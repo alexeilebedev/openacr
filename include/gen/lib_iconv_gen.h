@@ -50,7 +50,8 @@ namespace lib_iconv { // gen:ns_print_struct
 // --- lib_iconv.trace
 #pragma pack(push,1)
 struct trace { // lib_iconv.trace
-    trace();
+    // func:lib_iconv.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -103,25 +104,29 @@ bool                 icd_XrefMaybe(lib_iconv::Icd &row);
 // func:lib_iconv.FDb..Init
 void                 FDb_Init();
 // func:lib_iconv.FDb..Uninit
-void                 FDb_Uninit() __attribute__((nothrow));
+inline void          FDb_Uninit() __attribute__((nothrow));
 
 // --- lib_iconv.FieldId
 #pragma pack(push,1)
 struct FieldId { // lib_iconv.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator lib_iconv_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(lib_iconv_FieldIdEnum arg);
-    FieldId();
+    // func:lib_iconv.FieldId.value.Cast
+    inline               operator lib_iconv_FieldIdEnum() const __attribute__((nothrow));
+    // func:lib_iconv.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:lib_iconv.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:lib_iconv.FieldId..EnumCtor
+    inline               FieldId(lib_iconv_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:lib_iconv.FieldId.value.GetEnum
-lib_iconv_FieldIdEnum value_GetEnum(const lib_iconv::FieldId& parent) __attribute__((nothrow));
+inline lib_iconv_FieldIdEnum value_GetEnum(const lib_iconv::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:lib_iconv.FieldId.value.SetEnum
-void                 value_SetEnum(lib_iconv::FieldId& parent, lib_iconv_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(lib_iconv::FieldId& parent, lib_iconv_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:lib_iconv.FieldId.value.ToCstr
@@ -149,7 +154,7 @@ bool                 value_ReadStrptrMaybe(lib_iconv::FieldId& parent, algo::str
 bool                 FieldId_ReadStrptrMaybe(lib_iconv::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_iconv.FieldId..Init
-void                 FieldId_Init(lib_iconv::FieldId& parent);
+inline void          FieldId_Init(lib_iconv::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:lib_iconv.FieldId.String  printfmt:Raw
 // func:lib_iconv.FieldId..Print
@@ -159,12 +164,10 @@ void                 FieldId_Print(lib_iconv::FieldId& row, algo::cstring& str) 
 // create: lib_iconv.FDb.icd (Cppstack)
 struct Icd { // lib_iconv.Icd
     iconv_t   icd;   //   ((iconv_t)-1)  iconv descriptor
-    Icd();
-    ~Icd();
-private:
-    // user-defined fcleanup on lib_iconv.Icd.icd prevents copy
-    Icd(const Icd&){ /*disallow copy constructor */}
-    void operator =(const Icd&){ /*disallow direct assignment */}
+    // func:lib_iconv.Icd..Ctor
+    inline               Icd() __attribute__((nothrow));
+    // func:lib_iconv.Icd..Dtor
+    inline               ~Icd() __attribute__((nothrow));
 };
 
 // Declaration for user-defined cleanup function
@@ -175,9 +178,9 @@ void                 icd_Cleanup(lib_iconv::Icd& icd) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:lib_iconv.Icd..Init
-void                 Icd_Init(lib_iconv::Icd& icd);
+inline void          Icd_Init(lib_iconv::Icd& icd);
 // func:lib_iconv.Icd..Uninit
-void                 Icd_Uninit(lib_iconv::Icd& icd) __attribute__((nothrow));
+inline void          Icd_Uninit(lib_iconv::Icd& icd) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:lib_iconv.Icd.String  printfmt:Raw
 // func:lib_iconv.Icd..Print

@@ -1,4 +1,4 @@
-## AMC Protocols
+## amc Protocols
 <a href="#amc-protocols"></a>
 
 Amc has support for protocols. A protocol is a set of struct layout definitions and

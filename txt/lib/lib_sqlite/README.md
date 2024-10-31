@@ -3,68 +3,22 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Ctypes](#ctypes)
-* [Functions](#functions)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
 
-### Ctypes
-<a href="#ctypes"></a>
-Other ctypes in this namespace which don't have own readme files
-
-#### lib_sqlite.FConn - 
-<a href="#lib_sqlite-fconn"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|name|algo.cstring|Val|
-|db|sqlite3|Ptr|
-
-#### lib_sqlite.FDb - 
-<a href="#lib_sqlite-fdb"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|_db|lib_sqlite.FDb|Global|
-|conn|lib_sqlite.FConn|Tpool|
-|ind_conn|lib_sqlite.FConn|Thash|
-|substr|lib_sqlite.FSubstr|Lary|
-
-#### lib_sqlite.FSubstr - 
-<a href="#lib_sqlite-fsubstr"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|base|[dmmeta.Substr](/txt/ssimdb/dmmeta/substr.md)|Base|
-
-#### lib_sqlite.Vtab - An instance of the virtual table
-<a href="#lib_sqlite-vtab"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|base|sqlite3_vtab|Val|
-|filename|algo.cstring|Val|
-|c_ssimfile|lib_ctype.FSsimfile|Ptr|
-|p_ctype|lib_ctype.FCtype|Ptr|
-
-#### lib_sqlite.VtabCurs - A cursor for the virtual table
-<a href="#lib_sqlite-vtabcurs"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|base|sqlite3_vtab_cursor|Val||Base class. Must be first|
-|file|algo_lib.InTextFile|Val||current file|
-|line|algo.strptr|Val||current line|
-|i|i32|Val||current line number|
-|eof|bool|Val|
-|row|algo.Tuple|Val||Parsed row|
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Functions
 <a href="#functions"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Functions -->
 Functions exported from this namespace:
 
 ```c++
-void lib_sqlite::Open(lib_sqlite::FConn& conn) 
+int lib_sqlite::Open(lib_sqlite::FConn& conn) 
 ```
 
 ```c++
@@ -79,8 +33,33 @@ void lib_sqlite::Init()
 sqlite3_module lib_sqlite::SsimModule = 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
+
+### Inputs
+<a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
+`lib_sqlite` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
+|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
+|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
+|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
+|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
+|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
+|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
+|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
+|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
+
 ### Sources
 <a href="#sources"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
 The source code license is GPL
 The following source files are part of this tool:
 
@@ -93,22 +72,181 @@ The following source files are part of this tool:
 |[include/gen/lib_sqlite_gen.inl.h](/include/gen/lib_sqlite_gen.inl.h)||
 |[include/lib_sqlite.h](/include/lib_sqlite.h)||
 
-### Inputs
-<a href="#inputs"></a>
-`lib_sqlite` takes the following tables on input:
-|ssimfile|comment|
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
+
+### Dependencies
+<a href="#dependencies"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
+The build target depends on the following libraries
+|Target|Comment|
 |---|---|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[algo_lib](/txt/lib/algo_lib/README.md)|Support library for all executables|
+|[lib_ctype](/txt/lib/lib_ctype/README.md)|Helpful library for reading/writing ctypes as text tuples|
+|[lib_prot](/txt/lib/lib_prot/README.md)|Library covering all protocols|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
+
+### In Memory DB
+<a href="#in-memory-db"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Imdb -->
+`lib_sqlite` generated code creates the tables below.
+All allocations are done through global `lib_sqlite::_db` [lib_sqlite.FDb](#lib_sqlite-fdb) structure
+|Ctype|Ssimfile|Create|Access|
+|---|---|---|---|
+|[lib_sqlite.FConn](#lib_sqlite-fconn)||FDb.conn (Tpool)|ind_conn (Thash, hash field name)|
+|[lib_sqlite.FDb](#lib_sqlite-fdb)||FDb._db (Global)|
+|[lib_sqlite.FSubstr](#lib_sqlite-fsubstr)|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|FDb.substr (Lary)|substr (Lary, by rowid)|
+|[lib_sqlite.Vtab](#lib_sqlite-vtab)||
+|[lib_sqlite.VtabCurs](#lib_sqlite-vtabcurs)||
+
+#### lib_sqlite.FConn - 
+<a href="#lib_sqlite-fconn"></a>
+
+#### lib_sqlite.FConn Fields
+<a href="#lib_sqlite-fconn-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_sqlite.FConn.name|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_sqlite.FConn.db|sqlite3|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+
+#### Struct FConn
+<a href="#struct-fconn"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_sqlite_gen.h](/include/gen/lib_sqlite_gen.h)
+```
+struct FConn { // lib_sqlite.FConn
+    algo::cstring        name;            //
+    sqlite3*             db;              // optional pointer
+    lib_sqlite::FConn*   conn_next;       // Pointer to next free element int tpool
+    lib_sqlite::FConn*   ind_conn_next;   // hash next
+    // user-defined fcleanup on lib_sqlite.FConn.db prevents copy
+    // func:lib_sqlite.FConn..AssignOp
+    inline lib_sqlite::FConn& operator =(const lib_sqlite::FConn &rhs) = delete;
+    // user-defined fcleanup on lib_sqlite.FConn.db prevents copy
+    // func:lib_sqlite.FConn..CopyCtor
+    inline               FConn(const lib_sqlite::FConn &rhs) = delete;
+private:
+    // func:lib_sqlite.FConn..Ctor
+    inline               FConn() __attribute__((nothrow));
+    // func:lib_sqlite.FConn..Dtor
+    inline               ~FConn() __attribute__((nothrow));
+    friend lib_sqlite::FConn&   conn_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_sqlite::FConn*   conn_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 conn_Delete(lib_sqlite::FConn &row) __attribute__((nothrow));
+};
+```
+
+#### lib_sqlite.FDb - 
+<a href="#lib_sqlite-fdb"></a>
+
+#### lib_sqlite.FDb Fields
+<a href="#lib_sqlite-fdb-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_sqlite.FDb._db|[lib_sqlite.FDb](/txt/lib/lib_sqlite/README.md#lib_sqlite-fdb)|[Global](/txt/exe/amc/reftypes.md#global)|||
+|lib_sqlite.FDb.conn|[lib_sqlite.FConn](/txt/lib/lib_sqlite/README.md#lib_sqlite-fconn)|[Tpool](/txt/exe/amc/reftypes.md#tpool)|||
+|lib_sqlite.FDb.ind_conn|[lib_sqlite.FConn](/txt/lib/lib_sqlite/README.md#lib_sqlite-fconn)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|lib_sqlite.FDb.substr|[lib_sqlite.FSubstr](/txt/lib/lib_sqlite/README.md#lib_sqlite-fsubstr)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+
+#### Struct FDb
+<a href="#struct-fdb"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_sqlite_gen.h](/include/gen/lib_sqlite_gen.h)
+```
+struct FDb { // lib_sqlite.FDb
+    u64                    conn_blocksize;           // # bytes per block
+    lib_sqlite::FConn*     conn_free;                //
+    lib_sqlite::FConn**    ind_conn_buckets_elems;   // pointer to bucket array
+    i32                    ind_conn_buckets_n;       // number of elements in bucket array
+    i32                    ind_conn_n;               // number of elements in the hash table
+    lib_sqlite::FSubstr*   substr_lary[32];          // level array
+    i32                    substr_n;                 // number of elements in array
+    lib_sqlite::trace      trace;                    //
+};
+```
+
+#### lib_sqlite.FSubstr - Specify that the field value is computed from a substring of another field
+<a href="#lib_sqlite-fsubstr"></a>
+
+#### lib_sqlite.FSubstr Fields
+<a href="#lib_sqlite-fsubstr-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_sqlite.FSubstr.base|[dmmeta.Substr](/txt/ssimdb/dmmeta/substr.md)|[Base](/txt/ssimdb/dmmeta/substr.md)|||
+
+#### Struct FSubstr
+<a href="#struct-fsubstr"></a>
+*Note:* field ``lib_sqlite.FSubstr.base`` has reftype ``base`` so the fields of [dmmeta.Substr](/txt/ssimdb/dmmeta/substr.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_sqlite_gen.h](/include/gen/lib_sqlite_gen.h)
+```
+struct FSubstr { // lib_sqlite.FSubstr
+    algo::Smallstr100   field;      //
+    algo::CppExpr       expr;       //
+    algo::Smallstr100   srcfield;   //
+private:
+    // func:lib_sqlite.FSubstr..Ctor
+    inline               FSubstr() __attribute__((nothrow));
+    friend lib_sqlite::FSubstr& substr_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_sqlite::FSubstr* substr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 substr_RemoveAll() __attribute__((nothrow));
+    friend void                 substr_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### lib_sqlite.Vtab - An instance of the virtual table
+<a href="#lib_sqlite-vtab"></a>
+
+#### lib_sqlite.Vtab Fields
+<a href="#lib_sqlite-vtab-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_sqlite.Vtab.base|sqlite3_vtab|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_sqlite.Vtab.filename|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_sqlite.Vtab.c_ssimfile|[lib_ctype.FSsimfile](/txt/lib/lib_ctype/README.md#lib_ctype-fssimfile)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|lib_sqlite.Vtab.p_ctype|[lib_ctype.FCtype](/txt/lib/lib_ctype/README.md#lib_ctype-fctype)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+
+#### Struct Vtab
+<a href="#struct-vtab"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_sqlite_gen.h](/include/gen/lib_sqlite_gen.h)
+```
+struct Vtab { // lib_sqlite.Vtab: An instance of the virtual table
+    sqlite3_vtab            base;         //
+    algo::cstring           filename;     //
+    lib_ctype::FSsimfile*   c_ssimfile;   // optional pointer
+    lib_ctype::FCtype*      p_ctype;      // optional pointer
+    // func:lib_sqlite.Vtab..Ctor
+    inline               Vtab() __attribute__((nothrow));
+};
+```
+
+#### lib_sqlite.VtabCurs - A cursor for the virtual table
+<a href="#lib_sqlite-vtabcurs"></a>
+
+#### lib_sqlite.VtabCurs Fields
+<a href="#lib_sqlite-vtabcurs-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_sqlite.VtabCurs.base|sqlite3_vtab_cursor|[Val](/txt/exe/amc/reftypes.md#val)||Base class. Must be first|
+|lib_sqlite.VtabCurs.file|[algo_lib.InTextFile](/txt/lib/algo_lib/README.md#algo_lib-intextfile)|[Val](/txt/exe/amc/reftypes.md#val)||current file|
+|lib_sqlite.VtabCurs.line|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftypes.md#val)||current line|
+|lib_sqlite.VtabCurs.i|i32|[Val](/txt/exe/amc/reftypes.md#val)||current line number|
+|lib_sqlite.VtabCurs.eof|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_sqlite.VtabCurs.row|[algo.Tuple](/txt/protocol/algo/Tuple.md)|[Val](/txt/exe/amc/reftypes.md#val)||Parsed row|
+
+#### Struct VtabCurs
+<a href="#struct-vtabcurs"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_sqlite_gen.h](/include/gen/lib_sqlite_gen.h)
+```
+struct VtabCurs { // lib_sqlite.VtabCurs: A cursor for the virtual table
+    sqlite3_vtab_cursor    base;   // Base class. Must be first
+    algo_lib::InTextFile   file;   // current file
+    algo::strptr           line;   // current line
+    i32                    i;      //   0  current line number
+    bool                   eof;    //   false
+    algo::Tuple            row;    // Parsed row
+    // func:lib_sqlite.VtabCurs..Ctor
+    inline               VtabCurs() __attribute__((nothrow));
+};
+```
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Imdb -->
 

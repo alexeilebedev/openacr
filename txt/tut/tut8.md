@@ -21,8 +21,8 @@ acr.insert  dmmeta.ctype  ctype:dev.A  comment:""
 
 acr.insert  dmmeta.ssimfile  ssimfile:dev.a  ctype:dev.A
   acr.insert  dmmeta.ssimsort  ssimfile:dev.a  sortfld:dev.A.a  comment:""
-report.acr  ***
-report.amc  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 This will create a new empty table data/dev/a.ssim. The ctype for `a` has a single string field
@@ -32,7 +32,7 @@ The dmmeta database holds acr's schema
 ```
 inline-command: acr ssimfile:dev.a
 dmmeta.ssimfile  ssimfile:dev.a  ctype:dev.A
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 We can now populate this table with some data. `acr -insert -write` reads values from standard
@@ -52,7 +52,7 @@ acr.insert  dev.a  a:a6   comment:""
 acr.insert  dev.a  a:a7   comment:""
 acr.insert  dev.a  a:a8   comment:""
 acr.insert  dev.a  a:a9   comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Now let's query this table. Here, we use a SQL regex and ask for values a2, a3 and a4.
@@ -62,7 +62,7 @@ inline-command: acr a:a'(2|3|4)'
 dev.a  a:a2  comment:""
 dev.a  a:a3  comment:""
 dev.a  a:a4  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 If we wanted to use these values in a shell script, there are a few flags that help with that.
@@ -102,8 +102,8 @@ acr.insert  dmmeta.ctype  ctype:dev.T  comment:""
 
 acr.insert  dmmeta.ssimfile  ssimfile:dev.t  ctype:dev.T
   acr.insert  dmmeta.ssimsort  ssimfile:dev.t  sortfld:dev.T.t  comment:""
-report.acr  ***
-report.amc  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Now we add an extra attribute to `t` called `val`, with integer type.
@@ -112,8 +112,8 @@ Now we add an extra attribute to `t` called `val`, with integer type.
 inline-command: acr_ed -create -field dev.T.val -arg u32 -write
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:dev.T.val  arg:u32  reftype:Val  dflt:""  comment:""
-report.acr  ***
-report.amc  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Insert some data using a bash one-liner:
@@ -121,14 +121,14 @@ Insert some data using a bash one-liner:
 ```
 inline-command: echo 'dev.t t:ggg val:3' | acr -insert -write
 acr.insert  dev.t  t:ggg  val:3  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Now let's try to insert another record with the value `ggg`:
 
 ```
 inline-command: echo 'dev.t t:ggg' | acr -insert -write
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 That failed. Now let's replace instead. This will succeed, and the value `val`
@@ -137,7 +137,7 @@ will go back to the default:
 ```
 inline-command: echo 'dev.t t:ggg' | acr -replace -write
 acr.update  dev.t  t:ggg  val:0   comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 The `-merge` option also reads stdin, but whole records aren't replaced.
@@ -152,14 +152,14 @@ set `val` back to 3:
 inline-command: acr_ed -create -field dev.T.val2 -arg u32 -write
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:dev.T.val2  arg:u32  reftype:Val  dflt:""  comment:""
-report.acr  ***
-report.amc  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 ```
 inline-command: echo 'dev.t t:ggg val:3' | acr -replace -write
 acr.update  dev.t  t:ggg  val:3  val2:0   comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 So far so good. Now let's use -merge:
@@ -167,7 +167,7 @@ So far so good. Now let's use -merge:
 ```
 inline-command: echo 'dev.t t:ggg val2:4' | acr -merge -write
 acr.update  dev.t  t:ggg  val:3  val2:4  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 As as we can see, `val` has retained the value of 3, while `val2` was set to 4.
@@ -178,7 +178,7 @@ With the `-trunc` option, when the first change is made to the table, the table 
 inline-command: echo 'dev.t t:hhh' | acr -insert -trunc -write
 acr.delete  dev.t  t:ggg  val:3   val2:4   comment:""
 acr.insert  dev.t  t:hhh  val:0   val2:0   comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 ### Creating bash commands
@@ -219,8 +219,8 @@ Let's illustrate adding a column to the `a` table:
 inline-command: acr_ed -create -field dev.A.b -arg u32 -write
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:dev.A.b  arg:u32  reftype:Val  dflt:""  comment:""
-report.acr  ***
-report.amc  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Let's update a few values with `acr -merge`:
@@ -228,7 +228,7 @@ Let's update a few values with `acr -merge`:
 ```
 inline-command: echo 'dev.a a:a1 b:55' | acr -merge -write
 acr.update  dev.a  a:a1  b:55  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Let's check if the b column is there:
@@ -246,7 +246,7 @@ dev.a  a:a6   b:0   comment:""
 dev.a  a:a7   b:0   comment:""
 dev.a  a:a8   b:0   comment:""
 dev.a  a:a9   b:0   comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Yes, it is. What if we just look in the file itself?
@@ -280,8 +280,8 @@ acr.insert  dmmeta.ctype  ctype:dev.B  comment:""
 
 acr.insert  dmmeta.ssimfile  ssimfile:dev.b  ctype:dev.B
   acr.insert  dmmeta.ssimsort  ssimfile:dev.b  sortfld:dev.B.a  comment:""
-report.acr  ***
-report.amc  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Let's quickly check how `B`'s fields were defined:
@@ -290,7 +290,7 @@ Let's quickly check how `B`'s fields were defined:
 inline-command: acr field:dev.B.%
 dmmeta.field  field:dev.B.a        arg:dev.A         reftype:Pkey  dflt:""  comment:""
 dmmeta.field  field:dev.B.comment  arg:algo.Comment  reftype:Val   dflt:""  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 We see that the field dev.B.a was created, with `arg:dev.A` and `reftype:Pkey`.
@@ -308,7 +308,7 @@ acr.insert  dev.b  a:a4  comment:""
 acr.insert  dev.b  a:a5  comment:""
 acr.insert  dev.b  a:a6  comment:""
 acr.insert  dev.b  a:a7  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 ### Following References Up
@@ -322,7 +322,7 @@ inline-command: acr b:a3 -nup 1
 dev.a  a:a3  b:0  comment:""
 
 dev.b  a:a3  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Yes! It worked. What if we try the same thing when querying a?
@@ -330,7 +330,7 @@ Yes! It worked. What if we try the same thing when querying a?
 ```
 inline-command: acr a:a3 -nup 1
 dev.a  a:a3  b:0  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Since `a` doesn't refer to anything, there is nothing to discover.
@@ -344,7 +344,7 @@ inline-command: acr a:a4 -ndown  1
 dev.a  a:a4  b:0  comment:""
 
 dev.b  a:a4  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Notice that in the output, `a` is always printed out before `b`. That's because
@@ -372,7 +372,7 @@ dev.a  a:a6  b:0  comment:""
 
 dev.a  a:a7  b:0  comment:""
   dev.b  a:a7  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Since `-xref -tree` is very frequently used, command line option `-t` is an alias for it.
@@ -381,7 +381,7 @@ Since `-xref -tree` is very frequently used, command line option `-t` is an alia
 inline-command: acr b:a5 -t
 dev.a  a:a5  b:0  comment:""
   dev.b  a:a5  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 ### Deleting Records
@@ -393,7 +393,7 @@ inline-command: acr a:a4 -del -write
 acr.delete  dev.a  a:a4  b:0  comment:""
 
 acr.delete  dev.b  a:a4  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 As you can see, acr followed the reference and deleted the dependent `b` record as well as the
@@ -409,7 +409,7 @@ inline-command: acr a:a5 -del
 acr.delete  dev.a  a:a5  b:0  comment:""
 
 acr.delete  dev.b  a:a5  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 `-del` works with any number of records. You could delete the entire database with
@@ -425,7 +425,7 @@ Let's insert a record into the `b` table which has no corresponding record in th
 ```
 inline-command: echo 'dev.b a:xyz' | acr -insert -write
 acr.insert  dev.b  a:xyz  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Now we have a record referring to a non-existing `xyz`. This is clearly a foreign
@@ -448,7 +448,7 @@ acr.badrefs  ctype:dev.B  nbad:1
 
 report.acr_check  records:***  errors:3
 dev.b  a:xyz  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 We wee that acr has detected the error and given us some suggestions on how to fix it.
@@ -470,7 +470,7 @@ inline-command: acr a:a3 -rename a99 -write
 acr.update  dev.a  a:a99  b:0  comment:""
 
 acr.update  dev.b  a:a99  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 We can check that the dependencies were followed during the rename.
@@ -479,7 +479,7 @@ We can check that the dependencies were followed during the rename.
 inline-command: acr a:a99 -t
 dev.a  a:a99  b:0  comment:""
   dev.b  a:a99  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 ### Cross-Product Types
@@ -502,8 +502,8 @@ acr.insert  dmmeta.ctype  ctype:dev.C  comment:""
 
 acr.insert  dmmeta.ssimfile  ssimfile:dev.c  ctype:dev.C
   acr.insert  dmmeta.ssimsort  ssimfile:dev.c  sortfld:dev.C.c  comment:""
-report.acr  ***
-report.amc  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 ```
@@ -511,7 +511,7 @@ inline-command: for X in red green blue; do echo dev.c c:$X; done | acr -insert 
 acr.insert  dev.c  c:blue   comment:""
 acr.insert  dev.c  c:green  comment:""
 acr.insert  dev.c  c:red    comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 ```
@@ -534,8 +534,8 @@ acr.insert  dmmeta.ctype  ctype:dev.D  comment:""
 
 acr.insert  dmmeta.ssimfile  ssimfile:dev.d  ctype:dev.D
   acr.insert  dmmeta.ssimsort  ssimfile:dev.d  sortfld:dev.D.d  comment:""
-report.acr  ***
-report.amc  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 ```
@@ -549,7 +549,7 @@ acr.insert  dev.d  d:a6.red    comment:""
 acr.insert  dev.d  d:a7.blue   comment:""
 acr.insert  dev.d  d:a7.green  comment:""
 acr.insert  dev.d  d:a7.red    comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 How does acr see the resulting structure?
@@ -580,7 +580,7 @@ dev.a  a:a7  b:0  comment:""
     dev.d  d:a7.blue   comment:""
     dev.d  d:a7.green  comment:""
     dev.d  d:a7.red    comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Renaming will update structured keys. So if you renamed `a5` to something else, all of the
@@ -613,7 +613,7 @@ dmmeta.nstype  nstype:ssimdb  comment:"Ssim database (not a target)"
 
 dmmeta.ssimfile  ssimfile:dev.d  ctype:dev.D
   dmmeta.ssimsort  ssimfile:dev.d  sortfld:dev.D.d  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 ### Fldfunc fields
@@ -635,7 +635,7 @@ dev.d  d:a6.red    b:a6  c:red    comment:""
 dev.d  d:a7.blue   b:a7  c:blue   comment:""
 dev.d  d:a7.green  b:a7  c:green  comment:""
 dev.d  d:a7.red    b:a7  c:red    comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 We can also use `-regx` to quickly confirm which values are present:
@@ -720,7 +720,7 @@ field name:
 
 ```
 inline-command: acr dev.D.c:blue
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Alternatively, we can use `-where`:
@@ -730,7 +730,7 @@ inline-command: acr d -where c:blue
 dev.d  d:a5.blue  comment:""
 dev.d  d:a6.blue  comment:""
 dev.d  d:a7.blue  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 The query string you pass to acr is a regular expression that extends to the name of the ssimfile as well.
@@ -747,7 +747,7 @@ dev.b  a:a6   comment:""
 dev.b  a:a7   comment:""
 dev.b  a:a99  comment:""
 dev.b  a:xyz  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 In fact, we can search for any value in the entire dataset with `acr %:%<value>%`
@@ -766,7 +766,7 @@ inline-command: acr c
 dev.c  c:blue   comment:""
 dev.c  c:green  comment:""
 dev.c  c:red    comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 The colors are sorted by name. Let's look at the ctype:
@@ -787,7 +787,7 @@ dmmeta.field  field:dev.D.c  arg:dev.C  reftype:Pkey  dflt:""  comment:""
 
 dmmeta.ssimfile  ssimfile:dev.c  ctype:dev.C
   dmmeta.ssimsort  ssimfile:dev.c  sortfld:dev.C.c  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Now let's delete the ssimsort line.
@@ -795,7 +795,7 @@ Now let's delete the ssimsort line.
 ```
 inline-command: acr ssimsort:dev.c -del -write
 acr.delete  dmmeta.ssimsort  ssimfile:dev.c  sortfld:dev.C.c  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 If we now use `acr -e` to open `c` in an editor, we will see that each line now has an additional
@@ -808,7 +808,7 @@ inline-command: acr c -rowid
 dev.c  c:blue   acr.rowid:0       comment:""
 dev.c  c:green  acr.rowid:1       comment:""
 dev.c  c:red    acr.rowid:2       comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 If we swap the lines for `blue` and `green`, and exit from the editor, no change will 
@@ -837,7 +837,7 @@ option:
 
 ```
 inline-command: mkdir x; acr % | acr -in:x -insert -write -print:N
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 All records have now been copied from `data` to `in`.
@@ -852,7 +852,7 @@ inline-command: rm -r x; touch x; acr c -report:N | acr -in:x -insert -write
 acr.insert  dev.c  c:blue   comment:""
 acr.insert  dev.c  c:green  comment:""
 acr.insert  dev.c  c:red    comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 File `x` now contains ssim tuples, one per line, and it can be queried or edited
@@ -866,7 +866,7 @@ with bash pipelines.
 ```
 inline-command: echo 'dmmeta.ctype ctype:xyz' | acr -in:- ctype:%
 dmmeta.ctype  ctype:xyz  comment:""
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 This shows a couple of interesting things. First, acr always displays tuples 
@@ -885,7 +885,7 @@ If we pass an empty data set as schema, we expect nothing to be printed:
 
 ```
 inline-command: rm -r x; touch x; echo 'dmmeta.ctype ctype:xyz' | acr -in:- ctype:% -schema:x
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Sure enough, acr doesn't recognize the input as a known tuple, so the line is silently
@@ -902,7 +902,7 @@ dmmeta.ctype  ctype:dev.C  comment:""
   dmmeta.field  field:dev.C.comment  arg:algo.Comment     reftype:Val  dflt:""  comment:""
   dmmeta.cfmt  cfmt:dev.C.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
   dmmeta.ctypelen  ctype:dev.C  len:204  alignment:1  padbytes:0  plaindata:Y
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 The `-meta` option looks at the selected records, and de-selects them, and selects their
@@ -916,7 +916,7 @@ fields. Let's add a comment to the dev.C.c field:
 ```
 inline-command: echo 'dmmeta.field field:dev.C.c comment:"Name of the color (primary key)"' | acr -merge -write
 acr.update  dmmeta.field  field:dev.C.c  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:"Name of the color (primary key)"
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 
 Now when we display the `c` table with the `-cmt` option, this comment shows up. `-cmt` is the default whenever
@@ -924,7 +924,9 @@ Now when we display the `c` table with the `-cmt` option, this comment shows up.
 
 ```
 inline-command: acr c -cmt
-# Ctype  Comment
+# Ctype            Comment
+# algo.Smallstr50  inline string with length field
+# algo.Comment     Generic comment for ssim tuples
 
 # e.g. dev.c  c:""  comment:""
 
@@ -935,6 +937,6 @@ dev.c  c:red    comment:""
 # Field          Arg              Reftype  Comment
 # dev.C.c        algo.Smallstr50  Val      Name of the color (primary key)
 # dev.C.comment  algo.Comment     Val
-report.acr  ***
+report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 ```
 

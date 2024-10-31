@@ -3,11 +3,15 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Sources
 <a href="#sources"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
 The source code license is GPL
 The following source files are part of this tool:
 
@@ -39,10 +43,15 @@ The following source files are part of this tool:
 |[include/gen/lib_prot_gen.h](/include/gen/lib_prot_gen.h)||
 |[include/gen/lib_prot_gen.inl.h](/include/gen/lib_prot_gen.inl.h)||
 
-### Inputs
-<a href="#inputs"></a>
-`lib_prot` takes the following tables on input:
-|ssimfile|comment|
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
+
+### Dependencies
+<a href="#dependencies"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
+The build target depends on the following libraries
+|Target|Comment|
 |---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[lib_json](/txt/lib/lib_json/README.md)|Full json support library|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
 

@@ -25,16 +25,14 @@
 #pragma once
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline atfdb::Amctest::Amctest() {
+
+// --- atfdb.Amctest..Ctor
+inline  atfdb::Amctest::Amctest() {
 }
 
-inline atfdb::Cijob::Cijob() {
+// --- atfdb.Cijob..Ctor
+inline  atfdb::Cijob::Cijob() {
 }
-
-inline atfdb::Cipackage::Cipackage() {
-    atfdb::Cipackage_Init(*this);
-}
-
 
 // --- atfdb.Cipackage..Init
 // Set all fields to initial values.
@@ -42,10 +40,11 @@ inline void atfdb::Cipackage_Init(atfdb::Cipackage& parent) {
     parent.remove = bool(false);
     parent.build = bool(false);
 }
-inline atfdb::Citest::Citest() {
-    atfdb::Citest_Init(*this);
-}
 
+// --- atfdb.Cipackage..Ctor
+inline  atfdb::Cipackage::Cipackage() {
+    atfdb::Cipackage_Init(*this);
+}
 
 // --- atfdb.Citest..Init
 // Set all fields to initial values.
@@ -53,10 +52,11 @@ inline void atfdb::Citest_Init(atfdb::Citest& parent) {
     parent.cijob = algo::strptr("test");
     parent.sandbox = bool(false);
 }
-inline atfdb::Comptest::Comptest() {
-    atfdb::Comptest_Init(*this);
-}
 
+// --- atfdb.Citest..Ctor
+inline  atfdb::Citest::Citest() {
+    atfdb::Citest_Init(*this);
+}
 
 // --- atfdb.Comptest..Init
 // Set all fields to initial values.
@@ -65,15 +65,11 @@ inline void atfdb::Comptest_Init(atfdb::Comptest& parent) {
     parent.memcheck = bool(true);
     parent.exit_code = u8(0);
 }
-inline atfdb::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atfdb::FieldId::FieldId(atfdb_FieldIdEnum arg) { this->value = i32(arg); }
-inline atfdb::FieldId::FieldId() {
-    atfdb::FieldId_Init(*this);
-}
 
+// --- atfdb.Comptest..Ctor
+inline  atfdb::Comptest::Comptest() {
+    atfdb::Comptest_Init(*this);
+}
 
 // --- atfdb.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -88,7 +84,7 @@ inline void atfdb::value_SetEnum(atfdb::FieldId& parent, atfdb_FieldIdEnum rhs) 
 }
 
 // --- atfdb.FieldId.value.Cast
-inline atfdb::FieldId::operator atfdb_FieldIdEnum () const {
+inline  atfdb::FieldId::operator atfdb_FieldIdEnum() const {
     return atfdb_FieldIdEnum((*this).value);
 }
 
@@ -97,40 +93,65 @@ inline atfdb::FieldId::operator atfdb_FieldIdEnum () const {
 inline void atfdb::FieldId_Init(atfdb::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline atfdb::Fuzzstrat::Fuzzstrat() {
+
+// --- atfdb.FieldId..Ctor
+inline  atfdb::FieldId::FieldId() {
+    atfdb::FieldId_Init(*this);
 }
 
-inline atfdb::Msgdir::Msgdir() {
+// --- atfdb.FieldId..FieldwiseCtor
+inline  atfdb::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
 }
 
-inline atfdb::Targs::Targs() {
+// --- atfdb.FieldId..EnumCtor
+inline  atfdb::FieldId::FieldId(atfdb_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
-inline atfdb::TestGsymbolChar::TestGsymbolChar() {
+// --- atfdb.Fuzzstrat..Ctor
+inline  atfdb::Fuzzstrat::Fuzzstrat() {
 }
 
-inline atfdb::TestGsymbolPkey::TestGsymbolPkey() {
+// --- atfdb.Msgdir..Ctor
+inline  atfdb::Msgdir::Msgdir() {
 }
 
-inline atfdb::TestGsymbolStrptr::TestGsymbolStrptr() {
+// --- atfdb.Targs..Ctor
+inline  atfdb::Targs::Targs() {
 }
 
-inline atfdb::Tfilt::Tfilt() {
+// --- atfdb.TestGsymbolChar..Ctor
+inline  atfdb::TestGsymbolChar::TestGsymbolChar() {
 }
 
-inline atfdb::Tmsg::Tmsg() {
-    atfdb::Tmsg_Init(*this);
+// --- atfdb.TestGsymbolPkey..Ctor
+inline  atfdb::TestGsymbolPkey::TestGsymbolPkey() {
 }
 
+// --- atfdb.TestGsymbolStrptr..Ctor
+inline  atfdb::TestGsymbolStrptr::TestGsymbolStrptr() {
+}
+
+// --- atfdb.Tfilt..Ctor
+inline  atfdb::Tfilt::Tfilt() {
+}
 
 // --- atfdb.Tmsg..Init
 // Set all fields to initial values.
 inline void atfdb::Tmsg_Init(atfdb::Tmsg& parent) {
     parent.istuple = bool(false);
 }
-inline atfdb::Unittest::Unittest() {
+
+// --- atfdb.Tmsg..Ctor
+inline  atfdb::Tmsg::Tmsg() {
+    atfdb::Tmsg_Init(*this);
 }
 
+// --- atfdb.Unittest..Ctor
+inline  atfdb::Unittest::Unittest() {
+}
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Cijob &row) {// cfmt:atfdb.Cijob.String
     atfdb::Cijob_Print(const_cast<atfdb::Cijob&>(row), str);

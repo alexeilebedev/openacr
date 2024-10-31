@@ -94,44 +94,52 @@ namespace atf_amc { // gen:ns_gsymbol
 } // gen:ns_gsymbol
 namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.BitfldType1.bit1.ReadStrptrMaybe
-    static bool          bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.BitfldType1.bits5.ReadStrptrMaybe
-    static bool          bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.BitfldType2.bit0.ReadStrptrMaybe
-    static bool          bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.BitfldType2.bit1.ReadStrptrMaybe
-    static bool          bit1_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   bit1_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) __attribute__((nothrow));
+    // Internal function to scan for a message
+    //
+    // func:atf_amc.Bytebuf.in.ScanMsg
+    static void          in_ScanMsg(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Bytebuf.in.Shift
     static void          in_Shift(atf_amc::Bytebuf& bytebuf) __attribute__((nothrow));
+    // Internal function to scan for a message
+    //
+    // func:atf_amc.BytebufDyn.in.ScanMsg
+    static void          in_ScanMsg(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.BytebufDyn.in.Shift
     static void          in_Shift(atf_amc::BytebufDyn& bytebuf_dyn) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
     // func:atf_amc.Cstr.val.Nextchar
-    static int           val_Nextchar(const atf_amc::Cstr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
+    inline static int    val_Nextchar(const atf_amc::Cstr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // func:atf_amc.DispFilter.strval.ReadStrptrMaybe
-    static bool          strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.strval_regx.ReadStrptrMaybe
-    static bool          strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.strval2.ReadStrptrMaybe
-    static bool          strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.strval2_regx.ReadStrptrMaybe
-    static bool          strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.start_dateval.ReadStrptrMaybe
-    static bool          start_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   start_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.end_dateval.ReadStrptrMaybe
-    static bool          end_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   end_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.dateval.ReadStrptrMaybe
-    static bool          dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.start_intval.ReadStrptrMaybe
-    static bool          start_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   start_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.end_intval.ReadStrptrMaybe
-    static bool          end_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   end_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.DispFilter.intval.ReadStrptrMaybe
-    static bool          intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:atf_amc.FCascdel.bh_child_bheap.Downheap
@@ -141,26 +149,26 @@ namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.FCascdel.bh_child_bheap.Upheap
     static int           bh_child_bheap_Upheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) __attribute__((nothrow));
     // func:atf_amc.FCascdel.bh_child_bheap.ElemLt
-    static bool          bh_child_bheap_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
+    inline static bool   bh_child_bheap_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
     // func:atf_amc.FCascdel.bh_child_bheap.ElemLtval
-    static bool          bh_child_bheap_ElemLtval(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, const u32 &b) __attribute__((nothrow));
+    inline static bool   bh_child_bheap_ElemLtval(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, const u32 &b) __attribute__((nothrow));
     // func:atf_amc.FCascdel.bh_child_bheap_curs.Add
     static void          cascdel_bh_child_bheap_curs_Add(cascdel_bh_child_bheap_curs &curs, atf_amc::FCascdel& row);
     // Returns the child that has greater height.
     // func:atf_amc.FCascdel.tr_child_atree.TallerChild
-    static atf_amc::FCascdel* tr_child_atree_TallerChild(atf_amc::FCascdel& node) __attribute__((nothrow));
+    inline static atf_amc::FCascdel* tr_child_atree_TallerChild(atf_amc::FCascdel& node) __attribute__((nothrow));
     // Disconnects the subtree(branch) from the parent
     // func:atf_amc.FCascdel.tr_child_atree.Disconnect
     static void          tr_child_atree_Disconnect(atf_amc::FCascdel& node) __attribute__((nothrow));
     // func:atf_amc.FCascdel.tr_child_atree.ElemLt
-    static bool          tr_child_atree_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
+    inline static bool   tr_child_atree_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) __attribute__((nothrow));
     // func:atf_amc.FCascdel.tr_child_atree.UpdateDepth
     static void          tr_child_atree_updateDepth(atf_amc::FCascdel& node) __attribute__((nothrow));
     // rotates the tree in from->to direction
     // func:atf_amc.FCascdel.tr_child_atree.Turn
     static void          tr_child_atree_Turn(atf_amc::FCascdel& from, atf_amc::FCascdel& to) __attribute__((nothrow));
     // func:atf_amc.FCascdel.tr_child_atree.Connect
-    static void          tr_child_atree_Connect(atf_amc::FCascdel* parent, atf_amc::FCascdel* child, bool left) __attribute__((nothrow));
+    inline static void   tr_child_atree_Connect(atf_amc::FCascdel* parent, atf_amc::FCascdel* child, bool left) __attribute__((nothrow));
     // Find new location for ROW starting at IDX
     // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
     // func:atf_amc.FDb.bh_typec.Downheap
@@ -170,7 +178,7 @@ namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.FDb.bh_typec.Upheap
     static int           bh_typec_Upheap(atf_amc::FTypeC& row, int idx) __attribute__((nothrow));
     // func:atf_amc.FDb.bh_typec.ElemLt
-    static bool          bh_typec_ElemLt(atf_amc::FTypeC &a, atf_amc::FTypeC &b) __attribute__((nothrow));
+    inline static bool   bh_typec_ElemLt(atf_amc::FTypeC &a, atf_amc::FTypeC &b) __attribute__((nothrow));
     // func:atf_amc.FDb.bh_typec_curs.Add
     static void          _db_bh_typec_curs_Add(_db_bh_typec_curs &curs, atf_amc::FTypeC& row);
     // func:atf_amc.FDb.types.InputMaybe
@@ -185,26 +193,26 @@ namespace atf_amc { // gen:ns_print_proto
     static void          cd_in_msg_FirstChanged() __attribute__((nothrow));
     // Update cycles count from previous clock capture
     // func:atf_amc.FDb.cd_in_msg.UpdateCycles
-    static void          cd_in_msg_UpdateCycles() __attribute__((nothrow));
+    inline static void   cd_in_msg_UpdateCycles() __attribute__((nothrow));
     // func:atf_amc.FDb.cd_in_msg.Call
-    static void          cd_in_msg_Call() __attribute__((nothrow));
+    inline static void   cd_in_msg_Call() __attribute__((nothrow));
     // func:atf_amc.FDb.amctest.LoadStatic
     static void          amctest_LoadStatic() __attribute__((nothrow));
     // Returns the child that has greater height.
     // func:atf_amc.FDb.tr_avl.TallerChild
-    static atf_amc::FAvl* tr_avl_TallerChild(atf_amc::FAvl& node) __attribute__((nothrow));
+    inline static atf_amc::FAvl* tr_avl_TallerChild(atf_amc::FAvl& node) __attribute__((nothrow));
     // Disconnects the subtree(branch) from the parent
     // func:atf_amc.FDb.tr_avl.Disconnect
     static void          tr_avl_Disconnect(atf_amc::FAvl& node) __attribute__((nothrow));
     // func:atf_amc.FDb.tr_avl.ElemLt
-    static bool          tr_avl_ElemLt(atf_amc::FAvl &a, atf_amc::FAvl &b) __attribute__((nothrow));
+    inline static bool   tr_avl_ElemLt(atf_amc::FAvl &a, atf_amc::FAvl &b) __attribute__((nothrow));
     // func:atf_amc.FDb.tr_avl.UpdateDepth
     static void          tr_avl_updateDepth(atf_amc::FAvl& node) __attribute__((nothrow));
     // rotates the tree in from->to direction
     // func:atf_amc.FDb.tr_avl.Turn
     static void          tr_avl_Turn(atf_amc::FAvl& from, atf_amc::FAvl& to) __attribute__((nothrow));
     // func:atf_amc.FDb.tr_avl.Connect
-    static void          tr_avl_Connect(atf_amc::FAvl* parent, atf_amc::FAvl* child, bool left) __attribute__((nothrow));
+    inline static void   tr_avl_Connect(atf_amc::FAvl* parent, atf_amc::FAvl* child, bool left) __attribute__((nothrow));
     // func:atf_amc.FDb.listtype.LoadStatic
     static void          listtype_LoadStatic() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
@@ -212,13 +220,13 @@ namespace atf_amc { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:atf_amc.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // Swap values elem_a and elem_b
     // func:atf_amc.FPerfSortString.sorted1.Swap
-    static void          sorted1_Swap(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) __attribute__((nothrow));
+    inline static void   sorted1_Swap(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:atf_amc.FPerfSortString.sorted1.Rotleft
-    static void          sorted1_Rotleft(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b, atf_amc::Cstr &elem_c) __attribute__((nothrow));
+    inline static void   sorted1_Rotleft(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b, atf_amc::Cstr &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -242,15 +250,15 @@ namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.FTypeA.bh_typeb.Upheap
     static int           bh_typeb_Upheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) __attribute__((nothrow));
     // func:atf_amc.FTypeA.bh_typeb.ElemLt
-    static bool          bh_typeb_ElemLt(atf_amc::FTypeA& typea, atf_amc::FTypeB &a, atf_amc::FTypeB &b) __attribute__((nothrow));
+    inline static bool   bh_typeb_ElemLt(atf_amc::FTypeA& typea, atf_amc::FTypeB &a, atf_amc::FTypeB &b) __attribute__((nothrow));
     // func:atf_amc.FTypeA.bh_typeb_curs.Add
     static void          typea_bh_typeb_curs_Add(typea_bh_typeb_curs &curs, atf_amc::FTypeB& row);
     // Swap values elem_a and elem_b
     // func:atf_amc.FUnitSort.tary.Swap
-    static void          tary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
+    inline static void   tary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:atf_amc.FUnitSort.tary.Rotleft
-    static void          tary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) __attribute__((nothrow));
+    inline static void   tary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -267,10 +275,10 @@ namespace atf_amc { // gen:ns_print_proto
     static void          tary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     // func:atf_amc.FUnitSort.c_ptrary.Swap
-    static void          c_ptrary_Swap(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b) __attribute__((nothrow));
+    inline static void   c_ptrary_Swap(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:atf_amc.FUnitSort.c_ptrary.Rotleft
-    static void          c_ptrary_Rotleft(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b, atf_amc::TypeA* &elem_c) __attribute__((nothrow));
+    inline static void   c_ptrary_Rotleft(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b, atf_amc::TypeA* &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -287,10 +295,10 @@ namespace atf_amc { // gen:ns_print_proto
     static void          c_ptrary_IntQuickSort(atf_amc::TypeA* *elems, int n, int depth) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     // func:atf_amc.FUnitSort.fixary.Swap
-    static void          fixary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
+    inline static void   fixary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:atf_amc.FUnitSort.fixary.Rotleft
-    static void          fixary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) __attribute__((nothrow));
+    inline static void   fixary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -307,212 +315,216 @@ namespace atf_amc { // gen:ns_print_proto
     static void          fixary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) __attribute__((nothrow));
     // Internal function to scan for a message
     //
-    // func:atf_amc.Linebuf.in.Scanmsg
-    static void          in_Scanmsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
+    // func:atf_amc.Linebuf.in.ScanMsg
+    static void          in_ScanMsg(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Linebuf.in.Shift
     static void          in_Shift(atf_amc::Linebuf& linebuf) __attribute__((nothrow));
     // Internal function to scan for a message
     //
-    // func:atf_amc.Msgbuf.in.Scanmsg
-    static void          in_Scanmsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // func:atf_amc.Msgbuf.in_buf.ScanMsg
+    static void          in_buf_ScanMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
-    // func:atf_amc.Msgbuf.in.Shift
-    static void          in_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // func:atf_amc.Msgbuf.in_buf.Shift
+    static void          in_buf_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // Internal function to shift data left
+    // Shift existing bytes over to the beginning of the buffer
+    // func:atf_amc.Msgbuf.in_custom.Shift
+    static void          in_custom_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Msgbuf.out_extra.Shift
     static void          out_extra_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     // Internal function to scan for a message
     //
-    // func:atf_amc.Msgbuf.in_extra.Scanmsg
-    static void          in_extra_Scanmsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
+    // func:atf_amc.Msgbuf.in_extra.ScanMsg
+    static void          in_extra_ScanMsg(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     // Internal function to shift data left
     // Shift existing bytes over to the beginning of the buffer
     // func:atf_amc.Msgbuf.in_extra.Shift
     static void          in_extra_Shift(atf_amc::Msgbuf& msgbuf) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value1.ReadStrptrMaybe
-    static bool          value1_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value1_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value2.ReadStrptrMaybe
-    static bool          value2_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value2_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value3.ReadStrptrMaybe
-    static bool          value3_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value3_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value4.ReadStrptrMaybe
-    static bool          value4_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value4_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value5.ReadStrptrMaybe
-    static bool          value5_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value5_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value6.ReadStrptrMaybe
-    static bool          value6_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value6_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskMultiple.value7.ReadStrptrMaybe
-    static bool          value7_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value7_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value.ReadStrptrMaybe
-    static bool          value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value2.ReadStrptrMaybe
-    static bool          value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value3.ReadStrptrMaybe
-    static bool          value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value21.ReadStrptrMaybe
-    static bool          value21_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value21_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value22.ReadStrptrMaybe
-    static bool          value22_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value22_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value23.ReadStrptrMaybe
-    static bool          value23_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value23_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value24.ReadStrptrMaybe
-    static bool          value24_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value24_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value25.ReadStrptrMaybe
-    static bool          value25_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value25_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value26.ReadStrptrMaybe
-    static bool          value26_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value26_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value20.ReadStrptrMaybe
-    static bool          value20_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value20_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value28.ReadStrptrMaybe
-    static bool          value28_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value28_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value29.ReadStrptrMaybe
-    static bool          value29_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value29_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value30.ReadStrptrMaybe
-    static bool          value30_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value30_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value31.ReadStrptrMaybe
-    static bool          value31_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value31_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value32.ReadStrptrMaybe
-    static bool          value32_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value32_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value27.ReadStrptrMaybe
-    static bool          value27_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value27_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value19.ReadStrptrMaybe
-    static bool          value19_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value19_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value18.ReadStrptrMaybe
-    static bool          value18_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value18_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value4.ReadStrptrMaybe
-    static bool          value4_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value4_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value5.ReadStrptrMaybe
-    static bool          value5_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value5_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value6.ReadStrptrMaybe
-    static bool          value6_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value6_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value7.ReadStrptrMaybe
-    static bool          value7_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value7_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value8.ReadStrptrMaybe
-    static bool          value8_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value8_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value9.ReadStrptrMaybe
-    static bool          value9_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value9_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value69.ReadStrptrMaybe
-    static bool          value69_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value69_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value11.ReadStrptrMaybe
-    static bool          value11_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value11_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value12.ReadStrptrMaybe
-    static bool          value12_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value12_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value13.ReadStrptrMaybe
-    static bool          value13_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value13_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value14.ReadStrptrMaybe
-    static bool          value14_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value14_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value15.ReadStrptrMaybe
-    static bool          value15_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value15_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value16.ReadStrptrMaybe
-    static bool          value16_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value16_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value33.ReadStrptrMaybe
-    static bool          value33_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value33_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value10.ReadStrptrMaybe
-    static bool          value10_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value10_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value17.ReadStrptrMaybe
-    static bool          value17_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value17_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value35.ReadStrptrMaybe
-    static bool          value35_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value35_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value55.ReadStrptrMaybe
-    static bool          value55_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value55_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value56.ReadStrptrMaybe
-    static bool          value56_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value56_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value57.ReadStrptrMaybe
-    static bool          value57_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value57_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value58.ReadStrptrMaybe
-    static bool          value58_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value58_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value59.ReadStrptrMaybe
-    static bool          value59_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value59_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value60.ReadStrptrMaybe
-    static bool          value60_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value60_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value54.ReadStrptrMaybe
-    static bool          value54_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value54_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value62.ReadStrptrMaybe
-    static bool          value62_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value62_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value63.ReadStrptrMaybe
-    static bool          value63_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value63_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value64.ReadStrptrMaybe
-    static bool          value64_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value64_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value65.ReadStrptrMaybe
-    static bool          value65_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value65_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value66.ReadStrptrMaybe
-    static bool          value66_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value66_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value67.ReadStrptrMaybe
-    static bool          value67_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value67_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value68.ReadStrptrMaybe
-    static bool          value68_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value68_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value61.ReadStrptrMaybe
-    static bool          value61_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value61_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value34.ReadStrptrMaybe
-    static bool          value34_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value34_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value52.ReadStrptrMaybe
-    static bool          value52_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value52_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value36.ReadStrptrMaybe
-    static bool          value36_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value36_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value37.ReadStrptrMaybe
-    static bool          value37_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value37_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value38.ReadStrptrMaybe
-    static bool          value38_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value38_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value39.ReadStrptrMaybe
-    static bool          value39_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value39_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value40.ReadStrptrMaybe
-    static bool          value40_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value40_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value41.ReadStrptrMaybe
-    static bool          value41_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value41_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value42.ReadStrptrMaybe
-    static bool          value42_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value42_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value53.ReadStrptrMaybe
-    static bool          value53_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value53_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value44.ReadStrptrMaybe
-    static bool          value44_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value44_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value45.ReadStrptrMaybe
-    static bool          value45_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value45_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value46.ReadStrptrMaybe
-    static bool          value46_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value46_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value47.ReadStrptrMaybe
-    static bool          value47_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value47_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value48.ReadStrptrMaybe
-    static bool          value48_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value48_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value49.ReadStrptrMaybe
-    static bool          value49_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value49_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value50.ReadStrptrMaybe
-    static bool          value50_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value50_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value51.ReadStrptrMaybe
-    static bool          value51_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value51_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value43.ReadStrptrMaybe
-    static bool          value43_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value43_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value70.ReadStrptrMaybe
-    static bool          value70_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value70_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU128.value71.ReadStrptrMaybe
-    static bool          value71_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value71_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU32.value.ReadStrptrMaybe
-    static bool          value_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU32.value2.ReadStrptrMaybe
-    static bool          value2_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value2_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU32.value3.ReadStrptrMaybe
-    static bool          value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU32.value4.ReadStrptrMaybe
-    static bool          value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:atf_amc.PmaskU32.value5.ReadStrptrMaybe
-    static bool          value5_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value5_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
     // func:atf_amc.SortedStr.novs.Nextchar
-    static int           novs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
+    inline static int    novs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // Extract next character from STR and advance IDX
     // func:atf_amc.SortedStr.vs.Nextchar
-    static u64           vs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
+    inline static u64    vs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) __attribute__((nothrow));
     // func:atf_amc.TypeBE64.value.ReadStrptrMaybe
-    static bool          value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) __attribute__((nothrow));
     // Swap values elem_a and elem_b
     // func:atf_amc.VarlenH.typeh.Swap
-    static void          typeh_Swap(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) __attribute__((nothrow));
+    inline static void   typeh_Swap(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) __attribute__((nothrow));
     // Left circular shift of three-tuple
     // func:atf_amc.VarlenH.typeh.Rotleft
-    static void          typeh_Rotleft(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b, atf_amc::TypeH &elem_c) __attribute__((nothrow));
+    inline static void   typeh_Rotleft(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b, atf_amc::TypeH &elem_c) __attribute__((nothrow));
     // Compare values elem_a and elem_b
     // The comparison function must be anti-symmetric: if a>b, then !(b>a).
     // If not, mayhem results.
@@ -528,15 +540,8 @@ namespace atf_amc { // gen:ns_print_proto
     // func:atf_amc.VarlenH.typeh.IntQuickSort
     static void          typeh_IntQuickSort(atf_amc::TypeH *elems, int n, int depth) __attribute__((nothrow));
     // func:atf_amc...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
-
-// --- atf_amc.AmcCleanup2..Uninit
-void atf_amc::AmcCleanup2_Uninit(atf_amc::AmcCleanup2& parent) {
-    atf_amc::AmcCleanup2 &row = parent; (void)row;
-    field2_Cleanup(parent); // dmmeta.fcleanup:atf_amc.AmcCleanup2.field2
-    field1_Cleanup(parent); // dmmeta.fcleanup:atf_amc.AmcCleanup2.field1
-}
 
 // --- atf_amc.AmcSubstr1.boolval.Get
 bool atf_amc::boolval_Get(atf_amc::AmcSubstr1& parent) {
@@ -803,12 +808,13 @@ void atf_amc::Bitset_fld64_bitcurs_Next(Bitset_fld64_bitcurs &curs) {
 // 
 algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Bytebuf& bytebuf) {
     algo::aryptr<char> ret;
-    if (in_N(bytebuf) == 0) {
+    if (!bytebuf.in_msgvalid) {
+        in_ScanMsg(bytebuf);
     }
     char *hdr = (char*)(bytebuf.in_elems + bytebuf.in_start);
-    if (in_N(bytebuf)) {
-        ret.elems = hdr; // if no elements, return value is NULL
-        ret.n_elems = in_N(bytebuf);
+    if (bytebuf.in_msgvalid) {
+        ret.elems = hdr;
+        ret.n_elems = bytebuf.in_msglen;
     }
     return ret;
 }
@@ -819,6 +825,20 @@ algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Bytebuf& bytebuf) {
 void atf_amc::in_RemoveAll(atf_amc::Bytebuf& bytebuf) {
     bytebuf.in_start    = 0;
     bytebuf.in_end      = 0;
+    bytebuf.in_msgvalid = false;
+}
+
+// --- atf_amc.Bytebuf.in.ScanMsg
+// Internal function to scan for a message
+// 
+static void atf_amc::in_ScanMsg(atf_amc::Bytebuf& bytebuf) {
+    i32 avail = in_N(bytebuf);
+    i32 msglen;
+    bool found = false;
+    found = avail>0;
+    msglen = avail;
+    bytebuf.in_msglen = msglen;
+    bytebuf.in_msgvalid = found;
 }
 
 // --- atf_amc.Bytebuf.in.Shift
@@ -842,6 +862,21 @@ void atf_amc::in_SkipBytes(atf_amc::Bytebuf& bytebuf, int n) {
     int avail = bytebuf.in_end - bytebuf.in_start;
     n = i32_Min(n,avail);
     bytebuf.in_start += n;
+    bytebuf.in_msgvalid = false;
+}
+
+// --- atf_amc.Bytebuf.in.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void atf_amc::in_SkipMsg(atf_amc::Bytebuf& bytebuf) {
+    if (bytebuf.in_msgvalid) {
+        int skip = bytebuf.in_msglen;
+        i32 start = bytebuf.in_start;
+        start += skip;
+        bytebuf.in_start = start;
+        bytebuf.in_msgvalid = false;
+        bytebuf.in_msglen   = 0; // reset message length -- important for delimited streams
+    }
 }
 
 // --- atf_amc.Bytebuf.in.WriteAll
@@ -872,6 +907,8 @@ void atf_amc::Bytebuf_Init(atf_amc::Bytebuf& bytebuf) {
     bytebuf.in_end = 0; // in: initialize
     bytebuf.in_start = 0; // in: initialize
     bytebuf.in_eof = false; // in: initialize
+    bytebuf.in_msgvalid = false; // in: initialize
+    bytebuf.in_msglen = 0; // in: initialize
     bytebuf.in_epoll_enable = true; // in: initialize
 }
 
@@ -892,12 +929,13 @@ void atf_amc::Bytebuf_Print(atf_amc::Bytebuf& row, algo::cstring& str) {
 // 
 algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
     algo::aryptr<char> ret;
-    if (in_N(bytebuf_dyn) == 0) {
+    if (!bytebuf_dyn.in_msgvalid) {
+        in_ScanMsg(bytebuf_dyn);
     }
     char *hdr = (char*)(bytebuf_dyn.in_elems + bytebuf_dyn.in_start);
-    if (in_N(bytebuf_dyn)) {
-        ret.elems = hdr; // if no elements, return value is NULL
-        ret.n_elems = in_N(bytebuf_dyn);
+    if (bytebuf_dyn.in_msgvalid) {
+        ret.elems = hdr;
+        ret.n_elems = bytebuf_dyn.in_msglen;
     }
     return ret;
 }
@@ -925,6 +963,20 @@ void atf_amc::in_Realloc(atf_amc::BytebufDyn& bytebuf_dyn, int new_max) {
 void atf_amc::in_RemoveAll(atf_amc::BytebufDyn& bytebuf_dyn) {
     bytebuf_dyn.in_start    = 0;
     bytebuf_dyn.in_end      = 0;
+    bytebuf_dyn.in_msgvalid = false;
+}
+
+// --- atf_amc.BytebufDyn.in.ScanMsg
+// Internal function to scan for a message
+// 
+static void atf_amc::in_ScanMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
+    i32 avail = in_N(bytebuf_dyn);
+    i32 msglen;
+    bool found = false;
+    found = avail>0;
+    msglen = avail;
+    bytebuf_dyn.in_msglen = msglen;
+    bytebuf_dyn.in_msgvalid = found;
 }
 
 // --- atf_amc.BytebufDyn.in.Shift
@@ -948,6 +1000,21 @@ void atf_amc::in_SkipBytes(atf_amc::BytebufDyn& bytebuf_dyn, int n) {
     int avail = bytebuf_dyn.in_end - bytebuf_dyn.in_start;
     n = i32_Min(n,avail);
     bytebuf_dyn.in_start += n;
+    bytebuf_dyn.in_msgvalid = false;
+}
+
+// --- atf_amc.BytebufDyn.in.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void atf_amc::in_SkipMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
+    if (bytebuf_dyn.in_msgvalid) {
+        int skip = bytebuf_dyn.in_msglen;
+        i32 start = bytebuf_dyn.in_start;
+        start += skip;
+        bytebuf_dyn.in_start = start;
+        bytebuf_dyn.in_msgvalid = false;
+        bytebuf_dyn.in_msglen   = 0; // reset message length -- important for delimited streams
+    }
 }
 
 // --- atf_amc.BytebufDyn.in.WriteAll
@@ -980,6 +1047,8 @@ void atf_amc::BytebufDyn_Init(atf_amc::BytebufDyn& bytebuf_dyn) {
     bytebuf_dyn.in_end = 0; // in: initialize
     bytebuf_dyn.in_start = 0; // in: initialize
     bytebuf_dyn.in_eof = false; // in: initialize
+    bytebuf_dyn.in_msgvalid = false; // in: initialize
+    bytebuf_dyn.in_msglen = 0; // in: initialize
     bytebuf_dyn.in_epoll_enable = true; // in: initialize
 }
 
@@ -6069,6 +6138,7 @@ static void atf_amc::amctest_LoadStatic() {
         ,{ "atfdb.amctest  amctest:linebuf_test3  comment:\"write a line in two phases, no message in between\"", atf_amc::amctest_linebuf_test3 }
         ,{ "atfdb.amctest  amctest:linebuf_test4  comment:\"Write an empty line, read line back\"", atf_amc::amctest_linebuf_test4 }
         ,{ "atfdb.amctest  amctest:linebuf_test5  comment:\"Line too large -- will never fit. Set EOF\"", atf_amc::amctest_linebuf_test5 }
+        ,{ "atfdb.amctest  amctest:msgbuf_custom  comment:\"Custom framer\"", atf_amc::amctest_msgbuf_custom }
         ,{ "atfdb.amctest  amctest:msgbuf_extra_test  comment:\"Write messages with extra len to temp buffer and read them\"", atf_amc::amctest_msgbuf_extra_test }
         ,{ "atfdb.amctest  amctest:msgbuf_test0  comment:\"initial state - no message\"", atf_amc::amctest_msgbuf_test0 }
         ,{ "atfdb.amctest  amctest:msgbuf_test1  comment:\"write message, read message back\"", atf_amc::amctest_msgbuf_test1 }
@@ -8379,6 +8449,25 @@ void atf_amc::FPerfSortString_Uninit(atf_amc::FPerfSortString& parent) {
     orig_RemoveAll(parent);
     // free memory for Tary atf_amc.FPerfSortString.orig
     algo_lib::malloc_FreeMem(parent.orig_elems, sizeof(atf_amc::Cstr)*parent.orig_max); // (atf_amc.FPerfSortString.orig)
+}
+
+// --- atf_amc.FPerfSortString..AssignOp
+atf_amc::FPerfSortString& atf_amc::FPerfSortString::operator =(const atf_amc::FPerfSortString &rhs) {
+    orig_Setary(*this, orig_Getary(const_cast<atf_amc::FPerfSortString&>(rhs)));
+    sorted1_Setary(*this, sorted1_Getary(const_cast<atf_amc::FPerfSortString&>(rhs)));
+    return *this;
+}
+
+// --- atf_amc.FPerfSortString..CopyCtor
+ atf_amc::FPerfSortString::FPerfSortString(const atf_amc::FPerfSortString &rhs) {
+    orig_elems 	= 0; // (atf_amc.FPerfSortString.orig)
+    orig_n     	= 0; // (atf_amc.FPerfSortString.orig)
+    orig_max   	= 0; // (atf_amc.FPerfSortString.orig)
+    orig_Setary(*this, orig_Getary(const_cast<atf_amc::FPerfSortString&>(rhs)));
+    sorted1_elems 	= 0; // (atf_amc.FPerfSortString.sorted1)
+    sorted1_n     	= 0; // (atf_amc.FPerfSortString.sorted1)
+    sorted1_max   	= 0; // (atf_amc.FPerfSortString.sorted1)
+    sorted1_Setary(*this, sorted1_Getary(const_cast<atf_amc::FPerfSortString&>(rhs)));
 }
 
 // --- atf_amc.FThashElem..Uninit
@@ -10795,7 +10884,7 @@ void atf_amc::Lary32_Uninit(atf_amc::Lary32& parent) {
 algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Linebuf& linebuf) {
     algo::aryptr<char> ret;
     if (!linebuf.in_msgvalid) {
-        in_Scanmsg(linebuf);
+        in_ScanMsg(linebuf);
     }
     char *hdr = (char*)(linebuf.in_elems + linebuf.in_start);
     if (linebuf.in_msgvalid) {
@@ -10812,13 +10901,12 @@ void atf_amc::in_RemoveAll(atf_amc::Linebuf& linebuf) {
     linebuf.in_start    = 0;
     linebuf.in_end      = 0;
     linebuf.in_msgvalid = false;
-    linebuf.in_msglen   = 0; // reset message length -- important for delimited streams
 }
 
-// --- atf_amc.Linebuf.in.Scanmsg
+// --- atf_amc.Linebuf.in.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_Scanmsg(atf_amc::Linebuf& linebuf) {
+static void atf_amc::in_ScanMsg(atf_amc::Linebuf& linebuf) {
     char *hdr = (char*)(linebuf.in_elems + linebuf.in_start);
     i32 avail = in_N(linebuf);
     i32 msglen;
@@ -10862,6 +10950,7 @@ void atf_amc::in_SkipBytes(atf_amc::Linebuf& linebuf, int n) {
     int avail = linebuf.in_end - linebuf.in_start;
     n = i32_Min(n,avail);
     linebuf.in_start += n;
+    linebuf.in_msgvalid = false;
 }
 
 // --- atf_amc.Linebuf.in.SkipMsg
@@ -11583,102 +11672,101 @@ void atf_amc::MsgLTV_Print(atf_amc::MsgLTV& row, algo::cstring& str) {
     }ind_end;
 }
 
-// --- atf_amc.Msgbuf.in.BeginRead
+// --- atf_amc.Msgbuf.in_buf.BeginRead
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
-// File descriptor becomes owned by atf_amc::Msgbuf.in via FIohook field.
+// File descriptor becomes owned by atf_amc::Msgbuf.in_buf via FIohook field.
 // Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
-void atf_amc::in_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
-    callback_Set1(msgbuf.in_iohook, msgbuf, atf_amc::cd_in_msg_Insert);
-    msgbuf.in_iohook.fildes = fd;
+void atf_amc::in_buf_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
+    callback_Set1(msgbuf.in_buf_iohook, msgbuf, atf_amc::cd_in_msg_Insert);
+    msgbuf.in_buf_iohook.fildes = fd;
     IOEvtFlags flags;
     read_Set(flags, true);
-    if (msgbuf.in_epoll_enable) {
-        algo_lib::IohookAdd(msgbuf.in_iohook, flags);
+    if (msgbuf.in_buf_epoll_enable) {
+        algo_lib::IohookAdd(msgbuf.in_buf_iohook, flags);
     } else {
         atf_amc::cd_in_msg_Insert(msgbuf);
     }
 }
 
-// --- atf_amc.Msgbuf.in.EndRead
+// --- atf_amc.Msgbuf.in_buf.EndRead
 // Set EOF flag
-void atf_amc::in_EndRead(atf_amc::Msgbuf& msgbuf) {
-    if (ValidQ(msgbuf.in_iohook.fildes)) {
-        msgbuf.in_eof = true;
+void atf_amc::in_buf_EndRead(atf_amc::Msgbuf& msgbuf) {
+    if (ValidQ(msgbuf.in_buf_iohook.fildes)) {
+        msgbuf.in_buf_eof = true;
         atf_amc::cd_in_msg_Insert(msgbuf);
     }
 }
 
-// --- atf_amc.Msgbuf.in.GetMsg
+// --- atf_amc.Msgbuf.in_buf.GetMsg
 // Detect incoming message in buffer and return it
 // Look for valid message at current position in the buffer.
 // If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is length-delimited based on field length field
 // 
-atf_amc::MsgHeader* atf_amc::in_GetMsg(atf_amc::Msgbuf& msgbuf) {
+atf_amc::MsgHeader* atf_amc::in_buf_GetMsg(atf_amc::Msgbuf& msgbuf) {
     atf_amc::MsgHeader* ret;
-    if (!msgbuf.in_msgvalid) {
-        in_Scanmsg(msgbuf);
-        if (!msgbuf.in_msgvalid) {
-            bool readable = in_Refill(msgbuf);
+    if (!msgbuf.in_buf_msgvalid) {
+        in_buf_ScanMsg(msgbuf);
+        if (!msgbuf.in_buf_msgvalid) {
+            bool readable = in_buf_Refill(msgbuf);
             if (readable) {
-                in_Scanmsg(msgbuf);
+                in_buf_ScanMsg(msgbuf);
             }
         }
     }
-    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(msgbuf.in_elems + msgbuf.in_start);
-    ret = msgbuf.in_msgvalid ? hdr : NULL;
+    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(msgbuf.in_buf_elems + msgbuf.in_buf_start);
+    ret = msgbuf.in_buf_msgvalid ? hdr : NULL;
     return ret;
 }
 
-// --- atf_amc.Msgbuf.in.Refill
+// --- atf_amc.Msgbuf.in_buf.Refill
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool atf_amc::in_Refill(atf_amc::Msgbuf& msgbuf) {
-    bool readable = ValidQ(msgbuf.in_iohook.fildes);
+bool atf_amc::in_buf_Refill(atf_amc::Msgbuf& msgbuf) {
+    bool readable = ValidQ(msgbuf.in_buf_iohook.fildes);
     if (readable) {
-        int fd     = msgbuf.in_iohook.fildes.value;
-        i32 max    = in_Max(msgbuf);
-        i32 end    = msgbuf.in_end;
-        i32 nbytes = end - msgbuf.in_start; // # bytes currently in buffer
+        int fd     = msgbuf.in_buf_iohook.fildes.value;
+        i32 max    = in_buf_Max(msgbuf);
+        i32 end    = msgbuf.in_buf_end;
+        i32 nbytes = end - msgbuf.in_buf_start; // # bytes currently in buffer
         i32 nfree  = max - end; // bytes available at the end of buffer
         if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)
-            in_Shift(msgbuf);
-            end = msgbuf.in_end;
+            in_buf_Shift(msgbuf);
+            end = msgbuf.in_buf_end;
             nfree = max - end;
         }
-        ssize_t ret         = read(fd, msgbuf.in_elems + end, nfree);
+        ssize_t ret         = read(fd, msgbuf.in_buf_elems + end, nfree);
         readable            = !(ret < 0 && errno == EAGAIN);
         bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
         bool eof            = error || (ret == 0 && nfree > 0);
-        msgbuf.in_end += i32_Max(ret,0); // new end of bytes
+        msgbuf.in_buf_end += i32_Max(ret,0); // new end of bytes
         if (error) {
-            msgbuf.in_err = algo::FromErrno(errno); // fetch errno
+            msgbuf.in_buf_err = algo::FromErrno(errno); // fetch errno
         }
-        msgbuf.in_eof |= eof;
+        msgbuf.in_buf_eof |= eof;
     }
-    if (!readable && msgbuf.in_epoll_enable) {
+    if (!readable && msgbuf.in_buf_epoll_enable) {
         atf_amc::cd_in_msg_Remove(msgbuf);
     }
     return readable;
 }
 
-// --- atf_amc.Msgbuf.in.RemoveAll
+// --- atf_amc.Msgbuf.in_buf.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_RemoveAll(atf_amc::Msgbuf& msgbuf) {
-    msgbuf.in_start    = 0;
-    msgbuf.in_end      = 0;
-    msgbuf.in_msgvalid = false;
-    msgbuf.in_msglen   = 0; // reset message length -- important for delimited streams
+void atf_amc::in_buf_RemoveAll(atf_amc::Msgbuf& msgbuf) {
+    msgbuf.in_buf_start    = 0;
+    msgbuf.in_buf_end      = 0;
+    msgbuf.in_buf_msgvalid = false;
 }
 
-// --- atf_amc.Msgbuf.in.Scanmsg
+// --- atf_amc.Msgbuf.in_buf.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_Scanmsg(atf_amc::Msgbuf& msgbuf) {
-    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(msgbuf.in_elems + msgbuf.in_start);
-    i32 avail = in_N(msgbuf);
+static void atf_amc::in_buf_ScanMsg(atf_amc::Msgbuf& msgbuf) {
+    atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(msgbuf.in_buf_elems + msgbuf.in_buf_start);
+    i32 avail = in_buf_N(msgbuf);
     i32 msglen;
     bool found = false;
     msglen = ssizeof(atf_amc::MsgHeader);
@@ -11686,70 +11774,222 @@ static void atf_amc::in_Scanmsg(atf_amc::Msgbuf& msgbuf) {
         msglen = i32((*hdr).length); // check rest of the message
     }
     found = msglen >= ssizeof(atf_amc::MsgHeader) && avail >= msglen;
-    if (msglen < ssizeof(atf_amc::MsgHeader) || msglen > in_Max(msgbuf)) {
-        msgbuf.in_eof = true; // cause user to detect eof
-        msgbuf.in_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
+    if (msglen < ssizeof(atf_amc::MsgHeader) || msglen > in_buf_Max(msgbuf)) {
+        msgbuf.in_buf_eof = true; // cause user to detect eof
+        msgbuf.in_buf_err = algo::FromErrno(E2BIG); // argument list too big -- closest error code
     }
-    msgbuf.in_msglen = msglen;
-    msgbuf.in_msgvalid = found;
+    msgbuf.in_buf_msglen = msglen;
+    msgbuf.in_buf_msgvalid = found;
 }
 
-// --- atf_amc.Msgbuf.in.Shift
+// --- atf_amc.Msgbuf.in_buf.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_Shift(atf_amc::Msgbuf& msgbuf) {
-    i32 start = msgbuf.in_start;
-    i32 bytes_n = msgbuf.in_end - start;
+static void atf_amc::in_buf_Shift(atf_amc::Msgbuf& msgbuf) {
+    i32 start = msgbuf.in_buf_start;
+    i32 bytes_n = msgbuf.in_buf_end - start;
     if (bytes_n > 0) {
-        memmove(msgbuf.in_elems, msgbuf.in_elems + start, bytes_n);
+        memmove(msgbuf.in_buf_elems, msgbuf.in_buf_elems + start, bytes_n);
     }
-    msgbuf.in_end = bytes_n;
-    msgbuf.in_start = 0;
+    msgbuf.in_buf_end = bytes_n;
+    msgbuf.in_buf_start = 0;
 }
 
-// --- atf_amc.Msgbuf.in.SkipMsg
+// --- atf_amc.Msgbuf.in_buf.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_SkipMsg(atf_amc::Msgbuf& msgbuf) {
-    if (msgbuf.in_msgvalid) {
-        int skip = msgbuf.in_msglen;
-        i32 start = msgbuf.in_start;
+void atf_amc::in_buf_SkipMsg(atf_amc::Msgbuf& msgbuf) {
+    if (msgbuf.in_buf_msgvalid) {
+        int skip = msgbuf.in_buf_msglen;
+        i32 start = msgbuf.in_buf_start;
         start += skip;
-        msgbuf.in_start = start;
-        msgbuf.in_msgvalid = false;
-        msgbuf.in_msglen   = 0; // reset message length -- important for delimited streams
+        msgbuf.in_buf_start = start;
+        msgbuf.in_buf_msgvalid = false;
+        msgbuf.in_buf_msglen   = 0; // reset message length -- important for delimited streams
     }
 }
 
-// --- atf_amc.Msgbuf.in.WriteAll
+// --- atf_amc.Msgbuf.in_buf.WriteAll
 // Attempt to write buffer contents to fd
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
-    int max = in_Max(msgbuf);
+bool atf_amc::in_buf_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+    int max = in_buf_Max(msgbuf);
     // check if message doesn't fit. if so, shift bytes over.
-    if (msgbuf.in_end + in_n > max) {
-        in_Shift(msgbuf);
+    if (msgbuf.in_buf_end + in_n > max) {
+        in_buf_Shift(msgbuf);
     }
     // now try to write the message.
-    i32 end = msgbuf.in_end;
+    i32 end = msgbuf.in_buf_end;
     bool fits = end + in_n <= max;
     if (fits && in_n > 0) {
-        memcpy(msgbuf.in_elems + end, in, in_n);
-        msgbuf.in_end = end + in_n;
+        memcpy(msgbuf.in_buf_elems + end, in, in_n);
+        msgbuf.in_buf_end = end + in_n;
     }
     return fits;
 }
 
-// --- atf_amc.Msgbuf.in.XrefMaybe
+// --- atf_amc.Msgbuf.in_buf.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool atf_amc::in_XrefMaybe(atf_amc::MsgHeader &row) {
+bool atf_amc::in_buf_XrefMaybe(atf_amc::MsgHeader &row) {
     bool retval = true;
     (void)row;
     return retval;
+}
+
+// --- atf_amc.Msgbuf.in_custom.BeginRead
+// Attach fbuf to Iohook for reading
+// Attach file descriptor and begin reading using edge-triggered epoll.
+// File descriptor becomes owned by atf_amc::Msgbuf.in_custom via FIohook field.
+// Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
+void atf_amc::in_custom_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
+    callback_Set1(msgbuf.in_custom_iohook, msgbuf, atf_amc::cd_in_msg_Insert);
+    msgbuf.in_custom_iohook.fildes = fd;
+    IOEvtFlags flags;
+    read_Set(flags, true);
+    if (msgbuf.in_custom_epoll_enable) {
+        algo_lib::IohookAdd(msgbuf.in_custom_iohook, flags);
+    } else {
+        atf_amc::cd_in_msg_Insert(msgbuf);
+    }
+}
+
+// --- atf_amc.Msgbuf.in_custom.EndRead
+// Set EOF flag
+void atf_amc::in_custom_EndRead(atf_amc::Msgbuf& msgbuf) {
+    if (ValidQ(msgbuf.in_custom_iohook.fildes)) {
+        msgbuf.in_custom_eof = true;
+        atf_amc::cd_in_msg_Insert(msgbuf);
+    }
+}
+
+// --- atf_amc.Msgbuf.in_custom.GetMsg
+// Detect incoming message in buffer and return it
+// Look for valid message at current position in the buffer.
+// If message is already there, return a pointer to it. Do not skip message (call SkipMsg to do that).
+// If there is no message, read once from underlying file descriptor and try again.
+// The message boundary is determined by a custom ScanMsg function implemented by user
+// 
+algo::aryptr<char> atf_amc::in_custom_GetMsg(atf_amc::Msgbuf& msgbuf) {
+    algo::aryptr<char> ret;
+    if (!msgbuf.in_custom_msgvalid) {
+        in_custom_ScanMsg(msgbuf);
+        if (!msgbuf.in_custom_msgvalid) {
+            bool readable = in_custom_Refill(msgbuf);
+            if (readable) {
+                in_custom_ScanMsg(msgbuf);
+            }
+        }
+    }
+    char *hdr = (char*)(msgbuf.in_custom_elems + msgbuf.in_custom_start);
+    if (msgbuf.in_custom_msgvalid) {
+        ret.elems = hdr;
+        ret.n_elems = msgbuf.in_custom_msglen;
+    }
+    return ret;
+}
+
+// --- atf_amc.Msgbuf.in_custom.Refill
+// Refill buffer. Return false if no further refill possible (input buffer exhausted)
+bool atf_amc::in_custom_Refill(atf_amc::Msgbuf& msgbuf) {
+    bool readable = ValidQ(msgbuf.in_custom_iohook.fildes);
+    if (readable) {
+        int fd     = msgbuf.in_custom_iohook.fildes.value;
+        i32 max    = in_custom_Max(msgbuf);
+        i32 end    = msgbuf.in_custom_end;
+        i32 nbytes = end - msgbuf.in_custom_start; // # bytes currently in buffer
+        i32 nfree  = max - end; // bytes available at the end of buffer
+        if (nbytes == 0 || nfree == 0) { // make more room for reading (or take advantage of free shift)
+            in_custom_Shift(msgbuf);
+            end = msgbuf.in_custom_end;
+            nfree = max - end;
+        }
+        ssize_t ret         = read(fd, msgbuf.in_custom_elems + end, nfree);
+        readable            = !(ret < 0 && errno == EAGAIN);
+        bool error          = ret < 0 && errno != EAGAIN; // detect permanent error on this fd
+        bool eof            = error || (ret == 0 && nfree > 0);
+        msgbuf.in_custom_end += i32_Max(ret,0); // new end of bytes
+        if (error) {
+            msgbuf.in_custom_err = algo::FromErrno(errno); // fetch errno
+        }
+        msgbuf.in_custom_eof |= eof;
+    }
+    if (!readable && msgbuf.in_custom_epoll_enable) {
+        atf_amc::cd_in_msg_Remove(msgbuf);
+    }
+    return readable;
+}
+
+// --- atf_amc.Msgbuf.in_custom.RemoveAll
+// Empty bfufer
+// Discard contents of the buffer.
+void atf_amc::in_custom_RemoveAll(atf_amc::Msgbuf& msgbuf) {
+    msgbuf.in_custom_start    = 0;
+    msgbuf.in_custom_end      = 0;
+    msgbuf.in_custom_msgvalid = false;
+}
+
+// --- atf_amc.Msgbuf.in_custom.Shift
+// Internal function to shift data left
+// Shift existing bytes over to the beginning of the buffer
+static void atf_amc::in_custom_Shift(atf_amc::Msgbuf& msgbuf) {
+    i32 start = msgbuf.in_custom_start;
+    i32 bytes_n = msgbuf.in_custom_end - start;
+    if (bytes_n > 0) {
+        memmove(msgbuf.in_custom_elems, msgbuf.in_custom_elems + start, bytes_n);
+    }
+    msgbuf.in_custom_end = bytes_n;
+    msgbuf.in_custom_start = 0;
+}
+
+// --- atf_amc.Msgbuf.in_custom.SkipBytes
+// Skip N bytes when reading
+// Mark some buffer contents as read.
+// 
+void atf_amc::in_custom_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) {
+    int avail = msgbuf.in_custom_end - msgbuf.in_custom_start;
+    n = i32_Min(n,avail);
+    msgbuf.in_custom_start += n;
+    msgbuf.in_custom_msgvalid = false;
+}
+
+// --- atf_amc.Msgbuf.in_custom.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void atf_amc::in_custom_SkipMsg(atf_amc::Msgbuf& msgbuf) {
+    if (msgbuf.in_custom_msgvalid) {
+        int skip = msgbuf.in_custom_msglen;
+        i32 start = msgbuf.in_custom_start;
+        start += skip;
+        msgbuf.in_custom_start = start;
+        msgbuf.in_custom_msgvalid = false;
+        msgbuf.in_custom_msglen   = 0; // reset message length -- important for delimited streams
+    }
+}
+
+// --- atf_amc.Msgbuf.in_custom.WriteAll
+// Attempt to write buffer contents to fd
+// Write bytes to the buffer. If the entire block is written, return true,
+// Otherwise return false.
+// Bytes in the buffer are potentially shifted left to make room for the message.
+// 
+bool atf_amc::in_custom_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+    int max = in_custom_Max(msgbuf);
+    // check if message doesn't fit. if so, shift bytes over.
+    if (msgbuf.in_custom_end + in_n > max) {
+        in_custom_Shift(msgbuf);
+    }
+    // now try to write the message.
+    i32 end = msgbuf.in_custom_end;
+    bool fits = end + in_n <= max;
+    if (fits && in_n > 0) {
+        memcpy(msgbuf.in_custom_elems + end, in, in_n);
+        msgbuf.in_custom_end = end + in_n;
+    }
+    return fits;
 }
 
 // --- atf_amc.Msgbuf.out_extra.RemoveAll
@@ -11758,6 +11998,7 @@ bool atf_amc::in_XrefMaybe(atf_amc::MsgHeader &row) {
 void atf_amc::out_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) {
     msgbuf.out_extra_start    = 0;
     msgbuf.out_extra_end      = 0;
+    msgbuf.out_extra_msgvalid = false;
 }
 
 // --- atf_amc.Msgbuf.out_extra.Shift
@@ -11781,6 +12022,21 @@ void atf_amc::out_extra_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) {
     int avail = msgbuf.out_extra_end - msgbuf.out_extra_start;
     n = i32_Min(n,avail);
     msgbuf.out_extra_start += n;
+    msgbuf.out_extra_msgvalid = false;
+}
+
+// --- atf_amc.Msgbuf.out_extra.SkipMsg
+// Skip current message, if any
+// Skip current message, if any.
+void atf_amc::out_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) {
+    if (msgbuf.out_extra_msgvalid) {
+        int skip = msgbuf.out_extra_msglen;
+        i32 start = msgbuf.out_extra_start;
+        start += skip;
+        msgbuf.out_extra_start = start;
+        msgbuf.out_extra_msgvalid = false;
+        msgbuf.out_extra_msglen   = 0; // reset message length -- important for delimited streams
+    }
 }
 
 // --- atf_amc.Msgbuf.out_extra.WriteAll
@@ -11821,7 +12077,7 @@ bool atf_amc::out_extra_WriteMsg(atf_amc::Msgbuf& msgbuf, atf_amc::MsgHdrLT &msg
 atf_amc::MsgHdrLT* atf_amc::in_extra_GetMsg(atf_amc::Msgbuf& msgbuf) {
     atf_amc::MsgHdrLT* ret;
     if (!msgbuf.in_extra_msgvalid) {
-        in_extra_Scanmsg(msgbuf);
+        in_extra_ScanMsg(msgbuf);
     }
     atf_amc::MsgHdrLT *hdr = (atf_amc::MsgHdrLT*)(msgbuf.in_extra_elems + msgbuf.in_extra_start);
     ret = msgbuf.in_extra_msgvalid ? hdr : NULL;
@@ -11835,13 +12091,12 @@ void atf_amc::in_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) {
     msgbuf.in_extra_start    = 0;
     msgbuf.in_extra_end      = 0;
     msgbuf.in_extra_msgvalid = false;
-    msgbuf.in_extra_msglen   = 0; // reset message length -- important for delimited streams
 }
 
-// --- atf_amc.Msgbuf.in_extra.Scanmsg
+// --- atf_amc.Msgbuf.in_extra.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_extra_Scanmsg(atf_amc::Msgbuf& msgbuf) {
+static void atf_amc::in_extra_ScanMsg(atf_amc::Msgbuf& msgbuf) {
     atf_amc::MsgHdrLT *hdr = (atf_amc::MsgHdrLT*)(msgbuf.in_extra_elems + msgbuf.in_extra_start);
     i32 avail = in_extra_N(msgbuf);
     i32 msglen;
@@ -11911,15 +12166,23 @@ bool atf_amc::in_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 // --- atf_amc.Msgbuf..Init
 // Set all fields to initial values.
 void atf_amc::Msgbuf_Init(atf_amc::Msgbuf& msgbuf) {
-    msgbuf.in_end = 0; // in: initialize
-    msgbuf.in_start = 0; // in: initialize
-    msgbuf.in_eof = false; // in: initialize
-    msgbuf.in_msgvalid = false; // in: initialize
-    msgbuf.in_msglen = 0; // in: initialize
-    msgbuf.in_epoll_enable = true; // in: initialize
+    msgbuf.in_buf_end = 0; // in_buf: initialize
+    msgbuf.in_buf_start = 0; // in_buf: initialize
+    msgbuf.in_buf_eof = false; // in_buf: initialize
+    msgbuf.in_buf_msgvalid = false; // in_buf: initialize
+    msgbuf.in_buf_msglen = 0; // in_buf: initialize
+    msgbuf.in_buf_epoll_enable = true; // in_buf: initialize
+    msgbuf.in_custom_end = 0; // in_custom: initialize
+    msgbuf.in_custom_start = 0; // in_custom: initialize
+    msgbuf.in_custom_eof = false; // in_custom: initialize
+    msgbuf.in_custom_msgvalid = false; // in_custom: initialize
+    msgbuf.in_custom_msglen = 0; // in_custom: initialize
+    msgbuf.in_custom_epoll_enable = true; // in_custom: initialize
     msgbuf.out_extra_end = 0; // out_extra: initialize
     msgbuf.out_extra_start = 0; // out_extra: initialize
     msgbuf.out_extra_eof = false; // out_extra: initialize
+    msgbuf.out_extra_msgvalid = false; // out_extra: initialize
+    msgbuf.out_extra_msglen = 0; // out_extra: initialize
     msgbuf.out_extra_epoll_enable = true; // out_extra: initialize
     msgbuf.in_extra_end = 0; // in_extra: initialize
     msgbuf.in_extra_start = 0; // in_extra: initialize
@@ -14532,7 +14795,7 @@ bool atf_amc::ch_SetnumMaybe(atf_amc::RnullStr6_U32& parent, i64 rhs) {
 }
 
 // --- atf_amc.RnullStr6_U32..Hash
-u32 atf_amc::RnullStr6_U32_Hash(u32 prev, const atf_amc::RnullStr6_U32 & rhs) {
+u32 atf_amc::RnullStr6_U32_Hash(u32 prev, const atf_amc::RnullStr6_U32& rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -14640,7 +14903,7 @@ bool atf_amc::ch_SetnumMaybe(atf_amc::RpasU32Str6& parent, i64 rhs) {
 }
 
 // --- atf_amc.RpasU32Str6..Hash
-u32 atf_amc::RpasU32Str6_Hash(u32 prev, const atf_amc::RpasU32Str6 & rhs) {
+u32 atf_amc::RpasU32Str6_Hash(u32 prev, const atf_amc::RpasU32Str6& rhs) {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -15179,6 +15442,20 @@ void atf_amc::TaryU32_Uninit(atf_amc::TaryU32& parent) {
     algo_lib::malloc_FreeMem(parent.tary_u32_elems, sizeof(u32)*parent.tary_u32_max); // (atf_amc.TaryU32.tary_u32)
 }
 
+// --- atf_amc.TaryU32..AssignOp
+atf_amc::TaryU32& atf_amc::TaryU32::operator =(const atf_amc::TaryU32 &rhs) {
+    tary_u32_Setary(*this, tary_u32_Getary(const_cast<atf_amc::TaryU32&>(rhs)));
+    return *this;
+}
+
+// --- atf_amc.TaryU32..CopyCtor
+ atf_amc::TaryU32::TaryU32(const atf_amc::TaryU32 &rhs) {
+    tary_u32_elems 	= 0; // (atf_amc.TaryU32.tary_u32)
+    tary_u32_n     	= 0; // (atf_amc.TaryU32.tary_u32)
+    tary_u32_max   	= 0; // (atf_amc.TaryU32.tary_u32)
+    tary_u32_Setary(*this, tary_u32_Getary(const_cast<atf_amc::TaryU32&>(rhs)));
+}
+
 // --- atf_amc.TaryU8.ary.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -15328,6 +15605,20 @@ void atf_amc::TaryU8_Uninit(atf_amc::TaryU8& parent) {
     ary_RemoveAll(parent);
     // free memory for Tary atf_amc.TaryU8.ary
     algo_lib::malloc_FreeMem(parent.ary_elems, sizeof(u8)*parent.ary_max); // (atf_amc.TaryU8.ary)
+}
+
+// --- atf_amc.TaryU8..AssignOp
+atf_amc::TaryU8& atf_amc::TaryU8::operator =(const atf_amc::TaryU8 &rhs) {
+    ary_Setary(*this, ary_Getary(const_cast<atf_amc::TaryU8&>(rhs)));
+    return *this;
+}
+
+// --- atf_amc.TaryU8..CopyCtor
+ atf_amc::TaryU8::TaryU8(const atf_amc::TaryU8 &rhs) {
+    ary_elems 	= 0; // (atf_amc.TaryU8.ary)
+    ary_n     	= 0; // (atf_amc.TaryU8.ary)
+    ary_max   	= 0; // (atf_amc.TaryU8.ary)
+    ary_Setary(*this, ary_Getary(const_cast<atf_amc::TaryU8&>(rhs)));
 }
 
 // --- atf_amc.TestRegx1.val.Print

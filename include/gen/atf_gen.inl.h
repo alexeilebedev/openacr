@@ -25,15 +25,6 @@
 #pragma once
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline atf::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf::FieldId::FieldId(atf_FieldIdEnum arg) { this->value = i32(arg); }
-inline atf::FieldId::FieldId() {
-    atf::FieldId_Init(*this);
-}
-
 
 // --- atf.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -48,7 +39,7 @@ inline void atf::value_SetEnum(atf::FieldId& parent, atf_FieldIdEnum rhs) {
 }
 
 // --- atf.FieldId.value.Cast
-inline atf::FieldId::operator atf_FieldIdEnum () const {
+inline  atf::FieldId::operator atf_FieldIdEnum() const {
     return atf_FieldIdEnum((*this).value);
 }
 
@@ -57,15 +48,22 @@ inline atf::FieldId::operator atf_FieldIdEnum () const {
 inline void atf::FieldId_Init(atf::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline atf::Testresult::Testresult(u32                            in_value)
-    : value(in_value)
-{
-}
-inline atf::Testresult::Testresult(atf_TestresultEnum arg) { this->value = u32(arg); }
-inline atf::Testresult::Testresult() {
-    atf::Testresult_Init(*this);
+
+// --- atf.FieldId..Ctor
+inline  atf::FieldId::FieldId() {
+    atf::FieldId_Init(*this);
 }
 
+// --- atf.FieldId..FieldwiseCtor
+inline  atf::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf.FieldId..EnumCtor
+inline  atf::FieldId::FieldId(atf_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- atf.Testresult.value.GetEnum
 // Get value of field as enum type
@@ -80,7 +78,7 @@ inline void atf::value_SetEnum(atf::Testresult& parent, atf_TestresultEnum rhs) 
 }
 
 // --- atf.Testresult.value.Cast
-inline atf::Testresult::operator atf_TestresultEnum () const {
+inline  atf::Testresult::operator atf_TestresultEnum() const {
     return atf_TestresultEnum((*this).value);
 }
 
@@ -89,22 +87,22 @@ inline atf::Testresult::operator atf_TestresultEnum () const {
 inline void atf::Testresult_Init(atf::Testresult& parent) {
     parent.value = u32(0);
 }
-inline atf::Testrun::Testrun(const algo::strptr&            in_testrun
-        ,const atf::Testresult&         in_testresult
-        ,u64                            in_n_step
-        ,u64                            in_n_cmp
-        ,const algo::strptr&            in_comment)
-    : testrun(in_testrun)
-    , testresult(in_testresult)
-    , n_step(in_n_step)
-    , n_cmp(in_n_cmp)
-    , comment(in_comment)
-{
-}
-inline atf::Testrun::Testrun() {
-    atf::Testrun_Init(*this);
+
+// --- atf.Testresult..Ctor
+inline  atf::Testresult::Testresult() {
+    atf::Testresult_Init(*this);
 }
 
+// --- atf.Testresult..FieldwiseCtor
+inline  atf::Testresult::Testresult(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf.Testresult..EnumCtor
+inline  atf::Testresult::Testresult(atf_TestresultEnum arg) {
+    this->value = u32(arg);
+}
 
 // --- atf.Testrun..Init
 // Set all fields to initial values.
@@ -112,6 +110,21 @@ inline void atf::Testrun_Init(atf::Testrun& parent) {
     parent.testresult = atf_TestresultEnum(0);
     parent.n_step = u64(0);
     parent.n_cmp = u64(0);
+}
+
+// --- atf.Testrun..Ctor
+inline  atf::Testrun::Testrun() {
+    atf::Testrun_Init(*this);
+}
+
+// --- atf.Testrun..FieldwiseCtor
+inline  atf::Testrun::Testrun(const algo::strptr& in_testrun, const atf::Testresult& in_testresult, u64 in_n_step, u64 in_n_cmp, const algo::strptr& in_comment)
+    : testrun(in_testrun)
+    , testresult(in_testresult)
+    , n_step(in_n_step)
+    , n_cmp(in_n_cmp)
+    , comment(in_comment)
+ {
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf::FieldId &row) {// cfmt:atf.FieldId.String

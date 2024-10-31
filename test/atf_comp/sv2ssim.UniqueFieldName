@@ -2,9 +2,9 @@ a.B  _1:2  _12:2  _13:2  _14:2  field:2  field2:""
 sv2ssim.report  n_line:2  n_nonempty_line:2  n_field:6  n_wideline:1
 dmmeta.ctype  ctype:a.B  comment:""
 dmmeta.cfmt  cfmt:a.B.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
-dmmeta.field  field:a.B._1  arg:u32  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B._12  arg:u32  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B._13  arg:u32  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B._14  arg:u32  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B.field  arg:u32  reftype:Val  dflt:""  comment:""
-dmmeta.field  field:a.B.field2  arg:bool  reftype:Val  dflt:""  comment:""
+dmmeta.field  field:a.B._1  arg:u32  reftype:Val  dflt:""  comment:_1
+dmmeta.field  field:a.B._12  arg:u32  reftype:Val  dflt:""  comment:_12
+dmmeta.field  field:a.B._13  arg:u32  reftype:Val  dflt:""  comment:_13
+dmmeta.field  field:a.B._14  arg:u32  reftype:Val  dflt:""  comment:_14
+dmmeta.field  field:a.B.field  arg:u32  reftype:Val  dflt:""  comment:field
+dmmeta.field  field:a.B.field2  arg:bool  reftype:Val  dflt:""  comment:field2

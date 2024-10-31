@@ -380,9 +380,10 @@ i64 algo::GetFileSize(Fildes fd) NOTHROW {
 
 // -----------------------------------------------------------------------------
 
-// Strip directory name in PATH. and return the rest
-// This is equivalent to Pathcomp(path,"/RR");
-// c:\dir\file.txt -> file
+// Strip extension from PATH, then strip directory name from PATH,
+// and return the remainder.
+// c.d      -> c
+// /a/b/c.d -> c
 strptr algo::GetFileName(const strptr& path) NOTHROW {
     return StripDirName(StripExt(path));
 }
@@ -401,6 +402,8 @@ tempstr algo::ReplaceFileName(const strptr& a, const strptr& b) {
 
 // -----------------------------------------------------------------------------
 
+// Return modification time of file FILENAME
+// If file is not found or is not accessible, return 0.
 algo::UnTime algo::ModTime(strptr filename) {
     StatStruct S;
     UnTime ret;
@@ -412,6 +415,10 @@ algo::UnTime algo::ModTime(strptr filename) {
 
 // -----------------------------------------------------------------------------
 
+// Remove directory.
+// Return TRUE if operaiton succeeds
+// The function will fail if the directory is not empty. For that case,
+// use RemDirRecurse.
 bool algo::RemDir(strptr name) {
     bool ok = rmdir(TOCSTR(name))==0;
     return ok;
@@ -442,6 +449,7 @@ bool algo::RemDirRecurse(strptr name, bool remove_topmost) {
 
 // -----------------------------------------------------------------------------
 
+// User-defined cleanup trigger for dir_handle field of ctype:algo.DirEntry
 void algo::dir_handle_Cleanup(algo::DirEntry &dir_entry) {
     if (dir_entry.dir_handle) {
         closedir(dir_entry.dir_handle);
@@ -450,6 +458,7 @@ void algo::dir_handle_Cleanup(algo::DirEntry &dir_entry) {
 
 // -----------------------------------------------------------------------------
 
+// User-defined cleanup trigger fildes field of ctype:algo_lib.FLockfile
 void algo_lib::fildes_Cleanup(algo_lib::FLockfile &lockfile) {
     if (ValidQ(lockfile.fildes.fd)) {
         (void)flock(lockfile.fildes.fd.value, LOCK_UN);

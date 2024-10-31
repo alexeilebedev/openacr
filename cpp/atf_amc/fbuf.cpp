@@ -30,7 +30,7 @@ void atf_amc::cd_in_msg_Step() {
 
 void atf_amc::amctest_msgbuf_test0() {
     atf_amc::Msgbuf msgbuf;
-    atf_amc::MsgHeader *msg = in_GetMsg(msgbuf);
+    atf_amc::MsgHeader *msg = in_buf_GetMsg(msgbuf);
     vrfy_(msg == NULL);
 }
 
@@ -38,11 +38,11 @@ void atf_amc::amctest_msgbuf_test1() {
     atf_amc::Msgbuf msgbuf;
     atf_amc::MsgHeader *msg;
     atf_amc::MsgHeader hdr(atf_amc::MsgType(1), atf_amc::MsgLength(4));
-    in_WriteAll(msgbuf, (u8*)&hdr, hdr.length);
-    msg = in_GetMsg(msgbuf);
+    in_buf_WriteAll(msgbuf, (u8*)&hdr, hdr.length);
+    msg = in_buf_GetMsg(msgbuf);
     vrfy_(msg->type == hdr.type && msg->length == hdr.length);
-    in_SkipMsg(msgbuf);
-    msg = in_GetMsg(msgbuf);
+    in_buf_SkipMsg(msgbuf);
+    msg = in_buf_GetMsg(msgbuf);
     vrfy_(msg == NULL);
 }
 
@@ -50,8 +50,8 @@ void atf_amc::amctest_msgbuf_test1_1() {
     atf_amc::Msgbuf msgbuf;
     atf_amc::MsgHeader *msg;
     atf_amc::MsgHeader hdr(atf_amc::MsgType(1), atf_amc::MsgLength(3));
-    in_WriteAll(msgbuf, (u8*)&hdr, hdr.length);
-    msg = in_GetMsg(msgbuf);
+    in_buf_WriteAll(msgbuf, (u8*)&hdr, hdr.length);
+    msg = in_buf_GetMsg(msgbuf);
     vrfy_(msg == NULL);
 }
 
@@ -59,11 +59,11 @@ void atf_amc::amctest_msgbuf_test1_2() {
     atf_amc::Msgbuf msgbuf;
     atf_amc::MsgHeader *msg;
     atf_amc::MsgHeader hdr(atf_amc::MsgType(1), atf_amc::MsgLength(4));
-    in_WriteAll(msgbuf, (u8*)&hdr, hdr.length);
-    msg = in_GetMsg(msgbuf);
+    in_buf_WriteAll(msgbuf, (u8*)&hdr, hdr.length);
+    msg = in_buf_GetMsg(msgbuf);
     vrfyeq_((msg==NULL), false);
-    in_RemoveAll(msgbuf);
-    msg = in_GetMsg(msgbuf);
+    in_buf_RemoveAll(msgbuf);
+    msg = in_buf_GetMsg(msgbuf);
     vrfyeq_((msg==NULL), true);
 }
 
@@ -71,16 +71,16 @@ void atf_amc::amctest_msgbuf_test2() {
     atf_amc::Msgbuf msgbuf;
     atf_amc::MsgHeader *msg;
     atf_amc::MsgHeader hdr(atf_amc::MsgType(1), atf_amc::MsgLength(4));
-    in_WriteAll(msgbuf, (u8*)&hdr, hdr.length);
-    in_WriteAll(msgbuf, (u8*)&hdr, hdr.length-1);
-    msg = in_GetMsg(msgbuf);
+    in_buf_WriteAll(msgbuf, (u8*)&hdr, hdr.length);
+    in_buf_WriteAll(msgbuf, (u8*)&hdr, hdr.length-1);
+    msg = in_buf_GetMsg(msgbuf);
     vrfy_(msg->type == hdr.type && msg->length == hdr.length);
-    in_SkipMsg(msgbuf);
-    msg = in_GetMsg(msgbuf);
+    in_buf_SkipMsg(msgbuf);
+    msg = in_buf_GetMsg(msgbuf);
     vrfy_(msg == NULL);
-    msgbuf.in_eof = true;
-    in_GetMsg(msgbuf);
-    vrfy_(msgbuf.in_eof && !msgbuf.in_msgvalid);
+    msgbuf.in_buf_eof = true;
+    in_buf_GetMsg(msgbuf);
+    vrfy_(msgbuf.in_buf_eof && !msgbuf.in_buf_msgvalid);
 }
 
 void atf_amc::amctest_msgbuf_test3() {
@@ -89,18 +89,18 @@ void atf_amc::amctest_msgbuf_test3() {
     atf_amc::MsgHeader hdr1(atf_amc::MsgType(1), atf_amc::MsgLength(4));
     atf_amc::MsgHeader hdr2(atf_amc::MsgType(2), atf_amc::MsgLength(4));
     atf_amc::MsgHeader hdr3(atf_amc::MsgType(3), atf_amc::MsgLength(4));
-    in_WriteAll(msgbuf, (u8*)&hdr1, hdr1.length);
-    in_WriteAll(msgbuf, (u8*)&hdr2, hdr2.length);
-    in_WriteAll(msgbuf, (u8*)&hdr3, hdr3.length);
-    msg = in_GetMsg(msgbuf);
+    in_buf_WriteAll(msgbuf, (u8*)&hdr1, hdr1.length);
+    in_buf_WriteAll(msgbuf, (u8*)&hdr2, hdr2.length);
+    in_buf_WriteAll(msgbuf, (u8*)&hdr3, hdr3.length);
+    msg = in_buf_GetMsg(msgbuf);
     vrfy_(msg->type == hdr1.type && msg->length == hdr1.length);
-    in_SkipMsg(msgbuf);
-    msg = in_GetMsg(msgbuf);
+    in_buf_SkipMsg(msgbuf);
+    msg = in_buf_GetMsg(msgbuf);
     vrfy_(msg->type == hdr2.type && msg->length == hdr2.length);
-    in_SkipMsg(msgbuf);
-    msg = in_GetMsg(msgbuf);
+    in_buf_SkipMsg(msgbuf);
+    msg = in_buf_GetMsg(msgbuf);
     vrfy_(msg->type == hdr3.type && msg->length == hdr3.length);
-    in_SkipMsg(msgbuf);
+    in_buf_SkipMsg(msgbuf);
 }
 
 void atf_amc::amctest_msgbuf_test4() {
@@ -112,25 +112,25 @@ void atf_amc::amctest_msgbuf_test4() {
     atf_amc::MsgHeader *hdr=new (buf) atf_amc::MsgHeader(atf_amc::MsgType(1), atf_amc::MsgLength(4));
     // second message - 64 bytes
     atf_amc::MsgHeader *hdr2=new (buf+4) atf_amc::MsgHeader(atf_amc::MsgType(2), atf_amc::MsgLength(64));
-    in_WriteAll(msgbuf, (u8*)hdr, 4); // write first message in full
-    in_WriteAll(msgbuf, (u8*)hdr2, 60); // write second message partially
+    in_buf_WriteAll(msgbuf, (u8*)hdr, 4); // write first message in full
+    in_buf_WriteAll(msgbuf, (u8*)hdr2, 60); // write second message partially
     //
-    msg = in_GetMsg(msgbuf); // get first message
+    msg = in_buf_GetMsg(msgbuf); // get first message
     vrfyeq_(msg->type, hdr->type); //it should be OK
     vrfyeq_(msg->length, hdr->length); //it should be OK
     vrfyeq_(memcmp(msg, hdr, hdr->length), 0);
-    in_SkipMsg(msgbuf);//skip first message
+    in_buf_SkipMsg(msgbuf);//skip first message
 
-    msg = in_GetMsg(msgbuf);// try to access next message
+    msg = in_buf_GetMsg(msgbuf);// try to access next message
     vrfyeq_((u64)msg, (u64)0);// message should not be there
 
-    in_WriteAll(msgbuf, ((u8*)hdr2)+60, 4);// write remainder of second message
-    msg = in_GetMsg(msgbuf);// try to access second message
+    in_buf_WriteAll(msgbuf, ((u8*)hdr2)+60, 4);// write remainder of second message
+    msg = in_buf_GetMsg(msgbuf);// try to access second message
     vrfyeq_(msg->type, hdr2->type);// message is there
     vrfyeq_(msg->length, hdr2->length);// message is there
     vrfyeq_(memcmp(msg, hdr2, hdr2->length), 0);
-    in_SkipMsg(msgbuf);// skip second message
-    msg = in_GetMsg(msgbuf);// try to access third (non-existent) message
+    in_buf_SkipMsg(msgbuf);// skip second message
+    msg = in_buf_GetMsg(msgbuf);// try to access third (non-existent) message
     vrfyeq_((u64)msg, (u64)0);// it shouldn't be there
 }
 
@@ -139,14 +139,14 @@ void atf_amc::amctest_msgbuf_test5() {
 
     atf_amc::MsgHeader hdr;
     hdr.length.value = sizeof(hdr);
-    in_WriteAll(msgbuf, (u8*)&hdr, sizeof(hdr));// write a message into the buffer
+    in_buf_WriteAll(msgbuf, (u8*)&hdr, sizeof(hdr));// write a message into the buffer
     cd_in_msg_Insert(msgbuf);
     vrfyeq_(cd_in_msg_InLlistQ(msgbuf), true);
-    atf_amc::MsgHeader *msg = in_GetMsg(msgbuf);// access message
+    atf_amc::MsgHeader *msg = in_buf_GetMsg(msgbuf);// access message
     vrfyeq_(msg !=NULL, true);// message must be there
-    in_SkipMsg(msgbuf);// skip it
+    in_buf_SkipMsg(msgbuf);// skip it
     vrfyeq_(cd_in_msg_InLlistQ(msgbuf), true);// still readable
-    msg = in_GetMsg(msgbuf);// access message
+    msg = in_buf_GetMsg(msgbuf);// access message
     vrfyeq_(msg !=NULL, false);// message is not there
     vrfyeq_(cd_in_msg_InLlistQ(msgbuf), false);// must not be readable
 }
@@ -156,11 +156,11 @@ void atf_amc::amctest_msgbuf_test6() {
 
     atf_amc::MsgHeader hdr;
     hdr.length.value = 1;
-    in_WriteAll(msgbuf, (u8*)&hdr, sizeof(hdr));// write a message into the buffer
-    atf_amc::MsgHeader *msg = in_GetMsg(msgbuf);// access message
+    in_buf_WriteAll(msgbuf, (u8*)&hdr, sizeof(hdr));// write a message into the buffer
+    atf_amc::MsgHeader *msg = in_buf_GetMsg(msgbuf);// access message
     vrfyeq_(msg==NULL, true);// message must NOT be there
-    vrfyeq_(msgbuf.in_eof, true);// eof flag must be set
-    vrfyeq_(msgbuf.in_err.value != 0, true);// error flag must be set
+    vrfyeq_(msgbuf.in_buf_eof, true);// eof flag must be set
+    vrfyeq_(msgbuf.in_buf_err.value != 0, true);// error flag must be set
 }
 
 void atf_amc::amctest_msgbuf_test7() {
@@ -168,11 +168,11 @@ void atf_amc::amctest_msgbuf_test7() {
 
     atf_amc::MsgHeader hdr;
     hdr.length.value = 65;
-    in_WriteAll(msgbuf, (u8*)&hdr, sizeof(hdr));// write a message into the buffer
-    atf_amc::MsgHeader *msg = in_GetMsg(msgbuf);// access message
+    in_buf_WriteAll(msgbuf, (u8*)&hdr, sizeof(hdr));// write a message into the buffer
+    atf_amc::MsgHeader *msg = in_buf_GetMsg(msgbuf);// access message
     vrfyeq_(msg==NULL, true);// message must NOT be there
-    vrfyeq_(msgbuf.in_eof, true);// eof flag must be set
-    vrfyeq_(msgbuf.in_err.value != 0, true);// error flag must be set
+    vrfyeq_(msgbuf.in_buf_eof, true);// eof flag must be set
+    vrfyeq_(msgbuf.in_buf_err.value != 0, true);// error flag must be set
 }
 
 void atf_amc::amctest_msgbuf_test8() {
@@ -186,26 +186,26 @@ void atf_amc::amctest_msgbuf_test8() {
     (void)algo::SetBlockingMode(write_fd, false);
 
     atf_amc::Msgbuf msgbuf;
-    in_BeginRead(msgbuf, read_fd);// set up iohook
+    in_buf_BeginRead(msgbuf, read_fd);// set up iohook
     // #AL# on platforms like Windows, the pipe may be
     // market readable in IoHookAdd. until this is fixed, normalize desired state.
     // it doesn't affect correctness
     cd_in_msg_Remove(msgbuf);
-    msgbuf.in_iohook.nodelete=true;
+    msgbuf.in_buf_iohook.nodelete=true;
 
     atf_amc::MsgHeader hdr;
     hdr.length.value = sizeof(hdr);
     vrfyeq_((u64)write(write_fd.value, &hdr, sizeof(hdr)), sizeof(hdr));// write to the write end of the pipe
     prlog("1");
     vrfyeq_(cd_in_msg_InLlistQ(msgbuf), false); // the buffer is not readable
-    callback_Call(msgbuf.in_iohook, msgbuf.in_iohook);// call the iohook callback
+    callback_Call(msgbuf.in_buf_iohook, msgbuf.in_buf_iohook);// call the iohook callback
     prlog("2");
     vrfyeq_(cd_in_msg_InLlistQ(msgbuf), true);// the buffer should have become readable
 
-    atf_amc::MsgHeader *msg = in_GetMsg(msgbuf);// access message
+    atf_amc::MsgHeader *msg = in_buf_GetMsg(msgbuf);// access message
     vrfyeq_(msg !=NULL, true);// message must be there
-    in_SkipMsg(msgbuf);// skip it
-    vrfyeq_((u64)in_GetMsg(msgbuf), (u64)0);// access message -- this should return 0
+    in_buf_SkipMsg(msgbuf);// skip it
+    vrfyeq_((u64)in_buf_GetMsg(msgbuf), (u64)0);// access message -- this should return 0
     prlog("3");
     vrfyeq_(cd_in_msg_InLlistQ(msgbuf), false);// the buffer should have become NOT readable
 
@@ -225,8 +225,8 @@ void atf_amc::amctest_msgbuf_test9() {
     (void)algo::SetBlockingMode(write_fd, false);
 
     atf_amc::Msgbuf msgbuf;
-    in_BeginRead(msgbuf, read_fd);// set up iohook
-    msgbuf.in_iohook.nodelete=true;
+    in_buf_BeginRead(msgbuf, read_fd);// set up iohook
+    msgbuf.in_buf_iohook.nodelete=true;
 
     char buf[64+4];
     frep_(i,sizeof(buf)) buf[i] = i; // some pattern
@@ -235,11 +235,11 @@ void atf_amc::amctest_msgbuf_test9() {
     int nmsg_read=0;
     for (int i=0; i<ssizeof(buf); i++) {
         vrfyeq_((u64)write(write_fd.value, buf+i, 1), (u64)1);// write 1 byte
-        nmsg_read += in_GetMsg(msgbuf) != NULL;
-        in_SkipMsg(msgbuf);
+        nmsg_read += in_buf_GetMsg(msgbuf) != NULL;
+        in_buf_SkipMsg(msgbuf);
     }
-    vrfyeq_(msgbuf.in_eof, false);
-    vrfyeq_(msgbuf.in_err.value, (u32)0); //  no error
+    vrfyeq_(msgbuf.in_buf_eof, false);
+    vrfyeq_(msgbuf.in_buf_err.value, (u32)0); //  no error
     vrfyeq_(nmsg_read, 2); //  two messages should have been read
     char drain;
     while (read(read_fd.value,&drain,1) > 0) {// read any remaining bytes out of the pipe
@@ -257,8 +257,8 @@ void atf_amc::amctest_msgbuf_test10() {
     (void)algo::SetBlockingMode(write_fd, false);
 
     atf_amc::Msgbuf msgbuf;
-    in_BeginRead(msgbuf, read_fd);// set up iohook
-    msgbuf.in_iohook.nodelete=true;
+    in_buf_BeginRead(msgbuf, read_fd);// set up iohook
+    msgbuf.in_buf_iohook.nodelete=true;
 
     char buf[64];
     memset(buf,0,sizeof(buf));
@@ -298,22 +298,22 @@ void atf_amc::amctest_msgbuf_test10() {
         }
         // phase2: read messages into buffer
         if (phase2) {
-            callback_Call(msgbuf.in_iohook, msgbuf.in_iohook);
+            callback_Call(msgbuf.in_buf_iohook, msgbuf.in_buf_iohook);
         }
 
         // phase3: read messages from buffer
         if (phase3 && cd_in_msg_InLlistQ(msgbuf)) {
-            atf_amc::MsgHeader *hdr = in_GetMsg(msgbuf);
+            atf_amc::MsgHeader *hdr = in_buf_GetMsg(msgbuf);
             if (hdr) {
                 vrfyeq_(hdr->type, nmsg_read % 65536);
             }
-            vrfy_(!msgbuf.in_eof);
+            vrfy_(!msgbuf.in_buf_eof);
             nmsg_read += hdr != NULL;
-            in_SkipMsg(msgbuf);
+            in_buf_SkipMsg(msgbuf);
         }
     }
 
-    vrfyeq_(msgbuf.in_eof, false);
+    vrfyeq_(msgbuf.in_buf_eof, false);
 
     char drain;
     while (read(read_fd.value,&drain,1) > 0) {// read any remaining bytes out of the pipe
@@ -446,4 +446,34 @@ void atf_amc::amctest_bytebuf_dyn_test1() {
     in_SkipBytes(bytebuf, 5);// skip too many
     line = in_GetMsg(bytebuf);
     vrfyeq_(line, strptr("",0));
+}
+
+// custom framer -- 4 bytes at a time
+void atf_amc::in_custom_ScanMsg(atf_amc::Msgbuf &msgbuf) {
+    i32 avail = in_custom_N(msgbuf);
+    msgbuf.in_custom_msgvalid = avail>=4;
+    msgbuf.in_custom_msglen=4;
+}
+
+void atf_amc::amctest_msgbuf_custom() {
+    atf_amc::Msgbuf msgbuf;
+    // try custom framer
+    in_custom_WriteAll(msgbuf,(u8*)"abcdefghij",10);
+    vrfyeq_(in_custom_GetMsg(msgbuf), algo::strptr("abcd"));
+    vrfyeq_(in_custom_GetMsg(msgbuf), algo::strptr("abcd"));
+    in_custom_SkipMsg(msgbuf);
+    vrfyeq_(in_custom_GetMsg(msgbuf), algo::strptr("efgh"));
+    in_custom_SkipMsg(msgbuf);
+    vrfyeq_(in_custom_GetMsg(msgbuf), algo::strptr(""));
+    in_custom_WriteAll(msgbuf,(u8*)"kl",2);
+    vrfyeq_(in_custom_GetMsg(msgbuf), algo::strptr("ijkl"));
+    in_custom_SkipMsg(msgbuf);
+
+    // try SkipBytes instead of SkipMsg
+    in_custom_WriteAll(msgbuf,(u8*)"abcdefghij",10);
+    vrfyeq_(in_custom_GetMsg(msgbuf), algo::strptr("abcd"));
+    in_custom_SkipBytes(msgbuf,1);
+    vrfyeq_(in_custom_GetMsg(msgbuf), algo::strptr("bcde"));
+    in_custom_SkipBytes(msgbuf,1);
+    vrfyeq_(in_custom_GetMsg(msgbuf), algo::strptr("cdef"));
 }

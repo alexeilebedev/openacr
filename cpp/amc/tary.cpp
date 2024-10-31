@@ -20,7 +20,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/tary.cpp
+// Source: cpp/amc/tary.cpp -- Tary (vector) reftype
 //
 
 #include "include/amc.h"
@@ -678,4 +678,42 @@ void amc::tfunc_Tary_ReadStrptrMaybe() {
 
 void amc::tfunc_Tary_Print() {
     tfunc_Inlary_Print();
+}
+
+// -----------------------------------------------------------------------------
+
+// Assignment operator from aryptr
+// Generated only if the containing struct has only one field
+void amc::tfunc_Tary_AssignAryptr() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    if (c_field_N(ctype)==1) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        func.member=true;
+        Ins(&R, func.ret  , "void", false);
+        Ins(&R, func.proto, "operator =(const algo::aryptr<$Cpptype> &rhs)", false);
+        Ins(&R, func.body, "$name_Setary(*this, rhs);");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Construct from aryptr
+// Generated only if the containing struct has only one field
+void amc::tfunc_Tary_CtorAryptr() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
+    if (c_field_N(ctype)==1) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        func.inl=true;
+        func.comment="";
+        func.isexplicit=true;
+        func.member=true;
+        Ins(&R, func.proto, "$Parname(const algo::aryptr<$Cpptype> &rhs)", false);
+        Ins(&R, func.body, "$name_elems \t= 0; // ($field)");
+        Ins(&R, func.body, "$name_n     \t= 0; // ($field)");
+        Ins(&R, func.body, "$name_max   \t= 0; // ($field)");
+        Ins(&R, func.body, "$name_Addary(*this, rhs);");
+    }
 }

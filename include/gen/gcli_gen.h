@@ -208,7 +208,8 @@ namespace gcli { // gen:ns_print_struct
 // --- gcli.trace
 #pragma pack(push,1)
 struct trace { // gcli.trace
-    trace();
+    // func:gcli.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -437,16 +438,16 @@ gcli::FGtype*        gtype_InsertMaybe(const gclidb::Gtype &value) __attribute__
 void*                gtype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gtype.EmptyQ
-bool                 gtype_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gtype_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gtype.Find
-gcli::FGtype*        gtype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGtype* gtype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gtype.Last
-gcli::FGtype*        gtype_Last() __attribute__((nothrow, pure));
+inline gcli::FGtype* gtype_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gtype.N
-i32                  gtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gtype.RemoveAll
 void                 gtype_RemoveAll() __attribute__((nothrow));
@@ -455,7 +456,7 @@ void                 gtype_RemoveAll() __attribute__((nothrow));
 void                 gtype_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gtype.qFind
-gcli::FGtype&        gtype_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGtype& gtype_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gtype.XrefMaybe
@@ -477,16 +478,16 @@ gcli::FGrepossh*     grepossh_InsertMaybe(const gclidb::Grepossh &value) __attri
 void*                grepossh_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.grepossh.EmptyQ
-bool                 grepossh_EmptyQ() __attribute__((nothrow, pure));
+inline bool          grepossh_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.grepossh.Find
-gcli::FGrepossh*     grepossh_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGrepossh* grepossh_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.grepossh.Last
-gcli::FGrepossh*     grepossh_Last() __attribute__((nothrow, pure));
+inline gcli::FGrepossh* grepossh_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.grepossh.N
-i32                  grepossh_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           grepossh_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.grepossh.RemoveAll
 void                 grepossh_RemoveAll() __attribute__((nothrow));
@@ -495,7 +496,7 @@ void                 grepossh_RemoveAll() __attribute__((nothrow));
 void                 grepossh_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.grepossh.qFind
-gcli::FGrepossh&     grepossh_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGrepossh& grepossh_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.grepossh.XrefMaybe
@@ -517,16 +518,16 @@ gcli::FGrepogitport* grepogitport_InsertMaybe(const gclidb::Grepogitport &value)
 void*                grepogitport_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.grepogitport.EmptyQ
-bool                 grepogitport_EmptyQ() __attribute__((nothrow, pure));
+inline bool          grepogitport_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.grepogitport.Find
-gcli::FGrepogitport* grepogitport_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGrepogitport* grepogitport_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.grepogitport.Last
-gcli::FGrepogitport* grepogitport_Last() __attribute__((nothrow, pure));
+inline gcli::FGrepogitport* grepogitport_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.grepogitport.N
-i32                  grepogitport_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           grepogitport_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.grepogitport.RemoveAll
 void                 grepogitport_RemoveAll() __attribute__((nothrow));
@@ -535,7 +536,7 @@ void                 grepogitport_RemoveAll() __attribute__((nothrow));
 void                 grepogitport_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.grepogitport.qFind
-gcli::FGrepogitport& grepogitport_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGrepogitport& grepogitport_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.grepogitport.XrefMaybe
@@ -553,16 +554,16 @@ gcli::FGithost*      githost_AllocMaybe() __attribute__((__warn_unused_result__,
 void*                githost_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.githost.EmptyQ
-bool                 githost_EmptyQ() __attribute__((nothrow, pure));
+inline bool          githost_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.githost.Find
-gcli::FGithost*      githost_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGithost* githost_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.githost.Last
-gcli::FGithost*      githost_Last() __attribute__((nothrow, pure));
+inline gcli::FGithost* githost_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.githost.N
-i32                  githost_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           githost_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.githost.RemoveAll
 void                 githost_RemoveAll() __attribute__((nothrow));
@@ -571,7 +572,7 @@ void                 githost_RemoveAll() __attribute__((nothrow));
 void                 githost_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.githost.qFind
-gcli::FGithost&      githost_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGithost& githost_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.githost.XrefMaybe
@@ -593,16 +594,16 @@ gcli::FGstatet*      gstatet_InsertMaybe(const gclidb::Gstatet &value) __attribu
 void*                gstatet_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gstatet.EmptyQ
-bool                 gstatet_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gstatet_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gstatet.Find
-gcli::FGstatet*      gstatet_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGstatet* gstatet_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gstatet.Last
-gcli::FGstatet*      gstatet_Last() __attribute__((nothrow, pure));
+inline gcli::FGstatet* gstatet_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gstatet.N
-i32                  gstatet_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gstatet_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gstatet.RemoveAll
 void                 gstatet_RemoveAll() __attribute__((nothrow));
@@ -611,7 +612,7 @@ void                 gstatet_RemoveAll() __attribute__((nothrow));
 void                 gstatet_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gstatet.qFind
-gcli::FGstatet&      gstatet_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGstatet& gstatet_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gstatet.XrefMaybe
@@ -633,16 +634,16 @@ gcli::FGmethod*      gmethod_InsertMaybe(const gclidb::Gmethod &value) __attribu
 void*                gmethod_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gmethod.EmptyQ
-bool                 gmethod_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gmethod_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gmethod.Find
-gcli::FGmethod*      gmethod_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGmethod* gmethod_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gmethod.Last
-gcli::FGmethod*      gmethod_Last() __attribute__((nothrow, pure));
+inline gcli::FGmethod* gmethod_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gmethod.N
-i32                  gmethod_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gmethod_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gmethod.RemoveAll
 void                 gmethod_RemoveAll() __attribute__((nothrow));
@@ -651,7 +652,7 @@ void                 gmethod_RemoveAll() __attribute__((nothrow));
 void                 gmethod_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gmethod.qFind
-gcli::FGmethod&      gmethod_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGmethod& gmethod_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gmethod.XrefMaybe
@@ -673,16 +674,16 @@ gcli::FGclicmdt*     gclicmdt_InsertMaybe(const gclidb::Gclicmdt &value) __attri
 void*                gclicmdt_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gclicmdt.EmptyQ
-bool                 gclicmdt_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gclicmdt_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gclicmdt.Find
-gcli::FGclicmdt*     gclicmdt_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGclicmdt* gclicmdt_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gclicmdt.Last
-gcli::FGclicmdt*     gclicmdt_Last() __attribute__((nothrow, pure));
+inline gcli::FGclicmdt* gclicmdt_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gclicmdt.N
-i32                  gclicmdt_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gclicmdt_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gclicmdt.RemoveAll
 void                 gclicmdt_RemoveAll() __attribute__((nothrow));
@@ -691,7 +692,7 @@ void                 gclicmdt_RemoveAll() __attribute__((nothrow));
 void                 gclicmdt_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gclicmdt.qFind
-gcli::FGclicmdt&     gclicmdt_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGclicmdt& gclicmdt_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gclicmdt.XrefMaybe
@@ -709,16 +710,16 @@ gcli::FGclicmdf*     gclicmdf_AllocMaybe() __attribute__((__warn_unused_result__
 void*                gclicmdf_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gclicmdf.EmptyQ
-bool                 gclicmdf_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gclicmdf_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gclicmdf.Find
-gcli::FGclicmdf*     gclicmdf_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGclicmdf* gclicmdf_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gclicmdf.Last
-gcli::FGclicmdf*     gclicmdf_Last() __attribute__((nothrow, pure));
+inline gcli::FGclicmdf* gclicmdf_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gclicmdf.N
-i32                  gclicmdf_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gclicmdf_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gclicmdf.RemoveAll
 void                 gclicmdf_RemoveAll() __attribute__((nothrow));
@@ -727,7 +728,7 @@ void                 gclicmdf_RemoveAll() __attribute__((nothrow));
 void                 gclicmdf_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gclicmdf.qFind
-gcli::FGclicmdf&     gclicmdf_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGclicmdf& gclicmdf_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gclicmdf.XrefMaybe
@@ -749,16 +750,16 @@ gcli::FGclicmdf2j*   gclicmdf2j_InsertMaybe(const gclidb::Gclicmdf2j &value) __a
 void*                gclicmdf2j_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gclicmdf2j.EmptyQ
-bool                 gclicmdf2j_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gclicmdf2j_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gclicmdf2j.Find
-gcli::FGclicmdf2j*   gclicmdf2j_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGclicmdf2j* gclicmdf2j_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gclicmdf2j.Last
-gcli::FGclicmdf2j*   gclicmdf2j_Last() __attribute__((nothrow, pure));
+inline gcli::FGclicmdf2j* gclicmdf2j_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gclicmdf2j.N
-i32                  gclicmdf2j_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gclicmdf2j_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gclicmdf2j.RemoveAll
 void                 gclicmdf2j_RemoveAll() __attribute__((nothrow));
@@ -767,7 +768,7 @@ void                 gclicmdf2j_RemoveAll() __attribute__((nothrow));
 void                 gclicmdf2j_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gclicmdf2j.qFind
-gcli::FGclicmdf2j&   gclicmdf2j_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGclicmdf2j& gclicmdf2j_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gclicmdf2j.XrefMaybe
@@ -789,16 +790,16 @@ gcli::FGclicmd*      gclicmd_InsertMaybe(const gclidb::Gclicmd &value) __attribu
 void*                gclicmd_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gclicmd.EmptyQ
-bool                 gclicmd_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gclicmd_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gclicmd.Find
-gcli::FGclicmd*      gclicmd_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGclicmd* gclicmd_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gclicmd.Last
-gcli::FGclicmd*      gclicmd_Last() __attribute__((nothrow, pure));
+inline gcli::FGclicmd* gclicmd_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gclicmd.N
-i32                  gclicmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gclicmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gclicmd.RemoveAll
 void                 gclicmd_RemoveAll() __attribute__((nothrow));
@@ -807,7 +808,7 @@ void                 gclicmd_RemoveAll() __attribute__((nothrow));
 void                 gclicmd_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gclicmd.qFind
-gcli::FGclicmd&      gclicmd_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGclicmd& gclicmd_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gclicmd.XrefMaybe
@@ -829,16 +830,16 @@ gcli::FGtypeh*       gtypeh_InsertMaybe(const gclidb::Gtypeh &value) __attribute
 void*                gtypeh_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gtypeh.EmptyQ
-bool                 gtypeh_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gtypeh_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gtypeh.Find
-gcli::FGtypeh*       gtypeh_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGtypeh* gtypeh_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gtypeh.Last
-gcli::FGtypeh*       gtypeh_Last() __attribute__((nothrow, pure));
+inline gcli::FGtypeh* gtypeh_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gtypeh.N
-i32                  gtypeh_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gtypeh_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gtypeh.RemoveAll
 void                 gtypeh_RemoveAll() __attribute__((nothrow));
@@ -847,7 +848,7 @@ void                 gtypeh_RemoveAll() __attribute__((nothrow));
 void                 gtypeh_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gtypeh.qFind
-gcli::FGtypeh&       gtypeh_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGtypeh& gtypeh_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gtypeh.XrefMaybe
@@ -855,7 +856,7 @@ bool                 gtypeh_XrefMaybe(gcli::FGtypeh &row);
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gclicmd.EmptyQ
-bool                 ind_gclicmd_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gclicmd_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gclicmd.Find
 gcli::FGclicmd*      ind_gclicmd_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -867,7 +868,7 @@ gcli::FGclicmd&      ind_gclicmd_FindX(const algo::strptr& key);
 gcli::FGclicmd&      ind_gclicmd_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_gclicmd.N
-i32                  ind_gclicmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gclicmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gclicmd.InsertMaybe
 bool                 ind_gclicmd_InsertMaybe(gcli::FGclicmd& row) __attribute__((nothrow));
@@ -880,7 +881,7 @@ void                 ind_gclicmd_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gclicmdf.EmptyQ
-bool                 ind_gclicmdf_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gclicmdf_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gclicmdf.Find
 gcli::FGclicmdf*     ind_gclicmdf_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -892,7 +893,7 @@ gcli::FGclicmdf&     ind_gclicmdf_FindX(const algo::strptr& key);
 gcli::FGclicmdf&     ind_gclicmdf_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_gclicmdf.N
-i32                  ind_gclicmdf_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gclicmdf_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gclicmdf.InsertMaybe
 bool                 ind_gclicmdf_InsertMaybe(gcli::FGclicmdf& row) __attribute__((nothrow));
@@ -905,7 +906,7 @@ void                 ind_gclicmdf_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gclicmdt.EmptyQ
-bool                 ind_gclicmdt_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gclicmdt_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gclicmdt.Find
 gcli::FGclicmdt*     ind_gclicmdt_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -914,7 +915,7 @@ gcli::FGclicmdt*     ind_gclicmdt_Find(const algo::strptr& key) __attribute__((_
 gcli::FGclicmdt&     ind_gclicmdt_FindX(const algo::strptr& key);
 // Return number of items in the hash
 // func:gcli.FDb.ind_gclicmdt.N
-i32                  ind_gclicmdt_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gclicmdt_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gclicmdt.InsertMaybe
 bool                 ind_gclicmdt_InsertMaybe(gcli::FGclicmdt& row) __attribute__((nothrow));
@@ -927,7 +928,7 @@ void                 ind_gclicmdt_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gmethod.EmptyQ
-bool                 ind_gmethod_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gmethod_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gmethod.Find
 gcli::FGmethod*      ind_gmethod_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -939,7 +940,7 @@ gcli::FGmethod&      ind_gmethod_FindX(const algo::strptr& key);
 gcli::FGmethod&      ind_gmethod_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_gmethod.N
-i32                  ind_gmethod_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gmethod_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gmethod.InsertMaybe
 bool                 ind_gmethod_InsertMaybe(gcli::FGmethod& row) __attribute__((nothrow));
@@ -952,7 +953,7 @@ void                 ind_gmethod_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_grepo.EmptyQ
-bool                 ind_grepo_EmptyQ() __attribute__((nothrow));
+inline bool          ind_grepo_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_grepo.Find
 gcli::FGrepo*        ind_grepo_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -964,7 +965,7 @@ gcli::FGrepo&        ind_grepo_FindX(const algo::strptr& key);
 gcli::FGrepo&        ind_grepo_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_grepo.N
-i32                  ind_grepo_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_grepo_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_grepo.InsertMaybe
 bool                 ind_grepo_InsertMaybe(gcli::FGrepo& row) __attribute__((nothrow));
@@ -977,7 +978,7 @@ void                 ind_grepo_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_issue.EmptyQ
-bool                 ind_issue_EmptyQ() __attribute__((nothrow));
+inline bool          ind_issue_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_issue.Find
 gcli::FIssue*        ind_issue_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -989,7 +990,7 @@ gcli::FIssue&        ind_issue_FindX(const algo::strptr& key);
 gcli::FIssue&        ind_issue_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_issue.N
-i32                  ind_issue_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_issue_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_issue.InsertMaybe
 bool                 ind_issue_InsertMaybe(gcli::FIssue& row) __attribute__((nothrow));
@@ -1006,7 +1007,7 @@ void                 regx_repo_Print(algo::cstring &out) __attribute__((nothrow)
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gstatet.EmptyQ
-bool                 ind_gstatet_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gstatet_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gstatet.Find
 gcli::FGstatet*      ind_gstatet_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1018,7 +1019,7 @@ gcli::FGstatet&      ind_gstatet_FindX(const algo::strptr& key);
 gcli::FGstatet&      ind_gstatet_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_gstatet.N
-i32                  ind_gstatet_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gstatet_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gstatet.InsertMaybe
 bool                 ind_gstatet_InsertMaybe(gcli::FGstatet& row) __attribute__((nothrow));
@@ -1031,7 +1032,7 @@ void                 ind_gstatet_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_githost.EmptyQ
-bool                 ind_githost_EmptyQ() __attribute__((nothrow));
+inline bool          ind_githost_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_githost.Find
 gcli::FGithost*      ind_githost_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1043,7 +1044,7 @@ gcli::FGithost&      ind_githost_FindX(const algo::strptr& key);
 gcli::FGithost&      ind_githost_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_githost.N
-i32                  ind_githost_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_githost_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_githost.InsertMaybe
 bool                 ind_githost_InsertMaybe(gcli::FGithost& row) __attribute__((nothrow));
@@ -1056,7 +1057,7 @@ void                 ind_githost_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_grepogitport.EmptyQ
-bool                 ind_grepogitport_EmptyQ() __attribute__((nothrow));
+inline bool          ind_grepogitport_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_grepogitport.Find
 gcli::FGrepogitport* ind_grepogitport_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1068,7 +1069,7 @@ gcli::FGrepogitport& ind_grepogitport_FindX(const algo::strptr& key);
 gcli::FGrepogitport& ind_grepogitport_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_grepogitport.N
-i32                  ind_grepogitport_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_grepogitport_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_grepogitport.InsertMaybe
 bool                 ind_grepogitport_InsertMaybe(gcli::FGrepogitport& row) __attribute__((nothrow));
@@ -1081,7 +1082,7 @@ void                 ind_grepogitport_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_grepossh.EmptyQ
-bool                 ind_grepossh_EmptyQ() __attribute__((nothrow));
+inline bool          ind_grepossh_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_grepossh.Find
 gcli::FGrepossh*     ind_grepossh_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1093,7 +1094,7 @@ gcli::FGrepossh&     ind_grepossh_FindX(const algo::strptr& key);
 gcli::FGrepossh&     ind_grepossh_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_grepossh.N
-i32                  ind_grepossh_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_grepossh_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_grepossh.InsertMaybe
 bool                 ind_grepossh_InsertMaybe(gcli::FGrepossh& row) __attribute__((nothrow));
@@ -1106,7 +1107,7 @@ void                 ind_grepossh_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gtype.EmptyQ
-bool                 ind_gtype_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gtype_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gtype.Find
 gcli::FGtype*        ind_gtype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1118,7 +1119,7 @@ gcli::FGtype&        ind_gtype_FindX(const algo::strptr& key);
 gcli::FGtype&        ind_gtype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_gtype.N
-i32                  ind_gtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gtype.InsertMaybe
 bool                 ind_gtype_InsertMaybe(gcli::FGtype& row) __attribute__((nothrow));
@@ -1131,13 +1132,13 @@ void                 ind_gtype_Reserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FDb.c_gclicmd.EmptyQ
-bool                 c_gclicmd_EmptyQ() __attribute__((nothrow));
+inline bool          c_gclicmd_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.c_gclicmd.Find
-gcli::FGclicmd*      c_gclicmd_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGclicmd* c_gclicmd_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FDb.c_gclicmd.Getary
-algo::aryptr<gcli::FGclicmd*> c_gclicmd_Getary() __attribute__((nothrow));
+inline algo::aryptr<gcli::FGclicmd*> c_gclicmd_Getary() __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FDb.c_gclicmd.Insert
@@ -1149,25 +1150,25 @@ void                 c_gclicmd_Insert(gcli::FGclicmd& row) __attribute__((nothro
 bool                 c_gclicmd_InsertMaybe(gcli::FGclicmd& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FDb.c_gclicmd.N
-i32                  c_gclicmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_gclicmd_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FDb.c_gclicmd.Remove
 void                 c_gclicmd_Remove(gcli::FGclicmd& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FDb.c_gclicmd.RemoveAll
-void                 c_gclicmd_RemoveAll() __attribute__((nothrow));
+inline void          c_gclicmd_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FDb.c_gclicmd.Reserve
 void                 c_gclicmd_Reserve(u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FDb.c_gclicmd.qFind
-gcli::FGclicmd&      c_gclicmd_qFind(u32 idx) __attribute__((nothrow));
+inline gcli::FGclicmd& c_gclicmd_qFind(u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FDb.c_gclicmd.InAryQ
-bool                 c_gclicmd_InAryQ(gcli::FGclicmd& row) __attribute__((nothrow));
+inline bool          c_gclicmd_InAryQ(gcli::FGclicmd& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FDb.c_gclicmd.qLast
-gcli::FGclicmd&      c_gclicmd_qLast() __attribute__((nothrow));
+inline gcli::FGclicmd& c_gclicmd_qLast() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1181,16 +1182,16 @@ gcli::FGclicmdj2f*   gclicmdj2f_AllocMaybe() __attribute__((__warn_unused_result
 void*                gclicmdj2f_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gclicmdj2f.EmptyQ
-bool                 gclicmdj2f_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gclicmdj2f_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gclicmdj2f.Find
-gcli::FGclicmdj2f*   gclicmdj2f_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGclicmdj2f* gclicmdj2f_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gclicmdj2f.Last
-gcli::FGclicmdj2f*   gclicmdj2f_Last() __attribute__((nothrow, pure));
+inline gcli::FGclicmdj2f* gclicmdj2f_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gclicmdj2f.N
-i32                  gclicmdj2f_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gclicmdj2f_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gclicmdj2f.RemoveAll
 void                 gclicmdj2f_RemoveAll() __attribute__((nothrow));
@@ -1199,7 +1200,7 @@ void                 gclicmdj2f_RemoveAll() __attribute__((nothrow));
 void                 gclicmdj2f_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gclicmdj2f.qFind
-gcli::FGclicmdj2f&   gclicmdj2f_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGclicmdj2f& gclicmdj2f_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gclicmdj2f.XrefMaybe
@@ -1217,16 +1218,16 @@ gcli::FGclicmdc*     gclicmdc_AllocMaybe() __attribute__((__warn_unused_result__
 void*                gclicmdc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gclicmdc.EmptyQ
-bool                 gclicmdc_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gclicmdc_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gclicmdc.Find
-gcli::FGclicmdc*     gclicmdc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGclicmdc* gclicmdc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gclicmdc.Last
-gcli::FGclicmdc*     gclicmdc_Last() __attribute__((nothrow, pure));
+inline gcli::FGclicmdc* gclicmdc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gclicmdc.N
-i32                  gclicmdc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gclicmdc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gclicmdc.RemoveAll
 void                 gclicmdc_RemoveAll() __attribute__((nothrow));
@@ -1235,7 +1236,7 @@ void                 gclicmdc_RemoveAll() __attribute__((nothrow));
 void                 gclicmdc_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gclicmdc.qFind
-gcli::FGclicmdc&     gclicmdc_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGclicmdc& gclicmdc_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gclicmdc.XrefMaybe
@@ -1253,16 +1254,16 @@ gcli::FGclicmdarg*   gclicmdarg_AllocMaybe() __attribute__((__warn_unused_result
 void*                gclicmdarg_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gclicmdarg.EmptyQ
-bool                 gclicmdarg_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gclicmdarg_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gclicmdarg.Find
-gcli::FGclicmdarg*   gclicmdarg_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGclicmdarg* gclicmdarg_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gclicmdarg.Last
-gcli::FGclicmdarg*   gclicmdarg_Last() __attribute__((nothrow, pure));
+inline gcli::FGclicmdarg* gclicmdarg_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gclicmdarg.N
-i32                  gclicmdarg_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gclicmdarg_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gclicmdarg.RemoveAll
 void                 gclicmdarg_RemoveAll() __attribute__((nothrow));
@@ -1271,7 +1272,7 @@ void                 gclicmdarg_RemoveAll() __attribute__((nothrow));
 void                 gclicmdarg_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gclicmdarg.qFind
-gcli::FGclicmdarg&   gclicmdarg_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGclicmdarg& gclicmdarg_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gclicmdarg.XrefMaybe
@@ -1279,7 +1280,7 @@ bool                 gclicmdarg_XrefMaybe(gcli::FGclicmdarg &row);
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gclicmdj2f.EmptyQ
-bool                 ind_gclicmdj2f_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gclicmdj2f_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gclicmdj2f.Find
 gcli::FGclicmdj2f*   ind_gclicmdj2f_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1291,7 +1292,7 @@ gcli::FGclicmdj2f&   ind_gclicmdj2f_FindX(const algo::strptr& key);
 gcli::FGclicmdj2f&   ind_gclicmdj2f_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_gclicmdj2f.N
-i32                  ind_gclicmdj2f_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gclicmdj2f_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gclicmdj2f.InsertMaybe
 bool                 ind_gclicmdj2f_InsertMaybe(gcli::FGclicmdj2f& row) __attribute__((nothrow));
@@ -1304,7 +1305,7 @@ void                 ind_gclicmdj2f_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gclicmdarg.EmptyQ
-bool                 ind_gclicmdarg_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gclicmdarg_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gclicmdarg.Find
 gcli::FGclicmdarg*   ind_gclicmdarg_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1316,7 +1317,7 @@ gcli::FGclicmdarg&   ind_gclicmdarg_FindX(const algo::strptr& key);
 gcli::FGclicmdarg&   ind_gclicmdarg_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_gclicmdarg.N
-i32                  ind_gclicmdarg_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gclicmdarg_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gclicmdarg.InsertMaybe
 bool                 ind_gclicmdarg_InsertMaybe(gcli::FGclicmdarg& row) __attribute__((nothrow));
@@ -1329,7 +1330,7 @@ void                 ind_gclicmdarg_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gclicmdc.EmptyQ
-bool                 ind_gclicmdc_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gclicmdc_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gclicmdc.Find
 gcli::FGclicmdc*     ind_gclicmdc_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1341,7 +1342,7 @@ gcli::FGclicmdc&     ind_gclicmdc_FindX(const algo::strptr& key);
 gcli::FGclicmdc&     ind_gclicmdc_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_gclicmdc.N
-i32                  ind_gclicmdc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gclicmdc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gclicmdc.InsertMaybe
 bool                 ind_gclicmdc_InsertMaybe(gcli::FGclicmdc& row) __attribute__((nothrow));
@@ -1368,16 +1369,16 @@ gcli::FIssue*        issue_InsertMaybe(const gclidb::Issue &value) __attribute__
 void*                issue_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.issue.EmptyQ
-bool                 issue_EmptyQ() __attribute__((nothrow, pure));
+inline bool          issue_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.issue.Find
-gcli::FIssue*        issue_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FIssue* issue_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.issue.Last
-gcli::FIssue*        issue_Last() __attribute__((nothrow, pure));
+inline gcli::FIssue* issue_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.issue.N
-i32                  issue_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           issue_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.issue.RemoveAll
 void                 issue_RemoveAll() __attribute__((nothrow));
@@ -1386,7 +1387,7 @@ void                 issue_RemoveAll() __attribute__((nothrow));
 void                 issue_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.issue.qFind
-gcli::FIssue&        issue_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FIssue& issue_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.issue.XrefMaybe
@@ -1408,16 +1409,16 @@ gcli::FGrepo*        grepo_InsertMaybe(const gclidb::Grepo &value) __attribute__
 void*                grepo_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.grepo.EmptyQ
-bool                 grepo_EmptyQ() __attribute__((nothrow, pure));
+inline bool          grepo_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.grepo.Find
-gcli::FGrepo*        grepo_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGrepo* grepo_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.grepo.Last
-gcli::FGrepo*        grepo_Last() __attribute__((nothrow, pure));
+inline gcli::FGrepo* grepo_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.grepo.N
-i32                  grepo_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           grepo_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.grepo.RemoveAll
 void                 grepo_RemoveAll() __attribute__((nothrow));
@@ -1426,7 +1427,7 @@ void                 grepo_RemoveAll() __attribute__((nothrow));
 void                 grepo_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.grepo.qFind
-gcli::FGrepo&        grepo_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGrepo& grepo_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.grepo.XrefMaybe
@@ -1444,16 +1445,16 @@ gcli::FTuples*       tuples_AllocMaybe() __attribute__((__warn_unused_result__, 
 void*                tuples_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.tuples.EmptyQ
-bool                 tuples_EmptyQ() __attribute__((nothrow, pure));
+inline bool          tuples_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.tuples.Find
-gcli::FTuples*       tuples_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FTuples* tuples_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.tuples.Last
-gcli::FTuples*       tuples_Last() __attribute__((nothrow, pure));
+inline gcli::FTuples* tuples_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.tuples.N
-i32                  tuples_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           tuples_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.tuples.RemoveAll
 void                 tuples_RemoveAll() __attribute__((nothrow));
@@ -1462,7 +1463,7 @@ void                 tuples_RemoveAll() __attribute__((nothrow));
 void                 tuples_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.tuples.qFind
-gcli::FTuples&       tuples_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FTuples& tuples_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.tuples.XrefMaybe
@@ -1484,16 +1485,16 @@ gcli::FIssuenote*    issuenote_InsertMaybe(const gclidb::Issuenote &value) __att
 void*                issuenote_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.issuenote.EmptyQ
-bool                 issuenote_EmptyQ() __attribute__((nothrow, pure));
+inline bool          issuenote_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.issuenote.Find
-gcli::FIssuenote*    issuenote_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FIssuenote* issuenote_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.issuenote.Last
-gcli::FIssuenote*    issuenote_Last() __attribute__((nothrow, pure));
+inline gcli::FIssuenote* issuenote_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.issuenote.N
-i32                  issuenote_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           issuenote_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.issuenote.RemoveAll
 void                 issuenote_RemoveAll() __attribute__((nothrow));
@@ -1502,7 +1503,7 @@ void                 issuenote_RemoveAll() __attribute__((nothrow));
 void                 issuenote_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.issuenote.qFind
-gcli::FIssuenote&    issuenote_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FIssuenote& issuenote_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.issuenote.XrefMaybe
@@ -1524,16 +1525,16 @@ gcli::FMrjob*        mrjob_InsertMaybe(const gclidb::Mrjob &value) __attribute__
 void*                mrjob_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.mrjob.EmptyQ
-bool                 mrjob_EmptyQ() __attribute__((nothrow, pure));
+inline bool          mrjob_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.mrjob.Find
-gcli::FMrjob*        mrjob_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FMrjob* mrjob_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.mrjob.Last
-gcli::FMrjob*        mrjob_Last() __attribute__((nothrow, pure));
+inline gcli::FMrjob* mrjob_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.mrjob.N
-i32                  mrjob_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           mrjob_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.mrjob.RemoveAll
 void                 mrjob_RemoveAll() __attribute__((nothrow));
@@ -1542,7 +1543,7 @@ void                 mrjob_RemoveAll() __attribute__((nothrow));
 void                 mrjob_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.mrjob.qFind
-gcli::FMrjob&        mrjob_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FMrjob& mrjob_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.mrjob.XrefMaybe
@@ -1564,16 +1565,16 @@ gcli::FMrnote*       mrnote_InsertMaybe(const gclidb::Mrnote &value) __attribute
 void*                mrnote_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.mrnote.EmptyQ
-bool                 mrnote_EmptyQ() __attribute__((nothrow, pure));
+inline bool          mrnote_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.mrnote.Find
-gcli::FMrnote*       mrnote_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FMrnote* mrnote_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.mrnote.Last
-gcli::FMrnote*       mrnote_Last() __attribute__((nothrow, pure));
+inline gcli::FMrnote* mrnote_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.mrnote.N
-i32                  mrnote_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           mrnote_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.mrnote.RemoveAll
 void                 mrnote_RemoveAll() __attribute__((nothrow));
@@ -1582,7 +1583,7 @@ void                 mrnote_RemoveAll() __attribute__((nothrow));
 void                 mrnote_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.mrnote.qFind
-gcli::FMrnote&       mrnote_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FMrnote& mrnote_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.mrnote.XrefMaybe
@@ -1590,7 +1591,7 @@ bool                 mrnote_XrefMaybe(gcli::FMrnote &row);
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_mrnote.EmptyQ
-bool                 ind_mrnote_EmptyQ() __attribute__((nothrow));
+inline bool          ind_mrnote_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_mrnote.Find
 gcli::FMrnote*       ind_mrnote_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1599,7 +1600,7 @@ gcli::FMrnote*       ind_mrnote_Find(const algo::strptr& key) __attribute__((__w
 gcli::FMrnote&       ind_mrnote_FindX(const algo::strptr& key);
 // Return number of items in the hash
 // func:gcli.FDb.ind_mrnote.N
-i32                  ind_mrnote_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_mrnote_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_mrnote.InsertMaybe
 bool                 ind_mrnote_InsertMaybe(gcli::FMrnote& row) __attribute__((nothrow));
@@ -1612,7 +1613,7 @@ void                 ind_mrnote_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_issuenote.EmptyQ
-bool                 ind_issuenote_EmptyQ() __attribute__((nothrow));
+inline bool          ind_issuenote_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_issuenote.Find
 gcli::FIssuenote*    ind_issuenote_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1621,7 +1622,7 @@ gcli::FIssuenote*    ind_issuenote_Find(const algo::strptr& key) __attribute__((
 gcli::FIssuenote&    ind_issuenote_FindX(const algo::strptr& key);
 // Return number of items in the hash
 // func:gcli.FDb.ind_issuenote.N
-i32                  ind_issuenote_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_issuenote_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_issuenote.InsertMaybe
 bool                 ind_issuenote_InsertMaybe(gcli::FIssuenote& row) __attribute__((nothrow));
@@ -1634,7 +1635,7 @@ void                 ind_issuenote_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_mrjob.EmptyQ
-bool                 ind_mrjob_EmptyQ() __attribute__((nothrow));
+inline bool          ind_mrjob_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_mrjob.Find
 gcli::FMrjob*        ind_mrjob_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1643,7 +1644,7 @@ gcli::FMrjob*        ind_mrjob_Find(const algo::strptr& key) __attribute__((__wa
 gcli::FMrjob&        ind_mrjob_FindX(const algo::strptr& key);
 // Return number of items in the hash
 // func:gcli.FDb.ind_mrjob.N
-i32                  ind_mrjob_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_mrjob_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_mrjob.InsertMaybe
 bool                 ind_mrjob_InsertMaybe(gcli::FMrjob& row) __attribute__((nothrow));
@@ -1670,16 +1671,16 @@ gcli::FUser*         user_InsertMaybe(const gclidb::User &value) __attribute__((
 void*                user_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.user.EmptyQ
-bool                 user_EmptyQ() __attribute__((nothrow, pure));
+inline bool          user_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.user.Find
-gcli::FUser*         user_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FUser*  user_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.user.Last
-gcli::FUser*         user_Last() __attribute__((nothrow, pure));
+inline gcli::FUser*  user_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.user.N
-i32                  user_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           user_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.user.RemoveAll
 void                 user_RemoveAll() __attribute__((nothrow));
@@ -1688,7 +1689,7 @@ void                 user_RemoveAll() __attribute__((nothrow));
 void                 user_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.user.qFind
-gcli::FUser&         user_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FUser&  user_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.user.XrefMaybe
@@ -1696,7 +1697,7 @@ bool                 user_XrefMaybe(gcli::FUser &row);
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_user.EmptyQ
-bool                 ind_user_EmptyQ() __attribute__((nothrow));
+inline bool          ind_user_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_user.Find
 gcli::FUser*         ind_user_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1708,7 +1709,7 @@ gcli::FUser&         ind_user_FindX(const algo::strptr& key);
 gcli::FUser&         ind_user_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_user.N
-i32                  ind_user_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_user_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_user.InsertMaybe
 bool                 ind_user_InsertMaybe(gcli::FUser& row) __attribute__((nothrow));
@@ -1721,7 +1722,7 @@ void                 ind_user_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_mr.EmptyQ
-bool                 ind_mr_EmptyQ() __attribute__((nothrow));
+inline bool          ind_mr_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_mr.Find
 gcli::FMr*           ind_mr_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1733,7 +1734,7 @@ gcli::FMr&           ind_mr_FindX(const algo::strptr& key);
 gcli::FMr&           ind_mr_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_mr.N
-i32                  ind_mr_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_mr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_mr.InsertMaybe
 bool                 ind_mr_InsertMaybe(gcli::FMr& row) __attribute__((nothrow));
@@ -1746,7 +1747,7 @@ void                 ind_mr_Reserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_milestone.EmptyQ
-bool                 ind_milestone_EmptyQ() __attribute__((nothrow));
+inline bool          ind_milestone_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_milestone.Find
 gcli::FMilestone*    ind_milestone_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1758,7 +1759,7 @@ gcli::FMilestone&    ind_milestone_FindX(const algo::strptr& key);
 gcli::FMilestone&    ind_milestone_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_milestone.N
-i32                  ind_milestone_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_milestone_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_milestone.InsertMaybe
 bool                 ind_milestone_InsertMaybe(gcli::FMilestone& row) __attribute__((nothrow));
@@ -1785,16 +1786,16 @@ gcli::FMilestone*    milestone_InsertMaybe(const gclidb::Milestone &value) __att
 void*                milestone_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.milestone.EmptyQ
-bool                 milestone_EmptyQ() __attribute__((nothrow, pure));
+inline bool          milestone_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.milestone.Find
-gcli::FMilestone*    milestone_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FMilestone* milestone_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.milestone.Last
-gcli::FMilestone*    milestone_Last() __attribute__((nothrow, pure));
+inline gcli::FMilestone* milestone_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.milestone.N
-i32                  milestone_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           milestone_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.milestone.RemoveAll
 void                 milestone_RemoveAll() __attribute__((nothrow));
@@ -1803,7 +1804,7 @@ void                 milestone_RemoveAll() __attribute__((nothrow));
 void                 milestone_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.milestone.qFind
-gcli::FMilestone&    milestone_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FMilestone& milestone_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.milestone.XrefMaybe
@@ -1825,16 +1826,16 @@ gcli::FMr*           mr_InsertMaybe(const gclidb::Mr &value) __attribute__((noth
 void*                mr_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.mr.EmptyQ
-bool                 mr_EmptyQ() __attribute__((nothrow, pure));
+inline bool          mr_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.mr.Find
-gcli::FMr*           mr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FMr*    mr_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.mr.Last
-gcli::FMr*           mr_Last() __attribute__((nothrow, pure));
+inline gcli::FMr*    mr_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.mr.N
-i32                  mr_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           mr_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.mr.RemoveAll
 void                 mr_RemoveAll() __attribute__((nothrow));
@@ -1843,7 +1844,7 @@ void                 mr_RemoveAll() __attribute__((nothrow));
 void                 mr_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.mr.qFind
-gcli::FMr&           mr_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FMr&    mr_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.mr.XrefMaybe
@@ -1865,16 +1866,16 @@ gcli::FGtypeprefix*  gtypeprefix_InsertMaybe(const gclidb::Gtypeprefix &value) _
 void*                gtypeprefix_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gtypeprefix.EmptyQ
-bool                 gtypeprefix_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gtypeprefix_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gtypeprefix.Find
-gcli::FGtypeprefix*  gtypeprefix_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGtypeprefix* gtypeprefix_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gtypeprefix.Last
-gcli::FGtypeprefix*  gtypeprefix_Last() __attribute__((nothrow, pure));
+inline gcli::FGtypeprefix* gtypeprefix_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gtypeprefix.N
-i32                  gtypeprefix_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gtypeprefix_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gtypeprefix.RemoveAll
 void                 gtypeprefix_RemoveAll() __attribute__((nothrow));
@@ -1883,7 +1884,7 @@ void                 gtypeprefix_RemoveAll() __attribute__((nothrow));
 void                 gtypeprefix_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gtypeprefix.qFind
-gcli::FGtypeprefix&  gtypeprefix_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGtypeprefix& gtypeprefix_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gtypeprefix.XrefMaybe
@@ -1905,16 +1906,16 @@ gcli::FGtblact*      gtblact_InsertMaybe(const gclidb::Gtblact &value) __attribu
 void*                gtblact_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gtblact.EmptyQ
-bool                 gtblact_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gtblact_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gtblact.Find
-gcli::FGtblact*      gtblact_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGtblact* gtblact_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gtblact.Last
-gcli::FGtblact*      gtblact_Last() __attribute__((nothrow, pure));
+inline gcli::FGtblact* gtblact_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gtblact.N
-i32                  gtblact_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gtblact_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gtblact.RemoveAll
 void                 gtblact_RemoveAll() __attribute__((nothrow));
@@ -1923,7 +1924,7 @@ void                 gtblact_RemoveAll() __attribute__((nothrow));
 void                 gtblact_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gtblact.qFind
-gcli::FGtblact&      gtblact_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGtblact& gtblact_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gtblact.XrefMaybe
@@ -1945,16 +1946,16 @@ gcli::FGtblactfld*   gtblactfld_InsertMaybe(const gclidb::Gtblactfld &value) __a
 void*                gtblactfld_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gtblactfld.EmptyQ
-bool                 gtblactfld_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gtblactfld_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gtblactfld.Find
-gcli::FGtblactfld*   gtblactfld_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGtblactfld* gtblactfld_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gtblactfld.Last
-gcli::FGtblactfld*   gtblactfld_Last() __attribute__((nothrow, pure));
+inline gcli::FGtblactfld* gtblactfld_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gtblactfld.N
-i32                  gtblactfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gtblactfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gtblactfld.RemoveAll
 void                 gtblactfld_RemoveAll() __attribute__((nothrow));
@@ -1963,7 +1964,7 @@ void                 gtblactfld_RemoveAll() __attribute__((nothrow));
 void                 gtblactfld_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gtblactfld.qFind
-gcli::FGtblactfld&   gtblactfld_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGtblactfld& gtblactfld_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gtblactfld.XrefMaybe
@@ -1971,7 +1972,7 @@ bool                 gtblactfld_XrefMaybe(gcli::FGtblactfld &row);
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gtblact.EmptyQ
-bool                 ind_gtblact_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gtblact_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gtblact.Find
 gcli::FGtblact*      ind_gtblact_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -1983,7 +1984,7 @@ gcli::FGtblact&      ind_gtblact_FindX(const algo::strptr& key);
 gcli::FGtblact&      ind_gtblact_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_gtblact.N
-i32                  ind_gtblact_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gtblact_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gtblact.InsertMaybe
 bool                 ind_gtblact_InsertMaybe(gcli::FGtblact& row) __attribute__((nothrow));
@@ -1996,28 +1997,28 @@ void                 ind_gtblact_Reserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FDb.zd_gtblact.EmptyQ
-bool                 zd_gtblact_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+inline bool          zd_gtblact_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
 // If index empty, return NULL. Otherwise return pointer to first element in index
 // func:gcli.FDb.zd_gtblact.First
-gcli::FGtblact*      zd_gtblact_First() __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGtblact* zd_gtblact_First() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:gcli.FDb.zd_gtblact.InLlistQ
-bool                 zd_gtblact_InLlistQ(gcli::FGtblact& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          zd_gtblact_InLlistQ(gcli::FGtblact& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:gcli.FDb.zd_gtblact.Insert
 void                 zd_gtblact_Insert(gcli::FGtblact& row) __attribute__((nothrow));
 // If index empty, return NULL. Otherwise return pointer to last element in index
 // func:gcli.FDb.zd_gtblact.Last
-gcli::FGtblact*      zd_gtblact_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGtblact* zd_gtblact_Last() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return number of items in the linked list
 // func:gcli.FDb.zd_gtblact.N
-i32                  zd_gtblact_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           zd_gtblact_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:gcli.FDb.zd_gtblact.Next
-gcli::FGtblact*      zd_gtblact_Next(gcli::FGtblact &row) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGtblact* zd_gtblact_Next(gcli::FGtblact &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:gcli.FDb.zd_gtblact.Prev
-gcli::FGtblact*      zd_gtblact_Prev(gcli::FGtblact &row) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGtblact* zd_gtblact_Prev(gcli::FGtblact &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:gcli.FDb.zd_gtblact.Remove
 void                 zd_gtblact_Remove(gcli::FGtblact& row) __attribute__((nothrow));
@@ -2029,11 +2030,11 @@ void                 zd_gtblact_RemoveAll() __attribute__((nothrow));
 gcli::FGtblact*      zd_gtblact_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:gcli.FDb.zd_gtblact.qLast
-gcli::FGtblact&      zd_gtblact_qLast() __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGtblact& zd_gtblact_qLast() __attribute__((__warn_unused_result__, nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gtblactfld.EmptyQ
-bool                 ind_gtblactfld_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gtblactfld_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gtblactfld.Find
 gcli::FGtblactfld*   ind_gtblactfld_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -2042,7 +2043,7 @@ gcli::FGtblactfld*   ind_gtblactfld_Find(const algo::strptr& key) __attribute__(
 gcli::FGtblactfld&   ind_gtblactfld_FindX(const algo::strptr& key);
 // Return number of items in the hash
 // func:gcli.FDb.ind_gtblactfld.N
-i32                  ind_gtblactfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gtblactfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gtblactfld.InsertMaybe
 bool                 ind_gtblactfld_InsertMaybe(gcli::FGtblactfld& row) __attribute__((nothrow));
@@ -2069,16 +2070,16 @@ gcli::FGfld*         gfld_InsertMaybe(const gclidb::Gfld &value) __attribute__((
 void*                gfld_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gfld.EmptyQ
-bool                 gfld_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gfld_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gfld.Find
-gcli::FGfld*         gfld_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGfld*  gfld_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gfld.Last
-gcli::FGfld*         gfld_Last() __attribute__((nothrow, pure));
+inline gcli::FGfld*  gfld_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gfld.N
-i32                  gfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gfld.RemoveAll
 void                 gfld_RemoveAll() __attribute__((nothrow));
@@ -2087,7 +2088,7 @@ void                 gfld_RemoveAll() __attribute__((nothrow));
 void                 gfld_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gfld.qFind
-gcli::FGfld&         gfld_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGfld&  gfld_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gfld.XrefMaybe
@@ -2095,7 +2096,7 @@ bool                 gfld_XrefMaybe(gcli::FGfld &row);
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gfld.EmptyQ
-bool                 ind_gfld_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gfld_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gfld.Find
 gcli::FGfld*         ind_gfld_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -2107,7 +2108,7 @@ gcli::FGfld&         ind_gfld_FindX(const algo::strptr& key);
 gcli::FGfld&         ind_gfld_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_gfld.N
-i32                  ind_gfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gfld.InsertMaybe
 bool                 ind_gfld_InsertMaybe(gcli::FGfld& row) __attribute__((nothrow));
@@ -2120,13 +2121,13 @@ void                 ind_gfld_Reserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FDb.c_gfld.EmptyQ
-bool                 c_gfld_EmptyQ() __attribute__((nothrow));
+inline bool          c_gfld_EmptyQ() __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.c_gfld.Find
-gcli::FGfld*         c_gfld_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGfld*  c_gfld_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FDb.c_gfld.Getary
-algo::aryptr<gcli::FGfld*> c_gfld_Getary() __attribute__((nothrow));
+inline algo::aryptr<gcli::FGfld*> c_gfld_Getary() __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FDb.c_gfld.Insert
@@ -2138,25 +2139,25 @@ void                 c_gfld_Insert(gcli::FGfld& row) __attribute__((nothrow));
 bool                 c_gfld_InsertMaybe(gcli::FGfld& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FDb.c_gfld.N
-i32                  c_gfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_gfld_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FDb.c_gfld.Remove
 void                 c_gfld_Remove(gcli::FGfld& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FDb.c_gfld.RemoveAll
-void                 c_gfld_RemoveAll() __attribute__((nothrow));
+inline void          c_gfld_RemoveAll() __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FDb.c_gfld.Reserve
 void                 c_gfld_Reserve(u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FDb.c_gfld.qFind
-gcli::FGfld&         c_gfld_qFind(u32 idx) __attribute__((nothrow));
+inline gcli::FGfld&  c_gfld_qFind(u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FDb.c_gfld.InAryQ
-bool                 c_gfld_InAryQ(gcli::FGfld& row) __attribute__((nothrow));
+inline bool          c_gfld_InAryQ(gcli::FGfld& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FDb.c_gfld.qLast
-gcli::FGfld&         c_gfld_qLast() __attribute__((nothrow));
+inline gcli::FGfld&  c_gfld_qLast() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -2174,16 +2175,16 @@ gcli::FGtbl*         gtbl_InsertMaybe(const gclidb::Gtbl &value) __attribute__((
 void*                gtbl_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gtbl.EmptyQ
-bool                 gtbl_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gtbl_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gtbl.Find
-gcli::FGtbl*         gtbl_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGtbl*  gtbl_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gtbl.Last
-gcli::FGtbl*         gtbl_Last() __attribute__((nothrow, pure));
+inline gcli::FGtbl*  gtbl_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gtbl.N
-i32                  gtbl_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gtbl_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gtbl.RemoveAll
 void                 gtbl_RemoveAll() __attribute__((nothrow));
@@ -2192,7 +2193,7 @@ void                 gtbl_RemoveAll() __attribute__((nothrow));
 void                 gtbl_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gtbl.qFind
-gcli::FGtbl&         gtbl_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGtbl&  gtbl_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gtbl.XrefMaybe
@@ -2200,7 +2201,7 @@ bool                 gtbl_XrefMaybe(gcli::FGtbl &row);
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gtbl.EmptyQ
-bool                 ind_gtbl_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gtbl_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gtbl.Find
 gcli::FGtbl*         ind_gtbl_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -2212,7 +2213,7 @@ gcli::FGtbl&         ind_gtbl_FindX(const algo::strptr& key);
 gcli::FGtbl&         ind_gtbl_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_gtbl.N
-i32                  ind_gtbl_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gtbl_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gtbl.InsertMaybe
 bool                 ind_gtbl_InsertMaybe(gcli::FGtbl& row) __attribute__((nothrow));
@@ -2239,16 +2240,16 @@ gcli::FGact*         gact_InsertMaybe(const gclidb::Gact &value) __attribute__((
 void*                gact_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FDb.gact.EmptyQ
-bool                 gact_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gact_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FDb.gact.Find
-gcli::FGact*         gact_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline gcli::FGact*  gact_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FDb.gact.Last
-gcli::FGact*         gact_Last() __attribute__((nothrow, pure));
+inline gcli::FGact*  gact_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:gcli.FDb.gact.N
-i32                  gact_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gact_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:gcli.FDb.gact.RemoveAll
 void                 gact_RemoveAll() __attribute__((nothrow));
@@ -2257,7 +2258,7 @@ void                 gact_RemoveAll() __attribute__((nothrow));
 void                 gact_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FDb.gact.qFind
-gcli::FGact&         gact_qFind(u64 t) __attribute__((nothrow, pure));
+inline gcli::FGact&  gact_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gact.XrefMaybe
@@ -2265,7 +2266,7 @@ bool                 gact_XrefMaybe(gcli::FGact &row);
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gact.EmptyQ
-bool                 ind_gact_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gact_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:gcli.FDb.ind_gact.Find
 gcli::FGact*         ind_gact_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -2277,7 +2278,7 @@ gcli::FGact&         ind_gact_FindX(const algo::strptr& key);
 gcli::FGact&         ind_gact_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:gcli.FDb.ind_gact.N
-i32                  ind_gact_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gact_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:gcli.FDb.ind_gact.InsertMaybe
 bool                 ind_gact_InsertMaybe(gcli::FGact& row) __attribute__((nothrow));
@@ -2290,386 +2291,386 @@ void                 ind_gact_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:gcli.FDb.gtype_curs.Reset
-void                 _db_gtype_curs_Reset(_db_gtype_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gtype_curs_Reset(_db_gtype_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtype_curs.ValidQ
-bool                 _db_gtype_curs_ValidQ(_db_gtype_curs &curs) __attribute__((nothrow));
+inline bool          _db_gtype_curs_ValidQ(_db_gtype_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gtype_curs.Next
-void                 _db_gtype_curs_Next(_db_gtype_curs &curs) __attribute__((nothrow));
+inline void          _db_gtype_curs_Next(_db_gtype_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gtype_curs.Access
-gcli::FGtype&        _db_gtype_curs_Access(_db_gtype_curs &curs) __attribute__((nothrow));
+inline gcli::FGtype& _db_gtype_curs_Access(_db_gtype_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.grepossh_curs.Reset
-void                 _db_grepossh_curs_Reset(_db_grepossh_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_grepossh_curs_Reset(_db_grepossh_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.grepossh_curs.ValidQ
-bool                 _db_grepossh_curs_ValidQ(_db_grepossh_curs &curs) __attribute__((nothrow));
+inline bool          _db_grepossh_curs_ValidQ(_db_grepossh_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.grepossh_curs.Next
-void                 _db_grepossh_curs_Next(_db_grepossh_curs &curs) __attribute__((nothrow));
+inline void          _db_grepossh_curs_Next(_db_grepossh_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.grepossh_curs.Access
-gcli::FGrepossh&     _db_grepossh_curs_Access(_db_grepossh_curs &curs) __attribute__((nothrow));
+inline gcli::FGrepossh& _db_grepossh_curs_Access(_db_grepossh_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.grepogitport_curs.Reset
-void                 _db_grepogitport_curs_Reset(_db_grepogitport_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_grepogitport_curs_Reset(_db_grepogitport_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.grepogitport_curs.ValidQ
-bool                 _db_grepogitport_curs_ValidQ(_db_grepogitport_curs &curs) __attribute__((nothrow));
+inline bool          _db_grepogitport_curs_ValidQ(_db_grepogitport_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.grepogitport_curs.Next
-void                 _db_grepogitport_curs_Next(_db_grepogitport_curs &curs) __attribute__((nothrow));
+inline void          _db_grepogitport_curs_Next(_db_grepogitport_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.grepogitport_curs.Access
-gcli::FGrepogitport& _db_grepogitport_curs_Access(_db_grepogitport_curs &curs) __attribute__((nothrow));
+inline gcli::FGrepogitport& _db_grepogitport_curs_Access(_db_grepogitport_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.githost_curs.Reset
-void                 _db_githost_curs_Reset(_db_githost_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_githost_curs_Reset(_db_githost_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.githost_curs.ValidQ
-bool                 _db_githost_curs_ValidQ(_db_githost_curs &curs) __attribute__((nothrow));
+inline bool          _db_githost_curs_ValidQ(_db_githost_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.githost_curs.Next
-void                 _db_githost_curs_Next(_db_githost_curs &curs) __attribute__((nothrow));
+inline void          _db_githost_curs_Next(_db_githost_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.githost_curs.Access
-gcli::FGithost&      _db_githost_curs_Access(_db_githost_curs &curs) __attribute__((nothrow));
+inline gcli::FGithost& _db_githost_curs_Access(_db_githost_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gstatet_curs.Reset
-void                 _db_gstatet_curs_Reset(_db_gstatet_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gstatet_curs_Reset(_db_gstatet_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gstatet_curs.ValidQ
-bool                 _db_gstatet_curs_ValidQ(_db_gstatet_curs &curs) __attribute__((nothrow));
+inline bool          _db_gstatet_curs_ValidQ(_db_gstatet_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gstatet_curs.Next
-void                 _db_gstatet_curs_Next(_db_gstatet_curs &curs) __attribute__((nothrow));
+inline void          _db_gstatet_curs_Next(_db_gstatet_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gstatet_curs.Access
-gcli::FGstatet&      _db_gstatet_curs_Access(_db_gstatet_curs &curs) __attribute__((nothrow));
+inline gcli::FGstatet& _db_gstatet_curs_Access(_db_gstatet_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gmethod_curs.Reset
-void                 _db_gmethod_curs_Reset(_db_gmethod_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gmethod_curs_Reset(_db_gmethod_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gmethod_curs.ValidQ
-bool                 _db_gmethod_curs_ValidQ(_db_gmethod_curs &curs) __attribute__((nothrow));
+inline bool          _db_gmethod_curs_ValidQ(_db_gmethod_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gmethod_curs.Next
-void                 _db_gmethod_curs_Next(_db_gmethod_curs &curs) __attribute__((nothrow));
+inline void          _db_gmethod_curs_Next(_db_gmethod_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gmethod_curs.Access
-gcli::FGmethod&      _db_gmethod_curs_Access(_db_gmethod_curs &curs) __attribute__((nothrow));
+inline gcli::FGmethod& _db_gmethod_curs_Access(_db_gmethod_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdt_curs.Reset
-void                 _db_gclicmdt_curs_Reset(_db_gclicmdt_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gclicmdt_curs_Reset(_db_gclicmdt_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdt_curs.ValidQ
-bool                 _db_gclicmdt_curs_ValidQ(_db_gclicmdt_curs &curs) __attribute__((nothrow));
+inline bool          _db_gclicmdt_curs_ValidQ(_db_gclicmdt_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmdt_curs.Next
-void                 _db_gclicmdt_curs_Next(_db_gclicmdt_curs &curs) __attribute__((nothrow));
+inline void          _db_gclicmdt_curs_Next(_db_gclicmdt_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmdt_curs.Access
-gcli::FGclicmdt&     _db_gclicmdt_curs_Access(_db_gclicmdt_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmdt& _db_gclicmdt_curs_Access(_db_gclicmdt_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdf_curs.Reset
-void                 _db_gclicmdf_curs_Reset(_db_gclicmdf_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gclicmdf_curs_Reset(_db_gclicmdf_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdf_curs.ValidQ
-bool                 _db_gclicmdf_curs_ValidQ(_db_gclicmdf_curs &curs) __attribute__((nothrow));
+inline bool          _db_gclicmdf_curs_ValidQ(_db_gclicmdf_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmdf_curs.Next
-void                 _db_gclicmdf_curs_Next(_db_gclicmdf_curs &curs) __attribute__((nothrow));
+inline void          _db_gclicmdf_curs_Next(_db_gclicmdf_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmdf_curs.Access
-gcli::FGclicmdf&     _db_gclicmdf_curs_Access(_db_gclicmdf_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmdf& _db_gclicmdf_curs_Access(_db_gclicmdf_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdf2j_curs.Reset
-void                 _db_gclicmdf2j_curs_Reset(_db_gclicmdf2j_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gclicmdf2j_curs_Reset(_db_gclicmdf2j_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdf2j_curs.ValidQ
-bool                 _db_gclicmdf2j_curs_ValidQ(_db_gclicmdf2j_curs &curs) __attribute__((nothrow));
+inline bool          _db_gclicmdf2j_curs_ValidQ(_db_gclicmdf2j_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmdf2j_curs.Next
-void                 _db_gclicmdf2j_curs_Next(_db_gclicmdf2j_curs &curs) __attribute__((nothrow));
+inline void          _db_gclicmdf2j_curs_Next(_db_gclicmdf2j_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmdf2j_curs.Access
-gcli::FGclicmdf2j&   _db_gclicmdf2j_curs_Access(_db_gclicmdf2j_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmdf2j& _db_gclicmdf2j_curs_Access(_db_gclicmdf2j_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmd_curs.Reset
-void                 _db_gclicmd_curs_Reset(_db_gclicmd_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gclicmd_curs_Reset(_db_gclicmd_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmd_curs.ValidQ
-bool                 _db_gclicmd_curs_ValidQ(_db_gclicmd_curs &curs) __attribute__((nothrow));
+inline bool          _db_gclicmd_curs_ValidQ(_db_gclicmd_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmd_curs.Next
-void                 _db_gclicmd_curs_Next(_db_gclicmd_curs &curs) __attribute__((nothrow));
+inline void          _db_gclicmd_curs_Next(_db_gclicmd_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmd_curs.Access
-gcli::FGclicmd&      _db_gclicmd_curs_Access(_db_gclicmd_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmd& _db_gclicmd_curs_Access(_db_gclicmd_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtypeh_curs.Reset
-void                 _db_gtypeh_curs_Reset(_db_gtypeh_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gtypeh_curs_Reset(_db_gtypeh_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtypeh_curs.ValidQ
-bool                 _db_gtypeh_curs_ValidQ(_db_gtypeh_curs &curs) __attribute__((nothrow));
+inline bool          _db_gtypeh_curs_ValidQ(_db_gtypeh_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gtypeh_curs.Next
-void                 _db_gtypeh_curs_Next(_db_gtypeh_curs &curs) __attribute__((nothrow));
+inline void          _db_gtypeh_curs_Next(_db_gtypeh_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gtypeh_curs.Access
-gcli::FGtypeh&       _db_gtypeh_curs_Access(_db_gtypeh_curs &curs) __attribute__((nothrow));
+inline gcli::FGtypeh& _db_gtypeh_curs_Access(_db_gtypeh_curs &curs) __attribute__((nothrow));
 // func:gcli.FDb.c_gclicmd_curs.Reset
-void                 _db_c_gclicmd_curs_Reset(_db_c_gclicmd_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_c_gclicmd_curs_Reset(_db_c_gclicmd_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.c_gclicmd_curs.ValidQ
-bool                 _db_c_gclicmd_curs_ValidQ(_db_c_gclicmd_curs &curs) __attribute__((nothrow));
+inline bool          _db_c_gclicmd_curs_ValidQ(_db_c_gclicmd_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.c_gclicmd_curs.Next
-void                 _db_c_gclicmd_curs_Next(_db_c_gclicmd_curs &curs) __attribute__((nothrow));
+inline void          _db_c_gclicmd_curs_Next(_db_c_gclicmd_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.c_gclicmd_curs.Access
-gcli::FGclicmd&      _db_c_gclicmd_curs_Access(_db_c_gclicmd_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmd& _db_c_gclicmd_curs_Access(_db_c_gclicmd_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdj2f_curs.Reset
-void                 _db_gclicmdj2f_curs_Reset(_db_gclicmdj2f_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gclicmdj2f_curs_Reset(_db_gclicmdj2f_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdj2f_curs.ValidQ
-bool                 _db_gclicmdj2f_curs_ValidQ(_db_gclicmdj2f_curs &curs) __attribute__((nothrow));
+inline bool          _db_gclicmdj2f_curs_ValidQ(_db_gclicmdj2f_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmdj2f_curs.Next
-void                 _db_gclicmdj2f_curs_Next(_db_gclicmdj2f_curs &curs) __attribute__((nothrow));
+inline void          _db_gclicmdj2f_curs_Next(_db_gclicmdj2f_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmdj2f_curs.Access
-gcli::FGclicmdj2f&   _db_gclicmdj2f_curs_Access(_db_gclicmdj2f_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmdj2f& _db_gclicmdj2f_curs_Access(_db_gclicmdj2f_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdc_curs.Reset
-void                 _db_gclicmdc_curs_Reset(_db_gclicmdc_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gclicmdc_curs_Reset(_db_gclicmdc_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdc_curs.ValidQ
-bool                 _db_gclicmdc_curs_ValidQ(_db_gclicmdc_curs &curs) __attribute__((nothrow));
+inline bool          _db_gclicmdc_curs_ValidQ(_db_gclicmdc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmdc_curs.Next
-void                 _db_gclicmdc_curs_Next(_db_gclicmdc_curs &curs) __attribute__((nothrow));
+inline void          _db_gclicmdc_curs_Next(_db_gclicmdc_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmdc_curs.Access
-gcli::FGclicmdc&     _db_gclicmdc_curs_Access(_db_gclicmdc_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmdc& _db_gclicmdc_curs_Access(_db_gclicmdc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdarg_curs.Reset
-void                 _db_gclicmdarg_curs_Reset(_db_gclicmdarg_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gclicmdarg_curs_Reset(_db_gclicmdarg_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gclicmdarg_curs.ValidQ
-bool                 _db_gclicmdarg_curs_ValidQ(_db_gclicmdarg_curs &curs) __attribute__((nothrow));
+inline bool          _db_gclicmdarg_curs_ValidQ(_db_gclicmdarg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gclicmdarg_curs.Next
-void                 _db_gclicmdarg_curs_Next(_db_gclicmdarg_curs &curs) __attribute__((nothrow));
+inline void          _db_gclicmdarg_curs_Next(_db_gclicmdarg_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gclicmdarg_curs.Access
-gcli::FGclicmdarg&   _db_gclicmdarg_curs_Access(_db_gclicmdarg_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmdarg& _db_gclicmdarg_curs_Access(_db_gclicmdarg_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.issue_curs.Reset
-void                 _db_issue_curs_Reset(_db_issue_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_issue_curs_Reset(_db_issue_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.issue_curs.ValidQ
-bool                 _db_issue_curs_ValidQ(_db_issue_curs &curs) __attribute__((nothrow));
+inline bool          _db_issue_curs_ValidQ(_db_issue_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.issue_curs.Next
-void                 _db_issue_curs_Next(_db_issue_curs &curs) __attribute__((nothrow));
+inline void          _db_issue_curs_Next(_db_issue_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.issue_curs.Access
-gcli::FIssue&        _db_issue_curs_Access(_db_issue_curs &curs) __attribute__((nothrow));
+inline gcli::FIssue& _db_issue_curs_Access(_db_issue_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.grepo_curs.Reset
-void                 _db_grepo_curs_Reset(_db_grepo_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_grepo_curs_Reset(_db_grepo_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.grepo_curs.ValidQ
-bool                 _db_grepo_curs_ValidQ(_db_grepo_curs &curs) __attribute__((nothrow));
+inline bool          _db_grepo_curs_ValidQ(_db_grepo_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.grepo_curs.Next
-void                 _db_grepo_curs_Next(_db_grepo_curs &curs) __attribute__((nothrow));
+inline void          _db_grepo_curs_Next(_db_grepo_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.grepo_curs.Access
-gcli::FGrepo&        _db_grepo_curs_Access(_db_grepo_curs &curs) __attribute__((nothrow));
+inline gcli::FGrepo& _db_grepo_curs_Access(_db_grepo_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.tuples_curs.Reset
-void                 _db_tuples_curs_Reset(_db_tuples_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_tuples_curs_Reset(_db_tuples_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.tuples_curs.ValidQ
-bool                 _db_tuples_curs_ValidQ(_db_tuples_curs &curs) __attribute__((nothrow));
+inline bool          _db_tuples_curs_ValidQ(_db_tuples_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.tuples_curs.Next
-void                 _db_tuples_curs_Next(_db_tuples_curs &curs) __attribute__((nothrow));
+inline void          _db_tuples_curs_Next(_db_tuples_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.tuples_curs.Access
-gcli::FTuples&       _db_tuples_curs_Access(_db_tuples_curs &curs) __attribute__((nothrow));
+inline gcli::FTuples& _db_tuples_curs_Access(_db_tuples_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.issuenote_curs.Reset
-void                 _db_issuenote_curs_Reset(_db_issuenote_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_issuenote_curs_Reset(_db_issuenote_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.issuenote_curs.ValidQ
-bool                 _db_issuenote_curs_ValidQ(_db_issuenote_curs &curs) __attribute__((nothrow));
+inline bool          _db_issuenote_curs_ValidQ(_db_issuenote_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.issuenote_curs.Next
-void                 _db_issuenote_curs_Next(_db_issuenote_curs &curs) __attribute__((nothrow));
+inline void          _db_issuenote_curs_Next(_db_issuenote_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.issuenote_curs.Access
-gcli::FIssuenote&    _db_issuenote_curs_Access(_db_issuenote_curs &curs) __attribute__((nothrow));
+inline gcli::FIssuenote& _db_issuenote_curs_Access(_db_issuenote_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.mrjob_curs.Reset
-void                 _db_mrjob_curs_Reset(_db_mrjob_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_mrjob_curs_Reset(_db_mrjob_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.mrjob_curs.ValidQ
-bool                 _db_mrjob_curs_ValidQ(_db_mrjob_curs &curs) __attribute__((nothrow));
+inline bool          _db_mrjob_curs_ValidQ(_db_mrjob_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.mrjob_curs.Next
-void                 _db_mrjob_curs_Next(_db_mrjob_curs &curs) __attribute__((nothrow));
+inline void          _db_mrjob_curs_Next(_db_mrjob_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.mrjob_curs.Access
-gcli::FMrjob&        _db_mrjob_curs_Access(_db_mrjob_curs &curs) __attribute__((nothrow));
+inline gcli::FMrjob& _db_mrjob_curs_Access(_db_mrjob_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.mrnote_curs.Reset
-void                 _db_mrnote_curs_Reset(_db_mrnote_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_mrnote_curs_Reset(_db_mrnote_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.mrnote_curs.ValidQ
-bool                 _db_mrnote_curs_ValidQ(_db_mrnote_curs &curs) __attribute__((nothrow));
+inline bool          _db_mrnote_curs_ValidQ(_db_mrnote_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.mrnote_curs.Next
-void                 _db_mrnote_curs_Next(_db_mrnote_curs &curs) __attribute__((nothrow));
+inline void          _db_mrnote_curs_Next(_db_mrnote_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.mrnote_curs.Access
-gcli::FMrnote&       _db_mrnote_curs_Access(_db_mrnote_curs &curs) __attribute__((nothrow));
+inline gcli::FMrnote& _db_mrnote_curs_Access(_db_mrnote_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.user_curs.Reset
-void                 _db_user_curs_Reset(_db_user_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_user_curs_Reset(_db_user_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.user_curs.ValidQ
-bool                 _db_user_curs_ValidQ(_db_user_curs &curs) __attribute__((nothrow));
+inline bool          _db_user_curs_ValidQ(_db_user_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.user_curs.Next
-void                 _db_user_curs_Next(_db_user_curs &curs) __attribute__((nothrow));
+inline void          _db_user_curs_Next(_db_user_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.user_curs.Access
-gcli::FUser&         _db_user_curs_Access(_db_user_curs &curs) __attribute__((nothrow));
+inline gcli::FUser&  _db_user_curs_Access(_db_user_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.milestone_curs.Reset
-void                 _db_milestone_curs_Reset(_db_milestone_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_milestone_curs_Reset(_db_milestone_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.milestone_curs.ValidQ
-bool                 _db_milestone_curs_ValidQ(_db_milestone_curs &curs) __attribute__((nothrow));
+inline bool          _db_milestone_curs_ValidQ(_db_milestone_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.milestone_curs.Next
-void                 _db_milestone_curs_Next(_db_milestone_curs &curs) __attribute__((nothrow));
+inline void          _db_milestone_curs_Next(_db_milestone_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.milestone_curs.Access
-gcli::FMilestone&    _db_milestone_curs_Access(_db_milestone_curs &curs) __attribute__((nothrow));
+inline gcli::FMilestone& _db_milestone_curs_Access(_db_milestone_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.mr_curs.Reset
-void                 _db_mr_curs_Reset(_db_mr_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_mr_curs_Reset(_db_mr_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.mr_curs.ValidQ
-bool                 _db_mr_curs_ValidQ(_db_mr_curs &curs) __attribute__((nothrow));
+inline bool          _db_mr_curs_ValidQ(_db_mr_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.mr_curs.Next
-void                 _db_mr_curs_Next(_db_mr_curs &curs) __attribute__((nothrow));
+inline void          _db_mr_curs_Next(_db_mr_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.mr_curs.Access
-gcli::FMr&           _db_mr_curs_Access(_db_mr_curs &curs) __attribute__((nothrow));
+inline gcli::FMr&    _db_mr_curs_Access(_db_mr_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtypeprefix_curs.Reset
-void                 _db_gtypeprefix_curs_Reset(_db_gtypeprefix_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gtypeprefix_curs_Reset(_db_gtypeprefix_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtypeprefix_curs.ValidQ
-bool                 _db_gtypeprefix_curs_ValidQ(_db_gtypeprefix_curs &curs) __attribute__((nothrow));
+inline bool          _db_gtypeprefix_curs_ValidQ(_db_gtypeprefix_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gtypeprefix_curs.Next
-void                 _db_gtypeprefix_curs_Next(_db_gtypeprefix_curs &curs) __attribute__((nothrow));
+inline void          _db_gtypeprefix_curs_Next(_db_gtypeprefix_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gtypeprefix_curs.Access
-gcli::FGtypeprefix&  _db_gtypeprefix_curs_Access(_db_gtypeprefix_curs &curs) __attribute__((nothrow));
+inline gcli::FGtypeprefix& _db_gtypeprefix_curs_Access(_db_gtypeprefix_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtblact_curs.Reset
-void                 _db_gtblact_curs_Reset(_db_gtblact_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gtblact_curs_Reset(_db_gtblact_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtblact_curs.ValidQ
-bool                 _db_gtblact_curs_ValidQ(_db_gtblact_curs &curs) __attribute__((nothrow));
+inline bool          _db_gtblact_curs_ValidQ(_db_gtblact_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gtblact_curs.Next
-void                 _db_gtblact_curs_Next(_db_gtblact_curs &curs) __attribute__((nothrow));
+inline void          _db_gtblact_curs_Next(_db_gtblact_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gtblact_curs.Access
-gcli::FGtblact&      _db_gtblact_curs_Access(_db_gtblact_curs &curs) __attribute__((nothrow));
+inline gcli::FGtblact& _db_gtblact_curs_Access(_db_gtblact_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtblactfld_curs.Reset
-void                 _db_gtblactfld_curs_Reset(_db_gtblactfld_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gtblactfld_curs_Reset(_db_gtblactfld_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtblactfld_curs.ValidQ
-bool                 _db_gtblactfld_curs_ValidQ(_db_gtblactfld_curs &curs) __attribute__((nothrow));
+inline bool          _db_gtblactfld_curs_ValidQ(_db_gtblactfld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gtblactfld_curs.Next
-void                 _db_gtblactfld_curs_Next(_db_gtblactfld_curs &curs) __attribute__((nothrow));
+inline void          _db_gtblactfld_curs_Next(_db_gtblactfld_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gtblactfld_curs.Access
-gcli::FGtblactfld&   _db_gtblactfld_curs_Access(_db_gtblactfld_curs &curs) __attribute__((nothrow));
+inline gcli::FGtblactfld& _db_gtblactfld_curs_Access(_db_gtblactfld_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.zd_gtblact_curs.Reset
-void                 _db_zd_gtblact_curs_Reset(_db_zd_gtblact_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_zd_gtblact_curs_Reset(_db_zd_gtblact_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.zd_gtblact_curs.ValidQ
-bool                 _db_zd_gtblact_curs_ValidQ(_db_zd_gtblact_curs &curs) __attribute__((nothrow));
+inline bool          _db_zd_gtblact_curs_ValidQ(_db_zd_gtblact_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.zd_gtblact_curs.Next
-void                 _db_zd_gtblact_curs_Next(_db_zd_gtblact_curs &curs) __attribute__((nothrow));
+inline void          _db_zd_gtblact_curs_Next(_db_zd_gtblact_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.zd_gtblact_curs.Access
-gcli::FGtblact&      _db_zd_gtblact_curs_Access(_db_zd_gtblact_curs &curs) __attribute__((nothrow));
+inline gcli::FGtblact& _db_zd_gtblact_curs_Access(_db_zd_gtblact_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gfld_curs.Reset
-void                 _db_gfld_curs_Reset(_db_gfld_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gfld_curs_Reset(_db_gfld_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gfld_curs.ValidQ
-bool                 _db_gfld_curs_ValidQ(_db_gfld_curs &curs) __attribute__((nothrow));
+inline bool          _db_gfld_curs_ValidQ(_db_gfld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gfld_curs.Next
-void                 _db_gfld_curs_Next(_db_gfld_curs &curs) __attribute__((nothrow));
+inline void          _db_gfld_curs_Next(_db_gfld_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gfld_curs.Access
-gcli::FGfld&         _db_gfld_curs_Access(_db_gfld_curs &curs) __attribute__((nothrow));
+inline gcli::FGfld&  _db_gfld_curs_Access(_db_gfld_curs &curs) __attribute__((nothrow));
 // func:gcli.FDb.c_gfld_curs.Reset
-void                 _db_c_gfld_curs_Reset(_db_c_gfld_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_c_gfld_curs_Reset(_db_c_gfld_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.c_gfld_curs.ValidQ
-bool                 _db_c_gfld_curs_ValidQ(_db_c_gfld_curs &curs) __attribute__((nothrow));
+inline bool          _db_c_gfld_curs_ValidQ(_db_c_gfld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.c_gfld_curs.Next
-void                 _db_c_gfld_curs_Next(_db_c_gfld_curs &curs) __attribute__((nothrow));
+inline void          _db_c_gfld_curs_Next(_db_c_gfld_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.c_gfld_curs.Access
-gcli::FGfld&         _db_c_gfld_curs_Access(_db_c_gfld_curs &curs) __attribute__((nothrow));
+inline gcli::FGfld&  _db_c_gfld_curs_Access(_db_c_gfld_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtbl_curs.Reset
-void                 _db_gtbl_curs_Reset(_db_gtbl_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gtbl_curs_Reset(_db_gtbl_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gtbl_curs.ValidQ
-bool                 _db_gtbl_curs_ValidQ(_db_gtbl_curs &curs) __attribute__((nothrow));
+inline bool          _db_gtbl_curs_ValidQ(_db_gtbl_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gtbl_curs.Next
-void                 _db_gtbl_curs_Next(_db_gtbl_curs &curs) __attribute__((nothrow));
+inline void          _db_gtbl_curs_Next(_db_gtbl_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gtbl_curs.Access
-gcli::FGtbl&         _db_gtbl_curs_Access(_db_gtbl_curs &curs) __attribute__((nothrow));
+inline gcli::FGtbl&  _db_gtbl_curs_Access(_db_gtbl_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gact_curs.Reset
-void                 _db_gact_curs_Reset(_db_gact_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
+inline void          _db_gact_curs_Reset(_db_gact_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.gact_curs.ValidQ
-bool                 _db_gact_curs_ValidQ(_db_gact_curs &curs) __attribute__((nothrow));
+inline bool          _db_gact_curs_ValidQ(_db_gact_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FDb.gact_curs.Next
-void                 _db_gact_curs_Next(_db_gact_curs &curs) __attribute__((nothrow));
+inline void          _db_gact_curs_Next(_db_gact_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FDb.gact_curs.Access
-gcli::FGact&         _db_gact_curs_Access(_db_gact_curs &curs) __attribute__((nothrow));
+inline gcli::FGact&  _db_gact_curs_Access(_db_gact_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcli.FDb..Init
 void                 FDb_Init();
@@ -2678,20 +2679,25 @@ void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- gcli.FGact
 // create: gcli.FDb.gact (Lary)
-// global access: ind_gact (Thash)
+// global access: gact (Lary, by rowid)
+// global access: ind_gact (Thash, hash field gact)
 struct FGact { // gcli.FGact
     gcli::FGact*       ind_gact_next;   // hash next
     algo::Smallstr50   gact;            //
     algo::Comment      comment;         //
+    // func:gcli.FGact..AssignOp
+    inline gcli::FGact&  operator =(const gcli::FGact &rhs) = delete;
+    // func:gcli.FGact..CopyCtor
+    inline               FGact(const gcli::FGact &rhs) = delete;
 private:
+    // func:gcli.FGact..Ctor
+    inline               FGact() __attribute__((nothrow));
+    // func:gcli.FGact..Dtor
+    inline               ~FGact() __attribute__((nothrow));
     friend gcli::FGact&         gact_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGact*         gact_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gact_RemoveAll() __attribute__((nothrow));
     friend void                 gact_RemoveLast() __attribute__((nothrow));
-    FGact();
-    ~FGact();
-    FGact(const FGact&){ /*disallow copy constructor */}
-    void operator =(const FGact&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -2703,13 +2709,14 @@ void                 gact_CopyIn(gcli::FGact &row, gclidb::Gact &in) __attribute
 
 // Set all fields to initial values.
 // func:gcli.FGact..Init
-void                 FGact_Init(gcli::FGact& gact);
+inline void          FGact_Init(gcli::FGact& gact);
 // func:gcli.FGact..Uninit
 void                 FGact_Uninit(gcli::FGact& gact) __attribute__((nothrow));
 
 // --- gcli.FGclicmd
 // create: gcli.FDb.gclicmd (Lary)
-// global access: ind_gclicmd (Thash)
+// global access: gclicmd (Lary, by rowid)
+// global access: ind_gclicmd (Thash, hash field gclicmd)
 // global access: c_gclicmd (Ptrary)
 // access: gcli.FGclicmd.step (Hook)
 // access: gcli.FGclicmd.p_gclicmd (Upptr)
@@ -2751,15 +2758,29 @@ struct FGclicmd { // gcli.FGclicmd
     u32                       c_gclicmdf2j_max;       // capacity of allocated array
     gcli::FGclicmd*           p_gclicmd;              // reference to parent row
     bool                      _db_c_gclicmd_in_ary;   //   false  membership flag
+    // reftype Ptrary of gcli.FGclicmd.c_tuples prohibits copy
+    // reftype Hook of gcli.FGclicmd.step prohibits copy
+    // reftype Ptrary of gcli.FGclicmd.c_gclicmdarg prohibits copy
+    // reftype Ptrary of gcli.FGclicmd.c_gclicmdc prohibits copy
+    // reftype Ptrary of gcli.FGclicmd.c_gclicmdf2j prohibits copy
+    // func:gcli.FGclicmd..AssignOp
+    gcli::FGclicmd&      operator =(const gcli::FGclicmd &rhs) = delete;
+    // reftype Ptrary of gcli.FGclicmd.c_tuples prohibits copy
+    // reftype Hook of gcli.FGclicmd.step prohibits copy
+    // reftype Ptrary of gcli.FGclicmd.c_gclicmdarg prohibits copy
+    // reftype Ptrary of gcli.FGclicmd.c_gclicmdc prohibits copy
+    // reftype Ptrary of gcli.FGclicmd.c_gclicmdf2j prohibits copy
+    // func:gcli.FGclicmd..CopyCtor
+    FGclicmd(const gcli::FGclicmd &rhs) = delete;
 private:
+    // func:gcli.FGclicmd..Ctor
+    inline               FGclicmd() __attribute__((nothrow));
+    // func:gcli.FGclicmd..Dtor
+    inline               ~FGclicmd() __attribute__((nothrow));
     friend gcli::FGclicmd&      gclicmd_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGclicmd*      gclicmd_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gclicmd_RemoveAll() __attribute__((nothrow));
     friend void                 gclicmd_RemoveLast() __attribute__((nothrow));
-    FGclicmd();
-    ~FGclicmd();
-    FGclicmd(const FGclicmd&){ /*disallow copy constructor */}
-    void operator =(const FGclicmd&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -2771,13 +2792,13 @@ void                 gclicmd_CopyIn(gcli::FGclicmd &row, gclidb::Gclicmd &in) __
 
 // Return true if index is empty
 // func:gcli.FGclicmd.c_tuples.EmptyQ
-bool                 c_tuples_EmptyQ(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline bool          c_tuples_EmptyQ(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FGclicmd.c_tuples.Find
-gcli::FTuples*       c_tuples_Find(gcli::FGclicmd& gclicmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FTuples* c_tuples_Find(gcli::FGclicmd& gclicmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FGclicmd.c_tuples.Getary
-algo::aryptr<gcli::FTuples*> c_tuples_Getary(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline algo::aryptr<gcli::FTuples*> c_tuples_Getary(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FGclicmd.c_tuples.Insert
@@ -2790,36 +2811,36 @@ void                 c_tuples_Insert(gcli::FGclicmd& gclicmd, gcli::FTuples& row
 bool                 c_tuples_ScanInsertMaybe(gcli::FGclicmd& gclicmd, gcli::FTuples& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FGclicmd.c_tuples.N
-i32                  c_tuples_N(const gcli::FGclicmd& gclicmd) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_tuples_N(const gcli::FGclicmd& gclicmd) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FGclicmd.c_tuples.Remove
 void                 c_tuples_Remove(gcli::FGclicmd& gclicmd, gcli::FTuples& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FGclicmd.c_tuples.RemoveAll
-void                 c_tuples_RemoveAll(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline void          c_tuples_RemoveAll(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FGclicmd.c_tuples.Reserve
 void                 c_tuples_Reserve(gcli::FGclicmd& gclicmd, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FGclicmd.c_tuples.qFind
-gcli::FTuples&       c_tuples_qFind(gcli::FGclicmd& gclicmd, u32 idx) __attribute__((nothrow));
+inline gcli::FTuples& c_tuples_qFind(gcli::FGclicmd& gclicmd, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FGclicmd.c_tuples.qLast
-gcli::FTuples&       c_tuples_qLast(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline gcli::FTuples& c_tuples_qLast(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 
 // Invoke function by pointer
 // func:gcli.FGclicmd.step.Call
-void                 step_Call(gcli::FGclicmd& gclicmd, gcli::FGclicmd& arg) __attribute__((nothrow));
+inline void          step_Call(gcli::FGclicmd& gclicmd, gcli::FGclicmd& arg) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FGclicmd.c_gclicmdarg.EmptyQ
-bool                 c_gclicmdarg_EmptyQ(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline bool          c_gclicmdarg_EmptyQ(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FGclicmd.c_gclicmdarg.Find
-gcli::FGclicmdarg*   c_gclicmdarg_Find(gcli::FGclicmd& gclicmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGclicmdarg* c_gclicmdarg_Find(gcli::FGclicmd& gclicmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FGclicmd.c_gclicmdarg.Getary
-algo::aryptr<gcli::FGclicmdarg*> c_gclicmdarg_Getary(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline algo::aryptr<gcli::FGclicmdarg*> c_gclicmdarg_Getary(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FGclicmd.c_gclicmdarg.Insert
@@ -2831,35 +2852,35 @@ void                 c_gclicmdarg_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmd
 bool                 c_gclicmdarg_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FGclicmd.c_gclicmdarg.N
-i32                  c_gclicmdarg_N(const gcli::FGclicmd& gclicmd) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_gclicmdarg_N(const gcli::FGclicmd& gclicmd) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FGclicmd.c_gclicmdarg.Remove
 void                 c_gclicmdarg_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FGclicmd.c_gclicmdarg.RemoveAll
-void                 c_gclicmdarg_RemoveAll(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline void          c_gclicmdarg_RemoveAll(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FGclicmd.c_gclicmdarg.Reserve
 void                 c_gclicmdarg_Reserve(gcli::FGclicmd& gclicmd, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FGclicmd.c_gclicmdarg.qFind
-gcli::FGclicmdarg&   c_gclicmdarg_qFind(gcli::FGclicmd& gclicmd, u32 idx) __attribute__((nothrow));
+inline gcli::FGclicmdarg& c_gclicmdarg_qFind(gcli::FGclicmd& gclicmd, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FGclicmd.c_gclicmdarg.InAryQ
-bool                 gclicmd_c_gclicmdarg_InAryQ(gcli::FGclicmdarg& row) __attribute__((nothrow));
+inline bool          gclicmd_c_gclicmdarg_InAryQ(gcli::FGclicmdarg& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FGclicmd.c_gclicmdarg.qLast
-gcli::FGclicmdarg&   c_gclicmdarg_qLast(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline gcli::FGclicmdarg& c_gclicmdarg_qLast(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FGclicmd.c_gclicmdc.EmptyQ
-bool                 c_gclicmdc_EmptyQ(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline bool          c_gclicmdc_EmptyQ(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FGclicmd.c_gclicmdc.Find
-gcli::FGclicmdc*     c_gclicmdc_Find(gcli::FGclicmd& gclicmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGclicmdc* c_gclicmdc_Find(gcli::FGclicmd& gclicmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FGclicmd.c_gclicmdc.Getary
-algo::aryptr<gcli::FGclicmdc*> c_gclicmdc_Getary(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline algo::aryptr<gcli::FGclicmdc*> c_gclicmdc_Getary(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FGclicmd.c_gclicmdc.Insert
@@ -2871,35 +2892,35 @@ void                 c_gclicmdc_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdc&
 bool                 c_gclicmdc_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FGclicmd.c_gclicmdc.N
-i32                  c_gclicmdc_N(const gcli::FGclicmd& gclicmd) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_gclicmdc_N(const gcli::FGclicmd& gclicmd) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FGclicmd.c_gclicmdc.Remove
 void                 c_gclicmdc_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FGclicmd.c_gclicmdc.RemoveAll
-void                 c_gclicmdc_RemoveAll(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline void          c_gclicmdc_RemoveAll(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FGclicmd.c_gclicmdc.Reserve
 void                 c_gclicmdc_Reserve(gcli::FGclicmd& gclicmd, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FGclicmd.c_gclicmdc.qFind
-gcli::FGclicmdc&     c_gclicmdc_qFind(gcli::FGclicmd& gclicmd, u32 idx) __attribute__((nothrow));
+inline gcli::FGclicmdc& c_gclicmdc_qFind(gcli::FGclicmd& gclicmd, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FGclicmd.c_gclicmdc.InAryQ
-bool                 gclicmd_c_gclicmdc_InAryQ(gcli::FGclicmdc& row) __attribute__((nothrow));
+inline bool          gclicmd_c_gclicmdc_InAryQ(gcli::FGclicmdc& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FGclicmd.c_gclicmdc.qLast
-gcli::FGclicmdc&     c_gclicmdc_qLast(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline gcli::FGclicmdc& c_gclicmdc_qLast(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FGclicmd.c_gclicmdf2j.EmptyQ
-bool                 c_gclicmdf2j_EmptyQ(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline bool          c_gclicmdf2j_EmptyQ(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FGclicmd.c_gclicmdf2j.Find
-gcli::FGclicmdf2j*   c_gclicmdf2j_Find(gcli::FGclicmd& gclicmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGclicmdf2j* c_gclicmdf2j_Find(gcli::FGclicmd& gclicmd, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FGclicmd.c_gclicmdf2j.Getary
-algo::aryptr<gcli::FGclicmdf2j*> c_gclicmdf2j_Getary(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline algo::aryptr<gcli::FGclicmdf2j*> c_gclicmdf2j_Getary(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FGclicmd.c_gclicmdf2j.Insert
@@ -2911,93 +2932,98 @@ void                 c_gclicmdf2j_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmd
 bool                 c_gclicmdf2j_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FGclicmd.c_gclicmdf2j.N
-i32                  c_gclicmdf2j_N(const gcli::FGclicmd& gclicmd) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_gclicmdf2j_N(const gcli::FGclicmd& gclicmd) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FGclicmd.c_gclicmdf2j.Remove
 void                 c_gclicmdf2j_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FGclicmd.c_gclicmdf2j.RemoveAll
-void                 c_gclicmdf2j_RemoveAll(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline void          c_gclicmdf2j_RemoveAll(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FGclicmd.c_gclicmdf2j.Reserve
 void                 c_gclicmdf2j_Reserve(gcli::FGclicmd& gclicmd, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FGclicmd.c_gclicmdf2j.qFind
-gcli::FGclicmdf2j&   c_gclicmdf2j_qFind(gcli::FGclicmd& gclicmd, u32 idx) __attribute__((nothrow));
+inline gcli::FGclicmdf2j& c_gclicmdf2j_qFind(gcli::FGclicmd& gclicmd, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FGclicmd.c_gclicmdf2j.InAryQ
-bool                 gclicmd_c_gclicmdf2j_InAryQ(gcli::FGclicmdf2j& row) __attribute__((nothrow));
+inline bool          gclicmd_c_gclicmdf2j_InAryQ(gcli::FGclicmdf2j& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FGclicmd.c_gclicmdf2j.qLast
-gcli::FGclicmdf2j&   c_gclicmdf2j_qLast(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
+inline gcli::FGclicmdf2j& c_gclicmdf2j_qLast(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:gcli.FGclicmd..Init
 void                 FGclicmd_Init(gcli::FGclicmd& gclicmd);
 // func:gcli.FGclicmd.c_tuples_curs.Reset
-void                 gclicmd_c_tuples_curs_Reset(gclicmd_c_tuples_curs &curs, gcli::FGclicmd &parent) __attribute__((nothrow));
+inline void          gclicmd_c_tuples_curs_Reset(gclicmd_c_tuples_curs &curs, gcli::FGclicmd &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGclicmd.c_tuples_curs.ValidQ
-bool                 gclicmd_c_tuples_curs_ValidQ(gclicmd_c_tuples_curs &curs) __attribute__((nothrow));
+inline bool          gclicmd_c_tuples_curs_ValidQ(gclicmd_c_tuples_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGclicmd.c_tuples_curs.Next
-void                 gclicmd_c_tuples_curs_Next(gclicmd_c_tuples_curs &curs) __attribute__((nothrow));
+inline void          gclicmd_c_tuples_curs_Next(gclicmd_c_tuples_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGclicmd.c_tuples_curs.Access
-gcli::FTuples&       gclicmd_c_tuples_curs_Access(gclicmd_c_tuples_curs &curs) __attribute__((nothrow));
+inline gcli::FTuples& gclicmd_c_tuples_curs_Access(gclicmd_c_tuples_curs &curs) __attribute__((nothrow));
 // func:gcli.FGclicmd.c_gclicmdarg_curs.Reset
-void                 gclicmd_c_gclicmdarg_curs_Reset(gclicmd_c_gclicmdarg_curs &curs, gcli::FGclicmd &parent) __attribute__((nothrow));
+inline void          gclicmd_c_gclicmdarg_curs_Reset(gclicmd_c_gclicmdarg_curs &curs, gcli::FGclicmd &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGclicmd.c_gclicmdarg_curs.ValidQ
-bool                 gclicmd_c_gclicmdarg_curs_ValidQ(gclicmd_c_gclicmdarg_curs &curs) __attribute__((nothrow));
+inline bool          gclicmd_c_gclicmdarg_curs_ValidQ(gclicmd_c_gclicmdarg_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGclicmd.c_gclicmdarg_curs.Next
-void                 gclicmd_c_gclicmdarg_curs_Next(gclicmd_c_gclicmdarg_curs &curs) __attribute__((nothrow));
+inline void          gclicmd_c_gclicmdarg_curs_Next(gclicmd_c_gclicmdarg_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGclicmd.c_gclicmdarg_curs.Access
-gcli::FGclicmdarg&   gclicmd_c_gclicmdarg_curs_Access(gclicmd_c_gclicmdarg_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmdarg& gclicmd_c_gclicmdarg_curs_Access(gclicmd_c_gclicmdarg_curs &curs) __attribute__((nothrow));
 // func:gcli.FGclicmd.c_gclicmdc_curs.Reset
-void                 gclicmd_c_gclicmdc_curs_Reset(gclicmd_c_gclicmdc_curs &curs, gcli::FGclicmd &parent) __attribute__((nothrow));
+inline void          gclicmd_c_gclicmdc_curs_Reset(gclicmd_c_gclicmdc_curs &curs, gcli::FGclicmd &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGclicmd.c_gclicmdc_curs.ValidQ
-bool                 gclicmd_c_gclicmdc_curs_ValidQ(gclicmd_c_gclicmdc_curs &curs) __attribute__((nothrow));
+inline bool          gclicmd_c_gclicmdc_curs_ValidQ(gclicmd_c_gclicmdc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGclicmd.c_gclicmdc_curs.Next
-void                 gclicmd_c_gclicmdc_curs_Next(gclicmd_c_gclicmdc_curs &curs) __attribute__((nothrow));
+inline void          gclicmd_c_gclicmdc_curs_Next(gclicmd_c_gclicmdc_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGclicmd.c_gclicmdc_curs.Access
-gcli::FGclicmdc&     gclicmd_c_gclicmdc_curs_Access(gclicmd_c_gclicmdc_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmdc& gclicmd_c_gclicmdc_curs_Access(gclicmd_c_gclicmdc_curs &curs) __attribute__((nothrow));
 // func:gcli.FGclicmd.c_gclicmdf2j_curs.Reset
-void                 gclicmd_c_gclicmdf2j_curs_Reset(gclicmd_c_gclicmdf2j_curs &curs, gcli::FGclicmd &parent) __attribute__((nothrow));
+inline void          gclicmd_c_gclicmdf2j_curs_Reset(gclicmd_c_gclicmdf2j_curs &curs, gcli::FGclicmd &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGclicmd.c_gclicmdf2j_curs.ValidQ
-bool                 gclicmd_c_gclicmdf2j_curs_ValidQ(gclicmd_c_gclicmdf2j_curs &curs) __attribute__((nothrow));
+inline bool          gclicmd_c_gclicmdf2j_curs_ValidQ(gclicmd_c_gclicmdf2j_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGclicmd.c_gclicmdf2j_curs.Next
-void                 gclicmd_c_gclicmdf2j_curs_Next(gclicmd_c_gclicmdf2j_curs &curs) __attribute__((nothrow));
+inline void          gclicmd_c_gclicmdf2j_curs_Next(gclicmd_c_gclicmdf2j_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGclicmd.c_gclicmdf2j_curs.Access
-gcli::FGclicmdf2j&   gclicmd_c_gclicmdf2j_curs_Access(gclicmd_c_gclicmdf2j_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmdf2j& gclicmd_c_gclicmdf2j_curs_Access(gclicmd_c_gclicmdf2j_curs &curs) __attribute__((nothrow));
 // func:gcli.FGclicmd..Uninit
 void                 FGclicmd_Uninit(gcli::FGclicmd& gclicmd) __attribute__((nothrow));
 
 // --- gcli.FGclicmdarg
 // create: gcli.FDb.gclicmdarg (Lary)
-// global access: ind_gclicmdarg (Thash)
+// global access: gclicmdarg (Lary, by rowid)
+// global access: ind_gclicmdarg (Thash, hash field gclicmdarg)
 // access: gcli.FGclicmd.c_gclicmdarg (Ptrary)
 struct FGclicmdarg { // gcli.FGclicmdarg
     gcli::FGclicmdarg*   ind_gclicmdarg_next;           // hash next
     algo::Smallstr250    gclicmdarg;                    //
     bool                 gclicmd_c_gclicmdarg_in_ary;   //   false  membership flag
+    // func:gcli.FGclicmdarg..AssignOp
+    inline gcli::FGclicmdarg& operator =(const gcli::FGclicmdarg &rhs) = delete;
+    // func:gcli.FGclicmdarg..CopyCtor
+    inline               FGclicmdarg(const gcli::FGclicmdarg &rhs) = delete;
 private:
+    // func:gcli.FGclicmdarg..Ctor
+    inline               FGclicmdarg() __attribute__((nothrow));
+    // func:gcli.FGclicmdarg..Dtor
+    inline               ~FGclicmdarg() __attribute__((nothrow));
     friend gcli::FGclicmdarg&   gclicmdarg_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGclicmdarg*   gclicmdarg_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gclicmdarg_RemoveAll() __attribute__((nothrow));
     friend void                 gclicmdarg_RemoveLast() __attribute__((nothrow));
-    FGclicmdarg();
-    ~FGclicmdarg();
-    FGclicmdarg(const FGclicmdarg&){ /*disallow copy constructor */}
-    void operator =(const FGclicmdarg&){ /*disallow direct assignment */}
 };
 
 // func:gcli.FGclicmdarg.gclicmd.Get
@@ -3008,7 +3034,7 @@ algo::cstring        arg_Get(gcli::FGclicmdarg& gclicmdarg) __attribute__((__war
 
 // Set all fields to initial values.
 // func:gcli.FGclicmdarg..Init
-void                 FGclicmdarg_Init(gcli::FGclicmdarg& gclicmdarg);
+inline void          FGclicmdarg_Init(gcli::FGclicmdarg& gclicmdarg);
 // func:gcli.FGclicmdarg..Concat_gclicmd_arg
 tempstr              FGclicmdarg_Concat_gclicmd_arg( const algo::strptr& gclicmd ,const algo::strptr& arg );
 // func:gcli.FGclicmdarg..Uninit
@@ -3016,7 +3042,8 @@ void                 FGclicmdarg_Uninit(gcli::FGclicmdarg& gclicmdarg) __attribu
 
 // --- gcli.FGclicmdc
 // create: gcli.FDb.gclicmdc (Lary)
-// global access: ind_gclicmdc (Thash)
+// global access: gclicmdc (Lary, by rowid)
+// global access: ind_gclicmdc (Thash, hash field gclicmdc)
 // access: gcli.FGclicmd.c_gclicmdc (Ptrary)
 struct FGclicmdc { // gcli.FGclicmdc
     gcli::FGclicmdc*    ind_gclicmdc_next;           // hash next
@@ -3025,15 +3052,21 @@ struct FGclicmdc { // gcli.FGclicmdc
     u32                 c_gclicmdf_n;                // array of pointers
     u32                 c_gclicmdf_max;              // capacity of allocated array
     bool                gclicmd_c_gclicmdc_in_ary;   //   false  membership flag
+    // reftype Ptrary of gcli.FGclicmdc.c_gclicmdf prohibits copy
+    // func:gcli.FGclicmdc..AssignOp
+    inline gcli::FGclicmdc& operator =(const gcli::FGclicmdc &rhs) = delete;
+    // reftype Ptrary of gcli.FGclicmdc.c_gclicmdf prohibits copy
+    // func:gcli.FGclicmdc..CopyCtor
+    inline               FGclicmdc(const gcli::FGclicmdc &rhs) = delete;
 private:
+    // func:gcli.FGclicmdc..Ctor
+    inline               FGclicmdc() __attribute__((nothrow));
+    // func:gcli.FGclicmdc..Dtor
+    inline               ~FGclicmdc() __attribute__((nothrow));
     friend gcli::FGclicmdc&     gclicmdc_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGclicmdc*     gclicmdc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gclicmdc_RemoveAll() __attribute__((nothrow));
     friend void                 gclicmdc_RemoveLast() __attribute__((nothrow));
-    FGclicmdc();
-    ~FGclicmdc();
-    FGclicmdc(const FGclicmdc&){ /*disallow copy constructor */}
-    void operator =(const FGclicmdc&){ /*disallow direct assignment */}
 };
 
 // func:gcli.FGclicmdc.gclicmd.Get
@@ -3044,13 +3077,13 @@ algo::cstring        ctype_Get(gcli::FGclicmdc& gclicmdc) __attribute__((__warn_
 
 // Return true if index is empty
 // func:gcli.FGclicmdc.c_gclicmdf.EmptyQ
-bool                 c_gclicmdf_EmptyQ(gcli::FGclicmdc& gclicmdc) __attribute__((nothrow));
+inline bool          c_gclicmdf_EmptyQ(gcli::FGclicmdc& gclicmdc) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FGclicmdc.c_gclicmdf.Find
-gcli::FGclicmdf*     c_gclicmdf_Find(gcli::FGclicmdc& gclicmdc, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGclicmdf* c_gclicmdf_Find(gcli::FGclicmdc& gclicmdc, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FGclicmdc.c_gclicmdf.Getary
-algo::aryptr<gcli::FGclicmdf*> c_gclicmdf_Getary(gcli::FGclicmdc& gclicmdc) __attribute__((nothrow));
+inline algo::aryptr<gcli::FGclicmdf*> c_gclicmdf_Getary(gcli::FGclicmdc& gclicmdc) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FGclicmdc.c_gclicmdf.Insert
@@ -3062,48 +3095,49 @@ void                 c_gclicmdf_Insert(gcli::FGclicmdc& gclicmdc, gcli::FGclicmd
 bool                 c_gclicmdf_InsertMaybe(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FGclicmdc.c_gclicmdf.N
-i32                  c_gclicmdf_N(const gcli::FGclicmdc& gclicmdc) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_gclicmdf_N(const gcli::FGclicmdc& gclicmdc) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FGclicmdc.c_gclicmdf.Remove
 void                 c_gclicmdf_Remove(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FGclicmdc.c_gclicmdf.RemoveAll
-void                 c_gclicmdf_RemoveAll(gcli::FGclicmdc& gclicmdc) __attribute__((nothrow));
+inline void          c_gclicmdf_RemoveAll(gcli::FGclicmdc& gclicmdc) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FGclicmdc.c_gclicmdf.Reserve
 void                 c_gclicmdf_Reserve(gcli::FGclicmdc& gclicmdc, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FGclicmdc.c_gclicmdf.qFind
-gcli::FGclicmdf&     c_gclicmdf_qFind(gcli::FGclicmdc& gclicmdc, u32 idx) __attribute__((nothrow));
+inline gcli::FGclicmdf& c_gclicmdf_qFind(gcli::FGclicmdc& gclicmdc, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FGclicmdc.c_gclicmdf.InAryQ
-bool                 gclicmdc_c_gclicmdf_InAryQ(gcli::FGclicmdf& row) __attribute__((nothrow));
+inline bool          gclicmdc_c_gclicmdf_InAryQ(gcli::FGclicmdf& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FGclicmdc.c_gclicmdf.qLast
-gcli::FGclicmdf&     c_gclicmdf_qLast(gcli::FGclicmdc& gclicmdc) __attribute__((nothrow));
+inline gcli::FGclicmdf& c_gclicmdf_qLast(gcli::FGclicmdc& gclicmdc) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:gcli.FGclicmdc..Init
-void                 FGclicmdc_Init(gcli::FGclicmdc& gclicmdc);
+inline void          FGclicmdc_Init(gcli::FGclicmdc& gclicmdc);
 // func:gcli.FGclicmdc..Concat_gclicmd_ctype
 tempstr              FGclicmdc_Concat_gclicmd_ctype( const algo::strptr& gclicmd ,const algo::strptr& ctype );
 // func:gcli.FGclicmdc.c_gclicmdf_curs.Reset
-void                 gclicmdc_c_gclicmdf_curs_Reset(gclicmdc_c_gclicmdf_curs &curs, gcli::FGclicmdc &parent) __attribute__((nothrow));
+inline void          gclicmdc_c_gclicmdf_curs_Reset(gclicmdc_c_gclicmdf_curs &curs, gcli::FGclicmdc &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGclicmdc.c_gclicmdf_curs.ValidQ
-bool                 gclicmdc_c_gclicmdf_curs_ValidQ(gclicmdc_c_gclicmdf_curs &curs) __attribute__((nothrow));
+inline bool          gclicmdc_c_gclicmdf_curs_ValidQ(gclicmdc_c_gclicmdf_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGclicmdc.c_gclicmdf_curs.Next
-void                 gclicmdc_c_gclicmdf_curs_Next(gclicmdc_c_gclicmdf_curs &curs) __attribute__((nothrow));
+inline void          gclicmdc_c_gclicmdf_curs_Next(gclicmdc_c_gclicmdf_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGclicmdc.c_gclicmdf_curs.Access
-gcli::FGclicmdf&     gclicmdc_c_gclicmdf_curs_Access(gclicmdc_c_gclicmdf_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmdf& gclicmdc_c_gclicmdf_curs_Access(gclicmdc_c_gclicmdf_curs &curs) __attribute__((nothrow));
 // func:gcli.FGclicmdc..Uninit
 void                 FGclicmdc_Uninit(gcli::FGclicmdc& gclicmdc) __attribute__((nothrow));
 
 // --- gcli.FGclicmdf
 // create: gcli.FDb.gclicmdf (Lary)
-// global access: ind_gclicmdf (Thash)
+// global access: gclicmdf (Lary, by rowid)
+// global access: ind_gclicmdf (Thash, hash field gclicmdf)
 // access: gcli.FGclicmdc.c_gclicmdf (Ptrary)
 // access: gcli.FGclicmdj2f.c_gclicmdf (Ptrary)
 struct FGclicmdf { // gcli.FGclicmdf: fields
@@ -3111,15 +3145,19 @@ struct FGclicmdf { // gcli.FGclicmdf: fields
     algo::Smallstr250   gclicmdf;                     //
     algo::cstring       uval;                         //
     bool                gclicmdc_c_gclicmdf_in_ary;   //   false  membership flag
+    // func:gcli.FGclicmdf..AssignOp
+    inline gcli::FGclicmdf& operator =(const gcli::FGclicmdf &rhs) = delete;
+    // func:gcli.FGclicmdf..CopyCtor
+    inline               FGclicmdf(const gcli::FGclicmdf &rhs) = delete;
 private:
+    // func:gcli.FGclicmdf..Ctor
+    inline               FGclicmdf() __attribute__((nothrow));
+    // func:gcli.FGclicmdf..Dtor
+    inline               ~FGclicmdf() __attribute__((nothrow));
     friend gcli::FGclicmdf&     gclicmdf_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGclicmdf*     gclicmdf_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gclicmdf_RemoveAll() __attribute__((nothrow));
     friend void                 gclicmdf_RemoveLast() __attribute__((nothrow));
-    FGclicmdf();
-    ~FGclicmdf();
-    FGclicmdf(const FGclicmdf&){ /*disallow copy constructor */}
-    void operator =(const FGclicmdf&){ /*disallow direct assignment */}
 };
 
 // func:gcli.FGclicmdf.gclicmd.Get
@@ -3136,7 +3174,7 @@ algo::cstring        gclicmdc_Get(gcli::FGclicmdf& gclicmdf) __attribute__((__wa
 
 // Set all fields to initial values.
 // func:gcli.FGclicmdf..Init
-void                 FGclicmdf_Init(gcli::FGclicmdf& gclicmdf);
+inline void          FGclicmdf_Init(gcli::FGclicmdf& gclicmdf);
 // func:gcli.FGclicmdf..Concat_gclicmd_field
 tempstr              FGclicmdf_Concat_gclicmd_field( const algo::strptr& gclicmd ,const algo::strptr& field );
 // func:gcli.FGclicmdf..Concat_gclicmdc_name
@@ -3146,6 +3184,7 @@ void                 FGclicmdf_Uninit(gcli::FGclicmdf& gclicmdf) __attribute__((
 
 // --- gcli.FGclicmdf2j
 // create: gcli.FDb.gclicmdf2j (Lary)
+// global access: gclicmdf2j (Lary, by rowid)
 // access: gcli.FGclicmd.c_gclicmdf2j (Ptrary)
 struct FGclicmdf2j { // gcli.FGclicmdf2j: mapping field to json key
     algo::Smallstr250   gclicmdf2j;                    //
@@ -3153,15 +3192,21 @@ struct FGclicmdf2j { // gcli.FGclicmdf2j: mapping field to json key
     algo::Comment       comment;                       //
     gcli::FGclicmd*     p_gclicmd;                     // reference to parent row
     bool                gclicmd_c_gclicmdf2j_in_ary;   //   false  membership flag
+    // x-reference on gcli.FGclicmdf2j.p_gclicmd prevents copy
+    // func:gcli.FGclicmdf2j..AssignOp
+    gcli::FGclicmdf2j&   operator =(const gcli::FGclicmdf2j &rhs) = delete;
+    // x-reference on gcli.FGclicmdf2j.p_gclicmd prevents copy
+    // func:gcli.FGclicmdf2j..CopyCtor
+    FGclicmdf2j(const gcli::FGclicmdf2j &rhs) = delete;
 private:
+    // func:gcli.FGclicmdf2j..Ctor
+    inline               FGclicmdf2j() __attribute__((nothrow));
+    // func:gcli.FGclicmdf2j..Dtor
+    inline               ~FGclicmdf2j() __attribute__((nothrow));
     friend gcli::FGclicmdf2j&   gclicmdf2j_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGclicmdf2j*   gclicmdf2j_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gclicmdf2j_RemoveAll() __attribute__((nothrow));
     friend void                 gclicmdf2j_RemoveLast() __attribute__((nothrow));
-    FGclicmdf2j();
-    ~FGclicmdf2j();
-    FGclicmdf2j(const FGclicmdf2j&){ /*disallow copy constructor */}
-    void operator =(const FGclicmdf2j&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3185,13 +3230,14 @@ algo::cstring        jkey_Get(gcli::FGclicmdf2j& gclicmdf2j) __attribute__((__wa
 
 // Set all fields to initial values.
 // func:gcli.FGclicmdf2j..Init
-void                 FGclicmdf2j_Init(gcli::FGclicmdf2j& gclicmdf2j);
+inline void          FGclicmdf2j_Init(gcli::FGclicmdf2j& gclicmdf2j);
 // func:gcli.FGclicmdf2j..Uninit
 void                 FGclicmdf2j_Uninit(gcli::FGclicmdf2j& gclicmdf2j) __attribute__((nothrow));
 
 // --- gcli.FGclicmdj2f
 // create: gcli.FDb.gclicmdj2f (Lary)
-// global access: ind_gclicmdj2f (Thash)
+// global access: gclicmdj2f (Lary, by rowid)
+// global access: ind_gclicmdj2f (Thash, hash field gclicmdj2f)
 struct FGclicmdj2f { // gcli.FGclicmdj2f
     gcli::FGclicmdj2f*   ind_gclicmdj2f_next;   // hash next
     algo::Smallstr250    gclicmdj2f;            //
@@ -3200,15 +3246,21 @@ struct FGclicmdj2f { // gcli.FGclicmdj2f
     gcli::FGclicmdf**    c_gclicmdf_elems;      // array of pointers
     u32                  c_gclicmdf_n;          // array of pointers
     u32                  c_gclicmdf_max;        // capacity of allocated array
+    // reftype Ptrary of gcli.FGclicmdj2f.c_gclicmdf prohibits copy
+    // func:gcli.FGclicmdj2f..AssignOp
+    inline gcli::FGclicmdj2f& operator =(const gcli::FGclicmdj2f &rhs) = delete;
+    // reftype Ptrary of gcli.FGclicmdj2f.c_gclicmdf prohibits copy
+    // func:gcli.FGclicmdj2f..CopyCtor
+    inline               FGclicmdj2f(const gcli::FGclicmdj2f &rhs) = delete;
 private:
+    // func:gcli.FGclicmdj2f..Ctor
+    inline               FGclicmdj2f() __attribute__((nothrow));
+    // func:gcli.FGclicmdj2f..Dtor
+    inline               ~FGclicmdj2f() __attribute__((nothrow));
     friend gcli::FGclicmdj2f&   gclicmdj2f_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGclicmdj2f*   gclicmdj2f_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gclicmdj2f_RemoveAll() __attribute__((nothrow));
     friend void                 gclicmdj2f_RemoveLast() __attribute__((nothrow));
-    FGclicmdj2f();
-    ~FGclicmdj2f();
-    FGclicmdj2f(const FGclicmdj2f&){ /*disallow copy constructor */}
-    void operator =(const FGclicmdj2f&){ /*disallow direct assignment */}
 };
 
 // func:gcli.FGclicmdj2f.gclicmd.Get
@@ -3219,13 +3271,13 @@ algo::cstring        jkey_Get(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((__wa
 
 // Return true if index is empty
 // func:gcli.FGclicmdj2f.c_gclicmdf.EmptyQ
-bool                 c_gclicmdf_EmptyQ(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((nothrow));
+inline bool          c_gclicmdf_EmptyQ(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FGclicmdj2f.c_gclicmdf.Find
-gcli::FGclicmdf*     c_gclicmdf_Find(gcli::FGclicmdj2f& gclicmdj2f, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGclicmdf* c_gclicmdf_Find(gcli::FGclicmdj2f& gclicmdj2f, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FGclicmdj2f.c_gclicmdf.Getary
-algo::aryptr<gcli::FGclicmdf*> c_gclicmdf_Getary(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((nothrow));
+inline algo::aryptr<gcli::FGclicmdf*> c_gclicmdf_Getary(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FGclicmdj2f.c_gclicmdf.Insert
@@ -3238,45 +3290,46 @@ void                 c_gclicmdf_Insert(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGcl
 bool                 c_gclicmdf_ScanInsertMaybe(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGclicmdf& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FGclicmdj2f.c_gclicmdf.N
-i32                  c_gclicmdf_N(const gcli::FGclicmdj2f& gclicmdj2f) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_gclicmdf_N(const gcli::FGclicmdj2f& gclicmdj2f) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FGclicmdj2f.c_gclicmdf.Remove
 void                 c_gclicmdf_Remove(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGclicmdf& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FGclicmdj2f.c_gclicmdf.RemoveAll
-void                 c_gclicmdf_RemoveAll(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((nothrow));
+inline void          c_gclicmdf_RemoveAll(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FGclicmdj2f.c_gclicmdf.Reserve
 void                 c_gclicmdf_Reserve(gcli::FGclicmdj2f& gclicmdj2f, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FGclicmdj2f.c_gclicmdf.qFind
-gcli::FGclicmdf&     c_gclicmdf_qFind(gcli::FGclicmdj2f& gclicmdj2f, u32 idx) __attribute__((nothrow));
+inline gcli::FGclicmdf& c_gclicmdf_qFind(gcli::FGclicmdj2f& gclicmdj2f, u32 idx) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FGclicmdj2f.c_gclicmdf.qLast
-gcli::FGclicmdf&     c_gclicmdf_qLast(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((nothrow));
+inline gcli::FGclicmdf& c_gclicmdf_qLast(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:gcli.FGclicmdj2f..Init
-void                 FGclicmdj2f_Init(gcli::FGclicmdj2f& gclicmdj2f);
+inline void          FGclicmdj2f_Init(gcli::FGclicmdj2f& gclicmdj2f);
 // func:gcli.FGclicmdj2f..Concat_gclicmd_jkey
 tempstr              FGclicmdj2f_Concat_gclicmd_jkey( const algo::strptr& gclicmd ,const algo::strptr& jkey );
 // func:gcli.FGclicmdj2f.c_gclicmdf_curs.Reset
-void                 gclicmdj2f_c_gclicmdf_curs_Reset(gclicmdj2f_c_gclicmdf_curs &curs, gcli::FGclicmdj2f &parent) __attribute__((nothrow));
+inline void          gclicmdj2f_c_gclicmdf_curs_Reset(gclicmdj2f_c_gclicmdf_curs &curs, gcli::FGclicmdj2f &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGclicmdj2f.c_gclicmdf_curs.ValidQ
-bool                 gclicmdj2f_c_gclicmdf_curs_ValidQ(gclicmdj2f_c_gclicmdf_curs &curs) __attribute__((nothrow));
+inline bool          gclicmdj2f_c_gclicmdf_curs_ValidQ(gclicmdj2f_c_gclicmdf_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGclicmdj2f.c_gclicmdf_curs.Next
-void                 gclicmdj2f_c_gclicmdf_curs_Next(gclicmdj2f_c_gclicmdf_curs &curs) __attribute__((nothrow));
+inline void          gclicmdj2f_c_gclicmdf_curs_Next(gclicmdj2f_c_gclicmdf_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGclicmdj2f.c_gclicmdf_curs.Access
-gcli::FGclicmdf&     gclicmdj2f_c_gclicmdf_curs_Access(gclicmdj2f_c_gclicmdf_curs &curs) __attribute__((nothrow));
+inline gcli::FGclicmdf& gclicmdj2f_c_gclicmdf_curs_Access(gclicmdj2f_c_gclicmdf_curs &curs) __attribute__((nothrow));
 // func:gcli.FGclicmdj2f..Uninit
 void                 FGclicmdj2f_Uninit(gcli::FGclicmdj2f& gclicmdj2f) __attribute__((nothrow));
 
 // --- gcli.FGclicmdt
 // create: gcli.FDb.gclicmdt (Lary)
-// global access: ind_gclicmdt (Thash)
+// global access: gclicmdt (Lary, by rowid)
+// global access: ind_gclicmdt (Thash, hash field gclicmdt)
 struct FGclicmdt { // gcli.FGclicmdt
     gcli::FGclicmdt*    ind_gclicmdt_next;   // hash next
     algo::Smallstr250   gclicmdt;            //
@@ -3285,15 +3338,23 @@ struct FGclicmdt { // gcli.FGclicmdt
     algo::Comment       comment;             //
     gcli::FGclicmd*     p_gclicmd;           // reference to parent row
     gcli::FGtype*       p_gtype;             // reference to parent row
+    // x-reference on gcli.FGclicmdt.p_gclicmd prevents copy
+    // x-reference on gcli.FGclicmdt.p_gtype prevents copy
+    // func:gcli.FGclicmdt..AssignOp
+    inline gcli::FGclicmdt& operator =(const gcli::FGclicmdt &rhs) = delete;
+    // x-reference on gcli.FGclicmdt.p_gclicmd prevents copy
+    // x-reference on gcli.FGclicmdt.p_gtype prevents copy
+    // func:gcli.FGclicmdt..CopyCtor
+    inline               FGclicmdt(const gcli::FGclicmdt &rhs) = delete;
 private:
+    // func:gcli.FGclicmdt..Ctor
+    inline               FGclicmdt() __attribute__((nothrow));
+    // func:gcli.FGclicmdt..Dtor
+    inline               ~FGclicmdt() __attribute__((nothrow));
     friend gcli::FGclicmdt&     gclicmdt_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGclicmdt*     gclicmdt_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gclicmdt_RemoveAll() __attribute__((nothrow));
     friend void                 gclicmdt_RemoveLast() __attribute__((nothrow));
-    FGclicmdt();
-    ~FGclicmdt();
-    FGclicmdt(const FGclicmdt&){ /*disallow copy constructor */}
-    void operator =(const FGclicmdt&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3311,13 +3372,14 @@ algo::Smallstr50     gtype_Get(gcli::FGclicmdt& gclicmdt) __attribute__((__warn_
 
 // Set all fields to initial values.
 // func:gcli.FGclicmdt..Init
-void                 FGclicmdt_Init(gcli::FGclicmdt& gclicmdt);
+inline void          FGclicmdt_Init(gcli::FGclicmdt& gclicmdt);
 // func:gcli.FGclicmdt..Uninit
 void                 FGclicmdt_Uninit(gcli::FGclicmdt& gclicmdt) __attribute__((nothrow));
 
 // --- gcli.FGfld
 // create: gcli.FDb.gfld (Lary)
-// global access: ind_gfld (Thash)
+// global access: gfld (Lary, by rowid)
+// global access: ind_gfld (Thash, hash field gfld)
 // global access: c_gfld (Ptrary)
 // access: gcli.FGtblactfld.p_gfld (Upptr)
 struct FGfld { // gcli.FGfld
@@ -3328,15 +3390,21 @@ struct FGfld { // gcli.FGfld
     u32                   c_gtblactfld_n;       // array of pointers
     u32                   c_gtblactfld_max;     // capacity of allocated array
     bool                  _db_c_gfld_in_ary;    //   false  membership flag
+    // reftype Ptrary of gcli.FGfld.c_gtblactfld prohibits copy
+    // func:gcli.FGfld..AssignOp
+    inline gcli::FGfld&  operator =(const gcli::FGfld &rhs) = delete;
+    // reftype Ptrary of gcli.FGfld.c_gtblactfld prohibits copy
+    // func:gcli.FGfld..CopyCtor
+    inline               FGfld(const gcli::FGfld &rhs) = delete;
 private:
+    // func:gcli.FGfld..Ctor
+    inline               FGfld() __attribute__((nothrow));
+    // func:gcli.FGfld..Dtor
+    inline               ~FGfld() __attribute__((nothrow));
     friend gcli::FGfld&         gfld_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGfld*         gfld_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gfld_RemoveAll() __attribute__((nothrow));
     friend void                 gfld_RemoveLast() __attribute__((nothrow));
-    FGfld();
-    ~FGfld();
-    FGfld(const FGfld&){ /*disallow copy constructor */}
-    void operator =(const FGfld&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3348,13 +3416,13 @@ void                 gfld_CopyIn(gcli::FGfld &row, gclidb::Gfld &in) __attribute
 
 // Return true if index is empty
 // func:gcli.FGfld.c_gtblactfld.EmptyQ
-bool                 c_gtblactfld_EmptyQ(gcli::FGfld& gfld) __attribute__((nothrow));
+inline bool          c_gtblactfld_EmptyQ(gcli::FGfld& gfld) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FGfld.c_gtblactfld.Find
-gcli::FGtblactfld*   c_gtblactfld_Find(gcli::FGfld& gfld, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGtblactfld* c_gtblactfld_Find(gcli::FGfld& gfld, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FGfld.c_gtblactfld.Getary
-algo::aryptr<gcli::FGtblactfld*> c_gtblactfld_Getary(gcli::FGfld& gfld) __attribute__((nothrow));
+inline algo::aryptr<gcli::FGtblactfld*> c_gtblactfld_Getary(gcli::FGfld& gfld) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FGfld.c_gtblactfld.Insert
@@ -3366,46 +3434,47 @@ void                 c_gtblactfld_Insert(gcli::FGfld& gfld, gcli::FGtblactfld& r
 bool                 c_gtblactfld_InsertMaybe(gcli::FGfld& gfld, gcli::FGtblactfld& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FGfld.c_gtblactfld.N
-i32                  c_gtblactfld_N(const gcli::FGfld& gfld) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_gtblactfld_N(const gcli::FGfld& gfld) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FGfld.c_gtblactfld.Remove
 void                 c_gtblactfld_Remove(gcli::FGfld& gfld, gcli::FGtblactfld& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FGfld.c_gtblactfld.RemoveAll
-void                 c_gtblactfld_RemoveAll(gcli::FGfld& gfld) __attribute__((nothrow));
+inline void          c_gtblactfld_RemoveAll(gcli::FGfld& gfld) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FGfld.c_gtblactfld.Reserve
 void                 c_gtblactfld_Reserve(gcli::FGfld& gfld, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FGfld.c_gtblactfld.qFind
-gcli::FGtblactfld&   c_gtblactfld_qFind(gcli::FGfld& gfld, u32 idx) __attribute__((nothrow));
+inline gcli::FGtblactfld& c_gtblactfld_qFind(gcli::FGfld& gfld, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FGfld.c_gtblactfld.InAryQ
-bool                 gfld_c_gtblactfld_InAryQ(gcli::FGtblactfld& row) __attribute__((nothrow));
+inline bool          gfld_c_gtblactfld_InAryQ(gcli::FGtblactfld& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FGfld.c_gtblactfld.qLast
-gcli::FGtblactfld&   c_gtblactfld_qLast(gcli::FGfld& gfld) __attribute__((nothrow));
+inline gcli::FGtblactfld& c_gtblactfld_qLast(gcli::FGfld& gfld) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:gcli.FGfld..Init
-void                 FGfld_Init(gcli::FGfld& gfld);
+inline void          FGfld_Init(gcli::FGfld& gfld);
 // func:gcli.FGfld.c_gtblactfld_curs.Reset
-void                 gfld_c_gtblactfld_curs_Reset(gfld_c_gtblactfld_curs &curs, gcli::FGfld &parent) __attribute__((nothrow));
+inline void          gfld_c_gtblactfld_curs_Reset(gfld_c_gtblactfld_curs &curs, gcli::FGfld &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGfld.c_gtblactfld_curs.ValidQ
-bool                 gfld_c_gtblactfld_curs_ValidQ(gfld_c_gtblactfld_curs &curs) __attribute__((nothrow));
+inline bool          gfld_c_gtblactfld_curs_ValidQ(gfld_c_gtblactfld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGfld.c_gtblactfld_curs.Next
-void                 gfld_c_gtblactfld_curs_Next(gfld_c_gtblactfld_curs &curs) __attribute__((nothrow));
+inline void          gfld_c_gtblactfld_curs_Next(gfld_c_gtblactfld_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGfld.c_gtblactfld_curs.Access
-gcli::FGtblactfld&   gfld_c_gtblactfld_curs_Access(gfld_c_gtblactfld_curs &curs) __attribute__((nothrow));
+inline gcli::FGtblactfld& gfld_c_gtblactfld_curs_Access(gfld_c_gtblactfld_curs &curs) __attribute__((nothrow));
 // func:gcli.FGfld..Uninit
 void                 FGfld_Uninit(gcli::FGfld& gfld) __attribute__((nothrow));
 
 // --- gcli.FGithost
 // create: gcli.FDb.githost (Lary)
-// global access: ind_githost (Thash)
+// global access: githost (Lary, by rowid)
+// global access: ind_githost (Thash, hash field githost)
 struct FGithost { // gcli.FGithost
     gcli::FGithost*     ind_githost_next;   // hash next
     algo::Smallstr250   githost;            //
@@ -3416,40 +3485,49 @@ struct FGithost { // gcli.FGithost
     algo::cstring       user;               //
     algo::cstring       ssh_config;         //
     algo::cstring       ssh_cmd;            //
+    // func:gcli.FGithost..AssignOp
+    inline gcli::FGithost& operator =(const gcli::FGithost &rhs) = delete;
+    // func:gcli.FGithost..CopyCtor
+    inline               FGithost(const gcli::FGithost &rhs) = delete;
 private:
+    // func:gcli.FGithost..Ctor
+    inline               FGithost() __attribute__((nothrow));
+    // func:gcli.FGithost..Dtor
+    inline               ~FGithost() __attribute__((nothrow));
     friend gcli::FGithost&      githost_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGithost*      githost_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 githost_RemoveAll() __attribute__((nothrow));
     friend void                 githost_RemoveLast() __attribute__((nothrow));
-    FGithost();
-    ~FGithost();
-    FGithost(const FGithost&){ /*disallow copy constructor */}
-    void operator =(const FGithost&){ /*disallow direct assignment */}
 };
 
 // Set all fields to initial values.
 // func:gcli.FGithost..Init
-void                 FGithost_Init(gcli::FGithost& githost);
+inline void          FGithost_Init(gcli::FGithost& githost);
 // func:gcli.FGithost..Uninit
 void                 FGithost_Uninit(gcli::FGithost& githost) __attribute__((nothrow));
 
 // --- gcli.FGmethod
 // create: gcli.FDb.gmethod (Lary)
-// global access: ind_gmethod (Thash)
+// global access: gmethod (Lary, by rowid)
+// global access: ind_gmethod (Thash, hash field gmethod)
 struct FGmethod { // gcli.FGmethod
     gcli::FGmethod*    ind_gmethod_next;   // hash next
     algo::Smallstr50   gmethod;            //
     u32                val;                //   0
     algo::Comment      comment;            //
+    // func:gcli.FGmethod..AssignOp
+    inline gcli::FGmethod& operator =(const gcli::FGmethod &rhs) = delete;
+    // func:gcli.FGmethod..CopyCtor
+    inline               FGmethod(const gcli::FGmethod &rhs) = delete;
 private:
+    // func:gcli.FGmethod..Ctor
+    inline               FGmethod() __attribute__((nothrow));
+    // func:gcli.FGmethod..Dtor
+    inline               ~FGmethod() __attribute__((nothrow));
     friend gcli::FGmethod&      gmethod_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGmethod*      gmethod_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gmethod_RemoveAll() __attribute__((nothrow));
     friend void                 gmethod_RemoveLast() __attribute__((nothrow));
-    FGmethod();
-    ~FGmethod();
-    FGmethod(const FGmethod&){ /*disallow copy constructor */}
-    void operator =(const FGmethod&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3461,13 +3539,14 @@ void                 gmethod_CopyIn(gcli::FGmethod &row, gclidb::Gmethod &in) __
 
 // Set all fields to initial values.
 // func:gcli.FGmethod..Init
-void                 FGmethod_Init(gcli::FGmethod& gmethod);
+inline void          FGmethod_Init(gcli::FGmethod& gmethod);
 // func:gcli.FGmethod..Uninit
 void                 FGmethod_Uninit(gcli::FGmethod& gmethod) __attribute__((nothrow));
 
 // --- gcli.FGrepo
 // create: gcli.FDb.grepo (Lary)
-// global access: ind_grepo (Thash)
+// global access: ind_grepo (Thash, hash field grepo)
+// global access: grepo (Lary, by rowid)
 struct FGrepo { // gcli.FGrepo
     gcli::FGrepo*       ind_grepo_next;   // hash next
     algo::Smallstr250   grepo;            // gcli host/full name
@@ -3482,15 +3561,19 @@ struct FGrepo { // gcli.FGrepo
     algo::cstring       priv;             //
     bool                select;           //   false
     algo::cstring       gitremote_cmd;    //
+    // func:gcli.FGrepo..AssignOp
+    gcli::FGrepo&        operator =(const gcli::FGrepo &rhs) = delete;
+    // func:gcli.FGrepo..CopyCtor
+    FGrepo(const gcli::FGrepo &rhs) = delete;
 private:
+    // func:gcli.FGrepo..Ctor
+    inline               FGrepo() __attribute__((nothrow));
+    // func:gcli.FGrepo..Dtor
+    inline               ~FGrepo() __attribute__((nothrow));
     friend gcli::FGrepo&        grepo_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGrepo*        grepo_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 grepo_RemoveAll() __attribute__((nothrow));
     friend void                 grepo_RemoveLast() __attribute__((nothrow));
-    FGrepo();
-    ~FGrepo();
-    FGrepo(const FGrepo&){ /*disallow copy constructor */}
-    void operator =(const FGrepo&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3514,21 +3597,26 @@ void                 FGrepo_Uninit(gcli::FGrepo& grepo) __attribute__((nothrow))
 
 // --- gcli.FGrepogitport
 // create: gcli.FDb.grepogitport (Lary)
-// global access: ind_grepogitport (Thash)
+// global access: grepogitport (Lary, by rowid)
+// global access: ind_grepogitport (Thash, hash field grepogitport)
 struct FGrepogitport { // gcli.FGrepogitport
     gcli::FGrepogitport*   ind_grepogitport_next;   // hash next
     algo::Smallstr50       grepogitport;            // grepo git host
     algo::cstring          port;                    // ssh port for config
     algo::Comment          comment;                 //
+    // func:gcli.FGrepogitport..AssignOp
+    inline gcli::FGrepogitport& operator =(const gcli::FGrepogitport &rhs) = delete;
+    // func:gcli.FGrepogitport..CopyCtor
+    inline               FGrepogitport(const gcli::FGrepogitport &rhs) = delete;
 private:
+    // func:gcli.FGrepogitport..Ctor
+    inline               FGrepogitport() __attribute__((nothrow));
+    // func:gcli.FGrepogitport..Dtor
+    inline               ~FGrepogitport() __attribute__((nothrow));
     friend gcli::FGrepogitport& grepogitport_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGrepogitport* grepogitport_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 grepogitport_RemoveAll() __attribute__((nothrow));
     friend void                 grepogitport_RemoveLast() __attribute__((nothrow));
-    FGrepogitport();
-    ~FGrepogitport();
-    FGrepogitport(const FGrepogitport&){ /*disallow copy constructor */}
-    void operator =(const FGrepogitport&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3540,27 +3628,32 @@ void                 grepogitport_CopyIn(gcli::FGrepogitport &row, gclidb::Grepo
 
 // Set all fields to initial values.
 // func:gcli.FGrepogitport..Init
-void                 FGrepogitport_Init(gcli::FGrepogitport& grepogitport);
+inline void          FGrepogitport_Init(gcli::FGrepogitport& grepogitport);
 // func:gcli.FGrepogitport..Uninit
 void                 FGrepogitport_Uninit(gcli::FGrepogitport& grepogitport) __attribute__((nothrow));
 
 // --- gcli.FGrepossh
 // create: gcli.FDb.grepossh (Lary)
-// global access: ind_grepossh (Thash)
+// global access: grepossh (Lary, by rowid)
+// global access: ind_grepossh (Thash, hash field grepossh)
 struct FGrepossh { // gcli.FGrepossh
     gcli::FGrepossh*    ind_grepossh_next;   // hash next
     algo::Smallstr50    grepossh;            // grepo project/repo name
     algo::Smallstr200   sshid;               // ssh id key name for ssh config
     algo::Comment       comment;             //
+    // func:gcli.FGrepossh..AssignOp
+    inline gcli::FGrepossh& operator =(const gcli::FGrepossh &rhs) = delete;
+    // func:gcli.FGrepossh..CopyCtor
+    inline               FGrepossh(const gcli::FGrepossh &rhs) = delete;
 private:
+    // func:gcli.FGrepossh..Ctor
+    inline               FGrepossh() __attribute__((nothrow));
+    // func:gcli.FGrepossh..Dtor
+    inline               ~FGrepossh() __attribute__((nothrow));
     friend gcli::FGrepossh&     grepossh_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGrepossh*     grepossh_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 grepossh_RemoveAll() __attribute__((nothrow));
     friend void                 grepossh_RemoveLast() __attribute__((nothrow));
-    FGrepossh();
-    ~FGrepossh();
-    FGrepossh(const FGrepossh&){ /*disallow copy constructor */}
-    void operator =(const FGrepossh&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3575,26 +3668,31 @@ algo::cstring        name_Get(gcli::FGrepossh& grepossh) __attribute__((__warn_u
 
 // Set all fields to initial values.
 // func:gcli.FGrepossh..Init
-void                 FGrepossh_Init(gcli::FGrepossh& grepossh);
+inline void          FGrepossh_Init(gcli::FGrepossh& grepossh);
 // func:gcli.FGrepossh..Uninit
 void                 FGrepossh_Uninit(gcli::FGrepossh& grepossh) __attribute__((nothrow));
 
 // --- gcli.FGstatet
 // create: gcli.FDb.gstatet (Lary)
-// global access: ind_gstatet (Thash)
+// global access: gstatet (Lary, by rowid)
+// global access: ind_gstatet (Thash, hash field gstatet)
 struct FGstatet { // gcli.FGstatet
     gcli::FGstatet*    ind_gstatet_next;   // hash next
     algo::Smallstr50   gstatet;            //
     algo::cstring      state;              //
+    // func:gcli.FGstatet..AssignOp
+    inline gcli::FGstatet& operator =(const gcli::FGstatet &rhs) = delete;
+    // func:gcli.FGstatet..CopyCtor
+    inline               FGstatet(const gcli::FGstatet &rhs) = delete;
 private:
+    // func:gcli.FGstatet..Ctor
+    inline               FGstatet() __attribute__((nothrow));
+    // func:gcli.FGstatet..Dtor
+    inline               ~FGstatet() __attribute__((nothrow));
     friend gcli::FGstatet&      gstatet_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGstatet*      gstatet_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gstatet_RemoveAll() __attribute__((nothrow));
     friend void                 gstatet_RemoveLast() __attribute__((nothrow));
-    FGstatet();
-    ~FGstatet();
-    FGstatet(const FGstatet&){ /*disallow copy constructor */}
-    void operator =(const FGstatet&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3612,14 +3710,15 @@ algo::Smallstr50     gstate_Get(gcli::FGstatet& gstatet) __attribute__((__warn_u
 
 // Set all fields to initial values.
 // func:gcli.FGstatet..Init
-void                 FGstatet_Init(gcli::FGstatet& gstatet);
+inline void          FGstatet_Init(gcli::FGstatet& gstatet);
 // func:gcli.FGstatet..Uninit
 void                 FGstatet_Uninit(gcli::FGstatet& gstatet) __attribute__((nothrow));
 
 // --- gcli.FGtbl
 // create: gcli.FDb.gtbl (Lary)
 // global access: p_gtbl (Ptr)
-// global access: ind_gtbl (Thash)
+// global access: gtbl (Lary, by rowid)
+// global access: ind_gtbl (Thash, hash field gtbl)
 struct FGtbl { // gcli.FGtbl
     gcli::FGtbl*        ind_gtbl_next;     // hash next
     algo::Smallstr250   gtbl;              //
@@ -3630,15 +3729,21 @@ struct FGtbl { // gcli.FGtbl
     gcli::FGtblact**    c_gtblact_elems;   // array of pointers
     u32                 c_gtblact_n;       // array of pointers
     u32                 c_gtblact_max;     // capacity of allocated array
+    // reftype Ptrary of gcli.FGtbl.c_gtblact prohibits copy
+    // func:gcli.FGtbl..AssignOp
+    inline gcli::FGtbl&  operator =(const gcli::FGtbl &rhs) = delete;
+    // reftype Ptrary of gcli.FGtbl.c_gtblact prohibits copy
+    // func:gcli.FGtbl..CopyCtor
+    inline               FGtbl(const gcli::FGtbl &rhs) = delete;
 private:
+    // func:gcli.FGtbl..Ctor
+    inline               FGtbl() __attribute__((nothrow));
+    // func:gcli.FGtbl..Dtor
+    inline               ~FGtbl() __attribute__((nothrow));
     friend gcli::FGtbl&         gtbl_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGtbl*         gtbl_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gtbl_RemoveAll() __attribute__((nothrow));
     friend void                 gtbl_RemoveLast() __attribute__((nothrow));
-    FGtbl();
-    ~FGtbl();
-    FGtbl(const FGtbl&){ /*disallow copy constructor */}
-    void operator =(const FGtbl&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3650,13 +3755,13 @@ void                 gtbl_CopyIn(gcli::FGtbl &row, gclidb::Gtbl &in) __attribute
 
 // Return true if index is empty
 // func:gcli.FGtbl.c_gtblact.EmptyQ
-bool                 c_gtblact_EmptyQ(gcli::FGtbl& gtbl) __attribute__((nothrow));
+inline bool          c_gtblact_EmptyQ(gcli::FGtbl& gtbl) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FGtbl.c_gtblact.Find
-gcli::FGtblact*      c_gtblact_Find(gcli::FGtbl& gtbl, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGtblact* c_gtblact_Find(gcli::FGtbl& gtbl, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FGtbl.c_gtblact.Getary
-algo::aryptr<gcli::FGtblact*> c_gtblact_Getary(gcli::FGtbl& gtbl) __attribute__((nothrow));
+inline algo::aryptr<gcli::FGtblact*> c_gtblact_Getary(gcli::FGtbl& gtbl) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FGtbl.c_gtblact.Insert
@@ -3668,46 +3773,47 @@ void                 c_gtblact_Insert(gcli::FGtbl& gtbl, gcli::FGtblact& row) __
 bool                 c_gtblact_InsertMaybe(gcli::FGtbl& gtbl, gcli::FGtblact& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FGtbl.c_gtblact.N
-i32                  c_gtblact_N(const gcli::FGtbl& gtbl) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_gtblact_N(const gcli::FGtbl& gtbl) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FGtbl.c_gtblact.Remove
 void                 c_gtblact_Remove(gcli::FGtbl& gtbl, gcli::FGtblact& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FGtbl.c_gtblact.RemoveAll
-void                 c_gtblact_RemoveAll(gcli::FGtbl& gtbl) __attribute__((nothrow));
+inline void          c_gtblact_RemoveAll(gcli::FGtbl& gtbl) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FGtbl.c_gtblact.Reserve
 void                 c_gtblact_Reserve(gcli::FGtbl& gtbl, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FGtbl.c_gtblact.qFind
-gcli::FGtblact&      c_gtblact_qFind(gcli::FGtbl& gtbl, u32 idx) __attribute__((nothrow));
+inline gcli::FGtblact& c_gtblact_qFind(gcli::FGtbl& gtbl, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FGtbl.c_gtblact.InAryQ
-bool                 gtbl_c_gtblact_InAryQ(gcli::FGtblact& row) __attribute__((nothrow));
+inline bool          gtbl_c_gtblact_InAryQ(gcli::FGtblact& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FGtbl.c_gtblact.qLast
-gcli::FGtblact&      c_gtblact_qLast(gcli::FGtbl& gtbl) __attribute__((nothrow));
+inline gcli::FGtblact& c_gtblact_qLast(gcli::FGtbl& gtbl) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:gcli.FGtbl..Init
-void                 FGtbl_Init(gcli::FGtbl& gtbl);
+inline void          FGtbl_Init(gcli::FGtbl& gtbl);
 // func:gcli.FGtbl.c_gtblact_curs.Reset
-void                 gtbl_c_gtblact_curs_Reset(gtbl_c_gtblact_curs &curs, gcli::FGtbl &parent) __attribute__((nothrow));
+inline void          gtbl_c_gtblact_curs_Reset(gtbl_c_gtblact_curs &curs, gcli::FGtbl &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGtbl.c_gtblact_curs.ValidQ
-bool                 gtbl_c_gtblact_curs_ValidQ(gtbl_c_gtblact_curs &curs) __attribute__((nothrow));
+inline bool          gtbl_c_gtblact_curs_ValidQ(gtbl_c_gtblact_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGtbl.c_gtblact_curs.Next
-void                 gtbl_c_gtblact_curs_Next(gtbl_c_gtblact_curs &curs) __attribute__((nothrow));
+inline void          gtbl_c_gtblact_curs_Next(gtbl_c_gtblact_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGtbl.c_gtblact_curs.Access
-gcli::FGtblact&      gtbl_c_gtblact_curs_Access(gtbl_c_gtblact_curs &curs) __attribute__((nothrow));
+inline gcli::FGtblact& gtbl_c_gtblact_curs_Access(gtbl_c_gtblact_curs &curs) __attribute__((nothrow));
 // func:gcli.FGtbl..Uninit
 void                 FGtbl_Uninit(gcli::FGtbl& gtbl) __attribute__((nothrow));
 
 // --- gcli.FGtblact
 // create: gcli.FDb.gtblact (Lary)
-// global access: ind_gtblact (Thash)
+// global access: gtblact (Lary, by rowid)
+// global access: ind_gtblact (Thash, hash field gtblact)
 // global access: zd_gtblact (Llist)
 // access: gcli.FGtbl.c_gtblact (Ptrary)
 // access: gcli.FGtblact.step (Hook)
@@ -3727,15 +3833,23 @@ struct FGtblact { // gcli.FGtblact
     bool                      select;                  //   false
     algo::cstring             aliascmd;                //
     bool                      gtbl_c_gtblact_in_ary;   //   false  membership flag
+    // reftype Hook of gcli.FGtblact.step prohibits copy
+    // reftype Ptrary of gcli.FGtblact.c_gtblactfld prohibits copy
+    // func:gcli.FGtblact..AssignOp
+    gcli::FGtblact&      operator =(const gcli::FGtblact &rhs) = delete;
+    // reftype Hook of gcli.FGtblact.step prohibits copy
+    // reftype Ptrary of gcli.FGtblact.c_gtblactfld prohibits copy
+    // func:gcli.FGtblact..CopyCtor
+    FGtblact(const gcli::FGtblact &rhs) = delete;
 private:
+    // func:gcli.FGtblact..Ctor
+    inline               FGtblact() __attribute__((nothrow));
+    // func:gcli.FGtblact..Dtor
+    inline               ~FGtblact() __attribute__((nothrow));
     friend gcli::FGtblact&      gtblact_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGtblact*      gtblact_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gtblact_RemoveAll() __attribute__((nothrow));
     friend void                 gtblact_RemoveLast() __attribute__((nothrow));
-    FGtblact();
-    ~FGtblact();
-    FGtblact(const FGtblact&){ /*disallow copy constructor */}
-    void operator =(const FGtblact&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3753,17 +3867,17 @@ algo::Smallstr50     gact_Get(gcli::FGtblact& gtblact) __attribute__((__warn_unu
 
 // Invoke function by pointer
 // func:gcli.FGtblact.step.Call
-void                 step_Call(gcli::FGtblact& gtblact, gcli::FGtblact& arg) __attribute__((nothrow));
+inline void          step_Call(gcli::FGtblact& gtblact, gcli::FGtblact& arg) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FGtblact.c_gtblactfld.EmptyQ
-bool                 c_gtblactfld_EmptyQ(gcli::FGtblact& gtblact) __attribute__((nothrow));
+inline bool          c_gtblactfld_EmptyQ(gcli::FGtblact& gtblact) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FGtblact.c_gtblactfld.Find
-gcli::FGtblactfld*   c_gtblactfld_Find(gcli::FGtblact& gtblact, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGtblactfld* c_gtblactfld_Find(gcli::FGtblact& gtblact, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FGtblact.c_gtblactfld.Getary
-algo::aryptr<gcli::FGtblactfld*> c_gtblactfld_Getary(gcli::FGtblact& gtblact) __attribute__((nothrow));
+inline algo::aryptr<gcli::FGtblactfld*> c_gtblactfld_Getary(gcli::FGtblact& gtblact) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FGtblact.c_gtblactfld.Insert
@@ -3775,46 +3889,47 @@ void                 c_gtblactfld_Insert(gcli::FGtblact& gtblact, gcli::FGtblact
 bool                 c_gtblactfld_InsertMaybe(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FGtblact.c_gtblactfld.N
-i32                  c_gtblactfld_N(const gcli::FGtblact& gtblact) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_gtblactfld_N(const gcli::FGtblact& gtblact) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FGtblact.c_gtblactfld.Remove
 void                 c_gtblactfld_Remove(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FGtblact.c_gtblactfld.RemoveAll
-void                 c_gtblactfld_RemoveAll(gcli::FGtblact& gtblact) __attribute__((nothrow));
+inline void          c_gtblactfld_RemoveAll(gcli::FGtblact& gtblact) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FGtblact.c_gtblactfld.Reserve
 void                 c_gtblactfld_Reserve(gcli::FGtblact& gtblact, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FGtblact.c_gtblactfld.qFind
-gcli::FGtblactfld&   c_gtblactfld_qFind(gcli::FGtblact& gtblact, u32 idx) __attribute__((nothrow));
+inline gcli::FGtblactfld& c_gtblactfld_qFind(gcli::FGtblact& gtblact, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FGtblact.c_gtblactfld.InAryQ
-bool                 gtblact_c_gtblactfld_InAryQ(gcli::FGtblactfld& row) __attribute__((nothrow));
+inline bool          gtblact_c_gtblactfld_InAryQ(gcli::FGtblactfld& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FGtblact.c_gtblactfld.qLast
-gcli::FGtblactfld&   c_gtblactfld_qLast(gcli::FGtblact& gtblact) __attribute__((nothrow));
+inline gcli::FGtblactfld& c_gtblactfld_qLast(gcli::FGtblact& gtblact) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:gcli.FGtblact..Init
 void                 FGtblact_Init(gcli::FGtblact& gtblact);
 // func:gcli.FGtblact.c_gtblactfld_curs.Reset
-void                 gtblact_c_gtblactfld_curs_Reset(gtblact_c_gtblactfld_curs &curs, gcli::FGtblact &parent) __attribute__((nothrow));
+inline void          gtblact_c_gtblactfld_curs_Reset(gtblact_c_gtblactfld_curs &curs, gcli::FGtblact &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGtblact.c_gtblactfld_curs.ValidQ
-bool                 gtblact_c_gtblactfld_curs_ValidQ(gtblact_c_gtblactfld_curs &curs) __attribute__((nothrow));
+inline bool          gtblact_c_gtblactfld_curs_ValidQ(gtblact_c_gtblactfld_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGtblact.c_gtblactfld_curs.Next
-void                 gtblact_c_gtblactfld_curs_Next(gtblact_c_gtblactfld_curs &curs) __attribute__((nothrow));
+inline void          gtblact_c_gtblactfld_curs_Next(gtblact_c_gtblactfld_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGtblact.c_gtblactfld_curs.Access
-gcli::FGtblactfld&   gtblact_c_gtblactfld_curs_Access(gtblact_c_gtblactfld_curs &curs) __attribute__((nothrow));
+inline gcli::FGtblactfld& gtblact_c_gtblactfld_curs_Access(gtblact_c_gtblactfld_curs &curs) __attribute__((nothrow));
 // func:gcli.FGtblact..Uninit
 void                 FGtblact_Uninit(gcli::FGtblact& gtblact) __attribute__((nothrow));
 
 // --- gcli.FGtblactfld
 // create: gcli.FDb.gtblactfld (Lary)
-// global access: ind_gtblactfld (Thash)
+// global access: gtblactfld (Lary, by rowid)
+// global access: ind_gtblactfld (Thash, hash field gtblactfld)
 // access: gcli.FGfld.c_gtblactfld (Ptrary)
 // access: gcli.FGtblact.c_gtblactfld (Ptrary)
 struct FGtblactfld { // gcli.FGtblactfld
@@ -3833,15 +3948,21 @@ struct FGtblactfld { // gcli.FGtblactfld
     gcli::FGfld*         p_gfld;                        // reference to parent row
     bool                 gfld_c_gtblactfld_in_ary;      //   false  membership flag
     bool                 gtblact_c_gtblactfld_in_ary;   //   false  membership flag
+    // x-reference on gcli.FGtblactfld.p_gfld prevents copy
+    // func:gcli.FGtblactfld..AssignOp
+    gcli::FGtblactfld&   operator =(const gcli::FGtblactfld &rhs) = delete;
+    // x-reference on gcli.FGtblactfld.p_gfld prevents copy
+    // func:gcli.FGtblactfld..CopyCtor
+    FGtblactfld(const gcli::FGtblactfld &rhs) = delete;
 private:
+    // func:gcli.FGtblactfld..Ctor
+    inline               FGtblactfld() __attribute__((nothrow));
+    // func:gcli.FGtblactfld..Dtor
+    inline               ~FGtblactfld() __attribute__((nothrow));
     friend gcli::FGtblactfld&   gtblactfld_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGtblactfld*   gtblactfld_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gtblactfld_RemoveAll() __attribute__((nothrow));
     friend void                 gtblactfld_RemoveLast() __attribute__((nothrow));
-    FGtblactfld();
-    ~FGtblactfld();
-    FGtblactfld(const FGtblactfld&){ /*disallow copy constructor */}
-    void operator =(const FGtblactfld&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3865,8 +3986,9 @@ void                 FGtblactfld_Uninit(gcli::FGtblactfld& gtblactfld) __attribu
 
 // --- gcli.FGtype
 // create: gcli.FDb.gtype (Lary)
+// global access: gtype (Lary, by rowid)
 // global access: p_gtype (Ptr)
-// global access: ind_gtype (Thash)
+// global access: ind_gtype (Thash, hash field gtype)
 // access: gcli.FGclicmdt.p_gtype (Upptr)
 // access: gcli.FGtypeprefix.p_gtype (Upptr)
 struct FGtype { // gcli.FGtype
@@ -3880,15 +4002,23 @@ struct FGtype { // gcli.FGtype
     gcli::FGtypeprefix**   c_gtypeprefix_elems;   // array of pointers
     u32                    c_gtypeprefix_n;       // array of pointers
     u32                    c_gtypeprefix_max;     // capacity of allocated array
+    // reftype Ptrary of gcli.FGtype.c_gtypeh prohibits copy
+    // reftype Ptrary of gcli.FGtype.c_gtypeprefix prohibits copy
+    // func:gcli.FGtype..AssignOp
+    inline gcli::FGtype& operator =(const gcli::FGtype &rhs) = delete;
+    // reftype Ptrary of gcli.FGtype.c_gtypeh prohibits copy
+    // reftype Ptrary of gcli.FGtype.c_gtypeprefix prohibits copy
+    // func:gcli.FGtype..CopyCtor
+    inline               FGtype(const gcli::FGtype &rhs) = delete;
 private:
+    // func:gcli.FGtype..Ctor
+    inline               FGtype() __attribute__((nothrow));
+    // func:gcli.FGtype..Dtor
+    inline               ~FGtype() __attribute__((nothrow));
     friend gcli::FGtype&        gtype_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGtype*        gtype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gtype_RemoveAll() __attribute__((nothrow));
     friend void                 gtype_RemoveLast() __attribute__((nothrow));
-    FGtype();
-    ~FGtype();
-    FGtype(const FGtype&){ /*disallow copy constructor */}
-    void operator =(const FGtype&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -3900,13 +4030,13 @@ void                 gtype_CopyIn(gcli::FGtype &row, gclidb::Gtype &in) __attrib
 
 // Return true if index is empty
 // func:gcli.FGtype.c_gtypeh.EmptyQ
-bool                 c_gtypeh_EmptyQ(gcli::FGtype& gtype) __attribute__((nothrow));
+inline bool          c_gtypeh_EmptyQ(gcli::FGtype& gtype) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FGtype.c_gtypeh.Find
-gcli::FGtypeh*       c_gtypeh_Find(gcli::FGtype& gtype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGtypeh* c_gtypeh_Find(gcli::FGtype& gtype, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FGtype.c_gtypeh.Getary
-algo::aryptr<gcli::FGtypeh*> c_gtypeh_Getary(gcli::FGtype& gtype) __attribute__((nothrow));
+inline algo::aryptr<gcli::FGtypeh*> c_gtypeh_Getary(gcli::FGtype& gtype) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FGtype.c_gtypeh.Insert
@@ -3918,35 +4048,35 @@ void                 c_gtypeh_Insert(gcli::FGtype& gtype, gcli::FGtypeh& row) __
 bool                 c_gtypeh_InsertMaybe(gcli::FGtype& gtype, gcli::FGtypeh& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FGtype.c_gtypeh.N
-i32                  c_gtypeh_N(const gcli::FGtype& gtype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_gtypeh_N(const gcli::FGtype& gtype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FGtype.c_gtypeh.Remove
 void                 c_gtypeh_Remove(gcli::FGtype& gtype, gcli::FGtypeh& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FGtype.c_gtypeh.RemoveAll
-void                 c_gtypeh_RemoveAll(gcli::FGtype& gtype) __attribute__((nothrow));
+inline void          c_gtypeh_RemoveAll(gcli::FGtype& gtype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FGtype.c_gtypeh.Reserve
 void                 c_gtypeh_Reserve(gcli::FGtype& gtype, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FGtype.c_gtypeh.qFind
-gcli::FGtypeh&       c_gtypeh_qFind(gcli::FGtype& gtype, u32 idx) __attribute__((nothrow));
+inline gcli::FGtypeh& c_gtypeh_qFind(gcli::FGtype& gtype, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FGtype.c_gtypeh.InAryQ
-bool                 gtype_c_gtypeh_InAryQ(gcli::FGtypeh& row) __attribute__((nothrow));
+inline bool          gtype_c_gtypeh_InAryQ(gcli::FGtypeh& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FGtype.c_gtypeh.qLast
-gcli::FGtypeh&       c_gtypeh_qLast(gcli::FGtype& gtype) __attribute__((nothrow));
+inline gcli::FGtypeh& c_gtypeh_qLast(gcli::FGtype& gtype) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FGtype.c_gtypeprefix.EmptyQ
-bool                 c_gtypeprefix_EmptyQ(gcli::FGtype& gtype) __attribute__((nothrow));
+inline bool          c_gtypeprefix_EmptyQ(gcli::FGtype& gtype) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FGtype.c_gtypeprefix.Find
-gcli::FGtypeprefix*  c_gtypeprefix_Find(gcli::FGtype& gtype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FGtypeprefix* c_gtypeprefix_Find(gcli::FGtype& gtype, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FGtype.c_gtypeprefix.Getary
-algo::aryptr<gcli::FGtypeprefix*> c_gtypeprefix_Getary(gcli::FGtype& gtype) __attribute__((nothrow));
+inline algo::aryptr<gcli::FGtypeprefix*> c_gtypeprefix_Getary(gcli::FGtype& gtype) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FGtype.c_gtypeprefix.Insert
@@ -3958,70 +4088,75 @@ void                 c_gtypeprefix_Insert(gcli::FGtype& gtype, gcli::FGtypeprefi
 bool                 c_gtypeprefix_InsertMaybe(gcli::FGtype& gtype, gcli::FGtypeprefix& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FGtype.c_gtypeprefix.N
-i32                  c_gtypeprefix_N(const gcli::FGtype& gtype) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_gtypeprefix_N(const gcli::FGtype& gtype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FGtype.c_gtypeprefix.Remove
 void                 c_gtypeprefix_Remove(gcli::FGtype& gtype, gcli::FGtypeprefix& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FGtype.c_gtypeprefix.RemoveAll
-void                 c_gtypeprefix_RemoveAll(gcli::FGtype& gtype) __attribute__((nothrow));
+inline void          c_gtypeprefix_RemoveAll(gcli::FGtype& gtype) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FGtype.c_gtypeprefix.Reserve
 void                 c_gtypeprefix_Reserve(gcli::FGtype& gtype, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FGtype.c_gtypeprefix.qFind
-gcli::FGtypeprefix&  c_gtypeprefix_qFind(gcli::FGtype& gtype, u32 idx) __attribute__((nothrow));
+inline gcli::FGtypeprefix& c_gtypeprefix_qFind(gcli::FGtype& gtype, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FGtype.c_gtypeprefix.InAryQ
-bool                 gtype_c_gtypeprefix_InAryQ(gcli::FGtypeprefix& row) __attribute__((nothrow));
+inline bool          gtype_c_gtypeprefix_InAryQ(gcli::FGtypeprefix& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FGtype.c_gtypeprefix.qLast
-gcli::FGtypeprefix&  c_gtypeprefix_qLast(gcli::FGtype& gtype) __attribute__((nothrow));
+inline gcli::FGtypeprefix& c_gtypeprefix_qLast(gcli::FGtype& gtype) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:gcli.FGtype..Init
-void                 FGtype_Init(gcli::FGtype& gtype);
+inline void          FGtype_Init(gcli::FGtype& gtype);
 // func:gcli.FGtype.c_gtypeh_curs.Reset
-void                 gtype_c_gtypeh_curs_Reset(gtype_c_gtypeh_curs &curs, gcli::FGtype &parent) __attribute__((nothrow));
+inline void          gtype_c_gtypeh_curs_Reset(gtype_c_gtypeh_curs &curs, gcli::FGtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGtype.c_gtypeh_curs.ValidQ
-bool                 gtype_c_gtypeh_curs_ValidQ(gtype_c_gtypeh_curs &curs) __attribute__((nothrow));
+inline bool          gtype_c_gtypeh_curs_ValidQ(gtype_c_gtypeh_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGtype.c_gtypeh_curs.Next
-void                 gtype_c_gtypeh_curs_Next(gtype_c_gtypeh_curs &curs) __attribute__((nothrow));
+inline void          gtype_c_gtypeh_curs_Next(gtype_c_gtypeh_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGtype.c_gtypeh_curs.Access
-gcli::FGtypeh&       gtype_c_gtypeh_curs_Access(gtype_c_gtypeh_curs &curs) __attribute__((nothrow));
+inline gcli::FGtypeh& gtype_c_gtypeh_curs_Access(gtype_c_gtypeh_curs &curs) __attribute__((nothrow));
 // func:gcli.FGtype.c_gtypeprefix_curs.Reset
-void                 gtype_c_gtypeprefix_curs_Reset(gtype_c_gtypeprefix_curs &curs, gcli::FGtype &parent) __attribute__((nothrow));
+inline void          gtype_c_gtypeprefix_curs_Reset(gtype_c_gtypeprefix_curs &curs, gcli::FGtype &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FGtype.c_gtypeprefix_curs.ValidQ
-bool                 gtype_c_gtypeprefix_curs_ValidQ(gtype_c_gtypeprefix_curs &curs) __attribute__((nothrow));
+inline bool          gtype_c_gtypeprefix_curs_ValidQ(gtype_c_gtypeprefix_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FGtype.c_gtypeprefix_curs.Next
-void                 gtype_c_gtypeprefix_curs_Next(gtype_c_gtypeprefix_curs &curs) __attribute__((nothrow));
+inline void          gtype_c_gtypeprefix_curs_Next(gtype_c_gtypeprefix_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FGtype.c_gtypeprefix_curs.Access
-gcli::FGtypeprefix&  gtype_c_gtypeprefix_curs_Access(gtype_c_gtypeprefix_curs &curs) __attribute__((nothrow));
+inline gcli::FGtypeprefix& gtype_c_gtypeprefix_curs_Access(gtype_c_gtypeprefix_curs &curs) __attribute__((nothrow));
 // func:gcli.FGtype..Uninit
 void                 FGtype_Uninit(gcli::FGtype& gtype) __attribute__((nothrow));
 
 // --- gcli.FGtypeh
 // create: gcli.FDb.gtypeh (Lary)
+// global access: gtypeh (Lary, by rowid)
 // access: gcli.FGtype.c_gtypeh (Ptrary)
 struct FGtypeh { // gcli.FGtypeh
     algo::Smallstr250   gtypeh;                  //
     algo::cstring       header;                  //
     bool                gtype_c_gtypeh_in_ary;   //   false  membership flag
+    // func:gcli.FGtypeh..AssignOp
+    inline gcli::FGtypeh& operator =(const gcli::FGtypeh &rhs) = delete;
+    // func:gcli.FGtypeh..CopyCtor
+    inline               FGtypeh(const gcli::FGtypeh &rhs) = delete;
 private:
+    // func:gcli.FGtypeh..Ctor
+    inline               FGtypeh() __attribute__((nothrow));
+    // func:gcli.FGtypeh..Dtor
+    inline               ~FGtypeh() __attribute__((nothrow));
     friend gcli::FGtypeh&       gtypeh_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGtypeh*       gtypeh_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gtypeh_RemoveAll() __attribute__((nothrow));
     friend void                 gtypeh_RemoveLast() __attribute__((nothrow));
-    FGtypeh();
-    ~FGtypeh();
-    FGtypeh(const FGtypeh&){ /*disallow copy constructor */}
-    void operator =(const FGtypeh&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -4039,27 +4174,34 @@ algo::cstring        name_Get(gcli::FGtypeh& gtypeh) __attribute__((__warn_unuse
 
 // Set all fields to initial values.
 // func:gcli.FGtypeh..Init
-void                 FGtypeh_Init(gcli::FGtypeh& gtypeh);
+inline void          FGtypeh_Init(gcli::FGtypeh& gtypeh);
 // func:gcli.FGtypeh..Uninit
 void                 FGtypeh_Uninit(gcli::FGtypeh& gtypeh) __attribute__((nothrow));
 
 // --- gcli.FGtypeprefix
 // create: gcli.FDb.gtypeprefix (Lary)
+// global access: gtypeprefix (Lary, by rowid)
 // access: gcli.FGtype.c_gtypeprefix (Ptrary)
 struct FGtypeprefix { // gcli.FGtypeprefix
     algo::Smallstr50   gtypeprefix;                  //
     algo::Comment      comment;                      //
     gcli::FGtype*      p_gtype;                      // reference to parent row
     bool               gtype_c_gtypeprefix_in_ary;   //   false  membership flag
+    // x-reference on gcli.FGtypeprefix.p_gtype prevents copy
+    // func:gcli.FGtypeprefix..AssignOp
+    inline gcli::FGtypeprefix& operator =(const gcli::FGtypeprefix &rhs) = delete;
+    // x-reference on gcli.FGtypeprefix.p_gtype prevents copy
+    // func:gcli.FGtypeprefix..CopyCtor
+    inline               FGtypeprefix(const gcli::FGtypeprefix &rhs) = delete;
 private:
+    // func:gcli.FGtypeprefix..Ctor
+    inline               FGtypeprefix() __attribute__((nothrow));
+    // func:gcli.FGtypeprefix..Dtor
+    inline               ~FGtypeprefix() __attribute__((nothrow));
     friend gcli::FGtypeprefix&  gtypeprefix_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FGtypeprefix*  gtypeprefix_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gtypeprefix_RemoveAll() __attribute__((nothrow));
     friend void                 gtypeprefix_RemoveLast() __attribute__((nothrow));
-    FGtypeprefix();
-    ~FGtypeprefix();
-    FGtypeprefix(const FGtypeprefix&){ /*disallow copy constructor */}
-    void operator =(const FGtypeprefix&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -4077,7 +4219,7 @@ algo::cstring        prefix_Get(gcli::FGtypeprefix& gtypeprefix) __attribute__((
 
 // Set all fields to initial values.
 // func:gcli.FGtypeprefix..Init
-void                 FGtypeprefix_Init(gcli::FGtypeprefix& gtypeprefix);
+inline void          FGtypeprefix_Init(gcli::FGtypeprefix& gtypeprefix);
 // func:gcli.FGtypeprefix..Uninit
 void                 FGtypeprefix_Uninit(gcli::FGtypeprefix& gtypeprefix) __attribute__((nothrow));
 
@@ -4098,21 +4240,24 @@ struct FHttp { // gcli.FHttp: HTTP request
     bool                response_content_type_json;   //   false  Flag if response is JSON
     lib_json::FParser   response_json_parser;         // Json parser to parse response body on the fly
     u32                 request_body_sent_bytes;      //   0  Sent bytes in request body
-    FHttp();
-    ~FHttp();
-private:
-    // reftype Tary of gcli.FHttp.response_header prohibits copy
     // value field gcli.FHttp.response_json_parser is not copiable
-    FHttp(const FHttp&){ /*disallow copy constructor */}
-    void operator =(const FHttp&){ /*disallow direct assignment */}
+    // func:gcli.FHttp..AssignOp
+    gcli::FHttp&         operator =(const gcli::FHttp &rhs) = delete;
+    // func:gcli.FHttp..Ctor
+    inline               FHttp() __attribute__((nothrow));
+    // func:gcli.FHttp..Dtor
+    inline               ~FHttp() __attribute__((nothrow));
+    // value field gcli.FHttp.response_json_parser is not copiable
+    // func:gcli.FHttp..CopyCtor
+    FHttp(const gcli::FHttp &rhs) = delete;
 };
 
 // Get value of field as enum type
 // func:gcli.FHttp.request_method.GetEnum
-gcli_FHttp_request_method_Enum request_method_GetEnum(const gcli::FHttp& parent) __attribute__((nothrow));
+inline gcli_FHttp_request_method_Enum request_method_GetEnum(const gcli::FHttp& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:gcli.FHttp.request_method.SetEnum
-void                 request_method_SetEnum(gcli::FHttp& parent, gcli_FHttp_request_method_Enum rhs) __attribute__((nothrow));
+inline void          request_method_SetEnum(gcli::FHttp& parent, gcli_FHttp_request_method_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:gcli.FHttp.request_method.ToCstr
@@ -4149,22 +4294,22 @@ algo::cstring&       response_header_AllocAt(gcli::FHttp& parent, int at) __attr
 algo::aryptr<algo::cstring> response_header_AllocN(gcli::FHttp& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FHttp.response_header.EmptyQ
-bool                 response_header_EmptyQ(gcli::FHttp& parent) __attribute__((nothrow));
+inline bool          response_header_EmptyQ(gcli::FHttp& parent) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FHttp.response_header.Find
-algo::cstring*       response_header_Find(gcli::FHttp& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+inline algo::cstring* response_header_Find(gcli::FHttp& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array pointer by value
 // func:gcli.FHttp.response_header.Getary
-algo::aryptr<algo::cstring> response_header_Getary(const gcli::FHttp& parent) __attribute__((nothrow));
+inline algo::aryptr<algo::cstring> response_header_Getary(const gcli::FHttp& parent) __attribute__((nothrow));
 // Return pointer to last element of array, or NULL if array is empty
 // func:gcli.FHttp.response_header.Last
-algo::cstring*       response_header_Last(gcli::FHttp& parent) __attribute__((nothrow, pure));
+inline algo::cstring* response_header_Last(gcli::FHttp& parent) __attribute__((nothrow, pure));
 // Return max. number of items in the array
 // func:gcli.FHttp.response_header.Max
-i32                  response_header_Max(gcli::FHttp& parent) __attribute__((nothrow));
+inline i32           response_header_Max(gcli::FHttp& parent) __attribute__((nothrow));
 // Return number of items in the array
 // func:gcli.FHttp.response_header.N
-i32                  response_header_N(const gcli::FHttp& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           response_header_N(const gcli::FHttp& parent) __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove item by index. If index outside of range, do nothing.
 // func:gcli.FHttp.response_header.Remove
 void                 response_header_Remove(gcli::FHttp& parent, u32 i) __attribute__((nothrow));
@@ -4175,7 +4320,7 @@ void                 response_header_RemoveAll(gcli::FHttp& parent) __attribute_
 void                 response_header_RemoveLast(gcli::FHttp& parent) __attribute__((nothrow));
 // Make sure N *more* elements will fit in array. Process dies if out of memory
 // func:gcli.FHttp.response_header.Reserve
-void                 response_header_Reserve(gcli::FHttp& parent, int n) __attribute__((nothrow));
+inline void          response_header_Reserve(gcli::FHttp& parent, int n) __attribute__((nothrow));
 // Make sure N elements fit in array. Process dies if out of memory
 // func:gcli.FHttp.response_header.AbsReserve
 void                 response_header_AbsReserve(gcli::FHttp& parent, int n) __attribute__((nothrow));
@@ -4188,13 +4333,13 @@ void                 response_header_Setary(gcli::FHttp& parent, gcli::FHttp &rh
 void                 response_header_Setary(gcli::FHttp& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:gcli.FHttp.response_header.qFind
-algo::cstring&       response_header_qFind(gcli::FHttp& parent, u64 t) __attribute__((nothrow));
+inline algo::cstring& response_header_qFind(gcli::FHttp& parent, u64 t) __attribute__((nothrow));
 // Return reference to last element of array. No bounds checking
 // func:gcli.FHttp.response_header.qLast
-algo::cstring&       response_header_qLast(gcli::FHttp& parent) __attribute__((nothrow));
+inline algo::cstring& response_header_qLast(gcli::FHttp& parent) __attribute__((nothrow));
 // Return row id of specified element
 // func:gcli.FHttp.response_header.rowid_Get
-u64                  response_header_rowid_Get(gcli::FHttp& parent, algo::cstring &elem) __attribute__((nothrow));
+inline u64           response_header_rowid_Get(gcli::FHttp& parent, algo::cstring &elem) __attribute__((nothrow));
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:gcli.FHttp.response_header.AllocNVal
 algo::aryptr<algo::cstring> response_header_AllocNVal(gcli::FHttp& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
@@ -4206,15 +4351,15 @@ bool                 response_header_ReadStrptrMaybe(gcli::FHttp& parent, algo::
 
 // proceed to next item
 // func:gcli.FHttp.response_header_curs.Next
-void                 FHttp_response_header_curs_Next(FHttp_response_header_curs &curs) __attribute__((nothrow));
+inline void          FHttp_response_header_curs_Next(FHttp_response_header_curs &curs) __attribute__((nothrow));
 // func:gcli.FHttp.response_header_curs.Reset
-void                 FHttp_response_header_curs_Reset(FHttp_response_header_curs &curs, gcli::FHttp &parent) __attribute__((nothrow));
+inline void          FHttp_response_header_curs_Reset(FHttp_response_header_curs &curs, gcli::FHttp &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FHttp.response_header_curs.ValidQ
-bool                 FHttp_response_header_curs_ValidQ(FHttp_response_header_curs &curs) __attribute__((nothrow));
+inline bool          FHttp_response_header_curs_ValidQ(FHttp_response_header_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FHttp.response_header_curs.Access
-algo::cstring&       FHttp_response_header_curs_Access(FHttp_response_header_curs &curs) __attribute__((nothrow));
+inline algo::cstring& FHttp_response_header_curs_Access(FHttp_response_header_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcli.FHttp..Init
 void                 FHttp_Init(gcli::FHttp& parent);
@@ -4227,7 +4372,8 @@ void                 FHttp_Print(gcli::FHttp& row, algo::cstring& str) __attribu
 
 // --- gcli.FIssue
 // create: gcli.FDb.issue (Lary)
-// global access: ind_issue (Thash)
+// global access: ind_issue (Thash, hash field issue)
+// global access: issue (Lary, by rowid)
 // access: gcli.FGclicmd.p_issue (Ptr)
 struct FIssue { // gcli.FIssue
     gcli::FIssue*        ind_issue_next;      // hash next
@@ -4250,15 +4396,23 @@ struct FIssue { // gcli.FIssue
     gcli::FIssuenote**   c_issuenote_elems;   // array of pointers
     u32                  c_issuenote_n;       // array of pointers
     u32                  c_issuenote_max;     // capacity of allocated array
+    // reftype Ptrary of gcli.FIssue.c_mrjob prohibits copy
+    // reftype Ptrary of gcli.FIssue.c_issuenote prohibits copy
+    // func:gcli.FIssue..AssignOp
+    gcli::FIssue&        operator =(const gcli::FIssue &rhs) = delete;
+    // reftype Ptrary of gcli.FIssue.c_mrjob prohibits copy
+    // reftype Ptrary of gcli.FIssue.c_issuenote prohibits copy
+    // func:gcli.FIssue..CopyCtor
+    FIssue(const gcli::FIssue &rhs) = delete;
 private:
+    // func:gcli.FIssue..Ctor
+    inline               FIssue() __attribute__((nothrow));
+    // func:gcli.FIssue..Dtor
+    inline               ~FIssue() __attribute__((nothrow));
     friend gcli::FIssue&        issue_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FIssue*        issue_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 issue_RemoveAll() __attribute__((nothrow));
     friend void                 issue_RemoveLast() __attribute__((nothrow));
-    FIssue();
-    ~FIssue();
-    FIssue(const FIssue&){ /*disallow copy constructor */}
-    void operator =(const FIssue&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -4276,13 +4430,13 @@ algo::cstring        iid_Get(gcli::FIssue& issue) __attribute__((__warn_unused_r
 
 // Return true if index is empty
 // func:gcli.FIssue.c_mrjob.EmptyQ
-bool                 c_mrjob_EmptyQ(gcli::FIssue& issue) __attribute__((nothrow));
+inline bool          c_mrjob_EmptyQ(gcli::FIssue& issue) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FIssue.c_mrjob.Find
-gcli::FMrjob*        c_mrjob_Find(gcli::FIssue& issue, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FMrjob* c_mrjob_Find(gcli::FIssue& issue, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FIssue.c_mrjob.Getary
-algo::aryptr<gcli::FMrjob*> c_mrjob_Getary(gcli::FIssue& issue) __attribute__((nothrow));
+inline algo::aryptr<gcli::FMrjob*> c_mrjob_Getary(gcli::FIssue& issue) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FIssue.c_mrjob.Insert
@@ -4294,35 +4448,35 @@ void                 c_mrjob_Insert(gcli::FIssue& issue, gcli::FMrjob& row) __at
 bool                 c_mrjob_InsertMaybe(gcli::FIssue& issue, gcli::FMrjob& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FIssue.c_mrjob.N
-i32                  c_mrjob_N(const gcli::FIssue& issue) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_mrjob_N(const gcli::FIssue& issue) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FIssue.c_mrjob.Remove
 void                 c_mrjob_Remove(gcli::FIssue& issue, gcli::FMrjob& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FIssue.c_mrjob.RemoveAll
-void                 c_mrjob_RemoveAll(gcli::FIssue& issue) __attribute__((nothrow));
+inline void          c_mrjob_RemoveAll(gcli::FIssue& issue) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FIssue.c_mrjob.Reserve
 void                 c_mrjob_Reserve(gcli::FIssue& issue, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FIssue.c_mrjob.qFind
-gcli::FMrjob&        c_mrjob_qFind(gcli::FIssue& issue, u32 idx) __attribute__((nothrow));
+inline gcli::FMrjob& c_mrjob_qFind(gcli::FIssue& issue, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FIssue.c_mrjob.InAryQ
-bool                 issue_c_mrjob_InAryQ(gcli::FMrjob& row) __attribute__((nothrow));
+inline bool          issue_c_mrjob_InAryQ(gcli::FMrjob& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FIssue.c_mrjob.qLast
-gcli::FMrjob&        c_mrjob_qLast(gcli::FIssue& issue) __attribute__((nothrow));
+inline gcli::FMrjob& c_mrjob_qLast(gcli::FIssue& issue) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FIssue.c_issuenote.EmptyQ
-bool                 c_issuenote_EmptyQ(gcli::FIssue& issue) __attribute__((nothrow));
+inline bool          c_issuenote_EmptyQ(gcli::FIssue& issue) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FIssue.c_issuenote.Find
-gcli::FIssuenote*    c_issuenote_Find(gcli::FIssue& issue, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FIssuenote* c_issuenote_Find(gcli::FIssue& issue, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FIssue.c_issuenote.Getary
-algo::aryptr<gcli::FIssuenote*> c_issuenote_Getary(gcli::FIssue& issue) __attribute__((nothrow));
+inline algo::aryptr<gcli::FIssuenote*> c_issuenote_Getary(gcli::FIssue& issue) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FIssue.c_issuenote.Insert
@@ -4334,57 +4488,58 @@ void                 c_issuenote_Insert(gcli::FIssue& issue, gcli::FIssuenote& r
 bool                 c_issuenote_InsertMaybe(gcli::FIssue& issue, gcli::FIssuenote& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FIssue.c_issuenote.N
-i32                  c_issuenote_N(const gcli::FIssue& issue) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_issuenote_N(const gcli::FIssue& issue) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FIssue.c_issuenote.Remove
 void                 c_issuenote_Remove(gcli::FIssue& issue, gcli::FIssuenote& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FIssue.c_issuenote.RemoveAll
-void                 c_issuenote_RemoveAll(gcli::FIssue& issue) __attribute__((nothrow));
+inline void          c_issuenote_RemoveAll(gcli::FIssue& issue) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FIssue.c_issuenote.Reserve
 void                 c_issuenote_Reserve(gcli::FIssue& issue, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FIssue.c_issuenote.qFind
-gcli::FIssuenote&    c_issuenote_qFind(gcli::FIssue& issue, u32 idx) __attribute__((nothrow));
+inline gcli::FIssuenote& c_issuenote_qFind(gcli::FIssue& issue, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FIssue.c_issuenote.InAryQ
-bool                 issue_c_issuenote_InAryQ(gcli::FIssuenote& row) __attribute__((nothrow));
+inline bool          issue_c_issuenote_InAryQ(gcli::FIssuenote& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FIssue.c_issuenote.qLast
-gcli::FIssuenote&    c_issuenote_qLast(gcli::FIssue& issue) __attribute__((nothrow));
+inline gcli::FIssuenote& c_issuenote_qLast(gcli::FIssue& issue) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:gcli.FIssue..Init
 void                 FIssue_Init(gcli::FIssue& issue);
 // func:gcli.FIssue.c_mrjob_curs.Reset
-void                 issue_c_mrjob_curs_Reset(issue_c_mrjob_curs &curs, gcli::FIssue &parent) __attribute__((nothrow));
+inline void          issue_c_mrjob_curs_Reset(issue_c_mrjob_curs &curs, gcli::FIssue &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FIssue.c_mrjob_curs.ValidQ
-bool                 issue_c_mrjob_curs_ValidQ(issue_c_mrjob_curs &curs) __attribute__((nothrow));
+inline bool          issue_c_mrjob_curs_ValidQ(issue_c_mrjob_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FIssue.c_mrjob_curs.Next
-void                 issue_c_mrjob_curs_Next(issue_c_mrjob_curs &curs) __attribute__((nothrow));
+inline void          issue_c_mrjob_curs_Next(issue_c_mrjob_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FIssue.c_mrjob_curs.Access
-gcli::FMrjob&        issue_c_mrjob_curs_Access(issue_c_mrjob_curs &curs) __attribute__((nothrow));
+inline gcli::FMrjob& issue_c_mrjob_curs_Access(issue_c_mrjob_curs &curs) __attribute__((nothrow));
 // func:gcli.FIssue.c_issuenote_curs.Reset
-void                 issue_c_issuenote_curs_Reset(issue_c_issuenote_curs &curs, gcli::FIssue &parent) __attribute__((nothrow));
+inline void          issue_c_issuenote_curs_Reset(issue_c_issuenote_curs &curs, gcli::FIssue &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FIssue.c_issuenote_curs.ValidQ
-bool                 issue_c_issuenote_curs_ValidQ(issue_c_issuenote_curs &curs) __attribute__((nothrow));
+inline bool          issue_c_issuenote_curs_ValidQ(issue_c_issuenote_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FIssue.c_issuenote_curs.Next
-void                 issue_c_issuenote_curs_Next(issue_c_issuenote_curs &curs) __attribute__((nothrow));
+inline void          issue_c_issuenote_curs_Next(issue_c_issuenote_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FIssue.c_issuenote_curs.Access
-gcli::FIssuenote&    issue_c_issuenote_curs_Access(issue_c_issuenote_curs &curs) __attribute__((nothrow));
+inline gcli::FIssuenote& issue_c_issuenote_curs_Access(issue_c_issuenote_curs &curs) __attribute__((nothrow));
 // func:gcli.FIssue..Uninit
 void                 FIssue_Uninit(gcli::FIssue& issue) __attribute__((nothrow));
 
 // --- gcli.FIssuenote
 // create: gcli.FDb.issuenote (Lary)
-// global access: ind_issuenote (Thash)
+// global access: issuenote (Lary, by rowid)
+// global access: ind_issuenote (Thash, hash field issuenote)
 // access: gcli.FIssue.c_issuenote (Ptrary)
 struct FIssuenote { // gcli.FIssuenote
     gcli::FIssuenote*   ind_issuenote_next;         // hash next
@@ -4394,15 +4549,19 @@ struct FIssuenote { // gcli.FIssuenote
     algo::cstring       author;                     // Authtor of issue note
     bool                select;                     //   false
     bool                issue_c_issuenote_in_ary;   //   false  membership flag
+    // func:gcli.FIssuenote..AssignOp
+    inline gcli::FIssuenote& operator =(const gcli::FIssuenote &rhs) = delete;
+    // func:gcli.FIssuenote..CopyCtor
+    inline               FIssuenote(const gcli::FIssuenote &rhs) = delete;
 private:
+    // func:gcli.FIssuenote..Ctor
+    inline               FIssuenote() __attribute__((nothrow));
+    // func:gcli.FIssuenote..Dtor
+    inline               ~FIssuenote() __attribute__((nothrow));
     friend gcli::FIssuenote&    issuenote_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FIssuenote*    issuenote_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 issuenote_RemoveAll() __attribute__((nothrow));
     friend void                 issuenote_RemoveLast() __attribute__((nothrow));
-    FIssuenote();
-    ~FIssuenote();
-    FIssuenote(const FIssuenote&){ /*disallow copy constructor */}
-    void operator =(const FIssuenote&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -4420,28 +4579,33 @@ algo::cstring        nid_Get(gcli::FIssuenote& issuenote) __attribute__((__warn_
 
 // Set all fields to initial values.
 // func:gcli.FIssuenote..Init
-void                 FIssuenote_Init(gcli::FIssuenote& issuenote);
+inline void          FIssuenote_Init(gcli::FIssuenote& issuenote);
 // func:gcli.FIssuenote..Uninit
 void                 FIssuenote_Uninit(gcli::FIssuenote& issuenote) __attribute__((nothrow));
 
 // --- gcli.FMilestone
 // create: gcli.FDb.milestone (Lary)
-// global access: ind_milestone (Thash)
+// global access: ind_milestone (Thash, hash field milestone)
+// global access: milestone (Lary, by rowid)
 struct FMilestone { // gcli.FMilestone
     gcli::FMilestone*   ind_milestone_next;   // hash next
     algo::Smallstr200   milestone;            // Milestone id
     algo::cstring       description;          // Milestone description
     algo::cstring       title;                // Milestone title
     bool                select;               //   false
+    // func:gcli.FMilestone..AssignOp
+    inline gcli::FMilestone& operator =(const gcli::FMilestone &rhs) = delete;
+    // func:gcli.FMilestone..CopyCtor
+    inline               FMilestone(const gcli::FMilestone &rhs) = delete;
 private:
+    // func:gcli.FMilestone..Ctor
+    inline               FMilestone() __attribute__((nothrow));
+    // func:gcli.FMilestone..Dtor
+    inline               ~FMilestone() __attribute__((nothrow));
     friend gcli::FMilestone&    milestone_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FMilestone*    milestone_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 milestone_RemoveAll() __attribute__((nothrow));
     friend void                 milestone_RemoveLast() __attribute__((nothrow));
-    FMilestone();
-    ~FMilestone();
-    FMilestone(const FMilestone&){ /*disallow copy constructor */}
-    void operator =(const FMilestone&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -4459,7 +4623,7 @@ algo::cstring        iid_Get(gcli::FMilestone& milestone) __attribute__((__warn_
 
 // Set all fields to initial values.
 // func:gcli.FMilestone..Init
-void                 FMilestone_Init(gcli::FMilestone& milestone);
+inline void          FMilestone_Init(gcli::FMilestone& milestone);
 // func:gcli.FMilestone..Uninit
 void                 FMilestone_Uninit(gcli::FMilestone& milestone) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4469,7 +4633,8 @@ void                 FMilestone_Print(gcli::FMilestone& row, algo::cstring& str)
 
 // --- gcli.FMr
 // create: gcli.FDb.mr (Lary)
-// global access: ind_mr (Thash)
+// global access: ind_mr (Thash, hash field mr)
+// global access: mr (Lary, by rowid)
 // access: gcli.FGclicmd.p_mr (Ptr)
 // access: gcli.FIssue.p_mr_open (Ptr)
 struct FMr { // gcli.FMr
@@ -4493,15 +4658,23 @@ struct FMr { // gcli.FMr
     u32                 c_mrjob_n;         // array of pointers
     u32                 c_mrjob_max;       // capacity of allocated array
     bool                select;            //   false
+    // reftype Ptrary of gcli.FMr.c_mrnote prohibits copy
+    // reftype Ptrary of gcli.FMr.c_mrjob prohibits copy
+    // func:gcli.FMr..AssignOp
+    gcli::FMr&           operator =(const gcli::FMr &rhs) = delete;
+    // reftype Ptrary of gcli.FMr.c_mrnote prohibits copy
+    // reftype Ptrary of gcli.FMr.c_mrjob prohibits copy
+    // func:gcli.FMr..CopyCtor
+    FMr(const gcli::FMr &rhs) = delete;
 private:
+    // func:gcli.FMr..Ctor
+    inline               FMr() __attribute__((nothrow));
+    // func:gcli.FMr..Dtor
+    inline               ~FMr() __attribute__((nothrow));
     friend gcli::FMr&           mr_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FMr*           mr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 mr_RemoveAll() __attribute__((nothrow));
     friend void                 mr_RemoveLast() __attribute__((nothrow));
-    FMr();
-    ~FMr();
-    FMr(const FMr&){ /*disallow copy constructor */}
-    void operator =(const FMr&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -4519,13 +4692,13 @@ algo::cstring        iid_Get(gcli::FMr& mr) __attribute__((__warn_unused_result_
 
 // Return true if index is empty
 // func:gcli.FMr.c_mrnote.EmptyQ
-bool                 c_mrnote_EmptyQ(gcli::FMr& mr) __attribute__((nothrow));
+inline bool          c_mrnote_EmptyQ(gcli::FMr& mr) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FMr.c_mrnote.Find
-gcli::FMrnote*       c_mrnote_Find(gcli::FMr& mr, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FMrnote* c_mrnote_Find(gcli::FMr& mr, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FMr.c_mrnote.Getary
-algo::aryptr<gcli::FMrnote*> c_mrnote_Getary(gcli::FMr& mr) __attribute__((nothrow));
+inline algo::aryptr<gcli::FMrnote*> c_mrnote_Getary(gcli::FMr& mr) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FMr.c_mrnote.Insert
@@ -4537,35 +4710,35 @@ void                 c_mrnote_Insert(gcli::FMr& mr, gcli::FMrnote& row) __attrib
 bool                 c_mrnote_InsertMaybe(gcli::FMr& mr, gcli::FMrnote& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FMr.c_mrnote.N
-i32                  c_mrnote_N(const gcli::FMr& mr) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_mrnote_N(const gcli::FMr& mr) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FMr.c_mrnote.Remove
 void                 c_mrnote_Remove(gcli::FMr& mr, gcli::FMrnote& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FMr.c_mrnote.RemoveAll
-void                 c_mrnote_RemoveAll(gcli::FMr& mr) __attribute__((nothrow));
+inline void          c_mrnote_RemoveAll(gcli::FMr& mr) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FMr.c_mrnote.Reserve
 void                 c_mrnote_Reserve(gcli::FMr& mr, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FMr.c_mrnote.qFind
-gcli::FMrnote&       c_mrnote_qFind(gcli::FMr& mr, u32 idx) __attribute__((nothrow));
+inline gcli::FMrnote& c_mrnote_qFind(gcli::FMr& mr, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FMr.c_mrnote.InAryQ
-bool                 mr_c_mrnote_InAryQ(gcli::FMrnote& row) __attribute__((nothrow));
+inline bool          mr_c_mrnote_InAryQ(gcli::FMrnote& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FMr.c_mrnote.qLast
-gcli::FMrnote&       c_mrnote_qLast(gcli::FMr& mr) __attribute__((nothrow));
+inline gcli::FMrnote& c_mrnote_qLast(gcli::FMr& mr) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FMr.c_mrjob.EmptyQ
-bool                 c_mrjob_EmptyQ(gcli::FMr& mr) __attribute__((nothrow));
+inline bool          c_mrjob_EmptyQ(gcli::FMr& mr) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:gcli.FMr.c_mrjob.Find
-gcli::FMrjob*        c_mrjob_Find(gcli::FMr& mr, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline gcli::FMrjob* c_mrjob_Find(gcli::FMr& mr, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:gcli.FMr.c_mrjob.Getary
-algo::aryptr<gcli::FMrjob*> c_mrjob_Getary(gcli::FMr& mr) __attribute__((nothrow));
+inline algo::aryptr<gcli::FMrjob*> c_mrjob_Getary(gcli::FMr& mr) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:gcli.FMr.c_mrjob.Insert
@@ -4577,51 +4750,51 @@ void                 c_mrjob_Insert(gcli::FMr& mr, gcli::FMrjob& row) __attribut
 bool                 c_mrjob_InsertMaybe(gcli::FMr& mr, gcli::FMrjob& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:gcli.FMr.c_mrjob.N
-i32                  c_mrjob_N(const gcli::FMr& mr) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_mrjob_N(const gcli::FMr& mr) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:gcli.FMr.c_mrjob.Remove
 void                 c_mrjob_Remove(gcli::FMr& mr, gcli::FMrjob& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:gcli.FMr.c_mrjob.RemoveAll
-void                 c_mrjob_RemoveAll(gcli::FMr& mr) __attribute__((nothrow));
+inline void          c_mrjob_RemoveAll(gcli::FMr& mr) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:gcli.FMr.c_mrjob.Reserve
 void                 c_mrjob_Reserve(gcli::FMr& mr, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:gcli.FMr.c_mrjob.qFind
-gcli::FMrjob&        c_mrjob_qFind(gcli::FMr& mr, u32 idx) __attribute__((nothrow));
+inline gcli::FMrjob& c_mrjob_qFind(gcli::FMr& mr, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:gcli.FMr.c_mrjob.InAryQ
-bool                 mr_c_mrjob_InAryQ(gcli::FMrjob& row) __attribute__((nothrow));
+inline bool          mr_c_mrjob_InAryQ(gcli::FMrjob& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:gcli.FMr.c_mrjob.qLast
-gcli::FMrjob&        c_mrjob_qLast(gcli::FMr& mr) __attribute__((nothrow));
+inline gcli::FMrjob& c_mrjob_qLast(gcli::FMr& mr) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:gcli.FMr..Init
 void                 FMr_Init(gcli::FMr& mr);
 // func:gcli.FMr.c_mrnote_curs.Reset
-void                 mr_c_mrnote_curs_Reset(mr_c_mrnote_curs &curs, gcli::FMr &parent) __attribute__((nothrow));
+inline void          mr_c_mrnote_curs_Reset(mr_c_mrnote_curs &curs, gcli::FMr &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FMr.c_mrnote_curs.ValidQ
-bool                 mr_c_mrnote_curs_ValidQ(mr_c_mrnote_curs &curs) __attribute__((nothrow));
+inline bool          mr_c_mrnote_curs_ValidQ(mr_c_mrnote_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FMr.c_mrnote_curs.Next
-void                 mr_c_mrnote_curs_Next(mr_c_mrnote_curs &curs) __attribute__((nothrow));
+inline void          mr_c_mrnote_curs_Next(mr_c_mrnote_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FMr.c_mrnote_curs.Access
-gcli::FMrnote&       mr_c_mrnote_curs_Access(mr_c_mrnote_curs &curs) __attribute__((nothrow));
+inline gcli::FMrnote& mr_c_mrnote_curs_Access(mr_c_mrnote_curs &curs) __attribute__((nothrow));
 // func:gcli.FMr.c_mrjob_curs.Reset
-void                 mr_c_mrjob_curs_Reset(mr_c_mrjob_curs &curs, gcli::FMr &parent) __attribute__((nothrow));
+inline void          mr_c_mrjob_curs_Reset(mr_c_mrjob_curs &curs, gcli::FMr &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FMr.c_mrjob_curs.ValidQ
-bool                 mr_c_mrjob_curs_ValidQ(mr_c_mrjob_curs &curs) __attribute__((nothrow));
+inline bool          mr_c_mrjob_curs_ValidQ(mr_c_mrjob_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:gcli.FMr.c_mrjob_curs.Next
-void                 mr_c_mrjob_curs_Next(mr_c_mrjob_curs &curs) __attribute__((nothrow));
+inline void          mr_c_mrjob_curs_Next(mr_c_mrjob_curs &curs) __attribute__((nothrow));
 // item access
 // func:gcli.FMr.c_mrjob_curs.Access
-gcli::FMrjob&        mr_c_mrjob_curs_Access(mr_c_mrjob_curs &curs) __attribute__((nothrow));
+inline gcli::FMrjob& mr_c_mrjob_curs_Access(mr_c_mrjob_curs &curs) __attribute__((nothrow));
 // func:gcli.FMr..Uninit
 void                 FMr_Uninit(gcli::FMr& mr) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -4631,7 +4804,8 @@ void                 FMr_Print(gcli::FMr& row, algo::cstring& str) __attribute__
 
 // --- gcli.FMrjob
 // create: gcli.FDb.mrjob (Lary)
-// global access: ind_mrjob (Thash)
+// global access: mrjob (Lary, by rowid)
+// global access: ind_mrjob (Thash, hash field mrjob)
 // access: gcli.FIssue.c_mrjob (Ptrary)
 // access: gcli.FMr.c_mrjob (Ptrary)
 struct FMrjob { // gcli.FMrjob
@@ -4646,15 +4820,19 @@ struct FMrjob { // gcli.FMrjob
     bool                select;                 //   false
     bool                issue_c_mrjob_in_ary;   //   false  membership flag
     bool                mr_c_mrjob_in_ary;      //   false  membership flag
+    // func:gcli.FMrjob..AssignOp
+    gcli::FMrjob&        operator =(const gcli::FMrjob &rhs) = delete;
+    // func:gcli.FMrjob..CopyCtor
+    FMrjob(const gcli::FMrjob &rhs) = delete;
 private:
+    // func:gcli.FMrjob..Ctor
+    inline               FMrjob() __attribute__((nothrow));
+    // func:gcli.FMrjob..Dtor
+    inline               ~FMrjob() __attribute__((nothrow));
     friend gcli::FMrjob&        mrjob_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FMrjob*        mrjob_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 mrjob_RemoveAll() __attribute__((nothrow));
     friend void                 mrjob_RemoveLast() __attribute__((nothrow));
-    FMrjob();
-    ~FMrjob();
-    FMrjob(const FMrjob&){ /*disallow copy constructor */}
-    void operator =(const FMrjob&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -4678,7 +4856,8 @@ void                 FMrjob_Uninit(gcli::FMrjob& mrjob) __attribute__((nothrow))
 
 // --- gcli.FMrnote
 // create: gcli.FDb.mrnote (Lary)
-// global access: ind_mrnote (Thash)
+// global access: mrnote (Lary, by rowid)
+// global access: ind_mrnote (Thash, hash field mrnote)
 // access: gcli.FMr.c_mrnote (Ptrary)
 struct FMrnote { // gcli.FMrnote
     gcli::FMrnote*      ind_mrnote_next;      // hash next
@@ -4688,15 +4867,19 @@ struct FMrnote { // gcli.FMrnote
     algo::cstring       author;               // Authtor of mr note
     bool                select;               //   false
     bool                mr_c_mrnote_in_ary;   //   false  membership flag
+    // func:gcli.FMrnote..AssignOp
+    inline gcli::FMrnote& operator =(const gcli::FMrnote &rhs) = delete;
+    // func:gcli.FMrnote..CopyCtor
+    inline               FMrnote(const gcli::FMrnote &rhs) = delete;
 private:
+    // func:gcli.FMrnote..Ctor
+    inline               FMrnote() __attribute__((nothrow));
+    // func:gcli.FMrnote..Dtor
+    inline               ~FMrnote() __attribute__((nothrow));
     friend gcli::FMrnote&       mrnote_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FMrnote*       mrnote_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 mrnote_RemoveAll() __attribute__((nothrow));
     friend void                 mrnote_RemoveLast() __attribute__((nothrow));
-    FMrnote();
-    ~FMrnote();
-    FMrnote(const FMrnote&){ /*disallow copy constructor */}
-    void operator =(const FMrnote&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -4714,42 +4897,49 @@ algo::Smallstr150    mr_Get(gcli::FMrnote& mrnote) __attribute__((__warn_unused_
 
 // Set all fields to initial values.
 // func:gcli.FMrnote..Init
-void                 FMrnote_Init(gcli::FMrnote& mrnote);
+inline void          FMrnote_Init(gcli::FMrnote& mrnote);
 // func:gcli.FMrnote..Uninit
 void                 FMrnote_Uninit(gcli::FMrnote& mrnote) __attribute__((nothrow));
 
 // --- gcli.FTuples
 // create: gcli.FDb.tuples (Lary)
+// global access: tuples (Lary, by rowid)
 // access: gcli.FGclicmd.c_tuples (Ptrary)
 struct FTuples { // gcli.FTuples
     algo::cstring   tuples;   //
 private:
+    // func:gcli.FTuples..Ctor
+    inline               FTuples() __attribute__((nothrow));
     friend gcli::FTuples&       tuples_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FTuples*       tuples_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 tuples_RemoveAll() __attribute__((nothrow));
     friend void                 tuples_RemoveLast() __attribute__((nothrow));
-    FTuples();
 };
 
 
 // --- gcli.FUser
 // create: gcli.FDb.user (Lary)
-// global access: ind_user (Thash)
+// global access: user (Lary, by rowid)
+// global access: ind_user (Thash, hash field user)
 struct FUser { // gcli.FUser
     gcli::FUser*       ind_user_next;   // hash next
     algo::Smallstr50   user;            //
     u32                id;              //   0
     algo::cstring      name;            //
     bool               select;          //   false
+    // func:gcli.FUser..AssignOp
+    inline gcli::FUser&  operator =(const gcli::FUser &rhs) = delete;
+    // func:gcli.FUser..CopyCtor
+    inline               FUser(const gcli::FUser &rhs) = delete;
 private:
+    // func:gcli.FUser..Ctor
+    inline               FUser() __attribute__((nothrow));
+    // func:gcli.FUser..Dtor
+    inline               ~FUser() __attribute__((nothrow));
     friend gcli::FUser&         user_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend gcli::FUser*         user_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 user_RemoveAll() __attribute__((nothrow));
     friend void                 user_RemoveLast() __attribute__((nothrow));
-    FUser();
-    ~FUser();
-    FUser(const FUser&){ /*disallow copy constructor */}
-    void operator =(const FUser&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -4761,7 +4951,7 @@ void                 user_CopyIn(gcli::FUser &row, gclidb::User &in) __attribute
 
 // Set all fields to initial values.
 // func:gcli.FUser..Init
-void                 FUser_Init(gcli::FUser& user);
+inline void          FUser_Init(gcli::FUser& user);
 // func:gcli.FUser..Uninit
 void                 FUser_Uninit(gcli::FUser& user) __attribute__((nothrow));
 
@@ -4769,19 +4959,23 @@ void                 FUser_Uninit(gcli::FUser& user) __attribute__((nothrow));
 #pragma pack(push,1)
 struct FieldId { // gcli.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator gcli_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(gcli_FieldIdEnum arg);
-    FieldId();
+    // func:gcli.FieldId.value.Cast
+    inline               operator gcli_FieldIdEnum() const __attribute__((nothrow));
+    // func:gcli.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:gcli.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:gcli.FieldId..EnumCtor
+    inline               FieldId(gcli_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:gcli.FieldId.value.GetEnum
-gcli_FieldIdEnum     value_GetEnum(const gcli::FieldId& parent) __attribute__((nothrow));
+inline gcli_FieldIdEnum value_GetEnum(const gcli::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:gcli.FieldId.value.SetEnum
-void                 value_SetEnum(gcli::FieldId& parent, gcli_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(gcli::FieldId& parent, gcli_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:gcli.FieldId.value.ToCstr
@@ -4809,7 +5003,7 @@ bool                 value_ReadStrptrMaybe(gcli::FieldId& parent, algo::strptr r
 bool                 FieldId_ReadStrptrMaybe(gcli::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcli.FieldId..Init
-void                 FieldId_Init(gcli::FieldId& parent);
+inline void          FieldId_Init(gcli::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:gcli.FieldId.String  printfmt:Raw
 // func:gcli.FieldId..Print
@@ -4818,18 +5012,22 @@ void                 FieldId_Print(gcli::FieldId& row, algo::cstring& str) __att
 // --- gcli.TableId
 struct TableId { // gcli.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
-    inline operator gcli_TableIdEnum() const;
-    explicit TableId(i32                            in_value);
-    TableId(gcli_TableIdEnum arg);
-    TableId();
+    // func:gcli.TableId.value.Cast
+    inline               operator gcli_TableIdEnum() const __attribute__((nothrow));
+    // func:gcli.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:gcli.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:gcli.TableId..EnumCtor
+    inline               TableId(gcli_TableIdEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:gcli.TableId.value.GetEnum
-gcli_TableIdEnum     value_GetEnum(const gcli::TableId& parent) __attribute__((nothrow));
+inline gcli_TableIdEnum value_GetEnum(const gcli::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:gcli.TableId.value.SetEnum
-void                 value_SetEnum(gcli::TableId& parent, gcli_TableIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(gcli::TableId& parent, gcli_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:gcli.TableId.value.ToCstr
@@ -4857,7 +5055,7 @@ bool                 value_ReadStrptrMaybe(gcli::TableId& parent, algo::strptr r
 bool                 TableId_ReadStrptrMaybe(gcli::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:gcli.TableId..Init
-void                 TableId_Init(gcli::TableId& parent);
+inline void          TableId_Init(gcli::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:gcli.TableId.String  printfmt:Raw
 // func:gcli.TableId..Print

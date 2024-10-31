@@ -19,7 +19,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/avl.cpp
+// Source: cpp/amc/avl.cpp -- AVL tree
 //
 
 #include "include/amc.h"

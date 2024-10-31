@@ -36,11 +36,15 @@ namespace abt { // update-hdr
     // -------------------------------------------------------------------
     // cpp/abt/build.cpp -- Build dag execution
     //
+    abt::FSyscmd* NewCmd(abt::FSyscmd *start, abt::FSyscmd *end);
     void Main_Build();
 
     // -------------------------------------------------------------------
     // cpp/abt/disas.cpp -- Disassemble
     //
+
+    // Show disassembly of function matching regex _db.cmdline.disas
+    // in all selected targets & build directories
     void Main_Disas();
 
     // -------------------------------------------------------------------
@@ -48,26 +52,53 @@ namespace abt { // update-hdr
     //
     bool HeaderExtQ(strptr ext);
 
+    // Access cached 'stat' results for FNAME
+    abt::FFilestat &GetFilestat(strptr fname);
+
     // how are we using this execkey???
     i64 execkey_Get(abt::FSyscmd &cmd);
-    abt::FSyscmd& NewCmd(abt::FSyscmd *start, abt::FSyscmd *end);
+    bool SourceQ(abt::FTargsrc &targsrc);
 
-    // compute obj key by replace path components
+    // compute obj key by replacing path components
     // with .
     // So, cpp/abt/main.cpp becomes cpp.abt.main.cpp
     // Next step will be to replace the extension
     tempstr GetObjkey(strptr source);
+
+    // Compute object pathname by combinindg builddir path,
+    // objkey, and extension.
+    tempstr GetObjpath(abt::FBuilddir &builddir, abt::FSrcfile &srcfile);
     void DeleteFileV(strptr path);
-    void Main_PrepOpts();
+    tempstr GetOutfile(abt::FBuilddir &builddir, abt::FTarget &target);
     void Main();
+
+    // -------------------------------------------------------------------
+    // cpp/abt/ood.cpp
+    //
+
+    // Compute cumulative modification timestamp for source files
+    // and targets.
+    // This calculates SRCFILE.CUM_MODTIME, TARGET.CUM_MODTIME
+    void ComputeTimestamps();
+
+    // Recalculate SRCFILE.OOD, TARGET.OOD, TARGET.OUT_MODTIME
+    // for given build directory BUILDDIR
+    void ComputeOod(abt::FBuilddir &builddir);
 
     // -------------------------------------------------------------------
     // cpp/abt/opt.cpp -- Calculate compiler options
     //
-    tempstr EvalSrcfileCmdline(algo_lib::Replscope &R, abt::FTarget &target, abt::FSrcfile &srcfile);
+    tempstr EvalSrcfileCmdline(abt::FBuilddir &builddir, abt::FTarget &target, abt::FSrcfile &srcfile);
 
     // Return list of object file pathnames and library pathnames for target TARGET
     // into output variables OBJS and LIBS
-    void DepsObjList(abt::FTarget &target, cstring &objs, cstring &libs);
-    tempstr EvalLinkCmdline(algo_lib::Replscope &R, abt::FTarget &target);
+    void DepsObjList(abt::FBuilddir &builddir, abt::FTarget &target, cstring &objs, cstring &libs);
+    tempstr EvalLinkCmdline(abt::FBuilddir &builddir, abt::FTarget &target);
+
+    // -------------------------------------------------------------------
+    // cpp/abt/scan.cpp
+    //
+
+    // This function always scans the entire graph of all sources
+    void ScanSrcfile();
 }

@@ -29,13 +29,6 @@
 #include "include/gen/atfdb_gen.inl.h"
 #include "include/gen/lib_exec_gen.inl.h"
 //#pragma endinclude
-inline atf_unit::Cstr::Cstr(const algo::strptr&            in_val)
-    : val(in_val)
-{
-}
-inline atf_unit::Cstr::Cstr() {
-}
-
 
 // --- atf_unit.Cstr.val.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
@@ -52,12 +45,12 @@ inline i32 atf_unit::val_Cmp(atf_unit::Cstr& parent, atf_unit::Cstr &rhs) {
 }
 
 // --- atf_unit.Cstr.val.Cast
-inline atf_unit::Cstr::operator algo::strptr () const {
+inline  atf_unit::Cstr::operator algo::strptr() const {
     return algo::strptr((*this).val);
 }
 
 // --- atf_unit.Cstr..Hash
-inline u32 atf_unit::Cstr_Hash(u32 prev, const atf_unit::Cstr & rhs) {
+inline u32 atf_unit::Cstr_Hash(u32 prev, const atf_unit::Cstr& rhs) {
     prev = cstring_Hash(prev, rhs.val);
     return prev;
 }
@@ -90,41 +83,19 @@ inline bool atf_unit::Cstr_Update(atf_unit::Cstr &lhs, atf_unit::Cstr& rhs) {
     }
     return ret;
 }
-inline atf_unit::Dbl::Dbl(double                         in_val)
+
+// --- atf_unit.Cstr..Ctor
+inline  atf_unit::Cstr::Cstr() {
+}
+
+// --- atf_unit.Cstr..FieldwiseCtor
+inline  atf_unit::Cstr::Cstr(const algo::strptr& in_val)
     : val(in_val)
-{
+ {
 }
-
-inline bool atf_unit::Dbl::operator ==(const atf_unit::Dbl &rhs) const {
-    return atf_unit::Dbl_Eq(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
-}
-
-inline bool atf_unit::Dbl::operator !=(const atf_unit::Dbl &rhs) const {
-    return !atf_unit::Dbl_Eq(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
-}
-
-inline bool atf_unit::Dbl::operator <(const atf_unit::Dbl &rhs) const {
-    return atf_unit::Dbl_Lt(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
-}
-
-inline bool atf_unit::Dbl::operator >(const atf_unit::Dbl &rhs) const {
-    return rhs < *this;
-}
-
-inline bool atf_unit::Dbl::operator <=(const atf_unit::Dbl &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool atf_unit::Dbl::operator >=(const atf_unit::Dbl &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_unit::Dbl::Dbl() {
-    atf_unit::Dbl_Init(*this);
-}
-
 
 // --- atf_unit.Dbl.val.Cast
-inline atf_unit::Dbl::operator double () const {
+inline  atf_unit::Dbl::operator double() const {
     return double((*this).val);
 }
 
@@ -132,6 +103,36 @@ inline atf_unit::Dbl::operator double () const {
 inline u32 atf_unit::Dbl_Hash(u32 prev, atf_unit::Dbl rhs) {
     prev = double_Hash(prev, rhs.val);
     return prev;
+}
+
+// --- atf_unit.Dbl..EqOp
+inline bool atf_unit::Dbl::operator ==(const atf_unit::Dbl &rhs) const {
+    return atf_unit::Dbl_Eq(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
+}
+
+// --- atf_unit.Dbl..NeOp
+inline bool atf_unit::Dbl::operator !=(const atf_unit::Dbl &rhs) const {
+    return !atf_unit::Dbl_Eq(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
+}
+
+// --- atf_unit.Dbl..LtOp
+inline bool atf_unit::Dbl::operator <(const atf_unit::Dbl &rhs) const {
+    return atf_unit::Dbl_Lt(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
+}
+
+// --- atf_unit.Dbl..GtOp
+inline bool atf_unit::Dbl::operator >(const atf_unit::Dbl &rhs) const {
+    return atf_unit::Dbl_Lt(const_cast<atf_unit::Dbl&>(rhs),const_cast<atf_unit::Dbl&>(*this));
+}
+
+// --- atf_unit.Dbl..LeOp
+inline bool atf_unit::Dbl::operator <=(const atf_unit::Dbl &rhs) const {
+    return !atf_unit::Dbl_Lt(const_cast<atf_unit::Dbl&>(rhs),const_cast<atf_unit::Dbl&>(*this));
+}
+
+// --- atf_unit.Dbl..GeOp
+inline bool atf_unit::Dbl::operator >=(const atf_unit::Dbl &rhs) const {
+    return !atf_unit::Dbl_Lt(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
 }
 
 // --- atf_unit.Dbl..Lt
@@ -168,9 +169,21 @@ inline bool atf_unit::Dbl_Update(atf_unit::Dbl &lhs, atf_unit::Dbl rhs) {
     }
     return ret;
 }
-inline atf_unit::trace::trace() {
+
+// --- atf_unit.Dbl..Ctor
+inline  atf_unit::Dbl::Dbl() {
+    atf_unit::Dbl_Init(*this);
 }
 
+// --- atf_unit.Dbl..FieldwiseCtor
+inline  atf_unit::Dbl::Dbl(double in_val)
+    : val(in_val)
+ {
+}
+
+// --- atf_unit.trace..Ctor
+inline  atf_unit::trace::trace() {
+}
 
 // --- atf_unit.FDb.tr_number.EmptyQ
 // Return true if index is empty
@@ -294,14 +307,6 @@ inline void atf_unit::_db_unittest_curs_Next(_db_unittest_curs &curs) {
 inline atf_unit::FUnittest& atf_unit::_db_unittest_curs_Access(_db_unittest_curs &curs) {
     return unittest_qFind(u64(curs.index));
 }
-inline atf_unit::FNumber::FNumber() {
-    atf_unit::FNumber_Init(*this);
-}
-
-inline atf_unit::FNumber::~FNumber() {
-    atf_unit::FNumber_Uninit(*this);
-}
-
 
 // --- atf_unit.FNumber..Init
 // Set all fields to initial values.
@@ -313,14 +318,16 @@ inline void atf_unit::FNumber_Init(atf_unit::FNumber& number) {
     number.tr_number_right = NULL;
     number.tr_number_depth = 0;
 }
-inline atf_unit::FPerfSort::FPerfSort() {
-    atf_unit::FPerfSort_Init(*this);
+
+// --- atf_unit.FNumber..Ctor
+inline  atf_unit::FNumber::FNumber() {
+    atf_unit::FNumber_Init(*this);
 }
 
-inline atf_unit::FPerfSort::~FPerfSort() {
-    atf_unit::FPerfSort_Uninit(*this);
+// --- atf_unit.FNumber..Dtor
+inline  atf_unit::FNumber::~FNumber() {
+    atf_unit::FNumber_Uninit(*this);
 }
-
 
 // --- atf_unit.FPerfSort.orig.EmptyQ
 // Return true if index is empty
@@ -629,14 +636,16 @@ inline void atf_unit::FPerfSort_Init(atf_unit::FPerfSort& parent) {
     parent.index_n     	= 0; // (atf_unit.FPerfSort.index)
     parent.index_max   	= 0; // (atf_unit.FPerfSort.index)
 }
-inline atf_unit::FUnittest::FUnittest() {
-    atf_unit::FUnittest_Init(*this);
+
+// --- atf_unit.FPerfSort..Ctor
+inline  atf_unit::FPerfSort::FPerfSort() {
+    atf_unit::FPerfSort_Init(*this);
 }
 
-inline atf_unit::FUnittest::~FUnittest() {
-    atf_unit::FUnittest_Uninit(*this);
+// --- atf_unit.FPerfSort..Dtor
+inline  atf_unit::FPerfSort::~FPerfSort() {
+    atf_unit::FPerfSort_Uninit(*this);
 }
-
 
 // --- atf_unit.FUnittest.step.Call
 // Invoke function by pointer
@@ -655,15 +664,16 @@ inline void atf_unit::FUnittest_Init(atf_unit::FUnittest& unittest) {
     unittest.ind_unittest_next = (atf_unit::FUnittest*)-1; // (atf_unit.FDb.ind_unittest) not-in-hash
     unittest.step = NULL;
 }
-inline atf_unit::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_unit::FieldId::FieldId(atf_unit_FieldIdEnum arg) { this->value = i32(arg); }
-inline atf_unit::FieldId::FieldId() {
-    atf_unit::FieldId_Init(*this);
+
+// --- atf_unit.FUnittest..Ctor
+inline  atf_unit::FUnittest::FUnittest() {
+    atf_unit::FUnittest_Init(*this);
 }
 
+// --- atf_unit.FUnittest..Dtor
+inline  atf_unit::FUnittest::~FUnittest() {
+    atf_unit::FUnittest_Uninit(*this);
+}
 
 // --- atf_unit.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -678,7 +688,7 @@ inline void atf_unit::value_SetEnum(atf_unit::FieldId& parent, atf_unit_FieldIdE
 }
 
 // --- atf_unit.FieldId.value.Cast
-inline atf_unit::FieldId::operator atf_unit_FieldIdEnum () const {
+inline  atf_unit::FieldId::operator atf_unit_FieldIdEnum() const {
     return atf_unit_FieldIdEnum((*this).value);
 }
 
@@ -688,38 +698,56 @@ inline void atf_unit::FieldId_Init(atf_unit::FieldId& parent) {
     parent.value = i32(-1);
 }
 
+// --- atf_unit.FieldId..Ctor
+inline  atf_unit::FieldId::FieldId() {
+    atf_unit::FieldId_Init(*this);
+}
+
+// --- atf_unit.FieldId..FieldwiseCtor
+inline  atf_unit::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_unit.FieldId..EnumCtor
+inline  atf_unit::FieldId::FieldId(atf_unit_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
+
+// --- atf_unit.TypeA..Hash
+inline u32 atf_unit::TypeA_Hash(u32 prev, const atf_unit::TypeA& rhs) {
+    prev = i32_Hash(prev, rhs.typea);
+    return prev;
+}
+
+// --- atf_unit.TypeA..EqOp
 inline bool atf_unit::TypeA::operator ==(const atf_unit::TypeA &rhs) const {
     return atf_unit::TypeA_Eq(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
 }
 
+// --- atf_unit.TypeA..NeOp
 inline bool atf_unit::TypeA::operator !=(const atf_unit::TypeA &rhs) const {
     return !atf_unit::TypeA_Eq(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
 }
 
+// --- atf_unit.TypeA..LtOp
 inline bool atf_unit::TypeA::operator <(const atf_unit::TypeA &rhs) const {
     return atf_unit::TypeA_Lt(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
 }
 
+// --- atf_unit.TypeA..GtOp
 inline bool atf_unit::TypeA::operator >(const atf_unit::TypeA &rhs) const {
-    return rhs < *this;
+    return atf_unit::TypeA_Lt(const_cast<atf_unit::TypeA&>(rhs),const_cast<atf_unit::TypeA&>(*this));
 }
 
+// --- atf_unit.TypeA..LeOp
 inline bool atf_unit::TypeA::operator <=(const atf_unit::TypeA &rhs) const {
-    return !(rhs < *this);
+    return !atf_unit::TypeA_Lt(const_cast<atf_unit::TypeA&>(rhs),const_cast<atf_unit::TypeA&>(*this));
 }
 
+// --- atf_unit.TypeA..GeOp
 inline bool atf_unit::TypeA::operator >=(const atf_unit::TypeA &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_unit::TypeA::TypeA() {
-    atf_unit::TypeA_Init(*this);
-}
-
-
-// --- atf_unit.TypeA..Hash
-inline u32 atf_unit::TypeA_Hash(u32 prev, const atf_unit::TypeA & rhs) {
-    prev = i32_Hash(prev, rhs.typea);
-    return prev;
+    return !atf_unit::TypeA_Lt(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
 }
 
 // --- atf_unit.TypeA..Lt
@@ -757,39 +785,46 @@ inline bool atf_unit::TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA& rhs) {
     return ret;
 }
 
+// --- atf_unit.TypeA..Ctor
+inline  atf_unit::TypeA::TypeA() {
+    atf_unit::TypeA_Init(*this);
+}
+
+// --- atf_unit.TypeB..Hash
+inline u32 atf_unit::TypeB_Hash(u32 prev, const atf_unit::TypeB& rhs) {
+    prev = i32_Hash(prev, rhs.typea);
+    prev = i32_Hash(prev, rhs.j);
+    return prev;
+}
+
+// --- atf_unit.TypeB..EqOp
 inline bool atf_unit::TypeB::operator ==(const atf_unit::TypeB &rhs) const {
     return atf_unit::TypeB_Eq(const_cast<atf_unit::TypeB&>(*this),const_cast<atf_unit::TypeB&>(rhs));
 }
 
+// --- atf_unit.TypeB..NeOp
 inline bool atf_unit::TypeB::operator !=(const atf_unit::TypeB &rhs) const {
     return !atf_unit::TypeB_Eq(const_cast<atf_unit::TypeB&>(*this),const_cast<atf_unit::TypeB&>(rhs));
 }
 
+// --- atf_unit.TypeB..LtOp
 inline bool atf_unit::TypeB::operator <(const atf_unit::TypeB &rhs) const {
     return atf_unit::TypeB_Lt(const_cast<atf_unit::TypeB&>(*this),const_cast<atf_unit::TypeB&>(rhs));
 }
 
+// --- atf_unit.TypeB..GtOp
 inline bool atf_unit::TypeB::operator >(const atf_unit::TypeB &rhs) const {
-    return rhs < *this;
+    return atf_unit::TypeB_Lt(const_cast<atf_unit::TypeB&>(rhs),const_cast<atf_unit::TypeB&>(*this));
 }
 
+// --- atf_unit.TypeB..LeOp
 inline bool atf_unit::TypeB::operator <=(const atf_unit::TypeB &rhs) const {
-    return !(rhs < *this);
+    return !atf_unit::TypeB_Lt(const_cast<atf_unit::TypeB&>(rhs),const_cast<atf_unit::TypeB&>(*this));
 }
 
+// --- atf_unit.TypeB..GeOp
 inline bool atf_unit::TypeB::operator >=(const atf_unit::TypeB &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_unit::TypeB::TypeB() {
-    atf_unit::TypeB_Init(*this);
-}
-
-
-// --- atf_unit.TypeB..Hash
-inline u32 atf_unit::TypeB_Hash(u32 prev, const atf_unit::TypeB & rhs) {
-    prev = i32_Hash(prev, rhs.typea);
-    prev = i32_Hash(prev, rhs.j);
-    return prev;
+    return !atf_unit::TypeB_Lt(const_cast<atf_unit::TypeB&>(*this),const_cast<atf_unit::TypeB&>(rhs));
 }
 
 // --- atf_unit.TypeB..Lt
@@ -835,10 +870,16 @@ inline bool atf_unit::TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB& rhs) {
     }
     return ret;
 }
-inline atf_unit::TestJson::TestJson() {
-    atf_unit::TestJson_Init(*this);
+
+// --- atf_unit.TypeB..Ctor
+inline  atf_unit::TypeB::TypeB() {
+    atf_unit::TypeB_Init(*this);
 }
 
+// --- atf_unit.TestJson..Ctor
+inline  atf_unit::TestJson::TestJson() {
+    atf_unit::TestJson_Init(*this);
+}
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_unit::Cstr &row) {// cfmt:atf_unit.Cstr.String
     atf_unit::Cstr_Print(const_cast<atf_unit::Cstr&>(row), str);

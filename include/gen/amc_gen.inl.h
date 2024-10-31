@@ -44,53 +44,45 @@ static amc::FTclass &amc_tclass_Count      = ((amc::FTclass*)amc::_db.tclass_dat
 static amc::FTclass &amc_tclass_Cppfunc    = ((amc::FTclass*)amc::_db.tclass_data)[10];
 static amc::FTclass &amc_tclass_Cppstack   = ((amc::FTclass*)amc::_db.tclass_data)[11];
 static amc::FTclass &amc_tclass_Ctype      = ((amc::FTclass*)amc::_db.tclass_data)[12];
-static amc::FTclass &amc_tclass_Dec        = ((amc::FTclass*)amc::_db.tclass_data)[13];
-static amc::FTclass &amc_tclass_Delptr     = ((amc::FTclass*)amc::_db.tclass_data)[14];
-static amc::FTclass &amc_tclass_Exec       = ((amc::FTclass*)amc::_db.tclass_data)[15];
-static amc::FTclass &amc_tclass_Fbuf       = ((amc::FTclass*)amc::_db.tclass_data)[16];
-static amc::FTclass &amc_tclass_Fcast      = ((amc::FTclass*)amc::_db.tclass_data)[17];
-static amc::FTclass &amc_tclass_Fconst     = ((amc::FTclass*)amc::_db.tclass_data)[18];
-static amc::FTclass &amc_tclass_Field      = ((amc::FTclass*)amc::_db.tclass_data)[19];
-static amc::FTclass &amc_tclass_Field2     = ((amc::FTclass*)amc::_db.tclass_data)[20];
-static amc::FTclass &amc_tclass_Global     = ((amc::FTclass*)amc::_db.tclass_data)[21];
-static amc::FTclass &amc_tclass_Hook       = ((amc::FTclass*)amc::_db.tclass_data)[22];
-static amc::FTclass &amc_tclass_Inlary     = ((amc::FTclass*)amc::_db.tclass_data)[23];
-static amc::FTclass &amc_tclass_Io         = ((amc::FTclass*)amc::_db.tclass_data)[24];
-static amc::FTclass &amc_tclass_Lary       = ((amc::FTclass*)amc::_db.tclass_data)[25];
-static amc::FTclass &amc_tclass_Llist      = ((amc::FTclass*)amc::_db.tclass_data)[26];
-static amc::FTclass &amc_tclass_Lpool      = ((amc::FTclass*)amc::_db.tclass_data)[27];
-static amc::FTclass &amc_tclass_Malloc     = ((amc::FTclass*)amc::_db.tclass_data)[28];
-static amc::FTclass &amc_tclass_Ns         = ((amc::FTclass*)amc::_db.tclass_data)[29];
-static amc::FTclass &amc_tclass_Numstr     = ((amc::FTclass*)amc::_db.tclass_data)[30];
-static amc::FTclass &amc_tclass_Opt        = ((amc::FTclass*)amc::_db.tclass_data)[31];
-static amc::FTclass &amc_tclass_Pkey       = ((amc::FTclass*)amc::_db.tclass_data)[32];
-static amc::FTclass &amc_tclass_Pmask      = ((amc::FTclass*)amc::_db.tclass_data)[33];
-static amc::FTclass &amc_tclass_Pool       = ((amc::FTclass*)amc::_db.tclass_data)[34];
-static amc::FTclass &amc_tclass_Ptr        = ((amc::FTclass*)amc::_db.tclass_data)[35];
-static amc::FTclass &amc_tclass_Ptrary     = ((amc::FTclass*)amc::_db.tclass_data)[36];
-static amc::FTclass &amc_tclass_Regx       = ((amc::FTclass*)amc::_db.tclass_data)[37];
-static amc::FTclass &amc_tclass_RegxSql    = ((amc::FTclass*)amc::_db.tclass_data)[38];
-static amc::FTclass &amc_tclass_Sbrk       = ((amc::FTclass*)amc::_db.tclass_data)[39];
-static amc::FTclass &amc_tclass_Smallstr   = ((amc::FTclass*)amc::_db.tclass_data)[40];
-static amc::FTclass &amc_tclass_Sort       = ((amc::FTclass*)amc::_db.tclass_data)[41];
-static amc::FTclass &amc_tclass_Step       = ((amc::FTclass*)amc::_db.tclass_data)[42];
-static amc::FTclass &amc_tclass_Substr     = ((amc::FTclass*)amc::_db.tclass_data)[43];
-static amc::FTclass &amc_tclass_Tary       = ((amc::FTclass*)amc::_db.tclass_data)[44];
-static amc::FTclass &amc_tclass_Thash      = ((amc::FTclass*)amc::_db.tclass_data)[45];
-static amc::FTclass &amc_tclass_Tpool      = ((amc::FTclass*)amc::_db.tclass_data)[46];
-static amc::FTclass &amc_tclass_Upptr      = ((amc::FTclass*)amc::_db.tclass_data)[47];
-static amc::FTclass &amc_tclass_Val        = ((amc::FTclass*)amc::_db.tclass_data)[48];
-static amc::FTclass &amc_tclass_Varlen     = ((amc::FTclass*)amc::_db.tclass_data)[49];
-static amc::FTclass &amc_tclass_ZSListMT   = ((amc::FTclass*)amc::_db.tclass_data)[50];
-inline amc::BltinId::BltinId(u8                             in_value)
-    : value(in_value)
-{
-}
-inline amc::BltinId::BltinId(amc_BltinIdEnum arg) { this->value = u8(arg); }
-inline amc::BltinId::BltinId() {
-    amc::BltinId_Init(*this);
-}
-
+static amc::FTclass &amc_tclass_Ctype2     = ((amc::FTclass*)amc::_db.tclass_data)[13];
+static amc::FTclass &amc_tclass_Dec        = ((amc::FTclass*)amc::_db.tclass_data)[14];
+static amc::FTclass &amc_tclass_Delptr     = ((amc::FTclass*)amc::_db.tclass_data)[15];
+static amc::FTclass &amc_tclass_Exec       = ((amc::FTclass*)amc::_db.tclass_data)[16];
+static amc::FTclass &amc_tclass_Fbuf       = ((amc::FTclass*)amc::_db.tclass_data)[17];
+static amc::FTclass &amc_tclass_Fcast      = ((amc::FTclass*)amc::_db.tclass_data)[18];
+static amc::FTclass &amc_tclass_Fconst     = ((amc::FTclass*)amc::_db.tclass_data)[19];
+static amc::FTclass &amc_tclass_Field      = ((amc::FTclass*)amc::_db.tclass_data)[20];
+static amc::FTclass &amc_tclass_Field2     = ((amc::FTclass*)amc::_db.tclass_data)[21];
+static amc::FTclass &amc_tclass_Global     = ((amc::FTclass*)amc::_db.tclass_data)[22];
+static amc::FTclass &amc_tclass_Hook       = ((amc::FTclass*)amc::_db.tclass_data)[23];
+static amc::FTclass &amc_tclass_Inlary     = ((amc::FTclass*)amc::_db.tclass_data)[24];
+static amc::FTclass &amc_tclass_Io         = ((amc::FTclass*)amc::_db.tclass_data)[25];
+static amc::FTclass &amc_tclass_Lary       = ((amc::FTclass*)amc::_db.tclass_data)[26];
+static amc::FTclass &amc_tclass_Llist      = ((amc::FTclass*)amc::_db.tclass_data)[27];
+static amc::FTclass &amc_tclass_Lpool      = ((amc::FTclass*)amc::_db.tclass_data)[28];
+static amc::FTclass &amc_tclass_Malloc     = ((amc::FTclass*)amc::_db.tclass_data)[29];
+static amc::FTclass &amc_tclass_Ns         = ((amc::FTclass*)amc::_db.tclass_data)[30];
+static amc::FTclass &amc_tclass_Numstr     = ((amc::FTclass*)amc::_db.tclass_data)[31];
+static amc::FTclass &amc_tclass_Opt        = ((amc::FTclass*)amc::_db.tclass_data)[32];
+static amc::FTclass &amc_tclass_Pkey       = ((amc::FTclass*)amc::_db.tclass_data)[33];
+static amc::FTclass &amc_tclass_Pmask      = ((amc::FTclass*)amc::_db.tclass_data)[34];
+static amc::FTclass &amc_tclass_Pool       = ((amc::FTclass*)amc::_db.tclass_data)[35];
+static amc::FTclass &amc_tclass_Ptr        = ((amc::FTclass*)amc::_db.tclass_data)[36];
+static amc::FTclass &amc_tclass_Ptrary     = ((amc::FTclass*)amc::_db.tclass_data)[37];
+static amc::FTclass &amc_tclass_Regx       = ((amc::FTclass*)amc::_db.tclass_data)[38];
+static amc::FTclass &amc_tclass_RegxSql    = ((amc::FTclass*)amc::_db.tclass_data)[39];
+static amc::FTclass &amc_tclass_Sbrk       = ((amc::FTclass*)amc::_db.tclass_data)[40];
+static amc::FTclass &amc_tclass_Smallstr   = ((amc::FTclass*)amc::_db.tclass_data)[41];
+static amc::FTclass &amc_tclass_Sort       = ((amc::FTclass*)amc::_db.tclass_data)[42];
+static amc::FTclass &amc_tclass_Step       = ((amc::FTclass*)amc::_db.tclass_data)[43];
+static amc::FTclass &amc_tclass_Substr     = ((amc::FTclass*)amc::_db.tclass_data)[44];
+static amc::FTclass &amc_tclass_Tary       = ((amc::FTclass*)amc::_db.tclass_data)[45];
+static amc::FTclass &amc_tclass_Thash      = ((amc::FTclass*)amc::_db.tclass_data)[46];
+static amc::FTclass &amc_tclass_Tpool      = ((amc::FTclass*)amc::_db.tclass_data)[47];
+static amc::FTclass &amc_tclass_Upptr      = ((amc::FTclass*)amc::_db.tclass_data)[48];
+static amc::FTclass &amc_tclass_Val        = ((amc::FTclass*)amc::_db.tclass_data)[49];
+static amc::FTclass &amc_tclass_Varlen     = ((amc::FTclass*)amc::_db.tclass_data)[50];
+static amc::FTclass &amc_tclass_ZSListMT   = ((amc::FTclass*)amc::_db.tclass_data)[51];
 
 // --- amc.BltinId.value.GetEnum
 // Get value of field as enum type
@@ -105,7 +97,7 @@ inline void amc::value_SetEnum(amc::BltinId& parent, amc_BltinIdEnum rhs) {
 }
 
 // --- amc.BltinId.value.Cast
-inline amc::BltinId::operator amc_BltinIdEnum () const {
+inline  amc::BltinId::operator amc_BltinIdEnum() const {
     return amc_BltinIdEnum((*this).value);
 }
 
@@ -114,10 +106,22 @@ inline amc::BltinId::operator amc_BltinIdEnum () const {
 inline void amc::BltinId_Init(amc::BltinId& parent) {
     parent.value = u8(0);
 }
-inline amc::CppkeywordId::CppkeywordId() {
-    amc::CppkeywordId_Init(*this);
+
+// --- amc.BltinId..Ctor
+inline  amc::BltinId::BltinId() {
+    amc::BltinId_Init(*this);
 }
 
+// --- amc.BltinId..FieldwiseCtor
+inline  amc::BltinId::BltinId(u8 in_value)
+    : value(in_value)
+ {
+}
+
+// --- amc.BltinId..EnumCtor
+inline  amc::BltinId::BltinId(amc_BltinIdEnum arg) {
+    this->value = u8(arg);
+}
 
 // --- amc.CppkeywordId.id.GetEnum
 // Get value of field as enum type
@@ -136,40 +140,16 @@ inline void amc::id_SetEnum(amc::CppkeywordId& parent, amc_CppkeywordIdEnum rhs)
 inline void amc::CppkeywordId_Init(amc::CppkeywordId& parent) {
     parent.id = u32(0);
 }
-inline amc::Enumstr::Enumstr(i32                            in_len
-        ,const algo::strptr&            in_str)
-    : len(in_len)
-    , str(in_str)
-{
+
+// --- amc.CppkeywordId..Ctor
+inline  amc::CppkeywordId::CppkeywordId() {
+    amc::CppkeywordId_Init(*this);
 }
 
-inline bool amc::Enumstr::operator ==(const amc::Enumstr &rhs) const {
-    return amc::Enumstr_Eq(const_cast<amc::Enumstr&>(*this),const_cast<amc::Enumstr&>(rhs));
+// --- amc.CppkeywordId..EnumCtor
+inline  amc::CppkeywordId::CppkeywordId(amc_CppkeywordIdEnum arg) {
+    this->id = u32(arg);
 }
-
-inline bool amc::Enumstr::operator !=(const amc::Enumstr &rhs) const {
-    return !amc::Enumstr_Eq(const_cast<amc::Enumstr&>(*this),const_cast<amc::Enumstr&>(rhs));
-}
-
-inline bool amc::Enumstr::operator <(const amc::Enumstr &rhs) const {
-    return amc::Enumstr_Lt(const_cast<amc::Enumstr&>(*this),const_cast<amc::Enumstr&>(rhs));
-}
-
-inline bool amc::Enumstr::operator >(const amc::Enumstr &rhs) const {
-    return rhs < *this;
-}
-
-inline bool amc::Enumstr::operator <=(const amc::Enumstr &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool amc::Enumstr::operator >=(const amc::Enumstr &rhs) const {
-    return !(*this < rhs);
-}
-inline amc::Enumstr::Enumstr() {
-    amc::Enumstr_Init(*this);
-}
-
 
 // --- amc.Enumstr.str.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
@@ -186,10 +166,40 @@ inline i32 amc::str_Cmp(amc::Enumstr& parent, amc::Enumstr &rhs) {
 }
 
 // --- amc.Enumstr..Hash
-inline u32 amc::Enumstr_Hash(u32 prev, const amc::Enumstr & rhs) {
+inline u32 amc::Enumstr_Hash(u32 prev, const amc::Enumstr& rhs) {
     prev = i32_Hash(prev, rhs.len);
     prev = RnullStr8_Hash(prev, rhs.str);
     return prev;
+}
+
+// --- amc.Enumstr..EqOp
+inline bool amc::Enumstr::operator ==(const amc::Enumstr &rhs) const {
+    return amc::Enumstr_Eq(const_cast<amc::Enumstr&>(*this),const_cast<amc::Enumstr&>(rhs));
+}
+
+// --- amc.Enumstr..NeOp
+inline bool amc::Enumstr::operator !=(const amc::Enumstr &rhs) const {
+    return !amc::Enumstr_Eq(const_cast<amc::Enumstr&>(*this),const_cast<amc::Enumstr&>(rhs));
+}
+
+// --- amc.Enumstr..LtOp
+inline bool amc::Enumstr::operator <(const amc::Enumstr &rhs) const {
+    return amc::Enumstr_Lt(const_cast<amc::Enumstr&>(*this),const_cast<amc::Enumstr&>(rhs));
+}
+
+// --- amc.Enumstr..GtOp
+inline bool amc::Enumstr::operator >(const amc::Enumstr &rhs) const {
+    return amc::Enumstr_Lt(const_cast<amc::Enumstr&>(rhs),const_cast<amc::Enumstr&>(*this));
+}
+
+// --- amc.Enumstr..LeOp
+inline bool amc::Enumstr::operator <=(const amc::Enumstr &rhs) const {
+    return !amc::Enumstr_Lt(const_cast<amc::Enumstr&>(rhs),const_cast<amc::Enumstr&>(*this));
+}
+
+// --- amc.Enumstr..GeOp
+inline bool amc::Enumstr::operator >=(const amc::Enumstr &rhs) const {
+    return !amc::Enumstr_Lt(const_cast<amc::Enumstr&>(*this),const_cast<amc::Enumstr&>(rhs));
 }
 
 // --- amc.Enumstr..Lt
@@ -234,35 +244,43 @@ inline bool amc::Enumstr_Update(amc::Enumstr &lhs, amc::Enumstr& rhs) {
     }
     return ret;
 }
-inline amc::FAnonfld::FAnonfld() {
-    amc::FAnonfld_Init(*this);
+
+// --- amc.Enumstr..Ctor
+inline  amc::Enumstr::Enumstr() {
+    amc::Enumstr_Init(*this);
 }
 
-inline amc::FAnonfld::~FAnonfld() {
-    amc::FAnonfld_Uninit(*this);
+// --- amc.Enumstr..FieldwiseCtor
+inline  amc::Enumstr::Enumstr(i32 in_len, const algo::strptr& in_str)
+    : len(in_len)
+    , str(in_str)
+ {
 }
-
 
 // --- amc.FAnonfld..Init
 // Set all fields to initial values.
 inline void amc::FAnonfld_Init(amc::FAnonfld& anonfld) {
     anonfld.anon_idx = i32(0);
 }
-inline amc::FArgvtype::FArgvtype() {
+
+// --- amc.FAnonfld..Ctor
+inline  amc::FAnonfld::FAnonfld() {
+    amc::FAnonfld_Init(*this);
 }
 
-inline amc::FArgvtype::~FArgvtype() {
+// --- amc.FAnonfld..Dtor
+inline  amc::FAnonfld::~FAnonfld() {
+    amc::FAnonfld_Uninit(*this);
+}
+
+// --- amc.FArgvtype..Ctor
+inline  amc::FArgvtype::FArgvtype() {
+}
+
+// --- amc.FArgvtype..Dtor
+inline  amc::FArgvtype::~FArgvtype() {
     amc::FArgvtype_Uninit(*this);
 }
-
-inline amc::FBasepool::FBasepool() {
-    amc::FBasepool_Init(*this);
-}
-
-inline amc::FBasepool::~FBasepool() {
-    amc::FBasepool_Uninit(*this);
-}
-
 
 // --- amc.FBasepool..Init
 // Set all fields to initial values.
@@ -270,14 +288,16 @@ inline void amc::FBasepool_Init(amc::FBasepool& basepool) {
     basepool.p_field = NULL;
     basepool.p_base = NULL;
 }
-inline amc::FBitfld::FBitfld() {
-    amc::FBitfld_Init(*this);
+
+// --- amc.FBasepool..Ctor
+inline  amc::FBasepool::FBasepool() {
+    amc::FBasepool_Init(*this);
 }
 
-inline amc::FBitfld::~FBitfld() {
-    amc::FBitfld_Uninit(*this);
+// --- amc.FBasepool..Dtor
+inline  amc::FBasepool::~FBasepool() {
+    amc::FBasepool_Uninit(*this);
 }
-
 
 // --- amc.FBitfld..Init
 // Set all fields to initial values.
@@ -288,14 +308,16 @@ inline void amc::FBitfld_Init(amc::FBitfld& bitfld) {
     bitfld.p_field = NULL;
     bitfld.bh_bitfld_idx = -1; // (amc.FField.bh_bitfld) not-in-heap
 }
-inline amc::FBltin::FBltin() {
-    amc::FBltin_Init(*this);
+
+// --- amc.FBitfld..Ctor
+inline  amc::FBitfld::FBitfld() {
+    amc::FBitfld_Init(*this);
 }
 
-inline amc::FBltin::~FBltin() {
-    amc::FBltin_Uninit(*this);
+// --- amc.FBitfld..Dtor
+inline  amc::FBitfld::~FBitfld() {
+    amc::FBitfld_Uninit(*this);
 }
-
 
 // --- amc.FBltin..Init
 // Set all fields to initial values.
@@ -305,14 +327,16 @@ inline void amc::FBltin_Init(amc::FBltin& bltin) {
     bltin.issigned = bool(false);
     bltin.ind_bltin_next = (amc::FBltin*)-1; // (amc.FDb.ind_bltin) not-in-hash
 }
-inline amc::FCafter::FCafter() {
-    amc::FCafter_Init(*this);
+
+// --- amc.FBltin..Ctor
+inline  amc::FBltin::FBltin() {
+    amc::FBltin_Init(*this);
 }
 
-inline amc::FCafter::~FCafter() {
-    amc::FCafter_Uninit(*this);
+// --- amc.FBltin..Dtor
+inline  amc::FBltin::~FBltin() {
+    amc::FBltin_Uninit(*this);
 }
-
 
 // --- amc.FCafter..Init
 // Set all fields to initial values.
@@ -321,28 +345,32 @@ inline void amc::FCafter_Init(amc::FCafter& cafter) {
     cafter.zd_cafter_next = (amc::FCafter*)-1; // (amc.FCtype.zd_cafter) not-in-list
     cafter.zd_cafter_prev = NULL; // (amc.FCtype.zd_cafter)
 }
-inline amc::FCascdel::FCascdel() {
-    amc::FCascdel_Init(*this);
+
+// --- amc.FCafter..Ctor
+inline  amc::FCafter::FCafter() {
+    amc::FCafter_Init(*this);
 }
 
-inline amc::FCascdel::~FCascdel() {
-    amc::FCascdel_Uninit(*this);
+// --- amc.FCafter..Dtor
+inline  amc::FCafter::~FCafter() {
+    amc::FCafter_Uninit(*this);
 }
-
 
 // --- amc.FCascdel..Init
 // Set all fields to initial values.
 inline void amc::FCascdel_Init(amc::FCascdel& cascdel) {
     cascdel.p_field = NULL;
 }
-inline amc::FCcmp::FCcmp() {
-    amc::FCcmp_Init(*this);
+
+// --- amc.FCascdel..Ctor
+inline  amc::FCascdel::FCascdel() {
+    amc::FCascdel_Init(*this);
 }
 
-inline amc::FCcmp::~FCcmp() {
-    amc::FCcmp_Uninit(*this);
+// --- amc.FCascdel..Dtor
+inline  amc::FCascdel::~FCascdel() {
+    amc::FCascdel_Uninit(*this);
 }
-
 
 // --- amc.FCcmp..Init
 // Set all fields to initial values.
@@ -353,21 +381,25 @@ inline void amc::FCcmp_Init(amc::FCcmp& ccmp) {
     ccmp.minmax = bool(false);
     ccmp.ind_ccmp_next = (amc::FCcmp*)-1; // (amc.FDb.ind_ccmp) not-in-hash
 }
-inline amc::FCdflt::FCdflt() {
+
+// --- amc.FCcmp..Ctor
+inline  amc::FCcmp::FCcmp() {
+    amc::FCcmp_Init(*this);
 }
 
-inline amc::FCdflt::~FCdflt() {
+// --- amc.FCcmp..Dtor
+inline  amc::FCcmp::~FCcmp() {
+    amc::FCcmp_Uninit(*this);
+}
+
+// --- amc.FCdflt..Ctor
+inline  amc::FCdflt::FCdflt() {
+}
+
+// --- amc.FCdflt..Dtor
+inline  amc::FCdflt::~FCdflt() {
     amc::FCdflt_Uninit(*this);
 }
-
-inline amc::FCextern::FCextern() {
-    amc::FCextern_Init(*this);
-}
-
-inline amc::FCextern::~FCextern() {
-    amc::FCextern_Uninit(*this);
-}
-
 
 // --- amc.FCextern..Init
 // Set all fields to initial values.
@@ -376,14 +408,16 @@ inline void amc::FCextern_Init(amc::FCextern& cextern) {
     cextern.isstruct = bool(false);
     cextern.plaindata = bool(false);
 }
-inline amc::FCfast::FCfast() {
-    amc::FCfast_Init(*this);
+
+// --- amc.FCextern..Ctor
+inline  amc::FCextern::FCextern() {
+    amc::FCextern_Init(*this);
 }
 
-inline amc::FCfast::~FCfast() {
-    amc::FCfast_Uninit(*this);
+// --- amc.FCextern..Dtor
+inline  amc::FCextern::~FCextern() {
+    amc::FCextern_Uninit(*this);
 }
-
 
 // --- amc.FCfast..Init
 // Set all fields to initial values.
@@ -391,14 +425,16 @@ inline void amc::FCfast_Init(amc::FCfast& cfast) {
     cfast.id = u32(0);
     cfast.reset = bool(false);
 }
-inline amc::FCfmt::FCfmt() {
-    amc::FCfmt_Init(*this);
+
+// --- amc.FCfast..Ctor
+inline  amc::FCfast::FCfast() {
+    amc::FCfast_Init(*this);
 }
 
-inline amc::FCfmt::~FCfmt() {
-    amc::FCfmt_Uninit(*this);
+// --- amc.FCfast..Dtor
+inline  amc::FCfast::~FCfast() {
+    amc::FCfast_Uninit(*this);
 }
-
 
 // --- amc.FCfmt..Init
 // Set all fields to initial values.
@@ -409,24 +445,27 @@ inline void amc::FCfmt_Init(amc::FCfmt& cfmt) {
     cfmt.zs_cfmt_next = (amc::FCfmt*)-1; // (amc.FCtype.zs_cfmt) not-in-list
     cfmt.ind_cfmt_next = (amc::FCfmt*)-1; // (amc.FDb.ind_cfmt) not-in-hash
 }
-inline amc::FCget::FCget() {
-    amc::FCget_Init(*this);
+
+// --- amc.FCfmt..Ctor
+inline  amc::FCfmt::FCfmt() {
+    amc::FCfmt_Init(*this);
 }
 
+// --- amc.FCfmt..Dtor
+inline  amc::FCfmt::~FCfmt() {
+    amc::FCfmt_Uninit(*this);
+}
 
 // --- amc.FCget..Init
 // Set all fields to initial values.
 inline void amc::FCget_Init(amc::FCget& cget) {
     cget.p_ctype = NULL;
 }
-inline amc::FCharset::FCharset() {
-    amc::FCharset_Init(*this);
-}
 
-inline amc::FCharset::~FCharset() {
-    amc::FCharset_Uninit(*this);
+// --- amc.FCget..Ctor
+inline  amc::FCget::FCget() {
+    amc::FCget_Init(*this);
 }
-
 
 // --- amc.FCharset..Init
 // Set all fields to initial values.
@@ -434,28 +473,32 @@ inline void amc::FCharset_Init(amc::FCharset& charset) {
     charset.charrange = bool(false);
     charset.calc = bool(false);
 }
-inline amc::FChash::FChash() {
-    amc::FChash_Init(*this);
+
+// --- amc.FCharset..Ctor
+inline  amc::FCharset::FCharset() {
+    amc::FCharset_Init(*this);
 }
 
-inline amc::FChash::~FChash() {
-    amc::FChash_Uninit(*this);
+// --- amc.FCharset..Dtor
+inline  amc::FCharset::~FCharset() {
+    amc::FCharset_Uninit(*this);
 }
-
 
 // --- amc.FChash..Init
 // Set all fields to initial values.
 inline void amc::FChash_Init(amc::FChash& chash) {
     chash.ind_chash_next = (amc::FChash*)-1; // (amc.FDb.ind_chash) not-in-hash
 }
-inline amc::FCppfunc::FCppfunc() {
-    amc::FCppfunc_Init(*this);
+
+// --- amc.FChash..Ctor
+inline  amc::FChash::FChash() {
+    amc::FChash_Init(*this);
 }
 
-inline amc::FCppfunc::~FCppfunc() {
-    amc::FCppfunc_Uninit(*this);
+// --- amc.FChash..Dtor
+inline  amc::FChash::~FChash() {
+    amc::FChash_Uninit(*this);
 }
-
 
 // --- amc.FCppfunc..Init
 // Set all fields to initial values.
@@ -463,14 +506,16 @@ inline void amc::FCppfunc_Init(amc::FCppfunc& cppfunc) {
     cppfunc.print = bool(false);
     cppfunc.set = bool(false);
 }
-inline amc::FCpptype::FCpptype() {
-    amc::FCpptype_Init(*this);
+
+// --- amc.FCppfunc..Ctor
+inline  amc::FCppfunc::FCppfunc() {
+    amc::FCppfunc_Init(*this);
 }
 
-inline amc::FCpptype::~FCpptype() {
-    amc::FCpptype_Uninit(*this);
+// --- amc.FCppfunc..Dtor
+inline  amc::FCppfunc::~FCppfunc() {
+    amc::FCppfunc_Uninit(*this);
 }
-
 
 // --- amc.FCpptype..Init
 // Set all fields to initial values.
@@ -481,14 +526,16 @@ inline void amc::FCpptype_Init(amc::FCpptype& cpptype) {
     cpptype.p_ctype = NULL;
     cpptype.ind_cpptype_next = (amc::FCpptype*)-1; // (amc.FDb.ind_cpptype) not-in-hash
 }
-inline amc::FCsize::FCsize() {
-    amc::FCsize_Init(*this);
+
+// --- amc.FCpptype..Ctor
+inline  amc::FCpptype::FCpptype() {
+    amc::FCpptype_Init(*this);
 }
 
-inline amc::FCsize::~FCsize() {
-    amc::FCsize_Uninit(*this);
+// --- amc.FCpptype..Dtor
+inline  amc::FCpptype::~FCpptype() {
+    amc::FCpptype_Uninit(*this);
 }
-
 
 // --- amc.FCsize..Init
 // Set all fields to initial values.
@@ -496,28 +543,32 @@ inline void amc::FCsize_Init(amc::FCsize& csize) {
     csize.size = u32(0);
     csize.alignment = u32(1);
 }
-inline amc::FCstr::FCstr() {
-    amc::FCstr_Init(*this);
+
+// --- amc.FCsize..Ctor
+inline  amc::FCsize::FCsize() {
+    amc::FCsize_Init(*this);
 }
 
-inline amc::FCstr::~FCstr() {
-    amc::FCstr_Uninit(*this);
+// --- amc.FCsize..Dtor
+inline  amc::FCsize::~FCsize() {
+    amc::FCsize_Uninit(*this);
 }
-
 
 // --- amc.FCstr..Init
 // Set all fields to initial values.
 inline void amc::FCstr_Init(amc::FCstr& cstr) {
     cstr.strequiv = bool(false);
 }
-inline amc::FCtype::FCtype() {
-    amc::FCtype_Init(*this);
+
+// --- amc.FCstr..Ctor
+inline  amc::FCstr::FCstr() {
+    amc::FCstr_Init(*this);
 }
 
-inline amc::FCtype::~FCtype() {
-    amc::FCtype_Uninit(*this);
+// --- amc.FCstr..Dtor
+inline  amc::FCstr::~FCstr() {
+    amc::FCstr_Uninit(*this);
 }
-
 
 // --- amc.FCtype.zs_cfmt.EmptyQ
 // Return true if index is empty
@@ -1939,14 +1990,16 @@ inline void amc::ctype_c_ffast_curs_Next(ctype_c_ffast_curs &curs) {
 inline amc::FFfast& amc::ctype_c_ffast_curs_Access(ctype_c_ffast_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline amc::FCtypelen::FCtypelen() {
-    amc::FCtypelen_Init(*this);
+
+// --- amc.FCtype..Ctor
+inline  amc::FCtype::FCtype() {
+    amc::FCtype_Init(*this);
 }
 
-inline amc::FCtypelen::~FCtypelen() {
-    amc::FCtypelen_Uninit(*this);
+// --- amc.FCtype..Dtor
+inline  amc::FCtype::~FCtype() {
+    amc::FCtype_Uninit(*this);
 }
-
 
 // --- amc.FCtypelen..Init
 // Set all fields to initial values.
@@ -1957,10 +2010,16 @@ inline void amc::FCtypelen_Init(amc::FCtypelen& ctypelen) {
     ctypelen.plaindata = bool(false);
     ctypelen._db_c_ctypelen_in_ary = bool(false);
 }
-inline amc::Genctx::Genctx() {
-    amc::Genctx_Init(*this);
+
+// --- amc.FCtypelen..Ctor
+inline  amc::FCtypelen::FCtypelen() {
+    amc::FCtypelen_Init(*this);
 }
 
+// --- amc.FCtypelen..Dtor
+inline  amc::FCtypelen::~FCtypelen() {
+    amc::FCtypelen_Uninit(*this);
+}
 
 // --- amc.Genctx..Init
 // Set all fields to initial values.
@@ -1970,14 +2029,11 @@ inline void amc::Genctx_Init(amc::Genctx& parent) {
     parent.p_field = NULL;
     parent.p_tfunc = NULL;
 }
-inline amc::FTclass::FTclass() {
-    amc::FTclass_Init(*this);
-}
 
-inline amc::FTclass::~FTclass() {
-    amc::FTclass_Uninit(*this);
+// --- amc.Genctx..Ctor
+inline  amc::Genctx::Genctx() {
+    amc::Genctx_Init(*this);
 }
-
 
 // --- amc.FTclass.c_tfunc.EmptyQ
 // Return true if index is empty
@@ -2077,9 +2133,20 @@ inline void amc::FTclass_Init(amc::FTclass& tclass) {
     tclass.step = NULL;
     tclass.ind_tclass_next = (amc::FTclass*)-1; // (amc.FDb.ind_tclass) not-in-hash
 }
-inline amc::trace::trace() {
+
+// --- amc.FTclass..Ctor
+inline  amc::FTclass::FTclass() {
+    amc::FTclass_Init(*this);
 }
 
+// --- amc.FTclass..Dtor
+inline  amc::FTclass::~FTclass() {
+    amc::FTclass_Uninit(*this);
+}
+
+// --- amc.trace..Ctor
+inline  amc::trace::trace() {
+}
 
 // --- amc.FDb.fsort.EmptyQ
 // Return true if index is empty
@@ -5557,7 +5624,7 @@ inline amc::FFregx& amc::fregx_qFind(u64 t) {
 // Allocate space for one element. If no memory available, return NULL.
 inline void* amc::tclass_AllocMem() {
     void *row = reinterpret_cast<amc::FTclass*>(_db.tclass_data) + _db.tclass_n;
-    if (_db.tclass_n == 51) row = NULL;
+    if (_db.tclass_n == 52) row = NULL;
     if (row) _db.tclass_n++;
     return row;
 }
@@ -5583,9 +5650,9 @@ inline algo::aryptr<amc::FTclass> amc::tclass_Getary() {
 }
 
 // --- amc.FDb.tclass.Max
-// Return constant 51 -- max. number of items in the pool
+// Return constant 52 -- max. number of items in the pool
 inline i32 amc::tclass_Max() {
-    return 51;
+    return 52;
 }
 
 // --- amc.FDb.tclass.N
@@ -7929,6 +7996,60 @@ inline amc::FSsimsort& amc::ssimsort_qFind(u64 t) {
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
     return _db.ssimsort_lary[bsr][index];
+}
+
+// --- amc.FDb.fbuftype.EmptyQ
+// Return true if index is empty
+inline bool amc::fbuftype_EmptyQ() {
+    return _db.fbuftype_n == 0;
+}
+
+// --- amc.FDb.fbuftype.Find
+// Look up row by row id. Return NULL if out of range
+inline amc::FFbuftype* amc::fbuftype_Find(u64 t) {
+    amc::FFbuftype *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.fbuftype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.fbuftype_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- amc.FDb.fbuftype.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline amc::FFbuftype* amc::fbuftype_Last() {
+    return fbuftype_Find(u64(_db.fbuftype_n-1));
+}
+
+// --- amc.FDb.fbuftype.N
+// Return number of items in the pool
+inline i32 amc::fbuftype_N() {
+    return _db.fbuftype_n;
+}
+
+// --- amc.FDb.fbuftype.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline amc::FFbuftype& amc::fbuftype_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.fbuftype_lary[bsr][index];
+}
+
+// --- amc.FDb.ind_fbuftype.EmptyQ
+// Return true if hash is empty
+inline bool amc::ind_fbuftype_EmptyQ() {
+    return _db.ind_fbuftype_n == 0;
+}
+
+// --- amc.FDb.ind_fbuftype.N
+// Return number of items in the hash
+inline i32 amc::ind_fbuftype_N() {
+    return _db.ind_fbuftype_n;
 }
 
 // --- amc.FDb.fsort_curs.Reset
@@ -11046,14 +11167,31 @@ inline void amc::_db_ssimsort_curs_Next(_db_ssimsort_curs &curs) {
 inline amc::FSsimsort& amc::_db_ssimsort_curs_Access(_db_ssimsort_curs &curs) {
     return ssimsort_qFind(u64(curs.index));
 }
-inline amc::FDispatch::FDispatch() {
-    amc::FDispatch_Init(*this);
+
+// --- amc.FDb.fbuftype_curs.Reset
+// cursor points to valid item
+inline void amc::_db_fbuftype_curs_Reset(_db_fbuftype_curs &curs, amc::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
 }
 
-inline amc::FDispatch::~FDispatch() {
-    amc::FDispatch_Uninit(*this);
+// --- amc.FDb.fbuftype_curs.ValidQ
+// cursor points to valid item
+inline bool amc::_db_fbuftype_curs_ValidQ(_db_fbuftype_curs &curs) {
+    return curs.index < _db.fbuftype_n;
 }
 
+// --- amc.FDb.fbuftype_curs.Next
+// proceed to next item
+inline void amc::_db_fbuftype_curs_Next(_db_fbuftype_curs &curs) {
+    curs.index++;
+}
+
+// --- amc.FDb.fbuftype_curs.Access
+// item access
+inline amc::FFbuftype& amc::_db_fbuftype_curs_Access(_db_fbuftype_curs &curs) {
+    return fbuftype_qFind(u64(curs.index));
+}
 
 // --- amc.FDispatch.c_dispfilter.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -11197,14 +11335,16 @@ inline void amc::dispatch_c_dispatch_msg_curs_Next(dispatch_c_dispatch_msg_curs 
 inline amc::FDispatchmsg& amc::dispatch_c_dispatch_msg_curs_Access(dispatch_c_dispatch_msg_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline amc::FDispatchmsg::FDispatchmsg() {
-    amc::FDispatchmsg_Init(*this);
+
+// --- amc.FDispatch..Ctor
+inline  amc::FDispatch::FDispatch() {
+    amc::FDispatch_Init(*this);
 }
 
-inline amc::FDispatchmsg::~FDispatchmsg() {
-    amc::FDispatchmsg_Uninit(*this);
+// --- amc.FDispatch..Dtor
+inline  amc::FDispatch::~FDispatch() {
+    amc::FDispatch_Uninit(*this);
 }
-
 
 // --- amc.FDispatchmsg..Init
 // Set all fields to initial values.
@@ -11213,42 +11353,48 @@ inline void amc::FDispatchmsg_Init(amc::FDispatchmsg& dispatch_msg) {
     dispatch_msg.p_dispatch = NULL;
     dispatch_msg.dispatch_c_dispatch_msg_in_ary = bool(false);
 }
-inline amc::FDispctx::FDispctx() {
-    amc::FDispctx_Init(*this);
+
+// --- amc.FDispatchmsg..Ctor
+inline  amc::FDispatchmsg::FDispatchmsg() {
+    amc::FDispatchmsg_Init(*this);
 }
 
-inline amc::FDispctx::~FDispctx() {
-    amc::FDispctx_Uninit(*this);
+// --- amc.FDispatchmsg..Dtor
+inline  amc::FDispatchmsg::~FDispatchmsg() {
+    amc::FDispatchmsg_Uninit(*this);
 }
-
 
 // --- amc.FDispctx..Init
 // Set all fields to initial values.
 inline void amc::FDispctx_Init(amc::FDispctx& dispctx) {
     dispctx.p_ctype = NULL;
 }
-inline amc::FDispfilter::FDispfilter() {
-    amc::FDispfilter_Init(*this);
+
+// --- amc.FDispctx..Ctor
+inline  amc::FDispctx::FDispctx() {
+    amc::FDispctx_Init(*this);
 }
 
-inline amc::FDispfilter::~FDispfilter() {
-    amc::FDispfilter_Uninit(*this);
+// --- amc.FDispctx..Dtor
+inline  amc::FDispctx::~FDispctx() {
+    amc::FDispctx_Uninit(*this);
 }
-
 
 // --- amc.FDispfilter..Init
 // Set all fields to initial values.
 inline void amc::FDispfilter_Init(amc::FDispfilter& dispfilter) {
     dispfilter.match_all = bool(false);
 }
-inline amc::FDispsig::FDispsig() {
-    amc::FDispsig_Init(*this);
+
+// --- amc.FDispfilter..Ctor
+inline  amc::FDispfilter::FDispfilter() {
+    amc::FDispfilter_Init(*this);
 }
 
-inline amc::FDispsig::~FDispsig() {
-    amc::FDispsig_Uninit(*this);
+// --- amc.FDispfilter..Dtor
+inline  amc::FDispfilter::~FDispfilter() {
+    amc::FDispfilter_Uninit(*this);
 }
-
 
 // --- amc.FDispsig..Init
 // Set all fields to initial values.
@@ -11256,14 +11402,16 @@ inline void amc::FDispsig_Init(amc::FDispsig& dispsig) {
     dispsig._db_c_dispsig_sorted_in_ary = bool(false);
     dispsig.ns_c_dispsig_in_ary = bool(false);
 }
-inline amc::FDisptrace::FDisptrace() {
-    amc::FDisptrace_Init(*this);
+
+// --- amc.FDispsig..Ctor
+inline  amc::FDispsig::FDispsig() {
+    amc::FDispsig_Init(*this);
 }
 
-inline amc::FDisptrace::~FDisptrace() {
-    amc::FDisptrace_Uninit(*this);
+// --- amc.FDispsig..Dtor
+inline  amc::FDispsig::~FDispsig() {
+    amc::FDispsig_Uninit(*this);
 }
-
 
 // --- amc.FDisptrace..Init
 // Set all fields to initial values.
@@ -11271,14 +11419,16 @@ inline void amc::FDisptrace_Init(amc::FDisptrace& disptrace) {
     disptrace.cycle = bool(false);
     disptrace.p_dispatch = NULL;
 }
-inline amc::FEnumstr::FEnumstr() {
-    amc::FEnumstr_Init(*this);
+
+// --- amc.FDisptrace..Ctor
+inline  amc::FDisptrace::FDisptrace() {
+    amc::FDisptrace_Init(*this);
 }
 
-inline amc::FEnumstr::~FEnumstr() {
-    amc::FEnumstr_Uninit(*this);
+// --- amc.FDisptrace..Dtor
+inline  amc::FDisptrace::~FDisptrace() {
+    amc::FDisptrace_Uninit(*this);
 }
-
 
 // --- amc.FEnumstr.c_fconst.EmptyQ
 // Return true if index is empty
@@ -11362,14 +11512,16 @@ inline void amc::enumstr_c_fconst_curs_Next(enumstr_c_fconst_curs &curs) {
 inline amc::FFconst& amc::enumstr_c_fconst_curs_Access(enumstr_c_fconst_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline amc::FEnumstrLen::FEnumstrLen() {
-    amc::FEnumstrLen_Init(*this);
+
+// --- amc.FEnumstr..Ctor
+inline  amc::FEnumstr::FEnumstr() {
+    amc::FEnumstr_Init(*this);
 }
 
-inline amc::FEnumstrLen::~FEnumstrLen() {
-    amc::FEnumstrLen_Uninit(*this);
+// --- amc.FEnumstr..Dtor
+inline  amc::FEnumstr::~FEnumstr() {
+    amc::FEnumstr_Uninit(*this);
 }
-
 
 // --- amc.FEnumstrLen.bh_enumstr.EmptyQ
 // Return true if index is empty
@@ -11423,56 +11575,64 @@ inline amc::FEnumstr& amc::enumstr_len_bh_enumstr_curs_Access(enumstr_len_bh_enu
 inline bool amc::enumstr_len_bh_enumstr_curs_ValidQ(enumstr_len_bh_enumstr_curs &curs) {
     return curs.temp_n > 0;
 }
-inline amc::FFalias::FFalias() {
-    amc::FFalias_Init(*this);
+
+// --- amc.FEnumstrLen..Ctor
+inline  amc::FEnumstrLen::FEnumstrLen() {
+    amc::FEnumstrLen_Init(*this);
 }
 
-inline amc::FFalias::~FFalias() {
-    amc::FFalias_Uninit(*this);
+// --- amc.FEnumstrLen..Dtor
+inline  amc::FEnumstrLen::~FEnumstrLen() {
+    amc::FEnumstrLen_Uninit(*this);
 }
-
 
 // --- amc.FFalias..Init
 // Set all fields to initial values.
 inline void amc::FFalias_Init(amc::FFalias& falias) {
     falias.p_srcfield = NULL;
 }
-inline amc::FFbase::FFbase() {
-    amc::FFbase_Init(*this);
+
+// --- amc.FFalias..Ctor
+inline  amc::FFalias::FFalias() {
+    amc::FFalias_Init(*this);
 }
 
-inline amc::FFbase::~FFbase() {
-    amc::FFbase_Uninit(*this);
+// --- amc.FFalias..Dtor
+inline  amc::FFalias::~FFalias() {
+    amc::FFalias_Uninit(*this);
 }
-
 
 // --- amc.FFbase..Init
 // Set all fields to initial values.
 inline void amc::FFbase_Init(amc::FFbase& fbase) {
     fbase.stripcomment = bool(false);
 }
-inline amc::FFbigend::FFbigend() {
-    amc::FFbigend_Init(*this);
+
+// --- amc.FFbase..Ctor
+inline  amc::FFbase::FFbase() {
+    amc::FFbase_Init(*this);
 }
 
-inline amc::FFbigend::~FFbigend() {
-    amc::FFbigend_Uninit(*this);
+// --- amc.FFbase..Dtor
+inline  amc::FFbase::~FFbase() {
+    amc::FFbase_Uninit(*this);
 }
-
 
 // --- amc.FFbigend..Init
 // Set all fields to initial values.
 inline void amc::FFbigend_Init(amc::FFbigend& fbigend) {
     fbigend.p_field = NULL;
 }
-inline amc::FFbitset::FFbitset() {
-    amc::FFbitset_Init(*this);
+
+// --- amc.FFbigend..Ctor
+inline  amc::FFbigend::FFbigend() {
+    amc::FFbigend_Init(*this);
 }
 
-inline amc::FFbitset::~FFbitset() {
-    amc::FFbitset_Uninit(*this);
+// --- amc.FFbigend..Dtor
+inline  amc::FFbigend::~FFbigend() {
+    amc::FFbigend_Uninit(*this);
 }
-
 
 // --- amc.FFbitset..Init
 // Set all fields to initial values.
@@ -11480,14 +11640,16 @@ inline void amc::FFbitset_Init(amc::FFbitset& fbitset) {
     fbitset.p_field = NULL;
     fbitset.ind_fbitset_next = (amc::FFbitset*)-1; // (amc.FDb.ind_fbitset) not-in-hash
 }
-inline amc::FFbuf::FFbuf() {
-    amc::FFbuf_Init(*this);
+
+// --- amc.FFbitset..Ctor
+inline  amc::FFbitset::FFbitset() {
+    amc::FFbitset_Init(*this);
 }
 
-inline amc::FFbuf::~FFbuf() {
-    amc::FFbuf_Uninit(*this);
+// --- amc.FFbitset..Dtor
+inline  amc::FFbitset::~FFbitset() {
+    amc::FFbitset_Uninit(*this);
 }
-
 
 // --- amc.FFbuf..Init
 // Set all fields to initial values.
@@ -11495,45 +11657,71 @@ inline void amc::FFbuf_Init(amc::FFbuf& fbuf) {
     fbuf.max = u32(0);
     fbuf.p_insready = NULL;
     fbuf.p_inseof = NULL;
+    fbuf.p_fbuftype = NULL;
     fbuf.ind_fbuf_next = (amc::FFbuf*)-1; // (amc.FDb.ind_fbuf) not-in-hash
 }
-inline amc::FFcast::FFcast() {
+
+// --- amc.FFbuf..Ctor
+inline  amc::FFbuf::FFbuf() {
+    amc::FFbuf_Init(*this);
 }
 
-inline amc::FFcast::~FFcast() {
+// --- amc.FFbuf..Dtor
+inline  amc::FFbuf::~FFbuf() {
+    amc::FFbuf_Uninit(*this);
+}
+
+// --- amc.FFbuftype..Init
+// Set all fields to initial values.
+inline void amc::FFbuftype_Init(amc::FFbuftype& fbuftype) {
+    fbuftype.skipbytes = bool(false);
+    fbuftype.ind_fbuftype_next = (amc::FFbuftype*)-1; // (amc.FDb.ind_fbuftype) not-in-hash
+}
+
+// --- amc.FFbuftype..Ctor
+inline  amc::FFbuftype::FFbuftype() {
+    amc::FFbuftype_Init(*this);
+}
+
+// --- amc.FFbuftype..Dtor
+inline  amc::FFbuftype::~FFbuftype() {
+    amc::FFbuftype_Uninit(*this);
+}
+
+// --- amc.FFcast..Ctor
+inline  amc::FFcast::FFcast() {
+}
+
+// --- amc.FFcast..Dtor
+inline  amc::FFcast::~FFcast() {
     amc::FFcast_Uninit(*this);
 }
-
-inline amc::FFcleanup::FFcleanup() {
-    amc::FFcleanup_Init(*this);
-}
-
-inline amc::FFcleanup::~FFcleanup() {
-    amc::FFcleanup_Uninit(*this);
-}
-
 
 // --- amc.FFcleanup..Init
 // Set all fields to initial values.
 inline void amc::FFcleanup_Init(amc::FFcleanup& fcleanup) {
     fcleanup.p_field = NULL;
 }
-inline amc::FFcmap::FFcmap() {
+
+// --- amc.FFcleanup..Ctor
+inline  amc::FFcleanup::FFcleanup() {
+    amc::FFcleanup_Init(*this);
+}
+
+// --- amc.FFcleanup..Dtor
+inline  amc::FFcleanup::~FFcleanup() {
+    amc::FFcleanup_Uninit(*this);
+}
+
+// --- amc.FFcmap..Ctor
+inline  amc::FFcmap::FFcmap() {
     amc::FFcmap_Init(*this);
 }
 
-inline amc::FFcmap::~FFcmap() {
+// --- amc.FFcmap..Dtor
+inline  amc::FFcmap::~FFcmap() {
     amc::FFcmap_Uninit(*this);
 }
-
-inline amc::FFcmdline::FFcmdline() {
-    amc::FFcmdline_Init(*this);
-}
-
-inline amc::FFcmdline::~FFcmdline() {
-    amc::FFcmdline_Uninit(*this);
-}
-
 
 // --- amc.FFcmdline..Init
 // Set all fields to initial values.
@@ -11543,14 +11731,16 @@ inline void amc::FFcmdline_Init(amc::FFcmdline& fcmdline) {
     fcmdline.p_ns = NULL;
     fcmdline.p_basecmdline = NULL;
 }
-inline amc::FFcmp::FFcmp() {
-    amc::FFcmp_Init(*this);
+
+// --- amc.FFcmdline..Ctor
+inline  amc::FFcmdline::FFcmdline() {
+    amc::FFcmdline_Init(*this);
 }
 
-inline amc::FFcmp::~FFcmp() {
-    amc::FFcmp_Uninit(*this);
+// --- amc.FFcmdline..Dtor
+inline  amc::FFcmdline::~FFcmdline() {
+    amc::FFcmdline_Uninit(*this);
 }
-
 
 // --- amc.FFcmp..Init
 // Set all fields to initial values.
@@ -11559,29 +11749,35 @@ inline void amc::FFcmp_Init(amc::FFcmp& fcmp) {
     fcmp.casesens = bool(true);
     fcmp.extrn = bool(false);
 }
-inline amc::FFcompact::FFcompact() {
+
+// --- amc.FFcmp..Ctor
+inline  amc::FFcmp::FFcmp() {
+    amc::FFcmp_Init(*this);
 }
 
-inline amc::FFcompact::~FFcompact() {
+// --- amc.FFcmp..Dtor
+inline  amc::FFcmp::~FFcmp() {
+    amc::FFcmp_Uninit(*this);
+}
+
+// --- amc.FFcompact..Ctor
+inline  amc::FFcompact::FFcompact() {
+}
+
+// --- amc.FFcompact..Dtor
+inline  amc::FFcompact::~FFcompact() {
     amc::FFcompact_Uninit(*this);
 }
 
-inline amc::FFconst::FFconst() {
+// --- amc.FFconst..Ctor
+inline  amc::FFconst::FFconst() {
     amc::FFconst_Init(*this);
 }
 
-inline amc::FFconst::~FFconst() {
+// --- amc.FFconst..Dtor
+inline  amc::FFconst::~FFconst() {
     amc::FFconst_Uninit(*this);
 }
-
-inline amc::FFcurs::FFcurs() {
-    amc::FFcurs_Init(*this);
-}
-
-inline amc::FFcurs::~FFcurs() {
-    amc::FFcurs_Uninit(*this);
-}
-
 
 // --- amc.FFcurs..Init
 // Set all fields to initial values.
@@ -11590,14 +11786,16 @@ inline void amc::FFcurs_Init(amc::FFcurs& fcurs) {
     fcurs.ctype_c_fcurs_in_ary = bool(false);
     fcurs.ind_fcurs_next = (amc::FFcurs*)-1; // (amc.FDb.ind_fcurs) not-in-hash
 }
-inline amc::FFdec::FFdec() {
-    amc::FFdec_Init(*this);
+
+// --- amc.FFcurs..Ctor
+inline  amc::FFcurs::FFcurs() {
+    amc::FFcurs_Init(*this);
 }
 
-inline amc::FFdec::~FFdec() {
-    amc::FFdec_Uninit(*this);
+// --- amc.FFcurs..Dtor
+inline  amc::FFcurs::~FFcurs() {
+    amc::FFcurs_Uninit(*this);
 }
-
 
 // --- amc.FFdec..Init
 // Set all fields to initial values.
@@ -11607,36 +11805,42 @@ inline void amc::FFdec_Init(amc::FFdec& fdec) {
     fdec.p_field = NULL;
     fdec.ind_fdec_next = (amc::FFdec*)-1; // (amc.FDb.ind_fdec) not-in-hash
 }
-inline amc::FFdelay::FFdelay() {
-    amc::FFdelay_Init(*this);
+
+// --- amc.FFdec..Ctor
+inline  amc::FFdec::FFdec() {
+    amc::FFdec_Init(*this);
 }
 
-inline amc::FFdelay::~FFdelay() {
-    amc::FFdelay_Uninit(*this);
+// --- amc.FFdec..Dtor
+inline  amc::FFdec::~FFdec() {
+    amc::FFdec_Uninit(*this);
 }
-
 
 // --- amc.FFdelay..Init
 // Set all fields to initial values.
 inline void amc::FFdelay_Init(amc::FFdelay& fdelay) {
     fdelay.scale = bool(false);
 }
-inline amc::FFfast::FFfast() {
+
+// --- amc.FFdelay..Ctor
+inline  amc::FFdelay::FFdelay() {
+    amc::FFdelay_Init(*this);
+}
+
+// --- amc.FFdelay..Dtor
+inline  amc::FFdelay::~FFdelay() {
+    amc::FFdelay_Uninit(*this);
+}
+
+// --- amc.FFfast..Ctor
+inline  amc::FFfast::FFfast() {
     amc::FFfast_Init(*this);
 }
 
-inline amc::FFfast::~FFfast() {
+// --- amc.FFfast..Dtor
+inline  amc::FFfast::~FFfast() {
     amc::FFfast_Uninit(*this);
 }
-
-inline amc::FFflag::FFflag() {
-    amc::FFflag_Init(*this);
-}
-
-inline amc::FFflag::~FFflag() {
-    amc::FFflag_Uninit(*this);
-}
-
 
 // --- amc.FFflag..Init
 // Set all fields to initial values.
@@ -11645,14 +11849,16 @@ inline void amc::FFflag_Init(amc::FFflag& fflag) {
     fflag.emptyval = algo::strptr("");
     fflag.ind_fflag_next = (amc::FFflag*)-1; // (amc.FDb.ind_fflag) not-in-hash
 }
-inline amc::FField::FField() {
-    amc::FField_Init(*this);
+
+// --- amc.FFflag..Ctor
+inline  amc::FFflag::FFflag() {
+    amc::FFflag_Init(*this);
 }
 
-inline amc::FField::~FField() {
-    amc::FField_Uninit(*this);
+// --- amc.FFflag..Dtor
+inline  amc::FFflag::~FFflag() {
+    amc::FFflag_Uninit(*this);
 }
-
 
 // --- amc.FField.c_fsort.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -13107,21 +13313,25 @@ inline void amc::field_c_pmaskfld_member_curs_Next(field_c_pmaskfld_member_curs 
 inline amc::FPmaskfldMember& amc::field_c_pmaskfld_member_curs_Access(field_c_pmaskfld_member_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline amc::FFindrem::FFindrem() {
+
+// --- amc.FField..Ctor
+inline  amc::FField::FField() {
+    amc::FField_Init(*this);
 }
 
-inline amc::FFindrem::~FFindrem() {
+// --- amc.FField..Dtor
+inline  amc::FField::~FField() {
+    amc::FField_Uninit(*this);
+}
+
+// --- amc.FFindrem..Ctor
+inline  amc::FFindrem::FFindrem() {
+}
+
+// --- amc.FFindrem..Dtor
+inline  amc::FFindrem::~FFindrem() {
     amc::FFindrem_Uninit(*this);
 }
-
-inline amc::FFinput::FFinput() {
-    amc::FFinput_Init(*this);
-}
-
-inline amc::FFinput::~FFinput() {
-    amc::FFinput_Uninit(*this);
-}
-
 
 // --- amc.FFinput..Init
 // Set all fields to initial values.
@@ -13131,14 +13341,16 @@ inline void amc::FFinput_Init(amc::FFinput& finput) {
     finput.strict = bool(true);
     finput.p_field = NULL;
 }
-inline amc::FFldoffset::FFldoffset() {
-    amc::FFldoffset_Init(*this);
+
+// --- amc.FFinput..Ctor
+inline  amc::FFinput::FFinput() {
+    amc::FFinput_Init(*this);
 }
 
-inline amc::FFldoffset::~FFldoffset() {
-    amc::FFldoffset_Uninit(*this);
+// --- amc.FFinput..Dtor
+inline  amc::FFinput::~FFinput() {
+    amc::FFinput_Uninit(*this);
 }
-
 
 // --- amc.FFldoffset..Init
 // Set all fields to initial values.
@@ -13146,49 +13358,57 @@ inline void amc::FFldoffset_Init(amc::FFldoffset& fldoffset) {
     fldoffset.offset = i32(0);
     fldoffset.p_field = NULL;
 }
-inline amc::FFloadtuples::FFloadtuples() {
-    amc::FFloadtuples_Init(*this);
+
+// --- amc.FFldoffset..Ctor
+inline  amc::FFldoffset::FFldoffset() {
+    amc::FFldoffset_Init(*this);
 }
 
-inline amc::FFloadtuples::~FFloadtuples() {
-    amc::FFloadtuples_Uninit(*this);
+// --- amc.FFldoffset..Dtor
+inline  amc::FFldoffset::~FFldoffset() {
+    amc::FFldoffset_Uninit(*this);
 }
-
 
 // --- amc.FFloadtuples..Init
 // Set all fields to initial values.
 inline void amc::FFloadtuples_Init(amc::FFloadtuples& floadtuples) {
     floadtuples.p_field = NULL;
 }
-inline amc::FFnoremove::FFnoremove() {
+
+// --- amc.FFloadtuples..Ctor
+inline  amc::FFloadtuples::FFloadtuples() {
+    amc::FFloadtuples_Init(*this);
 }
 
-inline amc::FFnoremove::~FFnoremove() {
+// --- amc.FFloadtuples..Dtor
+inline  amc::FFloadtuples::~FFloadtuples() {
+    amc::FFloadtuples_Uninit(*this);
+}
+
+// --- amc.FFnoremove..Ctor
+inline  amc::FFnoremove::FFnoremove() {
+}
+
+// --- amc.FFnoremove..Dtor
+inline  amc::FFnoremove::~FFnoremove() {
     amc::FFnoremove_Uninit(*this);
 }
-
-inline amc::FFoutput::FFoutput() {
-    amc::FFoutput_Init(*this);
-}
-
-inline amc::FFoutput::~FFoutput() {
-    amc::FFoutput_Uninit(*this);
-}
-
 
 // --- amc.FFoutput..Init
 // Set all fields to initial values.
 inline void amc::FFoutput_Init(amc::FFoutput& foutput) {
     foutput.ns_c_foutput_in_ary = bool(false);
 }
-inline amc::FFprefix::FFprefix() {
-    amc::FFprefix_Init(*this);
+
+// --- amc.FFoutput..Ctor
+inline  amc::FFoutput::FFoutput() {
+    amc::FFoutput_Init(*this);
 }
 
-inline amc::FFprefix::~FFprefix() {
-    amc::FFprefix_Uninit(*this);
+// --- amc.FFoutput..Dtor
+inline  amc::FFoutput::~FFoutput() {
+    amc::FFoutput_Uninit(*this);
 }
-
 
 // --- amc.FFprefix..Init
 // Set all fields to initial values.
@@ -13196,28 +13416,32 @@ inline void amc::FFprefix_Init(amc::FFprefix& fprefix) {
     fprefix.ind_prefix_next = (amc::FFprefix*)-1; // (amc.FDb.ind_prefix) not-in-hash
     fprefix.zs_fprefix_next = (amc::FFprefix*)-1; // (amc.FReftype.zs_fprefix) not-in-list
 }
-inline amc::FFregx::FFregx() {
-    amc::FFregx_Init(*this);
+
+// --- amc.FFprefix..Ctor
+inline  amc::FFprefix::FFprefix() {
+    amc::FFprefix_Init(*this);
 }
 
-inline amc::FFregx::~FFregx() {
-    amc::FFregx_Uninit(*this);
+// --- amc.FFprefix..Dtor
+inline  amc::FFprefix::~FFprefix() {
+    amc::FFprefix_Uninit(*this);
 }
-
 
 // --- amc.FFregx..Init
 // Set all fields to initial values.
 inline void amc::FFregx_Init(amc::FFregx& fregx) {
     fregx.partial = bool(false);
 }
-inline amc::FFsort::FFsort() {
-    amc::FFsort_Init(*this);
+
+// --- amc.FFregx..Ctor
+inline  amc::FFregx::FFregx() {
+    amc::FFregx_Init(*this);
 }
 
-inline amc::FFsort::~FFsort() {
-    amc::FFsort_Uninit(*this);
+// --- amc.FFregx..Dtor
+inline  amc::FFregx::~FFregx() {
+    amc::FFregx_Uninit(*this);
 }
-
 
 // --- amc.FFsort..Init
 // Set all fields to initial values.
@@ -13225,14 +13449,16 @@ inline void amc::FFsort_Init(amc::FFsort& fsort) {
     fsort.p_field = NULL;
     fsort.p_sortfld = NULL;
 }
-inline amc::FFstep::FFstep() {
-    amc::FFstep_Init(*this);
+
+// --- amc.FFsort..Ctor
+inline  amc::FFsort::FFsort() {
+    amc::FFsort_Init(*this);
 }
 
-inline amc::FFstep::~FFstep() {
-    amc::FFstep_Uninit(*this);
+// --- amc.FFsort..Dtor
+inline  amc::FFsort::~FFsort() {
+    amc::FFsort_Uninit(*this);
 }
-
 
 // --- amc.FFstep.c_fdelay.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -13262,21 +13488,25 @@ inline void amc::FFstep_Init(amc::FFstep& fstep) {
     fstep.ns_c_fstep_in_ary = bool(false);
     fstep.ind_fstep_next = (amc::FFstep*)-1; // (amc.FDb.ind_fstep) not-in-hash
 }
-inline amc::FFtrace::FFtrace() {
+
+// --- amc.FFstep..Ctor
+inline  amc::FFstep::FFstep() {
+    amc::FFstep_Init(*this);
 }
 
-inline amc::FFtrace::~FFtrace() {
+// --- amc.FFstep..Dtor
+inline  amc::FFstep::~FFstep() {
+    amc::FFstep_Uninit(*this);
+}
+
+// --- amc.FFtrace..Ctor
+inline  amc::FFtrace::FFtrace() {
+}
+
+// --- amc.FFtrace..Dtor
+inline  amc::FFtrace::~FFtrace() {
     amc::FFtrace_Uninit(*this);
 }
-
-inline amc::FFunc::FFunc() {
-    amc::FFunc_Init(*this);
-}
-
-inline amc::FFunc::~FFunc() {
-    amc::FFunc_Uninit(*this);
-}
-
 
 // --- amc.FFunc.funcarg.EmptyQ
 // Return true if index is empty
@@ -13370,28 +13600,34 @@ inline bool amc::func_funcarg_curs_ValidQ(func_funcarg_curs &curs) {
 inline amc::Funcarg& amc::func_funcarg_curs_Access(func_funcarg_curs &curs) {
     return curs.elems[curs.index];
 }
-inline amc::FFunique::FFunique() {
+
+// --- amc.FFunc..Ctor
+inline  amc::FFunc::FFunc() {
+    amc::FFunc_Init(*this);
 }
 
-inline amc::FFunique::~FFunique() {
+// --- amc.FFunc..Dtor
+inline  amc::FFunc::~FFunc() {
+    amc::FFunc_Uninit(*this);
+}
+
+// --- amc.FFunique..Ctor
+inline  amc::FFunique::FFunique() {
+}
+
+// --- amc.FFunique..Dtor
+inline  amc::FFunique::~FFunique() {
     amc::FFunique_Uninit(*this);
 }
 
-inline amc::FFuserinit::FFuserinit() {
+// --- amc.FFuserinit..Ctor
+inline  amc::FFuserinit::FFuserinit() {
 }
 
-inline amc::FFuserinit::~FFuserinit() {
+// --- amc.FFuserinit..Dtor
+inline  amc::FFuserinit::~FFuserinit() {
     amc::FFuserinit_Uninit(*this);
 }
-
-inline amc::FFwddecl::FFwddecl() {
-    amc::FFwddecl_Init(*this);
-}
-
-inline amc::FFwddecl::~FFwddecl() {
-    amc::FFwddecl_Uninit(*this);
-}
-
 
 // --- amc.FFwddecl..Init
 // Set all fields to initial values.
@@ -13399,14 +13635,16 @@ inline void amc::FFwddecl_Init(amc::FFwddecl& fwddecl) {
     fwddecl.ns_c_fwddecl_in_ary = bool(false);
     fwddecl.ind_fwddecl_next = (amc::FFwddecl*)-1; // (amc.FDb.ind_fwddecl) not-in-hash
 }
-inline amc::FGconst::FGconst() {
-    amc::FGconst_Init(*this);
+
+// --- amc.FFwddecl..Ctor
+inline  amc::FFwddecl::FFwddecl() {
+    amc::FFwddecl_Init(*this);
 }
 
-inline amc::FGconst::~FGconst() {
-    amc::FGconst_Uninit(*this);
+// --- amc.FFwddecl..Dtor
+inline  amc::FFwddecl::~FFwddecl() {
+    amc::FFwddecl_Uninit(*this);
 }
-
 
 // --- amc.FGconst..Init
 // Set all fields to initial values.
@@ -13415,14 +13653,16 @@ inline void amc::FGconst_Init(amc::FGconst& gconst) {
     gconst.p_namefld = NULL;
     gconst.p_field = NULL;
 }
-inline amc::FGen::FGen() {
-    amc::FGen_Init(*this);
+
+// --- amc.FGconst..Ctor
+inline  amc::FGconst::FGconst() {
+    amc::FGconst_Init(*this);
 }
 
-inline amc::FGen::~FGen() {
-    amc::FGen_Uninit(*this);
+// --- amc.FGconst..Dtor
+inline  amc::FGconst::~FGconst() {
+    amc::FGconst_Uninit(*this);
 }
-
 
 // --- amc.FGen.step.Call
 // Invoke function by pointer
@@ -13440,14 +13680,16 @@ inline void amc::FGen_Init(amc::FGen& gen) {
     gen.zs_gen_perns_next = (amc::FGen*)-1; // (amc.FDb.zs_gen_perns) not-in-list
     gen.step = NULL;
 }
-inline amc::FGenXref::FGenXref() {
-    amc::FGenXref_Init(*this);
+
+// --- amc.FGen..Ctor
+inline  amc::FGen::FGen() {
+    amc::FGen_Init(*this);
 }
 
-inline amc::FGenXref::~FGenXref() {
-    amc::FGenXref_Uninit(*this);
+// --- amc.FGen..Dtor
+inline  amc::FGen::~FGen() {
+    amc::FGen_Uninit(*this);
 }
-
 
 // --- amc.FGenXref.ind_seen.EmptyQ
 // Return true if hash is empty
@@ -13527,24 +13769,27 @@ inline void amc::FGenXref_seen_curs_Next(FGenXref_seen_curs &curs) {
 inline amc::FGenXrefSeen& amc::FGenXref_seen_curs_Access(FGenXref_seen_curs &curs) {
     return seen_qFind((*curs.parent), u64(curs.index));
 }
-inline amc::FGenXrefSeen::FGenXrefSeen() {
-    amc::FGenXrefSeen_Init(*this);
+
+// --- amc.FGenXref..Ctor
+inline  amc::FGenXref::FGenXref() {
+    amc::FGenXref_Init(*this);
 }
 
+// --- amc.FGenXref..Dtor
+inline  amc::FGenXref::~FGenXref() {
+    amc::FGenXref_Uninit(*this);
+}
 
 // --- amc.FGenXrefSeen..Init
 // Set all fields to initial values.
 inline void amc::FGenXrefSeen_Init(amc::FGenXrefSeen& seen) {
     seen.ind_seen_next = (amc::FGenXrefSeen*)-1; // (amc.FGenXref.ind_seen) not-in-hash
 }
-inline amc::FGstatic::FGstatic() {
-    amc::FGstatic_Init(*this);
-}
 
-inline amc::FGstatic::~FGstatic() {
-    amc::FGstatic_Uninit(*this);
+// --- amc.FGenXrefSeen..Ctor
+inline  amc::FGenXrefSeen::FGenXrefSeen() {
+    amc::FGenXrefSeen_Init(*this);
 }
-
 
 // --- amc.FGstatic..Init
 // Set all fields to initial values.
@@ -13553,14 +13798,16 @@ inline void amc::FGstatic_Init(amc::FGstatic& gstatic) {
     gstatic.rowid = u32(0);
     gstatic.ns_c_gstatic_in_ary = bool(false);
 }
-inline amc::FGsymbol::FGsymbol() {
-    amc::FGsymbol_Init(*this);
+
+// --- amc.FGstatic..Ctor
+inline  amc::FGstatic::FGstatic() {
+    amc::FGstatic_Init(*this);
 }
 
-inline amc::FGsymbol::~FGsymbol() {
-    amc::FGsymbol_Uninit(*this);
+// --- amc.FGstatic..Dtor
+inline  amc::FGstatic::~FGstatic() {
+    amc::FGstatic_Uninit(*this);
 }
-
 
 // --- amc.FGsymbol..Init
 // Set all fields to initial values.
@@ -13569,14 +13816,16 @@ inline void amc::FGsymbol_Init(amc::FGsymbol& gsymbol) {
     gsymbol.p_symboltype = NULL;
     gsymbol.ns_c_gsymbol_in_ary = bool(false);
 }
-inline amc::FHook::FHook() {
-    amc::FHook_Init(*this);
+
+// --- amc.FGsymbol..Ctor
+inline  amc::FGsymbol::FGsymbol() {
+    amc::FGsymbol_Init(*this);
 }
 
-inline amc::FHook::~FHook() {
-    amc::FHook_Uninit(*this);
+// --- amc.FGsymbol..Dtor
+inline  amc::FGsymbol::~FGsymbol() {
+    amc::FGsymbol_Uninit(*this);
 }
-
 
 // --- amc.FHook..Init
 // Set all fields to initial values.
@@ -13584,14 +13833,16 @@ inline void amc::FHook_Init(amc::FHook& hook) {
     hook.p_funcptr = NULL;
     hook.p_field = NULL;
 }
-inline amc::FInlary::FInlary() {
-    amc::FInlary_Init(*this);
+
+// --- amc.FHook..Ctor
+inline  amc::FHook::FHook() {
+    amc::FHook_Init(*this);
 }
 
-inline amc::FInlary::~FInlary() {
-    amc::FInlary_Uninit(*this);
+// --- amc.FHook..Dtor
+inline  amc::FHook::~FHook() {
+    amc::FHook_Uninit(*this);
 }
-
 
 // --- amc.FInlary..Init
 // Set all fields to initial values.
@@ -13600,14 +13851,16 @@ inline void amc::FInlary_Init(amc::FInlary& inlary) {
     inlary.max = i32(0);
     inlary.ind_inlary_next = (amc::FInlary*)-1; // (amc.FDb.ind_inlary) not-in-hash
 }
-inline amc::FLenfld::FLenfld() {
-    amc::FLenfld_Init(*this);
+
+// --- amc.FInlary..Ctor
+inline  amc::FInlary::FInlary() {
+    amc::FInlary_Init(*this);
 }
 
-inline amc::FLenfld::~FLenfld() {
-    amc::FLenfld_Uninit(*this);
+// --- amc.FInlary..Dtor
+inline  amc::FInlary::~FInlary() {
+    amc::FInlary_Uninit(*this);
 }
-
 
 // --- amc.FLenfld..Init
 // Set all fields to initial values.
@@ -13615,28 +13868,32 @@ inline void amc::FLenfld_Init(amc::FLenfld& lenfld) {
     lenfld.extra = i32(0);
     lenfld.p_field = NULL;
 }
-inline amc::FLicense::FLicense() {
-    amc::FLicense_Init(*this);
+
+// --- amc.FLenfld..Ctor
+inline  amc::FLenfld::FLenfld() {
+    amc::FLenfld_Init(*this);
 }
 
-inline amc::FLicense::~FLicense() {
-    amc::FLicense_Uninit(*this);
+// --- amc.FLenfld..Dtor
+inline  amc::FLenfld::~FLenfld() {
+    amc::FLenfld_Uninit(*this);
 }
-
 
 // --- amc.FLicense..Init
 // Set all fields to initial values.
 inline void amc::FLicense_Init(amc::FLicense& license) {
     license.ind_license_next = (amc::FLicense*)-1; // (amc.FDb.ind_license) not-in-hash
 }
-inline amc::FListtype::FListtype() {
-    amc::FListtype_Init(*this);
+
+// --- amc.FLicense..Ctor
+inline  amc::FLicense::FLicense() {
+    amc::FLicense_Init(*this);
 }
 
-inline amc::FListtype::~FListtype() {
-    amc::FListtype_Uninit(*this);
+// --- amc.FLicense..Dtor
+inline  amc::FLicense::~FLicense() {
+    amc::FLicense_Uninit(*this);
 }
-
 
 // --- amc.FListtype..Init
 // Set all fields to initial values.
@@ -13646,14 +13903,16 @@ inline void amc::FListtype_Init(amc::FListtype& listtype) {
     listtype.instail = bool(false);
     listtype.ind_listtype_next = (amc::FListtype*)-1; // (amc.FDb.ind_listtype) not-in-hash
 }
-inline amc::FLlist::FLlist() {
-    amc::FLlist_Init(*this);
+
+// --- amc.FListtype..Ctor
+inline  amc::FListtype::FListtype() {
+    amc::FListtype_Init(*this);
 }
 
-inline amc::FLlist::~FLlist() {
-    amc::FLlist_Uninit(*this);
+// --- amc.FListtype..Dtor
+inline  amc::FListtype::~FListtype() {
+    amc::FListtype_Uninit(*this);
 }
-
 
 // --- amc.FLlist..Init
 // Set all fields to initial values.
@@ -13662,14 +13921,16 @@ inline void amc::FLlist_Init(amc::FLlist& llist) {
     llist.havecount = bool(false);
     llist.p_listtype = NULL;
 }
-inline amc::FMain::FMain() {
-    amc::FMain_Init(*this);
+
+// --- amc.FLlist..Ctor
+inline  amc::FLlist::FLlist() {
+    amc::FLlist_Init(*this);
 }
 
-inline amc::FMain::~FMain() {
-    amc::FMain_Uninit(*this);
+// --- amc.FLlist..Dtor
+inline  amc::FLlist::~FLlist() {
+    amc::FLlist_Uninit(*this);
 }
-
 
 // --- amc.FMain..Init
 // Set all fields to initial values.
@@ -13677,49 +13938,59 @@ inline void amc::FMain_Init(amc::FMain& main) {
     main.ismodule = bool(false);
     main.ind_main_next = (amc::FMain*)-1; // (amc.FDb.ind_main) not-in-hash
 }
-inline amc::FMsgtype::FMsgtype() {
-    amc::FMsgtype_Init(*this);
+
+// --- amc.FMain..Ctor
+inline  amc::FMain::FMain() {
+    amc::FMain_Init(*this);
 }
 
-inline amc::FMsgtype::~FMsgtype() {
-    amc::FMsgtype_Uninit(*this);
+// --- amc.FMain..Dtor
+inline  amc::FMain::~FMain() {
+    amc::FMain_Uninit(*this);
 }
-
 
 // --- amc.FMsgtype..Init
 // Set all fields to initial values.
 inline void amc::FMsgtype_Init(amc::FMsgtype& msgtype) {
     msgtype.p_ctype = NULL;
 }
-inline amc::FNocascdel::FNocascdel() {
+
+// --- amc.FMsgtype..Ctor
+inline  amc::FMsgtype::FMsgtype() {
+    amc::FMsgtype_Init(*this);
 }
 
-inline amc::FNocascdel::~FNocascdel() {
+// --- amc.FMsgtype..Dtor
+inline  amc::FMsgtype::~FMsgtype() {
+    amc::FMsgtype_Uninit(*this);
+}
+
+// --- amc.FNocascdel..Ctor
+inline  amc::FNocascdel::FNocascdel() {
+}
+
+// --- amc.FNocascdel..Dtor
+inline  amc::FNocascdel::~FNocascdel() {
     amc::FNocascdel_Uninit(*this);
 }
 
-inline amc::FNossimfile::FNossimfile() {
+// --- amc.FNossimfile..Ctor
+inline  amc::FNossimfile::FNossimfile() {
 }
 
-inline amc::FNossimfile::~FNossimfile() {
+// --- amc.FNossimfile..Dtor
+inline  amc::FNossimfile::~FNossimfile() {
     amc::FNossimfile_Uninit(*this);
 }
 
-inline amc::FNoxref::FNoxref() {
+// --- amc.FNoxref..Ctor
+inline  amc::FNoxref::FNoxref() {
 }
 
-inline amc::FNoxref::~FNoxref() {
+// --- amc.FNoxref..Dtor
+inline  amc::FNoxref::~FNoxref() {
     amc::FNoxref_Uninit(*this);
 }
-
-inline amc::FNs::FNs() {
-    amc::FNs_Init(*this);
-}
-
-inline amc::FNs::~FNs() {
-    amc::FNs_Uninit(*this);
-}
-
 
 // --- amc.FNs.c_ctype.EmptyQ
 // Return true if index is empty
@@ -15188,28 +15459,34 @@ inline void amc::ns_c_nsinclude_curs_Next(ns_c_nsinclude_curs &curs) {
 inline amc::FNsinclude& amc::ns_c_nsinclude_curs_Access(ns_c_nsinclude_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline amc::FNscpp::FNscpp() {
+
+// --- amc.FNs..Ctor
+inline  amc::FNs::FNs() {
+    amc::FNs_Init(*this);
 }
 
-inline amc::FNscpp::~FNscpp() {
+// --- amc.FNs..Dtor
+inline  amc::FNs::~FNs() {
+    amc::FNs_Uninit(*this);
+}
+
+// --- amc.FNscpp..Ctor
+inline  amc::FNscpp::FNscpp() {
+}
+
+// --- amc.FNscpp..Dtor
+inline  amc::FNscpp::~FNscpp() {
     amc::FNscpp_Uninit(*this);
 }
 
-inline amc::FNsdb::FNsdb() {
+// --- amc.FNsdb..Ctor
+inline  amc::FNsdb::FNsdb() {
 }
 
-inline amc::FNsdb::~FNsdb() {
+// --- amc.FNsdb..Dtor
+inline  amc::FNsdb::~FNsdb() {
     amc::FNsdb_Uninit(*this);
 }
-
-inline amc::FNsinclude::FNsinclude() {
-    amc::FNsinclude_Init(*this);
-}
-
-inline amc::FNsinclude::~FNsinclude() {
-    amc::FNsinclude_Uninit(*this);
-}
-
 
 // --- amc.FNsinclude..Init
 // Set all fields to initial values.
@@ -15217,21 +15494,25 @@ inline void amc::FNsinclude_Init(amc::FNsinclude& nsinclude) {
     nsinclude.sys = bool(false);
     nsinclude.ns_c_nsinclude_in_ary = bool(false);
 }
-inline amc::FNsproto::FNsproto() {
+
+// --- amc.FNsinclude..Ctor
+inline  amc::FNsinclude::FNsinclude() {
+    amc::FNsinclude_Init(*this);
 }
 
-inline amc::FNsproto::~FNsproto() {
+// --- amc.FNsinclude..Dtor
+inline  amc::FNsinclude::~FNsinclude() {
+    amc::FNsinclude_Uninit(*this);
+}
+
+// --- amc.FNsproto..Ctor
+inline  amc::FNsproto::FNsproto() {
+}
+
+// --- amc.FNsproto..Dtor
+inline  amc::FNsproto::~FNsproto() {
     amc::FNsproto_Uninit(*this);
 }
-
-inline amc::FNsx::FNsx() {
-    amc::FNsx_Init(*this);
-}
-
-inline amc::FNsx::~FNsx() {
-    amc::FNsx_Uninit(*this);
-}
-
 
 // --- amc.FNsx..Init
 // Set all fields to initial values.
@@ -15242,14 +15523,16 @@ inline void amc::FNsx_Init(amc::FNsx& nsx) {
     nsx.pack = bool(false);
     nsx.p_pool = NULL;
 }
-inline amc::FNumstr::FNumstr() {
-    amc::FNumstr_Init(*this);
+
+// --- amc.FNsx..Ctor
+inline  amc::FNsx::FNsx() {
+    amc::FNsx_Init(*this);
 }
 
-inline amc::FNumstr::~FNumstr() {
-    amc::FNumstr_Uninit(*this);
+// --- amc.FNsx..Dtor
+inline  amc::FNsx::~FNsx() {
+    amc::FNsx_Uninit(*this);
 }
-
 
 // --- amc.FNumstr..Init
 // Set all fields to initial values.
@@ -15261,14 +15544,16 @@ inline void amc::FNumstr_Init(amc::FNumstr& numstr) {
     numstr.nummax = u64(0);
     numstr.issigned = bool(false);
 }
-inline amc::FOutfile::FOutfile() {
-    amc::FOutfile_Init(*this);
+
+// --- amc.FNumstr..Ctor
+inline  amc::FNumstr::FNumstr() {
+    amc::FNumstr_Init(*this);
 }
 
-inline amc::FOutfile::~FOutfile() {
-    amc::FOutfile_Uninit(*this);
+// --- amc.FNumstr..Dtor
+inline  amc::FNumstr::~FNumstr() {
+    amc::FNumstr_Uninit(*this);
 }
-
 
 // --- amc.FOutfile..Init
 // Set all fields to initial values.
@@ -15277,14 +15562,16 @@ inline void amc::FOutfile_Init(amc::FOutfile& outfile) {
     outfile.ns_c_outfile_in_ary = bool(false);
     outfile.outfile_next = (amc::FOutfile*)-1; // (amc.FDb.outfile) not-in-tpool's freelist
 }
-inline amc::FPack::FPack() {
-    amc::FPack_Init(*this);
+
+// --- amc.FOutfile..Ctor
+inline  amc::FOutfile::FOutfile() {
+    amc::FOutfile_Init(*this);
 }
 
-inline amc::FPack::~FPack() {
-    amc::FPack_Uninit(*this);
+// --- amc.FOutfile..Dtor
+inline  amc::FOutfile::~FOutfile() {
+    amc::FOutfile_Uninit(*this);
 }
-
 
 // --- amc.FPack..Init
 // Set all fields to initial values.
@@ -15292,14 +15579,16 @@ inline void amc::FPack_Init(amc::FPack& pack) {
     pack.p_ctype = NULL;
     pack.ind_pack_next = (amc::FPack*)-1; // (amc.FDb.ind_pack) not-in-hash
 }
-inline amc::FPmaskfld::FPmaskfld() {
-    amc::FPmaskfld_Init(*this);
+
+// --- amc.FPack..Ctor
+inline  amc::FPack::FPack() {
+    amc::FPack_Init(*this);
 }
 
-inline amc::FPmaskfld::~FPmaskfld() {
-    amc::FPmaskfld_Uninit(*this);
+// --- amc.FPack..Dtor
+inline  amc::FPack::~FPack() {
+    amc::FPack_Uninit(*this);
 }
-
 
 // --- amc.FPmaskfld.c_pmaskfld_member.EmptyQ
 // Return true if index is empty
@@ -15396,14 +15685,16 @@ inline void amc::pmaskfld_c_pmaskfld_member_curs_Next(pmaskfld_c_pmaskfld_member
 inline amc::FPmaskfldMember& amc::pmaskfld_c_pmaskfld_member_curs_Access(pmaskfld_c_pmaskfld_member_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline amc::FPmaskfldMember::FPmaskfldMember() {
-    amc::FPmaskfldMember_Init(*this);
+
+// --- amc.FPmaskfld..Ctor
+inline  amc::FPmaskfld::FPmaskfld() {
+    amc::FPmaskfld_Init(*this);
 }
 
-inline amc::FPmaskfldMember::~FPmaskfldMember() {
-    amc::FPmaskfldMember_Uninit(*this);
+// --- amc.FPmaskfld..Dtor
+inline  amc::FPmaskfld::~FPmaskfld() {
+    amc::FPmaskfld_Uninit(*this);
 }
-
 
 // --- amc.FPmaskfldMember..Init
 // Set all fields to initial values.
@@ -15414,14 +15705,16 @@ inline void amc::FPmaskfldMember_Init(amc::FPmaskfldMember& pmaskfld_member) {
     pmaskfld_member.field_c_pmaskfld_member_in_ary = bool(false);
     pmaskfld_member.pmaskfld_c_pmaskfld_member_in_ary = bool(false);
 }
-inline amc::FPnew::FPnew() {
-    amc::FPnew_Init(*this);
+
+// --- amc.FPmaskfldMember..Ctor
+inline  amc::FPmaskfldMember::FPmaskfldMember() {
+    amc::FPmaskfldMember_Init(*this);
 }
 
-inline amc::FPnew::~FPnew() {
-    amc::FPnew_Uninit(*this);
+// --- amc.FPmaskfldMember..Dtor
+inline  amc::FPmaskfldMember::~FPmaskfldMember() {
+    amc::FPmaskfldMember_Uninit(*this);
 }
-
 
 // --- amc.FPnew..Init
 // Set all fields to initial values.
@@ -15431,14 +15724,16 @@ inline void amc::FPnew_Init(amc::FPnew& pnew) {
     pnew.ns_c_pnew_in_ary = bool(false);
     pnew.ind_pnew_next = (amc::FPnew*)-1; // (amc.FDb.ind_pnew) not-in-hash
 }
-inline amc::FPtrary::FPtrary() {
-    amc::FPtrary_Init(*this);
+
+// --- amc.FPnew..Ctor
+inline  amc::FPnew::FPnew() {
+    amc::FPnew_Init(*this);
 }
 
-inline amc::FPtrary::~FPtrary() {
-    amc::FPtrary_Uninit(*this);
+// --- amc.FPnew..Dtor
+inline  amc::FPnew::~FPnew() {
+    amc::FPnew_Uninit(*this);
 }
-
 
 // --- amc.FPtrary..Init
 // Set all fields to initial values.
@@ -15446,14 +15741,16 @@ inline void amc::FPtrary_Init(amc::FPtrary& ptrary) {
     ptrary.unique = bool(false);
     ptrary.p_field = NULL;
 }
-inline amc::FReftype::FReftype() {
-    amc::FReftype_Init(*this);
+
+// --- amc.FPtrary..Ctor
+inline  amc::FPtrary::FPtrary() {
+    amc::FPtrary_Init(*this);
 }
 
-inline amc::FReftype::~FReftype() {
-    amc::FReftype_Uninit(*this);
+// --- amc.FPtrary..Dtor
+inline  amc::FPtrary::~FPtrary() {
+    amc::FPtrary_Uninit(*this);
 }
-
 
 // --- amc.FReftype.zs_fprefix.EmptyQ
 // Return true if index is empty
@@ -15523,28 +15820,32 @@ inline void amc::reftype_zs_fprefix_curs_Next(reftype_zs_fprefix_curs &curs) {
 inline amc::FFprefix& amc::reftype_zs_fprefix_curs_Access(reftype_zs_fprefix_curs &curs) {
     return *curs.row;
 }
-inline amc::FRowid::FRowid() {
-    amc::FRowid_Init(*this);
+
+// --- amc.FReftype..Ctor
+inline  amc::FReftype::FReftype() {
+    amc::FReftype_Init(*this);
 }
 
-inline amc::FRowid::~FRowid() {
-    amc::FRowid_Uninit(*this);
+// --- amc.FReftype..Dtor
+inline  amc::FReftype::~FReftype() {
+    amc::FReftype_Uninit(*this);
 }
-
 
 // --- amc.FRowid..Init
 // Set all fields to initial values.
 inline void amc::FRowid_Init(amc::FRowid& rowid) {
     rowid.ind_rowid_next = (amc::FRowid*)-1; // (amc.FDb.ind_rowid) not-in-hash
 }
-inline amc::FSmallstr::FSmallstr() {
-    amc::FSmallstr_Init(*this);
+
+// --- amc.FRowid..Ctor
+inline  amc::FRowid::FRowid() {
+    amc::FRowid_Init(*this);
 }
 
-inline amc::FSmallstr::~FSmallstr() {
-    amc::FSmallstr_Uninit(*this);
+// --- amc.FRowid..Dtor
+inline  amc::FRowid::~FRowid() {
+    amc::FRowid_Uninit(*this);
 }
-
 
 // --- amc.FSmallstr.c_numstr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -15575,28 +15876,32 @@ inline void amc::FSmallstr_Init(amc::FSmallstr& smallstr) {
     smallstr.c_numstr = NULL;
     smallstr.ind_smallstr_next = (amc::FSmallstr*)-1; // (amc.FDb.ind_smallstr) not-in-hash
 }
-inline amc::FSortfld::FSortfld() {
-    amc::FSortfld_Init(*this);
+
+// --- amc.FSmallstr..Ctor
+inline  amc::FSmallstr::FSmallstr() {
+    amc::FSmallstr_Init(*this);
 }
 
-inline amc::FSortfld::~FSortfld() {
-    amc::FSortfld_Uninit(*this);
+// --- amc.FSmallstr..Dtor
+inline  amc::FSmallstr::~FSmallstr() {
+    amc::FSmallstr_Uninit(*this);
 }
-
 
 // --- amc.FSortfld..Init
 // Set all fields to initial values.
 inline void amc::FSortfld_Init(amc::FSortfld& sortfld) {
     sortfld.p_sortfld = NULL;
 }
-inline amc::FSsimfile::FSsimfile() {
-    amc::FSsimfile_Init(*this);
+
+// --- amc.FSortfld..Ctor
+inline  amc::FSortfld::FSortfld() {
+    amc::FSortfld_Init(*this);
 }
 
-inline amc::FSsimfile::~FSsimfile() {
-    amc::FSsimfile_Uninit(*this);
+// --- amc.FSortfld..Dtor
+inline  amc::FSortfld::~FSortfld() {
+    amc::FSortfld_Uninit(*this);
 }
-
 
 // --- amc.FSsimfile.c_ssimvolatile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -15617,10 +15922,16 @@ inline void amc::c_ssimvolatile_Remove(amc::FSsimfile& ssimfile, amc::FSsimvolat
         ssimfile.c_ssimvolatile = NULL;
     }
 }
-inline amc::FSsimsort::FSsimsort() {
-    amc::FSsimsort_Init(*this);
+
+// --- amc.FSsimfile..Ctor
+inline  amc::FSsimfile::FSsimfile() {
+    amc::FSsimfile_Init(*this);
 }
 
+// --- amc.FSsimfile..Dtor
+inline  amc::FSsimfile::~FSsimfile() {
+    amc::FSsimfile_Uninit(*this);
+}
 
 // --- amc.FSsimsort..Init
 // Set all fields to initial values.
@@ -15628,35 +15939,36 @@ inline void amc::FSsimsort_Init(amc::FSsimsort& ssimsort) {
     ssimsort.p_ssimfile = NULL;
     ssimsort.p_sortfld = NULL;
 }
-inline amc::FSsimvolatile::FSsimvolatile() {
+
+// --- amc.FSsimsort..Ctor
+inline  amc::FSsimsort::FSsimsort() {
+    amc::FSsimsort_Init(*this);
 }
 
-inline amc::FSsimvolatile::~FSsimvolatile() {
+// --- amc.FSsimvolatile..Ctor
+inline  amc::FSsimvolatile::FSsimvolatile() {
+}
+
+// --- amc.FSsimvolatile..Dtor
+inline  amc::FSsimvolatile::~FSsimvolatile() {
     amc::FSsimvolatile_Uninit(*this);
 }
-
-inline amc::FStatictuple::FStatictuple() {
-    amc::FStatictuple_Init(*this);
-}
-
-inline amc::FStatictuple::~FStatictuple() {
-    amc::FStatictuple_Uninit(*this);
-}
-
 
 // --- amc.FStatictuple..Init
 // Set all fields to initial values.
 inline void amc::FStatictuple_Init(amc::FStatictuple& static_tuple) {
     static_tuple.ctype_c_static_in_ary = bool(false);
 }
-inline amc::FSubstr::FSubstr() {
-    amc::FSubstr_Init(*this);
+
+// --- amc.FStatictuple..Ctor
+inline  amc::FStatictuple::FStatictuple() {
+    amc::FStatictuple_Init(*this);
 }
 
-inline amc::FSubstr::~FSubstr() {
-    amc::FSubstr_Uninit(*this);
+// --- amc.FStatictuple..Dtor
+inline  amc::FStatictuple::~FStatictuple() {
+    amc::FStatictuple_Uninit(*this);
 }
-
 
 // --- amc.FSubstr..Init
 // Set all fields to initial values.
@@ -15668,14 +15980,16 @@ inline void amc::FSubstr_Init(amc::FSubstr& substr) {
     substr.zd_substr_params_next = (amc::FSubstr*)-1; // (amc.FDb.zd_substr_params) not-in-list
     substr.zd_substr_params_prev = NULL; // (amc.FDb.zd_substr_params)
 }
-inline amc::FTargdep::FTargdep() {
-    amc::FTargdep_Init(*this);
+
+// --- amc.FSubstr..Ctor
+inline  amc::FSubstr::FSubstr() {
+    amc::FSubstr_Init(*this);
 }
 
-inline amc::FTargdep::~FTargdep() {
-    amc::FTargdep_Uninit(*this);
+// --- amc.FSubstr..Dtor
+inline  amc::FSubstr::~FSubstr() {
+    amc::FSubstr_Uninit(*this);
 }
-
 
 // --- amc.FTargdep..Init
 // Set all fields to initial values.
@@ -15684,14 +15998,16 @@ inline void amc::FTargdep_Init(amc::FTargdep& targdep) {
     targdep.p_parent = NULL;
     targdep.target_c_targdep_in_ary = bool(false);
 }
-inline amc::FTarget::FTarget() {
-    amc::FTarget_Init(*this);
+
+// --- amc.FTargdep..Ctor
+inline  amc::FTargdep::FTargdep() {
+    amc::FTargdep_Init(*this);
 }
 
-inline amc::FTarget::~FTarget() {
-    amc::FTarget_Uninit(*this);
+// --- amc.FTargdep..Dtor
+inline  amc::FTargdep::~FTargdep() {
+    amc::FTargdep_Uninit(*this);
 }
-
 
 // --- amc.FTarget.c_targdep.EmptyQ
 // Return true if index is empty
@@ -15785,14 +16101,16 @@ inline void amc::target_c_targdep_curs_Next(target_c_targdep_curs &curs) {
 inline amc::FTargdep& amc::target_c_targdep_curs_Access(target_c_targdep_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline amc::FTary::FTary() {
-    amc::FTary_Init(*this);
+
+// --- amc.FTarget..Ctor
+inline  amc::FTarget::FTarget() {
+    amc::FTarget_Init(*this);
 }
 
-inline amc::FTary::~FTary() {
-    amc::FTary_Uninit(*this);
+// --- amc.FTarget..Dtor
+inline  amc::FTarget::~FTarget() {
+    amc::FTarget_Uninit(*this);
 }
-
 
 // --- amc.FTary..Init
 // Set all fields to initial values.
@@ -15801,28 +16119,32 @@ inline void amc::FTary_Init(amc::FTary& tary) {
     tary.p_field = NULL;
     tary.ind_tary_next = (amc::FTary*)-1; // (amc.FDb.ind_tary) not-in-hash
 }
-inline amc::FTcurs::FTcurs() {
-    amc::FTcurs_Init(*this);
+
+// --- amc.FTary..Ctor
+inline  amc::FTary::FTary() {
+    amc::FTary_Init(*this);
 }
 
-inline amc::FTcurs::~FTcurs() {
-    amc::FTcurs_Uninit(*this);
+// --- amc.FTary..Dtor
+inline  amc::FTary::~FTary() {
+    amc::FTary_Uninit(*this);
 }
-
 
 // --- amc.FTcurs..Init
 // Set all fields to initial values.
 inline void amc::FTcurs_Init(amc::FTcurs& tcurs) {
     tcurs.dflt = bool(false);
 }
-inline amc::FTfunc::FTfunc() {
-    amc::FTfunc_Init(*this);
+
+// --- amc.FTcurs..Ctor
+inline  amc::FTcurs::FTcurs() {
+    amc::FTcurs_Init(*this);
 }
 
-inline amc::FTfunc::~FTfunc() {
-    amc::FTfunc_Uninit(*this);
+// --- amc.FTcurs..Dtor
+inline  amc::FTcurs::~FTcurs() {
+    amc::FTcurs_Uninit(*this);
 }
-
 
 // --- amc.FTfunc.step.Call
 // Invoke function by pointer
@@ -15851,14 +16173,16 @@ inline void amc::c_tcurs_Remove(amc::FTfunc& tfunc, amc::FTcurs& row) {
         tfunc.c_tcurs = NULL;
     }
 }
-inline amc::FThash::FThash() {
-    amc::FThash_Init(*this);
+
+// --- amc.FTfunc..Ctor
+inline  amc::FTfunc::FTfunc() {
+    amc::FTfunc_Init(*this);
 }
 
-inline amc::FThash::~FThash() {
-    amc::FThash_Uninit(*this);
+// --- amc.FTfunc..Dtor
+inline  amc::FTfunc::~FTfunc() {
+    amc::FTfunc_Uninit(*this);
 }
-
 
 // --- amc.FThash..Init
 // Set all fields to initial values.
@@ -15867,20 +16191,24 @@ inline void amc::FThash_Init(amc::FThash& thash) {
     thash.p_hashfld = NULL;
     thash.p_field = NULL;
 }
-inline amc::FTracefld::FTracefld() {
+
+// --- amc.FThash..Ctor
+inline  amc::FThash::FThash() {
+    amc::FThash_Init(*this);
 }
 
-inline amc::FTracerec::FTracerec() {
+// --- amc.FThash..Dtor
+inline  amc::FThash::~FThash() {
+    amc::FThash_Uninit(*this);
 }
 
-inline amc::FTypefld::FTypefld() {
-    amc::FTypefld_Init(*this);
+// --- amc.FTracefld..Ctor
+inline  amc::FTracefld::FTracefld() {
 }
 
-inline amc::FTypefld::~FTypefld() {
-    amc::FTypefld_Uninit(*this);
+// --- amc.FTracerec..Ctor
+inline  amc::FTracerec::FTracerec() {
 }
-
 
 // --- amc.FTypefld..Init
 // Set all fields to initial values.
@@ -15888,17 +16216,20 @@ inline void amc::FTypefld_Init(amc::FTypefld& typefld) {
     typefld.p_field = NULL;
     typefld.p_ctype = NULL;
 }
-inline amc::FUsertracefld::FUsertracefld() {
+
+// --- amc.FTypefld..Ctor
+inline  amc::FTypefld::FTypefld() {
+    amc::FTypefld_Init(*this);
 }
 
-inline amc::FXref::FXref() {
-    amc::FXref_Init(*this);
+// --- amc.FTypefld..Dtor
+inline  amc::FTypefld::~FTypefld() {
+    amc::FTypefld_Uninit(*this);
 }
 
-inline amc::FXref::~FXref() {
-    amc::FXref_Uninit(*this);
+// --- amc.FUsertracefld..Ctor
+inline  amc::FUsertracefld::FUsertracefld() {
 }
-
 
 // --- amc.FXref.c_nocascdel.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -15919,15 +16250,16 @@ inline void amc::c_nocascdel_Remove(amc::FXref& xref, amc::FNocascdel& row) {
         xref.c_nocascdel = NULL;
     }
 }
-inline amc::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline amc::FieldId::FieldId(amc_FieldIdEnum arg) { this->value = i32(arg); }
-inline amc::FieldId::FieldId() {
-    amc::FieldId_Init(*this);
+
+// --- amc.FXref..Ctor
+inline  amc::FXref::FXref() {
+    amc::FXref_Init(*this);
 }
 
+// --- amc.FXref..Dtor
+inline  amc::FXref::~FXref() {
+    amc::FXref_Uninit(*this);
+}
 
 // --- amc.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -15942,7 +16274,7 @@ inline void amc::value_SetEnum(amc::FieldId& parent, amc_FieldIdEnum rhs) {
 }
 
 // --- amc.FieldId.value.Cast
-inline amc::FieldId::operator amc_FieldIdEnum () const {
+inline  amc::FieldId::operator amc_FieldIdEnum() const {
     return amc_FieldIdEnum((*this).value);
 }
 
@@ -15951,10 +16283,22 @@ inline amc::FieldId::operator amc_FieldIdEnum () const {
 inline void amc::FieldId_Init(amc::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline amc::Funcarg::Funcarg() {
-    amc::Funcarg_Init(*this);
+
+// --- amc.FieldId..Ctor
+inline  amc::FieldId::FieldId() {
+    amc::FieldId_Init(*this);
 }
 
+// --- amc.FieldId..FieldwiseCtor
+inline  amc::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- amc.FieldId..EnumCtor
+inline  amc::FieldId::FieldId(amc_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- amc.Funcarg..Init
 // Set all fields to initial values.
@@ -15964,19 +16308,16 @@ inline void amc::Funcarg_Init(amc::Funcarg& parent) {
     parent.indent = bool(false);
     parent.typearg = bool(false);
 }
-inline amc::Genpnew::Genpnew() {
+
+// --- amc.Funcarg..Ctor
+inline  amc::Funcarg::Funcarg() {
+    amc::Funcarg_Init(*this);
+}
+
+// --- amc.Genpnew..Ctor
+inline  amc::Genpnew::Genpnew() {
     amc::Genpnew_Init(*this);
 }
-
-inline amc::Pnewtype::Pnewtype(u8                             in_value)
-    : value(in_value)
-{
-}
-inline amc::Pnewtype::Pnewtype(amc_PnewtypeEnum arg) { this->value = u8(arg); }
-inline amc::Pnewtype::Pnewtype() {
-    amc::Pnewtype_Init(*this);
-}
-
 
 // --- amc.Pnewtype.value.GetEnum
 // Get value of field as enum type
@@ -15991,7 +16332,7 @@ inline void amc::value_SetEnum(amc::Pnewtype& parent, amc_PnewtypeEnum rhs) {
 }
 
 // --- amc.Pnewtype.value.Cast
-inline amc::Pnewtype::operator amc_PnewtypeEnum () const {
+inline  amc::Pnewtype::operator amc_PnewtypeEnum() const {
     return amc_PnewtypeEnum((*this).value);
 }
 
@@ -16000,15 +16341,22 @@ inline amc::Pnewtype::operator amc_PnewtypeEnum () const {
 inline void amc::Pnewtype_Init(amc::Pnewtype& parent) {
     parent.value = u8(0);
 }
-inline amc::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline amc::TableId::TableId(amc_TableIdEnum arg) { this->value = i32(arg); }
-inline amc::TableId::TableId() {
-    amc::TableId_Init(*this);
+
+// --- amc.Pnewtype..Ctor
+inline  amc::Pnewtype::Pnewtype() {
+    amc::Pnewtype_Init(*this);
 }
 
+// --- amc.Pnewtype..FieldwiseCtor
+inline  amc::Pnewtype::Pnewtype(u8 in_value)
+    : value(in_value)
+ {
+}
+
+// --- amc.Pnewtype..EnumCtor
+inline  amc::Pnewtype::Pnewtype(amc_PnewtypeEnum arg) {
+    this->value = u8(arg);
+}
 
 // --- amc.TableId.value.GetEnum
 // Get value of field as enum type
@@ -16023,7 +16371,7 @@ inline void amc::value_SetEnum(amc::TableId& parent, amc_TableIdEnum rhs) {
 }
 
 // --- amc.TableId.value.Cast
-inline amc::TableId::operator amc_TableIdEnum () const {
+inline  amc::TableId::operator amc_TableIdEnum() const {
     return amc_TableIdEnum((*this).value);
 }
 
@@ -16031,6 +16379,22 @@ inline amc::TableId::operator amc_TableIdEnum () const {
 // Set all fields to initial values.
 inline void amc::TableId_Init(amc::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- amc.TableId..Ctor
+inline  amc::TableId::TableId() {
+    amc::TableId_Init(*this);
+}
+
+// --- amc.TableId..FieldwiseCtor
+inline  amc::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- amc.TableId..EnumCtor
+inline  amc::TableId::TableId(amc_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const amc::BltinId &row) {// cfmt:amc.BltinId.String

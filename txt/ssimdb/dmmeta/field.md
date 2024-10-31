@@ -3,23 +3,29 @@
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Field
 
 * file:[data/dmmeta/field.ssim](/data/dmmeta/field.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+italicised fields: *ctype, ns, name* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|algo.Smallstr100|Val||Primary key, as ctype.name|
-|ctype|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|Pkey||Parent structure<br>.RL of field|
-|ns|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|Pkey||Parent namespace<br>.RL.RL of field|
-|name|algo.Smallstr50|Val||Name of the field<br>.RR of field|
-|arg|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|Pkey||Type of field|
-|reftype|[dmmeta.Reftype](/txt/ssimdb/dmmeta/reftype.md)|Pkey|"Val"|Type constructor|
-|dflt|algo.CppExpr|Val||Default value (c++ expression)|
-|comment|algo.Comment|Val|
+|field|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftypes.md#val)||Primary key, as ctype.name|
+|*ctype*|*[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*Parent structure<br>.RL of field*|
+|*ns*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*Parent namespace<br>.RL.RL of field*|
+|*name*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftypes.md#val)*||*Name of the field<br>.RR of field*|
+|arg|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Type of field|
+|reftype|[dmmeta.Reftype](/txt/ssimdb/dmmeta/reftype.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|"Val"|Type constructor|
+|dflt|[algo.CppExpr](/txt/protocol/algo/CppExpr.md)|[Val](/txt/exe/amc/reftypes.md#val)||Default value (c++ expression)|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Subsets
 <a href="#subsets"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Subsets -->
 These ssimfiles are subsets of dmmeta.field
 
 * [dev.Unstablefld](/txt/ssimdb/dev/unstablefld.md) - Fields that should be stripped from component test output because they contain timestamps etc. 
@@ -70,10 +76,13 @@ These ssimfiles are subsets of dmmeta.field
 * [dmmeta.Tary](/txt/ssimdb/dmmeta/tary.md) - Indirect linear dynamically alocated array (used for strings, arrays of data, etc) 
 * [dmmeta.Thash](/txt/ssimdb/dmmeta/thash.md) - Hash index, required for fields with reftype Thash 
 * [dmmeta.Typefld](/txt/ssimdb/dmmeta/typefld.md) - Specifies which field of a message carries the type 
-* [dmmeta.Xref](/txt/ssimdb/dmmeta/xref.md) - Specify how to cross-reference (i.e. project, or group-by) one record with another
+* [dmmeta.Xref](/txt/ssimdb/dmmeta/xref.md) - Specify how to cross-reference (i.e. project, or group-by) one record with another 
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Subsets -->
 
 ### Related
 <a href="#related"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Related -->
 These ssimfiles reference dmmeta.field
 
 * [dmmeta.basepool via base](/txt/ssimdb/dmmeta/basepool.md) - Specify pool to be used for allocating elements of a type 
@@ -101,26 +110,36 @@ These ssimfiles reference dmmeta.field
 * [dmmeta.thash via hashfld](/txt/ssimdb/dmmeta/thash.md) - Field on which hash function is computed 
 * [dmmeta.xref via viafld](/txt/ssimdb/dmmeta/xref.md) - Specify how to cross-reference (i.e. project, or group-by) one record with another 
 * [dmmeta.xref via keyfld](/txt/ssimdb/dmmeta/xref.md) - Specify how to cross-reference (i.e. project, or group-by) one record with another 
-* [gclidb.gclicmdf2j via field](/txt/ssimdb/gclidb/gclicmdf2j.md) - Mapping of internal fields to JSON fields for gitlab/github
+* [gclidb.gclicmdf2j via field](/txt/ssimdb/gclidb/gclicmdf2j.md) - Mapping of internal fields to JSON fields for gitlab/github 
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->
 
 ### Used In Commands
 <a href="#used-in-commands"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:CmdlineUses -->
+
 * [acr_ed -field](/txt/exe/acr_ed/README.md) - Create field 
 * [acr_ed -before](/txt/exe/acr_ed/README.md) - Place field before this one 
 * [acr_ed -srcfield](/txt/exe/acr_ed/README.md) - Source field for bitfld/substr 
 * [acr_ed -hashfld](/txt/exe/acr_ed/README.md) - (-reftype:Thash) Hash field 
-* [acr_ed -sortfld](/txt/exe/acr_ed/README.md) - (-reftype:Bheap) Sort field
+* [acr_ed -sortfld](/txt/exe/acr_ed/README.md) - (-reftype:Bheap) Sort field 
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:CmdlineUses -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [abt_md](/txt/exe/abt_md/README.md) as abt_md.FField
-* [acr](/txt/exe/acr/README.md) as acr.FField
-* [acr_compl](/txt/exe/acr_compl/README.md) as acr_compl.FField
-* [acr_ed](/txt/exe/acr_ed/README.md) as acr_ed.FField
-* [acr_in](/txt/exe/acr_in/README.md) as acr_in.FField
-* [amc](/txt/exe/amc/README.md) as amc.FField
-* [amc_vis](/txt/exe/amc_vis/README.md) as amc_vis.FField
-* [apm](/txt/exe/apm/README.md) as apm.FField
-* [lib_ctype](/txt/lib/lib_ctype/README.md) as lib_ctype.FField
-* [ssim2mysql](/txt/exe/ssim2mysql/README.md) as ssim2mysql.FField
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [abt_md](/txt/exe/abt_md/internals.md) as [abt_md.FField](/txt/exe/abt_md/internals.md#abt_md-ffield)
+* [acr](/txt/exe/acr/internals.md) as [acr.FField](/txt/exe/acr/internals.md#acr-ffield)
+* [acr_compl](/txt/exe/acr_compl/internals.md) as [acr_compl.FField](/txt/exe/acr_compl/internals.md#acr_compl-ffield)
+* [acr_ed](/txt/exe/acr_ed/internals.md) as [acr_ed.FField](/txt/exe/acr_ed/internals.md#acr_ed-ffield)
+* [acr_in](/txt/exe/acr_in/internals.md) as [acr_in.FField](/txt/exe/acr_in/internals.md#acr_in-ffield)
+* [amc](/txt/exe/amc/internals.md) as [amc.FField](/txt/exe/amc/internals.md#amc-ffield)
+* [amc_vis](/txt/exe/amc_vis/internals.md) as [amc_vis.FField](/txt/exe/amc_vis/internals.md#amc_vis-ffield)
+* [apm](/txt/exe/apm/internals.md) as [apm.FField](/txt/exe/apm/internals.md#apm-ffield)
+* [lib_ctype](/txt/lib/lib_ctype/README.md) as [lib_ctype.FField](/txt/lib/lib_ctype/README.md#lib_ctype-ffield)
+* [ssim2mysql](/txt/exe/ssim2mysql/internals.md) as [ssim2mysql.FField](/txt/exe/ssim2mysql/internals.md#ssim2mysql-ffield)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

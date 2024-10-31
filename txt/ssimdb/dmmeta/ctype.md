@@ -3,19 +3,25 @@
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Ctype
 
 * file:[data/dmmeta/ctype.ssim](/data/dmmeta/ctype.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+italicised fields: *ns, name* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|ctype|algo.Smallstr100|Val||Identifier. must be ns.typename|
-|ns|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|Pkey||Parent namespace<br>.RL of ctype|
-|name|algo.Smallstr100|Val||Name sans namespace<br>.RR of ctype|
-|comment|algo.Comment|Val|
+|ctype|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftypes.md#val)||Identifier. must be ns.typename|
+|*ns*|*[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*Parent namespace<br>.RL of ctype*|
+|*name*|*[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)*|*[Val](/txt/exe/amc/reftypes.md#val)*||*Name sans namespace<br>.RR of ctype*|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Subsets
 <a href="#subsets"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Subsets -->
 These ssimfiles are subsets of dmmeta.ctype
 
 * [amcdb.Bltin](/txt/ssimdb/amcdb/bltin.md) - Specify properties of a C built-in type 
@@ -34,10 +40,13 @@ These ssimfiles are subsets of dmmeta.ctype
 * [dmmeta.Nossimfile](/txt/ssimdb/dmmeta/nossimfile.md) - Indicates that ssimfile does not exist for this ssimdb ctype 
 * [dmmeta.Pack](/txt/ssimdb/dmmeta/pack.md) - Request byte-packing of structure fields 
 * [dmmeta.Sqltype](/txt/ssimdb/dmmeta/sqltype.md) - Mapping of ctype -> SQL expression 
-* [dmmeta.Svtype](/txt/ssimdb/dmmeta/svtype.md) - Table for determining ctype from separated value file
+* [dmmeta.Svtype](/txt/ssimdb/dmmeta/svtype.md) - Table for determining ctype from separated value file 
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Subsets -->
 
 ### Related
 <a href="#related"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Related -->
 These ssimfiles reference dmmeta.ctype
 
 * [dmmeta.cafter via ctype](/txt/ssimdb/dmmeta/cafter.md) - Control amc processing order for unrelated types (used in rare situations) 
@@ -61,28 +70,38 @@ These ssimfiles reference dmmeta.ctype
 * [dmmeta.smallstr via ctype](/txt/ssimdb/dmmeta/smallstr.md) - Generated fixed-length padded or length-delimited string field 
 * [dmmeta.ssimfile via ctype](/txt/ssimdb/dmmeta/ssimfile.md) - File with ssim tuples 
 * [dmmeta.ssimreq via parent_ctype](/txt/ssimdb/dmmeta/ssimreq.md) - Extended constraints for ssim records 
-* [dmmeta.typefld via ctype](/txt/ssimdb/dmmeta/typefld.md) - Name of length field
+* [dmmeta.typefld via ctype](/txt/ssimdb/dmmeta/typefld.md) - Name of length field 
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->
 
 ### Used In Commands
 <a href="#used-in-commands"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:CmdlineUses -->
+
 * [acr_ed -ctype](/txt/exe/acr_ed/README.md) - Create/Rename/Delete ctype 
 * [acr_ed -subset](/txt/exe/acr_ed/README.md) - Primary key is a subset of this ctype 
 * [acr_ed -subset2](/txt/exe/acr_ed/README.md) - Primary key is also a subset of this ctype 
 * [acr_ed -arg](/txt/exe/acr_ed/README.md) - Field type (e.g. u32, etc), (with -ctype) add the base field 
 * [amc_vis -ctype](/txt/exe/amc_vis/README.md) - Ctype regexp to compute access path diagram 
 * [atf_cmdline -dregx](/txt/exe/atf_cmdline/README.md) - Predefined regx 
-* [atf_cmdline -dpkey](/txt/exe/atf_cmdline/README.md) - Predefined pkey
+* [atf_cmdline -dpkey](/txt/exe/atf_cmdline/README.md) - Predefined pkey 
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:CmdlineUses -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [abt_md](/txt/exe/abt_md/README.md) as abt_md.FCtype
-* [acr](/txt/exe/acr/README.md) as acr.FCtype
-* [acr_compl](/txt/exe/acr_compl/README.md) as acr_compl.FCtype
-* [acr_ed](/txt/exe/acr_ed/README.md) as acr_ed.FCtype
-* [acr_in](/txt/exe/acr_in/README.md) as acr_in.FCtype
-* [amc](/txt/exe/amc/README.md) as amc.FCtype
-* [amc_vis](/txt/exe/amc_vis/README.md) as amc_vis.FCtype
-* [apm](/txt/exe/apm/README.md) as apm.FCtype
-* [lib_ctype](/txt/lib/lib_ctype/README.md) as lib_ctype.FCtype
-* [ssim2mysql](/txt/exe/ssim2mysql/README.md) as ssim2mysql.FCtype
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [abt_md](/txt/exe/abt_md/internals.md) as [abt_md.FCtype](/txt/exe/abt_md/internals.md#abt_md-fctype)
+* [acr](/txt/exe/acr/internals.md) as [acr.FCtype](/txt/exe/acr/internals.md#acr-fctype)
+* [acr_compl](/txt/exe/acr_compl/internals.md) as [acr_compl.FCtype](/txt/exe/acr_compl/internals.md#acr_compl-fctype)
+* [acr_ed](/txt/exe/acr_ed/internals.md) as [acr_ed.FCtype](/txt/exe/acr_ed/internals.md#acr_ed-fctype)
+* [acr_in](/txt/exe/acr_in/internals.md) as [acr_in.FCtype](/txt/exe/acr_in/internals.md#acr_in-fctype)
+* [amc](/txt/exe/amc/internals.md) as [amc.FCtype](/txt/exe/amc/internals.md#amc-fctype)
+* [amc_vis](/txt/exe/amc_vis/internals.md) as [amc_vis.FCtype](/txt/exe/amc_vis/internals.md#amc_vis-fctype)
+* [apm](/txt/exe/apm/internals.md) as [apm.FCtype](/txt/exe/apm/internals.md#apm-fctype)
+* [lib_ctype](/txt/lib/lib_ctype/README.md) as [lib_ctype.FCtype](/txt/lib/lib_ctype/README.md#lib_ctype-fctype)
+* [ssim2mysql](/txt/exe/ssim2mysql/internals.md) as [ssim2mysql.FCtype](/txt/exe/ssim2mysql/internals.md#ssim2mysql-fctype)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

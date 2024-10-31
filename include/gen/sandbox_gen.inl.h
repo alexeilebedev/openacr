@@ -27,9 +27,10 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
-inline sandbox::trace::trace() {
-}
 
+// --- sandbox.trace..Ctor
+inline  sandbox::trace::trace() {
+}
 
 // --- sandbox.FDb.sandbox.EmptyQ
 // Return true if index is empty
@@ -176,14 +177,6 @@ inline void sandbox::_db_sbpath_curs_Next(_db_sbpath_curs &curs) {
 inline sandbox::FSbpath& sandbox::_db_sbpath_curs_Access(_db_sbpath_curs &curs) {
     return sbpath_qFind(u64(curs.index));
 }
-inline sandbox::FSandbox::FSandbox() {
-    sandbox::FSandbox_Init(*this);
-}
-
-inline sandbox::FSandbox::~FSandbox() {
-    sandbox::FSandbox_Uninit(*this);
-}
-
 
 // --- sandbox.FSandbox..Init
 // Set all fields to initial values.
@@ -191,18 +184,20 @@ inline void sandbox::FSandbox_Init(sandbox::FSandbox& sandbox) {
     sandbox.select = bool(false);
     sandbox.ind_sandbox_next = (sandbox::FSandbox*)-1; // (sandbox.FDb.ind_sandbox) not-in-hash
 }
-inline sandbox::FSbpath::FSbpath() {
+
+// --- sandbox.FSandbox..Ctor
+inline  sandbox::FSandbox::FSandbox() {
+    sandbox::FSandbox_Init(*this);
 }
 
-inline sandbox::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline sandbox::FieldId::FieldId(sandbox_FieldIdEnum arg) { this->value = i32(arg); }
-inline sandbox::FieldId::FieldId() {
-    sandbox::FieldId_Init(*this);
+// --- sandbox.FSandbox..Dtor
+inline  sandbox::FSandbox::~FSandbox() {
+    sandbox::FSandbox_Uninit(*this);
 }
 
+// --- sandbox.FSbpath..Ctor
+inline  sandbox::FSbpath::FSbpath() {
+}
 
 // --- sandbox.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -217,7 +212,7 @@ inline void sandbox::value_SetEnum(sandbox::FieldId& parent, sandbox_FieldIdEnum
 }
 
 // --- sandbox.FieldId.value.Cast
-inline sandbox::FieldId::operator sandbox_FieldIdEnum () const {
+inline  sandbox::FieldId::operator sandbox_FieldIdEnum() const {
     return sandbox_FieldIdEnum((*this).value);
 }
 
@@ -226,15 +221,22 @@ inline sandbox::FieldId::operator sandbox_FieldIdEnum () const {
 inline void sandbox::FieldId_Init(sandbox::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline sandbox::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline sandbox::TableId::TableId(sandbox_TableIdEnum arg) { this->value = i32(arg); }
-inline sandbox::TableId::TableId() {
-    sandbox::TableId_Init(*this);
+
+// --- sandbox.FieldId..Ctor
+inline  sandbox::FieldId::FieldId() {
+    sandbox::FieldId_Init(*this);
 }
 
+// --- sandbox.FieldId..FieldwiseCtor
+inline  sandbox::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- sandbox.FieldId..EnumCtor
+inline  sandbox::FieldId::FieldId(sandbox_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- sandbox.TableId.value.GetEnum
 // Get value of field as enum type
@@ -249,7 +251,7 @@ inline void sandbox::value_SetEnum(sandbox::TableId& parent, sandbox_TableIdEnum
 }
 
 // --- sandbox.TableId.value.Cast
-inline sandbox::TableId::operator sandbox_TableIdEnum () const {
+inline  sandbox::TableId::operator sandbox_TableIdEnum() const {
     return sandbox_TableIdEnum((*this).value);
 }
 
@@ -257,6 +259,22 @@ inline sandbox::TableId::operator sandbox_TableIdEnum () const {
 // Set all fields to initial values.
 inline void sandbox::TableId_Init(sandbox::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- sandbox.TableId..Ctor
+inline  sandbox::TableId::TableId() {
+    sandbox::TableId_Init(*this);
+}
+
+// --- sandbox.TableId..FieldwiseCtor
+inline  sandbox::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- sandbox.TableId..EnumCtor
+inline  sandbox::TableId::TableId(sandbox_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const sandbox::trace &row) {// cfmt:sandbox.trace.String

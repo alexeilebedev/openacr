@@ -24,18 +24,25 @@ amc -report:N atf_amc.FDb.ind_typea.% -proto
 
 ### Attributes
 <a href="#attributes"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Attributes -->
 * [ctype:](/txt/ssimdb/dmmeta/ctype.md)dmmeta.Thash
 
 * file:[data/dmmeta/thash.ssim](/data/dmmeta/thash.ssim)
 
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey|
-|hashfld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|Pkey||Field on which hash function is computed|
-|unique|bool|Val|true|Enforce uniqueness of member elements|
-|comment|algo.Comment|Val|
+|field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
+|hashfld|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Field on which hash function is computed|
+|unique|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Enforce uniqueness of member elements|
+|comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
 ### Used In Executables
 <a href="#used-in-executables"></a>
-* [amc](/txt/exe/amc/README.md) as amc.FThash
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
+
+* [amc](/txt/exe/amc/internals.md) as [amc.FThash](/txt/exe/amc/internals.md#amc-fthash)
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

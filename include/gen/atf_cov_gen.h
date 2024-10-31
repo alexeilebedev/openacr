@@ -111,6 +111,7 @@ namespace atf_cov { // gen:ns_print_struct
 
 // --- atf_cov.FCovfile
 // create: atf_cov.FDb.covfile (Lary)
+// global access: covfile (Lary, by rowid)
 // access: atf_cov.FGitfile.c_covfile (Ptr)
 struct FCovfile { // atf_cov.FCovfile
     algo::Smallstr200   covfile;   // Source file
@@ -120,15 +121,19 @@ struct FCovfile { // atf_cov.FCovfile
     algo::U32Dec2       exer;      // Percentage of executable lines
     u32                 hit;       //   0  Exercised lines
     algo::U32Dec2       cov;       // Line coverage
+    // func:atf_cov.FCovfile..AssignOp
+    inline atf_cov::FCovfile& operator =(const atf_cov::FCovfile &rhs) = delete;
+    // func:atf_cov.FCovfile..CopyCtor
+    inline               FCovfile(const atf_cov::FCovfile &rhs) = delete;
 private:
+    // func:atf_cov.FCovfile..Ctor
+    inline               FCovfile() __attribute__((nothrow));
+    // func:atf_cov.FCovfile..Dtor
+    inline               ~FCovfile() __attribute__((nothrow));
     friend atf_cov::FCovfile&   covfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_cov::FCovfile*   covfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 covfile_RemoveAll() __attribute__((nothrow));
     friend void                 covfile_RemoveLast() __attribute__((nothrow));
-    FCovfile();
-    ~FCovfile();
-    FCovfile(const FCovfile&){ /*disallow copy constructor */}
-    void operator =(const FCovfile&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -140,13 +145,14 @@ void                 covfile_CopyIn(atf_cov::FCovfile &row, dev::Covfile &in) __
 
 // Set all fields to initial values.
 // func:atf_cov.FCovfile..Init
-void                 FCovfile_Init(atf_cov::FCovfile& covfile);
+inline void          FCovfile_Init(atf_cov::FCovfile& covfile);
 // func:atf_cov.FCovfile..Uninit
 void                 FCovfile_Uninit(atf_cov::FCovfile& covfile) __attribute__((nothrow));
 
 // --- atf_cov.FCovline
 // create: atf_cov.FDb.covline (Lary)
-// global access: ind_covline (Thash)
+// global access: covline (Lary, by rowid)
+// global access: ind_covline (Thash, hash field covline)
 // access: atf_cov.FGitfile.c_covline (Ptrary)
 struct FCovline { // atf_cov.FCovline
     algo::Smallstr200    covline;                    // file:line
@@ -156,15 +162,21 @@ struct FCovline { // atf_cov.FCovline
     atf_cov::FGitfile*   p_gitfile;                  // reference to parent row
     bool                 gitfile_c_covline_in_ary;   //   false  membership flag
     atf_cov::FCovline*   ind_covline_next;           // hash next
+    // x-reference on atf_cov.FCovline.p_gitfile prevents copy
+    // func:atf_cov.FCovline..AssignOp
+    inline atf_cov::FCovline& operator =(const atf_cov::FCovline &rhs) = delete;
+    // x-reference on atf_cov.FCovline.p_gitfile prevents copy
+    // func:atf_cov.FCovline..CopyCtor
+    inline               FCovline(const atf_cov::FCovline &rhs) = delete;
 private:
+    // func:atf_cov.FCovline..Ctor
+    inline               FCovline() __attribute__((nothrow));
+    // func:atf_cov.FCovline..Dtor
+    inline               ~FCovline() __attribute__((nothrow));
     friend atf_cov::FCovline&   covline_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_cov::FCovline*   covline_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 covline_RemoveAll() __attribute__((nothrow));
     friend void                 covline_RemoveLast() __attribute__((nothrow));
-    FCovline();
-    ~FCovline();
-    FCovline(const FCovline&){ /*disallow copy constructor */}
-    void operator =(const FCovline&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -182,7 +194,7 @@ u32                  line_Get(atf_cov::FCovline& covline) __attribute__((__warn_
 
 // Set all fields to initial values.
 // func:atf_cov.FCovline..Init
-void                 FCovline_Init(atf_cov::FCovline& covline);
+inline void          FCovline_Init(atf_cov::FCovline& covline);
 // func:atf_cov.FCovline..Uninit
 void                 FCovline_Uninit(atf_cov::FCovline& covline) __attribute__((nothrow));
 // print string representation of ROW to string STR
@@ -192,6 +204,7 @@ void                 FCovline_Print(atf_cov::FCovline& row, algo::cstring& str) 
 
 // --- atf_cov.FCovtarget
 // create: atf_cov.FDb.covtarget (Lary)
+// global access: covtarget (Lary, by rowid)
 // access: atf_cov.FTarget.c_covtarget (Ptr)
 struct FCovtarget { // atf_cov.FCovtarget
     algo::Smallstr16   covtarget;   // Target
@@ -201,15 +214,19 @@ struct FCovtarget { // atf_cov.FCovtarget
     algo::U32Dec2      exer;        // Percentage of executable lines
     u32                hit;         //   0  Exercised lines
     algo::U32Dec2      cov;         // Line coverage
+    // func:atf_cov.FCovtarget..AssignOp
+    inline atf_cov::FCovtarget& operator =(const atf_cov::FCovtarget &rhs) = delete;
+    // func:atf_cov.FCovtarget..CopyCtor
+    inline               FCovtarget(const atf_cov::FCovtarget &rhs) = delete;
 private:
+    // func:atf_cov.FCovtarget..Ctor
+    inline               FCovtarget() __attribute__((nothrow));
+    // func:atf_cov.FCovtarget..Dtor
+    inline               ~FCovtarget() __attribute__((nothrow));
     friend atf_cov::FCovtarget& covtarget_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_cov::FCovtarget* covtarget_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 covtarget_RemoveAll() __attribute__((nothrow));
     friend void                 covtarget_RemoveLast() __attribute__((nothrow));
-    FCovtarget();
-    ~FCovtarget();
-    FCovtarget(const FCovtarget&){ /*disallow copy constructor */}
-    void operator =(const FCovtarget&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -221,14 +238,15 @@ void                 covtarget_CopyIn(atf_cov::FCovtarget &row, dev::Covtarget &
 
 // Set all fields to initial values.
 // func:atf_cov.FCovtarget..Init
-void                 FCovtarget_Init(atf_cov::FCovtarget& covtarget);
+inline void          FCovtarget_Init(atf_cov::FCovtarget& covtarget);
 // func:atf_cov.FCovtarget..Uninit
 void                 FCovtarget_Uninit(atf_cov::FCovtarget& covtarget) __attribute__((nothrow));
 
 // --- atf_cov.trace
 #pragma pack(push,1)
 struct trace { // atf_cov.trace
-    trace();
+    // func:atf_cov.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -337,16 +355,16 @@ atf_cov::FCovline*   covline_InsertMaybe(const dev::Covline &value) __attribute_
 void*                covline_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_cov.FDb.covline.EmptyQ
-bool                 covline_EmptyQ() __attribute__((nothrow, pure));
+inline bool          covline_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FDb.covline.Find
-atf_cov::FCovline*   covline_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_cov::FCovline* covline_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_cov.FDb.covline.Last
-atf_cov::FCovline*   covline_Last() __attribute__((nothrow, pure));
+inline atf_cov::FCovline* covline_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.covline.N
-i32                  covline_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           covline_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.covline.RemoveAll
 void                 covline_RemoveAll() __attribute__((nothrow));
@@ -355,7 +373,7 @@ void                 covline_RemoveAll() __attribute__((nothrow));
 void                 covline_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_cov.FDb.covline.qFind
-atf_cov::FCovline&   covline_qFind(u64 t) __attribute__((nothrow, pure));
+inline atf_cov::FCovline& covline_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_cov.FDb.covline.XrefMaybe
@@ -363,7 +381,7 @@ bool                 covline_XrefMaybe(atf_cov::FCovline &row);
 
 // Return true if hash is empty
 // func:atf_cov.FDb.ind_covline.EmptyQ
-bool                 ind_covline_EmptyQ() __attribute__((nothrow));
+inline bool          ind_covline_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:atf_cov.FDb.ind_covline.Find
 atf_cov::FCovline*   ind_covline_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -372,7 +390,7 @@ atf_cov::FCovline*   ind_covline_Find(const algo::strptr& key) __attribute__((__
 atf_cov::FCovline&   ind_covline_FindX(const algo::strptr& key);
 // Return number of items in the hash
 // func:atf_cov.FDb.ind_covline.N
-i32                  ind_covline_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_covline_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:atf_cov.FDb.ind_covline.InsertMaybe
 bool                 ind_covline_InsertMaybe(atf_cov::FCovline& row) __attribute__((nothrow));
@@ -399,16 +417,16 @@ atf_cov::FTarget*    target_InsertMaybe(const dev::Target &value) __attribute__(
 void*                target_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_cov.FDb.target.EmptyQ
-bool                 target_EmptyQ() __attribute__((nothrow, pure));
+inline bool          target_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FDb.target.Find
-atf_cov::FTarget*    target_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_cov::FTarget* target_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_cov.FDb.target.Last
-atf_cov::FTarget*    target_Last() __attribute__((nothrow, pure));
+inline atf_cov::FTarget* target_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.target.N
-i32                  target_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.target.RemoveAll
 void                 target_RemoveAll() __attribute__((nothrow));
@@ -417,7 +435,7 @@ void                 target_RemoveAll() __attribute__((nothrow));
 void                 target_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_cov.FDb.target.qFind
-atf_cov::FTarget&    target_qFind(u64 t) __attribute__((nothrow, pure));
+inline atf_cov::FTarget& target_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_cov.FDb.target.XrefMaybe
@@ -425,7 +443,7 @@ bool                 target_XrefMaybe(atf_cov::FTarget &row);
 
 // Return true if hash is empty
 // func:atf_cov.FDb.ind_target.EmptyQ
-bool                 ind_target_EmptyQ() __attribute__((nothrow));
+inline bool          ind_target_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:atf_cov.FDb.ind_target.Find
 atf_cov::FTarget*    ind_target_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -437,7 +455,7 @@ atf_cov::FTarget&    ind_target_FindX(const algo::strptr& key);
 atf_cov::FTarget&    ind_target_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:atf_cov.FDb.ind_target.N
-i32                  ind_target_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_target_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:atf_cov.FDb.ind_target.InsertMaybe
 bool                 ind_target_InsertMaybe(atf_cov::FTarget& row) __attribute__((nothrow));
@@ -464,16 +482,16 @@ atf_cov::FTargsrc*   targsrc_InsertMaybe(const dev::Targsrc &value) __attribute_
 void*                targsrc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_cov.FDb.targsrc.EmptyQ
-bool                 targsrc_EmptyQ() __attribute__((nothrow, pure));
+inline bool          targsrc_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FDb.targsrc.Find
-atf_cov::FTargsrc*   targsrc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_cov::FTargsrc* targsrc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_cov.FDb.targsrc.Last
-atf_cov::FTargsrc*   targsrc_Last() __attribute__((nothrow, pure));
+inline atf_cov::FTargsrc* targsrc_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.targsrc.N
-i32                  targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.targsrc.RemoveAll
 void                 targsrc_RemoveAll() __attribute__((nothrow));
@@ -482,7 +500,7 @@ void                 targsrc_RemoveAll() __attribute__((nothrow));
 void                 targsrc_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_cov.FDb.targsrc.qFind
-atf_cov::FTargsrc&   targsrc_qFind(u64 t) __attribute__((nothrow, pure));
+inline atf_cov::FTargsrc& targsrc_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_cov.FDb.targsrc.XrefMaybe
@@ -490,7 +508,7 @@ bool                 targsrc_XrefMaybe(atf_cov::FTargsrc &row);
 
 // Return true if hash is empty
 // func:atf_cov.FDb.ind_targsrc.EmptyQ
-bool                 ind_targsrc_EmptyQ() __attribute__((nothrow));
+inline bool          ind_targsrc_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:atf_cov.FDb.ind_targsrc.Find
 atf_cov::FTargsrc*   ind_targsrc_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -499,7 +517,7 @@ atf_cov::FTargsrc*   ind_targsrc_Find(const algo::strptr& key) __attribute__((__
 atf_cov::FTargsrc&   ind_targsrc_FindX(const algo::strptr& key);
 // Return number of items in the hash
 // func:atf_cov.FDb.ind_targsrc.N
-i32                  ind_targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_targsrc_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:atf_cov.FDb.ind_targsrc.InsertMaybe
 bool                 ind_targsrc_InsertMaybe(atf_cov::FTargsrc& row) __attribute__((nothrow));
@@ -526,16 +544,16 @@ atf_cov::FGitfile*   gitfile_InsertMaybe(const dev::Gitfile &value) __attribute_
 void*                gitfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_cov.FDb.gitfile.EmptyQ
-bool                 gitfile_EmptyQ() __attribute__((nothrow, pure));
+inline bool          gitfile_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FDb.gitfile.Find
-atf_cov::FGitfile*   gitfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_cov::FGitfile* gitfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_cov.FDb.gitfile.Last
-atf_cov::FGitfile*   gitfile_Last() __attribute__((nothrow, pure));
+inline atf_cov::FGitfile* gitfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.gitfile.N
-i32                  gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.gitfile.RemoveAll
 void                 gitfile_RemoveAll() __attribute__((nothrow));
@@ -544,7 +562,7 @@ void                 gitfile_RemoveAll() __attribute__((nothrow));
 void                 gitfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_cov.FDb.gitfile.qFind
-atf_cov::FGitfile&   gitfile_qFind(u64 t) __attribute__((nothrow, pure));
+inline atf_cov::FGitfile& gitfile_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_cov.FDb.gitfile.XrefMaybe
@@ -552,7 +570,7 @@ bool                 gitfile_XrefMaybe(atf_cov::FGitfile &row);
 
 // Return true if hash is empty
 // func:atf_cov.FDb.ind_gitfile.EmptyQ
-bool                 ind_gitfile_EmptyQ() __attribute__((nothrow));
+inline bool          ind_gitfile_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:atf_cov.FDb.ind_gitfile.Find
 atf_cov::FGitfile*   ind_gitfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -564,7 +582,7 @@ atf_cov::FGitfile&   ind_gitfile_FindX(const algo::strptr& key);
 atf_cov::FGitfile&   ind_gitfile_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
 // Return number of items in the hash
 // func:atf_cov.FDb.ind_gitfile.N
-i32                  ind_gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_gitfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:atf_cov.FDb.ind_gitfile.InsertMaybe
 bool                 ind_gitfile_InsertMaybe(atf_cov::FGitfile& row) __attribute__((nothrow));
@@ -591,16 +609,16 @@ atf_cov::FCovtarget* covtarget_InsertMaybe(const dev::Covtarget &value) __attrib
 void*                covtarget_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_cov.FDb.covtarget.EmptyQ
-bool                 covtarget_EmptyQ() __attribute__((nothrow, pure));
+inline bool          covtarget_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FDb.covtarget.Find
-atf_cov::FCovtarget* covtarget_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_cov::FCovtarget* covtarget_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_cov.FDb.covtarget.Last
-atf_cov::FCovtarget* covtarget_Last() __attribute__((nothrow, pure));
+inline atf_cov::FCovtarget* covtarget_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.covtarget.N
-i32                  covtarget_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           covtarget_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.covtarget.RemoveAll
 void                 covtarget_RemoveAll() __attribute__((nothrow));
@@ -609,7 +627,7 @@ void                 covtarget_RemoveAll() __attribute__((nothrow));
 void                 covtarget_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_cov.FDb.covtarget.qFind
-atf_cov::FCovtarget& covtarget_qFind(u64 t) __attribute__((nothrow, pure));
+inline atf_cov::FCovtarget& covtarget_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_cov.FDb.covtarget.XrefMaybe
@@ -631,16 +649,16 @@ atf_cov::FCovfile*   covfile_InsertMaybe(const dev::Covfile &value) __attribute_
 void*                covfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_cov.FDb.covfile.EmptyQ
-bool                 covfile_EmptyQ() __attribute__((nothrow, pure));
+inline bool          covfile_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FDb.covfile.Find
-atf_cov::FCovfile*   covfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_cov::FCovfile* covfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_cov.FDb.covfile.Last
-atf_cov::FCovfile*   covfile_Last() __attribute__((nothrow, pure));
+inline atf_cov::FCovfile* covfile_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.covfile.N
-i32                  covfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           covfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.covfile.RemoveAll
 void                 covfile_RemoveAll() __attribute__((nothrow));
@@ -649,7 +667,7 @@ void                 covfile_RemoveAll() __attribute__((nothrow));
 void                 covfile_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_cov.FDb.covfile.qFind
-atf_cov::FCovfile&   covfile_qFind(u64 t) __attribute__((nothrow, pure));
+inline atf_cov::FCovfile& covfile_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_cov.FDb.covfile.XrefMaybe
@@ -671,16 +689,16 @@ atf_cov::FTgtcov*    tgtcov_InsertMaybe(const dev::Tgtcov &value) __attribute__(
 void*                tgtcov_AllocMem() __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:atf_cov.FDb.tgtcov.EmptyQ
-bool                 tgtcov_EmptyQ() __attribute__((nothrow, pure));
+inline bool          tgtcov_EmptyQ() __attribute__((nothrow, pure));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FDb.tgtcov.Find
-atf_cov::FTgtcov*    tgtcov_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+inline atf_cov::FTgtcov* tgtcov_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to last element of array, or NULL if array is empty
 // func:atf_cov.FDb.tgtcov.Last
-atf_cov::FTgtcov*    tgtcov_Last() __attribute__((nothrow, pure));
+inline atf_cov::FTgtcov* tgtcov_Last() __attribute__((nothrow, pure));
 // Return number of items in the pool
 // func:atf_cov.FDb.tgtcov.N
-i32                  tgtcov_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           tgtcov_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Remove all elements from Lary
 // func:atf_cov.FDb.tgtcov.RemoveAll
 void                 tgtcov_RemoveAll() __attribute__((nothrow));
@@ -689,7 +707,7 @@ void                 tgtcov_RemoveAll() __attribute__((nothrow));
 void                 tgtcov_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:atf_cov.FDb.tgtcov.qFind
-atf_cov::FTgtcov&    tgtcov_qFind(u64 t) __attribute__((nothrow, pure));
+inline atf_cov::FTgtcov& tgtcov_qFind(u64 t) __attribute__((nothrow, pure));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:atf_cov.FDb.tgtcov.XrefMaybe
@@ -697,7 +715,7 @@ bool                 tgtcov_XrefMaybe(atf_cov::FTgtcov &row);
 
 // Return true if hash is empty
 // func:atf_cov.FDb.ind_tgtcov.EmptyQ
-bool                 ind_tgtcov_EmptyQ() __attribute__((nothrow));
+inline bool          ind_tgtcov_EmptyQ() __attribute__((nothrow));
 // Find row by key. Return NULL if not found.
 // func:atf_cov.FDb.ind_tgtcov.Find
 atf_cov::FTgtcov*    ind_tgtcov_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
@@ -706,7 +724,7 @@ atf_cov::FTgtcov*    ind_tgtcov_Find(const algo::strptr& key) __attribute__((__w
 atf_cov::FTgtcov&    ind_tgtcov_FindX(const algo::strptr& key);
 // Return number of items in the hash
 // func:atf_cov.FDb.ind_tgtcov.N
-i32                  ind_tgtcov_N() __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           ind_tgtcov_N() __attribute__((__warn_unused_result__, nothrow, pure));
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 // func:atf_cov.FDb.ind_tgtcov.InsertMaybe
 bool                 ind_tgtcov_InsertMaybe(atf_cov::FTgtcov& row) __attribute__((nothrow));
@@ -719,88 +737,88 @@ void                 ind_tgtcov_Reserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:atf_cov.FDb.covline_curs.Reset
-void                 _db_covline_curs_Reset(_db_covline_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
+inline void          _db_covline_curs_Reset(_db_covline_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.covline_curs.ValidQ
-bool                 _db_covline_curs_ValidQ(_db_covline_curs &curs) __attribute__((nothrow));
+inline bool          _db_covline_curs_ValidQ(_db_covline_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.covline_curs.Next
-void                 _db_covline_curs_Next(_db_covline_curs &curs) __attribute__((nothrow));
+inline void          _db_covline_curs_Next(_db_covline_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.covline_curs.Access
-atf_cov::FCovline&   _db_covline_curs_Access(_db_covline_curs &curs) __attribute__((nothrow));
+inline atf_cov::FCovline& _db_covline_curs_Access(_db_covline_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.target_curs.Reset
-void                 _db_target_curs_Reset(_db_target_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
+inline void          _db_target_curs_Reset(_db_target_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.target_curs.ValidQ
-bool                 _db_target_curs_ValidQ(_db_target_curs &curs) __attribute__((nothrow));
+inline bool          _db_target_curs_ValidQ(_db_target_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.target_curs.Next
-void                 _db_target_curs_Next(_db_target_curs &curs) __attribute__((nothrow));
+inline void          _db_target_curs_Next(_db_target_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.target_curs.Access
-atf_cov::FTarget&    _db_target_curs_Access(_db_target_curs &curs) __attribute__((nothrow));
+inline atf_cov::FTarget& _db_target_curs_Access(_db_target_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.targsrc_curs.Reset
-void                 _db_targsrc_curs_Reset(_db_targsrc_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
+inline void          _db_targsrc_curs_Reset(_db_targsrc_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.targsrc_curs.ValidQ
-bool                 _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) __attribute__((nothrow));
+inline bool          _db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.targsrc_curs.Next
-void                 _db_targsrc_curs_Next(_db_targsrc_curs &curs) __attribute__((nothrow));
+inline void          _db_targsrc_curs_Next(_db_targsrc_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.targsrc_curs.Access
-atf_cov::FTargsrc&   _db_targsrc_curs_Access(_db_targsrc_curs &curs) __attribute__((nothrow));
+inline atf_cov::FTargsrc& _db_targsrc_curs_Access(_db_targsrc_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.gitfile_curs.Reset
-void                 _db_gitfile_curs_Reset(_db_gitfile_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
+inline void          _db_gitfile_curs_Reset(_db_gitfile_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.gitfile_curs.ValidQ
-bool                 _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) __attribute__((nothrow));
+inline bool          _db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.gitfile_curs.Next
-void                 _db_gitfile_curs_Next(_db_gitfile_curs &curs) __attribute__((nothrow));
+inline void          _db_gitfile_curs_Next(_db_gitfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.gitfile_curs.Access
-atf_cov::FGitfile&   _db_gitfile_curs_Access(_db_gitfile_curs &curs) __attribute__((nothrow));
+inline atf_cov::FGitfile& _db_gitfile_curs_Access(_db_gitfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.covtarget_curs.Reset
-void                 _db_covtarget_curs_Reset(_db_covtarget_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
+inline void          _db_covtarget_curs_Reset(_db_covtarget_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.covtarget_curs.ValidQ
-bool                 _db_covtarget_curs_ValidQ(_db_covtarget_curs &curs) __attribute__((nothrow));
+inline bool          _db_covtarget_curs_ValidQ(_db_covtarget_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.covtarget_curs.Next
-void                 _db_covtarget_curs_Next(_db_covtarget_curs &curs) __attribute__((nothrow));
+inline void          _db_covtarget_curs_Next(_db_covtarget_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.covtarget_curs.Access
-atf_cov::FCovtarget& _db_covtarget_curs_Access(_db_covtarget_curs &curs) __attribute__((nothrow));
+inline atf_cov::FCovtarget& _db_covtarget_curs_Access(_db_covtarget_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.covfile_curs.Reset
-void                 _db_covfile_curs_Reset(_db_covfile_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
+inline void          _db_covfile_curs_Reset(_db_covfile_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.covfile_curs.ValidQ
-bool                 _db_covfile_curs_ValidQ(_db_covfile_curs &curs) __attribute__((nothrow));
+inline bool          _db_covfile_curs_ValidQ(_db_covfile_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.covfile_curs.Next
-void                 _db_covfile_curs_Next(_db_covfile_curs &curs) __attribute__((nothrow));
+inline void          _db_covfile_curs_Next(_db_covfile_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.covfile_curs.Access
-atf_cov::FCovfile&   _db_covfile_curs_Access(_db_covfile_curs &curs) __attribute__((nothrow));
+inline atf_cov::FCovfile& _db_covfile_curs_Access(_db_covfile_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.tgtcov_curs.Reset
-void                 _db_tgtcov_curs_Reset(_db_tgtcov_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
+inline void          _db_tgtcov_curs_Reset(_db_tgtcov_curs &curs, atf_cov::FDb &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FDb.tgtcov_curs.ValidQ
-bool                 _db_tgtcov_curs_ValidQ(_db_tgtcov_curs &curs) __attribute__((nothrow));
+inline bool          _db_tgtcov_curs_ValidQ(_db_tgtcov_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FDb.tgtcov_curs.Next
-void                 _db_tgtcov_curs_Next(_db_tgtcov_curs &curs) __attribute__((nothrow));
+inline void          _db_tgtcov_curs_Next(_db_tgtcov_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FDb.tgtcov_curs.Access
-atf_cov::FTgtcov&    _db_tgtcov_curs_Access(_db_tgtcov_curs &curs) __attribute__((nothrow));
+inline atf_cov::FTgtcov& _db_tgtcov_curs_Access(_db_tgtcov_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_cov.FDb..Init
 void                 FDb_Init();
@@ -809,7 +827,8 @@ void                 FDb_Uninit() __attribute__((nothrow));
 
 // --- atf_cov.FGitfile
 // create: atf_cov.FDb.gitfile (Lary)
-// global access: ind_gitfile (Thash)
+// global access: gitfile (Lary, by rowid)
+// global access: ind_gitfile (Thash, hash field gitfile)
 // access: atf_cov.FCovline.p_gitfile (Upptr)
 // access: atf_cov.FTargsrc.p_gitfile (Upptr)
 struct FGitfile { // atf_cov.FGitfile
@@ -820,15 +839,25 @@ struct FGitfile { // atf_cov.FGitfile
     u32                   c_covline_n;        // array of pointers
     u32                   c_covline_max;      // capacity of allocated array
     atf_cov::FCovfile*    c_covfile;          // optional pointer
+    // x-reference on atf_cov.FGitfile.c_targsrc prevents copy
+    // reftype Ptrary of atf_cov.FGitfile.c_covline prohibits copy
+    // x-reference on atf_cov.FGitfile.c_covfile prevents copy
+    // func:atf_cov.FGitfile..AssignOp
+    inline atf_cov::FGitfile& operator =(const atf_cov::FGitfile &rhs) = delete;
+    // x-reference on atf_cov.FGitfile.c_targsrc prevents copy
+    // reftype Ptrary of atf_cov.FGitfile.c_covline prohibits copy
+    // x-reference on atf_cov.FGitfile.c_covfile prevents copy
+    // func:atf_cov.FGitfile..CopyCtor
+    inline               FGitfile(const atf_cov::FGitfile &rhs) = delete;
 private:
+    // func:atf_cov.FGitfile..Ctor
+    inline               FGitfile() __attribute__((nothrow));
+    // func:atf_cov.FGitfile..Dtor
+    inline               ~FGitfile() __attribute__((nothrow));
     friend atf_cov::FGitfile&   gitfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_cov::FGitfile*   gitfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 gitfile_RemoveAll() __attribute__((nothrow));
     friend void                 gitfile_RemoveLast() __attribute__((nothrow));
-    FGitfile();
-    ~FGitfile();
-    FGitfile(const FGitfile&){ /*disallow copy constructor */}
-    void operator =(const FGitfile&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -843,20 +872,20 @@ algo::Smallstr50     ext_Get(atf_cov::FGitfile& gitfile) __attribute__((__warn_u
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_cov.FGitfile.c_targsrc.InsertMaybe
-bool                 c_targsrc_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FTargsrc& row) __attribute__((nothrow));
+inline bool          c_targsrc_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FTargsrc& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_cov.FGitfile.c_targsrc.Remove
-void                 c_targsrc_Remove(atf_cov::FGitfile& gitfile, atf_cov::FTargsrc& row) __attribute__((nothrow));
+inline void          c_targsrc_Remove(atf_cov::FGitfile& gitfile, atf_cov::FTargsrc& row) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:atf_cov.FGitfile.c_covline.EmptyQ
-bool                 c_covline_EmptyQ(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
+inline bool          c_covline_EmptyQ(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FGitfile.c_covline.Find
-atf_cov::FCovline*   c_covline_Find(atf_cov::FGitfile& gitfile, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_cov::FCovline* c_covline_Find(atf_cov::FGitfile& gitfile, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:atf_cov.FGitfile.c_covline.Getary
-algo::aryptr<atf_cov::FCovline*> c_covline_Getary(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
+inline algo::aryptr<atf_cov::FCovline*> c_covline_Getary(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:atf_cov.FGitfile.c_covline.Insert
@@ -868,53 +897,54 @@ void                 c_covline_Insert(atf_cov::FGitfile& gitfile, atf_cov::FCovl
 bool                 c_covline_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:atf_cov.FGitfile.c_covline.N
-i32                  c_covline_N(const atf_cov::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_covline_N(const atf_cov::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:atf_cov.FGitfile.c_covline.Remove
 void                 c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:atf_cov.FGitfile.c_covline.RemoveAll
-void                 c_covline_RemoveAll(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
+inline void          c_covline_RemoveAll(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:atf_cov.FGitfile.c_covline.Reserve
 void                 c_covline_Reserve(atf_cov::FGitfile& gitfile, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:atf_cov.FGitfile.c_covline.qFind
-atf_cov::FCovline&   c_covline_qFind(atf_cov::FGitfile& gitfile, u32 idx) __attribute__((nothrow));
+inline atf_cov::FCovline& c_covline_qFind(atf_cov::FGitfile& gitfile, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:atf_cov.FGitfile.c_covline.InAryQ
-bool                 gitfile_c_covline_InAryQ(atf_cov::FCovline& row) __attribute__((nothrow));
+inline bool          gitfile_c_covline_InAryQ(atf_cov::FCovline& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:atf_cov.FGitfile.c_covline.qLast
-atf_cov::FCovline&   c_covline_qLast(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
+inline atf_cov::FCovline& c_covline_qLast(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_cov.FGitfile.c_covfile.InsertMaybe
-bool                 c_covfile_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovfile& row) __attribute__((nothrow));
+inline bool          c_covfile_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovfile& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_cov.FGitfile.c_covfile.Remove
-void                 c_covfile_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovfile& row) __attribute__((nothrow));
+inline void          c_covfile_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovfile& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_cov.FGitfile..Init
-void                 FGitfile_Init(atf_cov::FGitfile& gitfile);
+inline void          FGitfile_Init(atf_cov::FGitfile& gitfile);
 // func:atf_cov.FGitfile.c_covline_curs.Reset
-void                 gitfile_c_covline_curs_Reset(gitfile_c_covline_curs &curs, atf_cov::FGitfile &parent) __attribute__((nothrow));
+inline void          gitfile_c_covline_curs_Reset(gitfile_c_covline_curs &curs, atf_cov::FGitfile &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FGitfile.c_covline_curs.ValidQ
-bool                 gitfile_c_covline_curs_ValidQ(gitfile_c_covline_curs &curs) __attribute__((nothrow));
+inline bool          gitfile_c_covline_curs_ValidQ(gitfile_c_covline_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FGitfile.c_covline_curs.Next
-void                 gitfile_c_covline_curs_Next(gitfile_c_covline_curs &curs) __attribute__((nothrow));
+inline void          gitfile_c_covline_curs_Next(gitfile_c_covline_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FGitfile.c_covline_curs.Access
-atf_cov::FCovline&   gitfile_c_covline_curs_Access(gitfile_c_covline_curs &curs) __attribute__((nothrow));
+inline atf_cov::FCovline& gitfile_c_covline_curs_Access(gitfile_c_covline_curs &curs) __attribute__((nothrow));
 // func:atf_cov.FGitfile..Uninit
 void                 FGitfile_Uninit(atf_cov::FGitfile& gitfile) __attribute__((nothrow));
 
 // --- atf_cov.FTarget
 // create: atf_cov.FDb.target (Lary)
-// global access: ind_target (Thash)
+// global access: target (Lary, by rowid)
+// global access: ind_target (Thash, hash field target)
 // access: atf_cov.FTargsrc.p_target (Upptr)
 struct FTarget { // atf_cov.FTarget
     atf_cov::FTarget*      ind_target_next;   // hash next
@@ -924,15 +954,25 @@ struct FTarget { // atf_cov.FTarget
     u32                    c_targsrc_max;     // capacity of allocated array
     atf_cov::FCovtarget*   c_covtarget;       // optional pointer
     atf_cov::FTgtcov*      c_tgtcov;          // optional pointer
+    // reftype Ptrary of atf_cov.FTarget.c_targsrc prohibits copy
+    // x-reference on atf_cov.FTarget.c_covtarget prevents copy
+    // x-reference on atf_cov.FTarget.c_tgtcov prevents copy
+    // func:atf_cov.FTarget..AssignOp
+    inline atf_cov::FTarget& operator =(const atf_cov::FTarget &rhs) = delete;
+    // reftype Ptrary of atf_cov.FTarget.c_targsrc prohibits copy
+    // x-reference on atf_cov.FTarget.c_covtarget prevents copy
+    // x-reference on atf_cov.FTarget.c_tgtcov prevents copy
+    // func:atf_cov.FTarget..CopyCtor
+    inline               FTarget(const atf_cov::FTarget &rhs) = delete;
 private:
+    // func:atf_cov.FTarget..Ctor
+    inline               FTarget() __attribute__((nothrow));
+    // func:atf_cov.FTarget..Dtor
+    inline               ~FTarget() __attribute__((nothrow));
     friend atf_cov::FTarget&    target_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_cov::FTarget*    target_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 target_RemoveAll() __attribute__((nothrow));
     friend void                 target_RemoveLast() __attribute__((nothrow));
-    FTarget();
-    ~FTarget();
-    FTarget(const FTarget&){ /*disallow copy constructor */}
-    void operator =(const FTarget&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -944,13 +984,13 @@ void                 target_CopyIn(atf_cov::FTarget &row, dev::Target &in) __att
 
 // Return true if index is empty
 // func:atf_cov.FTarget.c_targsrc.EmptyQ
-bool                 c_targsrc_EmptyQ(atf_cov::FTarget& target) __attribute__((nothrow));
+inline bool          c_targsrc_EmptyQ(atf_cov::FTarget& target) __attribute__((nothrow));
 // Look up row by row id. Return NULL if out of range
 // func:atf_cov.FTarget.c_targsrc.Find
-atf_cov::FTargsrc*   c_targsrc_Find(atf_cov::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
+inline atf_cov::FTargsrc* c_targsrc_Find(atf_cov::FTarget& target, u32 t) __attribute__((__warn_unused_result__, nothrow));
 // Return array of pointers
 // func:atf_cov.FTarget.c_targsrc.Getary
-algo::aryptr<atf_cov::FTargsrc*> c_targsrc_Getary(atf_cov::FTarget& target) __attribute__((nothrow));
+inline algo::aryptr<atf_cov::FTargsrc*> c_targsrc_Getary(atf_cov::FTarget& target) __attribute__((nothrow));
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 // func:atf_cov.FTarget.c_targsrc.Insert
@@ -962,60 +1002,61 @@ void                 c_targsrc_Insert(atf_cov::FTarget& target, atf_cov::FTargsr
 bool                 c_targsrc_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTargsrc& row) __attribute__((nothrow));
 // Return number of items in the pointer array
 // func:atf_cov.FTarget.c_targsrc.N
-i32                  c_targsrc_N(const atf_cov::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
+inline i32           c_targsrc_N(const atf_cov::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 // func:atf_cov.FTarget.c_targsrc.Remove
 void                 c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsrc& row) __attribute__((nothrow));
 // Empty the index. (The rows are not deleted)
 // func:atf_cov.FTarget.c_targsrc.RemoveAll
-void                 c_targsrc_RemoveAll(atf_cov::FTarget& target) __attribute__((nothrow));
+inline void          c_targsrc_RemoveAll(atf_cov::FTarget& target) __attribute__((nothrow));
 // Reserve space in index for N more elements;
 // func:atf_cov.FTarget.c_targsrc.Reserve
 void                 c_targsrc_Reserve(atf_cov::FTarget& target, u32 n) __attribute__((nothrow));
 // Return reference without bounds checking
 // func:atf_cov.FTarget.c_targsrc.qFind
-atf_cov::FTargsrc&   c_targsrc_qFind(atf_cov::FTarget& target, u32 idx) __attribute__((nothrow));
+inline atf_cov::FTargsrc& c_targsrc_qFind(atf_cov::FTarget& target, u32 idx) __attribute__((nothrow));
 // True if row is in any ptrary instance
 // func:atf_cov.FTarget.c_targsrc.InAryQ
-bool                 target_c_targsrc_InAryQ(atf_cov::FTargsrc& row) __attribute__((nothrow));
+inline bool          target_c_targsrc_InAryQ(atf_cov::FTargsrc& row) __attribute__((nothrow));
 // Reference to last element without bounds checking
 // func:atf_cov.FTarget.c_targsrc.qLast
-atf_cov::FTargsrc&   c_targsrc_qLast(atf_cov::FTarget& target) __attribute__((nothrow));
+inline atf_cov::FTargsrc& c_targsrc_qLast(atf_cov::FTarget& target) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_cov.FTarget.c_covtarget.InsertMaybe
-bool                 c_covtarget_InsertMaybe(atf_cov::FTarget& target, atf_cov::FCovtarget& row) __attribute__((nothrow));
+inline bool          c_covtarget_InsertMaybe(atf_cov::FTarget& target, atf_cov::FCovtarget& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_cov.FTarget.c_covtarget.Remove
-void                 c_covtarget_Remove(atf_cov::FTarget& target, atf_cov::FCovtarget& row) __attribute__((nothrow));
+inline void          c_covtarget_Remove(atf_cov::FTarget& target, atf_cov::FCovtarget& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:atf_cov.FTarget.c_tgtcov.InsertMaybe
-bool                 c_tgtcov_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTgtcov& row) __attribute__((nothrow));
+inline bool          c_tgtcov_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTgtcov& row) __attribute__((nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_cov.FTarget.c_tgtcov.Remove
-void                 c_tgtcov_Remove(atf_cov::FTarget& target, atf_cov::FTgtcov& row) __attribute__((nothrow));
+inline void          c_tgtcov_Remove(atf_cov::FTarget& target, atf_cov::FTgtcov& row) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:atf_cov.FTarget..Init
-void                 FTarget_Init(atf_cov::FTarget& target);
+inline void          FTarget_Init(atf_cov::FTarget& target);
 // func:atf_cov.FTarget.c_targsrc_curs.Reset
-void                 target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, atf_cov::FTarget &parent) __attribute__((nothrow));
+inline void          target_c_targsrc_curs_Reset(target_c_targsrc_curs &curs, atf_cov::FTarget &parent) __attribute__((nothrow));
 // cursor points to valid item
 // func:atf_cov.FTarget.c_targsrc_curs.ValidQ
-bool                 target_c_targsrc_curs_ValidQ(target_c_targsrc_curs &curs) __attribute__((nothrow));
+inline bool          target_c_targsrc_curs_ValidQ(target_c_targsrc_curs &curs) __attribute__((nothrow));
 // proceed to next item
 // func:atf_cov.FTarget.c_targsrc_curs.Next
-void                 target_c_targsrc_curs_Next(target_c_targsrc_curs &curs) __attribute__((nothrow));
+inline void          target_c_targsrc_curs_Next(target_c_targsrc_curs &curs) __attribute__((nothrow));
 // item access
 // func:atf_cov.FTarget.c_targsrc_curs.Access
-atf_cov::FTargsrc&   target_c_targsrc_curs_Access(target_c_targsrc_curs &curs) __attribute__((nothrow));
+inline atf_cov::FTargsrc& target_c_targsrc_curs_Access(target_c_targsrc_curs &curs) __attribute__((nothrow));
 // func:atf_cov.FTarget..Uninit
 void                 FTarget_Uninit(atf_cov::FTarget& target) __attribute__((nothrow));
 
 // --- atf_cov.FTargsrc
 // create: atf_cov.FDb.targsrc (Lary)
-// global access: ind_targsrc (Thash)
+// global access: targsrc (Lary, by rowid)
+// global access: ind_targsrc (Thash, hash field targsrc)
 // access: atf_cov.FGitfile.c_targsrc (Ptr)
 // access: atf_cov.FTarget.c_targsrc (Ptrary)
 struct FTargsrc { // atf_cov.FTargsrc
@@ -1025,15 +1066,23 @@ struct FTargsrc { // atf_cov.FTargsrc
     atf_cov::FGitfile*   p_gitfile;                 // reference to parent row
     atf_cov::FTarget*    p_target;                  // reference to parent row
     bool                 target_c_targsrc_in_ary;   //   false  membership flag
+    // x-reference on atf_cov.FTargsrc.p_gitfile prevents copy
+    // x-reference on atf_cov.FTargsrc.p_target prevents copy
+    // func:atf_cov.FTargsrc..AssignOp
+    inline atf_cov::FTargsrc& operator =(const atf_cov::FTargsrc &rhs) = delete;
+    // x-reference on atf_cov.FTargsrc.p_gitfile prevents copy
+    // x-reference on atf_cov.FTargsrc.p_target prevents copy
+    // func:atf_cov.FTargsrc..CopyCtor
+    inline               FTargsrc(const atf_cov::FTargsrc &rhs) = delete;
 private:
+    // func:atf_cov.FTargsrc..Ctor
+    inline               FTargsrc() __attribute__((nothrow));
+    // func:atf_cov.FTargsrc..Dtor
+    inline               ~FTargsrc() __attribute__((nothrow));
     friend atf_cov::FTargsrc&   targsrc_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_cov::FTargsrc*   targsrc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 targsrc_RemoveAll() __attribute__((nothrow));
     friend void                 targsrc_RemoveLast() __attribute__((nothrow));
-    FTargsrc();
-    ~FTargsrc();
-    FTargsrc(const FTargsrc&){ /*disallow copy constructor */}
-    void operator =(const FTargsrc&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -1054,13 +1103,14 @@ algo::Smallstr10     ext_Get(atf_cov::FTargsrc& targsrc) __attribute__((__warn_u
 
 // Set all fields to initial values.
 // func:atf_cov.FTargsrc..Init
-void                 FTargsrc_Init(atf_cov::FTargsrc& targsrc);
+inline void          FTargsrc_Init(atf_cov::FTargsrc& targsrc);
 // func:atf_cov.FTargsrc..Uninit
 void                 FTargsrc_Uninit(atf_cov::FTargsrc& targsrc) __attribute__((nothrow));
 
 // --- atf_cov.FTgtcov
 // create: atf_cov.FDb.tgtcov (Lary)
-// global access: ind_tgtcov (Thash)
+// global access: tgtcov (Lary, by rowid)
+// global access: ind_tgtcov (Thash, hash field target)
 // access: atf_cov.FTarget.c_tgtcov (Ptr)
 struct FTgtcov { // atf_cov.FTgtcov
     atf_cov::FTgtcov*   ind_tgtcov_next;   // hash next
@@ -1068,15 +1118,19 @@ struct FTgtcov { // atf_cov.FTgtcov
     algo::U32Dec2       cov_min;           // Minimal coverage limit
     algo::U32Dec2       maxerr;            // Tolerable error
     algo::Comment       comment;           //
+    // func:atf_cov.FTgtcov..AssignOp
+    inline atf_cov::FTgtcov& operator =(const atf_cov::FTgtcov &rhs) = delete;
+    // func:atf_cov.FTgtcov..CopyCtor
+    inline               FTgtcov(const atf_cov::FTgtcov &rhs) = delete;
 private:
+    // func:atf_cov.FTgtcov..Ctor
+    inline               FTgtcov() __attribute__((nothrow));
+    // func:atf_cov.FTgtcov..Dtor
+    inline               ~FTgtcov() __attribute__((nothrow));
     friend atf_cov::FTgtcov&    tgtcov_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend atf_cov::FTgtcov*    tgtcov_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 tgtcov_RemoveAll() __attribute__((nothrow));
     friend void                 tgtcov_RemoveLast() __attribute__((nothrow));
-    FTgtcov();
-    ~FTgtcov();
-    FTgtcov(const FTgtcov&){ /*disallow copy constructor */}
-    void operator =(const FTgtcov&){ /*disallow direct assignment */}
 };
 
 // Copy fields out of row
@@ -1088,7 +1142,7 @@ void                 tgtcov_CopyIn(atf_cov::FTgtcov &row, dev::Tgtcov &in) __att
 
 // Set all fields to initial values.
 // func:atf_cov.FTgtcov..Init
-void                 FTgtcov_Init(atf_cov::FTgtcov& tgtcov);
+inline void          FTgtcov_Init(atf_cov::FTgtcov& tgtcov);
 // func:atf_cov.FTgtcov..Uninit
 void                 FTgtcov_Uninit(atf_cov::FTgtcov& tgtcov) __attribute__((nothrow));
 
@@ -1096,19 +1150,23 @@ void                 FTgtcov_Uninit(atf_cov::FTgtcov& tgtcov) __attribute__((not
 #pragma pack(push,1)
 struct FieldId { // atf_cov.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator atf_cov_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(atf_cov_FieldIdEnum arg);
-    FieldId();
+    // func:atf_cov.FieldId.value.Cast
+    inline               operator atf_cov_FieldIdEnum() const __attribute__((nothrow));
+    // func:atf_cov.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:atf_cov.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:atf_cov.FieldId..EnumCtor
+    inline               FieldId(atf_cov_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:atf_cov.FieldId.value.GetEnum
-atf_cov_FieldIdEnum  value_GetEnum(const atf_cov::FieldId& parent) __attribute__((nothrow));
+inline atf_cov_FieldIdEnum value_GetEnum(const atf_cov::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:atf_cov.FieldId.value.SetEnum
-void                 value_SetEnum(atf_cov::FieldId& parent, atf_cov_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(atf_cov::FieldId& parent, atf_cov_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:atf_cov.FieldId.value.ToCstr
@@ -1136,7 +1194,7 @@ bool                 value_ReadStrptrMaybe(atf_cov::FieldId& parent, algo::strpt
 bool                 FieldId_ReadStrptrMaybe(atf_cov::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_cov.FieldId..Init
-void                 FieldId_Init(atf_cov::FieldId& parent);
+inline void          FieldId_Init(atf_cov::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_cov.FieldId.String  printfmt:Raw
 // func:atf_cov.FieldId..Print
@@ -1145,22 +1203,33 @@ void                 FieldId_Print(atf_cov::FieldId& row, algo::cstring& str) __
 // --- atf_cov.Phase
 struct Phase { // atf_cov.Phase
     u8   value;   //   0
-    bool operator ==(const atf_cov::Phase &rhs) const;
-    bool operator !=(const atf_cov::Phase &rhs) const;
-    bool operator <(const atf_cov::Phase &rhs) const;
-    bool operator >(const atf_cov::Phase &rhs) const;
-    bool operator <=(const atf_cov::Phase &rhs) const;
-    bool operator >=(const atf_cov::Phase &rhs) const;
-    bool operator ==(atf_cov_Phase_value_Enum rhs) const;
-    Phase();
+    // func:atf_cov.Phase..EqOp
+    inline bool          operator ==(const atf_cov::Phase &rhs) const __attribute__((nothrow));
+    // func:atf_cov.Phase..NeOp
+    inline bool          operator !=(const atf_cov::Phase &rhs) const __attribute__((nothrow));
+    // func:atf_cov.Phase..LtOp
+    inline bool          operator <(const atf_cov::Phase &rhs) const __attribute__((nothrow));
+    // func:atf_cov.Phase..GtOp
+    inline bool          operator >(const atf_cov::Phase &rhs) const __attribute__((nothrow));
+    // func:atf_cov.Phase..LeOp
+    inline bool          operator <=(const atf_cov::Phase &rhs) const __attribute__((nothrow));
+    // func:atf_cov.Phase..GeOp
+    inline bool          operator >=(const atf_cov::Phase &rhs) const __attribute__((nothrow));
+    // define enum comparison operator to avoid ambiguity
+    // func:atf_cov.Phase..EqEnum
+    inline bool          operator ==(atf_cov_Phase_value_Enum rhs) const __attribute__((nothrow));
+    // func:atf_cov.Phase..Ctor
+    inline               Phase() __attribute__((nothrow));
+    // func:atf_cov.Phase..EnumCtor
+    inline               Phase(atf_cov_Phase_value_Enum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:atf_cov.Phase.value.GetEnum
-atf_cov_Phase_value_Enum value_GetEnum(const atf_cov::Phase& parent) __attribute__((nothrow));
+inline atf_cov_Phase_value_Enum value_GetEnum(const atf_cov::Phase& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:atf_cov.Phase.value.SetEnum
-void                 value_SetEnum(atf_cov::Phase& parent, atf_cov_Phase_value_Enum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(atf_cov::Phase& parent, atf_cov_Phase_value_Enum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:atf_cov.Phase.value.ToCstr
@@ -1187,52 +1256,53 @@ bool                 value_ReadStrptrMaybe(atf_cov::Phase& parent, algo::strptr 
 // func:atf_cov.Phase..ReadStrptrMaybe
 bool                 Phase_ReadStrptrMaybe(atf_cov::Phase &parent, algo::strptr in_str) __attribute__((nothrow));
 // func:atf_cov.Phase..Lt
-bool                 Phase_Lt(atf_cov::Phase lhs, atf_cov::Phase rhs) __attribute__((nothrow));
+inline bool          Phase_Lt(atf_cov::Phase lhs, atf_cov::Phase rhs) __attribute__((nothrow));
 // func:atf_cov.Phase..Cmp
-i32                  Phase_Cmp(atf_cov::Phase lhs, atf_cov::Phase rhs) __attribute__((nothrow));
+inline i32           Phase_Cmp(atf_cov::Phase lhs, atf_cov::Phase rhs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_cov.Phase..Init
-void                 Phase_Init(atf_cov::Phase& parent);
+inline void          Phase_Init(atf_cov::Phase& parent);
 // Attempt to make LHS bigger. Return true if it was changed
 // func:atf_cov.Phase..UpdateMax
-bool                 Phase_UpdateMax(atf_cov::Phase &lhs, atf_cov::Phase rhs) __attribute__((nothrow));
+inline bool          Phase_UpdateMax(atf_cov::Phase &lhs, atf_cov::Phase rhs) __attribute__((nothrow));
 // Return the lesser of two values
 // func:atf_cov.Phase..Min
-atf_cov::Phase       Phase_Min(atf_cov::Phase lhs, atf_cov::Phase rhs) __attribute__((nothrow));
+inline atf_cov::Phase Phase_Min(atf_cov::Phase lhs, atf_cov::Phase rhs) __attribute__((nothrow));
 // Attempt to make LHS smaller. Return true if it was changed
 // func:atf_cov.Phase..UpdateMin
-bool                 Phase_UpdateMin(atf_cov::Phase &lhs, atf_cov::Phase rhs) __attribute__((nothrow));
+inline bool          Phase_UpdateMin(atf_cov::Phase &lhs, atf_cov::Phase rhs) __attribute__((nothrow));
 // Return the greater of two values
 // func:atf_cov.Phase..Max
-atf_cov::Phase       Phase_Max(atf_cov::Phase lhs, atf_cov::Phase rhs) __attribute__((nothrow));
+inline atf_cov::Phase Phase_Max(atf_cov::Phase lhs, atf_cov::Phase rhs) __attribute__((nothrow));
 // func:atf_cov.Phase..Eq
-bool                 Phase_Eq(atf_cov::Phase lhs, atf_cov::Phase rhs) __attribute__((nothrow));
+inline bool          Phase_Eq(atf_cov::Phase lhs, atf_cov::Phase rhs) __attribute__((nothrow));
 // Set value. Return true if new value is different from old value.
 // func:atf_cov.Phase..Update
-bool                 Phase_Update(atf_cov::Phase &lhs, atf_cov::Phase rhs) __attribute__((nothrow));
+inline bool          Phase_Update(atf_cov::Phase &lhs, atf_cov::Phase rhs) __attribute__((nothrow));
 // print string representation of ROW to string STR
 // cfmt:atf_cov.Phase.String  printfmt:Raw
 // func:atf_cov.Phase..Print
 void                 Phase_Print(atf_cov::Phase row, algo::cstring& str) __attribute__((nothrow));
-// define enum comparison operator to avoid ambiguity
-// func:atf_cov.Phase..EqEnum
-bool                 Phase_EqEnum(atf_cov::Phase lhs, atf_cov_Phase_value_Enum rhs) __attribute__((nothrow));
 
 // --- atf_cov.TableId
 struct TableId { // atf_cov.TableId: Index of table in this namespace
     i32   value;   //   -1  index of table
-    inline operator atf_cov_TableIdEnum() const;
-    explicit TableId(i32                            in_value);
-    TableId(atf_cov_TableIdEnum arg);
-    TableId();
+    // func:atf_cov.TableId.value.Cast
+    inline               operator atf_cov_TableIdEnum() const __attribute__((nothrow));
+    // func:atf_cov.TableId..Ctor
+    inline               TableId() __attribute__((nothrow));
+    // func:atf_cov.TableId..FieldwiseCtor
+    explicit inline               TableId(i32 in_value) __attribute__((nothrow));
+    // func:atf_cov.TableId..EnumCtor
+    inline               TableId(atf_cov_TableIdEnum arg) __attribute__((nothrow));
 };
 
 // Get value of field as enum type
 // func:atf_cov.TableId.value.GetEnum
-atf_cov_TableIdEnum  value_GetEnum(const atf_cov::TableId& parent) __attribute__((nothrow));
+inline atf_cov_TableIdEnum value_GetEnum(const atf_cov::TableId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:atf_cov.TableId.value.SetEnum
-void                 value_SetEnum(atf_cov::TableId& parent, atf_cov_TableIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(atf_cov::TableId& parent, atf_cov_TableIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:atf_cov.TableId.value.ToCstr
@@ -1260,7 +1330,7 @@ bool                 value_ReadStrptrMaybe(atf_cov::TableId& parent, algo::strpt
 bool                 TableId_ReadStrptrMaybe(atf_cov::TableId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_cov.TableId..Init
-void                 TableId_Init(atf_cov::TableId& parent);
+inline void          TableId_Init(atf_cov::TableId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_cov.TableId.String  printfmt:Raw
 // func:atf_cov.TableId..Print

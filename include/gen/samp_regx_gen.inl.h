@@ -25,18 +25,15 @@
 #pragma once
 #include "include/gen/command_gen.inl.h"
 //#pragma endinclude
-inline samp_regx::trace::trace() {
+
+// --- samp_regx.trace..Ctor
+inline  samp_regx::trace::trace() {
 }
 
-inline samp_regx::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
+// --- samp_regx.FDb..Uninit
+inline void samp_regx::FDb_Uninit() {
+    samp_regx::FDb &row = _db; (void)row;
 }
-inline samp_regx::FieldId::FieldId(samp_regx_FieldIdEnum arg) { this->value = i32(arg); }
-inline samp_regx::FieldId::FieldId() {
-    samp_regx::FieldId_Init(*this);
-}
-
 
 // --- samp_regx.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -51,7 +48,7 @@ inline void samp_regx::value_SetEnum(samp_regx::FieldId& parent, samp_regx_Field
 }
 
 // --- samp_regx.FieldId.value.Cast
-inline samp_regx::FieldId::operator samp_regx_FieldIdEnum () const {
+inline  samp_regx::FieldId::operator samp_regx_FieldIdEnum() const {
     return samp_regx_FieldIdEnum((*this).value);
 }
 
@@ -59,6 +56,22 @@ inline samp_regx::FieldId::operator samp_regx_FieldIdEnum () const {
 // Set all fields to initial values.
 inline void samp_regx::FieldId_Init(samp_regx::FieldId& parent) {
     parent.value = i32(-1);
+}
+
+// --- samp_regx.FieldId..Ctor
+inline  samp_regx::FieldId::FieldId() {
+    samp_regx::FieldId_Init(*this);
+}
+
+// --- samp_regx.FieldId..FieldwiseCtor
+inline  samp_regx::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- samp_regx.FieldId..EnumCtor
+inline  samp_regx::FieldId::FieldId(samp_regx_FieldIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const samp_regx::trace &row) {// cfmt:samp_regx.trace.String

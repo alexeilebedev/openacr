@@ -37,7 +37,7 @@ namespace amc { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/amc/alias.cpp
+    // cpp/amc/alias.cpp -- Alias field type
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Alias();
@@ -46,7 +46,7 @@ namespace amc { // update-hdr
     // void tfunc_Alias_ReadStrptrMaybe();
 
     // -------------------------------------------------------------------
-    // cpp/amc/avl.cpp
+    // cpp/amc/avl.cpp -- AVL tree
     //
 
     // Initialize the structs etc.
@@ -157,7 +157,7 @@ namespace amc { // update-hdr
     // void tfunc_Atree_curs();
 
     // -------------------------------------------------------------------
-    // cpp/amc/base.cpp
+    // cpp/amc/base.cpp -- Base reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Base();
@@ -201,7 +201,7 @@ namespace amc { // update-hdr
     // void tfunc_Bheap_curs();
 
     // -------------------------------------------------------------------
-    // cpp/amc/bitfld.cpp
+    // cpp/amc/bitfld.cpp -- Bit fields
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Bitfld();
@@ -210,7 +210,7 @@ namespace amc { // update-hdr
     // void tfunc_Bitfld_Set();
 
     // -------------------------------------------------------------------
-    // cpp/amc/bitset.cpp
+    // cpp/amc/bitset.cpp -- Bit sets
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Bitset();
@@ -236,7 +236,7 @@ namespace amc { // update-hdr
     // void tfunc_Bitset_bitcurs();
 
     // -------------------------------------------------------------------
-    // cpp/amc/blkpool.cpp
+    // cpp/amc/blkpool.cpp -- Block pool
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Blkpool();
@@ -247,7 +247,7 @@ namespace amc { // update-hdr
     // void tfunc_Blkpool_Init();
 
     // -------------------------------------------------------------------
-    // cpp/amc/cget.cpp
+    // cpp/amc/cget.cpp -- Getters / Setters
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_cget();
@@ -263,13 +263,13 @@ namespace amc { // update-hdr
     // void tfunc_Charset_Match();
 
     // -------------------------------------------------------------------
-    // cpp/amc/checkxref.cpp
+    // cpp/amc/checkxref.cpp -- X-reference checker
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_check_xref();
 
     // -------------------------------------------------------------------
-    // cpp/amc/cmp.cpp
+    // cpp/amc/cmp.cpp -- Comparison functions
     //
 
     // Field comparison functions
@@ -286,21 +286,12 @@ namespace amc { // update-hdr
     // void tfunc_Cmp_Lt();
 
     // -------------------------------------------------------------------
-    // cpp/amc/concat.cpp
+    // cpp/amc/concat.cpp -- Pkey constructor
     //
     void GenerateSetForCoveredTrees(amc::FField& sourceField, u64 filledRange, int lastIndex);
 
     // -------------------------------------------------------------------
-    // cpp/amc/copypriv.cpp
-    //
-
-    // Calculate value of copy_priv and return it.
-    // This function can only be called once; addition of new fields after calling
-    // this function is not supported.
-    bool CopyPrivQ(amc::FCtype &ctype);
-
-    // -------------------------------------------------------------------
-    // cpp/amc/count.cpp
+    // cpp/amc/count.cpp -- Count reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Count();
@@ -309,7 +300,7 @@ namespace amc { // update-hdr
     // void tfunc_Count_N();
 
     // -------------------------------------------------------------------
-    // cpp/amc/cppfunc.cpp
+    // cpp/amc/cppfunc.cpp -- Cppfunc reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Cppfunc();
@@ -322,7 +313,19 @@ namespace amc { // update-hdr
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Ctype();
+
+    // Generate de-initialization function:
+    // - cascdel fields
+    // - remove record from all indexes
+    // - user-defined cleanup for all fields
+    // - un-init fields (frees memory)
+    // All fields are scanned in reverse order
     // void tfunc_Ctype_Uninit();
+
+    // Introduce local variable that points to the parent side of XREF
+    // by evaluating the path provided by xref + xreffld + xrefvia records.
+    bool ComputeAccess(algo_lib::Replscope &R, amc::FCtype &ctype, amc::FXref &xref, amc::FFunc &func, amc::FGenXref &frame, bool check_null);
+    //     (user-implemented function, prototype is in amc-generated header)
     // void tfunc_Ctype_XrefMaybe();
     // void tfunc_Ctype_Unref();
     // void tfunc_Ctype_Hash();
@@ -353,7 +356,6 @@ namespace amc { // update-hdr
     // - if no custom Eq function is defined on a field, but the field's type has an Eq function, it is used
     // - for all other fields, c++ operator "==" is used. it better be defined
     // void tfunc_Ctype_Eq();
-    // void tfunc_Ctype_EqStrptr();
     // void tfunc_Ctype_ToCmdline();
 
     // Used with command lines
@@ -364,9 +366,30 @@ namespace amc { // update-hdr
     // void tfunc_Ctype_GetAnon();
     // void tfunc_Ctype_GetMsgLength();
     // void tfunc_Ctype_GetMsgMemptr();
+    // void tclass_Ctype2();
+
+    // Generate constructor.
+    // void tfunc_Ctype2_Ctor();
+    // void tfunc_Ctype2_FieldwiseCtor();
+    // void tfunc_Ctype2_EnumCtor();
+
+    // Generator copy constructor or assignment operator
+    // (the two functions are very similar)
+    void GenCopyCtorOrAssignOp(bool copyctor);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void tfunc_Ctype2_CopyCtor();
+    // void tfunc_Ctype_AssignOp();
+    // void tfunc_Ctype2_Dtor();
+    // void tfunc_Ctype_EqOp();
+    // void tfunc_Ctype_NeOp();
+    // void tfunc_Ctype_LtOp();
+    // void tfunc_Ctype_GtOp();
+    // void tfunc_Ctype_LeOp();
+    // void tfunc_Ctype_GeOp();
+    // void tfunc_Ctype_EqOpAryptr();
 
     // -------------------------------------------------------------------
-    // cpp/amc/delptr.cpp
+    // cpp/amc/delptr.cpp -- Delptr reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Delptr();
@@ -383,7 +406,7 @@ namespace amc { // update-hdr
     void Field_UpdateDflt(amc::FField &field);
 
     // -------------------------------------------------------------------
-    // cpp/amc/disp/call.cpp
+    // cpp/amc/disp/call.cpp -- Dispatch call
     //
 
     // Generator for call-type dispatch (where we invoke a user function
@@ -391,7 +414,7 @@ namespace amc { // update-hdr
     void Disp_Call(amc::FDispatch& dispatch);
 
     // -------------------------------------------------------------------
-    // cpp/amc/disp/casetype.cpp
+    // cpp/amc/disp/casetype.cpp -- Dispatch casetype generator
     //
 
     // Determine common header for all messages in the dispatch
@@ -411,7 +434,7 @@ namespace amc { // update-hdr
     void Filter_Gen(amc::FNs &ns);
 
     // -------------------------------------------------------------------
-    // cpp/amc/disp/main.cpp -- Dispatch
+    // cpp/amc/disp/main.cpp -- Dispatch main
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_ns_dispatch();
@@ -422,7 +445,7 @@ namespace amc { // update-hdr
     // void gen_dispenum();
 
     // -------------------------------------------------------------------
-    // cpp/amc/disp/msg.cpp
+    // cpp/amc/disp/msg.cpp -- Dispatch on message
     //
 
     // Create a new dispatch collecting all messages
@@ -432,14 +455,14 @@ namespace amc { // update-hdr
     void Disp_CreateFromMsg();
 
     // -------------------------------------------------------------------
-    // cpp/amc/disp/print.cpp
+    // cpp/amc/disp/print.cpp -- Dispatch print
     //
 
     // Generate Dispatch_Print function
     void Disp_Print(amc::FDispatch &disp);
 
     // -------------------------------------------------------------------
-    // cpp/amc/disp/read.cpp
+    // cpp/amc/disp/read.cpp -- Dispatch read from string
     //
     amc::FCfmt *FindStringRead(amc::FCtype &ctype);
 
@@ -447,7 +470,7 @@ namespace amc { // update-hdr
     void Disp_Read(amc::FDispatch &disp);
 
     // -------------------------------------------------------------------
-    // cpp/amc/enum.cpp
+    // cpp/amc/enum.cpp -- Enumerated types
     //
 
     // emit constants
@@ -457,7 +480,7 @@ namespace amc { // update-hdr
     tempstr Enumtype(amc::FField &field);
 
     // -------------------------------------------------------------------
-    // cpp/amc/exec.cpp -- reftype Exec
+    // cpp/amc/exec.cpp -- Exec reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Exec();
@@ -475,7 +498,7 @@ namespace amc { // update-hdr
     void NewFieldExec();
 
     // -------------------------------------------------------------------
-    // cpp/amc/fast.cpp
+    // cpp/amc/fast.cpp -- Fixfast generator
     //
 
     // Prepare FAST data
@@ -508,7 +531,7 @@ namespace amc { // update-hdr
     // void tfunc_Fbuf_N();
     // void tfunc_Fbuf_Refill();
     // void tfunc_Fbuf_RemoveAll();
-    // void tfunc_Fbuf_Scanmsg();
+    // void tfunc_Fbuf_ScanMsg();
     // void tfunc_Fbuf_Shift();
     // void tfunc_Fbuf_SkipBytes();
     // void tfunc_Fbuf_SkipMsg();
@@ -522,14 +545,14 @@ namespace amc { // update-hdr
     // void tfunc_Fbuf_Uninit();
 
     // -------------------------------------------------------------------
-    // cpp/amc/fcast.cpp
+    // cpp/amc/fcast.cpp -- Implicit casts
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Fcast();
     // void tfunc_Fcast_Cast();
 
     // -------------------------------------------------------------------
-    // cpp/amc/fcmap.cpp -- Fcmap generation
+    // cpp/amc/fcmap.cpp -- Fcmap generation (enum<->enum conversion)
     //
 
     // Get the conversion function if it exists
@@ -554,7 +577,7 @@ namespace amc { // update-hdr
     // void tfunc_Fconst_ReadStrptrMaybe();
 
     // -------------------------------------------------------------------
-    // cpp/amc/fdec.cpp
+    // cpp/amc/fdec.cpp -- Decimal types
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Dec();
@@ -567,7 +590,7 @@ namespace amc { // update-hdr
     // void tfunc_Dec_Print();
 
     // -------------------------------------------------------------------
-    // cpp/amc/field.cpp
+    // cpp/amc/field.cpp -- Generic field genrator
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Field();
@@ -653,7 +676,7 @@ namespace amc { // update-hdr
     amc::FFunc &CreateInlineFunc(algo::strptr name);
 
     // -------------------------------------------------------------------
-    // cpp/amc/fwddecl.cpp
+    // cpp/amc/fwddecl.cpp -- Forward declarations
     //
 
     // Return TRUE if namespace NS already contains a forward declaration
@@ -672,7 +695,7 @@ namespace amc { // update-hdr
     // void gen_ns_fwddecl();
 
     // -------------------------------------------------------------------
-    // cpp/amc/gen.cpp
+    // cpp/amc/gen.cpp -- AMC Generators (amcdb.gen)
     //
     amc::FField *InsField(const dmmeta::Field &field);
 
@@ -783,7 +806,7 @@ namespace amc { // update-hdr
     // void gen_sortssimfile();
 
     // -------------------------------------------------------------------
-    // cpp/amc/global.cpp
+    // cpp/amc/global.cpp -- Global (FDb)
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Global();
@@ -838,7 +861,7 @@ namespace amc { // update-hdr
     // void gen_ns_gsymbol();
 
     // -------------------------------------------------------------------
-    // cpp/amc/hook.cpp
+    // cpp/amc/hook.cpp -- Hook (function pointer)
     //
 
     // Determine if hook is static (i.e. parent ctype uses gstatic
@@ -862,7 +885,7 @@ namespace amc { // update-hdr
     bool InlaryQ(amc::FHook& hook);
 
     // -------------------------------------------------------------------
-    // cpp/amc/include.cpp
+    // cpp/amc/include.cpp -- Manage includes for generated files
     //
 
     // Emit #pragma once for all headers and inline headers
@@ -892,7 +915,7 @@ namespace amc { // update-hdr
     bool HdrIncludesQ(amc::FNs &ns, amc::FNs &other);
 
     // -------------------------------------------------------------------
-    // cpp/amc/inlary.cpp
+    // cpp/amc/inlary.cpp -- Inline array
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Inlary();
@@ -964,7 +987,7 @@ namespace amc { // update-hdr
     // void tfunc_Io_LoadStatic();
 
     // -------------------------------------------------------------------
-    // cpp/amc/lary.cpp
+    // cpp/amc/lary.cpp -- Level array with permanent pointers
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Lary();
@@ -1018,7 +1041,7 @@ namespace amc { // update-hdr
     // void tfunc_Llist_delcurs();
 
     // -------------------------------------------------------------------
-    // cpp/amc/lpool.cpp
+    // cpp/amc/lpool.cpp -- Variable-length free pool
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Lpool();
@@ -1108,6 +1131,10 @@ namespace amc { // update-hdr
     tempstr VarStringToInteger(strptr name, i32 len);
     void GetMinMax(amc::FCtype& _ctype, u64 &min, u64 &max, bool &issigned);
     bool CheapCopyQ(amc::FField &field);
+    bool HasFcast(amc::FCtype& ctype);
+
+    // Determine if ctype should have a private constructor
+    bool CopyPrivQ(amc::FCtype &ctype);
 
     // Return c++ type for rowid of FCtype
     // By default this is a u64, but if the struct has a field marked rowid,
@@ -1251,7 +1278,7 @@ namespace amc { // update-hdr
     void Main();
 
     // -------------------------------------------------------------------
-    // cpp/amc/malloc.cpp
+    // cpp/amc/malloc.cpp -- Malloc allocator
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Malloc();
@@ -1268,7 +1295,7 @@ namespace amc { // update-hdr
     // void gen_msgcurs();
 
     // -------------------------------------------------------------------
-    // cpp/amc/nstype.cpp
+    // cpp/amc/nstype.cpp -- Namespace types
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_ssimdb();
@@ -1287,7 +1314,7 @@ namespace amc { // update-hdr
     // void gen_parsenum();
 
     // -------------------------------------------------------------------
-    // cpp/amc/opt.cpp
+    // cpp/amc/opt.cpp -- Opt reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Opt();
@@ -1297,7 +1324,7 @@ namespace amc { // update-hdr
     // void tfunc_Opt_ReadStrptrMaybe();
 
     // -------------------------------------------------------------------
-    // cpp/amc/outfile.cpp
+    // cpp/amc/outfile.cpp -- Ouptut functions
     //
 
     // Write output file to disk
@@ -1310,7 +1337,7 @@ namespace amc { // update-hdr
     amc::FOutfile &outfile_Create(strptr filename);
 
     // -------------------------------------------------------------------
-    // cpp/amc/pmask.cpp
+    // cpp/amc/pmask.cpp -- Presence masks
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void gen_pmask();
@@ -1347,7 +1374,7 @@ namespace amc { // update-hdr
     void GenPnew(amc::FNs& ns, amc::FPnew& pnew, amc::FCtype& ctype);
 
     // -------------------------------------------------------------------
-    // cpp/amc/pool.cpp
+    // cpp/amc/pool.cpp -- Generic pool functions
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Pool();
@@ -1390,14 +1417,14 @@ namespace amc { // update-hdr
     void GenPrint(amc::FCtype &parent, amc::FCfmt &cfmt);
 
     // -------------------------------------------------------------------
-    // cpp/amc/protocol.cpp
+    // cpp/amc/protocol.cpp -- Protocol functions
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Ns();
     // void tfunc_Ns_StaticCheck();
 
     // -------------------------------------------------------------------
-    // cpp/amc/ptr.cpp
+    // cpp/amc/ptr.cpp -- Ptr reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Ptr();
@@ -1407,7 +1434,7 @@ namespace amc { // update-hdr
     // void tfunc_Ptr_Cascdel();
 
     // -------------------------------------------------------------------
-    // cpp/amc/ptrary.cpp
+    // cpp/amc/ptrary.cpp -- Ptrary reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Ptrary();
@@ -1433,7 +1460,7 @@ namespace amc { // update-hdr
     // void tfunc_Ptrary_oncecurs();
 
     // -------------------------------------------------------------------
-    // cpp/amc/query.cpp
+    // cpp/amc/query.cpp -- Query mode
     //
     void Main_Querymode();
 
@@ -1463,7 +1490,7 @@ namespace amc { // update-hdr
     // void tfunc_Regx_Init();
 
     // -------------------------------------------------------------------
-    // cpp/amc/sbrk.cpp
+    // cpp/amc/sbrk.cpp -- Sbrk allocator
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Sbrk();
@@ -1472,7 +1499,7 @@ namespace amc { // update-hdr
     // void tfunc_Sbrk_Init();
 
     // -------------------------------------------------------------------
-    // cpp/amc/signature.cpp
+    // cpp/amc/signature.cpp -- Signature calculation for protocols
     //
 
     // Recursive function to compute all ctype dependencies
@@ -1539,16 +1566,12 @@ namespace amc { // update-hdr
     // from the appropriate end.
     // void tfunc_Smallstr_SetStrptr();
 
-    // Copy from same type
-    // void tfunc_Smallstr_Set();
-
     // Assignment operator from strptr
+    // Generated only if the containing struct has only one field
     // void tfunc_Smallstr_AssignStrptr();
 
-    // Construct from same type
-    // void tfunc_Smallstr_Ctor();
-
     // Construct from strptr
+    // Generated only if the containing struct has only one field
     // void tfunc_Smallstr_CtorStrptr();
 
     // -------------------------------------------------------------------
@@ -1568,7 +1591,7 @@ namespace amc { // update-hdr
     // void tfunc_Sort_QuickSort();
 
     // -------------------------------------------------------------------
-    // cpp/amc/step.cpp
+    // cpp/amc/step.cpp -- Step functions
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Step();
@@ -1580,12 +1603,15 @@ namespace amc { // update-hdr
     // void tfunc_Step_SetDelay();
 
     // -------------------------------------------------------------------
-    // cpp/amc/struct.cpp
+    // cpp/amc/struct.cpp -- C++ struct output
     //
+
+    // True if the field can be passed via constructor
+    bool PassFieldViaArgQ(amc::FField &field, amc::FCtype &ctype);
     void GenStruct(amc::FNs& ns, amc::FCtype& ctype);
 
     // -------------------------------------------------------------------
-    // cpp/amc/substr.cpp
+    // cpp/amc/substr.cpp -- Substr fields
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Substr();
@@ -1607,7 +1633,7 @@ namespace amc { // update-hdr
     // void gen_fieldid();
 
     // -------------------------------------------------------------------
-    // cpp/amc/tary.cpp
+    // cpp/amc/tary.cpp -- Tary (vector) reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Tary();
@@ -1655,9 +1681,18 @@ namespace amc { // update-hdr
     // void tfunc_Tary_ReadStrptrMaybe();
     // void tfunc_Tary_Print();
 
+    // Assignment operator from aryptr
+    // Generated only if the containing struct has only one field
+    // void tfunc_Tary_AssignAryptr();
+
+    // Construct from aryptr
+    // Generated only if the containing struct has only one field
+    // void tfunc_Tary_CtorAryptr();
+
     // -------------------------------------------------------------------
-    // cpp/amc/tclass.cpp
+    // cpp/amc/tclass.cpp -- Driver for tfuncs
     //
+    void ResetVars(amc::Genctx &ctx);
 
     // Call tclass, tfunc, and cursor generators for this template
     // Context is provided via _db.genctx:
@@ -1710,7 +1745,7 @@ namespace amc { // update-hdr
     // void tfunc_Thash_curs();
 
     // -------------------------------------------------------------------
-    // cpp/amc/tpool.cpp
+    // cpp/amc/tpool.cpp -- Tpool refetype (fixed-length freelist)
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Tpool();
@@ -1727,14 +1762,14 @@ namespace amc { // update-hdr
     // void gen_trace();
 
     // -------------------------------------------------------------------
-    // cpp/amc/upptr.cpp
+    // cpp/amc/upptr.cpp -- Upptr reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Upptr();
     // void tfunc_Upptr_Init();
 
     // -------------------------------------------------------------------
-    // cpp/amc/val.cpp
+    // cpp/amc/val.cpp -- Val reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Val();
@@ -1745,7 +1780,7 @@ namespace amc { // update-hdr
     // void tfunc_Val_N();
 
     // -------------------------------------------------------------------
-    // cpp/amc/varlen.cpp
+    // cpp/amc/varlen.cpp -- Varlen reftype
     //
     //     (user-implemented function, prototype is in amc-generated header)
     // void tclass_Varlen();

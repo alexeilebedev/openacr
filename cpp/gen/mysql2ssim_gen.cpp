@@ -70,9 +70,9 @@ namespace mysql2ssim { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:mysql2ssim.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:mysql2ssim...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- mysql2ssim.trace..Print
@@ -845,6 +845,25 @@ void mysql2ssim::FTobltin_Uninit(mysql2ssim::FTobltin& parent) {
     vals_RemoveAll(parent);
     // free memory for Tary mysql2ssim.FTobltin.vals
     algo_lib::malloc_FreeMem(parent.vals_elems, sizeof(algo::cstring)*parent.vals_max); // (mysql2ssim.FTobltin.vals)
+}
+
+// --- mysql2ssim.FTobltin..AssignOp
+mysql2ssim::FTobltin& mysql2ssim::FTobltin::operator =(const mysql2ssim::FTobltin &rhs) {
+    warn = rhs.warn;
+    err = rhs.err;
+    vals_Setary(*this, vals_Getary(const_cast<mysql2ssim::FTobltin&>(rhs)));
+    return *this;
+}
+
+// --- mysql2ssim.FTobltin..CopyCtor
+ mysql2ssim::FTobltin::FTobltin(const mysql2ssim::FTobltin &rhs)
+    : warn(rhs.warn)
+    , err(rhs.err)
+ {
+    vals_elems 	= 0; // (mysql2ssim.FTobltin.vals)
+    vals_n     	= 0; // (mysql2ssim.FTobltin.vals)
+    vals_max   	= 0; // (mysql2ssim.FTobltin.vals)
+    vals_Setary(*this, vals_Getary(const_cast<mysql2ssim::FTobltin&>(rhs)));
 }
 
 // --- mysql2ssim.FieldId.value.ToCstr

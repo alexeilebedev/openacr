@@ -28,24 +28,17 @@
 #include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
-inline lib_ctype::Cmdline::Cmdline() {
-    lib_ctype::Cmdline_Init(*this);
-}
-
 
 // --- lib_ctype.Cmdline..Init
 // Set all fields to initial values.
 inline void lib_ctype::Cmdline_Init(lib_ctype::Cmdline& parent) {
     parent.in = algo::strptr("data");
 }
-inline lib_ctype::FBltin::FBltin() {
-    lib_ctype::FBltin_Init(*this);
-}
 
-inline lib_ctype::FBltin::~FBltin() {
-    lib_ctype::FBltin_Uninit(*this);
+// --- lib_ctype.Cmdline..Ctor
+inline  lib_ctype::Cmdline::Cmdline() {
+    lib_ctype::Cmdline_Init(*this);
 }
-
 
 // --- lib_ctype.FBltin..Init
 // Set all fields to initial values.
@@ -54,29 +47,35 @@ inline void lib_ctype::FBltin_Init(lib_ctype::FBltin& bltin) {
     bltin.bigendok = bool(false);
     bltin.issigned = bool(false);
 }
-inline lib_ctype::FCdflt::FCdflt() {
+
+// --- lib_ctype.FBltin..Ctor
+inline  lib_ctype::FBltin::FBltin() {
+    lib_ctype::FBltin_Init(*this);
 }
 
-inline lib_ctype::FCdflt::~FCdflt() {
+// --- lib_ctype.FBltin..Dtor
+inline  lib_ctype::FBltin::~FBltin() {
+    lib_ctype::FBltin_Uninit(*this);
+}
+
+// --- lib_ctype.FCdflt..Ctor
+inline  lib_ctype::FCdflt::FCdflt() {
+}
+
+// --- lib_ctype.FCdflt..Dtor
+inline  lib_ctype::FCdflt::~FCdflt() {
     lib_ctype::FCdflt_Uninit(*this);
 }
 
-inline lib_ctype::FCfmt::FCfmt() {
+// --- lib_ctype.FCfmt..Ctor
+inline  lib_ctype::FCfmt::FCfmt() {
     lib_ctype::FCfmt_Init(*this);
 }
 
-inline lib_ctype::FCfmt::~FCfmt() {
+// --- lib_ctype.FCfmt..Dtor
+inline  lib_ctype::FCfmt::~FCfmt() {
     lib_ctype::FCfmt_Uninit(*this);
 }
-
-inline lib_ctype::FCppfunc::FCppfunc() {
-    lib_ctype::FCppfunc_Init(*this);
-}
-
-inline lib_ctype::FCppfunc::~FCppfunc() {
-    lib_ctype::FCppfunc_Uninit(*this);
-}
-
 
 // --- lib_ctype.FCppfunc..Init
 // Set all fields to initial values.
@@ -84,14 +83,16 @@ inline void lib_ctype::FCppfunc_Init(lib_ctype::FCppfunc& cppfunc) {
     cppfunc.print = bool(false);
     cppfunc.set = bool(false);
 }
-inline lib_ctype::FCtype::FCtype() {
-    lib_ctype::FCtype_Init(*this);
+
+// --- lib_ctype.FCppfunc..Ctor
+inline  lib_ctype::FCppfunc::FCppfunc() {
+    lib_ctype::FCppfunc_Init(*this);
 }
 
-inline lib_ctype::FCtype::~FCtype() {
-    lib_ctype::FCtype_Uninit(*this);
+// --- lib_ctype.FCppfunc..Dtor
+inline  lib_ctype::FCppfunc::~FCppfunc() {
+    lib_ctype::FCppfunc_Uninit(*this);
 }
-
 
 // --- lib_ctype.FCtype.c_field.EmptyQ
 // Return true if index is empty
@@ -318,9 +319,20 @@ inline void lib_ctype::ctype_c_cfmt_curs_Next(ctype_c_cfmt_curs &curs) {
 inline lib_ctype::FCfmt& lib_ctype::ctype_c_cfmt_curs_Access(ctype_c_cfmt_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline lib_ctype::trace::trace() {
+
+// --- lib_ctype.FCtype..Ctor
+inline  lib_ctype::FCtype::FCtype() {
+    lib_ctype::FCtype_Init(*this);
 }
 
+// --- lib_ctype.FCtype..Dtor
+inline  lib_ctype::FCtype::~FCtype() {
+    lib_ctype::FCtype_Uninit(*this);
+}
+
+// --- lib_ctype.trace..Ctor
+inline  lib_ctype::trace::trace() {
+}
 
 // --- lib_ctype.FDb.fconst.EmptyQ
 // Return true if index is empty
@@ -1197,14 +1209,6 @@ inline void lib_ctype::_db_sqltype_curs_Next(_db_sqltype_curs &curs) {
 inline lib_ctype::FSqltype& lib_ctype::_db_sqltype_curs_Access(_db_sqltype_curs &curs) {
     return sqltype_qFind(u64(curs.index));
 }
-inline lib_ctype::FFconst::FFconst() {
-    lib_ctype::FFconst_Init(*this);
-}
-
-inline lib_ctype::FFconst::~FFconst() {
-    lib_ctype::FFconst_Uninit(*this);
-}
-
 
 // --- lib_ctype.FFconst..Init
 // Set all fields to initial values.
@@ -1214,14 +1218,16 @@ inline void lib_ctype::FFconst_Init(lib_ctype::FFconst& fconst) {
     fconst.zd_fconst_next = (lib_ctype::FFconst*)-1; // (lib_ctype.FField.zd_fconst) not-in-list
     fconst.zd_fconst_prev = NULL; // (lib_ctype.FField.zd_fconst)
 }
-inline lib_ctype::FField::FField() {
-    lib_ctype::FField_Init(*this);
+
+// --- lib_ctype.FFconst..Ctor
+inline  lib_ctype::FFconst::FFconst() {
+    lib_ctype::FFconst_Init(*this);
 }
 
-inline lib_ctype::FField::~FField() {
-    lib_ctype::FField_Uninit(*this);
+// --- lib_ctype.FFconst..Dtor
+inline  lib_ctype::FFconst::~FFconst() {
+    lib_ctype::FFconst_Uninit(*this);
 }
-
 
 // --- lib_ctype.FField.c_ftuple.InsertMaybe
 // Insert row into pointer index. Return final membership status.
@@ -1466,28 +1472,34 @@ inline void lib_ctype::field_c_substr_srcfield_curs_Next(field_c_substr_srcfield
 inline lib_ctype::FSubstr& lib_ctype::field_c_substr_srcfield_curs_Access(field_c_substr_srcfield_curs &curs) {
     return *curs.elems[curs.index];
 }
-inline lib_ctype::FFtuple::FFtuple() {
+
+// --- lib_ctype.FField..Ctor
+inline  lib_ctype::FField::FField() {
+    lib_ctype::FField_Init(*this);
 }
 
-inline lib_ctype::FFtuple::~FFtuple() {
+// --- lib_ctype.FField..Dtor
+inline  lib_ctype::FField::~FField() {
+    lib_ctype::FField_Uninit(*this);
+}
+
+// --- lib_ctype.FFtuple..Ctor
+inline  lib_ctype::FFtuple::FFtuple() {
+}
+
+// --- lib_ctype.FFtuple..Dtor
+inline  lib_ctype::FFtuple::~FFtuple() {
     lib_ctype::FFtuple_Uninit(*this);
 }
 
-inline lib_ctype::FSqltype::FSqltype() {
+// --- lib_ctype.FSqltype..Ctor
+inline  lib_ctype::FSqltype::FSqltype() {
 }
 
-inline lib_ctype::FSqltype::~FSqltype() {
+// --- lib_ctype.FSqltype..Dtor
+inline  lib_ctype::FSqltype::~FSqltype() {
     lib_ctype::FSqltype_Uninit(*this);
 }
-
-inline lib_ctype::FSsimfile::FSsimfile() {
-    lib_ctype::FSsimfile_Init(*this);
-}
-
-inline lib_ctype::FSsimfile::~FSsimfile() {
-    lib_ctype::FSsimfile_Uninit(*this);
-}
-
 
 // --- lib_ctype.FSsimfile..Init
 // Set all fields to initial values.
@@ -1495,14 +1507,16 @@ inline void lib_ctype::FSsimfile_Init(lib_ctype::FSsimfile& ssimfile) {
     ssimfile.p_ctype = NULL;
     ssimfile.ind_ssimfile_next = (lib_ctype::FSsimfile*)-1; // (lib_ctype.FDb.ind_ssimfile) not-in-hash
 }
-inline lib_ctype::FSubstr::FSubstr() {
-    lib_ctype::FSubstr_Init(*this);
+
+// --- lib_ctype.FSsimfile..Ctor
+inline  lib_ctype::FSsimfile::FSsimfile() {
+    lib_ctype::FSsimfile_Init(*this);
 }
 
-inline lib_ctype::FSubstr::~FSubstr() {
-    lib_ctype::FSubstr_Uninit(*this);
+// --- lib_ctype.FSsimfile..Dtor
+inline  lib_ctype::FSsimfile::~FSsimfile() {
+    lib_ctype::FSsimfile_Uninit(*this);
 }
-
 
 // --- lib_ctype.FSubstr..Init
 // Set all fields to initial values.
@@ -1510,22 +1524,25 @@ inline void lib_ctype::FSubstr_Init(lib_ctype::FSubstr& substr) {
     substr.p_field = NULL;
     substr.field_c_substr_srcfield_in_ary = bool(false);
 }
-inline lib_ctype::FUnstablefld::FUnstablefld() {
+
+// --- lib_ctype.FSubstr..Ctor
+inline  lib_ctype::FSubstr::FSubstr() {
+    lib_ctype::FSubstr_Init(*this);
 }
 
-inline lib_ctype::FUnstablefld::~FUnstablefld() {
+// --- lib_ctype.FSubstr..Dtor
+inline  lib_ctype::FSubstr::~FSubstr() {
+    lib_ctype::FSubstr_Uninit(*this);
+}
+
+// --- lib_ctype.FUnstablefld..Ctor
+inline  lib_ctype::FUnstablefld::FUnstablefld() {
+}
+
+// --- lib_ctype.FUnstablefld..Dtor
+inline  lib_ctype::FUnstablefld::~FUnstablefld() {
     lib_ctype::FUnstablefld_Uninit(*this);
 }
-
-inline lib_ctype::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_ctype::FieldId::FieldId(lib_ctype_FieldIdEnum arg) { this->value = i32(arg); }
-inline lib_ctype::FieldId::FieldId() {
-    lib_ctype::FieldId_Init(*this);
-}
-
 
 // --- lib_ctype.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -1540,7 +1557,7 @@ inline void lib_ctype::value_SetEnum(lib_ctype::FieldId& parent, lib_ctype_Field
 }
 
 // --- lib_ctype.FieldId.value.Cast
-inline lib_ctype::FieldId::operator lib_ctype_FieldIdEnum () const {
+inline  lib_ctype::FieldId::operator lib_ctype_FieldIdEnum() const {
     return lib_ctype_FieldIdEnum((*this).value);
 }
 
@@ -1549,10 +1566,22 @@ inline lib_ctype::FieldId::operator lib_ctype_FieldIdEnum () const {
 inline void lib_ctype::FieldId_Init(lib_ctype::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline lib_ctype::Match::Match() {
-    lib_ctype::Match_Init(*this);
+
+// --- lib_ctype.FieldId..Ctor
+inline  lib_ctype::FieldId::FieldId() {
+    lib_ctype::FieldId_Init(*this);
 }
 
+// --- lib_ctype.FieldId..FieldwiseCtor
+inline  lib_ctype::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_ctype.FieldId..EnumCtor
+inline  lib_ctype::FieldId::FieldId(lib_ctype_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- lib_ctype.Match..Init
 // Set all fields to initial values.
@@ -1563,15 +1592,11 @@ inline void lib_ctype::Match_Init(lib_ctype::Match& parent) {
     parent.save_unmatched = bool(false);
     parent.n_unmatched = i32(0);
 }
-inline lib_ctype::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline lib_ctype::TableId::TableId(lib_ctype_TableIdEnum arg) { this->value = i32(arg); }
-inline lib_ctype::TableId::TableId() {
-    lib_ctype::TableId_Init(*this);
-}
 
+// --- lib_ctype.Match..Ctor
+inline  lib_ctype::Match::Match() {
+    lib_ctype::Match_Init(*this);
+}
 
 // --- lib_ctype.TableId.value.GetEnum
 // Get value of field as enum type
@@ -1586,7 +1611,7 @@ inline void lib_ctype::value_SetEnum(lib_ctype::TableId& parent, lib_ctype_Table
 }
 
 // --- lib_ctype.TableId.value.Cast
-inline lib_ctype::TableId::operator lib_ctype_TableIdEnum () const {
+inline  lib_ctype::TableId::operator lib_ctype_TableIdEnum() const {
     return lib_ctype_TableIdEnum((*this).value);
 }
 
@@ -1594,6 +1619,22 @@ inline lib_ctype::TableId::operator lib_ctype_TableIdEnum () const {
 // Set all fields to initial values.
 inline void lib_ctype::TableId_Init(lib_ctype::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- lib_ctype.TableId..Ctor
+inline  lib_ctype::TableId::TableId() {
+    lib_ctype::TableId_Init(*this);
+}
+
+// --- lib_ctype.TableId..FieldwiseCtor
+inline  lib_ctype::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- lib_ctype.TableId..EnumCtor
+inline  lib_ctype::TableId::TableId(lib_ctype_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_ctype::trace &row) {// cfmt:lib_ctype.trace.String

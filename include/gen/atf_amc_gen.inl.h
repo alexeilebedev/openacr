@@ -38,14 +38,6 @@ static atf_amc::FListtype &atf_amc_listtype_zd    = ((atf_amc::FListtype*)atf_am
 static atf_amc::FListtype &atf_amc_listtype_zdl   = ((atf_amc::FListtype*)atf_amc::_db.listtype_data)[5];
 static atf_amc::FListtype &atf_amc_listtype_zs    = ((atf_amc::FListtype*)atf_amc::_db.listtype_data)[6];
 static atf_amc::FListtype &atf_amc_listtype_zsl   = ((atf_amc::FListtype*)atf_amc::_db.listtype_data)[7];
-inline atf_amc::AmcCleanup2::AmcCleanup2() {
-    atf_amc::AmcCleanup2_Init(*this);
-}
-
-inline atf_amc::AmcCleanup2::~AmcCleanup2() {
-    atf_amc::AmcCleanup2_Uninit(*this);
-}
-
 
 // --- atf_amc.AmcCleanup2..Init
 // Set all fields to initial values.
@@ -53,13 +45,27 @@ inline void atf_amc::AmcCleanup2_Init(atf_amc::AmcCleanup2& parent) {
     parent.field1 = i32(0);
     parent.field2 = i32(0);
 }
-inline atf_amc::AmcSubstr1::AmcSubstr1() {
+
+// --- atf_amc.AmcCleanup2..Uninit
+inline void atf_amc::AmcCleanup2_Uninit(atf_amc::AmcCleanup2& parent) {
+    atf_amc::AmcCleanup2 &row = parent; (void)row;
+    field2_Cleanup(parent); // dmmeta.fcleanup:atf_amc.AmcCleanup2.field2
+    field1_Cleanup(parent); // dmmeta.fcleanup:atf_amc.AmcCleanup2.field1
 }
 
-inline atf_amc::BitfldType1::BitfldType1() {
-    atf_amc::BitfldType1_Init(*this);
+// --- atf_amc.AmcCleanup2..Ctor
+inline  atf_amc::AmcCleanup2::AmcCleanup2() {
+    atf_amc::AmcCleanup2_Init(*this);
 }
 
+// --- atf_amc.AmcCleanup2..Dtor
+inline  atf_amc::AmcCleanup2::~AmcCleanup2() {
+    atf_amc::AmcCleanup2_Uninit(*this);
+}
+
+// --- atf_amc.AmcSubstr1..Ctor
+inline  atf_amc::AmcSubstr1::AmcSubstr1() {
+}
 
 // --- atf_amc.BitfldType1.bit1.Get
 // Retrieve bitfield from value of field value
@@ -98,10 +104,11 @@ inline void atf_amc::bits5_Set(atf_amc::BitfldType1& parent, u64 rhs) {
 inline void atf_amc::BitfldType1_Init(atf_amc::BitfldType1& parent) {
     parent.value = u64(0);
 }
-inline atf_amc::BitfldType2::BitfldType2() {
-    atf_amc::BitfldType2_Init(*this);
-}
 
+// --- atf_amc.BitfldType1..Ctor
+inline  atf_amc::BitfldType1::BitfldType1() {
+    atf_amc::BitfldType1_Init(*this);
+}
 
 // --- atf_amc.BitfldType2.bit0.Get
 // Retrieve bitfield from value of field value
@@ -141,10 +148,11 @@ inline void atf_amc::BitfldType2_Init(atf_amc::BitfldType2& parent) {
     parent.value = u64(0);
     parent.freebool = bool(false);
 }
-inline atf_amc::BitfldU128::BitfldU128() {
-    atf_amc::BitfldU128_Init(*this);
-}
 
+// --- atf_amc.BitfldType2..Ctor
+inline  atf_amc::BitfldType2::BitfldType2() {
+    atf_amc::BitfldType2_Init(*this);
+}
 
 // --- atf_amc.BitfldU128.bits1_65.Get
 // Retrieve bitfield from value of field value
@@ -183,10 +191,11 @@ inline void atf_amc::bits65_128_Set(atf_amc::BitfldU128& parent, u64 rhs) {
 inline void atf_amc::BitfldU128_Init(atf_amc::BitfldU128& parent) {
     parent.value = u128(0);
 }
-inline atf_amc::BitfldU16::BitfldU16() {
-    atf_amc::BitfldU16_Init(*this);
-}
 
+// --- atf_amc.BitfldU128..Ctor
+inline  atf_amc::BitfldU128::BitfldU128() {
+    atf_amc::BitfldU128_Init(*this);
+}
 
 // --- atf_amc.BitfldU16.bits0_4.Get
 // Retrieve bitfield from value of field value
@@ -225,10 +234,11 @@ inline void atf_amc::bits8_12_Set(atf_amc::BitfldU16& parent, u8 rhs) {
 inline void atf_amc::BitfldU16_Init(atf_amc::BitfldU16& parent) {
     parent.value = u16(0);
 }
-inline atf_amc::Bitset::Bitset() {
-    atf_amc::Bitset_Init(*this);
-}
 
+// --- atf_amc.BitfldU16..Ctor
+inline  atf_amc::BitfldU16::BitfldU16() {
+    atf_amc::BitfldU16_Init(*this);
+}
 
 // --- atf_amc.Bitset.fld1.NBits
 // Get max # of bits in the bitset
@@ -428,10 +438,8 @@ inline i32 atf_amc::fld1_N(const atf_amc::Bitset& parent) {
 // --- atf_amc.Bitset.fld1.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 inline void atf_amc::fld1_Setary(atf_amc::Bitset& parent, const algo::aryptr<u16> &rhs) {
-    int n = 4 < rhs.n_elems ? 4 : rhs.n_elems;
-    for (int i = 0; i < n; i++) {
-        parent.fld1_elems[i] = rhs[i];
-    }
+    int n = i32_Min(4, rhs.n_elems);
+    memcpy(parent.fld1_elems, rhs.elems, sizeof(u16)*n);
 }
 
 // --- atf_amc.Bitset.fld1.qFind
@@ -1035,12 +1043,11 @@ inline void atf_amc::Bitset_Init(atf_amc::Bitset& parent) {
     parent.fld64 = u64(0);
     parent.fld128 = u128(0);
 }
-inline atf_amc::Bytebuf::Bytebuf() {
-    atf_amc::Bytebuf_Init(*this);
-    // added because atf_amc.Bytebuf.in (Fbuf) does not need initialization
-    // coverity[uninit_member]
-}
 
+// --- atf_amc.Bitset..Ctor
+inline  atf_amc::Bitset::Bitset() {
+    atf_amc::Bitset_Init(*this);
+}
 
 // --- atf_amc.Bytebuf.in.Max
 // Return max. number of bytes in the buffer.
@@ -1054,16 +1061,13 @@ inline i32 atf_amc::in_Max(atf_amc::Bytebuf& bytebuf) {
 inline i32 atf_amc::in_N(atf_amc::Bytebuf& bytebuf) {
     return bytebuf.in_end - bytebuf.in_start;
 }
-inline atf_amc::BytebufDyn::BytebufDyn() {
-    atf_amc::BytebufDyn_Init(*this);
-    // added because atf_amc.BytebufDyn.in (Fbuf) does not need initialization
+
+// --- atf_amc.Bytebuf..Ctor
+inline  atf_amc::Bytebuf::Bytebuf() {
+    atf_amc::Bytebuf_Init(*this);
+    // added because atf_amc.Bytebuf.in (Fbuf) does not need initialization
     // coverity[uninit_member]
 }
-
-inline atf_amc::BytebufDyn::~BytebufDyn() {
-    atf_amc::BytebufDyn_Uninit(*this);
-}
-
 
 // --- atf_amc.BytebufDyn.in.Max
 // Return max. number of bytes in the buffer.
@@ -1076,37 +1080,18 @@ inline i32 atf_amc::in_Max(atf_amc::BytebufDyn& bytebuf_dyn) {
 inline i32 atf_amc::in_N(atf_amc::BytebufDyn& bytebuf_dyn) {
     return bytebuf_dyn.in_end - bytebuf_dyn.in_start;
 }
-inline atf_amc::Cstr::Cstr(const algo::strptr&            in_val)
-    : val(in_val)
-{
+
+// --- atf_amc.BytebufDyn..Ctor
+inline  atf_amc::BytebufDyn::BytebufDyn() {
+    atf_amc::BytebufDyn_Init(*this);
+    // added because atf_amc.BytebufDyn.in (Fbuf) does not need initialization
+    // coverity[uninit_member]
 }
 
-inline bool atf_amc::Cstr::operator ==(const atf_amc::Cstr &rhs) const {
-    return atf_amc::Cstr_Eq(const_cast<atf_amc::Cstr&>(*this),const_cast<atf_amc::Cstr&>(rhs));
+// --- atf_amc.BytebufDyn..Dtor
+inline  atf_amc::BytebufDyn::~BytebufDyn() {
+    atf_amc::BytebufDyn_Uninit(*this);
 }
-
-inline bool atf_amc::Cstr::operator !=(const atf_amc::Cstr &rhs) const {
-    return !atf_amc::Cstr_Eq(const_cast<atf_amc::Cstr&>(*this),const_cast<atf_amc::Cstr&>(rhs));
-}
-
-inline bool atf_amc::Cstr::operator <(const atf_amc::Cstr &rhs) const {
-    return atf_amc::Cstr_Lt(const_cast<atf_amc::Cstr&>(*this),const_cast<atf_amc::Cstr&>(rhs));
-}
-
-inline bool atf_amc::Cstr::operator >(const atf_amc::Cstr &rhs) const {
-    return rhs < *this;
-}
-
-inline bool atf_amc::Cstr::operator <=(const atf_amc::Cstr &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool atf_amc::Cstr::operator >=(const atf_amc::Cstr &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::Cstr::Cstr() {
-}
-
 
 // --- atf_amc.Cstr.val.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
@@ -1123,14 +1108,44 @@ inline i32 atf_amc::val_Cmp(atf_amc::Cstr& parent, atf_amc::Cstr &rhs) {
 }
 
 // --- atf_amc.Cstr.val.Cast
-inline atf_amc::Cstr::operator algo::strptr () const {
+inline  atf_amc::Cstr::operator algo::strptr() const {
     return algo::strptr((*this).val);
 }
 
 // --- atf_amc.Cstr..Hash
-inline u32 atf_amc::Cstr_Hash(u32 prev, const atf_amc::Cstr & rhs) {
+inline u32 atf_amc::Cstr_Hash(u32 prev, const atf_amc::Cstr& rhs) {
     prev = cstring_Hash(prev, rhs.val);
     return prev;
+}
+
+// --- atf_amc.Cstr..EqOp
+inline bool atf_amc::Cstr::operator ==(const atf_amc::Cstr &rhs) const {
+    return atf_amc::Cstr_Eq(const_cast<atf_amc::Cstr&>(*this),const_cast<atf_amc::Cstr&>(rhs));
+}
+
+// --- atf_amc.Cstr..NeOp
+inline bool atf_amc::Cstr::operator !=(const atf_amc::Cstr &rhs) const {
+    return !atf_amc::Cstr_Eq(const_cast<atf_amc::Cstr&>(*this),const_cast<atf_amc::Cstr&>(rhs));
+}
+
+// --- atf_amc.Cstr..LtOp
+inline bool atf_amc::Cstr::operator <(const atf_amc::Cstr &rhs) const {
+    return atf_amc::Cstr_Lt(const_cast<atf_amc::Cstr&>(*this),const_cast<atf_amc::Cstr&>(rhs));
+}
+
+// --- atf_amc.Cstr..GtOp
+inline bool atf_amc::Cstr::operator >(const atf_amc::Cstr &rhs) const {
+    return atf_amc::Cstr_Lt(const_cast<atf_amc::Cstr&>(rhs),const_cast<atf_amc::Cstr&>(*this));
+}
+
+// --- atf_amc.Cstr..LeOp
+inline bool atf_amc::Cstr::operator <=(const atf_amc::Cstr &rhs) const {
+    return !atf_amc::Cstr_Lt(const_cast<atf_amc::Cstr&>(rhs),const_cast<atf_amc::Cstr&>(*this));
+}
+
+// --- atf_amc.Cstr..GeOp
+inline bool atf_amc::Cstr::operator >=(const atf_amc::Cstr &rhs) const {
+    return !atf_amc::Cstr_Lt(const_cast<atf_amc::Cstr&>(*this),const_cast<atf_amc::Cstr&>(rhs));
 }
 
 // --- atf_amc.Cstr..Lt
@@ -1161,51 +1176,60 @@ inline bool atf_amc::Cstr_Update(atf_amc::Cstr &lhs, atf_amc::Cstr& rhs) {
     }
     return ret;
 }
-inline atf_amc::Cstring::Cstring() {
+
+// --- atf_amc.Cstr..Ctor
+inline  atf_amc::Cstr::Cstr() {
 }
 
-inline atf_amc::Ctype1Attr::Ctype1Attr(u32                            in_attr1)
-    : attr1(in_attr1)
-{
+// --- atf_amc.Cstr..FieldwiseCtor
+inline  atf_amc::Cstr::Cstr(const algo::strptr& in_val)
+    : val(in_val)
+ {
 }
 
-inline bool atf_amc::Ctype1Attr::operator ==(const atf_amc::Ctype1Attr &rhs) const {
-    return atf_amc::Ctype1Attr_Eq(const_cast<atf_amc::Ctype1Attr&>(*this),const_cast<atf_amc::Ctype1Attr&>(rhs));
+// --- atf_amc.Cstring..Ctor
+inline  atf_amc::Cstring::Cstring() {
 }
-
-inline bool atf_amc::Ctype1Attr::operator !=(const atf_amc::Ctype1Attr &rhs) const {
-    return !atf_amc::Ctype1Attr_Eq(const_cast<atf_amc::Ctype1Attr&>(*this),const_cast<atf_amc::Ctype1Attr&>(rhs));
-}
-
-inline bool atf_amc::Ctype1Attr::operator <(const atf_amc::Ctype1Attr &rhs) const {
-    return atf_amc::Ctype1Attr_Lt(const_cast<atf_amc::Ctype1Attr&>(*this),const_cast<atf_amc::Ctype1Attr&>(rhs));
-}
-
-inline bool atf_amc::Ctype1Attr::operator >(const atf_amc::Ctype1Attr &rhs) const {
-    return rhs < *this;
-}
-
-inline bool atf_amc::Ctype1Attr::operator <=(const atf_amc::Ctype1Attr &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool atf_amc::Ctype1Attr::operator >=(const atf_amc::Ctype1Attr &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::Ctype1Attr::Ctype1Attr() {
-    atf_amc::Ctype1Attr_Init(*this);
-}
-
 
 // --- atf_amc.Ctype1Attr.attr1.Cast
-inline atf_amc::Ctype1Attr::operator u32 () const {
+inline  atf_amc::Ctype1Attr::operator u32() const {
     return u32((*this).attr1);
 }
 
 // --- atf_amc.Ctype1Attr..Hash
-inline u32 atf_amc::Ctype1Attr_Hash(u32 prev, const atf_amc::Ctype1Attr & rhs) {
+inline u32 atf_amc::Ctype1Attr_Hash(u32 prev, const atf_amc::Ctype1Attr& rhs) {
     prev = u32_Hash(prev, rhs.attr1);
     return prev;
+}
+
+// --- atf_amc.Ctype1Attr..EqOp
+inline bool atf_amc::Ctype1Attr::operator ==(const atf_amc::Ctype1Attr &rhs) const {
+    return atf_amc::Ctype1Attr_Eq(const_cast<atf_amc::Ctype1Attr&>(*this),const_cast<atf_amc::Ctype1Attr&>(rhs));
+}
+
+// --- atf_amc.Ctype1Attr..NeOp
+inline bool atf_amc::Ctype1Attr::operator !=(const atf_amc::Ctype1Attr &rhs) const {
+    return !atf_amc::Ctype1Attr_Eq(const_cast<atf_amc::Ctype1Attr&>(*this),const_cast<atf_amc::Ctype1Attr&>(rhs));
+}
+
+// --- atf_amc.Ctype1Attr..LtOp
+inline bool atf_amc::Ctype1Attr::operator <(const atf_amc::Ctype1Attr &rhs) const {
+    return atf_amc::Ctype1Attr_Lt(const_cast<atf_amc::Ctype1Attr&>(*this),const_cast<atf_amc::Ctype1Attr&>(rhs));
+}
+
+// --- atf_amc.Ctype1Attr..GtOp
+inline bool atf_amc::Ctype1Attr::operator >(const atf_amc::Ctype1Attr &rhs) const {
+    return atf_amc::Ctype1Attr_Lt(const_cast<atf_amc::Ctype1Attr&>(rhs),const_cast<atf_amc::Ctype1Attr&>(*this));
+}
+
+// --- atf_amc.Ctype1Attr..LeOp
+inline bool atf_amc::Ctype1Attr::operator <=(const atf_amc::Ctype1Attr &rhs) const {
+    return !atf_amc::Ctype1Attr_Lt(const_cast<atf_amc::Ctype1Attr&>(rhs),const_cast<atf_amc::Ctype1Attr&>(*this));
+}
+
+// --- atf_amc.Ctype1Attr..GeOp
+inline bool atf_amc::Ctype1Attr::operator >=(const atf_amc::Ctype1Attr &rhs) const {
+    return !atf_amc::Ctype1Attr_Lt(const_cast<atf_amc::Ctype1Attr&>(*this),const_cast<atf_amc::Ctype1Attr&>(rhs));
 }
 
 // --- atf_amc.Ctype1Attr..Lt
@@ -1242,46 +1266,53 @@ inline bool atf_amc::Ctype1Attr_Update(atf_amc::Ctype1Attr &lhs, atf_amc::Ctype1
     }
     return ret;
 }
-inline atf_amc::Ctype2Attr::Ctype2Attr(u32                            in_attr1
-        ,u32                            in_attr2)
-    : attr1(in_attr1)
-    , attr2(in_attr2)
-{
+
+// --- atf_amc.Ctype1Attr..Ctor
+inline  atf_amc::Ctype1Attr::Ctype1Attr() {
+    atf_amc::Ctype1Attr_Init(*this);
 }
 
+// --- atf_amc.Ctype1Attr..FieldwiseCtor
+inline  atf_amc::Ctype1Attr::Ctype1Attr(u32 in_attr1)
+    : attr1(in_attr1)
+ {
+}
+
+// --- atf_amc.Ctype2Attr..Hash
+inline u32 atf_amc::Ctype2Attr_Hash(u32 prev, const atf_amc::Ctype2Attr& rhs) {
+    prev = u32_Hash(prev, rhs.attr1);
+    prev = u32_Hash(prev, rhs.attr2);
+    return prev;
+}
+
+// --- atf_amc.Ctype2Attr..EqOp
 inline bool atf_amc::Ctype2Attr::operator ==(const atf_amc::Ctype2Attr &rhs) const {
     return atf_amc::Ctype2Attr_Eq(const_cast<atf_amc::Ctype2Attr&>(*this),const_cast<atf_amc::Ctype2Attr&>(rhs));
 }
 
+// --- atf_amc.Ctype2Attr..NeOp
 inline bool atf_amc::Ctype2Attr::operator !=(const atf_amc::Ctype2Attr &rhs) const {
     return !atf_amc::Ctype2Attr_Eq(const_cast<atf_amc::Ctype2Attr&>(*this),const_cast<atf_amc::Ctype2Attr&>(rhs));
 }
 
+// --- atf_amc.Ctype2Attr..LtOp
 inline bool atf_amc::Ctype2Attr::operator <(const atf_amc::Ctype2Attr &rhs) const {
     return atf_amc::Ctype2Attr_Lt(const_cast<atf_amc::Ctype2Attr&>(*this),const_cast<atf_amc::Ctype2Attr&>(rhs));
 }
 
+// --- atf_amc.Ctype2Attr..GtOp
 inline bool atf_amc::Ctype2Attr::operator >(const atf_amc::Ctype2Attr &rhs) const {
-    return rhs < *this;
+    return atf_amc::Ctype2Attr_Lt(const_cast<atf_amc::Ctype2Attr&>(rhs),const_cast<atf_amc::Ctype2Attr&>(*this));
 }
 
+// --- atf_amc.Ctype2Attr..LeOp
 inline bool atf_amc::Ctype2Attr::operator <=(const atf_amc::Ctype2Attr &rhs) const {
-    return !(rhs < *this);
+    return !atf_amc::Ctype2Attr_Lt(const_cast<atf_amc::Ctype2Attr&>(rhs),const_cast<atf_amc::Ctype2Attr&>(*this));
 }
 
+// --- atf_amc.Ctype2Attr..GeOp
 inline bool atf_amc::Ctype2Attr::operator >=(const atf_amc::Ctype2Attr &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::Ctype2Attr::Ctype2Attr() {
-    atf_amc::Ctype2Attr_Init(*this);
-}
-
-
-// --- atf_amc.Ctype2Attr..Hash
-inline u32 atf_amc::Ctype2Attr_Hash(u32 prev, const atf_amc::Ctype2Attr & rhs) {
-    prev = u32_Hash(prev, rhs.attr1);
-    prev = u32_Hash(prev, rhs.attr2);
-    return prev;
+    return !atf_amc::Ctype2Attr_Lt(const_cast<atf_amc::Ctype2Attr&>(*this),const_cast<atf_amc::Ctype2Attr&>(rhs));
 }
 
 // --- atf_amc.Ctype2Attr..Lt
@@ -1327,16 +1358,18 @@ inline bool atf_amc::Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2
     }
     return ret;
 }
-inline atf_amc::Ctype2AttrAnon::Ctype2AttrAnon(u32                            in_attr1
-        ,u32                            in_attr2)
-    : attr1(in_attr1)
-    , attr2(in_attr2)
-{
-}
-inline atf_amc::Ctype2AttrAnon::Ctype2AttrAnon() {
-    atf_amc::Ctype2AttrAnon_Init(*this);
+
+// --- atf_amc.Ctype2Attr..Ctor
+inline  atf_amc::Ctype2Attr::Ctype2Attr() {
+    atf_amc::Ctype2Attr_Init(*this);
 }
 
+// --- atf_amc.Ctype2Attr..FieldwiseCtor
+inline  atf_amc::Ctype2Attr::Ctype2Attr(u32 in_attr1, u32 in_attr2)
+    : attr1(in_attr1)
+    , attr2(in_attr2)
+ {
+}
 
 // --- atf_amc.Ctype2AttrAnon..Init
 // Set all fields to initial values.
@@ -1344,29 +1377,34 @@ inline void atf_amc::Ctype2AttrAnon_Init(atf_amc::Ctype2AttrAnon& parent) {
     parent.attr1 = u32(0);
     parent.attr2 = u32(0);
 }
-inline atf_amc::DelType1::DelType1() {
-    atf_amc::DelType1_Init(*this);
+
+// --- atf_amc.Ctype2AttrAnon..Ctor
+inline  atf_amc::Ctype2AttrAnon::Ctype2AttrAnon() {
+    atf_amc::Ctype2AttrAnon_Init(*this);
 }
 
-inline atf_amc::DelType1::~DelType1() {
-    atf_amc::DelType1_Uninit(*this);
+// --- atf_amc.Ctype2AttrAnon..FieldwiseCtor
+inline  atf_amc::Ctype2AttrAnon::Ctype2AttrAnon(u32 in_attr1, u32 in_attr2)
+    : attr1(in_attr1)
+    , attr2(in_attr2)
+ {
 }
-
 
 // --- atf_amc.DelType1..Init
 // Set all fields to initial values.
 inline void atf_amc::DelType1_Init(atf_amc::DelType1& parent) {
     parent.u32val = NULL;
 }
-inline atf_amc::DispCase::DispCase(u32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_amc::DispCase::DispCase(atf_amc_DispCaseEnum arg) { this->value = u32(arg); }
-inline atf_amc::DispCase::DispCase() {
-    atf_amc::DispCase_Init(*this);
+
+// --- atf_amc.DelType1..Ctor
+inline  atf_amc::DelType1::DelType1() {
+    atf_amc::DelType1_Init(*this);
 }
 
+// --- atf_amc.DelType1..Dtor
+inline  atf_amc::DelType1::~DelType1() {
+    atf_amc::DelType1_Uninit(*this);
+}
 
 // --- atf_amc.DispCase.value.GetEnum
 // Get value of field as enum type
@@ -1381,7 +1419,7 @@ inline void atf_amc::value_SetEnum(atf_amc::DispCase& parent, atf_amc_DispCaseEn
 }
 
 // --- atf_amc.DispCase.value.Cast
-inline atf_amc::DispCase::operator atf_amc_DispCaseEnum () const {
+inline  atf_amc::DispCase::operator atf_amc_DispCaseEnum() const {
     return atf_amc_DispCaseEnum((*this).value);
 }
 
@@ -1390,10 +1428,22 @@ inline atf_amc::DispCase::operator atf_amc_DispCaseEnum () const {
 inline void atf_amc::DispCase_Init(atf_amc::DispCase& parent) {
     parent.value = u32(0);
 }
-inline atf_amc::DispFilter::DispFilter() {
-    atf_amc::DispFilter_Init(*this);
+
+// --- atf_amc.DispCase..Ctor
+inline  atf_amc::DispCase::DispCase() {
+    atf_amc::DispCase_Init(*this);
 }
 
+// --- atf_amc.DispCase..FieldwiseCtor
+inline  atf_amc::DispCase::DispCase(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_amc.DispCase..EnumCtor
+inline  atf_amc::DispCase::DispCase(atf_amc_DispCaseEnum arg) {
+    this->value = u32(arg);
+}
 
 // --- atf_amc.DispFilter.pmask.NBits
 // Get max # of bits in the bitset
@@ -1593,10 +1643,8 @@ inline i32 atf_amc::pmask_N(const atf_amc::DispFilter& parent) {
 // --- atf_amc.DispFilter.pmask.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 inline void atf_amc::pmask_Setary(atf_amc::DispFilter& parent, const algo::aryptr<u64> &rhs) {
-    int n = 1 < rhs.n_elems ? 1 : rhs.n_elems;
-    for (int i = 0; i < n; i++) {
-        parent.pmask_elems[i] = rhs[i];
-    }
+    int n = i32_Min(1, rhs.n_elems);
+    memcpy(parent.pmask_elems, rhs.elems, sizeof(u64)*n);
 }
 
 // --- atf_amc.DispFilter.pmask.qFind
@@ -1897,33 +1945,37 @@ inline void atf_amc::DispFilter_pmask_curs_Next(DispFilter_pmask_curs &curs) {
 inline u64& atf_amc::DispFilter_pmask_curs_Access(DispFilter_pmask_curs &curs) {
     return pmask_qFind((*curs.parent), u64(curs.index));
 }
-inline atf_amc::DispType1::DispType1() {
+
+// --- atf_amc.DispFilter..Ctor
+inline  atf_amc::DispFilter::DispFilter() {
+    atf_amc::DispFilter_Init(*this);
 }
 
-inline atf_amc::DispType2::DispType2() {
-    atf_amc::DispType2_Init(*this);
+// --- atf_amc.DispType1..Ctor
+inline  atf_amc::DispType1::DispType1() {
 }
-
 
 // --- atf_amc.DispType2..Init
 // Set all fields to initial values.
 inline void atf_amc::DispType2_Init(atf_amc::DispType2& parent) {
     parent.intval = u32(0);
 }
-inline atf_amc::DispType3::DispType3() {
-    atf_amc::DispType3_Init(*this);
-}
 
+// --- atf_amc.DispType2..Ctor
+inline  atf_amc::DispType2::DispType2() {
+    atf_amc::DispType2_Init(*this);
+}
 
 // --- atf_amc.DispType3..Init
 // Set all fields to initial values.
 inline void atf_amc::DispType3_Init(atf_amc::DispType3& parent) {
     parent.intval = u32(0);
 }
-inline atf_amc::FAmctest::FAmctest() {
-    atf_amc::FAmctest_Init(*this);
-}
 
+// --- atf_amc.DispType3..Ctor
+inline  atf_amc::DispType3::DispType3() {
+    atf_amc::DispType3_Init(*this);
+}
 
 // --- atf_amc.FAmctest.step.Call
 // Invoke function by pointer
@@ -1941,14 +1993,11 @@ inline void atf_amc::FAmctest_Init(atf_amc::FAmctest& amctest) {
     amctest.c_syscmd = NULL;
     amctest.step = NULL;
 }
-inline atf_amc::FAvl::FAvl() {
-    atf_amc::FAvl_Init(*this);
-}
 
-inline atf_amc::FAvl::~FAvl() {
-    atf_amc::FAvl_Uninit(*this);
+// --- atf_amc.FAmctest..Ctor
+inline  atf_amc::FAmctest::FAmctest() {
+    atf_amc::FAmctest_Init(*this);
 }
-
 
 // --- atf_amc.FAvl..Init
 // Set all fields to initial values.
@@ -1959,14 +2008,16 @@ inline void atf_amc::FAvl_Init(atf_amc::FAvl& avl) {
     avl.tr_avl_right = NULL;
     avl.tr_avl_depth = 0;
 }
-inline atf_amc::FCascdel::FCascdel() {
-    atf_amc::FCascdel_Init(*this);
+
+// --- atf_amc.FAvl..Ctor
+inline  atf_amc::FAvl::FAvl() {
+    atf_amc::FAvl_Init(*this);
 }
 
-inline atf_amc::FCascdel::~FCascdel() {
-    atf_amc::FCascdel_Uninit(*this);
+// --- atf_amc.FAvl..Dtor
+inline  atf_amc::FAvl::~FAvl() {
+    atf_amc::FAvl_Uninit(*this);
 }
-
 
 // --- atf_amc.FCascdel.type.GetEnum
 // Get value of field as enum type
@@ -2261,24 +2312,32 @@ inline void atf_amc::cascdel_tr_child_atree_curs_Next(cascdel_tr_child_atree_cur
 inline atf_amc::FCascdel& atf_amc::cascdel_tr_child_atree_curs_Access(cascdel_tr_child_atree_curs &curs) {
     return *curs.row;
 }
-inline atf_amc::FCstring::FCstring() {
-    atf_amc::FCstring_Init(*this);
+
+// --- atf_amc.FCascdel..Ctor
+inline  atf_amc::FCascdel::FCascdel() {
+    atf_amc::FCascdel_Init(*this);
 }
 
-inline atf_amc::FCstring::~FCstring() {
-    atf_amc::FCstring_Uninit(*this);
+// --- atf_amc.FCascdel..Dtor
+inline  atf_amc::FCascdel::~FCascdel() {
+    atf_amc::FCascdel_Uninit(*this);
 }
-
 
 // --- atf_amc.FCstring..Init
 // Set all fields to initial values.
 inline void atf_amc::FCstring_Init(atf_amc::FCstring& cstring) {
     cstring.ind_cstring_next = (atf_amc::FCstring*)-1; // (atf_amc.FDb.ind_cstring) not-in-hash
 }
-inline atf_amc::FListtype::FListtype() {
-    atf_amc::FListtype_Init(*this);
+
+// --- atf_amc.FCstring..Ctor
+inline  atf_amc::FCstring::FCstring() {
+    atf_amc::FCstring_Init(*this);
 }
 
+// --- atf_amc.FCstring..Dtor
+inline  atf_amc::FCstring::~FCstring() {
+    atf_amc::FCstring_Uninit(*this);
+}
 
 // --- atf_amc.FListtype.step.Call
 // Invoke function by pointer
@@ -2295,10 +2354,16 @@ inline void atf_amc::FListtype_Init(atf_amc::FListtype& listtype) {
     listtype.seen = bool(false);
     listtype.step = NULL;
 }
-inline atf_amc::trace::trace() {
-    atf_amc::trace_Init(*this);
+
+// --- atf_amc.FListtype..Ctor
+inline  atf_amc::FListtype::FListtype() {
+    atf_amc::FListtype_Init(*this);
 }
 
+// --- atf_amc.trace..Ctor
+inline  atf_amc::trace::trace() {
+    atf_amc::trace_Init(*this);
+}
 
 // --- atf_amc.FDb.bh_typec.EmptyQ
 // Return true if index is empty
@@ -4317,38 +4382,40 @@ inline atf_amc::FThashElem& atf_amc::_db_thash_elem_curs_Access(_db_thash_elem_c
     return thash_elem_qFind(u64(curs.index));
 }
 
+// --- atf_amc.TypeG..Hash
+inline u32 atf_amc::TypeG_Hash(u32 prev, const atf_amc::TypeG& rhs) {
+    prev = i32_Hash(prev, rhs.typeg);
+    return prev;
+}
+
+// --- atf_amc.TypeG..EqOp
 inline bool atf_amc::TypeG::operator ==(const atf_amc::TypeG &rhs) const {
     return atf_amc::TypeG_Eq(const_cast<atf_amc::TypeG&>(*this),const_cast<atf_amc::TypeG&>(rhs));
 }
 
+// --- atf_amc.TypeG..NeOp
 inline bool atf_amc::TypeG::operator !=(const atf_amc::TypeG &rhs) const {
     return !atf_amc::TypeG_Eq(const_cast<atf_amc::TypeG&>(*this),const_cast<atf_amc::TypeG&>(rhs));
 }
 
+// --- atf_amc.TypeG..LtOp
 inline bool atf_amc::TypeG::operator <(const atf_amc::TypeG &rhs) const {
     return atf_amc::TypeG_Lt(const_cast<atf_amc::TypeG&>(*this),const_cast<atf_amc::TypeG&>(rhs));
 }
 
+// --- atf_amc.TypeG..GtOp
 inline bool atf_amc::TypeG::operator >(const atf_amc::TypeG &rhs) const {
-    return rhs < *this;
+    return atf_amc::TypeG_Lt(const_cast<atf_amc::TypeG&>(rhs),const_cast<atf_amc::TypeG&>(*this));
 }
 
+// --- atf_amc.TypeG..LeOp
 inline bool atf_amc::TypeG::operator <=(const atf_amc::TypeG &rhs) const {
-    return !(rhs < *this);
+    return !atf_amc::TypeG_Lt(const_cast<atf_amc::TypeG&>(rhs),const_cast<atf_amc::TypeG&>(*this));
 }
 
+// --- atf_amc.TypeG..GeOp
 inline bool atf_amc::TypeG::operator >=(const atf_amc::TypeG &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::TypeG::TypeG() {
-    atf_amc::TypeG_Init(*this);
-}
-
-
-// --- atf_amc.TypeG..Hash
-inline u32 atf_amc::TypeG_Hash(u32 prev, const atf_amc::TypeG & rhs) {
-    prev = i32_Hash(prev, rhs.typeg);
-    return prev;
+    return !atf_amc::TypeG_Lt(const_cast<atf_amc::TypeG&>(*this),const_cast<atf_amc::TypeG&>(rhs));
 }
 
 // --- atf_amc.TypeG..Lt
@@ -4385,10 +4452,11 @@ inline bool atf_amc::TypeG_Update(atf_amc::TypeG &lhs, atf_amc::TypeG& rhs) {
     }
     return ret;
 }
-inline atf_amc::FOptG::FOptG() {
-    atf_amc::FOptG_Init(*this);
-}
 
+// --- atf_amc.TypeG..Ctor
+inline  atf_amc::TypeG::TypeG() {
+    atf_amc::TypeG_Init(*this);
+}
 
 // --- atf_amc.FOptG.typeg.Get
 // Return pointer to optional last element (NULL if none)
@@ -4419,14 +4487,11 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::FOptG& row) {
 inline void atf_amc::FOptG_Init(atf_amc::FOptG& optg) {
     optg.length = u32(0);
 }
-inline atf_amc::FPerfSortString::FPerfSortString() {
-    atf_amc::FPerfSortString_Init(*this);
-}
 
-inline atf_amc::FPerfSortString::~FPerfSortString() {
-    atf_amc::FPerfSortString_Uninit(*this);
+// --- atf_amc.FOptG..Ctor
+inline  atf_amc::FOptG::FOptG() {
+    atf_amc::FOptG_Init(*this);
 }
-
 
 // --- atf_amc.FPerfSortString.orig.EmptyQ
 // Return true if index is empty
@@ -4624,14 +4689,16 @@ inline void atf_amc::FPerfSortString_Init(atf_amc::FPerfSortString& parent) {
     parent.sorted1_n     	= 0; // (atf_amc.FPerfSortString.sorted1)
     parent.sorted1_max   	= 0; // (atf_amc.FPerfSortString.sorted1)
 }
-inline atf_amc::FThashElem::FThashElem() {
-    atf_amc::FThashElem_Init(*this);
+
+// --- atf_amc.FPerfSortString..Ctor
+inline  atf_amc::FPerfSortString::FPerfSortString() {
+    atf_amc::FPerfSortString_Init(*this);
 }
 
-inline atf_amc::FThashElem::~FThashElem() {
-    atf_amc::FThashElem_Uninit(*this);
+// --- atf_amc.FPerfSortString..Dtor
+inline  atf_amc::FPerfSortString::~FPerfSortString() {
+    atf_amc::FPerfSortString_Uninit(*this);
 }
-
 
 // --- atf_amc.FThashElem..Init
 // Set all fields to initial values.
@@ -4639,14 +4706,16 @@ inline void atf_amc::FThashElem_Init(atf_amc::FThashElem& thash_elem) {
     thash_elem.key = u64(0);
     thash_elem.ind_thash_elem_next = (atf_amc::FThashElem*)-1; // (atf_amc.FDb.ind_thash_elem) not-in-hash
 }
-inline atf_amc::FTypeC::FTypeC() {
-    atf_amc::FTypeC_Init(*this);
+
+// --- atf_amc.FThashElem..Ctor
+inline  atf_amc::FThashElem::FThashElem() {
+    atf_amc::FThashElem_Init(*this);
 }
 
-inline atf_amc::FTypeC::~FTypeC() {
-    atf_amc::FTypeC_Uninit(*this);
+// --- atf_amc.FThashElem..Dtor
+inline  atf_amc::FThashElem::~FThashElem() {
+    atf_amc::FThashElem_Uninit(*this);
 }
-
 
 // --- atf_amc.FTypeC..Init
 // Set all fields to initial values.
@@ -4671,16 +4740,16 @@ inline void atf_amc::FTypeC_Init(atf_amc::FTypeC& typec) {
     typec.csl_h_typec_next = (atf_amc::FTypeC*)-1; // (atf_amc.FDb.csl_h_typec) not-in-list
     typec.cs_t_typec_next = (atf_amc::FTypeC*)-1; // (atf_amc.FDb.cs_t_typec) not-in-list
 }
-inline atf_amc::FTypeA::FTypeA() {
-    atf_amc::FTypeA_Init(*this);
-    // added because atf_amc.FTypeA.typec (Inlary) does not need initialization
-    // coverity[uninit_member]
+
+// --- atf_amc.FTypeC..Ctor
+inline  atf_amc::FTypeC::FTypeC() {
+    atf_amc::FTypeC_Init(*this);
 }
 
-inline atf_amc::FTypeA::~FTypeA() {
-    atf_amc::FTypeA_Uninit(*this);
+// --- atf_amc.FTypeC..Dtor
+inline  atf_amc::FTypeC::~FTypeC() {
+    atf_amc::FTypeC_Uninit(*this);
 }
-
 
 // --- atf_amc.FTypeA.typec.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
@@ -4885,14 +4954,18 @@ inline atf_amc::FTypeB& atf_amc::typea_bh_typeb_curs_Access(typea_bh_typeb_curs 
 inline bool atf_amc::typea_bh_typeb_curs_ValidQ(typea_bh_typeb_curs &curs) {
     return curs.temp_n > 0;
 }
-inline atf_amc::FTypeB::FTypeB() {
-    atf_amc::FTypeB_Init(*this);
+
+// --- atf_amc.FTypeA..Ctor
+inline  atf_amc::FTypeA::FTypeA() {
+    atf_amc::FTypeA_Init(*this);
+    // added because atf_amc.FTypeA.typec (Inlary) does not need initialization
+    // coverity[uninit_member]
 }
 
-inline atf_amc::FTypeB::~FTypeB() {
-    atf_amc::FTypeB_Uninit(*this);
+// --- atf_amc.FTypeA..Dtor
+inline  atf_amc::FTypeA::~FTypeA() {
+    atf_amc::FTypeA_Uninit(*this);
 }
-
 
 // --- atf_amc.FTypeB..Init
 // Set all fields to initial values.
@@ -4904,14 +4977,16 @@ inline void atf_amc::FTypeB_Init(atf_amc::FTypeB& typeb) {
     typeb.zdl_typeb_prev = NULL; // (atf_amc.FTypeA.zdl_typeb)
     typeb.bh_typeb_idx = -1; // (atf_amc.FTypeA.bh_typeb) not-in-heap
 }
-inline atf_amc::FTypeD::FTypeD() {
-    atf_amc::FTypeD_Init(*this);
+
+// --- atf_amc.FTypeB..Ctor
+inline  atf_amc::FTypeB::FTypeB() {
+    atf_amc::FTypeB_Init(*this);
 }
 
-inline atf_amc::FTypeD::~FTypeD() {
-    atf_amc::FTypeD_Uninit(*this);
+// --- atf_amc.FTypeB..Dtor
+inline  atf_amc::FTypeB::~FTypeB() {
+    atf_amc::FTypeB_Uninit(*this);
 }
-
 
 // --- atf_amc.FTypeD..Init
 // Set all fields to initial values.
@@ -4924,10 +4999,16 @@ inline void atf_amc::FTypeD_Init(atf_amc::FTypeD& typed) {
     typed.cd_typed_prev = NULL; // (atf_amc.FDb.cd_typed)
     typed.typed_next = (atf_amc::FTypeD*)-1; // (atf_amc.FDb.typed) not-in-tpool's freelist
 }
-inline atf_amc::FTypeK::FTypeK() {
-    atf_amc::FTypeK_Init(*this);
+
+// --- atf_amc.FTypeD..Ctor
+inline  atf_amc::FTypeD::FTypeD() {
+    atf_amc::FTypeD_Init(*this);
 }
 
+// --- atf_amc.FTypeD..Dtor
+inline  atf_amc::FTypeD::~FTypeD() {
+    atf_amc::FTypeD_Uninit(*this);
+}
 
 // --- atf_amc.FTypeK..Init
 // Set all fields to initial values.
@@ -4935,14 +5016,11 @@ inline void atf_amc::FTypeK_Init(atf_amc::FTypeK& parent) {
     parent.value = u32(0);
     parent._db_c_typek_in_ary = bool(false);
 }
-inline atf_amc::FTypeS::FTypeS() {
-    atf_amc::FTypeS_Init(*this);
-}
 
-inline atf_amc::FTypeS::~FTypeS() {
-    atf_amc::FTypeS_Uninit(*this);
+// --- atf_amc.FTypeK..Ctor
+inline  atf_amc::FTypeK::FTypeK() {
+    atf_amc::FTypeK_Init(*this);
 }
-
 
 // --- atf_amc.FTypeS.zdl_typet.EmptyQ
 // Return true if index is empty
@@ -5034,14 +5112,16 @@ inline void atf_amc::types_zdl_typet_curs_Next(types_zdl_typet_curs &curs) {
 inline atf_amc::FTypeT& atf_amc::types_zdl_typet_curs_Access(types_zdl_typet_curs &curs) {
     return *curs.row;
 }
-inline atf_amc::FTypeT::FTypeT() {
-    atf_amc::FTypeT_Init(*this);
+
+// --- atf_amc.FTypeS..Ctor
+inline  atf_amc::FTypeS::FTypeS() {
+    atf_amc::FTypeS_Init(*this);
 }
 
-inline atf_amc::FTypeT::~FTypeT() {
-    atf_amc::FTypeT_Uninit(*this);
+// --- atf_amc.FTypeS..Dtor
+inline  atf_amc::FTypeS::~FTypeS() {
+    atf_amc::FTypeS_Uninit(*this);
 }
-
 
 // --- atf_amc.FTypeT..Init
 // Set all fields to initial values.
@@ -5052,38 +5132,50 @@ inline void atf_amc::FTypeT_Init(atf_amc::FTypeT& typet) {
     typet.zdl_typet_prev = NULL; // (atf_amc.FTypeS.zdl_typet)
 }
 
+// --- atf_amc.FTypeT..Ctor
+inline  atf_amc::FTypeT::FTypeT() {
+    atf_amc::FTypeT_Init(*this);
+}
+
+// --- atf_amc.FTypeT..Dtor
+inline  atf_amc::FTypeT::~FTypeT() {
+    atf_amc::FTypeT_Uninit(*this);
+}
+
+// --- atf_amc.TypeA..Hash
+inline u32 atf_amc::TypeA_Hash(u32 prev, const atf_amc::TypeA& rhs) {
+    prev = i32_Hash(prev, rhs.typea);
+    return prev;
+}
+
+// --- atf_amc.TypeA..EqOp
 inline bool atf_amc::TypeA::operator ==(const atf_amc::TypeA &rhs) const {
     return atf_amc::TypeA_Eq(const_cast<atf_amc::TypeA&>(*this),const_cast<atf_amc::TypeA&>(rhs));
 }
 
+// --- atf_amc.TypeA..NeOp
 inline bool atf_amc::TypeA::operator !=(const atf_amc::TypeA &rhs) const {
     return !atf_amc::TypeA_Eq(const_cast<atf_amc::TypeA&>(*this),const_cast<atf_amc::TypeA&>(rhs));
 }
 
+// --- atf_amc.TypeA..LtOp
 inline bool atf_amc::TypeA::operator <(const atf_amc::TypeA &rhs) const {
     return atf_amc::TypeA_Lt(const_cast<atf_amc::TypeA&>(*this),const_cast<atf_amc::TypeA&>(rhs));
 }
 
+// --- atf_amc.TypeA..GtOp
 inline bool atf_amc::TypeA::operator >(const atf_amc::TypeA &rhs) const {
-    return rhs < *this;
+    return atf_amc::TypeA_Lt(const_cast<atf_amc::TypeA&>(rhs),const_cast<atf_amc::TypeA&>(*this));
 }
 
+// --- atf_amc.TypeA..LeOp
 inline bool atf_amc::TypeA::operator <=(const atf_amc::TypeA &rhs) const {
-    return !(rhs < *this);
+    return !atf_amc::TypeA_Lt(const_cast<atf_amc::TypeA&>(rhs),const_cast<atf_amc::TypeA&>(*this));
 }
 
+// --- atf_amc.TypeA..GeOp
 inline bool atf_amc::TypeA::operator >=(const atf_amc::TypeA &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::TypeA::TypeA() {
-    atf_amc::TypeA_Init(*this);
-}
-
-
-// --- atf_amc.TypeA..Hash
-inline u32 atf_amc::TypeA_Hash(u32 prev, const atf_amc::TypeA & rhs) {
-    prev = i32_Hash(prev, rhs.typea);
-    return prev;
+    return !atf_amc::TypeA_Lt(const_cast<atf_amc::TypeA&>(*this),const_cast<atf_amc::TypeA&>(rhs));
 }
 
 // --- atf_amc.TypeA..Lt
@@ -5120,14 +5212,11 @@ inline bool atf_amc::TypeA_Update(atf_amc::TypeA &lhs, atf_amc::TypeA& rhs) {
     }
     return ret;
 }
-inline atf_amc::FUnitSort::FUnitSort() {
-    atf_amc::FUnitSort_Init(*this);
-}
 
-inline atf_amc::FUnitSort::~FUnitSort() {
-    atf_amc::FUnitSort_Uninit(*this);
+// --- atf_amc.TypeA..Ctor
+inline  atf_amc::TypeA::TypeA() {
+    atf_amc::TypeA_Init(*this);
 }
-
 
 // --- atf_amc.FUnitSort.tary.EmptyQ
 // Return true if index is empty
@@ -5284,10 +5373,8 @@ inline i32 atf_amc::fixary_N(const atf_amc::FUnitSort& parent) {
 // --- atf_amc.FUnitSort.fixary.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 inline void atf_amc::fixary_Setary(atf_amc::FUnitSort& parent, const algo::aryptr<atf_amc::TypeA> &rhs) {
-    int n = 100 < rhs.n_elems ? 100 : rhs.n_elems;
-    for (int i = 0; i < n; i++) {
-        parent.fixary_elems[i] = rhs[i];
-    }
+    int n = i32_Min(100, rhs.n_elems);
+    memcpy(parent.fixary_elems, rhs.elems, sizeof(atf_amc::TypeA)*n);
 }
 
 // --- atf_amc.FUnitSort.fixary.qFind
@@ -5381,15 +5468,16 @@ inline void atf_amc::FUnitSort_Init(atf_amc::FUnitSort& parent) {
     parent.c_ptrary_n = 0; // (atf_amc.FUnitSort.c_ptrary)
     parent.c_ptrary_max = 0; // (atf_amc.FUnitSort.c_ptrary)
 }
-inline atf_amc::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_amc::FieldId::FieldId(atf_amc_FieldIdEnum arg) { this->value = i32(arg); }
-inline atf_amc::FieldId::FieldId() {
-    atf_amc::FieldId_Init(*this);
+
+// --- atf_amc.FUnitSort..Ctor
+inline  atf_amc::FUnitSort::FUnitSort() {
+    atf_amc::FUnitSort_Init(*this);
 }
 
+// --- atf_amc.FUnitSort..Dtor
+inline  atf_amc::FUnitSort::~FUnitSort() {
+    atf_amc::FUnitSort_Uninit(*this);
+}
 
 // --- atf_amc.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -5404,7 +5492,7 @@ inline void atf_amc::value_SetEnum(atf_amc::FieldId& parent, atf_amc_FieldIdEnum
 }
 
 // --- atf_amc.FieldId.value.Cast
-inline atf_amc::FieldId::operator atf_amc_FieldIdEnum () const {
+inline  atf_amc::FieldId::operator atf_amc_FieldIdEnum() const {
     return atf_amc_FieldIdEnum((*this).value);
 }
 
@@ -5413,10 +5501,22 @@ inline atf_amc::FieldId::operator atf_amc_FieldIdEnum () const {
 inline void atf_amc::FieldId_Init(atf_amc::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline atf_amc::Hooktype::Hooktype() {
-    atf_amc::Hooktype_Init(*this);
+
+// --- atf_amc.FieldId..Ctor
+inline  atf_amc::FieldId::FieldId() {
+    atf_amc::FieldId_Init(*this);
 }
 
+// --- atf_amc.FieldId..FieldwiseCtor
+inline  atf_amc::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_amc.FieldId..EnumCtor
+inline  atf_amc::FieldId::FieldId(atf_amc_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- atf_amc.Hooktype.callback.Call
 // Invoke function by pointer
@@ -5454,16 +5554,11 @@ inline void atf_amc::Hooktype_Init(atf_amc::Hooktype& parent) {
     parent.callback = NULL;
     parent.callback_ctx = 0;
 }
-inline atf_amc::InlaryPrint::InlaryPrint() {
-    atf_amc::InlaryPrint_Init(*this);
-    // added because atf_amc.InlaryPrint.inlary (Inlary) does not need initialization
-    // coverity[uninit_member]
-}
 
-inline atf_amc::InlaryPrint::~InlaryPrint() {
-    atf_amc::InlaryPrint_Uninit(*this);
+// --- atf_amc.Hooktype..Ctor
+inline  atf_amc::Hooktype::Hooktype() {
+    atf_amc::Hooktype_Init(*this);
 }
-
 
 // --- atf_amc.InlaryPrint.fixary.Fill
 // Set all elements of fixed array to value RHS
@@ -5504,10 +5599,8 @@ inline i32 atf_amc::fixary_N(const atf_amc::InlaryPrint& parent) {
 // --- atf_amc.InlaryPrint.fixary.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 inline void atf_amc::fixary_Setary(atf_amc::InlaryPrint& parent, const algo::aryptr<u32> &rhs) {
-    int n = 3 < rhs.n_elems ? 3 : rhs.n_elems;
-    for (int i = 0; i < n; i++) {
-        parent.fixary_elems[i] = rhs[i];
-    }
+    int n = i32_Min(3, rhs.n_elems);
+    memcpy(parent.fixary_elems, rhs.elems, sizeof(u32)*n);
 }
 
 // --- atf_amc.InlaryPrint.fixary.qFind
@@ -5557,6 +5650,13 @@ inline i32 atf_amc::inlary_Max(atf_amc::InlaryPrint& parent) {
 inline i32 atf_amc::inlary_N(const atf_amc::InlaryPrint& parent) {
     (void)parent;//only to avoid -Wunused-parameter
     return parent.inlary_n;
+}
+
+// --- atf_amc.InlaryPrint.inlary.Setary
+// Set contents of fixed array to RHS; Input length is trimmed as necessary
+inline void atf_amc::inlary_Setary(atf_amc::InlaryPrint& parent, const algo::aryptr<u32> &rhs) {
+    int n = i32_Min(10, rhs.n_elems);
+    memcpy(reinterpret_cast<u32*>(parent.inlary_data), rhs.elems, sizeof(u32)*n);
 }
 
 // --- atf_amc.InlaryPrint.inlary.qFind
@@ -5621,14 +5721,35 @@ inline void atf_amc::InlaryPrint_inlary_curs_Next(InlaryPrint_inlary_curs &curs)
 inline u32& atf_amc::InlaryPrint_inlary_curs_Access(InlaryPrint_inlary_curs &curs) {
     return inlary_qFind((*curs.parent), u64(curs.index));
 }
-inline atf_amc::Lary32::Lary32() {
-    atf_amc::Lary32_Init(*this);
+
+// --- atf_amc.InlaryPrint..AssignOp
+inline atf_amc::InlaryPrint& atf_amc::InlaryPrint::operator =(const atf_amc::InlaryPrint &rhs) {
+    fixary_Setary(*this, fixary_Getary(const_cast<atf_amc::InlaryPrint&>(rhs)));
+    inlary_Setary(*this, inlary_Getary(const_cast<atf_amc::InlaryPrint&>(rhs)));
+    return *this;
 }
 
-inline atf_amc::Lary32::~Lary32() {
-    atf_amc::Lary32_Uninit(*this);
+// --- atf_amc.InlaryPrint..Ctor
+inline  atf_amc::InlaryPrint::InlaryPrint() {
+    atf_amc::InlaryPrint_Init(*this);
+    // added because atf_amc.InlaryPrint.inlary (Inlary) does not need initialization
+    // coverity[uninit_member]
 }
 
+// --- atf_amc.InlaryPrint..Dtor
+inline  atf_amc::InlaryPrint::~InlaryPrint() {
+    atf_amc::InlaryPrint_Uninit(*this);
+}
+
+// --- atf_amc.InlaryPrint..CopyCtor
+inline  atf_amc::InlaryPrint::InlaryPrint(const atf_amc::InlaryPrint &rhs) {
+    for (int i = 0; i < 3; i++) {
+        fixary_elems[i] = 0;
+    }
+    fixary_Setary(*this, fixary_Getary(const_cast<atf_amc::InlaryPrint&>(rhs)));
+    inlary_n = 0; // inlary: initialize count
+    inlary_Setary(*this, inlary_Getary(const_cast<atf_amc::InlaryPrint&>(rhs)));
+}
 
 // --- atf_amc.Lary32.lary.EmptyQ
 // Return true if index is empty
@@ -5696,12 +5817,16 @@ inline void atf_amc::Lary32_lary_curs_Next(Lary32_lary_curs &curs) {
 inline u32& atf_amc::Lary32_lary_curs_Access(Lary32_lary_curs &curs) {
     return lary_qFind((*curs.parent), u64(curs.index));
 }
-inline atf_amc::Linebuf::Linebuf() {
-    atf_amc::Linebuf_Init(*this);
-    // added because atf_amc.Linebuf.in (Fbuf) does not need initialization
-    // coverity[uninit_member]
+
+// --- atf_amc.Lary32..Ctor
+inline  atf_amc::Lary32::Lary32() {
+    atf_amc::Lary32_Init(*this);
 }
 
+// --- atf_amc.Lary32..Dtor
+inline  atf_amc::Lary32::~Lary32() {
+    atf_amc::Lary32_Uninit(*this);
+}
 
 // --- atf_amc.Linebuf.in.Max
 // Return max. number of bytes in the buffer.
@@ -5715,16 +5840,13 @@ inline i32 atf_amc::in_Max(atf_amc::Linebuf& linebuf) {
 inline i32 atf_amc::in_N(atf_amc::Linebuf& linebuf) {
     return linebuf.in_end - linebuf.in_start;
 }
-inline atf_amc::MsgHdrLT::MsgHdrLT(u8                             in_len
-        ,char                           in_type)
-    : len(in_len)
-    , type(in_type)
-{
-}
-inline atf_amc::MsgHdrLT::MsgHdrLT() {
-    atf_amc::MsgHdrLT_Init(*this);
-}
 
+// --- atf_amc.Linebuf..Ctor
+inline  atf_amc::Linebuf::Linebuf() {
+    atf_amc::Linebuf_Init(*this);
+    // added because atf_amc.Linebuf.in (Fbuf) does not need initialization
+    // coverity[uninit_member]
+}
 
 // --- atf_amc.MsgHdrLT.type.GetEnum
 // Get value of field as enum type
@@ -5756,15 +5878,18 @@ inline void atf_amc::MsgHdrLT_Init(atf_amc::MsgHdrLT& o) {
     o.len = u8(0);
     o.type = char(0);
 }
-inline atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase(u32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase(atf_amc_MsgHdrLTMsgsCaseEnum arg) { this->value = u32(arg); }
-inline atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase() {
-    atf_amc::MsgHdrLTMsgsCase_Init(*this);
+
+// --- atf_amc.MsgHdrLT..Ctor
+inline  atf_amc::MsgHdrLT::MsgHdrLT() {
+    atf_amc::MsgHdrLT_Init(*this);
 }
 
+// --- atf_amc.MsgHdrLT..FieldwiseCtor
+inline  atf_amc::MsgHdrLT::MsgHdrLT(u8 in_len, char in_type)
+    : len(in_len)
+    , type(in_type)
+ {
+}
 
 // --- atf_amc.MsgHdrLTMsgsCase.value.GetEnum
 // Get value of field as enum type
@@ -5779,7 +5904,7 @@ inline void atf_amc::value_SetEnum(atf_amc::MsgHdrLTMsgsCase& parent, atf_amc_Ms
 }
 
 // --- atf_amc.MsgHdrLTMsgsCase.value.Cast
-inline atf_amc::MsgHdrLTMsgsCase::operator atf_amc_MsgHdrLTMsgsCaseEnum () const {
+inline  atf_amc::MsgHdrLTMsgsCase::operator atf_amc_MsgHdrLTMsgsCaseEnum() const {
     return atf_amc_MsgHdrLTMsgsCaseEnum((*this).value);
 }
 
@@ -5788,10 +5913,22 @@ inline atf_amc::MsgHdrLTMsgsCase::operator atf_amc_MsgHdrLTMsgsCaseEnum () const
 inline void atf_amc::MsgHdrLTMsgsCase_Init(atf_amc::MsgHdrLTMsgsCase& parent) {
     parent.value = u32(0);
 }
-inline atf_amc::MsgHdrLT_curs::MsgHdrLT_curs() {
-    atf_amc::MsgHdrLT_curs_Init(*this);
+
+// --- atf_amc.MsgHdrLTMsgsCase..Ctor
+inline  atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase() {
+    atf_amc::MsgHdrLTMsgsCase_Init(*this);
 }
 
+// --- atf_amc.MsgHdrLTMsgsCase..FieldwiseCtor
+inline  atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_amc.MsgHdrLTMsgsCase..EnumCtor
+inline  atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase(atf_amc_MsgHdrLTMsgsCaseEnum arg) {
+    this->value = u32(arg);
+}
 
 // --- atf_amc.MsgHdrLT_curs..ValidQ
 inline bool atf_amc::MsgHdrLT_curs_ValidQ(atf_amc::MsgHdrLT_curs& curs) {
@@ -5845,43 +5982,11 @@ inline void atf_amc::MsgHdrLT_curs_Init(atf_amc::MsgHdrLT_curs& parent) {
     parent.limit = i32(0);
     parent.msglen = i32(0);
 }
-inline atf_amc::MsgType::MsgType(u16                            in_value)
-    : value(in_value)
-{
-}
-inline atf_amc::MsgType::MsgType(atf_amc_MsgTypeEnum arg) { this->value = u16(arg); }
 
-inline bool atf_amc::MsgType::operator ==(const atf_amc::MsgType &rhs) const {
-    return atf_amc::MsgType_Eq(const_cast<atf_amc::MsgType&>(*this),const_cast<atf_amc::MsgType&>(rhs));
+// --- atf_amc.MsgHdrLT_curs..Ctor
+inline  atf_amc::MsgHdrLT_curs::MsgHdrLT_curs() {
+    atf_amc::MsgHdrLT_curs_Init(*this);
 }
-
-inline bool atf_amc::MsgType::operator !=(const atf_amc::MsgType &rhs) const {
-    return !atf_amc::MsgType_Eq(const_cast<atf_amc::MsgType&>(*this),const_cast<atf_amc::MsgType&>(rhs));
-}
-
-inline bool atf_amc::MsgType::operator <(const atf_amc::MsgType &rhs) const {
-    return atf_amc::MsgType_Lt(const_cast<atf_amc::MsgType&>(*this),const_cast<atf_amc::MsgType&>(rhs));
-}
-
-inline bool atf_amc::MsgType::operator >(const atf_amc::MsgType &rhs) const {
-    return rhs < *this;
-}
-
-inline bool atf_amc::MsgType::operator <=(const atf_amc::MsgType &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool atf_amc::MsgType::operator >=(const atf_amc::MsgType &rhs) const {
-    return !(*this < rhs);
-}
-
-inline bool atf_amc::MsgType::operator ==(atf_amc_MsgTypeEnum rhs) const {
-    return atf_amc::MsgType_EqEnum(const_cast<atf_amc::MsgType&>(*this),rhs);
-}
-inline atf_amc::MsgType::MsgType() {
-    atf_amc::MsgType_Init(*this);
-}
-
 
 // --- atf_amc.MsgType.value.GetEnum
 // Get value of field as enum type
@@ -5896,7 +6001,7 @@ inline void atf_amc::value_SetEnum(atf_amc::MsgType& parent, atf_amc_MsgTypeEnum
 }
 
 // --- atf_amc.MsgType.value.Cast
-inline atf_amc::MsgType::operator atf_amc_MsgTypeEnum () const {
+inline  atf_amc::MsgType::operator atf_amc_MsgTypeEnum() const {
     return atf_amc_MsgTypeEnum((*this).value);
 }
 
@@ -5904,6 +6009,36 @@ inline atf_amc::MsgType::operator atf_amc_MsgTypeEnum () const {
 inline u32 atf_amc::MsgType_Hash(u32 prev, atf_amc::MsgType rhs) {
     prev = u16_Hash(prev, rhs.value);
     return prev;
+}
+
+// --- atf_amc.MsgType..EqOp
+inline bool atf_amc::MsgType::operator ==(const atf_amc::MsgType &rhs) const {
+    return atf_amc::MsgType_Eq(const_cast<atf_amc::MsgType&>(*this),const_cast<atf_amc::MsgType&>(rhs));
+}
+
+// --- atf_amc.MsgType..NeOp
+inline bool atf_amc::MsgType::operator !=(const atf_amc::MsgType &rhs) const {
+    return !atf_amc::MsgType_Eq(const_cast<atf_amc::MsgType&>(*this),const_cast<atf_amc::MsgType&>(rhs));
+}
+
+// --- atf_amc.MsgType..LtOp
+inline bool atf_amc::MsgType::operator <(const atf_amc::MsgType &rhs) const {
+    return atf_amc::MsgType_Lt(const_cast<atf_amc::MsgType&>(*this),const_cast<atf_amc::MsgType&>(rhs));
+}
+
+// --- atf_amc.MsgType..GtOp
+inline bool atf_amc::MsgType::operator >(const atf_amc::MsgType &rhs) const {
+    return atf_amc::MsgType_Lt(const_cast<atf_amc::MsgType&>(rhs),const_cast<atf_amc::MsgType&>(*this));
+}
+
+// --- atf_amc.MsgType..LeOp
+inline bool atf_amc::MsgType::operator <=(const atf_amc::MsgType &rhs) const {
+    return !atf_amc::MsgType_Lt(const_cast<atf_amc::MsgType&>(rhs),const_cast<atf_amc::MsgType&>(*this));
+}
+
+// --- atf_amc.MsgType..GeOp
+inline bool atf_amc::MsgType::operator >=(const atf_amc::MsgType &rhs) const {
+    return !atf_amc::MsgType_Lt(const_cast<atf_amc::MsgType&>(*this),const_cast<atf_amc::MsgType&>(rhs));
 }
 
 // --- atf_amc.MsgType..Lt
@@ -5943,20 +6078,28 @@ inline bool atf_amc::MsgType_Update(atf_amc::MsgType &lhs, atf_amc::MsgType rhs)
 
 // --- atf_amc.MsgType..EqEnum
 // define enum comparison operator to avoid ambiguity
-inline bool atf_amc::MsgType_EqEnum(atf_amc::MsgType lhs, atf_amc_MsgTypeEnum rhs) {
-    return atf_amc_MsgTypeEnum(lhs.value) == rhs;
-}
-inline atf_amc::MsgLength::MsgLength(u16                            in_value)
-    : value(in_value)
-{
-}
-inline atf_amc::MsgLength::MsgLength() {
-    atf_amc::MsgLength_Init(*this);
+inline bool atf_amc::MsgType::operator ==(atf_amc_MsgTypeEnum rhs) const {
+    return atf_amc_MsgTypeEnum(value) == rhs;
 }
 
+// --- atf_amc.MsgType..Ctor
+inline  atf_amc::MsgType::MsgType() {
+    atf_amc::MsgType_Init(*this);
+}
+
+// --- atf_amc.MsgType..FieldwiseCtor
+inline  atf_amc::MsgType::MsgType(u16 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_amc.MsgType..EnumCtor
+inline  atf_amc::MsgType::MsgType(atf_amc_MsgTypeEnum arg) {
+    this->value = u16(arg);
+}
 
 // --- atf_amc.MsgLength.value.Cast
-inline atf_amc::MsgLength::operator u16 () const {
+inline  atf_amc::MsgLength::operator u16() const {
     return u16((*this).value);
 }
 
@@ -6000,29 +6143,33 @@ inline bool atf_amc::MsgLength_Update(atf_amc::MsgLength &lhs, atf_amc::MsgLengt
     }
     return ret;
 }
-inline atf_amc::MsgHeader::MsgHeader(atf_amc::MsgType               in_type
-        ,atf_amc::MsgLength             in_length)
-    : type(in_type)
-    , length(in_length)
-{
+
+// --- atf_amc.MsgLength..Ctor
+inline  atf_amc::MsgLength::MsgLength() {
+    atf_amc::MsgLength_Init(*this);
 }
 
+// --- atf_amc.MsgLength..FieldwiseCtor
+inline  atf_amc::MsgLength::MsgLength(u16 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_amc.MsgHeader..Hash
+inline u32 atf_amc::MsgHeader_Hash(u32 prev, const atf_amc::MsgHeader& rhs) {
+    prev = MsgType_Hash(prev, rhs.type);
+    prev = MsgLength_Hash(prev, rhs.length);
+    return prev;
+}
+
+// --- atf_amc.MsgHeader..EqOp
 inline bool atf_amc::MsgHeader::operator ==(const atf_amc::MsgHeader &rhs) const {
     return atf_amc::MsgHeader_Eq(const_cast<atf_amc::MsgHeader&>(*this),const_cast<atf_amc::MsgHeader&>(rhs));
 }
 
+// --- atf_amc.MsgHeader..NeOp
 inline bool atf_amc::MsgHeader::operator !=(const atf_amc::MsgHeader &rhs) const {
     return !atf_amc::MsgHeader_Eq(const_cast<atf_amc::MsgHeader&>(*this),const_cast<atf_amc::MsgHeader&>(rhs));
-}
-inline atf_amc::MsgHeader::MsgHeader() {
-}
-
-
-// --- atf_amc.MsgHeader..Hash
-inline u32 atf_amc::MsgHeader_Hash(u32 prev, const atf_amc::MsgHeader & rhs) {
-    prev = MsgType_Hash(prev, rhs.type);
-    prev = MsgLength_Hash(prev, rhs.length);
-    return prev;
 }
 
 // --- atf_amc.MsgHeader..GetMsgLength
@@ -6058,10 +6205,17 @@ inline bool atf_amc::MsgHeader_Eq(atf_amc::MsgHeader& lhs, atf_amc::MsgHeader& r
     retval = atf_amc::MsgLength_Eq(lhs.length, rhs.length);
     return retval;
 }
-inline atf_amc::MsgHeader_curs::MsgHeader_curs() {
-    atf_amc::MsgHeader_curs_Init(*this);
+
+// --- atf_amc.MsgHeader..Ctor
+inline  atf_amc::MsgHeader::MsgHeader() {
 }
 
+// --- atf_amc.MsgHeader..FieldwiseCtor
+inline  atf_amc::MsgHeader::MsgHeader(atf_amc::MsgType in_type, atf_amc::MsgLength in_length)
+    : type(in_type)
+    , length(in_length)
+ {
+}
 
 // --- atf_amc.MsgHeader_curs..ValidQ
 inline bool atf_amc::MsgHeader_curs_ValidQ(atf_amc::MsgHeader_curs& curs) {
@@ -6115,16 +6269,11 @@ inline void atf_amc::MsgHeader_curs_Init(atf_amc::MsgHeader_curs& parent) {
     parent.limit = i32(0);
     parent.msglen = i32(0);
 }
-inline atf_amc::MsgLTA::MsgLTA(const algo::strptr&            in_a)
-    : a(in_a)
-{
-    this->len = u8(ssizeof(*this) + (-2));
-    this->type = char('A');
-}
-inline atf_amc::MsgLTA::MsgLTA() {
-    atf_amc::MsgLTA_Init(*this);
-}
 
+// --- atf_amc.MsgHeader_curs..Ctor
+inline  atf_amc::MsgHeader_curs::MsgHeader_curs() {
+    atf_amc::MsgHeader_curs_Init(*this);
+}
 
 // --- atf_amc.MsgLTA.base.Castdown
 // Check if atf_amc::MsgHdrLT is an instance of MsgLTA by checking the type field
@@ -6160,16 +6309,19 @@ inline void atf_amc::MsgLTA_Init(atf_amc::MsgLTA& parent) {
     parent.len = u8(ssizeof(parent) + (-2));
     parent.type = char('A');
 }
-inline atf_amc::MsgLTB::MsgLTB(const algo::strptr&            in_b)
-    : b(in_b)
-{
-    this->len = u8(ssizeof(*this) + (-2));
-    this->type = char('B');
-}
-inline atf_amc::MsgLTB::MsgLTB() {
-    atf_amc::MsgLTB_Init(*this);
+
+// --- atf_amc.MsgLTA..Ctor
+inline  atf_amc::MsgLTA::MsgLTA() {
+    atf_amc::MsgLTA_Init(*this);
 }
 
+// --- atf_amc.MsgLTA..FieldwiseCtor
+inline  atf_amc::MsgLTA::MsgLTA(const algo::strptr& in_a)
+    : a(in_a)
+ {
+    this->len = u8(ssizeof(*this) + (-2));
+    this->type = char('A');
+}
 
 // --- atf_amc.MsgLTB.base.Castdown
 // Check if atf_amc::MsgHdrLT is an instance of MsgLTB by checking the type field
@@ -6205,10 +6357,19 @@ inline void atf_amc::MsgLTB_Init(atf_amc::MsgLTB& parent) {
     parent.len = u8(ssizeof(parent) + (-2));
     parent.type = char('B');
 }
-inline atf_amc::MsgLTO::MsgLTO() {
-    atf_amc::MsgLTO_Init(*this);
+
+// --- atf_amc.MsgLTB..Ctor
+inline  atf_amc::MsgLTB::MsgLTB() {
+    atf_amc::MsgLTB_Init(*this);
 }
 
+// --- atf_amc.MsgLTB..FieldwiseCtor
+inline  atf_amc::MsgLTB::MsgLTB(const algo::strptr& in_b)
+    : b(in_b)
+ {
+    this->len = u8(ssizeof(*this) + (-2));
+    this->type = char('B');
+}
 
 // --- atf_amc.MsgLTO.base.Castdown
 // Check if atf_amc::MsgHdrLT is an instance of MsgLTO by checking the type field
@@ -6260,10 +6421,11 @@ inline void atf_amc::MsgLTO_Init(atf_amc::MsgLTO& parent) {
     parent.len = u8(ssizeof(parent) + (-2));
     parent.type = char('O');
 }
-inline atf_amc::MsgLTV::MsgLTV() {
-    atf_amc::MsgLTV_Init(*this);
-}
 
+// --- atf_amc.MsgLTO..Ctor
+inline  atf_amc::MsgLTO::MsgLTO() {
+    atf_amc::MsgLTO_Init(*this);
+}
 
 // --- atf_amc.MsgLTV.base.Castdown
 // Check if atf_amc::MsgHdrLT is an instance of MsgLTV by checking the type field
@@ -6337,28 +6499,36 @@ inline void atf_amc::MsgLTV_Init(atf_amc::MsgLTV& parent) {
     parent.len = u8(ssizeof(parent) + (-2));
     parent.type = char('V');
 }
-inline atf_amc::Msgbuf::Msgbuf() {
-    atf_amc::Msgbuf_Init(*this);
-    // added because atf_amc.Msgbuf.in (Fbuf) does not need initialization
-    // coverity[uninit_member]
+
+// --- atf_amc.MsgLTV..Ctor
+inline  atf_amc::MsgLTV::MsgLTV() {
+    atf_amc::MsgLTV_Init(*this);
 }
 
-inline atf_amc::Msgbuf::~Msgbuf() {
-    atf_amc::Msgbuf_Uninit(*this);
-}
-
-
-// --- atf_amc.Msgbuf.in.Max
+// --- atf_amc.Msgbuf.in_buf.Max
 // Return max. number of bytes in the buffer.
-inline i32 atf_amc::in_Max(atf_amc::Msgbuf& msgbuf) {
+inline i32 atf_amc::in_buf_Max(atf_amc::Msgbuf& msgbuf) {
     return 64;
     (void)msgbuf;//only to avoid -Wunused-parameter
 }
 
-// --- atf_amc.Msgbuf.in.N
+// --- atf_amc.Msgbuf.in_buf.N
 // Return number of bytes in the buffer.
-inline i32 atf_amc::in_N(atf_amc::Msgbuf& msgbuf) {
-    return msgbuf.in_end - msgbuf.in_start;
+inline i32 atf_amc::in_buf_N(atf_amc::Msgbuf& msgbuf) {
+    return msgbuf.in_buf_end - msgbuf.in_buf_start;
+}
+
+// --- atf_amc.Msgbuf.in_custom.Max
+// Return max. number of bytes in the buffer.
+inline i32 atf_amc::in_custom_Max(atf_amc::Msgbuf& msgbuf) {
+    return 64;
+    (void)msgbuf;//only to avoid -Wunused-parameter
+}
+
+// --- atf_amc.Msgbuf.in_custom.N
+// Return number of bytes in the buffer.
+inline i32 atf_amc::in_custom_N(atf_amc::Msgbuf& msgbuf) {
+    return msgbuf.in_custom_end - msgbuf.in_custom_start;
 }
 
 // --- atf_amc.Msgbuf.out_extra.Max
@@ -6386,15 +6556,18 @@ inline i32 atf_amc::in_extra_Max(atf_amc::Msgbuf& msgbuf) {
 inline i32 atf_amc::in_extra_N(atf_amc::Msgbuf& msgbuf) {
     return msgbuf.in_extra_end - msgbuf.in_extra_start;
 }
-inline atf_amc::MsgsCase::MsgsCase(u32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_amc::MsgsCase::MsgsCase(atf_amc_MsgsCaseEnum arg) { this->value = u32(arg); }
-inline atf_amc::MsgsCase::MsgsCase() {
-    atf_amc::MsgsCase_Init(*this);
+
+// --- atf_amc.Msgbuf..Ctor
+inline  atf_amc::Msgbuf::Msgbuf() {
+    atf_amc::Msgbuf_Init(*this);
+    // added because atf_amc.Msgbuf.in_buf (Fbuf) does not need initialization
+    // coverity[uninit_member]
 }
 
+// --- atf_amc.Msgbuf..Dtor
+inline  atf_amc::Msgbuf::~Msgbuf() {
+    atf_amc::Msgbuf_Uninit(*this);
+}
 
 // --- atf_amc.MsgsCase.value.GetEnum
 // Get value of field as enum type
@@ -6409,7 +6582,7 @@ inline void atf_amc::value_SetEnum(atf_amc::MsgsCase& parent, atf_amc_MsgsCaseEn
 }
 
 // --- atf_amc.MsgsCase.value.Cast
-inline atf_amc::MsgsCase::operator atf_amc_MsgsCaseEnum () const {
+inline  atf_amc::MsgsCase::operator atf_amc_MsgsCaseEnum() const {
     return atf_amc_MsgsCaseEnum((*this).value);
 }
 
@@ -6418,10 +6591,22 @@ inline atf_amc::MsgsCase::operator atf_amc_MsgsCaseEnum () const {
 inline void atf_amc::MsgsCase_Init(atf_amc::MsgsCase& parent) {
     parent.value = u32(0);
 }
-inline atf_amc::NetBitfld1::NetBitfld1() {
-    atf_amc::NetBitfld1_Init(*this);
+
+// --- atf_amc.MsgsCase..Ctor
+inline  atf_amc::MsgsCase::MsgsCase() {
+    atf_amc::MsgsCase_Init(*this);
 }
 
+// --- atf_amc.MsgsCase..FieldwiseCtor
+inline  atf_amc::MsgsCase::MsgsCase(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_amc.MsgsCase..EnumCtor
+inline  atf_amc::MsgsCase::MsgsCase(atf_amc_MsgsCaseEnum arg) {
+    this->value = u32(arg);
+}
 
 // --- atf_amc.NetBitfld1.value.Get
 inline u16 atf_amc::value_Get(const atf_amc::NetBitfld1& parent) {
@@ -6480,10 +6665,11 @@ inline void atf_amc::bits8_12_Set(atf_amc::NetBitfld1& parent, u8 rhs) {
 inline void atf_amc::NetBitfld1_Init(atf_amc::NetBitfld1& parent) {
     parent.value_be = htobe16(0); // write big-endian value to memory
 }
-inline atf_amc::OptAlloc::OptAlloc() {
-    atf_amc::OptAlloc_Init(*this);
-}
 
+// --- atf_amc.NetBitfld1..Ctor
+inline  atf_amc::NetBitfld1::NetBitfld1() {
+    atf_amc::NetBitfld1_Init(*this);
+}
 
 // --- atf_amc.OptAlloc.typeg.Get
 // Return pointer to optional last element (NULL if none)
@@ -6514,10 +6700,11 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptAlloc& row) {
 inline void atf_amc::OptAlloc_Init(atf_amc::OptAlloc& optalloc) {
     optalloc.length = u32(0);
 }
-inline atf_amc::OptAlloc_curs::OptAlloc_curs() {
-    atf_amc::OptAlloc_curs_Init(*this);
-}
 
+// --- atf_amc.OptAlloc..Ctor
+inline  atf_amc::OptAlloc::OptAlloc() {
+    atf_amc::OptAlloc_Init(*this);
+}
 
 // --- atf_amc.OptAlloc_curs..ValidQ
 inline bool atf_amc::OptAlloc_curs_ValidQ(atf_amc::OptAlloc_curs& curs) {
@@ -6571,10 +6758,11 @@ inline void atf_amc::OptAlloc_curs_Init(atf_amc::OptAlloc_curs& parent) {
     parent.limit = i32(0);
     parent.msglen = i32(0);
 }
-inline atf_amc::OptG::OptG() {
-    atf_amc::OptG_Init(*this);
-}
 
+// --- atf_amc.OptAlloc_curs..Ctor
+inline  atf_amc::OptAlloc_curs::OptAlloc_curs() {
+    atf_amc::OptAlloc_curs_Init(*this);
+}
 
 // --- atf_amc.OptG.typeg.Get
 // Return pointer to optional last element (NULL if none)
@@ -6605,10 +6793,11 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptG& row) {
 inline void atf_amc::OptG_Init(atf_amc::OptG& optg) {
     optg.length = u32(0);
 }
-inline atf_amc::OptG_curs::OptG_curs() {
-    atf_amc::OptG_curs_Init(*this);
-}
 
+// --- atf_amc.OptG..Ctor
+inline  atf_amc::OptG::OptG() {
+    atf_amc::OptG_Init(*this);
+}
 
 // --- atf_amc.OptG_curs..ValidQ
 inline bool atf_amc::OptG_curs_ValidQ(atf_amc::OptG_curs& curs) {
@@ -6662,10 +6851,11 @@ inline void atf_amc::OptG_curs_Init(atf_amc::OptG_curs& parent) {
     parent.limit = i32(0);
     parent.msglen = i32(0);
 }
-inline atf_amc::OptOptG::OptOptG() {
-    atf_amc::OptOptG_Init(*this);
-}
 
+// --- atf_amc.OptG_curs..Ctor
+inline  atf_amc::OptG_curs::OptG_curs() {
+    atf_amc::OptG_curs_Init(*this);
+}
 
 // --- atf_amc.OptOptG.optg.Get
 // Return pointer to optional last element (NULL if none)
@@ -6700,10 +6890,11 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptOptG& row) {
 inline void atf_amc::OptOptG_Init(atf_amc::OptOptG& parent) {
     parent.length = u32(0);
 }
-inline atf_amc::OptOptG_curs::OptOptG_curs() {
-    atf_amc::OptOptG_curs_Init(*this);
-}
 
+// --- atf_amc.OptOptG..Ctor
+inline  atf_amc::OptOptG::OptOptG() {
+    atf_amc::OptOptG_Init(*this);
+}
 
 // --- atf_amc.OptOptG_curs..ValidQ
 inline bool atf_amc::OptOptG_curs_ValidQ(atf_amc::OptOptG_curs& curs) {
@@ -6757,10 +6948,11 @@ inline void atf_amc::OptOptG_curs_Init(atf_amc::OptOptG_curs& parent) {
     parent.limit = i32(0);
     parent.msglen = i32(0);
 }
-inline atf_amc::PmaskMultiple::PmaskMultiple() {
-    atf_amc::PmaskMultiple_Init(*this);
-}
 
+// --- atf_amc.OptOptG_curs..Ctor
+inline  atf_amc::OptOptG_curs::OptOptG_curs() {
+    atf_amc::OptOptG_curs_Init(*this);
+}
 
 // --- atf_amc.PmaskMultiple.present.N
 // Return constant 1
@@ -7729,10 +7921,11 @@ inline bool atf_amc::PmaskMultiple_nullable_bitcurs_ValidQ(PmaskMultiple_nullabl
 inline int& atf_amc::PmaskMultiple_nullable_bitcurs_Access(PmaskMultiple_nullable_bitcurs &curs) {
     return curs.bit;
 }
-inline atf_amc::PmaskU128::PmaskU128() {
-    atf_amc::PmaskU128_Init(*this);
-}
 
+// --- atf_amc.PmaskMultiple..Ctor
+inline  atf_amc::PmaskMultiple::PmaskMultiple() {
+    atf_amc::PmaskMultiple_Init(*this);
+}
 
 // --- atf_amc.PmaskU128.pmask.N
 // Return constant 1
@@ -9735,10 +9928,11 @@ inline void atf_amc::value71_Set(atf_amc::PmaskU128& parent, u32 rhs) {
     parent.value71 = rhs;
     pmask_qSetBit(parent, 70); // mark presence in pmask
 }
-inline atf_amc::PmaskU32::PmaskU32() {
-    atf_amc::PmaskU32_Init(*this);
-}
 
+// --- atf_amc.PmaskU128..Ctor
+inline  atf_amc::PmaskU128::PmaskU128() {
+    atf_amc::PmaskU128_Init(*this);
+}
 
 // --- atf_amc.PmaskU32.pmask.N
 // Return constant 1
@@ -10072,10 +10266,11 @@ inline void atf_amc::PmaskU32_Init(atf_amc::PmaskU32& parent) {
     parent.value4 = u32(0);
     parent.value5 = u32(0);
 }
-inline atf_amc::PmaskU555::PmaskU555() {
-    atf_amc::PmaskU555_Init(*this);
-}
 
+// --- atf_amc.PmaskU32..Ctor
+inline  atf_amc::PmaskU32::PmaskU32() {
+    atf_amc::PmaskU32_Init(*this);
+}
 
 // --- atf_amc.PmaskU555.value.PresentQ
 // Return true if the field is marked in the presence mask
@@ -10301,10 +10496,8 @@ inline i32 atf_amc::pmask_N(const atf_amc::PmaskU555& parent) {
 // --- atf_amc.PmaskU555.pmask.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
 inline void atf_amc::pmask_Setary(atf_amc::PmaskU555& parent, const algo::aryptr<u64> &rhs) {
-    int n = 10 < rhs.n_elems ? 10 : rhs.n_elems;
-    for (int i = 0; i < n; i++) {
-        parent.pmask_elems[i] = rhs[i];
-    }
+    int n = i32_Min(10, rhs.n_elems);
+    memcpy(parent.pmask_elems, rhs.elems, sizeof(u64)*n);
 }
 
 // --- atf_amc.PmaskU555.pmask.qFind
@@ -10366,10 +10559,11 @@ inline void atf_amc::PmaskU555_Init(atf_amc::PmaskU555& parent) {
         parent.pmask_elems[i] = 0;
     }
 }
-inline atf_amc::PooledBE64::PooledBE64() {
-    atf_amc::PooledBE64_Init(*this);
-}
 
+// --- atf_amc.PmaskU555..Ctor
+inline  atf_amc::PmaskU555::PmaskU555() {
+    atf_amc::PmaskU555_Init(*this);
+}
 
 // --- atf_amc.PooledBE64.value.Get
 inline u64 atf_amc::value_Get(const atf_amc::PooledBE64& pooledbe64) {
@@ -10400,37 +10594,15 @@ inline void atf_amc::PooledBE64_Init(atf_amc::PooledBE64& pooledbe64) {
     pooledbe64.pooledbe64_next = (atf_amc::PooledBE64*)-1; // (atf_amc.FDb.pooledbe64) not-in-tpool's freelist
 }
 
-inline bool atf_amc::RnullStr6_U32::operator ==(const atf_amc::RnullStr6_U32 &rhs) const {
-    return atf_amc::RnullStr6_U32_Eq(const_cast<atf_amc::RnullStr6_U32&>(*this),const_cast<atf_amc::RnullStr6_U32&>(rhs));
+// --- atf_amc.PooledBE64..Ctor
+inline  atf_amc::PooledBE64::PooledBE64() {
+    atf_amc::PooledBE64_Init(*this);
 }
 
-inline bool atf_amc::RnullStr6_U32::operator !=(const atf_amc::RnullStr6_U32 &rhs) const {
-    return !atf_amc::RnullStr6_U32_Eq(const_cast<atf_amc::RnullStr6_U32&>(*this),const_cast<atf_amc::RnullStr6_U32&>(rhs));
+// --- atf_amc.PooledBE64..EnumCtor
+inline  atf_amc::PooledBE64::PooledBE64(atf_amc_PooledBE64_value_Enum arg) {
+    value_Set(*this, u64(arg));
 }
-
-inline bool atf_amc::RnullStr6_U32::operator ==(const algo::strptr &rhs) const {
-    return atf_amc::RnullStr6_U32_EqStrptr(const_cast<atf_amc::RnullStr6_U32&>(*this),rhs);
-}
-
-inline bool atf_amc::RnullStr6_U32::operator <(const atf_amc::RnullStr6_U32 &rhs) const {
-    return atf_amc::RnullStr6_U32_Lt(const_cast<atf_amc::RnullStr6_U32&>(*this),const_cast<atf_amc::RnullStr6_U32&>(rhs));
-}
-
-inline bool atf_amc::RnullStr6_U32::operator >(const atf_amc::RnullStr6_U32 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool atf_amc::RnullStr6_U32::operator <=(const atf_amc::RnullStr6_U32 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool atf_amc::RnullStr6_U32::operator >=(const atf_amc::RnullStr6_U32 &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::RnullStr6_U32::RnullStr6_U32() {
-    atf_amc::RnullStr6_U32_Init(*this);
-}
-
 
 // --- atf_amc.RnullStr6_U32.ch.Getary
 // Access string as array of chars
@@ -10473,21 +10645,39 @@ inline void atf_amc::RnullStr6_U32::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- atf_amc.RnullStr6_U32.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void atf_amc::RnullStr6_U32::operator =(const atf_amc::RnullStr6_U32& parent) {
-    memcpy(ch, parent.ch, 6);
-}
-
-// --- atf_amc.RnullStr6_U32.ch.Ctor
-inline  atf_amc::RnullStr6_U32::RnullStr6_U32(const atf_amc::RnullStr6_U32 &rhs) {
-    operator =(rhs);
-}
-
 // --- atf_amc.RnullStr6_U32.ch.CtorStrptr
 inline  atf_amc::RnullStr6_U32::RnullStr6_U32(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
+}
+
+// --- atf_amc.RnullStr6_U32..EqOp
+inline bool atf_amc::RnullStr6_U32::operator ==(const atf_amc::RnullStr6_U32 &rhs) const {
+    return atf_amc::RnullStr6_U32_Eq(const_cast<atf_amc::RnullStr6_U32&>(*this),const_cast<atf_amc::RnullStr6_U32&>(rhs));
+}
+
+// --- atf_amc.RnullStr6_U32..NeOp
+inline bool atf_amc::RnullStr6_U32::operator !=(const atf_amc::RnullStr6_U32 &rhs) const {
+    return !atf_amc::RnullStr6_U32_Eq(const_cast<atf_amc::RnullStr6_U32&>(*this),const_cast<atf_amc::RnullStr6_U32&>(rhs));
+}
+
+// --- atf_amc.RnullStr6_U32..LtOp
+inline bool atf_amc::RnullStr6_U32::operator <(const atf_amc::RnullStr6_U32 &rhs) const {
+    return atf_amc::RnullStr6_U32_Lt(const_cast<atf_amc::RnullStr6_U32&>(*this),const_cast<atf_amc::RnullStr6_U32&>(rhs));
+}
+
+// --- atf_amc.RnullStr6_U32..GtOp
+inline bool atf_amc::RnullStr6_U32::operator >(const atf_amc::RnullStr6_U32 &rhs) const {
+    return atf_amc::RnullStr6_U32_Lt(const_cast<atf_amc::RnullStr6_U32&>(rhs),const_cast<atf_amc::RnullStr6_U32&>(*this));
+}
+
+// --- atf_amc.RnullStr6_U32..LeOp
+inline bool atf_amc::RnullStr6_U32::operator <=(const atf_amc::RnullStr6_U32 &rhs) const {
+    return !atf_amc::RnullStr6_U32_Lt(const_cast<atf_amc::RnullStr6_U32&>(rhs),const_cast<atf_amc::RnullStr6_U32&>(*this));
+}
+
+// --- atf_amc.RnullStr6_U32..GeOp
+inline bool atf_amc::RnullStr6_U32::operator >=(const atf_amc::RnullStr6_U32 &rhs) const {
+    return !atf_amc::RnullStr6_U32_Lt(const_cast<atf_amc::RnullStr6_U32&>(*this),const_cast<atf_amc::RnullStr6_U32&>(rhs));
 }
 
 // --- atf_amc.RnullStr6_U32..Lt
@@ -10527,42 +10717,28 @@ inline bool atf_amc::RnullStr6_U32_Update(atf_amc::RnullStr6_U32 &lhs, atf_amc::
     return ret;
 }
 
-// --- atf_amc.RnullStr6_U32..EqStrptr
-inline bool atf_amc::RnullStr6_U32_EqStrptr(const atf_amc::RnullStr6_U32& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
+// --- atf_amc.RnullStr6_U32..EqOpAryptr
+inline bool atf_amc::RnullStr6_U32::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool atf_amc::RpasU32Str6::operator ==(const atf_amc::RpasU32Str6 &rhs) const {
-    return atf_amc::RpasU32Str6_Eq(const_cast<atf_amc::RpasU32Str6&>(*this),const_cast<atf_amc::RpasU32Str6&>(rhs));
+// --- atf_amc.RnullStr6_U32..AssignOp
+inline atf_amc::RnullStr6_U32& atf_amc::RnullStr6_U32::operator =(const atf_amc::RnullStr6_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(atf_amc::RnullStr6_U32));
+    return *this;
 }
 
-inline bool atf_amc::RpasU32Str6::operator !=(const atf_amc::RpasU32Str6 &rhs) const {
-    return !atf_amc::RpasU32Str6_Eq(const_cast<atf_amc::RpasU32Str6&>(*this),const_cast<atf_amc::RpasU32Str6&>(rhs));
+// --- atf_amc.RnullStr6_U32..Ctor
+inline  atf_amc::RnullStr6_U32::RnullStr6_U32() {
+    atf_amc::RnullStr6_U32_Init(*this);
 }
 
-inline bool atf_amc::RpasU32Str6::operator ==(const algo::strptr &rhs) const {
-    return atf_amc::RpasU32Str6_EqStrptr(const_cast<atf_amc::RpasU32Str6&>(*this),rhs);
+// --- atf_amc.RnullStr6_U32..CopyCtor
+inline  atf_amc::RnullStr6_U32::RnullStr6_U32(const atf_amc::RnullStr6_U32 &rhs) {
+    // type is plaindata, with no holes, copying as memory
+    memcpy(this,&rhs,sizeof(atf_amc::RnullStr6_U32));
 }
-
-inline bool atf_amc::RpasU32Str6::operator <(const atf_amc::RpasU32Str6 &rhs) const {
-    return atf_amc::RpasU32Str6_Lt(const_cast<atf_amc::RpasU32Str6&>(*this),const_cast<atf_amc::RpasU32Str6&>(rhs));
-}
-
-inline bool atf_amc::RpasU32Str6::operator >(const atf_amc::RpasU32Str6 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool atf_amc::RpasU32Str6::operator <=(const atf_amc::RpasU32Str6 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool atf_amc::RpasU32Str6::operator >=(const atf_amc::RpasU32Str6 &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::RpasU32Str6::RpasU32Str6() {
-    atf_amc::RpasU32Str6_Init(*this);
-}
-
 
 // --- atf_amc.RpasU32Str6.ch.Add
 // Append character to string.
@@ -10624,22 +10800,39 @@ inline void atf_amc::RpasU32Str6::operator =(const algo::strptr &str) {
     ch_SetStrptr(*this, str);
 }
 
-// --- atf_amc.RpasU32Str6.ch.Set
-// Copy from same type
-// Copy value from RHS.
-inline void atf_amc::RpasU32Str6::operator =(const atf_amc::RpasU32Str6& parent) {
-    memcpy(ch, parent.ch, parent.n_ch);
-    n_ch = parent.n_ch;
-}
-
-// --- atf_amc.RpasU32Str6.ch.Ctor
-inline  atf_amc::RpasU32Str6::RpasU32Str6(const atf_amc::RpasU32Str6 &rhs) {
-    operator =(rhs);
-}
-
 // --- atf_amc.RpasU32Str6.ch.CtorStrptr
 inline  atf_amc::RpasU32Str6::RpasU32Str6(const algo::strptr &rhs) {
     ch_SetStrptr(*this, rhs);
+}
+
+// --- atf_amc.RpasU32Str6..EqOp
+inline bool atf_amc::RpasU32Str6::operator ==(const atf_amc::RpasU32Str6 &rhs) const {
+    return atf_amc::RpasU32Str6_Eq(const_cast<atf_amc::RpasU32Str6&>(*this),const_cast<atf_amc::RpasU32Str6&>(rhs));
+}
+
+// --- atf_amc.RpasU32Str6..NeOp
+inline bool atf_amc::RpasU32Str6::operator !=(const atf_amc::RpasU32Str6 &rhs) const {
+    return !atf_amc::RpasU32Str6_Eq(const_cast<atf_amc::RpasU32Str6&>(*this),const_cast<atf_amc::RpasU32Str6&>(rhs));
+}
+
+// --- atf_amc.RpasU32Str6..LtOp
+inline bool atf_amc::RpasU32Str6::operator <(const atf_amc::RpasU32Str6 &rhs) const {
+    return atf_amc::RpasU32Str6_Lt(const_cast<atf_amc::RpasU32Str6&>(*this),const_cast<atf_amc::RpasU32Str6&>(rhs));
+}
+
+// --- atf_amc.RpasU32Str6..GtOp
+inline bool atf_amc::RpasU32Str6::operator >(const atf_amc::RpasU32Str6 &rhs) const {
+    return atf_amc::RpasU32Str6_Lt(const_cast<atf_amc::RpasU32Str6&>(rhs),const_cast<atf_amc::RpasU32Str6&>(*this));
+}
+
+// --- atf_amc.RpasU32Str6..LeOp
+inline bool atf_amc::RpasU32Str6::operator <=(const atf_amc::RpasU32Str6 &rhs) const {
+    return !atf_amc::RpasU32Str6_Lt(const_cast<atf_amc::RpasU32Str6&>(rhs),const_cast<atf_amc::RpasU32Str6&>(*this));
+}
+
+// --- atf_amc.RpasU32Str6..GeOp
+inline bool atf_amc::RpasU32Str6::operator >=(const atf_amc::RpasU32Str6 &rhs) const {
+    return !atf_amc::RpasU32Str6_Lt(const_cast<atf_amc::RpasU32Str6&>(*this),const_cast<atf_amc::RpasU32Str6&>(rhs));
 }
 
 // --- atf_amc.RpasU32Str6..Lt
@@ -10677,53 +10870,65 @@ inline bool atf_amc::RpasU32Str6_Update(atf_amc::RpasU32Str6 &lhs, atf_amc::Rpas
     return ret;
 }
 
-// --- atf_amc.RpasU32Str6..EqStrptr
-inline bool atf_amc::RpasU32Str6_EqStrptr(const atf_amc::RpasU32Str6& lhs, const algo::strptr& rhs) {
-    return algo::strptr_Eq(ch_Getary(lhs), rhs);
-}
-inline atf_amc::Sep1::Sep1(u32                            in_val1
-        ,u32                            in_val2
-        ,u32                            in_val3)
-    : val1(in_val1)
-    , val2(in_val2)
-    , val3(in_val3)
-{
+// --- atf_amc.RpasU32Str6..EqOpAryptr
+inline bool atf_amc::RpasU32Str6::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
-inline bool atf_amc::Sep1::operator ==(const atf_amc::Sep1 &rhs) const {
-    return atf_amc::Sep1_Eq(const_cast<atf_amc::Sep1&>(*this),const_cast<atf_amc::Sep1&>(rhs));
+// --- atf_amc.RpasU32Str6..AssignOp
+inline atf_amc::RpasU32Str6& atf_amc::RpasU32Str6::operator =(const atf_amc::RpasU32Str6 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
 }
 
-inline bool atf_amc::Sep1::operator !=(const atf_amc::Sep1 &rhs) const {
-    return !atf_amc::Sep1_Eq(const_cast<atf_amc::Sep1&>(*this),const_cast<atf_amc::Sep1&>(rhs));
+// --- atf_amc.RpasU32Str6..Ctor
+inline  atf_amc::RpasU32Str6::RpasU32Str6() {
+    atf_amc::RpasU32Str6_Init(*this);
 }
 
-inline bool atf_amc::Sep1::operator <(const atf_amc::Sep1 &rhs) const {
-    return atf_amc::Sep1_Lt(const_cast<atf_amc::Sep1&>(*this),const_cast<atf_amc::Sep1&>(rhs));
+// --- atf_amc.RpasU32Str6..CopyCtor
+inline  atf_amc::RpasU32Str6::RpasU32Str6(const atf_amc::RpasU32Str6 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
 }
-
-inline bool atf_amc::Sep1::operator >(const atf_amc::Sep1 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool atf_amc::Sep1::operator <=(const atf_amc::Sep1 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool atf_amc::Sep1::operator >=(const atf_amc::Sep1 &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::Sep1::Sep1() {
-    atf_amc::Sep1_Init(*this);
-}
-
 
 // --- atf_amc.Sep1..Hash
-inline u32 atf_amc::Sep1_Hash(u32 prev, const atf_amc::Sep1 & rhs) {
+inline u32 atf_amc::Sep1_Hash(u32 prev, const atf_amc::Sep1& rhs) {
     prev = u32_Hash(prev, rhs.val1);
     prev = u32_Hash(prev, rhs.val2);
     prev = u32_Hash(prev, rhs.val3);
     return prev;
+}
+
+// --- atf_amc.Sep1..EqOp
+inline bool atf_amc::Sep1::operator ==(const atf_amc::Sep1 &rhs) const {
+    return atf_amc::Sep1_Eq(const_cast<atf_amc::Sep1&>(*this),const_cast<atf_amc::Sep1&>(rhs));
+}
+
+// --- atf_amc.Sep1..NeOp
+inline bool atf_amc::Sep1::operator !=(const atf_amc::Sep1 &rhs) const {
+    return !atf_amc::Sep1_Eq(const_cast<atf_amc::Sep1&>(*this),const_cast<atf_amc::Sep1&>(rhs));
+}
+
+// --- atf_amc.Sep1..LtOp
+inline bool atf_amc::Sep1::operator <(const atf_amc::Sep1 &rhs) const {
+    return atf_amc::Sep1_Lt(const_cast<atf_amc::Sep1&>(*this),const_cast<atf_amc::Sep1&>(rhs));
+}
+
+// --- atf_amc.Sep1..GtOp
+inline bool atf_amc::Sep1::operator >(const atf_amc::Sep1 &rhs) const {
+    return atf_amc::Sep1_Lt(const_cast<atf_amc::Sep1&>(rhs),const_cast<atf_amc::Sep1&>(*this));
+}
+
+// --- atf_amc.Sep1..LeOp
+inline bool atf_amc::Sep1::operator <=(const atf_amc::Sep1 &rhs) const {
+    return !atf_amc::Sep1_Lt(const_cast<atf_amc::Sep1&>(rhs),const_cast<atf_amc::Sep1&>(*this));
+}
+
+// --- atf_amc.Sep1..GeOp
+inline bool atf_amc::Sep1::operator >=(const atf_amc::Sep1 &rhs) const {
+    return !atf_amc::Sep1_Lt(const_cast<atf_amc::Sep1&>(*this),const_cast<atf_amc::Sep1&>(rhs));
 }
 
 // --- atf_amc.Sep1..Lt
@@ -10778,10 +10983,19 @@ inline bool atf_amc::Sep1_Update(atf_amc::Sep1 &lhs, atf_amc::Sep1& rhs) {
     }
     return ret;
 }
-inline atf_amc::Seqmsg::Seqmsg() {
-    atf_amc::Seqmsg_Init(*this);
+
+// --- atf_amc.Sep1..Ctor
+inline  atf_amc::Sep1::Sep1() {
+    atf_amc::Sep1_Init(*this);
 }
 
+// --- atf_amc.Sep1..FieldwiseCtor
+inline  atf_amc::Sep1::Sep1(u32 in_val1, u32 in_val2, u32 in_val3)
+    : val1(in_val1)
+    , val2(in_val2)
+    , val3(in_val3)
+ {
+}
 
 // --- atf_amc.Seqmsg.msghdr.Castdown
 // Check if atf_amc::MsgHeader is an instance of Seqmsg by checking the type field
@@ -10833,39 +11047,11 @@ inline void atf_amc::Seqmsg_Init(atf_amc::Seqmsg& parent) {
     parent.type = atf_amc_MsgTypeEnum(0x0905);
     parent.length = atf_amc::MsgLength(ssizeof(parent) + (0));
 }
-inline atf_amc::SortedStr::SortedStr(const algo::strptr&            in_novs
-        ,const algo::strptr&            in_vs)
-    : novs(in_novs)
-    , vs(in_vs)
-{
-}
 
-inline bool atf_amc::SortedStr::operator ==(const atf_amc::SortedStr &rhs) const {
-    return atf_amc::SortedStr_Eq(const_cast<atf_amc::SortedStr&>(*this),const_cast<atf_amc::SortedStr&>(rhs));
+// --- atf_amc.Seqmsg..Ctor
+inline  atf_amc::Seqmsg::Seqmsg() {
+    atf_amc::Seqmsg_Init(*this);
 }
-
-inline bool atf_amc::SortedStr::operator !=(const atf_amc::SortedStr &rhs) const {
-    return !atf_amc::SortedStr_Eq(const_cast<atf_amc::SortedStr&>(*this),const_cast<atf_amc::SortedStr&>(rhs));
-}
-
-inline bool atf_amc::SortedStr::operator <(const atf_amc::SortedStr &rhs) const {
-    return atf_amc::SortedStr_Lt(const_cast<atf_amc::SortedStr&>(*this),const_cast<atf_amc::SortedStr&>(rhs));
-}
-
-inline bool atf_amc::SortedStr::operator >(const atf_amc::SortedStr &rhs) const {
-    return rhs < *this;
-}
-
-inline bool atf_amc::SortedStr::operator <=(const atf_amc::SortedStr &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool atf_amc::SortedStr::operator >=(const atf_amc::SortedStr &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::SortedStr::SortedStr() {
-}
-
 
 // --- atf_amc.SortedStr.novs.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
@@ -10885,6 +11071,36 @@ inline i32 atf_amc::novs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
 inline bool atf_amc::vs_Lt(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) {
     return vs_Cmp(parent,rhs) < 0;
+}
+
+// --- atf_amc.SortedStr..EqOp
+inline bool atf_amc::SortedStr::operator ==(const atf_amc::SortedStr &rhs) const {
+    return atf_amc::SortedStr_Eq(const_cast<atf_amc::SortedStr&>(*this),const_cast<atf_amc::SortedStr&>(rhs));
+}
+
+// --- atf_amc.SortedStr..NeOp
+inline bool atf_amc::SortedStr::operator !=(const atf_amc::SortedStr &rhs) const {
+    return !atf_amc::SortedStr_Eq(const_cast<atf_amc::SortedStr&>(*this),const_cast<atf_amc::SortedStr&>(rhs));
+}
+
+// --- atf_amc.SortedStr..LtOp
+inline bool atf_amc::SortedStr::operator <(const atf_amc::SortedStr &rhs) const {
+    return atf_amc::SortedStr_Lt(const_cast<atf_amc::SortedStr&>(*this),const_cast<atf_amc::SortedStr&>(rhs));
+}
+
+// --- atf_amc.SortedStr..GtOp
+inline bool atf_amc::SortedStr::operator >(const atf_amc::SortedStr &rhs) const {
+    return atf_amc::SortedStr_Lt(const_cast<atf_amc::SortedStr&>(rhs),const_cast<atf_amc::SortedStr&>(*this));
+}
+
+// --- atf_amc.SortedStr..LeOp
+inline bool atf_amc::SortedStr::operator <=(const atf_amc::SortedStr &rhs) const {
+    return !atf_amc::SortedStr_Lt(const_cast<atf_amc::SortedStr&>(rhs),const_cast<atf_amc::SortedStr&>(*this));
+}
+
+// --- atf_amc.SortedStr..GeOp
+inline bool atf_amc::SortedStr::operator >=(const atf_amc::SortedStr &rhs) const {
+    return !atf_amc::SortedStr_Lt(const_cast<atf_amc::SortedStr&>(*this),const_cast<atf_amc::SortedStr&>(rhs));
 }
 
 // --- atf_amc.SortedStr..Lt
@@ -10923,15 +11139,17 @@ inline bool atf_amc::SortedStr_Update(atf_amc::SortedStr &lhs, atf_amc::SortedSt
     }
     return ret;
 }
-inline atf_amc::SsimfilesCase::SsimfilesCase(u32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_amc::SsimfilesCase::SsimfilesCase(atf_amc_SsimfilesCaseEnum arg) { this->value = u32(arg); }
-inline atf_amc::SsimfilesCase::SsimfilesCase() {
-    atf_amc::SsimfilesCase_Init(*this);
+
+// --- atf_amc.SortedStr..Ctor
+inline  atf_amc::SortedStr::SortedStr() {
 }
 
+// --- atf_amc.SortedStr..FieldwiseCtor
+inline  atf_amc::SortedStr::SortedStr(const algo::strptr& in_novs, const algo::strptr& in_vs)
+    : novs(in_novs)
+    , vs(in_vs)
+ {
+}
 
 // --- atf_amc.SsimfilesCase.value.GetEnum
 // Get value of field as enum type
@@ -10946,7 +11164,7 @@ inline void atf_amc::value_SetEnum(atf_amc::SsimfilesCase& parent, atf_amc_Ssimf
 }
 
 // --- atf_amc.SsimfilesCase.value.Cast
-inline atf_amc::SsimfilesCase::operator atf_amc_SsimfilesCaseEnum () const {
+inline  atf_amc::SsimfilesCase::operator atf_amc_SsimfilesCaseEnum() const {
     return atf_amc_SsimfilesCaseEnum((*this).value);
 }
 
@@ -10955,15 +11173,22 @@ inline atf_amc::SsimfilesCase::operator atf_amc_SsimfilesCaseEnum () const {
 inline void atf_amc::SsimfilesCase_Init(atf_amc::SsimfilesCase& parent) {
     parent.value = u32(0);
 }
-inline atf_amc::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_amc::TableId::TableId(atf_amc_TableIdEnum arg) { this->value = i32(arg); }
-inline atf_amc::TableId::TableId() {
-    atf_amc::TableId_Init(*this);
+
+// --- atf_amc.SsimfilesCase..Ctor
+inline  atf_amc::SsimfilesCase::SsimfilesCase() {
+    atf_amc::SsimfilesCase_Init(*this);
 }
 
+// --- atf_amc.SsimfilesCase..FieldwiseCtor
+inline  atf_amc::SsimfilesCase::SsimfilesCase(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_amc.SsimfilesCase..EnumCtor
+inline  atf_amc::SsimfilesCase::SsimfilesCase(atf_amc_SsimfilesCaseEnum arg) {
+    this->value = u32(arg);
+}
 
 // --- atf_amc.TableId.value.GetEnum
 // Get value of field as enum type
@@ -10978,7 +11203,7 @@ inline void atf_amc::value_SetEnum(atf_amc::TableId& parent, atf_amc_TableIdEnum
 }
 
 // --- atf_amc.TableId.value.Cast
-inline atf_amc::TableId::operator atf_amc_TableIdEnum () const {
+inline  atf_amc::TableId::operator atf_amc_TableIdEnum() const {
     return atf_amc_TableIdEnum((*this).value);
 }
 
@@ -10987,14 +11212,22 @@ inline atf_amc::TableId::operator atf_amc_TableIdEnum () const {
 inline void atf_amc::TableId_Init(atf_amc::TableId& parent) {
     parent.value = i32(-1);
 }
-inline atf_amc::TaryU32::TaryU32() {
-    atf_amc::TaryU32_Init(*this);
+
+// --- atf_amc.TableId..Ctor
+inline  atf_amc::TableId::TableId() {
+    atf_amc::TableId_Init(*this);
 }
 
-inline atf_amc::TaryU32::~TaryU32() {
-    atf_amc::TaryU32_Uninit(*this);
+// --- atf_amc.TableId..FieldwiseCtor
+inline  atf_amc::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
 }
 
+// --- atf_amc.TableId..EnumCtor
+inline  atf_amc::TableId::TableId(atf_amc_TableIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- atf_amc.TaryU32.tary_u32.EmptyQ
 // Return true if index is empty
@@ -11021,6 +11254,20 @@ inline algo::aryptr<u32> atf_amc::tary_u32_Getary(const atf_amc::TaryU32& parent
 // Return pointer to last element of array, or NULL if array is empty
 inline u32* atf_amc::tary_u32_Last(atf_amc::TaryU32& parent) {
     return tary_u32_Find(parent, u64(parent.tary_u32_n-1));
+}
+
+// --- atf_amc.TaryU32.tary_u32.AssignAryptr
+// Copy from aryptr (operator=)
+inline void atf_amc::TaryU32::operator =(const algo::aryptr<u32> &rhs) {
+    tary_u32_Setary(*this, rhs);
+}
+
+// --- atf_amc.TaryU32.tary_u32.CtorAryptr
+inline  atf_amc::TaryU32::TaryU32(const algo::aryptr<u32> &rhs) {
+    tary_u32_elems 	= 0; // (atf_amc.TaryU32.tary_u32)
+    tary_u32_n     	= 0; // (atf_amc.TaryU32.tary_u32)
+    tary_u32_max   	= 0; // (atf_amc.TaryU32.tary_u32)
+    tary_u32_Addary(*this, rhs);
 }
 
 // --- atf_amc.TaryU32.tary_u32.Max
@@ -11101,14 +11348,16 @@ inline void atf_amc::TaryU32_Init(atf_amc::TaryU32& parent) {
     parent.tary_u32_n     	= 0; // (atf_amc.TaryU32.tary_u32)
     parent.tary_u32_max   	= 0; // (atf_amc.TaryU32.tary_u32)
 }
-inline atf_amc::TaryU8::TaryU8() {
-    atf_amc::TaryU8_Init(*this);
+
+// --- atf_amc.TaryU32..Ctor
+inline  atf_amc::TaryU32::TaryU32() {
+    atf_amc::TaryU32_Init(*this);
 }
 
-inline atf_amc::TaryU8::~TaryU8() {
-    atf_amc::TaryU8_Uninit(*this);
+// --- atf_amc.TaryU32..Dtor
+inline  atf_amc::TaryU32::~TaryU32() {
+    atf_amc::TaryU32_Uninit(*this);
 }
-
 
 // --- atf_amc.TaryU8.ary.EmptyQ
 // Return true if index is empty
@@ -11135,6 +11384,20 @@ inline algo::aryptr<u8> atf_amc::ary_Getary(const atf_amc::TaryU8& parent) {
 // Return pointer to last element of array, or NULL if array is empty
 inline u8* atf_amc::ary_Last(atf_amc::TaryU8& parent) {
     return ary_Find(parent, u64(parent.ary_n-1));
+}
+
+// --- atf_amc.TaryU8.ary.AssignAryptr
+// Copy from aryptr (operator=)
+inline void atf_amc::TaryU8::operator =(const algo::aryptr<u8> &rhs) {
+    ary_Setary(*this, rhs);
+}
+
+// --- atf_amc.TaryU8.ary.CtorAryptr
+inline  atf_amc::TaryU8::TaryU8(const algo::aryptr<u8> &rhs) {
+    ary_elems 	= 0; // (atf_amc.TaryU8.ary)
+    ary_n     	= 0; // (atf_amc.TaryU8.ary)
+    ary_max   	= 0; // (atf_amc.TaryU8.ary)
+    ary_Addary(*this, rhs);
 }
 
 // --- atf_amc.TaryU8.ary.Max
@@ -11215,16 +11478,24 @@ inline void atf_amc::TaryU8_Init(atf_amc::TaryU8& parent) {
     parent.ary_n     	= 0; // (atf_amc.TaryU8.ary)
     parent.ary_max   	= 0; // (atf_amc.TaryU8.ary)
 }
-inline atf_amc::TestRegx1::TestRegx1() {
+
+// --- atf_amc.TaryU8..Ctor
+inline  atf_amc::TaryU8::TaryU8() {
+    atf_amc::TaryU8_Init(*this);
 }
 
-inline atf_amc::TestType::TestType() {
+// --- atf_amc.TaryU8..Dtor
+inline  atf_amc::TaryU8::~TaryU8() {
+    atf_amc::TaryU8_Uninit(*this);
 }
 
-inline atf_amc::Text::Text() {
-    atf_amc::Text_Init(*this);
+// --- atf_amc.TestRegx1..Ctor
+inline  atf_amc::TestRegx1::TestRegx1() {
 }
 
+// --- atf_amc.TestType..Ctor
+inline  atf_amc::TestType::TestType() {
+}
 
 // --- atf_amc.Text.msghdr.Castdown
 // Check if atf_amc::MsgHeader is an instance of Text by checking the type field
@@ -11298,39 +11569,46 @@ inline void atf_amc::Text_Init(atf_amc::Text& parent) {
     parent.length = atf_amc::MsgLength(ssizeof(parent) + (0));
 }
 
+// --- atf_amc.Text..Ctor
+inline  atf_amc::Text::Text() {
+    atf_amc::Text_Init(*this);
+}
+
+// --- atf_amc.TypeB..Hash
+inline u32 atf_amc::TypeB_Hash(u32 prev, const atf_amc::TypeB& rhs) {
+    prev = i32_Hash(prev, rhs.typea);
+    prev = i32_Hash(prev, rhs.j);
+    return prev;
+}
+
+// --- atf_amc.TypeB..EqOp
 inline bool atf_amc::TypeB::operator ==(const atf_amc::TypeB &rhs) const {
     return atf_amc::TypeB_Eq(const_cast<atf_amc::TypeB&>(*this),const_cast<atf_amc::TypeB&>(rhs));
 }
 
+// --- atf_amc.TypeB..NeOp
 inline bool atf_amc::TypeB::operator !=(const atf_amc::TypeB &rhs) const {
     return !atf_amc::TypeB_Eq(const_cast<atf_amc::TypeB&>(*this),const_cast<atf_amc::TypeB&>(rhs));
 }
 
+// --- atf_amc.TypeB..LtOp
 inline bool atf_amc::TypeB::operator <(const atf_amc::TypeB &rhs) const {
     return atf_amc::TypeB_Lt(const_cast<atf_amc::TypeB&>(*this),const_cast<atf_amc::TypeB&>(rhs));
 }
 
+// --- atf_amc.TypeB..GtOp
 inline bool atf_amc::TypeB::operator >(const atf_amc::TypeB &rhs) const {
-    return rhs < *this;
+    return atf_amc::TypeB_Lt(const_cast<atf_amc::TypeB&>(rhs),const_cast<atf_amc::TypeB&>(*this));
 }
 
+// --- atf_amc.TypeB..LeOp
 inline bool atf_amc::TypeB::operator <=(const atf_amc::TypeB &rhs) const {
-    return !(rhs < *this);
+    return !atf_amc::TypeB_Lt(const_cast<atf_amc::TypeB&>(rhs),const_cast<atf_amc::TypeB&>(*this));
 }
 
+// --- atf_amc.TypeB..GeOp
 inline bool atf_amc::TypeB::operator >=(const atf_amc::TypeB &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::TypeB::TypeB() {
-    atf_amc::TypeB_Init(*this);
-}
-
-
-// --- atf_amc.TypeB..Hash
-inline u32 atf_amc::TypeB_Hash(u32 prev, const atf_amc::TypeB & rhs) {
-    prev = i32_Hash(prev, rhs.typea);
-    prev = i32_Hash(prev, rhs.j);
-    return prev;
+    return !atf_amc::TypeB_Lt(const_cast<atf_amc::TypeB&>(*this),const_cast<atf_amc::TypeB&>(rhs));
 }
 
 // --- atf_amc.TypeB..Lt
@@ -11376,10 +11654,11 @@ inline bool atf_amc::TypeB_Update(atf_amc::TypeB &lhs, atf_amc::TypeB& rhs) {
     }
     return ret;
 }
-inline atf_amc::TypeBE16::TypeBE16() {
-    atf_amc::TypeBE16_Init(*this);
-}
 
+// --- atf_amc.TypeB..Ctor
+inline  atf_amc::TypeB::TypeB() {
+    atf_amc::TypeB_Init(*this);
+}
 
 // --- atf_amc.TypeBE16.value.Get
 inline u16 atf_amc::value_Get(const atf_amc::TypeBE16& parent) {
@@ -11396,10 +11675,11 @@ inline void atf_amc::value_Set(atf_amc::TypeBE16& parent, u16 rhs) {
 inline void atf_amc::TypeBE16_Init(atf_amc::TypeBE16& parent) {
     parent.value_be = htobe16(0); // write big-endian value to memory
 }
-inline atf_amc::TypeBE32::TypeBE32() {
-    atf_amc::TypeBE32_Init(*this);
-}
 
+// --- atf_amc.TypeBE16..Ctor
+inline  atf_amc::TypeBE16::TypeBE16() {
+    atf_amc::TypeBE16_Init(*this);
+}
 
 // --- atf_amc.TypeBE32.value.Get
 inline u32 atf_amc::value_Get(const atf_amc::TypeBE32& parent) {
@@ -11416,15 +11696,11 @@ inline void atf_amc::value_Set(atf_amc::TypeBE32& parent, u32 rhs) {
 inline void atf_amc::TypeBE32_Init(atf_amc::TypeBE32& parent) {
     parent.value_be = htobe32(0); // write big-endian value to memory
 }
-inline atf_amc::TypeBE32en::TypeBE32en(u32                            in_value)
-{
-    value_Set(*this,in_value);
-}
-inline atf_amc::TypeBE32en::TypeBE32en(atf_amc_TypeBE32en_value_Enum arg) { value_Set(*this, u32(arg)); }
-inline atf_amc::TypeBE32en::TypeBE32en() {
-    atf_amc::TypeBE32en_Init(*this);
-}
 
+// --- atf_amc.TypeBE32..Ctor
+inline  atf_amc::TypeBE32::TypeBE32() {
+    atf_amc::TypeBE32_Init(*this);
+}
 
 // --- atf_amc.TypeBE32en.value.Get
 inline u32 atf_amc::value_Get(const atf_amc::TypeBE32en& parent) {
@@ -11449,12 +11725,12 @@ inline void atf_amc::value_SetEnum(atf_amc::TypeBE32en& parent, atf_amc_TypeBE32
 }
 
 // --- atf_amc.TypeBE32en.value.Cast
-inline atf_amc::TypeBE32en::operator atf_amc_TypeBE32en_value_Enum () const {
+inline  atf_amc::TypeBE32en::operator atf_amc_TypeBE32en_value_Enum() const {
     return atf_amc_TypeBE32en_value_Enum(value_Get((*this)));
 }
 
 // --- atf_amc.TypeBE32en..Hash
-inline u32 atf_amc::TypeBE32en_Hash(u32 prev, const atf_amc::TypeBE32en & rhs) {
+inline u32 atf_amc::TypeBE32en_Hash(u32 prev, const atf_amc::TypeBE32en& rhs) {
     prev = u32_Hash(prev, value_Get(rhs));
     return prev;
 }
@@ -11464,38 +11740,21 @@ inline u32 atf_amc::TypeBE32en_Hash(u32 prev, const atf_amc::TypeBE32en & rhs) {
 inline void atf_amc::TypeBE32en_Init(atf_amc::TypeBE32en& parent) {
     parent.value_be = htobe32(0); // write big-endian value to memory
 }
-inline atf_amc::TypeBE64::TypeBE64(u64                            in_value)
-{
+
+// --- atf_amc.TypeBE32en..Ctor
+inline  atf_amc::TypeBE32en::TypeBE32en() {
+    atf_amc::TypeBE32en_Init(*this);
+}
+
+// --- atf_amc.TypeBE32en..FieldwiseCtor
+inline  atf_amc::TypeBE32en::TypeBE32en(u32 in_value) {
     value_Set(*this,in_value);
 }
 
-inline bool atf_amc::TypeBE64::operator ==(const atf_amc::TypeBE64 &rhs) const {
-    return atf_amc::TypeBE64_Eq(const_cast<atf_amc::TypeBE64&>(*this),const_cast<atf_amc::TypeBE64&>(rhs));
+// --- atf_amc.TypeBE32en..EnumCtor
+inline  atf_amc::TypeBE32en::TypeBE32en(atf_amc_TypeBE32en_value_Enum arg) {
+    value_Set(*this, u32(arg));
 }
-
-inline bool atf_amc::TypeBE64::operator !=(const atf_amc::TypeBE64 &rhs) const {
-    return !atf_amc::TypeBE64_Eq(const_cast<atf_amc::TypeBE64&>(*this),const_cast<atf_amc::TypeBE64&>(rhs));
-}
-
-inline bool atf_amc::TypeBE64::operator <(const atf_amc::TypeBE64 &rhs) const {
-    return atf_amc::TypeBE64_Lt(const_cast<atf_amc::TypeBE64&>(*this),const_cast<atf_amc::TypeBE64&>(rhs));
-}
-
-inline bool atf_amc::TypeBE64::operator >(const atf_amc::TypeBE64 &rhs) const {
-    return rhs < *this;
-}
-
-inline bool atf_amc::TypeBE64::operator <=(const atf_amc::TypeBE64 &rhs) const {
-    return !(rhs < *this);
-}
-
-inline bool atf_amc::TypeBE64::operator >=(const atf_amc::TypeBE64 &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::TypeBE64::TypeBE64() {
-    atf_amc::TypeBE64_Init(*this);
-}
-
 
 // --- atf_amc.TypeBE64.value.Get
 inline u64 atf_amc::value_Get(const atf_amc::TypeBE64& parent) {
@@ -11508,14 +11767,44 @@ inline void atf_amc::value_Set(atf_amc::TypeBE64& parent, u64 rhs) {
 }
 
 // --- atf_amc.TypeBE64.value.Cast
-inline atf_amc::TypeBE64::operator u64 () const {
+inline  atf_amc::TypeBE64::operator u64() const {
     return u64(value_Get((*this)));
 }
 
 // --- atf_amc.TypeBE64..Hash
-inline u32 atf_amc::TypeBE64_Hash(u32 prev, const atf_amc::TypeBE64 & rhs) {
+inline u32 atf_amc::TypeBE64_Hash(u32 prev, const atf_amc::TypeBE64& rhs) {
     prev = u64_Hash(prev, value_Get(rhs));
     return prev;
+}
+
+// --- atf_amc.TypeBE64..EqOp
+inline bool atf_amc::TypeBE64::operator ==(const atf_amc::TypeBE64 &rhs) const {
+    return atf_amc::TypeBE64_Eq(const_cast<atf_amc::TypeBE64&>(*this),const_cast<atf_amc::TypeBE64&>(rhs));
+}
+
+// --- atf_amc.TypeBE64..NeOp
+inline bool atf_amc::TypeBE64::operator !=(const atf_amc::TypeBE64 &rhs) const {
+    return !atf_amc::TypeBE64_Eq(const_cast<atf_amc::TypeBE64&>(*this),const_cast<atf_amc::TypeBE64&>(rhs));
+}
+
+// --- atf_amc.TypeBE64..LtOp
+inline bool atf_amc::TypeBE64::operator <(const atf_amc::TypeBE64 &rhs) const {
+    return atf_amc::TypeBE64_Lt(const_cast<atf_amc::TypeBE64&>(*this),const_cast<atf_amc::TypeBE64&>(rhs));
+}
+
+// --- atf_amc.TypeBE64..GtOp
+inline bool atf_amc::TypeBE64::operator >(const atf_amc::TypeBE64 &rhs) const {
+    return atf_amc::TypeBE64_Lt(const_cast<atf_amc::TypeBE64&>(rhs),const_cast<atf_amc::TypeBE64&>(*this));
+}
+
+// --- atf_amc.TypeBE64..LeOp
+inline bool atf_amc::TypeBE64::operator <=(const atf_amc::TypeBE64 &rhs) const {
+    return !atf_amc::TypeBE64_Lt(const_cast<atf_amc::TypeBE64&>(rhs),const_cast<atf_amc::TypeBE64&>(*this));
+}
+
+// --- atf_amc.TypeBE64..GeOp
+inline bool atf_amc::TypeBE64::operator >=(const atf_amc::TypeBE64 &rhs) const {
+    return !atf_amc::TypeBE64_Lt(const_cast<atf_amc::TypeBE64&>(*this),const_cast<atf_amc::TypeBE64&>(rhs));
 }
 
 // --- atf_amc.TypeBE64..Lt
@@ -11552,14 +11841,16 @@ inline bool atf_amc::TypeBE64_Update(atf_amc::TypeBE64 &lhs, atf_amc::TypeBE64& 
     }
     return ret;
 }
-inline atf_amc::TypeBE64dflt::TypeBE64dflt(u64                            in_value)
-{
-    value_Set(*this,in_value);
-}
-inline atf_amc::TypeBE64dflt::TypeBE64dflt() {
-    atf_amc::TypeBE64dflt_Init(*this);
+
+// --- atf_amc.TypeBE64..Ctor
+inline  atf_amc::TypeBE64::TypeBE64() {
+    atf_amc::TypeBE64_Init(*this);
 }
 
+// --- atf_amc.TypeBE64..FieldwiseCtor
+inline  atf_amc::TypeBE64::TypeBE64(u64 in_value) {
+    value_Set(*this,in_value);
+}
 
 // --- atf_amc.TypeBE64dflt.value.Get
 inline u64 atf_amc::value_Get(const atf_amc::TypeBE64dflt& parent) {
@@ -11572,7 +11863,7 @@ inline void atf_amc::value_Set(atf_amc::TypeBE64dflt& parent, u64 rhs) {
 }
 
 // --- atf_amc.TypeBE64dflt.value.Cast
-inline atf_amc::TypeBE64dflt::operator u64 () const {
+inline  atf_amc::TypeBE64dflt::operator u64() const {
     return u64(value_Get((*this)));
 }
 
@@ -11581,10 +11872,16 @@ inline atf_amc::TypeBE64dflt::operator u64 () const {
 inline void atf_amc::TypeBE64dflt_Init(atf_amc::TypeBE64dflt& parent) {
     parent.value_be = htobe64(0xfedcba9876543210); // write big-endian value to memory
 }
-inline atf_amc::TypeBE64sf::TypeBE64sf() {
-    atf_amc::TypeBE64sf_Init(*this);
+
+// --- atf_amc.TypeBE64dflt..Ctor
+inline  atf_amc::TypeBE64dflt::TypeBE64dflt() {
+    atf_amc::TypeBE64dflt_Init(*this);
 }
 
+// --- atf_amc.TypeBE64dflt..FieldwiseCtor
+inline  atf_amc::TypeBE64dflt::TypeBE64dflt(u64 in_value) {
+    value_Set(*this,in_value);
+}
 
 // --- atf_amc.TypeBE64sf.value.Get
 inline u64 atf_amc::value_Get(const atf_amc::TypeBE64sf& parent) {
@@ -11770,38 +12067,45 @@ inline void atf_amc::TypeBE64sf_Init(atf_amc::TypeBE64sf& parent) {
     parent.value_be = htobe64(0); // write big-endian value to memory
 }
 
+// --- atf_amc.TypeBE64sf..Ctor
+inline  atf_amc::TypeBE64sf::TypeBE64sf() {
+    atf_amc::TypeBE64sf_Init(*this);
+}
+
+// --- atf_amc.TypeC..Hash
+inline u32 atf_amc::TypeC_Hash(u32 prev, const atf_amc::TypeC& rhs) {
+    prev = i32_Hash(prev, rhs.typec);
+    return prev;
+}
+
+// --- atf_amc.TypeC..EqOp
 inline bool atf_amc::TypeC::operator ==(const atf_amc::TypeC &rhs) const {
     return atf_amc::TypeC_Eq(const_cast<atf_amc::TypeC&>(*this),const_cast<atf_amc::TypeC&>(rhs));
 }
 
+// --- atf_amc.TypeC..NeOp
 inline bool atf_amc::TypeC::operator !=(const atf_amc::TypeC &rhs) const {
     return !atf_amc::TypeC_Eq(const_cast<atf_amc::TypeC&>(*this),const_cast<atf_amc::TypeC&>(rhs));
 }
 
+// --- atf_amc.TypeC..LtOp
 inline bool atf_amc::TypeC::operator <(const atf_amc::TypeC &rhs) const {
     return atf_amc::TypeC_Lt(const_cast<atf_amc::TypeC&>(*this),const_cast<atf_amc::TypeC&>(rhs));
 }
 
+// --- atf_amc.TypeC..GtOp
 inline bool atf_amc::TypeC::operator >(const atf_amc::TypeC &rhs) const {
-    return rhs < *this;
+    return atf_amc::TypeC_Lt(const_cast<atf_amc::TypeC&>(rhs),const_cast<atf_amc::TypeC&>(*this));
 }
 
+// --- atf_amc.TypeC..LeOp
 inline bool atf_amc::TypeC::operator <=(const atf_amc::TypeC &rhs) const {
-    return !(rhs < *this);
+    return !atf_amc::TypeC_Lt(const_cast<atf_amc::TypeC&>(rhs),const_cast<atf_amc::TypeC&>(*this));
 }
 
+// --- atf_amc.TypeC..GeOp
 inline bool atf_amc::TypeC::operator >=(const atf_amc::TypeC &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::TypeC::TypeC() {
-    atf_amc::TypeC_Init(*this);
-}
-
-
-// --- atf_amc.TypeC..Hash
-inline u32 atf_amc::TypeC_Hash(u32 prev, const atf_amc::TypeC & rhs) {
-    prev = i32_Hash(prev, rhs.typec);
-    return prev;
+    return !atf_amc::TypeC_Lt(const_cast<atf_amc::TypeC&>(*this),const_cast<atf_amc::TypeC&>(rhs));
 }
 
 // --- atf_amc.TypeC..Lt
@@ -11839,38 +12143,45 @@ inline bool atf_amc::TypeC_Update(atf_amc::TypeC &lhs, atf_amc::TypeC& rhs) {
     return ret;
 }
 
+// --- atf_amc.TypeC..Ctor
+inline  atf_amc::TypeC::TypeC() {
+    atf_amc::TypeC_Init(*this);
+}
+
+// --- atf_amc.TypeH..Hash
+inline u32 atf_amc::TypeH_Hash(u32 prev, const atf_amc::TypeH& rhs) {
+    prev = i32_Hash(prev, rhs.typeh);
+    return prev;
+}
+
+// --- atf_amc.TypeH..EqOp
 inline bool atf_amc::TypeH::operator ==(const atf_amc::TypeH &rhs) const {
     return atf_amc::TypeH_Eq(const_cast<atf_amc::TypeH&>(*this),const_cast<atf_amc::TypeH&>(rhs));
 }
 
+// --- atf_amc.TypeH..NeOp
 inline bool atf_amc::TypeH::operator !=(const atf_amc::TypeH &rhs) const {
     return !atf_amc::TypeH_Eq(const_cast<atf_amc::TypeH&>(*this),const_cast<atf_amc::TypeH&>(rhs));
 }
 
+// --- atf_amc.TypeH..LtOp
 inline bool atf_amc::TypeH::operator <(const atf_amc::TypeH &rhs) const {
     return atf_amc::TypeH_Lt(const_cast<atf_amc::TypeH&>(*this),const_cast<atf_amc::TypeH&>(rhs));
 }
 
+// --- atf_amc.TypeH..GtOp
 inline bool atf_amc::TypeH::operator >(const atf_amc::TypeH &rhs) const {
-    return rhs < *this;
+    return atf_amc::TypeH_Lt(const_cast<atf_amc::TypeH&>(rhs),const_cast<atf_amc::TypeH&>(*this));
 }
 
+// --- atf_amc.TypeH..LeOp
 inline bool atf_amc::TypeH::operator <=(const atf_amc::TypeH &rhs) const {
-    return !(rhs < *this);
+    return !atf_amc::TypeH_Lt(const_cast<atf_amc::TypeH&>(rhs),const_cast<atf_amc::TypeH&>(*this));
 }
 
+// --- atf_amc.TypeH..GeOp
 inline bool atf_amc::TypeH::operator >=(const atf_amc::TypeH &rhs) const {
-    return !(*this < rhs);
-}
-inline atf_amc::TypeH::TypeH() {
-    atf_amc::TypeH_Init(*this);
-}
-
-
-// --- atf_amc.TypeH..Hash
-inline u32 atf_amc::TypeH_Hash(u32 prev, const atf_amc::TypeH & rhs) {
-    prev = i32_Hash(prev, rhs.typeh);
-    return prev;
+    return !atf_amc::TypeH_Lt(const_cast<atf_amc::TypeH&>(*this),const_cast<atf_amc::TypeH&>(rhs));
 }
 
 // --- atf_amc.TypeH..Lt
@@ -11907,23 +12218,25 @@ inline bool atf_amc::TypeH_Update(atf_amc::TypeH &lhs, atf_amc::TypeH& rhs) {
     }
     return ret;
 }
-inline atf_amc::TypeS::TypeS() {
-    atf_amc::TypeS_Init(*this);
-}
 
+// --- atf_amc.TypeH..Ctor
+inline  atf_amc::TypeH::TypeH() {
+    atf_amc::TypeH_Init(*this);
+}
 
 // --- atf_amc.TypeS..Init
 // Set all fields to initial values.
 inline void atf_amc::TypeS_Init(atf_amc::TypeS& parent) {
     parent.types = i32(0);
 }
-inline atf_amc::TypeT::TypeT() {
-    atf_amc::TypeT_Init(*this);
+
+// --- atf_amc.TypeS..Ctor
+inline  atf_amc::TypeS::TypeS() {
+    atf_amc::TypeS_Init(*this);
 }
 
-
 // --- atf_amc.TypeT..Hash
-inline u32 atf_amc::TypeT_Hash(u32 prev, const atf_amc::TypeT & rhs) {
+inline u32 atf_amc::TypeT_Hash(u32 prev, const atf_amc::TypeT& rhs) {
     prev = i32_Hash(prev, rhs.types);
     prev = i32_Hash(prev, rhs.j);
     return prev;
@@ -11935,25 +12248,22 @@ inline void atf_amc::TypeT_Init(atf_amc::TypeT& parent) {
     parent.types = i32(0);
     parent.j = i32(0);
 }
-inline atf_amc::TypeTVal::TypeTVal() {
-    atf_amc::TypeTVal_Init(*this);
-}
 
+// --- atf_amc.TypeT..Ctor
+inline  atf_amc::TypeT::TypeT() {
+    atf_amc::TypeT_Init(*this);
+}
 
 // --- atf_amc.TypeTVal..Init
 // Set all fields to initial values.
 inline void atf_amc::TypeTVal_Init(atf_amc::TypeTVal& parent) {
     parent.j = i32(0);
 }
-inline atf_amc::Typefconst::Typefconst(u32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_amc::Typefconst::Typefconst(atf_amc_Typefconst_value_Enum arg) { this->value = u32(arg); }
-inline atf_amc::Typefconst::Typefconst() {
-    atf_amc::Typefconst_Init(*this);
-}
 
+// --- atf_amc.TypeTVal..Ctor
+inline  atf_amc::TypeTVal::TypeTVal() {
+    atf_amc::TypeTVal_Init(*this);
+}
 
 // --- atf_amc.Typefconst.value.GetEnum
 // Get value of field as enum type
@@ -11968,7 +12278,7 @@ inline void atf_amc::value_SetEnum(atf_amc::Typefconst& parent, atf_amc_Typefcon
 }
 
 // --- atf_amc.Typefconst.value.Cast
-inline atf_amc::Typefconst::operator atf_amc_Typefconst_value_Enum () const {
+inline  atf_amc::Typefconst::operator atf_amc_Typefconst_value_Enum() const {
     return atf_amc_Typefconst_value_Enum((*this).value);
 }
 
@@ -11977,10 +12287,22 @@ inline atf_amc::Typefconst::operator atf_amc_Typefconst_value_Enum () const {
 inline void atf_amc::Typefconst_Init(atf_amc::Typefconst& parent) {
     parent.value = u32(0);
 }
-inline atf_amc::VarlenAlloc::VarlenAlloc() {
-    atf_amc::VarlenAlloc_Init(*this);
+
+// --- atf_amc.Typefconst..Ctor
+inline  atf_amc::Typefconst::Typefconst() {
+    atf_amc::Typefconst_Init(*this);
 }
 
+// --- atf_amc.Typefconst..FieldwiseCtor
+inline  atf_amc::Typefconst::Typefconst(u32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_amc.Typefconst..EnumCtor
+inline  atf_amc::Typefconst::Typefconst(atf_amc_Typefconst_value_Enum arg) {
+    this->value = u32(arg);
+}
 
 // --- atf_amc.VarlenAlloc.elem.N
 // Return number of elements in varlen field
@@ -12036,10 +12358,11 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenAlloc& row) {
 inline void atf_amc::VarlenAlloc_Init(atf_amc::VarlenAlloc& varlenalloc) {
     varlenalloc.length = u32(0);
 }
-inline atf_amc::VarlenAlloc_curs::VarlenAlloc_curs() {
-    atf_amc::VarlenAlloc_curs_Init(*this);
-}
 
+// --- atf_amc.VarlenAlloc..Ctor
+inline  atf_amc::VarlenAlloc::VarlenAlloc() {
+    atf_amc::VarlenAlloc_Init(*this);
+}
 
 // --- atf_amc.VarlenAlloc_curs..ValidQ
 inline bool atf_amc::VarlenAlloc_curs_ValidQ(atf_amc::VarlenAlloc_curs& curs) {
@@ -12093,10 +12416,11 @@ inline void atf_amc::VarlenAlloc_curs_Init(atf_amc::VarlenAlloc_curs& parent) {
     parent.limit = i32(0);
     parent.msglen = i32(0);
 }
-inline atf_amc::VarlenExtern::VarlenExtern() {
-    atf_amc::VarlenExtern_Init(*this);
-}
 
+// --- atf_amc.VarlenAlloc_curs..Ctor
+inline  atf_amc::VarlenAlloc_curs::VarlenAlloc_curs() {
+    atf_amc::VarlenAlloc_curs_Init(*this);
+}
 
 // --- atf_amc.VarlenExtern.varlen.N
 // Return number of elements in varlen field
@@ -12152,10 +12476,11 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenExtern& row) {
 inline void atf_amc::VarlenExtern_Init(atf_amc::VarlenExtern& varlen_extern) {
     varlen_extern.n_elems = u32(0);
 }
-inline atf_amc::VarlenExtern_curs::VarlenExtern_curs() {
-    atf_amc::VarlenExtern_curs_Init(*this);
-}
 
+// --- atf_amc.VarlenExtern..Ctor
+inline  atf_amc::VarlenExtern::VarlenExtern() {
+    atf_amc::VarlenExtern_Init(*this);
+}
 
 // --- atf_amc.VarlenExtern_curs..ValidQ
 inline bool atf_amc::VarlenExtern_curs_ValidQ(atf_amc::VarlenExtern_curs& curs) {
@@ -12209,10 +12534,11 @@ inline void atf_amc::VarlenExtern_curs_Init(atf_amc::VarlenExtern_curs& parent) 
     parent.limit = i32(0);
     parent.msglen = i32(0);
 }
-inline atf_amc::VarlenH::VarlenH() {
-    atf_amc::VarlenH_Init(*this);
-}
 
+// --- atf_amc.VarlenExtern_curs..Ctor
+inline  atf_amc::VarlenExtern_curs::VarlenExtern_curs() {
+    atf_amc::VarlenExtern_curs_Init(*this);
+}
 
 // --- atf_amc.VarlenH.typeh.N
 // Return number of elements in varlen field
@@ -12268,10 +12594,11 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenH& row) {
 inline void atf_amc::VarlenH_Init(atf_amc::VarlenH& parent) {
     parent.length = u32(0);
 }
-inline atf_amc::VarlenH_curs::VarlenH_curs() {
-    atf_amc::VarlenH_curs_Init(*this);
-}
 
+// --- atf_amc.VarlenH..Ctor
+inline  atf_amc::VarlenH::VarlenH() {
+    atf_amc::VarlenH_Init(*this);
+}
 
 // --- atf_amc.VarlenH_curs..ValidQ
 inline bool atf_amc::VarlenH_curs_ValidQ(atf_amc::VarlenH_curs& curs) {
@@ -12325,10 +12652,11 @@ inline void atf_amc::VarlenH_curs_Init(atf_amc::VarlenH_curs& parent) {
     parent.limit = i32(0);
     parent.msglen = i32(0);
 }
-inline atf_amc::VarlenK::VarlenK() {
-    atf_amc::VarlenK_Init(*this);
-}
 
+// --- atf_amc.VarlenH_curs..Ctor
+inline  atf_amc::VarlenH_curs::VarlenH_curs() {
+    atf_amc::VarlenH_curs_Init(*this);
+}
 
 // --- atf_amc.VarlenK.i.N
 // Return number of elements in varlen field
@@ -12384,10 +12712,11 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenK& row) {
 inline void atf_amc::VarlenK_Init(atf_amc::VarlenK& k) {
     k.length = u32(0);
 }
-inline atf_amc::VarlenK_curs::VarlenK_curs() {
-    atf_amc::VarlenK_curs_Init(*this);
-}
 
+// --- atf_amc.VarlenK..Ctor
+inline  atf_amc::VarlenK::VarlenK() {
+    atf_amc::VarlenK_Init(*this);
+}
 
 // --- atf_amc.VarlenK_curs..ValidQ
 inline bool atf_amc::VarlenK_curs_ValidQ(atf_amc::VarlenK_curs& curs) {
@@ -12441,10 +12770,11 @@ inline void atf_amc::VarlenK_curs_Init(atf_amc::VarlenK_curs& parent) {
     parent.limit = i32(0);
     parent.msglen = i32(0);
 }
-inline atf_amc::VarlenMsg::VarlenMsg() {
-    atf_amc::VarlenMsg_Init(*this);
-}
 
+// --- atf_amc.VarlenK_curs..Ctor
+inline  atf_amc::VarlenK_curs::VarlenK_curs() {
+    atf_amc::VarlenK_curs_Init(*this);
+}
 
 // --- atf_amc.VarlenMsg.base.Castdown
 // Check if atf_amc::MsgHeader is an instance of VarlenMsg by checking the type field
@@ -12517,6 +12847,11 @@ inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenMsg& row) {
 inline void atf_amc::VarlenMsg_Init(atf_amc::VarlenMsg& parent) {
     parent.type = atf_amc_MsgTypeEnum(0x1000);
     parent.length = atf_amc::MsgLength(ssizeof(parent) + (0));
+}
+
+// --- atf_amc.VarlenMsg..Ctor
+inline  atf_amc::VarlenMsg::VarlenMsg() {
+    atf_amc::VarlenMsg_Init(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_amc::BitfldType1 &row) {// cfmt:atf_amc.BitfldType1.String

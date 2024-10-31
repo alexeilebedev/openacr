@@ -1,4 +1,4 @@
-## AMC Enumerated Types
+## amc Enumerated Types
 <a href="#amc-enumerated-types"></a>
 
 You can associate several key-value pairs with a numeric field using `fconst` records.
@@ -20,7 +20,7 @@ Here is an example defining an fconst:
 
 ```
 inline-command: acr -report:N field:algo.Bool.% -t | grep Bool.
-    dmmeta.ctype  ctype:algo.Bool  comment:""
+    dmmeta.ctype  ctype:algo.Bool  comment:"Bool type for converting booleans to string"
       dmmeta.field  field:algo.Bool.value  arg:u8  reftype:Val  dflt:false  comment:""
         dmmeta.anonfld  field:algo.Bool.value  comment:""
         dmmeta.fcast  field:algo.Bool.value  expr:""  comment:""

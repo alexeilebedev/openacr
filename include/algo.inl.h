@@ -1363,3 +1363,11 @@ inline algo::UnTime algo::CurrUnTime() {
     ret.value = i64(ts.tv_sec) * 1000000000 + ts.tv_nsec;
     return ret;
 }
+
+inline i32 algo::strptr_Cmp(algo::strptr a, algo::strptr b) {
+    int n = i32_Min(a.n_elems,b.n_elems);
+    for (int i=0; i<n; i++) {
+        if (a[i] != b[i]) return a[i]-b[i];
+    }
+    return i32_Cmp(a.n_elems, b.n_elems);
+}

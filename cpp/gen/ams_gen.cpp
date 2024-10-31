@@ -34,21 +34,21 @@
 //#pragma endinclude
 namespace ams { // gen:ns_print_proto
     // func:ams.StreamFlags.write.ReadStrptrMaybe
-    static bool          write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.StreamFlags.read.ReadStrptrMaybe
-    static bool          read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.StreamFlags.nonblock.ReadStrptrMaybe
-    static bool          nonblock_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   nonblock_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.StreamFlags.trace_read.ReadStrptrMaybe
-    static bool          trace_read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   trace_read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.StreamFlags.trace_write.ReadStrptrMaybe
-    static bool          trace_write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   trace_write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.StreamFlags.write_err.ReadStrptrMaybe
-    static bool          write_err_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   write_err_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams.StreamFlags.trace_text.ReadStrptrMaybe
-    static bool          trace_text_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   trace_text_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ams...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- ams.AlarmSyncMsg.base.CopyOut

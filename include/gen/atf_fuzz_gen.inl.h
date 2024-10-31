@@ -28,9 +28,10 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dev_gen.inl.h"
 //#pragma endinclude
-inline atf_fuzz::trace::trace() {
-}
 
+// --- atf_fuzz.trace..Ctor
+inline  atf_fuzz::trace::trace() {
+}
 
 // --- atf_fuzz.FDb.fuzzstrat.EmptyQ
 // Return true if index is empty
@@ -177,10 +178,6 @@ inline void atf_fuzz::_db_target_curs_Next(_db_target_curs &curs) {
 inline atf_fuzz::FTarget& atf_fuzz::_db_target_curs_Access(_db_target_curs &curs) {
     return target_qFind(u64(curs.index));
 }
-inline atf_fuzz::FFuzzstrat::FFuzzstrat() {
-    atf_fuzz::FFuzzstrat_Init(*this);
-}
-
 
 // --- atf_fuzz.FFuzzstrat.step.Call
 // Invoke function by pointer
@@ -195,29 +192,27 @@ inline void atf_fuzz::step_Call(atf_fuzz::FFuzzstrat& fuzzstrat) {
 inline void atf_fuzz::FFuzzstrat_Init(atf_fuzz::FFuzzstrat& fuzzstrat) {
     fuzzstrat.step = NULL;
 }
-inline atf_fuzz::FTarget::FTarget() {
-    atf_fuzz::FTarget_Init(*this);
-}
 
-inline atf_fuzz::FTarget::~FTarget() {
-    atf_fuzz::FTarget_Uninit(*this);
+// --- atf_fuzz.FFuzzstrat..Ctor
+inline  atf_fuzz::FFuzzstrat::FFuzzstrat() {
+    atf_fuzz::FFuzzstrat_Init(*this);
 }
-
 
 // --- atf_fuzz.FTarget..Init
 // Set all fields to initial values.
 inline void atf_fuzz::FTarget_Init(atf_fuzz::FTarget& target) {
     target.ind_target_next = (atf_fuzz::FTarget*)-1; // (atf_fuzz.FDb.ind_target) not-in-hash
 }
-inline atf_fuzz::FieldId::FieldId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_fuzz::FieldId::FieldId(atf_fuzz_FieldIdEnum arg) { this->value = i32(arg); }
-inline atf_fuzz::FieldId::FieldId() {
-    atf_fuzz::FieldId_Init(*this);
+
+// --- atf_fuzz.FTarget..Ctor
+inline  atf_fuzz::FTarget::FTarget() {
+    atf_fuzz::FTarget_Init(*this);
 }
 
+// --- atf_fuzz.FTarget..Dtor
+inline  atf_fuzz::FTarget::~FTarget() {
+    atf_fuzz::FTarget_Uninit(*this);
+}
 
 // --- atf_fuzz.FieldId.value.GetEnum
 // Get value of field as enum type
@@ -232,7 +227,7 @@ inline void atf_fuzz::value_SetEnum(atf_fuzz::FieldId& parent, atf_fuzz_FieldIdE
 }
 
 // --- atf_fuzz.FieldId.value.Cast
-inline atf_fuzz::FieldId::operator atf_fuzz_FieldIdEnum () const {
+inline  atf_fuzz::FieldId::operator atf_fuzz_FieldIdEnum() const {
     return atf_fuzz_FieldIdEnum((*this).value);
 }
 
@@ -241,15 +236,22 @@ inline atf_fuzz::FieldId::operator atf_fuzz_FieldIdEnum () const {
 inline void atf_fuzz::FieldId_Init(atf_fuzz::FieldId& parent) {
     parent.value = i32(-1);
 }
-inline atf_fuzz::TableId::TableId(i32                            in_value)
-    : value(in_value)
-{
-}
-inline atf_fuzz::TableId::TableId(atf_fuzz_TableIdEnum arg) { this->value = i32(arg); }
-inline atf_fuzz::TableId::TableId() {
-    atf_fuzz::TableId_Init(*this);
+
+// --- atf_fuzz.FieldId..Ctor
+inline  atf_fuzz::FieldId::FieldId() {
+    atf_fuzz::FieldId_Init(*this);
 }
 
+// --- atf_fuzz.FieldId..FieldwiseCtor
+inline  atf_fuzz::FieldId::FieldId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_fuzz.FieldId..EnumCtor
+inline  atf_fuzz::FieldId::FieldId(atf_fuzz_FieldIdEnum arg) {
+    this->value = i32(arg);
+}
 
 // --- atf_fuzz.TableId.value.GetEnum
 // Get value of field as enum type
@@ -264,7 +266,7 @@ inline void atf_fuzz::value_SetEnum(atf_fuzz::TableId& parent, atf_fuzz_TableIdE
 }
 
 // --- atf_fuzz.TableId.value.Cast
-inline atf_fuzz::TableId::operator atf_fuzz_TableIdEnum () const {
+inline  atf_fuzz::TableId::operator atf_fuzz_TableIdEnum() const {
     return atf_fuzz_TableIdEnum((*this).value);
 }
 
@@ -272,6 +274,22 @@ inline atf_fuzz::TableId::operator atf_fuzz_TableIdEnum () const {
 // Set all fields to initial values.
 inline void atf_fuzz::TableId_Init(atf_fuzz::TableId& parent) {
     parent.value = i32(-1);
+}
+
+// --- atf_fuzz.TableId..Ctor
+inline  atf_fuzz::TableId::TableId() {
+    atf_fuzz::TableId_Init(*this);
+}
+
+// --- atf_fuzz.TableId..FieldwiseCtor
+inline  atf_fuzz::TableId::TableId(i32 in_value)
+    : value(in_value)
+ {
+}
+
+// --- atf_fuzz.TableId..EnumCtor
+inline  atf_fuzz::TableId::TableId(atf_fuzz_TableIdEnum arg) {
+    this->value = i32(arg);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atf_fuzz::trace &row) {// cfmt:atf_fuzz.trace.String

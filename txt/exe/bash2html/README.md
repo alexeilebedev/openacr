@@ -3,13 +3,17 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [bash2html - Internals](/txt/exe/bash2html/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 bash2html: Convert bash output and colours to html
 Usage: bash2html [options]
@@ -24,32 +28,27 @@ Usage: bash2html [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
 #### -test -- Produce Test Output
 <a href="#-test"></a>
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/bash2html.cpp](/cpp/bash2html.cpp)||
-|[cpp/gen/bash2html_gen.cpp](/cpp/gen/bash2html_gen.cpp)||
-|[include/bash2html.h](/include/bash2html.h)||
-|[include/gen/bash2html_gen.h](/include/gen/bash2html_gen.h)||
-|[include/gen/bash2html_gen.inl.h](/include/gen/bash2html_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `bash2html` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

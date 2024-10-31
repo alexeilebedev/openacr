@@ -3,14 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [amc_gc - Internals](/txt/exe/amc_gc/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 amc_gc: Garbage collector for in-memory databases
 Usage: amc_gc [options]
@@ -27,8 +31,11 @@ Usage: amc_gc [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 `amc_gc` is a tool for removing unused records and thus optimizing a program by simplifying it
 
@@ -56,9 +63,12 @@ Let's finish by deleting the unused target
 
     $ acr_ed -del -target sample -write
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -target -- Target to test-build
 <a href="#-target"></a>
 
@@ -71,22 +81,15 @@ Let's finish by deleting the unused target
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/amc/amc_gc.cpp](/cpp/amc/amc_gc.cpp)||
-|[cpp/gen/amc_gc_gen.cpp](/cpp/gen/amc_gc_gen.cpp)||
-|[include/gen/amc_gc_gen.h](/include/gen/amc_gc_gen.h)||
-|[include/gen/amc_gc_gen.inl.h](/include/gen/amc_gc_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `amc_gc` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

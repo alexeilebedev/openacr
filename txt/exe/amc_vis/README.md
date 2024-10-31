@@ -3,14 +3,18 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Sources](#sources)
-* [Inputs](#inputs)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [amc_vis - Internals](/txt/exe/amc_vis/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 amc_vis: Draw access path diagrams
 Usage: amc_vis [[-ctype:]<regx>] [options]
@@ -31,8 +35,11 @@ Usage: amc_vis [[-ctype:]<regx>] [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 The single parameter to `amc_vis` is a ctype regex,
 and whatever ctypes are matched by the regex will be shown
@@ -65,9 +72,12 @@ amc_vis can also output an dot file, which can then be viewed in a browser:
 
     $ firefox xyz.svg
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -ctype -- Ctype regexp to compute access path diagram
 <a href="#-ctype"></a>
 
@@ -92,26 +102,19 @@ amc_vis can also output an dot file, which can then be viewed in a browser:
 #### -render -- Produce an ascii drawing
 <a href="#-render"></a>
 
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/amc/amc_vis.cpp](/cpp/amc/amc_vis.cpp)||
-|[cpp/gen/amc_vis_gen.cpp](/cpp/gen/amc_vis_gen.cpp)||
-|[include/gen/amc_vis_gen.h](/include/gen/amc_vis_gen.h)||
-|[include/gen/amc_vis_gen.inl.h](/include/gen/amc_vis_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `amc_vis` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
 |[dmmeta.reftype](/txt/ssimdb/dmmeta/reftype.md)|Field type constructor (e.g. reference type)|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
 |[dmmeta.finput](/txt/ssimdb/dmmeta/finput.md)|Describe input table of a program|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

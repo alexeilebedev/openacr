@@ -3,20 +3,23 @@
 
 ### Table Of Contents
 <a href="#table-of-contents"></a>
-* [Syntax](#syntax)
-* [Description](#description)
-* [Options](#options)
-* [Disambiguation](#disambiguation)
-* [Specifying arguments](#specifying-arguments)
-* [Edit-and-retry](#edit-and-retry)
-* [Exceptions](#exceptions)
-* [Bugs](#bugs)
-* [Sources](#sources)
-* [Inputs](#inputs)
-* [Tests](#tests)
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Description](#description)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Disambiguation](#disambiguation)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Specifying arguments](#specifying-arguments)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Edit-and-retry](#edit-and-retry)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Exceptions](#exceptions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Bugs](#bugs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&#128196; [mdbg - Internals](/txt/exe/mdbg/internals.md)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
 
 ### Syntax
 <a href="#syntax"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 mdbg: Gdb front-end
 Usage: mdbg [-target:]<string> [[-args:]<string>] [options]
@@ -44,8 +47,11 @@ Usage: mdbg [-target:]<string> [[-args:]<string>] [options]
 
 ```
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Syntax -->
+
 ### Description
 <a href="#description"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Description -->
 
 This is a wrapper for automating the invocation of `gdb` from command line.
 
@@ -94,9 +100,45 @@ and run the target program under the debugger, stopping at Main.
               algo_lib::_db.argc = argc;
       ...
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Description -->
+
+### Disambiguation
+<a href="#disambiguation"></a>
+
+There exists a microsoft-provided tool named mdbg. Please make sure
+this tool is first in PATH in order to avoid confusion.
+
+### Specifying arguments
+<a href="#specifying-arguments"></a>
+
+The first argument to mdbg is the debug target name. Mdbg must know it so it can build it.
+To pass arguments to the debug target, specify them in as anonymous arguments:a single string like this:
+ 
+    $ mdbg sample -- -in:filename
+
+### Edit-and-retry
+<a href="#edit-and-retry"></a>
+
+Mdbg sets up the standard shortcut F7 for edit-and-retry: the target is rebuilt
+and reinvoked with the same options as initially. This can save a lot of set up, because
+the gdb instance is not restarted; only the debug target.
+
+### Exceptions
+<a href="#exceptions"></a>
+
+By default, gdb is configured to catch exceptions. To ignore them instead, specify `-catchthrow:N`
+
+### Bugs
+<a href="#bugs"></a>
+
+Because gdb and emacs don't form a standardized environment, it's possible that mdbg's integration
+is broken in some way. Please file an issue, describing your config, so that this combination
+can be tried out and fixed.
+
 ### Options
 <a href="#options"></a>
 
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
 #### -target -- Executable name
 <a href="#-target"></a>
 
@@ -175,68 +217,17 @@ Configure gdb to enable gdb python scriptability
 #### -dry_run -- Print commands but don't execute
 <a href="#-dry_run"></a>
 
-### Disambiguation
-<a href="#disambiguation"></a>
-
-There exists a microsoft-provided tool named mdbg. Please make sure
-this tool is first in PATH in order to avoid confusion.
-
-### Specifying arguments
-<a href="#specifying-arguments"></a>
-
-The first argument to mdbg is the debug target name. Mdbg must know it so it can build it.
-To pass arguments to the debug target, specify them in as anonymous arguments:a single string like this:
- 
-    $ mdbg sample -- -in:filename
-
-### Edit-and-retry
-<a href="#edit-and-retry"></a>
-
-Mdbg sets up the standard shortcut F7 for edit-and-retry: the target is rebuilt
-and reinvoked with the same options as initially. This can save a lot of set up, because
-the gdb instance is not restarted; only the debug target.
-
-### Exceptions
-<a href="#exceptions"></a>
-
-By default, gdb is configured to catch exceptions. To ignore them instead, specify `-catchthrow:N`
-
-### Bugs
-<a href="#bugs"></a>
-
-Because gdb and emacs don't form a standardized environment, it's possible that mdbg's integration
-is broken in some way. Please file an issue, describing your config, so that this combination
-can be tried out and fixed.
-
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/gen/mdbg_gen.cpp](/cpp/gen/mdbg_gen.cpp)||
-|[cpp/mdbg/mdbg.cpp](/cpp/mdbg/mdbg.cpp)||
-|[include/gen/mdbg_gen.h](/include/gen/mdbg_gen.h)||
-|[include/gen/mdbg_gen.inl.h](/include/gen/mdbg_gen.inl.h)||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
 <a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
 `mdbg` takes the following tables on input:
-|ssimfile|comment|
+|Ssimfile|Comment|
 |---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dev.cfg](/txt/ssimdb/dev/cfg.md)|Compiler configuration|
 |[dev.builddir](/txt/ssimdb/dev/builddir.md)|Directory where object files/executables go. Determines compile/link options|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 
-### Tests
-<a href="#tests"></a>
-The following component tests are defined for `mdbg`.
-These can be executed with `atf_comp <comptest> -v`
-|COMPTEST|COMMENT|
-|---|---|
-|mdbg.OutOfOrderArgs||
-|mdbg.Smoke||
-|mdbg.SmokeBreak||
-|mdbg.SmokeBreak2||
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

@@ -50,7 +50,8 @@ namespace atf_cmdline { // gen:ns_print_struct
 // --- atf_cmdline.trace
 #pragma pack(push,1)
 struct trace { // atf_cmdline.trace
-    trace();
+    // func:atf_cmdline.trace..Ctor
+    inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
@@ -115,25 +116,29 @@ bool                 _db_XrefMaybe();
 // func:atf_cmdline.FDb..Init
 void                 FDb_Init();
 // func:atf_cmdline.FDb..Uninit
-void                 FDb_Uninit() __attribute__((nothrow));
+inline void          FDb_Uninit() __attribute__((nothrow));
 
 // --- atf_cmdline.FieldId
 #pragma pack(push,1)
 struct FieldId { // atf_cmdline.FieldId: Field read helper
     i32   value;   //   -1
-    inline operator atf_cmdline_FieldIdEnum() const;
-    explicit FieldId(i32                            in_value);
-    FieldId(atf_cmdline_FieldIdEnum arg);
-    FieldId();
+    // func:atf_cmdline.FieldId.value.Cast
+    inline               operator atf_cmdline_FieldIdEnum() const __attribute__((nothrow));
+    // func:atf_cmdline.FieldId..Ctor
+    inline               FieldId() __attribute__((nothrow));
+    // func:atf_cmdline.FieldId..FieldwiseCtor
+    explicit inline               FieldId(i32 in_value) __attribute__((nothrow));
+    // func:atf_cmdline.FieldId..EnumCtor
+    inline               FieldId(atf_cmdline_FieldIdEnum arg) __attribute__((nothrow));
 };
 #pragma pack(pop)
 
 // Get value of field as enum type
 // func:atf_cmdline.FieldId.value.GetEnum
-atf_cmdline_FieldIdEnum value_GetEnum(const atf_cmdline::FieldId& parent) __attribute__((nothrow));
+inline atf_cmdline_FieldIdEnum value_GetEnum(const atf_cmdline::FieldId& parent) __attribute__((nothrow));
 // Set value of field from enum type.
 // func:atf_cmdline.FieldId.value.SetEnum
-void                 value_SetEnum(atf_cmdline::FieldId& parent, atf_cmdline_FieldIdEnum rhs) __attribute__((nothrow));
+inline void          value_SetEnum(atf_cmdline::FieldId& parent, atf_cmdline_FieldIdEnum rhs) __attribute__((nothrow));
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
 // func:atf_cmdline.FieldId.value.ToCstr
@@ -161,7 +166,7 @@ bool                 value_ReadStrptrMaybe(atf_cmdline::FieldId& parent, algo::s
 bool                 FieldId_ReadStrptrMaybe(atf_cmdline::FieldId &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_cmdline.FieldId..Init
-void                 FieldId_Init(atf_cmdline::FieldId& parent);
+inline void          FieldId_Init(atf_cmdline::FieldId& parent);
 // print string representation of ROW to string STR
 // cfmt:atf_cmdline.FieldId.String  printfmt:Raw
 // func:atf_cmdline.FieldId..Print

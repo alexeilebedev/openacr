@@ -28,9 +28,9 @@
 //#pragma endinclude
 namespace ietf { // gen:ns_print_proto
     // func:ietf.Ipv4Addr.addr.ReadStrptrMaybe
-    static bool          addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str) __attribute__((nothrow));
+    inline static bool   addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:ietf...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- ietf.FieldId.value.ToCstr

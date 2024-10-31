@@ -39,6 +39,19 @@ static tempstr PrintDoublePercent(double d) {
 
 // -----------------------------------------------------------------------------
 
+abt::FSyscmd* abt::NewCmd(abt::FSyscmd *start, abt::FSyscmd *end) {
+    abt::FSyscmd *cmd = &abt::ind_syscmd_GetOrCreate(abt::syscmd_N());
+    if (start) {
+        abt::syscmddep_InsertMaybe(dev::Syscmddep(cmd->rowid, start->rowid));//child,parent
+    }
+    if (end) {
+        abt::syscmddep_InsertMaybe(dev::Syscmddep(end->rowid, cmd->rowid));
+    }
+    return cmd;
+}
+
+// -----------------------------------------------------------------------------
+
 static void Build_Forkit(abt::FSyscmd *next_cmd) {
     if (next_cmd->redirect) {
         next_cmd->fstdout = tempstr() << "temp/abt-XXXXXX";

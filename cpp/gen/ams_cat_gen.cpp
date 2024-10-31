@@ -68,9 +68,9 @@ namespace ams_cat { // gen:ns_print_proto
     static algo::ImrowPtr trace_RowidFind(int t) __attribute__((nothrow));
     // Function return 1
     // func:ams_cat.FDb.trace.N
-    static i32           trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
+    inline static i32    trace_N() __attribute__((__warn_unused_result__, nothrow, pure));
     // func:ams_cat...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- ams_cat.trace..Print
@@ -360,11 +360,6 @@ inline static i32 ams_cat::trace_N() {
 void ams_cat::FDb_Init() {
 
     ams_cat::InitReflection();
-}
-
-// --- ams_cat.FDb..Uninit
-void ams_cat::FDb_Uninit() {
-    ams_cat::FDb &row = _db; (void)row;
 }
 
 // --- ams_cat.FieldId.value.ToCstr

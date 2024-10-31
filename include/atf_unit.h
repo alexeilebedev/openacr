@@ -238,6 +238,12 @@ namespace atf_unit { // update-hdr
     // void unittest_algo_lib_ReverseBits();
 
     // -------------------------------------------------------------------
+    // cpp/atf_unit/algo_txttbl.cpp
+    //
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void unittest_algo_lib_Txttbl();
+
+    // -------------------------------------------------------------------
     // cpp/atf_unit/ams.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)

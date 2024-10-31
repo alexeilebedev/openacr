@@ -30,7 +30,7 @@
 //#pragma endinclude
 namespace report { // gen:ns_print_proto
     // func:report...SizeCheck
-    static void          SizeCheck();
+    inline static void   SizeCheck();
 } // gen:ns_print_proto
 
 // --- report.FieldId.value.ToCstr

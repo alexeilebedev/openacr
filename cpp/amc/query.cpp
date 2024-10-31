@@ -18,7 +18,7 @@
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: amc (exe) -- Algo Model Compiler: generate code under include/gen and cpp/gen
 // Exceptions: NO
-// Source: cpp/amc/query.cpp
+// Source: cpp/amc/query.cpp -- Query mode
 //
 
 #include "include/amc.h"
@@ -60,7 +60,7 @@ static void Query_Func(algo_lib::Regx &regx, cstring &out) {
                 ch_RemoveAll(*ns.cpp);
                 ch_RemoveAll(*ns.hdr);
                 ch_RemoveAll(*ns.inl);
-                if (amc::_db.cmdline.proto || func.extrn) {
+                if (amc::_db.cmdline.proto || func.extrn || func.deleted) {
                     amc::_db.report.n_func++;
                     tempstr proto;
                     PrintFuncProto(func, NULL, proto);
