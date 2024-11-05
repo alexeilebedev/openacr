@@ -24,6 +24,7 @@
 
 #pragma once
 #include <sqlite3.h>
+#include "extern/sqlite-3470000/sqlite3.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/lib_ctype_gen.h"
