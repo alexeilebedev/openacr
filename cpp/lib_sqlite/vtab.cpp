@@ -224,4 +224,5 @@ sqlite3_module lib_sqlite::SsimModule = {
     0,             /* xRelease */
     0,             /* xRollbackTo */
     0,             /* xShadowName */
+    0,             /* xIntegrity */
 };
