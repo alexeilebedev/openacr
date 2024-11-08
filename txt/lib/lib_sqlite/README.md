@@ -69,6 +69,7 @@ The following source files are part of this tool:
 |[cpp/lib_sqlite/lib_sqlite.cpp](/cpp/lib_sqlite/lib_sqlite.cpp)||
 |[cpp/lib_sqlite/vtab.cpp](/cpp/lib_sqlite/vtab.cpp)||
 |[extern/sqlite-3470000/sqlite3.c](/extern/sqlite-3470000/sqlite3.c)||
+|[extern/sqlite-3470000/sqlite3.h](/extern/sqlite-3470000/sqlite3.h)||
 |[include/gen/lib_sqlite_gen.h](/include/gen/lib_sqlite_gen.h)||
 |[include/gen/lib_sqlite_gen.inl.h](/include/gen/lib_sqlite_gen.inl.h)||
 |[include/lib_sqlite.h](/include/lib_sqlite.h)||
