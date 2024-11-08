@@ -33,6 +33,4 @@ void lib_sqlite::db_Cleanup(lib_sqlite::FConn &parent) {
 
 void lib_sqlite::Init() {
     lib_ctype::Init();
-    auto rc = sqlite3_config(SQLITE_CONFIG_SINGLETHREAD);
-    vrfyeq_(rc, SQLITE_OK);
 }

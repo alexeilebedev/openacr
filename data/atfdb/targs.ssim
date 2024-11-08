@@ -166,7 +166,7 @@ atfdb.targs  comptest:acr_ed.CreateSsimfileBadNs  args:"--create -ssimfile ams.t
 atfdb.targs  comptest:acr_in.Reverse  args:"-r dev.targdep"
 atfdb.targs  comptest:acr_in.Simple  args:acr_in
 atfdb.targs  comptest:acr_in.Tree  args:"acr_in -t"
-atfdb.targs  comptest:aqlite.Number  args:"-ns:dmmeta 'select * from field where dflt = 0 and ns = \"dev\"'"
+atfdb.targs  comptest:aqlite.Number  args:"-ns:dmmeta \"select * from field where dflt = 0 and ns = 'dev'\""
 atfdb.targs  comptest:aqlite.Smoke  args:'-ns:dmmeta -data:- "select rowid,* from ctype; select rowid,* from field"'
 atfdb.targs  comptest:atf_cmdline.Bare  args:""
 atfdb.targs  comptest:atf_cmdline.Debug  args:"-debug blah -str blah"

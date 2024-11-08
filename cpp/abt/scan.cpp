@@ -184,7 +184,9 @@ void abt::ScanSrcfile() {
     while(abt::FSrcfile *srcfile = abt::zs_srcfile_read_First()) {
         srcfile->objkey = abt::GetObjkey(srcfile->srcfile);
         // read file, scan includes
-        ScanHeaders(srcfile);
+        if (!algo::StartsWithQ(srcfile->srcfile,"extern/")) {
+            ScanHeaders(srcfile);
+        }
         abt::zs_srcfile_read_RemoveFirst();
     }
 }
