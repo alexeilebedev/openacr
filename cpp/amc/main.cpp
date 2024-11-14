@@ -1212,31 +1212,28 @@ static void Main_Report() {
 
 // -----------------------------------------------------------------------------
 
+static void RunGen(amc::FGen &gen, int &prev_err) {
+    u64 c=algo::get_cycles();
+    amc::_db.cur_gen=gen.gen;
+    gen.step();
+    CheckCumulativeError(gen,prev_err);
+    gen.cycle_total += algo::get_cycles()-c;
+}
+
 // Go over `amcdb.gen` table and invoke each global generator
-// Then, go over namespaces
-//    Go over per-namespace `amcdb.gen` entries and invoke them.
 // Collect performance data long the way
 // This is where amc spends most of the time. See the `amcdb.gen` table for more information.
 void amc::Main_Gen() {
     int prev_err=0;
-    // run non-per-namespace generators
-    ind_beg(amc::_db_gen_curs,gen,amc::_db) if (!gen.perns) {
-        u64 c=algo::get_cycles();
-        _db.cur_gen=gen.gen;
-        gen.step();
-        CheckCumulativeError(gen,prev_err);
-        gen.cycle_total += algo::get_cycles()-c;
-    }ind_end;
-    // run per-namespace generators
-    ind_beg(amc::_db_ns_curs, ns, amc::_db) {
-        if (ns.select) {
-            ind_beg(amc::_db_zs_gen_perns_curs,gen,amc::_db) {
-                u64 c=algo::get_cycles();
-                amc::_db.c_ns=&ns;
-                _db.cur_gen=gen.gen;
-                gen.step();
-                CheckCumulativeError(gen,prev_err);
-                gen.cycle_total += algo::get_cycles()-c;
+    ind_beg(amc::_db_gen_curs,gen,amc::_db) {
+        if (!gen.perns) {
+            RunGen(gen,prev_err);
+        } else {
+            ind_beg(amc::_db_ns_curs, ns, amc::_db) {
+                if (ns.select) {
+                    amc::_db.c_ns=&ns;
+                    RunGen(gen,prev_err);
+                }
             }ind_end;
         }
     }ind_end;

@@ -16569,7 +16569,6 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:check_basefield  perns:N  comment:\"Check Base usage\"", amc::gen_check_basefield }
         ,{ "amcdb.gen  gen:check_ssimsort  perns:N  comment:\"Check Ssimsort table\"", amc::gen_check_ssimsort }
         ,{ "amcdb.gen  gen:clonefconst  perns:N  comment:\"Generate numeric fconsts for all string-based fconsts (creates new ctype)\"", amc::gen_clonefconst }
-        ,{ "amcdb.gen  gen:parsenum  perns:N  comment:\"Generate functions to parse {i,u}{32,64,128}\"", amc::gen_parsenum }
         ,{ "amcdb.gen  gen:newfield_charset  perns:N  comment:\"Generate code for charsets -- earlyish\"", amc::gen_newfield_charset }
         ,{ "amcdb.gen  gen:newfield_count  perns:N  comment:\"Create new fields for Count\"", amc::gen_newfield_count }
         ,{ "amcdb.gen  gen:newfield_hook  perns:N  comment:\"Create new fields for Hook\"", amc::gen_newfield_hook }
@@ -16623,6 +16622,7 @@ static void amc::gen_LoadStatic() {
         ,{ "amcdb.gen  gen:ns_check_path  perns:Y  comment:\"Check x-ref paths for consistency\"", amc::gen_ns_check_path }
         ,{ "amcdb.gen  gen:ns_check_pack  perns:Y  comment:\"Recursively check packing\"", amc::gen_ns_check_pack }
         ,{ "amcdb.gen  gen:ns_check_nstype  perns:Y  comment:\"Check namespace annotations\"", amc::gen_ns_check_nstype }
+        ,{ "amcdb.gen  gen:parsenum  perns:N  comment:\"Fill in functions to parse {i,u}{32,64,128} (prototypes are 'extern')\"", amc::gen_parsenum }
         ,{ "amcdb.gen  gen:ns_check_main  perns:Y  comment:\"Check main() usage\"", amc::gen_ns_check_main }
         ,{ "amcdb.gen  gen:ns_fast  perns:Y  comment:\"Generate FAST decode\"", amc::gen_ns_fast }
         ,{ "amcdb.gen  gen:ns_dispatch  perns:Y  comment:\"Generate dispatch code\"", amc::gen_ns_dispatch }

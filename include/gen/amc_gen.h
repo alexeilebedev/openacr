@@ -20387,10 +20387,6 @@ void                 gen_check_ssimsort();
 // this function is 'extrn' and implemented by user
 void                 gen_clonefconst();
 // User-implemented function from gstatic:amc.FDb.gen
-// func:amc...gen_parsenum
-// this function is 'extrn' and implemented by user
-void                 gen_parsenum();
-// User-implemented function from gstatic:amc.FDb.gen
 // func:amc...gen_newfield_charset
 // this function is 'extrn' and implemented by user
 void                 gen_newfield_charset();
@@ -20602,6 +20598,10 @@ void                 gen_ns_check_pack();
 // func:amc...gen_ns_check_nstype
 // this function is 'extrn' and implemented by user
 void                 gen_ns_check_nstype();
+// User-implemented function from gstatic:amc.FDb.gen
+// func:amc...gen_parsenum
+// this function is 'extrn' and implemented by user
+void                 gen_parsenum();
 // User-implemented function from gstatic:amc.FDb.gen
 // func:amc...gen_ns_check_main
 // this function is 'extrn' and implemented by user
