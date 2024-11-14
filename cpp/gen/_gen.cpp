@@ -24,35 +24,36 @@
 
 #include "include/algo.h"  // hard-coded include
 
-// --- ...i8_ReadStrptrMaybe
-// Attempt to parse i8 from str
+// --- i16..ReadStrptrMaybe
+// Read fields of i16 from an ascii string.
+// Attempt to parse i16 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, RESULT is unchanged
+// Return success value; If false, PARENT is unchanged
 // String must be non-empty
 // Number may prefixed with + or - (with no space after)
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool i8_ReadStrptrMaybe(i8& result, algo::strptr str) {
+bool i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str) {
     bool retval = true;
     int index = 0;
     bool neg=false;
     bool hex=false;
     u32 num=0;
     char c;
-    while (index < str.n_elems && algo_lib::WhiteCharQ(str.elems[index])) {
+    while (index < in_str.n_elems && algo_lib::WhiteCharQ(in_str.elems[index])) {
         index++;
     }
-    if (index < str.n_elems) {
-        c = str.elems[index];
+    if (index < in_str.n_elems) {
+        c = in_str.elems[index];
         index++;
         if (c=='+') {
         } else if (c=='-') {
             neg=true;
         } else if (algo_lib::DigitCharQ(c)) {
             num = c-'0';
-            if (num==0 && index < str.n_elems) {
-                c = str.elems[index];
+            if (num==0 && index < in_str.n_elems) {
+                c = in_str.elems[index];
                 if (c == 'x' || c == 'X') {
                     hex=true;
                     index++;
@@ -65,11 +66,11 @@ bool i8_ReadStrptrMaybe(i8& result, algo::strptr str) {
         retval= index == 0;
     }
     if (hex) {
-        if (index == str.n_elems) {
+        if (index == in_str.n_elems) {
             retval=false;
         }
-        for (; index < str.n_elems; index++) {
-            c = str.elems[index];
+        for (; index < in_str.n_elems; index++) {
+            c = in_str.elems[index];
             u8 val;
             if (!algo::ParseHex1(c, val)) {
                 break;
@@ -77,163 +78,9 @@ bool i8_ReadStrptrMaybe(i8& result, algo::strptr str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+4-1, str.n_elems); // 1 digit already in num
+        int lim = u32_Min(index+6-1, in_str.n_elems); // 1 digit already in num
         for (; index < lim; index++) {
-            c = str.elems[index];
-            if (!algo_lib::DigitCharQ(c)) {
-                break;
-            }
-            num = num*10 + (c-'0');
-        }
-        if (num > 0x7f) {
-            num = 0x7f;
-        }
-    }
-    if (neg) {
-        num = -num;
-    }
-    if (retval) {
-        result = num;
-    } else {
-        algo_lib::SaveBadTag("comment", "i8_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",str);
-    }
-    return retval;
-}
-
-// --- ...u8_ReadStrptrMaybe
-// Attempt to parse u8 from str
-// Leading whitespace is silently skipped
-// Return success value; If false, RESULT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
-// If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
-// For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool u8_ReadStrptrMaybe(u8& result, algo::strptr str) {
-    bool retval = true;
-    int index = 0;
-    bool neg=false;
-    bool hex=false;
-    u32 num=0;
-    char c;
-    while (index < str.n_elems && algo_lib::WhiteCharQ(str.elems[index])) {
-        index++;
-    }
-    if (index < str.n_elems) {
-        c = str.elems[index];
-        index++;
-        if (c=='+') {
-        } else if (c=='-') {
-            neg=true;
-        } else if (algo_lib::DigitCharQ(c)) {
-            num = c-'0';
-            if (num==0 && index < str.n_elems) {
-                c = str.elems[index];
-                if (c == 'x' || c == 'X') {
-                    hex=true;
-                    index++;
-                }
-            }
-        } else {
-            retval=false;
-        }
-    } else {
-        retval= index == 0;
-    }
-    if (hex) {
-        if (index == str.n_elems) {
-            retval=false;
-        }
-        for (; index < str.n_elems; index++) {
-            c = str.elems[index];
-            u8 val;
-            if (!algo::ParseHex1(c, val)) {
-                break;
-            }
-            num = num*16 + val;
-        }
-    } else {
-        int lim = u32_Min(index+4-1, str.n_elems); // 1 digit already in num
-        for (; index < lim; index++) {
-            c = str.elems[index];
-            if (!algo_lib::DigitCharQ(c)) {
-                break;
-            }
-            num = num*10 + (c-'0');
-        }
-        if (num > 0xff) {
-            num = 0xff;
-        }
-    }
-    if (neg) {
-        num = 0;
-    }
-    if (retval) {
-        result = num;
-    } else {
-        algo_lib::SaveBadTag("comment", "u8_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",str);
-    }
-    return retval;
-}
-
-// --- ...i16_ReadStrptrMaybe
-// Attempt to parse i16 from str
-// Leading whitespace is silently skipped
-// Return success value; If false, RESULT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
-// If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
-// For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool i16_ReadStrptrMaybe(i16& result, algo::strptr str) {
-    bool retval = true;
-    int index = 0;
-    bool neg=false;
-    bool hex=false;
-    u32 num=0;
-    char c;
-    while (index < str.n_elems && algo_lib::WhiteCharQ(str.elems[index])) {
-        index++;
-    }
-    if (index < str.n_elems) {
-        c = str.elems[index];
-        index++;
-        if (c=='+') {
-        } else if (c=='-') {
-            neg=true;
-        } else if (algo_lib::DigitCharQ(c)) {
-            num = c-'0';
-            if (num==0 && index < str.n_elems) {
-                c = str.elems[index];
-                if (c == 'x' || c == 'X') {
-                    hex=true;
-                    index++;
-                }
-            }
-        } else {
-            retval=false;
-        }
-    } else {
-        retval= index == 0;
-    }
-    if (hex) {
-        if (index == str.n_elems) {
-            retval=false;
-        }
-        for (; index < str.n_elems; index++) {
-            c = str.elems[index];
-            u8 val;
-            if (!algo::ParseHex1(c, val)) {
-                break;
-            }
-            num = num*16 + val;
-        }
-    } else {
-        int lim = u32_Min(index+6-1, str.n_elems); // 1 digit already in num
-        for (; index < lim; index++) {
-            c = str.elems[index];
+            c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
                 break;
             }
@@ -247,120 +94,44 @@ bool i16_ReadStrptrMaybe(i16& result, algo::strptr str) {
         num = -num;
     }
     if (retval) {
-        result = num;
+        parent = num;
     } else {
         algo_lib::SaveBadTag("comment", "i16_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",str);
+        algo_lib::SaveBadTag("value",in_str);
     }
     return retval;
 }
 
-// --- ...u16_ReadStrptrMaybe
-// Attempt to parse u16 from str
+// --- i32..ReadStrptrMaybe
+// Read fields of i32 from an ascii string.
+// Attempt to parse i32 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, RESULT is unchanged
+// Return success value; If false, PARENT is unchanged
 // String must be non-empty
 // Number may prefixed with + or - (with no space after)
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool u16_ReadStrptrMaybe(u16& result, algo::strptr str) {
-    bool retval = true;
-    int index = 0;
-    bool neg=false;
-    bool hex=false;
-    u32 num=0;
-    char c;
-    while (index < str.n_elems && algo_lib::WhiteCharQ(str.elems[index])) {
-        index++;
-    }
-    if (index < str.n_elems) {
-        c = str.elems[index];
-        index++;
-        if (c=='+') {
-        } else if (c=='-') {
-            neg=true;
-        } else if (algo_lib::DigitCharQ(c)) {
-            num = c-'0';
-            if (num==0 && index < str.n_elems) {
-                c = str.elems[index];
-                if (c == 'x' || c == 'X') {
-                    hex=true;
-                    index++;
-                }
-            }
-        } else {
-            retval=false;
-        }
-    } else {
-        retval= index == 0;
-    }
-    if (hex) {
-        if (index == str.n_elems) {
-            retval=false;
-        }
-        for (; index < str.n_elems; index++) {
-            c = str.elems[index];
-            u8 val;
-            if (!algo::ParseHex1(c, val)) {
-                break;
-            }
-            num = num*16 + val;
-        }
-    } else {
-        int lim = u32_Min(index+6-1, str.n_elems); // 1 digit already in num
-        for (; index < lim; index++) {
-            c = str.elems[index];
-            if (!algo_lib::DigitCharQ(c)) {
-                break;
-            }
-            num = num*10 + (c-'0');
-        }
-        if (num > 0xffff) {
-            num = 0xffff;
-        }
-    }
-    if (neg) {
-        num = 0;
-    }
-    if (retval) {
-        result = num;
-    } else {
-        algo_lib::SaveBadTag("comment", "u16_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",str);
-    }
-    return retval;
-}
-
-// --- ...i32_ReadStrptrMaybe
-// Attempt to parse i32 from str
-// Leading whitespace is silently skipped
-// Return success value; If false, RESULT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
-// If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
-// For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool i32_ReadStrptrMaybe(i32& result, algo::strptr str) {
+bool i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str) {
     bool retval = true;
     int index = 0;
     bool neg=false;
     bool hex=false;
     u64 num=0;
     char c;
-    while (index < str.n_elems && algo_lib::WhiteCharQ(str.elems[index])) {
+    while (index < in_str.n_elems && algo_lib::WhiteCharQ(in_str.elems[index])) {
         index++;
     }
-    if (index < str.n_elems) {
-        c = str.elems[index];
+    if (index < in_str.n_elems) {
+        c = in_str.elems[index];
         index++;
         if (c=='+') {
         } else if (c=='-') {
             neg=true;
         } else if (algo_lib::DigitCharQ(c)) {
             num = c-'0';
-            if (num==0 && index < str.n_elems) {
-                c = str.elems[index];
+            if (num==0 && index < in_str.n_elems) {
+                c = in_str.elems[index];
                 if (c == 'x' || c == 'X') {
                     hex=true;
                     index++;
@@ -373,11 +144,11 @@ bool i32_ReadStrptrMaybe(i32& result, algo::strptr str) {
         retval= index == 0;
     }
     if (hex) {
-        if (index == str.n_elems) {
+        if (index == in_str.n_elems) {
             retval=false;
         }
-        for (; index < str.n_elems; index++) {
-            c = str.elems[index];
+        for (; index < in_str.n_elems; index++) {
+            c = in_str.elems[index];
             u8 val;
             if (!algo::ParseHex1(c, val)) {
                 break;
@@ -385,9 +156,9 @@ bool i32_ReadStrptrMaybe(i32& result, algo::strptr str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+12-1, str.n_elems); // 1 digit already in num
+        int lim = u32_Min(index+12-1, in_str.n_elems); // 1 digit already in num
         for (; index < lim; index++) {
-            c = str.elems[index];
+            c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
                 break;
             }
@@ -401,43 +172,44 @@ bool i32_ReadStrptrMaybe(i32& result, algo::strptr str) {
         num = -num;
     }
     if (retval) {
-        result = num;
+        parent = num;
     } else {
         algo_lib::SaveBadTag("comment", "i32_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",str);
+        algo_lib::SaveBadTag("value",in_str);
     }
     return retval;
 }
 
-// --- ...u32_ReadStrptrMaybe
-// Attempt to parse u32 from str
+// --- i64..ReadStrptrMaybe
+// Read fields of i64 from an ascii string.
+// Attempt to parse i64 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, RESULT is unchanged
+// Return success value; If false, PARENT is unchanged
 // String must be non-empty
 // Number may prefixed with + or - (with no space after)
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool u32_ReadStrptrMaybe(u32& result, algo::strptr str) {
+bool i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str) {
     bool retval = true;
     int index = 0;
     bool neg=false;
     bool hex=false;
     u64 num=0;
     char c;
-    while (index < str.n_elems && algo_lib::WhiteCharQ(str.elems[index])) {
+    while (index < in_str.n_elems && algo_lib::WhiteCharQ(in_str.elems[index])) {
         index++;
     }
-    if (index < str.n_elems) {
-        c = str.elems[index];
+    if (index < in_str.n_elems) {
+        c = in_str.elems[index];
         index++;
         if (c=='+') {
         } else if (c=='-') {
             neg=true;
         } else if (algo_lib::DigitCharQ(c)) {
             num = c-'0';
-            if (num==0 && index < str.n_elems) {
-                c = str.elems[index];
+            if (num==0 && index < in_str.n_elems) {
+                c = in_str.elems[index];
                 if (c == 'x' || c == 'X') {
                     hex=true;
                     index++;
@@ -450,11 +222,11 @@ bool u32_ReadStrptrMaybe(u32& result, algo::strptr str) {
         retval= index == 0;
     }
     if (hex) {
-        if (index == str.n_elems) {
+        if (index == in_str.n_elems) {
             retval=false;
         }
-        for (; index < str.n_elems; index++) {
-            c = str.elems[index];
+        for (; index < in_str.n_elems; index++) {
+            c = in_str.elems[index];
             u8 val;
             if (!algo::ParseHex1(c, val)) {
                 break;
@@ -462,98 +234,21 @@ bool u32_ReadStrptrMaybe(u32& result, algo::strptr str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+12-1, str.n_elems); // 1 digit already in num
+        int lim = u32_Min(index+14-1, in_str.n_elems); // 1 digit already in num
         for (; index < lim; index++) {
-            c = str.elems[index];
-            if (!algo_lib::DigitCharQ(c)) {
-                break;
-            }
-            num = num*10 + (c-'0');
-        }
-        if (num > 0xffffffff) {
-            num = 0xffffffff;
-        }
-    }
-    if (neg) {
-        num = 0;
-    }
-    if (retval) {
-        result = num;
-    } else {
-        algo_lib::SaveBadTag("comment", "u32_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",str);
-    }
-    return retval;
-}
-
-// --- ...i64_ReadStrptrMaybe
-// Attempt to parse i64 from str
-// Leading whitespace is silently skipped
-// Return success value; If false, RESULT is unchanged
-// String must be non-empty
-// Number may prefixed with + or - (with no space after)
-// If the value is outside of valid range for the type, it is clipped to the valid range
-// Supported bases: 10, 16 (if string starts with 0x or 0X
-// For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool i64_ReadStrptrMaybe(i64& result, algo::strptr str) {
-    bool retval = true;
-    int index = 0;
-    bool neg=false;
-    bool hex=false;
-    u64 num=0;
-    char c;
-    while (index < str.n_elems && algo_lib::WhiteCharQ(str.elems[index])) {
-        index++;
-    }
-    if (index < str.n_elems) {
-        c = str.elems[index];
-        index++;
-        if (c=='+') {
-        } else if (c=='-') {
-            neg=true;
-        } else if (algo_lib::DigitCharQ(c)) {
-            num = c-'0';
-            if (num==0 && index < str.n_elems) {
-                c = str.elems[index];
-                if (c == 'x' || c == 'X') {
-                    hex=true;
-                    index++;
-                }
-            }
-        } else {
-            retval=false;
-        }
-    } else {
-        retval= index == 0;
-    }
-    if (hex) {
-        if (index == str.n_elems) {
-            retval=false;
-        }
-        for (; index < str.n_elems; index++) {
-            c = str.elems[index];
-            u8 val;
-            if (!algo::ParseHex1(c, val)) {
-                break;
-            }
-            num = num*16 + val;
-        }
-    } else {
-        int lim = u32_Min(index+14-1, str.n_elems); // 1 digit already in num
-        for (; index < lim; index++) {
-            c = str.elems[index];
+            c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
                 break;
             }
             num = num*10 + (c-'0');
         }
         // 2nd batch of digits
-        if (index < str.n_elems) {
-            lim = u32_Min(index+14, str.n_elems);
+        if (index < in_str.n_elems) {
+            lim = u32_Min(index+14, in_str.n_elems);
             u64 num2 = 0;
             u64 div = 1;
             for (; index < lim; index++) {
-                c = str.elems[index];
+                c = in_str.elems[index];
                 if (!algo_lib::DigitCharQ(c)) {
                     break;
                 }
@@ -571,43 +266,44 @@ bool i64_ReadStrptrMaybe(i64& result, algo::strptr str) {
         num = -num;
     }
     if (retval) {
-        result = num;
+        parent = num;
     } else {
         algo_lib::SaveBadTag("comment", "i64_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",str);
+        algo_lib::SaveBadTag("value",in_str);
     }
     return retval;
 }
 
-// --- ...u64_ReadStrptrMaybe
-// Attempt to parse u64 from str
+// --- i8..ReadStrptrMaybe
+// Read fields of i8 from an ascii string.
+// Attempt to parse i8 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, RESULT is unchanged
+// Return success value; If false, PARENT is unchanged
 // String must be non-empty
 // Number may prefixed with + or - (with no space after)
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool u64_ReadStrptrMaybe(u64& result, algo::strptr str) {
+bool i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str) {
     bool retval = true;
     int index = 0;
     bool neg=false;
     bool hex=false;
-    u64 num=0;
+    u32 num=0;
     char c;
-    while (index < str.n_elems && algo_lib::WhiteCharQ(str.elems[index])) {
+    while (index < in_str.n_elems && algo_lib::WhiteCharQ(in_str.elems[index])) {
         index++;
     }
-    if (index < str.n_elems) {
-        c = str.elems[index];
+    if (index < in_str.n_elems) {
+        c = in_str.elems[index];
         index++;
         if (c=='+') {
         } else if (c=='-') {
             neg=true;
         } else if (algo_lib::DigitCharQ(c)) {
             num = c-'0';
-            if (num==0 && index < str.n_elems) {
-                c = str.elems[index];
+            if (num==0 && index < in_str.n_elems) {
+                c = in_str.elems[index];
                 if (c == 'x' || c == 'X') {
                     hex=true;
                     index++;
@@ -620,11 +316,11 @@ bool u64_ReadStrptrMaybe(u64& result, algo::strptr str) {
         retval= index == 0;
     }
     if (hex) {
-        if (index == str.n_elems) {
+        if (index == in_str.n_elems) {
             retval=false;
         }
-        for (; index < str.n_elems; index++) {
-            c = str.elems[index];
+        for (; index < in_str.n_elems; index++) {
+            c = in_str.elems[index];
             u8 val;
             if (!algo::ParseHex1(c, val)) {
                 break;
@@ -632,75 +328,138 @@ bool u64_ReadStrptrMaybe(u64& result, algo::strptr str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+14-1, str.n_elems); // 1 digit already in num
+        int lim = u32_Min(index+4-1, in_str.n_elems); // 1 digit already in num
         for (; index < lim; index++) {
-            c = str.elems[index];
+            c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
                 break;
             }
             num = num*10 + (c-'0');
         }
-        // 2nd batch of digits
-        if (index < str.n_elems) {
-            lim = u32_Min(index+14, str.n_elems);
-            u64 num2 = 0;
-            u64 div = 1;
-            for (; index < lim; index++) {
-                c = str.elems[index];
-                if (!algo_lib::DigitCharQ(c)) {
-                    break;
+        if (num > 0x7f) {
+            num = 0x7f;
+        }
+    }
+    if (neg) {
+        num = -num;
+    }
+    if (retval) {
+        parent = num;
+    } else {
+        algo_lib::SaveBadTag("comment", "i8_ReadStrptrMaybe: bad number");
+        algo_lib::SaveBadTag("value",in_str);
+    }
+    return retval;
+}
+
+// --- u8..ReadStrptrMaybe
+// Read fields of u8 from an ascii string.
+// Attempt to parse u8 from in_str
+// Leading whitespace is silently skipped
+// Return success value; If false, PARENT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool u8_ReadStrptrMaybe(u8 &parent, algo::strptr in_str) {
+    bool retval = true;
+    int index = 0;
+    bool neg=false;
+    bool hex=false;
+    u32 num=0;
+    char c;
+    while (index < in_str.n_elems && algo_lib::WhiteCharQ(in_str.elems[index])) {
+        index++;
+    }
+    if (index < in_str.n_elems) {
+        c = in_str.elems[index];
+        index++;
+        if (c=='+') {
+        } else if (c=='-') {
+            neg=true;
+        } else if (algo_lib::DigitCharQ(c)) {
+            num = c-'0';
+            if (num==0 && index < in_str.n_elems) {
+                c = in_str.elems[index];
+                if (c == 'x' || c == 'X') {
+                    hex=true;
+                    index++;
                 }
-                num2 = num2*10 + (c-'0');
-                div = div*10;
             }
-            if (num > 0xffffffffffffffffULL/div) {
-                num = 0xffffffffffffffffULL;
-            } else {
-                num = num*div + num2;
+        } else {
+            retval=false;
+        }
+    } else {
+        retval= index == 0;
+    }
+    if (hex) {
+        if (index == in_str.n_elems) {
+            retval=false;
+        }
+        for (; index < in_str.n_elems; index++) {
+            c = in_str.elems[index];
+            u8 val;
+            if (!algo::ParseHex1(c, val)) {
+                break;
             }
+            num = num*16 + val;
+        }
+    } else {
+        int lim = u32_Min(index+4-1, in_str.n_elems); // 1 digit already in num
+        for (; index < lim; index++) {
+            c = in_str.elems[index];
+            if (!algo_lib::DigitCharQ(c)) {
+                break;
+            }
+            num = num*10 + (c-'0');
+        }
+        if (num > 0xff) {
+            num = 0xff;
         }
     }
     if (neg) {
         num = 0;
     }
     if (retval) {
-        result = num;
+        parent = num;
     } else {
-        algo_lib::SaveBadTag("comment", "u64_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",str);
+        algo_lib::SaveBadTag("comment", "u8_ReadStrptrMaybe: bad number");
+        algo_lib::SaveBadTag("value",in_str);
     }
     return retval;
 }
 
-// --- ...u128_ReadStrptrMaybe
-// Attempt to parse u128 from str
+// --- u128..ReadStrptrMaybe
+// Read fields of u128 from an ascii string.
+// Attempt to parse u128 from in_str
 // Leading whitespace is silently skipped
-// Return success value; If false, RESULT is unchanged
+// Return success value; If false, PARENT is unchanged
 // String must be non-empty
 // Number may prefixed with + or - (with no space after)
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool u128_ReadStrptrMaybe(u128& result, algo::strptr str) {
+bool u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str) {
     bool retval = true;
     int index = 0;
     bool neg=false;
     bool hex=false;
     u128 num=0;
     char c;
-    while (index < str.n_elems && algo_lib::WhiteCharQ(str.elems[index])) {
+    while (index < in_str.n_elems && algo_lib::WhiteCharQ(in_str.elems[index])) {
         index++;
     }
-    if (index < str.n_elems) {
-        c = str.elems[index];
+    if (index < in_str.n_elems) {
+        c = in_str.elems[index];
         index++;
         if (c=='+') {
         } else if (c=='-') {
             neg=true;
         } else if (algo_lib::DigitCharQ(c)) {
             num = c-'0';
-            if (num==0 && index < str.n_elems) {
-                c = str.elems[index];
+            if (num==0 && index < in_str.n_elems) {
+                c = in_str.elems[index];
                 if (c == 'x' || c == 'X') {
                     hex=true;
                     index++;
@@ -713,11 +472,11 @@ bool u128_ReadStrptrMaybe(u128& result, algo::strptr str) {
         retval= index == 0;
     }
     if (hex) {
-        if (index == str.n_elems) {
+        if (index == in_str.n_elems) {
             retval=false;
         }
-        for (; index < str.n_elems; index++) {
-            c = str.elems[index];
+        for (; index < in_str.n_elems; index++) {
+            c = in_str.elems[index];
             u8 val;
             if (!algo::ParseHex1(c, val)) {
                 break;
@@ -725,21 +484,21 @@ bool u128_ReadStrptrMaybe(u128& result, algo::strptr str) {
             num = num*16 + val;
         }
     } else {
-        int lim = u32_Min(index+25-1, str.n_elems); // 1 digit already in num
+        int lim = u32_Min(index+25-1, in_str.n_elems); // 1 digit already in num
         for (; index < lim; index++) {
-            c = str.elems[index];
+            c = in_str.elems[index];
             if (!algo_lib::DigitCharQ(c)) {
                 break;
             }
             num = num*10 + (c-'0');
         }
         // 2nd batch of digits
-        if (index < str.n_elems) {
-            lim = u32_Min(index+25, str.n_elems);
+        if (index < in_str.n_elems) {
+            lim = u32_Min(index+25, in_str.n_elems);
             u128 num2 = 0;
             u128 div = 1;
             for (; index < lim; index++) {
-                c = str.elems[index];
+                c = in_str.elems[index];
                 if (!algo_lib::DigitCharQ(c)) {
                     break;
                 }
@@ -757,10 +516,260 @@ bool u128_ReadStrptrMaybe(u128& result, algo::strptr str) {
         num = 0;
     }
     if (retval) {
-        result = num;
+        parent = num;
     } else {
         algo_lib::SaveBadTag("comment", "u128_ReadStrptrMaybe: bad number");
-        algo_lib::SaveBadTag("value",str);
+        algo_lib::SaveBadTag("value",in_str);
+    }
+    return retval;
+}
+
+// --- u16..ReadStrptrMaybe
+// Read fields of u16 from an ascii string.
+// Attempt to parse u16 from in_str
+// Leading whitespace is silently skipped
+// Return success value; If false, PARENT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool u16_ReadStrptrMaybe(u16 &parent, algo::strptr in_str) {
+    bool retval = true;
+    int index = 0;
+    bool neg=false;
+    bool hex=false;
+    u32 num=0;
+    char c;
+    while (index < in_str.n_elems && algo_lib::WhiteCharQ(in_str.elems[index])) {
+        index++;
+    }
+    if (index < in_str.n_elems) {
+        c = in_str.elems[index];
+        index++;
+        if (c=='+') {
+        } else if (c=='-') {
+            neg=true;
+        } else if (algo_lib::DigitCharQ(c)) {
+            num = c-'0';
+            if (num==0 && index < in_str.n_elems) {
+                c = in_str.elems[index];
+                if (c == 'x' || c == 'X') {
+                    hex=true;
+                    index++;
+                }
+            }
+        } else {
+            retval=false;
+        }
+    } else {
+        retval= index == 0;
+    }
+    if (hex) {
+        if (index == in_str.n_elems) {
+            retval=false;
+        }
+        for (; index < in_str.n_elems; index++) {
+            c = in_str.elems[index];
+            u8 val;
+            if (!algo::ParseHex1(c, val)) {
+                break;
+            }
+            num = num*16 + val;
+        }
+    } else {
+        int lim = u32_Min(index+6-1, in_str.n_elems); // 1 digit already in num
+        for (; index < lim; index++) {
+            c = in_str.elems[index];
+            if (!algo_lib::DigitCharQ(c)) {
+                break;
+            }
+            num = num*10 + (c-'0');
+        }
+        if (num > 0xffff) {
+            num = 0xffff;
+        }
+    }
+    if (neg) {
+        num = 0;
+    }
+    if (retval) {
+        parent = num;
+    } else {
+        algo_lib::SaveBadTag("comment", "u16_ReadStrptrMaybe: bad number");
+        algo_lib::SaveBadTag("value",in_str);
+    }
+    return retval;
+}
+
+// --- u32..ReadStrptrMaybe
+// Read fields of u32 from an ascii string.
+// Attempt to parse u32 from in_str
+// Leading whitespace is silently skipped
+// Return success value; If false, PARENT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool u32_ReadStrptrMaybe(u32 &parent, algo::strptr in_str) {
+    bool retval = true;
+    int index = 0;
+    bool neg=false;
+    bool hex=false;
+    u64 num=0;
+    char c;
+    while (index < in_str.n_elems && algo_lib::WhiteCharQ(in_str.elems[index])) {
+        index++;
+    }
+    if (index < in_str.n_elems) {
+        c = in_str.elems[index];
+        index++;
+        if (c=='+') {
+        } else if (c=='-') {
+            neg=true;
+        } else if (algo_lib::DigitCharQ(c)) {
+            num = c-'0';
+            if (num==0 && index < in_str.n_elems) {
+                c = in_str.elems[index];
+                if (c == 'x' || c == 'X') {
+                    hex=true;
+                    index++;
+                }
+            }
+        } else {
+            retval=false;
+        }
+    } else {
+        retval= index == 0;
+    }
+    if (hex) {
+        if (index == in_str.n_elems) {
+            retval=false;
+        }
+        for (; index < in_str.n_elems; index++) {
+            c = in_str.elems[index];
+            u8 val;
+            if (!algo::ParseHex1(c, val)) {
+                break;
+            }
+            num = num*16 + val;
+        }
+    } else {
+        int lim = u32_Min(index+12-1, in_str.n_elems); // 1 digit already in num
+        for (; index < lim; index++) {
+            c = in_str.elems[index];
+            if (!algo_lib::DigitCharQ(c)) {
+                break;
+            }
+            num = num*10 + (c-'0');
+        }
+        if (num > 0xffffffff) {
+            num = 0xffffffff;
+        }
+    }
+    if (neg) {
+        num = 0;
+    }
+    if (retval) {
+        parent = num;
+    } else {
+        algo_lib::SaveBadTag("comment", "u32_ReadStrptrMaybe: bad number");
+        algo_lib::SaveBadTag("value",in_str);
+    }
+    return retval;
+}
+
+// --- u64..ReadStrptrMaybe
+// Read fields of u64 from an ascii string.
+// Attempt to parse u64 from in_str
+// Leading whitespace is silently skipped
+// Return success value; If false, PARENT is unchanged
+// String must be non-empty
+// Number may prefixed with + or - (with no space after)
+// If the value is outside of valid range for the type, it is clipped to the valid range
+// Supported bases: 10, 16 (if string starts with 0x or 0X
+// For hex numbers, there is no overflow (just take last N digits that fit the type)
+bool u64_ReadStrptrMaybe(u64 &parent, algo::strptr in_str) {
+    bool retval = true;
+    int index = 0;
+    bool neg=false;
+    bool hex=false;
+    u64 num=0;
+    char c;
+    while (index < in_str.n_elems && algo_lib::WhiteCharQ(in_str.elems[index])) {
+        index++;
+    }
+    if (index < in_str.n_elems) {
+        c = in_str.elems[index];
+        index++;
+        if (c=='+') {
+        } else if (c=='-') {
+            neg=true;
+        } else if (algo_lib::DigitCharQ(c)) {
+            num = c-'0';
+            if (num==0 && index < in_str.n_elems) {
+                c = in_str.elems[index];
+                if (c == 'x' || c == 'X') {
+                    hex=true;
+                    index++;
+                }
+            }
+        } else {
+            retval=false;
+        }
+    } else {
+        retval= index == 0;
+    }
+    if (hex) {
+        if (index == in_str.n_elems) {
+            retval=false;
+        }
+        for (; index < in_str.n_elems; index++) {
+            c = in_str.elems[index];
+            u8 val;
+            if (!algo::ParseHex1(c, val)) {
+                break;
+            }
+            num = num*16 + val;
+        }
+    } else {
+        int lim = u32_Min(index+14-1, in_str.n_elems); // 1 digit already in num
+        for (; index < lim; index++) {
+            c = in_str.elems[index];
+            if (!algo_lib::DigitCharQ(c)) {
+                break;
+            }
+            num = num*10 + (c-'0');
+        }
+        // 2nd batch of digits
+        if (index < in_str.n_elems) {
+            lim = u32_Min(index+14, in_str.n_elems);
+            u64 num2 = 0;
+            u64 div = 1;
+            for (; index < lim; index++) {
+                c = in_str.elems[index];
+                if (!algo_lib::DigitCharQ(c)) {
+                    break;
+                }
+                num2 = num2*10 + (c-'0');
+                div = div*10;
+            }
+            if (num > 0xffffffffffffffffULL/div) {
+                num = 0xffffffffffffffffULL;
+            } else {
+                num = num*div + num2;
+            }
+        }
+    }
+    if (neg) {
+        num = 0;
+    }
+    if (retval) {
+        parent = num;
+    } else {
+        algo_lib::SaveBadTag("comment", "u64_ReadStrptrMaybe: bad number");
+        algo_lib::SaveBadTag("value",in_str);
     }
     return retval;
 }

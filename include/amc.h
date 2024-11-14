@@ -1268,8 +1268,6 @@ namespace amc { // update-hdr
     int c_anonfld_N(amc::FCtype &ctype);
 
     // Go over `amcdb.gen` table and invoke each global generator
-    // Then, go over namespaces
-    // Go over per-namespace `amcdb.gen` entries and invoke them.
     // Collect performance data long the way
     // This is where amc spends most of the time. See the `amcdb.gen` table for more information.
     void Main_Gen();
