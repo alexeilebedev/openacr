@@ -193,6 +193,7 @@ dmmeta.thash  field:orgfile.FDb.ind_filename  hashfld:orgfile.FFilename.filename
 dmmeta.thash  field:samp_meng.FDb.ind_order  hashfld:samp_meng.FOrder.order  unique:Y  comment:""
 dmmeta.thash  field:samp_meng.FDb.ind_symbol  hashfld:samp_meng.FSymbol.symbol  unique:Y  comment:""
 dmmeta.thash  field:samp_meng.FDb.ind_user  hashfld:samp_meng.FUser.user  unique:Y  comment:""
+dmmeta.thash  field:sample.FDb.ind_rec  hashfld:sample.FRec.rec  unique:N  comment:""
 dmmeta.thash  field:sandbox.FDb.ind_sandbox  hashfld:dev.Sandbox.sandbox  unique:Y  comment:""
 dmmeta.thash  field:src_func.FDb.ind_ctypelen  hashfld:dmmeta.Ctypelen.ctype  unique:Y  comment:""
 dmmeta.thash  field:src_func.FDb.ind_func  hashfld:src_func.FFunc.func  unique:Y  comment:""

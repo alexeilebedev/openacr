@@ -758,6 +758,7 @@ dmmeta.ctypelen  ctype:command.mysql2ssim  len:72  alignment:8  padbytes:19  pla
 dmmeta.ctypelen  ctype:command.orgfile  len:144  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:command.samp_meng  len:16  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:command.samp_regx  len:64  alignment:8  padbytes:13  plaindata:N
+dmmeta.ctypelen  ctype:command.sample  len:16  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:command.sandbox  len:176  alignment:8  padbytes:15  plaindata:N
 dmmeta.ctypelen  ctype:command.src_func  len:760  alignment:8  padbytes:1  plaindata:N
 dmmeta.ctypelen  ctype:command.src_hdr  len:200  alignment:8  padbytes:5  plaindata:N
@@ -1105,6 +1106,8 @@ dmmeta.ctypelen  ctype:samp_meng.Ordkey  len:16  alignment:8  padbytes:0  plaind
 dmmeta.ctypelen  ctype:samp_meng.Symbol  len:8  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:samp_meng.TextMsg  len:2  alignment:1  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:samp_regx.FDb  len:72  alignment:8  padbytes:7  plaindata:N
+dmmeta.ctypelen  ctype:sample.FDb  len:112  alignment:8  padbytes:11  plaindata:N
+dmmeta.ctypelen  ctype:sample.FRec  len:72  alignment:8  padbytes:11  plaindata:N
 dmmeta.ctypelen  ctype:sandbox.FDb  len:720  alignment:8  padbytes:7  plaindata:N
 dmmeta.ctypelen  ctype:sandbox.FSandbox  len:240  alignment:8  padbytes:11  plaindata:N
 dmmeta.ctypelen  ctype:sandbox.FSbpath  len:204  alignment:1  padbytes:0  plaindata:Y

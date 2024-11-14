@@ -677,6 +677,10 @@ dmmeta.xref  field:samp_meng.FOrdq.bh_order  inscond:true  via:samp_meng.FOrder.
 dmmeta.xref  field:samp_meng.FSymbol.c_ordq  inscond:true  via:samp_meng.FOrdq.p_symbol
 dmmeta.xref  field:samp_meng.FDb.ind_user  inscond:true  via:""
 dmmeta.xref  field:samp_meng.FUser.zd_order  inscond:true  via:samp_meng.FOrder.p_user
+dmmeta.xref  field:sample.FDb.zd_rec  inscond:true  via:""
+dmmeta.xref  field:sample.FDb.ind_rec  inscond:true  via:""
+dmmeta.xref  field:sample.FDb.bh_rec  inscond:true  via:""
+dmmeta.xref  field:sample.FDb.zd_sel_rec  inscond:false  via:""
 dmmeta.xref  field:sandbox.FDb.ind_sandbox  inscond:true  via:""
 dmmeta.xref  field:src_func.FDb.ind_target  inscond:true  via:""
 dmmeta.xref  field:src_func.FTarget.cd_targsrc  inscond:true  via:src_func.FDb.ind_target/dev.Targsrc.target

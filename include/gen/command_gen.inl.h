@@ -2040,6 +2040,36 @@ inline  command::samp_regx_proc::~samp_regx_proc() {
     command::samp_regx_proc_Uninit(*this);
 }
 
+// --- command.sample..Init
+// Set all fields to initial values.
+inline void command::sample_Init(command::sample& parent) {
+    parent.in = algo::strptr("data");
+}
+
+// --- command.sample..Ctor
+inline  command::sample::sample() {
+    command::sample_Init(*this);
+}
+
+// --- command.sample_proc..Init
+// Set all fields to initial values.
+inline void command::sample_proc_Init(command::sample_proc& parent) {
+    parent.path = algo::strptr("bin/sample");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+
+// --- command.sample_proc..Ctor
+inline  command::sample_proc::sample_proc() {
+    command::sample_proc_Init(*this);
+}
+
+// --- command.sample_proc..Dtor
+inline  command::sample_proc::~sample_proc() {
+    command::sample_proc_Uninit(*this);
+}
+
 // --- command.sandbox.cmd.EmptyQ
 // Return true if index is empty
 inline bool command::cmd_EmptyQ(command::sandbox& parent) {

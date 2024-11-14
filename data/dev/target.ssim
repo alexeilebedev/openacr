@@ -44,6 +44,7 @@ dev.target  target:mysql2ssim
 dev.target  target:orgfile
 dev.target  target:samp_meng
 dev.target  target:samp_regx
+dev.target  target:sample
 dev.target  target:sandbox
 dev.target  target:src_func
 dev.target  target:src_hdr

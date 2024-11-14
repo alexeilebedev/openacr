@@ -83,6 +83,7 @@ dev.gitfile  gitfile:bin/normalize
 dev.gitfile  gitfile:bin/orgfile
 dev.gitfile  gitfile:bin/samp_meng
 dev.gitfile  gitfile:bin/samp_regx
+dev.gitfile  gitfile:bin/sample
 dev.gitfile  gitfile:bin/sandbox
 dev.gitfile  gitfile:bin/select-bootstrap
 dev.gitfile  gitfile:bin/sha1
@@ -399,6 +400,7 @@ dev.gitfile  gitfile:cpp/gen/orgfile_gen.cpp
 dev.gitfile  gitfile:cpp/gen/report_gen.cpp
 dev.gitfile  gitfile:cpp/gen/samp_meng_gen.cpp
 dev.gitfile  gitfile:cpp/gen/samp_regx_gen.cpp
+dev.gitfile  gitfile:cpp/gen/sample_gen.cpp
 dev.gitfile  gitfile:cpp/gen/sandbox_gen.cpp
 dev.gitfile  gitfile:cpp/gen/src_func_gen.cpp
 dev.gitfile  gitfile:cpp/gen/src_hdr_gen.cpp
@@ -450,6 +452,7 @@ dev.gitfile  gitfile:cpp/mysql2ssim.cpp
 dev.gitfile  gitfile:cpp/orgfile.cpp
 dev.gitfile  gitfile:cpp/samp_meng/samp_meng.cpp
 dev.gitfile  gitfile:cpp/samp_regx/samp_regx.cpp
+dev.gitfile  gitfile:cpp/sample/sample.cpp
 dev.gitfile  gitfile:cpp/sandbox.cpp
 dev.gitfile  gitfile:cpp/src_func/edit.cpp
 dev.gitfile  gitfile:cpp/src_func/fileloc.cpp
@@ -845,6 +848,8 @@ dev.gitfile  gitfile:include/gen/samp_meng_gen.h
 dev.gitfile  gitfile:include/gen/samp_meng_gen.inl.h
 dev.gitfile  gitfile:include/gen/samp_regx_gen.h
 dev.gitfile  gitfile:include/gen/samp_regx_gen.inl.h
+dev.gitfile  gitfile:include/gen/sample_gen.h
+dev.gitfile  gitfile:include/gen/sample_gen.inl.h
 dev.gitfile  gitfile:include/gen/sandbox_gen.h
 dev.gitfile  gitfile:include/gen/sandbox_gen.inl.h
 dev.gitfile  gitfile:include/gen/src_func_gen.h
@@ -878,6 +883,7 @@ dev.gitfile  gitfile:include/lib_sqlite.h
 dev.gitfile  gitfile:include/orgfile.h
 dev.gitfile  gitfile:include/samp_meng.h
 dev.gitfile  gitfile:include/samp_regx.h
+dev.gitfile  gitfile:include/sample.h
 dev.gitfile  gitfile:include/sandbox.h
 dev.gitfile  gitfile:include/sha.h
 dev.gitfile  gitfile:include/src_func.h
@@ -1195,6 +1201,8 @@ dev.gitfile  gitfile:txt/exe/samp_meng/README.md
 dev.gitfile  gitfile:txt/exe/samp_meng/internals.md
 dev.gitfile  gitfile:txt/exe/samp_regx/README.md
 dev.gitfile  gitfile:txt/exe/samp_regx/internals.md
+dev.gitfile  gitfile:txt/exe/sample/README.md
+dev.gitfile  gitfile:txt/exe/sample/internals.md
 dev.gitfile  gitfile:txt/exe/sandbox/README.md
 dev.gitfile  gitfile:txt/exe/sandbox/internals.md
 dev.gitfile  gitfile:txt/exe/src_func/README.md
