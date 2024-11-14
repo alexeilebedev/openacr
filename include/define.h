@@ -83,18 +83,6 @@
 #error only gcc
 #endif
 
-// On cygwin with clang 8 try/catch problem has been observed:
-// http://cygwin.1069669.n5.nabble.com/BUG-try-catch-does-not-work-if-compiled-with-clang-8-0-td148824.html
-//
-// Similar problem has been discovered on Linux clang++ 10.
-// Catch occasinally does not catch exceptions. Using -stdlib=libc++ does not help.
-//
-// Clang++ support has been discontinued until these issues will have been fixed
-//
-#ifdef __clang__
-#error clang++ is no longer supported
-#endif
-
 #define T_MAY_ALIAS                 __attribute__((__may_alias__))
 #define V_UNUSED                    __attribute__((unused))
 #define F_NONNULL                   __attribute__((nonnull))

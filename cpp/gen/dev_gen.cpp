@@ -45,6 +45,10 @@ const char *dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64   = "FreeBSD-cl
 const char *dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64      = "FreeBSD-clang++.debug-amd64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64    = "FreeBSD-clang++.profile-amd64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_release_amd64    = "FreeBSD-clang++.release-amd64";
+const char *dev_Builddir_builddir_Linux_clangPP_coverage_x86_64    = "Linux-clang++.coverage-x86_64";
+const char *dev_Builddir_builddir_Linux_clangPP_debug_x86_64       = "Linux-clang++.debug-x86_64";
+const char *dev_Builddir_builddir_Linux_clangPP_profile_x86_64     = "Linux-clang++.profile-x86_64";
+const char *dev_Builddir_builddir_Linux_clangPP_release_x86_64     = "Linux-clang++.release-x86_64";
 const char *dev_Builddir_builddir_Linux_gPP_coverage_x86_64        = "Linux-g++.coverage-x86_64";
 const char *dev_Builddir_builddir_Linux_gPP_debug_x86_64           = "Linux-g++.debug-x86_64";
 const char *dev_Builddir_builddir_Linux_gPP_profile_x86_64         = "Linux-g++.profile-x86_64";
@@ -64,7 +68,6 @@ const char *dev_Compiler_compiler_          = "";
 const char *dev_Compiler_compiler_cl        = "cl";
 const char *dev_Compiler_compiler_clangPP   = "clang++";
 const char *dev_Compiler_compiler_gPP       = "g++";
-const char *dev_Compiler_compiler_gPP_9     = "g++-9";
 
 // compile-time string constants for dev.License.license
 const char *dev_License_license_      = "";

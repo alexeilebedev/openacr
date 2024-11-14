@@ -156,7 +156,6 @@ COMPILER  RANLIB       AR       LINK      LIBEXT  EXEEXT  PCHEXT  OBJEXT  RC    
 cl                     LIB.EXE  LINK.EXE  .lib    .exe    .pch    .obj    RC.EXE
 clang++   llvm-ranlib  llvm-ar  clang++   .a              .gch    .o
 g++       ranlib       ar       g++       .a              .gch    .o
-g++-9     ranlib       ar       g++-9     .a              .gch    .o
 
 ```
 

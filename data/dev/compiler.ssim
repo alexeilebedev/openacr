@@ -2,4 +2,3 @@ dev.compiler  compiler:""  ranlib:""  ar:""  link:""  libext:""  exeext:""  pche
 dev.compiler  compiler:cl  ranlib:""  ar:LIB.EXE  link:LINK.EXE  libext:.lib  exeext:.exe  pchext:.pch  objext:.obj  rc:RC.EXE  comment:""
 dev.compiler  compiler:clang++  ranlib:llvm-ranlib  ar:llvm-ar  link:clang++  libext:.a  exeext:""  pchext:.gch  objext:.o  rc:""  comment:""
 dev.compiler  compiler:g++  ranlib:ranlib  ar:ar  link:g++  libext:.a  exeext:""  pchext:.gch  objext:.o  rc:""  comment:""
-dev.compiler  compiler:g++-9  ranlib:ranlib  ar:ar  link:g++-9  libext:.a  exeext:""  pchext:.gch  objext:.o  rc:""  comment:""
