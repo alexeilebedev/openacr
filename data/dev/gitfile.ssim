@@ -36,6 +36,7 @@ dev.gitfile  gitfile:bin/atf_unit
 dev.gitfile  gitfile:bin/bash2html
 dev.gitfile  gitfile:bin/bootstrap/Darwin-clang++.release-x86_64
 dev.gitfile  gitfile:bin/bootstrap/FreeBSD-clang++.release-amd64
+dev.gitfile  gitfile:bin/bootstrap/Linux-clang++.release-x86_64
 dev.gitfile  gitfile:bin/bootstrap/Linux-g++.release-x86_64
 dev.gitfile  gitfile:bin/break-long-lines
 dev.gitfile  gitfile:bin/ci-show-log
