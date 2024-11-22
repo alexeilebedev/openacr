@@ -139,6 +139,7 @@ const char *dmmeta_Ns_ns_orgfile      = "orgfile";
 const char *dmmeta_Ns_ns_report       = "report";
 const char *dmmeta_Ns_ns_samp_meng    = "samp_meng";
 const char *dmmeta_Ns_ns_samp_regx    = "samp_regx";
+const char *dmmeta_Ns_ns_sample       = "sample";
 const char *dmmeta_Ns_ns_sandbox      = "sandbox";
 const char *dmmeta_Ns_ns_src_func     = "src_func";
 const char *dmmeta_Ns_ns_src_hdr      = "src_hdr";

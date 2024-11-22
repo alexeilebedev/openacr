@@ -1,0 +1,227 @@
+  512  acr_ed -create  -target sample -write
+  513  acr_ed -create -ctype sample.FRec -pooltype Tpool -subset i32 
+  514  acr_ed -create -ctype sample.FRec -pooltype Tpool -subset i32  -write
+  515  amc -e sample.FRec
+  516  git diff data
+  517  git diff data/dmmeta/ssimfile.ssim 
+  518  git diff --stat
+  519  fg
+  520  amc -e sample.FRec
+  521  amc sample.FRec
+  522  fg
+  523  em cpp/sample/sample.cpp 
+  524  amc sample.FRec
+  525  fg
+  526  amcsample.FRec
+  527  amc sample.FRec
+  528  fg
+  529  sample
+  530  fg
+  531  sample
+  532  fg
+  533  acr_ed -create -field sample.FDb.zd_rec 
+  534  acr_ed -create -field sample.FDb.zd_rec -write
+  535  fg
+  536  amc sample.FRec
+  537  fg
+  538  amc sample.FDb.rec.XrefMaybe
+  539  fg
+  540  amc_vis sample.%
+  541  fg
+  542  amc_vis sample.%
+  543  fg
+  544  sample
+  545  fg
+  546  acr_ed -create -field sample.FDb.ind_rec
+  547  acr_ed -create -field sample.FDb.ind_rec -write
+  548  amc sample.FDb.rec.XrefMaybe
+  549  amc -e sample.FRec
+  550  amc sample.FDb.rec.XrefMaybe
+  551  fg
+  552  amc_vis sample.%
+  553  fg
+  554  sample
+  555  fg
+  556  sample
+  557  fg
+  558  sample
+  559  fg
+  560  acr_ed -create -field sample.FDb.bh_rec -write
+  561  fg
+  562  sample
+  563  fg
+  564  sample
+  565  fg
+  566  amc sample.FRec
+  567  acr_ed -create -field sample.FDb.zd_sel_rec -inscond false -write
+  568  acr_ed -create -field sample.FDb.zd_sel_rec -inscond false -write -arg sample.FRec
+  569  fg
+  570  amc_vis sample.%
+  571  fg
+  572  amc
+  573  amc -e sample.FRec
+  574  amc
+  575  fg
+  576  sample
+  577  fg
+  578  sample
+  579  fg
+  580  sample
+  581  fg
+  582  sample
+  583  fg
+  584  acr field:sample.%
+  585  acr tfunc:Thash.%
+  586  amc sample.FDb.ind_rec.% -proto
+  587  amc sample.FDb.zd_rec.% -proto
+  588  acr tfunc
+  589  amc -e sample
+  590  amc sample.FDb.zd_rec.% -proto
+  591  ai
+  592  fg
+  593  amc -e sample
+  594  acr ns:sample
+  595  acr ns:sample -ndown 1
+  596  acr ns:sample -ndown 10
+  597  acr ns:sample -ndown 10 -tree
+  598  acr ns:sample -ndown 10 -tree -e
+  599  acr ns:sample -ndown 10 -e
+  600  amc
+  601  git commit -am wip
+  602  acr ns:sample -ndown 10 -e
+  603  amc
+  604  git diff --stat
+  605  git diff data/dmmeta/llist.ssim 
+  606  acr ns:sample -ndown 10 -tree 
+  607  acr ns:sample -ndown 10 -tree -e
+  608  acr_ed -create -field sample.FRec.field3 -arg u8 
+  609  acr_ed -create -field sample.FRec.field3 -arg u8  | sh
+  610  acr ns:sample -t
+  611  acr ns:acr_ed -t
+  612  fg
+  613  apm -ns sample
+  614  apm -ns sample -showrec
+  615  git log
+  616  git diff
+  617  git-add-to-last-commit 
+  618  git branch
+  619  git push origin master:sample1
+  620  git gc
+  621  git checkout */gen
+  622  git log
+  623  git reset --hard HEAD~
+  624  git show
+  625  git commit --amend
+  626  git push origin master:amcprotofix
+  627  normalize
+  628  git diff
+  629  git rm txt/ee/sample/internals.md
+  630  git rm txt/exe/sample/internals.md
+  631  update-gitifle
+  632  update-gitfile
+  633  git diff
+  634  acr ns:sample
+  635  abt_md -h
+  636  abt_md -evealcmd:N
+  637  abt_md -evalcmd:N
+  638  git diff
+  639  acr ns:sample
+  640  find . -name sample
+  641  rm -r cpp/sample
+  642  git rm -f txt/exe/sample/internals.md 
+  643  git rm -r txt/exe/sample/internals.md 
+  644  abt_md -evalcmd:N
+  645  git diff
+  646  git push origin master:amcprotofix
+  647  which clang
+  648  sudo yum install clang
+  649  sudo apt-get install clang
+  650  which clang
+  651  which clang++
+  652  (cd ../algox2-app; git fetch origin; git checkout -B main origin/main)
+  653  amc_vis dmmeta.'(Ctype|Field|Ns)'
+  654  amc_vis dmmeta.'(Ctype|Field|Ns)' -dot:xyz
+  655  amc_vis dmmeta.'%' -dot:xyz
+  656  amc_vis acr.% -dot:xyz
+  657  acr ctype:sample.%
+  658  git lo
+  659  git log
+  660  ff -d cpp/acr_ed fstep
+  661  errlist ff -d cpp/acr_ed fstep
+  662  amc -e command.acr_ed
+  663  acr steptype
+  664  fg
+  665  ls -l cpp/sample
+  666  acr_ed -create -target sample -write
+  667  acr_ed -create -ctype sample.FRec -subset i32 -pooltype Tpool -indexed
+  668  acr_ed -create -ctype sample.FRec -subset i32 -pooltype Tpool -indexed -write
+  669  amc sample.FRec
+  670  acr_ed -create -field sample.FDb.zd_rec 
+  671  acr_ed -create -field sample.FDb.zd_rec  -fstep InlineRecur 
+  672  acr_ed -create -field sample.FDb.zd_rec  -fstep InlineRecur -write
+  673  em cpp/sample/sample.cpp 
+  674  amc -e sample
+  675  acr fdelay
+  676  fg
+  677  amc
+  678  amc -e sample
+  679  fg
+  680  abt sample -disas sample::cd_rec_Step
+  681  sample
+  682  fg
+  683  amc -e sample
+  684  fg
+  685  ai
+  686  sample
+  687  fg
+  688  sample
+  689  sample | timestamps
+  690  fg
+  691  amc -e sample
+  692  acr bheap
+  693  acr bheap -meta
+  694  fg
+  695  acr reftype:Bheap -t
+  696  fg
+  697  acr reftype:Bheap -t
+  698  fg
+  699  sample
+  700  fg
+  701  amc -e sample
+  702  acr_ed -create -ctype sample.Recckey -subset i32 
+  703  acr_ed -create -ctype sample.Recckey -subset i32  -write
+  704  acr_ed -create -field sample.Recckey.reckey2 -subset double  -write
+  705  acr_ed -create -field sample.Recckey.reckey3 -subset algo.Smallstr20  -write
+  706  amc -e sample
+  707  fg
+  708  rm temp/acr.ssim
+  709  amc -e sample
+  710  acr ccmp
+  711  fg
+  712  acr ccmp
+  713  fg
+  714  amc -e sample
+  715  fg
+  716  amc -e sample
+  717  acr cfmt
+  718  fg
+  719  amc
+  720  amc -e sample
+  721  fg
+  722  amc -e sample
+  723  fg
+  724  amc -e sample
+  725  fg
+  726  amc -e sample
+  727  fg
+  728  sample
+  729  fg
+  730  amc -e sample
+  731  fg
+  732  sample
+  733  fg
+  734  amc -e sample
+  735  amc sample.Reckey
+  736  amc sample.FRec
+  737  fg
+  738  history > history.txt

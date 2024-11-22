@@ -506,7 +506,7 @@ void atf_unit::acr_ed_ToArgv(algo::StringAry& args) {
     if (_db.acr_ed_cmd.fstep != "") {
         cstring *arg = &ary_Alloc(args);
         *arg << "-fstep:";
-        Smallstr100_Print(_db.acr_ed_cmd.fstep, *arg);
+        Smallstr50_Print(_db.acr_ed_cmd.fstep, *arg);
     }
 
     if (_db.acr_ed_cmd.inscond != "true") {

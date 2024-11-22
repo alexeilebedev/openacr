@@ -103,7 +103,7 @@ dmmeta.ctypelen  ctype:acr_ed.FCfmt  len:331  alignment:1  padbytes:0  plaindata
 dmmeta.ctypelen  ctype:acr_ed.FCpptype  len:105  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_ed.FCstr  len:255  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:acr_ed.FCtype  len:344  alignment:8  padbytes:2  plaindata:N
-dmmeta.ctypelen  ctype:acr_ed.FDb  len:11136  alignment:16  padbytes:89  plaindata:N
+dmmeta.ctypelen  ctype:acr_ed.FDb  len:11088  alignment:16  padbytes:89  plaindata:N
 dmmeta.ctypelen  ctype:acr_ed.FEdaction  len:232  alignment:8  padbytes:10  plaindata:N
 dmmeta.ctypelen  ctype:acr_ed.FField  len:704  alignment:8  padbytes:11  plaindata:N
 dmmeta.ctypelen  ctype:acr_ed.FFprefix  len:224  alignment:8  padbytes:5  plaindata:N
@@ -702,7 +702,7 @@ dmmeta.ctypelen  ctype:atf_nrun.FDb  len:368  alignment:8  padbytes:15  plaindat
 dmmeta.ctypelen  ctype:atf_nrun.FEntry  len:144  alignment:8  padbytes:8  plaindata:N
 dmmeta.ctypelen  ctype:atf_unit.Cstr  len:16  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:atf_unit.Dbl  len:8  alignment:8  padbytes:0  plaindata:Y
-dmmeta.ctypelen  ctype:atf_unit.FDb  len:2336  alignment:8  padbytes:21  plaindata:N
+dmmeta.ctypelen  ctype:atf_unit.FDb  len:2288  alignment:8  padbytes:21  plaindata:N
 dmmeta.ctypelen  ctype:atf_unit.FNumber  len:40  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:atf_unit.FPerfSort  len:48  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:atf_unit.FUnittest  len:256  alignment:8  padbytes:10  plaindata:N
@@ -729,7 +729,7 @@ dmmeta.ctypelen  ctype:command.abt_md  len:288  alignment:8  padbytes:0  plainda
 dmmeta.ctypelen  ctype:command.acr  len:192  alignment:8  padbytes:21  plaindata:N
 dmmeta.ctypelen  ctype:command.acr_compl  len:104  alignment:8  padbytes:7  plaindata:N
 dmmeta.ctypelen  ctype:command.acr_dm  len:40  alignment:8  padbytes:5  plaindata:N
-dmmeta.ctypelen  ctype:command.acr_ed  len:1608  alignment:8  padbytes:51  plaindata:N
+dmmeta.ctypelen  ctype:command.acr_ed  len:1560  alignment:8  padbytes:53  plaindata:N
 dmmeta.ctypelen  ctype:command.acr_in  len:328  alignment:8  padbytes:11  plaindata:N
 dmmeta.ctypelen  ctype:command.acr_my  len:128  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:command.amc  len:144  alignment:8  padbytes:5  plaindata:N
@@ -758,6 +758,7 @@ dmmeta.ctypelen  ctype:command.mysql2ssim  len:72  alignment:8  padbytes:19  pla
 dmmeta.ctypelen  ctype:command.orgfile  len:144  alignment:8  padbytes:6  plaindata:N
 dmmeta.ctypelen  ctype:command.samp_meng  len:16  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:command.samp_regx  len:64  alignment:8  padbytes:13  plaindata:N
+dmmeta.ctypelen  ctype:command.sample  len:16  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:command.sandbox  len:176  alignment:8  padbytes:15  plaindata:N
 dmmeta.ctypelen  ctype:command.src_func  len:760  alignment:8  padbytes:1  plaindata:N
 dmmeta.ctypelen  ctype:command.src_hdr  len:200  alignment:8  padbytes:5  plaindata:N
@@ -1105,6 +1106,9 @@ dmmeta.ctypelen  ctype:samp_meng.Ordkey  len:16  alignment:8  padbytes:0  plaind
 dmmeta.ctypelen  ctype:samp_meng.Symbol  len:8  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:samp_meng.TextMsg  len:2  alignment:1  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:samp_regx.FDb  len:72  alignment:8  padbytes:7  plaindata:N
+dmmeta.ctypelen  ctype:sample.FDb  len:88  alignment:8  padbytes:7  plaindata:N
+dmmeta.ctypelen  ctype:sample.FRec  len:64  alignment:8  padbytes:4  plaindata:N
+dmmeta.ctypelen  ctype:sample.Reckey  len:40  alignment:8  padbytes:6  plaindata:Y
 dmmeta.ctypelen  ctype:sandbox.FDb  len:720  alignment:8  padbytes:7  plaindata:N
 dmmeta.ctypelen  ctype:sandbox.FSandbox  len:240  alignment:8  padbytes:11  plaindata:N
 dmmeta.ctypelen  ctype:sandbox.FSbpath  len:204  alignment:1  padbytes:0  plaindata:Y

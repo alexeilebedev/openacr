@@ -477,6 +477,8 @@ namespace command { struct samp_meng; }
 namespace command { struct samp_meng_proc; }
 namespace command { struct samp_regx; }
 namespace command { struct samp_regx_proc; }
+namespace command { struct sample; }
+namespace command { struct sample_proc; }
 namespace command { struct sandbox; }
 namespace command { struct sandbox_proc; }
 namespace command { struct src_func; }
@@ -1400,7 +1402,7 @@ struct acr_ed { // command.acr_ed
     algo::Smallstr100   substr;      //   ""    New field is a substring
     bool                alias;       //   false  Create alias field (requires -srcfield)
     algo::Smallstr100   srcfield;    //   ""    Source field for bitfld/substr
-    algo::Smallstr100   fstep;       //   ""    Add fstep record
+    algo::Smallstr50    fstep;       //   ""    Add fstep record
     algo::cstring       inscond;     //   "true"    Insert condition (for xref)
     algo::Smallstr50    reftype;     //   ""    Reftype (e.g. Val, Thash, Llist, etc)
     algo::Smallstr100   hashfld;     //   ""      (-reftype:Thash) Hash field
@@ -4994,6 +4996,89 @@ void                 samp_regx_ToArgv(command::samp_regx_proc& parent, algo::Str
 inline void          samp_regx_proc_Init(command::samp_regx_proc& parent);
 // func:command.samp_regx_proc..Uninit
 void                 samp_regx_proc_Uninit(command::samp_regx_proc& parent) __attribute__((nothrow));
+
+// --- command.sample
+// access: command.sample_proc.sample (Exec)
+struct sample { // command.sample
+    algo::cstring   in;   //   "data"  Input directory or filename, - for stdin
+    // func:command.sample..Ctor
+    inline               sample() __attribute__((nothrow));
+};
+
+// func:command.sample..ReadFieldMaybe
+bool                 sample_ReadFieldMaybe(command::sample& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::sample from attributes of ascii tuple TUPLE
+// func:command.sample..ReadTupleMaybe
+bool                 sample_ReadTupleMaybe(command::sample &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:command.sample..Init
+inline void          sample_Init(command::sample& parent);
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+// func:command.sample..ToCmdline
+tempstr              sample_ToCmdline(command::sample& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.sample.Argv  printfmt:Tuple
+// func:command.sample..PrintArgv
+void                 sample_PrintArgv(command::sample& row, algo::cstring& str) __attribute__((nothrow));
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+// func:command.sample..NArgs
+i32                  sample_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
+
+// --- command.sample_proc
+struct sample_proc { // command.sample_proc: Subprocess: 
+    algo::cstring     path;      //   "bin/sample"  path for executable
+    command::sample   cmd;       // command line for child process
+    algo::cstring     fstdin;    // redirect for stdin
+    algo::cstring     fstdout;   // redirect for stdout
+    algo::cstring     fstderr;   // redirect for stderr
+    pid_t             pid;       //   0  pid of running child process
+    i32               timeout;   //   0  optional timeout for child process
+    i32               status;    //   0  last exit status of child process
+    // func:command.sample_proc..Ctor
+    inline               sample_proc() __attribute__((nothrow));
+    // func:command.sample_proc..Dtor
+    inline               ~sample_proc() __attribute__((nothrow));
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+// func:command.sample_proc.sample.Start
+int                  sample_Start(command::sample_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+// func:command.sample_proc.sample.StartRead
+algo::Fildes         sample_StartRead(command::sample_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+// func:command.sample_proc.sample.Kill
+void                 sample_Kill(command::sample_proc& parent);
+// Wait for subprocess to return
+// func:command.sample_proc.sample.Wait
+void                 sample_Wait(command::sample_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+// func:command.sample_proc.sample.Exec
+int                  sample_Exec(command::sample_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+// func:command.sample_proc.sample.ExecX
+void                 sample_ExecX(command::sample_proc& parent);
+// Call execv()
+// Call execv with specified parameters
+// func:command.sample_proc.sample.Execv
+int                  sample_Execv(command::sample_proc& parent) __attribute__((nothrow));
+// func:command.sample_proc.sample.ToCmdline
+algo::tempstr        sample_ToCmdline(command::sample_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.sample_proc.sample.ToArgv
+void                 sample_ToArgv(command::sample_proc& parent, algo::StringAry& args) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:command.sample_proc..Init
+inline void          sample_proc_Init(command::sample_proc& parent);
+// func:command.sample_proc..Uninit
+void                 sample_proc_Uninit(command::sample_proc& parent) __attribute__((nothrow));
 
 // --- command.sandbox
 // access: command.sandbox_proc.sandbox (Exec)

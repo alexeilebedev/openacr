@@ -58,6 +58,7 @@ dmmeta.ns  ns:orgfile  nstype:exe  license:GPL  comment:"Organize and deduplicat
 dmmeta.ns  ns:report  nstype:protocol  license:GPL  comment:"Command reports"
 dmmeta.ns  ns:samp_meng  nstype:exe  license:GPL  comment:""
 dmmeta.ns  ns:samp_regx  nstype:exe  license:GPL  comment:"Test tool for regular expressions"
+dmmeta.ns  ns:sample  nstype:exe  license:GPL  comment:""
 dmmeta.ns  ns:sandbox  nstype:exe  license:GPL  comment:"Sandbox - sandbox management tool"
 dmmeta.ns  ns:src_func  nstype:exe  license:GPL  comment:"Access / edit functions"
 dmmeta.ns  ns:src_hdr  nstype:exe  license:GPL  comment:"Manage source copyright+license header in source files and scripts"

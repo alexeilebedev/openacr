@@ -203,6 +203,7 @@ dmmeta.ccmp  ctype:lib_json.FldKey  extrn:N  genop:Y  order:Y  minmax:N  comment
 dmmeta.ccmp  ctype:samp_meng.I64Price8  extrn:N  genop:Y  order:Y  minmax:Y  comment:""
 dmmeta.ccmp  ctype:samp_meng.Ordkey  extrn:N  genop:Y  order:Y  minmax:N  comment:""
 dmmeta.ccmp  ctype:samp_meng.Symbol  extrn:N  genop:Y  order:N  minmax:N  comment:""
+dmmeta.ccmp  ctype:sample.Reckey  extrn:N  genop:Y  order:Y  minmax:N  comment:""
 dmmeta.ccmp  ctype:u128  extrn:Y  genop:N  order:Y  minmax:Y  comment:""
 dmmeta.ccmp  ctype:u16  extrn:Y  genop:N  order:Y  minmax:Y  comment:""
 dmmeta.ccmp  ctype:u32  extrn:Y  genop:N  order:Y  minmax:Y  comment:""

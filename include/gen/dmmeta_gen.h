@@ -345,6 +345,7 @@ extern const char *  dmmeta_Ns_ns_orgfile;        // orgfile         fconst:dmme
 extern const char *  dmmeta_Ns_ns_report;         // report          fconst:dmmeta.Ns.ns/report
 extern const char *  dmmeta_Ns_ns_samp_meng;      // samp_meng       fconst:dmmeta.Ns.ns/samp_meng
 extern const char *  dmmeta_Ns_ns_samp_regx;      // samp_regx       fconst:dmmeta.Ns.ns/samp_regx
+extern const char *  dmmeta_Ns_ns_sample;         // sample          fconst:dmmeta.Ns.ns/sample
 extern const char *  dmmeta_Ns_ns_sandbox;        // sandbox         fconst:dmmeta.Ns.ns/sandbox
 extern const char *  dmmeta_Ns_ns_src_func;       // src_func        fconst:dmmeta.Ns.ns/src_func
 extern const char *  dmmeta_Ns_ns_src_hdr;        // src_hdr         fconst:dmmeta.Ns.ns/src_hdr

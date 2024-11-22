@@ -358,6 +358,7 @@ dmmeta.cpptype  ctype:samp_meng.NewUserReqMsg  ctor:Y  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:samp_meng.OrderTradeMsg  ctor:Y  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:samp_meng.Symbol  ctor:N  dtor:N  cheap_copy:N
 dmmeta.cpptype  ctype:samp_meng.TextMsg  ctor:Y  dtor:N  cheap_copy:N
+dmmeta.cpptype  ctype:sample.Reckey  ctor:Y  dtor:Y  cheap_copy:N
 dmmeta.cpptype  ctype:u128  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:u16  ctor:N  dtor:N  cheap_copy:Y
 dmmeta.cpptype  ctype:u32  ctor:N  dtor:N  cheap_copy:Y

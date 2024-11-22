@@ -79,6 +79,8 @@ dev.readme  gitfile:txt/exe/samp_meng/README.md  inl:N  sandbox:N  filter:""  co
 dev.readme  gitfile:txt/exe/samp_meng/internals.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/exe/samp_regx/README.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/exe/samp_regx/internals.md  inl:N  sandbox:N  filter:""  comment:""
+dev.readme  gitfile:txt/exe/sample/README.md  inl:N  sandbox:N  filter:""  comment:""
+dev.readme  gitfile:txt/exe/sample/internals.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/exe/sandbox/README.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/exe/sandbox/internals.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/exe/src_func/README.md  inl:N  sandbox:N  filter:""  comment:""
