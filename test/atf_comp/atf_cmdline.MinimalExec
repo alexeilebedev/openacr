@@ -1,4 +1,4 @@
-bin/atf_cmdline  -astr:blah -anum:0 -adbl:0 -aflag:N -str:blah -cconst:None
+bin/atf_cmdline  -astr:blah -anum:0 -adbl:0 -aflag:N -str:blah
 astr:blah
 anum:0
 adbl:0

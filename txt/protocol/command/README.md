@@ -364,7 +364,7 @@ Other ctypes in this namespace which don't have own readme files
 |mdbl|double|[Tary](/txt/exe/amc/reftypes.md#tary)||Double array|
 |amnum|i32|[Tary](/txt/exe/amc/reftypes.md#tary)||Anon number array|
 |fconst|u8|[Val](/txt/exe/amc/reftypes.md#val)||Fconst for field|
-|cconst|[algo.Month](/txt/protocol/algo/Month.md)|[Val](/txt/exe/amc/reftypes.md#val)||Fconst for arg ctype|
+|cconst|[algo.Month](/txt/protocol/algo/Month.md)|[Val](/txt/exe/amc/reftypes.md#val)|0|Fconst for arg ctype|
 |dregx|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Predefined regx|
 |dpkey|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|""|Predefined pkey|
 
