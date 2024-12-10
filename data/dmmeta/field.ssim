@@ -2921,7 +2921,7 @@ dmmeta.field  field:command.atf_cmdline.mnum  arg:i32  reftype:Tary  dflt:""  co
 dmmeta.field  field:command.atf_cmdline.mdbl  arg:double  reftype:Tary  dflt:""  comment:"Double array"
 dmmeta.field  field:command.atf_cmdline.amnum  arg:i32  reftype:Tary  dflt:""  comment:"Anon number array"
 dmmeta.field  field:command.atf_cmdline.fconst  arg:u8  reftype:Val  dflt:""  comment:"Fconst for field"
-dmmeta.field  field:command.atf_cmdline.cconst  arg:algo.Month  reftype:Val  dflt:""  comment:"Fconst for arg ctype"
+dmmeta.field  field:command.atf_cmdline.cconst  arg:algo.Month  reftype:Val  dflt:0  comment:"Fconst for arg ctype"
 dmmeta.field  field:command.atf_cmdline.dregx  arg:dmmeta.Ctype  reftype:RegxSql  dflt:'"%"'  comment:"Predefined regx"
 dmmeta.field  field:command.atf_cmdline.dpkey  arg:dmmeta.Ctype  reftype:Pkey  dflt:'""'  comment:"Predefined pkey"
 dmmeta.field  field:command.atf_comp.in  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Input directory or filename, - for stdin"

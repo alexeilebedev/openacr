@@ -12012,6 +12012,7 @@ void command::atf_cmdline_Init(command::atf_cmdline& parent) {
     parent.amnum_n     	= 0; // (command.atf_cmdline.amnum)
     parent.amnum_max   	= 0; // (command.atf_cmdline.amnum)
     parent.fconst = u8(0);
+    parent.cconst = algo_MonthEnum(0);
     Regx_ReadSql(parent.dregx, "%", true);
     parent.dpkey = algo::strptr("");
 }
@@ -12173,10 +12174,12 @@ void command::atf_cmdline_PrintArgv(command::atf_cmdline& row, algo::cstring& st
         str << " -fconst:";
         strptr_PrintBash(temp,str);
     }
-    ch_RemoveAll(temp);
-    Month_Print(row.cconst, temp);
-    str << " -cconst:";
-    strptr_PrintBash(temp,str);
+    if (!(row.cconst == 0)) {
+        ch_RemoveAll(temp);
+        Month_Print(row.cconst, temp);
+        str << " -cconst:";
+        strptr_PrintBash(temp,str);
+    }
     if (!(row.dregx.expr == "%")) {
         ch_RemoveAll(temp);
         command::dregx_Print(const_cast<command::atf_cmdline&>(row), temp);
@@ -12604,7 +12607,7 @@ void command::atf_cmdline_ToArgv(command::atf_cmdline_proc& parent, algo::String
         command::fconst_Print(parent.cmd, *arg);
     }
 
-    if (true) {
+    if (parent.cmd.cconst != 0) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-cconst:";
         Month_Print(parent.cmd.cconst, *arg);

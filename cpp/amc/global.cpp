@@ -579,7 +579,6 @@ bool amc::CmdArgRequiredQ(amc::FField &field) {
     return field.dflt.value=="" // no default provided...
         && !(field.arg == "algo.UnTime" || field.arg == "algo.UnDiff") // these can't be mandatory
         && !field.c_tary // not an array
-        && !c_fconst_N(*amc::GetEnumField(field)) // not an enum (these are always initialized)
         && CmdArgValueRequiredQ(field); // does require an arg
 }
 
