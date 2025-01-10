@@ -40,6 +40,10 @@ extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64;   // 
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64;      // FreeBSD-clang++.debug-amd64       fconst:dev.Builddir.builddir/FreeBSD-clang++.debug-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64;    // FreeBSD-clang++.profile-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.profile-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_release_amd64;    // FreeBSD-clang++.release-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.release-amd64
+extern const char *  dev_Builddir_builddir_Linux_clangPP_coverage_x86_64;    // Linux-clang++.coverage-x86_64     fconst:dev.Builddir.builddir/Linux-clang++.coverage-x86_64
+extern const char *  dev_Builddir_builddir_Linux_clangPP_debug_x86_64;       // Linux-clang++.debug-x86_64        fconst:dev.Builddir.builddir/Linux-clang++.debug-x86_64
+extern const char *  dev_Builddir_builddir_Linux_clangPP_profile_x86_64;     // Linux-clang++.profile-x86_64      fconst:dev.Builddir.builddir/Linux-clang++.profile-x86_64
+extern const char *  dev_Builddir_builddir_Linux_clangPP_release_x86_64;     // Linux-clang++.release-x86_64      fconst:dev.Builddir.builddir/Linux-clang++.release-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_coverage_x86_64;        // Linux-g++.coverage-x86_64         fconst:dev.Builddir.builddir/Linux-g++.coverage-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_debug_x86_64;           // Linux-g++.debug-x86_64            fconst:dev.Builddir.builddir/Linux-g++.debug-x86_64
 extern const char *  dev_Builddir_builddir_Linux_gPP_profile_x86_64;         // Linux-g++.profile-x86_64          fconst:dev.Builddir.builddir/Linux-g++.profile-x86_64
@@ -53,7 +57,6 @@ extern const char *  dev_Compiler_compiler_;          //            fconst:dev.C
 extern const char *  dev_Compiler_compiler_cl;        // cl         fconst:dev.Compiler.compiler/cl
 extern const char *  dev_Compiler_compiler_clangPP;   // clang++    fconst:dev.Compiler.compiler/clang++
 extern const char *  dev_Compiler_compiler_gPP;       // g++        fconst:dev.Compiler.compiler/g++
-extern const char *  dev_Compiler_compiler_gPP_9;     // g++-9      fconst:dev.Compiler.compiler/g++-9
 
 // --- dev_Covline_flag_Enum
 
