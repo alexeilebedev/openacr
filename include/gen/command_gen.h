@@ -2713,7 +2713,7 @@ struct atf_cmdline { // command.atf_cmdline
     u32                 amnum_n;       // number of elements in array
     u32                 amnum_max;     // max. capacity of array before realloc
     u8                  fconst;        //   0  Fconst for field
-    algo::Month         cconst;        // Fconst for arg ctype
+    algo::Month         cconst;        //   0  Fconst for arg ctype
     algo_lib::Regx      dregx;         //   "%"  Sql Regx of dmmeta::Ctype
     algo::Smallstr100   dpkey;         //   ""  Predefined pkey
     // func:command.atf_cmdline..AssignOp
