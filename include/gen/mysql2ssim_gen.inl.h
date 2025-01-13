@@ -28,18 +28,18 @@
 //#pragma endinclude
 
 // --- mysql2ssim.trace..Ctor
-inline  mysql2ssim::trace::trace() {
+inline  mysql2ssim::trace::trace() throw() {
 }
 
 // --- mysql2ssim.FDb.table_names.EmptyQ
 // Return true if index is empty
-inline bool mysql2ssim::table_names_EmptyQ() {
+inline bool mysql2ssim::table_names_EmptyQ() throw() {
     return _db.table_names_n == 0;
 }
 
 // --- mysql2ssim.FDb.table_names.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* mysql2ssim::table_names_Find(u64 t) {
+inline algo::cstring* mysql2ssim::table_names_Find(u64 t) throw() {
     u64 idx = t;
     u64 lim = _db.table_names_n;
     if (idx >= lim) return NULL;
@@ -48,31 +48,31 @@ inline algo::cstring* mysql2ssim::table_names_Find(u64 t) {
 
 // --- mysql2ssim.FDb.table_names.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> mysql2ssim::table_names_Getary() {
+inline algo::aryptr<algo::cstring> mysql2ssim::table_names_Getary() throw() {
     return algo::aryptr<algo::cstring>(_db.table_names_elems, _db.table_names_n);
 }
 
 // --- mysql2ssim.FDb.table_names.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* mysql2ssim::table_names_Last() {
+inline algo::cstring* mysql2ssim::table_names_Last() throw() {
     return table_names_Find(u64(_db.table_names_n-1));
 }
 
 // --- mysql2ssim.FDb.table_names.Max
 // Return max. number of items in the array
-inline i32 mysql2ssim::table_names_Max() {
+inline i32 mysql2ssim::table_names_Max() throw() {
     return _db.table_names_max;
 }
 
 // --- mysql2ssim.FDb.table_names.N
 // Return number of items in the array
-inline i32 mysql2ssim::table_names_N() {
+inline i32 mysql2ssim::table_names_N() throw() {
     return _db.table_names_n;
 }
 
 // --- mysql2ssim.FDb.table_names.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void mysql2ssim::table_names_Reserve(int n) {
+inline void mysql2ssim::table_names_Reserve(int n) throw() {
     u32 new_n = _db.table_names_n + n;
     if (UNLIKELY(new_n > _db.table_names_max)) {
         table_names_AbsReserve(new_n);
@@ -81,32 +81,32 @@ inline void mysql2ssim::table_names_Reserve(int n) {
 
 // --- mysql2ssim.FDb.table_names.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& mysql2ssim::table_names_qFind(u64 t) {
+inline algo::cstring& mysql2ssim::table_names_qFind(u64 t) throw() {
     return _db.table_names_elems[t];
 }
 
 // --- mysql2ssim.FDb.table_names.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& mysql2ssim::table_names_qLast() {
+inline algo::cstring& mysql2ssim::table_names_qLast() throw() {
     return table_names_qFind(u64(_db.table_names_n-1));
 }
 
 // --- mysql2ssim.FDb.table_names.rowid_Get
 // Return row id of specified element
-inline u64 mysql2ssim::table_names_rowid_Get(algo::cstring &elem) {
+inline u64 mysql2ssim::table_names_rowid_Get(algo::cstring &elem) throw() {
     u64 id = &elem - _db.table_names_elems;
     return u64(id);
 }
 
 // --- mysql2ssim.FDb.in_tables.EmptyQ
 // Return true if index is empty
-inline bool mysql2ssim::in_tables_EmptyQ() {
+inline bool mysql2ssim::in_tables_EmptyQ() throw() {
     return _db.in_tables_n == 0;
 }
 
 // --- mysql2ssim.FDb.in_tables.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* mysql2ssim::in_tables_Find(u64 t) {
+inline algo::cstring* mysql2ssim::in_tables_Find(u64 t) throw() {
     u64 idx = t;
     u64 lim = _db.in_tables_n;
     if (idx >= lim) return NULL;
@@ -115,31 +115,31 @@ inline algo::cstring* mysql2ssim::in_tables_Find(u64 t) {
 
 // --- mysql2ssim.FDb.in_tables.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> mysql2ssim::in_tables_Getary() {
+inline algo::aryptr<algo::cstring> mysql2ssim::in_tables_Getary() throw() {
     return algo::aryptr<algo::cstring>(_db.in_tables_elems, _db.in_tables_n);
 }
 
 // --- mysql2ssim.FDb.in_tables.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* mysql2ssim::in_tables_Last() {
+inline algo::cstring* mysql2ssim::in_tables_Last() throw() {
     return in_tables_Find(u64(_db.in_tables_n-1));
 }
 
 // --- mysql2ssim.FDb.in_tables.Max
 // Return max. number of items in the array
-inline i32 mysql2ssim::in_tables_Max() {
+inline i32 mysql2ssim::in_tables_Max() throw() {
     return _db.in_tables_max;
 }
 
 // --- mysql2ssim.FDb.in_tables.N
 // Return number of items in the array
-inline i32 mysql2ssim::in_tables_N() {
+inline i32 mysql2ssim::in_tables_N() throw() {
     return _db.in_tables_n;
 }
 
 // --- mysql2ssim.FDb.in_tables.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void mysql2ssim::in_tables_Reserve(int n) {
+inline void mysql2ssim::in_tables_Reserve(int n) throw() {
     u32 new_n = _db.in_tables_n + n;
     if (UNLIKELY(new_n > _db.in_tables_max)) {
         in_tables_AbsReserve(new_n);
@@ -148,31 +148,31 @@ inline void mysql2ssim::in_tables_Reserve(int n) {
 
 // --- mysql2ssim.FDb.in_tables.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& mysql2ssim::in_tables_qFind(u64 t) {
+inline algo::cstring& mysql2ssim::in_tables_qFind(u64 t) throw() {
     return _db.in_tables_elems[t];
 }
 
 // --- mysql2ssim.FDb.in_tables.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& mysql2ssim::in_tables_qLast() {
+inline algo::cstring& mysql2ssim::in_tables_qLast() throw() {
     return in_tables_qFind(u64(_db.in_tables_n-1));
 }
 
 // --- mysql2ssim.FDb.in_tables.rowid_Get
 // Return row id of specified element
-inline u64 mysql2ssim::in_tables_rowid_Get(algo::cstring &elem) {
+inline u64 mysql2ssim::in_tables_rowid_Get(algo::cstring &elem) throw() {
     u64 id = &elem - _db.in_tables_elems;
     return u64(id);
 }
 
 // --- mysql2ssim.FDb.table_names_curs.Next
 // proceed to next item
-inline void mysql2ssim::_db_table_names_curs_Next(_db_table_names_curs &curs) {
+inline void mysql2ssim::_db_table_names_curs_Next(_db_table_names_curs &curs) throw() {
     curs.index++;
 }
 
 // --- mysql2ssim.FDb.table_names_curs.Reset
-inline void mysql2ssim::_db_table_names_curs_Reset(_db_table_names_curs &curs, mysql2ssim::FDb &parent) {
+inline void mysql2ssim::_db_table_names_curs_Reset(_db_table_names_curs &curs, mysql2ssim::FDb &parent) throw() {
     curs.elems = parent.table_names_elems;
     curs.n_elems = parent.table_names_n;
     curs.index = 0;
@@ -180,24 +180,24 @@ inline void mysql2ssim::_db_table_names_curs_Reset(_db_table_names_curs &curs, m
 
 // --- mysql2ssim.FDb.table_names_curs.ValidQ
 // cursor points to valid item
-inline bool mysql2ssim::_db_table_names_curs_ValidQ(_db_table_names_curs &curs) {
+inline bool mysql2ssim::_db_table_names_curs_ValidQ(_db_table_names_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- mysql2ssim.FDb.table_names_curs.Access
 // item access
-inline algo::cstring& mysql2ssim::_db_table_names_curs_Access(_db_table_names_curs &curs) {
+inline algo::cstring& mysql2ssim::_db_table_names_curs_Access(_db_table_names_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- mysql2ssim.FDb.in_tables_curs.Next
 // proceed to next item
-inline void mysql2ssim::_db_in_tables_curs_Next(_db_in_tables_curs &curs) {
+inline void mysql2ssim::_db_in_tables_curs_Next(_db_in_tables_curs &curs) throw() {
     curs.index++;
 }
 
 // --- mysql2ssim.FDb.in_tables_curs.Reset
-inline void mysql2ssim::_db_in_tables_curs_Reset(_db_in_tables_curs &curs, mysql2ssim::FDb &parent) {
+inline void mysql2ssim::_db_in_tables_curs_Reset(_db_in_tables_curs &curs, mysql2ssim::FDb &parent) throw() {
     curs.elems = parent.in_tables_elems;
     curs.n_elems = parent.in_tables_n;
     curs.index = 0;
@@ -205,25 +205,25 @@ inline void mysql2ssim::_db_in_tables_curs_Reset(_db_in_tables_curs &curs, mysql
 
 // --- mysql2ssim.FDb.in_tables_curs.ValidQ
 // cursor points to valid item
-inline bool mysql2ssim::_db_in_tables_curs_ValidQ(_db_in_tables_curs &curs) {
+inline bool mysql2ssim::_db_in_tables_curs_ValidQ(_db_in_tables_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- mysql2ssim.FDb.in_tables_curs.Access
 // item access
-inline algo::cstring& mysql2ssim::_db_in_tables_curs_Access(_db_in_tables_curs &curs) {
+inline algo::cstring& mysql2ssim::_db_in_tables_curs_Access(_db_in_tables_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- mysql2ssim.FTobltin.vals.EmptyQ
 // Return true if index is empty
-inline bool mysql2ssim::vals_EmptyQ(mysql2ssim::FTobltin& parent) {
+inline bool mysql2ssim::vals_EmptyQ(mysql2ssim::FTobltin& parent) throw() {
     return parent.vals_n == 0;
 }
 
 // --- mysql2ssim.FTobltin.vals.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* mysql2ssim::vals_Find(mysql2ssim::FTobltin& parent, u64 t) {
+inline algo::cstring* mysql2ssim::vals_Find(mysql2ssim::FTobltin& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.vals_n;
     if (idx >= lim) return NULL;
@@ -232,32 +232,32 @@ inline algo::cstring* mysql2ssim::vals_Find(mysql2ssim::FTobltin& parent, u64 t)
 
 // --- mysql2ssim.FTobltin.vals.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> mysql2ssim::vals_Getary(const mysql2ssim::FTobltin& parent) {
+inline algo::aryptr<algo::cstring> mysql2ssim::vals_Getary(const mysql2ssim::FTobltin& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.vals_elems, parent.vals_n);
 }
 
 // --- mysql2ssim.FTobltin.vals.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* mysql2ssim::vals_Last(mysql2ssim::FTobltin& parent) {
+inline algo::cstring* mysql2ssim::vals_Last(mysql2ssim::FTobltin& parent) throw() {
     return vals_Find(parent, u64(parent.vals_n-1));
 }
 
 // --- mysql2ssim.FTobltin.vals.Max
 // Return max. number of items in the array
-inline i32 mysql2ssim::vals_Max(mysql2ssim::FTobltin& parent) {
+inline i32 mysql2ssim::vals_Max(mysql2ssim::FTobltin& parent) throw() {
     (void)parent;
     return parent.vals_max;
 }
 
 // --- mysql2ssim.FTobltin.vals.N
 // Return number of items in the array
-inline i32 mysql2ssim::vals_N(const mysql2ssim::FTobltin& parent) {
+inline i32 mysql2ssim::vals_N(const mysql2ssim::FTobltin& parent) throw() {
     return parent.vals_n;
 }
 
 // --- mysql2ssim.FTobltin.vals.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void mysql2ssim::vals_Reserve(mysql2ssim::FTobltin& parent, int n) {
+inline void mysql2ssim::vals_Reserve(mysql2ssim::FTobltin& parent, int n) throw() {
     u32 new_n = parent.vals_n + n;
     if (UNLIKELY(new_n > parent.vals_max)) {
         vals_AbsReserve(parent, new_n);
@@ -266,31 +266,31 @@ inline void mysql2ssim::vals_Reserve(mysql2ssim::FTobltin& parent, int n) {
 
 // --- mysql2ssim.FTobltin.vals.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& mysql2ssim::vals_qFind(mysql2ssim::FTobltin& parent, u64 t) {
+inline algo::cstring& mysql2ssim::vals_qFind(mysql2ssim::FTobltin& parent, u64 t) throw() {
     return parent.vals_elems[t];
 }
 
 // --- mysql2ssim.FTobltin.vals.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& mysql2ssim::vals_qLast(mysql2ssim::FTobltin& parent) {
+inline algo::cstring& mysql2ssim::vals_qLast(mysql2ssim::FTobltin& parent) throw() {
     return vals_qFind(parent, u64(parent.vals_n-1));
 }
 
 // --- mysql2ssim.FTobltin.vals.rowid_Get
 // Return row id of specified element
-inline u64 mysql2ssim::vals_rowid_Get(mysql2ssim::FTobltin& parent, algo::cstring &elem) {
+inline u64 mysql2ssim::vals_rowid_Get(mysql2ssim::FTobltin& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.vals_elems;
     return u64(id);
 }
 
 // --- mysql2ssim.FTobltin.vals_curs.Next
 // proceed to next item
-inline void mysql2ssim::FTobltin_vals_curs_Next(FTobltin_vals_curs &curs) {
+inline void mysql2ssim::FTobltin_vals_curs_Next(FTobltin_vals_curs &curs) throw() {
     curs.index++;
 }
 
 // --- mysql2ssim.FTobltin.vals_curs.Reset
-inline void mysql2ssim::FTobltin_vals_curs_Reset(FTobltin_vals_curs &curs, mysql2ssim::FTobltin &parent) {
+inline void mysql2ssim::FTobltin_vals_curs_Reset(FTobltin_vals_curs &curs, mysql2ssim::FTobltin &parent) throw() {
     curs.elems = parent.vals_elems;
     curs.n_elems = parent.vals_n;
     curs.index = 0;
@@ -298,13 +298,13 @@ inline void mysql2ssim::FTobltin_vals_curs_Reset(FTobltin_vals_curs &curs, mysql
 
 // --- mysql2ssim.FTobltin.vals_curs.ValidQ
 // cursor points to valid item
-inline bool mysql2ssim::FTobltin_vals_curs_ValidQ(FTobltin_vals_curs &curs) {
+inline bool mysql2ssim::FTobltin_vals_curs_ValidQ(FTobltin_vals_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- mysql2ssim.FTobltin.vals_curs.Access
 // item access
-inline algo::cstring& mysql2ssim::FTobltin_vals_curs_Access(FTobltin_vals_curs &curs) {
+inline algo::cstring& mysql2ssim::FTobltin_vals_curs_Access(FTobltin_vals_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -319,29 +319,29 @@ inline void mysql2ssim::FTobltin_Init(mysql2ssim::FTobltin& parent) {
 }
 
 // --- mysql2ssim.FTobltin..Ctor
-inline  mysql2ssim::FTobltin::FTobltin() {
+inline  mysql2ssim::FTobltin::FTobltin() throw() {
     mysql2ssim::FTobltin_Init(*this);
 }
 
 // --- mysql2ssim.FTobltin..Dtor
-inline  mysql2ssim::FTobltin::~FTobltin() {
+inline  mysql2ssim::FTobltin::~FTobltin() throw() {
     mysql2ssim::FTobltin_Uninit(*this);
 }
 
 // --- mysql2ssim.FieldId.value.GetEnum
 // Get value of field as enum type
-inline mysql2ssim_FieldIdEnum mysql2ssim::value_GetEnum(const mysql2ssim::FieldId& parent) {
+inline mysql2ssim_FieldIdEnum mysql2ssim::value_GetEnum(const mysql2ssim::FieldId& parent) throw() {
     return mysql2ssim_FieldIdEnum(parent.value);
 }
 
 // --- mysql2ssim.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void mysql2ssim::value_SetEnum(mysql2ssim::FieldId& parent, mysql2ssim_FieldIdEnum rhs) {
+inline void mysql2ssim::value_SetEnum(mysql2ssim::FieldId& parent, mysql2ssim_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- mysql2ssim.FieldId.value.Cast
-inline  mysql2ssim::FieldId::operator mysql2ssim_FieldIdEnum() const {
+inline  mysql2ssim::FieldId::operator mysql2ssim_FieldIdEnum() const throw() {
     return mysql2ssim_FieldIdEnum((*this).value);
 }
 
@@ -352,18 +352,18 @@ inline void mysql2ssim::FieldId_Init(mysql2ssim::FieldId& parent) {
 }
 
 // --- mysql2ssim.FieldId..Ctor
-inline  mysql2ssim::FieldId::FieldId() {
+inline  mysql2ssim::FieldId::FieldId() throw() {
     mysql2ssim::FieldId_Init(*this);
 }
 
 // --- mysql2ssim.FieldId..FieldwiseCtor
-inline  mysql2ssim::FieldId::FieldId(i32 in_value)
+inline  mysql2ssim::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- mysql2ssim.FieldId..EnumCtor
-inline  mysql2ssim::FieldId::FieldId(mysql2ssim_FieldIdEnum arg) {
+inline  mysql2ssim::FieldId::FieldId(mysql2ssim_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

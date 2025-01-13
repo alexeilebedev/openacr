@@ -27,13 +27,13 @@
 
 // --- algo.cstring.ch.EmptyQ
 // Return true if index is empty
-inline bool algo::ch_EmptyQ(algo::cstring& parent) {
+inline bool algo::ch_EmptyQ(algo::cstring& parent) throw() {
     return parent.ch_n == 0;
 }
 
 // --- algo.cstring.ch.Find
 // Look up row by row id. Return NULL if out of range
-inline char* algo::ch_Find(algo::cstring& parent, u64 t) {
+inline char* algo::ch_Find(algo::cstring& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.ch_n;
     if (idx >= lim) return NULL;
@@ -42,24 +42,24 @@ inline char* algo::ch_Find(algo::cstring& parent, u64 t) {
 
 // --- algo.cstring.ch.Getary
 // Return array pointer by value
-inline algo::aryptr<char> algo::ch_Getary(const algo::cstring& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::cstring& parent) throw() {
     return algo::aryptr<char>(parent.ch_elems, parent.ch_n);
 }
 
 // --- algo.cstring.ch.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline char* algo::ch_Last(algo::cstring& parent) {
+inline char* algo::ch_Last(algo::cstring& parent) throw() {
     return ch_Find(parent, u64(parent.ch_n-1));
 }
 
 // --- algo.cstring.ch.AssignAryptr
 // Copy from aryptr (operator=)
-inline void algo::cstring::operator =(const algo::aryptr<char> &rhs) {
+inline void algo::cstring::operator =(const algo::aryptr<char> &rhs) throw() {
     ch_Setary(*this, rhs);
 }
 
 // --- algo.cstring.ch.CtorAryptr
-inline  algo::cstring::cstring(const algo::aryptr<char> &rhs) {
+inline  algo::cstring::cstring(const algo::aryptr<char> &rhs) throw() {
     ch_elems 	= 0; // (algo.cstring.ch)
     ch_n     	= 0; // (algo.cstring.ch)
     ch_max   	= 0; // (algo.cstring.ch)
@@ -68,25 +68,25 @@ inline  algo::cstring::cstring(const algo::aryptr<char> &rhs) {
 
 // --- algo.cstring.ch.Max
 // Return max. number of items in the array
-inline i32 algo::ch_Max(algo::cstring& parent) {
+inline i32 algo::ch_Max(algo::cstring& parent) throw() {
     (void)parent;
     return parent.ch_max;
 }
 
 // --- algo.cstring.ch.N
 // Return number of items in the array
-inline i32 algo::ch_N(const algo::cstring& parent) {
+inline i32 algo::ch_N(const algo::cstring& parent) throw() {
     return parent.ch_n;
 }
 
 // --- algo.cstring.ch.RemoveAll
-inline void algo::ch_RemoveAll(algo::cstring& parent) {
+inline void algo::ch_RemoveAll(algo::cstring& parent) throw() {
     parent.ch_n = 0;
 }
 
 // --- algo.cstring.ch.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo::ch_Reserve(algo::cstring& parent, int n) {
+inline void algo::ch_Reserve(algo::cstring& parent, int n) throw() {
     u32 new_n = parent.ch_n + n;
     if (UNLIKELY(new_n > parent.ch_max)) {
         ch_AbsReserve(parent, new_n);
@@ -95,36 +95,36 @@ inline void algo::ch_Reserve(algo::cstring& parent, int n) {
 
 // --- algo.cstring.ch.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline char& algo::ch_qFind(algo::cstring& parent, u64 t) {
+inline char& algo::ch_qFind(algo::cstring& parent, u64 t) throw() {
     return parent.ch_elems[t];
 }
 
 // --- algo.cstring.ch.qLast
 // Return reference to last element of array. No bounds checking
-inline char& algo::ch_qLast(algo::cstring& parent) {
+inline char& algo::ch_qLast(algo::cstring& parent) throw() {
     return ch_qFind(parent, u64(parent.ch_n-1));
 }
 
 // --- algo.cstring.ch.rowid_Get
 // Return row id of specified element
-inline u64 algo::ch_rowid_Get(algo::cstring& parent, char &elem) {
+inline u64 algo::ch_rowid_Get(algo::cstring& parent, char &elem) throw() {
     u64 id = &elem - parent.ch_elems;
     return u64(id);
 }
 
 // --- algo.cstring.ch.Cast
-inline  algo::cstring::operator algo::strptr() const {
+inline  algo::cstring::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.cstring.ch_curs.Next
 // proceed to next item
-inline void algo::cstring_ch_curs_Next(cstring_ch_curs &curs) {
+inline void algo::cstring_ch_curs_Next(cstring_ch_curs &curs) throw() {
     curs.index++;
 }
 
 // --- algo.cstring.ch_curs.Reset
-inline void algo::cstring_ch_curs_Reset(cstring_ch_curs &curs, algo::cstring &parent) {
+inline void algo::cstring_ch_curs_Reset(cstring_ch_curs &curs, algo::cstring &parent) throw() {
     curs.elems = parent.ch_elems;
     curs.n_elems = parent.ch_n;
     curs.index = 0;
@@ -132,53 +132,53 @@ inline void algo::cstring_ch_curs_Reset(cstring_ch_curs &curs, algo::cstring &pa
 
 // --- algo.cstring.ch_curs.ValidQ
 // cursor points to valid item
-inline bool algo::cstring_ch_curs_ValidQ(cstring_ch_curs &curs) {
+inline bool algo::cstring_ch_curs_ValidQ(cstring_ch_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- algo.cstring.ch_curs.Access
 // item access
-inline char& algo::cstring_ch_curs_Access(cstring_ch_curs &curs) {
+inline char& algo::cstring_ch_curs_Access(cstring_ch_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- algo.cstring..EqOp
-inline bool algo::cstring::operator ==(const algo::cstring &rhs) const {
+inline bool algo::cstring::operator ==(const algo::cstring &rhs) const throw() {
     return algo::cstring_Eq(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
 }
 
 // --- algo.cstring..NeOp
-inline bool algo::cstring::operator !=(const algo::cstring &rhs) const {
+inline bool algo::cstring::operator !=(const algo::cstring &rhs) const throw() {
     return !algo::cstring_Eq(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
 }
 
 // --- algo.cstring..LtOp
-inline bool algo::cstring::operator <(const algo::cstring &rhs) const {
+inline bool algo::cstring::operator <(const algo::cstring &rhs) const throw() {
     return algo::cstring_Lt(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
 }
 
 // --- algo.cstring..GtOp
-inline bool algo::cstring::operator >(const algo::cstring &rhs) const {
+inline bool algo::cstring::operator >(const algo::cstring &rhs) const throw() {
     return algo::cstring_Lt(const_cast<algo::cstring&>(rhs),const_cast<algo::cstring&>(*this));
 }
 
 // --- algo.cstring..LeOp
-inline bool algo::cstring::operator <=(const algo::cstring &rhs) const {
+inline bool algo::cstring::operator <=(const algo::cstring &rhs) const throw() {
     return !algo::cstring_Lt(const_cast<algo::cstring&>(rhs),const_cast<algo::cstring&>(*this));
 }
 
 // --- algo.cstring..GeOp
-inline bool algo::cstring::operator >=(const algo::cstring &rhs) const {
+inline bool algo::cstring::operator >=(const algo::cstring &rhs) const throw() {
     return !algo::cstring_Lt(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
 }
 
 // --- algo.cstring..Lt
-inline bool algo::cstring_Lt(algo::cstring& lhs, algo::cstring& rhs) {
+inline bool algo::cstring_Lt(algo::cstring& lhs, algo::cstring& rhs) throw() {
     return ch_Cmp(lhs,rhs) < 0;
 }
 
 // --- algo.cstring..Cmp
-inline i32 algo::cstring_Cmp(algo::cstring& lhs, algo::cstring& rhs) {
+inline i32 algo::cstring_Cmp(algo::cstring& lhs, algo::cstring& rhs) throw() {
     i32 retval = 0;
     retval = ch_Cmp(lhs,rhs);
     return retval;
@@ -193,7 +193,7 @@ inline void algo::cstring_Init(algo::cstring& parent) {
 }
 
 // --- algo.cstring..Eq
-inline bool algo::cstring_Eq(algo::cstring& lhs, algo::cstring& rhs) {
+inline bool algo::cstring_Eq(algo::cstring& lhs, algo::cstring& rhs) throw() {
     bool retval = true;
     retval = ch_Eq(lhs,rhs);
     return retval;
@@ -201,7 +201,7 @@ inline bool algo::cstring_Eq(algo::cstring& lhs, algo::cstring& rhs) {
 
 // --- algo.cstring..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::cstring_Update(algo::cstring &lhs, algo::cstring& rhs) {
+inline bool algo::cstring_Update(algo::cstring &lhs, algo::cstring& rhs) throw() {
     bool ret = !cstring_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -210,27 +210,27 @@ inline bool algo::cstring_Update(algo::cstring &lhs, algo::cstring& rhs) {
 }
 
 // --- algo.cstring..Ctor
-inline  algo::cstring::cstring() {
+inline  algo::cstring::cstring() throw() {
     algo::cstring_Init(*this);
 }
 
 // --- algo.cstring..Dtor
-inline  algo::cstring::~cstring() {
+inline  algo::cstring::~cstring() throw() {
     algo::cstring_Uninit(*this);
 }
 
 // --- algo.Attr..EqOp
-inline bool algo::Attr::operator ==(const algo::Attr &rhs) const {
+inline bool algo::Attr::operator ==(const algo::Attr &rhs) const throw() {
     return algo::Attr_Eq(const_cast<algo::Attr&>(*this),const_cast<algo::Attr&>(rhs));
 }
 
 // --- algo.Attr..NeOp
-inline bool algo::Attr::operator !=(const algo::Attr &rhs) const {
+inline bool algo::Attr::operator !=(const algo::Attr &rhs) const throw() {
     return !algo::Attr_Eq(const_cast<algo::Attr&>(*this),const_cast<algo::Attr&>(rhs));
 }
 
 // --- algo.Attr..Cmp
-inline i32 algo::Attr_Cmp(algo::Attr& lhs, algo::Attr& rhs) {
+inline i32 algo::Attr_Cmp(algo::Attr& lhs, algo::Attr& rhs) throw() {
     i32 retval = 0;
     retval = algo::cstring_Cmp(lhs.name, rhs.name);
     if (retval != 0) {
@@ -241,7 +241,7 @@ inline i32 algo::Attr_Cmp(algo::Attr& lhs, algo::Attr& rhs) {
 }
 
 // --- algo.Attr..Eq
-inline bool algo::Attr_Eq(algo::Attr& lhs, algo::Attr& rhs) {
+inline bool algo::Attr_Eq(algo::Attr& lhs, algo::Attr& rhs) throw() {
     bool retval = true;
     retval = algo::cstring_Eq(lhs.name, rhs.name);
     if (!retval) {
@@ -252,11 +252,11 @@ inline bool algo::Attr_Eq(algo::Attr& lhs, algo::Attr& rhs) {
 }
 
 // --- algo.Attr..Ctor
-inline  algo::Attr::Attr() {
+inline  algo::Attr::Attr() throw() {
 }
 
 // --- algo.Attr..FieldwiseCtor
-inline  algo::Attr::Attr(const algo::strptr& in_name, const algo::strptr& in_value)
+inline  algo::Attr::Attr(const algo::strptr& in_name, const algo::strptr& in_value) throw()
     : name(in_name)
     , value(in_value)
  {
@@ -264,18 +264,18 @@ inline  algo::Attr::Attr(const algo::strptr& in_name, const algo::strptr& in_val
 
 // --- algo.Bool.value.GetEnum
 // Get value of field as enum type
-inline algo_BoolEnum algo::value_GetEnum(const algo::Bool& parent) {
+inline algo_BoolEnum algo::value_GetEnum(const algo::Bool& parent) throw() {
     return algo_BoolEnum(parent.value);
 }
 
 // --- algo.Bool.value.SetEnum
 // Set value of field from enum type.
-inline void algo::value_SetEnum(algo::Bool& parent, algo_BoolEnum rhs) {
+inline void algo::value_SetEnum(algo::Bool& parent, algo_BoolEnum rhs) throw() {
     parent.value = u8(rhs);
 }
 
 // --- algo.Bool.value.Cast
-inline  algo::Bool::operator algo_BoolEnum() const {
+inline  algo::Bool::operator algo_BoolEnum() const throw() {
     return algo_BoolEnum((*this).value);
 }
 
@@ -286,30 +286,30 @@ inline void algo::Bool_Init(algo::Bool& parent) {
 }
 
 // --- algo.Bool..Ctor
-inline  algo::Bool::Bool() {
+inline  algo::Bool::Bool() throw() {
     algo::Bool_Init(*this);
 }
 
 // --- algo.Bool..FieldwiseCtor
-inline  algo::Bool::Bool(u8 in_value)
+inline  algo::Bool::Bool(u8 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.Bool..EnumCtor
-inline  algo::Bool::Bool(algo_BoolEnum arg) {
+inline  algo::Bool::Bool(algo_BoolEnum arg) throw() {
     this->value = u8(arg);
 }
 
 // --- algo.ByteAry.ary.EmptyQ
 // Return true if index is empty
-inline bool algo::ary_EmptyQ(algo::ByteAry& parent) {
+inline bool algo::ary_EmptyQ(algo::ByteAry& parent) throw() {
     return parent.ary_n == 0;
 }
 
 // --- algo.ByteAry.ary.Find
 // Look up row by row id. Return NULL if out of range
-inline u8* algo::ary_Find(algo::ByteAry& parent, u64 t) {
+inline u8* algo::ary_Find(algo::ByteAry& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.ary_n;
     if (idx >= lim) return NULL;
@@ -318,24 +318,24 @@ inline u8* algo::ary_Find(algo::ByteAry& parent, u64 t) {
 
 // --- algo.ByteAry.ary.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> algo::ary_Getary(const algo::ByteAry& parent) {
+inline algo::aryptr<u8> algo::ary_Getary(const algo::ByteAry& parent) throw() {
     return algo::aryptr<u8>(parent.ary_elems, parent.ary_n);
 }
 
 // --- algo.ByteAry.ary.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline u8* algo::ary_Last(algo::ByteAry& parent) {
+inline u8* algo::ary_Last(algo::ByteAry& parent) throw() {
     return ary_Find(parent, u64(parent.ary_n-1));
 }
 
 // --- algo.ByteAry.ary.AssignAryptr
 // Copy from aryptr (operator=)
-inline void algo::ByteAry::operator =(const algo::aryptr<u8> &rhs) {
+inline void algo::ByteAry::operator =(const algo::aryptr<u8> &rhs) throw() {
     ary_Setary(*this, rhs);
 }
 
 // --- algo.ByteAry.ary.CtorAryptr
-inline  algo::ByteAry::ByteAry(const algo::aryptr<u8> &rhs) {
+inline  algo::ByteAry::ByteAry(const algo::aryptr<u8> &rhs) throw() {
     ary_elems 	= 0; // (algo.ByteAry.ary)
     ary_n     	= 0; // (algo.ByteAry.ary)
     ary_max   	= 0; // (algo.ByteAry.ary)
@@ -344,25 +344,25 @@ inline  algo::ByteAry::ByteAry(const algo::aryptr<u8> &rhs) {
 
 // --- algo.ByteAry.ary.Max
 // Return max. number of items in the array
-inline i32 algo::ary_Max(algo::ByteAry& parent) {
+inline i32 algo::ary_Max(algo::ByteAry& parent) throw() {
     (void)parent;
     return parent.ary_max;
 }
 
 // --- algo.ByteAry.ary.N
 // Return number of items in the array
-inline i32 algo::ary_N(const algo::ByteAry& parent) {
+inline i32 algo::ary_N(const algo::ByteAry& parent) throw() {
     return parent.ary_n;
 }
 
 // --- algo.ByteAry.ary.RemoveAll
-inline void algo::ary_RemoveAll(algo::ByteAry& parent) {
+inline void algo::ary_RemoveAll(algo::ByteAry& parent) throw() {
     parent.ary_n = 0;
 }
 
 // --- algo.ByteAry.ary.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo::ary_Reserve(algo::ByteAry& parent, int n) {
+inline void algo::ary_Reserve(algo::ByteAry& parent, int n) throw() {
     u32 new_n = parent.ary_n + n;
     if (UNLIKELY(new_n > parent.ary_max)) {
         ary_AbsReserve(parent, new_n);
@@ -371,36 +371,36 @@ inline void algo::ary_Reserve(algo::ByteAry& parent, int n) {
 
 // --- algo.ByteAry.ary.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline u8& algo::ary_qFind(algo::ByteAry& parent, u64 t) {
+inline u8& algo::ary_qFind(algo::ByteAry& parent, u64 t) throw() {
     return parent.ary_elems[t];
 }
 
 // --- algo.ByteAry.ary.qLast
 // Return reference to last element of array. No bounds checking
-inline u8& algo::ary_qLast(algo::ByteAry& parent) {
+inline u8& algo::ary_qLast(algo::ByteAry& parent) throw() {
     return ary_qFind(parent, u64(parent.ary_n-1));
 }
 
 // --- algo.ByteAry.ary.rowid_Get
 // Return row id of specified element
-inline u64 algo::ary_rowid_Get(algo::ByteAry& parent, u8 &elem) {
+inline u64 algo::ary_rowid_Get(algo::ByteAry& parent, u8 &elem) throw() {
     u64 id = &elem - parent.ary_elems;
     return u64(id);
 }
 
 // --- algo.ByteAry.ary.Cast
-inline  algo::ByteAry::operator algo::aryptr<u8>() const {
+inline  algo::ByteAry::operator algo::aryptr<u8>() const throw() {
     return ary_Getary(*this);
 }
 
 // --- algo.ByteAry.ary_curs.Next
 // proceed to next item
-inline void algo::ByteAry_ary_curs_Next(ByteAry_ary_curs &curs) {
+inline void algo::ByteAry_ary_curs_Next(ByteAry_ary_curs &curs) throw() {
     curs.index++;
 }
 
 // --- algo.ByteAry.ary_curs.Reset
-inline void algo::ByteAry_ary_curs_Reset(ByteAry_ary_curs &curs, algo::ByteAry &parent) {
+inline void algo::ByteAry_ary_curs_Reset(ByteAry_ary_curs &curs, algo::ByteAry &parent) throw() {
     curs.elems = parent.ary_elems;
     curs.n_elems = parent.ary_n;
     curs.index = 0;
@@ -408,13 +408,13 @@ inline void algo::ByteAry_ary_curs_Reset(ByteAry_ary_curs &curs, algo::ByteAry &
 
 // --- algo.ByteAry.ary_curs.ValidQ
 // cursor points to valid item
-inline bool algo::ByteAry_ary_curs_ValidQ(ByteAry_ary_curs &curs) {
+inline bool algo::ByteAry_ary_curs_ValidQ(ByteAry_ary_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- algo.ByteAry.ary_curs.Access
 // item access
-inline u8& algo::ByteAry_ary_curs_Access(ByteAry_ary_curs &curs) {
+inline u8& algo::ByteAry_ary_curs_Access(ByteAry_ary_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -427,25 +427,25 @@ inline void algo::ByteAry_Init(algo::ByteAry& parent) {
 }
 
 // --- algo.ByteAry..Ctor
-inline  algo::ByteAry::ByteAry() {
+inline  algo::ByteAry::ByteAry() throw() {
     algo::ByteAry_Init(*this);
 }
 
 // --- algo.ByteAry..Dtor
-inline  algo::ByteAry::~ByteAry() {
+inline  algo::ByteAry::~ByteAry() throw() {
     algo::ByteAry_Uninit(*this);
 }
 
 // --- algo.Charset.ch.NBits
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
-inline int algo::ch_Nbits(algo::Charset& parent) {
+inline int algo::ch_Nbits(algo::Charset& parent) throw() {
     return ch_N(parent) * 64;
 }
 
 // --- algo.Charset.ch.qGetBit
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-inline bool algo::ch_qGetBit(algo::Charset& parent, u32 bit_idx) {
+inline bool algo::ch_qGetBit(algo::Charset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = ch_qFind(parent, elem_idx); // fetch element
@@ -454,7 +454,7 @@ inline bool algo::ch_qGetBit(algo::Charset& parent, u32 bit_idx) {
 
 // --- algo.Charset.ch.GetBit
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-inline bool algo::ch_GetBit(algo::Charset& parent, u32 bit_idx) {
+inline bool algo::ch_GetBit(algo::Charset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     bool ret = false;
@@ -468,7 +468,7 @@ inline bool algo::ch_GetBit(algo::Charset& parent, u32 bit_idx) {
 
 // --- algo.Charset.ch.BitsEmptyQ
 // Check if all the bits in the bitset are equal to zero
-inline bool algo::ch_BitsEmptyQ(algo::Charset& parent) {
+inline bool algo::ch_BitsEmptyQ(algo::Charset& parent) throw() {
     bool retval = true;
     u64 n = ch_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -481,7 +481,7 @@ inline bool algo::ch_BitsEmptyQ(algo::Charset& parent) {
 }
 
 // --- algo.Charset.ch.Sum1s
-inline u64 algo::ch_Sum1s(algo::Charset& parent) {
+inline u64 algo::ch_Sum1s(algo::Charset& parent) throw() {
     u64 sum = 0;
     u64 n = ch_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -492,7 +492,7 @@ inline u64 algo::ch_Sum1s(algo::Charset& parent) {
 
 // --- algo.Charset.ch.qClearBit
 // Clear bit # BIT_IDX in bit set. No bounds checking
-inline void algo::ch_qClearBit(algo::Charset& parent, u32 bit_idx) {
+inline void algo::ch_qClearBit(algo::Charset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = ch_qFind(parent, elem_idx); // fetch
@@ -501,7 +501,7 @@ inline void algo::ch_qClearBit(algo::Charset& parent, u32 bit_idx) {
 
 // --- algo.Charset.ch.ClearBit
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-inline void algo::ch_ClearBit(algo::Charset& parent, u32 bit_idx) {
+inline void algo::ch_ClearBit(algo::Charset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 lim = ch_N(parent);
@@ -513,7 +513,7 @@ inline void algo::ch_ClearBit(algo::Charset& parent, u32 bit_idx) {
 
 // --- algo.Charset.ch.qSetBit
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void algo::ch_qSetBit(algo::Charset& parent, u32 bit_idx) {
+inline void algo::ch_qSetBit(algo::Charset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = ch_qFind(parent, elem_idx); // fetch
@@ -522,7 +522,7 @@ inline void algo::ch_qSetBit(algo::Charset& parent, u32 bit_idx) {
 
 // --- algo.Charset.ch.SetBit
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-inline void algo::ch_SetBit(algo::Charset& parent, u32 bit_idx) {
+inline void algo::ch_SetBit(algo::Charset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 lim = ch_N(parent);
@@ -534,7 +534,7 @@ inline void algo::ch_SetBit(algo::Charset& parent, u32 bit_idx) {
 
 // --- algo.Charset.ch.qSetBitVal
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void algo::ch_qSetBitVal(algo::Charset& parent, u32 bit_idx, bool val) {
+inline void algo::ch_qSetBitVal(algo::Charset& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = ch_qFind(parent, elem_idx); // fetch
@@ -543,7 +543,7 @@ inline void algo::ch_qSetBitVal(algo::Charset& parent, u32 bit_idx, bool val) {
 
 // --- algo.Charset.ch.qOrBitVal
 // Or bit # BIT_IDX in bit set. No bounds checking
-inline void algo::ch_qOrBitVal(algo::Charset& parent, u32 bit_idx, bool val) {
+inline void algo::ch_qOrBitVal(algo::Charset& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = ch_qFind(parent, elem_idx); // fetch
@@ -553,7 +553,7 @@ inline void algo::ch_qOrBitVal(algo::Charset& parent, u32 bit_idx, bool val) {
 // --- algo.Charset.ch.ClearBitsAll
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
-inline void algo::ch_ClearBitsAll(algo::Charset& parent) {
+inline void algo::ch_ClearBitsAll(algo::Charset& parent) throw() {
     u64 n = ch_N(parent);
     for (u64 i = 0; i < n; i++) {
         ch_qFind(parent, i) = 0;
@@ -562,7 +562,7 @@ inline void algo::ch_ClearBitsAll(algo::Charset& parent) {
 
 // --- algo.Charset.ch.ClearBits
 // Zero in PARENT any bits that are set in RHS.
-inline void algo::ch_ClearBits(algo::Charset& parent, algo::Charset &rhs) {
+inline void algo::ch_ClearBits(algo::Charset& parent, algo::Charset &rhs) throw() {
     u64 n = u64_Min(ch_N(parent), ch_N(rhs));
     for (u64 i = 0; i < n; i++) {
         ch_qFind(parent, i) &= ~ch_qFind(rhs, i);
@@ -572,7 +572,7 @@ inline void algo::ch_ClearBits(algo::Charset& parent, algo::Charset &rhs) {
 // --- algo.Charset.ch.OrBits
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
-inline void algo::ch_OrBits(algo::Charset& parent, algo::Charset &rhs) {
+inline void algo::ch_OrBits(algo::Charset& parent, algo::Charset &rhs) throw() {
     u64 n = u64_Min(ch_N(parent), ch_N(rhs));
     for (u64 i = 0; i < n; i++) {
         ch_qFind(parent, i) |= ch_qFind(rhs, i);
@@ -581,7 +581,7 @@ inline void algo::ch_OrBits(algo::Charset& parent, algo::Charset &rhs) {
 
 // --- algo.Charset.ch.Sup
 // Return smallest number N such that indexes of all 1 bits are below N
-inline i32 algo::ch_Sup(algo::Charset& parent) {
+inline i32 algo::ch_Sup(algo::Charset& parent) throw() {
     u64 lim = ch_N(parent);
     i32 ret = 0;
     for (int i = lim-1; i >= 0; i--) {
@@ -597,7 +597,7 @@ inline i32 algo::ch_Sup(algo::Charset& parent) {
 
 // --- algo.Charset.ch.Fill
 // Set all elements of fixed array to value RHS
-inline void algo::ch_Fill(algo::Charset& parent, const u64 &rhs) {
+inline void algo::ch_Fill(algo::Charset& parent, const u64 &rhs) throw() {
     for (int i = 0; i < 8; i++) {
         parent.ch_elems[i] = rhs;
     }
@@ -605,7 +605,7 @@ inline void algo::ch_Fill(algo::Charset& parent, const u64 &rhs) {
 
 // --- algo.Charset.ch.Find
 // Look up row by row id. Return NULL if out of range
-inline u64* algo::ch_Find(algo::Charset& parent, u64 t) {
+inline u64* algo::ch_Find(algo::Charset& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = 8;
     return idx < lim ? parent.ch_elems + idx : NULL; // unsigned comparison with limit
@@ -613,39 +613,39 @@ inline u64* algo::ch_Find(algo::Charset& parent, u64 t) {
 
 // --- algo.Charset.ch.Getary
 // Access fixed array ch as aryptr.
-inline algo::aryptr<u64> algo::ch_Getary(algo::Charset& parent) {
+inline algo::aryptr<u64> algo::ch_Getary(algo::Charset& parent) throw() {
     return algo::aryptr<u64>(parent.ch_elems, 8);
 }
 
 // --- algo.Charset.ch.Max
 // Return max number of items in the array
-inline i32 algo::ch_Max(algo::Charset& parent) {
+inline i32 algo::ch_Max(algo::Charset& parent) throw() {
     (void)parent;
     return 8;
 }
 
 // --- algo.Charset.ch.N
 // Return number of items in the array
-inline i32 algo::ch_N(const algo::Charset& parent) {
+inline i32 algo::ch_N(const algo::Charset& parent) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     return 8;
 }
 
 // --- algo.Charset.ch.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
-inline void algo::ch_Setary(algo::Charset& parent, const algo::aryptr<u64> &rhs) {
+inline void algo::ch_Setary(algo::Charset& parent, const algo::aryptr<u64> &rhs) throw() {
     int n = i32_Min(8, rhs.n_elems);
     memcpy(parent.ch_elems, rhs.elems, sizeof(u64)*n);
 }
 
 // --- algo.Charset.ch.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline u64& algo::ch_qFind(algo::Charset& parent, u64 t) {
+inline u64& algo::ch_qFind(algo::Charset& parent, u64 t) throw() {
     return parent.ch_elems[u64(t)];
 }
 
 // --- algo.Charset.ch_bitcurs.Reset
-inline void algo::Charset_ch_bitcurs_Reset(Charset_ch_bitcurs &curs, algo::Charset &parent) {
+inline void algo::Charset_ch_bitcurs_Reset(Charset_ch_bitcurs &curs, algo::Charset &parent) throw() {
     curs.elems = &ch_qFind(parent,0);
     curs.n_elems = ch_N(parent);
     curs.bit = -1;
@@ -654,38 +654,38 @@ inline void algo::Charset_ch_bitcurs_Reset(Charset_ch_bitcurs &curs, algo::Chars
 
 // --- algo.Charset.ch_bitcurs.ValidQ
 // cursor points to valid item
-inline bool algo::Charset_ch_bitcurs_ValidQ(Charset_ch_bitcurs &curs) {
+inline bool algo::Charset_ch_bitcurs_ValidQ(Charset_ch_bitcurs &curs) throw() {
     return curs.bit < curs.n_elems*64;
 }
 
 // --- algo.Charset.ch_bitcurs.Access
 // item access
-inline int& algo::Charset_ch_bitcurs_Access(Charset_ch_bitcurs &curs) {
+inline int& algo::Charset_ch_bitcurs_Access(Charset_ch_bitcurs &curs) throw() {
     return curs.bit;
 }
 
 // --- algo.Charset.ch_curs.Reset
 // cursor points to valid item
-inline void algo::Charset_ch_curs_Reset(Charset_ch_curs &curs, algo::Charset &parent) {
+inline void algo::Charset_ch_curs_Reset(Charset_ch_curs &curs, algo::Charset &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- algo.Charset.ch_curs.ValidQ
 // cursor points to valid item
-inline bool algo::Charset_ch_curs_ValidQ(Charset_ch_curs &curs) {
+inline bool algo::Charset_ch_curs_ValidQ(Charset_ch_curs &curs) throw() {
     return u64(curs.index) < u64(8);
 }
 
 // --- algo.Charset.ch_curs.Next
 // proceed to next item
-inline void algo::Charset_ch_curs_Next(Charset_ch_curs &curs) {
+inline void algo::Charset_ch_curs_Next(Charset_ch_curs &curs) throw() {
     curs.index++;
 }
 
 // --- algo.Charset.ch_curs.Access
 // item access
-inline u64& algo::Charset_ch_curs_Access(Charset_ch_curs &curs) {
+inline u64& algo::Charset_ch_curs_Access(Charset_ch_curs &curs) throw() {
     return ch_qFind((*curs.parent), u64(curs.index));
 }
 
@@ -698,14 +698,14 @@ inline void algo::Charset_Init(algo::Charset& parent) {
 }
 
 // --- algo.Charset..Ctor
-inline  algo::Charset::Charset() {
+inline  algo::Charset::Charset() throw() {
     algo::Charset_Init(*this);
 }
 
 // --- algo.Smallstr150.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr150& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr150& parent, char c) throw() {
     if (parent.n_ch < 150) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -715,7 +715,7 @@ inline void algo::ch_Add(algo::Smallstr150& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr150& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr150& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 150) {
         n_new = 150 - parent.n_ch;
@@ -726,7 +726,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr150& parent, algo::strptr str) {
 
 // --- algo.Smallstr150.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr150& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr150& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -738,19 +738,19 @@ inline u32 algo::Smallstr150_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr150.ch.Init
-inline void algo::ch_Init(algo::Smallstr150 &parent) {
+inline void algo::ch_Init(algo::Smallstr150 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr150.ch.Max
 // always return constant 150
-inline int algo::ch_Max(algo::Smallstr150& parent) {
+inline int algo::ch_Max(algo::Smallstr150& parent) throw() {
     (void)parent;
     return 150;
 }
 
 // --- algo.Smallstr150.ch.N
-inline int algo::ch_N(const algo::Smallstr150& parent) {
+inline int algo::ch_N(const algo::Smallstr150& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -758,32 +758,32 @@ inline int algo::ch_N(const algo::Smallstr150& parent) {
 
 // --- algo.Smallstr150.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr150::operator =(const algo::strptr &str) {
+inline void algo::Smallstr150::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr150.ch.CtorStrptr
-inline  algo::Smallstr150::Smallstr150(const algo::strptr &rhs) {
+inline  algo::Smallstr150::Smallstr150(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr150.ch.Cast
-inline  algo::Smallstr150::operator algo::strptr() const {
+inline  algo::Smallstr150::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr150..EqOp
-inline bool algo::Smallstr150::operator ==(const algo::Smallstr150 &rhs) const {
+inline bool algo::Smallstr150::operator ==(const algo::Smallstr150 &rhs) const throw() {
     return algo::Smallstr150_Eq(const_cast<algo::Smallstr150&>(*this),const_cast<algo::Smallstr150&>(rhs));
 }
 
 // --- algo.Smallstr150..NeOp
-inline bool algo::Smallstr150::operator !=(const algo::Smallstr150 &rhs) const {
+inline bool algo::Smallstr150::operator !=(const algo::Smallstr150 &rhs) const throw() {
     return !algo::Smallstr150_Eq(const_cast<algo::Smallstr150&>(*this),const_cast<algo::Smallstr150&>(rhs));
 }
 
 // --- algo.Smallstr150..Cmp
-inline i32 algo::Smallstr150_Cmp(algo::Smallstr150& lhs, algo::Smallstr150& rhs) {
+inline i32 algo::Smallstr150_Cmp(algo::Smallstr150& lhs, algo::Smallstr150& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -796,60 +796,60 @@ inline void algo::Smallstr150_Init(algo::Smallstr150& parent) {
 }
 
 // --- algo.Smallstr150..Eq
-inline bool algo::Smallstr150_Eq(algo::Smallstr150& lhs, algo::Smallstr150& rhs) {
+inline bool algo::Smallstr150_Eq(algo::Smallstr150& lhs, algo::Smallstr150& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr150..EqOpAryptr
-inline bool algo::Smallstr150::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr150::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr150..AssignOp
-inline algo::Smallstr150& algo::Smallstr150::operator =(const algo::Smallstr150 &rhs) {
+inline algo::Smallstr150& algo::Smallstr150::operator =(const algo::Smallstr150 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr150..Ctor
-inline  algo::Smallstr150::Smallstr150() {
+inline  algo::Smallstr150::Smallstr150() throw() {
     algo::Smallstr150_Init(*this);
 }
 
 // --- algo.Smallstr150..CopyCtor
-inline  algo::Smallstr150::Smallstr150(const algo::Smallstr150 &rhs) {
+inline  algo::Smallstr150::Smallstr150(const algo::Smallstr150 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
 
 // --- algo.Comment.value.Cast
-inline  algo::Comment::operator algo::strptr() const {
+inline  algo::Comment::operator algo::strptr() const throw() {
     return algo::strptr((*this).value);
 }
 
 // --- algo.Comment..Cmp
-inline i32 algo::Comment_Cmp(algo::Comment& lhs, algo::Comment& rhs) {
+inline i32 algo::Comment_Cmp(algo::Comment& lhs, algo::Comment& rhs) throw() {
     i32 retval = 0;
     retval = algo::Smallstr150_Cmp(lhs.value, rhs.value);
     return retval;
 }
 
 // --- algo.Comment..Eq
-inline bool algo::Comment_Eq(algo::Comment& lhs, algo::Comment& rhs) {
+inline bool algo::Comment_Eq(algo::Comment& lhs, algo::Comment& rhs) throw() {
     bool retval = true;
     retval = algo::Smallstr150_Eq(lhs.value, rhs.value);
     return retval;
 }
 
 // --- algo.Comment..Ctor
-inline  algo::Comment::Comment() {
+inline  algo::Comment::Comment() throw() {
 }
 
 // --- algo.Comment..FieldwiseCtor
-inline  algo::Comment::Comment(const algo::strptr& in_value)
+inline  algo::Comment::Comment(const algo::strptr& in_value) throw()
     : value(in_value)
  {
 }
@@ -857,7 +857,7 @@ inline  algo::Comment::Comment(const algo::strptr& in_value)
 // --- algo.Smallstr250.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr250& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr250& parent, char c) throw() {
     if (parent.n_ch < 250) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -867,7 +867,7 @@ inline void algo::ch_Add(algo::Smallstr250& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr250& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr250& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 250) {
         n_new = 250 - parent.n_ch;
@@ -878,7 +878,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr250& parent, algo::strptr str) {
 
 // --- algo.Smallstr250.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr250& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr250& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -890,19 +890,19 @@ inline u32 algo::Smallstr250_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr250.ch.Init
-inline void algo::ch_Init(algo::Smallstr250 &parent) {
+inline void algo::ch_Init(algo::Smallstr250 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr250.ch.Max
 // always return constant 250
-inline int algo::ch_Max(algo::Smallstr250& parent) {
+inline int algo::ch_Max(algo::Smallstr250& parent) throw() {
     (void)parent;
     return 250;
 }
 
 // --- algo.Smallstr250.ch.N
-inline int algo::ch_N(const algo::Smallstr250& parent) {
+inline int algo::ch_N(const algo::Smallstr250& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -910,32 +910,32 @@ inline int algo::ch_N(const algo::Smallstr250& parent) {
 
 // --- algo.Smallstr250.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr250::operator =(const algo::strptr &str) {
+inline void algo::Smallstr250::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr250.ch.CtorStrptr
-inline  algo::Smallstr250::Smallstr250(const algo::strptr &rhs) {
+inline  algo::Smallstr250::Smallstr250(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr250.ch.Cast
-inline  algo::Smallstr250::operator algo::strptr() const {
+inline  algo::Smallstr250::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr250..EqOp
-inline bool algo::Smallstr250::operator ==(const algo::Smallstr250 &rhs) const {
+inline bool algo::Smallstr250::operator ==(const algo::Smallstr250 &rhs) const throw() {
     return algo::Smallstr250_Eq(const_cast<algo::Smallstr250&>(*this),const_cast<algo::Smallstr250&>(rhs));
 }
 
 // --- algo.Smallstr250..NeOp
-inline bool algo::Smallstr250::operator !=(const algo::Smallstr250 &rhs) const {
+inline bool algo::Smallstr250::operator !=(const algo::Smallstr250 &rhs) const throw() {
     return !algo::Smallstr250_Eq(const_cast<algo::Smallstr250&>(*this),const_cast<algo::Smallstr250&>(rhs));
 }
 
 // --- algo.Smallstr250..Cmp
-inline i32 algo::Smallstr250_Cmp(algo::Smallstr250& lhs, algo::Smallstr250& rhs) {
+inline i32 algo::Smallstr250_Cmp(algo::Smallstr250& lhs, algo::Smallstr250& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -948,88 +948,88 @@ inline void algo::Smallstr250_Init(algo::Smallstr250& parent) {
 }
 
 // --- algo.Smallstr250..Eq
-inline bool algo::Smallstr250_Eq(algo::Smallstr250& lhs, algo::Smallstr250& rhs) {
+inline bool algo::Smallstr250_Eq(algo::Smallstr250& lhs, algo::Smallstr250& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr250..EqOpAryptr
-inline bool algo::Smallstr250::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr250::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr250..AssignOp
-inline algo::Smallstr250& algo::Smallstr250::operator =(const algo::Smallstr250 &rhs) {
+inline algo::Smallstr250& algo::Smallstr250::operator =(const algo::Smallstr250 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr250..Ctor
-inline  algo::Smallstr250::Smallstr250() {
+inline  algo::Smallstr250::Smallstr250() throw() {
     algo::Smallstr250_Init(*this);
 }
 
 // --- algo.Smallstr250..CopyCtor
-inline  algo::Smallstr250::Smallstr250(const algo::Smallstr250 &rhs) {
+inline  algo::Smallstr250::Smallstr250(const algo::Smallstr250 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
 
 // --- algo.CppExpr..Ctor
-inline  algo::CppExpr::CppExpr() {
+inline  algo::CppExpr::CppExpr() throw() {
 }
 
 // --- algo.CppExpr..FieldwiseCtor
-inline  algo::CppExpr::CppExpr(const algo::strptr& in_value)
+inline  algo::CppExpr::CppExpr(const algo::strptr& in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.UnTime..Hash
-inline u32 algo::UnTime_Hash(u32 prev, algo::UnTime rhs) {
+inline u32 algo::UnTime_Hash(u32 prev, algo::UnTime rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
 
 // --- algo.UnTime..EqOp
-inline bool algo::UnTime::operator ==(const algo::UnTime &rhs) const {
+inline bool algo::UnTime::operator ==(const algo::UnTime &rhs) const throw() {
     return algo::UnTime_Eq(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
 }
 
 // --- algo.UnTime..NeOp
-inline bool algo::UnTime::operator !=(const algo::UnTime &rhs) const {
+inline bool algo::UnTime::operator !=(const algo::UnTime &rhs) const throw() {
     return !algo::UnTime_Eq(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
 }
 
 // --- algo.UnTime..LtOp
-inline bool algo::UnTime::operator <(const algo::UnTime &rhs) const {
+inline bool algo::UnTime::operator <(const algo::UnTime &rhs) const throw() {
     return algo::UnTime_Lt(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
 }
 
 // --- algo.UnTime..GtOp
-inline bool algo::UnTime::operator >(const algo::UnTime &rhs) const {
+inline bool algo::UnTime::operator >(const algo::UnTime &rhs) const throw() {
     return algo::UnTime_Lt(const_cast<algo::UnTime&>(rhs),const_cast<algo::UnTime&>(*this));
 }
 
 // --- algo.UnTime..LeOp
-inline bool algo::UnTime::operator <=(const algo::UnTime &rhs) const {
+inline bool algo::UnTime::operator <=(const algo::UnTime &rhs) const throw() {
     return !algo::UnTime_Lt(const_cast<algo::UnTime&>(rhs),const_cast<algo::UnTime&>(*this));
 }
 
 // --- algo.UnTime..GeOp
-inline bool algo::UnTime::operator >=(const algo::UnTime &rhs) const {
+inline bool algo::UnTime::operator >=(const algo::UnTime &rhs) const throw() {
     return !algo::UnTime_Lt(const_cast<algo::UnTime&>(*this),const_cast<algo::UnTime&>(rhs));
 }
 
 // --- algo.UnTime..Lt
-inline bool algo::UnTime_Lt(algo::UnTime lhs, algo::UnTime rhs) {
+inline bool algo::UnTime_Lt(algo::UnTime lhs, algo::UnTime rhs) throw() {
     return i64_Lt(lhs.value, rhs.value);
 }
 
 // --- algo.UnTime..Cmp
-inline i32 algo::UnTime_Cmp(algo::UnTime lhs, algo::UnTime rhs) {
+inline i32 algo::UnTime_Cmp(algo::UnTime lhs, algo::UnTime rhs) throw() {
     i32 retval = 0;
     retval = i64_Cmp(lhs.value, rhs.value);
     return retval;
@@ -1043,7 +1043,7 @@ inline void algo::UnTime_Init(algo::UnTime& parent) {
 
 // --- algo.UnTime..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool algo::UnTime_UpdateMax(algo::UnTime &lhs, algo::UnTime rhs) {
+inline bool algo::UnTime_UpdateMax(algo::UnTime &lhs, algo::UnTime rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -1053,13 +1053,13 @@ inline bool algo::UnTime_UpdateMax(algo::UnTime &lhs, algo::UnTime rhs) {
 
 // --- algo.UnTime..Min
 // Return the lesser of two values
-inline algo::UnTime algo::UnTime_Min(algo::UnTime lhs, algo::UnTime rhs) {
+inline algo::UnTime algo::UnTime_Min(algo::UnTime lhs, algo::UnTime rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- algo.UnTime..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool algo::UnTime_UpdateMin(algo::UnTime &lhs, algo::UnTime rhs) {
+inline bool algo::UnTime_UpdateMin(algo::UnTime &lhs, algo::UnTime rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -1069,12 +1069,12 @@ inline bool algo::UnTime_UpdateMin(algo::UnTime &lhs, algo::UnTime rhs) {
 
 // --- algo.UnTime..Max
 // Return the greater of two values
-inline algo::UnTime algo::UnTime_Max(algo::UnTime lhs, algo::UnTime rhs) {
+inline algo::UnTime algo::UnTime_Max(algo::UnTime lhs, algo::UnTime rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- algo.UnTime..Eq
-inline bool algo::UnTime_Eq(algo::UnTime lhs, algo::UnTime rhs) {
+inline bool algo::UnTime_Eq(algo::UnTime lhs, algo::UnTime rhs) throw() {
     bool retval = true;
     retval = i64_Eq(lhs.value, rhs.value);
     return retval;
@@ -1082,7 +1082,7 @@ inline bool algo::UnTime_Eq(algo::UnTime lhs, algo::UnTime rhs) {
 
 // --- algo.UnTime..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::UnTime_Update(algo::UnTime &lhs, algo::UnTime rhs) {
+inline bool algo::UnTime_Update(algo::UnTime &lhs, algo::UnTime rhs) throw() {
     bool ret = !UnTime_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -1091,43 +1091,43 @@ inline bool algo::UnTime_Update(algo::UnTime &lhs, algo::UnTime rhs) {
 }
 
 // --- algo.UnTime..Ctor
-inline  algo::UnTime::UnTime() {
+inline  algo::UnTime::UnTime() throw() {
     algo::UnTime_Init(*this);
 }
 
 // --- algo.UnTime..FieldwiseCtor
-inline  algo::UnTime::UnTime(i64 in_value)
+inline  algo::UnTime::UnTime(i64 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.DateCache..Ctor
-inline  algo::DateCache::DateCache() {
+inline  algo::DateCache::DateCache() throw() {
 }
 
 // --- algo.DayRange..Ctor
-inline  algo::DayRange::DayRange() {
+inline  algo::DayRange::DayRange() throw() {
 }
 
 // --- algo.DayRange..FieldwiseCtor
-inline  algo::DayRange::DayRange(algo::UnTime in_start, algo::UnTime in_end)
+inline  algo::DayRange::DayRange(algo::UnTime in_start, algo::UnTime in_end) throw()
     : start(in_start)
     , end(in_end)
  {
 }
 
 // --- algo.Decimal..EqOp
-inline bool algo::Decimal::operator ==(const algo::Decimal &rhs) const {
+inline bool algo::Decimal::operator ==(const algo::Decimal &rhs) const throw() {
     return algo::Decimal_Eq(const_cast<algo::Decimal&>(*this),const_cast<algo::Decimal&>(rhs));
 }
 
 // --- algo.Decimal..NeOp
-inline bool algo::Decimal::operator !=(const algo::Decimal &rhs) const {
+inline bool algo::Decimal::operator !=(const algo::Decimal &rhs) const throw() {
     return !algo::Decimal_Eq(const_cast<algo::Decimal&>(*this),const_cast<algo::Decimal&>(rhs));
 }
 
 // --- algo.Decimal..Cmp
-inline i32 algo::Decimal_Cmp(algo::Decimal lhs, algo::Decimal rhs) {
+inline i32 algo::Decimal_Cmp(algo::Decimal lhs, algo::Decimal rhs) throw() {
     i32 retval = 0;
     retval = i32_Cmp(lhs.exponent, rhs.exponent);
     if (retval != 0) {
@@ -1145,7 +1145,7 @@ inline void algo::Decimal_Init(algo::Decimal& parent) {
 }
 
 // --- algo.Decimal..Eq
-inline bool algo::Decimal_Eq(algo::Decimal lhs, algo::Decimal rhs) {
+inline bool algo::Decimal_Eq(algo::Decimal lhs, algo::Decimal rhs) throw() {
     bool retval = true;
     retval = i32_Eq(lhs.exponent, rhs.exponent);
     if (!retval) {
@@ -1156,29 +1156,29 @@ inline bool algo::Decimal_Eq(algo::Decimal lhs, algo::Decimal rhs) {
 }
 
 // --- algo.Decimal..Ctor
-inline  algo::Decimal::Decimal() {
+inline  algo::Decimal::Decimal() throw() {
     algo::Decimal_Init(*this);
 }
 
 // --- algo.Decimal..FieldwiseCtor
-inline  algo::Decimal::Decimal(i32 in_exponent, i64 in_mantissa)
+inline  algo::Decimal::Decimal(i32 in_exponent, i64 in_mantissa) throw()
     : exponent(in_exponent)
     , mantissa(in_mantissa)
  {
 }
 
 // --- algo.DirEntry..Ctor
-inline  algo::DirEntry::DirEntry() {
+inline  algo::DirEntry::DirEntry() throw() {
     algo::DirEntry_Init(*this);
 }
 
 // --- algo.DirEntry..Dtor
-inline  algo::DirEntry::~DirEntry() {
+inline  algo::DirEntry::~DirEntry() throw() {
     algo::DirEntry_Uninit(*this);
 }
 
 // --- algo.DryrunQ.value.Cast
-inline  algo::DryrunQ::operator bool() const {
+inline  algo::DryrunQ::operator bool() const throw() {
     return bool((*this).value);
 }
 
@@ -1189,30 +1189,30 @@ inline void algo::DryrunQ_Init(algo::DryrunQ& parent) {
 }
 
 // --- algo.DryrunQ..Ctor
-inline  algo::DryrunQ::DryrunQ() {
+inline  algo::DryrunQ::DryrunQ() throw() {
     algo::DryrunQ_Init(*this);
 }
 
 // --- algo.DryrunQ..FieldwiseCtor
-inline  algo::DryrunQ::DryrunQ(bool in_value)
+inline  algo::DryrunQ::DryrunQ(bool in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.EchoQ.value.GetEnum
 // Get value of field as enum type
-inline algo_EchoQEnum algo::value_GetEnum(const algo::EchoQ& parent) {
+inline algo_EchoQEnum algo::value_GetEnum(const algo::EchoQ& parent) throw() {
     return algo_EchoQEnum(parent.value);
 }
 
 // --- algo.EchoQ.value.SetEnum
 // Set value of field from enum type.
-inline void algo::value_SetEnum(algo::EchoQ& parent, algo_EchoQEnum rhs) {
+inline void algo::value_SetEnum(algo::EchoQ& parent, algo_EchoQEnum rhs) throw() {
     parent.value = bool(rhs);
 }
 
 // --- algo.EchoQ.value.Cast
-inline  algo::EchoQ::operator algo_EchoQEnum() const {
+inline  algo::EchoQ::operator algo_EchoQEnum() const throw() {
     return algo_EchoQEnum((*this).value);
 }
 
@@ -1223,35 +1223,35 @@ inline void algo::EchoQ_Init(algo::EchoQ& parent) {
 }
 
 // --- algo.EchoQ..Ctor
-inline  algo::EchoQ::EchoQ() {
+inline  algo::EchoQ::EchoQ() throw() {
     algo::EchoQ_Init(*this);
 }
 
 // --- algo.EchoQ..FieldwiseCtor
-inline  algo::EchoQ::EchoQ(bool in_value)
+inline  algo::EchoQ::EchoQ(bool in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.EchoQ..EnumCtor
-inline  algo::EchoQ::EchoQ(algo_EchoQEnum arg) {
+inline  algo::EchoQ::EchoQ(algo_EchoQEnum arg) throw() {
     this->value = bool(arg);
 }
 
 // --- algo.Errns.value.GetEnum
 // Get value of field as enum type
-inline algo_ErrnsEnum algo::value_GetEnum(const algo::Errns& parent) {
+inline algo_ErrnsEnum algo::value_GetEnum(const algo::Errns& parent) throw() {
     return algo_ErrnsEnum(parent.value);
 }
 
 // --- algo.Errns.value.SetEnum
 // Set value of field from enum type.
-inline void algo::value_SetEnum(algo::Errns& parent, algo_ErrnsEnum rhs) {
+inline void algo::value_SetEnum(algo::Errns& parent, algo_ErrnsEnum rhs) throw() {
     parent.value = u8(rhs);
 }
 
 // --- algo.Errns.value.Cast
-inline  algo::Errns::operator algo_ErrnsEnum() const {
+inline  algo::Errns::operator algo_ErrnsEnum() const throw() {
     return algo_ErrnsEnum((*this).value);
 }
 
@@ -1262,32 +1262,32 @@ inline void algo::Errns_Init(algo::Errns& parent) {
 }
 
 // --- algo.Errns..Ctor
-inline  algo::Errns::Errns() {
+inline  algo::Errns::Errns() throw() {
     algo::Errns_Init(*this);
 }
 
 // --- algo.Errns..FieldwiseCtor
-inline  algo::Errns::Errns(u8 in_value)
+inline  algo::Errns::Errns(u8 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.Errns..EnumCtor
-inline  algo::Errns::Errns(algo_ErrnsEnum arg) {
+inline  algo::Errns::Errns(algo_ErrnsEnum arg) throw() {
     this->value = u8(arg);
 }
 
 // --- algo.Errcode.code.Get
 // Retrieve bitfield from value of field value
 //    32 bits starting at bit 0.
-inline i32 algo::code_Get(const algo::Errcode& parent) {
+inline i32 algo::code_Get(const algo::Errcode& parent) throw() {
     return i32((parent.value >> 0) & 0xffffffff);
 }
 
 // --- algo.Errcode.code.Set
 // Set bitfield in value of field 'value'
 //    32 bits starting at bit 0.
-inline void algo::code_Set(algo::Errcode& parent, i32 rhs) {
+inline void algo::code_Set(algo::Errcode& parent, i32 rhs) throw() {
     u64 t1    = u64(0xffffffff) << 0;
     u64 t2    = (u64(rhs) & 0xffffffff) << 0;
     parent.value = u64((parent.value & ~t1) | t2);
@@ -1296,14 +1296,14 @@ inline void algo::code_Set(algo::Errcode& parent, i32 rhs) {
 // --- algo.Errcode.type.Get
 // Retrieve bitfield from value of field value
 //    8 bits starting at bit 32.
-inline algo::Errns algo::type_Get(const algo::Errcode& parent) {
+inline algo::Errns algo::type_Get(const algo::Errcode& parent) throw() {
     return algo::Errns((parent.value >> 32) & 0xff);
 }
 
 // --- algo.Errcode.type.Set
 // Set bitfield in value of field 'value'
 //    8 bits starting at bit 32.
-inline void algo::type_Set(algo::Errcode& parent, algo::Errns rhs) {
+inline void algo::type_Set(algo::Errcode& parent, algo::Errns rhs) throw() {
     u64 t1    = u64(0xff) << 32;
     u64 t2    = (u64(rhs.value) & 0xff) << 32;
     parent.value = u64((parent.value & ~t1) | t2);
@@ -1316,24 +1316,24 @@ inline void algo::Errcode_Init(algo::Errcode& parent) {
 }
 
 // --- algo.Errcode..Ctor
-inline  algo::Errcode::Errcode() {
+inline  algo::Errcode::Errcode() throw() {
     algo::Errcode_Init(*this);
 }
 
 // --- algo.FailokQ.value.GetEnum
 // Get value of field as enum type
-inline algo_FailokQEnum algo::value_GetEnum(const algo::FailokQ& parent) {
+inline algo_FailokQEnum algo::value_GetEnum(const algo::FailokQ& parent) throw() {
     return algo_FailokQEnum(parent.value);
 }
 
 // --- algo.FailokQ.value.SetEnum
 // Set value of field from enum type.
-inline void algo::value_SetEnum(algo::FailokQ& parent, algo_FailokQEnum rhs) {
+inline void algo::value_SetEnum(algo::FailokQ& parent, algo_FailokQEnum rhs) throw() {
     parent.value = bool(rhs);
 }
 
 // --- algo.FailokQ.value.Cast
-inline  algo::FailokQ::operator algo_FailokQEnum() const {
+inline  algo::FailokQ::operator algo_FailokQEnum() const throw() {
     return algo_FailokQEnum((*this).value);
 }
 
@@ -1344,35 +1344,35 @@ inline void algo::FailokQ_Init(algo::FailokQ& parent) {
 }
 
 // --- algo.FailokQ..Ctor
-inline  algo::FailokQ::FailokQ() {
+inline  algo::FailokQ::FailokQ() throw() {
     algo::FailokQ_Init(*this);
 }
 
 // --- algo.FailokQ..FieldwiseCtor
-inline  algo::FailokQ::FailokQ(bool in_value)
+inline  algo::FailokQ::FailokQ(bool in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.FailokQ..EnumCtor
-inline  algo::FailokQ::FailokQ(algo_FailokQEnum arg) {
+inline  algo::FailokQ::FailokQ(algo_FailokQEnum arg) throw() {
     this->value = bool(arg);
 }
 
 // --- algo.FieldId.value.GetEnum
 // Get value of field as enum type
-inline algo_FieldIdEnum algo::value_GetEnum(const algo::FieldId& parent) {
+inline algo_FieldIdEnum algo::value_GetEnum(const algo::FieldId& parent) throw() {
     return algo_FieldIdEnum(parent.value);
 }
 
 // --- algo.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void algo::value_SetEnum(algo::FieldId& parent, algo_FieldIdEnum rhs) {
+inline void algo::value_SetEnum(algo::FieldId& parent, algo_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- algo.FieldId.value.Cast
-inline  algo::FieldId::operator algo_FieldIdEnum() const {
+inline  algo::FieldId::operator algo_FieldIdEnum() const throw() {
     return algo_FieldIdEnum((*this).value);
 }
 
@@ -1383,64 +1383,64 @@ inline void algo::FieldId_Init(algo::FieldId& parent) {
 }
 
 // --- algo.FieldId..Ctor
-inline  algo::FieldId::FieldId() {
+inline  algo::FieldId::FieldId() throw() {
     algo::FieldId_Init(*this);
 }
 
 // --- algo.FieldId..FieldwiseCtor
-inline  algo::FieldId::FieldId(i32 in_value)
+inline  algo::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.FieldId..EnumCtor
-inline  algo::FieldId::FieldId(algo_FieldIdEnum arg) {
+inline  algo::FieldId::FieldId(algo_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- algo.Fildes..Hash
-inline u32 algo::Fildes_Hash(u32 prev, const algo::Fildes& rhs) {
+inline u32 algo::Fildes_Hash(u32 prev, const algo::Fildes& rhs) throw() {
     prev = i32_Hash(prev, rhs.value);
     return prev;
 }
 
 // --- algo.Fildes..EqOp
-inline bool algo::Fildes::operator ==(const algo::Fildes &rhs) const {
+inline bool algo::Fildes::operator ==(const algo::Fildes &rhs) const throw() {
     return algo::Fildes_Eq(const_cast<algo::Fildes&>(*this),const_cast<algo::Fildes&>(rhs));
 }
 
 // --- algo.Fildes..NeOp
-inline bool algo::Fildes::operator !=(const algo::Fildes &rhs) const {
+inline bool algo::Fildes::operator !=(const algo::Fildes &rhs) const throw() {
     return !algo::Fildes_Eq(const_cast<algo::Fildes&>(*this),const_cast<algo::Fildes&>(rhs));
 }
 
 // --- algo.Fildes..LtOp
-inline bool algo::Fildes::operator <(const algo::Fildes &rhs) const {
+inline bool algo::Fildes::operator <(const algo::Fildes &rhs) const throw() {
     return algo::Fildes_Lt(const_cast<algo::Fildes&>(*this),const_cast<algo::Fildes&>(rhs));
 }
 
 // --- algo.Fildes..GtOp
-inline bool algo::Fildes::operator >(const algo::Fildes &rhs) const {
+inline bool algo::Fildes::operator >(const algo::Fildes &rhs) const throw() {
     return algo::Fildes_Lt(const_cast<algo::Fildes&>(rhs),const_cast<algo::Fildes&>(*this));
 }
 
 // --- algo.Fildes..LeOp
-inline bool algo::Fildes::operator <=(const algo::Fildes &rhs) const {
+inline bool algo::Fildes::operator <=(const algo::Fildes &rhs) const throw() {
     return !algo::Fildes_Lt(const_cast<algo::Fildes&>(rhs),const_cast<algo::Fildes&>(*this));
 }
 
 // --- algo.Fildes..GeOp
-inline bool algo::Fildes::operator >=(const algo::Fildes &rhs) const {
+inline bool algo::Fildes::operator >=(const algo::Fildes &rhs) const throw() {
     return !algo::Fildes_Lt(const_cast<algo::Fildes&>(*this),const_cast<algo::Fildes&>(rhs));
 }
 
 // --- algo.Fildes..Lt
-inline bool algo::Fildes_Lt(algo::Fildes& lhs, algo::Fildes& rhs) {
+inline bool algo::Fildes_Lt(algo::Fildes& lhs, algo::Fildes& rhs) throw() {
     return i32_Lt(lhs.value, rhs.value);
 }
 
 // --- algo.Fildes..Cmp
-inline i32 algo::Fildes_Cmp(algo::Fildes& lhs, algo::Fildes& rhs) {
+inline i32 algo::Fildes_Cmp(algo::Fildes& lhs, algo::Fildes& rhs) throw() {
     i32 retval = 0;
     retval = i32_Cmp(lhs.value, rhs.value);
     return retval;
@@ -1453,7 +1453,7 @@ inline void algo::Fildes_Init(algo::Fildes& parent) {
 }
 
 // --- algo.Fildes..Eq
-inline bool algo::Fildes_Eq(algo::Fildes& lhs, algo::Fildes& rhs) {
+inline bool algo::Fildes_Eq(algo::Fildes& lhs, algo::Fildes& rhs) throw() {
     bool retval = true;
     retval = i32_Eq(lhs.value, rhs.value);
     return retval;
@@ -1461,7 +1461,7 @@ inline bool algo::Fildes_Eq(algo::Fildes& lhs, algo::Fildes& rhs) {
 
 // --- algo.Fildes..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::Fildes_Update(algo::Fildes &lhs, algo::Fildes& rhs) {
+inline bool algo::Fildes_Update(algo::Fildes &lhs, algo::Fildes& rhs) throw() {
     bool ret = !Fildes_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -1470,32 +1470,32 @@ inline bool algo::Fildes_Update(algo::Fildes &lhs, algo::Fildes& rhs) {
 }
 
 // --- algo.Fildes..Ctor
-inline  algo::Fildes::Fildes() {
+inline  algo::Fildes::Fildes() throw() {
     algo::Fildes_Init(*this);
 }
 
 // --- algo.Fildes..FieldwiseCtor
-inline  algo::Fildes::Fildes(i32 in_value)
+inline  algo::Fildes::Fildes(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.FileFlags.value.Cast
-inline  algo::FileFlags::operator algo_FileFlagsEnum() const {
+inline  algo::FileFlags::operator algo_FileFlagsEnum() const throw() {
     return algo_FileFlagsEnum((*this).value);
 }
 
 // --- algo.FileFlags.append.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 4.
-inline bool algo::append_Get(const algo::FileFlags& parent) {
+inline bool algo::append_Get(const algo::FileFlags& parent) throw() {
     return bool((parent.value >> 4) & 0x01);
 }
 
 // --- algo.FileFlags.append.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 4.
-inline void algo::append_Set(algo::FileFlags& parent, bool rhs) {
+inline void algo::append_Set(algo::FileFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 4;
     u32 t2    = (u32(rhs) & 0x01) << 4;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -1504,14 +1504,14 @@ inline void algo::append_Set(algo::FileFlags& parent, bool rhs) {
 // --- algo.FileFlags.read.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 0.
-inline bool algo::read_Get(const algo::FileFlags& parent) {
+inline bool algo::read_Get(const algo::FileFlags& parent) throw() {
     return bool((parent.value >> 0) & 0x01);
 }
 
 // --- algo.FileFlags.read.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 0.
-inline void algo::read_Set(algo::FileFlags& parent, bool rhs) {
+inline void algo::read_Set(algo::FileFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 0;
     u32 t2    = (u32(rhs) & 0x01) << 0;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -1520,14 +1520,14 @@ inline void algo::read_Set(algo::FileFlags& parent, bool rhs) {
 // --- algo.FileFlags.write.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 1.
-inline bool algo::write_Get(const algo::FileFlags& parent) {
+inline bool algo::write_Get(const algo::FileFlags& parent) throw() {
     return bool((parent.value >> 1) & 0x01);
 }
 
 // --- algo.FileFlags.write.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 1.
-inline void algo::write_Set(algo::FileFlags& parent, bool rhs) {
+inline void algo::write_Set(algo::FileFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 1;
     u32 t2    = (u32(rhs) & 0x01) << 1;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -1536,14 +1536,14 @@ inline void algo::write_Set(algo::FileFlags& parent, bool rhs) {
 // --- algo.FileFlags._throw.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 5.
-inline bool algo::_throw_Get(const algo::FileFlags& parent) {
+inline bool algo::_throw_Get(const algo::FileFlags& parent) throw() {
     return bool((parent.value >> 5) & 0x01);
 }
 
 // --- algo.FileFlags._throw.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 5.
-inline void algo::_throw_Set(algo::FileFlags& parent, bool rhs) {
+inline void algo::_throw_Set(algo::FileFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 5;
     u32 t2    = (u32(rhs) & 0x01) << 5;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -1552,14 +1552,14 @@ inline void algo::_throw_Set(algo::FileFlags& parent, bool rhs) {
 // --- algo.FileFlags.temp.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 6.
-inline bool algo::temp_Get(const algo::FileFlags& parent) {
+inline bool algo::temp_Get(const algo::FileFlags& parent) throw() {
     return bool((parent.value >> 6) & 0x01);
 }
 
 // --- algo.FileFlags.temp.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 6.
-inline void algo::temp_Set(algo::FileFlags& parent, bool rhs) {
+inline void algo::temp_Set(algo::FileFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 6;
     u32 t2    = (u32(rhs) & 0x01) << 6;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -1568,14 +1568,14 @@ inline void algo::temp_Set(algo::FileFlags& parent, bool rhs) {
 // --- algo.FileFlags.overlap.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 7.
-inline bool algo::overlap_Get(const algo::FileFlags& parent) {
+inline bool algo::overlap_Get(const algo::FileFlags& parent) throw() {
     return bool((parent.value >> 7) & 0x01);
 }
 
 // --- algo.FileFlags.overlap.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 7.
-inline void algo::overlap_Set(algo::FileFlags& parent, bool rhs) {
+inline void algo::overlap_Set(algo::FileFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 7;
     u32 t2    = (u32(rhs) & 0x01) << 7;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -1584,14 +1584,14 @@ inline void algo::overlap_Set(algo::FileFlags& parent, bool rhs) {
 // --- algo.FileFlags.linear.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 8.
-inline bool algo::linear_Get(const algo::FileFlags& parent) {
+inline bool algo::linear_Get(const algo::FileFlags& parent) throw() {
     return bool((parent.value >> 8) & 0x01);
 }
 
 // --- algo.FileFlags.linear.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 8.
-inline void algo::linear_Set(algo::FileFlags& parent, bool rhs) {
+inline void algo::linear_Set(algo::FileFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 8;
     u32 t2    = (u32(rhs) & 0x01) << 8;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -1600,14 +1600,14 @@ inline void algo::linear_Set(algo::FileFlags& parent, bool rhs) {
 // --- algo.FileFlags.printerr.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 9.
-inline bool algo::printerr_Get(const algo::FileFlags& parent) {
+inline bool algo::printerr_Get(const algo::FileFlags& parent) throw() {
     return bool((parent.value >> 9) & 0x01);
 }
 
 // --- algo.FileFlags.printerr.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 9.
-inline void algo::printerr_Set(algo::FileFlags& parent, bool rhs) {
+inline void algo::printerr_Set(algo::FileFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 9;
     u32 t2    = (u32(rhs) & 0x01) << 9;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -1620,18 +1620,18 @@ inline void algo::FileFlags_Init(algo::FileFlags& parent) {
 }
 
 // --- algo.FileFlags..Ctor
-inline  algo::FileFlags::FileFlags() {
+inline  algo::FileFlags::FileFlags() throw() {
     algo::FileFlags_Init(*this);
 }
 
 // --- algo.FileFlags..FieldwiseCtor
-inline  algo::FileFlags::FileFlags(u32 in_value)
+inline  algo::FileFlags::FileFlags(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.FileFlags..EnumCtor
-inline  algo::FileFlags::FileFlags(algo_FileFlagsEnum arg) {
+inline  algo::FileFlags::FileFlags(algo_FileFlagsEnum arg) throw() {
     this->value = u32(arg);
 }
 
@@ -1642,14 +1642,14 @@ inline  algo::FileFlags::FileFlags(algo_FileFlagsEnum arg) {
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I32Dec1& parent, double val) {
+inline void algo::value_qSetDouble(algo::I32Dec1& parent, double val) throw() {
     double intval = val * 10 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I32Dec1.value.GetDouble
-inline double algo::value_GetDouble(const algo::I32Dec1& parent) {
+inline double algo::value_GetDouble(const algo::I32Dec1& parent) throw() {
     double ret;
     ret = parent.value / double(10);
     return ret;
@@ -1657,7 +1657,7 @@ inline double algo::value_GetDouble(const algo::I32Dec1& parent) {
 
 // --- algo.I32Dec1.value.GetInt
 // Return integer portion (divide number by 10)
-inline i32 algo::value_GetInt(const algo::I32Dec1& parent) {
+inline i32 algo::value_GetInt(const algo::I32Dec1& parent) throw() {
     i32 ret;
     ret = parent.value / 10;
     return ret;
@@ -1665,17 +1665,17 @@ inline i32 algo::value_GetInt(const algo::I32Dec1& parent) {
 
 // --- algo.I32Dec1.value.GetScale
 // Return constant 10
-inline i32 algo::I32Dec1_GetScale() {
+inline i32 algo::I32Dec1_GetScale() throw() {
     return 10;
 }
 
 // --- algo.I32Dec1.value.Cast
-inline  algo::I32Dec1::operator i32() const {
+inline  algo::I32Dec1::operator i32() const throw() {
     return i32((*this).value);
 }
 
 // --- algo.I32Dec1..Hash
-inline u32 algo::I32Dec1_Hash(u32 prev, algo::I32Dec1 rhs) {
+inline u32 algo::I32Dec1_Hash(u32 prev, algo::I32Dec1 rhs) throw() {
     prev = i32_Hash(prev, rhs.value);
     return prev;
 }
@@ -1687,12 +1687,12 @@ inline void algo::I32Dec1_Init(algo::I32Dec1& parent) {
 }
 
 // --- algo.I32Dec1..Ctor
-inline  algo::I32Dec1::I32Dec1() {
+inline  algo::I32Dec1::I32Dec1() throw() {
     algo::I32Dec1_Init(*this);
 }
 
 // --- algo.I32Dec1..FieldwiseCtor
-inline  algo::I32Dec1::I32Dec1(i32 in_value)
+inline  algo::I32Dec1::I32Dec1(i32 in_value) throw()
     : value(in_value)
  {
 }
@@ -1704,14 +1704,14 @@ inline  algo::I32Dec1::I32Dec1(i32 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I32Dec2& parent, double val) {
+inline void algo::value_qSetDouble(algo::I32Dec2& parent, double val) throw() {
     double intval = val * 100 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I32Dec2.value.GetDouble
-inline double algo::value_GetDouble(const algo::I32Dec2& parent) {
+inline double algo::value_GetDouble(const algo::I32Dec2& parent) throw() {
     double ret;
     ret = parent.value / double(100);
     return ret;
@@ -1719,7 +1719,7 @@ inline double algo::value_GetDouble(const algo::I32Dec2& parent) {
 
 // --- algo.I32Dec2.value.GetInt
 // Return integer portion (divide number by 100)
-inline i32 algo::value_GetInt(const algo::I32Dec2& parent) {
+inline i32 algo::value_GetInt(const algo::I32Dec2& parent) throw() {
     i32 ret;
     ret = parent.value / 100;
     return ret;
@@ -1727,17 +1727,17 @@ inline i32 algo::value_GetInt(const algo::I32Dec2& parent) {
 
 // --- algo.I32Dec2.value.GetScale
 // Return constant 100
-inline i32 algo::I32Dec2_GetScale() {
+inline i32 algo::I32Dec2_GetScale() throw() {
     return 100;
 }
 
 // --- algo.I32Dec2.value.Cast
-inline  algo::I32Dec2::operator i32() const {
+inline  algo::I32Dec2::operator i32() const throw() {
     return i32((*this).value);
 }
 
 // --- algo.I32Dec2..Hash
-inline u32 algo::I32Dec2_Hash(u32 prev, algo::I32Dec2 rhs) {
+inline u32 algo::I32Dec2_Hash(u32 prev, algo::I32Dec2 rhs) throw() {
     prev = i32_Hash(prev, rhs.value);
     return prev;
 }
@@ -1749,12 +1749,12 @@ inline void algo::I32Dec2_Init(algo::I32Dec2& parent) {
 }
 
 // --- algo.I32Dec2..Ctor
-inline  algo::I32Dec2::I32Dec2() {
+inline  algo::I32Dec2::I32Dec2() throw() {
     algo::I32Dec2_Init(*this);
 }
 
 // --- algo.I32Dec2..FieldwiseCtor
-inline  algo::I32Dec2::I32Dec2(i32 in_value)
+inline  algo::I32Dec2::I32Dec2(i32 in_value) throw()
     : value(in_value)
  {
 }
@@ -1766,14 +1766,14 @@ inline  algo::I32Dec2::I32Dec2(i32 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I32Dec3& parent, double val) {
+inline void algo::value_qSetDouble(algo::I32Dec3& parent, double val) throw() {
     double intval = val * 1000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I32Dec3.value.GetDouble
-inline double algo::value_GetDouble(const algo::I32Dec3& parent) {
+inline double algo::value_GetDouble(const algo::I32Dec3& parent) throw() {
     double ret;
     ret = parent.value / double(1000);
     return ret;
@@ -1781,7 +1781,7 @@ inline double algo::value_GetDouble(const algo::I32Dec3& parent) {
 
 // --- algo.I32Dec3.value.GetInt
 // Return integer portion (divide number by 1000)
-inline i32 algo::value_GetInt(const algo::I32Dec3& parent) {
+inline i32 algo::value_GetInt(const algo::I32Dec3& parent) throw() {
     i32 ret;
     ret = parent.value / 1000;
     return ret;
@@ -1789,17 +1789,17 @@ inline i32 algo::value_GetInt(const algo::I32Dec3& parent) {
 
 // --- algo.I32Dec3.value.GetScale
 // Return constant 1000
-inline i32 algo::I32Dec3_GetScale() {
+inline i32 algo::I32Dec3_GetScale() throw() {
     return 1000;
 }
 
 // --- algo.I32Dec3.value.Cast
-inline  algo::I32Dec3::operator i32() const {
+inline  algo::I32Dec3::operator i32() const throw() {
     return i32((*this).value);
 }
 
 // --- algo.I32Dec3..Hash
-inline u32 algo::I32Dec3_Hash(u32 prev, algo::I32Dec3 rhs) {
+inline u32 algo::I32Dec3_Hash(u32 prev, algo::I32Dec3 rhs) throw() {
     prev = i32_Hash(prev, rhs.value);
     return prev;
 }
@@ -1811,12 +1811,12 @@ inline void algo::I32Dec3_Init(algo::I32Dec3& parent) {
 }
 
 // --- algo.I32Dec3..Ctor
-inline  algo::I32Dec3::I32Dec3() {
+inline  algo::I32Dec3::I32Dec3() throw() {
     algo::I32Dec3_Init(*this);
 }
 
 // --- algo.I32Dec3..FieldwiseCtor
-inline  algo::I32Dec3::I32Dec3(i32 in_value)
+inline  algo::I32Dec3::I32Dec3(i32 in_value) throw()
     : value(in_value)
  {
 }
@@ -1828,14 +1828,14 @@ inline  algo::I32Dec3::I32Dec3(i32 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I32Dec4& parent, double val) {
+inline void algo::value_qSetDouble(algo::I32Dec4& parent, double val) throw() {
     double intval = val * 10000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I32Dec4.value.GetDouble
-inline double algo::value_GetDouble(const algo::I32Dec4& parent) {
+inline double algo::value_GetDouble(const algo::I32Dec4& parent) throw() {
     double ret;
     ret = parent.value / double(10000);
     return ret;
@@ -1843,7 +1843,7 @@ inline double algo::value_GetDouble(const algo::I32Dec4& parent) {
 
 // --- algo.I32Dec4.value.GetInt
 // Return integer portion (divide number by 10000)
-inline i32 algo::value_GetInt(const algo::I32Dec4& parent) {
+inline i32 algo::value_GetInt(const algo::I32Dec4& parent) throw() {
     i32 ret;
     ret = parent.value / 10000;
     return ret;
@@ -1851,17 +1851,17 @@ inline i32 algo::value_GetInt(const algo::I32Dec4& parent) {
 
 // --- algo.I32Dec4.value.GetScale
 // Return constant 10000
-inline i32 algo::I32Dec4_GetScale() {
+inline i32 algo::I32Dec4_GetScale() throw() {
     return 10000;
 }
 
 // --- algo.I32Dec4.value.Cast
-inline  algo::I32Dec4::operator i32() const {
+inline  algo::I32Dec4::operator i32() const throw() {
     return i32((*this).value);
 }
 
 // --- algo.I32Dec4..Hash
-inline u32 algo::I32Dec4_Hash(u32 prev, algo::I32Dec4 rhs) {
+inline u32 algo::I32Dec4_Hash(u32 prev, algo::I32Dec4 rhs) throw() {
     prev = i32_Hash(prev, rhs.value);
     return prev;
 }
@@ -1873,12 +1873,12 @@ inline void algo::I32Dec4_Init(algo::I32Dec4& parent) {
 }
 
 // --- algo.I32Dec4..Ctor
-inline  algo::I32Dec4::I32Dec4() {
+inline  algo::I32Dec4::I32Dec4() throw() {
     algo::I32Dec4_Init(*this);
 }
 
 // --- algo.I32Dec4..FieldwiseCtor
-inline  algo::I32Dec4::I32Dec4(i32 in_value)
+inline  algo::I32Dec4::I32Dec4(i32 in_value) throw()
     : value(in_value)
  {
 }
@@ -1890,14 +1890,14 @@ inline  algo::I32Dec4::I32Dec4(i32 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I32Dec5& parent, double val) {
+inline void algo::value_qSetDouble(algo::I32Dec5& parent, double val) throw() {
     double intval = val * 100000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I32Dec5.value.GetDouble
-inline double algo::value_GetDouble(const algo::I32Dec5& parent) {
+inline double algo::value_GetDouble(const algo::I32Dec5& parent) throw() {
     double ret;
     ret = parent.value / double(100000);
     return ret;
@@ -1905,7 +1905,7 @@ inline double algo::value_GetDouble(const algo::I32Dec5& parent) {
 
 // --- algo.I32Dec5.value.GetInt
 // Return integer portion (divide number by 100000)
-inline i32 algo::value_GetInt(const algo::I32Dec5& parent) {
+inline i32 algo::value_GetInt(const algo::I32Dec5& parent) throw() {
     i32 ret;
     ret = parent.value / 100000;
     return ret;
@@ -1913,17 +1913,17 @@ inline i32 algo::value_GetInt(const algo::I32Dec5& parent) {
 
 // --- algo.I32Dec5.value.GetScale
 // Return constant 100000
-inline i32 algo::I32Dec5_GetScale() {
+inline i32 algo::I32Dec5_GetScale() throw() {
     return 100000;
 }
 
 // --- algo.I32Dec5.value.Cast
-inline  algo::I32Dec5::operator i32() const {
+inline  algo::I32Dec5::operator i32() const throw() {
     return i32((*this).value);
 }
 
 // --- algo.I32Dec5..Hash
-inline u32 algo::I32Dec5_Hash(u32 prev, algo::I32Dec5 rhs) {
+inline u32 algo::I32Dec5_Hash(u32 prev, algo::I32Dec5 rhs) throw() {
     prev = i32_Hash(prev, rhs.value);
     return prev;
 }
@@ -1935,12 +1935,12 @@ inline void algo::I32Dec5_Init(algo::I32Dec5& parent) {
 }
 
 // --- algo.I32Dec5..Ctor
-inline  algo::I32Dec5::I32Dec5() {
+inline  algo::I32Dec5::I32Dec5() throw() {
     algo::I32Dec5_Init(*this);
 }
 
 // --- algo.I32Dec5..FieldwiseCtor
-inline  algo::I32Dec5::I32Dec5(i32 in_value)
+inline  algo::I32Dec5::I32Dec5(i32 in_value) throw()
     : value(in_value)
  {
 }
@@ -1952,14 +1952,14 @@ inline  algo::I32Dec5::I32Dec5(i32 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I64Dec1& parent, double val) {
+inline void algo::value_qSetDouble(algo::I64Dec1& parent, double val) throw() {
     double intval = val * 10 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I64Dec1.value.GetDouble
-inline double algo::value_GetDouble(const algo::I64Dec1& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec1& parent) throw() {
     double ret;
     ret = parent.value / double(10);
     return ret;
@@ -1967,7 +1967,7 @@ inline double algo::value_GetDouble(const algo::I64Dec1& parent) {
 
 // --- algo.I64Dec1.value.GetInt
 // Return integer portion (divide number by 10)
-inline i64 algo::value_GetInt(const algo::I64Dec1& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec1& parent) throw() {
     i64 ret;
     ret = parent.value / 10;
     return ret;
@@ -1975,17 +1975,17 @@ inline i64 algo::value_GetInt(const algo::I64Dec1& parent) {
 
 // --- algo.I64Dec1.value.GetScale
 // Return constant 10
-inline i64 algo::I64Dec1_GetScale() {
+inline i64 algo::I64Dec1_GetScale() throw() {
     return 10;
 }
 
 // --- algo.I64Dec1.value.Cast
-inline  algo::I64Dec1::operator i64() const {
+inline  algo::I64Dec1::operator i64() const throw() {
     return i64((*this).value);
 }
 
 // --- algo.I64Dec1..Hash
-inline u32 algo::I64Dec1_Hash(u32 prev, algo::I64Dec1 rhs) {
+inline u32 algo::I64Dec1_Hash(u32 prev, algo::I64Dec1 rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
@@ -1997,12 +1997,12 @@ inline void algo::I64Dec1_Init(algo::I64Dec1& parent) {
 }
 
 // --- algo.I64Dec1..Ctor
-inline  algo::I64Dec1::I64Dec1() {
+inline  algo::I64Dec1::I64Dec1() throw() {
     algo::I64Dec1_Init(*this);
 }
 
 // --- algo.I64Dec1..FieldwiseCtor
-inline  algo::I64Dec1::I64Dec1(i64 in_value)
+inline  algo::I64Dec1::I64Dec1(i64 in_value) throw()
     : value(in_value)
  {
 }
@@ -2014,14 +2014,14 @@ inline  algo::I64Dec1::I64Dec1(i64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I64Dec10& parent, double val) {
+inline void algo::value_qSetDouble(algo::I64Dec10& parent, double val) throw() {
     double intval = val * 10000000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I64Dec10.value.GetDouble
-inline double algo::value_GetDouble(const algo::I64Dec10& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec10& parent) throw() {
     double ret;
     ret = parent.value / double(10000000000);
     return ret;
@@ -2029,7 +2029,7 @@ inline double algo::value_GetDouble(const algo::I64Dec10& parent) {
 
 // --- algo.I64Dec10.value.GetInt
 // Return integer portion (divide number by 10000000000)
-inline i64 algo::value_GetInt(const algo::I64Dec10& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec10& parent) throw() {
     i64 ret;
     ret = parent.value / 10000000000;
     return ret;
@@ -2037,17 +2037,17 @@ inline i64 algo::value_GetInt(const algo::I64Dec10& parent) {
 
 // --- algo.I64Dec10.value.GetScale
 // Return constant 10000000000
-inline i64 algo::I64Dec10_GetScale() {
+inline i64 algo::I64Dec10_GetScale() throw() {
     return 10000000000;
 }
 
 // --- algo.I64Dec10.value.Cast
-inline  algo::I64Dec10::operator i64() const {
+inline  algo::I64Dec10::operator i64() const throw() {
     return i64((*this).value);
 }
 
 // --- algo.I64Dec10..Hash
-inline u32 algo::I64Dec10_Hash(u32 prev, algo::I64Dec10 rhs) {
+inline u32 algo::I64Dec10_Hash(u32 prev, algo::I64Dec10 rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
@@ -2059,12 +2059,12 @@ inline void algo::I64Dec10_Init(algo::I64Dec10& parent) {
 }
 
 // --- algo.I64Dec10..Ctor
-inline  algo::I64Dec10::I64Dec10() {
+inline  algo::I64Dec10::I64Dec10() throw() {
     algo::I64Dec10_Init(*this);
 }
 
 // --- algo.I64Dec10..FieldwiseCtor
-inline  algo::I64Dec10::I64Dec10(i64 in_value)
+inline  algo::I64Dec10::I64Dec10(i64 in_value) throw()
     : value(in_value)
  {
 }
@@ -2076,14 +2076,14 @@ inline  algo::I64Dec10::I64Dec10(i64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I64Dec2& parent, double val) {
+inline void algo::value_qSetDouble(algo::I64Dec2& parent, double val) throw() {
     double intval = val * 100 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I64Dec2.value.GetDouble
-inline double algo::value_GetDouble(const algo::I64Dec2& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec2& parent) throw() {
     double ret;
     ret = parent.value / double(100);
     return ret;
@@ -2091,7 +2091,7 @@ inline double algo::value_GetDouble(const algo::I64Dec2& parent) {
 
 // --- algo.I64Dec2.value.GetInt
 // Return integer portion (divide number by 100)
-inline i64 algo::value_GetInt(const algo::I64Dec2& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec2& parent) throw() {
     i64 ret;
     ret = parent.value / 100;
     return ret;
@@ -2099,17 +2099,17 @@ inline i64 algo::value_GetInt(const algo::I64Dec2& parent) {
 
 // --- algo.I64Dec2.value.GetScale
 // Return constant 100
-inline i64 algo::I64Dec2_GetScale() {
+inline i64 algo::I64Dec2_GetScale() throw() {
     return 100;
 }
 
 // --- algo.I64Dec2.value.Cast
-inline  algo::I64Dec2::operator i64() const {
+inline  algo::I64Dec2::operator i64() const throw() {
     return i64((*this).value);
 }
 
 // --- algo.I64Dec2..Hash
-inline u32 algo::I64Dec2_Hash(u32 prev, algo::I64Dec2 rhs) {
+inline u32 algo::I64Dec2_Hash(u32 prev, algo::I64Dec2 rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
@@ -2121,12 +2121,12 @@ inline void algo::I64Dec2_Init(algo::I64Dec2& parent) {
 }
 
 // --- algo.I64Dec2..Ctor
-inline  algo::I64Dec2::I64Dec2() {
+inline  algo::I64Dec2::I64Dec2() throw() {
     algo::I64Dec2_Init(*this);
 }
 
 // --- algo.I64Dec2..FieldwiseCtor
-inline  algo::I64Dec2::I64Dec2(i64 in_value)
+inline  algo::I64Dec2::I64Dec2(i64 in_value) throw()
     : value(in_value)
  {
 }
@@ -2138,14 +2138,14 @@ inline  algo::I64Dec2::I64Dec2(i64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I64Dec3& parent, double val) {
+inline void algo::value_qSetDouble(algo::I64Dec3& parent, double val) throw() {
     double intval = val * 1000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I64Dec3.value.GetDouble
-inline double algo::value_GetDouble(const algo::I64Dec3& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec3& parent) throw() {
     double ret;
     ret = parent.value / double(1000);
     return ret;
@@ -2153,7 +2153,7 @@ inline double algo::value_GetDouble(const algo::I64Dec3& parent) {
 
 // --- algo.I64Dec3.value.GetInt
 // Return integer portion (divide number by 1000)
-inline i64 algo::value_GetInt(const algo::I64Dec3& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec3& parent) throw() {
     i64 ret;
     ret = parent.value / 1000;
     return ret;
@@ -2161,17 +2161,17 @@ inline i64 algo::value_GetInt(const algo::I64Dec3& parent) {
 
 // --- algo.I64Dec3.value.GetScale
 // Return constant 1000
-inline i64 algo::I64Dec3_GetScale() {
+inline i64 algo::I64Dec3_GetScale() throw() {
     return 1000;
 }
 
 // --- algo.I64Dec3.value.Cast
-inline  algo::I64Dec3::operator i64() const {
+inline  algo::I64Dec3::operator i64() const throw() {
     return i64((*this).value);
 }
 
 // --- algo.I64Dec3..Hash
-inline u32 algo::I64Dec3_Hash(u32 prev, algo::I64Dec3 rhs) {
+inline u32 algo::I64Dec3_Hash(u32 prev, algo::I64Dec3 rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
@@ -2183,12 +2183,12 @@ inline void algo::I64Dec3_Init(algo::I64Dec3& parent) {
 }
 
 // --- algo.I64Dec3..Ctor
-inline  algo::I64Dec3::I64Dec3() {
+inline  algo::I64Dec3::I64Dec3() throw() {
     algo::I64Dec3_Init(*this);
 }
 
 // --- algo.I64Dec3..FieldwiseCtor
-inline  algo::I64Dec3::I64Dec3(i64 in_value)
+inline  algo::I64Dec3::I64Dec3(i64 in_value) throw()
     : value(in_value)
  {
 }
@@ -2200,14 +2200,14 @@ inline  algo::I64Dec3::I64Dec3(i64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I64Dec4& parent, double val) {
+inline void algo::value_qSetDouble(algo::I64Dec4& parent, double val) throw() {
     double intval = val * 10000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I64Dec4.value.GetDouble
-inline double algo::value_GetDouble(const algo::I64Dec4& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec4& parent) throw() {
     double ret;
     ret = parent.value / double(10000);
     return ret;
@@ -2215,7 +2215,7 @@ inline double algo::value_GetDouble(const algo::I64Dec4& parent) {
 
 // --- algo.I64Dec4.value.GetInt
 // Return integer portion (divide number by 10000)
-inline i64 algo::value_GetInt(const algo::I64Dec4& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec4& parent) throw() {
     i64 ret;
     ret = parent.value / 10000;
     return ret;
@@ -2223,17 +2223,17 @@ inline i64 algo::value_GetInt(const algo::I64Dec4& parent) {
 
 // --- algo.I64Dec4.value.GetScale
 // Return constant 10000
-inline i64 algo::I64Dec4_GetScale() {
+inline i64 algo::I64Dec4_GetScale() throw() {
     return 10000;
 }
 
 // --- algo.I64Dec4.value.Cast
-inline  algo::I64Dec4::operator i64() const {
+inline  algo::I64Dec4::operator i64() const throw() {
     return i64((*this).value);
 }
 
 // --- algo.I64Dec4..Hash
-inline u32 algo::I64Dec4_Hash(u32 prev, algo::I64Dec4 rhs) {
+inline u32 algo::I64Dec4_Hash(u32 prev, algo::I64Dec4 rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
@@ -2245,12 +2245,12 @@ inline void algo::I64Dec4_Init(algo::I64Dec4& parent) {
 }
 
 // --- algo.I64Dec4..Ctor
-inline  algo::I64Dec4::I64Dec4() {
+inline  algo::I64Dec4::I64Dec4() throw() {
     algo::I64Dec4_Init(*this);
 }
 
 // --- algo.I64Dec4..FieldwiseCtor
-inline  algo::I64Dec4::I64Dec4(i64 in_value)
+inline  algo::I64Dec4::I64Dec4(i64 in_value) throw()
     : value(in_value)
  {
 }
@@ -2262,14 +2262,14 @@ inline  algo::I64Dec4::I64Dec4(i64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I64Dec5& parent, double val) {
+inline void algo::value_qSetDouble(algo::I64Dec5& parent, double val) throw() {
     double intval = val * 100000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I64Dec5.value.GetDouble
-inline double algo::value_GetDouble(const algo::I64Dec5& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec5& parent) throw() {
     double ret;
     ret = parent.value / double(100000);
     return ret;
@@ -2277,7 +2277,7 @@ inline double algo::value_GetDouble(const algo::I64Dec5& parent) {
 
 // --- algo.I64Dec5.value.GetInt
 // Return integer portion (divide number by 100000)
-inline i64 algo::value_GetInt(const algo::I64Dec5& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec5& parent) throw() {
     i64 ret;
     ret = parent.value / 100000;
     return ret;
@@ -2285,17 +2285,17 @@ inline i64 algo::value_GetInt(const algo::I64Dec5& parent) {
 
 // --- algo.I64Dec5.value.GetScale
 // Return constant 100000
-inline i64 algo::I64Dec5_GetScale() {
+inline i64 algo::I64Dec5_GetScale() throw() {
     return 100000;
 }
 
 // --- algo.I64Dec5.value.Cast
-inline  algo::I64Dec5::operator i64() const {
+inline  algo::I64Dec5::operator i64() const throw() {
     return i64((*this).value);
 }
 
 // --- algo.I64Dec5..Hash
-inline u32 algo::I64Dec5_Hash(u32 prev, algo::I64Dec5 rhs) {
+inline u32 algo::I64Dec5_Hash(u32 prev, algo::I64Dec5 rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
@@ -2307,12 +2307,12 @@ inline void algo::I64Dec5_Init(algo::I64Dec5& parent) {
 }
 
 // --- algo.I64Dec5..Ctor
-inline  algo::I64Dec5::I64Dec5() {
+inline  algo::I64Dec5::I64Dec5() throw() {
     algo::I64Dec5_Init(*this);
 }
 
 // --- algo.I64Dec5..FieldwiseCtor
-inline  algo::I64Dec5::I64Dec5(i64 in_value)
+inline  algo::I64Dec5::I64Dec5(i64 in_value) throw()
     : value(in_value)
  {
 }
@@ -2324,14 +2324,14 @@ inline  algo::I64Dec5::I64Dec5(i64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I64Dec6& parent, double val) {
+inline void algo::value_qSetDouble(algo::I64Dec6& parent, double val) throw() {
     double intval = val * 1000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I64Dec6.value.GetDouble
-inline double algo::value_GetDouble(const algo::I64Dec6& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec6& parent) throw() {
     double ret;
     ret = parent.value / double(1000000);
     return ret;
@@ -2339,7 +2339,7 @@ inline double algo::value_GetDouble(const algo::I64Dec6& parent) {
 
 // --- algo.I64Dec6.value.GetInt
 // Return integer portion (divide number by 1000000)
-inline i64 algo::value_GetInt(const algo::I64Dec6& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec6& parent) throw() {
     i64 ret;
     ret = parent.value / 1000000;
     return ret;
@@ -2347,17 +2347,17 @@ inline i64 algo::value_GetInt(const algo::I64Dec6& parent) {
 
 // --- algo.I64Dec6.value.GetScale
 // Return constant 1000000
-inline i64 algo::I64Dec6_GetScale() {
+inline i64 algo::I64Dec6_GetScale() throw() {
     return 1000000;
 }
 
 // --- algo.I64Dec6.value.Cast
-inline  algo::I64Dec6::operator i64() const {
+inline  algo::I64Dec6::operator i64() const throw() {
     return i64((*this).value);
 }
 
 // --- algo.I64Dec6..Hash
-inline u32 algo::I64Dec6_Hash(u32 prev, algo::I64Dec6 rhs) {
+inline u32 algo::I64Dec6_Hash(u32 prev, algo::I64Dec6 rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
@@ -2369,12 +2369,12 @@ inline void algo::I64Dec6_Init(algo::I64Dec6& parent) {
 }
 
 // --- algo.I64Dec6..Ctor
-inline  algo::I64Dec6::I64Dec6() {
+inline  algo::I64Dec6::I64Dec6() throw() {
     algo::I64Dec6_Init(*this);
 }
 
 // --- algo.I64Dec6..FieldwiseCtor
-inline  algo::I64Dec6::I64Dec6(i64 in_value)
+inline  algo::I64Dec6::I64Dec6(i64 in_value) throw()
     : value(in_value)
  {
 }
@@ -2386,14 +2386,14 @@ inline  algo::I64Dec6::I64Dec6(i64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I64Dec7& parent, double val) {
+inline void algo::value_qSetDouble(algo::I64Dec7& parent, double val) throw() {
     double intval = val * 10000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I64Dec7.value.GetDouble
-inline double algo::value_GetDouble(const algo::I64Dec7& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec7& parent) throw() {
     double ret;
     ret = parent.value / double(10000000);
     return ret;
@@ -2401,7 +2401,7 @@ inline double algo::value_GetDouble(const algo::I64Dec7& parent) {
 
 // --- algo.I64Dec7.value.GetInt
 // Return integer portion (divide number by 10000000)
-inline i64 algo::value_GetInt(const algo::I64Dec7& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec7& parent) throw() {
     i64 ret;
     ret = parent.value / 10000000;
     return ret;
@@ -2409,17 +2409,17 @@ inline i64 algo::value_GetInt(const algo::I64Dec7& parent) {
 
 // --- algo.I64Dec7.value.GetScale
 // Return constant 10000000
-inline i64 algo::I64Dec7_GetScale() {
+inline i64 algo::I64Dec7_GetScale() throw() {
     return 10000000;
 }
 
 // --- algo.I64Dec7.value.Cast
-inline  algo::I64Dec7::operator i64() const {
+inline  algo::I64Dec7::operator i64() const throw() {
     return i64((*this).value);
 }
 
 // --- algo.I64Dec7..Hash
-inline u32 algo::I64Dec7_Hash(u32 prev, algo::I64Dec7 rhs) {
+inline u32 algo::I64Dec7_Hash(u32 prev, algo::I64Dec7 rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
@@ -2431,12 +2431,12 @@ inline void algo::I64Dec7_Init(algo::I64Dec7& parent) {
 }
 
 // --- algo.I64Dec7..Ctor
-inline  algo::I64Dec7::I64Dec7() {
+inline  algo::I64Dec7::I64Dec7() throw() {
     algo::I64Dec7_Init(*this);
 }
 
 // --- algo.I64Dec7..FieldwiseCtor
-inline  algo::I64Dec7::I64Dec7(i64 in_value)
+inline  algo::I64Dec7::I64Dec7(i64 in_value) throw()
     : value(in_value)
  {
 }
@@ -2448,14 +2448,14 @@ inline  algo::I64Dec7::I64Dec7(i64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I64Dec8& parent, double val) {
+inline void algo::value_qSetDouble(algo::I64Dec8& parent, double val) throw() {
     double intval = val * 100000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I64Dec8.value.GetDouble
-inline double algo::value_GetDouble(const algo::I64Dec8& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec8& parent) throw() {
     double ret;
     ret = parent.value / double(100000000);
     return ret;
@@ -2463,7 +2463,7 @@ inline double algo::value_GetDouble(const algo::I64Dec8& parent) {
 
 // --- algo.I64Dec8.value.GetInt
 // Return integer portion (divide number by 100000000)
-inline i64 algo::value_GetInt(const algo::I64Dec8& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec8& parent) throw() {
     i64 ret;
     ret = parent.value / 100000000;
     return ret;
@@ -2471,17 +2471,17 @@ inline i64 algo::value_GetInt(const algo::I64Dec8& parent) {
 
 // --- algo.I64Dec8.value.GetScale
 // Return constant 100000000
-inline i64 algo::I64Dec8_GetScale() {
+inline i64 algo::I64Dec8_GetScale() throw() {
     return 100000000;
 }
 
 // --- algo.I64Dec8.value.Cast
-inline  algo::I64Dec8::operator i64() const {
+inline  algo::I64Dec8::operator i64() const throw() {
     return i64((*this).value);
 }
 
 // --- algo.I64Dec8..Hash
-inline u32 algo::I64Dec8_Hash(u32 prev, algo::I64Dec8 rhs) {
+inline u32 algo::I64Dec8_Hash(u32 prev, algo::I64Dec8 rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
@@ -2493,12 +2493,12 @@ inline void algo::I64Dec8_Init(algo::I64Dec8& parent) {
 }
 
 // --- algo.I64Dec8..Ctor
-inline  algo::I64Dec8::I64Dec8() {
+inline  algo::I64Dec8::I64Dec8() throw() {
     algo::I64Dec8_Init(*this);
 }
 
 // --- algo.I64Dec8..FieldwiseCtor
-inline  algo::I64Dec8::I64Dec8(i64 in_value)
+inline  algo::I64Dec8::I64Dec8(i64 in_value) throw()
     : value(in_value)
  {
 }
@@ -2510,14 +2510,14 @@ inline  algo::I64Dec8::I64Dec8(i64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::I64Dec9& parent, double val) {
+inline void algo::value_qSetDouble(algo::I64Dec9& parent, double val) throw() {
     double intval = val * 1000000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.I64Dec9.value.GetDouble
-inline double algo::value_GetDouble(const algo::I64Dec9& parent) {
+inline double algo::value_GetDouble(const algo::I64Dec9& parent) throw() {
     double ret;
     ret = parent.value / double(1000000000);
     return ret;
@@ -2525,7 +2525,7 @@ inline double algo::value_GetDouble(const algo::I64Dec9& parent) {
 
 // --- algo.I64Dec9.value.GetInt
 // Return integer portion (divide number by 1000000000)
-inline i64 algo::value_GetInt(const algo::I64Dec9& parent) {
+inline i64 algo::value_GetInt(const algo::I64Dec9& parent) throw() {
     i64 ret;
     ret = parent.value / 1000000000;
     return ret;
@@ -2533,17 +2533,17 @@ inline i64 algo::value_GetInt(const algo::I64Dec9& parent) {
 
 // --- algo.I64Dec9.value.GetScale
 // Return constant 1000000000
-inline i64 algo::I64Dec9_GetScale() {
+inline i64 algo::I64Dec9_GetScale() throw() {
     return 1000000000;
 }
 
 // --- algo.I64Dec9.value.Cast
-inline  algo::I64Dec9::operator i64() const {
+inline  algo::I64Dec9::operator i64() const throw() {
     return i64((*this).value);
 }
 
 // --- algo.I64Dec9..Hash
-inline u32 algo::I64Dec9_Hash(u32 prev, algo::I64Dec9 rhs) {
+inline u32 algo::I64Dec9_Hash(u32 prev, algo::I64Dec9 rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
@@ -2555,32 +2555,32 @@ inline void algo::I64Dec9_Init(algo::I64Dec9& parent) {
 }
 
 // --- algo.I64Dec9..Ctor
-inline  algo::I64Dec9::I64Dec9() {
+inline  algo::I64Dec9::I64Dec9() throw() {
     algo::I64Dec9_Init(*this);
 }
 
 // --- algo.I64Dec9..FieldwiseCtor
-inline  algo::I64Dec9::I64Dec9(i64 in_value)
+inline  algo::I64Dec9::I64Dec9(i64 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.IOEvtFlags.value.Cast
-inline  algo::IOEvtFlags::operator algo_IOEvtFlagsEnum() const {
+inline  algo::IOEvtFlags::operator algo_IOEvtFlagsEnum() const throw() {
     return algo_IOEvtFlagsEnum((*this).value);
 }
 
 // --- algo.IOEvtFlags.read.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 0.
-inline bool algo::read_Get(const algo::IOEvtFlags& parent) {
+inline bool algo::read_Get(const algo::IOEvtFlags& parent) throw() {
     return bool((parent.value >> 0) & 0x01);
 }
 
 // --- algo.IOEvtFlags.read.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 0.
-inline void algo::read_Set(algo::IOEvtFlags& parent, bool rhs) {
+inline void algo::read_Set(algo::IOEvtFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 0;
     u32 t2    = (u32(rhs) & 0x01) << 0;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -2589,14 +2589,14 @@ inline void algo::read_Set(algo::IOEvtFlags& parent, bool rhs) {
 // --- algo.IOEvtFlags.write.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 1.
-inline bool algo::write_Get(const algo::IOEvtFlags& parent) {
+inline bool algo::write_Get(const algo::IOEvtFlags& parent) throw() {
     return bool((parent.value >> 1) & 0x01);
 }
 
 // --- algo.IOEvtFlags.write.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 1.
-inline void algo::write_Set(algo::IOEvtFlags& parent, bool rhs) {
+inline void algo::write_Set(algo::IOEvtFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 1;
     u32 t2    = (u32(rhs) & 0x01) << 1;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -2605,14 +2605,14 @@ inline void algo::write_Set(algo::IOEvtFlags& parent, bool rhs) {
 // --- algo.IOEvtFlags.eof.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 2.
-inline bool algo::eof_Get(const algo::IOEvtFlags& parent) {
+inline bool algo::eof_Get(const algo::IOEvtFlags& parent) throw() {
     return bool((parent.value >> 2) & 0x01);
 }
 
 // --- algo.IOEvtFlags.eof.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 2.
-inline void algo::eof_Set(algo::IOEvtFlags& parent, bool rhs) {
+inline void algo::eof_Set(algo::IOEvtFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 2;
     u32 t2    = (u32(rhs) & 0x01) << 2;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -2621,14 +2621,14 @@ inline void algo::eof_Set(algo::IOEvtFlags& parent, bool rhs) {
 // --- algo.IOEvtFlags.err.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 3.
-inline bool algo::err_Get(const algo::IOEvtFlags& parent) {
+inline bool algo::err_Get(const algo::IOEvtFlags& parent) throw() {
     return bool((parent.value >> 3) & 0x01);
 }
 
 // --- algo.IOEvtFlags.err.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 3.
-inline void algo::err_Set(algo::IOEvtFlags& parent, bool rhs) {
+inline void algo::err_Set(algo::IOEvtFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 3;
     u32 t2    = (u32(rhs) & 0x01) << 3;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -2641,18 +2641,18 @@ inline void algo::IOEvtFlags_Init(algo::IOEvtFlags& parent) {
 }
 
 // --- algo.IOEvtFlags..Ctor
-inline  algo::IOEvtFlags::IOEvtFlags() {
+inline  algo::IOEvtFlags::IOEvtFlags() throw() {
     algo::IOEvtFlags_Init(*this);
 }
 
 // --- algo.IOEvtFlags..FieldwiseCtor
-inline  algo::IOEvtFlags::IOEvtFlags(u32 in_value)
+inline  algo::IOEvtFlags::IOEvtFlags(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.IOEvtFlags..EnumCtor
-inline  algo::IOEvtFlags::IOEvtFlags(algo_IOEvtFlagsEnum arg) {
+inline  algo::IOEvtFlags::IOEvtFlags(algo_IOEvtFlagsEnum arg) throw() {
     this->value = u32(arg);
 }
 
@@ -2664,14 +2664,14 @@ inline void algo::IPoint_Init(algo::IPoint& parent) {
 }
 
 // --- algo.IPoint..Ctor
-inline  algo::IPoint::IPoint() {
+inline  algo::IPoint::IPoint() throw() {
     algo::IPoint_Init(*this);
 }
 
 // --- algo.Smallstr50.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr50& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr50& parent, char c) throw() {
     if (parent.n_ch < 50) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -2681,7 +2681,7 @@ inline void algo::ch_Add(algo::Smallstr50& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr50& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr50& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 50) {
         n_new = 50 - parent.n_ch;
@@ -2692,7 +2692,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr50& parent, algo::strptr str) {
 
 // --- algo.Smallstr50.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr50& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr50& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -2704,19 +2704,19 @@ inline u32 algo::Smallstr50_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr50.ch.Init
-inline void algo::ch_Init(algo::Smallstr50 &parent) {
+inline void algo::ch_Init(algo::Smallstr50 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr50.ch.Max
 // always return constant 50
-inline int algo::ch_Max(algo::Smallstr50& parent) {
+inline int algo::ch_Max(algo::Smallstr50& parent) throw() {
     (void)parent;
     return 50;
 }
 
 // --- algo.Smallstr50.ch.N
-inline int algo::ch_N(const algo::Smallstr50& parent) {
+inline int algo::ch_N(const algo::Smallstr50& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -2724,57 +2724,57 @@ inline int algo::ch_N(const algo::Smallstr50& parent) {
 
 // --- algo.Smallstr50.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr50::operator =(const algo::strptr &str) {
+inline void algo::Smallstr50::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr50.ch.CtorStrptr
-inline  algo::Smallstr50::Smallstr50(const algo::strptr &rhs) {
+inline  algo::Smallstr50::Smallstr50(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr50.ch.Cast
-inline  algo::Smallstr50::operator algo::strptr() const {
+inline  algo::Smallstr50::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr50..EqOp
-inline bool algo::Smallstr50::operator ==(const algo::Smallstr50 &rhs) const {
+inline bool algo::Smallstr50::operator ==(const algo::Smallstr50 &rhs) const throw() {
     return algo::Smallstr50_Eq(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
 }
 
 // --- algo.Smallstr50..NeOp
-inline bool algo::Smallstr50::operator !=(const algo::Smallstr50 &rhs) const {
+inline bool algo::Smallstr50::operator !=(const algo::Smallstr50 &rhs) const throw() {
     return !algo::Smallstr50_Eq(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
 }
 
 // --- algo.Smallstr50..LtOp
-inline bool algo::Smallstr50::operator <(const algo::Smallstr50 &rhs) const {
+inline bool algo::Smallstr50::operator <(const algo::Smallstr50 &rhs) const throw() {
     return algo::Smallstr50_Lt(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
 }
 
 // --- algo.Smallstr50..GtOp
-inline bool algo::Smallstr50::operator >(const algo::Smallstr50 &rhs) const {
+inline bool algo::Smallstr50::operator >(const algo::Smallstr50 &rhs) const throw() {
     return algo::Smallstr50_Lt(const_cast<algo::Smallstr50&>(rhs),const_cast<algo::Smallstr50&>(*this));
 }
 
 // --- algo.Smallstr50..LeOp
-inline bool algo::Smallstr50::operator <=(const algo::Smallstr50 &rhs) const {
+inline bool algo::Smallstr50::operator <=(const algo::Smallstr50 &rhs) const throw() {
     return !algo::Smallstr50_Lt(const_cast<algo::Smallstr50&>(rhs),const_cast<algo::Smallstr50&>(*this));
 }
 
 // --- algo.Smallstr50..GeOp
-inline bool algo::Smallstr50::operator >=(const algo::Smallstr50 &rhs) const {
+inline bool algo::Smallstr50::operator >=(const algo::Smallstr50 &rhs) const throw() {
     return !algo::Smallstr50_Lt(const_cast<algo::Smallstr50&>(*this),const_cast<algo::Smallstr50&>(rhs));
 }
 
 // --- algo.Smallstr50..Lt
-inline bool algo::Smallstr50_Lt(algo::Smallstr50& lhs, algo::Smallstr50& rhs) {
+inline bool algo::Smallstr50_Lt(algo::Smallstr50& lhs, algo::Smallstr50& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.Smallstr50..Cmp
-inline i32 algo::Smallstr50_Cmp(algo::Smallstr50& lhs, algo::Smallstr50& rhs) {
+inline i32 algo::Smallstr50_Cmp(algo::Smallstr50& lhs, algo::Smallstr50& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -2787,7 +2787,7 @@ inline void algo::Smallstr50_Init(algo::Smallstr50& parent) {
 }
 
 // --- algo.Smallstr50..Eq
-inline bool algo::Smallstr50_Eq(algo::Smallstr50& lhs, algo::Smallstr50& rhs) {
+inline bool algo::Smallstr50_Eq(algo::Smallstr50& lhs, algo::Smallstr50& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -2795,7 +2795,7 @@ inline bool algo::Smallstr50_Eq(algo::Smallstr50& lhs, algo::Smallstr50& rhs) {
 
 // --- algo.Smallstr50..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::Smallstr50_Update(algo::Smallstr50 &lhs, algo::Smallstr50& rhs) {
+inline bool algo::Smallstr50_Update(algo::Smallstr50 &lhs, algo::Smallstr50& rhs) throw() {
     bool ret = !Smallstr50_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -2804,24 +2804,24 @@ inline bool algo::Smallstr50_Update(algo::Smallstr50 &lhs, algo::Smallstr50& rhs
 }
 
 // --- algo.Smallstr50..EqOpAryptr
-inline bool algo::Smallstr50::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr50::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr50..AssignOp
-inline algo::Smallstr50& algo::Smallstr50::operator =(const algo::Smallstr50 &rhs) {
+inline algo::Smallstr50& algo::Smallstr50::operator =(const algo::Smallstr50 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr50..Ctor
-inline  algo::Smallstr50::Smallstr50() {
+inline  algo::Smallstr50::Smallstr50() throw() {
     algo::Smallstr50_Init(*this);
 }
 
 // --- algo.Smallstr50..CopyCtor
-inline  algo::Smallstr50::Smallstr50(const algo::Smallstr50 &rhs) {
+inline  algo::Smallstr50::Smallstr50(const algo::Smallstr50 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -2836,12 +2836,12 @@ inline void algo::Imdb_Init(algo::Imdb& parent) {
 }
 
 // --- algo.Imdb..Ctor
-inline  algo::Imdb::Imdb() {
+inline  algo::Imdb::Imdb() throw() {
     algo::Imdb_Init(*this);
 }
 
 // --- algo.Imdb..FieldwiseCtor
-inline  algo::Imdb::Imdb(const algo::strptr& in_imdb, const algo::ImdbInsertStrptrMaybeFcn& in_InsertStrptrMaybe, const algo::ImdbStepFcn& in_Step, const algo::ImdbMainLoopFcn& in_MainLoop, const algo::ImdbGetTraceFcn& in_GetTrace, const algo::Comment& in_comment)
+inline  algo::Imdb::Imdb(const algo::strptr& in_imdb, const algo::ImdbInsertStrptrMaybeFcn& in_InsertStrptrMaybe, const algo::ImdbStepFcn& in_Step, const algo::ImdbMainLoopFcn& in_MainLoop, const algo::ImdbGetTraceFcn& in_GetTrace, const algo::Comment& in_comment) throw()
     : imdb(in_imdb)
     , InsertStrptrMaybe(in_InsertStrptrMaybe)
     , Step(in_Step)
@@ -2852,7 +2852,7 @@ inline  algo::Imdb::Imdb(const algo::strptr& in_imdb, const algo::ImdbInsertStrp
 }
 
 // --- algo.ImrowPtr.value.Cast
-inline  algo::ImrowPtr::operator u64() const {
+inline  algo::ImrowPtr::operator u64() const throw() {
     return u64((*this).value);
 }
 
@@ -2863,12 +2863,12 @@ inline void algo::ImrowPtr_Init(algo::ImrowPtr& parent) {
 }
 
 // --- algo.ImrowPtr..Ctor
-inline  algo::ImrowPtr::ImrowPtr() {
+inline  algo::ImrowPtr::ImrowPtr() throw() {
     algo::ImrowPtr_Init(*this);
 }
 
 // --- algo.ImrowPtr..FieldwiseCtor
-inline  algo::ImrowPtr::ImrowPtr(u64 in_value)
+inline  algo::ImrowPtr::ImrowPtr(u64 in_value) throw()
     : value(in_value)
  {
 }
@@ -2876,7 +2876,7 @@ inline  algo::ImrowPtr::ImrowPtr(u64 in_value)
 // --- algo.Smallstr100.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr100& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr100& parent, char c) throw() {
     if (parent.n_ch < 100) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -2886,7 +2886,7 @@ inline void algo::ch_Add(algo::Smallstr100& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr100& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr100& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 100) {
         n_new = 100 - parent.n_ch;
@@ -2897,7 +2897,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr100& parent, algo::strptr str) {
 
 // --- algo.Smallstr100.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr100& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr100& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -2909,19 +2909,19 @@ inline u32 algo::Smallstr100_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr100.ch.Init
-inline void algo::ch_Init(algo::Smallstr100 &parent) {
+inline void algo::ch_Init(algo::Smallstr100 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr100.ch.Max
 // always return constant 100
-inline int algo::ch_Max(algo::Smallstr100& parent) {
+inline int algo::ch_Max(algo::Smallstr100& parent) throw() {
     (void)parent;
     return 100;
 }
 
 // --- algo.Smallstr100.ch.N
-inline int algo::ch_N(const algo::Smallstr100& parent) {
+inline int algo::ch_N(const algo::Smallstr100& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -2929,22 +2929,22 @@ inline int algo::ch_N(const algo::Smallstr100& parent) {
 
 // --- algo.Smallstr100.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr100::operator =(const algo::strptr &str) {
+inline void algo::Smallstr100::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr100.ch.CtorStrptr
-inline  algo::Smallstr100::Smallstr100(const algo::strptr &rhs) {
+inline  algo::Smallstr100::Smallstr100(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr100.ch.Cast
-inline  algo::Smallstr100::operator algo::strptr() const {
+inline  algo::Smallstr100::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr100..Cmp
-inline i32 algo::Smallstr100_Cmp(algo::Smallstr100& lhs, algo::Smallstr100& rhs) {
+inline i32 algo::Smallstr100_Cmp(algo::Smallstr100& lhs, algo::Smallstr100& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -2957,31 +2957,31 @@ inline void algo::Smallstr100_Init(algo::Smallstr100& parent) {
 }
 
 // --- algo.Smallstr100..Eq
-inline bool algo::Smallstr100_Eq(algo::Smallstr100& lhs, algo::Smallstr100& rhs) {
+inline bool algo::Smallstr100_Eq(algo::Smallstr100& lhs, algo::Smallstr100& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr100..EqOpAryptr
-inline bool algo::Smallstr100::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr100::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr100..AssignOp
-inline algo::Smallstr100& algo::Smallstr100::operator =(const algo::Smallstr100 &rhs) {
+inline algo::Smallstr100& algo::Smallstr100::operator =(const algo::Smallstr100 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr100..Ctor
-inline  algo::Smallstr100::Smallstr100() {
+inline  algo::Smallstr100::Smallstr100() throw() {
     algo::Smallstr100_Init(*this);
 }
 
 // --- algo.Smallstr100..CopyCtor
-inline  algo::Smallstr100::Smallstr100(const algo::Smallstr100 &rhs) {
+inline  algo::Smallstr100::Smallstr100(const algo::Smallstr100 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -2997,12 +2997,12 @@ inline void algo::Imtable_Init(algo::Imtable& parent) {
 }
 
 // --- algo.Imtable..Ctor
-inline  algo::Imtable::Imtable() {
+inline  algo::Imtable::Imtable() throw() {
     algo::Imtable_Init(*this);
 }
 
 // --- algo.Imtable..FieldwiseCtor
-inline  algo::Imtable::Imtable(const algo::strptr& in_imtable, const algo::strptr& in_elem_type, const algo::ImrowRowidFindFcn& in_c_RowidFind, const algo::ImrowXrefXFcn& in_XrefX, const algo::ImrowNItemsFcn& in_NItems, const algo::ImrowPrintFcn& in_Print, i32 in_size, const algo::strptr& in_ssimfile, const algo::Comment& in_comment)
+inline  algo::Imtable::Imtable(const algo::strptr& in_imtable, const algo::strptr& in_elem_type, const algo::ImrowRowidFindFcn& in_c_RowidFind, const algo::ImrowXrefXFcn& in_XrefX, const algo::ImrowNItemsFcn& in_NItems, const algo::ImrowPrintFcn& in_Print, i32 in_size, const algo::strptr& in_ssimfile, const algo::Comment& in_comment) throw()
     : imtable(in_imtable)
     , elem_type(in_elem_type)
     , c_RowidFind(in_c_RowidFind)
@@ -3023,13 +3023,13 @@ inline void algo::Ipmask_Init(algo::Ipmask& parent) {
 }
 
 // --- algo.Ipmask..Ctor
-inline  algo::Ipmask::Ipmask() {
+inline  algo::Ipmask::Ipmask() throw() {
     algo::Ipmask_Init(*this);
 }
 
 // --- algo.strptr..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::strptr_Update(algo::strptr &lhs, algo::strptr rhs) {
+inline bool algo::strptr_Update(algo::strptr &lhs, algo::strptr rhs) throw() {
     bool ret = !strptr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -3039,13 +3039,13 @@ inline bool algo::strptr_Update(algo::strptr &lhs, algo::strptr rhs) {
 
 // --- algo.LineBuf.buf.EmptyQ
 // Return true if index is empty
-inline bool algo::buf_EmptyQ(algo::LineBuf& parent) {
+inline bool algo::buf_EmptyQ(algo::LineBuf& parent) throw() {
     return parent.buf_n == 0;
 }
 
 // --- algo.LineBuf.buf.Find
 // Look up row by row id. Return NULL if out of range
-inline char* algo::buf_Find(algo::LineBuf& parent, u64 t) {
+inline char* algo::buf_Find(algo::LineBuf& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.buf_n;
     if (idx >= lim) return NULL;
@@ -3054,37 +3054,37 @@ inline char* algo::buf_Find(algo::LineBuf& parent, u64 t) {
 
 // --- algo.LineBuf.buf.Getary
 // Return array pointer by value
-inline algo::aryptr<char> algo::buf_Getary(const algo::LineBuf& parent) {
+inline algo::aryptr<char> algo::buf_Getary(const algo::LineBuf& parent) throw() {
     return algo::aryptr<char>(parent.buf_elems, parent.buf_n);
 }
 
 // --- algo.LineBuf.buf.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline char* algo::buf_Last(algo::LineBuf& parent) {
+inline char* algo::buf_Last(algo::LineBuf& parent) throw() {
     return buf_Find(parent, u64(parent.buf_n-1));
 }
 
 // --- algo.LineBuf.buf.Max
 // Return max. number of items in the array
-inline i32 algo::buf_Max(algo::LineBuf& parent) {
+inline i32 algo::buf_Max(algo::LineBuf& parent) throw() {
     (void)parent;
     return parent.buf_max;
 }
 
 // --- algo.LineBuf.buf.N
 // Return number of items in the array
-inline i32 algo::buf_N(const algo::LineBuf& parent) {
+inline i32 algo::buf_N(const algo::LineBuf& parent) throw() {
     return parent.buf_n;
 }
 
 // --- algo.LineBuf.buf.RemoveAll
-inline void algo::buf_RemoveAll(algo::LineBuf& parent) {
+inline void algo::buf_RemoveAll(algo::LineBuf& parent) throw() {
     parent.buf_n = 0;
 }
 
 // --- algo.LineBuf.buf.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo::buf_Reserve(algo::LineBuf& parent, int n) {
+inline void algo::buf_Reserve(algo::LineBuf& parent, int n) throw() {
     u32 new_n = parent.buf_n + n;
     if (UNLIKELY(new_n > parent.buf_max)) {
         buf_AbsReserve(parent, new_n);
@@ -3093,31 +3093,31 @@ inline void algo::buf_Reserve(algo::LineBuf& parent, int n) {
 
 // --- algo.LineBuf.buf.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline char& algo::buf_qFind(algo::LineBuf& parent, u64 t) {
+inline char& algo::buf_qFind(algo::LineBuf& parent, u64 t) throw() {
     return parent.buf_elems[t];
 }
 
 // --- algo.LineBuf.buf.qLast
 // Return reference to last element of array. No bounds checking
-inline char& algo::buf_qLast(algo::LineBuf& parent) {
+inline char& algo::buf_qLast(algo::LineBuf& parent) throw() {
     return buf_qFind(parent, u64(parent.buf_n-1));
 }
 
 // --- algo.LineBuf.buf.rowid_Get
 // Return row id of specified element
-inline u64 algo::buf_rowid_Get(algo::LineBuf& parent, char &elem) {
+inline u64 algo::buf_rowid_Get(algo::LineBuf& parent, char &elem) throw() {
     u64 id = &elem - parent.buf_elems;
     return u64(id);
 }
 
 // --- algo.LineBuf.buf_curs.Next
 // proceed to next item
-inline void algo::LineBuf_buf_curs_Next(LineBuf_buf_curs &curs) {
+inline void algo::LineBuf_buf_curs_Next(LineBuf_buf_curs &curs) throw() {
     curs.index++;
 }
 
 // --- algo.LineBuf.buf_curs.Reset
-inline void algo::LineBuf_buf_curs_Reset(LineBuf_buf_curs &curs, algo::LineBuf &parent) {
+inline void algo::LineBuf_buf_curs_Reset(LineBuf_buf_curs &curs, algo::LineBuf &parent) throw() {
     curs.elems = parent.buf_elems;
     curs.n_elems = parent.buf_n;
     curs.index = 0;
@@ -3125,13 +3125,13 @@ inline void algo::LineBuf_buf_curs_Reset(LineBuf_buf_curs &curs, algo::LineBuf &
 
 // --- algo.LineBuf.buf_curs.ValidQ
 // cursor points to valid item
-inline bool algo::LineBuf_buf_curs_ValidQ(LineBuf_buf_curs &curs) {
+inline bool algo::LineBuf_buf_curs_ValidQ(LineBuf_buf_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- algo.LineBuf.buf_curs.Access
 // item access
-inline char& algo::LineBuf_buf_curs_Access(LineBuf_buf_curs &curs) {
+inline char& algo::LineBuf_buf_curs_Access(LineBuf_buf_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -3146,18 +3146,18 @@ inline void algo::LineBuf_Init(algo::LineBuf& parent) {
 }
 
 // --- algo.LineBuf..Ctor
-inline  algo::LineBuf::LineBuf() {
+inline  algo::LineBuf::LineBuf() throw() {
     algo::LineBuf_Init(*this);
 }
 
 // --- algo.LineBuf..Dtor
-inline  algo::LineBuf::~LineBuf() {
+inline  algo::LineBuf::~LineBuf() throw() {
     algo::LineBuf_Uninit(*this);
 }
 
 // --- algo.LnumStr10_U64.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr10_U64& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr10_U64& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 10 - len;
@@ -3170,7 +3170,7 @@ inline u32 algo::LnumStr10_U64_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr10_U64.ch.Init
-inline void algo::ch_Init(algo::LnumStr10_U64 &parent) {
+inline void algo::ch_Init(algo::LnumStr10_U64 &parent) throw() {
     for (int i = 0; i < 10; i++) {
         parent.ch[i] = '0';
     }
@@ -3178,13 +3178,13 @@ inline void algo::ch_Init(algo::LnumStr10_U64 &parent) {
 
 // --- algo.LnumStr10_U64.ch.Max
 // always return constant 10
-inline int algo::ch_Max(algo::LnumStr10_U64& parent) {
+inline int algo::ch_Max(algo::LnumStr10_U64& parent) throw() {
     (void)parent;
     return 10;
 }
 
 // --- algo.LnumStr10_U64.ch.N
-inline int algo::ch_N(const algo::LnumStr10_U64& parent) {
+inline int algo::ch_N(const algo::LnumStr10_U64& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<10 && parent.ch[ret]==u8('0')) {
@@ -3196,32 +3196,32 @@ inline int algo::ch_N(const algo::LnumStr10_U64& parent) {
 
 // --- algo.LnumStr10_U64.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr10_U64::operator =(const algo::strptr &str) {
+inline void algo::LnumStr10_U64::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr10_U64.ch.CtorStrptr
-inline  algo::LnumStr10_U64::LnumStr10_U64(const algo::strptr &rhs) {
+inline  algo::LnumStr10_U64::LnumStr10_U64(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr10_U64.ch.Cast
-inline  algo::LnumStr10_U64::operator algo::strptr() const {
+inline  algo::LnumStr10_U64::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr10_U64..EqOp
-inline bool algo::LnumStr10_U64::operator ==(const algo::LnumStr10_U64 &rhs) const {
+inline bool algo::LnumStr10_U64::operator ==(const algo::LnumStr10_U64 &rhs) const throw() {
     return algo::LnumStr10_U64_Eq(const_cast<algo::LnumStr10_U64&>(*this),const_cast<algo::LnumStr10_U64&>(rhs));
 }
 
 // --- algo.LnumStr10_U64..NeOp
-inline bool algo::LnumStr10_U64::operator !=(const algo::LnumStr10_U64 &rhs) const {
+inline bool algo::LnumStr10_U64::operator !=(const algo::LnumStr10_U64 &rhs) const throw() {
     return !algo::LnumStr10_U64_Eq(const_cast<algo::LnumStr10_U64&>(*this),const_cast<algo::LnumStr10_U64&>(rhs));
 }
 
 // --- algo.LnumStr10_U64..Cmp
-inline i32 algo::LnumStr10_U64_Cmp(algo::LnumStr10_U64& lhs, algo::LnumStr10_U64& rhs) {
+inline i32 algo::LnumStr10_U64_Cmp(algo::LnumStr10_U64& lhs, algo::LnumStr10_U64& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -3236,7 +3236,7 @@ inline void algo::LnumStr10_U64_Init(algo::LnumStr10_U64& parent) {
 }
 
 // --- algo.LnumStr10_U64..Eq
-inline bool algo::LnumStr10_U64_Eq(algo::LnumStr10_U64& lhs, algo::LnumStr10_U64& rhs) {
+inline bool algo::LnumStr10_U64_Eq(algo::LnumStr10_U64& lhs, algo::LnumStr10_U64& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3245,31 +3245,31 @@ inline bool algo::LnumStr10_U64_Eq(algo::LnumStr10_U64& lhs, algo::LnumStr10_U64
 }
 
 // --- algo.LnumStr10_U64..EqOpAryptr
-inline bool algo::LnumStr10_U64::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr10_U64::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr10_U64..AssignOp
-inline algo::LnumStr10_U64& algo::LnumStr10_U64::operator =(const algo::LnumStr10_U64 &rhs) {
+inline algo::LnumStr10_U64& algo::LnumStr10_U64::operator =(const algo::LnumStr10_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr10_U64));
     return *this;
 }
 
 // --- algo.LnumStr10_U64..Ctor
-inline  algo::LnumStr10_U64::LnumStr10_U64() {
+inline  algo::LnumStr10_U64::LnumStr10_U64() throw() {
     algo::LnumStr10_U64_Init(*this);
 }
 
 // --- algo.LnumStr10_U64..CopyCtor
-inline  algo::LnumStr10_U64::LnumStr10_U64(const algo::LnumStr10_U64 &rhs) {
+inline  algo::LnumStr10_U64::LnumStr10_U64(const algo::LnumStr10_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr10_U64));
 }
 
 // --- algo.LnumStr11_U64.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr11_U64& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr11_U64& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 11 - len;
@@ -3282,7 +3282,7 @@ inline u32 algo::LnumStr11_U64_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr11_U64.ch.Init
-inline void algo::ch_Init(algo::LnumStr11_U64 &parent) {
+inline void algo::ch_Init(algo::LnumStr11_U64 &parent) throw() {
     for (int i = 0; i < 11; i++) {
         parent.ch[i] = '0';
     }
@@ -3290,13 +3290,13 @@ inline void algo::ch_Init(algo::LnumStr11_U64 &parent) {
 
 // --- algo.LnumStr11_U64.ch.Max
 // always return constant 11
-inline int algo::ch_Max(algo::LnumStr11_U64& parent) {
+inline int algo::ch_Max(algo::LnumStr11_U64& parent) throw() {
     (void)parent;
     return 11;
 }
 
 // --- algo.LnumStr11_U64.ch.N
-inline int algo::ch_N(const algo::LnumStr11_U64& parent) {
+inline int algo::ch_N(const algo::LnumStr11_U64& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<11 && parent.ch[ret]==u8('0')) {
@@ -3308,32 +3308,32 @@ inline int algo::ch_N(const algo::LnumStr11_U64& parent) {
 
 // --- algo.LnumStr11_U64.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr11_U64::operator =(const algo::strptr &str) {
+inline void algo::LnumStr11_U64::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr11_U64.ch.CtorStrptr
-inline  algo::LnumStr11_U64::LnumStr11_U64(const algo::strptr &rhs) {
+inline  algo::LnumStr11_U64::LnumStr11_U64(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr11_U64.ch.Cast
-inline  algo::LnumStr11_U64::operator algo::strptr() const {
+inline  algo::LnumStr11_U64::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr11_U64..EqOp
-inline bool algo::LnumStr11_U64::operator ==(const algo::LnumStr11_U64 &rhs) const {
+inline bool algo::LnumStr11_U64::operator ==(const algo::LnumStr11_U64 &rhs) const throw() {
     return algo::LnumStr11_U64_Eq(const_cast<algo::LnumStr11_U64&>(*this),const_cast<algo::LnumStr11_U64&>(rhs));
 }
 
 // --- algo.LnumStr11_U64..NeOp
-inline bool algo::LnumStr11_U64::operator !=(const algo::LnumStr11_U64 &rhs) const {
+inline bool algo::LnumStr11_U64::operator !=(const algo::LnumStr11_U64 &rhs) const throw() {
     return !algo::LnumStr11_U64_Eq(const_cast<algo::LnumStr11_U64&>(*this),const_cast<algo::LnumStr11_U64&>(rhs));
 }
 
 // --- algo.LnumStr11_U64..Cmp
-inline i32 algo::LnumStr11_U64_Cmp(algo::LnumStr11_U64& lhs, algo::LnumStr11_U64& rhs) {
+inline i32 algo::LnumStr11_U64_Cmp(algo::LnumStr11_U64& lhs, algo::LnumStr11_U64& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -3348,7 +3348,7 @@ inline void algo::LnumStr11_U64_Init(algo::LnumStr11_U64& parent) {
 }
 
 // --- algo.LnumStr11_U64..Eq
-inline bool algo::LnumStr11_U64_Eq(algo::LnumStr11_U64& lhs, algo::LnumStr11_U64& rhs) {
+inline bool algo::LnumStr11_U64_Eq(algo::LnumStr11_U64& lhs, algo::LnumStr11_U64& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3358,31 +3358,31 @@ inline bool algo::LnumStr11_U64_Eq(algo::LnumStr11_U64& lhs, algo::LnumStr11_U64
 }
 
 // --- algo.LnumStr11_U64..EqOpAryptr
-inline bool algo::LnumStr11_U64::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr11_U64::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr11_U64..AssignOp
-inline algo::LnumStr11_U64& algo::LnumStr11_U64::operator =(const algo::LnumStr11_U64 &rhs) {
+inline algo::LnumStr11_U64& algo::LnumStr11_U64::operator =(const algo::LnumStr11_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr11_U64));
     return *this;
 }
 
 // --- algo.LnumStr11_U64..Ctor
-inline  algo::LnumStr11_U64::LnumStr11_U64() {
+inline  algo::LnumStr11_U64::LnumStr11_U64() throw() {
     algo::LnumStr11_U64_Init(*this);
 }
 
 // --- algo.LnumStr11_U64..CopyCtor
-inline  algo::LnumStr11_U64::LnumStr11_U64(const algo::LnumStr11_U64 &rhs) {
+inline  algo::LnumStr11_U64::LnumStr11_U64(const algo::LnumStr11_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr11_U64));
 }
 
 // --- algo.LnumStr12_U64.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr12_U64& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr12_U64& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 12 - len;
@@ -3395,7 +3395,7 @@ inline u32 algo::LnumStr12_U64_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr12_U64.ch.Init
-inline void algo::ch_Init(algo::LnumStr12_U64 &parent) {
+inline void algo::ch_Init(algo::LnumStr12_U64 &parent) throw() {
     for (int i = 0; i < 12; i++) {
         parent.ch[i] = '0';
     }
@@ -3403,13 +3403,13 @@ inline void algo::ch_Init(algo::LnumStr12_U64 &parent) {
 
 // --- algo.LnumStr12_U64.ch.Max
 // always return constant 12
-inline int algo::ch_Max(algo::LnumStr12_U64& parent) {
+inline int algo::ch_Max(algo::LnumStr12_U64& parent) throw() {
     (void)parent;
     return 12;
 }
 
 // --- algo.LnumStr12_U64.ch.N
-inline int algo::ch_N(const algo::LnumStr12_U64& parent) {
+inline int algo::ch_N(const algo::LnumStr12_U64& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<12 && parent.ch[ret]==u8('0')) {
@@ -3421,32 +3421,32 @@ inline int algo::ch_N(const algo::LnumStr12_U64& parent) {
 
 // --- algo.LnumStr12_U64.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr12_U64::operator =(const algo::strptr &str) {
+inline void algo::LnumStr12_U64::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr12_U64.ch.CtorStrptr
-inline  algo::LnumStr12_U64::LnumStr12_U64(const algo::strptr &rhs) {
+inline  algo::LnumStr12_U64::LnumStr12_U64(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr12_U64.ch.Cast
-inline  algo::LnumStr12_U64::operator algo::strptr() const {
+inline  algo::LnumStr12_U64::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr12_U64..EqOp
-inline bool algo::LnumStr12_U64::operator ==(const algo::LnumStr12_U64 &rhs) const {
+inline bool algo::LnumStr12_U64::operator ==(const algo::LnumStr12_U64 &rhs) const throw() {
     return algo::LnumStr12_U64_Eq(const_cast<algo::LnumStr12_U64&>(*this),const_cast<algo::LnumStr12_U64&>(rhs));
 }
 
 // --- algo.LnumStr12_U64..NeOp
-inline bool algo::LnumStr12_U64::operator !=(const algo::LnumStr12_U64 &rhs) const {
+inline bool algo::LnumStr12_U64::operator !=(const algo::LnumStr12_U64 &rhs) const throw() {
     return !algo::LnumStr12_U64_Eq(const_cast<algo::LnumStr12_U64&>(*this),const_cast<algo::LnumStr12_U64&>(rhs));
 }
 
 // --- algo.LnumStr12_U64..Cmp
-inline i32 algo::LnumStr12_U64_Cmp(algo::LnumStr12_U64& lhs, algo::LnumStr12_U64& rhs) {
+inline i32 algo::LnumStr12_U64_Cmp(algo::LnumStr12_U64& lhs, algo::LnumStr12_U64& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -3461,7 +3461,7 @@ inline void algo::LnumStr12_U64_Init(algo::LnumStr12_U64& parent) {
 }
 
 // --- algo.LnumStr12_U64..Eq
-inline bool algo::LnumStr12_U64_Eq(algo::LnumStr12_U64& lhs, algo::LnumStr12_U64& rhs) {
+inline bool algo::LnumStr12_U64_Eq(algo::LnumStr12_U64& lhs, algo::LnumStr12_U64& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3470,31 +3470,31 @@ inline bool algo::LnumStr12_U64_Eq(algo::LnumStr12_U64& lhs, algo::LnumStr12_U64
 }
 
 // --- algo.LnumStr12_U64..EqOpAryptr
-inline bool algo::LnumStr12_U64::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr12_U64::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr12_U64..AssignOp
-inline algo::LnumStr12_U64& algo::LnumStr12_U64::operator =(const algo::LnumStr12_U64 &rhs) {
+inline algo::LnumStr12_U64& algo::LnumStr12_U64::operator =(const algo::LnumStr12_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr12_U64));
     return *this;
 }
 
 // --- algo.LnumStr12_U64..Ctor
-inline  algo::LnumStr12_U64::LnumStr12_U64() {
+inline  algo::LnumStr12_U64::LnumStr12_U64() throw() {
     algo::LnumStr12_U64_Init(*this);
 }
 
 // --- algo.LnumStr12_U64..CopyCtor
-inline  algo::LnumStr12_U64::LnumStr12_U64(const algo::LnumStr12_U64 &rhs) {
+inline  algo::LnumStr12_U64::LnumStr12_U64(const algo::LnumStr12_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr12_U64));
 }
 
 // --- algo.LnumStr13_U64_Base36.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr13_U64_Base36& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr13_U64_Base36& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 13 - len;
@@ -3507,7 +3507,7 @@ inline u32 algo::LnumStr13_U64_Base36_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr13_U64_Base36.ch.Init
-inline void algo::ch_Init(algo::LnumStr13_U64_Base36 &parent) {
+inline void algo::ch_Init(algo::LnumStr13_U64_Base36 &parent) throw() {
     for (int i = 0; i < 13; i++) {
         parent.ch[i] = '0';
     }
@@ -3515,13 +3515,13 @@ inline void algo::ch_Init(algo::LnumStr13_U64_Base36 &parent) {
 
 // --- algo.LnumStr13_U64_Base36.ch.Max
 // always return constant 13
-inline int algo::ch_Max(algo::LnumStr13_U64_Base36& parent) {
+inline int algo::ch_Max(algo::LnumStr13_U64_Base36& parent) throw() {
     (void)parent;
     return 13;
 }
 
 // --- algo.LnumStr13_U64_Base36.ch.N
-inline int algo::ch_N(const algo::LnumStr13_U64_Base36& parent) {
+inline int algo::ch_N(const algo::LnumStr13_U64_Base36& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<13 && parent.ch[ret]==u8('0')) {
@@ -3533,32 +3533,32 @@ inline int algo::ch_N(const algo::LnumStr13_U64_Base36& parent) {
 
 // --- algo.LnumStr13_U64_Base36.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr13_U64_Base36::operator =(const algo::strptr &str) {
+inline void algo::LnumStr13_U64_Base36::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr13_U64_Base36.ch.CtorStrptr
-inline  algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36(const algo::strptr &rhs) {
+inline  algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr13_U64_Base36.ch.Cast
-inline  algo::LnumStr13_U64_Base36::operator algo::strptr() const {
+inline  algo::LnumStr13_U64_Base36::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr13_U64_Base36..EqOp
-inline bool algo::LnumStr13_U64_Base36::operator ==(const algo::LnumStr13_U64_Base36 &rhs) const {
+inline bool algo::LnumStr13_U64_Base36::operator ==(const algo::LnumStr13_U64_Base36 &rhs) const throw() {
     return algo::LnumStr13_U64_Base36_Eq(const_cast<algo::LnumStr13_U64_Base36&>(*this),const_cast<algo::LnumStr13_U64_Base36&>(rhs));
 }
 
 // --- algo.LnumStr13_U64_Base36..NeOp
-inline bool algo::LnumStr13_U64_Base36::operator !=(const algo::LnumStr13_U64_Base36 &rhs) const {
+inline bool algo::LnumStr13_U64_Base36::operator !=(const algo::LnumStr13_U64_Base36 &rhs) const throw() {
     return !algo::LnumStr13_U64_Base36_Eq(const_cast<algo::LnumStr13_U64_Base36&>(*this),const_cast<algo::LnumStr13_U64_Base36&>(rhs));
 }
 
 // --- algo.LnumStr13_U64_Base36..Cmp
-inline i32 algo::LnumStr13_U64_Base36_Cmp(algo::LnumStr13_U64_Base36& lhs, algo::LnumStr13_U64_Base36& rhs) {
+inline i32 algo::LnumStr13_U64_Base36_Cmp(algo::LnumStr13_U64_Base36& lhs, algo::LnumStr13_U64_Base36& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -3573,7 +3573,7 @@ inline void algo::LnumStr13_U64_Base36_Init(algo::LnumStr13_U64_Base36& parent) 
 }
 
 // --- algo.LnumStr13_U64_Base36..Eq
-inline bool algo::LnumStr13_U64_Base36_Eq(algo::LnumStr13_U64_Base36& lhs, algo::LnumStr13_U64_Base36& rhs) {
+inline bool algo::LnumStr13_U64_Base36_Eq(algo::LnumStr13_U64_Base36& lhs, algo::LnumStr13_U64_Base36& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3583,31 +3583,31 @@ inline bool algo::LnumStr13_U64_Base36_Eq(algo::LnumStr13_U64_Base36& lhs, algo:
 }
 
 // --- algo.LnumStr13_U64_Base36..EqOpAryptr
-inline bool algo::LnumStr13_U64_Base36::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr13_U64_Base36::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr13_U64_Base36..AssignOp
-inline algo::LnumStr13_U64_Base36& algo::LnumStr13_U64_Base36::operator =(const algo::LnumStr13_U64_Base36 &rhs) {
+inline algo::LnumStr13_U64_Base36& algo::LnumStr13_U64_Base36::operator =(const algo::LnumStr13_U64_Base36 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr13_U64_Base36));
     return *this;
 }
 
 // --- algo.LnumStr13_U64_Base36..Ctor
-inline  algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36() {
+inline  algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36() throw() {
     algo::LnumStr13_U64_Base36_Init(*this);
 }
 
 // --- algo.LnumStr13_U64_Base36..CopyCtor
-inline  algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36(const algo::LnumStr13_U64_Base36 &rhs) {
+inline  algo::LnumStr13_U64_Base36::LnumStr13_U64_Base36(const algo::LnumStr13_U64_Base36 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr13_U64_Base36));
 }
 
 // --- algo.LnumStr16_U64_Base16.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr16_U64_Base16& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr16_U64_Base16& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 16 - len;
@@ -3620,7 +3620,7 @@ inline u32 algo::LnumStr16_U64_Base16_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr16_U64_Base16.ch.Init
-inline void algo::ch_Init(algo::LnumStr16_U64_Base16 &parent) {
+inline void algo::ch_Init(algo::LnumStr16_U64_Base16 &parent) throw() {
     for (int i = 0; i < 16; i++) {
         parent.ch[i] = '0';
     }
@@ -3628,13 +3628,13 @@ inline void algo::ch_Init(algo::LnumStr16_U64_Base16 &parent) {
 
 // --- algo.LnumStr16_U64_Base16.ch.Max
 // always return constant 16
-inline int algo::ch_Max(algo::LnumStr16_U64_Base16& parent) {
+inline int algo::ch_Max(algo::LnumStr16_U64_Base16& parent) throw() {
     (void)parent;
     return 16;
 }
 
 // --- algo.LnumStr16_U64_Base16.ch.N
-inline int algo::ch_N(const algo::LnumStr16_U64_Base16& parent) {
+inline int algo::ch_N(const algo::LnumStr16_U64_Base16& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<16 && parent.ch[ret]==u8('0')) {
@@ -3646,32 +3646,32 @@ inline int algo::ch_N(const algo::LnumStr16_U64_Base16& parent) {
 
 // --- algo.LnumStr16_U64_Base16.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr16_U64_Base16::operator =(const algo::strptr &str) {
+inline void algo::LnumStr16_U64_Base16::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr16_U64_Base16.ch.CtorStrptr
-inline  algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16(const algo::strptr &rhs) {
+inline  algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr16_U64_Base16.ch.Cast
-inline  algo::LnumStr16_U64_Base16::operator algo::strptr() const {
+inline  algo::LnumStr16_U64_Base16::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr16_U64_Base16..EqOp
-inline bool algo::LnumStr16_U64_Base16::operator ==(const algo::LnumStr16_U64_Base16 &rhs) const {
+inline bool algo::LnumStr16_U64_Base16::operator ==(const algo::LnumStr16_U64_Base16 &rhs) const throw() {
     return algo::LnumStr16_U64_Base16_Eq(const_cast<algo::LnumStr16_U64_Base16&>(*this),const_cast<algo::LnumStr16_U64_Base16&>(rhs));
 }
 
 // --- algo.LnumStr16_U64_Base16..NeOp
-inline bool algo::LnumStr16_U64_Base16::operator !=(const algo::LnumStr16_U64_Base16 &rhs) const {
+inline bool algo::LnumStr16_U64_Base16::operator !=(const algo::LnumStr16_U64_Base16 &rhs) const throw() {
     return !algo::LnumStr16_U64_Base16_Eq(const_cast<algo::LnumStr16_U64_Base16&>(*this),const_cast<algo::LnumStr16_U64_Base16&>(rhs));
 }
 
 // --- algo.LnumStr16_U64_Base16..Cmp
-inline i32 algo::LnumStr16_U64_Base16_Cmp(algo::LnumStr16_U64_Base16& lhs, algo::LnumStr16_U64_Base16& rhs) {
+inline i32 algo::LnumStr16_U64_Base16_Cmp(algo::LnumStr16_U64_Base16& lhs, algo::LnumStr16_U64_Base16& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -3686,7 +3686,7 @@ inline void algo::LnumStr16_U64_Base16_Init(algo::LnumStr16_U64_Base16& parent) 
 }
 
 // --- algo.LnumStr16_U64_Base16..Eq
-inline bool algo::LnumStr16_U64_Base16_Eq(algo::LnumStr16_U64_Base16& lhs, algo::LnumStr16_U64_Base16& rhs) {
+inline bool algo::LnumStr16_U64_Base16_Eq(algo::LnumStr16_U64_Base16& lhs, algo::LnumStr16_U64_Base16& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3695,31 +3695,31 @@ inline bool algo::LnumStr16_U64_Base16_Eq(algo::LnumStr16_U64_Base16& lhs, algo:
 }
 
 // --- algo.LnumStr16_U64_Base16..EqOpAryptr
-inline bool algo::LnumStr16_U64_Base16::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr16_U64_Base16::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr16_U64_Base16..AssignOp
-inline algo::LnumStr16_U64_Base16& algo::LnumStr16_U64_Base16::operator =(const algo::LnumStr16_U64_Base16 &rhs) {
+inline algo::LnumStr16_U64_Base16& algo::LnumStr16_U64_Base16::operator =(const algo::LnumStr16_U64_Base16 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr16_U64_Base16));
     return *this;
 }
 
 // --- algo.LnumStr16_U64_Base16..Ctor
-inline  algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16() {
+inline  algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16() throw() {
     algo::LnumStr16_U64_Base16_Init(*this);
 }
 
 // --- algo.LnumStr16_U64_Base16..CopyCtor
-inline  algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16(const algo::LnumStr16_U64_Base16 &rhs) {
+inline  algo::LnumStr16_U64_Base16::LnumStr16_U64_Base16(const algo::LnumStr16_U64_Base16 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr16_U64_Base16));
 }
 
 // --- algo.LnumStr1_U32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr1_U32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr1_U32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 1 - len;
@@ -3732,7 +3732,7 @@ inline u32 algo::LnumStr1_U32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr1_U32.ch.Init
-inline void algo::ch_Init(algo::LnumStr1_U32 &parent) {
+inline void algo::ch_Init(algo::LnumStr1_U32 &parent) throw() {
     for (int i = 0; i < 1; i++) {
         parent.ch[i] = '0';
     }
@@ -3740,13 +3740,13 @@ inline void algo::ch_Init(algo::LnumStr1_U32 &parent) {
 
 // --- algo.LnumStr1_U32.ch.Max
 // always return constant 1
-inline int algo::ch_Max(algo::LnumStr1_U32& parent) {
+inline int algo::ch_Max(algo::LnumStr1_U32& parent) throw() {
     (void)parent;
     return 1;
 }
 
 // --- algo.LnumStr1_U32.ch.N
-inline int algo::ch_N(const algo::LnumStr1_U32& parent) {
+inline int algo::ch_N(const algo::LnumStr1_U32& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<1 && parent.ch[ret]==u8('0')) {
@@ -3758,32 +3758,32 @@ inline int algo::ch_N(const algo::LnumStr1_U32& parent) {
 
 // --- algo.LnumStr1_U32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr1_U32::operator =(const algo::strptr &str) {
+inline void algo::LnumStr1_U32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr1_U32.ch.CtorStrptr
-inline  algo::LnumStr1_U32::LnumStr1_U32(const algo::strptr &rhs) {
+inline  algo::LnumStr1_U32::LnumStr1_U32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr1_U32.ch.Cast
-inline  algo::LnumStr1_U32::operator algo::strptr() const {
+inline  algo::LnumStr1_U32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr1_U32..EqOp
-inline bool algo::LnumStr1_U32::operator ==(const algo::LnumStr1_U32 &rhs) const {
+inline bool algo::LnumStr1_U32::operator ==(const algo::LnumStr1_U32 &rhs) const throw() {
     return algo::LnumStr1_U32_Eq(const_cast<algo::LnumStr1_U32&>(*this),const_cast<algo::LnumStr1_U32&>(rhs));
 }
 
 // --- algo.LnumStr1_U32..NeOp
-inline bool algo::LnumStr1_U32::operator !=(const algo::LnumStr1_U32 &rhs) const {
+inline bool algo::LnumStr1_U32::operator !=(const algo::LnumStr1_U32 &rhs) const throw() {
     return !algo::LnumStr1_U32_Eq(const_cast<algo::LnumStr1_U32&>(*this),const_cast<algo::LnumStr1_U32&>(rhs));
 }
 
 // --- algo.LnumStr1_U32..Cmp
-inline i32 algo::LnumStr1_U32_Cmp(algo::LnumStr1_U32& lhs, algo::LnumStr1_U32& rhs) {
+inline i32 algo::LnumStr1_U32_Cmp(algo::LnumStr1_U32& lhs, algo::LnumStr1_U32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -3798,7 +3798,7 @@ inline void algo::LnumStr1_U32_Init(algo::LnumStr1_U32& parent) {
 }
 
 // --- algo.LnumStr1_U32..Eq
-inline bool algo::LnumStr1_U32_Eq(algo::LnumStr1_U32& lhs, algo::LnumStr1_U32& rhs) {
+inline bool algo::LnumStr1_U32_Eq(algo::LnumStr1_U32& lhs, algo::LnumStr1_U32& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u8*)(lhs.ch+0) == *(u8*)(rhs.ch+0);
@@ -3806,31 +3806,31 @@ inline bool algo::LnumStr1_U32_Eq(algo::LnumStr1_U32& lhs, algo::LnumStr1_U32& r
 }
 
 // --- algo.LnumStr1_U32..EqOpAryptr
-inline bool algo::LnumStr1_U32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr1_U32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr1_U32..AssignOp
-inline algo::LnumStr1_U32& algo::LnumStr1_U32::operator =(const algo::LnumStr1_U32 &rhs) {
+inline algo::LnumStr1_U32& algo::LnumStr1_U32::operator =(const algo::LnumStr1_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr1_U32));
     return *this;
 }
 
 // --- algo.LnumStr1_U32..Ctor
-inline  algo::LnumStr1_U32::LnumStr1_U32() {
+inline  algo::LnumStr1_U32::LnumStr1_U32() throw() {
     algo::LnumStr1_U32_Init(*this);
 }
 
 // --- algo.LnumStr1_U32..CopyCtor
-inline  algo::LnumStr1_U32::LnumStr1_U32(const algo::LnumStr1_U32 &rhs) {
+inline  algo::LnumStr1_U32::LnumStr1_U32(const algo::LnumStr1_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr1_U32));
 }
 
 // --- algo.LnumStr20_U64.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr20_U64& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr20_U64& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 20 - len;
@@ -3843,7 +3843,7 @@ inline u32 algo::LnumStr20_U64_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr20_U64.ch.Init
-inline void algo::ch_Init(algo::LnumStr20_U64 &parent) {
+inline void algo::ch_Init(algo::LnumStr20_U64 &parent) throw() {
     for (int i = 0; i < 20; i++) {
         parent.ch[i] = '0';
     }
@@ -3851,13 +3851,13 @@ inline void algo::ch_Init(algo::LnumStr20_U64 &parent) {
 
 // --- algo.LnumStr20_U64.ch.Max
 // always return constant 20
-inline int algo::ch_Max(algo::LnumStr20_U64& parent) {
+inline int algo::ch_Max(algo::LnumStr20_U64& parent) throw() {
     (void)parent;
     return 20;
 }
 
 // --- algo.LnumStr20_U64.ch.N
-inline int algo::ch_N(const algo::LnumStr20_U64& parent) {
+inline int algo::ch_N(const algo::LnumStr20_U64& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<20 && parent.ch[ret]==u8('0')) {
@@ -3869,32 +3869,32 @@ inline int algo::ch_N(const algo::LnumStr20_U64& parent) {
 
 // --- algo.LnumStr20_U64.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr20_U64::operator =(const algo::strptr &str) {
+inline void algo::LnumStr20_U64::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr20_U64.ch.CtorStrptr
-inline  algo::LnumStr20_U64::LnumStr20_U64(const algo::strptr &rhs) {
+inline  algo::LnumStr20_U64::LnumStr20_U64(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr20_U64.ch.Cast
-inline  algo::LnumStr20_U64::operator algo::strptr() const {
+inline  algo::LnumStr20_U64::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr20_U64..EqOp
-inline bool algo::LnumStr20_U64::operator ==(const algo::LnumStr20_U64 &rhs) const {
+inline bool algo::LnumStr20_U64::operator ==(const algo::LnumStr20_U64 &rhs) const throw() {
     return algo::LnumStr20_U64_Eq(const_cast<algo::LnumStr20_U64&>(*this),const_cast<algo::LnumStr20_U64&>(rhs));
 }
 
 // --- algo.LnumStr20_U64..NeOp
-inline bool algo::LnumStr20_U64::operator !=(const algo::LnumStr20_U64 &rhs) const {
+inline bool algo::LnumStr20_U64::operator !=(const algo::LnumStr20_U64 &rhs) const throw() {
     return !algo::LnumStr20_U64_Eq(const_cast<algo::LnumStr20_U64&>(*this),const_cast<algo::LnumStr20_U64&>(rhs));
 }
 
 // --- algo.LnumStr20_U64..Cmp
-inline i32 algo::LnumStr20_U64_Cmp(algo::LnumStr20_U64& lhs, algo::LnumStr20_U64& rhs) {
+inline i32 algo::LnumStr20_U64_Cmp(algo::LnumStr20_U64& lhs, algo::LnumStr20_U64& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -3909,7 +3909,7 @@ inline void algo::LnumStr20_U64_Init(algo::LnumStr20_U64& parent) {
 }
 
 // --- algo.LnumStr20_U64..Eq
-inline bool algo::LnumStr20_U64_Eq(algo::LnumStr20_U64& lhs, algo::LnumStr20_U64& rhs) {
+inline bool algo::LnumStr20_U64_Eq(algo::LnumStr20_U64& lhs, algo::LnumStr20_U64& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -3919,31 +3919,31 @@ inline bool algo::LnumStr20_U64_Eq(algo::LnumStr20_U64& lhs, algo::LnumStr20_U64
 }
 
 // --- algo.LnumStr20_U64..EqOpAryptr
-inline bool algo::LnumStr20_U64::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr20_U64::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr20_U64..AssignOp
-inline algo::LnumStr20_U64& algo::LnumStr20_U64::operator =(const algo::LnumStr20_U64 &rhs) {
+inline algo::LnumStr20_U64& algo::LnumStr20_U64::operator =(const algo::LnumStr20_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr20_U64));
     return *this;
 }
 
 // --- algo.LnumStr20_U64..Ctor
-inline  algo::LnumStr20_U64::LnumStr20_U64() {
+inline  algo::LnumStr20_U64::LnumStr20_U64() throw() {
     algo::LnumStr20_U64_Init(*this);
 }
 
 // --- algo.LnumStr20_U64..CopyCtor
-inline  algo::LnumStr20_U64::LnumStr20_U64(const algo::LnumStr20_U64 &rhs) {
+inline  algo::LnumStr20_U64::LnumStr20_U64(const algo::LnumStr20_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr20_U64));
 }
 
 // --- algo.LnumStr22_U64.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr22_U64& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr22_U64& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 22 - len;
@@ -3956,7 +3956,7 @@ inline u32 algo::LnumStr22_U64_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr22_U64.ch.Init
-inline void algo::ch_Init(algo::LnumStr22_U64 &parent) {
+inline void algo::ch_Init(algo::LnumStr22_U64 &parent) throw() {
     for (int i = 0; i < 22; i++) {
         parent.ch[i] = '0';
     }
@@ -3964,13 +3964,13 @@ inline void algo::ch_Init(algo::LnumStr22_U64 &parent) {
 
 // --- algo.LnumStr22_U64.ch.Max
 // always return constant 22
-inline int algo::ch_Max(algo::LnumStr22_U64& parent) {
+inline int algo::ch_Max(algo::LnumStr22_U64& parent) throw() {
     (void)parent;
     return 22;
 }
 
 // --- algo.LnumStr22_U64.ch.N
-inline int algo::ch_N(const algo::LnumStr22_U64& parent) {
+inline int algo::ch_N(const algo::LnumStr22_U64& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<22 && parent.ch[ret]==u8('0')) {
@@ -3982,32 +3982,32 @@ inline int algo::ch_N(const algo::LnumStr22_U64& parent) {
 
 // --- algo.LnumStr22_U64.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr22_U64::operator =(const algo::strptr &str) {
+inline void algo::LnumStr22_U64::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr22_U64.ch.CtorStrptr
-inline  algo::LnumStr22_U64::LnumStr22_U64(const algo::strptr &rhs) {
+inline  algo::LnumStr22_U64::LnumStr22_U64(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr22_U64.ch.Cast
-inline  algo::LnumStr22_U64::operator algo::strptr() const {
+inline  algo::LnumStr22_U64::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr22_U64..EqOp
-inline bool algo::LnumStr22_U64::operator ==(const algo::LnumStr22_U64 &rhs) const {
+inline bool algo::LnumStr22_U64::operator ==(const algo::LnumStr22_U64 &rhs) const throw() {
     return algo::LnumStr22_U64_Eq(const_cast<algo::LnumStr22_U64&>(*this),const_cast<algo::LnumStr22_U64&>(rhs));
 }
 
 // --- algo.LnumStr22_U64..NeOp
-inline bool algo::LnumStr22_U64::operator !=(const algo::LnumStr22_U64 &rhs) const {
+inline bool algo::LnumStr22_U64::operator !=(const algo::LnumStr22_U64 &rhs) const throw() {
     return !algo::LnumStr22_U64_Eq(const_cast<algo::LnumStr22_U64&>(*this),const_cast<algo::LnumStr22_U64&>(rhs));
 }
 
 // --- algo.LnumStr22_U64..Cmp
-inline i32 algo::LnumStr22_U64_Cmp(algo::LnumStr22_U64& lhs, algo::LnumStr22_U64& rhs) {
+inline i32 algo::LnumStr22_U64_Cmp(algo::LnumStr22_U64& lhs, algo::LnumStr22_U64& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -4022,7 +4022,7 @@ inline void algo::LnumStr22_U64_Init(algo::LnumStr22_U64& parent) {
 }
 
 // --- algo.LnumStr22_U64..Eq
-inline bool algo::LnumStr22_U64_Eq(algo::LnumStr22_U64& lhs, algo::LnumStr22_U64& rhs) {
+inline bool algo::LnumStr22_U64_Eq(algo::LnumStr22_U64& lhs, algo::LnumStr22_U64& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -4033,31 +4033,31 @@ inline bool algo::LnumStr22_U64_Eq(algo::LnumStr22_U64& lhs, algo::LnumStr22_U64
 }
 
 // --- algo.LnumStr22_U64..EqOpAryptr
-inline bool algo::LnumStr22_U64::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr22_U64::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr22_U64..AssignOp
-inline algo::LnumStr22_U64& algo::LnumStr22_U64::operator =(const algo::LnumStr22_U64 &rhs) {
+inline algo::LnumStr22_U64& algo::LnumStr22_U64::operator =(const algo::LnumStr22_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr22_U64));
     return *this;
 }
 
 // --- algo.LnumStr22_U64..Ctor
-inline  algo::LnumStr22_U64::LnumStr22_U64() {
+inline  algo::LnumStr22_U64::LnumStr22_U64() throw() {
     algo::LnumStr22_U64_Init(*this);
 }
 
 // --- algo.LnumStr22_U64..CopyCtor
-inline  algo::LnumStr22_U64::LnumStr22_U64(const algo::LnumStr22_U64 &rhs) {
+inline  algo::LnumStr22_U64::LnumStr22_U64(const algo::LnumStr22_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr22_U64));
 }
 
 // --- algo.LnumStr2_U32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr2_U32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr2_U32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 2 - len;
@@ -4070,7 +4070,7 @@ inline u32 algo::LnumStr2_U32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr2_U32.ch.Init
-inline void algo::ch_Init(algo::LnumStr2_U32 &parent) {
+inline void algo::ch_Init(algo::LnumStr2_U32 &parent) throw() {
     for (int i = 0; i < 2; i++) {
         parent.ch[i] = '0';
     }
@@ -4078,13 +4078,13 @@ inline void algo::ch_Init(algo::LnumStr2_U32 &parent) {
 
 // --- algo.LnumStr2_U32.ch.Max
 // always return constant 2
-inline int algo::ch_Max(algo::LnumStr2_U32& parent) {
+inline int algo::ch_Max(algo::LnumStr2_U32& parent) throw() {
     (void)parent;
     return 2;
 }
 
 // --- algo.LnumStr2_U32.ch.N
-inline int algo::ch_N(const algo::LnumStr2_U32& parent) {
+inline int algo::ch_N(const algo::LnumStr2_U32& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<2 && parent.ch[ret]==u8('0')) {
@@ -4096,32 +4096,32 @@ inline int algo::ch_N(const algo::LnumStr2_U32& parent) {
 
 // --- algo.LnumStr2_U32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr2_U32::operator =(const algo::strptr &str) {
+inline void algo::LnumStr2_U32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr2_U32.ch.CtorStrptr
-inline  algo::LnumStr2_U32::LnumStr2_U32(const algo::strptr &rhs) {
+inline  algo::LnumStr2_U32::LnumStr2_U32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr2_U32.ch.Cast
-inline  algo::LnumStr2_U32::operator algo::strptr() const {
+inline  algo::LnumStr2_U32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr2_U32..EqOp
-inline bool algo::LnumStr2_U32::operator ==(const algo::LnumStr2_U32 &rhs) const {
+inline bool algo::LnumStr2_U32::operator ==(const algo::LnumStr2_U32 &rhs) const throw() {
     return algo::LnumStr2_U32_Eq(const_cast<algo::LnumStr2_U32&>(*this),const_cast<algo::LnumStr2_U32&>(rhs));
 }
 
 // --- algo.LnumStr2_U32..NeOp
-inline bool algo::LnumStr2_U32::operator !=(const algo::LnumStr2_U32 &rhs) const {
+inline bool algo::LnumStr2_U32::operator !=(const algo::LnumStr2_U32 &rhs) const throw() {
     return !algo::LnumStr2_U32_Eq(const_cast<algo::LnumStr2_U32&>(*this),const_cast<algo::LnumStr2_U32&>(rhs));
 }
 
 // --- algo.LnumStr2_U32..Cmp
-inline i32 algo::LnumStr2_U32_Cmp(algo::LnumStr2_U32& lhs, algo::LnumStr2_U32& rhs) {
+inline i32 algo::LnumStr2_U32_Cmp(algo::LnumStr2_U32& lhs, algo::LnumStr2_U32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -4136,7 +4136,7 @@ inline void algo::LnumStr2_U32_Init(algo::LnumStr2_U32& parent) {
 }
 
 // --- algo.LnumStr2_U32..Eq
-inline bool algo::LnumStr2_U32_Eq(algo::LnumStr2_U32& lhs, algo::LnumStr2_U32& rhs) {
+inline bool algo::LnumStr2_U32_Eq(algo::LnumStr2_U32& lhs, algo::LnumStr2_U32& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u16*)(lhs.ch+0) == *(u16*)(rhs.ch+0);
@@ -4144,31 +4144,31 @@ inline bool algo::LnumStr2_U32_Eq(algo::LnumStr2_U32& lhs, algo::LnumStr2_U32& r
 }
 
 // --- algo.LnumStr2_U32..EqOpAryptr
-inline bool algo::LnumStr2_U32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr2_U32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr2_U32..AssignOp
-inline algo::LnumStr2_U32& algo::LnumStr2_U32::operator =(const algo::LnumStr2_U32 &rhs) {
+inline algo::LnumStr2_U32& algo::LnumStr2_U32::operator =(const algo::LnumStr2_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr2_U32));
     return *this;
 }
 
 // --- algo.LnumStr2_U32..Ctor
-inline  algo::LnumStr2_U32::LnumStr2_U32() {
+inline  algo::LnumStr2_U32::LnumStr2_U32() throw() {
     algo::LnumStr2_U32_Init(*this);
 }
 
 // --- algo.LnumStr2_U32..CopyCtor
-inline  algo::LnumStr2_U32::LnumStr2_U32(const algo::LnumStr2_U32 &rhs) {
+inline  algo::LnumStr2_U32::LnumStr2_U32(const algo::LnumStr2_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr2_U32));
 }
 
 // --- algo.LnumStr3_U32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr3_U32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr3_U32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 3 - len;
@@ -4181,7 +4181,7 @@ inline u32 algo::LnumStr3_U32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr3_U32.ch.Init
-inline void algo::ch_Init(algo::LnumStr3_U32 &parent) {
+inline void algo::ch_Init(algo::LnumStr3_U32 &parent) throw() {
     for (int i = 0; i < 3; i++) {
         parent.ch[i] = '0';
     }
@@ -4189,13 +4189,13 @@ inline void algo::ch_Init(algo::LnumStr3_U32 &parent) {
 
 // --- algo.LnumStr3_U32.ch.Max
 // always return constant 3
-inline int algo::ch_Max(algo::LnumStr3_U32& parent) {
+inline int algo::ch_Max(algo::LnumStr3_U32& parent) throw() {
     (void)parent;
     return 3;
 }
 
 // --- algo.LnumStr3_U32.ch.N
-inline int algo::ch_N(const algo::LnumStr3_U32& parent) {
+inline int algo::ch_N(const algo::LnumStr3_U32& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<3 && parent.ch[ret]==u8('0')) {
@@ -4207,32 +4207,32 @@ inline int algo::ch_N(const algo::LnumStr3_U32& parent) {
 
 // --- algo.LnumStr3_U32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr3_U32::operator =(const algo::strptr &str) {
+inline void algo::LnumStr3_U32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr3_U32.ch.CtorStrptr
-inline  algo::LnumStr3_U32::LnumStr3_U32(const algo::strptr &rhs) {
+inline  algo::LnumStr3_U32::LnumStr3_U32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr3_U32.ch.Cast
-inline  algo::LnumStr3_U32::operator algo::strptr() const {
+inline  algo::LnumStr3_U32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr3_U32..EqOp
-inline bool algo::LnumStr3_U32::operator ==(const algo::LnumStr3_U32 &rhs) const {
+inline bool algo::LnumStr3_U32::operator ==(const algo::LnumStr3_U32 &rhs) const throw() {
     return algo::LnumStr3_U32_Eq(const_cast<algo::LnumStr3_U32&>(*this),const_cast<algo::LnumStr3_U32&>(rhs));
 }
 
 // --- algo.LnumStr3_U32..NeOp
-inline bool algo::LnumStr3_U32::operator !=(const algo::LnumStr3_U32 &rhs) const {
+inline bool algo::LnumStr3_U32::operator !=(const algo::LnumStr3_U32 &rhs) const throw() {
     return !algo::LnumStr3_U32_Eq(const_cast<algo::LnumStr3_U32&>(*this),const_cast<algo::LnumStr3_U32&>(rhs));
 }
 
 // --- algo.LnumStr3_U32..Cmp
-inline i32 algo::LnumStr3_U32_Cmp(algo::LnumStr3_U32& lhs, algo::LnumStr3_U32& rhs) {
+inline i32 algo::LnumStr3_U32_Cmp(algo::LnumStr3_U32& lhs, algo::LnumStr3_U32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -4247,7 +4247,7 @@ inline void algo::LnumStr3_U32_Init(algo::LnumStr3_U32& parent) {
 }
 
 // --- algo.LnumStr3_U32..Eq
-inline bool algo::LnumStr3_U32_Eq(algo::LnumStr3_U32& lhs, algo::LnumStr3_U32& rhs) {
+inline bool algo::LnumStr3_U32_Eq(algo::LnumStr3_U32& lhs, algo::LnumStr3_U32& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u16*)(lhs.ch+0) == *(u16*)(rhs.ch+0)
@@ -4256,31 +4256,31 @@ inline bool algo::LnumStr3_U32_Eq(algo::LnumStr3_U32& lhs, algo::LnumStr3_U32& r
 }
 
 // --- algo.LnumStr3_U32..EqOpAryptr
-inline bool algo::LnumStr3_U32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr3_U32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr3_U32..AssignOp
-inline algo::LnumStr3_U32& algo::LnumStr3_U32::operator =(const algo::LnumStr3_U32 &rhs) {
+inline algo::LnumStr3_U32& algo::LnumStr3_U32::operator =(const algo::LnumStr3_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr3_U32));
     return *this;
 }
 
 // --- algo.LnumStr3_U32..Ctor
-inline  algo::LnumStr3_U32::LnumStr3_U32() {
+inline  algo::LnumStr3_U32::LnumStr3_U32() throw() {
     algo::LnumStr3_U32_Init(*this);
 }
 
 // --- algo.LnumStr3_U32..CopyCtor
-inline  algo::LnumStr3_U32::LnumStr3_U32(const algo::LnumStr3_U32 &rhs) {
+inline  algo::LnumStr3_U32::LnumStr3_U32(const algo::LnumStr3_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr3_U32));
 }
 
 // --- algo.LnumStr4_U32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr4_U32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr4_U32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 4 - len;
@@ -4293,7 +4293,7 @@ inline u32 algo::LnumStr4_U32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr4_U32.ch.Init
-inline void algo::ch_Init(algo::LnumStr4_U32 &parent) {
+inline void algo::ch_Init(algo::LnumStr4_U32 &parent) throw() {
     for (int i = 0; i < 4; i++) {
         parent.ch[i] = '0';
     }
@@ -4301,13 +4301,13 @@ inline void algo::ch_Init(algo::LnumStr4_U32 &parent) {
 
 // --- algo.LnumStr4_U32.ch.Max
 // always return constant 4
-inline int algo::ch_Max(algo::LnumStr4_U32& parent) {
+inline int algo::ch_Max(algo::LnumStr4_U32& parent) throw() {
     (void)parent;
     return 4;
 }
 
 // --- algo.LnumStr4_U32.ch.N
-inline int algo::ch_N(const algo::LnumStr4_U32& parent) {
+inline int algo::ch_N(const algo::LnumStr4_U32& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<4 && parent.ch[ret]==u8('0')) {
@@ -4319,32 +4319,32 @@ inline int algo::ch_N(const algo::LnumStr4_U32& parent) {
 
 // --- algo.LnumStr4_U32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr4_U32::operator =(const algo::strptr &str) {
+inline void algo::LnumStr4_U32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr4_U32.ch.CtorStrptr
-inline  algo::LnumStr4_U32::LnumStr4_U32(const algo::strptr &rhs) {
+inline  algo::LnumStr4_U32::LnumStr4_U32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr4_U32.ch.Cast
-inline  algo::LnumStr4_U32::operator algo::strptr() const {
+inline  algo::LnumStr4_U32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr4_U32..EqOp
-inline bool algo::LnumStr4_U32::operator ==(const algo::LnumStr4_U32 &rhs) const {
+inline bool algo::LnumStr4_U32::operator ==(const algo::LnumStr4_U32 &rhs) const throw() {
     return algo::LnumStr4_U32_Eq(const_cast<algo::LnumStr4_U32&>(*this),const_cast<algo::LnumStr4_U32&>(rhs));
 }
 
 // --- algo.LnumStr4_U32..NeOp
-inline bool algo::LnumStr4_U32::operator !=(const algo::LnumStr4_U32 &rhs) const {
+inline bool algo::LnumStr4_U32::operator !=(const algo::LnumStr4_U32 &rhs) const throw() {
     return !algo::LnumStr4_U32_Eq(const_cast<algo::LnumStr4_U32&>(*this),const_cast<algo::LnumStr4_U32&>(rhs));
 }
 
 // --- algo.LnumStr4_U32..Cmp
-inline i32 algo::LnumStr4_U32_Cmp(algo::LnumStr4_U32& lhs, algo::LnumStr4_U32& rhs) {
+inline i32 algo::LnumStr4_U32_Cmp(algo::LnumStr4_U32& lhs, algo::LnumStr4_U32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -4359,7 +4359,7 @@ inline void algo::LnumStr4_U32_Init(algo::LnumStr4_U32& parent) {
 }
 
 // --- algo.LnumStr4_U32..Eq
-inline bool algo::LnumStr4_U32_Eq(algo::LnumStr4_U32& lhs, algo::LnumStr4_U32& rhs) {
+inline bool algo::LnumStr4_U32_Eq(algo::LnumStr4_U32& lhs, algo::LnumStr4_U32& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0);
@@ -4367,31 +4367,31 @@ inline bool algo::LnumStr4_U32_Eq(algo::LnumStr4_U32& lhs, algo::LnumStr4_U32& r
 }
 
 // --- algo.LnumStr4_U32..EqOpAryptr
-inline bool algo::LnumStr4_U32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr4_U32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr4_U32..AssignOp
-inline algo::LnumStr4_U32& algo::LnumStr4_U32::operator =(const algo::LnumStr4_U32 &rhs) {
+inline algo::LnumStr4_U32& algo::LnumStr4_U32::operator =(const algo::LnumStr4_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr4_U32));
     return *this;
 }
 
 // --- algo.LnumStr4_U32..Ctor
-inline  algo::LnumStr4_U32::LnumStr4_U32() {
+inline  algo::LnumStr4_U32::LnumStr4_U32() throw() {
     algo::LnumStr4_U32_Init(*this);
 }
 
 // --- algo.LnumStr4_U32..CopyCtor
-inline  algo::LnumStr4_U32::LnumStr4_U32(const algo::LnumStr4_U32 &rhs) {
+inline  algo::LnumStr4_U32::LnumStr4_U32(const algo::LnumStr4_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr4_U32));
 }
 
 // --- algo.LnumStr5_U32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr5_U32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr5_U32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 5 - len;
@@ -4404,7 +4404,7 @@ inline u32 algo::LnumStr5_U32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr5_U32.ch.Init
-inline void algo::ch_Init(algo::LnumStr5_U32 &parent) {
+inline void algo::ch_Init(algo::LnumStr5_U32 &parent) throw() {
     for (int i = 0; i < 5; i++) {
         parent.ch[i] = '0';
     }
@@ -4412,13 +4412,13 @@ inline void algo::ch_Init(algo::LnumStr5_U32 &parent) {
 
 // --- algo.LnumStr5_U32.ch.Max
 // always return constant 5
-inline int algo::ch_Max(algo::LnumStr5_U32& parent) {
+inline int algo::ch_Max(algo::LnumStr5_U32& parent) throw() {
     (void)parent;
     return 5;
 }
 
 // --- algo.LnumStr5_U32.ch.N
-inline int algo::ch_N(const algo::LnumStr5_U32& parent) {
+inline int algo::ch_N(const algo::LnumStr5_U32& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<5 && parent.ch[ret]==u8('0')) {
@@ -4430,32 +4430,32 @@ inline int algo::ch_N(const algo::LnumStr5_U32& parent) {
 
 // --- algo.LnumStr5_U32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr5_U32::operator =(const algo::strptr &str) {
+inline void algo::LnumStr5_U32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr5_U32.ch.CtorStrptr
-inline  algo::LnumStr5_U32::LnumStr5_U32(const algo::strptr &rhs) {
+inline  algo::LnumStr5_U32::LnumStr5_U32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr5_U32.ch.Cast
-inline  algo::LnumStr5_U32::operator algo::strptr() const {
+inline  algo::LnumStr5_U32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr5_U32..EqOp
-inline bool algo::LnumStr5_U32::operator ==(const algo::LnumStr5_U32 &rhs) const {
+inline bool algo::LnumStr5_U32::operator ==(const algo::LnumStr5_U32 &rhs) const throw() {
     return algo::LnumStr5_U32_Eq(const_cast<algo::LnumStr5_U32&>(*this),const_cast<algo::LnumStr5_U32&>(rhs));
 }
 
 // --- algo.LnumStr5_U32..NeOp
-inline bool algo::LnumStr5_U32::operator !=(const algo::LnumStr5_U32 &rhs) const {
+inline bool algo::LnumStr5_U32::operator !=(const algo::LnumStr5_U32 &rhs) const throw() {
     return !algo::LnumStr5_U32_Eq(const_cast<algo::LnumStr5_U32&>(*this),const_cast<algo::LnumStr5_U32&>(rhs));
 }
 
 // --- algo.LnumStr5_U32..Cmp
-inline i32 algo::LnumStr5_U32_Cmp(algo::LnumStr5_U32& lhs, algo::LnumStr5_U32& rhs) {
+inline i32 algo::LnumStr5_U32_Cmp(algo::LnumStr5_U32& lhs, algo::LnumStr5_U32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -4470,7 +4470,7 @@ inline void algo::LnumStr5_U32_Init(algo::LnumStr5_U32& parent) {
 }
 
 // --- algo.LnumStr5_U32..Eq
-inline bool algo::LnumStr5_U32_Eq(algo::LnumStr5_U32& lhs, algo::LnumStr5_U32& rhs) {
+inline bool algo::LnumStr5_U32_Eq(algo::LnumStr5_U32& lhs, algo::LnumStr5_U32& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -4479,31 +4479,31 @@ inline bool algo::LnumStr5_U32_Eq(algo::LnumStr5_U32& lhs, algo::LnumStr5_U32& r
 }
 
 // --- algo.LnumStr5_U32..EqOpAryptr
-inline bool algo::LnumStr5_U32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr5_U32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr5_U32..AssignOp
-inline algo::LnumStr5_U32& algo::LnumStr5_U32::operator =(const algo::LnumStr5_U32 &rhs) {
+inline algo::LnumStr5_U32& algo::LnumStr5_U32::operator =(const algo::LnumStr5_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr5_U32));
     return *this;
 }
 
 // --- algo.LnumStr5_U32..Ctor
-inline  algo::LnumStr5_U32::LnumStr5_U32() {
+inline  algo::LnumStr5_U32::LnumStr5_U32() throw() {
     algo::LnumStr5_U32_Init(*this);
 }
 
 // --- algo.LnumStr5_U32..CopyCtor
-inline  algo::LnumStr5_U32::LnumStr5_U32(const algo::LnumStr5_U32 &rhs) {
+inline  algo::LnumStr5_U32::LnumStr5_U32(const algo::LnumStr5_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr5_U32));
 }
 
 // --- algo.LnumStr5_U32_Base36.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr5_U32_Base36& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr5_U32_Base36& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 5 - len;
@@ -4516,7 +4516,7 @@ inline u32 algo::LnumStr5_U32_Base36_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr5_U32_Base36.ch.Init
-inline void algo::ch_Init(algo::LnumStr5_U32_Base36 &parent) {
+inline void algo::ch_Init(algo::LnumStr5_U32_Base36 &parent) throw() {
     for (int i = 0; i < 5; i++) {
         parent.ch[i] = '0';
     }
@@ -4524,13 +4524,13 @@ inline void algo::ch_Init(algo::LnumStr5_U32_Base36 &parent) {
 
 // --- algo.LnumStr5_U32_Base36.ch.Max
 // always return constant 5
-inline int algo::ch_Max(algo::LnumStr5_U32_Base36& parent) {
+inline int algo::ch_Max(algo::LnumStr5_U32_Base36& parent) throw() {
     (void)parent;
     return 5;
 }
 
 // --- algo.LnumStr5_U32_Base36.ch.N
-inline int algo::ch_N(const algo::LnumStr5_U32_Base36& parent) {
+inline int algo::ch_N(const algo::LnumStr5_U32_Base36& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<5 && parent.ch[ret]==u8('0')) {
@@ -4542,32 +4542,32 @@ inline int algo::ch_N(const algo::LnumStr5_U32_Base36& parent) {
 
 // --- algo.LnumStr5_U32_Base36.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr5_U32_Base36::operator =(const algo::strptr &str) {
+inline void algo::LnumStr5_U32_Base36::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr5_U32_Base36.ch.CtorStrptr
-inline  algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36(const algo::strptr &rhs) {
+inline  algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr5_U32_Base36.ch.Cast
-inline  algo::LnumStr5_U32_Base36::operator algo::strptr() const {
+inline  algo::LnumStr5_U32_Base36::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr5_U32_Base36..EqOp
-inline bool algo::LnumStr5_U32_Base36::operator ==(const algo::LnumStr5_U32_Base36 &rhs) const {
+inline bool algo::LnumStr5_U32_Base36::operator ==(const algo::LnumStr5_U32_Base36 &rhs) const throw() {
     return algo::LnumStr5_U32_Base36_Eq(const_cast<algo::LnumStr5_U32_Base36&>(*this),const_cast<algo::LnumStr5_U32_Base36&>(rhs));
 }
 
 // --- algo.LnumStr5_U32_Base36..NeOp
-inline bool algo::LnumStr5_U32_Base36::operator !=(const algo::LnumStr5_U32_Base36 &rhs) const {
+inline bool algo::LnumStr5_U32_Base36::operator !=(const algo::LnumStr5_U32_Base36 &rhs) const throw() {
     return !algo::LnumStr5_U32_Base36_Eq(const_cast<algo::LnumStr5_U32_Base36&>(*this),const_cast<algo::LnumStr5_U32_Base36&>(rhs));
 }
 
 // --- algo.LnumStr5_U32_Base36..Cmp
-inline i32 algo::LnumStr5_U32_Base36_Cmp(algo::LnumStr5_U32_Base36& lhs, algo::LnumStr5_U32_Base36& rhs) {
+inline i32 algo::LnumStr5_U32_Base36_Cmp(algo::LnumStr5_U32_Base36& lhs, algo::LnumStr5_U32_Base36& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -4582,7 +4582,7 @@ inline void algo::LnumStr5_U32_Base36_Init(algo::LnumStr5_U32_Base36& parent) {
 }
 
 // --- algo.LnumStr5_U32_Base36..Eq
-inline bool algo::LnumStr5_U32_Base36_Eq(algo::LnumStr5_U32_Base36& lhs, algo::LnumStr5_U32_Base36& rhs) {
+inline bool algo::LnumStr5_U32_Base36_Eq(algo::LnumStr5_U32_Base36& lhs, algo::LnumStr5_U32_Base36& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -4591,31 +4591,31 @@ inline bool algo::LnumStr5_U32_Base36_Eq(algo::LnumStr5_U32_Base36& lhs, algo::L
 }
 
 // --- algo.LnumStr5_U32_Base36..EqOpAryptr
-inline bool algo::LnumStr5_U32_Base36::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr5_U32_Base36::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr5_U32_Base36..AssignOp
-inline algo::LnumStr5_U32_Base36& algo::LnumStr5_U32_Base36::operator =(const algo::LnumStr5_U32_Base36 &rhs) {
+inline algo::LnumStr5_U32_Base36& algo::LnumStr5_U32_Base36::operator =(const algo::LnumStr5_U32_Base36 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr5_U32_Base36));
     return *this;
 }
 
 // --- algo.LnumStr5_U32_Base36..Ctor
-inline  algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36() {
+inline  algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36() throw() {
     algo::LnumStr5_U32_Base36_Init(*this);
 }
 
 // --- algo.LnumStr5_U32_Base36..CopyCtor
-inline  algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36(const algo::LnumStr5_U32_Base36 &rhs) {
+inline  algo::LnumStr5_U32_Base36::LnumStr5_U32_Base36(const algo::LnumStr5_U32_Base36 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr5_U32_Base36));
 }
 
 // --- algo.LnumStr6_U32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr6_U32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr6_U32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 6 - len;
@@ -4628,7 +4628,7 @@ inline u32 algo::LnumStr6_U32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr6_U32.ch.Init
-inline void algo::ch_Init(algo::LnumStr6_U32 &parent) {
+inline void algo::ch_Init(algo::LnumStr6_U32 &parent) throw() {
     for (int i = 0; i < 6; i++) {
         parent.ch[i] = '0';
     }
@@ -4636,13 +4636,13 @@ inline void algo::ch_Init(algo::LnumStr6_U32 &parent) {
 
 // --- algo.LnumStr6_U32.ch.Max
 // always return constant 6
-inline int algo::ch_Max(algo::LnumStr6_U32& parent) {
+inline int algo::ch_Max(algo::LnumStr6_U32& parent) throw() {
     (void)parent;
     return 6;
 }
 
 // --- algo.LnumStr6_U32.ch.N
-inline int algo::ch_N(const algo::LnumStr6_U32& parent) {
+inline int algo::ch_N(const algo::LnumStr6_U32& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<6 && parent.ch[ret]==u8('0')) {
@@ -4654,32 +4654,32 @@ inline int algo::ch_N(const algo::LnumStr6_U32& parent) {
 
 // --- algo.LnumStr6_U32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr6_U32::operator =(const algo::strptr &str) {
+inline void algo::LnumStr6_U32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr6_U32.ch.CtorStrptr
-inline  algo::LnumStr6_U32::LnumStr6_U32(const algo::strptr &rhs) {
+inline  algo::LnumStr6_U32::LnumStr6_U32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr6_U32.ch.Cast
-inline  algo::LnumStr6_U32::operator algo::strptr() const {
+inline  algo::LnumStr6_U32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr6_U32..EqOp
-inline bool algo::LnumStr6_U32::operator ==(const algo::LnumStr6_U32 &rhs) const {
+inline bool algo::LnumStr6_U32::operator ==(const algo::LnumStr6_U32 &rhs) const throw() {
     return algo::LnumStr6_U32_Eq(const_cast<algo::LnumStr6_U32&>(*this),const_cast<algo::LnumStr6_U32&>(rhs));
 }
 
 // --- algo.LnumStr6_U32..NeOp
-inline bool algo::LnumStr6_U32::operator !=(const algo::LnumStr6_U32 &rhs) const {
+inline bool algo::LnumStr6_U32::operator !=(const algo::LnumStr6_U32 &rhs) const throw() {
     return !algo::LnumStr6_U32_Eq(const_cast<algo::LnumStr6_U32&>(*this),const_cast<algo::LnumStr6_U32&>(rhs));
 }
 
 // --- algo.LnumStr6_U32..Cmp
-inline i32 algo::LnumStr6_U32_Cmp(algo::LnumStr6_U32& lhs, algo::LnumStr6_U32& rhs) {
+inline i32 algo::LnumStr6_U32_Cmp(algo::LnumStr6_U32& lhs, algo::LnumStr6_U32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -4694,7 +4694,7 @@ inline void algo::LnumStr6_U32_Init(algo::LnumStr6_U32& parent) {
 }
 
 // --- algo.LnumStr6_U32..Eq
-inline bool algo::LnumStr6_U32_Eq(algo::LnumStr6_U32& lhs, algo::LnumStr6_U32& rhs) {
+inline bool algo::LnumStr6_U32_Eq(algo::LnumStr6_U32& lhs, algo::LnumStr6_U32& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -4703,31 +4703,31 @@ inline bool algo::LnumStr6_U32_Eq(algo::LnumStr6_U32& lhs, algo::LnumStr6_U32& r
 }
 
 // --- algo.LnumStr6_U32..EqOpAryptr
-inline bool algo::LnumStr6_U32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr6_U32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr6_U32..AssignOp
-inline algo::LnumStr6_U32& algo::LnumStr6_U32::operator =(const algo::LnumStr6_U32 &rhs) {
+inline algo::LnumStr6_U32& algo::LnumStr6_U32::operator =(const algo::LnumStr6_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr6_U32));
     return *this;
 }
 
 // --- algo.LnumStr6_U32..Ctor
-inline  algo::LnumStr6_U32::LnumStr6_U32() {
+inline  algo::LnumStr6_U32::LnumStr6_U32() throw() {
     algo::LnumStr6_U32_Init(*this);
 }
 
 // --- algo.LnumStr6_U32..CopyCtor
-inline  algo::LnumStr6_U32::LnumStr6_U32(const algo::LnumStr6_U32 &rhs) {
+inline  algo::LnumStr6_U32::LnumStr6_U32(const algo::LnumStr6_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr6_U32));
 }
 
 // --- algo.LnumStr7_U32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr7_U32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr7_U32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 7 - len;
@@ -4740,7 +4740,7 @@ inline u32 algo::LnumStr7_U32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr7_U32.ch.Init
-inline void algo::ch_Init(algo::LnumStr7_U32 &parent) {
+inline void algo::ch_Init(algo::LnumStr7_U32 &parent) throw() {
     for (int i = 0; i < 7; i++) {
         parent.ch[i] = '0';
     }
@@ -4748,13 +4748,13 @@ inline void algo::ch_Init(algo::LnumStr7_U32 &parent) {
 
 // --- algo.LnumStr7_U32.ch.Max
 // always return constant 7
-inline int algo::ch_Max(algo::LnumStr7_U32& parent) {
+inline int algo::ch_Max(algo::LnumStr7_U32& parent) throw() {
     (void)parent;
     return 7;
 }
 
 // --- algo.LnumStr7_U32.ch.N
-inline int algo::ch_N(const algo::LnumStr7_U32& parent) {
+inline int algo::ch_N(const algo::LnumStr7_U32& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<7 && parent.ch[ret]==u8('0')) {
@@ -4766,32 +4766,32 @@ inline int algo::ch_N(const algo::LnumStr7_U32& parent) {
 
 // --- algo.LnumStr7_U32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr7_U32::operator =(const algo::strptr &str) {
+inline void algo::LnumStr7_U32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr7_U32.ch.CtorStrptr
-inline  algo::LnumStr7_U32::LnumStr7_U32(const algo::strptr &rhs) {
+inline  algo::LnumStr7_U32::LnumStr7_U32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr7_U32.ch.Cast
-inline  algo::LnumStr7_U32::operator algo::strptr() const {
+inline  algo::LnumStr7_U32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr7_U32..EqOp
-inline bool algo::LnumStr7_U32::operator ==(const algo::LnumStr7_U32 &rhs) const {
+inline bool algo::LnumStr7_U32::operator ==(const algo::LnumStr7_U32 &rhs) const throw() {
     return algo::LnumStr7_U32_Eq(const_cast<algo::LnumStr7_U32&>(*this),const_cast<algo::LnumStr7_U32&>(rhs));
 }
 
 // --- algo.LnumStr7_U32..NeOp
-inline bool algo::LnumStr7_U32::operator !=(const algo::LnumStr7_U32 &rhs) const {
+inline bool algo::LnumStr7_U32::operator !=(const algo::LnumStr7_U32 &rhs) const throw() {
     return !algo::LnumStr7_U32_Eq(const_cast<algo::LnumStr7_U32&>(*this),const_cast<algo::LnumStr7_U32&>(rhs));
 }
 
 // --- algo.LnumStr7_U32..Cmp
-inline i32 algo::LnumStr7_U32_Cmp(algo::LnumStr7_U32& lhs, algo::LnumStr7_U32& rhs) {
+inline i32 algo::LnumStr7_U32_Cmp(algo::LnumStr7_U32& lhs, algo::LnumStr7_U32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -4806,7 +4806,7 @@ inline void algo::LnumStr7_U32_Init(algo::LnumStr7_U32& parent) {
 }
 
 // --- algo.LnumStr7_U32..Eq
-inline bool algo::LnumStr7_U32_Eq(algo::LnumStr7_U32& lhs, algo::LnumStr7_U32& rhs) {
+inline bool algo::LnumStr7_U32_Eq(algo::LnumStr7_U32& lhs, algo::LnumStr7_U32& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -4816,31 +4816,31 @@ inline bool algo::LnumStr7_U32_Eq(algo::LnumStr7_U32& lhs, algo::LnumStr7_U32& r
 }
 
 // --- algo.LnumStr7_U32..EqOpAryptr
-inline bool algo::LnumStr7_U32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr7_U32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr7_U32..AssignOp
-inline algo::LnumStr7_U32& algo::LnumStr7_U32::operator =(const algo::LnumStr7_U32 &rhs) {
+inline algo::LnumStr7_U32& algo::LnumStr7_U32::operator =(const algo::LnumStr7_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr7_U32));
     return *this;
 }
 
 // --- algo.LnumStr7_U32..Ctor
-inline  algo::LnumStr7_U32::LnumStr7_U32() {
+inline  algo::LnumStr7_U32::LnumStr7_U32() throw() {
     algo::LnumStr7_U32_Init(*this);
 }
 
 // --- algo.LnumStr7_U32..CopyCtor
-inline  algo::LnumStr7_U32::LnumStr7_U32(const algo::LnumStr7_U32 &rhs) {
+inline  algo::LnumStr7_U32::LnumStr7_U32(const algo::LnumStr7_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr7_U32));
 }
 
 // --- algo.LnumStr7_U32_Base36.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr7_U32_Base36& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr7_U32_Base36& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 7 - len;
@@ -4853,7 +4853,7 @@ inline u32 algo::LnumStr7_U32_Base36_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr7_U32_Base36.ch.Init
-inline void algo::ch_Init(algo::LnumStr7_U32_Base36 &parent) {
+inline void algo::ch_Init(algo::LnumStr7_U32_Base36 &parent) throw() {
     for (int i = 0; i < 7; i++) {
         parent.ch[i] = '0';
     }
@@ -4861,13 +4861,13 @@ inline void algo::ch_Init(algo::LnumStr7_U32_Base36 &parent) {
 
 // --- algo.LnumStr7_U32_Base36.ch.Max
 // always return constant 7
-inline int algo::ch_Max(algo::LnumStr7_U32_Base36& parent) {
+inline int algo::ch_Max(algo::LnumStr7_U32_Base36& parent) throw() {
     (void)parent;
     return 7;
 }
 
 // --- algo.LnumStr7_U32_Base36.ch.N
-inline int algo::ch_N(const algo::LnumStr7_U32_Base36& parent) {
+inline int algo::ch_N(const algo::LnumStr7_U32_Base36& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<7 && parent.ch[ret]==u8('0')) {
@@ -4879,32 +4879,32 @@ inline int algo::ch_N(const algo::LnumStr7_U32_Base36& parent) {
 
 // --- algo.LnumStr7_U32_Base36.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr7_U32_Base36::operator =(const algo::strptr &str) {
+inline void algo::LnumStr7_U32_Base36::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr7_U32_Base36.ch.CtorStrptr
-inline  algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36(const algo::strptr &rhs) {
+inline  algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr7_U32_Base36.ch.Cast
-inline  algo::LnumStr7_U32_Base36::operator algo::strptr() const {
+inline  algo::LnumStr7_U32_Base36::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr7_U32_Base36..EqOp
-inline bool algo::LnumStr7_U32_Base36::operator ==(const algo::LnumStr7_U32_Base36 &rhs) const {
+inline bool algo::LnumStr7_U32_Base36::operator ==(const algo::LnumStr7_U32_Base36 &rhs) const throw() {
     return algo::LnumStr7_U32_Base36_Eq(const_cast<algo::LnumStr7_U32_Base36&>(*this),const_cast<algo::LnumStr7_U32_Base36&>(rhs));
 }
 
 // --- algo.LnumStr7_U32_Base36..NeOp
-inline bool algo::LnumStr7_U32_Base36::operator !=(const algo::LnumStr7_U32_Base36 &rhs) const {
+inline bool algo::LnumStr7_U32_Base36::operator !=(const algo::LnumStr7_U32_Base36 &rhs) const throw() {
     return !algo::LnumStr7_U32_Base36_Eq(const_cast<algo::LnumStr7_U32_Base36&>(*this),const_cast<algo::LnumStr7_U32_Base36&>(rhs));
 }
 
 // --- algo.LnumStr7_U32_Base36..Cmp
-inline i32 algo::LnumStr7_U32_Base36_Cmp(algo::LnumStr7_U32_Base36& lhs, algo::LnumStr7_U32_Base36& rhs) {
+inline i32 algo::LnumStr7_U32_Base36_Cmp(algo::LnumStr7_U32_Base36& lhs, algo::LnumStr7_U32_Base36& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -4919,7 +4919,7 @@ inline void algo::LnumStr7_U32_Base36_Init(algo::LnumStr7_U32_Base36& parent) {
 }
 
 // --- algo.LnumStr7_U32_Base36..Eq
-inline bool algo::LnumStr7_U32_Base36_Eq(algo::LnumStr7_U32_Base36& lhs, algo::LnumStr7_U32_Base36& rhs) {
+inline bool algo::LnumStr7_U32_Base36_Eq(algo::LnumStr7_U32_Base36& lhs, algo::LnumStr7_U32_Base36& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -4929,31 +4929,31 @@ inline bool algo::LnumStr7_U32_Base36_Eq(algo::LnumStr7_U32_Base36& lhs, algo::L
 }
 
 // --- algo.LnumStr7_U32_Base36..EqOpAryptr
-inline bool algo::LnumStr7_U32_Base36::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr7_U32_Base36::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr7_U32_Base36..AssignOp
-inline algo::LnumStr7_U32_Base36& algo::LnumStr7_U32_Base36::operator =(const algo::LnumStr7_U32_Base36 &rhs) {
+inline algo::LnumStr7_U32_Base36& algo::LnumStr7_U32_Base36::operator =(const algo::LnumStr7_U32_Base36 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr7_U32_Base36));
     return *this;
 }
 
 // --- algo.LnumStr7_U32_Base36..Ctor
-inline  algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36() {
+inline  algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36() throw() {
     algo::LnumStr7_U32_Base36_Init(*this);
 }
 
 // --- algo.LnumStr7_U32_Base36..CopyCtor
-inline  algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36(const algo::LnumStr7_U32_Base36 &rhs) {
+inline  algo::LnumStr7_U32_Base36::LnumStr7_U32_Base36(const algo::LnumStr7_U32_Base36 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr7_U32_Base36));
 }
 
 // --- algo.LnumStr8_U32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr8_U32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr8_U32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 8 - len;
@@ -4966,7 +4966,7 @@ inline u32 algo::LnumStr8_U32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr8_U32.ch.Init
-inline void algo::ch_Init(algo::LnumStr8_U32 &parent) {
+inline void algo::ch_Init(algo::LnumStr8_U32 &parent) throw() {
     for (int i = 0; i < 8; i++) {
         parent.ch[i] = '0';
     }
@@ -4974,13 +4974,13 @@ inline void algo::ch_Init(algo::LnumStr8_U32 &parent) {
 
 // --- algo.LnumStr8_U32.ch.Max
 // always return constant 8
-inline int algo::ch_Max(algo::LnumStr8_U32& parent) {
+inline int algo::ch_Max(algo::LnumStr8_U32& parent) throw() {
     (void)parent;
     return 8;
 }
 
 // --- algo.LnumStr8_U32.ch.N
-inline int algo::ch_N(const algo::LnumStr8_U32& parent) {
+inline int algo::ch_N(const algo::LnumStr8_U32& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<8 && parent.ch[ret]==u8('0')) {
@@ -4992,32 +4992,32 @@ inline int algo::ch_N(const algo::LnumStr8_U32& parent) {
 
 // --- algo.LnumStr8_U32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr8_U32::operator =(const algo::strptr &str) {
+inline void algo::LnumStr8_U32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr8_U32.ch.CtorStrptr
-inline  algo::LnumStr8_U32::LnumStr8_U32(const algo::strptr &rhs) {
+inline  algo::LnumStr8_U32::LnumStr8_U32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr8_U32.ch.Cast
-inline  algo::LnumStr8_U32::operator algo::strptr() const {
+inline  algo::LnumStr8_U32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr8_U32..EqOp
-inline bool algo::LnumStr8_U32::operator ==(const algo::LnumStr8_U32 &rhs) const {
+inline bool algo::LnumStr8_U32::operator ==(const algo::LnumStr8_U32 &rhs) const throw() {
     return algo::LnumStr8_U32_Eq(const_cast<algo::LnumStr8_U32&>(*this),const_cast<algo::LnumStr8_U32&>(rhs));
 }
 
 // --- algo.LnumStr8_U32..NeOp
-inline bool algo::LnumStr8_U32::operator !=(const algo::LnumStr8_U32 &rhs) const {
+inline bool algo::LnumStr8_U32::operator !=(const algo::LnumStr8_U32 &rhs) const throw() {
     return !algo::LnumStr8_U32_Eq(const_cast<algo::LnumStr8_U32&>(*this),const_cast<algo::LnumStr8_U32&>(rhs));
 }
 
 // --- algo.LnumStr8_U32..Cmp
-inline i32 algo::LnumStr8_U32_Cmp(algo::LnumStr8_U32& lhs, algo::LnumStr8_U32& rhs) {
+inline i32 algo::LnumStr8_U32_Cmp(algo::LnumStr8_U32& lhs, algo::LnumStr8_U32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -5032,7 +5032,7 @@ inline void algo::LnumStr8_U32_Init(algo::LnumStr8_U32& parent) {
 }
 
 // --- algo.LnumStr8_U32..Eq
-inline bool algo::LnumStr8_U32_Eq(algo::LnumStr8_U32& lhs, algo::LnumStr8_U32& rhs) {
+inline bool algo::LnumStr8_U32_Eq(algo::LnumStr8_U32& lhs, algo::LnumStr8_U32& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0);
@@ -5040,31 +5040,31 @@ inline bool algo::LnumStr8_U32_Eq(algo::LnumStr8_U32& lhs, algo::LnumStr8_U32& r
 }
 
 // --- algo.LnumStr8_U32..EqOpAryptr
-inline bool algo::LnumStr8_U32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr8_U32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr8_U32..AssignOp
-inline algo::LnumStr8_U32& algo::LnumStr8_U32::operator =(const algo::LnumStr8_U32 &rhs) {
+inline algo::LnumStr8_U32& algo::LnumStr8_U32::operator =(const algo::LnumStr8_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr8_U32));
     return *this;
 }
 
 // --- algo.LnumStr8_U32..Ctor
-inline  algo::LnumStr8_U32::LnumStr8_U32() {
+inline  algo::LnumStr8_U32::LnumStr8_U32() throw() {
     algo::LnumStr8_U32_Init(*this);
 }
 
 // --- algo.LnumStr8_U32..CopyCtor
-inline  algo::LnumStr8_U32::LnumStr8_U32(const algo::LnumStr8_U32 &rhs) {
+inline  algo::LnumStr8_U32::LnumStr8_U32(const algo::LnumStr8_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr8_U32));
 }
 
 // --- algo.LnumStr8_U32_Base16.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr8_U32_Base16& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr8_U32_Base16& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 8 - len;
@@ -5077,7 +5077,7 @@ inline u32 algo::LnumStr8_U32_Base16_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr8_U32_Base16.ch.Init
-inline void algo::ch_Init(algo::LnumStr8_U32_Base16 &parent) {
+inline void algo::ch_Init(algo::LnumStr8_U32_Base16 &parent) throw() {
     for (int i = 0; i < 8; i++) {
         parent.ch[i] = '0';
     }
@@ -5085,13 +5085,13 @@ inline void algo::ch_Init(algo::LnumStr8_U32_Base16 &parent) {
 
 // --- algo.LnumStr8_U32_Base16.ch.Max
 // always return constant 8
-inline int algo::ch_Max(algo::LnumStr8_U32_Base16& parent) {
+inline int algo::ch_Max(algo::LnumStr8_U32_Base16& parent) throw() {
     (void)parent;
     return 8;
 }
 
 // --- algo.LnumStr8_U32_Base16.ch.N
-inline int algo::ch_N(const algo::LnumStr8_U32_Base16& parent) {
+inline int algo::ch_N(const algo::LnumStr8_U32_Base16& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<8 && parent.ch[ret]==u8('0')) {
@@ -5103,32 +5103,32 @@ inline int algo::ch_N(const algo::LnumStr8_U32_Base16& parent) {
 
 // --- algo.LnumStr8_U32_Base16.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr8_U32_Base16::operator =(const algo::strptr &str) {
+inline void algo::LnumStr8_U32_Base16::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr8_U32_Base16.ch.CtorStrptr
-inline  algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16(const algo::strptr &rhs) {
+inline  algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr8_U32_Base16.ch.Cast
-inline  algo::LnumStr8_U32_Base16::operator algo::strptr() const {
+inline  algo::LnumStr8_U32_Base16::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr8_U32_Base16..EqOp
-inline bool algo::LnumStr8_U32_Base16::operator ==(const algo::LnumStr8_U32_Base16 &rhs) const {
+inline bool algo::LnumStr8_U32_Base16::operator ==(const algo::LnumStr8_U32_Base16 &rhs) const throw() {
     return algo::LnumStr8_U32_Base16_Eq(const_cast<algo::LnumStr8_U32_Base16&>(*this),const_cast<algo::LnumStr8_U32_Base16&>(rhs));
 }
 
 // --- algo.LnumStr8_U32_Base16..NeOp
-inline bool algo::LnumStr8_U32_Base16::operator !=(const algo::LnumStr8_U32_Base16 &rhs) const {
+inline bool algo::LnumStr8_U32_Base16::operator !=(const algo::LnumStr8_U32_Base16 &rhs) const throw() {
     return !algo::LnumStr8_U32_Base16_Eq(const_cast<algo::LnumStr8_U32_Base16&>(*this),const_cast<algo::LnumStr8_U32_Base16&>(rhs));
 }
 
 // --- algo.LnumStr8_U32_Base16..Cmp
-inline i32 algo::LnumStr8_U32_Base16_Cmp(algo::LnumStr8_U32_Base16& lhs, algo::LnumStr8_U32_Base16& rhs) {
+inline i32 algo::LnumStr8_U32_Base16_Cmp(algo::LnumStr8_U32_Base16& lhs, algo::LnumStr8_U32_Base16& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -5143,7 +5143,7 @@ inline void algo::LnumStr8_U32_Base16_Init(algo::LnumStr8_U32_Base16& parent) {
 }
 
 // --- algo.LnumStr8_U32_Base16..Eq
-inline bool algo::LnumStr8_U32_Base16_Eq(algo::LnumStr8_U32_Base16& lhs, algo::LnumStr8_U32_Base16& rhs) {
+inline bool algo::LnumStr8_U32_Base16_Eq(algo::LnumStr8_U32_Base16& lhs, algo::LnumStr8_U32_Base16& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0);
@@ -5151,31 +5151,31 @@ inline bool algo::LnumStr8_U32_Base16_Eq(algo::LnumStr8_U32_Base16& lhs, algo::L
 }
 
 // --- algo.LnumStr8_U32_Base16..EqOpAryptr
-inline bool algo::LnumStr8_U32_Base16::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr8_U32_Base16::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr8_U32_Base16..AssignOp
-inline algo::LnumStr8_U32_Base16& algo::LnumStr8_U32_Base16::operator =(const algo::LnumStr8_U32_Base16 &rhs) {
+inline algo::LnumStr8_U32_Base16& algo::LnumStr8_U32_Base16::operator =(const algo::LnumStr8_U32_Base16 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr8_U32_Base16));
     return *this;
 }
 
 // --- algo.LnumStr8_U32_Base16..Ctor
-inline  algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16() {
+inline  algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16() throw() {
     algo::LnumStr8_U32_Base16_Init(*this);
 }
 
 // --- algo.LnumStr8_U32_Base16..CopyCtor
-inline  algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16(const algo::LnumStr8_U32_Base16 &rhs) {
+inline  algo::LnumStr8_U32_Base16::LnumStr8_U32_Base16(const algo::LnumStr8_U32_Base16 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr8_U32_Base16));
 }
 
 // --- algo.LnumStr8_U64.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr8_U64& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr8_U64& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 8 - len;
@@ -5188,7 +5188,7 @@ inline u32 algo::LnumStr8_U64_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr8_U64.ch.Init
-inline void algo::ch_Init(algo::LnumStr8_U64 &parent) {
+inline void algo::ch_Init(algo::LnumStr8_U64 &parent) throw() {
     for (int i = 0; i < 8; i++) {
         parent.ch[i] = '0';
     }
@@ -5196,13 +5196,13 @@ inline void algo::ch_Init(algo::LnumStr8_U64 &parent) {
 
 // --- algo.LnumStr8_U64.ch.Max
 // always return constant 8
-inline int algo::ch_Max(algo::LnumStr8_U64& parent) {
+inline int algo::ch_Max(algo::LnumStr8_U64& parent) throw() {
     (void)parent;
     return 8;
 }
 
 // --- algo.LnumStr8_U64.ch.N
-inline int algo::ch_N(const algo::LnumStr8_U64& parent) {
+inline int algo::ch_N(const algo::LnumStr8_U64& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<8 && parent.ch[ret]==u8('0')) {
@@ -5214,32 +5214,32 @@ inline int algo::ch_N(const algo::LnumStr8_U64& parent) {
 
 // --- algo.LnumStr8_U64.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr8_U64::operator =(const algo::strptr &str) {
+inline void algo::LnumStr8_U64::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr8_U64.ch.CtorStrptr
-inline  algo::LnumStr8_U64::LnumStr8_U64(const algo::strptr &rhs) {
+inline  algo::LnumStr8_U64::LnumStr8_U64(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr8_U64.ch.Cast
-inline  algo::LnumStr8_U64::operator algo::strptr() const {
+inline  algo::LnumStr8_U64::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr8_U64..EqOp
-inline bool algo::LnumStr8_U64::operator ==(const algo::LnumStr8_U64 &rhs) const {
+inline bool algo::LnumStr8_U64::operator ==(const algo::LnumStr8_U64 &rhs) const throw() {
     return algo::LnumStr8_U64_Eq(const_cast<algo::LnumStr8_U64&>(*this),const_cast<algo::LnumStr8_U64&>(rhs));
 }
 
 // --- algo.LnumStr8_U64..NeOp
-inline bool algo::LnumStr8_U64::operator !=(const algo::LnumStr8_U64 &rhs) const {
+inline bool algo::LnumStr8_U64::operator !=(const algo::LnumStr8_U64 &rhs) const throw() {
     return !algo::LnumStr8_U64_Eq(const_cast<algo::LnumStr8_U64&>(*this),const_cast<algo::LnumStr8_U64&>(rhs));
 }
 
 // --- algo.LnumStr8_U64..Cmp
-inline i32 algo::LnumStr8_U64_Cmp(algo::LnumStr8_U64& lhs, algo::LnumStr8_U64& rhs) {
+inline i32 algo::LnumStr8_U64_Cmp(algo::LnumStr8_U64& lhs, algo::LnumStr8_U64& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -5254,7 +5254,7 @@ inline void algo::LnumStr8_U64_Init(algo::LnumStr8_U64& parent) {
 }
 
 // --- algo.LnumStr8_U64..Eq
-inline bool algo::LnumStr8_U64_Eq(algo::LnumStr8_U64& lhs, algo::LnumStr8_U64& rhs) {
+inline bool algo::LnumStr8_U64_Eq(algo::LnumStr8_U64& lhs, algo::LnumStr8_U64& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0);
@@ -5262,31 +5262,31 @@ inline bool algo::LnumStr8_U64_Eq(algo::LnumStr8_U64& lhs, algo::LnumStr8_U64& r
 }
 
 // --- algo.LnumStr8_U64..EqOpAryptr
-inline bool algo::LnumStr8_U64::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr8_U64::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr8_U64..AssignOp
-inline algo::LnumStr8_U64& algo::LnumStr8_U64::operator =(const algo::LnumStr8_U64 &rhs) {
+inline algo::LnumStr8_U64& algo::LnumStr8_U64::operator =(const algo::LnumStr8_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr8_U64));
     return *this;
 }
 
 // --- algo.LnumStr8_U64..Ctor
-inline  algo::LnumStr8_U64::LnumStr8_U64() {
+inline  algo::LnumStr8_U64::LnumStr8_U64() throw() {
     algo::LnumStr8_U64_Init(*this);
 }
 
 // --- algo.LnumStr8_U64..CopyCtor
-inline  algo::LnumStr8_U64::LnumStr8_U64(const algo::LnumStr8_U64 &rhs) {
+inline  algo::LnumStr8_U64::LnumStr8_U64(const algo::LnumStr8_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr8_U64));
 }
 
 // --- algo.LnumStr9_U32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr9_U32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr9_U32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 9 - len;
@@ -5299,7 +5299,7 @@ inline u32 algo::LnumStr9_U32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr9_U32.ch.Init
-inline void algo::ch_Init(algo::LnumStr9_U32 &parent) {
+inline void algo::ch_Init(algo::LnumStr9_U32 &parent) throw() {
     for (int i = 0; i < 9; i++) {
         parent.ch[i] = '0';
     }
@@ -5307,13 +5307,13 @@ inline void algo::ch_Init(algo::LnumStr9_U32 &parent) {
 
 // --- algo.LnumStr9_U32.ch.Max
 // always return constant 9
-inline int algo::ch_Max(algo::LnumStr9_U32& parent) {
+inline int algo::ch_Max(algo::LnumStr9_U32& parent) throw() {
     (void)parent;
     return 9;
 }
 
 // --- algo.LnumStr9_U32.ch.N
-inline int algo::ch_N(const algo::LnumStr9_U32& parent) {
+inline int algo::ch_N(const algo::LnumStr9_U32& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<9 && parent.ch[ret]==u8('0')) {
@@ -5325,32 +5325,32 @@ inline int algo::ch_N(const algo::LnumStr9_U32& parent) {
 
 // --- algo.LnumStr9_U32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr9_U32::operator =(const algo::strptr &str) {
+inline void algo::LnumStr9_U32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr9_U32.ch.CtorStrptr
-inline  algo::LnumStr9_U32::LnumStr9_U32(const algo::strptr &rhs) {
+inline  algo::LnumStr9_U32::LnumStr9_U32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr9_U32.ch.Cast
-inline  algo::LnumStr9_U32::operator algo::strptr() const {
+inline  algo::LnumStr9_U32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr9_U32..EqOp
-inline bool algo::LnumStr9_U32::operator ==(const algo::LnumStr9_U32 &rhs) const {
+inline bool algo::LnumStr9_U32::operator ==(const algo::LnumStr9_U32 &rhs) const throw() {
     return algo::LnumStr9_U32_Eq(const_cast<algo::LnumStr9_U32&>(*this),const_cast<algo::LnumStr9_U32&>(rhs));
 }
 
 // --- algo.LnumStr9_U32..NeOp
-inline bool algo::LnumStr9_U32::operator !=(const algo::LnumStr9_U32 &rhs) const {
+inline bool algo::LnumStr9_U32::operator !=(const algo::LnumStr9_U32 &rhs) const throw() {
     return !algo::LnumStr9_U32_Eq(const_cast<algo::LnumStr9_U32&>(*this),const_cast<algo::LnumStr9_U32&>(rhs));
 }
 
 // --- algo.LnumStr9_U32..Cmp
-inline i32 algo::LnumStr9_U32_Cmp(algo::LnumStr9_U32& lhs, algo::LnumStr9_U32& rhs) {
+inline i32 algo::LnumStr9_U32_Cmp(algo::LnumStr9_U32& lhs, algo::LnumStr9_U32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -5365,7 +5365,7 @@ inline void algo::LnumStr9_U32_Init(algo::LnumStr9_U32& parent) {
 }
 
 // --- algo.LnumStr9_U32..Eq
-inline bool algo::LnumStr9_U32_Eq(algo::LnumStr9_U32& lhs, algo::LnumStr9_U32& rhs) {
+inline bool algo::LnumStr9_U32_Eq(algo::LnumStr9_U32& lhs, algo::LnumStr9_U32& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5374,31 +5374,31 @@ inline bool algo::LnumStr9_U32_Eq(algo::LnumStr9_U32& lhs, algo::LnumStr9_U32& r
 }
 
 // --- algo.LnumStr9_U32..EqOpAryptr
-inline bool algo::LnumStr9_U32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr9_U32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr9_U32..AssignOp
-inline algo::LnumStr9_U32& algo::LnumStr9_U32::operator =(const algo::LnumStr9_U32 &rhs) {
+inline algo::LnumStr9_U32& algo::LnumStr9_U32::operator =(const algo::LnumStr9_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr9_U32));
     return *this;
 }
 
 // --- algo.LnumStr9_U32..Ctor
-inline  algo::LnumStr9_U32::LnumStr9_U32() {
+inline  algo::LnumStr9_U32::LnumStr9_U32() throw() {
     algo::LnumStr9_U32_Init(*this);
 }
 
 // --- algo.LnumStr9_U32..CopyCtor
-inline  algo::LnumStr9_U32::LnumStr9_U32(const algo::LnumStr9_U32 &rhs) {
+inline  algo::LnumStr9_U32::LnumStr9_U32(const algo::LnumStr9_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr9_U32));
 }
 
 // --- algo.LnumStr9_U64.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr9_U64& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr9_U64& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 9 - len;
@@ -5411,7 +5411,7 @@ inline u32 algo::LnumStr9_U64_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LnumStr9_U64.ch.Init
-inline void algo::ch_Init(algo::LnumStr9_U64 &parent) {
+inline void algo::ch_Init(algo::LnumStr9_U64 &parent) throw() {
     for (int i = 0; i < 9; i++) {
         parent.ch[i] = '0';
     }
@@ -5419,13 +5419,13 @@ inline void algo::ch_Init(algo::LnumStr9_U64 &parent) {
 
 // --- algo.LnumStr9_U64.ch.Max
 // always return constant 9
-inline int algo::ch_Max(algo::LnumStr9_U64& parent) {
+inline int algo::ch_Max(algo::LnumStr9_U64& parent) throw() {
     (void)parent;
     return 9;
 }
 
 // --- algo.LnumStr9_U64.ch.N
-inline int algo::ch_N(const algo::LnumStr9_U64& parent) {
+inline int algo::ch_N(const algo::LnumStr9_U64& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<9 && parent.ch[ret]==u8('0')) {
@@ -5437,32 +5437,32 @@ inline int algo::ch_N(const algo::LnumStr9_U64& parent) {
 
 // --- algo.LnumStr9_U64.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LnumStr9_U64::operator =(const algo::strptr &str) {
+inline void algo::LnumStr9_U64::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LnumStr9_U64.ch.CtorStrptr
-inline  algo::LnumStr9_U64::LnumStr9_U64(const algo::strptr &rhs) {
+inline  algo::LnumStr9_U64::LnumStr9_U64(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LnumStr9_U64.ch.Cast
-inline  algo::LnumStr9_U64::operator algo::strptr() const {
+inline  algo::LnumStr9_U64::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LnumStr9_U64..EqOp
-inline bool algo::LnumStr9_U64::operator ==(const algo::LnumStr9_U64 &rhs) const {
+inline bool algo::LnumStr9_U64::operator ==(const algo::LnumStr9_U64 &rhs) const throw() {
     return algo::LnumStr9_U64_Eq(const_cast<algo::LnumStr9_U64&>(*this),const_cast<algo::LnumStr9_U64&>(rhs));
 }
 
 // --- algo.LnumStr9_U64..NeOp
-inline bool algo::LnumStr9_U64::operator !=(const algo::LnumStr9_U64 &rhs) const {
+inline bool algo::LnumStr9_U64::operator !=(const algo::LnumStr9_U64 &rhs) const throw() {
     return !algo::LnumStr9_U64_Eq(const_cast<algo::LnumStr9_U64&>(*this),const_cast<algo::LnumStr9_U64&>(rhs));
 }
 
 // --- algo.LnumStr9_U64..Cmp
-inline i32 algo::LnumStr9_U64_Cmp(algo::LnumStr9_U64& lhs, algo::LnumStr9_U64& rhs) {
+inline i32 algo::LnumStr9_U64_Cmp(algo::LnumStr9_U64& lhs, algo::LnumStr9_U64& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -5477,7 +5477,7 @@ inline void algo::LnumStr9_U64_Init(algo::LnumStr9_U64& parent) {
 }
 
 // --- algo.LnumStr9_U64..Eq
-inline bool algo::LnumStr9_U64_Eq(algo::LnumStr9_U64& lhs, algo::LnumStr9_U64& rhs) {
+inline bool algo::LnumStr9_U64_Eq(algo::LnumStr9_U64& lhs, algo::LnumStr9_U64& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5486,31 +5486,31 @@ inline bool algo::LnumStr9_U64_Eq(algo::LnumStr9_U64& lhs, algo::LnumStr9_U64& r
 }
 
 // --- algo.LnumStr9_U64..EqOpAryptr
-inline bool algo::LnumStr9_U64::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LnumStr9_U64::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LnumStr9_U64..AssignOp
-inline algo::LnumStr9_U64& algo::LnumStr9_U64::operator =(const algo::LnumStr9_U64 &rhs) {
+inline algo::LnumStr9_U64& algo::LnumStr9_U64::operator =(const algo::LnumStr9_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr9_U64));
     return *this;
 }
 
 // --- algo.LnumStr9_U64..Ctor
-inline  algo::LnumStr9_U64::LnumStr9_U64() {
+inline  algo::LnumStr9_U64::LnumStr9_U64() throw() {
     algo::LnumStr9_U64_Init(*this);
 }
 
 // --- algo.LnumStr9_U64..CopyCtor
-inline  algo::LnumStr9_U64::LnumStr9_U64(const algo::LnumStr9_U64 &rhs) {
+inline  algo::LnumStr9_U64::LnumStr9_U64(const algo::LnumStr9_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LnumStr9_U64));
 }
 
 // --- algo.LspaceStr10.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr10& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr10& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 10 - len;
@@ -5523,19 +5523,19 @@ inline u32 algo::LspaceStr10_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr10.ch.Init
-inline void algo::ch_Init(algo::LspaceStr10 &parent) {
+inline void algo::ch_Init(algo::LspaceStr10 &parent) throw() {
     memset(parent.ch, ' ', 10);
 }
 
 // --- algo.LspaceStr10.ch.Max
 // always return constant 10
-inline int algo::ch_Max(algo::LspaceStr10& parent) {
+inline int algo::ch_Max(algo::LspaceStr10& parent) throw() {
     (void)parent;
     return 10;
 }
 
 // --- algo.LspaceStr10.ch.N
-inline int algo::ch_N(const algo::LspaceStr10& parent) {
+inline int algo::ch_N(const algo::LspaceStr10& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<10 && parent.ch[ret]==u8(' ')) {
@@ -5547,32 +5547,32 @@ inline int algo::ch_N(const algo::LspaceStr10& parent) {
 
 // --- algo.LspaceStr10.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr10::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr10::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr10.ch.CtorStrptr
-inline  algo::LspaceStr10::LspaceStr10(const algo::strptr &rhs) {
+inline  algo::LspaceStr10::LspaceStr10(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr10.ch.Cast
-inline  algo::LspaceStr10::operator algo::strptr() const {
+inline  algo::LspaceStr10::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr10..EqOp
-inline bool algo::LspaceStr10::operator ==(const algo::LspaceStr10 &rhs) const {
+inline bool algo::LspaceStr10::operator ==(const algo::LspaceStr10 &rhs) const throw() {
     return algo::LspaceStr10_Eq(const_cast<algo::LspaceStr10&>(*this),const_cast<algo::LspaceStr10&>(rhs));
 }
 
 // --- algo.LspaceStr10..NeOp
-inline bool algo::LspaceStr10::operator !=(const algo::LspaceStr10 &rhs) const {
+inline bool algo::LspaceStr10::operator !=(const algo::LspaceStr10 &rhs) const throw() {
     return !algo::LspaceStr10_Eq(const_cast<algo::LspaceStr10&>(*this),const_cast<algo::LspaceStr10&>(rhs));
 }
 
 // --- algo.LspaceStr10..Cmp
-inline i32 algo::LspaceStr10_Cmp(algo::LspaceStr10& lhs, algo::LspaceStr10& rhs) {
+inline i32 algo::LspaceStr10_Cmp(algo::LspaceStr10& lhs, algo::LspaceStr10& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -5585,7 +5585,7 @@ inline void algo::LspaceStr10_Init(algo::LspaceStr10& parent) {
 }
 
 // --- algo.LspaceStr10..Eq
-inline bool algo::LspaceStr10_Eq(algo::LspaceStr10& lhs, algo::LspaceStr10& rhs) {
+inline bool algo::LspaceStr10_Eq(algo::LspaceStr10& lhs, algo::LspaceStr10& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5594,31 +5594,31 @@ inline bool algo::LspaceStr10_Eq(algo::LspaceStr10& lhs, algo::LspaceStr10& rhs)
 }
 
 // --- algo.LspaceStr10..EqOpAryptr
-inline bool algo::LspaceStr10::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr10::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr10..AssignOp
-inline algo::LspaceStr10& algo::LspaceStr10::operator =(const algo::LspaceStr10 &rhs) {
+inline algo::LspaceStr10& algo::LspaceStr10::operator =(const algo::LspaceStr10 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr10));
     return *this;
 }
 
 // --- algo.LspaceStr10..Ctor
-inline  algo::LspaceStr10::LspaceStr10() {
+inline  algo::LspaceStr10::LspaceStr10() throw() {
     algo::LspaceStr10_Init(*this);
 }
 
 // --- algo.LspaceStr10..CopyCtor
-inline  algo::LspaceStr10::LspaceStr10(const algo::LspaceStr10 &rhs) {
+inline  algo::LspaceStr10::LspaceStr10(const algo::LspaceStr10 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr10));
 }
 
 // --- algo.LspaceStr12.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr12& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr12& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 12 - len;
@@ -5631,19 +5631,19 @@ inline u32 algo::LspaceStr12_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr12.ch.Init
-inline void algo::ch_Init(algo::LspaceStr12 &parent) {
+inline void algo::ch_Init(algo::LspaceStr12 &parent) throw() {
     memset(parent.ch, ' ', 12);
 }
 
 // --- algo.LspaceStr12.ch.Max
 // always return constant 12
-inline int algo::ch_Max(algo::LspaceStr12& parent) {
+inline int algo::ch_Max(algo::LspaceStr12& parent) throw() {
     (void)parent;
     return 12;
 }
 
 // --- algo.LspaceStr12.ch.N
-inline int algo::ch_N(const algo::LspaceStr12& parent) {
+inline int algo::ch_N(const algo::LspaceStr12& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<12 && parent.ch[ret]==u8(' ')) {
@@ -5655,32 +5655,32 @@ inline int algo::ch_N(const algo::LspaceStr12& parent) {
 
 // --- algo.LspaceStr12.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr12::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr12::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr12.ch.CtorStrptr
-inline  algo::LspaceStr12::LspaceStr12(const algo::strptr &rhs) {
+inline  algo::LspaceStr12::LspaceStr12(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr12.ch.Cast
-inline  algo::LspaceStr12::operator algo::strptr() const {
+inline  algo::LspaceStr12::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr12..EqOp
-inline bool algo::LspaceStr12::operator ==(const algo::LspaceStr12 &rhs) const {
+inline bool algo::LspaceStr12::operator ==(const algo::LspaceStr12 &rhs) const throw() {
     return algo::LspaceStr12_Eq(const_cast<algo::LspaceStr12&>(*this),const_cast<algo::LspaceStr12&>(rhs));
 }
 
 // --- algo.LspaceStr12..NeOp
-inline bool algo::LspaceStr12::operator !=(const algo::LspaceStr12 &rhs) const {
+inline bool algo::LspaceStr12::operator !=(const algo::LspaceStr12 &rhs) const throw() {
     return !algo::LspaceStr12_Eq(const_cast<algo::LspaceStr12&>(*this),const_cast<algo::LspaceStr12&>(rhs));
 }
 
 // --- algo.LspaceStr12..Cmp
-inline i32 algo::LspaceStr12_Cmp(algo::LspaceStr12& lhs, algo::LspaceStr12& rhs) {
+inline i32 algo::LspaceStr12_Cmp(algo::LspaceStr12& lhs, algo::LspaceStr12& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -5693,7 +5693,7 @@ inline void algo::LspaceStr12_Init(algo::LspaceStr12& parent) {
 }
 
 // --- algo.LspaceStr12..Eq
-inline bool algo::LspaceStr12_Eq(algo::LspaceStr12& lhs, algo::LspaceStr12& rhs) {
+inline bool algo::LspaceStr12_Eq(algo::LspaceStr12& lhs, algo::LspaceStr12& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5702,31 +5702,31 @@ inline bool algo::LspaceStr12_Eq(algo::LspaceStr12& lhs, algo::LspaceStr12& rhs)
 }
 
 // --- algo.LspaceStr12..EqOpAryptr
-inline bool algo::LspaceStr12::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr12::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr12..AssignOp
-inline algo::LspaceStr12& algo::LspaceStr12::operator =(const algo::LspaceStr12 &rhs) {
+inline algo::LspaceStr12& algo::LspaceStr12::operator =(const algo::LspaceStr12 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr12));
     return *this;
 }
 
 // --- algo.LspaceStr12..Ctor
-inline  algo::LspaceStr12::LspaceStr12() {
+inline  algo::LspaceStr12::LspaceStr12() throw() {
     algo::LspaceStr12_Init(*this);
 }
 
 // --- algo.LspaceStr12..CopyCtor
-inline  algo::LspaceStr12::LspaceStr12(const algo::LspaceStr12 &rhs) {
+inline  algo::LspaceStr12::LspaceStr12(const algo::LspaceStr12 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr12));
 }
 
 // --- algo.LspaceStr14.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr14& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr14& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 14 - len;
@@ -5739,19 +5739,19 @@ inline u32 algo::LspaceStr14_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr14.ch.Init
-inline void algo::ch_Init(algo::LspaceStr14 &parent) {
+inline void algo::ch_Init(algo::LspaceStr14 &parent) throw() {
     memset(parent.ch, ' ', 14);
 }
 
 // --- algo.LspaceStr14.ch.Max
 // always return constant 14
-inline int algo::ch_Max(algo::LspaceStr14& parent) {
+inline int algo::ch_Max(algo::LspaceStr14& parent) throw() {
     (void)parent;
     return 14;
 }
 
 // --- algo.LspaceStr14.ch.N
-inline int algo::ch_N(const algo::LspaceStr14& parent) {
+inline int algo::ch_N(const algo::LspaceStr14& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<14 && parent.ch[ret]==u8(' ')) {
@@ -5763,32 +5763,32 @@ inline int algo::ch_N(const algo::LspaceStr14& parent) {
 
 // --- algo.LspaceStr14.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr14::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr14::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr14.ch.CtorStrptr
-inline  algo::LspaceStr14::LspaceStr14(const algo::strptr &rhs) {
+inline  algo::LspaceStr14::LspaceStr14(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr14.ch.Cast
-inline  algo::LspaceStr14::operator algo::strptr() const {
+inline  algo::LspaceStr14::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr14..EqOp
-inline bool algo::LspaceStr14::operator ==(const algo::LspaceStr14 &rhs) const {
+inline bool algo::LspaceStr14::operator ==(const algo::LspaceStr14 &rhs) const throw() {
     return algo::LspaceStr14_Eq(const_cast<algo::LspaceStr14&>(*this),const_cast<algo::LspaceStr14&>(rhs));
 }
 
 // --- algo.LspaceStr14..NeOp
-inline bool algo::LspaceStr14::operator !=(const algo::LspaceStr14 &rhs) const {
+inline bool algo::LspaceStr14::operator !=(const algo::LspaceStr14 &rhs) const throw() {
     return !algo::LspaceStr14_Eq(const_cast<algo::LspaceStr14&>(*this),const_cast<algo::LspaceStr14&>(rhs));
 }
 
 // --- algo.LspaceStr14..Cmp
-inline i32 algo::LspaceStr14_Cmp(algo::LspaceStr14& lhs, algo::LspaceStr14& rhs) {
+inline i32 algo::LspaceStr14_Cmp(algo::LspaceStr14& lhs, algo::LspaceStr14& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -5801,7 +5801,7 @@ inline void algo::LspaceStr14_Init(algo::LspaceStr14& parent) {
 }
 
 // --- algo.LspaceStr14..Eq
-inline bool algo::LspaceStr14_Eq(algo::LspaceStr14& lhs, algo::LspaceStr14& rhs) {
+inline bool algo::LspaceStr14_Eq(algo::LspaceStr14& lhs, algo::LspaceStr14& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5811,31 +5811,31 @@ inline bool algo::LspaceStr14_Eq(algo::LspaceStr14& lhs, algo::LspaceStr14& rhs)
 }
 
 // --- algo.LspaceStr14..EqOpAryptr
-inline bool algo::LspaceStr14::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr14::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr14..AssignOp
-inline algo::LspaceStr14& algo::LspaceStr14::operator =(const algo::LspaceStr14 &rhs) {
+inline algo::LspaceStr14& algo::LspaceStr14::operator =(const algo::LspaceStr14 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr14));
     return *this;
 }
 
 // --- algo.LspaceStr14..Ctor
-inline  algo::LspaceStr14::LspaceStr14() {
+inline  algo::LspaceStr14::LspaceStr14() throw() {
     algo::LspaceStr14_Init(*this);
 }
 
 // --- algo.LspaceStr14..CopyCtor
-inline  algo::LspaceStr14::LspaceStr14(const algo::LspaceStr14 &rhs) {
+inline  algo::LspaceStr14::LspaceStr14(const algo::LspaceStr14 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr14));
 }
 
 // --- algo.LspaceStr15.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr15& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr15& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 15 - len;
@@ -5848,19 +5848,19 @@ inline u32 algo::LspaceStr15_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr15.ch.Init
-inline void algo::ch_Init(algo::LspaceStr15 &parent) {
+inline void algo::ch_Init(algo::LspaceStr15 &parent) throw() {
     memset(parent.ch, ' ', 15);
 }
 
 // --- algo.LspaceStr15.ch.Max
 // always return constant 15
-inline int algo::ch_Max(algo::LspaceStr15& parent) {
+inline int algo::ch_Max(algo::LspaceStr15& parent) throw() {
     (void)parent;
     return 15;
 }
 
 // --- algo.LspaceStr15.ch.N
-inline int algo::ch_N(const algo::LspaceStr15& parent) {
+inline int algo::ch_N(const algo::LspaceStr15& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<15 && parent.ch[ret]==u8(' ')) {
@@ -5872,32 +5872,32 @@ inline int algo::ch_N(const algo::LspaceStr15& parent) {
 
 // --- algo.LspaceStr15.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr15::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr15::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr15.ch.CtorStrptr
-inline  algo::LspaceStr15::LspaceStr15(const algo::strptr &rhs) {
+inline  algo::LspaceStr15::LspaceStr15(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr15.ch.Cast
-inline  algo::LspaceStr15::operator algo::strptr() const {
+inline  algo::LspaceStr15::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr15..EqOp
-inline bool algo::LspaceStr15::operator ==(const algo::LspaceStr15 &rhs) const {
+inline bool algo::LspaceStr15::operator ==(const algo::LspaceStr15 &rhs) const throw() {
     return algo::LspaceStr15_Eq(const_cast<algo::LspaceStr15&>(*this),const_cast<algo::LspaceStr15&>(rhs));
 }
 
 // --- algo.LspaceStr15..NeOp
-inline bool algo::LspaceStr15::operator !=(const algo::LspaceStr15 &rhs) const {
+inline bool algo::LspaceStr15::operator !=(const algo::LspaceStr15 &rhs) const throw() {
     return !algo::LspaceStr15_Eq(const_cast<algo::LspaceStr15&>(*this),const_cast<algo::LspaceStr15&>(rhs));
 }
 
 // --- algo.LspaceStr15..Cmp
-inline i32 algo::LspaceStr15_Cmp(algo::LspaceStr15& lhs, algo::LspaceStr15& rhs) {
+inline i32 algo::LspaceStr15_Cmp(algo::LspaceStr15& lhs, algo::LspaceStr15& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -5910,7 +5910,7 @@ inline void algo::LspaceStr15_Init(algo::LspaceStr15& parent) {
 }
 
 // --- algo.LspaceStr15..Eq
-inline bool algo::LspaceStr15_Eq(algo::LspaceStr15& lhs, algo::LspaceStr15& rhs) {
+inline bool algo::LspaceStr15_Eq(algo::LspaceStr15& lhs, algo::LspaceStr15& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -5921,31 +5921,31 @@ inline bool algo::LspaceStr15_Eq(algo::LspaceStr15& lhs, algo::LspaceStr15& rhs)
 }
 
 // --- algo.LspaceStr15..EqOpAryptr
-inline bool algo::LspaceStr15::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr15::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr15..AssignOp
-inline algo::LspaceStr15& algo::LspaceStr15::operator =(const algo::LspaceStr15 &rhs) {
+inline algo::LspaceStr15& algo::LspaceStr15::operator =(const algo::LspaceStr15 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr15));
     return *this;
 }
 
 // --- algo.LspaceStr15..Ctor
-inline  algo::LspaceStr15::LspaceStr15() {
+inline  algo::LspaceStr15::LspaceStr15() throw() {
     algo::LspaceStr15_Init(*this);
 }
 
 // --- algo.LspaceStr15..CopyCtor
-inline  algo::LspaceStr15::LspaceStr15(const algo::LspaceStr15 &rhs) {
+inline  algo::LspaceStr15::LspaceStr15(const algo::LspaceStr15 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr15));
 }
 
 // --- algo.LspaceStr20_I64.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr20_I64& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr20_I64& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 20 - len;
@@ -5958,19 +5958,19 @@ inline u32 algo::LspaceStr20_I64_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr20_I64.ch.Init
-inline void algo::ch_Init(algo::LspaceStr20_I64 &parent) {
+inline void algo::ch_Init(algo::LspaceStr20_I64 &parent) throw() {
     memset(parent.ch, ' ', 20);
 }
 
 // --- algo.LspaceStr20_I64.ch.Max
 // always return constant 20
-inline int algo::ch_Max(algo::LspaceStr20_I64& parent) {
+inline int algo::ch_Max(algo::LspaceStr20_I64& parent) throw() {
     (void)parent;
     return 20;
 }
 
 // --- algo.LspaceStr20_I64.ch.N
-inline int algo::ch_N(const algo::LspaceStr20_I64& parent) {
+inline int algo::ch_N(const algo::LspaceStr20_I64& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<20 && parent.ch[ret]==u8(' ')) {
@@ -5982,32 +5982,32 @@ inline int algo::ch_N(const algo::LspaceStr20_I64& parent) {
 
 // --- algo.LspaceStr20_I64.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr20_I64::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr20_I64::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr20_I64.ch.CtorStrptr
-inline  algo::LspaceStr20_I64::LspaceStr20_I64(const algo::strptr &rhs) {
+inline  algo::LspaceStr20_I64::LspaceStr20_I64(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr20_I64.ch.Cast
-inline  algo::LspaceStr20_I64::operator algo::strptr() const {
+inline  algo::LspaceStr20_I64::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr20_I64..EqOp
-inline bool algo::LspaceStr20_I64::operator ==(const algo::LspaceStr20_I64 &rhs) const {
+inline bool algo::LspaceStr20_I64::operator ==(const algo::LspaceStr20_I64 &rhs) const throw() {
     return algo::LspaceStr20_I64_Eq(const_cast<algo::LspaceStr20_I64&>(*this),const_cast<algo::LspaceStr20_I64&>(rhs));
 }
 
 // --- algo.LspaceStr20_I64..NeOp
-inline bool algo::LspaceStr20_I64::operator !=(const algo::LspaceStr20_I64 &rhs) const {
+inline bool algo::LspaceStr20_I64::operator !=(const algo::LspaceStr20_I64 &rhs) const throw() {
     return !algo::LspaceStr20_I64_Eq(const_cast<algo::LspaceStr20_I64&>(*this),const_cast<algo::LspaceStr20_I64&>(rhs));
 }
 
 // --- algo.LspaceStr20_I64..Cmp
-inline i32 algo::LspaceStr20_I64_Cmp(algo::LspaceStr20_I64& lhs, algo::LspaceStr20_I64& rhs) {
+inline i32 algo::LspaceStr20_I64_Cmp(algo::LspaceStr20_I64& lhs, algo::LspaceStr20_I64& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -6020,7 +6020,7 @@ inline void algo::LspaceStr20_I64_Init(algo::LspaceStr20_I64& parent) {
 }
 
 // --- algo.LspaceStr20_I64..Eq
-inline bool algo::LspaceStr20_I64_Eq(algo::LspaceStr20_I64& lhs, algo::LspaceStr20_I64& rhs) {
+inline bool algo::LspaceStr20_I64_Eq(algo::LspaceStr20_I64& lhs, algo::LspaceStr20_I64& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -6030,31 +6030,31 @@ inline bool algo::LspaceStr20_I64_Eq(algo::LspaceStr20_I64& lhs, algo::LspaceStr
 }
 
 // --- algo.LspaceStr20_I64..EqOpAryptr
-inline bool algo::LspaceStr20_I64::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr20_I64::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr20_I64..AssignOp
-inline algo::LspaceStr20_I64& algo::LspaceStr20_I64::operator =(const algo::LspaceStr20_I64 &rhs) {
+inline algo::LspaceStr20_I64& algo::LspaceStr20_I64::operator =(const algo::LspaceStr20_I64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr20_I64));
     return *this;
 }
 
 // --- algo.LspaceStr20_I64..Ctor
-inline  algo::LspaceStr20_I64::LspaceStr20_I64() {
+inline  algo::LspaceStr20_I64::LspaceStr20_I64() throw() {
     algo::LspaceStr20_I64_Init(*this);
 }
 
 // --- algo.LspaceStr20_I64..CopyCtor
-inline  algo::LspaceStr20_I64::LspaceStr20_I64(const algo::LspaceStr20_I64 &rhs) {
+inline  algo::LspaceStr20_I64::LspaceStr20_I64(const algo::LspaceStr20_I64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr20_I64));
 }
 
 // --- algo.LspaceStr20_U64.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr20_U64& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr20_U64& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 20 - len;
@@ -6067,19 +6067,19 @@ inline u32 algo::LspaceStr20_U64_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr20_U64.ch.Init
-inline void algo::ch_Init(algo::LspaceStr20_U64 &parent) {
+inline void algo::ch_Init(algo::LspaceStr20_U64 &parent) throw() {
     memset(parent.ch, ' ', 20);
 }
 
 // --- algo.LspaceStr20_U64.ch.Max
 // always return constant 20
-inline int algo::ch_Max(algo::LspaceStr20_U64& parent) {
+inline int algo::ch_Max(algo::LspaceStr20_U64& parent) throw() {
     (void)parent;
     return 20;
 }
 
 // --- algo.LspaceStr20_U64.ch.N
-inline int algo::ch_N(const algo::LspaceStr20_U64& parent) {
+inline int algo::ch_N(const algo::LspaceStr20_U64& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<20 && parent.ch[ret]==u8(' ')) {
@@ -6091,32 +6091,32 @@ inline int algo::ch_N(const algo::LspaceStr20_U64& parent) {
 
 // --- algo.LspaceStr20_U64.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr20_U64::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr20_U64::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr20_U64.ch.CtorStrptr
-inline  algo::LspaceStr20_U64::LspaceStr20_U64(const algo::strptr &rhs) {
+inline  algo::LspaceStr20_U64::LspaceStr20_U64(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr20_U64.ch.Cast
-inline  algo::LspaceStr20_U64::operator algo::strptr() const {
+inline  algo::LspaceStr20_U64::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr20_U64..EqOp
-inline bool algo::LspaceStr20_U64::operator ==(const algo::LspaceStr20_U64 &rhs) const {
+inline bool algo::LspaceStr20_U64::operator ==(const algo::LspaceStr20_U64 &rhs) const throw() {
     return algo::LspaceStr20_U64_Eq(const_cast<algo::LspaceStr20_U64&>(*this),const_cast<algo::LspaceStr20_U64&>(rhs));
 }
 
 // --- algo.LspaceStr20_U64..NeOp
-inline bool algo::LspaceStr20_U64::operator !=(const algo::LspaceStr20_U64 &rhs) const {
+inline bool algo::LspaceStr20_U64::operator !=(const algo::LspaceStr20_U64 &rhs) const throw() {
     return !algo::LspaceStr20_U64_Eq(const_cast<algo::LspaceStr20_U64&>(*this),const_cast<algo::LspaceStr20_U64&>(rhs));
 }
 
 // --- algo.LspaceStr20_U64..Cmp
-inline i32 algo::LspaceStr20_U64_Cmp(algo::LspaceStr20_U64& lhs, algo::LspaceStr20_U64& rhs) {
+inline i32 algo::LspaceStr20_U64_Cmp(algo::LspaceStr20_U64& lhs, algo::LspaceStr20_U64& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -6129,7 +6129,7 @@ inline void algo::LspaceStr20_U64_Init(algo::LspaceStr20_U64& parent) {
 }
 
 // --- algo.LspaceStr20_U64..Eq
-inline bool algo::LspaceStr20_U64_Eq(algo::LspaceStr20_U64& lhs, algo::LspaceStr20_U64& rhs) {
+inline bool algo::LspaceStr20_U64_Eq(algo::LspaceStr20_U64& lhs, algo::LspaceStr20_U64& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -6139,31 +6139,31 @@ inline bool algo::LspaceStr20_U64_Eq(algo::LspaceStr20_U64& lhs, algo::LspaceStr
 }
 
 // --- algo.LspaceStr20_U64..EqOpAryptr
-inline bool algo::LspaceStr20_U64::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr20_U64::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr20_U64..AssignOp
-inline algo::LspaceStr20_U64& algo::LspaceStr20_U64::operator =(const algo::LspaceStr20_U64 &rhs) {
+inline algo::LspaceStr20_U64& algo::LspaceStr20_U64::operator =(const algo::LspaceStr20_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr20_U64));
     return *this;
 }
 
 // --- algo.LspaceStr20_U64..Ctor
-inline  algo::LspaceStr20_U64::LspaceStr20_U64() {
+inline  algo::LspaceStr20_U64::LspaceStr20_U64() throw() {
     algo::LspaceStr20_U64_Init(*this);
 }
 
 // --- algo.LspaceStr20_U64..CopyCtor
-inline  algo::LspaceStr20_U64::LspaceStr20_U64(const algo::LspaceStr20_U64 &rhs) {
+inline  algo::LspaceStr20_U64::LspaceStr20_U64(const algo::LspaceStr20_U64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr20_U64));
 }
 
 // --- algo.LspaceStr3.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr3& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr3& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 3 - len;
@@ -6176,19 +6176,19 @@ inline u32 algo::LspaceStr3_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr3.ch.Init
-inline void algo::ch_Init(algo::LspaceStr3 &parent) {
+inline void algo::ch_Init(algo::LspaceStr3 &parent) throw() {
     memset(parent.ch, ' ', 3);
 }
 
 // --- algo.LspaceStr3.ch.Max
 // always return constant 3
-inline int algo::ch_Max(algo::LspaceStr3& parent) {
+inline int algo::ch_Max(algo::LspaceStr3& parent) throw() {
     (void)parent;
     return 3;
 }
 
 // --- algo.LspaceStr3.ch.N
-inline int algo::ch_N(const algo::LspaceStr3& parent) {
+inline int algo::ch_N(const algo::LspaceStr3& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<3 && parent.ch[ret]==u8(' ')) {
@@ -6200,32 +6200,32 @@ inline int algo::ch_N(const algo::LspaceStr3& parent) {
 
 // --- algo.LspaceStr3.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr3::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr3::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr3.ch.CtorStrptr
-inline  algo::LspaceStr3::LspaceStr3(const algo::strptr &rhs) {
+inline  algo::LspaceStr3::LspaceStr3(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr3.ch.Cast
-inline  algo::LspaceStr3::operator algo::strptr() const {
+inline  algo::LspaceStr3::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr3..EqOp
-inline bool algo::LspaceStr3::operator ==(const algo::LspaceStr3 &rhs) const {
+inline bool algo::LspaceStr3::operator ==(const algo::LspaceStr3 &rhs) const throw() {
     return algo::LspaceStr3_Eq(const_cast<algo::LspaceStr3&>(*this),const_cast<algo::LspaceStr3&>(rhs));
 }
 
 // --- algo.LspaceStr3..NeOp
-inline bool algo::LspaceStr3::operator !=(const algo::LspaceStr3 &rhs) const {
+inline bool algo::LspaceStr3::operator !=(const algo::LspaceStr3 &rhs) const throw() {
     return !algo::LspaceStr3_Eq(const_cast<algo::LspaceStr3&>(*this),const_cast<algo::LspaceStr3&>(rhs));
 }
 
 // --- algo.LspaceStr3..Cmp
-inline i32 algo::LspaceStr3_Cmp(algo::LspaceStr3& lhs, algo::LspaceStr3& rhs) {
+inline i32 algo::LspaceStr3_Cmp(algo::LspaceStr3& lhs, algo::LspaceStr3& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -6238,7 +6238,7 @@ inline void algo::LspaceStr3_Init(algo::LspaceStr3& parent) {
 }
 
 // --- algo.LspaceStr3..Eq
-inline bool algo::LspaceStr3_Eq(algo::LspaceStr3& lhs, algo::LspaceStr3& rhs) {
+inline bool algo::LspaceStr3_Eq(algo::LspaceStr3& lhs, algo::LspaceStr3& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u16*)(lhs.ch+0) == *(u16*)(rhs.ch+0)
@@ -6247,31 +6247,31 @@ inline bool algo::LspaceStr3_Eq(algo::LspaceStr3& lhs, algo::LspaceStr3& rhs) {
 }
 
 // --- algo.LspaceStr3..EqOpAryptr
-inline bool algo::LspaceStr3::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr3::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr3..AssignOp
-inline algo::LspaceStr3& algo::LspaceStr3::operator =(const algo::LspaceStr3 &rhs) {
+inline algo::LspaceStr3& algo::LspaceStr3::operator =(const algo::LspaceStr3 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr3));
     return *this;
 }
 
 // --- algo.LspaceStr3..Ctor
-inline  algo::LspaceStr3::LspaceStr3() {
+inline  algo::LspaceStr3::LspaceStr3() throw() {
     algo::LspaceStr3_Init(*this);
 }
 
 // --- algo.LspaceStr3..CopyCtor
-inline  algo::LspaceStr3::LspaceStr3(const algo::LspaceStr3 &rhs) {
+inline  algo::LspaceStr3::LspaceStr3(const algo::LspaceStr3 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr3));
 }
 
 // --- algo.LspaceStr3_I16.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr3_I16& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr3_I16& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 3 - len;
@@ -6284,19 +6284,19 @@ inline u32 algo::LspaceStr3_I16_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr3_I16.ch.Init
-inline void algo::ch_Init(algo::LspaceStr3_I16 &parent) {
+inline void algo::ch_Init(algo::LspaceStr3_I16 &parent) throw() {
     memset(parent.ch, ' ', 3);
 }
 
 // --- algo.LspaceStr3_I16.ch.Max
 // always return constant 3
-inline int algo::ch_Max(algo::LspaceStr3_I16& parent) {
+inline int algo::ch_Max(algo::LspaceStr3_I16& parent) throw() {
     (void)parent;
     return 3;
 }
 
 // --- algo.LspaceStr3_I16.ch.N
-inline int algo::ch_N(const algo::LspaceStr3_I16& parent) {
+inline int algo::ch_N(const algo::LspaceStr3_I16& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<3 && parent.ch[ret]==u8(' ')) {
@@ -6308,32 +6308,32 @@ inline int algo::ch_N(const algo::LspaceStr3_I16& parent) {
 
 // --- algo.LspaceStr3_I16.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr3_I16::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr3_I16::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr3_I16.ch.CtorStrptr
-inline  algo::LspaceStr3_I16::LspaceStr3_I16(const algo::strptr &rhs) {
+inline  algo::LspaceStr3_I16::LspaceStr3_I16(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr3_I16.ch.Cast
-inline  algo::LspaceStr3_I16::operator algo::strptr() const {
+inline  algo::LspaceStr3_I16::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr3_I16..EqOp
-inline bool algo::LspaceStr3_I16::operator ==(const algo::LspaceStr3_I16 &rhs) const {
+inline bool algo::LspaceStr3_I16::operator ==(const algo::LspaceStr3_I16 &rhs) const throw() {
     return algo::LspaceStr3_I16_Eq(const_cast<algo::LspaceStr3_I16&>(*this),const_cast<algo::LspaceStr3_I16&>(rhs));
 }
 
 // --- algo.LspaceStr3_I16..NeOp
-inline bool algo::LspaceStr3_I16::operator !=(const algo::LspaceStr3_I16 &rhs) const {
+inline bool algo::LspaceStr3_I16::operator !=(const algo::LspaceStr3_I16 &rhs) const throw() {
     return !algo::LspaceStr3_I16_Eq(const_cast<algo::LspaceStr3_I16&>(*this),const_cast<algo::LspaceStr3_I16&>(rhs));
 }
 
 // --- algo.LspaceStr3_I16..Cmp
-inline i32 algo::LspaceStr3_I16_Cmp(algo::LspaceStr3_I16& lhs, algo::LspaceStr3_I16& rhs) {
+inline i32 algo::LspaceStr3_I16_Cmp(algo::LspaceStr3_I16& lhs, algo::LspaceStr3_I16& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -6346,7 +6346,7 @@ inline void algo::LspaceStr3_I16_Init(algo::LspaceStr3_I16& parent) {
 }
 
 // --- algo.LspaceStr3_I16..Eq
-inline bool algo::LspaceStr3_I16_Eq(algo::LspaceStr3_I16& lhs, algo::LspaceStr3_I16& rhs) {
+inline bool algo::LspaceStr3_I16_Eq(algo::LspaceStr3_I16& lhs, algo::LspaceStr3_I16& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u16*)(lhs.ch+0) == *(u16*)(rhs.ch+0)
@@ -6355,31 +6355,31 @@ inline bool algo::LspaceStr3_I16_Eq(algo::LspaceStr3_I16& lhs, algo::LspaceStr3_
 }
 
 // --- algo.LspaceStr3_I16..EqOpAryptr
-inline bool algo::LspaceStr3_I16::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr3_I16::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr3_I16..AssignOp
-inline algo::LspaceStr3_I16& algo::LspaceStr3_I16::operator =(const algo::LspaceStr3_I16 &rhs) {
+inline algo::LspaceStr3_I16& algo::LspaceStr3_I16::operator =(const algo::LspaceStr3_I16 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr3_I16));
     return *this;
 }
 
 // --- algo.LspaceStr3_I16..Ctor
-inline  algo::LspaceStr3_I16::LspaceStr3_I16() {
+inline  algo::LspaceStr3_I16::LspaceStr3_I16() throw() {
     algo::LspaceStr3_I16_Init(*this);
 }
 
 // --- algo.LspaceStr3_I16..CopyCtor
-inline  algo::LspaceStr3_I16::LspaceStr3_I16(const algo::LspaceStr3_I16 &rhs) {
+inline  algo::LspaceStr3_I16::LspaceStr3_I16(const algo::LspaceStr3_I16 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr3_I16));
 }
 
 // --- algo.LspaceStr4.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr4& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr4& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 4 - len;
@@ -6392,19 +6392,19 @@ inline u32 algo::LspaceStr4_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr4.ch.Init
-inline void algo::ch_Init(algo::LspaceStr4 &parent) {
+inline void algo::ch_Init(algo::LspaceStr4 &parent) throw() {
     memset(parent.ch, ' ', 4);
 }
 
 // --- algo.LspaceStr4.ch.Max
 // always return constant 4
-inline int algo::ch_Max(algo::LspaceStr4& parent) {
+inline int algo::ch_Max(algo::LspaceStr4& parent) throw() {
     (void)parent;
     return 4;
 }
 
 // --- algo.LspaceStr4.ch.N
-inline int algo::ch_N(const algo::LspaceStr4& parent) {
+inline int algo::ch_N(const algo::LspaceStr4& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<4 && parent.ch[ret]==u8(' ')) {
@@ -6416,32 +6416,32 @@ inline int algo::ch_N(const algo::LspaceStr4& parent) {
 
 // --- algo.LspaceStr4.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr4::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr4::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr4.ch.CtorStrptr
-inline  algo::LspaceStr4::LspaceStr4(const algo::strptr &rhs) {
+inline  algo::LspaceStr4::LspaceStr4(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr4.ch.Cast
-inline  algo::LspaceStr4::operator algo::strptr() const {
+inline  algo::LspaceStr4::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr4..EqOp
-inline bool algo::LspaceStr4::operator ==(const algo::LspaceStr4 &rhs) const {
+inline bool algo::LspaceStr4::operator ==(const algo::LspaceStr4 &rhs) const throw() {
     return algo::LspaceStr4_Eq(const_cast<algo::LspaceStr4&>(*this),const_cast<algo::LspaceStr4&>(rhs));
 }
 
 // --- algo.LspaceStr4..NeOp
-inline bool algo::LspaceStr4::operator !=(const algo::LspaceStr4 &rhs) const {
+inline bool algo::LspaceStr4::operator !=(const algo::LspaceStr4 &rhs) const throw() {
     return !algo::LspaceStr4_Eq(const_cast<algo::LspaceStr4&>(*this),const_cast<algo::LspaceStr4&>(rhs));
 }
 
 // --- algo.LspaceStr4..Cmp
-inline i32 algo::LspaceStr4_Cmp(algo::LspaceStr4& lhs, algo::LspaceStr4& rhs) {
+inline i32 algo::LspaceStr4_Cmp(algo::LspaceStr4& lhs, algo::LspaceStr4& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -6454,7 +6454,7 @@ inline void algo::LspaceStr4_Init(algo::LspaceStr4& parent) {
 }
 
 // --- algo.LspaceStr4..Eq
-inline bool algo::LspaceStr4_Eq(algo::LspaceStr4& lhs, algo::LspaceStr4& rhs) {
+inline bool algo::LspaceStr4_Eq(algo::LspaceStr4& lhs, algo::LspaceStr4& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0);
@@ -6462,31 +6462,31 @@ inline bool algo::LspaceStr4_Eq(algo::LspaceStr4& lhs, algo::LspaceStr4& rhs) {
 }
 
 // --- algo.LspaceStr4..EqOpAryptr
-inline bool algo::LspaceStr4::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr4::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr4..AssignOp
-inline algo::LspaceStr4& algo::LspaceStr4::operator =(const algo::LspaceStr4 &rhs) {
+inline algo::LspaceStr4& algo::LspaceStr4::operator =(const algo::LspaceStr4 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr4));
     return *this;
 }
 
 // --- algo.LspaceStr4..Ctor
-inline  algo::LspaceStr4::LspaceStr4() {
+inline  algo::LspaceStr4::LspaceStr4() throw() {
     algo::LspaceStr4_Init(*this);
 }
 
 // --- algo.LspaceStr4..CopyCtor
-inline  algo::LspaceStr4::LspaceStr4(const algo::LspaceStr4 &rhs) {
+inline  algo::LspaceStr4::LspaceStr4(const algo::LspaceStr4 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr4));
 }
 
 // --- algo.LspaceStr5.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr5& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr5& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 5 - len;
@@ -6499,19 +6499,19 @@ inline u32 algo::LspaceStr5_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr5.ch.Init
-inline void algo::ch_Init(algo::LspaceStr5 &parent) {
+inline void algo::ch_Init(algo::LspaceStr5 &parent) throw() {
     memset(parent.ch, ' ', 5);
 }
 
 // --- algo.LspaceStr5.ch.Max
 // always return constant 5
-inline int algo::ch_Max(algo::LspaceStr5& parent) {
+inline int algo::ch_Max(algo::LspaceStr5& parent) throw() {
     (void)parent;
     return 5;
 }
 
 // --- algo.LspaceStr5.ch.N
-inline int algo::ch_N(const algo::LspaceStr5& parent) {
+inline int algo::ch_N(const algo::LspaceStr5& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<5 && parent.ch[ret]==u8(' ')) {
@@ -6523,32 +6523,32 @@ inline int algo::ch_N(const algo::LspaceStr5& parent) {
 
 // --- algo.LspaceStr5.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr5::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr5::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr5.ch.CtorStrptr
-inline  algo::LspaceStr5::LspaceStr5(const algo::strptr &rhs) {
+inline  algo::LspaceStr5::LspaceStr5(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr5.ch.Cast
-inline  algo::LspaceStr5::operator algo::strptr() const {
+inline  algo::LspaceStr5::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr5..EqOp
-inline bool algo::LspaceStr5::operator ==(const algo::LspaceStr5 &rhs) const {
+inline bool algo::LspaceStr5::operator ==(const algo::LspaceStr5 &rhs) const throw() {
     return algo::LspaceStr5_Eq(const_cast<algo::LspaceStr5&>(*this),const_cast<algo::LspaceStr5&>(rhs));
 }
 
 // --- algo.LspaceStr5..NeOp
-inline bool algo::LspaceStr5::operator !=(const algo::LspaceStr5 &rhs) const {
+inline bool algo::LspaceStr5::operator !=(const algo::LspaceStr5 &rhs) const throw() {
     return !algo::LspaceStr5_Eq(const_cast<algo::LspaceStr5&>(*this),const_cast<algo::LspaceStr5&>(rhs));
 }
 
 // --- algo.LspaceStr5..Cmp
-inline i32 algo::LspaceStr5_Cmp(algo::LspaceStr5& lhs, algo::LspaceStr5& rhs) {
+inline i32 algo::LspaceStr5_Cmp(algo::LspaceStr5& lhs, algo::LspaceStr5& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -6561,7 +6561,7 @@ inline void algo::LspaceStr5_Init(algo::LspaceStr5& parent) {
 }
 
 // --- algo.LspaceStr5..Eq
-inline bool algo::LspaceStr5_Eq(algo::LspaceStr5& lhs, algo::LspaceStr5& rhs) {
+inline bool algo::LspaceStr5_Eq(algo::LspaceStr5& lhs, algo::LspaceStr5& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -6570,31 +6570,31 @@ inline bool algo::LspaceStr5_Eq(algo::LspaceStr5& lhs, algo::LspaceStr5& rhs) {
 }
 
 // --- algo.LspaceStr5..EqOpAryptr
-inline bool algo::LspaceStr5::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr5::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr5..AssignOp
-inline algo::LspaceStr5& algo::LspaceStr5::operator =(const algo::LspaceStr5 &rhs) {
+inline algo::LspaceStr5& algo::LspaceStr5::operator =(const algo::LspaceStr5 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr5));
     return *this;
 }
 
 // --- algo.LspaceStr5..Ctor
-inline  algo::LspaceStr5::LspaceStr5() {
+inline  algo::LspaceStr5::LspaceStr5() throw() {
     algo::LspaceStr5_Init(*this);
 }
 
 // --- algo.LspaceStr5..CopyCtor
-inline  algo::LspaceStr5::LspaceStr5(const algo::LspaceStr5 &rhs) {
+inline  algo::LspaceStr5::LspaceStr5(const algo::LspaceStr5 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr5));
 }
 
 // --- algo.LspaceStr5_I16.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr5_I16& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr5_I16& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 5 - len;
@@ -6607,19 +6607,19 @@ inline u32 algo::LspaceStr5_I16_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr5_I16.ch.Init
-inline void algo::ch_Init(algo::LspaceStr5_I16 &parent) {
+inline void algo::ch_Init(algo::LspaceStr5_I16 &parent) throw() {
     memset(parent.ch, ' ', 5);
 }
 
 // --- algo.LspaceStr5_I16.ch.Max
 // always return constant 5
-inline int algo::ch_Max(algo::LspaceStr5_I16& parent) {
+inline int algo::ch_Max(algo::LspaceStr5_I16& parent) throw() {
     (void)parent;
     return 5;
 }
 
 // --- algo.LspaceStr5_I16.ch.N
-inline int algo::ch_N(const algo::LspaceStr5_I16& parent) {
+inline int algo::ch_N(const algo::LspaceStr5_I16& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<5 && parent.ch[ret]==u8(' ')) {
@@ -6631,32 +6631,32 @@ inline int algo::ch_N(const algo::LspaceStr5_I16& parent) {
 
 // --- algo.LspaceStr5_I16.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr5_I16::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr5_I16::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr5_I16.ch.CtorStrptr
-inline  algo::LspaceStr5_I16::LspaceStr5_I16(const algo::strptr &rhs) {
+inline  algo::LspaceStr5_I16::LspaceStr5_I16(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr5_I16.ch.Cast
-inline  algo::LspaceStr5_I16::operator algo::strptr() const {
+inline  algo::LspaceStr5_I16::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr5_I16..EqOp
-inline bool algo::LspaceStr5_I16::operator ==(const algo::LspaceStr5_I16 &rhs) const {
+inline bool algo::LspaceStr5_I16::operator ==(const algo::LspaceStr5_I16 &rhs) const throw() {
     return algo::LspaceStr5_I16_Eq(const_cast<algo::LspaceStr5_I16&>(*this),const_cast<algo::LspaceStr5_I16&>(rhs));
 }
 
 // --- algo.LspaceStr5_I16..NeOp
-inline bool algo::LspaceStr5_I16::operator !=(const algo::LspaceStr5_I16 &rhs) const {
+inline bool algo::LspaceStr5_I16::operator !=(const algo::LspaceStr5_I16 &rhs) const throw() {
     return !algo::LspaceStr5_I16_Eq(const_cast<algo::LspaceStr5_I16&>(*this),const_cast<algo::LspaceStr5_I16&>(rhs));
 }
 
 // --- algo.LspaceStr5_I16..Cmp
-inline i32 algo::LspaceStr5_I16_Cmp(algo::LspaceStr5_I16& lhs, algo::LspaceStr5_I16& rhs) {
+inline i32 algo::LspaceStr5_I16_Cmp(algo::LspaceStr5_I16& lhs, algo::LspaceStr5_I16& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -6669,7 +6669,7 @@ inline void algo::LspaceStr5_I16_Init(algo::LspaceStr5_I16& parent) {
 }
 
 // --- algo.LspaceStr5_I16..Eq
-inline bool algo::LspaceStr5_I16_Eq(algo::LspaceStr5_I16& lhs, algo::LspaceStr5_I16& rhs) {
+inline bool algo::LspaceStr5_I16_Eq(algo::LspaceStr5_I16& lhs, algo::LspaceStr5_I16& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -6678,31 +6678,31 @@ inline bool algo::LspaceStr5_I16_Eq(algo::LspaceStr5_I16& lhs, algo::LspaceStr5_
 }
 
 // --- algo.LspaceStr5_I16..EqOpAryptr
-inline bool algo::LspaceStr5_I16::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr5_I16::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr5_I16..AssignOp
-inline algo::LspaceStr5_I16& algo::LspaceStr5_I16::operator =(const algo::LspaceStr5_I16 &rhs) {
+inline algo::LspaceStr5_I16& algo::LspaceStr5_I16::operator =(const algo::LspaceStr5_I16 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr5_I16));
     return *this;
 }
 
 // --- algo.LspaceStr5_I16..Ctor
-inline  algo::LspaceStr5_I16::LspaceStr5_I16() {
+inline  algo::LspaceStr5_I16::LspaceStr5_I16() throw() {
     algo::LspaceStr5_I16_Init(*this);
 }
 
 // --- algo.LspaceStr5_I16..CopyCtor
-inline  algo::LspaceStr5_I16::LspaceStr5_I16(const algo::LspaceStr5_I16 &rhs) {
+inline  algo::LspaceStr5_I16::LspaceStr5_I16(const algo::LspaceStr5_I16 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr5_I16));
 }
 
 // --- algo.LspaceStr6.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr6& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr6& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 6 - len;
@@ -6715,19 +6715,19 @@ inline u32 algo::LspaceStr6_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr6.ch.Init
-inline void algo::ch_Init(algo::LspaceStr6 &parent) {
+inline void algo::ch_Init(algo::LspaceStr6 &parent) throw() {
     memset(parent.ch, ' ', 6);
 }
 
 // --- algo.LspaceStr6.ch.Max
 // always return constant 6
-inline int algo::ch_Max(algo::LspaceStr6& parent) {
+inline int algo::ch_Max(algo::LspaceStr6& parent) throw() {
     (void)parent;
     return 6;
 }
 
 // --- algo.LspaceStr6.ch.N
-inline int algo::ch_N(const algo::LspaceStr6& parent) {
+inline int algo::ch_N(const algo::LspaceStr6& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<6 && parent.ch[ret]==u8(' ')) {
@@ -6739,32 +6739,32 @@ inline int algo::ch_N(const algo::LspaceStr6& parent) {
 
 // --- algo.LspaceStr6.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr6::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr6::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr6.ch.CtorStrptr
-inline  algo::LspaceStr6::LspaceStr6(const algo::strptr &rhs) {
+inline  algo::LspaceStr6::LspaceStr6(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr6.ch.Cast
-inline  algo::LspaceStr6::operator algo::strptr() const {
+inline  algo::LspaceStr6::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr6..EqOp
-inline bool algo::LspaceStr6::operator ==(const algo::LspaceStr6 &rhs) const {
+inline bool algo::LspaceStr6::operator ==(const algo::LspaceStr6 &rhs) const throw() {
     return algo::LspaceStr6_Eq(const_cast<algo::LspaceStr6&>(*this),const_cast<algo::LspaceStr6&>(rhs));
 }
 
 // --- algo.LspaceStr6..NeOp
-inline bool algo::LspaceStr6::operator !=(const algo::LspaceStr6 &rhs) const {
+inline bool algo::LspaceStr6::operator !=(const algo::LspaceStr6 &rhs) const throw() {
     return !algo::LspaceStr6_Eq(const_cast<algo::LspaceStr6&>(*this),const_cast<algo::LspaceStr6&>(rhs));
 }
 
 // --- algo.LspaceStr6..Cmp
-inline i32 algo::LspaceStr6_Cmp(algo::LspaceStr6& lhs, algo::LspaceStr6& rhs) {
+inline i32 algo::LspaceStr6_Cmp(algo::LspaceStr6& lhs, algo::LspaceStr6& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -6777,7 +6777,7 @@ inline void algo::LspaceStr6_Init(algo::LspaceStr6& parent) {
 }
 
 // --- algo.LspaceStr6..Eq
-inline bool algo::LspaceStr6_Eq(algo::LspaceStr6& lhs, algo::LspaceStr6& rhs) {
+inline bool algo::LspaceStr6_Eq(algo::LspaceStr6& lhs, algo::LspaceStr6& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -6786,31 +6786,31 @@ inline bool algo::LspaceStr6_Eq(algo::LspaceStr6& lhs, algo::LspaceStr6& rhs) {
 }
 
 // --- algo.LspaceStr6..EqOpAryptr
-inline bool algo::LspaceStr6::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr6::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr6..AssignOp
-inline algo::LspaceStr6& algo::LspaceStr6::operator =(const algo::LspaceStr6 &rhs) {
+inline algo::LspaceStr6& algo::LspaceStr6::operator =(const algo::LspaceStr6 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr6));
     return *this;
 }
 
 // --- algo.LspaceStr6..Ctor
-inline  algo::LspaceStr6::LspaceStr6() {
+inline  algo::LspaceStr6::LspaceStr6() throw() {
     algo::LspaceStr6_Init(*this);
 }
 
 // --- algo.LspaceStr6..CopyCtor
-inline  algo::LspaceStr6::LspaceStr6(const algo::LspaceStr6 &rhs) {
+inline  algo::LspaceStr6::LspaceStr6(const algo::LspaceStr6 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr6));
 }
 
 // --- algo.LspaceStr6_U32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr6_U32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr6_U32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 6 - len;
@@ -6823,19 +6823,19 @@ inline u32 algo::LspaceStr6_U32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr6_U32.ch.Init
-inline void algo::ch_Init(algo::LspaceStr6_U32 &parent) {
+inline void algo::ch_Init(algo::LspaceStr6_U32 &parent) throw() {
     memset(parent.ch, ' ', 6);
 }
 
 // --- algo.LspaceStr6_U32.ch.Max
 // always return constant 6
-inline int algo::ch_Max(algo::LspaceStr6_U32& parent) {
+inline int algo::ch_Max(algo::LspaceStr6_U32& parent) throw() {
     (void)parent;
     return 6;
 }
 
 // --- algo.LspaceStr6_U32.ch.N
-inline int algo::ch_N(const algo::LspaceStr6_U32& parent) {
+inline int algo::ch_N(const algo::LspaceStr6_U32& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<6 && parent.ch[ret]==u8(' ')) {
@@ -6847,32 +6847,32 @@ inline int algo::ch_N(const algo::LspaceStr6_U32& parent) {
 
 // --- algo.LspaceStr6_U32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr6_U32::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr6_U32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr6_U32.ch.CtorStrptr
-inline  algo::LspaceStr6_U32::LspaceStr6_U32(const algo::strptr &rhs) {
+inline  algo::LspaceStr6_U32::LspaceStr6_U32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr6_U32.ch.Cast
-inline  algo::LspaceStr6_U32::operator algo::strptr() const {
+inline  algo::LspaceStr6_U32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr6_U32..EqOp
-inline bool algo::LspaceStr6_U32::operator ==(const algo::LspaceStr6_U32 &rhs) const {
+inline bool algo::LspaceStr6_U32::operator ==(const algo::LspaceStr6_U32 &rhs) const throw() {
     return algo::LspaceStr6_U32_Eq(const_cast<algo::LspaceStr6_U32&>(*this),const_cast<algo::LspaceStr6_U32&>(rhs));
 }
 
 // --- algo.LspaceStr6_U32..NeOp
-inline bool algo::LspaceStr6_U32::operator !=(const algo::LspaceStr6_U32 &rhs) const {
+inline bool algo::LspaceStr6_U32::operator !=(const algo::LspaceStr6_U32 &rhs) const throw() {
     return !algo::LspaceStr6_U32_Eq(const_cast<algo::LspaceStr6_U32&>(*this),const_cast<algo::LspaceStr6_U32&>(rhs));
 }
 
 // --- algo.LspaceStr6_U32..Cmp
-inline i32 algo::LspaceStr6_U32_Cmp(algo::LspaceStr6_U32& lhs, algo::LspaceStr6_U32& rhs) {
+inline i32 algo::LspaceStr6_U32_Cmp(algo::LspaceStr6_U32& lhs, algo::LspaceStr6_U32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -6885,7 +6885,7 @@ inline void algo::LspaceStr6_U32_Init(algo::LspaceStr6_U32& parent) {
 }
 
 // --- algo.LspaceStr6_U32..Eq
-inline bool algo::LspaceStr6_U32_Eq(algo::LspaceStr6_U32& lhs, algo::LspaceStr6_U32& rhs) {
+inline bool algo::LspaceStr6_U32_Eq(algo::LspaceStr6_U32& lhs, algo::LspaceStr6_U32& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -6894,31 +6894,31 @@ inline bool algo::LspaceStr6_U32_Eq(algo::LspaceStr6_U32& lhs, algo::LspaceStr6_
 }
 
 // --- algo.LspaceStr6_U32..EqOpAryptr
-inline bool algo::LspaceStr6_U32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr6_U32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr6_U32..AssignOp
-inline algo::LspaceStr6_U32& algo::LspaceStr6_U32::operator =(const algo::LspaceStr6_U32 &rhs) {
+inline algo::LspaceStr6_U32& algo::LspaceStr6_U32::operator =(const algo::LspaceStr6_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr6_U32));
     return *this;
 }
 
 // --- algo.LspaceStr6_U32..Ctor
-inline  algo::LspaceStr6_U32::LspaceStr6_U32() {
+inline  algo::LspaceStr6_U32::LspaceStr6_U32() throw() {
     algo::LspaceStr6_U32_Init(*this);
 }
 
 // --- algo.LspaceStr6_U32..CopyCtor
-inline  algo::LspaceStr6_U32::LspaceStr6_U32(const algo::LspaceStr6_U32 &rhs) {
+inline  algo::LspaceStr6_U32::LspaceStr6_U32(const algo::LspaceStr6_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr6_U32));
 }
 
 // --- algo.LspaceStr7_I32_Base36.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr7_I32_Base36& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr7_I32_Base36& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 7 - len;
@@ -6931,19 +6931,19 @@ inline u32 algo::LspaceStr7_I32_Base36_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr7_I32_Base36.ch.Init
-inline void algo::ch_Init(algo::LspaceStr7_I32_Base36 &parent) {
+inline void algo::ch_Init(algo::LspaceStr7_I32_Base36 &parent) throw() {
     memset(parent.ch, ' ', 7);
 }
 
 // --- algo.LspaceStr7_I32_Base36.ch.Max
 // always return constant 7
-inline int algo::ch_Max(algo::LspaceStr7_I32_Base36& parent) {
+inline int algo::ch_Max(algo::LspaceStr7_I32_Base36& parent) throw() {
     (void)parent;
     return 7;
 }
 
 // --- algo.LspaceStr7_I32_Base36.ch.N
-inline int algo::ch_N(const algo::LspaceStr7_I32_Base36& parent) {
+inline int algo::ch_N(const algo::LspaceStr7_I32_Base36& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<7 && parent.ch[ret]==u8(' ')) {
@@ -6955,32 +6955,32 @@ inline int algo::ch_N(const algo::LspaceStr7_I32_Base36& parent) {
 
 // --- algo.LspaceStr7_I32_Base36.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr7_I32_Base36::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr7_I32_Base36::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr7_I32_Base36.ch.CtorStrptr
-inline  algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36(const algo::strptr &rhs) {
+inline  algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr7_I32_Base36.ch.Cast
-inline  algo::LspaceStr7_I32_Base36::operator algo::strptr() const {
+inline  algo::LspaceStr7_I32_Base36::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr7_I32_Base36..EqOp
-inline bool algo::LspaceStr7_I32_Base36::operator ==(const algo::LspaceStr7_I32_Base36 &rhs) const {
+inline bool algo::LspaceStr7_I32_Base36::operator ==(const algo::LspaceStr7_I32_Base36 &rhs) const throw() {
     return algo::LspaceStr7_I32_Base36_Eq(const_cast<algo::LspaceStr7_I32_Base36&>(*this),const_cast<algo::LspaceStr7_I32_Base36&>(rhs));
 }
 
 // --- algo.LspaceStr7_I32_Base36..NeOp
-inline bool algo::LspaceStr7_I32_Base36::operator !=(const algo::LspaceStr7_I32_Base36 &rhs) const {
+inline bool algo::LspaceStr7_I32_Base36::operator !=(const algo::LspaceStr7_I32_Base36 &rhs) const throw() {
     return !algo::LspaceStr7_I32_Base36_Eq(const_cast<algo::LspaceStr7_I32_Base36&>(*this),const_cast<algo::LspaceStr7_I32_Base36&>(rhs));
 }
 
 // --- algo.LspaceStr7_I32_Base36..Cmp
-inline i32 algo::LspaceStr7_I32_Base36_Cmp(algo::LspaceStr7_I32_Base36& lhs, algo::LspaceStr7_I32_Base36& rhs) {
+inline i32 algo::LspaceStr7_I32_Base36_Cmp(algo::LspaceStr7_I32_Base36& lhs, algo::LspaceStr7_I32_Base36& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -6993,7 +6993,7 @@ inline void algo::LspaceStr7_I32_Base36_Init(algo::LspaceStr7_I32_Base36& parent
 }
 
 // --- algo.LspaceStr7_I32_Base36..Eq
-inline bool algo::LspaceStr7_I32_Base36_Eq(algo::LspaceStr7_I32_Base36& lhs, algo::LspaceStr7_I32_Base36& rhs) {
+inline bool algo::LspaceStr7_I32_Base36_Eq(algo::LspaceStr7_I32_Base36& lhs, algo::LspaceStr7_I32_Base36& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -7003,31 +7003,31 @@ inline bool algo::LspaceStr7_I32_Base36_Eq(algo::LspaceStr7_I32_Base36& lhs, alg
 }
 
 // --- algo.LspaceStr7_I32_Base36..EqOpAryptr
-inline bool algo::LspaceStr7_I32_Base36::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr7_I32_Base36::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr7_I32_Base36..AssignOp
-inline algo::LspaceStr7_I32_Base36& algo::LspaceStr7_I32_Base36::operator =(const algo::LspaceStr7_I32_Base36 &rhs) {
+inline algo::LspaceStr7_I32_Base36& algo::LspaceStr7_I32_Base36::operator =(const algo::LspaceStr7_I32_Base36 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr7_I32_Base36));
     return *this;
 }
 
 // --- algo.LspaceStr7_I32_Base36..Ctor
-inline  algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36() {
+inline  algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36() throw() {
     algo::LspaceStr7_I32_Base36_Init(*this);
 }
 
 // --- algo.LspaceStr7_I32_Base36..CopyCtor
-inline  algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36(const algo::LspaceStr7_I32_Base36 &rhs) {
+inline  algo::LspaceStr7_I32_Base36::LspaceStr7_I32_Base36(const algo::LspaceStr7_I32_Base36 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr7_I32_Base36));
 }
 
 // --- algo.LspaceStr8.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr8& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr8& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 8 - len;
@@ -7040,19 +7040,19 @@ inline u32 algo::LspaceStr8_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr8.ch.Init
-inline void algo::ch_Init(algo::LspaceStr8 &parent) {
+inline void algo::ch_Init(algo::LspaceStr8 &parent) throw() {
     memset(parent.ch, ' ', 8);
 }
 
 // --- algo.LspaceStr8.ch.Max
 // always return constant 8
-inline int algo::ch_Max(algo::LspaceStr8& parent) {
+inline int algo::ch_Max(algo::LspaceStr8& parent) throw() {
     (void)parent;
     return 8;
 }
 
 // --- algo.LspaceStr8.ch.N
-inline int algo::ch_N(const algo::LspaceStr8& parent) {
+inline int algo::ch_N(const algo::LspaceStr8& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<8 && parent.ch[ret]==u8(' ')) {
@@ -7064,32 +7064,32 @@ inline int algo::ch_N(const algo::LspaceStr8& parent) {
 
 // --- algo.LspaceStr8.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr8::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr8::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr8.ch.CtorStrptr
-inline  algo::LspaceStr8::LspaceStr8(const algo::strptr &rhs) {
+inline  algo::LspaceStr8::LspaceStr8(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr8.ch.Cast
-inline  algo::LspaceStr8::operator algo::strptr() const {
+inline  algo::LspaceStr8::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr8..EqOp
-inline bool algo::LspaceStr8::operator ==(const algo::LspaceStr8 &rhs) const {
+inline bool algo::LspaceStr8::operator ==(const algo::LspaceStr8 &rhs) const throw() {
     return algo::LspaceStr8_Eq(const_cast<algo::LspaceStr8&>(*this),const_cast<algo::LspaceStr8&>(rhs));
 }
 
 // --- algo.LspaceStr8..NeOp
-inline bool algo::LspaceStr8::operator !=(const algo::LspaceStr8 &rhs) const {
+inline bool algo::LspaceStr8::operator !=(const algo::LspaceStr8 &rhs) const throw() {
     return !algo::LspaceStr8_Eq(const_cast<algo::LspaceStr8&>(*this),const_cast<algo::LspaceStr8&>(rhs));
 }
 
 // --- algo.LspaceStr8..Cmp
-inline i32 algo::LspaceStr8_Cmp(algo::LspaceStr8& lhs, algo::LspaceStr8& rhs) {
+inline i32 algo::LspaceStr8_Cmp(algo::LspaceStr8& lhs, algo::LspaceStr8& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -7102,7 +7102,7 @@ inline void algo::LspaceStr8_Init(algo::LspaceStr8& parent) {
 }
 
 // --- algo.LspaceStr8..Eq
-inline bool algo::LspaceStr8_Eq(algo::LspaceStr8& lhs, algo::LspaceStr8& rhs) {
+inline bool algo::LspaceStr8_Eq(algo::LspaceStr8& lhs, algo::LspaceStr8& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0);
@@ -7110,31 +7110,31 @@ inline bool algo::LspaceStr8_Eq(algo::LspaceStr8& lhs, algo::LspaceStr8& rhs) {
 }
 
 // --- algo.LspaceStr8..EqOpAryptr
-inline bool algo::LspaceStr8::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr8::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr8..AssignOp
-inline algo::LspaceStr8& algo::LspaceStr8::operator =(const algo::LspaceStr8 &rhs) {
+inline algo::LspaceStr8& algo::LspaceStr8::operator =(const algo::LspaceStr8 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr8));
     return *this;
 }
 
 // --- algo.LspaceStr8..Ctor
-inline  algo::LspaceStr8::LspaceStr8() {
+inline  algo::LspaceStr8::LspaceStr8() throw() {
     algo::LspaceStr8_Init(*this);
 }
 
 // --- algo.LspaceStr8..CopyCtor
-inline  algo::LspaceStr8::LspaceStr8(const algo::LspaceStr8 &rhs) {
+inline  algo::LspaceStr8::LspaceStr8(const algo::LspaceStr8 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr8));
 }
 
 // --- algo.LspaceStr9.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr9& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr9& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 9 - len;
@@ -7147,19 +7147,19 @@ inline u32 algo::LspaceStr9_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.LspaceStr9.ch.Init
-inline void algo::ch_Init(algo::LspaceStr9 &parent) {
+inline void algo::ch_Init(algo::LspaceStr9 &parent) throw() {
     memset(parent.ch, ' ', 9);
 }
 
 // --- algo.LspaceStr9.ch.Max
 // always return constant 9
-inline int algo::ch_Max(algo::LspaceStr9& parent) {
+inline int algo::ch_Max(algo::LspaceStr9& parent) throw() {
     (void)parent;
     return 9;
 }
 
 // --- algo.LspaceStr9.ch.N
-inline int algo::ch_N(const algo::LspaceStr9& parent) {
+inline int algo::ch_N(const algo::LspaceStr9& parent) throw() {
     u64 ret;
     ret = 0;
     while (ret<9 && parent.ch[ret]==u8(' ')) {
@@ -7171,32 +7171,32 @@ inline int algo::ch_N(const algo::LspaceStr9& parent) {
 
 // --- algo.LspaceStr9.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::LspaceStr9::operator =(const algo::strptr &str) {
+inline void algo::LspaceStr9::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.LspaceStr9.ch.CtorStrptr
-inline  algo::LspaceStr9::LspaceStr9(const algo::strptr &rhs) {
+inline  algo::LspaceStr9::LspaceStr9(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.LspaceStr9.ch.Cast
-inline  algo::LspaceStr9::operator algo::strptr() const {
+inline  algo::LspaceStr9::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.LspaceStr9..EqOp
-inline bool algo::LspaceStr9::operator ==(const algo::LspaceStr9 &rhs) const {
+inline bool algo::LspaceStr9::operator ==(const algo::LspaceStr9 &rhs) const throw() {
     return algo::LspaceStr9_Eq(const_cast<algo::LspaceStr9&>(*this),const_cast<algo::LspaceStr9&>(rhs));
 }
 
 // --- algo.LspaceStr9..NeOp
-inline bool algo::LspaceStr9::operator !=(const algo::LspaceStr9 &rhs) const {
+inline bool algo::LspaceStr9::operator !=(const algo::LspaceStr9 &rhs) const throw() {
     return !algo::LspaceStr9_Eq(const_cast<algo::LspaceStr9&>(*this),const_cast<algo::LspaceStr9&>(rhs));
 }
 
 // --- algo.LspaceStr9..Cmp
-inline i32 algo::LspaceStr9_Cmp(algo::LspaceStr9& lhs, algo::LspaceStr9& rhs) {
+inline i32 algo::LspaceStr9_Cmp(algo::LspaceStr9& lhs, algo::LspaceStr9& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -7209,7 +7209,7 @@ inline void algo::LspaceStr9_Init(algo::LspaceStr9& parent) {
 }
 
 // --- algo.LspaceStr9..Eq
-inline bool algo::LspaceStr9_Eq(algo::LspaceStr9& lhs, algo::LspaceStr9& rhs) {
+inline bool algo::LspaceStr9_Eq(algo::LspaceStr9& lhs, algo::LspaceStr9& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -7218,31 +7218,31 @@ inline bool algo::LspaceStr9_Eq(algo::LspaceStr9& lhs, algo::LspaceStr9& rhs) {
 }
 
 // --- algo.LspaceStr9..EqOpAryptr
-inline bool algo::LspaceStr9::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::LspaceStr9::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.LspaceStr9..AssignOp
-inline algo::LspaceStr9& algo::LspaceStr9::operator =(const algo::LspaceStr9 &rhs) {
+inline algo::LspaceStr9& algo::LspaceStr9::operator =(const algo::LspaceStr9 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr9));
     return *this;
 }
 
 // --- algo.LspaceStr9..Ctor
-inline  algo::LspaceStr9::LspaceStr9() {
+inline  algo::LspaceStr9::LspaceStr9() throw() {
     algo::LspaceStr9_Init(*this);
 }
 
 // --- algo.LspaceStr9..CopyCtor
-inline  algo::LspaceStr9::LspaceStr9(const algo::LspaceStr9 &rhs) {
+inline  algo::LspaceStr9::LspaceStr9(const algo::LspaceStr9 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::LspaceStr9));
 }
 
 // --- algo.Md5Digest.value.Fill
 // Set all elements of fixed array to value RHS
-inline void algo::value_Fill(algo::Md5Digest& parent, const u8 &rhs) {
+inline void algo::value_Fill(algo::Md5Digest& parent, const u8 &rhs) throw() {
     for (int i = 0; i < 16; i++) {
         parent.value_elems[i] = rhs;
     }
@@ -7250,7 +7250,7 @@ inline void algo::value_Fill(algo::Md5Digest& parent, const u8 &rhs) {
 
 // --- algo.Md5Digest.value.Find
 // Look up row by row id. Return NULL if out of range
-inline u8* algo::value_Find(algo::Md5Digest& parent, u64 t) {
+inline u8* algo::value_Find(algo::Md5Digest& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = 16;
     return idx < lim ? parent.value_elems + idx : NULL; // unsigned comparison with limit
@@ -7258,59 +7258,59 @@ inline u8* algo::value_Find(algo::Md5Digest& parent, u64 t) {
 
 // --- algo.Md5Digest.value.Getary
 // Access fixed array value as aryptr.
-inline algo::aryptr<u8> algo::value_Getary(algo::Md5Digest& parent) {
+inline algo::aryptr<u8> algo::value_Getary(algo::Md5Digest& parent) throw() {
     return algo::aryptr<u8>(parent.value_elems, 16);
 }
 
 // --- algo.Md5Digest.value.Max
 // Return max number of items in the array
-inline i32 algo::value_Max(algo::Md5Digest& parent) {
+inline i32 algo::value_Max(algo::Md5Digest& parent) throw() {
     (void)parent;
     return 16;
 }
 
 // --- algo.Md5Digest.value.N
 // Return number of items in the array
-inline i32 algo::value_N(const algo::Md5Digest& parent) {
+inline i32 algo::value_N(const algo::Md5Digest& parent) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     return 16;
 }
 
 // --- algo.Md5Digest.value.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
-inline void algo::value_Setary(algo::Md5Digest& parent, const algo::aryptr<u8> &rhs) {
+inline void algo::value_Setary(algo::Md5Digest& parent, const algo::aryptr<u8> &rhs) throw() {
     int n = i32_Min(16, rhs.n_elems);
     memcpy(parent.value_elems, rhs.elems, sizeof(u8)*n);
 }
 
 // --- algo.Md5Digest.value.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline u8& algo::value_qFind(algo::Md5Digest& parent, u64 t) {
+inline u8& algo::value_qFind(algo::Md5Digest& parent, u64 t) throw() {
     return parent.value_elems[u64(t)];
 }
 
 // --- algo.Md5Digest.value_curs.Reset
 // cursor points to valid item
-inline void algo::Md5Digest_value_curs_Reset(Md5Digest_value_curs &curs, algo::Md5Digest &parent) {
+inline void algo::Md5Digest_value_curs_Reset(Md5Digest_value_curs &curs, algo::Md5Digest &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- algo.Md5Digest.value_curs.ValidQ
 // cursor points to valid item
-inline bool algo::Md5Digest_value_curs_ValidQ(Md5Digest_value_curs &curs) {
+inline bool algo::Md5Digest_value_curs_ValidQ(Md5Digest_value_curs &curs) throw() {
     return u64(curs.index) < u64(16);
 }
 
 // --- algo.Md5Digest.value_curs.Next
 // proceed to next item
-inline void algo::Md5Digest_value_curs_Next(Md5Digest_value_curs &curs) {
+inline void algo::Md5Digest_value_curs_Next(Md5Digest_value_curs &curs) throw() {
     curs.index++;
 }
 
 // --- algo.Md5Digest.value_curs.Access
 // item access
-inline u8& algo::Md5Digest_value_curs_Access(Md5Digest_value_curs &curs) {
+inline u8& algo::Md5Digest_value_curs_Access(Md5Digest_value_curs &curs) throw() {
     return value_qFind((*curs.parent), u64(curs.index));
 }
 
@@ -7323,29 +7323,29 @@ inline void algo::Md5Digest_Init(algo::Md5Digest& parent) {
 }
 
 // --- algo.Md5Digest..Ctor
-inline  algo::Md5Digest::Md5Digest() {
+inline  algo::Md5Digest::Md5Digest() throw() {
     algo::Md5Digest_Init(*this);
 }
 
 // --- algo.Md5Digest..FieldwiseCtor
-inline  algo::Md5Digest::Md5Digest(algo::aryptr<u8 > in_value) {
+inline  algo::Md5Digest::Md5Digest(algo::aryptr<u8 > in_value) throw() {
     value_Setary(*this, in_value);
 }
 
 // --- algo.Month.value.GetEnum
 // Get value of field as enum type
-inline algo_MonthEnum algo::value_GetEnum(const algo::Month& parent) {
+inline algo_MonthEnum algo::value_GetEnum(const algo::Month& parent) throw() {
     return algo_MonthEnum(parent.value);
 }
 
 // --- algo.Month.value.SetEnum
 // Set value of field from enum type.
-inline void algo::value_SetEnum(algo::Month& parent, algo_MonthEnum rhs) {
+inline void algo::value_SetEnum(algo::Month& parent, algo_MonthEnum rhs) throw() {
     parent.value = u32(rhs);
 }
 
 // --- algo.Month.value.Cast
-inline  algo::Month::operator algo_MonthEnum() const {
+inline  algo::Month::operator algo_MonthEnum() const throw() {
     return algo_MonthEnum((*this).value);
 }
 
@@ -7356,37 +7356,37 @@ inline void algo::Month_Init(algo::Month& parent) {
 }
 
 // --- algo.Month..Ctor
-inline  algo::Month::Month() {
+inline  algo::Month::Month() throw() {
     algo::Month_Init(*this);
 }
 
 // --- algo.Month..FieldwiseCtor
-inline  algo::Month::Month(u32 in_value)
+inline  algo::Month::Month(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.Month..EnumCtor
-inline  algo::Month::Month(algo_MonthEnum arg) {
+inline  algo::Month::Month(algo_MonthEnum arg) throw() {
     this->value = u32(arg);
 }
 
 // --- algo.NumParseFlags.value.Cast
-inline  algo::NumParseFlags::operator algo_NumParseFlagsEnum() const {
+inline  algo::NumParseFlags::operator algo_NumParseFlagsEnum() const throw() {
     return algo_NumParseFlagsEnum((*this).value);
 }
 
 // --- algo.NumParseFlags.err.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 0.
-inline bool algo::err_Get(const algo::NumParseFlags& parent) {
+inline bool algo::err_Get(const algo::NumParseFlags& parent) throw() {
     return bool((parent.value >> 0) & 0x01);
 }
 
 // --- algo.NumParseFlags.err.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 0.
-inline void algo::err_Set(algo::NumParseFlags& parent, bool rhs) {
+inline void algo::err_Set(algo::NumParseFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 0;
     u32 t2    = (u32(rhs) & 0x01) << 0;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -7395,14 +7395,14 @@ inline void algo::err_Set(algo::NumParseFlags& parent, bool rhs) {
 // --- algo.NumParseFlags.ok.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 1.
-inline bool algo::ok_Get(const algo::NumParseFlags& parent) {
+inline bool algo::ok_Get(const algo::NumParseFlags& parent) throw() {
     return bool((parent.value >> 1) & 0x01);
 }
 
 // --- algo.NumParseFlags.ok.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 1.
-inline void algo::ok_Set(algo::NumParseFlags& parent, bool rhs) {
+inline void algo::ok_Set(algo::NumParseFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 1;
     u32 t2    = (u32(rhs) & 0x01) << 1;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -7411,14 +7411,14 @@ inline void algo::ok_Set(algo::NumParseFlags& parent, bool rhs) {
 // --- algo.NumParseFlags.neg.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 2.
-inline bool algo::neg_Get(const algo::NumParseFlags& parent) {
+inline bool algo::neg_Get(const algo::NumParseFlags& parent) throw() {
     return bool((parent.value >> 2) & 0x01);
 }
 
 // --- algo.NumParseFlags.neg.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 2.
-inline void algo::neg_Set(algo::NumParseFlags& parent, bool rhs) {
+inline void algo::neg_Set(algo::NumParseFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 2;
     u32 t2    = (u32(rhs) & 0x01) << 2;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -7427,14 +7427,14 @@ inline void algo::neg_Set(algo::NumParseFlags& parent, bool rhs) {
 // --- algo.NumParseFlags.overflow.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 3.
-inline bool algo::overflow_Get(const algo::NumParseFlags& parent) {
+inline bool algo::overflow_Get(const algo::NumParseFlags& parent) throw() {
     return bool((parent.value >> 3) & 0x01);
 }
 
 // --- algo.NumParseFlags.overflow.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 3.
-inline void algo::overflow_Set(algo::NumParseFlags& parent, bool rhs) {
+inline void algo::overflow_Set(algo::NumParseFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 3;
     u32 t2    = (u32(rhs) & 0x01) << 3;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -7443,14 +7443,14 @@ inline void algo::overflow_Set(algo::NumParseFlags& parent, bool rhs) {
 // --- algo.NumParseFlags.hex.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 4.
-inline bool algo::hex_Get(const algo::NumParseFlags& parent) {
+inline bool algo::hex_Get(const algo::NumParseFlags& parent) throw() {
     return bool((parent.value >> 4) & 0x01);
 }
 
 // --- algo.NumParseFlags.hex.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 4.
-inline void algo::hex_Set(algo::NumParseFlags& parent, bool rhs) {
+inline void algo::hex_Set(algo::NumParseFlags& parent, bool rhs) throw() {
     u32 t1    = u32(0x01) << 4;
     u32 t2    = (u32(rhs) & 0x01) << 4;
     parent.value = u32((parent.value & ~t1) | t2);
@@ -7463,24 +7463,24 @@ inline void algo::NumParseFlags_Init(algo::NumParseFlags& parent) {
 }
 
 // --- algo.NumParseFlags..Ctor
-inline  algo::NumParseFlags::NumParseFlags() {
+inline  algo::NumParseFlags::NumParseFlags() throw() {
     algo::NumParseFlags_Init(*this);
 }
 
 // --- algo.NumParseFlags..FieldwiseCtor
-inline  algo::NumParseFlags::NumParseFlags(u32 in_value)
+inline  algo::NumParseFlags::NumParseFlags(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.NumParseFlags..EnumCtor
-inline  algo::NumParseFlags::NumParseFlags(algo_NumParseFlagsEnum arg) {
+inline  algo::NumParseFlags::NumParseFlags(algo_NumParseFlagsEnum arg) throw() {
     this->value = u32(arg);
 }
 
 // --- algo.RnullStr1.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr1& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr1& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -7492,19 +7492,19 @@ inline u32 algo::RnullStr1_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr1.ch.Init
-inline void algo::ch_Init(algo::RnullStr1 &parent) {
+inline void algo::ch_Init(algo::RnullStr1 &parent) throw() {
     memset(parent.ch, 0, 1);
 }
 
 // --- algo.RnullStr1.ch.Max
 // always return constant 1
-inline int algo::ch_Max(algo::RnullStr1& parent) {
+inline int algo::ch_Max(algo::RnullStr1& parent) throw() {
     (void)parent;
     return 1;
 }
 
 // --- algo.RnullStr1.ch.N
-inline int algo::ch_N(const algo::RnullStr1& parent) {
+inline int algo::ch_N(const algo::RnullStr1& parent) throw() {
     u64 ret;
     ret = 1;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -7515,57 +7515,57 @@ inline int algo::ch_N(const algo::RnullStr1& parent) {
 
 // --- algo.RnullStr1.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr1::operator =(const algo::strptr &str) {
+inline void algo::RnullStr1::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr1.ch.CtorStrptr
-inline  algo::RnullStr1::RnullStr1(const algo::strptr &rhs) {
+inline  algo::RnullStr1::RnullStr1(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr1.ch.Cast
-inline  algo::RnullStr1::operator algo::strptr() const {
+inline  algo::RnullStr1::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr1..EqOp
-inline bool algo::RnullStr1::operator ==(const algo::RnullStr1 &rhs) const {
+inline bool algo::RnullStr1::operator ==(const algo::RnullStr1 &rhs) const throw() {
     return algo::RnullStr1_Eq(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
 }
 
 // --- algo.RnullStr1..NeOp
-inline bool algo::RnullStr1::operator !=(const algo::RnullStr1 &rhs) const {
+inline bool algo::RnullStr1::operator !=(const algo::RnullStr1 &rhs) const throw() {
     return !algo::RnullStr1_Eq(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
 }
 
 // --- algo.RnullStr1..LtOp
-inline bool algo::RnullStr1::operator <(const algo::RnullStr1 &rhs) const {
+inline bool algo::RnullStr1::operator <(const algo::RnullStr1 &rhs) const throw() {
     return algo::RnullStr1_Lt(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
 }
 
 // --- algo.RnullStr1..GtOp
-inline bool algo::RnullStr1::operator >(const algo::RnullStr1 &rhs) const {
+inline bool algo::RnullStr1::operator >(const algo::RnullStr1 &rhs) const throw() {
     return algo::RnullStr1_Lt(const_cast<algo::RnullStr1&>(rhs),const_cast<algo::RnullStr1&>(*this));
 }
 
 // --- algo.RnullStr1..LeOp
-inline bool algo::RnullStr1::operator <=(const algo::RnullStr1 &rhs) const {
+inline bool algo::RnullStr1::operator <=(const algo::RnullStr1 &rhs) const throw() {
     return !algo::RnullStr1_Lt(const_cast<algo::RnullStr1&>(rhs),const_cast<algo::RnullStr1&>(*this));
 }
 
 // --- algo.RnullStr1..GeOp
-inline bool algo::RnullStr1::operator >=(const algo::RnullStr1 &rhs) const {
+inline bool algo::RnullStr1::operator >=(const algo::RnullStr1 &rhs) const throw() {
     return !algo::RnullStr1_Lt(const_cast<algo::RnullStr1&>(*this),const_cast<algo::RnullStr1&>(rhs));
 }
 
 // --- algo.RnullStr1..Lt
-inline bool algo::RnullStr1_Lt(algo::RnullStr1 lhs, algo::RnullStr1 rhs) {
+inline bool algo::RnullStr1_Lt(algo::RnullStr1 lhs, algo::RnullStr1 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr1..Cmp
-inline i32 algo::RnullStr1_Cmp(algo::RnullStr1 lhs, algo::RnullStr1 rhs) {
+inline i32 algo::RnullStr1_Cmp(algo::RnullStr1 lhs, algo::RnullStr1 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -7578,7 +7578,7 @@ inline void algo::RnullStr1_Init(algo::RnullStr1& parent) {
 }
 
 // --- algo.RnullStr1..Eq
-inline bool algo::RnullStr1_Eq(algo::RnullStr1 lhs, algo::RnullStr1 rhs) {
+inline bool algo::RnullStr1_Eq(algo::RnullStr1 lhs, algo::RnullStr1 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u8*)(lhs.ch+0) == *(u8*)(rhs.ch+0);
@@ -7587,7 +7587,7 @@ inline bool algo::RnullStr1_Eq(algo::RnullStr1 lhs, algo::RnullStr1 rhs) {
 
 // --- algo.RnullStr1..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr1_Update(algo::RnullStr1 &lhs, algo::RnullStr1 rhs) {
+inline bool algo::RnullStr1_Update(algo::RnullStr1 &lhs, algo::RnullStr1 rhs) throw() {
     bool ret = !RnullStr1_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -7596,31 +7596,31 @@ inline bool algo::RnullStr1_Update(algo::RnullStr1 &lhs, algo::RnullStr1 rhs) {
 }
 
 // --- algo.RnullStr1..EqOpAryptr
-inline bool algo::RnullStr1::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr1::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr1..AssignOp
-inline algo::RnullStr1& algo::RnullStr1::operator =(const algo::RnullStr1 &rhs) {
+inline algo::RnullStr1& algo::RnullStr1::operator =(const algo::RnullStr1 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr1));
     return *this;
 }
 
 // --- algo.RnullStr1..Ctor
-inline  algo::RnullStr1::RnullStr1() {
+inline  algo::RnullStr1::RnullStr1() throw() {
     algo::RnullStr1_Init(*this);
 }
 
 // --- algo.RnullStr1..CopyCtor
-inline  algo::RnullStr1::RnullStr1(const algo::RnullStr1 &rhs) {
+inline  algo::RnullStr1::RnullStr1(const algo::RnullStr1 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr1));
 }
 
 // --- algo.RnullStr10.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr10& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr10& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -7632,19 +7632,19 @@ inline u32 algo::RnullStr10_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr10.ch.Init
-inline void algo::ch_Init(algo::RnullStr10 &parent) {
+inline void algo::ch_Init(algo::RnullStr10 &parent) throw() {
     memset(parent.ch, 0, 10);
 }
 
 // --- algo.RnullStr10.ch.Max
 // always return constant 10
-inline int algo::ch_Max(algo::RnullStr10& parent) {
+inline int algo::ch_Max(algo::RnullStr10& parent) throw() {
     (void)parent;
     return 10;
 }
 
 // --- algo.RnullStr10.ch.N
-inline int algo::ch_N(const algo::RnullStr10& parent) {
+inline int algo::ch_N(const algo::RnullStr10& parent) throw() {
     u64 ret;
     ret = 10;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -7655,57 +7655,57 @@ inline int algo::ch_N(const algo::RnullStr10& parent) {
 
 // --- algo.RnullStr10.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr10::operator =(const algo::strptr &str) {
+inline void algo::RnullStr10::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr10.ch.CtorStrptr
-inline  algo::RnullStr10::RnullStr10(const algo::strptr &rhs) {
+inline  algo::RnullStr10::RnullStr10(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr10.ch.Cast
-inline  algo::RnullStr10::operator algo::strptr() const {
+inline  algo::RnullStr10::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr10..EqOp
-inline bool algo::RnullStr10::operator ==(const algo::RnullStr10 &rhs) const {
+inline bool algo::RnullStr10::operator ==(const algo::RnullStr10 &rhs) const throw() {
     return algo::RnullStr10_Eq(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
 }
 
 // --- algo.RnullStr10..NeOp
-inline bool algo::RnullStr10::operator !=(const algo::RnullStr10 &rhs) const {
+inline bool algo::RnullStr10::operator !=(const algo::RnullStr10 &rhs) const throw() {
     return !algo::RnullStr10_Eq(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
 }
 
 // --- algo.RnullStr10..LtOp
-inline bool algo::RnullStr10::operator <(const algo::RnullStr10 &rhs) const {
+inline bool algo::RnullStr10::operator <(const algo::RnullStr10 &rhs) const throw() {
     return algo::RnullStr10_Lt(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
 }
 
 // --- algo.RnullStr10..GtOp
-inline bool algo::RnullStr10::operator >(const algo::RnullStr10 &rhs) const {
+inline bool algo::RnullStr10::operator >(const algo::RnullStr10 &rhs) const throw() {
     return algo::RnullStr10_Lt(const_cast<algo::RnullStr10&>(rhs),const_cast<algo::RnullStr10&>(*this));
 }
 
 // --- algo.RnullStr10..LeOp
-inline bool algo::RnullStr10::operator <=(const algo::RnullStr10 &rhs) const {
+inline bool algo::RnullStr10::operator <=(const algo::RnullStr10 &rhs) const throw() {
     return !algo::RnullStr10_Lt(const_cast<algo::RnullStr10&>(rhs),const_cast<algo::RnullStr10&>(*this));
 }
 
 // --- algo.RnullStr10..GeOp
-inline bool algo::RnullStr10::operator >=(const algo::RnullStr10 &rhs) const {
+inline bool algo::RnullStr10::operator >=(const algo::RnullStr10 &rhs) const throw() {
     return !algo::RnullStr10_Lt(const_cast<algo::RnullStr10&>(*this),const_cast<algo::RnullStr10&>(rhs));
 }
 
 // --- algo.RnullStr10..Lt
-inline bool algo::RnullStr10_Lt(algo::RnullStr10 lhs, algo::RnullStr10 rhs) {
+inline bool algo::RnullStr10_Lt(algo::RnullStr10 lhs, algo::RnullStr10 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr10..Cmp
-inline i32 algo::RnullStr10_Cmp(algo::RnullStr10 lhs, algo::RnullStr10 rhs) {
+inline i32 algo::RnullStr10_Cmp(algo::RnullStr10 lhs, algo::RnullStr10 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -7718,7 +7718,7 @@ inline void algo::RnullStr10_Init(algo::RnullStr10& parent) {
 }
 
 // --- algo.RnullStr10..Eq
-inline bool algo::RnullStr10_Eq(algo::RnullStr10 lhs, algo::RnullStr10 rhs) {
+inline bool algo::RnullStr10_Eq(algo::RnullStr10 lhs, algo::RnullStr10 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -7728,7 +7728,7 @@ inline bool algo::RnullStr10_Eq(algo::RnullStr10 lhs, algo::RnullStr10 rhs) {
 
 // --- algo.RnullStr10..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr10_Update(algo::RnullStr10 &lhs, algo::RnullStr10 rhs) {
+inline bool algo::RnullStr10_Update(algo::RnullStr10 &lhs, algo::RnullStr10 rhs) throw() {
     bool ret = !RnullStr10_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -7737,31 +7737,31 @@ inline bool algo::RnullStr10_Update(algo::RnullStr10 &lhs, algo::RnullStr10 rhs)
 }
 
 // --- algo.RnullStr10..EqOpAryptr
-inline bool algo::RnullStr10::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr10::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr10..AssignOp
-inline algo::RnullStr10& algo::RnullStr10::operator =(const algo::RnullStr10 &rhs) {
+inline algo::RnullStr10& algo::RnullStr10::operator =(const algo::RnullStr10 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr10));
     return *this;
 }
 
 // --- algo.RnullStr10..Ctor
-inline  algo::RnullStr10::RnullStr10() {
+inline  algo::RnullStr10::RnullStr10() throw() {
     algo::RnullStr10_Init(*this);
 }
 
 // --- algo.RnullStr10..CopyCtor
-inline  algo::RnullStr10::RnullStr10(const algo::RnullStr10 &rhs) {
+inline  algo::RnullStr10::RnullStr10(const algo::RnullStr10 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr10));
 }
 
 // --- algo.RnullStr100.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr100& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr100& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -7773,19 +7773,19 @@ inline u32 algo::RnullStr100_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr100.ch.Init
-inline void algo::ch_Init(algo::RnullStr100 &parent) {
+inline void algo::ch_Init(algo::RnullStr100 &parent) throw() {
     memset(parent.ch, 0, 100);
 }
 
 // --- algo.RnullStr100.ch.Max
 // always return constant 100
-inline int algo::ch_Max(algo::RnullStr100& parent) {
+inline int algo::ch_Max(algo::RnullStr100& parent) throw() {
     (void)parent;
     return 100;
 }
 
 // --- algo.RnullStr100.ch.N
-inline int algo::ch_N(const algo::RnullStr100& parent) {
+inline int algo::ch_N(const algo::RnullStr100& parent) throw() {
     u64 ret;
     ret = 100;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -7796,27 +7796,27 @@ inline int algo::ch_N(const algo::RnullStr100& parent) {
 
 // --- algo.RnullStr100.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr100::operator =(const algo::strptr &str) {
+inline void algo::RnullStr100::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr100.ch.CtorStrptr
-inline  algo::RnullStr100::RnullStr100(const algo::strptr &rhs) {
+inline  algo::RnullStr100::RnullStr100(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr100.ch.Cast
-inline  algo::RnullStr100::operator algo::strptr() const {
+inline  algo::RnullStr100::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr100..Lt
-inline bool algo::RnullStr100_Lt(algo::RnullStr100& lhs, algo::RnullStr100& rhs) {
+inline bool algo::RnullStr100_Lt(algo::RnullStr100& lhs, algo::RnullStr100& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr100..Cmp
-inline i32 algo::RnullStr100_Cmp(algo::RnullStr100& lhs, algo::RnullStr100& rhs) {
+inline i32 algo::RnullStr100_Cmp(algo::RnullStr100& lhs, algo::RnullStr100& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -7829,7 +7829,7 @@ inline void algo::RnullStr100_Init(algo::RnullStr100& parent) {
 }
 
 // --- algo.RnullStr100..Eq
-inline bool algo::RnullStr100_Eq(algo::RnullStr100& lhs, algo::RnullStr100& rhs) {
+inline bool algo::RnullStr100_Eq(algo::RnullStr100& lhs, algo::RnullStr100& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -7850,7 +7850,7 @@ inline bool algo::RnullStr100_Eq(algo::RnullStr100& lhs, algo::RnullStr100& rhs)
 
 // --- algo.RnullStr100..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr100_Update(algo::RnullStr100 &lhs, algo::RnullStr100& rhs) {
+inline bool algo::RnullStr100_Update(algo::RnullStr100 &lhs, algo::RnullStr100& rhs) throw() {
     bool ret = !RnullStr100_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -7859,31 +7859,31 @@ inline bool algo::RnullStr100_Update(algo::RnullStr100 &lhs, algo::RnullStr100& 
 }
 
 // --- algo.RnullStr100..EqOpAryptr
-inline bool algo::RnullStr100::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr100::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr100..AssignOp
-inline algo::RnullStr100& algo::RnullStr100::operator =(const algo::RnullStr100 &rhs) {
+inline algo::RnullStr100& algo::RnullStr100::operator =(const algo::RnullStr100 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr100));
     return *this;
 }
 
 // --- algo.RnullStr100..Ctor
-inline  algo::RnullStr100::RnullStr100() {
+inline  algo::RnullStr100::RnullStr100() throw() {
     algo::RnullStr100_Init(*this);
 }
 
 // --- algo.RnullStr100..CopyCtor
-inline  algo::RnullStr100::RnullStr100(const algo::RnullStr100 &rhs) {
+inline  algo::RnullStr100::RnullStr100(const algo::RnullStr100 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr100));
 }
 
 // --- algo.RnullStr1000.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr1000& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr1000& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -7895,19 +7895,19 @@ inline u32 algo::RnullStr1000_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr1000.ch.Init
-inline void algo::ch_Init(algo::RnullStr1000 &parent) {
+inline void algo::ch_Init(algo::RnullStr1000 &parent) throw() {
     memset(parent.ch, 0, 1000);
 }
 
 // --- algo.RnullStr1000.ch.Max
 // always return constant 1000
-inline int algo::ch_Max(algo::RnullStr1000& parent) {
+inline int algo::ch_Max(algo::RnullStr1000& parent) throw() {
     (void)parent;
     return 1000;
 }
 
 // --- algo.RnullStr1000.ch.N
-inline int algo::ch_N(const algo::RnullStr1000& parent) {
+inline int algo::ch_N(const algo::RnullStr1000& parent) throw() {
     u64 ret;
     ret = 1000;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -7918,57 +7918,57 @@ inline int algo::ch_N(const algo::RnullStr1000& parent) {
 
 // --- algo.RnullStr1000.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr1000::operator =(const algo::strptr &str) {
+inline void algo::RnullStr1000::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr1000.ch.CtorStrptr
-inline  algo::RnullStr1000::RnullStr1000(const algo::strptr &rhs) {
+inline  algo::RnullStr1000::RnullStr1000(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr1000.ch.Cast
-inline  algo::RnullStr1000::operator algo::strptr() const {
+inline  algo::RnullStr1000::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr1000..EqOp
-inline bool algo::RnullStr1000::operator ==(const algo::RnullStr1000 &rhs) const {
+inline bool algo::RnullStr1000::operator ==(const algo::RnullStr1000 &rhs) const throw() {
     return algo::RnullStr1000_Eq(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
 }
 
 // --- algo.RnullStr1000..NeOp
-inline bool algo::RnullStr1000::operator !=(const algo::RnullStr1000 &rhs) const {
+inline bool algo::RnullStr1000::operator !=(const algo::RnullStr1000 &rhs) const throw() {
     return !algo::RnullStr1000_Eq(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
 }
 
 // --- algo.RnullStr1000..LtOp
-inline bool algo::RnullStr1000::operator <(const algo::RnullStr1000 &rhs) const {
+inline bool algo::RnullStr1000::operator <(const algo::RnullStr1000 &rhs) const throw() {
     return algo::RnullStr1000_Lt(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
 }
 
 // --- algo.RnullStr1000..GtOp
-inline bool algo::RnullStr1000::operator >(const algo::RnullStr1000 &rhs) const {
+inline bool algo::RnullStr1000::operator >(const algo::RnullStr1000 &rhs) const throw() {
     return algo::RnullStr1000_Lt(const_cast<algo::RnullStr1000&>(rhs),const_cast<algo::RnullStr1000&>(*this));
 }
 
 // --- algo.RnullStr1000..LeOp
-inline bool algo::RnullStr1000::operator <=(const algo::RnullStr1000 &rhs) const {
+inline bool algo::RnullStr1000::operator <=(const algo::RnullStr1000 &rhs) const throw() {
     return !algo::RnullStr1000_Lt(const_cast<algo::RnullStr1000&>(rhs),const_cast<algo::RnullStr1000&>(*this));
 }
 
 // --- algo.RnullStr1000..GeOp
-inline bool algo::RnullStr1000::operator >=(const algo::RnullStr1000 &rhs) const {
+inline bool algo::RnullStr1000::operator >=(const algo::RnullStr1000 &rhs) const throw() {
     return !algo::RnullStr1000_Lt(const_cast<algo::RnullStr1000&>(*this),const_cast<algo::RnullStr1000&>(rhs));
 }
 
 // --- algo.RnullStr1000..Lt
-inline bool algo::RnullStr1000_Lt(algo::RnullStr1000& lhs, algo::RnullStr1000& rhs) {
+inline bool algo::RnullStr1000_Lt(algo::RnullStr1000& lhs, algo::RnullStr1000& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr1000..Cmp
-inline i32 algo::RnullStr1000_Cmp(algo::RnullStr1000& lhs, algo::RnullStr1000& rhs) {
+inline i32 algo::RnullStr1000_Cmp(algo::RnullStr1000& lhs, algo::RnullStr1000& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -7981,7 +7981,7 @@ inline void algo::RnullStr1000_Init(algo::RnullStr1000& parent) {
 }
 
 // --- algo.RnullStr1000..Eq
-inline bool algo::RnullStr1000_Eq(algo::RnullStr1000& lhs, algo::RnullStr1000& rhs) {
+inline bool algo::RnullStr1000_Eq(algo::RnullStr1000& lhs, algo::RnullStr1000& rhs) throw() {
     bool retval = true;
     for (int i=0; i<125 && retval; i++) {
         retval = ((u64*)lhs.ch)[i] == ((u64*)rhs.ch)[i];
@@ -7991,7 +7991,7 @@ inline bool algo::RnullStr1000_Eq(algo::RnullStr1000& lhs, algo::RnullStr1000& r
 
 // --- algo.RnullStr1000..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr1000_Update(algo::RnullStr1000 &lhs, algo::RnullStr1000& rhs) {
+inline bool algo::RnullStr1000_Update(algo::RnullStr1000 &lhs, algo::RnullStr1000& rhs) throw() {
     bool ret = !RnullStr1000_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -8000,31 +8000,31 @@ inline bool algo::RnullStr1000_Update(algo::RnullStr1000 &lhs, algo::RnullStr100
 }
 
 // --- algo.RnullStr1000..EqOpAryptr
-inline bool algo::RnullStr1000::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr1000::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr1000..AssignOp
-inline algo::RnullStr1000& algo::RnullStr1000::operator =(const algo::RnullStr1000 &rhs) {
+inline algo::RnullStr1000& algo::RnullStr1000::operator =(const algo::RnullStr1000 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr1000));
     return *this;
 }
 
 // --- algo.RnullStr1000..Ctor
-inline  algo::RnullStr1000::RnullStr1000() {
+inline  algo::RnullStr1000::RnullStr1000() throw() {
     algo::RnullStr1000_Init(*this);
 }
 
 // --- algo.RnullStr1000..CopyCtor
-inline  algo::RnullStr1000::RnullStr1000(const algo::RnullStr1000 &rhs) {
+inline  algo::RnullStr1000::RnullStr1000(const algo::RnullStr1000 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr1000));
 }
 
 // --- algo.RnullStr11.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr11& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr11& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -8036,19 +8036,19 @@ inline u32 algo::RnullStr11_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr11.ch.Init
-inline void algo::ch_Init(algo::RnullStr11 &parent) {
+inline void algo::ch_Init(algo::RnullStr11 &parent) throw() {
     memset(parent.ch, 0, 11);
 }
 
 // --- algo.RnullStr11.ch.Max
 // always return constant 11
-inline int algo::ch_Max(algo::RnullStr11& parent) {
+inline int algo::ch_Max(algo::RnullStr11& parent) throw() {
     (void)parent;
     return 11;
 }
 
 // --- algo.RnullStr11.ch.N
-inline int algo::ch_N(const algo::RnullStr11& parent) {
+inline int algo::ch_N(const algo::RnullStr11& parent) throw() {
     u64 ret;
     ret = 11;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -8059,57 +8059,57 @@ inline int algo::ch_N(const algo::RnullStr11& parent) {
 
 // --- algo.RnullStr11.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr11::operator =(const algo::strptr &str) {
+inline void algo::RnullStr11::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr11.ch.CtorStrptr
-inline  algo::RnullStr11::RnullStr11(const algo::strptr &rhs) {
+inline  algo::RnullStr11::RnullStr11(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr11.ch.Cast
-inline  algo::RnullStr11::operator algo::strptr() const {
+inline  algo::RnullStr11::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr11..EqOp
-inline bool algo::RnullStr11::operator ==(const algo::RnullStr11 &rhs) const {
+inline bool algo::RnullStr11::operator ==(const algo::RnullStr11 &rhs) const throw() {
     return algo::RnullStr11_Eq(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
 }
 
 // --- algo.RnullStr11..NeOp
-inline bool algo::RnullStr11::operator !=(const algo::RnullStr11 &rhs) const {
+inline bool algo::RnullStr11::operator !=(const algo::RnullStr11 &rhs) const throw() {
     return !algo::RnullStr11_Eq(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
 }
 
 // --- algo.RnullStr11..LtOp
-inline bool algo::RnullStr11::operator <(const algo::RnullStr11 &rhs) const {
+inline bool algo::RnullStr11::operator <(const algo::RnullStr11 &rhs) const throw() {
     return algo::RnullStr11_Lt(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
 }
 
 // --- algo.RnullStr11..GtOp
-inline bool algo::RnullStr11::operator >(const algo::RnullStr11 &rhs) const {
+inline bool algo::RnullStr11::operator >(const algo::RnullStr11 &rhs) const throw() {
     return algo::RnullStr11_Lt(const_cast<algo::RnullStr11&>(rhs),const_cast<algo::RnullStr11&>(*this));
 }
 
 // --- algo.RnullStr11..LeOp
-inline bool algo::RnullStr11::operator <=(const algo::RnullStr11 &rhs) const {
+inline bool algo::RnullStr11::operator <=(const algo::RnullStr11 &rhs) const throw() {
     return !algo::RnullStr11_Lt(const_cast<algo::RnullStr11&>(rhs),const_cast<algo::RnullStr11&>(*this));
 }
 
 // --- algo.RnullStr11..GeOp
-inline bool algo::RnullStr11::operator >=(const algo::RnullStr11 &rhs) const {
+inline bool algo::RnullStr11::operator >=(const algo::RnullStr11 &rhs) const throw() {
     return !algo::RnullStr11_Lt(const_cast<algo::RnullStr11&>(*this),const_cast<algo::RnullStr11&>(rhs));
 }
 
 // --- algo.RnullStr11..Lt
-inline bool algo::RnullStr11_Lt(algo::RnullStr11& lhs, algo::RnullStr11& rhs) {
+inline bool algo::RnullStr11_Lt(algo::RnullStr11& lhs, algo::RnullStr11& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr11..Cmp
-inline i32 algo::RnullStr11_Cmp(algo::RnullStr11& lhs, algo::RnullStr11& rhs) {
+inline i32 algo::RnullStr11_Cmp(algo::RnullStr11& lhs, algo::RnullStr11& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -8122,7 +8122,7 @@ inline void algo::RnullStr11_Init(algo::RnullStr11& parent) {
 }
 
 // --- algo.RnullStr11..Eq
-inline bool algo::RnullStr11_Eq(algo::RnullStr11& lhs, algo::RnullStr11& rhs) {
+inline bool algo::RnullStr11_Eq(algo::RnullStr11& lhs, algo::RnullStr11& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -8133,7 +8133,7 @@ inline bool algo::RnullStr11_Eq(algo::RnullStr11& lhs, algo::RnullStr11& rhs) {
 
 // --- algo.RnullStr11..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr11_Update(algo::RnullStr11 &lhs, algo::RnullStr11& rhs) {
+inline bool algo::RnullStr11_Update(algo::RnullStr11 &lhs, algo::RnullStr11& rhs) throw() {
     bool ret = !RnullStr11_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -8142,31 +8142,31 @@ inline bool algo::RnullStr11_Update(algo::RnullStr11 &lhs, algo::RnullStr11& rhs
 }
 
 // --- algo.RnullStr11..EqOpAryptr
-inline bool algo::RnullStr11::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr11::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr11..AssignOp
-inline algo::RnullStr11& algo::RnullStr11::operator =(const algo::RnullStr11 &rhs) {
+inline algo::RnullStr11& algo::RnullStr11::operator =(const algo::RnullStr11 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr11));
     return *this;
 }
 
 // --- algo.RnullStr11..Ctor
-inline  algo::RnullStr11::RnullStr11() {
+inline  algo::RnullStr11::RnullStr11() throw() {
     algo::RnullStr11_Init(*this);
 }
 
 // --- algo.RnullStr11..CopyCtor
-inline  algo::RnullStr11::RnullStr11(const algo::RnullStr11 &rhs) {
+inline  algo::RnullStr11::RnullStr11(const algo::RnullStr11 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr11));
 }
 
 // --- algo.RnullStr12.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr12& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr12& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -8178,19 +8178,19 @@ inline u32 algo::RnullStr12_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr12.ch.Init
-inline void algo::ch_Init(algo::RnullStr12 &parent) {
+inline void algo::ch_Init(algo::RnullStr12 &parent) throw() {
     memset(parent.ch, 0, 12);
 }
 
 // --- algo.RnullStr12.ch.Max
 // always return constant 12
-inline int algo::ch_Max(algo::RnullStr12& parent) {
+inline int algo::ch_Max(algo::RnullStr12& parent) throw() {
     (void)parent;
     return 12;
 }
 
 // --- algo.RnullStr12.ch.N
-inline int algo::ch_N(const algo::RnullStr12& parent) {
+inline int algo::ch_N(const algo::RnullStr12& parent) throw() {
     u64 ret;
     ret = 12;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -8201,57 +8201,57 @@ inline int algo::ch_N(const algo::RnullStr12& parent) {
 
 // --- algo.RnullStr12.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr12::operator =(const algo::strptr &str) {
+inline void algo::RnullStr12::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr12.ch.CtorStrptr
-inline  algo::RnullStr12::RnullStr12(const algo::strptr &rhs) {
+inline  algo::RnullStr12::RnullStr12(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr12.ch.Cast
-inline  algo::RnullStr12::operator algo::strptr() const {
+inline  algo::RnullStr12::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr12..EqOp
-inline bool algo::RnullStr12::operator ==(const algo::RnullStr12 &rhs) const {
+inline bool algo::RnullStr12::operator ==(const algo::RnullStr12 &rhs) const throw() {
     return algo::RnullStr12_Eq(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
 }
 
 // --- algo.RnullStr12..NeOp
-inline bool algo::RnullStr12::operator !=(const algo::RnullStr12 &rhs) const {
+inline bool algo::RnullStr12::operator !=(const algo::RnullStr12 &rhs) const throw() {
     return !algo::RnullStr12_Eq(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
 }
 
 // --- algo.RnullStr12..LtOp
-inline bool algo::RnullStr12::operator <(const algo::RnullStr12 &rhs) const {
+inline bool algo::RnullStr12::operator <(const algo::RnullStr12 &rhs) const throw() {
     return algo::RnullStr12_Lt(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
 }
 
 // --- algo.RnullStr12..GtOp
-inline bool algo::RnullStr12::operator >(const algo::RnullStr12 &rhs) const {
+inline bool algo::RnullStr12::operator >(const algo::RnullStr12 &rhs) const throw() {
     return algo::RnullStr12_Lt(const_cast<algo::RnullStr12&>(rhs),const_cast<algo::RnullStr12&>(*this));
 }
 
 // --- algo.RnullStr12..LeOp
-inline bool algo::RnullStr12::operator <=(const algo::RnullStr12 &rhs) const {
+inline bool algo::RnullStr12::operator <=(const algo::RnullStr12 &rhs) const throw() {
     return !algo::RnullStr12_Lt(const_cast<algo::RnullStr12&>(rhs),const_cast<algo::RnullStr12&>(*this));
 }
 
 // --- algo.RnullStr12..GeOp
-inline bool algo::RnullStr12::operator >=(const algo::RnullStr12 &rhs) const {
+inline bool algo::RnullStr12::operator >=(const algo::RnullStr12 &rhs) const throw() {
     return !algo::RnullStr12_Lt(const_cast<algo::RnullStr12&>(*this),const_cast<algo::RnullStr12&>(rhs));
 }
 
 // --- algo.RnullStr12..Lt
-inline bool algo::RnullStr12_Lt(algo::RnullStr12& lhs, algo::RnullStr12& rhs) {
+inline bool algo::RnullStr12_Lt(algo::RnullStr12& lhs, algo::RnullStr12& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr12..Cmp
-inline i32 algo::RnullStr12_Cmp(algo::RnullStr12& lhs, algo::RnullStr12& rhs) {
+inline i32 algo::RnullStr12_Cmp(algo::RnullStr12& lhs, algo::RnullStr12& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -8264,7 +8264,7 @@ inline void algo::RnullStr12_Init(algo::RnullStr12& parent) {
 }
 
 // --- algo.RnullStr12..Eq
-inline bool algo::RnullStr12_Eq(algo::RnullStr12& lhs, algo::RnullStr12& rhs) {
+inline bool algo::RnullStr12_Eq(algo::RnullStr12& lhs, algo::RnullStr12& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -8274,7 +8274,7 @@ inline bool algo::RnullStr12_Eq(algo::RnullStr12& lhs, algo::RnullStr12& rhs) {
 
 // --- algo.RnullStr12..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr12_Update(algo::RnullStr12 &lhs, algo::RnullStr12& rhs) {
+inline bool algo::RnullStr12_Update(algo::RnullStr12 &lhs, algo::RnullStr12& rhs) throw() {
     bool ret = !RnullStr12_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -8283,31 +8283,31 @@ inline bool algo::RnullStr12_Update(algo::RnullStr12 &lhs, algo::RnullStr12& rhs
 }
 
 // --- algo.RnullStr12..EqOpAryptr
-inline bool algo::RnullStr12::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr12::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr12..AssignOp
-inline algo::RnullStr12& algo::RnullStr12::operator =(const algo::RnullStr12 &rhs) {
+inline algo::RnullStr12& algo::RnullStr12::operator =(const algo::RnullStr12 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr12));
     return *this;
 }
 
 // --- algo.RnullStr12..Ctor
-inline  algo::RnullStr12::RnullStr12() {
+inline  algo::RnullStr12::RnullStr12() throw() {
     algo::RnullStr12_Init(*this);
 }
 
 // --- algo.RnullStr12..CopyCtor
-inline  algo::RnullStr12::RnullStr12(const algo::RnullStr12 &rhs) {
+inline  algo::RnullStr12::RnullStr12(const algo::RnullStr12 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr12));
 }
 
 // --- algo.RnullStr129.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr129& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr129& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -8319,19 +8319,19 @@ inline u32 algo::RnullStr129_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr129.ch.Init
-inline void algo::ch_Init(algo::RnullStr129 &parent) {
+inline void algo::ch_Init(algo::RnullStr129 &parent) throw() {
     memset(parent.ch, 0, 129);
 }
 
 // --- algo.RnullStr129.ch.Max
 // always return constant 129
-inline int algo::ch_Max(algo::RnullStr129& parent) {
+inline int algo::ch_Max(algo::RnullStr129& parent) throw() {
     (void)parent;
     return 129;
 }
 
 // --- algo.RnullStr129.ch.N
-inline int algo::ch_N(const algo::RnullStr129& parent) {
+inline int algo::ch_N(const algo::RnullStr129& parent) throw() {
     u64 ret;
     ret = 129;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -8342,57 +8342,57 @@ inline int algo::ch_N(const algo::RnullStr129& parent) {
 
 // --- algo.RnullStr129.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr129::operator =(const algo::strptr &str) {
+inline void algo::RnullStr129::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr129.ch.CtorStrptr
-inline  algo::RnullStr129::RnullStr129(const algo::strptr &rhs) {
+inline  algo::RnullStr129::RnullStr129(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr129.ch.Cast
-inline  algo::RnullStr129::operator algo::strptr() const {
+inline  algo::RnullStr129::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr129..EqOp
-inline bool algo::RnullStr129::operator ==(const algo::RnullStr129 &rhs) const {
+inline bool algo::RnullStr129::operator ==(const algo::RnullStr129 &rhs) const throw() {
     return algo::RnullStr129_Eq(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
 }
 
 // --- algo.RnullStr129..NeOp
-inline bool algo::RnullStr129::operator !=(const algo::RnullStr129 &rhs) const {
+inline bool algo::RnullStr129::operator !=(const algo::RnullStr129 &rhs) const throw() {
     return !algo::RnullStr129_Eq(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
 }
 
 // --- algo.RnullStr129..LtOp
-inline bool algo::RnullStr129::operator <(const algo::RnullStr129 &rhs) const {
+inline bool algo::RnullStr129::operator <(const algo::RnullStr129 &rhs) const throw() {
     return algo::RnullStr129_Lt(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
 }
 
 // --- algo.RnullStr129..GtOp
-inline bool algo::RnullStr129::operator >(const algo::RnullStr129 &rhs) const {
+inline bool algo::RnullStr129::operator >(const algo::RnullStr129 &rhs) const throw() {
     return algo::RnullStr129_Lt(const_cast<algo::RnullStr129&>(rhs),const_cast<algo::RnullStr129&>(*this));
 }
 
 // --- algo.RnullStr129..LeOp
-inline bool algo::RnullStr129::operator <=(const algo::RnullStr129 &rhs) const {
+inline bool algo::RnullStr129::operator <=(const algo::RnullStr129 &rhs) const throw() {
     return !algo::RnullStr129_Lt(const_cast<algo::RnullStr129&>(rhs),const_cast<algo::RnullStr129&>(*this));
 }
 
 // --- algo.RnullStr129..GeOp
-inline bool algo::RnullStr129::operator >=(const algo::RnullStr129 &rhs) const {
+inline bool algo::RnullStr129::operator >=(const algo::RnullStr129 &rhs) const throw() {
     return !algo::RnullStr129_Lt(const_cast<algo::RnullStr129&>(*this),const_cast<algo::RnullStr129&>(rhs));
 }
 
 // --- algo.RnullStr129..Lt
-inline bool algo::RnullStr129_Lt(algo::RnullStr129& lhs, algo::RnullStr129& rhs) {
+inline bool algo::RnullStr129_Lt(algo::RnullStr129& lhs, algo::RnullStr129& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr129..Cmp
-inline i32 algo::RnullStr129_Cmp(algo::RnullStr129& lhs, algo::RnullStr129& rhs) {
+inline i32 algo::RnullStr129_Cmp(algo::RnullStr129& lhs, algo::RnullStr129& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -8405,7 +8405,7 @@ inline void algo::RnullStr129_Init(algo::RnullStr129& parent) {
 }
 
 // --- algo.RnullStr129..Eq
-inline bool algo::RnullStr129_Eq(algo::RnullStr129& lhs, algo::RnullStr129& rhs) {
+inline bool algo::RnullStr129_Eq(algo::RnullStr129& lhs, algo::RnullStr129& rhs) throw() {
     bool retval = true;
     for (int i=0; i<16 && retval; i++) {
         retval = ((u64*)lhs.ch)[i] == ((u64*)rhs.ch)[i];
@@ -8417,7 +8417,7 @@ inline bool algo::RnullStr129_Eq(algo::RnullStr129& lhs, algo::RnullStr129& rhs)
 
 // --- algo.RnullStr129..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr129_Update(algo::RnullStr129 &lhs, algo::RnullStr129& rhs) {
+inline bool algo::RnullStr129_Update(algo::RnullStr129 &lhs, algo::RnullStr129& rhs) throw() {
     bool ret = !RnullStr129_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -8426,31 +8426,31 @@ inline bool algo::RnullStr129_Update(algo::RnullStr129 &lhs, algo::RnullStr129& 
 }
 
 // --- algo.RnullStr129..EqOpAryptr
-inline bool algo::RnullStr129::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr129::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr129..AssignOp
-inline algo::RnullStr129& algo::RnullStr129::operator =(const algo::RnullStr129 &rhs) {
+inline algo::RnullStr129& algo::RnullStr129::operator =(const algo::RnullStr129 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr129));
     return *this;
 }
 
 // --- algo.RnullStr129..Ctor
-inline  algo::RnullStr129::RnullStr129() {
+inline  algo::RnullStr129::RnullStr129() throw() {
     algo::RnullStr129_Init(*this);
 }
 
 // --- algo.RnullStr129..CopyCtor
-inline  algo::RnullStr129::RnullStr129(const algo::RnullStr129 &rhs) {
+inline  algo::RnullStr129::RnullStr129(const algo::RnullStr129 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr129));
 }
 
 // --- algo.RnullStr13.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr13& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr13& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -8462,19 +8462,19 @@ inline u32 algo::RnullStr13_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr13.ch.Init
-inline void algo::ch_Init(algo::RnullStr13 &parent) {
+inline void algo::ch_Init(algo::RnullStr13 &parent) throw() {
     memset(parent.ch, 0, 13);
 }
 
 // --- algo.RnullStr13.ch.Max
 // always return constant 13
-inline int algo::ch_Max(algo::RnullStr13& parent) {
+inline int algo::ch_Max(algo::RnullStr13& parent) throw() {
     (void)parent;
     return 13;
 }
 
 // --- algo.RnullStr13.ch.N
-inline int algo::ch_N(const algo::RnullStr13& parent) {
+inline int algo::ch_N(const algo::RnullStr13& parent) throw() {
     u64 ret;
     ret = 13;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -8485,57 +8485,57 @@ inline int algo::ch_N(const algo::RnullStr13& parent) {
 
 // --- algo.RnullStr13.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr13::operator =(const algo::strptr &str) {
+inline void algo::RnullStr13::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr13.ch.CtorStrptr
-inline  algo::RnullStr13::RnullStr13(const algo::strptr &rhs) {
+inline  algo::RnullStr13::RnullStr13(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr13.ch.Cast
-inline  algo::RnullStr13::operator algo::strptr() const {
+inline  algo::RnullStr13::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr13..EqOp
-inline bool algo::RnullStr13::operator ==(const algo::RnullStr13 &rhs) const {
+inline bool algo::RnullStr13::operator ==(const algo::RnullStr13 &rhs) const throw() {
     return algo::RnullStr13_Eq(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
 }
 
 // --- algo.RnullStr13..NeOp
-inline bool algo::RnullStr13::operator !=(const algo::RnullStr13 &rhs) const {
+inline bool algo::RnullStr13::operator !=(const algo::RnullStr13 &rhs) const throw() {
     return !algo::RnullStr13_Eq(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
 }
 
 // --- algo.RnullStr13..LtOp
-inline bool algo::RnullStr13::operator <(const algo::RnullStr13 &rhs) const {
+inline bool algo::RnullStr13::operator <(const algo::RnullStr13 &rhs) const throw() {
     return algo::RnullStr13_Lt(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
 }
 
 // --- algo.RnullStr13..GtOp
-inline bool algo::RnullStr13::operator >(const algo::RnullStr13 &rhs) const {
+inline bool algo::RnullStr13::operator >(const algo::RnullStr13 &rhs) const throw() {
     return algo::RnullStr13_Lt(const_cast<algo::RnullStr13&>(rhs),const_cast<algo::RnullStr13&>(*this));
 }
 
 // --- algo.RnullStr13..LeOp
-inline bool algo::RnullStr13::operator <=(const algo::RnullStr13 &rhs) const {
+inline bool algo::RnullStr13::operator <=(const algo::RnullStr13 &rhs) const throw() {
     return !algo::RnullStr13_Lt(const_cast<algo::RnullStr13&>(rhs),const_cast<algo::RnullStr13&>(*this));
 }
 
 // --- algo.RnullStr13..GeOp
-inline bool algo::RnullStr13::operator >=(const algo::RnullStr13 &rhs) const {
+inline bool algo::RnullStr13::operator >=(const algo::RnullStr13 &rhs) const throw() {
     return !algo::RnullStr13_Lt(const_cast<algo::RnullStr13&>(*this),const_cast<algo::RnullStr13&>(rhs));
 }
 
 // --- algo.RnullStr13..Lt
-inline bool algo::RnullStr13_Lt(algo::RnullStr13& lhs, algo::RnullStr13& rhs) {
+inline bool algo::RnullStr13_Lt(algo::RnullStr13& lhs, algo::RnullStr13& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr13..Cmp
-inline i32 algo::RnullStr13_Cmp(algo::RnullStr13& lhs, algo::RnullStr13& rhs) {
+inline i32 algo::RnullStr13_Cmp(algo::RnullStr13& lhs, algo::RnullStr13& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -8548,7 +8548,7 @@ inline void algo::RnullStr13_Init(algo::RnullStr13& parent) {
 }
 
 // --- algo.RnullStr13..Eq
-inline bool algo::RnullStr13_Eq(algo::RnullStr13& lhs, algo::RnullStr13& rhs) {
+inline bool algo::RnullStr13_Eq(algo::RnullStr13& lhs, algo::RnullStr13& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -8559,7 +8559,7 @@ inline bool algo::RnullStr13_Eq(algo::RnullStr13& lhs, algo::RnullStr13& rhs) {
 
 // --- algo.RnullStr13..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr13_Update(algo::RnullStr13 &lhs, algo::RnullStr13& rhs) {
+inline bool algo::RnullStr13_Update(algo::RnullStr13 &lhs, algo::RnullStr13& rhs) throw() {
     bool ret = !RnullStr13_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -8568,31 +8568,31 @@ inline bool algo::RnullStr13_Update(algo::RnullStr13 &lhs, algo::RnullStr13& rhs
 }
 
 // --- algo.RnullStr13..EqOpAryptr
-inline bool algo::RnullStr13::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr13::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr13..AssignOp
-inline algo::RnullStr13& algo::RnullStr13::operator =(const algo::RnullStr13 &rhs) {
+inline algo::RnullStr13& algo::RnullStr13::operator =(const algo::RnullStr13 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr13));
     return *this;
 }
 
 // --- algo.RnullStr13..Ctor
-inline  algo::RnullStr13::RnullStr13() {
+inline  algo::RnullStr13::RnullStr13() throw() {
     algo::RnullStr13_Init(*this);
 }
 
 // --- algo.RnullStr13..CopyCtor
-inline  algo::RnullStr13::RnullStr13(const algo::RnullStr13 &rhs) {
+inline  algo::RnullStr13::RnullStr13(const algo::RnullStr13 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr13));
 }
 
 // --- algo.RnullStr14.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr14& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr14& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -8604,19 +8604,19 @@ inline u32 algo::RnullStr14_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr14.ch.Init
-inline void algo::ch_Init(algo::RnullStr14 &parent) {
+inline void algo::ch_Init(algo::RnullStr14 &parent) throw() {
     memset(parent.ch, 0, 14);
 }
 
 // --- algo.RnullStr14.ch.Max
 // always return constant 14
-inline int algo::ch_Max(algo::RnullStr14& parent) {
+inline int algo::ch_Max(algo::RnullStr14& parent) throw() {
     (void)parent;
     return 14;
 }
 
 // --- algo.RnullStr14.ch.N
-inline int algo::ch_N(const algo::RnullStr14& parent) {
+inline int algo::ch_N(const algo::RnullStr14& parent) throw() {
     u64 ret;
     ret = 14;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -8627,57 +8627,57 @@ inline int algo::ch_N(const algo::RnullStr14& parent) {
 
 // --- algo.RnullStr14.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr14::operator =(const algo::strptr &str) {
+inline void algo::RnullStr14::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr14.ch.CtorStrptr
-inline  algo::RnullStr14::RnullStr14(const algo::strptr &rhs) {
+inline  algo::RnullStr14::RnullStr14(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr14.ch.Cast
-inline  algo::RnullStr14::operator algo::strptr() const {
+inline  algo::RnullStr14::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr14..EqOp
-inline bool algo::RnullStr14::operator ==(const algo::RnullStr14 &rhs) const {
+inline bool algo::RnullStr14::operator ==(const algo::RnullStr14 &rhs) const throw() {
     return algo::RnullStr14_Eq(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
 }
 
 // --- algo.RnullStr14..NeOp
-inline bool algo::RnullStr14::operator !=(const algo::RnullStr14 &rhs) const {
+inline bool algo::RnullStr14::operator !=(const algo::RnullStr14 &rhs) const throw() {
     return !algo::RnullStr14_Eq(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
 }
 
 // --- algo.RnullStr14..LtOp
-inline bool algo::RnullStr14::operator <(const algo::RnullStr14 &rhs) const {
+inline bool algo::RnullStr14::operator <(const algo::RnullStr14 &rhs) const throw() {
     return algo::RnullStr14_Lt(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
 }
 
 // --- algo.RnullStr14..GtOp
-inline bool algo::RnullStr14::operator >(const algo::RnullStr14 &rhs) const {
+inline bool algo::RnullStr14::operator >(const algo::RnullStr14 &rhs) const throw() {
     return algo::RnullStr14_Lt(const_cast<algo::RnullStr14&>(rhs),const_cast<algo::RnullStr14&>(*this));
 }
 
 // --- algo.RnullStr14..LeOp
-inline bool algo::RnullStr14::operator <=(const algo::RnullStr14 &rhs) const {
+inline bool algo::RnullStr14::operator <=(const algo::RnullStr14 &rhs) const throw() {
     return !algo::RnullStr14_Lt(const_cast<algo::RnullStr14&>(rhs),const_cast<algo::RnullStr14&>(*this));
 }
 
 // --- algo.RnullStr14..GeOp
-inline bool algo::RnullStr14::operator >=(const algo::RnullStr14 &rhs) const {
+inline bool algo::RnullStr14::operator >=(const algo::RnullStr14 &rhs) const throw() {
     return !algo::RnullStr14_Lt(const_cast<algo::RnullStr14&>(*this),const_cast<algo::RnullStr14&>(rhs));
 }
 
 // --- algo.RnullStr14..Lt
-inline bool algo::RnullStr14_Lt(algo::RnullStr14& lhs, algo::RnullStr14& rhs) {
+inline bool algo::RnullStr14_Lt(algo::RnullStr14& lhs, algo::RnullStr14& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr14..Cmp
-inline i32 algo::RnullStr14_Cmp(algo::RnullStr14& lhs, algo::RnullStr14& rhs) {
+inline i32 algo::RnullStr14_Cmp(algo::RnullStr14& lhs, algo::RnullStr14& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -8690,7 +8690,7 @@ inline void algo::RnullStr14_Init(algo::RnullStr14& parent) {
 }
 
 // --- algo.RnullStr14..Eq
-inline bool algo::RnullStr14_Eq(algo::RnullStr14& lhs, algo::RnullStr14& rhs) {
+inline bool algo::RnullStr14_Eq(algo::RnullStr14& lhs, algo::RnullStr14& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -8701,7 +8701,7 @@ inline bool algo::RnullStr14_Eq(algo::RnullStr14& lhs, algo::RnullStr14& rhs) {
 
 // --- algo.RnullStr14..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr14_Update(algo::RnullStr14 &lhs, algo::RnullStr14& rhs) {
+inline bool algo::RnullStr14_Update(algo::RnullStr14 &lhs, algo::RnullStr14& rhs) throw() {
     bool ret = !RnullStr14_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -8710,31 +8710,31 @@ inline bool algo::RnullStr14_Update(algo::RnullStr14 &lhs, algo::RnullStr14& rhs
 }
 
 // --- algo.RnullStr14..EqOpAryptr
-inline bool algo::RnullStr14::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr14::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr14..AssignOp
-inline algo::RnullStr14& algo::RnullStr14::operator =(const algo::RnullStr14 &rhs) {
+inline algo::RnullStr14& algo::RnullStr14::operator =(const algo::RnullStr14 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr14));
     return *this;
 }
 
 // --- algo.RnullStr14..Ctor
-inline  algo::RnullStr14::RnullStr14() {
+inline  algo::RnullStr14::RnullStr14() throw() {
     algo::RnullStr14_Init(*this);
 }
 
 // --- algo.RnullStr14..CopyCtor
-inline  algo::RnullStr14::RnullStr14(const algo::RnullStr14 &rhs) {
+inline  algo::RnullStr14::RnullStr14(const algo::RnullStr14 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr14));
 }
 
 // --- algo.RnullStr15.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr15& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr15& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -8746,19 +8746,19 @@ inline u32 algo::RnullStr15_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr15.ch.Init
-inline void algo::ch_Init(algo::RnullStr15 &parent) {
+inline void algo::ch_Init(algo::RnullStr15 &parent) throw() {
     memset(parent.ch, 0, 15);
 }
 
 // --- algo.RnullStr15.ch.Max
 // always return constant 15
-inline int algo::ch_Max(algo::RnullStr15& parent) {
+inline int algo::ch_Max(algo::RnullStr15& parent) throw() {
     (void)parent;
     return 15;
 }
 
 // --- algo.RnullStr15.ch.N
-inline int algo::ch_N(const algo::RnullStr15& parent) {
+inline int algo::ch_N(const algo::RnullStr15& parent) throw() {
     u64 ret;
     ret = 15;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -8769,57 +8769,57 @@ inline int algo::ch_N(const algo::RnullStr15& parent) {
 
 // --- algo.RnullStr15.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr15::operator =(const algo::strptr &str) {
+inline void algo::RnullStr15::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr15.ch.CtorStrptr
-inline  algo::RnullStr15::RnullStr15(const algo::strptr &rhs) {
+inline  algo::RnullStr15::RnullStr15(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr15.ch.Cast
-inline  algo::RnullStr15::operator algo::strptr() const {
+inline  algo::RnullStr15::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr15..EqOp
-inline bool algo::RnullStr15::operator ==(const algo::RnullStr15 &rhs) const {
+inline bool algo::RnullStr15::operator ==(const algo::RnullStr15 &rhs) const throw() {
     return algo::RnullStr15_Eq(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
 }
 
 // --- algo.RnullStr15..NeOp
-inline bool algo::RnullStr15::operator !=(const algo::RnullStr15 &rhs) const {
+inline bool algo::RnullStr15::operator !=(const algo::RnullStr15 &rhs) const throw() {
     return !algo::RnullStr15_Eq(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
 }
 
 // --- algo.RnullStr15..LtOp
-inline bool algo::RnullStr15::operator <(const algo::RnullStr15 &rhs) const {
+inline bool algo::RnullStr15::operator <(const algo::RnullStr15 &rhs) const throw() {
     return algo::RnullStr15_Lt(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
 }
 
 // --- algo.RnullStr15..GtOp
-inline bool algo::RnullStr15::operator >(const algo::RnullStr15 &rhs) const {
+inline bool algo::RnullStr15::operator >(const algo::RnullStr15 &rhs) const throw() {
     return algo::RnullStr15_Lt(const_cast<algo::RnullStr15&>(rhs),const_cast<algo::RnullStr15&>(*this));
 }
 
 // --- algo.RnullStr15..LeOp
-inline bool algo::RnullStr15::operator <=(const algo::RnullStr15 &rhs) const {
+inline bool algo::RnullStr15::operator <=(const algo::RnullStr15 &rhs) const throw() {
     return !algo::RnullStr15_Lt(const_cast<algo::RnullStr15&>(rhs),const_cast<algo::RnullStr15&>(*this));
 }
 
 // --- algo.RnullStr15..GeOp
-inline bool algo::RnullStr15::operator >=(const algo::RnullStr15 &rhs) const {
+inline bool algo::RnullStr15::operator >=(const algo::RnullStr15 &rhs) const throw() {
     return !algo::RnullStr15_Lt(const_cast<algo::RnullStr15&>(*this),const_cast<algo::RnullStr15&>(rhs));
 }
 
 // --- algo.RnullStr15..Lt
-inline bool algo::RnullStr15_Lt(algo::RnullStr15& lhs, algo::RnullStr15& rhs) {
+inline bool algo::RnullStr15_Lt(algo::RnullStr15& lhs, algo::RnullStr15& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr15..Cmp
-inline i32 algo::RnullStr15_Cmp(algo::RnullStr15& lhs, algo::RnullStr15& rhs) {
+inline i32 algo::RnullStr15_Cmp(algo::RnullStr15& lhs, algo::RnullStr15& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -8832,7 +8832,7 @@ inline void algo::RnullStr15_Init(algo::RnullStr15& parent) {
 }
 
 // --- algo.RnullStr15..Eq
-inline bool algo::RnullStr15_Eq(algo::RnullStr15& lhs, algo::RnullStr15& rhs) {
+inline bool algo::RnullStr15_Eq(algo::RnullStr15& lhs, algo::RnullStr15& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -8844,7 +8844,7 @@ inline bool algo::RnullStr15_Eq(algo::RnullStr15& lhs, algo::RnullStr15& rhs) {
 
 // --- algo.RnullStr15..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr15_Update(algo::RnullStr15 &lhs, algo::RnullStr15& rhs) {
+inline bool algo::RnullStr15_Update(algo::RnullStr15 &lhs, algo::RnullStr15& rhs) throw() {
     bool ret = !RnullStr15_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -8853,31 +8853,31 @@ inline bool algo::RnullStr15_Update(algo::RnullStr15 &lhs, algo::RnullStr15& rhs
 }
 
 // --- algo.RnullStr15..EqOpAryptr
-inline bool algo::RnullStr15::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr15::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr15..AssignOp
-inline algo::RnullStr15& algo::RnullStr15::operator =(const algo::RnullStr15 &rhs) {
+inline algo::RnullStr15& algo::RnullStr15::operator =(const algo::RnullStr15 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr15));
     return *this;
 }
 
 // --- algo.RnullStr15..Ctor
-inline  algo::RnullStr15::RnullStr15() {
+inline  algo::RnullStr15::RnullStr15() throw() {
     algo::RnullStr15_Init(*this);
 }
 
 // --- algo.RnullStr15..CopyCtor
-inline  algo::RnullStr15::RnullStr15(const algo::RnullStr15 &rhs) {
+inline  algo::RnullStr15::RnullStr15(const algo::RnullStr15 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr15));
 }
 
 // --- algo.RnullStr151.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr151& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr151& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -8889,19 +8889,19 @@ inline u32 algo::RnullStr151_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr151.ch.Init
-inline void algo::ch_Init(algo::RnullStr151 &parent) {
+inline void algo::ch_Init(algo::RnullStr151 &parent) throw() {
     memset(parent.ch, 0, 151);
 }
 
 // --- algo.RnullStr151.ch.Max
 // always return constant 151
-inline int algo::ch_Max(algo::RnullStr151& parent) {
+inline int algo::ch_Max(algo::RnullStr151& parent) throw() {
     (void)parent;
     return 151;
 }
 
 // --- algo.RnullStr151.ch.N
-inline int algo::ch_N(const algo::RnullStr151& parent) {
+inline int algo::ch_N(const algo::RnullStr151& parent) throw() {
     u64 ret;
     ret = 151;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -8912,57 +8912,57 @@ inline int algo::ch_N(const algo::RnullStr151& parent) {
 
 // --- algo.RnullStr151.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr151::operator =(const algo::strptr &str) {
+inline void algo::RnullStr151::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr151.ch.CtorStrptr
-inline  algo::RnullStr151::RnullStr151(const algo::strptr &rhs) {
+inline  algo::RnullStr151::RnullStr151(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr151.ch.Cast
-inline  algo::RnullStr151::operator algo::strptr() const {
+inline  algo::RnullStr151::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr151..EqOp
-inline bool algo::RnullStr151::operator ==(const algo::RnullStr151 &rhs) const {
+inline bool algo::RnullStr151::operator ==(const algo::RnullStr151 &rhs) const throw() {
     return algo::RnullStr151_Eq(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
 }
 
 // --- algo.RnullStr151..NeOp
-inline bool algo::RnullStr151::operator !=(const algo::RnullStr151 &rhs) const {
+inline bool algo::RnullStr151::operator !=(const algo::RnullStr151 &rhs) const throw() {
     return !algo::RnullStr151_Eq(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
 }
 
 // --- algo.RnullStr151..LtOp
-inline bool algo::RnullStr151::operator <(const algo::RnullStr151 &rhs) const {
+inline bool algo::RnullStr151::operator <(const algo::RnullStr151 &rhs) const throw() {
     return algo::RnullStr151_Lt(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
 }
 
 // --- algo.RnullStr151..GtOp
-inline bool algo::RnullStr151::operator >(const algo::RnullStr151 &rhs) const {
+inline bool algo::RnullStr151::operator >(const algo::RnullStr151 &rhs) const throw() {
     return algo::RnullStr151_Lt(const_cast<algo::RnullStr151&>(rhs),const_cast<algo::RnullStr151&>(*this));
 }
 
 // --- algo.RnullStr151..LeOp
-inline bool algo::RnullStr151::operator <=(const algo::RnullStr151 &rhs) const {
+inline bool algo::RnullStr151::operator <=(const algo::RnullStr151 &rhs) const throw() {
     return !algo::RnullStr151_Lt(const_cast<algo::RnullStr151&>(rhs),const_cast<algo::RnullStr151&>(*this));
 }
 
 // --- algo.RnullStr151..GeOp
-inline bool algo::RnullStr151::operator >=(const algo::RnullStr151 &rhs) const {
+inline bool algo::RnullStr151::operator >=(const algo::RnullStr151 &rhs) const throw() {
     return !algo::RnullStr151_Lt(const_cast<algo::RnullStr151&>(*this),const_cast<algo::RnullStr151&>(rhs));
 }
 
 // --- algo.RnullStr151..Lt
-inline bool algo::RnullStr151_Lt(algo::RnullStr151& lhs, algo::RnullStr151& rhs) {
+inline bool algo::RnullStr151_Lt(algo::RnullStr151& lhs, algo::RnullStr151& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr151..Cmp
-inline i32 algo::RnullStr151_Cmp(algo::RnullStr151& lhs, algo::RnullStr151& rhs) {
+inline i32 algo::RnullStr151_Cmp(algo::RnullStr151& lhs, algo::RnullStr151& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -8975,7 +8975,7 @@ inline void algo::RnullStr151_Init(algo::RnullStr151& parent) {
 }
 
 // --- algo.RnullStr151..Eq
-inline bool algo::RnullStr151_Eq(algo::RnullStr151& lhs, algo::RnullStr151& rhs) {
+inline bool algo::RnullStr151_Eq(algo::RnullStr151& lhs, algo::RnullStr151& rhs) throw() {
     bool retval = true;
     for (int i=0; i<18 && retval; i++) {
         retval = ((u64*)lhs.ch)[i] == ((u64*)rhs.ch)[i];
@@ -8989,7 +8989,7 @@ inline bool algo::RnullStr151_Eq(algo::RnullStr151& lhs, algo::RnullStr151& rhs)
 
 // --- algo.RnullStr151..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr151_Update(algo::RnullStr151 &lhs, algo::RnullStr151& rhs) {
+inline bool algo::RnullStr151_Update(algo::RnullStr151 &lhs, algo::RnullStr151& rhs) throw() {
     bool ret = !RnullStr151_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -8998,31 +8998,31 @@ inline bool algo::RnullStr151_Update(algo::RnullStr151 &lhs, algo::RnullStr151& 
 }
 
 // --- algo.RnullStr151..EqOpAryptr
-inline bool algo::RnullStr151::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr151::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr151..AssignOp
-inline algo::RnullStr151& algo::RnullStr151::operator =(const algo::RnullStr151 &rhs) {
+inline algo::RnullStr151& algo::RnullStr151::operator =(const algo::RnullStr151 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr151));
     return *this;
 }
 
 // --- algo.RnullStr151..Ctor
-inline  algo::RnullStr151::RnullStr151() {
+inline  algo::RnullStr151::RnullStr151() throw() {
     algo::RnullStr151_Init(*this);
 }
 
 // --- algo.RnullStr151..CopyCtor
-inline  algo::RnullStr151::RnullStr151(const algo::RnullStr151 &rhs) {
+inline  algo::RnullStr151::RnullStr151(const algo::RnullStr151 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr151));
 }
 
 // --- algo.RnullStr16.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr16& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr16& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -9034,19 +9034,19 @@ inline u32 algo::RnullStr16_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr16.ch.Init
-inline void algo::ch_Init(algo::RnullStr16 &parent) {
+inline void algo::ch_Init(algo::RnullStr16 &parent) throw() {
     memset(parent.ch, 0, 16);
 }
 
 // --- algo.RnullStr16.ch.Max
 // always return constant 16
-inline int algo::ch_Max(algo::RnullStr16& parent) {
+inline int algo::ch_Max(algo::RnullStr16& parent) throw() {
     (void)parent;
     return 16;
 }
 
 // --- algo.RnullStr16.ch.N
-inline int algo::ch_N(const algo::RnullStr16& parent) {
+inline int algo::ch_N(const algo::RnullStr16& parent) throw() {
     u64 ret;
     ret = 16;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -9057,27 +9057,27 @@ inline int algo::ch_N(const algo::RnullStr16& parent) {
 
 // --- algo.RnullStr16.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr16::operator =(const algo::strptr &str) {
+inline void algo::RnullStr16::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr16.ch.CtorStrptr
-inline  algo::RnullStr16::RnullStr16(const algo::strptr &rhs) {
+inline  algo::RnullStr16::RnullStr16(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr16.ch.Cast
-inline  algo::RnullStr16::operator algo::strptr() const {
+inline  algo::RnullStr16::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr16..Lt
-inline bool algo::RnullStr16_Lt(algo::RnullStr16 lhs, algo::RnullStr16 rhs) {
+inline bool algo::RnullStr16_Lt(algo::RnullStr16 lhs, algo::RnullStr16 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr16..Cmp
-inline i32 algo::RnullStr16_Cmp(algo::RnullStr16 lhs, algo::RnullStr16 rhs) {
+inline i32 algo::RnullStr16_Cmp(algo::RnullStr16 lhs, algo::RnullStr16 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -9090,7 +9090,7 @@ inline void algo::RnullStr16_Init(algo::RnullStr16& parent) {
 }
 
 // --- algo.RnullStr16..Eq
-inline bool algo::RnullStr16_Eq(algo::RnullStr16 lhs, algo::RnullStr16 rhs) {
+inline bool algo::RnullStr16_Eq(algo::RnullStr16 lhs, algo::RnullStr16 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -9100,7 +9100,7 @@ inline bool algo::RnullStr16_Eq(algo::RnullStr16 lhs, algo::RnullStr16 rhs) {
 
 // --- algo.RnullStr16..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr16_Update(algo::RnullStr16 &lhs, algo::RnullStr16 rhs) {
+inline bool algo::RnullStr16_Update(algo::RnullStr16 &lhs, algo::RnullStr16 rhs) throw() {
     bool ret = !RnullStr16_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -9109,31 +9109,31 @@ inline bool algo::RnullStr16_Update(algo::RnullStr16 &lhs, algo::RnullStr16 rhs)
 }
 
 // --- algo.RnullStr16..EqOpAryptr
-inline bool algo::RnullStr16::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr16::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr16..AssignOp
-inline algo::RnullStr16& algo::RnullStr16::operator =(const algo::RnullStr16 &rhs) {
+inline algo::RnullStr16& algo::RnullStr16::operator =(const algo::RnullStr16 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr16));
     return *this;
 }
 
 // --- algo.RnullStr16..Ctor
-inline  algo::RnullStr16::RnullStr16() {
+inline  algo::RnullStr16::RnullStr16() throw() {
     algo::RnullStr16_Init(*this);
 }
 
 // --- algo.RnullStr16..CopyCtor
-inline  algo::RnullStr16::RnullStr16(const algo::RnullStr16 &rhs) {
+inline  algo::RnullStr16::RnullStr16(const algo::RnullStr16 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr16));
 }
 
 // --- algo.RnullStr17.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr17& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr17& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -9145,19 +9145,19 @@ inline u32 algo::RnullStr17_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr17.ch.Init
-inline void algo::ch_Init(algo::RnullStr17 &parent) {
+inline void algo::ch_Init(algo::RnullStr17 &parent) throw() {
     memset(parent.ch, 0, 17);
 }
 
 // --- algo.RnullStr17.ch.Max
 // always return constant 17
-inline int algo::ch_Max(algo::RnullStr17& parent) {
+inline int algo::ch_Max(algo::RnullStr17& parent) throw() {
     (void)parent;
     return 17;
 }
 
 // --- algo.RnullStr17.ch.N
-inline int algo::ch_N(const algo::RnullStr17& parent) {
+inline int algo::ch_N(const algo::RnullStr17& parent) throw() {
     u64 ret;
     ret = 17;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -9168,57 +9168,57 @@ inline int algo::ch_N(const algo::RnullStr17& parent) {
 
 // --- algo.RnullStr17.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr17::operator =(const algo::strptr &str) {
+inline void algo::RnullStr17::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr17.ch.CtorStrptr
-inline  algo::RnullStr17::RnullStr17(const algo::strptr &rhs) {
+inline  algo::RnullStr17::RnullStr17(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr17.ch.Cast
-inline  algo::RnullStr17::operator algo::strptr() const {
+inline  algo::RnullStr17::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr17..EqOp
-inline bool algo::RnullStr17::operator ==(const algo::RnullStr17 &rhs) const {
+inline bool algo::RnullStr17::operator ==(const algo::RnullStr17 &rhs) const throw() {
     return algo::RnullStr17_Eq(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
 }
 
 // --- algo.RnullStr17..NeOp
-inline bool algo::RnullStr17::operator !=(const algo::RnullStr17 &rhs) const {
+inline bool algo::RnullStr17::operator !=(const algo::RnullStr17 &rhs) const throw() {
     return !algo::RnullStr17_Eq(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
 }
 
 // --- algo.RnullStr17..LtOp
-inline bool algo::RnullStr17::operator <(const algo::RnullStr17 &rhs) const {
+inline bool algo::RnullStr17::operator <(const algo::RnullStr17 &rhs) const throw() {
     return algo::RnullStr17_Lt(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
 }
 
 // --- algo.RnullStr17..GtOp
-inline bool algo::RnullStr17::operator >(const algo::RnullStr17 &rhs) const {
+inline bool algo::RnullStr17::operator >(const algo::RnullStr17 &rhs) const throw() {
     return algo::RnullStr17_Lt(const_cast<algo::RnullStr17&>(rhs),const_cast<algo::RnullStr17&>(*this));
 }
 
 // --- algo.RnullStr17..LeOp
-inline bool algo::RnullStr17::operator <=(const algo::RnullStr17 &rhs) const {
+inline bool algo::RnullStr17::operator <=(const algo::RnullStr17 &rhs) const throw() {
     return !algo::RnullStr17_Lt(const_cast<algo::RnullStr17&>(rhs),const_cast<algo::RnullStr17&>(*this));
 }
 
 // --- algo.RnullStr17..GeOp
-inline bool algo::RnullStr17::operator >=(const algo::RnullStr17 &rhs) const {
+inline bool algo::RnullStr17::operator >=(const algo::RnullStr17 &rhs) const throw() {
     return !algo::RnullStr17_Lt(const_cast<algo::RnullStr17&>(*this),const_cast<algo::RnullStr17&>(rhs));
 }
 
 // --- algo.RnullStr17..Lt
-inline bool algo::RnullStr17_Lt(algo::RnullStr17& lhs, algo::RnullStr17& rhs) {
+inline bool algo::RnullStr17_Lt(algo::RnullStr17& lhs, algo::RnullStr17& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr17..Cmp
-inline i32 algo::RnullStr17_Cmp(algo::RnullStr17& lhs, algo::RnullStr17& rhs) {
+inline i32 algo::RnullStr17_Cmp(algo::RnullStr17& lhs, algo::RnullStr17& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -9231,7 +9231,7 @@ inline void algo::RnullStr17_Init(algo::RnullStr17& parent) {
 }
 
 // --- algo.RnullStr17..Eq
-inline bool algo::RnullStr17_Eq(algo::RnullStr17& lhs, algo::RnullStr17& rhs) {
+inline bool algo::RnullStr17_Eq(algo::RnullStr17& lhs, algo::RnullStr17& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -9242,7 +9242,7 @@ inline bool algo::RnullStr17_Eq(algo::RnullStr17& lhs, algo::RnullStr17& rhs) {
 
 // --- algo.RnullStr17..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr17_Update(algo::RnullStr17 &lhs, algo::RnullStr17& rhs) {
+inline bool algo::RnullStr17_Update(algo::RnullStr17 &lhs, algo::RnullStr17& rhs) throw() {
     bool ret = !RnullStr17_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -9251,31 +9251,31 @@ inline bool algo::RnullStr17_Update(algo::RnullStr17 &lhs, algo::RnullStr17& rhs
 }
 
 // --- algo.RnullStr17..EqOpAryptr
-inline bool algo::RnullStr17::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr17::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr17..AssignOp
-inline algo::RnullStr17& algo::RnullStr17::operator =(const algo::RnullStr17 &rhs) {
+inline algo::RnullStr17& algo::RnullStr17::operator =(const algo::RnullStr17 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr17));
     return *this;
 }
 
 // --- algo.RnullStr17..Ctor
-inline  algo::RnullStr17::RnullStr17() {
+inline  algo::RnullStr17::RnullStr17() throw() {
     algo::RnullStr17_Init(*this);
 }
 
 // --- algo.RnullStr17..CopyCtor
-inline  algo::RnullStr17::RnullStr17(const algo::RnullStr17 &rhs) {
+inline  algo::RnullStr17::RnullStr17(const algo::RnullStr17 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr17));
 }
 
 // --- algo.RnullStr18.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr18& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr18& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -9287,19 +9287,19 @@ inline u32 algo::RnullStr18_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr18.ch.Init
-inline void algo::ch_Init(algo::RnullStr18 &parent) {
+inline void algo::ch_Init(algo::RnullStr18 &parent) throw() {
     memset(parent.ch, 0, 18);
 }
 
 // --- algo.RnullStr18.ch.Max
 // always return constant 18
-inline int algo::ch_Max(algo::RnullStr18& parent) {
+inline int algo::ch_Max(algo::RnullStr18& parent) throw() {
     (void)parent;
     return 18;
 }
 
 // --- algo.RnullStr18.ch.N
-inline int algo::ch_N(const algo::RnullStr18& parent) {
+inline int algo::ch_N(const algo::RnullStr18& parent) throw() {
     u64 ret;
     ret = 18;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -9310,57 +9310,57 @@ inline int algo::ch_N(const algo::RnullStr18& parent) {
 
 // --- algo.RnullStr18.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr18::operator =(const algo::strptr &str) {
+inline void algo::RnullStr18::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr18.ch.CtorStrptr
-inline  algo::RnullStr18::RnullStr18(const algo::strptr &rhs) {
+inline  algo::RnullStr18::RnullStr18(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr18.ch.Cast
-inline  algo::RnullStr18::operator algo::strptr() const {
+inline  algo::RnullStr18::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr18..EqOp
-inline bool algo::RnullStr18::operator ==(const algo::RnullStr18 &rhs) const {
+inline bool algo::RnullStr18::operator ==(const algo::RnullStr18 &rhs) const throw() {
     return algo::RnullStr18_Eq(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
 }
 
 // --- algo.RnullStr18..NeOp
-inline bool algo::RnullStr18::operator !=(const algo::RnullStr18 &rhs) const {
+inline bool algo::RnullStr18::operator !=(const algo::RnullStr18 &rhs) const throw() {
     return !algo::RnullStr18_Eq(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
 }
 
 // --- algo.RnullStr18..LtOp
-inline bool algo::RnullStr18::operator <(const algo::RnullStr18 &rhs) const {
+inline bool algo::RnullStr18::operator <(const algo::RnullStr18 &rhs) const throw() {
     return algo::RnullStr18_Lt(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
 }
 
 // --- algo.RnullStr18..GtOp
-inline bool algo::RnullStr18::operator >(const algo::RnullStr18 &rhs) const {
+inline bool algo::RnullStr18::operator >(const algo::RnullStr18 &rhs) const throw() {
     return algo::RnullStr18_Lt(const_cast<algo::RnullStr18&>(rhs),const_cast<algo::RnullStr18&>(*this));
 }
 
 // --- algo.RnullStr18..LeOp
-inline bool algo::RnullStr18::operator <=(const algo::RnullStr18 &rhs) const {
+inline bool algo::RnullStr18::operator <=(const algo::RnullStr18 &rhs) const throw() {
     return !algo::RnullStr18_Lt(const_cast<algo::RnullStr18&>(rhs),const_cast<algo::RnullStr18&>(*this));
 }
 
 // --- algo.RnullStr18..GeOp
-inline bool algo::RnullStr18::operator >=(const algo::RnullStr18 &rhs) const {
+inline bool algo::RnullStr18::operator >=(const algo::RnullStr18 &rhs) const throw() {
     return !algo::RnullStr18_Lt(const_cast<algo::RnullStr18&>(*this),const_cast<algo::RnullStr18&>(rhs));
 }
 
 // --- algo.RnullStr18..Lt
-inline bool algo::RnullStr18_Lt(algo::RnullStr18 lhs, algo::RnullStr18 rhs) {
+inline bool algo::RnullStr18_Lt(algo::RnullStr18 lhs, algo::RnullStr18 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr18..Cmp
-inline i32 algo::RnullStr18_Cmp(algo::RnullStr18 lhs, algo::RnullStr18 rhs) {
+inline i32 algo::RnullStr18_Cmp(algo::RnullStr18 lhs, algo::RnullStr18 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -9373,7 +9373,7 @@ inline void algo::RnullStr18_Init(algo::RnullStr18& parent) {
 }
 
 // --- algo.RnullStr18..Eq
-inline bool algo::RnullStr18_Eq(algo::RnullStr18 lhs, algo::RnullStr18 rhs) {
+inline bool algo::RnullStr18_Eq(algo::RnullStr18 lhs, algo::RnullStr18 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -9384,7 +9384,7 @@ inline bool algo::RnullStr18_Eq(algo::RnullStr18 lhs, algo::RnullStr18 rhs) {
 
 // --- algo.RnullStr18..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr18_Update(algo::RnullStr18 &lhs, algo::RnullStr18 rhs) {
+inline bool algo::RnullStr18_Update(algo::RnullStr18 &lhs, algo::RnullStr18 rhs) throw() {
     bool ret = !RnullStr18_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -9393,31 +9393,31 @@ inline bool algo::RnullStr18_Update(algo::RnullStr18 &lhs, algo::RnullStr18 rhs)
 }
 
 // --- algo.RnullStr18..EqOpAryptr
-inline bool algo::RnullStr18::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr18::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr18..AssignOp
-inline algo::RnullStr18& algo::RnullStr18::operator =(const algo::RnullStr18 &rhs) {
+inline algo::RnullStr18& algo::RnullStr18::operator =(const algo::RnullStr18 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr18));
     return *this;
 }
 
 // --- algo.RnullStr18..Ctor
-inline  algo::RnullStr18::RnullStr18() {
+inline  algo::RnullStr18::RnullStr18() throw() {
     algo::RnullStr18_Init(*this);
 }
 
 // --- algo.RnullStr18..CopyCtor
-inline  algo::RnullStr18::RnullStr18(const algo::RnullStr18 &rhs) {
+inline  algo::RnullStr18::RnullStr18(const algo::RnullStr18 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr18));
 }
 
 // --- algo.RnullStr19.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr19& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr19& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -9429,19 +9429,19 @@ inline u32 algo::RnullStr19_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr19.ch.Init
-inline void algo::ch_Init(algo::RnullStr19 &parent) {
+inline void algo::ch_Init(algo::RnullStr19 &parent) throw() {
     memset(parent.ch, 0, 19);
 }
 
 // --- algo.RnullStr19.ch.Max
 // always return constant 19
-inline int algo::ch_Max(algo::RnullStr19& parent) {
+inline int algo::ch_Max(algo::RnullStr19& parent) throw() {
     (void)parent;
     return 19;
 }
 
 // --- algo.RnullStr19.ch.N
-inline int algo::ch_N(const algo::RnullStr19& parent) {
+inline int algo::ch_N(const algo::RnullStr19& parent) throw() {
     u64 ret;
     ret = 19;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -9452,27 +9452,27 @@ inline int algo::ch_N(const algo::RnullStr19& parent) {
 
 // --- algo.RnullStr19.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr19::operator =(const algo::strptr &str) {
+inline void algo::RnullStr19::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr19.ch.CtorStrptr
-inline  algo::RnullStr19::RnullStr19(const algo::strptr &rhs) {
+inline  algo::RnullStr19::RnullStr19(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr19.ch.Cast
-inline  algo::RnullStr19::operator algo::strptr() const {
+inline  algo::RnullStr19::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr19..Lt
-inline bool algo::RnullStr19_Lt(algo::RnullStr19& lhs, algo::RnullStr19& rhs) {
+inline bool algo::RnullStr19_Lt(algo::RnullStr19& lhs, algo::RnullStr19& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr19..Cmp
-inline i32 algo::RnullStr19_Cmp(algo::RnullStr19& lhs, algo::RnullStr19& rhs) {
+inline i32 algo::RnullStr19_Cmp(algo::RnullStr19& lhs, algo::RnullStr19& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -9485,7 +9485,7 @@ inline void algo::RnullStr19_Init(algo::RnullStr19& parent) {
 }
 
 // --- algo.RnullStr19..Eq
-inline bool algo::RnullStr19_Eq(algo::RnullStr19& lhs, algo::RnullStr19& rhs) {
+inline bool algo::RnullStr19_Eq(algo::RnullStr19& lhs, algo::RnullStr19& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -9497,7 +9497,7 @@ inline bool algo::RnullStr19_Eq(algo::RnullStr19& lhs, algo::RnullStr19& rhs) {
 
 // --- algo.RnullStr19..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr19_Update(algo::RnullStr19 &lhs, algo::RnullStr19& rhs) {
+inline bool algo::RnullStr19_Update(algo::RnullStr19 &lhs, algo::RnullStr19& rhs) throw() {
     bool ret = !RnullStr19_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -9506,31 +9506,31 @@ inline bool algo::RnullStr19_Update(algo::RnullStr19 &lhs, algo::RnullStr19& rhs
 }
 
 // --- algo.RnullStr19..EqOpAryptr
-inline bool algo::RnullStr19::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr19::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr19..AssignOp
-inline algo::RnullStr19& algo::RnullStr19::operator =(const algo::RnullStr19 &rhs) {
+inline algo::RnullStr19& algo::RnullStr19::operator =(const algo::RnullStr19 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr19));
     return *this;
 }
 
 // --- algo.RnullStr19..Ctor
-inline  algo::RnullStr19::RnullStr19() {
+inline  algo::RnullStr19::RnullStr19() throw() {
     algo::RnullStr19_Init(*this);
 }
 
 // --- algo.RnullStr19..CopyCtor
-inline  algo::RnullStr19::RnullStr19(const algo::RnullStr19 &rhs) {
+inline  algo::RnullStr19::RnullStr19(const algo::RnullStr19 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr19));
 }
 
 // --- algo.RnullStr2.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr2& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr2& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -9542,19 +9542,19 @@ inline u32 algo::RnullStr2_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr2.ch.Init
-inline void algo::ch_Init(algo::RnullStr2 &parent) {
+inline void algo::ch_Init(algo::RnullStr2 &parent) throw() {
     memset(parent.ch, 0, 2);
 }
 
 // --- algo.RnullStr2.ch.Max
 // always return constant 2
-inline int algo::ch_Max(algo::RnullStr2& parent) {
+inline int algo::ch_Max(algo::RnullStr2& parent) throw() {
     (void)parent;
     return 2;
 }
 
 // --- algo.RnullStr2.ch.N
-inline int algo::ch_N(const algo::RnullStr2& parent) {
+inline int algo::ch_N(const algo::RnullStr2& parent) throw() {
     u64 ret;
     ret = 2;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -9565,57 +9565,57 @@ inline int algo::ch_N(const algo::RnullStr2& parent) {
 
 // --- algo.RnullStr2.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr2::operator =(const algo::strptr &str) {
+inline void algo::RnullStr2::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr2.ch.CtorStrptr
-inline  algo::RnullStr2::RnullStr2(const algo::strptr &rhs) {
+inline  algo::RnullStr2::RnullStr2(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr2.ch.Cast
-inline  algo::RnullStr2::operator algo::strptr() const {
+inline  algo::RnullStr2::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr2..EqOp
-inline bool algo::RnullStr2::operator ==(const algo::RnullStr2 &rhs) const {
+inline bool algo::RnullStr2::operator ==(const algo::RnullStr2 &rhs) const throw() {
     return algo::RnullStr2_Eq(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
 }
 
 // --- algo.RnullStr2..NeOp
-inline bool algo::RnullStr2::operator !=(const algo::RnullStr2 &rhs) const {
+inline bool algo::RnullStr2::operator !=(const algo::RnullStr2 &rhs) const throw() {
     return !algo::RnullStr2_Eq(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
 }
 
 // --- algo.RnullStr2..LtOp
-inline bool algo::RnullStr2::operator <(const algo::RnullStr2 &rhs) const {
+inline bool algo::RnullStr2::operator <(const algo::RnullStr2 &rhs) const throw() {
     return algo::RnullStr2_Lt(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
 }
 
 // --- algo.RnullStr2..GtOp
-inline bool algo::RnullStr2::operator >(const algo::RnullStr2 &rhs) const {
+inline bool algo::RnullStr2::operator >(const algo::RnullStr2 &rhs) const throw() {
     return algo::RnullStr2_Lt(const_cast<algo::RnullStr2&>(rhs),const_cast<algo::RnullStr2&>(*this));
 }
 
 // --- algo.RnullStr2..LeOp
-inline bool algo::RnullStr2::operator <=(const algo::RnullStr2 &rhs) const {
+inline bool algo::RnullStr2::operator <=(const algo::RnullStr2 &rhs) const throw() {
     return !algo::RnullStr2_Lt(const_cast<algo::RnullStr2&>(rhs),const_cast<algo::RnullStr2&>(*this));
 }
 
 // --- algo.RnullStr2..GeOp
-inline bool algo::RnullStr2::operator >=(const algo::RnullStr2 &rhs) const {
+inline bool algo::RnullStr2::operator >=(const algo::RnullStr2 &rhs) const throw() {
     return !algo::RnullStr2_Lt(const_cast<algo::RnullStr2&>(*this),const_cast<algo::RnullStr2&>(rhs));
 }
 
 // --- algo.RnullStr2..Lt
-inline bool algo::RnullStr2_Lt(algo::RnullStr2 lhs, algo::RnullStr2 rhs) {
+inline bool algo::RnullStr2_Lt(algo::RnullStr2 lhs, algo::RnullStr2 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr2..Cmp
-inline i32 algo::RnullStr2_Cmp(algo::RnullStr2 lhs, algo::RnullStr2 rhs) {
+inline i32 algo::RnullStr2_Cmp(algo::RnullStr2 lhs, algo::RnullStr2 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -9628,7 +9628,7 @@ inline void algo::RnullStr2_Init(algo::RnullStr2& parent) {
 }
 
 // --- algo.RnullStr2..Eq
-inline bool algo::RnullStr2_Eq(algo::RnullStr2 lhs, algo::RnullStr2 rhs) {
+inline bool algo::RnullStr2_Eq(algo::RnullStr2 lhs, algo::RnullStr2 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u16*)(lhs.ch+0) == *(u16*)(rhs.ch+0);
@@ -9637,7 +9637,7 @@ inline bool algo::RnullStr2_Eq(algo::RnullStr2 lhs, algo::RnullStr2 rhs) {
 
 // --- algo.RnullStr2..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr2_Update(algo::RnullStr2 &lhs, algo::RnullStr2 rhs) {
+inline bool algo::RnullStr2_Update(algo::RnullStr2 &lhs, algo::RnullStr2 rhs) throw() {
     bool ret = !RnullStr2_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -9646,31 +9646,31 @@ inline bool algo::RnullStr2_Update(algo::RnullStr2 &lhs, algo::RnullStr2 rhs) {
 }
 
 // --- algo.RnullStr2..EqOpAryptr
-inline bool algo::RnullStr2::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr2::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr2..AssignOp
-inline algo::RnullStr2& algo::RnullStr2::operator =(const algo::RnullStr2 &rhs) {
+inline algo::RnullStr2& algo::RnullStr2::operator =(const algo::RnullStr2 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr2));
     return *this;
 }
 
 // --- algo.RnullStr2..Ctor
-inline  algo::RnullStr2::RnullStr2() {
+inline  algo::RnullStr2::RnullStr2() throw() {
     algo::RnullStr2_Init(*this);
 }
 
 // --- algo.RnullStr2..CopyCtor
-inline  algo::RnullStr2::RnullStr2(const algo::RnullStr2 &rhs) {
+inline  algo::RnullStr2::RnullStr2(const algo::RnullStr2 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr2));
 }
 
 // --- algo.RnullStr20.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr20& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr20& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -9682,19 +9682,19 @@ inline u32 algo::RnullStr20_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr20.ch.Init
-inline void algo::ch_Init(algo::RnullStr20 &parent) {
+inline void algo::ch_Init(algo::RnullStr20 &parent) throw() {
     memset(parent.ch, 0, 20);
 }
 
 // --- algo.RnullStr20.ch.Max
 // always return constant 20
-inline int algo::ch_Max(algo::RnullStr20& parent) {
+inline int algo::ch_Max(algo::RnullStr20& parent) throw() {
     (void)parent;
     return 20;
 }
 
 // --- algo.RnullStr20.ch.N
-inline int algo::ch_N(const algo::RnullStr20& parent) {
+inline int algo::ch_N(const algo::RnullStr20& parent) throw() {
     u64 ret;
     ret = 20;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -9705,57 +9705,57 @@ inline int algo::ch_N(const algo::RnullStr20& parent) {
 
 // --- algo.RnullStr20.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr20::operator =(const algo::strptr &str) {
+inline void algo::RnullStr20::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr20.ch.CtorStrptr
-inline  algo::RnullStr20::RnullStr20(const algo::strptr &rhs) {
+inline  algo::RnullStr20::RnullStr20(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr20.ch.Cast
-inline  algo::RnullStr20::operator algo::strptr() const {
+inline  algo::RnullStr20::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr20..EqOp
-inline bool algo::RnullStr20::operator ==(const algo::RnullStr20 &rhs) const {
+inline bool algo::RnullStr20::operator ==(const algo::RnullStr20 &rhs) const throw() {
     return algo::RnullStr20_Eq(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
 }
 
 // --- algo.RnullStr20..NeOp
-inline bool algo::RnullStr20::operator !=(const algo::RnullStr20 &rhs) const {
+inline bool algo::RnullStr20::operator !=(const algo::RnullStr20 &rhs) const throw() {
     return !algo::RnullStr20_Eq(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
 }
 
 // --- algo.RnullStr20..LtOp
-inline bool algo::RnullStr20::operator <(const algo::RnullStr20 &rhs) const {
+inline bool algo::RnullStr20::operator <(const algo::RnullStr20 &rhs) const throw() {
     return algo::RnullStr20_Lt(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
 }
 
 // --- algo.RnullStr20..GtOp
-inline bool algo::RnullStr20::operator >(const algo::RnullStr20 &rhs) const {
+inline bool algo::RnullStr20::operator >(const algo::RnullStr20 &rhs) const throw() {
     return algo::RnullStr20_Lt(const_cast<algo::RnullStr20&>(rhs),const_cast<algo::RnullStr20&>(*this));
 }
 
 // --- algo.RnullStr20..LeOp
-inline bool algo::RnullStr20::operator <=(const algo::RnullStr20 &rhs) const {
+inline bool algo::RnullStr20::operator <=(const algo::RnullStr20 &rhs) const throw() {
     return !algo::RnullStr20_Lt(const_cast<algo::RnullStr20&>(rhs),const_cast<algo::RnullStr20&>(*this));
 }
 
 // --- algo.RnullStr20..GeOp
-inline bool algo::RnullStr20::operator >=(const algo::RnullStr20 &rhs) const {
+inline bool algo::RnullStr20::operator >=(const algo::RnullStr20 &rhs) const throw() {
     return !algo::RnullStr20_Lt(const_cast<algo::RnullStr20&>(*this),const_cast<algo::RnullStr20&>(rhs));
 }
 
 // --- algo.RnullStr20..Lt
-inline bool algo::RnullStr20_Lt(algo::RnullStr20 lhs, algo::RnullStr20 rhs) {
+inline bool algo::RnullStr20_Lt(algo::RnullStr20 lhs, algo::RnullStr20 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr20..Cmp
-inline i32 algo::RnullStr20_Cmp(algo::RnullStr20 lhs, algo::RnullStr20 rhs) {
+inline i32 algo::RnullStr20_Cmp(algo::RnullStr20 lhs, algo::RnullStr20 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -9768,7 +9768,7 @@ inline void algo::RnullStr20_Init(algo::RnullStr20& parent) {
 }
 
 // --- algo.RnullStr20..Eq
-inline bool algo::RnullStr20_Eq(algo::RnullStr20 lhs, algo::RnullStr20 rhs) {
+inline bool algo::RnullStr20_Eq(algo::RnullStr20 lhs, algo::RnullStr20 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -9779,7 +9779,7 @@ inline bool algo::RnullStr20_Eq(algo::RnullStr20 lhs, algo::RnullStr20 rhs) {
 
 // --- algo.RnullStr20..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr20_Update(algo::RnullStr20 &lhs, algo::RnullStr20 rhs) {
+inline bool algo::RnullStr20_Update(algo::RnullStr20 &lhs, algo::RnullStr20 rhs) throw() {
     bool ret = !RnullStr20_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -9788,31 +9788,31 @@ inline bool algo::RnullStr20_Update(algo::RnullStr20 &lhs, algo::RnullStr20 rhs)
 }
 
 // --- algo.RnullStr20..EqOpAryptr
-inline bool algo::RnullStr20::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr20::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr20..AssignOp
-inline algo::RnullStr20& algo::RnullStr20::operator =(const algo::RnullStr20 &rhs) {
+inline algo::RnullStr20& algo::RnullStr20::operator =(const algo::RnullStr20 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr20));
     return *this;
 }
 
 // --- algo.RnullStr20..Ctor
-inline  algo::RnullStr20::RnullStr20() {
+inline  algo::RnullStr20::RnullStr20() throw() {
     algo::RnullStr20_Init(*this);
 }
 
 // --- algo.RnullStr20..CopyCtor
-inline  algo::RnullStr20::RnullStr20(const algo::RnullStr20 &rhs) {
+inline  algo::RnullStr20::RnullStr20(const algo::RnullStr20 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr20));
 }
 
 // --- algo.RnullStr21.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr21& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr21& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -9824,19 +9824,19 @@ inline u32 algo::RnullStr21_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr21.ch.Init
-inline void algo::ch_Init(algo::RnullStr21 &parent) {
+inline void algo::ch_Init(algo::RnullStr21 &parent) throw() {
     memset(parent.ch, 0, 21);
 }
 
 // --- algo.RnullStr21.ch.Max
 // always return constant 21
-inline int algo::ch_Max(algo::RnullStr21& parent) {
+inline int algo::ch_Max(algo::RnullStr21& parent) throw() {
     (void)parent;
     return 21;
 }
 
 // --- algo.RnullStr21.ch.N
-inline int algo::ch_N(const algo::RnullStr21& parent) {
+inline int algo::ch_N(const algo::RnullStr21& parent) throw() {
     u64 ret;
     ret = 21;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -9847,27 +9847,27 @@ inline int algo::ch_N(const algo::RnullStr21& parent) {
 
 // --- algo.RnullStr21.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr21::operator =(const algo::strptr &str) {
+inline void algo::RnullStr21::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr21.ch.CtorStrptr
-inline  algo::RnullStr21::RnullStr21(const algo::strptr &rhs) {
+inline  algo::RnullStr21::RnullStr21(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr21.ch.Cast
-inline  algo::RnullStr21::operator algo::strptr() const {
+inline  algo::RnullStr21::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr21..Lt
-inline bool algo::RnullStr21_Lt(algo::RnullStr21& lhs, algo::RnullStr21& rhs) {
+inline bool algo::RnullStr21_Lt(algo::RnullStr21& lhs, algo::RnullStr21& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr21..Cmp
-inline i32 algo::RnullStr21_Cmp(algo::RnullStr21& lhs, algo::RnullStr21& rhs) {
+inline i32 algo::RnullStr21_Cmp(algo::RnullStr21& lhs, algo::RnullStr21& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -9880,7 +9880,7 @@ inline void algo::RnullStr21_Init(algo::RnullStr21& parent) {
 }
 
 // --- algo.RnullStr21..Eq
-inline bool algo::RnullStr21_Eq(algo::RnullStr21& lhs, algo::RnullStr21& rhs) {
+inline bool algo::RnullStr21_Eq(algo::RnullStr21& lhs, algo::RnullStr21& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -9892,7 +9892,7 @@ inline bool algo::RnullStr21_Eq(algo::RnullStr21& lhs, algo::RnullStr21& rhs) {
 
 // --- algo.RnullStr21..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr21_Update(algo::RnullStr21 &lhs, algo::RnullStr21& rhs) {
+inline bool algo::RnullStr21_Update(algo::RnullStr21 &lhs, algo::RnullStr21& rhs) throw() {
     bool ret = !RnullStr21_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -9901,31 +9901,31 @@ inline bool algo::RnullStr21_Update(algo::RnullStr21 &lhs, algo::RnullStr21& rhs
 }
 
 // --- algo.RnullStr21..EqOpAryptr
-inline bool algo::RnullStr21::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr21::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr21..AssignOp
-inline algo::RnullStr21& algo::RnullStr21::operator =(const algo::RnullStr21 &rhs) {
+inline algo::RnullStr21& algo::RnullStr21::operator =(const algo::RnullStr21 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr21));
     return *this;
 }
 
 // --- algo.RnullStr21..Ctor
-inline  algo::RnullStr21::RnullStr21() {
+inline  algo::RnullStr21::RnullStr21() throw() {
     algo::RnullStr21_Init(*this);
 }
 
 // --- algo.RnullStr21..CopyCtor
-inline  algo::RnullStr21::RnullStr21(const algo::RnullStr21 &rhs) {
+inline  algo::RnullStr21::RnullStr21(const algo::RnullStr21 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr21));
 }
 
 // --- algo.RnullStr24.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr24& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr24& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -9937,19 +9937,19 @@ inline u32 algo::RnullStr24_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr24.ch.Init
-inline void algo::ch_Init(algo::RnullStr24 &parent) {
+inline void algo::ch_Init(algo::RnullStr24 &parent) throw() {
     memset(parent.ch, 0, 24);
 }
 
 // --- algo.RnullStr24.ch.Max
 // always return constant 24
-inline int algo::ch_Max(algo::RnullStr24& parent) {
+inline int algo::ch_Max(algo::RnullStr24& parent) throw() {
     (void)parent;
     return 24;
 }
 
 // --- algo.RnullStr24.ch.N
-inline int algo::ch_N(const algo::RnullStr24& parent) {
+inline int algo::ch_N(const algo::RnullStr24& parent) throw() {
     u64 ret;
     ret = 24;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -9960,57 +9960,57 @@ inline int algo::ch_N(const algo::RnullStr24& parent) {
 
 // --- algo.RnullStr24.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr24::operator =(const algo::strptr &str) {
+inline void algo::RnullStr24::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr24.ch.CtorStrptr
-inline  algo::RnullStr24::RnullStr24(const algo::strptr &rhs) {
+inline  algo::RnullStr24::RnullStr24(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr24.ch.Cast
-inline  algo::RnullStr24::operator algo::strptr() const {
+inline  algo::RnullStr24::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr24..EqOp
-inline bool algo::RnullStr24::operator ==(const algo::RnullStr24 &rhs) const {
+inline bool algo::RnullStr24::operator ==(const algo::RnullStr24 &rhs) const throw() {
     return algo::RnullStr24_Eq(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
 }
 
 // --- algo.RnullStr24..NeOp
-inline bool algo::RnullStr24::operator !=(const algo::RnullStr24 &rhs) const {
+inline bool algo::RnullStr24::operator !=(const algo::RnullStr24 &rhs) const throw() {
     return !algo::RnullStr24_Eq(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
 }
 
 // --- algo.RnullStr24..LtOp
-inline bool algo::RnullStr24::operator <(const algo::RnullStr24 &rhs) const {
+inline bool algo::RnullStr24::operator <(const algo::RnullStr24 &rhs) const throw() {
     return algo::RnullStr24_Lt(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
 }
 
 // --- algo.RnullStr24..GtOp
-inline bool algo::RnullStr24::operator >(const algo::RnullStr24 &rhs) const {
+inline bool algo::RnullStr24::operator >(const algo::RnullStr24 &rhs) const throw() {
     return algo::RnullStr24_Lt(const_cast<algo::RnullStr24&>(rhs),const_cast<algo::RnullStr24&>(*this));
 }
 
 // --- algo.RnullStr24..LeOp
-inline bool algo::RnullStr24::operator <=(const algo::RnullStr24 &rhs) const {
+inline bool algo::RnullStr24::operator <=(const algo::RnullStr24 &rhs) const throw() {
     return !algo::RnullStr24_Lt(const_cast<algo::RnullStr24&>(rhs),const_cast<algo::RnullStr24&>(*this));
 }
 
 // --- algo.RnullStr24..GeOp
-inline bool algo::RnullStr24::operator >=(const algo::RnullStr24 &rhs) const {
+inline bool algo::RnullStr24::operator >=(const algo::RnullStr24 &rhs) const throw() {
     return !algo::RnullStr24_Lt(const_cast<algo::RnullStr24&>(*this),const_cast<algo::RnullStr24&>(rhs));
 }
 
 // --- algo.RnullStr24..Lt
-inline bool algo::RnullStr24_Lt(algo::RnullStr24& lhs, algo::RnullStr24& rhs) {
+inline bool algo::RnullStr24_Lt(algo::RnullStr24& lhs, algo::RnullStr24& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr24..Cmp
-inline i32 algo::RnullStr24_Cmp(algo::RnullStr24& lhs, algo::RnullStr24& rhs) {
+inline i32 algo::RnullStr24_Cmp(algo::RnullStr24& lhs, algo::RnullStr24& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -10023,7 +10023,7 @@ inline void algo::RnullStr24_Init(algo::RnullStr24& parent) {
 }
 
 // --- algo.RnullStr24..Eq
-inline bool algo::RnullStr24_Eq(algo::RnullStr24& lhs, algo::RnullStr24& rhs) {
+inline bool algo::RnullStr24_Eq(algo::RnullStr24& lhs, algo::RnullStr24& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -10034,7 +10034,7 @@ inline bool algo::RnullStr24_Eq(algo::RnullStr24& lhs, algo::RnullStr24& rhs) {
 
 // --- algo.RnullStr24..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr24_Update(algo::RnullStr24 &lhs, algo::RnullStr24& rhs) {
+inline bool algo::RnullStr24_Update(algo::RnullStr24 &lhs, algo::RnullStr24& rhs) throw() {
     bool ret = !RnullStr24_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10043,31 +10043,31 @@ inline bool algo::RnullStr24_Update(algo::RnullStr24 &lhs, algo::RnullStr24& rhs
 }
 
 // --- algo.RnullStr24..EqOpAryptr
-inline bool algo::RnullStr24::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr24::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr24..AssignOp
-inline algo::RnullStr24& algo::RnullStr24::operator =(const algo::RnullStr24 &rhs) {
+inline algo::RnullStr24& algo::RnullStr24::operator =(const algo::RnullStr24 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr24));
     return *this;
 }
 
 // --- algo.RnullStr24..Ctor
-inline  algo::RnullStr24::RnullStr24() {
+inline  algo::RnullStr24::RnullStr24() throw() {
     algo::RnullStr24_Init(*this);
 }
 
 // --- algo.RnullStr24..CopyCtor
-inline  algo::RnullStr24::RnullStr24(const algo::RnullStr24 &rhs) {
+inline  algo::RnullStr24::RnullStr24(const algo::RnullStr24 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr24));
 }
 
 // --- algo.RnullStr25.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr25& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr25& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -10079,19 +10079,19 @@ inline u32 algo::RnullStr25_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr25.ch.Init
-inline void algo::ch_Init(algo::RnullStr25 &parent) {
+inline void algo::ch_Init(algo::RnullStr25 &parent) throw() {
     memset(parent.ch, 0, 25);
 }
 
 // --- algo.RnullStr25.ch.Max
 // always return constant 25
-inline int algo::ch_Max(algo::RnullStr25& parent) {
+inline int algo::ch_Max(algo::RnullStr25& parent) throw() {
     (void)parent;
     return 25;
 }
 
 // --- algo.RnullStr25.ch.N
-inline int algo::ch_N(const algo::RnullStr25& parent) {
+inline int algo::ch_N(const algo::RnullStr25& parent) throw() {
     u64 ret;
     ret = 25;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -10102,57 +10102,57 @@ inline int algo::ch_N(const algo::RnullStr25& parent) {
 
 // --- algo.RnullStr25.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr25::operator =(const algo::strptr &str) {
+inline void algo::RnullStr25::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr25.ch.CtorStrptr
-inline  algo::RnullStr25::RnullStr25(const algo::strptr &rhs) {
+inline  algo::RnullStr25::RnullStr25(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr25.ch.Cast
-inline  algo::RnullStr25::operator algo::strptr() const {
+inline  algo::RnullStr25::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr25..EqOp
-inline bool algo::RnullStr25::operator ==(const algo::RnullStr25 &rhs) const {
+inline bool algo::RnullStr25::operator ==(const algo::RnullStr25 &rhs) const throw() {
     return algo::RnullStr25_Eq(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
 }
 
 // --- algo.RnullStr25..NeOp
-inline bool algo::RnullStr25::operator !=(const algo::RnullStr25 &rhs) const {
+inline bool algo::RnullStr25::operator !=(const algo::RnullStr25 &rhs) const throw() {
     return !algo::RnullStr25_Eq(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
 }
 
 // --- algo.RnullStr25..LtOp
-inline bool algo::RnullStr25::operator <(const algo::RnullStr25 &rhs) const {
+inline bool algo::RnullStr25::operator <(const algo::RnullStr25 &rhs) const throw() {
     return algo::RnullStr25_Lt(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
 }
 
 // --- algo.RnullStr25..GtOp
-inline bool algo::RnullStr25::operator >(const algo::RnullStr25 &rhs) const {
+inline bool algo::RnullStr25::operator >(const algo::RnullStr25 &rhs) const throw() {
     return algo::RnullStr25_Lt(const_cast<algo::RnullStr25&>(rhs),const_cast<algo::RnullStr25&>(*this));
 }
 
 // --- algo.RnullStr25..LeOp
-inline bool algo::RnullStr25::operator <=(const algo::RnullStr25 &rhs) const {
+inline bool algo::RnullStr25::operator <=(const algo::RnullStr25 &rhs) const throw() {
     return !algo::RnullStr25_Lt(const_cast<algo::RnullStr25&>(rhs),const_cast<algo::RnullStr25&>(*this));
 }
 
 // --- algo.RnullStr25..GeOp
-inline bool algo::RnullStr25::operator >=(const algo::RnullStr25 &rhs) const {
+inline bool algo::RnullStr25::operator >=(const algo::RnullStr25 &rhs) const throw() {
     return !algo::RnullStr25_Lt(const_cast<algo::RnullStr25&>(*this),const_cast<algo::RnullStr25&>(rhs));
 }
 
 // --- algo.RnullStr25..Lt
-inline bool algo::RnullStr25_Lt(algo::RnullStr25& lhs, algo::RnullStr25& rhs) {
+inline bool algo::RnullStr25_Lt(algo::RnullStr25& lhs, algo::RnullStr25& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr25..Cmp
-inline i32 algo::RnullStr25_Cmp(algo::RnullStr25& lhs, algo::RnullStr25& rhs) {
+inline i32 algo::RnullStr25_Cmp(algo::RnullStr25& lhs, algo::RnullStr25& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -10165,7 +10165,7 @@ inline void algo::RnullStr25_Init(algo::RnullStr25& parent) {
 }
 
 // --- algo.RnullStr25..Eq
-inline bool algo::RnullStr25_Eq(algo::RnullStr25& lhs, algo::RnullStr25& rhs) {
+inline bool algo::RnullStr25_Eq(algo::RnullStr25& lhs, algo::RnullStr25& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -10177,7 +10177,7 @@ inline bool algo::RnullStr25_Eq(algo::RnullStr25& lhs, algo::RnullStr25& rhs) {
 
 // --- algo.RnullStr25..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr25_Update(algo::RnullStr25 &lhs, algo::RnullStr25& rhs) {
+inline bool algo::RnullStr25_Update(algo::RnullStr25 &lhs, algo::RnullStr25& rhs) throw() {
     bool ret = !RnullStr25_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10186,31 +10186,31 @@ inline bool algo::RnullStr25_Update(algo::RnullStr25 &lhs, algo::RnullStr25& rhs
 }
 
 // --- algo.RnullStr25..EqOpAryptr
-inline bool algo::RnullStr25::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr25::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr25..AssignOp
-inline algo::RnullStr25& algo::RnullStr25::operator =(const algo::RnullStr25 &rhs) {
+inline algo::RnullStr25& algo::RnullStr25::operator =(const algo::RnullStr25 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr25));
     return *this;
 }
 
 // --- algo.RnullStr25..Ctor
-inline  algo::RnullStr25::RnullStr25() {
+inline  algo::RnullStr25::RnullStr25() throw() {
     algo::RnullStr25_Init(*this);
 }
 
 // --- algo.RnullStr25..CopyCtor
-inline  algo::RnullStr25::RnullStr25(const algo::RnullStr25 &rhs) {
+inline  algo::RnullStr25::RnullStr25(const algo::RnullStr25 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr25));
 }
 
 // --- algo.RnullStr28.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr28& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr28& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -10222,19 +10222,19 @@ inline u32 algo::RnullStr28_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr28.ch.Init
-inline void algo::ch_Init(algo::RnullStr28 &parent) {
+inline void algo::ch_Init(algo::RnullStr28 &parent) throw() {
     memset(parent.ch, 0, 28);
 }
 
 // --- algo.RnullStr28.ch.Max
 // always return constant 28
-inline int algo::ch_Max(algo::RnullStr28& parent) {
+inline int algo::ch_Max(algo::RnullStr28& parent) throw() {
     (void)parent;
     return 28;
 }
 
 // --- algo.RnullStr28.ch.N
-inline int algo::ch_N(const algo::RnullStr28& parent) {
+inline int algo::ch_N(const algo::RnullStr28& parent) throw() {
     u64 ret;
     ret = 28;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -10245,57 +10245,57 @@ inline int algo::ch_N(const algo::RnullStr28& parent) {
 
 // --- algo.RnullStr28.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr28::operator =(const algo::strptr &str) {
+inline void algo::RnullStr28::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr28.ch.CtorStrptr
-inline  algo::RnullStr28::RnullStr28(const algo::strptr &rhs) {
+inline  algo::RnullStr28::RnullStr28(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr28.ch.Cast
-inline  algo::RnullStr28::operator algo::strptr() const {
+inline  algo::RnullStr28::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr28..EqOp
-inline bool algo::RnullStr28::operator ==(const algo::RnullStr28 &rhs) const {
+inline bool algo::RnullStr28::operator ==(const algo::RnullStr28 &rhs) const throw() {
     return algo::RnullStr28_Eq(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
 }
 
 // --- algo.RnullStr28..NeOp
-inline bool algo::RnullStr28::operator !=(const algo::RnullStr28 &rhs) const {
+inline bool algo::RnullStr28::operator !=(const algo::RnullStr28 &rhs) const throw() {
     return !algo::RnullStr28_Eq(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
 }
 
 // --- algo.RnullStr28..LtOp
-inline bool algo::RnullStr28::operator <(const algo::RnullStr28 &rhs) const {
+inline bool algo::RnullStr28::operator <(const algo::RnullStr28 &rhs) const throw() {
     return algo::RnullStr28_Lt(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
 }
 
 // --- algo.RnullStr28..GtOp
-inline bool algo::RnullStr28::operator >(const algo::RnullStr28 &rhs) const {
+inline bool algo::RnullStr28::operator >(const algo::RnullStr28 &rhs) const throw() {
     return algo::RnullStr28_Lt(const_cast<algo::RnullStr28&>(rhs),const_cast<algo::RnullStr28&>(*this));
 }
 
 // --- algo.RnullStr28..LeOp
-inline bool algo::RnullStr28::operator <=(const algo::RnullStr28 &rhs) const {
+inline bool algo::RnullStr28::operator <=(const algo::RnullStr28 &rhs) const throw() {
     return !algo::RnullStr28_Lt(const_cast<algo::RnullStr28&>(rhs),const_cast<algo::RnullStr28&>(*this));
 }
 
 // --- algo.RnullStr28..GeOp
-inline bool algo::RnullStr28::operator >=(const algo::RnullStr28 &rhs) const {
+inline bool algo::RnullStr28::operator >=(const algo::RnullStr28 &rhs) const throw() {
     return !algo::RnullStr28_Lt(const_cast<algo::RnullStr28&>(*this),const_cast<algo::RnullStr28&>(rhs));
 }
 
 // --- algo.RnullStr28..Lt
-inline bool algo::RnullStr28_Lt(algo::RnullStr28& lhs, algo::RnullStr28& rhs) {
+inline bool algo::RnullStr28_Lt(algo::RnullStr28& lhs, algo::RnullStr28& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr28..Cmp
-inline i32 algo::RnullStr28_Cmp(algo::RnullStr28& lhs, algo::RnullStr28& rhs) {
+inline i32 algo::RnullStr28_Cmp(algo::RnullStr28& lhs, algo::RnullStr28& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -10308,7 +10308,7 @@ inline void algo::RnullStr28_Init(algo::RnullStr28& parent) {
 }
 
 // --- algo.RnullStr28..Eq
-inline bool algo::RnullStr28_Eq(algo::RnullStr28& lhs, algo::RnullStr28& rhs) {
+inline bool algo::RnullStr28_Eq(algo::RnullStr28& lhs, algo::RnullStr28& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -10320,7 +10320,7 @@ inline bool algo::RnullStr28_Eq(algo::RnullStr28& lhs, algo::RnullStr28& rhs) {
 
 // --- algo.RnullStr28..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr28_Update(algo::RnullStr28 &lhs, algo::RnullStr28& rhs) {
+inline bool algo::RnullStr28_Update(algo::RnullStr28 &lhs, algo::RnullStr28& rhs) throw() {
     bool ret = !RnullStr28_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10329,31 +10329,31 @@ inline bool algo::RnullStr28_Update(algo::RnullStr28 &lhs, algo::RnullStr28& rhs
 }
 
 // --- algo.RnullStr28..EqOpAryptr
-inline bool algo::RnullStr28::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr28::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr28..AssignOp
-inline algo::RnullStr28& algo::RnullStr28::operator =(const algo::RnullStr28 &rhs) {
+inline algo::RnullStr28& algo::RnullStr28::operator =(const algo::RnullStr28 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr28));
     return *this;
 }
 
 // --- algo.RnullStr28..Ctor
-inline  algo::RnullStr28::RnullStr28() {
+inline  algo::RnullStr28::RnullStr28() throw() {
     algo::RnullStr28_Init(*this);
 }
 
 // --- algo.RnullStr28..CopyCtor
-inline  algo::RnullStr28::RnullStr28(const algo::RnullStr28 &rhs) {
+inline  algo::RnullStr28::RnullStr28(const algo::RnullStr28 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr28));
 }
 
 // --- algo.RnullStr3.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr3& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr3& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -10365,19 +10365,19 @@ inline u32 algo::RnullStr3_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr3.ch.Init
-inline void algo::ch_Init(algo::RnullStr3 &parent) {
+inline void algo::ch_Init(algo::RnullStr3 &parent) throw() {
     memset(parent.ch, 0, 3);
 }
 
 // --- algo.RnullStr3.ch.Max
 // always return constant 3
-inline int algo::ch_Max(algo::RnullStr3& parent) {
+inline int algo::ch_Max(algo::RnullStr3& parent) throw() {
     (void)parent;
     return 3;
 }
 
 // --- algo.RnullStr3.ch.N
-inline int algo::ch_N(const algo::RnullStr3& parent) {
+inline int algo::ch_N(const algo::RnullStr3& parent) throw() {
     u64 ret;
     ret = 3;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -10388,57 +10388,57 @@ inline int algo::ch_N(const algo::RnullStr3& parent) {
 
 // --- algo.RnullStr3.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr3::operator =(const algo::strptr &str) {
+inline void algo::RnullStr3::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr3.ch.CtorStrptr
-inline  algo::RnullStr3::RnullStr3(const algo::strptr &rhs) {
+inline  algo::RnullStr3::RnullStr3(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr3.ch.Cast
-inline  algo::RnullStr3::operator algo::strptr() const {
+inline  algo::RnullStr3::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr3..EqOp
-inline bool algo::RnullStr3::operator ==(const algo::RnullStr3 &rhs) const {
+inline bool algo::RnullStr3::operator ==(const algo::RnullStr3 &rhs) const throw() {
     return algo::RnullStr3_Eq(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
 }
 
 // --- algo.RnullStr3..NeOp
-inline bool algo::RnullStr3::operator !=(const algo::RnullStr3 &rhs) const {
+inline bool algo::RnullStr3::operator !=(const algo::RnullStr3 &rhs) const throw() {
     return !algo::RnullStr3_Eq(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
 }
 
 // --- algo.RnullStr3..LtOp
-inline bool algo::RnullStr3::operator <(const algo::RnullStr3 &rhs) const {
+inline bool algo::RnullStr3::operator <(const algo::RnullStr3 &rhs) const throw() {
     return algo::RnullStr3_Lt(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
 }
 
 // --- algo.RnullStr3..GtOp
-inline bool algo::RnullStr3::operator >(const algo::RnullStr3 &rhs) const {
+inline bool algo::RnullStr3::operator >(const algo::RnullStr3 &rhs) const throw() {
     return algo::RnullStr3_Lt(const_cast<algo::RnullStr3&>(rhs),const_cast<algo::RnullStr3&>(*this));
 }
 
 // --- algo.RnullStr3..LeOp
-inline bool algo::RnullStr3::operator <=(const algo::RnullStr3 &rhs) const {
+inline bool algo::RnullStr3::operator <=(const algo::RnullStr3 &rhs) const throw() {
     return !algo::RnullStr3_Lt(const_cast<algo::RnullStr3&>(rhs),const_cast<algo::RnullStr3&>(*this));
 }
 
 // --- algo.RnullStr3..GeOp
-inline bool algo::RnullStr3::operator >=(const algo::RnullStr3 &rhs) const {
+inline bool algo::RnullStr3::operator >=(const algo::RnullStr3 &rhs) const throw() {
     return !algo::RnullStr3_Lt(const_cast<algo::RnullStr3&>(*this),const_cast<algo::RnullStr3&>(rhs));
 }
 
 // --- algo.RnullStr3..Lt
-inline bool algo::RnullStr3_Lt(algo::RnullStr3 lhs, algo::RnullStr3 rhs) {
+inline bool algo::RnullStr3_Lt(algo::RnullStr3 lhs, algo::RnullStr3 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr3..Cmp
-inline i32 algo::RnullStr3_Cmp(algo::RnullStr3 lhs, algo::RnullStr3 rhs) {
+inline i32 algo::RnullStr3_Cmp(algo::RnullStr3 lhs, algo::RnullStr3 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -10451,7 +10451,7 @@ inline void algo::RnullStr3_Init(algo::RnullStr3& parent) {
 }
 
 // --- algo.RnullStr3..Eq
-inline bool algo::RnullStr3_Eq(algo::RnullStr3 lhs, algo::RnullStr3 rhs) {
+inline bool algo::RnullStr3_Eq(algo::RnullStr3 lhs, algo::RnullStr3 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u16*)(lhs.ch+0) == *(u16*)(rhs.ch+0)
@@ -10461,7 +10461,7 @@ inline bool algo::RnullStr3_Eq(algo::RnullStr3 lhs, algo::RnullStr3 rhs) {
 
 // --- algo.RnullStr3..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr3_Update(algo::RnullStr3 &lhs, algo::RnullStr3 rhs) {
+inline bool algo::RnullStr3_Update(algo::RnullStr3 &lhs, algo::RnullStr3 rhs) throw() {
     bool ret = !RnullStr3_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10470,31 +10470,31 @@ inline bool algo::RnullStr3_Update(algo::RnullStr3 &lhs, algo::RnullStr3 rhs) {
 }
 
 // --- algo.RnullStr3..EqOpAryptr
-inline bool algo::RnullStr3::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr3::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr3..AssignOp
-inline algo::RnullStr3& algo::RnullStr3::operator =(const algo::RnullStr3 &rhs) {
+inline algo::RnullStr3& algo::RnullStr3::operator =(const algo::RnullStr3 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr3));
     return *this;
 }
 
 // --- algo.RnullStr3..Ctor
-inline  algo::RnullStr3::RnullStr3() {
+inline  algo::RnullStr3::RnullStr3() throw() {
     algo::RnullStr3_Init(*this);
 }
 
 // --- algo.RnullStr3..CopyCtor
-inline  algo::RnullStr3::RnullStr3(const algo::RnullStr3 &rhs) {
+inline  algo::RnullStr3::RnullStr3(const algo::RnullStr3 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr3));
 }
 
 // --- algo.RnullStr30.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr30& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr30& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -10506,19 +10506,19 @@ inline u32 algo::RnullStr30_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr30.ch.Init
-inline void algo::ch_Init(algo::RnullStr30 &parent) {
+inline void algo::ch_Init(algo::RnullStr30 &parent) throw() {
     memset(parent.ch, 0, 30);
 }
 
 // --- algo.RnullStr30.ch.Max
 // always return constant 30
-inline int algo::ch_Max(algo::RnullStr30& parent) {
+inline int algo::ch_Max(algo::RnullStr30& parent) throw() {
     (void)parent;
     return 30;
 }
 
 // --- algo.RnullStr30.ch.N
-inline int algo::ch_N(const algo::RnullStr30& parent) {
+inline int algo::ch_N(const algo::RnullStr30& parent) throw() {
     u64 ret;
     ret = 30;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -10529,27 +10529,27 @@ inline int algo::ch_N(const algo::RnullStr30& parent) {
 
 // --- algo.RnullStr30.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr30::operator =(const algo::strptr &str) {
+inline void algo::RnullStr30::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr30.ch.CtorStrptr
-inline  algo::RnullStr30::RnullStr30(const algo::strptr &rhs) {
+inline  algo::RnullStr30::RnullStr30(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr30.ch.Cast
-inline  algo::RnullStr30::operator algo::strptr() const {
+inline  algo::RnullStr30::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr30..Lt
-inline bool algo::RnullStr30_Lt(algo::RnullStr30 lhs, algo::RnullStr30 rhs) {
+inline bool algo::RnullStr30_Lt(algo::RnullStr30 lhs, algo::RnullStr30 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr30..Cmp
-inline i32 algo::RnullStr30_Cmp(algo::RnullStr30 lhs, algo::RnullStr30 rhs) {
+inline i32 algo::RnullStr30_Cmp(algo::RnullStr30 lhs, algo::RnullStr30 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -10562,7 +10562,7 @@ inline void algo::RnullStr30_Init(algo::RnullStr30& parent) {
 }
 
 // --- algo.RnullStr30..Eq
-inline bool algo::RnullStr30_Eq(algo::RnullStr30 lhs, algo::RnullStr30 rhs) {
+inline bool algo::RnullStr30_Eq(algo::RnullStr30 lhs, algo::RnullStr30 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -10575,7 +10575,7 @@ inline bool algo::RnullStr30_Eq(algo::RnullStr30 lhs, algo::RnullStr30 rhs) {
 
 // --- algo.RnullStr30..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr30_Update(algo::RnullStr30 &lhs, algo::RnullStr30 rhs) {
+inline bool algo::RnullStr30_Update(algo::RnullStr30 &lhs, algo::RnullStr30 rhs) throw() {
     bool ret = !RnullStr30_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10584,31 +10584,31 @@ inline bool algo::RnullStr30_Update(algo::RnullStr30 &lhs, algo::RnullStr30 rhs)
 }
 
 // --- algo.RnullStr30..EqOpAryptr
-inline bool algo::RnullStr30::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr30::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr30..AssignOp
-inline algo::RnullStr30& algo::RnullStr30::operator =(const algo::RnullStr30 &rhs) {
+inline algo::RnullStr30& algo::RnullStr30::operator =(const algo::RnullStr30 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr30));
     return *this;
 }
 
 // --- algo.RnullStr30..Ctor
-inline  algo::RnullStr30::RnullStr30() {
+inline  algo::RnullStr30::RnullStr30() throw() {
     algo::RnullStr30_Init(*this);
 }
 
 // --- algo.RnullStr30..CopyCtor
-inline  algo::RnullStr30::RnullStr30(const algo::RnullStr30 &rhs) {
+inline  algo::RnullStr30::RnullStr30(const algo::RnullStr30 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr30));
 }
 
 // --- algo.RnullStr32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -10620,19 +10620,19 @@ inline u32 algo::RnullStr32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr32.ch.Init
-inline void algo::ch_Init(algo::RnullStr32 &parent) {
+inline void algo::ch_Init(algo::RnullStr32 &parent) throw() {
     memset(parent.ch, 0, 32);
 }
 
 // --- algo.RnullStr32.ch.Max
 // always return constant 32
-inline int algo::ch_Max(algo::RnullStr32& parent) {
+inline int algo::ch_Max(algo::RnullStr32& parent) throw() {
     (void)parent;
     return 32;
 }
 
 // --- algo.RnullStr32.ch.N
-inline int algo::ch_N(const algo::RnullStr32& parent) {
+inline int algo::ch_N(const algo::RnullStr32& parent) throw() {
     u64 ret;
     ret = 32;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -10643,57 +10643,57 @@ inline int algo::ch_N(const algo::RnullStr32& parent) {
 
 // --- algo.RnullStr32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr32::operator =(const algo::strptr &str) {
+inline void algo::RnullStr32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr32.ch.CtorStrptr
-inline  algo::RnullStr32::RnullStr32(const algo::strptr &rhs) {
+inline  algo::RnullStr32::RnullStr32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr32.ch.Cast
-inline  algo::RnullStr32::operator algo::strptr() const {
+inline  algo::RnullStr32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr32..EqOp
-inline bool algo::RnullStr32::operator ==(const algo::RnullStr32 &rhs) const {
+inline bool algo::RnullStr32::operator ==(const algo::RnullStr32 &rhs) const throw() {
     return algo::RnullStr32_Eq(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
 }
 
 // --- algo.RnullStr32..NeOp
-inline bool algo::RnullStr32::operator !=(const algo::RnullStr32 &rhs) const {
+inline bool algo::RnullStr32::operator !=(const algo::RnullStr32 &rhs) const throw() {
     return !algo::RnullStr32_Eq(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
 }
 
 // --- algo.RnullStr32..LtOp
-inline bool algo::RnullStr32::operator <(const algo::RnullStr32 &rhs) const {
+inline bool algo::RnullStr32::operator <(const algo::RnullStr32 &rhs) const throw() {
     return algo::RnullStr32_Lt(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
 }
 
 // --- algo.RnullStr32..GtOp
-inline bool algo::RnullStr32::operator >(const algo::RnullStr32 &rhs) const {
+inline bool algo::RnullStr32::operator >(const algo::RnullStr32 &rhs) const throw() {
     return algo::RnullStr32_Lt(const_cast<algo::RnullStr32&>(rhs),const_cast<algo::RnullStr32&>(*this));
 }
 
 // --- algo.RnullStr32..LeOp
-inline bool algo::RnullStr32::operator <=(const algo::RnullStr32 &rhs) const {
+inline bool algo::RnullStr32::operator <=(const algo::RnullStr32 &rhs) const throw() {
     return !algo::RnullStr32_Lt(const_cast<algo::RnullStr32&>(rhs),const_cast<algo::RnullStr32&>(*this));
 }
 
 // --- algo.RnullStr32..GeOp
-inline bool algo::RnullStr32::operator >=(const algo::RnullStr32 &rhs) const {
+inline bool algo::RnullStr32::operator >=(const algo::RnullStr32 &rhs) const throw() {
     return !algo::RnullStr32_Lt(const_cast<algo::RnullStr32&>(*this),const_cast<algo::RnullStr32&>(rhs));
 }
 
 // --- algo.RnullStr32..Lt
-inline bool algo::RnullStr32_Lt(algo::RnullStr32 lhs, algo::RnullStr32 rhs) {
+inline bool algo::RnullStr32_Lt(algo::RnullStr32 lhs, algo::RnullStr32 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr32..Cmp
-inline i32 algo::RnullStr32_Cmp(algo::RnullStr32 lhs, algo::RnullStr32 rhs) {
+inline i32 algo::RnullStr32_Cmp(algo::RnullStr32 lhs, algo::RnullStr32 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -10706,7 +10706,7 @@ inline void algo::RnullStr32_Init(algo::RnullStr32& parent) {
 }
 
 // --- algo.RnullStr32..Eq
-inline bool algo::RnullStr32_Eq(algo::RnullStr32 lhs, algo::RnullStr32 rhs) {
+inline bool algo::RnullStr32_Eq(algo::RnullStr32 lhs, algo::RnullStr32 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -10718,7 +10718,7 @@ inline bool algo::RnullStr32_Eq(algo::RnullStr32 lhs, algo::RnullStr32 rhs) {
 
 // --- algo.RnullStr32..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr32_Update(algo::RnullStr32 &lhs, algo::RnullStr32 rhs) {
+inline bool algo::RnullStr32_Update(algo::RnullStr32 &lhs, algo::RnullStr32 rhs) throw() {
     bool ret = !RnullStr32_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10727,31 +10727,31 @@ inline bool algo::RnullStr32_Update(algo::RnullStr32 &lhs, algo::RnullStr32 rhs)
 }
 
 // --- algo.RnullStr32..EqOpAryptr
-inline bool algo::RnullStr32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr32..AssignOp
-inline algo::RnullStr32& algo::RnullStr32::operator =(const algo::RnullStr32 &rhs) {
+inline algo::RnullStr32& algo::RnullStr32::operator =(const algo::RnullStr32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr32));
     return *this;
 }
 
 // --- algo.RnullStr32..Ctor
-inline  algo::RnullStr32::RnullStr32() {
+inline  algo::RnullStr32::RnullStr32() throw() {
     algo::RnullStr32_Init(*this);
 }
 
 // --- algo.RnullStr32..CopyCtor
-inline  algo::RnullStr32::RnullStr32(const algo::RnullStr32 &rhs) {
+inline  algo::RnullStr32::RnullStr32(const algo::RnullStr32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr32));
 }
 
 // --- algo.RnullStr33.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr33& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr33& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -10763,19 +10763,19 @@ inline u32 algo::RnullStr33_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr33.ch.Init
-inline void algo::ch_Init(algo::RnullStr33 &parent) {
+inline void algo::ch_Init(algo::RnullStr33 &parent) throw() {
     memset(parent.ch, 0, 33);
 }
 
 // --- algo.RnullStr33.ch.Max
 // always return constant 33
-inline int algo::ch_Max(algo::RnullStr33& parent) {
+inline int algo::ch_Max(algo::RnullStr33& parent) throw() {
     (void)parent;
     return 33;
 }
 
 // --- algo.RnullStr33.ch.N
-inline int algo::ch_N(const algo::RnullStr33& parent) {
+inline int algo::ch_N(const algo::RnullStr33& parent) throw() {
     u64 ret;
     ret = 33;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -10786,57 +10786,57 @@ inline int algo::ch_N(const algo::RnullStr33& parent) {
 
 // --- algo.RnullStr33.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr33::operator =(const algo::strptr &str) {
+inline void algo::RnullStr33::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr33.ch.CtorStrptr
-inline  algo::RnullStr33::RnullStr33(const algo::strptr &rhs) {
+inline  algo::RnullStr33::RnullStr33(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr33.ch.Cast
-inline  algo::RnullStr33::operator algo::strptr() const {
+inline  algo::RnullStr33::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr33..EqOp
-inline bool algo::RnullStr33::operator ==(const algo::RnullStr33 &rhs) const {
+inline bool algo::RnullStr33::operator ==(const algo::RnullStr33 &rhs) const throw() {
     return algo::RnullStr33_Eq(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
 }
 
 // --- algo.RnullStr33..NeOp
-inline bool algo::RnullStr33::operator !=(const algo::RnullStr33 &rhs) const {
+inline bool algo::RnullStr33::operator !=(const algo::RnullStr33 &rhs) const throw() {
     return !algo::RnullStr33_Eq(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
 }
 
 // --- algo.RnullStr33..LtOp
-inline bool algo::RnullStr33::operator <(const algo::RnullStr33 &rhs) const {
+inline bool algo::RnullStr33::operator <(const algo::RnullStr33 &rhs) const throw() {
     return algo::RnullStr33_Lt(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
 }
 
 // --- algo.RnullStr33..GtOp
-inline bool algo::RnullStr33::operator >(const algo::RnullStr33 &rhs) const {
+inline bool algo::RnullStr33::operator >(const algo::RnullStr33 &rhs) const throw() {
     return algo::RnullStr33_Lt(const_cast<algo::RnullStr33&>(rhs),const_cast<algo::RnullStr33&>(*this));
 }
 
 // --- algo.RnullStr33..LeOp
-inline bool algo::RnullStr33::operator <=(const algo::RnullStr33 &rhs) const {
+inline bool algo::RnullStr33::operator <=(const algo::RnullStr33 &rhs) const throw() {
     return !algo::RnullStr33_Lt(const_cast<algo::RnullStr33&>(rhs),const_cast<algo::RnullStr33&>(*this));
 }
 
 // --- algo.RnullStr33..GeOp
-inline bool algo::RnullStr33::operator >=(const algo::RnullStr33 &rhs) const {
+inline bool algo::RnullStr33::operator >=(const algo::RnullStr33 &rhs) const throw() {
     return !algo::RnullStr33_Lt(const_cast<algo::RnullStr33&>(*this),const_cast<algo::RnullStr33&>(rhs));
 }
 
 // --- algo.RnullStr33..Lt
-inline bool algo::RnullStr33_Lt(algo::RnullStr33& lhs, algo::RnullStr33& rhs) {
+inline bool algo::RnullStr33_Lt(algo::RnullStr33& lhs, algo::RnullStr33& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr33..Cmp
-inline i32 algo::RnullStr33_Cmp(algo::RnullStr33& lhs, algo::RnullStr33& rhs) {
+inline i32 algo::RnullStr33_Cmp(algo::RnullStr33& lhs, algo::RnullStr33& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -10849,7 +10849,7 @@ inline void algo::RnullStr33_Init(algo::RnullStr33& parent) {
 }
 
 // --- algo.RnullStr33..Eq
-inline bool algo::RnullStr33_Eq(algo::RnullStr33& lhs, algo::RnullStr33& rhs) {
+inline bool algo::RnullStr33_Eq(algo::RnullStr33& lhs, algo::RnullStr33& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -10862,7 +10862,7 @@ inline bool algo::RnullStr33_Eq(algo::RnullStr33& lhs, algo::RnullStr33& rhs) {
 
 // --- algo.RnullStr33..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr33_Update(algo::RnullStr33 &lhs, algo::RnullStr33& rhs) {
+inline bool algo::RnullStr33_Update(algo::RnullStr33 &lhs, algo::RnullStr33& rhs) throw() {
     bool ret = !RnullStr33_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10871,31 +10871,31 @@ inline bool algo::RnullStr33_Update(algo::RnullStr33 &lhs, algo::RnullStr33& rhs
 }
 
 // --- algo.RnullStr33..EqOpAryptr
-inline bool algo::RnullStr33::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr33::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr33..AssignOp
-inline algo::RnullStr33& algo::RnullStr33::operator =(const algo::RnullStr33 &rhs) {
+inline algo::RnullStr33& algo::RnullStr33::operator =(const algo::RnullStr33 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr33));
     return *this;
 }
 
 // --- algo.RnullStr33..Ctor
-inline  algo::RnullStr33::RnullStr33() {
+inline  algo::RnullStr33::RnullStr33() throw() {
     algo::RnullStr33_Init(*this);
 }
 
 // --- algo.RnullStr33..CopyCtor
-inline  algo::RnullStr33::RnullStr33(const algo::RnullStr33 &rhs) {
+inline  algo::RnullStr33::RnullStr33(const algo::RnullStr33 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr33));
 }
 
 // --- algo.RnullStr35.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr35& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr35& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -10907,19 +10907,19 @@ inline u32 algo::RnullStr35_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr35.ch.Init
-inline void algo::ch_Init(algo::RnullStr35 &parent) {
+inline void algo::ch_Init(algo::RnullStr35 &parent) throw() {
     memset(parent.ch, 0, 35);
 }
 
 // --- algo.RnullStr35.ch.Max
 // always return constant 35
-inline int algo::ch_Max(algo::RnullStr35& parent) {
+inline int algo::ch_Max(algo::RnullStr35& parent) throw() {
     (void)parent;
     return 35;
 }
 
 // --- algo.RnullStr35.ch.N
-inline int algo::ch_N(const algo::RnullStr35& parent) {
+inline int algo::ch_N(const algo::RnullStr35& parent) throw() {
     u64 ret;
     ret = 35;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -10930,57 +10930,57 @@ inline int algo::ch_N(const algo::RnullStr35& parent) {
 
 // --- algo.RnullStr35.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr35::operator =(const algo::strptr &str) {
+inline void algo::RnullStr35::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr35.ch.CtorStrptr
-inline  algo::RnullStr35::RnullStr35(const algo::strptr &rhs) {
+inline  algo::RnullStr35::RnullStr35(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr35.ch.Cast
-inline  algo::RnullStr35::operator algo::strptr() const {
+inline  algo::RnullStr35::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr35..EqOp
-inline bool algo::RnullStr35::operator ==(const algo::RnullStr35 &rhs) const {
+inline bool algo::RnullStr35::operator ==(const algo::RnullStr35 &rhs) const throw() {
     return algo::RnullStr35_Eq(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
 }
 
 // --- algo.RnullStr35..NeOp
-inline bool algo::RnullStr35::operator !=(const algo::RnullStr35 &rhs) const {
+inline bool algo::RnullStr35::operator !=(const algo::RnullStr35 &rhs) const throw() {
     return !algo::RnullStr35_Eq(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
 }
 
 // --- algo.RnullStr35..LtOp
-inline bool algo::RnullStr35::operator <(const algo::RnullStr35 &rhs) const {
+inline bool algo::RnullStr35::operator <(const algo::RnullStr35 &rhs) const throw() {
     return algo::RnullStr35_Lt(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
 }
 
 // --- algo.RnullStr35..GtOp
-inline bool algo::RnullStr35::operator >(const algo::RnullStr35 &rhs) const {
+inline bool algo::RnullStr35::operator >(const algo::RnullStr35 &rhs) const throw() {
     return algo::RnullStr35_Lt(const_cast<algo::RnullStr35&>(rhs),const_cast<algo::RnullStr35&>(*this));
 }
 
 // --- algo.RnullStr35..LeOp
-inline bool algo::RnullStr35::operator <=(const algo::RnullStr35 &rhs) const {
+inline bool algo::RnullStr35::operator <=(const algo::RnullStr35 &rhs) const throw() {
     return !algo::RnullStr35_Lt(const_cast<algo::RnullStr35&>(rhs),const_cast<algo::RnullStr35&>(*this));
 }
 
 // --- algo.RnullStr35..GeOp
-inline bool algo::RnullStr35::operator >=(const algo::RnullStr35 &rhs) const {
+inline bool algo::RnullStr35::operator >=(const algo::RnullStr35 &rhs) const throw() {
     return !algo::RnullStr35_Lt(const_cast<algo::RnullStr35&>(*this),const_cast<algo::RnullStr35&>(rhs));
 }
 
 // --- algo.RnullStr35..Lt
-inline bool algo::RnullStr35_Lt(algo::RnullStr35& lhs, algo::RnullStr35& rhs) {
+inline bool algo::RnullStr35_Lt(algo::RnullStr35& lhs, algo::RnullStr35& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr35..Cmp
-inline i32 algo::RnullStr35_Cmp(algo::RnullStr35& lhs, algo::RnullStr35& rhs) {
+inline i32 algo::RnullStr35_Cmp(algo::RnullStr35& lhs, algo::RnullStr35& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -10993,7 +10993,7 @@ inline void algo::RnullStr35_Init(algo::RnullStr35& parent) {
 }
 
 // --- algo.RnullStr35..Eq
-inline bool algo::RnullStr35_Eq(algo::RnullStr35& lhs, algo::RnullStr35& rhs) {
+inline bool algo::RnullStr35_Eq(algo::RnullStr35& lhs, algo::RnullStr35& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11007,7 +11007,7 @@ inline bool algo::RnullStr35_Eq(algo::RnullStr35& lhs, algo::RnullStr35& rhs) {
 
 // --- algo.RnullStr35..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr35_Update(algo::RnullStr35 &lhs, algo::RnullStr35& rhs) {
+inline bool algo::RnullStr35_Update(algo::RnullStr35 &lhs, algo::RnullStr35& rhs) throw() {
     bool ret = !RnullStr35_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -11016,31 +11016,31 @@ inline bool algo::RnullStr35_Update(algo::RnullStr35 &lhs, algo::RnullStr35& rhs
 }
 
 // --- algo.RnullStr35..EqOpAryptr
-inline bool algo::RnullStr35::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr35::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr35..AssignOp
-inline algo::RnullStr35& algo::RnullStr35::operator =(const algo::RnullStr35 &rhs) {
+inline algo::RnullStr35& algo::RnullStr35::operator =(const algo::RnullStr35 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr35));
     return *this;
 }
 
 // --- algo.RnullStr35..Ctor
-inline  algo::RnullStr35::RnullStr35() {
+inline  algo::RnullStr35::RnullStr35() throw() {
     algo::RnullStr35_Init(*this);
 }
 
 // --- algo.RnullStr35..CopyCtor
-inline  algo::RnullStr35::RnullStr35(const algo::RnullStr35 &rhs) {
+inline  algo::RnullStr35::RnullStr35(const algo::RnullStr35 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr35));
 }
 
 // --- algo.RnullStr36.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr36& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr36& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -11052,19 +11052,19 @@ inline u32 algo::RnullStr36_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr36.ch.Init
-inline void algo::ch_Init(algo::RnullStr36 &parent) {
+inline void algo::ch_Init(algo::RnullStr36 &parent) throw() {
     memset(parent.ch, 0, 36);
 }
 
 // --- algo.RnullStr36.ch.Max
 // always return constant 36
-inline int algo::ch_Max(algo::RnullStr36& parent) {
+inline int algo::ch_Max(algo::RnullStr36& parent) throw() {
     (void)parent;
     return 36;
 }
 
 // --- algo.RnullStr36.ch.N
-inline int algo::ch_N(const algo::RnullStr36& parent) {
+inline int algo::ch_N(const algo::RnullStr36& parent) throw() {
     u64 ret;
     ret = 36;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -11075,57 +11075,57 @@ inline int algo::ch_N(const algo::RnullStr36& parent) {
 
 // --- algo.RnullStr36.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr36::operator =(const algo::strptr &str) {
+inline void algo::RnullStr36::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr36.ch.CtorStrptr
-inline  algo::RnullStr36::RnullStr36(const algo::strptr &rhs) {
+inline  algo::RnullStr36::RnullStr36(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr36.ch.Cast
-inline  algo::RnullStr36::operator algo::strptr() const {
+inline  algo::RnullStr36::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr36..EqOp
-inline bool algo::RnullStr36::operator ==(const algo::RnullStr36 &rhs) const {
+inline bool algo::RnullStr36::operator ==(const algo::RnullStr36 &rhs) const throw() {
     return algo::RnullStr36_Eq(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
 }
 
 // --- algo.RnullStr36..NeOp
-inline bool algo::RnullStr36::operator !=(const algo::RnullStr36 &rhs) const {
+inline bool algo::RnullStr36::operator !=(const algo::RnullStr36 &rhs) const throw() {
     return !algo::RnullStr36_Eq(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
 }
 
 // --- algo.RnullStr36..LtOp
-inline bool algo::RnullStr36::operator <(const algo::RnullStr36 &rhs) const {
+inline bool algo::RnullStr36::operator <(const algo::RnullStr36 &rhs) const throw() {
     return algo::RnullStr36_Lt(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
 }
 
 // --- algo.RnullStr36..GtOp
-inline bool algo::RnullStr36::operator >(const algo::RnullStr36 &rhs) const {
+inline bool algo::RnullStr36::operator >(const algo::RnullStr36 &rhs) const throw() {
     return algo::RnullStr36_Lt(const_cast<algo::RnullStr36&>(rhs),const_cast<algo::RnullStr36&>(*this));
 }
 
 // --- algo.RnullStr36..LeOp
-inline bool algo::RnullStr36::operator <=(const algo::RnullStr36 &rhs) const {
+inline bool algo::RnullStr36::operator <=(const algo::RnullStr36 &rhs) const throw() {
     return !algo::RnullStr36_Lt(const_cast<algo::RnullStr36&>(rhs),const_cast<algo::RnullStr36&>(*this));
 }
 
 // --- algo.RnullStr36..GeOp
-inline bool algo::RnullStr36::operator >=(const algo::RnullStr36 &rhs) const {
+inline bool algo::RnullStr36::operator >=(const algo::RnullStr36 &rhs) const throw() {
     return !algo::RnullStr36_Lt(const_cast<algo::RnullStr36&>(*this),const_cast<algo::RnullStr36&>(rhs));
 }
 
 // --- algo.RnullStr36..Lt
-inline bool algo::RnullStr36_Lt(algo::RnullStr36& lhs, algo::RnullStr36& rhs) {
+inline bool algo::RnullStr36_Lt(algo::RnullStr36& lhs, algo::RnullStr36& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr36..Cmp
-inline i32 algo::RnullStr36_Cmp(algo::RnullStr36& lhs, algo::RnullStr36& rhs) {
+inline i32 algo::RnullStr36_Cmp(algo::RnullStr36& lhs, algo::RnullStr36& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -11138,7 +11138,7 @@ inline void algo::RnullStr36_Init(algo::RnullStr36& parent) {
 }
 
 // --- algo.RnullStr36..Eq
-inline bool algo::RnullStr36_Eq(algo::RnullStr36& lhs, algo::RnullStr36& rhs) {
+inline bool algo::RnullStr36_Eq(algo::RnullStr36& lhs, algo::RnullStr36& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11151,7 +11151,7 @@ inline bool algo::RnullStr36_Eq(algo::RnullStr36& lhs, algo::RnullStr36& rhs) {
 
 // --- algo.RnullStr36..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr36_Update(algo::RnullStr36 &lhs, algo::RnullStr36& rhs) {
+inline bool algo::RnullStr36_Update(algo::RnullStr36 &lhs, algo::RnullStr36& rhs) throw() {
     bool ret = !RnullStr36_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -11160,31 +11160,31 @@ inline bool algo::RnullStr36_Update(algo::RnullStr36 &lhs, algo::RnullStr36& rhs
 }
 
 // --- algo.RnullStr36..EqOpAryptr
-inline bool algo::RnullStr36::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr36::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr36..AssignOp
-inline algo::RnullStr36& algo::RnullStr36::operator =(const algo::RnullStr36 &rhs) {
+inline algo::RnullStr36& algo::RnullStr36::operator =(const algo::RnullStr36 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr36));
     return *this;
 }
 
 // --- algo.RnullStr36..Ctor
-inline  algo::RnullStr36::RnullStr36() {
+inline  algo::RnullStr36::RnullStr36() throw() {
     algo::RnullStr36_Init(*this);
 }
 
 // --- algo.RnullStr36..CopyCtor
-inline  algo::RnullStr36::RnullStr36(const algo::RnullStr36 &rhs) {
+inline  algo::RnullStr36::RnullStr36(const algo::RnullStr36 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr36));
 }
 
 // --- algo.RnullStr4.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr4& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr4& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -11196,19 +11196,19 @@ inline u32 algo::RnullStr4_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr4.ch.Init
-inline void algo::ch_Init(algo::RnullStr4 &parent) {
+inline void algo::ch_Init(algo::RnullStr4 &parent) throw() {
     memset(parent.ch, 0, 4);
 }
 
 // --- algo.RnullStr4.ch.Max
 // always return constant 4
-inline int algo::ch_Max(algo::RnullStr4& parent) {
+inline int algo::ch_Max(algo::RnullStr4& parent) throw() {
     (void)parent;
     return 4;
 }
 
 // --- algo.RnullStr4.ch.N
-inline int algo::ch_N(const algo::RnullStr4& parent) {
+inline int algo::ch_N(const algo::RnullStr4& parent) throw() {
     u64 ret;
     ret = 4;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -11219,27 +11219,27 @@ inline int algo::ch_N(const algo::RnullStr4& parent) {
 
 // --- algo.RnullStr4.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr4::operator =(const algo::strptr &str) {
+inline void algo::RnullStr4::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr4.ch.CtorStrptr
-inline  algo::RnullStr4::RnullStr4(const algo::strptr &rhs) {
+inline  algo::RnullStr4::RnullStr4(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr4.ch.Cast
-inline  algo::RnullStr4::operator algo::strptr() const {
+inline  algo::RnullStr4::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr4..Lt
-inline bool algo::RnullStr4_Lt(algo::RnullStr4 lhs, algo::RnullStr4 rhs) {
+inline bool algo::RnullStr4_Lt(algo::RnullStr4 lhs, algo::RnullStr4 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr4..Cmp
-inline i32 algo::RnullStr4_Cmp(algo::RnullStr4 lhs, algo::RnullStr4 rhs) {
+inline i32 algo::RnullStr4_Cmp(algo::RnullStr4 lhs, algo::RnullStr4 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -11252,7 +11252,7 @@ inline void algo::RnullStr4_Init(algo::RnullStr4& parent) {
 }
 
 // --- algo.RnullStr4..Eq
-inline bool algo::RnullStr4_Eq(algo::RnullStr4 lhs, algo::RnullStr4 rhs) {
+inline bool algo::RnullStr4_Eq(algo::RnullStr4 lhs, algo::RnullStr4 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0);
@@ -11261,7 +11261,7 @@ inline bool algo::RnullStr4_Eq(algo::RnullStr4 lhs, algo::RnullStr4 rhs) {
 
 // --- algo.RnullStr4..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr4_Update(algo::RnullStr4 &lhs, algo::RnullStr4 rhs) {
+inline bool algo::RnullStr4_Update(algo::RnullStr4 &lhs, algo::RnullStr4 rhs) throw() {
     bool ret = !RnullStr4_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -11270,31 +11270,31 @@ inline bool algo::RnullStr4_Update(algo::RnullStr4 &lhs, algo::RnullStr4 rhs) {
 }
 
 // --- algo.RnullStr4..EqOpAryptr
-inline bool algo::RnullStr4::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr4::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr4..AssignOp
-inline algo::RnullStr4& algo::RnullStr4::operator =(const algo::RnullStr4 &rhs) {
+inline algo::RnullStr4& algo::RnullStr4::operator =(const algo::RnullStr4 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr4));
     return *this;
 }
 
 // --- algo.RnullStr4..Ctor
-inline  algo::RnullStr4::RnullStr4() {
+inline  algo::RnullStr4::RnullStr4() throw() {
     algo::RnullStr4_Init(*this);
 }
 
 // --- algo.RnullStr4..CopyCtor
-inline  algo::RnullStr4::RnullStr4(const algo::RnullStr4 &rhs) {
+inline  algo::RnullStr4::RnullStr4(const algo::RnullStr4 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr4));
 }
 
 // --- algo.RnullStr40.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr40& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr40& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -11306,19 +11306,19 @@ inline u32 algo::RnullStr40_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr40.ch.Init
-inline void algo::ch_Init(algo::RnullStr40 &parent) {
+inline void algo::ch_Init(algo::RnullStr40 &parent) throw() {
     memset(parent.ch, 0, 40);
 }
 
 // --- algo.RnullStr40.ch.Max
 // always return constant 40
-inline int algo::ch_Max(algo::RnullStr40& parent) {
+inline int algo::ch_Max(algo::RnullStr40& parent) throw() {
     (void)parent;
     return 40;
 }
 
 // --- algo.RnullStr40.ch.N
-inline int algo::ch_N(const algo::RnullStr40& parent) {
+inline int algo::ch_N(const algo::RnullStr40& parent) throw() {
     u64 ret;
     ret = 40;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -11329,57 +11329,57 @@ inline int algo::ch_N(const algo::RnullStr40& parent) {
 
 // --- algo.RnullStr40.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr40::operator =(const algo::strptr &str) {
+inline void algo::RnullStr40::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr40.ch.CtorStrptr
-inline  algo::RnullStr40::RnullStr40(const algo::strptr &rhs) {
+inline  algo::RnullStr40::RnullStr40(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr40.ch.Cast
-inline  algo::RnullStr40::operator algo::strptr() const {
+inline  algo::RnullStr40::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr40..EqOp
-inline bool algo::RnullStr40::operator ==(const algo::RnullStr40 &rhs) const {
+inline bool algo::RnullStr40::operator ==(const algo::RnullStr40 &rhs) const throw() {
     return algo::RnullStr40_Eq(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
 }
 
 // --- algo.RnullStr40..NeOp
-inline bool algo::RnullStr40::operator !=(const algo::RnullStr40 &rhs) const {
+inline bool algo::RnullStr40::operator !=(const algo::RnullStr40 &rhs) const throw() {
     return !algo::RnullStr40_Eq(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
 }
 
 // --- algo.RnullStr40..LtOp
-inline bool algo::RnullStr40::operator <(const algo::RnullStr40 &rhs) const {
+inline bool algo::RnullStr40::operator <(const algo::RnullStr40 &rhs) const throw() {
     return algo::RnullStr40_Lt(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
 }
 
 // --- algo.RnullStr40..GtOp
-inline bool algo::RnullStr40::operator >(const algo::RnullStr40 &rhs) const {
+inline bool algo::RnullStr40::operator >(const algo::RnullStr40 &rhs) const throw() {
     return algo::RnullStr40_Lt(const_cast<algo::RnullStr40&>(rhs),const_cast<algo::RnullStr40&>(*this));
 }
 
 // --- algo.RnullStr40..LeOp
-inline bool algo::RnullStr40::operator <=(const algo::RnullStr40 &rhs) const {
+inline bool algo::RnullStr40::operator <=(const algo::RnullStr40 &rhs) const throw() {
     return !algo::RnullStr40_Lt(const_cast<algo::RnullStr40&>(rhs),const_cast<algo::RnullStr40&>(*this));
 }
 
 // --- algo.RnullStr40..GeOp
-inline bool algo::RnullStr40::operator >=(const algo::RnullStr40 &rhs) const {
+inline bool algo::RnullStr40::operator >=(const algo::RnullStr40 &rhs) const throw() {
     return !algo::RnullStr40_Lt(const_cast<algo::RnullStr40&>(*this),const_cast<algo::RnullStr40&>(rhs));
 }
 
 // --- algo.RnullStr40..Lt
-inline bool algo::RnullStr40_Lt(algo::RnullStr40& lhs, algo::RnullStr40& rhs) {
+inline bool algo::RnullStr40_Lt(algo::RnullStr40& lhs, algo::RnullStr40& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr40..Cmp
-inline i32 algo::RnullStr40_Cmp(algo::RnullStr40& lhs, algo::RnullStr40& rhs) {
+inline i32 algo::RnullStr40_Cmp(algo::RnullStr40& lhs, algo::RnullStr40& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -11392,7 +11392,7 @@ inline void algo::RnullStr40_Init(algo::RnullStr40& parent) {
 }
 
 // --- algo.RnullStr40..Eq
-inline bool algo::RnullStr40_Eq(algo::RnullStr40& lhs, algo::RnullStr40& rhs) {
+inline bool algo::RnullStr40_Eq(algo::RnullStr40& lhs, algo::RnullStr40& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11405,7 +11405,7 @@ inline bool algo::RnullStr40_Eq(algo::RnullStr40& lhs, algo::RnullStr40& rhs) {
 
 // --- algo.RnullStr40..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr40_Update(algo::RnullStr40 &lhs, algo::RnullStr40& rhs) {
+inline bool algo::RnullStr40_Update(algo::RnullStr40 &lhs, algo::RnullStr40& rhs) throw() {
     bool ret = !RnullStr40_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -11414,31 +11414,31 @@ inline bool algo::RnullStr40_Update(algo::RnullStr40 &lhs, algo::RnullStr40& rhs
 }
 
 // --- algo.RnullStr40..EqOpAryptr
-inline bool algo::RnullStr40::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr40::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr40..AssignOp
-inline algo::RnullStr40& algo::RnullStr40::operator =(const algo::RnullStr40 &rhs) {
+inline algo::RnullStr40& algo::RnullStr40::operator =(const algo::RnullStr40 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr40));
     return *this;
 }
 
 // --- algo.RnullStr40..Ctor
-inline  algo::RnullStr40::RnullStr40() {
+inline  algo::RnullStr40::RnullStr40() throw() {
     algo::RnullStr40_Init(*this);
 }
 
 // --- algo.RnullStr40..CopyCtor
-inline  algo::RnullStr40::RnullStr40(const algo::RnullStr40 &rhs) {
+inline  algo::RnullStr40::RnullStr40(const algo::RnullStr40 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr40));
 }
 
 // --- algo.RnullStr41.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr41& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr41& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -11450,19 +11450,19 @@ inline u32 algo::RnullStr41_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr41.ch.Init
-inline void algo::ch_Init(algo::RnullStr41 &parent) {
+inline void algo::ch_Init(algo::RnullStr41 &parent) throw() {
     memset(parent.ch, 0, 41);
 }
 
 // --- algo.RnullStr41.ch.Max
 // always return constant 41
-inline int algo::ch_Max(algo::RnullStr41& parent) {
+inline int algo::ch_Max(algo::RnullStr41& parent) throw() {
     (void)parent;
     return 41;
 }
 
 // --- algo.RnullStr41.ch.N
-inline int algo::ch_N(const algo::RnullStr41& parent) {
+inline int algo::ch_N(const algo::RnullStr41& parent) throw() {
     u64 ret;
     ret = 41;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -11473,57 +11473,57 @@ inline int algo::ch_N(const algo::RnullStr41& parent) {
 
 // --- algo.RnullStr41.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr41::operator =(const algo::strptr &str) {
+inline void algo::RnullStr41::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr41.ch.CtorStrptr
-inline  algo::RnullStr41::RnullStr41(const algo::strptr &rhs) {
+inline  algo::RnullStr41::RnullStr41(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr41.ch.Cast
-inline  algo::RnullStr41::operator algo::strptr() const {
+inline  algo::RnullStr41::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr41..EqOp
-inline bool algo::RnullStr41::operator ==(const algo::RnullStr41 &rhs) const {
+inline bool algo::RnullStr41::operator ==(const algo::RnullStr41 &rhs) const throw() {
     return algo::RnullStr41_Eq(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
 }
 
 // --- algo.RnullStr41..NeOp
-inline bool algo::RnullStr41::operator !=(const algo::RnullStr41 &rhs) const {
+inline bool algo::RnullStr41::operator !=(const algo::RnullStr41 &rhs) const throw() {
     return !algo::RnullStr41_Eq(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
 }
 
 // --- algo.RnullStr41..LtOp
-inline bool algo::RnullStr41::operator <(const algo::RnullStr41 &rhs) const {
+inline bool algo::RnullStr41::operator <(const algo::RnullStr41 &rhs) const throw() {
     return algo::RnullStr41_Lt(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
 }
 
 // --- algo.RnullStr41..GtOp
-inline bool algo::RnullStr41::operator >(const algo::RnullStr41 &rhs) const {
+inline bool algo::RnullStr41::operator >(const algo::RnullStr41 &rhs) const throw() {
     return algo::RnullStr41_Lt(const_cast<algo::RnullStr41&>(rhs),const_cast<algo::RnullStr41&>(*this));
 }
 
 // --- algo.RnullStr41..LeOp
-inline bool algo::RnullStr41::operator <=(const algo::RnullStr41 &rhs) const {
+inline bool algo::RnullStr41::operator <=(const algo::RnullStr41 &rhs) const throw() {
     return !algo::RnullStr41_Lt(const_cast<algo::RnullStr41&>(rhs),const_cast<algo::RnullStr41&>(*this));
 }
 
 // --- algo.RnullStr41..GeOp
-inline bool algo::RnullStr41::operator >=(const algo::RnullStr41 &rhs) const {
+inline bool algo::RnullStr41::operator >=(const algo::RnullStr41 &rhs) const throw() {
     return !algo::RnullStr41_Lt(const_cast<algo::RnullStr41&>(*this),const_cast<algo::RnullStr41&>(rhs));
 }
 
 // --- algo.RnullStr41..Lt
-inline bool algo::RnullStr41_Lt(algo::RnullStr41& lhs, algo::RnullStr41& rhs) {
+inline bool algo::RnullStr41_Lt(algo::RnullStr41& lhs, algo::RnullStr41& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr41..Cmp
-inline i32 algo::RnullStr41_Cmp(algo::RnullStr41& lhs, algo::RnullStr41& rhs) {
+inline i32 algo::RnullStr41_Cmp(algo::RnullStr41& lhs, algo::RnullStr41& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -11536,7 +11536,7 @@ inline void algo::RnullStr41_Init(algo::RnullStr41& parent) {
 }
 
 // --- algo.RnullStr41..Eq
-inline bool algo::RnullStr41_Eq(algo::RnullStr41& lhs, algo::RnullStr41& rhs) {
+inline bool algo::RnullStr41_Eq(algo::RnullStr41& lhs, algo::RnullStr41& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11550,7 +11550,7 @@ inline bool algo::RnullStr41_Eq(algo::RnullStr41& lhs, algo::RnullStr41& rhs) {
 
 // --- algo.RnullStr41..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr41_Update(algo::RnullStr41 &lhs, algo::RnullStr41& rhs) {
+inline bool algo::RnullStr41_Update(algo::RnullStr41 &lhs, algo::RnullStr41& rhs) throw() {
     bool ret = !RnullStr41_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -11559,31 +11559,31 @@ inline bool algo::RnullStr41_Update(algo::RnullStr41 &lhs, algo::RnullStr41& rhs
 }
 
 // --- algo.RnullStr41..EqOpAryptr
-inline bool algo::RnullStr41::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr41::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr41..AssignOp
-inline algo::RnullStr41& algo::RnullStr41::operator =(const algo::RnullStr41 &rhs) {
+inline algo::RnullStr41& algo::RnullStr41::operator =(const algo::RnullStr41 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr41));
     return *this;
 }
 
 // --- algo.RnullStr41..Ctor
-inline  algo::RnullStr41::RnullStr41() {
+inline  algo::RnullStr41::RnullStr41() throw() {
     algo::RnullStr41_Init(*this);
 }
 
 // --- algo.RnullStr41..CopyCtor
-inline  algo::RnullStr41::RnullStr41(const algo::RnullStr41 &rhs) {
+inline  algo::RnullStr41::RnullStr41(const algo::RnullStr41 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr41));
 }
 
 // --- algo.RnullStr43.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr43& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr43& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -11595,19 +11595,19 @@ inline u32 algo::RnullStr43_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr43.ch.Init
-inline void algo::ch_Init(algo::RnullStr43 &parent) {
+inline void algo::ch_Init(algo::RnullStr43 &parent) throw() {
     memset(parent.ch, 0, 43);
 }
 
 // --- algo.RnullStr43.ch.Max
 // always return constant 43
-inline int algo::ch_Max(algo::RnullStr43& parent) {
+inline int algo::ch_Max(algo::RnullStr43& parent) throw() {
     (void)parent;
     return 43;
 }
 
 // --- algo.RnullStr43.ch.N
-inline int algo::ch_N(const algo::RnullStr43& parent) {
+inline int algo::ch_N(const algo::RnullStr43& parent) throw() {
     u64 ret;
     ret = 43;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -11618,27 +11618,27 @@ inline int algo::ch_N(const algo::RnullStr43& parent) {
 
 // --- algo.RnullStr43.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr43::operator =(const algo::strptr &str) {
+inline void algo::RnullStr43::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr43.ch.CtorStrptr
-inline  algo::RnullStr43::RnullStr43(const algo::strptr &rhs) {
+inline  algo::RnullStr43::RnullStr43(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr43.ch.Cast
-inline  algo::RnullStr43::operator algo::strptr() const {
+inline  algo::RnullStr43::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr43..Lt
-inline bool algo::RnullStr43_Lt(algo::RnullStr43& lhs, algo::RnullStr43& rhs) {
+inline bool algo::RnullStr43_Lt(algo::RnullStr43& lhs, algo::RnullStr43& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr43..Cmp
-inline i32 algo::RnullStr43_Cmp(algo::RnullStr43& lhs, algo::RnullStr43& rhs) {
+inline i32 algo::RnullStr43_Cmp(algo::RnullStr43& lhs, algo::RnullStr43& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -11651,7 +11651,7 @@ inline void algo::RnullStr43_Init(algo::RnullStr43& parent) {
 }
 
 // --- algo.RnullStr43..Eq
-inline bool algo::RnullStr43_Eq(algo::RnullStr43& lhs, algo::RnullStr43& rhs) {
+inline bool algo::RnullStr43_Eq(algo::RnullStr43& lhs, algo::RnullStr43& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11666,7 +11666,7 @@ inline bool algo::RnullStr43_Eq(algo::RnullStr43& lhs, algo::RnullStr43& rhs) {
 
 // --- algo.RnullStr43..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr43_Update(algo::RnullStr43 &lhs, algo::RnullStr43& rhs) {
+inline bool algo::RnullStr43_Update(algo::RnullStr43 &lhs, algo::RnullStr43& rhs) throw() {
     bool ret = !RnullStr43_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -11675,31 +11675,31 @@ inline bool algo::RnullStr43_Update(algo::RnullStr43 &lhs, algo::RnullStr43& rhs
 }
 
 // --- algo.RnullStr43..EqOpAryptr
-inline bool algo::RnullStr43::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr43::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr43..AssignOp
-inline algo::RnullStr43& algo::RnullStr43::operator =(const algo::RnullStr43 &rhs) {
+inline algo::RnullStr43& algo::RnullStr43::operator =(const algo::RnullStr43 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr43));
     return *this;
 }
 
 // --- algo.RnullStr43..Ctor
-inline  algo::RnullStr43::RnullStr43() {
+inline  algo::RnullStr43::RnullStr43() throw() {
     algo::RnullStr43_Init(*this);
 }
 
 // --- algo.RnullStr43..CopyCtor
-inline  algo::RnullStr43::RnullStr43(const algo::RnullStr43 &rhs) {
+inline  algo::RnullStr43::RnullStr43(const algo::RnullStr43 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr43));
 }
 
 // --- algo.RnullStr44.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr44& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr44& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -11711,19 +11711,19 @@ inline u32 algo::RnullStr44_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr44.ch.Init
-inline void algo::ch_Init(algo::RnullStr44 &parent) {
+inline void algo::ch_Init(algo::RnullStr44 &parent) throw() {
     memset(parent.ch, 0, 44);
 }
 
 // --- algo.RnullStr44.ch.Max
 // always return constant 44
-inline int algo::ch_Max(algo::RnullStr44& parent) {
+inline int algo::ch_Max(algo::RnullStr44& parent) throw() {
     (void)parent;
     return 44;
 }
 
 // --- algo.RnullStr44.ch.N
-inline int algo::ch_N(const algo::RnullStr44& parent) {
+inline int algo::ch_N(const algo::RnullStr44& parent) throw() {
     u64 ret;
     ret = 44;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -11734,27 +11734,27 @@ inline int algo::ch_N(const algo::RnullStr44& parent) {
 
 // --- algo.RnullStr44.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr44::operator =(const algo::strptr &str) {
+inline void algo::RnullStr44::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr44.ch.CtorStrptr
-inline  algo::RnullStr44::RnullStr44(const algo::strptr &rhs) {
+inline  algo::RnullStr44::RnullStr44(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr44.ch.Cast
-inline  algo::RnullStr44::operator algo::strptr() const {
+inline  algo::RnullStr44::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr44..Lt
-inline bool algo::RnullStr44_Lt(algo::RnullStr44& lhs, algo::RnullStr44& rhs) {
+inline bool algo::RnullStr44_Lt(algo::RnullStr44& lhs, algo::RnullStr44& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr44..Cmp
-inline i32 algo::RnullStr44_Cmp(algo::RnullStr44& lhs, algo::RnullStr44& rhs) {
+inline i32 algo::RnullStr44_Cmp(algo::RnullStr44& lhs, algo::RnullStr44& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -11767,7 +11767,7 @@ inline void algo::RnullStr44_Init(algo::RnullStr44& parent) {
 }
 
 // --- algo.RnullStr44..Eq
-inline bool algo::RnullStr44_Eq(algo::RnullStr44& lhs, algo::RnullStr44& rhs) {
+inline bool algo::RnullStr44_Eq(algo::RnullStr44& lhs, algo::RnullStr44& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11781,7 +11781,7 @@ inline bool algo::RnullStr44_Eq(algo::RnullStr44& lhs, algo::RnullStr44& rhs) {
 
 // --- algo.RnullStr44..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr44_Update(algo::RnullStr44 &lhs, algo::RnullStr44& rhs) {
+inline bool algo::RnullStr44_Update(algo::RnullStr44 &lhs, algo::RnullStr44& rhs) throw() {
     bool ret = !RnullStr44_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -11790,31 +11790,31 @@ inline bool algo::RnullStr44_Update(algo::RnullStr44 &lhs, algo::RnullStr44& rhs
 }
 
 // --- algo.RnullStr44..EqOpAryptr
-inline bool algo::RnullStr44::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr44::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr44..AssignOp
-inline algo::RnullStr44& algo::RnullStr44::operator =(const algo::RnullStr44 &rhs) {
+inline algo::RnullStr44& algo::RnullStr44::operator =(const algo::RnullStr44 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr44));
     return *this;
 }
 
 // --- algo.RnullStr44..Ctor
-inline  algo::RnullStr44::RnullStr44() {
+inline  algo::RnullStr44::RnullStr44() throw() {
     algo::RnullStr44_Init(*this);
 }
 
 // --- algo.RnullStr44..CopyCtor
-inline  algo::RnullStr44::RnullStr44(const algo::RnullStr44 &rhs) {
+inline  algo::RnullStr44::RnullStr44(const algo::RnullStr44 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr44));
 }
 
 // --- algo.RnullStr48.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr48& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr48& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -11826,19 +11826,19 @@ inline u32 algo::RnullStr48_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr48.ch.Init
-inline void algo::ch_Init(algo::RnullStr48 &parent) {
+inline void algo::ch_Init(algo::RnullStr48 &parent) throw() {
     memset(parent.ch, 0, 48);
 }
 
 // --- algo.RnullStr48.ch.Max
 // always return constant 48
-inline int algo::ch_Max(algo::RnullStr48& parent) {
+inline int algo::ch_Max(algo::RnullStr48& parent) throw() {
     (void)parent;
     return 48;
 }
 
 // --- algo.RnullStr48.ch.N
-inline int algo::ch_N(const algo::RnullStr48& parent) {
+inline int algo::ch_N(const algo::RnullStr48& parent) throw() {
     u64 ret;
     ret = 48;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -11849,27 +11849,27 @@ inline int algo::ch_N(const algo::RnullStr48& parent) {
 
 // --- algo.RnullStr48.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr48::operator =(const algo::strptr &str) {
+inline void algo::RnullStr48::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr48.ch.CtorStrptr
-inline  algo::RnullStr48::RnullStr48(const algo::strptr &rhs) {
+inline  algo::RnullStr48::RnullStr48(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr48.ch.Cast
-inline  algo::RnullStr48::operator algo::strptr() const {
+inline  algo::RnullStr48::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr48..Lt
-inline bool algo::RnullStr48_Lt(algo::RnullStr48& lhs, algo::RnullStr48& rhs) {
+inline bool algo::RnullStr48_Lt(algo::RnullStr48& lhs, algo::RnullStr48& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr48..Cmp
-inline i32 algo::RnullStr48_Cmp(algo::RnullStr48& lhs, algo::RnullStr48& rhs) {
+inline i32 algo::RnullStr48_Cmp(algo::RnullStr48& lhs, algo::RnullStr48& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -11882,7 +11882,7 @@ inline void algo::RnullStr48_Init(algo::RnullStr48& parent) {
 }
 
 // --- algo.RnullStr48..Eq
-inline bool algo::RnullStr48_Eq(algo::RnullStr48& lhs, algo::RnullStr48& rhs) {
+inline bool algo::RnullStr48_Eq(algo::RnullStr48& lhs, algo::RnullStr48& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -11896,7 +11896,7 @@ inline bool algo::RnullStr48_Eq(algo::RnullStr48& lhs, algo::RnullStr48& rhs) {
 
 // --- algo.RnullStr48..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr48_Update(algo::RnullStr48 &lhs, algo::RnullStr48& rhs) {
+inline bool algo::RnullStr48_Update(algo::RnullStr48 &lhs, algo::RnullStr48& rhs) throw() {
     bool ret = !RnullStr48_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -11905,31 +11905,31 @@ inline bool algo::RnullStr48_Update(algo::RnullStr48 &lhs, algo::RnullStr48& rhs
 }
 
 // --- algo.RnullStr48..EqOpAryptr
-inline bool algo::RnullStr48::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr48::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr48..AssignOp
-inline algo::RnullStr48& algo::RnullStr48::operator =(const algo::RnullStr48 &rhs) {
+inline algo::RnullStr48& algo::RnullStr48::operator =(const algo::RnullStr48 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr48));
     return *this;
 }
 
 // --- algo.RnullStr48..Ctor
-inline  algo::RnullStr48::RnullStr48() {
+inline  algo::RnullStr48::RnullStr48() throw() {
     algo::RnullStr48_Init(*this);
 }
 
 // --- algo.RnullStr48..CopyCtor
-inline  algo::RnullStr48::RnullStr48(const algo::RnullStr48 &rhs) {
+inline  algo::RnullStr48::RnullStr48(const algo::RnullStr48 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr48));
 }
 
 // --- algo.RnullStr5.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr5& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr5& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -11941,19 +11941,19 @@ inline u32 algo::RnullStr5_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr5.ch.Init
-inline void algo::ch_Init(algo::RnullStr5 &parent) {
+inline void algo::ch_Init(algo::RnullStr5 &parent) throw() {
     memset(parent.ch, 0, 5);
 }
 
 // --- algo.RnullStr5.ch.Max
 // always return constant 5
-inline int algo::ch_Max(algo::RnullStr5& parent) {
+inline int algo::ch_Max(algo::RnullStr5& parent) throw() {
     (void)parent;
     return 5;
 }
 
 // --- algo.RnullStr5.ch.N
-inline int algo::ch_N(const algo::RnullStr5& parent) {
+inline int algo::ch_N(const algo::RnullStr5& parent) throw() {
     u64 ret;
     ret = 5;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -11964,27 +11964,27 @@ inline int algo::ch_N(const algo::RnullStr5& parent) {
 
 // --- algo.RnullStr5.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr5::operator =(const algo::strptr &str) {
+inline void algo::RnullStr5::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr5.ch.CtorStrptr
-inline  algo::RnullStr5::RnullStr5(const algo::strptr &rhs) {
+inline  algo::RnullStr5::RnullStr5(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr5.ch.Cast
-inline  algo::RnullStr5::operator algo::strptr() const {
+inline  algo::RnullStr5::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr5..Lt
-inline bool algo::RnullStr5_Lt(algo::RnullStr5 lhs, algo::RnullStr5 rhs) {
+inline bool algo::RnullStr5_Lt(algo::RnullStr5 lhs, algo::RnullStr5 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr5..Cmp
-inline i32 algo::RnullStr5_Cmp(algo::RnullStr5 lhs, algo::RnullStr5 rhs) {
+inline i32 algo::RnullStr5_Cmp(algo::RnullStr5 lhs, algo::RnullStr5 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -11997,7 +11997,7 @@ inline void algo::RnullStr5_Init(algo::RnullStr5& parent) {
 }
 
 // --- algo.RnullStr5..Eq
-inline bool algo::RnullStr5_Eq(algo::RnullStr5 lhs, algo::RnullStr5 rhs) {
+inline bool algo::RnullStr5_Eq(algo::RnullStr5 lhs, algo::RnullStr5 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -12007,7 +12007,7 @@ inline bool algo::RnullStr5_Eq(algo::RnullStr5 lhs, algo::RnullStr5 rhs) {
 
 // --- algo.RnullStr5..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr5_Update(algo::RnullStr5 &lhs, algo::RnullStr5 rhs) {
+inline bool algo::RnullStr5_Update(algo::RnullStr5 &lhs, algo::RnullStr5 rhs) throw() {
     bool ret = !RnullStr5_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -12016,31 +12016,31 @@ inline bool algo::RnullStr5_Update(algo::RnullStr5 &lhs, algo::RnullStr5 rhs) {
 }
 
 // --- algo.RnullStr5..EqOpAryptr
-inline bool algo::RnullStr5::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr5::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr5..AssignOp
-inline algo::RnullStr5& algo::RnullStr5::operator =(const algo::RnullStr5 &rhs) {
+inline algo::RnullStr5& algo::RnullStr5::operator =(const algo::RnullStr5 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr5));
     return *this;
 }
 
 // --- algo.RnullStr5..Ctor
-inline  algo::RnullStr5::RnullStr5() {
+inline  algo::RnullStr5::RnullStr5() throw() {
     algo::RnullStr5_Init(*this);
 }
 
 // --- algo.RnullStr5..CopyCtor
-inline  algo::RnullStr5::RnullStr5(const algo::RnullStr5 &rhs) {
+inline  algo::RnullStr5::RnullStr5(const algo::RnullStr5 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr5));
 }
 
 // --- algo.RnullStr50.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr50& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr50& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -12052,19 +12052,19 @@ inline u32 algo::RnullStr50_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr50.ch.Init
-inline void algo::ch_Init(algo::RnullStr50 &parent) {
+inline void algo::ch_Init(algo::RnullStr50 &parent) throw() {
     memset(parent.ch, 0, 50);
 }
 
 // --- algo.RnullStr50.ch.Max
 // always return constant 50
-inline int algo::ch_Max(algo::RnullStr50& parent) {
+inline int algo::ch_Max(algo::RnullStr50& parent) throw() {
     (void)parent;
     return 50;
 }
 
 // --- algo.RnullStr50.ch.N
-inline int algo::ch_N(const algo::RnullStr50& parent) {
+inline int algo::ch_N(const algo::RnullStr50& parent) throw() {
     u64 ret;
     ret = 50;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -12075,27 +12075,27 @@ inline int algo::ch_N(const algo::RnullStr50& parent) {
 
 // --- algo.RnullStr50.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr50::operator =(const algo::strptr &str) {
+inline void algo::RnullStr50::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr50.ch.CtorStrptr
-inline  algo::RnullStr50::RnullStr50(const algo::strptr &rhs) {
+inline  algo::RnullStr50::RnullStr50(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr50.ch.Cast
-inline  algo::RnullStr50::operator algo::strptr() const {
+inline  algo::RnullStr50::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr50..Lt
-inline bool algo::RnullStr50_Lt(algo::RnullStr50& lhs, algo::RnullStr50& rhs) {
+inline bool algo::RnullStr50_Lt(algo::RnullStr50& lhs, algo::RnullStr50& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr50..Cmp
-inline i32 algo::RnullStr50_Cmp(algo::RnullStr50& lhs, algo::RnullStr50& rhs) {
+inline i32 algo::RnullStr50_Cmp(algo::RnullStr50& lhs, algo::RnullStr50& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -12108,7 +12108,7 @@ inline void algo::RnullStr50_Init(algo::RnullStr50& parent) {
 }
 
 // --- algo.RnullStr50..Eq
-inline bool algo::RnullStr50_Eq(algo::RnullStr50& lhs, algo::RnullStr50& rhs) {
+inline bool algo::RnullStr50_Eq(algo::RnullStr50& lhs, algo::RnullStr50& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -12123,7 +12123,7 @@ inline bool algo::RnullStr50_Eq(algo::RnullStr50& lhs, algo::RnullStr50& rhs) {
 
 // --- algo.RnullStr50..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr50_Update(algo::RnullStr50 &lhs, algo::RnullStr50& rhs) {
+inline bool algo::RnullStr50_Update(algo::RnullStr50 &lhs, algo::RnullStr50& rhs) throw() {
     bool ret = !RnullStr50_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -12132,31 +12132,31 @@ inline bool algo::RnullStr50_Update(algo::RnullStr50 &lhs, algo::RnullStr50& rhs
 }
 
 // --- algo.RnullStr50..EqOpAryptr
-inline bool algo::RnullStr50::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr50::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr50..AssignOp
-inline algo::RnullStr50& algo::RnullStr50::operator =(const algo::RnullStr50 &rhs) {
+inline algo::RnullStr50& algo::RnullStr50::operator =(const algo::RnullStr50 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr50));
     return *this;
 }
 
 // --- algo.RnullStr50..Ctor
-inline  algo::RnullStr50::RnullStr50() {
+inline  algo::RnullStr50::RnullStr50() throw() {
     algo::RnullStr50_Init(*this);
 }
 
 // --- algo.RnullStr50..CopyCtor
-inline  algo::RnullStr50::RnullStr50(const algo::RnullStr50 &rhs) {
+inline  algo::RnullStr50::RnullStr50(const algo::RnullStr50 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr50));
 }
 
 // --- algo.RnullStr54.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr54& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr54& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -12168,19 +12168,19 @@ inline u32 algo::RnullStr54_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr54.ch.Init
-inline void algo::ch_Init(algo::RnullStr54 &parent) {
+inline void algo::ch_Init(algo::RnullStr54 &parent) throw() {
     memset(parent.ch, 0, 54);
 }
 
 // --- algo.RnullStr54.ch.Max
 // always return constant 54
-inline int algo::ch_Max(algo::RnullStr54& parent) {
+inline int algo::ch_Max(algo::RnullStr54& parent) throw() {
     (void)parent;
     return 54;
 }
 
 // --- algo.RnullStr54.ch.N
-inline int algo::ch_N(const algo::RnullStr54& parent) {
+inline int algo::ch_N(const algo::RnullStr54& parent) throw() {
     u64 ret;
     ret = 54;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -12191,57 +12191,57 @@ inline int algo::ch_N(const algo::RnullStr54& parent) {
 
 // --- algo.RnullStr54.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr54::operator =(const algo::strptr &str) {
+inline void algo::RnullStr54::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr54.ch.CtorStrptr
-inline  algo::RnullStr54::RnullStr54(const algo::strptr &rhs) {
+inline  algo::RnullStr54::RnullStr54(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr54.ch.Cast
-inline  algo::RnullStr54::operator algo::strptr() const {
+inline  algo::RnullStr54::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr54..EqOp
-inline bool algo::RnullStr54::operator ==(const algo::RnullStr54 &rhs) const {
+inline bool algo::RnullStr54::operator ==(const algo::RnullStr54 &rhs) const throw() {
     return algo::RnullStr54_Eq(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
 }
 
 // --- algo.RnullStr54..NeOp
-inline bool algo::RnullStr54::operator !=(const algo::RnullStr54 &rhs) const {
+inline bool algo::RnullStr54::operator !=(const algo::RnullStr54 &rhs) const throw() {
     return !algo::RnullStr54_Eq(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
 }
 
 // --- algo.RnullStr54..LtOp
-inline bool algo::RnullStr54::operator <(const algo::RnullStr54 &rhs) const {
+inline bool algo::RnullStr54::operator <(const algo::RnullStr54 &rhs) const throw() {
     return algo::RnullStr54_Lt(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
 }
 
 // --- algo.RnullStr54..GtOp
-inline bool algo::RnullStr54::operator >(const algo::RnullStr54 &rhs) const {
+inline bool algo::RnullStr54::operator >(const algo::RnullStr54 &rhs) const throw() {
     return algo::RnullStr54_Lt(const_cast<algo::RnullStr54&>(rhs),const_cast<algo::RnullStr54&>(*this));
 }
 
 // --- algo.RnullStr54..LeOp
-inline bool algo::RnullStr54::operator <=(const algo::RnullStr54 &rhs) const {
+inline bool algo::RnullStr54::operator <=(const algo::RnullStr54 &rhs) const throw() {
     return !algo::RnullStr54_Lt(const_cast<algo::RnullStr54&>(rhs),const_cast<algo::RnullStr54&>(*this));
 }
 
 // --- algo.RnullStr54..GeOp
-inline bool algo::RnullStr54::operator >=(const algo::RnullStr54 &rhs) const {
+inline bool algo::RnullStr54::operator >=(const algo::RnullStr54 &rhs) const throw() {
     return !algo::RnullStr54_Lt(const_cast<algo::RnullStr54&>(*this),const_cast<algo::RnullStr54&>(rhs));
 }
 
 // --- algo.RnullStr54..Lt
-inline bool algo::RnullStr54_Lt(algo::RnullStr54& lhs, algo::RnullStr54& rhs) {
+inline bool algo::RnullStr54_Lt(algo::RnullStr54& lhs, algo::RnullStr54& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr54..Cmp
-inline i32 algo::RnullStr54_Cmp(algo::RnullStr54& lhs, algo::RnullStr54& rhs) {
+inline i32 algo::RnullStr54_Cmp(algo::RnullStr54& lhs, algo::RnullStr54& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -12254,7 +12254,7 @@ inline void algo::RnullStr54_Init(algo::RnullStr54& parent) {
 }
 
 // --- algo.RnullStr54..Eq
-inline bool algo::RnullStr54_Eq(algo::RnullStr54& lhs, algo::RnullStr54& rhs) {
+inline bool algo::RnullStr54_Eq(algo::RnullStr54& lhs, algo::RnullStr54& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -12270,7 +12270,7 @@ inline bool algo::RnullStr54_Eq(algo::RnullStr54& lhs, algo::RnullStr54& rhs) {
 
 // --- algo.RnullStr54..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr54_Update(algo::RnullStr54 &lhs, algo::RnullStr54& rhs) {
+inline bool algo::RnullStr54_Update(algo::RnullStr54 &lhs, algo::RnullStr54& rhs) throw() {
     bool ret = !RnullStr54_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -12279,31 +12279,31 @@ inline bool algo::RnullStr54_Update(algo::RnullStr54 &lhs, algo::RnullStr54& rhs
 }
 
 // --- algo.RnullStr54..EqOpAryptr
-inline bool algo::RnullStr54::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr54::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr54..AssignOp
-inline algo::RnullStr54& algo::RnullStr54::operator =(const algo::RnullStr54 &rhs) {
+inline algo::RnullStr54& algo::RnullStr54::operator =(const algo::RnullStr54 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr54));
     return *this;
 }
 
 // --- algo.RnullStr54..Ctor
-inline  algo::RnullStr54::RnullStr54() {
+inline  algo::RnullStr54::RnullStr54() throw() {
     algo::RnullStr54_Init(*this);
 }
 
 // --- algo.RnullStr54..CopyCtor
-inline  algo::RnullStr54::RnullStr54(const algo::RnullStr54 &rhs) {
+inline  algo::RnullStr54::RnullStr54(const algo::RnullStr54 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr54));
 }
 
 // --- algo.RnullStr55.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr55& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr55& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -12315,19 +12315,19 @@ inline u32 algo::RnullStr55_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr55.ch.Init
-inline void algo::ch_Init(algo::RnullStr55 &parent) {
+inline void algo::ch_Init(algo::RnullStr55 &parent) throw() {
     memset(parent.ch, 0, 55);
 }
 
 // --- algo.RnullStr55.ch.Max
 // always return constant 55
-inline int algo::ch_Max(algo::RnullStr55& parent) {
+inline int algo::ch_Max(algo::RnullStr55& parent) throw() {
     (void)parent;
     return 55;
 }
 
 // --- algo.RnullStr55.ch.N
-inline int algo::ch_N(const algo::RnullStr55& parent) {
+inline int algo::ch_N(const algo::RnullStr55& parent) throw() {
     u64 ret;
     ret = 55;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -12338,27 +12338,27 @@ inline int algo::ch_N(const algo::RnullStr55& parent) {
 
 // --- algo.RnullStr55.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr55::operator =(const algo::strptr &str) {
+inline void algo::RnullStr55::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr55.ch.CtorStrptr
-inline  algo::RnullStr55::RnullStr55(const algo::strptr &rhs) {
+inline  algo::RnullStr55::RnullStr55(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr55.ch.Cast
-inline  algo::RnullStr55::operator algo::strptr() const {
+inline  algo::RnullStr55::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr55..Lt
-inline bool algo::RnullStr55_Lt(algo::RnullStr55& lhs, algo::RnullStr55& rhs) {
+inline bool algo::RnullStr55_Lt(algo::RnullStr55& lhs, algo::RnullStr55& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr55..Cmp
-inline i32 algo::RnullStr55_Cmp(algo::RnullStr55& lhs, algo::RnullStr55& rhs) {
+inline i32 algo::RnullStr55_Cmp(algo::RnullStr55& lhs, algo::RnullStr55& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -12371,7 +12371,7 @@ inline void algo::RnullStr55_Init(algo::RnullStr55& parent) {
 }
 
 // --- algo.RnullStr55..Eq
-inline bool algo::RnullStr55_Eq(algo::RnullStr55& lhs, algo::RnullStr55& rhs) {
+inline bool algo::RnullStr55_Eq(algo::RnullStr55& lhs, algo::RnullStr55& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -12388,7 +12388,7 @@ inline bool algo::RnullStr55_Eq(algo::RnullStr55& lhs, algo::RnullStr55& rhs) {
 
 // --- algo.RnullStr55..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr55_Update(algo::RnullStr55 &lhs, algo::RnullStr55& rhs) {
+inline bool algo::RnullStr55_Update(algo::RnullStr55 &lhs, algo::RnullStr55& rhs) throw() {
     bool ret = !RnullStr55_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -12397,31 +12397,31 @@ inline bool algo::RnullStr55_Update(algo::RnullStr55 &lhs, algo::RnullStr55& rhs
 }
 
 // --- algo.RnullStr55..EqOpAryptr
-inline bool algo::RnullStr55::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr55::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr55..AssignOp
-inline algo::RnullStr55& algo::RnullStr55::operator =(const algo::RnullStr55 &rhs) {
+inline algo::RnullStr55& algo::RnullStr55::operator =(const algo::RnullStr55 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr55));
     return *this;
 }
 
 // --- algo.RnullStr55..Ctor
-inline  algo::RnullStr55::RnullStr55() {
+inline  algo::RnullStr55::RnullStr55() throw() {
     algo::RnullStr55_Init(*this);
 }
 
 // --- algo.RnullStr55..CopyCtor
-inline  algo::RnullStr55::RnullStr55(const algo::RnullStr55 &rhs) {
+inline  algo::RnullStr55::RnullStr55(const algo::RnullStr55 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr55));
 }
 
 // --- algo.RnullStr6.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr6& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr6& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -12433,19 +12433,19 @@ inline u32 algo::RnullStr6_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr6.ch.Init
-inline void algo::ch_Init(algo::RnullStr6 &parent) {
+inline void algo::ch_Init(algo::RnullStr6 &parent) throw() {
     memset(parent.ch, 0, 6);
 }
 
 // --- algo.RnullStr6.ch.Max
 // always return constant 6
-inline int algo::ch_Max(algo::RnullStr6& parent) {
+inline int algo::ch_Max(algo::RnullStr6& parent) throw() {
     (void)parent;
     return 6;
 }
 
 // --- algo.RnullStr6.ch.N
-inline int algo::ch_N(const algo::RnullStr6& parent) {
+inline int algo::ch_N(const algo::RnullStr6& parent) throw() {
     u64 ret;
     ret = 6;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -12456,57 +12456,57 @@ inline int algo::ch_N(const algo::RnullStr6& parent) {
 
 // --- algo.RnullStr6.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr6::operator =(const algo::strptr &str) {
+inline void algo::RnullStr6::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr6.ch.CtorStrptr
-inline  algo::RnullStr6::RnullStr6(const algo::strptr &rhs) {
+inline  algo::RnullStr6::RnullStr6(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr6.ch.Cast
-inline  algo::RnullStr6::operator algo::strptr() const {
+inline  algo::RnullStr6::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr6..EqOp
-inline bool algo::RnullStr6::operator ==(const algo::RnullStr6 &rhs) const {
+inline bool algo::RnullStr6::operator ==(const algo::RnullStr6 &rhs) const throw() {
     return algo::RnullStr6_Eq(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
 }
 
 // --- algo.RnullStr6..NeOp
-inline bool algo::RnullStr6::operator !=(const algo::RnullStr6 &rhs) const {
+inline bool algo::RnullStr6::operator !=(const algo::RnullStr6 &rhs) const throw() {
     return !algo::RnullStr6_Eq(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
 }
 
 // --- algo.RnullStr6..LtOp
-inline bool algo::RnullStr6::operator <(const algo::RnullStr6 &rhs) const {
+inline bool algo::RnullStr6::operator <(const algo::RnullStr6 &rhs) const throw() {
     return algo::RnullStr6_Lt(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
 }
 
 // --- algo.RnullStr6..GtOp
-inline bool algo::RnullStr6::operator >(const algo::RnullStr6 &rhs) const {
+inline bool algo::RnullStr6::operator >(const algo::RnullStr6 &rhs) const throw() {
     return algo::RnullStr6_Lt(const_cast<algo::RnullStr6&>(rhs),const_cast<algo::RnullStr6&>(*this));
 }
 
 // --- algo.RnullStr6..LeOp
-inline bool algo::RnullStr6::operator <=(const algo::RnullStr6 &rhs) const {
+inline bool algo::RnullStr6::operator <=(const algo::RnullStr6 &rhs) const throw() {
     return !algo::RnullStr6_Lt(const_cast<algo::RnullStr6&>(rhs),const_cast<algo::RnullStr6&>(*this));
 }
 
 // --- algo.RnullStr6..GeOp
-inline bool algo::RnullStr6::operator >=(const algo::RnullStr6 &rhs) const {
+inline bool algo::RnullStr6::operator >=(const algo::RnullStr6 &rhs) const throw() {
     return !algo::RnullStr6_Lt(const_cast<algo::RnullStr6&>(*this),const_cast<algo::RnullStr6&>(rhs));
 }
 
 // --- algo.RnullStr6..Lt
-inline bool algo::RnullStr6_Lt(algo::RnullStr6 lhs, algo::RnullStr6 rhs) {
+inline bool algo::RnullStr6_Lt(algo::RnullStr6 lhs, algo::RnullStr6 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr6..Cmp
-inline i32 algo::RnullStr6_Cmp(algo::RnullStr6 lhs, algo::RnullStr6 rhs) {
+inline i32 algo::RnullStr6_Cmp(algo::RnullStr6 lhs, algo::RnullStr6 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -12519,7 +12519,7 @@ inline void algo::RnullStr6_Init(algo::RnullStr6& parent) {
 }
 
 // --- algo.RnullStr6..Eq
-inline bool algo::RnullStr6_Eq(algo::RnullStr6 lhs, algo::RnullStr6 rhs) {
+inline bool algo::RnullStr6_Eq(algo::RnullStr6 lhs, algo::RnullStr6 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -12529,7 +12529,7 @@ inline bool algo::RnullStr6_Eq(algo::RnullStr6 lhs, algo::RnullStr6 rhs) {
 
 // --- algo.RnullStr6..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr6_Update(algo::RnullStr6 &lhs, algo::RnullStr6 rhs) {
+inline bool algo::RnullStr6_Update(algo::RnullStr6 &lhs, algo::RnullStr6 rhs) throw() {
     bool ret = !RnullStr6_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -12538,31 +12538,31 @@ inline bool algo::RnullStr6_Update(algo::RnullStr6 &lhs, algo::RnullStr6 rhs) {
 }
 
 // --- algo.RnullStr6..EqOpAryptr
-inline bool algo::RnullStr6::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr6::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr6..AssignOp
-inline algo::RnullStr6& algo::RnullStr6::operator =(const algo::RnullStr6 &rhs) {
+inline algo::RnullStr6& algo::RnullStr6::operator =(const algo::RnullStr6 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr6));
     return *this;
 }
 
 // --- algo.RnullStr6..Ctor
-inline  algo::RnullStr6::RnullStr6() {
+inline  algo::RnullStr6::RnullStr6() throw() {
     algo::RnullStr6_Init(*this);
 }
 
 // --- algo.RnullStr6..CopyCtor
-inline  algo::RnullStr6::RnullStr6(const algo::RnullStr6 &rhs) {
+inline  algo::RnullStr6::RnullStr6(const algo::RnullStr6 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr6));
 }
 
 // --- algo.RnullStr60.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr60& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr60& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -12574,19 +12574,19 @@ inline u32 algo::RnullStr60_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr60.ch.Init
-inline void algo::ch_Init(algo::RnullStr60 &parent) {
+inline void algo::ch_Init(algo::RnullStr60 &parent) throw() {
     memset(parent.ch, 0, 60);
 }
 
 // --- algo.RnullStr60.ch.Max
 // always return constant 60
-inline int algo::ch_Max(algo::RnullStr60& parent) {
+inline int algo::ch_Max(algo::RnullStr60& parent) throw() {
     (void)parent;
     return 60;
 }
 
 // --- algo.RnullStr60.ch.N
-inline int algo::ch_N(const algo::RnullStr60& parent) {
+inline int algo::ch_N(const algo::RnullStr60& parent) throw() {
     u64 ret;
     ret = 60;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -12597,57 +12597,57 @@ inline int algo::ch_N(const algo::RnullStr60& parent) {
 
 // --- algo.RnullStr60.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr60::operator =(const algo::strptr &str) {
+inline void algo::RnullStr60::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr60.ch.CtorStrptr
-inline  algo::RnullStr60::RnullStr60(const algo::strptr &rhs) {
+inline  algo::RnullStr60::RnullStr60(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr60.ch.Cast
-inline  algo::RnullStr60::operator algo::strptr() const {
+inline  algo::RnullStr60::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr60..EqOp
-inline bool algo::RnullStr60::operator ==(const algo::RnullStr60 &rhs) const {
+inline bool algo::RnullStr60::operator ==(const algo::RnullStr60 &rhs) const throw() {
     return algo::RnullStr60_Eq(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
 }
 
 // --- algo.RnullStr60..NeOp
-inline bool algo::RnullStr60::operator !=(const algo::RnullStr60 &rhs) const {
+inline bool algo::RnullStr60::operator !=(const algo::RnullStr60 &rhs) const throw() {
     return !algo::RnullStr60_Eq(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
 }
 
 // --- algo.RnullStr60..LtOp
-inline bool algo::RnullStr60::operator <(const algo::RnullStr60 &rhs) const {
+inline bool algo::RnullStr60::operator <(const algo::RnullStr60 &rhs) const throw() {
     return algo::RnullStr60_Lt(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
 }
 
 // --- algo.RnullStr60..GtOp
-inline bool algo::RnullStr60::operator >(const algo::RnullStr60 &rhs) const {
+inline bool algo::RnullStr60::operator >(const algo::RnullStr60 &rhs) const throw() {
     return algo::RnullStr60_Lt(const_cast<algo::RnullStr60&>(rhs),const_cast<algo::RnullStr60&>(*this));
 }
 
 // --- algo.RnullStr60..LeOp
-inline bool algo::RnullStr60::operator <=(const algo::RnullStr60 &rhs) const {
+inline bool algo::RnullStr60::operator <=(const algo::RnullStr60 &rhs) const throw() {
     return !algo::RnullStr60_Lt(const_cast<algo::RnullStr60&>(rhs),const_cast<algo::RnullStr60&>(*this));
 }
 
 // --- algo.RnullStr60..GeOp
-inline bool algo::RnullStr60::operator >=(const algo::RnullStr60 &rhs) const {
+inline bool algo::RnullStr60::operator >=(const algo::RnullStr60 &rhs) const throw() {
     return !algo::RnullStr60_Lt(const_cast<algo::RnullStr60&>(*this),const_cast<algo::RnullStr60&>(rhs));
 }
 
 // --- algo.RnullStr60..Lt
-inline bool algo::RnullStr60_Lt(algo::RnullStr60& lhs, algo::RnullStr60& rhs) {
+inline bool algo::RnullStr60_Lt(algo::RnullStr60& lhs, algo::RnullStr60& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr60..Cmp
-inline i32 algo::RnullStr60_Cmp(algo::RnullStr60& lhs, algo::RnullStr60& rhs) {
+inline i32 algo::RnullStr60_Cmp(algo::RnullStr60& lhs, algo::RnullStr60& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -12660,7 +12660,7 @@ inline void algo::RnullStr60_Init(algo::RnullStr60& parent) {
 }
 
 // --- algo.RnullStr60..Eq
-inline bool algo::RnullStr60_Eq(algo::RnullStr60& lhs, algo::RnullStr60& rhs) {
+inline bool algo::RnullStr60_Eq(algo::RnullStr60& lhs, algo::RnullStr60& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -12676,7 +12676,7 @@ inline bool algo::RnullStr60_Eq(algo::RnullStr60& lhs, algo::RnullStr60& rhs) {
 
 // --- algo.RnullStr60..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr60_Update(algo::RnullStr60 &lhs, algo::RnullStr60& rhs) {
+inline bool algo::RnullStr60_Update(algo::RnullStr60 &lhs, algo::RnullStr60& rhs) throw() {
     bool ret = !RnullStr60_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -12685,31 +12685,31 @@ inline bool algo::RnullStr60_Update(algo::RnullStr60 &lhs, algo::RnullStr60& rhs
 }
 
 // --- algo.RnullStr60..EqOpAryptr
-inline bool algo::RnullStr60::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr60::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr60..AssignOp
-inline algo::RnullStr60& algo::RnullStr60::operator =(const algo::RnullStr60 &rhs) {
+inline algo::RnullStr60& algo::RnullStr60::operator =(const algo::RnullStr60 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr60));
     return *this;
 }
 
 // --- algo.RnullStr60..Ctor
-inline  algo::RnullStr60::RnullStr60() {
+inline  algo::RnullStr60::RnullStr60() throw() {
     algo::RnullStr60_Init(*this);
 }
 
 // --- algo.RnullStr60..CopyCtor
-inline  algo::RnullStr60::RnullStr60(const algo::RnullStr60 &rhs) {
+inline  algo::RnullStr60::RnullStr60(const algo::RnullStr60 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr60));
 }
 
 // --- algo.RnullStr62.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr62& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr62& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -12721,19 +12721,19 @@ inline u32 algo::RnullStr62_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr62.ch.Init
-inline void algo::ch_Init(algo::RnullStr62 &parent) {
+inline void algo::ch_Init(algo::RnullStr62 &parent) throw() {
     memset(parent.ch, 0, 62);
 }
 
 // --- algo.RnullStr62.ch.Max
 // always return constant 62
-inline int algo::ch_Max(algo::RnullStr62& parent) {
+inline int algo::ch_Max(algo::RnullStr62& parent) throw() {
     (void)parent;
     return 62;
 }
 
 // --- algo.RnullStr62.ch.N
-inline int algo::ch_N(const algo::RnullStr62& parent) {
+inline int algo::ch_N(const algo::RnullStr62& parent) throw() {
     u64 ret;
     ret = 62;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -12744,57 +12744,57 @@ inline int algo::ch_N(const algo::RnullStr62& parent) {
 
 // --- algo.RnullStr62.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr62::operator =(const algo::strptr &str) {
+inline void algo::RnullStr62::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr62.ch.CtorStrptr
-inline  algo::RnullStr62::RnullStr62(const algo::strptr &rhs) {
+inline  algo::RnullStr62::RnullStr62(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr62.ch.Cast
-inline  algo::RnullStr62::operator algo::strptr() const {
+inline  algo::RnullStr62::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr62..EqOp
-inline bool algo::RnullStr62::operator ==(const algo::RnullStr62 &rhs) const {
+inline bool algo::RnullStr62::operator ==(const algo::RnullStr62 &rhs) const throw() {
     return algo::RnullStr62_Eq(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
 }
 
 // --- algo.RnullStr62..NeOp
-inline bool algo::RnullStr62::operator !=(const algo::RnullStr62 &rhs) const {
+inline bool algo::RnullStr62::operator !=(const algo::RnullStr62 &rhs) const throw() {
     return !algo::RnullStr62_Eq(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
 }
 
 // --- algo.RnullStr62..LtOp
-inline bool algo::RnullStr62::operator <(const algo::RnullStr62 &rhs) const {
+inline bool algo::RnullStr62::operator <(const algo::RnullStr62 &rhs) const throw() {
     return algo::RnullStr62_Lt(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
 }
 
 // --- algo.RnullStr62..GtOp
-inline bool algo::RnullStr62::operator >(const algo::RnullStr62 &rhs) const {
+inline bool algo::RnullStr62::operator >(const algo::RnullStr62 &rhs) const throw() {
     return algo::RnullStr62_Lt(const_cast<algo::RnullStr62&>(rhs),const_cast<algo::RnullStr62&>(*this));
 }
 
 // --- algo.RnullStr62..LeOp
-inline bool algo::RnullStr62::operator <=(const algo::RnullStr62 &rhs) const {
+inline bool algo::RnullStr62::operator <=(const algo::RnullStr62 &rhs) const throw() {
     return !algo::RnullStr62_Lt(const_cast<algo::RnullStr62&>(rhs),const_cast<algo::RnullStr62&>(*this));
 }
 
 // --- algo.RnullStr62..GeOp
-inline bool algo::RnullStr62::operator >=(const algo::RnullStr62 &rhs) const {
+inline bool algo::RnullStr62::operator >=(const algo::RnullStr62 &rhs) const throw() {
     return !algo::RnullStr62_Lt(const_cast<algo::RnullStr62&>(*this),const_cast<algo::RnullStr62&>(rhs));
 }
 
 // --- algo.RnullStr62..Lt
-inline bool algo::RnullStr62_Lt(algo::RnullStr62& lhs, algo::RnullStr62& rhs) {
+inline bool algo::RnullStr62_Lt(algo::RnullStr62& lhs, algo::RnullStr62& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr62..Cmp
-inline i32 algo::RnullStr62_Cmp(algo::RnullStr62& lhs, algo::RnullStr62& rhs) {
+inline i32 algo::RnullStr62_Cmp(algo::RnullStr62& lhs, algo::RnullStr62& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -12807,7 +12807,7 @@ inline void algo::RnullStr62_Init(algo::RnullStr62& parent) {
 }
 
 // --- algo.RnullStr62..Eq
-inline bool algo::RnullStr62_Eq(algo::RnullStr62& lhs, algo::RnullStr62& rhs) {
+inline bool algo::RnullStr62_Eq(algo::RnullStr62& lhs, algo::RnullStr62& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -12824,7 +12824,7 @@ inline bool algo::RnullStr62_Eq(algo::RnullStr62& lhs, algo::RnullStr62& rhs) {
 
 // --- algo.RnullStr62..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr62_Update(algo::RnullStr62 &lhs, algo::RnullStr62& rhs) {
+inline bool algo::RnullStr62_Update(algo::RnullStr62 &lhs, algo::RnullStr62& rhs) throw() {
     bool ret = !RnullStr62_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -12833,31 +12833,31 @@ inline bool algo::RnullStr62_Update(algo::RnullStr62 &lhs, algo::RnullStr62& rhs
 }
 
 // --- algo.RnullStr62..EqOpAryptr
-inline bool algo::RnullStr62::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr62::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr62..AssignOp
-inline algo::RnullStr62& algo::RnullStr62::operator =(const algo::RnullStr62 &rhs) {
+inline algo::RnullStr62& algo::RnullStr62::operator =(const algo::RnullStr62 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr62));
     return *this;
 }
 
 // --- algo.RnullStr62..Ctor
-inline  algo::RnullStr62::RnullStr62() {
+inline  algo::RnullStr62::RnullStr62() throw() {
     algo::RnullStr62_Init(*this);
 }
 
 // --- algo.RnullStr62..CopyCtor
-inline  algo::RnullStr62::RnullStr62(const algo::RnullStr62 &rhs) {
+inline  algo::RnullStr62::RnullStr62(const algo::RnullStr62 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr62));
 }
 
 // --- algo.RnullStr66.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr66& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr66& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -12869,19 +12869,19 @@ inline u32 algo::RnullStr66_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr66.ch.Init
-inline void algo::ch_Init(algo::RnullStr66 &parent) {
+inline void algo::ch_Init(algo::RnullStr66 &parent) throw() {
     memset(parent.ch, 0, 66);
 }
 
 // --- algo.RnullStr66.ch.Max
 // always return constant 66
-inline int algo::ch_Max(algo::RnullStr66& parent) {
+inline int algo::ch_Max(algo::RnullStr66& parent) throw() {
     (void)parent;
     return 66;
 }
 
 // --- algo.RnullStr66.ch.N
-inline int algo::ch_N(const algo::RnullStr66& parent) {
+inline int algo::ch_N(const algo::RnullStr66& parent) throw() {
     u64 ret;
     ret = 66;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -12892,27 +12892,27 @@ inline int algo::ch_N(const algo::RnullStr66& parent) {
 
 // --- algo.RnullStr66.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr66::operator =(const algo::strptr &str) {
+inline void algo::RnullStr66::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr66.ch.CtorStrptr
-inline  algo::RnullStr66::RnullStr66(const algo::strptr &rhs) {
+inline  algo::RnullStr66::RnullStr66(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr66.ch.Cast
-inline  algo::RnullStr66::operator algo::strptr() const {
+inline  algo::RnullStr66::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr66..Lt
-inline bool algo::RnullStr66_Lt(algo::RnullStr66& lhs, algo::RnullStr66& rhs) {
+inline bool algo::RnullStr66_Lt(algo::RnullStr66& lhs, algo::RnullStr66& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr66..Cmp
-inline i32 algo::RnullStr66_Cmp(algo::RnullStr66& lhs, algo::RnullStr66& rhs) {
+inline i32 algo::RnullStr66_Cmp(algo::RnullStr66& lhs, algo::RnullStr66& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -12925,7 +12925,7 @@ inline void algo::RnullStr66_Init(algo::RnullStr66& parent) {
 }
 
 // --- algo.RnullStr66..Eq
-inline bool algo::RnullStr66_Eq(algo::RnullStr66& lhs, algo::RnullStr66& rhs) {
+inline bool algo::RnullStr66_Eq(algo::RnullStr66& lhs, algo::RnullStr66& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -12942,7 +12942,7 @@ inline bool algo::RnullStr66_Eq(algo::RnullStr66& lhs, algo::RnullStr66& rhs) {
 
 // --- algo.RnullStr66..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr66_Update(algo::RnullStr66 &lhs, algo::RnullStr66& rhs) {
+inline bool algo::RnullStr66_Update(algo::RnullStr66 &lhs, algo::RnullStr66& rhs) throw() {
     bool ret = !RnullStr66_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -12951,31 +12951,31 @@ inline bool algo::RnullStr66_Update(algo::RnullStr66 &lhs, algo::RnullStr66& rhs
 }
 
 // --- algo.RnullStr66..EqOpAryptr
-inline bool algo::RnullStr66::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr66::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr66..AssignOp
-inline algo::RnullStr66& algo::RnullStr66::operator =(const algo::RnullStr66 &rhs) {
+inline algo::RnullStr66& algo::RnullStr66::operator =(const algo::RnullStr66 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr66));
     return *this;
 }
 
 // --- algo.RnullStr66..Ctor
-inline  algo::RnullStr66::RnullStr66() {
+inline  algo::RnullStr66::RnullStr66() throw() {
     algo::RnullStr66_Init(*this);
 }
 
 // --- algo.RnullStr66..CopyCtor
-inline  algo::RnullStr66::RnullStr66(const algo::RnullStr66 &rhs) {
+inline  algo::RnullStr66::RnullStr66(const algo::RnullStr66 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr66));
 }
 
 // --- algo.RnullStr6_U32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr6_U32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr6_U32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -12987,19 +12987,19 @@ inline u32 algo::RnullStr6_U32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr6_U32.ch.Init
-inline void algo::ch_Init(algo::RnullStr6_U32 &parent) {
+inline void algo::ch_Init(algo::RnullStr6_U32 &parent) throw() {
     memset(parent.ch, 0, 6);
 }
 
 // --- algo.RnullStr6_U32.ch.Max
 // always return constant 6
-inline int algo::ch_Max(algo::RnullStr6_U32& parent) {
+inline int algo::ch_Max(algo::RnullStr6_U32& parent) throw() {
     (void)parent;
     return 6;
 }
 
 // --- algo.RnullStr6_U32.ch.N
-inline int algo::ch_N(const algo::RnullStr6_U32& parent) {
+inline int algo::ch_N(const algo::RnullStr6_U32& parent) throw() {
     u64 ret;
     ret = 6;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -13010,32 +13010,32 @@ inline int algo::ch_N(const algo::RnullStr6_U32& parent) {
 
 // --- algo.RnullStr6_U32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr6_U32::operator =(const algo::strptr &str) {
+inline void algo::RnullStr6_U32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr6_U32.ch.CtorStrptr
-inline  algo::RnullStr6_U32::RnullStr6_U32(const algo::strptr &rhs) {
+inline  algo::RnullStr6_U32::RnullStr6_U32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr6_U32.ch.Cast
-inline  algo::RnullStr6_U32::operator algo::strptr() const {
+inline  algo::RnullStr6_U32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr6_U32..EqOp
-inline bool algo::RnullStr6_U32::operator ==(const algo::RnullStr6_U32 &rhs) const {
+inline bool algo::RnullStr6_U32::operator ==(const algo::RnullStr6_U32 &rhs) const throw() {
     return algo::RnullStr6_U32_Eq(const_cast<algo::RnullStr6_U32&>(*this),const_cast<algo::RnullStr6_U32&>(rhs));
 }
 
 // --- algo.RnullStr6_U32..NeOp
-inline bool algo::RnullStr6_U32::operator !=(const algo::RnullStr6_U32 &rhs) const {
+inline bool algo::RnullStr6_U32::operator !=(const algo::RnullStr6_U32 &rhs) const throw() {
     return !algo::RnullStr6_U32_Eq(const_cast<algo::RnullStr6_U32&>(*this),const_cast<algo::RnullStr6_U32&>(rhs));
 }
 
 // --- algo.RnullStr6_U32..Cmp
-inline i32 algo::RnullStr6_U32_Cmp(algo::RnullStr6_U32& lhs, algo::RnullStr6_U32& rhs) {
+inline i32 algo::RnullStr6_U32_Cmp(algo::RnullStr6_U32& lhs, algo::RnullStr6_U32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -13048,7 +13048,7 @@ inline void algo::RnullStr6_U32_Init(algo::RnullStr6_U32& parent) {
 }
 
 // --- algo.RnullStr6_U32..Eq
-inline bool algo::RnullStr6_U32_Eq(algo::RnullStr6_U32& lhs, algo::RnullStr6_U32& rhs) {
+inline bool algo::RnullStr6_U32_Eq(algo::RnullStr6_U32& lhs, algo::RnullStr6_U32& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -13057,31 +13057,31 @@ inline bool algo::RnullStr6_U32_Eq(algo::RnullStr6_U32& lhs, algo::RnullStr6_U32
 }
 
 // --- algo.RnullStr6_U32..EqOpAryptr
-inline bool algo::RnullStr6_U32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr6_U32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr6_U32..AssignOp
-inline algo::RnullStr6_U32& algo::RnullStr6_U32::operator =(const algo::RnullStr6_U32 &rhs) {
+inline algo::RnullStr6_U32& algo::RnullStr6_U32::operator =(const algo::RnullStr6_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr6_U32));
     return *this;
 }
 
 // --- algo.RnullStr6_U32..Ctor
-inline  algo::RnullStr6_U32::RnullStr6_U32() {
+inline  algo::RnullStr6_U32::RnullStr6_U32() throw() {
     algo::RnullStr6_U32_Init(*this);
 }
 
 // --- algo.RnullStr6_U32..CopyCtor
-inline  algo::RnullStr6_U32::RnullStr6_U32(const algo::RnullStr6_U32 &rhs) {
+inline  algo::RnullStr6_U32::RnullStr6_U32(const algo::RnullStr6_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr6_U32));
 }
 
 // --- algo.RnullStr7.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr7& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr7& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -13093,19 +13093,19 @@ inline u32 algo::RnullStr7_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr7.ch.Init
-inline void algo::ch_Init(algo::RnullStr7 &parent) {
+inline void algo::ch_Init(algo::RnullStr7 &parent) throw() {
     memset(parent.ch, 0, 7);
 }
 
 // --- algo.RnullStr7.ch.Max
 // always return constant 7
-inline int algo::ch_Max(algo::RnullStr7& parent) {
+inline int algo::ch_Max(algo::RnullStr7& parent) throw() {
     (void)parent;
     return 7;
 }
 
 // --- algo.RnullStr7.ch.N
-inline int algo::ch_N(const algo::RnullStr7& parent) {
+inline int algo::ch_N(const algo::RnullStr7& parent) throw() {
     u64 ret;
     ret = 7;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -13116,57 +13116,57 @@ inline int algo::ch_N(const algo::RnullStr7& parent) {
 
 // --- algo.RnullStr7.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr7::operator =(const algo::strptr &str) {
+inline void algo::RnullStr7::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr7.ch.CtorStrptr
-inline  algo::RnullStr7::RnullStr7(const algo::strptr &rhs) {
+inline  algo::RnullStr7::RnullStr7(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr7.ch.Cast
-inline  algo::RnullStr7::operator algo::strptr() const {
+inline  algo::RnullStr7::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr7..EqOp
-inline bool algo::RnullStr7::operator ==(const algo::RnullStr7 &rhs) const {
+inline bool algo::RnullStr7::operator ==(const algo::RnullStr7 &rhs) const throw() {
     return algo::RnullStr7_Eq(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
 }
 
 // --- algo.RnullStr7..NeOp
-inline bool algo::RnullStr7::operator !=(const algo::RnullStr7 &rhs) const {
+inline bool algo::RnullStr7::operator !=(const algo::RnullStr7 &rhs) const throw() {
     return !algo::RnullStr7_Eq(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
 }
 
 // --- algo.RnullStr7..LtOp
-inline bool algo::RnullStr7::operator <(const algo::RnullStr7 &rhs) const {
+inline bool algo::RnullStr7::operator <(const algo::RnullStr7 &rhs) const throw() {
     return algo::RnullStr7_Lt(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
 }
 
 // --- algo.RnullStr7..GtOp
-inline bool algo::RnullStr7::operator >(const algo::RnullStr7 &rhs) const {
+inline bool algo::RnullStr7::operator >(const algo::RnullStr7 &rhs) const throw() {
     return algo::RnullStr7_Lt(const_cast<algo::RnullStr7&>(rhs),const_cast<algo::RnullStr7&>(*this));
 }
 
 // --- algo.RnullStr7..LeOp
-inline bool algo::RnullStr7::operator <=(const algo::RnullStr7 &rhs) const {
+inline bool algo::RnullStr7::operator <=(const algo::RnullStr7 &rhs) const throw() {
     return !algo::RnullStr7_Lt(const_cast<algo::RnullStr7&>(rhs),const_cast<algo::RnullStr7&>(*this));
 }
 
 // --- algo.RnullStr7..GeOp
-inline bool algo::RnullStr7::operator >=(const algo::RnullStr7 &rhs) const {
+inline bool algo::RnullStr7::operator >=(const algo::RnullStr7 &rhs) const throw() {
     return !algo::RnullStr7_Lt(const_cast<algo::RnullStr7&>(*this),const_cast<algo::RnullStr7&>(rhs));
 }
 
 // --- algo.RnullStr7..Lt
-inline bool algo::RnullStr7_Lt(algo::RnullStr7 lhs, algo::RnullStr7 rhs) {
+inline bool algo::RnullStr7_Lt(algo::RnullStr7 lhs, algo::RnullStr7 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr7..Cmp
-inline i32 algo::RnullStr7_Cmp(algo::RnullStr7 lhs, algo::RnullStr7 rhs) {
+inline i32 algo::RnullStr7_Cmp(algo::RnullStr7 lhs, algo::RnullStr7 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -13179,7 +13179,7 @@ inline void algo::RnullStr7_Init(algo::RnullStr7& parent) {
 }
 
 // --- algo.RnullStr7..Eq
-inline bool algo::RnullStr7_Eq(algo::RnullStr7 lhs, algo::RnullStr7 rhs) {
+inline bool algo::RnullStr7_Eq(algo::RnullStr7 lhs, algo::RnullStr7 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -13190,7 +13190,7 @@ inline bool algo::RnullStr7_Eq(algo::RnullStr7 lhs, algo::RnullStr7 rhs) {
 
 // --- algo.RnullStr7..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr7_Update(algo::RnullStr7 &lhs, algo::RnullStr7 rhs) {
+inline bool algo::RnullStr7_Update(algo::RnullStr7 &lhs, algo::RnullStr7 rhs) throw() {
     bool ret = !RnullStr7_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -13199,31 +13199,31 @@ inline bool algo::RnullStr7_Update(algo::RnullStr7 &lhs, algo::RnullStr7 rhs) {
 }
 
 // --- algo.RnullStr7..EqOpAryptr
-inline bool algo::RnullStr7::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr7::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr7..AssignOp
-inline algo::RnullStr7& algo::RnullStr7::operator =(const algo::RnullStr7 &rhs) {
+inline algo::RnullStr7& algo::RnullStr7::operator =(const algo::RnullStr7 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr7));
     return *this;
 }
 
 // --- algo.RnullStr7..Ctor
-inline  algo::RnullStr7::RnullStr7() {
+inline  algo::RnullStr7::RnullStr7() throw() {
     algo::RnullStr7_Init(*this);
 }
 
 // --- algo.RnullStr7..CopyCtor
-inline  algo::RnullStr7::RnullStr7(const algo::RnullStr7 &rhs) {
+inline  algo::RnullStr7::RnullStr7(const algo::RnullStr7 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr7));
 }
 
 // --- algo.RnullStr8.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr8& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr8& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -13235,19 +13235,19 @@ inline u32 algo::RnullStr8_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr8.ch.Init
-inline void algo::ch_Init(algo::RnullStr8 &parent) {
+inline void algo::ch_Init(algo::RnullStr8 &parent) throw() {
     memset(parent.ch, 0, 8);
 }
 
 // --- algo.RnullStr8.ch.Max
 // always return constant 8
-inline int algo::ch_Max(algo::RnullStr8& parent) {
+inline int algo::ch_Max(algo::RnullStr8& parent) throw() {
     (void)parent;
     return 8;
 }
 
 // --- algo.RnullStr8.ch.N
-inline int algo::ch_N(const algo::RnullStr8& parent) {
+inline int algo::ch_N(const algo::RnullStr8& parent) throw() {
     u64 ret;
     ret = 8;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -13258,27 +13258,27 @@ inline int algo::ch_N(const algo::RnullStr8& parent) {
 
 // --- algo.RnullStr8.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr8::operator =(const algo::strptr &str) {
+inline void algo::RnullStr8::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr8.ch.CtorStrptr
-inline  algo::RnullStr8::RnullStr8(const algo::strptr &rhs) {
+inline  algo::RnullStr8::RnullStr8(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr8.ch.Cast
-inline  algo::RnullStr8::operator algo::strptr() const {
+inline  algo::RnullStr8::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr8..Lt
-inline bool algo::RnullStr8_Lt(algo::RnullStr8 lhs, algo::RnullStr8 rhs) {
+inline bool algo::RnullStr8_Lt(algo::RnullStr8 lhs, algo::RnullStr8 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr8..Cmp
-inline i32 algo::RnullStr8_Cmp(algo::RnullStr8 lhs, algo::RnullStr8 rhs) {
+inline i32 algo::RnullStr8_Cmp(algo::RnullStr8 lhs, algo::RnullStr8 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -13291,7 +13291,7 @@ inline void algo::RnullStr8_Init(algo::RnullStr8& parent) {
 }
 
 // --- algo.RnullStr8..Eq
-inline bool algo::RnullStr8_Eq(algo::RnullStr8 lhs, algo::RnullStr8 rhs) {
+inline bool algo::RnullStr8_Eq(algo::RnullStr8 lhs, algo::RnullStr8 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0);
@@ -13300,7 +13300,7 @@ inline bool algo::RnullStr8_Eq(algo::RnullStr8 lhs, algo::RnullStr8 rhs) {
 
 // --- algo.RnullStr8..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr8_Update(algo::RnullStr8 &lhs, algo::RnullStr8 rhs) {
+inline bool algo::RnullStr8_Update(algo::RnullStr8 &lhs, algo::RnullStr8 rhs) throw() {
     bool ret = !RnullStr8_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -13309,31 +13309,31 @@ inline bool algo::RnullStr8_Update(algo::RnullStr8 &lhs, algo::RnullStr8 rhs) {
 }
 
 // --- algo.RnullStr8..EqOpAryptr
-inline bool algo::RnullStr8::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr8::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr8..AssignOp
-inline algo::RnullStr8& algo::RnullStr8::operator =(const algo::RnullStr8 &rhs) {
+inline algo::RnullStr8& algo::RnullStr8::operator =(const algo::RnullStr8 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr8));
     return *this;
 }
 
 // --- algo.RnullStr8..Ctor
-inline  algo::RnullStr8::RnullStr8() {
+inline  algo::RnullStr8::RnullStr8() throw() {
     algo::RnullStr8_Init(*this);
 }
 
 // --- algo.RnullStr8..CopyCtor
-inline  algo::RnullStr8::RnullStr8(const algo::RnullStr8 &rhs) {
+inline  algo::RnullStr8::RnullStr8(const algo::RnullStr8 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr8));
 }
 
 // --- algo.RnullStr80.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr80& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr80& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -13345,19 +13345,19 @@ inline u32 algo::RnullStr80_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr80.ch.Init
-inline void algo::ch_Init(algo::RnullStr80 &parent) {
+inline void algo::ch_Init(algo::RnullStr80 &parent) throw() {
     memset(parent.ch, 0, 80);
 }
 
 // --- algo.RnullStr80.ch.Max
 // always return constant 80
-inline int algo::ch_Max(algo::RnullStr80& parent) {
+inline int algo::ch_Max(algo::RnullStr80& parent) throw() {
     (void)parent;
     return 80;
 }
 
 // --- algo.RnullStr80.ch.N
-inline int algo::ch_N(const algo::RnullStr80& parent) {
+inline int algo::ch_N(const algo::RnullStr80& parent) throw() {
     u64 ret;
     ret = 80;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -13368,27 +13368,27 @@ inline int algo::ch_N(const algo::RnullStr80& parent) {
 
 // --- algo.RnullStr80.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr80::operator =(const algo::strptr &str) {
+inline void algo::RnullStr80::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr80.ch.CtorStrptr
-inline  algo::RnullStr80::RnullStr80(const algo::strptr &rhs) {
+inline  algo::RnullStr80::RnullStr80(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr80.ch.Cast
-inline  algo::RnullStr80::operator algo::strptr() const {
+inline  algo::RnullStr80::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr80..Lt
-inline bool algo::RnullStr80_Lt(algo::RnullStr80& lhs, algo::RnullStr80& rhs) {
+inline bool algo::RnullStr80_Lt(algo::RnullStr80& lhs, algo::RnullStr80& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr80..Cmp
-inline i32 algo::RnullStr80_Cmp(algo::RnullStr80& lhs, algo::RnullStr80& rhs) {
+inline i32 algo::RnullStr80_Cmp(algo::RnullStr80& lhs, algo::RnullStr80& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -13401,7 +13401,7 @@ inline void algo::RnullStr80_Init(algo::RnullStr80& parent) {
 }
 
 // --- algo.RnullStr80..Eq
-inline bool algo::RnullStr80_Eq(algo::RnullStr80& lhs, algo::RnullStr80& rhs) {
+inline bool algo::RnullStr80_Eq(algo::RnullStr80& lhs, algo::RnullStr80& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -13419,7 +13419,7 @@ inline bool algo::RnullStr80_Eq(algo::RnullStr80& lhs, algo::RnullStr80& rhs) {
 
 // --- algo.RnullStr80..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr80_Update(algo::RnullStr80 &lhs, algo::RnullStr80& rhs) {
+inline bool algo::RnullStr80_Update(algo::RnullStr80 &lhs, algo::RnullStr80& rhs) throw() {
     bool ret = !RnullStr80_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -13428,31 +13428,31 @@ inline bool algo::RnullStr80_Update(algo::RnullStr80 &lhs, algo::RnullStr80& rhs
 }
 
 // --- algo.RnullStr80..EqOpAryptr
-inline bool algo::RnullStr80::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr80::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr80..AssignOp
-inline algo::RnullStr80& algo::RnullStr80::operator =(const algo::RnullStr80 &rhs) {
+inline algo::RnullStr80& algo::RnullStr80::operator =(const algo::RnullStr80 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr80));
     return *this;
 }
 
 // --- algo.RnullStr80..Ctor
-inline  algo::RnullStr80::RnullStr80() {
+inline  algo::RnullStr80::RnullStr80() throw() {
     algo::RnullStr80_Init(*this);
 }
 
 // --- algo.RnullStr80..CopyCtor
-inline  algo::RnullStr80::RnullStr80(const algo::RnullStr80 &rhs) {
+inline  algo::RnullStr80::RnullStr80(const algo::RnullStr80 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr80));
 }
 
 // --- algo.RnullStr9.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr9& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr9& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -13464,19 +13464,19 @@ inline u32 algo::RnullStr9_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RnullStr9.ch.Init
-inline void algo::ch_Init(algo::RnullStr9 &parent) {
+inline void algo::ch_Init(algo::RnullStr9 &parent) throw() {
     memset(parent.ch, 0, 9);
 }
 
 // --- algo.RnullStr9.ch.Max
 // always return constant 9
-inline int algo::ch_Max(algo::RnullStr9& parent) {
+inline int algo::ch_Max(algo::RnullStr9& parent) throw() {
     (void)parent;
     return 9;
 }
 
 // --- algo.RnullStr9.ch.N
-inline int algo::ch_N(const algo::RnullStr9& parent) {
+inline int algo::ch_N(const algo::RnullStr9& parent) throw() {
     u64 ret;
     ret = 9;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -13487,57 +13487,57 @@ inline int algo::ch_N(const algo::RnullStr9& parent) {
 
 // --- algo.RnullStr9.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RnullStr9::operator =(const algo::strptr &str) {
+inline void algo::RnullStr9::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RnullStr9.ch.CtorStrptr
-inline  algo::RnullStr9::RnullStr9(const algo::strptr &rhs) {
+inline  algo::RnullStr9::RnullStr9(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RnullStr9.ch.Cast
-inline  algo::RnullStr9::operator algo::strptr() const {
+inline  algo::RnullStr9::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RnullStr9..EqOp
-inline bool algo::RnullStr9::operator ==(const algo::RnullStr9 &rhs) const {
+inline bool algo::RnullStr9::operator ==(const algo::RnullStr9 &rhs) const throw() {
     return algo::RnullStr9_Eq(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
 }
 
 // --- algo.RnullStr9..NeOp
-inline bool algo::RnullStr9::operator !=(const algo::RnullStr9 &rhs) const {
+inline bool algo::RnullStr9::operator !=(const algo::RnullStr9 &rhs) const throw() {
     return !algo::RnullStr9_Eq(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
 }
 
 // --- algo.RnullStr9..LtOp
-inline bool algo::RnullStr9::operator <(const algo::RnullStr9 &rhs) const {
+inline bool algo::RnullStr9::operator <(const algo::RnullStr9 &rhs) const throw() {
     return algo::RnullStr9_Lt(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
 }
 
 // --- algo.RnullStr9..GtOp
-inline bool algo::RnullStr9::operator >(const algo::RnullStr9 &rhs) const {
+inline bool algo::RnullStr9::operator >(const algo::RnullStr9 &rhs) const throw() {
     return algo::RnullStr9_Lt(const_cast<algo::RnullStr9&>(rhs),const_cast<algo::RnullStr9&>(*this));
 }
 
 // --- algo.RnullStr9..LeOp
-inline bool algo::RnullStr9::operator <=(const algo::RnullStr9 &rhs) const {
+inline bool algo::RnullStr9::operator <=(const algo::RnullStr9 &rhs) const throw() {
     return !algo::RnullStr9_Lt(const_cast<algo::RnullStr9&>(rhs),const_cast<algo::RnullStr9&>(*this));
 }
 
 // --- algo.RnullStr9..GeOp
-inline bool algo::RnullStr9::operator >=(const algo::RnullStr9 &rhs) const {
+inline bool algo::RnullStr9::operator >=(const algo::RnullStr9 &rhs) const throw() {
     return !algo::RnullStr9_Lt(const_cast<algo::RnullStr9&>(*this),const_cast<algo::RnullStr9&>(rhs));
 }
 
 // --- algo.RnullStr9..Lt
-inline bool algo::RnullStr9_Lt(algo::RnullStr9& lhs, algo::RnullStr9& rhs) {
+inline bool algo::RnullStr9_Lt(algo::RnullStr9& lhs, algo::RnullStr9& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RnullStr9..Cmp
-inline i32 algo::RnullStr9_Cmp(algo::RnullStr9& lhs, algo::RnullStr9& rhs) {
+inline i32 algo::RnullStr9_Cmp(algo::RnullStr9& lhs, algo::RnullStr9& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -13550,7 +13550,7 @@ inline void algo::RnullStr9_Init(algo::RnullStr9& parent) {
 }
 
 // --- algo.RnullStr9..Eq
-inline bool algo::RnullStr9_Eq(algo::RnullStr9& lhs, algo::RnullStr9& rhs) {
+inline bool algo::RnullStr9_Eq(algo::RnullStr9& lhs, algo::RnullStr9& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -13560,7 +13560,7 @@ inline bool algo::RnullStr9_Eq(algo::RnullStr9& lhs, algo::RnullStr9& rhs) {
 
 // --- algo.RnullStr9..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RnullStr9_Update(algo::RnullStr9 &lhs, algo::RnullStr9& rhs) {
+inline bool algo::RnullStr9_Update(algo::RnullStr9 &lhs, algo::RnullStr9& rhs) throw() {
     bool ret = !RnullStr9_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -13569,31 +13569,31 @@ inline bool algo::RnullStr9_Update(algo::RnullStr9 &lhs, algo::RnullStr9& rhs) {
 }
 
 // --- algo.RnullStr9..EqOpAryptr
-inline bool algo::RnullStr9::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RnullStr9::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RnullStr9..AssignOp
-inline algo::RnullStr9& algo::RnullStr9::operator =(const algo::RnullStr9 &rhs) {
+inline algo::RnullStr9& algo::RnullStr9::operator =(const algo::RnullStr9 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr9));
     return *this;
 }
 
 // --- algo.RnullStr9..Ctor
-inline  algo::RnullStr9::RnullStr9() {
+inline  algo::RnullStr9::RnullStr9() throw() {
     algo::RnullStr9_Init(*this);
 }
 
 // --- algo.RnullStr9..CopyCtor
-inline  algo::RnullStr9::RnullStr9(const algo::RnullStr9 &rhs) {
+inline  algo::RnullStr9::RnullStr9(const algo::RnullStr9 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RnullStr9));
 }
 
 // --- algo.RspaceStr10.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr10& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr10& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -13605,19 +13605,19 @@ inline u32 algo::RspaceStr10_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr10.ch.Init
-inline void algo::ch_Init(algo::RspaceStr10 &parent) {
+inline void algo::ch_Init(algo::RspaceStr10 &parent) throw() {
     memset(parent.ch, ' ', 10);
 }
 
 // --- algo.RspaceStr10.ch.Max
 // always return constant 10
-inline int algo::ch_Max(algo::RspaceStr10& parent) {
+inline int algo::ch_Max(algo::RspaceStr10& parent) throw() {
     (void)parent;
     return 10;
 }
 
 // --- algo.RspaceStr10.ch.N
-inline int algo::ch_N(const algo::RspaceStr10& parent) {
+inline int algo::ch_N(const algo::RspaceStr10& parent) throw() {
     u64 ret;
     ret = 10;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -13628,32 +13628,32 @@ inline int algo::ch_N(const algo::RspaceStr10& parent) {
 
 // --- algo.RspaceStr10.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr10::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr10::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr10.ch.CtorStrptr
-inline  algo::RspaceStr10::RspaceStr10(const algo::strptr &rhs) {
+inline  algo::RspaceStr10::RspaceStr10(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr10.ch.Cast
-inline  algo::RspaceStr10::operator algo::strptr() const {
+inline  algo::RspaceStr10::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr10..EqOp
-inline bool algo::RspaceStr10::operator ==(const algo::RspaceStr10 &rhs) const {
+inline bool algo::RspaceStr10::operator ==(const algo::RspaceStr10 &rhs) const throw() {
     return algo::RspaceStr10_Eq(const_cast<algo::RspaceStr10&>(*this),const_cast<algo::RspaceStr10&>(rhs));
 }
 
 // --- algo.RspaceStr10..NeOp
-inline bool algo::RspaceStr10::operator !=(const algo::RspaceStr10 &rhs) const {
+inline bool algo::RspaceStr10::operator !=(const algo::RspaceStr10 &rhs) const throw() {
     return !algo::RspaceStr10_Eq(const_cast<algo::RspaceStr10&>(*this),const_cast<algo::RspaceStr10&>(rhs));
 }
 
 // --- algo.RspaceStr10..Cmp
-inline i32 algo::RspaceStr10_Cmp(algo::RspaceStr10 lhs, algo::RspaceStr10 rhs) {
+inline i32 algo::RspaceStr10_Cmp(algo::RspaceStr10 lhs, algo::RspaceStr10 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -13666,7 +13666,7 @@ inline void algo::RspaceStr10_Init(algo::RspaceStr10& parent) {
 }
 
 // --- algo.RspaceStr10..Eq
-inline bool algo::RspaceStr10_Eq(algo::RspaceStr10 lhs, algo::RspaceStr10 rhs) {
+inline bool algo::RspaceStr10_Eq(algo::RspaceStr10 lhs, algo::RspaceStr10 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -13675,31 +13675,31 @@ inline bool algo::RspaceStr10_Eq(algo::RspaceStr10 lhs, algo::RspaceStr10 rhs) {
 }
 
 // --- algo.RspaceStr10..EqOpAryptr
-inline bool algo::RspaceStr10::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr10::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr10..AssignOp
-inline algo::RspaceStr10& algo::RspaceStr10::operator =(const algo::RspaceStr10 &rhs) {
+inline algo::RspaceStr10& algo::RspaceStr10::operator =(const algo::RspaceStr10 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr10));
     return *this;
 }
 
 // --- algo.RspaceStr10..Ctor
-inline  algo::RspaceStr10::RspaceStr10() {
+inline  algo::RspaceStr10::RspaceStr10() throw() {
     algo::RspaceStr10_Init(*this);
 }
 
 // --- algo.RspaceStr10..CopyCtor
-inline  algo::RspaceStr10::RspaceStr10(const algo::RspaceStr10 &rhs) {
+inline  algo::RspaceStr10::RspaceStr10(const algo::RspaceStr10 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr10));
 }
 
 // --- algo.RspaceStr100.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr100& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr100& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -13711,19 +13711,19 @@ inline u32 algo::RspaceStr100_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr100.ch.Init
-inline void algo::ch_Init(algo::RspaceStr100 &parent) {
+inline void algo::ch_Init(algo::RspaceStr100 &parent) throw() {
     memset(parent.ch, ' ', 100);
 }
 
 // --- algo.RspaceStr100.ch.Max
 // always return constant 100
-inline int algo::ch_Max(algo::RspaceStr100& parent) {
+inline int algo::ch_Max(algo::RspaceStr100& parent) throw() {
     (void)parent;
     return 100;
 }
 
 // --- algo.RspaceStr100.ch.N
-inline int algo::ch_N(const algo::RspaceStr100& parent) {
+inline int algo::ch_N(const algo::RspaceStr100& parent) throw() {
     u64 ret;
     ret = 100;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -13734,32 +13734,32 @@ inline int algo::ch_N(const algo::RspaceStr100& parent) {
 
 // --- algo.RspaceStr100.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr100::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr100::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr100.ch.CtorStrptr
-inline  algo::RspaceStr100::RspaceStr100(const algo::strptr &rhs) {
+inline  algo::RspaceStr100::RspaceStr100(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr100.ch.Cast
-inline  algo::RspaceStr100::operator algo::strptr() const {
+inline  algo::RspaceStr100::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr100..EqOp
-inline bool algo::RspaceStr100::operator ==(const algo::RspaceStr100 &rhs) const {
+inline bool algo::RspaceStr100::operator ==(const algo::RspaceStr100 &rhs) const throw() {
     return algo::RspaceStr100_Eq(const_cast<algo::RspaceStr100&>(*this),const_cast<algo::RspaceStr100&>(rhs));
 }
 
 // --- algo.RspaceStr100..NeOp
-inline bool algo::RspaceStr100::operator !=(const algo::RspaceStr100 &rhs) const {
+inline bool algo::RspaceStr100::operator !=(const algo::RspaceStr100 &rhs) const throw() {
     return !algo::RspaceStr100_Eq(const_cast<algo::RspaceStr100&>(*this),const_cast<algo::RspaceStr100&>(rhs));
 }
 
 // --- algo.RspaceStr100..Cmp
-inline i32 algo::RspaceStr100_Cmp(algo::RspaceStr100& lhs, algo::RspaceStr100& rhs) {
+inline i32 algo::RspaceStr100_Cmp(algo::RspaceStr100& lhs, algo::RspaceStr100& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -13772,7 +13772,7 @@ inline void algo::RspaceStr100_Init(algo::RspaceStr100& parent) {
 }
 
 // --- algo.RspaceStr100..Eq
-inline bool algo::RspaceStr100_Eq(algo::RspaceStr100& lhs, algo::RspaceStr100& rhs) {
+inline bool algo::RspaceStr100_Eq(algo::RspaceStr100& lhs, algo::RspaceStr100& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -13792,31 +13792,31 @@ inline bool algo::RspaceStr100_Eq(algo::RspaceStr100& lhs, algo::RspaceStr100& r
 }
 
 // --- algo.RspaceStr100..EqOpAryptr
-inline bool algo::RspaceStr100::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr100::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr100..AssignOp
-inline algo::RspaceStr100& algo::RspaceStr100::operator =(const algo::RspaceStr100 &rhs) {
+inline algo::RspaceStr100& algo::RspaceStr100::operator =(const algo::RspaceStr100 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr100));
     return *this;
 }
 
 // --- algo.RspaceStr100..Ctor
-inline  algo::RspaceStr100::RspaceStr100() {
+inline  algo::RspaceStr100::RspaceStr100() throw() {
     algo::RspaceStr100_Init(*this);
 }
 
 // --- algo.RspaceStr100..CopyCtor
-inline  algo::RspaceStr100::RspaceStr100(const algo::RspaceStr100 &rhs) {
+inline  algo::RspaceStr100::RspaceStr100(const algo::RspaceStr100 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr100));
 }
 
 // --- algo.RspaceStr11.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr11& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr11& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -13828,19 +13828,19 @@ inline u32 algo::RspaceStr11_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr11.ch.Init
-inline void algo::ch_Init(algo::RspaceStr11 &parent) {
+inline void algo::ch_Init(algo::RspaceStr11 &parent) throw() {
     memset(parent.ch, ' ', 11);
 }
 
 // --- algo.RspaceStr11.ch.Max
 // always return constant 11
-inline int algo::ch_Max(algo::RspaceStr11& parent) {
+inline int algo::ch_Max(algo::RspaceStr11& parent) throw() {
     (void)parent;
     return 11;
 }
 
 // --- algo.RspaceStr11.ch.N
-inline int algo::ch_N(const algo::RspaceStr11& parent) {
+inline int algo::ch_N(const algo::RspaceStr11& parent) throw() {
     u64 ret;
     ret = 11;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -13851,32 +13851,32 @@ inline int algo::ch_N(const algo::RspaceStr11& parent) {
 
 // --- algo.RspaceStr11.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr11::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr11::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr11.ch.CtorStrptr
-inline  algo::RspaceStr11::RspaceStr11(const algo::strptr &rhs) {
+inline  algo::RspaceStr11::RspaceStr11(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr11.ch.Cast
-inline  algo::RspaceStr11::operator algo::strptr() const {
+inline  algo::RspaceStr11::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr11..EqOp
-inline bool algo::RspaceStr11::operator ==(const algo::RspaceStr11 &rhs) const {
+inline bool algo::RspaceStr11::operator ==(const algo::RspaceStr11 &rhs) const throw() {
     return algo::RspaceStr11_Eq(const_cast<algo::RspaceStr11&>(*this),const_cast<algo::RspaceStr11&>(rhs));
 }
 
 // --- algo.RspaceStr11..NeOp
-inline bool algo::RspaceStr11::operator !=(const algo::RspaceStr11 &rhs) const {
+inline bool algo::RspaceStr11::operator !=(const algo::RspaceStr11 &rhs) const throw() {
     return !algo::RspaceStr11_Eq(const_cast<algo::RspaceStr11&>(*this),const_cast<algo::RspaceStr11&>(rhs));
 }
 
 // --- algo.RspaceStr11..Cmp
-inline i32 algo::RspaceStr11_Cmp(algo::RspaceStr11& lhs, algo::RspaceStr11& rhs) {
+inline i32 algo::RspaceStr11_Cmp(algo::RspaceStr11& lhs, algo::RspaceStr11& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -13889,7 +13889,7 @@ inline void algo::RspaceStr11_Init(algo::RspaceStr11& parent) {
 }
 
 // --- algo.RspaceStr11..Eq
-inline bool algo::RspaceStr11_Eq(algo::RspaceStr11& lhs, algo::RspaceStr11& rhs) {
+inline bool algo::RspaceStr11_Eq(algo::RspaceStr11& lhs, algo::RspaceStr11& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -13899,31 +13899,31 @@ inline bool algo::RspaceStr11_Eq(algo::RspaceStr11& lhs, algo::RspaceStr11& rhs)
 }
 
 // --- algo.RspaceStr11..EqOpAryptr
-inline bool algo::RspaceStr11::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr11::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr11..AssignOp
-inline algo::RspaceStr11& algo::RspaceStr11::operator =(const algo::RspaceStr11 &rhs) {
+inline algo::RspaceStr11& algo::RspaceStr11::operator =(const algo::RspaceStr11 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr11));
     return *this;
 }
 
 // --- algo.RspaceStr11..Ctor
-inline  algo::RspaceStr11::RspaceStr11() {
+inline  algo::RspaceStr11::RspaceStr11() throw() {
     algo::RspaceStr11_Init(*this);
 }
 
 // --- algo.RspaceStr11..CopyCtor
-inline  algo::RspaceStr11::RspaceStr11(const algo::RspaceStr11 &rhs) {
+inline  algo::RspaceStr11::RspaceStr11(const algo::RspaceStr11 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr11));
 }
 
 // --- algo.RspaceStr12.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr12& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr12& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -13935,19 +13935,19 @@ inline u32 algo::RspaceStr12_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr12.ch.Init
-inline void algo::ch_Init(algo::RspaceStr12 &parent) {
+inline void algo::ch_Init(algo::RspaceStr12 &parent) throw() {
     memset(parent.ch, ' ', 12);
 }
 
 // --- algo.RspaceStr12.ch.Max
 // always return constant 12
-inline int algo::ch_Max(algo::RspaceStr12& parent) {
+inline int algo::ch_Max(algo::RspaceStr12& parent) throw() {
     (void)parent;
     return 12;
 }
 
 // --- algo.RspaceStr12.ch.N
-inline int algo::ch_N(const algo::RspaceStr12& parent) {
+inline int algo::ch_N(const algo::RspaceStr12& parent) throw() {
     u64 ret;
     ret = 12;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -13958,32 +13958,32 @@ inline int algo::ch_N(const algo::RspaceStr12& parent) {
 
 // --- algo.RspaceStr12.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr12::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr12::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr12.ch.CtorStrptr
-inline  algo::RspaceStr12::RspaceStr12(const algo::strptr &rhs) {
+inline  algo::RspaceStr12::RspaceStr12(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr12.ch.Cast
-inline  algo::RspaceStr12::operator algo::strptr() const {
+inline  algo::RspaceStr12::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr12..EqOp
-inline bool algo::RspaceStr12::operator ==(const algo::RspaceStr12 &rhs) const {
+inline bool algo::RspaceStr12::operator ==(const algo::RspaceStr12 &rhs) const throw() {
     return algo::RspaceStr12_Eq(const_cast<algo::RspaceStr12&>(*this),const_cast<algo::RspaceStr12&>(rhs));
 }
 
 // --- algo.RspaceStr12..NeOp
-inline bool algo::RspaceStr12::operator !=(const algo::RspaceStr12 &rhs) const {
+inline bool algo::RspaceStr12::operator !=(const algo::RspaceStr12 &rhs) const throw() {
     return !algo::RspaceStr12_Eq(const_cast<algo::RspaceStr12&>(*this),const_cast<algo::RspaceStr12&>(rhs));
 }
 
 // --- algo.RspaceStr12..Cmp
-inline i32 algo::RspaceStr12_Cmp(algo::RspaceStr12 lhs, algo::RspaceStr12 rhs) {
+inline i32 algo::RspaceStr12_Cmp(algo::RspaceStr12 lhs, algo::RspaceStr12 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -13996,7 +13996,7 @@ inline void algo::RspaceStr12_Init(algo::RspaceStr12& parent) {
 }
 
 // --- algo.RspaceStr12..Eq
-inline bool algo::RspaceStr12_Eq(algo::RspaceStr12 lhs, algo::RspaceStr12 rhs) {
+inline bool algo::RspaceStr12_Eq(algo::RspaceStr12 lhs, algo::RspaceStr12 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -14005,31 +14005,31 @@ inline bool algo::RspaceStr12_Eq(algo::RspaceStr12 lhs, algo::RspaceStr12 rhs) {
 }
 
 // --- algo.RspaceStr12..EqOpAryptr
-inline bool algo::RspaceStr12::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr12::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr12..AssignOp
-inline algo::RspaceStr12& algo::RspaceStr12::operator =(const algo::RspaceStr12 &rhs) {
+inline algo::RspaceStr12& algo::RspaceStr12::operator =(const algo::RspaceStr12 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr12));
     return *this;
 }
 
 // --- algo.RspaceStr12..Ctor
-inline  algo::RspaceStr12::RspaceStr12() {
+inline  algo::RspaceStr12::RspaceStr12() throw() {
     algo::RspaceStr12_Init(*this);
 }
 
 // --- algo.RspaceStr12..CopyCtor
-inline  algo::RspaceStr12::RspaceStr12(const algo::RspaceStr12 &rhs) {
+inline  algo::RspaceStr12::RspaceStr12(const algo::RspaceStr12 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr12));
 }
 
 // --- algo.RspaceStr128.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr128& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr128& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -14041,19 +14041,19 @@ inline u32 algo::RspaceStr128_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr128.ch.Init
-inline void algo::ch_Init(algo::RspaceStr128 &parent) {
+inline void algo::ch_Init(algo::RspaceStr128 &parent) throw() {
     memset(parent.ch, ' ', 128);
 }
 
 // --- algo.RspaceStr128.ch.Max
 // always return constant 128
-inline int algo::ch_Max(algo::RspaceStr128& parent) {
+inline int algo::ch_Max(algo::RspaceStr128& parent) throw() {
     (void)parent;
     return 128;
 }
 
 // --- algo.RspaceStr128.ch.N
-inline int algo::ch_N(const algo::RspaceStr128& parent) {
+inline int algo::ch_N(const algo::RspaceStr128& parent) throw() {
     u64 ret;
     ret = 128;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -14064,32 +14064,32 @@ inline int algo::ch_N(const algo::RspaceStr128& parent) {
 
 // --- algo.RspaceStr128.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr128::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr128::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr128.ch.CtorStrptr
-inline  algo::RspaceStr128::RspaceStr128(const algo::strptr &rhs) {
+inline  algo::RspaceStr128::RspaceStr128(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr128.ch.Cast
-inline  algo::RspaceStr128::operator algo::strptr() const {
+inline  algo::RspaceStr128::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr128..EqOp
-inline bool algo::RspaceStr128::operator ==(const algo::RspaceStr128 &rhs) const {
+inline bool algo::RspaceStr128::operator ==(const algo::RspaceStr128 &rhs) const throw() {
     return algo::RspaceStr128_Eq(const_cast<algo::RspaceStr128&>(*this),const_cast<algo::RspaceStr128&>(rhs));
 }
 
 // --- algo.RspaceStr128..NeOp
-inline bool algo::RspaceStr128::operator !=(const algo::RspaceStr128 &rhs) const {
+inline bool algo::RspaceStr128::operator !=(const algo::RspaceStr128 &rhs) const throw() {
     return !algo::RspaceStr128_Eq(const_cast<algo::RspaceStr128&>(*this),const_cast<algo::RspaceStr128&>(rhs));
 }
 
 // --- algo.RspaceStr128..Cmp
-inline i32 algo::RspaceStr128_Cmp(algo::RspaceStr128 lhs, algo::RspaceStr128 rhs) {
+inline i32 algo::RspaceStr128_Cmp(algo::RspaceStr128 lhs, algo::RspaceStr128 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -14102,7 +14102,7 @@ inline void algo::RspaceStr128_Init(algo::RspaceStr128& parent) {
 }
 
 // --- algo.RspaceStr128..Eq
-inline bool algo::RspaceStr128_Eq(algo::RspaceStr128 lhs, algo::RspaceStr128 rhs) {
+inline bool algo::RspaceStr128_Eq(algo::RspaceStr128 lhs, algo::RspaceStr128 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -14125,31 +14125,31 @@ inline bool algo::RspaceStr128_Eq(algo::RspaceStr128 lhs, algo::RspaceStr128 rhs
 }
 
 // --- algo.RspaceStr128..EqOpAryptr
-inline bool algo::RspaceStr128::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr128::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr128..AssignOp
-inline algo::RspaceStr128& algo::RspaceStr128::operator =(const algo::RspaceStr128 &rhs) {
+inline algo::RspaceStr128& algo::RspaceStr128::operator =(const algo::RspaceStr128 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr128));
     return *this;
 }
 
 // --- algo.RspaceStr128..Ctor
-inline  algo::RspaceStr128::RspaceStr128() {
+inline  algo::RspaceStr128::RspaceStr128() throw() {
     algo::RspaceStr128_Init(*this);
 }
 
 // --- algo.RspaceStr128..CopyCtor
-inline  algo::RspaceStr128::RspaceStr128(const algo::RspaceStr128 &rhs) {
+inline  algo::RspaceStr128::RspaceStr128(const algo::RspaceStr128 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr128));
 }
 
 // --- algo.RspaceStr14.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr14& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr14& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -14161,19 +14161,19 @@ inline u32 algo::RspaceStr14_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr14.ch.Init
-inline void algo::ch_Init(algo::RspaceStr14 &parent) {
+inline void algo::ch_Init(algo::RspaceStr14 &parent) throw() {
     memset(parent.ch, ' ', 14);
 }
 
 // --- algo.RspaceStr14.ch.Max
 // always return constant 14
-inline int algo::ch_Max(algo::RspaceStr14& parent) {
+inline int algo::ch_Max(algo::RspaceStr14& parent) throw() {
     (void)parent;
     return 14;
 }
 
 // --- algo.RspaceStr14.ch.N
-inline int algo::ch_N(const algo::RspaceStr14& parent) {
+inline int algo::ch_N(const algo::RspaceStr14& parent) throw() {
     u64 ret;
     ret = 14;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -14184,32 +14184,32 @@ inline int algo::ch_N(const algo::RspaceStr14& parent) {
 
 // --- algo.RspaceStr14.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr14::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr14::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr14.ch.CtorStrptr
-inline  algo::RspaceStr14::RspaceStr14(const algo::strptr &rhs) {
+inline  algo::RspaceStr14::RspaceStr14(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr14.ch.Cast
-inline  algo::RspaceStr14::operator algo::strptr() const {
+inline  algo::RspaceStr14::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr14..EqOp
-inline bool algo::RspaceStr14::operator ==(const algo::RspaceStr14 &rhs) const {
+inline bool algo::RspaceStr14::operator ==(const algo::RspaceStr14 &rhs) const throw() {
     return algo::RspaceStr14_Eq(const_cast<algo::RspaceStr14&>(*this),const_cast<algo::RspaceStr14&>(rhs));
 }
 
 // --- algo.RspaceStr14..NeOp
-inline bool algo::RspaceStr14::operator !=(const algo::RspaceStr14 &rhs) const {
+inline bool algo::RspaceStr14::operator !=(const algo::RspaceStr14 &rhs) const throw() {
     return !algo::RspaceStr14_Eq(const_cast<algo::RspaceStr14&>(*this),const_cast<algo::RspaceStr14&>(rhs));
 }
 
 // --- algo.RspaceStr14..Cmp
-inline i32 algo::RspaceStr14_Cmp(algo::RspaceStr14 lhs, algo::RspaceStr14 rhs) {
+inline i32 algo::RspaceStr14_Cmp(algo::RspaceStr14 lhs, algo::RspaceStr14 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -14222,7 +14222,7 @@ inline void algo::RspaceStr14_Init(algo::RspaceStr14& parent) {
 }
 
 // --- algo.RspaceStr14..Eq
-inline bool algo::RspaceStr14_Eq(algo::RspaceStr14 lhs, algo::RspaceStr14 rhs) {
+inline bool algo::RspaceStr14_Eq(algo::RspaceStr14 lhs, algo::RspaceStr14 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -14232,31 +14232,31 @@ inline bool algo::RspaceStr14_Eq(algo::RspaceStr14 lhs, algo::RspaceStr14 rhs) {
 }
 
 // --- algo.RspaceStr14..EqOpAryptr
-inline bool algo::RspaceStr14::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr14::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr14..AssignOp
-inline algo::RspaceStr14& algo::RspaceStr14::operator =(const algo::RspaceStr14 &rhs) {
+inline algo::RspaceStr14& algo::RspaceStr14::operator =(const algo::RspaceStr14 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr14));
     return *this;
 }
 
 // --- algo.RspaceStr14..Ctor
-inline  algo::RspaceStr14::RspaceStr14() {
+inline  algo::RspaceStr14::RspaceStr14() throw() {
     algo::RspaceStr14_Init(*this);
 }
 
 // --- algo.RspaceStr14..CopyCtor
-inline  algo::RspaceStr14::RspaceStr14(const algo::RspaceStr14 &rhs) {
+inline  algo::RspaceStr14::RspaceStr14(const algo::RspaceStr14 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr14));
 }
 
 // --- algo.RspaceStr15.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr15& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr15& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -14268,19 +14268,19 @@ inline u32 algo::RspaceStr15_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr15.ch.Init
-inline void algo::ch_Init(algo::RspaceStr15 &parent) {
+inline void algo::ch_Init(algo::RspaceStr15 &parent) throw() {
     memset(parent.ch, ' ', 15);
 }
 
 // --- algo.RspaceStr15.ch.Max
 // always return constant 15
-inline int algo::ch_Max(algo::RspaceStr15& parent) {
+inline int algo::ch_Max(algo::RspaceStr15& parent) throw() {
     (void)parent;
     return 15;
 }
 
 // --- algo.RspaceStr15.ch.N
-inline int algo::ch_N(const algo::RspaceStr15& parent) {
+inline int algo::ch_N(const algo::RspaceStr15& parent) throw() {
     u64 ret;
     ret = 15;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -14291,32 +14291,32 @@ inline int algo::ch_N(const algo::RspaceStr15& parent) {
 
 // --- algo.RspaceStr15.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr15::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr15::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr15.ch.CtorStrptr
-inline  algo::RspaceStr15::RspaceStr15(const algo::strptr &rhs) {
+inline  algo::RspaceStr15::RspaceStr15(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr15.ch.Cast
-inline  algo::RspaceStr15::operator algo::strptr() const {
+inline  algo::RspaceStr15::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr15..EqOp
-inline bool algo::RspaceStr15::operator ==(const algo::RspaceStr15 &rhs) const {
+inline bool algo::RspaceStr15::operator ==(const algo::RspaceStr15 &rhs) const throw() {
     return algo::RspaceStr15_Eq(const_cast<algo::RspaceStr15&>(*this),const_cast<algo::RspaceStr15&>(rhs));
 }
 
 // --- algo.RspaceStr15..NeOp
-inline bool algo::RspaceStr15::operator !=(const algo::RspaceStr15 &rhs) const {
+inline bool algo::RspaceStr15::operator !=(const algo::RspaceStr15 &rhs) const throw() {
     return !algo::RspaceStr15_Eq(const_cast<algo::RspaceStr15&>(*this),const_cast<algo::RspaceStr15&>(rhs));
 }
 
 // --- algo.RspaceStr15..Cmp
-inline i32 algo::RspaceStr15_Cmp(algo::RspaceStr15 lhs, algo::RspaceStr15 rhs) {
+inline i32 algo::RspaceStr15_Cmp(algo::RspaceStr15 lhs, algo::RspaceStr15 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -14329,7 +14329,7 @@ inline void algo::RspaceStr15_Init(algo::RspaceStr15& parent) {
 }
 
 // --- algo.RspaceStr15..Eq
-inline bool algo::RspaceStr15_Eq(algo::RspaceStr15 lhs, algo::RspaceStr15 rhs) {
+inline bool algo::RspaceStr15_Eq(algo::RspaceStr15 lhs, algo::RspaceStr15 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -14340,31 +14340,31 @@ inline bool algo::RspaceStr15_Eq(algo::RspaceStr15 lhs, algo::RspaceStr15 rhs) {
 }
 
 // --- algo.RspaceStr15..EqOpAryptr
-inline bool algo::RspaceStr15::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr15::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr15..AssignOp
-inline algo::RspaceStr15& algo::RspaceStr15::operator =(const algo::RspaceStr15 &rhs) {
+inline algo::RspaceStr15& algo::RspaceStr15::operator =(const algo::RspaceStr15 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr15));
     return *this;
 }
 
 // --- algo.RspaceStr15..Ctor
-inline  algo::RspaceStr15::RspaceStr15() {
+inline  algo::RspaceStr15::RspaceStr15() throw() {
     algo::RspaceStr15_Init(*this);
 }
 
 // --- algo.RspaceStr15..CopyCtor
-inline  algo::RspaceStr15::RspaceStr15(const algo::RspaceStr15 &rhs) {
+inline  algo::RspaceStr15::RspaceStr15(const algo::RspaceStr15 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr15));
 }
 
 // --- algo.RspaceStr16.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr16& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr16& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -14376,19 +14376,19 @@ inline u32 algo::RspaceStr16_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr16.ch.Init
-inline void algo::ch_Init(algo::RspaceStr16 &parent) {
+inline void algo::ch_Init(algo::RspaceStr16 &parent) throw() {
     memset(parent.ch, ' ', 16);
 }
 
 // --- algo.RspaceStr16.ch.Max
 // always return constant 16
-inline int algo::ch_Max(algo::RspaceStr16& parent) {
+inline int algo::ch_Max(algo::RspaceStr16& parent) throw() {
     (void)parent;
     return 16;
 }
 
 // --- algo.RspaceStr16.ch.N
-inline int algo::ch_N(const algo::RspaceStr16& parent) {
+inline int algo::ch_N(const algo::RspaceStr16& parent) throw() {
     u64 ret;
     ret = 16;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -14399,27 +14399,27 @@ inline int algo::ch_N(const algo::RspaceStr16& parent) {
 
 // --- algo.RspaceStr16.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr16::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr16::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr16.ch.CtorStrptr
-inline  algo::RspaceStr16::RspaceStr16(const algo::strptr &rhs) {
+inline  algo::RspaceStr16::RspaceStr16(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr16.ch.Cast
-inline  algo::RspaceStr16::operator algo::strptr() const {
+inline  algo::RspaceStr16::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr16..Lt
-inline bool algo::RspaceStr16_Lt(algo::RspaceStr16 lhs, algo::RspaceStr16 rhs) {
+inline bool algo::RspaceStr16_Lt(algo::RspaceStr16 lhs, algo::RspaceStr16 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RspaceStr16..Cmp
-inline i32 algo::RspaceStr16_Cmp(algo::RspaceStr16 lhs, algo::RspaceStr16 rhs) {
+inline i32 algo::RspaceStr16_Cmp(algo::RspaceStr16 lhs, algo::RspaceStr16 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -14432,7 +14432,7 @@ inline void algo::RspaceStr16_Init(algo::RspaceStr16& parent) {
 }
 
 // --- algo.RspaceStr16..Eq
-inline bool algo::RspaceStr16_Eq(algo::RspaceStr16 lhs, algo::RspaceStr16 rhs) {
+inline bool algo::RspaceStr16_Eq(algo::RspaceStr16 lhs, algo::RspaceStr16 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -14442,7 +14442,7 @@ inline bool algo::RspaceStr16_Eq(algo::RspaceStr16 lhs, algo::RspaceStr16 rhs) {
 
 // --- algo.RspaceStr16..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RspaceStr16_Update(algo::RspaceStr16 &lhs, algo::RspaceStr16 rhs) {
+inline bool algo::RspaceStr16_Update(algo::RspaceStr16 &lhs, algo::RspaceStr16 rhs) throw() {
     bool ret = !RspaceStr16_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -14451,31 +14451,31 @@ inline bool algo::RspaceStr16_Update(algo::RspaceStr16 &lhs, algo::RspaceStr16 r
 }
 
 // --- algo.RspaceStr16..EqOpAryptr
-inline bool algo::RspaceStr16::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr16::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr16..AssignOp
-inline algo::RspaceStr16& algo::RspaceStr16::operator =(const algo::RspaceStr16 &rhs) {
+inline algo::RspaceStr16& algo::RspaceStr16::operator =(const algo::RspaceStr16 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr16));
     return *this;
 }
 
 // --- algo.RspaceStr16..Ctor
-inline  algo::RspaceStr16::RspaceStr16() {
+inline  algo::RspaceStr16::RspaceStr16() throw() {
     algo::RspaceStr16_Init(*this);
 }
 
 // --- algo.RspaceStr16..CopyCtor
-inline  algo::RspaceStr16::RspaceStr16(const algo::RspaceStr16 &rhs) {
+inline  algo::RspaceStr16::RspaceStr16(const algo::RspaceStr16 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr16));
 }
 
 // --- algo.RspaceStr18.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr18& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr18& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -14487,19 +14487,19 @@ inline u32 algo::RspaceStr18_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr18.ch.Init
-inline void algo::ch_Init(algo::RspaceStr18 &parent) {
+inline void algo::ch_Init(algo::RspaceStr18 &parent) throw() {
     memset(parent.ch, ' ', 18);
 }
 
 // --- algo.RspaceStr18.ch.Max
 // always return constant 18
-inline int algo::ch_Max(algo::RspaceStr18& parent) {
+inline int algo::ch_Max(algo::RspaceStr18& parent) throw() {
     (void)parent;
     return 18;
 }
 
 // --- algo.RspaceStr18.ch.N
-inline int algo::ch_N(const algo::RspaceStr18& parent) {
+inline int algo::ch_N(const algo::RspaceStr18& parent) throw() {
     u64 ret;
     ret = 18;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -14510,32 +14510,32 @@ inline int algo::ch_N(const algo::RspaceStr18& parent) {
 
 // --- algo.RspaceStr18.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr18::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr18::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr18.ch.CtorStrptr
-inline  algo::RspaceStr18::RspaceStr18(const algo::strptr &rhs) {
+inline  algo::RspaceStr18::RspaceStr18(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr18.ch.Cast
-inline  algo::RspaceStr18::operator algo::strptr() const {
+inline  algo::RspaceStr18::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr18..EqOp
-inline bool algo::RspaceStr18::operator ==(const algo::RspaceStr18 &rhs) const {
+inline bool algo::RspaceStr18::operator ==(const algo::RspaceStr18 &rhs) const throw() {
     return algo::RspaceStr18_Eq(const_cast<algo::RspaceStr18&>(*this),const_cast<algo::RspaceStr18&>(rhs));
 }
 
 // --- algo.RspaceStr18..NeOp
-inline bool algo::RspaceStr18::operator !=(const algo::RspaceStr18 &rhs) const {
+inline bool algo::RspaceStr18::operator !=(const algo::RspaceStr18 &rhs) const throw() {
     return !algo::RspaceStr18_Eq(const_cast<algo::RspaceStr18&>(*this),const_cast<algo::RspaceStr18&>(rhs));
 }
 
 // --- algo.RspaceStr18..Cmp
-inline i32 algo::RspaceStr18_Cmp(algo::RspaceStr18 lhs, algo::RspaceStr18 rhs) {
+inline i32 algo::RspaceStr18_Cmp(algo::RspaceStr18 lhs, algo::RspaceStr18 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -14548,7 +14548,7 @@ inline void algo::RspaceStr18_Init(algo::RspaceStr18& parent) {
 }
 
 // --- algo.RspaceStr18..Eq
-inline bool algo::RspaceStr18_Eq(algo::RspaceStr18 lhs, algo::RspaceStr18 rhs) {
+inline bool algo::RspaceStr18_Eq(algo::RspaceStr18 lhs, algo::RspaceStr18 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -14558,31 +14558,31 @@ inline bool algo::RspaceStr18_Eq(algo::RspaceStr18 lhs, algo::RspaceStr18 rhs) {
 }
 
 // --- algo.RspaceStr18..EqOpAryptr
-inline bool algo::RspaceStr18::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr18::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr18..AssignOp
-inline algo::RspaceStr18& algo::RspaceStr18::operator =(const algo::RspaceStr18 &rhs) {
+inline algo::RspaceStr18& algo::RspaceStr18::operator =(const algo::RspaceStr18 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr18));
     return *this;
 }
 
 // --- algo.RspaceStr18..Ctor
-inline  algo::RspaceStr18::RspaceStr18() {
+inline  algo::RspaceStr18::RspaceStr18() throw() {
     algo::RspaceStr18_Init(*this);
 }
 
 // --- algo.RspaceStr18..CopyCtor
-inline  algo::RspaceStr18::RspaceStr18(const algo::RspaceStr18 &rhs) {
+inline  algo::RspaceStr18::RspaceStr18(const algo::RspaceStr18 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr18));
 }
 
 // --- algo.RspaceStr2.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr2& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr2& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -14594,19 +14594,19 @@ inline u32 algo::RspaceStr2_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr2.ch.Init
-inline void algo::ch_Init(algo::RspaceStr2 &parent) {
+inline void algo::ch_Init(algo::RspaceStr2 &parent) throw() {
     memset(parent.ch, ' ', 2);
 }
 
 // --- algo.RspaceStr2.ch.Max
 // always return constant 2
-inline int algo::ch_Max(algo::RspaceStr2& parent) {
+inline int algo::ch_Max(algo::RspaceStr2& parent) throw() {
     (void)parent;
     return 2;
 }
 
 // --- algo.RspaceStr2.ch.N
-inline int algo::ch_N(const algo::RspaceStr2& parent) {
+inline int algo::ch_N(const algo::RspaceStr2& parent) throw() {
     u64 ret;
     ret = 2;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -14617,32 +14617,32 @@ inline int algo::ch_N(const algo::RspaceStr2& parent) {
 
 // --- algo.RspaceStr2.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr2::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr2::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr2.ch.CtorStrptr
-inline  algo::RspaceStr2::RspaceStr2(const algo::strptr &rhs) {
+inline  algo::RspaceStr2::RspaceStr2(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr2.ch.Cast
-inline  algo::RspaceStr2::operator algo::strptr() const {
+inline  algo::RspaceStr2::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr2..EqOp
-inline bool algo::RspaceStr2::operator ==(const algo::RspaceStr2 &rhs) const {
+inline bool algo::RspaceStr2::operator ==(const algo::RspaceStr2 &rhs) const throw() {
     return algo::RspaceStr2_Eq(const_cast<algo::RspaceStr2&>(*this),const_cast<algo::RspaceStr2&>(rhs));
 }
 
 // --- algo.RspaceStr2..NeOp
-inline bool algo::RspaceStr2::operator !=(const algo::RspaceStr2 &rhs) const {
+inline bool algo::RspaceStr2::operator !=(const algo::RspaceStr2 &rhs) const throw() {
     return !algo::RspaceStr2_Eq(const_cast<algo::RspaceStr2&>(*this),const_cast<algo::RspaceStr2&>(rhs));
 }
 
 // --- algo.RspaceStr2..Cmp
-inline i32 algo::RspaceStr2_Cmp(algo::RspaceStr2 lhs, algo::RspaceStr2 rhs) {
+inline i32 algo::RspaceStr2_Cmp(algo::RspaceStr2 lhs, algo::RspaceStr2 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -14655,7 +14655,7 @@ inline void algo::RspaceStr2_Init(algo::RspaceStr2& parent) {
 }
 
 // --- algo.RspaceStr2..Eq
-inline bool algo::RspaceStr2_Eq(algo::RspaceStr2 lhs, algo::RspaceStr2 rhs) {
+inline bool algo::RspaceStr2_Eq(algo::RspaceStr2 lhs, algo::RspaceStr2 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u16*)(lhs.ch+0) == *(u16*)(rhs.ch+0);
@@ -14663,31 +14663,31 @@ inline bool algo::RspaceStr2_Eq(algo::RspaceStr2 lhs, algo::RspaceStr2 rhs) {
 }
 
 // --- algo.RspaceStr2..EqOpAryptr
-inline bool algo::RspaceStr2::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr2::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr2..AssignOp
-inline algo::RspaceStr2& algo::RspaceStr2::operator =(const algo::RspaceStr2 &rhs) {
+inline algo::RspaceStr2& algo::RspaceStr2::operator =(const algo::RspaceStr2 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr2));
     return *this;
 }
 
 // --- algo.RspaceStr2..Ctor
-inline  algo::RspaceStr2::RspaceStr2() {
+inline  algo::RspaceStr2::RspaceStr2() throw() {
     algo::RspaceStr2_Init(*this);
 }
 
 // --- algo.RspaceStr2..CopyCtor
-inline  algo::RspaceStr2::RspaceStr2(const algo::RspaceStr2 &rhs) {
+inline  algo::RspaceStr2::RspaceStr2(const algo::RspaceStr2 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr2));
 }
 
 // --- algo.RspaceStr20.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr20& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr20& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -14699,19 +14699,19 @@ inline u32 algo::RspaceStr20_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr20.ch.Init
-inline void algo::ch_Init(algo::RspaceStr20 &parent) {
+inline void algo::ch_Init(algo::RspaceStr20 &parent) throw() {
     memset(parent.ch, ' ', 20);
 }
 
 // --- algo.RspaceStr20.ch.Max
 // always return constant 20
-inline int algo::ch_Max(algo::RspaceStr20& parent) {
+inline int algo::ch_Max(algo::RspaceStr20& parent) throw() {
     (void)parent;
     return 20;
 }
 
 // --- algo.RspaceStr20.ch.N
-inline int algo::ch_N(const algo::RspaceStr20& parent) {
+inline int algo::ch_N(const algo::RspaceStr20& parent) throw() {
     u64 ret;
     ret = 20;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -14722,32 +14722,32 @@ inline int algo::ch_N(const algo::RspaceStr20& parent) {
 
 // --- algo.RspaceStr20.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr20::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr20::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr20.ch.CtorStrptr
-inline  algo::RspaceStr20::RspaceStr20(const algo::strptr &rhs) {
+inline  algo::RspaceStr20::RspaceStr20(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr20.ch.Cast
-inline  algo::RspaceStr20::operator algo::strptr() const {
+inline  algo::RspaceStr20::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr20..EqOp
-inline bool algo::RspaceStr20::operator ==(const algo::RspaceStr20 &rhs) const {
+inline bool algo::RspaceStr20::operator ==(const algo::RspaceStr20 &rhs) const throw() {
     return algo::RspaceStr20_Eq(const_cast<algo::RspaceStr20&>(*this),const_cast<algo::RspaceStr20&>(rhs));
 }
 
 // --- algo.RspaceStr20..NeOp
-inline bool algo::RspaceStr20::operator !=(const algo::RspaceStr20 &rhs) const {
+inline bool algo::RspaceStr20::operator !=(const algo::RspaceStr20 &rhs) const throw() {
     return !algo::RspaceStr20_Eq(const_cast<algo::RspaceStr20&>(*this),const_cast<algo::RspaceStr20&>(rhs));
 }
 
 // --- algo.RspaceStr20..Cmp
-inline i32 algo::RspaceStr20_Cmp(algo::RspaceStr20 lhs, algo::RspaceStr20 rhs) {
+inline i32 algo::RspaceStr20_Cmp(algo::RspaceStr20 lhs, algo::RspaceStr20 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -14760,7 +14760,7 @@ inline void algo::RspaceStr20_Init(algo::RspaceStr20& parent) {
 }
 
 // --- algo.RspaceStr20..Eq
-inline bool algo::RspaceStr20_Eq(algo::RspaceStr20 lhs, algo::RspaceStr20 rhs) {
+inline bool algo::RspaceStr20_Eq(algo::RspaceStr20 lhs, algo::RspaceStr20 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -14770,31 +14770,31 @@ inline bool algo::RspaceStr20_Eq(algo::RspaceStr20 lhs, algo::RspaceStr20 rhs) {
 }
 
 // --- algo.RspaceStr20..EqOpAryptr
-inline bool algo::RspaceStr20::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr20::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr20..AssignOp
-inline algo::RspaceStr20& algo::RspaceStr20::operator =(const algo::RspaceStr20 &rhs) {
+inline algo::RspaceStr20& algo::RspaceStr20::operator =(const algo::RspaceStr20 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr20));
     return *this;
 }
 
 // --- algo.RspaceStr20..Ctor
-inline  algo::RspaceStr20::RspaceStr20() {
+inline  algo::RspaceStr20::RspaceStr20() throw() {
     algo::RspaceStr20_Init(*this);
 }
 
 // --- algo.RspaceStr20..CopyCtor
-inline  algo::RspaceStr20::RspaceStr20(const algo::RspaceStr20 &rhs) {
+inline  algo::RspaceStr20::RspaceStr20(const algo::RspaceStr20 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr20));
 }
 
 // --- algo.RspaceStr200.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr200& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr200& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -14806,19 +14806,19 @@ inline u32 algo::RspaceStr200_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr200.ch.Init
-inline void algo::ch_Init(algo::RspaceStr200 &parent) {
+inline void algo::ch_Init(algo::RspaceStr200 &parent) throw() {
     memset(parent.ch, ' ', 200);
 }
 
 // --- algo.RspaceStr200.ch.Max
 // always return constant 200
-inline int algo::ch_Max(algo::RspaceStr200& parent) {
+inline int algo::ch_Max(algo::RspaceStr200& parent) throw() {
     (void)parent;
     return 200;
 }
 
 // --- algo.RspaceStr200.ch.N
-inline int algo::ch_N(const algo::RspaceStr200& parent) {
+inline int algo::ch_N(const algo::RspaceStr200& parent) throw() {
     u64 ret;
     ret = 200;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -14829,32 +14829,32 @@ inline int algo::ch_N(const algo::RspaceStr200& parent) {
 
 // --- algo.RspaceStr200.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr200::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr200::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr200.ch.CtorStrptr
-inline  algo::RspaceStr200::RspaceStr200(const algo::strptr &rhs) {
+inline  algo::RspaceStr200::RspaceStr200(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr200.ch.Cast
-inline  algo::RspaceStr200::operator algo::strptr() const {
+inline  algo::RspaceStr200::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr200..EqOp
-inline bool algo::RspaceStr200::operator ==(const algo::RspaceStr200 &rhs) const {
+inline bool algo::RspaceStr200::operator ==(const algo::RspaceStr200 &rhs) const throw() {
     return algo::RspaceStr200_Eq(const_cast<algo::RspaceStr200&>(*this),const_cast<algo::RspaceStr200&>(rhs));
 }
 
 // --- algo.RspaceStr200..NeOp
-inline bool algo::RspaceStr200::operator !=(const algo::RspaceStr200 &rhs) const {
+inline bool algo::RspaceStr200::operator !=(const algo::RspaceStr200 &rhs) const throw() {
     return !algo::RspaceStr200_Eq(const_cast<algo::RspaceStr200&>(*this),const_cast<algo::RspaceStr200&>(rhs));
 }
 
 // --- algo.RspaceStr200..Cmp
-inline i32 algo::RspaceStr200_Cmp(algo::RspaceStr200& lhs, algo::RspaceStr200& rhs) {
+inline i32 algo::RspaceStr200_Cmp(algo::RspaceStr200& lhs, algo::RspaceStr200& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -14867,7 +14867,7 @@ inline void algo::RspaceStr200_Init(algo::RspaceStr200& parent) {
 }
 
 // --- algo.RspaceStr200..Eq
-inline bool algo::RspaceStr200_Eq(algo::RspaceStr200& lhs, algo::RspaceStr200& rhs) {
+inline bool algo::RspaceStr200_Eq(algo::RspaceStr200& lhs, algo::RspaceStr200& rhs) throw() {
     bool retval = true;
     for (int i=0; i<25 && retval; i++) {
         retval = ((u64*)lhs.ch)[i] == ((u64*)rhs.ch)[i];
@@ -14876,31 +14876,31 @@ inline bool algo::RspaceStr200_Eq(algo::RspaceStr200& lhs, algo::RspaceStr200& r
 }
 
 // --- algo.RspaceStr200..EqOpAryptr
-inline bool algo::RspaceStr200::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr200::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr200..AssignOp
-inline algo::RspaceStr200& algo::RspaceStr200::operator =(const algo::RspaceStr200 &rhs) {
+inline algo::RspaceStr200& algo::RspaceStr200::operator =(const algo::RspaceStr200 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr200));
     return *this;
 }
 
 // --- algo.RspaceStr200..Ctor
-inline  algo::RspaceStr200::RspaceStr200() {
+inline  algo::RspaceStr200::RspaceStr200() throw() {
     algo::RspaceStr200_Init(*this);
 }
 
 // --- algo.RspaceStr200..CopyCtor
-inline  algo::RspaceStr200::RspaceStr200(const algo::RspaceStr200 &rhs) {
+inline  algo::RspaceStr200::RspaceStr200(const algo::RspaceStr200 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr200));
 }
 
 // --- algo.RspaceStr21.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr21& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr21& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -14912,19 +14912,19 @@ inline u32 algo::RspaceStr21_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr21.ch.Init
-inline void algo::ch_Init(algo::RspaceStr21 &parent) {
+inline void algo::ch_Init(algo::RspaceStr21 &parent) throw() {
     memset(parent.ch, ' ', 21);
 }
 
 // --- algo.RspaceStr21.ch.Max
 // always return constant 21
-inline int algo::ch_Max(algo::RspaceStr21& parent) {
+inline int algo::ch_Max(algo::RspaceStr21& parent) throw() {
     (void)parent;
     return 21;
 }
 
 // --- algo.RspaceStr21.ch.N
-inline int algo::ch_N(const algo::RspaceStr21& parent) {
+inline int algo::ch_N(const algo::RspaceStr21& parent) throw() {
     u64 ret;
     ret = 21;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -14935,32 +14935,32 @@ inline int algo::ch_N(const algo::RspaceStr21& parent) {
 
 // --- algo.RspaceStr21.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr21::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr21::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr21.ch.CtorStrptr
-inline  algo::RspaceStr21::RspaceStr21(const algo::strptr &rhs) {
+inline  algo::RspaceStr21::RspaceStr21(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr21.ch.Cast
-inline  algo::RspaceStr21::operator algo::strptr() const {
+inline  algo::RspaceStr21::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr21..EqOp
-inline bool algo::RspaceStr21::operator ==(const algo::RspaceStr21 &rhs) const {
+inline bool algo::RspaceStr21::operator ==(const algo::RspaceStr21 &rhs) const throw() {
     return algo::RspaceStr21_Eq(const_cast<algo::RspaceStr21&>(*this),const_cast<algo::RspaceStr21&>(rhs));
 }
 
 // --- algo.RspaceStr21..NeOp
-inline bool algo::RspaceStr21::operator !=(const algo::RspaceStr21 &rhs) const {
+inline bool algo::RspaceStr21::operator !=(const algo::RspaceStr21 &rhs) const throw() {
     return !algo::RspaceStr21_Eq(const_cast<algo::RspaceStr21&>(*this),const_cast<algo::RspaceStr21&>(rhs));
 }
 
 // --- algo.RspaceStr21..Cmp
-inline i32 algo::RspaceStr21_Cmp(algo::RspaceStr21& lhs, algo::RspaceStr21& rhs) {
+inline i32 algo::RspaceStr21_Cmp(algo::RspaceStr21& lhs, algo::RspaceStr21& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -14973,7 +14973,7 @@ inline void algo::RspaceStr21_Init(algo::RspaceStr21& parent) {
 }
 
 // --- algo.RspaceStr21..Eq
-inline bool algo::RspaceStr21_Eq(algo::RspaceStr21& lhs, algo::RspaceStr21& rhs) {
+inline bool algo::RspaceStr21_Eq(algo::RspaceStr21& lhs, algo::RspaceStr21& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -14984,31 +14984,31 @@ inline bool algo::RspaceStr21_Eq(algo::RspaceStr21& lhs, algo::RspaceStr21& rhs)
 }
 
 // --- algo.RspaceStr21..EqOpAryptr
-inline bool algo::RspaceStr21::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr21::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr21..AssignOp
-inline algo::RspaceStr21& algo::RspaceStr21::operator =(const algo::RspaceStr21 &rhs) {
+inline algo::RspaceStr21& algo::RspaceStr21::operator =(const algo::RspaceStr21 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr21));
     return *this;
 }
 
 // --- algo.RspaceStr21..Ctor
-inline  algo::RspaceStr21::RspaceStr21() {
+inline  algo::RspaceStr21::RspaceStr21() throw() {
     algo::RspaceStr21_Init(*this);
 }
 
 // --- algo.RspaceStr21..CopyCtor
-inline  algo::RspaceStr21::RspaceStr21(const algo::RspaceStr21 &rhs) {
+inline  algo::RspaceStr21::RspaceStr21(const algo::RspaceStr21 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr21));
 }
 
 // --- algo.RspaceStr24.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr24& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr24& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -15020,19 +15020,19 @@ inline u32 algo::RspaceStr24_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr24.ch.Init
-inline void algo::ch_Init(algo::RspaceStr24 &parent) {
+inline void algo::ch_Init(algo::RspaceStr24 &parent) throw() {
     memset(parent.ch, ' ', 24);
 }
 
 // --- algo.RspaceStr24.ch.Max
 // always return constant 24
-inline int algo::ch_Max(algo::RspaceStr24& parent) {
+inline int algo::ch_Max(algo::RspaceStr24& parent) throw() {
     (void)parent;
     return 24;
 }
 
 // --- algo.RspaceStr24.ch.N
-inline int algo::ch_N(const algo::RspaceStr24& parent) {
+inline int algo::ch_N(const algo::RspaceStr24& parent) throw() {
     u64 ret;
     ret = 24;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -15043,27 +15043,27 @@ inline int algo::ch_N(const algo::RspaceStr24& parent) {
 
 // --- algo.RspaceStr24.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr24::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr24::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr24.ch.CtorStrptr
-inline  algo::RspaceStr24::RspaceStr24(const algo::strptr &rhs) {
+inline  algo::RspaceStr24::RspaceStr24(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr24.ch.Cast
-inline  algo::RspaceStr24::operator algo::strptr() const {
+inline  algo::RspaceStr24::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr24..Lt
-inline bool algo::RspaceStr24_Lt(algo::RspaceStr24 lhs, algo::RspaceStr24 rhs) {
+inline bool algo::RspaceStr24_Lt(algo::RspaceStr24 lhs, algo::RspaceStr24 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RspaceStr24..Cmp
-inline i32 algo::RspaceStr24_Cmp(algo::RspaceStr24 lhs, algo::RspaceStr24 rhs) {
+inline i32 algo::RspaceStr24_Cmp(algo::RspaceStr24 lhs, algo::RspaceStr24 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -15076,7 +15076,7 @@ inline void algo::RspaceStr24_Init(algo::RspaceStr24& parent) {
 }
 
 // --- algo.RspaceStr24..Eq
-inline bool algo::RspaceStr24_Eq(algo::RspaceStr24 lhs, algo::RspaceStr24 rhs) {
+inline bool algo::RspaceStr24_Eq(algo::RspaceStr24 lhs, algo::RspaceStr24 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -15087,7 +15087,7 @@ inline bool algo::RspaceStr24_Eq(algo::RspaceStr24 lhs, algo::RspaceStr24 rhs) {
 
 // --- algo.RspaceStr24..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RspaceStr24_Update(algo::RspaceStr24 &lhs, algo::RspaceStr24 rhs) {
+inline bool algo::RspaceStr24_Update(algo::RspaceStr24 &lhs, algo::RspaceStr24 rhs) throw() {
     bool ret = !RspaceStr24_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -15096,31 +15096,31 @@ inline bool algo::RspaceStr24_Update(algo::RspaceStr24 &lhs, algo::RspaceStr24 r
 }
 
 // --- algo.RspaceStr24..EqOpAryptr
-inline bool algo::RspaceStr24::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr24::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr24..AssignOp
-inline algo::RspaceStr24& algo::RspaceStr24::operator =(const algo::RspaceStr24 &rhs) {
+inline algo::RspaceStr24& algo::RspaceStr24::operator =(const algo::RspaceStr24 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr24));
     return *this;
 }
 
 // --- algo.RspaceStr24..Ctor
-inline  algo::RspaceStr24::RspaceStr24() {
+inline  algo::RspaceStr24::RspaceStr24() throw() {
     algo::RspaceStr24_Init(*this);
 }
 
 // --- algo.RspaceStr24..CopyCtor
-inline  algo::RspaceStr24::RspaceStr24(const algo::RspaceStr24 &rhs) {
+inline  algo::RspaceStr24::RspaceStr24(const algo::RspaceStr24 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr24));
 }
 
 // --- algo.RspaceStr240.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr240& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr240& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -15132,19 +15132,19 @@ inline u32 algo::RspaceStr240_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr240.ch.Init
-inline void algo::ch_Init(algo::RspaceStr240 &parent) {
+inline void algo::ch_Init(algo::RspaceStr240 &parent) throw() {
     memset(parent.ch, ' ', 240);
 }
 
 // --- algo.RspaceStr240.ch.Max
 // always return constant 240
-inline int algo::ch_Max(algo::RspaceStr240& parent) {
+inline int algo::ch_Max(algo::RspaceStr240& parent) throw() {
     (void)parent;
     return 240;
 }
 
 // --- algo.RspaceStr240.ch.N
-inline int algo::ch_N(const algo::RspaceStr240& parent) {
+inline int algo::ch_N(const algo::RspaceStr240& parent) throw() {
     u64 ret;
     ret = 240;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -15155,32 +15155,32 @@ inline int algo::ch_N(const algo::RspaceStr240& parent) {
 
 // --- algo.RspaceStr240.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr240::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr240::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr240.ch.CtorStrptr
-inline  algo::RspaceStr240::RspaceStr240(const algo::strptr &rhs) {
+inline  algo::RspaceStr240::RspaceStr240(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr240.ch.Cast
-inline  algo::RspaceStr240::operator algo::strptr() const {
+inline  algo::RspaceStr240::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr240..EqOp
-inline bool algo::RspaceStr240::operator ==(const algo::RspaceStr240 &rhs) const {
+inline bool algo::RspaceStr240::operator ==(const algo::RspaceStr240 &rhs) const throw() {
     return algo::RspaceStr240_Eq(const_cast<algo::RspaceStr240&>(*this),const_cast<algo::RspaceStr240&>(rhs));
 }
 
 // --- algo.RspaceStr240..NeOp
-inline bool algo::RspaceStr240::operator !=(const algo::RspaceStr240 &rhs) const {
+inline bool algo::RspaceStr240::operator !=(const algo::RspaceStr240 &rhs) const throw() {
     return !algo::RspaceStr240_Eq(const_cast<algo::RspaceStr240&>(*this),const_cast<algo::RspaceStr240&>(rhs));
 }
 
 // --- algo.RspaceStr240..Cmp
-inline i32 algo::RspaceStr240_Cmp(algo::RspaceStr240& lhs, algo::RspaceStr240& rhs) {
+inline i32 algo::RspaceStr240_Cmp(algo::RspaceStr240& lhs, algo::RspaceStr240& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -15193,7 +15193,7 @@ inline void algo::RspaceStr240_Init(algo::RspaceStr240& parent) {
 }
 
 // --- algo.RspaceStr240..Eq
-inline bool algo::RspaceStr240_Eq(algo::RspaceStr240& lhs, algo::RspaceStr240& rhs) {
+inline bool algo::RspaceStr240_Eq(algo::RspaceStr240& lhs, algo::RspaceStr240& rhs) throw() {
     bool retval = true;
     for (int i=0; i<30 && retval; i++) {
         retval = ((u64*)lhs.ch)[i] == ((u64*)rhs.ch)[i];
@@ -15202,31 +15202,31 @@ inline bool algo::RspaceStr240_Eq(algo::RspaceStr240& lhs, algo::RspaceStr240& r
 }
 
 // --- algo.RspaceStr240..EqOpAryptr
-inline bool algo::RspaceStr240::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr240::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr240..AssignOp
-inline algo::RspaceStr240& algo::RspaceStr240::operator =(const algo::RspaceStr240 &rhs) {
+inline algo::RspaceStr240& algo::RspaceStr240::operator =(const algo::RspaceStr240 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr240));
     return *this;
 }
 
 // --- algo.RspaceStr240..Ctor
-inline  algo::RspaceStr240::RspaceStr240() {
+inline  algo::RspaceStr240::RspaceStr240() throw() {
     algo::RspaceStr240_Init(*this);
 }
 
 // --- algo.RspaceStr240..CopyCtor
-inline  algo::RspaceStr240::RspaceStr240(const algo::RspaceStr240 &rhs) {
+inline  algo::RspaceStr240::RspaceStr240(const algo::RspaceStr240 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr240));
 }
 
 // --- algo.RspaceStr25.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr25& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr25& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -15238,19 +15238,19 @@ inline u32 algo::RspaceStr25_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr25.ch.Init
-inline void algo::ch_Init(algo::RspaceStr25 &parent) {
+inline void algo::ch_Init(algo::RspaceStr25 &parent) throw() {
     memset(parent.ch, ' ', 25);
 }
 
 // --- algo.RspaceStr25.ch.Max
 // always return constant 25
-inline int algo::ch_Max(algo::RspaceStr25& parent) {
+inline int algo::ch_Max(algo::RspaceStr25& parent) throw() {
     (void)parent;
     return 25;
 }
 
 // --- algo.RspaceStr25.ch.N
-inline int algo::ch_N(const algo::RspaceStr25& parent) {
+inline int algo::ch_N(const algo::RspaceStr25& parent) throw() {
     u64 ret;
     ret = 25;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -15261,27 +15261,27 @@ inline int algo::ch_N(const algo::RspaceStr25& parent) {
 
 // --- algo.RspaceStr25.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr25::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr25::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr25.ch.CtorStrptr
-inline  algo::RspaceStr25::RspaceStr25(const algo::strptr &rhs) {
+inline  algo::RspaceStr25::RspaceStr25(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr25.ch.Cast
-inline  algo::RspaceStr25::operator algo::strptr() const {
+inline  algo::RspaceStr25::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr25..Lt
-inline bool algo::RspaceStr25_Lt(algo::RspaceStr25 lhs, algo::RspaceStr25 rhs) {
+inline bool algo::RspaceStr25_Lt(algo::RspaceStr25 lhs, algo::RspaceStr25 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RspaceStr25..Cmp
-inline i32 algo::RspaceStr25_Cmp(algo::RspaceStr25 lhs, algo::RspaceStr25 rhs) {
+inline i32 algo::RspaceStr25_Cmp(algo::RspaceStr25 lhs, algo::RspaceStr25 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -15294,7 +15294,7 @@ inline void algo::RspaceStr25_Init(algo::RspaceStr25& parent) {
 }
 
 // --- algo.RspaceStr25..Eq
-inline bool algo::RspaceStr25_Eq(algo::RspaceStr25 lhs, algo::RspaceStr25 rhs) {
+inline bool algo::RspaceStr25_Eq(algo::RspaceStr25 lhs, algo::RspaceStr25 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -15306,7 +15306,7 @@ inline bool algo::RspaceStr25_Eq(algo::RspaceStr25 lhs, algo::RspaceStr25 rhs) {
 
 // --- algo.RspaceStr25..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RspaceStr25_Update(algo::RspaceStr25 &lhs, algo::RspaceStr25 rhs) {
+inline bool algo::RspaceStr25_Update(algo::RspaceStr25 &lhs, algo::RspaceStr25 rhs) throw() {
     bool ret = !RspaceStr25_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -15315,31 +15315,31 @@ inline bool algo::RspaceStr25_Update(algo::RspaceStr25 &lhs, algo::RspaceStr25 r
 }
 
 // --- algo.RspaceStr25..EqOpAryptr
-inline bool algo::RspaceStr25::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr25::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr25..AssignOp
-inline algo::RspaceStr25& algo::RspaceStr25::operator =(const algo::RspaceStr25 &rhs) {
+inline algo::RspaceStr25& algo::RspaceStr25::operator =(const algo::RspaceStr25 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr25));
     return *this;
 }
 
 // --- algo.RspaceStr25..Ctor
-inline  algo::RspaceStr25::RspaceStr25() {
+inline  algo::RspaceStr25::RspaceStr25() throw() {
     algo::RspaceStr25_Init(*this);
 }
 
 // --- algo.RspaceStr25..CopyCtor
-inline  algo::RspaceStr25::RspaceStr25(const algo::RspaceStr25 &rhs) {
+inline  algo::RspaceStr25::RspaceStr25(const algo::RspaceStr25 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr25));
 }
 
 // --- algo.RspaceStr26.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr26& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr26& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -15351,19 +15351,19 @@ inline u32 algo::RspaceStr26_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr26.ch.Init
-inline void algo::ch_Init(algo::RspaceStr26 &parent) {
+inline void algo::ch_Init(algo::RspaceStr26 &parent) throw() {
     memset(parent.ch, ' ', 26);
 }
 
 // --- algo.RspaceStr26.ch.Max
 // always return constant 26
-inline int algo::ch_Max(algo::RspaceStr26& parent) {
+inline int algo::ch_Max(algo::RspaceStr26& parent) throw() {
     (void)parent;
     return 26;
 }
 
 // --- algo.RspaceStr26.ch.N
-inline int algo::ch_N(const algo::RspaceStr26& parent) {
+inline int algo::ch_N(const algo::RspaceStr26& parent) throw() {
     u64 ret;
     ret = 26;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -15374,32 +15374,32 @@ inline int algo::ch_N(const algo::RspaceStr26& parent) {
 
 // --- algo.RspaceStr26.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr26::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr26::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr26.ch.CtorStrptr
-inline  algo::RspaceStr26::RspaceStr26(const algo::strptr &rhs) {
+inline  algo::RspaceStr26::RspaceStr26(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr26.ch.Cast
-inline  algo::RspaceStr26::operator algo::strptr() const {
+inline  algo::RspaceStr26::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr26..EqOp
-inline bool algo::RspaceStr26::operator ==(const algo::RspaceStr26 &rhs) const {
+inline bool algo::RspaceStr26::operator ==(const algo::RspaceStr26 &rhs) const throw() {
     return algo::RspaceStr26_Eq(const_cast<algo::RspaceStr26&>(*this),const_cast<algo::RspaceStr26&>(rhs));
 }
 
 // --- algo.RspaceStr26..NeOp
-inline bool algo::RspaceStr26::operator !=(const algo::RspaceStr26 &rhs) const {
+inline bool algo::RspaceStr26::operator !=(const algo::RspaceStr26 &rhs) const throw() {
     return !algo::RspaceStr26_Eq(const_cast<algo::RspaceStr26&>(*this),const_cast<algo::RspaceStr26&>(rhs));
 }
 
 // --- algo.RspaceStr26..Cmp
-inline i32 algo::RspaceStr26_Cmp(algo::RspaceStr26& lhs, algo::RspaceStr26& rhs) {
+inline i32 algo::RspaceStr26_Cmp(algo::RspaceStr26& lhs, algo::RspaceStr26& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -15412,7 +15412,7 @@ inline void algo::RspaceStr26_Init(algo::RspaceStr26& parent) {
 }
 
 // --- algo.RspaceStr26..Eq
-inline bool algo::RspaceStr26_Eq(algo::RspaceStr26& lhs, algo::RspaceStr26& rhs) {
+inline bool algo::RspaceStr26_Eq(algo::RspaceStr26& lhs, algo::RspaceStr26& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -15423,31 +15423,31 @@ inline bool algo::RspaceStr26_Eq(algo::RspaceStr26& lhs, algo::RspaceStr26& rhs)
 }
 
 // --- algo.RspaceStr26..EqOpAryptr
-inline bool algo::RspaceStr26::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr26::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr26..AssignOp
-inline algo::RspaceStr26& algo::RspaceStr26::operator =(const algo::RspaceStr26 &rhs) {
+inline algo::RspaceStr26& algo::RspaceStr26::operator =(const algo::RspaceStr26 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr26));
     return *this;
 }
 
 // --- algo.RspaceStr26..Ctor
-inline  algo::RspaceStr26::RspaceStr26() {
+inline  algo::RspaceStr26::RspaceStr26() throw() {
     algo::RspaceStr26_Init(*this);
 }
 
 // --- algo.RspaceStr26..CopyCtor
-inline  algo::RspaceStr26::RspaceStr26(const algo::RspaceStr26 &rhs) {
+inline  algo::RspaceStr26::RspaceStr26(const algo::RspaceStr26 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr26));
 }
 
 // --- algo.RspaceStr3.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr3& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr3& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -15459,19 +15459,19 @@ inline u32 algo::RspaceStr3_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr3.ch.Init
-inline void algo::ch_Init(algo::RspaceStr3 &parent) {
+inline void algo::ch_Init(algo::RspaceStr3 &parent) throw() {
     memset(parent.ch, ' ', 3);
 }
 
 // --- algo.RspaceStr3.ch.Max
 // always return constant 3
-inline int algo::ch_Max(algo::RspaceStr3& parent) {
+inline int algo::ch_Max(algo::RspaceStr3& parent) throw() {
     (void)parent;
     return 3;
 }
 
 // --- algo.RspaceStr3.ch.N
-inline int algo::ch_N(const algo::RspaceStr3& parent) {
+inline int algo::ch_N(const algo::RspaceStr3& parent) throw() {
     u64 ret;
     ret = 3;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -15482,32 +15482,32 @@ inline int algo::ch_N(const algo::RspaceStr3& parent) {
 
 // --- algo.RspaceStr3.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr3::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr3::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr3.ch.CtorStrptr
-inline  algo::RspaceStr3::RspaceStr3(const algo::strptr &rhs) {
+inline  algo::RspaceStr3::RspaceStr3(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr3.ch.Cast
-inline  algo::RspaceStr3::operator algo::strptr() const {
+inline  algo::RspaceStr3::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr3..EqOp
-inline bool algo::RspaceStr3::operator ==(const algo::RspaceStr3 &rhs) const {
+inline bool algo::RspaceStr3::operator ==(const algo::RspaceStr3 &rhs) const throw() {
     return algo::RspaceStr3_Eq(const_cast<algo::RspaceStr3&>(*this),const_cast<algo::RspaceStr3&>(rhs));
 }
 
 // --- algo.RspaceStr3..NeOp
-inline bool algo::RspaceStr3::operator !=(const algo::RspaceStr3 &rhs) const {
+inline bool algo::RspaceStr3::operator !=(const algo::RspaceStr3 &rhs) const throw() {
     return !algo::RspaceStr3_Eq(const_cast<algo::RspaceStr3&>(*this),const_cast<algo::RspaceStr3&>(rhs));
 }
 
 // --- algo.RspaceStr3..Cmp
-inline i32 algo::RspaceStr3_Cmp(algo::RspaceStr3 lhs, algo::RspaceStr3 rhs) {
+inline i32 algo::RspaceStr3_Cmp(algo::RspaceStr3 lhs, algo::RspaceStr3 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -15520,7 +15520,7 @@ inline void algo::RspaceStr3_Init(algo::RspaceStr3& parent) {
 }
 
 // --- algo.RspaceStr3..Eq
-inline bool algo::RspaceStr3_Eq(algo::RspaceStr3 lhs, algo::RspaceStr3 rhs) {
+inline bool algo::RspaceStr3_Eq(algo::RspaceStr3 lhs, algo::RspaceStr3 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u16*)(lhs.ch+0) == *(u16*)(rhs.ch+0)
@@ -15529,31 +15529,31 @@ inline bool algo::RspaceStr3_Eq(algo::RspaceStr3 lhs, algo::RspaceStr3 rhs) {
 }
 
 // --- algo.RspaceStr3..EqOpAryptr
-inline bool algo::RspaceStr3::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr3::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr3..AssignOp
-inline algo::RspaceStr3& algo::RspaceStr3::operator =(const algo::RspaceStr3 &rhs) {
+inline algo::RspaceStr3& algo::RspaceStr3::operator =(const algo::RspaceStr3 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr3));
     return *this;
 }
 
 // --- algo.RspaceStr3..Ctor
-inline  algo::RspaceStr3::RspaceStr3() {
+inline  algo::RspaceStr3::RspaceStr3() throw() {
     algo::RspaceStr3_Init(*this);
 }
 
 // --- algo.RspaceStr3..CopyCtor
-inline  algo::RspaceStr3::RspaceStr3(const algo::RspaceStr3 &rhs) {
+inline  algo::RspaceStr3::RspaceStr3(const algo::RspaceStr3 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr3));
 }
 
 // --- algo.RspaceStr31.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr31& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr31& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -15565,19 +15565,19 @@ inline u32 algo::RspaceStr31_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr31.ch.Init
-inline void algo::ch_Init(algo::RspaceStr31 &parent) {
+inline void algo::ch_Init(algo::RspaceStr31 &parent) throw() {
     memset(parent.ch, ' ', 31);
 }
 
 // --- algo.RspaceStr31.ch.Max
 // always return constant 31
-inline int algo::ch_Max(algo::RspaceStr31& parent) {
+inline int algo::ch_Max(algo::RspaceStr31& parent) throw() {
     (void)parent;
     return 31;
 }
 
 // --- algo.RspaceStr31.ch.N
-inline int algo::ch_N(const algo::RspaceStr31& parent) {
+inline int algo::ch_N(const algo::RspaceStr31& parent) throw() {
     u64 ret;
     ret = 31;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -15588,32 +15588,32 @@ inline int algo::ch_N(const algo::RspaceStr31& parent) {
 
 // --- algo.RspaceStr31.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr31::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr31::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr31.ch.CtorStrptr
-inline  algo::RspaceStr31::RspaceStr31(const algo::strptr &rhs) {
+inline  algo::RspaceStr31::RspaceStr31(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr31.ch.Cast
-inline  algo::RspaceStr31::operator algo::strptr() const {
+inline  algo::RspaceStr31::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr31..EqOp
-inline bool algo::RspaceStr31::operator ==(const algo::RspaceStr31 &rhs) const {
+inline bool algo::RspaceStr31::operator ==(const algo::RspaceStr31 &rhs) const throw() {
     return algo::RspaceStr31_Eq(const_cast<algo::RspaceStr31&>(*this),const_cast<algo::RspaceStr31&>(rhs));
 }
 
 // --- algo.RspaceStr31..NeOp
-inline bool algo::RspaceStr31::operator !=(const algo::RspaceStr31 &rhs) const {
+inline bool algo::RspaceStr31::operator !=(const algo::RspaceStr31 &rhs) const throw() {
     return !algo::RspaceStr31_Eq(const_cast<algo::RspaceStr31&>(*this),const_cast<algo::RspaceStr31&>(rhs));
 }
 
 // --- algo.RspaceStr31..Cmp
-inline i32 algo::RspaceStr31_Cmp(algo::RspaceStr31& lhs, algo::RspaceStr31& rhs) {
+inline i32 algo::RspaceStr31_Cmp(algo::RspaceStr31& lhs, algo::RspaceStr31& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -15626,7 +15626,7 @@ inline void algo::RspaceStr31_Init(algo::RspaceStr31& parent) {
 }
 
 // --- algo.RspaceStr31..Eq
-inline bool algo::RspaceStr31_Eq(algo::RspaceStr31& lhs, algo::RspaceStr31& rhs) {
+inline bool algo::RspaceStr31_Eq(algo::RspaceStr31& lhs, algo::RspaceStr31& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -15639,31 +15639,31 @@ inline bool algo::RspaceStr31_Eq(algo::RspaceStr31& lhs, algo::RspaceStr31& rhs)
 }
 
 // --- algo.RspaceStr31..EqOpAryptr
-inline bool algo::RspaceStr31::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr31::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr31..AssignOp
-inline algo::RspaceStr31& algo::RspaceStr31::operator =(const algo::RspaceStr31 &rhs) {
+inline algo::RspaceStr31& algo::RspaceStr31::operator =(const algo::RspaceStr31 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr31));
     return *this;
 }
 
 // --- algo.RspaceStr31..Ctor
-inline  algo::RspaceStr31::RspaceStr31() {
+inline  algo::RspaceStr31::RspaceStr31() throw() {
     algo::RspaceStr31_Init(*this);
 }
 
 // --- algo.RspaceStr31..CopyCtor
-inline  algo::RspaceStr31::RspaceStr31(const algo::RspaceStr31 &rhs) {
+inline  algo::RspaceStr31::RspaceStr31(const algo::RspaceStr31 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr31));
 }
 
 // --- algo.RspaceStr32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -15675,19 +15675,19 @@ inline u32 algo::RspaceStr32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr32.ch.Init
-inline void algo::ch_Init(algo::RspaceStr32 &parent) {
+inline void algo::ch_Init(algo::RspaceStr32 &parent) throw() {
     memset(parent.ch, ' ', 32);
 }
 
 // --- algo.RspaceStr32.ch.Max
 // always return constant 32
-inline int algo::ch_Max(algo::RspaceStr32& parent) {
+inline int algo::ch_Max(algo::RspaceStr32& parent) throw() {
     (void)parent;
     return 32;
 }
 
 // --- algo.RspaceStr32.ch.N
-inline int algo::ch_N(const algo::RspaceStr32& parent) {
+inline int algo::ch_N(const algo::RspaceStr32& parent) throw() {
     u64 ret;
     ret = 32;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -15698,32 +15698,32 @@ inline int algo::ch_N(const algo::RspaceStr32& parent) {
 
 // --- algo.RspaceStr32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr32::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr32.ch.CtorStrptr
-inline  algo::RspaceStr32::RspaceStr32(const algo::strptr &rhs) {
+inline  algo::RspaceStr32::RspaceStr32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr32.ch.Cast
-inline  algo::RspaceStr32::operator algo::strptr() const {
+inline  algo::RspaceStr32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr32..EqOp
-inline bool algo::RspaceStr32::operator ==(const algo::RspaceStr32 &rhs) const {
+inline bool algo::RspaceStr32::operator ==(const algo::RspaceStr32 &rhs) const throw() {
     return algo::RspaceStr32_Eq(const_cast<algo::RspaceStr32&>(*this),const_cast<algo::RspaceStr32&>(rhs));
 }
 
 // --- algo.RspaceStr32..NeOp
-inline bool algo::RspaceStr32::operator !=(const algo::RspaceStr32 &rhs) const {
+inline bool algo::RspaceStr32::operator !=(const algo::RspaceStr32 &rhs) const throw() {
     return !algo::RspaceStr32_Eq(const_cast<algo::RspaceStr32&>(*this),const_cast<algo::RspaceStr32&>(rhs));
 }
 
 // --- algo.RspaceStr32..Cmp
-inline i32 algo::RspaceStr32_Cmp(algo::RspaceStr32 lhs, algo::RspaceStr32 rhs) {
+inline i32 algo::RspaceStr32_Cmp(algo::RspaceStr32 lhs, algo::RspaceStr32 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -15736,7 +15736,7 @@ inline void algo::RspaceStr32_Init(algo::RspaceStr32& parent) {
 }
 
 // --- algo.RspaceStr32..Eq
-inline bool algo::RspaceStr32_Eq(algo::RspaceStr32 lhs, algo::RspaceStr32 rhs) {
+inline bool algo::RspaceStr32_Eq(algo::RspaceStr32 lhs, algo::RspaceStr32 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -15747,31 +15747,31 @@ inline bool algo::RspaceStr32_Eq(algo::RspaceStr32 lhs, algo::RspaceStr32 rhs) {
 }
 
 // --- algo.RspaceStr32..EqOpAryptr
-inline bool algo::RspaceStr32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr32..AssignOp
-inline algo::RspaceStr32& algo::RspaceStr32::operator =(const algo::RspaceStr32 &rhs) {
+inline algo::RspaceStr32& algo::RspaceStr32::operator =(const algo::RspaceStr32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr32));
     return *this;
 }
 
 // --- algo.RspaceStr32..Ctor
-inline  algo::RspaceStr32::RspaceStr32() {
+inline  algo::RspaceStr32::RspaceStr32() throw() {
     algo::RspaceStr32_Init(*this);
 }
 
 // --- algo.RspaceStr32..CopyCtor
-inline  algo::RspaceStr32::RspaceStr32(const algo::RspaceStr32 &rhs) {
+inline  algo::RspaceStr32::RspaceStr32(const algo::RspaceStr32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr32));
 }
 
 // --- algo.RspaceStr4.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr4& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr4& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -15783,19 +15783,19 @@ inline u32 algo::RspaceStr4_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr4.ch.Init
-inline void algo::ch_Init(algo::RspaceStr4 &parent) {
+inline void algo::ch_Init(algo::RspaceStr4 &parent) throw() {
     memset(parent.ch, ' ', 4);
 }
 
 // --- algo.RspaceStr4.ch.Max
 // always return constant 4
-inline int algo::ch_Max(algo::RspaceStr4& parent) {
+inline int algo::ch_Max(algo::RspaceStr4& parent) throw() {
     (void)parent;
     return 4;
 }
 
 // --- algo.RspaceStr4.ch.N
-inline int algo::ch_N(const algo::RspaceStr4& parent) {
+inline int algo::ch_N(const algo::RspaceStr4& parent) throw() {
     u64 ret;
     ret = 4;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -15806,32 +15806,32 @@ inline int algo::ch_N(const algo::RspaceStr4& parent) {
 
 // --- algo.RspaceStr4.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr4::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr4::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr4.ch.CtorStrptr
-inline  algo::RspaceStr4::RspaceStr4(const algo::strptr &rhs) {
+inline  algo::RspaceStr4::RspaceStr4(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr4.ch.Cast
-inline  algo::RspaceStr4::operator algo::strptr() const {
+inline  algo::RspaceStr4::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr4..EqOp
-inline bool algo::RspaceStr4::operator ==(const algo::RspaceStr4 &rhs) const {
+inline bool algo::RspaceStr4::operator ==(const algo::RspaceStr4 &rhs) const throw() {
     return algo::RspaceStr4_Eq(const_cast<algo::RspaceStr4&>(*this),const_cast<algo::RspaceStr4&>(rhs));
 }
 
 // --- algo.RspaceStr4..NeOp
-inline bool algo::RspaceStr4::operator !=(const algo::RspaceStr4 &rhs) const {
+inline bool algo::RspaceStr4::operator !=(const algo::RspaceStr4 &rhs) const throw() {
     return !algo::RspaceStr4_Eq(const_cast<algo::RspaceStr4&>(*this),const_cast<algo::RspaceStr4&>(rhs));
 }
 
 // --- algo.RspaceStr4..Cmp
-inline i32 algo::RspaceStr4_Cmp(algo::RspaceStr4 lhs, algo::RspaceStr4 rhs) {
+inline i32 algo::RspaceStr4_Cmp(algo::RspaceStr4 lhs, algo::RspaceStr4 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -15844,7 +15844,7 @@ inline void algo::RspaceStr4_Init(algo::RspaceStr4& parent) {
 }
 
 // --- algo.RspaceStr4..Eq
-inline bool algo::RspaceStr4_Eq(algo::RspaceStr4 lhs, algo::RspaceStr4 rhs) {
+inline bool algo::RspaceStr4_Eq(algo::RspaceStr4 lhs, algo::RspaceStr4 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0);
@@ -15852,31 +15852,31 @@ inline bool algo::RspaceStr4_Eq(algo::RspaceStr4 lhs, algo::RspaceStr4 rhs) {
 }
 
 // --- algo.RspaceStr4..EqOpAryptr
-inline bool algo::RspaceStr4::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr4::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr4..AssignOp
-inline algo::RspaceStr4& algo::RspaceStr4::operator =(const algo::RspaceStr4 &rhs) {
+inline algo::RspaceStr4& algo::RspaceStr4::operator =(const algo::RspaceStr4 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr4));
     return *this;
 }
 
 // --- algo.RspaceStr4..Ctor
-inline  algo::RspaceStr4::RspaceStr4() {
+inline  algo::RspaceStr4::RspaceStr4() throw() {
     algo::RspaceStr4_Init(*this);
 }
 
 // --- algo.RspaceStr4..CopyCtor
-inline  algo::RspaceStr4::RspaceStr4(const algo::RspaceStr4 &rhs) {
+inline  algo::RspaceStr4::RspaceStr4(const algo::RspaceStr4 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr4));
 }
 
 // --- algo.RspaceStr40.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr40& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr40& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -15888,19 +15888,19 @@ inline u32 algo::RspaceStr40_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr40.ch.Init
-inline void algo::ch_Init(algo::RspaceStr40 &parent) {
+inline void algo::ch_Init(algo::RspaceStr40 &parent) throw() {
     memset(parent.ch, ' ', 40);
 }
 
 // --- algo.RspaceStr40.ch.Max
 // always return constant 40
-inline int algo::ch_Max(algo::RspaceStr40& parent) {
+inline int algo::ch_Max(algo::RspaceStr40& parent) throw() {
     (void)parent;
     return 40;
 }
 
 // --- algo.RspaceStr40.ch.N
-inline int algo::ch_N(const algo::RspaceStr40& parent) {
+inline int algo::ch_N(const algo::RspaceStr40& parent) throw() {
     u64 ret;
     ret = 40;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -15911,22 +15911,22 @@ inline int algo::ch_N(const algo::RspaceStr40& parent) {
 
 // --- algo.RspaceStr40.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr40::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr40::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr40.ch.CtorStrptr
-inline  algo::RspaceStr40::RspaceStr40(const algo::strptr &rhs) {
+inline  algo::RspaceStr40::RspaceStr40(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr40.ch.Cast
-inline  algo::RspaceStr40::operator algo::strptr() const {
+inline  algo::RspaceStr40::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr40..Cmp
-inline i32 algo::RspaceStr40_Cmp(algo::RspaceStr40 lhs, algo::RspaceStr40 rhs) {
+inline i32 algo::RspaceStr40_Cmp(algo::RspaceStr40 lhs, algo::RspaceStr40 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -15939,7 +15939,7 @@ inline void algo::RspaceStr40_Init(algo::RspaceStr40& parent) {
 }
 
 // --- algo.RspaceStr40..Eq
-inline bool algo::RspaceStr40_Eq(algo::RspaceStr40 lhs, algo::RspaceStr40 rhs) {
+inline bool algo::RspaceStr40_Eq(algo::RspaceStr40 lhs, algo::RspaceStr40 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -15951,31 +15951,31 @@ inline bool algo::RspaceStr40_Eq(algo::RspaceStr40 lhs, algo::RspaceStr40 rhs) {
 }
 
 // --- algo.RspaceStr40..EqOpAryptr
-inline bool algo::RspaceStr40::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr40::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr40..AssignOp
-inline algo::RspaceStr40& algo::RspaceStr40::operator =(const algo::RspaceStr40 &rhs) {
+inline algo::RspaceStr40& algo::RspaceStr40::operator =(const algo::RspaceStr40 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr40));
     return *this;
 }
 
 // --- algo.RspaceStr40..Ctor
-inline  algo::RspaceStr40::RspaceStr40() {
+inline  algo::RspaceStr40::RspaceStr40() throw() {
     algo::RspaceStr40_Init(*this);
 }
 
 // --- algo.RspaceStr40..CopyCtor
-inline  algo::RspaceStr40::RspaceStr40(const algo::RspaceStr40 &rhs) {
+inline  algo::RspaceStr40::RspaceStr40(const algo::RspaceStr40 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr40));
 }
 
 // --- algo.RspaceStr5.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr5& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr5& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -15987,19 +15987,19 @@ inline u32 algo::RspaceStr5_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr5.ch.Init
-inline void algo::ch_Init(algo::RspaceStr5 &parent) {
+inline void algo::ch_Init(algo::RspaceStr5 &parent) throw() {
     memset(parent.ch, ' ', 5);
 }
 
 // --- algo.RspaceStr5.ch.Max
 // always return constant 5
-inline int algo::ch_Max(algo::RspaceStr5& parent) {
+inline int algo::ch_Max(algo::RspaceStr5& parent) throw() {
     (void)parent;
     return 5;
 }
 
 // --- algo.RspaceStr5.ch.N
-inline int algo::ch_N(const algo::RspaceStr5& parent) {
+inline int algo::ch_N(const algo::RspaceStr5& parent) throw() {
     u64 ret;
     ret = 5;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -16010,32 +16010,32 @@ inline int algo::ch_N(const algo::RspaceStr5& parent) {
 
 // --- algo.RspaceStr5.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr5::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr5::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr5.ch.CtorStrptr
-inline  algo::RspaceStr5::RspaceStr5(const algo::strptr &rhs) {
+inline  algo::RspaceStr5::RspaceStr5(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr5.ch.Cast
-inline  algo::RspaceStr5::operator algo::strptr() const {
+inline  algo::RspaceStr5::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr5..EqOp
-inline bool algo::RspaceStr5::operator ==(const algo::RspaceStr5 &rhs) const {
+inline bool algo::RspaceStr5::operator ==(const algo::RspaceStr5 &rhs) const throw() {
     return algo::RspaceStr5_Eq(const_cast<algo::RspaceStr5&>(*this),const_cast<algo::RspaceStr5&>(rhs));
 }
 
 // --- algo.RspaceStr5..NeOp
-inline bool algo::RspaceStr5::operator !=(const algo::RspaceStr5 &rhs) const {
+inline bool algo::RspaceStr5::operator !=(const algo::RspaceStr5 &rhs) const throw() {
     return !algo::RspaceStr5_Eq(const_cast<algo::RspaceStr5&>(*this),const_cast<algo::RspaceStr5&>(rhs));
 }
 
 // --- algo.RspaceStr5..Cmp
-inline i32 algo::RspaceStr5_Cmp(algo::RspaceStr5 lhs, algo::RspaceStr5 rhs) {
+inline i32 algo::RspaceStr5_Cmp(algo::RspaceStr5 lhs, algo::RspaceStr5 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -16048,7 +16048,7 @@ inline void algo::RspaceStr5_Init(algo::RspaceStr5& parent) {
 }
 
 // --- algo.RspaceStr5..Eq
-inline bool algo::RspaceStr5_Eq(algo::RspaceStr5 lhs, algo::RspaceStr5 rhs) {
+inline bool algo::RspaceStr5_Eq(algo::RspaceStr5 lhs, algo::RspaceStr5 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -16057,31 +16057,31 @@ inline bool algo::RspaceStr5_Eq(algo::RspaceStr5 lhs, algo::RspaceStr5 rhs) {
 }
 
 // --- algo.RspaceStr5..EqOpAryptr
-inline bool algo::RspaceStr5::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr5::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr5..AssignOp
-inline algo::RspaceStr5& algo::RspaceStr5::operator =(const algo::RspaceStr5 &rhs) {
+inline algo::RspaceStr5& algo::RspaceStr5::operator =(const algo::RspaceStr5 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr5));
     return *this;
 }
 
 // --- algo.RspaceStr5..Ctor
-inline  algo::RspaceStr5::RspaceStr5() {
+inline  algo::RspaceStr5::RspaceStr5() throw() {
     algo::RspaceStr5_Init(*this);
 }
 
 // --- algo.RspaceStr5..CopyCtor
-inline  algo::RspaceStr5::RspaceStr5(const algo::RspaceStr5 &rhs) {
+inline  algo::RspaceStr5::RspaceStr5(const algo::RspaceStr5 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr5));
 }
 
 // --- algo.RspaceStr50.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr50& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr50& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -16093,19 +16093,19 @@ inline u32 algo::RspaceStr50_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr50.ch.Init
-inline void algo::ch_Init(algo::RspaceStr50 &parent) {
+inline void algo::ch_Init(algo::RspaceStr50 &parent) throw() {
     memset(parent.ch, ' ', 50);
 }
 
 // --- algo.RspaceStr50.ch.Max
 // always return constant 50
-inline int algo::ch_Max(algo::RspaceStr50& parent) {
+inline int algo::ch_Max(algo::RspaceStr50& parent) throw() {
     (void)parent;
     return 50;
 }
 
 // --- algo.RspaceStr50.ch.N
-inline int algo::ch_N(const algo::RspaceStr50& parent) {
+inline int algo::ch_N(const algo::RspaceStr50& parent) throw() {
     u64 ret;
     ret = 50;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -16116,32 +16116,32 @@ inline int algo::ch_N(const algo::RspaceStr50& parent) {
 
 // --- algo.RspaceStr50.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr50::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr50::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr50.ch.CtorStrptr
-inline  algo::RspaceStr50::RspaceStr50(const algo::strptr &rhs) {
+inline  algo::RspaceStr50::RspaceStr50(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr50.ch.Cast
-inline  algo::RspaceStr50::operator algo::strptr() const {
+inline  algo::RspaceStr50::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr50..EqOp
-inline bool algo::RspaceStr50::operator ==(const algo::RspaceStr50 &rhs) const {
+inline bool algo::RspaceStr50::operator ==(const algo::RspaceStr50 &rhs) const throw() {
     return algo::RspaceStr50_Eq(const_cast<algo::RspaceStr50&>(*this),const_cast<algo::RspaceStr50&>(rhs));
 }
 
 // --- algo.RspaceStr50..NeOp
-inline bool algo::RspaceStr50::operator !=(const algo::RspaceStr50 &rhs) const {
+inline bool algo::RspaceStr50::operator !=(const algo::RspaceStr50 &rhs) const throw() {
     return !algo::RspaceStr50_Eq(const_cast<algo::RspaceStr50&>(*this),const_cast<algo::RspaceStr50&>(rhs));
 }
 
 // --- algo.RspaceStr50..Cmp
-inline i32 algo::RspaceStr50_Cmp(algo::RspaceStr50 lhs, algo::RspaceStr50 rhs) {
+inline i32 algo::RspaceStr50_Cmp(algo::RspaceStr50 lhs, algo::RspaceStr50 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -16154,7 +16154,7 @@ inline void algo::RspaceStr50_Init(algo::RspaceStr50& parent) {
 }
 
 // --- algo.RspaceStr50..Eq
-inline bool algo::RspaceStr50_Eq(algo::RspaceStr50 lhs, algo::RspaceStr50 rhs) {
+inline bool algo::RspaceStr50_Eq(algo::RspaceStr50 lhs, algo::RspaceStr50 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -16168,31 +16168,31 @@ inline bool algo::RspaceStr50_Eq(algo::RspaceStr50 lhs, algo::RspaceStr50 rhs) {
 }
 
 // --- algo.RspaceStr50..EqOpAryptr
-inline bool algo::RspaceStr50::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr50::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr50..AssignOp
-inline algo::RspaceStr50& algo::RspaceStr50::operator =(const algo::RspaceStr50 &rhs) {
+inline algo::RspaceStr50& algo::RspaceStr50::operator =(const algo::RspaceStr50 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr50));
     return *this;
 }
 
 // --- algo.RspaceStr50..Ctor
-inline  algo::RspaceStr50::RspaceStr50() {
+inline  algo::RspaceStr50::RspaceStr50() throw() {
     algo::RspaceStr50_Init(*this);
 }
 
 // --- algo.RspaceStr50..CopyCtor
-inline  algo::RspaceStr50::RspaceStr50(const algo::RspaceStr50 &rhs) {
+inline  algo::RspaceStr50::RspaceStr50(const algo::RspaceStr50 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr50));
 }
 
 // --- algo.RspaceStr6.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr6& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr6& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -16204,19 +16204,19 @@ inline u32 algo::RspaceStr6_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr6.ch.Init
-inline void algo::ch_Init(algo::RspaceStr6 &parent) {
+inline void algo::ch_Init(algo::RspaceStr6 &parent) throw() {
     memset(parent.ch, ' ', 6);
 }
 
 // --- algo.RspaceStr6.ch.Max
 // always return constant 6
-inline int algo::ch_Max(algo::RspaceStr6& parent) {
+inline int algo::ch_Max(algo::RspaceStr6& parent) throw() {
     (void)parent;
     return 6;
 }
 
 // --- algo.RspaceStr6.ch.N
-inline int algo::ch_N(const algo::RspaceStr6& parent) {
+inline int algo::ch_N(const algo::RspaceStr6& parent) throw() {
     u64 ret;
     ret = 6;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -16227,57 +16227,57 @@ inline int algo::ch_N(const algo::RspaceStr6& parent) {
 
 // --- algo.RspaceStr6.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr6::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr6::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr6.ch.CtorStrptr
-inline  algo::RspaceStr6::RspaceStr6(const algo::strptr &rhs) {
+inline  algo::RspaceStr6::RspaceStr6(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr6.ch.Cast
-inline  algo::RspaceStr6::operator algo::strptr() const {
+inline  algo::RspaceStr6::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr6..EqOp
-inline bool algo::RspaceStr6::operator ==(const algo::RspaceStr6 &rhs) const {
+inline bool algo::RspaceStr6::operator ==(const algo::RspaceStr6 &rhs) const throw() {
     return algo::RspaceStr6_Eq(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
 }
 
 // --- algo.RspaceStr6..NeOp
-inline bool algo::RspaceStr6::operator !=(const algo::RspaceStr6 &rhs) const {
+inline bool algo::RspaceStr6::operator !=(const algo::RspaceStr6 &rhs) const throw() {
     return !algo::RspaceStr6_Eq(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
 }
 
 // --- algo.RspaceStr6..LtOp
-inline bool algo::RspaceStr6::operator <(const algo::RspaceStr6 &rhs) const {
+inline bool algo::RspaceStr6::operator <(const algo::RspaceStr6 &rhs) const throw() {
     return algo::RspaceStr6_Lt(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
 }
 
 // --- algo.RspaceStr6..GtOp
-inline bool algo::RspaceStr6::operator >(const algo::RspaceStr6 &rhs) const {
+inline bool algo::RspaceStr6::operator >(const algo::RspaceStr6 &rhs) const throw() {
     return algo::RspaceStr6_Lt(const_cast<algo::RspaceStr6&>(rhs),const_cast<algo::RspaceStr6&>(*this));
 }
 
 // --- algo.RspaceStr6..LeOp
-inline bool algo::RspaceStr6::operator <=(const algo::RspaceStr6 &rhs) const {
+inline bool algo::RspaceStr6::operator <=(const algo::RspaceStr6 &rhs) const throw() {
     return !algo::RspaceStr6_Lt(const_cast<algo::RspaceStr6&>(rhs),const_cast<algo::RspaceStr6&>(*this));
 }
 
 // --- algo.RspaceStr6..GeOp
-inline bool algo::RspaceStr6::operator >=(const algo::RspaceStr6 &rhs) const {
+inline bool algo::RspaceStr6::operator >=(const algo::RspaceStr6 &rhs) const throw() {
     return !algo::RspaceStr6_Lt(const_cast<algo::RspaceStr6&>(*this),const_cast<algo::RspaceStr6&>(rhs));
 }
 
 // --- algo.RspaceStr6..Lt
-inline bool algo::RspaceStr6_Lt(algo::RspaceStr6 lhs, algo::RspaceStr6 rhs) {
+inline bool algo::RspaceStr6_Lt(algo::RspaceStr6 lhs, algo::RspaceStr6 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RspaceStr6..Cmp
-inline i32 algo::RspaceStr6_Cmp(algo::RspaceStr6 lhs, algo::RspaceStr6 rhs) {
+inline i32 algo::RspaceStr6_Cmp(algo::RspaceStr6 lhs, algo::RspaceStr6 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -16290,7 +16290,7 @@ inline void algo::RspaceStr6_Init(algo::RspaceStr6& parent) {
 }
 
 // --- algo.RspaceStr6..Eq
-inline bool algo::RspaceStr6_Eq(algo::RspaceStr6 lhs, algo::RspaceStr6 rhs) {
+inline bool algo::RspaceStr6_Eq(algo::RspaceStr6 lhs, algo::RspaceStr6 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -16300,7 +16300,7 @@ inline bool algo::RspaceStr6_Eq(algo::RspaceStr6 lhs, algo::RspaceStr6 rhs) {
 
 // --- algo.RspaceStr6..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RspaceStr6_Update(algo::RspaceStr6 &lhs, algo::RspaceStr6 rhs) {
+inline bool algo::RspaceStr6_Update(algo::RspaceStr6 &lhs, algo::RspaceStr6 rhs) throw() {
     bool ret = !RspaceStr6_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -16309,31 +16309,31 @@ inline bool algo::RspaceStr6_Update(algo::RspaceStr6 &lhs, algo::RspaceStr6 rhs)
 }
 
 // --- algo.RspaceStr6..EqOpAryptr
-inline bool algo::RspaceStr6::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr6::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr6..AssignOp
-inline algo::RspaceStr6& algo::RspaceStr6::operator =(const algo::RspaceStr6 &rhs) {
+inline algo::RspaceStr6& algo::RspaceStr6::operator =(const algo::RspaceStr6 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr6));
     return *this;
 }
 
 // --- algo.RspaceStr6..Ctor
-inline  algo::RspaceStr6::RspaceStr6() {
+inline  algo::RspaceStr6::RspaceStr6() throw() {
     algo::RspaceStr6_Init(*this);
 }
 
 // --- algo.RspaceStr6..CopyCtor
-inline  algo::RspaceStr6::RspaceStr6(const algo::RspaceStr6 &rhs) {
+inline  algo::RspaceStr6::RspaceStr6(const algo::RspaceStr6 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr6));
 }
 
 // --- algo.RspaceStr64.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr64& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr64& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -16345,19 +16345,19 @@ inline u32 algo::RspaceStr64_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr64.ch.Init
-inline void algo::ch_Init(algo::RspaceStr64 &parent) {
+inline void algo::ch_Init(algo::RspaceStr64 &parent) throw() {
     memset(parent.ch, ' ', 64);
 }
 
 // --- algo.RspaceStr64.ch.Max
 // always return constant 64
-inline int algo::ch_Max(algo::RspaceStr64& parent) {
+inline int algo::ch_Max(algo::RspaceStr64& parent) throw() {
     (void)parent;
     return 64;
 }
 
 // --- algo.RspaceStr64.ch.N
-inline int algo::ch_N(const algo::RspaceStr64& parent) {
+inline int algo::ch_N(const algo::RspaceStr64& parent) throw() {
     u64 ret;
     ret = 64;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -16368,32 +16368,32 @@ inline int algo::ch_N(const algo::RspaceStr64& parent) {
 
 // --- algo.RspaceStr64.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr64::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr64::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr64.ch.CtorStrptr
-inline  algo::RspaceStr64::RspaceStr64(const algo::strptr &rhs) {
+inline  algo::RspaceStr64::RspaceStr64(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr64.ch.Cast
-inline  algo::RspaceStr64::operator algo::strptr() const {
+inline  algo::RspaceStr64::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr64..EqOp
-inline bool algo::RspaceStr64::operator ==(const algo::RspaceStr64 &rhs) const {
+inline bool algo::RspaceStr64::operator ==(const algo::RspaceStr64 &rhs) const throw() {
     return algo::RspaceStr64_Eq(const_cast<algo::RspaceStr64&>(*this),const_cast<algo::RspaceStr64&>(rhs));
 }
 
 // --- algo.RspaceStr64..NeOp
-inline bool algo::RspaceStr64::operator !=(const algo::RspaceStr64 &rhs) const {
+inline bool algo::RspaceStr64::operator !=(const algo::RspaceStr64 &rhs) const throw() {
     return !algo::RspaceStr64_Eq(const_cast<algo::RspaceStr64&>(*this),const_cast<algo::RspaceStr64&>(rhs));
 }
 
 // --- algo.RspaceStr64..Cmp
-inline i32 algo::RspaceStr64_Cmp(algo::RspaceStr64& lhs, algo::RspaceStr64& rhs) {
+inline i32 algo::RspaceStr64_Cmp(algo::RspaceStr64& lhs, algo::RspaceStr64& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -16406,7 +16406,7 @@ inline void algo::RspaceStr64_Init(algo::RspaceStr64& parent) {
 }
 
 // --- algo.RspaceStr64..Eq
-inline bool algo::RspaceStr64_Eq(algo::RspaceStr64& lhs, algo::RspaceStr64& rhs) {
+inline bool algo::RspaceStr64_Eq(algo::RspaceStr64& lhs, algo::RspaceStr64& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -16421,31 +16421,31 @@ inline bool algo::RspaceStr64_Eq(algo::RspaceStr64& lhs, algo::RspaceStr64& rhs)
 }
 
 // --- algo.RspaceStr64..EqOpAryptr
-inline bool algo::RspaceStr64::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr64::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr64..AssignOp
-inline algo::RspaceStr64& algo::RspaceStr64::operator =(const algo::RspaceStr64 &rhs) {
+inline algo::RspaceStr64& algo::RspaceStr64::operator =(const algo::RspaceStr64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr64));
     return *this;
 }
 
 // --- algo.RspaceStr64..Ctor
-inline  algo::RspaceStr64::RspaceStr64() {
+inline  algo::RspaceStr64::RspaceStr64() throw() {
     algo::RspaceStr64_Init(*this);
 }
 
 // --- algo.RspaceStr64..CopyCtor
-inline  algo::RspaceStr64::RspaceStr64(const algo::RspaceStr64 &rhs) {
+inline  algo::RspaceStr64::RspaceStr64(const algo::RspaceStr64 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr64));
 }
 
 // --- algo.RspaceStr7.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr7& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr7& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -16457,19 +16457,19 @@ inline u32 algo::RspaceStr7_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr7.ch.Init
-inline void algo::ch_Init(algo::RspaceStr7 &parent) {
+inline void algo::ch_Init(algo::RspaceStr7 &parent) throw() {
     memset(parent.ch, ' ', 7);
 }
 
 // --- algo.RspaceStr7.ch.Max
 // always return constant 7
-inline int algo::ch_Max(algo::RspaceStr7& parent) {
+inline int algo::ch_Max(algo::RspaceStr7& parent) throw() {
     (void)parent;
     return 7;
 }
 
 // --- algo.RspaceStr7.ch.N
-inline int algo::ch_N(const algo::RspaceStr7& parent) {
+inline int algo::ch_N(const algo::RspaceStr7& parent) throw() {
     u64 ret;
     ret = 7;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -16480,32 +16480,32 @@ inline int algo::ch_N(const algo::RspaceStr7& parent) {
 
 // --- algo.RspaceStr7.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr7::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr7::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr7.ch.CtorStrptr
-inline  algo::RspaceStr7::RspaceStr7(const algo::strptr &rhs) {
+inline  algo::RspaceStr7::RspaceStr7(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr7.ch.Cast
-inline  algo::RspaceStr7::operator algo::strptr() const {
+inline  algo::RspaceStr7::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr7..EqOp
-inline bool algo::RspaceStr7::operator ==(const algo::RspaceStr7 &rhs) const {
+inline bool algo::RspaceStr7::operator ==(const algo::RspaceStr7 &rhs) const throw() {
     return algo::RspaceStr7_Eq(const_cast<algo::RspaceStr7&>(*this),const_cast<algo::RspaceStr7&>(rhs));
 }
 
 // --- algo.RspaceStr7..NeOp
-inline bool algo::RspaceStr7::operator !=(const algo::RspaceStr7 &rhs) const {
+inline bool algo::RspaceStr7::operator !=(const algo::RspaceStr7 &rhs) const throw() {
     return !algo::RspaceStr7_Eq(const_cast<algo::RspaceStr7&>(*this),const_cast<algo::RspaceStr7&>(rhs));
 }
 
 // --- algo.RspaceStr7..Cmp
-inline i32 algo::RspaceStr7_Cmp(algo::RspaceStr7 lhs, algo::RspaceStr7 rhs) {
+inline i32 algo::RspaceStr7_Cmp(algo::RspaceStr7 lhs, algo::RspaceStr7 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -16518,7 +16518,7 @@ inline void algo::RspaceStr7_Init(algo::RspaceStr7& parent) {
 }
 
 // --- algo.RspaceStr7..Eq
-inline bool algo::RspaceStr7_Eq(algo::RspaceStr7 lhs, algo::RspaceStr7 rhs) {
+inline bool algo::RspaceStr7_Eq(algo::RspaceStr7 lhs, algo::RspaceStr7 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -16528,31 +16528,31 @@ inline bool algo::RspaceStr7_Eq(algo::RspaceStr7 lhs, algo::RspaceStr7 rhs) {
 }
 
 // --- algo.RspaceStr7..EqOpAryptr
-inline bool algo::RspaceStr7::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr7::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr7..AssignOp
-inline algo::RspaceStr7& algo::RspaceStr7::operator =(const algo::RspaceStr7 &rhs) {
+inline algo::RspaceStr7& algo::RspaceStr7::operator =(const algo::RspaceStr7 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr7));
     return *this;
 }
 
 // --- algo.RspaceStr7..Ctor
-inline  algo::RspaceStr7::RspaceStr7() {
+inline  algo::RspaceStr7::RspaceStr7() throw() {
     algo::RspaceStr7_Init(*this);
 }
 
 // --- algo.RspaceStr7..CopyCtor
-inline  algo::RspaceStr7::RspaceStr7(const algo::RspaceStr7 &rhs) {
+inline  algo::RspaceStr7::RspaceStr7(const algo::RspaceStr7 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr7));
 }
 
 // --- algo.RspaceStr75.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr75& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr75& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -16564,19 +16564,19 @@ inline u32 algo::RspaceStr75_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr75.ch.Init
-inline void algo::ch_Init(algo::RspaceStr75 &parent) {
+inline void algo::ch_Init(algo::RspaceStr75 &parent) throw() {
     memset(parent.ch, ' ', 75);
 }
 
 // --- algo.RspaceStr75.ch.Max
 // always return constant 75
-inline int algo::ch_Max(algo::RspaceStr75& parent) {
+inline int algo::ch_Max(algo::RspaceStr75& parent) throw() {
     (void)parent;
     return 75;
 }
 
 // --- algo.RspaceStr75.ch.N
-inline int algo::ch_N(const algo::RspaceStr75& parent) {
+inline int algo::ch_N(const algo::RspaceStr75& parent) throw() {
     u64 ret;
     ret = 75;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -16587,32 +16587,32 @@ inline int algo::ch_N(const algo::RspaceStr75& parent) {
 
 // --- algo.RspaceStr75.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr75::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr75::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr75.ch.CtorStrptr
-inline  algo::RspaceStr75::RspaceStr75(const algo::strptr &rhs) {
+inline  algo::RspaceStr75::RspaceStr75(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr75.ch.Cast
-inline  algo::RspaceStr75::operator algo::strptr() const {
+inline  algo::RspaceStr75::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr75..EqOp
-inline bool algo::RspaceStr75::operator ==(const algo::RspaceStr75 &rhs) const {
+inline bool algo::RspaceStr75::operator ==(const algo::RspaceStr75 &rhs) const throw() {
     return algo::RspaceStr75_Eq(const_cast<algo::RspaceStr75&>(*this),const_cast<algo::RspaceStr75&>(rhs));
 }
 
 // --- algo.RspaceStr75..NeOp
-inline bool algo::RspaceStr75::operator !=(const algo::RspaceStr75 &rhs) const {
+inline bool algo::RspaceStr75::operator !=(const algo::RspaceStr75 &rhs) const throw() {
     return !algo::RspaceStr75_Eq(const_cast<algo::RspaceStr75&>(*this),const_cast<algo::RspaceStr75&>(rhs));
 }
 
 // --- algo.RspaceStr75..Cmp
-inline i32 algo::RspaceStr75_Cmp(algo::RspaceStr75 lhs, algo::RspaceStr75 rhs) {
+inline i32 algo::RspaceStr75_Cmp(algo::RspaceStr75 lhs, algo::RspaceStr75 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -16625,7 +16625,7 @@ inline void algo::RspaceStr75_Init(algo::RspaceStr75& parent) {
 }
 
 // --- algo.RspaceStr75..Eq
-inline bool algo::RspaceStr75_Eq(algo::RspaceStr75 lhs, algo::RspaceStr75 rhs) {
+inline bool algo::RspaceStr75_Eq(algo::RspaceStr75 lhs, algo::RspaceStr75 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -16643,31 +16643,31 @@ inline bool algo::RspaceStr75_Eq(algo::RspaceStr75 lhs, algo::RspaceStr75 rhs) {
 }
 
 // --- algo.RspaceStr75..EqOpAryptr
-inline bool algo::RspaceStr75::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr75::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr75..AssignOp
-inline algo::RspaceStr75& algo::RspaceStr75::operator =(const algo::RspaceStr75 &rhs) {
+inline algo::RspaceStr75& algo::RspaceStr75::operator =(const algo::RspaceStr75 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr75));
     return *this;
 }
 
 // --- algo.RspaceStr75..Ctor
-inline  algo::RspaceStr75::RspaceStr75() {
+inline  algo::RspaceStr75::RspaceStr75() throw() {
     algo::RspaceStr75_Init(*this);
 }
 
 // --- algo.RspaceStr75..CopyCtor
-inline  algo::RspaceStr75::RspaceStr75(const algo::RspaceStr75 &rhs) {
+inline  algo::RspaceStr75::RspaceStr75(const algo::RspaceStr75 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr75));
 }
 
 // --- algo.RspaceStr8.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr8& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr8& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -16679,19 +16679,19 @@ inline u32 algo::RspaceStr8_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr8.ch.Init
-inline void algo::ch_Init(algo::RspaceStr8 &parent) {
+inline void algo::ch_Init(algo::RspaceStr8 &parent) throw() {
     memset(parent.ch, ' ', 8);
 }
 
 // --- algo.RspaceStr8.ch.Max
 // always return constant 8
-inline int algo::ch_Max(algo::RspaceStr8& parent) {
+inline int algo::ch_Max(algo::RspaceStr8& parent) throw() {
     (void)parent;
     return 8;
 }
 
 // --- algo.RspaceStr8.ch.N
-inline int algo::ch_N(const algo::RspaceStr8& parent) {
+inline int algo::ch_N(const algo::RspaceStr8& parent) throw() {
     u64 ret;
     ret = 8;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -16702,27 +16702,27 @@ inline int algo::ch_N(const algo::RspaceStr8& parent) {
 
 // --- algo.RspaceStr8.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr8::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr8::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr8.ch.CtorStrptr
-inline  algo::RspaceStr8::RspaceStr8(const algo::strptr &rhs) {
+inline  algo::RspaceStr8::RspaceStr8(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr8.ch.Cast
-inline  algo::RspaceStr8::operator algo::strptr() const {
+inline  algo::RspaceStr8::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr8..Lt
-inline bool algo::RspaceStr8_Lt(algo::RspaceStr8 lhs, algo::RspaceStr8 rhs) {
+inline bool algo::RspaceStr8_Lt(algo::RspaceStr8 lhs, algo::RspaceStr8 rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.RspaceStr8..Cmp
-inline i32 algo::RspaceStr8_Cmp(algo::RspaceStr8 lhs, algo::RspaceStr8 rhs) {
+inline i32 algo::RspaceStr8_Cmp(algo::RspaceStr8 lhs, algo::RspaceStr8 rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -16735,7 +16735,7 @@ inline void algo::RspaceStr8_Init(algo::RspaceStr8& parent) {
 }
 
 // --- algo.RspaceStr8..Eq
-inline bool algo::RspaceStr8_Eq(algo::RspaceStr8 lhs, algo::RspaceStr8 rhs) {
+inline bool algo::RspaceStr8_Eq(algo::RspaceStr8 lhs, algo::RspaceStr8 rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0);
@@ -16744,7 +16744,7 @@ inline bool algo::RspaceStr8_Eq(algo::RspaceStr8 lhs, algo::RspaceStr8 rhs) {
 
 // --- algo.RspaceStr8..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::RspaceStr8_Update(algo::RspaceStr8 &lhs, algo::RspaceStr8 rhs) {
+inline bool algo::RspaceStr8_Update(algo::RspaceStr8 &lhs, algo::RspaceStr8 rhs) throw() {
     bool ret = !RspaceStr8_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -16753,31 +16753,31 @@ inline bool algo::RspaceStr8_Update(algo::RspaceStr8 &lhs, algo::RspaceStr8 rhs)
 }
 
 // --- algo.RspaceStr8..EqOpAryptr
-inline bool algo::RspaceStr8::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr8::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr8..AssignOp
-inline algo::RspaceStr8& algo::RspaceStr8::operator =(const algo::RspaceStr8 &rhs) {
+inline algo::RspaceStr8& algo::RspaceStr8::operator =(const algo::RspaceStr8 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr8));
     return *this;
 }
 
 // --- algo.RspaceStr8..Ctor
-inline  algo::RspaceStr8::RspaceStr8() {
+inline  algo::RspaceStr8::RspaceStr8() throw() {
     algo::RspaceStr8_Init(*this);
 }
 
 // --- algo.RspaceStr8..CopyCtor
-inline  algo::RspaceStr8::RspaceStr8(const algo::RspaceStr8 &rhs) {
+inline  algo::RspaceStr8::RspaceStr8(const algo::RspaceStr8 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr8));
 }
 
 // --- algo.RspaceStr9.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr9& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr9& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -16789,19 +16789,19 @@ inline u32 algo::RspaceStr9_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.RspaceStr9.ch.Init
-inline void algo::ch_Init(algo::RspaceStr9 &parent) {
+inline void algo::ch_Init(algo::RspaceStr9 &parent) throw() {
     memset(parent.ch, ' ', 9);
 }
 
 // --- algo.RspaceStr9.ch.Max
 // always return constant 9
-inline int algo::ch_Max(algo::RspaceStr9& parent) {
+inline int algo::ch_Max(algo::RspaceStr9& parent) throw() {
     (void)parent;
     return 9;
 }
 
 // --- algo.RspaceStr9.ch.N
-inline int algo::ch_N(const algo::RspaceStr9& parent) {
+inline int algo::ch_N(const algo::RspaceStr9& parent) throw() {
     u64 ret;
     ret = 9;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -16812,32 +16812,32 @@ inline int algo::ch_N(const algo::RspaceStr9& parent) {
 
 // --- algo.RspaceStr9.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::RspaceStr9::operator =(const algo::strptr &str) {
+inline void algo::RspaceStr9::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.RspaceStr9.ch.CtorStrptr
-inline  algo::RspaceStr9::RspaceStr9(const algo::strptr &rhs) {
+inline  algo::RspaceStr9::RspaceStr9(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.RspaceStr9.ch.Cast
-inline  algo::RspaceStr9::operator algo::strptr() const {
+inline  algo::RspaceStr9::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.RspaceStr9..EqOp
-inline bool algo::RspaceStr9::operator ==(const algo::RspaceStr9 &rhs) const {
+inline bool algo::RspaceStr9::operator ==(const algo::RspaceStr9 &rhs) const throw() {
     return algo::RspaceStr9_Eq(const_cast<algo::RspaceStr9&>(*this),const_cast<algo::RspaceStr9&>(rhs));
 }
 
 // --- algo.RspaceStr9..NeOp
-inline bool algo::RspaceStr9::operator !=(const algo::RspaceStr9 &rhs) const {
+inline bool algo::RspaceStr9::operator !=(const algo::RspaceStr9 &rhs) const throw() {
     return !algo::RspaceStr9_Eq(const_cast<algo::RspaceStr9&>(*this),const_cast<algo::RspaceStr9&>(rhs));
 }
 
 // --- algo.RspaceStr9..Cmp
-inline i32 algo::RspaceStr9_Cmp(algo::RspaceStr9& lhs, algo::RspaceStr9& rhs) {
+inline i32 algo::RspaceStr9_Cmp(algo::RspaceStr9& lhs, algo::RspaceStr9& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -16850,7 +16850,7 @@ inline void algo::RspaceStr9_Init(algo::RspaceStr9& parent) {
 }
 
 // --- algo.RspaceStr9..Eq
-inline bool algo::RspaceStr9_Eq(algo::RspaceStr9& lhs, algo::RspaceStr9& rhs) {
+inline bool algo::RspaceStr9_Eq(algo::RspaceStr9& lhs, algo::RspaceStr9& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -16859,40 +16859,40 @@ inline bool algo::RspaceStr9_Eq(algo::RspaceStr9& lhs, algo::RspaceStr9& rhs) {
 }
 
 // --- algo.RspaceStr9..EqOpAryptr
-inline bool algo::RspaceStr9::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::RspaceStr9::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.RspaceStr9..AssignOp
-inline algo::RspaceStr9& algo::RspaceStr9::operator =(const algo::RspaceStr9 &rhs) {
+inline algo::RspaceStr9& algo::RspaceStr9::operator =(const algo::RspaceStr9 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr9));
     return *this;
 }
 
 // --- algo.RspaceStr9..Ctor
-inline  algo::RspaceStr9::RspaceStr9() {
+inline  algo::RspaceStr9::RspaceStr9() throw() {
     algo::RspaceStr9_Init(*this);
 }
 
 // --- algo.RspaceStr9..CopyCtor
-inline  algo::RspaceStr9::RspaceStr9(const algo::RspaceStr9 &rhs) {
+inline  algo::RspaceStr9::RspaceStr9(const algo::RspaceStr9 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(algo::RspaceStr9));
 }
 
 // --- algo.SchedTime.value.Cast
-inline  algo::SchedTime::operator u64() const {
+inline  algo::SchedTime::operator u64() const throw() {
     return u64((*this).value);
 }
 
 // --- algo.SchedTime..Lt
-inline bool algo::SchedTime_Lt(algo::SchedTime lhs, algo::SchedTime rhs) {
+inline bool algo::SchedTime_Lt(algo::SchedTime lhs, algo::SchedTime rhs) throw() {
     return u64_Lt(lhs.value, rhs.value);
 }
 
 // --- algo.SchedTime..Cmp
-inline i32 algo::SchedTime_Cmp(algo::SchedTime lhs, algo::SchedTime rhs) {
+inline i32 algo::SchedTime_Cmp(algo::SchedTime lhs, algo::SchedTime rhs) throw() {
     i32 retval = 0;
     retval = u64_Cmp(lhs.value, rhs.value);
     return retval;
@@ -16905,7 +16905,7 @@ inline void algo::SchedTime_Init(algo::SchedTime& parent) {
 }
 
 // --- algo.SchedTime..Eq
-inline bool algo::SchedTime_Eq(algo::SchedTime lhs, algo::SchedTime rhs) {
+inline bool algo::SchedTime_Eq(algo::SchedTime lhs, algo::SchedTime rhs) throw() {
     bool retval = true;
     retval = u64_Eq(lhs.value, rhs.value);
     return retval;
@@ -16913,7 +16913,7 @@ inline bool algo::SchedTime_Eq(algo::SchedTime lhs, algo::SchedTime rhs) {
 
 // --- algo.SchedTime..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::SchedTime_Update(algo::SchedTime &lhs, algo::SchedTime rhs) {
+inline bool algo::SchedTime_Update(algo::SchedTime &lhs, algo::SchedTime rhs) throw() {
     bool ret = !SchedTime_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -16922,34 +16922,34 @@ inline bool algo::SchedTime_Update(algo::SchedTime &lhs, algo::SchedTime rhs) {
 }
 
 // --- algo.SchedTime..Ctor
-inline  algo::SchedTime::SchedTime() {
+inline  algo::SchedTime::SchedTime() throw() {
     algo::SchedTime_Init(*this);
 }
 
 // --- algo.SchedTime..FieldwiseCtor
-inline  algo::SchedTime::SchedTime(u64 in_value)
+inline  algo::SchedTime::SchedTime(u64 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.SeqType.value.Cast
-inline  algo::SeqType::operator u64() const {
+inline  algo::SeqType::operator u64() const throw() {
     return u64((*this).value);
 }
 
 // --- algo.SeqType..Hash
-inline u32 algo::SeqType_Hash(u32 prev, algo::SeqType rhs) {
+inline u32 algo::SeqType_Hash(u32 prev, algo::SeqType rhs) throw() {
     prev = u64_Hash(prev, rhs.value);
     return prev;
 }
 
 // --- algo.SeqType..Lt
-inline bool algo::SeqType_Lt(algo::SeqType lhs, algo::SeqType rhs) {
+inline bool algo::SeqType_Lt(algo::SeqType lhs, algo::SeqType rhs) throw() {
     return u64_Lt(lhs.value, rhs.value);
 }
 
 // --- algo.SeqType..Cmp
-inline i32 algo::SeqType_Cmp(algo::SeqType lhs, algo::SeqType rhs) {
+inline i32 algo::SeqType_Cmp(algo::SeqType lhs, algo::SeqType rhs) throw() {
     i32 retval = 0;
     retval = u64_Cmp(lhs.value, rhs.value);
     return retval;
@@ -16962,7 +16962,7 @@ inline void algo::SeqType_Init(algo::SeqType& parent) {
 }
 
 // --- algo.SeqType..Eq
-inline bool algo::SeqType_Eq(algo::SeqType lhs, algo::SeqType rhs) {
+inline bool algo::SeqType_Eq(algo::SeqType lhs, algo::SeqType rhs) throw() {
     bool retval = true;
     retval = u64_Eq(lhs.value, rhs.value);
     return retval;
@@ -16970,7 +16970,7 @@ inline bool algo::SeqType_Eq(algo::SeqType lhs, algo::SeqType rhs) {
 
 // --- algo.SeqType..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::SeqType_Update(algo::SeqType &lhs, algo::SeqType rhs) {
+inline bool algo::SeqType_Update(algo::SeqType &lhs, algo::SeqType rhs) throw() {
     bool ret = !SeqType_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -16979,19 +16979,19 @@ inline bool algo::SeqType_Update(algo::SeqType &lhs, algo::SeqType rhs) {
 }
 
 // --- algo.SeqType..Ctor
-inline  algo::SeqType::SeqType() {
+inline  algo::SeqType::SeqType() throw() {
     algo::SeqType_Init(*this);
 }
 
 // --- algo.SeqType..FieldwiseCtor
-inline  algo::SeqType::SeqType(u64 in_value)
+inline  algo::SeqType::SeqType(u64 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.Sha1sig.sha1sig.Fill
 // Set all elements of fixed array to value RHS
-inline void algo::sha1sig_Fill(algo::Sha1sig& parent, const u8 &rhs) {
+inline void algo::sha1sig_Fill(algo::Sha1sig& parent, const u8 &rhs) throw() {
     for (int i = 0; i < 20; i++) {
         parent.sha1sig_elems[i] = rhs;
     }
@@ -16999,7 +16999,7 @@ inline void algo::sha1sig_Fill(algo::Sha1sig& parent, const u8 &rhs) {
 
 // --- algo.Sha1sig.sha1sig.Find
 // Look up row by row id. Return NULL if out of range
-inline u8* algo::sha1sig_Find(algo::Sha1sig& parent, u64 t) {
+inline u8* algo::sha1sig_Find(algo::Sha1sig& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = 20;
     return idx < lim ? parent.sha1sig_elems + idx : NULL; // unsigned comparison with limit
@@ -17007,99 +17007,99 @@ inline u8* algo::sha1sig_Find(algo::Sha1sig& parent, u64 t) {
 
 // --- algo.Sha1sig.sha1sig.Getary
 // Access fixed array sha1sig as aryptr.
-inline algo::aryptr<u8> algo::sha1sig_Getary(algo::Sha1sig& parent) {
+inline algo::aryptr<u8> algo::sha1sig_Getary(algo::Sha1sig& parent) throw() {
     return algo::aryptr<u8>(parent.sha1sig_elems, 20);
 }
 
 // --- algo.Sha1sig.sha1sig.Max
 // Return max number of items in the array
-inline i32 algo::sha1sig_Max(algo::Sha1sig& parent) {
+inline i32 algo::sha1sig_Max(algo::Sha1sig& parent) throw() {
     (void)parent;
     return 20;
 }
 
 // --- algo.Sha1sig.sha1sig.N
 // Return number of items in the array
-inline i32 algo::sha1sig_N(const algo::Sha1sig& parent) {
+inline i32 algo::sha1sig_N(const algo::Sha1sig& parent) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     return 20;
 }
 
 // --- algo.Sha1sig.sha1sig.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
-inline void algo::sha1sig_Setary(algo::Sha1sig& parent, const algo::aryptr<u8> &rhs) {
+inline void algo::sha1sig_Setary(algo::Sha1sig& parent, const algo::aryptr<u8> &rhs) throw() {
     int n = i32_Min(20, rhs.n_elems);
     memcpy(parent.sha1sig_elems, rhs.elems, sizeof(u8)*n);
 }
 
 // --- algo.Sha1sig.sha1sig.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline u8& algo::sha1sig_qFind(algo::Sha1sig& parent, u64 t) {
+inline u8& algo::sha1sig_qFind(algo::Sha1sig& parent, u64 t) throw() {
     return parent.sha1sig_elems[u64(t)];
 }
 
 // --- algo.Sha1sig.sha1sig_curs.Reset
 // cursor points to valid item
-inline void algo::Sha1sig_sha1sig_curs_Reset(Sha1sig_sha1sig_curs &curs, algo::Sha1sig &parent) {
+inline void algo::Sha1sig_sha1sig_curs_Reset(Sha1sig_sha1sig_curs &curs, algo::Sha1sig &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- algo.Sha1sig.sha1sig_curs.ValidQ
 // cursor points to valid item
-inline bool algo::Sha1sig_sha1sig_curs_ValidQ(Sha1sig_sha1sig_curs &curs) {
+inline bool algo::Sha1sig_sha1sig_curs_ValidQ(Sha1sig_sha1sig_curs &curs) throw() {
     return u64(curs.index) < u64(20);
 }
 
 // --- algo.Sha1sig.sha1sig_curs.Next
 // proceed to next item
-inline void algo::Sha1sig_sha1sig_curs_Next(Sha1sig_sha1sig_curs &curs) {
+inline void algo::Sha1sig_sha1sig_curs_Next(Sha1sig_sha1sig_curs &curs) throw() {
     curs.index++;
 }
 
 // --- algo.Sha1sig.sha1sig_curs.Access
 // item access
-inline u8& algo::Sha1sig_sha1sig_curs_Access(Sha1sig_sha1sig_curs &curs) {
+inline u8& algo::Sha1sig_sha1sig_curs_Access(Sha1sig_sha1sig_curs &curs) throw() {
     return sha1sig_qFind((*curs.parent), u64(curs.index));
 }
 
 // --- algo.Sha1sig..EqOp
-inline bool algo::Sha1sig::operator ==(const algo::Sha1sig &rhs) const {
+inline bool algo::Sha1sig::operator ==(const algo::Sha1sig &rhs) const throw() {
     return algo::Sha1sig_Eq(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
 }
 
 // --- algo.Sha1sig..NeOp
-inline bool algo::Sha1sig::operator !=(const algo::Sha1sig &rhs) const {
+inline bool algo::Sha1sig::operator !=(const algo::Sha1sig &rhs) const throw() {
     return !algo::Sha1sig_Eq(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
 }
 
 // --- algo.Sha1sig..LtOp
-inline bool algo::Sha1sig::operator <(const algo::Sha1sig &rhs) const {
+inline bool algo::Sha1sig::operator <(const algo::Sha1sig &rhs) const throw() {
     return algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
 }
 
 // --- algo.Sha1sig..GtOp
-inline bool algo::Sha1sig::operator >(const algo::Sha1sig &rhs) const {
+inline bool algo::Sha1sig::operator >(const algo::Sha1sig &rhs) const throw() {
     return algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(rhs),const_cast<algo::Sha1sig&>(*this));
 }
 
 // --- algo.Sha1sig..LeOp
-inline bool algo::Sha1sig::operator <=(const algo::Sha1sig &rhs) const {
+inline bool algo::Sha1sig::operator <=(const algo::Sha1sig &rhs) const throw() {
     return !algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(rhs),const_cast<algo::Sha1sig&>(*this));
 }
 
 // --- algo.Sha1sig..GeOp
-inline bool algo::Sha1sig::operator >=(const algo::Sha1sig &rhs) const {
+inline bool algo::Sha1sig::operator >=(const algo::Sha1sig &rhs) const throw() {
     return !algo::Sha1sig_Lt(const_cast<algo::Sha1sig&>(*this),const_cast<algo::Sha1sig&>(rhs));
 }
 
 // --- algo.Sha1sig..Lt
-inline bool algo::Sha1sig_Lt(algo::Sha1sig& lhs, algo::Sha1sig& rhs) {
+inline bool algo::Sha1sig_Lt(algo::Sha1sig& lhs, algo::Sha1sig& rhs) throw() {
     return sha1sig_Cmp(lhs,rhs) < 0;
 }
 
 // --- algo.Sha1sig..Cmp
-inline i32 algo::Sha1sig_Cmp(algo::Sha1sig& lhs, algo::Sha1sig& rhs) {
+inline i32 algo::Sha1sig_Cmp(algo::Sha1sig& lhs, algo::Sha1sig& rhs) throw() {
     i32 retval = 0;
     retval = sha1sig_Cmp(lhs,rhs);
     return retval;
@@ -17114,7 +17114,7 @@ inline void algo::Sha1sig_Init(algo::Sha1sig& parent) {
 }
 
 // --- algo.Sha1sig..Eq
-inline bool algo::Sha1sig_Eq(algo::Sha1sig& lhs, algo::Sha1sig& rhs) {
+inline bool algo::Sha1sig_Eq(algo::Sha1sig& lhs, algo::Sha1sig& rhs) throw() {
     bool retval = true;
     retval = sha1sig_Eq(lhs,rhs);
     return retval;
@@ -17122,7 +17122,7 @@ inline bool algo::Sha1sig_Eq(algo::Sha1sig& lhs, algo::Sha1sig& rhs) {
 
 // --- algo.Sha1sig..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::Sha1sig_Update(algo::Sha1sig &lhs, algo::Sha1sig& rhs) {
+inline bool algo::Sha1sig_Update(algo::Sha1sig &lhs, algo::Sha1sig& rhs) throw() {
     bool ret = !Sha1sig_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -17131,14 +17131,14 @@ inline bool algo::Sha1sig_Update(algo::Sha1sig &lhs, algo::Sha1sig& rhs) {
 }
 
 // --- algo.Sha1sig..Ctor
-inline  algo::Sha1sig::Sha1sig() {
+inline  algo::Sha1sig::Sha1sig() throw() {
     algo::Sha1sig_Init(*this);
 }
 
 // --- algo.Smallstr1.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr1& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr1& parent, char c) throw() {
     if (parent.n_ch < 1) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -17148,7 +17148,7 @@ inline void algo::ch_Add(algo::Smallstr1& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr1& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr1& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 1) {
         n_new = 1 - parent.n_ch;
@@ -17159,7 +17159,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr1& parent, algo::strptr str) {
 
 // --- algo.Smallstr1.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr1& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr1& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -17171,19 +17171,19 @@ inline u32 algo::Smallstr1_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr1.ch.Init
-inline void algo::ch_Init(algo::Smallstr1 &parent) {
+inline void algo::ch_Init(algo::Smallstr1 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr1.ch.Max
 // always return constant 1
-inline int algo::ch_Max(algo::Smallstr1& parent) {
+inline int algo::ch_Max(algo::Smallstr1& parent) throw() {
     (void)parent;
     return 1;
 }
 
 // --- algo.Smallstr1.ch.N
-inline int algo::ch_N(const algo::Smallstr1& parent) {
+inline int algo::ch_N(const algo::Smallstr1& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -17191,32 +17191,32 @@ inline int algo::ch_N(const algo::Smallstr1& parent) {
 
 // --- algo.Smallstr1.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr1::operator =(const algo::strptr &str) {
+inline void algo::Smallstr1::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr1.ch.CtorStrptr
-inline  algo::Smallstr1::Smallstr1(const algo::strptr &rhs) {
+inline  algo::Smallstr1::Smallstr1(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr1.ch.Cast
-inline  algo::Smallstr1::operator algo::strptr() const {
+inline  algo::Smallstr1::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr1..EqOp
-inline bool algo::Smallstr1::operator ==(const algo::Smallstr1 &rhs) const {
+inline bool algo::Smallstr1::operator ==(const algo::Smallstr1 &rhs) const throw() {
     return algo::Smallstr1_Eq(const_cast<algo::Smallstr1&>(*this),const_cast<algo::Smallstr1&>(rhs));
 }
 
 // --- algo.Smallstr1..NeOp
-inline bool algo::Smallstr1::operator !=(const algo::Smallstr1 &rhs) const {
+inline bool algo::Smallstr1::operator !=(const algo::Smallstr1 &rhs) const throw() {
     return !algo::Smallstr1_Eq(const_cast<algo::Smallstr1&>(*this),const_cast<algo::Smallstr1&>(rhs));
 }
 
 // --- algo.Smallstr1..Cmp
-inline i32 algo::Smallstr1_Cmp(algo::Smallstr1& lhs, algo::Smallstr1& rhs) {
+inline i32 algo::Smallstr1_Cmp(algo::Smallstr1& lhs, algo::Smallstr1& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17229,31 +17229,31 @@ inline void algo::Smallstr1_Init(algo::Smallstr1& parent) {
 }
 
 // --- algo.Smallstr1..Eq
-inline bool algo::Smallstr1_Eq(algo::Smallstr1& lhs, algo::Smallstr1& rhs) {
+inline bool algo::Smallstr1_Eq(algo::Smallstr1& lhs, algo::Smallstr1& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr1..EqOpAryptr
-inline bool algo::Smallstr1::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr1::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr1..AssignOp
-inline algo::Smallstr1& algo::Smallstr1::operator =(const algo::Smallstr1 &rhs) {
+inline algo::Smallstr1& algo::Smallstr1::operator =(const algo::Smallstr1 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr1..Ctor
-inline  algo::Smallstr1::Smallstr1() {
+inline  algo::Smallstr1::Smallstr1() throw() {
     algo::Smallstr1_Init(*this);
 }
 
 // --- algo.Smallstr1..CopyCtor
-inline  algo::Smallstr1::Smallstr1(const algo::Smallstr1 &rhs) {
+inline  algo::Smallstr1::Smallstr1(const algo::Smallstr1 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -17261,7 +17261,7 @@ inline  algo::Smallstr1::Smallstr1(const algo::Smallstr1 &rhs) {
 // --- algo.Smallstr10.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr10& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr10& parent, char c) throw() {
     if (parent.n_ch < 10) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -17271,7 +17271,7 @@ inline void algo::ch_Add(algo::Smallstr10& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr10& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr10& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 10) {
         n_new = 10 - parent.n_ch;
@@ -17282,7 +17282,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr10& parent, algo::strptr str) {
 
 // --- algo.Smallstr10.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr10& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr10& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -17294,19 +17294,19 @@ inline u32 algo::Smallstr10_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr10.ch.Init
-inline void algo::ch_Init(algo::Smallstr10 &parent) {
+inline void algo::ch_Init(algo::Smallstr10 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr10.ch.Max
 // always return constant 10
-inline int algo::ch_Max(algo::Smallstr10& parent) {
+inline int algo::ch_Max(algo::Smallstr10& parent) throw() {
     (void)parent;
     return 10;
 }
 
 // --- algo.Smallstr10.ch.N
-inline int algo::ch_N(const algo::Smallstr10& parent) {
+inline int algo::ch_N(const algo::Smallstr10& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -17314,32 +17314,32 @@ inline int algo::ch_N(const algo::Smallstr10& parent) {
 
 // --- algo.Smallstr10.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr10::operator =(const algo::strptr &str) {
+inline void algo::Smallstr10::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr10.ch.CtorStrptr
-inline  algo::Smallstr10::Smallstr10(const algo::strptr &rhs) {
+inline  algo::Smallstr10::Smallstr10(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr10.ch.Cast
-inline  algo::Smallstr10::operator algo::strptr() const {
+inline  algo::Smallstr10::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr10..EqOp
-inline bool algo::Smallstr10::operator ==(const algo::Smallstr10 &rhs) const {
+inline bool algo::Smallstr10::operator ==(const algo::Smallstr10 &rhs) const throw() {
     return algo::Smallstr10_Eq(const_cast<algo::Smallstr10&>(*this),const_cast<algo::Smallstr10&>(rhs));
 }
 
 // --- algo.Smallstr10..NeOp
-inline bool algo::Smallstr10::operator !=(const algo::Smallstr10 &rhs) const {
+inline bool algo::Smallstr10::operator !=(const algo::Smallstr10 &rhs) const throw() {
     return !algo::Smallstr10_Eq(const_cast<algo::Smallstr10&>(*this),const_cast<algo::Smallstr10&>(rhs));
 }
 
 // --- algo.Smallstr10..Cmp
-inline i32 algo::Smallstr10_Cmp(algo::Smallstr10& lhs, algo::Smallstr10& rhs) {
+inline i32 algo::Smallstr10_Cmp(algo::Smallstr10& lhs, algo::Smallstr10& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17352,31 +17352,31 @@ inline void algo::Smallstr10_Init(algo::Smallstr10& parent) {
 }
 
 // --- algo.Smallstr10..Eq
-inline bool algo::Smallstr10_Eq(algo::Smallstr10& lhs, algo::Smallstr10& rhs) {
+inline bool algo::Smallstr10_Eq(algo::Smallstr10& lhs, algo::Smallstr10& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr10..EqOpAryptr
-inline bool algo::Smallstr10::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr10::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr10..AssignOp
-inline algo::Smallstr10& algo::Smallstr10::operator =(const algo::Smallstr10 &rhs) {
+inline algo::Smallstr10& algo::Smallstr10::operator =(const algo::Smallstr10 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr10..Ctor
-inline  algo::Smallstr10::Smallstr10() {
+inline  algo::Smallstr10::Smallstr10() throw() {
     algo::Smallstr10_Init(*this);
 }
 
 // --- algo.Smallstr10..CopyCtor
-inline  algo::Smallstr10::Smallstr10(const algo::Smallstr10 &rhs) {
+inline  algo::Smallstr10::Smallstr10(const algo::Smallstr10 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -17384,7 +17384,7 @@ inline  algo::Smallstr10::Smallstr10(const algo::Smallstr10 &rhs) {
 // --- algo.Smallstr16.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr16& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr16& parent, char c) throw() {
     if (parent.n_ch < 16) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -17394,7 +17394,7 @@ inline void algo::ch_Add(algo::Smallstr16& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr16& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr16& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 16) {
         n_new = 16 - parent.n_ch;
@@ -17405,7 +17405,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr16& parent, algo::strptr str) {
 
 // --- algo.Smallstr16.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr16& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr16& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -17417,19 +17417,19 @@ inline u32 algo::Smallstr16_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr16.ch.Init
-inline void algo::ch_Init(algo::Smallstr16 &parent) {
+inline void algo::ch_Init(algo::Smallstr16 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr16.ch.Max
 // always return constant 16
-inline int algo::ch_Max(algo::Smallstr16& parent) {
+inline int algo::ch_Max(algo::Smallstr16& parent) throw() {
     (void)parent;
     return 16;
 }
 
 // --- algo.Smallstr16.ch.N
-inline int algo::ch_N(const algo::Smallstr16& parent) {
+inline int algo::ch_N(const algo::Smallstr16& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -17437,32 +17437,32 @@ inline int algo::ch_N(const algo::Smallstr16& parent) {
 
 // --- algo.Smallstr16.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr16::operator =(const algo::strptr &str) {
+inline void algo::Smallstr16::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr16.ch.CtorStrptr
-inline  algo::Smallstr16::Smallstr16(const algo::strptr &rhs) {
+inline  algo::Smallstr16::Smallstr16(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr16.ch.Cast
-inline  algo::Smallstr16::operator algo::strptr() const {
+inline  algo::Smallstr16::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr16..EqOp
-inline bool algo::Smallstr16::operator ==(const algo::Smallstr16 &rhs) const {
+inline bool algo::Smallstr16::operator ==(const algo::Smallstr16 &rhs) const throw() {
     return algo::Smallstr16_Eq(const_cast<algo::Smallstr16&>(*this),const_cast<algo::Smallstr16&>(rhs));
 }
 
 // --- algo.Smallstr16..NeOp
-inline bool algo::Smallstr16::operator !=(const algo::Smallstr16 &rhs) const {
+inline bool algo::Smallstr16::operator !=(const algo::Smallstr16 &rhs) const throw() {
     return !algo::Smallstr16_Eq(const_cast<algo::Smallstr16&>(*this),const_cast<algo::Smallstr16&>(rhs));
 }
 
 // --- algo.Smallstr16..Cmp
-inline i32 algo::Smallstr16_Cmp(algo::Smallstr16& lhs, algo::Smallstr16& rhs) {
+inline i32 algo::Smallstr16_Cmp(algo::Smallstr16& lhs, algo::Smallstr16& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17475,31 +17475,31 @@ inline void algo::Smallstr16_Init(algo::Smallstr16& parent) {
 }
 
 // --- algo.Smallstr16..Eq
-inline bool algo::Smallstr16_Eq(algo::Smallstr16& lhs, algo::Smallstr16& rhs) {
+inline bool algo::Smallstr16_Eq(algo::Smallstr16& lhs, algo::Smallstr16& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr16..EqOpAryptr
-inline bool algo::Smallstr16::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr16::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr16..AssignOp
-inline algo::Smallstr16& algo::Smallstr16::operator =(const algo::Smallstr16 &rhs) {
+inline algo::Smallstr16& algo::Smallstr16::operator =(const algo::Smallstr16 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr16..Ctor
-inline  algo::Smallstr16::Smallstr16() {
+inline  algo::Smallstr16::Smallstr16() throw() {
     algo::Smallstr16_Init(*this);
 }
 
 // --- algo.Smallstr16..CopyCtor
-inline  algo::Smallstr16::Smallstr16(const algo::Smallstr16 &rhs) {
+inline  algo::Smallstr16::Smallstr16(const algo::Smallstr16 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -17507,7 +17507,7 @@ inline  algo::Smallstr16::Smallstr16(const algo::Smallstr16 &rhs) {
 // --- algo.Smallstr2.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr2& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr2& parent, char c) throw() {
     if (parent.n_ch < 2) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -17517,7 +17517,7 @@ inline void algo::ch_Add(algo::Smallstr2& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr2& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr2& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 2) {
         n_new = 2 - parent.n_ch;
@@ -17528,7 +17528,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr2& parent, algo::strptr str) {
 
 // --- algo.Smallstr2.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr2& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr2& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -17540,19 +17540,19 @@ inline u32 algo::Smallstr2_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr2.ch.Init
-inline void algo::ch_Init(algo::Smallstr2 &parent) {
+inline void algo::ch_Init(algo::Smallstr2 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr2.ch.Max
 // always return constant 2
-inline int algo::ch_Max(algo::Smallstr2& parent) {
+inline int algo::ch_Max(algo::Smallstr2& parent) throw() {
     (void)parent;
     return 2;
 }
 
 // --- algo.Smallstr2.ch.N
-inline int algo::ch_N(const algo::Smallstr2& parent) {
+inline int algo::ch_N(const algo::Smallstr2& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -17560,32 +17560,32 @@ inline int algo::ch_N(const algo::Smallstr2& parent) {
 
 // --- algo.Smallstr2.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr2::operator =(const algo::strptr &str) {
+inline void algo::Smallstr2::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr2.ch.CtorStrptr
-inline  algo::Smallstr2::Smallstr2(const algo::strptr &rhs) {
+inline  algo::Smallstr2::Smallstr2(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr2.ch.Cast
-inline  algo::Smallstr2::operator algo::strptr() const {
+inline  algo::Smallstr2::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr2..EqOp
-inline bool algo::Smallstr2::operator ==(const algo::Smallstr2 &rhs) const {
+inline bool algo::Smallstr2::operator ==(const algo::Smallstr2 &rhs) const throw() {
     return algo::Smallstr2_Eq(const_cast<algo::Smallstr2&>(*this),const_cast<algo::Smallstr2&>(rhs));
 }
 
 // --- algo.Smallstr2..NeOp
-inline bool algo::Smallstr2::operator !=(const algo::Smallstr2 &rhs) const {
+inline bool algo::Smallstr2::operator !=(const algo::Smallstr2 &rhs) const throw() {
     return !algo::Smallstr2_Eq(const_cast<algo::Smallstr2&>(*this),const_cast<algo::Smallstr2&>(rhs));
 }
 
 // --- algo.Smallstr2..Cmp
-inline i32 algo::Smallstr2_Cmp(algo::Smallstr2& lhs, algo::Smallstr2& rhs) {
+inline i32 algo::Smallstr2_Cmp(algo::Smallstr2& lhs, algo::Smallstr2& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17598,31 +17598,31 @@ inline void algo::Smallstr2_Init(algo::Smallstr2& parent) {
 }
 
 // --- algo.Smallstr2..Eq
-inline bool algo::Smallstr2_Eq(algo::Smallstr2& lhs, algo::Smallstr2& rhs) {
+inline bool algo::Smallstr2_Eq(algo::Smallstr2& lhs, algo::Smallstr2& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr2..EqOpAryptr
-inline bool algo::Smallstr2::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr2::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr2..AssignOp
-inline algo::Smallstr2& algo::Smallstr2::operator =(const algo::Smallstr2 &rhs) {
+inline algo::Smallstr2& algo::Smallstr2::operator =(const algo::Smallstr2 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr2..Ctor
-inline  algo::Smallstr2::Smallstr2() {
+inline  algo::Smallstr2::Smallstr2() throw() {
     algo::Smallstr2_Init(*this);
 }
 
 // --- algo.Smallstr2..CopyCtor
-inline  algo::Smallstr2::Smallstr2(const algo::Smallstr2 &rhs) {
+inline  algo::Smallstr2::Smallstr2(const algo::Smallstr2 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -17630,7 +17630,7 @@ inline  algo::Smallstr2::Smallstr2(const algo::Smallstr2 &rhs) {
 // --- algo.Smallstr20.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr20& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr20& parent, char c) throw() {
     if (parent.n_ch < 20) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -17640,7 +17640,7 @@ inline void algo::ch_Add(algo::Smallstr20& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr20& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr20& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 20) {
         n_new = 20 - parent.n_ch;
@@ -17651,7 +17651,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr20& parent, algo::strptr str) {
 
 // --- algo.Smallstr20.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr20& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr20& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -17663,19 +17663,19 @@ inline u32 algo::Smallstr20_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr20.ch.Init
-inline void algo::ch_Init(algo::Smallstr20 &parent) {
+inline void algo::ch_Init(algo::Smallstr20 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr20.ch.Max
 // always return constant 20
-inline int algo::ch_Max(algo::Smallstr20& parent) {
+inline int algo::ch_Max(algo::Smallstr20& parent) throw() {
     (void)parent;
     return 20;
 }
 
 // --- algo.Smallstr20.ch.N
-inline int algo::ch_N(const algo::Smallstr20& parent) {
+inline int algo::ch_N(const algo::Smallstr20& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -17683,57 +17683,57 @@ inline int algo::ch_N(const algo::Smallstr20& parent) {
 
 // --- algo.Smallstr20.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr20::operator =(const algo::strptr &str) {
+inline void algo::Smallstr20::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr20.ch.CtorStrptr
-inline  algo::Smallstr20::Smallstr20(const algo::strptr &rhs) {
+inline  algo::Smallstr20::Smallstr20(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr20.ch.Cast
-inline  algo::Smallstr20::operator algo::strptr() const {
+inline  algo::Smallstr20::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr20..EqOp
-inline bool algo::Smallstr20::operator ==(const algo::Smallstr20 &rhs) const {
+inline bool algo::Smallstr20::operator ==(const algo::Smallstr20 &rhs) const throw() {
     return algo::Smallstr20_Eq(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
 }
 
 // --- algo.Smallstr20..NeOp
-inline bool algo::Smallstr20::operator !=(const algo::Smallstr20 &rhs) const {
+inline bool algo::Smallstr20::operator !=(const algo::Smallstr20 &rhs) const throw() {
     return !algo::Smallstr20_Eq(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
 }
 
 // --- algo.Smallstr20..LtOp
-inline bool algo::Smallstr20::operator <(const algo::Smallstr20 &rhs) const {
+inline bool algo::Smallstr20::operator <(const algo::Smallstr20 &rhs) const throw() {
     return algo::Smallstr20_Lt(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
 }
 
 // --- algo.Smallstr20..GtOp
-inline bool algo::Smallstr20::operator >(const algo::Smallstr20 &rhs) const {
+inline bool algo::Smallstr20::operator >(const algo::Smallstr20 &rhs) const throw() {
     return algo::Smallstr20_Lt(const_cast<algo::Smallstr20&>(rhs),const_cast<algo::Smallstr20&>(*this));
 }
 
 // --- algo.Smallstr20..LeOp
-inline bool algo::Smallstr20::operator <=(const algo::Smallstr20 &rhs) const {
+inline bool algo::Smallstr20::operator <=(const algo::Smallstr20 &rhs) const throw() {
     return !algo::Smallstr20_Lt(const_cast<algo::Smallstr20&>(rhs),const_cast<algo::Smallstr20&>(*this));
 }
 
 // --- algo.Smallstr20..GeOp
-inline bool algo::Smallstr20::operator >=(const algo::Smallstr20 &rhs) const {
+inline bool algo::Smallstr20::operator >=(const algo::Smallstr20 &rhs) const throw() {
     return !algo::Smallstr20_Lt(const_cast<algo::Smallstr20&>(*this),const_cast<algo::Smallstr20&>(rhs));
 }
 
 // --- algo.Smallstr20..Lt
-inline bool algo::Smallstr20_Lt(algo::Smallstr20& lhs, algo::Smallstr20& rhs) {
+inline bool algo::Smallstr20_Lt(algo::Smallstr20& lhs, algo::Smallstr20& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.Smallstr20..Cmp
-inline i32 algo::Smallstr20_Cmp(algo::Smallstr20& lhs, algo::Smallstr20& rhs) {
+inline i32 algo::Smallstr20_Cmp(algo::Smallstr20& lhs, algo::Smallstr20& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17746,7 +17746,7 @@ inline void algo::Smallstr20_Init(algo::Smallstr20& parent) {
 }
 
 // --- algo.Smallstr20..Eq
-inline bool algo::Smallstr20_Eq(algo::Smallstr20& lhs, algo::Smallstr20& rhs) {
+inline bool algo::Smallstr20_Eq(algo::Smallstr20& lhs, algo::Smallstr20& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17754,7 +17754,7 @@ inline bool algo::Smallstr20_Eq(algo::Smallstr20& lhs, algo::Smallstr20& rhs) {
 
 // --- algo.Smallstr20..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::Smallstr20_Update(algo::Smallstr20 &lhs, algo::Smallstr20& rhs) {
+inline bool algo::Smallstr20_Update(algo::Smallstr20 &lhs, algo::Smallstr20& rhs) throw() {
     bool ret = !Smallstr20_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -17763,24 +17763,24 @@ inline bool algo::Smallstr20_Update(algo::Smallstr20 &lhs, algo::Smallstr20& rhs
 }
 
 // --- algo.Smallstr20..EqOpAryptr
-inline bool algo::Smallstr20::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr20::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr20..AssignOp
-inline algo::Smallstr20& algo::Smallstr20::operator =(const algo::Smallstr20 &rhs) {
+inline algo::Smallstr20& algo::Smallstr20::operator =(const algo::Smallstr20 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr20..Ctor
-inline  algo::Smallstr20::Smallstr20() {
+inline  algo::Smallstr20::Smallstr20() throw() {
     algo::Smallstr20_Init(*this);
 }
 
 // --- algo.Smallstr20..CopyCtor
-inline  algo::Smallstr20::Smallstr20(const algo::Smallstr20 &rhs) {
+inline  algo::Smallstr20::Smallstr20(const algo::Smallstr20 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -17788,7 +17788,7 @@ inline  algo::Smallstr20::Smallstr20(const algo::Smallstr20 &rhs) {
 // --- algo.Smallstr200.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr200& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr200& parent, char c) throw() {
     if (parent.n_ch < 200) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -17798,7 +17798,7 @@ inline void algo::ch_Add(algo::Smallstr200& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr200& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr200& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 200) {
         n_new = 200 - parent.n_ch;
@@ -17809,7 +17809,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr200& parent, algo::strptr str) {
 
 // --- algo.Smallstr200.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr200& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr200& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -17821,19 +17821,19 @@ inline u32 algo::Smallstr200_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr200.ch.Init
-inline void algo::ch_Init(algo::Smallstr200 &parent) {
+inline void algo::ch_Init(algo::Smallstr200 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr200.ch.Max
 // always return constant 200
-inline int algo::ch_Max(algo::Smallstr200& parent) {
+inline int algo::ch_Max(algo::Smallstr200& parent) throw() {
     (void)parent;
     return 200;
 }
 
 // --- algo.Smallstr200.ch.N
-inline int algo::ch_N(const algo::Smallstr200& parent) {
+inline int algo::ch_N(const algo::Smallstr200& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -17841,32 +17841,32 @@ inline int algo::ch_N(const algo::Smallstr200& parent) {
 
 // --- algo.Smallstr200.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr200::operator =(const algo::strptr &str) {
+inline void algo::Smallstr200::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr200.ch.CtorStrptr
-inline  algo::Smallstr200::Smallstr200(const algo::strptr &rhs) {
+inline  algo::Smallstr200::Smallstr200(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr200.ch.Cast
-inline  algo::Smallstr200::operator algo::strptr() const {
+inline  algo::Smallstr200::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr200..EqOp
-inline bool algo::Smallstr200::operator ==(const algo::Smallstr200 &rhs) const {
+inline bool algo::Smallstr200::operator ==(const algo::Smallstr200 &rhs) const throw() {
     return algo::Smallstr200_Eq(const_cast<algo::Smallstr200&>(*this),const_cast<algo::Smallstr200&>(rhs));
 }
 
 // --- algo.Smallstr200..NeOp
-inline bool algo::Smallstr200::operator !=(const algo::Smallstr200 &rhs) const {
+inline bool algo::Smallstr200::operator !=(const algo::Smallstr200 &rhs) const throw() {
     return !algo::Smallstr200_Eq(const_cast<algo::Smallstr200&>(*this),const_cast<algo::Smallstr200&>(rhs));
 }
 
 // --- algo.Smallstr200..Cmp
-inline i32 algo::Smallstr200_Cmp(algo::Smallstr200& lhs, algo::Smallstr200& rhs) {
+inline i32 algo::Smallstr200_Cmp(algo::Smallstr200& lhs, algo::Smallstr200& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -17879,31 +17879,31 @@ inline void algo::Smallstr200_Init(algo::Smallstr200& parent) {
 }
 
 // --- algo.Smallstr200..Eq
-inline bool algo::Smallstr200_Eq(algo::Smallstr200& lhs, algo::Smallstr200& rhs) {
+inline bool algo::Smallstr200_Eq(algo::Smallstr200& lhs, algo::Smallstr200& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr200..EqOpAryptr
-inline bool algo::Smallstr200::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr200::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr200..AssignOp
-inline algo::Smallstr200& algo::Smallstr200::operator =(const algo::Smallstr200 &rhs) {
+inline algo::Smallstr200& algo::Smallstr200::operator =(const algo::Smallstr200 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr200..Ctor
-inline  algo::Smallstr200::Smallstr200() {
+inline  algo::Smallstr200::Smallstr200() throw() {
     algo::Smallstr200_Init(*this);
 }
 
 // --- algo.Smallstr200..CopyCtor
-inline  algo::Smallstr200::Smallstr200(const algo::Smallstr200 &rhs) {
+inline  algo::Smallstr200::Smallstr200(const algo::Smallstr200 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -17911,7 +17911,7 @@ inline  algo::Smallstr200::Smallstr200(const algo::Smallstr200 &rhs) {
 // --- algo.Smallstr25.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr25& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr25& parent, char c) throw() {
     if (parent.n_ch < 25) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -17921,7 +17921,7 @@ inline void algo::ch_Add(algo::Smallstr25& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr25& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr25& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 25) {
         n_new = 25 - parent.n_ch;
@@ -17932,7 +17932,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr25& parent, algo::strptr str) {
 
 // --- algo.Smallstr25.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr25& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr25& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -17944,19 +17944,19 @@ inline u32 algo::Smallstr25_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr25.ch.Init
-inline void algo::ch_Init(algo::Smallstr25 &parent) {
+inline void algo::ch_Init(algo::Smallstr25 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr25.ch.Max
 // always return constant 25
-inline int algo::ch_Max(algo::Smallstr25& parent) {
+inline int algo::ch_Max(algo::Smallstr25& parent) throw() {
     (void)parent;
     return 25;
 }
 
 // --- algo.Smallstr25.ch.N
-inline int algo::ch_N(const algo::Smallstr25& parent) {
+inline int algo::ch_N(const algo::Smallstr25& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -17964,32 +17964,32 @@ inline int algo::ch_N(const algo::Smallstr25& parent) {
 
 // --- algo.Smallstr25.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr25::operator =(const algo::strptr &str) {
+inline void algo::Smallstr25::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr25.ch.CtorStrptr
-inline  algo::Smallstr25::Smallstr25(const algo::strptr &rhs) {
+inline  algo::Smallstr25::Smallstr25(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr25.ch.Cast
-inline  algo::Smallstr25::operator algo::strptr() const {
+inline  algo::Smallstr25::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr25..EqOp
-inline bool algo::Smallstr25::operator ==(const algo::Smallstr25 &rhs) const {
+inline bool algo::Smallstr25::operator ==(const algo::Smallstr25 &rhs) const throw() {
     return algo::Smallstr25_Eq(const_cast<algo::Smallstr25&>(*this),const_cast<algo::Smallstr25&>(rhs));
 }
 
 // --- algo.Smallstr25..NeOp
-inline bool algo::Smallstr25::operator !=(const algo::Smallstr25 &rhs) const {
+inline bool algo::Smallstr25::operator !=(const algo::Smallstr25 &rhs) const throw() {
     return !algo::Smallstr25_Eq(const_cast<algo::Smallstr25&>(*this),const_cast<algo::Smallstr25&>(rhs));
 }
 
 // --- algo.Smallstr25..Cmp
-inline i32 algo::Smallstr25_Cmp(algo::Smallstr25& lhs, algo::Smallstr25& rhs) {
+inline i32 algo::Smallstr25_Cmp(algo::Smallstr25& lhs, algo::Smallstr25& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18002,31 +18002,31 @@ inline void algo::Smallstr25_Init(algo::Smallstr25& parent) {
 }
 
 // --- algo.Smallstr25..Eq
-inline bool algo::Smallstr25_Eq(algo::Smallstr25& lhs, algo::Smallstr25& rhs) {
+inline bool algo::Smallstr25_Eq(algo::Smallstr25& lhs, algo::Smallstr25& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr25..EqOpAryptr
-inline bool algo::Smallstr25::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr25::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr25..AssignOp
-inline algo::Smallstr25& algo::Smallstr25::operator =(const algo::Smallstr25 &rhs) {
+inline algo::Smallstr25& algo::Smallstr25::operator =(const algo::Smallstr25 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr25..Ctor
-inline  algo::Smallstr25::Smallstr25() {
+inline  algo::Smallstr25::Smallstr25() throw() {
     algo::Smallstr25_Init(*this);
 }
 
 // --- algo.Smallstr25..CopyCtor
-inline  algo::Smallstr25::Smallstr25(const algo::Smallstr25 &rhs) {
+inline  algo::Smallstr25::Smallstr25(const algo::Smallstr25 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -18034,7 +18034,7 @@ inline  algo::Smallstr25::Smallstr25(const algo::Smallstr25 &rhs) {
 // --- algo.Smallstr3.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr3& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr3& parent, char c) throw() {
     if (parent.n_ch < 3) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -18044,7 +18044,7 @@ inline void algo::ch_Add(algo::Smallstr3& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr3& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr3& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 3) {
         n_new = 3 - parent.n_ch;
@@ -18055,7 +18055,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr3& parent, algo::strptr str) {
 
 // --- algo.Smallstr3.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr3& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr3& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -18067,19 +18067,19 @@ inline u32 algo::Smallstr3_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr3.ch.Init
-inline void algo::ch_Init(algo::Smallstr3 &parent) {
+inline void algo::ch_Init(algo::Smallstr3 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr3.ch.Max
 // always return constant 3
-inline int algo::ch_Max(algo::Smallstr3& parent) {
+inline int algo::ch_Max(algo::Smallstr3& parent) throw() {
     (void)parent;
     return 3;
 }
 
 // --- algo.Smallstr3.ch.N
-inline int algo::ch_N(const algo::Smallstr3& parent) {
+inline int algo::ch_N(const algo::Smallstr3& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -18087,32 +18087,32 @@ inline int algo::ch_N(const algo::Smallstr3& parent) {
 
 // --- algo.Smallstr3.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr3::operator =(const algo::strptr &str) {
+inline void algo::Smallstr3::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr3.ch.CtorStrptr
-inline  algo::Smallstr3::Smallstr3(const algo::strptr &rhs) {
+inline  algo::Smallstr3::Smallstr3(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr3.ch.Cast
-inline  algo::Smallstr3::operator algo::strptr() const {
+inline  algo::Smallstr3::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr3..EqOp
-inline bool algo::Smallstr3::operator ==(const algo::Smallstr3 &rhs) const {
+inline bool algo::Smallstr3::operator ==(const algo::Smallstr3 &rhs) const throw() {
     return algo::Smallstr3_Eq(const_cast<algo::Smallstr3&>(*this),const_cast<algo::Smallstr3&>(rhs));
 }
 
 // --- algo.Smallstr3..NeOp
-inline bool algo::Smallstr3::operator !=(const algo::Smallstr3 &rhs) const {
+inline bool algo::Smallstr3::operator !=(const algo::Smallstr3 &rhs) const throw() {
     return !algo::Smallstr3_Eq(const_cast<algo::Smallstr3&>(*this),const_cast<algo::Smallstr3&>(rhs));
 }
 
 // --- algo.Smallstr3..Cmp
-inline i32 algo::Smallstr3_Cmp(algo::Smallstr3& lhs, algo::Smallstr3& rhs) {
+inline i32 algo::Smallstr3_Cmp(algo::Smallstr3& lhs, algo::Smallstr3& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18125,31 +18125,31 @@ inline void algo::Smallstr3_Init(algo::Smallstr3& parent) {
 }
 
 // --- algo.Smallstr3..Eq
-inline bool algo::Smallstr3_Eq(algo::Smallstr3& lhs, algo::Smallstr3& rhs) {
+inline bool algo::Smallstr3_Eq(algo::Smallstr3& lhs, algo::Smallstr3& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr3..EqOpAryptr
-inline bool algo::Smallstr3::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr3::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr3..AssignOp
-inline algo::Smallstr3& algo::Smallstr3::operator =(const algo::Smallstr3 &rhs) {
+inline algo::Smallstr3& algo::Smallstr3::operator =(const algo::Smallstr3 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr3..Ctor
-inline  algo::Smallstr3::Smallstr3() {
+inline  algo::Smallstr3::Smallstr3() throw() {
     algo::Smallstr3_Init(*this);
 }
 
 // --- algo.Smallstr3..CopyCtor
-inline  algo::Smallstr3::Smallstr3(const algo::Smallstr3 &rhs) {
+inline  algo::Smallstr3::Smallstr3(const algo::Smallstr3 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -18157,7 +18157,7 @@ inline  algo::Smallstr3::Smallstr3(const algo::Smallstr3 &rhs) {
 // --- algo.Smallstr30.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr30& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr30& parent, char c) throw() {
     if (parent.n_ch < 30) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -18167,7 +18167,7 @@ inline void algo::ch_Add(algo::Smallstr30& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr30& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr30& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 30) {
         n_new = 30 - parent.n_ch;
@@ -18178,7 +18178,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr30& parent, algo::strptr str) {
 
 // --- algo.Smallstr30.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr30& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr30& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -18190,19 +18190,19 @@ inline u32 algo::Smallstr30_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr30.ch.Init
-inline void algo::ch_Init(algo::Smallstr30 &parent) {
+inline void algo::ch_Init(algo::Smallstr30 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr30.ch.Max
 // always return constant 30
-inline int algo::ch_Max(algo::Smallstr30& parent) {
+inline int algo::ch_Max(algo::Smallstr30& parent) throw() {
     (void)parent;
     return 30;
 }
 
 // --- algo.Smallstr30.ch.N
-inline int algo::ch_N(const algo::Smallstr30& parent) {
+inline int algo::ch_N(const algo::Smallstr30& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -18210,57 +18210,57 @@ inline int algo::ch_N(const algo::Smallstr30& parent) {
 
 // --- algo.Smallstr30.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr30::operator =(const algo::strptr &str) {
+inline void algo::Smallstr30::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr30.ch.CtorStrptr
-inline  algo::Smallstr30::Smallstr30(const algo::strptr &rhs) {
+inline  algo::Smallstr30::Smallstr30(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr30.ch.Cast
-inline  algo::Smallstr30::operator algo::strptr() const {
+inline  algo::Smallstr30::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr30..EqOp
-inline bool algo::Smallstr30::operator ==(const algo::Smallstr30 &rhs) const {
+inline bool algo::Smallstr30::operator ==(const algo::Smallstr30 &rhs) const throw() {
     return algo::Smallstr30_Eq(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
 }
 
 // --- algo.Smallstr30..NeOp
-inline bool algo::Smallstr30::operator !=(const algo::Smallstr30 &rhs) const {
+inline bool algo::Smallstr30::operator !=(const algo::Smallstr30 &rhs) const throw() {
     return !algo::Smallstr30_Eq(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
 }
 
 // --- algo.Smallstr30..LtOp
-inline bool algo::Smallstr30::operator <(const algo::Smallstr30 &rhs) const {
+inline bool algo::Smallstr30::operator <(const algo::Smallstr30 &rhs) const throw() {
     return algo::Smallstr30_Lt(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
 }
 
 // --- algo.Smallstr30..GtOp
-inline bool algo::Smallstr30::operator >(const algo::Smallstr30 &rhs) const {
+inline bool algo::Smallstr30::operator >(const algo::Smallstr30 &rhs) const throw() {
     return algo::Smallstr30_Lt(const_cast<algo::Smallstr30&>(rhs),const_cast<algo::Smallstr30&>(*this));
 }
 
 // --- algo.Smallstr30..LeOp
-inline bool algo::Smallstr30::operator <=(const algo::Smallstr30 &rhs) const {
+inline bool algo::Smallstr30::operator <=(const algo::Smallstr30 &rhs) const throw() {
     return !algo::Smallstr30_Lt(const_cast<algo::Smallstr30&>(rhs),const_cast<algo::Smallstr30&>(*this));
 }
 
 // --- algo.Smallstr30..GeOp
-inline bool algo::Smallstr30::operator >=(const algo::Smallstr30 &rhs) const {
+inline bool algo::Smallstr30::operator >=(const algo::Smallstr30 &rhs) const throw() {
     return !algo::Smallstr30_Lt(const_cast<algo::Smallstr30&>(*this),const_cast<algo::Smallstr30&>(rhs));
 }
 
 // --- algo.Smallstr30..Lt
-inline bool algo::Smallstr30_Lt(algo::Smallstr30& lhs, algo::Smallstr30& rhs) {
+inline bool algo::Smallstr30_Lt(algo::Smallstr30& lhs, algo::Smallstr30& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- algo.Smallstr30..Cmp
-inline i32 algo::Smallstr30_Cmp(algo::Smallstr30& lhs, algo::Smallstr30& rhs) {
+inline i32 algo::Smallstr30_Cmp(algo::Smallstr30& lhs, algo::Smallstr30& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18273,7 +18273,7 @@ inline void algo::Smallstr30_Init(algo::Smallstr30& parent) {
 }
 
 // --- algo.Smallstr30..Eq
-inline bool algo::Smallstr30_Eq(algo::Smallstr30& lhs, algo::Smallstr30& rhs) {
+inline bool algo::Smallstr30_Eq(algo::Smallstr30& lhs, algo::Smallstr30& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18281,7 +18281,7 @@ inline bool algo::Smallstr30_Eq(algo::Smallstr30& lhs, algo::Smallstr30& rhs) {
 
 // --- algo.Smallstr30..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::Smallstr30_Update(algo::Smallstr30 &lhs, algo::Smallstr30& rhs) {
+inline bool algo::Smallstr30_Update(algo::Smallstr30 &lhs, algo::Smallstr30& rhs) throw() {
     bool ret = !Smallstr30_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -18290,24 +18290,24 @@ inline bool algo::Smallstr30_Update(algo::Smallstr30 &lhs, algo::Smallstr30& rhs
 }
 
 // --- algo.Smallstr30..EqOpAryptr
-inline bool algo::Smallstr30::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr30::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr30..AssignOp
-inline algo::Smallstr30& algo::Smallstr30::operator =(const algo::Smallstr30 &rhs) {
+inline algo::Smallstr30& algo::Smallstr30::operator =(const algo::Smallstr30 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr30..Ctor
-inline  algo::Smallstr30::Smallstr30() {
+inline  algo::Smallstr30::Smallstr30() throw() {
     algo::Smallstr30_Init(*this);
 }
 
 // --- algo.Smallstr30..CopyCtor
-inline  algo::Smallstr30::Smallstr30(const algo::Smallstr30 &rhs) {
+inline  algo::Smallstr30::Smallstr30(const algo::Smallstr30 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -18315,7 +18315,7 @@ inline  algo::Smallstr30::Smallstr30(const algo::Smallstr30 &rhs) {
 // --- algo.Smallstr32.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr32& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr32& parent, char c) throw() {
     if (parent.n_ch < 32) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -18325,7 +18325,7 @@ inline void algo::ch_Add(algo::Smallstr32& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr32& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr32& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 32) {
         n_new = 32 - parent.n_ch;
@@ -18336,7 +18336,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr32& parent, algo::strptr str) {
 
 // --- algo.Smallstr32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr32& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -18348,19 +18348,19 @@ inline u32 algo::Smallstr32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr32.ch.Init
-inline void algo::ch_Init(algo::Smallstr32 &parent) {
+inline void algo::ch_Init(algo::Smallstr32 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr32.ch.Max
 // always return constant 32
-inline int algo::ch_Max(algo::Smallstr32& parent) {
+inline int algo::ch_Max(algo::Smallstr32& parent) throw() {
     (void)parent;
     return 32;
 }
 
 // --- algo.Smallstr32.ch.N
-inline int algo::ch_N(const algo::Smallstr32& parent) {
+inline int algo::ch_N(const algo::Smallstr32& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -18368,32 +18368,32 @@ inline int algo::ch_N(const algo::Smallstr32& parent) {
 
 // --- algo.Smallstr32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr32::operator =(const algo::strptr &str) {
+inline void algo::Smallstr32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr32.ch.CtorStrptr
-inline  algo::Smallstr32::Smallstr32(const algo::strptr &rhs) {
+inline  algo::Smallstr32::Smallstr32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr32.ch.Cast
-inline  algo::Smallstr32::operator algo::strptr() const {
+inline  algo::Smallstr32::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr32..EqOp
-inline bool algo::Smallstr32::operator ==(const algo::Smallstr32 &rhs) const {
+inline bool algo::Smallstr32::operator ==(const algo::Smallstr32 &rhs) const throw() {
     return algo::Smallstr32_Eq(const_cast<algo::Smallstr32&>(*this),const_cast<algo::Smallstr32&>(rhs));
 }
 
 // --- algo.Smallstr32..NeOp
-inline bool algo::Smallstr32::operator !=(const algo::Smallstr32 &rhs) const {
+inline bool algo::Smallstr32::operator !=(const algo::Smallstr32 &rhs) const throw() {
     return !algo::Smallstr32_Eq(const_cast<algo::Smallstr32&>(*this),const_cast<algo::Smallstr32&>(rhs));
 }
 
 // --- algo.Smallstr32..Cmp
-inline i32 algo::Smallstr32_Cmp(algo::Smallstr32& lhs, algo::Smallstr32& rhs) {
+inline i32 algo::Smallstr32_Cmp(algo::Smallstr32& lhs, algo::Smallstr32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18406,31 +18406,31 @@ inline void algo::Smallstr32_Init(algo::Smallstr32& parent) {
 }
 
 // --- algo.Smallstr32..Eq
-inline bool algo::Smallstr32_Eq(algo::Smallstr32& lhs, algo::Smallstr32& rhs) {
+inline bool algo::Smallstr32_Eq(algo::Smallstr32& lhs, algo::Smallstr32& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr32..EqOpAryptr
-inline bool algo::Smallstr32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr32..AssignOp
-inline algo::Smallstr32& algo::Smallstr32::operator =(const algo::Smallstr32 &rhs) {
+inline algo::Smallstr32& algo::Smallstr32::operator =(const algo::Smallstr32 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr32..Ctor
-inline  algo::Smallstr32::Smallstr32() {
+inline  algo::Smallstr32::Smallstr32() throw() {
     algo::Smallstr32_Init(*this);
 }
 
 // --- algo.Smallstr32..CopyCtor
-inline  algo::Smallstr32::Smallstr32(const algo::Smallstr32 &rhs) {
+inline  algo::Smallstr32::Smallstr32(const algo::Smallstr32 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -18438,7 +18438,7 @@ inline  algo::Smallstr32::Smallstr32(const algo::Smallstr32 &rhs) {
 // --- algo.Smallstr4.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr4& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr4& parent, char c) throw() {
     if (parent.n_ch < 4) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -18448,7 +18448,7 @@ inline void algo::ch_Add(algo::Smallstr4& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr4& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr4& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 4) {
         n_new = 4 - parent.n_ch;
@@ -18459,7 +18459,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr4& parent, algo::strptr str) {
 
 // --- algo.Smallstr4.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr4& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr4& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -18471,19 +18471,19 @@ inline u32 algo::Smallstr4_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr4.ch.Init
-inline void algo::ch_Init(algo::Smallstr4 &parent) {
+inline void algo::ch_Init(algo::Smallstr4 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr4.ch.Max
 // always return constant 4
-inline int algo::ch_Max(algo::Smallstr4& parent) {
+inline int algo::ch_Max(algo::Smallstr4& parent) throw() {
     (void)parent;
     return 4;
 }
 
 // --- algo.Smallstr4.ch.N
-inline int algo::ch_N(const algo::Smallstr4& parent) {
+inline int algo::ch_N(const algo::Smallstr4& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -18491,32 +18491,32 @@ inline int algo::ch_N(const algo::Smallstr4& parent) {
 
 // --- algo.Smallstr4.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr4::operator =(const algo::strptr &str) {
+inline void algo::Smallstr4::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr4.ch.CtorStrptr
-inline  algo::Smallstr4::Smallstr4(const algo::strptr &rhs) {
+inline  algo::Smallstr4::Smallstr4(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr4.ch.Cast
-inline  algo::Smallstr4::operator algo::strptr() const {
+inline  algo::Smallstr4::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr4..EqOp
-inline bool algo::Smallstr4::operator ==(const algo::Smallstr4 &rhs) const {
+inline bool algo::Smallstr4::operator ==(const algo::Smallstr4 &rhs) const throw() {
     return algo::Smallstr4_Eq(const_cast<algo::Smallstr4&>(*this),const_cast<algo::Smallstr4&>(rhs));
 }
 
 // --- algo.Smallstr4..NeOp
-inline bool algo::Smallstr4::operator !=(const algo::Smallstr4 &rhs) const {
+inline bool algo::Smallstr4::operator !=(const algo::Smallstr4 &rhs) const throw() {
     return !algo::Smallstr4_Eq(const_cast<algo::Smallstr4&>(*this),const_cast<algo::Smallstr4&>(rhs));
 }
 
 // --- algo.Smallstr4..Cmp
-inline i32 algo::Smallstr4_Cmp(algo::Smallstr4& lhs, algo::Smallstr4& rhs) {
+inline i32 algo::Smallstr4_Cmp(algo::Smallstr4& lhs, algo::Smallstr4& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18529,31 +18529,31 @@ inline void algo::Smallstr4_Init(algo::Smallstr4& parent) {
 }
 
 // --- algo.Smallstr4..Eq
-inline bool algo::Smallstr4_Eq(algo::Smallstr4& lhs, algo::Smallstr4& rhs) {
+inline bool algo::Smallstr4_Eq(algo::Smallstr4& lhs, algo::Smallstr4& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr4..EqOpAryptr
-inline bool algo::Smallstr4::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr4::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr4..AssignOp
-inline algo::Smallstr4& algo::Smallstr4::operator =(const algo::Smallstr4 &rhs) {
+inline algo::Smallstr4& algo::Smallstr4::operator =(const algo::Smallstr4 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr4..Ctor
-inline  algo::Smallstr4::Smallstr4() {
+inline  algo::Smallstr4::Smallstr4() throw() {
     algo::Smallstr4_Init(*this);
 }
 
 // --- algo.Smallstr4..CopyCtor
-inline  algo::Smallstr4::Smallstr4(const algo::Smallstr4 &rhs) {
+inline  algo::Smallstr4::Smallstr4(const algo::Smallstr4 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -18561,7 +18561,7 @@ inline  algo::Smallstr4::Smallstr4(const algo::Smallstr4 &rhs) {
 // --- algo.Smallstr40.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr40& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr40& parent, char c) throw() {
     if (parent.n_ch < 40) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -18571,7 +18571,7 @@ inline void algo::ch_Add(algo::Smallstr40& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr40& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr40& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 40) {
         n_new = 40 - parent.n_ch;
@@ -18582,7 +18582,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr40& parent, algo::strptr str) {
 
 // --- algo.Smallstr40.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr40& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr40& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -18594,19 +18594,19 @@ inline u32 algo::Smallstr40_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr40.ch.Init
-inline void algo::ch_Init(algo::Smallstr40 &parent) {
+inline void algo::ch_Init(algo::Smallstr40 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr40.ch.Max
 // always return constant 40
-inline int algo::ch_Max(algo::Smallstr40& parent) {
+inline int algo::ch_Max(algo::Smallstr40& parent) throw() {
     (void)parent;
     return 40;
 }
 
 // --- algo.Smallstr40.ch.N
-inline int algo::ch_N(const algo::Smallstr40& parent) {
+inline int algo::ch_N(const algo::Smallstr40& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -18614,32 +18614,32 @@ inline int algo::ch_N(const algo::Smallstr40& parent) {
 
 // --- algo.Smallstr40.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr40::operator =(const algo::strptr &str) {
+inline void algo::Smallstr40::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr40.ch.CtorStrptr
-inline  algo::Smallstr40::Smallstr40(const algo::strptr &rhs) {
+inline  algo::Smallstr40::Smallstr40(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr40.ch.Cast
-inline  algo::Smallstr40::operator algo::strptr() const {
+inline  algo::Smallstr40::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr40..EqOp
-inline bool algo::Smallstr40::operator ==(const algo::Smallstr40 &rhs) const {
+inline bool algo::Smallstr40::operator ==(const algo::Smallstr40 &rhs) const throw() {
     return algo::Smallstr40_Eq(const_cast<algo::Smallstr40&>(*this),const_cast<algo::Smallstr40&>(rhs));
 }
 
 // --- algo.Smallstr40..NeOp
-inline bool algo::Smallstr40::operator !=(const algo::Smallstr40 &rhs) const {
+inline bool algo::Smallstr40::operator !=(const algo::Smallstr40 &rhs) const throw() {
     return !algo::Smallstr40_Eq(const_cast<algo::Smallstr40&>(*this),const_cast<algo::Smallstr40&>(rhs));
 }
 
 // --- algo.Smallstr40..Cmp
-inline i32 algo::Smallstr40_Cmp(algo::Smallstr40& lhs, algo::Smallstr40& rhs) {
+inline i32 algo::Smallstr40_Cmp(algo::Smallstr40& lhs, algo::Smallstr40& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18652,31 +18652,31 @@ inline void algo::Smallstr40_Init(algo::Smallstr40& parent) {
 }
 
 // --- algo.Smallstr40..Eq
-inline bool algo::Smallstr40_Eq(algo::Smallstr40& lhs, algo::Smallstr40& rhs) {
+inline bool algo::Smallstr40_Eq(algo::Smallstr40& lhs, algo::Smallstr40& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr40..EqOpAryptr
-inline bool algo::Smallstr40::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr40::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr40..AssignOp
-inline algo::Smallstr40& algo::Smallstr40::operator =(const algo::Smallstr40 &rhs) {
+inline algo::Smallstr40& algo::Smallstr40::operator =(const algo::Smallstr40 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr40..Ctor
-inline  algo::Smallstr40::Smallstr40() {
+inline  algo::Smallstr40::Smallstr40() throw() {
     algo::Smallstr40_Init(*this);
 }
 
 // --- algo.Smallstr40..CopyCtor
-inline  algo::Smallstr40::Smallstr40(const algo::Smallstr40 &rhs) {
+inline  algo::Smallstr40::Smallstr40(const algo::Smallstr40 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
@@ -18684,7 +18684,7 @@ inline  algo::Smallstr40::Smallstr40(const algo::Smallstr40 &rhs) {
 // --- algo.Smallstr5.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void algo::ch_Add(algo::Smallstr5& parent, char c) {
+inline void algo::ch_Add(algo::Smallstr5& parent, char c) throw() {
     if (parent.n_ch < 5) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -18694,7 +18694,7 @@ inline void algo::ch_Add(algo::Smallstr5& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void algo::ch_AddStrptr(algo::Smallstr5& parent, algo::strptr str) {
+inline void algo::ch_AddStrptr(algo::Smallstr5& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 5) {
         n_new = 5 - parent.n_ch;
@@ -18705,7 +18705,7 @@ inline void algo::ch_AddStrptr(algo::Smallstr5& parent, algo::strptr str) {
 
 // --- algo.Smallstr5.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr5& parent) {
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr5& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -18717,19 +18717,19 @@ inline u32 algo::Smallstr5_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- algo.Smallstr5.ch.Init
-inline void algo::ch_Init(algo::Smallstr5 &parent) {
+inline void algo::ch_Init(algo::Smallstr5 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- algo.Smallstr5.ch.Max
 // always return constant 5
-inline int algo::ch_Max(algo::Smallstr5& parent) {
+inline int algo::ch_Max(algo::Smallstr5& parent) throw() {
     (void)parent;
     return 5;
 }
 
 // --- algo.Smallstr5.ch.N
-inline int algo::ch_N(const algo::Smallstr5& parent) {
+inline int algo::ch_N(const algo::Smallstr5& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -18737,32 +18737,32 @@ inline int algo::ch_N(const algo::Smallstr5& parent) {
 
 // --- algo.Smallstr5.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void algo::Smallstr5::operator =(const algo::strptr &str) {
+inline void algo::Smallstr5::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- algo.Smallstr5.ch.CtorStrptr
-inline  algo::Smallstr5::Smallstr5(const algo::strptr &rhs) {
+inline  algo::Smallstr5::Smallstr5(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- algo.Smallstr5.ch.Cast
-inline  algo::Smallstr5::operator algo::strptr() const {
+inline  algo::Smallstr5::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- algo.Smallstr5..EqOp
-inline bool algo::Smallstr5::operator ==(const algo::Smallstr5 &rhs) const {
+inline bool algo::Smallstr5::operator ==(const algo::Smallstr5 &rhs) const throw() {
     return algo::Smallstr5_Eq(const_cast<algo::Smallstr5&>(*this),const_cast<algo::Smallstr5&>(rhs));
 }
 
 // --- algo.Smallstr5..NeOp
-inline bool algo::Smallstr5::operator !=(const algo::Smallstr5 &rhs) const {
+inline bool algo::Smallstr5::operator !=(const algo::Smallstr5 &rhs) const throw() {
     return !algo::Smallstr5_Eq(const_cast<algo::Smallstr5&>(*this),const_cast<algo::Smallstr5&>(rhs));
 }
 
 // --- algo.Smallstr5..Cmp
-inline i32 algo::Smallstr5_Cmp(algo::Smallstr5& lhs, algo::Smallstr5& rhs) {
+inline i32 algo::Smallstr5_Cmp(algo::Smallstr5& lhs, algo::Smallstr5& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -18775,44 +18775,44 @@ inline void algo::Smallstr5_Init(algo::Smallstr5& parent) {
 }
 
 // --- algo.Smallstr5..Eq
-inline bool algo::Smallstr5_Eq(algo::Smallstr5& lhs, algo::Smallstr5& rhs) {
+inline bool algo::Smallstr5_Eq(algo::Smallstr5& lhs, algo::Smallstr5& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
 }
 
 // --- algo.Smallstr5..EqOpAryptr
-inline bool algo::Smallstr5::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool algo::Smallstr5::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- algo.Smallstr5..AssignOp
-inline algo::Smallstr5& algo::Smallstr5::operator =(const algo::Smallstr5 &rhs) {
+inline algo::Smallstr5& algo::Smallstr5::operator =(const algo::Smallstr5 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- algo.Smallstr5..Ctor
-inline  algo::Smallstr5::Smallstr5() {
+inline  algo::Smallstr5::Smallstr5() throw() {
     algo::Smallstr5_Init(*this);
 }
 
 // --- algo.Smallstr5..CopyCtor
-inline  algo::Smallstr5::Smallstr5(const algo::Smallstr5 &rhs) {
+inline  algo::Smallstr5::Smallstr5(const algo::Smallstr5 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
 
 // --- algo.StringAry.ary.EmptyQ
 // Return true if index is empty
-inline bool algo::ary_EmptyQ(algo::StringAry& parent) {
+inline bool algo::ary_EmptyQ(algo::StringAry& parent) throw() {
     return parent.ary_n == 0;
 }
 
 // --- algo.StringAry.ary.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* algo::ary_Find(algo::StringAry& parent, u64 t) {
+inline algo::cstring* algo::ary_Find(algo::StringAry& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.ary_n;
     if (idx >= lim) return NULL;
@@ -18821,24 +18821,24 @@ inline algo::cstring* algo::ary_Find(algo::StringAry& parent, u64 t) {
 
 // --- algo.StringAry.ary.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> algo::ary_Getary(const algo::StringAry& parent) {
+inline algo::aryptr<algo::cstring> algo::ary_Getary(const algo::StringAry& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.ary_elems, parent.ary_n);
 }
 
 // --- algo.StringAry.ary.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* algo::ary_Last(algo::StringAry& parent) {
+inline algo::cstring* algo::ary_Last(algo::StringAry& parent) throw() {
     return ary_Find(parent, u64(parent.ary_n-1));
 }
 
 // --- algo.StringAry.ary.AssignAryptr
 // Copy from aryptr (operator=)
-inline void algo::StringAry::operator =(const algo::aryptr<algo::cstring> &rhs) {
+inline void algo::StringAry::operator =(const algo::aryptr<algo::cstring> &rhs) throw() {
     ary_Setary(*this, rhs);
 }
 
 // --- algo.StringAry.ary.CtorAryptr
-inline  algo::StringAry::StringAry(const algo::aryptr<algo::cstring> &rhs) {
+inline  algo::StringAry::StringAry(const algo::aryptr<algo::cstring> &rhs) throw() {
     ary_elems 	= 0; // (algo.StringAry.ary)
     ary_n     	= 0; // (algo.StringAry.ary)
     ary_max   	= 0; // (algo.StringAry.ary)
@@ -18847,20 +18847,20 @@ inline  algo::StringAry::StringAry(const algo::aryptr<algo::cstring> &rhs) {
 
 // --- algo.StringAry.ary.Max
 // Return max. number of items in the array
-inline i32 algo::ary_Max(algo::StringAry& parent) {
+inline i32 algo::ary_Max(algo::StringAry& parent) throw() {
     (void)parent;
     return parent.ary_max;
 }
 
 // --- algo.StringAry.ary.N
 // Return number of items in the array
-inline i32 algo::ary_N(const algo::StringAry& parent) {
+inline i32 algo::ary_N(const algo::StringAry& parent) throw() {
     return parent.ary_n;
 }
 
 // --- algo.StringAry.ary.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo::ary_Reserve(algo::StringAry& parent, int n) {
+inline void algo::ary_Reserve(algo::StringAry& parent, int n) throw() {
     u32 new_n = parent.ary_n + n;
     if (UNLIKELY(new_n > parent.ary_max)) {
         ary_AbsReserve(parent, new_n);
@@ -18869,36 +18869,36 @@ inline void algo::ary_Reserve(algo::StringAry& parent, int n) {
 
 // --- algo.StringAry.ary.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& algo::ary_qFind(algo::StringAry& parent, u64 t) {
+inline algo::cstring& algo::ary_qFind(algo::StringAry& parent, u64 t) throw() {
     return parent.ary_elems[t];
 }
 
 // --- algo.StringAry.ary.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& algo::ary_qLast(algo::StringAry& parent) {
+inline algo::cstring& algo::ary_qLast(algo::StringAry& parent) throw() {
     return ary_qFind(parent, u64(parent.ary_n-1));
 }
 
 // --- algo.StringAry.ary.rowid_Get
 // Return row id of specified element
-inline u64 algo::ary_rowid_Get(algo::StringAry& parent, algo::cstring &elem) {
+inline u64 algo::ary_rowid_Get(algo::StringAry& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.ary_elems;
     return u64(id);
 }
 
 // --- algo.StringAry.ary.Cast
-inline  algo::StringAry::operator algo::aryptr<algo::cstring>() const {
+inline  algo::StringAry::operator algo::aryptr<algo::cstring>() const throw() {
     return ary_Getary(*this);
 }
 
 // --- algo.StringAry.ary_curs.Next
 // proceed to next item
-inline void algo::StringAry_ary_curs_Next(StringAry_ary_curs &curs) {
+inline void algo::StringAry_ary_curs_Next(StringAry_ary_curs &curs) throw() {
     curs.index++;
 }
 
 // --- algo.StringAry.ary_curs.Reset
-inline void algo::StringAry_ary_curs_Reset(StringAry_ary_curs &curs, algo::StringAry &parent) {
+inline void algo::StringAry_ary_curs_Reset(StringAry_ary_curs &curs, algo::StringAry &parent) throw() {
     curs.elems = parent.ary_elems;
     curs.n_elems = parent.ary_n;
     curs.index = 0;
@@ -18906,13 +18906,13 @@ inline void algo::StringAry_ary_curs_Reset(StringAry_ary_curs &curs, algo::Strin
 
 // --- algo.StringAry.ary_curs.ValidQ
 // cursor points to valid item
-inline bool algo::StringAry_ary_curs_ValidQ(StringAry_ary_curs &curs) {
+inline bool algo::StringAry_ary_curs_ValidQ(StringAry_ary_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- algo.StringAry.ary_curs.Access
 // item access
-inline algo::cstring& algo::StringAry_ary_curs_Access(StringAry_ary_curs &curs) {
+inline algo::cstring& algo::StringAry_ary_curs_Access(StringAry_ary_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -18925,29 +18925,29 @@ inline void algo::StringAry_Init(algo::StringAry& parent) {
 }
 
 // --- algo.StringAry..Ctor
-inline  algo::StringAry::StringAry() {
+inline  algo::StringAry::StringAry() throw() {
     algo::StringAry_Init(*this);
 }
 
 // --- algo.StringAry..Dtor
-inline  algo::StringAry::~StringAry() {
+inline  algo::StringAry::~StringAry() throw() {
     algo::StringAry_Uninit(*this);
 }
 
 // --- algo.TermStyle.value.GetEnum
 // Get value of field as enum type
-inline algo_TermStyleEnum algo::value_GetEnum(const algo::TermStyle& parent) {
+inline algo_TermStyleEnum algo::value_GetEnum(const algo::TermStyle& parent) throw() {
     return algo_TermStyleEnum(parent.value);
 }
 
 // --- algo.TermStyle.value.SetEnum
 // Set value of field from enum type.
-inline void algo::value_SetEnum(algo::TermStyle& parent, algo_TermStyleEnum rhs) {
+inline void algo::value_SetEnum(algo::TermStyle& parent, algo_TermStyleEnum rhs) throw() {
     parent.value = u32(rhs);
 }
 
 // --- algo.TermStyle.value.Cast
-inline  algo::TermStyle::operator algo_TermStyleEnum() const {
+inline  algo::TermStyle::operator algo_TermStyleEnum() const throw() {
     return algo_TermStyleEnum((*this).value);
 }
 
@@ -18958,35 +18958,35 @@ inline void algo::TermStyle_Init(algo::TermStyle& parent) {
 }
 
 // --- algo.TermStyle..Ctor
-inline  algo::TermStyle::TermStyle() {
+inline  algo::TermStyle::TermStyle() throw() {
     algo::TermStyle_Init(*this);
 }
 
 // --- algo.TermStyle..FieldwiseCtor
-inline  algo::TermStyle::TermStyle(u32 in_value)
+inline  algo::TermStyle::TermStyle(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.TermStyle..EnumCtor
-inline  algo::TermStyle::TermStyle(algo_TermStyleEnum arg) {
+inline  algo::TermStyle::TermStyle(algo_TermStyleEnum arg) throw() {
     this->value = u32(arg);
 }
 
 // --- algo.TextJust.value.GetEnum
 // Get value of field as enum type
-inline algo_TextJustEnum algo::value_GetEnum(const algo::TextJust& parent) {
+inline algo_TextJustEnum algo::value_GetEnum(const algo::TextJust& parent) throw() {
     return algo_TextJustEnum(parent.value);
 }
 
 // --- algo.TextJust.value.SetEnum
 // Set value of field from enum type.
-inline void algo::value_SetEnum(algo::TextJust& parent, algo_TextJustEnum rhs) {
+inline void algo::value_SetEnum(algo::TextJust& parent, algo_TextJustEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- algo.TextJust.value.Cast
-inline  algo::TextJust::operator algo_TextJustEnum() const {
+inline  algo::TextJust::operator algo_TextJustEnum() const throw() {
     return algo_TextJustEnum((*this).value);
 }
 
@@ -18997,35 +18997,35 @@ inline void algo::TextJust_Init(algo::TextJust& parent) {
 }
 
 // --- algo.TextJust..Ctor
-inline  algo::TextJust::TextJust() {
+inline  algo::TextJust::TextJust() throw() {
     algo::TextJust_Init(*this);
 }
 
 // --- algo.TextJust..FieldwiseCtor
-inline  algo::TextJust::TextJust(i32 in_value)
+inline  algo::TextJust::TextJust(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.TextJust..EnumCtor
-inline  algo::TextJust::TextJust(algo_TextJustEnum arg) {
+inline  algo::TextJust::TextJust(algo_TextJustEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- algo.TstampCache..Ctor
-inline  algo::TstampCache::TstampCache() {
+inline  algo::TstampCache::TstampCache() throw() {
     algo::TstampCache_Init(*this);
 }
 
 // --- algo.Tuple.attrs.EmptyQ
 // Return true if index is empty
-inline bool algo::attrs_EmptyQ(algo::Tuple& parent) {
+inline bool algo::attrs_EmptyQ(algo::Tuple& parent) throw() {
     return parent.attrs_n == 0;
 }
 
 // --- algo.Tuple.attrs.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::Attr* algo::attrs_Find(algo::Tuple& parent, u64 t) {
+inline algo::Attr* algo::attrs_Find(algo::Tuple& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.attrs_n;
     if (idx >= lim) return NULL;
@@ -19034,32 +19034,32 @@ inline algo::Attr* algo::attrs_Find(algo::Tuple& parent, u64 t) {
 
 // --- algo.Tuple.attrs.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::Attr> algo::attrs_Getary(const algo::Tuple& parent) {
+inline algo::aryptr<algo::Attr> algo::attrs_Getary(const algo::Tuple& parent) throw() {
     return algo::aryptr<algo::Attr>(parent.attrs_elems, parent.attrs_n);
 }
 
 // --- algo.Tuple.attrs.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::Attr* algo::attrs_Last(algo::Tuple& parent) {
+inline algo::Attr* algo::attrs_Last(algo::Tuple& parent) throw() {
     return attrs_Find(parent, u64(parent.attrs_n-1));
 }
 
 // --- algo.Tuple.attrs.Max
 // Return max. number of items in the array
-inline i32 algo::attrs_Max(algo::Tuple& parent) {
+inline i32 algo::attrs_Max(algo::Tuple& parent) throw() {
     (void)parent;
     return parent.attrs_max;
 }
 
 // --- algo.Tuple.attrs.N
 // Return number of items in the array
-inline i32 algo::attrs_N(const algo::Tuple& parent) {
+inline i32 algo::attrs_N(const algo::Tuple& parent) throw() {
     return parent.attrs_n;
 }
 
 // --- algo.Tuple.attrs.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo::attrs_Reserve(algo::Tuple& parent, int n) {
+inline void algo::attrs_Reserve(algo::Tuple& parent, int n) throw() {
     u32 new_n = parent.attrs_n + n;
     if (UNLIKELY(new_n > parent.attrs_max)) {
         attrs_AbsReserve(parent, new_n);
@@ -19068,31 +19068,31 @@ inline void algo::attrs_Reserve(algo::Tuple& parent, int n) {
 
 // --- algo.Tuple.attrs.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::Attr& algo::attrs_qFind(algo::Tuple& parent, u64 t) {
+inline algo::Attr& algo::attrs_qFind(algo::Tuple& parent, u64 t) throw() {
     return parent.attrs_elems[t];
 }
 
 // --- algo.Tuple.attrs.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::Attr& algo::attrs_qLast(algo::Tuple& parent) {
+inline algo::Attr& algo::attrs_qLast(algo::Tuple& parent) throw() {
     return attrs_qFind(parent, u64(parent.attrs_n-1));
 }
 
 // --- algo.Tuple.attrs.rowid_Get
 // Return row id of specified element
-inline u64 algo::attrs_rowid_Get(algo::Tuple& parent, algo::Attr &elem) {
+inline u64 algo::attrs_rowid_Get(algo::Tuple& parent, algo::Attr &elem) throw() {
     u64 id = &elem - parent.attrs_elems;
     return u64(id);
 }
 
 // --- algo.Tuple.attrs_curs.Next
 // proceed to next item
-inline void algo::Tuple_attrs_curs_Next(Tuple_attrs_curs &curs) {
+inline void algo::Tuple_attrs_curs_Next(Tuple_attrs_curs &curs) throw() {
     curs.index++;
 }
 
 // --- algo.Tuple.attrs_curs.Reset
-inline void algo::Tuple_attrs_curs_Reset(Tuple_attrs_curs &curs, algo::Tuple &parent) {
+inline void algo::Tuple_attrs_curs_Reset(Tuple_attrs_curs &curs, algo::Tuple &parent) throw() {
     curs.elems = parent.attrs_elems;
     curs.n_elems = parent.attrs_n;
     curs.index = 0;
@@ -19100,28 +19100,28 @@ inline void algo::Tuple_attrs_curs_Reset(Tuple_attrs_curs &curs, algo::Tuple &pa
 
 // --- algo.Tuple.attrs_curs.ValidQ
 // cursor points to valid item
-inline bool algo::Tuple_attrs_curs_ValidQ(Tuple_attrs_curs &curs) {
+inline bool algo::Tuple_attrs_curs_ValidQ(Tuple_attrs_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- algo.Tuple.attrs_curs.Access
 // item access
-inline algo::Attr& algo::Tuple_attrs_curs_Access(Tuple_attrs_curs &curs) {
+inline algo::Attr& algo::Tuple_attrs_curs_Access(Tuple_attrs_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- algo.Tuple..EqOp
-inline bool algo::Tuple::operator ==(const algo::Tuple &rhs) const {
+inline bool algo::Tuple::operator ==(const algo::Tuple &rhs) const throw() {
     return algo::Tuple_Eq(const_cast<algo::Tuple&>(*this),const_cast<algo::Tuple&>(rhs));
 }
 
 // --- algo.Tuple..NeOp
-inline bool algo::Tuple::operator !=(const algo::Tuple &rhs) const {
+inline bool algo::Tuple::operator !=(const algo::Tuple &rhs) const throw() {
     return !algo::Tuple_Eq(const_cast<algo::Tuple&>(*this),const_cast<algo::Tuple&>(rhs));
 }
 
 // --- algo.Tuple..Cmp
-inline i32 algo::Tuple_Cmp(algo::Tuple& lhs, algo::Tuple& rhs) {
+inline i32 algo::Tuple_Cmp(algo::Tuple& lhs, algo::Tuple& rhs) throw() {
     i32 retval = 0;
     retval = attrs_Cmp(lhs,rhs);
     if (retval != 0) {
@@ -19140,7 +19140,7 @@ inline void algo::Tuple_Init(algo::Tuple& parent) {
 }
 
 // --- algo.Tuple..Eq
-inline bool algo::Tuple_Eq(algo::Tuple& lhs, algo::Tuple& rhs) {
+inline bool algo::Tuple_Eq(algo::Tuple& lhs, algo::Tuple& rhs) throw() {
     bool retval = true;
     retval = attrs_Eq(lhs,rhs);
     if (!retval) {
@@ -19151,12 +19151,12 @@ inline bool algo::Tuple_Eq(algo::Tuple& lhs, algo::Tuple& rhs) {
 }
 
 // --- algo.Tuple..Ctor
-inline  algo::Tuple::Tuple() {
+inline  algo::Tuple::Tuple() throw() {
     algo::Tuple_Init(*this);
 }
 
 // --- algo.Tuple..Dtor
-inline  algo::Tuple::~Tuple() {
+inline  algo::Tuple::~Tuple() throw() {
     algo::Tuple_Uninit(*this);
 }
 
@@ -19167,14 +19167,14 @@ inline  algo::Tuple::~Tuple() {
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U16Dec2& parent, double val) {
+inline void algo::value_qSetDouble(algo::U16Dec2& parent, double val) throw() {
     double intval = val * 100 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U16Dec2.value.GetDouble
-inline double algo::value_GetDouble(const algo::U16Dec2& parent) {
+inline double algo::value_GetDouble(const algo::U16Dec2& parent) throw() {
     double ret;
     ret = parent.value / double(100);
     return ret;
@@ -19182,7 +19182,7 @@ inline double algo::value_GetDouble(const algo::U16Dec2& parent) {
 
 // --- algo.U16Dec2.value.GetInt
 // Return integer portion (divide number by 100)
-inline u16 algo::value_GetInt(const algo::U16Dec2& parent) {
+inline u16 algo::value_GetInt(const algo::U16Dec2& parent) throw() {
     u16 ret;
     ret = parent.value / 100;
     return ret;
@@ -19190,17 +19190,17 @@ inline u16 algo::value_GetInt(const algo::U16Dec2& parent) {
 
 // --- algo.U16Dec2.value.GetScale
 // Return constant 100
-inline u16 algo::U16Dec2_GetScale() {
+inline u16 algo::U16Dec2_GetScale() throw() {
     return 100;
 }
 
 // --- algo.U16Dec2.value.Cast
-inline  algo::U16Dec2::operator u16() const {
+inline  algo::U16Dec2::operator u16() const throw() {
     return u16((*this).value);
 }
 
 // --- algo.U16Dec2..Hash
-inline u32 algo::U16Dec2_Hash(u32 prev, algo::U16Dec2 rhs) {
+inline u32 algo::U16Dec2_Hash(u32 prev, algo::U16Dec2 rhs) throw() {
     prev = u16_Hash(prev, rhs.value);
     return prev;
 }
@@ -19212,12 +19212,12 @@ inline void algo::U16Dec2_Init(algo::U16Dec2& parent) {
 }
 
 // --- algo.U16Dec2..Ctor
-inline  algo::U16Dec2::U16Dec2() {
+inline  algo::U16Dec2::U16Dec2() throw() {
     algo::U16Dec2_Init(*this);
 }
 
 // --- algo.U16Dec2..FieldwiseCtor
-inline  algo::U16Dec2::U16Dec2(u16 in_value)
+inline  algo::U16Dec2::U16Dec2(u16 in_value) throw()
     : value(in_value)
  {
 }
@@ -19229,14 +19229,14 @@ inline  algo::U16Dec2::U16Dec2(u16 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U32Dec1& parent, double val) {
+inline void algo::value_qSetDouble(algo::U32Dec1& parent, double val) throw() {
     double intval = val * 10 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U32Dec1.value.GetDouble
-inline double algo::value_GetDouble(const algo::U32Dec1& parent) {
+inline double algo::value_GetDouble(const algo::U32Dec1& parent) throw() {
     double ret;
     ret = parent.value / double(10);
     return ret;
@@ -19244,7 +19244,7 @@ inline double algo::value_GetDouble(const algo::U32Dec1& parent) {
 
 // --- algo.U32Dec1.value.GetInt
 // Return integer portion (divide number by 10)
-inline u32 algo::value_GetInt(const algo::U32Dec1& parent) {
+inline u32 algo::value_GetInt(const algo::U32Dec1& parent) throw() {
     u32 ret;
     ret = parent.value / 10;
     return ret;
@@ -19252,17 +19252,17 @@ inline u32 algo::value_GetInt(const algo::U32Dec1& parent) {
 
 // --- algo.U32Dec1.value.GetScale
 // Return constant 10
-inline u32 algo::U32Dec1_GetScale() {
+inline u32 algo::U32Dec1_GetScale() throw() {
     return 10;
 }
 
 // --- algo.U32Dec1.value.Cast
-inline  algo::U32Dec1::operator u32() const {
+inline  algo::U32Dec1::operator u32() const throw() {
     return u32((*this).value);
 }
 
 // --- algo.U32Dec1..Hash
-inline u32 algo::U32Dec1_Hash(u32 prev, algo::U32Dec1 rhs) {
+inline u32 algo::U32Dec1_Hash(u32 prev, algo::U32Dec1 rhs) throw() {
     prev = u32_Hash(prev, rhs.value);
     return prev;
 }
@@ -19274,12 +19274,12 @@ inline void algo::U32Dec1_Init(algo::U32Dec1& parent) {
 }
 
 // --- algo.U32Dec1..Ctor
-inline  algo::U32Dec1::U32Dec1() {
+inline  algo::U32Dec1::U32Dec1() throw() {
     algo::U32Dec1_Init(*this);
 }
 
 // --- algo.U32Dec1..FieldwiseCtor
-inline  algo::U32Dec1::U32Dec1(u32 in_value)
+inline  algo::U32Dec1::U32Dec1(u32 in_value) throw()
     : value(in_value)
  {
 }
@@ -19291,14 +19291,14 @@ inline  algo::U32Dec1::U32Dec1(u32 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U32Dec2& parent, double val) {
+inline void algo::value_qSetDouble(algo::U32Dec2& parent, double val) throw() {
     double intval = val * 100 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U32Dec2.value.GetDouble
-inline double algo::value_GetDouble(const algo::U32Dec2& parent) {
+inline double algo::value_GetDouble(const algo::U32Dec2& parent) throw() {
     double ret;
     ret = parent.value / double(100);
     return ret;
@@ -19306,7 +19306,7 @@ inline double algo::value_GetDouble(const algo::U32Dec2& parent) {
 
 // --- algo.U32Dec2.value.GetInt
 // Return integer portion (divide number by 100)
-inline u32 algo::value_GetInt(const algo::U32Dec2& parent) {
+inline u32 algo::value_GetInt(const algo::U32Dec2& parent) throw() {
     u32 ret;
     ret = parent.value / 100;
     return ret;
@@ -19314,17 +19314,17 @@ inline u32 algo::value_GetInt(const algo::U32Dec2& parent) {
 
 // --- algo.U32Dec2.value.GetScale
 // Return constant 100
-inline u32 algo::U32Dec2_GetScale() {
+inline u32 algo::U32Dec2_GetScale() throw() {
     return 100;
 }
 
 // --- algo.U32Dec2.value.Cast
-inline  algo::U32Dec2::operator u32() const {
+inline  algo::U32Dec2::operator u32() const throw() {
     return u32((*this).value);
 }
 
 // --- algo.U32Dec2..Hash
-inline u32 algo::U32Dec2_Hash(u32 prev, algo::U32Dec2 rhs) {
+inline u32 algo::U32Dec2_Hash(u32 prev, algo::U32Dec2 rhs) throw() {
     prev = u32_Hash(prev, rhs.value);
     return prev;
 }
@@ -19336,12 +19336,12 @@ inline void algo::U32Dec2_Init(algo::U32Dec2& parent) {
 }
 
 // --- algo.U32Dec2..Ctor
-inline  algo::U32Dec2::U32Dec2() {
+inline  algo::U32Dec2::U32Dec2() throw() {
     algo::U32Dec2_Init(*this);
 }
 
 // --- algo.U32Dec2..FieldwiseCtor
-inline  algo::U32Dec2::U32Dec2(u32 in_value)
+inline  algo::U32Dec2::U32Dec2(u32 in_value) throw()
     : value(in_value)
  {
 }
@@ -19353,14 +19353,14 @@ inline  algo::U32Dec2::U32Dec2(u32 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U32Dec3& parent, double val) {
+inline void algo::value_qSetDouble(algo::U32Dec3& parent, double val) throw() {
     double intval = val * 1000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U32Dec3.value.GetDouble
-inline double algo::value_GetDouble(const algo::U32Dec3& parent) {
+inline double algo::value_GetDouble(const algo::U32Dec3& parent) throw() {
     double ret;
     ret = parent.value / double(1000);
     return ret;
@@ -19368,7 +19368,7 @@ inline double algo::value_GetDouble(const algo::U32Dec3& parent) {
 
 // --- algo.U32Dec3.value.GetInt
 // Return integer portion (divide number by 1000)
-inline u32 algo::value_GetInt(const algo::U32Dec3& parent) {
+inline u32 algo::value_GetInt(const algo::U32Dec3& parent) throw() {
     u32 ret;
     ret = parent.value / 1000;
     return ret;
@@ -19376,17 +19376,17 @@ inline u32 algo::value_GetInt(const algo::U32Dec3& parent) {
 
 // --- algo.U32Dec3.value.GetScale
 // Return constant 1000
-inline u32 algo::U32Dec3_GetScale() {
+inline u32 algo::U32Dec3_GetScale() throw() {
     return 1000;
 }
 
 // --- algo.U32Dec3.value.Cast
-inline  algo::U32Dec3::operator u32() const {
+inline  algo::U32Dec3::operator u32() const throw() {
     return u32((*this).value);
 }
 
 // --- algo.U32Dec3..Hash
-inline u32 algo::U32Dec3_Hash(u32 prev, algo::U32Dec3 rhs) {
+inline u32 algo::U32Dec3_Hash(u32 prev, algo::U32Dec3 rhs) throw() {
     prev = u32_Hash(prev, rhs.value);
     return prev;
 }
@@ -19398,12 +19398,12 @@ inline void algo::U32Dec3_Init(algo::U32Dec3& parent) {
 }
 
 // --- algo.U32Dec3..Ctor
-inline  algo::U32Dec3::U32Dec3() {
+inline  algo::U32Dec3::U32Dec3() throw() {
     algo::U32Dec3_Init(*this);
 }
 
 // --- algo.U32Dec3..FieldwiseCtor
-inline  algo::U32Dec3::U32Dec3(u32 in_value)
+inline  algo::U32Dec3::U32Dec3(u32 in_value) throw()
     : value(in_value)
  {
 }
@@ -19415,14 +19415,14 @@ inline  algo::U32Dec3::U32Dec3(u32 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U32Dec4& parent, double val) {
+inline void algo::value_qSetDouble(algo::U32Dec4& parent, double val) throw() {
     double intval = val * 10000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U32Dec4.value.GetDouble
-inline double algo::value_GetDouble(const algo::U32Dec4& parent) {
+inline double algo::value_GetDouble(const algo::U32Dec4& parent) throw() {
     double ret;
     ret = parent.value / double(10000);
     return ret;
@@ -19430,7 +19430,7 @@ inline double algo::value_GetDouble(const algo::U32Dec4& parent) {
 
 // --- algo.U32Dec4.value.GetInt
 // Return integer portion (divide number by 10000)
-inline u32 algo::value_GetInt(const algo::U32Dec4& parent) {
+inline u32 algo::value_GetInt(const algo::U32Dec4& parent) throw() {
     u32 ret;
     ret = parent.value / 10000;
     return ret;
@@ -19438,17 +19438,17 @@ inline u32 algo::value_GetInt(const algo::U32Dec4& parent) {
 
 // --- algo.U32Dec4.value.GetScale
 // Return constant 10000
-inline u32 algo::U32Dec4_GetScale() {
+inline u32 algo::U32Dec4_GetScale() throw() {
     return 10000;
 }
 
 // --- algo.U32Dec4.value.Cast
-inline  algo::U32Dec4::operator u32() const {
+inline  algo::U32Dec4::operator u32() const throw() {
     return u32((*this).value);
 }
 
 // --- algo.U32Dec4..Hash
-inline u32 algo::U32Dec4_Hash(u32 prev, algo::U32Dec4 rhs) {
+inline u32 algo::U32Dec4_Hash(u32 prev, algo::U32Dec4 rhs) throw() {
     prev = u32_Hash(prev, rhs.value);
     return prev;
 }
@@ -19460,12 +19460,12 @@ inline void algo::U32Dec4_Init(algo::U32Dec4& parent) {
 }
 
 // --- algo.U32Dec4..Ctor
-inline  algo::U32Dec4::U32Dec4() {
+inline  algo::U32Dec4::U32Dec4() throw() {
     algo::U32Dec4_Init(*this);
 }
 
 // --- algo.U32Dec4..FieldwiseCtor
-inline  algo::U32Dec4::U32Dec4(u32 in_value)
+inline  algo::U32Dec4::U32Dec4(u32 in_value) throw()
     : value(in_value)
  {
 }
@@ -19477,14 +19477,14 @@ inline  algo::U32Dec4::U32Dec4(u32 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U32Dec5& parent, double val) {
+inline void algo::value_qSetDouble(algo::U32Dec5& parent, double val) throw() {
     double intval = val * 100000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U32Dec5.value.GetDouble
-inline double algo::value_GetDouble(const algo::U32Dec5& parent) {
+inline double algo::value_GetDouble(const algo::U32Dec5& parent) throw() {
     double ret;
     ret = parent.value / double(100000);
     return ret;
@@ -19492,7 +19492,7 @@ inline double algo::value_GetDouble(const algo::U32Dec5& parent) {
 
 // --- algo.U32Dec5.value.GetInt
 // Return integer portion (divide number by 100000)
-inline u32 algo::value_GetInt(const algo::U32Dec5& parent) {
+inline u32 algo::value_GetInt(const algo::U32Dec5& parent) throw() {
     u32 ret;
     ret = parent.value / 100000;
     return ret;
@@ -19500,17 +19500,17 @@ inline u32 algo::value_GetInt(const algo::U32Dec5& parent) {
 
 // --- algo.U32Dec5.value.GetScale
 // Return constant 100000
-inline u32 algo::U32Dec5_GetScale() {
+inline u32 algo::U32Dec5_GetScale() throw() {
     return 100000;
 }
 
 // --- algo.U32Dec5.value.Cast
-inline  algo::U32Dec5::operator u32() const {
+inline  algo::U32Dec5::operator u32() const throw() {
     return u32((*this).value);
 }
 
 // --- algo.U32Dec5..Hash
-inline u32 algo::U32Dec5_Hash(u32 prev, algo::U32Dec5 rhs) {
+inline u32 algo::U32Dec5_Hash(u32 prev, algo::U32Dec5 rhs) throw() {
     prev = u32_Hash(prev, rhs.value);
     return prev;
 }
@@ -19522,25 +19522,25 @@ inline void algo::U32Dec5_Init(algo::U32Dec5& parent) {
 }
 
 // --- algo.U32Dec5..Ctor
-inline  algo::U32Dec5::U32Dec5() {
+inline  algo::U32Dec5::U32Dec5() throw() {
     algo::U32Dec5_Init(*this);
 }
 
 // --- algo.U32Dec5..FieldwiseCtor
-inline  algo::U32Dec5::U32Dec5(u32 in_value)
+inline  algo::U32Dec5::U32Dec5(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.U64Ary.ary.EmptyQ
 // Return true if index is empty
-inline bool algo::ary_EmptyQ(algo::U64Ary& parent) {
+inline bool algo::ary_EmptyQ(algo::U64Ary& parent) throw() {
     return parent.ary_n == 0;
 }
 
 // --- algo.U64Ary.ary.Find
 // Look up row by row id. Return NULL if out of range
-inline u64* algo::ary_Find(algo::U64Ary& parent, u64 t) {
+inline u64* algo::ary_Find(algo::U64Ary& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.ary_n;
     if (idx >= lim) return NULL;
@@ -19549,24 +19549,24 @@ inline u64* algo::ary_Find(algo::U64Ary& parent, u64 t) {
 
 // --- algo.U64Ary.ary.Getary
 // Return array pointer by value
-inline algo::aryptr<u64> algo::ary_Getary(const algo::U64Ary& parent) {
+inline algo::aryptr<u64> algo::ary_Getary(const algo::U64Ary& parent) throw() {
     return algo::aryptr<u64>(parent.ary_elems, parent.ary_n);
 }
 
 // --- algo.U64Ary.ary.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline u64* algo::ary_Last(algo::U64Ary& parent) {
+inline u64* algo::ary_Last(algo::U64Ary& parent) throw() {
     return ary_Find(parent, u64(parent.ary_n-1));
 }
 
 // --- algo.U64Ary.ary.AssignAryptr
 // Copy from aryptr (operator=)
-inline void algo::U64Ary::operator =(const algo::aryptr<u64> &rhs) {
+inline void algo::U64Ary::operator =(const algo::aryptr<u64> &rhs) throw() {
     ary_Setary(*this, rhs);
 }
 
 // --- algo.U64Ary.ary.CtorAryptr
-inline  algo::U64Ary::U64Ary(const algo::aryptr<u64> &rhs) {
+inline  algo::U64Ary::U64Ary(const algo::aryptr<u64> &rhs) throw() {
     ary_elems 	= 0; // (algo.U64Ary.ary)
     ary_n     	= 0; // (algo.U64Ary.ary)
     ary_max   	= 0; // (algo.U64Ary.ary)
@@ -19575,25 +19575,25 @@ inline  algo::U64Ary::U64Ary(const algo::aryptr<u64> &rhs) {
 
 // --- algo.U64Ary.ary.Max
 // Return max. number of items in the array
-inline i32 algo::ary_Max(algo::U64Ary& parent) {
+inline i32 algo::ary_Max(algo::U64Ary& parent) throw() {
     (void)parent;
     return parent.ary_max;
 }
 
 // --- algo.U64Ary.ary.N
 // Return number of items in the array
-inline i32 algo::ary_N(const algo::U64Ary& parent) {
+inline i32 algo::ary_N(const algo::U64Ary& parent) throw() {
     return parent.ary_n;
 }
 
 // --- algo.U64Ary.ary.RemoveAll
-inline void algo::ary_RemoveAll(algo::U64Ary& parent) {
+inline void algo::ary_RemoveAll(algo::U64Ary& parent) throw() {
     parent.ary_n = 0;
 }
 
 // --- algo.U64Ary.ary.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo::ary_Reserve(algo::U64Ary& parent, int n) {
+inline void algo::ary_Reserve(algo::U64Ary& parent, int n) throw() {
     u32 new_n = parent.ary_n + n;
     if (UNLIKELY(new_n > parent.ary_max)) {
         ary_AbsReserve(parent, new_n);
@@ -19602,31 +19602,31 @@ inline void algo::ary_Reserve(algo::U64Ary& parent, int n) {
 
 // --- algo.U64Ary.ary.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline u64& algo::ary_qFind(algo::U64Ary& parent, u64 t) {
+inline u64& algo::ary_qFind(algo::U64Ary& parent, u64 t) throw() {
     return parent.ary_elems[t];
 }
 
 // --- algo.U64Ary.ary.qLast
 // Return reference to last element of array. No bounds checking
-inline u64& algo::ary_qLast(algo::U64Ary& parent) {
+inline u64& algo::ary_qLast(algo::U64Ary& parent) throw() {
     return ary_qFind(parent, u64(parent.ary_n-1));
 }
 
 // --- algo.U64Ary.ary.rowid_Get
 // Return row id of specified element
-inline u64 algo::ary_rowid_Get(algo::U64Ary& parent, u64 &elem) {
+inline u64 algo::ary_rowid_Get(algo::U64Ary& parent, u64 &elem) throw() {
     u64 id = &elem - parent.ary_elems;
     return u64(id);
 }
 
 // --- algo.U64Ary.ary_curs.Next
 // proceed to next item
-inline void algo::U64Ary_ary_curs_Next(U64Ary_ary_curs &curs) {
+inline void algo::U64Ary_ary_curs_Next(U64Ary_ary_curs &curs) throw() {
     curs.index++;
 }
 
 // --- algo.U64Ary.ary_curs.Reset
-inline void algo::U64Ary_ary_curs_Reset(U64Ary_ary_curs &curs, algo::U64Ary &parent) {
+inline void algo::U64Ary_ary_curs_Reset(U64Ary_ary_curs &curs, algo::U64Ary &parent) throw() {
     curs.elems = parent.ary_elems;
     curs.n_elems = parent.ary_n;
     curs.index = 0;
@@ -19634,13 +19634,13 @@ inline void algo::U64Ary_ary_curs_Reset(U64Ary_ary_curs &curs, algo::U64Ary &par
 
 // --- algo.U64Ary.ary_curs.ValidQ
 // cursor points to valid item
-inline bool algo::U64Ary_ary_curs_ValidQ(U64Ary_ary_curs &curs) {
+inline bool algo::U64Ary_ary_curs_ValidQ(U64Ary_ary_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- algo.U64Ary.ary_curs.Access
 // item access
-inline u64& algo::U64Ary_ary_curs_Access(U64Ary_ary_curs &curs) {
+inline u64& algo::U64Ary_ary_curs_Access(U64Ary_ary_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -19653,12 +19653,12 @@ inline void algo::U64Ary_Init(algo::U64Ary& parent) {
 }
 
 // --- algo.U64Ary..Ctor
-inline  algo::U64Ary::U64Ary() {
+inline  algo::U64Ary::U64Ary() throw() {
     algo::U64Ary_Init(*this);
 }
 
 // --- algo.U64Ary..Dtor
-inline  algo::U64Ary::~U64Ary() {
+inline  algo::U64Ary::~U64Ary() throw() {
     algo::U64Ary_Uninit(*this);
 }
 
@@ -19669,14 +19669,14 @@ inline  algo::U64Ary::~U64Ary() {
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U64Dec10& parent, double val) {
+inline void algo::value_qSetDouble(algo::U64Dec10& parent, double val) throw() {
     double intval = val * 10000000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U64Dec10.value.GetDouble
-inline double algo::value_GetDouble(const algo::U64Dec10& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec10& parent) throw() {
     double ret;
     ret = parent.value / double(10000000000);
     return ret;
@@ -19684,7 +19684,7 @@ inline double algo::value_GetDouble(const algo::U64Dec10& parent) {
 
 // --- algo.U64Dec10.value.GetInt
 // Return integer portion (divide number by 10000000000)
-inline u64 algo::value_GetInt(const algo::U64Dec10& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec10& parent) throw() {
     u64 ret;
     ret = parent.value / 10000000000;
     return ret;
@@ -19692,17 +19692,17 @@ inline u64 algo::value_GetInt(const algo::U64Dec10& parent) {
 
 // --- algo.U64Dec10.value.GetScale
 // Return constant 10000000000
-inline u64 algo::U64Dec10_GetScale() {
+inline u64 algo::U64Dec10_GetScale() throw() {
     return 10000000000;
 }
 
 // --- algo.U64Dec10.value.Cast
-inline  algo::U64Dec10::operator u64() const {
+inline  algo::U64Dec10::operator u64() const throw() {
     return u64((*this).value);
 }
 
 // --- algo.U64Dec10..Hash
-inline u32 algo::U64Dec10_Hash(u32 prev, algo::U64Dec10 rhs) {
+inline u32 algo::U64Dec10_Hash(u32 prev, algo::U64Dec10 rhs) throw() {
     prev = u64_Hash(prev, rhs.value);
     return prev;
 }
@@ -19714,12 +19714,12 @@ inline void algo::U64Dec10_Init(algo::U64Dec10& parent) {
 }
 
 // --- algo.U64Dec10..Ctor
-inline  algo::U64Dec10::U64Dec10() {
+inline  algo::U64Dec10::U64Dec10() throw() {
     algo::U64Dec10_Init(*this);
 }
 
 // --- algo.U64Dec10..FieldwiseCtor
-inline  algo::U64Dec10::U64Dec10(u64 in_value)
+inline  algo::U64Dec10::U64Dec10(u64 in_value) throw()
     : value(in_value)
  {
 }
@@ -19731,14 +19731,14 @@ inline  algo::U64Dec10::U64Dec10(u64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U64Dec2& parent, double val) {
+inline void algo::value_qSetDouble(algo::U64Dec2& parent, double val) throw() {
     double intval = val * 100 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U64Dec2.value.GetDouble
-inline double algo::value_GetDouble(const algo::U64Dec2& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec2& parent) throw() {
     double ret;
     ret = parent.value / double(100);
     return ret;
@@ -19746,7 +19746,7 @@ inline double algo::value_GetDouble(const algo::U64Dec2& parent) {
 
 // --- algo.U64Dec2.value.GetInt
 // Return integer portion (divide number by 100)
-inline u64 algo::value_GetInt(const algo::U64Dec2& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec2& parent) throw() {
     u64 ret;
     ret = parent.value / 100;
     return ret;
@@ -19754,17 +19754,17 @@ inline u64 algo::value_GetInt(const algo::U64Dec2& parent) {
 
 // --- algo.U64Dec2.value.GetScale
 // Return constant 100
-inline u64 algo::U64Dec2_GetScale() {
+inline u64 algo::U64Dec2_GetScale() throw() {
     return 100;
 }
 
 // --- algo.U64Dec2.value.Cast
-inline  algo::U64Dec2::operator u64() const {
+inline  algo::U64Dec2::operator u64() const throw() {
     return u64((*this).value);
 }
 
 // --- algo.U64Dec2..Hash
-inline u32 algo::U64Dec2_Hash(u32 prev, algo::U64Dec2 rhs) {
+inline u32 algo::U64Dec2_Hash(u32 prev, algo::U64Dec2 rhs) throw() {
     prev = u64_Hash(prev, rhs.value);
     return prev;
 }
@@ -19776,12 +19776,12 @@ inline void algo::U64Dec2_Init(algo::U64Dec2& parent) {
 }
 
 // --- algo.U64Dec2..Ctor
-inline  algo::U64Dec2::U64Dec2() {
+inline  algo::U64Dec2::U64Dec2() throw() {
     algo::U64Dec2_Init(*this);
 }
 
 // --- algo.U64Dec2..FieldwiseCtor
-inline  algo::U64Dec2::U64Dec2(u64 in_value)
+inline  algo::U64Dec2::U64Dec2(u64 in_value) throw()
     : value(in_value)
  {
 }
@@ -19793,14 +19793,14 @@ inline  algo::U64Dec2::U64Dec2(u64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U64Dec4& parent, double val) {
+inline void algo::value_qSetDouble(algo::U64Dec4& parent, double val) throw() {
     double intval = val * 10000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U64Dec4.value.GetDouble
-inline double algo::value_GetDouble(const algo::U64Dec4& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec4& parent) throw() {
     double ret;
     ret = parent.value / double(10000);
     return ret;
@@ -19808,7 +19808,7 @@ inline double algo::value_GetDouble(const algo::U64Dec4& parent) {
 
 // --- algo.U64Dec4.value.GetInt
 // Return integer portion (divide number by 10000)
-inline u64 algo::value_GetInt(const algo::U64Dec4& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec4& parent) throw() {
     u64 ret;
     ret = parent.value / 10000;
     return ret;
@@ -19816,17 +19816,17 @@ inline u64 algo::value_GetInt(const algo::U64Dec4& parent) {
 
 // --- algo.U64Dec4.value.GetScale
 // Return constant 10000
-inline u64 algo::U64Dec4_GetScale() {
+inline u64 algo::U64Dec4_GetScale() throw() {
     return 10000;
 }
 
 // --- algo.U64Dec4.value.Cast
-inline  algo::U64Dec4::operator u64() const {
+inline  algo::U64Dec4::operator u64() const throw() {
     return u64((*this).value);
 }
 
 // --- algo.U64Dec4..Hash
-inline u32 algo::U64Dec4_Hash(u32 prev, algo::U64Dec4 rhs) {
+inline u32 algo::U64Dec4_Hash(u32 prev, algo::U64Dec4 rhs) throw() {
     prev = u64_Hash(prev, rhs.value);
     return prev;
 }
@@ -19838,12 +19838,12 @@ inline void algo::U64Dec4_Init(algo::U64Dec4& parent) {
 }
 
 // --- algo.U64Dec4..Ctor
-inline  algo::U64Dec4::U64Dec4() {
+inline  algo::U64Dec4::U64Dec4() throw() {
     algo::U64Dec4_Init(*this);
 }
 
 // --- algo.U64Dec4..FieldwiseCtor
-inline  algo::U64Dec4::U64Dec4(u64 in_value)
+inline  algo::U64Dec4::U64Dec4(u64 in_value) throw()
     : value(in_value)
  {
 }
@@ -19855,14 +19855,14 @@ inline  algo::U64Dec4::U64Dec4(u64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U64Dec5& parent, double val) {
+inline void algo::value_qSetDouble(algo::U64Dec5& parent, double val) throw() {
     double intval = val * 100000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U64Dec5.value.GetDouble
-inline double algo::value_GetDouble(const algo::U64Dec5& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec5& parent) throw() {
     double ret;
     ret = parent.value / double(100000);
     return ret;
@@ -19870,7 +19870,7 @@ inline double algo::value_GetDouble(const algo::U64Dec5& parent) {
 
 // --- algo.U64Dec5.value.GetInt
 // Return integer portion (divide number by 100000)
-inline u64 algo::value_GetInt(const algo::U64Dec5& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec5& parent) throw() {
     u64 ret;
     ret = parent.value / 100000;
     return ret;
@@ -19878,17 +19878,17 @@ inline u64 algo::value_GetInt(const algo::U64Dec5& parent) {
 
 // --- algo.U64Dec5.value.GetScale
 // Return constant 100000
-inline u64 algo::U64Dec5_GetScale() {
+inline u64 algo::U64Dec5_GetScale() throw() {
     return 100000;
 }
 
 // --- algo.U64Dec5.value.Cast
-inline  algo::U64Dec5::operator u64() const {
+inline  algo::U64Dec5::operator u64() const throw() {
     return u64((*this).value);
 }
 
 // --- algo.U64Dec5..Hash
-inline u32 algo::U64Dec5_Hash(u32 prev, algo::U64Dec5 rhs) {
+inline u32 algo::U64Dec5_Hash(u32 prev, algo::U64Dec5 rhs) throw() {
     prev = u64_Hash(prev, rhs.value);
     return prev;
 }
@@ -19900,12 +19900,12 @@ inline void algo::U64Dec5_Init(algo::U64Dec5& parent) {
 }
 
 // --- algo.U64Dec5..Ctor
-inline  algo::U64Dec5::U64Dec5() {
+inline  algo::U64Dec5::U64Dec5() throw() {
     algo::U64Dec5_Init(*this);
 }
 
 // --- algo.U64Dec5..FieldwiseCtor
-inline  algo::U64Dec5::U64Dec5(u64 in_value)
+inline  algo::U64Dec5::U64Dec5(u64 in_value) throw()
     : value(in_value)
  {
 }
@@ -19917,14 +19917,14 @@ inline  algo::U64Dec5::U64Dec5(u64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U64Dec6& parent, double val) {
+inline void algo::value_qSetDouble(algo::U64Dec6& parent, double val) throw() {
     double intval = val * 1000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U64Dec6.value.GetDouble
-inline double algo::value_GetDouble(const algo::U64Dec6& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec6& parent) throw() {
     double ret;
     ret = parent.value / double(1000000);
     return ret;
@@ -19932,7 +19932,7 @@ inline double algo::value_GetDouble(const algo::U64Dec6& parent) {
 
 // --- algo.U64Dec6.value.GetInt
 // Return integer portion (divide number by 1000000)
-inline u64 algo::value_GetInt(const algo::U64Dec6& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec6& parent) throw() {
     u64 ret;
     ret = parent.value / 1000000;
     return ret;
@@ -19940,17 +19940,17 @@ inline u64 algo::value_GetInt(const algo::U64Dec6& parent) {
 
 // --- algo.U64Dec6.value.GetScale
 // Return constant 1000000
-inline u64 algo::U64Dec6_GetScale() {
+inline u64 algo::U64Dec6_GetScale() throw() {
     return 1000000;
 }
 
 // --- algo.U64Dec6.value.Cast
-inline  algo::U64Dec6::operator u64() const {
+inline  algo::U64Dec6::operator u64() const throw() {
     return u64((*this).value);
 }
 
 // --- algo.U64Dec6..Hash
-inline u32 algo::U64Dec6_Hash(u32 prev, algo::U64Dec6 rhs) {
+inline u32 algo::U64Dec6_Hash(u32 prev, algo::U64Dec6 rhs) throw() {
     prev = u64_Hash(prev, rhs.value);
     return prev;
 }
@@ -19962,12 +19962,12 @@ inline void algo::U64Dec6_Init(algo::U64Dec6& parent) {
 }
 
 // --- algo.U64Dec6..Ctor
-inline  algo::U64Dec6::U64Dec6() {
+inline  algo::U64Dec6::U64Dec6() throw() {
     algo::U64Dec6_Init(*this);
 }
 
 // --- algo.U64Dec6..FieldwiseCtor
-inline  algo::U64Dec6::U64Dec6(u64 in_value)
+inline  algo::U64Dec6::U64Dec6(u64 in_value) throw()
     : value(in_value)
  {
 }
@@ -19979,14 +19979,14 @@ inline  algo::U64Dec6::U64Dec6(u64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U64Dec7& parent, double val) {
+inline void algo::value_qSetDouble(algo::U64Dec7& parent, double val) throw() {
     double intval = val * 10000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U64Dec7.value.GetDouble
-inline double algo::value_GetDouble(const algo::U64Dec7& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec7& parent) throw() {
     double ret;
     ret = parent.value / double(10000000);
     return ret;
@@ -19994,7 +19994,7 @@ inline double algo::value_GetDouble(const algo::U64Dec7& parent) {
 
 // --- algo.U64Dec7.value.GetInt
 // Return integer portion (divide number by 10000000)
-inline u64 algo::value_GetInt(const algo::U64Dec7& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec7& parent) throw() {
     u64 ret;
     ret = parent.value / 10000000;
     return ret;
@@ -20002,17 +20002,17 @@ inline u64 algo::value_GetInt(const algo::U64Dec7& parent) {
 
 // --- algo.U64Dec7.value.GetScale
 // Return constant 10000000
-inline u64 algo::U64Dec7_GetScale() {
+inline u64 algo::U64Dec7_GetScale() throw() {
     return 10000000;
 }
 
 // --- algo.U64Dec7.value.Cast
-inline  algo::U64Dec7::operator u64() const {
+inline  algo::U64Dec7::operator u64() const throw() {
     return u64((*this).value);
 }
 
 // --- algo.U64Dec7..Hash
-inline u32 algo::U64Dec7_Hash(u32 prev, algo::U64Dec7 rhs) {
+inline u32 algo::U64Dec7_Hash(u32 prev, algo::U64Dec7 rhs) throw() {
     prev = u64_Hash(prev, rhs.value);
     return prev;
 }
@@ -20024,12 +20024,12 @@ inline void algo::U64Dec7_Init(algo::U64Dec7& parent) {
 }
 
 // --- algo.U64Dec7..Ctor
-inline  algo::U64Dec7::U64Dec7() {
+inline  algo::U64Dec7::U64Dec7() throw() {
     algo::U64Dec7_Init(*this);
 }
 
 // --- algo.U64Dec7..FieldwiseCtor
-inline  algo::U64Dec7::U64Dec7(u64 in_value)
+inline  algo::U64Dec7::U64Dec7(u64 in_value) throw()
     : value(in_value)
  {
 }
@@ -20041,14 +20041,14 @@ inline  algo::U64Dec7::U64Dec7(u64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U64Dec8& parent, double val) {
+inline void algo::value_qSetDouble(algo::U64Dec8& parent, double val) throw() {
     double intval = val * 100000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U64Dec8.value.GetDouble
-inline double algo::value_GetDouble(const algo::U64Dec8& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec8& parent) throw() {
     double ret;
     ret = parent.value / double(100000000);
     return ret;
@@ -20056,7 +20056,7 @@ inline double algo::value_GetDouble(const algo::U64Dec8& parent) {
 
 // --- algo.U64Dec8.value.GetInt
 // Return integer portion (divide number by 100000000)
-inline u64 algo::value_GetInt(const algo::U64Dec8& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec8& parent) throw() {
     u64 ret;
     ret = parent.value / 100000000;
     return ret;
@@ -20064,12 +20064,12 @@ inline u64 algo::value_GetInt(const algo::U64Dec8& parent) {
 
 // --- algo.U64Dec8.value.GetScale
 // Return constant 100000000
-inline u64 algo::U64Dec8_GetScale() {
+inline u64 algo::U64Dec8_GetScale() throw() {
     return 100000000;
 }
 
 // --- algo.U64Dec8..Hash
-inline u32 algo::U64Dec8_Hash(u32 prev, algo::U64Dec8 rhs) {
+inline u32 algo::U64Dec8_Hash(u32 prev, algo::U64Dec8 rhs) throw() {
     prev = u64_Hash(prev, rhs.value);
     return prev;
 }
@@ -20081,12 +20081,12 @@ inline void algo::U64Dec8_Init(algo::U64Dec8& parent) {
 }
 
 // --- algo.U64Dec8..Ctor
-inline  algo::U64Dec8::U64Dec8() {
+inline  algo::U64Dec8::U64Dec8() throw() {
     algo::U64Dec8_Init(*this);
 }
 
 // --- algo.U64Dec8..FieldwiseCtor
-inline  algo::U64Dec8::U64Dec8(u64 in_value)
+inline  algo::U64Dec8::U64Dec8(u64 in_value) throw()
     : value(in_value)
  {
 }
@@ -20098,14 +20098,14 @@ inline  algo::U64Dec8::U64Dec8(u64 in_value)
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void algo::value_qSetDouble(algo::U64Dec9& parent, double val) {
+inline void algo::value_qSetDouble(algo::U64Dec9& parent, double val) throw() {
     double intval = val * 1000000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- algo.U64Dec9.value.GetDouble
-inline double algo::value_GetDouble(const algo::U64Dec9& parent) {
+inline double algo::value_GetDouble(const algo::U64Dec9& parent) throw() {
     double ret;
     ret = parent.value / double(1000000000);
     return ret;
@@ -20113,7 +20113,7 @@ inline double algo::value_GetDouble(const algo::U64Dec9& parent) {
 
 // --- algo.U64Dec9.value.GetInt
 // Return integer portion (divide number by 1000000000)
-inline u64 algo::value_GetInt(const algo::U64Dec9& parent) {
+inline u64 algo::value_GetInt(const algo::U64Dec9& parent) throw() {
     u64 ret;
     ret = parent.value / 1000000000;
     return ret;
@@ -20121,17 +20121,17 @@ inline u64 algo::value_GetInt(const algo::U64Dec9& parent) {
 
 // --- algo.U64Dec9.value.GetScale
 // Return constant 1000000000
-inline u64 algo::U64Dec9_GetScale() {
+inline u64 algo::U64Dec9_GetScale() throw() {
     return 1000000000;
 }
 
 // --- algo.U64Dec9.value.Cast
-inline  algo::U64Dec9::operator u64() const {
+inline  algo::U64Dec9::operator u64() const throw() {
     return u64((*this).value);
 }
 
 // --- algo.U64Dec9..Hash
-inline u32 algo::U64Dec9_Hash(u32 prev, algo::U64Dec9 rhs) {
+inline u32 algo::U64Dec9_Hash(u32 prev, algo::U64Dec9 rhs) throw() {
     prev = u64_Hash(prev, rhs.value);
     return prev;
 }
@@ -20143,12 +20143,12 @@ inline void algo::U64Dec9_Init(algo::U64Dec9& parent) {
 }
 
 // --- algo.U64Dec9..Ctor
-inline  algo::U64Dec9::U64Dec9() {
+inline  algo::U64Dec9::U64Dec9() throw() {
     algo::U64Dec9_Init(*this);
 }
 
 // --- algo.U64Dec9..FieldwiseCtor
-inline  algo::U64Dec9::U64Dec9(u64 in_value)
+inline  algo::U64Dec9::U64Dec9(u64 in_value) throw()
     : value(in_value)
  {
 }
@@ -20161,12 +20161,12 @@ inline void algo::URL_Init(algo::URL& parent) {
 }
 
 // --- algo.URL..Ctor
-inline  algo::URL::URL() {
+inline  algo::URL::URL() throw() {
     algo::URL_Init(*this);
 }
 
 // --- algo.URL..FieldwiseCtor
-inline  algo::URL::URL(const algo::strptr& in_protocol, const algo::strptr& in_username, const algo::strptr& in_password, const algo::strptr& in_server, const algo::strptr& in_dir, i32 in_port, u32 in_source_addr_host, const algo::strptr& in_host)
+inline  algo::URL::URL(const algo::strptr& in_protocol, const algo::strptr& in_username, const algo::strptr& in_password, const algo::strptr& in_server, const algo::strptr& in_dir, i32 in_port, u32 in_source_addr_host, const algo::strptr& in_host) throw()
     : protocol(in_protocol)
     , username(in_username)
     , password(in_password)
@@ -20179,48 +20179,48 @@ inline  algo::URL::URL(const algo::strptr& in_protocol, const algo::strptr& in_u
 }
 
 // --- algo.UnDiff..Hash
-inline u32 algo::UnDiff_Hash(u32 prev, algo::UnDiff rhs) {
+inline u32 algo::UnDiff_Hash(u32 prev, algo::UnDiff rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
 
 // --- algo.UnDiff..EqOp
-inline bool algo::UnDiff::operator ==(const algo::UnDiff &rhs) const {
+inline bool algo::UnDiff::operator ==(const algo::UnDiff &rhs) const throw() {
     return algo::UnDiff_Eq(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
 }
 
 // --- algo.UnDiff..NeOp
-inline bool algo::UnDiff::operator !=(const algo::UnDiff &rhs) const {
+inline bool algo::UnDiff::operator !=(const algo::UnDiff &rhs) const throw() {
     return !algo::UnDiff_Eq(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
 }
 
 // --- algo.UnDiff..LtOp
-inline bool algo::UnDiff::operator <(const algo::UnDiff &rhs) const {
+inline bool algo::UnDiff::operator <(const algo::UnDiff &rhs) const throw() {
     return algo::UnDiff_Lt(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
 }
 
 // --- algo.UnDiff..GtOp
-inline bool algo::UnDiff::operator >(const algo::UnDiff &rhs) const {
+inline bool algo::UnDiff::operator >(const algo::UnDiff &rhs) const throw() {
     return algo::UnDiff_Lt(const_cast<algo::UnDiff&>(rhs),const_cast<algo::UnDiff&>(*this));
 }
 
 // --- algo.UnDiff..LeOp
-inline bool algo::UnDiff::operator <=(const algo::UnDiff &rhs) const {
+inline bool algo::UnDiff::operator <=(const algo::UnDiff &rhs) const throw() {
     return !algo::UnDiff_Lt(const_cast<algo::UnDiff&>(rhs),const_cast<algo::UnDiff&>(*this));
 }
 
 // --- algo.UnDiff..GeOp
-inline bool algo::UnDiff::operator >=(const algo::UnDiff &rhs) const {
+inline bool algo::UnDiff::operator >=(const algo::UnDiff &rhs) const throw() {
     return !algo::UnDiff_Lt(const_cast<algo::UnDiff&>(*this),const_cast<algo::UnDiff&>(rhs));
 }
 
 // --- algo.UnDiff..Lt
-inline bool algo::UnDiff_Lt(algo::UnDiff lhs, algo::UnDiff rhs) {
+inline bool algo::UnDiff_Lt(algo::UnDiff lhs, algo::UnDiff rhs) throw() {
     return i64_Lt(lhs.value, rhs.value);
 }
 
 // --- algo.UnDiff..Cmp
-inline i32 algo::UnDiff_Cmp(algo::UnDiff lhs, algo::UnDiff rhs) {
+inline i32 algo::UnDiff_Cmp(algo::UnDiff lhs, algo::UnDiff rhs) throw() {
     i32 retval = 0;
     retval = i64_Cmp(lhs.value, rhs.value);
     return retval;
@@ -20234,7 +20234,7 @@ inline void algo::UnDiff_Init(algo::UnDiff& parent) {
 
 // --- algo.UnDiff..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool algo::UnDiff_UpdateMax(algo::UnDiff &lhs, algo::UnDiff rhs) {
+inline bool algo::UnDiff_UpdateMax(algo::UnDiff &lhs, algo::UnDiff rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -20244,13 +20244,13 @@ inline bool algo::UnDiff_UpdateMax(algo::UnDiff &lhs, algo::UnDiff rhs) {
 
 // --- algo.UnDiff..Min
 // Return the lesser of two values
-inline algo::UnDiff algo::UnDiff_Min(algo::UnDiff lhs, algo::UnDiff rhs) {
+inline algo::UnDiff algo::UnDiff_Min(algo::UnDiff lhs, algo::UnDiff rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- algo.UnDiff..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool algo::UnDiff_UpdateMin(algo::UnDiff &lhs, algo::UnDiff rhs) {
+inline bool algo::UnDiff_UpdateMin(algo::UnDiff &lhs, algo::UnDiff rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -20260,12 +20260,12 @@ inline bool algo::UnDiff_UpdateMin(algo::UnDiff &lhs, algo::UnDiff rhs) {
 
 // --- algo.UnDiff..Max
 // Return the greater of two values
-inline algo::UnDiff algo::UnDiff_Max(algo::UnDiff lhs, algo::UnDiff rhs) {
+inline algo::UnDiff algo::UnDiff_Max(algo::UnDiff lhs, algo::UnDiff rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- algo.UnDiff..Eq
-inline bool algo::UnDiff_Eq(algo::UnDiff lhs, algo::UnDiff rhs) {
+inline bool algo::UnDiff_Eq(algo::UnDiff lhs, algo::UnDiff rhs) throw() {
     bool retval = true;
     retval = i64_Eq(lhs.value, rhs.value);
     return retval;
@@ -20273,7 +20273,7 @@ inline bool algo::UnDiff_Eq(algo::UnDiff lhs, algo::UnDiff rhs) {
 
 // --- algo.UnDiff..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::UnDiff_Update(algo::UnDiff &lhs, algo::UnDiff rhs) {
+inline bool algo::UnDiff_Update(algo::UnDiff &lhs, algo::UnDiff rhs) throw() {
     bool ret = !UnDiff_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -20282,59 +20282,59 @@ inline bool algo::UnDiff_Update(algo::UnDiff &lhs, algo::UnDiff rhs) {
 }
 
 // --- algo.UnDiff..Ctor
-inline  algo::UnDiff::UnDiff() {
+inline  algo::UnDiff::UnDiff() throw() {
     algo::UnDiff_Init(*this);
 }
 
 // --- algo.UnDiff..FieldwiseCtor
-inline  algo::UnDiff::UnDiff(i64 in_value)
+inline  algo::UnDiff::UnDiff(i64 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.UnixDiff..Hash
-inline u32 algo::UnixDiff_Hash(u32 prev, algo::UnixDiff rhs) {
+inline u32 algo::UnixDiff_Hash(u32 prev, algo::UnixDiff rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
 
 // --- algo.UnixDiff..EqOp
-inline bool algo::UnixDiff::operator ==(const algo::UnixDiff &rhs) const {
+inline bool algo::UnixDiff::operator ==(const algo::UnixDiff &rhs) const throw() {
     return algo::UnixDiff_Eq(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
 }
 
 // --- algo.UnixDiff..NeOp
-inline bool algo::UnixDiff::operator !=(const algo::UnixDiff &rhs) const {
+inline bool algo::UnixDiff::operator !=(const algo::UnixDiff &rhs) const throw() {
     return !algo::UnixDiff_Eq(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
 }
 
 // --- algo.UnixDiff..LtOp
-inline bool algo::UnixDiff::operator <(const algo::UnixDiff &rhs) const {
+inline bool algo::UnixDiff::operator <(const algo::UnixDiff &rhs) const throw() {
     return algo::UnixDiff_Lt(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
 }
 
 // --- algo.UnixDiff..GtOp
-inline bool algo::UnixDiff::operator >(const algo::UnixDiff &rhs) const {
+inline bool algo::UnixDiff::operator >(const algo::UnixDiff &rhs) const throw() {
     return algo::UnixDiff_Lt(const_cast<algo::UnixDiff&>(rhs),const_cast<algo::UnixDiff&>(*this));
 }
 
 // --- algo.UnixDiff..LeOp
-inline bool algo::UnixDiff::operator <=(const algo::UnixDiff &rhs) const {
+inline bool algo::UnixDiff::operator <=(const algo::UnixDiff &rhs) const throw() {
     return !algo::UnixDiff_Lt(const_cast<algo::UnixDiff&>(rhs),const_cast<algo::UnixDiff&>(*this));
 }
 
 // --- algo.UnixDiff..GeOp
-inline bool algo::UnixDiff::operator >=(const algo::UnixDiff &rhs) const {
+inline bool algo::UnixDiff::operator >=(const algo::UnixDiff &rhs) const throw() {
     return !algo::UnixDiff_Lt(const_cast<algo::UnixDiff&>(*this),const_cast<algo::UnixDiff&>(rhs));
 }
 
 // --- algo.UnixDiff..Lt
-inline bool algo::UnixDiff_Lt(algo::UnixDiff lhs, algo::UnixDiff rhs) {
+inline bool algo::UnixDiff_Lt(algo::UnixDiff lhs, algo::UnixDiff rhs) throw() {
     return i64_Lt(lhs.value, rhs.value);
 }
 
 // --- algo.UnixDiff..Cmp
-inline i32 algo::UnixDiff_Cmp(algo::UnixDiff lhs, algo::UnixDiff rhs) {
+inline i32 algo::UnixDiff_Cmp(algo::UnixDiff lhs, algo::UnixDiff rhs) throw() {
     i32 retval = 0;
     retval = i64_Cmp(lhs.value, rhs.value);
     return retval;
@@ -20348,7 +20348,7 @@ inline void algo::UnixDiff_Init(algo::UnixDiff& parent) {
 
 // --- algo.UnixDiff..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool algo::UnixDiff_UpdateMax(algo::UnixDiff &lhs, algo::UnixDiff rhs) {
+inline bool algo::UnixDiff_UpdateMax(algo::UnixDiff &lhs, algo::UnixDiff rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -20358,13 +20358,13 @@ inline bool algo::UnixDiff_UpdateMax(algo::UnixDiff &lhs, algo::UnixDiff rhs) {
 
 // --- algo.UnixDiff..Min
 // Return the lesser of two values
-inline algo::UnixDiff algo::UnixDiff_Min(algo::UnixDiff lhs, algo::UnixDiff rhs) {
+inline algo::UnixDiff algo::UnixDiff_Min(algo::UnixDiff lhs, algo::UnixDiff rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- algo.UnixDiff..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool algo::UnixDiff_UpdateMin(algo::UnixDiff &lhs, algo::UnixDiff rhs) {
+inline bool algo::UnixDiff_UpdateMin(algo::UnixDiff &lhs, algo::UnixDiff rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -20374,12 +20374,12 @@ inline bool algo::UnixDiff_UpdateMin(algo::UnixDiff &lhs, algo::UnixDiff rhs) {
 
 // --- algo.UnixDiff..Max
 // Return the greater of two values
-inline algo::UnixDiff algo::UnixDiff_Max(algo::UnixDiff lhs, algo::UnixDiff rhs) {
+inline algo::UnixDiff algo::UnixDiff_Max(algo::UnixDiff lhs, algo::UnixDiff rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- algo.UnixDiff..Eq
-inline bool algo::UnixDiff_Eq(algo::UnixDiff lhs, algo::UnixDiff rhs) {
+inline bool algo::UnixDiff_Eq(algo::UnixDiff lhs, algo::UnixDiff rhs) throw() {
     bool retval = true;
     retval = i64_Eq(lhs.value, rhs.value);
     return retval;
@@ -20387,7 +20387,7 @@ inline bool algo::UnixDiff_Eq(algo::UnixDiff lhs, algo::UnixDiff rhs) {
 
 // --- algo.UnixDiff..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::UnixDiff_Update(algo::UnixDiff &lhs, algo::UnixDiff rhs) {
+inline bool algo::UnixDiff_Update(algo::UnixDiff &lhs, algo::UnixDiff rhs) throw() {
     bool ret = !UnixDiff_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -20396,59 +20396,59 @@ inline bool algo::UnixDiff_Update(algo::UnixDiff &lhs, algo::UnixDiff rhs) {
 }
 
 // --- algo.UnixDiff..Ctor
-inline  algo::UnixDiff::UnixDiff() {
+inline  algo::UnixDiff::UnixDiff() throw() {
     algo::UnixDiff_Init(*this);
 }
 
 // --- algo.UnixDiff..FieldwiseCtor
-inline  algo::UnixDiff::UnixDiff(i64 in_value)
+inline  algo::UnixDiff::UnixDiff(i64 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.UnixTime..Hash
-inline u32 algo::UnixTime_Hash(u32 prev, algo::UnixTime rhs) {
+inline u32 algo::UnixTime_Hash(u32 prev, algo::UnixTime rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
 
 // --- algo.UnixTime..EqOp
-inline bool algo::UnixTime::operator ==(const algo::UnixTime &rhs) const {
+inline bool algo::UnixTime::operator ==(const algo::UnixTime &rhs) const throw() {
     return algo::UnixTime_Eq(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
 }
 
 // --- algo.UnixTime..NeOp
-inline bool algo::UnixTime::operator !=(const algo::UnixTime &rhs) const {
+inline bool algo::UnixTime::operator !=(const algo::UnixTime &rhs) const throw() {
     return !algo::UnixTime_Eq(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
 }
 
 // --- algo.UnixTime..LtOp
-inline bool algo::UnixTime::operator <(const algo::UnixTime &rhs) const {
+inline bool algo::UnixTime::operator <(const algo::UnixTime &rhs) const throw() {
     return algo::UnixTime_Lt(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
 }
 
 // --- algo.UnixTime..GtOp
-inline bool algo::UnixTime::operator >(const algo::UnixTime &rhs) const {
+inline bool algo::UnixTime::operator >(const algo::UnixTime &rhs) const throw() {
     return algo::UnixTime_Lt(const_cast<algo::UnixTime&>(rhs),const_cast<algo::UnixTime&>(*this));
 }
 
 // --- algo.UnixTime..LeOp
-inline bool algo::UnixTime::operator <=(const algo::UnixTime &rhs) const {
+inline bool algo::UnixTime::operator <=(const algo::UnixTime &rhs) const throw() {
     return !algo::UnixTime_Lt(const_cast<algo::UnixTime&>(rhs),const_cast<algo::UnixTime&>(*this));
 }
 
 // --- algo.UnixTime..GeOp
-inline bool algo::UnixTime::operator >=(const algo::UnixTime &rhs) const {
+inline bool algo::UnixTime::operator >=(const algo::UnixTime &rhs) const throw() {
     return !algo::UnixTime_Lt(const_cast<algo::UnixTime&>(*this),const_cast<algo::UnixTime&>(rhs));
 }
 
 // --- algo.UnixTime..Lt
-inline bool algo::UnixTime_Lt(algo::UnixTime lhs, algo::UnixTime rhs) {
+inline bool algo::UnixTime_Lt(algo::UnixTime lhs, algo::UnixTime rhs) throw() {
     return i64_Lt(lhs.value, rhs.value);
 }
 
 // --- algo.UnixTime..Cmp
-inline i32 algo::UnixTime_Cmp(algo::UnixTime lhs, algo::UnixTime rhs) {
+inline i32 algo::UnixTime_Cmp(algo::UnixTime lhs, algo::UnixTime rhs) throw() {
     i32 retval = 0;
     retval = i64_Cmp(lhs.value, rhs.value);
     return retval;
@@ -20462,7 +20462,7 @@ inline void algo::UnixTime_Init(algo::UnixTime& parent) {
 
 // --- algo.UnixTime..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool algo::UnixTime_UpdateMax(algo::UnixTime &lhs, algo::UnixTime rhs) {
+inline bool algo::UnixTime_UpdateMax(algo::UnixTime &lhs, algo::UnixTime rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -20472,13 +20472,13 @@ inline bool algo::UnixTime_UpdateMax(algo::UnixTime &lhs, algo::UnixTime rhs) {
 
 // --- algo.UnixTime..Min
 // Return the lesser of two values
-inline algo::UnixTime algo::UnixTime_Min(algo::UnixTime lhs, algo::UnixTime rhs) {
+inline algo::UnixTime algo::UnixTime_Min(algo::UnixTime lhs, algo::UnixTime rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- algo.UnixTime..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool algo::UnixTime_UpdateMin(algo::UnixTime &lhs, algo::UnixTime rhs) {
+inline bool algo::UnixTime_UpdateMin(algo::UnixTime &lhs, algo::UnixTime rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -20488,12 +20488,12 @@ inline bool algo::UnixTime_UpdateMin(algo::UnixTime &lhs, algo::UnixTime rhs) {
 
 // --- algo.UnixTime..Max
 // Return the greater of two values
-inline algo::UnixTime algo::UnixTime_Max(algo::UnixTime lhs, algo::UnixTime rhs) {
+inline algo::UnixTime algo::UnixTime_Max(algo::UnixTime lhs, algo::UnixTime rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- algo.UnixTime..Eq
-inline bool algo::UnixTime_Eq(algo::UnixTime lhs, algo::UnixTime rhs) {
+inline bool algo::UnixTime_Eq(algo::UnixTime lhs, algo::UnixTime rhs) throw() {
     bool retval = true;
     retval = i64_Eq(lhs.value, rhs.value);
     return retval;
@@ -20501,7 +20501,7 @@ inline bool algo::UnixTime_Eq(algo::UnixTime lhs, algo::UnixTime rhs) {
 
 // --- algo.UnixTime..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::UnixTime_Update(algo::UnixTime &lhs, algo::UnixTime rhs) {
+inline bool algo::UnixTime_Update(algo::UnixTime &lhs, algo::UnixTime rhs) throw() {
     bool ret = !UnixTime_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -20510,19 +20510,19 @@ inline bool algo::UnixTime_Update(algo::UnixTime &lhs, algo::UnixTime rhs) {
 }
 
 // --- algo.UnixTime..Ctor
-inline  algo::UnixTime::UnixTime() {
+inline  algo::UnixTime::UnixTime() throw() {
     algo::UnixTime_Init(*this);
 }
 
 // --- algo.UnixTime..FieldwiseCtor
-inline  algo::UnixTime::UnixTime(i64 in_value)
+inline  algo::UnixTime::UnixTime(i64 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.Uuid.value.Fill
 // Set all elements of fixed array to value RHS
-inline void algo::value_Fill(algo::Uuid& parent, const u8 &rhs) {
+inline void algo::value_Fill(algo::Uuid& parent, const u8 &rhs) throw() {
     for (int i = 0; i < 16; i++) {
         parent.value_elems[i] = rhs;
     }
@@ -20530,7 +20530,7 @@ inline void algo::value_Fill(algo::Uuid& parent, const u8 &rhs) {
 
 // --- algo.Uuid.value.Find
 // Look up row by row id. Return NULL if out of range
-inline u8* algo::value_Find(algo::Uuid& parent, u64 t) {
+inline u8* algo::value_Find(algo::Uuid& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = 16;
     return idx < lim ? parent.value_elems + idx : NULL; // unsigned comparison with limit
@@ -20538,80 +20538,80 @@ inline u8* algo::value_Find(algo::Uuid& parent, u64 t) {
 
 // --- algo.Uuid.value.Getary
 // Access fixed array value as aryptr.
-inline algo::aryptr<u8> algo::value_Getary(algo::Uuid& parent) {
+inline algo::aryptr<u8> algo::value_Getary(algo::Uuid& parent) throw() {
     return algo::aryptr<u8>(parent.value_elems, 16);
 }
 
 // --- algo.Uuid.value.Max
 // Return max number of items in the array
-inline i32 algo::value_Max(algo::Uuid& parent) {
+inline i32 algo::value_Max(algo::Uuid& parent) throw() {
     (void)parent;
     return 16;
 }
 
 // --- algo.Uuid.value.N
 // Return number of items in the array
-inline i32 algo::value_N(const algo::Uuid& parent) {
+inline i32 algo::value_N(const algo::Uuid& parent) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     return 16;
 }
 
 // --- algo.Uuid.value.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
-inline void algo::value_Setary(algo::Uuid& parent, const algo::aryptr<u8> &rhs) {
+inline void algo::value_Setary(algo::Uuid& parent, const algo::aryptr<u8> &rhs) throw() {
     int n = i32_Min(16, rhs.n_elems);
     memcpy(parent.value_elems, rhs.elems, sizeof(u8)*n);
 }
 
 // --- algo.Uuid.value.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline u8& algo::value_qFind(algo::Uuid& parent, u64 t) {
+inline u8& algo::value_qFind(algo::Uuid& parent, u64 t) throw() {
     return parent.value_elems[u64(t)];
 }
 
 // --- algo.Uuid.value_curs.Reset
 // cursor points to valid item
-inline void algo::Uuid_value_curs_Reset(Uuid_value_curs &curs, algo::Uuid &parent) {
+inline void algo::Uuid_value_curs_Reset(Uuid_value_curs &curs, algo::Uuid &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- algo.Uuid.value_curs.ValidQ
 // cursor points to valid item
-inline bool algo::Uuid_value_curs_ValidQ(Uuid_value_curs &curs) {
+inline bool algo::Uuid_value_curs_ValidQ(Uuid_value_curs &curs) throw() {
     return u64(curs.index) < u64(16);
 }
 
 // --- algo.Uuid.value_curs.Next
 // proceed to next item
-inline void algo::Uuid_value_curs_Next(Uuid_value_curs &curs) {
+inline void algo::Uuid_value_curs_Next(Uuid_value_curs &curs) throw() {
     curs.index++;
 }
 
 // --- algo.Uuid.value_curs.Access
 // item access
-inline u8& algo::Uuid_value_curs_Access(Uuid_value_curs &curs) {
+inline u8& algo::Uuid_value_curs_Access(Uuid_value_curs &curs) throw() {
     return value_qFind((*curs.parent), u64(curs.index));
 }
 
 // --- algo.Uuid..Hash
-inline u32 algo::Uuid_Hash(u32 prev, const algo::Uuid& rhs) {
+inline u32 algo::Uuid_Hash(u32 prev, const algo::Uuid& rhs) throw() {
     frep_(i,16) prev = u8_Hash(prev, rhs.value_elems[i]);
     return prev;
 }
 
 // --- algo.Uuid..EqOp
-inline bool algo::Uuid::operator ==(const algo::Uuid &rhs) const {
+inline bool algo::Uuid::operator ==(const algo::Uuid &rhs) const throw() {
     return algo::Uuid_Eq(const_cast<algo::Uuid&>(*this),const_cast<algo::Uuid&>(rhs));
 }
 
 // --- algo.Uuid..NeOp
-inline bool algo::Uuid::operator !=(const algo::Uuid &rhs) const {
+inline bool algo::Uuid::operator !=(const algo::Uuid &rhs) const throw() {
     return !algo::Uuid_Eq(const_cast<algo::Uuid&>(*this),const_cast<algo::Uuid&>(rhs));
 }
 
 // --- algo.Uuid..Cmp
-inline i32 algo::Uuid_Cmp(algo::Uuid& lhs, algo::Uuid& rhs) {
+inline i32 algo::Uuid_Cmp(algo::Uuid& lhs, algo::Uuid& rhs) throw() {
     i32 retval = 0;
     retval = value_Cmp(lhs,rhs);
     return retval;
@@ -20626,60 +20626,60 @@ inline void algo::Uuid_Init(algo::Uuid& parent) {
 }
 
 // --- algo.Uuid..Eq
-inline bool algo::Uuid_Eq(algo::Uuid& lhs, algo::Uuid& rhs) {
+inline bool algo::Uuid_Eq(algo::Uuid& lhs, algo::Uuid& rhs) throw() {
     bool retval = true;
     retval = value_Eq(lhs,rhs);
     return retval;
 }
 
 // --- algo.Uuid..Ctor
-inline  algo::Uuid::Uuid() {
+inline  algo::Uuid::Uuid() throw() {
     algo::Uuid_Init(*this);
 }
 
 // --- algo.WDiff..Hash
-inline u32 algo::WDiff_Hash(u32 prev, algo::WDiff rhs) {
+inline u32 algo::WDiff_Hash(u32 prev, algo::WDiff rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
 
 // --- algo.WDiff..EqOp
-inline bool algo::WDiff::operator ==(const algo::WDiff &rhs) const {
+inline bool algo::WDiff::operator ==(const algo::WDiff &rhs) const throw() {
     return algo::WDiff_Eq(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
 }
 
 // --- algo.WDiff..NeOp
-inline bool algo::WDiff::operator !=(const algo::WDiff &rhs) const {
+inline bool algo::WDiff::operator !=(const algo::WDiff &rhs) const throw() {
     return !algo::WDiff_Eq(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
 }
 
 // --- algo.WDiff..LtOp
-inline bool algo::WDiff::operator <(const algo::WDiff &rhs) const {
+inline bool algo::WDiff::operator <(const algo::WDiff &rhs) const throw() {
     return algo::WDiff_Lt(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
 }
 
 // --- algo.WDiff..GtOp
-inline bool algo::WDiff::operator >(const algo::WDiff &rhs) const {
+inline bool algo::WDiff::operator >(const algo::WDiff &rhs) const throw() {
     return algo::WDiff_Lt(const_cast<algo::WDiff&>(rhs),const_cast<algo::WDiff&>(*this));
 }
 
 // --- algo.WDiff..LeOp
-inline bool algo::WDiff::operator <=(const algo::WDiff &rhs) const {
+inline bool algo::WDiff::operator <=(const algo::WDiff &rhs) const throw() {
     return !algo::WDiff_Lt(const_cast<algo::WDiff&>(rhs),const_cast<algo::WDiff&>(*this));
 }
 
 // --- algo.WDiff..GeOp
-inline bool algo::WDiff::operator >=(const algo::WDiff &rhs) const {
+inline bool algo::WDiff::operator >=(const algo::WDiff &rhs) const throw() {
     return !algo::WDiff_Lt(const_cast<algo::WDiff&>(*this),const_cast<algo::WDiff&>(rhs));
 }
 
 // --- algo.WDiff..Lt
-inline bool algo::WDiff_Lt(algo::WDiff lhs, algo::WDiff rhs) {
+inline bool algo::WDiff_Lt(algo::WDiff lhs, algo::WDiff rhs) throw() {
     return i64_Lt(lhs.value, rhs.value);
 }
 
 // --- algo.WDiff..Cmp
-inline i32 algo::WDiff_Cmp(algo::WDiff lhs, algo::WDiff rhs) {
+inline i32 algo::WDiff_Cmp(algo::WDiff lhs, algo::WDiff rhs) throw() {
     i32 retval = 0;
     retval = i64_Cmp(lhs.value, rhs.value);
     return retval;
@@ -20693,7 +20693,7 @@ inline void algo::WDiff_Init(algo::WDiff& parent) {
 
 // --- algo.WDiff..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool algo::WDiff_UpdateMax(algo::WDiff &lhs, algo::WDiff rhs) {
+inline bool algo::WDiff_UpdateMax(algo::WDiff &lhs, algo::WDiff rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -20703,13 +20703,13 @@ inline bool algo::WDiff_UpdateMax(algo::WDiff &lhs, algo::WDiff rhs) {
 
 // --- algo.WDiff..Min
 // Return the lesser of two values
-inline algo::WDiff algo::WDiff_Min(algo::WDiff lhs, algo::WDiff rhs) {
+inline algo::WDiff algo::WDiff_Min(algo::WDiff lhs, algo::WDiff rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- algo.WDiff..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool algo::WDiff_UpdateMin(algo::WDiff &lhs, algo::WDiff rhs) {
+inline bool algo::WDiff_UpdateMin(algo::WDiff &lhs, algo::WDiff rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -20719,12 +20719,12 @@ inline bool algo::WDiff_UpdateMin(algo::WDiff &lhs, algo::WDiff rhs) {
 
 // --- algo.WDiff..Max
 // Return the greater of two values
-inline algo::WDiff algo::WDiff_Max(algo::WDiff lhs, algo::WDiff rhs) {
+inline algo::WDiff algo::WDiff_Max(algo::WDiff lhs, algo::WDiff rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- algo.WDiff..Eq
-inline bool algo::WDiff_Eq(algo::WDiff lhs, algo::WDiff rhs) {
+inline bool algo::WDiff_Eq(algo::WDiff lhs, algo::WDiff rhs) throw() {
     bool retval = true;
     retval = i64_Eq(lhs.value, rhs.value);
     return retval;
@@ -20732,7 +20732,7 @@ inline bool algo::WDiff_Eq(algo::WDiff lhs, algo::WDiff rhs) {
 
 // --- algo.WDiff..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::WDiff_Update(algo::WDiff &lhs, algo::WDiff rhs) {
+inline bool algo::WDiff_Update(algo::WDiff &lhs, algo::WDiff rhs) throw() {
     bool ret = !WDiff_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -20741,59 +20741,59 @@ inline bool algo::WDiff_Update(algo::WDiff &lhs, algo::WDiff rhs) {
 }
 
 // --- algo.WDiff..Ctor
-inline  algo::WDiff::WDiff() {
+inline  algo::WDiff::WDiff() throw() {
     algo::WDiff_Init(*this);
 }
 
 // --- algo.WDiff..FieldwiseCtor
-inline  algo::WDiff::WDiff(i64 in_value)
+inline  algo::WDiff::WDiff(i64 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.WTime..Hash
-inline u32 algo::WTime_Hash(u32 prev, algo::WTime rhs) {
+inline u32 algo::WTime_Hash(u32 prev, algo::WTime rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
 
 // --- algo.WTime..EqOp
-inline bool algo::WTime::operator ==(const algo::WTime &rhs) const {
+inline bool algo::WTime::operator ==(const algo::WTime &rhs) const throw() {
     return algo::WTime_Eq(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
 }
 
 // --- algo.WTime..NeOp
-inline bool algo::WTime::operator !=(const algo::WTime &rhs) const {
+inline bool algo::WTime::operator !=(const algo::WTime &rhs) const throw() {
     return !algo::WTime_Eq(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
 }
 
 // --- algo.WTime..LtOp
-inline bool algo::WTime::operator <(const algo::WTime &rhs) const {
+inline bool algo::WTime::operator <(const algo::WTime &rhs) const throw() {
     return algo::WTime_Lt(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
 }
 
 // --- algo.WTime..GtOp
-inline bool algo::WTime::operator >(const algo::WTime &rhs) const {
+inline bool algo::WTime::operator >(const algo::WTime &rhs) const throw() {
     return algo::WTime_Lt(const_cast<algo::WTime&>(rhs),const_cast<algo::WTime&>(*this));
 }
 
 // --- algo.WTime..LeOp
-inline bool algo::WTime::operator <=(const algo::WTime &rhs) const {
+inline bool algo::WTime::operator <=(const algo::WTime &rhs) const throw() {
     return !algo::WTime_Lt(const_cast<algo::WTime&>(rhs),const_cast<algo::WTime&>(*this));
 }
 
 // --- algo.WTime..GeOp
-inline bool algo::WTime::operator >=(const algo::WTime &rhs) const {
+inline bool algo::WTime::operator >=(const algo::WTime &rhs) const throw() {
     return !algo::WTime_Lt(const_cast<algo::WTime&>(*this),const_cast<algo::WTime&>(rhs));
 }
 
 // --- algo.WTime..Lt
-inline bool algo::WTime_Lt(algo::WTime lhs, algo::WTime rhs) {
+inline bool algo::WTime_Lt(algo::WTime lhs, algo::WTime rhs) throw() {
     return i64_Lt(lhs.value, rhs.value);
 }
 
 // --- algo.WTime..Cmp
-inline i32 algo::WTime_Cmp(algo::WTime lhs, algo::WTime rhs) {
+inline i32 algo::WTime_Cmp(algo::WTime lhs, algo::WTime rhs) throw() {
     i32 retval = 0;
     retval = i64_Cmp(lhs.value, rhs.value);
     return retval;
@@ -20807,7 +20807,7 @@ inline void algo::WTime_Init(algo::WTime& parent) {
 
 // --- algo.WTime..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool algo::WTime_UpdateMax(algo::WTime &lhs, algo::WTime rhs) {
+inline bool algo::WTime_UpdateMax(algo::WTime &lhs, algo::WTime rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -20817,13 +20817,13 @@ inline bool algo::WTime_UpdateMax(algo::WTime &lhs, algo::WTime rhs) {
 
 // --- algo.WTime..Min
 // Return the lesser of two values
-inline algo::WTime algo::WTime_Min(algo::WTime lhs, algo::WTime rhs) {
+inline algo::WTime algo::WTime_Min(algo::WTime lhs, algo::WTime rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- algo.WTime..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool algo::WTime_UpdateMin(algo::WTime &lhs, algo::WTime rhs) {
+inline bool algo::WTime_UpdateMin(algo::WTime &lhs, algo::WTime rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -20833,12 +20833,12 @@ inline bool algo::WTime_UpdateMin(algo::WTime &lhs, algo::WTime rhs) {
 
 // --- algo.WTime..Max
 // Return the greater of two values
-inline algo::WTime algo::WTime_Max(algo::WTime lhs, algo::WTime rhs) {
+inline algo::WTime algo::WTime_Max(algo::WTime lhs, algo::WTime rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- algo.WTime..Eq
-inline bool algo::WTime_Eq(algo::WTime lhs, algo::WTime rhs) {
+inline bool algo::WTime_Eq(algo::WTime lhs, algo::WTime rhs) throw() {
     bool retval = true;
     retval = i64_Eq(lhs.value, rhs.value);
     return retval;
@@ -20846,7 +20846,7 @@ inline bool algo::WTime_Eq(algo::WTime lhs, algo::WTime rhs) {
 
 // --- algo.WTime..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::WTime_Update(algo::WTime &lhs, algo::WTime rhs) {
+inline bool algo::WTime_Update(algo::WTime &lhs, algo::WTime rhs) throw() {
     bool ret = !WTime_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -20855,60 +20855,60 @@ inline bool algo::WTime_Update(algo::WTime &lhs, algo::WTime rhs) {
 }
 
 // --- algo.WTime..Ctor
-inline  algo::WTime::WTime() {
+inline  algo::WTime::WTime() throw() {
     algo::WTime_Init(*this);
 }
 
 // --- algo.WTime..FieldwiseCtor
-inline  algo::WTime::WTime(i64 in_value)
+inline  algo::WTime::WTime(i64 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- algo.i32_Range..Hash
-inline u32 algo::i32_Range_Hash(u32 prev, const algo::i32_Range& rhs) {
+inline u32 algo::i32_Range_Hash(u32 prev, const algo::i32_Range& rhs) throw() {
     prev = i32_Hash(prev, rhs.beg);
     prev = i32_Hash(prev, rhs.end);
     return prev;
 }
 
 // --- algo.i32_Range..EqOp
-inline bool algo::i32_Range::operator ==(const algo::i32_Range &rhs) const {
+inline bool algo::i32_Range::operator ==(const algo::i32_Range &rhs) const throw() {
     return algo::i32_Range_Eq(const_cast<algo::i32_Range&>(*this),const_cast<algo::i32_Range&>(rhs));
 }
 
 // --- algo.i32_Range..NeOp
-inline bool algo::i32_Range::operator !=(const algo::i32_Range &rhs) const {
+inline bool algo::i32_Range::operator !=(const algo::i32_Range &rhs) const throw() {
     return !algo::i32_Range_Eq(const_cast<algo::i32_Range&>(*this),const_cast<algo::i32_Range&>(rhs));
 }
 
 // --- algo.i32_Range..LtOp
-inline bool algo::i32_Range::operator <(const algo::i32_Range &rhs) const {
+inline bool algo::i32_Range::operator <(const algo::i32_Range &rhs) const throw() {
     return algo::i32_Range_Lt(const_cast<algo::i32_Range&>(*this),const_cast<algo::i32_Range&>(rhs));
 }
 
 // --- algo.i32_Range..GtOp
-inline bool algo::i32_Range::operator >(const algo::i32_Range &rhs) const {
+inline bool algo::i32_Range::operator >(const algo::i32_Range &rhs) const throw() {
     return algo::i32_Range_Lt(const_cast<algo::i32_Range&>(rhs),const_cast<algo::i32_Range&>(*this));
 }
 
 // --- algo.i32_Range..LeOp
-inline bool algo::i32_Range::operator <=(const algo::i32_Range &rhs) const {
+inline bool algo::i32_Range::operator <=(const algo::i32_Range &rhs) const throw() {
     return !algo::i32_Range_Lt(const_cast<algo::i32_Range&>(rhs),const_cast<algo::i32_Range&>(*this));
 }
 
 // --- algo.i32_Range..GeOp
-inline bool algo::i32_Range::operator >=(const algo::i32_Range &rhs) const {
+inline bool algo::i32_Range::operator >=(const algo::i32_Range &rhs) const throw() {
     return !algo::i32_Range_Lt(const_cast<algo::i32_Range&>(*this),const_cast<algo::i32_Range&>(rhs));
 }
 
 // --- algo.i32_Range..Lt
-inline bool algo::i32_Range_Lt(algo::i32_Range& lhs, algo::i32_Range& rhs) {
+inline bool algo::i32_Range_Lt(algo::i32_Range& lhs, algo::i32_Range& rhs) throw() {
     return i32_Range_Cmp(lhs,rhs) < 0;
 }
 
 // --- algo.i32_Range..Cmp
-inline i32 algo::i32_Range_Cmp(algo::i32_Range& lhs, algo::i32_Range& rhs) {
+inline i32 algo::i32_Range_Cmp(algo::i32_Range& lhs, algo::i32_Range& rhs) throw() {
     i32 retval = 0;
     retval = i32_Cmp(lhs.beg, rhs.beg);
     if (retval != 0) {
@@ -20926,7 +20926,7 @@ inline void algo::i32_Range_Init(algo::i32_Range& parent) {
 }
 
 // --- algo.i32_Range..Eq
-inline bool algo::i32_Range_Eq(algo::i32_Range& lhs, algo::i32_Range& rhs) {
+inline bool algo::i32_Range_Eq(algo::i32_Range& lhs, algo::i32_Range& rhs) throw() {
     bool retval = true;
     retval = i32_Eq(lhs.beg, rhs.beg);
     if (!retval) {
@@ -20938,7 +20938,7 @@ inline bool algo::i32_Range_Eq(algo::i32_Range& lhs, algo::i32_Range& rhs) {
 
 // --- algo.i32_Range..Update
 // Set value. Return true if new value is different from old value.
-inline bool algo::i32_Range_Update(algo::i32_Range &lhs, algo::i32_Range& rhs) {
+inline bool algo::i32_Range_Update(algo::i32_Range &lhs, algo::i32_Range& rhs) throw() {
     bool ret = !i32_Range_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -20947,12 +20947,12 @@ inline bool algo::i32_Range_Update(algo::i32_Range &lhs, algo::i32_Range& rhs) {
 }
 
 // --- algo.i32_Range..Ctor
-inline  algo::i32_Range::i32_Range() {
+inline  algo::i32_Range::i32_Range() throw() {
     algo::i32_Range_Init(*this);
 }
 
 // --- algo.i32_Range..FieldwiseCtor
-inline  algo::i32_Range::i32_Range(i32 in_beg, i32 in_end)
+inline  algo::i32_Range::i32_Range(i32 in_beg, i32 in_end) throw()
     : beg(in_beg)
     , end(in_end)
  {

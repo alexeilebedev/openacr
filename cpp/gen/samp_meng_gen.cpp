@@ -114,7 +114,7 @@ namespace samp_meng { // gen:ns_print_proto
 
 // --- samp_meng.CancelOrderMsg.base.CopyOut
 // Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::CancelOrderMsg &row, samp_meng::MsgHeader &out) {
+void samp_meng::parent_CopyOut(samp_meng::CancelOrderMsg &row, samp_meng::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -122,7 +122,7 @@ void samp_meng::parent_CopyOut(samp_meng::CancelOrderMsg &row, samp_meng::MsgHea
 }
 
 // --- samp_meng.CancelOrderMsg..ReadFieldMaybe
-bool samp_meng::CancelOrderMsg_ReadFieldMaybe(samp_meng::CancelOrderMsg& parent, algo::strptr field, algo::strptr strval) {
+bool samp_meng::CancelOrderMsg_ReadFieldMaybe(samp_meng::CancelOrderMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     samp_meng::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -154,7 +154,7 @@ bool samp_meng::CancelOrderMsg_ReadFieldMaybe(samp_meng::CancelOrderMsg& parent,
 // --- samp_meng.CancelOrderMsg..ReadStrptrMaybe
 // Read fields of samp_meng::CancelOrderMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool samp_meng::CancelOrderMsg_ReadStrptrMaybe(samp_meng::CancelOrderMsg &parent, algo::strptr in_str) {
+bool samp_meng::CancelOrderMsg_ReadStrptrMaybe(samp_meng::CancelOrderMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "samp_meng.CancelOrderMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -166,7 +166,7 @@ bool samp_meng::CancelOrderMsg_ReadStrptrMaybe(samp_meng::CancelOrderMsg &parent
 // --- samp_meng.CancelOrderMsg..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.CancelOrderMsg.String  printfmt:Tuple
-void samp_meng::CancelOrderMsg_Print(samp_meng::CancelOrderMsg& row, algo::cstring& str) {
+void samp_meng::CancelOrderMsg_Print(samp_meng::CancelOrderMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.CancelOrderMsg";
 
@@ -176,7 +176,7 @@ void samp_meng::CancelOrderMsg_Print(samp_meng::CancelOrderMsg& row, algo::cstri
 
 // --- samp_meng.CancelReqMsg.base.CopyOut
 // Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::CancelReqMsg &row, samp_meng::MsgHeader &out) {
+void samp_meng::parent_CopyOut(samp_meng::CancelReqMsg &row, samp_meng::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -184,7 +184,7 @@ void samp_meng::parent_CopyOut(samp_meng::CancelReqMsg &row, samp_meng::MsgHeade
 }
 
 // --- samp_meng.CancelReqMsg..ReadFieldMaybe
-bool samp_meng::CancelReqMsg_ReadFieldMaybe(samp_meng::CancelReqMsg& parent, algo::strptr field, algo::strptr strval) {
+bool samp_meng::CancelReqMsg_ReadFieldMaybe(samp_meng::CancelReqMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     samp_meng::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -216,7 +216,7 @@ bool samp_meng::CancelReqMsg_ReadFieldMaybe(samp_meng::CancelReqMsg& parent, alg
 // --- samp_meng.CancelReqMsg..ReadStrptrMaybe
 // Read fields of samp_meng::CancelReqMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool samp_meng::CancelReqMsg_ReadStrptrMaybe(samp_meng::CancelReqMsg &parent, algo::strptr in_str) {
+bool samp_meng::CancelReqMsg_ReadStrptrMaybe(samp_meng::CancelReqMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "samp_meng.CancelReqMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -228,7 +228,7 @@ bool samp_meng::CancelReqMsg_ReadStrptrMaybe(samp_meng::CancelReqMsg &parent, al
 // --- samp_meng.CancelReqMsg..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.CancelReqMsg.String  printfmt:Tuple
-void samp_meng::CancelReqMsg_Print(samp_meng::CancelReqMsg& row, algo::cstring& str) {
+void samp_meng::CancelReqMsg_Print(samp_meng::CancelReqMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.CancelReqMsg";
 
@@ -239,7 +239,7 @@ void samp_meng::CancelReqMsg_Print(samp_meng::CancelReqMsg& row, algo::cstring& 
 // --- samp_meng.trace..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.trace.String  printfmt:Tuple
-void samp_meng::trace_Print(samp_meng::trace& row, algo::cstring& str) {
+void samp_meng::trace_Print(samp_meng::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -250,7 +250,7 @@ void samp_meng::trace_Print(samp_meng::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     samp_meng.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void samp_meng::ReadArgv() {
+void samp_meng::ReadArgv() throw() {
     command::samp_meng &cmd = samp_meng::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -431,7 +431,7 @@ bool samp_meng::InsertStrptrMaybe(algo::strptr str) {
 
 // --- samp_meng.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool samp_meng::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool samp_meng::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = samp_meng::LoadTuplesFile(root, recursive);
@@ -454,7 +454,7 @@ bool samp_meng::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool samp_meng::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool samp_meng::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -467,7 +467,7 @@ bool samp_meng::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- samp_meng.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool samp_meng::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool samp_meng::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -486,7 +486,7 @@ bool samp_meng::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive
 
 // --- samp_meng.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool samp_meng::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool samp_meng::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = samp_meng::LoadTuplesFile(fname, recursive);
@@ -512,7 +512,7 @@ bool samp_meng::_db_XrefMaybe() {
 // --- samp_meng.FDb.fdin.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-samp_meng::FFdin& samp_meng::fdin_Alloc() {
+samp_meng::FFdin& samp_meng::fdin_Alloc() throw() {
     samp_meng::FFdin* row = fdin_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("samp_meng.out_of_mem  field:samp_meng.FDb.fdin  comment:'Alloc failed'");
@@ -522,7 +522,7 @@ samp_meng::FFdin& samp_meng::fdin_Alloc() {
 
 // --- samp_meng.FDb.fdin.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-samp_meng::FFdin* samp_meng::fdin_AllocMaybe() {
+samp_meng::FFdin* samp_meng::fdin_AllocMaybe() throw() {
     samp_meng::FFdin *row = (samp_meng::FFdin*)fdin_AllocMem();
     if (row) {
         new (row) samp_meng::FFdin; // call constructor
@@ -532,7 +532,7 @@ samp_meng::FFdin* samp_meng::fdin_AllocMaybe() {
 
 // --- samp_meng.FDb.fdin.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* samp_meng::fdin_AllocMem() {
+void* samp_meng::fdin_AllocMem() throw() {
     u64 new_nelems     = _db.fdin_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -558,7 +558,7 @@ void* samp_meng::fdin_AllocMem() {
 
 // --- samp_meng.FDb.fdin.RemoveAll
 // Remove all elements from Lary
-void samp_meng::fdin_RemoveAll() {
+void samp_meng::fdin_RemoveAll() throw() {
     for (u64 n = _db.fdin_n; n>0; ) {
         n--;
         fdin_qFind(u64(n)).~FFdin(); // destroy last element
@@ -568,7 +568,7 @@ void samp_meng::fdin_RemoveAll() {
 
 // --- samp_meng.FDb.fdin.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void samp_meng::fdin_RemoveLast() {
+void samp_meng::fdin_RemoveLast() throw() {
     u64 n = _db.fdin_n;
     if (n > 0) {
         n -= 1;
@@ -588,7 +588,7 @@ bool samp_meng::fdin_XrefMaybe(samp_meng::FFdin &row) {
 
 // --- samp_meng.FDb.cd_fdin_eof.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void samp_meng::cd_fdin_eof_Insert(samp_meng::FFdin& row) {
+void samp_meng::cd_fdin_eof_Insert(samp_meng::FFdin& row) throw() {
     if (!cd_fdin_eof_InLlistQ(row)) {
         if (_db.cd_fdin_eof_head) {
             row.cd_fdin_eof_next = _db.cd_fdin_eof_head;
@@ -609,7 +609,7 @@ void samp_meng::cd_fdin_eof_Insert(samp_meng::FFdin& row) {
 
 // --- samp_meng.FDb.cd_fdin_eof.Remove
 // Remove element from index. If element is not in index, do nothing.
-void samp_meng::cd_fdin_eof_Remove(samp_meng::FFdin& row) {
+void samp_meng::cd_fdin_eof_Remove(samp_meng::FFdin& row) throw() {
     if (cd_fdin_eof_InLlistQ(row)) {
         samp_meng::FFdin* old_head       = _db.cd_fdin_eof_head;
         (void)old_head; // in case it's not used
@@ -631,7 +631,7 @@ void samp_meng::cd_fdin_eof_Remove(samp_meng::FFdin& row) {
 
 // --- samp_meng.FDb.cd_fdin_eof.RemoveAll
 // Empty the index. (The rows are not deleted)
-void samp_meng::cd_fdin_eof_RemoveAll() {
+void samp_meng::cd_fdin_eof_RemoveAll() throw() {
     samp_meng::FFdin* row = _db.cd_fdin_eof_head;
     samp_meng::FFdin* head = _db.cd_fdin_eof_head;
     _db.cd_fdin_eof_head = NULL;
@@ -651,7 +651,7 @@ void samp_meng::cd_fdin_eof_RemoveAll() {
 // --- samp_meng.FDb.cd_fdin_eof.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
-samp_meng::FFdin* samp_meng::cd_fdin_eof_RemoveFirst() {
+samp_meng::FFdin* samp_meng::cd_fdin_eof_RemoveFirst() throw() {
     samp_meng::FFdin *row = NULL;
     row = _db.cd_fdin_eof_head;
     if (row) {
@@ -670,7 +670,7 @@ samp_meng::FFdin* samp_meng::cd_fdin_eof_RemoveFirst() {
 // --- samp_meng.FDb.cd_fdin_eof.RotateFirst
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
-samp_meng::FFdin* samp_meng::cd_fdin_eof_RotateFirst() {
+samp_meng::FFdin* samp_meng::cd_fdin_eof_RotateFirst() throw() {
     samp_meng::FFdin *row = NULL;
     row = _db.cd_fdin_eof_head;
     if (row) {
@@ -681,18 +681,18 @@ samp_meng::FFdin* samp_meng::cd_fdin_eof_RotateFirst() {
 
 // --- samp_meng.FDb.cd_fdin_eof.FirstChanged
 // First element of index changed.
-static void samp_meng::cd_fdin_eof_FirstChanged() {
+static void samp_meng::cd_fdin_eof_FirstChanged() throw() {
 }
 
 // --- samp_meng.FDb.cd_fdin_eof.UpdateCycles
 // Update cycles count from previous clock capture
-inline static void samp_meng::cd_fdin_eof_UpdateCycles() {
+inline static void samp_meng::cd_fdin_eof_UpdateCycles() throw() {
     u64 cur_cycles                      = algo::get_cycles();
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- samp_meng.FDb.cd_fdin_eof.Call
-inline static void samp_meng::cd_fdin_eof_Call() {
+inline static void samp_meng::cd_fdin_eof_Call() throw() {
     if (!samp_meng::cd_fdin_eof_EmptyQ()) { // fstep:samp_meng.FDb.cd_fdin_eof
         samp_meng::cd_fdin_eof_Step(); // steptype:Inline: call function on every step
         cd_fdin_eof_UpdateCycles();
@@ -703,7 +703,7 @@ inline static void samp_meng::cd_fdin_eof_Call() {
 // --- samp_meng.FDb.symbol.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-samp_meng::FSymbol& samp_meng::symbol_Alloc() {
+samp_meng::FSymbol& samp_meng::symbol_Alloc() throw() {
     samp_meng::FSymbol* row = symbol_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("samp_meng.out_of_mem  field:samp_meng.FDb.symbol  comment:'Alloc failed'");
@@ -713,7 +713,7 @@ samp_meng::FSymbol& samp_meng::symbol_Alloc() {
 
 // --- samp_meng.FDb.symbol.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-samp_meng::FSymbol* samp_meng::symbol_AllocMaybe() {
+samp_meng::FSymbol* samp_meng::symbol_AllocMaybe() throw() {
     samp_meng::FSymbol *row = (samp_meng::FSymbol*)symbol_AllocMem();
     if (row) {
         new (row) samp_meng::FSymbol; // call constructor
@@ -723,7 +723,7 @@ samp_meng::FSymbol* samp_meng::symbol_AllocMaybe() {
 
 // --- samp_meng.FDb.symbol.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* samp_meng::symbol_AllocMem() {
+void* samp_meng::symbol_AllocMem() throw() {
     u64 new_nelems     = _db.symbol_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -749,7 +749,7 @@ void* samp_meng::symbol_AllocMem() {
 
 // --- samp_meng.FDb.symbol.RemoveAll
 // Remove all elements from Lary
-void samp_meng::symbol_RemoveAll() {
+void samp_meng::symbol_RemoveAll() throw() {
     for (u64 n = _db.symbol_n; n>0; ) {
         n--;
         symbol_qFind(u64(n)).~FSymbol(); // destroy last element
@@ -759,7 +759,7 @@ void samp_meng::symbol_RemoveAll() {
 
 // --- samp_meng.FDb.symbol.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void samp_meng::symbol_RemoveLast() {
+void samp_meng::symbol_RemoveLast() throw() {
     u64 n = _db.symbol_n;
     if (n > 0) {
         n -= 1;
@@ -788,7 +788,7 @@ bool samp_meng::symbol_XrefMaybe(samp_meng::FSymbol &row) {
 
 // --- samp_meng.FDb.cd_fdin_read.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void samp_meng::cd_fdin_read_Insert(samp_meng::FFdin& row) {
+void samp_meng::cd_fdin_read_Insert(samp_meng::FFdin& row) throw() {
     if (!cd_fdin_read_InLlistQ(row)) {
         if (_db.cd_fdin_read_head) {
             row.cd_fdin_read_next = _db.cd_fdin_read_head;
@@ -809,7 +809,7 @@ void samp_meng::cd_fdin_read_Insert(samp_meng::FFdin& row) {
 
 // --- samp_meng.FDb.cd_fdin_read.Remove
 // Remove element from index. If element is not in index, do nothing.
-void samp_meng::cd_fdin_read_Remove(samp_meng::FFdin& row) {
+void samp_meng::cd_fdin_read_Remove(samp_meng::FFdin& row) throw() {
     if (cd_fdin_read_InLlistQ(row)) {
         samp_meng::FFdin* old_head       = _db.cd_fdin_read_head;
         (void)old_head; // in case it's not used
@@ -831,7 +831,7 @@ void samp_meng::cd_fdin_read_Remove(samp_meng::FFdin& row) {
 
 // --- samp_meng.FDb.cd_fdin_read.RemoveAll
 // Empty the index. (The rows are not deleted)
-void samp_meng::cd_fdin_read_RemoveAll() {
+void samp_meng::cd_fdin_read_RemoveAll() throw() {
     samp_meng::FFdin* row = _db.cd_fdin_read_head;
     samp_meng::FFdin* head = _db.cd_fdin_read_head;
     _db.cd_fdin_read_head = NULL;
@@ -851,7 +851,7 @@ void samp_meng::cd_fdin_read_RemoveAll() {
 // --- samp_meng.FDb.cd_fdin_read.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
-samp_meng::FFdin* samp_meng::cd_fdin_read_RemoveFirst() {
+samp_meng::FFdin* samp_meng::cd_fdin_read_RemoveFirst() throw() {
     samp_meng::FFdin *row = NULL;
     row = _db.cd_fdin_read_head;
     if (row) {
@@ -870,7 +870,7 @@ samp_meng::FFdin* samp_meng::cd_fdin_read_RemoveFirst() {
 // --- samp_meng.FDb.cd_fdin_read.RotateFirst
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
-samp_meng::FFdin* samp_meng::cd_fdin_read_RotateFirst() {
+samp_meng::FFdin* samp_meng::cd_fdin_read_RotateFirst() throw() {
     samp_meng::FFdin *row = NULL;
     row = _db.cd_fdin_read_head;
     if (row) {
@@ -881,18 +881,18 @@ samp_meng::FFdin* samp_meng::cd_fdin_read_RotateFirst() {
 
 // --- samp_meng.FDb.cd_fdin_read.FirstChanged
 // First element of index changed.
-static void samp_meng::cd_fdin_read_FirstChanged() {
+static void samp_meng::cd_fdin_read_FirstChanged() throw() {
 }
 
 // --- samp_meng.FDb.cd_fdin_read.UpdateCycles
 // Update cycles count from previous clock capture
-inline static void samp_meng::cd_fdin_read_UpdateCycles() {
+inline static void samp_meng::cd_fdin_read_UpdateCycles() throw() {
     u64 cur_cycles                      = algo::get_cycles();
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- samp_meng.FDb.cd_fdin_read.Call
-inline static void samp_meng::cd_fdin_read_Call() {
+inline static void samp_meng::cd_fdin_read_Call() throw() {
     if (!samp_meng::cd_fdin_read_EmptyQ()) { // fstep:samp_meng.FDb.cd_fdin_read
         samp_meng::cd_fdin_read_Step(); // steptype:Inline: call function on every step
         cd_fdin_read_UpdateCycles();
@@ -902,7 +902,7 @@ inline static void samp_meng::cd_fdin_read_Call() {
 
 // --- samp_meng.FDb.ind_symbol.Find
 // Find row by key. Return NULL if not found.
-samp_meng::FSymbol* samp_meng::ind_symbol_Find(const samp_meng::Symbol& key) {
+samp_meng::FSymbol* samp_meng::ind_symbol_Find(const samp_meng::Symbol& key) throw() {
     u32 index = samp_meng::Symbol_Hash(0, key) & (_db.ind_symbol_buckets_n - 1);
     samp_meng::FSymbol* *e = &_db.ind_symbol_buckets_elems[index];
     samp_meng::FSymbol* ret=NULL;
@@ -925,7 +925,7 @@ samp_meng::FSymbol& samp_meng::ind_symbol_FindX(const samp_meng::Symbol& key) {
 
 // --- samp_meng.FDb.ind_symbol.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-samp_meng::FSymbol& samp_meng::ind_symbol_GetOrCreate(const samp_meng::Symbol& key) {
+samp_meng::FSymbol& samp_meng::ind_symbol_GetOrCreate(const samp_meng::Symbol& key) throw() {
     samp_meng::FSymbol* ret = ind_symbol_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &symbol_Alloc();
@@ -942,7 +942,7 @@ samp_meng::FSymbol& samp_meng::ind_symbol_GetOrCreate(const samp_meng::Symbol& k
 
 // --- samp_meng.FDb.ind_symbol.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool samp_meng::ind_symbol_InsertMaybe(samp_meng::FSymbol& row) {
+bool samp_meng::ind_symbol_InsertMaybe(samp_meng::FSymbol& row) throw() {
     ind_symbol_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_symbol_next == (samp_meng::FSymbol*)-1)) {// check if in hash already
@@ -970,7 +970,7 @@ bool samp_meng::ind_symbol_InsertMaybe(samp_meng::FSymbol& row) {
 
 // --- samp_meng.FDb.ind_symbol.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void samp_meng::ind_symbol_Remove(samp_meng::FSymbol& row) {
+void samp_meng::ind_symbol_Remove(samp_meng::FSymbol& row) throw() {
     if (LIKELY(row.ind_symbol_next != (samp_meng::FSymbol*)-1)) {// check if in hash already
         u32 index = samp_meng::Symbol_Hash(0, row.symbol) & (_db.ind_symbol_buckets_n - 1);
         samp_meng::FSymbol* *prev = &_db.ind_symbol_buckets_elems[index]; // addr of pointer to current element
@@ -988,7 +988,7 @@ void samp_meng::ind_symbol_Remove(samp_meng::FSymbol& row) {
 
 // --- samp_meng.FDb.ind_symbol.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void samp_meng::ind_symbol_Reserve(int n) {
+void samp_meng::ind_symbol_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_symbol_buckets_n;
     u32 new_nelems   = _db.ind_symbol_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1025,7 +1025,7 @@ void samp_meng::ind_symbol_Reserve(int n) {
 // --- samp_meng.FDb.order.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-samp_meng::FOrder& samp_meng::order_Alloc() {
+samp_meng::FOrder& samp_meng::order_Alloc() throw() {
     samp_meng::FOrder* row = order_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("samp_meng.out_of_mem  field:samp_meng.FDb.order  comment:'Alloc failed'");
@@ -1035,7 +1035,7 @@ samp_meng::FOrder& samp_meng::order_Alloc() {
 
 // --- samp_meng.FDb.order.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-samp_meng::FOrder* samp_meng::order_AllocMaybe() {
+samp_meng::FOrder* samp_meng::order_AllocMaybe() throw() {
     samp_meng::FOrder *row = (samp_meng::FOrder*)order_AllocMem();
     if (row) {
         new (row) samp_meng::FOrder; // call constructor
@@ -1045,7 +1045,7 @@ samp_meng::FOrder* samp_meng::order_AllocMaybe() {
 
 // --- samp_meng.FDb.order.Delete
 // Remove row from all global and cross indices, then deallocate row
-void samp_meng::order_Delete(samp_meng::FOrder &row) {
+void samp_meng::order_Delete(samp_meng::FOrder &row) throw() {
     row.~FOrder();
     order_FreeMem(row);
 }
@@ -1053,7 +1053,7 @@ void samp_meng::order_Delete(samp_meng::FOrder &row) {
 // --- samp_meng.FDb.order.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* samp_meng::order_AllocMem() {
+void* samp_meng::order_AllocMem() throw() {
     samp_meng::FOrder *row = _db.order_free;
     if (UNLIKELY(!row)) {
         order_Reserve(1);
@@ -1067,7 +1067,7 @@ void* samp_meng::order_AllocMem() {
 
 // --- samp_meng.FDb.order.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void samp_meng::order_FreeMem(samp_meng::FOrder &row) {
+void samp_meng::order_FreeMem(samp_meng::FOrder &row) throw() {
     if (UNLIKELY(row.order_next != (samp_meng::FOrder*)-1)) {
         FatalErrorExit("samp_meng.tpool_double_delete  pool:samp_meng.FDb.order  comment:'double deletion caught'");
     }
@@ -1078,7 +1078,7 @@ void samp_meng::order_FreeMem(samp_meng::FOrder &row) {
 // --- samp_meng.FDb.order.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 samp_meng::order_Reserve(u64 n_elems) {
+u64 samp_meng::order_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.order_blocksize; // underlying allocator is probably Lpool
@@ -1094,7 +1094,7 @@ u64 samp_meng::order_Reserve(u64 n_elems) {
 // --- samp_meng.FDb.order.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 samp_meng::order_ReserveMem(u64 size) {
+u64 samp_meng::order_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(samp_meng::FOrder)) {
         samp_meng::FOrder *mem = (samp_meng::FOrder*)algo_lib::malloc_AllocMem(size);
@@ -1146,7 +1146,7 @@ bool samp_meng::order_XrefMaybe(samp_meng::FOrder &row) {
 
 // --- samp_meng.FDb.ind_order.Find
 // Find row by key. Return NULL if not found.
-samp_meng::FOrder* samp_meng::ind_order_Find(i64 key) {
+samp_meng::FOrder* samp_meng::ind_order_Find(i64 key) throw() {
     u32 index = ::i64_Hash(0, key) & (_db.ind_order_buckets_n - 1);
     samp_meng::FOrder* *e = &_db.ind_order_buckets_elems[index];
     samp_meng::FOrder* ret=NULL;
@@ -1169,7 +1169,7 @@ samp_meng::FOrder& samp_meng::ind_order_FindX(i64 key) {
 
 // --- samp_meng.FDb.ind_order.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool samp_meng::ind_order_InsertMaybe(samp_meng::FOrder& row) {
+bool samp_meng::ind_order_InsertMaybe(samp_meng::FOrder& row) throw() {
     ind_order_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_order_next == (samp_meng::FOrder*)-1)) {// check if in hash already
@@ -1197,7 +1197,7 @@ bool samp_meng::ind_order_InsertMaybe(samp_meng::FOrder& row) {
 
 // --- samp_meng.FDb.ind_order.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void samp_meng::ind_order_Remove(samp_meng::FOrder& row) {
+void samp_meng::ind_order_Remove(samp_meng::FOrder& row) throw() {
     if (LIKELY(row.ind_order_next != (samp_meng::FOrder*)-1)) {// check if in hash already
         u32 index = ::i64_Hash(0, row.order) & (_db.ind_order_buckets_n - 1);
         samp_meng::FOrder* *prev = &_db.ind_order_buckets_elems[index]; // addr of pointer to current element
@@ -1215,7 +1215,7 @@ void samp_meng::ind_order_Remove(samp_meng::FOrder& row) {
 
 // --- samp_meng.FDb.ind_order.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void samp_meng::ind_order_Reserve(int n) {
+void samp_meng::ind_order_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_order_buckets_n;
     u32 new_nelems   = _db.ind_order_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1252,7 +1252,7 @@ void samp_meng::ind_order_Reserve(int n) {
 // --- samp_meng.FDb.ordq.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-samp_meng::FOrdq& samp_meng::ordq_Alloc() {
+samp_meng::FOrdq& samp_meng::ordq_Alloc() throw() {
     samp_meng::FOrdq* row = ordq_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("samp_meng.out_of_mem  field:samp_meng.FDb.ordq  comment:'Alloc failed'");
@@ -1262,7 +1262,7 @@ samp_meng::FOrdq& samp_meng::ordq_Alloc() {
 
 // --- samp_meng.FDb.ordq.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-samp_meng::FOrdq* samp_meng::ordq_AllocMaybe() {
+samp_meng::FOrdq* samp_meng::ordq_AllocMaybe() throw() {
     samp_meng::FOrdq *row = (samp_meng::FOrdq*)ordq_AllocMem();
     if (row) {
         new (row) samp_meng::FOrdq; // call constructor
@@ -1272,7 +1272,7 @@ samp_meng::FOrdq* samp_meng::ordq_AllocMaybe() {
 
 // --- samp_meng.FDb.ordq.Delete
 // Remove row from all global and cross indices, then deallocate row
-void samp_meng::ordq_Delete(samp_meng::FOrdq &row) {
+void samp_meng::ordq_Delete(samp_meng::FOrdq &row) throw() {
     row.~FOrdq();
     ordq_FreeMem(row);
 }
@@ -1280,7 +1280,7 @@ void samp_meng::ordq_Delete(samp_meng::FOrdq &row) {
 // --- samp_meng.FDb.ordq.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* samp_meng::ordq_AllocMem() {
+void* samp_meng::ordq_AllocMem() throw() {
     samp_meng::FOrdq *row = _db.ordq_free;
     if (UNLIKELY(!row)) {
         ordq_Reserve(1);
@@ -1294,7 +1294,7 @@ void* samp_meng::ordq_AllocMem() {
 
 // --- samp_meng.FDb.ordq.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void samp_meng::ordq_FreeMem(samp_meng::FOrdq &row) {
+void samp_meng::ordq_FreeMem(samp_meng::FOrdq &row) throw() {
     if (UNLIKELY(row.ordq_next != (samp_meng::FOrdq*)-1)) {
         FatalErrorExit("samp_meng.tpool_double_delete  pool:samp_meng.FDb.ordq  comment:'double deletion caught'");
     }
@@ -1305,7 +1305,7 @@ void samp_meng::ordq_FreeMem(samp_meng::FOrdq &row) {
 // --- samp_meng.FDb.ordq.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 samp_meng::ordq_Reserve(u64 n_elems) {
+u64 samp_meng::ordq_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.ordq_blocksize; // underlying allocator is probably Lpool
@@ -1321,7 +1321,7 @@ u64 samp_meng::ordq_Reserve(u64 n_elems) {
 // --- samp_meng.FDb.ordq.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 samp_meng::ordq_ReserveMem(u64 size) {
+u64 samp_meng::ordq_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(samp_meng::FOrdq)) {
         samp_meng::FOrdq *mem = (samp_meng::FOrdq*)algo_lib::malloc_AllocMem(size);
@@ -1356,7 +1356,7 @@ bool samp_meng::ordq_XrefMaybe(samp_meng::FOrdq &row) {
 // --- samp_meng.FDb.user.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-samp_meng::FUser& samp_meng::user_Alloc() {
+samp_meng::FUser& samp_meng::user_Alloc() throw() {
     samp_meng::FUser* row = user_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("samp_meng.out_of_mem  field:samp_meng.FDb.user  comment:'Alloc failed'");
@@ -1366,7 +1366,7 @@ samp_meng::FUser& samp_meng::user_Alloc() {
 
 // --- samp_meng.FDb.user.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-samp_meng::FUser* samp_meng::user_AllocMaybe() {
+samp_meng::FUser* samp_meng::user_AllocMaybe() throw() {
     samp_meng::FUser *row = (samp_meng::FUser*)user_AllocMem();
     if (row) {
         new (row) samp_meng::FUser; // call constructor
@@ -1376,7 +1376,7 @@ samp_meng::FUser* samp_meng::user_AllocMaybe() {
 
 // --- samp_meng.FDb.user.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* samp_meng::user_AllocMem() {
+void* samp_meng::user_AllocMem() throw() {
     u64 new_nelems     = _db.user_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1402,7 +1402,7 @@ void* samp_meng::user_AllocMem() {
 
 // --- samp_meng.FDb.user.RemoveAll
 // Remove all elements from Lary
-void samp_meng::user_RemoveAll() {
+void samp_meng::user_RemoveAll() throw() {
     for (u64 n = _db.user_n; n>0; ) {
         n--;
         user_qFind(u64(n)).~FUser(); // destroy last element
@@ -1412,7 +1412,7 @@ void samp_meng::user_RemoveAll() {
 
 // --- samp_meng.FDb.user.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void samp_meng::user_RemoveLast() {
+void samp_meng::user_RemoveLast() throw() {
     u64 n = _db.user_n;
     if (n > 0) {
         n -= 1;
@@ -1441,7 +1441,7 @@ bool samp_meng::user_XrefMaybe(samp_meng::FUser &row) {
 
 // --- samp_meng.FDb.ind_user.Find
 // Find row by key. Return NULL if not found.
-samp_meng::FUser* samp_meng::ind_user_Find(i32 key) {
+samp_meng::FUser* samp_meng::ind_user_Find(i32 key) throw() {
     u32 index = ::i32_Hash(0, key) & (_db.ind_user_buckets_n - 1);
     samp_meng::FUser* *e = &_db.ind_user_buckets_elems[index];
     samp_meng::FUser* ret=NULL;
@@ -1464,7 +1464,7 @@ samp_meng::FUser& samp_meng::ind_user_FindX(i32 key) {
 
 // --- samp_meng.FDb.ind_user.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-samp_meng::FUser& samp_meng::ind_user_GetOrCreate(i32 key) {
+samp_meng::FUser& samp_meng::ind_user_GetOrCreate(i32 key) throw() {
     samp_meng::FUser* ret = ind_user_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &user_Alloc();
@@ -1481,7 +1481,7 @@ samp_meng::FUser& samp_meng::ind_user_GetOrCreate(i32 key) {
 
 // --- samp_meng.FDb.ind_user.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool samp_meng::ind_user_InsertMaybe(samp_meng::FUser& row) {
+bool samp_meng::ind_user_InsertMaybe(samp_meng::FUser& row) throw() {
     ind_user_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_user_next == (samp_meng::FUser*)-1)) {// check if in hash already
@@ -1509,7 +1509,7 @@ bool samp_meng::ind_user_InsertMaybe(samp_meng::FUser& row) {
 
 // --- samp_meng.FDb.ind_user.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void samp_meng::ind_user_Remove(samp_meng::FUser& row) {
+void samp_meng::ind_user_Remove(samp_meng::FUser& row) throw() {
     if (LIKELY(row.ind_user_next != (samp_meng::FUser*)-1)) {// check if in hash already
         u32 index = ::i32_Hash(0, row.user) & (_db.ind_user_buckets_n - 1);
         samp_meng::FUser* *prev = &_db.ind_user_buckets_elems[index]; // addr of pointer to current element
@@ -1527,7 +1527,7 @@ void samp_meng::ind_user_Remove(samp_meng::FUser& row) {
 
 // --- samp_meng.FDb.ind_user.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void samp_meng::ind_user_Reserve(int n) {
+void samp_meng::ind_user_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_user_buckets_n;
     u32 new_nelems   = _db.ind_user_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1563,13 +1563,13 @@ void samp_meng::ind_user_Reserve(int n) {
 
 // --- samp_meng.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr samp_meng::trace_RowidFind(int t) {
+static algo::ImrowPtr samp_meng::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- samp_meng.FDb.trace.N
 // Function return 1
-inline static i32 samp_meng::trace_N() {
+inline static i32 samp_meng::trace_N() throw() {
     return 1;
 }
 
@@ -1649,7 +1649,7 @@ void samp_meng::FDb_Init() {
 }
 
 // --- samp_meng.FDb..Uninit
-void samp_meng::FDb_Uninit() {
+void samp_meng::FDb_Uninit() throw() {
     samp_meng::FDb &row = _db; (void)row;
 
     // samp_meng.FDb.ind_user.Uninit (Thash)  //
@@ -1676,7 +1676,7 @@ void samp_meng::FDb_Uninit() {
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by samp_meng::FFdin.in via FIohook field.
 // Whenever the file descriptor becomes readable, insert fdin into cd_fdin_read.
-void samp_meng::in_BeginRead(samp_meng::FFdin& fdin, algo::Fildes fd) {
+void samp_meng::in_BeginRead(samp_meng::FFdin& fdin, algo::Fildes fd) throw() {
     callback_Set1(fdin.in_iohook, fdin, samp_meng::cd_fdin_read_Insert);
     fdin.in_iohook.fildes = fd;
     IOEvtFlags flags;
@@ -1690,7 +1690,7 @@ void samp_meng::in_BeginRead(samp_meng::FFdin& fdin, algo::Fildes fd) {
 
 // --- samp_meng.FFdin.in.EndRead
 // Set EOF flag
-void samp_meng::in_EndRead(samp_meng::FFdin& fdin) {
+void samp_meng::in_EndRead(samp_meng::FFdin& fdin) throw() {
     if (ValidQ(fdin.in_iohook.fildes)) {
         fdin.in_eof = true;
         samp_meng::cd_fdin_read_Insert(fdin);
@@ -1709,7 +1709,7 @@ void samp_meng::in_EndRead(samp_meng::FFdin& fdin) {
 // SkipMsg will skip both the line and the deliminter.
 // A partial line at the end of input is NOT returned (TODO?)
 // 
-algo::aryptr<char> samp_meng::in_GetMsg(samp_meng::FFdin& fdin) {
+algo::aryptr<char> samp_meng::in_GetMsg(samp_meng::FFdin& fdin) throw() {
     algo::aryptr<char> ret;
     if (!fdin.in_msgvalid) {
         in_ScanMsg(fdin);
@@ -1733,7 +1733,7 @@ algo::aryptr<char> samp_meng::in_GetMsg(samp_meng::FFdin& fdin) {
 
 // --- samp_meng.FFdin.in.Refill
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool samp_meng::in_Refill(samp_meng::FFdin& fdin) {
+bool samp_meng::in_Refill(samp_meng::FFdin& fdin) throw() {
     bool readable = ValidQ(fdin.in_iohook.fildes);
     if (readable) {
         int fd     = fdin.in_iohook.fildes.value;
@@ -1765,7 +1765,7 @@ bool samp_meng::in_Refill(samp_meng::FFdin& fdin) {
 // --- samp_meng.FFdin.in.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void samp_meng::in_RemoveAll(samp_meng::FFdin& fdin) {
+void samp_meng::in_RemoveAll(samp_meng::FFdin& fdin) throw() {
     fdin.in_start    = 0;
     fdin.in_end      = 0;
     fdin.in_msgvalid = false;
@@ -1774,7 +1774,7 @@ void samp_meng::in_RemoveAll(samp_meng::FFdin& fdin) {
 // --- samp_meng.FFdin.in.ScanMsg
 // Internal function to scan for a message
 // 
-static void samp_meng::in_ScanMsg(samp_meng::FFdin& fdin) {
+static void samp_meng::in_ScanMsg(samp_meng::FFdin& fdin) throw() {
     char *hdr = (char*)(fdin.in_elems + fdin.in_start);
     i32 avail = in_N(fdin);
     i32 msglen;
@@ -1800,7 +1800,7 @@ static void samp_meng::in_ScanMsg(samp_meng::FFdin& fdin) {
 // --- samp_meng.FFdin.in.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void samp_meng::in_Shift(samp_meng::FFdin& fdin) {
+static void samp_meng::in_Shift(samp_meng::FFdin& fdin) throw() {
     i32 start = fdin.in_start;
     i32 bytes_n = fdin.in_end - start;
     if (bytes_n > 0) {
@@ -1814,7 +1814,7 @@ static void samp_meng::in_Shift(samp_meng::FFdin& fdin) {
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void samp_meng::in_SkipBytes(samp_meng::FFdin& fdin, int n) {
+void samp_meng::in_SkipBytes(samp_meng::FFdin& fdin, int n) throw() {
     int avail = fdin.in_end - fdin.in_start;
     n = i32_Min(n,avail);
     fdin.in_start += n;
@@ -1824,7 +1824,7 @@ void samp_meng::in_SkipBytes(samp_meng::FFdin& fdin, int n) {
 // --- samp_meng.FFdin.in.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void samp_meng::in_SkipMsg(samp_meng::FFdin& fdin) {
+void samp_meng::in_SkipMsg(samp_meng::FFdin& fdin) throw() {
     if (fdin.in_msgvalid) {
         int skip = fdin.in_msglen;
         skip += ssizeof(char); // delimiter
@@ -1842,7 +1842,7 @@ void samp_meng::in_SkipMsg(samp_meng::FFdin& fdin) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool samp_meng::in_WriteAll(samp_meng::FFdin& fdin, u8 *in, i32 in_n) {
+bool samp_meng::in_WriteAll(samp_meng::FFdin& fdin, u8 *in, i32 in_n) throw() {
     int max = in_Max(fdin);
     // check if message doesn't fit. if so, shift bytes over.
     if (fdin.in_end + in_n > max) {
@@ -1874,7 +1874,7 @@ void samp_meng::FFdin_Init(samp_meng::FFdin& fdin) {
 }
 
 // --- samp_meng.FFdin..Uninit
-void samp_meng::FFdin_Uninit(samp_meng::FFdin& fdin) {
+void samp_meng::FFdin_Uninit(samp_meng::FFdin& fdin) throw() {
     samp_meng::FFdin &row = fdin; (void)row;
     cd_fdin_eof_Remove(row); // remove fdin from index cd_fdin_eof
     cd_fdin_read_Remove(row); // remove fdin from index cd_fdin_read
@@ -1883,7 +1883,7 @@ void samp_meng::FFdin_Uninit(samp_meng::FFdin& fdin) {
 // --- samp_meng.I64Price8.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool samp_meng::value_SetDoubleMaybe(samp_meng::I64Price8& parent, double val) {
+bool samp_meng::value_SetDoubleMaybe(samp_meng::I64Price8& parent, double val) throw() {
     double intval = val * 100000000;
     i64 minval = i64(-9223372036854775807LL);
     i64 maxval = i64(9223372036854775807LL);
@@ -1897,7 +1897,7 @@ bool samp_meng::value_SetDoubleMaybe(samp_meng::I64Price8& parent, double val) {
 }
 
 // --- samp_meng.I64Price8.value.ReadStrptrMaybe
-bool samp_meng::value_ReadStrptrMaybe(samp_meng::I64Price8& parent, algo::strptr in) {
+bool samp_meng::value_ReadStrptrMaybe(samp_meng::I64Price8& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -1945,7 +1945,7 @@ bool samp_meng::value_ReadStrptrMaybe(samp_meng::I64Price8& parent, algo::strptr
 }
 
 // --- samp_meng.I64Price8.value.Print
-void samp_meng::value_Print(samp_meng::I64Price8& parent, cstring &outstr) {
+void samp_meng::value_Print(samp_meng::I64Price8& parent, cstring &outstr) throw() {
     i64 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -1959,7 +1959,7 @@ void samp_meng::value_Print(samp_meng::I64Price8& parent, cstring &outstr) {
 // --- samp_meng.I64Price8..ReadStrptrMaybe
 // Read fields of samp_meng::I64Price8 from an ascii string.
 // The format of the string is the format of the samp_meng::I64Price8's only field
-bool samp_meng::I64Price8_ReadStrptrMaybe(samp_meng::I64Price8 &parent, algo::strptr in_str) {
+bool samp_meng::I64Price8_ReadStrptrMaybe(samp_meng::I64Price8 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1968,12 +1968,12 @@ bool samp_meng::I64Price8_ReadStrptrMaybe(samp_meng::I64Price8 &parent, algo::st
 // --- samp_meng.I64Price8..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.I64Price8.String  printfmt:Raw
-void samp_meng::I64Price8_Print(samp_meng::I64Price8 row, algo::cstring& str) {
+void samp_meng::I64Price8_Print(samp_meng::I64Price8 row, algo::cstring& str) throw() {
     samp_meng::value_Print(row, str);
 }
 
 // --- samp_meng.FOrder..Uninit
-void samp_meng::FOrder_Uninit(samp_meng::FOrder& order) {
+void samp_meng::FOrder_Uninit(samp_meng::FOrder& order) throw() {
     samp_meng::FOrder &row = order; (void)row;
     ind_order_Remove(row); // remove order from index ind_order
     samp_meng::FOrdq* p_p_ordq = row.p_ordq;
@@ -1989,7 +1989,7 @@ void samp_meng::FOrder_Uninit(samp_meng::FOrder& order) {
 // --- samp_meng.FOrdq.bh_order.Cascdel
 // Delete referred-to items.
 // Delete all elements referenced by the heap.
-void samp_meng::bh_order_Cascdel(samp_meng::FOrdq& ordq) {
+void samp_meng::bh_order_Cascdel(samp_meng::FOrdq& ordq) throw() {
     i32 n = ordq.bh_order_n;
     while (n > 0) {
         n--;
@@ -2002,7 +2002,7 @@ void samp_meng::bh_order_Cascdel(samp_meng::FOrdq& ordq) {
 
 // --- samp_meng.FOrdq.bh_order.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void samp_meng::bh_order_Dealloc(samp_meng::FOrdq& ordq) {
+void samp_meng::bh_order_Dealloc(samp_meng::FOrdq& ordq) throw() {
     bh_order_RemoveAll(ordq);
     algo_lib::malloc_FreeMem(ordq.bh_order_elems, sizeof(samp_meng::FOrder*)*ordq.bh_order_max);
     ordq.bh_order_max   = 0;
@@ -2012,7 +2012,7 @@ void samp_meng::bh_order_Dealloc(samp_meng::FOrdq& ordq) {
 // --- samp_meng.FOrdq.bh_order.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int samp_meng::bh_order_Downheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row, int idx) {
+static int samp_meng::bh_order_Downheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row, int idx) throw() {
     samp_meng::FOrder* *elems = ordq.bh_order_elems;
     int n = ordq.bh_order_n;
     int child = idx*2+1;
@@ -2039,7 +2039,7 @@ static int samp_meng::bh_order_Downheap(samp_meng::FOrdq& ordq, samp_meng::FOrde
 
 // --- samp_meng.FOrdq.bh_order.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void samp_meng::bh_order_Insert(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
+void samp_meng::bh_order_Insert(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) throw() {
     if (LIKELY(row.bh_order_idx == -1)) {
         bh_order_Reserve(ordq, 1);
         int n = ordq.bh_order_n;
@@ -2053,7 +2053,7 @@ void samp_meng::bh_order_Insert(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) 
 // --- samp_meng.FOrdq.bh_order.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 samp_meng::bh_order_Reheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
+i32 samp_meng::bh_order_Reheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) throw() {
     int old_idx = row.bh_order_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
@@ -2074,7 +2074,7 @@ i32 samp_meng::bh_order_Reheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 samp_meng::bh_order_ReheapFirst(samp_meng::FOrdq& ordq) {
+i32 samp_meng::bh_order_ReheapFirst(samp_meng::FOrdq& ordq) throw() {
     samp_meng::FOrder &row = *ordq.bh_order_elems[0];
     i32 new_idx = bh_order_Downheap(ordq, row, 0);
     row.bh_order_idx = new_idx;
@@ -2084,7 +2084,7 @@ i32 samp_meng::bh_order_ReheapFirst(samp_meng::FOrdq& ordq) {
 
 // --- samp_meng.FOrdq.bh_order.Remove
 // Remove element from index. If element is not in index, do nothing.
-void samp_meng::bh_order_Remove(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
+void samp_meng::bh_order_Remove(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) throw() {
     if (bh_order_InBheapQ(row)) {
         int old_idx = row.bh_order_idx;
         if (ordq.bh_order_elems[old_idx] == &row) { // sanity check: heap points back to row
@@ -2106,7 +2106,7 @@ void samp_meng::bh_order_Remove(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) 
 
 // --- samp_meng.FOrdq.bh_order.RemoveAll
 // Remove all elements from binary heap
-void samp_meng::bh_order_RemoveAll(samp_meng::FOrdq& ordq) {
+void samp_meng::bh_order_RemoveAll(samp_meng::FOrdq& ordq) throw() {
     int n = ordq.bh_order_n;
     for (int i = n - 1; i>=0; i--) {
         ordq.bh_order_elems[i]->bh_order_idx = -1; // mark not-in-heap
@@ -2117,7 +2117,7 @@ void samp_meng::bh_order_RemoveAll(samp_meng::FOrdq& ordq) {
 // --- samp_meng.FOrdq.bh_order.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-samp_meng::FOrder* samp_meng::bh_order_RemoveFirst(samp_meng::FOrdq& ordq) {
+samp_meng::FOrder* samp_meng::bh_order_RemoveFirst(samp_meng::FOrdq& ordq) throw() {
     samp_meng::FOrder *row = NULL;
     if (ordq.bh_order_n > 0) {
         row = ordq.bh_order_elems[0];
@@ -2136,7 +2136,7 @@ samp_meng::FOrder* samp_meng::bh_order_RemoveFirst(samp_meng::FOrdq& ordq) {
 
 // --- samp_meng.FOrdq.bh_order.Reserve
 // Reserve space in index for N more elements
-void samp_meng::bh_order_Reserve(samp_meng::FOrdq& ordq, int n) {
+void samp_meng::bh_order_Reserve(samp_meng::FOrdq& ordq, int n) throw() {
     i32 old_max = ordq.bh_order_max;
     if (UNLIKELY(ordq.bh_order_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -2154,7 +2154,7 @@ void samp_meng::bh_order_Reserve(samp_meng::FOrdq& ordq, int n) {
 // --- samp_meng.FOrdq.bh_order.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int samp_meng::bh_order_Upheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row, int idx) {
+static int samp_meng::bh_order_Upheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row, int idx) throw() {
     samp_meng::FOrder* *elems = ordq.bh_order_elems;
     while (idx>0) {
         int j = (idx-1)/2;
@@ -2170,7 +2170,7 @@ static int samp_meng::bh_order_Upheap(samp_meng::FOrdq& ordq, samp_meng::FOrder&
 }
 
 // --- samp_meng.FOrdq.bh_order.ElemLt
-inline static bool samp_meng::bh_order_ElemLt(samp_meng::FOrdq& ordq, samp_meng::FOrder &a, samp_meng::FOrder &b) {
+inline static bool samp_meng::bh_order_ElemLt(samp_meng::FOrdq& ordq, samp_meng::FOrder &a, samp_meng::FOrder &b) throw() {
     (void)ordq;
     return ordkey_Lt(a, b);
 }
@@ -2264,7 +2264,7 @@ void samp_meng::ordq_bh_order_curs_Next(ordq_bh_order_curs &curs) {
 }
 
 // --- samp_meng.FOrdq..Uninit
-void samp_meng::FOrdq_Uninit(samp_meng::FOrdq& ordq) {
+void samp_meng::FOrdq_Uninit(samp_meng::FOrdq& ordq) throw() {
     samp_meng::FOrdq &row = ordq; (void)row;
     bh_order_Cascdel(ordq); // dmmeta.cascdel:samp_meng.FOrdq.bh_order
     samp_meng::FSymbol* p_p_symbol = row.p_symbol;
@@ -2279,7 +2279,7 @@ void samp_meng::FOrdq_Uninit(samp_meng::FOrdq& ordq) {
 // --- samp_meng.Symbol..ReadStrptrMaybe
 // Read fields of samp_meng::Symbol from an ascii string.
 // The format of the string is the format of the samp_meng::Symbol's only field
-bool samp_meng::Symbol_ReadStrptrMaybe(samp_meng::Symbol &parent, algo::strptr in_str) {
+bool samp_meng::Symbol_ReadStrptrMaybe(samp_meng::Symbol &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && algo::RnullStr8_ReadStrptrMaybe(parent.symbol, in_str);
     return retval;
@@ -2288,14 +2288,14 @@ bool samp_meng::Symbol_ReadStrptrMaybe(samp_meng::Symbol &parent, algo::strptr i
 // --- samp_meng.Symbol..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.Symbol.String  printfmt:Raw
-void samp_meng::Symbol_Print(samp_meng::Symbol& row, algo::cstring& str) {
+void samp_meng::Symbol_Print(samp_meng::Symbol& row, algo::cstring& str) throw() {
     algo::RnullStr8_Print(row.symbol, str);
 }
 
 // --- samp_meng.FSymbol.c_ordq.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void samp_meng::c_ordq_Insert(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) {
+void samp_meng::c_ordq_Insert(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) throw() {
     if (bool_Update(row.symbol_c_ordq_in_ary,true)) {
         // reserve space
         c_ordq_Reserve(symbol, 1);
@@ -2312,7 +2312,7 @@ void samp_meng::c_ordq_Insert(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row)
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool samp_meng::c_ordq_InsertMaybe(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) {
+bool samp_meng::c_ordq_InsertMaybe(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) throw() {
     bool retval = !row.symbol_c_ordq_in_ary;
     c_ordq_Insert(symbol,row); // check is performed in _Insert again
     return retval;
@@ -2320,7 +2320,7 @@ bool samp_meng::c_ordq_InsertMaybe(samp_meng::FSymbol& symbol, samp_meng::FOrdq&
 
 // --- samp_meng.FSymbol.c_ordq.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void samp_meng::c_ordq_Remove(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) {
+void samp_meng::c_ordq_Remove(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) throw() {
     if (bool_Update(row.symbol_c_ordq_in_ary,false)) {
         int lim = symbol.c_ordq_n;
         samp_meng::FOrdq* *elems = symbol.c_ordq_elems;
@@ -2341,7 +2341,7 @@ void samp_meng::c_ordq_Remove(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row)
 
 // --- samp_meng.FSymbol.c_ordq.Reserve
 // Reserve space in index for N more elements;
-void samp_meng::c_ordq_Reserve(samp_meng::FSymbol& symbol, u32 n) {
+void samp_meng::c_ordq_Reserve(samp_meng::FSymbol& symbol, u32 n) throw() {
     u32 old_max = symbol.c_ordq_max;
     if (UNLIKELY(symbol.c_ordq_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -2357,7 +2357,7 @@ void samp_meng::c_ordq_Reserve(samp_meng::FSymbol& symbol, u32 n) {
 }
 
 // --- samp_meng.FSymbol..Uninit
-void samp_meng::FSymbol_Uninit(samp_meng::FSymbol& symbol) {
+void samp_meng::FSymbol_Uninit(samp_meng::FSymbol& symbol) throw() {
     samp_meng::FSymbol &row = symbol; (void)row;
     ind_symbol_Remove(row); // remove symbol from index ind_symbol
 
@@ -2367,7 +2367,7 @@ void samp_meng::FSymbol_Uninit(samp_meng::FSymbol& symbol) {
 
 // --- samp_meng.FUser.zd_order.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void samp_meng::zd_order_Insert(samp_meng::FUser& user, samp_meng::FOrder& row) {
+void samp_meng::zd_order_Insert(samp_meng::FUser& user, samp_meng::FOrder& row) throw() {
     if (!zd_order_InLlistQ(row)) {
         samp_meng::FOrder* old_tail = user.zd_order_tail;
         row.zd_order_next = NULL;
@@ -2383,7 +2383,7 @@ void samp_meng::zd_order_Insert(samp_meng::FUser& user, samp_meng::FOrder& row) 
 
 // --- samp_meng.FUser.zd_order.Remove
 // Remove element from index. If element is not in index, do nothing.
-void samp_meng::zd_order_Remove(samp_meng::FUser& user, samp_meng::FOrder& row) {
+void samp_meng::zd_order_Remove(samp_meng::FUser& user, samp_meng::FOrder& row) throw() {
     if (zd_order_InLlistQ(row)) {
         samp_meng::FOrder* old_head       = user.zd_order_head;
         (void)old_head; // in case it's not used
@@ -2406,7 +2406,7 @@ void samp_meng::zd_order_Remove(samp_meng::FUser& user, samp_meng::FOrder& row) 
 
 // --- samp_meng.FUser.zd_order.RemoveAll
 // Empty the index. (The rows are not deleted)
-void samp_meng::zd_order_RemoveAll(samp_meng::FUser& user) {
+void samp_meng::zd_order_RemoveAll(samp_meng::FUser& user) throw() {
     samp_meng::FOrder* row = user.zd_order_head;
     user.zd_order_head = NULL;
     user.zd_order_tail = NULL;
@@ -2421,7 +2421,7 @@ void samp_meng::zd_order_RemoveAll(samp_meng::FUser& user) {
 
 // --- samp_meng.FUser.zd_order.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-samp_meng::FOrder* samp_meng::zd_order_RemoveFirst(samp_meng::FUser& user) {
+samp_meng::FOrder* samp_meng::zd_order_RemoveFirst(samp_meng::FUser& user) throw() {
     samp_meng::FOrder *row = NULL;
     row = user.zd_order_head;
     if (row) {
@@ -2438,7 +2438,7 @@ samp_meng::FOrder* samp_meng::zd_order_RemoveFirst(samp_meng::FUser& user) {
 }
 
 // --- samp_meng.FUser..Uninit
-void samp_meng::FUser_Uninit(samp_meng::FUser& user) {
+void samp_meng::FUser_Uninit(samp_meng::FUser& user) throw() {
     samp_meng::FUser &row = user; (void)row;
     ind_user_Remove(row); // remove user from index ind_user
 }
@@ -2446,7 +2446,7 @@ void samp_meng::FUser_Uninit(samp_meng::FUser& user) {
 // --- samp_meng.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* samp_meng::value_ToCstr(const samp_meng::FieldId& parent) {
+const char* samp_meng::value_ToCstr(const samp_meng::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case samp_meng_FieldId_base        : ret = "base";  break;
@@ -2468,7 +2468,7 @@ const char* samp_meng::value_ToCstr(const samp_meng::FieldId& parent) {
 // --- samp_meng.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void samp_meng::value_Print(const samp_meng::FieldId& parent, algo::cstring &lhs) {
+void samp_meng::value_Print(const samp_meng::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2481,7 +2481,7 @@ void samp_meng::value_Print(const samp_meng::FieldId& parent, algo::cstring &lhs
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool samp_meng::value_SetStrptrMaybe(samp_meng::FieldId& parent, algo::strptr rhs) {
+bool samp_meng::value_SetStrptrMaybe(samp_meng::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -2547,13 +2547,13 @@ bool samp_meng::value_SetStrptrMaybe(samp_meng::FieldId& parent, algo::strptr rh
 // --- samp_meng.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void samp_meng::value_SetStrptr(samp_meng::FieldId& parent, algo::strptr rhs, samp_meng_FieldIdEnum dflt) {
+void samp_meng::value_SetStrptr(samp_meng::FieldId& parent, algo::strptr rhs, samp_meng_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- samp_meng.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool samp_meng::value_ReadStrptrMaybe(samp_meng::FieldId& parent, algo::strptr rhs) {
+bool samp_meng::value_ReadStrptrMaybe(samp_meng::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2565,7 +2565,7 @@ bool samp_meng::value_ReadStrptrMaybe(samp_meng::FieldId& parent, algo::strptr r
 // --- samp_meng.FieldId..ReadStrptrMaybe
 // Read fields of samp_meng::FieldId from an ascii string.
 // The format of the string is the format of the samp_meng::FieldId's only field
-bool samp_meng::FieldId_ReadStrptrMaybe(samp_meng::FieldId &parent, algo::strptr in_str) {
+bool samp_meng::FieldId_ReadStrptrMaybe(samp_meng::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2574,14 +2574,14 @@ bool samp_meng::FieldId_ReadStrptrMaybe(samp_meng::FieldId &parent, algo::strptr
 // --- samp_meng.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.FieldId.String  printfmt:Raw
-void samp_meng::FieldId_Print(samp_meng::FieldId& row, algo::cstring& str) {
+void samp_meng::FieldId_Print(samp_meng::FieldId& row, algo::cstring& str) throw() {
     samp_meng::value_Print(row, str);
 }
 
 // --- samp_meng.InCase.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* samp_meng::value_ToCstr(const samp_meng::InCase& parent) {
+const char* samp_meng::value_ToCstr(const samp_meng::InCase& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case samp_meng_InCase_samp_meng_CancelReqMsg: ret = "samp_meng.CancelReqMsg";  break;
@@ -2597,7 +2597,7 @@ const char* samp_meng::value_ToCstr(const samp_meng::InCase& parent) {
 // --- samp_meng.InCase.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void samp_meng::value_Print(const samp_meng::InCase& parent, algo::cstring &lhs) {
+void samp_meng::value_Print(const samp_meng::InCase& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2610,7 +2610,7 @@ void samp_meng::value_Print(const samp_meng::InCase& parent, algo::cstring &lhs)
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool samp_meng::value_SetStrptrMaybe(samp_meng::InCase& parent, algo::strptr rhs) {
+bool samp_meng::value_SetStrptrMaybe(samp_meng::InCase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 17: {
@@ -2674,13 +2674,13 @@ bool samp_meng::value_SetStrptrMaybe(samp_meng::InCase& parent, algo::strptr rhs
 // --- samp_meng.InCase.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void samp_meng::value_SetStrptr(samp_meng::InCase& parent, algo::strptr rhs, samp_meng_InCaseEnum dflt) {
+void samp_meng::value_SetStrptr(samp_meng::InCase& parent, algo::strptr rhs, samp_meng_InCaseEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- samp_meng.InCase.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool samp_meng::value_ReadStrptrMaybe(samp_meng::InCase& parent, algo::strptr rhs) {
+bool samp_meng::value_ReadStrptrMaybe(samp_meng::InCase& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2692,7 +2692,7 @@ bool samp_meng::value_ReadStrptrMaybe(samp_meng::InCase& parent, algo::strptr rh
 // --- samp_meng.InCase..ReadStrptrMaybe
 // Read fields of samp_meng::InCase from an ascii string.
 // The format of the string is the format of the samp_meng::InCase's only field
-bool samp_meng::InCase_ReadStrptrMaybe(samp_meng::InCase &parent, algo::strptr in_str) {
+bool samp_meng::InCase_ReadStrptrMaybe(samp_meng::InCase &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2700,7 +2700,7 @@ bool samp_meng::InCase_ReadStrptrMaybe(samp_meng::InCase &parent, algo::strptr i
 
 // --- samp_meng.MassCancelReqMsg.base.CopyOut
 // Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::MassCancelReqMsg &row, samp_meng::MsgHeader &out) {
+void samp_meng::parent_CopyOut(samp_meng::MassCancelReqMsg &row, samp_meng::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2708,7 +2708,7 @@ void samp_meng::parent_CopyOut(samp_meng::MassCancelReqMsg &row, samp_meng::MsgH
 }
 
 // --- samp_meng.MassCancelReqMsg..ReadFieldMaybe
-bool samp_meng::MassCancelReqMsg_ReadFieldMaybe(samp_meng::MassCancelReqMsg& parent, algo::strptr field, algo::strptr strval) {
+bool samp_meng::MassCancelReqMsg_ReadFieldMaybe(samp_meng::MassCancelReqMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     samp_meng::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2740,7 +2740,7 @@ bool samp_meng::MassCancelReqMsg_ReadFieldMaybe(samp_meng::MassCancelReqMsg& par
 // --- samp_meng.MassCancelReqMsg..ReadStrptrMaybe
 // Read fields of samp_meng::MassCancelReqMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool samp_meng::MassCancelReqMsg_ReadStrptrMaybe(samp_meng::MassCancelReqMsg &parent, algo::strptr in_str) {
+bool samp_meng::MassCancelReqMsg_ReadStrptrMaybe(samp_meng::MassCancelReqMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "samp_meng.MassCancelReqMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2752,7 +2752,7 @@ bool samp_meng::MassCancelReqMsg_ReadStrptrMaybe(samp_meng::MassCancelReqMsg &pa
 // --- samp_meng.MassCancelReqMsg..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.MassCancelReqMsg.String  printfmt:Tuple
-void samp_meng::MassCancelReqMsg_Print(samp_meng::MassCancelReqMsg& row, algo::cstring& str) {
+void samp_meng::MassCancelReqMsg_Print(samp_meng::MassCancelReqMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.MassCancelReqMsg";
 
@@ -2763,7 +2763,7 @@ void samp_meng::MassCancelReqMsg_Print(samp_meng::MassCancelReqMsg& row, algo::c
 // --- samp_meng.MsgHeader.type.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* samp_meng::type_ToCstr(const samp_meng::MsgHeader& parent) {
+const char* samp_meng::type_ToCstr(const samp_meng::MsgHeader& parent) throw() {
     const char *ret = NULL;
     switch(type_GetEnum(parent)) {
         case samp_meng_MsgHeader_type_samp_meng_CancelOrderMsg: ret = "samp_meng.CancelOrderMsg";  break;
@@ -2784,7 +2784,7 @@ const char* samp_meng::type_ToCstr(const samp_meng::MsgHeader& parent) {
 // --- samp_meng.MsgHeader.type.Print
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
-void samp_meng::type_Print(const samp_meng::MsgHeader& parent, algo::cstring &lhs) {
+void samp_meng::type_Print(const samp_meng::MsgHeader& parent, algo::cstring &lhs) throw() {
     const char *strval = type_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2797,7 +2797,7 @@ void samp_meng::type_Print(const samp_meng::MsgHeader& parent, algo::cstring &lh
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool samp_meng::type_SetStrptrMaybe(samp_meng::MsgHeader& parent, algo::strptr rhs) {
+bool samp_meng::type_SetStrptrMaybe(samp_meng::MsgHeader& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 17: {
@@ -2882,13 +2882,13 @@ bool samp_meng::type_SetStrptrMaybe(samp_meng::MsgHeader& parent, algo::strptr r
 // --- samp_meng.MsgHeader.type.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void samp_meng::type_SetStrptr(samp_meng::MsgHeader& parent, algo::strptr rhs, samp_meng_MsgHeader_type_Enum dflt) {
+void samp_meng::type_SetStrptr(samp_meng::MsgHeader& parent, algo::strptr rhs, samp_meng_MsgHeader_type_Enum dflt) throw() {
     if (!type_SetStrptrMaybe(parent,rhs)) type_SetEnum(parent,dflt);
 }
 
 // --- samp_meng.MsgHeader.type.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool samp_meng::type_ReadStrptrMaybe(samp_meng::MsgHeader& parent, algo::strptr rhs) {
+bool samp_meng::type_ReadStrptrMaybe(samp_meng::MsgHeader& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = type_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2898,7 +2898,7 @@ bool samp_meng::type_ReadStrptrMaybe(samp_meng::MsgHeader& parent, algo::strptr 
 }
 
 // --- samp_meng.MsgHeader..ReadFieldMaybe
-bool samp_meng::MsgHeader_ReadFieldMaybe(samp_meng::MsgHeader& parent, algo::strptr field, algo::strptr strval) {
+bool samp_meng::MsgHeader_ReadFieldMaybe(samp_meng::MsgHeader& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     samp_meng::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2922,7 +2922,7 @@ bool samp_meng::MsgHeader_ReadFieldMaybe(samp_meng::MsgHeader& parent, algo::str
 // --- samp_meng.MsgHeader..ReadStrptrMaybe
 // Read fields of samp_meng::MsgHeader from an ascii string.
 // The format of the string is an ssim Tuple
-bool samp_meng::MsgHeader_ReadStrptrMaybe(samp_meng::MsgHeader &parent, algo::strptr in_str) {
+bool samp_meng::MsgHeader_ReadStrptrMaybe(samp_meng::MsgHeader &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "samp_meng.MsgHeader");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2934,7 +2934,7 @@ bool samp_meng::MsgHeader_ReadStrptrMaybe(samp_meng::MsgHeader &parent, algo::st
 // --- samp_meng.MsgHeader..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.MsgHeader.String  printfmt:Tuple
-void samp_meng::MsgHeader_Print(samp_meng::MsgHeader& row, algo::cstring& str) {
+void samp_meng::MsgHeader_Print(samp_meng::MsgHeader& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.MsgHeader";
     (void)row;//only to avoid -Wunused-parameter
@@ -2943,7 +2943,7 @@ void samp_meng::MsgHeader_Print(samp_meng::MsgHeader& row, algo::cstring& str) {
 // --- samp_meng.MsgHeaderMsgsCase.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* samp_meng::value_ToCstr(const samp_meng::MsgHeaderMsgsCase& parent) {
+const char* samp_meng::value_ToCstr(const samp_meng::MsgHeaderMsgsCase& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case samp_meng_MsgHeaderMsgsCase_samp_meng_CancelOrderMsg: ret = "samp_meng.CancelOrderMsg";  break;
@@ -2964,7 +2964,7 @@ const char* samp_meng::value_ToCstr(const samp_meng::MsgHeaderMsgsCase& parent) 
 // --- samp_meng.MsgHeaderMsgsCase.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void samp_meng::value_Print(const samp_meng::MsgHeaderMsgsCase& parent, algo::cstring &lhs) {
+void samp_meng::value_Print(const samp_meng::MsgHeaderMsgsCase& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2977,7 +2977,7 @@ void samp_meng::value_Print(const samp_meng::MsgHeaderMsgsCase& parent, algo::cs
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool samp_meng::value_SetStrptrMaybe(samp_meng::MsgHeaderMsgsCase& parent, algo::strptr rhs) {
+bool samp_meng::value_SetStrptrMaybe(samp_meng::MsgHeaderMsgsCase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 17: {
@@ -3062,13 +3062,13 @@ bool samp_meng::value_SetStrptrMaybe(samp_meng::MsgHeaderMsgsCase& parent, algo:
 // --- samp_meng.MsgHeaderMsgsCase.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void samp_meng::value_SetStrptr(samp_meng::MsgHeaderMsgsCase& parent, algo::strptr rhs, samp_meng_MsgHeaderMsgsCaseEnum dflt) {
+void samp_meng::value_SetStrptr(samp_meng::MsgHeaderMsgsCase& parent, algo::strptr rhs, samp_meng_MsgHeaderMsgsCaseEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- samp_meng.MsgHeaderMsgsCase.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool samp_meng::value_ReadStrptrMaybe(samp_meng::MsgHeaderMsgsCase& parent, algo::strptr rhs) {
+bool samp_meng::value_ReadStrptrMaybe(samp_meng::MsgHeaderMsgsCase& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -3080,7 +3080,7 @@ bool samp_meng::value_ReadStrptrMaybe(samp_meng::MsgHeaderMsgsCase& parent, algo
 // --- samp_meng.MsgHeaderMsgsCase..ReadStrptrMaybe
 // Read fields of samp_meng::MsgHeaderMsgsCase from an ascii string.
 // The format of the string is the format of the samp_meng::MsgHeaderMsgsCase's only field
-bool samp_meng::MsgHeaderMsgsCase_ReadStrptrMaybe(samp_meng::MsgHeaderMsgsCase &parent, algo::strptr in_str) {
+bool samp_meng::MsgHeaderMsgsCase_ReadStrptrMaybe(samp_meng::MsgHeaderMsgsCase &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3088,7 +3088,7 @@ bool samp_meng::MsgHeaderMsgsCase_ReadStrptrMaybe(samp_meng::MsgHeaderMsgsCase &
 
 // --- samp_meng.NewOrderMsg.base.CopyOut
 // Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::NewOrderMsg &row, samp_meng::MsgHeader &out) {
+void samp_meng::parent_CopyOut(samp_meng::NewOrderMsg &row, samp_meng::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3096,7 +3096,7 @@ void samp_meng::parent_CopyOut(samp_meng::NewOrderMsg &row, samp_meng::MsgHeader
 }
 
 // --- samp_meng.NewOrderMsg..ReadFieldMaybe
-bool samp_meng::NewOrderMsg_ReadFieldMaybe(samp_meng::NewOrderMsg& parent, algo::strptr field, algo::strptr strval) {
+bool samp_meng::NewOrderMsg_ReadFieldMaybe(samp_meng::NewOrderMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     samp_meng::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3144,7 +3144,7 @@ bool samp_meng::NewOrderMsg_ReadFieldMaybe(samp_meng::NewOrderMsg& parent, algo:
 // --- samp_meng.NewOrderMsg..ReadStrptrMaybe
 // Read fields of samp_meng::NewOrderMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool samp_meng::NewOrderMsg_ReadStrptrMaybe(samp_meng::NewOrderMsg &parent, algo::strptr in_str) {
+bool samp_meng::NewOrderMsg_ReadStrptrMaybe(samp_meng::NewOrderMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "samp_meng.NewOrderMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3156,7 +3156,7 @@ bool samp_meng::NewOrderMsg_ReadStrptrMaybe(samp_meng::NewOrderMsg &parent, algo
 // --- samp_meng.NewOrderMsg..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.NewOrderMsg.String  printfmt:Tuple
-void samp_meng::NewOrderMsg_Print(samp_meng::NewOrderMsg& row, algo::cstring& str) {
+void samp_meng::NewOrderMsg_Print(samp_meng::NewOrderMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.NewOrderMsg";
 
@@ -3178,7 +3178,7 @@ void samp_meng::NewOrderMsg_Print(samp_meng::NewOrderMsg& row, algo::cstring& st
 
 // --- samp_meng.NewOrderReqMsg.base.CopyOut
 // Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::NewOrderReqMsg &row, samp_meng::MsgHeader &out) {
+void samp_meng::parent_CopyOut(samp_meng::NewOrderReqMsg &row, samp_meng::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3186,7 +3186,7 @@ void samp_meng::parent_CopyOut(samp_meng::NewOrderReqMsg &row, samp_meng::MsgHea
 }
 
 // --- samp_meng.NewOrderReqMsg..ReadFieldMaybe
-bool samp_meng::NewOrderReqMsg_ReadFieldMaybe(samp_meng::NewOrderReqMsg& parent, algo::strptr field, algo::strptr strval) {
+bool samp_meng::NewOrderReqMsg_ReadFieldMaybe(samp_meng::NewOrderReqMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     samp_meng::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3234,7 +3234,7 @@ bool samp_meng::NewOrderReqMsg_ReadFieldMaybe(samp_meng::NewOrderReqMsg& parent,
 // --- samp_meng.NewOrderReqMsg..ReadStrptrMaybe
 // Read fields of samp_meng::NewOrderReqMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool samp_meng::NewOrderReqMsg_ReadStrptrMaybe(samp_meng::NewOrderReqMsg &parent, algo::strptr in_str) {
+bool samp_meng::NewOrderReqMsg_ReadStrptrMaybe(samp_meng::NewOrderReqMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "samp_meng.NewOrderReqMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3246,7 +3246,7 @@ bool samp_meng::NewOrderReqMsg_ReadStrptrMaybe(samp_meng::NewOrderReqMsg &parent
 // --- samp_meng.NewOrderReqMsg..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.NewOrderReqMsg.String  printfmt:Tuple
-void samp_meng::NewOrderReqMsg_Print(samp_meng::NewOrderReqMsg& row, algo::cstring& str) {
+void samp_meng::NewOrderReqMsg_Print(samp_meng::NewOrderReqMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.NewOrderReqMsg";
 
@@ -3268,7 +3268,7 @@ void samp_meng::NewOrderReqMsg_Print(samp_meng::NewOrderReqMsg& row, algo::cstri
 
 // --- samp_meng.NewSymbolMsg.base.CopyOut
 // Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::NewSymbolMsg &row, samp_meng::MsgHeader &out) {
+void samp_meng::parent_CopyOut(samp_meng::NewSymbolMsg &row, samp_meng::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3276,7 +3276,7 @@ void samp_meng::parent_CopyOut(samp_meng::NewSymbolMsg &row, samp_meng::MsgHeade
 }
 
 // --- samp_meng.NewSymbolMsg..ReadFieldMaybe
-bool samp_meng::NewSymbolMsg_ReadFieldMaybe(samp_meng::NewSymbolMsg& parent, algo::strptr field, algo::strptr strval) {
+bool samp_meng::NewSymbolMsg_ReadFieldMaybe(samp_meng::NewSymbolMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     samp_meng::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3308,7 +3308,7 @@ bool samp_meng::NewSymbolMsg_ReadFieldMaybe(samp_meng::NewSymbolMsg& parent, alg
 // --- samp_meng.NewSymbolMsg..ReadStrptrMaybe
 // Read fields of samp_meng::NewSymbolMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool samp_meng::NewSymbolMsg_ReadStrptrMaybe(samp_meng::NewSymbolMsg &parent, algo::strptr in_str) {
+bool samp_meng::NewSymbolMsg_ReadStrptrMaybe(samp_meng::NewSymbolMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "samp_meng.NewSymbolMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3320,7 +3320,7 @@ bool samp_meng::NewSymbolMsg_ReadStrptrMaybe(samp_meng::NewSymbolMsg &parent, al
 // --- samp_meng.NewSymbolMsg..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.NewSymbolMsg.String  printfmt:Tuple
-void samp_meng::NewSymbolMsg_Print(samp_meng::NewSymbolMsg& row, algo::cstring& str) {
+void samp_meng::NewSymbolMsg_Print(samp_meng::NewSymbolMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.NewSymbolMsg";
 
@@ -3330,7 +3330,7 @@ void samp_meng::NewSymbolMsg_Print(samp_meng::NewSymbolMsg& row, algo::cstring& 
 
 // --- samp_meng.NewSymbolReqMsg.base.CopyOut
 // Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::NewSymbolReqMsg &row, samp_meng::MsgHeader &out) {
+void samp_meng::parent_CopyOut(samp_meng::NewSymbolReqMsg &row, samp_meng::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3338,7 +3338,7 @@ void samp_meng::parent_CopyOut(samp_meng::NewSymbolReqMsg &row, samp_meng::MsgHe
 }
 
 // --- samp_meng.NewSymbolReqMsg..ReadFieldMaybe
-bool samp_meng::NewSymbolReqMsg_ReadFieldMaybe(samp_meng::NewSymbolReqMsg& parent, algo::strptr field, algo::strptr strval) {
+bool samp_meng::NewSymbolReqMsg_ReadFieldMaybe(samp_meng::NewSymbolReqMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     samp_meng::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3370,7 +3370,7 @@ bool samp_meng::NewSymbolReqMsg_ReadFieldMaybe(samp_meng::NewSymbolReqMsg& paren
 // --- samp_meng.NewSymbolReqMsg..ReadStrptrMaybe
 // Read fields of samp_meng::NewSymbolReqMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool samp_meng::NewSymbolReqMsg_ReadStrptrMaybe(samp_meng::NewSymbolReqMsg &parent, algo::strptr in_str) {
+bool samp_meng::NewSymbolReqMsg_ReadStrptrMaybe(samp_meng::NewSymbolReqMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "samp_meng.NewSymbolReqMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3382,7 +3382,7 @@ bool samp_meng::NewSymbolReqMsg_ReadStrptrMaybe(samp_meng::NewSymbolReqMsg &pare
 // --- samp_meng.NewSymbolReqMsg..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.NewSymbolReqMsg.String  printfmt:Tuple
-void samp_meng::NewSymbolReqMsg_Print(samp_meng::NewSymbolReqMsg& row, algo::cstring& str) {
+void samp_meng::NewSymbolReqMsg_Print(samp_meng::NewSymbolReqMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.NewSymbolReqMsg";
 
@@ -3392,7 +3392,7 @@ void samp_meng::NewSymbolReqMsg_Print(samp_meng::NewSymbolReqMsg& row, algo::cst
 
 // --- samp_meng.NewUserMsg.base.CopyOut
 // Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::NewUserMsg &row, samp_meng::MsgHeader &out) {
+void samp_meng::parent_CopyOut(samp_meng::NewUserMsg &row, samp_meng::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3400,7 +3400,7 @@ void samp_meng::parent_CopyOut(samp_meng::NewUserMsg &row, samp_meng::MsgHeader 
 }
 
 // --- samp_meng.NewUserMsg..ReadFieldMaybe
-bool samp_meng::NewUserMsg_ReadFieldMaybe(samp_meng::NewUserMsg& parent, algo::strptr field, algo::strptr strval) {
+bool samp_meng::NewUserMsg_ReadFieldMaybe(samp_meng::NewUserMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     samp_meng::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3432,7 +3432,7 @@ bool samp_meng::NewUserMsg_ReadFieldMaybe(samp_meng::NewUserMsg& parent, algo::s
 // --- samp_meng.NewUserMsg..ReadStrptrMaybe
 // Read fields of samp_meng::NewUserMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool samp_meng::NewUserMsg_ReadStrptrMaybe(samp_meng::NewUserMsg &parent, algo::strptr in_str) {
+bool samp_meng::NewUserMsg_ReadStrptrMaybe(samp_meng::NewUserMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "samp_meng.NewUserMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3444,7 +3444,7 @@ bool samp_meng::NewUserMsg_ReadStrptrMaybe(samp_meng::NewUserMsg &parent, algo::
 // --- samp_meng.NewUserMsg..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.NewUserMsg.String  printfmt:Tuple
-void samp_meng::NewUserMsg_Print(samp_meng::NewUserMsg& row, algo::cstring& str) {
+void samp_meng::NewUserMsg_Print(samp_meng::NewUserMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.NewUserMsg";
 
@@ -3454,7 +3454,7 @@ void samp_meng::NewUserMsg_Print(samp_meng::NewUserMsg& row, algo::cstring& str)
 
 // --- samp_meng.NewUserReqMsg.base.CopyOut
 // Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::NewUserReqMsg &row, samp_meng::MsgHeader &out) {
+void samp_meng::parent_CopyOut(samp_meng::NewUserReqMsg &row, samp_meng::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3462,7 +3462,7 @@ void samp_meng::parent_CopyOut(samp_meng::NewUserReqMsg &row, samp_meng::MsgHead
 }
 
 // --- samp_meng.NewUserReqMsg..ReadFieldMaybe
-bool samp_meng::NewUserReqMsg_ReadFieldMaybe(samp_meng::NewUserReqMsg& parent, algo::strptr field, algo::strptr strval) {
+bool samp_meng::NewUserReqMsg_ReadFieldMaybe(samp_meng::NewUserReqMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     samp_meng::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3494,7 +3494,7 @@ bool samp_meng::NewUserReqMsg_ReadFieldMaybe(samp_meng::NewUserReqMsg& parent, a
 // --- samp_meng.NewUserReqMsg..ReadStrptrMaybe
 // Read fields of samp_meng::NewUserReqMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool samp_meng::NewUserReqMsg_ReadStrptrMaybe(samp_meng::NewUserReqMsg &parent, algo::strptr in_str) {
+bool samp_meng::NewUserReqMsg_ReadStrptrMaybe(samp_meng::NewUserReqMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "samp_meng.NewUserReqMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3506,7 +3506,7 @@ bool samp_meng::NewUserReqMsg_ReadStrptrMaybe(samp_meng::NewUserReqMsg &parent, 
 // --- samp_meng.NewUserReqMsg..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.NewUserReqMsg.String  printfmt:Tuple
-void samp_meng::NewUserReqMsg_Print(samp_meng::NewUserReqMsg& row, algo::cstring& str) {
+void samp_meng::NewUserReqMsg_Print(samp_meng::NewUserReqMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.NewUserReqMsg";
 
@@ -3516,7 +3516,7 @@ void samp_meng::NewUserReqMsg_Print(samp_meng::NewUserReqMsg& row, algo::cstring
 
 // --- samp_meng.OrderTradeMsg.base.CopyOut
 // Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::OrderTradeMsg &row, samp_meng::MsgHeader &out) {
+void samp_meng::parent_CopyOut(samp_meng::OrderTradeMsg &row, samp_meng::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3524,7 +3524,7 @@ void samp_meng::parent_CopyOut(samp_meng::OrderTradeMsg &row, samp_meng::MsgHead
 }
 
 // --- samp_meng.OrderTradeMsg..ReadFieldMaybe
-bool samp_meng::OrderTradeMsg_ReadFieldMaybe(samp_meng::OrderTradeMsg& parent, algo::strptr field, algo::strptr strval) {
+bool samp_meng::OrderTradeMsg_ReadFieldMaybe(samp_meng::OrderTradeMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     samp_meng::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3564,7 +3564,7 @@ bool samp_meng::OrderTradeMsg_ReadFieldMaybe(samp_meng::OrderTradeMsg& parent, a
 // --- samp_meng.OrderTradeMsg..ReadStrptrMaybe
 // Read fields of samp_meng::OrderTradeMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool samp_meng::OrderTradeMsg_ReadStrptrMaybe(samp_meng::OrderTradeMsg &parent, algo::strptr in_str) {
+bool samp_meng::OrderTradeMsg_ReadStrptrMaybe(samp_meng::OrderTradeMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "samp_meng.OrderTradeMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3576,7 +3576,7 @@ bool samp_meng::OrderTradeMsg_ReadStrptrMaybe(samp_meng::OrderTradeMsg &parent, 
 // --- samp_meng.OrderTradeMsg..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.OrderTradeMsg.String  printfmt:Tuple
-void samp_meng::OrderTradeMsg_Print(samp_meng::OrderTradeMsg& row, algo::cstring& str) {
+void samp_meng::OrderTradeMsg_Print(samp_meng::OrderTradeMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.OrderTradeMsg";
 
@@ -3592,7 +3592,7 @@ void samp_meng::OrderTradeMsg_Print(samp_meng::OrderTradeMsg& row, algo::cstring
 
 // --- samp_meng.TextMsg.base.CopyOut
 // Copy fields out of row
-void samp_meng::parent_CopyOut(samp_meng::TextMsg &row, samp_meng::MsgHeader &out) {
+void samp_meng::parent_CopyOut(samp_meng::TextMsg &row, samp_meng::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3601,7 +3601,7 @@ void samp_meng::parent_CopyOut(samp_meng::TextMsg &row, samp_meng::MsgHeader &ou
 
 // --- samp_meng.TextMsg.text.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> samp_meng::text_Getary(samp_meng::TextMsg& parent) {
+algo::aryptr<char> samp_meng::text_Getary(samp_meng::TextMsg& parent) throw() {
     return algo::aryptr<char>(text_Addr(parent), text_N(parent));
 }
 
@@ -3612,7 +3612,7 @@ char* samp_meng::text_Addr(samp_meng::TextMsg& parent) {
 
 // --- samp_meng.TextMsg.text.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool samp_meng::text_ReadStrptrMaybe(samp_meng::TextMsg& parent, algo::strptr in_str) {
+bool samp_meng::text_ReadStrptrMaybe(samp_meng::TextMsg& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
@@ -3624,12 +3624,12 @@ bool samp_meng::text_ReadStrptrMaybe(samp_meng::TextMsg& parent, algo::strptr in
 // --- samp_meng.TextMsg.text.Print
 // Convert text to a string.
 // Array is printed as a regular string.
-void samp_meng::text_Print(samp_meng::TextMsg& parent, algo::cstring &rhs) {
+void samp_meng::text_Print(samp_meng::TextMsg& parent, algo::cstring &rhs) throw() {
     rhs << text_Getary(parent);
 }
 
 // --- samp_meng.TextMsg..ReadFieldMaybe
-bool samp_meng::TextMsg_ReadFieldMaybe(samp_meng::TextMsg& parent, algo::strptr field, algo::strptr strval) {
+bool samp_meng::TextMsg_ReadFieldMaybe(samp_meng::TextMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     samp_meng::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -3662,7 +3662,7 @@ bool samp_meng::TextMsg_ReadFieldMaybe(samp_meng::TextMsg& parent, algo::strptr 
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of samp_meng::TextMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool samp_meng::TextMsg_ReadStrptrMaybe(samp_meng::TextMsg &parent, algo::strptr in_str) {
+bool samp_meng::TextMsg_ReadStrptrMaybe(samp_meng::TextMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "samp_meng.TextMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3674,7 +3674,7 @@ bool samp_meng::TextMsg_ReadStrptrMaybe(samp_meng::TextMsg &parent, algo::strptr
 // --- samp_meng.TextMsg..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.TextMsg.String  printfmt:Tuple
-void samp_meng::TextMsg_Print(samp_meng::TextMsg& row, algo::cstring& str) {
+void samp_meng::TextMsg_Print(samp_meng::TextMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "samp_meng.TextMsg";
 

@@ -127,7 +127,7 @@ namespace src_func { // gen:ns_print_proto
 
 // --- src_func.FCtypelen.base.CopyOut
 // Copy fields out of row
-void src_func::ctypelen_CopyOut(src_func::FCtypelen &row, dmmeta::Ctypelen &out) {
+void src_func::ctypelen_CopyOut(src_func::FCtypelen &row, dmmeta::Ctypelen &out) throw() {
     out.ctype = row.ctype;
     out.len = row.len;
     out.alignment = row.alignment;
@@ -137,7 +137,7 @@ void src_func::ctypelen_CopyOut(src_func::FCtypelen &row, dmmeta::Ctypelen &out)
 
 // --- src_func.FCtypelen.base.CopyIn
 // Copy fields in to row
-void src_func::ctypelen_CopyIn(src_func::FCtypelen &row, dmmeta::Ctypelen &in) {
+void src_func::ctypelen_CopyIn(src_func::FCtypelen &row, dmmeta::Ctypelen &in) throw() {
     row.ctype = in.ctype;
     row.len = in.len;
     row.alignment = in.alignment;
@@ -146,7 +146,7 @@ void src_func::ctypelen_CopyIn(src_func::FCtypelen &row, dmmeta::Ctypelen &in) {
 }
 
 // --- src_func.FCtypelen..Uninit
-void src_func::FCtypelen_Uninit(src_func::FCtypelen& ctypelen) {
+void src_func::FCtypelen_Uninit(src_func::FCtypelen& ctypelen) throw() {
     src_func::FCtypelen &row = ctypelen; (void)row;
     ind_ctypelen_Remove(row); // remove ctypelen from index ind_ctypelen
 }
@@ -154,7 +154,7 @@ void src_func::FCtypelen_Uninit(src_func::FCtypelen& ctypelen) {
 // --- src_func.trace..Print
 // print string representation of ROW to string STR
 // cfmt:src_func.trace.String  printfmt:Tuple
-void src_func::trace_Print(src_func::trace& row, algo::cstring& str) {
+void src_func::trace_Print(src_func::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "src_func.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -163,7 +163,7 @@ void src_func::trace_Print(src_func::trace& row, algo::cstring& str) {
 // --- src_func.FDb.genprefix.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_func::FGenprefix& src_func::genprefix_Alloc() {
+src_func::FGenprefix& src_func::genprefix_Alloc() throw() {
     src_func::FGenprefix* row = genprefix_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_func.out_of_mem  field:src_func.FDb.genprefix  comment:'Alloc failed'");
@@ -173,7 +173,7 @@ src_func::FGenprefix& src_func::genprefix_Alloc() {
 
 // --- src_func.FDb.genprefix.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_func::FGenprefix* src_func::genprefix_AllocMaybe() {
+src_func::FGenprefix* src_func::genprefix_AllocMaybe() throw() {
     src_func::FGenprefix *row = (src_func::FGenprefix*)genprefix_AllocMem();
     if (row) {
         new (row) src_func::FGenprefix; // call constructor
@@ -183,7 +183,7 @@ src_func::FGenprefix* src_func::genprefix_AllocMaybe() {
 
 // --- src_func.FDb.genprefix.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_func::genprefix_AllocMem() {
+void* src_func::genprefix_AllocMem() throw() {
     u64 new_nelems     = _db.genprefix_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -209,7 +209,7 @@ void* src_func::genprefix_AllocMem() {
 
 // --- src_func.FDb.genprefix.RemoveAll
 // Remove all elements from Lary
-void src_func::genprefix_RemoveAll() {
+void src_func::genprefix_RemoveAll() throw() {
     for (u64 n = _db.genprefix_n; n>0; ) {
         n--;
         genprefix_qFind(u64(n)).~FGenprefix(); // destroy last element
@@ -219,7 +219,7 @@ void src_func::genprefix_RemoveAll() {
 
 // --- src_func.FDb.genprefix.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_func::genprefix_RemoveLast() {
+void src_func::genprefix_RemoveLast() throw() {
     u64 n = _db.genprefix_n;
     if (n > 0) {
         n -= 1;
@@ -251,7 +251,7 @@ bool src_func::genprefix_XrefMaybe(src_func::FGenprefix &row) {
 // The following fields are updated:
 //     src_func.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void src_func::ReadArgv() {
+void src_func::ReadArgv() throw() {
     command::src_func &cmd = src_func::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -491,7 +491,7 @@ bool src_func::InsertStrptrMaybe(algo::strptr str) {
 
 // --- src_func.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool src_func::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool src_func::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = src_func::LoadTuplesFile(root, recursive);
@@ -520,7 +520,7 @@ bool src_func::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool src_func::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool src_func::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -533,7 +533,7 @@ bool src_func::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- src_func.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool src_func::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool src_func::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -553,7 +553,7 @@ bool src_func::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
 
 // --- src_func.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool src_func::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool src_func::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = src_func::LoadTuplesFile(fname, recursive);
@@ -578,7 +578,7 @@ bool src_func::_db_XrefMaybe() {
 // --- src_func.FDb.targsrc.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_func::FTargsrc& src_func::targsrc_Alloc() {
+src_func::FTargsrc& src_func::targsrc_Alloc() throw() {
     src_func::FTargsrc* row = targsrc_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_func.out_of_mem  field:src_func.FDb.targsrc  comment:'Alloc failed'");
@@ -588,7 +588,7 @@ src_func::FTargsrc& src_func::targsrc_Alloc() {
 
 // --- src_func.FDb.targsrc.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_func::FTargsrc* src_func::targsrc_AllocMaybe() {
+src_func::FTargsrc* src_func::targsrc_AllocMaybe() throw() {
     src_func::FTargsrc *row = (src_func::FTargsrc*)targsrc_AllocMem();
     if (row) {
         new (row) src_func::FTargsrc; // call constructor
@@ -599,7 +599,7 @@ src_func::FTargsrc* src_func::targsrc_AllocMaybe() {
 // --- src_func.FDb.targsrc.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_func::FTargsrc* src_func::targsrc_InsertMaybe(const dev::Targsrc &value) {
+src_func::FTargsrc* src_func::targsrc_InsertMaybe(const dev::Targsrc &value) throw() {
     src_func::FTargsrc *row = &targsrc_Alloc(); // if out of memory, process dies. if input error, return NULL.
     targsrc_CopyIn(*row,const_cast<dev::Targsrc&>(value));
     bool ok = targsrc_XrefMaybe(*row); // this may return false
@@ -612,7 +612,7 @@ src_func::FTargsrc* src_func::targsrc_InsertMaybe(const dev::Targsrc &value) {
 
 // --- src_func.FDb.targsrc.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_func::targsrc_AllocMem() {
+void* src_func::targsrc_AllocMem() throw() {
     u64 new_nelems     = _db.targsrc_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -638,7 +638,7 @@ void* src_func::targsrc_AllocMem() {
 
 // --- src_func.FDb.targsrc.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_func::targsrc_RemoveLast() {
+void src_func::targsrc_RemoveLast() throw() {
     u64 n = _db.targsrc_n;
     if (n > 0) {
         n -= 1;
@@ -648,7 +648,7 @@ void src_func::targsrc_RemoveLast() {
 }
 
 // --- src_func.FDb.targsrc.InputMaybe
-static bool src_func::targsrc_InputMaybe(dev::Targsrc &elem) {
+static bool src_func::targsrc_InputMaybe(dev::Targsrc &elem) throw() {
     bool retval = true;
     retval = targsrc_InsertMaybe(elem) != nullptr;
     return retval;
@@ -679,7 +679,7 @@ bool src_func::targsrc_XrefMaybe(src_func::FTargsrc &row) {
 // --- src_func.FDb.target.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_func::FTarget& src_func::target_Alloc() {
+src_func::FTarget& src_func::target_Alloc() throw() {
     src_func::FTarget* row = target_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_func.out_of_mem  field:src_func.FDb.target  comment:'Alloc failed'");
@@ -689,7 +689,7 @@ src_func::FTarget& src_func::target_Alloc() {
 
 // --- src_func.FDb.target.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_func::FTarget* src_func::target_AllocMaybe() {
+src_func::FTarget* src_func::target_AllocMaybe() throw() {
     src_func::FTarget *row = (src_func::FTarget*)target_AllocMem();
     if (row) {
         new (row) src_func::FTarget; // call constructor
@@ -700,7 +700,7 @@ src_func::FTarget* src_func::target_AllocMaybe() {
 // --- src_func.FDb.target.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_func::FTarget* src_func::target_InsertMaybe(const dev::Target &value) {
+src_func::FTarget* src_func::target_InsertMaybe(const dev::Target &value) throw() {
     src_func::FTarget *row = &target_Alloc(); // if out of memory, process dies. if input error, return NULL.
     target_CopyIn(*row,const_cast<dev::Target&>(value));
     bool ok = target_XrefMaybe(*row); // this may return false
@@ -713,7 +713,7 @@ src_func::FTarget* src_func::target_InsertMaybe(const dev::Target &value) {
 
 // --- src_func.FDb.target.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_func::target_AllocMem() {
+void* src_func::target_AllocMem() throw() {
     u64 new_nelems     = _db.target_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -739,7 +739,7 @@ void* src_func::target_AllocMem() {
 
 // --- src_func.FDb.target.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_func::target_RemoveLast() {
+void src_func::target_RemoveLast() throw() {
     u64 n = _db.target_n;
     if (n > 0) {
         n -= 1;
@@ -749,7 +749,7 @@ void src_func::target_RemoveLast() {
 }
 
 // --- src_func.FDb.target.InputMaybe
-static bool src_func::target_InputMaybe(dev::Target &elem) {
+static bool src_func::target_InputMaybe(dev::Target &elem) throw() {
     bool retval = true;
     retval = target_InsertMaybe(elem) != nullptr;
     return retval;
@@ -775,7 +775,7 @@ bool src_func::target_XrefMaybe(src_func::FTarget &row) {
 
 // --- src_func.FDb.ind_target.Find
 // Find row by key. Return NULL if not found.
-src_func::FTarget* src_func::ind_target_Find(const algo::strptr& key) {
+src_func::FTarget* src_func::ind_target_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
     src_func::FTarget* *e = &_db.ind_target_buckets_elems[index];
     src_func::FTarget* ret=NULL;
@@ -798,7 +798,7 @@ src_func::FTarget& src_func::ind_target_FindX(const algo::strptr& key) {
 
 // --- src_func.FDb.ind_target.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-src_func::FTarget& src_func::ind_target_GetOrCreate(const algo::strptr& key) {
+src_func::FTarget& src_func::ind_target_GetOrCreate(const algo::strptr& key) throw() {
     src_func::FTarget* ret = ind_target_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &target_Alloc();
@@ -815,7 +815,7 @@ src_func::FTarget& src_func::ind_target_GetOrCreate(const algo::strptr& key) {
 
 // --- src_func.FDb.ind_target.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool src_func::ind_target_InsertMaybe(src_func::FTarget& row) {
+bool src_func::ind_target_InsertMaybe(src_func::FTarget& row) throw() {
     ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (src_func::FTarget*)-1)) {// check if in hash already
@@ -843,7 +843,7 @@ bool src_func::ind_target_InsertMaybe(src_func::FTarget& row) {
 
 // --- src_func.FDb.ind_target.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void src_func::ind_target_Remove(src_func::FTarget& row) {
+void src_func::ind_target_Remove(src_func::FTarget& row) throw() {
     if (LIKELY(row.ind_target_next != (src_func::FTarget*)-1)) {// check if in hash already
         u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
         src_func::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
@@ -861,7 +861,7 @@ void src_func::ind_target_Remove(src_func::FTarget& row) {
 
 // --- src_func.FDb.ind_target.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void src_func::ind_target_Reserve(int n) {
+void src_func::ind_target_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_target_buckets_n;
     u32 new_nelems   = _db.ind_target_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -898,7 +898,7 @@ void src_func::ind_target_Reserve(int n) {
 // --- src_func.FDb.func.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_func::FFunc& src_func::func_Alloc() {
+src_func::FFunc& src_func::func_Alloc() throw() {
     src_func::FFunc* row = func_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_func.out_of_mem  field:src_func.FDb.func  comment:'Alloc failed'");
@@ -908,7 +908,7 @@ src_func::FFunc& src_func::func_Alloc() {
 
 // --- src_func.FDb.func.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_func::FFunc* src_func::func_AllocMaybe() {
+src_func::FFunc* src_func::func_AllocMaybe() throw() {
     src_func::FFunc *row = (src_func::FFunc*)func_AllocMem();
     if (row) {
         new (row) src_func::FFunc; // call constructor
@@ -918,7 +918,7 @@ src_func::FFunc* src_func::func_AllocMaybe() {
 
 // --- src_func.FDb.func.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_func::func_AllocMem() {
+void* src_func::func_AllocMem() throw() {
     u64 new_nelems     = _db.func_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -944,7 +944,7 @@ void* src_func::func_AllocMem() {
 
 // --- src_func.FDb.func.RemoveAll
 // Remove all elements from Lary
-void src_func::func_RemoveAll() {
+void src_func::func_RemoveAll() throw() {
     for (u64 n = _db.func_n; n>0; ) {
         n--;
         func_qFind(u64(n)).~FFunc(); // destroy last element
@@ -954,7 +954,7 @@ void src_func::func_RemoveAll() {
 
 // --- src_func.FDb.func.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_func::func_RemoveLast() {
+void src_func::func_RemoveLast() throw() {
     u64 n = _db.func_n;
     if (n > 0) {
         n -= 1;
@@ -996,7 +996,7 @@ bool src_func::func_XrefMaybe(src_func::FFunc &row) {
 
 // --- src_func.FDb.ind_func.Find
 // Find row by key. Return NULL if not found.
-src_func::FFunc* src_func::ind_func_Find(const algo::strptr& key) {
+src_func::FFunc* src_func::ind_func_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_func_buckets_n - 1);
     src_func::FFunc* *e = &_db.ind_func_buckets_elems[index];
     src_func::FFunc* ret=NULL;
@@ -1019,7 +1019,7 @@ src_func::FFunc& src_func::ind_func_FindX(const algo::strptr& key) {
 
 // --- src_func.FDb.ind_func.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool src_func::ind_func_InsertMaybe(src_func::FFunc& row) {
+bool src_func::ind_func_InsertMaybe(src_func::FFunc& row) throw() {
     ind_func_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_func_next == (src_func::FFunc*)-1)) {// check if in hash already
@@ -1047,7 +1047,7 @@ bool src_func::ind_func_InsertMaybe(src_func::FFunc& row) {
 
 // --- src_func.FDb.ind_func.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void src_func::ind_func_Remove(src_func::FFunc& row) {
+void src_func::ind_func_Remove(src_func::FFunc& row) throw() {
     if (LIKELY(row.ind_func_next != (src_func::FFunc*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.func) & (_db.ind_func_buckets_n - 1);
         src_func::FFunc* *prev = &_db.ind_func_buckets_elems[index]; // addr of pointer to current element
@@ -1065,7 +1065,7 @@ void src_func::ind_func_Remove(src_func::FFunc& row) {
 
 // --- src_func.FDb.ind_func.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void src_func::ind_func_Reserve(int n) {
+void src_func::ind_func_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_func_buckets_n;
     u32 new_nelems   = _db.ind_func_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1101,7 +1101,7 @@ void src_func::ind_func_Reserve(int n) {
 
 // --- src_func.FDb.bh_func.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void src_func::bh_func_Dealloc() {
+void src_func::bh_func_Dealloc() throw() {
     bh_func_RemoveAll();
     algo_lib::malloc_FreeMem(_db.bh_func_elems, sizeof(src_func::FFunc*)*_db.bh_func_max);
     _db.bh_func_max   = 0;
@@ -1111,7 +1111,7 @@ void src_func::bh_func_Dealloc() {
 // --- src_func.FDb.bh_func.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int src_func::bh_func_Downheap(src_func::FFunc& row, int idx) {
+static int src_func::bh_func_Downheap(src_func::FFunc& row, int idx) throw() {
     src_func::FFunc* *elems = _db.bh_func_elems;
     int n = _db.bh_func_n;
     int child = idx*2+1;
@@ -1138,7 +1138,7 @@ static int src_func::bh_func_Downheap(src_func::FFunc& row, int idx) {
 
 // --- src_func.FDb.bh_func.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void src_func::bh_func_Insert(src_func::FFunc& row) {
+void src_func::bh_func_Insert(src_func::FFunc& row) throw() {
     if (LIKELY(row.bh_func_idx == -1)) {
         bh_func_Reserve(1);
         int n = _db.bh_func_n;
@@ -1152,7 +1152,7 @@ void src_func::bh_func_Insert(src_func::FFunc& row) {
 // --- src_func.FDb.bh_func.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 src_func::bh_func_Reheap(src_func::FFunc& row) {
+i32 src_func::bh_func_Reheap(src_func::FFunc& row) throw() {
     int old_idx = row.bh_func_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
@@ -1173,7 +1173,7 @@ i32 src_func::bh_func_Reheap(src_func::FFunc& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 src_func::bh_func_ReheapFirst() {
+i32 src_func::bh_func_ReheapFirst() throw() {
     src_func::FFunc &row = *_db.bh_func_elems[0];
     i32 new_idx = bh_func_Downheap(row, 0);
     row.bh_func_idx = new_idx;
@@ -1183,7 +1183,7 @@ i32 src_func::bh_func_ReheapFirst() {
 
 // --- src_func.FDb.bh_func.Remove
 // Remove element from index. If element is not in index, do nothing.
-void src_func::bh_func_Remove(src_func::FFunc& row) {
+void src_func::bh_func_Remove(src_func::FFunc& row) throw() {
     if (bh_func_InBheapQ(row)) {
         int old_idx = row.bh_func_idx;
         if (_db.bh_func_elems[old_idx] == &row) { // sanity check: heap points back to row
@@ -1205,7 +1205,7 @@ void src_func::bh_func_Remove(src_func::FFunc& row) {
 
 // --- src_func.FDb.bh_func.RemoveAll
 // Remove all elements from binary heap
-void src_func::bh_func_RemoveAll() {
+void src_func::bh_func_RemoveAll() throw() {
     int n = _db.bh_func_n;
     for (int i = n - 1; i>=0; i--) {
         _db.bh_func_elems[i]->bh_func_idx = -1; // mark not-in-heap
@@ -1216,7 +1216,7 @@ void src_func::bh_func_RemoveAll() {
 // --- src_func.FDb.bh_func.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-src_func::FFunc* src_func::bh_func_RemoveFirst() {
+src_func::FFunc* src_func::bh_func_RemoveFirst() throw() {
     src_func::FFunc *row = NULL;
     if (_db.bh_func_n > 0) {
         row = _db.bh_func_elems[0];
@@ -1235,7 +1235,7 @@ src_func::FFunc* src_func::bh_func_RemoveFirst() {
 
 // --- src_func.FDb.bh_func.Reserve
 // Reserve space in index for N more elements
-void src_func::bh_func_Reserve(int n) {
+void src_func::bh_func_Reserve(int n) throw() {
     i32 old_max = _db.bh_func_max;
     if (UNLIKELY(_db.bh_func_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -1253,7 +1253,7 @@ void src_func::bh_func_Reserve(int n) {
 // --- src_func.FDb.bh_func.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int src_func::bh_func_Upheap(src_func::FFunc& row, int idx) {
+static int src_func::bh_func_Upheap(src_func::FFunc& row, int idx) throw() {
     src_func::FFunc* *elems = _db.bh_func_elems;
     while (idx>0) {
         int j = (idx-1)/2;
@@ -1269,7 +1269,7 @@ static int src_func::bh_func_Upheap(src_func::FFunc& row, int idx) {
 }
 
 // --- src_func.FDb.bh_func.ElemLt
-inline static bool src_func::bh_func_ElemLt(src_func::FFunc &a, src_func::FFunc &b) {
+inline static bool src_func::bh_func_ElemLt(src_func::FFunc &a, src_func::FFunc &b) throw() {
     (void)_db;
     return sortkey_Lt(a, b);
 }
@@ -1277,7 +1277,7 @@ inline static bool src_func::bh_func_ElemLt(src_func::FFunc &a, src_func::FFunc 
 // --- src_func.FDb.dispatch.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_func::FDispatch& src_func::dispatch_Alloc() {
+src_func::FDispatch& src_func::dispatch_Alloc() throw() {
     src_func::FDispatch* row = dispatch_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_func.out_of_mem  field:src_func.FDb.dispatch  comment:'Alloc failed'");
@@ -1287,7 +1287,7 @@ src_func::FDispatch& src_func::dispatch_Alloc() {
 
 // --- src_func.FDb.dispatch.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_func::FDispatch* src_func::dispatch_AllocMaybe() {
+src_func::FDispatch* src_func::dispatch_AllocMaybe() throw() {
     src_func::FDispatch *row = (src_func::FDispatch*)dispatch_AllocMem();
     if (row) {
         new (row) src_func::FDispatch; // call constructor
@@ -1298,7 +1298,7 @@ src_func::FDispatch* src_func::dispatch_AllocMaybe() {
 // --- src_func.FDb.dispatch.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_func::FDispatch* src_func::dispatch_InsertMaybe(const dmmeta::Dispatch &value) {
+src_func::FDispatch* src_func::dispatch_InsertMaybe(const dmmeta::Dispatch &value) throw() {
     src_func::FDispatch *row = &dispatch_Alloc(); // if out of memory, process dies. if input error, return NULL.
     dispatch_CopyIn(*row,const_cast<dmmeta::Dispatch&>(value));
     bool ok = dispatch_XrefMaybe(*row); // this may return false
@@ -1311,7 +1311,7 @@ src_func::FDispatch* src_func::dispatch_InsertMaybe(const dmmeta::Dispatch &valu
 
 // --- src_func.FDb.dispatch.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_func::dispatch_AllocMem() {
+void* src_func::dispatch_AllocMem() throw() {
     u64 new_nelems     = _db.dispatch_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1337,7 +1337,7 @@ void* src_func::dispatch_AllocMem() {
 
 // --- src_func.FDb.dispatch.RemoveAll
 // Remove all elements from Lary
-void src_func::dispatch_RemoveAll() {
+void src_func::dispatch_RemoveAll() throw() {
     for (u64 n = _db.dispatch_n; n>0; ) {
         n--;
         dispatch_qFind(u64(n)).~FDispatch(); // destroy last element
@@ -1347,7 +1347,7 @@ void src_func::dispatch_RemoveAll() {
 
 // --- src_func.FDb.dispatch.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_func::dispatch_RemoveLast() {
+void src_func::dispatch_RemoveLast() throw() {
     u64 n = _db.dispatch_n;
     if (n > 0) {
         n -= 1;
@@ -1357,7 +1357,7 @@ void src_func::dispatch_RemoveLast() {
 }
 
 // --- src_func.FDb.dispatch.InputMaybe
-static bool src_func::dispatch_InputMaybe(dmmeta::Dispatch &elem) {
+static bool src_func::dispatch_InputMaybe(dmmeta::Dispatch &elem) throw() {
     bool retval = true;
     retval = dispatch_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1375,7 +1375,7 @@ bool src_func::dispatch_XrefMaybe(src_func::FDispatch &row) {
 // --- src_func.FDb.fstep.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_func::FFstep& src_func::fstep_Alloc() {
+src_func::FFstep& src_func::fstep_Alloc() throw() {
     src_func::FFstep* row = fstep_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_func.out_of_mem  field:src_func.FDb.fstep  comment:'Alloc failed'");
@@ -1385,7 +1385,7 @@ src_func::FFstep& src_func::fstep_Alloc() {
 
 // --- src_func.FDb.fstep.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_func::FFstep* src_func::fstep_AllocMaybe() {
+src_func::FFstep* src_func::fstep_AllocMaybe() throw() {
     src_func::FFstep *row = (src_func::FFstep*)fstep_AllocMem();
     if (row) {
         new (row) src_func::FFstep; // call constructor
@@ -1396,7 +1396,7 @@ src_func::FFstep* src_func::fstep_AllocMaybe() {
 // --- src_func.FDb.fstep.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_func::FFstep* src_func::fstep_InsertMaybe(const dmmeta::Fstep &value) {
+src_func::FFstep* src_func::fstep_InsertMaybe(const dmmeta::Fstep &value) throw() {
     src_func::FFstep *row = &fstep_Alloc(); // if out of memory, process dies. if input error, return NULL.
     fstep_CopyIn(*row,const_cast<dmmeta::Fstep&>(value));
     bool ok = fstep_XrefMaybe(*row); // this may return false
@@ -1409,7 +1409,7 @@ src_func::FFstep* src_func::fstep_InsertMaybe(const dmmeta::Fstep &value) {
 
 // --- src_func.FDb.fstep.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_func::fstep_AllocMem() {
+void* src_func::fstep_AllocMem() throw() {
     u64 new_nelems     = _db.fstep_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1435,7 +1435,7 @@ void* src_func::fstep_AllocMem() {
 
 // --- src_func.FDb.fstep.RemoveAll
 // Remove all elements from Lary
-void src_func::fstep_RemoveAll() {
+void src_func::fstep_RemoveAll() throw() {
     for (u64 n = _db.fstep_n; n>0; ) {
         n--;
         fstep_qFind(u64(n)).~FFstep(); // destroy last element
@@ -1445,7 +1445,7 @@ void src_func::fstep_RemoveAll() {
 
 // --- src_func.FDb.fstep.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_func::fstep_RemoveLast() {
+void src_func::fstep_RemoveLast() throw() {
     u64 n = _db.fstep_n;
     if (n > 0) {
         n -= 1;
@@ -1455,7 +1455,7 @@ void src_func::fstep_RemoveLast() {
 }
 
 // --- src_func.FDb.fstep.InputMaybe
-static bool src_func::fstep_InputMaybe(dmmeta::Fstep &elem) {
+static bool src_func::fstep_InputMaybe(dmmeta::Fstep &elem) throw() {
     bool retval = true;
     retval = fstep_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1473,7 +1473,7 @@ bool src_func::fstep_XrefMaybe(src_func::FFstep &row) {
 // --- src_func.FDb.gstatic.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_func::FGstatic& src_func::gstatic_Alloc() {
+src_func::FGstatic& src_func::gstatic_Alloc() throw() {
     src_func::FGstatic* row = gstatic_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_func.out_of_mem  field:src_func.FDb.gstatic  comment:'Alloc failed'");
@@ -1483,7 +1483,7 @@ src_func::FGstatic& src_func::gstatic_Alloc() {
 
 // --- src_func.FDb.gstatic.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_func::FGstatic* src_func::gstatic_AllocMaybe() {
+src_func::FGstatic* src_func::gstatic_AllocMaybe() throw() {
     src_func::FGstatic *row = (src_func::FGstatic*)gstatic_AllocMem();
     if (row) {
         new (row) src_func::FGstatic; // call constructor
@@ -1494,7 +1494,7 @@ src_func::FGstatic* src_func::gstatic_AllocMaybe() {
 // --- src_func.FDb.gstatic.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_func::FGstatic* src_func::gstatic_InsertMaybe(const dmmeta::Gstatic &value) {
+src_func::FGstatic* src_func::gstatic_InsertMaybe(const dmmeta::Gstatic &value) throw() {
     src_func::FGstatic *row = &gstatic_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gstatic_CopyIn(*row,const_cast<dmmeta::Gstatic&>(value));
     bool ok = gstatic_XrefMaybe(*row); // this may return false
@@ -1507,7 +1507,7 @@ src_func::FGstatic* src_func::gstatic_InsertMaybe(const dmmeta::Gstatic &value) 
 
 // --- src_func.FDb.gstatic.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_func::gstatic_AllocMem() {
+void* src_func::gstatic_AllocMem() throw() {
     u64 new_nelems     = _db.gstatic_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1533,7 +1533,7 @@ void* src_func::gstatic_AllocMem() {
 
 // --- src_func.FDb.gstatic.RemoveAll
 // Remove all elements from Lary
-void src_func::gstatic_RemoveAll() {
+void src_func::gstatic_RemoveAll() throw() {
     for (u64 n = _db.gstatic_n; n>0; ) {
         n--;
         gstatic_qFind(u64(n)).~FGstatic(); // destroy last element
@@ -1543,7 +1543,7 @@ void src_func::gstatic_RemoveAll() {
 
 // --- src_func.FDb.gstatic.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_func::gstatic_RemoveLast() {
+void src_func::gstatic_RemoveLast() throw() {
     u64 n = _db.gstatic_n;
     if (n > 0) {
         n -= 1;
@@ -1553,7 +1553,7 @@ void src_func::gstatic_RemoveLast() {
 }
 
 // --- src_func.FDb.gstatic.InputMaybe
-static bool src_func::gstatic_InputMaybe(dmmeta::Gstatic &elem) {
+static bool src_func::gstatic_InputMaybe(dmmeta::Gstatic &elem) throw() {
     bool retval = true;
     retval = gstatic_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1570,7 +1570,7 @@ bool src_func::gstatic_XrefMaybe(src_func::FGstatic &row) {
 
 // --- src_func.FDb.ind_genprefix.Find
 // Find row by key. Return NULL if not found.
-src_func::FGenprefix* src_func::ind_genprefix_Find(const algo::strptr& key) {
+src_func::FGenprefix* src_func::ind_genprefix_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_genprefix_buckets_n - 1);
     src_func::FGenprefix* *e = &_db.ind_genprefix_buckets_elems[index];
     src_func::FGenprefix* ret=NULL;
@@ -1593,7 +1593,7 @@ src_func::FGenprefix& src_func::ind_genprefix_FindX(const algo::strptr& key) {
 
 // --- src_func.FDb.ind_genprefix.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-src_func::FGenprefix& src_func::ind_genprefix_GetOrCreate(const algo::strptr& key) {
+src_func::FGenprefix& src_func::ind_genprefix_GetOrCreate(const algo::strptr& key) throw() {
     src_func::FGenprefix* ret = ind_genprefix_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &genprefix_Alloc();
@@ -1610,7 +1610,7 @@ src_func::FGenprefix& src_func::ind_genprefix_GetOrCreate(const algo::strptr& ke
 
 // --- src_func.FDb.ind_genprefix.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool src_func::ind_genprefix_InsertMaybe(src_func::FGenprefix& row) {
+bool src_func::ind_genprefix_InsertMaybe(src_func::FGenprefix& row) throw() {
     ind_genprefix_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_genprefix_next == (src_func::FGenprefix*)-1)) {// check if in hash already
@@ -1638,7 +1638,7 @@ bool src_func::ind_genprefix_InsertMaybe(src_func::FGenprefix& row) {
 
 // --- src_func.FDb.ind_genprefix.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void src_func::ind_genprefix_Remove(src_func::FGenprefix& row) {
+void src_func::ind_genprefix_Remove(src_func::FGenprefix& row) throw() {
     if (LIKELY(row.ind_genprefix_next != (src_func::FGenprefix*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.genprefix) & (_db.ind_genprefix_buckets_n - 1);
         src_func::FGenprefix* *prev = &_db.ind_genprefix_buckets_elems[index]; // addr of pointer to current element
@@ -1656,7 +1656,7 @@ void src_func::ind_genprefix_Remove(src_func::FGenprefix& row) {
 
 // --- src_func.FDb.ind_genprefix.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void src_func::ind_genprefix_Reserve(int n) {
+void src_func::ind_genprefix_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_genprefix_buckets_n;
     u32 new_nelems   = _db.ind_genprefix_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1693,7 +1693,7 @@ void src_func::ind_genprefix_Reserve(int n) {
 // --- src_func.FDb.ctypelen.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_func::FCtypelen& src_func::ctypelen_Alloc() {
+src_func::FCtypelen& src_func::ctypelen_Alloc() throw() {
     src_func::FCtypelen* row = ctypelen_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_func.out_of_mem  field:src_func.FDb.ctypelen  comment:'Alloc failed'");
@@ -1703,7 +1703,7 @@ src_func::FCtypelen& src_func::ctypelen_Alloc() {
 
 // --- src_func.FDb.ctypelen.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_func::FCtypelen* src_func::ctypelen_AllocMaybe() {
+src_func::FCtypelen* src_func::ctypelen_AllocMaybe() throw() {
     src_func::FCtypelen *row = (src_func::FCtypelen*)ctypelen_AllocMem();
     if (row) {
         new (row) src_func::FCtypelen; // call constructor
@@ -1714,7 +1714,7 @@ src_func::FCtypelen* src_func::ctypelen_AllocMaybe() {
 // --- src_func.FDb.ctypelen.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_func::FCtypelen* src_func::ctypelen_InsertMaybe(const dmmeta::Ctypelen &value) {
+src_func::FCtypelen* src_func::ctypelen_InsertMaybe(const dmmeta::Ctypelen &value) throw() {
     src_func::FCtypelen *row = &ctypelen_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ctypelen_CopyIn(*row,const_cast<dmmeta::Ctypelen&>(value));
     bool ok = ctypelen_XrefMaybe(*row); // this may return false
@@ -1727,7 +1727,7 @@ src_func::FCtypelen* src_func::ctypelen_InsertMaybe(const dmmeta::Ctypelen &valu
 
 // --- src_func.FDb.ctypelen.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_func::ctypelen_AllocMem() {
+void* src_func::ctypelen_AllocMem() throw() {
     u64 new_nelems     = _db.ctypelen_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1753,7 +1753,7 @@ void* src_func::ctypelen_AllocMem() {
 
 // --- src_func.FDb.ctypelen.RemoveAll
 // Remove all elements from Lary
-void src_func::ctypelen_RemoveAll() {
+void src_func::ctypelen_RemoveAll() throw() {
     for (u64 n = _db.ctypelen_n; n>0; ) {
         n--;
         ctypelen_qFind(u64(n)).~FCtypelen(); // destroy last element
@@ -1763,7 +1763,7 @@ void src_func::ctypelen_RemoveAll() {
 
 // --- src_func.FDb.ctypelen.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_func::ctypelen_RemoveLast() {
+void src_func::ctypelen_RemoveLast() throw() {
     u64 n = _db.ctypelen_n;
     if (n > 0) {
         n -= 1;
@@ -1773,7 +1773,7 @@ void src_func::ctypelen_RemoveLast() {
 }
 
 // --- src_func.FDb.ctypelen.InputMaybe
-static bool src_func::ctypelen_InputMaybe(dmmeta::Ctypelen &elem) {
+static bool src_func::ctypelen_InputMaybe(dmmeta::Ctypelen &elem) throw() {
     bool retval = true;
     retval = ctypelen_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1799,7 +1799,7 @@ bool src_func::ctypelen_XrefMaybe(src_func::FCtypelen &row) {
 
 // --- src_func.FDb.ind_ctypelen.Find
 // Find row by key. Return NULL if not found.
-src_func::FCtypelen* src_func::ind_ctypelen_Find(const algo::strptr& key) {
+src_func::FCtypelen* src_func::ind_ctypelen_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctypelen_buckets_n - 1);
     src_func::FCtypelen* *e = &_db.ind_ctypelen_buckets_elems[index];
     src_func::FCtypelen* ret=NULL;
@@ -1822,7 +1822,7 @@ src_func::FCtypelen& src_func::ind_ctypelen_FindX(const algo::strptr& key) {
 
 // --- src_func.FDb.ind_ctypelen.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-src_func::FCtypelen& src_func::ind_ctypelen_GetOrCreate(const algo::strptr& key) {
+src_func::FCtypelen& src_func::ind_ctypelen_GetOrCreate(const algo::strptr& key) throw() {
     src_func::FCtypelen* ret = ind_ctypelen_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &ctypelen_Alloc();
@@ -1839,7 +1839,7 @@ src_func::FCtypelen& src_func::ind_ctypelen_GetOrCreate(const algo::strptr& key)
 
 // --- src_func.FDb.ind_ctypelen.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool src_func::ind_ctypelen_InsertMaybe(src_func::FCtypelen& row) {
+bool src_func::ind_ctypelen_InsertMaybe(src_func::FCtypelen& row) throw() {
     ind_ctypelen_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctypelen_next == (src_func::FCtypelen*)-1)) {// check if in hash already
@@ -1867,7 +1867,7 @@ bool src_func::ind_ctypelen_InsertMaybe(src_func::FCtypelen& row) {
 
 // --- src_func.FDb.ind_ctypelen.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void src_func::ind_ctypelen_Remove(src_func::FCtypelen& row) {
+void src_func::ind_ctypelen_Remove(src_func::FCtypelen& row) throw() {
     if (LIKELY(row.ind_ctypelen_next != (src_func::FCtypelen*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctypelen_buckets_n - 1);
         src_func::FCtypelen* *prev = &_db.ind_ctypelen_buckets_elems[index]; // addr of pointer to current element
@@ -1885,7 +1885,7 @@ void src_func::ind_ctypelen_Remove(src_func::FCtypelen& row) {
 
 // --- src_func.FDb.ind_ctypelen.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void src_func::ind_ctypelen_Reserve(int n) {
+void src_func::ind_ctypelen_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_ctypelen_buckets_n;
     u32 new_nelems   = _db.ind_ctypelen_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1921,13 +1921,13 @@ void src_func::ind_ctypelen_Reserve(int n) {
 
 // --- src_func.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr src_func::trace_RowidFind(int t) {
+static algo::ImrowPtr src_func::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- src_func.FDb.trace.N
 // Function return 1
-inline static i32 src_func::trace_N() {
+inline static i32 src_func::trace_N() throw() {
     return 1;
 }
 
@@ -2153,7 +2153,7 @@ void src_func::FDb_Init() {
 }
 
 // --- src_func.FDb..Uninit
-void src_func::FDb_Uninit() {
+void src_func::FDb_Uninit() throw() {
     src_func::FDb &row = _db; (void)row;
 
     // src_func.FDb.ind_ctypelen.Uninit (Thash)  //
@@ -2198,7 +2198,7 @@ void src_func::FDb_Uninit() {
 
 // --- src_func.FDispatch.base.CopyOut
 // Copy fields out of row
-void src_func::dispatch_CopyOut(src_func::FDispatch &row, dmmeta::Dispatch &out) {
+void src_func::dispatch_CopyOut(src_func::FDispatch &row, dmmeta::Dispatch &out) throw() {
     out.dispatch = row.dispatch;
     out.unk = row.unk;
     out.read = row.read;
@@ -2211,7 +2211,7 @@ void src_func::dispatch_CopyOut(src_func::FDispatch &row, dmmeta::Dispatch &out)
 
 // --- src_func.FDispatch.base.CopyIn
 // Copy fields in to row
-void src_func::dispatch_CopyIn(src_func::FDispatch &row, dmmeta::Dispatch &in) {
+void src_func::dispatch_CopyIn(src_func::FDispatch &row, dmmeta::Dispatch &in) throw() {
     row.dispatch = in.dispatch;
     row.unk = in.unk;
     row.read = in.read;
@@ -2223,13 +2223,13 @@ void src_func::dispatch_CopyIn(src_func::FDispatch &row, dmmeta::Dispatch &in) {
 }
 
 // --- src_func.FDispatch.ns.Get
-algo::Smallstr16 src_func::ns_Get(src_func::FDispatch& dispatch) {
+algo::Smallstr16 src_func::ns_Get(src_func::FDispatch& dispatch) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(dispatch.dispatch, ".RL"));
     return ret;
 }
 
 // --- src_func.FDispatch.name.Get
-algo::Smallstr50 src_func::name_Get(src_func::FDispatch& dispatch) {
+algo::Smallstr50 src_func::name_Get(src_func::FDispatch& dispatch) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(dispatch.dispatch, ".RR"));
     return ret;
 }
@@ -2247,7 +2247,7 @@ void src_func::FDispatch_Init(src_func::FDispatch& dispatch) {
 
 // --- src_func.FFstep.base.CopyOut
 // Copy fields out of row
-void src_func::fstep_CopyOut(src_func::FFstep &row, dmmeta::Fstep &out) {
+void src_func::fstep_CopyOut(src_func::FFstep &row, dmmeta::Fstep &out) throw() {
     out.fstep = row.fstep;
     out.steptype = row.steptype;
     out.comment = row.comment;
@@ -2255,33 +2255,33 @@ void src_func::fstep_CopyOut(src_func::FFstep &row, dmmeta::Fstep &out) {
 
 // --- src_func.FFstep.base.CopyIn
 // Copy fields in to row
-void src_func::fstep_CopyIn(src_func::FFstep &row, dmmeta::Fstep &in) {
+void src_func::fstep_CopyIn(src_func::FFstep &row, dmmeta::Fstep &in) throw() {
     row.fstep = in.fstep;
     row.steptype = in.steptype;
     row.comment = in.comment;
 }
 
 // --- src_func.FFstep.field.Get
-algo::Smallstr100 src_func::field_Get(src_func::FFstep& fstep) {
+algo::Smallstr100 src_func::field_Get(src_func::FFstep& fstep) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(fstep.fstep, ""));
     return ret;
 }
 
 // --- src_func.FFstep.ns.Get
-algo::Smallstr16 src_func::ns_Get(src_func::FFstep& fstep) {
+algo::Smallstr16 src_func::ns_Get(src_func::FFstep& fstep) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(fstep.fstep, ".LL"));
     return ret;
 }
 
 // --- src_func.FFstep.name.Get
-algo::Smallstr50 src_func::name_Get(src_func::FFstep& fstep) {
+algo::Smallstr50 src_func::name_Get(src_func::FFstep& fstep) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(fstep.fstep, ".RR"));
     return ret;
 }
 
 // --- src_func.FFunc.sortkey.Nextchar
 // Extract next character from STR and advance IDX
-inline static u64 src_func::sortkey_Nextchar(const src_func::FFunc& func, algo::strptr &str, int &idx) {
+inline static u64 src_func::sortkey_Nextchar(const src_func::FFunc& func, algo::strptr &str, int &idx) throw() {
     (void)func;
     int i = idx;
     u64 ch = str.elems[i];
@@ -2308,7 +2308,7 @@ inline static u64 src_func::sortkey_Nextchar(const src_func::FFunc& func, algo::
 // Compare two fields.
 // Comparison uses version sort (detect embedded integers).
 // Comparison is case-insensitive.
-i32 src_func::sortkey_Cmp(src_func::FFunc& func, src_func::FFunc &rhs) {
+i32 src_func::sortkey_Cmp(src_func::FFunc& func, src_func::FFunc &rhs) throw() {
     i32 retval = 0;
     int idx_a = 0;
     int idx_b = 0;
@@ -2347,7 +2347,7 @@ void src_func::FFunc_Init(src_func::FFunc& func) {
 }
 
 // --- src_func.FFunc..Uninit
-void src_func::FFunc_Uninit(src_func::FFunc& func) {
+void src_func::FFunc_Uninit(src_func::FFunc& func) throw() {
     src_func::FFunc &row = func; (void)row;
     bh_func_Remove(row); // remove func from index bh_func
     ind_func_Remove(row); // remove func from index ind_func
@@ -2358,46 +2358,46 @@ void src_func::FFunc_Uninit(src_func::FFunc& func) {
 }
 
 // --- src_func.FGenprefix..Uninit
-void src_func::FGenprefix_Uninit(src_func::FGenprefix& genprefix) {
+void src_func::FGenprefix_Uninit(src_func::FGenprefix& genprefix) throw() {
     src_func::FGenprefix &row = genprefix; (void)row;
     ind_genprefix_Remove(row); // remove genprefix from index ind_genprefix
 }
 
 // --- src_func.FGstatic.base.CopyOut
 // Copy fields out of row
-void src_func::gstatic_CopyOut(src_func::FGstatic &row, dmmeta::Gstatic &out) {
+void src_func::gstatic_CopyOut(src_func::FGstatic &row, dmmeta::Gstatic &out) throw() {
     out.field = row.field;
     out.comment = row.comment;
 }
 
 // --- src_func.FGstatic.base.CopyIn
 // Copy fields in to row
-void src_func::gstatic_CopyIn(src_func::FGstatic &row, dmmeta::Gstatic &in) {
+void src_func::gstatic_CopyIn(src_func::FGstatic &row, dmmeta::Gstatic &in) throw() {
     row.field = in.field;
     row.comment = in.comment;
 }
 
 // --- src_func.FGstatic.ns.Get
-algo::Smallstr16 src_func::ns_Get(src_func::FGstatic& gstatic) {
+algo::Smallstr16 src_func::ns_Get(src_func::FGstatic& gstatic) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(gstatic.field, ".LL"));
     return ret;
 }
 
 // --- src_func.FTarget.base.CopyOut
 // Copy fields out of row
-void src_func::target_CopyOut(src_func::FTarget &row, dev::Target &out) {
+void src_func::target_CopyOut(src_func::FTarget &row, dev::Target &out) throw() {
     out.target = row.target;
 }
 
 // --- src_func.FTarget.base.CopyIn
 // Copy fields in to row
-void src_func::target_CopyIn(src_func::FTarget &row, dev::Target &in) {
+void src_func::target_CopyIn(src_func::FTarget &row, dev::Target &in) throw() {
     row.target = in.target;
 }
 
 // --- src_func.FTarget.cd_targsrc.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void src_func::cd_targsrc_Insert(src_func::FTarget& target, src_func::FTargsrc& row) {
+void src_func::cd_targsrc_Insert(src_func::FTarget& target, src_func::FTargsrc& row) throw() {
     if (!cd_targsrc_InLlistQ(row)) {
         if (target.cd_targsrc_head) {
             row.cd_targsrc_next = target.cd_targsrc_head;
@@ -2415,7 +2415,7 @@ void src_func::cd_targsrc_Insert(src_func::FTarget& target, src_func::FTargsrc& 
 
 // --- src_func.FTarget.cd_targsrc.Remove
 // Remove element from index. If element is not in index, do nothing.
-void src_func::cd_targsrc_Remove(src_func::FTarget& target, src_func::FTargsrc& row) {
+void src_func::cd_targsrc_Remove(src_func::FTarget& target, src_func::FTargsrc& row) throw() {
     if (cd_targsrc_InLlistQ(row)) {
         src_func::FTargsrc* old_head       = target.cd_targsrc_head;
         (void)old_head; // in case it's not used
@@ -2434,7 +2434,7 @@ void src_func::cd_targsrc_Remove(src_func::FTarget& target, src_func::FTargsrc& 
 
 // --- src_func.FTarget.cd_targsrc.RemoveAll
 // Empty the index. (The rows are not deleted)
-void src_func::cd_targsrc_RemoveAll(src_func::FTarget& target) {
+void src_func::cd_targsrc_RemoveAll(src_func::FTarget& target) throw() {
     src_func::FTargsrc* row = target.cd_targsrc_head;
     src_func::FTargsrc* head = target.cd_targsrc_head;
     target.cd_targsrc_head = NULL;
@@ -2449,7 +2449,7 @@ void src_func::cd_targsrc_RemoveAll(src_func::FTarget& target) {
 
 // --- src_func.FTarget.cd_targsrc.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-src_func::FTargsrc* src_func::cd_targsrc_RemoveFirst(src_func::FTarget& target) {
+src_func::FTargsrc* src_func::cd_targsrc_RemoveFirst(src_func::FTarget& target) throw() {
     src_func::FTargsrc *row = NULL;
     row = target.cd_targsrc_head;
     if (row) {
@@ -2467,7 +2467,7 @@ src_func::FTargsrc* src_func::cd_targsrc_RemoveFirst(src_func::FTarget& target) 
 // --- src_func.FTarget.cd_targsrc.RotateFirst
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
-src_func::FTargsrc* src_func::cd_targsrc_RotateFirst(src_func::FTarget& target) {
+src_func::FTargsrc* src_func::cd_targsrc_RotateFirst(src_func::FTarget& target) throw() {
     src_func::FTargsrc *row = NULL;
     row = target.cd_targsrc_head;
     if (row) {
@@ -2477,46 +2477,46 @@ src_func::FTargsrc* src_func::cd_targsrc_RotateFirst(src_func::FTarget& target) 
 }
 
 // --- src_func.FTarget..Uninit
-void src_func::FTarget_Uninit(src_func::FTarget& target) {
+void src_func::FTarget_Uninit(src_func::FTarget& target) throw() {
     src_func::FTarget &row = target; (void)row;
     ind_target_Remove(row); // remove target from index ind_target
 }
 
 // --- src_func.FTargsrc.base.CopyOut
 // Copy fields out of row
-void src_func::targsrc_CopyOut(src_func::FTargsrc &row, dev::Targsrc &out) {
+void src_func::targsrc_CopyOut(src_func::FTargsrc &row, dev::Targsrc &out) throw() {
     out.targsrc = row.targsrc;
     out.comment = row.comment;
 }
 
 // --- src_func.FTargsrc.base.CopyIn
 // Copy fields in to row
-void src_func::targsrc_CopyIn(src_func::FTargsrc &row, dev::Targsrc &in) {
+void src_func::targsrc_CopyIn(src_func::FTargsrc &row, dev::Targsrc &in) throw() {
     row.targsrc = in.targsrc;
     row.comment = in.comment;
 }
 
 // --- src_func.FTargsrc.target.Get
-algo::Smallstr16 src_func::target_Get(src_func::FTargsrc& targsrc) {
+algo::Smallstr16 src_func::target_Get(src_func::FTargsrc& targsrc) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
     return ret;
 }
 
 // --- src_func.FTargsrc.src.Get
-algo::Smallstr200 src_func::src_Get(src_func::FTargsrc& targsrc) {
+algo::Smallstr200 src_func::src_Get(src_func::FTargsrc& targsrc) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
     return ret;
 }
 
 // --- src_func.FTargsrc.ext.Get
-algo::Smallstr10 src_func::ext_Get(src_func::FTargsrc& targsrc) {
+algo::Smallstr10 src_func::ext_Get(src_func::FTargsrc& targsrc) throw() {
     algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
     return ret;
 }
 
 // --- src_func.FTargsrc.zd_func.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void src_func::zd_func_Insert(src_func::FTargsrc& targsrc, src_func::FFunc& row) {
+void src_func::zd_func_Insert(src_func::FTargsrc& targsrc, src_func::FFunc& row) throw() {
     if (!zd_func_InLlistQ(row)) {
         src_func::FFunc* old_tail = targsrc.zd_func_tail;
         row.zd_func_next = NULL;
@@ -2532,7 +2532,7 @@ void src_func::zd_func_Insert(src_func::FTargsrc& targsrc, src_func::FFunc& row)
 
 // --- src_func.FTargsrc.zd_func.Remove
 // Remove element from index. If element is not in index, do nothing.
-void src_func::zd_func_Remove(src_func::FTargsrc& targsrc, src_func::FFunc& row) {
+void src_func::zd_func_Remove(src_func::FTargsrc& targsrc, src_func::FFunc& row) throw() {
     if (zd_func_InLlistQ(row)) {
         src_func::FFunc* old_head       = targsrc.zd_func_head;
         (void)old_head; // in case it's not used
@@ -2555,7 +2555,7 @@ void src_func::zd_func_Remove(src_func::FTargsrc& targsrc, src_func::FFunc& row)
 
 // --- src_func.FTargsrc.zd_func.RemoveAll
 // Empty the index. (The rows are not deleted)
-void src_func::zd_func_RemoveAll(src_func::FTargsrc& targsrc) {
+void src_func::zd_func_RemoveAll(src_func::FTargsrc& targsrc) throw() {
     src_func::FFunc* row = targsrc.zd_func_head;
     targsrc.zd_func_head = NULL;
     targsrc.zd_func_tail = NULL;
@@ -2570,7 +2570,7 @@ void src_func::zd_func_RemoveAll(src_func::FTargsrc& targsrc) {
 
 // --- src_func.FTargsrc.zd_func.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-src_func::FFunc* src_func::zd_func_RemoveFirst(src_func::FTargsrc& targsrc) {
+src_func::FFunc* src_func::zd_func_RemoveFirst(src_func::FTargsrc& targsrc) throw() {
     src_func::FFunc *row = NULL;
     row = targsrc.zd_func_head;
     if (row) {
@@ -2587,7 +2587,7 @@ src_func::FFunc* src_func::zd_func_RemoveFirst(src_func::FTargsrc& targsrc) {
 }
 
 // --- src_func.FTargsrc..Uninit
-void src_func::FTargsrc_Uninit(src_func::FTargsrc& targsrc) {
+void src_func::FTargsrc_Uninit(src_func::FTargsrc& targsrc) throw() {
     src_func::FTargsrc &row = targsrc; (void)row;
     src_func::FTarget* p_target = src_func::ind_target_Find(target_Get(row));
     if (p_target)  {
@@ -2598,7 +2598,7 @@ void src_func::FTargsrc_Uninit(src_func::FTargsrc& targsrc) {
 // --- src_func.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* src_func::value_ToCstr(const src_func::FieldId& parent) {
+const char* src_func::value_ToCstr(const src_func::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case src_func_FieldId_value        : ret = "value";  break;
@@ -2609,7 +2609,7 @@ const char* src_func::value_ToCstr(const src_func::FieldId& parent) {
 // --- src_func.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void src_func::value_Print(const src_func::FieldId& parent, algo::cstring &lhs) {
+void src_func::value_Print(const src_func::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2622,7 +2622,7 @@ void src_func::value_Print(const src_func::FieldId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool src_func::value_SetStrptrMaybe(src_func::FieldId& parent, algo::strptr rhs) {
+bool src_func::value_SetStrptrMaybe(src_func::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -2640,13 +2640,13 @@ bool src_func::value_SetStrptrMaybe(src_func::FieldId& parent, algo::strptr rhs)
 // --- src_func.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void src_func::value_SetStrptr(src_func::FieldId& parent, algo::strptr rhs, src_func_FieldIdEnum dflt) {
+void src_func::value_SetStrptr(src_func::FieldId& parent, algo::strptr rhs, src_func_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- src_func.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool src_func::value_ReadStrptrMaybe(src_func::FieldId& parent, algo::strptr rhs) {
+bool src_func::value_ReadStrptrMaybe(src_func::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2658,7 +2658,7 @@ bool src_func::value_ReadStrptrMaybe(src_func::FieldId& parent, algo::strptr rhs
 // --- src_func.FieldId..ReadStrptrMaybe
 // Read fields of src_func::FieldId from an ascii string.
 // The format of the string is the format of the src_func::FieldId's only field
-bool src_func::FieldId_ReadStrptrMaybe(src_func::FieldId &parent, algo::strptr in_str) {
+bool src_func::FieldId_ReadStrptrMaybe(src_func::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2667,14 +2667,14 @@ bool src_func::FieldId_ReadStrptrMaybe(src_func::FieldId &parent, algo::strptr i
 // --- src_func.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:src_func.FieldId.String  printfmt:Raw
-void src_func::FieldId_Print(src_func::FieldId& row, algo::cstring& str) {
+void src_func::FieldId_Print(src_func::FieldId& row, algo::cstring& str) throw() {
     src_func::value_Print(row, str);
 }
 
 // --- src_func.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* src_func::value_ToCstr(const src_func::TableId& parent) {
+const char* src_func::value_ToCstr(const src_func::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case src_func_TableId_dmmeta_Ctypelen: ret = "dmmeta.Ctypelen";  break;
@@ -2690,7 +2690,7 @@ const char* src_func::value_ToCstr(const src_func::TableId& parent) {
 // --- src_func.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void src_func::value_Print(const src_func::TableId& parent, algo::cstring &lhs) {
+void src_func::value_Print(const src_func::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2703,7 +2703,7 @@ void src_func::value_Print(const src_func::TableId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool src_func::value_SetStrptrMaybe(src_func::TableId& parent, algo::strptr rhs) {
+bool src_func::value_SetStrptrMaybe(src_func::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 10: {
@@ -2786,13 +2786,13 @@ bool src_func::value_SetStrptrMaybe(src_func::TableId& parent, algo::strptr rhs)
 // --- src_func.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void src_func::value_SetStrptr(src_func::TableId& parent, algo::strptr rhs, src_func_TableIdEnum dflt) {
+void src_func::value_SetStrptr(src_func::TableId& parent, algo::strptr rhs, src_func_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- src_func.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool src_func::value_ReadStrptrMaybe(src_func::TableId& parent, algo::strptr rhs) {
+bool src_func::value_ReadStrptrMaybe(src_func::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2804,7 +2804,7 @@ bool src_func::value_ReadStrptrMaybe(src_func::TableId& parent, algo::strptr rhs
 // --- src_func.TableId..ReadStrptrMaybe
 // Read fields of src_func::TableId from an ascii string.
 // The format of the string is the format of the src_func::TableId's only field
-bool src_func::TableId_ReadStrptrMaybe(src_func::TableId &parent, algo::strptr in_str) {
+bool src_func::TableId_ReadStrptrMaybe(src_func::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2813,7 +2813,7 @@ bool src_func::TableId_ReadStrptrMaybe(src_func::TableId &parent, algo::strptr i
 // --- src_func.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:src_func.TableId.String  printfmt:Raw
-void src_func::TableId_Print(src_func::TableId& row, algo::cstring& str) {
+void src_func::TableId_Print(src_func::TableId& row, algo::cstring& str) throw() {
     src_func::value_Print(row, str);
 }
 

@@ -36,7 +36,7 @@ namespace report { // gen:ns_print_proto
 // --- report.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* report::value_ToCstr(const report::FieldId& parent) {
+const char* report::value_ToCstr(const report::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case report_FieldId_n_target       : ret = "n_target";  break;
@@ -95,7 +95,7 @@ const char* report::value_ToCstr(const report::FieldId& parent) {
 // --- report.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void report::value_Print(const report::FieldId& parent, algo::cstring &lhs) {
+void report::value_Print(const report::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -108,7 +108,7 @@ void report::value_Print(const report::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
+bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -341,13 +341,13 @@ bool report::value_SetStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
 // --- report.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void report::value_SetStrptr(report::FieldId& parent, algo::strptr rhs, report_FieldIdEnum dflt) {
+void report::value_SetStrptr(report::FieldId& parent, algo::strptr rhs, report_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- report.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool report::value_ReadStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
+bool report::value_ReadStrptrMaybe(report::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -359,7 +359,7 @@ bool report::value_ReadStrptrMaybe(report::FieldId& parent, algo::strptr rhs) {
 // --- report.FieldId..ReadStrptrMaybe
 // Read fields of report::FieldId from an ascii string.
 // The format of the string is the format of the report::FieldId's only field
-bool report::FieldId_ReadStrptrMaybe(report::FieldId &parent, algo::strptr in_str) {
+bool report::FieldId_ReadStrptrMaybe(report::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -368,12 +368,12 @@ bool report::FieldId_ReadStrptrMaybe(report::FieldId &parent, algo::strptr in_st
 // --- report.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:report.FieldId.String  printfmt:Raw
-void report::FieldId_Print(report::FieldId& row, algo::cstring& str) {
+void report::FieldId_Print(report::FieldId& row, algo::cstring& str) throw() {
     report::value_Print(row, str);
 }
 
 // --- report.abt..ReadFieldMaybe
-bool report::abt_ReadFieldMaybe(report::abt& parent, algo::strptr field, algo::strptr strval) {
+bool report::abt_ReadFieldMaybe(report::abt& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -417,7 +417,7 @@ bool report::abt_ReadFieldMaybe(report::abt& parent, algo::strptr field, algo::s
 // --- report.abt..ReadStrptrMaybe
 // Read fields of report::abt from an ascii string.
 // The format of the string is an ssim Tuple
-bool report::abt_ReadStrptrMaybe(report::abt &parent, algo::strptr in_str) {
+bool report::abt_ReadStrptrMaybe(report::abt &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "report.abt");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -429,7 +429,7 @@ bool report::abt_ReadStrptrMaybe(report::abt &parent, algo::strptr in_str) {
 // --- report.abt..Print
 // print string representation of ROW to string STR
 // cfmt:report.abt.String  printfmt:Tuple
-void report::abt_Print(report::abt& row, algo::cstring& str) {
+void report::abt_Print(report::abt& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "report.abt";
 
@@ -456,7 +456,7 @@ void report::abt_Print(report::abt& row, algo::cstring& str) {
 }
 
 // --- report.acr..ReadFieldMaybe
-bool report::acr_ReadFieldMaybe(report::acr& parent, algo::strptr field, algo::strptr strval) {
+bool report::acr_ReadFieldMaybe(report::acr& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -496,7 +496,7 @@ bool report::acr_ReadFieldMaybe(report::acr& parent, algo::strptr field, algo::s
 // --- report.acr..ReadStrptrMaybe
 // Read fields of report::acr from an ascii string.
 // The format of the string is an ssim Tuple
-bool report::acr_ReadStrptrMaybe(report::acr &parent, algo::strptr in_str) {
+bool report::acr_ReadStrptrMaybe(report::acr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "report.acr");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -508,7 +508,7 @@ bool report::acr_ReadStrptrMaybe(report::acr &parent, algo::strptr in_str) {
 // --- report.acr..Print
 // print string representation of ROW to string STR
 // cfmt:report.acr.String  printfmt:Tuple
-void report::acr_Print(report::acr& row, algo::cstring& str) {
+void report::acr_Print(report::acr& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "report.acr";
 
@@ -532,7 +532,7 @@ void report::acr_Print(report::acr& row, algo::cstring& str) {
 }
 
 // --- report.acr_check..ReadFieldMaybe
-bool report::acr_check_ReadFieldMaybe(report::acr_check& parent, algo::strptr field, algo::strptr strval) {
+bool report::acr_check_ReadFieldMaybe(report::acr_check& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -556,7 +556,7 @@ bool report::acr_check_ReadFieldMaybe(report::acr_check& parent, algo::strptr fi
 // --- report.acr_check..ReadStrptrMaybe
 // Read fields of report::acr_check from an ascii string.
 // The format of the string is an ssim Tuple
-bool report::acr_check_ReadStrptrMaybe(report::acr_check &parent, algo::strptr in_str) {
+bool report::acr_check_ReadStrptrMaybe(report::acr_check &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "report.acr_check");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -568,7 +568,7 @@ bool report::acr_check_ReadStrptrMaybe(report::acr_check &parent, algo::strptr i
 // --- report.acr_check..Print
 // print string representation of ROW to string STR
 // cfmt:report.acr_check.String  printfmt:Tuple
-void report::acr_check_Print(report::acr_check& row, algo::cstring& str) {
+void report::acr_check_Print(report::acr_check& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "report.acr_check";
 
@@ -580,7 +580,7 @@ void report::acr_check_Print(report::acr_check& row, algo::cstring& str) {
 }
 
 // --- report.amc..ReadFieldMaybe
-bool report::amc_ReadFieldMaybe(report::amc& parent, algo::strptr field, algo::strptr strval) {
+bool report::amc_ReadFieldMaybe(report::amc& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -620,7 +620,7 @@ bool report::amc_ReadFieldMaybe(report::amc& parent, algo::strptr field, algo::s
 // --- report.amc..ReadStrptrMaybe
 // Read fields of report::amc from an ascii string.
 // The format of the string is an ssim Tuple
-bool report::amc_ReadStrptrMaybe(report::amc &parent, algo::strptr in_str) {
+bool report::amc_ReadStrptrMaybe(report::amc &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "report.amc");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -632,7 +632,7 @@ bool report::amc_ReadStrptrMaybe(report::amc &parent, algo::strptr in_str) {
 // --- report.amc..Print
 // print string representation of ROW to string STR
 // cfmt:report.amc.String  printfmt:Tuple
-void report::amc_Print(report::amc& row, algo::cstring& str) {
+void report::amc_Print(report::amc& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "report.amc";
 
@@ -656,7 +656,7 @@ void report::amc_Print(report::amc& row, algo::cstring& str) {
 }
 
 // --- report.atf_comp..ReadFieldMaybe
-bool report::atf_comp_ReadFieldMaybe(report::atf_comp& parent, algo::strptr field, algo::strptr strval) {
+bool report::atf_comp_ReadFieldMaybe(report::atf_comp& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -708,7 +708,7 @@ bool report::atf_comp_ReadFieldMaybe(report::atf_comp& parent, algo::strptr fiel
 // --- report.atf_comp..ReadStrptrMaybe
 // Read fields of report::atf_comp from an ascii string.
 // The format of the string is an ssim Tuple
-bool report::atf_comp_ReadStrptrMaybe(report::atf_comp &parent, algo::strptr in_str) {
+bool report::atf_comp_ReadStrptrMaybe(report::atf_comp &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "report.atf_comp");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -720,7 +720,7 @@ bool report::atf_comp_ReadStrptrMaybe(report::atf_comp &parent, algo::strptr in_
 // --- report.atf_comp..Print
 // print string representation of ROW to string STR
 // cfmt:report.atf_comp.String  printfmt:Tuple
-void report::atf_comp_Print(report::atf_comp& row, algo::cstring& str) {
+void report::atf_comp_Print(report::atf_comp& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "report.atf_comp";
 
@@ -753,7 +753,7 @@ void report::atf_comp_Print(report::atf_comp& row, algo::cstring& str) {
 }
 
 // --- report.atf_unit..ReadFieldMaybe
-bool report::atf_unit_ReadFieldMaybe(report::atf_unit& parent, algo::strptr field, algo::strptr strval) {
+bool report::atf_unit_ReadFieldMaybe(report::atf_unit& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -785,7 +785,7 @@ bool report::atf_unit_ReadFieldMaybe(report::atf_unit& parent, algo::strptr fiel
 // --- report.atf_unit..ReadStrptrMaybe
 // Read fields of report::atf_unit from an ascii string.
 // The format of the string is an ssim Tuple
-bool report::atf_unit_ReadStrptrMaybe(report::atf_unit &parent, algo::strptr in_str) {
+bool report::atf_unit_ReadStrptrMaybe(report::atf_unit &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "report.atf_unit");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -797,7 +797,7 @@ bool report::atf_unit_ReadStrptrMaybe(report::atf_unit &parent, algo::strptr in_
 // --- report.atf_unit..Print
 // print string representation of ROW to string STR
 // cfmt:report.atf_unit.String  printfmt:Tuple
-void report::atf_unit_Print(report::atf_unit& row, algo::cstring& str) {
+void report::atf_unit_Print(report::atf_unit& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "report.atf_unit";
 
@@ -815,7 +815,7 @@ void report::atf_unit_Print(report::atf_unit& row, algo::cstring& str) {
 }
 
 // --- report.gcache..ReadFieldMaybe
-bool report::gcache_ReadFieldMaybe(report::gcache& parent, algo::strptr field, algo::strptr strval) {
+bool report::gcache_ReadFieldMaybe(report::gcache& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -871,7 +871,7 @@ bool report::gcache_ReadFieldMaybe(report::gcache& parent, algo::strptr field, a
 // --- report.gcache..ReadStrptrMaybe
 // Read fields of report::gcache from an ascii string.
 // The format of the string is an ssim Tuple
-bool report::gcache_ReadStrptrMaybe(report::gcache &parent, algo::strptr in_str) {
+bool report::gcache_ReadStrptrMaybe(report::gcache &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "report.gcache");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -893,7 +893,7 @@ void report::gcache_Init(report::gcache& parent) {
 // --- report.gcache..Print
 // print string representation of ROW to string STR
 // cfmt:report.gcache.String  printfmt:Tuple
-void report::gcache_Print(report::gcache& row, algo::cstring& str) {
+void report::gcache_Print(report::gcache& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "report.gcache";
 
@@ -929,7 +929,7 @@ void report::gcache_Print(report::gcache& row, algo::cstring& str) {
 }
 
 // --- report.gcache_hitrate..ReadFieldMaybe
-bool report::gcache_hitrate_ReadFieldMaybe(report::gcache_hitrate& parent, algo::strptr field, algo::strptr strval) {
+bool report::gcache_hitrate_ReadFieldMaybe(report::gcache_hitrate& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -953,7 +953,7 @@ bool report::gcache_hitrate_ReadFieldMaybe(report::gcache_hitrate& parent, algo:
 // --- report.gcache_hitrate..ReadStrptrMaybe
 // Read fields of report::gcache_hitrate from an ascii string.
 // The format of the string is an ssim Tuple
-bool report::gcache_hitrate_ReadStrptrMaybe(report::gcache_hitrate &parent, algo::strptr in_str) {
+bool report::gcache_hitrate_ReadStrptrMaybe(report::gcache_hitrate &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "report.gcache_hitrate");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -965,7 +965,7 @@ bool report::gcache_hitrate_ReadStrptrMaybe(report::gcache_hitrate &parent, algo
 // --- report.gcache_hitrate..Print
 // print string representation of ROW to string STR
 // cfmt:report.gcache_hitrate.String  printfmt:Tuple
-void report::gcache_hitrate_Print(report::gcache_hitrate& row, algo::cstring& str) {
+void report::gcache_hitrate_Print(report::gcache_hitrate& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "report.gcache_hitrate";
 
@@ -977,7 +977,7 @@ void report::gcache_hitrate_Print(report::gcache_hitrate& row, algo::cstring& st
 }
 
 // --- report.src_func..ReadFieldMaybe
-bool report::src_func_ReadFieldMaybe(report::src_func& parent, algo::strptr field, algo::strptr strval) {
+bool report::src_func_ReadFieldMaybe(report::src_func& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     report::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1025,7 +1025,7 @@ bool report::src_func_ReadFieldMaybe(report::src_func& parent, algo::strptr fiel
 // --- report.src_func..ReadStrptrMaybe
 // Read fields of report::src_func from an ascii string.
 // The format of the string is an ssim Tuple
-bool report::src_func_ReadStrptrMaybe(report::src_func &parent, algo::strptr in_str) {
+bool report::src_func_ReadStrptrMaybe(report::src_func &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "report.src_func");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1037,7 +1037,7 @@ bool report::src_func_ReadStrptrMaybe(report::src_func &parent, algo::strptr in_
 // --- report.src_func..Print
 // print string representation of ROW to string STR
 // cfmt:report.src_func.String  printfmt:Tuple
-void report::src_func_Print(report::src_func& row, algo::cstring& str) {
+void report::src_func_Print(report::src_func& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "report.src_func";
 

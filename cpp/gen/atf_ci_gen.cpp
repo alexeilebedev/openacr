@@ -135,51 +135,51 @@ namespace atf_ci { // gen:ns_print_proto
 
 // --- atf_ci.FBuilddir.base.CopyOut
 // Copy fields out of row
-void atf_ci::builddir_CopyOut(atf_ci::FBuilddir &row, dev::Builddir &out) {
+void atf_ci::builddir_CopyOut(atf_ci::FBuilddir &row, dev::Builddir &out) throw() {
     out.builddir = row.builddir;
     out.comment = row.comment;
 }
 
 // --- atf_ci.FBuilddir.base.CopyIn
 // Copy fields in to row
-void atf_ci::builddir_CopyIn(atf_ci::FBuilddir &row, dev::Builddir &in) {
+void atf_ci::builddir_CopyIn(atf_ci::FBuilddir &row, dev::Builddir &in) throw() {
     row.builddir = in.builddir;
     row.comment = in.comment;
 }
 
 // --- atf_ci.FBuilddir.uname.Get
-algo::Smallstr50 atf_ci::uname_Get(atf_ci::FBuilddir& builddir) {
+algo::Smallstr50 atf_ci::uname_Get(atf_ci::FBuilddir& builddir) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LL"));
     return ret;
 }
 
 // --- atf_ci.FBuilddir.compiler.Get
-algo::Smallstr50 atf_ci::compiler_Get(atf_ci::FBuilddir& builddir) {
+algo::Smallstr50 atf_ci::compiler_Get(atf_ci::FBuilddir& builddir) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LR"));
     return ret;
 }
 
 // --- atf_ci.FBuilddir.cfg.Get
-algo::Smallstr50 atf_ci::cfg_Get(atf_ci::FBuilddir& builddir) {
+algo::Smallstr50 atf_ci::cfg_Get(atf_ci::FBuilddir& builddir) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LL"));
     return ret;
 }
 
 // --- atf_ci.FBuilddir.arch.Get
-algo::Smallstr50 atf_ci::arch_Get(atf_ci::FBuilddir& builddir) {
+algo::Smallstr50 atf_ci::arch_Get(atf_ci::FBuilddir& builddir) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LR"));
     return ret;
 }
 
 // --- atf_ci.FBuilddir..Uninit
-void atf_ci::FBuilddir_Uninit(atf_ci::FBuilddir& builddir) {
+void atf_ci::FBuilddir_Uninit(atf_ci::FBuilddir& builddir) throw() {
     atf_ci::FBuilddir &row = builddir; (void)row;
     ind_builddir_Remove(row); // remove builddir from index ind_builddir
 }
 
 // --- atf_ci.FCfg.base.CopyOut
 // Copy fields out of row
-void atf_ci::cfg_CopyOut(atf_ci::FCfg &row, dev::Cfg &out) {
+void atf_ci::cfg_CopyOut(atf_ci::FCfg &row, dev::Cfg &out) throw() {
     out.cfg = row.cfg;
     out.suffix = row.suffix;
     out.comment = row.comment;
@@ -187,7 +187,7 @@ void atf_ci::cfg_CopyOut(atf_ci::FCfg &row, dev::Cfg &out) {
 
 // --- atf_ci.FCfg.base.CopyIn
 // Copy fields in to row
-void atf_ci::cfg_CopyIn(atf_ci::FCfg &row, dev::Cfg &in) {
+void atf_ci::cfg_CopyIn(atf_ci::FCfg &row, dev::Cfg &in) throw() {
     row.cfg = in.cfg;
     row.suffix = in.suffix;
     row.comment = in.comment;
@@ -195,7 +195,7 @@ void atf_ci::cfg_CopyIn(atf_ci::FCfg &row, dev::Cfg &in) {
 
 // --- atf_ci.FCipackage.base.CopyOut
 // Copy fields out of row
-void atf_ci::cipackage_CopyOut(atf_ci::FCipackage &row, atfdb::Cipackage &out) {
+void atf_ci::cipackage_CopyOut(atf_ci::FCipackage &row, atfdb::Cipackage &out) throw() {
     out.package = row.package;
     out.remove = row.remove;
     out.build = row.build;
@@ -205,7 +205,7 @@ void atf_ci::cipackage_CopyOut(atf_ci::FCipackage &row, atfdb::Cipackage &out) {
 
 // --- atf_ci.FCipackage.base.CopyIn
 // Copy fields in to row
-void atf_ci::cipackage_CopyIn(atf_ci::FCipackage &row, atfdb::Cipackage &in) {
+void atf_ci::cipackage_CopyIn(atf_ci::FCipackage &row, atfdb::Cipackage &in) throw() {
     row.package = in.package;
     row.remove = in.remove;
     row.build = in.build;
@@ -215,7 +215,7 @@ void atf_ci::cipackage_CopyIn(atf_ci::FCipackage &row, atfdb::Cipackage &in) {
 
 // --- atf_ci.FCitest.base.CopyOut
 // Copy fields out of row
-void atf_ci::citest_CopyOut(atf_ci::FCitest &row, atfdb::Citest &out) {
+void atf_ci::citest_CopyOut(atf_ci::FCitest &row, atfdb::Citest &out) throw() {
     out.citest = row.citest;
     out.cijob = row.cijob;
     out.sandbox = row.sandbox;
@@ -224,7 +224,7 @@ void atf_ci::citest_CopyOut(atf_ci::FCitest &row, atfdb::Citest &out) {
 
 // --- atf_ci.FCitest.base.CopyIn
 // Copy fields in to row
-void atf_ci::citest_CopyIn(atf_ci::FCitest &row, atfdb::Citest &in) {
+void atf_ci::citest_CopyIn(atf_ci::FCitest &row, atfdb::Citest &in) throw() {
     row.citest = in.citest;
     row.cijob = in.cijob;
     row.sandbox = in.sandbox;
@@ -232,7 +232,7 @@ void atf_ci::citest_CopyIn(atf_ci::FCitest &row, atfdb::Citest &in) {
 }
 
 // --- atf_ci.FCitest..Uninit
-void atf_ci::FCitest_Uninit(atf_ci::FCitest& citest) {
+void atf_ci::FCitest_Uninit(atf_ci::FCitest& citest) throw() {
     atf_ci::FCitest &row = citest; (void)row;
     ind_citest_Remove(row); // remove citest from index ind_citest
 }
@@ -240,7 +240,7 @@ void atf_ci::FCitest_Uninit(atf_ci::FCitest& citest) {
 // --- atf_ci.trace..Print
 // print string representation of ROW to string STR
 // cfmt:atf_ci.trace.String  printfmt:Tuple
-void atf_ci::trace_Print(atf_ci::trace& row, algo::cstring& str) {
+void atf_ci::trace_Print(atf_ci::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_ci.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -251,7 +251,7 @@ void atf_ci::trace_Print(atf_ci::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     atf_ci.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void atf_ci::ReadArgv() {
+void atf_ci::ReadArgv() throw() {
     command::atf_ci &cmd = atf_ci::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -521,7 +521,7 @@ bool atf_ci::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_ci.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_ci::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool atf_ci::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = atf_ci::LoadTuplesFile(root, recursive);
@@ -566,7 +566,7 @@ bool atf_ci::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool atf_ci::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool atf_ci::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -579,7 +579,7 @@ bool atf_ci::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- atf_ci.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool atf_ci::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool atf_ci::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -600,7 +600,7 @@ bool atf_ci::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
 
 // --- atf_ci.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_ci::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool atf_ci::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = atf_ci::LoadTuplesFile(fname, recursive);
@@ -625,7 +625,7 @@ bool atf_ci::_db_XrefMaybe() {
 // --- atf_ci.FDb.citest.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FCitest& atf_ci::citest_Alloc() {
+atf_ci::FCitest& atf_ci::citest_Alloc() throw() {
     atf_ci::FCitest* row = citest_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.citest  comment:'Alloc failed'");
@@ -635,7 +635,7 @@ atf_ci::FCitest& atf_ci::citest_Alloc() {
 
 // --- atf_ci.FDb.citest.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FCitest* atf_ci::citest_AllocMaybe() {
+atf_ci::FCitest* atf_ci::citest_AllocMaybe() throw() {
     atf_ci::FCitest *row = (atf_ci::FCitest*)citest_AllocMem();
     if (row) {
         new (row) atf_ci::FCitest; // call constructor
@@ -646,7 +646,7 @@ atf_ci::FCitest* atf_ci::citest_AllocMaybe() {
 // --- atf_ci.FDb.citest.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FCitest* atf_ci::citest_InsertMaybe(const atfdb::Citest &value) {
+atf_ci::FCitest* atf_ci::citest_InsertMaybe(const atfdb::Citest &value) throw() {
     atf_ci::FCitest *row = &citest_Alloc(); // if out of memory, process dies. if input error, return NULL.
     citest_CopyIn(*row,const_cast<atfdb::Citest&>(value));
     bool ok = citest_XrefMaybe(*row); // this may return false
@@ -659,7 +659,7 @@ atf_ci::FCitest* atf_ci::citest_InsertMaybe(const atfdb::Citest &value) {
 
 // --- atf_ci.FDb.citest.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::citest_AllocMem() {
+void* atf_ci::citest_AllocMem() throw() {
     u64 new_nelems     = _db.citest_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -685,7 +685,7 @@ void* atf_ci::citest_AllocMem() {
 
 // --- atf_ci.FDb.citest.RemoveAll
 // Remove all elements from Lary
-void atf_ci::citest_RemoveAll() {
+void atf_ci::citest_RemoveAll() throw() {
     for (u64 n = _db.citest_n; n>0; ) {
         n--;
         citest_qFind(u64(n)).~FCitest(); // destroy last element
@@ -695,7 +695,7 @@ void atf_ci::citest_RemoveAll() {
 
 // --- atf_ci.FDb.citest.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::citest_RemoveLast() {
+void atf_ci::citest_RemoveLast() throw() {
     u64 n = _db.citest_n;
     if (n > 0) {
         n -= 1;
@@ -705,7 +705,7 @@ void atf_ci::citest_RemoveLast() {
 }
 
 // --- atf_ci.FDb.citest.LoadStatic
-static void atf_ci::citest_LoadStatic() {
+static void atf_ci::citest_LoadStatic() throw() {
     static struct _t {
         const char *s;
         void (*step)();
@@ -780,7 +780,7 @@ bool atf_ci::citest_XrefMaybe(atf_ci::FCitest &row) {
 // --- atf_ci.FDb.ssimfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FSsimfile& atf_ci::ssimfile_Alloc() {
+atf_ci::FSsimfile& atf_ci::ssimfile_Alloc() throw() {
     atf_ci::FSsimfile* row = ssimfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.ssimfile  comment:'Alloc failed'");
@@ -790,7 +790,7 @@ atf_ci::FSsimfile& atf_ci::ssimfile_Alloc() {
 
 // --- atf_ci.FDb.ssimfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FSsimfile* atf_ci::ssimfile_AllocMaybe() {
+atf_ci::FSsimfile* atf_ci::ssimfile_AllocMaybe() throw() {
     atf_ci::FSsimfile *row = (atf_ci::FSsimfile*)ssimfile_AllocMem();
     if (row) {
         new (row) atf_ci::FSsimfile; // call constructor
@@ -801,7 +801,7 @@ atf_ci::FSsimfile* atf_ci::ssimfile_AllocMaybe() {
 // --- atf_ci.FDb.ssimfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FSsimfile* atf_ci::ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) {
+atf_ci::FSsimfile* atf_ci::ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) throw() {
     atf_ci::FSsimfile *row = &ssimfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ssimfile_CopyIn(*row,const_cast<dmmeta::Ssimfile&>(value));
     bool ok = ssimfile_XrefMaybe(*row); // this may return false
@@ -814,7 +814,7 @@ atf_ci::FSsimfile* atf_ci::ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) {
 
 // --- atf_ci.FDb.ssimfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::ssimfile_AllocMem() {
+void* atf_ci::ssimfile_AllocMem() throw() {
     u64 new_nelems     = _db.ssimfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -840,7 +840,7 @@ void* atf_ci::ssimfile_AllocMem() {
 
 // --- atf_ci.FDb.ssimfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::ssimfile_RemoveLast() {
+void atf_ci::ssimfile_RemoveLast() throw() {
     u64 n = _db.ssimfile_n;
     if (n > 0) {
         n -= 1;
@@ -850,7 +850,7 @@ void atf_ci::ssimfile_RemoveLast() {
 }
 
 // --- atf_ci.FDb.ssimfile.InputMaybe
-static bool atf_ci::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
+static bool atf_ci::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) throw() {
     bool retval = true;
     retval = ssimfile_InsertMaybe(elem) != nullptr;
     return retval;
@@ -876,7 +876,7 @@ bool atf_ci::ssimfile_XrefMaybe(atf_ci::FSsimfile &row) {
 
 // --- atf_ci.FDb.ind_ssimfile.Find
 // Find row by key. Return NULL if not found.
-atf_ci::FSsimfile* atf_ci::ind_ssimfile_Find(const algo::strptr& key) {
+atf_ci::FSsimfile* atf_ci::ind_ssimfile_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
     atf_ci::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
     atf_ci::FSsimfile* ret=NULL;
@@ -899,7 +899,7 @@ atf_ci::FSsimfile& atf_ci::ind_ssimfile_FindX(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_ssimfile.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_ci::FSsimfile& atf_ci::ind_ssimfile_GetOrCreate(const algo::strptr& key) {
+atf_ci::FSsimfile& atf_ci::ind_ssimfile_GetOrCreate(const algo::strptr& key) throw() {
     atf_ci::FSsimfile* ret = ind_ssimfile_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &ssimfile_Alloc();
@@ -916,7 +916,7 @@ atf_ci::FSsimfile& atf_ci::ind_ssimfile_GetOrCreate(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_ssimfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_ci::ind_ssimfile_InsertMaybe(atf_ci::FSsimfile& row) {
+bool atf_ci::ind_ssimfile_InsertMaybe(atf_ci::FSsimfile& row) throw() {
     ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (atf_ci::FSsimfile*)-1)) {// check if in hash already
@@ -944,7 +944,7 @@ bool atf_ci::ind_ssimfile_InsertMaybe(atf_ci::FSsimfile& row) {
 
 // --- atf_ci.FDb.ind_ssimfile.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_ci::ind_ssimfile_Remove(atf_ci::FSsimfile& row) {
+void atf_ci::ind_ssimfile_Remove(atf_ci::FSsimfile& row) throw() {
     if (LIKELY(row.ind_ssimfile_next != (atf_ci::FSsimfile*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
         atf_ci::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
@@ -962,7 +962,7 @@ void atf_ci::ind_ssimfile_Remove(atf_ci::FSsimfile& row) {
 
 // --- atf_ci.FDb.ind_ssimfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_ci::ind_ssimfile_Reserve(int n) {
+void atf_ci::ind_ssimfile_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_ssimfile_buckets_n;
     u32 new_nelems   = _db.ind_ssimfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -999,7 +999,7 @@ void atf_ci::ind_ssimfile_Reserve(int n) {
 // --- atf_ci.FDb.scriptfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FScriptfile& atf_ci::scriptfile_Alloc() {
+atf_ci::FScriptfile& atf_ci::scriptfile_Alloc() throw() {
     atf_ci::FScriptfile* row = scriptfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.scriptfile  comment:'Alloc failed'");
@@ -1009,7 +1009,7 @@ atf_ci::FScriptfile& atf_ci::scriptfile_Alloc() {
 
 // --- atf_ci.FDb.scriptfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FScriptfile* atf_ci::scriptfile_AllocMaybe() {
+atf_ci::FScriptfile* atf_ci::scriptfile_AllocMaybe() throw() {
     atf_ci::FScriptfile *row = (atf_ci::FScriptfile*)scriptfile_AllocMem();
     if (row) {
         new (row) atf_ci::FScriptfile; // call constructor
@@ -1020,7 +1020,7 @@ atf_ci::FScriptfile* atf_ci::scriptfile_AllocMaybe() {
 // --- atf_ci.FDb.scriptfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FScriptfile* atf_ci::scriptfile_InsertMaybe(const dev::Scriptfile &value) {
+atf_ci::FScriptfile* atf_ci::scriptfile_InsertMaybe(const dev::Scriptfile &value) throw() {
     atf_ci::FScriptfile *row = &scriptfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     scriptfile_CopyIn(*row,const_cast<dev::Scriptfile&>(value));
     bool ok = scriptfile_XrefMaybe(*row); // this may return false
@@ -1033,7 +1033,7 @@ atf_ci::FScriptfile* atf_ci::scriptfile_InsertMaybe(const dev::Scriptfile &value
 
 // --- atf_ci.FDb.scriptfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::scriptfile_AllocMem() {
+void* atf_ci::scriptfile_AllocMem() throw() {
     u64 new_nelems     = _db.scriptfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1059,7 +1059,7 @@ void* atf_ci::scriptfile_AllocMem() {
 
 // --- atf_ci.FDb.scriptfile.RemoveAll
 // Remove all elements from Lary
-void atf_ci::scriptfile_RemoveAll() {
+void atf_ci::scriptfile_RemoveAll() throw() {
     for (u64 n = _db.scriptfile_n; n>0; ) {
         n--;
         scriptfile_qFind(u64(n)).~FScriptfile(); // destroy last element
@@ -1069,7 +1069,7 @@ void atf_ci::scriptfile_RemoveAll() {
 
 // --- atf_ci.FDb.scriptfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::scriptfile_RemoveLast() {
+void atf_ci::scriptfile_RemoveLast() throw() {
     u64 n = _db.scriptfile_n;
     if (n > 0) {
         n -= 1;
@@ -1079,7 +1079,7 @@ void atf_ci::scriptfile_RemoveLast() {
 }
 
 // --- atf_ci.FDb.scriptfile.InputMaybe
-static bool atf_ci::scriptfile_InputMaybe(dev::Scriptfile &elem) {
+static bool atf_ci::scriptfile_InputMaybe(dev::Scriptfile &elem) throw() {
     bool retval = true;
     retval = scriptfile_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1119,7 +1119,7 @@ bool atf_ci::scriptfile_XrefMaybe(atf_ci::FScriptfile &row) {
 
 // --- atf_ci.FDb.ind_scriptfile.Find
 // Find row by key. Return NULL if not found.
-atf_ci::FScriptfile* atf_ci::ind_scriptfile_Find(const algo::strptr& key) {
+atf_ci::FScriptfile* atf_ci::ind_scriptfile_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_scriptfile_buckets_n - 1);
     atf_ci::FScriptfile* *e = &_db.ind_scriptfile_buckets_elems[index];
     atf_ci::FScriptfile* ret=NULL;
@@ -1142,7 +1142,7 @@ atf_ci::FScriptfile& atf_ci::ind_scriptfile_FindX(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_scriptfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_ci::ind_scriptfile_InsertMaybe(atf_ci::FScriptfile& row) {
+bool atf_ci::ind_scriptfile_InsertMaybe(atf_ci::FScriptfile& row) throw() {
     ind_scriptfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_scriptfile_next == (atf_ci::FScriptfile*)-1)) {// check if in hash already
@@ -1170,7 +1170,7 @@ bool atf_ci::ind_scriptfile_InsertMaybe(atf_ci::FScriptfile& row) {
 
 // --- atf_ci.FDb.ind_scriptfile.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_ci::ind_scriptfile_Remove(atf_ci::FScriptfile& row) {
+void atf_ci::ind_scriptfile_Remove(atf_ci::FScriptfile& row) throw() {
     if (LIKELY(row.ind_scriptfile_next != (atf_ci::FScriptfile*)-1)) {// check if in hash already
         u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_scriptfile_buckets_n - 1);
         atf_ci::FScriptfile* *prev = &_db.ind_scriptfile_buckets_elems[index]; // addr of pointer to current element
@@ -1188,7 +1188,7 @@ void atf_ci::ind_scriptfile_Remove(atf_ci::FScriptfile& row) {
 
 // --- atf_ci.FDb.ind_scriptfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_ci::ind_scriptfile_Reserve(int n) {
+void atf_ci::ind_scriptfile_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_scriptfile_buckets_n;
     u32 new_nelems   = _db.ind_scriptfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1225,7 +1225,7 @@ void atf_ci::ind_scriptfile_Reserve(int n) {
 // --- atf_ci.FDb.ns.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FNs& atf_ci::ns_Alloc() {
+atf_ci::FNs& atf_ci::ns_Alloc() throw() {
     atf_ci::FNs* row = ns_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.ns  comment:'Alloc failed'");
@@ -1235,7 +1235,7 @@ atf_ci::FNs& atf_ci::ns_Alloc() {
 
 // --- atf_ci.FDb.ns.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FNs* atf_ci::ns_AllocMaybe() {
+atf_ci::FNs* atf_ci::ns_AllocMaybe() throw() {
     atf_ci::FNs *row = (atf_ci::FNs*)ns_AllocMem();
     if (row) {
         new (row) atf_ci::FNs; // call constructor
@@ -1246,7 +1246,7 @@ atf_ci::FNs* atf_ci::ns_AllocMaybe() {
 // --- atf_ci.FDb.ns.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FNs* atf_ci::ns_InsertMaybe(const dmmeta::Ns &value) {
+atf_ci::FNs* atf_ci::ns_InsertMaybe(const dmmeta::Ns &value) throw() {
     atf_ci::FNs *row = &ns_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ns_CopyIn(*row,const_cast<dmmeta::Ns&>(value));
     bool ok = ns_XrefMaybe(*row); // this may return false
@@ -1259,7 +1259,7 @@ atf_ci::FNs* atf_ci::ns_InsertMaybe(const dmmeta::Ns &value) {
 
 // --- atf_ci.FDb.ns.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::ns_AllocMem() {
+void* atf_ci::ns_AllocMem() throw() {
     u64 new_nelems     = _db.ns_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1285,7 +1285,7 @@ void* atf_ci::ns_AllocMem() {
 
 // --- atf_ci.FDb.ns.RemoveAll
 // Remove all elements from Lary
-void atf_ci::ns_RemoveAll() {
+void atf_ci::ns_RemoveAll() throw() {
     for (u64 n = _db.ns_n; n>0; ) {
         n--;
         ns_qFind(u64(n)).~FNs(); // destroy last element
@@ -1295,7 +1295,7 @@ void atf_ci::ns_RemoveAll() {
 
 // --- atf_ci.FDb.ns.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::ns_RemoveLast() {
+void atf_ci::ns_RemoveLast() throw() {
     u64 n = _db.ns_n;
     if (n > 0) {
         n -= 1;
@@ -1305,7 +1305,7 @@ void atf_ci::ns_RemoveLast() {
 }
 
 // --- atf_ci.FDb.ns.InputMaybe
-static bool atf_ci::ns_InputMaybe(dmmeta::Ns &elem) {
+static bool atf_ci::ns_InputMaybe(dmmeta::Ns &elem) throw() {
     bool retval = true;
     retval = ns_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1331,7 +1331,7 @@ bool atf_ci::ns_XrefMaybe(atf_ci::FNs &row) {
 
 // --- atf_ci.FDb.ind_ns.Find
 // Find row by key. Return NULL if not found.
-atf_ci::FNs* atf_ci::ind_ns_Find(const algo::strptr& key) {
+atf_ci::FNs* atf_ci::ind_ns_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
     atf_ci::FNs* *e = &_db.ind_ns_buckets_elems[index];
     atf_ci::FNs* ret=NULL;
@@ -1354,7 +1354,7 @@ atf_ci::FNs& atf_ci::ind_ns_FindX(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_ns.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_ci::FNs& atf_ci::ind_ns_GetOrCreate(const algo::strptr& key) {
+atf_ci::FNs& atf_ci::ind_ns_GetOrCreate(const algo::strptr& key) throw() {
     atf_ci::FNs* ret = ind_ns_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &ns_Alloc();
@@ -1371,7 +1371,7 @@ atf_ci::FNs& atf_ci::ind_ns_GetOrCreate(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_ns.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_ci::ind_ns_InsertMaybe(atf_ci::FNs& row) {
+bool atf_ci::ind_ns_InsertMaybe(atf_ci::FNs& row) throw() {
     ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (atf_ci::FNs*)-1)) {// check if in hash already
@@ -1399,7 +1399,7 @@ bool atf_ci::ind_ns_InsertMaybe(atf_ci::FNs& row) {
 
 // --- atf_ci.FDb.ind_ns.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_ci::ind_ns_Remove(atf_ci::FNs& row) {
+void atf_ci::ind_ns_Remove(atf_ci::FNs& row) throw() {
     if (LIKELY(row.ind_ns_next != (atf_ci::FNs*)-1)) {// check if in hash already
         u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         atf_ci::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
@@ -1417,7 +1417,7 @@ void atf_ci::ind_ns_Remove(atf_ci::FNs& row) {
 
 // --- atf_ci.FDb.ind_ns.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_ci::ind_ns_Reserve(int n) {
+void atf_ci::ind_ns_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_ns_buckets_n;
     u32 new_nelems   = _db.ind_ns_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1454,7 +1454,7 @@ void atf_ci::ind_ns_Reserve(int n) {
 // --- atf_ci.FDb.readme.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FReadme& atf_ci::readme_Alloc() {
+atf_ci::FReadme& atf_ci::readme_Alloc() throw() {
     atf_ci::FReadme* row = readme_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.readme  comment:'Alloc failed'");
@@ -1464,7 +1464,7 @@ atf_ci::FReadme& atf_ci::readme_Alloc() {
 
 // --- atf_ci.FDb.readme.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FReadme* atf_ci::readme_AllocMaybe() {
+atf_ci::FReadme* atf_ci::readme_AllocMaybe() throw() {
     atf_ci::FReadme *row = (atf_ci::FReadme*)readme_AllocMem();
     if (row) {
         new (row) atf_ci::FReadme; // call constructor
@@ -1475,7 +1475,7 @@ atf_ci::FReadme* atf_ci::readme_AllocMaybe() {
 // --- atf_ci.FDb.readme.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FReadme* atf_ci::readme_InsertMaybe(const dev::Readme &value) {
+atf_ci::FReadme* atf_ci::readme_InsertMaybe(const dev::Readme &value) throw() {
     atf_ci::FReadme *row = &readme_Alloc(); // if out of memory, process dies. if input error, return NULL.
     readme_CopyIn(*row,const_cast<dev::Readme&>(value));
     bool ok = readme_XrefMaybe(*row); // this may return false
@@ -1488,7 +1488,7 @@ atf_ci::FReadme* atf_ci::readme_InsertMaybe(const dev::Readme &value) {
 
 // --- atf_ci.FDb.readme.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::readme_AllocMem() {
+void* atf_ci::readme_AllocMem() throw() {
     u64 new_nelems     = _db.readme_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1514,7 +1514,7 @@ void* atf_ci::readme_AllocMem() {
 
 // --- atf_ci.FDb.readme.RemoveAll
 // Remove all elements from Lary
-void atf_ci::readme_RemoveAll() {
+void atf_ci::readme_RemoveAll() throw() {
     for (u64 n = _db.readme_n; n>0; ) {
         n--;
         readme_qFind(u64(n)).~FReadme(); // destroy last element
@@ -1524,7 +1524,7 @@ void atf_ci::readme_RemoveAll() {
 
 // --- atf_ci.FDb.readme.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::readme_RemoveLast() {
+void atf_ci::readme_RemoveLast() throw() {
     u64 n = _db.readme_n;
     if (n > 0) {
         n -= 1;
@@ -1534,7 +1534,7 @@ void atf_ci::readme_RemoveLast() {
 }
 
 // --- atf_ci.FDb.readme.InputMaybe
-static bool atf_ci::readme_InputMaybe(dev::Readme &elem) {
+static bool atf_ci::readme_InputMaybe(dev::Readme &elem) throw() {
     bool retval = true;
     retval = readme_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1552,7 +1552,7 @@ bool atf_ci::readme_XrefMaybe(atf_ci::FReadme &row) {
 // --- atf_ci.FDb.builddir.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FBuilddir& atf_ci::builddir_Alloc() {
+atf_ci::FBuilddir& atf_ci::builddir_Alloc() throw() {
     atf_ci::FBuilddir* row = builddir_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.builddir  comment:'Alloc failed'");
@@ -1562,7 +1562,7 @@ atf_ci::FBuilddir& atf_ci::builddir_Alloc() {
 
 // --- atf_ci.FDb.builddir.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FBuilddir* atf_ci::builddir_AllocMaybe() {
+atf_ci::FBuilddir* atf_ci::builddir_AllocMaybe() throw() {
     atf_ci::FBuilddir *row = (atf_ci::FBuilddir*)builddir_AllocMem();
     if (row) {
         new (row) atf_ci::FBuilddir; // call constructor
@@ -1573,7 +1573,7 @@ atf_ci::FBuilddir* atf_ci::builddir_AllocMaybe() {
 // --- atf_ci.FDb.builddir.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FBuilddir* atf_ci::builddir_InsertMaybe(const dev::Builddir &value) {
+atf_ci::FBuilddir* atf_ci::builddir_InsertMaybe(const dev::Builddir &value) throw() {
     atf_ci::FBuilddir *row = &builddir_Alloc(); // if out of memory, process dies. if input error, return NULL.
     builddir_CopyIn(*row,const_cast<dev::Builddir&>(value));
     bool ok = builddir_XrefMaybe(*row); // this may return false
@@ -1586,7 +1586,7 @@ atf_ci::FBuilddir* atf_ci::builddir_InsertMaybe(const dev::Builddir &value) {
 
 // --- atf_ci.FDb.builddir.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::builddir_AllocMem() {
+void* atf_ci::builddir_AllocMem() throw() {
     u64 new_nelems     = _db.builddir_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1612,7 +1612,7 @@ void* atf_ci::builddir_AllocMem() {
 
 // --- atf_ci.FDb.builddir.RemoveAll
 // Remove all elements from Lary
-void atf_ci::builddir_RemoveAll() {
+void atf_ci::builddir_RemoveAll() throw() {
     for (u64 n = _db.builddir_n; n>0; ) {
         n--;
         builddir_qFind(u64(n)).~FBuilddir(); // destroy last element
@@ -1622,7 +1622,7 @@ void atf_ci::builddir_RemoveAll() {
 
 // --- atf_ci.FDb.builddir.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::builddir_RemoveLast() {
+void atf_ci::builddir_RemoveLast() throw() {
     u64 n = _db.builddir_n;
     if (n > 0) {
         n -= 1;
@@ -1632,7 +1632,7 @@ void atf_ci::builddir_RemoveLast() {
 }
 
 // --- atf_ci.FDb.builddir.InputMaybe
-static bool atf_ci::builddir_InputMaybe(dev::Builddir &elem) {
+static bool atf_ci::builddir_InputMaybe(dev::Builddir &elem) throw() {
     bool retval = true;
     retval = builddir_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1659,7 +1659,7 @@ bool atf_ci::builddir_XrefMaybe(atf_ci::FBuilddir &row) {
 // --- atf_ci.FDb.cfg.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FCfg& atf_ci::cfg_Alloc() {
+atf_ci::FCfg& atf_ci::cfg_Alloc() throw() {
     atf_ci::FCfg* row = cfg_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.cfg  comment:'Alloc failed'");
@@ -1669,7 +1669,7 @@ atf_ci::FCfg& atf_ci::cfg_Alloc() {
 
 // --- atf_ci.FDb.cfg.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FCfg* atf_ci::cfg_AllocMaybe() {
+atf_ci::FCfg* atf_ci::cfg_AllocMaybe() throw() {
     atf_ci::FCfg *row = (atf_ci::FCfg*)cfg_AllocMem();
     if (row) {
         new (row) atf_ci::FCfg; // call constructor
@@ -1680,7 +1680,7 @@ atf_ci::FCfg* atf_ci::cfg_AllocMaybe() {
 // --- atf_ci.FDb.cfg.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FCfg* atf_ci::cfg_InsertMaybe(const dev::Cfg &value) {
+atf_ci::FCfg* atf_ci::cfg_InsertMaybe(const dev::Cfg &value) throw() {
     atf_ci::FCfg *row = &cfg_Alloc(); // if out of memory, process dies. if input error, return NULL.
     cfg_CopyIn(*row,const_cast<dev::Cfg&>(value));
     bool ok = cfg_XrefMaybe(*row); // this may return false
@@ -1693,7 +1693,7 @@ atf_ci::FCfg* atf_ci::cfg_InsertMaybe(const dev::Cfg &value) {
 
 // --- atf_ci.FDb.cfg.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::cfg_AllocMem() {
+void* atf_ci::cfg_AllocMem() throw() {
     u64 new_nelems     = _db.cfg_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1719,7 +1719,7 @@ void* atf_ci::cfg_AllocMem() {
 
 // --- atf_ci.FDb.cfg.RemoveAll
 // Remove all elements from Lary
-void atf_ci::cfg_RemoveAll() {
+void atf_ci::cfg_RemoveAll() throw() {
     for (u64 n = _db.cfg_n; n>0; ) {
         n--;
         cfg_qFind(u64(n)).~FCfg(); // destroy last element
@@ -1729,7 +1729,7 @@ void atf_ci::cfg_RemoveAll() {
 
 // --- atf_ci.FDb.cfg.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::cfg_RemoveLast() {
+void atf_ci::cfg_RemoveLast() throw() {
     u64 n = _db.cfg_n;
     if (n > 0) {
         n -= 1;
@@ -1739,7 +1739,7 @@ void atf_ci::cfg_RemoveLast() {
 }
 
 // --- atf_ci.FDb.cfg.InputMaybe
-static bool atf_ci::cfg_InputMaybe(dev::Cfg &elem) {
+static bool atf_ci::cfg_InputMaybe(dev::Cfg &elem) throw() {
     bool retval = true;
     retval = cfg_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1756,7 +1756,7 @@ bool atf_ci::cfg_XrefMaybe(atf_ci::FCfg &row) {
 
 // --- atf_ci.FDb.ind_builddir.Find
 // Find row by key. Return NULL if not found.
-atf_ci::FBuilddir* atf_ci::ind_builddir_Find(const algo::strptr& key) {
+atf_ci::FBuilddir* atf_ci::ind_builddir_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_builddir_buckets_n - 1);
     atf_ci::FBuilddir* *e = &_db.ind_builddir_buckets_elems[index];
     atf_ci::FBuilddir* ret=NULL;
@@ -1779,7 +1779,7 @@ atf_ci::FBuilddir& atf_ci::ind_builddir_FindX(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_builddir.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_ci::FBuilddir& atf_ci::ind_builddir_GetOrCreate(const algo::strptr& key) {
+atf_ci::FBuilddir& atf_ci::ind_builddir_GetOrCreate(const algo::strptr& key) throw() {
     atf_ci::FBuilddir* ret = ind_builddir_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &builddir_Alloc();
@@ -1796,7 +1796,7 @@ atf_ci::FBuilddir& atf_ci::ind_builddir_GetOrCreate(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_builddir.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_ci::ind_builddir_InsertMaybe(atf_ci::FBuilddir& row) {
+bool atf_ci::ind_builddir_InsertMaybe(atf_ci::FBuilddir& row) throw() {
     ind_builddir_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_builddir_next == (atf_ci::FBuilddir*)-1)) {// check if in hash already
@@ -1824,7 +1824,7 @@ bool atf_ci::ind_builddir_InsertMaybe(atf_ci::FBuilddir& row) {
 
 // --- atf_ci.FDb.ind_builddir.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_ci::ind_builddir_Remove(atf_ci::FBuilddir& row) {
+void atf_ci::ind_builddir_Remove(atf_ci::FBuilddir& row) throw() {
     if (LIKELY(row.ind_builddir_next != (atf_ci::FBuilddir*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
         atf_ci::FBuilddir* *prev = &_db.ind_builddir_buckets_elems[index]; // addr of pointer to current element
@@ -1842,7 +1842,7 @@ void atf_ci::ind_builddir_Remove(atf_ci::FBuilddir& row) {
 
 // --- atf_ci.FDb.ind_builddir.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_ci::ind_builddir_Reserve(int n) {
+void atf_ci::ind_builddir_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_builddir_buckets_n;
     u32 new_nelems   = _db.ind_builddir_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1879,7 +1879,7 @@ void atf_ci::ind_builddir_Reserve(int n) {
 // --- atf_ci.FDb.gitfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FGitfile& atf_ci::gitfile_Alloc() {
+atf_ci::FGitfile& atf_ci::gitfile_Alloc() throw() {
     atf_ci::FGitfile* row = gitfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.gitfile  comment:'Alloc failed'");
@@ -1889,7 +1889,7 @@ atf_ci::FGitfile& atf_ci::gitfile_Alloc() {
 
 // --- atf_ci.FDb.gitfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FGitfile* atf_ci::gitfile_AllocMaybe() {
+atf_ci::FGitfile* atf_ci::gitfile_AllocMaybe() throw() {
     atf_ci::FGitfile *row = (atf_ci::FGitfile*)gitfile_AllocMem();
     if (row) {
         new (row) atf_ci::FGitfile; // call constructor
@@ -1900,7 +1900,7 @@ atf_ci::FGitfile* atf_ci::gitfile_AllocMaybe() {
 // --- atf_ci.FDb.gitfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FGitfile* atf_ci::gitfile_InsertMaybe(const dev::Gitfile &value) {
+atf_ci::FGitfile* atf_ci::gitfile_InsertMaybe(const dev::Gitfile &value) throw() {
     atf_ci::FGitfile *row = &gitfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gitfile_CopyIn(*row,const_cast<dev::Gitfile&>(value));
     bool ok = gitfile_XrefMaybe(*row); // this may return false
@@ -1913,7 +1913,7 @@ atf_ci::FGitfile* atf_ci::gitfile_InsertMaybe(const dev::Gitfile &value) {
 
 // --- atf_ci.FDb.gitfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::gitfile_AllocMem() {
+void* atf_ci::gitfile_AllocMem() throw() {
     u64 new_nelems     = _db.gitfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1939,7 +1939,7 @@ void* atf_ci::gitfile_AllocMem() {
 
 // --- atf_ci.FDb.gitfile.RemoveAll
 // Remove all elements from Lary
-void atf_ci::gitfile_RemoveAll() {
+void atf_ci::gitfile_RemoveAll() throw() {
     for (u64 n = _db.gitfile_n; n>0; ) {
         n--;
         gitfile_qFind(u64(n)).~FGitfile(); // destroy last element
@@ -1949,7 +1949,7 @@ void atf_ci::gitfile_RemoveAll() {
 
 // --- atf_ci.FDb.gitfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::gitfile_RemoveLast() {
+void atf_ci::gitfile_RemoveLast() throw() {
     u64 n = _db.gitfile_n;
     if (n > 0) {
         n -= 1;
@@ -1959,7 +1959,7 @@ void atf_ci::gitfile_RemoveLast() {
 }
 
 // --- atf_ci.FDb.gitfile.InputMaybe
-static bool atf_ci::gitfile_InputMaybe(dev::Gitfile &elem) {
+static bool atf_ci::gitfile_InputMaybe(dev::Gitfile &elem) throw() {
     bool retval = true;
     retval = gitfile_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1985,7 +1985,7 @@ bool atf_ci::gitfile_XrefMaybe(atf_ci::FGitfile &row) {
 
 // --- atf_ci.FDb.ind_gitfile.Find
 // Find row by key. Return NULL if not found.
-atf_ci::FGitfile* atf_ci::ind_gitfile_Find(const algo::strptr& key) {
+atf_ci::FGitfile* atf_ci::ind_gitfile_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_gitfile_buckets_n - 1);
     atf_ci::FGitfile* *e = &_db.ind_gitfile_buckets_elems[index];
     atf_ci::FGitfile* ret=NULL;
@@ -2008,7 +2008,7 @@ atf_ci::FGitfile& atf_ci::ind_gitfile_FindX(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_gitfile.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_ci::FGitfile& atf_ci::ind_gitfile_GetOrCreate(const algo::strptr& key) {
+atf_ci::FGitfile& atf_ci::ind_gitfile_GetOrCreate(const algo::strptr& key) throw() {
     atf_ci::FGitfile* ret = ind_gitfile_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gitfile_Alloc();
@@ -2025,7 +2025,7 @@ atf_ci::FGitfile& atf_ci::ind_gitfile_GetOrCreate(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_gitfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_ci::ind_gitfile_InsertMaybe(atf_ci::FGitfile& row) {
+bool atf_ci::ind_gitfile_InsertMaybe(atf_ci::FGitfile& row) throw() {
     ind_gitfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gitfile_next == (atf_ci::FGitfile*)-1)) {// check if in hash already
@@ -2053,7 +2053,7 @@ bool atf_ci::ind_gitfile_InsertMaybe(atf_ci::FGitfile& row) {
 
 // --- atf_ci.FDb.ind_gitfile.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_ci::ind_gitfile_Remove(atf_ci::FGitfile& row) {
+void atf_ci::ind_gitfile_Remove(atf_ci::FGitfile& row) throw() {
     if (LIKELY(row.ind_gitfile_next != (atf_ci::FGitfile*)-1)) {// check if in hash already
         u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
         atf_ci::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index]; // addr of pointer to current element
@@ -2071,7 +2071,7 @@ void atf_ci::ind_gitfile_Remove(atf_ci::FGitfile& row) {
 
 // --- atf_ci.FDb.ind_gitfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_ci::ind_gitfile_Reserve(int n) {
+void atf_ci::ind_gitfile_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gitfile_buckets_n;
     u32 new_nelems   = _db.ind_gitfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2108,7 +2108,7 @@ void atf_ci::ind_gitfile_Reserve(int n) {
 // --- atf_ci.FDb.noindent.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FNoindent& atf_ci::noindent_Alloc() {
+atf_ci::FNoindent& atf_ci::noindent_Alloc() throw() {
     atf_ci::FNoindent* row = noindent_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.noindent  comment:'Alloc failed'");
@@ -2118,7 +2118,7 @@ atf_ci::FNoindent& atf_ci::noindent_Alloc() {
 
 // --- atf_ci.FDb.noindent.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FNoindent* atf_ci::noindent_AllocMaybe() {
+atf_ci::FNoindent* atf_ci::noindent_AllocMaybe() throw() {
     atf_ci::FNoindent *row = (atf_ci::FNoindent*)noindent_AllocMem();
     if (row) {
         new (row) atf_ci::FNoindent; // call constructor
@@ -2129,7 +2129,7 @@ atf_ci::FNoindent* atf_ci::noindent_AllocMaybe() {
 // --- atf_ci.FDb.noindent.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FNoindent* atf_ci::noindent_InsertMaybe(const dev::Noindent &value) {
+atf_ci::FNoindent* atf_ci::noindent_InsertMaybe(const dev::Noindent &value) throw() {
     atf_ci::FNoindent *row = &noindent_Alloc(); // if out of memory, process dies. if input error, return NULL.
     noindent_CopyIn(*row,const_cast<dev::Noindent&>(value));
     bool ok = noindent_XrefMaybe(*row); // this may return false
@@ -2142,7 +2142,7 @@ atf_ci::FNoindent* atf_ci::noindent_InsertMaybe(const dev::Noindent &value) {
 
 // --- atf_ci.FDb.noindent.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::noindent_AllocMem() {
+void* atf_ci::noindent_AllocMem() throw() {
     u64 new_nelems     = _db.noindent_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2168,7 +2168,7 @@ void* atf_ci::noindent_AllocMem() {
 
 // --- atf_ci.FDb.noindent.RemoveAll
 // Remove all elements from Lary
-void atf_ci::noindent_RemoveAll() {
+void atf_ci::noindent_RemoveAll() throw() {
     for (u64 n = _db.noindent_n; n>0; ) {
         n--;
         noindent_qFind(u64(n)).~FNoindent(); // destroy last element
@@ -2178,7 +2178,7 @@ void atf_ci::noindent_RemoveAll() {
 
 // --- atf_ci.FDb.noindent.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::noindent_RemoveLast() {
+void atf_ci::noindent_RemoveLast() throw() {
     u64 n = _db.noindent_n;
     if (n > 0) {
         n -= 1;
@@ -2188,7 +2188,7 @@ void atf_ci::noindent_RemoveLast() {
 }
 
 // --- atf_ci.FDb.noindent.InputMaybe
-static bool atf_ci::noindent_InputMaybe(dev::Noindent &elem) {
+static bool atf_ci::noindent_InputMaybe(dev::Noindent &elem) throw() {
     bool retval = true;
     retval = noindent_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2220,7 +2220,7 @@ bool atf_ci::noindent_XrefMaybe(atf_ci::FNoindent &row) {
 // --- atf_ci.FDb.targsrc.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FTargsrc& atf_ci::targsrc_Alloc() {
+atf_ci::FTargsrc& atf_ci::targsrc_Alloc() throw() {
     atf_ci::FTargsrc* row = targsrc_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.targsrc  comment:'Alloc failed'");
@@ -2230,7 +2230,7 @@ atf_ci::FTargsrc& atf_ci::targsrc_Alloc() {
 
 // --- atf_ci.FDb.targsrc.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FTargsrc* atf_ci::targsrc_AllocMaybe() {
+atf_ci::FTargsrc* atf_ci::targsrc_AllocMaybe() throw() {
     atf_ci::FTargsrc *row = (atf_ci::FTargsrc*)targsrc_AllocMem();
     if (row) {
         new (row) atf_ci::FTargsrc; // call constructor
@@ -2241,7 +2241,7 @@ atf_ci::FTargsrc* atf_ci::targsrc_AllocMaybe() {
 // --- atf_ci.FDb.targsrc.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FTargsrc* atf_ci::targsrc_InsertMaybe(const dev::Targsrc &value) {
+atf_ci::FTargsrc* atf_ci::targsrc_InsertMaybe(const dev::Targsrc &value) throw() {
     atf_ci::FTargsrc *row = &targsrc_Alloc(); // if out of memory, process dies. if input error, return NULL.
     targsrc_CopyIn(*row,const_cast<dev::Targsrc&>(value));
     bool ok = targsrc_XrefMaybe(*row); // this may return false
@@ -2254,7 +2254,7 @@ atf_ci::FTargsrc* atf_ci::targsrc_InsertMaybe(const dev::Targsrc &value) {
 
 // --- atf_ci.FDb.targsrc.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::targsrc_AllocMem() {
+void* atf_ci::targsrc_AllocMem() throw() {
     u64 new_nelems     = _db.targsrc_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2280,7 +2280,7 @@ void* atf_ci::targsrc_AllocMem() {
 
 // --- atf_ci.FDb.targsrc.RemoveAll
 // Remove all elements from Lary
-void atf_ci::targsrc_RemoveAll() {
+void atf_ci::targsrc_RemoveAll() throw() {
     for (u64 n = _db.targsrc_n; n>0; ) {
         n--;
         targsrc_qFind(u64(n)).~FTargsrc(); // destroy last element
@@ -2290,7 +2290,7 @@ void atf_ci::targsrc_RemoveAll() {
 
 // --- atf_ci.FDb.targsrc.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::targsrc_RemoveLast() {
+void atf_ci::targsrc_RemoveLast() throw() {
     u64 n = _db.targsrc_n;
     if (n > 0) {
         n -= 1;
@@ -2300,7 +2300,7 @@ void atf_ci::targsrc_RemoveLast() {
 }
 
 // --- atf_ci.FDb.targsrc.InputMaybe
-static bool atf_ci::targsrc_InputMaybe(dev::Targsrc &elem) {
+static bool atf_ci::targsrc_InputMaybe(dev::Targsrc &elem) throw() {
     bool retval = true;
     retval = targsrc_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2332,7 +2332,7 @@ bool atf_ci::targsrc_XrefMaybe(atf_ci::FTargsrc &row) {
 // --- atf_ci.FDb.msgfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FMsgfile& atf_ci::msgfile_Alloc() {
+atf_ci::FMsgfile& atf_ci::msgfile_Alloc() throw() {
     atf_ci::FMsgfile* row = msgfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.msgfile  comment:'Alloc failed'");
@@ -2342,7 +2342,7 @@ atf_ci::FMsgfile& atf_ci::msgfile_Alloc() {
 
 // --- atf_ci.FDb.msgfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FMsgfile* atf_ci::msgfile_AllocMaybe() {
+atf_ci::FMsgfile* atf_ci::msgfile_AllocMaybe() throw() {
     atf_ci::FMsgfile *row = (atf_ci::FMsgfile*)msgfile_AllocMem();
     if (row) {
         new (row) atf_ci::FMsgfile; // call constructor
@@ -2353,7 +2353,7 @@ atf_ci::FMsgfile* atf_ci::msgfile_AllocMaybe() {
 // --- atf_ci.FDb.msgfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FMsgfile* atf_ci::msgfile_InsertMaybe(const dev::Msgfile &value) {
+atf_ci::FMsgfile* atf_ci::msgfile_InsertMaybe(const dev::Msgfile &value) throw() {
     atf_ci::FMsgfile *row = &msgfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     msgfile_CopyIn(*row,const_cast<dev::Msgfile&>(value));
     bool ok = msgfile_XrefMaybe(*row); // this may return false
@@ -2366,7 +2366,7 @@ atf_ci::FMsgfile* atf_ci::msgfile_InsertMaybe(const dev::Msgfile &value) {
 
 // --- atf_ci.FDb.msgfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::msgfile_AllocMem() {
+void* atf_ci::msgfile_AllocMem() throw() {
     u64 new_nelems     = _db.msgfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2392,7 +2392,7 @@ void* atf_ci::msgfile_AllocMem() {
 
 // --- atf_ci.FDb.msgfile.RemoveAll
 // Remove all elements from Lary
-void atf_ci::msgfile_RemoveAll() {
+void atf_ci::msgfile_RemoveAll() throw() {
     for (u64 n = _db.msgfile_n; n>0; ) {
         n--;
         msgfile_qFind(u64(n)).~FMsgfile(); // destroy last element
@@ -2402,7 +2402,7 @@ void atf_ci::msgfile_RemoveAll() {
 
 // --- atf_ci.FDb.msgfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::msgfile_RemoveLast() {
+void atf_ci::msgfile_RemoveLast() throw() {
     u64 n = _db.msgfile_n;
     if (n > 0) {
         n -= 1;
@@ -2412,7 +2412,7 @@ void atf_ci::msgfile_RemoveLast() {
 }
 
 // --- atf_ci.FDb.msgfile.InputMaybe
-static bool atf_ci::msgfile_InputMaybe(dev::Msgfile &elem) {
+static bool atf_ci::msgfile_InputMaybe(dev::Msgfile &elem) throw() {
     bool retval = true;
     retval = msgfile_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2429,7 +2429,7 @@ bool atf_ci::msgfile_XrefMaybe(atf_ci::FMsgfile &row) {
 
 // --- atf_ci.FDb.ind_citest.Find
 // Find row by key. Return NULL if not found.
-atf_ci::FCitest* atf_ci::ind_citest_Find(const algo::strptr& key) {
+atf_ci::FCitest* atf_ci::ind_citest_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_citest_buckets_n - 1);
     atf_ci::FCitest* *e = &_db.ind_citest_buckets_elems[index];
     atf_ci::FCitest* ret=NULL;
@@ -2452,7 +2452,7 @@ atf_ci::FCitest& atf_ci::ind_citest_FindX(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_citest.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_ci::FCitest& atf_ci::ind_citest_GetOrCreate(const algo::strptr& key) {
+atf_ci::FCitest& atf_ci::ind_citest_GetOrCreate(const algo::strptr& key) throw() {
     atf_ci::FCitest* ret = ind_citest_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &citest_Alloc();
@@ -2469,7 +2469,7 @@ atf_ci::FCitest& atf_ci::ind_citest_GetOrCreate(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_citest.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_ci::ind_citest_InsertMaybe(atf_ci::FCitest& row) {
+bool atf_ci::ind_citest_InsertMaybe(atf_ci::FCitest& row) throw() {
     ind_citest_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_citest_next == (atf_ci::FCitest*)-1)) {// check if in hash already
@@ -2497,7 +2497,7 @@ bool atf_ci::ind_citest_InsertMaybe(atf_ci::FCitest& row) {
 
 // --- atf_ci.FDb.ind_citest.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_ci::ind_citest_Remove(atf_ci::FCitest& row) {
+void atf_ci::ind_citest_Remove(atf_ci::FCitest& row) throw() {
     if (LIKELY(row.ind_citest_next != (atf_ci::FCitest*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.citest) & (_db.ind_citest_buckets_n - 1);
         atf_ci::FCitest* *prev = &_db.ind_citest_buckets_elems[index]; // addr of pointer to current element
@@ -2515,7 +2515,7 @@ void atf_ci::ind_citest_Remove(atf_ci::FCitest& row) {
 
 // --- atf_ci.FDb.ind_citest.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_ci::ind_citest_Reserve(int n) {
+void atf_ci::ind_citest_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_citest_buckets_n;
     u32 new_nelems   = _db.ind_citest_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2552,7 +2552,7 @@ void atf_ci::ind_citest_Reserve(int n) {
 // --- atf_ci.FDb.file.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::File& atf_ci::file_Alloc() {
+atf_ci::File& atf_ci::file_Alloc() throw() {
     atf_ci::File* row = file_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.file  comment:'Alloc failed'");
@@ -2562,7 +2562,7 @@ atf_ci::File& atf_ci::file_Alloc() {
 
 // --- atf_ci.FDb.file.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::File* atf_ci::file_AllocMaybe() {
+atf_ci::File* atf_ci::file_AllocMaybe() throw() {
     atf_ci::File *row = (atf_ci::File*)file_AllocMem();
     if (row) {
         new (row) atf_ci::File; // call constructor
@@ -2572,7 +2572,7 @@ atf_ci::File* atf_ci::file_AllocMaybe() {
 
 // --- atf_ci.FDb.file.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::file_AllocMem() {
+void* atf_ci::file_AllocMem() throw() {
     u64 new_nelems     = _db.file_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2598,7 +2598,7 @@ void* atf_ci::file_AllocMem() {
 
 // --- atf_ci.FDb.file.RemoveAll
 // Remove all elements from Lary
-void atf_ci::file_RemoveAll() {
+void atf_ci::file_RemoveAll() throw() {
     for (u64 n = _db.file_n; n>0; ) {
         n--;
         file_qFind(u64(n)).~File(); // destroy last element
@@ -2608,7 +2608,7 @@ void atf_ci::file_RemoveAll() {
 
 // --- atf_ci.FDb.file.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::file_RemoveLast() {
+void atf_ci::file_RemoveLast() throw() {
     u64 n = _db.file_n;
     if (n > 0) {
         n -= 1;
@@ -2637,7 +2637,7 @@ bool atf_ci::file_XrefMaybe(atf_ci::File &row) {
 
 // --- atf_ci.FDb.ind_file.Find
 // Find row by key. Return NULL if not found.
-atf_ci::File* atf_ci::ind_file_Find(const algo::strptr& key) {
+atf_ci::File* atf_ci::ind_file_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_file_buckets_n - 1);
     atf_ci::File* *e = &_db.ind_file_buckets_elems[index];
     atf_ci::File* ret=NULL;
@@ -2660,7 +2660,7 @@ atf_ci::File& atf_ci::ind_file_FindX(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_file.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_ci::File& atf_ci::ind_file_GetOrCreate(const algo::strptr& key) {
+atf_ci::File& atf_ci::ind_file_GetOrCreate(const algo::strptr& key) throw() {
     atf_ci::File* ret = ind_file_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &file_Alloc();
@@ -2677,7 +2677,7 @@ atf_ci::File& atf_ci::ind_file_GetOrCreate(const algo::strptr& key) {
 
 // --- atf_ci.FDb.ind_file.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_ci::ind_file_InsertMaybe(atf_ci::File& row) {
+bool atf_ci::ind_file_InsertMaybe(atf_ci::File& row) throw() {
     ind_file_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_file_next == (atf_ci::File*)-1)) {// check if in hash already
@@ -2705,7 +2705,7 @@ bool atf_ci::ind_file_InsertMaybe(atf_ci::File& row) {
 
 // --- atf_ci.FDb.ind_file.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_ci::ind_file_Remove(atf_ci::File& row) {
+void atf_ci::ind_file_Remove(atf_ci::File& row) throw() {
     if (LIKELY(row.ind_file_next != (atf_ci::File*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.file) & (_db.ind_file_buckets_n - 1);
         atf_ci::File* *prev = &_db.ind_file_buckets_elems[index]; // addr of pointer to current element
@@ -2723,7 +2723,7 @@ void atf_ci::ind_file_Remove(atf_ci::File& row) {
 
 // --- atf_ci.FDb.ind_file.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_ci::ind_file_Reserve(int n) {
+void atf_ci::ind_file_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_file_buckets_n;
     u32 new_nelems   = _db.ind_file_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2760,7 +2760,7 @@ void atf_ci::ind_file_Reserve(int n) {
 // --- atf_ci.FDb.cipackage.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_ci::FCipackage& atf_ci::cipackage_Alloc() {
+atf_ci::FCipackage& atf_ci::cipackage_Alloc() throw() {
     atf_ci::FCipackage* row = cipackage_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_ci.out_of_mem  field:atf_ci.FDb.cipackage  comment:'Alloc failed'");
@@ -2770,7 +2770,7 @@ atf_ci::FCipackage& atf_ci::cipackage_Alloc() {
 
 // --- atf_ci.FDb.cipackage.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_ci::FCipackage* atf_ci::cipackage_AllocMaybe() {
+atf_ci::FCipackage* atf_ci::cipackage_AllocMaybe() throw() {
     atf_ci::FCipackage *row = (atf_ci::FCipackage*)cipackage_AllocMem();
     if (row) {
         new (row) atf_ci::FCipackage; // call constructor
@@ -2781,7 +2781,7 @@ atf_ci::FCipackage* atf_ci::cipackage_AllocMaybe() {
 // --- atf_ci.FDb.cipackage.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_ci::FCipackage* atf_ci::cipackage_InsertMaybe(const atfdb::Cipackage &value) {
+atf_ci::FCipackage* atf_ci::cipackage_InsertMaybe(const atfdb::Cipackage &value) throw() {
     atf_ci::FCipackage *row = &cipackage_Alloc(); // if out of memory, process dies. if input error, return NULL.
     cipackage_CopyIn(*row,const_cast<atfdb::Cipackage&>(value));
     bool ok = cipackage_XrefMaybe(*row); // this may return false
@@ -2794,7 +2794,7 @@ atf_ci::FCipackage* atf_ci::cipackage_InsertMaybe(const atfdb::Cipackage &value)
 
 // --- atf_ci.FDb.cipackage.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_ci::cipackage_AllocMem() {
+void* atf_ci::cipackage_AllocMem() throw() {
     u64 new_nelems     = _db.cipackage_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2820,7 +2820,7 @@ void* atf_ci::cipackage_AllocMem() {
 
 // --- atf_ci.FDb.cipackage.RemoveAll
 // Remove all elements from Lary
-void atf_ci::cipackage_RemoveAll() {
+void atf_ci::cipackage_RemoveAll() throw() {
     for (u64 n = _db.cipackage_n; n>0; ) {
         n--;
         cipackage_qFind(u64(n)).~FCipackage(); // destroy last element
@@ -2830,7 +2830,7 @@ void atf_ci::cipackage_RemoveAll() {
 
 // --- atf_ci.FDb.cipackage.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_ci::cipackage_RemoveLast() {
+void atf_ci::cipackage_RemoveLast() throw() {
     u64 n = _db.cipackage_n;
     if (n > 0) {
         n -= 1;
@@ -2840,7 +2840,7 @@ void atf_ci::cipackage_RemoveLast() {
 }
 
 // --- atf_ci.FDb.cipackage.InputMaybe
-static bool atf_ci::cipackage_InputMaybe(atfdb::Cipackage &elem) {
+static bool atf_ci::cipackage_InputMaybe(atfdb::Cipackage &elem) throw() {
     bool retval = true;
     retval = cipackage_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2857,13 +2857,13 @@ bool atf_ci::cipackage_XrefMaybe(atf_ci::FCipackage &row) {
 
 // --- atf_ci.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr atf_ci::trace_RowidFind(int t) {
+static algo::ImrowPtr atf_ci::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- atf_ci.FDb.trace.N
 // Function return 1
-inline static i32 atf_ci::trace_N() {
+inline static i32 atf_ci::trace_N() throw() {
     return 1;
 }
 
@@ -3077,7 +3077,7 @@ void atf_ci::FDb_Init() {
 }
 
 // --- atf_ci.FDb..Uninit
-void atf_ci::FDb_Uninit() {
+void atf_ci::FDb_Uninit() throw() {
     atf_ci::FDb &row = _db; (void)row;
 
     // atf_ci.FDb.cipackage.Uninit (Lary)  //
@@ -3143,31 +3143,31 @@ void atf_ci::FDb_Uninit() {
 
 // --- atf_ci.FGitfile.base.CopyOut
 // Copy fields out of row
-void atf_ci::gitfile_CopyOut(atf_ci::FGitfile &row, dev::Gitfile &out) {
+void atf_ci::gitfile_CopyOut(atf_ci::FGitfile &row, dev::Gitfile &out) throw() {
     out.gitfile = row.gitfile;
 }
 
 // --- atf_ci.FGitfile.base.CopyIn
 // Copy fields in to row
-void atf_ci::gitfile_CopyIn(atf_ci::FGitfile &row, dev::Gitfile &in) {
+void atf_ci::gitfile_CopyIn(atf_ci::FGitfile &row, dev::Gitfile &in) throw() {
     row.gitfile = in.gitfile;
 }
 
 // --- atf_ci.FGitfile.ext.Get
-algo::Smallstr50 atf_ci::ext_Get(atf_ci::FGitfile& gitfile) {
+algo::Smallstr50 atf_ci::ext_Get(atf_ci::FGitfile& gitfile) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR"));
     return ret;
 }
 
 // --- atf_ci.FGitfile..Uninit
-void atf_ci::FGitfile_Uninit(atf_ci::FGitfile& gitfile) {
+void atf_ci::FGitfile_Uninit(atf_ci::FGitfile& gitfile) throw() {
     atf_ci::FGitfile &row = gitfile; (void)row;
     ind_gitfile_Remove(row); // remove gitfile from index ind_gitfile
 }
 
 // --- atf_ci.FMsgfile.base.CopyOut
 // Copy fields out of row
-void atf_ci::msgfile_CopyOut(atf_ci::FMsgfile &row, dev::Msgfile &out) {
+void atf_ci::msgfile_CopyOut(atf_ci::FMsgfile &row, dev::Msgfile &out) throw() {
     out.gitfile = row.gitfile;
     out.strict = row.strict;
     out.comment = row.comment;
@@ -3175,7 +3175,7 @@ void atf_ci::msgfile_CopyOut(atf_ci::FMsgfile &row, dev::Msgfile &out) {
 
 // --- atf_ci.FMsgfile.base.CopyIn
 // Copy fields in to row
-void atf_ci::msgfile_CopyIn(atf_ci::FMsgfile &row, dev::Msgfile &in) {
+void atf_ci::msgfile_CopyIn(atf_ci::FMsgfile &row, dev::Msgfile &in) throw() {
     row.gitfile = in.gitfile;
     row.strict = in.strict;
     row.comment = in.comment;
@@ -3183,20 +3183,20 @@ void atf_ci::msgfile_CopyIn(atf_ci::FMsgfile &row, dev::Msgfile &in) {
 
 // --- atf_ci.FNoindent.base.CopyOut
 // Copy fields out of row
-void atf_ci::noindent_CopyOut(atf_ci::FNoindent &row, dev::Noindent &out) {
+void atf_ci::noindent_CopyOut(atf_ci::FNoindent &row, dev::Noindent &out) throw() {
     out.gitfile = row.gitfile;
     out.comment = row.comment;
 }
 
 // --- atf_ci.FNoindent.base.CopyIn
 // Copy fields in to row
-void atf_ci::noindent_CopyIn(atf_ci::FNoindent &row, dev::Noindent &in) {
+void atf_ci::noindent_CopyIn(atf_ci::FNoindent &row, dev::Noindent &in) throw() {
     row.gitfile = in.gitfile;
     row.comment = in.comment;
 }
 
 // --- atf_ci.FNoindent..Uninit
-void atf_ci::FNoindent_Uninit(atf_ci::FNoindent& noindent) {
+void atf_ci::FNoindent_Uninit(atf_ci::FNoindent& noindent) throw() {
     atf_ci::FNoindent &row = noindent; (void)row;
     atf_ci::FGitfile* p_gitfile = atf_ci::ind_gitfile_Find(row.gitfile);
     if (p_gitfile)  {
@@ -3206,7 +3206,7 @@ void atf_ci::FNoindent_Uninit(atf_ci::FNoindent& noindent) {
 
 // --- atf_ci.FNs.base.CopyOut
 // Copy fields out of row
-void atf_ci::ns_CopyOut(atf_ci::FNs &row, dmmeta::Ns &out) {
+void atf_ci::ns_CopyOut(atf_ci::FNs &row, dmmeta::Ns &out) throw() {
     out.ns = row.ns;
     out.nstype = row.nstype;
     out.license = row.license;
@@ -3215,7 +3215,7 @@ void atf_ci::ns_CopyOut(atf_ci::FNs &row, dmmeta::Ns &out) {
 
 // --- atf_ci.FNs.base.CopyIn
 // Copy fields in to row
-void atf_ci::ns_CopyIn(atf_ci::FNs &row, dmmeta::Ns &in) {
+void atf_ci::ns_CopyIn(atf_ci::FNs &row, dmmeta::Ns &in) throw() {
     row.ns = in.ns;
     row.nstype = in.nstype;
     row.license = in.license;
@@ -3223,14 +3223,14 @@ void atf_ci::ns_CopyIn(atf_ci::FNs &row, dmmeta::Ns &in) {
 }
 
 // --- atf_ci.FNs..Uninit
-void atf_ci::FNs_Uninit(atf_ci::FNs& ns) {
+void atf_ci::FNs_Uninit(atf_ci::FNs& ns) throw() {
     atf_ci::FNs &row = ns; (void)row;
     ind_ns_Remove(row); // remove ns from index ind_ns
 }
 
 // --- atf_ci.FReadme.base.CopyOut
 // Copy fields out of row
-void atf_ci::readme_CopyOut(atf_ci::FReadme &row, dev::Readme &out) {
+void atf_ci::readme_CopyOut(atf_ci::FReadme &row, dev::Readme &out) throw() {
     out.gitfile = row.gitfile;
     out.inl = row.inl;
     out.sandbox = row.sandbox;
@@ -3240,7 +3240,7 @@ void atf_ci::readme_CopyOut(atf_ci::FReadme &row, dev::Readme &out) {
 
 // --- atf_ci.FReadme.base.CopyIn
 // Copy fields in to row
-void atf_ci::readme_CopyIn(atf_ci::FReadme &row, dev::Readme &in) {
+void atf_ci::readme_CopyIn(atf_ci::FReadme &row, dev::Readme &in) throw() {
     row.gitfile = in.gitfile;
     row.inl = in.inl;
     row.sandbox = in.sandbox;
@@ -3250,7 +3250,7 @@ void atf_ci::readme_CopyIn(atf_ci::FReadme &row, dev::Readme &in) {
 
 // --- atf_ci.FScriptfile.base.CopyOut
 // Copy fields out of row
-void atf_ci::scriptfile_CopyOut(atf_ci::FScriptfile &row, dev::Scriptfile &out) {
+void atf_ci::scriptfile_CopyOut(atf_ci::FScriptfile &row, dev::Scriptfile &out) throw() {
     out.gitfile = row.gitfile;
     out.license = row.license;
     out.comment = row.comment;
@@ -3258,20 +3258,20 @@ void atf_ci::scriptfile_CopyOut(atf_ci::FScriptfile &row, dev::Scriptfile &out) 
 
 // --- atf_ci.FScriptfile.base.CopyIn
 // Copy fields in to row
-void atf_ci::scriptfile_CopyIn(atf_ci::FScriptfile &row, dev::Scriptfile &in) {
+void atf_ci::scriptfile_CopyIn(atf_ci::FScriptfile &row, dev::Scriptfile &in) throw() {
     row.gitfile = in.gitfile;
     row.license = in.license;
     row.comment = in.comment;
 }
 
 // --- atf_ci.FScriptfile.name.Get
-algo::Smallstr50 atf_ci::name_Get(atf_ci::FScriptfile& scriptfile) {
+algo::Smallstr50 atf_ci::name_Get(atf_ci::FScriptfile& scriptfile) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(scriptfile.gitfile, "/RR"));
     return ret;
 }
 
 // --- atf_ci.FScriptfile..Uninit
-void atf_ci::FScriptfile_Uninit(atf_ci::FScriptfile& scriptfile) {
+void atf_ci::FScriptfile_Uninit(atf_ci::FScriptfile& scriptfile) throw() {
     atf_ci::FScriptfile &row = scriptfile; (void)row;
     ind_scriptfile_Remove(row); // remove scriptfile from index ind_scriptfile
     atf_ci::FGitfile* p_gitfile = atf_ci::ind_gitfile_Find(row.gitfile);
@@ -3282,76 +3282,76 @@ void atf_ci::FScriptfile_Uninit(atf_ci::FScriptfile& scriptfile) {
 
 // --- atf_ci.FSsimfile.base.CopyOut
 // Copy fields out of row
-void atf_ci::ssimfile_CopyOut(atf_ci::FSsimfile &row, dmmeta::Ssimfile &out) {
+void atf_ci::ssimfile_CopyOut(atf_ci::FSsimfile &row, dmmeta::Ssimfile &out) throw() {
     out.ssimfile = row.ssimfile;
     out.ctype = row.ctype;
 }
 
 // --- atf_ci.FSsimfile.base.CopyIn
 // Copy fields in to row
-void atf_ci::ssimfile_CopyIn(atf_ci::FSsimfile &row, dmmeta::Ssimfile &in) {
+void atf_ci::ssimfile_CopyIn(atf_ci::FSsimfile &row, dmmeta::Ssimfile &in) throw() {
     row.ssimfile = in.ssimfile;
     row.ctype = in.ctype;
 }
 
 // --- atf_ci.FSsimfile.ssimns.Get
-algo::Smallstr16 atf_ci::ssimns_Get(atf_ci::FSsimfile& ssimfile) {
+algo::Smallstr16 atf_ci::ssimns_Get(atf_ci::FSsimfile& ssimfile) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
     return ret;
 }
 
 // --- atf_ci.FSsimfile.ns.Get
-algo::Smallstr16 atf_ci::ns_Get(atf_ci::FSsimfile& ssimfile) {
+algo::Smallstr16 atf_ci::ns_Get(atf_ci::FSsimfile& ssimfile) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
     return ret;
 }
 
 // --- atf_ci.FSsimfile.name.Get
-algo::Smallstr50 atf_ci::name_Get(atf_ci::FSsimfile& ssimfile) {
+algo::Smallstr50 atf_ci::name_Get(atf_ci::FSsimfile& ssimfile) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(ssimfile.ssimfile, ".RR"));
     return ret;
 }
 
 // --- atf_ci.FSsimfile..Uninit
-void atf_ci::FSsimfile_Uninit(atf_ci::FSsimfile& ssimfile) {
+void atf_ci::FSsimfile_Uninit(atf_ci::FSsimfile& ssimfile) throw() {
     atf_ci::FSsimfile &row = ssimfile; (void)row;
     ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
 }
 
 // --- atf_ci.FTargsrc.base.CopyOut
 // Copy fields out of row
-void atf_ci::targsrc_CopyOut(atf_ci::FTargsrc &row, dev::Targsrc &out) {
+void atf_ci::targsrc_CopyOut(atf_ci::FTargsrc &row, dev::Targsrc &out) throw() {
     out.targsrc = row.targsrc;
     out.comment = row.comment;
 }
 
 // --- atf_ci.FTargsrc.base.CopyIn
 // Copy fields in to row
-void atf_ci::targsrc_CopyIn(atf_ci::FTargsrc &row, dev::Targsrc &in) {
+void atf_ci::targsrc_CopyIn(atf_ci::FTargsrc &row, dev::Targsrc &in) throw() {
     row.targsrc = in.targsrc;
     row.comment = in.comment;
 }
 
 // --- atf_ci.FTargsrc.target.Get
-algo::Smallstr16 atf_ci::target_Get(atf_ci::FTargsrc& targsrc) {
+algo::Smallstr16 atf_ci::target_Get(atf_ci::FTargsrc& targsrc) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
     return ret;
 }
 
 // --- atf_ci.FTargsrc.src.Get
-algo::Smallstr200 atf_ci::src_Get(atf_ci::FTargsrc& targsrc) {
+algo::Smallstr200 atf_ci::src_Get(atf_ci::FTargsrc& targsrc) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
     return ret;
 }
 
 // --- atf_ci.FTargsrc.ext.Get
-algo::Smallstr10 atf_ci::ext_Get(atf_ci::FTargsrc& targsrc) {
+algo::Smallstr10 atf_ci::ext_Get(atf_ci::FTargsrc& targsrc) throw() {
     algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
     return ret;
 }
 
 // --- atf_ci.FTargsrc..Uninit
-void atf_ci::FTargsrc_Uninit(atf_ci::FTargsrc& targsrc) {
+void atf_ci::FTargsrc_Uninit(atf_ci::FTargsrc& targsrc) throw() {
     atf_ci::FTargsrc &row = targsrc; (void)row;
     atf_ci::FGitfile* p_src = atf_ci::ind_gitfile_Find(src_Get(row));
     if (p_src)  {
@@ -3362,7 +3362,7 @@ void atf_ci::FTargsrc_Uninit(atf_ci::FTargsrc& targsrc) {
 // --- atf_ci.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_ci::value_ToCstr(const atf_ci::FieldId& parent) {
+const char* atf_ci::value_ToCstr(const atf_ci::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_ci_FieldId_value          : ret = "value";  break;
@@ -3373,7 +3373,7 @@ const char* atf_ci::value_ToCstr(const atf_ci::FieldId& parent) {
 // --- atf_ci.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_ci::value_Print(const atf_ci::FieldId& parent, algo::cstring &lhs) {
+void atf_ci::value_Print(const atf_ci::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -3386,7 +3386,7 @@ void atf_ci::value_Print(const atf_ci::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_ci::value_SetStrptrMaybe(atf_ci::FieldId& parent, algo::strptr rhs) {
+bool atf_ci::value_SetStrptrMaybe(atf_ci::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -3404,13 +3404,13 @@ bool atf_ci::value_SetStrptrMaybe(atf_ci::FieldId& parent, algo::strptr rhs) {
 // --- atf_ci.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_ci::value_SetStrptr(atf_ci::FieldId& parent, algo::strptr rhs, atf_ci_FieldIdEnum dflt) {
+void atf_ci::value_SetStrptr(atf_ci::FieldId& parent, algo::strptr rhs, atf_ci_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_ci.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_ci::value_ReadStrptrMaybe(atf_ci::FieldId& parent, algo::strptr rhs) {
+bool atf_ci::value_ReadStrptrMaybe(atf_ci::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -3422,7 +3422,7 @@ bool atf_ci::value_ReadStrptrMaybe(atf_ci::FieldId& parent, algo::strptr rhs) {
 // --- atf_ci.FieldId..ReadStrptrMaybe
 // Read fields of atf_ci::FieldId from an ascii string.
 // The format of the string is the format of the atf_ci::FieldId's only field
-bool atf_ci::FieldId_ReadStrptrMaybe(atf_ci::FieldId &parent, algo::strptr in_str) {
+bool atf_ci::FieldId_ReadStrptrMaybe(atf_ci::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3431,12 +3431,12 @@ bool atf_ci::FieldId_ReadStrptrMaybe(atf_ci::FieldId &parent, algo::strptr in_st
 // --- atf_ci.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_ci.FieldId.String  printfmt:Raw
-void atf_ci::FieldId_Print(atf_ci::FieldId& row, algo::cstring& str) {
+void atf_ci::FieldId_Print(atf_ci::FieldId& row, algo::cstring& str) throw() {
     atf_ci::value_Print(row, str);
 }
 
 // --- atf_ci.File..Uninit
-void atf_ci::File_Uninit(atf_ci::File& file) {
+void atf_ci::File_Uninit(atf_ci::File& file) throw() {
     atf_ci::File &row = file; (void)row;
     ind_file_Remove(row); // remove file from index ind_file
 }
@@ -3444,7 +3444,7 @@ void atf_ci::File_Uninit(atf_ci::File& file) {
 // --- atf_ci.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_ci::value_ToCstr(const atf_ci::TableId& parent) {
+const char* atf_ci::value_ToCstr(const atf_ci::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_ci_TableId_dev_Builddir   : ret = "dev.Builddir";  break;
@@ -3465,7 +3465,7 @@ const char* atf_ci::value_ToCstr(const atf_ci::TableId& parent) {
 // --- atf_ci.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_ci::value_Print(const atf_ci::TableId& parent, algo::cstring &lhs) {
+void atf_ci::value_Print(const atf_ci::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -3478,7 +3478,7 @@ void atf_ci::value_Print(const atf_ci::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_ci::value_SetStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) {
+bool atf_ci::value_SetStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 7: {
@@ -3609,13 +3609,13 @@ bool atf_ci::value_SetStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) {
 // --- atf_ci.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_ci::value_SetStrptr(atf_ci::TableId& parent, algo::strptr rhs, atf_ci_TableIdEnum dflt) {
+void atf_ci::value_SetStrptr(atf_ci::TableId& parent, algo::strptr rhs, atf_ci_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_ci.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_ci::value_ReadStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) {
+bool atf_ci::value_ReadStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -3627,7 +3627,7 @@ bool atf_ci::value_ReadStrptrMaybe(atf_ci::TableId& parent, algo::strptr rhs) {
 // --- atf_ci.TableId..ReadStrptrMaybe
 // Read fields of atf_ci::TableId from an ascii string.
 // The format of the string is the format of the atf_ci::TableId's only field
-bool atf_ci::TableId_ReadStrptrMaybe(atf_ci::TableId &parent, algo::strptr in_str) {
+bool atf_ci::TableId_ReadStrptrMaybe(atf_ci::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3636,7 +3636,7 @@ bool atf_ci::TableId_ReadStrptrMaybe(atf_ci::TableId &parent, algo::strptr in_st
 // --- atf_ci.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_ci.TableId.String  printfmt:Raw
-void atf_ci::TableId_Print(atf_ci::TableId& row, algo::cstring& str) {
+void atf_ci::TableId_Print(atf_ci::TableId& row, algo::cstring& str) throw() {
     atf_ci::value_Print(row, str);
 }
 

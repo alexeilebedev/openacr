@@ -41,12 +41,12 @@ inline void gcache::cleanreport_Init(gcache::cleanreport& parent) {
 }
 
 // --- gcache.cleanreport..Ctor
-inline  gcache::cleanreport::cleanreport() {
+inline  gcache::cleanreport::cleanreport() throw() {
     gcache::cleanreport_Init(*this);
 }
 
 // --- gcache.cleanreport..FieldwiseCtor
-inline  gcache::cleanreport::cleanreport(i32 in_n_cachefile, i32 in_n_cachefile_del, i32 in_n_cachefile_recent, i32 in_n_logline, i32 in_n_logline_del, i64 in_new_cachesize_mb)
+inline  gcache::cleanreport::cleanreport(i32 in_n_cachefile, i32 in_n_cachefile_del, i32 in_n_cachefile_recent, i32 in_n_logline, i32 in_n_logline_del, i64 in_new_cachesize_mb) throw()
     : n_cachefile(in_n_cachefile)
     , n_cachefile_del(in_n_cachefile_del)
     , n_cachefile_recent(in_n_cachefile_recent)
@@ -57,18 +57,18 @@ inline  gcache::cleanreport::cleanreport(i32 in_n_cachefile, i32 in_n_cachefile_
 }
 
 // --- gcache.trace..Ctor
-inline  gcache::trace::trace() {
+inline  gcache::trace::trace() throw() {
 }
 
 // --- gcache.FDb.header.EmptyQ
 // Return true if index is empty
-inline bool gcache::header_EmptyQ() {
+inline bool gcache::header_EmptyQ() throw() {
     return _db.header_n == 0;
 }
 
 // --- gcache.FDb.header.Find
 // Look up row by row id. Return NULL if out of range
-inline gcache::FHeader* gcache::header_Find(u64 t) {
+inline gcache::FHeader* gcache::header_Find(u64 t) throw() {
     gcache::FHeader *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.header_n))) {
         u64 x = t + 1;
@@ -82,19 +82,19 @@ inline gcache::FHeader* gcache::header_Find(u64 t) {
 
 // --- gcache.FDb.header.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline gcache::FHeader* gcache::header_Last() {
+inline gcache::FHeader* gcache::header_Last() throw() {
     return header_Find(u64(_db.header_n-1));
 }
 
 // --- gcache.FDb.header.N
 // Return number of items in the pool
-inline i32 gcache::header_N() {
+inline i32 gcache::header_N() throw() {
     return _db.header_n;
 }
 
 // --- gcache.FDb.header.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline gcache::FHeader& gcache::header_qFind(u64 t) {
+inline gcache::FHeader& gcache::header_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -104,26 +104,26 @@ inline gcache::FHeader& gcache::header_qFind(u64 t) {
 
 // --- gcache.FDb.header_curs.Reset
 // cursor points to valid item
-inline void gcache::_db_header_curs_Reset(_db_header_curs &curs, gcache::FDb &parent) {
+inline void gcache::_db_header_curs_Reset(_db_header_curs &curs, gcache::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- gcache.FDb.header_curs.ValidQ
 // cursor points to valid item
-inline bool gcache::_db_header_curs_ValidQ(_db_header_curs &curs) {
+inline bool gcache::_db_header_curs_ValidQ(_db_header_curs &curs) throw() {
     return curs.index < _db.header_n;
 }
 
 // --- gcache.FDb.header_curs.Next
 // proceed to next item
-inline void gcache::_db_header_curs_Next(_db_header_curs &curs) {
+inline void gcache::_db_header_curs_Next(_db_header_curs &curs) throw() {
     curs.index++;
 }
 
 // --- gcache.FDb.header_curs.Access
 // item access
-inline gcache::FHeader& gcache::_db_header_curs_Access(_db_header_curs &curs) {
+inline gcache::FHeader& gcache::_db_header_curs_Access(_db_header_curs &curs) throw() {
     return header_qFind(u64(curs.index));
 }
 
@@ -138,24 +138,24 @@ inline void gcache::FHeader_Init(gcache::FHeader& header) {
 }
 
 // --- gcache.FHeader..Ctor
-inline  gcache::FHeader::FHeader() {
+inline  gcache::FHeader::FHeader() throw() {
     gcache::FHeader_Init(*this);
 }
 
 // --- gcache.FieldId.value.GetEnum
 // Get value of field as enum type
-inline gcache_FieldIdEnum gcache::value_GetEnum(const gcache::FieldId& parent) {
+inline gcache_FieldIdEnum gcache::value_GetEnum(const gcache::FieldId& parent) throw() {
     return gcache_FieldIdEnum(parent.value);
 }
 
 // --- gcache.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void gcache::value_SetEnum(gcache::FieldId& parent, gcache_FieldIdEnum rhs) {
+inline void gcache::value_SetEnum(gcache::FieldId& parent, gcache_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- gcache.FieldId.value.Cast
-inline  gcache::FieldId::operator gcache_FieldIdEnum() const {
+inline  gcache::FieldId::operator gcache_FieldIdEnum() const throw() {
     return gcache_FieldIdEnum((*this).value);
 }
 
@@ -166,18 +166,18 @@ inline void gcache::FieldId_Init(gcache::FieldId& parent) {
 }
 
 // --- gcache.FieldId..Ctor
-inline  gcache::FieldId::FieldId() {
+inline  gcache::FieldId::FieldId() throw() {
     gcache::FieldId_Init(*this);
 }
 
 // --- gcache.FieldId..FieldwiseCtor
-inline  gcache::FieldId::FieldId(i32 in_value)
+inline  gcache::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- gcache.FieldId..EnumCtor
-inline  gcache::FieldId::FieldId(gcache_FieldIdEnum arg) {
+inline  gcache::FieldId::FieldId(gcache_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

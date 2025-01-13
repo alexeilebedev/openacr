@@ -35,12 +35,12 @@ inline void amcdb::Bltin_Init(amcdb::Bltin& parent) {
 }
 
 // --- amcdb.Bltin..Ctor
-inline  amcdb::Bltin::Bltin() {
+inline  amcdb::Bltin::Bltin() throw() {
     amcdb::Bltin_Init(*this);
 }
 
 // --- amcdb.Bltin..FieldwiseCtor
-inline  amcdb::Bltin::Bltin(const algo::strptr& in_ctype, bool in_likeu64, bool in_bigendok, bool in_issigned, const algo::Comment& in_comment)
+inline  amcdb::Bltin::Bltin(const algo::strptr& in_ctype, bool in_likeu64, bool in_bigendok, bool in_issigned, const algo::Comment& in_comment) throw()
     : ctype(in_ctype)
     , likeu64(in_likeu64)
     , bigendok(in_bigendok)
@@ -50,23 +50,23 @@ inline  amcdb::Bltin::Bltin(const algo::strptr& in_ctype, bool in_likeu64, bool 
 }
 
 // --- amcdb.Curstype..Ctor
-inline  amcdb::Curstype::Curstype() {
+inline  amcdb::Curstype::Curstype() throw() {
 }
 
 // --- amcdb.FieldId.value.GetEnum
 // Get value of field as enum type
-inline amcdb_FieldIdEnum amcdb::value_GetEnum(const amcdb::FieldId& parent) {
+inline amcdb_FieldIdEnum amcdb::value_GetEnum(const amcdb::FieldId& parent) throw() {
     return amcdb_FieldIdEnum(parent.value);
 }
 
 // --- amcdb.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void amcdb::value_SetEnum(amcdb::FieldId& parent, amcdb_FieldIdEnum rhs) {
+inline void amcdb::value_SetEnum(amcdb::FieldId& parent, amcdb_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- amcdb.FieldId.value.Cast
-inline  amcdb::FieldId::operator amcdb_FieldIdEnum() const {
+inline  amcdb::FieldId::operator amcdb_FieldIdEnum() const throw() {
     return amcdb_FieldIdEnum((*this).value);
 }
 
@@ -77,18 +77,18 @@ inline void amcdb::FieldId_Init(amcdb::FieldId& parent) {
 }
 
 // --- amcdb.FieldId..Ctor
-inline  amcdb::FieldId::FieldId() {
+inline  amcdb::FieldId::FieldId() throw() {
     amcdb::FieldId_Init(*this);
 }
 
 // --- amcdb.FieldId..FieldwiseCtor
-inline  amcdb::FieldId::FieldId(i32 in_value)
+inline  amcdb::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- amcdb.FieldId..EnumCtor
-inline  amcdb::FieldId::FieldId(amcdb_FieldIdEnum arg) {
+inline  amcdb::FieldId::FieldId(amcdb_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
@@ -99,16 +99,16 @@ inline void amcdb::Gen_Init(amcdb::Gen& parent) {
 }
 
 // --- amcdb.Gen..Ctor
-inline  amcdb::Gen::Gen() {
+inline  amcdb::Gen::Gen() throw() {
     amcdb::Gen_Init(*this);
 }
 
 // --- amcdb.Regxtype..Ctor
-inline  amcdb::Regxtype::Regxtype() {
+inline  amcdb::Regxtype::Regxtype() throw() {
 }
 
 // --- amcdb.Tclass..Ctor
-inline  amcdb::Tclass::Tclass() {
+inline  amcdb::Tclass::Tclass() throw() {
 }
 
 // --- amcdb.Tcurs..Init
@@ -118,12 +118,12 @@ inline void amcdb::Tcurs_Init(amcdb::Tcurs& parent) {
 }
 
 // --- amcdb.Tcurs..Ctor
-inline  amcdb::Tcurs::Tcurs() {
+inline  amcdb::Tcurs::Tcurs() throw() {
     amcdb::Tcurs_Init(*this);
 }
 
 // --- amcdb.Tfunc..Ctor
-inline  amcdb::Tfunc::Tfunc() {
+inline  amcdb::Tfunc::Tfunc() throw() {
     amcdb::Tfunc_Init(*this);
 }
 

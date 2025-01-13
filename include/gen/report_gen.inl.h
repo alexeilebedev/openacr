@@ -28,18 +28,18 @@
 
 // --- report.FieldId.value.GetEnum
 // Get value of field as enum type
-inline report_FieldIdEnum report::value_GetEnum(const report::FieldId& parent) {
+inline report_FieldIdEnum report::value_GetEnum(const report::FieldId& parent) throw() {
     return report_FieldIdEnum(parent.value);
 }
 
 // --- report.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void report::value_SetEnum(report::FieldId& parent, report_FieldIdEnum rhs) {
+inline void report::value_SetEnum(report::FieldId& parent, report_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- report.FieldId.value.Cast
-inline  report::FieldId::operator report_FieldIdEnum() const {
+inline  report::FieldId::operator report_FieldIdEnum() const throw() {
     return report_FieldIdEnum((*this).value);
 }
 
@@ -50,18 +50,18 @@ inline void report::FieldId_Init(report::FieldId& parent) {
 }
 
 // --- report.FieldId..Ctor
-inline  report::FieldId::FieldId() {
+inline  report::FieldId::FieldId() throw() {
     report::FieldId_Init(*this);
 }
 
 // --- report.FieldId..FieldwiseCtor
-inline  report::FieldId::FieldId(i32 in_value)
+inline  report::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- report.FieldId..EnumCtor
-inline  report::FieldId::FieldId(report_FieldIdEnum arg) {
+inline  report::FieldId::FieldId(report_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
@@ -75,12 +75,12 @@ inline void report::abt_Init(report::abt& parent) {
 }
 
 // --- report.abt..Ctor
-inline  report::abt::abt() {
+inline  report::abt::abt() throw() {
     report::abt_Init(*this);
 }
 
 // --- report.abt..FieldwiseCtor
-inline  report::abt::abt(u16 in_n_target, algo::UnDiff in_time, const algo::strptr& in_hitrate, const algo::strptr& in_pch_hitrate, u32 in_n_warn, u32 in_n_err, u16 in_n_install)
+inline  report::abt::abt(u16 in_n_target, algo::UnDiff in_time, const algo::strptr& in_hitrate, const algo::strptr& in_pch_hitrate, u32 in_n_warn, u32 in_n_err, u16 in_n_install) throw()
     : n_target(in_n_target)
     , time(in_time)
     , hitrate(in_hitrate)
@@ -103,7 +103,7 @@ inline void report::acr_Init(report::acr& parent) {
 }
 
 // --- report.acr..Ctor
-inline  report::acr::acr() {
+inline  report::acr::acr() throw() {
     report::acr_Init(*this);
 }
 
@@ -115,12 +115,12 @@ inline void report::acr_check_Init(report::acr_check& parent) {
 }
 
 // --- report.acr_check..Ctor
-inline  report::acr_check::acr_check() {
+inline  report::acr_check::acr_check() throw() {
     report::acr_check_Init(*this);
 }
 
 // --- report.acr_check..FieldwiseCtor
-inline  report::acr_check::acr_check(u32 in_records, u32 in_errors)
+inline  report::acr_check::acr_check(u32 in_records, u32 in_errors) throw()
     : records(in_records)
     , errors(in_errors)
  {
@@ -138,7 +138,7 @@ inline void report::amc_Init(report::amc& parent) {
 }
 
 // --- report.amc..Ctor
-inline  report::amc::amc() {
+inline  report::amc::amc() throw() {
     report::amc_Init(*this);
 }
 
@@ -157,7 +157,7 @@ inline void report::atf_comp_Init(report::atf_comp& parent) {
 }
 
 // --- report.atf_comp..Ctor
-inline  report::atf_comp::atf_comp() {
+inline  report::atf_comp::atf_comp() throw() {
     report::atf_comp_Init(*this);
 }
 
@@ -171,17 +171,17 @@ inline void report::atf_unit_Init(report::atf_unit& parent) {
 }
 
 // --- report.atf_unit..Ctor
-inline  report::atf_unit::atf_unit() {
+inline  report::atf_unit::atf_unit() throw() {
     report::atf_unit_Init(*this);
 }
 
 // --- report.gcache..Ctor
-inline  report::gcache::gcache() {
+inline  report::gcache::gcache() throw() {
     report::gcache_Init(*this);
 }
 
 // --- report.gcache..FieldwiseCtor
-inline  report::gcache::gcache(algo::UnTime in_starttime, double in_elapsed_sec, i32 in_preproc_size, bool in_hit, const algo::strptr& in_cached_file, bool in_copy_file_range, bool in_pch_hit, const algo::strptr& in_pch_file, const algo::strptr& in_source, const algo::strptr& in_pch_source)
+inline  report::gcache::gcache(algo::UnTime in_starttime, double in_elapsed_sec, i32 in_preproc_size, bool in_hit, const algo::strptr& in_cached_file, bool in_copy_file_range, bool in_pch_hit, const algo::strptr& in_pch_file, const algo::strptr& in_source, const algo::strptr& in_pch_source) throw()
     : starttime(in_starttime)
     , elapsed_sec(in_elapsed_sec)
     , preproc_size(in_preproc_size)
@@ -196,11 +196,11 @@ inline  report::gcache::gcache(algo::UnTime in_starttime, double in_elapsed_sec,
 }
 
 // --- report.gcache_hitrate..Ctor
-inline  report::gcache_hitrate::gcache_hitrate() {
+inline  report::gcache_hitrate::gcache_hitrate() throw() {
 }
 
 // --- report.gcache_hitrate..FieldwiseCtor
-inline  report::gcache_hitrate::gcache_hitrate(const algo::strptr& in_hitrate, const algo::strptr& in_pch_hitrate)
+inline  report::gcache_hitrate::gcache_hitrate(const algo::strptr& in_hitrate, const algo::strptr& in_pch_hitrate) throw()
     : hitrate(in_hitrate)
     , pch_hitrate(in_pch_hitrate)
  {
@@ -219,7 +219,7 @@ inline void report::src_func_Init(report::src_func& parent) {
 }
 
 // --- report.src_func..Ctor
-inline  report::src_func::src_func() {
+inline  report::src_func::src_func() throw() {
     report::src_func_Init(*this);
 }
 

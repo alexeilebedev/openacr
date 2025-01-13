@@ -90,7 +90,7 @@ namespace aqlite { // gen:ns_print_proto
 // --- aqlite.trace..Print
 // print string representation of ROW to string STR
 // cfmt:aqlite.trace.String  printfmt:Tuple
-void aqlite::trace_Print(aqlite::trace& row, algo::cstring& str) {
+void aqlite::trace_Print(aqlite::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "aqlite.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -101,7 +101,7 @@ void aqlite::trace_Print(aqlite::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     aqlite.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void aqlite::ReadArgv() {
+void aqlite::ReadArgv() throw() {
     command::aqlite &cmd = aqlite::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -317,7 +317,7 @@ bool aqlite::InsertStrptrMaybe(algo::strptr str) {
 
 // --- aqlite.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool aqlite::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool aqlite::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = aqlite::LoadTuplesFile(root, recursive);
@@ -353,7 +353,7 @@ bool aqlite::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool aqlite::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool aqlite::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -366,7 +366,7 @@ bool aqlite::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- aqlite.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool aqlite::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool aqlite::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -388,7 +388,7 @@ bool aqlite::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
 
 // --- aqlite.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool aqlite::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool aqlite::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = aqlite::LoadTuplesFile(fname, recursive);
@@ -413,7 +413,7 @@ bool aqlite::_db_XrefMaybe() {
 // --- aqlite.FDb.ns.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-aqlite::FNs& aqlite::ns_Alloc() {
+aqlite::FNs& aqlite::ns_Alloc() throw() {
     aqlite::FNs* row = ns_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("aqlite.out_of_mem  field:aqlite.FDb.ns  comment:'Alloc failed'");
@@ -423,7 +423,7 @@ aqlite::FNs& aqlite::ns_Alloc() {
 
 // --- aqlite.FDb.ns.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-aqlite::FNs* aqlite::ns_AllocMaybe() {
+aqlite::FNs* aqlite::ns_AllocMaybe() throw() {
     aqlite::FNs *row = (aqlite::FNs*)ns_AllocMem();
     if (row) {
         new (row) aqlite::FNs; // call constructor
@@ -434,7 +434,7 @@ aqlite::FNs* aqlite::ns_AllocMaybe() {
 // --- aqlite.FDb.ns.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-aqlite::FNs* aqlite::ns_InsertMaybe(const dmmeta::Ns &value) {
+aqlite::FNs* aqlite::ns_InsertMaybe(const dmmeta::Ns &value) throw() {
     aqlite::FNs *row = &ns_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ns_CopyIn(*row,const_cast<dmmeta::Ns&>(value));
     bool ok = ns_XrefMaybe(*row); // this may return false
@@ -447,7 +447,7 @@ aqlite::FNs* aqlite::ns_InsertMaybe(const dmmeta::Ns &value) {
 
 // --- aqlite.FDb.ns.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* aqlite::ns_AllocMem() {
+void* aqlite::ns_AllocMem() throw() {
     u64 new_nelems     = _db.ns_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -473,7 +473,7 @@ void* aqlite::ns_AllocMem() {
 
 // --- aqlite.FDb.ns.RemoveAll
 // Remove all elements from Lary
-void aqlite::ns_RemoveAll() {
+void aqlite::ns_RemoveAll() throw() {
     for (u64 n = _db.ns_n; n>0; ) {
         n--;
         ns_qFind(u64(n)).~FNs(); // destroy last element
@@ -483,7 +483,7 @@ void aqlite::ns_RemoveAll() {
 
 // --- aqlite.FDb.ns.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void aqlite::ns_RemoveLast() {
+void aqlite::ns_RemoveLast() throw() {
     u64 n = _db.ns_n;
     if (n > 0) {
         n -= 1;
@@ -493,7 +493,7 @@ void aqlite::ns_RemoveLast() {
 }
 
 // --- aqlite.FDb.ns.InputMaybe
-static bool aqlite::ns_InputMaybe(dmmeta::Ns &elem) {
+static bool aqlite::ns_InputMaybe(dmmeta::Ns &elem) throw() {
     bool retval = true;
     retval = ns_InsertMaybe(elem) != nullptr;
     return retval;
@@ -519,7 +519,7 @@ bool aqlite::ns_XrefMaybe(aqlite::FNs &row) {
 
 // --- aqlite.FDb.ind_ns.Find
 // Find row by key. Return NULL if not found.
-aqlite::FNs* aqlite::ind_ns_Find(const algo::strptr& key) {
+aqlite::FNs* aqlite::ind_ns_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
     aqlite::FNs* *e = &_db.ind_ns_buckets_elems[index];
     aqlite::FNs* ret=NULL;
@@ -542,7 +542,7 @@ aqlite::FNs& aqlite::ind_ns_FindX(const algo::strptr& key) {
 
 // --- aqlite.FDb.ind_ns.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-aqlite::FNs& aqlite::ind_ns_GetOrCreate(const algo::strptr& key) {
+aqlite::FNs& aqlite::ind_ns_GetOrCreate(const algo::strptr& key) throw() {
     aqlite::FNs* ret = ind_ns_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &ns_Alloc();
@@ -559,7 +559,7 @@ aqlite::FNs& aqlite::ind_ns_GetOrCreate(const algo::strptr& key) {
 
 // --- aqlite.FDb.ind_ns.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool aqlite::ind_ns_InsertMaybe(aqlite::FNs& row) {
+bool aqlite::ind_ns_InsertMaybe(aqlite::FNs& row) throw() {
     ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (aqlite::FNs*)-1)) {// check if in hash already
@@ -587,7 +587,7 @@ bool aqlite::ind_ns_InsertMaybe(aqlite::FNs& row) {
 
 // --- aqlite.FDb.ind_ns.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void aqlite::ind_ns_Remove(aqlite::FNs& row) {
+void aqlite::ind_ns_Remove(aqlite::FNs& row) throw() {
     if (LIKELY(row.ind_ns_next != (aqlite::FNs*)-1)) {// check if in hash already
         u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         aqlite::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
@@ -605,7 +605,7 @@ void aqlite::ind_ns_Remove(aqlite::FNs& row) {
 
 // --- aqlite.FDb.ind_ns.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void aqlite::ind_ns_Reserve(int n) {
+void aqlite::ind_ns_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_ns_buckets_n;
     u32 new_nelems   = _db.ind_ns_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -641,13 +641,13 @@ void aqlite::ind_ns_Reserve(int n) {
 
 // --- aqlite.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr aqlite::trace_RowidFind(int t) {
+static algo::ImrowPtr aqlite::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- aqlite.FDb.trace.N
 // Function return 1
-inline static i32 aqlite::trace_N() {
+inline static i32 aqlite::trace_N() throw() {
     return 1;
 }
 
@@ -678,7 +678,7 @@ void aqlite::FDb_Init() {
 }
 
 // --- aqlite.FDb..Uninit
-void aqlite::FDb_Uninit() {
+void aqlite::FDb_Uninit() throw() {
     aqlite::FDb &row = _db; (void)row;
 
     // aqlite.FDb.ind_ns.Uninit (Thash)  //
@@ -690,7 +690,7 @@ void aqlite::FDb_Uninit() {
 
 // --- aqlite.FNs.base.CopyOut
 // Copy fields out of row
-void aqlite::ns_CopyOut(aqlite::FNs &row, dmmeta::Ns &out) {
+void aqlite::ns_CopyOut(aqlite::FNs &row, dmmeta::Ns &out) throw() {
     out.ns = row.ns;
     out.nstype = row.nstype;
     out.license = row.license;
@@ -699,7 +699,7 @@ void aqlite::ns_CopyOut(aqlite::FNs &row, dmmeta::Ns &out) {
 
 // --- aqlite.FNs.base.CopyIn
 // Copy fields in to row
-void aqlite::ns_CopyIn(aqlite::FNs &row, dmmeta::Ns &in) {
+void aqlite::ns_CopyIn(aqlite::FNs &row, dmmeta::Ns &in) throw() {
     row.ns = in.ns;
     row.nstype = in.nstype;
     row.license = in.license;
@@ -707,7 +707,7 @@ void aqlite::ns_CopyIn(aqlite::FNs &row, dmmeta::Ns &in) {
 }
 
 // --- aqlite.FNs..Uninit
-void aqlite::FNs_Uninit(aqlite::FNs& ns) {
+void aqlite::FNs_Uninit(aqlite::FNs& ns) throw() {
     aqlite::FNs &row = ns; (void)row;
     ind_ns_Remove(row); // remove ns from index ind_ns
 }
@@ -715,7 +715,7 @@ void aqlite::FNs_Uninit(aqlite::FNs& ns) {
 // --- aqlite.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* aqlite::value_ToCstr(const aqlite::FieldId& parent) {
+const char* aqlite::value_ToCstr(const aqlite::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case aqlite_FieldId_value          : ret = "value";  break;
@@ -726,7 +726,7 @@ const char* aqlite::value_ToCstr(const aqlite::FieldId& parent) {
 // --- aqlite.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void aqlite::value_Print(const aqlite::FieldId& parent, algo::cstring &lhs) {
+void aqlite::value_Print(const aqlite::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -739,7 +739,7 @@ void aqlite::value_Print(const aqlite::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool aqlite::value_SetStrptrMaybe(aqlite::FieldId& parent, algo::strptr rhs) {
+bool aqlite::value_SetStrptrMaybe(aqlite::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -757,13 +757,13 @@ bool aqlite::value_SetStrptrMaybe(aqlite::FieldId& parent, algo::strptr rhs) {
 // --- aqlite.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void aqlite::value_SetStrptr(aqlite::FieldId& parent, algo::strptr rhs, aqlite_FieldIdEnum dflt) {
+void aqlite::value_SetStrptr(aqlite::FieldId& parent, algo::strptr rhs, aqlite_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- aqlite.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool aqlite::value_ReadStrptrMaybe(aqlite::FieldId& parent, algo::strptr rhs) {
+bool aqlite::value_ReadStrptrMaybe(aqlite::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -775,7 +775,7 @@ bool aqlite::value_ReadStrptrMaybe(aqlite::FieldId& parent, algo::strptr rhs) {
 // --- aqlite.FieldId..ReadStrptrMaybe
 // Read fields of aqlite::FieldId from an ascii string.
 // The format of the string is the format of the aqlite::FieldId's only field
-bool aqlite::FieldId_ReadStrptrMaybe(aqlite::FieldId &parent, algo::strptr in_str) {
+bool aqlite::FieldId_ReadStrptrMaybe(aqlite::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -784,14 +784,14 @@ bool aqlite::FieldId_ReadStrptrMaybe(aqlite::FieldId &parent, algo::strptr in_st
 // --- aqlite.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:aqlite.FieldId.String  printfmt:Raw
-void aqlite::FieldId_Print(aqlite::FieldId& row, algo::cstring& str) {
+void aqlite::FieldId_Print(aqlite::FieldId& row, algo::cstring& str) throw() {
     aqlite::value_Print(row, str);
 }
 
 // --- aqlite.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* aqlite::value_ToCstr(const aqlite::TableId& parent) {
+const char* aqlite::value_ToCstr(const aqlite::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case aqlite_TableId_dmmeta_Ns      : ret = "dmmeta.Ns";  break;
@@ -802,7 +802,7 @@ const char* aqlite::value_ToCstr(const aqlite::TableId& parent) {
 // --- aqlite.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void aqlite::value_Print(const aqlite::TableId& parent, algo::cstring &lhs) {
+void aqlite::value_Print(const aqlite::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -815,7 +815,7 @@ void aqlite::value_Print(const aqlite::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool aqlite::value_SetStrptrMaybe(aqlite::TableId& parent, algo::strptr rhs) {
+bool aqlite::value_SetStrptrMaybe(aqlite::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 9: {
@@ -838,13 +838,13 @@ bool aqlite::value_SetStrptrMaybe(aqlite::TableId& parent, algo::strptr rhs) {
 // --- aqlite.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void aqlite::value_SetStrptr(aqlite::TableId& parent, algo::strptr rhs, aqlite_TableIdEnum dflt) {
+void aqlite::value_SetStrptr(aqlite::TableId& parent, algo::strptr rhs, aqlite_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- aqlite.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool aqlite::value_ReadStrptrMaybe(aqlite::TableId& parent, algo::strptr rhs) {
+bool aqlite::value_ReadStrptrMaybe(aqlite::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -856,7 +856,7 @@ bool aqlite::value_ReadStrptrMaybe(aqlite::TableId& parent, algo::strptr rhs) {
 // --- aqlite.TableId..ReadStrptrMaybe
 // Read fields of aqlite::TableId from an ascii string.
 // The format of the string is the format of the aqlite::TableId's only field
-bool aqlite::TableId_ReadStrptrMaybe(aqlite::TableId &parent, algo::strptr in_str) {
+bool aqlite::TableId_ReadStrptrMaybe(aqlite::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -865,7 +865,7 @@ bool aqlite::TableId_ReadStrptrMaybe(aqlite::TableId &parent, algo::strptr in_st
 // --- aqlite.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:aqlite.TableId.String  printfmt:Raw
-void aqlite::TableId_Print(aqlite::TableId& row, algo::cstring& str) {
+void aqlite::TableId_Print(aqlite::TableId& row, algo::cstring& str) throw() {
     aqlite::value_Print(row, str);
 }
 

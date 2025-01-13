@@ -31,7 +31,7 @@ inline void pad_byte_Init(pad_byte& parent) {
 
 // --- bool..Update
 // Set value. Return true if new value is different from old value.
-inline bool bool_Update(bool &lhs, bool rhs) {
+inline bool bool_Update(bool &lhs, bool rhs) throw() {
     bool ret = !bool_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -41,7 +41,7 @@ inline bool bool_Update(bool &lhs, bool rhs) {
 
 // --- char..Update
 // Set value. Return true if new value is different from old value.
-inline bool char_Update(char &lhs, char rhs) {
+inline bool char_Update(char &lhs, char rhs) throw() {
     bool ret = !char_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -51,7 +51,7 @@ inline bool char_Update(char &lhs, char rhs) {
 
 // --- double..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool double_UpdateMax(double &lhs, double rhs) {
+inline bool double_UpdateMax(double &lhs, double rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -61,13 +61,13 @@ inline bool double_UpdateMax(double &lhs, double rhs) {
 
 // --- double..Min
 // Return the lesser of two values
-inline double double_Min(double lhs, double rhs) {
+inline double double_Min(double lhs, double rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- double..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool double_UpdateMin(double &lhs, double rhs) {
+inline bool double_UpdateMin(double &lhs, double rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -77,13 +77,13 @@ inline bool double_UpdateMin(double &lhs, double rhs) {
 
 // --- double..Max
 // Return the greater of two values
-inline double double_Max(double lhs, double rhs) {
+inline double double_Max(double lhs, double rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- double..Update
 // Set value. Return true if new value is different from old value.
-inline bool double_Update(double &lhs, double rhs) {
+inline bool double_Update(double &lhs, double rhs) throw() {
     bool ret = !double_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -93,7 +93,7 @@ inline bool double_Update(double &lhs, double rhs) {
 
 // --- float..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool float_UpdateMax(float &lhs, float rhs) {
+inline bool float_UpdateMax(float &lhs, float rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -103,13 +103,13 @@ inline bool float_UpdateMax(float &lhs, float rhs) {
 
 // --- float..Min
 // Return the lesser of two values
-inline float float_Min(float lhs, float rhs) {
+inline float float_Min(float lhs, float rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- float..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool float_UpdateMin(float &lhs, float rhs) {
+inline bool float_UpdateMin(float &lhs, float rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -119,13 +119,13 @@ inline bool float_UpdateMin(float &lhs, float rhs) {
 
 // --- float..Max
 // Return the greater of two values
-inline float float_Max(float lhs, float rhs) {
+inline float float_Max(float lhs, float rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- float..Update
 // Set value. Return true if new value is different from old value.
-inline bool float_Update(float &lhs, float rhs) {
+inline bool float_Update(float &lhs, float rhs) throw() {
     bool ret = !float_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -135,7 +135,7 @@ inline bool float_Update(float &lhs, float rhs) {
 
 // --- i16..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool i16_UpdateMax(i16 &lhs, i16 rhs) {
+inline bool i16_UpdateMax(i16 &lhs, i16 rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -145,13 +145,13 @@ inline bool i16_UpdateMax(i16 &lhs, i16 rhs) {
 
 // --- i16..Min
 // Return the lesser of two values
-inline i16 i16_Min(i16 lhs, i16 rhs) {
+inline i16 i16_Min(i16 lhs, i16 rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- i16..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool i16_UpdateMin(i16 &lhs, i16 rhs) {
+inline bool i16_UpdateMin(i16 &lhs, i16 rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -161,13 +161,13 @@ inline bool i16_UpdateMin(i16 &lhs, i16 rhs) {
 
 // --- i16..Max
 // Return the greater of two values
-inline i16 i16_Max(i16 lhs, i16 rhs) {
+inline i16 i16_Max(i16 lhs, i16 rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- i16..Update
 // Set value. Return true if new value is different from old value.
-inline bool i16_Update(i16 &lhs, i16 rhs) {
+inline bool i16_Update(i16 &lhs, i16 rhs) throw() {
     bool ret = !i16_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -177,7 +177,7 @@ inline bool i16_Update(i16 &lhs, i16 rhs) {
 
 // --- i32..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool i32_UpdateMax(i32 &lhs, i32 rhs) {
+inline bool i32_UpdateMax(i32 &lhs, i32 rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -187,13 +187,13 @@ inline bool i32_UpdateMax(i32 &lhs, i32 rhs) {
 
 // --- i32..Min
 // Return the lesser of two values
-inline i32 i32_Min(i32 lhs, i32 rhs) {
+inline i32 i32_Min(i32 lhs, i32 rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- i32..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool i32_UpdateMin(i32 &lhs, i32 rhs) {
+inline bool i32_UpdateMin(i32 &lhs, i32 rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -203,13 +203,13 @@ inline bool i32_UpdateMin(i32 &lhs, i32 rhs) {
 
 // --- i32..Max
 // Return the greater of two values
-inline i32 i32_Max(i32 lhs, i32 rhs) {
+inline i32 i32_Max(i32 lhs, i32 rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- i32..Update
 // Set value. Return true if new value is different from old value.
-inline bool i32_Update(i32 &lhs, i32 rhs) {
+inline bool i32_Update(i32 &lhs, i32 rhs) throw() {
     bool ret = !i32_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -219,7 +219,7 @@ inline bool i32_Update(i32 &lhs, i32 rhs) {
 
 // --- i64..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool i64_UpdateMax(i64 &lhs, i64 rhs) {
+inline bool i64_UpdateMax(i64 &lhs, i64 rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -229,13 +229,13 @@ inline bool i64_UpdateMax(i64 &lhs, i64 rhs) {
 
 // --- i64..Min
 // Return the lesser of two values
-inline i64 i64_Min(i64 lhs, i64 rhs) {
+inline i64 i64_Min(i64 lhs, i64 rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- i64..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool i64_UpdateMin(i64 &lhs, i64 rhs) {
+inline bool i64_UpdateMin(i64 &lhs, i64 rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -245,13 +245,13 @@ inline bool i64_UpdateMin(i64 &lhs, i64 rhs) {
 
 // --- i64..Max
 // Return the greater of two values
-inline i64 i64_Max(i64 lhs, i64 rhs) {
+inline i64 i64_Max(i64 lhs, i64 rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- i64..Update
 // Set value. Return true if new value is different from old value.
-inline bool i64_Update(i64 &lhs, i64 rhs) {
+inline bool i64_Update(i64 &lhs, i64 rhs) throw() {
     bool ret = !i64_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -261,7 +261,7 @@ inline bool i64_Update(i64 &lhs, i64 rhs) {
 
 // --- i8..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool i8_UpdateMax(i8 &lhs, i8 rhs) {
+inline bool i8_UpdateMax(i8 &lhs, i8 rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -271,13 +271,13 @@ inline bool i8_UpdateMax(i8 &lhs, i8 rhs) {
 
 // --- i8..Min
 // Return the lesser of two values
-inline i8 i8_Min(i8 lhs, i8 rhs) {
+inline i8 i8_Min(i8 lhs, i8 rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- i8..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool i8_UpdateMin(i8 &lhs, i8 rhs) {
+inline bool i8_UpdateMin(i8 &lhs, i8 rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -287,13 +287,13 @@ inline bool i8_UpdateMin(i8 &lhs, i8 rhs) {
 
 // --- i8..Max
 // Return the greater of two values
-inline i8 i8_Max(i8 lhs, i8 rhs) {
+inline i8 i8_Max(i8 lhs, i8 rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- i8..Update
 // Set value. Return true if new value is different from old value.
-inline bool i8_Update(i8 &lhs, i8 rhs) {
+inline bool i8_Update(i8 &lhs, i8 rhs) throw() {
     bool ret = !i8_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -303,7 +303,7 @@ inline bool i8_Update(i8 &lhs, i8 rhs) {
 
 // --- u8..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool u8_UpdateMax(u8 &lhs, u8 rhs) {
+inline bool u8_UpdateMax(u8 &lhs, u8 rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -313,13 +313,13 @@ inline bool u8_UpdateMax(u8 &lhs, u8 rhs) {
 
 // --- u8..Min
 // Return the lesser of two values
-inline u8 u8_Min(u8 lhs, u8 rhs) {
+inline u8 u8_Min(u8 lhs, u8 rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- u8..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool u8_UpdateMin(u8 &lhs, u8 rhs) {
+inline bool u8_UpdateMin(u8 &lhs, u8 rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -329,13 +329,13 @@ inline bool u8_UpdateMin(u8 &lhs, u8 rhs) {
 
 // --- u8..Max
 // Return the greater of two values
-inline u8 u8_Max(u8 lhs, u8 rhs) {
+inline u8 u8_Max(u8 lhs, u8 rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- u8..Update
 // Set value. Return true if new value is different from old value.
-inline bool u8_Update(u8 &lhs, u8 rhs) {
+inline bool u8_Update(u8 &lhs, u8 rhs) throw() {
     bool ret = !u8_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -345,7 +345,7 @@ inline bool u8_Update(u8 &lhs, u8 rhs) {
 
 // --- u128..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool u128_UpdateMax(u128 &lhs, u128 rhs) {
+inline bool u128_UpdateMax(u128 &lhs, u128 rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -355,13 +355,13 @@ inline bool u128_UpdateMax(u128 &lhs, u128 rhs) {
 
 // --- u128..Min
 // Return the lesser of two values
-inline u128 u128_Min(u128 lhs, u128 rhs) {
+inline u128 u128_Min(u128 lhs, u128 rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- u128..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool u128_UpdateMin(u128 &lhs, u128 rhs) {
+inline bool u128_UpdateMin(u128 &lhs, u128 rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -371,13 +371,13 @@ inline bool u128_UpdateMin(u128 &lhs, u128 rhs) {
 
 // --- u128..Max
 // Return the greater of two values
-inline u128 u128_Max(u128 lhs, u128 rhs) {
+inline u128 u128_Max(u128 lhs, u128 rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- u128..Update
 // Set value. Return true if new value is different from old value.
-inline bool u128_Update(u128 &lhs, u128 rhs) {
+inline bool u128_Update(u128 &lhs, u128 rhs) throw() {
     bool ret = !u128_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -387,7 +387,7 @@ inline bool u128_Update(u128 &lhs, u128 rhs) {
 
 // --- u16..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool u16_UpdateMax(u16 &lhs, u16 rhs) {
+inline bool u16_UpdateMax(u16 &lhs, u16 rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -397,13 +397,13 @@ inline bool u16_UpdateMax(u16 &lhs, u16 rhs) {
 
 // --- u16..Min
 // Return the lesser of two values
-inline u16 u16_Min(u16 lhs, u16 rhs) {
+inline u16 u16_Min(u16 lhs, u16 rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- u16..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool u16_UpdateMin(u16 &lhs, u16 rhs) {
+inline bool u16_UpdateMin(u16 &lhs, u16 rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -413,13 +413,13 @@ inline bool u16_UpdateMin(u16 &lhs, u16 rhs) {
 
 // --- u16..Max
 // Return the greater of two values
-inline u16 u16_Max(u16 lhs, u16 rhs) {
+inline u16 u16_Max(u16 lhs, u16 rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- u16..Update
 // Set value. Return true if new value is different from old value.
-inline bool u16_Update(u16 &lhs, u16 rhs) {
+inline bool u16_Update(u16 &lhs, u16 rhs) throw() {
     bool ret = !u16_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -429,7 +429,7 @@ inline bool u16_Update(u16 &lhs, u16 rhs) {
 
 // --- u32..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool u32_UpdateMax(u32 &lhs, u32 rhs) {
+inline bool u32_UpdateMax(u32 &lhs, u32 rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -439,13 +439,13 @@ inline bool u32_UpdateMax(u32 &lhs, u32 rhs) {
 
 // --- u32..Min
 // Return the lesser of two values
-inline u32 u32_Min(u32 lhs, u32 rhs) {
+inline u32 u32_Min(u32 lhs, u32 rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- u32..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool u32_UpdateMin(u32 &lhs, u32 rhs) {
+inline bool u32_UpdateMin(u32 &lhs, u32 rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -455,13 +455,13 @@ inline bool u32_UpdateMin(u32 &lhs, u32 rhs) {
 
 // --- u32..Max
 // Return the greater of two values
-inline u32 u32_Max(u32 lhs, u32 rhs) {
+inline u32 u32_Max(u32 lhs, u32 rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- u32..Update
 // Set value. Return true if new value is different from old value.
-inline bool u32_Update(u32 &lhs, u32 rhs) {
+inline bool u32_Update(u32 &lhs, u32 rhs) throw() {
     bool ret = !u32_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -471,7 +471,7 @@ inline bool u32_Update(u32 &lhs, u32 rhs) {
 
 // --- u64..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool u64_UpdateMax(u64 &lhs, u64 rhs) {
+inline bool u64_UpdateMax(u64 &lhs, u64 rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -481,13 +481,13 @@ inline bool u64_UpdateMax(u64 &lhs, u64 rhs) {
 
 // --- u64..Min
 // Return the lesser of two values
-inline u64 u64_Min(u64 lhs, u64 rhs) {
+inline u64 u64_Min(u64 lhs, u64 rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- u64..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool u64_UpdateMin(u64 &lhs, u64 rhs) {
+inline bool u64_UpdateMin(u64 &lhs, u64 rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -497,13 +497,13 @@ inline bool u64_UpdateMin(u64 &lhs, u64 rhs) {
 
 // --- u64..Max
 // Return the greater of two values
-inline u64 u64_Max(u64 lhs, u64 rhs) {
+inline u64 u64_Max(u64 lhs, u64 rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- u64..Update
 // Set value. Return true if new value is different from old value.
-inline bool u64_Update(u64 &lhs, u64 rhs) {
+inline bool u64_Update(u64 &lhs, u64 rhs) throw() {
     bool ret = !u64_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update

@@ -45,7 +45,7 @@ namespace lib_iconv { // gen:ns_print_proto
 // --- lib_iconv.trace..Print
 // print string representation of ROW to string STR
 // cfmt:lib_iconv.trace.String  printfmt:Tuple
-void lib_iconv::trace_Print(lib_iconv::trace& row, algo::cstring& str) {
+void lib_iconv::trace_Print(lib_iconv::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_iconv.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -81,7 +81,7 @@ bool lib_iconv::InsertStrptrMaybe(algo::strptr str) {
 
 // --- lib_iconv.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool lib_iconv::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool lib_iconv::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = lib_iconv::LoadTuplesFile(root, recursive);
@@ -104,7 +104,7 @@ bool lib_iconv::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool lib_iconv::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool lib_iconv::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -117,7 +117,7 @@ bool lib_iconv::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- lib_iconv.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool lib_iconv::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool lib_iconv::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -136,7 +136,7 @@ bool lib_iconv::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive
 
 // --- lib_iconv.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool lib_iconv::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool lib_iconv::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = lib_iconv::LoadTuplesFile(fname, recursive);
@@ -169,13 +169,13 @@ bool lib_iconv::icd_XrefMaybe(lib_iconv::Icd &row) {
 
 // --- lib_iconv.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr lib_iconv::trace_RowidFind(int t) {
+static algo::ImrowPtr lib_iconv::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- lib_iconv.FDb.trace.N
 // Function return 1
-inline static i32 lib_iconv::trace_N() {
+inline static i32 lib_iconv::trace_N() throw() {
     return 1;
 }
 
@@ -189,7 +189,7 @@ void lib_iconv::FDb_Init() {
 // --- lib_iconv.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_iconv::value_ToCstr(const lib_iconv::FieldId& parent) {
+const char* lib_iconv::value_ToCstr(const lib_iconv::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_iconv_FieldId_value       : ret = "value";  break;
@@ -200,7 +200,7 @@ const char* lib_iconv::value_ToCstr(const lib_iconv::FieldId& parent) {
 // --- lib_iconv.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_iconv::value_Print(const lib_iconv::FieldId& parent, algo::cstring &lhs) {
+void lib_iconv::value_Print(const lib_iconv::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -213,7 +213,7 @@ void lib_iconv::value_Print(const lib_iconv::FieldId& parent, algo::cstring &lhs
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_iconv::value_SetStrptrMaybe(lib_iconv::FieldId& parent, algo::strptr rhs) {
+bool lib_iconv::value_SetStrptrMaybe(lib_iconv::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -231,13 +231,13 @@ bool lib_iconv::value_SetStrptrMaybe(lib_iconv::FieldId& parent, algo::strptr rh
 // --- lib_iconv.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_iconv::value_SetStrptr(lib_iconv::FieldId& parent, algo::strptr rhs, lib_iconv_FieldIdEnum dflt) {
+void lib_iconv::value_SetStrptr(lib_iconv::FieldId& parent, algo::strptr rhs, lib_iconv_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_iconv.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_iconv::value_ReadStrptrMaybe(lib_iconv::FieldId& parent, algo::strptr rhs) {
+bool lib_iconv::value_ReadStrptrMaybe(lib_iconv::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -249,7 +249,7 @@ bool lib_iconv::value_ReadStrptrMaybe(lib_iconv::FieldId& parent, algo::strptr r
 // --- lib_iconv.FieldId..ReadStrptrMaybe
 // Read fields of lib_iconv::FieldId from an ascii string.
 // The format of the string is the format of the lib_iconv::FieldId's only field
-bool lib_iconv::FieldId_ReadStrptrMaybe(lib_iconv::FieldId &parent, algo::strptr in_str) {
+bool lib_iconv::FieldId_ReadStrptrMaybe(lib_iconv::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -258,14 +258,14 @@ bool lib_iconv::FieldId_ReadStrptrMaybe(lib_iconv::FieldId &parent, algo::strptr
 // --- lib_iconv.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_iconv.FieldId.String  printfmt:Raw
-void lib_iconv::FieldId_Print(lib_iconv::FieldId& row, algo::cstring& str) {
+void lib_iconv::FieldId_Print(lib_iconv::FieldId& row, algo::cstring& str) throw() {
     lib_iconv::value_Print(row, str);
 }
 
 // --- lib_iconv.Icd..Print
 // print string representation of ROW to string STR
 // cfmt:lib_iconv.Icd.String  printfmt:Raw
-void lib_iconv::Icd_Print(lib_iconv::Icd& row, algo::cstring& str) {
+void lib_iconv::Icd_Print(lib_iconv::Icd& row, algo::cstring& str) throw() {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }

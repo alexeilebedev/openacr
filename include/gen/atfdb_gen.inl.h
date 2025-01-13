@@ -27,11 +27,11 @@
 //#pragma endinclude
 
 // --- atfdb.Amctest..Ctor
-inline  atfdb::Amctest::Amctest() {
+inline  atfdb::Amctest::Amctest() throw() {
 }
 
 // --- atfdb.Cijob..Ctor
-inline  atfdb::Cijob::Cijob() {
+inline  atfdb::Cijob::Cijob() throw() {
 }
 
 // --- atfdb.Cipackage..Init
@@ -42,7 +42,7 @@ inline void atfdb::Cipackage_Init(atfdb::Cipackage& parent) {
 }
 
 // --- atfdb.Cipackage..Ctor
-inline  atfdb::Cipackage::Cipackage() {
+inline  atfdb::Cipackage::Cipackage() throw() {
     atfdb::Cipackage_Init(*this);
 }
 
@@ -54,7 +54,7 @@ inline void atfdb::Citest_Init(atfdb::Citest& parent) {
 }
 
 // --- atfdb.Citest..Ctor
-inline  atfdb::Citest::Citest() {
+inline  atfdb::Citest::Citest() throw() {
     atfdb::Citest_Init(*this);
 }
 
@@ -67,24 +67,24 @@ inline void atfdb::Comptest_Init(atfdb::Comptest& parent) {
 }
 
 // --- atfdb.Comptest..Ctor
-inline  atfdb::Comptest::Comptest() {
+inline  atfdb::Comptest::Comptest() throw() {
     atfdb::Comptest_Init(*this);
 }
 
 // --- atfdb.FieldId.value.GetEnum
 // Get value of field as enum type
-inline atfdb_FieldIdEnum atfdb::value_GetEnum(const atfdb::FieldId& parent) {
+inline atfdb_FieldIdEnum atfdb::value_GetEnum(const atfdb::FieldId& parent) throw() {
     return atfdb_FieldIdEnum(parent.value);
 }
 
 // --- atfdb.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void atfdb::value_SetEnum(atfdb::FieldId& parent, atfdb_FieldIdEnum rhs) {
+inline void atfdb::value_SetEnum(atfdb::FieldId& parent, atfdb_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- atfdb.FieldId.value.Cast
-inline  atfdb::FieldId::operator atfdb_FieldIdEnum() const {
+inline  atfdb::FieldId::operator atfdb_FieldIdEnum() const throw() {
     return atfdb_FieldIdEnum((*this).value);
 }
 
@@ -95,47 +95,47 @@ inline void atfdb::FieldId_Init(atfdb::FieldId& parent) {
 }
 
 // --- atfdb.FieldId..Ctor
-inline  atfdb::FieldId::FieldId() {
+inline  atfdb::FieldId::FieldId() throw() {
     atfdb::FieldId_Init(*this);
 }
 
 // --- atfdb.FieldId..FieldwiseCtor
-inline  atfdb::FieldId::FieldId(i32 in_value)
+inline  atfdb::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atfdb.FieldId..EnumCtor
-inline  atfdb::FieldId::FieldId(atfdb_FieldIdEnum arg) {
+inline  atfdb::FieldId::FieldId(atfdb_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- atfdb.Fuzzstrat..Ctor
-inline  atfdb::Fuzzstrat::Fuzzstrat() {
+inline  atfdb::Fuzzstrat::Fuzzstrat() throw() {
 }
 
 // --- atfdb.Msgdir..Ctor
-inline  atfdb::Msgdir::Msgdir() {
+inline  atfdb::Msgdir::Msgdir() throw() {
 }
 
 // --- atfdb.Targs..Ctor
-inline  atfdb::Targs::Targs() {
+inline  atfdb::Targs::Targs() throw() {
 }
 
 // --- atfdb.TestGsymbolChar..Ctor
-inline  atfdb::TestGsymbolChar::TestGsymbolChar() {
+inline  atfdb::TestGsymbolChar::TestGsymbolChar() throw() {
 }
 
 // --- atfdb.TestGsymbolPkey..Ctor
-inline  atfdb::TestGsymbolPkey::TestGsymbolPkey() {
+inline  atfdb::TestGsymbolPkey::TestGsymbolPkey() throw() {
 }
 
 // --- atfdb.TestGsymbolStrptr..Ctor
-inline  atfdb::TestGsymbolStrptr::TestGsymbolStrptr() {
+inline  atfdb::TestGsymbolStrptr::TestGsymbolStrptr() throw() {
 }
 
 // --- atfdb.Tfilt..Ctor
-inline  atfdb::Tfilt::Tfilt() {
+inline  atfdb::Tfilt::Tfilt() throw() {
 }
 
 // --- atfdb.Tmsg..Init
@@ -145,12 +145,12 @@ inline void atfdb::Tmsg_Init(atfdb::Tmsg& parent) {
 }
 
 // --- atfdb.Tmsg..Ctor
-inline  atfdb::Tmsg::Tmsg() {
+inline  atfdb::Tmsg::Tmsg() throw() {
     atfdb::Tmsg_Init(*this);
 }
 
 // --- atfdb.Unittest..Ctor
-inline  atfdb::Unittest::Unittest() {
+inline  atfdb::Unittest::Unittest() throw() {
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const atfdb::Cijob &row) {// cfmt:atfdb.Cijob.String

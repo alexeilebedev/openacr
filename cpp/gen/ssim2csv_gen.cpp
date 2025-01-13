@@ -71,7 +71,7 @@ namespace ssim2csv { // gen:ns_print_proto
 // --- ssim2csv.trace..Print
 // print string representation of ROW to string STR
 // cfmt:ssim2csv.trace.String  printfmt:Tuple
-void ssim2csv::trace_Print(ssim2csv::trace& row, algo::cstring& str) {
+void ssim2csv::trace_Print(ssim2csv::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ssim2csv.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -82,7 +82,7 @@ void ssim2csv::trace_Print(ssim2csv::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     ssim2csv.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void ssim2csv::ReadArgv() {
+void ssim2csv::ReadArgv() throw() {
     command::ssim2csv &cmd = ssim2csv::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -253,7 +253,7 @@ bool ssim2csv::InsertStrptrMaybe(algo::strptr str) {
 
 // --- ssim2csv.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool ssim2csv::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool ssim2csv::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = ssim2csv::LoadTuplesFile(root, recursive);
@@ -276,7 +276,7 @@ bool ssim2csv::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool ssim2csv::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool ssim2csv::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -289,7 +289,7 @@ bool ssim2csv::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- ssim2csv.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool ssim2csv::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool ssim2csv::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -308,7 +308,7 @@ bool ssim2csv::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
 
 // --- ssim2csv.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool ssim2csv::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool ssim2csv::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = ssim2csv::LoadTuplesFile(fname, recursive);
@@ -333,7 +333,7 @@ bool ssim2csv::_db_XrefMaybe() {
 // --- ssim2csv.FDb.expand.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-ssim2csv::FExpand& ssim2csv::expand_Alloc() {
+ssim2csv::FExpand& ssim2csv::expand_Alloc() throw() {
     ssim2csv::FExpand* row = expand_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("ssim2csv.out_of_mem  field:ssim2csv.FDb.expand  comment:'Alloc failed'");
@@ -343,7 +343,7 @@ ssim2csv::FExpand& ssim2csv::expand_Alloc() {
 
 // --- ssim2csv.FDb.expand.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-ssim2csv::FExpand* ssim2csv::expand_AllocMaybe() {
+ssim2csv::FExpand* ssim2csv::expand_AllocMaybe() throw() {
     ssim2csv::FExpand *row = (ssim2csv::FExpand*)expand_AllocMem();
     if (row) {
         new (row) ssim2csv::FExpand; // call constructor
@@ -353,7 +353,7 @@ ssim2csv::FExpand* ssim2csv::expand_AllocMaybe() {
 
 // --- ssim2csv.FDb.expand.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* ssim2csv::expand_AllocMem() {
+void* ssim2csv::expand_AllocMem() throw() {
     u64 new_nelems     = _db.expand_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -379,7 +379,7 @@ void* ssim2csv::expand_AllocMem() {
 
 // --- ssim2csv.FDb.expand.RemoveAll
 // Remove all elements from Lary
-void ssim2csv::expand_RemoveAll() {
+void ssim2csv::expand_RemoveAll() throw() {
     for (u64 n = _db.expand_n; n>0; ) {
         n--;
         expand_qFind(u64(n)).~FExpand(); // destroy last element
@@ -389,7 +389,7 @@ void ssim2csv::expand_RemoveAll() {
 
 // --- ssim2csv.FDb.expand.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void ssim2csv::expand_RemoveLast() {
+void ssim2csv::expand_RemoveLast() throw() {
     u64 n = _db.expand_n;
     if (n > 0) {
         n -= 1;
@@ -418,7 +418,7 @@ bool ssim2csv::expand_XrefMaybe(ssim2csv::FExpand &row) {
 
 // --- ssim2csv.FDb.ind_expand.Find
 // Find row by key. Return NULL if not found.
-ssim2csv::FExpand* ssim2csv::ind_expand_Find(const algo::strptr& key) {
+ssim2csv::FExpand* ssim2csv::ind_expand_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_expand_buckets_n - 1);
     ssim2csv::FExpand* *e = &_db.ind_expand_buckets_elems[index];
     ssim2csv::FExpand* ret=NULL;
@@ -441,7 +441,7 @@ ssim2csv::FExpand& ssim2csv::ind_expand_FindX(const algo::strptr& key) {
 
 // --- ssim2csv.FDb.ind_expand.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-ssim2csv::FExpand& ssim2csv::ind_expand_GetOrCreate(const algo::strptr& key) {
+ssim2csv::FExpand& ssim2csv::ind_expand_GetOrCreate(const algo::strptr& key) throw() {
     ssim2csv::FExpand* ret = ind_expand_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &expand_Alloc();
@@ -458,7 +458,7 @@ ssim2csv::FExpand& ssim2csv::ind_expand_GetOrCreate(const algo::strptr& key) {
 
 // --- ssim2csv.FDb.ind_expand.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool ssim2csv::ind_expand_InsertMaybe(ssim2csv::FExpand& row) {
+bool ssim2csv::ind_expand_InsertMaybe(ssim2csv::FExpand& row) throw() {
     ind_expand_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_expand_next == (ssim2csv::FExpand*)-1)) {// check if in hash already
@@ -486,7 +486,7 @@ bool ssim2csv::ind_expand_InsertMaybe(ssim2csv::FExpand& row) {
 
 // --- ssim2csv.FDb.ind_expand.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void ssim2csv::ind_expand_Remove(ssim2csv::FExpand& row) {
+void ssim2csv::ind_expand_Remove(ssim2csv::FExpand& row) throw() {
     if (LIKELY(row.ind_expand_next != (ssim2csv::FExpand*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.expand) & (_db.ind_expand_buckets_n - 1);
         ssim2csv::FExpand* *prev = &_db.ind_expand_buckets_elems[index]; // addr of pointer to current element
@@ -504,7 +504,7 @@ void ssim2csv::ind_expand_Remove(ssim2csv::FExpand& row) {
 
 // --- ssim2csv.FDb.ind_expand.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void ssim2csv::ind_expand_Reserve(int n) {
+void ssim2csv::ind_expand_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_expand_buckets_n;
     u32 new_nelems   = _db.ind_expand_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -541,7 +541,7 @@ void ssim2csv::ind_expand_Reserve(int n) {
 // --- ssim2csv.FDb.outfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-ssim2csv::FOutfile& ssim2csv::outfile_Alloc() {
+ssim2csv::FOutfile& ssim2csv::outfile_Alloc() throw() {
     ssim2csv::FOutfile* row = outfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("ssim2csv.out_of_mem  field:ssim2csv.FDb.outfile  comment:'Alloc failed'");
@@ -551,7 +551,7 @@ ssim2csv::FOutfile& ssim2csv::outfile_Alloc() {
 
 // --- ssim2csv.FDb.outfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-ssim2csv::FOutfile* ssim2csv::outfile_AllocMaybe() {
+ssim2csv::FOutfile* ssim2csv::outfile_AllocMaybe() throw() {
     ssim2csv::FOutfile *row = (ssim2csv::FOutfile*)outfile_AllocMem();
     if (row) {
         new (row) ssim2csv::FOutfile; // call constructor
@@ -561,7 +561,7 @@ ssim2csv::FOutfile* ssim2csv::outfile_AllocMaybe() {
 
 // --- ssim2csv.FDb.outfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* ssim2csv::outfile_AllocMem() {
+void* ssim2csv::outfile_AllocMem() throw() {
     u64 new_nelems     = _db.outfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -587,7 +587,7 @@ void* ssim2csv::outfile_AllocMem() {
 
 // --- ssim2csv.FDb.outfile.RemoveAll
 // Remove all elements from Lary
-void ssim2csv::outfile_RemoveAll() {
+void ssim2csv::outfile_RemoveAll() throw() {
     for (u64 n = _db.outfile_n; n>0; ) {
         n--;
         outfile_qFind(u64(n)).~FOutfile(); // destroy last element
@@ -597,7 +597,7 @@ void ssim2csv::outfile_RemoveAll() {
 
 // --- ssim2csv.FDb.outfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void ssim2csv::outfile_RemoveLast() {
+void ssim2csv::outfile_RemoveLast() throw() {
     u64 n = _db.outfile_n;
     if (n > 0) {
         n -= 1;
@@ -626,7 +626,7 @@ bool ssim2csv::outfile_XrefMaybe(ssim2csv::FOutfile &row) {
 
 // --- ssim2csv.FDb.ind_outfile.Find
 // Find row by key. Return NULL if not found.
-ssim2csv::FOutfile* ssim2csv::ind_outfile_Find(const algo::strptr& key) {
+ssim2csv::FOutfile* ssim2csv::ind_outfile_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_outfile_buckets_n - 1);
     ssim2csv::FOutfile* *e = &_db.ind_outfile_buckets_elems[index];
     ssim2csv::FOutfile* ret=NULL;
@@ -649,7 +649,7 @@ ssim2csv::FOutfile& ssim2csv::ind_outfile_FindX(const algo::strptr& key) {
 
 // --- ssim2csv.FDb.ind_outfile.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-ssim2csv::FOutfile& ssim2csv::ind_outfile_GetOrCreate(const algo::strptr& key) {
+ssim2csv::FOutfile& ssim2csv::ind_outfile_GetOrCreate(const algo::strptr& key) throw() {
     ssim2csv::FOutfile* ret = ind_outfile_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &outfile_Alloc();
@@ -666,7 +666,7 @@ ssim2csv::FOutfile& ssim2csv::ind_outfile_GetOrCreate(const algo::strptr& key) {
 
 // --- ssim2csv.FDb.ind_outfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool ssim2csv::ind_outfile_InsertMaybe(ssim2csv::FOutfile& row) {
+bool ssim2csv::ind_outfile_InsertMaybe(ssim2csv::FOutfile& row) throw() {
     ind_outfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_outfile_next == (ssim2csv::FOutfile*)-1)) {// check if in hash already
@@ -694,7 +694,7 @@ bool ssim2csv::ind_outfile_InsertMaybe(ssim2csv::FOutfile& row) {
 
 // --- ssim2csv.FDb.ind_outfile.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void ssim2csv::ind_outfile_Remove(ssim2csv::FOutfile& row) {
+void ssim2csv::ind_outfile_Remove(ssim2csv::FOutfile& row) throw() {
     if (LIKELY(row.ind_outfile_next != (ssim2csv::FOutfile*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.outfile) & (_db.ind_outfile_buckets_n - 1);
         ssim2csv::FOutfile* *prev = &_db.ind_outfile_buckets_elems[index]; // addr of pointer to current element
@@ -712,7 +712,7 @@ void ssim2csv::ind_outfile_Remove(ssim2csv::FOutfile& row) {
 
 // --- ssim2csv.FDb.ind_outfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void ssim2csv::ind_outfile_Reserve(int n) {
+void ssim2csv::ind_outfile_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_outfile_buckets_n;
     u32 new_nelems   = _db.ind_outfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -750,7 +750,7 @@ void ssim2csv::ind_outfile_Reserve(int n) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> ssim2csv::name_Addary(algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> ssim2csv::name_Addary(algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.name_elems && rhs.elems < _db.name_elems + _db.name_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("ssim2csv.tary_alias  field:ssim2csv.FDb.name  comment:'alias error: sub-array is being appended to the whole'");
@@ -768,7 +768,7 @@ algo::aryptr<algo::cstring> ssim2csv::name_Addary(algo::aryptr<algo::cstring> rh
 // --- ssim2csv.FDb.name.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& ssim2csv::name_Alloc() {
+algo::cstring& ssim2csv::name_Alloc() throw() {
     name_Reserve(1);
     int n  = _db.name_n;
     int at = n;
@@ -781,7 +781,7 @@ algo::cstring& ssim2csv::name_Alloc() {
 // --- ssim2csv.FDb.name.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& ssim2csv::name_AllocAt(int at) {
+algo::cstring& ssim2csv::name_AllocAt(int at) throw() {
     name_Reserve(1);
     int n  = _db.name_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -796,7 +796,7 @@ algo::cstring& ssim2csv::name_AllocAt(int at) {
 
 // --- ssim2csv.FDb.name.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> ssim2csv::name_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> ssim2csv::name_AllocN(int n_elems) throw() {
     name_Reserve(n_elems);
     int old_n  = _db.name_n;
     int new_n = old_n + n_elems;
@@ -810,7 +810,7 @@ algo::aryptr<algo::cstring> ssim2csv::name_AllocN(int n_elems) {
 
 // --- ssim2csv.FDb.name.Remove
 // Remove item by index. If index outside of range, do nothing.
-void ssim2csv::name_Remove(u32 i) {
+void ssim2csv::name_Remove(u32 i) throw() {
     u32 lim = _db.name_n;
     algo::cstring *elems = _db.name_elems;
     if (i < lim) {
@@ -821,7 +821,7 @@ void ssim2csv::name_Remove(u32 i) {
 }
 
 // --- ssim2csv.FDb.name.RemoveAll
-void ssim2csv::name_RemoveAll() {
+void ssim2csv::name_RemoveAll() throw() {
     u32 n = _db.name_n;
     while (n > 0) {
         n -= 1;
@@ -832,7 +832,7 @@ void ssim2csv::name_RemoveAll() {
 
 // --- ssim2csv.FDb.name.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void ssim2csv::name_RemoveLast() {
+void ssim2csv::name_RemoveLast() throw() {
     u64 n = _db.name_n;
     if (n > 0) {
         n -= 1;
@@ -843,7 +843,7 @@ void ssim2csv::name_RemoveLast() {
 
 // --- ssim2csv.FDb.name.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void ssim2csv::name_AbsReserve(int n) {
+void ssim2csv::name_AbsReserve(int n) throw() {
     u32 old_max  = _db.name_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -858,7 +858,7 @@ void ssim2csv::name_AbsReserve(int n) {
 
 // --- ssim2csv.FDb.name.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> ssim2csv::name_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> ssim2csv::name_AllocNVal(int n_elems, const algo::cstring& val) throw() {
     name_Reserve(n_elems);
     int old_n  = _db.name_n;
     int new_n = old_n + n_elems;
@@ -874,7 +874,7 @@ algo::aryptr<algo::cstring> ssim2csv::name_AllocNVal(int n_elems, const algo::cs
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool ssim2csv::name_ReadStrptrMaybe(algo::strptr in_str) {
+bool ssim2csv::name_ReadStrptrMaybe(algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = name_Alloc();
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -888,7 +888,7 @@ bool ssim2csv::name_ReadStrptrMaybe(algo::strptr in_str) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> ssim2csv::value_Addary(algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> ssim2csv::value_Addary(algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.value_elems && rhs.elems < _db.value_elems + _db.value_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("ssim2csv.tary_alias  field:ssim2csv.FDb.value  comment:'alias error: sub-array is being appended to the whole'");
@@ -906,7 +906,7 @@ algo::aryptr<algo::cstring> ssim2csv::value_Addary(algo::aryptr<algo::cstring> r
 // --- ssim2csv.FDb.value.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& ssim2csv::value_Alloc() {
+algo::cstring& ssim2csv::value_Alloc() throw() {
     value_Reserve(1);
     int n  = _db.value_n;
     int at = n;
@@ -919,7 +919,7 @@ algo::cstring& ssim2csv::value_Alloc() {
 // --- ssim2csv.FDb.value.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& ssim2csv::value_AllocAt(int at) {
+algo::cstring& ssim2csv::value_AllocAt(int at) throw() {
     value_Reserve(1);
     int n  = _db.value_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -934,7 +934,7 @@ algo::cstring& ssim2csv::value_AllocAt(int at) {
 
 // --- ssim2csv.FDb.value.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> ssim2csv::value_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> ssim2csv::value_AllocN(int n_elems) throw() {
     value_Reserve(n_elems);
     int old_n  = _db.value_n;
     int new_n = old_n + n_elems;
@@ -948,7 +948,7 @@ algo::aryptr<algo::cstring> ssim2csv::value_AllocN(int n_elems) {
 
 // --- ssim2csv.FDb.value.Remove
 // Remove item by index. If index outside of range, do nothing.
-void ssim2csv::value_Remove(u32 i) {
+void ssim2csv::value_Remove(u32 i) throw() {
     u32 lim = _db.value_n;
     algo::cstring *elems = _db.value_elems;
     if (i < lim) {
@@ -959,7 +959,7 @@ void ssim2csv::value_Remove(u32 i) {
 }
 
 // --- ssim2csv.FDb.value.RemoveAll
-void ssim2csv::value_RemoveAll() {
+void ssim2csv::value_RemoveAll() throw() {
     u32 n = _db.value_n;
     while (n > 0) {
         n -= 1;
@@ -970,7 +970,7 @@ void ssim2csv::value_RemoveAll() {
 
 // --- ssim2csv.FDb.value.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void ssim2csv::value_RemoveLast() {
+void ssim2csv::value_RemoveLast() throw() {
     u64 n = _db.value_n;
     if (n > 0) {
         n -= 1;
@@ -981,7 +981,7 @@ void ssim2csv::value_RemoveLast() {
 
 // --- ssim2csv.FDb.value.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void ssim2csv::value_AbsReserve(int n) {
+void ssim2csv::value_AbsReserve(int n) throw() {
     u32 old_max  = _db.value_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -996,7 +996,7 @@ void ssim2csv::value_AbsReserve(int n) {
 
 // --- ssim2csv.FDb.value.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> ssim2csv::value_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> ssim2csv::value_AllocNVal(int n_elems, const algo::cstring& val) throw() {
     value_Reserve(n_elems);
     int old_n  = _db.value_n;
     int new_n = old_n + n_elems;
@@ -1012,7 +1012,7 @@ algo::aryptr<algo::cstring> ssim2csv::value_AllocNVal(int n_elems, const algo::c
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool ssim2csv::value_ReadStrptrMaybe(algo::strptr in_str) {
+bool ssim2csv::value_ReadStrptrMaybe(algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = value_Alloc();
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -1026,7 +1026,7 @@ bool ssim2csv::value_ReadStrptrMaybe(algo::strptr in_str) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_Addary(algo::aryptr<ssim2csv::FFlatten> rhs) {
+algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_Addary(algo::aryptr<ssim2csv::FFlatten> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.flatten_elems && rhs.elems < _db.flatten_elems + _db.flatten_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("ssim2csv.tary_alias  field:ssim2csv.FDb.flatten  comment:'alias error: sub-array is being appended to the whole'");
@@ -1044,7 +1044,7 @@ algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_Addary(algo::aryptr<ssim2csv:
 // --- ssim2csv.FDb.flatten.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-ssim2csv::FFlatten& ssim2csv::flatten_Alloc() {
+ssim2csv::FFlatten& ssim2csv::flatten_Alloc() throw() {
     flatten_Reserve(1);
     int n  = _db.flatten_n;
     int at = n;
@@ -1057,7 +1057,7 @@ ssim2csv::FFlatten& ssim2csv::flatten_Alloc() {
 // --- ssim2csv.FDb.flatten.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-ssim2csv::FFlatten& ssim2csv::flatten_AllocAt(int at) {
+ssim2csv::FFlatten& ssim2csv::flatten_AllocAt(int at) throw() {
     flatten_Reserve(1);
     int n  = _db.flatten_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -1072,7 +1072,7 @@ ssim2csv::FFlatten& ssim2csv::flatten_AllocAt(int at) {
 
 // --- ssim2csv.FDb.flatten.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_AllocN(int n_elems) {
+algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_AllocN(int n_elems) throw() {
     flatten_Reserve(n_elems);
     int old_n  = _db.flatten_n;
     int new_n = old_n + n_elems;
@@ -1086,7 +1086,7 @@ algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_AllocN(int n_elems) {
 
 // --- ssim2csv.FDb.flatten.Remove
 // Remove item by index. If index outside of range, do nothing.
-void ssim2csv::flatten_Remove(u32 i) {
+void ssim2csv::flatten_Remove(u32 i) throw() {
     u32 lim = _db.flatten_n;
     ssim2csv::FFlatten *elems = _db.flatten_elems;
     if (i < lim) {
@@ -1097,7 +1097,7 @@ void ssim2csv::flatten_Remove(u32 i) {
 }
 
 // --- ssim2csv.FDb.flatten.RemoveAll
-void ssim2csv::flatten_RemoveAll() {
+void ssim2csv::flatten_RemoveAll() throw() {
     u32 n = _db.flatten_n;
     while (n > 0) {
         n -= 1;
@@ -1108,7 +1108,7 @@ void ssim2csv::flatten_RemoveAll() {
 
 // --- ssim2csv.FDb.flatten.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void ssim2csv::flatten_RemoveLast() {
+void ssim2csv::flatten_RemoveLast() throw() {
     u64 n = _db.flatten_n;
     if (n > 0) {
         n -= 1;
@@ -1119,7 +1119,7 @@ void ssim2csv::flatten_RemoveLast() {
 
 // --- ssim2csv.FDb.flatten.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void ssim2csv::flatten_AbsReserve(int n) {
+void ssim2csv::flatten_AbsReserve(int n) throw() {
     u32 old_max  = _db.flatten_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -1134,7 +1134,7 @@ void ssim2csv::flatten_AbsReserve(int n) {
 
 // --- ssim2csv.FDb.flatten.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_AllocNVal(int n_elems, const ssim2csv::FFlatten& val) {
+algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_AllocNVal(int n_elems, const ssim2csv::FFlatten& val) throw() {
     flatten_Reserve(n_elems);
     int old_n  = _db.flatten_n;
     int new_n = old_n + n_elems;
@@ -1148,13 +1148,13 @@ algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_AllocNVal(int n_elems, const 
 
 // --- ssim2csv.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr ssim2csv::trace_RowidFind(int t) {
+static algo::ImrowPtr ssim2csv::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- ssim2csv.FDb.trace.N
 // Function return 1
-inline static i32 ssim2csv::trace_N() {
+inline static i32 ssim2csv::trace_N() throw() {
     return 1;
 }
 
@@ -1213,7 +1213,7 @@ void ssim2csv::FDb_Init() {
 }
 
 // --- ssim2csv.FDb..Uninit
-void ssim2csv::FDb_Uninit() {
+void ssim2csv::FDb_Uninit() throw() {
     ssim2csv::FDb &row = _db; (void)row;
 
     // ssim2csv.FDb.flatten.Uninit (Tary)  //
@@ -1248,7 +1248,7 @@ void ssim2csv::FDb_Uninit() {
 }
 
 // --- ssim2csv.FExpand..Uninit
-void ssim2csv::FExpand_Uninit(ssim2csv::FExpand& expand) {
+void ssim2csv::FExpand_Uninit(ssim2csv::FExpand& expand) throw() {
     ssim2csv::FExpand &row = expand; (void)row;
     ind_expand_Remove(row); // remove expand from index ind_expand
 }
@@ -1256,14 +1256,14 @@ void ssim2csv::FExpand_Uninit(ssim2csv::FExpand& expand) {
 // --- ssim2csv.FExpand..Print
 // print string representation of ROW to string STR
 // cfmt:ssim2csv.FExpand.String  printfmt:Raw
-void ssim2csv::FExpand_Print(ssim2csv::FExpand& row, algo::cstring& str) {
+void ssim2csv::FExpand_Print(ssim2csv::FExpand& row, algo::cstring& str) throw() {
     algo::cstring_Print(row.expand, str);
 }
 
 // --- ssim2csv.FFlatten..Print
 // print string representation of ROW to string STR
 // cfmt:ssim2csv.FFlatten.String  printfmt:Tuple
-void ssim2csv::FFlatten_Print(ssim2csv::FFlatten& row, algo::cstring& str) {
+void ssim2csv::FFlatten_Print(ssim2csv::FFlatten& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ssim2csv.FFlatten";
 
@@ -1275,7 +1275,7 @@ void ssim2csv::FFlatten_Print(ssim2csv::FFlatten& row, algo::cstring& str) {
 }
 
 // --- ssim2csv.FOutfile..Uninit
-void ssim2csv::FOutfile_Uninit(ssim2csv::FOutfile& outfile) {
+void ssim2csv::FOutfile_Uninit(ssim2csv::FOutfile& outfile) throw() {
     ssim2csv::FOutfile &row = outfile; (void)row;
     ind_outfile_Remove(row); // remove outfile from index ind_outfile
 }
@@ -1283,7 +1283,7 @@ void ssim2csv::FOutfile_Uninit(ssim2csv::FOutfile& outfile) {
 // --- ssim2csv.FOutfile..Print
 // print string representation of ROW to string STR
 // cfmt:ssim2csv.FOutfile.String  printfmt:Tuple
-void ssim2csv::FOutfile_Print(ssim2csv::FOutfile& row, algo::cstring& str) {
+void ssim2csv::FOutfile_Print(ssim2csv::FOutfile& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ssim2csv.FOutfile";
 
@@ -1300,7 +1300,7 @@ void ssim2csv::FOutfile_Print(ssim2csv::FOutfile& row, algo::cstring& str) {
 // --- ssim2csv.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ssim2csv::value_ToCstr(const ssim2csv::FieldId& parent) {
+const char* ssim2csv::value_ToCstr(const ssim2csv::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ssim2csv_FieldId_value        : ret = "value";  break;
@@ -1311,7 +1311,7 @@ const char* ssim2csv::value_ToCstr(const ssim2csv::FieldId& parent) {
 // --- ssim2csv.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void ssim2csv::value_Print(const ssim2csv::FieldId& parent, algo::cstring &lhs) {
+void ssim2csv::value_Print(const ssim2csv::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1324,7 +1324,7 @@ void ssim2csv::value_Print(const ssim2csv::FieldId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ssim2csv::value_SetStrptrMaybe(ssim2csv::FieldId& parent, algo::strptr rhs) {
+bool ssim2csv::value_SetStrptrMaybe(ssim2csv::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -1342,13 +1342,13 @@ bool ssim2csv::value_SetStrptrMaybe(ssim2csv::FieldId& parent, algo::strptr rhs)
 // --- ssim2csv.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ssim2csv::value_SetStrptr(ssim2csv::FieldId& parent, algo::strptr rhs, ssim2csv_FieldIdEnum dflt) {
+void ssim2csv::value_SetStrptr(ssim2csv::FieldId& parent, algo::strptr rhs, ssim2csv_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- ssim2csv.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ssim2csv::value_ReadStrptrMaybe(ssim2csv::FieldId& parent, algo::strptr rhs) {
+bool ssim2csv::value_ReadStrptrMaybe(ssim2csv::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1360,7 +1360,7 @@ bool ssim2csv::value_ReadStrptrMaybe(ssim2csv::FieldId& parent, algo::strptr rhs
 // --- ssim2csv.FieldId..ReadStrptrMaybe
 // Read fields of ssim2csv::FieldId from an ascii string.
 // The format of the string is the format of the ssim2csv::FieldId's only field
-bool ssim2csv::FieldId_ReadStrptrMaybe(ssim2csv::FieldId &parent, algo::strptr in_str) {
+bool ssim2csv::FieldId_ReadStrptrMaybe(ssim2csv::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1369,7 +1369,7 @@ bool ssim2csv::FieldId_ReadStrptrMaybe(ssim2csv::FieldId &parent, algo::strptr i
 // --- ssim2csv.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:ssim2csv.FieldId.String  printfmt:Raw
-void ssim2csv::FieldId_Print(ssim2csv::FieldId& row, algo::cstring& str) {
+void ssim2csv::FieldId_Print(ssim2csv::FieldId& row, algo::cstring& str) throw() {
     ssim2csv::value_Print(row, str);
 }
 

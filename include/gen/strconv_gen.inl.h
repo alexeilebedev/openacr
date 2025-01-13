@@ -27,28 +27,28 @@
 //#pragma endinclude
 
 // --- strconv.trace..Ctor
-inline  strconv::trace::trace() {
+inline  strconv::trace::trace() throw() {
 }
 
 // --- strconv.FDb..Uninit
-inline void strconv::FDb_Uninit() {
+inline void strconv::FDb_Uninit() throw() {
     strconv::FDb &row = _db; (void)row;
 }
 
 // --- strconv.FieldId.value.GetEnum
 // Get value of field as enum type
-inline strconv_FieldIdEnum strconv::value_GetEnum(const strconv::FieldId& parent) {
+inline strconv_FieldIdEnum strconv::value_GetEnum(const strconv::FieldId& parent) throw() {
     return strconv_FieldIdEnum(parent.value);
 }
 
 // --- strconv.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void strconv::value_SetEnum(strconv::FieldId& parent, strconv_FieldIdEnum rhs) {
+inline void strconv::value_SetEnum(strconv::FieldId& parent, strconv_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- strconv.FieldId.value.Cast
-inline  strconv::FieldId::operator strconv_FieldIdEnum() const {
+inline  strconv::FieldId::operator strconv_FieldIdEnum() const throw() {
     return strconv_FieldIdEnum((*this).value);
 }
 
@@ -59,18 +59,18 @@ inline void strconv::FieldId_Init(strconv::FieldId& parent) {
 }
 
 // --- strconv.FieldId..Ctor
-inline  strconv::FieldId::FieldId() {
+inline  strconv::FieldId::FieldId() throw() {
     strconv::FieldId_Init(*this);
 }
 
 // --- strconv.FieldId..FieldwiseCtor
-inline  strconv::FieldId::FieldId(i32 in_value)
+inline  strconv::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- strconv.FieldId..EnumCtor
-inline  strconv::FieldId::FieldId(strconv_FieldIdEnum arg) {
+inline  strconv::FieldId::FieldId(strconv_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

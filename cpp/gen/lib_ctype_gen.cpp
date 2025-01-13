@@ -77,7 +77,7 @@ namespace lib_ctype { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- lib_ctype.Cmdline..ReadFieldMaybe
-bool lib_ctype::Cmdline_ReadFieldMaybe(lib_ctype::Cmdline& parent, algo::strptr field, algo::strptr strval) {
+bool lib_ctype::Cmdline_ReadFieldMaybe(lib_ctype::Cmdline& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     lib_ctype::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -96,7 +96,7 @@ bool lib_ctype::Cmdline_ReadFieldMaybe(lib_ctype::Cmdline& parent, algo::strptr 
 
 // --- lib_ctype.Cmdline..ReadTupleMaybe
 // Read fields of lib_ctype::Cmdline from attributes of ascii tuple TUPLE
-bool lib_ctype::Cmdline_ReadTupleMaybe(lib_ctype::Cmdline &parent, algo::Tuple &tuple) {
+bool lib_ctype::Cmdline_ReadTupleMaybe(lib_ctype::Cmdline &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = Cmdline_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -110,7 +110,7 @@ bool lib_ctype::Cmdline_ReadTupleMaybe(lib_ctype::Cmdline &parent, algo::Tuple &
 // --- lib_ctype.Cmdline..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr lib_ctype::Cmdline_ToCmdline(lib_ctype::Cmdline& row) {
+tempstr lib_ctype::Cmdline_ToCmdline(lib_ctype::Cmdline& row) throw() {
     tempstr ret;
     ret << "bin/Cmdline ";
     Cmdline_PrintArgv(row, ret);
@@ -127,7 +127,7 @@ tempstr lib_ctype::Cmdline_ToCmdline(lib_ctype::Cmdline& row) {
 // --- lib_ctype.Cmdline..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:lib_ctype.Cmdline.Argv  printfmt:Tuple
-void lib_ctype::Cmdline_PrintArgv(lib_ctype::Cmdline& row, algo::cstring& str) {
+void lib_ctype::Cmdline_PrintArgv(lib_ctype::Cmdline& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -143,7 +143,7 @@ void lib_ctype::Cmdline_PrintArgv(lib_ctype::Cmdline& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 lib_ctype::Cmdline_NArgs(lib_ctype::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 lib_ctype::Cmdline_NArgs(lib_ctype::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case lib_ctype_FieldId_in: { // $comment
@@ -158,7 +158,7 @@ i32 lib_ctype::Cmdline_NArgs(lib_ctype::FieldId field, algo::strptr& out_dflt, b
 
 // --- lib_ctype.FBltin.base.CopyOut
 // Copy fields out of row
-void lib_ctype::bltin_CopyOut(lib_ctype::FBltin &row, amcdb::Bltin &out) {
+void lib_ctype::bltin_CopyOut(lib_ctype::FBltin &row, amcdb::Bltin &out) throw() {
     out.ctype = row.ctype;
     out.likeu64 = row.likeu64;
     out.bigendok = row.bigendok;
@@ -168,7 +168,7 @@ void lib_ctype::bltin_CopyOut(lib_ctype::FBltin &row, amcdb::Bltin &out) {
 
 // --- lib_ctype.FBltin.base.CopyIn
 // Copy fields in to row
-void lib_ctype::bltin_CopyIn(lib_ctype::FBltin &row, amcdb::Bltin &in) {
+void lib_ctype::bltin_CopyIn(lib_ctype::FBltin &row, amcdb::Bltin &in) throw() {
     row.ctype = in.ctype;
     row.likeu64 = in.likeu64;
     row.bigendok = in.bigendok;
@@ -177,7 +177,7 @@ void lib_ctype::bltin_CopyIn(lib_ctype::FBltin &row, amcdb::Bltin &in) {
 }
 
 // --- lib_ctype.FBltin..Uninit
-void lib_ctype::FBltin_Uninit(lib_ctype::FBltin& bltin) {
+void lib_ctype::FBltin_Uninit(lib_ctype::FBltin& bltin) throw() {
     lib_ctype::FBltin &row = bltin; (void)row;
     lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(row.ctype);
     if (p_ctype)  {
@@ -187,7 +187,7 @@ void lib_ctype::FBltin_Uninit(lib_ctype::FBltin& bltin) {
 
 // --- lib_ctype.FCdflt.base.CopyOut
 // Copy fields out of row
-void lib_ctype::cdflt_CopyOut(lib_ctype::FCdflt &row, dmmeta::Cdflt &out) {
+void lib_ctype::cdflt_CopyOut(lib_ctype::FCdflt &row, dmmeta::Cdflt &out) throw() {
     out.ctype = row.ctype;
     out.dflt = row.dflt;
     out.cppdflt = row.cppdflt;
@@ -198,7 +198,7 @@ void lib_ctype::cdflt_CopyOut(lib_ctype::FCdflt &row, dmmeta::Cdflt &out) {
 
 // --- lib_ctype.FCdflt.base.CopyIn
 // Copy fields in to row
-void lib_ctype::cdflt_CopyIn(lib_ctype::FCdflt &row, dmmeta::Cdflt &in) {
+void lib_ctype::cdflt_CopyIn(lib_ctype::FCdflt &row, dmmeta::Cdflt &in) throw() {
     row.ctype = in.ctype;
     row.dflt = in.dflt;
     row.cppdflt = in.cppdflt;
@@ -208,7 +208,7 @@ void lib_ctype::cdflt_CopyIn(lib_ctype::FCdflt &row, dmmeta::Cdflt &in) {
 }
 
 // --- lib_ctype.FCdflt..Uninit
-void lib_ctype::FCdflt_Uninit(lib_ctype::FCdflt& cdflt) {
+void lib_ctype::FCdflt_Uninit(lib_ctype::FCdflt& cdflt) throw() {
     lib_ctype::FCdflt &row = cdflt; (void)row;
     lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(row.ctype);
     if (p_ctype)  {
@@ -218,7 +218,7 @@ void lib_ctype::FCdflt_Uninit(lib_ctype::FCdflt& cdflt) {
 
 // --- lib_ctype.FCfmt.msghdr.CopyOut
 // Copy fields out of row
-void lib_ctype::cfmt_CopyOut(lib_ctype::FCfmt &row, dmmeta::Cfmt &out) {
+void lib_ctype::cfmt_CopyOut(lib_ctype::FCfmt &row, dmmeta::Cfmt &out) throw() {
     out.cfmt = row.cfmt;
     out.printfmt = row.printfmt;
     out.read = row.read;
@@ -230,7 +230,7 @@ void lib_ctype::cfmt_CopyOut(lib_ctype::FCfmt &row, dmmeta::Cfmt &out) {
 
 // --- lib_ctype.FCfmt.msghdr.CopyIn
 // Copy fields in to row
-void lib_ctype::cfmt_CopyIn(lib_ctype::FCfmt &row, dmmeta::Cfmt &in) {
+void lib_ctype::cfmt_CopyIn(lib_ctype::FCfmt &row, dmmeta::Cfmt &in) throw() {
     row.cfmt = in.cfmt;
     row.printfmt = in.printfmt;
     row.read = in.read;
@@ -241,13 +241,13 @@ void lib_ctype::cfmt_CopyIn(lib_ctype::FCfmt &row, dmmeta::Cfmt &in) {
 }
 
 // --- lib_ctype.FCfmt.ctype.Get
-algo::Smallstr100 lib_ctype::ctype_Get(lib_ctype::FCfmt& cfmt) {
+algo::Smallstr100 lib_ctype::ctype_Get(lib_ctype::FCfmt& cfmt) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(cfmt.cfmt, ".RL"));
     return ret;
 }
 
 // --- lib_ctype.FCfmt.strfmt.Get
-algo::Smallstr50 lib_ctype::strfmt_Get(lib_ctype::FCfmt& cfmt) {
+algo::Smallstr50 lib_ctype::strfmt_Get(lib_ctype::FCfmt& cfmt) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(cfmt.cfmt, ".RR"));
     return ret;
 }
@@ -263,7 +263,7 @@ void lib_ctype::FCfmt_Init(lib_ctype::FCfmt& cfmt) {
 }
 
 // --- lib_ctype.FCfmt..Uninit
-void lib_ctype::FCfmt_Uninit(lib_ctype::FCfmt& cfmt) {
+void lib_ctype::FCfmt_Uninit(lib_ctype::FCfmt& cfmt) throw() {
     lib_ctype::FCfmt &row = cfmt; (void)row;
     lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(ctype_Get(row));
     if (p_ctype)  {
@@ -275,7 +275,7 @@ void lib_ctype::FCfmt_Uninit(lib_ctype::FCfmt& cfmt) {
 // --- lib_ctype.FCfmt..Print
 // print string representation of ROW to string STR
 // cfmt:lib_ctype.FCfmt.String  printfmt:Tuple
-void lib_ctype::FCfmt_Print(lib_ctype::FCfmt& row, algo::cstring& str) {
+void lib_ctype::FCfmt_Print(lib_ctype::FCfmt& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_ctype.FCfmt";
 
@@ -306,7 +306,7 @@ void lib_ctype::FCfmt_Print(lib_ctype::FCfmt& row, algo::cstring& str) {
 
 // --- lib_ctype.FCppfunc.base.CopyOut
 // Copy fields out of row
-void lib_ctype::cppfunc_CopyOut(lib_ctype::FCppfunc &row, dmmeta::Cppfunc &out) {
+void lib_ctype::cppfunc_CopyOut(lib_ctype::FCppfunc &row, dmmeta::Cppfunc &out) throw() {
     out.field = row.field;
     out.expr = row.expr;
     out.print = row.print;
@@ -315,7 +315,7 @@ void lib_ctype::cppfunc_CopyOut(lib_ctype::FCppfunc &row, dmmeta::Cppfunc &out) 
 
 // --- lib_ctype.FCppfunc.base.CopyIn
 // Copy fields in to row
-void lib_ctype::cppfunc_CopyIn(lib_ctype::FCppfunc &row, dmmeta::Cppfunc &in) {
+void lib_ctype::cppfunc_CopyIn(lib_ctype::FCppfunc &row, dmmeta::Cppfunc &in) throw() {
     row.field = in.field;
     row.expr = in.expr;
     row.print = in.print;
@@ -323,7 +323,7 @@ void lib_ctype::cppfunc_CopyIn(lib_ctype::FCppfunc &row, dmmeta::Cppfunc &in) {
 }
 
 // --- lib_ctype.FCppfunc..Uninit
-void lib_ctype::FCppfunc_Uninit(lib_ctype::FCppfunc& cppfunc) {
+void lib_ctype::FCppfunc_Uninit(lib_ctype::FCppfunc& cppfunc) throw() {
     lib_ctype::FCppfunc &row = cppfunc; (void)row;
     lib_ctype::FField* p_field = lib_ctype::ind_field_Find(row.field);
     if (p_field)  {
@@ -333,26 +333,26 @@ void lib_ctype::FCppfunc_Uninit(lib_ctype::FCppfunc& cppfunc) {
 
 // --- lib_ctype.FCtype.msghdr.CopyOut
 // Copy fields out of row
-void lib_ctype::ctype_CopyOut(lib_ctype::FCtype &row, dmmeta::Ctype &out) {
+void lib_ctype::ctype_CopyOut(lib_ctype::FCtype &row, dmmeta::Ctype &out) throw() {
     out.ctype = row.ctype;
     out.comment = row.comment;
 }
 
 // --- lib_ctype.FCtype.msghdr.CopyIn
 // Copy fields in to row
-void lib_ctype::ctype_CopyIn(lib_ctype::FCtype &row, dmmeta::Ctype &in) {
+void lib_ctype::ctype_CopyIn(lib_ctype::FCtype &row, dmmeta::Ctype &in) throw() {
     row.ctype = in.ctype;
     row.comment = in.comment;
 }
 
 // --- lib_ctype.FCtype.ns.Get
-algo::Smallstr16 lib_ctype::ns_Get(lib_ctype::FCtype& ctype) {
+algo::Smallstr16 lib_ctype::ns_Get(lib_ctype::FCtype& ctype) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(ctype.ctype, ".RL"));
     return ret;
 }
 
 // --- lib_ctype.FCtype.name.Get
-algo::Smallstr100 lib_ctype::name_Get(lib_ctype::FCtype& ctype) {
+algo::Smallstr100 lib_ctype::name_Get(lib_ctype::FCtype& ctype) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
     return ret;
 }
@@ -360,7 +360,7 @@ algo::Smallstr100 lib_ctype::name_Get(lib_ctype::FCtype& ctype) {
 // --- lib_ctype.FCtype.c_field.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void lib_ctype::c_field_Insert(lib_ctype::FCtype& ctype, lib_ctype::FField& row) {
+void lib_ctype::c_field_Insert(lib_ctype::FCtype& ctype, lib_ctype::FField& row) throw() {
     if (bool_Update(row.ctype_c_field_in_ary,true)) {
         // reserve space
         c_field_Reserve(ctype, 1);
@@ -377,7 +377,7 @@ void lib_ctype::c_field_Insert(lib_ctype::FCtype& ctype, lib_ctype::FField& row)
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool lib_ctype::c_field_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FField& row) {
+bool lib_ctype::c_field_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FField& row) throw() {
     bool retval = !row.ctype_c_field_in_ary;
     c_field_Insert(ctype,row); // check is performed in _Insert again
     return retval;
@@ -385,7 +385,7 @@ bool lib_ctype::c_field_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FField&
 
 // --- lib_ctype.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void lib_ctype::c_field_Remove(lib_ctype::FCtype& ctype, lib_ctype::FField& row) {
+void lib_ctype::c_field_Remove(lib_ctype::FCtype& ctype, lib_ctype::FField& row) throw() {
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
         int lim = ctype.c_field_n;
         lib_ctype::FField* *elems = ctype.c_field_elems;
@@ -406,7 +406,7 @@ void lib_ctype::c_field_Remove(lib_ctype::FCtype& ctype, lib_ctype::FField& row)
 
 // --- lib_ctype.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void lib_ctype::c_field_Reserve(lib_ctype::FCtype& ctype, u32 n) {
+void lib_ctype::c_field_Reserve(lib_ctype::FCtype& ctype, u32 n) throw() {
     u32 old_max = ctype.c_field_max;
     if (UNLIKELY(ctype.c_field_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -424,7 +424,7 @@ void lib_ctype::c_field_Reserve(lib_ctype::FCtype& ctype, u32 n) {
 // --- lib_ctype.FCtype.c_cfmt.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void lib_ctype::c_cfmt_Insert(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
+void lib_ctype::c_cfmt_Insert(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) throw() {
     if (bool_Update(row.ctype_c_cfmt_in_ary,true)) {
         // reserve space
         c_cfmt_Reserve(ctype, 1);
@@ -441,7 +441,7 @@ void lib_ctype::c_cfmt_Insert(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool lib_ctype::c_cfmt_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
+bool lib_ctype::c_cfmt_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) throw() {
     bool retval = !row.ctype_c_cfmt_in_ary;
     c_cfmt_Insert(ctype,row); // check is performed in _Insert again
     return retval;
@@ -449,7 +449,7 @@ bool lib_ctype::c_cfmt_InsertMaybe(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& r
 
 // --- lib_ctype.FCtype.c_cfmt.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void lib_ctype::c_cfmt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
+void lib_ctype::c_cfmt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) throw() {
     if (bool_Update(row.ctype_c_cfmt_in_ary,false)) {
         int lim = ctype.c_cfmt_n;
         lib_ctype::FCfmt* *elems = ctype.c_cfmt_elems;
@@ -470,7 +470,7 @@ void lib_ctype::c_cfmt_Remove(lib_ctype::FCtype& ctype, lib_ctype::FCfmt& row) {
 
 // --- lib_ctype.FCtype.c_cfmt.Reserve
 // Reserve space in index for N more elements;
-void lib_ctype::c_cfmt_Reserve(lib_ctype::FCtype& ctype, u32 n) {
+void lib_ctype::c_cfmt_Reserve(lib_ctype::FCtype& ctype, u32 n) throw() {
     u32 old_max = ctype.c_cfmt_max;
     if (UNLIKELY(ctype.c_cfmt_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -501,7 +501,7 @@ void lib_ctype::FCtype_Init(lib_ctype::FCtype& ctype) {
 }
 
 // --- lib_ctype.FCtype..Uninit
-void lib_ctype::FCtype_Uninit(lib_ctype::FCtype& ctype) {
+void lib_ctype::FCtype_Uninit(lib_ctype::FCtype& ctype) throw() {
     lib_ctype::FCtype &row = ctype; (void)row;
     ind_ctype_Remove(row); // remove ctype from index ind_ctype
 
@@ -515,7 +515,7 @@ void lib_ctype::FCtype_Uninit(lib_ctype::FCtype& ctype) {
 // --- lib_ctype.trace..Print
 // print string representation of ROW to string STR
 // cfmt:lib_ctype.trace.String  printfmt:Tuple
-void lib_ctype::trace_Print(lib_ctype::trace& row, algo::cstring& str) {
+void lib_ctype::trace_Print(lib_ctype::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_ctype.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -524,7 +524,7 @@ void lib_ctype::trace_Print(lib_ctype::trace& row, algo::cstring& str) {
 // --- lib_ctype.FDb.fconst.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ctype::FFconst& lib_ctype::fconst_Alloc() {
+lib_ctype::FFconst& lib_ctype::fconst_Alloc() throw() {
     lib_ctype::FFconst* row = fconst_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.fconst  comment:'Alloc failed'");
@@ -534,7 +534,7 @@ lib_ctype::FFconst& lib_ctype::fconst_Alloc() {
 
 // --- lib_ctype.FDb.fconst.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ctype::FFconst* lib_ctype::fconst_AllocMaybe() {
+lib_ctype::FFconst* lib_ctype::fconst_AllocMaybe() throw() {
     lib_ctype::FFconst *row = (lib_ctype::FFconst*)fconst_AllocMem();
     if (row) {
         new (row) lib_ctype::FFconst; // call constructor
@@ -545,7 +545,7 @@ lib_ctype::FFconst* lib_ctype::fconst_AllocMaybe() {
 // --- lib_ctype.FDb.fconst.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ctype::FFconst* lib_ctype::fconst_InsertMaybe(const dmmeta::Fconst &value) {
+lib_ctype::FFconst* lib_ctype::fconst_InsertMaybe(const dmmeta::Fconst &value) throw() {
     lib_ctype::FFconst *row = &fconst_Alloc(); // if out of memory, process dies. if input error, return NULL.
     fconst_CopyIn(*row,const_cast<dmmeta::Fconst&>(value));
     bool ok = fconst_XrefMaybe(*row); // this may return false
@@ -558,7 +558,7 @@ lib_ctype::FFconst* lib_ctype::fconst_InsertMaybe(const dmmeta::Fconst &value) {
 
 // --- lib_ctype.FDb.fconst.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ctype::fconst_AllocMem() {
+void* lib_ctype::fconst_AllocMem() throw() {
     u64 new_nelems     = _db.fconst_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -584,7 +584,7 @@ void* lib_ctype::fconst_AllocMem() {
 
 // --- lib_ctype.FDb.fconst.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ctype::fconst_RemoveLast() {
+void lib_ctype::fconst_RemoveLast() throw() {
     u64 n = _db.fconst_n;
     if (n > 0) {
         n -= 1;
@@ -594,7 +594,7 @@ void lib_ctype::fconst_RemoveLast() {
 }
 
 // --- lib_ctype.FDb.fconst.InputMaybe
-static bool lib_ctype::fconst_InputMaybe(dmmeta::Fconst &elem) {
+static bool lib_ctype::fconst_InputMaybe(dmmeta::Fconst &elem) throw() {
     bool retval = true;
     retval = fconst_InsertMaybe(elem) != nullptr;
     return retval;
@@ -629,7 +629,7 @@ bool lib_ctype::fconst_XrefMaybe(lib_ctype::FFconst &row) {
 
 // --- lib_ctype.FDb.ind_fconst_key.Find
 // Find row by key. Return NULL if not found.
-lib_ctype::FFconst* lib_ctype::ind_fconst_key_Find(const algo::strptr& key) {
+lib_ctype::FFconst* lib_ctype::ind_fconst_key_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_fconst_key_buckets_n - 1);
     lib_ctype::FFconst* *e = &_db.ind_fconst_key_buckets_elems[index];
     lib_ctype::FFconst* ret=NULL;
@@ -652,7 +652,7 @@ lib_ctype::FFconst& lib_ctype::ind_fconst_key_FindX(const algo::strptr& key) {
 
 // --- lib_ctype.FDb.ind_fconst_key.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_ctype::ind_fconst_key_InsertMaybe(lib_ctype::FFconst& row) {
+bool lib_ctype::ind_fconst_key_InsertMaybe(lib_ctype::FFconst& row) throw() {
     ind_fconst_key_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_fconst_key_next == (lib_ctype::FFconst*)-1)) {// check if in hash already
@@ -680,7 +680,7 @@ bool lib_ctype::ind_fconst_key_InsertMaybe(lib_ctype::FFconst& row) {
 
 // --- lib_ctype.FDb.ind_fconst_key.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_ctype::ind_fconst_key_Remove(lib_ctype::FFconst& row) {
+void lib_ctype::ind_fconst_key_Remove(lib_ctype::FFconst& row) throw() {
     if (LIKELY(row.ind_fconst_key_next != (lib_ctype::FFconst*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.key) & (_db.ind_fconst_key_buckets_n - 1);
         lib_ctype::FFconst* *prev = &_db.ind_fconst_key_buckets_elems[index]; // addr of pointer to current element
@@ -698,7 +698,7 @@ void lib_ctype::ind_fconst_key_Remove(lib_ctype::FFconst& row) {
 
 // --- lib_ctype.FDb.ind_fconst_key.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_ctype::ind_fconst_key_Reserve(int n) {
+void lib_ctype::ind_fconst_key_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_fconst_key_buckets_n;
     u32 new_nelems   = _db.ind_fconst_key_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -734,7 +734,7 @@ void lib_ctype::ind_fconst_key_Reserve(int n) {
 
 // --- lib_ctype.FDb.ind_fconst.Find
 // Find row by key. Return NULL if not found.
-lib_ctype::FFconst* lib_ctype::ind_fconst_Find(const algo::strptr& key) {
+lib_ctype::FFconst* lib_ctype::ind_fconst_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_fconst_buckets_n - 1);
     lib_ctype::FFconst* *e = &_db.ind_fconst_buckets_elems[index];
     lib_ctype::FFconst* ret=NULL;
@@ -757,7 +757,7 @@ lib_ctype::FFconst& lib_ctype::ind_fconst_FindX(const algo::strptr& key) {
 
 // --- lib_ctype.FDb.ind_fconst.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_ctype::ind_fconst_InsertMaybe(lib_ctype::FFconst& row) {
+bool lib_ctype::ind_fconst_InsertMaybe(lib_ctype::FFconst& row) throw() {
     ind_fconst_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_fconst_next == (lib_ctype::FFconst*)-1)) {// check if in hash already
@@ -785,7 +785,7 @@ bool lib_ctype::ind_fconst_InsertMaybe(lib_ctype::FFconst& row) {
 
 // --- lib_ctype.FDb.ind_fconst.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_ctype::ind_fconst_Remove(lib_ctype::FFconst& row) {
+void lib_ctype::ind_fconst_Remove(lib_ctype::FFconst& row) throw() {
     if (LIKELY(row.ind_fconst_next != (lib_ctype::FFconst*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.fconst) & (_db.ind_fconst_buckets_n - 1);
         lib_ctype::FFconst* *prev = &_db.ind_fconst_buckets_elems[index]; // addr of pointer to current element
@@ -803,7 +803,7 @@ void lib_ctype::ind_fconst_Remove(lib_ctype::FFconst& row) {
 
 // --- lib_ctype.FDb.ind_fconst.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_ctype::ind_fconst_Reserve(int n) {
+void lib_ctype::ind_fconst_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_fconst_buckets_n;
     u32 new_nelems   = _db.ind_fconst_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -840,7 +840,7 @@ void lib_ctype::ind_fconst_Reserve(int n) {
 // --- lib_ctype.FDb.ssimfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ctype::FSsimfile& lib_ctype::ssimfile_Alloc() {
+lib_ctype::FSsimfile& lib_ctype::ssimfile_Alloc() throw() {
     lib_ctype::FSsimfile* row = ssimfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.ssimfile  comment:'Alloc failed'");
@@ -850,7 +850,7 @@ lib_ctype::FSsimfile& lib_ctype::ssimfile_Alloc() {
 
 // --- lib_ctype.FDb.ssimfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ctype::FSsimfile* lib_ctype::ssimfile_AllocMaybe() {
+lib_ctype::FSsimfile* lib_ctype::ssimfile_AllocMaybe() throw() {
     lib_ctype::FSsimfile *row = (lib_ctype::FSsimfile*)ssimfile_AllocMem();
     if (row) {
         new (row) lib_ctype::FSsimfile; // call constructor
@@ -861,7 +861,7 @@ lib_ctype::FSsimfile* lib_ctype::ssimfile_AllocMaybe() {
 // --- lib_ctype.FDb.ssimfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ctype::FSsimfile* lib_ctype::ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) {
+lib_ctype::FSsimfile* lib_ctype::ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) throw() {
     lib_ctype::FSsimfile *row = &ssimfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ssimfile_CopyIn(*row,const_cast<dmmeta::Ssimfile&>(value));
     bool ok = ssimfile_XrefMaybe(*row); // this may return false
@@ -874,7 +874,7 @@ lib_ctype::FSsimfile* lib_ctype::ssimfile_InsertMaybe(const dmmeta::Ssimfile &va
 
 // --- lib_ctype.FDb.ssimfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ctype::ssimfile_AllocMem() {
+void* lib_ctype::ssimfile_AllocMem() throw() {
     u64 new_nelems     = _db.ssimfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -900,7 +900,7 @@ void* lib_ctype::ssimfile_AllocMem() {
 
 // --- lib_ctype.FDb.ssimfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ctype::ssimfile_RemoveLast() {
+void lib_ctype::ssimfile_RemoveLast() throw() {
     u64 n = _db.ssimfile_n;
     if (n > 0) {
         n -= 1;
@@ -910,7 +910,7 @@ void lib_ctype::ssimfile_RemoveLast() {
 }
 
 // --- lib_ctype.FDb.ssimfile.InputMaybe
-static bool lib_ctype::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
+static bool lib_ctype::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) throw() {
     bool retval = true;
     retval = ssimfile_InsertMaybe(elem) != nullptr;
     return retval;
@@ -945,7 +945,7 @@ bool lib_ctype::ssimfile_XrefMaybe(lib_ctype::FSsimfile &row) {
 
 // --- lib_ctype.FDb.ind_ssimfile.Find
 // Find row by key. Return NULL if not found.
-lib_ctype::FSsimfile* lib_ctype::ind_ssimfile_Find(const algo::strptr& key) {
+lib_ctype::FSsimfile* lib_ctype::ind_ssimfile_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
     lib_ctype::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
     lib_ctype::FSsimfile* ret=NULL;
@@ -968,7 +968,7 @@ lib_ctype::FSsimfile& lib_ctype::ind_ssimfile_FindX(const algo::strptr& key) {
 
 // --- lib_ctype.FDb.ind_ssimfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_ctype::ind_ssimfile_InsertMaybe(lib_ctype::FSsimfile& row) {
+bool lib_ctype::ind_ssimfile_InsertMaybe(lib_ctype::FSsimfile& row) throw() {
     ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (lib_ctype::FSsimfile*)-1)) {// check if in hash already
@@ -996,7 +996,7 @@ bool lib_ctype::ind_ssimfile_InsertMaybe(lib_ctype::FSsimfile& row) {
 
 // --- lib_ctype.FDb.ind_ssimfile.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_ctype::ind_ssimfile_Remove(lib_ctype::FSsimfile& row) {
+void lib_ctype::ind_ssimfile_Remove(lib_ctype::FSsimfile& row) throw() {
     if (LIKELY(row.ind_ssimfile_next != (lib_ctype::FSsimfile*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
         lib_ctype::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
@@ -1014,7 +1014,7 @@ void lib_ctype::ind_ssimfile_Remove(lib_ctype::FSsimfile& row) {
 
 // --- lib_ctype.FDb.ind_ssimfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_ctype::ind_ssimfile_Reserve(int n) {
+void lib_ctype::ind_ssimfile_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_ssimfile_buckets_n;
     u32 new_nelems   = _db.ind_ssimfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1051,7 +1051,7 @@ void lib_ctype::ind_ssimfile_Reserve(int n) {
 // --- lib_ctype.FDb.ftuple.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ctype::FFtuple& lib_ctype::ftuple_Alloc() {
+lib_ctype::FFtuple& lib_ctype::ftuple_Alloc() throw() {
     lib_ctype::FFtuple* row = ftuple_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.ftuple  comment:'Alloc failed'");
@@ -1061,7 +1061,7 @@ lib_ctype::FFtuple& lib_ctype::ftuple_Alloc() {
 
 // --- lib_ctype.FDb.ftuple.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ctype::FFtuple* lib_ctype::ftuple_AllocMaybe() {
+lib_ctype::FFtuple* lib_ctype::ftuple_AllocMaybe() throw() {
     lib_ctype::FFtuple *row = (lib_ctype::FFtuple*)ftuple_AllocMem();
     if (row) {
         new (row) lib_ctype::FFtuple; // call constructor
@@ -1072,7 +1072,7 @@ lib_ctype::FFtuple* lib_ctype::ftuple_AllocMaybe() {
 // --- lib_ctype.FDb.ftuple.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ctype::FFtuple* lib_ctype::ftuple_InsertMaybe(const dmmeta::Ftuple &value) {
+lib_ctype::FFtuple* lib_ctype::ftuple_InsertMaybe(const dmmeta::Ftuple &value) throw() {
     lib_ctype::FFtuple *row = &ftuple_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ftuple_CopyIn(*row,const_cast<dmmeta::Ftuple&>(value));
     bool ok = ftuple_XrefMaybe(*row); // this may return false
@@ -1085,7 +1085,7 @@ lib_ctype::FFtuple* lib_ctype::ftuple_InsertMaybe(const dmmeta::Ftuple &value) {
 
 // --- lib_ctype.FDb.ftuple.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ctype::ftuple_AllocMem() {
+void* lib_ctype::ftuple_AllocMem() throw() {
     u64 new_nelems     = _db.ftuple_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1111,7 +1111,7 @@ void* lib_ctype::ftuple_AllocMem() {
 
 // --- lib_ctype.FDb.ftuple.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ctype::ftuple_RemoveLast() {
+void lib_ctype::ftuple_RemoveLast() throw() {
     u64 n = _db.ftuple_n;
     if (n > 0) {
         n -= 1;
@@ -1121,7 +1121,7 @@ void lib_ctype::ftuple_RemoveLast() {
 }
 
 // --- lib_ctype.FDb.ftuple.InputMaybe
-static bool lib_ctype::ftuple_InputMaybe(dmmeta::Ftuple &elem) {
+static bool lib_ctype::ftuple_InputMaybe(dmmeta::Ftuple &elem) throw() {
     bool retval = true;
     retval = ftuple_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1153,7 +1153,7 @@ bool lib_ctype::ftuple_XrefMaybe(lib_ctype::FFtuple &row) {
 // --- lib_ctype.FDb.ctype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ctype::FCtype& lib_ctype::ctype_Alloc() {
+lib_ctype::FCtype& lib_ctype::ctype_Alloc() throw() {
     lib_ctype::FCtype* row = ctype_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.ctype  comment:'Alloc failed'");
@@ -1163,7 +1163,7 @@ lib_ctype::FCtype& lib_ctype::ctype_Alloc() {
 
 // --- lib_ctype.FDb.ctype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ctype::FCtype* lib_ctype::ctype_AllocMaybe() {
+lib_ctype::FCtype* lib_ctype::ctype_AllocMaybe() throw() {
     lib_ctype::FCtype *row = (lib_ctype::FCtype*)ctype_AllocMem();
     if (row) {
         new (row) lib_ctype::FCtype; // call constructor
@@ -1174,7 +1174,7 @@ lib_ctype::FCtype* lib_ctype::ctype_AllocMaybe() {
 // --- lib_ctype.FDb.ctype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ctype::FCtype* lib_ctype::ctype_InsertMaybe(const dmmeta::Ctype &value) {
+lib_ctype::FCtype* lib_ctype::ctype_InsertMaybe(const dmmeta::Ctype &value) throw() {
     lib_ctype::FCtype *row = &ctype_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ctype_CopyIn(*row,const_cast<dmmeta::Ctype&>(value));
     bool ok = ctype_XrefMaybe(*row); // this may return false
@@ -1187,7 +1187,7 @@ lib_ctype::FCtype* lib_ctype::ctype_InsertMaybe(const dmmeta::Ctype &value) {
 
 // --- lib_ctype.FDb.ctype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ctype::ctype_AllocMem() {
+void* lib_ctype::ctype_AllocMem() throw() {
     u64 new_nelems     = _db.ctype_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1213,7 +1213,7 @@ void* lib_ctype::ctype_AllocMem() {
 
 // --- lib_ctype.FDb.ctype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ctype::ctype_RemoveLast() {
+void lib_ctype::ctype_RemoveLast() throw() {
     u64 n = _db.ctype_n;
     if (n > 0) {
         n -= 1;
@@ -1223,7 +1223,7 @@ void lib_ctype::ctype_RemoveLast() {
 }
 
 // --- lib_ctype.FDb.ctype.InputMaybe
-static bool lib_ctype::ctype_InputMaybe(dmmeta::Ctype &elem) {
+static bool lib_ctype::ctype_InputMaybe(dmmeta::Ctype &elem) throw() {
     bool retval = true;
     retval = ctype_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1249,7 +1249,7 @@ bool lib_ctype::ctype_XrefMaybe(lib_ctype::FCtype &row) {
 
 // --- lib_ctype.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
-lib_ctype::FCtype* lib_ctype::ind_ctype_Find(const algo::strptr& key) {
+lib_ctype::FCtype* lib_ctype::ind_ctype_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     lib_ctype::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     lib_ctype::FCtype* ret=NULL;
@@ -1272,7 +1272,7 @@ lib_ctype::FCtype& lib_ctype::ind_ctype_FindX(const algo::strptr& key) {
 
 // --- lib_ctype.FDb.ind_ctype.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-lib_ctype::FCtype& lib_ctype::ind_ctype_GetOrCreate(const algo::strptr& key) {
+lib_ctype::FCtype& lib_ctype::ind_ctype_GetOrCreate(const algo::strptr& key) throw() {
     lib_ctype::FCtype* ret = ind_ctype_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &ctype_Alloc();
@@ -1289,7 +1289,7 @@ lib_ctype::FCtype& lib_ctype::ind_ctype_GetOrCreate(const algo::strptr& key) {
 
 // --- lib_ctype.FDb.ind_ctype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_ctype::ind_ctype_InsertMaybe(lib_ctype::FCtype& row) {
+bool lib_ctype::ind_ctype_InsertMaybe(lib_ctype::FCtype& row) throw() {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (lib_ctype::FCtype*)-1)) {// check if in hash already
@@ -1317,7 +1317,7 @@ bool lib_ctype::ind_ctype_InsertMaybe(lib_ctype::FCtype& row) {
 
 // --- lib_ctype.FDb.ind_ctype.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_ctype::ind_ctype_Remove(lib_ctype::FCtype& row) {
+void lib_ctype::ind_ctype_Remove(lib_ctype::FCtype& row) throw() {
     if (LIKELY(row.ind_ctype_next != (lib_ctype::FCtype*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         lib_ctype::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
@@ -1335,7 +1335,7 @@ void lib_ctype::ind_ctype_Remove(lib_ctype::FCtype& row) {
 
 // --- lib_ctype.FDb.ind_ctype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_ctype::ind_ctype_Reserve(int n) {
+void lib_ctype::ind_ctype_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_ctype_buckets_n;
     u32 new_nelems   = _db.ind_ctype_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1372,7 +1372,7 @@ void lib_ctype::ind_ctype_Reserve(int n) {
 // --- lib_ctype.FDb.field.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ctype::FField& lib_ctype::field_Alloc() {
+lib_ctype::FField& lib_ctype::field_Alloc() throw() {
     lib_ctype::FField* row = field_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.field  comment:'Alloc failed'");
@@ -1382,7 +1382,7 @@ lib_ctype::FField& lib_ctype::field_Alloc() {
 
 // --- lib_ctype.FDb.field.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ctype::FField* lib_ctype::field_AllocMaybe() {
+lib_ctype::FField* lib_ctype::field_AllocMaybe() throw() {
     lib_ctype::FField *row = (lib_ctype::FField*)field_AllocMem();
     if (row) {
         new (row) lib_ctype::FField; // call constructor
@@ -1393,7 +1393,7 @@ lib_ctype::FField* lib_ctype::field_AllocMaybe() {
 // --- lib_ctype.FDb.field.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ctype::FField* lib_ctype::field_InsertMaybe(const dmmeta::Field &value) {
+lib_ctype::FField* lib_ctype::field_InsertMaybe(const dmmeta::Field &value) throw() {
     lib_ctype::FField *row = &field_Alloc(); // if out of memory, process dies. if input error, return NULL.
     field_CopyIn(*row,const_cast<dmmeta::Field&>(value));
     bool ok = field_XrefMaybe(*row); // this may return false
@@ -1406,7 +1406,7 @@ lib_ctype::FField* lib_ctype::field_InsertMaybe(const dmmeta::Field &value) {
 
 // --- lib_ctype.FDb.field.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ctype::field_AllocMem() {
+void* lib_ctype::field_AllocMem() throw() {
     u64 new_nelems     = _db.field_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1432,7 +1432,7 @@ void* lib_ctype::field_AllocMem() {
 
 // --- lib_ctype.FDb.field.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ctype::field_RemoveLast() {
+void lib_ctype::field_RemoveLast() throw() {
     u64 n = _db.field_n;
     if (n > 0) {
         n -= 1;
@@ -1442,7 +1442,7 @@ void lib_ctype::field_RemoveLast() {
 }
 
 // --- lib_ctype.FDb.field.InputMaybe
-static bool lib_ctype::field_InputMaybe(dmmeta::Field &elem) {
+static bool lib_ctype::field_InputMaybe(dmmeta::Field &elem) throw() {
     bool retval = true;
     retval = field_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1486,7 +1486,7 @@ bool lib_ctype::field_XrefMaybe(lib_ctype::FField &row) {
 
 // --- lib_ctype.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
-lib_ctype::FField* lib_ctype::ind_field_Find(const algo::strptr& key) {
+lib_ctype::FField* lib_ctype::ind_field_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     lib_ctype::FField* *e = &_db.ind_field_buckets_elems[index];
     lib_ctype::FField* ret=NULL;
@@ -1509,7 +1509,7 @@ lib_ctype::FField& lib_ctype::ind_field_FindX(const algo::strptr& key) {
 
 // --- lib_ctype.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_ctype::ind_field_InsertMaybe(lib_ctype::FField& row) {
+bool lib_ctype::ind_field_InsertMaybe(lib_ctype::FField& row) throw() {
     ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (lib_ctype::FField*)-1)) {// check if in hash already
@@ -1537,7 +1537,7 @@ bool lib_ctype::ind_field_InsertMaybe(lib_ctype::FField& row) {
 
 // --- lib_ctype.FDb.ind_field.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_ctype::ind_field_Remove(lib_ctype::FField& row) {
+void lib_ctype::ind_field_Remove(lib_ctype::FField& row) throw() {
     if (LIKELY(row.ind_field_next != (lib_ctype::FField*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         lib_ctype::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
@@ -1555,7 +1555,7 @@ void lib_ctype::ind_field_Remove(lib_ctype::FField& row) {
 
 // --- lib_ctype.FDb.ind_field.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_ctype::ind_field_Reserve(int n) {
+void lib_ctype::ind_field_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_field_buckets_n;
     u32 new_nelems   = _db.ind_field_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1592,7 +1592,7 @@ void lib_ctype::ind_field_Reserve(int n) {
 // --- lib_ctype.FDb.cdflt.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ctype::FCdflt& lib_ctype::cdflt_Alloc() {
+lib_ctype::FCdflt& lib_ctype::cdflt_Alloc() throw() {
     lib_ctype::FCdflt* row = cdflt_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.cdflt  comment:'Alloc failed'");
@@ -1602,7 +1602,7 @@ lib_ctype::FCdflt& lib_ctype::cdflt_Alloc() {
 
 // --- lib_ctype.FDb.cdflt.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ctype::FCdflt* lib_ctype::cdflt_AllocMaybe() {
+lib_ctype::FCdflt* lib_ctype::cdflt_AllocMaybe() throw() {
     lib_ctype::FCdflt *row = (lib_ctype::FCdflt*)cdflt_AllocMem();
     if (row) {
         new (row) lib_ctype::FCdflt; // call constructor
@@ -1613,7 +1613,7 @@ lib_ctype::FCdflt* lib_ctype::cdflt_AllocMaybe() {
 // --- lib_ctype.FDb.cdflt.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ctype::FCdflt* lib_ctype::cdflt_InsertMaybe(const dmmeta::Cdflt &value) {
+lib_ctype::FCdflt* lib_ctype::cdflt_InsertMaybe(const dmmeta::Cdflt &value) throw() {
     lib_ctype::FCdflt *row = &cdflt_Alloc(); // if out of memory, process dies. if input error, return NULL.
     cdflt_CopyIn(*row,const_cast<dmmeta::Cdflt&>(value));
     bool ok = cdflt_XrefMaybe(*row); // this may return false
@@ -1626,7 +1626,7 @@ lib_ctype::FCdflt* lib_ctype::cdflt_InsertMaybe(const dmmeta::Cdflt &value) {
 
 // --- lib_ctype.FDb.cdflt.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ctype::cdflt_AllocMem() {
+void* lib_ctype::cdflt_AllocMem() throw() {
     u64 new_nelems     = _db.cdflt_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1652,7 +1652,7 @@ void* lib_ctype::cdflt_AllocMem() {
 
 // --- lib_ctype.FDb.cdflt.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ctype::cdflt_RemoveLast() {
+void lib_ctype::cdflt_RemoveLast() throw() {
     u64 n = _db.cdflt_n;
     if (n > 0) {
         n -= 1;
@@ -1662,7 +1662,7 @@ void lib_ctype::cdflt_RemoveLast() {
 }
 
 // --- lib_ctype.FDb.cdflt.InputMaybe
-static bool lib_ctype::cdflt_InputMaybe(dmmeta::Cdflt &elem) {
+static bool lib_ctype::cdflt_InputMaybe(dmmeta::Cdflt &elem) throw() {
     bool retval = true;
     retval = cdflt_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1802,7 +1802,7 @@ bool lib_ctype::InsertStrptrMaybe(algo::strptr str) {
 
 // --- lib_ctype.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool lib_ctype::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool lib_ctype::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = lib_ctype::LoadTuplesFile(root, recursive);
@@ -1837,7 +1837,7 @@ bool lib_ctype::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool lib_ctype::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool lib_ctype::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -1850,7 +1850,7 @@ bool lib_ctype::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- lib_ctype.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool lib_ctype::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool lib_ctype::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -1870,7 +1870,7 @@ bool lib_ctype::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive
 
 // --- lib_ctype.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool lib_ctype::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool lib_ctype::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = lib_ctype::LoadTuplesFile(fname, recursive);
@@ -1895,7 +1895,7 @@ bool lib_ctype::_db_XrefMaybe() {
 // --- lib_ctype.FDb.cfmt.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ctype::FCfmt& lib_ctype::cfmt_Alloc() {
+lib_ctype::FCfmt& lib_ctype::cfmt_Alloc() throw() {
     lib_ctype::FCfmt* row = cfmt_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.cfmt  comment:'Alloc failed'");
@@ -1905,7 +1905,7 @@ lib_ctype::FCfmt& lib_ctype::cfmt_Alloc() {
 
 // --- lib_ctype.FDb.cfmt.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ctype::FCfmt* lib_ctype::cfmt_AllocMaybe() {
+lib_ctype::FCfmt* lib_ctype::cfmt_AllocMaybe() throw() {
     lib_ctype::FCfmt *row = (lib_ctype::FCfmt*)cfmt_AllocMem();
     if (row) {
         new (row) lib_ctype::FCfmt; // call constructor
@@ -1916,7 +1916,7 @@ lib_ctype::FCfmt* lib_ctype::cfmt_AllocMaybe() {
 // --- lib_ctype.FDb.cfmt.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ctype::FCfmt* lib_ctype::cfmt_InsertMaybe(const dmmeta::Cfmt &value) {
+lib_ctype::FCfmt* lib_ctype::cfmt_InsertMaybe(const dmmeta::Cfmt &value) throw() {
     lib_ctype::FCfmt *row = &cfmt_Alloc(); // if out of memory, process dies. if input error, return NULL.
     cfmt_CopyIn(*row,const_cast<dmmeta::Cfmt&>(value));
     bool ok = cfmt_XrefMaybe(*row); // this may return false
@@ -1929,7 +1929,7 @@ lib_ctype::FCfmt* lib_ctype::cfmt_InsertMaybe(const dmmeta::Cfmt &value) {
 
 // --- lib_ctype.FDb.cfmt.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ctype::cfmt_AllocMem() {
+void* lib_ctype::cfmt_AllocMem() throw() {
     u64 new_nelems     = _db.cfmt_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1955,7 +1955,7 @@ void* lib_ctype::cfmt_AllocMem() {
 
 // --- lib_ctype.FDb.cfmt.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ctype::cfmt_RemoveLast() {
+void lib_ctype::cfmt_RemoveLast() throw() {
     u64 n = _db.cfmt_n;
     if (n > 0) {
         n -= 1;
@@ -1965,7 +1965,7 @@ void lib_ctype::cfmt_RemoveLast() {
 }
 
 // --- lib_ctype.FDb.cfmt.InputMaybe
-static bool lib_ctype::cfmt_InputMaybe(dmmeta::Cfmt &elem) {
+static bool lib_ctype::cfmt_InputMaybe(dmmeta::Cfmt &elem) throw() {
     bool retval = true;
     retval = cfmt_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2000,7 +2000,7 @@ bool lib_ctype::cfmt_XrefMaybe(lib_ctype::FCfmt &row) {
 
 // --- lib_ctype.FDb.ind_cfmt.Find
 // Find row by key. Return NULL if not found.
-lib_ctype::FCfmt* lib_ctype::ind_cfmt_Find(const algo::strptr& key) {
+lib_ctype::FCfmt* lib_ctype::ind_cfmt_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_cfmt_buckets_n - 1);
     lib_ctype::FCfmt* *e = &_db.ind_cfmt_buckets_elems[index];
     lib_ctype::FCfmt* ret=NULL;
@@ -2023,7 +2023,7 @@ lib_ctype::FCfmt& lib_ctype::ind_cfmt_FindX(const algo::strptr& key) {
 
 // --- lib_ctype.FDb.ind_cfmt.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_ctype::ind_cfmt_InsertMaybe(lib_ctype::FCfmt& row) {
+bool lib_ctype::ind_cfmt_InsertMaybe(lib_ctype::FCfmt& row) throw() {
     ind_cfmt_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_cfmt_next == (lib_ctype::FCfmt*)-1)) {// check if in hash already
@@ -2051,7 +2051,7 @@ bool lib_ctype::ind_cfmt_InsertMaybe(lib_ctype::FCfmt& row) {
 
 // --- lib_ctype.FDb.ind_cfmt.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_ctype::ind_cfmt_Remove(lib_ctype::FCfmt& row) {
+void lib_ctype::ind_cfmt_Remove(lib_ctype::FCfmt& row) throw() {
     if (LIKELY(row.ind_cfmt_next != (lib_ctype::FCfmt*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.cfmt) & (_db.ind_cfmt_buckets_n - 1);
         lib_ctype::FCfmt* *prev = &_db.ind_cfmt_buckets_elems[index]; // addr of pointer to current element
@@ -2069,7 +2069,7 @@ void lib_ctype::ind_cfmt_Remove(lib_ctype::FCfmt& row) {
 
 // --- lib_ctype.FDb.ind_cfmt.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_ctype::ind_cfmt_Reserve(int n) {
+void lib_ctype::ind_cfmt_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_cfmt_buckets_n;
     u32 new_nelems   = _db.ind_cfmt_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2106,7 +2106,7 @@ void lib_ctype::ind_cfmt_Reserve(int n) {
 // --- lib_ctype.FDb.cppfunc.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ctype::FCppfunc& lib_ctype::cppfunc_Alloc() {
+lib_ctype::FCppfunc& lib_ctype::cppfunc_Alloc() throw() {
     lib_ctype::FCppfunc* row = cppfunc_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.cppfunc  comment:'Alloc failed'");
@@ -2116,7 +2116,7 @@ lib_ctype::FCppfunc& lib_ctype::cppfunc_Alloc() {
 
 // --- lib_ctype.FDb.cppfunc.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ctype::FCppfunc* lib_ctype::cppfunc_AllocMaybe() {
+lib_ctype::FCppfunc* lib_ctype::cppfunc_AllocMaybe() throw() {
     lib_ctype::FCppfunc *row = (lib_ctype::FCppfunc*)cppfunc_AllocMem();
     if (row) {
         new (row) lib_ctype::FCppfunc; // call constructor
@@ -2127,7 +2127,7 @@ lib_ctype::FCppfunc* lib_ctype::cppfunc_AllocMaybe() {
 // --- lib_ctype.FDb.cppfunc.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ctype::FCppfunc* lib_ctype::cppfunc_InsertMaybe(const dmmeta::Cppfunc &value) {
+lib_ctype::FCppfunc* lib_ctype::cppfunc_InsertMaybe(const dmmeta::Cppfunc &value) throw() {
     lib_ctype::FCppfunc *row = &cppfunc_Alloc(); // if out of memory, process dies. if input error, return NULL.
     cppfunc_CopyIn(*row,const_cast<dmmeta::Cppfunc&>(value));
     bool ok = cppfunc_XrefMaybe(*row); // this may return false
@@ -2140,7 +2140,7 @@ lib_ctype::FCppfunc* lib_ctype::cppfunc_InsertMaybe(const dmmeta::Cppfunc &value
 
 // --- lib_ctype.FDb.cppfunc.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ctype::cppfunc_AllocMem() {
+void* lib_ctype::cppfunc_AllocMem() throw() {
     u64 new_nelems     = _db.cppfunc_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2166,7 +2166,7 @@ void* lib_ctype::cppfunc_AllocMem() {
 
 // --- lib_ctype.FDb.cppfunc.RemoveAll
 // Remove all elements from Lary
-void lib_ctype::cppfunc_RemoveAll() {
+void lib_ctype::cppfunc_RemoveAll() throw() {
     for (u64 n = _db.cppfunc_n; n>0; ) {
         n--;
         cppfunc_qFind(u64(n)).~FCppfunc(); // destroy last element
@@ -2176,7 +2176,7 @@ void lib_ctype::cppfunc_RemoveAll() {
 
 // --- lib_ctype.FDb.cppfunc.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ctype::cppfunc_RemoveLast() {
+void lib_ctype::cppfunc_RemoveLast() throw() {
     u64 n = _db.cppfunc_n;
     if (n > 0) {
         n -= 1;
@@ -2186,7 +2186,7 @@ void lib_ctype::cppfunc_RemoveLast() {
 }
 
 // --- lib_ctype.FDb.cppfunc.InputMaybe
-static bool lib_ctype::cppfunc_InputMaybe(dmmeta::Cppfunc &elem) {
+static bool lib_ctype::cppfunc_InputMaybe(dmmeta::Cppfunc &elem) throw() {
     bool retval = true;
     retval = cppfunc_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2218,7 +2218,7 @@ bool lib_ctype::cppfunc_XrefMaybe(lib_ctype::FCppfunc &row) {
 // --- lib_ctype.FDb.substr.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ctype::FSubstr& lib_ctype::substr_Alloc() {
+lib_ctype::FSubstr& lib_ctype::substr_Alloc() throw() {
     lib_ctype::FSubstr* row = substr_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.substr  comment:'Alloc failed'");
@@ -2228,7 +2228,7 @@ lib_ctype::FSubstr& lib_ctype::substr_Alloc() {
 
 // --- lib_ctype.FDb.substr.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ctype::FSubstr* lib_ctype::substr_AllocMaybe() {
+lib_ctype::FSubstr* lib_ctype::substr_AllocMaybe() throw() {
     lib_ctype::FSubstr *row = (lib_ctype::FSubstr*)substr_AllocMem();
     if (row) {
         new (row) lib_ctype::FSubstr; // call constructor
@@ -2239,7 +2239,7 @@ lib_ctype::FSubstr* lib_ctype::substr_AllocMaybe() {
 // --- lib_ctype.FDb.substr.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ctype::FSubstr* lib_ctype::substr_InsertMaybe(const dmmeta::Substr &value) {
+lib_ctype::FSubstr* lib_ctype::substr_InsertMaybe(const dmmeta::Substr &value) throw() {
     lib_ctype::FSubstr *row = &substr_Alloc(); // if out of memory, process dies. if input error, return NULL.
     substr_CopyIn(*row,const_cast<dmmeta::Substr&>(value));
     bool ok = substr_XrefMaybe(*row); // this may return false
@@ -2252,7 +2252,7 @@ lib_ctype::FSubstr* lib_ctype::substr_InsertMaybe(const dmmeta::Substr &value) {
 
 // --- lib_ctype.FDb.substr.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ctype::substr_AllocMem() {
+void* lib_ctype::substr_AllocMem() throw() {
     u64 new_nelems     = _db.substr_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2278,7 +2278,7 @@ void* lib_ctype::substr_AllocMem() {
 
 // --- lib_ctype.FDb.substr.RemoveAll
 // Remove all elements from Lary
-void lib_ctype::substr_RemoveAll() {
+void lib_ctype::substr_RemoveAll() throw() {
     for (u64 n = _db.substr_n; n>0; ) {
         n--;
         substr_qFind(u64(n)).~FSubstr(); // destroy last element
@@ -2288,7 +2288,7 @@ void lib_ctype::substr_RemoveAll() {
 
 // --- lib_ctype.FDb.substr.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ctype::substr_RemoveLast() {
+void lib_ctype::substr_RemoveLast() throw() {
     u64 n = _db.substr_n;
     if (n > 0) {
         n -= 1;
@@ -2298,7 +2298,7 @@ void lib_ctype::substr_RemoveLast() {
 }
 
 // --- lib_ctype.FDb.substr.InputMaybe
-static bool lib_ctype::substr_InputMaybe(dmmeta::Substr &elem) {
+static bool lib_ctype::substr_InputMaybe(dmmeta::Substr &elem) throw() {
     bool retval = true;
     retval = substr_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2343,7 +2343,7 @@ bool lib_ctype::substr_XrefMaybe(lib_ctype::FSubstr &row) {
 // --- lib_ctype.FDb.unstablefld.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ctype::FUnstablefld& lib_ctype::unstablefld_Alloc() {
+lib_ctype::FUnstablefld& lib_ctype::unstablefld_Alloc() throw() {
     lib_ctype::FUnstablefld* row = unstablefld_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.unstablefld  comment:'Alloc failed'");
@@ -2353,7 +2353,7 @@ lib_ctype::FUnstablefld& lib_ctype::unstablefld_Alloc() {
 
 // --- lib_ctype.FDb.unstablefld.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ctype::FUnstablefld* lib_ctype::unstablefld_AllocMaybe() {
+lib_ctype::FUnstablefld* lib_ctype::unstablefld_AllocMaybe() throw() {
     lib_ctype::FUnstablefld *row = (lib_ctype::FUnstablefld*)unstablefld_AllocMem();
     if (row) {
         new (row) lib_ctype::FUnstablefld; // call constructor
@@ -2364,7 +2364,7 @@ lib_ctype::FUnstablefld* lib_ctype::unstablefld_AllocMaybe() {
 // --- lib_ctype.FDb.unstablefld.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ctype::FUnstablefld* lib_ctype::unstablefld_InsertMaybe(const dev::Unstablefld &value) {
+lib_ctype::FUnstablefld* lib_ctype::unstablefld_InsertMaybe(const dev::Unstablefld &value) throw() {
     lib_ctype::FUnstablefld *row = &unstablefld_Alloc(); // if out of memory, process dies. if input error, return NULL.
     unstablefld_CopyIn(*row,const_cast<dev::Unstablefld&>(value));
     bool ok = unstablefld_XrefMaybe(*row); // this may return false
@@ -2377,7 +2377,7 @@ lib_ctype::FUnstablefld* lib_ctype::unstablefld_InsertMaybe(const dev::Unstablef
 
 // --- lib_ctype.FDb.unstablefld.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ctype::unstablefld_AllocMem() {
+void* lib_ctype::unstablefld_AllocMem() throw() {
     u64 new_nelems     = _db.unstablefld_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2403,7 +2403,7 @@ void* lib_ctype::unstablefld_AllocMem() {
 
 // --- lib_ctype.FDb.unstablefld.RemoveAll
 // Remove all elements from Lary
-void lib_ctype::unstablefld_RemoveAll() {
+void lib_ctype::unstablefld_RemoveAll() throw() {
     for (u64 n = _db.unstablefld_n; n>0; ) {
         n--;
         unstablefld_qFind(u64(n)).~FUnstablefld(); // destroy last element
@@ -2413,7 +2413,7 @@ void lib_ctype::unstablefld_RemoveAll() {
 
 // --- lib_ctype.FDb.unstablefld.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ctype::unstablefld_RemoveLast() {
+void lib_ctype::unstablefld_RemoveLast() throw() {
     u64 n = _db.unstablefld_n;
     if (n > 0) {
         n -= 1;
@@ -2423,7 +2423,7 @@ void lib_ctype::unstablefld_RemoveLast() {
 }
 
 // --- lib_ctype.FDb.unstablefld.InputMaybe
-static bool lib_ctype::unstablefld_InputMaybe(dev::Unstablefld &elem) {
+static bool lib_ctype::unstablefld_InputMaybe(dev::Unstablefld &elem) throw() {
     bool retval = true;
     retval = unstablefld_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2455,7 +2455,7 @@ bool lib_ctype::unstablefld_XrefMaybe(lib_ctype::FUnstablefld &row) {
 // --- lib_ctype.FDb.bltin.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ctype::FBltin& lib_ctype::bltin_Alloc() {
+lib_ctype::FBltin& lib_ctype::bltin_Alloc() throw() {
     lib_ctype::FBltin* row = bltin_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.bltin  comment:'Alloc failed'");
@@ -2465,7 +2465,7 @@ lib_ctype::FBltin& lib_ctype::bltin_Alloc() {
 
 // --- lib_ctype.FDb.bltin.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ctype::FBltin* lib_ctype::bltin_AllocMaybe() {
+lib_ctype::FBltin* lib_ctype::bltin_AllocMaybe() throw() {
     lib_ctype::FBltin *row = (lib_ctype::FBltin*)bltin_AllocMem();
     if (row) {
         new (row) lib_ctype::FBltin; // call constructor
@@ -2476,7 +2476,7 @@ lib_ctype::FBltin* lib_ctype::bltin_AllocMaybe() {
 // --- lib_ctype.FDb.bltin.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ctype::FBltin* lib_ctype::bltin_InsertMaybe(const amcdb::Bltin &value) {
+lib_ctype::FBltin* lib_ctype::bltin_InsertMaybe(const amcdb::Bltin &value) throw() {
     lib_ctype::FBltin *row = &bltin_Alloc(); // if out of memory, process dies. if input error, return NULL.
     bltin_CopyIn(*row,const_cast<amcdb::Bltin&>(value));
     bool ok = bltin_XrefMaybe(*row); // this may return false
@@ -2489,7 +2489,7 @@ lib_ctype::FBltin* lib_ctype::bltin_InsertMaybe(const amcdb::Bltin &value) {
 
 // --- lib_ctype.FDb.bltin.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ctype::bltin_AllocMem() {
+void* lib_ctype::bltin_AllocMem() throw() {
     u64 new_nelems     = _db.bltin_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2515,7 +2515,7 @@ void* lib_ctype::bltin_AllocMem() {
 
 // --- lib_ctype.FDb.bltin.RemoveAll
 // Remove all elements from Lary
-void lib_ctype::bltin_RemoveAll() {
+void lib_ctype::bltin_RemoveAll() throw() {
     for (u64 n = _db.bltin_n; n>0; ) {
         n--;
         bltin_qFind(u64(n)).~FBltin(); // destroy last element
@@ -2525,7 +2525,7 @@ void lib_ctype::bltin_RemoveAll() {
 
 // --- lib_ctype.FDb.bltin.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ctype::bltin_RemoveLast() {
+void lib_ctype::bltin_RemoveLast() throw() {
     u64 n = _db.bltin_n;
     if (n > 0) {
         n -= 1;
@@ -2535,7 +2535,7 @@ void lib_ctype::bltin_RemoveLast() {
 }
 
 // --- lib_ctype.FDb.bltin.InputMaybe
-static bool lib_ctype::bltin_InputMaybe(amcdb::Bltin &elem) {
+static bool lib_ctype::bltin_InputMaybe(amcdb::Bltin &elem) throw() {
     bool retval = true;
     retval = bltin_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2567,7 +2567,7 @@ bool lib_ctype::bltin_XrefMaybe(lib_ctype::FBltin &row) {
 // --- lib_ctype.FDb.sqltype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_ctype::FSqltype& lib_ctype::sqltype_Alloc() {
+lib_ctype::FSqltype& lib_ctype::sqltype_Alloc() throw() {
     lib_ctype::FSqltype* row = sqltype_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_ctype.out_of_mem  field:lib_ctype.FDb.sqltype  comment:'Alloc failed'");
@@ -2577,7 +2577,7 @@ lib_ctype::FSqltype& lib_ctype::sqltype_Alloc() {
 
 // --- lib_ctype.FDb.sqltype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_ctype::FSqltype* lib_ctype::sqltype_AllocMaybe() {
+lib_ctype::FSqltype* lib_ctype::sqltype_AllocMaybe() throw() {
     lib_ctype::FSqltype *row = (lib_ctype::FSqltype*)sqltype_AllocMem();
     if (row) {
         new (row) lib_ctype::FSqltype; // call constructor
@@ -2588,7 +2588,7 @@ lib_ctype::FSqltype* lib_ctype::sqltype_AllocMaybe() {
 // --- lib_ctype.FDb.sqltype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_ctype::FSqltype* lib_ctype::sqltype_InsertMaybe(const dmmeta::Sqltype &value) {
+lib_ctype::FSqltype* lib_ctype::sqltype_InsertMaybe(const dmmeta::Sqltype &value) throw() {
     lib_ctype::FSqltype *row = &sqltype_Alloc(); // if out of memory, process dies. if input error, return NULL.
     sqltype_CopyIn(*row,const_cast<dmmeta::Sqltype&>(value));
     bool ok = sqltype_XrefMaybe(*row); // this may return false
@@ -2601,7 +2601,7 @@ lib_ctype::FSqltype* lib_ctype::sqltype_InsertMaybe(const dmmeta::Sqltype &value
 
 // --- lib_ctype.FDb.sqltype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_ctype::sqltype_AllocMem() {
+void* lib_ctype::sqltype_AllocMem() throw() {
     u64 new_nelems     = _db.sqltype_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2627,7 +2627,7 @@ void* lib_ctype::sqltype_AllocMem() {
 
 // --- lib_ctype.FDb.sqltype.RemoveAll
 // Remove all elements from Lary
-void lib_ctype::sqltype_RemoveAll() {
+void lib_ctype::sqltype_RemoveAll() throw() {
     for (u64 n = _db.sqltype_n; n>0; ) {
         n--;
         sqltype_qFind(u64(n)).~FSqltype(); // destroy last element
@@ -2637,7 +2637,7 @@ void lib_ctype::sqltype_RemoveAll() {
 
 // --- lib_ctype.FDb.sqltype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_ctype::sqltype_RemoveLast() {
+void lib_ctype::sqltype_RemoveLast() throw() {
     u64 n = _db.sqltype_n;
     if (n > 0) {
         n -= 1;
@@ -2647,7 +2647,7 @@ void lib_ctype::sqltype_RemoveLast() {
 }
 
 // --- lib_ctype.FDb.sqltype.InputMaybe
-static bool lib_ctype::sqltype_InputMaybe(dmmeta::Sqltype &elem) {
+static bool lib_ctype::sqltype_InputMaybe(dmmeta::Sqltype &elem) throw() {
     bool retval = true;
     retval = sqltype_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2678,13 +2678,13 @@ bool lib_ctype::sqltype_XrefMaybe(lib_ctype::FSqltype &row) {
 
 // --- lib_ctype.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr lib_ctype::trace_RowidFind(int t) {
+static algo::ImrowPtr lib_ctype::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- lib_ctype.FDb.trace.N
 // Function return 1
-inline static i32 lib_ctype::trace_N() {
+inline static i32 lib_ctype::trace_N() throw() {
     return 1;
 }
 
@@ -2879,7 +2879,7 @@ void lib_ctype::FDb_Init() {
 }
 
 // --- lib_ctype.FDb..Uninit
-void lib_ctype::FDb_Uninit() {
+void lib_ctype::FDb_Uninit() throw() {
     lib_ctype::FDb &row = _db; (void)row;
 
     // lib_ctype.FDb.sqltype.Uninit (Lary)  //
@@ -2939,7 +2939,7 @@ void lib_ctype::FDb_Uninit() {
 
 // --- lib_ctype.FFconst.msghdr.CopyOut
 // Copy fields out of row
-void lib_ctype::fconst_CopyOut(lib_ctype::FFconst &row, dmmeta::Fconst &out) {
+void lib_ctype::fconst_CopyOut(lib_ctype::FFconst &row, dmmeta::Fconst &out) throw() {
     out.fconst = row.fconst;
     out.value = row.value;
     out.comment = row.comment;
@@ -2947,26 +2947,26 @@ void lib_ctype::fconst_CopyOut(lib_ctype::FFconst &row, dmmeta::Fconst &out) {
 
 // --- lib_ctype.FFconst.msghdr.CopyIn
 // Copy fields in to row
-void lib_ctype::fconst_CopyIn(lib_ctype::FFconst &row, dmmeta::Fconst &in) {
+void lib_ctype::fconst_CopyIn(lib_ctype::FFconst &row, dmmeta::Fconst &in) throw() {
     row.fconst = in.fconst;
     row.value = in.value;
     row.comment = in.comment;
 }
 
 // --- lib_ctype.FFconst.field.Get
-algo::Smallstr100 lib_ctype::field_Get(lib_ctype::FFconst& fconst) {
+algo::Smallstr100 lib_ctype::field_Get(lib_ctype::FFconst& fconst) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(fconst.fconst, "/LL"));
     return ret;
 }
 
 // --- lib_ctype.FFconst.name.Get
-algo::Smallstr100 lib_ctype::name_Get(lib_ctype::FFconst& fconst) {
+algo::Smallstr100 lib_ctype::name_Get(lib_ctype::FFconst& fconst) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(fconst.fconst, "/LR"));
     return ret;
 }
 
 // --- lib_ctype.FFconst..Uninit
-void lib_ctype::FFconst_Uninit(lib_ctype::FFconst& fconst) {
+void lib_ctype::FFconst_Uninit(lib_ctype::FFconst& fconst) throw() {
     lib_ctype::FFconst &row = fconst; (void)row;
     ind_fconst_Remove(row); // remove fconst from index ind_fconst
     ind_fconst_key_Remove(row); // remove fconst from index ind_fconst_key
@@ -2979,7 +2979,7 @@ void lib_ctype::FFconst_Uninit(lib_ctype::FFconst& fconst) {
 // --- lib_ctype.FFconst..Print
 // print string representation of ROW to string STR
 // cfmt:lib_ctype.FFconst.String  printfmt:Tuple
-void lib_ctype::FFconst_Print(lib_ctype::FFconst& row, algo::cstring& str) {
+void lib_ctype::FFconst_Print(lib_ctype::FFconst& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_ctype.FFconst";
 
@@ -2998,7 +2998,7 @@ void lib_ctype::FFconst_Print(lib_ctype::FFconst& row, algo::cstring& str) {
 
 // --- lib_ctype.FField.msghdr.CopyOut
 // Copy fields out of row
-void lib_ctype::field_CopyOut(lib_ctype::FField &row, dmmeta::Field &out) {
+void lib_ctype::field_CopyOut(lib_ctype::FField &row, dmmeta::Field &out) throw() {
     out.field = row.field;
     out.arg = row.arg;
     out.reftype = row.reftype;
@@ -3008,7 +3008,7 @@ void lib_ctype::field_CopyOut(lib_ctype::FField &row, dmmeta::Field &out) {
 
 // --- lib_ctype.FField.msghdr.CopyIn
 // Copy fields in to row
-void lib_ctype::field_CopyIn(lib_ctype::FField &row, dmmeta::Field &in) {
+void lib_ctype::field_CopyIn(lib_ctype::FField &row, dmmeta::Field &in) throw() {
     row.field = in.field;
     row.arg = in.arg;
     row.reftype = in.reftype;
@@ -3017,26 +3017,26 @@ void lib_ctype::field_CopyIn(lib_ctype::FField &row, dmmeta::Field &in) {
 }
 
 // --- lib_ctype.FField.ctype.Get
-algo::Smallstr100 lib_ctype::ctype_Get(lib_ctype::FField& field) {
+algo::Smallstr100 lib_ctype::ctype_Get(lib_ctype::FField& field) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
     return ret;
 }
 
 // --- lib_ctype.FField.ns.Get
-algo::Smallstr16 lib_ctype::ns_Get(lib_ctype::FField& field) {
+algo::Smallstr16 lib_ctype::ns_Get(lib_ctype::FField& field) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(field.field, ".RL.RL"));
     return ret;
 }
 
 // --- lib_ctype.FField.name.Get
-algo::Smallstr50 lib_ctype::name_Get(lib_ctype::FField& field) {
+algo::Smallstr50 lib_ctype::name_Get(lib_ctype::FField& field) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RR"));
     return ret;
 }
 
 // --- lib_ctype.FField.zd_fconst.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void lib_ctype::zd_fconst_Insert(lib_ctype::FField& field, lib_ctype::FFconst& row) {
+void lib_ctype::zd_fconst_Insert(lib_ctype::FField& field, lib_ctype::FFconst& row) throw() {
     if (!zd_fconst_InLlistQ(row)) {
         lib_ctype::FFconst* old_tail = field.zd_fconst_tail;
         row.zd_fconst_next = NULL;
@@ -3052,7 +3052,7 @@ void lib_ctype::zd_fconst_Insert(lib_ctype::FField& field, lib_ctype::FFconst& r
 
 // --- lib_ctype.FField.zd_fconst.Remove
 // Remove element from index. If element is not in index, do nothing.
-void lib_ctype::zd_fconst_Remove(lib_ctype::FField& field, lib_ctype::FFconst& row) {
+void lib_ctype::zd_fconst_Remove(lib_ctype::FField& field, lib_ctype::FFconst& row) throw() {
     if (zd_fconst_InLlistQ(row)) {
         lib_ctype::FFconst* old_head       = field.zd_fconst_head;
         (void)old_head; // in case it's not used
@@ -3075,7 +3075,7 @@ void lib_ctype::zd_fconst_Remove(lib_ctype::FField& field, lib_ctype::FFconst& r
 
 // --- lib_ctype.FField.zd_fconst.RemoveAll
 // Empty the index. (The rows are not deleted)
-void lib_ctype::zd_fconst_RemoveAll(lib_ctype::FField& field) {
+void lib_ctype::zd_fconst_RemoveAll(lib_ctype::FField& field) throw() {
     lib_ctype::FFconst* row = field.zd_fconst_head;
     field.zd_fconst_head = NULL;
     field.zd_fconst_tail = NULL;
@@ -3090,7 +3090,7 @@ void lib_ctype::zd_fconst_RemoveAll(lib_ctype::FField& field) {
 
 // --- lib_ctype.FField.zd_fconst.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-lib_ctype::FFconst* lib_ctype::zd_fconst_RemoveFirst(lib_ctype::FField& field) {
+lib_ctype::FFconst* lib_ctype::zd_fconst_RemoveFirst(lib_ctype::FField& field) throw() {
     lib_ctype::FFconst *row = NULL;
     row = field.zd_fconst_head;
     if (row) {
@@ -3109,7 +3109,7 @@ lib_ctype::FFconst* lib_ctype::zd_fconst_RemoveFirst(lib_ctype::FField& field) {
 // --- lib_ctype.FField.c_substr_srcfield.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void lib_ctype::c_substr_srcfield_Insert(lib_ctype::FField& field, lib_ctype::FSubstr& row) {
+void lib_ctype::c_substr_srcfield_Insert(lib_ctype::FField& field, lib_ctype::FSubstr& row) throw() {
     if (bool_Update(row.field_c_substr_srcfield_in_ary,true)) {
         // reserve space
         c_substr_srcfield_Reserve(field, 1);
@@ -3126,7 +3126,7 @@ void lib_ctype::c_substr_srcfield_Insert(lib_ctype::FField& field, lib_ctype::FS
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool lib_ctype::c_substr_srcfield_InsertMaybe(lib_ctype::FField& field, lib_ctype::FSubstr& row) {
+bool lib_ctype::c_substr_srcfield_InsertMaybe(lib_ctype::FField& field, lib_ctype::FSubstr& row) throw() {
     bool retval = !row.field_c_substr_srcfield_in_ary;
     c_substr_srcfield_Insert(field,row); // check is performed in _Insert again
     return retval;
@@ -3134,7 +3134,7 @@ bool lib_ctype::c_substr_srcfield_InsertMaybe(lib_ctype::FField& field, lib_ctyp
 
 // --- lib_ctype.FField.c_substr_srcfield.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void lib_ctype::c_substr_srcfield_Remove(lib_ctype::FField& field, lib_ctype::FSubstr& row) {
+void lib_ctype::c_substr_srcfield_Remove(lib_ctype::FField& field, lib_ctype::FSubstr& row) throw() {
     if (bool_Update(row.field_c_substr_srcfield_in_ary,false)) {
         int lim = field.c_substr_srcfield_n;
         lib_ctype::FSubstr* *elems = field.c_substr_srcfield_elems;
@@ -3155,7 +3155,7 @@ void lib_ctype::c_substr_srcfield_Remove(lib_ctype::FField& field, lib_ctype::FS
 
 // --- lib_ctype.FField.c_substr_srcfield.Reserve
 // Reserve space in index for N more elements;
-void lib_ctype::c_substr_srcfield_Reserve(lib_ctype::FField& field, u32 n) {
+void lib_ctype::c_substr_srcfield_Reserve(lib_ctype::FField& field, u32 n) throw() {
     u32 old_max = field.c_substr_srcfield_max;
     if (UNLIKELY(field.c_substr_srcfield_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -3193,7 +3193,7 @@ void lib_ctype::FField_Init(lib_ctype::FField& field) {
 }
 
 // --- lib_ctype.FField..Uninit
-void lib_ctype::FField_Uninit(lib_ctype::FField& field) {
+void lib_ctype::FField_Uninit(lib_ctype::FField& field) throw() {
     lib_ctype::FField &row = field; (void)row;
     lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(ctype_Get(row));
     if (p_ctype)  {
@@ -3208,7 +3208,7 @@ void lib_ctype::FField_Uninit(lib_ctype::FField& field) {
 // --- lib_ctype.FField..Print
 // print string representation of ROW to string STR
 // cfmt:lib_ctype.FField.String  printfmt:Tuple
-void lib_ctype::FField_Print(lib_ctype::FField& row, algo::cstring& str) {
+void lib_ctype::FField_Print(lib_ctype::FField& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_ctype.FField";
 
@@ -3254,20 +3254,20 @@ void lib_ctype::FField_Print(lib_ctype::FField& row, algo::cstring& str) {
 
 // --- lib_ctype.FFtuple.msghdr.CopyOut
 // Copy fields out of row
-void lib_ctype::ftuple_CopyOut(lib_ctype::FFtuple &row, dmmeta::Ftuple &out) {
+void lib_ctype::ftuple_CopyOut(lib_ctype::FFtuple &row, dmmeta::Ftuple &out) throw() {
     out.field = row.field;
     out.comment = row.comment;
 }
 
 // --- lib_ctype.FFtuple.msghdr.CopyIn
 // Copy fields in to row
-void lib_ctype::ftuple_CopyIn(lib_ctype::FFtuple &row, dmmeta::Ftuple &in) {
+void lib_ctype::ftuple_CopyIn(lib_ctype::FFtuple &row, dmmeta::Ftuple &in) throw() {
     row.field = in.field;
     row.comment = in.comment;
 }
 
 // --- lib_ctype.FFtuple..Uninit
-void lib_ctype::FFtuple_Uninit(lib_ctype::FFtuple& ftuple) {
+void lib_ctype::FFtuple_Uninit(lib_ctype::FFtuple& ftuple) throw() {
     lib_ctype::FFtuple &row = ftuple; (void)row;
     lib_ctype::FField* p_field = lib_ctype::ind_field_Find(row.field);
     if (p_field)  {
@@ -3277,7 +3277,7 @@ void lib_ctype::FFtuple_Uninit(lib_ctype::FFtuple& ftuple) {
 
 // --- lib_ctype.FSqltype.base.CopyOut
 // Copy fields out of row
-void lib_ctype::sqltype_CopyOut(lib_ctype::FSqltype &row, dmmeta::Sqltype &out) {
+void lib_ctype::sqltype_CopyOut(lib_ctype::FSqltype &row, dmmeta::Sqltype &out) throw() {
     out.ctype = row.ctype;
     out.expr = row.expr;
     out.comment = row.comment;
@@ -3285,14 +3285,14 @@ void lib_ctype::sqltype_CopyOut(lib_ctype::FSqltype &row, dmmeta::Sqltype &out) 
 
 // --- lib_ctype.FSqltype.base.CopyIn
 // Copy fields in to row
-void lib_ctype::sqltype_CopyIn(lib_ctype::FSqltype &row, dmmeta::Sqltype &in) {
+void lib_ctype::sqltype_CopyIn(lib_ctype::FSqltype &row, dmmeta::Sqltype &in) throw() {
     row.ctype = in.ctype;
     row.expr = in.expr;
     row.comment = in.comment;
 }
 
 // --- lib_ctype.FSqltype..Uninit
-void lib_ctype::FSqltype_Uninit(lib_ctype::FSqltype& sqltype) {
+void lib_ctype::FSqltype_Uninit(lib_ctype::FSqltype& sqltype) throw() {
     lib_ctype::FSqltype &row = sqltype; (void)row;
     lib_ctype::FCtype* p_ctype = lib_ctype::ind_ctype_Find(row.ctype);
     if (p_ctype)  {
@@ -3302,45 +3302,45 @@ void lib_ctype::FSqltype_Uninit(lib_ctype::FSqltype& sqltype) {
 
 // --- lib_ctype.FSsimfile.msghdr.CopyOut
 // Copy fields out of row
-void lib_ctype::ssimfile_CopyOut(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &out) {
+void lib_ctype::ssimfile_CopyOut(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &out) throw() {
     out.ssimfile = row.ssimfile;
     out.ctype = row.ctype;
 }
 
 // --- lib_ctype.FSsimfile.msghdr.CopyIn
 // Copy fields in to row
-void lib_ctype::ssimfile_CopyIn(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &in) {
+void lib_ctype::ssimfile_CopyIn(lib_ctype::FSsimfile &row, dmmeta::Ssimfile &in) throw() {
     row.ssimfile = in.ssimfile;
     row.ctype = in.ctype;
 }
 
 // --- lib_ctype.FSsimfile.ssimns.Get
-algo::Smallstr16 lib_ctype::ssimns_Get(lib_ctype::FSsimfile& ssimfile) {
+algo::Smallstr16 lib_ctype::ssimns_Get(lib_ctype::FSsimfile& ssimfile) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
     return ret;
 }
 
 // --- lib_ctype.FSsimfile.ns.Get
-algo::Smallstr16 lib_ctype::ns_Get(lib_ctype::FSsimfile& ssimfile) {
+algo::Smallstr16 lib_ctype::ns_Get(lib_ctype::FSsimfile& ssimfile) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
     return ret;
 }
 
 // --- lib_ctype.FSsimfile.name.Get
-algo::Smallstr50 lib_ctype::name_Get(lib_ctype::FSsimfile& ssimfile) {
+algo::Smallstr50 lib_ctype::name_Get(lib_ctype::FSsimfile& ssimfile) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(ssimfile.ssimfile, ".RR"));
     return ret;
 }
 
 // --- lib_ctype.FSsimfile..Uninit
-void lib_ctype::FSsimfile_Uninit(lib_ctype::FSsimfile& ssimfile) {
+void lib_ctype::FSsimfile_Uninit(lib_ctype::FSsimfile& ssimfile) throw() {
     lib_ctype::FSsimfile &row = ssimfile; (void)row;
     ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
 }
 
 // --- lib_ctype.FSubstr.base.CopyOut
 // Copy fields out of row
-void lib_ctype::substr_CopyOut(lib_ctype::FSubstr &row, dmmeta::Substr &out) {
+void lib_ctype::substr_CopyOut(lib_ctype::FSubstr &row, dmmeta::Substr &out) throw() {
     out.field = row.field;
     out.expr = row.expr;
     out.srcfield = row.srcfield;
@@ -3348,14 +3348,14 @@ void lib_ctype::substr_CopyOut(lib_ctype::FSubstr &row, dmmeta::Substr &out) {
 
 // --- lib_ctype.FSubstr.base.CopyIn
 // Copy fields in to row
-void lib_ctype::substr_CopyIn(lib_ctype::FSubstr &row, dmmeta::Substr &in) {
+void lib_ctype::substr_CopyIn(lib_ctype::FSubstr &row, dmmeta::Substr &in) throw() {
     row.field = in.field;
     row.expr = in.expr;
     row.srcfield = in.srcfield;
 }
 
 // --- lib_ctype.FSubstr..Uninit
-void lib_ctype::FSubstr_Uninit(lib_ctype::FSubstr& substr) {
+void lib_ctype::FSubstr_Uninit(lib_ctype::FSubstr& substr) throw() {
     lib_ctype::FSubstr &row = substr; (void)row;
     lib_ctype::FField* p_field = lib_ctype::ind_field_Find(row.field);
     if (p_field)  {
@@ -3369,20 +3369,20 @@ void lib_ctype::FSubstr_Uninit(lib_ctype::FSubstr& substr) {
 
 // --- lib_ctype.FUnstablefld.base.CopyOut
 // Copy fields out of row
-void lib_ctype::unstablefld_CopyOut(lib_ctype::FUnstablefld &row, dev::Unstablefld &out) {
+void lib_ctype::unstablefld_CopyOut(lib_ctype::FUnstablefld &row, dev::Unstablefld &out) throw() {
     out.field = row.field;
     out.comment = row.comment;
 }
 
 // --- lib_ctype.FUnstablefld.base.CopyIn
 // Copy fields in to row
-void lib_ctype::unstablefld_CopyIn(lib_ctype::FUnstablefld &row, dev::Unstablefld &in) {
+void lib_ctype::unstablefld_CopyIn(lib_ctype::FUnstablefld &row, dev::Unstablefld &in) throw() {
     row.field = in.field;
     row.comment = in.comment;
 }
 
 // --- lib_ctype.FUnstablefld..Uninit
-void lib_ctype::FUnstablefld_Uninit(lib_ctype::FUnstablefld& unstablefld) {
+void lib_ctype::FUnstablefld_Uninit(lib_ctype::FUnstablefld& unstablefld) throw() {
     lib_ctype::FUnstablefld &row = unstablefld; (void)row;
     lib_ctype::FField* p_field = lib_ctype::ind_field_Find(row.field);
     if (p_field)  {
@@ -3393,7 +3393,7 @@ void lib_ctype::FUnstablefld_Uninit(lib_ctype::FUnstablefld& unstablefld) {
 // --- lib_ctype.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_ctype::value_ToCstr(const lib_ctype::FieldId& parent) {
+const char* lib_ctype::value_ToCstr(const lib_ctype::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_ctype_FieldId_in          : ret = "in";  break;
@@ -3405,7 +3405,7 @@ const char* lib_ctype::value_ToCstr(const lib_ctype::FieldId& parent) {
 // --- lib_ctype.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_ctype::value_Print(const lib_ctype::FieldId& parent, algo::cstring &lhs) {
+void lib_ctype::value_Print(const lib_ctype::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -3418,7 +3418,7 @@ void lib_ctype::value_Print(const lib_ctype::FieldId& parent, algo::cstring &lhs
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_ctype::value_SetStrptrMaybe(lib_ctype::FieldId& parent, algo::strptr rhs) {
+bool lib_ctype::value_SetStrptrMaybe(lib_ctype::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 2: {
@@ -3444,13 +3444,13 @@ bool lib_ctype::value_SetStrptrMaybe(lib_ctype::FieldId& parent, algo::strptr rh
 // --- lib_ctype.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_ctype::value_SetStrptr(lib_ctype::FieldId& parent, algo::strptr rhs, lib_ctype_FieldIdEnum dflt) {
+void lib_ctype::value_SetStrptr(lib_ctype::FieldId& parent, algo::strptr rhs, lib_ctype_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_ctype.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_ctype::value_ReadStrptrMaybe(lib_ctype::FieldId& parent, algo::strptr rhs) {
+bool lib_ctype::value_ReadStrptrMaybe(lib_ctype::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -3462,7 +3462,7 @@ bool lib_ctype::value_ReadStrptrMaybe(lib_ctype::FieldId& parent, algo::strptr r
 // --- lib_ctype.FieldId..ReadStrptrMaybe
 // Read fields of lib_ctype::FieldId from an ascii string.
 // The format of the string is the format of the lib_ctype::FieldId's only field
-bool lib_ctype::FieldId_ReadStrptrMaybe(lib_ctype::FieldId &parent, algo::strptr in_str) {
+bool lib_ctype::FieldId_ReadStrptrMaybe(lib_ctype::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3471,14 +3471,14 @@ bool lib_ctype::FieldId_ReadStrptrMaybe(lib_ctype::FieldId &parent, algo::strptr
 // --- lib_ctype.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_ctype.FieldId.String  printfmt:Raw
-void lib_ctype::FieldId_Print(lib_ctype::FieldId& row, algo::cstring& str) {
+void lib_ctype::FieldId_Print(lib_ctype::FieldId& row, algo::cstring& str) throw() {
     lib_ctype::value_Print(row, str);
 }
 
 // --- lib_ctype.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_ctype::value_ToCstr(const lib_ctype::TableId& parent) {
+const char* lib_ctype::value_ToCstr(const lib_ctype::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_ctype_TableId_amcdb_Bltin : ret = "amcdb.Bltin";  break;
@@ -3500,7 +3500,7 @@ const char* lib_ctype::value_ToCstr(const lib_ctype::TableId& parent) {
 // --- lib_ctype.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_ctype::value_Print(const lib_ctype::TableId& parent, algo::cstring &lhs) {
+void lib_ctype::value_Print(const lib_ctype::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -3513,7 +3513,7 @@ void lib_ctype::value_Print(const lib_ctype::TableId& parent, algo::cstring &lhs
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_ctype::value_SetStrptrMaybe(lib_ctype::TableId& parent, algo::strptr rhs) {
+bool lib_ctype::value_SetStrptrMaybe(lib_ctype::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 11: {
@@ -3632,13 +3632,13 @@ bool lib_ctype::value_SetStrptrMaybe(lib_ctype::TableId& parent, algo::strptr rh
 // --- lib_ctype.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_ctype::value_SetStrptr(lib_ctype::TableId& parent, algo::strptr rhs, lib_ctype_TableIdEnum dflt) {
+void lib_ctype::value_SetStrptr(lib_ctype::TableId& parent, algo::strptr rhs, lib_ctype_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_ctype.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_ctype::value_ReadStrptrMaybe(lib_ctype::TableId& parent, algo::strptr rhs) {
+bool lib_ctype::value_ReadStrptrMaybe(lib_ctype::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -3650,7 +3650,7 @@ bool lib_ctype::value_ReadStrptrMaybe(lib_ctype::TableId& parent, algo::strptr r
 // --- lib_ctype.TableId..ReadStrptrMaybe
 // Read fields of lib_ctype::TableId from an ascii string.
 // The format of the string is the format of the lib_ctype::TableId's only field
-bool lib_ctype::TableId_ReadStrptrMaybe(lib_ctype::TableId &parent, algo::strptr in_str) {
+bool lib_ctype::TableId_ReadStrptrMaybe(lib_ctype::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3659,7 +3659,7 @@ bool lib_ctype::TableId_ReadStrptrMaybe(lib_ctype::TableId &parent, algo::strptr
 // --- lib_ctype.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_ctype.TableId.String  printfmt:Raw
-void lib_ctype::TableId_Print(lib_ctype::TableId& row, algo::cstring& str) {
+void lib_ctype::TableId_Print(lib_ctype::TableId& row, algo::cstring& str) throw() {
     lib_ctype::value_Print(row, str);
 }
 

@@ -78,7 +78,7 @@ namespace mysql2ssim { // gen:ns_print_proto
 // --- mysql2ssim.trace..Print
 // print string representation of ROW to string STR
 // cfmt:mysql2ssim.trace.String  printfmt:Tuple
-void mysql2ssim::trace_Print(mysql2ssim::trace& row, algo::cstring& str) {
+void mysql2ssim::trace_Print(mysql2ssim::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "mysql2ssim.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -89,7 +89,7 @@ void mysql2ssim::trace_Print(mysql2ssim::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     mysql2ssim.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void mysql2ssim::ReadArgv() {
+void mysql2ssim::ReadArgv() throw() {
     command::mysql2ssim &cmd = mysql2ssim::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -283,7 +283,7 @@ bool mysql2ssim::InsertStrptrMaybe(algo::strptr str) {
 
 // --- mysql2ssim.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool mysql2ssim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool mysql2ssim::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = mysql2ssim::LoadTuplesFile(root, recursive);
@@ -306,7 +306,7 @@ bool mysql2ssim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool mysql2ssim::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool mysql2ssim::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -319,7 +319,7 @@ bool mysql2ssim::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- mysql2ssim.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool mysql2ssim::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool mysql2ssim::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -338,7 +338,7 @@ bool mysql2ssim::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursiv
 
 // --- mysql2ssim.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool mysql2ssim::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool mysql2ssim::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = mysql2ssim::LoadTuplesFile(fname, recursive);
@@ -364,7 +364,7 @@ bool mysql2ssim::_db_XrefMaybe() {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> mysql2ssim::table_names_Addary(algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> mysql2ssim::table_names_Addary(algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.table_names_elems && rhs.elems < _db.table_names_elems + _db.table_names_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("mysql2ssim.tary_alias  field:mysql2ssim.FDb.table_names  comment:'alias error: sub-array is being appended to the whole'");
@@ -382,7 +382,7 @@ algo::aryptr<algo::cstring> mysql2ssim::table_names_Addary(algo::aryptr<algo::cs
 // --- mysql2ssim.FDb.table_names.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& mysql2ssim::table_names_Alloc() {
+algo::cstring& mysql2ssim::table_names_Alloc() throw() {
     table_names_Reserve(1);
     int n  = _db.table_names_n;
     int at = n;
@@ -395,7 +395,7 @@ algo::cstring& mysql2ssim::table_names_Alloc() {
 // --- mysql2ssim.FDb.table_names.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& mysql2ssim::table_names_AllocAt(int at) {
+algo::cstring& mysql2ssim::table_names_AllocAt(int at) throw() {
     table_names_Reserve(1);
     int n  = _db.table_names_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -410,7 +410,7 @@ algo::cstring& mysql2ssim::table_names_AllocAt(int at) {
 
 // --- mysql2ssim.FDb.table_names.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> mysql2ssim::table_names_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> mysql2ssim::table_names_AllocN(int n_elems) throw() {
     table_names_Reserve(n_elems);
     int old_n  = _db.table_names_n;
     int new_n = old_n + n_elems;
@@ -424,7 +424,7 @@ algo::aryptr<algo::cstring> mysql2ssim::table_names_AllocN(int n_elems) {
 
 // --- mysql2ssim.FDb.table_names.Remove
 // Remove item by index. If index outside of range, do nothing.
-void mysql2ssim::table_names_Remove(u32 i) {
+void mysql2ssim::table_names_Remove(u32 i) throw() {
     u32 lim = _db.table_names_n;
     algo::cstring *elems = _db.table_names_elems;
     if (i < lim) {
@@ -435,7 +435,7 @@ void mysql2ssim::table_names_Remove(u32 i) {
 }
 
 // --- mysql2ssim.FDb.table_names.RemoveAll
-void mysql2ssim::table_names_RemoveAll() {
+void mysql2ssim::table_names_RemoveAll() throw() {
     u32 n = _db.table_names_n;
     while (n > 0) {
         n -= 1;
@@ -446,7 +446,7 @@ void mysql2ssim::table_names_RemoveAll() {
 
 // --- mysql2ssim.FDb.table_names.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void mysql2ssim::table_names_RemoveLast() {
+void mysql2ssim::table_names_RemoveLast() throw() {
     u64 n = _db.table_names_n;
     if (n > 0) {
         n -= 1;
@@ -457,7 +457,7 @@ void mysql2ssim::table_names_RemoveLast() {
 
 // --- mysql2ssim.FDb.table_names.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void mysql2ssim::table_names_AbsReserve(int n) {
+void mysql2ssim::table_names_AbsReserve(int n) throw() {
     u32 old_max  = _db.table_names_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -472,7 +472,7 @@ void mysql2ssim::table_names_AbsReserve(int n) {
 
 // --- mysql2ssim.FDb.table_names.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> mysql2ssim::table_names_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> mysql2ssim::table_names_AllocNVal(int n_elems, const algo::cstring& val) throw() {
     table_names_Reserve(n_elems);
     int old_n  = _db.table_names_n;
     int new_n = old_n + n_elems;
@@ -488,7 +488,7 @@ algo::aryptr<algo::cstring> mysql2ssim::table_names_AllocNVal(int n_elems, const
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool mysql2ssim::table_names_ReadStrptrMaybe(algo::strptr in_str) {
+bool mysql2ssim::table_names_ReadStrptrMaybe(algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = table_names_Alloc();
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -502,7 +502,7 @@ bool mysql2ssim::table_names_ReadStrptrMaybe(algo::strptr in_str) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> mysql2ssim::in_tables_Addary(algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> mysql2ssim::in_tables_Addary(algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.in_tables_elems && rhs.elems < _db.in_tables_elems + _db.in_tables_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("mysql2ssim.tary_alias  field:mysql2ssim.FDb.in_tables  comment:'alias error: sub-array is being appended to the whole'");
@@ -520,7 +520,7 @@ algo::aryptr<algo::cstring> mysql2ssim::in_tables_Addary(algo::aryptr<algo::cstr
 // --- mysql2ssim.FDb.in_tables.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& mysql2ssim::in_tables_Alloc() {
+algo::cstring& mysql2ssim::in_tables_Alloc() throw() {
     in_tables_Reserve(1);
     int n  = _db.in_tables_n;
     int at = n;
@@ -533,7 +533,7 @@ algo::cstring& mysql2ssim::in_tables_Alloc() {
 // --- mysql2ssim.FDb.in_tables.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& mysql2ssim::in_tables_AllocAt(int at) {
+algo::cstring& mysql2ssim::in_tables_AllocAt(int at) throw() {
     in_tables_Reserve(1);
     int n  = _db.in_tables_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -548,7 +548,7 @@ algo::cstring& mysql2ssim::in_tables_AllocAt(int at) {
 
 // --- mysql2ssim.FDb.in_tables.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> mysql2ssim::in_tables_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> mysql2ssim::in_tables_AllocN(int n_elems) throw() {
     in_tables_Reserve(n_elems);
     int old_n  = _db.in_tables_n;
     int new_n = old_n + n_elems;
@@ -562,7 +562,7 @@ algo::aryptr<algo::cstring> mysql2ssim::in_tables_AllocN(int n_elems) {
 
 // --- mysql2ssim.FDb.in_tables.Remove
 // Remove item by index. If index outside of range, do nothing.
-void mysql2ssim::in_tables_Remove(u32 i) {
+void mysql2ssim::in_tables_Remove(u32 i) throw() {
     u32 lim = _db.in_tables_n;
     algo::cstring *elems = _db.in_tables_elems;
     if (i < lim) {
@@ -573,7 +573,7 @@ void mysql2ssim::in_tables_Remove(u32 i) {
 }
 
 // --- mysql2ssim.FDb.in_tables.RemoveAll
-void mysql2ssim::in_tables_RemoveAll() {
+void mysql2ssim::in_tables_RemoveAll() throw() {
     u32 n = _db.in_tables_n;
     while (n > 0) {
         n -= 1;
@@ -584,7 +584,7 @@ void mysql2ssim::in_tables_RemoveAll() {
 
 // --- mysql2ssim.FDb.in_tables.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void mysql2ssim::in_tables_RemoveLast() {
+void mysql2ssim::in_tables_RemoveLast() throw() {
     u64 n = _db.in_tables_n;
     if (n > 0) {
         n -= 1;
@@ -595,7 +595,7 @@ void mysql2ssim::in_tables_RemoveLast() {
 
 // --- mysql2ssim.FDb.in_tables.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void mysql2ssim::in_tables_AbsReserve(int n) {
+void mysql2ssim::in_tables_AbsReserve(int n) throw() {
     u32 old_max  = _db.in_tables_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -610,7 +610,7 @@ void mysql2ssim::in_tables_AbsReserve(int n) {
 
 // --- mysql2ssim.FDb.in_tables.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> mysql2ssim::in_tables_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> mysql2ssim::in_tables_AllocNVal(int n_elems, const algo::cstring& val) throw() {
     in_tables_Reserve(n_elems);
     int old_n  = _db.in_tables_n;
     int new_n = old_n + n_elems;
@@ -626,7 +626,7 @@ algo::aryptr<algo::cstring> mysql2ssim::in_tables_AllocNVal(int n_elems, const a
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool mysql2ssim::in_tables_ReadStrptrMaybe(algo::strptr in_str) {
+bool mysql2ssim::in_tables_ReadStrptrMaybe(algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = in_tables_Alloc();
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -638,13 +638,13 @@ bool mysql2ssim::in_tables_ReadStrptrMaybe(algo::strptr in_str) {
 
 // --- mysql2ssim.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr mysql2ssim::trace_RowidFind(int t) {
+static algo::ImrowPtr mysql2ssim::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- mysql2ssim.FDb.trace.N
 // Function return 1
-inline static i32 mysql2ssim::trace_N() {
+inline static i32 mysql2ssim::trace_N() throw() {
     return 1;
 }
 
@@ -662,7 +662,7 @@ void mysql2ssim::FDb_Init() {
 }
 
 // --- mysql2ssim.FDb..Uninit
-void mysql2ssim::FDb_Uninit() {
+void mysql2ssim::FDb_Uninit() throw() {
     mysql2ssim::FDb &row = _db; (void)row;
 
     // mysql2ssim.FDb.in_tables.Uninit (Tary)  //
@@ -682,7 +682,7 @@ void mysql2ssim::FDb_Uninit() {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> mysql2ssim::vals_Addary(mysql2ssim::FTobltin& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> mysql2ssim::vals_Addary(mysql2ssim::FTobltin& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.vals_elems && rhs.elems < parent.vals_elems + parent.vals_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("mysql2ssim.tary_alias  field:mysql2ssim.FTobltin.vals  comment:'alias error: sub-array is being appended to the whole'");
@@ -700,7 +700,7 @@ algo::aryptr<algo::cstring> mysql2ssim::vals_Addary(mysql2ssim::FTobltin& parent
 // --- mysql2ssim.FTobltin.vals.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& mysql2ssim::vals_Alloc(mysql2ssim::FTobltin& parent) {
+algo::cstring& mysql2ssim::vals_Alloc(mysql2ssim::FTobltin& parent) throw() {
     vals_Reserve(parent, 1);
     int n  = parent.vals_n;
     int at = n;
@@ -713,7 +713,7 @@ algo::cstring& mysql2ssim::vals_Alloc(mysql2ssim::FTobltin& parent) {
 // --- mysql2ssim.FTobltin.vals.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& mysql2ssim::vals_AllocAt(mysql2ssim::FTobltin& parent, int at) {
+algo::cstring& mysql2ssim::vals_AllocAt(mysql2ssim::FTobltin& parent, int at) throw() {
     vals_Reserve(parent, 1);
     int n  = parent.vals_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -728,7 +728,7 @@ algo::cstring& mysql2ssim::vals_AllocAt(mysql2ssim::FTobltin& parent, int at) {
 
 // --- mysql2ssim.FTobltin.vals.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> mysql2ssim::vals_AllocN(mysql2ssim::FTobltin& parent, int n_elems) {
+algo::aryptr<algo::cstring> mysql2ssim::vals_AllocN(mysql2ssim::FTobltin& parent, int n_elems) throw() {
     vals_Reserve(parent, n_elems);
     int old_n  = parent.vals_n;
     int new_n = old_n + n_elems;
@@ -742,7 +742,7 @@ algo::aryptr<algo::cstring> mysql2ssim::vals_AllocN(mysql2ssim::FTobltin& parent
 
 // --- mysql2ssim.FTobltin.vals.Remove
 // Remove item by index. If index outside of range, do nothing.
-void mysql2ssim::vals_Remove(mysql2ssim::FTobltin& parent, u32 i) {
+void mysql2ssim::vals_Remove(mysql2ssim::FTobltin& parent, u32 i) throw() {
     u32 lim = parent.vals_n;
     algo::cstring *elems = parent.vals_elems;
     if (i < lim) {
@@ -753,7 +753,7 @@ void mysql2ssim::vals_Remove(mysql2ssim::FTobltin& parent, u32 i) {
 }
 
 // --- mysql2ssim.FTobltin.vals.RemoveAll
-void mysql2ssim::vals_RemoveAll(mysql2ssim::FTobltin& parent) {
+void mysql2ssim::vals_RemoveAll(mysql2ssim::FTobltin& parent) throw() {
     u32 n = parent.vals_n;
     while (n > 0) {
         n -= 1;
@@ -764,7 +764,7 @@ void mysql2ssim::vals_RemoveAll(mysql2ssim::FTobltin& parent) {
 
 // --- mysql2ssim.FTobltin.vals.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void mysql2ssim::vals_RemoveLast(mysql2ssim::FTobltin& parent) {
+void mysql2ssim::vals_RemoveLast(mysql2ssim::FTobltin& parent) throw() {
     u64 n = parent.vals_n;
     if (n > 0) {
         n -= 1;
@@ -775,7 +775,7 @@ void mysql2ssim::vals_RemoveLast(mysql2ssim::FTobltin& parent) {
 
 // --- mysql2ssim.FTobltin.vals.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void mysql2ssim::vals_AbsReserve(mysql2ssim::FTobltin& parent, int n) {
+void mysql2ssim::vals_AbsReserve(mysql2ssim::FTobltin& parent, int n) throw() {
     u32 old_max  = parent.vals_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -790,7 +790,7 @@ void mysql2ssim::vals_AbsReserve(mysql2ssim::FTobltin& parent, int n) {
 
 // --- mysql2ssim.FTobltin.vals.Setary
 // Copy contents of RHS to PARENT.
-void mysql2ssim::vals_Setary(mysql2ssim::FTobltin& parent, mysql2ssim::FTobltin &rhs) {
+void mysql2ssim::vals_Setary(mysql2ssim::FTobltin& parent, mysql2ssim::FTobltin &rhs) throw() {
     vals_RemoveAll(parent);
     int nnew = rhs.vals_n;
     vals_Reserve(parent, nnew); // reserve space
@@ -803,14 +803,14 @@ void mysql2ssim::vals_Setary(mysql2ssim::FTobltin& parent, mysql2ssim::FTobltin 
 // --- mysql2ssim.FTobltin.vals.Setary2
 // Copy specified array into vals, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void mysql2ssim::vals_Setary(mysql2ssim::FTobltin& parent, const algo::aryptr<algo::cstring> &rhs) {
+void mysql2ssim::vals_Setary(mysql2ssim::FTobltin& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     vals_RemoveAll(parent);
     vals_Addary(parent, rhs);
 }
 
 // --- mysql2ssim.FTobltin.vals.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> mysql2ssim::vals_AllocNVal(mysql2ssim::FTobltin& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> mysql2ssim::vals_AllocNVal(mysql2ssim::FTobltin& parent, int n_elems, const algo::cstring& val) throw() {
     vals_Reserve(parent, n_elems);
     int old_n  = parent.vals_n;
     int new_n = old_n + n_elems;
@@ -826,7 +826,7 @@ algo::aryptr<algo::cstring> mysql2ssim::vals_AllocNVal(mysql2ssim::FTobltin& par
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool mysql2ssim::vals_ReadStrptrMaybe(mysql2ssim::FTobltin& parent, algo::strptr in_str) {
+bool mysql2ssim::vals_ReadStrptrMaybe(mysql2ssim::FTobltin& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = vals_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -837,7 +837,7 @@ bool mysql2ssim::vals_ReadStrptrMaybe(mysql2ssim::FTobltin& parent, algo::strptr
 }
 
 // --- mysql2ssim.FTobltin..Uninit
-void mysql2ssim::FTobltin_Uninit(mysql2ssim::FTobltin& parent) {
+void mysql2ssim::FTobltin_Uninit(mysql2ssim::FTobltin& parent) throw() {
     mysql2ssim::FTobltin &row = parent; (void)row;
 
     // mysql2ssim.FTobltin.vals.Uninit (Tary)  //Used during schema extraction
@@ -848,7 +848,7 @@ void mysql2ssim::FTobltin_Uninit(mysql2ssim::FTobltin& parent) {
 }
 
 // --- mysql2ssim.FTobltin..AssignOp
-mysql2ssim::FTobltin& mysql2ssim::FTobltin::operator =(const mysql2ssim::FTobltin &rhs) {
+mysql2ssim::FTobltin& mysql2ssim::FTobltin::operator =(const mysql2ssim::FTobltin &rhs) throw() {
     warn = rhs.warn;
     err = rhs.err;
     vals_Setary(*this, vals_Getary(const_cast<mysql2ssim::FTobltin&>(rhs)));
@@ -856,7 +856,7 @@ mysql2ssim::FTobltin& mysql2ssim::FTobltin::operator =(const mysql2ssim::FToblti
 }
 
 // --- mysql2ssim.FTobltin..CopyCtor
- mysql2ssim::FTobltin::FTobltin(const mysql2ssim::FTobltin &rhs)
+ mysql2ssim::FTobltin::FTobltin(const mysql2ssim::FTobltin &rhs) throw()
     : warn(rhs.warn)
     , err(rhs.err)
  {
@@ -869,7 +869,7 @@ mysql2ssim::FTobltin& mysql2ssim::FTobltin::operator =(const mysql2ssim::FToblti
 // --- mysql2ssim.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* mysql2ssim::value_ToCstr(const mysql2ssim::FieldId& parent) {
+const char* mysql2ssim::value_ToCstr(const mysql2ssim::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case mysql2ssim_FieldId_value      : ret = "value";  break;
@@ -880,7 +880,7 @@ const char* mysql2ssim::value_ToCstr(const mysql2ssim::FieldId& parent) {
 // --- mysql2ssim.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void mysql2ssim::value_Print(const mysql2ssim::FieldId& parent, algo::cstring &lhs) {
+void mysql2ssim::value_Print(const mysql2ssim::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -893,7 +893,7 @@ void mysql2ssim::value_Print(const mysql2ssim::FieldId& parent, algo::cstring &l
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool mysql2ssim::value_SetStrptrMaybe(mysql2ssim::FieldId& parent, algo::strptr rhs) {
+bool mysql2ssim::value_SetStrptrMaybe(mysql2ssim::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -911,13 +911,13 @@ bool mysql2ssim::value_SetStrptrMaybe(mysql2ssim::FieldId& parent, algo::strptr 
 // --- mysql2ssim.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void mysql2ssim::value_SetStrptr(mysql2ssim::FieldId& parent, algo::strptr rhs, mysql2ssim_FieldIdEnum dflt) {
+void mysql2ssim::value_SetStrptr(mysql2ssim::FieldId& parent, algo::strptr rhs, mysql2ssim_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- mysql2ssim.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool mysql2ssim::value_ReadStrptrMaybe(mysql2ssim::FieldId& parent, algo::strptr rhs) {
+bool mysql2ssim::value_ReadStrptrMaybe(mysql2ssim::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -929,7 +929,7 @@ bool mysql2ssim::value_ReadStrptrMaybe(mysql2ssim::FieldId& parent, algo::strptr
 // --- mysql2ssim.FieldId..ReadStrptrMaybe
 // Read fields of mysql2ssim::FieldId from an ascii string.
 // The format of the string is the format of the mysql2ssim::FieldId's only field
-bool mysql2ssim::FieldId_ReadStrptrMaybe(mysql2ssim::FieldId &parent, algo::strptr in_str) {
+bool mysql2ssim::FieldId_ReadStrptrMaybe(mysql2ssim::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -938,7 +938,7 @@ bool mysql2ssim::FieldId_ReadStrptrMaybe(mysql2ssim::FieldId &parent, algo::strp
 // --- mysql2ssim.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:mysql2ssim.FieldId.String  printfmt:Raw
-void mysql2ssim::FieldId_Print(mysql2ssim::FieldId& row, algo::cstring& str) {
+void mysql2ssim::FieldId_Print(mysql2ssim::FieldId& row, algo::cstring& str) throw() {
     mysql2ssim::value_Print(row, str);
 }
 

@@ -30,18 +30,18 @@
 //#pragma endinclude
 
 // --- atf_gcli.trace..Ctor
-inline  atf_gcli::trace::trace() {
+inline  atf_gcli::trace::trace() throw() {
 }
 
 // --- atf_gcli.FDb.gtblacttst.EmptyQ
 // Return true if index is empty
-inline bool atf_gcli::gtblacttst_EmptyQ() {
+inline bool atf_gcli::gtblacttst_EmptyQ() throw() {
     return _db.gtblacttst_n == 0;
 }
 
 // --- atf_gcli.FDb.gtblacttst.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_gcli::FGtblacttst* atf_gcli::gtblacttst_Find(u64 t) {
+inline atf_gcli::FGtblacttst* atf_gcli::gtblacttst_Find(u64 t) throw() {
     atf_gcli::FGtblacttst *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gtblacttst_n))) {
         u64 x = t + 1;
@@ -55,19 +55,19 @@ inline atf_gcli::FGtblacttst* atf_gcli::gtblacttst_Find(u64 t) {
 
 // --- atf_gcli.FDb.gtblacttst.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_gcli::FGtblacttst* atf_gcli::gtblacttst_Last() {
+inline atf_gcli::FGtblacttst* atf_gcli::gtblacttst_Last() throw() {
     return gtblacttst_Find(u64(_db.gtblacttst_n-1));
 }
 
 // --- atf_gcli.FDb.gtblacttst.N
 // Return number of items in the pool
-inline i32 atf_gcli::gtblacttst_N() {
+inline i32 atf_gcli::gtblacttst_N() throw() {
     return _db.gtblacttst_n;
 }
 
 // --- atf_gcli.FDb.gtblacttst.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_gcli::FGtblacttst& atf_gcli::gtblacttst_qFind(u64 t) {
+inline atf_gcli::FGtblacttst& atf_gcli::gtblacttst_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -77,13 +77,13 @@ inline atf_gcli::FGtblacttst& atf_gcli::gtblacttst_qFind(u64 t) {
 
 // --- atf_gcli.FDb.gtblacttstout.EmptyQ
 // Return true if index is empty
-inline bool atf_gcli::gtblacttstout_EmptyQ() {
+inline bool atf_gcli::gtblacttstout_EmptyQ() throw() {
     return _db.gtblacttstout_n == 0;
 }
 
 // --- atf_gcli.FDb.gtblacttstout.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_gcli::FGtblacttstout* atf_gcli::gtblacttstout_Find(u64 t) {
+inline atf_gcli::FGtblacttstout* atf_gcli::gtblacttstout_Find(u64 t) throw() {
     atf_gcli::FGtblacttstout *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gtblacttstout_n))) {
         u64 x = t + 1;
@@ -97,19 +97,19 @@ inline atf_gcli::FGtblacttstout* atf_gcli::gtblacttstout_Find(u64 t) {
 
 // --- atf_gcli.FDb.gtblacttstout.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_gcli::FGtblacttstout* atf_gcli::gtblacttstout_Last() {
+inline atf_gcli::FGtblacttstout* atf_gcli::gtblacttstout_Last() throw() {
     return gtblacttstout_Find(u64(_db.gtblacttstout_n-1));
 }
 
 // --- atf_gcli.FDb.gtblacttstout.N
 // Return number of items in the pool
-inline i32 atf_gcli::gtblacttstout_N() {
+inline i32 atf_gcli::gtblacttstout_N() throw() {
     return _db.gtblacttstout_n;
 }
 
 // --- atf_gcli.FDb.gtblacttstout.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_gcli::FGtblacttstout& atf_gcli::gtblacttstout_qFind(u64 t) {
+inline atf_gcli::FGtblacttstout& atf_gcli::gtblacttstout_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -119,37 +119,37 @@ inline atf_gcli::FGtblacttstout& atf_gcli::gtblacttstout_qFind(u64 t) {
 
 // --- atf_gcli.FDb.ind_gtblacttst.EmptyQ
 // Return true if hash is empty
-inline bool atf_gcli::ind_gtblacttst_EmptyQ() {
+inline bool atf_gcli::ind_gtblacttst_EmptyQ() throw() {
     return _db.ind_gtblacttst_n == 0;
 }
 
 // --- atf_gcli.FDb.ind_gtblacttst.N
 // Return number of items in the hash
-inline i32 atf_gcli::ind_gtblacttst_N() {
+inline i32 atf_gcli::ind_gtblacttst_N() throw() {
     return _db.ind_gtblacttst_n;
 }
 
 // --- atf_gcli.FDb.ind_gtblacttstout.EmptyQ
 // Return true if hash is empty
-inline bool atf_gcli::ind_gtblacttstout_EmptyQ() {
+inline bool atf_gcli::ind_gtblacttstout_EmptyQ() throw() {
     return _db.ind_gtblacttstout_n == 0;
 }
 
 // --- atf_gcli.FDb.ind_gtblacttstout.N
 // Return number of items in the hash
-inline i32 atf_gcli::ind_gtblacttstout_N() {
+inline i32 atf_gcli::ind_gtblacttstout_N() throw() {
     return _db.ind_gtblacttstout_n;
 }
 
 // --- atf_gcli.FDb.c_gtblacttst.EmptyQ
 // Return true if index is empty
-inline bool atf_gcli::c_gtblacttst_EmptyQ() {
+inline bool atf_gcli::c_gtblacttst_EmptyQ() throw() {
     return _db.c_gtblacttst_n == 0;
 }
 
 // --- atf_gcli.FDb.c_gtblacttst.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_gcli::FGtblacttst* atf_gcli::c_gtblacttst_Find(u32 t) {
+inline atf_gcli::FGtblacttst* atf_gcli::c_gtblacttst_Find(u32 t) throw() {
     atf_gcli::FGtblacttst *retval = NULL;
     u64 idx = t;
     u64 lim = _db.c_gtblacttst_n;
@@ -161,19 +161,19 @@ inline atf_gcli::FGtblacttst* atf_gcli::c_gtblacttst_Find(u32 t) {
 
 // --- atf_gcli.FDb.c_gtblacttst.Getary
 // Return array of pointers
-inline algo::aryptr<atf_gcli::FGtblacttst*> atf_gcli::c_gtblacttst_Getary() {
+inline algo::aryptr<atf_gcli::FGtblacttst*> atf_gcli::c_gtblacttst_Getary() throw() {
     return algo::aryptr<atf_gcli::FGtblacttst*>(_db.c_gtblacttst_elems, _db.c_gtblacttst_n);
 }
 
 // --- atf_gcli.FDb.c_gtblacttst.N
 // Return number of items in the pointer array
-inline i32 atf_gcli::c_gtblacttst_N() {
+inline i32 atf_gcli::c_gtblacttst_N() throw() {
     return _db.c_gtblacttst_n;
 }
 
 // --- atf_gcli.FDb.c_gtblacttst.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void atf_gcli::c_gtblacttst_RemoveAll() {
+inline void atf_gcli::c_gtblacttst_RemoveAll() throw() {
     for (u32 i = 0; i < _db.c_gtblacttst_n; i++) {
         // mark all elements as not-in-array
         _db.c_gtblacttst_elems[i]->_db_c_gtblacttst_in_ary = false;
@@ -183,31 +183,31 @@ inline void atf_gcli::c_gtblacttst_RemoveAll() {
 
 // --- atf_gcli.FDb.c_gtblacttst.qFind
 // Return reference without bounds checking
-inline atf_gcli::FGtblacttst& atf_gcli::c_gtblacttst_qFind(u32 idx) {
+inline atf_gcli::FGtblacttst& atf_gcli::c_gtblacttst_qFind(u32 idx) throw() {
     return *_db.c_gtblacttst_elems[idx];
 }
 
 // --- atf_gcli.FDb.c_gtblacttst.InAryQ
 // True if row is in any ptrary instance
-inline bool atf_gcli::c_gtblacttst_InAryQ(atf_gcli::FGtblacttst& row) {
+inline bool atf_gcli::c_gtblacttst_InAryQ(atf_gcli::FGtblacttst& row) throw() {
     return row._db_c_gtblacttst_in_ary;
 }
 
 // --- atf_gcli.FDb.c_gtblacttst.qLast
 // Reference to last element without bounds checking
-inline atf_gcli::FGtblacttst& atf_gcli::c_gtblacttst_qLast() {
+inline atf_gcli::FGtblacttst& atf_gcli::c_gtblacttst_qLast() throw() {
     return *_db.c_gtblacttst_elems[_db.c_gtblacttst_n-1];
 }
 
 // --- atf_gcli.FDb.gclienvsub.EmptyQ
 // Return true if index is empty
-inline bool atf_gcli::gclienvsub_EmptyQ() {
+inline bool atf_gcli::gclienvsub_EmptyQ() throw() {
     return _db.gclienvsub_n == 0;
 }
 
 // --- atf_gcli.FDb.gclienvsub.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_gcli::FGclienvsub* atf_gcli::gclienvsub_Find(u64 t) {
+inline atf_gcli::FGclienvsub* atf_gcli::gclienvsub_Find(u64 t) throw() {
     atf_gcli::FGclienvsub *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gclienvsub_n))) {
         u64 x = t + 1;
@@ -221,19 +221,19 @@ inline atf_gcli::FGclienvsub* atf_gcli::gclienvsub_Find(u64 t) {
 
 // --- atf_gcli.FDb.gclienvsub.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_gcli::FGclienvsub* atf_gcli::gclienvsub_Last() {
+inline atf_gcli::FGclienvsub* atf_gcli::gclienvsub_Last() throw() {
     return gclienvsub_Find(u64(_db.gclienvsub_n-1));
 }
 
 // --- atf_gcli.FDb.gclienvsub.N
 // Return number of items in the pool
-inline i32 atf_gcli::gclienvsub_N() {
+inline i32 atf_gcli::gclienvsub_N() throw() {
     return _db.gclienvsub_n;
 }
 
 // --- atf_gcli.FDb.gclienvsub.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_gcli::FGclienvsub& atf_gcli::gclienvsub_qFind(u64 t) {
+inline atf_gcli::FGclienvsub& atf_gcli::gclienvsub_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -243,13 +243,13 @@ inline atf_gcli::FGclienvsub& atf_gcli::gclienvsub_qFind(u64 t) {
 
 // --- atf_gcli.FDb.gclienv.EmptyQ
 // Return true if index is empty
-inline bool atf_gcli::gclienv_EmptyQ() {
+inline bool atf_gcli::gclienv_EmptyQ() throw() {
     return _db.gclienv_n == 0;
 }
 
 // --- atf_gcli.FDb.gclienv.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_gcli::FGclienv* atf_gcli::gclienv_Find(u64 t) {
+inline atf_gcli::FGclienv* atf_gcli::gclienv_Find(u64 t) throw() {
     atf_gcli::FGclienv *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gclienv_n))) {
         u64 x = t + 1;
@@ -263,19 +263,19 @@ inline atf_gcli::FGclienv* atf_gcli::gclienv_Find(u64 t) {
 
 // --- atf_gcli.FDb.gclienv.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_gcli::FGclienv* atf_gcli::gclienv_Last() {
+inline atf_gcli::FGclienv* atf_gcli::gclienv_Last() throw() {
     return gclienv_Find(u64(_db.gclienv_n-1));
 }
 
 // --- atf_gcli.FDb.gclienv.N
 // Return number of items in the pool
-inline i32 atf_gcli::gclienv_N() {
+inline i32 atf_gcli::gclienv_N() throw() {
     return _db.gclienv_n;
 }
 
 // --- atf_gcli.FDb.gclienv.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_gcli::FGclienv& atf_gcli::gclienv_qFind(u64 t) {
+inline atf_gcli::FGclienv& atf_gcli::gclienv_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -285,37 +285,37 @@ inline atf_gcli::FGclienv& atf_gcli::gclienv_qFind(u64 t) {
 
 // --- atf_gcli.FDb.ind_gclienv.EmptyQ
 // Return true if hash is empty
-inline bool atf_gcli::ind_gclienv_EmptyQ() {
+inline bool atf_gcli::ind_gclienv_EmptyQ() throw() {
     return _db.ind_gclienv_n == 0;
 }
 
 // --- atf_gcli.FDb.ind_gclienv.N
 // Return number of items in the hash
-inline i32 atf_gcli::ind_gclienv_N() {
+inline i32 atf_gcli::ind_gclienv_N() throw() {
     return _db.ind_gclienv_n;
 }
 
 // --- atf_gcli.FDb.ind_gclienvsub.EmptyQ
 // Return true if hash is empty
-inline bool atf_gcli::ind_gclienvsub_EmptyQ() {
+inline bool atf_gcli::ind_gclienvsub_EmptyQ() throw() {
     return _db.ind_gclienvsub_n == 0;
 }
 
 // --- atf_gcli.FDb.ind_gclienvsub.N
 // Return number of items in the hash
-inline i32 atf_gcli::ind_gclienvsub_N() {
+inline i32 atf_gcli::ind_gclienvsub_N() throw() {
     return _db.ind_gclienvsub_n;
 }
 
 // --- atf_gcli.FDb.gtblact.EmptyQ
 // Return true if index is empty
-inline bool atf_gcli::gtblact_EmptyQ() {
+inline bool atf_gcli::gtblact_EmptyQ() throw() {
     return _db.gtblact_n == 0;
 }
 
 // --- atf_gcli.FDb.gtblact.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_gcli::FGtblact* atf_gcli::gtblact_Find(u64 t) {
+inline atf_gcli::FGtblact* atf_gcli::gtblact_Find(u64 t) throw() {
     atf_gcli::FGtblact *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gtblact_n))) {
         u64 x = t + 1;
@@ -329,19 +329,19 @@ inline atf_gcli::FGtblact* atf_gcli::gtblact_Find(u64 t) {
 
 // --- atf_gcli.FDb.gtblact.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_gcli::FGtblact* atf_gcli::gtblact_Last() {
+inline atf_gcli::FGtblact* atf_gcli::gtblact_Last() throw() {
     return gtblact_Find(u64(_db.gtblact_n-1));
 }
 
 // --- atf_gcli.FDb.gtblact.N
 // Return number of items in the pool
-inline i32 atf_gcli::gtblact_N() {
+inline i32 atf_gcli::gtblact_N() throw() {
     return _db.gtblact_n;
 }
 
 // --- atf_gcli.FDb.gtblact.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_gcli::FGtblact& atf_gcli::gtblact_qFind(u64 t) {
+inline atf_gcli::FGtblact& atf_gcli::gtblact_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -351,68 +351,68 @@ inline atf_gcli::FGtblact& atf_gcli::gtblact_qFind(u64 t) {
 
 // --- atf_gcli.FDb.ind_gtblact.EmptyQ
 // Return true if hash is empty
-inline bool atf_gcli::ind_gtblact_EmptyQ() {
+inline bool atf_gcli::ind_gtblact_EmptyQ() throw() {
     return _db.ind_gtblact_n == 0;
 }
 
 // --- atf_gcli.FDb.ind_gtblact.N
 // Return number of items in the hash
-inline i32 atf_gcli::ind_gtblact_N() {
+inline i32 atf_gcli::ind_gtblact_N() throw() {
     return _db.ind_gtblact_n;
 }
 
 // --- atf_gcli.FDb.gtblacttst_curs.Reset
 // cursor points to valid item
-inline void atf_gcli::_db_gtblacttst_curs_Reset(_db_gtblacttst_curs &curs, atf_gcli::FDb &parent) {
+inline void atf_gcli::_db_gtblacttst_curs_Reset(_db_gtblacttst_curs &curs, atf_gcli::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_gcli.FDb.gtblacttst_curs.ValidQ
 // cursor points to valid item
-inline bool atf_gcli::_db_gtblacttst_curs_ValidQ(_db_gtblacttst_curs &curs) {
+inline bool atf_gcli::_db_gtblacttst_curs_ValidQ(_db_gtblacttst_curs &curs) throw() {
     return curs.index < _db.gtblacttst_n;
 }
 
 // --- atf_gcli.FDb.gtblacttst_curs.Next
 // proceed to next item
-inline void atf_gcli::_db_gtblacttst_curs_Next(_db_gtblacttst_curs &curs) {
+inline void atf_gcli::_db_gtblacttst_curs_Next(_db_gtblacttst_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_gcli.FDb.gtblacttst_curs.Access
 // item access
-inline atf_gcli::FGtblacttst& atf_gcli::_db_gtblacttst_curs_Access(_db_gtblacttst_curs &curs) {
+inline atf_gcli::FGtblacttst& atf_gcli::_db_gtblacttst_curs_Access(_db_gtblacttst_curs &curs) throw() {
     return gtblacttst_qFind(u64(curs.index));
 }
 
 // --- atf_gcli.FDb.gtblacttstout_curs.Reset
 // cursor points to valid item
-inline void atf_gcli::_db_gtblacttstout_curs_Reset(_db_gtblacttstout_curs &curs, atf_gcli::FDb &parent) {
+inline void atf_gcli::_db_gtblacttstout_curs_Reset(_db_gtblacttstout_curs &curs, atf_gcli::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_gcli.FDb.gtblacttstout_curs.ValidQ
 // cursor points to valid item
-inline bool atf_gcli::_db_gtblacttstout_curs_ValidQ(_db_gtblacttstout_curs &curs) {
+inline bool atf_gcli::_db_gtblacttstout_curs_ValidQ(_db_gtblacttstout_curs &curs) throw() {
     return curs.index < _db.gtblacttstout_n;
 }
 
 // --- atf_gcli.FDb.gtblacttstout_curs.Next
 // proceed to next item
-inline void atf_gcli::_db_gtblacttstout_curs_Next(_db_gtblacttstout_curs &curs) {
+inline void atf_gcli::_db_gtblacttstout_curs_Next(_db_gtblacttstout_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_gcli.FDb.gtblacttstout_curs.Access
 // item access
-inline atf_gcli::FGtblacttstout& atf_gcli::_db_gtblacttstout_curs_Access(_db_gtblacttstout_curs &curs) {
+inline atf_gcli::FGtblacttstout& atf_gcli::_db_gtblacttstout_curs_Access(_db_gtblacttstout_curs &curs) throw() {
     return gtblacttstout_qFind(u64(curs.index));
 }
 
 // --- atf_gcli.FDb.c_gtblacttst_curs.Reset
-inline void atf_gcli::_db_c_gtblacttst_curs_Reset(_db_c_gtblacttst_curs &curs, atf_gcli::FDb &parent) {
+inline void atf_gcli::_db_c_gtblacttst_curs_Reset(_db_c_gtblacttst_curs &curs, atf_gcli::FDb &parent) throw() {
     curs.elems = parent.c_gtblacttst_elems;
     curs.n_elems = parent.c_gtblacttst_n;
     curs.index = 0;
@@ -420,106 +420,106 @@ inline void atf_gcli::_db_c_gtblacttst_curs_Reset(_db_c_gtblacttst_curs &curs, a
 
 // --- atf_gcli.FDb.c_gtblacttst_curs.ValidQ
 // cursor points to valid item
-inline bool atf_gcli::_db_c_gtblacttst_curs_ValidQ(_db_c_gtblacttst_curs &curs) {
+inline bool atf_gcli::_db_c_gtblacttst_curs_ValidQ(_db_c_gtblacttst_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_gcli.FDb.c_gtblacttst_curs.Next
 // proceed to next item
-inline void atf_gcli::_db_c_gtblacttst_curs_Next(_db_c_gtblacttst_curs &curs) {
+inline void atf_gcli::_db_c_gtblacttst_curs_Next(_db_c_gtblacttst_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_gcli.FDb.c_gtblacttst_curs.Access
 // item access
-inline atf_gcli::FGtblacttst& atf_gcli::_db_c_gtblacttst_curs_Access(_db_c_gtblacttst_curs &curs) {
+inline atf_gcli::FGtblacttst& atf_gcli::_db_c_gtblacttst_curs_Access(_db_c_gtblacttst_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- atf_gcli.FDb.gclienvsub_curs.Reset
 // cursor points to valid item
-inline void atf_gcli::_db_gclienvsub_curs_Reset(_db_gclienvsub_curs &curs, atf_gcli::FDb &parent) {
+inline void atf_gcli::_db_gclienvsub_curs_Reset(_db_gclienvsub_curs &curs, atf_gcli::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_gcli.FDb.gclienvsub_curs.ValidQ
 // cursor points to valid item
-inline bool atf_gcli::_db_gclienvsub_curs_ValidQ(_db_gclienvsub_curs &curs) {
+inline bool atf_gcli::_db_gclienvsub_curs_ValidQ(_db_gclienvsub_curs &curs) throw() {
     return curs.index < _db.gclienvsub_n;
 }
 
 // --- atf_gcli.FDb.gclienvsub_curs.Next
 // proceed to next item
-inline void atf_gcli::_db_gclienvsub_curs_Next(_db_gclienvsub_curs &curs) {
+inline void atf_gcli::_db_gclienvsub_curs_Next(_db_gclienvsub_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_gcli.FDb.gclienvsub_curs.Access
 // item access
-inline atf_gcli::FGclienvsub& atf_gcli::_db_gclienvsub_curs_Access(_db_gclienvsub_curs &curs) {
+inline atf_gcli::FGclienvsub& atf_gcli::_db_gclienvsub_curs_Access(_db_gclienvsub_curs &curs) throw() {
     return gclienvsub_qFind(u64(curs.index));
 }
 
 // --- atf_gcli.FDb.gclienv_curs.Reset
 // cursor points to valid item
-inline void atf_gcli::_db_gclienv_curs_Reset(_db_gclienv_curs &curs, atf_gcli::FDb &parent) {
+inline void atf_gcli::_db_gclienv_curs_Reset(_db_gclienv_curs &curs, atf_gcli::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_gcli.FDb.gclienv_curs.ValidQ
 // cursor points to valid item
-inline bool atf_gcli::_db_gclienv_curs_ValidQ(_db_gclienv_curs &curs) {
+inline bool atf_gcli::_db_gclienv_curs_ValidQ(_db_gclienv_curs &curs) throw() {
     return curs.index < _db.gclienv_n;
 }
 
 // --- atf_gcli.FDb.gclienv_curs.Next
 // proceed to next item
-inline void atf_gcli::_db_gclienv_curs_Next(_db_gclienv_curs &curs) {
+inline void atf_gcli::_db_gclienv_curs_Next(_db_gclienv_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_gcli.FDb.gclienv_curs.Access
 // item access
-inline atf_gcli::FGclienv& atf_gcli::_db_gclienv_curs_Access(_db_gclienv_curs &curs) {
+inline atf_gcli::FGclienv& atf_gcli::_db_gclienv_curs_Access(_db_gclienv_curs &curs) throw() {
     return gclienv_qFind(u64(curs.index));
 }
 
 // --- atf_gcli.FDb.gtblact_curs.Reset
 // cursor points to valid item
-inline void atf_gcli::_db_gtblact_curs_Reset(_db_gtblact_curs &curs, atf_gcli::FDb &parent) {
+inline void atf_gcli::_db_gtblact_curs_Reset(_db_gtblact_curs &curs, atf_gcli::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_gcli.FDb.gtblact_curs.ValidQ
 // cursor points to valid item
-inline bool atf_gcli::_db_gtblact_curs_ValidQ(_db_gtblact_curs &curs) {
+inline bool atf_gcli::_db_gtblact_curs_ValidQ(_db_gtblact_curs &curs) throw() {
     return curs.index < _db.gtblact_n;
 }
 
 // --- atf_gcli.FDb.gtblact_curs.Next
 // proceed to next item
-inline void atf_gcli::_db_gtblact_curs_Next(_db_gtblact_curs &curs) {
+inline void atf_gcli::_db_gtblact_curs_Next(_db_gtblact_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_gcli.FDb.gtblact_curs.Access
 // item access
-inline atf_gcli::FGtblact& atf_gcli::_db_gtblact_curs_Access(_db_gtblact_curs &curs) {
+inline atf_gcli::FGtblact& atf_gcli::_db_gtblact_curs_Access(_db_gtblact_curs &curs) throw() {
     return gtblact_qFind(u64(curs.index));
 }
 
 // --- atf_gcli.FGclienv.c_gclienvsub.EmptyQ
 // Return true if index is empty
-inline bool atf_gcli::c_gclienvsub_EmptyQ(atf_gcli::FGclienv& gclienv) {
+inline bool atf_gcli::c_gclienvsub_EmptyQ(atf_gcli::FGclienv& gclienv) throw() {
     return gclienv.c_gclienvsub_n == 0;
 }
 
 // --- atf_gcli.FGclienv.c_gclienvsub.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_gcli::FGclienvsub* atf_gcli::c_gclienvsub_Find(atf_gcli::FGclienv& gclienv, u32 t) {
+inline atf_gcli::FGclienvsub* atf_gcli::c_gclienvsub_Find(atf_gcli::FGclienv& gclienv, u32 t) throw() {
     atf_gcli::FGclienvsub *retval = NULL;
     u64 idx = t;
     u64 lim = gclienv.c_gclienvsub_n;
@@ -531,19 +531,19 @@ inline atf_gcli::FGclienvsub* atf_gcli::c_gclienvsub_Find(atf_gcli::FGclienv& gc
 
 // --- atf_gcli.FGclienv.c_gclienvsub.Getary
 // Return array of pointers
-inline algo::aryptr<atf_gcli::FGclienvsub*> atf_gcli::c_gclienvsub_Getary(atf_gcli::FGclienv& gclienv) {
+inline algo::aryptr<atf_gcli::FGclienvsub*> atf_gcli::c_gclienvsub_Getary(atf_gcli::FGclienv& gclienv) throw() {
     return algo::aryptr<atf_gcli::FGclienvsub*>(gclienv.c_gclienvsub_elems, gclienv.c_gclienvsub_n);
 }
 
 // --- atf_gcli.FGclienv.c_gclienvsub.N
 // Return number of items in the pointer array
-inline i32 atf_gcli::c_gclienvsub_N(const atf_gcli::FGclienv& gclienv) {
+inline i32 atf_gcli::c_gclienvsub_N(const atf_gcli::FGclienv& gclienv) throw() {
     return gclienv.c_gclienvsub_n;
 }
 
 // --- atf_gcli.FGclienv.c_gclienvsub.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void atf_gcli::c_gclienvsub_RemoveAll(atf_gcli::FGclienv& gclienv) {
+inline void atf_gcli::c_gclienvsub_RemoveAll(atf_gcli::FGclienv& gclienv) throw() {
     for (u32 i = 0; i < gclienv.c_gclienvsub_n; i++) {
         // mark all elements as not-in-array
         gclienv.c_gclienvsub_elems[i]->gclienv_c_gclienvsub_in_ary = false;
@@ -553,19 +553,19 @@ inline void atf_gcli::c_gclienvsub_RemoveAll(atf_gcli::FGclienv& gclienv) {
 
 // --- atf_gcli.FGclienv.c_gclienvsub.qFind
 // Return reference without bounds checking
-inline atf_gcli::FGclienvsub& atf_gcli::c_gclienvsub_qFind(atf_gcli::FGclienv& gclienv, u32 idx) {
+inline atf_gcli::FGclienvsub& atf_gcli::c_gclienvsub_qFind(atf_gcli::FGclienv& gclienv, u32 idx) throw() {
     return *gclienv.c_gclienvsub_elems[idx];
 }
 
 // --- atf_gcli.FGclienv.c_gclienvsub.InAryQ
 // True if row is in any ptrary instance
-inline bool atf_gcli::gclienv_c_gclienvsub_InAryQ(atf_gcli::FGclienvsub& row) {
+inline bool atf_gcli::gclienv_c_gclienvsub_InAryQ(atf_gcli::FGclienvsub& row) throw() {
     return row.gclienv_c_gclienvsub_in_ary;
 }
 
 // --- atf_gcli.FGclienv.c_gclienvsub.qLast
 // Reference to last element without bounds checking
-inline atf_gcli::FGclienvsub& atf_gcli::c_gclienvsub_qLast(atf_gcli::FGclienv& gclienv) {
+inline atf_gcli::FGclienvsub& atf_gcli::c_gclienvsub_qLast(atf_gcli::FGclienv& gclienv) throw() {
     return *gclienv.c_gclienvsub_elems[gclienv.c_gclienvsub_n-1];
 }
 
@@ -579,7 +579,7 @@ inline void atf_gcli::FGclienv_Init(atf_gcli::FGclienv& gclienv) {
 }
 
 // --- atf_gcli.FGclienv.c_gclienvsub_curs.Reset
-inline void atf_gcli::gclienv_c_gclienvsub_curs_Reset(gclienv_c_gclienvsub_curs &curs, atf_gcli::FGclienv &parent) {
+inline void atf_gcli::gclienv_c_gclienvsub_curs_Reset(gclienv_c_gclienvsub_curs &curs, atf_gcli::FGclienv &parent) throw() {
     curs.elems = parent.c_gclienvsub_elems;
     curs.n_elems = parent.c_gclienvsub_n;
     curs.index = 0;
@@ -587,29 +587,29 @@ inline void atf_gcli::gclienv_c_gclienvsub_curs_Reset(gclienv_c_gclienvsub_curs 
 
 // --- atf_gcli.FGclienv.c_gclienvsub_curs.ValidQ
 // cursor points to valid item
-inline bool atf_gcli::gclienv_c_gclienvsub_curs_ValidQ(gclienv_c_gclienvsub_curs &curs) {
+inline bool atf_gcli::gclienv_c_gclienvsub_curs_ValidQ(gclienv_c_gclienvsub_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_gcli.FGclienv.c_gclienvsub_curs.Next
 // proceed to next item
-inline void atf_gcli::gclienv_c_gclienvsub_curs_Next(gclienv_c_gclienvsub_curs &curs) {
+inline void atf_gcli::gclienv_c_gclienvsub_curs_Next(gclienv_c_gclienvsub_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_gcli.FGclienv.c_gclienvsub_curs.Access
 // item access
-inline atf_gcli::FGclienvsub& atf_gcli::gclienv_c_gclienvsub_curs_Access(gclienv_c_gclienvsub_curs &curs) {
+inline atf_gcli::FGclienvsub& atf_gcli::gclienv_c_gclienvsub_curs_Access(gclienv_c_gclienvsub_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- atf_gcli.FGclienv..Ctor
-inline  atf_gcli::FGclienv::FGclienv() {
+inline  atf_gcli::FGclienv::FGclienv() throw() {
     atf_gcli::FGclienv_Init(*this);
 }
 
 // --- atf_gcli.FGclienv..Dtor
-inline  atf_gcli::FGclienv::~FGclienv() {
+inline  atf_gcli::FGclienv::~FGclienv() throw() {
     atf_gcli::FGclienv_Uninit(*this);
 }
 
@@ -623,34 +623,34 @@ inline void atf_gcli::FGclienvsub_Init(atf_gcli::FGclienvsub& gclienvsub) {
 }
 
 // --- atf_gcli.FGclienvsub..Ctor
-inline  atf_gcli::FGclienvsub::FGclienvsub() {
+inline  atf_gcli::FGclienvsub::FGclienvsub() throw() {
     atf_gcli::FGclienvsub_Init(*this);
 }
 
 // --- atf_gcli.FGclienvsub..Dtor
-inline  atf_gcli::FGclienvsub::~FGclienvsub() {
+inline  atf_gcli::FGclienvsub::~FGclienvsub() throw() {
     atf_gcli::FGclienvsub_Uninit(*this);
 }
 
 // --- atf_gcli.FGtblact..Ctor
-inline  atf_gcli::FGtblact::FGtblact() {
+inline  atf_gcli::FGtblact::FGtblact() throw() {
     atf_gcli::FGtblact_Init(*this);
 }
 
 // --- atf_gcli.FGtblact..Dtor
-inline  atf_gcli::FGtblact::~FGtblact() {
+inline  atf_gcli::FGtblact::~FGtblact() throw() {
     atf_gcli::FGtblact_Uninit(*this);
 }
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout.EmptyQ
 // Return true if index is empty
-inline bool atf_gcli::c_gtblacttstout_EmptyQ(atf_gcli::FGtblacttst& gtblacttst) {
+inline bool atf_gcli::c_gtblacttstout_EmptyQ(atf_gcli::FGtblacttst& gtblacttst) throw() {
     return gtblacttst.c_gtblacttstout_n == 0;
 }
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_gcli::FGtblacttstout* atf_gcli::c_gtblacttstout_Find(atf_gcli::FGtblacttst& gtblacttst, u32 t) {
+inline atf_gcli::FGtblacttstout* atf_gcli::c_gtblacttstout_Find(atf_gcli::FGtblacttst& gtblacttst, u32 t) throw() {
     atf_gcli::FGtblacttstout *retval = NULL;
     u64 idx = t;
     u64 lim = gtblacttst.c_gtblacttstout_n;
@@ -662,19 +662,19 @@ inline atf_gcli::FGtblacttstout* atf_gcli::c_gtblacttstout_Find(atf_gcli::FGtbla
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout.Getary
 // Return array of pointers
-inline algo::aryptr<atf_gcli::FGtblacttstout*> atf_gcli::c_gtblacttstout_Getary(atf_gcli::FGtblacttst& gtblacttst) {
+inline algo::aryptr<atf_gcli::FGtblacttstout*> atf_gcli::c_gtblacttstout_Getary(atf_gcli::FGtblacttst& gtblacttst) throw() {
     return algo::aryptr<atf_gcli::FGtblacttstout*>(gtblacttst.c_gtblacttstout_elems, gtblacttst.c_gtblacttstout_n);
 }
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout.N
 // Return number of items in the pointer array
-inline i32 atf_gcli::c_gtblacttstout_N(const atf_gcli::FGtblacttst& gtblacttst) {
+inline i32 atf_gcli::c_gtblacttstout_N(const atf_gcli::FGtblacttst& gtblacttst) throw() {
     return gtblacttst.c_gtblacttstout_n;
 }
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void atf_gcli::c_gtblacttstout_RemoveAll(atf_gcli::FGtblacttst& gtblacttst) {
+inline void atf_gcli::c_gtblacttstout_RemoveAll(atf_gcli::FGtblacttst& gtblacttst) throw() {
     for (u32 i = 0; i < gtblacttst.c_gtblacttstout_n; i++) {
         // mark all elements as not-in-array
         gtblacttst.c_gtblacttstout_elems[i]->gtblacttst_c_gtblacttstout_in_ary = false;
@@ -684,24 +684,24 @@ inline void atf_gcli::c_gtblacttstout_RemoveAll(atf_gcli::FGtblacttst& gtblactts
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout.qFind
 // Return reference without bounds checking
-inline atf_gcli::FGtblacttstout& atf_gcli::c_gtblacttstout_qFind(atf_gcli::FGtblacttst& gtblacttst, u32 idx) {
+inline atf_gcli::FGtblacttstout& atf_gcli::c_gtblacttstout_qFind(atf_gcli::FGtblacttst& gtblacttst, u32 idx) throw() {
     return *gtblacttst.c_gtblacttstout_elems[idx];
 }
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout.InAryQ
 // True if row is in any ptrary instance
-inline bool atf_gcli::gtblacttst_c_gtblacttstout_InAryQ(atf_gcli::FGtblacttstout& row) {
+inline bool atf_gcli::gtblacttst_c_gtblacttstout_InAryQ(atf_gcli::FGtblacttstout& row) throw() {
     return row.gtblacttst_c_gtblacttstout_in_ary;
 }
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout.qLast
 // Reference to last element without bounds checking
-inline atf_gcli::FGtblacttstout& atf_gcli::c_gtblacttstout_qLast(atf_gcli::FGtblacttst& gtblacttst) {
+inline atf_gcli::FGtblacttstout& atf_gcli::c_gtblacttstout_qLast(atf_gcli::FGtblacttst& gtblacttst) throw() {
     return *gtblacttst.c_gtblacttstout_elems[gtblacttst.c_gtblacttstout_n-1];
 }
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout_curs.Reset
-inline void atf_gcli::gtblacttst_c_gtblacttstout_curs_Reset(gtblacttst_c_gtblacttstout_curs &curs, atf_gcli::FGtblacttst &parent) {
+inline void atf_gcli::gtblacttst_c_gtblacttstout_curs_Reset(gtblacttst_c_gtblacttstout_curs &curs, atf_gcli::FGtblacttst &parent) throw() {
     curs.elems = parent.c_gtblacttstout_elems;
     curs.n_elems = parent.c_gtblacttstout_n;
     curs.index = 0;
@@ -709,29 +709,29 @@ inline void atf_gcli::gtblacttst_c_gtblacttstout_curs_Reset(gtblacttst_c_gtblact
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout_curs.ValidQ
 // cursor points to valid item
-inline bool atf_gcli::gtblacttst_c_gtblacttstout_curs_ValidQ(gtblacttst_c_gtblacttstout_curs &curs) {
+inline bool atf_gcli::gtblacttst_c_gtblacttstout_curs_ValidQ(gtblacttst_c_gtblacttstout_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout_curs.Next
 // proceed to next item
-inline void atf_gcli::gtblacttst_c_gtblacttstout_curs_Next(gtblacttst_c_gtblacttstout_curs &curs) {
+inline void atf_gcli::gtblacttst_c_gtblacttstout_curs_Next(gtblacttst_c_gtblacttstout_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout_curs.Access
 // item access
-inline atf_gcli::FGtblacttstout& atf_gcli::gtblacttst_c_gtblacttstout_curs_Access(gtblacttst_c_gtblacttstout_curs &curs) {
+inline atf_gcli::FGtblacttstout& atf_gcli::gtblacttst_c_gtblacttstout_curs_Access(gtblacttst_c_gtblacttstout_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- atf_gcli.FGtblacttst..Ctor
-inline  atf_gcli::FGtblacttst::FGtblacttst() {
+inline  atf_gcli::FGtblacttst::FGtblacttst() throw() {
     atf_gcli::FGtblacttst_Init(*this);
 }
 
 // --- atf_gcli.FGtblacttst..Dtor
-inline  atf_gcli::FGtblacttst::~FGtblacttst() {
+inline  atf_gcli::FGtblacttst::~FGtblacttst() throw() {
     atf_gcli::FGtblacttst_Uninit(*this);
 }
 
@@ -743,29 +743,29 @@ inline void atf_gcli::FGtblacttstout_Init(atf_gcli::FGtblacttstout& gtblacttstou
 }
 
 // --- atf_gcli.FGtblacttstout..Ctor
-inline  atf_gcli::FGtblacttstout::FGtblacttstout() {
+inline  atf_gcli::FGtblacttstout::FGtblacttstout() throw() {
     atf_gcli::FGtblacttstout_Init(*this);
 }
 
 // --- atf_gcli.FGtblacttstout..Dtor
-inline  atf_gcli::FGtblacttstout::~FGtblacttstout() {
+inline  atf_gcli::FGtblacttstout::~FGtblacttstout() throw() {
     atf_gcli::FGtblacttstout_Uninit(*this);
 }
 
 // --- atf_gcli.FieldId.value.GetEnum
 // Get value of field as enum type
-inline atf_gcli_FieldIdEnum atf_gcli::value_GetEnum(const atf_gcli::FieldId& parent) {
+inline atf_gcli_FieldIdEnum atf_gcli::value_GetEnum(const atf_gcli::FieldId& parent) throw() {
     return atf_gcli_FieldIdEnum(parent.value);
 }
 
 // --- atf_gcli.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void atf_gcli::value_SetEnum(atf_gcli::FieldId& parent, atf_gcli_FieldIdEnum rhs) {
+inline void atf_gcli::value_SetEnum(atf_gcli::FieldId& parent, atf_gcli_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- atf_gcli.FieldId.value.Cast
-inline  atf_gcli::FieldId::operator atf_gcli_FieldIdEnum() const {
+inline  atf_gcli::FieldId::operator atf_gcli_FieldIdEnum() const throw() {
     return atf_gcli_FieldIdEnum((*this).value);
 }
 
@@ -776,35 +776,35 @@ inline void atf_gcli::FieldId_Init(atf_gcli::FieldId& parent) {
 }
 
 // --- atf_gcli.FieldId..Ctor
-inline  atf_gcli::FieldId::FieldId() {
+inline  atf_gcli::FieldId::FieldId() throw() {
     atf_gcli::FieldId_Init(*this);
 }
 
 // --- atf_gcli.FieldId..FieldwiseCtor
-inline  atf_gcli::FieldId::FieldId(i32 in_value)
+inline  atf_gcli::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_gcli.FieldId..EnumCtor
-inline  atf_gcli::FieldId::FieldId(atf_gcli_FieldIdEnum arg) {
+inline  atf_gcli::FieldId::FieldId(atf_gcli_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- atf_gcli.TableId.value.GetEnum
 // Get value of field as enum type
-inline atf_gcli_TableIdEnum atf_gcli::value_GetEnum(const atf_gcli::TableId& parent) {
+inline atf_gcli_TableIdEnum atf_gcli::value_GetEnum(const atf_gcli::TableId& parent) throw() {
     return atf_gcli_TableIdEnum(parent.value);
 }
 
 // --- atf_gcli.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void atf_gcli::value_SetEnum(atf_gcli::TableId& parent, atf_gcli_TableIdEnum rhs) {
+inline void atf_gcli::value_SetEnum(atf_gcli::TableId& parent, atf_gcli_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- atf_gcli.TableId.value.Cast
-inline  atf_gcli::TableId::operator atf_gcli_TableIdEnum() const {
+inline  atf_gcli::TableId::operator atf_gcli_TableIdEnum() const throw() {
     return atf_gcli_TableIdEnum((*this).value);
 }
 
@@ -815,18 +815,18 @@ inline void atf_gcli::TableId_Init(atf_gcli::TableId& parent) {
 }
 
 // --- atf_gcli.TableId..Ctor
-inline  atf_gcli::TableId::TableId() {
+inline  atf_gcli::TableId::TableId() throw() {
     atf_gcli::TableId_Init(*this);
 }
 
 // --- atf_gcli.TableId..FieldwiseCtor
-inline  atf_gcli::TableId::TableId(i32 in_value)
+inline  atf_gcli::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_gcli.TableId..EnumCtor
-inline  atf_gcli::TableId::TableId(atf_gcli_TableIdEnum arg) {
+inline  atf_gcli::TableId::TableId(atf_gcli_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

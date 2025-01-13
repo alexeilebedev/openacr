@@ -29,7 +29,7 @@
 
 // --- fm.Code.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> fm::ch_Getary(const fm::Code& parent) {
+inline algo::aryptr<char> fm::ch_Getary(const fm::Code& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -41,19 +41,19 @@ inline u32 fm::Code_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- fm.Code.ch.Init
-inline void fm::ch_Init(fm::Code &parent) {
+inline void fm::ch_Init(fm::Code &parent) throw() {
     memset(parent.ch, ' ', 32);
 }
 
 // --- fm.Code.ch.Max
 // always return constant 32
-inline int fm::ch_Max(fm::Code& parent) {
+inline int fm::ch_Max(fm::Code& parent) throw() {
     (void)parent;
     return 32;
 }
 
 // --- fm.Code.ch.N
-inline int fm::ch_N(const fm::Code& parent) {
+inline int fm::ch_N(const fm::Code& parent) throw() {
     u64 ret;
     ret = 32;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -64,32 +64,32 @@ inline int fm::ch_N(const fm::Code& parent) {
 
 // --- fm.Code.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void fm::Code::operator =(const algo::strptr &str) {
+inline void fm::Code::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- fm.Code.ch.CtorStrptr
-inline  fm::Code::Code(const algo::strptr &rhs) {
+inline  fm::Code::Code(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- fm.Code.ch.Cast
-inline  fm::Code::operator algo::strptr() const {
+inline  fm::Code::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- fm.Code..EqOp
-inline bool fm::Code::operator ==(const fm::Code &rhs) const {
+inline bool fm::Code::operator ==(const fm::Code &rhs) const throw() {
     return fm::Code_Eq(const_cast<fm::Code&>(*this),const_cast<fm::Code&>(rhs));
 }
 
 // --- fm.Code..NeOp
-inline bool fm::Code::operator !=(const fm::Code &rhs) const {
+inline bool fm::Code::operator !=(const fm::Code &rhs) const throw() {
     return !fm::Code_Eq(const_cast<fm::Code&>(*this),const_cast<fm::Code&>(rhs));
 }
 
 // --- fm.Code..Cmp
-inline i32 fm::Code_Cmp(fm::Code& lhs, fm::Code& rhs) {
+inline i32 fm::Code_Cmp(fm::Code& lhs, fm::Code& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -102,7 +102,7 @@ inline void fm::Code_Init(fm::Code& parent) {
 }
 
 // --- fm.Code..Eq
-inline bool fm::Code_Eq(fm::Code& lhs, fm::Code& rhs) {
+inline bool fm::Code_Eq(fm::Code& lhs, fm::Code& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -113,31 +113,31 @@ inline bool fm::Code_Eq(fm::Code& lhs, fm::Code& rhs) {
 }
 
 // --- fm.Code..EqOpAryptr
-inline bool fm::Code::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool fm::Code::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- fm.Code..AssignOp
-inline fm::Code& fm::Code::operator =(const fm::Code &rhs) {
+inline fm::Code& fm::Code::operator =(const fm::Code &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(fm::Code));
     return *this;
 }
 
 // --- fm.Code..Ctor
-inline  fm::Code::Code() {
+inline  fm::Code::Code() throw() {
     fm::Code_Init(*this);
 }
 
 // --- fm.Code..CopyCtor
-inline  fm::Code::Code(const fm::Code &rhs) {
+inline  fm::Code::Code(const fm::Code &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(fm::Code));
 }
 
 // --- fm.Objtype.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> fm::ch_Getary(const fm::Objtype& parent) {
+inline algo::aryptr<char> fm::ch_Getary(const fm::Objtype& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -149,19 +149,19 @@ inline u32 fm::Objtype_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- fm.Objtype.ch.Init
-inline void fm::ch_Init(fm::Objtype &parent) {
+inline void fm::ch_Init(fm::Objtype &parent) throw() {
     memset(parent.ch, ' ', 15);
 }
 
 // --- fm.Objtype.ch.Max
 // always return constant 15
-inline int fm::ch_Max(fm::Objtype& parent) {
+inline int fm::ch_Max(fm::Objtype& parent) throw() {
     (void)parent;
     return 15;
 }
 
 // --- fm.Objtype.ch.N
-inline int fm::ch_N(const fm::Objtype& parent) {
+inline int fm::ch_N(const fm::Objtype& parent) throw() {
     u64 ret;
     ret = 15;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -172,32 +172,32 @@ inline int fm::ch_N(const fm::Objtype& parent) {
 
 // --- fm.Objtype.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void fm::Objtype::operator =(const algo::strptr &str) {
+inline void fm::Objtype::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- fm.Objtype.ch.CtorStrptr
-inline  fm::Objtype::Objtype(const algo::strptr &rhs) {
+inline  fm::Objtype::Objtype(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- fm.Objtype.ch.Cast
-inline  fm::Objtype::operator algo::strptr() const {
+inline  fm::Objtype::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- fm.Objtype..EqOp
-inline bool fm::Objtype::operator ==(const fm::Objtype &rhs) const {
+inline bool fm::Objtype::operator ==(const fm::Objtype &rhs) const throw() {
     return fm::Objtype_Eq(const_cast<fm::Objtype&>(*this),const_cast<fm::Objtype&>(rhs));
 }
 
 // --- fm.Objtype..NeOp
-inline bool fm::Objtype::operator !=(const fm::Objtype &rhs) const {
+inline bool fm::Objtype::operator !=(const fm::Objtype &rhs) const throw() {
     return !fm::Objtype_Eq(const_cast<fm::Objtype&>(*this),const_cast<fm::Objtype&>(rhs));
 }
 
 // --- fm.Objtype..Cmp
-inline i32 fm::Objtype_Cmp(fm::Objtype& lhs, fm::Objtype& rhs) {
+inline i32 fm::Objtype_Cmp(fm::Objtype& lhs, fm::Objtype& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -210,7 +210,7 @@ inline void fm::Objtype_Init(fm::Objtype& parent) {
 }
 
 // --- fm.Objtype..Eq
-inline bool fm::Objtype_Eq(fm::Objtype& lhs, fm::Objtype& rhs) {
+inline bool fm::Objtype_Eq(fm::Objtype& lhs, fm::Objtype& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -221,31 +221,31 @@ inline bool fm::Objtype_Eq(fm::Objtype& lhs, fm::Objtype& rhs) {
 }
 
 // --- fm.Objtype..EqOpAryptr
-inline bool fm::Objtype::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool fm::Objtype::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- fm.Objtype..AssignOp
-inline fm::Objtype& fm::Objtype::operator =(const fm::Objtype &rhs) {
+inline fm::Objtype& fm::Objtype::operator =(const fm::Objtype &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(fm::Objtype));
     return *this;
 }
 
 // --- fm.Objtype..Ctor
-inline  fm::Objtype::Objtype() {
+inline  fm::Objtype::Objtype() throw() {
     fm::Objtype_Init(*this);
 }
 
 // --- fm.Objtype..CopyCtor
-inline  fm::Objtype::Objtype(const fm::Objtype &rhs) {
+inline  fm::Objtype::Objtype(const fm::Objtype &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(fm::Objtype));
 }
 
 // --- fm.Objinst.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> fm::ch_Getary(const fm::Objinst& parent) {
+inline algo::aryptr<char> fm::ch_Getary(const fm::Objinst& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -257,19 +257,19 @@ inline u32 fm::Objinst_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- fm.Objinst.ch.Init
-inline void fm::ch_Init(fm::Objinst &parent) {
+inline void fm::ch_Init(fm::Objinst &parent) throw() {
     memset(parent.ch, ' ', 79);
 }
 
 // --- fm.Objinst.ch.Max
 // always return constant 79
-inline int fm::ch_Max(fm::Objinst& parent) {
+inline int fm::ch_Max(fm::Objinst& parent) throw() {
     (void)parent;
     return 79;
 }
 
 // --- fm.Objinst.ch.N
-inline int fm::ch_N(const fm::Objinst& parent) {
+inline int fm::ch_N(const fm::Objinst& parent) throw() {
     u64 ret;
     ret = 79;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -280,32 +280,32 @@ inline int fm::ch_N(const fm::Objinst& parent) {
 
 // --- fm.Objinst.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void fm::Objinst::operator =(const algo::strptr &str) {
+inline void fm::Objinst::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- fm.Objinst.ch.CtorStrptr
-inline  fm::Objinst::Objinst(const algo::strptr &rhs) {
+inline  fm::Objinst::Objinst(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- fm.Objinst.ch.Cast
-inline  fm::Objinst::operator algo::strptr() const {
+inline  fm::Objinst::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- fm.Objinst..EqOp
-inline bool fm::Objinst::operator ==(const fm::Objinst &rhs) const {
+inline bool fm::Objinst::operator ==(const fm::Objinst &rhs) const throw() {
     return fm::Objinst_Eq(const_cast<fm::Objinst&>(*this),const_cast<fm::Objinst&>(rhs));
 }
 
 // --- fm.Objinst..NeOp
-inline bool fm::Objinst::operator !=(const fm::Objinst &rhs) const {
+inline bool fm::Objinst::operator !=(const fm::Objinst &rhs) const throw() {
     return !fm::Objinst_Eq(const_cast<fm::Objinst&>(*this),const_cast<fm::Objinst&>(rhs));
 }
 
 // --- fm.Objinst..Cmp
-inline i32 fm::Objinst_Cmp(fm::Objinst& lhs, fm::Objinst& rhs) {
+inline i32 fm::Objinst_Cmp(fm::Objinst& lhs, fm::Objinst& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -318,7 +318,7 @@ inline void fm::Objinst_Init(fm::Objinst& parent) {
 }
 
 // --- fm.Objinst..Eq
-inline bool fm::Objinst_Eq(fm::Objinst& lhs, fm::Objinst& rhs) {
+inline bool fm::Objinst_Eq(fm::Objinst& lhs, fm::Objinst& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -337,37 +337,37 @@ inline bool fm::Objinst_Eq(fm::Objinst& lhs, fm::Objinst& rhs) {
 }
 
 // --- fm.Objinst..EqOpAryptr
-inline bool fm::Objinst::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool fm::Objinst::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- fm.Objinst..AssignOp
-inline fm::Objinst& fm::Objinst::operator =(const fm::Objinst &rhs) {
+inline fm::Objinst& fm::Objinst::operator =(const fm::Objinst &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(fm::Objinst));
     return *this;
 }
 
 // --- fm.Objinst..Ctor
-inline  fm::Objinst::Objinst() {
+inline  fm::Objinst::Objinst() throw() {
     fm::Objinst_Init(*this);
 }
 
 // --- fm.Objinst..CopyCtor
-inline  fm::Objinst::Objinst(const fm::Objinst &rhs) {
+inline  fm::Objinst::Objinst(const fm::Objinst &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(fm::Objinst));
 }
 
 // --- fm.Flag.value.GetEnum
 // Get value of field as enum type
-inline fm_Flag_value_Enum fm::value_GetEnum(const fm::Flag& parent) {
+inline fm_Flag_value_Enum fm::value_GetEnum(const fm::Flag& parent) throw() {
     return fm_Flag_value_Enum(parent.value);
 }
 
 // --- fm.Flag.value.SetEnum
 // Set value of field from enum type.
-inline void fm::value_SetEnum(fm::Flag& parent, fm_Flag_value_Enum rhs) {
+inline void fm::value_SetEnum(fm::Flag& parent, fm_Flag_value_Enum rhs) throw() {
     parent.value = char(rhs);
 }
 
@@ -378,64 +378,64 @@ inline void fm::Flag_Init(fm::Flag& parent) {
 }
 
 // --- fm.Flag..Ctor
-inline  fm::Flag::Flag() {
+inline  fm::Flag::Flag() throw() {
     fm::Flag_Init(*this);
 }
 
 // --- fm.Flag..EnumCtor
-inline  fm::Flag::Flag(fm_Flag_value_Enum arg) {
+inline  fm::Flag::Flag(fm_Flag_value_Enum arg) throw() {
     this->value = char(arg);
 }
 
 // --- fm.Severity.value.GetEnum
 // Get value of field as enum type
-inline fm_Severity_value_Enum fm::value_GetEnum(const fm::Severity& parent) {
+inline fm_Severity_value_Enum fm::value_GetEnum(const fm::Severity& parent) throw() {
     return fm_Severity_value_Enum(parent.value);
 }
 
 // --- fm.Severity.value.SetEnum
 // Set value of field from enum type.
-inline void fm::value_SetEnum(fm::Severity& parent, fm_Severity_value_Enum rhs) {
+inline void fm::value_SetEnum(fm::Severity& parent, fm_Severity_value_Enum rhs) throw() {
     parent.value = char(rhs);
 }
 
 // --- fm.Severity..EqOp
-inline bool fm::Severity::operator ==(const fm::Severity &rhs) const {
+inline bool fm::Severity::operator ==(const fm::Severity &rhs) const throw() {
     return fm::Severity_Eq(const_cast<fm::Severity&>(*this),const_cast<fm::Severity&>(rhs));
 }
 
 // --- fm.Severity..NeOp
-inline bool fm::Severity::operator !=(const fm::Severity &rhs) const {
+inline bool fm::Severity::operator !=(const fm::Severity &rhs) const throw() {
     return !fm::Severity_Eq(const_cast<fm::Severity&>(*this),const_cast<fm::Severity&>(rhs));
 }
 
 // --- fm.Severity..LtOp
-inline bool fm::Severity::operator <(const fm::Severity &rhs) const {
+inline bool fm::Severity::operator <(const fm::Severity &rhs) const throw() {
     return fm::Severity_Lt(const_cast<fm::Severity&>(*this),const_cast<fm::Severity&>(rhs));
 }
 
 // --- fm.Severity..GtOp
-inline bool fm::Severity::operator >(const fm::Severity &rhs) const {
+inline bool fm::Severity::operator >(const fm::Severity &rhs) const throw() {
     return fm::Severity_Lt(const_cast<fm::Severity&>(rhs),const_cast<fm::Severity&>(*this));
 }
 
 // --- fm.Severity..LeOp
-inline bool fm::Severity::operator <=(const fm::Severity &rhs) const {
+inline bool fm::Severity::operator <=(const fm::Severity &rhs) const throw() {
     return !fm::Severity_Lt(const_cast<fm::Severity&>(rhs),const_cast<fm::Severity&>(*this));
 }
 
 // --- fm.Severity..GeOp
-inline bool fm::Severity::operator >=(const fm::Severity &rhs) const {
+inline bool fm::Severity::operator >=(const fm::Severity &rhs) const throw() {
     return !fm::Severity_Lt(const_cast<fm::Severity&>(*this),const_cast<fm::Severity&>(rhs));
 }
 
 // --- fm.Severity..Lt
-inline bool fm::Severity_Lt(fm::Severity lhs, fm::Severity rhs) {
+inline bool fm::Severity_Lt(fm::Severity lhs, fm::Severity rhs) throw() {
     return char_Lt(lhs.value, rhs.value);
 }
 
 // --- fm.Severity..Cmp
-inline i32 fm::Severity_Cmp(fm::Severity lhs, fm::Severity rhs) {
+inline i32 fm::Severity_Cmp(fm::Severity lhs, fm::Severity rhs) throw() {
     i32 retval = 0;
     retval = char_Cmp(lhs.value, rhs.value);
     return retval;
@@ -449,7 +449,7 @@ inline void fm::Severity_Init(fm::Severity& parent) {
 
 // --- fm.Severity..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool fm::Severity_UpdateMax(fm::Severity &lhs, fm::Severity rhs) {
+inline bool fm::Severity_UpdateMax(fm::Severity &lhs, fm::Severity rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -459,13 +459,13 @@ inline bool fm::Severity_UpdateMax(fm::Severity &lhs, fm::Severity rhs) {
 
 // --- fm.Severity..Min
 // Return the lesser of two values
-inline fm::Severity fm::Severity_Min(fm::Severity lhs, fm::Severity rhs) {
+inline fm::Severity fm::Severity_Min(fm::Severity lhs, fm::Severity rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- fm.Severity..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool fm::Severity_UpdateMin(fm::Severity &lhs, fm::Severity rhs) {
+inline bool fm::Severity_UpdateMin(fm::Severity &lhs, fm::Severity rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -475,12 +475,12 @@ inline bool fm::Severity_UpdateMin(fm::Severity &lhs, fm::Severity rhs) {
 
 // --- fm.Severity..Max
 // Return the greater of two values
-inline fm::Severity fm::Severity_Max(fm::Severity lhs, fm::Severity rhs) {
+inline fm::Severity fm::Severity_Max(fm::Severity lhs, fm::Severity rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- fm.Severity..Eq
-inline bool fm::Severity_Eq(fm::Severity lhs, fm::Severity rhs) {
+inline bool fm::Severity_Eq(fm::Severity lhs, fm::Severity rhs) throw() {
     bool retval = true;
     retval = char_Eq(lhs.value, rhs.value);
     return retval;
@@ -488,7 +488,7 @@ inline bool fm::Severity_Eq(fm::Severity lhs, fm::Severity rhs) {
 
 // --- fm.Severity..Update
 // Set value. Return true if new value is different from old value.
-inline bool fm::Severity_Update(fm::Severity &lhs, fm::Severity rhs) {
+inline bool fm::Severity_Update(fm::Severity &lhs, fm::Severity rhs) throw() {
     bool ret = !Severity_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -498,23 +498,23 @@ inline bool fm::Severity_Update(fm::Severity &lhs, fm::Severity rhs) {
 
 // --- fm.Severity..EqEnum
 // define enum comparison operator to avoid ambiguity
-inline bool fm::Severity::operator ==(fm_Severity_value_Enum rhs) const {
+inline bool fm::Severity::operator ==(fm_Severity_value_Enum rhs) const throw() {
     return fm_Severity_value_Enum(value) == rhs;
 }
 
 // --- fm.Severity..Ctor
-inline  fm::Severity::Severity() {
+inline  fm::Severity::Severity() throw() {
     fm::Severity_Init(*this);
 }
 
 // --- fm.Severity..EnumCtor
-inline  fm::Severity::Severity(fm_Severity_value_Enum arg) {
+inline  fm::Severity::Severity(fm_Severity_value_Enum arg) throw() {
     this->value = char(arg);
 }
 
 // --- fm.Summary.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> fm::ch_Getary(const fm::Summary& parent) {
+inline algo::aryptr<char> fm::ch_Getary(const fm::Summary& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -526,19 +526,19 @@ inline u32 fm::Summary_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- fm.Summary.ch.Init
-inline void fm::ch_Init(fm::Summary &parent) {
+inline void fm::ch_Init(fm::Summary &parent) throw() {
     memset(parent.ch, ' ', 64);
 }
 
 // --- fm.Summary.ch.Max
 // always return constant 64
-inline int fm::ch_Max(fm::Summary& parent) {
+inline int fm::ch_Max(fm::Summary& parent) throw() {
     (void)parent;
     return 64;
 }
 
 // --- fm.Summary.ch.N
-inline int fm::ch_N(const fm::Summary& parent) {
+inline int fm::ch_N(const fm::Summary& parent) throw() {
     u64 ret;
     ret = 64;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -549,32 +549,32 @@ inline int fm::ch_N(const fm::Summary& parent) {
 
 // --- fm.Summary.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void fm::Summary::operator =(const algo::strptr &str) {
+inline void fm::Summary::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- fm.Summary.ch.CtorStrptr
-inline  fm::Summary::Summary(const algo::strptr &rhs) {
+inline  fm::Summary::Summary(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- fm.Summary.ch.Cast
-inline  fm::Summary::operator algo::strptr() const {
+inline  fm::Summary::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- fm.Summary..EqOp
-inline bool fm::Summary::operator ==(const fm::Summary &rhs) const {
+inline bool fm::Summary::operator ==(const fm::Summary &rhs) const throw() {
     return fm::Summary_Eq(const_cast<fm::Summary&>(*this),const_cast<fm::Summary&>(rhs));
 }
 
 // --- fm.Summary..NeOp
-inline bool fm::Summary::operator !=(const fm::Summary &rhs) const {
+inline bool fm::Summary::operator !=(const fm::Summary &rhs) const throw() {
     return !fm::Summary_Eq(const_cast<fm::Summary&>(*this),const_cast<fm::Summary&>(rhs));
 }
 
 // --- fm.Summary..Cmp
-inline i32 fm::Summary_Cmp(fm::Summary& lhs, fm::Summary& rhs) {
+inline i32 fm::Summary_Cmp(fm::Summary& lhs, fm::Summary& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -587,7 +587,7 @@ inline void fm::Summary_Init(fm::Summary& parent) {
 }
 
 // --- fm.Summary..Eq
-inline bool fm::Summary_Eq(fm::Summary& lhs, fm::Summary& rhs) {
+inline bool fm::Summary_Eq(fm::Summary& lhs, fm::Summary& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -602,31 +602,31 @@ inline bool fm::Summary_Eq(fm::Summary& lhs, fm::Summary& rhs) {
 }
 
 // --- fm.Summary..EqOpAryptr
-inline bool fm::Summary::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool fm::Summary::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- fm.Summary..AssignOp
-inline fm::Summary& fm::Summary::operator =(const fm::Summary &rhs) {
+inline fm::Summary& fm::Summary::operator =(const fm::Summary &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(fm::Summary));
     return *this;
 }
 
 // --- fm.Summary..Ctor
-inline  fm::Summary::Summary() {
+inline  fm::Summary::Summary() throw() {
     fm::Summary_Init(*this);
 }
 
 // --- fm.Summary..CopyCtor
-inline  fm::Summary::Summary(const fm::Summary &rhs) {
+inline  fm::Summary::Summary(const fm::Summary &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(fm::Summary));
 }
 
 // --- fm.Description.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> fm::ch_Getary(const fm::Description& parent) {
+inline algo::aryptr<char> fm::ch_Getary(const fm::Description& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -638,19 +638,19 @@ inline u32 fm::Description_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- fm.Description.ch.Init
-inline void fm::ch_Init(fm::Description &parent) {
+inline void fm::ch_Init(fm::Description &parent) throw() {
     memset(parent.ch, ' ', 128);
 }
 
 // --- fm.Description.ch.Max
 // always return constant 128
-inline int fm::ch_Max(fm::Description& parent) {
+inline int fm::ch_Max(fm::Description& parent) throw() {
     (void)parent;
     return 128;
 }
 
 // --- fm.Description.ch.N
-inline int fm::ch_N(const fm::Description& parent) {
+inline int fm::ch_N(const fm::Description& parent) throw() {
     u64 ret;
     ret = 128;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -661,32 +661,32 @@ inline int fm::ch_N(const fm::Description& parent) {
 
 // --- fm.Description.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void fm::Description::operator =(const algo::strptr &str) {
+inline void fm::Description::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- fm.Description.ch.CtorStrptr
-inline  fm::Description::Description(const algo::strptr &rhs) {
+inline  fm::Description::Description(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- fm.Description.ch.Cast
-inline  fm::Description::operator algo::strptr() const {
+inline  fm::Description::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- fm.Description..EqOp
-inline bool fm::Description::operator ==(const fm::Description &rhs) const {
+inline bool fm::Description::operator ==(const fm::Description &rhs) const throw() {
     return fm::Description_Eq(const_cast<fm::Description&>(*this),const_cast<fm::Description&>(rhs));
 }
 
 // --- fm.Description..NeOp
-inline bool fm::Description::operator !=(const fm::Description &rhs) const {
+inline bool fm::Description::operator !=(const fm::Description &rhs) const throw() {
     return !fm::Description_Eq(const_cast<fm::Description&>(*this),const_cast<fm::Description&>(rhs));
 }
 
 // --- fm.Description..Cmp
-inline i32 fm::Description_Cmp(fm::Description& lhs, fm::Description& rhs) {
+inline i32 fm::Description_Cmp(fm::Description& lhs, fm::Description& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -699,7 +699,7 @@ inline void fm::Description_Init(fm::Description& parent) {
 }
 
 // --- fm.Description..Eq
-inline bool fm::Description_Eq(fm::Description& lhs, fm::Description& rhs) {
+inline bool fm::Description_Eq(fm::Description& lhs, fm::Description& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -722,31 +722,31 @@ inline bool fm::Description_Eq(fm::Description& lhs, fm::Description& rhs) {
 }
 
 // --- fm.Description..EqOpAryptr
-inline bool fm::Description::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool fm::Description::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- fm.Description..AssignOp
-inline fm::Description& fm::Description::operator =(const fm::Description &rhs) {
+inline fm::Description& fm::Description::operator =(const fm::Description &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(fm::Description));
     return *this;
 }
 
 // --- fm.Description..Ctor
-inline  fm::Description::Description() {
+inline  fm::Description::Description() throw() {
     fm::Description_Init(*this);
 }
 
 // --- fm.Description..CopyCtor
-inline  fm::Description::Description(const fm::Description &rhs) {
+inline  fm::Description::Description(const fm::Description &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(fm::Description));
 }
 
 // --- fm.Source.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> fm::ch_Getary(const fm::Source& parent) {
+inline algo::aryptr<char> fm::ch_Getary(const fm::Source& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -758,19 +758,19 @@ inline u32 fm::Source_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- fm.Source.ch.Init
-inline void fm::ch_Init(fm::Source &parent) {
+inline void fm::ch_Init(fm::Source &parent) throw() {
     memset(parent.ch, ' ', 32);
 }
 
 // --- fm.Source.ch.Max
 // always return constant 32
-inline int fm::ch_Max(fm::Source& parent) {
+inline int fm::ch_Max(fm::Source& parent) throw() {
     (void)parent;
     return 32;
 }
 
 // --- fm.Source.ch.N
-inline int fm::ch_N(const fm::Source& parent) {
+inline int fm::ch_N(const fm::Source& parent) throw() {
     u64 ret;
     ret = 32;
     while (ret>0 && parent.ch[ret-1]==u8(' ')) {
@@ -781,32 +781,32 @@ inline int fm::ch_N(const fm::Source& parent) {
 
 // --- fm.Source.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void fm::Source::operator =(const algo::strptr &str) {
+inline void fm::Source::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- fm.Source.ch.CtorStrptr
-inline  fm::Source::Source(const algo::strptr &rhs) {
+inline  fm::Source::Source(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- fm.Source.ch.Cast
-inline  fm::Source::operator algo::strptr() const {
+inline  fm::Source::operator algo::strptr() const throw() {
     return ch_Getary(*this);
 }
 
 // --- fm.Source..EqOp
-inline bool fm::Source::operator ==(const fm::Source &rhs) const {
+inline bool fm::Source::operator ==(const fm::Source &rhs) const throw() {
     return fm::Source_Eq(const_cast<fm::Source&>(*this),const_cast<fm::Source&>(rhs));
 }
 
 // --- fm.Source..NeOp
-inline bool fm::Source::operator !=(const fm::Source &rhs) const {
+inline bool fm::Source::operator !=(const fm::Source &rhs) const throw() {
     return !fm::Source_Eq(const_cast<fm::Source&>(*this),const_cast<fm::Source&>(rhs));
 }
 
 // --- fm.Source..Cmp
-inline i32 fm::Source_Cmp(fm::Source& lhs, fm::Source& rhs) {
+inline i32 fm::Source_Cmp(fm::Source& lhs, fm::Source& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -819,7 +819,7 @@ inline void fm::Source_Init(fm::Source& parent) {
 }
 
 // --- fm.Source..Eq
-inline bool fm::Source_Eq(fm::Source& lhs, fm::Source& rhs) {
+inline bool fm::Source_Eq(fm::Source& lhs, fm::Source& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u64*)(lhs.ch+0) == *(u64*)(rhs.ch+0)
@@ -830,24 +830,24 @@ inline bool fm::Source_Eq(fm::Source& lhs, fm::Source& rhs) {
 }
 
 // --- fm.Source..EqOpAryptr
-inline bool fm::Source::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool fm::Source::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- fm.Source..AssignOp
-inline fm::Source& fm::Source::operator =(const fm::Source &rhs) {
+inline fm::Source& fm::Source::operator =(const fm::Source &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(fm::Source));
     return *this;
 }
 
 // --- fm.Source..Ctor
-inline  fm::Source::Source() {
+inline  fm::Source::Source() throw() {
     fm::Source_Init(*this);
 }
 
 // --- fm.Source..CopyCtor
-inline  fm::Source::Source(const fm::Source &rhs) {
+inline  fm::Source::Source(const fm::Source &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(fm::Source));
 }
@@ -870,35 +870,35 @@ inline ams::MsgHeader& fm::Castbase(fm::AlarmMsg& parent) {
 
 // --- fm.AlarmMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 fm::GetMsgLength(const fm::AlarmMsg& parent) {
+inline i32 fm::GetMsgLength(const fm::AlarmMsg& parent) throw() {
     return i32(const_cast<fm::AlarmMsg&>(parent).length);
 }
 
 // --- fm.AlarmMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr fm::GetMsgMemptr(const fm::AlarmMsg& row) {
+inline algo::memptr fm::GetMsgMemptr(const fm::AlarmMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<fm::AlarmMsg&>(row).length));
 }
 
 // --- fm.AlarmMsg..Ctor
-inline  fm::AlarmMsg::AlarmMsg() {
+inline  fm::AlarmMsg::AlarmMsg() throw() {
     fm::AlarmMsg_Init(*this);
 }
 
 // --- fm.FieldId.value.GetEnum
 // Get value of field as enum type
-inline fm_FieldIdEnum fm::value_GetEnum(const fm::FieldId& parent) {
+inline fm_FieldIdEnum fm::value_GetEnum(const fm::FieldId& parent) throw() {
     return fm_FieldIdEnum(parent.value);
 }
 
 // --- fm.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void fm::value_SetEnum(fm::FieldId& parent, fm_FieldIdEnum rhs) {
+inline void fm::value_SetEnum(fm::FieldId& parent, fm_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- fm.FieldId.value.Cast
-inline  fm::FieldId::operator fm_FieldIdEnum() const {
+inline  fm::FieldId::operator fm_FieldIdEnum() const throw() {
     return fm_FieldIdEnum((*this).value);
 }
 
@@ -909,18 +909,18 @@ inline void fm::FieldId_Init(fm::FieldId& parent) {
 }
 
 // --- fm.FieldId..Ctor
-inline  fm::FieldId::FieldId() {
+inline  fm::FieldId::FieldId() throw() {
     fm::FieldId_Init(*this);
 }
 
 // --- fm.FieldId..FieldwiseCtor
-inline  fm::FieldId::FieldId(i32 in_value)
+inline  fm::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- fm.FieldId..EnumCtor
-inline  fm::FieldId::FieldId(fm_FieldIdEnum arg) {
+inline  fm::FieldId::FieldId(fm_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

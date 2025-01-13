@@ -26,28 +26,28 @@
 //#pragma endinclude
 
 // --- lib_git.trace..Ctor
-inline  lib_git::trace::trace() {
+inline  lib_git::trace::trace() throw() {
 }
 
 // --- lib_git.FDb..Uninit
-inline void lib_git::FDb_Uninit() {
+inline void lib_git::FDb_Uninit() throw() {
     lib_git::FDb &row = _db; (void)row;
 }
 
 // --- lib_git.FieldId.value.GetEnum
 // Get value of field as enum type
-inline lib_git_FieldIdEnum lib_git::value_GetEnum(const lib_git::FieldId& parent) {
+inline lib_git_FieldIdEnum lib_git::value_GetEnum(const lib_git::FieldId& parent) throw() {
     return lib_git_FieldIdEnum(parent.value);
 }
 
 // --- lib_git.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void lib_git::value_SetEnum(lib_git::FieldId& parent, lib_git_FieldIdEnum rhs) {
+inline void lib_git::value_SetEnum(lib_git::FieldId& parent, lib_git_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- lib_git.FieldId.value.Cast
-inline  lib_git::FieldId::operator lib_git_FieldIdEnum() const {
+inline  lib_git::FieldId::operator lib_git_FieldIdEnum() const throw() {
     return lib_git_FieldIdEnum((*this).value);
 }
 
@@ -58,18 +58,18 @@ inline void lib_git::FieldId_Init(lib_git::FieldId& parent) {
 }
 
 // --- lib_git.FieldId..Ctor
-inline  lib_git::FieldId::FieldId() {
+inline  lib_git::FieldId::FieldId() throw() {
     lib_git::FieldId_Init(*this);
 }
 
 // --- lib_git.FieldId..FieldwiseCtor
-inline  lib_git::FieldId::FieldId(i32 in_value)
+inline  lib_git::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_git.FieldId..EnumCtor
-inline  lib_git::FieldId::FieldId(lib_git_FieldIdEnum arg) {
+inline  lib_git::FieldId::FieldId(lib_git_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

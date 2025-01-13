@@ -36,7 +36,7 @@ namespace atf { // gen:ns_print_proto
 // --- atf.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf::value_ToCstr(const atf::FieldId& parent) {
+const char* atf::value_ToCstr(const atf::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_FieldId_value             : ret = "value";  break;
@@ -52,7 +52,7 @@ const char* atf::value_ToCstr(const atf::FieldId& parent) {
 // --- atf.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf::value_Print(const atf::FieldId& parent, algo::cstring &lhs) {
+void atf::value_Print(const atf::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -65,7 +65,7 @@ void atf::value_Print(const atf::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf::value_SetStrptrMaybe(atf::FieldId& parent, algo::strptr rhs) {
+bool atf::value_SetStrptrMaybe(atf::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -114,13 +114,13 @@ bool atf::value_SetStrptrMaybe(atf::FieldId& parent, algo::strptr rhs) {
 // --- atf.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf::value_SetStrptr(atf::FieldId& parent, algo::strptr rhs, atf_FieldIdEnum dflt) {
+void atf::value_SetStrptr(atf::FieldId& parent, algo::strptr rhs, atf_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf::value_ReadStrptrMaybe(atf::FieldId& parent, algo::strptr rhs) {
+bool atf::value_ReadStrptrMaybe(atf::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -132,7 +132,7 @@ bool atf::value_ReadStrptrMaybe(atf::FieldId& parent, algo::strptr rhs) {
 // --- atf.FieldId..ReadStrptrMaybe
 // Read fields of atf::FieldId from an ascii string.
 // The format of the string is the format of the atf::FieldId's only field
-bool atf::FieldId_ReadStrptrMaybe(atf::FieldId &parent, algo::strptr in_str) {
+bool atf::FieldId_ReadStrptrMaybe(atf::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -141,14 +141,14 @@ bool atf::FieldId_ReadStrptrMaybe(atf::FieldId &parent, algo::strptr in_str) {
 // --- atf.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf.FieldId.String  printfmt:Raw
-void atf::FieldId_Print(atf::FieldId& row, algo::cstring& str) {
+void atf::FieldId_Print(atf::FieldId& row, algo::cstring& str) throw() {
     atf::value_Print(row, str);
 }
 
 // --- atf.Testresult.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf::value_ToCstr(const atf::Testresult& parent) {
+const char* atf::value_ToCstr(const atf::Testresult& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_Testresult_UNTESTED       : ret = "UNTESTED";  break;
@@ -164,7 +164,7 @@ const char* atf::value_ToCstr(const atf::Testresult& parent) {
 // --- atf.Testresult.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf::value_Print(const atf::Testresult& parent, algo::cstring &lhs) {
+void atf::value_Print(const atf::Testresult& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -177,7 +177,7 @@ void atf::value_Print(const atf::Testresult& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf::value_SetStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) {
+bool atf::value_SetStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 6: {
@@ -232,13 +232,13 @@ bool atf::value_SetStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) {
 // --- atf.Testresult.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf::value_SetStrptr(atf::Testresult& parent, algo::strptr rhs, atf_TestresultEnum dflt) {
+void atf::value_SetStrptr(atf::Testresult& parent, algo::strptr rhs, atf_TestresultEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf.Testresult.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf::value_ReadStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) {
+bool atf::value_ReadStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -250,7 +250,7 @@ bool atf::value_ReadStrptrMaybe(atf::Testresult& parent, algo::strptr rhs) {
 // --- atf.Testresult..ReadStrptrMaybe
 // Read fields of atf::Testresult from an ascii string.
 // The format of the string is the format of the atf::Testresult's only field
-bool atf::Testresult_ReadStrptrMaybe(atf::Testresult &parent, algo::strptr in_str) {
+bool atf::Testresult_ReadStrptrMaybe(atf::Testresult &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -259,12 +259,12 @@ bool atf::Testresult_ReadStrptrMaybe(atf::Testresult &parent, algo::strptr in_st
 // --- atf.Testresult..Print
 // print string representation of ROW to string STR
 // cfmt:atf.Testresult.String  printfmt:Raw
-void atf::Testresult_Print(atf::Testresult& row, algo::cstring& str) {
+void atf::Testresult_Print(atf::Testresult& row, algo::cstring& str) throw() {
     atf::value_Print(row, str);
 }
 
 // --- atf.Testrun..ReadFieldMaybe
-bool atf::Testrun_ReadFieldMaybe(atf::Testrun& parent, algo::strptr field, algo::strptr strval) {
+bool atf::Testrun_ReadFieldMaybe(atf::Testrun& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -300,7 +300,7 @@ bool atf::Testrun_ReadFieldMaybe(atf::Testrun& parent, algo::strptr field, algo:
 // --- atf.Testrun..ReadStrptrMaybe
 // Read fields of atf::Testrun from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf::Testrun_ReadStrptrMaybe(atf::Testrun &parent, algo::strptr in_str) {
+bool atf::Testrun_ReadStrptrMaybe(atf::Testrun &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf.Testrun");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -312,7 +312,7 @@ bool atf::Testrun_ReadStrptrMaybe(atf::Testrun &parent, algo::strptr in_str) {
 // --- atf.Testrun..Print
 // print string representation of ROW to string STR
 // cfmt:atf.Testrun.String  printfmt:Tuple
-void atf::Testrun_Print(atf::Testrun& row, algo::cstring& str) {
+void atf::Testrun_Print(atf::Testrun& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf.Testrun";
 

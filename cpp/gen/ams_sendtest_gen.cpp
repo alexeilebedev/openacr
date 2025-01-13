@@ -93,7 +93,7 @@ namespace ams_sendtest { // gen:ns_print_proto
 // --- ams_sendtest.AmsSendTest..Print
 // print string representation of ROW to string STR
 // cfmt:ams_sendtest.AmsSendTest.String  printfmt:Tuple
-void ams_sendtest::AmsSendTest_Print(ams_sendtest::AmsSendTest& row, algo::cstring& str) {
+void ams_sendtest::AmsSendTest_Print(ams_sendtest::AmsSendTest& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams_sendtest.AmsSendTest";
 
@@ -119,7 +119,7 @@ void ams_sendtest::AmsSendTest_Print(ams_sendtest::AmsSendTest& row, algo::cstri
 // --- ams_sendtest.FChild.child.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int ams_sendtest::child_Start(ams_sendtest::FChild& child) {
+int ams_sendtest::child_Start(ams_sendtest::FChild& child) throw() {
     int retval = 0;
     if (child.child_pid == 0) {
         verblog(child_ToCmdline(child)); // maybe print command
@@ -157,7 +157,7 @@ int ams_sendtest::child_Start(ams_sendtest::FChild& child) {
 
 // --- ams_sendtest.FChild.child.StartRead
 // Start subprocess & Read output
-algo::Fildes ams_sendtest::child_StartRead(ams_sendtest::FChild& child, algo_lib::FFildes &read) {
+algo::Fildes ams_sendtest::child_StartRead(ams_sendtest::FChild& child, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -179,7 +179,7 @@ void ams_sendtest::child_Kill(ams_sendtest::FChild& child) {
 
 // --- ams_sendtest.FChild.child.Wait
 // Wait for subprocess to return
-void ams_sendtest::child_Wait(ams_sendtest::FChild& child) {
+void ams_sendtest::child_Wait(ams_sendtest::FChild& child) throw() {
     if (child.child_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -198,7 +198,7 @@ void ams_sendtest::child_Wait(ams_sendtest::FChild& child) {
 // --- ams_sendtest.FChild.child.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int ams_sendtest::child_Exec(ams_sendtest::FChild& child) {
+int ams_sendtest::child_Exec(ams_sendtest::FChild& child) throw() {
     child_Start(child);
     child_Wait(child);
     return child.child_status;
@@ -216,7 +216,7 @@ void ams_sendtest::child_ExecX(ams_sendtest::FChild& child) {
 // --- ams_sendtest.FChild.child.Execv
 // Call execv()
 // Call execv with specified parameters
-int ams_sendtest::child_Execv(ams_sendtest::FChild& child) {
+int ams_sendtest::child_Execv(ams_sendtest::FChild& child) throw() {
     int ret = 0;
     algo::StringAry args;
     child_ToArgv(child, args);
@@ -232,7 +232,7 @@ int ams_sendtest::child_Execv(ams_sendtest::FChild& child) {
 }
 
 // --- ams_sendtest.FChild.child.ToCmdline
-algo::tempstr ams_sendtest::child_ToCmdline(ams_sendtest::FChild& child) {
+algo::tempstr ams_sendtest::child_ToCmdline(ams_sendtest::FChild& child) throw() {
     algo::tempstr retval;
     retval << child.child_path << " ";
     command::ams_sendtest_PrintArgv(child.child_cmd,retval);
@@ -250,7 +250,7 @@ algo::tempstr ams_sendtest::child_ToCmdline(ams_sendtest::FChild& child) {
 
 // --- ams_sendtest.FChild.child.ToArgv
 // Form array from the command line
-void ams_sendtest::child_ToArgv(ams_sendtest::FChild& child, algo::StringAry& args) {
+void ams_sendtest::child_ToArgv(ams_sendtest::FChild& child, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << child.child_path;
 
@@ -352,7 +352,7 @@ void ams_sendtest::FChild_Init(ams_sendtest::FChild& child) {
 }
 
 // --- ams_sendtest.FChild..Uninit
-void ams_sendtest::FChild_Uninit(ams_sendtest::FChild& child) {
+void ams_sendtest::FChild_Uninit(ams_sendtest::FChild& child) throw() {
     ams_sendtest::FChild &row = child; (void)row;
 
     // ams_sendtest.FChild.child.Uninit (Exec)  //
@@ -362,7 +362,7 @@ void ams_sendtest::FChild_Uninit(ams_sendtest::FChild& child) {
 // --- ams_sendtest.trace..Print
 // print string representation of ROW to string STR
 // cfmt:ams_sendtest.trace.String  printfmt:Tuple
-void ams_sendtest::trace_Print(ams_sendtest::trace& row, algo::cstring& str) {
+void ams_sendtest::trace_Print(ams_sendtest::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams_sendtest.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -373,7 +373,7 @@ void ams_sendtest::trace_Print(ams_sendtest::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     ams_sendtest.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void ams_sendtest::ReadArgv() {
+void ams_sendtest::ReadArgv() throw() {
     command::ams_sendtest &cmd = ams_sendtest::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -551,7 +551,7 @@ bool ams_sendtest::InsertStrptrMaybe(algo::strptr str) {
 
 // --- ams_sendtest.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool ams_sendtest::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool ams_sendtest::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = ams_sendtest::LoadTuplesFile(root, recursive);
@@ -574,7 +574,7 @@ bool ams_sendtest::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool ams_sendtest::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool ams_sendtest::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -587,7 +587,7 @@ bool ams_sendtest::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- ams_sendtest.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool ams_sendtest::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool ams_sendtest::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -606,7 +606,7 @@ bool ams_sendtest::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recurs
 
 // --- ams_sendtest.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool ams_sendtest::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool ams_sendtest::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = ams_sendtest::LoadTuplesFile(fname, recursive);
@@ -632,7 +632,7 @@ bool ams_sendtest::_db_XrefMaybe() {
 // --- ams_sendtest.FDb.child.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-ams_sendtest::FChild& ams_sendtest::child_Alloc() {
+ams_sendtest::FChild& ams_sendtest::child_Alloc() throw() {
     ams_sendtest::FChild* row = child_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("ams_sendtest.out_of_mem  field:ams_sendtest.FDb.child  comment:'Alloc failed'");
@@ -642,7 +642,7 @@ ams_sendtest::FChild& ams_sendtest::child_Alloc() {
 
 // --- ams_sendtest.FDb.child.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-ams_sendtest::FChild* ams_sendtest::child_AllocMaybe() {
+ams_sendtest::FChild* ams_sendtest::child_AllocMaybe() throw() {
     ams_sendtest::FChild *row = (ams_sendtest::FChild*)child_AllocMem();
     if (row) {
         new (row) ams_sendtest::FChild; // call constructor
@@ -652,7 +652,7 @@ ams_sendtest::FChild* ams_sendtest::child_AllocMaybe() {
 
 // --- ams_sendtest.FDb.child.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* ams_sendtest::child_AllocMem() {
+void* ams_sendtest::child_AllocMem() throw() {
     u64 new_nelems     = _db.child_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -678,7 +678,7 @@ void* ams_sendtest::child_AllocMem() {
 
 // --- ams_sendtest.FDb.child.RemoveAll
 // Remove all elements from Lary
-void ams_sendtest::child_RemoveAll() {
+void ams_sendtest::child_RemoveAll() throw() {
     for (u64 n = _db.child_n; n>0; ) {
         n--;
         child_qFind(u64(n)).~FChild(); // destroy last element
@@ -688,7 +688,7 @@ void ams_sendtest::child_RemoveAll() {
 
 // --- ams_sendtest.FDb.child.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void ams_sendtest::child_RemoveLast() {
+void ams_sendtest::child_RemoveLast() throw() {
     u64 n = _db.child_n;
     if (n > 0) {
         n -= 1;
@@ -708,13 +708,13 @@ bool ams_sendtest::child_XrefMaybe(ams_sendtest::FChild &row) {
 
 // --- ams_sendtest.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr ams_sendtest::trace_RowidFind(int t) {
+static algo::ImrowPtr ams_sendtest::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- ams_sendtest.FDb.trace.N
 // Function return 1
-inline static i32 ams_sendtest::trace_N() {
+inline static i32 ams_sendtest::trace_N() throw() {
     return 1;
 }
 
@@ -738,7 +738,7 @@ void ams_sendtest::FDb_Init() {
 }
 
 // --- ams_sendtest.FDb..Uninit
-void ams_sendtest::FDb_Uninit() {
+void ams_sendtest::FDb_Uninit() throw() {
     ams_sendtest::FDb &row = _db; (void)row;
 
     // ams_sendtest.FDb.child.Uninit (Lary)  //
@@ -748,7 +748,7 @@ void ams_sendtest::FDb_Uninit() {
 // --- ams_sendtest.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ams_sendtest::value_ToCstr(const ams_sendtest::FieldId& parent) {
+const char* ams_sendtest::value_ToCstr(const ams_sendtest::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ams_sendtest_FieldId_value    : ret = "value";  break;
@@ -759,7 +759,7 @@ const char* ams_sendtest::value_ToCstr(const ams_sendtest::FieldId& parent) {
 // --- ams_sendtest.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void ams_sendtest::value_Print(const ams_sendtest::FieldId& parent, algo::cstring &lhs) {
+void ams_sendtest::value_Print(const ams_sendtest::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -772,7 +772,7 @@ void ams_sendtest::value_Print(const ams_sendtest::FieldId& parent, algo::cstrin
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ams_sendtest::value_SetStrptrMaybe(ams_sendtest::FieldId& parent, algo::strptr rhs) {
+bool ams_sendtest::value_SetStrptrMaybe(ams_sendtest::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -790,13 +790,13 @@ bool ams_sendtest::value_SetStrptrMaybe(ams_sendtest::FieldId& parent, algo::str
 // --- ams_sendtest.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ams_sendtest::value_SetStrptr(ams_sendtest::FieldId& parent, algo::strptr rhs, ams_sendtest_FieldIdEnum dflt) {
+void ams_sendtest::value_SetStrptr(ams_sendtest::FieldId& parent, algo::strptr rhs, ams_sendtest_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- ams_sendtest.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams_sendtest::value_ReadStrptrMaybe(ams_sendtest::FieldId& parent, algo::strptr rhs) {
+bool ams_sendtest::value_ReadStrptrMaybe(ams_sendtest::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -808,7 +808,7 @@ bool ams_sendtest::value_ReadStrptrMaybe(ams_sendtest::FieldId& parent, algo::st
 // --- ams_sendtest.FieldId..ReadStrptrMaybe
 // Read fields of ams_sendtest::FieldId from an ascii string.
 // The format of the string is the format of the ams_sendtest::FieldId's only field
-bool ams_sendtest::FieldId_ReadStrptrMaybe(ams_sendtest::FieldId &parent, algo::strptr in_str) {
+bool ams_sendtest::FieldId_ReadStrptrMaybe(ams_sendtest::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -817,7 +817,7 @@ bool ams_sendtest::FieldId_ReadStrptrMaybe(ams_sendtest::FieldId &parent, algo::
 // --- ams_sendtest.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:ams_sendtest.FieldId.String  printfmt:Raw
-void ams_sendtest::FieldId_Print(ams_sendtest::FieldId& row, algo::cstring& str) {
+void ams_sendtest::FieldId_Print(ams_sendtest::FieldId& row, algo::cstring& str) throw() {
     ams_sendtest::value_Print(row, str);
 }
 

@@ -79,7 +79,7 @@ namespace orgfile { // gen:ns_print_proto
 // --- orgfile.trace..Print
 // print string representation of ROW to string STR
 // cfmt:orgfile.trace.String  printfmt:Tuple
-void orgfile::trace_Print(orgfile::trace& row, algo::cstring& str) {
+void orgfile::trace_Print(orgfile::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "orgfile.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -90,7 +90,7 @@ void orgfile::trace_Print(orgfile::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     orgfile.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void orgfile::ReadArgv() {
+void orgfile::ReadArgv() throw() {
     command::orgfile &cmd = orgfile::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -283,7 +283,7 @@ bool orgfile::InsertStrptrMaybe(algo::strptr str) {
 
 // --- orgfile.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool orgfile::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool orgfile::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = orgfile::LoadTuplesFile(root, recursive);
@@ -307,7 +307,7 @@ bool orgfile::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool orgfile::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool orgfile::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -320,7 +320,7 @@ bool orgfile::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- orgfile.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool orgfile::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool orgfile::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -340,7 +340,7 @@ bool orgfile::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) 
 
 // --- orgfile.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool orgfile::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool orgfile::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = orgfile::LoadTuplesFile(fname, recursive);
@@ -365,7 +365,7 @@ bool orgfile::_db_XrefMaybe() {
 // --- orgfile.FDb.filename.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-orgfile::FFilename& orgfile::filename_Alloc() {
+orgfile::FFilename& orgfile::filename_Alloc() throw() {
     orgfile::FFilename* row = filename_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("orgfile.out_of_mem  field:orgfile.FDb.filename  comment:'Alloc failed'");
@@ -375,7 +375,7 @@ orgfile::FFilename& orgfile::filename_Alloc() {
 
 // --- orgfile.FDb.filename.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-orgfile::FFilename* orgfile::filename_AllocMaybe() {
+orgfile::FFilename* orgfile::filename_AllocMaybe() throw() {
     orgfile::FFilename *row = (orgfile::FFilename*)filename_AllocMem();
     if (row) {
         new (row) orgfile::FFilename; // call constructor
@@ -385,7 +385,7 @@ orgfile::FFilename* orgfile::filename_AllocMaybe() {
 
 // --- orgfile.FDb.filename.Delete
 // Remove row from all global and cross indices, then deallocate row
-void orgfile::filename_Delete(orgfile::FFilename &row) {
+void orgfile::filename_Delete(orgfile::FFilename &row) throw() {
     row.~FFilename();
     filename_FreeMem(row);
 }
@@ -393,7 +393,7 @@ void orgfile::filename_Delete(orgfile::FFilename &row) {
 // --- orgfile.FDb.filename.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* orgfile::filename_AllocMem() {
+void* orgfile::filename_AllocMem() throw() {
     orgfile::FFilename *row = _db.filename_free;
     if (UNLIKELY(!row)) {
         filename_Reserve(1);
@@ -407,7 +407,7 @@ void* orgfile::filename_AllocMem() {
 
 // --- orgfile.FDb.filename.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void orgfile::filename_FreeMem(orgfile::FFilename &row) {
+void orgfile::filename_FreeMem(orgfile::FFilename &row) throw() {
     if (UNLIKELY(row.filename_next != (orgfile::FFilename*)-1)) {
         FatalErrorExit("orgfile.tpool_double_delete  pool:orgfile.FDb.filename  comment:'double deletion caught'");
     }
@@ -418,7 +418,7 @@ void orgfile::filename_FreeMem(orgfile::FFilename &row) {
 // --- orgfile.FDb.filename.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 orgfile::filename_Reserve(u64 n_elems) {
+u64 orgfile::filename_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.filename_blocksize; // underlying allocator is probably Lpool
@@ -434,7 +434,7 @@ u64 orgfile::filename_Reserve(u64 n_elems) {
 // --- orgfile.FDb.filename.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 orgfile::filename_ReserveMem(u64 size) {
+u64 orgfile::filename_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(orgfile::FFilename)) {
         orgfile::FFilename *mem = (orgfile::FFilename*)algo_lib::malloc_AllocMem(size);
@@ -481,7 +481,7 @@ bool orgfile::filename_XrefMaybe(orgfile::FFilename &row) {
 
 // --- orgfile.FDb.ind_filename.Find
 // Find row by key. Return NULL if not found.
-orgfile::FFilename* orgfile::ind_filename_Find(const algo::strptr& key) {
+orgfile::FFilename* orgfile::ind_filename_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_filename_buckets_n - 1);
     orgfile::FFilename* *e = &_db.ind_filename_buckets_elems[index];
     orgfile::FFilename* ret=NULL;
@@ -504,7 +504,7 @@ orgfile::FFilename& orgfile::ind_filename_FindX(const algo::strptr& key) {
 
 // --- orgfile.FDb.ind_filename.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool orgfile::ind_filename_InsertMaybe(orgfile::FFilename& row) {
+bool orgfile::ind_filename_InsertMaybe(orgfile::FFilename& row) throw() {
     ind_filename_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_filename_next == (orgfile::FFilename*)-1)) {// check if in hash already
@@ -532,7 +532,7 @@ bool orgfile::ind_filename_InsertMaybe(orgfile::FFilename& row) {
 
 // --- orgfile.FDb.ind_filename.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void orgfile::ind_filename_Remove(orgfile::FFilename& row) {
+void orgfile::ind_filename_Remove(orgfile::FFilename& row) throw() {
     if (LIKELY(row.ind_filename_next != (orgfile::FFilename*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.filename) & (_db.ind_filename_buckets_n - 1);
         orgfile::FFilename* *prev = &_db.ind_filename_buckets_elems[index]; // addr of pointer to current element
@@ -550,7 +550,7 @@ void orgfile::ind_filename_Remove(orgfile::FFilename& row) {
 
 // --- orgfile.FDb.ind_filename.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void orgfile::ind_filename_Reserve(int n) {
+void orgfile::ind_filename_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_filename_buckets_n;
     u32 new_nelems   = _db.ind_filename_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -587,7 +587,7 @@ void orgfile::ind_filename_Reserve(int n) {
 // --- orgfile.FDb.filehash.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-orgfile::FFilehash& orgfile::filehash_Alloc() {
+orgfile::FFilehash& orgfile::filehash_Alloc() throw() {
     orgfile::FFilehash* row = filehash_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("orgfile.out_of_mem  field:orgfile.FDb.filehash  comment:'Alloc failed'");
@@ -597,7 +597,7 @@ orgfile::FFilehash& orgfile::filehash_Alloc() {
 
 // --- orgfile.FDb.filehash.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-orgfile::FFilehash* orgfile::filehash_AllocMaybe() {
+orgfile::FFilehash* orgfile::filehash_AllocMaybe() throw() {
     orgfile::FFilehash *row = (orgfile::FFilehash*)filehash_AllocMem();
     if (row) {
         new (row) orgfile::FFilehash; // call constructor
@@ -607,7 +607,7 @@ orgfile::FFilehash* orgfile::filehash_AllocMaybe() {
 
 // --- orgfile.FDb.filehash.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* orgfile::filehash_AllocMem() {
+void* orgfile::filehash_AllocMem() throw() {
     u64 new_nelems     = _db.filehash_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -633,7 +633,7 @@ void* orgfile::filehash_AllocMem() {
 
 // --- orgfile.FDb.filehash.RemoveAll
 // Remove all elements from Lary
-void orgfile::filehash_RemoveAll() {
+void orgfile::filehash_RemoveAll() throw() {
     for (u64 n = _db.filehash_n; n>0; ) {
         n--;
         filehash_qFind(u64(n)).~FFilehash(); // destroy last element
@@ -643,7 +643,7 @@ void orgfile::filehash_RemoveAll() {
 
 // --- orgfile.FDb.filehash.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void orgfile::filehash_RemoveLast() {
+void orgfile::filehash_RemoveLast() throw() {
     u64 n = _db.filehash_n;
     if (n > 0) {
         n -= 1;
@@ -672,7 +672,7 @@ bool orgfile::filehash_XrefMaybe(orgfile::FFilehash &row) {
 
 // --- orgfile.FDb.ind_filehash.Find
 // Find row by key. Return NULL if not found.
-orgfile::FFilehash* orgfile::ind_filehash_Find(const algo::strptr& key) {
+orgfile::FFilehash* orgfile::ind_filehash_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr40_Hash(0, key) & (_db.ind_filehash_buckets_n - 1);
     orgfile::FFilehash* *e = &_db.ind_filehash_buckets_elems[index];
     orgfile::FFilehash* ret=NULL;
@@ -695,7 +695,7 @@ orgfile::FFilehash& orgfile::ind_filehash_FindX(const algo::strptr& key) {
 
 // --- orgfile.FDb.ind_filehash.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-orgfile::FFilehash& orgfile::ind_filehash_GetOrCreate(const algo::strptr& key) {
+orgfile::FFilehash& orgfile::ind_filehash_GetOrCreate(const algo::strptr& key) throw() {
     orgfile::FFilehash* ret = ind_filehash_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &filehash_Alloc();
@@ -712,7 +712,7 @@ orgfile::FFilehash& orgfile::ind_filehash_GetOrCreate(const algo::strptr& key) {
 
 // --- orgfile.FDb.ind_filehash.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool orgfile::ind_filehash_InsertMaybe(orgfile::FFilehash& row) {
+bool orgfile::ind_filehash_InsertMaybe(orgfile::FFilehash& row) throw() {
     ind_filehash_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_filehash_next == (orgfile::FFilehash*)-1)) {// check if in hash already
@@ -740,7 +740,7 @@ bool orgfile::ind_filehash_InsertMaybe(orgfile::FFilehash& row) {
 
 // --- orgfile.FDb.ind_filehash.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void orgfile::ind_filehash_Remove(orgfile::FFilehash& row) {
+void orgfile::ind_filehash_Remove(orgfile::FFilehash& row) throw() {
     if (LIKELY(row.ind_filehash_next != (orgfile::FFilehash*)-1)) {// check if in hash already
         u32 index = algo::Smallstr40_Hash(0, row.filehash) & (_db.ind_filehash_buckets_n - 1);
         orgfile::FFilehash* *prev = &_db.ind_filehash_buckets_elems[index]; // addr of pointer to current element
@@ -758,7 +758,7 @@ void orgfile::ind_filehash_Remove(orgfile::FFilehash& row) {
 
 // --- orgfile.FDb.ind_filehash.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void orgfile::ind_filehash_Reserve(int n) {
+void orgfile::ind_filehash_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_filehash_buckets_n;
     u32 new_nelems   = _db.ind_filehash_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -795,7 +795,7 @@ void orgfile::ind_filehash_Reserve(int n) {
 // --- orgfile.FDb.timefmt.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-orgfile::FTimefmt& orgfile::timefmt_Alloc() {
+orgfile::FTimefmt& orgfile::timefmt_Alloc() throw() {
     orgfile::FTimefmt* row = timefmt_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("orgfile.out_of_mem  field:orgfile.FDb.timefmt  comment:'Alloc failed'");
@@ -805,7 +805,7 @@ orgfile::FTimefmt& orgfile::timefmt_Alloc() {
 
 // --- orgfile.FDb.timefmt.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-orgfile::FTimefmt* orgfile::timefmt_AllocMaybe() {
+orgfile::FTimefmt* orgfile::timefmt_AllocMaybe() throw() {
     orgfile::FTimefmt *row = (orgfile::FTimefmt*)timefmt_AllocMem();
     if (row) {
         new (row) orgfile::FTimefmt; // call constructor
@@ -816,7 +816,7 @@ orgfile::FTimefmt* orgfile::timefmt_AllocMaybe() {
 // --- orgfile.FDb.timefmt.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-orgfile::FTimefmt* orgfile::timefmt_InsertMaybe(const dev::Timefmt &value) {
+orgfile::FTimefmt* orgfile::timefmt_InsertMaybe(const dev::Timefmt &value) throw() {
     orgfile::FTimefmt *row = &timefmt_Alloc(); // if out of memory, process dies. if input error, return NULL.
     timefmt_CopyIn(*row,const_cast<dev::Timefmt&>(value));
     bool ok = timefmt_XrefMaybe(*row); // this may return false
@@ -829,7 +829,7 @@ orgfile::FTimefmt* orgfile::timefmt_InsertMaybe(const dev::Timefmt &value) {
 
 // --- orgfile.FDb.timefmt.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* orgfile::timefmt_AllocMem() {
+void* orgfile::timefmt_AllocMem() throw() {
     u64 new_nelems     = _db.timefmt_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -855,7 +855,7 @@ void* orgfile::timefmt_AllocMem() {
 
 // --- orgfile.FDb.timefmt.RemoveAll
 // Remove all elements from Lary
-void orgfile::timefmt_RemoveAll() {
+void orgfile::timefmt_RemoveAll() throw() {
     for (u64 n = _db.timefmt_n; n>0; ) {
         n--;
         timefmt_qFind(u64(n)).~FTimefmt(); // destroy last element
@@ -865,7 +865,7 @@ void orgfile::timefmt_RemoveAll() {
 
 // --- orgfile.FDb.timefmt.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void orgfile::timefmt_RemoveLast() {
+void orgfile::timefmt_RemoveLast() throw() {
     u64 n = _db.timefmt_n;
     if (n > 0) {
         n -= 1;
@@ -875,7 +875,7 @@ void orgfile::timefmt_RemoveLast() {
 }
 
 // --- orgfile.FDb.timefmt.InputMaybe
-static bool orgfile::timefmt_InputMaybe(dev::Timefmt &elem) {
+static bool orgfile::timefmt_InputMaybe(dev::Timefmt &elem) throw() {
     bool retval = true;
     retval = timefmt_InsertMaybe(elem) != nullptr;
     return retval;
@@ -892,13 +892,13 @@ bool orgfile::timefmt_XrefMaybe(orgfile::FTimefmt &row) {
 
 // --- orgfile.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr orgfile::trace_RowidFind(int t) {
+static algo::ImrowPtr orgfile::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- orgfile.FDb.trace.N
 // Function return 1
-inline static i32 orgfile::trace_N() {
+inline static i32 orgfile::trace_N() throw() {
     return 1;
 }
 
@@ -951,7 +951,7 @@ void orgfile::FDb_Init() {
 }
 
 // --- orgfile.FDb..Uninit
-void orgfile::FDb_Uninit() {
+void orgfile::FDb_Uninit() throw() {
     orgfile::FDb &row = _db; (void)row;
 
     // orgfile.FDb.timefmt.Uninit (Lary)  //
@@ -970,7 +970,7 @@ void orgfile::FDb_Uninit() {
 // --- orgfile.FFilehash.c_filename.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void orgfile::c_filename_Insert(orgfile::FFilehash& filehash, orgfile::FFilename& row) {
+void orgfile::c_filename_Insert(orgfile::FFilehash& filehash, orgfile::FFilename& row) throw() {
     if (bool_Update(row.filehash_c_filename_in_ary,true)) {
         // reserve space
         c_filename_Reserve(filehash, 1);
@@ -987,7 +987,7 @@ void orgfile::c_filename_Insert(orgfile::FFilehash& filehash, orgfile::FFilename
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool orgfile::c_filename_InsertMaybe(orgfile::FFilehash& filehash, orgfile::FFilename& row) {
+bool orgfile::c_filename_InsertMaybe(orgfile::FFilehash& filehash, orgfile::FFilename& row) throw() {
     bool retval = !row.filehash_c_filename_in_ary;
     c_filename_Insert(filehash,row); // check is performed in _Insert again
     return retval;
@@ -995,7 +995,7 @@ bool orgfile::c_filename_InsertMaybe(orgfile::FFilehash& filehash, orgfile::FFil
 
 // --- orgfile.FFilehash.c_filename.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void orgfile::c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FFilename& row) {
+void orgfile::c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FFilename& row) throw() {
     if (bool_Update(row.filehash_c_filename_in_ary,false)) {
         int lim = filehash.c_filename_n;
         orgfile::FFilename* *elems = filehash.c_filename_elems;
@@ -1016,7 +1016,7 @@ void orgfile::c_filename_Remove(orgfile::FFilehash& filehash, orgfile::FFilename
 
 // --- orgfile.FFilehash.c_filename.Reserve
 // Reserve space in index for N more elements;
-void orgfile::c_filename_Reserve(orgfile::FFilehash& filehash, u32 n) {
+void orgfile::c_filename_Reserve(orgfile::FFilehash& filehash, u32 n) throw() {
     u32 old_max = filehash.c_filename_max;
     if (UNLIKELY(filehash.c_filename_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -1032,7 +1032,7 @@ void orgfile::c_filename_Reserve(orgfile::FFilehash& filehash, u32 n) {
 }
 
 // --- orgfile.FFilehash..Uninit
-void orgfile::FFilehash_Uninit(orgfile::FFilehash& filehash) {
+void orgfile::FFilehash_Uninit(orgfile::FFilehash& filehash) throw() {
     orgfile::FFilehash &row = filehash; (void)row;
     ind_filehash_Remove(row); // remove filehash from index ind_filehash
 
@@ -1041,7 +1041,7 @@ void orgfile::FFilehash_Uninit(orgfile::FFilehash& filehash) {
 }
 
 // --- orgfile.FFilename..Uninit
-void orgfile::FFilename_Uninit(orgfile::FFilename& filename) {
+void orgfile::FFilename_Uninit(orgfile::FFilename& filename) throw() {
     orgfile::FFilename &row = filename; (void)row;
     ind_filename_Remove(row); // remove filename from index ind_filename
     orgfile::FFilehash* p_filehash = orgfile::ind_filehash_Find(row.filehash);
@@ -1052,7 +1052,7 @@ void orgfile::FFilename_Uninit(orgfile::FFilename& filename) {
 
 // --- orgfile.FTimefmt.base.CopyOut
 // Copy fields out of row
-void orgfile::timefmt_CopyOut(orgfile::FTimefmt &row, dev::Timefmt &out) {
+void orgfile::timefmt_CopyOut(orgfile::FTimefmt &row, dev::Timefmt &out) throw() {
     out.timefmt = row.timefmt;
     out.dirname = row.dirname;
     out.comment = row.comment;
@@ -1060,7 +1060,7 @@ void orgfile::timefmt_CopyOut(orgfile::FTimefmt &row, dev::Timefmt &out) {
 
 // --- orgfile.FTimefmt.base.CopyIn
 // Copy fields in to row
-void orgfile::timefmt_CopyIn(orgfile::FTimefmt &row, dev::Timefmt &in) {
+void orgfile::timefmt_CopyIn(orgfile::FTimefmt &row, dev::Timefmt &in) throw() {
     row.timefmt = in.timefmt;
     row.dirname = in.dirname;
     row.comment = in.comment;
@@ -1069,7 +1069,7 @@ void orgfile::timefmt_CopyIn(orgfile::FTimefmt &row, dev::Timefmt &in) {
 // --- orgfile.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* orgfile::value_ToCstr(const orgfile::FieldId& parent) {
+const char* orgfile::value_ToCstr(const orgfile::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case orgfile_FieldId_original      : ret = "original";  break;
@@ -1085,7 +1085,7 @@ const char* orgfile::value_ToCstr(const orgfile::FieldId& parent) {
 // --- orgfile.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void orgfile::value_Print(const orgfile::FieldId& parent, algo::cstring &lhs) {
+void orgfile::value_Print(const orgfile::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1098,7 +1098,7 @@ void orgfile::value_Print(const orgfile::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool orgfile::value_SetStrptrMaybe(orgfile::FieldId& parent, algo::strptr rhs) {
+bool orgfile::value_SetStrptrMaybe(orgfile::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -1147,13 +1147,13 @@ bool orgfile::value_SetStrptrMaybe(orgfile::FieldId& parent, algo::strptr rhs) {
 // --- orgfile.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void orgfile::value_SetStrptr(orgfile::FieldId& parent, algo::strptr rhs, orgfile_FieldIdEnum dflt) {
+void orgfile::value_SetStrptr(orgfile::FieldId& parent, algo::strptr rhs, orgfile_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- orgfile.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool orgfile::value_ReadStrptrMaybe(orgfile::FieldId& parent, algo::strptr rhs) {
+bool orgfile::value_ReadStrptrMaybe(orgfile::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1165,7 +1165,7 @@ bool orgfile::value_ReadStrptrMaybe(orgfile::FieldId& parent, algo::strptr rhs) 
 // --- orgfile.FieldId..ReadStrptrMaybe
 // Read fields of orgfile::FieldId from an ascii string.
 // The format of the string is the format of the orgfile::FieldId's only field
-bool orgfile::FieldId_ReadStrptrMaybe(orgfile::FieldId &parent, algo::strptr in_str) {
+bool orgfile::FieldId_ReadStrptrMaybe(orgfile::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1174,14 +1174,14 @@ bool orgfile::FieldId_ReadStrptrMaybe(orgfile::FieldId &parent, algo::strptr in_
 // --- orgfile.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:orgfile.FieldId.String  printfmt:Raw
-void orgfile::FieldId_Print(orgfile::FieldId& row, algo::cstring& str) {
+void orgfile::FieldId_Print(orgfile::FieldId& row, algo::cstring& str) throw() {
     orgfile::value_Print(row, str);
 }
 
 // --- orgfile.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* orgfile::value_ToCstr(const orgfile::TableId& parent) {
+const char* orgfile::value_ToCstr(const orgfile::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case orgfile_TableId_dev_Timefmt   : ret = "dev.Timefmt";  break;
@@ -1192,7 +1192,7 @@ const char* orgfile::value_ToCstr(const orgfile::TableId& parent) {
 // --- orgfile.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void orgfile::value_Print(const orgfile::TableId& parent, algo::cstring &lhs) {
+void orgfile::value_Print(const orgfile::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1205,7 +1205,7 @@ void orgfile::value_Print(const orgfile::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool orgfile::value_SetStrptrMaybe(orgfile::TableId& parent, algo::strptr rhs) {
+bool orgfile::value_SetStrptrMaybe(orgfile::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 11: {
@@ -1228,13 +1228,13 @@ bool orgfile::value_SetStrptrMaybe(orgfile::TableId& parent, algo::strptr rhs) {
 // --- orgfile.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void orgfile::value_SetStrptr(orgfile::TableId& parent, algo::strptr rhs, orgfile_TableIdEnum dflt) {
+void orgfile::value_SetStrptr(orgfile::TableId& parent, algo::strptr rhs, orgfile_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- orgfile.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool orgfile::value_ReadStrptrMaybe(orgfile::TableId& parent, algo::strptr rhs) {
+bool orgfile::value_ReadStrptrMaybe(orgfile::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1246,7 +1246,7 @@ bool orgfile::value_ReadStrptrMaybe(orgfile::TableId& parent, algo::strptr rhs) 
 // --- orgfile.TableId..ReadStrptrMaybe
 // Read fields of orgfile::TableId from an ascii string.
 // The format of the string is the format of the orgfile::TableId's only field
-bool orgfile::TableId_ReadStrptrMaybe(orgfile::TableId &parent, algo::strptr in_str) {
+bool orgfile::TableId_ReadStrptrMaybe(orgfile::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1255,12 +1255,12 @@ bool orgfile::TableId_ReadStrptrMaybe(orgfile::TableId &parent, algo::strptr in_
 // --- orgfile.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:orgfile.TableId.String  printfmt:Raw
-void orgfile::TableId_Print(orgfile::TableId& row, algo::cstring& str) {
+void orgfile::TableId_Print(orgfile::TableId& row, algo::cstring& str) throw() {
     orgfile::value_Print(row, str);
 }
 
 // --- orgfile.dedup..ReadFieldMaybe
-bool orgfile::dedup_ReadFieldMaybe(orgfile::dedup& parent, algo::strptr field, algo::strptr strval) {
+bool orgfile::dedup_ReadFieldMaybe(orgfile::dedup& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     orgfile::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1288,7 +1288,7 @@ bool orgfile::dedup_ReadFieldMaybe(orgfile::dedup& parent, algo::strptr field, a
 // --- orgfile.dedup..ReadStrptrMaybe
 // Read fields of orgfile::dedup from an ascii string.
 // The format of the string is an ssim Tuple
-bool orgfile::dedup_ReadStrptrMaybe(orgfile::dedup &parent, algo::strptr in_str) {
+bool orgfile::dedup_ReadStrptrMaybe(orgfile::dedup &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "orgfile.dedup");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1300,7 +1300,7 @@ bool orgfile::dedup_ReadStrptrMaybe(orgfile::dedup &parent, algo::strptr in_str)
 // --- orgfile.dedup..Print
 // print string representation of ROW to string STR
 // cfmt:orgfile.dedup.String  printfmt:Tuple
-void orgfile::dedup_Print(orgfile::dedup& row, algo::cstring& str) {
+void orgfile::dedup_Print(orgfile::dedup& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "orgfile.dedup";
 
@@ -1315,7 +1315,7 @@ void orgfile::dedup_Print(orgfile::dedup& row, algo::cstring& str) {
 }
 
 // --- orgfile.move..ReadFieldMaybe
-bool orgfile::move_ReadFieldMaybe(orgfile::move& parent, algo::strptr field, algo::strptr strval) {
+bool orgfile::move_ReadFieldMaybe(orgfile::move& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     orgfile::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1343,7 +1343,7 @@ bool orgfile::move_ReadFieldMaybe(orgfile::move& parent, algo::strptr field, alg
 // --- orgfile.move..ReadStrptrMaybe
 // Read fields of orgfile::move from an ascii string.
 // The format of the string is an ssim Tuple
-bool orgfile::move_ReadStrptrMaybe(orgfile::move &parent, algo::strptr in_str) {
+bool orgfile::move_ReadStrptrMaybe(orgfile::move &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "orgfile.move");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1355,7 +1355,7 @@ bool orgfile::move_ReadStrptrMaybe(orgfile::move &parent, algo::strptr in_str) {
 // --- orgfile.move..Print
 // print string representation of ROW to string STR
 // cfmt:orgfile.move.String  printfmt:Tuple
-void orgfile::move_Print(orgfile::move& row, algo::cstring& str) {
+void orgfile::move_Print(orgfile::move& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "orgfile.move";
 

@@ -29,18 +29,18 @@
 //#pragma endinclude
 
 // --- aqlite.trace..Ctor
-inline  aqlite::trace::trace() {
+inline  aqlite::trace::trace() throw() {
 }
 
 // --- aqlite.FDb.ns.EmptyQ
 // Return true if index is empty
-inline bool aqlite::ns_EmptyQ() {
+inline bool aqlite::ns_EmptyQ() throw() {
     return _db.ns_n == 0;
 }
 
 // --- aqlite.FDb.ns.Find
 // Look up row by row id. Return NULL if out of range
-inline aqlite::FNs* aqlite::ns_Find(u64 t) {
+inline aqlite::FNs* aqlite::ns_Find(u64 t) throw() {
     aqlite::FNs *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ns_n))) {
         u64 x = t + 1;
@@ -54,19 +54,19 @@ inline aqlite::FNs* aqlite::ns_Find(u64 t) {
 
 // --- aqlite.FDb.ns.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline aqlite::FNs* aqlite::ns_Last() {
+inline aqlite::FNs* aqlite::ns_Last() throw() {
     return ns_Find(u64(_db.ns_n-1));
 }
 
 // --- aqlite.FDb.ns.N
 // Return number of items in the pool
-inline i32 aqlite::ns_N() {
+inline i32 aqlite::ns_N() throw() {
     return _db.ns_n;
 }
 
 // --- aqlite.FDb.ns.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline aqlite::FNs& aqlite::ns_qFind(u64 t) {
+inline aqlite::FNs& aqlite::ns_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -76,38 +76,38 @@ inline aqlite::FNs& aqlite::ns_qFind(u64 t) {
 
 // --- aqlite.FDb.ind_ns.EmptyQ
 // Return true if hash is empty
-inline bool aqlite::ind_ns_EmptyQ() {
+inline bool aqlite::ind_ns_EmptyQ() throw() {
     return _db.ind_ns_n == 0;
 }
 
 // --- aqlite.FDb.ind_ns.N
 // Return number of items in the hash
-inline i32 aqlite::ind_ns_N() {
+inline i32 aqlite::ind_ns_N() throw() {
     return _db.ind_ns_n;
 }
 
 // --- aqlite.FDb.ns_curs.Reset
 // cursor points to valid item
-inline void aqlite::_db_ns_curs_Reset(_db_ns_curs &curs, aqlite::FDb &parent) {
+inline void aqlite::_db_ns_curs_Reset(_db_ns_curs &curs, aqlite::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- aqlite.FDb.ns_curs.ValidQ
 // cursor points to valid item
-inline bool aqlite::_db_ns_curs_ValidQ(_db_ns_curs &curs) {
+inline bool aqlite::_db_ns_curs_ValidQ(_db_ns_curs &curs) throw() {
     return curs.index < _db.ns_n;
 }
 
 // --- aqlite.FDb.ns_curs.Next
 // proceed to next item
-inline void aqlite::_db_ns_curs_Next(_db_ns_curs &curs) {
+inline void aqlite::_db_ns_curs_Next(_db_ns_curs &curs) throw() {
     curs.index++;
 }
 
 // --- aqlite.FDb.ns_curs.Access
 // item access
-inline aqlite::FNs& aqlite::_db_ns_curs_Access(_db_ns_curs &curs) {
+inline aqlite::FNs& aqlite::_db_ns_curs_Access(_db_ns_curs &curs) throw() {
     return ns_qFind(u64(curs.index));
 }
 
@@ -119,29 +119,29 @@ inline void aqlite::FNs_Init(aqlite::FNs& ns) {
 }
 
 // --- aqlite.FNs..Ctor
-inline  aqlite::FNs::FNs() {
+inline  aqlite::FNs::FNs() throw() {
     aqlite::FNs_Init(*this);
 }
 
 // --- aqlite.FNs..Dtor
-inline  aqlite::FNs::~FNs() {
+inline  aqlite::FNs::~FNs() throw() {
     aqlite::FNs_Uninit(*this);
 }
 
 // --- aqlite.FieldId.value.GetEnum
 // Get value of field as enum type
-inline aqlite_FieldIdEnum aqlite::value_GetEnum(const aqlite::FieldId& parent) {
+inline aqlite_FieldIdEnum aqlite::value_GetEnum(const aqlite::FieldId& parent) throw() {
     return aqlite_FieldIdEnum(parent.value);
 }
 
 // --- aqlite.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void aqlite::value_SetEnum(aqlite::FieldId& parent, aqlite_FieldIdEnum rhs) {
+inline void aqlite::value_SetEnum(aqlite::FieldId& parent, aqlite_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- aqlite.FieldId.value.Cast
-inline  aqlite::FieldId::operator aqlite_FieldIdEnum() const {
+inline  aqlite::FieldId::operator aqlite_FieldIdEnum() const throw() {
     return aqlite_FieldIdEnum((*this).value);
 }
 
@@ -152,35 +152,35 @@ inline void aqlite::FieldId_Init(aqlite::FieldId& parent) {
 }
 
 // --- aqlite.FieldId..Ctor
-inline  aqlite::FieldId::FieldId() {
+inline  aqlite::FieldId::FieldId() throw() {
     aqlite::FieldId_Init(*this);
 }
 
 // --- aqlite.FieldId..FieldwiseCtor
-inline  aqlite::FieldId::FieldId(i32 in_value)
+inline  aqlite::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- aqlite.FieldId..EnumCtor
-inline  aqlite::FieldId::FieldId(aqlite_FieldIdEnum arg) {
+inline  aqlite::FieldId::FieldId(aqlite_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- aqlite.TableId.value.GetEnum
 // Get value of field as enum type
-inline aqlite_TableIdEnum aqlite::value_GetEnum(const aqlite::TableId& parent) {
+inline aqlite_TableIdEnum aqlite::value_GetEnum(const aqlite::TableId& parent) throw() {
     return aqlite_TableIdEnum(parent.value);
 }
 
 // --- aqlite.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void aqlite::value_SetEnum(aqlite::TableId& parent, aqlite_TableIdEnum rhs) {
+inline void aqlite::value_SetEnum(aqlite::TableId& parent, aqlite_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- aqlite.TableId.value.Cast
-inline  aqlite::TableId::operator aqlite_TableIdEnum() const {
+inline  aqlite::TableId::operator aqlite_TableIdEnum() const throw() {
     return aqlite_TableIdEnum((*this).value);
 }
 
@@ -191,18 +191,18 @@ inline void aqlite::TableId_Init(aqlite::TableId& parent) {
 }
 
 // --- aqlite.TableId..Ctor
-inline  aqlite::TableId::TableId() {
+inline  aqlite::TableId::TableId() throw() {
     aqlite::TableId_Init(*this);
 }
 
 // --- aqlite.TableId..FieldwiseCtor
-inline  aqlite::TableId::TableId(i32 in_value)
+inline  aqlite::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- aqlite.TableId..EnumCtor
-inline  aqlite::TableId::TableId(aqlite_TableIdEnum arg) {
+inline  aqlite::TableId::TableId(aqlite_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

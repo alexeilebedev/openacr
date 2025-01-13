@@ -92,7 +92,7 @@ namespace atf_cmdline { // gen:ns_print_proto
 // --- atf_cmdline.trace..Print
 // print string representation of ROW to string STR
 // cfmt:atf_cmdline.trace.String  printfmt:Tuple
-void atf_cmdline::trace_Print(atf_cmdline::trace& row, algo::cstring& str) {
+void atf_cmdline::trace_Print(atf_cmdline::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_cmdline.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -103,7 +103,7 @@ void atf_cmdline::trace_Print(atf_cmdline::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     atf_cmdline.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void atf_cmdline::ReadArgv() {
+void atf_cmdline::ReadArgv() throw() {
     command::atf_cmdline &cmd = atf_cmdline::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -310,7 +310,7 @@ bool atf_cmdline::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_cmdline.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_cmdline::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool atf_cmdline::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = atf_cmdline::LoadTuplesFile(root, recursive);
@@ -333,7 +333,7 @@ bool atf_cmdline::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool atf_cmdline::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool atf_cmdline::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -346,7 +346,7 @@ bool atf_cmdline::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- atf_cmdline.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool atf_cmdline::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool atf_cmdline::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -365,7 +365,7 @@ bool atf_cmdline::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursi
 
 // --- atf_cmdline.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_cmdline::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool atf_cmdline::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = atf_cmdline::LoadTuplesFile(fname, recursive);
@@ -389,13 +389,13 @@ bool atf_cmdline::_db_XrefMaybe() {
 
 // --- atf_cmdline.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr atf_cmdline::trace_RowidFind(int t) {
+static algo::ImrowPtr atf_cmdline::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- atf_cmdline.FDb.trace.N
 // Function return 1
-inline static i32 atf_cmdline::trace_N() {
+inline static i32 atf_cmdline::trace_N() throw() {
     return 1;
 }
 
@@ -409,7 +409,7 @@ void atf_cmdline::FDb_Init() {
 // --- atf_cmdline.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_cmdline::value_ToCstr(const atf_cmdline::FieldId& parent) {
+const char* atf_cmdline::value_ToCstr(const atf_cmdline::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_cmdline_FieldId_value     : ret = "value";  break;
@@ -420,7 +420,7 @@ const char* atf_cmdline::value_ToCstr(const atf_cmdline::FieldId& parent) {
 // --- atf_cmdline.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_cmdline::value_Print(const atf_cmdline::FieldId& parent, algo::cstring &lhs) {
+void atf_cmdline::value_Print(const atf_cmdline::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -433,7 +433,7 @@ void atf_cmdline::value_Print(const atf_cmdline::FieldId& parent, algo::cstring 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_cmdline::value_SetStrptrMaybe(atf_cmdline::FieldId& parent, algo::strptr rhs) {
+bool atf_cmdline::value_SetStrptrMaybe(atf_cmdline::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -451,13 +451,13 @@ bool atf_cmdline::value_SetStrptrMaybe(atf_cmdline::FieldId& parent, algo::strpt
 // --- atf_cmdline.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_cmdline::value_SetStrptr(atf_cmdline::FieldId& parent, algo::strptr rhs, atf_cmdline_FieldIdEnum dflt) {
+void atf_cmdline::value_SetStrptr(atf_cmdline::FieldId& parent, algo::strptr rhs, atf_cmdline_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_cmdline.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_cmdline::value_ReadStrptrMaybe(atf_cmdline::FieldId& parent, algo::strptr rhs) {
+bool atf_cmdline::value_ReadStrptrMaybe(atf_cmdline::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -469,7 +469,7 @@ bool atf_cmdline::value_ReadStrptrMaybe(atf_cmdline::FieldId& parent, algo::strp
 // --- atf_cmdline.FieldId..ReadStrptrMaybe
 // Read fields of atf_cmdline::FieldId from an ascii string.
 // The format of the string is the format of the atf_cmdline::FieldId's only field
-bool atf_cmdline::FieldId_ReadStrptrMaybe(atf_cmdline::FieldId &parent, algo::strptr in_str) {
+bool atf_cmdline::FieldId_ReadStrptrMaybe(atf_cmdline::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -478,7 +478,7 @@ bool atf_cmdline::FieldId_ReadStrptrMaybe(atf_cmdline::FieldId &parent, algo::st
 // --- atf_cmdline.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_cmdline.FieldId.String  printfmt:Raw
-void atf_cmdline::FieldId_Print(atf_cmdline::FieldId& row, algo::cstring& str) {
+void atf_cmdline::FieldId_Print(atf_cmdline::FieldId& row, algo::cstring& str) throw() {
     atf_cmdline::value_Print(row, str);
 }
 

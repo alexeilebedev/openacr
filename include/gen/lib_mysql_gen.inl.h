@@ -26,29 +26,29 @@
 //#pragma endinclude
 
 // --- lib_mysql.trace..Ctor
-inline  lib_mysql::trace::trace() {
+inline  lib_mysql::trace::trace() throw() {
 }
 
 // --- lib_mysql.FDb..Uninit
-inline void lib_mysql::FDb_Uninit() {
+inline void lib_mysql::FDb_Uninit() throw() {
     lib_mysql::FDb &row = _db; (void)row;
     mysql_Cleanup(); // dmmeta.fcleanup:lib_mysql.FDb.mysql
 }
 
 // --- lib_mysql.FieldId.value.GetEnum
 // Get value of field as enum type
-inline lib_mysql_FieldIdEnum lib_mysql::value_GetEnum(const lib_mysql::FieldId& parent) {
+inline lib_mysql_FieldIdEnum lib_mysql::value_GetEnum(const lib_mysql::FieldId& parent) throw() {
     return lib_mysql_FieldIdEnum(parent.value);
 }
 
 // --- lib_mysql.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void lib_mysql::value_SetEnum(lib_mysql::FieldId& parent, lib_mysql_FieldIdEnum rhs) {
+inline void lib_mysql::value_SetEnum(lib_mysql::FieldId& parent, lib_mysql_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- lib_mysql.FieldId.value.Cast
-inline  lib_mysql::FieldId::operator lib_mysql_FieldIdEnum() const {
+inline  lib_mysql::FieldId::operator lib_mysql_FieldIdEnum() const throw() {
     return lib_mysql_FieldIdEnum((*this).value);
 }
 
@@ -59,18 +59,18 @@ inline void lib_mysql::FieldId_Init(lib_mysql::FieldId& parent) {
 }
 
 // --- lib_mysql.FieldId..Ctor
-inline  lib_mysql::FieldId::FieldId() {
+inline  lib_mysql::FieldId::FieldId() throw() {
     lib_mysql::FieldId_Init(*this);
 }
 
 // --- lib_mysql.FieldId..FieldwiseCtor
-inline  lib_mysql::FieldId::FieldId(i32 in_value)
+inline  lib_mysql::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_mysql.FieldId..EnumCtor
-inline  lib_mysql::FieldId::FieldId(lib_mysql_FieldIdEnum arg) {
+inline  lib_mysql::FieldId::FieldId(lib_mysql_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
@@ -81,18 +81,18 @@ inline void lib_mysql::Res_Init(lib_mysql::Res& res) {
 }
 
 // --- lib_mysql.Res..Uninit
-inline void lib_mysql::Res_Uninit(lib_mysql::Res& res) {
+inline void lib_mysql::Res_Uninit(lib_mysql::Res& res) throw() {
     lib_mysql::Res &row = res; (void)row;
     res_Cleanup(res); // dmmeta.fcleanup:lib_mysql.Res.res
 }
 
 // --- lib_mysql.Res..Ctor
-inline  lib_mysql::Res::Res() {
+inline  lib_mysql::Res::Res() throw() {
     lib_mysql::Res_Init(*this);
 }
 
 // --- lib_mysql.Res..Dtor
-inline  lib_mysql::Res::~Res() {
+inline  lib_mysql::Res::~Res() throw() {
     lib_mysql::Res_Uninit(*this);
 }
 

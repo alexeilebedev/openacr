@@ -30,18 +30,18 @@
 //#pragma endinclude
 
 // --- acr_my.trace..Ctor
-inline  acr_my::trace::trace() {
+inline  acr_my::trace::trace() throw() {
 }
 
 // --- acr_my.FDb.ary_ns.EmptyQ
 // Return true if index is empty
-inline bool acr_my::ary_ns_EmptyQ() {
+inline bool acr_my::ary_ns_EmptyQ() throw() {
     return _db.ary_ns_n == 0;
 }
 
 // --- acr_my.FDb.ary_ns.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* acr_my::ary_ns_Find(u64 t) {
+inline algo::cstring* acr_my::ary_ns_Find(u64 t) throw() {
     u64 idx = t;
     u64 lim = _db.ary_ns_n;
     if (idx >= lim) return NULL;
@@ -50,31 +50,31 @@ inline algo::cstring* acr_my::ary_ns_Find(u64 t) {
 
 // --- acr_my.FDb.ary_ns.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> acr_my::ary_ns_Getary() {
+inline algo::aryptr<algo::cstring> acr_my::ary_ns_Getary() throw() {
     return algo::aryptr<algo::cstring>(_db.ary_ns_elems, _db.ary_ns_n);
 }
 
 // --- acr_my.FDb.ary_ns.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* acr_my::ary_ns_Last() {
+inline algo::cstring* acr_my::ary_ns_Last() throw() {
     return ary_ns_Find(u64(_db.ary_ns_n-1));
 }
 
 // --- acr_my.FDb.ary_ns.Max
 // Return max. number of items in the array
-inline i32 acr_my::ary_ns_Max() {
+inline i32 acr_my::ary_ns_Max() throw() {
     return _db.ary_ns_max;
 }
 
 // --- acr_my.FDb.ary_ns.N
 // Return number of items in the array
-inline i32 acr_my::ary_ns_N() {
+inline i32 acr_my::ary_ns_N() throw() {
     return _db.ary_ns_n;
 }
 
 // --- acr_my.FDb.ary_ns.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void acr_my::ary_ns_Reserve(int n) {
+inline void acr_my::ary_ns_Reserve(int n) throw() {
     u32 new_n = _db.ary_ns_n + n;
     if (UNLIKELY(new_n > _db.ary_ns_max)) {
         ary_ns_AbsReserve(new_n);
@@ -83,32 +83,32 @@ inline void acr_my::ary_ns_Reserve(int n) {
 
 // --- acr_my.FDb.ary_ns.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& acr_my::ary_ns_qFind(u64 t) {
+inline algo::cstring& acr_my::ary_ns_qFind(u64 t) throw() {
     return _db.ary_ns_elems[t];
 }
 
 // --- acr_my.FDb.ary_ns.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& acr_my::ary_ns_qLast() {
+inline algo::cstring& acr_my::ary_ns_qLast() throw() {
     return ary_ns_qFind(u64(_db.ary_ns_n-1));
 }
 
 // --- acr_my.FDb.ary_ns.rowid_Get
 // Return row id of specified element
-inline u64 acr_my::ary_ns_rowid_Get(algo::cstring &elem) {
+inline u64 acr_my::ary_ns_rowid_Get(algo::cstring &elem) throw() {
     u64 id = &elem - _db.ary_ns_elems;
     return u64(id);
 }
 
 // --- acr_my.FDb.nsdb.EmptyQ
 // Return true if index is empty
-inline bool acr_my::nsdb_EmptyQ() {
+inline bool acr_my::nsdb_EmptyQ() throw() {
     return _db.nsdb_n == 0;
 }
 
 // --- acr_my.FDb.nsdb.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_my::FNsdb* acr_my::nsdb_Find(u64 t) {
+inline acr_my::FNsdb* acr_my::nsdb_Find(u64 t) throw() {
     acr_my::FNsdb *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.nsdb_n))) {
         u64 x = t + 1;
@@ -122,19 +122,19 @@ inline acr_my::FNsdb* acr_my::nsdb_Find(u64 t) {
 
 // --- acr_my.FDb.nsdb.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline acr_my::FNsdb* acr_my::nsdb_Last() {
+inline acr_my::FNsdb* acr_my::nsdb_Last() throw() {
     return nsdb_Find(u64(_db.nsdb_n-1));
 }
 
 // --- acr_my.FDb.nsdb.N
 // Return number of items in the pool
-inline i32 acr_my::nsdb_N() {
+inline i32 acr_my::nsdb_N() throw() {
     return _db.nsdb_n;
 }
 
 // --- acr_my.FDb.nsdb.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline acr_my::FNsdb& acr_my::nsdb_qFind(u64 t) {
+inline acr_my::FNsdb& acr_my::nsdb_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -144,13 +144,13 @@ inline acr_my::FNsdb& acr_my::nsdb_qFind(u64 t) {
 
 // --- acr_my.FDb.ssimfile.EmptyQ
 // Return true if index is empty
-inline bool acr_my::ssimfile_EmptyQ() {
+inline bool acr_my::ssimfile_EmptyQ() throw() {
     return _db.ssimfile_n == 0;
 }
 
 // --- acr_my.FDb.ssimfile.Find
 // Look up row by row id. Return NULL if out of range
-inline acr_my::FSsimfile* acr_my::ssimfile_Find(u64 t) {
+inline acr_my::FSsimfile* acr_my::ssimfile_Find(u64 t) throw() {
     acr_my::FSsimfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
         u64 x = t + 1;
@@ -164,19 +164,19 @@ inline acr_my::FSsimfile* acr_my::ssimfile_Find(u64 t) {
 
 // --- acr_my.FDb.ssimfile.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline acr_my::FSsimfile* acr_my::ssimfile_Last() {
+inline acr_my::FSsimfile* acr_my::ssimfile_Last() throw() {
     return ssimfile_Find(u64(_db.ssimfile_n-1));
 }
 
 // --- acr_my.FDb.ssimfile.N
 // Return number of items in the pool
-inline i32 acr_my::ssimfile_N() {
+inline i32 acr_my::ssimfile_N() throw() {
     return _db.ssimfile_n;
 }
 
 // --- acr_my.FDb.ssimfile.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline acr_my::FSsimfile& acr_my::ssimfile_qFind(u64 t) {
+inline acr_my::FSsimfile& acr_my::ssimfile_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -186,12 +186,12 @@ inline acr_my::FSsimfile& acr_my::ssimfile_qFind(u64 t) {
 
 // --- acr_my.FDb.ary_ns_curs.Next
 // proceed to next item
-inline void acr_my::_db_ary_ns_curs_Next(_db_ary_ns_curs &curs) {
+inline void acr_my::_db_ary_ns_curs_Next(_db_ary_ns_curs &curs) throw() {
     curs.index++;
 }
 
 // --- acr_my.FDb.ary_ns_curs.Reset
-inline void acr_my::_db_ary_ns_curs_Reset(_db_ary_ns_curs &curs, acr_my::FDb &parent) {
+inline void acr_my::_db_ary_ns_curs_Reset(_db_ary_ns_curs &curs, acr_my::FDb &parent) throw() {
     curs.elems = parent.ary_ns_elems;
     curs.n_elems = parent.ary_ns_n;
     curs.index = 0;
@@ -199,63 +199,63 @@ inline void acr_my::_db_ary_ns_curs_Reset(_db_ary_ns_curs &curs, acr_my::FDb &pa
 
 // --- acr_my.FDb.ary_ns_curs.ValidQ
 // cursor points to valid item
-inline bool acr_my::_db_ary_ns_curs_ValidQ(_db_ary_ns_curs &curs) {
+inline bool acr_my::_db_ary_ns_curs_ValidQ(_db_ary_ns_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- acr_my.FDb.ary_ns_curs.Access
 // item access
-inline algo::cstring& acr_my::_db_ary_ns_curs_Access(_db_ary_ns_curs &curs) {
+inline algo::cstring& acr_my::_db_ary_ns_curs_Access(_db_ary_ns_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- acr_my.FDb.nsdb_curs.Reset
 // cursor points to valid item
-inline void acr_my::_db_nsdb_curs_Reset(_db_nsdb_curs &curs, acr_my::FDb &parent) {
+inline void acr_my::_db_nsdb_curs_Reset(_db_nsdb_curs &curs, acr_my::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- acr_my.FDb.nsdb_curs.ValidQ
 // cursor points to valid item
-inline bool acr_my::_db_nsdb_curs_ValidQ(_db_nsdb_curs &curs) {
+inline bool acr_my::_db_nsdb_curs_ValidQ(_db_nsdb_curs &curs) throw() {
     return curs.index < _db.nsdb_n;
 }
 
 // --- acr_my.FDb.nsdb_curs.Next
 // proceed to next item
-inline void acr_my::_db_nsdb_curs_Next(_db_nsdb_curs &curs) {
+inline void acr_my::_db_nsdb_curs_Next(_db_nsdb_curs &curs) throw() {
     curs.index++;
 }
 
 // --- acr_my.FDb.nsdb_curs.Access
 // item access
-inline acr_my::FNsdb& acr_my::_db_nsdb_curs_Access(_db_nsdb_curs &curs) {
+inline acr_my::FNsdb& acr_my::_db_nsdb_curs_Access(_db_nsdb_curs &curs) throw() {
     return nsdb_qFind(u64(curs.index));
 }
 
 // --- acr_my.FDb.ssimfile_curs.Reset
 // cursor points to valid item
-inline void acr_my::_db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr_my::FDb &parent) {
+inline void acr_my::_db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, acr_my::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- acr_my.FDb.ssimfile_curs.ValidQ
 // cursor points to valid item
-inline bool acr_my::_db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) {
+inline bool acr_my::_db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) throw() {
     return curs.index < _db.ssimfile_n;
 }
 
 // --- acr_my.FDb.ssimfile_curs.Next
 // proceed to next item
-inline void acr_my::_db_ssimfile_curs_Next(_db_ssimfile_curs &curs) {
+inline void acr_my::_db_ssimfile_curs_Next(_db_ssimfile_curs &curs) throw() {
     curs.index++;
 }
 
 // --- acr_my.FDb.ssimfile_curs.Access
 // item access
-inline acr_my::FSsimfile& acr_my::_db_ssimfile_curs_Access(_db_ssimfile_curs &curs) {
+inline acr_my::FSsimfile& acr_my::_db_ssimfile_curs_Access(_db_ssimfile_curs &curs) throw() {
     return ssimfile_qFind(u64(curs.index));
 }
 
@@ -266,28 +266,28 @@ inline void acr_my::FNsdb_Init(acr_my::FNsdb& nsdb) {
 }
 
 // --- acr_my.FNsdb..Ctor
-inline  acr_my::FNsdb::FNsdb() {
+inline  acr_my::FNsdb::FNsdb() throw() {
     acr_my::FNsdb_Init(*this);
 }
 
 // --- acr_my.FSsimfile..Ctor
-inline  acr_my::FSsimfile::FSsimfile() {
+inline  acr_my::FSsimfile::FSsimfile() throw() {
 }
 
 // --- acr_my.FieldId.value.GetEnum
 // Get value of field as enum type
-inline acr_my_FieldIdEnum acr_my::value_GetEnum(const acr_my::FieldId& parent) {
+inline acr_my_FieldIdEnum acr_my::value_GetEnum(const acr_my::FieldId& parent) throw() {
     return acr_my_FieldIdEnum(parent.value);
 }
 
 // --- acr_my.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void acr_my::value_SetEnum(acr_my::FieldId& parent, acr_my_FieldIdEnum rhs) {
+inline void acr_my::value_SetEnum(acr_my::FieldId& parent, acr_my_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- acr_my.FieldId.value.Cast
-inline  acr_my::FieldId::operator acr_my_FieldIdEnum() const {
+inline  acr_my::FieldId::operator acr_my_FieldIdEnum() const throw() {
     return acr_my_FieldIdEnum((*this).value);
 }
 
@@ -298,35 +298,35 @@ inline void acr_my::FieldId_Init(acr_my::FieldId& parent) {
 }
 
 // --- acr_my.FieldId..Ctor
-inline  acr_my::FieldId::FieldId() {
+inline  acr_my::FieldId::FieldId() throw() {
     acr_my::FieldId_Init(*this);
 }
 
 // --- acr_my.FieldId..FieldwiseCtor
-inline  acr_my::FieldId::FieldId(i32 in_value)
+inline  acr_my::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- acr_my.FieldId..EnumCtor
-inline  acr_my::FieldId::FieldId(acr_my_FieldIdEnum arg) {
+inline  acr_my::FieldId::FieldId(acr_my_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- acr_my.TableId.value.GetEnum
 // Get value of field as enum type
-inline acr_my_TableIdEnum acr_my::value_GetEnum(const acr_my::TableId& parent) {
+inline acr_my_TableIdEnum acr_my::value_GetEnum(const acr_my::TableId& parent) throw() {
     return acr_my_TableIdEnum(parent.value);
 }
 
 // --- acr_my.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void acr_my::value_SetEnum(acr_my::TableId& parent, acr_my_TableIdEnum rhs) {
+inline void acr_my::value_SetEnum(acr_my::TableId& parent, acr_my_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- acr_my.TableId.value.Cast
-inline  acr_my::TableId::operator acr_my_TableIdEnum() const {
+inline  acr_my::TableId::operator acr_my_TableIdEnum() const throw() {
     return acr_my_TableIdEnum((*this).value);
 }
 
@@ -337,18 +337,18 @@ inline void acr_my::TableId_Init(acr_my::TableId& parent) {
 }
 
 // --- acr_my.TableId..Ctor
-inline  acr_my::TableId::TableId() {
+inline  acr_my::TableId::TableId() throw() {
     acr_my::TableId_Init(*this);
 }
 
 // --- acr_my.TableId..FieldwiseCtor
-inline  acr_my::TableId::TableId(i32 in_value)
+inline  acr_my::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- acr_my.TableId..EnumCtor
-inline  acr_my::TableId::TableId(acr_my_TableIdEnum arg) {
+inline  acr_my::TableId::TableId(acr_my_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

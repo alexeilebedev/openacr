@@ -90,7 +90,7 @@ namespace sv2ssim { // gen:ns_print_proto
 
 // --- sv2ssim.FBltin.base.CopyOut
 // Copy fields out of row
-void sv2ssim::bltin_CopyOut(sv2ssim::FBltin &row, amcdb::Bltin &out) {
+void sv2ssim::bltin_CopyOut(sv2ssim::FBltin &row, amcdb::Bltin &out) throw() {
     out.ctype = row.ctype;
     out.likeu64 = row.likeu64;
     out.bigendok = row.bigendok;
@@ -100,7 +100,7 @@ void sv2ssim::bltin_CopyOut(sv2ssim::FBltin &row, amcdb::Bltin &out) {
 
 // --- sv2ssim.FBltin.base.CopyIn
 // Copy fields in to row
-void sv2ssim::bltin_CopyIn(sv2ssim::FBltin &row, amcdb::Bltin &in) {
+void sv2ssim::bltin_CopyIn(sv2ssim::FBltin &row, amcdb::Bltin &in) throw() {
     row.ctype = in.ctype;
     row.likeu64 = in.likeu64;
     row.bigendok = in.bigendok;
@@ -109,7 +109,7 @@ void sv2ssim::bltin_CopyIn(sv2ssim::FBltin &row, amcdb::Bltin &in) {
 }
 
 // --- sv2ssim.FBltin..Uninit
-void sv2ssim::FBltin_Uninit(sv2ssim::FBltin& bltin) {
+void sv2ssim::FBltin_Uninit(sv2ssim::FBltin& bltin) throw() {
     sv2ssim::FBltin &row = bltin; (void)row;
     ind_bltin_Remove(row); // remove bltin from index ind_bltin
 }
@@ -117,7 +117,7 @@ void sv2ssim::FBltin_Uninit(sv2ssim::FBltin& bltin) {
 // --- sv2ssim.trace..Print
 // print string representation of ROW to string STR
 // cfmt:sv2ssim.trace.String  printfmt:Tuple
-void sv2ssim::trace_Print(sv2ssim::trace& row, algo::cstring& str) {
+void sv2ssim::trace_Print(sv2ssim::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "sv2ssim.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -128,7 +128,7 @@ void sv2ssim::trace_Print(sv2ssim::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     sv2ssim.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void sv2ssim::ReadArgv() {
+void sv2ssim::ReadArgv() throw() {
     command::sv2ssim &cmd = sv2ssim::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -350,7 +350,7 @@ bool sv2ssim::InsertStrptrMaybe(algo::strptr str) {
 
 // --- sv2ssim.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool sv2ssim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool sv2ssim::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = sv2ssim::LoadTuplesFile(root, recursive);
@@ -375,7 +375,7 @@ bool sv2ssim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool sv2ssim::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool sv2ssim::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -388,7 +388,7 @@ bool sv2ssim::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- sv2ssim.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool sv2ssim::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool sv2ssim::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -408,7 +408,7 @@ bool sv2ssim::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) 
 
 // --- sv2ssim.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool sv2ssim::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool sv2ssim::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = sv2ssim::LoadTuplesFile(fname, recursive);
@@ -433,7 +433,7 @@ bool sv2ssim::_db_XrefMaybe() {
 // --- sv2ssim.FDb.field.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-sv2ssim::FField& sv2ssim::field_Alloc() {
+sv2ssim::FField& sv2ssim::field_Alloc() throw() {
     sv2ssim::FField* row = field_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("sv2ssim.out_of_mem  field:sv2ssim.FDb.field  comment:'Alloc failed'");
@@ -443,7 +443,7 @@ sv2ssim::FField& sv2ssim::field_Alloc() {
 
 // --- sv2ssim.FDb.field.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-sv2ssim::FField* sv2ssim::field_AllocMaybe() {
+sv2ssim::FField* sv2ssim::field_AllocMaybe() throw() {
     sv2ssim::FField *row = (sv2ssim::FField*)field_AllocMem();
     if (row) {
         new (row) sv2ssim::FField; // call constructor
@@ -454,7 +454,7 @@ sv2ssim::FField* sv2ssim::field_AllocMaybe() {
 
 // --- sv2ssim.FDb.field.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* sv2ssim::field_AllocMem() {
+void* sv2ssim::field_AllocMem() throw() {
     u64 new_nelems     = _db.field_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -480,7 +480,7 @@ void* sv2ssim::field_AllocMem() {
 
 // --- sv2ssim.FDb.field.RemoveAll
 // Remove all elements from Lary
-void sv2ssim::field_RemoveAll() {
+void sv2ssim::field_RemoveAll() throw() {
     for (u64 n = _db.field_n; n>0; ) {
         n--;
         field_qFind(i32(n)).~FField(); // destroy last element
@@ -490,7 +490,7 @@ void sv2ssim::field_RemoveAll() {
 
 // --- sv2ssim.FDb.field.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void sv2ssim::field_RemoveLast() {
+void sv2ssim::field_RemoveLast() throw() {
     u64 n = _db.field_n;
     if (n > 0) {
         n -= 1;
@@ -521,7 +521,7 @@ bool sv2ssim::field_XrefMaybe(sv2ssim::FField &row) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> sv2ssim::linetok_Addary(algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> sv2ssim::linetok_Addary(algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.linetok_elems && rhs.elems < _db.linetok_elems + _db.linetok_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("sv2ssim.tary_alias  field:sv2ssim.FDb.linetok  comment:'alias error: sub-array is being appended to the whole'");
@@ -539,7 +539,7 @@ algo::aryptr<algo::cstring> sv2ssim::linetok_Addary(algo::aryptr<algo::cstring> 
 // --- sv2ssim.FDb.linetok.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& sv2ssim::linetok_Alloc() {
+algo::cstring& sv2ssim::linetok_Alloc() throw() {
     linetok_Reserve(1);
     int n  = _db.linetok_n;
     int at = n;
@@ -552,7 +552,7 @@ algo::cstring& sv2ssim::linetok_Alloc() {
 // --- sv2ssim.FDb.linetok.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& sv2ssim::linetok_AllocAt(int at) {
+algo::cstring& sv2ssim::linetok_AllocAt(int at) throw() {
     linetok_Reserve(1);
     int n  = _db.linetok_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -567,7 +567,7 @@ algo::cstring& sv2ssim::linetok_AllocAt(int at) {
 
 // --- sv2ssim.FDb.linetok.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> sv2ssim::linetok_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> sv2ssim::linetok_AllocN(int n_elems) throw() {
     linetok_Reserve(n_elems);
     int old_n  = _db.linetok_n;
     int new_n = old_n + n_elems;
@@ -581,7 +581,7 @@ algo::aryptr<algo::cstring> sv2ssim::linetok_AllocN(int n_elems) {
 
 // --- sv2ssim.FDb.linetok.Remove
 // Remove item by index. If index outside of range, do nothing.
-void sv2ssim::linetok_Remove(u32 i) {
+void sv2ssim::linetok_Remove(u32 i) throw() {
     u32 lim = _db.linetok_n;
     algo::cstring *elems = _db.linetok_elems;
     if (i < lim) {
@@ -592,7 +592,7 @@ void sv2ssim::linetok_Remove(u32 i) {
 }
 
 // --- sv2ssim.FDb.linetok.RemoveAll
-void sv2ssim::linetok_RemoveAll() {
+void sv2ssim::linetok_RemoveAll() throw() {
     u32 n = _db.linetok_n;
     while (n > 0) {
         n -= 1;
@@ -603,7 +603,7 @@ void sv2ssim::linetok_RemoveAll() {
 
 // --- sv2ssim.FDb.linetok.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void sv2ssim::linetok_RemoveLast() {
+void sv2ssim::linetok_RemoveLast() throw() {
     u64 n = _db.linetok_n;
     if (n > 0) {
         n -= 1;
@@ -614,7 +614,7 @@ void sv2ssim::linetok_RemoveLast() {
 
 // --- sv2ssim.FDb.linetok.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void sv2ssim::linetok_AbsReserve(int n) {
+void sv2ssim::linetok_AbsReserve(int n) throw() {
     u32 old_max  = _db.linetok_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -629,7 +629,7 @@ void sv2ssim::linetok_AbsReserve(int n) {
 
 // --- sv2ssim.FDb.linetok.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> sv2ssim::linetok_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> sv2ssim::linetok_AllocNVal(int n_elems, const algo::cstring& val) throw() {
     linetok_Reserve(n_elems);
     int old_n  = _db.linetok_n;
     int new_n = old_n + n_elems;
@@ -645,7 +645,7 @@ algo::aryptr<algo::cstring> sv2ssim::linetok_AllocNVal(int n_elems, const algo::
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool sv2ssim::linetok_ReadStrptrMaybe(algo::strptr in_str) {
+bool sv2ssim::linetok_ReadStrptrMaybe(algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = linetok_Alloc();
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -658,7 +658,7 @@ bool sv2ssim::linetok_ReadStrptrMaybe(algo::strptr in_str) {
 // --- sv2ssim.FDb.svtype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-sv2ssim::FSvtype& sv2ssim::svtype_Alloc() {
+sv2ssim::FSvtype& sv2ssim::svtype_Alloc() throw() {
     sv2ssim::FSvtype* row = svtype_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("sv2ssim.out_of_mem  field:sv2ssim.FDb.svtype  comment:'Alloc failed'");
@@ -668,7 +668,7 @@ sv2ssim::FSvtype& sv2ssim::svtype_Alloc() {
 
 // --- sv2ssim.FDb.svtype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-sv2ssim::FSvtype* sv2ssim::svtype_AllocMaybe() {
+sv2ssim::FSvtype* sv2ssim::svtype_AllocMaybe() throw() {
     sv2ssim::FSvtype *row = (sv2ssim::FSvtype*)svtype_AllocMem();
     if (row) {
         new (row) sv2ssim::FSvtype; // call constructor
@@ -679,7 +679,7 @@ sv2ssim::FSvtype* sv2ssim::svtype_AllocMaybe() {
 // --- sv2ssim.FDb.svtype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-sv2ssim::FSvtype* sv2ssim::svtype_InsertMaybe(const dmmeta::Svtype &value) {
+sv2ssim::FSvtype* sv2ssim::svtype_InsertMaybe(const dmmeta::Svtype &value) throw() {
     sv2ssim::FSvtype *row = &svtype_Alloc(); // if out of memory, process dies. if input error, return NULL.
     svtype_CopyIn(*row,const_cast<dmmeta::Svtype&>(value));
     bool ok = svtype_XrefMaybe(*row); // this may return false
@@ -692,7 +692,7 @@ sv2ssim::FSvtype* sv2ssim::svtype_InsertMaybe(const dmmeta::Svtype &value) {
 
 // --- sv2ssim.FDb.svtype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* sv2ssim::svtype_AllocMem() {
+void* sv2ssim::svtype_AllocMem() throw() {
     u64 new_nelems     = _db.svtype_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -718,7 +718,7 @@ void* sv2ssim::svtype_AllocMem() {
 
 // --- sv2ssim.FDb.svtype.RemoveAll
 // Remove all elements from Lary
-void sv2ssim::svtype_RemoveAll() {
+void sv2ssim::svtype_RemoveAll() throw() {
     for (u64 n = _db.svtype_n; n>0; ) {
         n--;
         svtype_qFind(u64(n)).~FSvtype(); // destroy last element
@@ -728,7 +728,7 @@ void sv2ssim::svtype_RemoveAll() {
 
 // --- sv2ssim.FDb.svtype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void sv2ssim::svtype_RemoveLast() {
+void sv2ssim::svtype_RemoveLast() throw() {
     u64 n = _db.svtype_n;
     if (n > 0) {
         n -= 1;
@@ -738,7 +738,7 @@ void sv2ssim::svtype_RemoveLast() {
 }
 
 // --- sv2ssim.FDb.svtype.InputMaybe
-static bool sv2ssim::svtype_InputMaybe(dmmeta::Svtype &elem) {
+static bool sv2ssim::svtype_InputMaybe(dmmeta::Svtype &elem) throw() {
     bool retval = true;
     retval = svtype_InsertMaybe(elem) != nullptr;
     return retval;
@@ -755,7 +755,7 @@ bool sv2ssim::svtype_XrefMaybe(sv2ssim::FSvtype &row) {
 
 // --- sv2ssim.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
-sv2ssim::FField* sv2ssim::ind_field_Find(const algo::strptr& key) {
+sv2ssim::FField* sv2ssim::ind_field_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     sv2ssim::FField* *e = &_db.ind_field_buckets_elems[index];
     sv2ssim::FField* ret=NULL;
@@ -778,7 +778,7 @@ sv2ssim::FField& sv2ssim::ind_field_FindX(const algo::strptr& key) {
 
 // --- sv2ssim.FDb.ind_field.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-sv2ssim::FField& sv2ssim::ind_field_GetOrCreate(const algo::strptr& key) {
+sv2ssim::FField& sv2ssim::ind_field_GetOrCreate(const algo::strptr& key) throw() {
     sv2ssim::FField* ret = ind_field_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &field_Alloc();
@@ -795,7 +795,7 @@ sv2ssim::FField& sv2ssim::ind_field_GetOrCreate(const algo::strptr& key) {
 
 // --- sv2ssim.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool sv2ssim::ind_field_InsertMaybe(sv2ssim::FField& row) {
+bool sv2ssim::ind_field_InsertMaybe(sv2ssim::FField& row) throw() {
     ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (sv2ssim::FField*)-1)) {// check if in hash already
@@ -823,7 +823,7 @@ bool sv2ssim::ind_field_InsertMaybe(sv2ssim::FField& row) {
 
 // --- sv2ssim.FDb.ind_field.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void sv2ssim::ind_field_Remove(sv2ssim::FField& row) {
+void sv2ssim::ind_field_Remove(sv2ssim::FField& row) throw() {
     if (LIKELY(row.ind_field_next != (sv2ssim::FField*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.name) & (_db.ind_field_buckets_n - 1);
         sv2ssim::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
@@ -841,7 +841,7 @@ void sv2ssim::ind_field_Remove(sv2ssim::FField& row) {
 
 // --- sv2ssim.FDb.ind_field.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void sv2ssim::ind_field_Reserve(int n) {
+void sv2ssim::ind_field_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_field_buckets_n;
     u32 new_nelems   = _db.ind_field_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -877,7 +877,7 @@ void sv2ssim::ind_field_Reserve(int n) {
 
 // --- sv2ssim.FDb.zd_selfield.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void sv2ssim::zd_selfield_Insert(sv2ssim::FField& row) {
+void sv2ssim::zd_selfield_Insert(sv2ssim::FField& row) throw() {
     if (!zd_selfield_InLlistQ(row)) {
         sv2ssim::FField* old_tail = _db.zd_selfield_tail;
         row.zd_selfield_next = NULL;
@@ -893,7 +893,7 @@ void sv2ssim::zd_selfield_Insert(sv2ssim::FField& row) {
 
 // --- sv2ssim.FDb.zd_selfield.Remove
 // Remove element from index. If element is not in index, do nothing.
-void sv2ssim::zd_selfield_Remove(sv2ssim::FField& row) {
+void sv2ssim::zd_selfield_Remove(sv2ssim::FField& row) throw() {
     if (zd_selfield_InLlistQ(row)) {
         sv2ssim::FField* old_head       = _db.zd_selfield_head;
         (void)old_head; // in case it's not used
@@ -916,7 +916,7 @@ void sv2ssim::zd_selfield_Remove(sv2ssim::FField& row) {
 
 // --- sv2ssim.FDb.zd_selfield.RemoveAll
 // Empty the index. (The rows are not deleted)
-void sv2ssim::zd_selfield_RemoveAll() {
+void sv2ssim::zd_selfield_RemoveAll() throw() {
     sv2ssim::FField* row = _db.zd_selfield_head;
     _db.zd_selfield_head = NULL;
     _db.zd_selfield_tail = NULL;
@@ -931,7 +931,7 @@ void sv2ssim::zd_selfield_RemoveAll() {
 
 // --- sv2ssim.FDb.zd_selfield.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-sv2ssim::FField* sv2ssim::zd_selfield_RemoveFirst() {
+sv2ssim::FField* sv2ssim::zd_selfield_RemoveFirst() throw() {
     sv2ssim::FField *row = NULL;
     row = _db.zd_selfield_head;
     if (row) {
@@ -950,7 +950,7 @@ sv2ssim::FField* sv2ssim::zd_selfield_RemoveFirst() {
 // --- sv2ssim.FDb.bltin.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-sv2ssim::FBltin& sv2ssim::bltin_Alloc() {
+sv2ssim::FBltin& sv2ssim::bltin_Alloc() throw() {
     sv2ssim::FBltin* row = bltin_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("sv2ssim.out_of_mem  field:sv2ssim.FDb.bltin  comment:'Alloc failed'");
@@ -960,7 +960,7 @@ sv2ssim::FBltin& sv2ssim::bltin_Alloc() {
 
 // --- sv2ssim.FDb.bltin.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-sv2ssim::FBltin* sv2ssim::bltin_AllocMaybe() {
+sv2ssim::FBltin* sv2ssim::bltin_AllocMaybe() throw() {
     sv2ssim::FBltin *row = (sv2ssim::FBltin*)bltin_AllocMem();
     if (row) {
         new (row) sv2ssim::FBltin; // call constructor
@@ -971,7 +971,7 @@ sv2ssim::FBltin* sv2ssim::bltin_AllocMaybe() {
 // --- sv2ssim.FDb.bltin.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-sv2ssim::FBltin* sv2ssim::bltin_InsertMaybe(const amcdb::Bltin &value) {
+sv2ssim::FBltin* sv2ssim::bltin_InsertMaybe(const amcdb::Bltin &value) throw() {
     sv2ssim::FBltin *row = &bltin_Alloc(); // if out of memory, process dies. if input error, return NULL.
     bltin_CopyIn(*row,const_cast<amcdb::Bltin&>(value));
     bool ok = bltin_XrefMaybe(*row); // this may return false
@@ -984,7 +984,7 @@ sv2ssim::FBltin* sv2ssim::bltin_InsertMaybe(const amcdb::Bltin &value) {
 
 // --- sv2ssim.FDb.bltin.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* sv2ssim::bltin_AllocMem() {
+void* sv2ssim::bltin_AllocMem() throw() {
     u64 new_nelems     = _db.bltin_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1010,7 +1010,7 @@ void* sv2ssim::bltin_AllocMem() {
 
 // --- sv2ssim.FDb.bltin.RemoveAll
 // Remove all elements from Lary
-void sv2ssim::bltin_RemoveAll() {
+void sv2ssim::bltin_RemoveAll() throw() {
     for (u64 n = _db.bltin_n; n>0; ) {
         n--;
         bltin_qFind(u64(n)).~FBltin(); // destroy last element
@@ -1020,7 +1020,7 @@ void sv2ssim::bltin_RemoveAll() {
 
 // --- sv2ssim.FDb.bltin.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void sv2ssim::bltin_RemoveLast() {
+void sv2ssim::bltin_RemoveLast() throw() {
     u64 n = _db.bltin_n;
     if (n > 0) {
         n -= 1;
@@ -1030,7 +1030,7 @@ void sv2ssim::bltin_RemoveLast() {
 }
 
 // --- sv2ssim.FDb.bltin.InputMaybe
-static bool sv2ssim::bltin_InputMaybe(amcdb::Bltin &elem) {
+static bool sv2ssim::bltin_InputMaybe(amcdb::Bltin &elem) throw() {
     bool retval = true;
     retval = bltin_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1056,7 +1056,7 @@ bool sv2ssim::bltin_XrefMaybe(sv2ssim::FBltin &row) {
 
 // --- sv2ssim.FDb.ind_bltin.Find
 // Find row by key. Return NULL if not found.
-sv2ssim::FBltin* sv2ssim::ind_bltin_Find(const algo::strptr& key) {
+sv2ssim::FBltin* sv2ssim::ind_bltin_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_bltin_buckets_n - 1);
     sv2ssim::FBltin* *e = &_db.ind_bltin_buckets_elems[index];
     sv2ssim::FBltin* ret=NULL;
@@ -1079,7 +1079,7 @@ sv2ssim::FBltin& sv2ssim::ind_bltin_FindX(const algo::strptr& key) {
 
 // --- sv2ssim.FDb.ind_bltin.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-sv2ssim::FBltin& sv2ssim::ind_bltin_GetOrCreate(const algo::strptr& key) {
+sv2ssim::FBltin& sv2ssim::ind_bltin_GetOrCreate(const algo::strptr& key) throw() {
     sv2ssim::FBltin* ret = ind_bltin_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &bltin_Alloc();
@@ -1096,7 +1096,7 @@ sv2ssim::FBltin& sv2ssim::ind_bltin_GetOrCreate(const algo::strptr& key) {
 
 // --- sv2ssim.FDb.ind_bltin.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool sv2ssim::ind_bltin_InsertMaybe(sv2ssim::FBltin& row) {
+bool sv2ssim::ind_bltin_InsertMaybe(sv2ssim::FBltin& row) throw() {
     ind_bltin_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_bltin_next == (sv2ssim::FBltin*)-1)) {// check if in hash already
@@ -1124,7 +1124,7 @@ bool sv2ssim::ind_bltin_InsertMaybe(sv2ssim::FBltin& row) {
 
 // --- sv2ssim.FDb.ind_bltin.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void sv2ssim::ind_bltin_Remove(sv2ssim::FBltin& row) {
+void sv2ssim::ind_bltin_Remove(sv2ssim::FBltin& row) throw() {
     if (LIKELY(row.ind_bltin_next != (sv2ssim::FBltin*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_bltin_buckets_n - 1);
         sv2ssim::FBltin* *prev = &_db.ind_bltin_buckets_elems[index]; // addr of pointer to current element
@@ -1142,7 +1142,7 @@ void sv2ssim::ind_bltin_Remove(sv2ssim::FBltin& row) {
 
 // --- sv2ssim.FDb.ind_bltin.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void sv2ssim::ind_bltin_Reserve(int n) {
+void sv2ssim::ind_bltin_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_bltin_buckets_n;
     u32 new_nelems   = _db.ind_bltin_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1178,13 +1178,13 @@ void sv2ssim::ind_bltin_Reserve(int n) {
 
 // --- sv2ssim.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr sv2ssim::trace_RowidFind(int t) {
+static algo::ImrowPtr sv2ssim::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- sv2ssim.FDb.trace.N
 // Function return 1
-inline static i32 sv2ssim::trace_N() {
+inline static i32 sv2ssim::trace_N() throw() {
     return 1;
 }
 
@@ -1253,7 +1253,7 @@ void sv2ssim::FDb_Init() {
 }
 
 // --- sv2ssim.FDb..Uninit
-void sv2ssim::FDb_Uninit() {
+void sv2ssim::FDb_Uninit() throw() {
     sv2ssim::FDb &row = _db; (void)row;
 
     // sv2ssim.FDb.ind_bltin.Uninit (Thash)  //
@@ -1299,7 +1299,7 @@ void sv2ssim::FField_Init(sv2ssim::FField& field) {
 }
 
 // --- sv2ssim.FField..ReadFieldMaybe
-bool sv2ssim::FField_ReadFieldMaybe(sv2ssim::FField& parent, algo::strptr field, algo::strptr strval) {
+bool sv2ssim::FField_ReadFieldMaybe(sv2ssim::FField& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     sv2ssim::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1371,7 +1371,7 @@ bool sv2ssim::FField_ReadFieldMaybe(sv2ssim::FField& parent, algo::strptr field,
 // --- sv2ssim.FField..ReadStrptrMaybe
 // Read fields of sv2ssim::FField from an ascii string.
 // The format of the string is an ssim Tuple
-bool sv2ssim::FField_ReadStrptrMaybe(sv2ssim::FField &parent, algo::strptr in_str) {
+bool sv2ssim::FField_ReadStrptrMaybe(sv2ssim::FField &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "sv2ssim.FField");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1381,7 +1381,7 @@ bool sv2ssim::FField_ReadStrptrMaybe(sv2ssim::FField &parent, algo::strptr in_st
 }
 
 // --- sv2ssim.FField..Uninit
-void sv2ssim::FField_Uninit(sv2ssim::FField& field) {
+void sv2ssim::FField_Uninit(sv2ssim::FField& field) throw() {
     sv2ssim::FField &row = field; (void)row;
     ind_field_Remove(row); // remove field from index ind_field
     zd_selfield_Remove(row); // remove field from index zd_selfield
@@ -1390,7 +1390,7 @@ void sv2ssim::FField_Uninit(sv2ssim::FField& field) {
 // --- sv2ssim.FField..Print
 // print string representation of ROW to string STR
 // cfmt:sv2ssim.FField.String  printfmt:Tuple
-void sv2ssim::FField_Print(sv2ssim::FField& row, algo::cstring& str) {
+void sv2ssim::FField_Print(sv2ssim::FField& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "sv2ssim.FField";
 
@@ -1439,7 +1439,7 @@ void sv2ssim::FField_Print(sv2ssim::FField& row, algo::cstring& str) {
 
 // --- sv2ssim.FSvtype.base.CopyOut
 // Copy fields out of row
-void sv2ssim::svtype_CopyOut(sv2ssim::FSvtype &row, dmmeta::Svtype &out) {
+void sv2ssim::svtype_CopyOut(sv2ssim::FSvtype &row, dmmeta::Svtype &out) throw() {
     out.ctype = row.ctype;
     out.maxwid = row.maxwid;
     out.fixedwid1 = row.fixedwid1;
@@ -1449,7 +1449,7 @@ void sv2ssim::svtype_CopyOut(sv2ssim::FSvtype &row, dmmeta::Svtype &out) {
 
 // --- sv2ssim.FSvtype.base.CopyIn
 // Copy fields in to row
-void sv2ssim::svtype_CopyIn(sv2ssim::FSvtype &row, dmmeta::Svtype &in) {
+void sv2ssim::svtype_CopyIn(sv2ssim::FSvtype &row, dmmeta::Svtype &in) throw() {
     row.ctype = in.ctype;
     row.maxwid = in.maxwid;
     row.fixedwid1 = in.fixedwid1;
@@ -1460,7 +1460,7 @@ void sv2ssim::svtype_CopyIn(sv2ssim::FSvtype &row, dmmeta::Svtype &in) {
 // --- sv2ssim.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* sv2ssim::value_ToCstr(const sv2ssim::FieldId& parent) {
+const char* sv2ssim::value_ToCstr(const sv2ssim::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case sv2ssim_FieldId_name          : ret = "name";  break;
@@ -1485,7 +1485,7 @@ const char* sv2ssim::value_ToCstr(const sv2ssim::FieldId& parent) {
 // --- sv2ssim.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void sv2ssim::value_Print(const sv2ssim::FieldId& parent, algo::cstring &lhs) {
+void sv2ssim::value_Print(const sv2ssim::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1498,7 +1498,7 @@ void sv2ssim::value_Print(const sv2ssim::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool sv2ssim::value_SetStrptrMaybe(sv2ssim::FieldId& parent, algo::strptr rhs) {
+bool sv2ssim::value_SetStrptrMaybe(sv2ssim::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
@@ -1582,13 +1582,13 @@ bool sv2ssim::value_SetStrptrMaybe(sv2ssim::FieldId& parent, algo::strptr rhs) {
 // --- sv2ssim.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void sv2ssim::value_SetStrptr(sv2ssim::FieldId& parent, algo::strptr rhs, sv2ssim_FieldIdEnum dflt) {
+void sv2ssim::value_SetStrptr(sv2ssim::FieldId& parent, algo::strptr rhs, sv2ssim_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- sv2ssim.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool sv2ssim::value_ReadStrptrMaybe(sv2ssim::FieldId& parent, algo::strptr rhs) {
+bool sv2ssim::value_ReadStrptrMaybe(sv2ssim::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1600,7 +1600,7 @@ bool sv2ssim::value_ReadStrptrMaybe(sv2ssim::FieldId& parent, algo::strptr rhs) 
 // --- sv2ssim.FieldId..ReadStrptrMaybe
 // Read fields of sv2ssim::FieldId from an ascii string.
 // The format of the string is the format of the sv2ssim::FieldId's only field
-bool sv2ssim::FieldId_ReadStrptrMaybe(sv2ssim::FieldId &parent, algo::strptr in_str) {
+bool sv2ssim::FieldId_ReadStrptrMaybe(sv2ssim::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1609,14 +1609,14 @@ bool sv2ssim::FieldId_ReadStrptrMaybe(sv2ssim::FieldId &parent, algo::strptr in_
 // --- sv2ssim.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:sv2ssim.FieldId.String  printfmt:Raw
-void sv2ssim::FieldId_Print(sv2ssim::FieldId& row, algo::cstring& str) {
+void sv2ssim::FieldId_Print(sv2ssim::FieldId& row, algo::cstring& str) throw() {
     sv2ssim::value_Print(row, str);
 }
 
 // --- sv2ssim.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* sv2ssim::value_ToCstr(const sv2ssim::TableId& parent) {
+const char* sv2ssim::value_ToCstr(const sv2ssim::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case sv2ssim_TableId_amcdb_Bltin   : ret = "amcdb.Bltin";  break;
@@ -1628,7 +1628,7 @@ const char* sv2ssim::value_ToCstr(const sv2ssim::TableId& parent) {
 // --- sv2ssim.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void sv2ssim::value_Print(const sv2ssim::TableId& parent, algo::cstring &lhs) {
+void sv2ssim::value_Print(const sv2ssim::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1641,7 +1641,7 @@ void sv2ssim::value_Print(const sv2ssim::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool sv2ssim::value_SetStrptrMaybe(sv2ssim::TableId& parent, algo::strptr rhs) {
+bool sv2ssim::value_SetStrptrMaybe(sv2ssim::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 11: {
@@ -1677,13 +1677,13 @@ bool sv2ssim::value_SetStrptrMaybe(sv2ssim::TableId& parent, algo::strptr rhs) {
 // --- sv2ssim.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void sv2ssim::value_SetStrptr(sv2ssim::TableId& parent, algo::strptr rhs, sv2ssim_TableIdEnum dflt) {
+void sv2ssim::value_SetStrptr(sv2ssim::TableId& parent, algo::strptr rhs, sv2ssim_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- sv2ssim.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool sv2ssim::value_ReadStrptrMaybe(sv2ssim::TableId& parent, algo::strptr rhs) {
+bool sv2ssim::value_ReadStrptrMaybe(sv2ssim::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1695,7 +1695,7 @@ bool sv2ssim::value_ReadStrptrMaybe(sv2ssim::TableId& parent, algo::strptr rhs) 
 // --- sv2ssim.TableId..ReadStrptrMaybe
 // Read fields of sv2ssim::TableId from an ascii string.
 // The format of the string is the format of the sv2ssim::TableId's only field
-bool sv2ssim::TableId_ReadStrptrMaybe(sv2ssim::TableId &parent, algo::strptr in_str) {
+bool sv2ssim::TableId_ReadStrptrMaybe(sv2ssim::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1704,7 +1704,7 @@ bool sv2ssim::TableId_ReadStrptrMaybe(sv2ssim::TableId &parent, algo::strptr in_
 // --- sv2ssim.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:sv2ssim.TableId.String  printfmt:Raw
-void sv2ssim::TableId_Print(sv2ssim::TableId& row, algo::cstring& str) {
+void sv2ssim::TableId_Print(sv2ssim::TableId& row, algo::cstring& str) throw() {
     sv2ssim::value_Print(row, str);
 }
 

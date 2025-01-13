@@ -36,7 +36,7 @@ namespace ietf { // gen:ns_print_proto
 // --- ietf.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ietf::value_ToCstr(const ietf::FieldId& parent) {
+const char* ietf::value_ToCstr(const ietf::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ietf_FieldId_ip               : ret = "ip";  break;
@@ -51,7 +51,7 @@ const char* ietf::value_ToCstr(const ietf::FieldId& parent) {
 // --- ietf.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void ietf::value_Print(const ietf::FieldId& parent, algo::cstring &lhs) {
+void ietf::value_Print(const ietf::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -64,7 +64,7 @@ void ietf::value_Print(const ietf::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ietf::value_SetStrptrMaybe(ietf::FieldId& parent, algo::strptr rhs) {
+bool ietf::value_SetStrptrMaybe(ietf::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 2: {
@@ -104,13 +104,13 @@ bool ietf::value_SetStrptrMaybe(ietf::FieldId& parent, algo::strptr rhs) {
 // --- ietf.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ietf::value_SetStrptr(ietf::FieldId& parent, algo::strptr rhs, ietf_FieldIdEnum dflt) {
+void ietf::value_SetStrptr(ietf::FieldId& parent, algo::strptr rhs, ietf_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- ietf.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ietf::value_ReadStrptrMaybe(ietf::FieldId& parent, algo::strptr rhs) {
+bool ietf::value_ReadStrptrMaybe(ietf::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -122,7 +122,7 @@ bool ietf::value_ReadStrptrMaybe(ietf::FieldId& parent, algo::strptr rhs) {
 // --- ietf.FieldId..ReadStrptrMaybe
 // Read fields of ietf::FieldId from an ascii string.
 // The format of the string is the format of the ietf::FieldId's only field
-bool ietf::FieldId_ReadStrptrMaybe(ietf::FieldId &parent, algo::strptr in_str) {
+bool ietf::FieldId_ReadStrptrMaybe(ietf::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -131,12 +131,12 @@ bool ietf::FieldId_ReadStrptrMaybe(ietf::FieldId &parent, algo::strptr in_str) {
 // --- ietf.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:ietf.FieldId.String  printfmt:Raw
-void ietf::FieldId_Print(ietf::FieldId& row, algo::cstring& str) {
+void ietf::FieldId_Print(ietf::FieldId& row, algo::cstring& str) throw() {
     ietf::value_Print(row, str);
 }
 
 // --- ietf.Ipv4Addr.addr.ReadStrptrMaybe
-inline static bool ietf::addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str) {
+inline static bool ietf::addr_ReadStrptrMaybe(ietf::Ipv4Addr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 addr_tmp;
     retval = u32_ReadStrptrMaybe(addr_tmp, in_str);

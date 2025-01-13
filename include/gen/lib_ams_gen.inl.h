@@ -31,18 +31,18 @@
 
 // --- lib_ams.CtlConnCase.value.GetEnum
 // Get value of field as enum type
-inline lib_ams_CtlConnCaseEnum lib_ams::value_GetEnum(const lib_ams::CtlConnCase& parent) {
+inline lib_ams_CtlConnCaseEnum lib_ams::value_GetEnum(const lib_ams::CtlConnCase& parent) throw() {
     return lib_ams_CtlConnCaseEnum(parent.value);
 }
 
 // --- lib_ams.CtlConnCase.value.SetEnum
 // Set value of field from enum type.
-inline void lib_ams::value_SetEnum(lib_ams::CtlConnCase& parent, lib_ams_CtlConnCaseEnum rhs) {
+inline void lib_ams::value_SetEnum(lib_ams::CtlConnCase& parent, lib_ams_CtlConnCaseEnum rhs) throw() {
     parent.value = u32(rhs);
 }
 
 // --- lib_ams.CtlConnCase.value.Cast
-inline  lib_ams::CtlConnCase::operator lib_ams_CtlConnCaseEnum() const {
+inline  lib_ams::CtlConnCase::operator lib_ams_CtlConnCaseEnum() const throw() {
     return lib_ams_CtlConnCaseEnum((*this).value);
 }
 
@@ -53,35 +53,35 @@ inline void lib_ams::CtlConnCase_Init(lib_ams::CtlConnCase& parent) {
 }
 
 // --- lib_ams.CtlConnCase..Ctor
-inline  lib_ams::CtlConnCase::CtlConnCase() {
+inline  lib_ams::CtlConnCase::CtlConnCase() throw() {
     lib_ams::CtlConnCase_Init(*this);
 }
 
 // --- lib_ams.CtlConnCase..FieldwiseCtor
-inline  lib_ams::CtlConnCase::CtlConnCase(u32 in_value)
+inline  lib_ams::CtlConnCase::CtlConnCase(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_ams.CtlConnCase..EnumCtor
-inline  lib_ams::CtlConnCase::CtlConnCase(lib_ams_CtlConnCaseEnum arg) {
+inline  lib_ams::CtlConnCase::CtlConnCase(lib_ams_CtlConnCaseEnum arg) throw() {
     this->value = u32(arg);
 }
 
 // --- lib_ams.CtlMsgCase.value.GetEnum
 // Get value of field as enum type
-inline lib_ams_CtlMsgCaseEnum lib_ams::value_GetEnum(const lib_ams::CtlMsgCase& parent) {
+inline lib_ams_CtlMsgCaseEnum lib_ams::value_GetEnum(const lib_ams::CtlMsgCase& parent) throw() {
     return lib_ams_CtlMsgCaseEnum(parent.value);
 }
 
 // --- lib_ams.CtlMsgCase.value.SetEnum
 // Set value of field from enum type.
-inline void lib_ams::value_SetEnum(lib_ams::CtlMsgCase& parent, lib_ams_CtlMsgCaseEnum rhs) {
+inline void lib_ams::value_SetEnum(lib_ams::CtlMsgCase& parent, lib_ams_CtlMsgCaseEnum rhs) throw() {
     parent.value = u32(rhs);
 }
 
 // --- lib_ams.CtlMsgCase.value.Cast
-inline  lib_ams::CtlMsgCase::operator lib_ams_CtlMsgCaseEnum() const {
+inline  lib_ams::CtlMsgCase::operator lib_ams_CtlMsgCaseEnum() const throw() {
     return lib_ams_CtlMsgCaseEnum((*this).value);
 }
 
@@ -92,18 +92,18 @@ inline void lib_ams::CtlMsgCase_Init(lib_ams::CtlMsgCase& parent) {
 }
 
 // --- lib_ams.CtlMsgCase..Ctor
-inline  lib_ams::CtlMsgCase::CtlMsgCase() {
+inline  lib_ams::CtlMsgCase::CtlMsgCase() throw() {
     lib_ams::CtlMsgCase_Init(*this);
 }
 
 // --- lib_ams.CtlMsgCase..FieldwiseCtor
-inline  lib_ams::CtlMsgCase::CtlMsgCase(u32 in_value)
+inline  lib_ams::CtlMsgCase::CtlMsgCase(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_ams.CtlMsgCase..EnumCtor
-inline  lib_ams::CtlMsgCase::CtlMsgCase(lib_ams_CtlMsgCaseEnum arg) {
+inline  lib_ams::CtlMsgCase::CtlMsgCase(lib_ams_CtlMsgCaseEnum arg) throw() {
     this->value = u32(arg);
 }
 
@@ -117,19 +117,19 @@ inline void lib_ams::trace_Init(lib_ams::trace& parent) {
 }
 
 // --- lib_ams.trace..Ctor
-inline  lib_ams::trace::trace() {
+inline  lib_ams::trace::trace() throw() {
     lib_ams::trace_Init(*this);
 }
 
 // --- lib_ams.FDb.fdin.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::fdin_EmptyQ() {
+inline bool lib_ams::fdin_EmptyQ() throw() {
     return _db.fdin_n == 0;
 }
 
 // --- lib_ams.FDb.fdin.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_ams::FFdin* lib_ams::fdin_Find(u64 t) {
+inline lib_ams::FFdin* lib_ams::fdin_Find(u64 t) throw() {
     lib_ams::FFdin *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fdin_n))) {
         u64 x = t + 1;
@@ -143,19 +143,19 @@ inline lib_ams::FFdin* lib_ams::fdin_Find(u64 t) {
 
 // --- lib_ams.FDb.fdin.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline lib_ams::FFdin* lib_ams::fdin_Last() {
+inline lib_ams::FFdin* lib_ams::fdin_Last() throw() {
     return fdin_Find(u64(_db.fdin_n-1));
 }
 
 // --- lib_ams.FDb.fdin.N
 // Return number of items in the pool
-inline i32 lib_ams::fdin_N() {
+inline i32 lib_ams::fdin_N() throw() {
     return _db.fdin_n;
 }
 
 // --- lib_ams.FDb.fdin.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline lib_ams::FFdin& lib_ams::fdin_qFind(u64 t) {
+inline lib_ams::FFdin& lib_ams::fdin_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -165,13 +165,13 @@ inline lib_ams::FFdin& lib_ams::fdin_qFind(u64 t) {
 
 // --- lib_ams.FDb.cd_fdin_eof.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::cd_fdin_eof_EmptyQ() {
+inline bool lib_ams::cd_fdin_eof_EmptyQ() throw() {
     return _db.cd_fdin_eof_head == NULL;
 }
 
 // --- lib_ams.FDb.cd_fdin_eof.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FFdin* lib_ams::cd_fdin_eof_First() {
+inline lib_ams::FFdin* lib_ams::cd_fdin_eof_First() throw() {
     lib_ams::FFdin *row = NULL;
     row = _db.cd_fdin_eof_head;
     return row;
@@ -179,7 +179,7 @@ inline lib_ams::FFdin* lib_ams::cd_fdin_eof_First() {
 
 // --- lib_ams.FDb.cd_fdin_eof.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_ams::cd_fdin_eof_InLlistQ(lib_ams::FFdin& row) {
+inline bool lib_ams::cd_fdin_eof_InLlistQ(lib_ams::FFdin& row) throw() {
     bool result = false;
     result = !(row.cd_fdin_eof_next == (lib_ams::FFdin*)-1);
     return result;
@@ -187,7 +187,7 @@ inline bool lib_ams::cd_fdin_eof_InLlistQ(lib_ams::FFdin& row) {
 
 // --- lib_ams.FDb.cd_fdin_eof.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FFdin* lib_ams::cd_fdin_eof_Last() {
+inline lib_ams::FFdin* lib_ams::cd_fdin_eof_Last() throw() {
     lib_ams::FFdin *row = NULL;
     row = _db.cd_fdin_eof_head ? _db.cd_fdin_eof_head->cd_fdin_eof_prev : NULL;
     return row;
@@ -195,25 +195,25 @@ inline lib_ams::FFdin* lib_ams::cd_fdin_eof_Last() {
 
 // --- lib_ams.FDb.cd_fdin_eof.N
 // Return number of items in the linked list
-inline i32 lib_ams::cd_fdin_eof_N() {
+inline i32 lib_ams::cd_fdin_eof_N() throw() {
     return _db.cd_fdin_eof_n;
 }
 
 // --- lib_ams.FDb.cd_fdin_eof.Next
 // Return pointer to next element in the list
-inline lib_ams::FFdin* lib_ams::cd_fdin_eof_Next(lib_ams::FFdin &row) {
+inline lib_ams::FFdin* lib_ams::cd_fdin_eof_Next(lib_ams::FFdin &row) throw() {
     return row.cd_fdin_eof_next;
 }
 
 // --- lib_ams.FDb.cd_fdin_eof.Prev
 // Return pointer to previous element in the list
-inline lib_ams::FFdin* lib_ams::cd_fdin_eof_Prev(lib_ams::FFdin &row) {
+inline lib_ams::FFdin* lib_ams::cd_fdin_eof_Prev(lib_ams::FFdin &row) throw() {
     return row.cd_fdin_eof_prev;
 }
 
 // --- lib_ams.FDb.cd_fdin_eof.qLast
 // Return reference to last element in the index. No bounds checking.
-inline lib_ams::FFdin& lib_ams::cd_fdin_eof_qLast() {
+inline lib_ams::FFdin& lib_ams::cd_fdin_eof_qLast() throw() {
     lib_ams::FFdin *row = NULL;
     row = _db.cd_fdin_eof_head ? _db.cd_fdin_eof_head->cd_fdin_eof_prev : NULL;
     return *row;
@@ -221,13 +221,13 @@ inline lib_ams::FFdin& lib_ams::cd_fdin_eof_qLast() {
 
 // --- lib_ams.FDb.cd_fdin_read.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::cd_fdin_read_EmptyQ() {
+inline bool lib_ams::cd_fdin_read_EmptyQ() throw() {
     return _db.cd_fdin_read_head == NULL;
 }
 
 // --- lib_ams.FDb.cd_fdin_read.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FFdin* lib_ams::cd_fdin_read_First() {
+inline lib_ams::FFdin* lib_ams::cd_fdin_read_First() throw() {
     lib_ams::FFdin *row = NULL;
     row = _db.cd_fdin_read_head;
     return row;
@@ -235,7 +235,7 @@ inline lib_ams::FFdin* lib_ams::cd_fdin_read_First() {
 
 // --- lib_ams.FDb.cd_fdin_read.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_ams::cd_fdin_read_InLlistQ(lib_ams::FFdin& row) {
+inline bool lib_ams::cd_fdin_read_InLlistQ(lib_ams::FFdin& row) throw() {
     bool result = false;
     result = !(row.cd_fdin_read_next == (lib_ams::FFdin*)-1);
     return result;
@@ -243,7 +243,7 @@ inline bool lib_ams::cd_fdin_read_InLlistQ(lib_ams::FFdin& row) {
 
 // --- lib_ams.FDb.cd_fdin_read.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FFdin* lib_ams::cd_fdin_read_Last() {
+inline lib_ams::FFdin* lib_ams::cd_fdin_read_Last() throw() {
     lib_ams::FFdin *row = NULL;
     row = _db.cd_fdin_read_head ? _db.cd_fdin_read_head->cd_fdin_read_prev : NULL;
     return row;
@@ -251,25 +251,25 @@ inline lib_ams::FFdin* lib_ams::cd_fdin_read_Last() {
 
 // --- lib_ams.FDb.cd_fdin_read.N
 // Return number of items in the linked list
-inline i32 lib_ams::cd_fdin_read_N() {
+inline i32 lib_ams::cd_fdin_read_N() throw() {
     return _db.cd_fdin_read_n;
 }
 
 // --- lib_ams.FDb.cd_fdin_read.Next
 // Return pointer to next element in the list
-inline lib_ams::FFdin* lib_ams::cd_fdin_read_Next(lib_ams::FFdin &row) {
+inline lib_ams::FFdin* lib_ams::cd_fdin_read_Next(lib_ams::FFdin &row) throw() {
     return row.cd_fdin_read_next;
 }
 
 // --- lib_ams.FDb.cd_fdin_read.Prev
 // Return pointer to previous element in the list
-inline lib_ams::FFdin* lib_ams::cd_fdin_read_Prev(lib_ams::FFdin &row) {
+inline lib_ams::FFdin* lib_ams::cd_fdin_read_Prev(lib_ams::FFdin &row) throw() {
     return row.cd_fdin_read_prev;
 }
 
 // --- lib_ams.FDb.cd_fdin_read.qLast
 // Return reference to last element in the index. No bounds checking.
-inline lib_ams::FFdin& lib_ams::cd_fdin_read_qLast() {
+inline lib_ams::FFdin& lib_ams::cd_fdin_read_qLast() throw() {
     lib_ams::FFdin *row = NULL;
     row = _db.cd_fdin_read_head ? _db.cd_fdin_read_head->cd_fdin_read_prev : NULL;
     return *row;
@@ -277,13 +277,13 @@ inline lib_ams::FFdin& lib_ams::cd_fdin_read_qLast() {
 
 // --- lib_ams.FDb.zd_flush.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::zd_flush_EmptyQ() {
+inline bool lib_ams::zd_flush_EmptyQ() throw() {
     return _db.zd_flush_head == NULL;
 }
 
 // --- lib_ams.FDb.zd_flush.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FWritefile* lib_ams::zd_flush_First() {
+inline lib_ams::FWritefile* lib_ams::zd_flush_First() throw() {
     lib_ams::FWritefile *row = NULL;
     row = _db.zd_flush_head;
     return row;
@@ -291,7 +291,7 @@ inline lib_ams::FWritefile* lib_ams::zd_flush_First() {
 
 // --- lib_ams.FDb.zd_flush.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_ams::zd_flush_InLlistQ(lib_ams::FWritefile& row) {
+inline bool lib_ams::zd_flush_InLlistQ(lib_ams::FWritefile& row) throw() {
     bool result = false;
     result = !(row.zd_flush_next == (lib_ams::FWritefile*)-1);
     return result;
@@ -299,7 +299,7 @@ inline bool lib_ams::zd_flush_InLlistQ(lib_ams::FWritefile& row) {
 
 // --- lib_ams.FDb.zd_flush.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FWritefile* lib_ams::zd_flush_Last() {
+inline lib_ams::FWritefile* lib_ams::zd_flush_Last() throw() {
     lib_ams::FWritefile *row = NULL;
     row = _db.zd_flush_tail;
     return row;
@@ -307,25 +307,25 @@ inline lib_ams::FWritefile* lib_ams::zd_flush_Last() {
 
 // --- lib_ams.FDb.zd_flush.N
 // Return number of items in the linked list
-inline i32 lib_ams::zd_flush_N() {
+inline i32 lib_ams::zd_flush_N() throw() {
     return _db.zd_flush_n;
 }
 
 // --- lib_ams.FDb.zd_flush.Next
 // Return pointer to next element in the list
-inline lib_ams::FWritefile* lib_ams::zd_flush_Next(lib_ams::FWritefile &row) {
+inline lib_ams::FWritefile* lib_ams::zd_flush_Next(lib_ams::FWritefile &row) throw() {
     return row.zd_flush_next;
 }
 
 // --- lib_ams.FDb.zd_flush.Prev
 // Return pointer to previous element in the list
-inline lib_ams::FWritefile* lib_ams::zd_flush_Prev(lib_ams::FWritefile &row) {
+inline lib_ams::FWritefile* lib_ams::zd_flush_Prev(lib_ams::FWritefile &row) throw() {
     return row.zd_flush_prev;
 }
 
 // --- lib_ams.FDb.zd_flush.qLast
 // Return reference to last element in the index. No bounds checking.
-inline lib_ams::FWritefile& lib_ams::zd_flush_qLast() {
+inline lib_ams::FWritefile& lib_ams::zd_flush_qLast() throw() {
     lib_ams::FWritefile *row = NULL;
     row = _db.zd_flush_tail;
     return *row;
@@ -333,13 +333,13 @@ inline lib_ams::FWritefile& lib_ams::zd_flush_qLast() {
 
 // --- lib_ams.FDb.stream.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::stream_EmptyQ() {
+inline bool lib_ams::stream_EmptyQ() throw() {
     return _db.stream_n == 0;
 }
 
 // --- lib_ams.FDb.stream.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_ams::FStream* lib_ams::stream_Find(u64 t) {
+inline lib_ams::FStream* lib_ams::stream_Find(u64 t) throw() {
     lib_ams::FStream *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.stream_n))) {
         u64 x = t + 1;
@@ -353,19 +353,19 @@ inline lib_ams::FStream* lib_ams::stream_Find(u64 t) {
 
 // --- lib_ams.FDb.stream.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline lib_ams::FStream* lib_ams::stream_Last() {
+inline lib_ams::FStream* lib_ams::stream_Last() throw() {
     return stream_Find(u64(_db.stream_n-1));
 }
 
 // --- lib_ams.FDb.stream.N
 // Return number of items in the pool
-inline i32 lib_ams::stream_N() {
+inline i32 lib_ams::stream_N() throw() {
     return _db.stream_n;
 }
 
 // --- lib_ams.FDb.stream.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline lib_ams::FStream& lib_ams::stream_qFind(u64 t) {
+inline lib_ams::FStream& lib_ams::stream_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -375,25 +375,25 @@ inline lib_ams::FStream& lib_ams::stream_qFind(u64 t) {
 
 // --- lib_ams.FDb.ind_stream.EmptyQ
 // Return true if hash is empty
-inline bool lib_ams::ind_stream_EmptyQ() {
+inline bool lib_ams::ind_stream_EmptyQ() throw() {
     return _db.ind_stream_n == 0;
 }
 
 // --- lib_ams.FDb.ind_stream.N
 // Return number of items in the hash
-inline i32 lib_ams::ind_stream_N() {
+inline i32 lib_ams::ind_stream_N() throw() {
     return _db.ind_stream_n;
 }
 
 // --- lib_ams.FDb.cd_stream_hb.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::cd_stream_hb_EmptyQ() {
+inline bool lib_ams::cd_stream_hb_EmptyQ() throw() {
     return _db.cd_stream_hb_head == NULL;
 }
 
 // --- lib_ams.FDb.cd_stream_hb.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FStream* lib_ams::cd_stream_hb_First() {
+inline lib_ams::FStream* lib_ams::cd_stream_hb_First() throw() {
     lib_ams::FStream *row = NULL;
     row = _db.cd_stream_hb_head;
     return row;
@@ -401,7 +401,7 @@ inline lib_ams::FStream* lib_ams::cd_stream_hb_First() {
 
 // --- lib_ams.FDb.cd_stream_hb.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_ams::cd_stream_hb_InLlistQ(lib_ams::FStream& row) {
+inline bool lib_ams::cd_stream_hb_InLlistQ(lib_ams::FStream& row) throw() {
     bool result = false;
     result = !(row.cd_stream_hb_next == (lib_ams::FStream*)-1);
     return result;
@@ -409,7 +409,7 @@ inline bool lib_ams::cd_stream_hb_InLlistQ(lib_ams::FStream& row) {
 
 // --- lib_ams.FDb.cd_stream_hb.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FStream* lib_ams::cd_stream_hb_Last() {
+inline lib_ams::FStream* lib_ams::cd_stream_hb_Last() throw() {
     lib_ams::FStream *row = NULL;
     row = _db.cd_stream_hb_head ? _db.cd_stream_hb_head->cd_stream_hb_prev : NULL;
     return row;
@@ -417,25 +417,25 @@ inline lib_ams::FStream* lib_ams::cd_stream_hb_Last() {
 
 // --- lib_ams.FDb.cd_stream_hb.N
 // Return number of items in the linked list
-inline i32 lib_ams::cd_stream_hb_N() {
+inline i32 lib_ams::cd_stream_hb_N() throw() {
     return _db.cd_stream_hb_n;
 }
 
 // --- lib_ams.FDb.cd_stream_hb.Next
 // Return pointer to next element in the list
-inline lib_ams::FStream* lib_ams::cd_stream_hb_Next(lib_ams::FStream &row) {
+inline lib_ams::FStream* lib_ams::cd_stream_hb_Next(lib_ams::FStream &row) throw() {
     return row.cd_stream_hb_next;
 }
 
 // --- lib_ams.FDb.cd_stream_hb.Prev
 // Return pointer to previous element in the list
-inline lib_ams::FStream* lib_ams::cd_stream_hb_Prev(lib_ams::FStream &row) {
+inline lib_ams::FStream* lib_ams::cd_stream_hb_Prev(lib_ams::FStream &row) throw() {
     return row.cd_stream_hb_prev;
 }
 
 // --- lib_ams.FDb.cd_stream_hb.qLast
 // Return reference to last element in the index. No bounds checking.
-inline lib_ams::FStream& lib_ams::cd_stream_hb_qLast() {
+inline lib_ams::FStream& lib_ams::cd_stream_hb_qLast() throw() {
     lib_ams::FStream *row = NULL;
     row = _db.cd_stream_hb_head ? _db.cd_stream_hb_head->cd_stream_hb_prev : NULL;
     return *row;
@@ -443,13 +443,13 @@ inline lib_ams::FStream& lib_ams::cd_stream_hb_qLast() {
 
 // --- lib_ams.FDb.cd_poll_read.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::cd_poll_read_EmptyQ() {
+inline bool lib_ams::cd_poll_read_EmptyQ() throw() {
     return _db.cd_poll_read_head == NULL;
 }
 
 // --- lib_ams.FDb.cd_poll_read.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FStream* lib_ams::cd_poll_read_First() {
+inline lib_ams::FStream* lib_ams::cd_poll_read_First() throw() {
     lib_ams::FStream *row = NULL;
     row = _db.cd_poll_read_head;
     return row;
@@ -457,7 +457,7 @@ inline lib_ams::FStream* lib_ams::cd_poll_read_First() {
 
 // --- lib_ams.FDb.cd_poll_read.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_ams::cd_poll_read_InLlistQ(lib_ams::FStream& row) {
+inline bool lib_ams::cd_poll_read_InLlistQ(lib_ams::FStream& row) throw() {
     bool result = false;
     result = !(row.cd_poll_read_next == (lib_ams::FStream*)-1);
     return result;
@@ -465,7 +465,7 @@ inline bool lib_ams::cd_poll_read_InLlistQ(lib_ams::FStream& row) {
 
 // --- lib_ams.FDb.cd_poll_read.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FStream* lib_ams::cd_poll_read_Last() {
+inline lib_ams::FStream* lib_ams::cd_poll_read_Last() throw() {
     lib_ams::FStream *row = NULL;
     row = _db.cd_poll_read_head ? _db.cd_poll_read_head->cd_poll_read_prev : NULL;
     return row;
@@ -473,25 +473,25 @@ inline lib_ams::FStream* lib_ams::cd_poll_read_Last() {
 
 // --- lib_ams.FDb.cd_poll_read.N
 // Return number of items in the linked list
-inline i32 lib_ams::cd_poll_read_N() {
+inline i32 lib_ams::cd_poll_read_N() throw() {
     return _db.cd_poll_read_n;
 }
 
 // --- lib_ams.FDb.cd_poll_read.Next
 // Return pointer to next element in the list
-inline lib_ams::FStream* lib_ams::cd_poll_read_Next(lib_ams::FStream &row) {
+inline lib_ams::FStream* lib_ams::cd_poll_read_Next(lib_ams::FStream &row) throw() {
     return row.cd_poll_read_next;
 }
 
 // --- lib_ams.FDb.cd_poll_read.Prev
 // Return pointer to previous element in the list
-inline lib_ams::FStream* lib_ams::cd_poll_read_Prev(lib_ams::FStream &row) {
+inline lib_ams::FStream* lib_ams::cd_poll_read_Prev(lib_ams::FStream &row) throw() {
     return row.cd_poll_read_prev;
 }
 
 // --- lib_ams.FDb.cd_poll_read.qLast
 // Return reference to last element in the index. No bounds checking.
-inline lib_ams::FStream& lib_ams::cd_poll_read_qLast() {
+inline lib_ams::FStream& lib_ams::cd_poll_read_qLast() throw() {
     lib_ams::FStream *row = NULL;
     row = _db.cd_poll_read_head ? _db.cd_poll_read_head->cd_poll_read_prev : NULL;
     return *row;
@@ -499,37 +499,37 @@ inline lib_ams::FStream& lib_ams::cd_poll_read_qLast() {
 
 // --- lib_ams.FDb.ind_proc.EmptyQ
 // Return true if hash is empty
-inline bool lib_ams::ind_proc_EmptyQ() {
+inline bool lib_ams::ind_proc_EmptyQ() throw() {
     return _db.ind_proc_n == 0;
 }
 
 // --- lib_ams.FDb.ind_proc.N
 // Return number of items in the hash
-inline i32 lib_ams::ind_proc_N() {
+inline i32 lib_ams::ind_proc_N() throw() {
     return _db.ind_proc_n;
 }
 
 // --- lib_ams.FDb.ind_member.EmptyQ
 // Return true if hash is empty
-inline bool lib_ams::ind_member_EmptyQ() {
+inline bool lib_ams::ind_member_EmptyQ() throw() {
     return _db.ind_member_n == 0;
 }
 
 // --- lib_ams.FDb.ind_member.N
 // Return number of items in the hash
-inline i32 lib_ams::ind_member_N() {
+inline i32 lib_ams::ind_member_N() throw() {
     return _db.ind_member_n;
 }
 
 // --- lib_ams.FDb.streamtype.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::streamtype_EmptyQ() {
+inline bool lib_ams::streamtype_EmptyQ() throw() {
     return _db.streamtype_n == 0;
 }
 
 // --- lib_ams.FDb.streamtype.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_ams::FStreamType* lib_ams::streamtype_Find(u64 t) {
+inline lib_ams::FStreamType* lib_ams::streamtype_Find(u64 t) throw() {
     lib_ams::FStreamType *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.streamtype_n))) {
         u64 x = t + 1;
@@ -543,19 +543,19 @@ inline lib_ams::FStreamType* lib_ams::streamtype_Find(u64 t) {
 
 // --- lib_ams.FDb.streamtype.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline lib_ams::FStreamType* lib_ams::streamtype_Last() {
+inline lib_ams::FStreamType* lib_ams::streamtype_Last() throw() {
     return streamtype_Find(u64(_db.streamtype_n-1));
 }
 
 // --- lib_ams.FDb.streamtype.N
 // Return number of items in the pool
-inline i32 lib_ams::streamtype_N() {
+inline i32 lib_ams::streamtype_N() throw() {
     return _db.streamtype_n;
 }
 
 // --- lib_ams.FDb.streamtype.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline lib_ams::FStreamType& lib_ams::streamtype_qFind(u64 t) {
+inline lib_ams::FStreamType& lib_ams::streamtype_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -565,25 +565,25 @@ inline lib_ams::FStreamType& lib_ams::streamtype_qFind(u64 t) {
 
 // --- lib_ams.FDb.ind_streamtype.EmptyQ
 // Return true if hash is empty
-inline bool lib_ams::ind_streamtype_EmptyQ() {
+inline bool lib_ams::ind_streamtype_EmptyQ() throw() {
     return _db.ind_streamtype_n == 0;
 }
 
 // --- lib_ams.FDb.ind_streamtype.N
 // Return number of items in the hash
-inline i32 lib_ams::ind_streamtype_N() {
+inline i32 lib_ams::ind_streamtype_N() throw() {
     return _db.ind_streamtype_n;
 }
 
 // --- lib_ams.FDb.zd_ctlin.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::zd_ctlin_EmptyQ() {
+inline bool lib_ams::zd_ctlin_EmptyQ() throw() {
     return _db.zd_ctlin_head == NULL;
 }
 
 // --- lib_ams.FDb.zd_ctlin.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FStream* lib_ams::zd_ctlin_First() {
+inline lib_ams::FStream* lib_ams::zd_ctlin_First() throw() {
     lib_ams::FStream *row = NULL;
     row = _db.zd_ctlin_head;
     return row;
@@ -591,7 +591,7 @@ inline lib_ams::FStream* lib_ams::zd_ctlin_First() {
 
 // --- lib_ams.FDb.zd_ctlin.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_ams::zd_ctlin_InLlistQ(lib_ams::FStream& row) {
+inline bool lib_ams::zd_ctlin_InLlistQ(lib_ams::FStream& row) throw() {
     bool result = false;
     result = !(row.zd_ctlin_next == (lib_ams::FStream*)-1);
     return result;
@@ -599,7 +599,7 @@ inline bool lib_ams::zd_ctlin_InLlistQ(lib_ams::FStream& row) {
 
 // --- lib_ams.FDb.zd_ctlin.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FStream* lib_ams::zd_ctlin_Last() {
+inline lib_ams::FStream* lib_ams::zd_ctlin_Last() throw() {
     lib_ams::FStream *row = NULL;
     row = _db.zd_ctlin_tail;
     return row;
@@ -607,25 +607,25 @@ inline lib_ams::FStream* lib_ams::zd_ctlin_Last() {
 
 // --- lib_ams.FDb.zd_ctlin.N
 // Return number of items in the linked list
-inline i32 lib_ams::zd_ctlin_N() {
+inline i32 lib_ams::zd_ctlin_N() throw() {
     return _db.zd_ctlin_n;
 }
 
 // --- lib_ams.FDb.zd_ctlin.Next
 // Return pointer to next element in the list
-inline lib_ams::FStream* lib_ams::zd_ctlin_Next(lib_ams::FStream &row) {
+inline lib_ams::FStream* lib_ams::zd_ctlin_Next(lib_ams::FStream &row) throw() {
     return row.zd_ctlin_next;
 }
 
 // --- lib_ams.FDb.zd_ctlin.Prev
 // Return pointer to previous element in the list
-inline lib_ams::FStream* lib_ams::zd_ctlin_Prev(lib_ams::FStream &row) {
+inline lib_ams::FStream* lib_ams::zd_ctlin_Prev(lib_ams::FStream &row) throw() {
     return row.zd_ctlin_prev;
 }
 
 // --- lib_ams.FDb.zd_ctlin.qLast
 // Return reference to last element in the index. No bounds checking.
-inline lib_ams::FStream& lib_ams::zd_ctlin_qLast() {
+inline lib_ams::FStream& lib_ams::zd_ctlin_qLast() throw() {
     lib_ams::FStream *row = NULL;
     row = _db.zd_ctlin_tail;
     return *row;
@@ -633,13 +633,13 @@ inline lib_ams::FStream& lib_ams::zd_ctlin_qLast() {
 
 // --- lib_ams.FDb.zd_proc.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::zd_proc_EmptyQ() {
+inline bool lib_ams::zd_proc_EmptyQ() throw() {
     return _db.zd_proc_head == NULL;
 }
 
 // --- lib_ams.FDb.zd_proc.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FProc* lib_ams::zd_proc_First() {
+inline lib_ams::FProc* lib_ams::zd_proc_First() throw() {
     lib_ams::FProc *row = NULL;
     row = _db.zd_proc_head;
     return row;
@@ -647,7 +647,7 @@ inline lib_ams::FProc* lib_ams::zd_proc_First() {
 
 // --- lib_ams.FDb.zd_proc.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_ams::zd_proc_InLlistQ(lib_ams::FProc& row) {
+inline bool lib_ams::zd_proc_InLlistQ(lib_ams::FProc& row) throw() {
     bool result = false;
     result = !(row.zd_proc_next == (lib_ams::FProc*)-1);
     return result;
@@ -655,7 +655,7 @@ inline bool lib_ams::zd_proc_InLlistQ(lib_ams::FProc& row) {
 
 // --- lib_ams.FDb.zd_proc.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FProc* lib_ams::zd_proc_Last() {
+inline lib_ams::FProc* lib_ams::zd_proc_Last() throw() {
     lib_ams::FProc *row = NULL;
     row = _db.zd_proc_tail;
     return row;
@@ -663,25 +663,25 @@ inline lib_ams::FProc* lib_ams::zd_proc_Last() {
 
 // --- lib_ams.FDb.zd_proc.N
 // Return number of items in the linked list
-inline i32 lib_ams::zd_proc_N() {
+inline i32 lib_ams::zd_proc_N() throw() {
     return _db.zd_proc_n;
 }
 
 // --- lib_ams.FDb.zd_proc.Next
 // Return pointer to next element in the list
-inline lib_ams::FProc* lib_ams::zd_proc_Next(lib_ams::FProc &row) {
+inline lib_ams::FProc* lib_ams::zd_proc_Next(lib_ams::FProc &row) throw() {
     return row.zd_proc_next;
 }
 
 // --- lib_ams.FDb.zd_proc.Prev
 // Return pointer to previous element in the list
-inline lib_ams::FProc* lib_ams::zd_proc_Prev(lib_ams::FProc &row) {
+inline lib_ams::FProc* lib_ams::zd_proc_Prev(lib_ams::FProc &row) throw() {
     return row.zd_proc_prev;
 }
 
 // --- lib_ams.FDb.zd_proc.qLast
 // Return reference to last element in the index. No bounds checking.
-inline lib_ams::FProc& lib_ams::zd_proc_qLast() {
+inline lib_ams::FProc& lib_ams::zd_proc_qLast() throw() {
     lib_ams::FProc *row = NULL;
     row = _db.zd_proc_tail;
     return *row;
@@ -689,45 +689,45 @@ inline lib_ams::FProc& lib_ams::zd_proc_qLast() {
 
 // --- lib_ams.FDb.fdin_curs.Reset
 // cursor points to valid item
-inline void lib_ams::_db_fdin_curs_Reset(_db_fdin_curs &curs, lib_ams::FDb &parent) {
+inline void lib_ams::_db_fdin_curs_Reset(_db_fdin_curs &curs, lib_ams::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- lib_ams.FDb.fdin_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::_db_fdin_curs_ValidQ(_db_fdin_curs &curs) {
+inline bool lib_ams::_db_fdin_curs_ValidQ(_db_fdin_curs &curs) throw() {
     return curs.index < _db.fdin_n;
 }
 
 // --- lib_ams.FDb.fdin_curs.Next
 // proceed to next item
-inline void lib_ams::_db_fdin_curs_Next(_db_fdin_curs &curs) {
+inline void lib_ams::_db_fdin_curs_Next(_db_fdin_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_ams.FDb.fdin_curs.Access
 // item access
-inline lib_ams::FFdin& lib_ams::_db_fdin_curs_Access(_db_fdin_curs &curs) {
+inline lib_ams::FFdin& lib_ams::_db_fdin_curs_Access(_db_fdin_curs &curs) throw() {
     return fdin_qFind(u64(curs.index));
 }
 
 // --- lib_ams.FDb.cd_fdin_eof_curs.Reset
 // cursor points to valid item
-inline void lib_ams::_db_cd_fdin_eof_curs_Reset(_db_cd_fdin_eof_curs &curs, lib_ams::FDb &parent) {
+inline void lib_ams::_db_cd_fdin_eof_curs_Reset(_db_cd_fdin_eof_curs &curs, lib_ams::FDb &parent) throw() {
     curs.row = parent.cd_fdin_eof_head;
     curs.head = &parent.cd_fdin_eof_head;
 }
 
 // --- lib_ams.FDb.cd_fdin_eof_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::_db_cd_fdin_eof_curs_ValidQ(_db_cd_fdin_eof_curs &curs) {
+inline bool lib_ams::_db_cd_fdin_eof_curs_ValidQ(_db_cd_fdin_eof_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- lib_ams.FDb.cd_fdin_eof_curs.Next
 // proceed to next item
-inline void lib_ams::_db_cd_fdin_eof_curs_Next(_db_cd_fdin_eof_curs &curs) {
+inline void lib_ams::_db_cd_fdin_eof_curs_Next(_db_cd_fdin_eof_curs &curs) throw() {
     lib_ams::FFdin *next = (*curs.row).cd_fdin_eof_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -737,26 +737,26 @@ inline void lib_ams::_db_cd_fdin_eof_curs_Next(_db_cd_fdin_eof_curs &curs) {
 
 // --- lib_ams.FDb.cd_fdin_eof_curs.Access
 // item access
-inline lib_ams::FFdin& lib_ams::_db_cd_fdin_eof_curs_Access(_db_cd_fdin_eof_curs &curs) {
+inline lib_ams::FFdin& lib_ams::_db_cd_fdin_eof_curs_Access(_db_cd_fdin_eof_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- lib_ams.FDb.cd_fdin_read_curs.Reset
 // cursor points to valid item
-inline void lib_ams::_db_cd_fdin_read_curs_Reset(_db_cd_fdin_read_curs &curs, lib_ams::FDb &parent) {
+inline void lib_ams::_db_cd_fdin_read_curs_Reset(_db_cd_fdin_read_curs &curs, lib_ams::FDb &parent) throw() {
     curs.row = parent.cd_fdin_read_head;
     curs.head = &parent.cd_fdin_read_head;
 }
 
 // --- lib_ams.FDb.cd_fdin_read_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::_db_cd_fdin_read_curs_ValidQ(_db_cd_fdin_read_curs &curs) {
+inline bool lib_ams::_db_cd_fdin_read_curs_ValidQ(_db_cd_fdin_read_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- lib_ams.FDb.cd_fdin_read_curs.Next
 // proceed to next item
-inline void lib_ams::_db_cd_fdin_read_curs_Next(_db_cd_fdin_read_curs &curs) {
+inline void lib_ams::_db_cd_fdin_read_curs_Next(_db_cd_fdin_read_curs &curs) throw() {
     lib_ams::FFdin *next = (*curs.row).cd_fdin_read_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -766,76 +766,76 @@ inline void lib_ams::_db_cd_fdin_read_curs_Next(_db_cd_fdin_read_curs &curs) {
 
 // --- lib_ams.FDb.cd_fdin_read_curs.Access
 // item access
-inline lib_ams::FFdin& lib_ams::_db_cd_fdin_read_curs_Access(_db_cd_fdin_read_curs &curs) {
+inline lib_ams::FFdin& lib_ams::_db_cd_fdin_read_curs_Access(_db_cd_fdin_read_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- lib_ams.FDb.zd_flush_curs.Reset
 // cursor points to valid item
-inline void lib_ams::_db_zd_flush_curs_Reset(_db_zd_flush_curs &curs, lib_ams::FDb &parent) {
+inline void lib_ams::_db_zd_flush_curs_Reset(_db_zd_flush_curs &curs, lib_ams::FDb &parent) throw() {
     curs.row = parent.zd_flush_head;
 }
 
 // --- lib_ams.FDb.zd_flush_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::_db_zd_flush_curs_ValidQ(_db_zd_flush_curs &curs) {
+inline bool lib_ams::_db_zd_flush_curs_ValidQ(_db_zd_flush_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- lib_ams.FDb.zd_flush_curs.Next
 // proceed to next item
-inline void lib_ams::_db_zd_flush_curs_Next(_db_zd_flush_curs &curs) {
+inline void lib_ams::_db_zd_flush_curs_Next(_db_zd_flush_curs &curs) throw() {
     lib_ams::FWritefile *next = (*curs.row).zd_flush_next;
     curs.row = next;
 }
 
 // --- lib_ams.FDb.zd_flush_curs.Access
 // item access
-inline lib_ams::FWritefile& lib_ams::_db_zd_flush_curs_Access(_db_zd_flush_curs &curs) {
+inline lib_ams::FWritefile& lib_ams::_db_zd_flush_curs_Access(_db_zd_flush_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- lib_ams.FDb.stream_curs.Reset
 // cursor points to valid item
-inline void lib_ams::_db_stream_curs_Reset(_db_stream_curs &curs, lib_ams::FDb &parent) {
+inline void lib_ams::_db_stream_curs_Reset(_db_stream_curs &curs, lib_ams::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- lib_ams.FDb.stream_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::_db_stream_curs_ValidQ(_db_stream_curs &curs) {
+inline bool lib_ams::_db_stream_curs_ValidQ(_db_stream_curs &curs) throw() {
     return curs.index < _db.stream_n;
 }
 
 // --- lib_ams.FDb.stream_curs.Next
 // proceed to next item
-inline void lib_ams::_db_stream_curs_Next(_db_stream_curs &curs) {
+inline void lib_ams::_db_stream_curs_Next(_db_stream_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_ams.FDb.stream_curs.Access
 // item access
-inline lib_ams::FStream& lib_ams::_db_stream_curs_Access(_db_stream_curs &curs) {
+inline lib_ams::FStream& lib_ams::_db_stream_curs_Access(_db_stream_curs &curs) throw() {
     return stream_qFind(u64(curs.index));
 }
 
 // --- lib_ams.FDb.cd_stream_hb_curs.Reset
 // cursor points to valid item
-inline void lib_ams::_db_cd_stream_hb_curs_Reset(_db_cd_stream_hb_curs &curs, lib_ams::FDb &parent) {
+inline void lib_ams::_db_cd_stream_hb_curs_Reset(_db_cd_stream_hb_curs &curs, lib_ams::FDb &parent) throw() {
     curs.row = parent.cd_stream_hb_head;
     curs.head = &parent.cd_stream_hb_head;
 }
 
 // --- lib_ams.FDb.cd_stream_hb_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::_db_cd_stream_hb_curs_ValidQ(_db_cd_stream_hb_curs &curs) {
+inline bool lib_ams::_db_cd_stream_hb_curs_ValidQ(_db_cd_stream_hb_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- lib_ams.FDb.cd_stream_hb_curs.Next
 // proceed to next item
-inline void lib_ams::_db_cd_stream_hb_curs_Next(_db_cd_stream_hb_curs &curs) {
+inline void lib_ams::_db_cd_stream_hb_curs_Next(_db_cd_stream_hb_curs &curs) throw() {
     lib_ams::FStream *next = (*curs.row).cd_stream_hb_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -845,26 +845,26 @@ inline void lib_ams::_db_cd_stream_hb_curs_Next(_db_cd_stream_hb_curs &curs) {
 
 // --- lib_ams.FDb.cd_stream_hb_curs.Access
 // item access
-inline lib_ams::FStream& lib_ams::_db_cd_stream_hb_curs_Access(_db_cd_stream_hb_curs &curs) {
+inline lib_ams::FStream& lib_ams::_db_cd_stream_hb_curs_Access(_db_cd_stream_hb_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- lib_ams.FDb.cd_poll_read_curs.Reset
 // cursor points to valid item
-inline void lib_ams::_db_cd_poll_read_curs_Reset(_db_cd_poll_read_curs &curs, lib_ams::FDb &parent) {
+inline void lib_ams::_db_cd_poll_read_curs_Reset(_db_cd_poll_read_curs &curs, lib_ams::FDb &parent) throw() {
     curs.row = parent.cd_poll_read_head;
     curs.head = &parent.cd_poll_read_head;
 }
 
 // --- lib_ams.FDb.cd_poll_read_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::_db_cd_poll_read_curs_ValidQ(_db_cd_poll_read_curs &curs) {
+inline bool lib_ams::_db_cd_poll_read_curs_ValidQ(_db_cd_poll_read_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- lib_ams.FDb.cd_poll_read_curs.Next
 // proceed to next item
-inline void lib_ams::_db_cd_poll_read_curs_Next(_db_cd_poll_read_curs &curs) {
+inline void lib_ams::_db_cd_poll_read_curs_Next(_db_cd_poll_read_curs &curs) throw() {
     lib_ams::FStream *next = (*curs.row).cd_poll_read_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -874,107 +874,107 @@ inline void lib_ams::_db_cd_poll_read_curs_Next(_db_cd_poll_read_curs &curs) {
 
 // --- lib_ams.FDb.cd_poll_read_curs.Access
 // item access
-inline lib_ams::FStream& lib_ams::_db_cd_poll_read_curs_Access(_db_cd_poll_read_curs &curs) {
+inline lib_ams::FStream& lib_ams::_db_cd_poll_read_curs_Access(_db_cd_poll_read_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- lib_ams.FDb.streamtype_curs.Reset
 // cursor points to valid item
-inline void lib_ams::_db_streamtype_curs_Reset(_db_streamtype_curs &curs, lib_ams::FDb &parent) {
+inline void lib_ams::_db_streamtype_curs_Reset(_db_streamtype_curs &curs, lib_ams::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- lib_ams.FDb.streamtype_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::_db_streamtype_curs_ValidQ(_db_streamtype_curs &curs) {
+inline bool lib_ams::_db_streamtype_curs_ValidQ(_db_streamtype_curs &curs) throw() {
     return curs.index < _db.streamtype_n;
 }
 
 // --- lib_ams.FDb.streamtype_curs.Next
 // proceed to next item
-inline void lib_ams::_db_streamtype_curs_Next(_db_streamtype_curs &curs) {
+inline void lib_ams::_db_streamtype_curs_Next(_db_streamtype_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_ams.FDb.streamtype_curs.Access
 // item access
-inline lib_ams::FStreamType& lib_ams::_db_streamtype_curs_Access(_db_streamtype_curs &curs) {
+inline lib_ams::FStreamType& lib_ams::_db_streamtype_curs_Access(_db_streamtype_curs &curs) throw() {
     return streamtype_qFind(u64(curs.index));
 }
 
 // --- lib_ams.FDb.zd_ctlin_curs.Reset
 // cursor points to valid item
-inline void lib_ams::_db_zd_ctlin_curs_Reset(_db_zd_ctlin_curs &curs, lib_ams::FDb &parent) {
+inline void lib_ams::_db_zd_ctlin_curs_Reset(_db_zd_ctlin_curs &curs, lib_ams::FDb &parent) throw() {
     curs.row = parent.zd_ctlin_head;
 }
 
 // --- lib_ams.FDb.zd_ctlin_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::_db_zd_ctlin_curs_ValidQ(_db_zd_ctlin_curs &curs) {
+inline bool lib_ams::_db_zd_ctlin_curs_ValidQ(_db_zd_ctlin_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- lib_ams.FDb.zd_ctlin_curs.Next
 // proceed to next item
-inline void lib_ams::_db_zd_ctlin_curs_Next(_db_zd_ctlin_curs &curs) {
+inline void lib_ams::_db_zd_ctlin_curs_Next(_db_zd_ctlin_curs &curs) throw() {
     lib_ams::FStream *next = (*curs.row).zd_ctlin_next;
     curs.row = next;
 }
 
 // --- lib_ams.FDb.zd_ctlin_curs.Access
 // item access
-inline lib_ams::FStream& lib_ams::_db_zd_ctlin_curs_Access(_db_zd_ctlin_curs &curs) {
+inline lib_ams::FStream& lib_ams::_db_zd_ctlin_curs_Access(_db_zd_ctlin_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- lib_ams.FDb.zd_proc_curs.Reset
 // cursor points to valid item
-inline void lib_ams::_db_zd_proc_curs_Reset(_db_zd_proc_curs &curs, lib_ams::FDb &parent) {
+inline void lib_ams::_db_zd_proc_curs_Reset(_db_zd_proc_curs &curs, lib_ams::FDb &parent) throw() {
     curs.row = parent.zd_proc_head;
 }
 
 // --- lib_ams.FDb.zd_proc_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::_db_zd_proc_curs_ValidQ(_db_zd_proc_curs &curs) {
+inline bool lib_ams::_db_zd_proc_curs_ValidQ(_db_zd_proc_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- lib_ams.FDb.zd_proc_curs.Next
 // proceed to next item
-inline void lib_ams::_db_zd_proc_curs_Next(_db_zd_proc_curs &curs) {
+inline void lib_ams::_db_zd_proc_curs_Next(_db_zd_proc_curs &curs) throw() {
     lib_ams::FProc *next = (*curs.row).zd_proc_next;
     curs.row = next;
 }
 
 // --- lib_ams.FDb.zd_proc_curs.Access
 // item access
-inline lib_ams::FProc& lib_ams::_db_zd_proc_curs_Access(_db_zd_proc_curs &curs) {
+inline lib_ams::FProc& lib_ams::_db_zd_proc_curs_Access(_db_zd_proc_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- lib_ams.FFdin.in.Max
 // Return max. number of bytes in the buffer.
-inline i32 lib_ams::in_Max(lib_ams::FFdin& fdin) {
+inline i32 lib_ams::in_Max(lib_ams::FFdin& fdin) throw() {
     return 8192;
     (void)fdin;//only to avoid -Wunused-parameter
 }
 
 // --- lib_ams.FFdin.in.N
 // Return number of bytes in the buffer.
-inline i32 lib_ams::in_N(lib_ams::FFdin& fdin) {
+inline i32 lib_ams::in_N(lib_ams::FFdin& fdin) throw() {
     return fdin.in_end - fdin.in_start;
 }
 
 // --- lib_ams.FFdin..Ctor
-inline  lib_ams::FFdin::FFdin() {
+inline  lib_ams::FFdin::FFdin() throw() {
     lib_ams::FFdin_Init(*this);
     // added because lib_ams.FFdin.in (Fbuf) does not need initialization
     // coverity[uninit_member]
 }
 
 // --- lib_ams.FFdin..Dtor
-inline  lib_ams::FFdin::~FFdin() {
+inline  lib_ams::FFdin::~FFdin() throw() {
     lib_ams::FFdin_Uninit(*this);
 }
 
@@ -993,24 +993,24 @@ inline void lib_ams::FMember_Init(lib_ams::FMember& member) {
 }
 
 // --- lib_ams.FMember..Ctor
-inline  lib_ams::FMember::FMember() {
+inline  lib_ams::FMember::FMember() throw() {
     lib_ams::FMember_Init(*this);
 }
 
 // --- lib_ams.FMember..Dtor
-inline  lib_ams::FMember::~FMember() {
+inline  lib_ams::FMember::~FMember() throw() {
     lib_ams::FMember_Uninit(*this);
 }
 
 // --- lib_ams.FProc.zd_member_byproc.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::zd_member_byproc_EmptyQ(lib_ams::FProc& proc) {
+inline bool lib_ams::zd_member_byproc_EmptyQ(lib_ams::FProc& proc) throw() {
     return proc.zd_member_byproc_head == NULL;
 }
 
 // --- lib_ams.FProc.zd_member_byproc.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FMember* lib_ams::zd_member_byproc_First(lib_ams::FProc& proc) {
+inline lib_ams::FMember* lib_ams::zd_member_byproc_First(lib_ams::FProc& proc) throw() {
     lib_ams::FMember *row = NULL;
     row = proc.zd_member_byproc_head;
     return row;
@@ -1018,7 +1018,7 @@ inline lib_ams::FMember* lib_ams::zd_member_byproc_First(lib_ams::FProc& proc) {
 
 // --- lib_ams.FProc.zd_member_byproc.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_ams::zd_member_byproc_InLlistQ(lib_ams::FMember& row) {
+inline bool lib_ams::zd_member_byproc_InLlistQ(lib_ams::FMember& row) throw() {
     bool result = false;
     result = !(row.zd_member_byproc_next == (lib_ams::FMember*)-1);
     return result;
@@ -1026,7 +1026,7 @@ inline bool lib_ams::zd_member_byproc_InLlistQ(lib_ams::FMember& row) {
 
 // --- lib_ams.FProc.zd_member_byproc.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FMember* lib_ams::zd_member_byproc_Last(lib_ams::FProc& proc) {
+inline lib_ams::FMember* lib_ams::zd_member_byproc_Last(lib_ams::FProc& proc) throw() {
     lib_ams::FMember *row = NULL;
     row = proc.zd_member_byproc_tail;
     return row;
@@ -1034,25 +1034,25 @@ inline lib_ams::FMember* lib_ams::zd_member_byproc_Last(lib_ams::FProc& proc) {
 
 // --- lib_ams.FProc.zd_member_byproc.N
 // Return number of items in the linked list
-inline i32 lib_ams::zd_member_byproc_N(const lib_ams::FProc& proc) {
+inline i32 lib_ams::zd_member_byproc_N(const lib_ams::FProc& proc) throw() {
     return proc.zd_member_byproc_n;
 }
 
 // --- lib_ams.FProc.zd_member_byproc.Next
 // Return pointer to next element in the list
-inline lib_ams::FMember* lib_ams::zd_member_byproc_Next(lib_ams::FMember &row) {
+inline lib_ams::FMember* lib_ams::zd_member_byproc_Next(lib_ams::FMember &row) throw() {
     return row.zd_member_byproc_next;
 }
 
 // --- lib_ams.FProc.zd_member_byproc.Prev
 // Return pointer to previous element in the list
-inline lib_ams::FMember* lib_ams::zd_member_byproc_Prev(lib_ams::FMember &row) {
+inline lib_ams::FMember* lib_ams::zd_member_byproc_Prev(lib_ams::FMember &row) throw() {
     return row.zd_member_byproc_prev;
 }
 
 // --- lib_ams.FProc.zd_member_byproc.qLast
 // Return reference to last element in the index. No bounds checking.
-inline lib_ams::FMember& lib_ams::zd_member_byproc_qLast(lib_ams::FProc& proc) {
+inline lib_ams::FMember& lib_ams::zd_member_byproc_qLast(lib_ams::FProc& proc) throw() {
     lib_ams::FMember *row = NULL;
     row = proc.zd_member_byproc_tail;
     return *row;
@@ -1077,48 +1077,48 @@ inline void lib_ams::FProc_Init(lib_ams::FProc& proc) {
 
 // --- lib_ams.FProc.zd_member_byproc_curs.Reset
 // cursor points to valid item
-inline void lib_ams::proc_zd_member_byproc_curs_Reset(proc_zd_member_byproc_curs &curs, lib_ams::FProc &parent) {
+inline void lib_ams::proc_zd_member_byproc_curs_Reset(proc_zd_member_byproc_curs &curs, lib_ams::FProc &parent) throw() {
     curs.row = parent.zd_member_byproc_head;
 }
 
 // --- lib_ams.FProc.zd_member_byproc_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::proc_zd_member_byproc_curs_ValidQ(proc_zd_member_byproc_curs &curs) {
+inline bool lib_ams::proc_zd_member_byproc_curs_ValidQ(proc_zd_member_byproc_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- lib_ams.FProc.zd_member_byproc_curs.Next
 // proceed to next item
-inline void lib_ams::proc_zd_member_byproc_curs_Next(proc_zd_member_byproc_curs &curs) {
+inline void lib_ams::proc_zd_member_byproc_curs_Next(proc_zd_member_byproc_curs &curs) throw() {
     lib_ams::FMember *next = (*curs.row).zd_member_byproc_next;
     curs.row = next;
 }
 
 // --- lib_ams.FProc.zd_member_byproc_curs.Access
 // item access
-inline lib_ams::FMember& lib_ams::proc_zd_member_byproc_curs_Access(proc_zd_member_byproc_curs &curs) {
+inline lib_ams::FMember& lib_ams::proc_zd_member_byproc_curs_Access(proc_zd_member_byproc_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- lib_ams.FProc..Ctor
-inline  lib_ams::FProc::FProc() {
+inline  lib_ams::FProc::FProc() throw() {
     lib_ams::FProc_Init(*this);
 }
 
 // --- lib_ams.FProc..Dtor
-inline  lib_ams::FProc::~FProc() {
+inline  lib_ams::FProc::~FProc() throw() {
     lib_ams::FProc_Uninit(*this);
 }
 
 // --- lib_ams.FReadfile.buf.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::buf_EmptyQ(lib_ams::FReadfile& parent) {
+inline bool lib_ams::buf_EmptyQ(lib_ams::FReadfile& parent) throw() {
     return parent.buf_n == 0;
 }
 
 // --- lib_ams.FReadfile.buf.Find
 // Look up row by row id. Return NULL if out of range
-inline u8* lib_ams::buf_Find(lib_ams::FReadfile& parent, u64 t) {
+inline u8* lib_ams::buf_Find(lib_ams::FReadfile& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.buf_n;
     if (idx >= lim) return NULL;
@@ -1127,37 +1127,37 @@ inline u8* lib_ams::buf_Find(lib_ams::FReadfile& parent, u64 t) {
 
 // --- lib_ams.FReadfile.buf.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> lib_ams::buf_Getary(const lib_ams::FReadfile& parent) {
+inline algo::aryptr<u8> lib_ams::buf_Getary(const lib_ams::FReadfile& parent) throw() {
     return algo::aryptr<u8>(parent.buf_elems, parent.buf_n);
 }
 
 // --- lib_ams.FReadfile.buf.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline u8* lib_ams::buf_Last(lib_ams::FReadfile& parent) {
+inline u8* lib_ams::buf_Last(lib_ams::FReadfile& parent) throw() {
     return buf_Find(parent, u64(parent.buf_n-1));
 }
 
 // --- lib_ams.FReadfile.buf.Max
 // Return max. number of items in the array
-inline i32 lib_ams::buf_Max(lib_ams::FReadfile& parent) {
+inline i32 lib_ams::buf_Max(lib_ams::FReadfile& parent) throw() {
     (void)parent;
     return parent.buf_max;
 }
 
 // --- lib_ams.FReadfile.buf.N
 // Return number of items in the array
-inline i32 lib_ams::buf_N(const lib_ams::FReadfile& parent) {
+inline i32 lib_ams::buf_N(const lib_ams::FReadfile& parent) throw() {
     return parent.buf_n;
 }
 
 // --- lib_ams.FReadfile.buf.RemoveAll
-inline void lib_ams::buf_RemoveAll(lib_ams::FReadfile& parent) {
+inline void lib_ams::buf_RemoveAll(lib_ams::FReadfile& parent) throw() {
     parent.buf_n = 0;
 }
 
 // --- lib_ams.FReadfile.buf.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_ams::buf_Reserve(lib_ams::FReadfile& parent, int n) {
+inline void lib_ams::buf_Reserve(lib_ams::FReadfile& parent, int n) throw() {
     u32 new_n = parent.buf_n + n;
     if (UNLIKELY(new_n > parent.buf_max)) {
         buf_AbsReserve(parent, new_n);
@@ -1166,32 +1166,32 @@ inline void lib_ams::buf_Reserve(lib_ams::FReadfile& parent, int n) {
 
 // --- lib_ams.FReadfile.buf.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline u8& lib_ams::buf_qFind(lib_ams::FReadfile& parent, u64 t) {
+inline u8& lib_ams::buf_qFind(lib_ams::FReadfile& parent, u64 t) throw() {
     return parent.buf_elems[t];
 }
 
 // --- lib_ams.FReadfile.buf.qLast
 // Return reference to last element of array. No bounds checking
-inline u8& lib_ams::buf_qLast(lib_ams::FReadfile& parent) {
+inline u8& lib_ams::buf_qLast(lib_ams::FReadfile& parent) throw() {
     return buf_qFind(parent, u64(parent.buf_n-1));
 }
 
 // --- lib_ams.FReadfile.buf.rowid_Get
 // Return row id of specified element
-inline u64 lib_ams::buf_rowid_Get(lib_ams::FReadfile& parent, u8 &elem) {
+inline u64 lib_ams::buf_rowid_Get(lib_ams::FReadfile& parent, u8 &elem) throw() {
     u64 id = &elem - parent.buf_elems;
     return u64(id);
 }
 
 // --- lib_ams.FReadfile.cbuf.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::cbuf_EmptyQ(lib_ams::FReadfile& parent) {
+inline bool lib_ams::cbuf_EmptyQ(lib_ams::FReadfile& parent) throw() {
     return parent.cbuf_n == 0;
 }
 
 // --- lib_ams.FReadfile.cbuf.Find
 // Look up row by row id. Return NULL if out of range
-inline u8* lib_ams::cbuf_Find(lib_ams::FReadfile& parent, u64 t) {
+inline u8* lib_ams::cbuf_Find(lib_ams::FReadfile& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.cbuf_n;
     if (idx >= lim) return NULL;
@@ -1200,37 +1200,37 @@ inline u8* lib_ams::cbuf_Find(lib_ams::FReadfile& parent, u64 t) {
 
 // --- lib_ams.FReadfile.cbuf.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> lib_ams::cbuf_Getary(const lib_ams::FReadfile& parent) {
+inline algo::aryptr<u8> lib_ams::cbuf_Getary(const lib_ams::FReadfile& parent) throw() {
     return algo::aryptr<u8>(parent.cbuf_elems, parent.cbuf_n);
 }
 
 // --- lib_ams.FReadfile.cbuf.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline u8* lib_ams::cbuf_Last(lib_ams::FReadfile& parent) {
+inline u8* lib_ams::cbuf_Last(lib_ams::FReadfile& parent) throw() {
     return cbuf_Find(parent, u64(parent.cbuf_n-1));
 }
 
 // --- lib_ams.FReadfile.cbuf.Max
 // Return max. number of items in the array
-inline i32 lib_ams::cbuf_Max(lib_ams::FReadfile& parent) {
+inline i32 lib_ams::cbuf_Max(lib_ams::FReadfile& parent) throw() {
     (void)parent;
     return parent.cbuf_max;
 }
 
 // --- lib_ams.FReadfile.cbuf.N
 // Return number of items in the array
-inline i32 lib_ams::cbuf_N(const lib_ams::FReadfile& parent) {
+inline i32 lib_ams::cbuf_N(const lib_ams::FReadfile& parent) throw() {
     return parent.cbuf_n;
 }
 
 // --- lib_ams.FReadfile.cbuf.RemoveAll
-inline void lib_ams::cbuf_RemoveAll(lib_ams::FReadfile& parent) {
+inline void lib_ams::cbuf_RemoveAll(lib_ams::FReadfile& parent) throw() {
     parent.cbuf_n = 0;
 }
 
 // --- lib_ams.FReadfile.cbuf.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_ams::cbuf_Reserve(lib_ams::FReadfile& parent, int n) {
+inline void lib_ams::cbuf_Reserve(lib_ams::FReadfile& parent, int n) throw() {
     u32 new_n = parent.cbuf_n + n;
     if (UNLIKELY(new_n > parent.cbuf_max)) {
         cbuf_AbsReserve(parent, new_n);
@@ -1239,32 +1239,32 @@ inline void lib_ams::cbuf_Reserve(lib_ams::FReadfile& parent, int n) {
 
 // --- lib_ams.FReadfile.cbuf.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline u8& lib_ams::cbuf_qFind(lib_ams::FReadfile& parent, u64 t) {
+inline u8& lib_ams::cbuf_qFind(lib_ams::FReadfile& parent, u64 t) throw() {
     return parent.cbuf_elems[t];
 }
 
 // --- lib_ams.FReadfile.cbuf.qLast
 // Return reference to last element of array. No bounds checking
-inline u8& lib_ams::cbuf_qLast(lib_ams::FReadfile& parent) {
+inline u8& lib_ams::cbuf_qLast(lib_ams::FReadfile& parent) throw() {
     return cbuf_qFind(parent, u64(parent.cbuf_n-1));
 }
 
 // --- lib_ams.FReadfile.cbuf.rowid_Get
 // Return row id of specified element
-inline u64 lib_ams::cbuf_rowid_Get(lib_ams::FReadfile& parent, u8 &elem) {
+inline u64 lib_ams::cbuf_rowid_Get(lib_ams::FReadfile& parent, u8 &elem) throw() {
     u64 id = &elem - parent.cbuf_elems;
     return u64(id);
 }
 
 // --- lib_ams.FReadfile.offset.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::offset_EmptyQ(lib_ams::FReadfile& parent) {
+inline bool lib_ams::offset_EmptyQ(lib_ams::FReadfile& parent) throw() {
     return parent.offset_n == 0;
 }
 
 // --- lib_ams.FReadfile.offset.Find
 // Look up row by row id. Return NULL if out of range
-inline u32* lib_ams::offset_Find(lib_ams::FReadfile& parent, u64 t) {
+inline u32* lib_ams::offset_Find(lib_ams::FReadfile& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.offset_n;
     if (idx >= lim) return NULL;
@@ -1273,37 +1273,37 @@ inline u32* lib_ams::offset_Find(lib_ams::FReadfile& parent, u64 t) {
 
 // --- lib_ams.FReadfile.offset.Getary
 // Return array pointer by value
-inline algo::aryptr<u32> lib_ams::offset_Getary(const lib_ams::FReadfile& parent) {
+inline algo::aryptr<u32> lib_ams::offset_Getary(const lib_ams::FReadfile& parent) throw() {
     return algo::aryptr<u32>(parent.offset_elems, parent.offset_n);
 }
 
 // --- lib_ams.FReadfile.offset.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline u32* lib_ams::offset_Last(lib_ams::FReadfile& parent) {
+inline u32* lib_ams::offset_Last(lib_ams::FReadfile& parent) throw() {
     return offset_Find(parent, u64(parent.offset_n-1));
 }
 
 // --- lib_ams.FReadfile.offset.Max
 // Return max. number of items in the array
-inline i32 lib_ams::offset_Max(lib_ams::FReadfile& parent) {
+inline i32 lib_ams::offset_Max(lib_ams::FReadfile& parent) throw() {
     (void)parent;
     return parent.offset_max;
 }
 
 // --- lib_ams.FReadfile.offset.N
 // Return number of items in the array
-inline i32 lib_ams::offset_N(const lib_ams::FReadfile& parent) {
+inline i32 lib_ams::offset_N(const lib_ams::FReadfile& parent) throw() {
     return parent.offset_n;
 }
 
 // --- lib_ams.FReadfile.offset.RemoveAll
-inline void lib_ams::offset_RemoveAll(lib_ams::FReadfile& parent) {
+inline void lib_ams::offset_RemoveAll(lib_ams::FReadfile& parent) throw() {
     parent.offset_n = 0;
 }
 
 // --- lib_ams.FReadfile.offset.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_ams::offset_Reserve(lib_ams::FReadfile& parent, int n) {
+inline void lib_ams::offset_Reserve(lib_ams::FReadfile& parent, int n) throw() {
     u32 new_n = parent.offset_n + n;
     if (UNLIKELY(new_n > parent.offset_max)) {
         offset_AbsReserve(parent, new_n);
@@ -1312,31 +1312,31 @@ inline void lib_ams::offset_Reserve(lib_ams::FReadfile& parent, int n) {
 
 // --- lib_ams.FReadfile.offset.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline u32& lib_ams::offset_qFind(lib_ams::FReadfile& parent, u64 t) {
+inline u32& lib_ams::offset_qFind(lib_ams::FReadfile& parent, u64 t) throw() {
     return parent.offset_elems[t];
 }
 
 // --- lib_ams.FReadfile.offset.qLast
 // Return reference to last element of array. No bounds checking
-inline u32& lib_ams::offset_qLast(lib_ams::FReadfile& parent) {
+inline u32& lib_ams::offset_qLast(lib_ams::FReadfile& parent) throw() {
     return offset_qFind(parent, u64(parent.offset_n-1));
 }
 
 // --- lib_ams.FReadfile.offset.rowid_Get
 // Return row id of specified element
-inline u64 lib_ams::offset_rowid_Get(lib_ams::FReadfile& parent, u32 &elem) {
+inline u64 lib_ams::offset_rowid_Get(lib_ams::FReadfile& parent, u32 &elem) throw() {
     u64 id = &elem - parent.offset_elems;
     return u64(id);
 }
 
 // --- lib_ams.FReadfile.buf_curs.Next
 // proceed to next item
-inline void lib_ams::FReadfile_buf_curs_Next(FReadfile_buf_curs &curs) {
+inline void lib_ams::FReadfile_buf_curs_Next(FReadfile_buf_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_ams.FReadfile.buf_curs.Reset
-inline void lib_ams::FReadfile_buf_curs_Reset(FReadfile_buf_curs &curs, lib_ams::FReadfile &parent) {
+inline void lib_ams::FReadfile_buf_curs_Reset(FReadfile_buf_curs &curs, lib_ams::FReadfile &parent) throw() {
     curs.elems = parent.buf_elems;
     curs.n_elems = parent.buf_n;
     curs.index = 0;
@@ -1344,24 +1344,24 @@ inline void lib_ams::FReadfile_buf_curs_Reset(FReadfile_buf_curs &curs, lib_ams:
 
 // --- lib_ams.FReadfile.buf_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::FReadfile_buf_curs_ValidQ(FReadfile_buf_curs &curs) {
+inline bool lib_ams::FReadfile_buf_curs_ValidQ(FReadfile_buf_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- lib_ams.FReadfile.buf_curs.Access
 // item access
-inline u8& lib_ams::FReadfile_buf_curs_Access(FReadfile_buf_curs &curs) {
+inline u8& lib_ams::FReadfile_buf_curs_Access(FReadfile_buf_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- lib_ams.FReadfile.cbuf_curs.Next
 // proceed to next item
-inline void lib_ams::FReadfile_cbuf_curs_Next(FReadfile_cbuf_curs &curs) {
+inline void lib_ams::FReadfile_cbuf_curs_Next(FReadfile_cbuf_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_ams.FReadfile.cbuf_curs.Reset
-inline void lib_ams::FReadfile_cbuf_curs_Reset(FReadfile_cbuf_curs &curs, lib_ams::FReadfile &parent) {
+inline void lib_ams::FReadfile_cbuf_curs_Reset(FReadfile_cbuf_curs &curs, lib_ams::FReadfile &parent) throw() {
     curs.elems = parent.cbuf_elems;
     curs.n_elems = parent.cbuf_n;
     curs.index = 0;
@@ -1369,24 +1369,24 @@ inline void lib_ams::FReadfile_cbuf_curs_Reset(FReadfile_cbuf_curs &curs, lib_am
 
 // --- lib_ams.FReadfile.cbuf_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::FReadfile_cbuf_curs_ValidQ(FReadfile_cbuf_curs &curs) {
+inline bool lib_ams::FReadfile_cbuf_curs_ValidQ(FReadfile_cbuf_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- lib_ams.FReadfile.cbuf_curs.Access
 // item access
-inline u8& lib_ams::FReadfile_cbuf_curs_Access(FReadfile_cbuf_curs &curs) {
+inline u8& lib_ams::FReadfile_cbuf_curs_Access(FReadfile_cbuf_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- lib_ams.FReadfile.offset_curs.Next
 // proceed to next item
-inline void lib_ams::FReadfile_offset_curs_Next(FReadfile_offset_curs &curs) {
+inline void lib_ams::FReadfile_offset_curs_Next(FReadfile_offset_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_ams.FReadfile.offset_curs.Reset
-inline void lib_ams::FReadfile_offset_curs_Reset(FReadfile_offset_curs &curs, lib_ams::FReadfile &parent) {
+inline void lib_ams::FReadfile_offset_curs_Reset(FReadfile_offset_curs &curs, lib_ams::FReadfile &parent) throw() {
     curs.elems = parent.offset_elems;
     curs.n_elems = parent.offset_n;
     curs.index = 0;
@@ -1394,13 +1394,13 @@ inline void lib_ams::FReadfile_offset_curs_Reset(FReadfile_offset_curs &curs, li
 
 // --- lib_ams.FReadfile.offset_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::FReadfile_offset_curs_ValidQ(FReadfile_offset_curs &curs) {
+inline bool lib_ams::FReadfile_offset_curs_ValidQ(FReadfile_offset_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- lib_ams.FReadfile.offset_curs.Access
 // item access
-inline u32& lib_ams::FReadfile_offset_curs_Access(FReadfile_offset_curs &curs) {
+inline u32& lib_ams::FReadfile_offset_curs_Access(FReadfile_offset_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -1421,18 +1421,18 @@ inline void lib_ams::FReadfile_Init(lib_ams::FReadfile& parent) {
 }
 
 // --- lib_ams.FReadfile..Ctor
-inline  lib_ams::FReadfile::FReadfile() {
+inline  lib_ams::FReadfile::FReadfile() throw() {
     lib_ams::FReadfile_Init(*this);
 }
 
 // --- lib_ams.FReadfile..Dtor
-inline  lib_ams::FReadfile::~FReadfile() {
+inline  lib_ams::FReadfile::~FReadfile() throw() {
     lib_ams::FReadfile_Uninit(*this);
 }
 
 // --- lib_ams.FStream.h_msg.Call
 // Invoke function by pointer
-inline void lib_ams::h_msg_Call(lib_ams::FStream& stream, ams::MsgHeader& arg) {
+inline void lib_ams::h_msg_Call(lib_ams::FStream& stream, ams::MsgHeader& arg) throw() {
     if (stream.h_msg) {
         stream.h_msg((void*)stream.h_msg_ctx, arg);
     }
@@ -1440,28 +1440,28 @@ inline void lib_ams::h_msg_Call(lib_ams::FStream& stream, ams::MsgHeader& arg) {
 
 // --- lib_ams.FStream.h_msg.Set0
 // Assign 0-argument hook with no context pointer
-inline void lib_ams::h_msg_Set0(lib_ams::FStream& stream, void (*fcn)() ) {
+inline void lib_ams::h_msg_Set0(lib_ams::FStream& stream, void (*fcn)() ) throw() {
     stream.h_msg_ctx = 0;
     stream.h_msg = (lib_ams::stream_h_msg_hook)fcn;
 }
 
 // --- lib_ams.FStream.h_msg.Set1
 // Assign 1-argument hook with context pointer
-template<class T> inline void lib_ams::h_msg_Set1(lib_ams::FStream& stream, T& ctx, void (*fcn)(T&) ) {
+template<class T> inline void lib_ams::h_msg_Set1(lib_ams::FStream& stream, T& ctx, void (*fcn)(T&) ) throw() {
     stream.h_msg_ctx = (u64)&ctx;
     stream.h_msg = (lib_ams::stream_h_msg_hook)fcn;
 }
 
 // --- lib_ams.FStream.h_msg.Set2
 // Assign 2-argument hook with context pointer
-template<class T> inline void lib_ams::h_msg_Set2(lib_ams::FStream& stream, T& ctx, void (*fcn)(T&, ams::MsgHeader& arg) ) {
+template<class T> inline void lib_ams::h_msg_Set2(lib_ams::FStream& stream, T& ctx, void (*fcn)(T&, ams::MsgHeader& arg) ) throw() {
     stream.h_msg_ctx = (u64)&ctx;
     stream.h_msg = (lib_ams::stream_h_msg_hook)fcn;
 }
 
 // --- lib_ams.FStream.h_msg_orig.Call
 // Invoke function by pointer
-inline void lib_ams::h_msg_orig_Call(lib_ams::FStream& stream, ams::MsgHeader& arg) {
+inline void lib_ams::h_msg_orig_Call(lib_ams::FStream& stream, ams::MsgHeader& arg) throw() {
     if (stream.h_msg_orig) {
         stream.h_msg_orig((void*)stream.h_msg_orig_ctx, arg);
     }
@@ -1469,34 +1469,34 @@ inline void lib_ams::h_msg_orig_Call(lib_ams::FStream& stream, ams::MsgHeader& a
 
 // --- lib_ams.FStream.h_msg_orig.Set0
 // Assign 0-argument hook with no context pointer
-inline void lib_ams::h_msg_orig_Set0(lib_ams::FStream& stream, void (*fcn)() ) {
+inline void lib_ams::h_msg_orig_Set0(lib_ams::FStream& stream, void (*fcn)() ) throw() {
     stream.h_msg_orig_ctx = 0;
     stream.h_msg_orig = (lib_ams::stream_h_msg_orig_hook)fcn;
 }
 
 // --- lib_ams.FStream.h_msg_orig.Set1
 // Assign 1-argument hook with context pointer
-template<class T> inline void lib_ams::h_msg_orig_Set1(lib_ams::FStream& stream, T& ctx, void (*fcn)(T&) ) {
+template<class T> inline void lib_ams::h_msg_orig_Set1(lib_ams::FStream& stream, T& ctx, void (*fcn)(T&) ) throw() {
     stream.h_msg_orig_ctx = (u64)&ctx;
     stream.h_msg_orig = (lib_ams::stream_h_msg_orig_hook)fcn;
 }
 
 // --- lib_ams.FStream.h_msg_orig.Set2
 // Assign 2-argument hook with context pointer
-template<class T> inline void lib_ams::h_msg_orig_Set2(lib_ams::FStream& stream, T& ctx, void (*fcn)(T&, ams::MsgHeader& arg) ) {
+template<class T> inline void lib_ams::h_msg_orig_Set2(lib_ams::FStream& stream, T& ctx, void (*fcn)(T&, ams::MsgHeader& arg) ) throw() {
     stream.h_msg_orig_ctx = (u64)&ctx;
     stream.h_msg_orig = (lib_ams::stream_h_msg_orig_hook)fcn;
 }
 
 // --- lib_ams.FStream.zd_member_bystream.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::zd_member_bystream_EmptyQ(lib_ams::FStream& stream) {
+inline bool lib_ams::zd_member_bystream_EmptyQ(lib_ams::FStream& stream) throw() {
     return stream.zd_member_bystream_head == NULL;
 }
 
 // --- lib_ams.FStream.zd_member_bystream.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_ams::FMember* lib_ams::zd_member_bystream_First(lib_ams::FStream& stream) {
+inline lib_ams::FMember* lib_ams::zd_member_bystream_First(lib_ams::FStream& stream) throw() {
     lib_ams::FMember *row = NULL;
     row = stream.zd_member_bystream_head;
     return row;
@@ -1504,7 +1504,7 @@ inline lib_ams::FMember* lib_ams::zd_member_bystream_First(lib_ams::FStream& str
 
 // --- lib_ams.FStream.zd_member_bystream.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_ams::zd_member_bystream_InLlistQ(lib_ams::FMember& row) {
+inline bool lib_ams::zd_member_bystream_InLlistQ(lib_ams::FMember& row) throw() {
     bool result = false;
     result = !(row.zd_member_bystream_next == (lib_ams::FMember*)-1);
     return result;
@@ -1512,7 +1512,7 @@ inline bool lib_ams::zd_member_bystream_InLlistQ(lib_ams::FMember& row) {
 
 // --- lib_ams.FStream.zd_member_bystream.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_ams::FMember* lib_ams::zd_member_bystream_Last(lib_ams::FStream& stream) {
+inline lib_ams::FMember* lib_ams::zd_member_bystream_Last(lib_ams::FStream& stream) throw() {
     lib_ams::FMember *row = NULL;
     row = stream.zd_member_bystream_tail;
     return row;
@@ -1520,25 +1520,25 @@ inline lib_ams::FMember* lib_ams::zd_member_bystream_Last(lib_ams::FStream& stre
 
 // --- lib_ams.FStream.zd_member_bystream.N
 // Return number of items in the linked list
-inline i32 lib_ams::zd_member_bystream_N(const lib_ams::FStream& stream) {
+inline i32 lib_ams::zd_member_bystream_N(const lib_ams::FStream& stream) throw() {
     return stream.zd_member_bystream_n;
 }
 
 // --- lib_ams.FStream.zd_member_bystream.Next
 // Return pointer to next element in the list
-inline lib_ams::FMember* lib_ams::zd_member_bystream_Next(lib_ams::FMember &row) {
+inline lib_ams::FMember* lib_ams::zd_member_bystream_Next(lib_ams::FMember &row) throw() {
     return row.zd_member_bystream_next;
 }
 
 // --- lib_ams.FStream.zd_member_bystream.Prev
 // Return pointer to previous element in the list
-inline lib_ams::FMember* lib_ams::zd_member_bystream_Prev(lib_ams::FMember &row) {
+inline lib_ams::FMember* lib_ams::zd_member_bystream_Prev(lib_ams::FMember &row) throw() {
     return row.zd_member_bystream_prev;
 }
 
 // --- lib_ams.FStream.zd_member_bystream.qLast
 // Return reference to last element in the index. No bounds checking.
-inline lib_ams::FMember& lib_ams::zd_member_bystream_qLast(lib_ams::FStream& stream) {
+inline lib_ams::FMember& lib_ams::zd_member_bystream_qLast(lib_ams::FStream& stream) throw() {
     lib_ams::FMember *row = NULL;
     row = stream.zd_member_bystream_tail;
     return *row;
@@ -1546,36 +1546,36 @@ inline lib_ams::FMember& lib_ams::zd_member_bystream_qLast(lib_ams::FStream& str
 
 // --- lib_ams.FStream.zd_member_bystream_curs.Reset
 // cursor points to valid item
-inline void lib_ams::stream_zd_member_bystream_curs_Reset(stream_zd_member_bystream_curs &curs, lib_ams::FStream &parent) {
+inline void lib_ams::stream_zd_member_bystream_curs_Reset(stream_zd_member_bystream_curs &curs, lib_ams::FStream &parent) throw() {
     curs.row = parent.zd_member_bystream_head;
 }
 
 // --- lib_ams.FStream.zd_member_bystream_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::stream_zd_member_bystream_curs_ValidQ(stream_zd_member_bystream_curs &curs) {
+inline bool lib_ams::stream_zd_member_bystream_curs_ValidQ(stream_zd_member_bystream_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- lib_ams.FStream.zd_member_bystream_curs.Next
 // proceed to next item
-inline void lib_ams::stream_zd_member_bystream_curs_Next(stream_zd_member_bystream_curs &curs) {
+inline void lib_ams::stream_zd_member_bystream_curs_Next(stream_zd_member_bystream_curs &curs) throw() {
     lib_ams::FMember *next = (*curs.row).zd_member_bystream_next;
     curs.row = next;
 }
 
 // --- lib_ams.FStream.zd_member_bystream_curs.Access
 // item access
-inline lib_ams::FMember& lib_ams::stream_zd_member_bystream_curs_Access(stream_zd_member_bystream_curs &curs) {
+inline lib_ams::FMember& lib_ams::stream_zd_member_bystream_curs_Access(stream_zd_member_bystream_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- lib_ams.FStream..Ctor
-inline  lib_ams::FStream::FStream() {
+inline  lib_ams::FStream::FStream() throw() {
     lib_ams::FStream_Init(*this);
 }
 
 // --- lib_ams.FStream..Dtor
-inline  lib_ams::FStream::~FStream() {
+inline  lib_ams::FStream::~FStream() throw() {
     lib_ams::FStream_Uninit(*this);
 }
 
@@ -1586,24 +1586,24 @@ inline void lib_ams::FStreamType_Init(lib_ams::FStreamType& streamtype) {
 }
 
 // --- lib_ams.FStreamType..Ctor
-inline  lib_ams::FStreamType::FStreamType() {
+inline  lib_ams::FStreamType::FStreamType() throw() {
     lib_ams::FStreamType_Init(*this);
 }
 
 // --- lib_ams.FStreamType..Dtor
-inline  lib_ams::FStreamType::~FStreamType() {
+inline  lib_ams::FStreamType::~FStreamType() throw() {
     lib_ams::FStreamType_Uninit(*this);
 }
 
 // --- lib_ams.FWritefile.buf.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::buf_EmptyQ(lib_ams::FWritefile& writefile) {
+inline bool lib_ams::buf_EmptyQ(lib_ams::FWritefile& writefile) throw() {
     return writefile.buf_n == 0;
 }
 
 // --- lib_ams.FWritefile.buf.Find
 // Look up row by row id. Return NULL if out of range
-inline u8* lib_ams::buf_Find(lib_ams::FWritefile& writefile, u64 t) {
+inline u8* lib_ams::buf_Find(lib_ams::FWritefile& writefile, u64 t) throw() {
     u64 idx = t;
     u64 lim = writefile.buf_n;
     if (idx >= lim) return NULL;
@@ -1612,37 +1612,37 @@ inline u8* lib_ams::buf_Find(lib_ams::FWritefile& writefile, u64 t) {
 
 // --- lib_ams.FWritefile.buf.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> lib_ams::buf_Getary(const lib_ams::FWritefile& writefile) {
+inline algo::aryptr<u8> lib_ams::buf_Getary(const lib_ams::FWritefile& writefile) throw() {
     return algo::aryptr<u8>(writefile.buf_elems, writefile.buf_n);
 }
 
 // --- lib_ams.FWritefile.buf.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline u8* lib_ams::buf_Last(lib_ams::FWritefile& writefile) {
+inline u8* lib_ams::buf_Last(lib_ams::FWritefile& writefile) throw() {
     return buf_Find(writefile, u64(writefile.buf_n-1));
 }
 
 // --- lib_ams.FWritefile.buf.Max
 // Return max. number of items in the array
-inline i32 lib_ams::buf_Max(lib_ams::FWritefile& writefile) {
+inline i32 lib_ams::buf_Max(lib_ams::FWritefile& writefile) throw() {
     (void)writefile;
     return writefile.buf_max;
 }
 
 // --- lib_ams.FWritefile.buf.N
 // Return number of items in the array
-inline i32 lib_ams::buf_N(const lib_ams::FWritefile& writefile) {
+inline i32 lib_ams::buf_N(const lib_ams::FWritefile& writefile) throw() {
     return writefile.buf_n;
 }
 
 // --- lib_ams.FWritefile.buf.RemoveAll
-inline void lib_ams::buf_RemoveAll(lib_ams::FWritefile& writefile) {
+inline void lib_ams::buf_RemoveAll(lib_ams::FWritefile& writefile) throw() {
     writefile.buf_n = 0;
 }
 
 // --- lib_ams.FWritefile.buf.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_ams::buf_Reserve(lib_ams::FWritefile& writefile, int n) {
+inline void lib_ams::buf_Reserve(lib_ams::FWritefile& writefile, int n) throw() {
     u32 new_n = writefile.buf_n + n;
     if (UNLIKELY(new_n > writefile.buf_max)) {
         buf_AbsReserve(writefile, new_n);
@@ -1651,32 +1651,32 @@ inline void lib_ams::buf_Reserve(lib_ams::FWritefile& writefile, int n) {
 
 // --- lib_ams.FWritefile.buf.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline u8& lib_ams::buf_qFind(lib_ams::FWritefile& writefile, u64 t) {
+inline u8& lib_ams::buf_qFind(lib_ams::FWritefile& writefile, u64 t) throw() {
     return writefile.buf_elems[t];
 }
 
 // --- lib_ams.FWritefile.buf.qLast
 // Return reference to last element of array. No bounds checking
-inline u8& lib_ams::buf_qLast(lib_ams::FWritefile& writefile) {
+inline u8& lib_ams::buf_qLast(lib_ams::FWritefile& writefile) throw() {
     return buf_qFind(writefile, u64(writefile.buf_n-1));
 }
 
 // --- lib_ams.FWritefile.buf.rowid_Get
 // Return row id of specified element
-inline u64 lib_ams::buf_rowid_Get(lib_ams::FWritefile& writefile, u8 &elem) {
+inline u64 lib_ams::buf_rowid_Get(lib_ams::FWritefile& writefile, u8 &elem) throw() {
     u64 id = &elem - writefile.buf_elems;
     return u64(id);
 }
 
 // --- lib_ams.FWritefile.cbuf.EmptyQ
 // Return true if index is empty
-inline bool lib_ams::cbuf_EmptyQ(lib_ams::FWritefile& writefile) {
+inline bool lib_ams::cbuf_EmptyQ(lib_ams::FWritefile& writefile) throw() {
     return writefile.cbuf_n == 0;
 }
 
 // --- lib_ams.FWritefile.cbuf.Find
 // Look up row by row id. Return NULL if out of range
-inline u8* lib_ams::cbuf_Find(lib_ams::FWritefile& writefile, u64 t) {
+inline u8* lib_ams::cbuf_Find(lib_ams::FWritefile& writefile, u64 t) throw() {
     u64 idx = t;
     u64 lim = writefile.cbuf_n;
     if (idx >= lim) return NULL;
@@ -1685,37 +1685,37 @@ inline u8* lib_ams::cbuf_Find(lib_ams::FWritefile& writefile, u64 t) {
 
 // --- lib_ams.FWritefile.cbuf.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> lib_ams::cbuf_Getary(const lib_ams::FWritefile& writefile) {
+inline algo::aryptr<u8> lib_ams::cbuf_Getary(const lib_ams::FWritefile& writefile) throw() {
     return algo::aryptr<u8>(writefile.cbuf_elems, writefile.cbuf_n);
 }
 
 // --- lib_ams.FWritefile.cbuf.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline u8* lib_ams::cbuf_Last(lib_ams::FWritefile& writefile) {
+inline u8* lib_ams::cbuf_Last(lib_ams::FWritefile& writefile) throw() {
     return cbuf_Find(writefile, u64(writefile.cbuf_n-1));
 }
 
 // --- lib_ams.FWritefile.cbuf.Max
 // Return max. number of items in the array
-inline i32 lib_ams::cbuf_Max(lib_ams::FWritefile& writefile) {
+inline i32 lib_ams::cbuf_Max(lib_ams::FWritefile& writefile) throw() {
     (void)writefile;
     return writefile.cbuf_max;
 }
 
 // --- lib_ams.FWritefile.cbuf.N
 // Return number of items in the array
-inline i32 lib_ams::cbuf_N(const lib_ams::FWritefile& writefile) {
+inline i32 lib_ams::cbuf_N(const lib_ams::FWritefile& writefile) throw() {
     return writefile.cbuf_n;
 }
 
 // --- lib_ams.FWritefile.cbuf.RemoveAll
-inline void lib_ams::cbuf_RemoveAll(lib_ams::FWritefile& writefile) {
+inline void lib_ams::cbuf_RemoveAll(lib_ams::FWritefile& writefile) throw() {
     writefile.cbuf_n = 0;
 }
 
 // --- lib_ams.FWritefile.cbuf.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void lib_ams::cbuf_Reserve(lib_ams::FWritefile& writefile, int n) {
+inline void lib_ams::cbuf_Reserve(lib_ams::FWritefile& writefile, int n) throw() {
     u32 new_n = writefile.cbuf_n + n;
     if (UNLIKELY(new_n > writefile.cbuf_max)) {
         cbuf_AbsReserve(writefile, new_n);
@@ -1724,19 +1724,19 @@ inline void lib_ams::cbuf_Reserve(lib_ams::FWritefile& writefile, int n) {
 
 // --- lib_ams.FWritefile.cbuf.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline u8& lib_ams::cbuf_qFind(lib_ams::FWritefile& writefile, u64 t) {
+inline u8& lib_ams::cbuf_qFind(lib_ams::FWritefile& writefile, u64 t) throw() {
     return writefile.cbuf_elems[t];
 }
 
 // --- lib_ams.FWritefile.cbuf.qLast
 // Return reference to last element of array. No bounds checking
-inline u8& lib_ams::cbuf_qLast(lib_ams::FWritefile& writefile) {
+inline u8& lib_ams::cbuf_qLast(lib_ams::FWritefile& writefile) throw() {
     return cbuf_qFind(writefile, u64(writefile.cbuf_n-1));
 }
 
 // --- lib_ams.FWritefile.cbuf.rowid_Get
 // Return row id of specified element
-inline u64 lib_ams::cbuf_rowid_Get(lib_ams::FWritefile& writefile, u8 &elem) {
+inline u64 lib_ams::cbuf_rowid_Get(lib_ams::FWritefile& writefile, u8 &elem) throw() {
     u64 id = &elem - writefile.cbuf_elems;
     return u64(id);
 }
@@ -1758,12 +1758,12 @@ inline void lib_ams::FWritefile_Init(lib_ams::FWritefile& writefile) {
 
 // --- lib_ams.FWritefile.buf_curs.Next
 // proceed to next item
-inline void lib_ams::writefile_buf_curs_Next(writefile_buf_curs &curs) {
+inline void lib_ams::writefile_buf_curs_Next(writefile_buf_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_ams.FWritefile.buf_curs.Reset
-inline void lib_ams::writefile_buf_curs_Reset(writefile_buf_curs &curs, lib_ams::FWritefile &parent) {
+inline void lib_ams::writefile_buf_curs_Reset(writefile_buf_curs &curs, lib_ams::FWritefile &parent) throw() {
     curs.elems = parent.buf_elems;
     curs.n_elems = parent.buf_n;
     curs.index = 0;
@@ -1771,24 +1771,24 @@ inline void lib_ams::writefile_buf_curs_Reset(writefile_buf_curs &curs, lib_ams:
 
 // --- lib_ams.FWritefile.buf_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::writefile_buf_curs_ValidQ(writefile_buf_curs &curs) {
+inline bool lib_ams::writefile_buf_curs_ValidQ(writefile_buf_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- lib_ams.FWritefile.buf_curs.Access
 // item access
-inline u8& lib_ams::writefile_buf_curs_Access(writefile_buf_curs &curs) {
+inline u8& lib_ams::writefile_buf_curs_Access(writefile_buf_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- lib_ams.FWritefile.cbuf_curs.Next
 // proceed to next item
-inline void lib_ams::writefile_cbuf_curs_Next(writefile_cbuf_curs &curs) {
+inline void lib_ams::writefile_cbuf_curs_Next(writefile_cbuf_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_ams.FWritefile.cbuf_curs.Reset
-inline void lib_ams::writefile_cbuf_curs_Reset(writefile_cbuf_curs &curs, lib_ams::FWritefile &parent) {
+inline void lib_ams::writefile_cbuf_curs_Reset(writefile_cbuf_curs &curs, lib_ams::FWritefile &parent) throw() {
     curs.elems = parent.cbuf_elems;
     curs.n_elems = parent.cbuf_n;
     curs.index = 0;
@@ -1796,40 +1796,40 @@ inline void lib_ams::writefile_cbuf_curs_Reset(writefile_cbuf_curs &curs, lib_am
 
 // --- lib_ams.FWritefile.cbuf_curs.ValidQ
 // cursor points to valid item
-inline bool lib_ams::writefile_cbuf_curs_ValidQ(writefile_cbuf_curs &curs) {
+inline bool lib_ams::writefile_cbuf_curs_ValidQ(writefile_cbuf_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- lib_ams.FWritefile.cbuf_curs.Access
 // item access
-inline u8& lib_ams::writefile_cbuf_curs_Access(writefile_cbuf_curs &curs) {
+inline u8& lib_ams::writefile_cbuf_curs_Access(writefile_cbuf_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- lib_ams.FWritefile..Ctor
-inline  lib_ams::FWritefile::FWritefile() {
+inline  lib_ams::FWritefile::FWritefile() throw() {
     lib_ams::FWritefile_Init(*this);
 }
 
 // --- lib_ams.FWritefile..Dtor
-inline  lib_ams::FWritefile::~FWritefile() {
+inline  lib_ams::FWritefile::~FWritefile() throw() {
     lib_ams::FWritefile_Uninit(*this);
 }
 
 // --- lib_ams.FieldId.value.GetEnum
 // Get value of field as enum type
-inline lib_ams_FieldIdEnum lib_ams::value_GetEnum(const lib_ams::FieldId& parent) {
+inline lib_ams_FieldIdEnum lib_ams::value_GetEnum(const lib_ams::FieldId& parent) throw() {
     return lib_ams_FieldIdEnum(parent.value);
 }
 
 // --- lib_ams.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void lib_ams::value_SetEnum(lib_ams::FieldId& parent, lib_ams_FieldIdEnum rhs) {
+inline void lib_ams::value_SetEnum(lib_ams::FieldId& parent, lib_ams_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- lib_ams.FieldId.value.Cast
-inline  lib_ams::FieldId::operator lib_ams_FieldIdEnum() const {
+inline  lib_ams::FieldId::operator lib_ams_FieldIdEnum() const throw() {
     return lib_ams_FieldIdEnum((*this).value);
 }
 
@@ -1840,18 +1840,18 @@ inline void lib_ams::FieldId_Init(lib_ams::FieldId& parent) {
 }
 
 // --- lib_ams.FieldId..Ctor
-inline  lib_ams::FieldId::FieldId() {
+inline  lib_ams::FieldId::FieldId() throw() {
     lib_ams::FieldId_Init(*this);
 }
 
 // --- lib_ams.FieldId..FieldwiseCtor
-inline  lib_ams::FieldId::FieldId(i32 in_value)
+inline  lib_ams::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_ams.FieldId..EnumCtor
-inline  lib_ams::FieldId::FieldId(lib_ams_FieldIdEnum arg) {
+inline  lib_ams::FieldId::FieldId(lib_ams_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

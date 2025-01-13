@@ -97,7 +97,7 @@ namespace atf_cov { // gen:ns_print_proto
 
 // --- atf_cov.FCovfile.base.CopyOut
 // Copy fields out of row
-void atf_cov::covfile_CopyOut(atf_cov::FCovfile &row, dev::Covfile &out) {
+void atf_cov::covfile_CopyOut(atf_cov::FCovfile &row, dev::Covfile &out) throw() {
     out.covfile = row.covfile;
     out.total = row.total;
     out.nonexe = row.nonexe;
@@ -109,7 +109,7 @@ void atf_cov::covfile_CopyOut(atf_cov::FCovfile &row, dev::Covfile &out) {
 
 // --- atf_cov.FCovfile.base.CopyIn
 // Copy fields in to row
-void atf_cov::covfile_CopyIn(atf_cov::FCovfile &row, dev::Covfile &in) {
+void atf_cov::covfile_CopyIn(atf_cov::FCovfile &row, dev::Covfile &in) throw() {
     row.covfile = in.covfile;
     row.total = in.total;
     row.nonexe = in.nonexe;
@@ -120,7 +120,7 @@ void atf_cov::covfile_CopyIn(atf_cov::FCovfile &row, dev::Covfile &in) {
 }
 
 // --- atf_cov.FCovfile..Uninit
-void atf_cov::FCovfile_Uninit(atf_cov::FCovfile& covfile) {
+void atf_cov::FCovfile_Uninit(atf_cov::FCovfile& covfile) throw() {
     atf_cov::FCovfile &row = covfile; (void)row;
     atf_cov::FGitfile* p_covfile = atf_cov::ind_gitfile_Find(row.covfile);
     if (p_covfile)  {
@@ -130,7 +130,7 @@ void atf_cov::FCovfile_Uninit(atf_cov::FCovfile& covfile) {
 
 // --- atf_cov.FCovline.base.CopyOut
 // Copy fields out of row
-void atf_cov::covline_CopyOut(atf_cov::FCovline &row, dev::Covline &out) {
+void atf_cov::covline_CopyOut(atf_cov::FCovline &row, dev::Covline &out) throw() {
     out.covline = row.covline;
     out.flag = row.flag;
     out.hit = row.hit;
@@ -139,7 +139,7 @@ void atf_cov::covline_CopyOut(atf_cov::FCovline &row, dev::Covline &out) {
 
 // --- atf_cov.FCovline.base.CopyIn
 // Copy fields in to row
-void atf_cov::covline_CopyIn(atf_cov::FCovline &row, dev::Covline &in) {
+void atf_cov::covline_CopyIn(atf_cov::FCovline &row, dev::Covline &in) throw() {
     row.covline = in.covline;
     row.flag = in.flag;
     row.hit = in.hit;
@@ -147,13 +147,13 @@ void atf_cov::covline_CopyIn(atf_cov::FCovline &row, dev::Covline &in) {
 }
 
 // --- atf_cov.FCovline.src.Get
-algo::Smallstr200 atf_cov::src_Get(atf_cov::FCovline& covline) {
+algo::Smallstr200 atf_cov::src_Get(atf_cov::FCovline& covline) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(covline.covline, ":RL"));
     return ret;
 }
 
 // --- atf_cov.FCovline.line.Get
-u32 atf_cov::line_Get(atf_cov::FCovline& covline) {
+u32 atf_cov::line_Get(atf_cov::FCovline& covline) throw() {
     u32 ret;
     ret = 0; // default value
     (void)u32_ReadStrptrMaybe(ret, algo::Pathcomp(covline.covline, ":RR"));
@@ -161,7 +161,7 @@ u32 atf_cov::line_Get(atf_cov::FCovline& covline) {
 }
 
 // --- atf_cov.FCovline..Uninit
-void atf_cov::FCovline_Uninit(atf_cov::FCovline& covline) {
+void atf_cov::FCovline_Uninit(atf_cov::FCovline& covline) throw() {
     atf_cov::FCovline &row = covline; (void)row;
     ind_covline_Remove(row); // remove covline from index ind_covline
     atf_cov::FGitfile* p_src = atf_cov::ind_gitfile_Find(src_Get(row));
@@ -173,7 +173,7 @@ void atf_cov::FCovline_Uninit(atf_cov::FCovline& covline) {
 // --- atf_cov.FCovline..Print
 // print string representation of ROW to string STR
 // cfmt:atf_cov.FCovline.String  printfmt:Tuple
-void atf_cov::FCovline_Print(atf_cov::FCovline& row, algo::cstring& str) {
+void atf_cov::FCovline_Print(atf_cov::FCovline& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_cov.FCovline";
 
@@ -195,7 +195,7 @@ void atf_cov::FCovline_Print(atf_cov::FCovline& row, algo::cstring& str) {
 
 // --- atf_cov.FCovtarget.base.CopyOut
 // Copy fields out of row
-void atf_cov::covtarget_CopyOut(atf_cov::FCovtarget &row, dev::Covtarget &out) {
+void atf_cov::covtarget_CopyOut(atf_cov::FCovtarget &row, dev::Covtarget &out) throw() {
     out.covtarget = row.covtarget;
     out.total = row.total;
     out.nonexe = row.nonexe;
@@ -207,7 +207,7 @@ void atf_cov::covtarget_CopyOut(atf_cov::FCovtarget &row, dev::Covtarget &out) {
 
 // --- atf_cov.FCovtarget.base.CopyIn
 // Copy fields in to row
-void atf_cov::covtarget_CopyIn(atf_cov::FCovtarget &row, dev::Covtarget &in) {
+void atf_cov::covtarget_CopyIn(atf_cov::FCovtarget &row, dev::Covtarget &in) throw() {
     row.covtarget = in.covtarget;
     row.total = in.total;
     row.nonexe = in.nonexe;
@@ -218,7 +218,7 @@ void atf_cov::covtarget_CopyIn(atf_cov::FCovtarget &row, dev::Covtarget &in) {
 }
 
 // --- atf_cov.FCovtarget..Uninit
-void atf_cov::FCovtarget_Uninit(atf_cov::FCovtarget& covtarget) {
+void atf_cov::FCovtarget_Uninit(atf_cov::FCovtarget& covtarget) throw() {
     atf_cov::FCovtarget &row = covtarget; (void)row;
     atf_cov::FTarget* p_covtarget = atf_cov::ind_target_Find(row.covtarget);
     if (p_covtarget)  {
@@ -229,7 +229,7 @@ void atf_cov::FCovtarget_Uninit(atf_cov::FCovtarget& covtarget) {
 // --- atf_cov.trace..Print
 // print string representation of ROW to string STR
 // cfmt:atf_cov.trace.String  printfmt:Tuple
-void atf_cov::trace_Print(atf_cov::trace& row, algo::cstring& str) {
+void atf_cov::trace_Print(atf_cov::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_cov.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -240,7 +240,7 @@ void atf_cov::trace_Print(atf_cov::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     atf_cov.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void atf_cov::ReadArgv() {
+void atf_cov::ReadArgv() throw() {
     command::atf_cov &cmd = atf_cov::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -469,7 +469,7 @@ bool atf_cov::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_cov.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_cov::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool atf_cov::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = atf_cov::LoadTuplesFile(root, recursive);
@@ -499,7 +499,7 @@ bool atf_cov::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool atf_cov::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool atf_cov::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -512,7 +512,7 @@ bool atf_cov::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- atf_cov.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool atf_cov::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool atf_cov::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -532,7 +532,7 @@ bool atf_cov::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) 
 
 // --- atf_cov.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_cov::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool atf_cov::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = atf_cov::LoadTuplesFile(fname, recursive);
@@ -557,7 +557,7 @@ bool atf_cov::_db_XrefMaybe() {
 // --- atf_cov.FDb.covline.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_cov::FCovline& atf_cov::covline_Alloc() {
+atf_cov::FCovline& atf_cov::covline_Alloc() throw() {
     atf_cov::FCovline* row = covline_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_cov.out_of_mem  field:atf_cov.FDb.covline  comment:'Alloc failed'");
@@ -567,7 +567,7 @@ atf_cov::FCovline& atf_cov::covline_Alloc() {
 
 // --- atf_cov.FDb.covline.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_cov::FCovline* atf_cov::covline_AllocMaybe() {
+atf_cov::FCovline* atf_cov::covline_AllocMaybe() throw() {
     atf_cov::FCovline *row = (atf_cov::FCovline*)covline_AllocMem();
     if (row) {
         new (row) atf_cov::FCovline; // call constructor
@@ -578,7 +578,7 @@ atf_cov::FCovline* atf_cov::covline_AllocMaybe() {
 // --- atf_cov.FDb.covline.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_cov::FCovline* atf_cov::covline_InsertMaybe(const dev::Covline &value) {
+atf_cov::FCovline* atf_cov::covline_InsertMaybe(const dev::Covline &value) throw() {
     atf_cov::FCovline *row = &covline_Alloc(); // if out of memory, process dies. if input error, return NULL.
     covline_CopyIn(*row,const_cast<dev::Covline&>(value));
     bool ok = covline_XrefMaybe(*row); // this may return false
@@ -591,7 +591,7 @@ atf_cov::FCovline* atf_cov::covline_InsertMaybe(const dev::Covline &value) {
 
 // --- atf_cov.FDb.covline.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_cov::covline_AllocMem() {
+void* atf_cov::covline_AllocMem() throw() {
     u64 new_nelems     = _db.covline_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -617,7 +617,7 @@ void* atf_cov::covline_AllocMem() {
 
 // --- atf_cov.FDb.covline.RemoveAll
 // Remove all elements from Lary
-void atf_cov::covline_RemoveAll() {
+void atf_cov::covline_RemoveAll() throw() {
     for (u64 n = _db.covline_n; n>0; ) {
         n--;
         covline_qFind(u64(n)).~FCovline(); // destroy last element
@@ -627,7 +627,7 @@ void atf_cov::covline_RemoveAll() {
 
 // --- atf_cov.FDb.covline.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_cov::covline_RemoveLast() {
+void atf_cov::covline_RemoveLast() throw() {
     u64 n = _db.covline_n;
     if (n > 0) {
         n -= 1;
@@ -637,7 +637,7 @@ void atf_cov::covline_RemoveLast() {
 }
 
 // --- atf_cov.FDb.covline.InputMaybe
-static bool atf_cov::covline_InputMaybe(dev::Covline &elem) {
+static bool atf_cov::covline_InputMaybe(dev::Covline &elem) throw() {
     bool retval = true;
     retval = covline_InsertMaybe(elem) != nullptr;
     return retval;
@@ -676,7 +676,7 @@ bool atf_cov::covline_XrefMaybe(atf_cov::FCovline &row) {
 
 // --- atf_cov.FDb.ind_covline.Find
 // Find row by key. Return NULL if not found.
-atf_cov::FCovline* atf_cov::ind_covline_Find(const algo::strptr& key) {
+atf_cov::FCovline* atf_cov::ind_covline_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_covline_buckets_n - 1);
     atf_cov::FCovline* *e = &_db.ind_covline_buckets_elems[index];
     atf_cov::FCovline* ret=NULL;
@@ -699,7 +699,7 @@ atf_cov::FCovline& atf_cov::ind_covline_FindX(const algo::strptr& key) {
 
 // --- atf_cov.FDb.ind_covline.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_cov::ind_covline_InsertMaybe(atf_cov::FCovline& row) {
+bool atf_cov::ind_covline_InsertMaybe(atf_cov::FCovline& row) throw() {
     ind_covline_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_covline_next == (atf_cov::FCovline*)-1)) {// check if in hash already
@@ -727,7 +727,7 @@ bool atf_cov::ind_covline_InsertMaybe(atf_cov::FCovline& row) {
 
 // --- atf_cov.FDb.ind_covline.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_cov::ind_covline_Remove(atf_cov::FCovline& row) {
+void atf_cov::ind_covline_Remove(atf_cov::FCovline& row) throw() {
     if (LIKELY(row.ind_covline_next != (atf_cov::FCovline*)-1)) {// check if in hash already
         u32 index = algo::Smallstr200_Hash(0, row.covline) & (_db.ind_covline_buckets_n - 1);
         atf_cov::FCovline* *prev = &_db.ind_covline_buckets_elems[index]; // addr of pointer to current element
@@ -745,7 +745,7 @@ void atf_cov::ind_covline_Remove(atf_cov::FCovline& row) {
 
 // --- atf_cov.FDb.ind_covline.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_cov::ind_covline_Reserve(int n) {
+void atf_cov::ind_covline_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_covline_buckets_n;
     u32 new_nelems   = _db.ind_covline_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -782,7 +782,7 @@ void atf_cov::ind_covline_Reserve(int n) {
 // --- atf_cov.FDb.target.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_cov::FTarget& atf_cov::target_Alloc() {
+atf_cov::FTarget& atf_cov::target_Alloc() throw() {
     atf_cov::FTarget* row = target_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_cov.out_of_mem  field:atf_cov.FDb.target  comment:'Alloc failed'");
@@ -792,7 +792,7 @@ atf_cov::FTarget& atf_cov::target_Alloc() {
 
 // --- atf_cov.FDb.target.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_cov::FTarget* atf_cov::target_AllocMaybe() {
+atf_cov::FTarget* atf_cov::target_AllocMaybe() throw() {
     atf_cov::FTarget *row = (atf_cov::FTarget*)target_AllocMem();
     if (row) {
         new (row) atf_cov::FTarget; // call constructor
@@ -803,7 +803,7 @@ atf_cov::FTarget* atf_cov::target_AllocMaybe() {
 // --- atf_cov.FDb.target.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_cov::FTarget* atf_cov::target_InsertMaybe(const dev::Target &value) {
+atf_cov::FTarget* atf_cov::target_InsertMaybe(const dev::Target &value) throw() {
     atf_cov::FTarget *row = &target_Alloc(); // if out of memory, process dies. if input error, return NULL.
     target_CopyIn(*row,const_cast<dev::Target&>(value));
     bool ok = target_XrefMaybe(*row); // this may return false
@@ -816,7 +816,7 @@ atf_cov::FTarget* atf_cov::target_InsertMaybe(const dev::Target &value) {
 
 // --- atf_cov.FDb.target.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_cov::target_AllocMem() {
+void* atf_cov::target_AllocMem() throw() {
     u64 new_nelems     = _db.target_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -842,7 +842,7 @@ void* atf_cov::target_AllocMem() {
 
 // --- atf_cov.FDb.target.RemoveAll
 // Remove all elements from Lary
-void atf_cov::target_RemoveAll() {
+void atf_cov::target_RemoveAll() throw() {
     for (u64 n = _db.target_n; n>0; ) {
         n--;
         target_qFind(u64(n)).~FTarget(); // destroy last element
@@ -852,7 +852,7 @@ void atf_cov::target_RemoveAll() {
 
 // --- atf_cov.FDb.target.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_cov::target_RemoveLast() {
+void atf_cov::target_RemoveLast() throw() {
     u64 n = _db.target_n;
     if (n > 0) {
         n -= 1;
@@ -862,7 +862,7 @@ void atf_cov::target_RemoveLast() {
 }
 
 // --- atf_cov.FDb.target.InputMaybe
-static bool atf_cov::target_InputMaybe(dev::Target &elem) {
+static bool atf_cov::target_InputMaybe(dev::Target &elem) throw() {
     bool retval = true;
     retval = target_InsertMaybe(elem) != nullptr;
     return retval;
@@ -888,7 +888,7 @@ bool atf_cov::target_XrefMaybe(atf_cov::FTarget &row) {
 
 // --- atf_cov.FDb.ind_target.Find
 // Find row by key. Return NULL if not found.
-atf_cov::FTarget* atf_cov::ind_target_Find(const algo::strptr& key) {
+atf_cov::FTarget* atf_cov::ind_target_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
     atf_cov::FTarget* *e = &_db.ind_target_buckets_elems[index];
     atf_cov::FTarget* ret=NULL;
@@ -911,7 +911,7 @@ atf_cov::FTarget& atf_cov::ind_target_FindX(const algo::strptr& key) {
 
 // --- atf_cov.FDb.ind_target.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_cov::FTarget& atf_cov::ind_target_GetOrCreate(const algo::strptr& key) {
+atf_cov::FTarget& atf_cov::ind_target_GetOrCreate(const algo::strptr& key) throw() {
     atf_cov::FTarget* ret = ind_target_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &target_Alloc();
@@ -928,7 +928,7 @@ atf_cov::FTarget& atf_cov::ind_target_GetOrCreate(const algo::strptr& key) {
 
 // --- atf_cov.FDb.ind_target.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_cov::ind_target_InsertMaybe(atf_cov::FTarget& row) {
+bool atf_cov::ind_target_InsertMaybe(atf_cov::FTarget& row) throw() {
     ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (atf_cov::FTarget*)-1)) {// check if in hash already
@@ -956,7 +956,7 @@ bool atf_cov::ind_target_InsertMaybe(atf_cov::FTarget& row) {
 
 // --- atf_cov.FDb.ind_target.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_cov::ind_target_Remove(atf_cov::FTarget& row) {
+void atf_cov::ind_target_Remove(atf_cov::FTarget& row) throw() {
     if (LIKELY(row.ind_target_next != (atf_cov::FTarget*)-1)) {// check if in hash already
         u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
         atf_cov::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
@@ -974,7 +974,7 @@ void atf_cov::ind_target_Remove(atf_cov::FTarget& row) {
 
 // --- atf_cov.FDb.ind_target.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_cov::ind_target_Reserve(int n) {
+void atf_cov::ind_target_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_target_buckets_n;
     u32 new_nelems   = _db.ind_target_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1011,7 +1011,7 @@ void atf_cov::ind_target_Reserve(int n) {
 // --- atf_cov.FDb.targsrc.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_cov::FTargsrc& atf_cov::targsrc_Alloc() {
+atf_cov::FTargsrc& atf_cov::targsrc_Alloc() throw() {
     atf_cov::FTargsrc* row = targsrc_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_cov.out_of_mem  field:atf_cov.FDb.targsrc  comment:'Alloc failed'");
@@ -1021,7 +1021,7 @@ atf_cov::FTargsrc& atf_cov::targsrc_Alloc() {
 
 // --- atf_cov.FDb.targsrc.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_cov::FTargsrc* atf_cov::targsrc_AllocMaybe() {
+atf_cov::FTargsrc* atf_cov::targsrc_AllocMaybe() throw() {
     atf_cov::FTargsrc *row = (atf_cov::FTargsrc*)targsrc_AllocMem();
     if (row) {
         new (row) atf_cov::FTargsrc; // call constructor
@@ -1032,7 +1032,7 @@ atf_cov::FTargsrc* atf_cov::targsrc_AllocMaybe() {
 // --- atf_cov.FDb.targsrc.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_cov::FTargsrc* atf_cov::targsrc_InsertMaybe(const dev::Targsrc &value) {
+atf_cov::FTargsrc* atf_cov::targsrc_InsertMaybe(const dev::Targsrc &value) throw() {
     atf_cov::FTargsrc *row = &targsrc_Alloc(); // if out of memory, process dies. if input error, return NULL.
     targsrc_CopyIn(*row,const_cast<dev::Targsrc&>(value));
     bool ok = targsrc_XrefMaybe(*row); // this may return false
@@ -1045,7 +1045,7 @@ atf_cov::FTargsrc* atf_cov::targsrc_InsertMaybe(const dev::Targsrc &value) {
 
 // --- atf_cov.FDb.targsrc.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_cov::targsrc_AllocMem() {
+void* atf_cov::targsrc_AllocMem() throw() {
     u64 new_nelems     = _db.targsrc_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1071,7 +1071,7 @@ void* atf_cov::targsrc_AllocMem() {
 
 // --- atf_cov.FDb.targsrc.RemoveAll
 // Remove all elements from Lary
-void atf_cov::targsrc_RemoveAll() {
+void atf_cov::targsrc_RemoveAll() throw() {
     for (u64 n = _db.targsrc_n; n>0; ) {
         n--;
         targsrc_qFind(u64(n)).~FTargsrc(); // destroy last element
@@ -1081,7 +1081,7 @@ void atf_cov::targsrc_RemoveAll() {
 
 // --- atf_cov.FDb.targsrc.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_cov::targsrc_RemoveLast() {
+void atf_cov::targsrc_RemoveLast() throw() {
     u64 n = _db.targsrc_n;
     if (n > 0) {
         n -= 1;
@@ -1091,7 +1091,7 @@ void atf_cov::targsrc_RemoveLast() {
 }
 
 // --- atf_cov.FDb.targsrc.InputMaybe
-static bool atf_cov::targsrc_InputMaybe(dev::Targsrc &elem) {
+static bool atf_cov::targsrc_InputMaybe(dev::Targsrc &elem) throw() {
     bool retval = true;
     retval = targsrc_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1148,7 +1148,7 @@ bool atf_cov::targsrc_XrefMaybe(atf_cov::FTargsrc &row) {
 
 // --- atf_cov.FDb.ind_targsrc.Find
 // Find row by key. Return NULL if not found.
-atf_cov::FTargsrc* atf_cov::ind_targsrc_Find(const algo::strptr& key) {
+atf_cov::FTargsrc* atf_cov::ind_targsrc_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_targsrc_buckets_n - 1);
     atf_cov::FTargsrc* *e = &_db.ind_targsrc_buckets_elems[index];
     atf_cov::FTargsrc* ret=NULL;
@@ -1171,7 +1171,7 @@ atf_cov::FTargsrc& atf_cov::ind_targsrc_FindX(const algo::strptr& key) {
 
 // --- atf_cov.FDb.ind_targsrc.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_cov::ind_targsrc_InsertMaybe(atf_cov::FTargsrc& row) {
+bool atf_cov::ind_targsrc_InsertMaybe(atf_cov::FTargsrc& row) throw() {
     ind_targsrc_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_targsrc_next == (atf_cov::FTargsrc*)-1)) {// check if in hash already
@@ -1199,7 +1199,7 @@ bool atf_cov::ind_targsrc_InsertMaybe(atf_cov::FTargsrc& row) {
 
 // --- atf_cov.FDb.ind_targsrc.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_cov::ind_targsrc_Remove(atf_cov::FTargsrc& row) {
+void atf_cov::ind_targsrc_Remove(atf_cov::FTargsrc& row) throw() {
     if (LIKELY(row.ind_targsrc_next != (atf_cov::FTargsrc*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.targsrc) & (_db.ind_targsrc_buckets_n - 1);
         atf_cov::FTargsrc* *prev = &_db.ind_targsrc_buckets_elems[index]; // addr of pointer to current element
@@ -1217,7 +1217,7 @@ void atf_cov::ind_targsrc_Remove(atf_cov::FTargsrc& row) {
 
 // --- atf_cov.FDb.ind_targsrc.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_cov::ind_targsrc_Reserve(int n) {
+void atf_cov::ind_targsrc_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_targsrc_buckets_n;
     u32 new_nelems   = _db.ind_targsrc_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1254,7 +1254,7 @@ void atf_cov::ind_targsrc_Reserve(int n) {
 // --- atf_cov.FDb.gitfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_cov::FGitfile& atf_cov::gitfile_Alloc() {
+atf_cov::FGitfile& atf_cov::gitfile_Alloc() throw() {
     atf_cov::FGitfile* row = gitfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_cov.out_of_mem  field:atf_cov.FDb.gitfile  comment:'Alloc failed'");
@@ -1264,7 +1264,7 @@ atf_cov::FGitfile& atf_cov::gitfile_Alloc() {
 
 // --- atf_cov.FDb.gitfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_cov::FGitfile* atf_cov::gitfile_AllocMaybe() {
+atf_cov::FGitfile* atf_cov::gitfile_AllocMaybe() throw() {
     atf_cov::FGitfile *row = (atf_cov::FGitfile*)gitfile_AllocMem();
     if (row) {
         new (row) atf_cov::FGitfile; // call constructor
@@ -1275,7 +1275,7 @@ atf_cov::FGitfile* atf_cov::gitfile_AllocMaybe() {
 // --- atf_cov.FDb.gitfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_cov::FGitfile* atf_cov::gitfile_InsertMaybe(const dev::Gitfile &value) {
+atf_cov::FGitfile* atf_cov::gitfile_InsertMaybe(const dev::Gitfile &value) throw() {
     atf_cov::FGitfile *row = &gitfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gitfile_CopyIn(*row,const_cast<dev::Gitfile&>(value));
     bool ok = gitfile_XrefMaybe(*row); // this may return false
@@ -1288,7 +1288,7 @@ atf_cov::FGitfile* atf_cov::gitfile_InsertMaybe(const dev::Gitfile &value) {
 
 // --- atf_cov.FDb.gitfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_cov::gitfile_AllocMem() {
+void* atf_cov::gitfile_AllocMem() throw() {
     u64 new_nelems     = _db.gitfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1314,7 +1314,7 @@ void* atf_cov::gitfile_AllocMem() {
 
 // --- atf_cov.FDb.gitfile.RemoveAll
 // Remove all elements from Lary
-void atf_cov::gitfile_RemoveAll() {
+void atf_cov::gitfile_RemoveAll() throw() {
     for (u64 n = _db.gitfile_n; n>0; ) {
         n--;
         gitfile_qFind(u64(n)).~FGitfile(); // destroy last element
@@ -1324,7 +1324,7 @@ void atf_cov::gitfile_RemoveAll() {
 
 // --- atf_cov.FDb.gitfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_cov::gitfile_RemoveLast() {
+void atf_cov::gitfile_RemoveLast() throw() {
     u64 n = _db.gitfile_n;
     if (n > 0) {
         n -= 1;
@@ -1334,7 +1334,7 @@ void atf_cov::gitfile_RemoveLast() {
 }
 
 // --- atf_cov.FDb.gitfile.InputMaybe
-static bool atf_cov::gitfile_InputMaybe(dev::Gitfile &elem) {
+static bool atf_cov::gitfile_InputMaybe(dev::Gitfile &elem) throw() {
     bool retval = true;
     retval = gitfile_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1360,7 +1360,7 @@ bool atf_cov::gitfile_XrefMaybe(atf_cov::FGitfile &row) {
 
 // --- atf_cov.FDb.ind_gitfile.Find
 // Find row by key. Return NULL if not found.
-atf_cov::FGitfile* atf_cov::ind_gitfile_Find(const algo::strptr& key) {
+atf_cov::FGitfile* atf_cov::ind_gitfile_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_gitfile_buckets_n - 1);
     atf_cov::FGitfile* *e = &_db.ind_gitfile_buckets_elems[index];
     atf_cov::FGitfile* ret=NULL;
@@ -1383,7 +1383,7 @@ atf_cov::FGitfile& atf_cov::ind_gitfile_FindX(const algo::strptr& key) {
 
 // --- atf_cov.FDb.ind_gitfile.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_cov::FGitfile& atf_cov::ind_gitfile_GetOrCreate(const algo::strptr& key) {
+atf_cov::FGitfile& atf_cov::ind_gitfile_GetOrCreate(const algo::strptr& key) throw() {
     atf_cov::FGitfile* ret = ind_gitfile_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gitfile_Alloc();
@@ -1400,7 +1400,7 @@ atf_cov::FGitfile& atf_cov::ind_gitfile_GetOrCreate(const algo::strptr& key) {
 
 // --- atf_cov.FDb.ind_gitfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_cov::ind_gitfile_InsertMaybe(atf_cov::FGitfile& row) {
+bool atf_cov::ind_gitfile_InsertMaybe(atf_cov::FGitfile& row) throw() {
     ind_gitfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gitfile_next == (atf_cov::FGitfile*)-1)) {// check if in hash already
@@ -1428,7 +1428,7 @@ bool atf_cov::ind_gitfile_InsertMaybe(atf_cov::FGitfile& row) {
 
 // --- atf_cov.FDb.ind_gitfile.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_cov::ind_gitfile_Remove(atf_cov::FGitfile& row) {
+void atf_cov::ind_gitfile_Remove(atf_cov::FGitfile& row) throw() {
     if (LIKELY(row.ind_gitfile_next != (atf_cov::FGitfile*)-1)) {// check if in hash already
         u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
         atf_cov::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index]; // addr of pointer to current element
@@ -1446,7 +1446,7 @@ void atf_cov::ind_gitfile_Remove(atf_cov::FGitfile& row) {
 
 // --- atf_cov.FDb.ind_gitfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_cov::ind_gitfile_Reserve(int n) {
+void atf_cov::ind_gitfile_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gitfile_buckets_n;
     u32 new_nelems   = _db.ind_gitfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1483,7 +1483,7 @@ void atf_cov::ind_gitfile_Reserve(int n) {
 // --- atf_cov.FDb.covtarget.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_cov::FCovtarget& atf_cov::covtarget_Alloc() {
+atf_cov::FCovtarget& atf_cov::covtarget_Alloc() throw() {
     atf_cov::FCovtarget* row = covtarget_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_cov.out_of_mem  field:atf_cov.FDb.covtarget  comment:'Alloc failed'");
@@ -1493,7 +1493,7 @@ atf_cov::FCovtarget& atf_cov::covtarget_Alloc() {
 
 // --- atf_cov.FDb.covtarget.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_cov::FCovtarget* atf_cov::covtarget_AllocMaybe() {
+atf_cov::FCovtarget* atf_cov::covtarget_AllocMaybe() throw() {
     atf_cov::FCovtarget *row = (atf_cov::FCovtarget*)covtarget_AllocMem();
     if (row) {
         new (row) atf_cov::FCovtarget; // call constructor
@@ -1504,7 +1504,7 @@ atf_cov::FCovtarget* atf_cov::covtarget_AllocMaybe() {
 // --- atf_cov.FDb.covtarget.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_cov::FCovtarget* atf_cov::covtarget_InsertMaybe(const dev::Covtarget &value) {
+atf_cov::FCovtarget* atf_cov::covtarget_InsertMaybe(const dev::Covtarget &value) throw() {
     atf_cov::FCovtarget *row = &covtarget_Alloc(); // if out of memory, process dies. if input error, return NULL.
     covtarget_CopyIn(*row,const_cast<dev::Covtarget&>(value));
     bool ok = covtarget_XrefMaybe(*row); // this may return false
@@ -1517,7 +1517,7 @@ atf_cov::FCovtarget* atf_cov::covtarget_InsertMaybe(const dev::Covtarget &value)
 
 // --- atf_cov.FDb.covtarget.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_cov::covtarget_AllocMem() {
+void* atf_cov::covtarget_AllocMem() throw() {
     u64 new_nelems     = _db.covtarget_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1543,7 +1543,7 @@ void* atf_cov::covtarget_AllocMem() {
 
 // --- atf_cov.FDb.covtarget.RemoveAll
 // Remove all elements from Lary
-void atf_cov::covtarget_RemoveAll() {
+void atf_cov::covtarget_RemoveAll() throw() {
     for (u64 n = _db.covtarget_n; n>0; ) {
         n--;
         covtarget_qFind(u64(n)).~FCovtarget(); // destroy last element
@@ -1553,7 +1553,7 @@ void atf_cov::covtarget_RemoveAll() {
 
 // --- atf_cov.FDb.covtarget.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_cov::covtarget_RemoveLast() {
+void atf_cov::covtarget_RemoveLast() throw() {
     u64 n = _db.covtarget_n;
     if (n > 0) {
         n -= 1;
@@ -1563,7 +1563,7 @@ void atf_cov::covtarget_RemoveLast() {
 }
 
 // --- atf_cov.FDb.covtarget.InputMaybe
-static bool atf_cov::covtarget_InputMaybe(dev::Covtarget &elem) {
+static bool atf_cov::covtarget_InputMaybe(dev::Covtarget &elem) throw() {
     bool retval = true;
     retval = covtarget_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1595,7 +1595,7 @@ bool atf_cov::covtarget_XrefMaybe(atf_cov::FCovtarget &row) {
 // --- atf_cov.FDb.covfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_cov::FCovfile& atf_cov::covfile_Alloc() {
+atf_cov::FCovfile& atf_cov::covfile_Alloc() throw() {
     atf_cov::FCovfile* row = covfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_cov.out_of_mem  field:atf_cov.FDb.covfile  comment:'Alloc failed'");
@@ -1605,7 +1605,7 @@ atf_cov::FCovfile& atf_cov::covfile_Alloc() {
 
 // --- atf_cov.FDb.covfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_cov::FCovfile* atf_cov::covfile_AllocMaybe() {
+atf_cov::FCovfile* atf_cov::covfile_AllocMaybe() throw() {
     atf_cov::FCovfile *row = (atf_cov::FCovfile*)covfile_AllocMem();
     if (row) {
         new (row) atf_cov::FCovfile; // call constructor
@@ -1616,7 +1616,7 @@ atf_cov::FCovfile* atf_cov::covfile_AllocMaybe() {
 // --- atf_cov.FDb.covfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_cov::FCovfile* atf_cov::covfile_InsertMaybe(const dev::Covfile &value) {
+atf_cov::FCovfile* atf_cov::covfile_InsertMaybe(const dev::Covfile &value) throw() {
     atf_cov::FCovfile *row = &covfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     covfile_CopyIn(*row,const_cast<dev::Covfile&>(value));
     bool ok = covfile_XrefMaybe(*row); // this may return false
@@ -1629,7 +1629,7 @@ atf_cov::FCovfile* atf_cov::covfile_InsertMaybe(const dev::Covfile &value) {
 
 // --- atf_cov.FDb.covfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_cov::covfile_AllocMem() {
+void* atf_cov::covfile_AllocMem() throw() {
     u64 new_nelems     = _db.covfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1655,7 +1655,7 @@ void* atf_cov::covfile_AllocMem() {
 
 // --- atf_cov.FDb.covfile.RemoveAll
 // Remove all elements from Lary
-void atf_cov::covfile_RemoveAll() {
+void atf_cov::covfile_RemoveAll() throw() {
     for (u64 n = _db.covfile_n; n>0; ) {
         n--;
         covfile_qFind(u64(n)).~FCovfile(); // destroy last element
@@ -1665,7 +1665,7 @@ void atf_cov::covfile_RemoveAll() {
 
 // --- atf_cov.FDb.covfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_cov::covfile_RemoveLast() {
+void atf_cov::covfile_RemoveLast() throw() {
     u64 n = _db.covfile_n;
     if (n > 0) {
         n -= 1;
@@ -1675,7 +1675,7 @@ void atf_cov::covfile_RemoveLast() {
 }
 
 // --- atf_cov.FDb.covfile.InputMaybe
-static bool atf_cov::covfile_InputMaybe(dev::Covfile &elem) {
+static bool atf_cov::covfile_InputMaybe(dev::Covfile &elem) throw() {
     bool retval = true;
     retval = covfile_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1707,7 +1707,7 @@ bool atf_cov::covfile_XrefMaybe(atf_cov::FCovfile &row) {
 // --- atf_cov.FDb.tgtcov.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_cov::FTgtcov& atf_cov::tgtcov_Alloc() {
+atf_cov::FTgtcov& atf_cov::tgtcov_Alloc() throw() {
     atf_cov::FTgtcov* row = tgtcov_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_cov.out_of_mem  field:atf_cov.FDb.tgtcov  comment:'Alloc failed'");
@@ -1717,7 +1717,7 @@ atf_cov::FTgtcov& atf_cov::tgtcov_Alloc() {
 
 // --- atf_cov.FDb.tgtcov.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_cov::FTgtcov* atf_cov::tgtcov_AllocMaybe() {
+atf_cov::FTgtcov* atf_cov::tgtcov_AllocMaybe() throw() {
     atf_cov::FTgtcov *row = (atf_cov::FTgtcov*)tgtcov_AllocMem();
     if (row) {
         new (row) atf_cov::FTgtcov; // call constructor
@@ -1728,7 +1728,7 @@ atf_cov::FTgtcov* atf_cov::tgtcov_AllocMaybe() {
 // --- atf_cov.FDb.tgtcov.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_cov::FTgtcov* atf_cov::tgtcov_InsertMaybe(const dev::Tgtcov &value) {
+atf_cov::FTgtcov* atf_cov::tgtcov_InsertMaybe(const dev::Tgtcov &value) throw() {
     atf_cov::FTgtcov *row = &tgtcov_Alloc(); // if out of memory, process dies. if input error, return NULL.
     tgtcov_CopyIn(*row,const_cast<dev::Tgtcov&>(value));
     bool ok = tgtcov_XrefMaybe(*row); // this may return false
@@ -1741,7 +1741,7 @@ atf_cov::FTgtcov* atf_cov::tgtcov_InsertMaybe(const dev::Tgtcov &value) {
 
 // --- atf_cov.FDb.tgtcov.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_cov::tgtcov_AllocMem() {
+void* atf_cov::tgtcov_AllocMem() throw() {
     u64 new_nelems     = _db.tgtcov_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1767,7 +1767,7 @@ void* atf_cov::tgtcov_AllocMem() {
 
 // --- atf_cov.FDb.tgtcov.RemoveAll
 // Remove all elements from Lary
-void atf_cov::tgtcov_RemoveAll() {
+void atf_cov::tgtcov_RemoveAll() throw() {
     for (u64 n = _db.tgtcov_n; n>0; ) {
         n--;
         tgtcov_qFind(u64(n)).~FTgtcov(); // destroy last element
@@ -1777,7 +1777,7 @@ void atf_cov::tgtcov_RemoveAll() {
 
 // --- atf_cov.FDb.tgtcov.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_cov::tgtcov_RemoveLast() {
+void atf_cov::tgtcov_RemoveLast() throw() {
     u64 n = _db.tgtcov_n;
     if (n > 0) {
         n -= 1;
@@ -1787,7 +1787,7 @@ void atf_cov::tgtcov_RemoveLast() {
 }
 
 // --- atf_cov.FDb.tgtcov.InputMaybe
-static bool atf_cov::tgtcov_InputMaybe(dev::Tgtcov &elem) {
+static bool atf_cov::tgtcov_InputMaybe(dev::Tgtcov &elem) throw() {
     bool retval = true;
     retval = tgtcov_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1827,7 +1827,7 @@ bool atf_cov::tgtcov_XrefMaybe(atf_cov::FTgtcov &row) {
 
 // --- atf_cov.FDb.ind_tgtcov.Find
 // Find row by key. Return NULL if not found.
-atf_cov::FTgtcov* atf_cov::ind_tgtcov_Find(const algo::strptr& key) {
+atf_cov::FTgtcov* atf_cov::ind_tgtcov_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_tgtcov_buckets_n - 1);
     atf_cov::FTgtcov* *e = &_db.ind_tgtcov_buckets_elems[index];
     atf_cov::FTgtcov* ret=NULL;
@@ -1850,7 +1850,7 @@ atf_cov::FTgtcov& atf_cov::ind_tgtcov_FindX(const algo::strptr& key) {
 
 // --- atf_cov.FDb.ind_tgtcov.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_cov::ind_tgtcov_InsertMaybe(atf_cov::FTgtcov& row) {
+bool atf_cov::ind_tgtcov_InsertMaybe(atf_cov::FTgtcov& row) throw() {
     ind_tgtcov_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_tgtcov_next == (atf_cov::FTgtcov*)-1)) {// check if in hash already
@@ -1878,7 +1878,7 @@ bool atf_cov::ind_tgtcov_InsertMaybe(atf_cov::FTgtcov& row) {
 
 // --- atf_cov.FDb.ind_tgtcov.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_cov::ind_tgtcov_Remove(atf_cov::FTgtcov& row) {
+void atf_cov::ind_tgtcov_Remove(atf_cov::FTgtcov& row) throw() {
     if (LIKELY(row.ind_tgtcov_next != (atf_cov::FTgtcov*)-1)) {// check if in hash already
         u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_tgtcov_buckets_n - 1);
         atf_cov::FTgtcov* *prev = &_db.ind_tgtcov_buckets_elems[index]; // addr of pointer to current element
@@ -1896,7 +1896,7 @@ void atf_cov::ind_tgtcov_Remove(atf_cov::FTgtcov& row) {
 
 // --- atf_cov.FDb.ind_tgtcov.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_cov::ind_tgtcov_Reserve(int n) {
+void atf_cov::ind_tgtcov_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_tgtcov_buckets_n;
     u32 new_nelems   = _db.ind_tgtcov_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1932,13 +1932,13 @@ void atf_cov::ind_tgtcov_Reserve(int n) {
 
 // --- atf_cov.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr atf_cov::trace_RowidFind(int t) {
+static algo::ImrowPtr atf_cov::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- atf_cov.FDb.trace.N
 // Function return 1
-inline static i32 atf_cov::trace_N() {
+inline static i32 atf_cov::trace_N() throw() {
     return 1;
 }
 
@@ -2067,7 +2067,7 @@ void atf_cov::FDb_Init() {
 }
 
 // --- atf_cov.FDb..Uninit
-void atf_cov::FDb_Uninit() {
+void atf_cov::FDb_Uninit() throw() {
     atf_cov::FDb &row = _db; (void)row;
 
     // atf_cov.FDb.ind_tgtcov.Uninit (Thash)  //
@@ -2109,18 +2109,18 @@ void atf_cov::FDb_Uninit() {
 
 // --- atf_cov.FGitfile.base.CopyOut
 // Copy fields out of row
-void atf_cov::gitfile_CopyOut(atf_cov::FGitfile &row, dev::Gitfile &out) {
+void atf_cov::gitfile_CopyOut(atf_cov::FGitfile &row, dev::Gitfile &out) throw() {
     out.gitfile = row.gitfile;
 }
 
 // --- atf_cov.FGitfile.base.CopyIn
 // Copy fields in to row
-void atf_cov::gitfile_CopyIn(atf_cov::FGitfile &row, dev::Gitfile &in) {
+void atf_cov::gitfile_CopyIn(atf_cov::FGitfile &row, dev::Gitfile &in) throw() {
     row.gitfile = in.gitfile;
 }
 
 // --- atf_cov.FGitfile.ext.Get
-algo::Smallstr50 atf_cov::ext_Get(atf_cov::FGitfile& gitfile) {
+algo::Smallstr50 atf_cov::ext_Get(atf_cov::FGitfile& gitfile) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR"));
     return ret;
 }
@@ -2128,7 +2128,7 @@ algo::Smallstr50 atf_cov::ext_Get(atf_cov::FGitfile& gitfile) {
 // --- atf_cov.FGitfile.c_covline.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void atf_cov::c_covline_Insert(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) {
+void atf_cov::c_covline_Insert(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) throw() {
     if (bool_Update(row.gitfile_c_covline_in_ary,true)) {
         // reserve space
         c_covline_Reserve(gitfile, 1);
@@ -2145,7 +2145,7 @@ void atf_cov::c_covline_Insert(atf_cov::FGitfile& gitfile, atf_cov::FCovline& ro
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool atf_cov::c_covline_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) {
+bool atf_cov::c_covline_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) throw() {
     bool retval = !row.gitfile_c_covline_in_ary;
     c_covline_Insert(gitfile,row); // check is performed in _Insert again
     return retval;
@@ -2153,7 +2153,7 @@ bool atf_cov::c_covline_InsertMaybe(atf_cov::FGitfile& gitfile, atf_cov::FCovlin
 
 // --- atf_cov.FGitfile.c_covline.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void atf_cov::c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) {
+void atf_cov::c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovline& row) throw() {
     if (bool_Update(row.gitfile_c_covline_in_ary,false)) {
         int lim = gitfile.c_covline_n;
         atf_cov::FCovline* *elems = gitfile.c_covline_elems;
@@ -2174,7 +2174,7 @@ void atf_cov::c_covline_Remove(atf_cov::FGitfile& gitfile, atf_cov::FCovline& ro
 
 // --- atf_cov.FGitfile.c_covline.Reserve
 // Reserve space in index for N more elements;
-void atf_cov::c_covline_Reserve(atf_cov::FGitfile& gitfile, u32 n) {
+void atf_cov::c_covline_Reserve(atf_cov::FGitfile& gitfile, u32 n) throw() {
     u32 old_max = gitfile.c_covline_max;
     if (UNLIKELY(gitfile.c_covline_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -2190,7 +2190,7 @@ void atf_cov::c_covline_Reserve(atf_cov::FGitfile& gitfile, u32 n) {
 }
 
 // --- atf_cov.FGitfile..Uninit
-void atf_cov::FGitfile_Uninit(atf_cov::FGitfile& gitfile) {
+void atf_cov::FGitfile_Uninit(atf_cov::FGitfile& gitfile) throw() {
     atf_cov::FGitfile &row = gitfile; (void)row;
     ind_gitfile_Remove(row); // remove gitfile from index ind_gitfile
 
@@ -2200,20 +2200,20 @@ void atf_cov::FGitfile_Uninit(atf_cov::FGitfile& gitfile) {
 
 // --- atf_cov.FTarget.base.CopyOut
 // Copy fields out of row
-void atf_cov::target_CopyOut(atf_cov::FTarget &row, dev::Target &out) {
+void atf_cov::target_CopyOut(atf_cov::FTarget &row, dev::Target &out) throw() {
     out.target = row.target;
 }
 
 // --- atf_cov.FTarget.base.CopyIn
 // Copy fields in to row
-void atf_cov::target_CopyIn(atf_cov::FTarget &row, dev::Target &in) {
+void atf_cov::target_CopyIn(atf_cov::FTarget &row, dev::Target &in) throw() {
     row.target = in.target;
 }
 
 // --- atf_cov.FTarget.c_targsrc.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void atf_cov::c_targsrc_Insert(atf_cov::FTarget& target, atf_cov::FTargsrc& row) {
+void atf_cov::c_targsrc_Insert(atf_cov::FTarget& target, atf_cov::FTargsrc& row) throw() {
     if (bool_Update(row.target_c_targsrc_in_ary,true)) {
         // reserve space
         c_targsrc_Reserve(target, 1);
@@ -2230,7 +2230,7 @@ void atf_cov::c_targsrc_Insert(atf_cov::FTarget& target, atf_cov::FTargsrc& row)
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool atf_cov::c_targsrc_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTargsrc& row) {
+bool atf_cov::c_targsrc_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTargsrc& row) throw() {
     bool retval = !row.target_c_targsrc_in_ary;
     c_targsrc_Insert(target,row); // check is performed in _Insert again
     return retval;
@@ -2238,7 +2238,7 @@ bool atf_cov::c_targsrc_InsertMaybe(atf_cov::FTarget& target, atf_cov::FTargsrc&
 
 // --- atf_cov.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void atf_cov::c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsrc& row) {
+void atf_cov::c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsrc& row) throw() {
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
         int lim = target.c_targsrc_n;
         atf_cov::FTargsrc* *elems = target.c_targsrc_elems;
@@ -2259,7 +2259,7 @@ void atf_cov::c_targsrc_Remove(atf_cov::FTarget& target, atf_cov::FTargsrc& row)
 
 // --- atf_cov.FTarget.c_targsrc.Reserve
 // Reserve space in index for N more elements;
-void atf_cov::c_targsrc_Reserve(atf_cov::FTarget& target, u32 n) {
+void atf_cov::c_targsrc_Reserve(atf_cov::FTarget& target, u32 n) throw() {
     u32 old_max = target.c_targsrc_max;
     if (UNLIKELY(target.c_targsrc_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -2275,7 +2275,7 @@ void atf_cov::c_targsrc_Reserve(atf_cov::FTarget& target, u32 n) {
 }
 
 // --- atf_cov.FTarget..Uninit
-void atf_cov::FTarget_Uninit(atf_cov::FTarget& target) {
+void atf_cov::FTarget_Uninit(atf_cov::FTarget& target) throw() {
     atf_cov::FTarget &row = target; (void)row;
     ind_target_Remove(row); // remove target from index ind_target
 
@@ -2285,38 +2285,38 @@ void atf_cov::FTarget_Uninit(atf_cov::FTarget& target) {
 
 // --- atf_cov.FTargsrc.base.CopyOut
 // Copy fields out of row
-void atf_cov::targsrc_CopyOut(atf_cov::FTargsrc &row, dev::Targsrc &out) {
+void atf_cov::targsrc_CopyOut(atf_cov::FTargsrc &row, dev::Targsrc &out) throw() {
     out.targsrc = row.targsrc;
     out.comment = row.comment;
 }
 
 // --- atf_cov.FTargsrc.base.CopyIn
 // Copy fields in to row
-void atf_cov::targsrc_CopyIn(atf_cov::FTargsrc &row, dev::Targsrc &in) {
+void atf_cov::targsrc_CopyIn(atf_cov::FTargsrc &row, dev::Targsrc &in) throw() {
     row.targsrc = in.targsrc;
     row.comment = in.comment;
 }
 
 // --- atf_cov.FTargsrc.target.Get
-algo::Smallstr16 atf_cov::target_Get(atf_cov::FTargsrc& targsrc) {
+algo::Smallstr16 atf_cov::target_Get(atf_cov::FTargsrc& targsrc) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
     return ret;
 }
 
 // --- atf_cov.FTargsrc.src.Get
-algo::Smallstr200 atf_cov::src_Get(atf_cov::FTargsrc& targsrc) {
+algo::Smallstr200 atf_cov::src_Get(atf_cov::FTargsrc& targsrc) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
     return ret;
 }
 
 // --- atf_cov.FTargsrc.ext.Get
-algo::Smallstr10 atf_cov::ext_Get(atf_cov::FTargsrc& targsrc) {
+algo::Smallstr10 atf_cov::ext_Get(atf_cov::FTargsrc& targsrc) throw() {
     algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
     return ret;
 }
 
 // --- atf_cov.FTargsrc..Uninit
-void atf_cov::FTargsrc_Uninit(atf_cov::FTargsrc& targsrc) {
+void atf_cov::FTargsrc_Uninit(atf_cov::FTargsrc& targsrc) throw() {
     atf_cov::FTargsrc &row = targsrc; (void)row;
     ind_targsrc_Remove(row); // remove targsrc from index ind_targsrc
     atf_cov::FTarget* p_target = atf_cov::ind_target_Find(target_Get(row));
@@ -2331,7 +2331,7 @@ void atf_cov::FTargsrc_Uninit(atf_cov::FTargsrc& targsrc) {
 
 // --- atf_cov.FTgtcov.base.CopyOut
 // Copy fields out of row
-void atf_cov::tgtcov_CopyOut(atf_cov::FTgtcov &row, dev::Tgtcov &out) {
+void atf_cov::tgtcov_CopyOut(atf_cov::FTgtcov &row, dev::Tgtcov &out) throw() {
     out.target = row.target;
     out.cov_min = row.cov_min;
     out.maxerr = row.maxerr;
@@ -2340,7 +2340,7 @@ void atf_cov::tgtcov_CopyOut(atf_cov::FTgtcov &row, dev::Tgtcov &out) {
 
 // --- atf_cov.FTgtcov.base.CopyIn
 // Copy fields in to row
-void atf_cov::tgtcov_CopyIn(atf_cov::FTgtcov &row, dev::Tgtcov &in) {
+void atf_cov::tgtcov_CopyIn(atf_cov::FTgtcov &row, dev::Tgtcov &in) throw() {
     row.target = in.target;
     row.cov_min = in.cov_min;
     row.maxerr = in.maxerr;
@@ -2348,7 +2348,7 @@ void atf_cov::tgtcov_CopyIn(atf_cov::FTgtcov &row, dev::Tgtcov &in) {
 }
 
 // --- atf_cov.FTgtcov..Uninit
-void atf_cov::FTgtcov_Uninit(atf_cov::FTgtcov& tgtcov) {
+void atf_cov::FTgtcov_Uninit(atf_cov::FTgtcov& tgtcov) throw() {
     atf_cov::FTgtcov &row = tgtcov; (void)row;
     ind_tgtcov_Remove(row); // remove tgtcov from index ind_tgtcov
     atf_cov::FTarget* p_target = atf_cov::ind_target_Find(row.target);
@@ -2360,7 +2360,7 @@ void atf_cov::FTgtcov_Uninit(atf_cov::FTgtcov& tgtcov) {
 // --- atf_cov.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_cov::value_ToCstr(const atf_cov::FieldId& parent) {
+const char* atf_cov::value_ToCstr(const atf_cov::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_cov_FieldId_value         : ret = "value";  break;
@@ -2371,7 +2371,7 @@ const char* atf_cov::value_ToCstr(const atf_cov::FieldId& parent) {
 // --- atf_cov.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_cov::value_Print(const atf_cov::FieldId& parent, algo::cstring &lhs) {
+void atf_cov::value_Print(const atf_cov::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2384,7 +2384,7 @@ void atf_cov::value_Print(const atf_cov::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_cov::value_SetStrptrMaybe(atf_cov::FieldId& parent, algo::strptr rhs) {
+bool atf_cov::value_SetStrptrMaybe(atf_cov::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -2402,13 +2402,13 @@ bool atf_cov::value_SetStrptrMaybe(atf_cov::FieldId& parent, algo::strptr rhs) {
 // --- atf_cov.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_cov::value_SetStrptr(atf_cov::FieldId& parent, algo::strptr rhs, atf_cov_FieldIdEnum dflt) {
+void atf_cov::value_SetStrptr(atf_cov::FieldId& parent, algo::strptr rhs, atf_cov_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_cov.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_cov::value_ReadStrptrMaybe(atf_cov::FieldId& parent, algo::strptr rhs) {
+bool atf_cov::value_ReadStrptrMaybe(atf_cov::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2420,7 +2420,7 @@ bool atf_cov::value_ReadStrptrMaybe(atf_cov::FieldId& parent, algo::strptr rhs) 
 // --- atf_cov.FieldId..ReadStrptrMaybe
 // Read fields of atf_cov::FieldId from an ascii string.
 // The format of the string is the format of the atf_cov::FieldId's only field
-bool atf_cov::FieldId_ReadStrptrMaybe(atf_cov::FieldId &parent, algo::strptr in_str) {
+bool atf_cov::FieldId_ReadStrptrMaybe(atf_cov::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2429,14 +2429,14 @@ bool atf_cov::FieldId_ReadStrptrMaybe(atf_cov::FieldId &parent, algo::strptr in_
 // --- atf_cov.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_cov.FieldId.String  printfmt:Raw
-void atf_cov::FieldId_Print(atf_cov::FieldId& row, algo::cstring& str) {
+void atf_cov::FieldId_Print(atf_cov::FieldId& row, algo::cstring& str) throw() {
     atf_cov::value_Print(row, str);
 }
 
 // --- atf_cov.Phase.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_cov::value_ToCstr(const atf_cov::Phase& parent) {
+const char* atf_cov::value_ToCstr(const atf_cov::Phase& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_cov_Phase_value_runcmd    : ret = "runcmd";  break;
@@ -2450,7 +2450,7 @@ const char* atf_cov::value_ToCstr(const atf_cov::Phase& parent) {
 // --- atf_cov.Phase.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_cov::value_Print(const atf_cov::Phase& parent, algo::cstring &lhs) {
+void atf_cov::value_Print(const atf_cov::Phase& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2463,7 +2463,7 @@ void atf_cov::value_Print(const atf_cov::Phase& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_cov::value_SetStrptrMaybe(atf_cov::Phase& parent, algo::strptr rhs) {
+bool atf_cov::value_SetStrptrMaybe(atf_cov::Phase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
@@ -2495,13 +2495,13 @@ bool atf_cov::value_SetStrptrMaybe(atf_cov::Phase& parent, algo::strptr rhs) {
 // --- atf_cov.Phase.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_cov::value_SetStrptr(atf_cov::Phase& parent, algo::strptr rhs, atf_cov_Phase_value_Enum dflt) {
+void atf_cov::value_SetStrptr(atf_cov::Phase& parent, algo::strptr rhs, atf_cov_Phase_value_Enum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_cov.Phase.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_cov::value_ReadStrptrMaybe(atf_cov::Phase& parent, algo::strptr rhs) {
+bool atf_cov::value_ReadStrptrMaybe(atf_cov::Phase& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2513,7 +2513,7 @@ bool atf_cov::value_ReadStrptrMaybe(atf_cov::Phase& parent, algo::strptr rhs) {
 // --- atf_cov.Phase..ReadStrptrMaybe
 // Read fields of atf_cov::Phase from an ascii string.
 // The format of the string is the format of the atf_cov::Phase's only field
-bool atf_cov::Phase_ReadStrptrMaybe(atf_cov::Phase &parent, algo::strptr in_str) {
+bool atf_cov::Phase_ReadStrptrMaybe(atf_cov::Phase &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2522,14 +2522,14 @@ bool atf_cov::Phase_ReadStrptrMaybe(atf_cov::Phase &parent, algo::strptr in_str)
 // --- atf_cov.Phase..Print
 // print string representation of ROW to string STR
 // cfmt:atf_cov.Phase.String  printfmt:Raw
-void atf_cov::Phase_Print(atf_cov::Phase row, algo::cstring& str) {
+void atf_cov::Phase_Print(atf_cov::Phase row, algo::cstring& str) throw() {
     atf_cov::value_Print(row, str);
 }
 
 // --- atf_cov.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_cov::value_ToCstr(const atf_cov::TableId& parent) {
+const char* atf_cov::value_ToCstr(const atf_cov::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_cov_TableId_dev_Covfile   : ret = "dev.Covfile";  break;
@@ -2546,7 +2546,7 @@ const char* atf_cov::value_ToCstr(const atf_cov::TableId& parent) {
 // --- atf_cov.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_cov::value_Print(const atf_cov::TableId& parent, algo::cstring &lhs) {
+void atf_cov::value_Print(const atf_cov::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2559,7 +2559,7 @@ void atf_cov::value_Print(const atf_cov::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_cov::value_SetStrptrMaybe(atf_cov::TableId& parent, algo::strptr rhs) {
+bool atf_cov::value_SetStrptrMaybe(atf_cov::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 10: {
@@ -2640,13 +2640,13 @@ bool atf_cov::value_SetStrptrMaybe(atf_cov::TableId& parent, algo::strptr rhs) {
 // --- atf_cov.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_cov::value_SetStrptr(atf_cov::TableId& parent, algo::strptr rhs, atf_cov_TableIdEnum dflt) {
+void atf_cov::value_SetStrptr(atf_cov::TableId& parent, algo::strptr rhs, atf_cov_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_cov.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_cov::value_ReadStrptrMaybe(atf_cov::TableId& parent, algo::strptr rhs) {
+bool atf_cov::value_ReadStrptrMaybe(atf_cov::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2658,7 +2658,7 @@ bool atf_cov::value_ReadStrptrMaybe(atf_cov::TableId& parent, algo::strptr rhs) 
 // --- atf_cov.TableId..ReadStrptrMaybe
 // Read fields of atf_cov::TableId from an ascii string.
 // The format of the string is the format of the atf_cov::TableId's only field
-bool atf_cov::TableId_ReadStrptrMaybe(atf_cov::TableId &parent, algo::strptr in_str) {
+bool atf_cov::TableId_ReadStrptrMaybe(atf_cov::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2667,7 +2667,7 @@ bool atf_cov::TableId_ReadStrptrMaybe(atf_cov::TableId &parent, algo::strptr in_
 // --- atf_cov.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_cov.TableId.String  printfmt:Raw
-void atf_cov::TableId_Print(atf_cov::TableId& row, algo::cstring& str) {
+void atf_cov::TableId_Print(atf_cov::TableId& row, algo::cstring& str) throw() {
     atf_cov::value_Print(row, str);
 }
 

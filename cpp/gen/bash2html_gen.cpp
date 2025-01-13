@@ -69,7 +69,7 @@ namespace bash2html { // gen:ns_print_proto
 // --- bash2html.trace..Print
 // print string representation of ROW to string STR
 // cfmt:bash2html.trace.String  printfmt:Tuple
-void bash2html::trace_Print(bash2html::trace& row, algo::cstring& str) {
+void bash2html::trace_Print(bash2html::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "bash2html.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -80,7 +80,7 @@ void bash2html::trace_Print(bash2html::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     bash2html.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void bash2html::ReadArgv() {
+void bash2html::ReadArgv() throw() {
     command::bash2html &cmd = bash2html::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -258,7 +258,7 @@ bool bash2html::InsertStrptrMaybe(algo::strptr str) {
 
 // --- bash2html.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool bash2html::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool bash2html::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = bash2html::LoadTuplesFile(root, recursive);
@@ -281,7 +281,7 @@ bool bash2html::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool bash2html::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool bash2html::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -294,7 +294,7 @@ bool bash2html::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- bash2html.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool bash2html::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool bash2html::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -313,7 +313,7 @@ bool bash2html::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive
 
 // --- bash2html.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool bash2html::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool bash2html::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = bash2html::LoadTuplesFile(fname, recursive);
@@ -337,13 +337,13 @@ bool bash2html::_db_XrefMaybe() {
 
 // --- bash2html.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr bash2html::trace_RowidFind(int t) {
+static algo::ImrowPtr bash2html::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- bash2html.FDb.trace.N
 // Function return 1
-inline static i32 bash2html::trace_N() {
+inline static i32 bash2html::trace_N() throw() {
     return 1;
 }
 
@@ -357,7 +357,7 @@ void bash2html::FDb_Init() {
 // --- bash2html.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* bash2html::value_ToCstr(const bash2html::FieldId& parent) {
+const char* bash2html::value_ToCstr(const bash2html::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case bash2html_FieldId_value       : ret = "value";  break;
@@ -368,7 +368,7 @@ const char* bash2html::value_ToCstr(const bash2html::FieldId& parent) {
 // --- bash2html.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void bash2html::value_Print(const bash2html::FieldId& parent, algo::cstring &lhs) {
+void bash2html::value_Print(const bash2html::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -381,7 +381,7 @@ void bash2html::value_Print(const bash2html::FieldId& parent, algo::cstring &lhs
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool bash2html::value_SetStrptrMaybe(bash2html::FieldId& parent, algo::strptr rhs) {
+bool bash2html::value_SetStrptrMaybe(bash2html::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -399,13 +399,13 @@ bool bash2html::value_SetStrptrMaybe(bash2html::FieldId& parent, algo::strptr rh
 // --- bash2html.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void bash2html::value_SetStrptr(bash2html::FieldId& parent, algo::strptr rhs, bash2html_FieldIdEnum dflt) {
+void bash2html::value_SetStrptr(bash2html::FieldId& parent, algo::strptr rhs, bash2html_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- bash2html.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool bash2html::value_ReadStrptrMaybe(bash2html::FieldId& parent, algo::strptr rhs) {
+bool bash2html::value_ReadStrptrMaybe(bash2html::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -417,7 +417,7 @@ bool bash2html::value_ReadStrptrMaybe(bash2html::FieldId& parent, algo::strptr r
 // --- bash2html.FieldId..ReadStrptrMaybe
 // Read fields of bash2html::FieldId from an ascii string.
 // The format of the string is the format of the bash2html::FieldId's only field
-bool bash2html::FieldId_ReadStrptrMaybe(bash2html::FieldId &parent, algo::strptr in_str) {
+bool bash2html::FieldId_ReadStrptrMaybe(bash2html::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -426,7 +426,7 @@ bool bash2html::FieldId_ReadStrptrMaybe(bash2html::FieldId &parent, algo::strptr
 // --- bash2html.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:bash2html.FieldId.String  printfmt:Raw
-void bash2html::FieldId_Print(bash2html::FieldId& row, algo::cstring& str) {
+void bash2html::FieldId_Print(bash2html::FieldId& row, algo::cstring& str) throw() {
     bash2html::value_Print(row, str);
 }
 

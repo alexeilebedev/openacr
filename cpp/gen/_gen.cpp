@@ -34,7 +34,7 @@
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str) {
+bool i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     int index = 0;
     bool neg=false;
@@ -112,7 +112,7 @@ bool i16_ReadStrptrMaybe(i16 &parent, algo::strptr in_str) {
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str) {
+bool i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     int index = 0;
     bool neg=false;
@@ -190,7 +190,7 @@ bool i32_ReadStrptrMaybe(i32 &parent, algo::strptr in_str) {
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str) {
+bool i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     int index = 0;
     bool neg=false;
@@ -284,7 +284,7 @@ bool i64_ReadStrptrMaybe(i64 &parent, algo::strptr in_str) {
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str) {
+bool i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     int index = 0;
     bool neg=false;
@@ -362,7 +362,7 @@ bool i8_ReadStrptrMaybe(i8 &parent, algo::strptr in_str) {
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool u8_ReadStrptrMaybe(u8 &parent, algo::strptr in_str) {
+bool u8_ReadStrptrMaybe(u8 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     int index = 0;
     bool neg=false;
@@ -440,7 +440,7 @@ bool u8_ReadStrptrMaybe(u8 &parent, algo::strptr in_str) {
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str) {
+bool u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     int index = 0;
     bool neg=false;
@@ -534,7 +534,7 @@ bool u128_ReadStrptrMaybe(u128 &parent, algo::strptr in_str) {
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool u16_ReadStrptrMaybe(u16 &parent, algo::strptr in_str) {
+bool u16_ReadStrptrMaybe(u16 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     int index = 0;
     bool neg=false;
@@ -612,7 +612,7 @@ bool u16_ReadStrptrMaybe(u16 &parent, algo::strptr in_str) {
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool u32_ReadStrptrMaybe(u32 &parent, algo::strptr in_str) {
+bool u32_ReadStrptrMaybe(u32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     int index = 0;
     bool neg=false;
@@ -690,7 +690,7 @@ bool u32_ReadStrptrMaybe(u32 &parent, algo::strptr in_str) {
 // If the value is outside of valid range for the type, it is clipped to the valid range
 // Supported bases: 10, 16 (if string starts with 0x or 0X
 // For hex numbers, there is no overflow (just take last N digits that fit the type)
-bool u64_ReadStrptrMaybe(u64 &parent, algo::strptr in_str) {
+bool u64_ReadStrptrMaybe(u64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     int index = 0;
     bool neg=false;

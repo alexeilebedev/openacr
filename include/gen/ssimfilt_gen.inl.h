@@ -29,18 +29,18 @@
 //#pragma endinclude
 
 // --- ssimfilt.trace..Ctor
-inline  ssimfilt::trace::trace() {
+inline  ssimfilt::trace::trace() throw() {
 }
 
 // --- ssimfilt.FDb.tuple.EmptyQ
 // Return true if index is empty
-inline bool ssimfilt::tuple_EmptyQ() {
+inline bool ssimfilt::tuple_EmptyQ() throw() {
     return _db.tuple_n == 0;
 }
 
 // --- ssimfilt.FDb.tuple.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::Tuple* ssimfilt::tuple_Find(u64 t) {
+inline algo::Tuple* ssimfilt::tuple_Find(u64 t) throw() {
     algo::Tuple *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.tuple_n))) {
         u64 x = t + 1;
@@ -54,19 +54,19 @@ inline algo::Tuple* ssimfilt::tuple_Find(u64 t) {
 
 // --- ssimfilt.FDb.tuple.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::Tuple* ssimfilt::tuple_Last() {
+inline algo::Tuple* ssimfilt::tuple_Last() throw() {
     return tuple_Find(u64(_db.tuple_n-1));
 }
 
 // --- ssimfilt.FDb.tuple.N
 // Return number of items in the pool
-inline i32 ssimfilt::tuple_N() {
+inline i32 ssimfilt::tuple_N() throw() {
     return _db.tuple_n;
 }
 
 // --- ssimfilt.FDb.tuple.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::Tuple& ssimfilt::tuple_qFind(u64 t) {
+inline algo::Tuple& ssimfilt::tuple_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -76,13 +76,13 @@ inline algo::Tuple& ssimfilt::tuple_qFind(u64 t) {
 
 // --- ssimfilt.FDb.matchfield.EmptyQ
 // Return true if index is empty
-inline bool ssimfilt::matchfield_EmptyQ() {
+inline bool ssimfilt::matchfield_EmptyQ() throw() {
     return _db.matchfield_n == 0;
 }
 
 // --- ssimfilt.FDb.matchfield.Find
 // Look up row by row id. Return NULL if out of range
-inline ssimfilt::KVRegx* ssimfilt::matchfield_Find(u64 t) {
+inline ssimfilt::KVRegx* ssimfilt::matchfield_Find(u64 t) throw() {
     ssimfilt::KVRegx *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.matchfield_n))) {
         u64 x = t + 1;
@@ -96,19 +96,19 @@ inline ssimfilt::KVRegx* ssimfilt::matchfield_Find(u64 t) {
 
 // --- ssimfilt.FDb.matchfield.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline ssimfilt::KVRegx* ssimfilt::matchfield_Last() {
+inline ssimfilt::KVRegx* ssimfilt::matchfield_Last() throw() {
     return matchfield_Find(u64(_db.matchfield_n-1));
 }
 
 // --- ssimfilt.FDb.matchfield.N
 // Return number of items in the pool
-inline i32 ssimfilt::matchfield_N() {
+inline i32 ssimfilt::matchfield_N() throw() {
     return _db.matchfield_n;
 }
 
 // --- ssimfilt.FDb.matchfield.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline ssimfilt::KVRegx& ssimfilt::matchfield_qFind(u64 t) {
+inline ssimfilt::KVRegx& ssimfilt::matchfield_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -118,13 +118,13 @@ inline ssimfilt::KVRegx& ssimfilt::matchfield_qFind(u64 t) {
 
 // --- ssimfilt.FDb.selfield.EmptyQ
 // Return true if index is empty
-inline bool ssimfilt::selfield_EmptyQ() {
+inline bool ssimfilt::selfield_EmptyQ() throw() {
     return _db.selfield_n == 0;
 }
 
 // --- ssimfilt.FDb.selfield.Find
 // Look up row by row id. Return NULL if out of range
-inline ssimfilt::KVRegx* ssimfilt::selfield_Find(u64 t) {
+inline ssimfilt::KVRegx* ssimfilt::selfield_Find(u64 t) throw() {
     ssimfilt::KVRegx *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.selfield_n))) {
         u64 x = t + 1;
@@ -138,19 +138,19 @@ inline ssimfilt::KVRegx* ssimfilt::selfield_Find(u64 t) {
 
 // --- ssimfilt.FDb.selfield.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline ssimfilt::KVRegx* ssimfilt::selfield_Last() {
+inline ssimfilt::KVRegx* ssimfilt::selfield_Last() throw() {
     return selfield_Find(u64(_db.selfield_n-1));
 }
 
 // --- ssimfilt.FDb.selfield.N
 // Return number of items in the pool
-inline i32 ssimfilt::selfield_N() {
+inline i32 ssimfilt::selfield_N() throw() {
     return _db.selfield_n;
 }
 
 // --- ssimfilt.FDb.selfield.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline ssimfilt::KVRegx& ssimfilt::selfield_qFind(u64 t) {
+inline ssimfilt::KVRegx& ssimfilt::selfield_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -160,13 +160,13 @@ inline ssimfilt::KVRegx& ssimfilt::selfield_qFind(u64 t) {
 
 // --- ssimfilt.FDb.unstablefld.EmptyQ
 // Return true if index is empty
-inline bool ssimfilt::unstablefld_EmptyQ() {
+inline bool ssimfilt::unstablefld_EmptyQ() throw() {
     return _db.unstablefld_n == 0;
 }
 
 // --- ssimfilt.FDb.unstablefld.Find
 // Look up row by row id. Return NULL if out of range
-inline ssimfilt::FUnstablefld* ssimfilt::unstablefld_Find(u64 t) {
+inline ssimfilt::FUnstablefld* ssimfilt::unstablefld_Find(u64 t) throw() {
     ssimfilt::FUnstablefld *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.unstablefld_n))) {
         u64 x = t + 1;
@@ -180,19 +180,19 @@ inline ssimfilt::FUnstablefld* ssimfilt::unstablefld_Find(u64 t) {
 
 // --- ssimfilt.FDb.unstablefld.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline ssimfilt::FUnstablefld* ssimfilt::unstablefld_Last() {
+inline ssimfilt::FUnstablefld* ssimfilt::unstablefld_Last() throw() {
     return unstablefld_Find(u64(_db.unstablefld_n-1));
 }
 
 // --- ssimfilt.FDb.unstablefld.N
 // Return number of items in the pool
-inline i32 ssimfilt::unstablefld_N() {
+inline i32 ssimfilt::unstablefld_N() throw() {
     return _db.unstablefld_n;
 }
 
 // --- ssimfilt.FDb.unstablefld.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline ssimfilt::FUnstablefld& ssimfilt::unstablefld_qFind(u64 t) {
+inline ssimfilt::FUnstablefld& ssimfilt::unstablefld_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -202,113 +202,113 @@ inline ssimfilt::FUnstablefld& ssimfilt::unstablefld_qFind(u64 t) {
 
 // --- ssimfilt.FDb.ind_unstablefld.EmptyQ
 // Return true if hash is empty
-inline bool ssimfilt::ind_unstablefld_EmptyQ() {
+inline bool ssimfilt::ind_unstablefld_EmptyQ() throw() {
     return _db.ind_unstablefld_n == 0;
 }
 
 // --- ssimfilt.FDb.ind_unstablefld.N
 // Return number of items in the hash
-inline i32 ssimfilt::ind_unstablefld_N() {
+inline i32 ssimfilt::ind_unstablefld_N() throw() {
     return _db.ind_unstablefld_n;
 }
 
 // --- ssimfilt.FDb.tuple_curs.Reset
 // cursor points to valid item
-inline void ssimfilt::_db_tuple_curs_Reset(_db_tuple_curs &curs, ssimfilt::FDb &parent) {
+inline void ssimfilt::_db_tuple_curs_Reset(_db_tuple_curs &curs, ssimfilt::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- ssimfilt.FDb.tuple_curs.ValidQ
 // cursor points to valid item
-inline bool ssimfilt::_db_tuple_curs_ValidQ(_db_tuple_curs &curs) {
+inline bool ssimfilt::_db_tuple_curs_ValidQ(_db_tuple_curs &curs) throw() {
     return curs.index < _db.tuple_n;
 }
 
 // --- ssimfilt.FDb.tuple_curs.Next
 // proceed to next item
-inline void ssimfilt::_db_tuple_curs_Next(_db_tuple_curs &curs) {
+inline void ssimfilt::_db_tuple_curs_Next(_db_tuple_curs &curs) throw() {
     curs.index++;
 }
 
 // --- ssimfilt.FDb.tuple_curs.Access
 // item access
-inline algo::Tuple& ssimfilt::_db_tuple_curs_Access(_db_tuple_curs &curs) {
+inline algo::Tuple& ssimfilt::_db_tuple_curs_Access(_db_tuple_curs &curs) throw() {
     return tuple_qFind(u64(curs.index));
 }
 
 // --- ssimfilt.FDb.matchfield_curs.Reset
 // cursor points to valid item
-inline void ssimfilt::_db_matchfield_curs_Reset(_db_matchfield_curs &curs, ssimfilt::FDb &parent) {
+inline void ssimfilt::_db_matchfield_curs_Reset(_db_matchfield_curs &curs, ssimfilt::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- ssimfilt.FDb.matchfield_curs.ValidQ
 // cursor points to valid item
-inline bool ssimfilt::_db_matchfield_curs_ValidQ(_db_matchfield_curs &curs) {
+inline bool ssimfilt::_db_matchfield_curs_ValidQ(_db_matchfield_curs &curs) throw() {
     return curs.index < _db.matchfield_n;
 }
 
 // --- ssimfilt.FDb.matchfield_curs.Next
 // proceed to next item
-inline void ssimfilt::_db_matchfield_curs_Next(_db_matchfield_curs &curs) {
+inline void ssimfilt::_db_matchfield_curs_Next(_db_matchfield_curs &curs) throw() {
     curs.index++;
 }
 
 // --- ssimfilt.FDb.matchfield_curs.Access
 // item access
-inline ssimfilt::KVRegx& ssimfilt::_db_matchfield_curs_Access(_db_matchfield_curs &curs) {
+inline ssimfilt::KVRegx& ssimfilt::_db_matchfield_curs_Access(_db_matchfield_curs &curs) throw() {
     return matchfield_qFind(u64(curs.index));
 }
 
 // --- ssimfilt.FDb.selfield_curs.Reset
 // cursor points to valid item
-inline void ssimfilt::_db_selfield_curs_Reset(_db_selfield_curs &curs, ssimfilt::FDb &parent) {
+inline void ssimfilt::_db_selfield_curs_Reset(_db_selfield_curs &curs, ssimfilt::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- ssimfilt.FDb.selfield_curs.ValidQ
 // cursor points to valid item
-inline bool ssimfilt::_db_selfield_curs_ValidQ(_db_selfield_curs &curs) {
+inline bool ssimfilt::_db_selfield_curs_ValidQ(_db_selfield_curs &curs) throw() {
     return curs.index < _db.selfield_n;
 }
 
 // --- ssimfilt.FDb.selfield_curs.Next
 // proceed to next item
-inline void ssimfilt::_db_selfield_curs_Next(_db_selfield_curs &curs) {
+inline void ssimfilt::_db_selfield_curs_Next(_db_selfield_curs &curs) throw() {
     curs.index++;
 }
 
 // --- ssimfilt.FDb.selfield_curs.Access
 // item access
-inline ssimfilt::KVRegx& ssimfilt::_db_selfield_curs_Access(_db_selfield_curs &curs) {
+inline ssimfilt::KVRegx& ssimfilt::_db_selfield_curs_Access(_db_selfield_curs &curs) throw() {
     return selfield_qFind(u64(curs.index));
 }
 
 // --- ssimfilt.FDb.unstablefld_curs.Reset
 // cursor points to valid item
-inline void ssimfilt::_db_unstablefld_curs_Reset(_db_unstablefld_curs &curs, ssimfilt::FDb &parent) {
+inline void ssimfilt::_db_unstablefld_curs_Reset(_db_unstablefld_curs &curs, ssimfilt::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- ssimfilt.FDb.unstablefld_curs.ValidQ
 // cursor points to valid item
-inline bool ssimfilt::_db_unstablefld_curs_ValidQ(_db_unstablefld_curs &curs) {
+inline bool ssimfilt::_db_unstablefld_curs_ValidQ(_db_unstablefld_curs &curs) throw() {
     return curs.index < _db.unstablefld_n;
 }
 
 // --- ssimfilt.FDb.unstablefld_curs.Next
 // proceed to next item
-inline void ssimfilt::_db_unstablefld_curs_Next(_db_unstablefld_curs &curs) {
+inline void ssimfilt::_db_unstablefld_curs_Next(_db_unstablefld_curs &curs) throw() {
     curs.index++;
 }
 
 // --- ssimfilt.FDb.unstablefld_curs.Access
 // item access
-inline ssimfilt::FUnstablefld& ssimfilt::_db_unstablefld_curs_Access(_db_unstablefld_curs &curs) {
+inline ssimfilt::FUnstablefld& ssimfilt::_db_unstablefld_curs_Access(_db_unstablefld_curs &curs) throw() {
     return unstablefld_qFind(u64(curs.index));
 }
 
@@ -319,29 +319,29 @@ inline void ssimfilt::FUnstablefld_Init(ssimfilt::FUnstablefld& unstablefld) {
 }
 
 // --- ssimfilt.FUnstablefld..Ctor
-inline  ssimfilt::FUnstablefld::FUnstablefld() {
+inline  ssimfilt::FUnstablefld::FUnstablefld() throw() {
     ssimfilt::FUnstablefld_Init(*this);
 }
 
 // --- ssimfilt.FUnstablefld..Dtor
-inline  ssimfilt::FUnstablefld::~FUnstablefld() {
+inline  ssimfilt::FUnstablefld::~FUnstablefld() throw() {
     ssimfilt::FUnstablefld_Uninit(*this);
 }
 
 // --- ssimfilt.FieldId.value.GetEnum
 // Get value of field as enum type
-inline ssimfilt_FieldIdEnum ssimfilt::value_GetEnum(const ssimfilt::FieldId& parent) {
+inline ssimfilt_FieldIdEnum ssimfilt::value_GetEnum(const ssimfilt::FieldId& parent) throw() {
     return ssimfilt_FieldIdEnum(parent.value);
 }
 
 // --- ssimfilt.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void ssimfilt::value_SetEnum(ssimfilt::FieldId& parent, ssimfilt_FieldIdEnum rhs) {
+inline void ssimfilt::value_SetEnum(ssimfilt::FieldId& parent, ssimfilt_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- ssimfilt.FieldId.value.Cast
-inline  ssimfilt::FieldId::operator ssimfilt_FieldIdEnum() const {
+inline  ssimfilt::FieldId::operator ssimfilt_FieldIdEnum() const throw() {
     return ssimfilt_FieldIdEnum((*this).value);
 }
 
@@ -352,39 +352,39 @@ inline void ssimfilt::FieldId_Init(ssimfilt::FieldId& parent) {
 }
 
 // --- ssimfilt.FieldId..Ctor
-inline  ssimfilt::FieldId::FieldId() {
+inline  ssimfilt::FieldId::FieldId() throw() {
     ssimfilt::FieldId_Init(*this);
 }
 
 // --- ssimfilt.FieldId..FieldwiseCtor
-inline  ssimfilt::FieldId::FieldId(i32 in_value)
+inline  ssimfilt::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- ssimfilt.FieldId..EnumCtor
-inline  ssimfilt::FieldId::FieldId(ssimfilt_FieldIdEnum arg) {
+inline  ssimfilt::FieldId::FieldId(ssimfilt_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- ssimfilt.KVRegx..Ctor
-inline  ssimfilt::KVRegx::KVRegx() {
+inline  ssimfilt::KVRegx::KVRegx() throw() {
 }
 
 // --- ssimfilt.TableId.value.GetEnum
 // Get value of field as enum type
-inline ssimfilt_TableIdEnum ssimfilt::value_GetEnum(const ssimfilt::TableId& parent) {
+inline ssimfilt_TableIdEnum ssimfilt::value_GetEnum(const ssimfilt::TableId& parent) throw() {
     return ssimfilt_TableIdEnum(parent.value);
 }
 
 // --- ssimfilt.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void ssimfilt::value_SetEnum(ssimfilt::TableId& parent, ssimfilt_TableIdEnum rhs) {
+inline void ssimfilt::value_SetEnum(ssimfilt::TableId& parent, ssimfilt_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- ssimfilt.TableId.value.Cast
-inline  ssimfilt::TableId::operator ssimfilt_TableIdEnum() const {
+inline  ssimfilt::TableId::operator ssimfilt_TableIdEnum() const throw() {
     return ssimfilt_TableIdEnum((*this).value);
 }
 
@@ -395,18 +395,18 @@ inline void ssimfilt::TableId_Init(ssimfilt::TableId& parent) {
 }
 
 // --- ssimfilt.TableId..Ctor
-inline  ssimfilt::TableId::TableId() {
+inline  ssimfilt::TableId::TableId() throw() {
     ssimfilt::TableId_Init(*this);
 }
 
 // --- ssimfilt.TableId..FieldwiseCtor
-inline  ssimfilt::TableId::TableId(i32 in_value)
+inline  ssimfilt::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- ssimfilt.TableId..EnumCtor
-inline  ssimfilt::TableId::TableId(ssimfilt_TableIdEnum arg) {
+inline  ssimfilt::TableId::TableId(ssimfilt_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

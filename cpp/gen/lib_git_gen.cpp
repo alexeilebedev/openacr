@@ -45,7 +45,7 @@ namespace lib_git { // gen:ns_print_proto
 // --- lib_git.trace..Print
 // print string representation of ROW to string STR
 // cfmt:lib_git.trace.String  printfmt:Tuple
-void lib_git::trace_Print(lib_git::trace& row, algo::cstring& str) {
+void lib_git::trace_Print(lib_git::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_git.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -81,7 +81,7 @@ bool lib_git::InsertStrptrMaybe(algo::strptr str) {
 
 // --- lib_git.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool lib_git::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool lib_git::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = lib_git::LoadTuplesFile(root, recursive);
@@ -104,7 +104,7 @@ bool lib_git::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool lib_git::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool lib_git::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -117,7 +117,7 @@ bool lib_git::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- lib_git.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool lib_git::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool lib_git::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -136,7 +136,7 @@ bool lib_git::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) 
 
 // --- lib_git.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool lib_git::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool lib_git::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = lib_git::LoadTuplesFile(fname, recursive);
@@ -160,13 +160,13 @@ bool lib_git::_db_XrefMaybe() {
 
 // --- lib_git.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr lib_git::trace_RowidFind(int t) {
+static algo::ImrowPtr lib_git::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- lib_git.FDb.trace.N
 // Function return 1
-inline static i32 lib_git::trace_N() {
+inline static i32 lib_git::trace_N() throw() {
     return 1;
 }
 
@@ -180,7 +180,7 @@ void lib_git::FDb_Init() {
 // --- lib_git.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_git::value_ToCstr(const lib_git::FieldId& parent) {
+const char* lib_git::value_ToCstr(const lib_git::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_git_FieldId_value         : ret = "value";  break;
@@ -191,7 +191,7 @@ const char* lib_git::value_ToCstr(const lib_git::FieldId& parent) {
 // --- lib_git.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_git::value_Print(const lib_git::FieldId& parent, algo::cstring &lhs) {
+void lib_git::value_Print(const lib_git::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -204,7 +204,7 @@ void lib_git::value_Print(const lib_git::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_git::value_SetStrptrMaybe(lib_git::FieldId& parent, algo::strptr rhs) {
+bool lib_git::value_SetStrptrMaybe(lib_git::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -222,13 +222,13 @@ bool lib_git::value_SetStrptrMaybe(lib_git::FieldId& parent, algo::strptr rhs) {
 // --- lib_git.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_git::value_SetStrptr(lib_git::FieldId& parent, algo::strptr rhs, lib_git_FieldIdEnum dflt) {
+void lib_git::value_SetStrptr(lib_git::FieldId& parent, algo::strptr rhs, lib_git_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_git.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_git::value_ReadStrptrMaybe(lib_git::FieldId& parent, algo::strptr rhs) {
+bool lib_git::value_ReadStrptrMaybe(lib_git::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -240,7 +240,7 @@ bool lib_git::value_ReadStrptrMaybe(lib_git::FieldId& parent, algo::strptr rhs) 
 // --- lib_git.FieldId..ReadStrptrMaybe
 // Read fields of lib_git::FieldId from an ascii string.
 // The format of the string is the format of the lib_git::FieldId's only field
-bool lib_git::FieldId_ReadStrptrMaybe(lib_git::FieldId &parent, algo::strptr in_str) {
+bool lib_git::FieldId_ReadStrptrMaybe(lib_git::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -249,7 +249,7 @@ bool lib_git::FieldId_ReadStrptrMaybe(lib_git::FieldId &parent, algo::strptr in_
 // --- lib_git.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_git.FieldId.String  printfmt:Raw
-void lib_git::FieldId_Print(lib_git::FieldId& row, algo::cstring& str) {
+void lib_git::FieldId_Print(lib_git::FieldId& row, algo::cstring& str) throw() {
     lib_git::value_Print(row, str);
 }
 

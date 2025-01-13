@@ -38,7 +38,7 @@ namespace command { // gen:ns_print_proto
 // --- command.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* command::value_ToCstr(const command::FieldId& parent) {
+const char* command::value_ToCstr(const command::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case command_FieldId_target        : ret = "target";  break;
@@ -352,7 +352,7 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
 // --- command.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void command::value_Print(const command::FieldId& parent, algo::cstring &lhs) {
+void command::value_Print(const command::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -365,7 +365,7 @@ void command::value_Print(const command::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
+bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
@@ -1409,13 +1409,13 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
 // --- command.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void command::value_SetStrptr(command::FieldId& parent, algo::strptr rhs, command_FieldIdEnum dflt) {
+void command::value_SetStrptr(command::FieldId& parent, algo::strptr rhs, command_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- command.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool command::value_ReadStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
+bool command::value_ReadStrptrMaybe(command::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1427,7 +1427,7 @@ bool command::value_ReadStrptrMaybe(command::FieldId& parent, algo::strptr rhs) 
 // --- command.FieldId..ReadStrptrMaybe
 // Read fields of command::FieldId from an ascii string.
 // The format of the string is the format of the command::FieldId's only field
-bool command::FieldId_ReadStrptrMaybe(command::FieldId &parent, algo::strptr in_str) {
+bool command::FieldId_ReadStrptrMaybe(command::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1436,20 +1436,20 @@ bool command::FieldId_ReadStrptrMaybe(command::FieldId &parent, algo::strptr in_
 // --- command.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:command.FieldId.String  printfmt:Raw
-void command::FieldId_Print(command::FieldId& row, algo::cstring& str) {
+void command::FieldId_Print(command::FieldId& row, algo::cstring& str) throw() {
     command::value_Print(row, str);
 }
 
 // --- command.abt.target.Print
 // Print back to string
-void command::target_Print(command::abt& parent, algo::cstring &out) {
+void command::target_Print(command::abt& parent, algo::cstring &out) throw() {
     Regx_Print(parent.target, out);
 }
 
 // --- command.abt.target.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::target_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
+bool command::target_ReadStrptrMaybe(command::abt& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.target, in, true);
     return retval;
@@ -1457,14 +1457,14 @@ bool command::target_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
 
 // --- command.abt.cfg.Print
 // Print back to string
-void command::cfg_Print(command::abt& parent, algo::cstring &out) {
+void command::cfg_Print(command::abt& parent, algo::cstring &out) throw() {
     Regx_Print(parent.cfg, out);
 }
 
 // --- command.abt.cfg.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::cfg_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
+bool command::cfg_ReadStrptrMaybe(command::abt& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.cfg, in, true);
     return retval;
@@ -1472,14 +1472,14 @@ bool command::cfg_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
 
 // --- command.abt.srcfile.Print
 // Print back to string
-void command::srcfile_Print(command::abt& parent, algo::cstring &out) {
+void command::srcfile_Print(command::abt& parent, algo::cstring &out) throw() {
     Regx_Print(parent.srcfile, out);
 }
 
 // --- command.abt.srcfile.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::srcfile_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
+bool command::srcfile_ReadStrptrMaybe(command::abt& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.srcfile, in, true);
     return retval;
@@ -1487,14 +1487,14 @@ bool command::srcfile_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
 
 // --- command.abt.disas.Print
 // Print back to string
-void command::disas_Print(command::abt& parent, algo::cstring &out) {
+void command::disas_Print(command::abt& parent, algo::cstring &out) throw() {
     Regx_Print(parent.disas, out);
 }
 
 // --- command.abt.disas.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::disas_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
+bool command::disas_ReadStrptrMaybe(command::abt& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.disas, in, false);
     return retval;
@@ -1503,7 +1503,7 @@ bool command::disas_ReadStrptrMaybe(command::abt& parent, algo::strptr in) {
 // --- command.abt.cache.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* command::cache_ToCstr(const command::abt& parent) {
+const char* command::cache_ToCstr(const command::abt& parent) throw() {
     const char *ret = NULL;
     switch(cache_GetEnum(parent)) {
         case command_abt_cache_auto        : ret = "auto";  break;
@@ -1518,7 +1518,7 @@ const char* command::cache_ToCstr(const command::abt& parent) {
 // --- command.abt.cache.Print
 // Convert cache to a string. First, attempt conversion to a known string.
 // If no string matches, print cache as a numeric value.
-void command::cache_Print(const command::abt& parent, algo::cstring &lhs) {
+void command::cache_Print(const command::abt& parent, algo::cstring &lhs) throw() {
     const char *strval = cache_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1531,7 +1531,7 @@ void command::cache_Print(const command::abt& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool command::cache_SetStrptrMaybe(command::abt& parent, algo::strptr rhs) {
+bool command::cache_SetStrptrMaybe(command::abt& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
@@ -1572,13 +1572,13 @@ bool command::cache_SetStrptrMaybe(command::abt& parent, algo::strptr rhs) {
 // --- command.abt.cache.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void command::cache_SetStrptr(command::abt& parent, algo::strptr rhs, command_abt_cache_Enum dflt) {
+void command::cache_SetStrptr(command::abt& parent, algo::strptr rhs, command_abt_cache_Enum dflt) throw() {
     if (!cache_SetStrptrMaybe(parent,rhs)) cache_SetEnum(parent,dflt);
 }
 
 // --- command.abt.cache.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool command::cache_ReadStrptrMaybe(command::abt& parent, algo::strptr rhs) {
+bool command::cache_ReadStrptrMaybe(command::abt& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = cache_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1588,7 +1588,7 @@ bool command::cache_ReadStrptrMaybe(command::abt& parent, algo::strptr rhs) {
 }
 
 // --- command.abt..ReadFieldMaybe
-bool command::abt_ReadFieldMaybe(command::abt& parent, algo::strptr field, algo::strptr strval) {
+bool command::abt_ReadFieldMaybe(command::abt& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1707,7 +1707,7 @@ bool command::abt_ReadFieldMaybe(command::abt& parent, algo::strptr field, algo:
 
 // --- command.abt..ReadTupleMaybe
 // Read fields of command::abt from attributes of ascii tuple TUPLE
-bool command::abt_ReadTupleMaybe(command::abt &parent, algo::Tuple &tuple) {
+bool command::abt_ReadTupleMaybe(command::abt &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -1756,7 +1756,7 @@ void command::abt_Init(command::abt& parent) {
 // --- command.abt..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::abt_ToCmdline(command::abt& row) {
+tempstr command::abt_ToCmdline(command::abt& row) throw() {
     tempstr ret;
     ret << "bin/abt ";
     abt_PrintArgv(row, ret);
@@ -1773,7 +1773,7 @@ tempstr command::abt_ToCmdline(command::abt& row) {
 // --- command.abt..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.abt.Argv  printfmt:Auto
-void command::abt_PrintArgv(command::abt& row, algo::cstring& str) {
+void command::abt_PrintArgv(command::abt& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -1934,7 +1934,7 @@ void command::abt_PrintArgv(command::abt& row, algo::cstring& str) {
 }
 
 // --- command.abt..GetAnon
-algo::strptr command::abt_GetAnon(command::abt &parent, i32 idx) {
+algo::strptr command::abt_GetAnon(command::abt &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("target", 6);
@@ -1946,7 +1946,7 @@ algo::strptr command::abt_GetAnon(command::abt &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::abt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::abt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_target: { // $comment
@@ -2061,14 +2061,14 @@ i32 command::abt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
 
 // --- command.abt_md.readme.Print
 // Print back to string
-void command::readme_Print(command::abt_md& parent, algo::cstring &out) {
+void command::readme_Print(command::abt_md& parent, algo::cstring &out) throw() {
     Regx_Print(parent.readme, out);
 }
 
 // --- command.abt_md.readme.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::readme_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
+bool command::readme_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.readme, in, true);
     return retval;
@@ -2076,14 +2076,14 @@ bool command::readme_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
 
 // --- command.abt_md.ns.Print
 // Print back to string
-void command::ns_Print(command::abt_md& parent, algo::cstring &out) {
+void command::ns_Print(command::abt_md& parent, algo::cstring &out) throw() {
     Regx_Print(parent.ns, out);
 }
 
 // --- command.abt_md.ns.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::ns_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
+bool command::ns_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.ns, in, true);
     return retval;
@@ -2091,21 +2091,21 @@ bool command::ns_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
 
 // --- command.abt_md.section.Print
 // Print back to string
-void command::section_Print(command::abt_md& parent, algo::cstring &out) {
+void command::section_Print(command::abt_md& parent, algo::cstring &out) throw() {
     Regx_Print(parent.section, out);
 }
 
 // --- command.abt_md.section.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::section_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) {
+bool command::section_ReadStrptrMaybe(command::abt_md& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.section, in, true);
     return retval;
 }
 
 // --- command.abt_md..ReadFieldMaybe
-bool command::abt_md_ReadFieldMaybe(command::abt_md& parent, algo::strptr field, algo::strptr strval) {
+bool command::abt_md_ReadFieldMaybe(command::abt_md& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2168,7 +2168,7 @@ bool command::abt_md_ReadFieldMaybe(command::abt_md& parent, algo::strptr field,
 
 // --- command.abt_md..ReadTupleMaybe
 // Read fields of command::abt_md from attributes of ascii tuple TUPLE
-bool command::abt_md_ReadTupleMaybe(command::abt_md &parent, algo::Tuple &tuple) {
+bool command::abt_md_ReadTupleMaybe(command::abt_md &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -2203,7 +2203,7 @@ void command::abt_md_Init(command::abt_md& parent) {
 // --- command.abt_md..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::abt_md_ToCmdline(command::abt_md& row) {
+tempstr command::abt_md_ToCmdline(command::abt_md& row) throw() {
     tempstr ret;
     ret << "bin/abt_md ";
     abt_md_PrintArgv(row, ret);
@@ -2220,7 +2220,7 @@ tempstr command::abt_md_ToCmdline(command::abt_md& row) {
 // --- command.abt_md..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.abt_md.Argv  printfmt:Tuple
-void command::abt_md_PrintArgv(command::abt_md& row, algo::cstring& str) {
+void command::abt_md_PrintArgv(command::abt_md& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -2295,7 +2295,7 @@ void command::abt_md_PrintArgv(command::abt_md& row, algo::cstring& str) {
 }
 
 // --- command.abt_md..GetAnon
-algo::strptr command::abt_md_GetAnon(command::abt_md &parent, i32 idx) {
+algo::strptr command::abt_md_GetAnon(command::abt_md &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("readme", 6);
@@ -2308,7 +2308,7 @@ algo::strptr command::abt_md_GetAnon(command::abt_md &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::abt_md_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::abt_md_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -2372,7 +2372,7 @@ i32 command::abt_md_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
 // --- command.abt_md_proc.abt_md.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::abt_md_Start(command::abt_md_proc& parent) {
+int command::abt_md_Start(command::abt_md_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(abt_md_ToCmdline(parent)); // maybe print command
@@ -2410,7 +2410,7 @@ int command::abt_md_Start(command::abt_md_proc& parent) {
 
 // --- command.abt_md_proc.abt_md.StartRead
 // Start subprocess & Read output
-algo::Fildes command::abt_md_StartRead(command::abt_md_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::abt_md_StartRead(command::abt_md_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -2432,7 +2432,7 @@ void command::abt_md_Kill(command::abt_md_proc& parent) {
 
 // --- command.abt_md_proc.abt_md.Wait
 // Wait for subprocess to return
-void command::abt_md_Wait(command::abt_md_proc& parent) {
+void command::abt_md_Wait(command::abt_md_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -2451,7 +2451,7 @@ void command::abt_md_Wait(command::abt_md_proc& parent) {
 // --- command.abt_md_proc.abt_md.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::abt_md_Exec(command::abt_md_proc& parent) {
+int command::abt_md_Exec(command::abt_md_proc& parent) throw() {
     abt_md_Start(parent);
     abt_md_Wait(parent);
     return parent.status;
@@ -2469,7 +2469,7 @@ void command::abt_md_ExecX(command::abt_md_proc& parent) {
 // --- command.abt_md_proc.abt_md.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::abt_md_Execv(command::abt_md_proc& parent) {
+int command::abt_md_Execv(command::abt_md_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     abt_md_ToArgv(parent, args);
@@ -2485,7 +2485,7 @@ int command::abt_md_Execv(command::abt_md_proc& parent) {
 }
 
 // --- command.abt_md_proc.abt_md.ToCmdline
-algo::tempstr command::abt_md_ToCmdline(command::abt_md_proc& parent) {
+algo::tempstr command::abt_md_ToCmdline(command::abt_md_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::abt_md_PrintArgv(parent.cmd,retval);
@@ -2503,7 +2503,7 @@ algo::tempstr command::abt_md_ToCmdline(command::abt_md_proc& parent) {
 
 // --- command.abt_md_proc.abt_md.ToArgv
 // Form array from the command line
-void command::abt_md_ToArgv(command::abt_md_proc& parent, algo::StringAry& args) {
+void command::abt_md_ToArgv(command::abt_md_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -2584,7 +2584,7 @@ void command::abt_md_ToArgv(command::abt_md_proc& parent, algo::StringAry& args)
 }
 
 // --- command.abt_md_proc..Uninit
-void command::abt_md_proc_Uninit(command::abt_md_proc& parent) {
+void command::abt_md_proc_Uninit(command::abt_md_proc& parent) throw() {
     command::abt_md_proc &row = parent; (void)row;
 
     // command.abt_md_proc.abt_md.Uninit (Exec)  //
@@ -2594,7 +2594,7 @@ void command::abt_md_proc_Uninit(command::abt_md_proc& parent) {
 // --- command.abt_proc.abt.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::abt_Start(command::abt_proc& parent) {
+int command::abt_Start(command::abt_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(abt_ToCmdline(parent)); // maybe print command
@@ -2632,7 +2632,7 @@ int command::abt_Start(command::abt_proc& parent) {
 
 // --- command.abt_proc.abt.StartRead
 // Start subprocess & Read output
-algo::Fildes command::abt_StartRead(command::abt_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::abt_StartRead(command::abt_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -2654,7 +2654,7 @@ void command::abt_Kill(command::abt_proc& parent) {
 
 // --- command.abt_proc.abt.Wait
 // Wait for subprocess to return
-void command::abt_Wait(command::abt_proc& parent) {
+void command::abt_Wait(command::abt_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -2673,7 +2673,7 @@ void command::abt_Wait(command::abt_proc& parent) {
 // --- command.abt_proc.abt.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::abt_Exec(command::abt_proc& parent) {
+int command::abt_Exec(command::abt_proc& parent) throw() {
     abt_Start(parent);
     abt_Wait(parent);
     return parent.status;
@@ -2691,7 +2691,7 @@ void command::abt_ExecX(command::abt_proc& parent) {
 // --- command.abt_proc.abt.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::abt_Execv(command::abt_proc& parent) {
+int command::abt_Execv(command::abt_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     abt_ToArgv(parent, args);
@@ -2707,7 +2707,7 @@ int command::abt_Execv(command::abt_proc& parent) {
 }
 
 // --- command.abt_proc.abt.ToCmdline
-algo::tempstr command::abt_ToCmdline(command::abt_proc& parent) {
+algo::tempstr command::abt_ToCmdline(command::abt_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::abt_PrintArgv(parent.cmd,retval);
@@ -2725,7 +2725,7 @@ algo::tempstr command::abt_ToCmdline(command::abt_proc& parent) {
 
 // --- command.abt_proc.abt.ToArgv
 // Form array from the command line
-void command::abt_ToArgv(command::abt_proc& parent, algo::StringAry& args) {
+void command::abt_ToArgv(command::abt_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -2890,7 +2890,7 @@ void command::abt_ToArgv(command::abt_proc& parent, algo::StringAry& args) {
 }
 
 // --- command.abt_proc..Uninit
-void command::abt_proc_Uninit(command::abt_proc& parent) {
+void command::abt_proc_Uninit(command::abt_proc& parent) throw() {
     command::abt_proc &row = parent; (void)row;
 
     // command.abt_proc.abt.Uninit (Exec)  //
@@ -2901,7 +2901,7 @@ void command::abt_proc_Uninit(command::abt_proc& parent) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> command::where_Addary(command::acr& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> command::where_Addary(command::acr& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.where_elems && rhs.elems < parent.where_elems + parent.where_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.acr.where  comment:'alias error: sub-array is being appended to the whole'");
@@ -2919,7 +2919,7 @@ algo::aryptr<algo::cstring> command::where_Addary(command::acr& parent, algo::ar
 // --- command.acr.where.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& command::where_Alloc(command::acr& parent) {
+algo::cstring& command::where_Alloc(command::acr& parent) throw() {
     where_Reserve(parent, 1);
     int n  = parent.where_n;
     int at = n;
@@ -2932,7 +2932,7 @@ algo::cstring& command::where_Alloc(command::acr& parent) {
 // --- command.acr.where.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& command::where_AllocAt(command::acr& parent, int at) {
+algo::cstring& command::where_AllocAt(command::acr& parent, int at) throw() {
     where_Reserve(parent, 1);
     int n  = parent.where_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -2947,7 +2947,7 @@ algo::cstring& command::where_AllocAt(command::acr& parent, int at) {
 
 // --- command.acr.where.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::where_AllocN(command::acr& parent, int n_elems) {
+algo::aryptr<algo::cstring> command::where_AllocN(command::acr& parent, int n_elems) throw() {
     where_Reserve(parent, n_elems);
     int old_n  = parent.where_n;
     int new_n = old_n + n_elems;
@@ -2961,7 +2961,7 @@ algo::aryptr<algo::cstring> command::where_AllocN(command::acr& parent, int n_el
 
 // --- command.acr.where.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::where_Remove(command::acr& parent, u32 i) {
+void command::where_Remove(command::acr& parent, u32 i) throw() {
     u32 lim = parent.where_n;
     algo::cstring *elems = parent.where_elems;
     if (i < lim) {
@@ -2972,7 +2972,7 @@ void command::where_Remove(command::acr& parent, u32 i) {
 }
 
 // --- command.acr.where.RemoveAll
-void command::where_RemoveAll(command::acr& parent) {
+void command::where_RemoveAll(command::acr& parent) throw() {
     u32 n = parent.where_n;
     while (n > 0) {
         n -= 1;
@@ -2983,7 +2983,7 @@ void command::where_RemoveAll(command::acr& parent) {
 
 // --- command.acr.where.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::where_RemoveLast(command::acr& parent) {
+void command::where_RemoveLast(command::acr& parent) throw() {
     u64 n = parent.where_n;
     if (n > 0) {
         n -= 1;
@@ -2994,7 +2994,7 @@ void command::where_RemoveLast(command::acr& parent) {
 
 // --- command.acr.where.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::where_AbsReserve(command::acr& parent, int n) {
+void command::where_AbsReserve(command::acr& parent, int n) throw() {
     u32 old_max  = parent.where_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -3009,7 +3009,7 @@ void command::where_AbsReserve(command::acr& parent, int n) {
 
 // --- command.acr.where.Setary
 // Copy contents of RHS to PARENT.
-void command::where_Setary(command::acr& parent, command::acr &rhs) {
+void command::where_Setary(command::acr& parent, command::acr &rhs) throw() {
     where_RemoveAll(parent);
     int nnew = rhs.where_n;
     where_Reserve(parent, nnew); // reserve space
@@ -3022,14 +3022,14 @@ void command::where_Setary(command::acr& parent, command::acr &rhs) {
 // --- command.acr.where.Setary2
 // Copy specified array into where, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::where_Setary(command::acr& parent, const algo::aryptr<algo::cstring> &rhs) {
+void command::where_Setary(command::acr& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     where_RemoveAll(parent);
     where_Addary(parent, rhs);
 }
 
 // --- command.acr.where.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::where_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> command::where_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) throw() {
     where_Reserve(parent, n_elems);
     int old_n  = parent.where_n;
     int new_n = old_n + n_elems;
@@ -3045,7 +3045,7 @@ algo::aryptr<algo::cstring> command::where_AllocNVal(command::acr& parent, int n
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::where_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) {
+bool command::where_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = where_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -3059,7 +3059,7 @@ bool command::where_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> command::field_Addary(command::acr& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> command::field_Addary(command::acr& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.field_elems && rhs.elems < parent.field_elems + parent.field_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.acr.field  comment:'alias error: sub-array is being appended to the whole'");
@@ -3077,7 +3077,7 @@ algo::aryptr<algo::cstring> command::field_Addary(command::acr& parent, algo::ar
 // --- command.acr.field.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& command::field_Alloc(command::acr& parent) {
+algo::cstring& command::field_Alloc(command::acr& parent) throw() {
     field_Reserve(parent, 1);
     int n  = parent.field_n;
     int at = n;
@@ -3090,7 +3090,7 @@ algo::cstring& command::field_Alloc(command::acr& parent) {
 // --- command.acr.field.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& command::field_AllocAt(command::acr& parent, int at) {
+algo::cstring& command::field_AllocAt(command::acr& parent, int at) throw() {
     field_Reserve(parent, 1);
     int n  = parent.field_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -3105,7 +3105,7 @@ algo::cstring& command::field_AllocAt(command::acr& parent, int at) {
 
 // --- command.acr.field.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::field_AllocN(command::acr& parent, int n_elems) {
+algo::aryptr<algo::cstring> command::field_AllocN(command::acr& parent, int n_elems) throw() {
     field_Reserve(parent, n_elems);
     int old_n  = parent.field_n;
     int new_n = old_n + n_elems;
@@ -3119,7 +3119,7 @@ algo::aryptr<algo::cstring> command::field_AllocN(command::acr& parent, int n_el
 
 // --- command.acr.field.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::field_Remove(command::acr& parent, u32 i) {
+void command::field_Remove(command::acr& parent, u32 i) throw() {
     u32 lim = parent.field_n;
     algo::cstring *elems = parent.field_elems;
     if (i < lim) {
@@ -3130,7 +3130,7 @@ void command::field_Remove(command::acr& parent, u32 i) {
 }
 
 // --- command.acr.field.RemoveAll
-void command::field_RemoveAll(command::acr& parent) {
+void command::field_RemoveAll(command::acr& parent) throw() {
     u32 n = parent.field_n;
     while (n > 0) {
         n -= 1;
@@ -3141,7 +3141,7 @@ void command::field_RemoveAll(command::acr& parent) {
 
 // --- command.acr.field.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::field_RemoveLast(command::acr& parent) {
+void command::field_RemoveLast(command::acr& parent) throw() {
     u64 n = parent.field_n;
     if (n > 0) {
         n -= 1;
@@ -3152,7 +3152,7 @@ void command::field_RemoveLast(command::acr& parent) {
 
 // --- command.acr.field.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::field_AbsReserve(command::acr& parent, int n) {
+void command::field_AbsReserve(command::acr& parent, int n) throw() {
     u32 old_max  = parent.field_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -3167,7 +3167,7 @@ void command::field_AbsReserve(command::acr& parent, int n) {
 
 // --- command.acr.field.Setary
 // Copy contents of RHS to PARENT.
-void command::field_Setary(command::acr& parent, command::acr &rhs) {
+void command::field_Setary(command::acr& parent, command::acr &rhs) throw() {
     field_RemoveAll(parent);
     int nnew = rhs.field_n;
     field_Reserve(parent, nnew); // reserve space
@@ -3180,14 +3180,14 @@ void command::field_Setary(command::acr& parent, command::acr &rhs) {
 // --- command.acr.field.Setary2
 // Copy specified array into field, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::field_Setary(command::acr& parent, const algo::aryptr<algo::cstring> &rhs) {
+void command::field_Setary(command::acr& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     field_RemoveAll(parent);
     field_Addary(parent, rhs);
 }
 
 // --- command.acr.field.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::field_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> command::field_AllocNVal(command::acr& parent, int n_elems, const algo::cstring& val) throw() {
     field_Reserve(parent, n_elems);
     int old_n  = parent.field_n;
     int new_n = old_n + n_elems;
@@ -3203,7 +3203,7 @@ algo::aryptr<algo::cstring> command::field_AllocNVal(command::acr& parent, int n
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::field_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) {
+bool command::field_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = field_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -3214,7 +3214,7 @@ bool command::field_ReadStrptrMaybe(command::acr& parent, algo::strptr in_str) {
 }
 
 // --- command.acr..ReadFieldMaybe
-bool command::acr_ReadFieldMaybe(command::acr& parent, algo::strptr field, algo::strptr strval) {
+bool command::acr_ReadFieldMaybe(command::acr& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -3385,7 +3385,7 @@ bool command::acr_ReadFieldMaybe(command::acr& parent, algo::strptr field, algo:
 
 // --- command.acr..ReadTupleMaybe
 // Read fields of command::acr from attributes of ascii tuple TUPLE
-bool command::acr_ReadTupleMaybe(command::acr &parent, algo::Tuple &tuple) {
+bool command::acr_ReadTupleMaybe(command::acr &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -3449,7 +3449,7 @@ void command::acr_Init(command::acr& parent) {
 }
 
 // --- command.acr..Uninit
-void command::acr_Uninit(command::acr& parent) {
+void command::acr_Uninit(command::acr& parent) throw() {
     command::acr &row = parent; (void)row;
 
     // command.acr.field.Uninit (Tary)  //Fields to select
@@ -3468,7 +3468,7 @@ void command::acr_Uninit(command::acr& parent) {
 // --- command.acr..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::acr_ToCmdline(command::acr& row) {
+tempstr command::acr_ToCmdline(command::acr& row) throw() {
     tempstr ret;
     ret << "bin/acr ";
     acr_PrintArgv(row, ret);
@@ -3485,7 +3485,7 @@ tempstr command::acr_ToCmdline(command::acr& row) {
 // --- command.acr..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.acr.Argv  printfmt:Auto
-void command::acr_PrintArgv(command::acr& row, algo::cstring& str) {
+void command::acr_PrintArgv(command::acr& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -3724,7 +3724,7 @@ void command::acr_PrintArgv(command::acr& row, algo::cstring& str) {
 }
 
 // --- command.acr..GetAnon
-algo::strptr command::acr_GetAnon(command::acr &parent, i32 idx) {
+algo::strptr command::acr_GetAnon(command::acr &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("query", 5);
@@ -3736,7 +3736,7 @@ algo::strptr command::acr_GetAnon(command::acr &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::acr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::acr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_query: { // $comment
@@ -3917,7 +3917,7 @@ i32 command::acr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
 }
 
 // --- command.acr..AssignOp
-command::acr& command::acr::operator =(const command::acr &rhs) {
+command::acr& command::acr::operator =(const command::acr &rhs) throw() {
     query = rhs.query;
     where_Setary(*this, where_Getary(const_cast<command::acr&>(rhs)));
     in = rhs.in;
@@ -3961,7 +3961,7 @@ command::acr& command::acr::operator =(const command::acr &rhs) {
 }
 
 // --- command.acr..CopyCtor
- command::acr::acr(const command::acr &rhs)
+ command::acr::acr(const command::acr &rhs) throw()
     : query(rhs.query)
     , in(rhs.in)
     , del(rhs.del)
@@ -4011,7 +4011,7 @@ command::acr& command::acr::operator =(const command::acr &rhs) {
 }
 
 // --- command.acr_compl..ReadFieldMaybe
-bool command::acr_compl_ReadFieldMaybe(command::acr_compl& parent, algo::strptr field, algo::strptr strval) {
+bool command::acr_compl_ReadFieldMaybe(command::acr_compl& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -4055,7 +4055,7 @@ bool command::acr_compl_ReadFieldMaybe(command::acr_compl& parent, algo::strptr 
 // --- command.acr_compl..ReadStrptrMaybe
 // Read fields of command::acr_compl from an ascii string.
 // The format of the string is an ssim Tuple
-bool command::acr_compl_ReadStrptrMaybe(command::acr_compl &parent, algo::strptr in_str) {
+bool command::acr_compl_ReadStrptrMaybe(command::acr_compl &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "command.acr_compl");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -4066,7 +4066,7 @@ bool command::acr_compl_ReadStrptrMaybe(command::acr_compl &parent, algo::strptr
 
 // --- command.acr_compl..ReadTupleMaybe
 // Read fields of command::acr_compl from attributes of ascii tuple TUPLE
-bool command::acr_compl_ReadTupleMaybe(command::acr_compl &parent, algo::Tuple &tuple) {
+bool command::acr_compl_ReadTupleMaybe(command::acr_compl &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = acr_compl_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -4080,7 +4080,7 @@ bool command::acr_compl_ReadTupleMaybe(command::acr_compl &parent, algo::Tuple &
 // --- command.acr_compl..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::acr_compl_ToCmdline(command::acr_compl& row) {
+tempstr command::acr_compl_ToCmdline(command::acr_compl& row) throw() {
     tempstr ret;
     ret << "bin/acr_compl ";
     acr_compl_PrintArgv(row, ret);
@@ -4097,7 +4097,7 @@ tempstr command::acr_compl_ToCmdline(command::acr_compl& row) {
 // --- command.acr_compl..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.acr_compl.Argv  printfmt:Auto
-void command::acr_compl_PrintArgv(command::acr_compl& row, algo::cstring& str) {
+void command::acr_compl_PrintArgv(command::acr_compl& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -4148,7 +4148,7 @@ void command::acr_compl_PrintArgv(command::acr_compl& row, algo::cstring& str) {
 // --- command.acr_compl..Print
 // print string representation of ROW to string STR
 // cfmt:command.acr_compl.String  printfmt:Tuple
-void command::acr_compl_Print(command::acr_compl& row, algo::cstring& str) {
+void command::acr_compl_Print(command::acr_compl& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "command.acr_compl";
 
@@ -4178,7 +4178,7 @@ void command::acr_compl_Print(command::acr_compl& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::acr_compl_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::acr_compl_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_data: { // $comment
@@ -4213,7 +4213,7 @@ i32 command::acr_compl_NArgs(command::FieldId field, algo::strptr& out_dflt, boo
 // --- command.acr_compl_proc.acr_compl.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::acr_compl_Start(command::acr_compl_proc& parent) {
+int command::acr_compl_Start(command::acr_compl_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(acr_compl_ToCmdline(parent)); // maybe print command
@@ -4251,7 +4251,7 @@ int command::acr_compl_Start(command::acr_compl_proc& parent) {
 
 // --- command.acr_compl_proc.acr_compl.StartRead
 // Start subprocess & Read output
-algo::Fildes command::acr_compl_StartRead(command::acr_compl_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::acr_compl_StartRead(command::acr_compl_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -4273,7 +4273,7 @@ void command::acr_compl_Kill(command::acr_compl_proc& parent) {
 
 // --- command.acr_compl_proc.acr_compl.Wait
 // Wait for subprocess to return
-void command::acr_compl_Wait(command::acr_compl_proc& parent) {
+void command::acr_compl_Wait(command::acr_compl_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -4292,7 +4292,7 @@ void command::acr_compl_Wait(command::acr_compl_proc& parent) {
 // --- command.acr_compl_proc.acr_compl.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::acr_compl_Exec(command::acr_compl_proc& parent) {
+int command::acr_compl_Exec(command::acr_compl_proc& parent) throw() {
     acr_compl_Start(parent);
     acr_compl_Wait(parent);
     return parent.status;
@@ -4310,7 +4310,7 @@ void command::acr_compl_ExecX(command::acr_compl_proc& parent) {
 // --- command.acr_compl_proc.acr_compl.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::acr_compl_Execv(command::acr_compl_proc& parent) {
+int command::acr_compl_Execv(command::acr_compl_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     acr_compl_ToArgv(parent, args);
@@ -4326,7 +4326,7 @@ int command::acr_compl_Execv(command::acr_compl_proc& parent) {
 }
 
 // --- command.acr_compl_proc.acr_compl.ToCmdline
-algo::tempstr command::acr_compl_ToCmdline(command::acr_compl_proc& parent) {
+algo::tempstr command::acr_compl_ToCmdline(command::acr_compl_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::acr_compl_PrintArgv(parent.cmd,retval);
@@ -4344,7 +4344,7 @@ algo::tempstr command::acr_compl_ToCmdline(command::acr_compl_proc& parent) {
 
 // --- command.acr_compl_proc.acr_compl.ToArgv
 // Form array from the command line
-void command::acr_compl_ToArgv(command::acr_compl_proc& parent, algo::StringAry& args) {
+void command::acr_compl_ToArgv(command::acr_compl_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -4395,7 +4395,7 @@ void command::acr_compl_ToArgv(command::acr_compl_proc& parent, algo::StringAry&
 }
 
 // --- command.acr_compl_proc..Uninit
-void command::acr_compl_proc_Uninit(command::acr_compl_proc& parent) {
+void command::acr_compl_proc_Uninit(command::acr_compl_proc& parent) throw() {
     command::acr_compl_proc &row = parent; (void)row;
 
     // command.acr_compl_proc.acr_compl.Uninit (Exec)  //
@@ -4406,7 +4406,7 @@ void command::acr_compl_proc_Uninit(command::acr_compl_proc& parent) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> command::arg_Addary(command::acr_dm& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> command::arg_Addary(command::acr_dm& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.arg_elems && rhs.elems < parent.arg_elems + parent.arg_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.acr_dm.arg  comment:'alias error: sub-array is being appended to the whole'");
@@ -4424,7 +4424,7 @@ algo::aryptr<algo::cstring> command::arg_Addary(command::acr_dm& parent, algo::a
 // --- command.acr_dm.arg.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& command::arg_Alloc(command::acr_dm& parent) {
+algo::cstring& command::arg_Alloc(command::acr_dm& parent) throw() {
     arg_Reserve(parent, 1);
     int n  = parent.arg_n;
     int at = n;
@@ -4437,7 +4437,7 @@ algo::cstring& command::arg_Alloc(command::acr_dm& parent) {
 // --- command.acr_dm.arg.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& command::arg_AllocAt(command::acr_dm& parent, int at) {
+algo::cstring& command::arg_AllocAt(command::acr_dm& parent, int at) throw() {
     arg_Reserve(parent, 1);
     int n  = parent.arg_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -4452,7 +4452,7 @@ algo::cstring& command::arg_AllocAt(command::acr_dm& parent, int at) {
 
 // --- command.acr_dm.arg.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::arg_AllocN(command::acr_dm& parent, int n_elems) {
+algo::aryptr<algo::cstring> command::arg_AllocN(command::acr_dm& parent, int n_elems) throw() {
     arg_Reserve(parent, n_elems);
     int old_n  = parent.arg_n;
     int new_n = old_n + n_elems;
@@ -4466,7 +4466,7 @@ algo::aryptr<algo::cstring> command::arg_AllocN(command::acr_dm& parent, int n_e
 
 // --- command.acr_dm.arg.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::arg_Remove(command::acr_dm& parent, u32 i) {
+void command::arg_Remove(command::acr_dm& parent, u32 i) throw() {
     u32 lim = parent.arg_n;
     algo::cstring *elems = parent.arg_elems;
     if (i < lim) {
@@ -4477,7 +4477,7 @@ void command::arg_Remove(command::acr_dm& parent, u32 i) {
 }
 
 // --- command.acr_dm.arg.RemoveAll
-void command::arg_RemoveAll(command::acr_dm& parent) {
+void command::arg_RemoveAll(command::acr_dm& parent) throw() {
     u32 n = parent.arg_n;
     while (n > 0) {
         n -= 1;
@@ -4488,7 +4488,7 @@ void command::arg_RemoveAll(command::acr_dm& parent) {
 
 // --- command.acr_dm.arg.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::arg_RemoveLast(command::acr_dm& parent) {
+void command::arg_RemoveLast(command::acr_dm& parent) throw() {
     u64 n = parent.arg_n;
     if (n > 0) {
         n -= 1;
@@ -4499,7 +4499,7 @@ void command::arg_RemoveLast(command::acr_dm& parent) {
 
 // --- command.acr_dm.arg.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::arg_AbsReserve(command::acr_dm& parent, int n) {
+void command::arg_AbsReserve(command::acr_dm& parent, int n) throw() {
     u32 old_max  = parent.arg_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -4514,7 +4514,7 @@ void command::arg_AbsReserve(command::acr_dm& parent, int n) {
 
 // --- command.acr_dm.arg.Setary
 // Copy contents of RHS to PARENT.
-void command::arg_Setary(command::acr_dm& parent, command::acr_dm &rhs) {
+void command::arg_Setary(command::acr_dm& parent, command::acr_dm &rhs) throw() {
     arg_RemoveAll(parent);
     int nnew = rhs.arg_n;
     arg_Reserve(parent, nnew); // reserve space
@@ -4527,14 +4527,14 @@ void command::arg_Setary(command::acr_dm& parent, command::acr_dm &rhs) {
 // --- command.acr_dm.arg.Setary2
 // Copy specified array into arg, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::arg_Setary(command::acr_dm& parent, const algo::aryptr<algo::cstring> &rhs) {
+void command::arg_Setary(command::acr_dm& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     arg_RemoveAll(parent);
     arg_Addary(parent, rhs);
 }
 
 // --- command.acr_dm.arg.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::arg_AllocNVal(command::acr_dm& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> command::arg_AllocNVal(command::acr_dm& parent, int n_elems, const algo::cstring& val) throw() {
     arg_Reserve(parent, n_elems);
     int old_n  = parent.arg_n;
     int new_n = old_n + n_elems;
@@ -4550,7 +4550,7 @@ algo::aryptr<algo::cstring> command::arg_AllocNVal(command::acr_dm& parent, int 
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr in_str) {
+bool command::arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = arg_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -4561,7 +4561,7 @@ bool command::arg_ReadStrptrMaybe(command::acr_dm& parent, algo::strptr in_str) 
 }
 
 // --- command.acr_dm..ReadFieldMaybe
-bool command::acr_dm_ReadFieldMaybe(command::acr_dm& parent, algo::strptr field, algo::strptr strval) {
+bool command::acr_dm_ReadFieldMaybe(command::acr_dm& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -4596,7 +4596,7 @@ bool command::acr_dm_ReadFieldMaybe(command::acr_dm& parent, algo::strptr field,
 
 // --- command.acr_dm..ReadTupleMaybe
 // Read fields of command::acr_dm from attributes of ascii tuple TUPLE
-bool command::acr_dm_ReadTupleMaybe(command::acr_dm &parent, algo::Tuple &tuple) {
+bool command::acr_dm_ReadTupleMaybe(command::acr_dm &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -4612,7 +4612,7 @@ bool command::acr_dm_ReadTupleMaybe(command::acr_dm &parent, algo::Tuple &tuple)
 }
 
 // --- command.acr_dm..Uninit
-void command::acr_dm_Uninit(command::acr_dm& parent) {
+void command::acr_dm_Uninit(command::acr_dm& parent) throw() {
     command::acr_dm &row = parent; (void)row;
 
     // command.acr_dm.arg.Uninit (Tary)  //Files to merge: older ours theirs...
@@ -4625,7 +4625,7 @@ void command::acr_dm_Uninit(command::acr_dm& parent) {
 // --- command.acr_dm..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::acr_dm_ToCmdline(command::acr_dm& row) {
+tempstr command::acr_dm_ToCmdline(command::acr_dm& row) throw() {
     tempstr ret;
     ret << "bin/acr_dm ";
     acr_dm_PrintArgv(row, ret);
@@ -4642,7 +4642,7 @@ tempstr command::acr_dm_ToCmdline(command::acr_dm& row) {
 // --- command.acr_dm..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.acr_dm.Argv  printfmt:Tuple
-void command::acr_dm_PrintArgv(command::acr_dm& row, algo::cstring& str) {
+void command::acr_dm_PrintArgv(command::acr_dm& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -4679,7 +4679,7 @@ void command::acr_dm_PrintArgv(command::acr_dm& row, algo::cstring& str) {
 }
 
 // --- command.acr_dm..GetAnon
-algo::strptr command::acr_dm_GetAnon(command::acr_dm &parent, i32 idx) {
+algo::strptr command::acr_dm_GetAnon(command::acr_dm &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         default: return strptr("arg", 3);
@@ -4690,7 +4690,7 @@ algo::strptr command::acr_dm_GetAnon(command::acr_dm &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::acr_dm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::acr_dm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -4719,7 +4719,7 @@ i32 command::acr_dm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
 }
 
 // --- command.acr_dm..AssignOp
-command::acr_dm& command::acr_dm::operator =(const command::acr_dm &rhs) {
+command::acr_dm& command::acr_dm::operator =(const command::acr_dm &rhs) throw() {
     in = rhs.in;
     arg_Setary(*this, arg_Getary(const_cast<command::acr_dm&>(rhs)));
     write_ours = rhs.write_ours;
@@ -4729,7 +4729,7 @@ command::acr_dm& command::acr_dm::operator =(const command::acr_dm &rhs) {
 }
 
 // --- command.acr_dm..CopyCtor
- command::acr_dm::acr_dm(const command::acr_dm &rhs)
+ command::acr_dm::acr_dm(const command::acr_dm &rhs) throw()
     : in(rhs.in)
     , write_ours(rhs.write_ours)
     , msize(rhs.msize)
@@ -4744,7 +4744,7 @@ command::acr_dm& command::acr_dm::operator =(const command::acr_dm &rhs) {
 // --- command.acr_dm_proc.acr_dm.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::acr_dm_Start(command::acr_dm_proc& parent) {
+int command::acr_dm_Start(command::acr_dm_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(acr_dm_ToCmdline(parent)); // maybe print command
@@ -4782,7 +4782,7 @@ int command::acr_dm_Start(command::acr_dm_proc& parent) {
 
 // --- command.acr_dm_proc.acr_dm.StartRead
 // Start subprocess & Read output
-algo::Fildes command::acr_dm_StartRead(command::acr_dm_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::acr_dm_StartRead(command::acr_dm_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -4804,7 +4804,7 @@ void command::acr_dm_Kill(command::acr_dm_proc& parent) {
 
 // --- command.acr_dm_proc.acr_dm.Wait
 // Wait for subprocess to return
-void command::acr_dm_Wait(command::acr_dm_proc& parent) {
+void command::acr_dm_Wait(command::acr_dm_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -4823,7 +4823,7 @@ void command::acr_dm_Wait(command::acr_dm_proc& parent) {
 // --- command.acr_dm_proc.acr_dm.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::acr_dm_Exec(command::acr_dm_proc& parent) {
+int command::acr_dm_Exec(command::acr_dm_proc& parent) throw() {
     acr_dm_Start(parent);
     acr_dm_Wait(parent);
     return parent.status;
@@ -4841,7 +4841,7 @@ void command::acr_dm_ExecX(command::acr_dm_proc& parent) {
 // --- command.acr_dm_proc.acr_dm.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::acr_dm_Execv(command::acr_dm_proc& parent) {
+int command::acr_dm_Execv(command::acr_dm_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     acr_dm_ToArgv(parent, args);
@@ -4857,7 +4857,7 @@ int command::acr_dm_Execv(command::acr_dm_proc& parent) {
 }
 
 // --- command.acr_dm_proc.acr_dm.ToCmdline
-algo::tempstr command::acr_dm_ToCmdline(command::acr_dm_proc& parent) {
+algo::tempstr command::acr_dm_ToCmdline(command::acr_dm_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::acr_dm_PrintArgv(parent.cmd,retval);
@@ -4875,7 +4875,7 @@ algo::tempstr command::acr_dm_ToCmdline(command::acr_dm_proc& parent) {
 
 // --- command.acr_dm_proc.acr_dm.ToArgv
 // Form array from the command line
-void command::acr_dm_ToArgv(command::acr_dm_proc& parent, algo::StringAry& args) {
+void command::acr_dm_ToArgv(command::acr_dm_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -4913,7 +4913,7 @@ void command::acr_dm_ToArgv(command::acr_dm_proc& parent, algo::StringAry& args)
 }
 
 // --- command.acr_dm_proc..Uninit
-void command::acr_dm_proc_Uninit(command::acr_dm_proc& parent) {
+void command::acr_dm_proc_Uninit(command::acr_dm_proc& parent) throw() {
     command::acr_dm_proc &row = parent; (void)row;
 
     // command.acr_dm_proc.acr_dm.Uninit (Exec)  //
@@ -4921,7 +4921,7 @@ void command::acr_dm_proc_Uninit(command::acr_dm_proc& parent) {
 }
 
 // --- command.acr_ed..ReadFieldMaybe
-bool command::acr_ed_ReadFieldMaybe(command::acr_ed& parent, algo::strptr field, algo::strptr strval) {
+bool command::acr_ed_ReadFieldMaybe(command::acr_ed& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5116,7 +5116,7 @@ bool command::acr_ed_ReadFieldMaybe(command::acr_ed& parent, algo::strptr field,
 
 // --- command.acr_ed..ReadTupleMaybe
 // Read fields of command::acr_ed from attributes of ascii tuple TUPLE
-bool command::acr_ed_ReadTupleMaybe(command::acr_ed &parent, algo::Tuple &tuple) {
+bool command::acr_ed_ReadTupleMaybe(command::acr_ed &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = acr_ed_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -5180,7 +5180,7 @@ void command::acr_ed_Init(command::acr_ed& parent) {
 // --- command.acr_ed..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::acr_ed_ToCmdline(command::acr_ed& row) {
+tempstr command::acr_ed_ToCmdline(command::acr_ed& row) throw() {
     tempstr ret;
     ret << "bin/acr_ed ";
     acr_ed_PrintArgv(row, ret);
@@ -5197,7 +5197,7 @@ tempstr command::acr_ed_ToCmdline(command::acr_ed& row) {
 // --- command.acr_ed..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.acr_ed.Argv  printfmt:Auto
-void command::acr_ed_PrintArgv(command::acr_ed& row, algo::cstring& str) {
+void command::acr_ed_PrintArgv(command::acr_ed& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -5477,7 +5477,7 @@ void command::acr_ed_PrintArgv(command::acr_ed& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::acr_ed_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::acr_ed_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -5658,7 +5658,7 @@ i32 command::acr_ed_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
 // --- command.acr_ed_proc.acr_ed.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::acr_ed_Start(command::acr_ed_proc& parent) {
+int command::acr_ed_Start(command::acr_ed_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(acr_ed_ToCmdline(parent)); // maybe print command
@@ -5696,7 +5696,7 @@ int command::acr_ed_Start(command::acr_ed_proc& parent) {
 
 // --- command.acr_ed_proc.acr_ed.StartRead
 // Start subprocess & Read output
-algo::Fildes command::acr_ed_StartRead(command::acr_ed_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::acr_ed_StartRead(command::acr_ed_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -5718,7 +5718,7 @@ void command::acr_ed_Kill(command::acr_ed_proc& parent) {
 
 // --- command.acr_ed_proc.acr_ed.Wait
 // Wait for subprocess to return
-void command::acr_ed_Wait(command::acr_ed_proc& parent) {
+void command::acr_ed_Wait(command::acr_ed_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -5737,7 +5737,7 @@ void command::acr_ed_Wait(command::acr_ed_proc& parent) {
 // --- command.acr_ed_proc.acr_ed.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::acr_ed_Exec(command::acr_ed_proc& parent) {
+int command::acr_ed_Exec(command::acr_ed_proc& parent) throw() {
     acr_ed_Start(parent);
     acr_ed_Wait(parent);
     return parent.status;
@@ -5755,7 +5755,7 @@ void command::acr_ed_ExecX(command::acr_ed_proc& parent) {
 // --- command.acr_ed_proc.acr_ed.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::acr_ed_Execv(command::acr_ed_proc& parent) {
+int command::acr_ed_Execv(command::acr_ed_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     acr_ed_ToArgv(parent, args);
@@ -5771,7 +5771,7 @@ int command::acr_ed_Execv(command::acr_ed_proc& parent) {
 }
 
 // --- command.acr_ed_proc.acr_ed.ToCmdline
-algo::tempstr command::acr_ed_ToCmdline(command::acr_ed_proc& parent) {
+algo::tempstr command::acr_ed_ToCmdline(command::acr_ed_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::acr_ed_PrintArgv(parent.cmd,retval);
@@ -5789,7 +5789,7 @@ algo::tempstr command::acr_ed_ToCmdline(command::acr_ed_proc& parent) {
 
 // --- command.acr_ed_proc.acr_ed.ToArgv
 // Form array from the command line
-void command::acr_ed_ToArgv(command::acr_ed_proc& parent, algo::StringAry& args) {
+void command::acr_ed_ToArgv(command::acr_ed_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -6068,7 +6068,7 @@ void command::acr_ed_ToArgv(command::acr_ed_proc& parent, algo::StringAry& args)
 }
 
 // --- command.acr_ed_proc..Uninit
-void command::acr_ed_proc_Uninit(command::acr_ed_proc& parent) {
+void command::acr_ed_proc_Uninit(command::acr_ed_proc& parent) throw() {
     command::acr_ed_proc &row = parent; (void)row;
 
     // command.acr_ed_proc.acr_ed.Uninit (Exec)  //
@@ -6077,14 +6077,14 @@ void command::acr_ed_proc_Uninit(command::acr_ed_proc& parent) {
 
 // --- command.acr_in.ns.Print
 // Print back to string
-void command::ns_Print(command::acr_in& parent, algo::cstring &out) {
+void command::ns_Print(command::acr_in& parent, algo::cstring &out) throw() {
     Regx_Print(parent.ns, out);
 }
 
 // --- command.acr_in.ns.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::ns_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) {
+bool command::ns_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.ns, in, true);
     return retval;
@@ -6092,14 +6092,14 @@ bool command::ns_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) {
 
 // --- command.acr_in.notssimfile.Print
 // Print back to string
-void command::notssimfile_Print(command::acr_in& parent, algo::cstring &out) {
+void command::notssimfile_Print(command::acr_in& parent, algo::cstring &out) throw() {
     Regx_Print(parent.notssimfile, out);
 }
 
 // --- command.acr_in.notssimfile.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::notssimfile_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) {
+bool command::notssimfile_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.notssimfile, in, true);
     return retval;
@@ -6107,21 +6107,21 @@ bool command::notssimfile_ReadStrptrMaybe(command::acr_in& parent, algo::strptr 
 
 // --- command.acr_in.r.Print
 // Print back to string
-void command::r_Print(command::acr_in& parent, algo::cstring &out) {
+void command::r_Print(command::acr_in& parent, algo::cstring &out) throw() {
     Regx_Print(parent.r, out);
 }
 
 // --- command.acr_in.r.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::r_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) {
+bool command::r_ReadStrptrMaybe(command::acr_in& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.r, in, true);
     return retval;
 }
 
 // --- command.acr_in..ReadFieldMaybe
-bool command::acr_in_ReadFieldMaybe(command::acr_in& parent, algo::strptr field, algo::strptr strval) {
+bool command::acr_in_ReadFieldMaybe(command::acr_in& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6180,7 +6180,7 @@ bool command::acr_in_ReadFieldMaybe(command::acr_in& parent, algo::strptr field,
 
 // --- command.acr_in..ReadTupleMaybe
 // Read fields of command::acr_in from attributes of ascii tuple TUPLE
-bool command::acr_in_ReadTupleMaybe(command::acr_in &parent, algo::Tuple &tuple) {
+bool command::acr_in_ReadTupleMaybe(command::acr_in &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -6214,7 +6214,7 @@ void command::acr_in_Init(command::acr_in& parent) {
 // --- command.acr_in..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::acr_in_ToCmdline(command::acr_in& row) {
+tempstr command::acr_in_ToCmdline(command::acr_in& row) throw() {
     tempstr ret;
     ret << "bin/acr_in ";
     acr_in_PrintArgv(row, ret);
@@ -6231,7 +6231,7 @@ tempstr command::acr_in_ToCmdline(command::acr_in& row) {
 // --- command.acr_in..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.acr_in.Argv  printfmt:Auto
-void command::acr_in_PrintArgv(command::acr_in& row, algo::cstring& str) {
+void command::acr_in_PrintArgv(command::acr_in& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -6302,7 +6302,7 @@ void command::acr_in_PrintArgv(command::acr_in& row, algo::cstring& str) {
 }
 
 // --- command.acr_in..GetAnon
-algo::strptr command::acr_in_GetAnon(command::acr_in &parent, i32 idx) {
+algo::strptr command::acr_in_GetAnon(command::acr_in &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("ns", 2);
@@ -6314,7 +6314,7 @@ algo::strptr command::acr_in_GetAnon(command::acr_in &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::acr_in_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::acr_in_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_ns: { // $comment
@@ -6369,7 +6369,7 @@ i32 command::acr_in_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
 // --- command.acr_in_proc.acr_in.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::acr_in_Start(command::acr_in_proc& parent) {
+int command::acr_in_Start(command::acr_in_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(acr_in_ToCmdline(parent)); // maybe print command
@@ -6407,7 +6407,7 @@ int command::acr_in_Start(command::acr_in_proc& parent) {
 
 // --- command.acr_in_proc.acr_in.StartRead
 // Start subprocess & Read output
-algo::Fildes command::acr_in_StartRead(command::acr_in_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::acr_in_StartRead(command::acr_in_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -6429,7 +6429,7 @@ void command::acr_in_Kill(command::acr_in_proc& parent) {
 
 // --- command.acr_in_proc.acr_in.Wait
 // Wait for subprocess to return
-void command::acr_in_Wait(command::acr_in_proc& parent) {
+void command::acr_in_Wait(command::acr_in_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -6448,7 +6448,7 @@ void command::acr_in_Wait(command::acr_in_proc& parent) {
 // --- command.acr_in_proc.acr_in.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::acr_in_Exec(command::acr_in_proc& parent) {
+int command::acr_in_Exec(command::acr_in_proc& parent) throw() {
     acr_in_Start(parent);
     acr_in_Wait(parent);
     return parent.status;
@@ -6466,7 +6466,7 @@ void command::acr_in_ExecX(command::acr_in_proc& parent) {
 // --- command.acr_in_proc.acr_in.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::acr_in_Execv(command::acr_in_proc& parent) {
+int command::acr_in_Execv(command::acr_in_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     acr_in_ToArgv(parent, args);
@@ -6482,7 +6482,7 @@ int command::acr_in_Execv(command::acr_in_proc& parent) {
 }
 
 // --- command.acr_in_proc.acr_in.ToCmdline
-algo::tempstr command::acr_in_ToCmdline(command::acr_in_proc& parent) {
+algo::tempstr command::acr_in_ToCmdline(command::acr_in_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::acr_in_PrintArgv(parent.cmd,retval);
@@ -6500,7 +6500,7 @@ algo::tempstr command::acr_in_ToCmdline(command::acr_in_proc& parent) {
 
 // --- command.acr_in_proc.acr_in.ToArgv
 // Form array from the command line
-void command::acr_in_ToArgv(command::acr_in_proc& parent, algo::StringAry& args) {
+void command::acr_in_ToArgv(command::acr_in_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -6575,7 +6575,7 @@ void command::acr_in_ToArgv(command::acr_in_proc& parent, algo::StringAry& args)
 }
 
 // --- command.acr_in_proc..Uninit
-void command::acr_in_proc_Uninit(command::acr_in_proc& parent) {
+void command::acr_in_proc_Uninit(command::acr_in_proc& parent) throw() {
     command::acr_in_proc &row = parent; (void)row;
 
     // command.acr_in_proc.acr_in.Uninit (Exec)  //
@@ -6584,21 +6584,21 @@ void command::acr_in_proc_Uninit(command::acr_in_proc& parent) {
 
 // --- command.acr_my.nsdb.Print
 // Print back to string
-void command::nsdb_Print(command::acr_my& parent, algo::cstring &out) {
+void command::nsdb_Print(command::acr_my& parent, algo::cstring &out) throw() {
     Regx_Print(parent.nsdb, out);
 }
 
 // --- command.acr_my.nsdb.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::nsdb_ReadStrptrMaybe(command::acr_my& parent, algo::strptr in) {
+bool command::nsdb_ReadStrptrMaybe(command::acr_my& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.nsdb, in, true);
     return retval;
 }
 
 // --- command.acr_my..ReadFieldMaybe
-bool command::acr_my_ReadFieldMaybe(command::acr_my& parent, algo::strptr field, algo::strptr strval) {
+bool command::acr_my_ReadFieldMaybe(command::acr_my& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6657,7 +6657,7 @@ bool command::acr_my_ReadFieldMaybe(command::acr_my& parent, algo::strptr field,
 
 // --- command.acr_my..ReadTupleMaybe
 // Read fields of command::acr_my from attributes of ascii tuple TUPLE
-bool command::acr_my_ReadTupleMaybe(command::acr_my &parent, algo::Tuple &tuple) {
+bool command::acr_my_ReadTupleMaybe(command::acr_my &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -6691,7 +6691,7 @@ void command::acr_my_Init(command::acr_my& parent) {
 // --- command.acr_my..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::acr_my_ToCmdline(command::acr_my& row) {
+tempstr command::acr_my_ToCmdline(command::acr_my& row) throw() {
     tempstr ret;
     ret << "bin/acr_my ";
     acr_my_PrintArgv(row, ret);
@@ -6708,7 +6708,7 @@ tempstr command::acr_my_ToCmdline(command::acr_my& row) {
 // --- command.acr_my..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.acr_my.Argv  printfmt:Tuple
-void command::acr_my_PrintArgv(command::acr_my& row, algo::cstring& str) {
+void command::acr_my_PrintArgv(command::acr_my& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -6779,7 +6779,7 @@ void command::acr_my_PrintArgv(command::acr_my& row, algo::cstring& str) {
 }
 
 // --- command.acr_my..GetAnon
-algo::strptr command::acr_my_GetAnon(command::acr_my &parent, i32 idx) {
+algo::strptr command::acr_my_GetAnon(command::acr_my &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("nsdb", 4);
@@ -6791,7 +6791,7 @@ algo::strptr command::acr_my_GetAnon(command::acr_my &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::acr_my_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::acr_my_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_nsdb: { // $comment
@@ -6852,7 +6852,7 @@ i32 command::acr_my_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
 // --- command.acr_my_proc.acr_my.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::acr_my_Start(command::acr_my_proc& parent) {
+int command::acr_my_Start(command::acr_my_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(acr_my_ToCmdline(parent)); // maybe print command
@@ -6890,7 +6890,7 @@ int command::acr_my_Start(command::acr_my_proc& parent) {
 
 // --- command.acr_my_proc.acr_my.StartRead
 // Start subprocess & Read output
-algo::Fildes command::acr_my_StartRead(command::acr_my_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::acr_my_StartRead(command::acr_my_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -6912,7 +6912,7 @@ void command::acr_my_Kill(command::acr_my_proc& parent) {
 
 // --- command.acr_my_proc.acr_my.Wait
 // Wait for subprocess to return
-void command::acr_my_Wait(command::acr_my_proc& parent) {
+void command::acr_my_Wait(command::acr_my_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -6931,7 +6931,7 @@ void command::acr_my_Wait(command::acr_my_proc& parent) {
 // --- command.acr_my_proc.acr_my.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::acr_my_Exec(command::acr_my_proc& parent) {
+int command::acr_my_Exec(command::acr_my_proc& parent) throw() {
     acr_my_Start(parent);
     acr_my_Wait(parent);
     return parent.status;
@@ -6949,7 +6949,7 @@ void command::acr_my_ExecX(command::acr_my_proc& parent) {
 // --- command.acr_my_proc.acr_my.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::acr_my_Execv(command::acr_my_proc& parent) {
+int command::acr_my_Execv(command::acr_my_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     acr_my_ToArgv(parent, args);
@@ -6965,7 +6965,7 @@ int command::acr_my_Execv(command::acr_my_proc& parent) {
 }
 
 // --- command.acr_my_proc.acr_my.ToCmdline
-algo::tempstr command::acr_my_ToCmdline(command::acr_my_proc& parent) {
+algo::tempstr command::acr_my_ToCmdline(command::acr_my_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::acr_my_PrintArgv(parent.cmd,retval);
@@ -6983,7 +6983,7 @@ algo::tempstr command::acr_my_ToCmdline(command::acr_my_proc& parent) {
 
 // --- command.acr_my_proc.acr_my.ToArgv
 // Form array from the command line
-void command::acr_my_ToArgv(command::acr_my_proc& parent, algo::StringAry& args) {
+void command::acr_my_ToArgv(command::acr_my_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -7058,7 +7058,7 @@ void command::acr_my_ToArgv(command::acr_my_proc& parent, algo::StringAry& args)
 }
 
 // --- command.acr_my_proc..Uninit
-void command::acr_my_proc_Uninit(command::acr_my_proc& parent) {
+void command::acr_my_proc_Uninit(command::acr_my_proc& parent) throw() {
     command::acr_my_proc &row = parent; (void)row;
 
     // command.acr_my_proc.acr_my.Uninit (Exec)  //
@@ -7068,7 +7068,7 @@ void command::acr_my_proc_Uninit(command::acr_my_proc& parent) {
 // --- command.acr_proc.acr.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::acr_Start(command::acr_proc& parent) {
+int command::acr_Start(command::acr_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(acr_ToCmdline(parent)); // maybe print command
@@ -7106,7 +7106,7 @@ int command::acr_Start(command::acr_proc& parent) {
 
 // --- command.acr_proc.acr.StartRead
 // Start subprocess & Read output
-algo::Fildes command::acr_StartRead(command::acr_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::acr_StartRead(command::acr_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -7128,7 +7128,7 @@ void command::acr_Kill(command::acr_proc& parent) {
 
 // --- command.acr_proc.acr.Wait
 // Wait for subprocess to return
-void command::acr_Wait(command::acr_proc& parent) {
+void command::acr_Wait(command::acr_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -7147,7 +7147,7 @@ void command::acr_Wait(command::acr_proc& parent) {
 // --- command.acr_proc.acr.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::acr_Exec(command::acr_proc& parent) {
+int command::acr_Exec(command::acr_proc& parent) throw() {
     acr_Start(parent);
     acr_Wait(parent);
     return parent.status;
@@ -7165,7 +7165,7 @@ void command::acr_ExecX(command::acr_proc& parent) {
 // --- command.acr_proc.acr.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::acr_Execv(command::acr_proc& parent) {
+int command::acr_Execv(command::acr_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     acr_ToArgv(parent, args);
@@ -7181,7 +7181,7 @@ int command::acr_Execv(command::acr_proc& parent) {
 }
 
 // --- command.acr_proc.acr.ToCmdline
-algo::tempstr command::acr_ToCmdline(command::acr_proc& parent) {
+algo::tempstr command::acr_ToCmdline(command::acr_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::acr_PrintArgv(parent.cmd,retval);
@@ -7199,7 +7199,7 @@ algo::tempstr command::acr_ToCmdline(command::acr_proc& parent) {
 
 // --- command.acr_proc.acr.ToArgv
 // Form array from the command line
-void command::acr_ToArgv(command::acr_proc& parent, algo::StringAry& args) {
+void command::acr_ToArgv(command::acr_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -7440,7 +7440,7 @@ void command::acr_ToArgv(command::acr_proc& parent, algo::StringAry& args) {
 }
 
 // --- command.acr_proc..Uninit
-void command::acr_proc_Uninit(command::acr_proc& parent) {
+void command::acr_proc_Uninit(command::acr_proc& parent) throw() {
     command::acr_proc &row = parent; (void)row;
 
     // command.acr_proc.acr.Uninit (Exec)  //
@@ -7449,21 +7449,21 @@ void command::acr_proc_Uninit(command::acr_proc& parent) {
 
 // --- command.amc.trace.Print
 // Print back to string
-void command::trace_Print(command::amc& parent, algo::cstring &out) {
+void command::trace_Print(command::amc& parent, algo::cstring &out) throw() {
     Regx_Print(parent.trace, out);
 }
 
 // --- command.amc.trace.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::trace_ReadStrptrMaybe(command::amc& parent, algo::strptr in) {
+bool command::trace_ReadStrptrMaybe(command::amc& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.trace, in, true);
     return retval;
 }
 
 // --- command.amc..ReadFieldMaybe
-bool command::amc_ReadFieldMaybe(command::amc& parent, algo::strptr field, algo::strptr strval) {
+bool command::amc_ReadFieldMaybe(command::amc& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7506,7 +7506,7 @@ bool command::amc_ReadFieldMaybe(command::amc& parent, algo::strptr field, algo:
 
 // --- command.amc..ReadTupleMaybe
 // Read fields of command::amc from attributes of ascii tuple TUPLE
-bool command::amc_ReadTupleMaybe(command::amc &parent, algo::Tuple &tuple) {
+bool command::amc_ReadTupleMaybe(command::amc &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -7536,7 +7536,7 @@ void command::amc_Init(command::amc& parent) {
 // --- command.amc..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::amc_ToCmdline(command::amc& row) {
+tempstr command::amc_ToCmdline(command::amc& row) throw() {
     tempstr ret;
     ret << "bin/amc ";
     amc_PrintArgv(row, ret);
@@ -7553,7 +7553,7 @@ tempstr command::amc_ToCmdline(command::amc& row) {
 // --- command.amc..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.amc.Argv  printfmt:Auto
-void command::amc_PrintArgv(command::amc& row, algo::cstring& str) {
+void command::amc_PrintArgv(command::amc& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -7600,7 +7600,7 @@ void command::amc_PrintArgv(command::amc& row, algo::cstring& str) {
 }
 
 // --- command.amc..GetAnon
-algo::strptr command::amc_GetAnon(command::amc &parent, i32 idx) {
+algo::strptr command::amc_GetAnon(command::amc &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("query", 5);
@@ -7612,7 +7612,7 @@ algo::strptr command::amc_GetAnon(command::amc &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::amc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::amc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in_dir: { // $comment
@@ -7650,14 +7650,14 @@ i32 command::amc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
 
 // --- command.amc_gc.target.Print
 // Print back to string
-void command::target_Print(command::amc_gc& parent, algo::cstring &out) {
+void command::target_Print(command::amc_gc& parent, algo::cstring &out) throw() {
     Regx_Print(parent.target, out);
 }
 
 // --- command.amc_gc.target.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::target_ReadStrptrMaybe(command::amc_gc& parent, algo::strptr in) {
+bool command::target_ReadStrptrMaybe(command::amc_gc& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.target, in, true);
     return retval;
@@ -7665,21 +7665,21 @@ bool command::target_ReadStrptrMaybe(command::amc_gc& parent, algo::strptr in) {
 
 // --- command.amc_gc.key.Print
 // Print back to string
-void command::key_Print(command::amc_gc& parent, algo::cstring &out) {
+void command::key_Print(command::amc_gc& parent, algo::cstring &out) throw() {
     Regx_Print(parent.key, out);
 }
 
 // --- command.amc_gc.key.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::key_ReadStrptrMaybe(command::amc_gc& parent, algo::strptr in) {
+bool command::key_ReadStrptrMaybe(command::amc_gc& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.key, in, true);
     return retval;
 }
 
 // --- command.amc_gc..ReadFieldMaybe
-bool command::amc_gc_ReadFieldMaybe(command::amc_gc& parent, algo::strptr field, algo::strptr strval) {
+bool command::amc_gc_ReadFieldMaybe(command::amc_gc& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7710,7 +7710,7 @@ bool command::amc_gc_ReadFieldMaybe(command::amc_gc& parent, algo::strptr field,
 
 // --- command.amc_gc..ReadTupleMaybe
 // Read fields of command::amc_gc from attributes of ascii tuple TUPLE
-bool command::amc_gc_ReadTupleMaybe(command::amc_gc &parent, algo::Tuple &tuple) {
+bool command::amc_gc_ReadTupleMaybe(command::amc_gc &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = amc_gc_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -7733,7 +7733,7 @@ void command::amc_gc_Init(command::amc_gc& parent) {
 // --- command.amc_gc..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::amc_gc_ToCmdline(command::amc_gc& row) {
+tempstr command::amc_gc_ToCmdline(command::amc_gc& row) throw() {
     tempstr ret;
     ret << "bin/amc_gc ";
     amc_gc_PrintArgv(row, ret);
@@ -7750,7 +7750,7 @@ tempstr command::amc_gc_ToCmdline(command::amc_gc& row) {
 // --- command.amc_gc..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.amc_gc.Argv  printfmt:Tuple
-void command::amc_gc_PrintArgv(command::amc_gc& row, algo::cstring& str) {
+void command::amc_gc_PrintArgv(command::amc_gc& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -7784,7 +7784,7 @@ void command::amc_gc_PrintArgv(command::amc_gc& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::amc_gc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::amc_gc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_target: { // $comment
@@ -7810,7 +7810,7 @@ i32 command::amc_gc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
 // --- command.amc_gc_proc.amc_gc.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::amc_gc_Start(command::amc_gc_proc& parent) {
+int command::amc_gc_Start(command::amc_gc_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(amc_gc_ToCmdline(parent)); // maybe print command
@@ -7848,7 +7848,7 @@ int command::amc_gc_Start(command::amc_gc_proc& parent) {
 
 // --- command.amc_gc_proc.amc_gc.StartRead
 // Start subprocess & Read output
-algo::Fildes command::amc_gc_StartRead(command::amc_gc_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::amc_gc_StartRead(command::amc_gc_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -7870,7 +7870,7 @@ void command::amc_gc_Kill(command::amc_gc_proc& parent) {
 
 // --- command.amc_gc_proc.amc_gc.Wait
 // Wait for subprocess to return
-void command::amc_gc_Wait(command::amc_gc_proc& parent) {
+void command::amc_gc_Wait(command::amc_gc_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -7889,7 +7889,7 @@ void command::amc_gc_Wait(command::amc_gc_proc& parent) {
 // --- command.amc_gc_proc.amc_gc.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::amc_gc_Exec(command::amc_gc_proc& parent) {
+int command::amc_gc_Exec(command::amc_gc_proc& parent) throw() {
     amc_gc_Start(parent);
     amc_gc_Wait(parent);
     return parent.status;
@@ -7907,7 +7907,7 @@ void command::amc_gc_ExecX(command::amc_gc_proc& parent) {
 // --- command.amc_gc_proc.amc_gc.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::amc_gc_Execv(command::amc_gc_proc& parent) {
+int command::amc_gc_Execv(command::amc_gc_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     amc_gc_ToArgv(parent, args);
@@ -7923,7 +7923,7 @@ int command::amc_gc_Execv(command::amc_gc_proc& parent) {
 }
 
 // --- command.amc_gc_proc.amc_gc.ToCmdline
-algo::tempstr command::amc_gc_ToCmdline(command::amc_gc_proc& parent) {
+algo::tempstr command::amc_gc_ToCmdline(command::amc_gc_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::amc_gc_PrintArgv(parent.cmd,retval);
@@ -7941,7 +7941,7 @@ algo::tempstr command::amc_gc_ToCmdline(command::amc_gc_proc& parent) {
 
 // --- command.amc_gc_proc.amc_gc.ToArgv
 // Form array from the command line
-void command::amc_gc_ToArgv(command::amc_gc_proc& parent, algo::StringAry& args) {
+void command::amc_gc_ToArgv(command::amc_gc_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -7974,7 +7974,7 @@ void command::amc_gc_ToArgv(command::amc_gc_proc& parent, algo::StringAry& args)
 }
 
 // --- command.amc_gc_proc..Uninit
-void command::amc_gc_proc_Uninit(command::amc_gc_proc& parent) {
+void command::amc_gc_proc_Uninit(command::amc_gc_proc& parent) throw() {
     command::amc_gc_proc &row = parent; (void)row;
 
     // command.amc_gc_proc.amc_gc.Uninit (Exec)  //
@@ -7984,7 +7984,7 @@ void command::amc_gc_proc_Uninit(command::amc_gc_proc& parent) {
 // --- command.amc_proc.amc.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::amc_Start(command::amc_proc& parent) {
+int command::amc_Start(command::amc_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(amc_ToCmdline(parent)); // maybe print command
@@ -8022,7 +8022,7 @@ int command::amc_Start(command::amc_proc& parent) {
 
 // --- command.amc_proc.amc.StartRead
 // Start subprocess & Read output
-algo::Fildes command::amc_StartRead(command::amc_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::amc_StartRead(command::amc_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -8044,7 +8044,7 @@ void command::amc_Kill(command::amc_proc& parent) {
 
 // --- command.amc_proc.amc.Wait
 // Wait for subprocess to return
-void command::amc_Wait(command::amc_proc& parent) {
+void command::amc_Wait(command::amc_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -8063,7 +8063,7 @@ void command::amc_Wait(command::amc_proc& parent) {
 // --- command.amc_proc.amc.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::amc_Exec(command::amc_proc& parent) {
+int command::amc_Exec(command::amc_proc& parent) throw() {
     amc_Start(parent);
     amc_Wait(parent);
     return parent.status;
@@ -8081,7 +8081,7 @@ void command::amc_ExecX(command::amc_proc& parent) {
 // --- command.amc_proc.amc.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::amc_Execv(command::amc_proc& parent) {
+int command::amc_Execv(command::amc_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     amc_ToArgv(parent, args);
@@ -8097,7 +8097,7 @@ int command::amc_Execv(command::amc_proc& parent) {
 }
 
 // --- command.amc_proc.amc.ToCmdline
-algo::tempstr command::amc_ToCmdline(command::amc_proc& parent) {
+algo::tempstr command::amc_ToCmdline(command::amc_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::amc_PrintArgv(parent.cmd,retval);
@@ -8115,7 +8115,7 @@ algo::tempstr command::amc_ToCmdline(command::amc_proc& parent) {
 
 // --- command.amc_proc.amc.ToArgv
 // Form array from the command line
-void command::amc_ToArgv(command::amc_proc& parent, algo::StringAry& args) {
+void command::amc_ToArgv(command::amc_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -8166,7 +8166,7 @@ void command::amc_ToArgv(command::amc_proc& parent, algo::StringAry& args) {
 }
 
 // --- command.amc_proc..Uninit
-void command::amc_proc_Uninit(command::amc_proc& parent) {
+void command::amc_proc_Uninit(command::amc_proc& parent) throw() {
     command::amc_proc &row = parent; (void)row;
 
     // command.amc_proc.amc.Uninit (Exec)  //
@@ -8175,21 +8175,21 @@ void command::amc_proc_Uninit(command::amc_proc& parent) {
 
 // --- command.amc_vis.ctype.Print
 // Print back to string
-void command::ctype_Print(command::amc_vis& parent, algo::cstring &out) {
+void command::ctype_Print(command::amc_vis& parent, algo::cstring &out) throw() {
     Regx_Print(parent.ctype, out);
 }
 
 // --- command.amc_vis.ctype.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::ctype_ReadStrptrMaybe(command::amc_vis& parent, algo::strptr in) {
+bool command::ctype_ReadStrptrMaybe(command::amc_vis& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.ctype, in, true);
     return retval;
 }
 
 // --- command.amc_vis..ReadFieldMaybe
-bool command::amc_vis_ReadFieldMaybe(command::amc_vis& parent, algo::strptr field, algo::strptr strval) {
+bool command::amc_vis_ReadFieldMaybe(command::amc_vis& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8236,7 +8236,7 @@ bool command::amc_vis_ReadFieldMaybe(command::amc_vis& parent, algo::strptr fiel
 
 // --- command.amc_vis..ReadTupleMaybe
 // Read fields of command::amc_vis from attributes of ascii tuple TUPLE
-bool command::amc_vis_ReadTupleMaybe(command::amc_vis &parent, algo::Tuple &tuple) {
+bool command::amc_vis_ReadTupleMaybe(command::amc_vis &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -8267,7 +8267,7 @@ void command::amc_vis_Init(command::amc_vis& parent) {
 // --- command.amc_vis..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::amc_vis_ToCmdline(command::amc_vis& row) {
+tempstr command::amc_vis_ToCmdline(command::amc_vis& row) throw() {
     tempstr ret;
     ret << "bin/amc_vis ";
     amc_vis_PrintArgv(row, ret);
@@ -8284,7 +8284,7 @@ tempstr command::amc_vis_ToCmdline(command::amc_vis& row) {
 // --- command.amc_vis..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.amc_vis.Argv  printfmt:Auto
-void command::amc_vis_PrintArgv(command::amc_vis& row, algo::cstring& str) {
+void command::amc_vis_PrintArgv(command::amc_vis& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -8337,7 +8337,7 @@ void command::amc_vis_PrintArgv(command::amc_vis& row, algo::cstring& str) {
 }
 
 // --- command.amc_vis..GetAnon
-algo::strptr command::amc_vis_GetAnon(command::amc_vis &parent, i32 idx) {
+algo::strptr command::amc_vis_GetAnon(command::amc_vis &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("ctype", 5);
@@ -8349,7 +8349,7 @@ algo::strptr command::amc_vis_GetAnon(command::amc_vis &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::amc_vis_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::amc_vis_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_ctype: { // $comment
@@ -8395,7 +8395,7 @@ i32 command::amc_vis_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
 // --- command.amc_vis_proc.amc_vis.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::amc_vis_Start(command::amc_vis_proc& parent) {
+int command::amc_vis_Start(command::amc_vis_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(amc_vis_ToCmdline(parent)); // maybe print command
@@ -8433,7 +8433,7 @@ int command::amc_vis_Start(command::amc_vis_proc& parent) {
 
 // --- command.amc_vis_proc.amc_vis.StartRead
 // Start subprocess & Read output
-algo::Fildes command::amc_vis_StartRead(command::amc_vis_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::amc_vis_StartRead(command::amc_vis_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -8455,7 +8455,7 @@ void command::amc_vis_Kill(command::amc_vis_proc& parent) {
 
 // --- command.amc_vis_proc.amc_vis.Wait
 // Wait for subprocess to return
-void command::amc_vis_Wait(command::amc_vis_proc& parent) {
+void command::amc_vis_Wait(command::amc_vis_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -8474,7 +8474,7 @@ void command::amc_vis_Wait(command::amc_vis_proc& parent) {
 // --- command.amc_vis_proc.amc_vis.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::amc_vis_Exec(command::amc_vis_proc& parent) {
+int command::amc_vis_Exec(command::amc_vis_proc& parent) throw() {
     amc_vis_Start(parent);
     amc_vis_Wait(parent);
     return parent.status;
@@ -8492,7 +8492,7 @@ void command::amc_vis_ExecX(command::amc_vis_proc& parent) {
 // --- command.amc_vis_proc.amc_vis.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::amc_vis_Execv(command::amc_vis_proc& parent) {
+int command::amc_vis_Execv(command::amc_vis_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     amc_vis_ToArgv(parent, args);
@@ -8508,7 +8508,7 @@ int command::amc_vis_Execv(command::amc_vis_proc& parent) {
 }
 
 // --- command.amc_vis_proc.amc_vis.ToCmdline
-algo::tempstr command::amc_vis_ToCmdline(command::amc_vis_proc& parent) {
+algo::tempstr command::amc_vis_ToCmdline(command::amc_vis_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::amc_vis_PrintArgv(parent.cmd,retval);
@@ -8526,7 +8526,7 @@ algo::tempstr command::amc_vis_ToCmdline(command::amc_vis_proc& parent) {
 
 // --- command.amc_vis_proc.amc_vis.ToArgv
 // Form array from the command line
-void command::amc_vis_ToArgv(command::amc_vis_proc& parent, algo::StringAry& args) {
+void command::amc_vis_ToArgv(command::amc_vis_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -8583,7 +8583,7 @@ void command::amc_vis_ToArgv(command::amc_vis_proc& parent, algo::StringAry& arg
 }
 
 // --- command.amc_vis_proc..Uninit
-void command::amc_vis_proc_Uninit(command::amc_vis_proc& parent) {
+void command::amc_vis_proc_Uninit(command::amc_vis_proc& parent) throw() {
     command::amc_vis_proc &row = parent; (void)row;
 
     // command.amc_vis_proc.amc_vis.Uninit (Exec)  //
@@ -8591,7 +8591,7 @@ void command::amc_vis_proc_Uninit(command::amc_vis_proc& parent) {
 }
 
 // --- command.ams_cat..ReadFieldMaybe
-bool command::ams_cat_ReadFieldMaybe(command::ams_cat& parent, algo::strptr field, algo::strptr strval) {
+bool command::ams_cat_ReadFieldMaybe(command::ams_cat& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8610,7 +8610,7 @@ bool command::ams_cat_ReadFieldMaybe(command::ams_cat& parent, algo::strptr fiel
 
 // --- command.ams_cat..ReadTupleMaybe
 // Read fields of command::ams_cat from attributes of ascii tuple TUPLE
-bool command::ams_cat_ReadTupleMaybe(command::ams_cat &parent, algo::Tuple &tuple) {
+bool command::ams_cat_ReadTupleMaybe(command::ams_cat &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = ams_cat_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -8624,7 +8624,7 @@ bool command::ams_cat_ReadTupleMaybe(command::ams_cat &parent, algo::Tuple &tupl
 // --- command.ams_cat..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::ams_cat_ToCmdline(command::ams_cat& row) {
+tempstr command::ams_cat_ToCmdline(command::ams_cat& row) throw() {
     tempstr ret;
     ret << "bin/ams_cat ";
     ams_cat_PrintArgv(row, ret);
@@ -8641,7 +8641,7 @@ tempstr command::ams_cat_ToCmdline(command::ams_cat& row) {
 // --- command.ams_cat..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.ams_cat.Argv  printfmt:Tuple
-void command::ams_cat_PrintArgv(command::ams_cat& row, algo::cstring& str) {
+void command::ams_cat_PrintArgv(command::ams_cat& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -8657,7 +8657,7 @@ void command::ams_cat_PrintArgv(command::ams_cat& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::ams_cat_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::ams_cat_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -8673,7 +8673,7 @@ i32 command::ams_cat_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
 // --- command.ams_cat_proc.ams_cat.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::ams_cat_Start(command::ams_cat_proc& parent) {
+int command::ams_cat_Start(command::ams_cat_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(ams_cat_ToCmdline(parent)); // maybe print command
@@ -8711,7 +8711,7 @@ int command::ams_cat_Start(command::ams_cat_proc& parent) {
 
 // --- command.ams_cat_proc.ams_cat.StartRead
 // Start subprocess & Read output
-algo::Fildes command::ams_cat_StartRead(command::ams_cat_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::ams_cat_StartRead(command::ams_cat_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -8733,7 +8733,7 @@ void command::ams_cat_Kill(command::ams_cat_proc& parent) {
 
 // --- command.ams_cat_proc.ams_cat.Wait
 // Wait for subprocess to return
-void command::ams_cat_Wait(command::ams_cat_proc& parent) {
+void command::ams_cat_Wait(command::ams_cat_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -8752,7 +8752,7 @@ void command::ams_cat_Wait(command::ams_cat_proc& parent) {
 // --- command.ams_cat_proc.ams_cat.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::ams_cat_Exec(command::ams_cat_proc& parent) {
+int command::ams_cat_Exec(command::ams_cat_proc& parent) throw() {
     ams_cat_Start(parent);
     ams_cat_Wait(parent);
     return parent.status;
@@ -8770,7 +8770,7 @@ void command::ams_cat_ExecX(command::ams_cat_proc& parent) {
 // --- command.ams_cat_proc.ams_cat.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::ams_cat_Execv(command::ams_cat_proc& parent) {
+int command::ams_cat_Execv(command::ams_cat_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     ams_cat_ToArgv(parent, args);
@@ -8786,7 +8786,7 @@ int command::ams_cat_Execv(command::ams_cat_proc& parent) {
 }
 
 // --- command.ams_cat_proc.ams_cat.ToCmdline
-algo::tempstr command::ams_cat_ToCmdline(command::ams_cat_proc& parent) {
+algo::tempstr command::ams_cat_ToCmdline(command::ams_cat_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::ams_cat_PrintArgv(parent.cmd,retval);
@@ -8804,7 +8804,7 @@ algo::tempstr command::ams_cat_ToCmdline(command::ams_cat_proc& parent) {
 
 // --- command.ams_cat_proc.ams_cat.ToArgv
 // Form array from the command line
-void command::ams_cat_ToArgv(command::ams_cat_proc& parent, algo::StringAry& args) {
+void command::ams_cat_ToArgv(command::ams_cat_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -8819,7 +8819,7 @@ void command::ams_cat_ToArgv(command::ams_cat_proc& parent, algo::StringAry& arg
 }
 
 // --- command.ams_cat_proc..Uninit
-void command::ams_cat_proc_Uninit(command::ams_cat_proc& parent) {
+void command::ams_cat_proc_Uninit(command::ams_cat_proc& parent) throw() {
     command::ams_cat_proc &row = parent; (void)row;
 
     // command.ams_cat_proc.ams_cat.Uninit (Exec)  //
@@ -8828,21 +8828,21 @@ void command::ams_cat_proc_Uninit(command::ams_cat_proc& parent) {
 
 // --- command.ams_sendtest.trace.Print
 // Print back to string
-void command::trace_Print(command::ams_sendtest& parent, algo::cstring &out) {
+void command::trace_Print(command::ams_sendtest& parent, algo::cstring &out) throw() {
     Regx_Print(parent.trace, out);
 }
 
 // --- command.ams_sendtest.trace.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::trace_ReadStrptrMaybe(command::ams_sendtest& parent, algo::strptr in) {
+bool command::trace_ReadStrptrMaybe(command::ams_sendtest& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.trace, in, true);
     return retval;
 }
 
 // --- command.ams_sendtest..ReadFieldMaybe
-bool command::ams_sendtest_ReadFieldMaybe(command::ams_sendtest& parent, algo::strptr field, algo::strptr strval) {
+bool command::ams_sendtest_ReadFieldMaybe(command::ams_sendtest& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8913,7 +8913,7 @@ bool command::ams_sendtest_ReadFieldMaybe(command::ams_sendtest& parent, algo::s
 
 // --- command.ams_sendtest..ReadTupleMaybe
 // Read fields of command::ams_sendtest from attributes of ascii tuple TUPLE
-bool command::ams_sendtest_ReadTupleMaybe(command::ams_sendtest &parent, algo::Tuple &tuple) {
+bool command::ams_sendtest_ReadTupleMaybe(command::ams_sendtest &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = ams_sendtest_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -8946,7 +8946,7 @@ void command::ams_sendtest_Init(command::ams_sendtest& parent) {
 // --- command.ams_sendtest..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::ams_sendtest_ToCmdline(command::ams_sendtest& row) {
+tempstr command::ams_sendtest_ToCmdline(command::ams_sendtest& row) throw() {
     tempstr ret;
     ret << "bin/ams_sendtest ";
     ams_sendtest_PrintArgv(row, ret);
@@ -8963,7 +8963,7 @@ tempstr command::ams_sendtest_ToCmdline(command::ams_sendtest& row) {
 // --- command.ams_sendtest..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.ams_sendtest.Argv  printfmt:Tuple
-void command::ams_sendtest_PrintArgv(command::ams_sendtest& row, algo::cstring& str) {
+void command::ams_sendtest_PrintArgv(command::ams_sendtest& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -9057,7 +9057,7 @@ void command::ams_sendtest_PrintArgv(command::ams_sendtest& row, algo::cstring& 
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::ams_sendtest_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::ams_sendtest_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -9113,7 +9113,7 @@ i32 command::ams_sendtest_NArgs(command::FieldId field, algo::strptr& out_dflt, 
 // --- command.ams_sendtest_proc.ams_sendtest.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::ams_sendtest_Start(command::ams_sendtest_proc& parent) {
+int command::ams_sendtest_Start(command::ams_sendtest_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(ams_sendtest_ToCmdline(parent)); // maybe print command
@@ -9151,7 +9151,7 @@ int command::ams_sendtest_Start(command::ams_sendtest_proc& parent) {
 
 // --- command.ams_sendtest_proc.ams_sendtest.StartRead
 // Start subprocess & Read output
-algo::Fildes command::ams_sendtest_StartRead(command::ams_sendtest_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::ams_sendtest_StartRead(command::ams_sendtest_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -9173,7 +9173,7 @@ void command::ams_sendtest_Kill(command::ams_sendtest_proc& parent) {
 
 // --- command.ams_sendtest_proc.ams_sendtest.Wait
 // Wait for subprocess to return
-void command::ams_sendtest_Wait(command::ams_sendtest_proc& parent) {
+void command::ams_sendtest_Wait(command::ams_sendtest_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -9192,7 +9192,7 @@ void command::ams_sendtest_Wait(command::ams_sendtest_proc& parent) {
 // --- command.ams_sendtest_proc.ams_sendtest.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::ams_sendtest_Exec(command::ams_sendtest_proc& parent) {
+int command::ams_sendtest_Exec(command::ams_sendtest_proc& parent) throw() {
     ams_sendtest_Start(parent);
     ams_sendtest_Wait(parent);
     return parent.status;
@@ -9210,7 +9210,7 @@ void command::ams_sendtest_ExecX(command::ams_sendtest_proc& parent) {
 // --- command.ams_sendtest_proc.ams_sendtest.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::ams_sendtest_Execv(command::ams_sendtest_proc& parent) {
+int command::ams_sendtest_Execv(command::ams_sendtest_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     ams_sendtest_ToArgv(parent, args);
@@ -9226,7 +9226,7 @@ int command::ams_sendtest_Execv(command::ams_sendtest_proc& parent) {
 }
 
 // --- command.ams_sendtest_proc.ams_sendtest.ToCmdline
-algo::tempstr command::ams_sendtest_ToCmdline(command::ams_sendtest_proc& parent) {
+algo::tempstr command::ams_sendtest_ToCmdline(command::ams_sendtest_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::ams_sendtest_PrintArgv(parent.cmd,retval);
@@ -9244,7 +9244,7 @@ algo::tempstr command::ams_sendtest_ToCmdline(command::ams_sendtest_proc& parent
 
 // --- command.ams_sendtest_proc.ams_sendtest.ToArgv
 // Form array from the command line
-void command::ams_sendtest_ToArgv(command::ams_sendtest_proc& parent, algo::StringAry& args) {
+void command::ams_sendtest_ToArgv(command::ams_sendtest_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -9337,7 +9337,7 @@ void command::ams_sendtest_ToArgv(command::ams_sendtest_proc& parent, algo::Stri
 }
 
 // --- command.ams_sendtest_proc..Uninit
-void command::ams_sendtest_proc_Uninit(command::ams_sendtest_proc& parent) {
+void command::ams_sendtest_proc_Uninit(command::ams_sendtest_proc& parent) throw() {
     command::ams_sendtest_proc &row = parent; (void)row;
 
     // command.ams_sendtest_proc.ams_sendtest.Uninit (Exec)  //
@@ -9346,14 +9346,14 @@ void command::ams_sendtest_proc_Uninit(command::ams_sendtest_proc& parent) {
 
 // --- command.apm.package.Print
 // Print back to string
-void command::package_Print(command::apm& parent, algo::cstring &out) {
+void command::package_Print(command::apm& parent, algo::cstring &out) throw() {
     Regx_Print(parent.package, out);
 }
 
 // --- command.apm.package.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::package_ReadStrptrMaybe(command::apm& parent, algo::strptr in) {
+bool command::package_ReadStrptrMaybe(command::apm& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.package, in, true);
     return retval;
@@ -9361,21 +9361,21 @@ bool command::package_ReadStrptrMaybe(command::apm& parent, algo::strptr in) {
 
 // --- command.apm.ns.Print
 // Print back to string
-void command::ns_Print(command::apm& parent, algo::cstring &out) {
+void command::ns_Print(command::apm& parent, algo::cstring &out) throw() {
     Regx_Print(parent.ns, out);
 }
 
 // --- command.apm.ns.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::ns_ReadStrptrMaybe(command::apm& parent, algo::strptr in) {
+bool command::ns_ReadStrptrMaybe(command::apm& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.ns, in, true);
     return retval;
 }
 
 // --- command.apm..ReadFieldMaybe
-bool command::apm_ReadFieldMaybe(command::apm& parent, algo::strptr field, algo::strptr strval) {
+bool command::apm_ReadFieldMaybe(command::apm& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9494,7 +9494,7 @@ bool command::apm_ReadFieldMaybe(command::apm& parent, algo::strptr field, algo:
 
 // --- command.apm..ReadTupleMaybe
 // Read fields of command::apm from attributes of ascii tuple TUPLE
-bool command::apm_ReadTupleMaybe(command::apm &parent, algo::Tuple &tuple) {
+bool command::apm_ReadTupleMaybe(command::apm &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -9543,7 +9543,7 @@ void command::apm_Init(command::apm& parent) {
 // --- command.apm..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::apm_ToCmdline(command::apm& row) {
+tempstr command::apm_ToCmdline(command::apm& row) throw() {
     tempstr ret;
     ret << "bin/apm ";
     apm_PrintArgv(row, ret);
@@ -9560,7 +9560,7 @@ tempstr command::apm_ToCmdline(command::apm& row) {
 // --- command.apm..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.apm.Argv  printfmt:Tuple
-void command::apm_PrintArgv(command::apm& row, algo::cstring& str) {
+void command::apm_PrintArgv(command::apm& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -9721,7 +9721,7 @@ void command::apm_PrintArgv(command::apm& row, algo::cstring& str) {
 }
 
 // --- command.apm..GetAnon
-algo::strptr command::apm_GetAnon(command::apm &parent, i32 idx) {
+algo::strptr command::apm_GetAnon(command::apm &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("package", 7);
@@ -9733,7 +9733,7 @@ algo::strptr command::apm_GetAnon(command::apm &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::apm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::apm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -9857,7 +9857,7 @@ i32 command::apm_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out
 // --- command.apm_proc.apm.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::apm_Start(command::apm_proc& parent) {
+int command::apm_Start(command::apm_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(apm_ToCmdline(parent)); // maybe print command
@@ -9895,7 +9895,7 @@ int command::apm_Start(command::apm_proc& parent) {
 
 // --- command.apm_proc.apm.StartRead
 // Start subprocess & Read output
-algo::Fildes command::apm_StartRead(command::apm_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::apm_StartRead(command::apm_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -9917,7 +9917,7 @@ void command::apm_Kill(command::apm_proc& parent) {
 
 // --- command.apm_proc.apm.Wait
 // Wait for subprocess to return
-void command::apm_Wait(command::apm_proc& parent) {
+void command::apm_Wait(command::apm_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -9936,7 +9936,7 @@ void command::apm_Wait(command::apm_proc& parent) {
 // --- command.apm_proc.apm.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::apm_Exec(command::apm_proc& parent) {
+int command::apm_Exec(command::apm_proc& parent) throw() {
     apm_Start(parent);
     apm_Wait(parent);
     return parent.status;
@@ -9954,7 +9954,7 @@ void command::apm_ExecX(command::apm_proc& parent) {
 // --- command.apm_proc.apm.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::apm_Execv(command::apm_proc& parent) {
+int command::apm_Execv(command::apm_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     apm_ToArgv(parent, args);
@@ -9970,7 +9970,7 @@ int command::apm_Execv(command::apm_proc& parent) {
 }
 
 // --- command.apm_proc.apm.ToCmdline
-algo::tempstr command::apm_ToCmdline(command::apm_proc& parent) {
+algo::tempstr command::apm_ToCmdline(command::apm_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::apm_PrintArgv(parent.cmd,retval);
@@ -9988,7 +9988,7 @@ algo::tempstr command::apm_ToCmdline(command::apm_proc& parent) {
 
 // --- command.apm_proc.apm.ToArgv
 // Form array from the command line
-void command::apm_ToArgv(command::apm_proc& parent, algo::StringAry& args) {
+void command::apm_ToArgv(command::apm_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -10153,7 +10153,7 @@ void command::apm_ToArgv(command::apm_proc& parent, algo::StringAry& args) {
 }
 
 // --- command.apm_proc..Uninit
-void command::apm_proc_Uninit(command::apm_proc& parent) {
+void command::apm_proc_Uninit(command::apm_proc& parent) throw() {
     command::apm_proc &row = parent; (void)row;
 
     // command.apm_proc.apm.Uninit (Exec)  //
@@ -10162,21 +10162,21 @@ void command::apm_proc_Uninit(command::apm_proc& parent) {
 
 // --- command.aqlite.ns.Print
 // Print back to string
-void command::ns_Print(command::aqlite& parent, algo::cstring &out) {
+void command::ns_Print(command::aqlite& parent, algo::cstring &out) throw() {
     Regx_Print(parent.ns, out);
 }
 
 // --- command.aqlite.ns.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::ns_ReadStrptrMaybe(command::aqlite& parent, algo::strptr in) {
+bool command::ns_ReadStrptrMaybe(command::aqlite& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.ns, in, true);
     return retval;
 }
 
 // --- command.aqlite..ReadFieldMaybe
-bool command::aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field, algo::strptr strval) {
+bool command::aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -10207,7 +10207,7 @@ bool command::aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field,
 
 // --- command.aqlite..ReadTupleMaybe
 // Read fields of command::aqlite from attributes of ascii tuple TUPLE
-bool command::aqlite_ReadTupleMaybe(command::aqlite &parent, algo::Tuple &tuple) {
+bool command::aqlite_ReadTupleMaybe(command::aqlite &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -10233,7 +10233,7 @@ void command::aqlite_Init(command::aqlite& parent) {
 // --- command.aqlite..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::aqlite_ToCmdline(command::aqlite& row) {
+tempstr command::aqlite_ToCmdline(command::aqlite& row) throw() {
     tempstr ret;
     ret << "bin/aqlite ";
     aqlite_PrintArgv(row, ret);
@@ -10250,7 +10250,7 @@ tempstr command::aqlite_ToCmdline(command::aqlite& row) {
 // --- command.aqlite..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.aqlite.Argv  printfmt:Tuple
-void command::aqlite_PrintArgv(command::aqlite& row, algo::cstring& str) {
+void command::aqlite_PrintArgv(command::aqlite& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -10279,7 +10279,7 @@ void command::aqlite_PrintArgv(command::aqlite& row, algo::cstring& str) {
 }
 
 // --- command.aqlite..GetAnon
-algo::strptr command::aqlite_GetAnon(command::aqlite &parent, i32 idx) {
+algo::strptr command::aqlite_GetAnon(command::aqlite &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("cmd", 3);
@@ -10291,7 +10291,7 @@ algo::strptr command::aqlite_GetAnon(command::aqlite &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::aqlite_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::aqlite_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -10316,7 +10316,7 @@ i32 command::aqlite_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
 // --- command.aqlite_proc.aqlite.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::aqlite_Start(command::aqlite_proc& parent) {
+int command::aqlite_Start(command::aqlite_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(aqlite_ToCmdline(parent)); // maybe print command
@@ -10354,7 +10354,7 @@ int command::aqlite_Start(command::aqlite_proc& parent) {
 
 // --- command.aqlite_proc.aqlite.StartRead
 // Start subprocess & Read output
-algo::Fildes command::aqlite_StartRead(command::aqlite_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::aqlite_StartRead(command::aqlite_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -10376,7 +10376,7 @@ void command::aqlite_Kill(command::aqlite_proc& parent) {
 
 // --- command.aqlite_proc.aqlite.Wait
 // Wait for subprocess to return
-void command::aqlite_Wait(command::aqlite_proc& parent) {
+void command::aqlite_Wait(command::aqlite_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -10395,7 +10395,7 @@ void command::aqlite_Wait(command::aqlite_proc& parent) {
 // --- command.aqlite_proc.aqlite.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::aqlite_Exec(command::aqlite_proc& parent) {
+int command::aqlite_Exec(command::aqlite_proc& parent) throw() {
     aqlite_Start(parent);
     aqlite_Wait(parent);
     return parent.status;
@@ -10413,7 +10413,7 @@ void command::aqlite_ExecX(command::aqlite_proc& parent) {
 // --- command.aqlite_proc.aqlite.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::aqlite_Execv(command::aqlite_proc& parent) {
+int command::aqlite_Execv(command::aqlite_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     aqlite_ToArgv(parent, args);
@@ -10429,7 +10429,7 @@ int command::aqlite_Execv(command::aqlite_proc& parent) {
 }
 
 // --- command.aqlite_proc.aqlite.ToCmdline
-algo::tempstr command::aqlite_ToCmdline(command::aqlite_proc& parent) {
+algo::tempstr command::aqlite_ToCmdline(command::aqlite_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::aqlite_PrintArgv(parent.cmd,retval);
@@ -10447,7 +10447,7 @@ algo::tempstr command::aqlite_ToCmdline(command::aqlite_proc& parent) {
 
 // --- command.aqlite_proc.aqlite.ToArgv
 // Form array from the command line
-void command::aqlite_ToArgv(command::aqlite_proc& parent, algo::StringAry& args) {
+void command::aqlite_ToArgv(command::aqlite_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -10480,7 +10480,7 @@ void command::aqlite_ToArgv(command::aqlite_proc& parent, algo::StringAry& args)
 }
 
 // --- command.aqlite_proc..Uninit
-void command::aqlite_proc_Uninit(command::aqlite_proc& parent) {
+void command::aqlite_proc_Uninit(command::aqlite_proc& parent) throw() {
     command::aqlite_proc &row = parent; (void)row;
 
     // command.aqlite_proc.aqlite.Uninit (Exec)  //
@@ -10489,21 +10489,21 @@ void command::aqlite_proc_Uninit(command::aqlite_proc& parent) {
 
 // --- command.atf_amc.amctest.Print
 // Print back to string
-void command::amctest_Print(command::atf_amc& parent, algo::cstring &out) {
+void command::amctest_Print(command::atf_amc& parent, algo::cstring &out) throw() {
     Regx_Print(parent.amctest, out);
 }
 
 // --- command.atf_amc.amctest.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::amctest_ReadStrptrMaybe(command::atf_amc& parent, algo::strptr in) {
+bool command::amctest_ReadStrptrMaybe(command::atf_amc& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.amctest, in, true);
     return retval;
 }
 
 // --- command.atf_amc..ReadFieldMaybe
-bool command::atf_amc_ReadFieldMaybe(command::atf_amc& parent, algo::strptr field, algo::strptr strval) {
+bool command::atf_amc_ReadFieldMaybe(command::atf_amc& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -10534,7 +10534,7 @@ bool command::atf_amc_ReadFieldMaybe(command::atf_amc& parent, algo::strptr fiel
 
 // --- command.atf_amc..ReadTupleMaybe
 // Read fields of command::atf_amc from attributes of ascii tuple TUPLE
-bool command::atf_amc_ReadTupleMaybe(command::atf_amc &parent, algo::Tuple &tuple) {
+bool command::atf_amc_ReadTupleMaybe(command::atf_amc &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -10561,7 +10561,7 @@ void command::atf_amc_Init(command::atf_amc& parent) {
 // --- command.atf_amc..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::atf_amc_ToCmdline(command::atf_amc& row) {
+tempstr command::atf_amc_ToCmdline(command::atf_amc& row) throw() {
     tempstr ret;
     ret << "bin/atf_amc ";
     atf_amc_PrintArgv(row, ret);
@@ -10578,7 +10578,7 @@ tempstr command::atf_amc_ToCmdline(command::atf_amc& row) {
 // --- command.atf_amc..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.atf_amc.Argv  printfmt:Tuple
-void command::atf_amc_PrintArgv(command::atf_amc& row, algo::cstring& str) {
+void command::atf_amc_PrintArgv(command::atf_amc& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -10607,7 +10607,7 @@ void command::atf_amc_PrintArgv(command::atf_amc& row, algo::cstring& str) {
 }
 
 // --- command.atf_amc..GetAnon
-algo::strptr command::atf_amc_GetAnon(command::atf_amc &parent, i32 idx) {
+algo::strptr command::atf_amc_GetAnon(command::atf_amc &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("amctest", 7);
@@ -10619,7 +10619,7 @@ algo::strptr command::atf_amc_GetAnon(command::atf_amc &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::atf_amc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::atf_amc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -10647,7 +10647,7 @@ i32 command::atf_amc_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
 // --- command.atf_amc_proc.atf_amc.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::atf_amc_Start(command::atf_amc_proc& parent) {
+int command::atf_amc_Start(command::atf_amc_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(atf_amc_ToCmdline(parent)); // maybe print command
@@ -10685,7 +10685,7 @@ int command::atf_amc_Start(command::atf_amc_proc& parent) {
 
 // --- command.atf_amc_proc.atf_amc.StartRead
 // Start subprocess & Read output
-algo::Fildes command::atf_amc_StartRead(command::atf_amc_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::atf_amc_StartRead(command::atf_amc_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -10707,7 +10707,7 @@ void command::atf_amc_Kill(command::atf_amc_proc& parent) {
 
 // --- command.atf_amc_proc.atf_amc.Wait
 // Wait for subprocess to return
-void command::atf_amc_Wait(command::atf_amc_proc& parent) {
+void command::atf_amc_Wait(command::atf_amc_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -10726,7 +10726,7 @@ void command::atf_amc_Wait(command::atf_amc_proc& parent) {
 // --- command.atf_amc_proc.atf_amc.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::atf_amc_Exec(command::atf_amc_proc& parent) {
+int command::atf_amc_Exec(command::atf_amc_proc& parent) throw() {
     atf_amc_Start(parent);
     atf_amc_Wait(parent);
     return parent.status;
@@ -10744,7 +10744,7 @@ void command::atf_amc_ExecX(command::atf_amc_proc& parent) {
 // --- command.atf_amc_proc.atf_amc.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::atf_amc_Execv(command::atf_amc_proc& parent) {
+int command::atf_amc_Execv(command::atf_amc_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     atf_amc_ToArgv(parent, args);
@@ -10760,7 +10760,7 @@ int command::atf_amc_Execv(command::atf_amc_proc& parent) {
 }
 
 // --- command.atf_amc_proc.atf_amc.ToCmdline
-algo::tempstr command::atf_amc_ToCmdline(command::atf_amc_proc& parent) {
+algo::tempstr command::atf_amc_ToCmdline(command::atf_amc_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::atf_amc_PrintArgv(parent.cmd,retval);
@@ -10778,7 +10778,7 @@ algo::tempstr command::atf_amc_ToCmdline(command::atf_amc_proc& parent) {
 
 // --- command.atf_amc_proc.atf_amc.ToArgv
 // Form array from the command line
-void command::atf_amc_ToArgv(command::atf_amc_proc& parent, algo::StringAry& args) {
+void command::atf_amc_ToArgv(command::atf_amc_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -10811,7 +10811,7 @@ void command::atf_amc_ToArgv(command::atf_amc_proc& parent, algo::StringAry& arg
 }
 
 // --- command.atf_amc_proc..Uninit
-void command::atf_amc_proc_Uninit(command::atf_amc_proc& parent) {
+void command::atf_amc_proc_Uninit(command::atf_amc_proc& parent) throw() {
     command::atf_amc_proc &row = parent; (void)row;
 
     // command.atf_amc_proc.atf_amc.Uninit (Exec)  //
@@ -10820,14 +10820,14 @@ void command::atf_amc_proc_Uninit(command::atf_amc_proc& parent) {
 
 // --- command.atf_ci.citest.Print
 // Print back to string
-void command::citest_Print(command::atf_ci& parent, algo::cstring &out) {
+void command::citest_Print(command::atf_ci& parent, algo::cstring &out) throw() {
     Regx_Print(parent.citest, out);
 }
 
 // --- command.atf_ci.citest.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::citest_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) {
+bool command::citest_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.citest, in, true);
     return retval;
@@ -10835,21 +10835,21 @@ bool command::citest_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) {
 
 // --- command.atf_ci.cijob.Print
 // Print back to string
-void command::cijob_Print(command::atf_ci& parent, algo::cstring &out) {
+void command::cijob_Print(command::atf_ci& parent, algo::cstring &out) throw() {
     Regx_Print(parent.cijob, out);
 }
 
 // --- command.atf_ci.cijob.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::cijob_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) {
+bool command::cijob_ReadStrptrMaybe(command::atf_ci& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.cijob, in, true);
     return retval;
 }
 
 // --- command.atf_ci..ReadFieldMaybe
-bool command::atf_ci_ReadFieldMaybe(command::atf_ci& parent, algo::strptr field, algo::strptr strval) {
+bool command::atf_ci_ReadFieldMaybe(command::atf_ci& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -10884,7 +10884,7 @@ bool command::atf_ci_ReadFieldMaybe(command::atf_ci& parent, algo::strptr field,
 
 // --- command.atf_ci..ReadTupleMaybe
 // Read fields of command::atf_ci from attributes of ascii tuple TUPLE
-bool command::atf_ci_ReadTupleMaybe(command::atf_ci &parent, algo::Tuple &tuple) {
+bool command::atf_ci_ReadTupleMaybe(command::atf_ci &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -10912,7 +10912,7 @@ void command::atf_ci_Init(command::atf_ci& parent) {
 // --- command.atf_ci..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::atf_ci_ToCmdline(command::atf_ci& row) {
+tempstr command::atf_ci_ToCmdline(command::atf_ci& row) throw() {
     tempstr ret;
     ret << "bin/atf_ci ";
     atf_ci_PrintArgv(row, ret);
@@ -10929,7 +10929,7 @@ tempstr command::atf_ci_ToCmdline(command::atf_ci& row) {
 // --- command.atf_ci..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.atf_ci.Argv  printfmt:Tuple
-void command::atf_ci_PrintArgv(command::atf_ci& row, algo::cstring& str) {
+void command::atf_ci_PrintArgv(command::atf_ci& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -10964,7 +10964,7 @@ void command::atf_ci_PrintArgv(command::atf_ci& row, algo::cstring& str) {
 }
 
 // --- command.atf_ci..GetAnon
-algo::strptr command::atf_ci_GetAnon(command::atf_ci &parent, i32 idx) {
+algo::strptr command::atf_ci_GetAnon(command::atf_ci &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("citest", 6);
@@ -10976,7 +10976,7 @@ algo::strptr command::atf_ci_GetAnon(command::atf_ci &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::atf_ci_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::atf_ci_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -11005,7 +11005,7 @@ i32 command::atf_ci_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
 // --- command.atf_ci_proc.atf_ci.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::atf_ci_Start(command::atf_ci_proc& parent) {
+int command::atf_ci_Start(command::atf_ci_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(atf_ci_ToCmdline(parent)); // maybe print command
@@ -11043,7 +11043,7 @@ int command::atf_ci_Start(command::atf_ci_proc& parent) {
 
 // --- command.atf_ci_proc.atf_ci.StartRead
 // Start subprocess & Read output
-algo::Fildes command::atf_ci_StartRead(command::atf_ci_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::atf_ci_StartRead(command::atf_ci_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -11065,7 +11065,7 @@ void command::atf_ci_Kill(command::atf_ci_proc& parent) {
 
 // --- command.atf_ci_proc.atf_ci.Wait
 // Wait for subprocess to return
-void command::atf_ci_Wait(command::atf_ci_proc& parent) {
+void command::atf_ci_Wait(command::atf_ci_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -11084,7 +11084,7 @@ void command::atf_ci_Wait(command::atf_ci_proc& parent) {
 // --- command.atf_ci_proc.atf_ci.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::atf_ci_Exec(command::atf_ci_proc& parent) {
+int command::atf_ci_Exec(command::atf_ci_proc& parent) throw() {
     atf_ci_Start(parent);
     atf_ci_Wait(parent);
     return parent.status;
@@ -11102,7 +11102,7 @@ void command::atf_ci_ExecX(command::atf_ci_proc& parent) {
 // --- command.atf_ci_proc.atf_ci.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::atf_ci_Execv(command::atf_ci_proc& parent) {
+int command::atf_ci_Execv(command::atf_ci_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     atf_ci_ToArgv(parent, args);
@@ -11118,7 +11118,7 @@ int command::atf_ci_Execv(command::atf_ci_proc& parent) {
 }
 
 // --- command.atf_ci_proc.atf_ci.ToCmdline
-algo::tempstr command::atf_ci_ToCmdline(command::atf_ci_proc& parent) {
+algo::tempstr command::atf_ci_ToCmdline(command::atf_ci_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::atf_ci_PrintArgv(parent.cmd,retval);
@@ -11136,7 +11136,7 @@ algo::tempstr command::atf_ci_ToCmdline(command::atf_ci_proc& parent) {
 
 // --- command.atf_ci_proc.atf_ci.ToArgv
 // Form array from the command line
-void command::atf_ci_ToArgv(command::atf_ci_proc& parent, algo::StringAry& args) {
+void command::atf_ci_ToArgv(command::atf_ci_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -11175,7 +11175,7 @@ void command::atf_ci_ToArgv(command::atf_ci_proc& parent, algo::StringAry& args)
 }
 
 // --- command.atf_ci_proc..Uninit
-void command::atf_ci_proc_Uninit(command::atf_ci_proc& parent) {
+void command::atf_ci_proc_Uninit(command::atf_ci_proc& parent) throw() {
     command::atf_ci_proc &row = parent; (void)row;
 
     // command.atf_ci_proc.atf_ci.Uninit (Exec)  //
@@ -11186,7 +11186,7 @@ void command::atf_ci_proc_Uninit(command::atf_ci_proc& parent) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> command::mstr_Addary(command::atf_cmdline& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> command::mstr_Addary(command::atf_cmdline& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.mstr_elems && rhs.elems < parent.mstr_elems + parent.mstr_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.atf_cmdline.mstr  comment:'alias error: sub-array is being appended to the whole'");
@@ -11204,7 +11204,7 @@ algo::aryptr<algo::cstring> command::mstr_Addary(command::atf_cmdline& parent, a
 // --- command.atf_cmdline.mstr.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& command::mstr_Alloc(command::atf_cmdline& parent) {
+algo::cstring& command::mstr_Alloc(command::atf_cmdline& parent) throw() {
     mstr_Reserve(parent, 1);
     int n  = parent.mstr_n;
     int at = n;
@@ -11217,7 +11217,7 @@ algo::cstring& command::mstr_Alloc(command::atf_cmdline& parent) {
 // --- command.atf_cmdline.mstr.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& command::mstr_AllocAt(command::atf_cmdline& parent, int at) {
+algo::cstring& command::mstr_AllocAt(command::atf_cmdline& parent, int at) throw() {
     mstr_Reserve(parent, 1);
     int n  = parent.mstr_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -11232,7 +11232,7 @@ algo::cstring& command::mstr_AllocAt(command::atf_cmdline& parent, int at) {
 
 // --- command.atf_cmdline.mstr.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::mstr_AllocN(command::atf_cmdline& parent, int n_elems) {
+algo::aryptr<algo::cstring> command::mstr_AllocN(command::atf_cmdline& parent, int n_elems) throw() {
     mstr_Reserve(parent, n_elems);
     int old_n  = parent.mstr_n;
     int new_n = old_n + n_elems;
@@ -11246,7 +11246,7 @@ algo::aryptr<algo::cstring> command::mstr_AllocN(command::atf_cmdline& parent, i
 
 // --- command.atf_cmdline.mstr.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::mstr_Remove(command::atf_cmdline& parent, u32 i) {
+void command::mstr_Remove(command::atf_cmdline& parent, u32 i) throw() {
     u32 lim = parent.mstr_n;
     algo::cstring *elems = parent.mstr_elems;
     if (i < lim) {
@@ -11257,7 +11257,7 @@ void command::mstr_Remove(command::atf_cmdline& parent, u32 i) {
 }
 
 // --- command.atf_cmdline.mstr.RemoveAll
-void command::mstr_RemoveAll(command::atf_cmdline& parent) {
+void command::mstr_RemoveAll(command::atf_cmdline& parent) throw() {
     u32 n = parent.mstr_n;
     while (n > 0) {
         n -= 1;
@@ -11268,7 +11268,7 @@ void command::mstr_RemoveAll(command::atf_cmdline& parent) {
 
 // --- command.atf_cmdline.mstr.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::mstr_RemoveLast(command::atf_cmdline& parent) {
+void command::mstr_RemoveLast(command::atf_cmdline& parent) throw() {
     u64 n = parent.mstr_n;
     if (n > 0) {
         n -= 1;
@@ -11279,7 +11279,7 @@ void command::mstr_RemoveLast(command::atf_cmdline& parent) {
 
 // --- command.atf_cmdline.mstr.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::mstr_AbsReserve(command::atf_cmdline& parent, int n) {
+void command::mstr_AbsReserve(command::atf_cmdline& parent, int n) throw() {
     u32 old_max  = parent.mstr_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -11294,7 +11294,7 @@ void command::mstr_AbsReserve(command::atf_cmdline& parent, int n) {
 
 // --- command.atf_cmdline.mstr.Setary
 // Copy contents of RHS to PARENT.
-void command::mstr_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) {
+void command::mstr_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) throw() {
     mstr_RemoveAll(parent);
     int nnew = rhs.mstr_n;
     mstr_Reserve(parent, nnew); // reserve space
@@ -11307,14 +11307,14 @@ void command::mstr_Setary(command::atf_cmdline& parent, command::atf_cmdline &rh
 // --- command.atf_cmdline.mstr.Setary2
 // Copy specified array into mstr, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::mstr_Setary(command::atf_cmdline& parent, const algo::aryptr<algo::cstring> &rhs) {
+void command::mstr_Setary(command::atf_cmdline& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     mstr_RemoveAll(parent);
     mstr_Addary(parent, rhs);
 }
 
 // --- command.atf_cmdline.mstr.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::mstr_AllocNVal(command::atf_cmdline& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> command::mstr_AllocNVal(command::atf_cmdline& parent, int n_elems, const algo::cstring& val) throw() {
     mstr_Reserve(parent, n_elems);
     int old_n  = parent.mstr_n;
     int new_n = old_n + n_elems;
@@ -11330,7 +11330,7 @@ algo::aryptr<algo::cstring> command::mstr_AllocNVal(command::atf_cmdline& parent
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::mstr_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) {
+bool command::mstr_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = mstr_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -11344,7 +11344,7 @@ bool command::mstr_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<i32> command::mnum_Addary(command::atf_cmdline& parent, algo::aryptr<i32> rhs) {
+algo::aryptr<i32> command::mnum_Addary(command::atf_cmdline& parent, algo::aryptr<i32> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.mnum_elems && rhs.elems < parent.mnum_elems + parent.mnum_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.atf_cmdline.mnum  comment:'alias error: sub-array is being appended to the whole'");
@@ -11360,7 +11360,7 @@ algo::aryptr<i32> command::mnum_Addary(command::atf_cmdline& parent, algo::arypt
 // --- command.atf_cmdline.mnum.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-i32& command::mnum_Alloc(command::atf_cmdline& parent) {
+i32& command::mnum_Alloc(command::atf_cmdline& parent) throw() {
     mnum_Reserve(parent, 1);
     int n  = parent.mnum_n;
     int at = n;
@@ -11373,7 +11373,7 @@ i32& command::mnum_Alloc(command::atf_cmdline& parent) {
 // --- command.atf_cmdline.mnum.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-i32& command::mnum_AllocAt(command::atf_cmdline& parent, int at) {
+i32& command::mnum_AllocAt(command::atf_cmdline& parent, int at) throw() {
     mnum_Reserve(parent, 1);
     int n  = parent.mnum_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -11388,7 +11388,7 @@ i32& command::mnum_AllocAt(command::atf_cmdline& parent, int at) {
 
 // --- command.atf_cmdline.mnum.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32> command::mnum_AllocN(command::atf_cmdline& parent, int n_elems) {
+algo::aryptr<i32> command::mnum_AllocN(command::atf_cmdline& parent, int n_elems) throw() {
     mnum_Reserve(parent, n_elems);
     int old_n  = parent.mnum_n;
     int new_n = old_n + n_elems;
@@ -11402,7 +11402,7 @@ algo::aryptr<i32> command::mnum_AllocN(command::atf_cmdline& parent, int n_elems
 
 // --- command.atf_cmdline.mnum.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::mnum_Remove(command::atf_cmdline& parent, u32 i) {
+void command::mnum_Remove(command::atf_cmdline& parent, u32 i) throw() {
     u32 lim = parent.mnum_n;
     i32 *elems = parent.mnum_elems;
     if (i < lim) {
@@ -11413,7 +11413,7 @@ void command::mnum_Remove(command::atf_cmdline& parent, u32 i) {
 
 // --- command.atf_cmdline.mnum.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::mnum_RemoveLast(command::atf_cmdline& parent) {
+void command::mnum_RemoveLast(command::atf_cmdline& parent) throw() {
     u64 n = parent.mnum_n;
     if (n > 0) {
         n -= 1;
@@ -11423,7 +11423,7 @@ void command::mnum_RemoveLast(command::atf_cmdline& parent) {
 
 // --- command.atf_cmdline.mnum.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::mnum_AbsReserve(command::atf_cmdline& parent, int n) {
+void command::mnum_AbsReserve(command::atf_cmdline& parent, int n) throw() {
     u32 old_max  = parent.mnum_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -11438,7 +11438,7 @@ void command::mnum_AbsReserve(command::atf_cmdline& parent, int n) {
 
 // --- command.atf_cmdline.mnum.Setary
 // Copy contents of RHS to PARENT.
-void command::mnum_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) {
+void command::mnum_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) throw() {
     mnum_RemoveAll(parent);
     int nnew = rhs.mnum_n;
     mnum_Reserve(parent, nnew); // reserve space
@@ -11451,14 +11451,14 @@ void command::mnum_Setary(command::atf_cmdline& parent, command::atf_cmdline &rh
 // --- command.atf_cmdline.mnum.Setary2
 // Copy specified array into mnum, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::mnum_Setary(command::atf_cmdline& parent, const algo::aryptr<i32> &rhs) {
+void command::mnum_Setary(command::atf_cmdline& parent, const algo::aryptr<i32> &rhs) throw() {
     mnum_RemoveAll(parent);
     mnum_Addary(parent, rhs);
 }
 
 // --- command.atf_cmdline.mnum.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32> command::mnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) {
+algo::aryptr<i32> command::mnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) throw() {
     mnum_Reserve(parent, n_elems);
     int old_n  = parent.mnum_n;
     int new_n = old_n + n_elems;
@@ -11474,7 +11474,7 @@ algo::aryptr<i32> command::mnum_AllocNVal(command::atf_cmdline& parent, int n_el
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::mnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) {
+bool command::mnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) throw() {
     bool retval = true;
     i32 &elem = mnum_Alloc(parent);
     retval = i32_ReadStrptrMaybe(elem, in_str);
@@ -11488,7 +11488,7 @@ bool command::mnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<double> command::mdbl_Addary(command::atf_cmdline& parent, algo::aryptr<double> rhs) {
+algo::aryptr<double> command::mdbl_Addary(command::atf_cmdline& parent, algo::aryptr<double> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.mdbl_elems && rhs.elems < parent.mdbl_elems + parent.mdbl_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.atf_cmdline.mdbl  comment:'alias error: sub-array is being appended to the whole'");
@@ -11504,7 +11504,7 @@ algo::aryptr<double> command::mdbl_Addary(command::atf_cmdline& parent, algo::ar
 // --- command.atf_cmdline.mdbl.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-double& command::mdbl_Alloc(command::atf_cmdline& parent) {
+double& command::mdbl_Alloc(command::atf_cmdline& parent) throw() {
     mdbl_Reserve(parent, 1);
     int n  = parent.mdbl_n;
     int at = n;
@@ -11517,7 +11517,7 @@ double& command::mdbl_Alloc(command::atf_cmdline& parent) {
 // --- command.atf_cmdline.mdbl.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-double& command::mdbl_AllocAt(command::atf_cmdline& parent, int at) {
+double& command::mdbl_AllocAt(command::atf_cmdline& parent, int at) throw() {
     mdbl_Reserve(parent, 1);
     int n  = parent.mdbl_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -11532,7 +11532,7 @@ double& command::mdbl_AllocAt(command::atf_cmdline& parent, int at) {
 
 // --- command.atf_cmdline.mdbl.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<double> command::mdbl_AllocN(command::atf_cmdline& parent, int n_elems) {
+algo::aryptr<double> command::mdbl_AllocN(command::atf_cmdline& parent, int n_elems) throw() {
     mdbl_Reserve(parent, n_elems);
     int old_n  = parent.mdbl_n;
     int new_n = old_n + n_elems;
@@ -11546,7 +11546,7 @@ algo::aryptr<double> command::mdbl_AllocN(command::atf_cmdline& parent, int n_el
 
 // --- command.atf_cmdline.mdbl.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::mdbl_Remove(command::atf_cmdline& parent, u32 i) {
+void command::mdbl_Remove(command::atf_cmdline& parent, u32 i) throw() {
     u32 lim = parent.mdbl_n;
     double *elems = parent.mdbl_elems;
     if (i < lim) {
@@ -11557,7 +11557,7 @@ void command::mdbl_Remove(command::atf_cmdline& parent, u32 i) {
 
 // --- command.atf_cmdline.mdbl.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::mdbl_RemoveLast(command::atf_cmdline& parent) {
+void command::mdbl_RemoveLast(command::atf_cmdline& parent) throw() {
     u64 n = parent.mdbl_n;
     if (n > 0) {
         n -= 1;
@@ -11567,7 +11567,7 @@ void command::mdbl_RemoveLast(command::atf_cmdline& parent) {
 
 // --- command.atf_cmdline.mdbl.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::mdbl_AbsReserve(command::atf_cmdline& parent, int n) {
+void command::mdbl_AbsReserve(command::atf_cmdline& parent, int n) throw() {
     u32 old_max  = parent.mdbl_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -11582,7 +11582,7 @@ void command::mdbl_AbsReserve(command::atf_cmdline& parent, int n) {
 
 // --- command.atf_cmdline.mdbl.Setary
 // Copy contents of RHS to PARENT.
-void command::mdbl_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) {
+void command::mdbl_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) throw() {
     mdbl_RemoveAll(parent);
     int nnew = rhs.mdbl_n;
     mdbl_Reserve(parent, nnew); // reserve space
@@ -11595,14 +11595,14 @@ void command::mdbl_Setary(command::atf_cmdline& parent, command::atf_cmdline &rh
 // --- command.atf_cmdline.mdbl.Setary2
 // Copy specified array into mdbl, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::mdbl_Setary(command::atf_cmdline& parent, const algo::aryptr<double> &rhs) {
+void command::mdbl_Setary(command::atf_cmdline& parent, const algo::aryptr<double> &rhs) throw() {
     mdbl_RemoveAll(parent);
     mdbl_Addary(parent, rhs);
 }
 
 // --- command.atf_cmdline.mdbl.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<double> command::mdbl_AllocNVal(command::atf_cmdline& parent, int n_elems, const double& val) {
+algo::aryptr<double> command::mdbl_AllocNVal(command::atf_cmdline& parent, int n_elems, const double& val) throw() {
     mdbl_Reserve(parent, n_elems);
     int old_n  = parent.mdbl_n;
     int new_n = old_n + n_elems;
@@ -11618,7 +11618,7 @@ algo::aryptr<double> command::mdbl_AllocNVal(command::atf_cmdline& parent, int n
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::mdbl_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) {
+bool command::mdbl_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) throw() {
     bool retval = true;
     double &elem = mdbl_Alloc(parent);
     retval = double_ReadStrptrMaybe(elem, in_str);
@@ -11632,7 +11632,7 @@ bool command::mdbl_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<i32> command::amnum_Addary(command::atf_cmdline& parent, algo::aryptr<i32> rhs) {
+algo::aryptr<i32> command::amnum_Addary(command::atf_cmdline& parent, algo::aryptr<i32> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.amnum_elems && rhs.elems < parent.amnum_elems + parent.amnum_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.atf_cmdline.amnum  comment:'alias error: sub-array is being appended to the whole'");
@@ -11648,7 +11648,7 @@ algo::aryptr<i32> command::amnum_Addary(command::atf_cmdline& parent, algo::aryp
 // --- command.atf_cmdline.amnum.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-i32& command::amnum_Alloc(command::atf_cmdline& parent) {
+i32& command::amnum_Alloc(command::atf_cmdline& parent) throw() {
     amnum_Reserve(parent, 1);
     int n  = parent.amnum_n;
     int at = n;
@@ -11661,7 +11661,7 @@ i32& command::amnum_Alloc(command::atf_cmdline& parent) {
 // --- command.atf_cmdline.amnum.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-i32& command::amnum_AllocAt(command::atf_cmdline& parent, int at) {
+i32& command::amnum_AllocAt(command::atf_cmdline& parent, int at) throw() {
     amnum_Reserve(parent, 1);
     int n  = parent.amnum_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -11676,7 +11676,7 @@ i32& command::amnum_AllocAt(command::atf_cmdline& parent, int at) {
 
 // --- command.atf_cmdline.amnum.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32> command::amnum_AllocN(command::atf_cmdline& parent, int n_elems) {
+algo::aryptr<i32> command::amnum_AllocN(command::atf_cmdline& parent, int n_elems) throw() {
     amnum_Reserve(parent, n_elems);
     int old_n  = parent.amnum_n;
     int new_n = old_n + n_elems;
@@ -11690,7 +11690,7 @@ algo::aryptr<i32> command::amnum_AllocN(command::atf_cmdline& parent, int n_elem
 
 // --- command.atf_cmdline.amnum.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::amnum_Remove(command::atf_cmdline& parent, u32 i) {
+void command::amnum_Remove(command::atf_cmdline& parent, u32 i) throw() {
     u32 lim = parent.amnum_n;
     i32 *elems = parent.amnum_elems;
     if (i < lim) {
@@ -11701,7 +11701,7 @@ void command::amnum_Remove(command::atf_cmdline& parent, u32 i) {
 
 // --- command.atf_cmdline.amnum.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::amnum_RemoveLast(command::atf_cmdline& parent) {
+void command::amnum_RemoveLast(command::atf_cmdline& parent) throw() {
     u64 n = parent.amnum_n;
     if (n > 0) {
         n -= 1;
@@ -11711,7 +11711,7 @@ void command::amnum_RemoveLast(command::atf_cmdline& parent) {
 
 // --- command.atf_cmdline.amnum.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::amnum_AbsReserve(command::atf_cmdline& parent, int n) {
+void command::amnum_AbsReserve(command::atf_cmdline& parent, int n) throw() {
     u32 old_max  = parent.amnum_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -11726,7 +11726,7 @@ void command::amnum_AbsReserve(command::atf_cmdline& parent, int n) {
 
 // --- command.atf_cmdline.amnum.Setary
 // Copy contents of RHS to PARENT.
-void command::amnum_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) {
+void command::amnum_Setary(command::atf_cmdline& parent, command::atf_cmdline &rhs) throw() {
     amnum_RemoveAll(parent);
     int nnew = rhs.amnum_n;
     amnum_Reserve(parent, nnew); // reserve space
@@ -11739,14 +11739,14 @@ void command::amnum_Setary(command::atf_cmdline& parent, command::atf_cmdline &r
 // --- command.atf_cmdline.amnum.Setary2
 // Copy specified array into amnum, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::amnum_Setary(command::atf_cmdline& parent, const algo::aryptr<i32> &rhs) {
+void command::amnum_Setary(command::atf_cmdline& parent, const algo::aryptr<i32> &rhs) throw() {
     amnum_RemoveAll(parent);
     amnum_Addary(parent, rhs);
 }
 
 // --- command.atf_cmdline.amnum.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32> command::amnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) {
+algo::aryptr<i32> command::amnum_AllocNVal(command::atf_cmdline& parent, int n_elems, const i32& val) throw() {
     amnum_Reserve(parent, n_elems);
     int old_n  = parent.amnum_n;
     int new_n = old_n + n_elems;
@@ -11762,7 +11762,7 @@ algo::aryptr<i32> command::amnum_AllocNVal(command::atf_cmdline& parent, int n_e
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::amnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) {
+bool command::amnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in_str) throw() {
     bool retval = true;
     i32 &elem = amnum_Alloc(parent);
     retval = i32_ReadStrptrMaybe(elem, in_str);
@@ -11775,7 +11775,7 @@ bool command::amnum_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr i
 // --- command.atf_cmdline.fconst.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* command::fconst_ToCstr(const command::atf_cmdline& parent) {
+const char* command::fconst_ToCstr(const command::atf_cmdline& parent) throw() {
     const char *ret = NULL;
     switch(fconst_GetEnum(parent)) {
         case command_atf_cmdline_fconst_high: ret = "high";  break;
@@ -11788,7 +11788,7 @@ const char* command::fconst_ToCstr(const command::atf_cmdline& parent) {
 // --- command.atf_cmdline.fconst.Print
 // Convert fconst to a string. First, attempt conversion to a known string.
 // If no string matches, print fconst as a numeric value.
-void command::fconst_Print(const command::atf_cmdline& parent, algo::cstring &lhs) {
+void command::fconst_Print(const command::atf_cmdline& parent, algo::cstring &lhs) throw() {
     const char *strval = fconst_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -11801,7 +11801,7 @@ void command::fconst_Print(const command::atf_cmdline& parent, algo::cstring &lh
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool command::fconst_SetStrptrMaybe(command::atf_cmdline& parent, algo::strptr rhs) {
+bool command::fconst_SetStrptrMaybe(command::atf_cmdline& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -11835,13 +11835,13 @@ bool command::fconst_SetStrptrMaybe(command::atf_cmdline& parent, algo::strptr r
 // --- command.atf_cmdline.fconst.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void command::fconst_SetStrptr(command::atf_cmdline& parent, algo::strptr rhs, command_atf_cmdline_fconst_Enum dflt) {
+void command::fconst_SetStrptr(command::atf_cmdline& parent, algo::strptr rhs, command_atf_cmdline_fconst_Enum dflt) throw() {
     if (!fconst_SetStrptrMaybe(parent,rhs)) fconst_SetEnum(parent,dflt);
 }
 
 // --- command.atf_cmdline.fconst.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool command::fconst_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr rhs) {
+bool command::fconst_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = fconst_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -11852,21 +11852,21 @@ bool command::fconst_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr 
 
 // --- command.atf_cmdline.dregx.Print
 // Print back to string
-void command::dregx_Print(command::atf_cmdline& parent, algo::cstring &out) {
+void command::dregx_Print(command::atf_cmdline& parent, algo::cstring &out) throw() {
     Regx_Print(parent.dregx, out);
 }
 
 // --- command.atf_cmdline.dregx.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::dregx_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in) {
+bool command::dregx_ReadStrptrMaybe(command::atf_cmdline& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.dregx, in, true);
     return retval;
 }
 
 // --- command.atf_cmdline..ReadFieldMaybe
-bool command::atf_cmdline_ReadFieldMaybe(command::atf_cmdline& parent, algo::strptr field, algo::strptr strval) {
+bool command::atf_cmdline_ReadFieldMaybe(command::atf_cmdline& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -11969,7 +11969,7 @@ bool command::atf_cmdline_ReadFieldMaybe(command::atf_cmdline& parent, algo::str
 
 // --- command.atf_cmdline..ReadTupleMaybe
 // Read fields of command::atf_cmdline from attributes of ascii tuple TUPLE
-bool command::atf_cmdline_ReadTupleMaybe(command::atf_cmdline &parent, algo::Tuple &tuple) {
+bool command::atf_cmdline_ReadTupleMaybe(command::atf_cmdline &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -12018,7 +12018,7 @@ void command::atf_cmdline_Init(command::atf_cmdline& parent) {
 }
 
 // --- command.atf_cmdline..Uninit
-void command::atf_cmdline_Uninit(command::atf_cmdline& parent) {
+void command::atf_cmdline_Uninit(command::atf_cmdline& parent) throw() {
     command::atf_cmdline &row = parent; (void)row;
 
     // command.atf_cmdline.amnum.Uninit (Tary)  //Anon number array
@@ -12049,7 +12049,7 @@ void command::atf_cmdline_Uninit(command::atf_cmdline& parent) {
 // --- command.atf_cmdline..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::atf_cmdline_ToCmdline(command::atf_cmdline& row) {
+tempstr command::atf_cmdline_ToCmdline(command::atf_cmdline& row) throw() {
     tempstr ret;
     ret << "bin/atf_cmdline ";
     atf_cmdline_PrintArgv(row, ret);
@@ -12066,7 +12066,7 @@ tempstr command::atf_cmdline_ToCmdline(command::atf_cmdline& row) {
 // --- command.atf_cmdline..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.atf_cmdline.Argv  printfmt:Tuple
-void command::atf_cmdline_PrintArgv(command::atf_cmdline& row, algo::cstring& str) {
+void command::atf_cmdline_PrintArgv(command::atf_cmdline& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -12195,7 +12195,7 @@ void command::atf_cmdline_PrintArgv(command::atf_cmdline& row, algo::cstring& st
 }
 
 // --- command.atf_cmdline..GetAnon
-algo::strptr command::atf_cmdline_GetAnon(command::atf_cmdline &parent, i32 idx) {
+algo::strptr command::atf_cmdline_GetAnon(command::atf_cmdline &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("astr", 4);
@@ -12210,7 +12210,7 @@ algo::strptr command::atf_cmdline_GetAnon(command::atf_cmdline &parent, i32 idx)
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::atf_cmdline_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::atf_cmdline_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -12294,7 +12294,7 @@ i32 command::atf_cmdline_NArgs(command::FieldId field, algo::strptr& out_dflt, b
 }
 
 // --- command.atf_cmdline..AssignOp
-command::atf_cmdline& command::atf_cmdline::operator =(const command::atf_cmdline &rhs) {
+command::atf_cmdline& command::atf_cmdline::operator =(const command::atf_cmdline &rhs) throw() {
     in = rhs.in;
     exec = rhs.exec;
     astr = rhs.astr;
@@ -12321,7 +12321,7 @@ command::atf_cmdline& command::atf_cmdline::operator =(const command::atf_cmdlin
 }
 
 // --- command.atf_cmdline..CopyCtor
- command::atf_cmdline::atf_cmdline(const command::atf_cmdline &rhs)
+ command::atf_cmdline::atf_cmdline(const command::atf_cmdline &rhs) throw()
     : in(rhs.in)
     , exec(rhs.exec)
     , astr(rhs.astr)
@@ -12362,7 +12362,7 @@ command::atf_cmdline& command::atf_cmdline::operator =(const command::atf_cmdlin
 // --- command.atf_cmdline_proc.atf_cmdline.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::atf_cmdline_Start(command::atf_cmdline_proc& parent) {
+int command::atf_cmdline_Start(command::atf_cmdline_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(atf_cmdline_ToCmdline(parent)); // maybe print command
@@ -12400,7 +12400,7 @@ int command::atf_cmdline_Start(command::atf_cmdline_proc& parent) {
 
 // --- command.atf_cmdline_proc.atf_cmdline.StartRead
 // Start subprocess & Read output
-algo::Fildes command::atf_cmdline_StartRead(command::atf_cmdline_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::atf_cmdline_StartRead(command::atf_cmdline_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -12422,7 +12422,7 @@ void command::atf_cmdline_Kill(command::atf_cmdline_proc& parent) {
 
 // --- command.atf_cmdline_proc.atf_cmdline.Wait
 // Wait for subprocess to return
-void command::atf_cmdline_Wait(command::atf_cmdline_proc& parent) {
+void command::atf_cmdline_Wait(command::atf_cmdline_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -12441,7 +12441,7 @@ void command::atf_cmdline_Wait(command::atf_cmdline_proc& parent) {
 // --- command.atf_cmdline_proc.atf_cmdline.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::atf_cmdline_Exec(command::atf_cmdline_proc& parent) {
+int command::atf_cmdline_Exec(command::atf_cmdline_proc& parent) throw() {
     atf_cmdline_Start(parent);
     atf_cmdline_Wait(parent);
     return parent.status;
@@ -12459,7 +12459,7 @@ void command::atf_cmdline_ExecX(command::atf_cmdline_proc& parent) {
 // --- command.atf_cmdline_proc.atf_cmdline.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::atf_cmdline_Execv(command::atf_cmdline_proc& parent) {
+int command::atf_cmdline_Execv(command::atf_cmdline_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     atf_cmdline_ToArgv(parent, args);
@@ -12475,7 +12475,7 @@ int command::atf_cmdline_Execv(command::atf_cmdline_proc& parent) {
 }
 
 // --- command.atf_cmdline_proc.atf_cmdline.ToCmdline
-algo::tempstr command::atf_cmdline_ToCmdline(command::atf_cmdline_proc& parent) {
+algo::tempstr command::atf_cmdline_ToCmdline(command::atf_cmdline_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::atf_cmdline_PrintArgv(parent.cmd,retval);
@@ -12493,7 +12493,7 @@ algo::tempstr command::atf_cmdline_ToCmdline(command::atf_cmdline_proc& parent) 
 
 // --- command.atf_cmdline_proc.atf_cmdline.ToArgv
 // Form array from the command line
-void command::atf_cmdline_ToArgv(command::atf_cmdline_proc& parent, algo::StringAry& args) {
+void command::atf_cmdline_ToArgv(command::atf_cmdline_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -12630,7 +12630,7 @@ void command::atf_cmdline_ToArgv(command::atf_cmdline_proc& parent, algo::String
 }
 
 // --- command.atf_cmdline_proc..Uninit
-void command::atf_cmdline_proc_Uninit(command::atf_cmdline_proc& parent) {
+void command::atf_cmdline_proc_Uninit(command::atf_cmdline_proc& parent) throw() {
     command::atf_cmdline_proc &row = parent; (void)row;
 
     // command.atf_cmdline_proc.atf_cmdline.Uninit (Exec)  //
@@ -12639,21 +12639,21 @@ void command::atf_cmdline_proc_Uninit(command::atf_cmdline_proc& parent) {
 
 // --- command.atf_comp.comptest.Print
 // Print back to string
-void command::comptest_Print(command::atf_comp& parent, algo::cstring &out) {
+void command::comptest_Print(command::atf_comp& parent, algo::cstring &out) throw() {
     Regx_Print(parent.comptest, out);
 }
 
 // --- command.atf_comp.comptest.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::comptest_ReadStrptrMaybe(command::atf_comp& parent, algo::strptr in) {
+bool command::comptest_ReadStrptrMaybe(command::atf_comp& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.comptest, in, true);
     return retval;
 }
 
 // --- command.atf_comp..ReadFieldMaybe
-bool command::atf_comp_ReadFieldMaybe(command::atf_comp& parent, algo::strptr field, algo::strptr strval) {
+bool command::atf_comp_ReadFieldMaybe(command::atf_comp& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -12772,7 +12772,7 @@ bool command::atf_comp_ReadFieldMaybe(command::atf_comp& parent, algo::strptr fi
 
 // --- command.atf_comp..ReadTupleMaybe
 // Read fields of command::atf_comp from attributes of ascii tuple TUPLE
-bool command::atf_comp_ReadTupleMaybe(command::atf_comp &parent, algo::Tuple &tuple) {
+bool command::atf_comp_ReadTupleMaybe(command::atf_comp &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -12821,7 +12821,7 @@ void command::atf_comp_Init(command::atf_comp& parent) {
 // --- command.atf_comp..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::atf_comp_ToCmdline(command::atf_comp& row) {
+tempstr command::atf_comp_ToCmdline(command::atf_comp& row) throw() {
     tempstr ret;
     ret << "bin/atf_comp ";
     atf_comp_PrintArgv(row, ret);
@@ -12838,7 +12838,7 @@ tempstr command::atf_comp_ToCmdline(command::atf_comp& row) {
 // --- command.atf_comp..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.atf_comp.Argv  printfmt:Tuple
-void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
+void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -12999,7 +12999,7 @@ void command::atf_comp_PrintArgv(command::atf_comp& row, algo::cstring& str) {
 }
 
 // --- command.atf_comp..GetAnon
-algo::strptr command::atf_comp_GetAnon(command::atf_comp &parent, i32 idx) {
+algo::strptr command::atf_comp_GetAnon(command::atf_comp &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("comptest", 8);
@@ -13011,7 +13011,7 @@ algo::strptr command::atf_comp_GetAnon(command::atf_comp &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::atf_comp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::atf_comp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -13139,7 +13139,7 @@ i32 command::atf_comp_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
 // --- command.atf_comp_proc.atf_comp.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::atf_comp_Start(command::atf_comp_proc& parent) {
+int command::atf_comp_Start(command::atf_comp_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(atf_comp_ToCmdline(parent)); // maybe print command
@@ -13177,7 +13177,7 @@ int command::atf_comp_Start(command::atf_comp_proc& parent) {
 
 // --- command.atf_comp_proc.atf_comp.StartRead
 // Start subprocess & Read output
-algo::Fildes command::atf_comp_StartRead(command::atf_comp_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::atf_comp_StartRead(command::atf_comp_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -13199,7 +13199,7 @@ void command::atf_comp_Kill(command::atf_comp_proc& parent) {
 
 // --- command.atf_comp_proc.atf_comp.Wait
 // Wait for subprocess to return
-void command::atf_comp_Wait(command::atf_comp_proc& parent) {
+void command::atf_comp_Wait(command::atf_comp_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -13218,7 +13218,7 @@ void command::atf_comp_Wait(command::atf_comp_proc& parent) {
 // --- command.atf_comp_proc.atf_comp.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::atf_comp_Exec(command::atf_comp_proc& parent) {
+int command::atf_comp_Exec(command::atf_comp_proc& parent) throw() {
     atf_comp_Start(parent);
     atf_comp_Wait(parent);
     return parent.status;
@@ -13236,7 +13236,7 @@ void command::atf_comp_ExecX(command::atf_comp_proc& parent) {
 // --- command.atf_comp_proc.atf_comp.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::atf_comp_Execv(command::atf_comp_proc& parent) {
+int command::atf_comp_Execv(command::atf_comp_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     atf_comp_ToArgv(parent, args);
@@ -13252,7 +13252,7 @@ int command::atf_comp_Execv(command::atf_comp_proc& parent) {
 }
 
 // --- command.atf_comp_proc.atf_comp.ToCmdline
-algo::tempstr command::atf_comp_ToCmdline(command::atf_comp_proc& parent) {
+algo::tempstr command::atf_comp_ToCmdline(command::atf_comp_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::atf_comp_PrintArgv(parent.cmd,retval);
@@ -13270,7 +13270,7 @@ algo::tempstr command::atf_comp_ToCmdline(command::atf_comp_proc& parent) {
 
 // --- command.atf_comp_proc.atf_comp.ToArgv
 // Form array from the command line
-void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& args) {
+void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -13435,7 +13435,7 @@ void command::atf_comp_ToArgv(command::atf_comp_proc& parent, algo::StringAry& a
 }
 
 // --- command.atf_comp_proc..Uninit
-void command::atf_comp_proc_Uninit(command::atf_comp_proc& parent) {
+void command::atf_comp_proc_Uninit(command::atf_comp_proc& parent) throw() {
     command::atf_comp_proc &row = parent; (void)row;
 
     // command.atf_comp_proc.atf_comp.Uninit (Exec)  //
@@ -13444,21 +13444,21 @@ void command::atf_comp_proc_Uninit(command::atf_comp_proc& parent) {
 
 // --- command.atf_cov.exclude.Print
 // Print back to string
-void command::exclude_Print(command::atf_cov& parent, algo::cstring &out) {
+void command::exclude_Print(command::atf_cov& parent, algo::cstring &out) throw() {
     Regx_Print(parent.exclude, out);
 }
 
 // --- command.atf_cov.exclude.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::exclude_ReadStrptrMaybe(command::atf_cov& parent, algo::strptr in) {
+bool command::exclude_ReadStrptrMaybe(command::atf_cov& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.exclude, in, true);
     return retval;
 }
 
 // --- command.atf_cov..ReadFieldMaybe
-bool command::atf_cov_ReadFieldMaybe(command::atf_cov& parent, algo::strptr field, algo::strptr strval) {
+bool command::atf_cov_ReadFieldMaybe(command::atf_cov& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -13525,7 +13525,7 @@ bool command::atf_cov_ReadFieldMaybe(command::atf_cov& parent, algo::strptr fiel
 
 // --- command.atf_cov..ReadTupleMaybe
 // Read fields of command::atf_cov from attributes of ascii tuple TUPLE
-bool command::atf_cov_ReadTupleMaybe(command::atf_cov &parent, algo::Tuple &tuple) {
+bool command::atf_cov_ReadTupleMaybe(command::atf_cov &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = atf_cov_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -13557,7 +13557,7 @@ void command::atf_cov_Init(command::atf_cov& parent) {
 // --- command.atf_cov..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::atf_cov_ToCmdline(command::atf_cov& row) {
+tempstr command::atf_cov_ToCmdline(command::atf_cov& row) throw() {
     tempstr ret;
     ret << "bin/atf_cov ";
     atf_cov_PrintArgv(row, ret);
@@ -13574,7 +13574,7 @@ tempstr command::atf_cov_ToCmdline(command::atf_cov& row) {
 // --- command.atf_cov..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.atf_cov.Argv  printfmt:Tuple
-void command::atf_cov_PrintArgv(command::atf_cov& row, algo::cstring& str) {
+void command::atf_cov_PrintArgv(command::atf_cov& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -13662,7 +13662,7 @@ void command::atf_cov_PrintArgv(command::atf_cov& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::atf_cov_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::atf_cov_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -13727,7 +13727,7 @@ i32 command::atf_cov_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
 // --- command.atf_cov_proc.atf_cov.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::atf_cov_Start(command::atf_cov_proc& parent) {
+int command::atf_cov_Start(command::atf_cov_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(atf_cov_ToCmdline(parent)); // maybe print command
@@ -13765,7 +13765,7 @@ int command::atf_cov_Start(command::atf_cov_proc& parent) {
 
 // --- command.atf_cov_proc.atf_cov.StartRead
 // Start subprocess & Read output
-algo::Fildes command::atf_cov_StartRead(command::atf_cov_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::atf_cov_StartRead(command::atf_cov_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -13787,7 +13787,7 @@ void command::atf_cov_Kill(command::atf_cov_proc& parent) {
 
 // --- command.atf_cov_proc.atf_cov.Wait
 // Wait for subprocess to return
-void command::atf_cov_Wait(command::atf_cov_proc& parent) {
+void command::atf_cov_Wait(command::atf_cov_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -13806,7 +13806,7 @@ void command::atf_cov_Wait(command::atf_cov_proc& parent) {
 // --- command.atf_cov_proc.atf_cov.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::atf_cov_Exec(command::atf_cov_proc& parent) {
+int command::atf_cov_Exec(command::atf_cov_proc& parent) throw() {
     atf_cov_Start(parent);
     atf_cov_Wait(parent);
     return parent.status;
@@ -13824,7 +13824,7 @@ void command::atf_cov_ExecX(command::atf_cov_proc& parent) {
 // --- command.atf_cov_proc.atf_cov.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::atf_cov_Execv(command::atf_cov_proc& parent) {
+int command::atf_cov_Execv(command::atf_cov_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     atf_cov_ToArgv(parent, args);
@@ -13840,7 +13840,7 @@ int command::atf_cov_Execv(command::atf_cov_proc& parent) {
 }
 
 // --- command.atf_cov_proc.atf_cov.ToCmdline
-algo::tempstr command::atf_cov_ToCmdline(command::atf_cov_proc& parent) {
+algo::tempstr command::atf_cov_ToCmdline(command::atf_cov_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::atf_cov_PrintArgv(parent.cmd,retval);
@@ -13858,7 +13858,7 @@ algo::tempstr command::atf_cov_ToCmdline(command::atf_cov_proc& parent) {
 
 // --- command.atf_cov_proc.atf_cov.ToArgv
 // Form array from the command line
-void command::atf_cov_ToArgv(command::atf_cov_proc& parent, algo::StringAry& args) {
+void command::atf_cov_ToArgv(command::atf_cov_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -13945,7 +13945,7 @@ void command::atf_cov_ToArgv(command::atf_cov_proc& parent, algo::StringAry& arg
 }
 
 // --- command.atf_cov_proc..Uninit
-void command::atf_cov_proc_Uninit(command::atf_cov_proc& parent) {
+void command::atf_cov_proc_Uninit(command::atf_cov_proc& parent) throw() {
     command::atf_cov_proc &row = parent; (void)row;
 
     // command.atf_cov_proc.atf_cov.Uninit (Exec)  //
@@ -13954,21 +13954,21 @@ void command::atf_cov_proc_Uninit(command::atf_cov_proc& parent) {
 
 // --- command.atf_fuzz.fuzzstrat.Print
 // Print back to string
-void command::fuzzstrat_Print(command::atf_fuzz& parent, algo::cstring &out) {
+void command::fuzzstrat_Print(command::atf_fuzz& parent, algo::cstring &out) throw() {
     Regx_Print(parent.fuzzstrat, out);
 }
 
 // --- command.atf_fuzz.fuzzstrat.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::fuzzstrat_ReadStrptrMaybe(command::atf_fuzz& parent, algo::strptr in) {
+bool command::fuzzstrat_ReadStrptrMaybe(command::atf_fuzz& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.fuzzstrat, in, true);
     return retval;
 }
 
 // --- command.atf_fuzz..ReadFieldMaybe
-bool command::atf_fuzz_ReadFieldMaybe(command::atf_fuzz& parent, algo::strptr field, algo::strptr strval) {
+bool command::atf_fuzz_ReadFieldMaybe(command::atf_fuzz& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -14015,7 +14015,7 @@ bool command::atf_fuzz_ReadFieldMaybe(command::atf_fuzz& parent, algo::strptr fi
 
 // --- command.atf_fuzz..ReadTupleMaybe
 // Read fields of command::atf_fuzz from attributes of ascii tuple TUPLE
-bool command::atf_fuzz_ReadTupleMaybe(command::atf_fuzz &parent, algo::Tuple &tuple) {
+bool command::atf_fuzz_ReadTupleMaybe(command::atf_fuzz &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -14046,7 +14046,7 @@ void command::atf_fuzz_Init(command::atf_fuzz& parent) {
 // --- command.atf_fuzz..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::atf_fuzz_ToCmdline(command::atf_fuzz& row) {
+tempstr command::atf_fuzz_ToCmdline(command::atf_fuzz& row) throw() {
     tempstr ret;
     ret << "bin/atf_fuzz ";
     atf_fuzz_PrintArgv(row, ret);
@@ -14063,7 +14063,7 @@ tempstr command::atf_fuzz_ToCmdline(command::atf_fuzz& row) {
 // --- command.atf_fuzz..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.atf_fuzz.Argv  printfmt:Tuple
-void command::atf_fuzz_PrintArgv(command::atf_fuzz& row, algo::cstring& str) {
+void command::atf_fuzz_PrintArgv(command::atf_fuzz& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -14114,7 +14114,7 @@ void command::atf_fuzz_PrintArgv(command::atf_fuzz& row, algo::cstring& str) {
 }
 
 // --- command.atf_fuzz..GetAnon
-algo::strptr command::atf_fuzz_GetAnon(command::atf_fuzz &parent, i32 idx) {
+algo::strptr command::atf_fuzz_GetAnon(command::atf_fuzz &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("target", 6);
@@ -14127,7 +14127,7 @@ algo::strptr command::atf_fuzz_GetAnon(command::atf_fuzz &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::atf_fuzz_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::atf_fuzz_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_reprofile: { // $comment
@@ -14164,7 +14164,7 @@ i32 command::atf_fuzz_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
 // --- command.atf_fuzz_proc.atf_fuzz.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::atf_fuzz_Start(command::atf_fuzz_proc& parent) {
+int command::atf_fuzz_Start(command::atf_fuzz_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(atf_fuzz_ToCmdline(parent)); // maybe print command
@@ -14202,7 +14202,7 @@ int command::atf_fuzz_Start(command::atf_fuzz_proc& parent) {
 
 // --- command.atf_fuzz_proc.atf_fuzz.StartRead
 // Start subprocess & Read output
-algo::Fildes command::atf_fuzz_StartRead(command::atf_fuzz_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::atf_fuzz_StartRead(command::atf_fuzz_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -14224,7 +14224,7 @@ void command::atf_fuzz_Kill(command::atf_fuzz_proc& parent) {
 
 // --- command.atf_fuzz_proc.atf_fuzz.Wait
 // Wait for subprocess to return
-void command::atf_fuzz_Wait(command::atf_fuzz_proc& parent) {
+void command::atf_fuzz_Wait(command::atf_fuzz_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -14243,7 +14243,7 @@ void command::atf_fuzz_Wait(command::atf_fuzz_proc& parent) {
 // --- command.atf_fuzz_proc.atf_fuzz.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::atf_fuzz_Exec(command::atf_fuzz_proc& parent) {
+int command::atf_fuzz_Exec(command::atf_fuzz_proc& parent) throw() {
     atf_fuzz_Start(parent);
     atf_fuzz_Wait(parent);
     return parent.status;
@@ -14261,7 +14261,7 @@ void command::atf_fuzz_ExecX(command::atf_fuzz_proc& parent) {
 // --- command.atf_fuzz_proc.atf_fuzz.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::atf_fuzz_Execv(command::atf_fuzz_proc& parent) {
+int command::atf_fuzz_Execv(command::atf_fuzz_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     atf_fuzz_ToArgv(parent, args);
@@ -14277,7 +14277,7 @@ int command::atf_fuzz_Execv(command::atf_fuzz_proc& parent) {
 }
 
 // --- command.atf_fuzz_proc.atf_fuzz.ToCmdline
-algo::tempstr command::atf_fuzz_ToCmdline(command::atf_fuzz_proc& parent) {
+algo::tempstr command::atf_fuzz_ToCmdline(command::atf_fuzz_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::atf_fuzz_PrintArgv(parent.cmd,retval);
@@ -14295,7 +14295,7 @@ algo::tempstr command::atf_fuzz_ToCmdline(command::atf_fuzz_proc& parent) {
 
 // --- command.atf_fuzz_proc.atf_fuzz.ToArgv
 // Form array from the command line
-void command::atf_fuzz_ToArgv(command::atf_fuzz_proc& parent, algo::StringAry& args) {
+void command::atf_fuzz_ToArgv(command::atf_fuzz_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -14352,7 +14352,7 @@ void command::atf_fuzz_ToArgv(command::atf_fuzz_proc& parent, algo::StringAry& a
 }
 
 // --- command.atf_fuzz_proc..Uninit
-void command::atf_fuzz_proc_Uninit(command::atf_fuzz_proc& parent) {
+void command::atf_fuzz_proc_Uninit(command::atf_fuzz_proc& parent) throw() {
     command::atf_fuzz_proc &row = parent; (void)row;
 
     // command.atf_fuzz_proc.atf_fuzz.Uninit (Exec)  //
@@ -14361,21 +14361,21 @@ void command::atf_fuzz_proc_Uninit(command::atf_fuzz_proc& parent) {
 
 // --- command.atf_gcli.gtblacttst.Print
 // Print back to string
-void command::gtblacttst_Print(command::atf_gcli& parent, algo::cstring &out) {
+void command::gtblacttst_Print(command::atf_gcli& parent, algo::cstring &out) throw() {
     Regx_Print(parent.gtblacttst, out);
 }
 
 // --- command.atf_gcli.gtblacttst.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::gtblacttst_ReadStrptrMaybe(command::atf_gcli& parent, algo::strptr in) {
+bool command::gtblacttst_ReadStrptrMaybe(command::atf_gcli& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.gtblacttst, in, true);
     return retval;
 }
 
 // --- command.atf_gcli..ReadFieldMaybe
-bool command::atf_gcli_ReadFieldMaybe(command::atf_gcli& parent, algo::strptr field, algo::strptr strval) {
+bool command::atf_gcli_ReadFieldMaybe(command::atf_gcli& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -14426,7 +14426,7 @@ bool command::atf_gcli_ReadFieldMaybe(command::atf_gcli& parent, algo::strptr fi
 
 // --- command.atf_gcli..ReadTupleMaybe
 // Read fields of command::atf_gcli from attributes of ascii tuple TUPLE
-bool command::atf_gcli_ReadTupleMaybe(command::atf_gcli &parent, algo::Tuple &tuple) {
+bool command::atf_gcli_ReadTupleMaybe(command::atf_gcli &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = atf_gcli_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -14454,7 +14454,7 @@ void command::atf_gcli_Init(command::atf_gcli& parent) {
 // --- command.atf_gcli..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::atf_gcli_ToCmdline(command::atf_gcli& row) {
+tempstr command::atf_gcli_ToCmdline(command::atf_gcli& row) throw() {
     tempstr ret;
     ret << "bin/atf_gcli ";
     atf_gcli_PrintArgv(row, ret);
@@ -14471,7 +14471,7 @@ tempstr command::atf_gcli_ToCmdline(command::atf_gcli& row) {
 // --- command.atf_gcli..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.atf_gcli.Argv  printfmt:Tuple
-void command::atf_gcli_PrintArgv(command::atf_gcli& row, algo::cstring& str) {
+void command::atf_gcli_PrintArgv(command::atf_gcli& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -14535,7 +14535,7 @@ void command::atf_gcli_PrintArgv(command::atf_gcli& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::atf_gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::atf_gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -14582,7 +14582,7 @@ i32 command::atf_gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
 // --- command.atf_gcli_proc.atf_gcli.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::atf_gcli_Start(command::atf_gcli_proc& parent) {
+int command::atf_gcli_Start(command::atf_gcli_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(atf_gcli_ToCmdline(parent)); // maybe print command
@@ -14620,7 +14620,7 @@ int command::atf_gcli_Start(command::atf_gcli_proc& parent) {
 
 // --- command.atf_gcli_proc.atf_gcli.StartRead
 // Start subprocess & Read output
-algo::Fildes command::atf_gcli_StartRead(command::atf_gcli_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::atf_gcli_StartRead(command::atf_gcli_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -14642,7 +14642,7 @@ void command::atf_gcli_Kill(command::atf_gcli_proc& parent) {
 
 // --- command.atf_gcli_proc.atf_gcli.Wait
 // Wait for subprocess to return
-void command::atf_gcli_Wait(command::atf_gcli_proc& parent) {
+void command::atf_gcli_Wait(command::atf_gcli_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -14661,7 +14661,7 @@ void command::atf_gcli_Wait(command::atf_gcli_proc& parent) {
 // --- command.atf_gcli_proc.atf_gcli.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::atf_gcli_Exec(command::atf_gcli_proc& parent) {
+int command::atf_gcli_Exec(command::atf_gcli_proc& parent) throw() {
     atf_gcli_Start(parent);
     atf_gcli_Wait(parent);
     return parent.status;
@@ -14679,7 +14679,7 @@ void command::atf_gcli_ExecX(command::atf_gcli_proc& parent) {
 // --- command.atf_gcli_proc.atf_gcli.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::atf_gcli_Execv(command::atf_gcli_proc& parent) {
+int command::atf_gcli_Execv(command::atf_gcli_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     atf_gcli_ToArgv(parent, args);
@@ -14695,7 +14695,7 @@ int command::atf_gcli_Execv(command::atf_gcli_proc& parent) {
 }
 
 // --- command.atf_gcli_proc.atf_gcli.ToCmdline
-algo::tempstr command::atf_gcli_ToCmdline(command::atf_gcli_proc& parent) {
+algo::tempstr command::atf_gcli_ToCmdline(command::atf_gcli_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::atf_gcli_PrintArgv(parent.cmd,retval);
@@ -14713,7 +14713,7 @@ algo::tempstr command::atf_gcli_ToCmdline(command::atf_gcli_proc& parent) {
 
 // --- command.atf_gcli_proc.atf_gcli.ToArgv
 // Form array from the command line
-void command::atf_gcli_ToArgv(command::atf_gcli_proc& parent, algo::StringAry& args) {
+void command::atf_gcli_ToArgv(command::atf_gcli_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -14776,7 +14776,7 @@ void command::atf_gcli_ToArgv(command::atf_gcli_proc& parent, algo::StringAry& a
 }
 
 // --- command.atf_gcli_proc..Uninit
-void command::atf_gcli_proc_Uninit(command::atf_gcli_proc& parent) {
+void command::atf_gcli_proc_Uninit(command::atf_gcli_proc& parent) throw() {
     command::atf_gcli_proc &row = parent; (void)row;
 
     // command.atf_gcli_proc.atf_gcli.Uninit (Exec)  //
@@ -14784,7 +14784,7 @@ void command::atf_gcli_proc_Uninit(command::atf_gcli_proc& parent) {
 }
 
 // --- command.atf_nrun..ReadFieldMaybe
-bool command::atf_nrun_ReadFieldMaybe(command::atf_nrun& parent, algo::strptr field, algo::strptr strval) {
+bool command::atf_nrun_ReadFieldMaybe(command::atf_nrun& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -14811,7 +14811,7 @@ bool command::atf_nrun_ReadFieldMaybe(command::atf_nrun& parent, algo::strptr fi
 
 // --- command.atf_nrun..ReadTupleMaybe
 // Read fields of command::atf_nrun from attributes of ascii tuple TUPLE
-bool command::atf_nrun_ReadTupleMaybe(command::atf_nrun &parent, algo::Tuple &tuple) {
+bool command::atf_nrun_ReadTupleMaybe(command::atf_nrun &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -14829,7 +14829,7 @@ bool command::atf_nrun_ReadTupleMaybe(command::atf_nrun &parent, algo::Tuple &tu
 // --- command.atf_nrun..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::atf_nrun_ToCmdline(command::atf_nrun& row) {
+tempstr command::atf_nrun_ToCmdline(command::atf_nrun& row) throw() {
     tempstr ret;
     ret << "bin/atf_nrun ";
     atf_nrun_PrintArgv(row, ret);
@@ -14846,7 +14846,7 @@ tempstr command::atf_nrun_ToCmdline(command::atf_nrun& row) {
 // --- command.atf_nrun..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.atf_nrun.Argv  printfmt:Tuple
-void command::atf_nrun_PrintArgv(command::atf_nrun& row, algo::cstring& str) {
+void command::atf_nrun_PrintArgv(command::atf_nrun& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -14869,7 +14869,7 @@ void command::atf_nrun_PrintArgv(command::atf_nrun& row, algo::cstring& str) {
 }
 
 // --- command.atf_nrun..GetAnon
-algo::strptr command::atf_nrun_GetAnon(command::atf_nrun &parent, i32 idx) {
+algo::strptr command::atf_nrun_GetAnon(command::atf_nrun &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("ncmd", 4);
@@ -14881,7 +14881,7 @@ algo::strptr command::atf_nrun_GetAnon(command::atf_nrun &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::atf_nrun_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::atf_nrun_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -14903,7 +14903,7 @@ i32 command::atf_nrun_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
 // --- command.atf_nrun_proc.atf_nrun.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::atf_nrun_Start(command::atf_nrun_proc& parent) {
+int command::atf_nrun_Start(command::atf_nrun_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(atf_nrun_ToCmdline(parent)); // maybe print command
@@ -14941,7 +14941,7 @@ int command::atf_nrun_Start(command::atf_nrun_proc& parent) {
 
 // --- command.atf_nrun_proc.atf_nrun.StartRead
 // Start subprocess & Read output
-algo::Fildes command::atf_nrun_StartRead(command::atf_nrun_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::atf_nrun_StartRead(command::atf_nrun_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -14963,7 +14963,7 @@ void command::atf_nrun_Kill(command::atf_nrun_proc& parent) {
 
 // --- command.atf_nrun_proc.atf_nrun.Wait
 // Wait for subprocess to return
-void command::atf_nrun_Wait(command::atf_nrun_proc& parent) {
+void command::atf_nrun_Wait(command::atf_nrun_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -14982,7 +14982,7 @@ void command::atf_nrun_Wait(command::atf_nrun_proc& parent) {
 // --- command.atf_nrun_proc.atf_nrun.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::atf_nrun_Exec(command::atf_nrun_proc& parent) {
+int command::atf_nrun_Exec(command::atf_nrun_proc& parent) throw() {
     atf_nrun_Start(parent);
     atf_nrun_Wait(parent);
     return parent.status;
@@ -15000,7 +15000,7 @@ void command::atf_nrun_ExecX(command::atf_nrun_proc& parent) {
 // --- command.atf_nrun_proc.atf_nrun.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::atf_nrun_Execv(command::atf_nrun_proc& parent) {
+int command::atf_nrun_Execv(command::atf_nrun_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     atf_nrun_ToArgv(parent, args);
@@ -15016,7 +15016,7 @@ int command::atf_nrun_Execv(command::atf_nrun_proc& parent) {
 }
 
 // --- command.atf_nrun_proc.atf_nrun.ToCmdline
-algo::tempstr command::atf_nrun_ToCmdline(command::atf_nrun_proc& parent) {
+algo::tempstr command::atf_nrun_ToCmdline(command::atf_nrun_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::atf_nrun_PrintArgv(parent.cmd,retval);
@@ -15034,7 +15034,7 @@ algo::tempstr command::atf_nrun_ToCmdline(command::atf_nrun_proc& parent) {
 
 // --- command.atf_nrun_proc.atf_nrun.ToArgv
 // Form array from the command line
-void command::atf_nrun_ToArgv(command::atf_nrun_proc& parent, algo::StringAry& args) {
+void command::atf_nrun_ToArgv(command::atf_nrun_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -15061,7 +15061,7 @@ void command::atf_nrun_ToArgv(command::atf_nrun_proc& parent, algo::StringAry& a
 }
 
 // --- command.atf_nrun_proc..Uninit
-void command::atf_nrun_proc_Uninit(command::atf_nrun_proc& parent) {
+void command::atf_nrun_proc_Uninit(command::atf_nrun_proc& parent) throw() {
     command::atf_nrun_proc &row = parent; (void)row;
 
     // command.atf_nrun_proc.atf_nrun.Uninit (Exec)  //
@@ -15070,21 +15070,21 @@ void command::atf_nrun_proc_Uninit(command::atf_nrun_proc& parent) {
 
 // --- command.atf_unit.unittest.Print
 // Print back to string
-void command::unittest_Print(command::atf_unit& parent, algo::cstring &out) {
+void command::unittest_Print(command::atf_unit& parent, algo::cstring &out) throw() {
     Regx_Print(parent.unittest, out);
 }
 
 // --- command.atf_unit.unittest.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::unittest_ReadStrptrMaybe(command::atf_unit& parent, algo::strptr in) {
+bool command::unittest_ReadStrptrMaybe(command::atf_unit& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.unittest, in, true);
     return retval;
 }
 
 // --- command.atf_unit..ReadFieldMaybe
-bool command::atf_unit_ReadFieldMaybe(command::atf_unit& parent, algo::strptr field, algo::strptr strval) {
+bool command::atf_unit_ReadFieldMaybe(command::atf_unit& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -15139,7 +15139,7 @@ bool command::atf_unit_ReadFieldMaybe(command::atf_unit& parent, algo::strptr fi
 
 // --- command.atf_unit..ReadTupleMaybe
 // Read fields of command::atf_unit from attributes of ascii tuple TUPLE
-bool command::atf_unit_ReadTupleMaybe(command::atf_unit &parent, algo::Tuple &tuple) {
+bool command::atf_unit_ReadTupleMaybe(command::atf_unit &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -15172,7 +15172,7 @@ void command::atf_unit_Init(command::atf_unit& parent) {
 // --- command.atf_unit..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::atf_unit_ToCmdline(command::atf_unit& row) {
+tempstr command::atf_unit_ToCmdline(command::atf_unit& row) throw() {
     tempstr ret;
     ret << "bin/atf_unit ";
     atf_unit_PrintArgv(row, ret);
@@ -15189,7 +15189,7 @@ tempstr command::atf_unit_ToCmdline(command::atf_unit& row) {
 // --- command.atf_unit..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.atf_unit.Argv  printfmt:Auto
-void command::atf_unit_PrintArgv(command::atf_unit& row, algo::cstring& str) {
+void command::atf_unit_PrintArgv(command::atf_unit& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -15254,7 +15254,7 @@ void command::atf_unit_PrintArgv(command::atf_unit& row, algo::cstring& str) {
 }
 
 // --- command.atf_unit..GetAnon
-algo::strptr command::atf_unit_GetAnon(command::atf_unit &parent, i32 idx) {
+algo::strptr command::atf_unit_GetAnon(command::atf_unit &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("unittest", 8);
@@ -15266,7 +15266,7 @@ algo::strptr command::atf_unit_GetAnon(command::atf_unit &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::atf_unit_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::atf_unit_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_unittest: { // $comment
@@ -15318,7 +15318,7 @@ i32 command::atf_unit_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
 // --- command.atf_unit_proc.atf_unit.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::atf_unit_Start(command::atf_unit_proc& parent) {
+int command::atf_unit_Start(command::atf_unit_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(atf_unit_ToCmdline(parent)); // maybe print command
@@ -15356,7 +15356,7 @@ int command::atf_unit_Start(command::atf_unit_proc& parent) {
 
 // --- command.atf_unit_proc.atf_unit.StartRead
 // Start subprocess & Read output
-algo::Fildes command::atf_unit_StartRead(command::atf_unit_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::atf_unit_StartRead(command::atf_unit_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -15378,7 +15378,7 @@ void command::atf_unit_Kill(command::atf_unit_proc& parent) {
 
 // --- command.atf_unit_proc.atf_unit.Wait
 // Wait for subprocess to return
-void command::atf_unit_Wait(command::atf_unit_proc& parent) {
+void command::atf_unit_Wait(command::atf_unit_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -15397,7 +15397,7 @@ void command::atf_unit_Wait(command::atf_unit_proc& parent) {
 // --- command.atf_unit_proc.atf_unit.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::atf_unit_Exec(command::atf_unit_proc& parent) {
+int command::atf_unit_Exec(command::atf_unit_proc& parent) throw() {
     atf_unit_Start(parent);
     atf_unit_Wait(parent);
     return parent.status;
@@ -15415,7 +15415,7 @@ void command::atf_unit_ExecX(command::atf_unit_proc& parent) {
 // --- command.atf_unit_proc.atf_unit.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::atf_unit_Execv(command::atf_unit_proc& parent) {
+int command::atf_unit_Execv(command::atf_unit_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     atf_unit_ToArgv(parent, args);
@@ -15431,7 +15431,7 @@ int command::atf_unit_Execv(command::atf_unit_proc& parent) {
 }
 
 // --- command.atf_unit_proc.atf_unit.ToCmdline
-algo::tempstr command::atf_unit_ToCmdline(command::atf_unit_proc& parent) {
+algo::tempstr command::atf_unit_ToCmdline(command::atf_unit_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::atf_unit_PrintArgv(parent.cmd,retval);
@@ -15449,7 +15449,7 @@ algo::tempstr command::atf_unit_ToCmdline(command::atf_unit_proc& parent) {
 
 // --- command.atf_unit_proc.atf_unit.ToArgv
 // Form array from the command line
-void command::atf_unit_ToArgv(command::atf_unit_proc& parent, algo::StringAry& args) {
+void command::atf_unit_ToArgv(command::atf_unit_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -15518,7 +15518,7 @@ void command::atf_unit_ToArgv(command::atf_unit_proc& parent, algo::StringAry& a
 }
 
 // --- command.atf_unit_proc..Uninit
-void command::atf_unit_proc_Uninit(command::atf_unit_proc& parent) {
+void command::atf_unit_proc_Uninit(command::atf_unit_proc& parent) throw() {
     command::atf_unit_proc &row = parent; (void)row;
 
     // command.atf_unit_proc.atf_unit.Uninit (Exec)  //
@@ -15528,7 +15528,7 @@ void command::atf_unit_proc_Uninit(command::atf_unit_proc& parent) {
 // --- command.bash..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.bash.ArgvGnu  printfmt:Auto
-void command::bash_PrintArgv(command::bash& row, algo::cstring& str) {
+void command::bash_PrintArgv(command::bash& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -15541,7 +15541,7 @@ void command::bash_PrintArgv(command::bash& row, algo::cstring& str) {
 }
 
 // --- command.bash2html..ReadFieldMaybe
-bool command::bash2html_ReadFieldMaybe(command::bash2html& parent, algo::strptr field, algo::strptr strval) {
+bool command::bash2html_ReadFieldMaybe(command::bash2html& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -15564,7 +15564,7 @@ bool command::bash2html_ReadFieldMaybe(command::bash2html& parent, algo::strptr 
 
 // --- command.bash2html..ReadTupleMaybe
 // Read fields of command::bash2html from attributes of ascii tuple TUPLE
-bool command::bash2html_ReadTupleMaybe(command::bash2html &parent, algo::Tuple &tuple) {
+bool command::bash2html_ReadTupleMaybe(command::bash2html &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = bash2html_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -15578,7 +15578,7 @@ bool command::bash2html_ReadTupleMaybe(command::bash2html &parent, algo::Tuple &
 // --- command.bash2html..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::bash2html_ToCmdline(command::bash2html& row) {
+tempstr command::bash2html_ToCmdline(command::bash2html& row) throw() {
     tempstr ret;
     ret << "bin/bash2html ";
     bash2html_PrintArgv(row, ret);
@@ -15595,7 +15595,7 @@ tempstr command::bash2html_ToCmdline(command::bash2html& row) {
 // --- command.bash2html..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.bash2html.Argv  printfmt:Tuple
-void command::bash2html_PrintArgv(command::bash2html& row, algo::cstring& str) {
+void command::bash2html_PrintArgv(command::bash2html& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -15617,7 +15617,7 @@ void command::bash2html_PrintArgv(command::bash2html& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::bash2html_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::bash2html_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -15637,7 +15637,7 @@ i32 command::bash2html_NArgs(command::FieldId field, algo::strptr& out_dflt, boo
 // --- command.bash2html_proc.bash2html.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::bash2html_Start(command::bash2html_proc& parent) {
+int command::bash2html_Start(command::bash2html_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(bash2html_ToCmdline(parent)); // maybe print command
@@ -15675,7 +15675,7 @@ int command::bash2html_Start(command::bash2html_proc& parent) {
 
 // --- command.bash2html_proc.bash2html.StartRead
 // Start subprocess & Read output
-algo::Fildes command::bash2html_StartRead(command::bash2html_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::bash2html_StartRead(command::bash2html_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -15697,7 +15697,7 @@ void command::bash2html_Kill(command::bash2html_proc& parent) {
 
 // --- command.bash2html_proc.bash2html.Wait
 // Wait for subprocess to return
-void command::bash2html_Wait(command::bash2html_proc& parent) {
+void command::bash2html_Wait(command::bash2html_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -15716,7 +15716,7 @@ void command::bash2html_Wait(command::bash2html_proc& parent) {
 // --- command.bash2html_proc.bash2html.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::bash2html_Exec(command::bash2html_proc& parent) {
+int command::bash2html_Exec(command::bash2html_proc& parent) throw() {
     bash2html_Start(parent);
     bash2html_Wait(parent);
     return parent.status;
@@ -15734,7 +15734,7 @@ void command::bash2html_ExecX(command::bash2html_proc& parent) {
 // --- command.bash2html_proc.bash2html.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::bash2html_Execv(command::bash2html_proc& parent) {
+int command::bash2html_Execv(command::bash2html_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     bash2html_ToArgv(parent, args);
@@ -15750,7 +15750,7 @@ int command::bash2html_Execv(command::bash2html_proc& parent) {
 }
 
 // --- command.bash2html_proc.bash2html.ToCmdline
-algo::tempstr command::bash2html_ToCmdline(command::bash2html_proc& parent) {
+algo::tempstr command::bash2html_ToCmdline(command::bash2html_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::bash2html_PrintArgv(parent.cmd,retval);
@@ -15768,7 +15768,7 @@ algo::tempstr command::bash2html_ToCmdline(command::bash2html_proc& parent) {
 
 // --- command.bash2html_proc.bash2html.ToArgv
 // Form array from the command line
-void command::bash2html_ToArgv(command::bash2html_proc& parent, algo::StringAry& args) {
+void command::bash2html_ToArgv(command::bash2html_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -15789,7 +15789,7 @@ void command::bash2html_ToArgv(command::bash2html_proc& parent, algo::StringAry&
 }
 
 // --- command.bash2html_proc..Uninit
-void command::bash2html_proc_Uninit(command::bash2html_proc& parent) {
+void command::bash2html_proc_Uninit(command::bash2html_proc& parent) throw() {
     command::bash2html_proc &row = parent; (void)row;
 
     // command.bash2html_proc.bash2html.Uninit (Exec)  //
@@ -15799,7 +15799,7 @@ void command::bash2html_proc_Uninit(command::bash2html_proc& parent) {
 // --- command.bash_proc.bash.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::bash_Start(command::bash_proc& parent) {
+int command::bash_Start(command::bash_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(bash_ToCmdline(parent)); // maybe print command
@@ -15837,7 +15837,7 @@ int command::bash_Start(command::bash_proc& parent) {
 
 // --- command.bash_proc.bash.StartRead
 // Start subprocess & Read output
-algo::Fildes command::bash_StartRead(command::bash_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::bash_StartRead(command::bash_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -15859,7 +15859,7 @@ void command::bash_Kill(command::bash_proc& parent) {
 
 // --- command.bash_proc.bash.Wait
 // Wait for subprocess to return
-void command::bash_Wait(command::bash_proc& parent) {
+void command::bash_Wait(command::bash_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -15878,7 +15878,7 @@ void command::bash_Wait(command::bash_proc& parent) {
 // --- command.bash_proc.bash.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::bash_Exec(command::bash_proc& parent) {
+int command::bash_Exec(command::bash_proc& parent) throw() {
     bash_Start(parent);
     bash_Wait(parent);
     return parent.status;
@@ -15896,7 +15896,7 @@ void command::bash_ExecX(command::bash_proc& parent) {
 // --- command.bash_proc.bash.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::bash_Execv(command::bash_proc& parent) {
+int command::bash_Execv(command::bash_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     bash_ToArgv(parent, args);
@@ -15912,7 +15912,7 @@ int command::bash_Execv(command::bash_proc& parent) {
 }
 
 // --- command.bash_proc.bash.ToCmdline
-algo::tempstr command::bash_ToCmdline(command::bash_proc& parent) {
+algo::tempstr command::bash_ToCmdline(command::bash_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::bash_PrintArgv(parent.cmd,retval);
@@ -15930,7 +15930,7 @@ algo::tempstr command::bash_ToCmdline(command::bash_proc& parent) {
 
 // --- command.bash_proc.bash.ToArgv
 // Form array from the command line
-void command::bash_ToArgv(command::bash_proc& parent, algo::StringAry& args) {
+void command::bash_ToArgv(command::bash_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -15942,7 +15942,7 @@ void command::bash_ToArgv(command::bash_proc& parent, algo::StringAry& args) {
 }
 
 // --- command.bash_proc..Uninit
-void command::bash_proc_Uninit(command::bash_proc& parent) {
+void command::bash_proc_Uninit(command::bash_proc& parent) throw() {
     command::bash_proc &row = parent; (void)row;
 
     // command.bash_proc.bash.Uninit (Exec)  //Must be bash to support $'' for string quoting
@@ -15953,7 +15953,7 @@ void command::bash_proc_Uninit(command::bash_proc& parent) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> command::cmd_Addary(command::gcache& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> command::cmd_Addary(command::gcache& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.cmd_elems && rhs.elems < parent.cmd_elems + parent.cmd_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.gcache.cmd  comment:'alias error: sub-array is being appended to the whole'");
@@ -15971,7 +15971,7 @@ algo::aryptr<algo::cstring> command::cmd_Addary(command::gcache& parent, algo::a
 // --- command.gcache.cmd.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& command::cmd_Alloc(command::gcache& parent) {
+algo::cstring& command::cmd_Alloc(command::gcache& parent) throw() {
     cmd_Reserve(parent, 1);
     int n  = parent.cmd_n;
     int at = n;
@@ -15984,7 +15984,7 @@ algo::cstring& command::cmd_Alloc(command::gcache& parent) {
 // --- command.gcache.cmd.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& command::cmd_AllocAt(command::gcache& parent, int at) {
+algo::cstring& command::cmd_AllocAt(command::gcache& parent, int at) throw() {
     cmd_Reserve(parent, 1);
     int n  = parent.cmd_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -15999,7 +15999,7 @@ algo::cstring& command::cmd_AllocAt(command::gcache& parent, int at) {
 
 // --- command.gcache.cmd.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::cmd_AllocN(command::gcache& parent, int n_elems) {
+algo::aryptr<algo::cstring> command::cmd_AllocN(command::gcache& parent, int n_elems) throw() {
     cmd_Reserve(parent, n_elems);
     int old_n  = parent.cmd_n;
     int new_n = old_n + n_elems;
@@ -16013,7 +16013,7 @@ algo::aryptr<algo::cstring> command::cmd_AllocN(command::gcache& parent, int n_e
 
 // --- command.gcache.cmd.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::cmd_Remove(command::gcache& parent, u32 i) {
+void command::cmd_Remove(command::gcache& parent, u32 i) throw() {
     u32 lim = parent.cmd_n;
     algo::cstring *elems = parent.cmd_elems;
     if (i < lim) {
@@ -16024,7 +16024,7 @@ void command::cmd_Remove(command::gcache& parent, u32 i) {
 }
 
 // --- command.gcache.cmd.RemoveAll
-void command::cmd_RemoveAll(command::gcache& parent) {
+void command::cmd_RemoveAll(command::gcache& parent) throw() {
     u32 n = parent.cmd_n;
     while (n > 0) {
         n -= 1;
@@ -16035,7 +16035,7 @@ void command::cmd_RemoveAll(command::gcache& parent) {
 
 // --- command.gcache.cmd.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::cmd_RemoveLast(command::gcache& parent) {
+void command::cmd_RemoveLast(command::gcache& parent) throw() {
     u64 n = parent.cmd_n;
     if (n > 0) {
         n -= 1;
@@ -16046,7 +16046,7 @@ void command::cmd_RemoveLast(command::gcache& parent) {
 
 // --- command.gcache.cmd.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::cmd_AbsReserve(command::gcache& parent, int n) {
+void command::cmd_AbsReserve(command::gcache& parent, int n) throw() {
     u32 old_max  = parent.cmd_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -16061,7 +16061,7 @@ void command::cmd_AbsReserve(command::gcache& parent, int n) {
 
 // --- command.gcache.cmd.Setary
 // Copy contents of RHS to PARENT.
-void command::cmd_Setary(command::gcache& parent, command::gcache &rhs) {
+void command::cmd_Setary(command::gcache& parent, command::gcache &rhs) throw() {
     cmd_RemoveAll(parent);
     int nnew = rhs.cmd_n;
     cmd_Reserve(parent, nnew); // reserve space
@@ -16074,14 +16074,14 @@ void command::cmd_Setary(command::gcache& parent, command::gcache &rhs) {
 // --- command.gcache.cmd.Setary2
 // Copy specified array into cmd, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::cmd_Setary(command::gcache& parent, const algo::aryptr<algo::cstring> &rhs) {
+void command::cmd_Setary(command::gcache& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     cmd_RemoveAll(parent);
     cmd_Addary(parent, rhs);
 }
 
 // --- command.gcache.cmd.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::cmd_AllocNVal(command::gcache& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> command::cmd_AllocNVal(command::gcache& parent, int n_elems, const algo::cstring& val) throw() {
     cmd_Reserve(parent, n_elems);
     int old_n  = parent.cmd_n;
     int new_n = old_n + n_elems;
@@ -16097,7 +16097,7 @@ algo::aryptr<algo::cstring> command::cmd_AllocNVal(command::gcache& parent, int 
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr in_str) {
+bool command::cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = cmd_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -16108,7 +16108,7 @@ bool command::cmd_ReadStrptrMaybe(command::gcache& parent, algo::strptr in_str) 
 }
 
 // --- command.gcache..ReadFieldMaybe
-bool command::gcache_ReadFieldMaybe(command::gcache& parent, algo::strptr field, algo::strptr strval) {
+bool command::gcache_ReadFieldMaybe(command::gcache& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -16175,7 +16175,7 @@ bool command::gcache_ReadFieldMaybe(command::gcache& parent, algo::strptr field,
 
 // --- command.gcache..ReadTupleMaybe
 // Read fields of command::gcache from attributes of ascii tuple TUPLE
-bool command::gcache_ReadTupleMaybe(command::gcache &parent, algo::Tuple &tuple) {
+bool command::gcache_ReadTupleMaybe(command::gcache &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -16210,7 +16210,7 @@ void command::gcache_Init(command::gcache& parent) {
 }
 
 // --- command.gcache..Uninit
-void command::gcache_Uninit(command::gcache& parent) {
+void command::gcache_Uninit(command::gcache& parent) throw() {
     command::gcache &row = parent; (void)row;
 
     // command.gcache.cmd.Uninit (Tary)  //Command to execute
@@ -16223,7 +16223,7 @@ void command::gcache_Uninit(command::gcache& parent) {
 // --- command.gcache..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::gcache_ToCmdline(command::gcache& row) {
+tempstr command::gcache_ToCmdline(command::gcache& row) throw() {
     tempstr ret;
     ret << "bin/gcache ";
     gcache_PrintArgv(row, ret);
@@ -16240,7 +16240,7 @@ tempstr command::gcache_ToCmdline(command::gcache& row) {
 // --- command.gcache..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.gcache.Argv  printfmt:Tuple
-void command::gcache_PrintArgv(command::gcache& row, algo::cstring& str) {
+void command::gcache_PrintArgv(command::gcache& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -16327,7 +16327,7 @@ void command::gcache_PrintArgv(command::gcache& row, algo::cstring& str) {
 // --- command.gcache..Print
 // print string representation of ROW to string STR
 // cfmt:command.gcache.String  printfmt:Tuple
-void command::gcache_Print(command::gcache& row, algo::cstring& str) {
+void command::gcache_Print(command::gcache& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "command.gcache";
 
@@ -16377,7 +16377,7 @@ void command::gcache_Print(command::gcache& row, algo::cstring& str) {
 }
 
 // --- command.gcache..GetAnon
-algo::strptr command::gcache_GetAnon(command::gcache &parent, i32 idx) {
+algo::strptr command::gcache_GetAnon(command::gcache &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         default: return strptr("cmd", 3);
@@ -16388,7 +16388,7 @@ algo::strptr command::gcache_GetAnon(command::gcache &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::gcache_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::gcache_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -16455,7 +16455,7 @@ i32 command::gcache_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
 }
 
 // --- command.gcache..AssignOp
-command::gcache& command::gcache::operator =(const command::gcache &rhs) {
+command::gcache& command::gcache::operator =(const command::gcache &rhs) throw() {
     in = rhs.in;
     cmd_Setary(*this, cmd_Getary(const_cast<command::gcache&>(rhs)));
     install = rhs.install;
@@ -16473,7 +16473,7 @@ command::gcache& command::gcache::operator =(const command::gcache &rhs) {
 }
 
 // --- command.gcache..CopyCtor
- command::gcache::gcache(const command::gcache &rhs)
+ command::gcache::gcache(const command::gcache &rhs) throw()
     : in(rhs.in)
     , install(rhs.install)
     , stats(rhs.stats)
@@ -16496,7 +16496,7 @@ command::gcache& command::gcache::operator =(const command::gcache &rhs) {
 // --- command.gcache_proc.gcache.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::gcache_Start(command::gcache_proc& parent) {
+int command::gcache_Start(command::gcache_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(gcache_ToCmdline(parent)); // maybe print command
@@ -16534,7 +16534,7 @@ int command::gcache_Start(command::gcache_proc& parent) {
 
 // --- command.gcache_proc.gcache.StartRead
 // Start subprocess & Read output
-algo::Fildes command::gcache_StartRead(command::gcache_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::gcache_StartRead(command::gcache_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -16556,7 +16556,7 @@ void command::gcache_Kill(command::gcache_proc& parent) {
 
 // --- command.gcache_proc.gcache.Wait
 // Wait for subprocess to return
-void command::gcache_Wait(command::gcache_proc& parent) {
+void command::gcache_Wait(command::gcache_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -16575,7 +16575,7 @@ void command::gcache_Wait(command::gcache_proc& parent) {
 // --- command.gcache_proc.gcache.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::gcache_Exec(command::gcache_proc& parent) {
+int command::gcache_Exec(command::gcache_proc& parent) throw() {
     gcache_Start(parent);
     gcache_Wait(parent);
     return parent.status;
@@ -16593,7 +16593,7 @@ void command::gcache_ExecX(command::gcache_proc& parent) {
 // --- command.gcache_proc.gcache.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::gcache_Execv(command::gcache_proc& parent) {
+int command::gcache_Execv(command::gcache_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     gcache_ToArgv(parent, args);
@@ -16609,7 +16609,7 @@ int command::gcache_Execv(command::gcache_proc& parent) {
 }
 
 // --- command.gcache_proc.gcache.ToCmdline
-algo::tempstr command::gcache_ToCmdline(command::gcache_proc& parent) {
+algo::tempstr command::gcache_ToCmdline(command::gcache_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::gcache_PrintArgv(parent.cmd,retval);
@@ -16627,7 +16627,7 @@ algo::tempstr command::gcache_ToCmdline(command::gcache_proc& parent) {
 
 // --- command.gcache_proc.gcache.ToArgv
 // Form array from the command line
-void command::gcache_ToArgv(command::gcache_proc& parent, algo::StringAry& args) {
+void command::gcache_ToArgv(command::gcache_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -16713,7 +16713,7 @@ void command::gcache_ToArgv(command::gcache_proc& parent, algo::StringAry& args)
 }
 
 // --- command.gcache_proc..Uninit
-void command::gcache_proc_Uninit(command::gcache_proc& parent) {
+void command::gcache_proc_Uninit(command::gcache_proc& parent) throw() {
     command::gcache_proc &row = parent; (void)row;
 
     // command.gcache_proc.gcache.Uninit (Exec)  //
@@ -16724,7 +16724,7 @@ void command::gcache_proc_Uninit(command::gcache_proc& parent) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> command::fields_Addary(command::gcli& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> command::fields_Addary(command::gcli& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.fields_elems && rhs.elems < parent.fields_elems + parent.fields_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.gcli.fields  comment:'alias error: sub-array is being appended to the whole'");
@@ -16742,7 +16742,7 @@ algo::aryptr<algo::cstring> command::fields_Addary(command::gcli& parent, algo::
 // --- command.gcli.fields.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& command::fields_Alloc(command::gcli& parent) {
+algo::cstring& command::fields_Alloc(command::gcli& parent) throw() {
     fields_Reserve(parent, 1);
     int n  = parent.fields_n;
     int at = n;
@@ -16755,7 +16755,7 @@ algo::cstring& command::fields_Alloc(command::gcli& parent) {
 // --- command.gcli.fields.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& command::fields_AllocAt(command::gcli& parent, int at) {
+algo::cstring& command::fields_AllocAt(command::gcli& parent, int at) throw() {
     fields_Reserve(parent, 1);
     int n  = parent.fields_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -16770,7 +16770,7 @@ algo::cstring& command::fields_AllocAt(command::gcli& parent, int at) {
 
 // --- command.gcli.fields.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::fields_AllocN(command::gcli& parent, int n_elems) {
+algo::aryptr<algo::cstring> command::fields_AllocN(command::gcli& parent, int n_elems) throw() {
     fields_Reserve(parent, n_elems);
     int old_n  = parent.fields_n;
     int new_n = old_n + n_elems;
@@ -16784,7 +16784,7 @@ algo::aryptr<algo::cstring> command::fields_AllocN(command::gcli& parent, int n_
 
 // --- command.gcli.fields.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::fields_Remove(command::gcli& parent, u32 i) {
+void command::fields_Remove(command::gcli& parent, u32 i) throw() {
     u32 lim = parent.fields_n;
     algo::cstring *elems = parent.fields_elems;
     if (i < lim) {
@@ -16795,7 +16795,7 @@ void command::fields_Remove(command::gcli& parent, u32 i) {
 }
 
 // --- command.gcli.fields.RemoveAll
-void command::fields_RemoveAll(command::gcli& parent) {
+void command::fields_RemoveAll(command::gcli& parent) throw() {
     u32 n = parent.fields_n;
     while (n > 0) {
         n -= 1;
@@ -16806,7 +16806,7 @@ void command::fields_RemoveAll(command::gcli& parent) {
 
 // --- command.gcli.fields.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::fields_RemoveLast(command::gcli& parent) {
+void command::fields_RemoveLast(command::gcli& parent) throw() {
     u64 n = parent.fields_n;
     if (n > 0) {
         n -= 1;
@@ -16817,7 +16817,7 @@ void command::fields_RemoveLast(command::gcli& parent) {
 
 // --- command.gcli.fields.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::fields_AbsReserve(command::gcli& parent, int n) {
+void command::fields_AbsReserve(command::gcli& parent, int n) throw() {
     u32 old_max  = parent.fields_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -16832,7 +16832,7 @@ void command::fields_AbsReserve(command::gcli& parent, int n) {
 
 // --- command.gcli.fields.Setary
 // Copy contents of RHS to PARENT.
-void command::fields_Setary(command::gcli& parent, command::gcli &rhs) {
+void command::fields_Setary(command::gcli& parent, command::gcli &rhs) throw() {
     fields_RemoveAll(parent);
     int nnew = rhs.fields_n;
     fields_Reserve(parent, nnew); // reserve space
@@ -16845,14 +16845,14 @@ void command::fields_Setary(command::gcli& parent, command::gcli &rhs) {
 // --- command.gcli.fields.Setary2
 // Copy specified array into fields, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::fields_Setary(command::gcli& parent, const algo::aryptr<algo::cstring> &rhs) {
+void command::fields_Setary(command::gcli& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     fields_RemoveAll(parent);
     fields_Addary(parent, rhs);
 }
 
 // --- command.gcli.fields.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::fields_AllocNVal(command::gcli& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> command::fields_AllocNVal(command::gcli& parent, int n_elems, const algo::cstring& val) throw() {
     fields_Reserve(parent, n_elems);
     int old_n  = parent.fields_n;
     int new_n = old_n + n_elems;
@@ -16868,7 +16868,7 @@ algo::aryptr<algo::cstring> command::fields_AllocNVal(command::gcli& parent, int
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr in_str) {
+bool command::fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = fields_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -16879,7 +16879,7 @@ bool command::fields_ReadStrptrMaybe(command::gcli& parent, algo::strptr in_str)
 }
 
 // --- command.gcli..ReadFieldMaybe
-bool command::gcli_ReadFieldMaybe(command::gcli& parent, algo::strptr field, algo::strptr strval) {
+bool command::gcli_ReadFieldMaybe(command::gcli& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -16962,7 +16962,7 @@ bool command::gcli_ReadFieldMaybe(command::gcli& parent, algo::strptr field, alg
 
 // --- command.gcli..ReadTupleMaybe
 // Read fields of command::gcli from attributes of ascii tuple TUPLE
-bool command::gcli_ReadTupleMaybe(command::gcli &parent, algo::Tuple &tuple) {
+bool command::gcli_ReadTupleMaybe(command::gcli &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -17002,7 +17002,7 @@ void command::gcli_Init(command::gcli& parent) {
 }
 
 // --- command.gcli..Uninit
-void command::gcli_Uninit(command::gcli& parent) {
+void command::gcli_Uninit(command::gcli& parent) throw() {
     command::gcli &row = parent; (void)row;
 
     // command.gcli.fields.Uninit (Tary)  //additional key:value pairs for use with -create, -list, -update
@@ -17015,7 +17015,7 @@ void command::gcli_Uninit(command::gcli& parent) {
 // --- command.gcli..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::gcli_ToCmdline(command::gcli& row) {
+tempstr command::gcli_ToCmdline(command::gcli& row) throw() {
     tempstr ret;
     ret << "bin/gcli ";
     gcli_PrintArgv(row, ret);
@@ -17032,7 +17032,7 @@ tempstr command::gcli_ToCmdline(command::gcli& row) {
 // --- command.gcli..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.gcli.Argv  printfmt:Tuple
-void command::gcli_PrintArgv(command::gcli& row, algo::cstring& str) {
+void command::gcli_PrintArgv(command::gcli& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -17139,7 +17139,7 @@ void command::gcli_PrintArgv(command::gcli& row, algo::cstring& str) {
 }
 
 // --- command.gcli..GetAnon
-algo::strptr command::gcli_GetAnon(command::gcli &parent, i32 idx) {
+algo::strptr command::gcli_GetAnon(command::gcli &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("selector", 8);
@@ -17151,7 +17151,7 @@ algo::strptr command::gcli_GetAnon(command::gcli &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -17236,7 +17236,7 @@ i32 command::gcli_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* ou
 }
 
 // --- command.gcli..AssignOp
-command::gcli& command::gcli::operator =(const command::gcli &rhs) {
+command::gcli& command::gcli::operator =(const command::gcli &rhs) throw() {
     in = rhs.in;
     selector = rhs.selector;
     fields_Setary(*this, fields_Getary(const_cast<command::gcli&>(rhs)));
@@ -17258,7 +17258,7 @@ command::gcli& command::gcli::operator =(const command::gcli &rhs) {
 }
 
 // --- command.gcli..CopyCtor
- command::gcli::gcli(const command::gcli &rhs)
+ command::gcli::gcli(const command::gcli &rhs) throw()
     : in(rhs.in)
     , selector(rhs.selector)
     , accept(rhs.accept)
@@ -17285,7 +17285,7 @@ command::gcli& command::gcli::operator =(const command::gcli &rhs) {
 // --- command.gcli_proc.gcli.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::gcli_Start(command::gcli_proc& parent) {
+int command::gcli_Start(command::gcli_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(gcli_ToCmdline(parent)); // maybe print command
@@ -17323,7 +17323,7 @@ int command::gcli_Start(command::gcli_proc& parent) {
 
 // --- command.gcli_proc.gcli.StartRead
 // Start subprocess & Read output
-algo::Fildes command::gcli_StartRead(command::gcli_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::gcli_StartRead(command::gcli_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -17345,7 +17345,7 @@ void command::gcli_Kill(command::gcli_proc& parent) {
 
 // --- command.gcli_proc.gcli.Wait
 // Wait for subprocess to return
-void command::gcli_Wait(command::gcli_proc& parent) {
+void command::gcli_Wait(command::gcli_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -17364,7 +17364,7 @@ void command::gcli_Wait(command::gcli_proc& parent) {
 // --- command.gcli_proc.gcli.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::gcli_Exec(command::gcli_proc& parent) {
+int command::gcli_Exec(command::gcli_proc& parent) throw() {
     gcli_Start(parent);
     gcli_Wait(parent);
     return parent.status;
@@ -17382,7 +17382,7 @@ void command::gcli_ExecX(command::gcli_proc& parent) {
 // --- command.gcli_proc.gcli.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::gcli_Execv(command::gcli_proc& parent) {
+int command::gcli_Execv(command::gcli_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     gcli_ToArgv(parent, args);
@@ -17398,7 +17398,7 @@ int command::gcli_Execv(command::gcli_proc& parent) {
 }
 
 // --- command.gcli_proc.gcli.ToCmdline
-algo::tempstr command::gcli_ToCmdline(command::gcli_proc& parent) {
+algo::tempstr command::gcli_ToCmdline(command::gcli_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::gcli_PrintArgv(parent.cmd,retval);
@@ -17416,7 +17416,7 @@ algo::tempstr command::gcli_ToCmdline(command::gcli_proc& parent) {
 
 // --- command.gcli_proc.gcli.ToArgv
 // Form array from the command line
-void command::gcli_ToArgv(command::gcli_proc& parent, algo::StringAry& args) {
+void command::gcli_ToArgv(command::gcli_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -17526,7 +17526,7 @@ void command::gcli_ToArgv(command::gcli_proc& parent, algo::StringAry& args) {
 }
 
 // --- command.gcli_proc..Uninit
-void command::gcli_proc_Uninit(command::gcli_proc& parent) {
+void command::gcli_proc_Uninit(command::gcli_proc& parent) throw() {
     command::gcli_proc &row = parent; (void)row;
 
     // command.gcli_proc.gcli.Uninit (Exec)  //
@@ -17537,7 +17537,7 @@ void command::gcli_proc_Uninit(command::gcli_proc& parent) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> command::args_Addary(command::mdbg& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> command::args_Addary(command::mdbg& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.args_elems && rhs.elems < parent.args_elems + parent.args_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.mdbg.args  comment:'alias error: sub-array is being appended to the whole'");
@@ -17555,7 +17555,7 @@ algo::aryptr<algo::cstring> command::args_Addary(command::mdbg& parent, algo::ar
 // --- command.mdbg.args.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& command::args_Alloc(command::mdbg& parent) {
+algo::cstring& command::args_Alloc(command::mdbg& parent) throw() {
     args_Reserve(parent, 1);
     int n  = parent.args_n;
     int at = n;
@@ -17568,7 +17568,7 @@ algo::cstring& command::args_Alloc(command::mdbg& parent) {
 // --- command.mdbg.args.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& command::args_AllocAt(command::mdbg& parent, int at) {
+algo::cstring& command::args_AllocAt(command::mdbg& parent, int at) throw() {
     args_Reserve(parent, 1);
     int n  = parent.args_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -17583,7 +17583,7 @@ algo::cstring& command::args_AllocAt(command::mdbg& parent, int at) {
 
 // --- command.mdbg.args.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::args_AllocN(command::mdbg& parent, int n_elems) {
+algo::aryptr<algo::cstring> command::args_AllocN(command::mdbg& parent, int n_elems) throw() {
     args_Reserve(parent, n_elems);
     int old_n  = parent.args_n;
     int new_n = old_n + n_elems;
@@ -17597,7 +17597,7 @@ algo::aryptr<algo::cstring> command::args_AllocN(command::mdbg& parent, int n_el
 
 // --- command.mdbg.args.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::args_Remove(command::mdbg& parent, u32 i) {
+void command::args_Remove(command::mdbg& parent, u32 i) throw() {
     u32 lim = parent.args_n;
     algo::cstring *elems = parent.args_elems;
     if (i < lim) {
@@ -17608,7 +17608,7 @@ void command::args_Remove(command::mdbg& parent, u32 i) {
 }
 
 // --- command.mdbg.args.RemoveAll
-void command::args_RemoveAll(command::mdbg& parent) {
+void command::args_RemoveAll(command::mdbg& parent) throw() {
     u32 n = parent.args_n;
     while (n > 0) {
         n -= 1;
@@ -17619,7 +17619,7 @@ void command::args_RemoveAll(command::mdbg& parent) {
 
 // --- command.mdbg.args.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::args_RemoveLast(command::mdbg& parent) {
+void command::args_RemoveLast(command::mdbg& parent) throw() {
     u64 n = parent.args_n;
     if (n > 0) {
         n -= 1;
@@ -17630,7 +17630,7 @@ void command::args_RemoveLast(command::mdbg& parent) {
 
 // --- command.mdbg.args.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::args_AbsReserve(command::mdbg& parent, int n) {
+void command::args_AbsReserve(command::mdbg& parent, int n) throw() {
     u32 old_max  = parent.args_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -17645,7 +17645,7 @@ void command::args_AbsReserve(command::mdbg& parent, int n) {
 
 // --- command.mdbg.args.Setary
 // Copy contents of RHS to PARENT.
-void command::args_Setary(command::mdbg& parent, command::mdbg &rhs) {
+void command::args_Setary(command::mdbg& parent, command::mdbg &rhs) throw() {
     args_RemoveAll(parent);
     int nnew = rhs.args_n;
     args_Reserve(parent, nnew); // reserve space
@@ -17658,14 +17658,14 @@ void command::args_Setary(command::mdbg& parent, command::mdbg &rhs) {
 // --- command.mdbg.args.Setary2
 // Copy specified array into args, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::args_Setary(command::mdbg& parent, const algo::aryptr<algo::cstring> &rhs) {
+void command::args_Setary(command::mdbg& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     args_RemoveAll(parent);
     args_Addary(parent, rhs);
 }
 
 // --- command.mdbg.args.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::args_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> command::args_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) throw() {
     args_Reserve(parent, n_elems);
     int old_n  = parent.args_n;
     int new_n = old_n + n_elems;
@@ -17681,7 +17681,7 @@ algo::aryptr<algo::cstring> command::args_AllocNVal(command::mdbg& parent, int n
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::args_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) {
+bool command::args_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = args_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -17695,7 +17695,7 @@ bool command::args_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> command::b_Addary(command::mdbg& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> command::b_Addary(command::mdbg& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.b_elems && rhs.elems < parent.b_elems + parent.b_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.mdbg.b  comment:'alias error: sub-array is being appended to the whole'");
@@ -17713,7 +17713,7 @@ algo::aryptr<algo::cstring> command::b_Addary(command::mdbg& parent, algo::arypt
 // --- command.mdbg.b.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& command::b_Alloc(command::mdbg& parent) {
+algo::cstring& command::b_Alloc(command::mdbg& parent) throw() {
     b_Reserve(parent, 1);
     int n  = parent.b_n;
     int at = n;
@@ -17726,7 +17726,7 @@ algo::cstring& command::b_Alloc(command::mdbg& parent) {
 // --- command.mdbg.b.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& command::b_AllocAt(command::mdbg& parent, int at) {
+algo::cstring& command::b_AllocAt(command::mdbg& parent, int at) throw() {
     b_Reserve(parent, 1);
     int n  = parent.b_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -17741,7 +17741,7 @@ algo::cstring& command::b_AllocAt(command::mdbg& parent, int at) {
 
 // --- command.mdbg.b.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::b_AllocN(command::mdbg& parent, int n_elems) {
+algo::aryptr<algo::cstring> command::b_AllocN(command::mdbg& parent, int n_elems) throw() {
     b_Reserve(parent, n_elems);
     int old_n  = parent.b_n;
     int new_n = old_n + n_elems;
@@ -17755,7 +17755,7 @@ algo::aryptr<algo::cstring> command::b_AllocN(command::mdbg& parent, int n_elems
 
 // --- command.mdbg.b.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::b_Remove(command::mdbg& parent, u32 i) {
+void command::b_Remove(command::mdbg& parent, u32 i) throw() {
     u32 lim = parent.b_n;
     algo::cstring *elems = parent.b_elems;
     if (i < lim) {
@@ -17766,7 +17766,7 @@ void command::b_Remove(command::mdbg& parent, u32 i) {
 }
 
 // --- command.mdbg.b.RemoveAll
-void command::b_RemoveAll(command::mdbg& parent) {
+void command::b_RemoveAll(command::mdbg& parent) throw() {
     u32 n = parent.b_n;
     while (n > 0) {
         n -= 1;
@@ -17777,7 +17777,7 @@ void command::b_RemoveAll(command::mdbg& parent) {
 
 // --- command.mdbg.b.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::b_RemoveLast(command::mdbg& parent) {
+void command::b_RemoveLast(command::mdbg& parent) throw() {
     u64 n = parent.b_n;
     if (n > 0) {
         n -= 1;
@@ -17788,7 +17788,7 @@ void command::b_RemoveLast(command::mdbg& parent) {
 
 // --- command.mdbg.b.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::b_AbsReserve(command::mdbg& parent, int n) {
+void command::b_AbsReserve(command::mdbg& parent, int n) throw() {
     u32 old_max  = parent.b_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -17803,7 +17803,7 @@ void command::b_AbsReserve(command::mdbg& parent, int n) {
 
 // --- command.mdbg.b.Setary
 // Copy contents of RHS to PARENT.
-void command::b_Setary(command::mdbg& parent, command::mdbg &rhs) {
+void command::b_Setary(command::mdbg& parent, command::mdbg &rhs) throw() {
     b_RemoveAll(parent);
     int nnew = rhs.b_n;
     b_Reserve(parent, nnew); // reserve space
@@ -17816,14 +17816,14 @@ void command::b_Setary(command::mdbg& parent, command::mdbg &rhs) {
 // --- command.mdbg.b.Setary2
 // Copy specified array into b, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::b_Setary(command::mdbg& parent, const algo::aryptr<algo::cstring> &rhs) {
+void command::b_Setary(command::mdbg& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     b_RemoveAll(parent);
     b_Addary(parent, rhs);
 }
 
 // --- command.mdbg.b.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::b_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> command::b_AllocNVal(command::mdbg& parent, int n_elems, const algo::cstring& val) throw() {
     b_Reserve(parent, n_elems);
     int old_n  = parent.b_n;
     int new_n = old_n + n_elems;
@@ -17839,7 +17839,7 @@ algo::aryptr<algo::cstring> command::b_AllocNVal(command::mdbg& parent, int n_el
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::b_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) {
+bool command::b_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = b_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -17850,7 +17850,7 @@ bool command::b_ReadStrptrMaybe(command::mdbg& parent, algo::strptr in_str) {
 }
 
 // --- command.mdbg..ReadFieldMaybe
-bool command::mdbg_ReadFieldMaybe(command::mdbg& parent, algo::strptr field, algo::strptr strval) {
+bool command::mdbg_ReadFieldMaybe(command::mdbg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -17925,7 +17925,7 @@ bool command::mdbg_ReadFieldMaybe(command::mdbg& parent, algo::strptr field, alg
 
 // --- command.mdbg..ReadTupleMaybe
 // Read fields of command::mdbg from attributes of ascii tuple TUPLE
-bool command::mdbg_ReadTupleMaybe(command::mdbg &parent, algo::Tuple &tuple) {
+bool command::mdbg_ReadTupleMaybe(command::mdbg &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -17964,7 +17964,7 @@ void command::mdbg_Init(command::mdbg& parent) {
 }
 
 // --- command.mdbg..Uninit
-void command::mdbg_Uninit(command::mdbg& parent) {
+void command::mdbg_Uninit(command::mdbg& parent) throw() {
     command::mdbg &row = parent; (void)row;
 
     // command.mdbg.b.Uninit (Tary)  //Set breakpoint, e.g. 'a.cpp:123 if cond1', 'func#3'
@@ -17983,7 +17983,7 @@ void command::mdbg_Uninit(command::mdbg& parent) {
 // --- command.mdbg..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::mdbg_ToCmdline(command::mdbg& row) {
+tempstr command::mdbg_ToCmdline(command::mdbg& row) throw() {
     tempstr ret;
     ret << "bin/mdbg ";
     mdbg_PrintArgv(row, ret);
@@ -18000,7 +18000,7 @@ tempstr command::mdbg_ToCmdline(command::mdbg& row) {
 // --- command.mdbg..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.mdbg.Argv  printfmt:Auto
-void command::mdbg_PrintArgv(command::mdbg& row, algo::cstring& str) {
+void command::mdbg_PrintArgv(command::mdbg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -18095,7 +18095,7 @@ void command::mdbg_PrintArgv(command::mdbg& row, algo::cstring& str) {
 }
 
 // --- command.mdbg..GetAnon
-algo::strptr command::mdbg_GetAnon(command::mdbg &parent, i32 idx) {
+algo::strptr command::mdbg_GetAnon(command::mdbg &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("target", 6);
@@ -18107,7 +18107,7 @@ algo::strptr command::mdbg_GetAnon(command::mdbg &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::mdbg_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::mdbg_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_target: { // $comment
@@ -18180,7 +18180,7 @@ i32 command::mdbg_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* ou
 }
 
 // --- command.mdbg..AssignOp
-command::mdbg& command::mdbg::operator =(const command::mdbg &rhs) {
+command::mdbg& command::mdbg::operator =(const command::mdbg &rhs) throw() {
     target = rhs.target;
     in = rhs.in;
     args_Setary(*this, args_Getary(const_cast<command::mdbg&>(rhs)));
@@ -18200,7 +18200,7 @@ command::mdbg& command::mdbg::operator =(const command::mdbg &rhs) {
 }
 
 // --- command.mdbg..CopyCtor
- command::mdbg::mdbg(const command::mdbg &rhs)
+ command::mdbg::mdbg(const command::mdbg &rhs) throw()
     : target(rhs.target)
     , in(rhs.in)
     , cfg(rhs.cfg)
@@ -18228,7 +18228,7 @@ command::mdbg& command::mdbg::operator =(const command::mdbg &rhs) {
 // --- command.mdbg_proc.mdbg.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::mdbg_Start(command::mdbg_proc& parent) {
+int command::mdbg_Start(command::mdbg_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(mdbg_ToCmdline(parent)); // maybe print command
@@ -18266,7 +18266,7 @@ int command::mdbg_Start(command::mdbg_proc& parent) {
 
 // --- command.mdbg_proc.mdbg.StartRead
 // Start subprocess & Read output
-algo::Fildes command::mdbg_StartRead(command::mdbg_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::mdbg_StartRead(command::mdbg_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -18288,7 +18288,7 @@ void command::mdbg_Kill(command::mdbg_proc& parent) {
 
 // --- command.mdbg_proc.mdbg.Wait
 // Wait for subprocess to return
-void command::mdbg_Wait(command::mdbg_proc& parent) {
+void command::mdbg_Wait(command::mdbg_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -18307,7 +18307,7 @@ void command::mdbg_Wait(command::mdbg_proc& parent) {
 // --- command.mdbg_proc.mdbg.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::mdbg_Exec(command::mdbg_proc& parent) {
+int command::mdbg_Exec(command::mdbg_proc& parent) throw() {
     mdbg_Start(parent);
     mdbg_Wait(parent);
     return parent.status;
@@ -18325,7 +18325,7 @@ void command::mdbg_ExecX(command::mdbg_proc& parent) {
 // --- command.mdbg_proc.mdbg.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::mdbg_Execv(command::mdbg_proc& parent) {
+int command::mdbg_Execv(command::mdbg_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     mdbg_ToArgv(parent, args);
@@ -18341,7 +18341,7 @@ int command::mdbg_Execv(command::mdbg_proc& parent) {
 }
 
 // --- command.mdbg_proc.mdbg.ToCmdline
-algo::tempstr command::mdbg_ToCmdline(command::mdbg_proc& parent) {
+algo::tempstr command::mdbg_ToCmdline(command::mdbg_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::mdbg_PrintArgv(parent.cmd,retval);
@@ -18359,7 +18359,7 @@ algo::tempstr command::mdbg_ToCmdline(command::mdbg_proc& parent) {
 
 // --- command.mdbg_proc.mdbg.ToArgv
 // Form array from the command line
-void command::mdbg_ToArgv(command::mdbg_proc& parent, algo::StringAry& args) {
+void command::mdbg_ToArgv(command::mdbg_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -18456,7 +18456,7 @@ void command::mdbg_ToArgv(command::mdbg_proc& parent, algo::StringAry& args) {
 }
 
 // --- command.mdbg_proc..Uninit
-void command::mdbg_proc_Uninit(command::mdbg_proc& parent) {
+void command::mdbg_proc_Uninit(command::mdbg_proc& parent) throw() {
     command::mdbg_proc &row = parent; (void)row;
 
     // command.mdbg_proc.mdbg.Uninit (Exec)  //
@@ -18464,7 +18464,7 @@ void command::mdbg_proc_Uninit(command::mdbg_proc& parent) {
 }
 
 // --- command.mysql2ssim..ReadFieldMaybe
-bool command::mysql2ssim_ReadFieldMaybe(command::mysql2ssim& parent, algo::strptr field, algo::strptr strval) {
+bool command::mysql2ssim_ReadFieldMaybe(command::mysql2ssim& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -18511,7 +18511,7 @@ bool command::mysql2ssim_ReadFieldMaybe(command::mysql2ssim& parent, algo::strpt
 
 // --- command.mysql2ssim..ReadTupleMaybe
 // Read fields of command::mysql2ssim from attributes of ascii tuple TUPLE
-bool command::mysql2ssim_ReadTupleMaybe(command::mysql2ssim &parent, algo::Tuple &tuple) {
+bool command::mysql2ssim_ReadTupleMaybe(command::mysql2ssim &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -18529,7 +18529,7 @@ bool command::mysql2ssim_ReadTupleMaybe(command::mysql2ssim &parent, algo::Tuple
 // --- command.mysql2ssim..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::mysql2ssim_ToCmdline(command::mysql2ssim& row) {
+tempstr command::mysql2ssim_ToCmdline(command::mysql2ssim& row) throw() {
     tempstr ret;
     ret << "bin/mysql2ssim ";
     mysql2ssim_PrintArgv(row, ret);
@@ -18546,7 +18546,7 @@ tempstr command::mysql2ssim_ToCmdline(command::mysql2ssim& row) {
 // --- command.mysql2ssim..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.mysql2ssim.Argv  printfmt:Auto
-void command::mysql2ssim_PrintArgv(command::mysql2ssim& row, algo::cstring& str) {
+void command::mysql2ssim_PrintArgv(command::mysql2ssim& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -18597,7 +18597,7 @@ void command::mysql2ssim_PrintArgv(command::mysql2ssim& row, algo::cstring& str)
 }
 
 // --- command.mysql2ssim..GetAnon
-algo::strptr command::mysql2ssim_GetAnon(command::mysql2ssim &parent, i32 idx) {
+algo::strptr command::mysql2ssim_GetAnon(command::mysql2ssim &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("url", 3);
@@ -18610,7 +18610,7 @@ algo::strptr command::mysql2ssim_GetAnon(command::mysql2ssim &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::mysql2ssim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::mysql2ssim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_writessimfile: { // $comment
@@ -18656,7 +18656,7 @@ i32 command::mysql2ssim_NArgs(command::FieldId field, algo::strptr& out_dflt, bo
 // --- command.mysql2ssim_proc.mysql2ssim.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::mysql2ssim_Start(command::mysql2ssim_proc& parent) {
+int command::mysql2ssim_Start(command::mysql2ssim_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(mysql2ssim_ToCmdline(parent)); // maybe print command
@@ -18694,7 +18694,7 @@ int command::mysql2ssim_Start(command::mysql2ssim_proc& parent) {
 
 // --- command.mysql2ssim_proc.mysql2ssim.StartRead
 // Start subprocess & Read output
-algo::Fildes command::mysql2ssim_StartRead(command::mysql2ssim_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::mysql2ssim_StartRead(command::mysql2ssim_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -18716,7 +18716,7 @@ void command::mysql2ssim_Kill(command::mysql2ssim_proc& parent) {
 
 // --- command.mysql2ssim_proc.mysql2ssim.Wait
 // Wait for subprocess to return
-void command::mysql2ssim_Wait(command::mysql2ssim_proc& parent) {
+void command::mysql2ssim_Wait(command::mysql2ssim_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -18735,7 +18735,7 @@ void command::mysql2ssim_Wait(command::mysql2ssim_proc& parent) {
 // --- command.mysql2ssim_proc.mysql2ssim.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::mysql2ssim_Exec(command::mysql2ssim_proc& parent) {
+int command::mysql2ssim_Exec(command::mysql2ssim_proc& parent) throw() {
     mysql2ssim_Start(parent);
     mysql2ssim_Wait(parent);
     return parent.status;
@@ -18753,7 +18753,7 @@ void command::mysql2ssim_ExecX(command::mysql2ssim_proc& parent) {
 // --- command.mysql2ssim_proc.mysql2ssim.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::mysql2ssim_Execv(command::mysql2ssim_proc& parent) {
+int command::mysql2ssim_Execv(command::mysql2ssim_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     mysql2ssim_ToArgv(parent, args);
@@ -18769,7 +18769,7 @@ int command::mysql2ssim_Execv(command::mysql2ssim_proc& parent) {
 }
 
 // --- command.mysql2ssim_proc.mysql2ssim.ToCmdline
-algo::tempstr command::mysql2ssim_ToCmdline(command::mysql2ssim_proc& parent) {
+algo::tempstr command::mysql2ssim_ToCmdline(command::mysql2ssim_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::mysql2ssim_PrintArgv(parent.cmd,retval);
@@ -18787,7 +18787,7 @@ algo::tempstr command::mysql2ssim_ToCmdline(command::mysql2ssim_proc& parent) {
 
 // --- command.mysql2ssim_proc.mysql2ssim.ToArgv
 // Form array from the command line
-void command::mysql2ssim_ToArgv(command::mysql2ssim_proc& parent, algo::StringAry& args) {
+void command::mysql2ssim_ToArgv(command::mysql2ssim_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -18844,7 +18844,7 @@ void command::mysql2ssim_ToArgv(command::mysql2ssim_proc& parent, algo::StringAr
 }
 
 // --- command.mysql2ssim_proc..Uninit
-void command::mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) {
+void command::mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) throw() {
     command::mysql2ssim_proc &row = parent; (void)row;
 
     // command.mysql2ssim_proc.mysql2ssim.Uninit (Exec)  //
@@ -18853,21 +18853,21 @@ void command::mysql2ssim_proc_Uninit(command::mysql2ssim_proc& parent) {
 
 // --- command.orgfile.dedup.Print
 // Print back to string
-void command::dedup_Print(command::orgfile& parent, algo::cstring &out) {
+void command::dedup_Print(command::orgfile& parent, algo::cstring &out) throw() {
     Regx_Print(parent.dedup, out);
 }
 
 // --- command.orgfile.dedup.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::dedup_ReadStrptrMaybe(command::orgfile& parent, algo::strptr in) {
+bool command::dedup_ReadStrptrMaybe(command::orgfile& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.dedup, in, true);
     return retval;
 }
 
 // --- command.orgfile..ReadFieldMaybe
-bool command::orgfile_ReadFieldMaybe(command::orgfile& parent, algo::strptr field, algo::strptr strval) {
+bool command::orgfile_ReadFieldMaybe(command::orgfile& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -18906,7 +18906,7 @@ bool command::orgfile_ReadFieldMaybe(command::orgfile& parent, algo::strptr fiel
 
 // --- command.orgfile..ReadTupleMaybe
 // Read fields of command::orgfile from attributes of ascii tuple TUPLE
-bool command::orgfile_ReadTupleMaybe(command::orgfile &parent, algo::Tuple &tuple) {
+bool command::orgfile_ReadTupleMaybe(command::orgfile &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = orgfile_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -18931,7 +18931,7 @@ void command::orgfile_Init(command::orgfile& parent) {
 // --- command.orgfile..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::orgfile_ToCmdline(command::orgfile& row) {
+tempstr command::orgfile_ToCmdline(command::orgfile& row) throw() {
     tempstr ret;
     ret << "bin/orgfile ";
     orgfile_PrintArgv(row, ret);
@@ -18948,7 +18948,7 @@ tempstr command::orgfile_ToCmdline(command::orgfile& row) {
 // --- command.orgfile..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.orgfile.Argv  printfmt:Tuple
-void command::orgfile_PrintArgv(command::orgfile& row, algo::cstring& str) {
+void command::orgfile_PrintArgv(command::orgfile& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -18994,7 +18994,7 @@ void command::orgfile_PrintArgv(command::orgfile& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::orgfile_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::orgfile_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -19028,7 +19028,7 @@ i32 command::orgfile_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
 // --- command.orgfile_proc.orgfile.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::orgfile_Start(command::orgfile_proc& parent) {
+int command::orgfile_Start(command::orgfile_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(orgfile_ToCmdline(parent)); // maybe print command
@@ -19066,7 +19066,7 @@ int command::orgfile_Start(command::orgfile_proc& parent) {
 
 // --- command.orgfile_proc.orgfile.StartRead
 // Start subprocess & Read output
-algo::Fildes command::orgfile_StartRead(command::orgfile_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::orgfile_StartRead(command::orgfile_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -19088,7 +19088,7 @@ void command::orgfile_Kill(command::orgfile_proc& parent) {
 
 // --- command.orgfile_proc.orgfile.Wait
 // Wait for subprocess to return
-void command::orgfile_Wait(command::orgfile_proc& parent) {
+void command::orgfile_Wait(command::orgfile_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -19107,7 +19107,7 @@ void command::orgfile_Wait(command::orgfile_proc& parent) {
 // --- command.orgfile_proc.orgfile.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::orgfile_Exec(command::orgfile_proc& parent) {
+int command::orgfile_Exec(command::orgfile_proc& parent) throw() {
     orgfile_Start(parent);
     orgfile_Wait(parent);
     return parent.status;
@@ -19125,7 +19125,7 @@ void command::orgfile_ExecX(command::orgfile_proc& parent) {
 // --- command.orgfile_proc.orgfile.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::orgfile_Execv(command::orgfile_proc& parent) {
+int command::orgfile_Execv(command::orgfile_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     orgfile_ToArgv(parent, args);
@@ -19141,7 +19141,7 @@ int command::orgfile_Execv(command::orgfile_proc& parent) {
 }
 
 // --- command.orgfile_proc.orgfile.ToCmdline
-algo::tempstr command::orgfile_ToCmdline(command::orgfile_proc& parent) {
+algo::tempstr command::orgfile_ToCmdline(command::orgfile_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::orgfile_PrintArgv(parent.cmd,retval);
@@ -19159,7 +19159,7 @@ algo::tempstr command::orgfile_ToCmdline(command::orgfile_proc& parent) {
 
 // --- command.orgfile_proc.orgfile.ToArgv
 // Form array from the command line
-void command::orgfile_ToArgv(command::orgfile_proc& parent, algo::StringAry& args) {
+void command::orgfile_ToArgv(command::orgfile_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -19204,7 +19204,7 @@ void command::orgfile_ToArgv(command::orgfile_proc& parent, algo::StringAry& arg
 }
 
 // --- command.orgfile_proc..Uninit
-void command::orgfile_proc_Uninit(command::orgfile_proc& parent) {
+void command::orgfile_proc_Uninit(command::orgfile_proc& parent) throw() {
     command::orgfile_proc &row = parent; (void)row;
 
     // command.orgfile_proc.orgfile.Uninit (Exec)  //
@@ -19212,7 +19212,7 @@ void command::orgfile_proc_Uninit(command::orgfile_proc& parent) {
 }
 
 // --- command.samp_meng..ReadFieldMaybe
-bool command::samp_meng_ReadFieldMaybe(command::samp_meng& parent, algo::strptr field, algo::strptr strval) {
+bool command::samp_meng_ReadFieldMaybe(command::samp_meng& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -19231,7 +19231,7 @@ bool command::samp_meng_ReadFieldMaybe(command::samp_meng& parent, algo::strptr 
 
 // --- command.samp_meng..ReadTupleMaybe
 // Read fields of command::samp_meng from attributes of ascii tuple TUPLE
-bool command::samp_meng_ReadTupleMaybe(command::samp_meng &parent, algo::Tuple &tuple) {
+bool command::samp_meng_ReadTupleMaybe(command::samp_meng &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = samp_meng_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -19245,7 +19245,7 @@ bool command::samp_meng_ReadTupleMaybe(command::samp_meng &parent, algo::Tuple &
 // --- command.samp_meng..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::samp_meng_ToCmdline(command::samp_meng& row) {
+tempstr command::samp_meng_ToCmdline(command::samp_meng& row) throw() {
     tempstr ret;
     ret << "bin/samp_meng ";
     samp_meng_PrintArgv(row, ret);
@@ -19262,7 +19262,7 @@ tempstr command::samp_meng_ToCmdline(command::samp_meng& row) {
 // --- command.samp_meng..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.samp_meng.Argv  printfmt:Tuple
-void command::samp_meng_PrintArgv(command::samp_meng& row, algo::cstring& str) {
+void command::samp_meng_PrintArgv(command::samp_meng& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -19278,7 +19278,7 @@ void command::samp_meng_PrintArgv(command::samp_meng& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::samp_meng_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::samp_meng_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -19294,7 +19294,7 @@ i32 command::samp_meng_NArgs(command::FieldId field, algo::strptr& out_dflt, boo
 // --- command.samp_meng_proc.samp_meng.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::samp_meng_Start(command::samp_meng_proc& parent) {
+int command::samp_meng_Start(command::samp_meng_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(samp_meng_ToCmdline(parent)); // maybe print command
@@ -19332,7 +19332,7 @@ int command::samp_meng_Start(command::samp_meng_proc& parent) {
 
 // --- command.samp_meng_proc.samp_meng.StartRead
 // Start subprocess & Read output
-algo::Fildes command::samp_meng_StartRead(command::samp_meng_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::samp_meng_StartRead(command::samp_meng_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -19354,7 +19354,7 @@ void command::samp_meng_Kill(command::samp_meng_proc& parent) {
 
 // --- command.samp_meng_proc.samp_meng.Wait
 // Wait for subprocess to return
-void command::samp_meng_Wait(command::samp_meng_proc& parent) {
+void command::samp_meng_Wait(command::samp_meng_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -19373,7 +19373,7 @@ void command::samp_meng_Wait(command::samp_meng_proc& parent) {
 // --- command.samp_meng_proc.samp_meng.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::samp_meng_Exec(command::samp_meng_proc& parent) {
+int command::samp_meng_Exec(command::samp_meng_proc& parent) throw() {
     samp_meng_Start(parent);
     samp_meng_Wait(parent);
     return parent.status;
@@ -19391,7 +19391,7 @@ void command::samp_meng_ExecX(command::samp_meng_proc& parent) {
 // --- command.samp_meng_proc.samp_meng.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::samp_meng_Execv(command::samp_meng_proc& parent) {
+int command::samp_meng_Execv(command::samp_meng_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     samp_meng_ToArgv(parent, args);
@@ -19407,7 +19407,7 @@ int command::samp_meng_Execv(command::samp_meng_proc& parent) {
 }
 
 // --- command.samp_meng_proc.samp_meng.ToCmdline
-algo::tempstr command::samp_meng_ToCmdline(command::samp_meng_proc& parent) {
+algo::tempstr command::samp_meng_ToCmdline(command::samp_meng_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::samp_meng_PrintArgv(parent.cmd,retval);
@@ -19425,7 +19425,7 @@ algo::tempstr command::samp_meng_ToCmdline(command::samp_meng_proc& parent) {
 
 // --- command.samp_meng_proc.samp_meng.ToArgv
 // Form array from the command line
-void command::samp_meng_ToArgv(command::samp_meng_proc& parent, algo::StringAry& args) {
+void command::samp_meng_ToArgv(command::samp_meng_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -19440,7 +19440,7 @@ void command::samp_meng_ToArgv(command::samp_meng_proc& parent, algo::StringAry&
 }
 
 // --- command.samp_meng_proc..Uninit
-void command::samp_meng_proc_Uninit(command::samp_meng_proc& parent) {
+void command::samp_meng_proc_Uninit(command::samp_meng_proc& parent) throw() {
     command::samp_meng_proc &row = parent; (void)row;
 
     // command.samp_meng_proc.samp_meng.Uninit (Exec)  //
@@ -19450,7 +19450,7 @@ void command::samp_meng_proc_Uninit(command::samp_meng_proc& parent) {
 // --- command.samp_regx.style.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* command::style_ToCstr(const command::samp_regx& parent) {
+const char* command::style_ToCstr(const command::samp_regx& parent) throw() {
     const char *ret = NULL;
     switch(style_GetEnum(parent)) {
         case command_samp_regx_style_acr   : ret = "acr";  break;
@@ -19464,7 +19464,7 @@ const char* command::style_ToCstr(const command::samp_regx& parent) {
 // --- command.samp_regx.style.Print
 // Convert style to a string. First, attempt conversion to a known string.
 // If no string matches, print style as a numeric value.
-void command::style_Print(const command::samp_regx& parent, algo::cstring &lhs) {
+void command::style_Print(const command::samp_regx& parent, algo::cstring &lhs) throw() {
     const char *strval = style_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -19477,7 +19477,7 @@ void command::style_Print(const command::samp_regx& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool command::style_SetStrptrMaybe(command::samp_regx& parent, algo::strptr rhs) {
+bool command::style_SetStrptrMaybe(command::samp_regx& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -19514,13 +19514,13 @@ bool command::style_SetStrptrMaybe(command::samp_regx& parent, algo::strptr rhs)
 // --- command.samp_regx.style.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void command::style_SetStrptr(command::samp_regx& parent, algo::strptr rhs, command_samp_regx_style_Enum dflt) {
+void command::style_SetStrptr(command::samp_regx& parent, algo::strptr rhs, command_samp_regx_style_Enum dflt) throw() {
     if (!style_SetStrptrMaybe(parent,rhs)) style_SetEnum(parent,dflt);
 }
 
 // --- command.samp_regx.style.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool command::style_ReadStrptrMaybe(command::samp_regx& parent, algo::strptr rhs) {
+bool command::style_ReadStrptrMaybe(command::samp_regx& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = style_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -19530,7 +19530,7 @@ bool command::style_ReadStrptrMaybe(command::samp_regx& parent, algo::strptr rhs
 }
 
 // --- command.samp_regx..ReadFieldMaybe
-bool command::samp_regx_ReadFieldMaybe(command::samp_regx& parent, algo::strptr field, algo::strptr strval) {
+bool command::samp_regx_ReadFieldMaybe(command::samp_regx& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -19569,7 +19569,7 @@ bool command::samp_regx_ReadFieldMaybe(command::samp_regx& parent, algo::strptr 
 
 // --- command.samp_regx..ReadTupleMaybe
 // Read fields of command::samp_regx from attributes of ascii tuple TUPLE
-bool command::samp_regx_ReadTupleMaybe(command::samp_regx &parent, algo::Tuple &tuple) {
+bool command::samp_regx_ReadTupleMaybe(command::samp_regx &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -19587,7 +19587,7 @@ bool command::samp_regx_ReadTupleMaybe(command::samp_regx &parent, algo::Tuple &
 // --- command.samp_regx..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::samp_regx_ToCmdline(command::samp_regx& row) {
+tempstr command::samp_regx_ToCmdline(command::samp_regx& row) throw() {
     tempstr ret;
     ret << "bin/samp_regx ";
     samp_regx_PrintArgv(row, ret);
@@ -19604,7 +19604,7 @@ tempstr command::samp_regx_ToCmdline(command::samp_regx& row) {
 // --- command.samp_regx..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.samp_regx.Argv  printfmt:Tuple
-void command::samp_regx_PrintArgv(command::samp_regx& row, algo::cstring& str) {
+void command::samp_regx_PrintArgv(command::samp_regx& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -19643,7 +19643,7 @@ void command::samp_regx_PrintArgv(command::samp_regx& row, algo::cstring& str) {
 }
 
 // --- command.samp_regx..GetAnon
-algo::strptr command::samp_regx_GetAnon(command::samp_regx &parent, i32 idx) {
+algo::strptr command::samp_regx_GetAnon(command::samp_regx &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("expr", 4);
@@ -19656,7 +19656,7 @@ algo::strptr command::samp_regx_GetAnon(command::samp_regx &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::samp_regx_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::samp_regx_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -19690,7 +19690,7 @@ i32 command::samp_regx_NArgs(command::FieldId field, algo::strptr& out_dflt, boo
 // --- command.samp_regx_proc.samp_regx.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::samp_regx_Start(command::samp_regx_proc& parent) {
+int command::samp_regx_Start(command::samp_regx_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(samp_regx_ToCmdline(parent)); // maybe print command
@@ -19728,7 +19728,7 @@ int command::samp_regx_Start(command::samp_regx_proc& parent) {
 
 // --- command.samp_regx_proc.samp_regx.StartRead
 // Start subprocess & Read output
-algo::Fildes command::samp_regx_StartRead(command::samp_regx_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::samp_regx_StartRead(command::samp_regx_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -19750,7 +19750,7 @@ void command::samp_regx_Kill(command::samp_regx_proc& parent) {
 
 // --- command.samp_regx_proc.samp_regx.Wait
 // Wait for subprocess to return
-void command::samp_regx_Wait(command::samp_regx_proc& parent) {
+void command::samp_regx_Wait(command::samp_regx_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -19769,7 +19769,7 @@ void command::samp_regx_Wait(command::samp_regx_proc& parent) {
 // --- command.samp_regx_proc.samp_regx.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::samp_regx_Exec(command::samp_regx_proc& parent) {
+int command::samp_regx_Exec(command::samp_regx_proc& parent) throw() {
     samp_regx_Start(parent);
     samp_regx_Wait(parent);
     return parent.status;
@@ -19787,7 +19787,7 @@ void command::samp_regx_ExecX(command::samp_regx_proc& parent) {
 // --- command.samp_regx_proc.samp_regx.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::samp_regx_Execv(command::samp_regx_proc& parent) {
+int command::samp_regx_Execv(command::samp_regx_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     samp_regx_ToArgv(parent, args);
@@ -19803,7 +19803,7 @@ int command::samp_regx_Execv(command::samp_regx_proc& parent) {
 }
 
 // --- command.samp_regx_proc.samp_regx.ToCmdline
-algo::tempstr command::samp_regx_ToCmdline(command::samp_regx_proc& parent) {
+algo::tempstr command::samp_regx_ToCmdline(command::samp_regx_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::samp_regx_PrintArgv(parent.cmd,retval);
@@ -19821,7 +19821,7 @@ algo::tempstr command::samp_regx_ToCmdline(command::samp_regx_proc& parent) {
 
 // --- command.samp_regx_proc.samp_regx.ToArgv
 // Form array from the command line
-void command::samp_regx_ToArgv(command::samp_regx_proc& parent, algo::StringAry& args) {
+void command::samp_regx_ToArgv(command::samp_regx_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -19866,7 +19866,7 @@ void command::samp_regx_ToArgv(command::samp_regx_proc& parent, algo::StringAry&
 }
 
 // --- command.samp_regx_proc..Uninit
-void command::samp_regx_proc_Uninit(command::samp_regx_proc& parent) {
+void command::samp_regx_proc_Uninit(command::samp_regx_proc& parent) throw() {
     command::samp_regx_proc &row = parent; (void)row;
 
     // command.samp_regx_proc.samp_regx.Uninit (Exec)  //
@@ -19875,14 +19875,14 @@ void command::samp_regx_proc_Uninit(command::samp_regx_proc& parent) {
 
 // --- command.sandbox.name.Print
 // Print back to string
-void command::name_Print(command::sandbox& parent, algo::cstring &out) {
+void command::name_Print(command::sandbox& parent, algo::cstring &out) throw() {
     Regx_Print(parent.name, out);
 }
 
 // --- command.sandbox.name.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::name_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in) {
+bool command::name_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.name, in, true);
     return retval;
@@ -19892,7 +19892,7 @@ bool command::name_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> command::cmd_Addary(command::sandbox& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> command::cmd_Addary(command::sandbox& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.cmd_elems && rhs.elems < parent.cmd_elems + parent.cmd_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.sandbox.cmd  comment:'alias error: sub-array is being appended to the whole'");
@@ -19910,7 +19910,7 @@ algo::aryptr<algo::cstring> command::cmd_Addary(command::sandbox& parent, algo::
 // --- command.sandbox.cmd.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& command::cmd_Alloc(command::sandbox& parent) {
+algo::cstring& command::cmd_Alloc(command::sandbox& parent) throw() {
     cmd_Reserve(parent, 1);
     int n  = parent.cmd_n;
     int at = n;
@@ -19923,7 +19923,7 @@ algo::cstring& command::cmd_Alloc(command::sandbox& parent) {
 // --- command.sandbox.cmd.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& command::cmd_AllocAt(command::sandbox& parent, int at) {
+algo::cstring& command::cmd_AllocAt(command::sandbox& parent, int at) throw() {
     cmd_Reserve(parent, 1);
     int n  = parent.cmd_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -19938,7 +19938,7 @@ algo::cstring& command::cmd_AllocAt(command::sandbox& parent, int at) {
 
 // --- command.sandbox.cmd.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::cmd_AllocN(command::sandbox& parent, int n_elems) {
+algo::aryptr<algo::cstring> command::cmd_AllocN(command::sandbox& parent, int n_elems) throw() {
     cmd_Reserve(parent, n_elems);
     int old_n  = parent.cmd_n;
     int new_n = old_n + n_elems;
@@ -19952,7 +19952,7 @@ algo::aryptr<algo::cstring> command::cmd_AllocN(command::sandbox& parent, int n_
 
 // --- command.sandbox.cmd.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::cmd_Remove(command::sandbox& parent, u32 i) {
+void command::cmd_Remove(command::sandbox& parent, u32 i) throw() {
     u32 lim = parent.cmd_n;
     algo::cstring *elems = parent.cmd_elems;
     if (i < lim) {
@@ -19963,7 +19963,7 @@ void command::cmd_Remove(command::sandbox& parent, u32 i) {
 }
 
 // --- command.sandbox.cmd.RemoveAll
-void command::cmd_RemoveAll(command::sandbox& parent) {
+void command::cmd_RemoveAll(command::sandbox& parent) throw() {
     u32 n = parent.cmd_n;
     while (n > 0) {
         n -= 1;
@@ -19974,7 +19974,7 @@ void command::cmd_RemoveAll(command::sandbox& parent) {
 
 // --- command.sandbox.cmd.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::cmd_RemoveLast(command::sandbox& parent) {
+void command::cmd_RemoveLast(command::sandbox& parent) throw() {
     u64 n = parent.cmd_n;
     if (n > 0) {
         n -= 1;
@@ -19985,7 +19985,7 @@ void command::cmd_RemoveLast(command::sandbox& parent) {
 
 // --- command.sandbox.cmd.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::cmd_AbsReserve(command::sandbox& parent, int n) {
+void command::cmd_AbsReserve(command::sandbox& parent, int n) throw() {
     u32 old_max  = parent.cmd_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -20000,7 +20000,7 @@ void command::cmd_AbsReserve(command::sandbox& parent, int n) {
 
 // --- command.sandbox.cmd.Setary
 // Copy contents of RHS to PARENT.
-void command::cmd_Setary(command::sandbox& parent, command::sandbox &rhs) {
+void command::cmd_Setary(command::sandbox& parent, command::sandbox &rhs) throw() {
     cmd_RemoveAll(parent);
     int nnew = rhs.cmd_n;
     cmd_Reserve(parent, nnew); // reserve space
@@ -20013,14 +20013,14 @@ void command::cmd_Setary(command::sandbox& parent, command::sandbox &rhs) {
 // --- command.sandbox.cmd.Setary2
 // Copy specified array into cmd, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::cmd_Setary(command::sandbox& parent, const algo::aryptr<algo::cstring> &rhs) {
+void command::cmd_Setary(command::sandbox& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     cmd_RemoveAll(parent);
     cmd_Addary(parent, rhs);
 }
 
 // --- command.sandbox.cmd.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::cmd_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> command::cmd_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) throw() {
     cmd_Reserve(parent, n_elems);
     int old_n  = parent.cmd_n;
     int new_n = old_n + n_elems;
@@ -20036,7 +20036,7 @@ algo::aryptr<algo::cstring> command::cmd_AllocNVal(command::sandbox& parent, int
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::cmd_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) {
+bool command::cmd_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = cmd_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -20050,7 +20050,7 @@ bool command::cmd_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str)
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> command::files_Addary(command::sandbox& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> command::files_Addary(command::sandbox& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.files_elems && rhs.elems < parent.files_elems + parent.files_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.sandbox.files  comment:'alias error: sub-array is being appended to the whole'");
@@ -20068,7 +20068,7 @@ algo::aryptr<algo::cstring> command::files_Addary(command::sandbox& parent, algo
 // --- command.sandbox.files.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& command::files_Alloc(command::sandbox& parent) {
+algo::cstring& command::files_Alloc(command::sandbox& parent) throw() {
     files_Reserve(parent, 1);
     int n  = parent.files_n;
     int at = n;
@@ -20081,7 +20081,7 @@ algo::cstring& command::files_Alloc(command::sandbox& parent) {
 // --- command.sandbox.files.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& command::files_AllocAt(command::sandbox& parent, int at) {
+algo::cstring& command::files_AllocAt(command::sandbox& parent, int at) throw() {
     files_Reserve(parent, 1);
     int n  = parent.files_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -20096,7 +20096,7 @@ algo::cstring& command::files_AllocAt(command::sandbox& parent, int at) {
 
 // --- command.sandbox.files.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::files_AllocN(command::sandbox& parent, int n_elems) {
+algo::aryptr<algo::cstring> command::files_AllocN(command::sandbox& parent, int n_elems) throw() {
     files_Reserve(parent, n_elems);
     int old_n  = parent.files_n;
     int new_n = old_n + n_elems;
@@ -20110,7 +20110,7 @@ algo::aryptr<algo::cstring> command::files_AllocN(command::sandbox& parent, int 
 
 // --- command.sandbox.files.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::files_Remove(command::sandbox& parent, u32 i) {
+void command::files_Remove(command::sandbox& parent, u32 i) throw() {
     u32 lim = parent.files_n;
     algo::cstring *elems = parent.files_elems;
     if (i < lim) {
@@ -20121,7 +20121,7 @@ void command::files_Remove(command::sandbox& parent, u32 i) {
 }
 
 // --- command.sandbox.files.RemoveAll
-void command::files_RemoveAll(command::sandbox& parent) {
+void command::files_RemoveAll(command::sandbox& parent) throw() {
     u32 n = parent.files_n;
     while (n > 0) {
         n -= 1;
@@ -20132,7 +20132,7 @@ void command::files_RemoveAll(command::sandbox& parent) {
 
 // --- command.sandbox.files.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::files_RemoveLast(command::sandbox& parent) {
+void command::files_RemoveLast(command::sandbox& parent) throw() {
     u64 n = parent.files_n;
     if (n > 0) {
         n -= 1;
@@ -20143,7 +20143,7 @@ void command::files_RemoveLast(command::sandbox& parent) {
 
 // --- command.sandbox.files.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::files_AbsReserve(command::sandbox& parent, int n) {
+void command::files_AbsReserve(command::sandbox& parent, int n) throw() {
     u32 old_max  = parent.files_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -20158,7 +20158,7 @@ void command::files_AbsReserve(command::sandbox& parent, int n) {
 
 // --- command.sandbox.files.Setary
 // Copy contents of RHS to PARENT.
-void command::files_Setary(command::sandbox& parent, command::sandbox &rhs) {
+void command::files_Setary(command::sandbox& parent, command::sandbox &rhs) throw() {
     files_RemoveAll(parent);
     int nnew = rhs.files_n;
     files_Reserve(parent, nnew); // reserve space
@@ -20171,14 +20171,14 @@ void command::files_Setary(command::sandbox& parent, command::sandbox &rhs) {
 // --- command.sandbox.files.Setary2
 // Copy specified array into files, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::files_Setary(command::sandbox& parent, const algo::aryptr<algo::cstring> &rhs) {
+void command::files_Setary(command::sandbox& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     files_RemoveAll(parent);
     files_Addary(parent, rhs);
 }
 
 // --- command.sandbox.files.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::files_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> command::files_AllocNVal(command::sandbox& parent, int n_elems, const algo::cstring& val) throw() {
     files_Reserve(parent, n_elems);
     int old_n  = parent.files_n;
     int new_n = old_n + n_elems;
@@ -20194,7 +20194,7 @@ algo::aryptr<algo::cstring> command::files_AllocNVal(command::sandbox& parent, i
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::files_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) {
+bool command::files_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = files_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -20205,7 +20205,7 @@ bool command::files_ReadStrptrMaybe(command::sandbox& parent, algo::strptr in_st
 }
 
 // --- command.sandbox..ReadFieldMaybe
-bool command::sandbox_ReadFieldMaybe(command::sandbox& parent, algo::strptr field, algo::strptr strval) {
+bool command::sandbox_ReadFieldMaybe(command::sandbox& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -20276,7 +20276,7 @@ bool command::sandbox_ReadFieldMaybe(command::sandbox& parent, algo::strptr fiel
 
 // --- command.sandbox..ReadTupleMaybe
 // Read fields of command::sandbox from attributes of ascii tuple TUPLE
-bool command::sandbox_ReadTupleMaybe(command::sandbox &parent, algo::Tuple &tuple) {
+bool command::sandbox_ReadTupleMaybe(command::sandbox &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -20314,7 +20314,7 @@ void command::sandbox_Init(command::sandbox& parent) {
 }
 
 // --- command.sandbox..Uninit
-void command::sandbox_Uninit(command::sandbox& parent) {
+void command::sandbox_Uninit(command::sandbox& parent) throw() {
     command::sandbox &row = parent; (void)row;
 
     // command.sandbox.files.Uninit (Tary)  //Shell regx to diff
@@ -20333,7 +20333,7 @@ void command::sandbox_Uninit(command::sandbox& parent) {
 // --- command.sandbox..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::sandbox_ToCmdline(command::sandbox& row) {
+tempstr command::sandbox_ToCmdline(command::sandbox& row) throw() {
     tempstr ret;
     ret << "bin/sandbox ";
     sandbox_PrintArgv(row, ret);
@@ -20350,7 +20350,7 @@ tempstr command::sandbox_ToCmdline(command::sandbox& row) {
 // --- command.sandbox..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.sandbox.Argv  printfmt:Tuple
-void command::sandbox_PrintArgv(command::sandbox& row, algo::cstring& str) {
+void command::sandbox_PrintArgv(command::sandbox& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -20439,7 +20439,7 @@ void command::sandbox_PrintArgv(command::sandbox& row, algo::cstring& str) {
 }
 
 // --- command.sandbox..GetAnon
-algo::strptr command::sandbox_GetAnon(command::sandbox &parent, i32 idx) {
+algo::strptr command::sandbox_GetAnon(command::sandbox &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("name", 4);
@@ -20451,7 +20451,7 @@ algo::strptr command::sandbox_GetAnon(command::sandbox &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::sandbox_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::sandbox_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -20521,7 +20521,7 @@ i32 command::sandbox_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
 }
 
 // --- command.sandbox..AssignOp
-command::sandbox& command::sandbox::operator =(const command::sandbox &rhs) {
+command::sandbox& command::sandbox::operator =(const command::sandbox &rhs) throw() {
     in = rhs.in;
     name = rhs.name;
     create = rhs.create;
@@ -20540,7 +20540,7 @@ command::sandbox& command::sandbox::operator =(const command::sandbox &rhs) {
 }
 
 // --- command.sandbox..CopyCtor
- command::sandbox::sandbox(const command::sandbox &rhs)
+ command::sandbox::sandbox(const command::sandbox &rhs) throw()
     : in(rhs.in)
     , name(rhs.name)
     , create(rhs.create)
@@ -20567,7 +20567,7 @@ command::sandbox& command::sandbox::operator =(const command::sandbox &rhs) {
 // --- command.sandbox_proc.sandbox.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::sandbox_Start(command::sandbox_proc& parent) {
+int command::sandbox_Start(command::sandbox_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(sandbox_ToCmdline(parent)); // maybe print command
@@ -20605,7 +20605,7 @@ int command::sandbox_Start(command::sandbox_proc& parent) {
 
 // --- command.sandbox_proc.sandbox.StartRead
 // Start subprocess & Read output
-algo::Fildes command::sandbox_StartRead(command::sandbox_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::sandbox_StartRead(command::sandbox_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -20627,7 +20627,7 @@ void command::sandbox_Kill(command::sandbox_proc& parent) {
 
 // --- command.sandbox_proc.sandbox.Wait
 // Wait for subprocess to return
-void command::sandbox_Wait(command::sandbox_proc& parent) {
+void command::sandbox_Wait(command::sandbox_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -20646,7 +20646,7 @@ void command::sandbox_Wait(command::sandbox_proc& parent) {
 // --- command.sandbox_proc.sandbox.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::sandbox_Exec(command::sandbox_proc& parent) {
+int command::sandbox_Exec(command::sandbox_proc& parent) throw() {
     sandbox_Start(parent);
     sandbox_Wait(parent);
     return parent.status;
@@ -20664,7 +20664,7 @@ void command::sandbox_ExecX(command::sandbox_proc& parent) {
 // --- command.sandbox_proc.sandbox.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::sandbox_Execv(command::sandbox_proc& parent) {
+int command::sandbox_Execv(command::sandbox_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     sandbox_ToArgv(parent, args);
@@ -20680,7 +20680,7 @@ int command::sandbox_Execv(command::sandbox_proc& parent) {
 }
 
 // --- command.sandbox_proc.sandbox.ToCmdline
-algo::tempstr command::sandbox_ToCmdline(command::sandbox_proc& parent) {
+algo::tempstr command::sandbox_ToCmdline(command::sandbox_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::sandbox_PrintArgv(parent.cmd,retval);
@@ -20698,7 +20698,7 @@ algo::tempstr command::sandbox_ToCmdline(command::sandbox_proc& parent) {
 
 // --- command.sandbox_proc.sandbox.ToArgv
 // Form array from the command line
-void command::sandbox_ToArgv(command::sandbox_proc& parent, algo::StringAry& args) {
+void command::sandbox_ToArgv(command::sandbox_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -20789,7 +20789,7 @@ void command::sandbox_ToArgv(command::sandbox_proc& parent, algo::StringAry& arg
 }
 
 // --- command.sandbox_proc..Uninit
-void command::sandbox_proc_Uninit(command::sandbox_proc& parent) {
+void command::sandbox_proc_Uninit(command::sandbox_proc& parent) throw() {
     command::sandbox_proc &row = parent; (void)row;
 
     // command.sandbox_proc.sandbox.Uninit (Exec)  //
@@ -20798,14 +20798,14 @@ void command::sandbox_proc_Uninit(command::sandbox_proc& parent) {
 
 // --- command.src_func.target.Print
 // Print back to string
-void command::target_Print(command::src_func& parent, algo::cstring &out) {
+void command::target_Print(command::src_func& parent, algo::cstring &out) throw() {
     Regx_Print(parent.target, out);
 }
 
 // --- command.src_func.target.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::target_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+bool command::target_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.target, in, true);
     return retval;
@@ -20813,14 +20813,14 @@ bool command::target_ReadStrptrMaybe(command::src_func& parent, algo::strptr in)
 
 // --- command.src_func.name.Print
 // Print back to string
-void command::name_Print(command::src_func& parent, algo::cstring &out) {
+void command::name_Print(command::src_func& parent, algo::cstring &out) throw() {
     Regx_Print(parent.name, out);
 }
 
 // --- command.src_func.name.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::name_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+bool command::name_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.name, in, true);
     return retval;
@@ -20828,14 +20828,14 @@ bool command::name_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
 
 // --- command.src_func.body.Print
 // Print back to string
-void command::body_Print(command::src_func& parent, algo::cstring &out) {
+void command::body_Print(command::src_func& parent, algo::cstring &out) throw() {
     Regx_Print(parent.body, out);
 }
 
 // --- command.src_func.body.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::body_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+bool command::body_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.body, in, true);
     return retval;
@@ -20843,14 +20843,14 @@ bool command::body_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
 
 // --- command.src_func.targsrc.Print
 // Print back to string
-void command::targsrc_Print(command::src_func& parent, algo::cstring &out) {
+void command::targsrc_Print(command::src_func& parent, algo::cstring &out) throw() {
     Regx_Print(parent.targsrc, out);
 }
 
 // --- command.src_func.targsrc.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::targsrc_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+bool command::targsrc_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.targsrc, in, true);
     return retval;
@@ -20858,14 +20858,14 @@ bool command::targsrc_ReadStrptrMaybe(command::src_func& parent, algo::strptr in
 
 // --- command.src_func.func.Print
 // Print back to string
-void command::func_Print(command::src_func& parent, algo::cstring &out) {
+void command::func_Print(command::src_func& parent, algo::cstring &out) throw() {
     Regx_Print(parent.func, out);
 }
 
 // --- command.src_func.func.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::func_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+bool command::func_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.func, in, true);
     return retval;
@@ -20873,21 +20873,21 @@ bool command::func_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
 
 // --- command.src_func.comment.Print
 // Print back to string
-void command::comment_Print(command::src_func& parent, algo::cstring &out) {
+void command::comment_Print(command::src_func& parent, algo::cstring &out) throw() {
     Regx_Print(parent.comment, out);
 }
 
 // --- command.src_func.comment.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::comment_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) {
+bool command::comment_ReadStrptrMaybe(command::src_func& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.comment, in, true);
     return retval;
 }
 
 // --- command.src_func..ReadFieldMaybe
-bool command::src_func_ReadFieldMaybe(command::src_func& parent, algo::strptr field, algo::strptr strval) {
+bool command::src_func_ReadFieldMaybe(command::src_func& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -20986,7 +20986,7 @@ bool command::src_func_ReadFieldMaybe(command::src_func& parent, algo::strptr fi
 
 // --- command.src_func..ReadTupleMaybe
 // Read fields of command::src_func from attributes of ascii tuple TUPLE
-bool command::src_func_ReadTupleMaybe(command::src_func &parent, algo::Tuple &tuple) {
+bool command::src_func_ReadTupleMaybe(command::src_func &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -21030,7 +21030,7 @@ void command::src_func_Init(command::src_func& parent) {
 // --- command.src_func..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::src_func_ToCmdline(command::src_func& row) {
+tempstr command::src_func_ToCmdline(command::src_func& row) throw() {
     tempstr ret;
     ret << "bin/src_func ";
     src_func_PrintArgv(row, ret);
@@ -21047,7 +21047,7 @@ tempstr command::src_func_ToCmdline(command::src_func& row) {
 // --- command.src_func..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.src_func.Argv  printfmt:Tuple
-void command::src_func_PrintArgv(command::src_func& row, algo::cstring& str) {
+void command::src_func_PrintArgv(command::src_func& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -21174,7 +21174,7 @@ void command::src_func_PrintArgv(command::src_func& row, algo::cstring& str) {
 }
 
 // --- command.src_func..GetAnon
-algo::strptr command::src_func_GetAnon(command::src_func &parent, i32 idx) {
+algo::strptr command::src_func_GetAnon(command::src_func &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("target", 6);
@@ -21188,7 +21188,7 @@ algo::strptr command::src_func_GetAnon(command::src_func &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::src_func_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::src_func_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -21289,7 +21289,7 @@ i32 command::src_func_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
 // --- command.src_func_proc.src_func.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::src_func_Start(command::src_func_proc& parent) {
+int command::src_func_Start(command::src_func_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(src_func_ToCmdline(parent)); // maybe print command
@@ -21327,7 +21327,7 @@ int command::src_func_Start(command::src_func_proc& parent) {
 
 // --- command.src_func_proc.src_func.StartRead
 // Start subprocess & Read output
-algo::Fildes command::src_func_StartRead(command::src_func_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::src_func_StartRead(command::src_func_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -21349,7 +21349,7 @@ void command::src_func_Kill(command::src_func_proc& parent) {
 
 // --- command.src_func_proc.src_func.Wait
 // Wait for subprocess to return
-void command::src_func_Wait(command::src_func_proc& parent) {
+void command::src_func_Wait(command::src_func_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -21368,7 +21368,7 @@ void command::src_func_Wait(command::src_func_proc& parent) {
 // --- command.src_func_proc.src_func.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::src_func_Exec(command::src_func_proc& parent) {
+int command::src_func_Exec(command::src_func_proc& parent) throw() {
     src_func_Start(parent);
     src_func_Wait(parent);
     return parent.status;
@@ -21386,7 +21386,7 @@ void command::src_func_ExecX(command::src_func_proc& parent) {
 // --- command.src_func_proc.src_func.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::src_func_Execv(command::src_func_proc& parent) {
+int command::src_func_Execv(command::src_func_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     src_func_ToArgv(parent, args);
@@ -21402,7 +21402,7 @@ int command::src_func_Execv(command::src_func_proc& parent) {
 }
 
 // --- command.src_func_proc.src_func.ToCmdline
-algo::tempstr command::src_func_ToCmdline(command::src_func_proc& parent) {
+algo::tempstr command::src_func_ToCmdline(command::src_func_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::src_func_PrintArgv(parent.cmd,retval);
@@ -21420,7 +21420,7 @@ algo::tempstr command::src_func_ToCmdline(command::src_func_proc& parent) {
 
 // --- command.src_func_proc.src_func.ToArgv
 // Form array from the command line
-void command::src_func_ToArgv(command::src_func_proc& parent, algo::StringAry& args) {
+void command::src_func_ToArgv(command::src_func_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -21555,7 +21555,7 @@ void command::src_func_ToArgv(command::src_func_proc& parent, algo::StringAry& a
 }
 
 // --- command.src_func_proc..Uninit
-void command::src_func_proc_Uninit(command::src_func_proc& parent) {
+void command::src_func_proc_Uninit(command::src_func_proc& parent) throw() {
     command::src_func_proc &row = parent; (void)row;
 
     // command.src_func_proc.src_func.Uninit (Exec)  //
@@ -21564,14 +21564,14 @@ void command::src_func_proc_Uninit(command::src_func_proc& parent) {
 
 // --- command.src_hdr.targsrc.Print
 // Print back to string
-void command::targsrc_Print(command::src_hdr& parent, algo::cstring &out) {
+void command::targsrc_Print(command::src_hdr& parent, algo::cstring &out) throw() {
     Regx_Print(parent.targsrc, out);
 }
 
 // --- command.src_hdr.targsrc.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::targsrc_ReadStrptrMaybe(command::src_hdr& parent, algo::strptr in) {
+bool command::targsrc_ReadStrptrMaybe(command::src_hdr& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.targsrc, in, true);
     return retval;
@@ -21579,21 +21579,21 @@ bool command::targsrc_ReadStrptrMaybe(command::src_hdr& parent, algo::strptr in)
 
 // --- command.src_hdr.scriptfile.Print
 // Print back to string
-void command::scriptfile_Print(command::src_hdr& parent, algo::cstring &out) {
+void command::scriptfile_Print(command::src_hdr& parent, algo::cstring &out) throw() {
     Regx_Print(parent.scriptfile, out);
 }
 
 // --- command.src_hdr.scriptfile.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::scriptfile_ReadStrptrMaybe(command::src_hdr& parent, algo::strptr in) {
+bool command::scriptfile_ReadStrptrMaybe(command::src_hdr& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.scriptfile, in, true);
     return retval;
 }
 
 // --- command.src_hdr..ReadFieldMaybe
-bool command::src_hdr_ReadFieldMaybe(command::src_hdr& parent, algo::strptr field, algo::strptr strval) {
+bool command::src_hdr_ReadFieldMaybe(command::src_hdr& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -21632,7 +21632,7 @@ bool command::src_hdr_ReadFieldMaybe(command::src_hdr& parent, algo::strptr fiel
 
 // --- command.src_hdr..ReadTupleMaybe
 // Read fields of command::src_hdr from attributes of ascii tuple TUPLE
-bool command::src_hdr_ReadTupleMaybe(command::src_hdr &parent, algo::Tuple &tuple) {
+bool command::src_hdr_ReadTupleMaybe(command::src_hdr &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = src_hdr_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -21657,7 +21657,7 @@ void command::src_hdr_Init(command::src_hdr& parent) {
 // --- command.src_hdr..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::src_hdr_ToCmdline(command::src_hdr& row) {
+tempstr command::src_hdr_ToCmdline(command::src_hdr& row) throw() {
     tempstr ret;
     ret << "bin/src_hdr ";
     src_hdr_PrintArgv(row, ret);
@@ -21674,7 +21674,7 @@ tempstr command::src_hdr_ToCmdline(command::src_hdr& row) {
 // --- command.src_hdr..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.src_hdr.Argv  printfmt:Tuple
-void command::src_hdr_PrintArgv(command::src_hdr& row, algo::cstring& str) {
+void command::src_hdr_PrintArgv(command::src_hdr& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -21720,7 +21720,7 @@ void command::src_hdr_PrintArgv(command::src_hdr& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::src_hdr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::src_hdr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -21756,7 +21756,7 @@ i32 command::src_hdr_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
 // --- command.src_hdr_proc.src_hdr.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::src_hdr_Start(command::src_hdr_proc& parent) {
+int command::src_hdr_Start(command::src_hdr_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(src_hdr_ToCmdline(parent)); // maybe print command
@@ -21794,7 +21794,7 @@ int command::src_hdr_Start(command::src_hdr_proc& parent) {
 
 // --- command.src_hdr_proc.src_hdr.StartRead
 // Start subprocess & Read output
-algo::Fildes command::src_hdr_StartRead(command::src_hdr_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::src_hdr_StartRead(command::src_hdr_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -21816,7 +21816,7 @@ void command::src_hdr_Kill(command::src_hdr_proc& parent) {
 
 // --- command.src_hdr_proc.src_hdr.Wait
 // Wait for subprocess to return
-void command::src_hdr_Wait(command::src_hdr_proc& parent) {
+void command::src_hdr_Wait(command::src_hdr_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -21835,7 +21835,7 @@ void command::src_hdr_Wait(command::src_hdr_proc& parent) {
 // --- command.src_hdr_proc.src_hdr.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::src_hdr_Exec(command::src_hdr_proc& parent) {
+int command::src_hdr_Exec(command::src_hdr_proc& parent) throw() {
     src_hdr_Start(parent);
     src_hdr_Wait(parent);
     return parent.status;
@@ -21853,7 +21853,7 @@ void command::src_hdr_ExecX(command::src_hdr_proc& parent) {
 // --- command.src_hdr_proc.src_hdr.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::src_hdr_Execv(command::src_hdr_proc& parent) {
+int command::src_hdr_Execv(command::src_hdr_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     src_hdr_ToArgv(parent, args);
@@ -21869,7 +21869,7 @@ int command::src_hdr_Execv(command::src_hdr_proc& parent) {
 }
 
 // --- command.src_hdr_proc.src_hdr.ToCmdline
-algo::tempstr command::src_hdr_ToCmdline(command::src_hdr_proc& parent) {
+algo::tempstr command::src_hdr_ToCmdline(command::src_hdr_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::src_hdr_PrintArgv(parent.cmd,retval);
@@ -21887,7 +21887,7 @@ algo::tempstr command::src_hdr_ToCmdline(command::src_hdr_proc& parent) {
 
 // --- command.src_hdr_proc.src_hdr.ToArgv
 // Form array from the command line
-void command::src_hdr_ToArgv(command::src_hdr_proc& parent, algo::StringAry& args) {
+void command::src_hdr_ToArgv(command::src_hdr_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -21932,7 +21932,7 @@ void command::src_hdr_ToArgv(command::src_hdr_proc& parent, algo::StringAry& arg
 }
 
 // --- command.src_hdr_proc..Uninit
-void command::src_hdr_proc_Uninit(command::src_hdr_proc& parent) {
+void command::src_hdr_proc_Uninit(command::src_hdr_proc& parent) throw() {
     command::src_hdr_proc &row = parent; (void)row;
 
     // command.src_hdr_proc.src_hdr.Uninit (Exec)  //
@@ -21941,14 +21941,14 @@ void command::src_hdr_proc_Uninit(command::src_hdr_proc& parent) {
 
 // --- command.src_lim.srcfile.Print
 // Print back to string
-void command::srcfile_Print(command::src_lim& parent, algo::cstring &out) {
+void command::srcfile_Print(command::src_lim& parent, algo::cstring &out) throw() {
     Regx_Print(parent.srcfile, out);
 }
 
 // --- command.src_lim.srcfile.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::srcfile_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in) {
+bool command::srcfile_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.srcfile, in, true);
     return retval;
@@ -21956,21 +21956,21 @@ bool command::srcfile_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in)
 
 // --- command.src_lim.badline.Print
 // Print back to string
-void command::badline_Print(command::src_lim& parent, algo::cstring &out) {
+void command::badline_Print(command::src_lim& parent, algo::cstring &out) throw() {
     Regx_Print(parent.badline, out);
 }
 
 // --- command.src_lim.badline.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::badline_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in) {
+bool command::badline_ReadStrptrMaybe(command::src_lim& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.badline, in, true);
     return retval;
 }
 
 // --- command.src_lim..ReadFieldMaybe
-bool command::src_lim_ReadFieldMaybe(command::src_lim& parent, algo::strptr field, algo::strptr strval) {
+bool command::src_lim_ReadFieldMaybe(command::src_lim& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -22017,7 +22017,7 @@ bool command::src_lim_ReadFieldMaybe(command::src_lim& parent, algo::strptr fiel
 
 // --- command.src_lim..ReadTupleMaybe
 // Read fields of command::src_lim from attributes of ascii tuple TUPLE
-bool command::src_lim_ReadTupleMaybe(command::src_lim &parent, algo::Tuple &tuple) {
+bool command::src_lim_ReadTupleMaybe(command::src_lim &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = src_lim_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -22044,7 +22044,7 @@ void command::src_lim_Init(command::src_lim& parent) {
 // --- command.src_lim..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::src_lim_ToCmdline(command::src_lim& row) {
+tempstr command::src_lim_ToCmdline(command::src_lim& row) throw() {
     tempstr ret;
     ret << "bin/src_lim ";
     src_lim_PrintArgv(row, ret);
@@ -22061,7 +22061,7 @@ tempstr command::src_lim_ToCmdline(command::src_lim& row) {
 // --- command.src_lim..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.src_lim.Argv  printfmt:Tuple
-void command::src_lim_PrintArgv(command::src_lim& row, algo::cstring& str) {
+void command::src_lim_PrintArgv(command::src_lim& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -22119,7 +22119,7 @@ void command::src_lim_PrintArgv(command::src_lim& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::src_lim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::src_lim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -22165,7 +22165,7 @@ i32 command::src_lim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
 // --- command.src_lim_proc.src_lim.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::src_lim_Start(command::src_lim_proc& parent) {
+int command::src_lim_Start(command::src_lim_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(src_lim_ToCmdline(parent)); // maybe print command
@@ -22203,7 +22203,7 @@ int command::src_lim_Start(command::src_lim_proc& parent) {
 
 // --- command.src_lim_proc.src_lim.StartRead
 // Start subprocess & Read output
-algo::Fildes command::src_lim_StartRead(command::src_lim_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::src_lim_StartRead(command::src_lim_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -22225,7 +22225,7 @@ void command::src_lim_Kill(command::src_lim_proc& parent) {
 
 // --- command.src_lim_proc.src_lim.Wait
 // Wait for subprocess to return
-void command::src_lim_Wait(command::src_lim_proc& parent) {
+void command::src_lim_Wait(command::src_lim_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -22244,7 +22244,7 @@ void command::src_lim_Wait(command::src_lim_proc& parent) {
 // --- command.src_lim_proc.src_lim.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::src_lim_Exec(command::src_lim_proc& parent) {
+int command::src_lim_Exec(command::src_lim_proc& parent) throw() {
     src_lim_Start(parent);
     src_lim_Wait(parent);
     return parent.status;
@@ -22262,7 +22262,7 @@ void command::src_lim_ExecX(command::src_lim_proc& parent) {
 // --- command.src_lim_proc.src_lim.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::src_lim_Execv(command::src_lim_proc& parent) {
+int command::src_lim_Execv(command::src_lim_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     src_lim_ToArgv(parent, args);
@@ -22278,7 +22278,7 @@ int command::src_lim_Execv(command::src_lim_proc& parent) {
 }
 
 // --- command.src_lim_proc.src_lim.ToCmdline
-algo::tempstr command::src_lim_ToCmdline(command::src_lim_proc& parent) {
+algo::tempstr command::src_lim_ToCmdline(command::src_lim_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::src_lim_PrintArgv(parent.cmd,retval);
@@ -22296,7 +22296,7 @@ algo::tempstr command::src_lim_ToCmdline(command::src_lim_proc& parent) {
 
 // --- command.src_lim_proc.src_lim.ToArgv
 // Form array from the command line
-void command::src_lim_ToArgv(command::src_lim_proc& parent, algo::StringAry& args) {
+void command::src_lim_ToArgv(command::src_lim_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -22353,7 +22353,7 @@ void command::src_lim_ToArgv(command::src_lim_proc& parent, algo::StringAry& arg
 }
 
 // --- command.src_lim_proc..Uninit
-void command::src_lim_proc_Uninit(command::src_lim_proc& parent) {
+void command::src_lim_proc_Uninit(command::src_lim_proc& parent) throw() {
     command::src_lim_proc &row = parent; (void)row;
 
     // command.src_lim_proc.src_lim.Uninit (Exec)  //
@@ -22361,7 +22361,7 @@ void command::src_lim_proc_Uninit(command::src_lim_proc& parent) {
 }
 
 // --- command.ssim2csv..ReadFieldMaybe
-bool command::ssim2csv_ReadFieldMaybe(command::ssim2csv& parent, algo::strptr field, algo::strptr strval) {
+bool command::ssim2csv_ReadFieldMaybe(command::ssim2csv& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -22384,7 +22384,7 @@ bool command::ssim2csv_ReadFieldMaybe(command::ssim2csv& parent, algo::strptr fi
 
 // --- command.ssim2csv..ReadTupleMaybe
 // Read fields of command::ssim2csv from attributes of ascii tuple TUPLE
-bool command::ssim2csv_ReadTupleMaybe(command::ssim2csv &parent, algo::Tuple &tuple) {
+bool command::ssim2csv_ReadTupleMaybe(command::ssim2csv &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = ssim2csv_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -22398,7 +22398,7 @@ bool command::ssim2csv_ReadTupleMaybe(command::ssim2csv &parent, algo::Tuple &tu
 // --- command.ssim2csv..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::ssim2csv_ToCmdline(command::ssim2csv& row) {
+tempstr command::ssim2csv_ToCmdline(command::ssim2csv& row) throw() {
     tempstr ret;
     ret << "bin/ssim2csv ";
     ssim2csv_PrintArgv(row, ret);
@@ -22415,7 +22415,7 @@ tempstr command::ssim2csv_ToCmdline(command::ssim2csv& row) {
 // --- command.ssim2csv..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.ssim2csv.Argv  printfmt:Auto
-void command::ssim2csv_PrintArgv(command::ssim2csv& row, algo::cstring& str) {
+void command::ssim2csv_PrintArgv(command::ssim2csv& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -22437,7 +22437,7 @@ void command::ssim2csv_PrintArgv(command::ssim2csv& row, algo::cstring& str) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::ssim2csv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::ssim2csv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_expand: { // $comment
@@ -22457,7 +22457,7 @@ i32 command::ssim2csv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
 // --- command.ssim2csv_proc.ssim2csv.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::ssim2csv_Start(command::ssim2csv_proc& parent) {
+int command::ssim2csv_Start(command::ssim2csv_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(ssim2csv_ToCmdline(parent)); // maybe print command
@@ -22495,7 +22495,7 @@ int command::ssim2csv_Start(command::ssim2csv_proc& parent) {
 
 // --- command.ssim2csv_proc.ssim2csv.StartRead
 // Start subprocess & Read output
-algo::Fildes command::ssim2csv_StartRead(command::ssim2csv_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::ssim2csv_StartRead(command::ssim2csv_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -22517,7 +22517,7 @@ void command::ssim2csv_Kill(command::ssim2csv_proc& parent) {
 
 // --- command.ssim2csv_proc.ssim2csv.Wait
 // Wait for subprocess to return
-void command::ssim2csv_Wait(command::ssim2csv_proc& parent) {
+void command::ssim2csv_Wait(command::ssim2csv_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -22536,7 +22536,7 @@ void command::ssim2csv_Wait(command::ssim2csv_proc& parent) {
 // --- command.ssim2csv_proc.ssim2csv.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::ssim2csv_Exec(command::ssim2csv_proc& parent) {
+int command::ssim2csv_Exec(command::ssim2csv_proc& parent) throw() {
     ssim2csv_Start(parent);
     ssim2csv_Wait(parent);
     return parent.status;
@@ -22554,7 +22554,7 @@ void command::ssim2csv_ExecX(command::ssim2csv_proc& parent) {
 // --- command.ssim2csv_proc.ssim2csv.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::ssim2csv_Execv(command::ssim2csv_proc& parent) {
+int command::ssim2csv_Execv(command::ssim2csv_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     ssim2csv_ToArgv(parent, args);
@@ -22570,7 +22570,7 @@ int command::ssim2csv_Execv(command::ssim2csv_proc& parent) {
 }
 
 // --- command.ssim2csv_proc.ssim2csv.ToCmdline
-algo::tempstr command::ssim2csv_ToCmdline(command::ssim2csv_proc& parent) {
+algo::tempstr command::ssim2csv_ToCmdline(command::ssim2csv_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::ssim2csv_PrintArgv(parent.cmd,retval);
@@ -22588,7 +22588,7 @@ algo::tempstr command::ssim2csv_ToCmdline(command::ssim2csv_proc& parent) {
 
 // --- command.ssim2csv_proc.ssim2csv.ToArgv
 // Form array from the command line
-void command::ssim2csv_ToArgv(command::ssim2csv_proc& parent, algo::StringAry& args) {
+void command::ssim2csv_ToArgv(command::ssim2csv_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -22609,7 +22609,7 @@ void command::ssim2csv_ToArgv(command::ssim2csv_proc& parent, algo::StringAry& a
 }
 
 // --- command.ssim2csv_proc..Uninit
-void command::ssim2csv_proc_Uninit(command::ssim2csv_proc& parent) {
+void command::ssim2csv_proc_Uninit(command::ssim2csv_proc& parent) throw() {
     command::ssim2csv_proc &row = parent; (void)row;
 
     // command.ssim2csv_proc.ssim2csv.Uninit (Exec)  //
@@ -22617,7 +22617,7 @@ void command::ssim2csv_proc_Uninit(command::ssim2csv_proc& parent) {
 }
 
 // --- command.ssim2mysql..ReadFieldMaybe
-bool command::ssim2mysql_ReadFieldMaybe(command::ssim2mysql& parent, algo::strptr field, algo::strptr strval) {
+bool command::ssim2mysql_ReadFieldMaybe(command::ssim2mysql& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -22676,7 +22676,7 @@ bool command::ssim2mysql_ReadFieldMaybe(command::ssim2mysql& parent, algo::strpt
 
 // --- command.ssim2mysql..ReadTupleMaybe
 // Read fields of command::ssim2mysql from attributes of ascii tuple TUPLE
-bool command::ssim2mysql_ReadTupleMaybe(command::ssim2mysql &parent, algo::Tuple &tuple) {
+bool command::ssim2mysql_ReadTupleMaybe(command::ssim2mysql &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = ssim2mysql_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -22706,7 +22706,7 @@ void command::ssim2mysql_Init(command::ssim2mysql& parent) {
 // --- command.ssim2mysql..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::ssim2mysql_ToCmdline(command::ssim2mysql& row) {
+tempstr command::ssim2mysql_ToCmdline(command::ssim2mysql& row) throw() {
     tempstr ret;
     ret << "bin/ssim2mysql ";
     ssim2mysql_PrintArgv(row, ret);
@@ -22723,7 +22723,7 @@ tempstr command::ssim2mysql_ToCmdline(command::ssim2mysql& row) {
 // --- command.ssim2mysql..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.ssim2mysql.Argv  printfmt:Auto
-void command::ssim2mysql_PrintArgv(command::ssim2mysql& row, algo::cstring& str) {
+void command::ssim2mysql_PrintArgv(command::ssim2mysql& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -22799,7 +22799,7 @@ void command::ssim2mysql_PrintArgv(command::ssim2mysql& row, algo::cstring& str)
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::ssim2mysql_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::ssim2mysql_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_url: { // $comment
@@ -22856,7 +22856,7 @@ i32 command::ssim2mysql_NArgs(command::FieldId field, algo::strptr& out_dflt, bo
 // --- command.ssim2mysql_proc.ssim2mysql.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::ssim2mysql_Start(command::ssim2mysql_proc& parent) {
+int command::ssim2mysql_Start(command::ssim2mysql_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(ssim2mysql_ToCmdline(parent)); // maybe print command
@@ -22894,7 +22894,7 @@ int command::ssim2mysql_Start(command::ssim2mysql_proc& parent) {
 
 // --- command.ssim2mysql_proc.ssim2mysql.StartRead
 // Start subprocess & Read output
-algo::Fildes command::ssim2mysql_StartRead(command::ssim2mysql_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::ssim2mysql_StartRead(command::ssim2mysql_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -22916,7 +22916,7 @@ void command::ssim2mysql_Kill(command::ssim2mysql_proc& parent) {
 
 // --- command.ssim2mysql_proc.ssim2mysql.Wait
 // Wait for subprocess to return
-void command::ssim2mysql_Wait(command::ssim2mysql_proc& parent) {
+void command::ssim2mysql_Wait(command::ssim2mysql_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -22935,7 +22935,7 @@ void command::ssim2mysql_Wait(command::ssim2mysql_proc& parent) {
 // --- command.ssim2mysql_proc.ssim2mysql.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::ssim2mysql_Exec(command::ssim2mysql_proc& parent) {
+int command::ssim2mysql_Exec(command::ssim2mysql_proc& parent) throw() {
     ssim2mysql_Start(parent);
     ssim2mysql_Wait(parent);
     return parent.status;
@@ -22953,7 +22953,7 @@ void command::ssim2mysql_ExecX(command::ssim2mysql_proc& parent) {
 // --- command.ssim2mysql_proc.ssim2mysql.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::ssim2mysql_Execv(command::ssim2mysql_proc& parent) {
+int command::ssim2mysql_Execv(command::ssim2mysql_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     ssim2mysql_ToArgv(parent, args);
@@ -22969,7 +22969,7 @@ int command::ssim2mysql_Execv(command::ssim2mysql_proc& parent) {
 }
 
 // --- command.ssim2mysql_proc.ssim2mysql.ToCmdline
-algo::tempstr command::ssim2mysql_ToCmdline(command::ssim2mysql_proc& parent) {
+algo::tempstr command::ssim2mysql_ToCmdline(command::ssim2mysql_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::ssim2mysql_PrintArgv(parent.cmd,retval);
@@ -22987,7 +22987,7 @@ algo::tempstr command::ssim2mysql_ToCmdline(command::ssim2mysql_proc& parent) {
 
 // --- command.ssim2mysql_proc.ssim2mysql.ToArgv
 // Form array from the command line
-void command::ssim2mysql_ToArgv(command::ssim2mysql_proc& parent, algo::StringAry& args) {
+void command::ssim2mysql_ToArgv(command::ssim2mysql_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -23062,7 +23062,7 @@ void command::ssim2mysql_ToArgv(command::ssim2mysql_proc& parent, algo::StringAr
 }
 
 // --- command.ssim2mysql_proc..Uninit
-void command::ssim2mysql_proc_Uninit(command::ssim2mysql_proc& parent) {
+void command::ssim2mysql_proc_Uninit(command::ssim2mysql_proc& parent) throw() {
     command::ssim2mysql_proc &row = parent; (void)row;
 
     // command.ssim2mysql_proc.ssim2mysql.Uninit (Exec)  //
@@ -23071,14 +23071,14 @@ void command::ssim2mysql_proc_Uninit(command::ssim2mysql_proc& parent) {
 
 // --- command.ssimfilt.typetag.Print
 // Print back to string
-void command::typetag_Print(command::ssimfilt& parent, algo::cstring &out) {
+void command::typetag_Print(command::ssimfilt& parent, algo::cstring &out) throw() {
     Regx_Print(parent.typetag, out);
 }
 
 // --- command.ssimfilt.typetag.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::typetag_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in) {
+bool command::typetag_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.typetag, in, true);
     return retval;
@@ -23088,7 +23088,7 @@ bool command::typetag_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> command::match_Addary(command::ssimfilt& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> command::match_Addary(command::ssimfilt& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.match_elems && rhs.elems < parent.match_elems + parent.match_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.ssimfilt.match  comment:'alias error: sub-array is being appended to the whole'");
@@ -23106,7 +23106,7 @@ algo::aryptr<algo::cstring> command::match_Addary(command::ssimfilt& parent, alg
 // --- command.ssimfilt.match.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& command::match_Alloc(command::ssimfilt& parent) {
+algo::cstring& command::match_Alloc(command::ssimfilt& parent) throw() {
     match_Reserve(parent, 1);
     int n  = parent.match_n;
     int at = n;
@@ -23119,7 +23119,7 @@ algo::cstring& command::match_Alloc(command::ssimfilt& parent) {
 // --- command.ssimfilt.match.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& command::match_AllocAt(command::ssimfilt& parent, int at) {
+algo::cstring& command::match_AllocAt(command::ssimfilt& parent, int at) throw() {
     match_Reserve(parent, 1);
     int n  = parent.match_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -23134,7 +23134,7 @@ algo::cstring& command::match_AllocAt(command::ssimfilt& parent, int at) {
 
 // --- command.ssimfilt.match.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::match_AllocN(command::ssimfilt& parent, int n_elems) {
+algo::aryptr<algo::cstring> command::match_AllocN(command::ssimfilt& parent, int n_elems) throw() {
     match_Reserve(parent, n_elems);
     int old_n  = parent.match_n;
     int new_n = old_n + n_elems;
@@ -23148,7 +23148,7 @@ algo::aryptr<algo::cstring> command::match_AllocN(command::ssimfilt& parent, int
 
 // --- command.ssimfilt.match.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::match_Remove(command::ssimfilt& parent, u32 i) {
+void command::match_Remove(command::ssimfilt& parent, u32 i) throw() {
     u32 lim = parent.match_n;
     algo::cstring *elems = parent.match_elems;
     if (i < lim) {
@@ -23159,7 +23159,7 @@ void command::match_Remove(command::ssimfilt& parent, u32 i) {
 }
 
 // --- command.ssimfilt.match.RemoveAll
-void command::match_RemoveAll(command::ssimfilt& parent) {
+void command::match_RemoveAll(command::ssimfilt& parent) throw() {
     u32 n = parent.match_n;
     while (n > 0) {
         n -= 1;
@@ -23170,7 +23170,7 @@ void command::match_RemoveAll(command::ssimfilt& parent) {
 
 // --- command.ssimfilt.match.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::match_RemoveLast(command::ssimfilt& parent) {
+void command::match_RemoveLast(command::ssimfilt& parent) throw() {
     u64 n = parent.match_n;
     if (n > 0) {
         n -= 1;
@@ -23181,7 +23181,7 @@ void command::match_RemoveLast(command::ssimfilt& parent) {
 
 // --- command.ssimfilt.match.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::match_AbsReserve(command::ssimfilt& parent, int n) {
+void command::match_AbsReserve(command::ssimfilt& parent, int n) throw() {
     u32 old_max  = parent.match_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -23196,7 +23196,7 @@ void command::match_AbsReserve(command::ssimfilt& parent, int n) {
 
 // --- command.ssimfilt.match.Setary
 // Copy contents of RHS to PARENT.
-void command::match_Setary(command::ssimfilt& parent, command::ssimfilt &rhs) {
+void command::match_Setary(command::ssimfilt& parent, command::ssimfilt &rhs) throw() {
     match_RemoveAll(parent);
     int nnew = rhs.match_n;
     match_Reserve(parent, nnew); // reserve space
@@ -23209,14 +23209,14 @@ void command::match_Setary(command::ssimfilt& parent, command::ssimfilt &rhs) {
 // --- command.ssimfilt.match.Setary2
 // Copy specified array into match, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::match_Setary(command::ssimfilt& parent, const algo::aryptr<algo::cstring> &rhs) {
+void command::match_Setary(command::ssimfilt& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     match_RemoveAll(parent);
     match_Addary(parent, rhs);
 }
 
 // --- command.ssimfilt.match.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::match_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> command::match_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) throw() {
     match_Reserve(parent, n_elems);
     int old_n  = parent.match_n;
     int new_n = old_n + n_elems;
@@ -23232,7 +23232,7 @@ algo::aryptr<algo::cstring> command::match_AllocNVal(command::ssimfilt& parent, 
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::match_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) {
+bool command::match_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = match_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -23246,7 +23246,7 @@ bool command::match_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_s
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> command::field_Addary(command::ssimfilt& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> command::field_Addary(command::ssimfilt& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.field_elems && rhs.elems < parent.field_elems + parent.field_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("command.tary_alias  field:command.ssimfilt.field  comment:'alias error: sub-array is being appended to the whole'");
@@ -23264,7 +23264,7 @@ algo::aryptr<algo::cstring> command::field_Addary(command::ssimfilt& parent, alg
 // --- command.ssimfilt.field.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& command::field_Alloc(command::ssimfilt& parent) {
+algo::cstring& command::field_Alloc(command::ssimfilt& parent) throw() {
     field_Reserve(parent, 1);
     int n  = parent.field_n;
     int at = n;
@@ -23277,7 +23277,7 @@ algo::cstring& command::field_Alloc(command::ssimfilt& parent) {
 // --- command.ssimfilt.field.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& command::field_AllocAt(command::ssimfilt& parent, int at) {
+algo::cstring& command::field_AllocAt(command::ssimfilt& parent, int at) throw() {
     field_Reserve(parent, 1);
     int n  = parent.field_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -23292,7 +23292,7 @@ algo::cstring& command::field_AllocAt(command::ssimfilt& parent, int at) {
 
 // --- command.ssimfilt.field.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::field_AllocN(command::ssimfilt& parent, int n_elems) {
+algo::aryptr<algo::cstring> command::field_AllocN(command::ssimfilt& parent, int n_elems) throw() {
     field_Reserve(parent, n_elems);
     int old_n  = parent.field_n;
     int new_n = old_n + n_elems;
@@ -23306,7 +23306,7 @@ algo::aryptr<algo::cstring> command::field_AllocN(command::ssimfilt& parent, int
 
 // --- command.ssimfilt.field.Remove
 // Remove item by index. If index outside of range, do nothing.
-void command::field_Remove(command::ssimfilt& parent, u32 i) {
+void command::field_Remove(command::ssimfilt& parent, u32 i) throw() {
     u32 lim = parent.field_n;
     algo::cstring *elems = parent.field_elems;
     if (i < lim) {
@@ -23317,7 +23317,7 @@ void command::field_Remove(command::ssimfilt& parent, u32 i) {
 }
 
 // --- command.ssimfilt.field.RemoveAll
-void command::field_RemoveAll(command::ssimfilt& parent) {
+void command::field_RemoveAll(command::ssimfilt& parent) throw() {
     u32 n = parent.field_n;
     while (n > 0) {
         n -= 1;
@@ -23328,7 +23328,7 @@ void command::field_RemoveAll(command::ssimfilt& parent) {
 
 // --- command.ssimfilt.field.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void command::field_RemoveLast(command::ssimfilt& parent) {
+void command::field_RemoveLast(command::ssimfilt& parent) throw() {
     u64 n = parent.field_n;
     if (n > 0) {
         n -= 1;
@@ -23339,7 +23339,7 @@ void command::field_RemoveLast(command::ssimfilt& parent) {
 
 // --- command.ssimfilt.field.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void command::field_AbsReserve(command::ssimfilt& parent, int n) {
+void command::field_AbsReserve(command::ssimfilt& parent, int n) throw() {
     u32 old_max  = parent.field_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -23354,7 +23354,7 @@ void command::field_AbsReserve(command::ssimfilt& parent, int n) {
 
 // --- command.ssimfilt.field.Setary
 // Copy contents of RHS to PARENT.
-void command::field_Setary(command::ssimfilt& parent, command::ssimfilt &rhs) {
+void command::field_Setary(command::ssimfilt& parent, command::ssimfilt &rhs) throw() {
     field_RemoveAll(parent);
     int nnew = rhs.field_n;
     field_Reserve(parent, nnew); // reserve space
@@ -23367,14 +23367,14 @@ void command::field_Setary(command::ssimfilt& parent, command::ssimfilt &rhs) {
 // --- command.ssimfilt.field.Setary2
 // Copy specified array into field, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void command::field_Setary(command::ssimfilt& parent, const algo::aryptr<algo::cstring> &rhs) {
+void command::field_Setary(command::ssimfilt& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     field_RemoveAll(parent);
     field_Addary(parent, rhs);
 }
 
 // --- command.ssimfilt.field.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> command::field_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> command::field_AllocNVal(command::ssimfilt& parent, int n_elems, const algo::cstring& val) throw() {
     field_Reserve(parent, n_elems);
     int old_n  = parent.field_n;
     int new_n = old_n + n_elems;
@@ -23390,7 +23390,7 @@ algo::aryptr<algo::cstring> command::field_AllocNVal(command::ssimfilt& parent, 
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool command::field_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) {
+bool command::field_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = field_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -23403,7 +23403,7 @@ bool command::field_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr in_s
 // --- command.ssimfilt.format.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* command::format_ToCstr(const command::ssimfilt& parent) {
+const char* command::format_ToCstr(const command::ssimfilt& parent) throw() {
     const char *ret = NULL;
     switch(format_GetEnum(parent)) {
         case command_ssimfilt_format_ssim  : ret = "ssim";  break;
@@ -23421,7 +23421,7 @@ const char* command::format_ToCstr(const command::ssimfilt& parent) {
 // --- command.ssimfilt.format.Print
 // Convert format to a string. First, attempt conversion to a known string.
 // If no string matches, print format as a numeric value.
-void command::format_Print(const command::ssimfilt& parent, algo::cstring &lhs) {
+void command::format_Print(const command::ssimfilt& parent, algo::cstring &lhs) throw() {
     const char *strval = format_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -23434,7 +23434,7 @@ void command::format_Print(const command::ssimfilt& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool command::format_SetStrptrMaybe(command::ssimfilt& parent, algo::strptr rhs) {
+bool command::format_SetStrptrMaybe(command::ssimfilt& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -23494,13 +23494,13 @@ bool command::format_SetStrptrMaybe(command::ssimfilt& parent, algo::strptr rhs)
 // --- command.ssimfilt.format.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void command::format_SetStrptr(command::ssimfilt& parent, algo::strptr rhs, command_ssimfilt_format_Enum dflt) {
+void command::format_SetStrptr(command::ssimfilt& parent, algo::strptr rhs, command_ssimfilt_format_Enum dflt) throw() {
     if (!format_SetStrptrMaybe(parent,rhs)) format_SetEnum(parent,dflt);
 }
 
 // --- command.ssimfilt.format.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool command::format_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr rhs) {
+bool command::format_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = format_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -23510,7 +23510,7 @@ bool command::format_ReadStrptrMaybe(command::ssimfilt& parent, algo::strptr rhs
 }
 
 // --- command.ssimfilt..ReadFieldMaybe
-bool command::ssimfilt_ReadFieldMaybe(command::ssimfilt& parent, algo::strptr field, algo::strptr strval) {
+bool command::ssimfilt_ReadFieldMaybe(command::ssimfilt& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -23553,7 +23553,7 @@ bool command::ssimfilt_ReadFieldMaybe(command::ssimfilt& parent, algo::strptr fi
 
 // --- command.ssimfilt..ReadTupleMaybe
 // Read fields of command::ssimfilt from attributes of ascii tuple TUPLE
-bool command::ssimfilt_ReadTupleMaybe(command::ssimfilt &parent, algo::Tuple &tuple) {
+bool command::ssimfilt_ReadTupleMaybe(command::ssimfilt &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -23585,7 +23585,7 @@ void command::ssimfilt_Init(command::ssimfilt& parent) {
 }
 
 // --- command.ssimfilt..Uninit
-void command::ssimfilt_Uninit(command::ssimfilt& parent) {
+void command::ssimfilt_Uninit(command::ssimfilt& parent) throw() {
     command::ssimfilt &row = parent; (void)row;
 
     // command.ssimfilt.field.Uninit (Tary)  //(project) Select fields for output (regx)
@@ -23604,7 +23604,7 @@ void command::ssimfilt_Uninit(command::ssimfilt& parent) {
 // --- command.ssimfilt..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::ssimfilt_ToCmdline(command::ssimfilt& row) {
+tempstr command::ssimfilt_ToCmdline(command::ssimfilt& row) throw() {
     tempstr ret;
     ret << "bin/ssimfilt ";
     ssimfilt_PrintArgv(row, ret);
@@ -23621,7 +23621,7 @@ tempstr command::ssimfilt_ToCmdline(command::ssimfilt& row) {
 // --- command.ssimfilt..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.ssimfilt.Argv  printfmt:Tuple
-void command::ssimfilt_PrintArgv(command::ssimfilt& row, algo::cstring& str) {
+void command::ssimfilt_PrintArgv(command::ssimfilt& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -23668,7 +23668,7 @@ void command::ssimfilt_PrintArgv(command::ssimfilt& row, algo::cstring& str) {
 }
 
 // --- command.ssimfilt..GetAnon
-algo::strptr command::ssimfilt_GetAnon(command::ssimfilt &parent, i32 idx) {
+algo::strptr command::ssimfilt_GetAnon(command::ssimfilt &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("typetag", 7);
@@ -23680,7 +23680,7 @@ algo::strptr command::ssimfilt_GetAnon(command::ssimfilt &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::ssimfilt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::ssimfilt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -23713,7 +23713,7 @@ i32 command::ssimfilt_NArgs(command::FieldId field, algo::strptr& out_dflt, bool
 }
 
 // --- command.ssimfilt..AssignOp
-command::ssimfilt& command::ssimfilt::operator =(const command::ssimfilt &rhs) {
+command::ssimfilt& command::ssimfilt::operator =(const command::ssimfilt &rhs) throw() {
     in = rhs.in;
     typetag = rhs.typetag;
     match_Setary(*this, match_Getary(const_cast<command::ssimfilt&>(rhs)));
@@ -23725,7 +23725,7 @@ command::ssimfilt& command::ssimfilt::operator =(const command::ssimfilt &rhs) {
 }
 
 // --- command.ssimfilt..CopyCtor
- command::ssimfilt::ssimfilt(const command::ssimfilt &rhs)
+ command::ssimfilt::ssimfilt(const command::ssimfilt &rhs) throw()
     : in(rhs.in)
     , typetag(rhs.typetag)
     , format(rhs.format)
@@ -23745,7 +23745,7 @@ command::ssimfilt& command::ssimfilt::operator =(const command::ssimfilt &rhs) {
 // --- command.ssimfilt_proc.ssimfilt.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::ssimfilt_Start(command::ssimfilt_proc& parent) {
+int command::ssimfilt_Start(command::ssimfilt_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(ssimfilt_ToCmdline(parent)); // maybe print command
@@ -23783,7 +23783,7 @@ int command::ssimfilt_Start(command::ssimfilt_proc& parent) {
 
 // --- command.ssimfilt_proc.ssimfilt.StartRead
 // Start subprocess & Read output
-algo::Fildes command::ssimfilt_StartRead(command::ssimfilt_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::ssimfilt_StartRead(command::ssimfilt_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -23805,7 +23805,7 @@ void command::ssimfilt_Kill(command::ssimfilt_proc& parent) {
 
 // --- command.ssimfilt_proc.ssimfilt.Wait
 // Wait for subprocess to return
-void command::ssimfilt_Wait(command::ssimfilt_proc& parent) {
+void command::ssimfilt_Wait(command::ssimfilt_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -23824,7 +23824,7 @@ void command::ssimfilt_Wait(command::ssimfilt_proc& parent) {
 // --- command.ssimfilt_proc.ssimfilt.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::ssimfilt_Exec(command::ssimfilt_proc& parent) {
+int command::ssimfilt_Exec(command::ssimfilt_proc& parent) throw() {
     ssimfilt_Start(parent);
     ssimfilt_Wait(parent);
     return parent.status;
@@ -23842,7 +23842,7 @@ void command::ssimfilt_ExecX(command::ssimfilt_proc& parent) {
 // --- command.ssimfilt_proc.ssimfilt.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::ssimfilt_Execv(command::ssimfilt_proc& parent) {
+int command::ssimfilt_Execv(command::ssimfilt_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     ssimfilt_ToArgv(parent, args);
@@ -23858,7 +23858,7 @@ int command::ssimfilt_Execv(command::ssimfilt_proc& parent) {
 }
 
 // --- command.ssimfilt_proc.ssimfilt.ToCmdline
-algo::tempstr command::ssimfilt_ToCmdline(command::ssimfilt_proc& parent) {
+algo::tempstr command::ssimfilt_ToCmdline(command::ssimfilt_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::ssimfilt_PrintArgv(parent.cmd,retval);
@@ -23876,7 +23876,7 @@ algo::tempstr command::ssimfilt_ToCmdline(command::ssimfilt_proc& parent) {
 
 // --- command.ssimfilt_proc.ssimfilt.ToArgv
 // Form array from the command line
-void command::ssimfilt_ToArgv(command::ssimfilt_proc& parent, algo::StringAry& args) {
+void command::ssimfilt_ToArgv(command::ssimfilt_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -23925,7 +23925,7 @@ void command::ssimfilt_ToArgv(command::ssimfilt_proc& parent, algo::StringAry& a
 }
 
 // --- command.ssimfilt_proc..Uninit
-void command::ssimfilt_proc_Uninit(command::ssimfilt_proc& parent) {
+void command::ssimfilt_proc_Uninit(command::ssimfilt_proc& parent) throw() {
     command::ssimfilt_proc &row = parent; (void)row;
 
     // command.ssimfilt_proc.ssimfilt.Uninit (Exec)  //
@@ -23933,7 +23933,7 @@ void command::ssimfilt_proc_Uninit(command::ssimfilt_proc& parent) {
 }
 
 // --- command.strconv..ReadFieldMaybe
-bool command::strconv_ReadFieldMaybe(command::strconv& parent, algo::strptr field, algo::strptr strval) {
+bool command::strconv_ReadFieldMaybe(command::strconv& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -23968,7 +23968,7 @@ bool command::strconv_ReadFieldMaybe(command::strconv& parent, algo::strptr fiel
 
 // --- command.strconv..ReadTupleMaybe
 // Read fields of command::strconv from attributes of ascii tuple TUPLE
-bool command::strconv_ReadTupleMaybe(command::strconv &parent, algo::Tuple &tuple) {
+bool command::strconv_ReadTupleMaybe(command::strconv &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -23986,7 +23986,7 @@ bool command::strconv_ReadTupleMaybe(command::strconv &parent, algo::Tuple &tupl
 // --- command.strconv..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::strconv_ToCmdline(command::strconv& row) {
+tempstr command::strconv_ToCmdline(command::strconv& row) throw() {
     tempstr ret;
     ret << "bin/strconv ";
     strconv_PrintArgv(row, ret);
@@ -24003,7 +24003,7 @@ tempstr command::strconv_ToCmdline(command::strconv& row) {
 // --- command.strconv..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.strconv.Argv  printfmt:Tuple
-void command::strconv_PrintArgv(command::strconv& row, algo::cstring& str) {
+void command::strconv_PrintArgv(command::strconv& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -24038,7 +24038,7 @@ void command::strconv_PrintArgv(command::strconv& row, algo::cstring& str) {
 }
 
 // --- command.strconv..GetAnon
-algo::strptr command::strconv_GetAnon(command::strconv &parent, i32 idx) {
+algo::strptr command::strconv_GetAnon(command::strconv &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("str", 3);
@@ -24050,7 +24050,7 @@ algo::strptr command::strconv_GetAnon(command::strconv &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::strconv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::strconv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_str: { // $comment
@@ -24081,7 +24081,7 @@ i32 command::strconv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
 // --- command.strconv_proc.strconv.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::strconv_Start(command::strconv_proc& parent) {
+int command::strconv_Start(command::strconv_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(strconv_ToCmdline(parent)); // maybe print command
@@ -24119,7 +24119,7 @@ int command::strconv_Start(command::strconv_proc& parent) {
 
 // --- command.strconv_proc.strconv.StartRead
 // Start subprocess & Read output
-algo::Fildes command::strconv_StartRead(command::strconv_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::strconv_StartRead(command::strconv_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -24141,7 +24141,7 @@ void command::strconv_Kill(command::strconv_proc& parent) {
 
 // --- command.strconv_proc.strconv.Wait
 // Wait for subprocess to return
-void command::strconv_Wait(command::strconv_proc& parent) {
+void command::strconv_Wait(command::strconv_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -24160,7 +24160,7 @@ void command::strconv_Wait(command::strconv_proc& parent) {
 // --- command.strconv_proc.strconv.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::strconv_Exec(command::strconv_proc& parent) {
+int command::strconv_Exec(command::strconv_proc& parent) throw() {
     strconv_Start(parent);
     strconv_Wait(parent);
     return parent.status;
@@ -24178,7 +24178,7 @@ void command::strconv_ExecX(command::strconv_proc& parent) {
 // --- command.strconv_proc.strconv.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::strconv_Execv(command::strconv_proc& parent) {
+int command::strconv_Execv(command::strconv_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     strconv_ToArgv(parent, args);
@@ -24194,7 +24194,7 @@ int command::strconv_Execv(command::strconv_proc& parent) {
 }
 
 // --- command.strconv_proc.strconv.ToCmdline
-algo::tempstr command::strconv_ToCmdline(command::strconv_proc& parent) {
+algo::tempstr command::strconv_ToCmdline(command::strconv_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::strconv_PrintArgv(parent.cmd,retval);
@@ -24212,7 +24212,7 @@ algo::tempstr command::strconv_ToCmdline(command::strconv_proc& parent) {
 
 // --- command.strconv_proc.strconv.ToArgv
 // Form array from the command line
-void command::strconv_ToArgv(command::strconv_proc& parent, algo::StringAry& args) {
+void command::strconv_ToArgv(command::strconv_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -24251,7 +24251,7 @@ void command::strconv_ToArgv(command::strconv_proc& parent, algo::StringAry& arg
 }
 
 // --- command.strconv_proc..Uninit
-void command::strconv_proc_Uninit(command::strconv_proc& parent) {
+void command::strconv_proc_Uninit(command::strconv_proc& parent) throw() {
     command::strconv_proc &row = parent; (void)row;
 
     // command.strconv_proc.strconv.Uninit (Exec)  //
@@ -24260,21 +24260,21 @@ void command::strconv_proc_Uninit(command::strconv_proc& parent) {
 
 // --- command.sv2ssim.field.Print
 // Print back to string
-void command::field_Print(command::sv2ssim& parent, algo::cstring &out) {
+void command::field_Print(command::sv2ssim& parent, algo::cstring &out) throw() {
     Regx_Print(parent.field, out);
 }
 
 // --- command.sv2ssim.field.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool command::field_ReadStrptrMaybe(command::sv2ssim& parent, algo::strptr in) {
+bool command::field_ReadStrptrMaybe(command::sv2ssim& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.field, in, true);
     return retval;
 }
 
 // --- command.sv2ssim..ReadFieldMaybe
-bool command::sv2ssim_ReadFieldMaybe(command::sv2ssim& parent, algo::strptr field, algo::strptr strval) {
+bool command::sv2ssim_ReadFieldMaybe(command::sv2ssim& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     command::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -24337,7 +24337,7 @@ bool command::sv2ssim_ReadFieldMaybe(command::sv2ssim& parent, algo::strptr fiel
 
 // --- command.sv2ssim..ReadTupleMaybe
 // Read fields of command::sv2ssim from attributes of ascii tuple TUPLE
-bool command::sv2ssim_ReadTupleMaybe(command::sv2ssim &parent, algo::Tuple &tuple) {
+bool command::sv2ssim_ReadTupleMaybe(command::sv2ssim &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     int anon_idx = 0;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
@@ -24371,7 +24371,7 @@ void command::sv2ssim_Init(command::sv2ssim& parent) {
 // --- command.sv2ssim..ToCmdline
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
-tempstr command::sv2ssim_ToCmdline(command::sv2ssim& row) {
+tempstr command::sv2ssim_ToCmdline(command::sv2ssim& row) throw() {
     tempstr ret;
     ret << "bin/sv2ssim ";
     sv2ssim_PrintArgv(row, ret);
@@ -24388,7 +24388,7 @@ tempstr command::sv2ssim_ToCmdline(command::sv2ssim& row) {
 // --- command.sv2ssim..PrintArgv
 // print string representation of ROW to string STR
 // cfmt:command.sv2ssim.Argv  printfmt:Tuple
-void command::sv2ssim_PrintArgv(command::sv2ssim& row, algo::cstring& str) {
+void command::sv2ssim_PrintArgv(command::sv2ssim& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     (void)temp;
     (void)str;
@@ -24465,7 +24465,7 @@ void command::sv2ssim_PrintArgv(command::sv2ssim& row, algo::cstring& str) {
 }
 
 // --- command.sv2ssim..GetAnon
-algo::strptr command::sv2ssim_GetAnon(command::sv2ssim &parent, i32 idx) {
+algo::strptr command::sv2ssim_GetAnon(command::sv2ssim &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("fname", 5);
@@ -24477,7 +24477,7 @@ algo::strptr command::sv2ssim_GetAnon(command::sv2ssim &parent, i32 idx) {
 // Used with command lines
 // Return # of command-line arguments that must follow this argument
 // If FIELD is invalid, return -1
-i32 command::sv2ssim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+i32 command::sv2ssim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) throw() {
     i32 retval = 1;
     switch (field) {
         case command_FieldId_in: { // $comment
@@ -24535,7 +24535,7 @@ i32 command::sv2ssim_NArgs(command::FieldId field, algo::strptr& out_dflt, bool*
 // --- command.sv2ssim_proc.sv2ssim.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int command::sv2ssim_Start(command::sv2ssim_proc& parent) {
+int command::sv2ssim_Start(command::sv2ssim_proc& parent) throw() {
     int retval = 0;
     if (parent.pid == 0) {
         verblog(sv2ssim_ToCmdline(parent)); // maybe print command
@@ -24573,7 +24573,7 @@ int command::sv2ssim_Start(command::sv2ssim_proc& parent) {
 
 // --- command.sv2ssim_proc.sv2ssim.StartRead
 // Start subprocess & Read output
-algo::Fildes command::sv2ssim_StartRead(command::sv2ssim_proc& parent, algo_lib::FFildes &read) {
+algo::Fildes command::sv2ssim_StartRead(command::sv2ssim_proc& parent, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -24595,7 +24595,7 @@ void command::sv2ssim_Kill(command::sv2ssim_proc& parent) {
 
 // --- command.sv2ssim_proc.sv2ssim.Wait
 // Wait for subprocess to return
-void command::sv2ssim_Wait(command::sv2ssim_proc& parent) {
+void command::sv2ssim_Wait(command::sv2ssim_proc& parent) throw() {
     if (parent.pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -24614,7 +24614,7 @@ void command::sv2ssim_Wait(command::sv2ssim_proc& parent) {
 // --- command.sv2ssim_proc.sv2ssim.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int command::sv2ssim_Exec(command::sv2ssim_proc& parent) {
+int command::sv2ssim_Exec(command::sv2ssim_proc& parent) throw() {
     sv2ssim_Start(parent);
     sv2ssim_Wait(parent);
     return parent.status;
@@ -24632,7 +24632,7 @@ void command::sv2ssim_ExecX(command::sv2ssim_proc& parent) {
 // --- command.sv2ssim_proc.sv2ssim.Execv
 // Call execv()
 // Call execv with specified parameters
-int command::sv2ssim_Execv(command::sv2ssim_proc& parent) {
+int command::sv2ssim_Execv(command::sv2ssim_proc& parent) throw() {
     int ret = 0;
     algo::StringAry args;
     sv2ssim_ToArgv(parent, args);
@@ -24648,7 +24648,7 @@ int command::sv2ssim_Execv(command::sv2ssim_proc& parent) {
 }
 
 // --- command.sv2ssim_proc.sv2ssim.ToCmdline
-algo::tempstr command::sv2ssim_ToCmdline(command::sv2ssim_proc& parent) {
+algo::tempstr command::sv2ssim_ToCmdline(command::sv2ssim_proc& parent) throw() {
     algo::tempstr retval;
     retval << parent.path << " ";
     command::sv2ssim_PrintArgv(parent.cmd,retval);
@@ -24666,7 +24666,7 @@ algo::tempstr command::sv2ssim_ToCmdline(command::sv2ssim_proc& parent) {
 
 // --- command.sv2ssim_proc.sv2ssim.ToArgv
 // Form array from the command line
-void command::sv2ssim_ToArgv(command::sv2ssim_proc& parent, algo::StringAry& args) {
+void command::sv2ssim_ToArgv(command::sv2ssim_proc& parent, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << parent.path;
 
@@ -24747,7 +24747,7 @@ void command::sv2ssim_ToArgv(command::sv2ssim_proc& parent, algo::StringAry& arg
 }
 
 // --- command.sv2ssim_proc..Uninit
-void command::sv2ssim_proc_Uninit(command::sv2ssim_proc& parent) {
+void command::sv2ssim_proc_Uninit(command::sv2ssim_proc& parent) throw() {
     command::sv2ssim_proc &row = parent; (void)row;
 
     // command.sv2ssim_proc.sv2ssim.Uninit (Exec)  //

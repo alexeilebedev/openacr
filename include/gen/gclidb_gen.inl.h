@@ -28,18 +28,18 @@
 
 // --- gclidb.FieldId.value.GetEnum
 // Get value of field as enum type
-inline gclidb_FieldIdEnum gclidb::value_GetEnum(const gclidb::FieldId& parent) {
+inline gclidb_FieldIdEnum gclidb::value_GetEnum(const gclidb::FieldId& parent) throw() {
     return gclidb_FieldIdEnum(parent.value);
 }
 
 // --- gclidb.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void gclidb::value_SetEnum(gclidb::FieldId& parent, gclidb_FieldIdEnum rhs) {
+inline void gclidb::value_SetEnum(gclidb::FieldId& parent, gclidb_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- gclidb.FieldId.value.Cast
-inline  gclidb::FieldId::operator gclidb_FieldIdEnum() const {
+inline  gclidb::FieldId::operator gclidb_FieldIdEnum() const throw() {
     return gclidb_FieldIdEnum((*this).value);
 }
 
@@ -50,31 +50,31 @@ inline void gclidb::FieldId_Init(gclidb::FieldId& parent) {
 }
 
 // --- gclidb.FieldId..Ctor
-inline  gclidb::FieldId::FieldId() {
+inline  gclidb::FieldId::FieldId() throw() {
     gclidb::FieldId_Init(*this);
 }
 
 // --- gclidb.FieldId..FieldwiseCtor
-inline  gclidb::FieldId::FieldId(i32 in_value)
+inline  gclidb::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- gclidb.FieldId..EnumCtor
-inline  gclidb::FieldId::FieldId(gclidb_FieldIdEnum arg) {
+inline  gclidb::FieldId::FieldId(gclidb_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- gclidb.Gact..Ctor
-inline  gclidb::Gact::Gact() {
+inline  gclidb::Gact::Gact() throw() {
 }
 
 // --- gclidb.Gatv..Ctor
-inline  gclidb::Gatv::Gatv() {
+inline  gclidb::Gatv::Gatv() throw() {
 }
 
 // --- gclidb.Gclicmd..Ctor
-inline  gclidb::Gclicmd::Gclicmd() {
+inline  gclidb::Gclicmd::Gclicmd() throw() {
 }
 
 // --- gclidb.Gclicmdf2j..Init
@@ -84,7 +84,7 @@ inline void gclidb::Gclicmdf2j_Init(gclidb::Gclicmdf2j& parent) {
 }
 
 // --- gclidb.Gclicmdf2j..Ctor
-inline  gclidb::Gclicmdf2j::Gclicmdf2j() {
+inline  gclidb::Gclicmdf2j::Gclicmdf2j() throw() {
     gclidb::Gclicmdf2j_Init(*this);
 }
 
@@ -95,12 +95,12 @@ inline void gclidb::Gclicmdt_Init(gclidb::Gclicmdt& parent) {
 }
 
 // --- gclidb.Gclicmdt..Ctor
-inline  gclidb::Gclicmdt::Gclicmdt() {
+inline  gclidb::Gclicmdt::Gclicmdt() throw() {
     gclidb::Gclicmdt_Init(*this);
 }
 
 // --- gclidb.Gclienv..Ctor
-inline  gclidb::Gclienv::Gclienv() {
+inline  gclidb::Gclienv::Gclienv() throw() {
 }
 
 // --- gclidb.Gclienvsub..Init
@@ -111,20 +111,20 @@ inline void gclidb::Gclienvsub_Init(gclidb::Gclienvsub& parent) {
 }
 
 // --- gclidb.Gclienvsub..Ctor
-inline  gclidb::Gclienvsub::Gclienvsub() {
+inline  gclidb::Gclienvsub::Gclienvsub() throw() {
     gclidb::Gclienvsub_Init(*this);
 }
 
 // --- gclidb.Gclisub..Ctor
-inline  gclidb::Gclisub::Gclisub() {
+inline  gclidb::Gclisub::Gclisub() throw() {
 }
 
 // --- gclidb.Gfld..Ctor
-inline  gclidb::Gfld::Gfld() {
+inline  gclidb::Gfld::Gfld() throw() {
 }
 
 // --- gclidb.Githost..Ctor
-inline  gclidb::Githost::Githost() {
+inline  gclidb::Githost::Githost() throw() {
 }
 
 // --- gclidb.Gmethod..Init
@@ -134,33 +134,33 @@ inline void gclidb::Gmethod_Init(gclidb::Gmethod& parent) {
 }
 
 // --- gclidb.Gmethod..Ctor
-inline  gclidb::Gmethod::Gmethod() {
+inline  gclidb::Gmethod::Gmethod() throw() {
     gclidb::Gmethod_Init(*this);
 }
 
 // --- gclidb.Grepo..Ctor
-inline  gclidb::Grepo::Grepo() {
+inline  gclidb::Grepo::Grepo() throw() {
     gclidb::Grepo_Init(*this);
 }
 
 // --- gclidb.Grepogitport..Ctor
-inline  gclidb::Grepogitport::Grepogitport() {
+inline  gclidb::Grepogitport::Grepogitport() throw() {
 }
 
 // --- gclidb.Grepossh..Ctor
-inline  gclidb::Grepossh::Grepossh() {
+inline  gclidb::Grepossh::Grepossh() throw() {
 }
 
 // --- gclidb.Gstate..Ctor
-inline  gclidb::Gstate::Gstate() {
+inline  gclidb::Gstate::Gstate() throw() {
 }
 
 // --- gclidb.Gstatet..Ctor
-inline  gclidb::Gstatet::Gstatet() {
+inline  gclidb::Gstatet::Gstatet() throw() {
 }
 
 // --- gclidb.Gtbl..Ctor
-inline  gclidb::Gtbl::Gtbl() {
+inline  gclidb::Gtbl::Gtbl() throw() {
 }
 
 // --- gclidb.Gtblact..Init
@@ -172,7 +172,7 @@ inline void gclidb::Gtblact_Init(gclidb::Gtblact& parent) {
 }
 
 // --- gclidb.Gtblact..Ctor
-inline  gclidb::Gtblact::Gtblact() {
+inline  gclidb::Gtblact::Gtblact() throw() {
     gclidb::Gtblact_Init(*this);
 }
 
@@ -185,7 +185,7 @@ inline void gclidb::Gtblactfld_Init(gclidb::Gtblactfld& parent) {
 }
 
 // --- gclidb.Gtblactfld..Ctor
-inline  gclidb::Gtblactfld::Gtblactfld() {
+inline  gclidb::Gtblactfld::Gtblactfld() throw() {
     gclidb::Gtblactfld_Init(*this);
 }
 
@@ -196,60 +196,60 @@ inline void gclidb::Gtblacttst_Init(gclidb::Gtblacttst& parent) {
 }
 
 // --- gclidb.Gtblacttst..Ctor
-inline  gclidb::Gtblacttst::Gtblacttst() {
+inline  gclidb::Gtblacttst::Gtblacttst() throw() {
     gclidb::Gtblacttst_Init(*this);
 }
 
 // --- gclidb.Gtblacttstout..Ctor
-inline  gclidb::Gtblacttstout::Gtblacttstout() {
+inline  gclidb::Gtblacttstout::Gtblacttstout() throw() {
 }
 
 // --- gclidb.Gtype..Ctor
-inline  gclidb::Gtype::Gtype() {
+inline  gclidb::Gtype::Gtype() throw() {
 }
 
 // --- gclidb.Gtypeh..Ctor
-inline  gclidb::Gtypeh::Gtypeh() {
+inline  gclidb::Gtypeh::Gtypeh() throw() {
 }
 
 // --- gclidb.Gtypeprefix..Ctor
-inline  gclidb::Gtypeprefix::Gtypeprefix() {
+inline  gclidb::Gtypeprefix::Gtypeprefix() throw() {
 }
 
 // --- gclidb.Issue..Ctor
-inline  gclidb::Issue::Issue() {
+inline  gclidb::Issue::Issue() throw() {
 }
 
 // --- gclidb.Issuenote..Ctor
-inline  gclidb::Issuenote::Issuenote() {
+inline  gclidb::Issuenote::Issuenote() throw() {
 }
 
 // --- gclidb.Issuepipeline..Ctor
-inline  gclidb::Issuepipeline::Issuepipeline() {
+inline  gclidb::Issuepipeline::Issuepipeline() throw() {
 }
 
 // --- gclidb.Label..Ctor
-inline  gclidb::Label::Label() {
+inline  gclidb::Label::Label() throw() {
 }
 
 // --- gclidb.Milestone..Ctor
-inline  gclidb::Milestone::Milestone() {
+inline  gclidb::Milestone::Milestone() throw() {
 }
 
 // --- gclidb.Mr..Ctor
-inline  gclidb::Mr::Mr() {
+inline  gclidb::Mr::Mr() throw() {
 }
 
 // --- gclidb.Mrjob..Ctor
-inline  gclidb::Mrjob::Mrjob() {
+inline  gclidb::Mrjob::Mrjob() throw() {
 }
 
 // --- gclidb.Mrnote..Ctor
-inline  gclidb::Mrnote::Mrnote() {
+inline  gclidb::Mrnote::Mrnote() throw() {
 }
 
 // --- gclidb.Project..Ctor
-inline  gclidb::Project::Project() {
+inline  gclidb::Project::Project() throw() {
 }
 
 // --- gclidb.User..Init
@@ -259,7 +259,7 @@ inline void gclidb::User_Init(gclidb::User& parent) {
 }
 
 // --- gclidb.User..Ctor
-inline  gclidb::User::User() {
+inline  gclidb::User::User() throw() {
     gclidb::User_Init(*this);
 }
 

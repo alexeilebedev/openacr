@@ -129,7 +129,7 @@ namespace atf_comp { // gen:ns_print_proto
 
 // --- atf_comp.FComptest.base.CopyOut
 // Copy fields out of row
-void atf_comp::comptest_CopyOut(atf_comp::FComptest &row, atfdb::Comptest &out) {
+void atf_comp::comptest_CopyOut(atf_comp::FComptest &row, atfdb::Comptest &out) throw() {
     out.comptest = row.comptest;
     out.timeout = row.timeout;
     out.memcheck = row.memcheck;
@@ -139,7 +139,7 @@ void atf_comp::comptest_CopyOut(atf_comp::FComptest &row, atfdb::Comptest &out) 
 
 // --- atf_comp.FComptest.base.CopyIn
 // Copy fields in to row
-void atf_comp::comptest_CopyIn(atf_comp::FComptest &row, atfdb::Comptest &in) {
+void atf_comp::comptest_CopyIn(atf_comp::FComptest &row, atfdb::Comptest &in) throw() {
     row.comptest = in.comptest;
     row.timeout = in.timeout;
     row.memcheck = in.memcheck;
@@ -148,13 +148,13 @@ void atf_comp::comptest_CopyIn(atf_comp::FComptest &row, atfdb::Comptest &in) {
 }
 
 // --- atf_comp.FComptest.target.Get
-algo::Smallstr16 atf_comp::target_Get(atf_comp::FComptest& comptest) {
+algo::Smallstr16 atf_comp::target_Get(atf_comp::FComptest& comptest) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(comptest.comptest, ".LL"));
     return ret;
 }
 
 // --- atf_comp.FComptest.testname.Get
-algo::Smallstr50 atf_comp::testname_Get(atf_comp::FComptest& comptest) {
+algo::Smallstr50 atf_comp::testname_Get(atf_comp::FComptest& comptest) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(comptest.comptest, ".LR"));
     return ret;
 }
@@ -162,7 +162,7 @@ algo::Smallstr50 atf_comp::testname_Get(atf_comp::FComptest& comptest) {
 // --- atf_comp.FComptest.c_targs.Cascdel
 // Delete referred-to items.
 // Deleted pointed-to item.
-void atf_comp::c_targs_Cascdel(atf_comp::FComptest& comptest) {
+void atf_comp::c_targs_Cascdel(atf_comp::FComptest& comptest) throw() {
     atf_comp::FTargs *ptr = comptest.c_targs;
     if (ptr) {
         targs_Delete(*ptr);
@@ -173,7 +173,7 @@ void atf_comp::c_targs_Cascdel(atf_comp::FComptest& comptest) {
 // --- atf_comp.FComptest.c_tfilt.Cascdel
 // Delete referred-to items.
 // Deleted pointed-to item.
-void atf_comp::c_tfilt_Cascdel(atf_comp::FComptest& comptest) {
+void atf_comp::c_tfilt_Cascdel(atf_comp::FComptest& comptest) throw() {
     atf_comp::FTfilt *ptr = comptest.c_tfilt;
     if (ptr) {
         tfilt_Delete(*ptr);
@@ -183,7 +183,7 @@ void atf_comp::c_tfilt_Cascdel(atf_comp::FComptest& comptest) {
 
 // --- atf_comp.FComptest.zd_tmsg.Cascdel
 // Delete all elements in the linked list.
-void atf_comp::zd_tmsg_Cascdel(atf_comp::FComptest& comptest) {
+void atf_comp::zd_tmsg_Cascdel(atf_comp::FComptest& comptest) throw() {
     while (atf_comp::FTmsg *zd_tmsg_first = zd_tmsg_First(comptest)) {
         tmsg_Delete(*zd_tmsg_first);
     }
@@ -191,7 +191,7 @@ void atf_comp::zd_tmsg_Cascdel(atf_comp::FComptest& comptest) {
 
 // --- atf_comp.FComptest.zd_tmsg.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_comp::zd_tmsg_Insert(atf_comp::FComptest& comptest, atf_comp::FTmsg& row) {
+void atf_comp::zd_tmsg_Insert(atf_comp::FComptest& comptest, atf_comp::FTmsg& row) throw() {
     if (!zd_tmsg_InLlistQ(row)) {
         atf_comp::FTmsg* old_tail = comptest.zd_tmsg_tail;
         row.zd_tmsg_next = NULL;
@@ -207,7 +207,7 @@ void atf_comp::zd_tmsg_Insert(atf_comp::FComptest& comptest, atf_comp::FTmsg& ro
 
 // --- atf_comp.FComptest.zd_tmsg.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_comp::zd_tmsg_Remove(atf_comp::FComptest& comptest, atf_comp::FTmsg& row) {
+void atf_comp::zd_tmsg_Remove(atf_comp::FComptest& comptest, atf_comp::FTmsg& row) throw() {
     if (zd_tmsg_InLlistQ(row)) {
         atf_comp::FTmsg* old_head       = comptest.zd_tmsg_head;
         (void)old_head; // in case it's not used
@@ -230,7 +230,7 @@ void atf_comp::zd_tmsg_Remove(atf_comp::FComptest& comptest, atf_comp::FTmsg& ro
 
 // --- atf_comp.FComptest.zd_tmsg.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_comp::zd_tmsg_RemoveAll(atf_comp::FComptest& comptest) {
+void atf_comp::zd_tmsg_RemoveAll(atf_comp::FComptest& comptest) throw() {
     atf_comp::FTmsg* row = comptest.zd_tmsg_head;
     comptest.zd_tmsg_head = NULL;
     comptest.zd_tmsg_tail = NULL;
@@ -245,7 +245,7 @@ void atf_comp::zd_tmsg_RemoveAll(atf_comp::FComptest& comptest) {
 
 // --- atf_comp.FComptest.zd_tmsg.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_comp::FTmsg* atf_comp::zd_tmsg_RemoveFirst(atf_comp::FComptest& comptest) {
+atf_comp::FTmsg* atf_comp::zd_tmsg_RemoveFirst(atf_comp::FComptest& comptest) throw() {
     atf_comp::FTmsg *row = NULL;
     row = comptest.zd_tmsg_head;
     if (row) {
@@ -286,7 +286,7 @@ void atf_comp::FComptest_Init(atf_comp::FComptest& comptest) {
 }
 
 // --- atf_comp.FComptest..Uninit
-void atf_comp::FComptest_Uninit(atf_comp::FComptest& comptest) {
+void atf_comp::FComptest_Uninit(atf_comp::FComptest& comptest) throw() {
     atf_comp::FComptest &row = comptest; (void)row;
     zd_tmsg_Cascdel(comptest); // dmmeta.cascdel:atf_comp.FComptest.zd_tmsg
     c_tfilt_Cascdel(comptest); // dmmeta.cascdel:atf_comp.FComptest.c_tfilt
@@ -300,7 +300,7 @@ void atf_comp::FComptest_Uninit(atf_comp::FComptest& comptest) {
 // --- atf_comp.trace..Print
 // print string representation of ROW to string STR
 // cfmt:atf_comp.trace.String  printfmt:Tuple
-void atf_comp::trace_Print(atf_comp::trace& row, algo::cstring& str) {
+void atf_comp::trace_Print(atf_comp::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_comp.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -311,7 +311,7 @@ void atf_comp::trace_Print(atf_comp::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     atf_comp.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void atf_comp::ReadArgv() {
+void atf_comp::ReadArgv() throw() {
     command::atf_comp &cmd = atf_comp::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -541,7 +541,7 @@ bool atf_comp::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_comp.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_comp::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool atf_comp::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = atf_comp::LoadTuplesFile(root, recursive);
@@ -580,7 +580,7 @@ bool atf_comp::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool atf_comp::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool atf_comp::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -593,7 +593,7 @@ bool atf_comp::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- atf_comp.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool atf_comp::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool atf_comp::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -614,7 +614,7 @@ bool atf_comp::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
 
 // --- atf_comp.FDb._db.SaveTuples
 // Save ssim data to given directory.
-u32 atf_comp::SaveTuples(algo::strptr root) {
+u32 atf_comp::SaveTuples(algo::strptr root) throw() {
     u32 retval = 0;
     u32 nbefore = algo_lib::_db.stringtofile_nwrite;
     (void)zd_out_tmsg_SaveSsimfile(SsimFname(root, "atfdb.tmsg"));
@@ -627,7 +627,7 @@ u32 atf_comp::SaveTuples(algo::strptr root) {
 
 // --- atf_comp.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_comp::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool atf_comp::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = atf_comp::LoadTuplesFile(fname, recursive);
@@ -653,7 +653,7 @@ bool atf_comp::_db_XrefMaybe() {
 // --- atf_comp.FDb.comptest.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_comp::FComptest& atf_comp::comptest_Alloc() {
+atf_comp::FComptest& atf_comp::comptest_Alloc() throw() {
     atf_comp::FComptest* row = comptest_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_comp.out_of_mem  field:atf_comp.FDb.comptest  comment:'Alloc failed'");
@@ -663,7 +663,7 @@ atf_comp::FComptest& atf_comp::comptest_Alloc() {
 
 // --- atf_comp.FDb.comptest.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_comp::FComptest* atf_comp::comptest_AllocMaybe() {
+atf_comp::FComptest* atf_comp::comptest_AllocMaybe() throw() {
     atf_comp::FComptest *row = (atf_comp::FComptest*)comptest_AllocMem();
     if (row) {
         new (row) atf_comp::FComptest; // call constructor
@@ -674,7 +674,7 @@ atf_comp::FComptest* atf_comp::comptest_AllocMaybe() {
 // --- atf_comp.FDb.comptest.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_comp::FComptest* atf_comp::comptest_InsertMaybe(const atfdb::Comptest &value) {
+atf_comp::FComptest* atf_comp::comptest_InsertMaybe(const atfdb::Comptest &value) throw() {
     atf_comp::FComptest *row = &comptest_Alloc(); // if out of memory, process dies. if input error, return NULL.
     comptest_CopyIn(*row,const_cast<atfdb::Comptest&>(value));
     bool ok = comptest_XrefMaybe(*row); // this may return false
@@ -687,7 +687,7 @@ atf_comp::FComptest* atf_comp::comptest_InsertMaybe(const atfdb::Comptest &value
 
 // --- atf_comp.FDb.comptest.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_comp::comptest_AllocMem() {
+void* atf_comp::comptest_AllocMem() throw() {
     u64 new_nelems     = _db.comptest_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -713,7 +713,7 @@ void* atf_comp::comptest_AllocMem() {
 
 // --- atf_comp.FDb.comptest.RemoveAll
 // Remove all elements from Lary
-void atf_comp::comptest_RemoveAll() {
+void atf_comp::comptest_RemoveAll() throw() {
     for (u64 n = _db.comptest_n; n>0; ) {
         n--;
         comptest_qFind(u64(n)).~FComptest(); // destroy last element
@@ -723,7 +723,7 @@ void atf_comp::comptest_RemoveAll() {
 
 // --- atf_comp.FDb.comptest.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_comp::comptest_RemoveLast() {
+void atf_comp::comptest_RemoveLast() throw() {
     u64 n = _db.comptest_n;
     if (n > 0) {
         n -= 1;
@@ -733,7 +733,7 @@ void atf_comp::comptest_RemoveLast() {
 }
 
 // --- atf_comp.FDb.comptest.InputMaybe
-static bool atf_comp::comptest_InputMaybe(atfdb::Comptest &elem) {
+static bool atf_comp::comptest_InputMaybe(atfdb::Comptest &elem) throw() {
     bool retval = true;
     retval = comptest_InsertMaybe(elem) != nullptr;
     return retval;
@@ -763,7 +763,7 @@ bool atf_comp::comptest_XrefMaybe(atf_comp::FComptest &row) {
 
 // --- atf_comp.FDb.ind_comptest.Find
 // Find row by key. Return NULL if not found.
-atf_comp::FComptest* atf_comp::ind_comptest_Find(const algo::strptr& key) {
+atf_comp::FComptest* atf_comp::ind_comptest_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_comptest_buckets_n - 1);
     atf_comp::FComptest* *e = &_db.ind_comptest_buckets_elems[index];
     atf_comp::FComptest* ret=NULL;
@@ -786,7 +786,7 @@ atf_comp::FComptest& atf_comp::ind_comptest_FindX(const algo::strptr& key) {
 
 // --- atf_comp.FDb.ind_comptest.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_comp::FComptest& atf_comp::ind_comptest_GetOrCreate(const algo::strptr& key) {
+atf_comp::FComptest& atf_comp::ind_comptest_GetOrCreate(const algo::strptr& key) throw() {
     atf_comp::FComptest* ret = ind_comptest_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &comptest_Alloc();
@@ -803,7 +803,7 @@ atf_comp::FComptest& atf_comp::ind_comptest_GetOrCreate(const algo::strptr& key)
 
 // --- atf_comp.FDb.ind_comptest.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_comp::ind_comptest_InsertMaybe(atf_comp::FComptest& row) {
+bool atf_comp::ind_comptest_InsertMaybe(atf_comp::FComptest& row) throw() {
     ind_comptest_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_comptest_next == (atf_comp::FComptest*)-1)) {// check if in hash already
@@ -831,7 +831,7 @@ bool atf_comp::ind_comptest_InsertMaybe(atf_comp::FComptest& row) {
 
 // --- atf_comp.FDb.ind_comptest.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_comp::ind_comptest_Remove(atf_comp::FComptest& row) {
+void atf_comp::ind_comptest_Remove(atf_comp::FComptest& row) throw() {
     if (LIKELY(row.ind_comptest_next != (atf_comp::FComptest*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.comptest) & (_db.ind_comptest_buckets_n - 1);
         atf_comp::FComptest* *prev = &_db.ind_comptest_buckets_elems[index]; // addr of pointer to current element
@@ -849,7 +849,7 @@ void atf_comp::ind_comptest_Remove(atf_comp::FComptest& row) {
 
 // --- atf_comp.FDb.ind_comptest.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_comp::ind_comptest_Reserve(int n) {
+void atf_comp::ind_comptest_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_comptest_buckets_n;
     u32 new_nelems   = _db.ind_comptest_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -885,7 +885,7 @@ void atf_comp::ind_comptest_Reserve(int n) {
 
 // --- atf_comp.FDb.zd_sel_comptest.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_comp::zd_sel_comptest_Insert(atf_comp::FComptest& row) {
+void atf_comp::zd_sel_comptest_Insert(atf_comp::FComptest& row) throw() {
     if (!zd_sel_comptest_InLlistQ(row)) {
         atf_comp::FComptest* old_tail = _db.zd_sel_comptest_tail;
         row.zd_sel_comptest_next = NULL;
@@ -904,7 +904,7 @@ void atf_comp::zd_sel_comptest_Insert(atf_comp::FComptest& row) {
 
 // --- atf_comp.FDb.zd_sel_comptest.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_comp::zd_sel_comptest_Remove(atf_comp::FComptest& row) {
+void atf_comp::zd_sel_comptest_Remove(atf_comp::FComptest& row) throw() {
     if (zd_sel_comptest_InLlistQ(row)) {
         atf_comp::FComptest* old_head       = _db.zd_sel_comptest_head;
         (void)old_head; // in case it's not used
@@ -930,7 +930,7 @@ void atf_comp::zd_sel_comptest_Remove(atf_comp::FComptest& row) {
 
 // --- atf_comp.FDb.zd_sel_comptest.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_comp::zd_sel_comptest_RemoveAll() {
+void atf_comp::zd_sel_comptest_RemoveAll() throw() {
     atf_comp::FComptest* row = _db.zd_sel_comptest_head;
     _db.zd_sel_comptest_head = NULL;
     _db.zd_sel_comptest_tail = NULL;
@@ -950,7 +950,7 @@ void atf_comp::zd_sel_comptest_RemoveAll() {
 // --- atf_comp.FDb.zd_sel_comptest.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
-atf_comp::FComptest* atf_comp::zd_sel_comptest_RemoveFirst() {
+atf_comp::FComptest* atf_comp::zd_sel_comptest_RemoveFirst() throw() {
     atf_comp::FComptest *row = NULL;
     row = _db.zd_sel_comptest_head;
     if (row) {
@@ -969,18 +969,18 @@ atf_comp::FComptest* atf_comp::zd_sel_comptest_RemoveFirst() {
 
 // --- atf_comp.FDb.zd_sel_comptest.FirstChanged
 // First element of index changed.
-static void atf_comp::zd_sel_comptest_FirstChanged() {
+static void atf_comp::zd_sel_comptest_FirstChanged() throw() {
 }
 
 // --- atf_comp.FDb.zd_sel_comptest.UpdateCycles
 // Update cycles count from previous clock capture
-inline static void atf_comp::zd_sel_comptest_UpdateCycles() {
+inline static void atf_comp::zd_sel_comptest_UpdateCycles() throw() {
     u64 cur_cycles                      = algo::get_cycles();
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- atf_comp.FDb.zd_sel_comptest.Call
-inline static void atf_comp::zd_sel_comptest_Call() {
+inline static void atf_comp::zd_sel_comptest_Call() throw() {
     if (!atf_comp::zd_sel_comptest_EmptyQ()) { // fstep:atf_comp.FDb.zd_sel_comptest
         atf_comp::zd_sel_comptest_Step(); // steptype:Inline: call function on every step
         zd_sel_comptest_UpdateCycles();
@@ -991,7 +991,7 @@ inline static void atf_comp::zd_sel_comptest_Call() {
 // --- atf_comp.FDb.targs.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_comp::FTargs& atf_comp::targs_Alloc() {
+atf_comp::FTargs& atf_comp::targs_Alloc() throw() {
     atf_comp::FTargs* row = targs_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_comp.out_of_mem  field:atf_comp.FDb.targs  comment:'Alloc failed'");
@@ -1001,7 +1001,7 @@ atf_comp::FTargs& atf_comp::targs_Alloc() {
 
 // --- atf_comp.FDb.targs.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_comp::FTargs* atf_comp::targs_AllocMaybe() {
+atf_comp::FTargs* atf_comp::targs_AllocMaybe() throw() {
     atf_comp::FTargs *row = (atf_comp::FTargs*)targs_AllocMem();
     if (row) {
         new (row) atf_comp::FTargs; // call constructor
@@ -1012,7 +1012,7 @@ atf_comp::FTargs* atf_comp::targs_AllocMaybe() {
 // --- atf_comp.FDb.targs.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_comp::FTargs* atf_comp::targs_InsertMaybe(const atfdb::Targs &value) {
+atf_comp::FTargs* atf_comp::targs_InsertMaybe(const atfdb::Targs &value) throw() {
     atf_comp::FTargs *row = &targs_Alloc(); // if out of memory, process dies. if input error, return NULL.
     targs_CopyIn(*row,const_cast<atfdb::Targs&>(value));
     bool ok = targs_XrefMaybe(*row); // this may return false
@@ -1025,7 +1025,7 @@ atf_comp::FTargs* atf_comp::targs_InsertMaybe(const atfdb::Targs &value) {
 
 // --- atf_comp.FDb.targs.Delete
 // Remove row from all global and cross indices, then deallocate row
-void atf_comp::targs_Delete(atf_comp::FTargs &row) {
+void atf_comp::targs_Delete(atf_comp::FTargs &row) throw() {
     row.~FTargs();
     targs_FreeMem(row);
 }
@@ -1033,7 +1033,7 @@ void atf_comp::targs_Delete(atf_comp::FTargs &row) {
 // --- atf_comp.FDb.targs.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* atf_comp::targs_AllocMem() {
+void* atf_comp::targs_AllocMem() throw() {
     atf_comp::FTargs *row = _db.targs_free;
     if (UNLIKELY(!row)) {
         targs_Reserve(1);
@@ -1047,7 +1047,7 @@ void* atf_comp::targs_AllocMem() {
 
 // --- atf_comp.FDb.targs.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void atf_comp::targs_FreeMem(atf_comp::FTargs &row) {
+void atf_comp::targs_FreeMem(atf_comp::FTargs &row) throw() {
     if (UNLIKELY(row.targs_next != (atf_comp::FTargs*)-1)) {
         FatalErrorExit("atf_comp.tpool_double_delete  pool:atf_comp.FDb.targs  comment:'double deletion caught'");
     }
@@ -1058,7 +1058,7 @@ void atf_comp::targs_FreeMem(atf_comp::FTargs &row) {
 // --- atf_comp.FDb.targs.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 atf_comp::targs_Reserve(u64 n_elems) {
+u64 atf_comp::targs_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.targs_blocksize; // underlying allocator is probably Lpool
@@ -1074,7 +1074,7 @@ u64 atf_comp::targs_Reserve(u64 n_elems) {
 // --- atf_comp.FDb.targs.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 atf_comp::targs_ReserveMem(u64 size) {
+u64 atf_comp::targs_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(atf_comp::FTargs)) {
         atf_comp::FTargs *mem = (atf_comp::FTargs*)algo_lib::malloc_AllocMem(size);
@@ -1089,7 +1089,7 @@ u64 atf_comp::targs_ReserveMem(u64 size) {
 }
 
 // --- atf_comp.FDb.targs.InputMaybe
-static bool atf_comp::targs_InputMaybe(atfdb::Targs &elem) {
+static bool atf_comp::targs_InputMaybe(atfdb::Targs &elem) throw() {
     bool retval = true;
     retval = targs_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1125,7 +1125,7 @@ bool atf_comp::targs_XrefMaybe(atf_comp::FTargs &row) {
 // --- atf_comp.FDb.tmsg.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_comp::FTmsg& atf_comp::tmsg_Alloc() {
+atf_comp::FTmsg& atf_comp::tmsg_Alloc() throw() {
     atf_comp::FTmsg* row = tmsg_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_comp.out_of_mem  field:atf_comp.FDb.tmsg  comment:'Alloc failed'");
@@ -1135,7 +1135,7 @@ atf_comp::FTmsg& atf_comp::tmsg_Alloc() {
 
 // --- atf_comp.FDb.tmsg.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_comp::FTmsg* atf_comp::tmsg_AllocMaybe() {
+atf_comp::FTmsg* atf_comp::tmsg_AllocMaybe() throw() {
     atf_comp::FTmsg *row = (atf_comp::FTmsg*)tmsg_AllocMem();
     if (row) {
         new (row) atf_comp::FTmsg; // call constructor
@@ -1146,7 +1146,7 @@ atf_comp::FTmsg* atf_comp::tmsg_AllocMaybe() {
 // --- atf_comp.FDb.tmsg.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_comp::FTmsg* atf_comp::tmsg_InsertMaybe(const atfdb::Tmsg &value) {
+atf_comp::FTmsg* atf_comp::tmsg_InsertMaybe(const atfdb::Tmsg &value) throw() {
     atf_comp::FTmsg *row = &tmsg_Alloc(); // if out of memory, process dies. if input error, return NULL.
     tmsg_CopyIn(*row,const_cast<atfdb::Tmsg&>(value));
     bool ok = tmsg_XrefMaybe(*row); // this may return false
@@ -1159,7 +1159,7 @@ atf_comp::FTmsg* atf_comp::tmsg_InsertMaybe(const atfdb::Tmsg &value) {
 
 // --- atf_comp.FDb.tmsg.Delete
 // Remove row from all global and cross indices, then deallocate row
-void atf_comp::tmsg_Delete(atf_comp::FTmsg &row) {
+void atf_comp::tmsg_Delete(atf_comp::FTmsg &row) throw() {
     row.~FTmsg();
     tmsg_FreeMem(row);
 }
@@ -1167,7 +1167,7 @@ void atf_comp::tmsg_Delete(atf_comp::FTmsg &row) {
 // --- atf_comp.FDb.tmsg.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* atf_comp::tmsg_AllocMem() {
+void* atf_comp::tmsg_AllocMem() throw() {
     atf_comp::FTmsg *row = _db.tmsg_free;
     if (UNLIKELY(!row)) {
         tmsg_Reserve(1);
@@ -1181,7 +1181,7 @@ void* atf_comp::tmsg_AllocMem() {
 
 // --- atf_comp.FDb.tmsg.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void atf_comp::tmsg_FreeMem(atf_comp::FTmsg &row) {
+void atf_comp::tmsg_FreeMem(atf_comp::FTmsg &row) throw() {
     if (UNLIKELY(row.tmsg_next != (atf_comp::FTmsg*)-1)) {
         FatalErrorExit("atf_comp.tpool_double_delete  pool:atf_comp.FDb.tmsg  comment:'double deletion caught'");
     }
@@ -1192,7 +1192,7 @@ void atf_comp::tmsg_FreeMem(atf_comp::FTmsg &row) {
 // --- atf_comp.FDb.tmsg.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 atf_comp::tmsg_Reserve(u64 n_elems) {
+u64 atf_comp::tmsg_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.tmsg_blocksize; // underlying allocator is probably Lpool
@@ -1208,7 +1208,7 @@ u64 atf_comp::tmsg_Reserve(u64 n_elems) {
 // --- atf_comp.FDb.tmsg.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 atf_comp::tmsg_ReserveMem(u64 size) {
+u64 atf_comp::tmsg_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(atf_comp::FTmsg)) {
         atf_comp::FTmsg *mem = (atf_comp::FTmsg*)algo_lib::malloc_AllocMem(size);
@@ -1223,7 +1223,7 @@ u64 atf_comp::tmsg_ReserveMem(u64 size) {
 }
 
 // --- atf_comp.FDb.tmsg.InputMaybe
-static bool atf_comp::tmsg_InputMaybe(atfdb::Tmsg &elem) {
+static bool atf_comp::tmsg_InputMaybe(atfdb::Tmsg &elem) throw() {
     bool retval = true;
     retval = tmsg_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1254,7 +1254,7 @@ bool atf_comp::tmsg_XrefMaybe(atf_comp::FTmsg &row) {
 // --- atf_comp.FDb.tfilt.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_comp::FTfilt& atf_comp::tfilt_Alloc() {
+atf_comp::FTfilt& atf_comp::tfilt_Alloc() throw() {
     atf_comp::FTfilt* row = tfilt_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_comp.out_of_mem  field:atf_comp.FDb.tfilt  comment:'Alloc failed'");
@@ -1264,7 +1264,7 @@ atf_comp::FTfilt& atf_comp::tfilt_Alloc() {
 
 // --- atf_comp.FDb.tfilt.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_comp::FTfilt* atf_comp::tfilt_AllocMaybe() {
+atf_comp::FTfilt* atf_comp::tfilt_AllocMaybe() throw() {
     atf_comp::FTfilt *row = (atf_comp::FTfilt*)tfilt_AllocMem();
     if (row) {
         new (row) atf_comp::FTfilt; // call constructor
@@ -1275,7 +1275,7 @@ atf_comp::FTfilt* atf_comp::tfilt_AllocMaybe() {
 // --- atf_comp.FDb.tfilt.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_comp::FTfilt* atf_comp::tfilt_InsertMaybe(const atfdb::Tfilt &value) {
+atf_comp::FTfilt* atf_comp::tfilt_InsertMaybe(const atfdb::Tfilt &value) throw() {
     atf_comp::FTfilt *row = &tfilt_Alloc(); // if out of memory, process dies. if input error, return NULL.
     tfilt_CopyIn(*row,const_cast<atfdb::Tfilt&>(value));
     bool ok = tfilt_XrefMaybe(*row); // this may return false
@@ -1288,7 +1288,7 @@ atf_comp::FTfilt* atf_comp::tfilt_InsertMaybe(const atfdb::Tfilt &value) {
 
 // --- atf_comp.FDb.tfilt.Delete
 // Remove row from all global and cross indices, then deallocate row
-void atf_comp::tfilt_Delete(atf_comp::FTfilt &row) {
+void atf_comp::tfilt_Delete(atf_comp::FTfilt &row) throw() {
     row.~FTfilt();
     tfilt_FreeMem(row);
 }
@@ -1296,7 +1296,7 @@ void atf_comp::tfilt_Delete(atf_comp::FTfilt &row) {
 // --- atf_comp.FDb.tfilt.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* atf_comp::tfilt_AllocMem() {
+void* atf_comp::tfilt_AllocMem() throw() {
     atf_comp::FTfilt *row = _db.tfilt_free;
     if (UNLIKELY(!row)) {
         tfilt_Reserve(1);
@@ -1310,7 +1310,7 @@ void* atf_comp::tfilt_AllocMem() {
 
 // --- atf_comp.FDb.tfilt.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void atf_comp::tfilt_FreeMem(atf_comp::FTfilt &row) {
+void atf_comp::tfilt_FreeMem(atf_comp::FTfilt &row) throw() {
     if (UNLIKELY(row.tfilt_next != (atf_comp::FTfilt*)-1)) {
         FatalErrorExit("atf_comp.tpool_double_delete  pool:atf_comp.FDb.tfilt  comment:'double deletion caught'");
     }
@@ -1321,7 +1321,7 @@ void atf_comp::tfilt_FreeMem(atf_comp::FTfilt &row) {
 // --- atf_comp.FDb.tfilt.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 atf_comp::tfilt_Reserve(u64 n_elems) {
+u64 atf_comp::tfilt_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.tfilt_blocksize; // underlying allocator is probably Lpool
@@ -1337,7 +1337,7 @@ u64 atf_comp::tfilt_Reserve(u64 n_elems) {
 // --- atf_comp.FDb.tfilt.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 atf_comp::tfilt_ReserveMem(u64 size) {
+u64 atf_comp::tfilt_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(atf_comp::FTfilt)) {
         atf_comp::FTfilt *mem = (atf_comp::FTfilt*)algo_lib::malloc_AllocMem(size);
@@ -1352,7 +1352,7 @@ u64 atf_comp::tfilt_ReserveMem(u64 size) {
 }
 
 // --- atf_comp.FDb.tfilt.InputMaybe
-static bool atf_comp::tfilt_InputMaybe(atfdb::Tfilt &elem) {
+static bool atf_comp::tfilt_InputMaybe(atfdb::Tfilt &elem) throw() {
     bool retval = true;
     retval = tfilt_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1387,7 +1387,7 @@ bool atf_comp::tfilt_XrefMaybe(atf_comp::FTfilt &row) {
 
 // --- atf_comp.FDb.zd_run_comptest.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_comp::zd_run_comptest_Insert(atf_comp::FComptest& row) {
+void atf_comp::zd_run_comptest_Insert(atf_comp::FComptest& row) throw() {
     if (!zd_run_comptest_InLlistQ(row)) {
         atf_comp::FComptest* old_tail = _db.zd_run_comptest_tail;
         row.zd_run_comptest_next = NULL;
@@ -1406,7 +1406,7 @@ void atf_comp::zd_run_comptest_Insert(atf_comp::FComptest& row) {
 
 // --- atf_comp.FDb.zd_run_comptest.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_comp::zd_run_comptest_Remove(atf_comp::FComptest& row) {
+void atf_comp::zd_run_comptest_Remove(atf_comp::FComptest& row) throw() {
     if (zd_run_comptest_InLlistQ(row)) {
         atf_comp::FComptest* old_head       = _db.zd_run_comptest_head;
         (void)old_head; // in case it's not used
@@ -1432,7 +1432,7 @@ void atf_comp::zd_run_comptest_Remove(atf_comp::FComptest& row) {
 
 // --- atf_comp.FDb.zd_run_comptest.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_comp::zd_run_comptest_RemoveAll() {
+void atf_comp::zd_run_comptest_RemoveAll() throw() {
     atf_comp::FComptest* row = _db.zd_run_comptest_head;
     _db.zd_run_comptest_head = NULL;
     _db.zd_run_comptest_tail = NULL;
@@ -1452,7 +1452,7 @@ void atf_comp::zd_run_comptest_RemoveAll() {
 // --- atf_comp.FDb.zd_run_comptest.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
-atf_comp::FComptest* atf_comp::zd_run_comptest_RemoveFirst() {
+atf_comp::FComptest* atf_comp::zd_run_comptest_RemoveFirst() throw() {
     atf_comp::FComptest *row = NULL;
     row = _db.zd_run_comptest_head;
     if (row) {
@@ -1471,18 +1471,18 @@ atf_comp::FComptest* atf_comp::zd_run_comptest_RemoveFirst() {
 
 // --- atf_comp.FDb.zd_run_comptest.FirstChanged
 // First element of index changed.
-void atf_comp::zd_run_comptest_FirstChanged() {
+void atf_comp::zd_run_comptest_FirstChanged() throw() {
 }
 
 // --- atf_comp.FDb.zd_run_comptest.UpdateCycles
 // Update cycles count from previous clock capture
-inline static void atf_comp::zd_run_comptest_UpdateCycles() {
+inline static void atf_comp::zd_run_comptest_UpdateCycles() throw() {
     u64 cur_cycles                      = algo::get_cycles();
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- atf_comp.FDb.zd_run_comptest.Call
-inline static void atf_comp::zd_run_comptest_Call() {
+inline static void atf_comp::zd_run_comptest_Call() throw() {
     if (!atf_comp::zd_run_comptest_EmptyQ()) { // fstep:atf_comp.FDb.zd_run_comptest
         if (atf_comp::_db.zd_run_comptest_next < algo_lib::_db.clock) {
             atf_comp::_db.zd_run_comptest_next = algo_lib::_db.clock + atf_comp::_db.zd_run_comptest_delay;
@@ -1496,7 +1496,7 @@ inline static void atf_comp::zd_run_comptest_Call() {
 // --- atf_comp.FDb.zd_run_comptest.SetDelay
 // Set inter-step delay to specified value.
 // The difference between new delay and current delay is added to the next scheduled time.
-void atf_comp::zd_run_comptest_SetDelay(algo::SchedTime delay) {
+void atf_comp::zd_run_comptest_SetDelay(algo::SchedTime delay) throw() {
     i64 diff = delay.value - atf_comp::_db.zd_run_comptest_delay.value;
     atf_comp::_db.zd_run_comptest_delay = delay;
     if (diff > 0) {
@@ -1508,7 +1508,7 @@ void atf_comp::zd_run_comptest_SetDelay(algo::SchedTime delay) {
 
 // --- atf_comp.FDb.zd_out_tmsg.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_comp::zd_out_tmsg_Insert(atf_comp::FTmsg& row) {
+void atf_comp::zd_out_tmsg_Insert(atf_comp::FTmsg& row) throw() {
     if (!zd_out_tmsg_InLlistQ(row)) {
         atf_comp::FTmsg* old_tail = _db.zd_out_tmsg_tail;
         row.zd_out_tmsg_next = NULL;
@@ -1524,7 +1524,7 @@ void atf_comp::zd_out_tmsg_Insert(atf_comp::FTmsg& row) {
 
 // --- atf_comp.FDb.zd_out_tmsg.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_comp::zd_out_tmsg_Remove(atf_comp::FTmsg& row) {
+void atf_comp::zd_out_tmsg_Remove(atf_comp::FTmsg& row) throw() {
     if (zd_out_tmsg_InLlistQ(row)) {
         atf_comp::FTmsg* old_head       = _db.zd_out_tmsg_head;
         (void)old_head; // in case it's not used
@@ -1547,7 +1547,7 @@ void atf_comp::zd_out_tmsg_Remove(atf_comp::FTmsg& row) {
 
 // --- atf_comp.FDb.zd_out_tmsg.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_comp::zd_out_tmsg_RemoveAll() {
+void atf_comp::zd_out_tmsg_RemoveAll() throw() {
     atf_comp::FTmsg* row = _db.zd_out_tmsg_head;
     _db.zd_out_tmsg_head = NULL;
     _db.zd_out_tmsg_tail = NULL;
@@ -1562,7 +1562,7 @@ void atf_comp::zd_out_tmsg_RemoveAll() {
 
 // --- atf_comp.FDb.zd_out_tmsg.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_comp::FTmsg* atf_comp::zd_out_tmsg_RemoveFirst() {
+atf_comp::FTmsg* atf_comp::zd_out_tmsg_RemoveFirst() throw() {
     atf_comp::FTmsg *row = NULL;
     row = _db.zd_out_tmsg_head;
     if (row) {
@@ -1580,7 +1580,7 @@ atf_comp::FTmsg* atf_comp::zd_out_tmsg_RemoveFirst() {
 
 // --- atf_comp.FDb.zd_out_tmsg.SaveSsimfile
 // Save table to ssimfile
-bool atf_comp::zd_out_tmsg_SaveSsimfile(algo::strptr fname) {
+bool atf_comp::zd_out_tmsg_SaveSsimfile(algo::strptr fname) throw() {
     cstring text;
     ind_beg(atf_comp::_db_zd_out_tmsg_curs, zd_out_tmsg, atf_comp::_db) {
         atfdb::Tmsg out;
@@ -1595,7 +1595,7 @@ bool atf_comp::zd_out_tmsg_SaveSsimfile(algo::strptr fname) {
 
 // --- atf_comp.FDb.zd_out_comptest.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_comp::zd_out_comptest_Insert(atf_comp::FComptest& row) {
+void atf_comp::zd_out_comptest_Insert(atf_comp::FComptest& row) throw() {
     if (!zd_out_comptest_InLlistQ(row)) {
         atf_comp::FComptest* old_tail = _db.zd_out_comptest_tail;
         row.zd_out_comptest_next = NULL;
@@ -1611,7 +1611,7 @@ void atf_comp::zd_out_comptest_Insert(atf_comp::FComptest& row) {
 
 // --- atf_comp.FDb.zd_out_comptest.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_comp::zd_out_comptest_Remove(atf_comp::FComptest& row) {
+void atf_comp::zd_out_comptest_Remove(atf_comp::FComptest& row) throw() {
     if (zd_out_comptest_InLlistQ(row)) {
         atf_comp::FComptest* old_head       = _db.zd_out_comptest_head;
         (void)old_head; // in case it's not used
@@ -1634,7 +1634,7 @@ void atf_comp::zd_out_comptest_Remove(atf_comp::FComptest& row) {
 
 // --- atf_comp.FDb.zd_out_comptest.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_comp::zd_out_comptest_RemoveAll() {
+void atf_comp::zd_out_comptest_RemoveAll() throw() {
     atf_comp::FComptest* row = _db.zd_out_comptest_head;
     _db.zd_out_comptest_head = NULL;
     _db.zd_out_comptest_tail = NULL;
@@ -1649,7 +1649,7 @@ void atf_comp::zd_out_comptest_RemoveAll() {
 
 // --- atf_comp.FDb.zd_out_comptest.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_comp::FComptest* atf_comp::zd_out_comptest_RemoveFirst() {
+atf_comp::FComptest* atf_comp::zd_out_comptest_RemoveFirst() throw() {
     atf_comp::FComptest *row = NULL;
     row = _db.zd_out_comptest_head;
     if (row) {
@@ -1667,7 +1667,7 @@ atf_comp::FComptest* atf_comp::zd_out_comptest_RemoveFirst() {
 
 // --- atf_comp.FDb.zd_out_comptest.SaveSsimfile
 // Save table to ssimfile
-bool atf_comp::zd_out_comptest_SaveSsimfile(algo::strptr fname) {
+bool atf_comp::zd_out_comptest_SaveSsimfile(algo::strptr fname) throw() {
     cstring text;
     ind_beg(atf_comp::_db_zd_out_comptest_curs, zd_out_comptest, atf_comp::_db) {
         atfdb::Comptest out;
@@ -1682,7 +1682,7 @@ bool atf_comp::zd_out_comptest_SaveSsimfile(algo::strptr fname) {
 
 // --- atf_comp.FDb.zd_out_tfilt.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_comp::zd_out_tfilt_Insert(atf_comp::FTfilt& row) {
+void atf_comp::zd_out_tfilt_Insert(atf_comp::FTfilt& row) throw() {
     if (!zd_out_tfilt_InLlistQ(row)) {
         atf_comp::FTfilt* old_tail = _db.zd_out_tfilt_tail;
         row.zd_out_tfilt_next = NULL;
@@ -1698,7 +1698,7 @@ void atf_comp::zd_out_tfilt_Insert(atf_comp::FTfilt& row) {
 
 // --- atf_comp.FDb.zd_out_tfilt.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_comp::zd_out_tfilt_Remove(atf_comp::FTfilt& row) {
+void atf_comp::zd_out_tfilt_Remove(atf_comp::FTfilt& row) throw() {
     if (zd_out_tfilt_InLlistQ(row)) {
         atf_comp::FTfilt* old_head       = _db.zd_out_tfilt_head;
         (void)old_head; // in case it's not used
@@ -1721,7 +1721,7 @@ void atf_comp::zd_out_tfilt_Remove(atf_comp::FTfilt& row) {
 
 // --- atf_comp.FDb.zd_out_tfilt.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_comp::zd_out_tfilt_RemoveAll() {
+void atf_comp::zd_out_tfilt_RemoveAll() throw() {
     atf_comp::FTfilt* row = _db.zd_out_tfilt_head;
     _db.zd_out_tfilt_head = NULL;
     _db.zd_out_tfilt_tail = NULL;
@@ -1736,7 +1736,7 @@ void atf_comp::zd_out_tfilt_RemoveAll() {
 
 // --- atf_comp.FDb.zd_out_tfilt.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_comp::FTfilt* atf_comp::zd_out_tfilt_RemoveFirst() {
+atf_comp::FTfilt* atf_comp::zd_out_tfilt_RemoveFirst() throw() {
     atf_comp::FTfilt *row = NULL;
     row = _db.zd_out_tfilt_head;
     if (row) {
@@ -1754,7 +1754,7 @@ atf_comp::FTfilt* atf_comp::zd_out_tfilt_RemoveFirst() {
 
 // --- atf_comp.FDb.zd_out_tfilt.SaveSsimfile
 // Save table to ssimfile
-bool atf_comp::zd_out_tfilt_SaveSsimfile(algo::strptr fname) {
+bool atf_comp::zd_out_tfilt_SaveSsimfile(algo::strptr fname) throw() {
     cstring text;
     ind_beg(atf_comp::_db_zd_out_tfilt_curs, zd_out_tfilt, atf_comp::_db) {
         atfdb::Tfilt out;
@@ -1769,7 +1769,7 @@ bool atf_comp::zd_out_tfilt_SaveSsimfile(algo::strptr fname) {
 
 // --- atf_comp.FDb.zd_out_targs.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_comp::zd_out_targs_Insert(atf_comp::FTargs& row) {
+void atf_comp::zd_out_targs_Insert(atf_comp::FTargs& row) throw() {
     if (!zd_out_targs_InLlistQ(row)) {
         atf_comp::FTargs* old_tail = _db.zd_out_targs_tail;
         row.zd_out_targs_next = NULL;
@@ -1785,7 +1785,7 @@ void atf_comp::zd_out_targs_Insert(atf_comp::FTargs& row) {
 
 // --- atf_comp.FDb.zd_out_targs.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_comp::zd_out_targs_Remove(atf_comp::FTargs& row) {
+void atf_comp::zd_out_targs_Remove(atf_comp::FTargs& row) throw() {
     if (zd_out_targs_InLlistQ(row)) {
         atf_comp::FTargs* old_head       = _db.zd_out_targs_head;
         (void)old_head; // in case it's not used
@@ -1808,7 +1808,7 @@ void atf_comp::zd_out_targs_Remove(atf_comp::FTargs& row) {
 
 // --- atf_comp.FDb.zd_out_targs.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_comp::zd_out_targs_RemoveAll() {
+void atf_comp::zd_out_targs_RemoveAll() throw() {
     atf_comp::FTargs* row = _db.zd_out_targs_head;
     _db.zd_out_targs_head = NULL;
     _db.zd_out_targs_tail = NULL;
@@ -1823,7 +1823,7 @@ void atf_comp::zd_out_targs_RemoveAll() {
 
 // --- atf_comp.FDb.zd_out_targs.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_comp::FTargs* atf_comp::zd_out_targs_RemoveFirst() {
+atf_comp::FTargs* atf_comp::zd_out_targs_RemoveFirst() throw() {
     atf_comp::FTargs *row = NULL;
     row = _db.zd_out_targs_head;
     if (row) {
@@ -1841,7 +1841,7 @@ atf_comp::FTargs* atf_comp::zd_out_targs_RemoveFirst() {
 
 // --- atf_comp.FDb.zd_out_targs.SaveSsimfile
 // Save table to ssimfile
-bool atf_comp::zd_out_targs_SaveSsimfile(algo::strptr fname) {
+bool atf_comp::zd_out_targs_SaveSsimfile(algo::strptr fname) throw() {
     cstring text;
     ind_beg(atf_comp::_db_zd_out_targs_curs, zd_out_targs, atf_comp::_db) {
         atfdb::Targs out;
@@ -1856,13 +1856,13 @@ bool atf_comp::zd_out_targs_SaveSsimfile(algo::strptr fname) {
 
 // --- atf_comp.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr atf_comp::trace_RowidFind(int t) {
+static algo::ImrowPtr atf_comp::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- atf_comp.FDb.trace.N
 // Function return 1
-inline static i32 atf_comp::trace_N() {
+inline static i32 atf_comp::trace_N() throw() {
     return 1;
 }
 
@@ -1922,7 +1922,7 @@ void atf_comp::FDb_Init() {
 }
 
 // --- atf_comp.FDb..Uninit
-void atf_comp::FDb_Uninit() {
+void atf_comp::FDb_Uninit() throw() {
     atf_comp::FDb &row = _db; (void)row;
 
     // atf_comp.FDb.ind_comptest.Uninit (Thash)  //
@@ -1934,20 +1934,20 @@ void atf_comp::FDb_Uninit() {
 
 // --- atf_comp.FTargs.base.CopyOut
 // Copy fields out of row
-void atf_comp::targs_CopyOut(atf_comp::FTargs &row, atfdb::Targs &out) {
+void atf_comp::targs_CopyOut(atf_comp::FTargs &row, atfdb::Targs &out) throw() {
     out.comptest = row.comptest;
     out.args = row.args;
 }
 
 // --- atf_comp.FTargs.base.CopyIn
 // Copy fields in to row
-void atf_comp::targs_CopyIn(atf_comp::FTargs &row, atfdb::Targs &in) {
+void atf_comp::targs_CopyIn(atf_comp::FTargs &row, atfdb::Targs &in) throw() {
     row.comptest = in.comptest;
     row.args = in.args;
 }
 
 // --- atf_comp.FTargs..Uninit
-void atf_comp::FTargs_Uninit(atf_comp::FTargs& targs) {
+void atf_comp::FTargs_Uninit(atf_comp::FTargs& targs) throw() {
     atf_comp::FTargs &row = targs; (void)row;
     atf_comp::FComptest* p_comptest = atf_comp::ind_comptest_Find(row.comptest);
     if (p_comptest)  {
@@ -1958,7 +1958,7 @@ void atf_comp::FTargs_Uninit(atf_comp::FTargs& targs) {
 
 // --- atf_comp.FTfilt.base.CopyOut
 // Copy fields out of row
-void atf_comp::tfilt_CopyOut(atf_comp::FTfilt &row, atfdb::Tfilt &out) {
+void atf_comp::tfilt_CopyOut(atf_comp::FTfilt &row, atfdb::Tfilt &out) throw() {
     out.comptest = row.comptest;
     out.filter = row.filter;
     out.comment = row.comment;
@@ -1966,14 +1966,14 @@ void atf_comp::tfilt_CopyOut(atf_comp::FTfilt &row, atfdb::Tfilt &out) {
 
 // --- atf_comp.FTfilt.base.CopyIn
 // Copy fields in to row
-void atf_comp::tfilt_CopyIn(atf_comp::FTfilt &row, atfdb::Tfilt &in) {
+void atf_comp::tfilt_CopyIn(atf_comp::FTfilt &row, atfdb::Tfilt &in) throw() {
     row.comptest = in.comptest;
     row.filter = in.filter;
     row.comment = in.comment;
 }
 
 // --- atf_comp.FTfilt..Uninit
-void atf_comp::FTfilt_Uninit(atf_comp::FTfilt& tfilt) {
+void atf_comp::FTfilt_Uninit(atf_comp::FTfilt& tfilt) throw() {
     atf_comp::FTfilt &row = tfilt; (void)row;
     atf_comp::FComptest* p_comptest = atf_comp::ind_comptest_Find(row.comptest);
     if (p_comptest)  {
@@ -1984,7 +1984,7 @@ void atf_comp::FTfilt_Uninit(atf_comp::FTfilt& tfilt) {
 
 // --- atf_comp.FTmsg.base.CopyOut
 // Copy fields out of row
-void atf_comp::tmsg_CopyOut(atf_comp::FTmsg &row, atfdb::Tmsg &out) {
+void atf_comp::tmsg_CopyOut(atf_comp::FTmsg &row, atfdb::Tmsg &out) throw() {
     out.tmsg = row.tmsg;
     out.istuple = row.istuple;
     out.msg = row.msg;
@@ -1992,20 +1992,20 @@ void atf_comp::tmsg_CopyOut(atf_comp::FTmsg &row, atfdb::Tmsg &out) {
 
 // --- atf_comp.FTmsg.base.CopyIn
 // Copy fields in to row
-void atf_comp::tmsg_CopyIn(atf_comp::FTmsg &row, atfdb::Tmsg &in) {
+void atf_comp::tmsg_CopyIn(atf_comp::FTmsg &row, atfdb::Tmsg &in) throw() {
     row.tmsg = in.tmsg;
     row.istuple = in.istuple;
     row.msg = in.msg;
 }
 
 // --- atf_comp.FTmsg.comptest.Get
-algo::Smallstr50 atf_comp::comptest_Get(atf_comp::FTmsg& tmsg) {
+algo::Smallstr50 atf_comp::comptest_Get(atf_comp::FTmsg& tmsg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(tmsg.tmsg, "/LL"));
     return ret;
 }
 
 // --- atf_comp.FTmsg.rank.Get
-i32 atf_comp::rank_Get(atf_comp::FTmsg& tmsg) {
+i32 atf_comp::rank_Get(atf_comp::FTmsg& tmsg) throw() {
     i32 ret;
     ret = 0; // default value
     (void)i32_ReadStrptrMaybe(ret, algo::Pathcomp(tmsg.tmsg, "/LR.LL"));
@@ -2013,13 +2013,13 @@ i32 atf_comp::rank_Get(atf_comp::FTmsg& tmsg) {
 }
 
 // --- atf_comp.FTmsg.dir.Get
-algo::Smallstr50 atf_comp::dir_Get(atf_comp::FTmsg& tmsg) {
+algo::Smallstr50 atf_comp::dir_Get(atf_comp::FTmsg& tmsg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(tmsg.tmsg, "/LR.LR"));
     return ret;
 }
 
 // --- atf_comp.FTmsg..Uninit
-void atf_comp::FTmsg_Uninit(atf_comp::FTmsg& tmsg) {
+void atf_comp::FTmsg_Uninit(atf_comp::FTmsg& tmsg) throw() {
     atf_comp::FTmsg &row = tmsg; (void)row;
     atf_comp::FComptest* p_comptest = atf_comp::ind_comptest_Find(comptest_Get(row));
     if (p_comptest)  {
@@ -2031,7 +2031,7 @@ void atf_comp::FTmsg_Uninit(atf_comp::FTmsg& tmsg) {
 // --- atf_comp.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_comp::value_ToCstr(const atf_comp::FieldId& parent) {
+const char* atf_comp::value_ToCstr(const atf_comp::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_comp_FieldId_value        : ret = "value";  break;
@@ -2042,7 +2042,7 @@ const char* atf_comp::value_ToCstr(const atf_comp::FieldId& parent) {
 // --- atf_comp.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_comp::value_Print(const atf_comp::FieldId& parent, algo::cstring &lhs) {
+void atf_comp::value_Print(const atf_comp::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2055,7 +2055,7 @@ void atf_comp::value_Print(const atf_comp::FieldId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_comp::value_SetStrptrMaybe(atf_comp::FieldId& parent, algo::strptr rhs) {
+bool atf_comp::value_SetStrptrMaybe(atf_comp::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -2073,13 +2073,13 @@ bool atf_comp::value_SetStrptrMaybe(atf_comp::FieldId& parent, algo::strptr rhs)
 // --- atf_comp.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_comp::value_SetStrptr(atf_comp::FieldId& parent, algo::strptr rhs, atf_comp_FieldIdEnum dflt) {
+void atf_comp::value_SetStrptr(atf_comp::FieldId& parent, algo::strptr rhs, atf_comp_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_comp.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_comp::value_ReadStrptrMaybe(atf_comp::FieldId& parent, algo::strptr rhs) {
+bool atf_comp::value_ReadStrptrMaybe(atf_comp::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2091,7 +2091,7 @@ bool atf_comp::value_ReadStrptrMaybe(atf_comp::FieldId& parent, algo::strptr rhs
 // --- atf_comp.FieldId..ReadStrptrMaybe
 // Read fields of atf_comp::FieldId from an ascii string.
 // The format of the string is the format of the atf_comp::FieldId's only field
-bool atf_comp::FieldId_ReadStrptrMaybe(atf_comp::FieldId &parent, algo::strptr in_str) {
+bool atf_comp::FieldId_ReadStrptrMaybe(atf_comp::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2100,14 +2100,14 @@ bool atf_comp::FieldId_ReadStrptrMaybe(atf_comp::FieldId &parent, algo::strptr i
 // --- atf_comp.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_comp.FieldId.String  printfmt:Raw
-void atf_comp::FieldId_Print(atf_comp::FieldId& row, algo::cstring& str) {
+void atf_comp::FieldId_Print(atf_comp::FieldId& row, algo::cstring& str) throw() {
     atf_comp::value_Print(row, str);
 }
 
 // --- atf_comp.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_comp::value_ToCstr(const atf_comp::TableId& parent) {
+const char* atf_comp::value_ToCstr(const atf_comp::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_comp_TableId_atfdb_Comptest: ret = "atfdb.Comptest";  break;
@@ -2121,7 +2121,7 @@ const char* atf_comp::value_ToCstr(const atf_comp::TableId& parent) {
 // --- atf_comp.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_comp::value_Print(const atf_comp::TableId& parent, algo::cstring &lhs) {
+void atf_comp::value_Print(const atf_comp::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2134,7 +2134,7 @@ void atf_comp::value_Print(const atf_comp::TableId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_comp::value_SetStrptrMaybe(atf_comp::TableId& parent, algo::strptr rhs) {
+bool atf_comp::value_SetStrptrMaybe(atf_comp::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 10: {
@@ -2191,13 +2191,13 @@ bool atf_comp::value_SetStrptrMaybe(atf_comp::TableId& parent, algo::strptr rhs)
 // --- atf_comp.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_comp::value_SetStrptr(atf_comp::TableId& parent, algo::strptr rhs, atf_comp_TableIdEnum dflt) {
+void atf_comp::value_SetStrptr(atf_comp::TableId& parent, algo::strptr rhs, atf_comp_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_comp.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_comp::value_ReadStrptrMaybe(atf_comp::TableId& parent, algo::strptr rhs) {
+bool atf_comp::value_ReadStrptrMaybe(atf_comp::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2209,7 +2209,7 @@ bool atf_comp::value_ReadStrptrMaybe(atf_comp::TableId& parent, algo::strptr rhs
 // --- atf_comp.TableId..ReadStrptrMaybe
 // Read fields of atf_comp::TableId from an ascii string.
 // The format of the string is the format of the atf_comp::TableId's only field
-bool atf_comp::TableId_ReadStrptrMaybe(atf_comp::TableId &parent, algo::strptr in_str) {
+bool atf_comp::TableId_ReadStrptrMaybe(atf_comp::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2218,7 +2218,7 @@ bool atf_comp::TableId_ReadStrptrMaybe(atf_comp::TableId &parent, algo::strptr i
 // --- atf_comp.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_comp.TableId.String  printfmt:Raw
-void atf_comp::TableId_Print(atf_comp::TableId& row, algo::cstring& str) {
+void atf_comp::TableId_Print(atf_comp::TableId& row, algo::cstring& str) throw() {
     atf_comp::value_Print(row, str);
 }
 

@@ -27,18 +27,18 @@
 
 // --- ietf.FieldId.value.GetEnum
 // Get value of field as enum type
-inline ietf_FieldIdEnum ietf::value_GetEnum(const ietf::FieldId& parent) {
+inline ietf_FieldIdEnum ietf::value_GetEnum(const ietf::FieldId& parent) throw() {
     return ietf_FieldIdEnum(parent.value);
 }
 
 // --- ietf.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void ietf::value_SetEnum(ietf::FieldId& parent, ietf_FieldIdEnum rhs) {
+inline void ietf::value_SetEnum(ietf::FieldId& parent, ietf_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- ietf.FieldId.value.Cast
-inline  ietf::FieldId::operator ietf_FieldIdEnum() const {
+inline  ietf::FieldId::operator ietf_FieldIdEnum() const throw() {
     return ietf_FieldIdEnum((*this).value);
 }
 
@@ -49,64 +49,64 @@ inline void ietf::FieldId_Init(ietf::FieldId& parent) {
 }
 
 // --- ietf.FieldId..Ctor
-inline  ietf::FieldId::FieldId() {
+inline  ietf::FieldId::FieldId() throw() {
     ietf::FieldId_Init(*this);
 }
 
 // --- ietf.FieldId..FieldwiseCtor
-inline  ietf::FieldId::FieldId(i32 in_value)
+inline  ietf::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- ietf.FieldId..EnumCtor
-inline  ietf::FieldId::FieldId(ietf_FieldIdEnum arg) {
+inline  ietf::FieldId::FieldId(ietf_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- ietf.Ipv4..Hash
-inline u32 ietf::Ipv4_Hash(u32 prev, ietf::Ipv4 rhs) {
+inline u32 ietf::Ipv4_Hash(u32 prev, ietf::Ipv4 rhs) throw() {
     prev = u32_Hash(prev, rhs.ipv4);
     return prev;
 }
 
 // --- ietf.Ipv4..EqOp
-inline bool ietf::Ipv4::operator ==(const ietf::Ipv4 &rhs) const {
+inline bool ietf::Ipv4::operator ==(const ietf::Ipv4 &rhs) const throw() {
     return ietf::Ipv4_Eq(const_cast<ietf::Ipv4&>(*this),const_cast<ietf::Ipv4&>(rhs));
 }
 
 // --- ietf.Ipv4..NeOp
-inline bool ietf::Ipv4::operator !=(const ietf::Ipv4 &rhs) const {
+inline bool ietf::Ipv4::operator !=(const ietf::Ipv4 &rhs) const throw() {
     return !ietf::Ipv4_Eq(const_cast<ietf::Ipv4&>(*this),const_cast<ietf::Ipv4&>(rhs));
 }
 
 // --- ietf.Ipv4..LtOp
-inline bool ietf::Ipv4::operator <(const ietf::Ipv4 &rhs) const {
+inline bool ietf::Ipv4::operator <(const ietf::Ipv4 &rhs) const throw() {
     return ietf::Ipv4_Lt(const_cast<ietf::Ipv4&>(*this),const_cast<ietf::Ipv4&>(rhs));
 }
 
 // --- ietf.Ipv4..GtOp
-inline bool ietf::Ipv4::operator >(const ietf::Ipv4 &rhs) const {
+inline bool ietf::Ipv4::operator >(const ietf::Ipv4 &rhs) const throw() {
     return ietf::Ipv4_Lt(const_cast<ietf::Ipv4&>(rhs),const_cast<ietf::Ipv4&>(*this));
 }
 
 // --- ietf.Ipv4..LeOp
-inline bool ietf::Ipv4::operator <=(const ietf::Ipv4 &rhs) const {
+inline bool ietf::Ipv4::operator <=(const ietf::Ipv4 &rhs) const throw() {
     return !ietf::Ipv4_Lt(const_cast<ietf::Ipv4&>(rhs),const_cast<ietf::Ipv4&>(*this));
 }
 
 // --- ietf.Ipv4..GeOp
-inline bool ietf::Ipv4::operator >=(const ietf::Ipv4 &rhs) const {
+inline bool ietf::Ipv4::operator >=(const ietf::Ipv4 &rhs) const throw() {
     return !ietf::Ipv4_Lt(const_cast<ietf::Ipv4&>(*this),const_cast<ietf::Ipv4&>(rhs));
 }
 
 // --- ietf.Ipv4..Lt
-inline bool ietf::Ipv4_Lt(ietf::Ipv4 lhs, ietf::Ipv4 rhs) {
+inline bool ietf::Ipv4_Lt(ietf::Ipv4 lhs, ietf::Ipv4 rhs) throw() {
     return u32_Lt(lhs.ipv4, rhs.ipv4);
 }
 
 // --- ietf.Ipv4..Cmp
-inline i32 ietf::Ipv4_Cmp(ietf::Ipv4 lhs, ietf::Ipv4 rhs) {
+inline i32 ietf::Ipv4_Cmp(ietf::Ipv4 lhs, ietf::Ipv4 rhs) throw() {
     i32 retval = 0;
     retval = u32_Cmp(lhs.ipv4, rhs.ipv4);
     return retval;
@@ -119,7 +119,7 @@ inline void ietf::Ipv4_Init(ietf::Ipv4& parent) {
 }
 
 // --- ietf.Ipv4..Eq
-inline bool ietf::Ipv4_Eq(ietf::Ipv4 lhs, ietf::Ipv4 rhs) {
+inline bool ietf::Ipv4_Eq(ietf::Ipv4 lhs, ietf::Ipv4 rhs) throw() {
     bool retval = true;
     retval = u32_Eq(lhs.ipv4, rhs.ipv4);
     return retval;
@@ -127,7 +127,7 @@ inline bool ietf::Ipv4_Eq(ietf::Ipv4 lhs, ietf::Ipv4 rhs) {
 
 // --- ietf.Ipv4..Update
 // Set value. Return true if new value is different from old value.
-inline bool ietf::Ipv4_Update(ietf::Ipv4 &lhs, ietf::Ipv4 rhs) {
+inline bool ietf::Ipv4_Update(ietf::Ipv4 &lhs, ietf::Ipv4 rhs) throw() {
     bool ret = !Ipv4_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -136,60 +136,60 @@ inline bool ietf::Ipv4_Update(ietf::Ipv4 &lhs, ietf::Ipv4 rhs) {
 }
 
 // --- ietf.Ipv4..Ctor
-inline  ietf::Ipv4::Ipv4() {
+inline  ietf::Ipv4::Ipv4() throw() {
     ietf::Ipv4_Init(*this);
 }
 
 // --- ietf.Ipv4..FieldwiseCtor
-inline  ietf::Ipv4::Ipv4(u32 in_ipv4)
+inline  ietf::Ipv4::Ipv4(u32 in_ipv4) throw()
     : ipv4(in_ipv4)
  {
 }
 
 // --- ietf.Ipport..Hash
-inline u32 ietf::Ipport_Hash(u32 prev, ietf::Ipport rhs) {
+inline u32 ietf::Ipport_Hash(u32 prev, ietf::Ipport rhs) throw() {
     prev = Ipv4_Hash(prev, rhs.ip);
     prev = u16_Hash(prev, rhs.port);
     return prev;
 }
 
 // --- ietf.Ipport..EqOp
-inline bool ietf::Ipport::operator ==(const ietf::Ipport &rhs) const {
+inline bool ietf::Ipport::operator ==(const ietf::Ipport &rhs) const throw() {
     return ietf::Ipport_Eq(const_cast<ietf::Ipport&>(*this),const_cast<ietf::Ipport&>(rhs));
 }
 
 // --- ietf.Ipport..NeOp
-inline bool ietf::Ipport::operator !=(const ietf::Ipport &rhs) const {
+inline bool ietf::Ipport::operator !=(const ietf::Ipport &rhs) const throw() {
     return !ietf::Ipport_Eq(const_cast<ietf::Ipport&>(*this),const_cast<ietf::Ipport&>(rhs));
 }
 
 // --- ietf.Ipport..LtOp
-inline bool ietf::Ipport::operator <(const ietf::Ipport &rhs) const {
+inline bool ietf::Ipport::operator <(const ietf::Ipport &rhs) const throw() {
     return ietf::Ipport_Lt(const_cast<ietf::Ipport&>(*this),const_cast<ietf::Ipport&>(rhs));
 }
 
 // --- ietf.Ipport..GtOp
-inline bool ietf::Ipport::operator >(const ietf::Ipport &rhs) const {
+inline bool ietf::Ipport::operator >(const ietf::Ipport &rhs) const throw() {
     return ietf::Ipport_Lt(const_cast<ietf::Ipport&>(rhs),const_cast<ietf::Ipport&>(*this));
 }
 
 // --- ietf.Ipport..LeOp
-inline bool ietf::Ipport::operator <=(const ietf::Ipport &rhs) const {
+inline bool ietf::Ipport::operator <=(const ietf::Ipport &rhs) const throw() {
     return !ietf::Ipport_Lt(const_cast<ietf::Ipport&>(rhs),const_cast<ietf::Ipport&>(*this));
 }
 
 // --- ietf.Ipport..GeOp
-inline bool ietf::Ipport::operator >=(const ietf::Ipport &rhs) const {
+inline bool ietf::Ipport::operator >=(const ietf::Ipport &rhs) const throw() {
     return !ietf::Ipport_Lt(const_cast<ietf::Ipport&>(*this),const_cast<ietf::Ipport&>(rhs));
 }
 
 // --- ietf.Ipport..Lt
-inline bool ietf::Ipport_Lt(ietf::Ipport lhs, ietf::Ipport rhs) {
+inline bool ietf::Ipport_Lt(ietf::Ipport lhs, ietf::Ipport rhs) throw() {
     return Ipport_Cmp(lhs,rhs) < 0;
 }
 
 // --- ietf.Ipport..Cmp
-inline i32 ietf::Ipport_Cmp(ietf::Ipport lhs, ietf::Ipport rhs) {
+inline i32 ietf::Ipport_Cmp(ietf::Ipport lhs, ietf::Ipport rhs) throw() {
     i32 retval = 0;
     retval = ietf::Ipv4_Cmp(lhs.ip, rhs.ip);
     if (retval != 0) {
@@ -206,7 +206,7 @@ inline void ietf::Ipport_Init(ietf::Ipport& parent) {
 }
 
 // --- ietf.Ipport..Eq
-inline bool ietf::Ipport_Eq(ietf::Ipport lhs, ietf::Ipport rhs) {
+inline bool ietf::Ipport_Eq(ietf::Ipport lhs, ietf::Ipport rhs) throw() {
     bool retval = true;
     retval = ietf::Ipv4_Eq(lhs.ip, rhs.ip);
     if (!retval) {
@@ -218,7 +218,7 @@ inline bool ietf::Ipport_Eq(ietf::Ipport lhs, ietf::Ipport rhs) {
 
 // --- ietf.Ipport..Update
 // Set value. Return true if new value is different from old value.
-inline bool ietf::Ipport_Update(ietf::Ipport &lhs, ietf::Ipport rhs) {
+inline bool ietf::Ipport_Update(ietf::Ipport &lhs, ietf::Ipport rhs) throw() {
     bool ret = !Ipport_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -227,70 +227,70 @@ inline bool ietf::Ipport_Update(ietf::Ipport &lhs, ietf::Ipport rhs) {
 }
 
 // --- ietf.Ipport..Ctor
-inline  ietf::Ipport::Ipport() {
+inline  ietf::Ipport::Ipport() throw() {
     ietf::Ipport_Init(*this);
 }
 
 // --- ietf.Ipport..FieldwiseCtor
-inline  ietf::Ipport::Ipport(ietf::Ipv4 in_ip, u16 in_port)
+inline  ietf::Ipport::Ipport(ietf::Ipv4 in_ip, u16 in_port) throw()
     : ip(in_ip)
     , port(in_port)
  {
 }
 
 // --- ietf.Ipv4Addr.addr.Get
-inline u32 ietf::addr_Get(const ietf::Ipv4Addr& parent) {
+inline u32 ietf::addr_Get(const ietf::Ipv4Addr& parent) throw() {
     return be32toh(parent.addr_be); // read big-endian value from memory
 }
 
 // --- ietf.Ipv4Addr.addr.Set
-inline void ietf::addr_Set(ietf::Ipv4Addr& parent, u32 rhs) {
+inline void ietf::addr_Set(ietf::Ipv4Addr& parent, u32 rhs) throw() {
     parent.addr_be = htobe32(rhs); // write big-endian value to memory
 }
 
 // --- ietf.Ipv4Addr..Hash
-inline u32 ietf::Ipv4Addr_Hash(u32 prev, ietf::Ipv4Addr rhs) {
+inline u32 ietf::Ipv4Addr_Hash(u32 prev, ietf::Ipv4Addr rhs) throw() {
     prev = u32_Hash(prev, addr_Get(rhs));
     return prev;
 }
 
 // --- ietf.Ipv4Addr..EqOp
-inline bool ietf::Ipv4Addr::operator ==(const ietf::Ipv4Addr &rhs) const {
+inline bool ietf::Ipv4Addr::operator ==(const ietf::Ipv4Addr &rhs) const throw() {
     return ietf::Ipv4Addr_Eq(const_cast<ietf::Ipv4Addr&>(*this),const_cast<ietf::Ipv4Addr&>(rhs));
 }
 
 // --- ietf.Ipv4Addr..NeOp
-inline bool ietf::Ipv4Addr::operator !=(const ietf::Ipv4Addr &rhs) const {
+inline bool ietf::Ipv4Addr::operator !=(const ietf::Ipv4Addr &rhs) const throw() {
     return !ietf::Ipv4Addr_Eq(const_cast<ietf::Ipv4Addr&>(*this),const_cast<ietf::Ipv4Addr&>(rhs));
 }
 
 // --- ietf.Ipv4Addr..LtOp
-inline bool ietf::Ipv4Addr::operator <(const ietf::Ipv4Addr &rhs) const {
+inline bool ietf::Ipv4Addr::operator <(const ietf::Ipv4Addr &rhs) const throw() {
     return ietf::Ipv4Addr_Lt(const_cast<ietf::Ipv4Addr&>(*this),const_cast<ietf::Ipv4Addr&>(rhs));
 }
 
 // --- ietf.Ipv4Addr..GtOp
-inline bool ietf::Ipv4Addr::operator >(const ietf::Ipv4Addr &rhs) const {
+inline bool ietf::Ipv4Addr::operator >(const ietf::Ipv4Addr &rhs) const throw() {
     return ietf::Ipv4Addr_Lt(const_cast<ietf::Ipv4Addr&>(rhs),const_cast<ietf::Ipv4Addr&>(*this));
 }
 
 // --- ietf.Ipv4Addr..LeOp
-inline bool ietf::Ipv4Addr::operator <=(const ietf::Ipv4Addr &rhs) const {
+inline bool ietf::Ipv4Addr::operator <=(const ietf::Ipv4Addr &rhs) const throw() {
     return !ietf::Ipv4Addr_Lt(const_cast<ietf::Ipv4Addr&>(rhs),const_cast<ietf::Ipv4Addr&>(*this));
 }
 
 // --- ietf.Ipv4Addr..GeOp
-inline bool ietf::Ipv4Addr::operator >=(const ietf::Ipv4Addr &rhs) const {
+inline bool ietf::Ipv4Addr::operator >=(const ietf::Ipv4Addr &rhs) const throw() {
     return !ietf::Ipv4Addr_Lt(const_cast<ietf::Ipv4Addr&>(*this),const_cast<ietf::Ipv4Addr&>(rhs));
 }
 
 // --- ietf.Ipv4Addr..Lt
-inline bool ietf::Ipv4Addr_Lt(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) {
+inline bool ietf::Ipv4Addr_Lt(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) throw() {
     return u32_Lt(addr_Get(lhs), addr_Get(rhs));
 }
 
 // --- ietf.Ipv4Addr..Cmp
-inline i32 ietf::Ipv4Addr_Cmp(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) {
+inline i32 ietf::Ipv4Addr_Cmp(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) throw() {
     i32 retval = 0;
     retval = u32_Cmp(addr_Get(lhs), addr_Get(rhs));
     return retval;
@@ -303,7 +303,7 @@ inline void ietf::Ipv4Addr_Init(ietf::Ipv4Addr& parent) {
 }
 
 // --- ietf.Ipv4Addr..Eq
-inline bool ietf::Ipv4Addr_Eq(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) {
+inline bool ietf::Ipv4Addr_Eq(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) throw() {
     bool retval = true;
     retval = u32_Eq(addr_Get(lhs), addr_Get(rhs));
     return retval;
@@ -311,7 +311,7 @@ inline bool ietf::Ipv4Addr_Eq(ietf::Ipv4Addr lhs, ietf::Ipv4Addr rhs) {
 
 // --- ietf.Ipv4Addr..Update
 // Set value. Return true if new value is different from old value.
-inline bool ietf::Ipv4Addr_Update(ietf::Ipv4Addr &lhs, ietf::Ipv4Addr rhs) {
+inline bool ietf::Ipv4Addr_Update(ietf::Ipv4Addr &lhs, ietf::Ipv4Addr rhs) throw() {
     bool ret = !Ipv4Addr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -320,12 +320,12 @@ inline bool ietf::Ipv4Addr_Update(ietf::Ipv4Addr &lhs, ietf::Ipv4Addr rhs) {
 }
 
 // --- ietf.Ipv4Addr..Ctor
-inline  ietf::Ipv4Addr::Ipv4Addr() {
+inline  ietf::Ipv4Addr::Ipv4Addr() throw() {
     ietf::Ipv4Addr_Init(*this);
 }
 
 // --- ietf.Ipv4Addr..FieldwiseCtor
-inline  ietf::Ipv4Addr::Ipv4Addr(u32 in_addr) {
+inline  ietf::Ipv4Addr::Ipv4Addr(u32 in_addr) throw() {
     addr_Set(*this,in_addr);
 }
 

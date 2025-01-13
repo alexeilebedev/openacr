@@ -544,7 +544,7 @@ namespace atf_amc { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- atf_amc.AmcSubstr1.boolval.Get
-bool atf_amc::boolval_Get(atf_amc::AmcSubstr1& parent) {
+bool atf_amc::boolval_Get(atf_amc::AmcSubstr1& parent) throw() {
     bool ret;
     ret = false; // default value
     (void)bool_ReadStrptrMaybe(ret, algo::Pathcomp(parent.strval, ".LR"));
@@ -552,7 +552,7 @@ bool atf_amc::boolval_Get(atf_amc::AmcSubstr1& parent) {
 }
 
 // --- atf_amc.AmcSubstr1.intval.Get
-i32 atf_amc::intval_Get(atf_amc::AmcSubstr1& parent) {
+i32 atf_amc::intval_Get(atf_amc::AmcSubstr1& parent) throw() {
     i32 ret;
     ret = 0; // default value
     (void)i32_ReadStrptrMaybe(ret, algo::Pathcomp(parent.strval, ".LR"));
@@ -560,7 +560,7 @@ i32 atf_amc::intval_Get(atf_amc::AmcSubstr1& parent) {
 }
 
 // --- atf_amc.BitfldType1.bit1.ReadStrptrMaybe
-inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) {
+inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u64 bit1_tmp;
     retval = u64_ReadStrptrMaybe(bit1_tmp, in_str);
@@ -571,7 +571,7 @@ inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, a
 }
 
 // --- atf_amc.BitfldType1.bits5.ReadStrptrMaybe
-inline static bool atf_amc::bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) {
+inline static bool atf_amc::bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u64 bits5_tmp;
     retval = u64_ReadStrptrMaybe(bits5_tmp, in_str);
@@ -582,7 +582,7 @@ inline static bool atf_amc::bits5_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, 
 }
 
 // --- atf_amc.BitfldType1..ReadFieldMaybe
-bool atf_amc::BitfldType1_ReadFieldMaybe(atf_amc::BitfldType1& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::BitfldType1_ReadFieldMaybe(atf_amc::BitfldType1& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -610,7 +610,7 @@ bool atf_amc::BitfldType1_ReadFieldMaybe(atf_amc::BitfldType1& parent, algo::str
 // --- atf_amc.BitfldType1..ReadStrptrMaybe
 // Read fields of atf_amc::BitfldType1 from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::BitfldType1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) {
+bool atf_amc::BitfldType1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.BitfldType1");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -622,7 +622,7 @@ bool atf_amc::BitfldType1_ReadStrptrMaybe(atf_amc::BitfldType1 &parent, algo::st
 // --- atf_amc.BitfldType1..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.BitfldType1.String  printfmt:Tuple
-void atf_amc::BitfldType1_Print(atf_amc::BitfldType1& row, algo::cstring& str) {
+void atf_amc::BitfldType1_Print(atf_amc::BitfldType1& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.BitfldType1";
 
@@ -634,7 +634,7 @@ void atf_amc::BitfldType1_Print(atf_amc::BitfldType1& row, algo::cstring& str) {
 }
 
 // --- atf_amc.BitfldType2.bit0.ReadStrptrMaybe
-inline static bool atf_amc::bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) {
+inline static bool atf_amc::bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool bit0_tmp;
     retval = bool_ReadStrptrMaybe(bit0_tmp, in_str);
@@ -645,7 +645,7 @@ inline static bool atf_amc::bit0_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, a
 }
 
 // --- atf_amc.BitfldType2.bit1.ReadStrptrMaybe
-inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) {
+inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool bit1_tmp;
     retval = bool_ReadStrptrMaybe(bit1_tmp, in_str);
@@ -656,7 +656,7 @@ inline static bool atf_amc::bit1_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, a
 }
 
 // --- atf_amc.BitfldType2..ReadFieldMaybe
-bool atf_amc::BitfldType2_ReadFieldMaybe(atf_amc::BitfldType2& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::BitfldType2_ReadFieldMaybe(atf_amc::BitfldType2& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -687,7 +687,7 @@ bool atf_amc::BitfldType2_ReadFieldMaybe(atf_amc::BitfldType2& parent, algo::str
 
 // --- atf_amc.BitfldType2..ReadStrptrMaybe
 // Read fields of atf_amc::BitfldType2 from an ascii string.
-bool atf_amc::BitfldType2_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) {
+bool atf_amc::BitfldType2_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     // Clear affected bits first)
     bit0_Set(parent, false);
@@ -727,7 +727,7 @@ bool atf_amc::BitfldType2_ReadStrptrMaybe(atf_amc::BitfldType2 &parent, algo::st
 // --- atf_amc.BitfldType2..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.BitfldType2.String  printfmt:Bitset
-void atf_amc::BitfldType2_Print(atf_amc::BitfldType2& row, algo::cstring& str) {
+void atf_amc::BitfldType2_Print(atf_amc::BitfldType2& row, algo::cstring& str) throw() {
     algo::ListSep ls(",");
     if (bit0_Get(row)) {
         str << ls << "bit0";
@@ -743,7 +743,7 @@ void atf_amc::BitfldType2_Print(atf_amc::BitfldType2& row, algo::cstring& str) {
 // --- atf_amc.Bitset.fld1.ReadStrptrMaybe
 // Read array from string
 // Convert string to field. Return success value
-bool atf_amc::fld1_ReadStrptrMaybe(atf_amc::Bitset& parent, algo::strptr in_str) {
+bool atf_amc::fld1_ReadStrptrMaybe(atf_amc::Bitset& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (4>0) {
         retval = u16_ReadStrptrMaybe(parent.fld1_elems[0], in_str);
@@ -806,7 +806,7 @@ void atf_amc::Bitset_fld64_bitcurs_Next(Bitset_fld64_bitcurs &curs) {
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is any number of bytes > 0
 // 
-algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Bytebuf& bytebuf) {
+algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Bytebuf& bytebuf) throw() {
     algo::aryptr<char> ret;
     if (!bytebuf.in_msgvalid) {
         in_ScanMsg(bytebuf);
@@ -822,7 +822,7 @@ algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Bytebuf& bytebuf) {
 // --- atf_amc.Bytebuf.in.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_RemoveAll(atf_amc::Bytebuf& bytebuf) {
+void atf_amc::in_RemoveAll(atf_amc::Bytebuf& bytebuf) throw() {
     bytebuf.in_start    = 0;
     bytebuf.in_end      = 0;
     bytebuf.in_msgvalid = false;
@@ -831,7 +831,7 @@ void atf_amc::in_RemoveAll(atf_amc::Bytebuf& bytebuf) {
 // --- atf_amc.Bytebuf.in.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_ScanMsg(atf_amc::Bytebuf& bytebuf) {
+static void atf_amc::in_ScanMsg(atf_amc::Bytebuf& bytebuf) throw() {
     i32 avail = in_N(bytebuf);
     i32 msglen;
     bool found = false;
@@ -844,7 +844,7 @@ static void atf_amc::in_ScanMsg(atf_amc::Bytebuf& bytebuf) {
 // --- atf_amc.Bytebuf.in.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_Shift(atf_amc::Bytebuf& bytebuf) {
+static void atf_amc::in_Shift(atf_amc::Bytebuf& bytebuf) throw() {
     i32 start = bytebuf.in_start;
     i32 bytes_n = bytebuf.in_end - start;
     if (bytes_n > 0) {
@@ -858,7 +858,7 @@ static void atf_amc::in_Shift(atf_amc::Bytebuf& bytebuf) {
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_amc::in_SkipBytes(atf_amc::Bytebuf& bytebuf, int n) {
+void atf_amc::in_SkipBytes(atf_amc::Bytebuf& bytebuf, int n) throw() {
     int avail = bytebuf.in_end - bytebuf.in_start;
     n = i32_Min(n,avail);
     bytebuf.in_start += n;
@@ -868,7 +868,7 @@ void atf_amc::in_SkipBytes(atf_amc::Bytebuf& bytebuf, int n) {
 // --- atf_amc.Bytebuf.in.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_SkipMsg(atf_amc::Bytebuf& bytebuf) {
+void atf_amc::in_SkipMsg(atf_amc::Bytebuf& bytebuf) throw() {
     if (bytebuf.in_msgvalid) {
         int skip = bytebuf.in_msglen;
         i32 start = bytebuf.in_start;
@@ -885,7 +885,7 @@ void atf_amc::in_SkipMsg(atf_amc::Bytebuf& bytebuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_WriteAll(atf_amc::Bytebuf& bytebuf, u8 *in, i32 in_n) {
+bool atf_amc::in_WriteAll(atf_amc::Bytebuf& bytebuf, u8 *in, i32 in_n) throw() {
     int max = in_Max(bytebuf);
     // check if message doesn't fit. if so, shift bytes over.
     if (bytebuf.in_end + in_n > max) {
@@ -915,7 +915,7 @@ void atf_amc::Bytebuf_Init(atf_amc::Bytebuf& bytebuf) {
 // --- atf_amc.Bytebuf..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Bytebuf.String  printfmt:Raw
-void atf_amc::Bytebuf_Print(atf_amc::Bytebuf& row, algo::cstring& str) {
+void atf_amc::Bytebuf_Print(atf_amc::Bytebuf& row, algo::cstring& str) throw() {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
@@ -927,7 +927,7 @@ void atf_amc::Bytebuf_Print(atf_amc::Bytebuf& row, algo::cstring& str) {
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is any number of bytes > 0
 // 
-algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
+algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::BytebufDyn& bytebuf_dyn) throw() {
     algo::aryptr<char> ret;
     if (!bytebuf_dyn.in_msgvalid) {
         in_ScanMsg(bytebuf_dyn);
@@ -945,7 +945,7 @@ algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
 // Unconditionally reallocate buffer to have size NEW_MAX
 // If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
 // (best to call this before filling the buffer)
-void atf_amc::in_Realloc(atf_amc::BytebufDyn& bytebuf_dyn, int new_max) {
+void atf_amc::in_Realloc(atf_amc::BytebufDyn& bytebuf_dyn, int new_max) throw() {
     new_max = i32_Max(new_max, bytebuf_dyn.in_end);
     u8 *new_mem = bytebuf_dyn.in_elems
     ? (u8*)algo_lib::malloc_ReallocMem(bytebuf_dyn.in_elems, bytebuf_dyn.in_max, new_max)
@@ -960,7 +960,7 @@ void atf_amc::in_Realloc(atf_amc::BytebufDyn& bytebuf_dyn, int new_max) {
 // --- atf_amc.BytebufDyn.in.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_RemoveAll(atf_amc::BytebufDyn& bytebuf_dyn) {
+void atf_amc::in_RemoveAll(atf_amc::BytebufDyn& bytebuf_dyn) throw() {
     bytebuf_dyn.in_start    = 0;
     bytebuf_dyn.in_end      = 0;
     bytebuf_dyn.in_msgvalid = false;
@@ -969,7 +969,7 @@ void atf_amc::in_RemoveAll(atf_amc::BytebufDyn& bytebuf_dyn) {
 // --- atf_amc.BytebufDyn.in.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_ScanMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
+static void atf_amc::in_ScanMsg(atf_amc::BytebufDyn& bytebuf_dyn) throw() {
     i32 avail = in_N(bytebuf_dyn);
     i32 msglen;
     bool found = false;
@@ -982,7 +982,7 @@ static void atf_amc::in_ScanMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
 // --- atf_amc.BytebufDyn.in.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_Shift(atf_amc::BytebufDyn& bytebuf_dyn) {
+static void atf_amc::in_Shift(atf_amc::BytebufDyn& bytebuf_dyn) throw() {
     i32 start = bytebuf_dyn.in_start;
     i32 bytes_n = bytebuf_dyn.in_end - start;
     if (bytes_n > 0) {
@@ -996,7 +996,7 @@ static void atf_amc::in_Shift(atf_amc::BytebufDyn& bytebuf_dyn) {
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_amc::in_SkipBytes(atf_amc::BytebufDyn& bytebuf_dyn, int n) {
+void atf_amc::in_SkipBytes(atf_amc::BytebufDyn& bytebuf_dyn, int n) throw() {
     int avail = bytebuf_dyn.in_end - bytebuf_dyn.in_start;
     n = i32_Min(n,avail);
     bytebuf_dyn.in_start += n;
@@ -1006,7 +1006,7 @@ void atf_amc::in_SkipBytes(atf_amc::BytebufDyn& bytebuf_dyn, int n) {
 // --- atf_amc.BytebufDyn.in.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_SkipMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
+void atf_amc::in_SkipMsg(atf_amc::BytebufDyn& bytebuf_dyn) throw() {
     if (bytebuf_dyn.in_msgvalid) {
         int skip = bytebuf_dyn.in_msglen;
         i32 start = bytebuf_dyn.in_start;
@@ -1023,7 +1023,7 @@ void atf_amc::in_SkipMsg(atf_amc::BytebufDyn& bytebuf_dyn) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_WriteAll(atf_amc::BytebufDyn& bytebuf_dyn, u8 *in, i32 in_n) {
+bool atf_amc::in_WriteAll(atf_amc::BytebufDyn& bytebuf_dyn, u8 *in, i32 in_n) throw() {
     int max = in_Max(bytebuf_dyn);
     // check if message doesn't fit. if so, shift bytes over.
     if (bytebuf_dyn.in_end + in_n > max) {
@@ -1053,7 +1053,7 @@ void atf_amc::BytebufDyn_Init(atf_amc::BytebufDyn& bytebuf_dyn) {
 }
 
 // --- atf_amc.BytebufDyn..Uninit
-void atf_amc::BytebufDyn_Uninit(atf_amc::BytebufDyn& bytebuf_dyn) {
+void atf_amc::BytebufDyn_Uninit(atf_amc::BytebufDyn& bytebuf_dyn) throw() {
     atf_amc::BytebufDyn &row = bytebuf_dyn; (void)row;
 
     // atf_amc.BytebufDyn.in.Uninit (Fbuf)  //Streaming buffer
@@ -1067,14 +1067,14 @@ void atf_amc::BytebufDyn_Uninit(atf_amc::BytebufDyn& bytebuf_dyn) {
 // --- atf_amc.BytebufDyn..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.BytebufDyn.String  printfmt:Raw
-void atf_amc::BytebufDyn_Print(atf_amc::BytebufDyn& row, algo::cstring& str) {
+void atf_amc::BytebufDyn_Print(atf_amc::BytebufDyn& row, algo::cstring& str) throw() {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
 
 // --- atf_amc.Cstr.val.Nextchar
 // Extract next character from STR and advance IDX
-inline static int atf_amc::val_Nextchar(const atf_amc::Cstr& parent, algo::strptr &str, int &idx) {
+inline static int atf_amc::val_Nextchar(const atf_amc::Cstr& parent, algo::strptr &str, int &idx) throw() {
     (void)parent;
     int i = idx;
     int ch = str.elems[i];
@@ -1086,14 +1086,14 @@ inline static int atf_amc::val_Nextchar(const atf_amc::Cstr& parent, algo::strpt
 // --- atf_amc.Cstr..FmtJson
 // Create JSON representation of atf_amc::Cstr under PARENT node
 // cfmt:atf_amc.Cstr.Json  printfmt:Auto
-lib_json::FNode * atf_amc::Cstr_FmtJson(atf_amc::Cstr& row, lib_json::FNode *parent) {
+lib_json::FNode * atf_amc::Cstr_FmtJson(atf_amc::Cstr& row, lib_json::FNode *parent) throw() {
     return algo::cstring_FmtJson(const_cast<atf_amc::Cstr&>(row).val,parent);;
 }
 
 // --- atf_amc.Ctype1Attr..ReadStrptrMaybe
 // Read fields of atf_amc::Ctype1Attr from an ascii string.
 // The format of the string is the format of the atf_amc::Ctype1Attr's only field
-bool atf_amc::Ctype1Attr_ReadStrptrMaybe(atf_amc::Ctype1Attr &parent, algo::strptr in_str) {
+bool atf_amc::Ctype1Attr_ReadStrptrMaybe(atf_amc::Ctype1Attr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && u32_ReadStrptrMaybe(parent.attr1, in_str);
     return retval;
@@ -1102,12 +1102,12 @@ bool atf_amc::Ctype1Attr_ReadStrptrMaybe(atf_amc::Ctype1Attr &parent, algo::strp
 // --- atf_amc.Ctype1Attr..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Ctype1Attr.String  printfmt:Raw
-void atf_amc::Ctype1Attr_Print(atf_amc::Ctype1Attr& row, algo::cstring& str) {
+void atf_amc::Ctype1Attr_Print(atf_amc::Ctype1Attr& row, algo::cstring& str) throw() {
     u32_Print(row.attr1, str);
 }
 
 // --- atf_amc.Ctype2Attr..ReadFieldMaybe
-bool atf_amc::Ctype2Attr_ReadFieldMaybe(atf_amc::Ctype2Attr& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::Ctype2Attr_ReadFieldMaybe(atf_amc::Ctype2Attr& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1131,7 +1131,7 @@ bool atf_amc::Ctype2Attr_ReadFieldMaybe(atf_amc::Ctype2Attr& parent, algo::strpt
 // --- atf_amc.Ctype2Attr..ReadStrptrMaybe
 // Read fields of atf_amc::Ctype2Attr from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::Ctype2Attr_ReadStrptrMaybe(atf_amc::Ctype2Attr &parent, algo::strptr in_str) {
+bool atf_amc::Ctype2Attr_ReadStrptrMaybe(atf_amc::Ctype2Attr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.Ctype2Attr");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1142,7 +1142,7 @@ bool atf_amc::Ctype2Attr_ReadStrptrMaybe(atf_amc::Ctype2Attr &parent, algo::strp
 
 // --- atf_amc.Ctype2Attr..ReadTupleMaybe
 // Read fields of atf_amc::Ctype2Attr from attributes of ascii tuple TUPLE
-bool atf_amc::Ctype2Attr_ReadTupleMaybe(atf_amc::Ctype2Attr &parent, algo::Tuple &tuple) {
+bool atf_amc::Ctype2Attr_ReadTupleMaybe(atf_amc::Ctype2Attr &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = Ctype2Attr_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -1156,7 +1156,7 @@ bool atf_amc::Ctype2Attr_ReadTupleMaybe(atf_amc::Ctype2Attr &parent, algo::Tuple
 // --- atf_amc.Ctype2Attr..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Ctype2Attr.String  printfmt:Tuple
-void atf_amc::Ctype2Attr_Print(atf_amc::Ctype2Attr& row, algo::cstring& str) {
+void atf_amc::Ctype2Attr_Print(atf_amc::Ctype2Attr& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.Ctype2Attr";
 
@@ -1168,7 +1168,7 @@ void atf_amc::Ctype2Attr_Print(atf_amc::Ctype2Attr& row, algo::cstring& str) {
 }
 
 // --- atf_amc.Ctype2AttrAnon..ReadFieldMaybe
-bool atf_amc::Ctype2AttrAnon_ReadFieldMaybe(atf_amc::Ctype2AttrAnon& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::Ctype2AttrAnon_ReadFieldMaybe(atf_amc::Ctype2AttrAnon& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1192,7 +1192,7 @@ bool atf_amc::Ctype2AttrAnon_ReadFieldMaybe(atf_amc::Ctype2AttrAnon& parent, alg
 // --- atf_amc.Ctype2AttrAnon..ReadStrptrMaybe
 // Read fields of atf_amc::Ctype2AttrAnon from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::Ctype2AttrAnon_ReadStrptrMaybe(atf_amc::Ctype2AttrAnon &parent, algo::strptr in_str) {
+bool atf_amc::Ctype2AttrAnon_ReadStrptrMaybe(atf_amc::Ctype2AttrAnon &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.Ctype2AttrAnon");
     int anon_idx = 0;
@@ -1208,7 +1208,7 @@ bool atf_amc::Ctype2AttrAnon_ReadStrptrMaybe(atf_amc::Ctype2AttrAnon &parent, al
 // --- atf_amc.Ctype2AttrAnon..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Ctype2AttrAnon.String  printfmt:Tuple
-void atf_amc::Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon& row, algo::cstring& str) {
+void atf_amc::Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.Ctype2AttrAnon";
 
@@ -1220,7 +1220,7 @@ void atf_amc::Ctype2AttrAnon_Print(atf_amc::Ctype2AttrAnon& row, algo::cstring& 
 }
 
 // --- atf_amc.Ctype2AttrAnon..GetAnon
-algo::strptr atf_amc::Ctype2AttrAnon_GetAnon(atf_amc::Ctype2AttrAnon &parent, i32 idx) {
+algo::strptr atf_amc::Ctype2AttrAnon_GetAnon(atf_amc::Ctype2AttrAnon &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("attr1", 5);
@@ -1232,7 +1232,7 @@ algo::strptr atf_amc::Ctype2AttrAnon_GetAnon(atf_amc::Ctype2AttrAnon &parent, i3
 // --- atf_amc.DelType1.u32val.Access
 // Get or Create
 // Access value, creating it if necessary. Process dies if not successful.
-u32& atf_amc::u32val_Access(atf_amc::DelType1& parent) {
+u32& atf_amc::u32val_Access(atf_amc::DelType1& parent) throw() {
     u32 *ret=parent.u32val;
     if (!ret) {
         ret = (u32*)algo_lib::malloc_AllocMem(sizeof(u32));
@@ -1247,7 +1247,7 @@ u32& atf_amc::u32val_Access(atf_amc::DelType1& parent) {
 
 // --- atf_amc.DelType1.u32val.Delete
 // Delete value.
-void atf_amc::u32val_Delete(atf_amc::DelType1& parent) {
+void atf_amc::u32val_Delete(atf_amc::DelType1& parent) throw() {
     if (parent.u32val) {
         algo_lib::malloc_FreeMem(parent.u32val, sizeof(u32));
         parent.u32val = NULL;
@@ -1255,7 +1255,7 @@ void atf_amc::u32val_Delete(atf_amc::DelType1& parent) {
 }
 
 // --- atf_amc.DelType1..Uninit
-void atf_amc::DelType1_Uninit(atf_amc::DelType1& parent) {
+void atf_amc::DelType1_Uninit(atf_amc::DelType1& parent) throw() {
     atf_amc::DelType1 &row = parent; (void)row;
 
     // atf_amc.DelType1.u32val.Uninit (Delptr)  //
@@ -1265,7 +1265,7 @@ void atf_amc::DelType1_Uninit(atf_amc::DelType1& parent) {
 // --- atf_amc.DispCase.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::DispCase& parent) {
+const char* atf_amc::value_ToCstr(const atf_amc::DispCase& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_amc_DispCase_atf_amc_DispType1: ret = "atf_amc.DispType1";  break;
@@ -1278,7 +1278,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::DispCase& parent) {
 // --- atf_amc.DispCase.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::DispCase& parent, algo::cstring &lhs) {
+void atf_amc::value_Print(const atf_amc::DispCase& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1291,7 +1291,7 @@ void atf_amc::value_Print(const atf_amc::DispCase& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::DispCase& parent, algo::strptr rhs) {
+bool atf_amc::value_SetStrptrMaybe(atf_amc::DispCase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 17: {
@@ -1312,13 +1312,13 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::DispCase& parent, algo::strptr rhs) 
 // --- atf_amc.DispCase.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::DispCase& parent, algo::strptr rhs, atf_amc_DispCaseEnum dflt) {
+void atf_amc::value_SetStrptr(atf_amc::DispCase& parent, algo::strptr rhs, atf_amc_DispCaseEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.DispCase.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::DispCase& parent, algo::strptr rhs) {
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::DispCase& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1330,7 +1330,7 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::DispCase& parent, algo::strptr rhs)
 // --- atf_amc.DispCase..ReadStrptrMaybe
 // Read fields of atf_amc::DispCase from an ascii string.
 // The format of the string is the format of the atf_amc::DispCase's only field
-bool atf_amc::DispCase_ReadStrptrMaybe(atf_amc::DispCase &parent, algo::strptr in_str) {
+bool atf_amc::DispCase_ReadStrptrMaybe(atf_amc::DispCase &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1339,7 +1339,7 @@ bool atf_amc::DispCase_ReadStrptrMaybe(atf_amc::DispCase &parent, algo::strptr i
 // --- atf_amc.DispFilter.pmask.ReadStrptrMaybe
 // Read array from string
 // Convert string to field. Return success value
-bool atf_amc::pmask_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) {
+bool atf_amc::pmask_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (1>0) {
         retval = u64_ReadStrptrMaybe(parent.pmask_elems[0], in_str);
@@ -1348,7 +1348,7 @@ bool atf_amc::pmask_ReadStrptrMaybe(atf_amc::DispFilter& parent, algo::strptr in
 }
 
 // --- atf_amc.DispFilter.strval.ReadStrptrMaybe
-inline static bool atf_amc::strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::Smallstr20 strval_tmp;
     retval = algo::Smallstr20_ReadStrptrMaybe(strval_tmp, in_str);
@@ -1359,7 +1359,7 @@ inline static bool atf_amc::strval_ReadStrptrMaybe(atf_amc::DispFilter &parent, 
 }
 
 // --- atf_amc.DispFilter.strval_regx.ReadStrptrMaybe
-inline static bool atf_amc::strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo_lib::Regx_ReadStrptrMaybe(parent.strval_regx, in_str);
     strval_regx_SetPresent(parent);
@@ -1367,7 +1367,7 @@ inline static bool atf_amc::strval_regx_ReadStrptrMaybe(atf_amc::DispFilter &par
 }
 
 // --- atf_amc.DispFilter.strval2.ReadStrptrMaybe
-inline static bool atf_amc::strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::Smallstr20 strval2_tmp;
     retval = algo::Smallstr20_ReadStrptrMaybe(strval2_tmp, in_str);
@@ -1378,7 +1378,7 @@ inline static bool atf_amc::strval2_ReadStrptrMaybe(atf_amc::DispFilter &parent,
 }
 
 // --- atf_amc.DispFilter.strval2_regx.ReadStrptrMaybe
-inline static bool atf_amc::strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo_lib::Regx_ReadStrptrMaybe(parent.strval2_regx, in_str);
     strval2_regx_SetPresent(parent);
@@ -1386,7 +1386,7 @@ inline static bool atf_amc::strval2_regx_ReadStrptrMaybe(atf_amc::DispFilter &pa
 }
 
 // --- atf_amc.DispFilter.start_dateval.ReadStrptrMaybe
-inline static bool atf_amc::start_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::start_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::UnTime start_dateval_tmp;
     retval = algo::UnTime_ReadStrptrMaybe(start_dateval_tmp, in_str);
@@ -1397,7 +1397,7 @@ inline static bool atf_amc::start_dateval_ReadStrptrMaybe(atf_amc::DispFilter &p
 }
 
 // --- atf_amc.DispFilter.end_dateval.ReadStrptrMaybe
-inline static bool atf_amc::end_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::end_dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::UnTime end_dateval_tmp;
     retval = algo::UnTime_ReadStrptrMaybe(end_dateval_tmp, in_str);
@@ -1408,7 +1408,7 @@ inline static bool atf_amc::end_dateval_ReadStrptrMaybe(atf_amc::DispFilter &par
 }
 
 // --- atf_amc.DispFilter.dateval.ReadStrptrMaybe
-inline static bool atf_amc::dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::UnTime dateval_tmp;
     retval = algo::UnTime_ReadStrptrMaybe(dateval_tmp, in_str);
@@ -1419,7 +1419,7 @@ inline static bool atf_amc::dateval_ReadStrptrMaybe(atf_amc::DispFilter &parent,
 }
 
 // --- atf_amc.DispFilter.start_intval.ReadStrptrMaybe
-inline static bool atf_amc::start_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::start_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 start_intval_tmp;
     retval = u32_ReadStrptrMaybe(start_intval_tmp, in_str);
@@ -1430,7 +1430,7 @@ inline static bool atf_amc::start_intval_ReadStrptrMaybe(atf_amc::DispFilter &pa
 }
 
 // --- atf_amc.DispFilter.end_intval.ReadStrptrMaybe
-inline static bool atf_amc::end_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::end_intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 end_intval_tmp;
     retval = u32_ReadStrptrMaybe(end_intval_tmp, in_str);
@@ -1441,7 +1441,7 @@ inline static bool atf_amc::end_intval_ReadStrptrMaybe(atf_amc::DispFilter &pare
 }
 
 // --- atf_amc.DispFilter.intval.ReadStrptrMaybe
-inline static bool atf_amc::intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) {
+inline static bool atf_amc::intval_ReadStrptrMaybe(atf_amc::DispFilter &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 intval_tmp;
     retval = u32_ReadStrptrMaybe(intval_tmp, in_str);
@@ -1468,7 +1468,7 @@ void atf_amc::DispFilter_pmask_bitcurs_Next(DispFilter_pmask_bitcurs &curs) {
 }
 
 // --- atf_amc.DispFilter..ReadFieldMaybe
-bool atf_amc::DispFilter_ReadFieldMaybe(atf_amc::DispFilter& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::DispFilter_ReadFieldMaybe(atf_amc::DispFilter& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -1557,7 +1557,7 @@ bool atf_amc::DispFilter_ReadFieldMaybe(atf_amc::DispFilter& parent, algo::strpt
 
 // --- atf_amc.DispFilter..ReadTupleMaybe
 // Read fields of atf_amc::DispFilter from attributes of ascii tuple TUPLE
-bool atf_amc::DispFilter_ReadTupleMaybe(atf_amc::DispFilter &parent, algo::Tuple &tuple) {
+bool atf_amc::DispFilter_ReadTupleMaybe(atf_amc::DispFilter &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = DispFilter_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -1658,7 +1658,7 @@ bool atf_amc::DispFilter_MatchDispType3(atf_amc::DispFilter &parent, atf_amc::Di
 }
 
 // --- atf_amc.DispType1..ReadFieldMaybe
-bool atf_amc::DispType1_ReadFieldMaybe(atf_amc::DispType1& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::DispType1_ReadFieldMaybe(atf_amc::DispType1& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1686,7 +1686,7 @@ bool atf_amc::DispType1_ReadFieldMaybe(atf_amc::DispType1& parent, algo::strptr 
 // --- atf_amc.DispType1..ReadStrptrMaybe
 // Read fields of atf_amc::DispType1 from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::DispType1_ReadStrptrMaybe(atf_amc::DispType1 &parent, algo::strptr in_str) {
+bool atf_amc::DispType1_ReadStrptrMaybe(atf_amc::DispType1 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.DispType1");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1698,7 +1698,7 @@ bool atf_amc::DispType1_ReadStrptrMaybe(atf_amc::DispType1 &parent, algo::strptr
 // --- atf_amc.DispType1..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.DispType1.String  printfmt:Tuple
-void atf_amc::DispType1_Print(atf_amc::DispType1& row, algo::cstring& str) {
+void atf_amc::DispType1_Print(atf_amc::DispType1& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.DispType1";
 
@@ -1715,7 +1715,7 @@ void atf_amc::DispType1_Print(atf_amc::DispType1& row, algo::cstring& str) {
 // --- atf_amc.DispType2..ReadStrptrMaybe
 // Read fields of atf_amc::DispType2 from an ascii string.
 // The format of the string is the format of the atf_amc::DispType2's only field
-bool atf_amc::DispType2_ReadStrptrMaybe(atf_amc::DispType2 &parent, algo::strptr in_str) {
+bool atf_amc::DispType2_ReadStrptrMaybe(atf_amc::DispType2 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && u32_ReadStrptrMaybe(parent.intval, in_str);
     return retval;
@@ -1724,12 +1724,12 @@ bool atf_amc::DispType2_ReadStrptrMaybe(atf_amc::DispType2 &parent, algo::strptr
 // --- atf_amc.DispType2..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.DispType2.String  printfmt:Raw
-void atf_amc::DispType2_Print(atf_amc::DispType2& row, algo::cstring& str) {
+void atf_amc::DispType2_Print(atf_amc::DispType2& row, algo::cstring& str) throw() {
     u32_Print(row.intval, str);
 }
 
 // --- atf_amc.DispType3..ReadFieldMaybe
-bool atf_amc::DispType3_ReadFieldMaybe(atf_amc::DispType3& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::DispType3_ReadFieldMaybe(atf_amc::DispType3& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1753,7 +1753,7 @@ bool atf_amc::DispType3_ReadFieldMaybe(atf_amc::DispType3& parent, algo::strptr 
 // --- atf_amc.DispType3..ReadStrptrMaybe
 // Read fields of atf_amc::DispType3 from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::DispType3_ReadStrptrMaybe(atf_amc::DispType3 &parent, algo::strptr in_str) {
+bool atf_amc::DispType3_ReadStrptrMaybe(atf_amc::DispType3 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.DispType3");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1765,7 +1765,7 @@ bool atf_amc::DispType3_ReadStrptrMaybe(atf_amc::DispType3 &parent, algo::strptr
 // --- atf_amc.DispType3..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.DispType3.String  printfmt:Tuple
-void atf_amc::DispType3_Print(atf_amc::DispType3& row, algo::cstring& str) {
+void atf_amc::DispType3_Print(atf_amc::DispType3& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.DispType3";
 
@@ -1778,14 +1778,14 @@ void atf_amc::DispType3_Print(atf_amc::DispType3& row, algo::cstring& str) {
 
 // --- atf_amc.FAmctest.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::amctest_CopyOut(atf_amc::FAmctest &row, atfdb::Amctest &out) {
+void atf_amc::amctest_CopyOut(atf_amc::FAmctest &row, atfdb::Amctest &out) throw() {
     out.amctest = row.amctest;
     out.comment = row.comment;
 }
 
 // --- atf_amc.FAmctest.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::amctest_CopyIn(atf_amc::FAmctest &row, atfdb::Amctest &in) {
+void atf_amc::amctest_CopyIn(atf_amc::FAmctest &row, atfdb::Amctest &in) throw() {
     row.amctest = in.amctest;
     row.comment = in.comment;
 }
@@ -1793,7 +1793,7 @@ void atf_amc::amctest_CopyIn(atf_amc::FAmctest &row, atfdb::Amctest &in) {
 // --- atf_amc.FAmctest..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.FAmctest.String  printfmt:Tuple
-void atf_amc::FAmctest_Print(atf_amc::FAmctest& row, algo::cstring& str) {
+void atf_amc::FAmctest_Print(atf_amc::FAmctest& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.FAmctest";
 
@@ -1814,7 +1814,7 @@ void atf_amc::FAmctest_Print(atf_amc::FAmctest& row, algo::cstring& str) {
 }
 
 // --- atf_amc.FAvl..Uninit
-void atf_amc::FAvl_Uninit(atf_amc::FAvl& avl) {
+void atf_amc::FAvl_Uninit(atf_amc::FAvl& avl) throw() {
     atf_amc::FAvl &row = avl; (void)row;
     tr_avl_Remove(row); // remove avl from index tr_avl
 }
@@ -1822,7 +1822,7 @@ void atf_amc::FAvl_Uninit(atf_amc::FAvl& avl) {
 // --- atf_amc.FCascdel.type.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::type_ToCstr(const atf_amc::FCascdel& cascdel) {
+const char* atf_amc::type_ToCstr(const atf_amc::FCascdel& cascdel) throw() {
     const char *ret = NULL;
     switch(type_GetEnum(cascdel)) {
         case atf_amc_FCascdel_type_none    : ret = "none";  break;
@@ -1838,7 +1838,7 @@ const char* atf_amc::type_ToCstr(const atf_amc::FCascdel& cascdel) {
 // --- atf_amc.FCascdel.type.Print
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
-void atf_amc::type_Print(const atf_amc::FCascdel& cascdel, algo::cstring &lhs) {
+void atf_amc::type_Print(const atf_amc::FCascdel& cascdel, algo::cstring &lhs) throw() {
     const char *strval = type_ToCstr(cascdel);
     if (strval) {
         lhs << strval;
@@ -1851,7 +1851,7 @@ void atf_amc::type_Print(const atf_amc::FCascdel& cascdel, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) {
+bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -1902,14 +1902,14 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::FCascdel& cascdel, algo::strptr rhs) 
 // --- atf_amc.FCascdel.type.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::type_SetStrptr(atf_amc::FCascdel& cascdel, algo::strptr rhs, atf_amc_FCascdel_type_Enum dflt) {
+void atf_amc::type_SetStrptr(atf_amc::FCascdel& cascdel, algo::strptr rhs, atf_amc_FCascdel_type_Enum dflt) throw() {
     if (!type_SetStrptrMaybe(cascdel,rhs)) type_SetEnum(cascdel,dflt);
 }
 
 // --- atf_amc.FCascdel.child_ptr.Cascdel
 // Delete referred-to items.
 // Deleted pointed-to item.
-void atf_amc::child_ptr_Cascdel(atf_amc::FCascdel& cascdel) {
+void atf_amc::child_ptr_Cascdel(atf_amc::FCascdel& cascdel) throw() {
     atf_amc::FCascdel *ptr = cascdel.child_ptr;
     if (ptr) {
         cascdel_Delete(*ptr);
@@ -1919,7 +1919,7 @@ void atf_amc::child_ptr_Cascdel(atf_amc::FCascdel& cascdel) {
 
 // --- atf_amc.FCascdel.c_child_ptrary.Cascdel
 // Delete all elements pointed to by the index.
-void atf_amc::c_child_ptrary_Cascdel(atf_amc::FCascdel& cascdel) {
+void atf_amc::c_child_ptrary_Cascdel(atf_amc::FCascdel& cascdel) throw() {
     // Clear c_child_ptrary_n so that calls to atf_amc.FCascdel.c_child_ptrary.Remove do not have to scan
     // the array for pointers or shift anything.
     // This is somewhat of a hack.
@@ -1935,7 +1935,7 @@ void atf_amc::c_child_ptrary_Cascdel(atf_amc::FCascdel& cascdel) {
 // --- atf_amc.FCascdel.c_child_ptrary.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void atf_amc::c_child_ptrary_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::c_child_ptrary_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     if (bool_Update(row.cascdel_c_child_ptrary_in_ary,true)) {
         // reserve space
         c_child_ptrary_Reserve(cascdel, 1);
@@ -1952,7 +1952,7 @@ void atf_amc::c_child_ptrary_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascde
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool atf_amc::c_child_ptrary_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+bool atf_amc::c_child_ptrary_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     bool retval = !row.cascdel_c_child_ptrary_in_ary;
     c_child_ptrary_Insert(cascdel,row); // check is performed in _Insert again
     return retval;
@@ -1960,7 +1960,7 @@ bool atf_amc::c_child_ptrary_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FC
 
 // --- atf_amc.FCascdel.c_child_ptrary.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void atf_amc::c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     if (bool_Update(row.cascdel_c_child_ptrary_in_ary,false)) {
         int lim = cascdel.c_child_ptrary_n;
         atf_amc::FCascdel* *elems = cascdel.c_child_ptrary_elems;
@@ -1981,7 +1981,7 @@ void atf_amc::c_child_ptrary_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascde
 
 // --- atf_amc.FCascdel.c_child_ptrary.Reserve
 // Reserve space in index for N more elements;
-void atf_amc::c_child_ptrary_Reserve(atf_amc::FCascdel& cascdel, u32 n) {
+void atf_amc::c_child_ptrary_Reserve(atf_amc::FCascdel& cascdel, u32 n) throw() {
     u32 old_max = cascdel.c_child_ptrary_max;
     if (UNLIKELY(cascdel.c_child_ptrary_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -1998,7 +1998,7 @@ void atf_amc::c_child_ptrary_Reserve(atf_amc::FCascdel& cascdel, u32 n) {
 
 // --- atf_amc.FCascdel.ind_child_thash.Cascdel
 // Delete all rows reachable through the hash index
-void atf_amc::ind_child_thash_Cascdel(atf_amc::FCascdel& cascdel) {
+void atf_amc::ind_child_thash_Cascdel(atf_amc::FCascdel& cascdel) throw() {
     if (cascdel.ind_child_thash_n) {
         for (int i = 0; i < cascdel.ind_child_thash_buckets_n; i++) {
             atf_amc::FCascdel *elem = cascdel.ind_child_thash_buckets_elems[i];
@@ -2013,7 +2013,7 @@ void atf_amc::ind_child_thash_Cascdel(atf_amc::FCascdel& cascdel) {
 
 // --- atf_amc.FCascdel.ind_child_thash.Find
 // Find row by key. Return NULL if not found.
-atf_amc::FCascdel* atf_amc::ind_child_thash_Find(atf_amc::FCascdel& cascdel, u32 key) {
+atf_amc::FCascdel* atf_amc::ind_child_thash_Find(atf_amc::FCascdel& cascdel, u32 key) throw() {
     u32 index = ::u32_Hash(0, key) & (cascdel.ind_child_thash_buckets_n - 1);
     atf_amc::FCascdel* *e = &cascdel.ind_child_thash_buckets_elems[index];
     atf_amc::FCascdel* ret=NULL;
@@ -2028,7 +2028,7 @@ atf_amc::FCascdel* atf_amc::ind_child_thash_Find(atf_amc::FCascdel& cascdel, u32
 
 // --- atf_amc.FCascdel.ind_child_thash.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_amc::ind_child_thash_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+bool atf_amc::ind_child_thash_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     ind_child_thash_Reserve(cascdel, 1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_child_thash_next == (atf_amc::FCascdel*)-1)) {// check if in hash already
@@ -2056,7 +2056,7 @@ bool atf_amc::ind_child_thash_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::F
 
 // --- atf_amc.FCascdel.ind_child_thash.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_amc::ind_child_thash_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::ind_child_thash_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     if (LIKELY(row.ind_child_thash_next != (atf_amc::FCascdel*)-1)) {// check if in hash already
         u32 index = ::u32_Hash(0, row.key) & (cascdel.ind_child_thash_buckets_n - 1);
         atf_amc::FCascdel* *prev = &cascdel.ind_child_thash_buckets_elems[index]; // addr of pointer to current element
@@ -2074,7 +2074,7 @@ void atf_amc::ind_child_thash_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascd
 
 // --- atf_amc.FCascdel.ind_child_thash.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_amc::ind_child_thash_Reserve(atf_amc::FCascdel& cascdel, int n) {
+void atf_amc::ind_child_thash_Reserve(atf_amc::FCascdel& cascdel, int n) throw() {
     u32 old_nbuckets = cascdel.ind_child_thash_buckets_n;
     u32 new_nelems   = cascdel.ind_child_thash_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2111,7 +2111,7 @@ void atf_amc::ind_child_thash_Reserve(atf_amc::FCascdel& cascdel, int n) {
 // --- atf_amc.FCascdel.bh_child_bheap.Cascdel
 // Delete referred-to items.
 // Delete all elements referenced by the heap.
-void atf_amc::bh_child_bheap_Cascdel(atf_amc::FCascdel& cascdel) {
+void atf_amc::bh_child_bheap_Cascdel(atf_amc::FCascdel& cascdel) throw() {
     i32 n = cascdel.bh_child_bheap_n;
     while (n > 0) {
         n--;
@@ -2124,7 +2124,7 @@ void atf_amc::bh_child_bheap_Cascdel(atf_amc::FCascdel& cascdel) {
 
 // --- atf_amc.FCascdel.bh_child_bheap.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void atf_amc::bh_child_bheap_Dealloc(atf_amc::FCascdel& cascdel) {
+void atf_amc::bh_child_bheap_Dealloc(atf_amc::FCascdel& cascdel) throw() {
     bh_child_bheap_RemoveAll(cascdel);
     algo_lib::malloc_FreeMem(cascdel.bh_child_bheap_elems, sizeof(atf_amc::FCascdel*)*cascdel.bh_child_bheap_max);
     cascdel.bh_child_bheap_max   = 0;
@@ -2134,7 +2134,7 @@ void atf_amc::bh_child_bheap_Dealloc(atf_amc::FCascdel& cascdel) {
 // --- atf_amc.FCascdel.bh_child_bheap.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int atf_amc::bh_child_bheap_Downheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) {
+static int atf_amc::bh_child_bheap_Downheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) throw() {
     atf_amc::FCascdel* *elems = cascdel.bh_child_bheap_elems;
     int n = cascdel.bh_child_bheap_n;
     int child = idx*2+1;
@@ -2161,7 +2161,7 @@ static int atf_amc::bh_child_bheap_Downheap(atf_amc::FCascdel& cascdel, atf_amc:
 
 // --- atf_amc.FCascdel.bh_child_bheap.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void atf_amc::bh_child_bheap_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::bh_child_bheap_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     if (LIKELY(row.bh_child_bheap_idx == -1)) {
         bh_child_bheap_Reserve(cascdel, 1);
         int n = cascdel.bh_child_bheap_n;
@@ -2175,7 +2175,7 @@ void atf_amc::bh_child_bheap_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascde
 // --- atf_amc.FCascdel.bh_child_bheap.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 atf_amc::bh_child_bheap_Reheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+i32 atf_amc::bh_child_bheap_Reheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     int old_idx = row.bh_child_bheap_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
@@ -2196,7 +2196,7 @@ i32 atf_amc::bh_child_bheap_Reheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 atf_amc::bh_child_bheap_ReheapFirst(atf_amc::FCascdel& cascdel) {
+i32 atf_amc::bh_child_bheap_ReheapFirst(atf_amc::FCascdel& cascdel) throw() {
     atf_amc::FCascdel &row = *cascdel.bh_child_bheap_elems[0];
     i32 new_idx = bh_child_bheap_Downheap(cascdel, row, 0);
     row.bh_child_bheap_idx = new_idx;
@@ -2206,7 +2206,7 @@ i32 atf_amc::bh_child_bheap_ReheapFirst(atf_amc::FCascdel& cascdel) {
 
 // --- atf_amc.FCascdel.bh_child_bheap.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::bh_child_bheap_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::bh_child_bheap_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     if (bh_child_bheap_InBheapQ(row)) {
         int old_idx = row.bh_child_bheap_idx;
         if (cascdel.bh_child_bheap_elems[old_idx] == &row) { // sanity check: heap points back to row
@@ -2228,7 +2228,7 @@ void atf_amc::bh_child_bheap_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascde
 
 // --- atf_amc.FCascdel.bh_child_bheap.RemoveAll
 // Remove all elements from binary heap
-void atf_amc::bh_child_bheap_RemoveAll(atf_amc::FCascdel& cascdel) {
+void atf_amc::bh_child_bheap_RemoveAll(atf_amc::FCascdel& cascdel) throw() {
     int n = cascdel.bh_child_bheap_n;
     for (int i = n - 1; i>=0; i--) {
         cascdel.bh_child_bheap_elems[i]->bh_child_bheap_idx = -1; // mark not-in-heap
@@ -2239,7 +2239,7 @@ void atf_amc::bh_child_bheap_RemoveAll(atf_amc::FCascdel& cascdel) {
 // --- atf_amc.FCascdel.bh_child_bheap.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-atf_amc::FCascdel* atf_amc::bh_child_bheap_RemoveFirst(atf_amc::FCascdel& cascdel) {
+atf_amc::FCascdel* atf_amc::bh_child_bheap_RemoveFirst(atf_amc::FCascdel& cascdel) throw() {
     atf_amc::FCascdel *row = NULL;
     if (cascdel.bh_child_bheap_n > 0) {
         row = cascdel.bh_child_bheap_elems[0];
@@ -2258,7 +2258,7 @@ atf_amc::FCascdel* atf_amc::bh_child_bheap_RemoveFirst(atf_amc::FCascdel& cascde
 
 // --- atf_amc.FCascdel.bh_child_bheap.Reserve
 // Reserve space in index for N more elements
-void atf_amc::bh_child_bheap_Reserve(atf_amc::FCascdel& cascdel, int n) {
+void atf_amc::bh_child_bheap_Reserve(atf_amc::FCascdel& cascdel, int n) throw() {
     i32 old_max = cascdel.bh_child_bheap_max;
     if (UNLIKELY(cascdel.bh_child_bheap_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -2276,7 +2276,7 @@ void atf_amc::bh_child_bheap_Reserve(atf_amc::FCascdel& cascdel, int n) {
 // --- atf_amc.FCascdel.bh_child_bheap.Set
 // Set row key to new value.
 // Update heap membership based on insert condition [row.p_parent != &row && row.type==atf_amc_FCascdel_type_bheap]
-void atf_amc::key_Set(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &row, u32 new_key) {
+void atf_amc::key_Set(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &row, u32 new_key) throw() {
     row.key = new_key;
     bool ins = row.p_parent != &row && row.type==atf_amc_FCascdel_type_bheap; // user-defined insert condition (xref)
     if (ins) {
@@ -2290,7 +2290,7 @@ void atf_amc::key_Set(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &row, u32 ne
 // Set row key to new value. If row not in heap, the key is set to new value
 // Otherwise, the key is changed only if the new key is better than the old.
 // Update heap membership based on insert condition [row.p_parent != &row && row.type==atf_amc_FCascdel_type_bheap]
-void atf_amc::key_SetIfBetter(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &row, u32 new_key) {
+void atf_amc::key_SetIfBetter(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &row, u32 new_key) throw() {
     bool better = true;
     if (bh_child_bheap_InBheapQ(row)) {
         better = !bh_child_bheap_ElemLtval(cascdel, row,new_key); // this is really Not Worse, not Better
@@ -2303,7 +2303,7 @@ void atf_amc::key_SetIfBetter(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &row
 // --- atf_amc.FCascdel.bh_child_bheap.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int atf_amc::bh_child_bheap_Upheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) {
+static int atf_amc::bh_child_bheap_Upheap(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row, int idx) throw() {
     atf_amc::FCascdel* *elems = cascdel.bh_child_bheap_elems;
     while (idx>0) {
         int j = (idx-1)/2;
@@ -2319,20 +2319,20 @@ static int atf_amc::bh_child_bheap_Upheap(atf_amc::FCascdel& cascdel, atf_amc::F
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.ElemLt
-inline static bool atf_amc::bh_child_bheap_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) {
+inline static bool atf_amc::bh_child_bheap_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) throw() {
     (void)cascdel;
     return a.key < b.key;
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.ElemLtval
-inline static bool atf_amc::bh_child_bheap_ElemLtval(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, const u32 &b) {
+inline static bool atf_amc::bh_child_bheap_ElemLtval(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, const u32 &b) throw() {
     (void)cascdel;
     return a.key < (u32&)b;
 }
 
 // --- atf_amc.FCascdel.zd_childlist.Cascdel
 // Delete all elements in the linked list.
-void atf_amc::zd_childlist_Cascdel(atf_amc::FCascdel& cascdel) {
+void atf_amc::zd_childlist_Cascdel(atf_amc::FCascdel& cascdel) throw() {
     while (atf_amc::FCascdel *zd_childlist_first = zd_childlist_First(cascdel)) {
         cascdel_Delete(*zd_childlist_first);
     }
@@ -2340,7 +2340,7 @@ void atf_amc::zd_childlist_Cascdel(atf_amc::FCascdel& cascdel) {
 
 // --- atf_amc.FCascdel.zd_childlist.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zd_childlist_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::zd_childlist_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     if (!zd_childlist_InLlistQ(row)) {
         atf_amc::FCascdel* old_tail = cascdel.zd_childlist_tail;
         row.zd_childlist_next = NULL;
@@ -2356,7 +2356,7 @@ void atf_amc::zd_childlist_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel&
 
 // --- atf_amc.FCascdel.zd_childlist.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::zd_childlist_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::zd_childlist_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     if (zd_childlist_InLlistQ(row)) {
         atf_amc::FCascdel* old_head       = cascdel.zd_childlist_head;
         (void)old_head; // in case it's not used
@@ -2379,7 +2379,7 @@ void atf_amc::zd_childlist_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel&
 
 // --- atf_amc.FCascdel.zd_childlist.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zd_childlist_RemoveAll(atf_amc::FCascdel& cascdel) {
+void atf_amc::zd_childlist_RemoveAll(atf_amc::FCascdel& cascdel) throw() {
     atf_amc::FCascdel* row = cascdel.zd_childlist_head;
     cascdel.zd_childlist_head = NULL;
     cascdel.zd_childlist_tail = NULL;
@@ -2394,7 +2394,7 @@ void atf_amc::zd_childlist_RemoveAll(atf_amc::FCascdel& cascdel) {
 
 // --- atf_amc.FCascdel.zd_childlist.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FCascdel* atf_amc::zd_childlist_RemoveFirst(atf_amc::FCascdel& cascdel) {
+atf_amc::FCascdel* atf_amc::zd_childlist_RemoveFirst(atf_amc::FCascdel& cascdel) throw() {
     atf_amc::FCascdel *row = NULL;
     row = cascdel.zd_childlist_head;
     if (row) {
@@ -2412,14 +2412,14 @@ atf_amc::FCascdel* atf_amc::zd_childlist_RemoveFirst(atf_amc::FCascdel& cascdel)
 
 // --- atf_amc.FCascdel.tr_child_atree.Cascdel
 // Delete all elements in the tree.
-void atf_amc::tr_child_atree_Cascdel(atf_amc::FCascdel& cascdel) {
+void atf_amc::tr_child_atree_Cascdel(atf_amc::FCascdel& cascdel) throw() {
     tr_child_atree_RemoveAllImpl(cascdel, cascdel.tr_child_atree_root, true);
     cascdel.tr_child_atree_root = NULL;
     cascdel.tr_child_atree_n = 0;
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.FirstImpl
-atf_amc::FCascdel* atf_amc::tr_child_atree_FirstImpl(atf_amc::FCascdel* root) {
+atf_amc::FCascdel* atf_amc::tr_child_atree_FirstImpl(atf_amc::FCascdel* root) throw() {
     atf_amc::FCascdel *result = root;
     while(result != NULL && result->tr_child_atree_left != NULL){
         result = result->tr_child_atree_left;
@@ -2429,13 +2429,13 @@ atf_amc::FCascdel* atf_amc::tr_child_atree_FirstImpl(atf_amc::FCascdel* root) {
 
 // --- atf_amc.FCascdel.tr_child_atree.First
 // Return pointer to the first(smallest) element in the tree
-atf_amc::FCascdel* atf_amc::tr_child_atree_First(atf_amc::FCascdel& cascdel) {
+atf_amc::FCascdel* atf_amc::tr_child_atree_First(atf_amc::FCascdel& cascdel) throw() {
     return tr_child_atree_FirstImpl(cascdel.tr_child_atree_root);
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.InsertImpl
 // Insert row into the tree. If row is already in the tree, do nothing.
-void atf_amc::tr_child_atree_InsertImpl(atf_amc::FCascdel& cascdel, atf_amc::FCascdel* parent, atf_amc::FCascdel& row) {
+void atf_amc::tr_child_atree_InsertImpl(atf_amc::FCascdel& cascdel, atf_amc::FCascdel* parent, atf_amc::FCascdel& row) throw() {
     bool left = false;
     while(parent != NULL){
         left = tr_child_atree_ElemLt(cascdel, row, *parent);
@@ -2450,7 +2450,7 @@ void atf_amc::tr_child_atree_InsertImpl(atf_amc::FCascdel& cascdel, atf_amc::FCa
 
 // --- atf_amc.FCascdel.tr_child_atree.Insert
 // Insert row into the tree. If row is already in the tree, do nothing.
-void atf_amc::tr_child_atree_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::tr_child_atree_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     if(!tr_child_atree_InTreeQ(row)){
         cascdel.tr_child_atree_n++;
         tr_child_atree_InsertImpl(cascdel, cascdel.tr_child_atree_root, row);
@@ -2460,7 +2460,7 @@ void atf_amc::tr_child_atree_Insert(atf_amc::FCascdel& cascdel, atf_amc::FCascde
 
 // --- atf_amc.FCascdel.tr_child_atree.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::tr_child_atree_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+void atf_amc::tr_child_atree_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     if(!tr_child_atree_InTreeQ(row)){
         return;
     }
@@ -2492,14 +2492,14 @@ void atf_amc::tr_child_atree_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascde
 
 // --- atf_amc.FCascdel.tr_child_atree.RemoveFirst
 // If the tree is empty, return NULL. Otherwise unlink and return pointer to first element.
-void atf_amc::tr_child_atree_RemoveFirst(atf_amc::FCascdel& cascdel) {
+void atf_amc::tr_child_atree_RemoveFirst(atf_amc::FCascdel& cascdel) throw() {
     if(!tr_child_atree_EmptyQ(cascdel)){
         tr_child_atree_Remove(cascdel, *tr_child_atree_First(cascdel));
     }
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.Balance
-i32 atf_amc::tr_child_atree_Balance(atf_amc::FCascdel& row) {
+i32 atf_amc::tr_child_atree_Balance(atf_amc::FCascdel& row) throw() {
     i32 left  = row.tr_child_atree_left  ? row.tr_child_atree_left->tr_child_atree_depth  : 0;
     i32 right = row.tr_child_atree_right ? row.tr_child_atree_right->tr_child_atree_depth : 0;
     return left - right;
@@ -2507,7 +2507,7 @@ i32 atf_amc::tr_child_atree_Balance(atf_amc::FCascdel& row) {
 
 // --- atf_amc.FCascdel.tr_child_atree.Propagate
 // Recalculate depth and keep rebalancing if needed
-atf_amc::FCascdel* atf_amc::tr_child_atree_Propagate(atf_amc::FCascdel& pnode) {
+atf_amc::FCascdel* atf_amc::tr_child_atree_Propagate(atf_amc::FCascdel& pnode) throw() {
     atf_amc::FCascdel *root = &pnode;
     atf_amc::FCascdel* node = &pnode;
     while(node != NULL){
@@ -2521,13 +2521,13 @@ atf_amc::FCascdel* atf_amc::tr_child_atree_Propagate(atf_amc::FCascdel& pnode) {
 
 // --- atf_amc.FCascdel.tr_child_atree.TallerChild
 // Returns the child that has greater height.
-inline static atf_amc::FCascdel* atf_amc::tr_child_atree_TallerChild(atf_amc::FCascdel& node) {
+inline static atf_amc::FCascdel* atf_amc::tr_child_atree_TallerChild(atf_amc::FCascdel& node) throw() {
     return tr_child_atree_Balance(node) < 0 ? node.tr_child_atree_right : node.tr_child_atree_left;
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.Disconnect
 // Disconnects the subtree(branch) from the parent
-static void atf_amc::tr_child_atree_Disconnect(atf_amc::FCascdel& node) {
+static void atf_amc::tr_child_atree_Disconnect(atf_amc::FCascdel& node) throw() {
     atf_amc::FCascdel* parent = node.tr_child_atree_up;
     if(parent != NULL){
         bool left = parent->tr_child_atree_left == &node;
@@ -2538,7 +2538,7 @@ static void atf_amc::tr_child_atree_Disconnect(atf_amc::FCascdel& node) {
 
 // --- atf_amc.FCascdel.tr_child_atree.Rebalance
 // Rebalances the node if needed.
-void atf_amc::tr_child_atree_Rebalance(atf_amc::FCascdel& node) {
+void atf_amc::tr_child_atree_Rebalance(atf_amc::FCascdel& node) throw() {
     if (algo::Abs(tr_child_atree_Balance(node)) > 1){
         atf_amc::FCascdel* deep1 = tr_child_atree_TallerChild(node);
         atf_amc::FCascdel* deep2 = tr_child_atree_TallerChild(*deep1);
@@ -2555,7 +2555,7 @@ void atf_amc::tr_child_atree_Rebalance(atf_amc::FCascdel& node) {
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.Next
-atf_amc::FCascdel* atf_amc::tr_child_atree_Next(atf_amc::FCascdel& node) {
+atf_amc::FCascdel* atf_amc::tr_child_atree_Next(atf_amc::FCascdel& node) throw() {
     atf_amc::FCascdel *result = &node;
     if(result->tr_child_atree_right == NULL){
         while(result->tr_child_atree_up != NULL && result->tr_child_atree_up->tr_child_atree_right == result){
@@ -2569,7 +2569,7 @@ atf_amc::FCascdel* atf_amc::tr_child_atree_Next(atf_amc::FCascdel& node) {
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.Prev
-atf_amc::FCascdel* atf_amc::tr_child_atree_Prev(atf_amc::FCascdel& node) {
+atf_amc::FCascdel* atf_amc::tr_child_atree_Prev(atf_amc::FCascdel& node) throw() {
     atf_amc::FCascdel *result = &node;
     if(result->tr_child_atree_left == NULL){
         while(result->tr_child_atree_up != NULL && result->tr_child_atree_up->tr_child_atree_left == result){
@@ -2583,7 +2583,7 @@ atf_amc::FCascdel* atf_amc::tr_child_atree_Prev(atf_amc::FCascdel& node) {
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.LastImpl
-atf_amc::FCascdel* atf_amc::tr_child_atree_LastImpl(atf_amc::FCascdel* root) {
+atf_amc::FCascdel* atf_amc::tr_child_atree_LastImpl(atf_amc::FCascdel* root) throw() {
     atf_amc::FCascdel *result = root;
     while(result != NULL && result->tr_child_atree_right != NULL){
         result = result->tr_child_atree_right;
@@ -2593,18 +2593,18 @@ atf_amc::FCascdel* atf_amc::tr_child_atree_LastImpl(atf_amc::FCascdel* root) {
 
 // --- atf_amc.FCascdel.tr_child_atree.Last
 // Return pointer to the last(largest) element in tree
-atf_amc::FCascdel* atf_amc::tr_child_atree_Last(atf_amc::FCascdel& cascdel) {
+atf_amc::FCascdel* atf_amc::tr_child_atree_Last(atf_amc::FCascdel& cascdel) throw() {
     return tr_child_atree_LastImpl(cascdel.tr_child_atree_root);
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.ElemLt
-inline static bool atf_amc::tr_child_atree_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) {
+inline static bool atf_amc::tr_child_atree_ElemLt(atf_amc::FCascdel& cascdel, atf_amc::FCascdel &a, atf_amc::FCascdel &b) throw() {
     (void)cascdel;
     return a.key < b.key;
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.UpdateDepth
-static void atf_amc::tr_child_atree_updateDepth(atf_amc::FCascdel& node) {
+static void atf_amc::tr_child_atree_updateDepth(atf_amc::FCascdel& node) throw() {
     i32 ldepth = node.tr_child_atree_left  != NULL ? node.tr_child_atree_left->tr_child_atree_depth : 0;
     i32 rdepth = node.tr_child_atree_right != NULL ? node.tr_child_atree_right->tr_child_atree_depth : 0;
     node.tr_child_atree_depth = i32_Max(ldepth, rdepth) + 1;
@@ -2612,7 +2612,7 @@ static void atf_amc::tr_child_atree_updateDepth(atf_amc::FCascdel& node) {
 
 // --- atf_amc.FCascdel.tr_child_atree.Turn
 // rotates the tree in from->to direction
-static void atf_amc::tr_child_atree_Turn(atf_amc::FCascdel& from, atf_amc::FCascdel& to) {
+static void atf_amc::tr_child_atree_Turn(atf_amc::FCascdel& from, atf_amc::FCascdel& to) throw() {
     atf_amc::FCascdel* root = to.tr_child_atree_up;
     bool dir = root && root->tr_child_atree_left == &to;
     tr_child_atree_Connect(root, &from, dir);
@@ -2623,7 +2623,7 @@ static void atf_amc::tr_child_atree_Turn(atf_amc::FCascdel& from, atf_amc::FCasc
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.Connect
-inline static void atf_amc::tr_child_atree_Connect(atf_amc::FCascdel* parent, atf_amc::FCascdel* child, bool left) {
+inline static void atf_amc::tr_child_atree_Connect(atf_amc::FCascdel* parent, atf_amc::FCascdel* child, bool left) throw() {
     if(parent){
         (left ? parent->tr_child_atree_left : parent->tr_child_atree_right) = child;
     }
@@ -2634,7 +2634,7 @@ inline static void atf_amc::tr_child_atree_Connect(atf_amc::FCascdel* parent, at
 
 // --- atf_amc.FCascdel.tr_child_atree.RemoveAllImpl
 // Empty the index. (rows may be deleted if cascdel)
-void atf_amc::tr_child_atree_RemoveAllImpl(atf_amc::FCascdel& cascdel, atf_amc::FCascdel* root, bool del) {
+void atf_amc::tr_child_atree_RemoveAllImpl(atf_amc::FCascdel& cascdel, atf_amc::FCascdel* root, bool del) throw() {
     if(root != NULL){
         tr_child_atree_RemoveAllImpl(cascdel, root->tr_child_atree_left, del);
         tr_child_atree_RemoveAllImpl(cascdel, root->tr_child_atree_right, del);
@@ -2649,14 +2649,14 @@ void atf_amc::tr_child_atree_RemoveAllImpl(atf_amc::FCascdel& cascdel, atf_amc::
 
 // --- atf_amc.FCascdel.tr_child_atree.Reinsert
 // Reinsert a row with modified key(Reheap semantics)
-void atf_amc::tr_child_atree_Reinsert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& node) {
+void atf_amc::tr_child_atree_Reinsert(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& node) throw() {
     tr_child_atree_Remove(cascdel, node);
     tr_child_atree_Insert(cascdel, node);
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.FirstGe
 // Find the first element that is greater or equal to a sortfld value
-atf_amc::FCascdel* atf_amc::tr_child_atree_FirstGe(atf_amc::FCascdel& cascdel, const u32& val) {
+atf_amc::FCascdel* atf_amc::tr_child_atree_FirstGe(atf_amc::FCascdel& cascdel, const u32& val) throw() {
     atf_amc::FCascdel* result = cascdel.tr_child_atree_root;
     bool left = false;
     while(result){
@@ -2675,7 +2675,7 @@ atf_amc::FCascdel* atf_amc::tr_child_atree_FirstGe(atf_amc::FCascdel& cascdel, c
 
 // --- atf_amc.FCascdel.tr_child_atree.LastLt
 // Find the last element that is smaller or equal to a sortfld value
-atf_amc::FCascdel* atf_amc::tr_child_atree_LastLt(atf_amc::FCascdel& cascdel, const u32& val) {
+atf_amc::FCascdel* atf_amc::tr_child_atree_LastLt(atf_amc::FCascdel& cascdel, const u32& val) throw() {
     atf_amc::FCascdel* result = cascdel.tr_child_atree_root;
     bool left = false;
     while(result){
@@ -2819,7 +2819,7 @@ void atf_amc::cascdel_bh_child_bheap_curs_Next(cascdel_bh_child_bheap_curs &curs
 }
 
 // --- atf_amc.FCascdel..Uninit
-void atf_amc::FCascdel_Uninit(atf_amc::FCascdel& cascdel) {
+void atf_amc::FCascdel_Uninit(atf_amc::FCascdel& cascdel) throw() {
     atf_amc::FCascdel &row = cascdel; (void)row;
     tr_child_atree_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.tr_child_atree
     zd_childlist_Cascdel(cascdel); // dmmeta.cascdel:atf_amc.FCascdel.zd_childlist
@@ -2861,7 +2861,7 @@ void atf_amc::FCascdel_Uninit(atf_amc::FCascdel& cascdel) {
 // --- atf_amc.FCascdel..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.FCascdel.String  printfmt:Tuple
-void atf_amc::FCascdel_Print(atf_amc::FCascdel& row, algo::cstring& str) {
+void atf_amc::FCascdel_Print(atf_amc::FCascdel& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.FCascdel";
 
@@ -2880,25 +2880,25 @@ void atf_amc::FCascdel_Print(atf_amc::FCascdel& row, algo::cstring& str) {
 
 // --- atf_amc.FCstring.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::cstring_CopyOut(atf_amc::FCstring &row, atf_amc::Cstring &out) {
+void atf_amc::cstring_CopyOut(atf_amc::FCstring &row, atf_amc::Cstring &out) throw() {
     out.str = row.str;
 }
 
 // --- atf_amc.FCstring.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::cstring_CopyIn(atf_amc::FCstring &row, atf_amc::Cstring &in) {
+void atf_amc::cstring_CopyIn(atf_amc::FCstring &row, atf_amc::Cstring &in) throw() {
     row.str = in.str;
 }
 
 // --- atf_amc.FCstring..Uninit
-void atf_amc::FCstring_Uninit(atf_amc::FCstring& cstring) {
+void atf_amc::FCstring_Uninit(atf_amc::FCstring& cstring) throw() {
     atf_amc::FCstring &row = cstring; (void)row;
     ind_cstring_Remove(row); // remove cstring from index ind_cstring
 }
 
 // --- atf_amc.FListtype.base.CopyOut
 // Copy fields out of row
-void atf_amc::listtype_CopyOut(atf_amc::FListtype &row, dmmeta::Listtype &out) {
+void atf_amc::listtype_CopyOut(atf_amc::FListtype &row, dmmeta::Listtype &out) throw() {
     out.listtype = row.listtype;
     out.circular = row.circular;
     out.haveprev = row.haveprev;
@@ -2908,7 +2908,7 @@ void atf_amc::listtype_CopyOut(atf_amc::FListtype &row, dmmeta::Listtype &out) {
 
 // --- atf_amc.FListtype.base.CopyIn
 // Copy fields in to row
-void atf_amc::listtype_CopyIn(atf_amc::FListtype &row, dmmeta::Listtype &in) {
+void atf_amc::listtype_CopyIn(atf_amc::FListtype &row, dmmeta::Listtype &in) throw() {
     row.listtype = in.listtype;
     row.circular = in.circular;
     row.haveprev = in.haveprev;
@@ -2936,7 +2936,7 @@ void atf_amc::trace_Init(atf_amc::trace& parent) {
 // --- atf_amc.trace..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.trace.String  printfmt:Tuple
-void atf_amc::trace_Print(atf_amc::trace& row, algo::cstring& str) {
+void atf_amc::trace_Print(atf_amc::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.trace";
 
@@ -2979,7 +2979,7 @@ void atf_amc::trace_Print(atf_amc::trace& row, algo::cstring& str) {
 
 // --- atf_amc.FDb.bh_typec.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void atf_amc::bh_typec_Dealloc() {
+void atf_amc::bh_typec_Dealloc() throw() {
     bh_typec_RemoveAll();
     algo_lib::malloc_FreeMem(_db.bh_typec_elems, sizeof(atf_amc::FTypeC*)*_db.bh_typec_max);
     _db.bh_typec_max   = 0;
@@ -2989,7 +2989,7 @@ void atf_amc::bh_typec_Dealloc() {
 // --- atf_amc.FDb.bh_typec.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int atf_amc::bh_typec_Downheap(atf_amc::FTypeC& row, int idx) {
+static int atf_amc::bh_typec_Downheap(atf_amc::FTypeC& row, int idx) throw() {
     atf_amc::FTypeC* *elems = _db.bh_typec_elems;
     int n = _db.bh_typec_n;
     int child = idx*2+1;
@@ -3016,7 +3016,7 @@ static int atf_amc::bh_typec_Downheap(atf_amc::FTypeC& row, int idx) {
 
 // --- atf_amc.FDb.bh_typec.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void atf_amc::bh_typec_Insert(atf_amc::FTypeC& row) {
+void atf_amc::bh_typec_Insert(atf_amc::FTypeC& row) throw() {
     if (LIKELY(row.bh_typec_idx == -1)) {
         bh_typec_Reserve(1);
         int n = _db.bh_typec_n;
@@ -3034,7 +3034,7 @@ void atf_amc::bh_typec_Insert(atf_amc::FTypeC& row) {
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
 // If first item of the is changed, update fstep:atf_amc.FDb.bh_typec
-i32 atf_amc::bh_typec_Reheap(atf_amc::FTypeC& row) {
+i32 atf_amc::bh_typec_Reheap(atf_amc::FTypeC& row) throw() {
     int old_idx = row.bh_typec_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
@@ -3060,7 +3060,7 @@ i32 atf_amc::bh_typec_Reheap(atf_amc::FTypeC& row) {
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
 // Update fstep:atf_amc.FDb.bh_typec
-i32 atf_amc::bh_typec_ReheapFirst() {
+i32 atf_amc::bh_typec_ReheapFirst() throw() {
     atf_amc::FTypeC &row = *_db.bh_typec_elems[0];
     i32 new_idx = bh_typec_Downheap(row, 0);
     row.bh_typec_idx = new_idx;
@@ -3073,7 +3073,7 @@ i32 atf_amc::bh_typec_ReheapFirst() {
 
 // --- atf_amc.FDb.bh_typec.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::bh_typec_Remove(atf_amc::FTypeC& row) {
+void atf_amc::bh_typec_Remove(atf_amc::FTypeC& row) throw() {
     if (bh_typec_InBheapQ(row)) {
         int old_idx = row.bh_typec_idx;
         if (_db.bh_typec_elems[old_idx] == &row) { // sanity check: heap points back to row
@@ -3098,7 +3098,7 @@ void atf_amc::bh_typec_Remove(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.bh_typec.RemoveAll
 // Remove all elements from binary heap
-void atf_amc::bh_typec_RemoveAll() {
+void atf_amc::bh_typec_RemoveAll() throw() {
     int n = _db.bh_typec_n;
     for (int i = n - 1; i>=0; i--) {
         _db.bh_typec_elems[i]->bh_typec_idx = -1; // mark not-in-heap
@@ -3112,7 +3112,7 @@ void atf_amc::bh_typec_RemoveAll() {
 // --- atf_amc.FDb.bh_typec.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-atf_amc::FTypeC* atf_amc::bh_typec_RemoveFirst() {
+atf_amc::FTypeC* atf_amc::bh_typec_RemoveFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     if (_db.bh_typec_n > 0) {
         row = _db.bh_typec_elems[0];
@@ -3132,7 +3132,7 @@ atf_amc::FTypeC* atf_amc::bh_typec_RemoveFirst() {
 
 // --- atf_amc.FDb.bh_typec.Reserve
 // Reserve space in index for N more elements
-void atf_amc::bh_typec_Reserve(int n) {
+void atf_amc::bh_typec_Reserve(int n) throw() {
     i32 old_max = _db.bh_typec_max;
     if (UNLIKELY(_db.bh_typec_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -3150,7 +3150,7 @@ void atf_amc::bh_typec_Reserve(int n) {
 // --- atf_amc.FDb.bh_typec.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int atf_amc::bh_typec_Upheap(atf_amc::FTypeC& row, int idx) {
+static int atf_amc::bh_typec_Upheap(atf_amc::FTypeC& row, int idx) throw() {
     atf_amc::FTypeC* *elems = _db.bh_typec_elems;
     while (idx>0) {
         int j = (idx-1)/2;
@@ -3166,14 +3166,14 @@ static int atf_amc::bh_typec_Upheap(atf_amc::FTypeC& row, int idx) {
 }
 
 // --- atf_amc.FDb.bh_typec.ElemLt
-inline static bool atf_amc::bh_typec_ElemLt(atf_amc::FTypeC &a, atf_amc::FTypeC &b) {
+inline static bool atf_amc::bh_typec_ElemLt(atf_amc::FTypeC &a, atf_amc::FTypeC &b) throw() {
     (void)_db;
     return a.typec < b.typec;
 }
 
 // --- atf_amc.FDb.bh_typec.UpdateCycles
 // Update cycles count from previous clock capture
-void atf_amc::bh_typec_UpdateCycles() {
+void atf_amc::bh_typec_UpdateCycles() throw() {
     u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++atf_amc::_db.trace.step_bh_typec;
@@ -3183,7 +3183,7 @@ void atf_amc::bh_typec_UpdateCycles() {
 
 // --- atf_amc.FDb.zdl_h_typec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zdl_h_typec_Insert(atf_amc::FTypeC& row) {
+void atf_amc::zdl_h_typec_Insert(atf_amc::FTypeC& row) throw() {
     if (!zdl_h_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_head = _db.zdl_h_typec_head;
         row.zdl_h_typec_prev = NULL;
@@ -3199,7 +3199,7 @@ void atf_amc::zdl_h_typec_Insert(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zdl_h_typec.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::zdl_h_typec_Remove(atf_amc::FTypeC& row) {
+void atf_amc::zdl_h_typec_Remove(atf_amc::FTypeC& row) throw() {
     if (zdl_h_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_head       = _db.zdl_h_typec_head;
         (void)old_head; // in case it's not used
@@ -3222,7 +3222,7 @@ void atf_amc::zdl_h_typec_Remove(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zdl_h_typec.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zdl_h_typec_RemoveAll() {
+void atf_amc::zdl_h_typec_RemoveAll() throw() {
     atf_amc::FTypeC* row = _db.zdl_h_typec_head;
     _db.zdl_h_typec_head = NULL;
     _db.zdl_h_typec_tail = NULL;
@@ -3237,7 +3237,7 @@ void atf_amc::zdl_h_typec_RemoveAll() {
 
 // --- atf_amc.FDb.zdl_h_typec.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FTypeC* atf_amc::zdl_h_typec_RemoveFirst() {
+atf_amc::FTypeC* atf_amc::zdl_h_typec_RemoveFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zdl_h_typec_head;
     if (row) {
@@ -3255,7 +3255,7 @@ atf_amc::FTypeC* atf_amc::zdl_h_typec_RemoveFirst() {
 
 // --- atf_amc.FDb.zd_t_typec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zd_t_typec_Insert(atf_amc::FTypeC& row) {
+void atf_amc::zd_t_typec_Insert(atf_amc::FTypeC& row) throw() {
     if (!zd_t_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_tail = _db.zd_t_typec_tail;
         row.zd_t_typec_next = NULL;
@@ -3271,7 +3271,7 @@ void atf_amc::zd_t_typec_Insert(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zd_t_typec.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::zd_t_typec_Remove(atf_amc::FTypeC& row) {
+void atf_amc::zd_t_typec_Remove(atf_amc::FTypeC& row) throw() {
     if (zd_t_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_head       = _db.zd_t_typec_head;
         (void)old_head; // in case it's not used
@@ -3294,7 +3294,7 @@ void atf_amc::zd_t_typec_Remove(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zd_t_typec.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zd_t_typec_RemoveAll() {
+void atf_amc::zd_t_typec_RemoveAll() throw() {
     atf_amc::FTypeC* row = _db.zd_t_typec_head;
     _db.zd_t_typec_head = NULL;
     _db.zd_t_typec_tail = NULL;
@@ -3309,7 +3309,7 @@ void atf_amc::zd_t_typec_RemoveAll() {
 
 // --- atf_amc.FDb.zd_t_typec.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FTypeC* atf_amc::zd_t_typec_RemoveFirst() {
+atf_amc::FTypeC* atf_amc::zd_t_typec_RemoveFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zd_t_typec_head;
     if (row) {
@@ -3327,7 +3327,7 @@ atf_amc::FTypeC* atf_amc::zd_t_typec_RemoveFirst() {
 
 // --- atf_amc.FDb.zd_typed.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zd_typed_Insert(atf_amc::FTypeD& row) {
+void atf_amc::zd_typed_Insert(atf_amc::FTypeD& row) throw() {
     if (!zd_typed_InLlistQ(row)) {
         atf_amc::FTypeD* old_tail = _db.zd_typed_tail;
         row.zd_typed_next = NULL;
@@ -3343,7 +3343,7 @@ void atf_amc::zd_typed_Insert(atf_amc::FTypeD& row) {
 
 // --- atf_amc.FDb.zd_typed.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::zd_typed_Remove(atf_amc::FTypeD& row) {
+void atf_amc::zd_typed_Remove(atf_amc::FTypeD& row) throw() {
     if (zd_typed_InLlistQ(row)) {
         atf_amc::FTypeD* old_head       = _db.zd_typed_head;
         (void)old_head; // in case it's not used
@@ -3366,7 +3366,7 @@ void atf_amc::zd_typed_Remove(atf_amc::FTypeD& row) {
 
 // --- atf_amc.FDb.zd_typed.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zd_typed_RemoveAll() {
+void atf_amc::zd_typed_RemoveAll() throw() {
     atf_amc::FTypeD* row = _db.zd_typed_head;
     _db.zd_typed_head = NULL;
     _db.zd_typed_tail = NULL;
@@ -3381,7 +3381,7 @@ void atf_amc::zd_typed_RemoveAll() {
 
 // --- atf_amc.FDb.zd_typed.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FTypeD* atf_amc::zd_typed_RemoveFirst() {
+atf_amc::FTypeD* atf_amc::zd_typed_RemoveFirst() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.zd_typed_head;
     if (row) {
@@ -3399,7 +3399,7 @@ atf_amc::FTypeD* atf_amc::zd_typed_RemoveFirst() {
 
 // --- atf_amc.FDb.zs_t_typed.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zs_t_typed_Insert(atf_amc::FTypeD& row) {
+void atf_amc::zs_t_typed_Insert(atf_amc::FTypeD& row) throw() {
     if (!zs_t_typed_InLlistQ(row)) {
         atf_amc::FTypeD* old_tail       = _db.zs_t_typed_tail;
         row.zs_t_typed_next  = NULL;
@@ -3415,7 +3415,7 @@ void atf_amc::zs_t_typed_Insert(atf_amc::FTypeD& row) {
 // --- atf_amc.FDb.zs_t_typed.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void atf_amc::zs_t_typed_Remove(atf_amc::FTypeD& row) {
+void atf_amc::zs_t_typed_Remove(atf_amc::FTypeD& row) throw() {
     if (zs_t_typed_InLlistQ(row)) {
         atf_amc::FTypeD* old_head       = _db.zs_t_typed_head;
         (void)old_head; // in case it's not used
@@ -3446,7 +3446,7 @@ void atf_amc::zs_t_typed_Remove(atf_amc::FTypeD& row) {
 
 // --- atf_amc.FDb.zs_t_typed.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zs_t_typed_RemoveAll() {
+void atf_amc::zs_t_typed_RemoveAll() throw() {
     atf_amc::FTypeD* row = _db.zs_t_typed_head;
     _db.zs_t_typed_head = NULL;
     _db.zs_t_typed_tail = NULL;
@@ -3460,7 +3460,7 @@ void atf_amc::zs_t_typed_RemoveAll() {
 
 // --- atf_amc.FDb.zs_t_typed.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FTypeD* atf_amc::zs_t_typed_RemoveFirst() {
+atf_amc::FTypeD* atf_amc::zs_t_typed_RemoveFirst() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.zs_t_typed_head;
     if (row) {
@@ -3478,7 +3478,7 @@ atf_amc::FTypeD* atf_amc::zs_t_typed_RemoveFirst() {
 
 // --- atf_amc.FDb.cd_typed.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::cd_typed_Insert(atf_amc::FTypeD& row) {
+void atf_amc::cd_typed_Insert(atf_amc::FTypeD& row) throw() {
     if (!cd_typed_InLlistQ(row)) {
         if (_db.cd_typed_head) {
             row.cd_typed_next = _db.cd_typed_head;
@@ -3496,7 +3496,7 @@ void atf_amc::cd_typed_Insert(atf_amc::FTypeD& row) {
 
 // --- atf_amc.FDb.cd_typed.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::cd_typed_Remove(atf_amc::FTypeD& row) {
+void atf_amc::cd_typed_Remove(atf_amc::FTypeD& row) throw() {
     if (cd_typed_InLlistQ(row)) {
         atf_amc::FTypeD* old_head       = _db.cd_typed_head;
         (void)old_head; // in case it's not used
@@ -3515,7 +3515,7 @@ void atf_amc::cd_typed_Remove(atf_amc::FTypeD& row) {
 
 // --- atf_amc.FDb.cd_typed.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::cd_typed_RemoveAll() {
+void atf_amc::cd_typed_RemoveAll() throw() {
     atf_amc::FTypeD* row = _db.cd_typed_head;
     atf_amc::FTypeD* head = _db.cd_typed_head;
     _db.cd_typed_head = NULL;
@@ -3530,7 +3530,7 @@ void atf_amc::cd_typed_RemoveAll() {
 
 // --- atf_amc.FDb.cd_typed.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FTypeD* atf_amc::cd_typed_RemoveFirst() {
+atf_amc::FTypeD* atf_amc::cd_typed_RemoveFirst() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.cd_typed_head;
     if (row) {
@@ -3548,7 +3548,7 @@ atf_amc::FTypeD* atf_amc::cd_typed_RemoveFirst() {
 // --- atf_amc.FDb.cd_typed.RotateFirst
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
-atf_amc::FTypeD* atf_amc::cd_typed_RotateFirst() {
+atf_amc::FTypeD* atf_amc::cd_typed_RotateFirst() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.cd_typed_head;
     if (row) {
@@ -3559,7 +3559,7 @@ atf_amc::FTypeD* atf_amc::cd_typed_RotateFirst() {
 
 // --- atf_amc.FDb.zsl_h_typec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zsl_h_typec_Insert(atf_amc::FTypeC& row) {
+void atf_amc::zsl_h_typec_Insert(atf_amc::FTypeC& row) throw() {
     if (!zsl_h_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_head = _db.zsl_h_typec_head;
         row.zsl_h_typec_next  = old_head;
@@ -3577,7 +3577,7 @@ void atf_amc::zsl_h_typec_Insert(atf_amc::FTypeC& row) {
 // --- atf_amc.FDb.zsl_h_typec.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void atf_amc::zsl_h_typec_Remove(atf_amc::FTypeC& row) {
+void atf_amc::zsl_h_typec_Remove(atf_amc::FTypeC& row) throw() {
     if (zsl_h_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_head       = _db.zsl_h_typec_head;
         (void)old_head; // in case it's not used
@@ -3611,7 +3611,7 @@ void atf_amc::zsl_h_typec_Remove(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zsl_h_typec.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zsl_h_typec_RemoveAll() {
+void atf_amc::zsl_h_typec_RemoveAll() throw() {
     atf_amc::FTypeC* row = _db.zsl_h_typec_head;
     _db.zsl_h_typec_head = NULL;
     _db.zsl_h_typec_tail = NULL;
@@ -3630,7 +3630,7 @@ void atf_amc::zsl_h_typec_RemoveAll() {
 // --- atf_amc.FDb.zsl_h_typec.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
-atf_amc::FTypeC* atf_amc::zsl_h_typec_RemoveFirst() {
+atf_amc::FTypeC* atf_amc::zsl_h_typec_RemoveFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zsl_h_typec_head;
     if (row) {
@@ -3649,7 +3649,7 @@ atf_amc::FTypeC* atf_amc::zsl_h_typec_RemoveFirst() {
 
 // --- atf_amc.FDb.zsl_h_typec.UpdateCycles
 // Update cycles count from previous clock capture
-void atf_amc::zsl_h_typec_UpdateCycles() {
+void atf_amc::zsl_h_typec_UpdateCycles() throw() {
     u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++atf_amc::_db.trace.step_zsl_h_typec;
@@ -3659,7 +3659,7 @@ void atf_amc::zsl_h_typec_UpdateCycles() {
 
 // --- atf_amc.FDb.zs_t_typec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zs_t_typec_Insert(atf_amc::FTypeC& row) {
+void atf_amc::zs_t_typec_Insert(atf_amc::FTypeC& row) throw() {
     if (!zs_t_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_tail       = _db.zs_t_typec_tail;
         row.zs_t_typec_next  = NULL;
@@ -3678,7 +3678,7 @@ void atf_amc::zs_t_typec_Insert(atf_amc::FTypeC& row) {
 // --- atf_amc.FDb.zs_t_typec.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void atf_amc::zs_t_typec_Remove(atf_amc::FTypeC& row) {
+void atf_amc::zs_t_typec_Remove(atf_amc::FTypeC& row) throw() {
     if (zs_t_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_head       = _db.zs_t_typec_head;
         (void)old_head; // in case it's not used
@@ -3712,7 +3712,7 @@ void atf_amc::zs_t_typec_Remove(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zs_t_typec.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zs_t_typec_RemoveAll() {
+void atf_amc::zs_t_typec_RemoveAll() throw() {
     atf_amc::FTypeC* row = _db.zs_t_typec_head;
     _db.zs_t_typec_head = NULL;
     _db.zs_t_typec_tail = NULL;
@@ -3731,7 +3731,7 @@ void atf_amc::zs_t_typec_RemoveAll() {
 // --- atf_amc.FDb.zs_t_typec.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
-atf_amc::FTypeC* atf_amc::zs_t_typec_RemoveFirst() {
+atf_amc::FTypeC* atf_amc::zs_t_typec_RemoveFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zs_t_typec_head;
     if (row) {
@@ -3750,7 +3750,7 @@ atf_amc::FTypeC* atf_amc::zs_t_typec_RemoveFirst() {
 
 // --- atf_amc.FDb.zs_t_typec.UpdateCycles
 // Update cycles count from previous clock capture
-void atf_amc::zs_t_typec_UpdateCycles() {
+void atf_amc::zs_t_typec_UpdateCycles() throw() {
     u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++atf_amc::_db.trace.step_zs_t_typec;
@@ -3763,7 +3763,7 @@ void atf_amc::zs_t_typec_UpdateCycles() {
 // Otherwise return first key in index.
 // NOTE: this function must be called from the reading thread.
 // NOTE: if called from the writing thread, it might result in loss of data.
-atf_amc::FTypeC* atf_amc::zs_mt_typec_DestructiveFirst() {
+atf_amc::FTypeC* atf_amc::zs_mt_typec_DestructiveFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zs_mt_typec_head;
     if (row == NULL && _db.zs_mt_typec_mt != NULL) {
@@ -3787,7 +3787,7 @@ atf_amc::FTypeC* atf_amc::zs_mt_typec_DestructiveFirst() {
 
 // --- atf_amc.FDb.zs_mt_typec.Insert
 // Insert row. Row must not already be in index. If row is already in index, the behavior is undefined.
-void atf_amc::zs_mt_typec_Insert(atf_amc::FTypeC& row) {
+void atf_amc::zs_mt_typec_Insert(atf_amc::FTypeC& row) throw() {
     if (!zs_mt_typec_InLlistQ(row)) {
         // insertion into thread-safe linked list.
         atf_amc::FTypeC *temp = NULL;
@@ -3804,7 +3804,7 @@ void atf_amc::zs_mt_typec_Insert(atf_amc::FTypeC& row) {
 // If element is not in index, do nothing.
 // Otherwise, throw exception: ZSListMT elements cannot
 // be removed from the list except via RemoveFIrst.
-void atf_amc::zs_mt_typec_Remove(atf_amc::FTypeC& row) {
+void atf_amc::zs_mt_typec_Remove(atf_amc::FTypeC& row) throw() {
     // cannot remove from ZSListMT
     // should the process die here?
     (void)_db;//only to avoid -Wunused-parameter
@@ -3813,7 +3813,7 @@ void atf_amc::zs_mt_typec_Remove(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zs_mt_typec.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
-atf_amc::FTypeC* atf_amc::zs_mt_typec_RemoveFirst() {
+atf_amc::FTypeC* atf_amc::zs_mt_typec_RemoveFirst() throw() {
     atf_amc::FTypeC *row = zs_mt_typec_DestructiveFirst();
     if (row) {
         atf_amc::FTypeC *next = row->zs_mt_typec_next;
@@ -3825,7 +3825,7 @@ atf_amc::FTypeC* atf_amc::zs_mt_typec_RemoveFirst() {
 
 // --- atf_amc.FDb.zdl_hnt_typec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zdl_hnt_typec_Insert(atf_amc::FTypeC& row) {
+void atf_amc::zdl_hnt_typec_Insert(atf_amc::FTypeC& row) throw() {
     if (!zdl_hnt_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_head = _db.zdl_hnt_typec_head;
         row.zdl_hnt_typec_prev = NULL;
@@ -3840,7 +3840,7 @@ void atf_amc::zdl_hnt_typec_Insert(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zdl_hnt_typec.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::zdl_hnt_typec_Remove(atf_amc::FTypeC& row) {
+void atf_amc::zdl_hnt_typec_Remove(atf_amc::FTypeC& row) throw() {
     if (zdl_hnt_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_head       = _db.zdl_hnt_typec_head;
         (void)old_head; // in case it's not used
@@ -3862,7 +3862,7 @@ void atf_amc::zdl_hnt_typec_Remove(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zdl_hnt_typec.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zdl_hnt_typec_RemoveAll() {
+void atf_amc::zdl_hnt_typec_RemoveAll() throw() {
     atf_amc::FTypeC* row = _db.zdl_hnt_typec_head;
     _db.zdl_hnt_typec_head = NULL;
     _db.zdl_hnt_typec_n = 0;
@@ -3876,7 +3876,7 @@ void atf_amc::zdl_hnt_typec_RemoveAll() {
 
 // --- atf_amc.FDb.zdl_hnt_typec.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FTypeC* atf_amc::zdl_hnt_typec_RemoveFirst() {
+atf_amc::FTypeC* atf_amc::zdl_hnt_typec_RemoveFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zdl_hnt_typec_head;
     if (row) {
@@ -3890,7 +3890,7 @@ atf_amc::FTypeC* atf_amc::zdl_hnt_typec_RemoveFirst() {
 
 // --- atf_amc.FDb.cdl_h_typec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::cdl_h_typec_Insert(atf_amc::FTypeC& row) {
+void atf_amc::cdl_h_typec_Insert(atf_amc::FTypeC& row) throw() {
     if (!cdl_h_typec_InLlistQ(row)) {
         if (_db.cdl_h_typec_head) {
             row.cdl_h_typec_next = _db.cdl_h_typec_head;
@@ -3909,7 +3909,7 @@ void atf_amc::cdl_h_typec_Insert(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.cdl_h_typec.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::cdl_h_typec_Remove(atf_amc::FTypeC& row) {
+void atf_amc::cdl_h_typec_Remove(atf_amc::FTypeC& row) throw() {
     if (cdl_h_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_head       = _db.cdl_h_typec_head;
         (void)old_head; // in case it's not used
@@ -3928,7 +3928,7 @@ void atf_amc::cdl_h_typec_Remove(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.cdl_h_typec.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::cdl_h_typec_RemoveAll() {
+void atf_amc::cdl_h_typec_RemoveAll() throw() {
     atf_amc::FTypeC* row = _db.cdl_h_typec_head;
     atf_amc::FTypeC* head = _db.cdl_h_typec_head;
     _db.cdl_h_typec_head = NULL;
@@ -3943,7 +3943,7 @@ void atf_amc::cdl_h_typec_RemoveAll() {
 
 // --- atf_amc.FDb.cdl_h_typec.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FTypeC* atf_amc::cdl_h_typec_RemoveFirst() {
+atf_amc::FTypeC* atf_amc::cdl_h_typec_RemoveFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cdl_h_typec_head;
     if (row) {
@@ -3961,7 +3961,7 @@ atf_amc::FTypeC* atf_amc::cdl_h_typec_RemoveFirst() {
 // --- atf_amc.FDb.cdl_h_typec.RotateFirst
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
-atf_amc::FTypeC* atf_amc::cdl_h_typec_RotateFirst() {
+atf_amc::FTypeC* atf_amc::cdl_h_typec_RotateFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cdl_h_typec_head;
     if (row) {
@@ -3972,7 +3972,7 @@ atf_amc::FTypeC* atf_amc::cdl_h_typec_RotateFirst() {
 
 // --- atf_amc.FDb.cd_t_typec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::cd_t_typec_Insert(atf_amc::FTypeC& row) {
+void atf_amc::cd_t_typec_Insert(atf_amc::FTypeC& row) throw() {
     if (!cd_t_typec_InLlistQ(row)) {
         if (_db.cd_t_typec_head) {
             row.cd_t_typec_next = _db.cd_t_typec_head;
@@ -3990,7 +3990,7 @@ void atf_amc::cd_t_typec_Insert(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.cd_t_typec.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::cd_t_typec_Remove(atf_amc::FTypeC& row) {
+void atf_amc::cd_t_typec_Remove(atf_amc::FTypeC& row) throw() {
     if (cd_t_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_head       = _db.cd_t_typec_head;
         (void)old_head; // in case it's not used
@@ -4009,7 +4009,7 @@ void atf_amc::cd_t_typec_Remove(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.cd_t_typec.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::cd_t_typec_RemoveAll() {
+void atf_amc::cd_t_typec_RemoveAll() throw() {
     atf_amc::FTypeC* row = _db.cd_t_typec_head;
     atf_amc::FTypeC* head = _db.cd_t_typec_head;
     _db.cd_t_typec_head = NULL;
@@ -4024,7 +4024,7 @@ void atf_amc::cd_t_typec_RemoveAll() {
 
 // --- atf_amc.FDb.cd_t_typec.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FTypeC* atf_amc::cd_t_typec_RemoveFirst() {
+atf_amc::FTypeC* atf_amc::cd_t_typec_RemoveFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cd_t_typec_head;
     if (row) {
@@ -4042,7 +4042,7 @@ atf_amc::FTypeC* atf_amc::cd_t_typec_RemoveFirst() {
 // --- atf_amc.FDb.cd_t_typec.RotateFirst
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
-atf_amc::FTypeC* atf_amc::cd_t_typec_RotateFirst() {
+atf_amc::FTypeC* atf_amc::cd_t_typec_RotateFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cd_t_typec_head;
     if (row) {
@@ -4053,7 +4053,7 @@ atf_amc::FTypeC* atf_amc::cd_t_typec_RotateFirst() {
 
 // --- atf_amc.FDb.csl_h_typec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::csl_h_typec_Insert(atf_amc::FTypeC& row) {
+void atf_amc::csl_h_typec_Insert(atf_amc::FTypeC& row) throw() {
     if (!csl_h_typec_InLlistQ(row)) {
         if (_db.csl_h_typec_head) {
             row.csl_h_typec_next = _db.csl_h_typec_head;
@@ -4074,7 +4074,7 @@ void atf_amc::csl_h_typec_Insert(atf_amc::FTypeC& row) {
 // --- atf_amc.FDb.csl_h_typec.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void atf_amc::csl_h_typec_Remove(atf_amc::FTypeC& row) {
+void atf_amc::csl_h_typec_Remove(atf_amc::FTypeC& row) throw() {
     if (csl_h_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_head       = _db.csl_h_typec_head;
         (void)old_head; // in case it's not used
@@ -4101,7 +4101,7 @@ void atf_amc::csl_h_typec_Remove(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.csl_h_typec.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::csl_h_typec_RemoveAll() {
+void atf_amc::csl_h_typec_RemoveAll() throw() {
     atf_amc::FTypeC* row = _db.csl_h_typec_head;
     atf_amc::FTypeC* head = _db.csl_h_typec_head;
     _db.csl_h_typec_head = NULL;
@@ -4121,7 +4121,7 @@ void atf_amc::csl_h_typec_RemoveAll() {
 // --- atf_amc.FDb.csl_h_typec.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
-atf_amc::FTypeC* atf_amc::csl_h_typec_RemoveFirst() {
+atf_amc::FTypeC* atf_amc::csl_h_typec_RemoveFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.csl_h_typec_head;
     if (row) {
@@ -4142,7 +4142,7 @@ atf_amc::FTypeC* atf_amc::csl_h_typec_RemoveFirst() {
 // --- atf_amc.FDb.csl_h_typec.RotateFirst
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
-atf_amc::FTypeC* atf_amc::csl_h_typec_RotateFirst() {
+atf_amc::FTypeC* atf_amc::csl_h_typec_RotateFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.csl_h_typec_head;
     if (row) {
@@ -4154,7 +4154,7 @@ atf_amc::FTypeC* atf_amc::csl_h_typec_RotateFirst() {
 
 // --- atf_amc.FDb.csl_h_typec.UpdateCycles
 // Update cycles count from previous clock capture
-void atf_amc::csl_h_typec_UpdateCycles() {
+void atf_amc::csl_h_typec_UpdateCycles() throw() {
     u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++atf_amc::_db.trace.step_csl_h_typec;
@@ -4164,7 +4164,7 @@ void atf_amc::csl_h_typec_UpdateCycles() {
 
 // --- atf_amc.FDb.cs_t_typec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::cs_t_typec_Insert(atf_amc::FTypeC& row) {
+void atf_amc::cs_t_typec_Insert(atf_amc::FTypeC& row) throw() {
     if (!cs_t_typec_InLlistQ(row)) {
         if (_db.cs_t_typec_head) {
             row.cs_t_typec_next = _db.cs_t_typec_head;
@@ -4185,7 +4185,7 @@ void atf_amc::cs_t_typec_Insert(atf_amc::FTypeC& row) {
 // --- atf_amc.FDb.cs_t_typec.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void atf_amc::cs_t_typec_Remove(atf_amc::FTypeC& row) {
+void atf_amc::cs_t_typec_Remove(atf_amc::FTypeC& row) throw() {
     if (cs_t_typec_InLlistQ(row)) {
         atf_amc::FTypeC* old_head       = _db.cs_t_typec_head;
         (void)old_head; // in case it's not used
@@ -4212,7 +4212,7 @@ void atf_amc::cs_t_typec_Remove(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.cs_t_typec.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::cs_t_typec_RemoveAll() {
+void atf_amc::cs_t_typec_RemoveAll() throw() {
     atf_amc::FTypeC* row = _db.cs_t_typec_head;
     atf_amc::FTypeC* head = _db.cs_t_typec_head;
     _db.cs_t_typec_head = NULL;
@@ -4232,7 +4232,7 @@ void atf_amc::cs_t_typec_RemoveAll() {
 // --- atf_amc.FDb.cs_t_typec.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
-atf_amc::FTypeC* atf_amc::cs_t_typec_RemoveFirst() {
+atf_amc::FTypeC* atf_amc::cs_t_typec_RemoveFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cs_t_typec_head;
     if (row) {
@@ -4253,7 +4253,7 @@ atf_amc::FTypeC* atf_amc::cs_t_typec_RemoveFirst() {
 // --- atf_amc.FDb.cs_t_typec.RotateFirst
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
-atf_amc::FTypeC* atf_amc::cs_t_typec_RotateFirst() {
+atf_amc::FTypeC* atf_amc::cs_t_typec_RotateFirst() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cs_t_typec_head;
     if (row) {
@@ -4265,7 +4265,7 @@ atf_amc::FTypeC* atf_amc::cs_t_typec_RotateFirst() {
 
 // --- atf_amc.FDb.cs_t_typec.UpdateCycles
 // Update cycles count from previous clock capture
-void atf_amc::cs_t_typec_UpdateCycles() {
+void atf_amc::cs_t_typec_UpdateCycles() throw() {
     u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++atf_amc::_db.trace.step_cs_t_typec;
@@ -4276,7 +4276,7 @@ void atf_amc::cs_t_typec_UpdateCycles() {
 // --- atf_amc.FDb.typea.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FTypeA& atf_amc::typea_Alloc() {
+atf_amc::FTypeA& atf_amc::typea_Alloc() throw() {
     atf_amc::FTypeA* row = typea_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.typea  comment:'Alloc failed'");
@@ -4286,7 +4286,7 @@ atf_amc::FTypeA& atf_amc::typea_Alloc() {
 
 // --- atf_amc.FDb.typea.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FTypeA* atf_amc::typea_AllocMaybe() {
+atf_amc::FTypeA* atf_amc::typea_AllocMaybe() throw() {
     atf_amc::FTypeA *row = (atf_amc::FTypeA*)typea_AllocMem();
     if (row) {
         new (row) atf_amc::FTypeA; // call constructor
@@ -4298,7 +4298,7 @@ atf_amc::FTypeA* atf_amc::typea_AllocMaybe() {
 // --- atf_amc.FDb.typea.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_amc::FTypeA* atf_amc::typea_InsertMaybe(const atf_amc::TypeA &value) {
+atf_amc::FTypeA* atf_amc::typea_InsertMaybe(const atf_amc::TypeA &value) throw() {
     atf_amc::FTypeA *row = &typea_Alloc(); // if out of memory, process dies. if input error, return NULL.
     typea_CopyIn(*row,const_cast<atf_amc::TypeA&>(value));
     bool ok = typea_XrefMaybe(*row); // this may return false
@@ -4311,7 +4311,7 @@ atf_amc::FTypeA* atf_amc::typea_InsertMaybe(const atf_amc::TypeA &value) {
 
 // --- atf_amc.FDb.typea.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_amc::typea_AllocMem() {
+void* atf_amc::typea_AllocMem() throw() {
     u64 new_nelems     = _db.typea_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4337,7 +4337,7 @@ void* atf_amc::typea_AllocMem() {
 
 // --- atf_amc.FDb.typea.RemoveAll
 // Remove all elements from Lary
-void atf_amc::typea_RemoveAll() {
+void atf_amc::typea_RemoveAll() throw() {
     for (u64 n = _db.typea_n; n>0; ) {
         n--;
         typea_qFind(i32(n)).~FTypeA(); // destroy last element
@@ -4347,7 +4347,7 @@ void atf_amc::typea_RemoveAll() {
 
 // --- atf_amc.FDb.typea.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::typea_RemoveLast() {
+void atf_amc::typea_RemoveLast() throw() {
     u64 n = _db.typea_n;
     if (n > 0) {
         n -= 1;
@@ -4377,7 +4377,7 @@ bool atf_amc::typea_XrefMaybe(atf_amc::FTypeA &row) {
 // --- atf_amc.FDb.types.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FTypeS& atf_amc::types_Alloc() {
+atf_amc::FTypeS& atf_amc::types_Alloc() throw() {
     atf_amc::FTypeS* row = types_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.types  comment:'Alloc failed'");
@@ -4387,7 +4387,7 @@ atf_amc::FTypeS& atf_amc::types_Alloc() {
 
 // --- atf_amc.FDb.types.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FTypeS* atf_amc::types_AllocMaybe() {
+atf_amc::FTypeS* atf_amc::types_AllocMaybe() throw() {
     atf_amc::FTypeS *row = (atf_amc::FTypeS*)types_AllocMem();
     if (row) {
         new (row) atf_amc::FTypeS; // call constructor
@@ -4398,7 +4398,7 @@ atf_amc::FTypeS* atf_amc::types_AllocMaybe() {
 // --- atf_amc.FDb.types.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_amc::FTypeS* atf_amc::types_InsertMaybe(const atf_amc::TypeS &value) {
+atf_amc::FTypeS* atf_amc::types_InsertMaybe(const atf_amc::TypeS &value) throw() {
     atf_amc::FTypeS *row = &types_Alloc(); // if out of memory, process dies. if input error, return NULL.
     types_CopyIn(*row,const_cast<atf_amc::TypeS&>(value));
     bool ok = types_XrefMaybe(*row); // this may return false
@@ -4411,7 +4411,7 @@ atf_amc::FTypeS* atf_amc::types_InsertMaybe(const atf_amc::TypeS &value) {
 
 // --- atf_amc.FDb.types.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_amc::types_AllocMem() {
+void* atf_amc::types_AllocMem() throw() {
     u64 new_nelems     = _db.types_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4437,7 +4437,7 @@ void* atf_amc::types_AllocMem() {
 
 // --- atf_amc.FDb.types.RemoveAll
 // Remove all elements from Lary
-void atf_amc::types_RemoveAll() {
+void atf_amc::types_RemoveAll() throw() {
     for (u64 n = _db.types_n; n>0; ) {
         n--;
         types_qFind(u64(n)).~FTypeS(); // destroy last element
@@ -4447,7 +4447,7 @@ void atf_amc::types_RemoveAll() {
 
 // --- atf_amc.FDb.types.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::types_RemoveLast() {
+void atf_amc::types_RemoveLast() throw() {
     u64 n = _db.types_n;
     if (n > 0) {
         n -= 1;
@@ -4457,7 +4457,7 @@ void atf_amc::types_RemoveLast() {
 }
 
 // --- atf_amc.FDb.types.InputMaybe
-static bool atf_amc::types_InputMaybe(atf_amc::TypeS &elem) {
+static bool atf_amc::types_InputMaybe(atf_amc::TypeS &elem) throw() {
     bool retval = true;
     retval = types_InsertMaybe(elem) != nullptr;
     return retval;
@@ -4483,7 +4483,7 @@ bool atf_amc::types_XrefMaybe(atf_amc::FTypeS &row) {
 
 // --- atf_amc.FDb.ind_types.Find
 // Find row by key. Return NULL if not found.
-atf_amc::FTypeS* atf_amc::ind_types_Find(i32 key) {
+atf_amc::FTypeS* atf_amc::ind_types_Find(i32 key) throw() {
     u32 index = ::i32_Hash(0, key) & (_db.ind_types_buckets_n - 1);
     atf_amc::FTypeS* *e = &_db.ind_types_buckets_elems[index];
     atf_amc::FTypeS* ret=NULL;
@@ -4498,7 +4498,7 @@ atf_amc::FTypeS* atf_amc::ind_types_Find(i32 key) {
 
 // --- atf_amc.FDb.ind_types.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_amc::FTypeS& atf_amc::ind_types_GetOrCreate(i32 key) {
+atf_amc::FTypeS& atf_amc::ind_types_GetOrCreate(i32 key) throw() {
     atf_amc::FTypeS* ret = ind_types_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &types_Alloc();
@@ -4515,7 +4515,7 @@ atf_amc::FTypeS& atf_amc::ind_types_GetOrCreate(i32 key) {
 
 // --- atf_amc.FDb.ind_types.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_amc::ind_types_InsertMaybe(atf_amc::FTypeS& row) {
+bool atf_amc::ind_types_InsertMaybe(atf_amc::FTypeS& row) throw() {
     ind_types_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_types_next == (atf_amc::FTypeS*)-1)) {// check if in hash already
@@ -4543,7 +4543,7 @@ bool atf_amc::ind_types_InsertMaybe(atf_amc::FTypeS& row) {
 
 // --- atf_amc.FDb.ind_types.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_amc::ind_types_Remove(atf_amc::FTypeS& row) {
+void atf_amc::ind_types_Remove(atf_amc::FTypeS& row) throw() {
     if (LIKELY(row.ind_types_next != (atf_amc::FTypeS*)-1)) {// check if in hash already
         u32 index = ::i32_Hash(0, row.types) & (_db.ind_types_buckets_n - 1);
         atf_amc::FTypeS* *prev = &_db.ind_types_buckets_elems[index]; // addr of pointer to current element
@@ -4561,7 +4561,7 @@ void atf_amc::ind_types_Remove(atf_amc::FTypeS& row) {
 
 // --- atf_amc.FDb.ind_types.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_amc::ind_types_Reserve(int n) {
+void atf_amc::ind_types_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_types_buckets_n;
     u32 new_nelems   = _db.ind_types_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -4597,7 +4597,7 @@ void atf_amc::ind_types_Reserve(int n) {
 
 // --- atf_amc.FDb.ind_typea.Find
 // Find row by key. Return NULL if not found.
-atf_amc::FTypeA* atf_amc::ind_typea_Find(i32 key) {
+atf_amc::FTypeA* atf_amc::ind_typea_Find(i32 key) throw() {
     u32 index = ::i32_Hash(0, key) & (_db.ind_typea_buckets_n - 1);
     atf_amc::FTypeA* *e = &_db.ind_typea_buckets_elems[index];
     atf_amc::FTypeA* ret=NULL;
@@ -4612,7 +4612,7 @@ atf_amc::FTypeA* atf_amc::ind_typea_Find(i32 key) {
 
 // --- atf_amc.FDb.ind_typea.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_amc::FTypeA& atf_amc::ind_typea_GetOrCreate(i32 key) {
+atf_amc::FTypeA& atf_amc::ind_typea_GetOrCreate(i32 key) throw() {
     atf_amc::FTypeA* ret = ind_typea_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &typea_Alloc();
@@ -4629,7 +4629,7 @@ atf_amc::FTypeA& atf_amc::ind_typea_GetOrCreate(i32 key) {
 
 // --- atf_amc.FDb.ind_typea.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_amc::ind_typea_InsertMaybe(atf_amc::FTypeA& row) {
+bool atf_amc::ind_typea_InsertMaybe(atf_amc::FTypeA& row) throw() {
     ind_typea_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_typea_next == (atf_amc::FTypeA*)-1)) {// check if in hash already
@@ -4657,7 +4657,7 @@ bool atf_amc::ind_typea_InsertMaybe(atf_amc::FTypeA& row) {
 
 // --- atf_amc.FDb.ind_typea.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_amc::ind_typea_Remove(atf_amc::FTypeA& row) {
+void atf_amc::ind_typea_Remove(atf_amc::FTypeA& row) throw() {
     if (LIKELY(row.ind_typea_next != (atf_amc::FTypeA*)-1)) {// check if in hash already
         u32 index = ::i32_Hash(0, row.typea) & (_db.ind_typea_buckets_n - 1);
         atf_amc::FTypeA* *prev = &_db.ind_typea_buckets_elems[index]; // addr of pointer to current element
@@ -4675,7 +4675,7 @@ void atf_amc::ind_typea_Remove(atf_amc::FTypeA& row) {
 
 // --- atf_amc.FDb.ind_typea.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_amc::ind_typea_Reserve(int n) {
+void atf_amc::ind_typea_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_typea_buckets_n;
     u32 new_nelems   = _db.ind_typea_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -4714,7 +4714,7 @@ void atf_amc::ind_typea_Reserve(int n) {
 // The following fields are updated:
 //     atf_amc.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void atf_amc::ReadArgv() {
+void atf_amc::ReadArgv() throw() {
     command::atf_amc &cmd = atf_amc::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -4939,7 +4939,7 @@ bool atf_amc::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_amc.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool atf_amc::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = atf_amc::LoadTuplesFile(root, recursive);
@@ -4962,7 +4962,7 @@ bool atf_amc::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool atf_amc::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool atf_amc::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -4975,7 +4975,7 @@ bool atf_amc::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- atf_amc.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool atf_amc::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool atf_amc::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -4995,7 +4995,7 @@ bool atf_amc::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) 
 
 // --- atf_amc.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_amc::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool atf_amc::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = atf_amc::LoadTuplesFile(fname, recursive);
@@ -5021,7 +5021,7 @@ bool atf_amc::_db_XrefMaybe() {
 // --- atf_amc.FDb.typet.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FTypeT& atf_amc::typet_Alloc() {
+atf_amc::FTypeT& atf_amc::typet_Alloc() throw() {
     atf_amc::FTypeT* row = typet_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.typet  comment:'Alloc failed'");
@@ -5031,7 +5031,7 @@ atf_amc::FTypeT& atf_amc::typet_Alloc() {
 
 // --- atf_amc.FDb.typet.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FTypeT* atf_amc::typet_AllocMaybe() {
+atf_amc::FTypeT* atf_amc::typet_AllocMaybe() throw() {
     atf_amc::FTypeT *row = (atf_amc::FTypeT*)typet_AllocMem();
     if (row) {
         new (row) atf_amc::FTypeT; // call constructor
@@ -5042,7 +5042,7 @@ atf_amc::FTypeT* atf_amc::typet_AllocMaybe() {
 // --- atf_amc.FDb.typet.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_amc::FTypeT* atf_amc::typet_InsertMaybe(const atf_amc::TypeT &value) {
+atf_amc::FTypeT* atf_amc::typet_InsertMaybe(const atf_amc::TypeT &value) throw() {
     atf_amc::FTypeT *row = &typet_Alloc(); // if out of memory, process dies. if input error, return NULL.
     typet_CopyIn(*row,const_cast<atf_amc::TypeT&>(value));
     bool ok = typet_XrefMaybe(*row); // this may return false
@@ -5055,7 +5055,7 @@ atf_amc::FTypeT* atf_amc::typet_InsertMaybe(const atf_amc::TypeT &value) {
 
 // --- atf_amc.FDb.typet.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_amc::typet_AllocMem() {
+void* atf_amc::typet_AllocMem() throw() {
     u64 new_nelems     = _db.typet_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -5081,7 +5081,7 @@ void* atf_amc::typet_AllocMem() {
 
 // --- atf_amc.FDb.typet.RemoveAll
 // Remove all elements from Lary
-void atf_amc::typet_RemoveAll() {
+void atf_amc::typet_RemoveAll() throw() {
     for (u64 n = _db.typet_n; n>0; ) {
         n--;
         typet_qFind(u64(n)).~FTypeT(); // destroy last element
@@ -5091,7 +5091,7 @@ void atf_amc::typet_RemoveAll() {
 
 // --- atf_amc.FDb.typet.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::typet_RemoveLast() {
+void atf_amc::typet_RemoveLast() throw() {
     u64 n = _db.typet_n;
     if (n > 0) {
         n -= 1;
@@ -5101,7 +5101,7 @@ void atf_amc::typet_RemoveLast() {
 }
 
 // --- atf_amc.FDb.typet.InputMaybe
-static bool atf_amc::typet_InputMaybe(atf_amc::TypeT &elem) {
+static bool atf_amc::typet_InputMaybe(atf_amc::TypeT &elem) throw() {
     bool retval = true;
     retval = typet_InsertMaybe(elem) != nullptr;
     return retval;
@@ -5128,7 +5128,7 @@ bool atf_amc::typet_XrefMaybe(atf_amc::FTypeT &row) {
 // --- atf_amc.FDb.cstring.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FCstring& atf_amc::cstring_Alloc() {
+atf_amc::FCstring& atf_amc::cstring_Alloc() throw() {
     atf_amc::FCstring* row = cstring_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.cstring  comment:'Alloc failed'");
@@ -5138,7 +5138,7 @@ atf_amc::FCstring& atf_amc::cstring_Alloc() {
 
 // --- atf_amc.FDb.cstring.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FCstring* atf_amc::cstring_AllocMaybe() {
+atf_amc::FCstring* atf_amc::cstring_AllocMaybe() throw() {
     atf_amc::FCstring *row = (atf_amc::FCstring*)cstring_AllocMem();
     if (row) {
         new (row) atf_amc::FCstring; // call constructor
@@ -5149,7 +5149,7 @@ atf_amc::FCstring* atf_amc::cstring_AllocMaybe() {
 // --- atf_amc.FDb.cstring.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_amc::FCstring* atf_amc::cstring_InsertMaybe(const atf_amc::Cstring &value) {
+atf_amc::FCstring* atf_amc::cstring_InsertMaybe(const atf_amc::Cstring &value) throw() {
     atf_amc::FCstring *row = &cstring_Alloc(); // if out of memory, process dies. if input error, return NULL.
     cstring_CopyIn(*row,const_cast<atf_amc::Cstring&>(value));
     bool ok = cstring_XrefMaybe(*row); // this may return false
@@ -5162,7 +5162,7 @@ atf_amc::FCstring* atf_amc::cstring_InsertMaybe(const atf_amc::Cstring &value) {
 
 // --- atf_amc.FDb.cstring.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_amc::cstring_AllocMem() {
+void* atf_amc::cstring_AllocMem() throw() {
     u64 new_nelems     = _db.cstring_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -5188,7 +5188,7 @@ void* atf_amc::cstring_AllocMem() {
 
 // --- atf_amc.FDb.cstring.RemoveAll
 // Remove all elements from Lary
-void atf_amc::cstring_RemoveAll() {
+void atf_amc::cstring_RemoveAll() throw() {
     for (u64 n = _db.cstring_n; n>0; ) {
         n--;
         cstring_qFind(u64(n)).~FCstring(); // destroy last element
@@ -5198,7 +5198,7 @@ void atf_amc::cstring_RemoveAll() {
 
 // --- atf_amc.FDb.cstring.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::cstring_RemoveLast() {
+void atf_amc::cstring_RemoveLast() throw() {
     u64 n = _db.cstring_n;
     if (n > 0) {
         n -= 1;
@@ -5227,7 +5227,7 @@ bool atf_amc::cstring_XrefMaybe(atf_amc::FCstring &row) {
 
 // --- atf_amc.FDb.ind_cstring.Find
 // Find row by key. Return NULL if not found.
-atf_amc::FCstring* atf_amc::ind_cstring_Find(const algo::strptr& key) {
+atf_amc::FCstring* atf_amc::ind_cstring_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_cstring_buckets_n - 1);
     atf_amc::FCstring* *e = &_db.ind_cstring_buckets_elems[index];
     atf_amc::FCstring* ret=NULL;
@@ -5242,7 +5242,7 @@ atf_amc::FCstring* atf_amc::ind_cstring_Find(const algo::strptr& key) {
 
 // --- atf_amc.FDb.ind_cstring.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_amc::FCstring& atf_amc::ind_cstring_GetOrCreate(const algo::strptr& key) {
+atf_amc::FCstring& atf_amc::ind_cstring_GetOrCreate(const algo::strptr& key) throw() {
     atf_amc::FCstring* ret = ind_cstring_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &cstring_Alloc();
@@ -5259,7 +5259,7 @@ atf_amc::FCstring& atf_amc::ind_cstring_GetOrCreate(const algo::strptr& key) {
 
 // --- atf_amc.FDb.ind_cstring.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_amc::ind_cstring_InsertMaybe(atf_amc::FCstring& row) {
+bool atf_amc::ind_cstring_InsertMaybe(atf_amc::FCstring& row) throw() {
     ind_cstring_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_cstring_next == (atf_amc::FCstring*)-1)) {// check if in hash already
@@ -5287,7 +5287,7 @@ bool atf_amc::ind_cstring_InsertMaybe(atf_amc::FCstring& row) {
 
 // --- atf_amc.FDb.ind_cstring.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_amc::ind_cstring_Remove(atf_amc::FCstring& row) {
+void atf_amc::ind_cstring_Remove(atf_amc::FCstring& row) throw() {
     if (LIKELY(row.ind_cstring_next != (atf_amc::FCstring*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.str) & (_db.ind_cstring_buckets_n - 1);
         atf_amc::FCstring* *prev = &_db.ind_cstring_buckets_elems[index]; // addr of pointer to current element
@@ -5305,7 +5305,7 @@ void atf_amc::ind_cstring_Remove(atf_amc::FCstring& row) {
 
 // --- atf_amc.FDb.ind_cstring.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_amc::ind_cstring_Reserve(int n) {
+void atf_amc::ind_cstring_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_cstring_buckets_n;
     u32 new_nelems   = _db.ind_cstring_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -5368,7 +5368,7 @@ bool atf_amc::linebuf_XrefMaybe(atf_amc::Linebuf &row) {
 
 // --- atf_amc.FDb.cd_in_msg.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::cd_in_msg_Insert(atf_amc::Msgbuf& row) {
+void atf_amc::cd_in_msg_Insert(atf_amc::Msgbuf& row) throw() {
     if (!cd_in_msg_InLlistQ(row)) {
         if (_db.cd_in_msg_head) {
             row.cd_in_msg_next = _db.cd_in_msg_head;
@@ -5388,7 +5388,7 @@ void atf_amc::cd_in_msg_Insert(atf_amc::Msgbuf& row) {
 
 // --- atf_amc.FDb.cd_in_msg.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::cd_in_msg_Remove(atf_amc::Msgbuf& row) {
+void atf_amc::cd_in_msg_Remove(atf_amc::Msgbuf& row) throw() {
     if (cd_in_msg_InLlistQ(row)) {
         atf_amc::Msgbuf* old_head       = _db.cd_in_msg_head;
         (void)old_head; // in case it's not used
@@ -5409,7 +5409,7 @@ void atf_amc::cd_in_msg_Remove(atf_amc::Msgbuf& row) {
 
 // --- atf_amc.FDb.cd_in_msg.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::cd_in_msg_RemoveAll() {
+void atf_amc::cd_in_msg_RemoveAll() throw() {
     atf_amc::Msgbuf* row = _db.cd_in_msg_head;
     atf_amc::Msgbuf* head = _db.cd_in_msg_head;
     _db.cd_in_msg_head = NULL;
@@ -5428,7 +5428,7 @@ void atf_amc::cd_in_msg_RemoveAll() {
 // --- atf_amc.FDb.cd_in_msg.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
-atf_amc::Msgbuf* atf_amc::cd_in_msg_RemoveFirst() {
+atf_amc::Msgbuf* atf_amc::cd_in_msg_RemoveFirst() throw() {
     atf_amc::Msgbuf *row = NULL;
     row = _db.cd_in_msg_head;
     if (row) {
@@ -5446,7 +5446,7 @@ atf_amc::Msgbuf* atf_amc::cd_in_msg_RemoveFirst() {
 // --- atf_amc.FDb.cd_in_msg.RotateFirst
 // If linked list is empty, return NULL.
 // Otherwise return head item and advance head to the next item.
-atf_amc::Msgbuf* atf_amc::cd_in_msg_RotateFirst() {
+atf_amc::Msgbuf* atf_amc::cd_in_msg_RotateFirst() throw() {
     atf_amc::Msgbuf *row = NULL;
     row = _db.cd_in_msg_head;
     if (row) {
@@ -5457,12 +5457,12 @@ atf_amc::Msgbuf* atf_amc::cd_in_msg_RotateFirst() {
 
 // --- atf_amc.FDb.cd_in_msg.FirstChanged
 // First element of index changed.
-static void atf_amc::cd_in_msg_FirstChanged() {
+static void atf_amc::cd_in_msg_FirstChanged() throw() {
 }
 
 // --- atf_amc.FDb.cd_in_msg.UpdateCycles
 // Update cycles count from previous clock capture
-inline static void atf_amc::cd_in_msg_UpdateCycles() {
+inline static void atf_amc::cd_in_msg_UpdateCycles() throw() {
     u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++atf_amc::_db.trace.step_cd_in_msg;
@@ -5471,7 +5471,7 @@ inline static void atf_amc::cd_in_msg_UpdateCycles() {
 }
 
 // --- atf_amc.FDb.cd_in_msg.Call
-inline static void atf_amc::cd_in_msg_Call() {
+inline static void atf_amc::cd_in_msg_Call() throw() {
     if (!atf_amc::cd_in_msg_EmptyQ()) { // fstep:atf_amc.FDb.cd_in_msg
         atf_amc::cd_in_msg_Step(); // steptype:Inline: call function on every step
         cd_in_msg_UpdateCycles();
@@ -5482,7 +5482,7 @@ inline static void atf_amc::cd_in_msg_Call() {
 // --- atf_amc.FDb.typeb.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FTypeB& atf_amc::typeb_Alloc() {
+atf_amc::FTypeB& atf_amc::typeb_Alloc() throw() {
     atf_amc::FTypeB* row = typeb_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.typeb  comment:'Alloc failed'");
@@ -5492,7 +5492,7 @@ atf_amc::FTypeB& atf_amc::typeb_Alloc() {
 
 // --- atf_amc.FDb.typeb.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FTypeB* atf_amc::typeb_AllocMaybe() {
+atf_amc::FTypeB* atf_amc::typeb_AllocMaybe() throw() {
     atf_amc::FTypeB *row = (atf_amc::FTypeB*)typeb_AllocMem();
     if (row) {
         new (row) atf_amc::FTypeB; // call constructor
@@ -5503,7 +5503,7 @@ atf_amc::FTypeB* atf_amc::typeb_AllocMaybe() {
 // --- atf_amc.FDb.typeb.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_amc::FTypeB* atf_amc::typeb_InsertMaybe(const atf_amc::TypeB &value) {
+atf_amc::FTypeB* atf_amc::typeb_InsertMaybe(const atf_amc::TypeB &value) throw() {
     atf_amc::FTypeB *row = &typeb_Alloc(); // if out of memory, process dies. if input error, return NULL.
     typeb_CopyIn(*row,const_cast<atf_amc::TypeB&>(value));
     bool ok = typeb_XrefMaybe(*row); // this may return false
@@ -5516,7 +5516,7 @@ atf_amc::FTypeB* atf_amc::typeb_InsertMaybe(const atf_amc::TypeB &value) {
 
 // --- atf_amc.FDb.typeb.Delete
 // Remove row from all global and cross indices, then deallocate row
-void atf_amc::typeb_Delete(atf_amc::FTypeB &row) {
+void atf_amc::typeb_Delete(atf_amc::FTypeB &row) throw() {
     row.~FTypeB();
     typeb_FreeMem(row);
 }
@@ -5524,7 +5524,7 @@ void atf_amc::typeb_Delete(atf_amc::FTypeB &row) {
 // --- atf_amc.FDb.typeb.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* atf_amc::typeb_AllocMem() {
+void* atf_amc::typeb_AllocMem() throw() {
     atf_amc::FTypeB *row = _db.typeb_free;
     if (UNLIKELY(!row)) {
         typeb_Reserve(1);
@@ -5538,7 +5538,7 @@ void* atf_amc::typeb_AllocMem() {
 
 // --- atf_amc.FDb.typeb.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void atf_amc::typeb_FreeMem(atf_amc::FTypeB &row) {
+void atf_amc::typeb_FreeMem(atf_amc::FTypeB &row) throw() {
     if (UNLIKELY(row.typeb_next != (atf_amc::FTypeB*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.typeb  comment:'double deletion caught'");
     }
@@ -5549,7 +5549,7 @@ void atf_amc::typeb_FreeMem(atf_amc::FTypeB &row) {
 // --- atf_amc.FDb.typeb.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 atf_amc::typeb_Reserve(u64 n_elems) {
+u64 atf_amc::typeb_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.typeb_blocksize; // underlying allocator is probably Lpool
@@ -5565,7 +5565,7 @@ u64 atf_amc::typeb_Reserve(u64 n_elems) {
 // --- atf_amc.FDb.typeb.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 atf_amc::typeb_ReserveMem(u64 size) {
+u64 atf_amc::typeb_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(atf_amc::FTypeB)) {
         atf_amc::FTypeB *mem = (atf_amc::FTypeB*)algo_lib::malloc_AllocMem(size);
@@ -5600,7 +5600,7 @@ bool atf_amc::typeb_XrefMaybe(atf_amc::FTypeB &row) {
 // --- atf_amc.FDb.pooledbe64.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::PooledBE64& atf_amc::pooledbe64_Alloc() {
+atf_amc::PooledBE64& atf_amc::pooledbe64_Alloc() throw() {
     atf_amc::PooledBE64* row = pooledbe64_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.pooledbe64  comment:'Alloc failed'");
@@ -5610,7 +5610,7 @@ atf_amc::PooledBE64& atf_amc::pooledbe64_Alloc() {
 
 // --- atf_amc.FDb.pooledbe64.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::PooledBE64* atf_amc::pooledbe64_AllocMaybe() {
+atf_amc::PooledBE64* atf_amc::pooledbe64_AllocMaybe() throw() {
     atf_amc::PooledBE64 *row = (atf_amc::PooledBE64*)pooledbe64_AllocMem();
     if (row) {
         new (row) atf_amc::PooledBE64; // call constructor
@@ -5620,7 +5620,7 @@ atf_amc::PooledBE64* atf_amc::pooledbe64_AllocMaybe() {
 
 // --- atf_amc.FDb.pooledbe64.Delete
 // Remove row from all global and cross indices, then deallocate row
-void atf_amc::pooledbe64_Delete(atf_amc::PooledBE64 &row) {
+void atf_amc::pooledbe64_Delete(atf_amc::PooledBE64 &row) throw() {
     row.~PooledBE64();
     pooledbe64_FreeMem(row);
 }
@@ -5628,7 +5628,7 @@ void atf_amc::pooledbe64_Delete(atf_amc::PooledBE64 &row) {
 // --- atf_amc.FDb.pooledbe64.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* atf_amc::pooledbe64_AllocMem() {
+void* atf_amc::pooledbe64_AllocMem() throw() {
     atf_amc::PooledBE64 *row = _db.pooledbe64_free;
     if (UNLIKELY(!row)) {
         pooledbe64_Reserve(1);
@@ -5642,7 +5642,7 @@ void* atf_amc::pooledbe64_AllocMem() {
 
 // --- atf_amc.FDb.pooledbe64.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void atf_amc::pooledbe64_FreeMem(atf_amc::PooledBE64 &row) {
+void atf_amc::pooledbe64_FreeMem(atf_amc::PooledBE64 &row) throw() {
     if (UNLIKELY(row.pooledbe64_next != (atf_amc::PooledBE64*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.pooledbe64  comment:'double deletion caught'");
     }
@@ -5653,7 +5653,7 @@ void atf_amc::pooledbe64_FreeMem(atf_amc::PooledBE64 &row) {
 // --- atf_amc.FDb.pooledbe64.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 atf_amc::pooledbe64_Reserve(u64 n_elems) {
+u64 atf_amc::pooledbe64_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.pooledbe64_blocksize; // underlying allocator is probably Lpool
@@ -5669,7 +5669,7 @@ u64 atf_amc::pooledbe64_Reserve(u64 n_elems) {
 // --- atf_amc.FDb.pooledbe64.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 atf_amc::pooledbe64_ReserveMem(u64 size) {
+u64 atf_amc::pooledbe64_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(atf_amc::PooledBE64)) {
         atf_amc::PooledBE64 *mem = (atf_amc::PooledBE64*)algo_lib::malloc_AllocMem(size);
@@ -5694,7 +5694,7 @@ bool atf_amc::pooledbe64_XrefMaybe(atf_amc::PooledBE64 &row) {
 
 // --- atf_amc.FDb.varlen_extern.FreeMem
 // Free block of memory previously returned by Lpool.
-void atf_amc::varlen_extern_FreeMem(void* mem, u64 size) {
+void atf_amc::varlen_extern_FreeMem(void* mem, u64 size) throw() {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
     if (mem && cell < 36) {
@@ -5710,7 +5710,7 @@ void atf_amc::varlen_extern_FreeMem(void* mem, u64 size) {
 // If not successful, return NULL
 // The allocated block is at least 1<<4
 // The maximum allocation size is at most 1<<(36+4)
-void* atf_amc::varlen_extern_AllocMem(u64 size) {
+void* atf_amc::varlen_extern_AllocMem(u64 size) throw() {
     void *retval = NULL;
     size     = u64_Max(size,1<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
@@ -5751,7 +5751,7 @@ void* atf_amc::varlen_extern_AllocMem(u64 size) {
 // --- atf_amc.FDb.varlen_extern.ReserveBuffers
 // Add N buffers of some size to the free store
 // Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::malloc)
-bool atf_amc::varlen_extern_ReserveBuffers(u64 nbuf, u64 bufsize) {
+bool atf_amc::varlen_extern_ReserveBuffers(u64 nbuf, u64 bufsize) throw() {
     bool retval = true;
     bufsize = u64_Max(bufsize, 1<<4);
     u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
@@ -5776,7 +5776,7 @@ bool atf_amc::varlen_extern_ReserveBuffers(u64 nbuf, u64 bufsize) {
 // If the new size is same as old size, do nothing.
 // In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL; old memory remains untouched
-void* atf_amc::varlen_extern_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+void* atf_amc::varlen_extern_ReallocMem(void* oldmem, u64 old_size, u64 new_size) throw() {
     void *ret = oldmem;
     if (new_size != old_size) {
         ret = varlen_extern_AllocMem(new_size);
@@ -5791,7 +5791,7 @@ void* atf_amc::varlen_extern_ReallocMem(void* oldmem, u64 old_size, u64 new_size
 // --- atf_amc.FDb.varlen_extern.Alloc
 // Allocate memory for a new row with N_VARFLD var-len elements
 // If out of memory, process is killed.
-atf_amc::VarlenExtern& atf_amc::varlen_extern_Alloc(i32 n_varfld) {
+atf_amc::VarlenExtern& atf_amc::varlen_extern_Alloc(i32 n_varfld) throw() {
     atf_amc::VarlenExtern* row = varlen_extern_AllocMaybe(n_varfld);
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.varlen_extern  comment:'Alloc failed'");
@@ -5800,7 +5800,7 @@ atf_amc::VarlenExtern& atf_amc::varlen_extern_Alloc(i32 n_varfld) {
 }
 
 // --- atf_amc.FDb.varlen_extern.AllocExtra
-atf_amc::VarlenExtern& atf_amc::varlen_extern_AllocExtra(void *extra, i32 nbyte_extra) {
+atf_amc::VarlenExtern& atf_amc::varlen_extern_AllocExtra(void *extra, i32 nbyte_extra) throw() {
     atf_amc::VarlenExtern *row = varlen_extern_AllocExtraMaybe(extra, nbyte_extra);
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.varlen_extern  comment:'Alloc failed'");
@@ -5810,7 +5810,7 @@ atf_amc::VarlenExtern& atf_amc::varlen_extern_AllocExtra(void *extra, i32 nbyte_
 
 // --- atf_amc.FDb.varlen_extern.AllocExtraMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocExtraMaybe(void *extra, i32 nbyte_extra) throw() {
     atf_amc::VarlenExtern *row = (atf_amc::VarlenExtern*)varlen_extern_AllocMem(sizeof(atf_amc::VarlenExtern) + nbyte_extra);
     if (row) {
         new (row) atf_amc::VarlenExtern; // call constructor
@@ -5824,7 +5824,7 @@ atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocExtraMaybe(void *extra, i32 n
 
 // --- atf_amc.FDb.varlen_extern.Delete
 // Remove row from all global and cross indices, then deallocate row
-void atf_amc::varlen_extern_Delete(atf_amc::VarlenExtern &row) {
+void atf_amc::varlen_extern_Delete(atf_amc::VarlenExtern &row) throw() {
     int length = i32(length_Get(row));
     row.~VarlenExtern();
     varlen_extern_FreeMem(&row, length);
@@ -5842,7 +5842,7 @@ bool atf_amc::varlen_extern_XrefMaybe(atf_amc::VarlenExtern &row) {
 // --- atf_amc.FDb.amctest.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FAmctest& atf_amc::amctest_Alloc() {
+atf_amc::FAmctest& atf_amc::amctest_Alloc() throw() {
     atf_amc::FAmctest* row = amctest_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.amctest  comment:'Alloc failed'");
@@ -5852,7 +5852,7 @@ atf_amc::FAmctest& atf_amc::amctest_Alloc() {
 
 // --- atf_amc.FDb.amctest.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FAmctest* atf_amc::amctest_AllocMaybe() {
+atf_amc::FAmctest* atf_amc::amctest_AllocMaybe() throw() {
     atf_amc::FAmctest *row = (atf_amc::FAmctest*)amctest_AllocMem();
     if (row) {
         new (row) atf_amc::FAmctest; // call constructor
@@ -5863,7 +5863,7 @@ atf_amc::FAmctest* atf_amc::amctest_AllocMaybe() {
 // --- atf_amc.FDb.amctest.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_amc::FAmctest* atf_amc::amctest_InsertMaybe(const atfdb::Amctest &value) {
+atf_amc::FAmctest* atf_amc::amctest_InsertMaybe(const atfdb::Amctest &value) throw() {
     atf_amc::FAmctest *row = &amctest_Alloc(); // if out of memory, process dies. if input error, return NULL.
     amctest_CopyIn(*row,const_cast<atfdb::Amctest&>(value));
     bool ok = amctest_XrefMaybe(*row); // this may return false
@@ -5876,7 +5876,7 @@ atf_amc::FAmctest* atf_amc::amctest_InsertMaybe(const atfdb::Amctest &value) {
 
 // --- atf_amc.FDb.amctest.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_amc::amctest_AllocMem() {
+void* atf_amc::amctest_AllocMem() throw() {
     u64 new_nelems     = _db.amctest_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -5902,7 +5902,7 @@ void* atf_amc::amctest_AllocMem() {
 
 // --- atf_amc.FDb.amctest.RemoveAll
 // Remove all elements from Lary
-void atf_amc::amctest_RemoveAll() {
+void atf_amc::amctest_RemoveAll() throw() {
     for (u64 n = _db.amctest_n; n>0; ) {
         n--;
         amctest_qFind(u64(n)).~FAmctest(); // destroy last element
@@ -5912,7 +5912,7 @@ void atf_amc::amctest_RemoveAll() {
 
 // --- atf_amc.FDb.amctest.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::amctest_RemoveLast() {
+void atf_amc::amctest_RemoveLast() throw() {
     u64 n = _db.amctest_n;
     if (n > 0) {
         n -= 1;
@@ -5922,7 +5922,7 @@ void atf_amc::amctest_RemoveLast() {
 }
 
 // --- atf_amc.FDb.amctest.LoadStatic
-static void atf_amc::amctest_LoadStatic() {
+static void atf_amc::amctest_LoadStatic() throw() {
     static struct _t {
         const char *s;
         void (*step)();
@@ -6179,7 +6179,7 @@ bool atf_amc::amctest_XrefMaybe(atf_amc::FAmctest &row) {
 // --- atf_amc.FDb.cascdel.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FCascdel& atf_amc::cascdel_Alloc() {
+atf_amc::FCascdel& atf_amc::cascdel_Alloc() throw() {
     atf_amc::FCascdel* row = cascdel_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.cascdel  comment:'Alloc failed'");
@@ -6189,7 +6189,7 @@ atf_amc::FCascdel& atf_amc::cascdel_Alloc() {
 
 // --- atf_amc.FDb.cascdel.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FCascdel* atf_amc::cascdel_AllocMaybe() {
+atf_amc::FCascdel* atf_amc::cascdel_AllocMaybe() throw() {
     atf_amc::FCascdel *row = (atf_amc::FCascdel*)cascdel_AllocMem();
     if (row) {
         new (row) atf_amc::FCascdel; // call constructor
@@ -6199,7 +6199,7 @@ atf_amc::FCascdel* atf_amc::cascdel_AllocMaybe() {
 
 // --- atf_amc.FDb.cascdel.Delete
 // Remove row from all global and cross indices, then deallocate row
-void atf_amc::cascdel_Delete(atf_amc::FCascdel &row) {
+void atf_amc::cascdel_Delete(atf_amc::FCascdel &row) throw() {
     row.~FCascdel();
     cascdel_FreeMem(row);
 }
@@ -6207,7 +6207,7 @@ void atf_amc::cascdel_Delete(atf_amc::FCascdel &row) {
 // --- atf_amc.FDb.cascdel.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* atf_amc::cascdel_AllocMem() {
+void* atf_amc::cascdel_AllocMem() throw() {
     atf_amc::FCascdel *row = _db.cascdel_free;
     if (UNLIKELY(!row)) {
         cascdel_Reserve(1);
@@ -6221,7 +6221,7 @@ void* atf_amc::cascdel_AllocMem() {
 
 // --- atf_amc.FDb.cascdel.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void atf_amc::cascdel_FreeMem(atf_amc::FCascdel &row) {
+void atf_amc::cascdel_FreeMem(atf_amc::FCascdel &row) throw() {
     if (UNLIKELY(row.cascdel_next != (atf_amc::FCascdel*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.cascdel  comment:'double deletion caught'");
     }
@@ -6232,7 +6232,7 @@ void atf_amc::cascdel_FreeMem(atf_amc::FCascdel &row) {
 // --- atf_amc.FDb.cascdel.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 atf_amc::cascdel_Reserve(u64 n_elems) {
+u64 atf_amc::cascdel_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.cascdel_blocksize; // underlying allocator is probably Lpool
@@ -6248,7 +6248,7 @@ u64 atf_amc::cascdel_Reserve(u64 n_elems) {
 // --- atf_amc.FDb.cascdel.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 atf_amc::cascdel_ReserveMem(u64 size) {
+u64 atf_amc::cascdel_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(atf_amc::FCascdel)) {
         atf_amc::FCascdel *mem = (atf_amc::FCascdel*)algo_lib::malloc_AllocMem(size);
@@ -6312,7 +6312,7 @@ bool atf_amc::cascdel_XrefMaybe(atf_amc::FCascdel &row) {
 
 // --- atf_amc.FDb.optalloc.FreeMem
 // Free block of memory previously returned by Lpool.
-void atf_amc::optalloc_FreeMem(void* mem, u64 size) {
+void atf_amc::optalloc_FreeMem(void* mem, u64 size) throw() {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
     if (mem && cell < 36) {
@@ -6328,7 +6328,7 @@ void atf_amc::optalloc_FreeMem(void* mem, u64 size) {
 // If not successful, return NULL
 // The allocated block is at least 1<<4
 // The maximum allocation size is at most 1<<(36+4)
-void* atf_amc::optalloc_AllocMem(u64 size) {
+void* atf_amc::optalloc_AllocMem(u64 size) throw() {
     void *retval = NULL;
     size     = u64_Max(size,1<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
@@ -6369,7 +6369,7 @@ void* atf_amc::optalloc_AllocMem(u64 size) {
 // --- atf_amc.FDb.optalloc.ReserveBuffers
 // Add N buffers of some size to the free store
 // Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::malloc)
-bool atf_amc::optalloc_ReserveBuffers(u64 nbuf, u64 bufsize) {
+bool atf_amc::optalloc_ReserveBuffers(u64 nbuf, u64 bufsize) throw() {
     bool retval = true;
     bufsize = u64_Max(bufsize, 1<<4);
     u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
@@ -6394,7 +6394,7 @@ bool atf_amc::optalloc_ReserveBuffers(u64 nbuf, u64 bufsize) {
 // If the new size is same as old size, do nothing.
 // In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL; old memory remains untouched
-void* atf_amc::optalloc_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+void* atf_amc::optalloc_ReallocMem(void* oldmem, u64 old_size, u64 new_size) throw() {
     void *ret = oldmem;
     if (new_size != old_size) {
         ret = optalloc_AllocMem(new_size);
@@ -6407,7 +6407,7 @@ void* atf_amc::optalloc_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
 }
 
 // --- atf_amc.FDb.optalloc.AllocExtra
-atf_amc::OptAlloc& atf_amc::optalloc_AllocExtra(void *extra, i32 nbyte_extra) {
+atf_amc::OptAlloc& atf_amc::optalloc_AllocExtra(void *extra, i32 nbyte_extra) throw() {
     atf_amc::OptAlloc *row = optalloc_AllocExtraMaybe(extra, nbyte_extra);
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.optalloc  comment:'Alloc failed'");
@@ -6417,7 +6417,7 @@ atf_amc::OptAlloc& atf_amc::optalloc_AllocExtra(void *extra, i32 nbyte_extra) {
 
 // --- atf_amc.FDb.optalloc.AllocExtraMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::OptAlloc* atf_amc::optalloc_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+atf_amc::OptAlloc* atf_amc::optalloc_AllocExtraMaybe(void *extra, i32 nbyte_extra) throw() {
     atf_amc::OptAlloc *row = (atf_amc::OptAlloc*)optalloc_AllocMem(sizeof(atf_amc::OptAlloc) + nbyte_extra);
     if (row) {
         new (row) atf_amc::OptAlloc; // call constructor
@@ -6431,7 +6431,7 @@ atf_amc::OptAlloc* atf_amc::optalloc_AllocExtraMaybe(void *extra, i32 nbyte_extr
 
 // --- atf_amc.FDb.optalloc.Delete
 // Remove row from all global and cross indices, then deallocate row
-void atf_amc::optalloc_Delete(atf_amc::OptAlloc &row) {
+void atf_amc::optalloc_Delete(atf_amc::OptAlloc &row) throw() {
     int length = i32(row.length);
     row.~OptAlloc();
     optalloc_FreeMem(&row, length);
@@ -6448,7 +6448,7 @@ bool atf_amc::optalloc_XrefMaybe(atf_amc::OptAlloc &row) {
 
 // --- atf_amc.FDb.varlenalloc.FreeMem
 // Free block of memory previously returned by Lpool.
-void atf_amc::varlenalloc_FreeMem(void* mem, u64 size) {
+void atf_amc::varlenalloc_FreeMem(void* mem, u64 size) throw() {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
     if (mem && cell < 36) {
@@ -6464,7 +6464,7 @@ void atf_amc::varlenalloc_FreeMem(void* mem, u64 size) {
 // If not successful, return NULL
 // The allocated block is at least 1<<4
 // The maximum allocation size is at most 1<<(36+4)
-void* atf_amc::varlenalloc_AllocMem(u64 size) {
+void* atf_amc::varlenalloc_AllocMem(u64 size) throw() {
     void *retval = NULL;
     size     = u64_Max(size,1<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
@@ -6505,7 +6505,7 @@ void* atf_amc::varlenalloc_AllocMem(u64 size) {
 // --- atf_amc.FDb.varlenalloc.ReserveBuffers
 // Add N buffers of some size to the free store
 // Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::malloc)
-bool atf_amc::varlenalloc_ReserveBuffers(u64 nbuf, u64 bufsize) {
+bool atf_amc::varlenalloc_ReserveBuffers(u64 nbuf, u64 bufsize) throw() {
     bool retval = true;
     bufsize = u64_Max(bufsize, 1<<4);
     u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
@@ -6530,7 +6530,7 @@ bool atf_amc::varlenalloc_ReserveBuffers(u64 nbuf, u64 bufsize) {
 // If the new size is same as old size, do nothing.
 // In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL; old memory remains untouched
-void* atf_amc::varlenalloc_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+void* atf_amc::varlenalloc_ReallocMem(void* oldmem, u64 old_size, u64 new_size) throw() {
     void *ret = oldmem;
     if (new_size != old_size) {
         ret = varlenalloc_AllocMem(new_size);
@@ -6545,7 +6545,7 @@ void* atf_amc::varlenalloc_ReallocMem(void* oldmem, u64 old_size, u64 new_size) 
 // --- atf_amc.FDb.varlenalloc.Alloc
 // Allocate memory for a new row with N_VARFLD var-len elements
 // If out of memory, process is killed.
-atf_amc::VarlenAlloc& atf_amc::varlenalloc_Alloc(i32 n_varfld) {
+atf_amc::VarlenAlloc& atf_amc::varlenalloc_Alloc(i32 n_varfld) throw() {
     atf_amc::VarlenAlloc* row = varlenalloc_AllocMaybe(n_varfld);
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.varlenalloc  comment:'Alloc failed'");
@@ -6554,7 +6554,7 @@ atf_amc::VarlenAlloc& atf_amc::varlenalloc_Alloc(i32 n_varfld) {
 }
 
 // --- atf_amc.FDb.varlenalloc.AllocExtra
-atf_amc::VarlenAlloc& atf_amc::varlenalloc_AllocExtra(void *extra, i32 nbyte_extra) {
+atf_amc::VarlenAlloc& atf_amc::varlenalloc_AllocExtra(void *extra, i32 nbyte_extra) throw() {
     atf_amc::VarlenAlloc *row = varlenalloc_AllocExtraMaybe(extra, nbyte_extra);
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.varlenalloc  comment:'Alloc failed'");
@@ -6564,7 +6564,7 @@ atf_amc::VarlenAlloc& atf_amc::varlenalloc_AllocExtra(void *extra, i32 nbyte_ext
 
 // --- atf_amc.FDb.varlenalloc.AllocExtraMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocExtraMaybe(void *extra, i32 nbyte_extra) throw() {
     atf_amc::VarlenAlloc *row = (atf_amc::VarlenAlloc*)varlenalloc_AllocMem(sizeof(atf_amc::VarlenAlloc) + nbyte_extra);
     if (row) {
         new (row) atf_amc::VarlenAlloc; // call constructor
@@ -6578,7 +6578,7 @@ atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocExtraMaybe(void *extra, i32 nbyt
 
 // --- atf_amc.FDb.varlenalloc.Delete
 // Remove row from all global and cross indices, then deallocate row
-void atf_amc::varlenalloc_Delete(atf_amc::VarlenAlloc &row) {
+void atf_amc::varlenalloc_Delete(atf_amc::VarlenAlloc &row) throw() {
     int length = i32(row.length);
     row.~VarlenAlloc();
     varlenalloc_FreeMem(&row, length);
@@ -6595,7 +6595,7 @@ bool atf_amc::varlenalloc_XrefMaybe(atf_amc::VarlenAlloc &row) {
 
 // --- atf_amc.FDb.optg.FreeMem
 // Free block of memory previously returned by Lpool.
-void atf_amc::optg_FreeMem(void* mem, u64 size) {
+void atf_amc::optg_FreeMem(void* mem, u64 size) throw() {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
     if (mem && cell < 36) {
@@ -6611,7 +6611,7 @@ void atf_amc::optg_FreeMem(void* mem, u64 size) {
 // If not successful, return NULL
 // The allocated block is at least 1<<4
 // The maximum allocation size is at most 1<<(36+4)
-void* atf_amc::optg_AllocMem(u64 size) {
+void* atf_amc::optg_AllocMem(u64 size) throw() {
     void *retval = NULL;
     size     = u64_Max(size,1<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
@@ -6652,7 +6652,7 @@ void* atf_amc::optg_AllocMem(u64 size) {
 // --- atf_amc.FDb.optg.ReserveBuffers
 // Add N buffers of some size to the free store
 // Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::malloc)
-bool atf_amc::optg_ReserveBuffers(u64 nbuf, u64 bufsize) {
+bool atf_amc::optg_ReserveBuffers(u64 nbuf, u64 bufsize) throw() {
     bool retval = true;
     bufsize = u64_Max(bufsize, 1<<4);
     u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
@@ -6677,7 +6677,7 @@ bool atf_amc::optg_ReserveBuffers(u64 nbuf, u64 bufsize) {
 // If the new size is same as old size, do nothing.
 // In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL; old memory remains untouched
-void* atf_amc::optg_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+void* atf_amc::optg_ReallocMem(void* oldmem, u64 old_size, u64 new_size) throw() {
     void *ret = oldmem;
     if (new_size != old_size) {
         ret = optg_AllocMem(new_size);
@@ -6690,7 +6690,7 @@ void* atf_amc::optg_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
 }
 
 // --- atf_amc.FDb.optg.AllocExtra
-atf_amc::FOptG& atf_amc::optg_AllocExtra(void *extra, i32 nbyte_extra) {
+atf_amc::FOptG& atf_amc::optg_AllocExtra(void *extra, i32 nbyte_extra) throw() {
     atf_amc::FOptG *row = optg_AllocExtraMaybe(extra, nbyte_extra);
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.optg  comment:'Alloc failed'");
@@ -6700,7 +6700,7 @@ atf_amc::FOptG& atf_amc::optg_AllocExtra(void *extra, i32 nbyte_extra) {
 
 // --- atf_amc.FDb.optg.AllocExtraMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FOptG* atf_amc::optg_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
+atf_amc::FOptG* atf_amc::optg_AllocExtraMaybe(void *extra, i32 nbyte_extra) throw() {
     atf_amc::FOptG *row = (atf_amc::FOptG*)optg_AllocMem(sizeof(atf_amc::FOptG) + nbyte_extra);
     if (row) {
         new (row) atf_amc::FOptG; // call constructor
@@ -6715,7 +6715,7 @@ atf_amc::FOptG* atf_amc::optg_AllocExtraMaybe(void *extra, i32 nbyte_extra) {
 // --- atf_amc.FDb.optg.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_amc::FOptG* atf_amc::optg_InsertMaybe(const atf_amc::OptG &value) {
+atf_amc::FOptG* atf_amc::optg_InsertMaybe(const atf_amc::OptG &value) throw() {
     u8 *addon_addr = (u8*)&value + ssizeof(atf_amc::OptG);
     int addon_len = i32(value.length) - ssizeof(atf_amc::OptG);
     atf_amc::FOptG *row = &optg_AllocExtra(addon_addr, addon_len);
@@ -6730,7 +6730,7 @@ atf_amc::FOptG* atf_amc::optg_InsertMaybe(const atf_amc::OptG &value) {
 
 // --- atf_amc.FDb.optg.Delete
 // Remove row from all global and cross indices, then deallocate row
-void atf_amc::optg_Delete(atf_amc::FOptG &row) {
+void atf_amc::optg_Delete(atf_amc::FOptG &row) throw() {
     int length = i32(row.length);
     row.~FOptG();
     optg_FreeMem(&row, length);
@@ -6748,7 +6748,7 @@ bool atf_amc::optg_XrefMaybe(atf_amc::FOptG &row) {
 // --- atf_amc.FDb.c_typek.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void atf_amc::c_typek_Insert(atf_amc::FTypeK& row) {
+void atf_amc::c_typek_Insert(atf_amc::FTypeK& row) throw() {
     if (bool_Update(row._db_c_typek_in_ary,true)) {
         // reserve space
         c_typek_Reserve(1);
@@ -6765,7 +6765,7 @@ void atf_amc::c_typek_Insert(atf_amc::FTypeK& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool atf_amc::c_typek_InsertMaybe(atf_amc::FTypeK& row) {
+bool atf_amc::c_typek_InsertMaybe(atf_amc::FTypeK& row) throw() {
     bool retval = !row._db_c_typek_in_ary;
     c_typek_Insert(row); // check is performed in _Insert again
     return retval;
@@ -6773,7 +6773,7 @@ bool atf_amc::c_typek_InsertMaybe(atf_amc::FTypeK& row) {
 
 // --- atf_amc.FDb.c_typek.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void atf_amc::c_typek_Remove(atf_amc::FTypeK& row) {
+void atf_amc::c_typek_Remove(atf_amc::FTypeK& row) throw() {
     if (bool_Update(row._db_c_typek_in_ary,false)) {
         int lim = _db.c_typek_n;
         atf_amc::FTypeK* *elems = _db.c_typek_elems;
@@ -6794,7 +6794,7 @@ void atf_amc::c_typek_Remove(atf_amc::FTypeK& row) {
 
 // --- atf_amc.FDb.c_typek.Reserve
 // Reserve space in index for N more elements;
-void atf_amc::c_typek_Reserve(u32 n) {
+void atf_amc::c_typek_Reserve(u32 n) throw() {
     u32 old_max = _db.c_typek_max;
     if (UNLIKELY(_db.c_typek_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -6812,7 +6812,7 @@ void atf_amc::c_typek_Reserve(u32 n) {
 // --- atf_amc.FDb.avl.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FAvl& atf_amc::avl_Alloc() {
+atf_amc::FAvl& atf_amc::avl_Alloc() throw() {
     atf_amc::FAvl* row = avl_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.avl  comment:'Alloc failed'");
@@ -6822,7 +6822,7 @@ atf_amc::FAvl& atf_amc::avl_Alloc() {
 
 // --- atf_amc.FDb.avl.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FAvl* atf_amc::avl_AllocMaybe() {
+atf_amc::FAvl* atf_amc::avl_AllocMaybe() throw() {
     atf_amc::FAvl *row = (atf_amc::FAvl*)avl_AllocMem();
     if (row) {
         new (row) atf_amc::FAvl; // call constructor
@@ -6832,7 +6832,7 @@ atf_amc::FAvl* atf_amc::avl_AllocMaybe() {
 
 // --- atf_amc.FDb.avl.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_amc::avl_AllocMem() {
+void* atf_amc::avl_AllocMem() throw() {
     u64 new_nelems     = _db.avl_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -6858,7 +6858,7 @@ void* atf_amc::avl_AllocMem() {
 
 // --- atf_amc.FDb.avl.RemoveAll
 // Remove all elements from Lary
-void atf_amc::avl_RemoveAll() {
+void atf_amc::avl_RemoveAll() throw() {
     for (u64 n = _db.avl_n; n>0; ) {
         n--;
         avl_qFind(u64(n)).~FAvl(); // destroy last element
@@ -6868,7 +6868,7 @@ void atf_amc::avl_RemoveAll() {
 
 // --- atf_amc.FDb.avl.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::avl_RemoveLast() {
+void atf_amc::avl_RemoveLast() throw() {
     u64 n = _db.avl_n;
     if (n > 0) {
         n -= 1;
@@ -6887,7 +6887,7 @@ bool atf_amc::avl_XrefMaybe(atf_amc::FAvl &row) {
 }
 
 // --- atf_amc.FDb.tr_avl.FirstImpl
-atf_amc::FAvl* atf_amc::tr_avl_FirstImpl(atf_amc::FAvl* root) {
+atf_amc::FAvl* atf_amc::tr_avl_FirstImpl(atf_amc::FAvl* root) throw() {
     atf_amc::FAvl *result = root;
     while(result != NULL && result->tr_avl_left != NULL){
         result = result->tr_avl_left;
@@ -6897,13 +6897,13 @@ atf_amc::FAvl* atf_amc::tr_avl_FirstImpl(atf_amc::FAvl* root) {
 
 // --- atf_amc.FDb.tr_avl.First
 // Return pointer to the first(smallest) element in the tree
-atf_amc::FAvl* atf_amc::tr_avl_First() {
+atf_amc::FAvl* atf_amc::tr_avl_First() throw() {
     return tr_avl_FirstImpl(_db.tr_avl_root);
 }
 
 // --- atf_amc.FDb.tr_avl.InsertImpl
 // Insert row into the tree. If row is already in the tree, do nothing.
-void atf_amc::tr_avl_InsertImpl(atf_amc::FAvl* parent, atf_amc::FAvl& row) {
+void atf_amc::tr_avl_InsertImpl(atf_amc::FAvl* parent, atf_amc::FAvl& row) throw() {
     bool left = false;
     while(parent != NULL){
         left = tr_avl_ElemLt(row, *parent);
@@ -6918,7 +6918,7 @@ void atf_amc::tr_avl_InsertImpl(atf_amc::FAvl* parent, atf_amc::FAvl& row) {
 
 // --- atf_amc.FDb.tr_avl.Insert
 // Insert row into the tree. If row is already in the tree, do nothing.
-void atf_amc::tr_avl_Insert(atf_amc::FAvl& row) {
+void atf_amc::tr_avl_Insert(atf_amc::FAvl& row) throw() {
     if(!tr_avl_InTreeQ(row)){
         _db.tr_avl_n++;
         tr_avl_InsertImpl(_db.tr_avl_root, row);
@@ -6928,7 +6928,7 @@ void atf_amc::tr_avl_Insert(atf_amc::FAvl& row) {
 
 // --- atf_amc.FDb.tr_avl.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::tr_avl_Remove(atf_amc::FAvl& row) {
+void atf_amc::tr_avl_Remove(atf_amc::FAvl& row) throw() {
     if(!tr_avl_InTreeQ(row)){
         return;
     }
@@ -6960,14 +6960,14 @@ void atf_amc::tr_avl_Remove(atf_amc::FAvl& row) {
 
 // --- atf_amc.FDb.tr_avl.RemoveFirst
 // If the tree is empty, return NULL. Otherwise unlink and return pointer to first element.
-void atf_amc::tr_avl_RemoveFirst() {
+void atf_amc::tr_avl_RemoveFirst() throw() {
     if(!tr_avl_EmptyQ()){
         tr_avl_Remove(*tr_avl_First());
     }
 }
 
 // --- atf_amc.FDb.tr_avl.Balance
-i32 atf_amc::tr_avl_Balance(atf_amc::FAvl& row) {
+i32 atf_amc::tr_avl_Balance(atf_amc::FAvl& row) throw() {
     i32 left  = row.tr_avl_left  ? row.tr_avl_left->tr_avl_depth  : 0;
     i32 right = row.tr_avl_right ? row.tr_avl_right->tr_avl_depth : 0;
     return left - right;
@@ -6975,7 +6975,7 @@ i32 atf_amc::tr_avl_Balance(atf_amc::FAvl& row) {
 
 // --- atf_amc.FDb.tr_avl.Propagate
 // Recalculate depth and keep rebalancing if needed
-atf_amc::FAvl* atf_amc::tr_avl_Propagate(atf_amc::FAvl& pnode) {
+atf_amc::FAvl* atf_amc::tr_avl_Propagate(atf_amc::FAvl& pnode) throw() {
     atf_amc::FAvl *root = &pnode;
     atf_amc::FAvl* node = &pnode;
     while(node != NULL){
@@ -6989,13 +6989,13 @@ atf_amc::FAvl* atf_amc::tr_avl_Propagate(atf_amc::FAvl& pnode) {
 
 // --- atf_amc.FDb.tr_avl.TallerChild
 // Returns the child that has greater height.
-inline static atf_amc::FAvl* atf_amc::tr_avl_TallerChild(atf_amc::FAvl& node) {
+inline static atf_amc::FAvl* atf_amc::tr_avl_TallerChild(atf_amc::FAvl& node) throw() {
     return tr_avl_Balance(node) < 0 ? node.tr_avl_right : node.tr_avl_left;
 }
 
 // --- atf_amc.FDb.tr_avl.Disconnect
 // Disconnects the subtree(branch) from the parent
-static void atf_amc::tr_avl_Disconnect(atf_amc::FAvl& node) {
+static void atf_amc::tr_avl_Disconnect(atf_amc::FAvl& node) throw() {
     atf_amc::FAvl* parent = node.tr_avl_up;
     if(parent != NULL){
         bool left = parent->tr_avl_left == &node;
@@ -7006,7 +7006,7 @@ static void atf_amc::tr_avl_Disconnect(atf_amc::FAvl& node) {
 
 // --- atf_amc.FDb.tr_avl.Rebalance
 // Rebalances the node if needed.
-void atf_amc::tr_avl_Rebalance(atf_amc::FAvl& node) {
+void atf_amc::tr_avl_Rebalance(atf_amc::FAvl& node) throw() {
     if (algo::Abs(tr_avl_Balance(node)) > 1){
         atf_amc::FAvl* deep1 = tr_avl_TallerChild(node);
         atf_amc::FAvl* deep2 = tr_avl_TallerChild(*deep1);
@@ -7023,7 +7023,7 @@ void atf_amc::tr_avl_Rebalance(atf_amc::FAvl& node) {
 }
 
 // --- atf_amc.FDb.tr_avl.Next
-atf_amc::FAvl* atf_amc::tr_avl_Next(atf_amc::FAvl& node) {
+atf_amc::FAvl* atf_amc::tr_avl_Next(atf_amc::FAvl& node) throw() {
     atf_amc::FAvl *result = &node;
     if(result->tr_avl_right == NULL){
         while(result->tr_avl_up != NULL && result->tr_avl_up->tr_avl_right == result){
@@ -7037,7 +7037,7 @@ atf_amc::FAvl* atf_amc::tr_avl_Next(atf_amc::FAvl& node) {
 }
 
 // --- atf_amc.FDb.tr_avl.Prev
-atf_amc::FAvl* atf_amc::tr_avl_Prev(atf_amc::FAvl& node) {
+atf_amc::FAvl* atf_amc::tr_avl_Prev(atf_amc::FAvl& node) throw() {
     atf_amc::FAvl *result = &node;
     if(result->tr_avl_left == NULL){
         while(result->tr_avl_up != NULL && result->tr_avl_up->tr_avl_left == result){
@@ -7051,7 +7051,7 @@ atf_amc::FAvl* atf_amc::tr_avl_Prev(atf_amc::FAvl& node) {
 }
 
 // --- atf_amc.FDb.tr_avl.LastImpl
-atf_amc::FAvl* atf_amc::tr_avl_LastImpl(atf_amc::FAvl* root) {
+atf_amc::FAvl* atf_amc::tr_avl_LastImpl(atf_amc::FAvl* root) throw() {
     atf_amc::FAvl *result = root;
     while(result != NULL && result->tr_avl_right != NULL){
         result = result->tr_avl_right;
@@ -7061,18 +7061,18 @@ atf_amc::FAvl* atf_amc::tr_avl_LastImpl(atf_amc::FAvl* root) {
 
 // --- atf_amc.FDb.tr_avl.Last
 // Return pointer to the last(largest) element in tree
-atf_amc::FAvl* atf_amc::tr_avl_Last() {
+atf_amc::FAvl* atf_amc::tr_avl_Last() throw() {
     return tr_avl_LastImpl(_db.tr_avl_root);
 }
 
 // --- atf_amc.FDb.tr_avl.ElemLt
-inline static bool atf_amc::tr_avl_ElemLt(atf_amc::FAvl &a, atf_amc::FAvl &b) {
+inline static bool atf_amc::tr_avl_ElemLt(atf_amc::FAvl &a, atf_amc::FAvl &b) throw() {
     (void)_db;
     return a.n < b.n;
 }
 
 // --- atf_amc.FDb.tr_avl.UpdateDepth
-static void atf_amc::tr_avl_updateDepth(atf_amc::FAvl& node) {
+static void atf_amc::tr_avl_updateDepth(atf_amc::FAvl& node) throw() {
     i32 ldepth = node.tr_avl_left  != NULL ? node.tr_avl_left->tr_avl_depth : 0;
     i32 rdepth = node.tr_avl_right != NULL ? node.tr_avl_right->tr_avl_depth : 0;
     node.tr_avl_depth = i32_Max(ldepth, rdepth) + 1;
@@ -7080,7 +7080,7 @@ static void atf_amc::tr_avl_updateDepth(atf_amc::FAvl& node) {
 
 // --- atf_amc.FDb.tr_avl.Turn
 // rotates the tree in from->to direction
-static void atf_amc::tr_avl_Turn(atf_amc::FAvl& from, atf_amc::FAvl& to) {
+static void atf_amc::tr_avl_Turn(atf_amc::FAvl& from, atf_amc::FAvl& to) throw() {
     atf_amc::FAvl* root = to.tr_avl_up;
     bool dir = root && root->tr_avl_left == &to;
     tr_avl_Connect(root, &from, dir);
@@ -7091,7 +7091,7 @@ static void atf_amc::tr_avl_Turn(atf_amc::FAvl& from, atf_amc::FAvl& to) {
 }
 
 // --- atf_amc.FDb.tr_avl.Connect
-inline static void atf_amc::tr_avl_Connect(atf_amc::FAvl* parent, atf_amc::FAvl* child, bool left) {
+inline static void atf_amc::tr_avl_Connect(atf_amc::FAvl* parent, atf_amc::FAvl* child, bool left) throw() {
     if(parent){
         (left ? parent->tr_avl_left : parent->tr_avl_right) = child;
     }
@@ -7102,7 +7102,7 @@ inline static void atf_amc::tr_avl_Connect(atf_amc::FAvl* parent, atf_amc::FAvl*
 
 // --- atf_amc.FDb.tr_avl.RemoveAllImpl
 // Empty the index. (rows may be deleted if cascdel)
-void atf_amc::tr_avl_RemoveAllImpl(atf_amc::FAvl* root, bool del) {
+void atf_amc::tr_avl_RemoveAllImpl(atf_amc::FAvl* root, bool del) throw() {
     if(root != NULL){
         tr_avl_RemoveAllImpl(root->tr_avl_left, del);
         tr_avl_RemoveAllImpl(root->tr_avl_right, del);
@@ -7114,14 +7114,14 @@ void atf_amc::tr_avl_RemoveAllImpl(atf_amc::FAvl* root, bool del) {
 
 // --- atf_amc.FDb.tr_avl.Reinsert
 // Reinsert a row with modified key(Reheap semantics)
-void atf_amc::tr_avl_Reinsert(atf_amc::FAvl& node) {
+void atf_amc::tr_avl_Reinsert(atf_amc::FAvl& node) throw() {
     tr_avl_Remove(node);
     tr_avl_Insert(node);
 }
 
 // --- atf_amc.FDb.tr_avl.FirstGe
 // Find the first element that is greater or equal to a sortfld value
-atf_amc::FAvl* atf_amc::tr_avl_FirstGe(const i32& val) {
+atf_amc::FAvl* atf_amc::tr_avl_FirstGe(const i32& val) throw() {
     atf_amc::FAvl* result = _db.tr_avl_root;
     bool left = false;
     while(result){
@@ -7140,7 +7140,7 @@ atf_amc::FAvl* atf_amc::tr_avl_FirstGe(const i32& val) {
 
 // --- atf_amc.FDb.tr_avl.LastLt
 // Find the last element that is smaller or equal to a sortfld value
-atf_amc::FAvl* atf_amc::tr_avl_LastLt(const i32& val) {
+atf_amc::FAvl* atf_amc::tr_avl_LastLt(const i32& val) throw() {
     atf_amc::FAvl* result = _db.tr_avl_root;
     bool left = false;
     while(result){
@@ -7160,7 +7160,7 @@ atf_amc::FAvl* atf_amc::tr_avl_LastLt(const i32& val) {
 // --- atf_amc.FDb.listtype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FListtype& atf_amc::listtype_Alloc() {
+atf_amc::FListtype& atf_amc::listtype_Alloc() throw() {
     atf_amc::FListtype* row = listtype_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.listtype  comment:'Alloc failed'");
@@ -7170,7 +7170,7 @@ atf_amc::FListtype& atf_amc::listtype_Alloc() {
 
 // --- atf_amc.FDb.listtype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FListtype* atf_amc::listtype_AllocMaybe() {
+atf_amc::FListtype* atf_amc::listtype_AllocMaybe() throw() {
     atf_amc::FListtype *row = (atf_amc::FListtype*)listtype_AllocMem();
     if (row) {
         new (row) atf_amc::FListtype; // call constructor
@@ -7181,7 +7181,7 @@ atf_amc::FListtype* atf_amc::listtype_AllocMaybe() {
 // --- atf_amc.FDb.listtype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_amc::FListtype* atf_amc::listtype_InsertMaybe(const dmmeta::Listtype &value) {
+atf_amc::FListtype* atf_amc::listtype_InsertMaybe(const dmmeta::Listtype &value) throw() {
     atf_amc::FListtype *row = &listtype_Alloc(); // if out of memory, process dies. if input error, return NULL.
     listtype_CopyIn(*row,const_cast<dmmeta::Listtype&>(value));
     bool ok = listtype_XrefMaybe(*row); // this may return false
@@ -7194,7 +7194,7 @@ atf_amc::FListtype* atf_amc::listtype_InsertMaybe(const dmmeta::Listtype &value)
 
 // --- atf_amc.FDb.listtype.RemoveAll
 // Destroy all elements of Inlary
-void atf_amc::listtype_RemoveAll() {
+void atf_amc::listtype_RemoveAll() throw() {
     for (u64 n = _db.listtype_n; n>0; ) {
         n--;
         reinterpret_cast<atf_amc::FListtype*>(_db.listtype_data)[n].~FListtype(); // destroy last element
@@ -7204,7 +7204,7 @@ void atf_amc::listtype_RemoveAll() {
 
 // --- atf_amc.FDb.listtype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::listtype_RemoveLast() {
+void atf_amc::listtype_RemoveLast() throw() {
     u64 n = _db.listtype_n;
     if (n > 0) {
         n -= 1;
@@ -7214,7 +7214,7 @@ void atf_amc::listtype_RemoveLast() {
 }
 
 // --- atf_amc.FDb.listtype.LoadStatic
-static void atf_amc::listtype_LoadStatic() {
+static void atf_amc::listtype_LoadStatic() throw() {
     static struct _t {
         const char *s;
         void (*step)(atf_amc::FListtype&);
@@ -7253,7 +7253,7 @@ bool atf_amc::listtype_XrefMaybe(atf_amc::FListtype &row) {
 // --- atf_amc.FDb.typed.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FTypeD& atf_amc::typed_Alloc() {
+atf_amc::FTypeD& atf_amc::typed_Alloc() throw() {
     atf_amc::FTypeD* row = typed_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.typed  comment:'Alloc failed'");
@@ -7263,7 +7263,7 @@ atf_amc::FTypeD& atf_amc::typed_Alloc() {
 
 // --- atf_amc.FDb.typed.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FTypeD* atf_amc::typed_AllocMaybe() {
+atf_amc::FTypeD* atf_amc::typed_AllocMaybe() throw() {
     atf_amc::FTypeD *row = (atf_amc::FTypeD*)typed_AllocMem();
     if (row) {
         new (row) atf_amc::FTypeD; // call constructor
@@ -7274,7 +7274,7 @@ atf_amc::FTypeD* atf_amc::typed_AllocMaybe() {
 // --- atf_amc.FDb.typed.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_amc::FTypeD* atf_amc::typed_InsertMaybe(const atf_amc::TypeC &value) {
+atf_amc::FTypeD* atf_amc::typed_InsertMaybe(const atf_amc::TypeC &value) throw() {
     atf_amc::FTypeD *row = &typed_Alloc(); // if out of memory, process dies. if input error, return NULL.
     typed_CopyIn(*row,const_cast<atf_amc::TypeC&>(value));
     bool ok = typed_XrefMaybe(*row); // this may return false
@@ -7287,7 +7287,7 @@ atf_amc::FTypeD* atf_amc::typed_InsertMaybe(const atf_amc::TypeC &value) {
 
 // --- atf_amc.FDb.typed.Delete
 // Remove row from all global and cross indices, then deallocate row
-void atf_amc::typed_Delete(atf_amc::FTypeD &row) {
+void atf_amc::typed_Delete(atf_amc::FTypeD &row) throw() {
     row.~FTypeD();
     typed_FreeMem(row);
 }
@@ -7295,7 +7295,7 @@ void atf_amc::typed_Delete(atf_amc::FTypeD &row) {
 // --- atf_amc.FDb.typed.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* atf_amc::typed_AllocMem() {
+void* atf_amc::typed_AllocMem() throw() {
     atf_amc::FTypeD *row = _db.typed_free;
     if (UNLIKELY(!row)) {
         typed_Reserve(1);
@@ -7309,7 +7309,7 @@ void* atf_amc::typed_AllocMem() {
 
 // --- atf_amc.FDb.typed.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void atf_amc::typed_FreeMem(atf_amc::FTypeD &row) {
+void atf_amc::typed_FreeMem(atf_amc::FTypeD &row) throw() {
     if (UNLIKELY(row.typed_next != (atf_amc::FTypeD*)-1)) {
         FatalErrorExit("atf_amc.tpool_double_delete  pool:atf_amc.FDb.typed  comment:'double deletion caught'");
     }
@@ -7320,7 +7320,7 @@ void atf_amc::typed_FreeMem(atf_amc::FTypeD &row) {
 // --- atf_amc.FDb.typed.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 atf_amc::typed_Reserve(u64 n_elems) {
+u64 atf_amc::typed_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.typed_blocksize; // underlying allocator is probably Lpool
@@ -7336,7 +7336,7 @@ u64 atf_amc::typed_Reserve(u64 n_elems) {
 // --- atf_amc.FDb.typed.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 atf_amc::typed_ReserveMem(u64 size) {
+u64 atf_amc::typed_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(atf_amc::FTypeD)) {
         atf_amc::FTypeD *mem = (atf_amc::FTypeD*)algo_lib::malloc_AllocMem(size);
@@ -7382,7 +7382,7 @@ bool atf_amc::bytebuf_dyn_XrefMaybe(atf_amc::BytebufDyn &row) {
 
 // --- atf_amc.FDb.ind_thash_elem.Find
 // Find row by key. Return NULL if not found.
-atf_amc::FThashElem* atf_amc::ind_thash_elem_Find(u64 key) {
+atf_amc::FThashElem* atf_amc::ind_thash_elem_Find(u64 key) throw() {
     u32 index = ::u64_Hash(0, key) & (_db.ind_thash_elem_buckets_n - 1);
     atf_amc::FThashElem* *e = &_db.ind_thash_elem_buckets_elems[index];
     atf_amc::FThashElem* ret=NULL;
@@ -7397,7 +7397,7 @@ atf_amc::FThashElem* atf_amc::ind_thash_elem_Find(u64 key) {
 
 // --- atf_amc.FDb.ind_thash_elem.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_amc::FThashElem& atf_amc::ind_thash_elem_GetOrCreate(u64 key) {
+atf_amc::FThashElem& atf_amc::ind_thash_elem_GetOrCreate(u64 key) throw() {
     atf_amc::FThashElem* ret = ind_thash_elem_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &thash_elem_Alloc();
@@ -7414,7 +7414,7 @@ atf_amc::FThashElem& atf_amc::ind_thash_elem_GetOrCreate(u64 key) {
 
 // --- atf_amc.FDb.ind_thash_elem.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_amc::ind_thash_elem_InsertMaybe(atf_amc::FThashElem& row) {
+bool atf_amc::ind_thash_elem_InsertMaybe(atf_amc::FThashElem& row) throw() {
     ind_thash_elem_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_thash_elem_next == (atf_amc::FThashElem*)-1)) {// check if in hash already
@@ -7442,7 +7442,7 @@ bool atf_amc::ind_thash_elem_InsertMaybe(atf_amc::FThashElem& row) {
 
 // --- atf_amc.FDb.ind_thash_elem.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_amc::ind_thash_elem_Remove(atf_amc::FThashElem& row) {
+void atf_amc::ind_thash_elem_Remove(atf_amc::FThashElem& row) throw() {
     if (LIKELY(row.ind_thash_elem_next != (atf_amc::FThashElem*)-1)) {// check if in hash already
         u32 index = ::u64_Hash(0, row.key) & (_db.ind_thash_elem_buckets_n - 1);
         atf_amc::FThashElem* *prev = &_db.ind_thash_elem_buckets_elems[index]; // addr of pointer to current element
@@ -7460,7 +7460,7 @@ void atf_amc::ind_thash_elem_Remove(atf_amc::FThashElem& row) {
 
 // --- atf_amc.FDb.ind_thash_elem.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_amc::ind_thash_elem_Reserve(int n) {
+void atf_amc::ind_thash_elem_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_thash_elem_buckets_n;
     u32 new_nelems   = _db.ind_thash_elem_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -7495,7 +7495,7 @@ void atf_amc::ind_thash_elem_Reserve(int n) {
 }
 
 // --- atf_amc.FDb.ind_thash_elem.FindRemove
-atf_amc::FThashElem* atf_amc::ind_thash_elem_FindRemove(u64 key) {
+atf_amc::FThashElem* atf_amc::ind_thash_elem_FindRemove(u64 key) throw() {
     u32 index = ::u64_Hash(0, key) & (_db.ind_thash_elem_buckets_n - 1);
     atf_amc::FThashElem* *prev = &_db.ind_thash_elem_buckets_elems[index];
     atf_amc::FThashElem* ret=NULL;
@@ -7516,7 +7516,7 @@ atf_amc::FThashElem* atf_amc::ind_thash_elem_FindRemove(u64 key) {
 // --- atf_amc.FDb.thash_elem.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FThashElem& atf_amc::thash_elem_Alloc() {
+atf_amc::FThashElem& atf_amc::thash_elem_Alloc() throw() {
     atf_amc::FThashElem* row = thash_elem_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FDb.thash_elem  comment:'Alloc failed'");
@@ -7526,7 +7526,7 @@ atf_amc::FThashElem& atf_amc::thash_elem_Alloc() {
 
 // --- atf_amc.FDb.thash_elem.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FThashElem* atf_amc::thash_elem_AllocMaybe() {
+atf_amc::FThashElem* atf_amc::thash_elem_AllocMaybe() throw() {
     atf_amc::FThashElem *row = (atf_amc::FThashElem*)thash_elem_AllocMem();
     if (row) {
         new (row) atf_amc::FThashElem; // call constructor
@@ -7536,7 +7536,7 @@ atf_amc::FThashElem* atf_amc::thash_elem_AllocMaybe() {
 
 // --- atf_amc.FDb.thash_elem.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_amc::thash_elem_AllocMem() {
+void* atf_amc::thash_elem_AllocMem() throw() {
     u64 new_nelems     = _db.thash_elem_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -7562,7 +7562,7 @@ void* atf_amc::thash_elem_AllocMem() {
 
 // --- atf_amc.FDb.thash_elem.RemoveAll
 // Remove all elements from Lary
-void atf_amc::thash_elem_RemoveAll() {
+void atf_amc::thash_elem_RemoveAll() throw() {
     for (u64 n = _db.thash_elem_n; n>0; ) {
         n--;
         thash_elem_qFind(u64(n)).~FThashElem(); // destroy last element
@@ -7572,7 +7572,7 @@ void atf_amc::thash_elem_RemoveAll() {
 
 // --- atf_amc.FDb.thash_elem.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::thash_elem_RemoveLast() {
+void atf_amc::thash_elem_RemoveLast() throw() {
     u64 n = _db.thash_elem_n;
     if (n > 0) {
         n -= 1;
@@ -7601,13 +7601,13 @@ bool atf_amc::thash_elem_XrefMaybe(atf_amc::FThashElem &row) {
 
 // --- atf_amc.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr atf_amc::trace_RowidFind(int t) {
+static algo::ImrowPtr atf_amc::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- atf_amc.FDb.trace.N
 // Function return 1
-inline static i32 atf_amc::trace_N() {
+inline static i32 atf_amc::trace_N() throw() {
     return 1;
 }
 
@@ -7890,7 +7890,7 @@ void atf_amc::FDb_Init() {
 }
 
 // --- atf_amc.FDb..Uninit
-void atf_amc::FDb_Uninit() {
+void atf_amc::FDb_Uninit() throw() {
     atf_amc::FDb &row = _db; (void)row;
 
     // atf_amc.FDb.thash_elem.Uninit (Lary)  //
@@ -7939,7 +7939,7 @@ void atf_amc::FDb_Uninit() {
 // --- atf_amc.TypeG..ReadStrptrMaybe
 // Read fields of atf_amc::TypeG from an ascii string.
 // The format of the string is the format of the atf_amc::TypeG's only field
-bool atf_amc::TypeG_ReadStrptrMaybe(atf_amc::TypeG &parent, algo::strptr in_str) {
+bool atf_amc::TypeG_ReadStrptrMaybe(atf_amc::TypeG &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && i32_ReadStrptrMaybe(parent.typeg, in_str);
     return retval;
@@ -7948,13 +7948,13 @@ bool atf_amc::TypeG_ReadStrptrMaybe(atf_amc::TypeG &parent, algo::strptr in_str)
 // --- atf_amc.TypeG..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeG.String  printfmt:Raw
-void atf_amc::TypeG_Print(atf_amc::TypeG& row, algo::cstring& str) {
+void atf_amc::TypeG_Print(atf_amc::TypeG& row, algo::cstring& str) throw() {
     i32_Print(row.typeg, str);
 }
 
 // --- atf_amc.FOptG.optg.CopyOut
 // Copy fields out of row
-void atf_amc::optg_CopyOut(atf_amc::FOptG &row, atf_amc::OptG &out) {
+void atf_amc::optg_CopyOut(atf_amc::FOptG &row, atf_amc::OptG &out) throw() {
     // length: field value is computed
     // typeg: unknown field type (Opt), skipped
     (void)row;//only to avoid -Wunused-parameter
@@ -7963,7 +7963,7 @@ void atf_amc::optg_CopyOut(atf_amc::FOptG &row, atf_amc::OptG &out) {
 
 // --- atf_amc.FOptG.optg.CopyIn
 // Copy fields in to row
-void atf_amc::optg_CopyIn(atf_amc::FOptG &row, atf_amc::OptG &in) {
+void atf_amc::optg_CopyIn(atf_amc::FOptG &row, atf_amc::OptG &in) throw() {
     // length: field value is computed
     // typeg: unknown field reftype (Opt), skipped
     (void)row;//only to avoid -Wunused-parameter
@@ -7972,7 +7972,7 @@ void atf_amc::optg_CopyIn(atf_amc::FOptG &row, atf_amc::OptG &in) {
 
 // --- atf_amc.FOptG.typeg.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::FOptG& optg) {
+algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::FOptG& optg) throw() {
     u8 *end = (u8*)&optg + sizeof(atf_amc::FOptG);
     return algo::aryptr<u8>(end, i32(optg.length) - ssizeof(atf_amc::FOptG));
 }
@@ -7981,7 +7981,7 @@ algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::FOptG& optg) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<atf_amc::Cstr> atf_amc::orig_Addary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs) {
+algo::aryptr<atf_amc::Cstr> atf_amc::orig_Addary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.orig_elems && rhs.elems < parent.orig_elems + parent.orig_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.FPerfSortString.orig  comment:'alias error: sub-array is being appended to the whole'");
@@ -7999,7 +7999,7 @@ algo::aryptr<atf_amc::Cstr> atf_amc::orig_Addary(atf_amc::FPerfSortString& paren
 // --- atf_amc.FPerfSortString.orig.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-atf_amc::Cstr& atf_amc::orig_Alloc(atf_amc::FPerfSortString& parent) {
+atf_amc::Cstr& atf_amc::orig_Alloc(atf_amc::FPerfSortString& parent) throw() {
     orig_Reserve(parent, 1);
     int n  = parent.orig_n;
     int at = n;
@@ -8012,7 +8012,7 @@ atf_amc::Cstr& atf_amc::orig_Alloc(atf_amc::FPerfSortString& parent) {
 // --- atf_amc.FPerfSortString.orig.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-atf_amc::Cstr& atf_amc::orig_AllocAt(atf_amc::FPerfSortString& parent, int at) {
+atf_amc::Cstr& atf_amc::orig_AllocAt(atf_amc::FPerfSortString& parent, int at) throw() {
     orig_Reserve(parent, 1);
     int n  = parent.orig_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -8027,7 +8027,7 @@ atf_amc::Cstr& atf_amc::orig_AllocAt(atf_amc::FPerfSortString& parent, int at) {
 
 // --- atf_amc.FPerfSortString.orig.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocN(atf_amc::FPerfSortString& parent, int n_elems) {
+algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocN(atf_amc::FPerfSortString& parent, int n_elems) throw() {
     orig_Reserve(parent, n_elems);
     int old_n  = parent.orig_n;
     int new_n = old_n + n_elems;
@@ -8041,7 +8041,7 @@ algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocN(atf_amc::FPerfSortString& paren
 
 // --- atf_amc.FPerfSortString.orig.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_amc::orig_Remove(atf_amc::FPerfSortString& parent, u32 i) {
+void atf_amc::orig_Remove(atf_amc::FPerfSortString& parent, u32 i) throw() {
     u32 lim = parent.orig_n;
     atf_amc::Cstr *elems = parent.orig_elems;
     if (i < lim) {
@@ -8052,7 +8052,7 @@ void atf_amc::orig_Remove(atf_amc::FPerfSortString& parent, u32 i) {
 }
 
 // --- atf_amc.FPerfSortString.orig.RemoveAll
-void atf_amc::orig_RemoveAll(atf_amc::FPerfSortString& parent) {
+void atf_amc::orig_RemoveAll(atf_amc::FPerfSortString& parent) throw() {
     u32 n = parent.orig_n;
     while (n > 0) {
         n -= 1;
@@ -8063,7 +8063,7 @@ void atf_amc::orig_RemoveAll(atf_amc::FPerfSortString& parent) {
 
 // --- atf_amc.FPerfSortString.orig.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::orig_RemoveLast(atf_amc::FPerfSortString& parent) {
+void atf_amc::orig_RemoveLast(atf_amc::FPerfSortString& parent) throw() {
     u64 n = parent.orig_n;
     if (n > 0) {
         n -= 1;
@@ -8074,7 +8074,7 @@ void atf_amc::orig_RemoveLast(atf_amc::FPerfSortString& parent) {
 
 // --- atf_amc.FPerfSortString.orig.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_amc::orig_AbsReserve(atf_amc::FPerfSortString& parent, int n) {
+void atf_amc::orig_AbsReserve(atf_amc::FPerfSortString& parent, int n) throw() {
     u32 old_max  = parent.orig_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -8089,7 +8089,7 @@ void atf_amc::orig_AbsReserve(atf_amc::FPerfSortString& parent, int n) {
 
 // --- atf_amc.FPerfSortString.orig.Setary
 // Copy contents of RHS to PARENT.
-void atf_amc::orig_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSortString &rhs) {
+void atf_amc::orig_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSortString &rhs) throw() {
     orig_RemoveAll(parent);
     int nnew = rhs.orig_n;
     orig_Reserve(parent, nnew); // reserve space
@@ -8102,14 +8102,14 @@ void atf_amc::orig_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSortSt
 // --- atf_amc.FPerfSortString.orig.Setary2
 // Copy specified array into orig, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void atf_amc::orig_Setary(atf_amc::FPerfSortString& parent, const algo::aryptr<atf_amc::Cstr> &rhs) {
+void atf_amc::orig_Setary(atf_amc::FPerfSortString& parent, const algo::aryptr<atf_amc::Cstr> &rhs) throw() {
     orig_RemoveAll(parent);
     orig_Addary(parent, rhs);
 }
 
 // --- atf_amc.FPerfSortString.orig.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) {
+algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) throw() {
     orig_Reserve(parent, n_elems);
     int old_n  = parent.orig_n;
     int new_n = old_n + n_elems;
@@ -8125,7 +8125,7 @@ algo::aryptr<atf_amc::Cstr> atf_amc::orig_AllocNVal(atf_amc::FPerfSortString& pa
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_Addary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs) {
+algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_Addary(atf_amc::FPerfSortString& parent, algo::aryptr<atf_amc::Cstr> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.sorted1_elems && rhs.elems < parent.sorted1_elems + parent.sorted1_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.FPerfSortString.sorted1  comment:'alias error: sub-array is being appended to the whole'");
@@ -8143,7 +8143,7 @@ algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_Addary(atf_amc::FPerfSortString& pa
 // --- atf_amc.FPerfSortString.sorted1.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-atf_amc::Cstr& atf_amc::sorted1_Alloc(atf_amc::FPerfSortString& parent) {
+atf_amc::Cstr& atf_amc::sorted1_Alloc(atf_amc::FPerfSortString& parent) throw() {
     sorted1_Reserve(parent, 1);
     int n  = parent.sorted1_n;
     int at = n;
@@ -8156,7 +8156,7 @@ atf_amc::Cstr& atf_amc::sorted1_Alloc(atf_amc::FPerfSortString& parent) {
 // --- atf_amc.FPerfSortString.sorted1.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-atf_amc::Cstr& atf_amc::sorted1_AllocAt(atf_amc::FPerfSortString& parent, int at) {
+atf_amc::Cstr& atf_amc::sorted1_AllocAt(atf_amc::FPerfSortString& parent, int at) throw() {
     sorted1_Reserve(parent, 1);
     int n  = parent.sorted1_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -8171,7 +8171,7 @@ atf_amc::Cstr& atf_amc::sorted1_AllocAt(atf_amc::FPerfSortString& parent, int at
 
 // --- atf_amc.FPerfSortString.sorted1.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocN(atf_amc::FPerfSortString& parent, int n_elems) {
+algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocN(atf_amc::FPerfSortString& parent, int n_elems) throw() {
     sorted1_Reserve(parent, n_elems);
     int old_n  = parent.sorted1_n;
     int new_n = old_n + n_elems;
@@ -8185,7 +8185,7 @@ algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocN(atf_amc::FPerfSortString& pa
 
 // --- atf_amc.FPerfSortString.sorted1.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_amc::sorted1_Remove(atf_amc::FPerfSortString& parent, u32 i) {
+void atf_amc::sorted1_Remove(atf_amc::FPerfSortString& parent, u32 i) throw() {
     u32 lim = parent.sorted1_n;
     atf_amc::Cstr *elems = parent.sorted1_elems;
     if (i < lim) {
@@ -8196,7 +8196,7 @@ void atf_amc::sorted1_Remove(atf_amc::FPerfSortString& parent, u32 i) {
 }
 
 // --- atf_amc.FPerfSortString.sorted1.RemoveAll
-void atf_amc::sorted1_RemoveAll(atf_amc::FPerfSortString& parent) {
+void atf_amc::sorted1_RemoveAll(atf_amc::FPerfSortString& parent) throw() {
     u32 n = parent.sorted1_n;
     while (n > 0) {
         n -= 1;
@@ -8207,7 +8207,7 @@ void atf_amc::sorted1_RemoveAll(atf_amc::FPerfSortString& parent) {
 
 // --- atf_amc.FPerfSortString.sorted1.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::sorted1_RemoveLast(atf_amc::FPerfSortString& parent) {
+void atf_amc::sorted1_RemoveLast(atf_amc::FPerfSortString& parent) throw() {
     u64 n = parent.sorted1_n;
     if (n > 0) {
         n -= 1;
@@ -8218,7 +8218,7 @@ void atf_amc::sorted1_RemoveLast(atf_amc::FPerfSortString& parent) {
 
 // --- atf_amc.FPerfSortString.sorted1.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_amc::sorted1_AbsReserve(atf_amc::FPerfSortString& parent, int n) {
+void atf_amc::sorted1_AbsReserve(atf_amc::FPerfSortString& parent, int n) throw() {
     u32 old_max  = parent.sorted1_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -8233,7 +8233,7 @@ void atf_amc::sorted1_AbsReserve(atf_amc::FPerfSortString& parent, int n) {
 
 // --- atf_amc.FPerfSortString.sorted1.Setary
 // Copy contents of RHS to PARENT.
-void atf_amc::sorted1_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSortString &rhs) {
+void atf_amc::sorted1_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSortString &rhs) throw() {
     sorted1_RemoveAll(parent);
     int nnew = rhs.sorted1_n;
     sorted1_Reserve(parent, nnew); // reserve space
@@ -8246,14 +8246,14 @@ void atf_amc::sorted1_Setary(atf_amc::FPerfSortString& parent, atf_amc::FPerfSor
 // --- atf_amc.FPerfSortString.sorted1.Setary2
 // Copy specified array into sorted1, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void atf_amc::sorted1_Setary(atf_amc::FPerfSortString& parent, const algo::aryptr<atf_amc::Cstr> &rhs) {
+void atf_amc::sorted1_Setary(atf_amc::FPerfSortString& parent, const algo::aryptr<atf_amc::Cstr> &rhs) throw() {
     sorted1_RemoveAll(parent);
     sorted1_Addary(parent, rhs);
 }
 
 // --- atf_amc.FPerfSortString.sorted1.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) {
+algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocNVal(atf_amc::FPerfSortString& parent, int n_elems, const atf_amc::Cstr& val) throw() {
     sorted1_Reserve(parent, n_elems);
     int old_n  = parent.sorted1_n;
     int new_n = old_n + n_elems;
@@ -8267,7 +8267,7 @@ algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_AllocNVal(atf_amc::FPerfSortString&
 
 // --- atf_amc.FPerfSortString.sorted1.Swap
 // Swap values elem_a and elem_b
-inline static void atf_amc::sorted1_Swap(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) {
+inline static void atf_amc::sorted1_Swap(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) throw() {
     u8 temp[sizeof(atf_amc::Cstr)];
     memcpy(&temp  , &elem_a, sizeof(atf_amc::Cstr));
     memcpy(&elem_a, &elem_b, sizeof(atf_amc::Cstr));
@@ -8276,7 +8276,7 @@ inline static void atf_amc::sorted1_Swap(atf_amc::Cstr &elem_a, atf_amc::Cstr &e
 
 // --- atf_amc.FPerfSortString.sorted1.Rotleft
 // Left circular shift of three-tuple
-inline static void atf_amc::sorted1_Rotleft(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b, atf_amc::Cstr &elem_c) {
+inline static void atf_amc::sorted1_Rotleft(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b, atf_amc::Cstr &elem_c) throw() {
     u8 temp[sizeof(atf_amc::Cstr)];
     memcpy(&temp, &elem_a   , sizeof(atf_amc::Cstr));
     memcpy(&elem_a   , &elem_b   , sizeof(atf_amc::Cstr));
@@ -8288,7 +8288,7 @@ inline static void atf_amc::sorted1_Rotleft(atf_amc::Cstr &elem_a, atf_amc::Cstr
 // Compare values elem_a and elem_b
 // The comparison function must be anti-symmetric: if a>b, then !(b>a).
 // If not, mayhem results.
-static bool atf_amc::sorted1_Lt(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) {
+static bool atf_amc::sorted1_Lt(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) throw() {
     bool ret;
     ret = val_Lt(elem_a, elem_b);
     return ret;
@@ -8296,7 +8296,7 @@ static bool atf_amc::sorted1_Lt(atf_amc::Cstr &elem_a, atf_amc::Cstr &elem_b) {
 
 // --- atf_amc.FPerfSortString.sorted1.SortedQ
 // Verify whether array is sorted
-bool atf_amc::sorted1_SortedQ(atf_amc::FPerfSortString& parent) {
+bool atf_amc::sorted1_SortedQ(atf_amc::FPerfSortString& parent) throw() {
     atf_amc::Cstr *elems = sorted1_Getary(parent).elems;
     int n = sorted1_N(parent);
     for (int i = 1; i < n; i++) {
@@ -8309,7 +8309,7 @@ bool atf_amc::sorted1_SortedQ(atf_amc::FPerfSortString& parent) {
 
 // --- atf_amc.FPerfSortString.sorted1.IntInsertionSort
 // Internal insertion sort
-static void atf_amc::sorted1_IntInsertionSort(atf_amc::Cstr *elems, int n) {
+static void atf_amc::sorted1_IntInsertionSort(atf_amc::Cstr *elems, int n) throw() {
     for (int i = 1; i < n; ++i) {
         int j = i;
         // find the spot for ith element.
@@ -8327,7 +8327,7 @@ static void atf_amc::sorted1_IntInsertionSort(atf_amc::Cstr *elems, int n) {
 
 // --- atf_amc.FPerfSortString.sorted1.IntHeapSort
 // Internal heap sort
-static void atf_amc::sorted1_IntHeapSort(atf_amc::Cstr *elems, int n) {
+static void atf_amc::sorted1_IntHeapSort(atf_amc::Cstr *elems, int n) throw() {
     // construct max-heap.
     // k=current element
     // j=parent element
@@ -8362,7 +8362,7 @@ static void atf_amc::sorted1_IntHeapSort(atf_amc::Cstr *elems, int n) {
 
 // --- atf_amc.FPerfSortString.sorted1.IntQuickSort
 // Quick sort engine
-static void atf_amc::sorted1_IntQuickSort(atf_amc::Cstr *elems, int n, int depth) {
+static void atf_amc::sorted1_IntQuickSort(atf_amc::Cstr *elems, int n, int depth) throw() {
     while (n>16) {
         // detect degenerate case and revert to heap sort
         if (depth==0) {
@@ -8410,7 +8410,7 @@ static void atf_amc::sorted1_IntQuickSort(atf_amc::Cstr *elems, int n, int depth
 
 // --- atf_amc.FPerfSortString.sorted1.InsertionSort
 // Insertion sort
-void atf_amc::sorted1_InsertionSort(atf_amc::FPerfSortString& parent) {
+void atf_amc::sorted1_InsertionSort(atf_amc::FPerfSortString& parent) throw() {
     atf_amc::Cstr *elems = sorted1_Getary(parent).elems;
     int n = sorted1_N(parent);
     sorted1_IntInsertionSort(elems, n);
@@ -8418,7 +8418,7 @@ void atf_amc::sorted1_InsertionSort(atf_amc::FPerfSortString& parent) {
 
 // --- atf_amc.FPerfSortString.sorted1.HeapSort
 // Heap sort
-void atf_amc::sorted1_HeapSort(atf_amc::FPerfSortString& parent) {
+void atf_amc::sorted1_HeapSort(atf_amc::FPerfSortString& parent) throw() {
     atf_amc::Cstr *elems = sorted1_Getary(parent).elems;
     int n = sorted1_N(parent);
     sorted1_IntHeapSort(elems, n);
@@ -8426,7 +8426,7 @@ void atf_amc::sorted1_HeapSort(atf_amc::FPerfSortString& parent) {
 
 // --- atf_amc.FPerfSortString.sorted1.QuickSort
 // Quick sort
-void atf_amc::sorted1_QuickSort(atf_amc::FPerfSortString& parent) {
+void atf_amc::sorted1_QuickSort(atf_amc::FPerfSortString& parent) throw() {
     // compute max recursion depth based on number of elements in the array
     int max_depth = algo::CeilingLog2(u32(sorted1_N(parent) + 1)) + 3;
     atf_amc::Cstr *elems = sorted1_Getary(parent).elems;
@@ -8435,7 +8435,7 @@ void atf_amc::sorted1_QuickSort(atf_amc::FPerfSortString& parent) {
 }
 
 // --- atf_amc.FPerfSortString..Uninit
-void atf_amc::FPerfSortString_Uninit(atf_amc::FPerfSortString& parent) {
+void atf_amc::FPerfSortString_Uninit(atf_amc::FPerfSortString& parent) throw() {
     atf_amc::FPerfSortString &row = parent; (void)row;
 
     // atf_amc.FPerfSortString.sorted1.Uninit (Tary)  //
@@ -8452,14 +8452,14 @@ void atf_amc::FPerfSortString_Uninit(atf_amc::FPerfSortString& parent) {
 }
 
 // --- atf_amc.FPerfSortString..AssignOp
-atf_amc::FPerfSortString& atf_amc::FPerfSortString::operator =(const atf_amc::FPerfSortString &rhs) {
+atf_amc::FPerfSortString& atf_amc::FPerfSortString::operator =(const atf_amc::FPerfSortString &rhs) throw() {
     orig_Setary(*this, orig_Getary(const_cast<atf_amc::FPerfSortString&>(rhs)));
     sorted1_Setary(*this, sorted1_Getary(const_cast<atf_amc::FPerfSortString&>(rhs)));
     return *this;
 }
 
 // --- atf_amc.FPerfSortString..CopyCtor
- atf_amc::FPerfSortString::FPerfSortString(const atf_amc::FPerfSortString &rhs) {
+ atf_amc::FPerfSortString::FPerfSortString(const atf_amc::FPerfSortString &rhs) throw() {
     orig_elems 	= 0; // (atf_amc.FPerfSortString.orig)
     orig_n     	= 0; // (atf_amc.FPerfSortString.orig)
     orig_max   	= 0; // (atf_amc.FPerfSortString.orig)
@@ -8471,25 +8471,25 @@ atf_amc::FPerfSortString& atf_amc::FPerfSortString::operator =(const atf_amc::FP
 }
 
 // --- atf_amc.FThashElem..Uninit
-void atf_amc::FThashElem_Uninit(atf_amc::FThashElem& thash_elem) {
+void atf_amc::FThashElem_Uninit(atf_amc::FThashElem& thash_elem) throw() {
     atf_amc::FThashElem &row = thash_elem; (void)row;
     ind_thash_elem_Remove(row); // remove thash_elem from index ind_thash_elem
 }
 
 // --- atf_amc.FTypeC.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::typec_CopyOut(atf_amc::FTypeC &row, atf_amc::TypeC &out) {
+void atf_amc::typec_CopyOut(atf_amc::FTypeC &row, atf_amc::TypeC &out) throw() {
     out.typec = row.typec;
 }
 
 // --- atf_amc.FTypeC.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::typec_CopyIn(atf_amc::FTypeC &row, atf_amc::TypeC &in) {
+void atf_amc::typec_CopyIn(atf_amc::FTypeC &row, atf_amc::TypeC &in) throw() {
     row.typec = in.typec;
 }
 
 // --- atf_amc.FTypeC..Uninit
-void atf_amc::FTypeC_Uninit(atf_amc::FTypeC& typec) {
+void atf_amc::FTypeC_Uninit(atf_amc::FTypeC& typec) throw() {
     atf_amc::FTypeC &row = typec; (void)row;
     zsl_h_typec_Remove(row); // remove typec from index zsl_h_typec
     zs_t_typec_Remove(row); // remove typec from index zs_t_typec
@@ -8507,26 +8507,26 @@ void atf_amc::FTypeC_Uninit(atf_amc::FTypeC& typec) {
 // --- atf_amc.FTypeC..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.FTypeC.String  printfmt:Raw
-void atf_amc::FTypeC_Print(atf_amc::FTypeC& row, algo::cstring& str) {
+void atf_amc::FTypeC_Print(atf_amc::FTypeC& row, algo::cstring& str) throw() {
     i32_Print(row.typec, str);
 }
 
 // --- atf_amc.FTypeA.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::typea_CopyOut(atf_amc::FTypeA &row, atf_amc::TypeA &out) {
+void atf_amc::typea_CopyOut(atf_amc::FTypeA &row, atf_amc::TypeA &out) throw() {
     out.typea = row.typea;
 }
 
 // --- atf_amc.FTypeA.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::typea_CopyIn(atf_amc::FTypeA &row, atf_amc::TypeA &in) {
+void atf_amc::typea_CopyIn(atf_amc::FTypeA &row, atf_amc::TypeA &in) throw() {
     row.typea = in.typea;
 }
 
 // --- atf_amc.FTypeA.typec.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_amc::FTypeC& atf_amc::typec_Alloc(atf_amc::FTypeA& typea) {
+atf_amc::FTypeC& atf_amc::typec_Alloc(atf_amc::FTypeA& typea) throw() {
     atf_amc::FTypeC* row = typec_AllocMaybe(typea);
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.FTypeA.typec  comment:'Alloc failed'");
@@ -8536,7 +8536,7 @@ atf_amc::FTypeC& atf_amc::typec_Alloc(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.typec.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_amc::FTypeC* atf_amc::typec_AllocMaybe(atf_amc::FTypeA& typea) {
+atf_amc::FTypeC* atf_amc::typec_AllocMaybe(atf_amc::FTypeA& typea) throw() {
     atf_amc::FTypeC *row = (atf_amc::FTypeC*)typec_AllocMem(typea);
     if (row) {
         new (row) atf_amc::FTypeC; // call constructor
@@ -8547,7 +8547,7 @@ atf_amc::FTypeC* atf_amc::typec_AllocMaybe(atf_amc::FTypeA& typea) {
 // --- atf_amc.FTypeA.typec.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_amc::FTypeC* atf_amc::typec_InsertMaybe(atf_amc::FTypeA& typea, const atf_amc::TypeC &value) {
+atf_amc::FTypeC* atf_amc::typec_InsertMaybe(atf_amc::FTypeA& typea, const atf_amc::TypeC &value) throw() {
     atf_amc::FTypeC *row = &typec_Alloc(typea); // if out of memory, process dies. if input error, return NULL.
     typec_CopyIn(*row,const_cast<atf_amc::TypeC&>(value));
     bool ok = typec_XrefMaybe(*row); // this may return false
@@ -8560,7 +8560,7 @@ atf_amc::FTypeC* atf_amc::typec_InsertMaybe(atf_amc::FTypeA& typea, const atf_am
 
 // --- atf_amc.FTypeA.typec.RemoveAll
 // Destroy all elements of Inlary
-void atf_amc::typec_RemoveAll(atf_amc::FTypeA& typea) {
+void atf_amc::typec_RemoveAll(atf_amc::FTypeA& typea) throw() {
     for (u64 n = typea.typec_n; n>0; ) {
         n--;
         reinterpret_cast<atf_amc::FTypeC*>(typea.typec_data)[n].~FTypeC(); // destroy last element
@@ -8570,7 +8570,7 @@ void atf_amc::typec_RemoveAll(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.typec.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::typec_RemoveLast(atf_amc::FTypeA& typea) {
+void atf_amc::typec_RemoveLast(atf_amc::FTypeA& typea) throw() {
     u64 n = typea.typec_n;
     if (n > 0) {
         n -= 1;
@@ -8590,7 +8590,7 @@ bool atf_amc::typec_XrefMaybe(atf_amc::FTypeC &row) {
 
 // --- atf_amc.FTypeA.zdl_typeb.Cascdel
 // Delete all elements in the linked list.
-void atf_amc::zdl_typeb_Cascdel(atf_amc::FTypeA& typea) {
+void atf_amc::zdl_typeb_Cascdel(atf_amc::FTypeA& typea) throw() {
     while (atf_amc::FTypeB *zdl_typeb_first = zdl_typeb_First(typea)) {
         typeb_Delete(*zdl_typeb_first);
     }
@@ -8598,7 +8598,7 @@ void atf_amc::zdl_typeb_Cascdel(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.zdl_typeb.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zdl_typeb_Insert(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
+void atf_amc::zdl_typeb_Insert(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) throw() {
     if (!zdl_typeb_InLlistQ(row)) {
         atf_amc::FTypeB* old_head = typea.zdl_typeb_head;
         row.zdl_typeb_prev = NULL;
@@ -8614,7 +8614,7 @@ void atf_amc::zdl_typeb_Insert(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
 
 // --- atf_amc.FTypeA.zdl_typeb.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::zdl_typeb_Remove(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
+void atf_amc::zdl_typeb_Remove(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) throw() {
     if (zdl_typeb_InLlistQ(row)) {
         atf_amc::FTypeB* old_head       = typea.zdl_typeb_head;
         (void)old_head; // in case it's not used
@@ -8637,7 +8637,7 @@ void atf_amc::zdl_typeb_Remove(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
 
 // --- atf_amc.FTypeA.zdl_typeb.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zdl_typeb_RemoveAll(atf_amc::FTypeA& typea) {
+void atf_amc::zdl_typeb_RemoveAll(atf_amc::FTypeA& typea) throw() {
     atf_amc::FTypeB* row = typea.zdl_typeb_head;
     typea.zdl_typeb_head = NULL;
     typea.zdl_typeb_tail = NULL;
@@ -8652,7 +8652,7 @@ void atf_amc::zdl_typeb_RemoveAll(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.zdl_typeb.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FTypeB* atf_amc::zdl_typeb_RemoveFirst(atf_amc::FTypeA& typea) {
+atf_amc::FTypeB* atf_amc::zdl_typeb_RemoveFirst(atf_amc::FTypeA& typea) throw() {
     atf_amc::FTypeB *row = NULL;
     row = typea.zdl_typeb_head;
     if (row) {
@@ -8671,7 +8671,7 @@ atf_amc::FTypeB* atf_amc::zdl_typeb_RemoveFirst(atf_amc::FTypeA& typea) {
 // --- atf_amc.FTypeA.bh_typeb.Cascdel
 // Delete referred-to items.
 // Delete all elements referenced by the heap.
-void atf_amc::bh_typeb_Cascdel(atf_amc::FTypeA& typea) {
+void atf_amc::bh_typeb_Cascdel(atf_amc::FTypeA& typea) throw() {
     i32 n = typea.bh_typeb_n;
     while (n > 0) {
         n--;
@@ -8684,7 +8684,7 @@ void atf_amc::bh_typeb_Cascdel(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.bh_typeb.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void atf_amc::bh_typeb_Dealloc(atf_amc::FTypeA& typea) {
+void atf_amc::bh_typeb_Dealloc(atf_amc::FTypeA& typea) throw() {
     bh_typeb_RemoveAll(typea);
     algo_lib::malloc_FreeMem(typea.bh_typeb_elems, sizeof(atf_amc::FTypeB*)*typea.bh_typeb_max);
     typea.bh_typeb_max   = 0;
@@ -8694,7 +8694,7 @@ void atf_amc::bh_typeb_Dealloc(atf_amc::FTypeA& typea) {
 // --- atf_amc.FTypeA.bh_typeb.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int atf_amc::bh_typeb_Downheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) {
+static int atf_amc::bh_typeb_Downheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) throw() {
     atf_amc::FTypeB* *elems = typea.bh_typeb_elems;
     int n = typea.bh_typeb_n;
     int child = idx*2+1;
@@ -8721,7 +8721,7 @@ static int atf_amc::bh_typeb_Downheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& r
 
 // --- atf_amc.FTypeA.bh_typeb.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void atf_amc::bh_typeb_Insert(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
+void atf_amc::bh_typeb_Insert(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) throw() {
     if (LIKELY(row.bh_typeb_idx == -1)) {
         bh_typeb_Reserve(typea, 1);
         int n = typea.bh_typeb_n;
@@ -8735,7 +8735,7 @@ void atf_amc::bh_typeb_Insert(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
 // --- atf_amc.FTypeA.bh_typeb.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 atf_amc::bh_typeb_Reheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
+i32 atf_amc::bh_typeb_Reheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) throw() {
     int old_idx = row.bh_typeb_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
@@ -8756,7 +8756,7 @@ i32 atf_amc::bh_typeb_Reheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 atf_amc::bh_typeb_ReheapFirst(atf_amc::FTypeA& typea) {
+i32 atf_amc::bh_typeb_ReheapFirst(atf_amc::FTypeA& typea) throw() {
     atf_amc::FTypeB &row = *typea.bh_typeb_elems[0];
     i32 new_idx = bh_typeb_Downheap(typea, row, 0);
     row.bh_typeb_idx = new_idx;
@@ -8766,7 +8766,7 @@ i32 atf_amc::bh_typeb_ReheapFirst(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.bh_typeb.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::bh_typeb_Remove(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
+void atf_amc::bh_typeb_Remove(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) throw() {
     if (bh_typeb_InBheapQ(row)) {
         int old_idx = row.bh_typeb_idx;
         if (typea.bh_typeb_elems[old_idx] == &row) { // sanity check: heap points back to row
@@ -8788,7 +8788,7 @@ void atf_amc::bh_typeb_Remove(atf_amc::FTypeA& typea, atf_amc::FTypeB& row) {
 
 // --- atf_amc.FTypeA.bh_typeb.RemoveAll
 // Remove all elements from binary heap
-void atf_amc::bh_typeb_RemoveAll(atf_amc::FTypeA& typea) {
+void atf_amc::bh_typeb_RemoveAll(atf_amc::FTypeA& typea) throw() {
     int n = typea.bh_typeb_n;
     for (int i = n - 1; i>=0; i--) {
         typea.bh_typeb_elems[i]->bh_typeb_idx = -1; // mark not-in-heap
@@ -8799,7 +8799,7 @@ void atf_amc::bh_typeb_RemoveAll(atf_amc::FTypeA& typea) {
 // --- atf_amc.FTypeA.bh_typeb.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-atf_amc::FTypeB* atf_amc::bh_typeb_RemoveFirst(atf_amc::FTypeA& typea) {
+atf_amc::FTypeB* atf_amc::bh_typeb_RemoveFirst(atf_amc::FTypeA& typea) throw() {
     atf_amc::FTypeB *row = NULL;
     if (typea.bh_typeb_n > 0) {
         row = typea.bh_typeb_elems[0];
@@ -8818,7 +8818,7 @@ atf_amc::FTypeB* atf_amc::bh_typeb_RemoveFirst(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.bh_typeb.Reserve
 // Reserve space in index for N more elements
-void atf_amc::bh_typeb_Reserve(atf_amc::FTypeA& typea, int n) {
+void atf_amc::bh_typeb_Reserve(atf_amc::FTypeA& typea, int n) throw() {
     i32 old_max = typea.bh_typeb_max;
     if (UNLIKELY(typea.bh_typeb_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -8836,7 +8836,7 @@ void atf_amc::bh_typeb_Reserve(atf_amc::FTypeA& typea, int n) {
 // --- atf_amc.FTypeA.bh_typeb.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int atf_amc::bh_typeb_Upheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) {
+static int atf_amc::bh_typeb_Upheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row, int idx) throw() {
     atf_amc::FTypeB* *elems = typea.bh_typeb_elems;
     while (idx>0) {
         int j = (idx-1)/2;
@@ -8852,7 +8852,7 @@ static int atf_amc::bh_typeb_Upheap(atf_amc::FTypeA& typea, atf_amc::FTypeB& row
 }
 
 // --- atf_amc.FTypeA.bh_typeb.ElemLt
-inline static bool atf_amc::bh_typeb_ElemLt(atf_amc::FTypeA& typea, atf_amc::FTypeB &a, atf_amc::FTypeB &b) {
+inline static bool atf_amc::bh_typeb_ElemLt(atf_amc::FTypeA& typea, atf_amc::FTypeB &a, atf_amc::FTypeB &b) throw() {
     (void)typea;
     return a.j < b.j;
 }
@@ -8961,7 +8961,7 @@ void atf_amc::typea_bh_typeb_curs_Next(typea_bh_typeb_curs &curs) {
 }
 
 // --- atf_amc.FTypeA..Uninit
-void atf_amc::FTypeA_Uninit(atf_amc::FTypeA& typea) {
+void atf_amc::FTypeA_Uninit(atf_amc::FTypeA& typea) throw() {
     atf_amc::FTypeA &row = typea; (void)row;
     bh_typeb_Cascdel(typea); // dmmeta.cascdel:atf_amc.FTypeA.bh_typeb
     zdl_typeb_Cascdel(typea); // dmmeta.cascdel:atf_amc.FTypeA.zdl_typeb
@@ -8977,7 +8977,7 @@ void atf_amc::FTypeA_Uninit(atf_amc::FTypeA& typea) {
 // --- atf_amc.FTypeA..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.FTypeA.String  printfmt:Tuple
-void atf_amc::FTypeA_Print(atf_amc::FTypeA& row, algo::cstring& str) {
+void atf_amc::FTypeA_Print(atf_amc::FTypeA& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.FTypeA";
 
@@ -8998,20 +8998,20 @@ void atf_amc::FTypeA_Print(atf_amc::FTypeA& row, algo::cstring& str) {
 
 // --- atf_amc.FTypeB.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::typeb_CopyOut(atf_amc::FTypeB &row, atf_amc::TypeB &out) {
+void atf_amc::typeb_CopyOut(atf_amc::FTypeB &row, atf_amc::TypeB &out) throw() {
     out.typea = row.typea;
     out.j = row.j;
 }
 
 // --- atf_amc.FTypeB.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::typeb_CopyIn(atf_amc::FTypeB &row, atf_amc::TypeB &in) {
+void atf_amc::typeb_CopyIn(atf_amc::FTypeB &row, atf_amc::TypeB &in) throw() {
     row.typea = in.typea;
     row.j = in.j;
 }
 
 // --- atf_amc.FTypeB..Uninit
-void atf_amc::FTypeB_Uninit(atf_amc::FTypeB& typeb) {
+void atf_amc::FTypeB_Uninit(atf_amc::FTypeB& typeb) throw() {
     atf_amc::FTypeB &row = typeb; (void)row;
     atf_amc::FTypeA* p_typea = atf_amc::ind_typea_Find(row.typea);
     if (p_typea)  {
@@ -9025,7 +9025,7 @@ void atf_amc::FTypeB_Uninit(atf_amc::FTypeB& typeb) {
 // --- atf_amc.FTypeB..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.FTypeB.String  printfmt:Tuple
-void atf_amc::FTypeB_Print(atf_amc::FTypeB& row, algo::cstring& str) {
+void atf_amc::FTypeB_Print(atf_amc::FTypeB& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.FTypeB";
 
@@ -9038,18 +9038,18 @@ void atf_amc::FTypeB_Print(atf_amc::FTypeB& row, algo::cstring& str) {
 
 // --- atf_amc.FTypeD.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::typed_CopyOut(atf_amc::FTypeD &row, atf_amc::TypeC &out) {
+void atf_amc::typed_CopyOut(atf_amc::FTypeD &row, atf_amc::TypeC &out) throw() {
     out.typec = row.typec;
 }
 
 // --- atf_amc.FTypeD.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::typed_CopyIn(atf_amc::FTypeD &row, atf_amc::TypeC &in) {
+void atf_amc::typed_CopyIn(atf_amc::FTypeD &row, atf_amc::TypeC &in) throw() {
     row.typec = in.typec;
 }
 
 // --- atf_amc.FTypeD..Uninit
-void atf_amc::FTypeD_Uninit(atf_amc::FTypeD& typed) {
+void atf_amc::FTypeD_Uninit(atf_amc::FTypeD& typed) throw() {
     atf_amc::FTypeD &row = typed; (void)row;
     zd_typed_Remove(row); // remove typed from index zd_typed
     zs_t_typed_Remove(row); // remove typed from index zs_t_typed
@@ -9059,27 +9059,27 @@ void atf_amc::FTypeD_Uninit(atf_amc::FTypeD& typed) {
 // --- atf_amc.FTypeD..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.FTypeD.String  printfmt:Raw
-void atf_amc::FTypeD_Print(atf_amc::FTypeD& row, algo::cstring& str) {
+void atf_amc::FTypeD_Print(atf_amc::FTypeD& row, algo::cstring& str) throw() {
     i32_Print(row.typec, str);
 }
 
 // --- atf_amc.FTypeS.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::types_CopyOut(atf_amc::FTypeS &row, atf_amc::TypeS &out) {
+void atf_amc::types_CopyOut(atf_amc::FTypeS &row, atf_amc::TypeS &out) throw() {
     out.types = row.types;
     out.comment = row.comment;
 }
 
 // --- atf_amc.FTypeS.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::types_CopyIn(atf_amc::FTypeS &row, atf_amc::TypeS &in) {
+void atf_amc::types_CopyIn(atf_amc::FTypeS &row, atf_amc::TypeS &in) throw() {
     row.types = in.types;
     row.comment = in.comment;
 }
 
 // --- atf_amc.FTypeS.zdl_typet.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_amc::zdl_typet_Insert(atf_amc::FTypeS& types, atf_amc::FTypeT& row) {
+void atf_amc::zdl_typet_Insert(atf_amc::FTypeS& types, atf_amc::FTypeT& row) throw() {
     if (!zdl_typet_InLlistQ(row)) {
         atf_amc::FTypeT* old_head = types.zdl_typet_head;
         row.zdl_typet_prev = NULL;
@@ -9095,7 +9095,7 @@ void atf_amc::zdl_typet_Insert(atf_amc::FTypeS& types, atf_amc::FTypeT& row) {
 
 // --- atf_amc.FTypeS.zdl_typet.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_amc::zdl_typet_Remove(atf_amc::FTypeS& types, atf_amc::FTypeT& row) {
+void atf_amc::zdl_typet_Remove(atf_amc::FTypeS& types, atf_amc::FTypeT& row) throw() {
     if (zdl_typet_InLlistQ(row)) {
         atf_amc::FTypeT* old_head       = types.zdl_typet_head;
         (void)old_head; // in case it's not used
@@ -9118,7 +9118,7 @@ void atf_amc::zdl_typet_Remove(atf_amc::FTypeS& types, atf_amc::FTypeT& row) {
 
 // --- atf_amc.FTypeS.zdl_typet.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_amc::zdl_typet_RemoveAll(atf_amc::FTypeS& types) {
+void atf_amc::zdl_typet_RemoveAll(atf_amc::FTypeS& types) throw() {
     atf_amc::FTypeT* row = types.zdl_typet_head;
     types.zdl_typet_head = NULL;
     types.zdl_typet_tail = NULL;
@@ -9133,7 +9133,7 @@ void atf_amc::zdl_typet_RemoveAll(atf_amc::FTypeS& types) {
 
 // --- atf_amc.FTypeS.zdl_typet.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-atf_amc::FTypeT* atf_amc::zdl_typet_RemoveFirst(atf_amc::FTypeS& types) {
+atf_amc::FTypeT* atf_amc::zdl_typet_RemoveFirst(atf_amc::FTypeS& types) throw() {
     atf_amc::FTypeT *row = NULL;
     row = types.zdl_typet_head;
     if (row) {
@@ -9150,7 +9150,7 @@ atf_amc::FTypeT* atf_amc::zdl_typet_RemoveFirst(atf_amc::FTypeS& types) {
 }
 
 // --- atf_amc.FTypeS..Uninit
-void atf_amc::FTypeS_Uninit(atf_amc::FTypeS& types) {
+void atf_amc::FTypeS_Uninit(atf_amc::FTypeS& types) throw() {
     atf_amc::FTypeS &row = types; (void)row;
     ind_types_Remove(row); // remove types from index ind_types
 }
@@ -9158,7 +9158,7 @@ void atf_amc::FTypeS_Uninit(atf_amc::FTypeS& types) {
 // --- atf_amc.FTypeS..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.FTypeS.String  printfmt:Tuple
-void atf_amc::FTypeS_Print(atf_amc::FTypeS& row, algo::cstring& str) {
+void atf_amc::FTypeS_Print(atf_amc::FTypeS& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.FTypeS";
 
@@ -9171,20 +9171,20 @@ void atf_amc::FTypeS_Print(atf_amc::FTypeS& row, algo::cstring& str) {
 
 // --- atf_amc.FTypeT.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::typet_CopyOut(atf_amc::FTypeT &row, atf_amc::TypeT &out) {
+void atf_amc::typet_CopyOut(atf_amc::FTypeT &row, atf_amc::TypeT &out) throw() {
     out.types = row.types;
     out.j = row.j;
 }
 
 // --- atf_amc.FTypeT.msghdr.CopyIn
 // Copy fields in to row
-void atf_amc::typet_CopyIn(atf_amc::FTypeT &row, atf_amc::TypeT &in) {
+void atf_amc::typet_CopyIn(atf_amc::FTypeT &row, atf_amc::TypeT &in) throw() {
     row.types = in.types;
     row.j = in.j;
 }
 
 // --- atf_amc.FTypeT..Uninit
-void atf_amc::FTypeT_Uninit(atf_amc::FTypeT& typet) {
+void atf_amc::FTypeT_Uninit(atf_amc::FTypeT& typet) throw() {
     atf_amc::FTypeT &row = typet; (void)row;
     atf_amc::FTypeS* p_types = atf_amc::ind_types_Find(row.types);
     if (p_types)  {
@@ -9195,7 +9195,7 @@ void atf_amc::FTypeT_Uninit(atf_amc::FTypeT& typet) {
 // --- atf_amc.FTypeT..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.FTypeT.String  printfmt:Tuple
-void atf_amc::FTypeT_Print(atf_amc::FTypeT& row, algo::cstring& str) {
+void atf_amc::FTypeT_Print(atf_amc::FTypeT& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.FTypeT";
 
@@ -9209,7 +9209,7 @@ void atf_amc::FTypeT_Print(atf_amc::FTypeT& row, algo::cstring& str) {
 // --- atf_amc.TypeA..ReadStrptrMaybe
 // Read fields of atf_amc::TypeA from an ascii string.
 // The format of the string is the format of the atf_amc::TypeA's only field
-bool atf_amc::TypeA_ReadStrptrMaybe(atf_amc::TypeA &parent, algo::strptr in_str) {
+bool atf_amc::TypeA_ReadStrptrMaybe(atf_amc::TypeA &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && i32_ReadStrptrMaybe(parent.typea, in_str);
     return retval;
@@ -9218,14 +9218,14 @@ bool atf_amc::TypeA_ReadStrptrMaybe(atf_amc::TypeA &parent, algo::strptr in_str)
 // --- atf_amc.TypeA..FmtJson
 // Create JSON representation of atf_amc::TypeA under PARENT node
 // cfmt:atf_amc.TypeA.Json  printfmt:Auto
-lib_json::FNode * atf_amc::TypeA_FmtJson(atf_amc::TypeA& row, lib_json::FNode *parent) {
+lib_json::FNode * atf_amc::TypeA_FmtJson(atf_amc::TypeA& row, lib_json::FNode *parent) throw() {
     return i32_FmtJson(const_cast<atf_amc::TypeA&>(row).typea,parent);;
 }
 
 // --- atf_amc.TypeA..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeA.String  printfmt:Raw
-void atf_amc::TypeA_Print(atf_amc::TypeA& row, algo::cstring& str) {
+void atf_amc::TypeA_Print(atf_amc::TypeA& row, algo::cstring& str) throw() {
     i32_Print(row.typea, str);
 }
 
@@ -9233,7 +9233,7 @@ void atf_amc::TypeA_Print(atf_amc::TypeA& row, algo::cstring& str) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<atf_amc::TypeA> atf_amc::tary_Addary(atf_amc::FUnitSort& parent, algo::aryptr<atf_amc::TypeA> rhs) {
+algo::aryptr<atf_amc::TypeA> atf_amc::tary_Addary(atf_amc::FUnitSort& parent, algo::aryptr<atf_amc::TypeA> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.tary_elems && rhs.elems < parent.tary_elems + parent.tary_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.FUnitSort.tary  comment:'alias error: sub-array is being appended to the whole'");
@@ -9251,7 +9251,7 @@ algo::aryptr<atf_amc::TypeA> atf_amc::tary_Addary(atf_amc::FUnitSort& parent, al
 // --- atf_amc.FUnitSort.tary.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-atf_amc::TypeA& atf_amc::tary_Alloc(atf_amc::FUnitSort& parent) {
+atf_amc::TypeA& atf_amc::tary_Alloc(atf_amc::FUnitSort& parent) throw() {
     tary_Reserve(parent, 1);
     int n  = parent.tary_n;
     int at = n;
@@ -9264,7 +9264,7 @@ atf_amc::TypeA& atf_amc::tary_Alloc(atf_amc::FUnitSort& parent) {
 // --- atf_amc.FUnitSort.tary.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-atf_amc::TypeA& atf_amc::tary_AllocAt(atf_amc::FUnitSort& parent, int at) {
+atf_amc::TypeA& atf_amc::tary_AllocAt(atf_amc::FUnitSort& parent, int at) throw() {
     tary_Reserve(parent, 1);
     int n  = parent.tary_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -9279,7 +9279,7 @@ atf_amc::TypeA& atf_amc::tary_AllocAt(atf_amc::FUnitSort& parent, int at) {
 
 // --- atf_amc.FUnitSort.tary.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocN(atf_amc::FUnitSort& parent, int n_elems) {
+algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocN(atf_amc::FUnitSort& parent, int n_elems) throw() {
     tary_Reserve(parent, n_elems);
     int old_n  = parent.tary_n;
     int new_n = old_n + n_elems;
@@ -9293,7 +9293,7 @@ algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocN(atf_amc::FUnitSort& parent, in
 
 // --- atf_amc.FUnitSort.tary.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_amc::tary_Remove(atf_amc::FUnitSort& parent, u32 i) {
+void atf_amc::tary_Remove(atf_amc::FUnitSort& parent, u32 i) throw() {
     u32 lim = parent.tary_n;
     atf_amc::TypeA *elems = parent.tary_elems;
     if (i < lim) {
@@ -9304,7 +9304,7 @@ void atf_amc::tary_Remove(atf_amc::FUnitSort& parent, u32 i) {
 }
 
 // --- atf_amc.FUnitSort.tary.RemoveAll
-void atf_amc::tary_RemoveAll(atf_amc::FUnitSort& parent) {
+void atf_amc::tary_RemoveAll(atf_amc::FUnitSort& parent) throw() {
     u32 n = parent.tary_n;
     while (n > 0) {
         n -= 1;
@@ -9315,7 +9315,7 @@ void atf_amc::tary_RemoveAll(atf_amc::FUnitSort& parent) {
 
 // --- atf_amc.FUnitSort.tary.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::tary_RemoveLast(atf_amc::FUnitSort& parent) {
+void atf_amc::tary_RemoveLast(atf_amc::FUnitSort& parent) throw() {
     u64 n = parent.tary_n;
     if (n > 0) {
         n -= 1;
@@ -9326,7 +9326,7 @@ void atf_amc::tary_RemoveLast(atf_amc::FUnitSort& parent) {
 
 // --- atf_amc.FUnitSort.tary.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_amc::tary_AbsReserve(atf_amc::FUnitSort& parent, int n) {
+void atf_amc::tary_AbsReserve(atf_amc::FUnitSort& parent, int n) throw() {
     u32 old_max  = parent.tary_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -9341,7 +9341,7 @@ void atf_amc::tary_AbsReserve(atf_amc::FUnitSort& parent, int n) {
 
 // --- atf_amc.FUnitSort.tary.Setary
 // Copy contents of RHS to PARENT.
-void atf_amc::tary_Setary(atf_amc::FUnitSort& parent, atf_amc::FUnitSort &rhs) {
+void atf_amc::tary_Setary(atf_amc::FUnitSort& parent, atf_amc::FUnitSort &rhs) throw() {
     tary_RemoveAll(parent);
     int nnew = rhs.tary_n;
     tary_Reserve(parent, nnew); // reserve space
@@ -9354,14 +9354,14 @@ void atf_amc::tary_Setary(atf_amc::FUnitSort& parent, atf_amc::FUnitSort &rhs) {
 // --- atf_amc.FUnitSort.tary.Setary2
 // Copy specified array into tary, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void atf_amc::tary_Setary(atf_amc::FUnitSort& parent, const algo::aryptr<atf_amc::TypeA> &rhs) {
+void atf_amc::tary_Setary(atf_amc::FUnitSort& parent, const algo::aryptr<atf_amc::TypeA> &rhs) throw() {
     tary_RemoveAll(parent);
     tary_Addary(parent, rhs);
 }
 
 // --- atf_amc.FUnitSort.tary.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocNVal(atf_amc::FUnitSort& parent, int n_elems, const atf_amc::TypeA& val) {
+algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocNVal(atf_amc::FUnitSort& parent, int n_elems, const atf_amc::TypeA& val) throw() {
     tary_Reserve(parent, n_elems);
     int old_n  = parent.tary_n;
     int new_n = old_n + n_elems;
@@ -9377,7 +9377,7 @@ algo::aryptr<atf_amc::TypeA> atf_amc::tary_AllocNVal(atf_amc::FUnitSort& parent,
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool atf_amc::tary_ReadStrptrMaybe(atf_amc::FUnitSort& parent, algo::strptr in_str) {
+bool atf_amc::tary_ReadStrptrMaybe(atf_amc::FUnitSort& parent, algo::strptr in_str) throw() {
     bool retval = true;
     atf_amc::TypeA &elem = tary_Alloc(parent);
     retval = atf_amc::TypeA_ReadStrptrMaybe(elem, in_str);
@@ -9389,7 +9389,7 @@ bool atf_amc::tary_ReadStrptrMaybe(atf_amc::FUnitSort& parent, algo::strptr in_s
 
 // --- atf_amc.FUnitSort.tary.Swap
 // Swap values elem_a and elem_b
-inline static void atf_amc::tary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) {
+inline static void atf_amc::tary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) throw() {
     u8 temp[sizeof(atf_amc::TypeA)];
     memcpy(&temp  , &elem_a, sizeof(atf_amc::TypeA));
     memcpy(&elem_a, &elem_b, sizeof(atf_amc::TypeA));
@@ -9398,7 +9398,7 @@ inline static void atf_amc::tary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &el
 
 // --- atf_amc.FUnitSort.tary.Rotleft
 // Left circular shift of three-tuple
-inline static void atf_amc::tary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) {
+inline static void atf_amc::tary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) throw() {
     u8 temp[sizeof(atf_amc::TypeA)];
     memcpy(&temp, &elem_a   , sizeof(atf_amc::TypeA));
     memcpy(&elem_a   , &elem_b   , sizeof(atf_amc::TypeA));
@@ -9410,7 +9410,7 @@ inline static void atf_amc::tary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA 
 // Compare values elem_a and elem_b
 // The comparison function must be anti-symmetric: if a>b, then !(b>a).
 // If not, mayhem results.
-static bool atf_amc::tary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) {
+static bool atf_amc::tary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) throw() {
     bool ret;
     ret = elem_a.typea < elem_b.typea;
     return ret;
@@ -9418,7 +9418,7 @@ static bool atf_amc::tary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) {
 
 // --- atf_amc.FUnitSort.tary.SortedQ
 // Verify whether array is sorted
-bool atf_amc::tary_SortedQ(atf_amc::FUnitSort& parent) {
+bool atf_amc::tary_SortedQ(atf_amc::FUnitSort& parent) throw() {
     atf_amc::TypeA *elems = tary_Getary(parent).elems;
     int n = tary_N(parent);
     for (int i = 1; i < n; i++) {
@@ -9431,7 +9431,7 @@ bool atf_amc::tary_SortedQ(atf_amc::FUnitSort& parent) {
 
 // --- atf_amc.FUnitSort.tary.IntInsertionSort
 // Internal insertion sort
-static void atf_amc::tary_IntInsertionSort(atf_amc::TypeA *elems, int n) {
+static void atf_amc::tary_IntInsertionSort(atf_amc::TypeA *elems, int n) throw() {
     for (int i = 1; i < n; ++i) {
         int j = i;
         // find the spot for ith element.
@@ -9449,7 +9449,7 @@ static void atf_amc::tary_IntInsertionSort(atf_amc::TypeA *elems, int n) {
 
 // --- atf_amc.FUnitSort.tary.IntHeapSort
 // Internal heap sort
-static void atf_amc::tary_IntHeapSort(atf_amc::TypeA *elems, int n) {
+static void atf_amc::tary_IntHeapSort(atf_amc::TypeA *elems, int n) throw() {
     // construct max-heap.
     // k=current element
     // j=parent element
@@ -9484,7 +9484,7 @@ static void atf_amc::tary_IntHeapSort(atf_amc::TypeA *elems, int n) {
 
 // --- atf_amc.FUnitSort.tary.IntQuickSort
 // Quick sort engine
-static void atf_amc::tary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) {
+static void atf_amc::tary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) throw() {
     while (n>16) {
         // detect degenerate case and revert to heap sort
         if (depth==0) {
@@ -9532,7 +9532,7 @@ static void atf_amc::tary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) 
 
 // --- atf_amc.FUnitSort.tary.InsertionSort
 // Insertion sort
-void atf_amc::tary_InsertionSort(atf_amc::FUnitSort& parent) {
+void atf_amc::tary_InsertionSort(atf_amc::FUnitSort& parent) throw() {
     atf_amc::TypeA *elems = tary_Getary(parent).elems;
     int n = tary_N(parent);
     tary_IntInsertionSort(elems, n);
@@ -9540,7 +9540,7 @@ void atf_amc::tary_InsertionSort(atf_amc::FUnitSort& parent) {
 
 // --- atf_amc.FUnitSort.tary.HeapSort
 // Heap sort
-void atf_amc::tary_HeapSort(atf_amc::FUnitSort& parent) {
+void atf_amc::tary_HeapSort(atf_amc::FUnitSort& parent) throw() {
     atf_amc::TypeA *elems = tary_Getary(parent).elems;
     int n = tary_N(parent);
     tary_IntHeapSort(elems, n);
@@ -9548,7 +9548,7 @@ void atf_amc::tary_HeapSort(atf_amc::FUnitSort& parent) {
 
 // --- atf_amc.FUnitSort.tary.QuickSort
 // Quick sort
-void atf_amc::tary_QuickSort(atf_amc::FUnitSort& parent) {
+void atf_amc::tary_QuickSort(atf_amc::FUnitSort& parent) throw() {
     // compute max recursion depth based on number of elements in the array
     int max_depth = algo::CeilingLog2(u32(tary_N(parent) + 1)) + 3;
     atf_amc::TypeA *elems = tary_Getary(parent).elems;
@@ -9559,7 +9559,7 @@ void atf_amc::tary_QuickSort(atf_amc::FUnitSort& parent) {
 // --- atf_amc.FUnitSort.c_ptrary.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void atf_amc::c_ptrary_Insert(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) {
+void atf_amc::c_ptrary_Insert(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) throw() {
     // reserve space
     c_ptrary_Reserve(parent, 1);
     u32 n  = parent.c_ptrary_n;
@@ -9575,7 +9575,7 @@ void atf_amc::c_ptrary_Insert(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool atf_amc::c_ptrary_ScanInsertMaybe(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) {
+bool atf_amc::c_ptrary_ScanInsertMaybe(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) throw() {
     bool retval = true;
     u32 n  = parent.c_ptrary_n;
     for (u32 i = 0; i < n; i++) {
@@ -9595,7 +9595,7 @@ bool atf_amc::c_ptrary_ScanInsertMaybe(atf_amc::FUnitSort& parent, atf_amc::Type
 
 // --- atf_amc.FUnitSort.c_ptrary.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void atf_amc::c_ptrary_Remove(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) {
+void atf_amc::c_ptrary_Remove(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) throw() {
     int lim = parent.c_ptrary_n;
     atf_amc::TypeA* *elems = parent.c_ptrary_elems;
     // search backward, so that most recently added element is found first.
@@ -9614,7 +9614,7 @@ void atf_amc::c_ptrary_Remove(atf_amc::FUnitSort& parent, atf_amc::TypeA& row) {
 
 // --- atf_amc.FUnitSort.c_ptrary.Reserve
 // Reserve space in index for N more elements;
-void atf_amc::c_ptrary_Reserve(atf_amc::FUnitSort& parent, u32 n) {
+void atf_amc::c_ptrary_Reserve(atf_amc::FUnitSort& parent, u32 n) throw() {
     u32 old_max = parent.c_ptrary_max;
     if (UNLIKELY(parent.c_ptrary_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -9631,7 +9631,7 @@ void atf_amc::c_ptrary_Reserve(atf_amc::FUnitSort& parent, u32 n) {
 
 // --- atf_amc.FUnitSort.c_ptrary.Swap
 // Swap values elem_a and elem_b
-inline static void atf_amc::c_ptrary_Swap(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b) {
+inline static void atf_amc::c_ptrary_Swap(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b) throw() {
     atf_amc::TypeA *temp = elem_a;
     elem_a = elem_b;
     elem_b = temp;
@@ -9639,7 +9639,7 @@ inline static void atf_amc::c_ptrary_Swap(atf_amc::TypeA* &elem_a, atf_amc::Type
 
 // --- atf_amc.FUnitSort.c_ptrary.Rotleft
 // Left circular shift of three-tuple
-inline static void atf_amc::c_ptrary_Rotleft(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b, atf_amc::TypeA* &elem_c) {
+inline static void atf_amc::c_ptrary_Rotleft(atf_amc::TypeA* &elem_a, atf_amc::TypeA* &elem_b, atf_amc::TypeA* &elem_c) throw() {
     atf_amc::TypeA *temp = elem_a;
     elem_a = elem_b;
     elem_b = elem_c;
@@ -9650,7 +9650,7 @@ inline static void atf_amc::c_ptrary_Rotleft(atf_amc::TypeA* &elem_a, atf_amc::T
 // Compare values elem_a and elem_b
 // The comparison function must be anti-symmetric: if a>b, then !(b>a).
 // If not, mayhem results.
-static bool atf_amc::c_ptrary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) {
+static bool atf_amc::c_ptrary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) throw() {
     bool ret;
     ret = elem_a.typea < elem_b.typea;
     return ret;
@@ -9658,7 +9658,7 @@ static bool atf_amc::c_ptrary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b)
 
 // --- atf_amc.FUnitSort.c_ptrary.SortedQ
 // Verify whether array is sorted
-bool atf_amc::c_ptrary_SortedQ(atf_amc::FUnitSort& parent) {
+bool atf_amc::c_ptrary_SortedQ(atf_amc::FUnitSort& parent) throw() {
     atf_amc::TypeA* *elems = c_ptrary_Getary(parent).elems;
     int n = c_ptrary_N(parent);
     for (int i = 1; i < n; i++) {
@@ -9671,7 +9671,7 @@ bool atf_amc::c_ptrary_SortedQ(atf_amc::FUnitSort& parent) {
 
 // --- atf_amc.FUnitSort.c_ptrary.IntInsertionSort
 // Internal insertion sort
-static void atf_amc::c_ptrary_IntInsertionSort(atf_amc::TypeA* *elems, int n) {
+static void atf_amc::c_ptrary_IntInsertionSort(atf_amc::TypeA* *elems, int n) throw() {
     for (int i = 1; i < n; ++i) {
         int j = i;
         atf_amc::TypeA *tmp = elems[i];
@@ -9688,7 +9688,7 @@ static void atf_amc::c_ptrary_IntInsertionSort(atf_amc::TypeA* *elems, int n) {
 
 // --- atf_amc.FUnitSort.c_ptrary.IntHeapSort
 // Internal heap sort
-static void atf_amc::c_ptrary_IntHeapSort(atf_amc::TypeA* *elems, int n) {
+static void atf_amc::c_ptrary_IntHeapSort(atf_amc::TypeA* *elems, int n) throw() {
     // construct max-heap.
     // k=current element
     // j=parent element
@@ -9723,7 +9723,7 @@ static void atf_amc::c_ptrary_IntHeapSort(atf_amc::TypeA* *elems, int n) {
 
 // --- atf_amc.FUnitSort.c_ptrary.IntQuickSort
 // Quick sort engine
-static void atf_amc::c_ptrary_IntQuickSort(atf_amc::TypeA* *elems, int n, int depth) {
+static void atf_amc::c_ptrary_IntQuickSort(atf_amc::TypeA* *elems, int n, int depth) throw() {
     while (n>16) {
         // detect degenerate case and revert to heap sort
         if (depth==0) {
@@ -9771,7 +9771,7 @@ static void atf_amc::c_ptrary_IntQuickSort(atf_amc::TypeA* *elems, int n, int de
 
 // --- atf_amc.FUnitSort.c_ptrary.InsertionSort
 // Insertion sort
-void atf_amc::c_ptrary_InsertionSort(atf_amc::FUnitSort& parent) {
+void atf_amc::c_ptrary_InsertionSort(atf_amc::FUnitSort& parent) throw() {
     atf_amc::TypeA* *elems = c_ptrary_Getary(parent).elems;
     int n = c_ptrary_N(parent);
     c_ptrary_IntInsertionSort(elems, n);
@@ -9779,7 +9779,7 @@ void atf_amc::c_ptrary_InsertionSort(atf_amc::FUnitSort& parent) {
 
 // --- atf_amc.FUnitSort.c_ptrary.HeapSort
 // Heap sort
-void atf_amc::c_ptrary_HeapSort(atf_amc::FUnitSort& parent) {
+void atf_amc::c_ptrary_HeapSort(atf_amc::FUnitSort& parent) throw() {
     atf_amc::TypeA* *elems = c_ptrary_Getary(parent).elems;
     int n = c_ptrary_N(parent);
     c_ptrary_IntHeapSort(elems, n);
@@ -9787,7 +9787,7 @@ void atf_amc::c_ptrary_HeapSort(atf_amc::FUnitSort& parent) {
 
 // --- atf_amc.FUnitSort.c_ptrary.QuickSort
 // Quick sort
-void atf_amc::c_ptrary_QuickSort(atf_amc::FUnitSort& parent) {
+void atf_amc::c_ptrary_QuickSort(atf_amc::FUnitSort& parent) throw() {
     // compute max recursion depth based on number of elements in the array
     int max_depth = algo::CeilingLog2(u32(c_ptrary_N(parent) + 1)) + 3;
     atf_amc::TypeA* *elems = c_ptrary_Getary(parent).elems;
@@ -9798,7 +9798,7 @@ void atf_amc::c_ptrary_QuickSort(atf_amc::FUnitSort& parent) {
 // --- atf_amc.FUnitSort.fixary.ReadStrptrMaybe
 // Read array from string
 // Convert string to field. Return success value
-bool atf_amc::fixary_ReadStrptrMaybe(atf_amc::FUnitSort& parent, algo::strptr in_str) {
+bool atf_amc::fixary_ReadStrptrMaybe(atf_amc::FUnitSort& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (100>0) {
         retval = atf_amc::TypeA_ReadStrptrMaybe(parent.fixary_elems[0], in_str);
@@ -9808,7 +9808,7 @@ bool atf_amc::fixary_ReadStrptrMaybe(atf_amc::FUnitSort& parent, algo::strptr in
 
 // --- atf_amc.FUnitSort.fixary.Swap
 // Swap values elem_a and elem_b
-inline static void atf_amc::fixary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) {
+inline static void atf_amc::fixary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) throw() {
     u8 temp[sizeof(atf_amc::TypeA)];
     memcpy(&temp  , &elem_a, sizeof(atf_amc::TypeA));
     memcpy(&elem_a, &elem_b, sizeof(atf_amc::TypeA));
@@ -9817,7 +9817,7 @@ inline static void atf_amc::fixary_Swap(atf_amc::TypeA &elem_a, atf_amc::TypeA &
 
 // --- atf_amc.FUnitSort.fixary.Rotleft
 // Left circular shift of three-tuple
-inline static void atf_amc::fixary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) {
+inline static void atf_amc::fixary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b, atf_amc::TypeA &elem_c) throw() {
     u8 temp[sizeof(atf_amc::TypeA)];
     memcpy(&temp, &elem_a   , sizeof(atf_amc::TypeA));
     memcpy(&elem_a   , &elem_b   , sizeof(atf_amc::TypeA));
@@ -9829,7 +9829,7 @@ inline static void atf_amc::fixary_Rotleft(atf_amc::TypeA &elem_a, atf_amc::Type
 // Compare values elem_a and elem_b
 // The comparison function must be anti-symmetric: if a>b, then !(b>a).
 // If not, mayhem results.
-static bool atf_amc::fixary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) {
+static bool atf_amc::fixary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) throw() {
     bool ret;
     ret = elem_a.typea < elem_b.typea;
     return ret;
@@ -9837,7 +9837,7 @@ static bool atf_amc::fixary_Lt(atf_amc::TypeA &elem_a, atf_amc::TypeA &elem_b) {
 
 // --- atf_amc.FUnitSort.fixary.SortedQ
 // Verify whether array is sorted
-bool atf_amc::fixary_SortedQ(atf_amc::FUnitSort& parent) {
+bool atf_amc::fixary_SortedQ(atf_amc::FUnitSort& parent) throw() {
     atf_amc::TypeA *elems = fixary_Getary(parent).elems;
     int n = fixary_N(parent);
     for (int i = 1; i < n; i++) {
@@ -9850,7 +9850,7 @@ bool atf_amc::fixary_SortedQ(atf_amc::FUnitSort& parent) {
 
 // --- atf_amc.FUnitSort.fixary.IntInsertionSort
 // Internal insertion sort
-static void atf_amc::fixary_IntInsertionSort(atf_amc::TypeA *elems, int n) {
+static void atf_amc::fixary_IntInsertionSort(atf_amc::TypeA *elems, int n) throw() {
     for (int i = 1; i < n; ++i) {
         int j = i;
         // find the spot for ith element.
@@ -9868,7 +9868,7 @@ static void atf_amc::fixary_IntInsertionSort(atf_amc::TypeA *elems, int n) {
 
 // --- atf_amc.FUnitSort.fixary.IntHeapSort
 // Internal heap sort
-static void atf_amc::fixary_IntHeapSort(atf_amc::TypeA *elems, int n) {
+static void atf_amc::fixary_IntHeapSort(atf_amc::TypeA *elems, int n) throw() {
     // construct max-heap.
     // k=current element
     // j=parent element
@@ -9903,7 +9903,7 @@ static void atf_amc::fixary_IntHeapSort(atf_amc::TypeA *elems, int n) {
 
 // --- atf_amc.FUnitSort.fixary.IntQuickSort
 // Quick sort engine
-static void atf_amc::fixary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) {
+static void atf_amc::fixary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth) throw() {
     while (n>16) {
         // detect degenerate case and revert to heap sort
         if (depth==0) {
@@ -9951,7 +9951,7 @@ static void atf_amc::fixary_IntQuickSort(atf_amc::TypeA *elems, int n, int depth
 
 // --- atf_amc.FUnitSort.fixary.InsertionSort
 // Insertion sort
-void atf_amc::fixary_InsertionSort(atf_amc::FUnitSort& parent) {
+void atf_amc::fixary_InsertionSort(atf_amc::FUnitSort& parent) throw() {
     atf_amc::TypeA *elems = fixary_Getary(parent).elems;
     int n = fixary_N(parent);
     fixary_IntInsertionSort(elems, n);
@@ -9959,7 +9959,7 @@ void atf_amc::fixary_InsertionSort(atf_amc::FUnitSort& parent) {
 
 // --- atf_amc.FUnitSort.fixary.HeapSort
 // Heap sort
-void atf_amc::fixary_HeapSort(atf_amc::FUnitSort& parent) {
+void atf_amc::fixary_HeapSort(atf_amc::FUnitSort& parent) throw() {
     atf_amc::TypeA *elems = fixary_Getary(parent).elems;
     int n = fixary_N(parent);
     fixary_IntHeapSort(elems, n);
@@ -9967,7 +9967,7 @@ void atf_amc::fixary_HeapSort(atf_amc::FUnitSort& parent) {
 
 // --- atf_amc.FUnitSort.fixary.QuickSort
 // Quick sort
-void atf_amc::fixary_QuickSort(atf_amc::FUnitSort& parent) {
+void atf_amc::fixary_QuickSort(atf_amc::FUnitSort& parent) throw() {
     // compute max recursion depth based on number of elements in the array
     int max_depth = algo::CeilingLog2(u32(fixary_N(parent) + 1)) + 3;
     atf_amc::TypeA *elems = fixary_Getary(parent).elems;
@@ -9985,7 +9985,7 @@ bool atf_amc::fixary_XrefMaybe(atf_amc::TypeA &row) {
 }
 
 // --- atf_amc.FUnitSort..Uninit
-void atf_amc::FUnitSort_Uninit(atf_amc::FUnitSort& parent) {
+void atf_amc::FUnitSort_Uninit(atf_amc::FUnitSort& parent) throw() {
     atf_amc::FUnitSort &row = parent; (void)row;
 
     // atf_amc.FUnitSort.c_ptrary.Uninit (Ptrary)  //
@@ -10001,7 +10001,7 @@ void atf_amc::FUnitSort_Uninit(atf_amc::FUnitSort& parent) {
 // --- atf_amc.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) {
+const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_amc_FieldId_value         : ret = "value";  break;
@@ -10131,7 +10131,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::FieldId& parent) {
 // --- atf_amc.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::FieldId& parent, algo::cstring &lhs) {
+void atf_amc::value_Print(const atf_amc::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -10144,7 +10144,7 @@ void atf_amc::value_Print(const atf_amc::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
+bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
@@ -10580,13 +10580,13 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
 // --- atf_amc.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::FieldId& parent, algo::strptr rhs, atf_amc_FieldIdEnum dflt) {
+void atf_amc::value_SetStrptr(atf_amc::FieldId& parent, algo::strptr rhs, atf_amc_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) {
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -10598,7 +10598,7 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::FieldId& parent, algo::strptr rhs) 
 // --- atf_amc.FieldId..ReadStrptrMaybe
 // Read fields of atf_amc::FieldId from an ascii string.
 // The format of the string is the format of the atf_amc::FieldId's only field
-bool atf_amc::FieldId_ReadStrptrMaybe(atf_amc::FieldId &parent, algo::strptr in_str) {
+bool atf_amc::FieldId_ReadStrptrMaybe(atf_amc::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10607,14 +10607,14 @@ bool atf_amc::FieldId_ReadStrptrMaybe(atf_amc::FieldId &parent, algo::strptr in_
 // --- atf_amc.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.FieldId.String  printfmt:Raw
-void atf_amc::FieldId_Print(atf_amc::FieldId& row, algo::cstring& str) {
+void atf_amc::FieldId_Print(atf_amc::FieldId& row, algo::cstring& str) throw() {
     atf_amc::value_Print(row, str);
 }
 
 // --- atf_amc.InlaryPrint.fixary.Print
 // Convert fixary to a string.
 // The separator character is ' '.
-void atf_amc::fixary_Print(atf_amc::InlaryPrint& parent, algo::cstring &rhs) {
+void atf_amc::fixary_Print(atf_amc::InlaryPrint& parent, algo::cstring &rhs) throw() {
     ind_beg(InlaryPrint_fixary_curs,fixary_elem,parent) {
         if (ind_curs(fixary_elem).index > 0) {
             rhs << ' ';
@@ -10626,7 +10626,7 @@ void atf_amc::fixary_Print(atf_amc::InlaryPrint& parent, algo::cstring &rhs) {
 // --- atf_amc.InlaryPrint.fixary.ReadStrptrMaybe
 // Read array from string
 // Convert string to field. Return success value
-bool atf_amc::fixary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::strptr in_str) {
+bool atf_amc::fixary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::strptr in_str) throw() {
     bool retval = true;
     for (int i=0; in_str != "" && i < 3; i++) {
         algo::strptr token;
@@ -10642,7 +10642,7 @@ bool atf_amc::fixary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::strptr 
 // --- atf_amc.InlaryPrint.inlary.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-u32& atf_amc::inlary_Alloc(atf_amc::InlaryPrint& parent) {
+u32& atf_amc::inlary_Alloc(atf_amc::InlaryPrint& parent) throw() {
     u32* row = inlary_AllocMaybe(parent);
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.InlaryPrint.inlary  comment:'Alloc failed'");
@@ -10652,7 +10652,7 @@ u32& atf_amc::inlary_Alloc(atf_amc::InlaryPrint& parent) {
 
 // --- atf_amc.InlaryPrint.inlary.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-u32* atf_amc::inlary_AllocMaybe(atf_amc::InlaryPrint& parent) {
+u32* atf_amc::inlary_AllocMaybe(atf_amc::InlaryPrint& parent) throw() {
     u32 *row = (u32*)inlary_AllocMem(parent);
     if (row) {
         new (row) u32; // call constructor
@@ -10662,13 +10662,13 @@ u32* atf_amc::inlary_AllocMaybe(atf_amc::InlaryPrint& parent) {
 
 // --- atf_amc.InlaryPrint.inlary.RemoveAll
 // Destroy all elements of Inlary
-void atf_amc::inlary_RemoveAll(atf_amc::InlaryPrint& parent) {
+void atf_amc::inlary_RemoveAll(atf_amc::InlaryPrint& parent) throw() {
     parent.inlary_n = 0;
 }
 
 // --- atf_amc.InlaryPrint.inlary.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::inlary_RemoveLast(atf_amc::InlaryPrint& parent) {
+void atf_amc::inlary_RemoveLast(atf_amc::InlaryPrint& parent) throw() {
     u64 n = parent.inlary_n;
     if (n > 0) {
         n -= 1;
@@ -10679,7 +10679,7 @@ void atf_amc::inlary_RemoveLast(atf_amc::InlaryPrint& parent) {
 // --- atf_amc.InlaryPrint.inlary.Print
 // Convert inlary to a string.
 // The separator character is ' '.
-void atf_amc::inlary_Print(atf_amc::InlaryPrint& parent, algo::cstring &rhs) {
+void atf_amc::inlary_Print(atf_amc::InlaryPrint& parent, algo::cstring &rhs) throw() {
     ind_beg(InlaryPrint_inlary_curs,inlary_elem,parent) {
         if (ind_curs(inlary_elem).index > 0) {
             rhs << ' ';
@@ -10691,7 +10691,7 @@ void atf_amc::inlary_Print(atf_amc::InlaryPrint& parent, algo::cstring &rhs) {
 // --- atf_amc.InlaryPrint.inlary.ReadStrptrMaybe
 // Read array from string
 // Convert string to field. Return success value
-bool atf_amc::inlary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::strptr in_str) {
+bool atf_amc::inlary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::strptr in_str) throw() {
     bool retval = true;
     inlary_RemoveAll(parent);
     for (int i=0; in_str != "" && i < 10; i++) {
@@ -10711,7 +10711,7 @@ bool atf_amc::inlary_ReadStrptrMaybe(atf_amc::InlaryPrint& parent, algo::strptr 
 }
 
 // --- atf_amc.InlaryPrint..ReadFieldMaybe
-bool atf_amc::InlaryPrint_ReadFieldMaybe(atf_amc::InlaryPrint& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::InlaryPrint_ReadFieldMaybe(atf_amc::InlaryPrint& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -10735,7 +10735,7 @@ bool atf_amc::InlaryPrint_ReadFieldMaybe(atf_amc::InlaryPrint& parent, algo::str
 // --- atf_amc.InlaryPrint..ReadStrptrMaybe
 // Read fields of atf_amc::InlaryPrint from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::InlaryPrint_ReadStrptrMaybe(atf_amc::InlaryPrint &parent, algo::strptr in_str) {
+bool atf_amc::InlaryPrint_ReadStrptrMaybe(atf_amc::InlaryPrint &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.InlaryPrint");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -10754,7 +10754,7 @@ void atf_amc::InlaryPrint_Init(atf_amc::InlaryPrint& parent) {
 }
 
 // --- atf_amc.InlaryPrint..Uninit
-void atf_amc::InlaryPrint_Uninit(atf_amc::InlaryPrint& parent) {
+void atf_amc::InlaryPrint_Uninit(atf_amc::InlaryPrint& parent) throw() {
     atf_amc::InlaryPrint &row = parent; (void)row;
 
     // atf_amc.InlaryPrint.inlary.Uninit (Inlary)  //
@@ -10764,7 +10764,7 @@ void atf_amc::InlaryPrint_Uninit(atf_amc::InlaryPrint& parent) {
 // --- atf_amc.InlaryPrint..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.InlaryPrint.String  printfmt:Tuple
-void atf_amc::InlaryPrint_Print(atf_amc::InlaryPrint& row, algo::cstring& str) {
+void atf_amc::InlaryPrint_Print(atf_amc::InlaryPrint& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.InlaryPrint";
 
@@ -10778,7 +10778,7 @@ void atf_amc::InlaryPrint_Print(atf_amc::InlaryPrint& row, algo::cstring& str) {
 // --- atf_amc.Lary32.lary.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-u32& atf_amc::lary_Alloc(atf_amc::Lary32& parent) {
+u32& atf_amc::lary_Alloc(atf_amc::Lary32& parent) throw() {
     u32* row = lary_AllocMaybe(parent);
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_amc.out_of_mem  field:atf_amc.Lary32.lary  comment:'Alloc failed'");
@@ -10788,7 +10788,7 @@ u32& atf_amc::lary_Alloc(atf_amc::Lary32& parent) {
 
 // --- atf_amc.Lary32.lary.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-u32* atf_amc::lary_AllocMaybe(atf_amc::Lary32& parent) {
+u32* atf_amc::lary_AllocMaybe(atf_amc::Lary32& parent) throw() {
     u32 *row = (u32*)lary_AllocMem(parent);
     if (row) {
         new (row) u32; // call constructor
@@ -10798,7 +10798,7 @@ u32* atf_amc::lary_AllocMaybe(atf_amc::Lary32& parent) {
 
 // --- atf_amc.Lary32.lary.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_amc::lary_AllocMem(atf_amc::Lary32& parent) {
+void* atf_amc::lary_AllocMem(atf_amc::Lary32& parent) throw() {
     u64 new_nelems     = parent.lary_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -10824,13 +10824,13 @@ void* atf_amc::lary_AllocMem(atf_amc::Lary32& parent) {
 
 // --- atf_amc.Lary32.lary.RemoveAll
 // Remove all elements from Lary
-void atf_amc::lary_RemoveAll(atf_amc::Lary32& parent) {
+void atf_amc::lary_RemoveAll(atf_amc::Lary32& parent) throw() {
     parent.lary_n = 0;
 }
 
 // --- atf_amc.Lary32.lary.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::lary_RemoveLast(atf_amc::Lary32& parent) {
+void atf_amc::lary_RemoveLast(atf_amc::Lary32& parent) throw() {
     u64 n = parent.lary_n;
     if (n > 0) {
         n -= 1;
@@ -10855,7 +10855,7 @@ void atf_amc::Lary32_Init(atf_amc::Lary32& parent) {
 }
 
 // --- atf_amc.Lary32..Uninit
-void atf_amc::Lary32_Uninit(atf_amc::Lary32& parent) {
+void atf_amc::Lary32_Uninit(atf_amc::Lary32& parent) throw() {
     atf_amc::Lary32 &row = parent; (void)row;
 
     // atf_amc.Lary32.lary.Uninit (Lary)  //
@@ -10881,7 +10881,7 @@ void atf_amc::Lary32_Uninit(atf_amc::Lary32& parent) {
 // SkipMsg will skip both the line and the deliminter.
 // A partial line at the end of input is NOT returned (TODO?)
 // 
-algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Linebuf& linebuf) {
+algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Linebuf& linebuf) throw() {
     algo::aryptr<char> ret;
     if (!linebuf.in_msgvalid) {
         in_ScanMsg(linebuf);
@@ -10897,7 +10897,7 @@ algo::aryptr<char> atf_amc::in_GetMsg(atf_amc::Linebuf& linebuf) {
 // --- atf_amc.Linebuf.in.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_RemoveAll(atf_amc::Linebuf& linebuf) {
+void atf_amc::in_RemoveAll(atf_amc::Linebuf& linebuf) throw() {
     linebuf.in_start    = 0;
     linebuf.in_end      = 0;
     linebuf.in_msgvalid = false;
@@ -10906,7 +10906,7 @@ void atf_amc::in_RemoveAll(atf_amc::Linebuf& linebuf) {
 // --- atf_amc.Linebuf.in.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_ScanMsg(atf_amc::Linebuf& linebuf) {
+static void atf_amc::in_ScanMsg(atf_amc::Linebuf& linebuf) throw() {
     char *hdr = (char*)(linebuf.in_elems + linebuf.in_start);
     i32 avail = in_N(linebuf);
     i32 msglen;
@@ -10932,7 +10932,7 @@ static void atf_amc::in_ScanMsg(atf_amc::Linebuf& linebuf) {
 // --- atf_amc.Linebuf.in.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_Shift(atf_amc::Linebuf& linebuf) {
+static void atf_amc::in_Shift(atf_amc::Linebuf& linebuf) throw() {
     i32 start = linebuf.in_start;
     i32 bytes_n = linebuf.in_end - start;
     if (bytes_n > 0) {
@@ -10946,7 +10946,7 @@ static void atf_amc::in_Shift(atf_amc::Linebuf& linebuf) {
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_amc::in_SkipBytes(atf_amc::Linebuf& linebuf, int n) {
+void atf_amc::in_SkipBytes(atf_amc::Linebuf& linebuf, int n) throw() {
     int avail = linebuf.in_end - linebuf.in_start;
     n = i32_Min(n,avail);
     linebuf.in_start += n;
@@ -10956,7 +10956,7 @@ void atf_amc::in_SkipBytes(atf_amc::Linebuf& linebuf, int n) {
 // --- atf_amc.Linebuf.in.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_SkipMsg(atf_amc::Linebuf& linebuf) {
+void atf_amc::in_SkipMsg(atf_amc::Linebuf& linebuf) throw() {
     if (linebuf.in_msgvalid) {
         int skip = linebuf.in_msglen;
         skip += ssizeof(char); // delimiter
@@ -10974,7 +10974,7 @@ void atf_amc::in_SkipMsg(atf_amc::Linebuf& linebuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_WriteAll(atf_amc::Linebuf& linebuf, u8 *in, i32 in_n) {
+bool atf_amc::in_WriteAll(atf_amc::Linebuf& linebuf, u8 *in, i32 in_n) throw() {
     int max = in_Max(linebuf);
     // check if message doesn't fit. if so, shift bytes over.
     if (linebuf.in_end + in_n > max) {
@@ -11004,7 +11004,7 @@ void atf_amc::Linebuf_Init(atf_amc::Linebuf& linebuf) {
 // --- atf_amc.Linebuf..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Linebuf.String  printfmt:Raw
-void atf_amc::Linebuf_Print(atf_amc::Linebuf& row, algo::cstring& str) {
+void atf_amc::Linebuf_Print(atf_amc::Linebuf& row, algo::cstring& str) throw() {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
@@ -11012,7 +11012,7 @@ void atf_amc::Linebuf_Print(atf_amc::Linebuf& row, algo::cstring& str) {
 // --- atf_amc.MsgHdrLT.type.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLT& o) {
+const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLT& o) throw() {
     const char *ret = NULL;
     switch(type_GetEnum(o)) {
         case atf_amc_MsgHdrLT_type_atf_amc_MsgLTA: ret = "atf_amc.MsgLTA";  break;
@@ -11026,7 +11026,7 @@ const char* atf_amc::type_ToCstr(const atf_amc::MsgHdrLT& o) {
 // --- atf_amc.MsgHdrLT.type.Print
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
-void atf_amc::type_Print(const atf_amc::MsgHdrLT& o, algo::cstring &lhs) {
+void atf_amc::type_Print(const atf_amc::MsgHdrLT& o, algo::cstring &lhs) throw() {
     const char *strval = type_ToCstr(o);
     if (strval) {
         lhs << strval;
@@ -11039,7 +11039,7 @@ void atf_amc::type_Print(const atf_amc::MsgHdrLT& o, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) {
+bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 14: {
@@ -11061,13 +11061,13 @@ bool atf_amc::type_SetStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) {
 // --- atf_amc.MsgHdrLT.type.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::type_SetStrptr(atf_amc::MsgHdrLT& o, algo::strptr rhs, atf_amc_MsgHdrLT_type_Enum dflt) {
+void atf_amc::type_SetStrptr(atf_amc::MsgHdrLT& o, algo::strptr rhs, atf_amc_MsgHdrLT_type_Enum dflt) throw() {
     if (!type_SetStrptrMaybe(o,rhs)) type_SetEnum(o,dflt);
 }
 
 // --- atf_amc.MsgHdrLT.type.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) {
+bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) throw() {
     bool retval = false;
     retval = type_SetStrptrMaybe(o,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -11077,7 +11077,7 @@ bool atf_amc::type_ReadStrptrMaybe(atf_amc::MsgHdrLT& o, algo::strptr rhs) {
 }
 
 // --- atf_amc.MsgHdrLT..ReadFieldMaybe
-bool atf_amc::MsgHdrLT_ReadFieldMaybe(atf_amc::MsgHdrLT& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::MsgHdrLT_ReadFieldMaybe(atf_amc::MsgHdrLT& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -11101,7 +11101,7 @@ bool atf_amc::MsgHdrLT_ReadFieldMaybe(atf_amc::MsgHdrLT& parent, algo::strptr fi
 // --- atf_amc.MsgHdrLT..ReadStrptrMaybe
 // Read fields of atf_amc::MsgHdrLT from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::MsgHdrLT_ReadStrptrMaybe(atf_amc::MsgHdrLT &parent, algo::strptr in_str) {
+bool atf_amc::MsgHdrLT_ReadStrptrMaybe(atf_amc::MsgHdrLT &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.MsgHdrLT");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -11113,7 +11113,7 @@ bool atf_amc::MsgHdrLT_ReadStrptrMaybe(atf_amc::MsgHdrLT &parent, algo::strptr i
 // --- atf_amc.MsgHdrLT..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.MsgHdrLT.String  printfmt:Tuple
-void atf_amc::MsgHdrLT_Print(atf_amc::MsgHdrLT& row, algo::cstring& str) {
+void atf_amc::MsgHdrLT_Print(atf_amc::MsgHdrLT& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.MsgHdrLT";
     (void)row;//only to avoid -Wunused-parameter
@@ -11122,7 +11122,7 @@ void atf_amc::MsgHdrLT_Print(atf_amc::MsgHdrLT& row, algo::cstring& str) {
 // --- atf_amc.MsgHdrLTMsgsCase.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::MsgHdrLTMsgsCase& parent) {
+const char* atf_amc::value_ToCstr(const atf_amc::MsgHdrLTMsgsCase& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_amc_MsgHdrLTMsgsCase_atf_amc_MsgLTA: ret = "atf_amc.MsgLTA";  break;
@@ -11136,7 +11136,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::MsgHdrLTMsgsCase& parent) {
 // --- atf_amc.MsgHdrLTMsgsCase.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::MsgHdrLTMsgsCase& parent, algo::cstring &lhs) {
+void atf_amc::value_Print(const atf_amc::MsgHdrLTMsgsCase& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -11149,7 +11149,7 @@ void atf_amc::value_Print(const atf_amc::MsgHdrLTMsgsCase& parent, algo::cstring
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) {
+bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 14: {
@@ -11171,13 +11171,13 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strp
 // --- atf_amc.MsgHdrLTMsgsCase.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTMsgsCaseEnum dflt) {
+void atf_amc::value_SetStrptr(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs, atf_amc_MsgHdrLTMsgsCaseEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.MsgHdrLTMsgsCase.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) {
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -11189,7 +11189,7 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase& parent, algo::str
 // --- atf_amc.MsgHdrLTMsgsCase..ReadStrptrMaybe
 // Read fields of atf_amc::MsgHdrLTMsgsCase from an ascii string.
 // The format of the string is the format of the atf_amc::MsgHdrLTMsgsCase's only field
-bool atf_amc::MsgHdrLTMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase &parent, algo::strptr in_str) {
+bool atf_amc::MsgHdrLTMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11198,7 +11198,7 @@ bool atf_amc::MsgHdrLTMsgsCase_ReadStrptrMaybe(atf_amc::MsgHdrLTMsgsCase &parent
 // --- atf_amc.MsgType.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::MsgType& parent) {
+const char* atf_amc::value_ToCstr(const atf_amc::MsgType& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_amc_MsgType_atf_amc_Seqmsg: ret = "atf_amc.Seqmsg";  break;
@@ -11211,7 +11211,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::MsgType& parent) {
 // --- atf_amc.MsgType.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::MsgType& parent, algo::cstring &lhs) {
+void atf_amc::value_Print(const atf_amc::MsgType& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -11224,7 +11224,7 @@ void atf_amc::value_Print(const atf_amc::MsgType& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) {
+bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 12: {
@@ -11261,13 +11261,13 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) {
 // --- atf_amc.MsgType.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::MsgType& parent, algo::strptr rhs, atf_amc_MsgTypeEnum dflt) {
+void atf_amc::value_SetStrptr(atf_amc::MsgType& parent, algo::strptr rhs, atf_amc_MsgTypeEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.MsgType.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) {
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -11279,7 +11279,7 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgType& parent, algo::strptr rhs) 
 // --- atf_amc.MsgType..ReadStrptrMaybe
 // Read fields of atf_amc::MsgType from an ascii string.
 // The format of the string is the format of the atf_amc::MsgType's only field
-bool atf_amc::MsgType_ReadStrptrMaybe(atf_amc::MsgType &parent, algo::strptr in_str) {
+bool atf_amc::MsgType_ReadStrptrMaybe(atf_amc::MsgType &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11288,14 +11288,14 @@ bool atf_amc::MsgType_ReadStrptrMaybe(atf_amc::MsgType &parent, algo::strptr in_
 // --- atf_amc.MsgType..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.MsgType.String  printfmt:Raw
-void atf_amc::MsgType_Print(atf_amc::MsgType row, algo::cstring& str) {
+void atf_amc::MsgType_Print(atf_amc::MsgType row, algo::cstring& str) throw() {
     atf_amc::value_Print(row, str);
 }
 
 // --- atf_amc.MsgLength..ReadStrptrMaybe
 // Read fields of atf_amc::MsgLength from an ascii string.
 // The format of the string is the format of the atf_amc::MsgLength's only field
-bool atf_amc::MsgLength_ReadStrptrMaybe(atf_amc::MsgLength &parent, algo::strptr in_str) {
+bool atf_amc::MsgLength_ReadStrptrMaybe(atf_amc::MsgLength &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && u16_ReadStrptrMaybe(parent.value, in_str);
     return retval;
@@ -11304,12 +11304,12 @@ bool atf_amc::MsgLength_ReadStrptrMaybe(atf_amc::MsgLength &parent, algo::strptr
 // --- atf_amc.MsgLength..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.MsgLength.String  printfmt:Raw
-void atf_amc::MsgLength_Print(atf_amc::MsgLength row, algo::cstring& str) {
+void atf_amc::MsgLength_Print(atf_amc::MsgLength row, algo::cstring& str) throw() {
     u16_Print(row.value, str);
 }
 
 // --- atf_amc.MsgHeader..ReadFieldMaybe
-bool atf_amc::MsgHeader_ReadFieldMaybe(atf_amc::MsgHeader& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::MsgHeader_ReadFieldMaybe(atf_amc::MsgHeader& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -11335,7 +11335,7 @@ bool atf_amc::MsgHeader_ReadFieldMaybe(atf_amc::MsgHeader& parent, algo::strptr 
 // --- atf_amc.MsgHeader..ReadStrptrMaybe
 // Read fields of atf_amc::MsgHeader from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::MsgHeader_ReadStrptrMaybe(atf_amc::MsgHeader &parent, algo::strptr in_str) {
+bool atf_amc::MsgHeader_ReadStrptrMaybe(atf_amc::MsgHeader &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.MsgHeader");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -11347,7 +11347,7 @@ bool atf_amc::MsgHeader_ReadStrptrMaybe(atf_amc::MsgHeader &parent, algo::strptr
 // --- atf_amc.MsgHeader..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.MsgHeader.String  printfmt:Tuple
-void atf_amc::MsgHeader_Print(atf_amc::MsgHeader& row, algo::cstring& str) {
+void atf_amc::MsgHeader_Print(atf_amc::MsgHeader& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.MsgHeader";
     (void)row;//only to avoid -Wunused-parameter
@@ -11355,7 +11355,7 @@ void atf_amc::MsgHeader_Print(atf_amc::MsgHeader& row, algo::cstring& str) {
 
 // --- atf_amc.MsgLTA.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::MsgLTA &row, atf_amc::MsgHdrLT &out) {
+void atf_amc::parent_CopyOut(atf_amc::MsgLTA &row, atf_amc::MsgHdrLT &out) throw() {
     // len: field value is computed
     // type: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -11363,7 +11363,7 @@ void atf_amc::parent_CopyOut(atf_amc::MsgLTA &row, atf_amc::MsgHdrLT &out) {
 }
 
 // --- atf_amc.MsgLTA..ReadFieldMaybe
-bool atf_amc::MsgLTA_ReadFieldMaybe(atf_amc::MsgLTA& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::MsgLTA_ReadFieldMaybe(atf_amc::MsgLTA& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -11395,7 +11395,7 @@ bool atf_amc::MsgLTA_ReadFieldMaybe(atf_amc::MsgLTA& parent, algo::strptr field,
 // --- atf_amc.MsgLTA..ReadStrptrMaybe
 // Read fields of atf_amc::MsgLTA from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::MsgLTA_ReadStrptrMaybe(atf_amc::MsgLTA &parent, algo::strptr in_str) {
+bool atf_amc::MsgLTA_ReadStrptrMaybe(atf_amc::MsgLTA &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.MsgLTA");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -11407,7 +11407,7 @@ bool atf_amc::MsgLTA_ReadStrptrMaybe(atf_amc::MsgLTA &parent, algo::strptr in_st
 // --- atf_amc.MsgLTA..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.MsgLTA.String  printfmt:Tuple
-void atf_amc::MsgLTA_Print(atf_amc::MsgLTA& row, algo::cstring& str) {
+void atf_amc::MsgLTA_Print(atf_amc::MsgLTA& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.MsgLTA";
 
@@ -11417,7 +11417,7 @@ void atf_amc::MsgLTA_Print(atf_amc::MsgLTA& row, algo::cstring& str) {
 
 // --- atf_amc.MsgLTB.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::MsgLTB &row, atf_amc::MsgHdrLT &out) {
+void atf_amc::parent_CopyOut(atf_amc::MsgLTB &row, atf_amc::MsgHdrLT &out) throw() {
     // len: field value is computed
     // type: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -11425,7 +11425,7 @@ void atf_amc::parent_CopyOut(atf_amc::MsgLTB &row, atf_amc::MsgHdrLT &out) {
 }
 
 // --- atf_amc.MsgLTB..ReadFieldMaybe
-bool atf_amc::MsgLTB_ReadFieldMaybe(atf_amc::MsgLTB& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::MsgLTB_ReadFieldMaybe(atf_amc::MsgLTB& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -11457,7 +11457,7 @@ bool atf_amc::MsgLTB_ReadFieldMaybe(atf_amc::MsgLTB& parent, algo::strptr field,
 // --- atf_amc.MsgLTB..ReadStrptrMaybe
 // Read fields of atf_amc::MsgLTB from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::MsgLTB_ReadStrptrMaybe(atf_amc::MsgLTB &parent, algo::strptr in_str) {
+bool atf_amc::MsgLTB_ReadStrptrMaybe(atf_amc::MsgLTB &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.MsgLTB");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -11469,7 +11469,7 @@ bool atf_amc::MsgLTB_ReadStrptrMaybe(atf_amc::MsgLTB &parent, algo::strptr in_st
 // --- atf_amc.MsgLTB..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.MsgLTB.String  printfmt:Tuple
-void atf_amc::MsgLTB_Print(atf_amc::MsgLTB& row, algo::cstring& str) {
+void atf_amc::MsgLTB_Print(atf_amc::MsgLTB& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.MsgLTB";
 
@@ -11479,7 +11479,7 @@ void atf_amc::MsgLTB_Print(atf_amc::MsgLTB& row, algo::cstring& str) {
 
 // --- atf_amc.MsgLTO.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::MsgLTO &row, atf_amc::MsgHdrLT &out) {
+void atf_amc::parent_CopyOut(atf_amc::MsgLTO &row, atf_amc::MsgHdrLT &out) throw() {
     // len: field value is computed
     // type: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -11488,13 +11488,13 @@ void atf_amc::parent_CopyOut(atf_amc::MsgLTO &row, atf_amc::MsgHdrLT &out) {
 
 // --- atf_amc.MsgLTO.o.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> atf_amc::o_Getary(atf_amc::MsgLTO& parent) {
+algo::aryptr<u8> atf_amc::o_Getary(atf_amc::MsgLTO& parent) throw() {
     u8 *end = (u8*)&parent + sizeof(atf_amc::MsgLTO);
     return algo::aryptr<u8>(end, i32(parent.len + 2) - ssizeof(atf_amc::MsgLTO));
 }
 
 // --- atf_amc.MsgLTO.o.Print
-void atf_amc::o_Print(atf_amc::MsgLTO& parent, cstring &out) {
+void atf_amc::o_Print(atf_amc::MsgLTO& parent, cstring &out) throw() {
     (void)out;
     (void)parent;
     if (atf_amc::MsgHdrLT *o = o_Get(parent)) {
@@ -11504,7 +11504,7 @@ void atf_amc::o_Print(atf_amc::MsgLTO& parent, cstring &out) {
 
 // --- atf_amc.MsgLTO.o.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::o_ReadStrptrMaybe(atf_amc::MsgLTO &parent, algo::strptr in_str) {
+bool atf_amc::o_ReadStrptrMaybe(atf_amc::MsgLTO &parent, algo::strptr in_str) throw() {
     bool retval = false;
     if (algo_lib::_db.varlenbuf) {
         algo::ByteAry temp;
@@ -11525,7 +11525,7 @@ bool atf_amc::o_XrefMaybe(atf_amc::MsgHdrLT &row) {
 }
 
 // --- atf_amc.MsgLTO..ReadFieldMaybe
-bool atf_amc::MsgLTO_ReadFieldMaybe(atf_amc::MsgLTO& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::MsgLTO_ReadFieldMaybe(atf_amc::MsgLTO& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -11558,7 +11558,7 @@ bool atf_amc::MsgLTO_ReadFieldMaybe(atf_amc::MsgLTO& parent, algo::strptr field,
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::MsgLTO from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::MsgLTO_ReadStrptrMaybe(atf_amc::MsgLTO &parent, algo::strptr in_str) {
+bool atf_amc::MsgLTO_ReadStrptrMaybe(atf_amc::MsgLTO &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.MsgLTO");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -11570,7 +11570,7 @@ bool atf_amc::MsgLTO_ReadStrptrMaybe(atf_amc::MsgLTO &parent, algo::strptr in_st
 // --- atf_amc.MsgLTO..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.MsgLTO.String  printfmt:Tuple
-void atf_amc::MsgLTO_Print(atf_amc::MsgLTO& row, algo::cstring& str) {
+void atf_amc::MsgLTO_Print(atf_amc::MsgLTO& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.MsgLTO";
 
@@ -11582,7 +11582,7 @@ void atf_amc::MsgLTO_Print(atf_amc::MsgLTO& row, algo::cstring& str) {
 
 // --- atf_amc.MsgLTV.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::MsgLTV &row, atf_amc::MsgHdrLT &out) {
+void atf_amc::parent_CopyOut(atf_amc::MsgLTV &row, atf_amc::MsgHdrLT &out) throw() {
     // len: field value is computed
     // type: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -11591,7 +11591,7 @@ void atf_amc::parent_CopyOut(atf_amc::MsgLTV &row, atf_amc::MsgHdrLT &out) {
 
 // --- atf_amc.MsgLTV.v.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u8> atf_amc::v_Getary(atf_amc::MsgLTV& parent) {
+algo::aryptr<u8> atf_amc::v_Getary(atf_amc::MsgLTV& parent) throw() {
     return algo::aryptr<u8>(v_Addr(parent), v_N(parent));
 }
 
@@ -11602,7 +11602,7 @@ u8* atf_amc::v_Addr(atf_amc::MsgLTV& parent) {
 
 // --- atf_amc.MsgLTV.v.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::v_ReadStrptrMaybe(atf_amc::MsgLTV& parent, algo::strptr in_str) {
+bool atf_amc::v_ReadStrptrMaybe(atf_amc::MsgLTV& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         algo::ByteAry temp;
@@ -11614,7 +11614,7 @@ bool atf_amc::v_ReadStrptrMaybe(atf_amc::MsgLTV& parent, algo::strptr in_str) {
 }
 
 // --- atf_amc.MsgLTV..ReadFieldMaybe
-bool atf_amc::MsgLTV_ReadFieldMaybe(atf_amc::MsgLTV& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::MsgLTV_ReadFieldMaybe(atf_amc::MsgLTV& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -11647,7 +11647,7 @@ bool atf_amc::MsgLTV_ReadFieldMaybe(atf_amc::MsgLTV& parent, algo::strptr field,
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::MsgLTV from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::MsgLTV_ReadStrptrMaybe(atf_amc::MsgLTV &parent, algo::strptr in_str) {
+bool atf_amc::MsgLTV_ReadStrptrMaybe(atf_amc::MsgLTV &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.MsgLTV");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -11659,7 +11659,7 @@ bool atf_amc::MsgLTV_ReadStrptrMaybe(atf_amc::MsgLTV &parent, algo::strptr in_st
 // --- atf_amc.MsgLTV..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.MsgLTV.String  printfmt:Tuple
-void atf_amc::MsgLTV_Print(atf_amc::MsgLTV& row, algo::cstring& str) {
+void atf_amc::MsgLTV_Print(atf_amc::MsgLTV& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.MsgLTV";
 
@@ -11677,7 +11677,7 @@ void atf_amc::MsgLTV_Print(atf_amc::MsgLTV& row, algo::cstring& str) {
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by atf_amc::Msgbuf.in_buf via FIohook field.
 // Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
-void atf_amc::in_buf_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
+void atf_amc::in_buf_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) throw() {
     callback_Set1(msgbuf.in_buf_iohook, msgbuf, atf_amc::cd_in_msg_Insert);
     msgbuf.in_buf_iohook.fildes = fd;
     IOEvtFlags flags;
@@ -11691,7 +11691,7 @@ void atf_amc::in_buf_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
 
 // --- atf_amc.Msgbuf.in_buf.EndRead
 // Set EOF flag
-void atf_amc::in_buf_EndRead(atf_amc::Msgbuf& msgbuf) {
+void atf_amc::in_buf_EndRead(atf_amc::Msgbuf& msgbuf) throw() {
     if (ValidQ(msgbuf.in_buf_iohook.fildes)) {
         msgbuf.in_buf_eof = true;
         atf_amc::cd_in_msg_Insert(msgbuf);
@@ -11705,7 +11705,7 @@ void atf_amc::in_buf_EndRead(atf_amc::Msgbuf& msgbuf) {
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is length-delimited based on field length field
 // 
-atf_amc::MsgHeader* atf_amc::in_buf_GetMsg(atf_amc::Msgbuf& msgbuf) {
+atf_amc::MsgHeader* atf_amc::in_buf_GetMsg(atf_amc::Msgbuf& msgbuf) throw() {
     atf_amc::MsgHeader* ret;
     if (!msgbuf.in_buf_msgvalid) {
         in_buf_ScanMsg(msgbuf);
@@ -11723,7 +11723,7 @@ atf_amc::MsgHeader* atf_amc::in_buf_GetMsg(atf_amc::Msgbuf& msgbuf) {
 
 // --- atf_amc.Msgbuf.in_buf.Refill
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool atf_amc::in_buf_Refill(atf_amc::Msgbuf& msgbuf) {
+bool atf_amc::in_buf_Refill(atf_amc::Msgbuf& msgbuf) throw() {
     bool readable = ValidQ(msgbuf.in_buf_iohook.fildes);
     if (readable) {
         int fd     = msgbuf.in_buf_iohook.fildes.value;
@@ -11755,7 +11755,7 @@ bool atf_amc::in_buf_Refill(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_buf.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_buf_RemoveAll(atf_amc::Msgbuf& msgbuf) {
+void atf_amc::in_buf_RemoveAll(atf_amc::Msgbuf& msgbuf) throw() {
     msgbuf.in_buf_start    = 0;
     msgbuf.in_buf_end      = 0;
     msgbuf.in_buf_msgvalid = false;
@@ -11764,7 +11764,7 @@ void atf_amc::in_buf_RemoveAll(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_buf.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_buf_ScanMsg(atf_amc::Msgbuf& msgbuf) {
+static void atf_amc::in_buf_ScanMsg(atf_amc::Msgbuf& msgbuf) throw() {
     atf_amc::MsgHeader *hdr = (atf_amc::MsgHeader*)(msgbuf.in_buf_elems + msgbuf.in_buf_start);
     i32 avail = in_buf_N(msgbuf);
     i32 msglen;
@@ -11785,7 +11785,7 @@ static void atf_amc::in_buf_ScanMsg(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_buf.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_buf_Shift(atf_amc::Msgbuf& msgbuf) {
+static void atf_amc::in_buf_Shift(atf_amc::Msgbuf& msgbuf) throw() {
     i32 start = msgbuf.in_buf_start;
     i32 bytes_n = msgbuf.in_buf_end - start;
     if (bytes_n > 0) {
@@ -11798,7 +11798,7 @@ static void atf_amc::in_buf_Shift(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_buf.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_buf_SkipMsg(atf_amc::Msgbuf& msgbuf) {
+void atf_amc::in_buf_SkipMsg(atf_amc::Msgbuf& msgbuf) throw() {
     if (msgbuf.in_buf_msgvalid) {
         int skip = msgbuf.in_buf_msglen;
         i32 start = msgbuf.in_buf_start;
@@ -11815,7 +11815,7 @@ void atf_amc::in_buf_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_buf_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+bool atf_amc::in_buf_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) throw() {
     int max = in_buf_Max(msgbuf);
     // check if message doesn't fit. if so, shift bytes over.
     if (msgbuf.in_buf_end + in_n > max) {
@@ -11845,7 +11845,7 @@ bool atf_amc::in_buf_XrefMaybe(atf_amc::MsgHeader &row) {
 // Attach file descriptor and begin reading using edge-triggered epoll.
 // File descriptor becomes owned by atf_amc::Msgbuf.in_custom via FIohook field.
 // Whenever the file descriptor becomes readable, insert msgbuf into cd_in_msg.
-void atf_amc::in_custom_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
+void atf_amc::in_custom_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) throw() {
     callback_Set1(msgbuf.in_custom_iohook, msgbuf, atf_amc::cd_in_msg_Insert);
     msgbuf.in_custom_iohook.fildes = fd;
     IOEvtFlags flags;
@@ -11859,7 +11859,7 @@ void atf_amc::in_custom_BeginRead(atf_amc::Msgbuf& msgbuf, algo::Fildes fd) {
 
 // --- atf_amc.Msgbuf.in_custom.EndRead
 // Set EOF flag
-void atf_amc::in_custom_EndRead(atf_amc::Msgbuf& msgbuf) {
+void atf_amc::in_custom_EndRead(atf_amc::Msgbuf& msgbuf) throw() {
     if (ValidQ(msgbuf.in_custom_iohook.fildes)) {
         msgbuf.in_custom_eof = true;
         atf_amc::cd_in_msg_Insert(msgbuf);
@@ -11873,7 +11873,7 @@ void atf_amc::in_custom_EndRead(atf_amc::Msgbuf& msgbuf) {
 // If there is no message, read once from underlying file descriptor and try again.
 // The message boundary is determined by a custom ScanMsg function implemented by user
 // 
-algo::aryptr<char> atf_amc::in_custom_GetMsg(atf_amc::Msgbuf& msgbuf) {
+algo::aryptr<char> atf_amc::in_custom_GetMsg(atf_amc::Msgbuf& msgbuf) throw() {
     algo::aryptr<char> ret;
     if (!msgbuf.in_custom_msgvalid) {
         in_custom_ScanMsg(msgbuf);
@@ -11894,7 +11894,7 @@ algo::aryptr<char> atf_amc::in_custom_GetMsg(atf_amc::Msgbuf& msgbuf) {
 
 // --- atf_amc.Msgbuf.in_custom.Refill
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
-bool atf_amc::in_custom_Refill(atf_amc::Msgbuf& msgbuf) {
+bool atf_amc::in_custom_Refill(atf_amc::Msgbuf& msgbuf) throw() {
     bool readable = ValidQ(msgbuf.in_custom_iohook.fildes);
     if (readable) {
         int fd     = msgbuf.in_custom_iohook.fildes.value;
@@ -11926,7 +11926,7 @@ bool atf_amc::in_custom_Refill(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_custom.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_custom_RemoveAll(atf_amc::Msgbuf& msgbuf) {
+void atf_amc::in_custom_RemoveAll(atf_amc::Msgbuf& msgbuf) throw() {
     msgbuf.in_custom_start    = 0;
     msgbuf.in_custom_end      = 0;
     msgbuf.in_custom_msgvalid = false;
@@ -11935,7 +11935,7 @@ void atf_amc::in_custom_RemoveAll(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_custom.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_custom_Shift(atf_amc::Msgbuf& msgbuf) {
+static void atf_amc::in_custom_Shift(atf_amc::Msgbuf& msgbuf) throw() {
     i32 start = msgbuf.in_custom_start;
     i32 bytes_n = msgbuf.in_custom_end - start;
     if (bytes_n > 0) {
@@ -11949,7 +11949,7 @@ static void atf_amc::in_custom_Shift(atf_amc::Msgbuf& msgbuf) {
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_amc::in_custom_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) {
+void atf_amc::in_custom_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) throw() {
     int avail = msgbuf.in_custom_end - msgbuf.in_custom_start;
     n = i32_Min(n,avail);
     msgbuf.in_custom_start += n;
@@ -11959,7 +11959,7 @@ void atf_amc::in_custom_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) {
 // --- atf_amc.Msgbuf.in_custom.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_custom_SkipMsg(atf_amc::Msgbuf& msgbuf) {
+void atf_amc::in_custom_SkipMsg(atf_amc::Msgbuf& msgbuf) throw() {
     if (msgbuf.in_custom_msgvalid) {
         int skip = msgbuf.in_custom_msglen;
         i32 start = msgbuf.in_custom_start;
@@ -11976,7 +11976,7 @@ void atf_amc::in_custom_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_custom_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+bool atf_amc::in_custom_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) throw() {
     int max = in_custom_Max(msgbuf);
     // check if message doesn't fit. if so, shift bytes over.
     if (msgbuf.in_custom_end + in_n > max) {
@@ -11995,7 +11995,7 @@ bool atf_amc::in_custom_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 // --- atf_amc.Msgbuf.out_extra.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::out_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) {
+void atf_amc::out_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) throw() {
     msgbuf.out_extra_start    = 0;
     msgbuf.out_extra_end      = 0;
     msgbuf.out_extra_msgvalid = false;
@@ -12004,7 +12004,7 @@ void atf_amc::out_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.out_extra.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::out_extra_Shift(atf_amc::Msgbuf& msgbuf) {
+static void atf_amc::out_extra_Shift(atf_amc::Msgbuf& msgbuf) throw() {
     i32 start = msgbuf.out_extra_start;
     i32 bytes_n = msgbuf.out_extra_end - start;
     if (bytes_n > 0) {
@@ -12018,7 +12018,7 @@ static void atf_amc::out_extra_Shift(atf_amc::Msgbuf& msgbuf) {
 // Skip N bytes when reading
 // Mark some buffer contents as read.
 // 
-void atf_amc::out_extra_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) {
+void atf_amc::out_extra_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) throw() {
     int avail = msgbuf.out_extra_end - msgbuf.out_extra_start;
     n = i32_Min(n,avail);
     msgbuf.out_extra_start += n;
@@ -12028,7 +12028,7 @@ void atf_amc::out_extra_SkipBytes(atf_amc::Msgbuf& msgbuf, int n) {
 // --- atf_amc.Msgbuf.out_extra.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::out_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) {
+void atf_amc::out_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) throw() {
     if (msgbuf.out_extra_msgvalid) {
         int skip = msgbuf.out_extra_msglen;
         i32 start = msgbuf.out_extra_start;
@@ -12045,7 +12045,7 @@ void atf_amc::out_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::out_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+bool atf_amc::out_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) throw() {
     int max = out_extra_Max(msgbuf);
     // check if message doesn't fit. if so, shift bytes over.
     if (msgbuf.out_extra_end + in_n > max) {
@@ -12063,7 +12063,7 @@ bool atf_amc::out_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
 
 // --- atf_amc.Msgbuf.out_extra.WriteMsg
 // Write message to buffer. If the entire message is written, return true, otherwise false.
-bool atf_amc::out_extra_WriteMsg(atf_amc::Msgbuf& msgbuf, atf_amc::MsgHdrLT &msg) {
+bool atf_amc::out_extra_WriteMsg(atf_amc::Msgbuf& msgbuf, atf_amc::MsgHdrLT &msg) throw() {
     return out_extra_WriteAll(msgbuf, (u8*)&msg, i32(msg.len + 2));
 }
 
@@ -12074,7 +12074,7 @@ bool atf_amc::out_extra_WriteMsg(atf_amc::Msgbuf& msgbuf, atf_amc::MsgHdrLT &msg
 // If there is no message, read once from underlying file descriptor and try again.
 // The message is length-delimited based on field len field
 // 
-atf_amc::MsgHdrLT* atf_amc::in_extra_GetMsg(atf_amc::Msgbuf& msgbuf) {
+atf_amc::MsgHdrLT* atf_amc::in_extra_GetMsg(atf_amc::Msgbuf& msgbuf) throw() {
     atf_amc::MsgHdrLT* ret;
     if (!msgbuf.in_extra_msgvalid) {
         in_extra_ScanMsg(msgbuf);
@@ -12087,7 +12087,7 @@ atf_amc::MsgHdrLT* atf_amc::in_extra_GetMsg(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_extra.RemoveAll
 // Empty bfufer
 // Discard contents of the buffer.
-void atf_amc::in_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) {
+void atf_amc::in_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) throw() {
     msgbuf.in_extra_start    = 0;
     msgbuf.in_extra_end      = 0;
     msgbuf.in_extra_msgvalid = false;
@@ -12096,7 +12096,7 @@ void atf_amc::in_extra_RemoveAll(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_extra.ScanMsg
 // Internal function to scan for a message
 // 
-static void atf_amc::in_extra_ScanMsg(atf_amc::Msgbuf& msgbuf) {
+static void atf_amc::in_extra_ScanMsg(atf_amc::Msgbuf& msgbuf) throw() {
     atf_amc::MsgHdrLT *hdr = (atf_amc::MsgHdrLT*)(msgbuf.in_extra_elems + msgbuf.in_extra_start);
     i32 avail = in_extra_N(msgbuf);
     i32 msglen;
@@ -12117,7 +12117,7 @@ static void atf_amc::in_extra_ScanMsg(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_extra.Shift
 // Internal function to shift data left
 // Shift existing bytes over to the beginning of the buffer
-static void atf_amc::in_extra_Shift(atf_amc::Msgbuf& msgbuf) {
+static void atf_amc::in_extra_Shift(atf_amc::Msgbuf& msgbuf) throw() {
     i32 start = msgbuf.in_extra_start;
     i32 bytes_n = msgbuf.in_extra_end - start;
     if (bytes_n > 0) {
@@ -12130,7 +12130,7 @@ static void atf_amc::in_extra_Shift(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf.in_extra.SkipMsg
 // Skip current message, if any
 // Skip current message, if any.
-void atf_amc::in_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) {
+void atf_amc::in_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) throw() {
     if (msgbuf.in_extra_msgvalid) {
         int skip = msgbuf.in_extra_msglen;
         i32 start = msgbuf.in_extra_start;
@@ -12147,7 +12147,7 @@ void atf_amc::in_extra_SkipMsg(atf_amc::Msgbuf& msgbuf) {
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
-bool atf_amc::in_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) {
+bool atf_amc::in_extra_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) throw() {
     int max = in_extra_Max(msgbuf);
     // check if message doesn't fit. if so, shift bytes over.
     if (msgbuf.in_extra_end + in_n > max) {
@@ -12195,7 +12195,7 @@ void atf_amc::Msgbuf_Init(atf_amc::Msgbuf& msgbuf) {
 }
 
 // --- atf_amc.Msgbuf..Uninit
-void atf_amc::Msgbuf_Uninit(atf_amc::Msgbuf& msgbuf) {
+void atf_amc::Msgbuf_Uninit(atf_amc::Msgbuf& msgbuf) throw() {
     atf_amc::Msgbuf &row = msgbuf; (void)row;
     cd_in_msg_Remove(row); // remove msgbuf from index cd_in_msg
 }
@@ -12203,7 +12203,7 @@ void atf_amc::Msgbuf_Uninit(atf_amc::Msgbuf& msgbuf) {
 // --- atf_amc.Msgbuf..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Msgbuf.String  printfmt:Raw
-void atf_amc::Msgbuf_Print(atf_amc::Msgbuf& row, algo::cstring& str) {
+void atf_amc::Msgbuf_Print(atf_amc::Msgbuf& row, algo::cstring& str) throw() {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
@@ -12211,7 +12211,7 @@ void atf_amc::Msgbuf_Print(atf_amc::Msgbuf& row, algo::cstring& str) {
 // --- atf_amc.MsgsCase.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::MsgsCase& parent) {
+const char* atf_amc::value_ToCstr(const atf_amc::MsgsCase& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_amc_MsgsCase_atf_amc_VarlenK: ret = "atf_amc.VarlenK";  break;
@@ -12222,7 +12222,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::MsgsCase& parent) {
 // --- atf_amc.MsgsCase.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::MsgsCase& parent, algo::cstring &lhs) {
+void atf_amc::value_Print(const atf_amc::MsgsCase& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -12235,7 +12235,7 @@ void atf_amc::value_Print(const atf_amc::MsgsCase& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgsCase& parent, algo::strptr rhs) {
+bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgsCase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 15: {
@@ -12254,13 +12254,13 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::MsgsCase& parent, algo::strptr rhs) 
 // --- atf_amc.MsgsCase.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::MsgsCase& parent, algo::strptr rhs, atf_amc_MsgsCaseEnum dflt) {
+void atf_amc::value_SetStrptr(atf_amc::MsgsCase& parent, algo::strptr rhs, atf_amc_MsgsCaseEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.MsgsCase.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgsCase& parent, algo::strptr rhs) {
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgsCase& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -12272,7 +12272,7 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::MsgsCase& parent, algo::strptr rhs)
 // --- atf_amc.MsgsCase..ReadStrptrMaybe
 // Read fields of atf_amc::MsgsCase from an ascii string.
 // The format of the string is the format of the atf_amc::MsgsCase's only field
-bool atf_amc::MsgsCase_ReadStrptrMaybe(atf_amc::MsgsCase &parent, algo::strptr in_str) {
+bool atf_amc::MsgsCase_ReadStrptrMaybe(atf_amc::MsgsCase &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12281,19 +12281,19 @@ bool atf_amc::MsgsCase_ReadStrptrMaybe(atf_amc::MsgsCase &parent, algo::strptr i
 // --- atf_amc.NetBitfld1..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.NetBitfld1.String  printfmt:Raw
-void atf_amc::NetBitfld1_Print(atf_amc::NetBitfld1& row, algo::cstring& str) {
+void atf_amc::NetBitfld1_Print(atf_amc::NetBitfld1& row, algo::cstring& str) throw() {
     u16_Print(value_Get(row), str);
 }
 
 // --- atf_amc.OptAlloc.typeg.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptAlloc& optalloc) {
+algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptAlloc& optalloc) throw() {
     u8 *end = (u8*)&optalloc + sizeof(atf_amc::OptAlloc);
     return algo::aryptr<u8>(end, i32(optalloc.length) - ssizeof(atf_amc::OptAlloc));
 }
 
 // --- atf_amc.OptAlloc.typeg.Print
-void atf_amc::typeg_Print(atf_amc::OptAlloc& optalloc, cstring &out) {
+void atf_amc::typeg_Print(atf_amc::OptAlloc& optalloc, cstring &out) throw() {
     (void)out;
     (void)optalloc;
     if (atf_amc::TypeG *typeg = typeg_Get(optalloc)) {
@@ -12303,7 +12303,7 @@ void atf_amc::typeg_Print(atf_amc::OptAlloc& optalloc, cstring &out) {
 
 // --- atf_amc.OptAlloc.typeg.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::typeg_ReadStrptrMaybe(atf_amc::OptAlloc &parent, algo::strptr in_str) {
+bool atf_amc::typeg_ReadStrptrMaybe(atf_amc::OptAlloc &parent, algo::strptr in_str) throw() {
     bool retval = false;
     // field cannot be read
     (void)parent;//only to avoid -Wunused-parameter
@@ -12321,7 +12321,7 @@ bool atf_amc::typeg_XrefMaybe(atf_amc::TypeG &row) {
 }
 
 // --- atf_amc.OptAlloc..ReadFieldMaybe
-bool atf_amc::OptAlloc_ReadFieldMaybe(atf_amc::OptAlloc& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::OptAlloc_ReadFieldMaybe(atf_amc::OptAlloc& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -12346,7 +12346,7 @@ bool atf_amc::OptAlloc_ReadFieldMaybe(atf_amc::OptAlloc& parent, algo::strptr fi
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::OptAlloc from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::OptAlloc_ReadStrptrMaybe(atf_amc::OptAlloc &parent, algo::strptr in_str) {
+bool atf_amc::OptAlloc_ReadStrptrMaybe(atf_amc::OptAlloc &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.OptAlloc");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -12358,7 +12358,7 @@ bool atf_amc::OptAlloc_ReadStrptrMaybe(atf_amc::OptAlloc &parent, algo::strptr i
 // --- atf_amc.OptAlloc..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.OptAlloc.String  printfmt:Tuple
-void atf_amc::OptAlloc_Print(atf_amc::OptAlloc& row, algo::cstring& str) {
+void atf_amc::OptAlloc_Print(atf_amc::OptAlloc& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.OptAlloc";
 
@@ -12370,13 +12370,13 @@ void atf_amc::OptAlloc_Print(atf_amc::OptAlloc& row, algo::cstring& str) {
 
 // --- atf_amc.OptG.typeg.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptG& optg) {
+algo::aryptr<u8> atf_amc::typeg_Getary(atf_amc::OptG& optg) throw() {
     u8 *end = (u8*)&optg + sizeof(atf_amc::OptG);
     return algo::aryptr<u8>(end, i32(optg.length) - ssizeof(atf_amc::OptG));
 }
 
 // --- atf_amc.OptG.typeg.Print
-void atf_amc::typeg_Print(atf_amc::OptG& optg, cstring &out) {
+void atf_amc::typeg_Print(atf_amc::OptG& optg, cstring &out) throw() {
     (void)out;
     (void)optg;
     if (atf_amc::TypeG *typeg = typeg_Get(optg)) {
@@ -12386,7 +12386,7 @@ void atf_amc::typeg_Print(atf_amc::OptG& optg, cstring &out) {
 
 // --- atf_amc.OptG.typeg.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::typeg_ReadStrptrMaybe(atf_amc::OptG &parent, algo::strptr in_str) {
+bool atf_amc::typeg_ReadStrptrMaybe(atf_amc::OptG &parent, algo::strptr in_str) throw() {
     bool retval = false;
     // field cannot be read
     (void)parent;//only to avoid -Wunused-parameter
@@ -12395,7 +12395,7 @@ bool atf_amc::typeg_ReadStrptrMaybe(atf_amc::OptG &parent, algo::strptr in_str) 
 }
 
 // --- atf_amc.OptG..ReadFieldMaybe
-bool atf_amc::OptG_ReadFieldMaybe(atf_amc::OptG& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::OptG_ReadFieldMaybe(atf_amc::OptG& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -12420,7 +12420,7 @@ bool atf_amc::OptG_ReadFieldMaybe(atf_amc::OptG& parent, algo::strptr field, alg
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::OptG from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::OptG_ReadStrptrMaybe(atf_amc::OptG &parent, algo::strptr in_str) {
+bool atf_amc::OptG_ReadStrptrMaybe(atf_amc::OptG &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.OptG");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -12432,7 +12432,7 @@ bool atf_amc::OptG_ReadStrptrMaybe(atf_amc::OptG &parent, algo::strptr in_str) {
 // --- atf_amc.OptG..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.OptG.String  printfmt:Tuple
-void atf_amc::OptG_Print(atf_amc::OptG& row, algo::cstring& str) {
+void atf_amc::OptG_Print(atf_amc::OptG& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.OptG";
 
@@ -12444,13 +12444,13 @@ void atf_amc::OptG_Print(atf_amc::OptG& row, algo::cstring& str) {
 
 // --- atf_amc.OptOptG.optg.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> atf_amc::optg_Getary(atf_amc::OptOptG& parent) {
+algo::aryptr<u8> atf_amc::optg_Getary(atf_amc::OptOptG& parent) throw() {
     u8 *end = (u8*)&parent + sizeof(atf_amc::OptOptG);
     return algo::aryptr<u8>(end, i32(parent.length) - ssizeof(atf_amc::OptOptG));
 }
 
 // --- atf_amc.OptOptG.optg.Print
-void atf_amc::optg_Print(atf_amc::OptOptG& parent, cstring &out) {
+void atf_amc::optg_Print(atf_amc::OptOptG& parent, cstring &out) throw() {
     (void)out;
     (void)parent;
     if (atf_amc::OptG *optg = optg_Get(parent)) {
@@ -12460,7 +12460,7 @@ void atf_amc::optg_Print(atf_amc::OptOptG& parent, cstring &out) {
 
 // --- atf_amc.OptOptG.optg.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::optg_ReadStrptrMaybe(atf_amc::OptOptG &parent, algo::strptr in_str) {
+bool atf_amc::optg_ReadStrptrMaybe(atf_amc::OptOptG &parent, algo::strptr in_str) throw() {
     bool retval = false;
     if (algo::ByteAry* varlenbuf_save = algo_lib::_db.varlenbuf) {
         int len = sizeof(atf_amc::OptG);
@@ -12487,7 +12487,7 @@ bool atf_amc::optg_XrefMaybe(atf_amc::OptG &row) {
 }
 
 // --- atf_amc.OptOptG..ReadFieldMaybe
-bool atf_amc::OptOptG_ReadFieldMaybe(atf_amc::OptOptG& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::OptOptG_ReadFieldMaybe(atf_amc::OptOptG& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -12512,7 +12512,7 @@ bool atf_amc::OptOptG_ReadFieldMaybe(atf_amc::OptOptG& parent, algo::strptr fiel
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::OptOptG from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::OptOptG_ReadStrptrMaybe(atf_amc::OptOptG &parent, algo::strptr in_str) {
+bool atf_amc::OptOptG_ReadStrptrMaybe(atf_amc::OptOptG &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.OptOptG");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -12524,7 +12524,7 @@ bool atf_amc::OptOptG_ReadStrptrMaybe(atf_amc::OptOptG &parent, algo::strptr in_
 // --- atf_amc.OptOptG..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.OptOptG.String  printfmt:Tuple
-void atf_amc::OptOptG_Print(atf_amc::OptOptG& row, algo::cstring& str) {
+void atf_amc::OptOptG_Print(atf_amc::OptOptG& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.OptOptG";
 
@@ -12535,7 +12535,7 @@ void atf_amc::OptOptG_Print(atf_amc::OptOptG& row, algo::cstring& str) {
 }
 
 // --- atf_amc.PmaskMultiple.value1.ReadStrptrMaybe
-inline static bool atf_amc::value1_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value1_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value1_tmp;
     retval = u32_ReadStrptrMaybe(value1_tmp, in_str);
@@ -12546,7 +12546,7 @@ inline static bool atf_amc::value1_ReadStrptrMaybe(atf_amc::PmaskMultiple &paren
 }
 
 // --- atf_amc.PmaskMultiple.value2.ReadStrptrMaybe
-inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value2_tmp;
     retval = u32_ReadStrptrMaybe(value2_tmp, in_str);
@@ -12557,7 +12557,7 @@ inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskMultiple &paren
 }
 
 // --- atf_amc.PmaskMultiple.value3.ReadStrptrMaybe
-inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value3_tmp;
     retval = u32_ReadStrptrMaybe(value3_tmp, in_str);
@@ -12568,7 +12568,7 @@ inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskMultiple &paren
 }
 
 // --- atf_amc.PmaskMultiple.value4.ReadStrptrMaybe
-inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value4_tmp;
     retval = u32_ReadStrptrMaybe(value4_tmp, in_str);
@@ -12579,7 +12579,7 @@ inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskMultiple &paren
 }
 
 // --- atf_amc.PmaskMultiple.value5.ReadStrptrMaybe
-inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value5_tmp;
     retval = u32_ReadStrptrMaybe(value5_tmp, in_str);
@@ -12590,7 +12590,7 @@ inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskMultiple &paren
 }
 
 // --- atf_amc.PmaskMultiple.value6.ReadStrptrMaybe
-inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value6_tmp;
     retval = u32_ReadStrptrMaybe(value6_tmp, in_str);
@@ -12601,7 +12601,7 @@ inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskMultiple &paren
 }
 
 // --- atf_amc.PmaskMultiple.value7.ReadStrptrMaybe
-inline static bool atf_amc::value7_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+inline static bool atf_amc::value7_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value7_tmp;
     retval = u32_ReadStrptrMaybe(value7_tmp, in_str);
@@ -12660,7 +12660,7 @@ void atf_amc::PmaskMultiple_nullable_bitcurs_Next(PmaskMultiple_nullable_bitcurs
 }
 
 // --- atf_amc.PmaskMultiple..ReadFieldMaybe
-bool atf_amc::PmaskMultiple_ReadFieldMaybe(atf_amc::PmaskMultiple& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::PmaskMultiple_ReadFieldMaybe(atf_amc::PmaskMultiple& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -12747,7 +12747,7 @@ bool atf_amc::PmaskMultiple_ReadFieldMaybe(atf_amc::PmaskMultiple& parent, algo:
 // --- atf_amc.PmaskMultiple..ReadStrptrMaybe
 // Read fields of atf_amc::PmaskMultiple from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::PmaskMultiple_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) {
+bool atf_amc::PmaskMultiple_ReadStrptrMaybe(atf_amc::PmaskMultiple &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.PmaskMultiple");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -12774,7 +12774,7 @@ void atf_amc::PmaskMultiple_Init(atf_amc::PmaskMultiple& parent) {
 // --- atf_amc.PmaskMultiple..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.PmaskMultiple.String  printfmt:Tuple
-void atf_amc::PmaskMultiple_Print(atf_amc::PmaskMultiple& row, algo::cstring& str) {
+void atf_amc::PmaskMultiple_Print(atf_amc::PmaskMultiple& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.PmaskMultiple";
 
@@ -12807,7 +12807,7 @@ void atf_amc::PmaskMultiple_Print(atf_amc::PmaskMultiple& row, algo::cstring& st
 }
 
 // --- atf_amc.PmaskU128.value.ReadStrptrMaybe
-inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value_tmp;
     retval = u32_ReadStrptrMaybe(value_tmp, in_str);
@@ -12818,7 +12818,7 @@ inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, al
 }
 
 // --- atf_amc.PmaskU128.value2.ReadStrptrMaybe
-inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value2_tmp;
     retval = u32_ReadStrptrMaybe(value2_tmp, in_str);
@@ -12829,7 +12829,7 @@ inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value3.ReadStrptrMaybe
-inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value3_tmp;
     retval = u32_ReadStrptrMaybe(value3_tmp, in_str);
@@ -12840,7 +12840,7 @@ inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value21.ReadStrptrMaybe
-inline static bool atf_amc::value21_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value21_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value21_tmp;
     retval = u32_ReadStrptrMaybe(value21_tmp, in_str);
@@ -12851,7 +12851,7 @@ inline static bool atf_amc::value21_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value22.ReadStrptrMaybe
-inline static bool atf_amc::value22_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value22_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value22_tmp;
     retval = u32_ReadStrptrMaybe(value22_tmp, in_str);
@@ -12862,7 +12862,7 @@ inline static bool atf_amc::value22_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value23.ReadStrptrMaybe
-inline static bool atf_amc::value23_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value23_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value23_tmp;
     retval = u32_ReadStrptrMaybe(value23_tmp, in_str);
@@ -12873,7 +12873,7 @@ inline static bool atf_amc::value23_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value24.ReadStrptrMaybe
-inline static bool atf_amc::value24_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value24_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value24_tmp;
     retval = u32_ReadStrptrMaybe(value24_tmp, in_str);
@@ -12884,7 +12884,7 @@ inline static bool atf_amc::value24_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value25.ReadStrptrMaybe
-inline static bool atf_amc::value25_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value25_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value25_tmp;
     retval = u32_ReadStrptrMaybe(value25_tmp, in_str);
@@ -12895,7 +12895,7 @@ inline static bool atf_amc::value25_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value26.ReadStrptrMaybe
-inline static bool atf_amc::value26_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value26_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value26_tmp;
     retval = u32_ReadStrptrMaybe(value26_tmp, in_str);
@@ -12906,7 +12906,7 @@ inline static bool atf_amc::value26_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value20.ReadStrptrMaybe
-inline static bool atf_amc::value20_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value20_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value20_tmp;
     retval = u32_ReadStrptrMaybe(value20_tmp, in_str);
@@ -12917,7 +12917,7 @@ inline static bool atf_amc::value20_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value28.ReadStrptrMaybe
-inline static bool atf_amc::value28_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value28_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value28_tmp;
     retval = u32_ReadStrptrMaybe(value28_tmp, in_str);
@@ -12928,7 +12928,7 @@ inline static bool atf_amc::value28_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value29.ReadStrptrMaybe
-inline static bool atf_amc::value29_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value29_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value29_tmp;
     retval = u32_ReadStrptrMaybe(value29_tmp, in_str);
@@ -12939,7 +12939,7 @@ inline static bool atf_amc::value29_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value30.ReadStrptrMaybe
-inline static bool atf_amc::value30_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value30_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value30_tmp;
     retval = u32_ReadStrptrMaybe(value30_tmp, in_str);
@@ -12950,7 +12950,7 @@ inline static bool atf_amc::value30_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value31.ReadStrptrMaybe
-inline static bool atf_amc::value31_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value31_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value31_tmp;
     retval = u32_ReadStrptrMaybe(value31_tmp, in_str);
@@ -12961,7 +12961,7 @@ inline static bool atf_amc::value31_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value32.ReadStrptrMaybe
-inline static bool atf_amc::value32_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value32_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value32_tmp;
     retval = u32_ReadStrptrMaybe(value32_tmp, in_str);
@@ -12972,7 +12972,7 @@ inline static bool atf_amc::value32_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value27.ReadStrptrMaybe
-inline static bool atf_amc::value27_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value27_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value27_tmp;
     retval = u32_ReadStrptrMaybe(value27_tmp, in_str);
@@ -12983,7 +12983,7 @@ inline static bool atf_amc::value27_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value19.ReadStrptrMaybe
-inline static bool atf_amc::value19_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value19_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value19_tmp;
     retval = u32_ReadStrptrMaybe(value19_tmp, in_str);
@@ -12994,7 +12994,7 @@ inline static bool atf_amc::value19_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value18.ReadStrptrMaybe
-inline static bool atf_amc::value18_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value18_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value18_tmp;
     retval = u32_ReadStrptrMaybe(value18_tmp, in_str);
@@ -13005,7 +13005,7 @@ inline static bool atf_amc::value18_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value4.ReadStrptrMaybe
-inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value4_tmp;
     retval = u32_ReadStrptrMaybe(value4_tmp, in_str);
@@ -13016,7 +13016,7 @@ inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value5.ReadStrptrMaybe
-inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value5_tmp;
     retval = u32_ReadStrptrMaybe(value5_tmp, in_str);
@@ -13027,7 +13027,7 @@ inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value6.ReadStrptrMaybe
-inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value6_tmp;
     retval = u32_ReadStrptrMaybe(value6_tmp, in_str);
@@ -13038,7 +13038,7 @@ inline static bool atf_amc::value6_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value7.ReadStrptrMaybe
-inline static bool atf_amc::value7_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value7_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value7_tmp;
     retval = u32_ReadStrptrMaybe(value7_tmp, in_str);
@@ -13049,7 +13049,7 @@ inline static bool atf_amc::value7_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value8.ReadStrptrMaybe
-inline static bool atf_amc::value8_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value8_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value8_tmp;
     retval = u32_ReadStrptrMaybe(value8_tmp, in_str);
@@ -13060,7 +13060,7 @@ inline static bool atf_amc::value8_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value9.ReadStrptrMaybe
-inline static bool atf_amc::value9_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value9_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value9_tmp;
     retval = u32_ReadStrptrMaybe(value9_tmp, in_str);
@@ -13071,7 +13071,7 @@ inline static bool atf_amc::value9_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, a
 }
 
 // --- atf_amc.PmaskU128.value69.ReadStrptrMaybe
-inline static bool atf_amc::value69_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value69_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value69_tmp;
     retval = u32_ReadStrptrMaybe(value69_tmp, in_str);
@@ -13082,7 +13082,7 @@ inline static bool atf_amc::value69_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value11.ReadStrptrMaybe
-inline static bool atf_amc::value11_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value11_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value11_tmp;
     retval = u32_ReadStrptrMaybe(value11_tmp, in_str);
@@ -13093,7 +13093,7 @@ inline static bool atf_amc::value11_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value12.ReadStrptrMaybe
-inline static bool atf_amc::value12_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value12_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value12_tmp;
     retval = u32_ReadStrptrMaybe(value12_tmp, in_str);
@@ -13104,7 +13104,7 @@ inline static bool atf_amc::value12_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value13.ReadStrptrMaybe
-inline static bool atf_amc::value13_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value13_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value13_tmp;
     retval = u32_ReadStrptrMaybe(value13_tmp, in_str);
@@ -13115,7 +13115,7 @@ inline static bool atf_amc::value13_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value14.ReadStrptrMaybe
-inline static bool atf_amc::value14_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value14_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value14_tmp;
     retval = u32_ReadStrptrMaybe(value14_tmp, in_str);
@@ -13126,7 +13126,7 @@ inline static bool atf_amc::value14_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value15.ReadStrptrMaybe
-inline static bool atf_amc::value15_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value15_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value15_tmp;
     retval = u32_ReadStrptrMaybe(value15_tmp, in_str);
@@ -13137,7 +13137,7 @@ inline static bool atf_amc::value15_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value16.ReadStrptrMaybe
-inline static bool atf_amc::value16_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value16_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value16_tmp;
     retval = u32_ReadStrptrMaybe(value16_tmp, in_str);
@@ -13148,7 +13148,7 @@ inline static bool atf_amc::value16_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value33.ReadStrptrMaybe
-inline static bool atf_amc::value33_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value33_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value33_tmp;
     retval = u32_ReadStrptrMaybe(value33_tmp, in_str);
@@ -13159,7 +13159,7 @@ inline static bool atf_amc::value33_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value10.ReadStrptrMaybe
-inline static bool atf_amc::value10_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value10_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value10_tmp;
     retval = u32_ReadStrptrMaybe(value10_tmp, in_str);
@@ -13170,7 +13170,7 @@ inline static bool atf_amc::value10_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value17.ReadStrptrMaybe
-inline static bool atf_amc::value17_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value17_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value17_tmp;
     retval = u32_ReadStrptrMaybe(value17_tmp, in_str);
@@ -13181,7 +13181,7 @@ inline static bool atf_amc::value17_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value35.ReadStrptrMaybe
-inline static bool atf_amc::value35_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value35_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value35_tmp;
     retval = u32_ReadStrptrMaybe(value35_tmp, in_str);
@@ -13192,7 +13192,7 @@ inline static bool atf_amc::value35_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value55.ReadStrptrMaybe
-inline static bool atf_amc::value55_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value55_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value55_tmp;
     retval = u32_ReadStrptrMaybe(value55_tmp, in_str);
@@ -13203,7 +13203,7 @@ inline static bool atf_amc::value55_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value56.ReadStrptrMaybe
-inline static bool atf_amc::value56_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value56_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value56_tmp;
     retval = u32_ReadStrptrMaybe(value56_tmp, in_str);
@@ -13214,7 +13214,7 @@ inline static bool atf_amc::value56_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value57.ReadStrptrMaybe
-inline static bool atf_amc::value57_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value57_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value57_tmp;
     retval = u32_ReadStrptrMaybe(value57_tmp, in_str);
@@ -13225,7 +13225,7 @@ inline static bool atf_amc::value57_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value58.ReadStrptrMaybe
-inline static bool atf_amc::value58_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value58_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value58_tmp;
     retval = u32_ReadStrptrMaybe(value58_tmp, in_str);
@@ -13236,7 +13236,7 @@ inline static bool atf_amc::value58_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value59.ReadStrptrMaybe
-inline static bool atf_amc::value59_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value59_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value59_tmp;
     retval = u32_ReadStrptrMaybe(value59_tmp, in_str);
@@ -13247,7 +13247,7 @@ inline static bool atf_amc::value59_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value60.ReadStrptrMaybe
-inline static bool atf_amc::value60_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value60_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value60_tmp;
     retval = u32_ReadStrptrMaybe(value60_tmp, in_str);
@@ -13258,7 +13258,7 @@ inline static bool atf_amc::value60_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value54.ReadStrptrMaybe
-inline static bool atf_amc::value54_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value54_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value54_tmp;
     retval = u32_ReadStrptrMaybe(value54_tmp, in_str);
@@ -13269,7 +13269,7 @@ inline static bool atf_amc::value54_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value62.ReadStrptrMaybe
-inline static bool atf_amc::value62_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value62_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value62_tmp;
     retval = u32_ReadStrptrMaybe(value62_tmp, in_str);
@@ -13280,7 +13280,7 @@ inline static bool atf_amc::value62_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value63.ReadStrptrMaybe
-inline static bool atf_amc::value63_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value63_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value63_tmp;
     retval = u32_ReadStrptrMaybe(value63_tmp, in_str);
@@ -13291,7 +13291,7 @@ inline static bool atf_amc::value63_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value64.ReadStrptrMaybe
-inline static bool atf_amc::value64_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value64_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value64_tmp;
     retval = u32_ReadStrptrMaybe(value64_tmp, in_str);
@@ -13302,7 +13302,7 @@ inline static bool atf_amc::value64_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value65.ReadStrptrMaybe
-inline static bool atf_amc::value65_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value65_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value65_tmp;
     retval = u32_ReadStrptrMaybe(value65_tmp, in_str);
@@ -13313,7 +13313,7 @@ inline static bool atf_amc::value65_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value66.ReadStrptrMaybe
-inline static bool atf_amc::value66_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value66_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value66_tmp;
     retval = u32_ReadStrptrMaybe(value66_tmp, in_str);
@@ -13324,7 +13324,7 @@ inline static bool atf_amc::value66_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value67.ReadStrptrMaybe
-inline static bool atf_amc::value67_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value67_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value67_tmp;
     retval = u32_ReadStrptrMaybe(value67_tmp, in_str);
@@ -13335,7 +13335,7 @@ inline static bool atf_amc::value67_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value68.ReadStrptrMaybe
-inline static bool atf_amc::value68_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value68_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value68_tmp;
     retval = u32_ReadStrptrMaybe(value68_tmp, in_str);
@@ -13346,7 +13346,7 @@ inline static bool atf_amc::value68_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value61.ReadStrptrMaybe
-inline static bool atf_amc::value61_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value61_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value61_tmp;
     retval = u32_ReadStrptrMaybe(value61_tmp, in_str);
@@ -13357,7 +13357,7 @@ inline static bool atf_amc::value61_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value34.ReadStrptrMaybe
-inline static bool atf_amc::value34_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value34_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value34_tmp;
     retval = u32_ReadStrptrMaybe(value34_tmp, in_str);
@@ -13368,7 +13368,7 @@ inline static bool atf_amc::value34_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value52.ReadStrptrMaybe
-inline static bool atf_amc::value52_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value52_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value52_tmp;
     retval = u32_ReadStrptrMaybe(value52_tmp, in_str);
@@ -13379,7 +13379,7 @@ inline static bool atf_amc::value52_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value36.ReadStrptrMaybe
-inline static bool atf_amc::value36_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value36_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value36_tmp;
     retval = u32_ReadStrptrMaybe(value36_tmp, in_str);
@@ -13390,7 +13390,7 @@ inline static bool atf_amc::value36_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value37.ReadStrptrMaybe
-inline static bool atf_amc::value37_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value37_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value37_tmp;
     retval = u32_ReadStrptrMaybe(value37_tmp, in_str);
@@ -13401,7 +13401,7 @@ inline static bool atf_amc::value37_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value38.ReadStrptrMaybe
-inline static bool atf_amc::value38_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value38_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value38_tmp;
     retval = u32_ReadStrptrMaybe(value38_tmp, in_str);
@@ -13412,7 +13412,7 @@ inline static bool atf_amc::value38_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value39.ReadStrptrMaybe
-inline static bool atf_amc::value39_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value39_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value39_tmp;
     retval = u32_ReadStrptrMaybe(value39_tmp, in_str);
@@ -13423,7 +13423,7 @@ inline static bool atf_amc::value39_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value40.ReadStrptrMaybe
-inline static bool atf_amc::value40_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value40_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value40_tmp;
     retval = u32_ReadStrptrMaybe(value40_tmp, in_str);
@@ -13434,7 +13434,7 @@ inline static bool atf_amc::value40_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value41.ReadStrptrMaybe
-inline static bool atf_amc::value41_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value41_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value41_tmp;
     retval = u32_ReadStrptrMaybe(value41_tmp, in_str);
@@ -13445,7 +13445,7 @@ inline static bool atf_amc::value41_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value42.ReadStrptrMaybe
-inline static bool atf_amc::value42_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value42_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value42_tmp;
     retval = u32_ReadStrptrMaybe(value42_tmp, in_str);
@@ -13456,7 +13456,7 @@ inline static bool atf_amc::value42_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value53.ReadStrptrMaybe
-inline static bool atf_amc::value53_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value53_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value53_tmp;
     retval = u32_ReadStrptrMaybe(value53_tmp, in_str);
@@ -13467,7 +13467,7 @@ inline static bool atf_amc::value53_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value44.ReadStrptrMaybe
-inline static bool atf_amc::value44_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value44_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value44_tmp;
     retval = u32_ReadStrptrMaybe(value44_tmp, in_str);
@@ -13478,7 +13478,7 @@ inline static bool atf_amc::value44_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value45.ReadStrptrMaybe
-inline static bool atf_amc::value45_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value45_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value45_tmp;
     retval = u32_ReadStrptrMaybe(value45_tmp, in_str);
@@ -13489,7 +13489,7 @@ inline static bool atf_amc::value45_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value46.ReadStrptrMaybe
-inline static bool atf_amc::value46_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value46_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value46_tmp;
     retval = u32_ReadStrptrMaybe(value46_tmp, in_str);
@@ -13500,7 +13500,7 @@ inline static bool atf_amc::value46_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value47.ReadStrptrMaybe
-inline static bool atf_amc::value47_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value47_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value47_tmp;
     retval = u32_ReadStrptrMaybe(value47_tmp, in_str);
@@ -13511,7 +13511,7 @@ inline static bool atf_amc::value47_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value48.ReadStrptrMaybe
-inline static bool atf_amc::value48_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value48_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value48_tmp;
     retval = u32_ReadStrptrMaybe(value48_tmp, in_str);
@@ -13522,7 +13522,7 @@ inline static bool atf_amc::value48_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value49.ReadStrptrMaybe
-inline static bool atf_amc::value49_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value49_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value49_tmp;
     retval = u32_ReadStrptrMaybe(value49_tmp, in_str);
@@ -13533,7 +13533,7 @@ inline static bool atf_amc::value49_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value50.ReadStrptrMaybe
-inline static bool atf_amc::value50_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value50_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value50_tmp;
     retval = u32_ReadStrptrMaybe(value50_tmp, in_str);
@@ -13544,7 +13544,7 @@ inline static bool atf_amc::value50_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value51.ReadStrptrMaybe
-inline static bool atf_amc::value51_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value51_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value51_tmp;
     retval = u32_ReadStrptrMaybe(value51_tmp, in_str);
@@ -13555,7 +13555,7 @@ inline static bool atf_amc::value51_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value43.ReadStrptrMaybe
-inline static bool atf_amc::value43_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value43_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value43_tmp;
     retval = u32_ReadStrptrMaybe(value43_tmp, in_str);
@@ -13566,7 +13566,7 @@ inline static bool atf_amc::value43_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value70.ReadStrptrMaybe
-inline static bool atf_amc::value70_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value70_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value70_tmp;
     retval = u32_ReadStrptrMaybe(value70_tmp, in_str);
@@ -13577,7 +13577,7 @@ inline static bool atf_amc::value70_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128.value71.ReadStrptrMaybe
-inline static bool atf_amc::value71_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value71_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value71_tmp;
     retval = u32_ReadStrptrMaybe(value71_tmp, in_str);
@@ -13588,7 +13588,7 @@ inline static bool atf_amc::value71_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, 
 }
 
 // --- atf_amc.PmaskU128..ReadFieldMaybe
-bool atf_amc::PmaskU128_ReadFieldMaybe(atf_amc::PmaskU128& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::PmaskU128_ReadFieldMaybe(atf_amc::PmaskU128& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -14105,7 +14105,7 @@ bool atf_amc::PmaskU128_ReadFieldMaybe(atf_amc::PmaskU128& parent, algo::strptr 
 // --- atf_amc.PmaskU128..ReadStrptrMaybe
 // Read fields of atf_amc::PmaskU128 from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::PmaskU128_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) {
+bool atf_amc::PmaskU128_ReadStrptrMaybe(atf_amc::PmaskU128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.PmaskU128");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -14194,7 +14194,7 @@ void atf_amc::PmaskU128_Init(atf_amc::PmaskU128& parent) {
 // --- atf_amc.PmaskU128..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.PmaskU128.String  printfmt:Tuple
-void atf_amc::PmaskU128_Print(atf_amc::PmaskU128& row, algo::cstring& str) {
+void atf_amc::PmaskU128_Print(atf_amc::PmaskU128& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.PmaskU128";
 
@@ -14413,7 +14413,7 @@ void atf_amc::PmaskU128_Print(atf_amc::PmaskU128& row, algo::cstring& str) {
 }
 
 // --- atf_amc.PmaskU32.value.ReadStrptrMaybe
-inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value_tmp;
     retval = u32_ReadStrptrMaybe(value_tmp, in_str);
@@ -14424,7 +14424,7 @@ inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, alg
 }
 
 // --- atf_amc.PmaskU32.value2.ReadStrptrMaybe
-inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value2_tmp;
     retval = u32_ReadStrptrMaybe(value2_tmp, in_str);
@@ -14435,7 +14435,7 @@ inline static bool atf_amc::value2_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, al
 }
 
 // --- atf_amc.PmaskU32.value3.ReadStrptrMaybe
-inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value3_tmp;
     retval = u32_ReadStrptrMaybe(value3_tmp, in_str);
@@ -14446,7 +14446,7 @@ inline static bool atf_amc::value3_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, al
 }
 
 // --- atf_amc.PmaskU32.value4.ReadStrptrMaybe
-inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value4_tmp;
     retval = u32_ReadStrptrMaybe(value4_tmp, in_str);
@@ -14457,7 +14457,7 @@ inline static bool atf_amc::value4_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, al
 }
 
 // --- atf_amc.PmaskU32.value5.ReadStrptrMaybe
-inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value5_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 value5_tmp;
     retval = u32_ReadStrptrMaybe(value5_tmp, in_str);
@@ -14484,7 +14484,7 @@ void atf_amc::PmaskU32_pmask_bitcurs_Next(PmaskU32_pmask_bitcurs &curs) {
 }
 
 // --- atf_amc.PmaskU32..ReadFieldMaybe
-bool atf_amc::PmaskU32_ReadFieldMaybe(atf_amc::PmaskU32& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::PmaskU32_ReadFieldMaybe(atf_amc::PmaskU32& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -14539,7 +14539,7 @@ bool atf_amc::PmaskU32_ReadFieldMaybe(atf_amc::PmaskU32& parent, algo::strptr fi
 // --- atf_amc.PmaskU32..ReadStrptrMaybe
 // Read fields of atf_amc::PmaskU32 from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::PmaskU32_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) {
+bool atf_amc::PmaskU32_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.PmaskU32");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -14551,7 +14551,7 @@ bool atf_amc::PmaskU32_ReadStrptrMaybe(atf_amc::PmaskU32 &parent, algo::strptr i
 // --- atf_amc.PmaskU32..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.PmaskU32.String  printfmt:Tuple
-void atf_amc::PmaskU32_Print(atf_amc::PmaskU32& row, algo::cstring& str) {
+void atf_amc::PmaskU32_Print(atf_amc::PmaskU32& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.PmaskU32";
 
@@ -14574,7 +14574,7 @@ void atf_amc::PmaskU32_Print(atf_amc::PmaskU32& row, algo::cstring& str) {
 // --- atf_amc.PmaskU555.pmask.ReadStrptrMaybe
 // Read array from string
 // Convert string to field. Return success value
-bool atf_amc::pmask_ReadStrptrMaybe(atf_amc::PmaskU555& parent, algo::strptr in_str) {
+bool atf_amc::pmask_ReadStrptrMaybe(atf_amc::PmaskU555& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (10>0) {
         retval = u64_ReadStrptrMaybe(parent.pmask_elems[0], in_str);
@@ -14601,7 +14601,7 @@ void atf_amc::PmaskU555_pmask_bitcurs_Next(PmaskU555_pmask_bitcurs &curs) {
 // --- atf_amc.PooledBE64.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::PooledBE64& pooledbe64) {
+const char* atf_amc::value_ToCstr(const atf_amc::PooledBE64& pooledbe64) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(pooledbe64)) {
         case atf_amc_PooledBE64_value_A    : ret = "A";  break;
@@ -14613,7 +14613,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::PooledBE64& pooledbe64) {
 // --- atf_amc.PooledBE64.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::PooledBE64& pooledbe64, algo::cstring &lhs) {
+void atf_amc::value_Print(const atf_amc::PooledBE64& pooledbe64, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(pooledbe64);
     if (strval) {
         lhs << strval;
@@ -14626,7 +14626,7 @@ void atf_amc::value_Print(const atf_amc::PooledBE64& pooledbe64, algo::cstring &
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::PooledBE64& pooledbe64, algo::strptr rhs) {
+bool atf_amc::value_SetStrptrMaybe(atf_amc::PooledBE64& pooledbe64, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
@@ -14647,13 +14647,13 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::PooledBE64& pooledbe64, algo::strptr
 // --- atf_amc.PooledBE64.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::PooledBE64& pooledbe64, algo::strptr rhs, atf_amc_PooledBE64_value_Enum dflt) {
+void atf_amc::value_SetStrptr(atf_amc::PooledBE64& pooledbe64, algo::strptr rhs, atf_amc_PooledBE64_value_Enum dflt) throw() {
     if (!value_SetStrptrMaybe(pooledbe64,rhs)) value_SetEnum(pooledbe64,dflt);
 }
 
 // --- atf_amc.PooledBE64.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::PooledBE64& pooledbe64, algo::strptr rhs) {
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::PooledBE64& pooledbe64, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(pooledbe64,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -14667,7 +14667,7 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::PooledBE64& pooledbe64, algo::strpt
 }
 
 // --- atf_amc.PooledBE64..ReadFieldMaybe
-bool atf_amc::PooledBE64_ReadFieldMaybe(atf_amc::PooledBE64& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::PooledBE64_ReadFieldMaybe(atf_amc::PooledBE64& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -14687,7 +14687,7 @@ bool atf_amc::PooledBE64_ReadFieldMaybe(atf_amc::PooledBE64& parent, algo::strpt
 // --- atf_amc.PooledBE64..ReadStrptrMaybe
 // Read fields of atf_amc::PooledBE64 from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::PooledBE64_ReadStrptrMaybe(atf_amc::PooledBE64 &parent, algo::strptr in_str) {
+bool atf_amc::PooledBE64_ReadStrptrMaybe(atf_amc::PooledBE64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.PooledBE64");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -14699,7 +14699,7 @@ bool atf_amc::PooledBE64_ReadStrptrMaybe(atf_amc::PooledBE64 &parent, algo::strp
 // --- atf_amc.PooledBE64..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.PooledBE64.String  printfmt:Tuple
-void atf_amc::PooledBE64_Print(atf_amc::PooledBE64& row, algo::cstring& str) {
+void atf_amc::PooledBE64_Print(atf_amc::PooledBE64& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.PooledBE64";
 
@@ -14708,13 +14708,13 @@ void atf_amc::PooledBE64_Print(atf_amc::PooledBE64& row, algo::cstring& str) {
 }
 
 // --- atf_amc.RnullStr6_U32.ch.Print
-void atf_amc::ch_Print(atf_amc::RnullStr6_U32& parent, algo::cstring &out) {
+void atf_amc::ch_Print(atf_amc::RnullStr6_U32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- atf_amc.RnullStr6_U32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::ch_ReadStrptrMaybe(atf_amc::RnullStr6_U32& parent, algo::strptr rhs) {
+bool atf_amc::ch_ReadStrptrMaybe(atf_amc::RnullStr6_U32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 6) {
         ch_SetStrptr(parent, rhs);
@@ -14729,7 +14729,7 @@ bool atf_amc::ch_ReadStrptrMaybe(atf_amc::RnullStr6_U32& parent, algo::strptr rh
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void atf_amc::ch_SetStrptr(atf_amc::RnullStr6_U32& parent, const algo::strptr& rhs) {
+void atf_amc::ch_SetStrptr(atf_amc::RnullStr6_U32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -14747,7 +14747,7 @@ void atf_amc::ch_SetStrptr(atf_amc::RnullStr6_U32& parent, const algo::strptr& r
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 atf_amc::ch_Getnum(atf_amc::RnullStr6_U32& parent, bool &and_ok) {
+u32 atf_amc::ch_Getnum(atf_amc::RnullStr6_U32& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -14762,7 +14762,7 @@ u32 atf_amc::ch_Getnum(atf_amc::RnullStr6_U32& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 atf_amc::ch_GetnumDflt(atf_amc::RnullStr6_U32& parent, u32 dflt) {
+u32 atf_amc::ch_GetnumDflt(atf_amc::RnullStr6_U32& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -14772,7 +14772,7 @@ u32 atf_amc::ch_GetnumDflt(atf_amc::RnullStr6_U32& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 atf_amc::ch_Geti64(atf_amc::RnullStr6_U32& parent, bool &out_ok) {
+i64 atf_amc::ch_Geti64(atf_amc::RnullStr6_U32& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -14781,7 +14781,7 @@ i64 atf_amc::ch_Geti64(atf_amc::RnullStr6_U32& parent, bool &out_ok) {
 // --- atf_amc.RnullStr6_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool atf_amc::ch_SetnumMaybe(atf_amc::RnullStr6_U32& parent, i64 rhs) {
+bool atf_amc::ch_SetnumMaybe(atf_amc::RnullStr6_U32& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -14795,7 +14795,7 @@ bool atf_amc::ch_SetnumMaybe(atf_amc::RnullStr6_U32& parent, i64 rhs) {
 }
 
 // --- atf_amc.RnullStr6_U32..Hash
-u32 atf_amc::RnullStr6_U32_Hash(u32 prev, const atf_amc::RnullStr6_U32& rhs) {
+u32 atf_amc::RnullStr6_U32_Hash(u32 prev, const atf_amc::RnullStr6_U32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -14804,7 +14804,7 @@ u32 atf_amc::RnullStr6_U32_Hash(u32 prev, const atf_amc::RnullStr6_U32& rhs) {
 // --- atf_amc.RnullStr6_U32..ReadStrptrMaybe
 // Read fields of atf_amc::RnullStr6_U32 from an ascii string.
 // The format of the string is the format of the atf_amc::RnullStr6_U32's only field
-bool atf_amc::RnullStr6_U32_ReadStrptrMaybe(atf_amc::RnullStr6_U32 &parent, algo::strptr in_str) {
+bool atf_amc::RnullStr6_U32_ReadStrptrMaybe(atf_amc::RnullStr6_U32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -14813,18 +14813,18 @@ bool atf_amc::RnullStr6_U32_ReadStrptrMaybe(atf_amc::RnullStr6_U32 &parent, algo
 // --- atf_amc.RnullStr6_U32..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.RnullStr6_U32.String  printfmt:Raw
-void atf_amc::RnullStr6_U32_Print(atf_amc::RnullStr6_U32& row, algo::cstring& str) {
+void atf_amc::RnullStr6_U32_Print(atf_amc::RnullStr6_U32& row, algo::cstring& str) throw() {
     atf_amc::ch_Print(row, str);
 }
 
 // --- atf_amc.RpasU32Str6.ch.Print
-void atf_amc::ch_Print(atf_amc::RpasU32Str6& parent, algo::cstring &out) {
+void atf_amc::ch_Print(atf_amc::RpasU32Str6& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- atf_amc.RpasU32Str6.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::ch_ReadStrptrMaybe(atf_amc::RpasU32Str6& parent, algo::strptr rhs) {
+bool atf_amc::ch_ReadStrptrMaybe(atf_amc::RpasU32Str6& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 6) {
         ch_SetStrptr(parent, rhs);
@@ -14839,7 +14839,7 @@ bool atf_amc::ch_ReadStrptrMaybe(atf_amc::RpasU32Str6& parent, algo::strptr rhs)
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void atf_amc::ch_SetStrptr(atf_amc::RpasU32Str6& parent, const algo::strptr& rhs) {
+void atf_amc::ch_SetStrptr(atf_amc::RpasU32Str6& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -14855,7 +14855,7 @@ void atf_amc::ch_SetStrptr(atf_amc::RpasU32Str6& parent, const algo::strptr& rhs
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 atf_amc::ch_Getnum(atf_amc::RpasU32Str6& parent, bool &and_ok) {
+u32 atf_amc::ch_Getnum(atf_amc::RpasU32Str6& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -14870,7 +14870,7 @@ u32 atf_amc::ch_Getnum(atf_amc::RpasU32Str6& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 atf_amc::ch_GetnumDflt(atf_amc::RpasU32Str6& parent, u32 dflt) {
+u32 atf_amc::ch_GetnumDflt(atf_amc::RpasU32Str6& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -14880,7 +14880,7 @@ u32 atf_amc::ch_GetnumDflt(atf_amc::RpasU32Str6& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 atf_amc::ch_Geti64(atf_amc::RpasU32Str6& parent, bool &out_ok) {
+i64 atf_amc::ch_Geti64(atf_amc::RpasU32Str6& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -14889,7 +14889,7 @@ i64 atf_amc::ch_Geti64(atf_amc::RpasU32Str6& parent, bool &out_ok) {
 // --- atf_amc.RpasU32Str6.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool atf_amc::ch_SetnumMaybe(atf_amc::RpasU32Str6& parent, i64 rhs) {
+bool atf_amc::ch_SetnumMaybe(atf_amc::RpasU32Str6& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -14903,7 +14903,7 @@ bool atf_amc::ch_SetnumMaybe(atf_amc::RpasU32Str6& parent, i64 rhs) {
 }
 
 // --- atf_amc.RpasU32Str6..Hash
-u32 atf_amc::RpasU32Str6_Hash(u32 prev, const atf_amc::RpasU32Str6& rhs) {
+u32 atf_amc::RpasU32Str6_Hash(u32 prev, const atf_amc::RpasU32Str6& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -14912,7 +14912,7 @@ u32 atf_amc::RpasU32Str6_Hash(u32 prev, const atf_amc::RpasU32Str6& rhs) {
 // --- atf_amc.RpasU32Str6..ReadStrptrMaybe
 // Read fields of atf_amc::RpasU32Str6 from an ascii string.
 // The format of the string is the format of the atf_amc::RpasU32Str6's only field
-bool atf_amc::RpasU32Str6_ReadStrptrMaybe(atf_amc::RpasU32Str6 &parent, algo::strptr in_str) {
+bool atf_amc::RpasU32Str6_ReadStrptrMaybe(atf_amc::RpasU32Str6 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -14921,12 +14921,12 @@ bool atf_amc::RpasU32Str6_ReadStrptrMaybe(atf_amc::RpasU32Str6 &parent, algo::st
 // --- atf_amc.RpasU32Str6..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.RpasU32Str6.String  printfmt:Raw
-void atf_amc::RpasU32Str6_Print(atf_amc::RpasU32Str6& row, algo::cstring& str) {
+void atf_amc::RpasU32Str6_Print(atf_amc::RpasU32Str6& row, algo::cstring& str) throw() {
     atf_amc::ch_Print(row, str);
 }
 
 // --- atf_amc.Sep1..ReadFieldMaybe
-bool atf_amc::Sep1_ReadFieldMaybe(atf_amc::Sep1& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::Sep1_ReadFieldMaybe(atf_amc::Sep1& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -14954,7 +14954,7 @@ bool atf_amc::Sep1_ReadFieldMaybe(atf_amc::Sep1& parent, algo::strptr field, alg
 // --- atf_amc.Sep1..ReadStrptrMaybe
 // Read fields of atf_amc::Sep1 from an ascii string.
 // The format of the string is a string with separated values
-bool atf_amc::Sep1_ReadStrptrMaybe(atf_amc::Sep1 &parent, algo::strptr in_str) {
+bool atf_amc::Sep1_ReadStrptrMaybe(atf_amc::Sep1 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::strptr value;
 
@@ -14972,7 +14972,7 @@ bool atf_amc::Sep1_ReadStrptrMaybe(atf_amc::Sep1 &parent, algo::strptr in_str) {
 // --- atf_amc.Sep1..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Sep1.String  printfmt:Sep
-void atf_amc::Sep1_Print(atf_amc::Sep1& row, algo::cstring& str) {
+void atf_amc::Sep1_Print(atf_amc::Sep1& row, algo::cstring& str) throw() {
     u32_Print(row.val1, str);
     str << '-';
     u32_Print(row.val2, str);
@@ -14982,7 +14982,7 @@ void atf_amc::Sep1_Print(atf_amc::Sep1& row, algo::cstring& str) {
 
 // --- atf_amc.Seqmsg.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::Seqmsg &row, atf_amc::MsgHeader &out) {
+void atf_amc::parent_CopyOut(atf_amc::Seqmsg &row, atf_amc::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -14991,13 +14991,13 @@ void atf_amc::parent_CopyOut(atf_amc::Seqmsg &row, atf_amc::MsgHeader &out) {
 
 // --- atf_amc.Seqmsg.payload.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> atf_amc::payload_Getary(atf_amc::Seqmsg& parent) {
+algo::aryptr<u8> atf_amc::payload_Getary(atf_amc::Seqmsg& parent) throw() {
     u8 *end = (u8*)&parent + sizeof(atf_amc::Seqmsg);
     return algo::aryptr<u8>(end, i32(parent.length) - ssizeof(atf_amc::Seqmsg));
 }
 
 // --- atf_amc.Seqmsg.payload.Print
-void atf_amc::payload_Print(atf_amc::Seqmsg& parent, cstring &out) {
+void atf_amc::payload_Print(atf_amc::Seqmsg& parent, cstring &out) throw() {
     (void)out;
     (void)parent;
     if (atf_amc::MsgHeader *payload = payload_Get(parent)) {
@@ -15007,7 +15007,7 @@ void atf_amc::payload_Print(atf_amc::Seqmsg& parent, cstring &out) {
 
 // --- atf_amc.Seqmsg.payload.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::payload_ReadStrptrMaybe(atf_amc::Seqmsg &parent, algo::strptr in_str) {
+bool atf_amc::payload_ReadStrptrMaybe(atf_amc::Seqmsg &parent, algo::strptr in_str) throw() {
     bool retval = false;
     if (algo_lib::_db.varlenbuf) {
         algo::ByteAry temp;
@@ -15019,7 +15019,7 @@ bool atf_amc::payload_ReadStrptrMaybe(atf_amc::Seqmsg &parent, algo::strptr in_s
 }
 
 // --- atf_amc.Seqmsg..ReadFieldMaybe
-bool atf_amc::Seqmsg_ReadFieldMaybe(atf_amc::Seqmsg& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::Seqmsg_ReadFieldMaybe(atf_amc::Seqmsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -15052,7 +15052,7 @@ bool atf_amc::Seqmsg_ReadFieldMaybe(atf_amc::Seqmsg& parent, algo::strptr field,
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::Seqmsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::Seqmsg_ReadStrptrMaybe(atf_amc::Seqmsg &parent, algo::strptr in_str) {
+bool atf_amc::Seqmsg_ReadStrptrMaybe(atf_amc::Seqmsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.Seqmsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -15064,7 +15064,7 @@ bool atf_amc::Seqmsg_ReadStrptrMaybe(atf_amc::Seqmsg &parent, algo::strptr in_st
 // --- atf_amc.Seqmsg..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Seqmsg.String  printfmt:Tuple
-void atf_amc::Seqmsg_Print(atf_amc::Seqmsg& row, algo::cstring& str) {
+void atf_amc::Seqmsg_Print(atf_amc::Seqmsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.Seqmsg";
 
@@ -15076,7 +15076,7 @@ void atf_amc::Seqmsg_Print(atf_amc::Seqmsg& row, algo::cstring& str) {
 
 // --- atf_amc.SortedStr.novs.Nextchar
 // Extract next character from STR and advance IDX
-inline static int atf_amc::novs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) {
+inline static int atf_amc::novs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) throw() {
     (void)parent;
     int i = idx;
     int ch = str.elems[i];
@@ -15087,7 +15087,7 @@ inline static int atf_amc::novs_Nextchar(const atf_amc::SortedStr& parent, algo:
 
 // --- atf_amc.SortedStr.vs.Nextchar
 // Extract next character from STR and advance IDX
-inline static u64 atf_amc::vs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) {
+inline static u64 atf_amc::vs_Nextchar(const atf_amc::SortedStr& parent, algo::strptr &str, int &idx) throw() {
     (void)parent;
     int i = idx;
     u64 ch = str.elems[i];
@@ -15114,7 +15114,7 @@ inline static u64 atf_amc::vs_Nextchar(const atf_amc::SortedStr& parent, algo::s
 // Compare two fields.
 // Comparison uses version sort (detect embedded integers).
 // Comparison is case-insensitive.
-i32 atf_amc::vs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) {
+i32 atf_amc::vs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) throw() {
     i32 retval = 0;
     int idx_a = 0;
     int idx_b = 0;
@@ -15137,7 +15137,7 @@ i32 atf_amc::vs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) {
 // --- atf_amc.SsimfilesCase.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::SsimfilesCase& parent) {
+const char* atf_amc::value_ToCstr(const atf_amc::SsimfilesCase& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_amc_SsimfilesCase_dmmeta_Ctype: ret = "dmmeta.Ctype";  break;
@@ -15148,7 +15148,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::SsimfilesCase& parent) {
 // --- atf_amc.SsimfilesCase.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::SsimfilesCase& parent, algo::cstring &lhs) {
+void atf_amc::value_Print(const atf_amc::SsimfilesCase& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -15161,7 +15161,7 @@ void atf_amc::value_Print(const atf_amc::SsimfilesCase& parent, algo::cstring &l
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::SsimfilesCase& parent, algo::strptr rhs) {
+bool atf_amc::value_SetStrptrMaybe(atf_amc::SsimfilesCase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 12: {
@@ -15184,13 +15184,13 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::SsimfilesCase& parent, algo::strptr 
 // --- atf_amc.SsimfilesCase.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::SsimfilesCase& parent, algo::strptr rhs, atf_amc_SsimfilesCaseEnum dflt) {
+void atf_amc::value_SetStrptr(atf_amc::SsimfilesCase& parent, algo::strptr rhs, atf_amc_SsimfilesCaseEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.SsimfilesCase.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::SsimfilesCase& parent, algo::strptr rhs) {
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::SsimfilesCase& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -15202,7 +15202,7 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::SsimfilesCase& parent, algo::strptr
 // --- atf_amc.SsimfilesCase..ReadStrptrMaybe
 // Read fields of atf_amc::SsimfilesCase from an ascii string.
 // The format of the string is the format of the atf_amc::SsimfilesCase's only field
-bool atf_amc::SsimfilesCase_ReadStrptrMaybe(atf_amc::SsimfilesCase &parent, algo::strptr in_str) {
+bool atf_amc::SsimfilesCase_ReadStrptrMaybe(atf_amc::SsimfilesCase &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -15211,7 +15211,7 @@ bool atf_amc::SsimfilesCase_ReadStrptrMaybe(atf_amc::SsimfilesCase &parent, algo
 // --- atf_amc.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::TableId& parent) {
+const char* atf_amc::value_ToCstr(const atf_amc::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_amc_TableId_atf_amc_TypeS : ret = "atf_amc.TypeS";  break;
@@ -15223,7 +15223,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::TableId& parent) {
 // --- atf_amc.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::TableId& parent, algo::cstring &lhs) {
+void atf_amc::value_Print(const atf_amc::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -15236,7 +15236,7 @@ void atf_amc::value_Print(const atf_amc::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::TableId& parent, algo::strptr rhs) {
+bool atf_amc::value_SetStrptrMaybe(atf_amc::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 13: {
@@ -15256,13 +15256,13 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::TableId& parent, algo::strptr rhs) {
 // --- atf_amc.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::TableId& parent, algo::strptr rhs, atf_amc_TableIdEnum dflt) {
+void atf_amc::value_SetStrptr(atf_amc::TableId& parent, algo::strptr rhs, atf_amc_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::TableId& parent, algo::strptr rhs) {
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -15274,7 +15274,7 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::TableId& parent, algo::strptr rhs) 
 // --- atf_amc.TableId..ReadStrptrMaybe
 // Read fields of atf_amc::TableId from an ascii string.
 // The format of the string is the format of the atf_amc::TableId's only field
-bool atf_amc::TableId_ReadStrptrMaybe(atf_amc::TableId &parent, algo::strptr in_str) {
+bool atf_amc::TableId_ReadStrptrMaybe(atf_amc::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -15283,7 +15283,7 @@ bool atf_amc::TableId_ReadStrptrMaybe(atf_amc::TableId &parent, algo::strptr in_
 // --- atf_amc.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TableId.String  printfmt:Raw
-void atf_amc::TableId_Print(atf_amc::TableId& row, algo::cstring& str) {
+void atf_amc::TableId_Print(atf_amc::TableId& row, algo::cstring& str) throw() {
     atf_amc::value_Print(row, str);
 }
 
@@ -15291,7 +15291,7 @@ void atf_amc::TableId_Print(atf_amc::TableId& row, algo::cstring& str) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<u32> atf_amc::tary_u32_Addary(atf_amc::TaryU32& parent, algo::aryptr<u32> rhs) {
+algo::aryptr<u32> atf_amc::tary_u32_Addary(atf_amc::TaryU32& parent, algo::aryptr<u32> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.tary_u32_elems && rhs.elems < parent.tary_u32_elems + parent.tary_u32_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.TaryU32.tary_u32  comment:'alias error: sub-array is being appended to the whole'");
@@ -15307,7 +15307,7 @@ algo::aryptr<u32> atf_amc::tary_u32_Addary(atf_amc::TaryU32& parent, algo::arypt
 // --- atf_amc.TaryU32.tary_u32.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-u32& atf_amc::tary_u32_Alloc(atf_amc::TaryU32& parent) {
+u32& atf_amc::tary_u32_Alloc(atf_amc::TaryU32& parent) throw() {
     tary_u32_Reserve(parent, 1);
     int n  = parent.tary_u32_n;
     int at = n;
@@ -15320,7 +15320,7 @@ u32& atf_amc::tary_u32_Alloc(atf_amc::TaryU32& parent) {
 // --- atf_amc.TaryU32.tary_u32.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-u32& atf_amc::tary_u32_AllocAt(atf_amc::TaryU32& parent, int at) {
+u32& atf_amc::tary_u32_AllocAt(atf_amc::TaryU32& parent, int at) throw() {
     tary_u32_Reserve(parent, 1);
     int n  = parent.tary_u32_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -15335,7 +15335,7 @@ u32& atf_amc::tary_u32_AllocAt(atf_amc::TaryU32& parent, int at) {
 
 // --- atf_amc.TaryU32.tary_u32.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u32> atf_amc::tary_u32_AllocN(atf_amc::TaryU32& parent, int n_elems) {
+algo::aryptr<u32> atf_amc::tary_u32_AllocN(atf_amc::TaryU32& parent, int n_elems) throw() {
     tary_u32_Reserve(parent, n_elems);
     int old_n  = parent.tary_u32_n;
     int new_n = old_n + n_elems;
@@ -15349,7 +15349,7 @@ algo::aryptr<u32> atf_amc::tary_u32_AllocN(atf_amc::TaryU32& parent, int n_elems
 
 // --- atf_amc.TaryU32.tary_u32.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_amc::tary_u32_Remove(atf_amc::TaryU32& parent, u32 i) {
+void atf_amc::tary_u32_Remove(atf_amc::TaryU32& parent, u32 i) throw() {
     u32 lim = parent.tary_u32_n;
     u32 *elems = parent.tary_u32_elems;
     if (i < lim) {
@@ -15360,7 +15360,7 @@ void atf_amc::tary_u32_Remove(atf_amc::TaryU32& parent, u32 i) {
 
 // --- atf_amc.TaryU32.tary_u32.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::tary_u32_RemoveLast(atf_amc::TaryU32& parent) {
+void atf_amc::tary_u32_RemoveLast(atf_amc::TaryU32& parent) throw() {
     u64 n = parent.tary_u32_n;
     if (n > 0) {
         n -= 1;
@@ -15370,7 +15370,7 @@ void atf_amc::tary_u32_RemoveLast(atf_amc::TaryU32& parent) {
 
 // --- atf_amc.TaryU32.tary_u32.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_amc::tary_u32_AbsReserve(atf_amc::TaryU32& parent, int n) {
+void atf_amc::tary_u32_AbsReserve(atf_amc::TaryU32& parent, int n) throw() {
     u32 old_max  = parent.tary_u32_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -15385,7 +15385,7 @@ void atf_amc::tary_u32_AbsReserve(atf_amc::TaryU32& parent, int n) {
 
 // --- atf_amc.TaryU32.tary_u32.Setary
 // Copy contents of RHS to PARENT.
-void atf_amc::tary_u32_Setary(atf_amc::TaryU32& parent, atf_amc::TaryU32 &rhs) {
+void atf_amc::tary_u32_Setary(atf_amc::TaryU32& parent, atf_amc::TaryU32 &rhs) throw() {
     tary_u32_RemoveAll(parent);
     int nnew = rhs.tary_u32_n;
     tary_u32_Reserve(parent, nnew); // reserve space
@@ -15398,14 +15398,14 @@ void atf_amc::tary_u32_Setary(atf_amc::TaryU32& parent, atf_amc::TaryU32 &rhs) {
 // --- atf_amc.TaryU32.tary_u32.Setary2
 // Copy specified array into tary_u32, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void atf_amc::tary_u32_Setary(atf_amc::TaryU32& parent, const algo::aryptr<u32> &rhs) {
+void atf_amc::tary_u32_Setary(atf_amc::TaryU32& parent, const algo::aryptr<u32> &rhs) throw() {
     tary_u32_RemoveAll(parent);
     tary_u32_Addary(parent, rhs);
 }
 
 // --- atf_amc.TaryU32.tary_u32.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u32> atf_amc::tary_u32_AllocNVal(atf_amc::TaryU32& parent, int n_elems, const u32& val) {
+algo::aryptr<u32> atf_amc::tary_u32_AllocNVal(atf_amc::TaryU32& parent, int n_elems, const u32& val) throw() {
     tary_u32_Reserve(parent, n_elems);
     int old_n  = parent.tary_u32_n;
     int new_n = old_n + n_elems;
@@ -15421,7 +15421,7 @@ algo::aryptr<u32> atf_amc::tary_u32_AllocNVal(atf_amc::TaryU32& parent, int n_el
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool atf_amc::tary_u32_ReadStrptrMaybe(atf_amc::TaryU32& parent, algo::strptr in_str) {
+bool atf_amc::tary_u32_ReadStrptrMaybe(atf_amc::TaryU32& parent, algo::strptr in_str) throw() {
     bool retval = true;
     u32 &elem = tary_u32_Alloc(parent);
     retval = u32_ReadStrptrMaybe(elem, in_str);
@@ -15432,7 +15432,7 @@ bool atf_amc::tary_u32_ReadStrptrMaybe(atf_amc::TaryU32& parent, algo::strptr in
 }
 
 // --- atf_amc.TaryU32..Uninit
-void atf_amc::TaryU32_Uninit(atf_amc::TaryU32& parent) {
+void atf_amc::TaryU32_Uninit(atf_amc::TaryU32& parent) throw() {
     atf_amc::TaryU32 &row = parent; (void)row;
 
     // atf_amc.TaryU32.tary_u32.Uninit (Tary)  //
@@ -15443,13 +15443,13 @@ void atf_amc::TaryU32_Uninit(atf_amc::TaryU32& parent) {
 }
 
 // --- atf_amc.TaryU32..AssignOp
-atf_amc::TaryU32& atf_amc::TaryU32::operator =(const atf_amc::TaryU32 &rhs) {
+atf_amc::TaryU32& atf_amc::TaryU32::operator =(const atf_amc::TaryU32 &rhs) throw() {
     tary_u32_Setary(*this, tary_u32_Getary(const_cast<atf_amc::TaryU32&>(rhs)));
     return *this;
 }
 
 // --- atf_amc.TaryU32..CopyCtor
- atf_amc::TaryU32::TaryU32(const atf_amc::TaryU32 &rhs) {
+ atf_amc::TaryU32::TaryU32(const atf_amc::TaryU32 &rhs) throw() {
     tary_u32_elems 	= 0; // (atf_amc.TaryU32.tary_u32)
     tary_u32_n     	= 0; // (atf_amc.TaryU32.tary_u32)
     tary_u32_max   	= 0; // (atf_amc.TaryU32.tary_u32)
@@ -15460,7 +15460,7 @@ atf_amc::TaryU32& atf_amc::TaryU32::operator =(const atf_amc::TaryU32 &rhs) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<u8> atf_amc::ary_Addary(atf_amc::TaryU8& parent, algo::aryptr<u8> rhs) {
+algo::aryptr<u8> atf_amc::ary_Addary(atf_amc::TaryU8& parent, algo::aryptr<u8> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_amc.tary_alias  field:atf_amc.TaryU8.ary  comment:'alias error: sub-array is being appended to the whole'");
@@ -15476,7 +15476,7 @@ algo::aryptr<u8> atf_amc::ary_Addary(atf_amc::TaryU8& parent, algo::aryptr<u8> r
 // --- atf_amc.TaryU8.ary.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-u8& atf_amc::ary_Alloc(atf_amc::TaryU8& parent) {
+u8& atf_amc::ary_Alloc(atf_amc::TaryU8& parent) throw() {
     ary_Reserve(parent, 1);
     int n  = parent.ary_n;
     int at = n;
@@ -15489,7 +15489,7 @@ u8& atf_amc::ary_Alloc(atf_amc::TaryU8& parent) {
 // --- atf_amc.TaryU8.ary.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-u8& atf_amc::ary_AllocAt(atf_amc::TaryU8& parent, int at) {
+u8& atf_amc::ary_AllocAt(atf_amc::TaryU8& parent, int at) throw() {
     ary_Reserve(parent, 1);
     int n  = parent.ary_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -15504,7 +15504,7 @@ u8& atf_amc::ary_AllocAt(atf_amc::TaryU8& parent, int at) {
 
 // --- atf_amc.TaryU8.ary.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8> atf_amc::ary_AllocN(atf_amc::TaryU8& parent, int n_elems) {
+algo::aryptr<u8> atf_amc::ary_AllocN(atf_amc::TaryU8& parent, int n_elems) throw() {
     ary_Reserve(parent, n_elems);
     int old_n  = parent.ary_n;
     int new_n = old_n + n_elems;
@@ -15516,7 +15516,7 @@ algo::aryptr<u8> atf_amc::ary_AllocN(atf_amc::TaryU8& parent, int n_elems) {
 
 // --- atf_amc.TaryU8.ary.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_amc::ary_Remove(atf_amc::TaryU8& parent, u32 i) {
+void atf_amc::ary_Remove(atf_amc::TaryU8& parent, u32 i) throw() {
     u32 lim = parent.ary_n;
     u8 *elems = parent.ary_elems;
     if (i < lim) {
@@ -15527,7 +15527,7 @@ void atf_amc::ary_Remove(atf_amc::TaryU8& parent, u32 i) {
 
 // --- atf_amc.TaryU8.ary.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_amc::ary_RemoveLast(atf_amc::TaryU8& parent) {
+void atf_amc::ary_RemoveLast(atf_amc::TaryU8& parent) throw() {
     u64 n = parent.ary_n;
     if (n > 0) {
         n -= 1;
@@ -15537,7 +15537,7 @@ void atf_amc::ary_RemoveLast(atf_amc::TaryU8& parent) {
 
 // --- atf_amc.TaryU8.ary.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_amc::ary_AbsReserve(atf_amc::TaryU8& parent, int n) {
+void atf_amc::ary_AbsReserve(atf_amc::TaryU8& parent, int n) throw() {
     u32 old_max  = parent.ary_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -15553,13 +15553,13 @@ void atf_amc::ary_AbsReserve(atf_amc::TaryU8& parent, int n) {
 // --- atf_amc.TaryU8.ary.Print
 // Convert ary to a string.
 // Array is printed as a regular string.
-void atf_amc::ary_Print(atf_amc::TaryU8& parent, algo::cstring &rhs) {
+void atf_amc::ary_Print(atf_amc::TaryU8& parent, algo::cstring &rhs) throw() {
     rhs << algo::memptr_ToStrptr(ary_Getary(parent));
 }
 
 // --- atf_amc.TaryU8.ary.Setary
 // Copy contents of RHS to PARENT.
-void atf_amc::ary_Setary(atf_amc::TaryU8& parent, atf_amc::TaryU8 &rhs) {
+void atf_amc::ary_Setary(atf_amc::TaryU8& parent, atf_amc::TaryU8 &rhs) throw() {
     ary_RemoveAll(parent);
     int nnew = rhs.ary_n;
     ary_Reserve(parent, nnew); // reserve space
@@ -15570,14 +15570,14 @@ void atf_amc::ary_Setary(atf_amc::TaryU8& parent, atf_amc::TaryU8 &rhs) {
 // --- atf_amc.TaryU8.ary.Setary2
 // Copy specified array into ary, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void atf_amc::ary_Setary(atf_amc::TaryU8& parent, const algo::aryptr<u8> &rhs) {
+void atf_amc::ary_Setary(atf_amc::TaryU8& parent, const algo::aryptr<u8> &rhs) throw() {
     ary_RemoveAll(parent);
     ary_Addary(parent, rhs);
 }
 
 // --- atf_amc.TaryU8.ary.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8> atf_amc::ary_AllocNVal(atf_amc::TaryU8& parent, int n_elems, const u8& val) {
+algo::aryptr<u8> atf_amc::ary_AllocNVal(atf_amc::TaryU8& parent, int n_elems, const u8& val) throw() {
     ary_Reserve(parent, n_elems);
     int old_n  = parent.ary_n;
     int new_n = old_n + n_elems;
@@ -15589,7 +15589,7 @@ algo::aryptr<u8> atf_amc::ary_AllocNVal(atf_amc::TaryU8& parent, int n_elems, co
 
 // --- atf_amc.TaryU8.ary.ReadStrptrMaybe
 // The array is replaced with the input string. Function always succeeds.
-bool atf_amc::ary_ReadStrptrMaybe(atf_amc::TaryU8& parent, algo::strptr in_str) {
+bool atf_amc::ary_ReadStrptrMaybe(atf_amc::TaryU8& parent, algo::strptr in_str) throw() {
     bool retval = true;
     ary_RemoveAll(parent);
     ary_Addary(parent,algo::strptr_ToMemptr(in_str));
@@ -15597,7 +15597,7 @@ bool atf_amc::ary_ReadStrptrMaybe(atf_amc::TaryU8& parent, algo::strptr in_str) 
 }
 
 // --- atf_amc.TaryU8..Uninit
-void atf_amc::TaryU8_Uninit(atf_amc::TaryU8& parent) {
+void atf_amc::TaryU8_Uninit(atf_amc::TaryU8& parent) throw() {
     atf_amc::TaryU8 &row = parent; (void)row;
 
     // atf_amc.TaryU8.ary.Uninit (Tary)  //
@@ -15608,13 +15608,13 @@ void atf_amc::TaryU8_Uninit(atf_amc::TaryU8& parent) {
 }
 
 // --- atf_amc.TaryU8..AssignOp
-atf_amc::TaryU8& atf_amc::TaryU8::operator =(const atf_amc::TaryU8 &rhs) {
+atf_amc::TaryU8& atf_amc::TaryU8::operator =(const atf_amc::TaryU8 &rhs) throw() {
     ary_Setary(*this, ary_Getary(const_cast<atf_amc::TaryU8&>(rhs)));
     return *this;
 }
 
 // --- atf_amc.TaryU8..CopyCtor
- atf_amc::TaryU8::TaryU8(const atf_amc::TaryU8 &rhs) {
+ atf_amc::TaryU8::TaryU8(const atf_amc::TaryU8 &rhs) throw() {
     ary_elems 	= 0; // (atf_amc.TaryU8.ary)
     ary_n     	= 0; // (atf_amc.TaryU8.ary)
     ary_max   	= 0; // (atf_amc.TaryU8.ary)
@@ -15623,21 +15623,21 @@ atf_amc::TaryU8& atf_amc::TaryU8::operator =(const atf_amc::TaryU8 &rhs) {
 
 // --- atf_amc.TestRegx1.val.Print
 // Print back to string
-void atf_amc::val_Print(atf_amc::TestRegx1& parent, algo::cstring &out) {
+void atf_amc::val_Print(atf_amc::TestRegx1& parent, algo::cstring &out) throw() {
     Regx_Print(parent.val, out);
 }
 
 // --- atf_amc.TestRegx1.val.ReadStrptrMaybe
 // Read Regx from string
 // Convert string to field. Return success value
-bool atf_amc::val_ReadStrptrMaybe(atf_amc::TestRegx1& parent, algo::strptr in) {
+bool atf_amc::val_ReadStrptrMaybe(atf_amc::TestRegx1& parent, algo::strptr in) throw() {
     bool retval = true;
     Regx_ReadSql(parent.val, in, true);
     return retval;
 }
 
 // --- atf_amc.TestRegx1..ReadFieldMaybe
-bool atf_amc::TestRegx1_ReadFieldMaybe(atf_amc::TestRegx1& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TestRegx1_ReadFieldMaybe(atf_amc::TestRegx1& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -15657,7 +15657,7 @@ bool atf_amc::TestRegx1_ReadFieldMaybe(atf_amc::TestRegx1& parent, algo::strptr 
 // --- atf_amc.TestRegx1..ReadStrptrMaybe
 // Read fields of atf_amc::TestRegx1 from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::TestRegx1_ReadStrptrMaybe(atf_amc::TestRegx1 &parent, algo::strptr in_str) {
+bool atf_amc::TestRegx1_ReadStrptrMaybe(atf_amc::TestRegx1 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.TestRegx1");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -15669,7 +15669,7 @@ bool atf_amc::TestRegx1_ReadStrptrMaybe(atf_amc::TestRegx1 &parent, algo::strptr
 // --- atf_amc.TestRegx1..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TestRegx1.String  printfmt:Tuple
-void atf_amc::TestRegx1_Print(atf_amc::TestRegx1& row, algo::cstring& str) {
+void atf_amc::TestRegx1_Print(atf_amc::TestRegx1& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.TestRegx1";
 
@@ -15679,7 +15679,7 @@ void atf_amc::TestRegx1_Print(atf_amc::TestRegx1& row, algo::cstring& str) {
 
 // --- atf_amc.TestType..ReadStrptrMaybe
 // Read fields of atf_amc::TestType from an ascii string.
-bool atf_amc::TestType_ReadStrptrMaybe(atf_amc::TestType &parent, algo::strptr in_str) {
+bool atf_amc::TestType_ReadStrptrMaybe(atf_amc::TestType &parent, algo::strptr in_str) throw() {
     bool retval = true;
     (void)parent;//only to avoid -Wunused-parameter
     (void)in_str;//only to avoid -Wunused-parameter
@@ -15689,14 +15689,14 @@ bool atf_amc::TestType_ReadStrptrMaybe(atf_amc::TestType &parent, algo::strptr i
 // --- atf_amc.TestType..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TestType.String  printfmt:Raw
-void atf_amc::TestType_Print(atf_amc::TestType& row, algo::cstring& str) {
+void atf_amc::TestType_Print(atf_amc::TestType& row, algo::cstring& str) throw() {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
 
 // --- atf_amc.Text.msghdr.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::Text &row, atf_amc::MsgHeader &out) {
+void atf_amc::parent_CopyOut(atf_amc::Text &row, atf_amc::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -15705,7 +15705,7 @@ void atf_amc::parent_CopyOut(atf_amc::Text &row, atf_amc::MsgHeader &out) {
 
 // --- atf_amc.Text.text.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> atf_amc::text_Getary(atf_amc::Text& parent) {
+algo::aryptr<char> atf_amc::text_Getary(atf_amc::Text& parent) throw() {
     return algo::aryptr<char>(text_Addr(parent), text_N(parent));
 }
 
@@ -15716,7 +15716,7 @@ char* atf_amc::text_Addr(atf_amc::Text& parent) {
 
 // --- atf_amc.Text.text.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::text_ReadStrptrMaybe(atf_amc::Text& parent, algo::strptr in_str) {
+bool atf_amc::text_ReadStrptrMaybe(atf_amc::Text& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
@@ -15728,12 +15728,12 @@ bool atf_amc::text_ReadStrptrMaybe(atf_amc::Text& parent, algo::strptr in_str) {
 // --- atf_amc.Text.text.Print
 // Convert text to a string.
 // Array is printed as a regular string.
-void atf_amc::text_Print(atf_amc::Text& parent, algo::cstring &rhs) {
+void atf_amc::text_Print(atf_amc::Text& parent, algo::cstring &rhs) throw() {
     rhs << text_Getary(parent);
 }
 
 // --- atf_amc.Text..ReadFieldMaybe
-bool atf_amc::Text_ReadFieldMaybe(atf_amc::Text& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::Text_ReadFieldMaybe(atf_amc::Text& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -15766,7 +15766,7 @@ bool atf_amc::Text_ReadFieldMaybe(atf_amc::Text& parent, algo::strptr field, alg
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::Text from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::Text_ReadStrptrMaybe(atf_amc::Text &parent, algo::strptr in_str) {
+bool atf_amc::Text_ReadStrptrMaybe(atf_amc::Text &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.Text");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -15778,7 +15778,7 @@ bool atf_amc::Text_ReadStrptrMaybe(atf_amc::Text &parent, algo::strptr in_str) {
 // --- atf_amc.Text..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Text.String  printfmt:Tuple
-void atf_amc::Text_Print(atf_amc::Text& row, algo::cstring& str) {
+void atf_amc::Text_Print(atf_amc::Text& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.Text";
 
@@ -15787,7 +15787,7 @@ void atf_amc::Text_Print(atf_amc::Text& row, algo::cstring& str) {
 }
 
 // --- atf_amc.TypeB..ReadFieldMaybe
-bool atf_amc::TypeB_ReadFieldMaybe(atf_amc::TypeB& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TypeB_ReadFieldMaybe(atf_amc::TypeB& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -15811,7 +15811,7 @@ bool atf_amc::TypeB_ReadFieldMaybe(atf_amc::TypeB& parent, algo::strptr field, a
 // --- atf_amc.TypeB..ReadStrptrMaybe
 // Read fields of atf_amc::TypeB from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::TypeB_ReadStrptrMaybe(atf_amc::TypeB &parent, algo::strptr in_str) {
+bool atf_amc::TypeB_ReadStrptrMaybe(atf_amc::TypeB &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.TypeB");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -15823,7 +15823,7 @@ bool atf_amc::TypeB_ReadStrptrMaybe(atf_amc::TypeB &parent, algo::strptr in_str)
 // --- atf_amc.TypeB..FmtJson
 // Create JSON representation of atf_amc::TypeB under PARENT node
 // cfmt:atf_amc.TypeB.Json  printfmt:Auto
-lib_json::FNode * atf_amc::TypeB_FmtJson(atf_amc::TypeB& row, lib_json::FNode *parent) {
+lib_json::FNode * atf_amc::TypeB_FmtJson(atf_amc::TypeB& row, lib_json::FNode *parent) throw() {
     lib_json::FNode *object_node = &lib_json::node_Alloc();
     object_node->p_parent = parent?parent:object_node;
     object_node->type   = lib_json_FNode_type_object;
@@ -15848,7 +15848,7 @@ lib_json::FNode * atf_amc::TypeB_FmtJson(atf_amc::TypeB& row, lib_json::FNode *p
 // --- atf_amc.TypeB..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeB.String  printfmt:Tuple
-void atf_amc::TypeB_Print(atf_amc::TypeB& row, algo::cstring& str) {
+void atf_amc::TypeB_Print(atf_amc::TypeB& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.TypeB";
 
@@ -15862,7 +15862,7 @@ void atf_amc::TypeB_Print(atf_amc::TypeB& row, algo::cstring& str) {
 // --- atf_amc.TypeBE32en.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::TypeBE32en& parent) {
+const char* atf_amc::value_ToCstr(const atf_amc::TypeBE32en& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_amc_TypeBE32en_value_val1 : ret = "val1";  break;
@@ -15874,7 +15874,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::TypeBE32en& parent) {
 // --- atf_amc.TypeBE32en.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::TypeBE32en& parent, algo::cstring &lhs) {
+void atf_amc::value_Print(const atf_amc::TypeBE32en& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -15887,7 +15887,7 @@ void atf_amc::value_Print(const atf_amc::TypeBE32en& parent, algo::cstring &lhs)
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rhs) {
+bool atf_amc::value_SetStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
@@ -15908,13 +15908,13 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rhs
 // --- atf_amc.TypeBE32en.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::TypeBE32en& parent, algo::strptr rhs, atf_amc_TypeBE32en_value_Enum dflt) {
+void atf_amc::value_SetStrptr(atf_amc::TypeBE32en& parent, algo::strptr rhs, atf_amc_TypeBE32en_value_Enum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.TypeBE32en.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rhs) {
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -15928,7 +15928,7 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE32en& parent, algo::strptr rh
 }
 
 // --- atf_amc.TypeBE32en..ReadFieldMaybe
-bool atf_amc::TypeBE32en_ReadFieldMaybe(atf_amc::TypeBE32en& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TypeBE32en_ReadFieldMaybe(atf_amc::TypeBE32en& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -15948,7 +15948,7 @@ bool atf_amc::TypeBE32en_ReadFieldMaybe(atf_amc::TypeBE32en& parent, algo::strpt
 // --- atf_amc.TypeBE32en..ReadStrptrMaybe
 // Read fields of atf_amc::TypeBE32en from an ascii string.
 // The format of the string is the format of the atf_amc::TypeBE32en's only field
-bool atf_amc::TypeBE32en_ReadStrptrMaybe(atf_amc::TypeBE32en &parent, algo::strptr in_str) {
+bool atf_amc::TypeBE32en_ReadStrptrMaybe(atf_amc::TypeBE32en &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -15956,7 +15956,7 @@ bool atf_amc::TypeBE32en_ReadStrptrMaybe(atf_amc::TypeBE32en &parent, algo::strp
 
 // --- atf_amc.TypeBE32en..ReadTupleMaybe
 // Read fields of atf_amc::TypeBE32en from attributes of ascii tuple TUPLE
-bool atf_amc::TypeBE32en_ReadTupleMaybe(atf_amc::TypeBE32en &parent, algo::Tuple &tuple) {
+bool atf_amc::TypeBE32en_ReadTupleMaybe(atf_amc::TypeBE32en &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = TypeBE32en_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -15970,12 +15970,12 @@ bool atf_amc::TypeBE32en_ReadTupleMaybe(atf_amc::TypeBE32en &parent, algo::Tuple
 // --- atf_amc.TypeBE32en..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeBE32en.String  printfmt:Raw
-void atf_amc::TypeBE32en_Print(atf_amc::TypeBE32en& row, algo::cstring& str) {
+void atf_amc::TypeBE32en_Print(atf_amc::TypeBE32en& row, algo::cstring& str) throw() {
     atf_amc::value_Print(row, str);
 }
 
 // --- atf_amc.TypeBE64.value.ReadStrptrMaybe
-inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) {
+inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     u64 value_tmp;
     retval = u64_ReadStrptrMaybe(value_tmp, in_str);
@@ -15986,7 +15986,7 @@ inline static bool atf_amc::value_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, alg
 }
 
 // --- atf_amc.TypeBE64..ReadFieldMaybe
-bool atf_amc::TypeBE64_ReadFieldMaybe(atf_amc::TypeBE64& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TypeBE64_ReadFieldMaybe(atf_amc::TypeBE64& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -16006,7 +16006,7 @@ bool atf_amc::TypeBE64_ReadFieldMaybe(atf_amc::TypeBE64& parent, algo::strptr fi
 // --- atf_amc.TypeBE64..ReadStrptrMaybe
 // Read fields of atf_amc::TypeBE64 from an ascii string.
 // The format of the string is the format of the atf_amc::TypeBE64's only field
-bool atf_amc::TypeBE64_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) {
+bool atf_amc::TypeBE64_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -16014,7 +16014,7 @@ bool atf_amc::TypeBE64_ReadStrptrMaybe(atf_amc::TypeBE64 &parent, algo::strptr i
 
 // --- atf_amc.TypeBE64..ReadTupleMaybe
 // Read fields of atf_amc::TypeBE64 from attributes of ascii tuple TUPLE
-bool atf_amc::TypeBE64_ReadTupleMaybe(atf_amc::TypeBE64 &parent, algo::Tuple &tuple) {
+bool atf_amc::TypeBE64_ReadTupleMaybe(atf_amc::TypeBE64 &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = TypeBE64_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -16028,14 +16028,14 @@ bool atf_amc::TypeBE64_ReadTupleMaybe(atf_amc::TypeBE64 &parent, algo::Tuple &tu
 // --- atf_amc.TypeBE64..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeBE64.String  printfmt:Raw
-void atf_amc::TypeBE64_Print(atf_amc::TypeBE64& row, algo::cstring& str) {
+void atf_amc::TypeBE64_Print(atf_amc::TypeBE64& row, algo::cstring& str) throw() {
     u64_Print(value_Get(row), str);
 }
 
 // --- atf_amc.TypeC..ReadStrptrMaybe
 // Read fields of atf_amc::TypeC from an ascii string.
 // The format of the string is the format of the atf_amc::TypeC's only field
-bool atf_amc::TypeC_ReadStrptrMaybe(atf_amc::TypeC &parent, algo::strptr in_str) {
+bool atf_amc::TypeC_ReadStrptrMaybe(atf_amc::TypeC &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && i32_ReadStrptrMaybe(parent.typec, in_str);
     return retval;
@@ -16044,14 +16044,14 @@ bool atf_amc::TypeC_ReadStrptrMaybe(atf_amc::TypeC &parent, algo::strptr in_str)
 // --- atf_amc.TypeC..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeC.String  printfmt:Raw
-void atf_amc::TypeC_Print(atf_amc::TypeC& row, algo::cstring& str) {
+void atf_amc::TypeC_Print(atf_amc::TypeC& row, algo::cstring& str) throw() {
     i32_Print(row.typec, str);
 }
 
 // --- atf_amc.TypeH..ReadStrptrMaybe
 // Read fields of atf_amc::TypeH from an ascii string.
 // The format of the string is the format of the atf_amc::TypeH's only field
-bool atf_amc::TypeH_ReadStrptrMaybe(atf_amc::TypeH &parent, algo::strptr in_str) {
+bool atf_amc::TypeH_ReadStrptrMaybe(atf_amc::TypeH &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && i32_ReadStrptrMaybe(parent.typeh, in_str);
     return retval;
@@ -16060,12 +16060,12 @@ bool atf_amc::TypeH_ReadStrptrMaybe(atf_amc::TypeH &parent, algo::strptr in_str)
 // --- atf_amc.TypeH..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeH.String  printfmt:Raw
-void atf_amc::TypeH_Print(atf_amc::TypeH& row, algo::cstring& str) {
+void atf_amc::TypeH_Print(atf_amc::TypeH& row, algo::cstring& str) throw() {
     i32_Print(row.typeh, str);
 }
 
 // --- atf_amc.TypeS..ReadFieldMaybe
-bool atf_amc::TypeS_ReadFieldMaybe(atf_amc::TypeS& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TypeS_ReadFieldMaybe(atf_amc::TypeS& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -16089,7 +16089,7 @@ bool atf_amc::TypeS_ReadFieldMaybe(atf_amc::TypeS& parent, algo::strptr field, a
 // --- atf_amc.TypeS..ReadStrptrMaybe
 // Read fields of atf_amc::TypeS from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::TypeS_ReadStrptrMaybe(atf_amc::TypeS &parent, algo::strptr in_str) {
+bool atf_amc::TypeS_ReadStrptrMaybe(atf_amc::TypeS &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.TypeS");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -16101,7 +16101,7 @@ bool atf_amc::TypeS_ReadStrptrMaybe(atf_amc::TypeS &parent, algo::strptr in_str)
 // --- atf_amc.TypeS..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeS.String  printfmt:Tuple
-void atf_amc::TypeS_Print(atf_amc::TypeS& row, algo::cstring& str) {
+void atf_amc::TypeS_Print(atf_amc::TypeS& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.TypeS";
 
@@ -16113,7 +16113,7 @@ void atf_amc::TypeS_Print(atf_amc::TypeS& row, algo::cstring& str) {
 }
 
 // --- atf_amc.TypeT..ReadFieldMaybe
-bool atf_amc::TypeT_ReadFieldMaybe(atf_amc::TypeT& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TypeT_ReadFieldMaybe(atf_amc::TypeT& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -16137,7 +16137,7 @@ bool atf_amc::TypeT_ReadFieldMaybe(atf_amc::TypeT& parent, algo::strptr field, a
 // --- atf_amc.TypeT..ReadStrptrMaybe
 // Read fields of atf_amc::TypeT from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::TypeT_ReadStrptrMaybe(atf_amc::TypeT &parent, algo::strptr in_str) {
+bool atf_amc::TypeT_ReadStrptrMaybe(atf_amc::TypeT &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.TypeT");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -16149,7 +16149,7 @@ bool atf_amc::TypeT_ReadStrptrMaybe(atf_amc::TypeT &parent, algo::strptr in_str)
 // --- atf_amc.TypeT..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeT.String  printfmt:Tuple
-void atf_amc::TypeT_Print(atf_amc::TypeT& row, algo::cstring& str) {
+void atf_amc::TypeT_Print(atf_amc::TypeT& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.TypeT";
 
@@ -16161,7 +16161,7 @@ void atf_amc::TypeT_Print(atf_amc::TypeT& row, algo::cstring& str) {
 }
 
 // --- atf_amc.TypeTVal..ReadFieldMaybe
-bool atf_amc::TypeTVal_ReadFieldMaybe(atf_amc::TypeTVal& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::TypeTVal_ReadFieldMaybe(atf_amc::TypeTVal& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -16185,7 +16185,7 @@ bool atf_amc::TypeTVal_ReadFieldMaybe(atf_amc::TypeTVal& parent, algo::strptr fi
 // --- atf_amc.TypeTVal..ReadStrptrMaybe
 // Read fields of atf_amc::TypeTVal from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::TypeTVal_ReadStrptrMaybe(atf_amc::TypeTVal &parent, algo::strptr in_str) {
+bool atf_amc::TypeTVal_ReadStrptrMaybe(atf_amc::TypeTVal &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.TypeTVal");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -16197,7 +16197,7 @@ bool atf_amc::TypeTVal_ReadStrptrMaybe(atf_amc::TypeTVal &parent, algo::strptr i
 // --- atf_amc.TypeTVal..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.TypeTVal.String  printfmt:Tuple
-void atf_amc::TypeTVal_Print(atf_amc::TypeTVal& row, algo::cstring& str) {
+void atf_amc::TypeTVal_Print(atf_amc::TypeTVal& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.TypeTVal";
 
@@ -16211,7 +16211,7 @@ void atf_amc::TypeTVal_Print(atf_amc::TypeTVal& row, algo::cstring& str) {
 // --- atf_amc.Typefconst.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_amc::value_ToCstr(const atf_amc::Typefconst& parent) {
+const char* atf_amc::value_ToCstr(const atf_amc::Typefconst& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_amc_Typefconst_value_strval1: ret = "strval1";  break;
@@ -16223,7 +16223,7 @@ const char* atf_amc::value_ToCstr(const atf_amc::Typefconst& parent) {
 // --- atf_amc.Typefconst.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_amc::value_Print(const atf_amc::Typefconst& parent, algo::cstring &lhs) {
+void atf_amc::value_Print(const atf_amc::Typefconst& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -16236,7 +16236,7 @@ void atf_amc::value_Print(const atf_amc::Typefconst& parent, algo::cstring &lhs)
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_amc::value_SetStrptrMaybe(atf_amc::Typefconst& parent, algo::strptr rhs) {
+bool atf_amc::value_SetStrptrMaybe(atf_amc::Typefconst& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 7: {
@@ -16257,13 +16257,13 @@ bool atf_amc::value_SetStrptrMaybe(atf_amc::Typefconst& parent, algo::strptr rhs
 // --- atf_amc.Typefconst.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_amc::value_SetStrptr(atf_amc::Typefconst& parent, algo::strptr rhs, atf_amc_Typefconst_value_Enum dflt) {
+void atf_amc::value_SetStrptr(atf_amc::Typefconst& parent, algo::strptr rhs, atf_amc_Typefconst_value_Enum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_amc.Typefconst.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::value_ReadStrptrMaybe(atf_amc::Typefconst& parent, algo::strptr rhs) {
+bool atf_amc::value_ReadStrptrMaybe(atf_amc::Typefconst& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -16273,7 +16273,7 @@ bool atf_amc::value_ReadStrptrMaybe(atf_amc::Typefconst& parent, algo::strptr rh
 }
 
 // --- atf_amc.Typefconst..ReadFieldMaybe
-bool atf_amc::Typefconst_ReadFieldMaybe(atf_amc::Typefconst& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::Typefconst_ReadFieldMaybe(atf_amc::Typefconst& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -16293,7 +16293,7 @@ bool atf_amc::Typefconst_ReadFieldMaybe(atf_amc::Typefconst& parent, algo::strpt
 // --- atf_amc.Typefconst..ReadStrptrMaybe
 // Read fields of atf_amc::Typefconst from an ascii string.
 // The format of the string is the format of the atf_amc::Typefconst's only field
-bool atf_amc::Typefconst_ReadStrptrMaybe(atf_amc::Typefconst &parent, algo::strptr in_str) {
+bool atf_amc::Typefconst_ReadStrptrMaybe(atf_amc::Typefconst &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -16301,7 +16301,7 @@ bool atf_amc::Typefconst_ReadStrptrMaybe(atf_amc::Typefconst &parent, algo::strp
 
 // --- atf_amc.Typefconst..ReadTupleMaybe
 // Read fields of atf_amc::Typefconst from attributes of ascii tuple TUPLE
-bool atf_amc::Typefconst_ReadTupleMaybe(atf_amc::Typefconst &parent, algo::Tuple &tuple) {
+bool atf_amc::Typefconst_ReadTupleMaybe(atf_amc::Typefconst &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = Typefconst_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -16315,13 +16315,13 @@ bool atf_amc::Typefconst_ReadTupleMaybe(atf_amc::Typefconst &parent, algo::Tuple
 // --- atf_amc.Typefconst..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.Typefconst.String  printfmt:Raw
-void atf_amc::Typefconst_Print(atf_amc::Typefconst& row, algo::cstring& str) {
+void atf_amc::Typefconst_Print(atf_amc::Typefconst& row, algo::cstring& str) throw() {
     atf_amc::value_Print(row, str);
 }
 
 // --- atf_amc.VarlenAlloc.elem.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<i32> atf_amc::elem_Getary(atf_amc::VarlenAlloc& varlenalloc) {
+algo::aryptr<i32> atf_amc::elem_Getary(atf_amc::VarlenAlloc& varlenalloc) throw() {
     return algo::aryptr<i32>(elem_Addr(varlenalloc), elem_N(varlenalloc));
 }
 
@@ -16332,7 +16332,7 @@ i32* atf_amc::elem_Addr(atf_amc::VarlenAlloc& varlenalloc) {
 
 // --- atf_amc.VarlenExtern.varlen.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u32> atf_amc::varlen_Getary(atf_amc::VarlenExtern& varlen_extern) {
+algo::aryptr<u32> atf_amc::varlen_Getary(atf_amc::VarlenExtern& varlen_extern) throw() {
     return algo::aryptr<u32>(varlen_Addr(varlen_extern), varlen_N(varlen_extern));
 }
 
@@ -16343,7 +16343,7 @@ u32* atf_amc::varlen_Addr(atf_amc::VarlenExtern& varlen_extern) {
 
 // --- atf_amc.VarlenH.typeh.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<atf_amc::TypeH> atf_amc::typeh_Getary(atf_amc::VarlenH& parent) {
+algo::aryptr<atf_amc::TypeH> atf_amc::typeh_Getary(atf_amc::VarlenH& parent) throw() {
     return algo::aryptr<atf_amc::TypeH>(typeh_Addr(parent), typeh_N(parent));
 }
 
@@ -16354,7 +16354,7 @@ atf_amc::TypeH* atf_amc::typeh_Addr(atf_amc::VarlenH& parent) {
 
 // --- atf_amc.VarlenH.typeh.Swap
 // Swap values elem_a and elem_b
-inline static void atf_amc::typeh_Swap(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) {
+inline static void atf_amc::typeh_Swap(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) throw() {
     u8 temp[sizeof(atf_amc::TypeH)];
     memcpy(&temp  , &elem_a, sizeof(atf_amc::TypeH));
     memcpy(&elem_a, &elem_b, sizeof(atf_amc::TypeH));
@@ -16363,7 +16363,7 @@ inline static void atf_amc::typeh_Swap(atf_amc::TypeH &elem_a, atf_amc::TypeH &e
 
 // --- atf_amc.VarlenH.typeh.Rotleft
 // Left circular shift of three-tuple
-inline static void atf_amc::typeh_Rotleft(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b, atf_amc::TypeH &elem_c) {
+inline static void atf_amc::typeh_Rotleft(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b, atf_amc::TypeH &elem_c) throw() {
     u8 temp[sizeof(atf_amc::TypeH)];
     memcpy(&temp, &elem_a   , sizeof(atf_amc::TypeH));
     memcpy(&elem_a   , &elem_b   , sizeof(atf_amc::TypeH));
@@ -16375,7 +16375,7 @@ inline static void atf_amc::typeh_Rotleft(atf_amc::TypeH &elem_a, atf_amc::TypeH
 // Compare values elem_a and elem_b
 // The comparison function must be anti-symmetric: if a>b, then !(b>a).
 // If not, mayhem results.
-static bool atf_amc::typeh_Lt(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) {
+static bool atf_amc::typeh_Lt(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) throw() {
     bool ret;
     ret = elem_a.typeh < elem_b.typeh;
     return ret;
@@ -16383,7 +16383,7 @@ static bool atf_amc::typeh_Lt(atf_amc::TypeH &elem_a, atf_amc::TypeH &elem_b) {
 
 // --- atf_amc.VarlenH.typeh.SortedQ
 // Verify whether array is sorted
-bool atf_amc::typeh_SortedQ(atf_amc::VarlenH& parent) {
+bool atf_amc::typeh_SortedQ(atf_amc::VarlenH& parent) throw() {
     atf_amc::TypeH *elems = typeh_Getary(parent).elems;
     int n = typeh_N(parent);
     for (int i = 1; i < n; i++) {
@@ -16396,7 +16396,7 @@ bool atf_amc::typeh_SortedQ(atf_amc::VarlenH& parent) {
 
 // --- atf_amc.VarlenH.typeh.IntInsertionSort
 // Internal insertion sort
-static void atf_amc::typeh_IntInsertionSort(atf_amc::TypeH *elems, int n) {
+static void atf_amc::typeh_IntInsertionSort(atf_amc::TypeH *elems, int n) throw() {
     for (int i = 1; i < n; ++i) {
         int j = i;
         // find the spot for ith element.
@@ -16414,7 +16414,7 @@ static void atf_amc::typeh_IntInsertionSort(atf_amc::TypeH *elems, int n) {
 
 // --- atf_amc.VarlenH.typeh.IntHeapSort
 // Internal heap sort
-static void atf_amc::typeh_IntHeapSort(atf_amc::TypeH *elems, int n) {
+static void atf_amc::typeh_IntHeapSort(atf_amc::TypeH *elems, int n) throw() {
     // construct max-heap.
     // k=current element
     // j=parent element
@@ -16449,7 +16449,7 @@ static void atf_amc::typeh_IntHeapSort(atf_amc::TypeH *elems, int n) {
 
 // --- atf_amc.VarlenH.typeh.IntQuickSort
 // Quick sort engine
-static void atf_amc::typeh_IntQuickSort(atf_amc::TypeH *elems, int n, int depth) {
+static void atf_amc::typeh_IntQuickSort(atf_amc::TypeH *elems, int n, int depth) throw() {
     while (n>16) {
         // detect degenerate case and revert to heap sort
         if (depth==0) {
@@ -16497,7 +16497,7 @@ static void atf_amc::typeh_IntQuickSort(atf_amc::TypeH *elems, int n, int depth)
 
 // --- atf_amc.VarlenH.typeh.InsertionSort
 // Insertion sort
-void atf_amc::typeh_InsertionSort(atf_amc::VarlenH& parent) {
+void atf_amc::typeh_InsertionSort(atf_amc::VarlenH& parent) throw() {
     atf_amc::TypeH *elems = typeh_Getary(parent).elems;
     int n = typeh_N(parent);
     typeh_IntInsertionSort(elems, n);
@@ -16505,7 +16505,7 @@ void atf_amc::typeh_InsertionSort(atf_amc::VarlenH& parent) {
 
 // --- atf_amc.VarlenH.typeh.HeapSort
 // Heap sort
-void atf_amc::typeh_HeapSort(atf_amc::VarlenH& parent) {
+void atf_amc::typeh_HeapSort(atf_amc::VarlenH& parent) throw() {
     atf_amc::TypeH *elems = typeh_Getary(parent).elems;
     int n = typeh_N(parent);
     typeh_IntHeapSort(elems, n);
@@ -16513,7 +16513,7 @@ void atf_amc::typeh_HeapSort(atf_amc::VarlenH& parent) {
 
 // --- atf_amc.VarlenH.typeh.QuickSort
 // Quick sort
-void atf_amc::typeh_QuickSort(atf_amc::VarlenH& parent) {
+void atf_amc::typeh_QuickSort(atf_amc::VarlenH& parent) throw() {
     // compute max recursion depth based on number of elements in the array
     int max_depth = algo::CeilingLog2(u32(typeh_N(parent) + 1)) + 3;
     atf_amc::TypeH *elems = typeh_Getary(parent).elems;
@@ -16532,7 +16532,7 @@ bool atf_amc::typeh_XrefMaybe(atf_amc::TypeH &row) {
 
 // --- atf_amc.VarlenK.i.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u32> atf_amc::i_Getary(atf_amc::VarlenK& k) {
+algo::aryptr<u32> atf_amc::i_Getary(atf_amc::VarlenK& k) throw() {
     return algo::aryptr<u32>(i_Addr(k), i_N(k));
 }
 
@@ -16543,7 +16543,7 @@ u32* atf_amc::i_Addr(atf_amc::VarlenK& k) {
 
 // --- atf_amc.VarlenK.i.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::i_ReadStrptrMaybe(atf_amc::VarlenK& k, algo::strptr in_str) {
+bool atf_amc::i_ReadStrptrMaybe(atf_amc::VarlenK& k, algo::strptr in_str) throw() {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         u32 *i_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(u32)).elems) u32;
@@ -16554,7 +16554,7 @@ bool atf_amc::i_ReadStrptrMaybe(atf_amc::VarlenK& k, algo::strptr in_str) {
 }
 
 // --- atf_amc.VarlenK..ReadFieldMaybe
-bool atf_amc::VarlenK_ReadFieldMaybe(atf_amc::VarlenK& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::VarlenK_ReadFieldMaybe(atf_amc::VarlenK& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -16579,7 +16579,7 @@ bool atf_amc::VarlenK_ReadFieldMaybe(atf_amc::VarlenK& parent, algo::strptr fiel
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::VarlenK from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::VarlenK_ReadStrptrMaybe(atf_amc::VarlenK &parent, algo::strptr in_str) {
+bool atf_amc::VarlenK_ReadStrptrMaybe(atf_amc::VarlenK &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.VarlenK");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -16591,7 +16591,7 @@ bool atf_amc::VarlenK_ReadStrptrMaybe(atf_amc::VarlenK &parent, algo::strptr in_
 // --- atf_amc.VarlenK..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.VarlenK.String  printfmt:Tuple
-void atf_amc::VarlenK_Print(atf_amc::VarlenK& row, algo::cstring& str) {
+void atf_amc::VarlenK_Print(atf_amc::VarlenK& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.VarlenK";
 
@@ -16606,7 +16606,7 @@ void atf_amc::VarlenK_Print(atf_amc::VarlenK& row, algo::cstring& str) {
 
 // --- atf_amc.VarlenMsg.base.CopyOut
 // Copy fields out of row
-void atf_amc::parent_CopyOut(atf_amc::VarlenMsg &row, atf_amc::MsgHeader &out) {
+void atf_amc::parent_CopyOut(atf_amc::VarlenMsg &row, atf_amc::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -16615,7 +16615,7 @@ void atf_amc::parent_CopyOut(atf_amc::VarlenMsg &row, atf_amc::MsgHeader &out) {
 
 // --- atf_amc.VarlenMsg.k.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u8> atf_amc::k_Getary(atf_amc::VarlenMsg& parent) {
+algo::aryptr<u8> atf_amc::k_Getary(atf_amc::VarlenMsg& parent) throw() {
     return algo::aryptr<u8>(k_Addr(parent), k_N(parent));
 }
 
@@ -16626,7 +16626,7 @@ u8* atf_amc::k_Addr(atf_amc::VarlenMsg& parent) {
 
 // --- atf_amc.VarlenMsg.k.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_amc::k_ReadStrptrMaybe(atf_amc::VarlenMsg& parent, algo::strptr in_str) {
+bool atf_amc::k_ReadStrptrMaybe(atf_amc::VarlenMsg& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         atf_amc::VarlenK *k_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(atf_amc::VarlenK)).elems) atf_amc::VarlenK;
@@ -16646,7 +16646,7 @@ bool atf_amc::k_XrefMaybe(atf_amc::VarlenK &row) {
 }
 
 // --- atf_amc.VarlenMsg..ReadFieldMaybe
-bool atf_amc::VarlenMsg_ReadFieldMaybe(atf_amc::VarlenMsg& parent, algo::strptr field, algo::strptr strval) {
+bool atf_amc::VarlenMsg_ReadFieldMaybe(atf_amc::VarlenMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_amc::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -16679,7 +16679,7 @@ bool atf_amc::VarlenMsg_ReadFieldMaybe(atf_amc::VarlenMsg& parent, algo::strptr 
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of atf_amc::VarlenMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_amc::VarlenMsg_ReadStrptrMaybe(atf_amc::VarlenMsg &parent, algo::strptr in_str) {
+bool atf_amc::VarlenMsg_ReadStrptrMaybe(atf_amc::VarlenMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_amc.VarlenMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -16691,7 +16691,7 @@ bool atf_amc::VarlenMsg_ReadStrptrMaybe(atf_amc::VarlenMsg &parent, algo::strptr
 // --- atf_amc.VarlenMsg..Print
 // print string representation of ROW to string STR
 // cfmt:atf_amc.VarlenMsg.String  printfmt:Tuple
-void atf_amc::VarlenMsg_Print(atf_amc::VarlenMsg& row, algo::cstring& str) {
+void atf_amc::VarlenMsg_Print(atf_amc::VarlenMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_amc.VarlenMsg";
 

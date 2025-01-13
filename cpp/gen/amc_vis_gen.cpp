@@ -120,26 +120,26 @@ namespace amc_vis { // gen:ns_print_proto
 
 // --- amc_vis.FCtype.msghdr.CopyOut
 // Copy fields out of row
-void amc_vis::ctype_CopyOut(amc_vis::FCtype &row, dmmeta::Ctype &out) {
+void amc_vis::ctype_CopyOut(amc_vis::FCtype &row, dmmeta::Ctype &out) throw() {
     out.ctype = row.ctype;
     out.comment = row.comment;
 }
 
 // --- amc_vis.FCtype.msghdr.CopyIn
 // Copy fields in to row
-void amc_vis::ctype_CopyIn(amc_vis::FCtype &row, dmmeta::Ctype &in) {
+void amc_vis::ctype_CopyIn(amc_vis::FCtype &row, dmmeta::Ctype &in) throw() {
     row.ctype = in.ctype;
     row.comment = in.comment;
 }
 
 // --- amc_vis.FCtype.ns.Get
-algo::Smallstr16 amc_vis::ns_Get(amc_vis::FCtype& ctype) {
+algo::Smallstr16 amc_vis::ns_Get(amc_vis::FCtype& ctype) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(ctype.ctype, ".RL"));
     return ret;
 }
 
 // --- amc_vis.FCtype.name.Get
-algo::Smallstr100 amc_vis::name_Get(amc_vis::FCtype& ctype) {
+algo::Smallstr100 amc_vis::name_Get(amc_vis::FCtype& ctype) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
     return ret;
 }
@@ -147,7 +147,7 @@ algo::Smallstr100 amc_vis::name_Get(amc_vis::FCtype& ctype) {
 // --- amc_vis.FCtype.c_field.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void amc_vis::c_field_Insert(amc_vis::FCtype& ctype, amc_vis::FField& row) {
+void amc_vis::c_field_Insert(amc_vis::FCtype& ctype, amc_vis::FField& row) throw() {
     if (bool_Update(row.ctype_c_field_in_ary,true)) {
         // reserve space
         c_field_Reserve(ctype, 1);
@@ -164,7 +164,7 @@ void amc_vis::c_field_Insert(amc_vis::FCtype& ctype, amc_vis::FField& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc_vis::c_field_InsertMaybe(amc_vis::FCtype& ctype, amc_vis::FField& row) {
+bool amc_vis::c_field_InsertMaybe(amc_vis::FCtype& ctype, amc_vis::FField& row) throw() {
     bool retval = !row.ctype_c_field_in_ary;
     c_field_Insert(ctype,row); // check is performed in _Insert again
     return retval;
@@ -172,7 +172,7 @@ bool amc_vis::c_field_InsertMaybe(amc_vis::FCtype& ctype, amc_vis::FField& row) 
 
 // --- amc_vis.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc_vis::c_field_Remove(amc_vis::FCtype& ctype, amc_vis::FField& row) {
+void amc_vis::c_field_Remove(amc_vis::FCtype& ctype, amc_vis::FField& row) throw() {
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
         int lim = ctype.c_field_n;
         amc_vis::FField* *elems = ctype.c_field_elems;
@@ -193,7 +193,7 @@ void amc_vis::c_field_Remove(amc_vis::FCtype& ctype, amc_vis::FField& row) {
 
 // --- amc_vis.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void amc_vis::c_field_Reserve(amc_vis::FCtype& ctype, u32 n) {
+void amc_vis::c_field_Reserve(amc_vis::FCtype& ctype, u32 n) throw() {
     u32 old_max = ctype.c_field_max;
     if (UNLIKELY(ctype.c_field_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -209,7 +209,7 @@ void amc_vis::c_field_Reserve(amc_vis::FCtype& ctype, u32 n) {
 }
 
 // --- amc_vis.FCtype..Uninit
-void amc_vis::FCtype_Uninit(amc_vis::FCtype& ctype) {
+void amc_vis::FCtype_Uninit(amc_vis::FCtype& ctype) throw() {
     amc_vis::FCtype &row = ctype; (void)row;
     ind_ctype_Remove(row); // remove ctype from index ind_ctype
     zd_select_Remove(row); // remove ctype from index zd_select
@@ -221,7 +221,7 @@ void amc_vis::FCtype_Uninit(amc_vis::FCtype& ctype) {
 // --- amc_vis.trace..Print
 // print string representation of ROW to string STR
 // cfmt:amc_vis.trace.String  printfmt:Tuple
-void amc_vis::trace_Print(amc_vis::trace& row, algo::cstring& str) {
+void amc_vis::trace_Print(amc_vis::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amc_vis.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -229,7 +229,7 @@ void amc_vis::trace_Print(amc_vis::trace& row, algo::cstring& str) {
 
 // --- amc_vis.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
-void amc_vis::lpool_FreeMem(void* mem, u64 size) {
+void amc_vis::lpool_FreeMem(void* mem, u64 size) throw() {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
     if (mem && cell < 36) {
@@ -244,7 +244,7 @@ void amc_vis::lpool_FreeMem(void* mem, u64 size) {
 // If not successful, return NULL
 // The allocated block is at least 1<<4
 // The maximum allocation size is at most 1<<(36+4)
-void* amc_vis::lpool_AllocMem(u64 size) {
+void* amc_vis::lpool_AllocMem(u64 size) throw() {
     void *retval = NULL;
     size     = u64_Max(size,1<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
@@ -284,7 +284,7 @@ void* amc_vis::lpool_AllocMem(u64 size) {
 // --- amc_vis.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
 // Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
-bool amc_vis::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
+bool amc_vis::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) throw() {
     bool retval = true;
     bufsize = u64_Max(bufsize, 1<<4);
     u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
@@ -309,7 +309,7 @@ bool amc_vis::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
 // If the new size is same as old size, do nothing.
 // In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL; old memory remains untouched
-void* amc_vis::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+void* amc_vis::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) throw() {
     void *ret = oldmem;
     if (new_size != old_size) {
         ret = lpool_AllocMem(new_size);
@@ -324,7 +324,7 @@ void* amc_vis::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
 // --- amc_vis.FDb.lpool.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-u8& amc_vis::lpool_Alloc() {
+u8& amc_vis::lpool_Alloc() throw() {
     u8* row = lpool_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("amc_vis.out_of_mem  field:amc_vis.FDb.lpool  comment:'Alloc failed'");
@@ -334,7 +334,7 @@ u8& amc_vis::lpool_Alloc() {
 
 // --- amc_vis.FDb.lpool.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-u8* amc_vis::lpool_AllocMaybe() {
+u8* amc_vis::lpool_AllocMaybe() throw() {
     u8 *row = (u8*)lpool_AllocMem(sizeof(u8));
     if (row) {
         new (row) u8; // call constructor
@@ -344,7 +344,7 @@ u8* amc_vis::lpool_AllocMaybe() {
 
 // --- amc_vis.FDb.lpool.Delete
 // Remove row from all global and cross indices, then deallocate row
-void amc_vis::lpool_Delete(u8 &row) {
+void amc_vis::lpool_Delete(u8 &row) throw() {
     int length = sizeof(u8);
     lpool_FreeMem(&row, length);
 }
@@ -352,7 +352,7 @@ void amc_vis::lpool_Delete(u8 &row) {
 // --- amc_vis.FDb.ctype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-amc_vis::FCtype& amc_vis::ctype_Alloc() {
+amc_vis::FCtype& amc_vis::ctype_Alloc() throw() {
     amc_vis::FCtype* row = ctype_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("amc_vis.out_of_mem  field:amc_vis.FDb.ctype  comment:'Alloc failed'");
@@ -362,7 +362,7 @@ amc_vis::FCtype& amc_vis::ctype_Alloc() {
 
 // --- amc_vis.FDb.ctype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-amc_vis::FCtype* amc_vis::ctype_AllocMaybe() {
+amc_vis::FCtype* amc_vis::ctype_AllocMaybe() throw() {
     amc_vis::FCtype *row = (amc_vis::FCtype*)ctype_AllocMem();
     if (row) {
         new (row) amc_vis::FCtype; // call constructor
@@ -373,7 +373,7 @@ amc_vis::FCtype* amc_vis::ctype_AllocMaybe() {
 // --- amc_vis.FDb.ctype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-amc_vis::FCtype* amc_vis::ctype_InsertMaybe(const dmmeta::Ctype &value) {
+amc_vis::FCtype* amc_vis::ctype_InsertMaybe(const dmmeta::Ctype &value) throw() {
     amc_vis::FCtype *row = &ctype_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ctype_CopyIn(*row,const_cast<dmmeta::Ctype&>(value));
     bool ok = ctype_XrefMaybe(*row); // this may return false
@@ -386,7 +386,7 @@ amc_vis::FCtype* amc_vis::ctype_InsertMaybe(const dmmeta::Ctype &value) {
 
 // --- amc_vis.FDb.ctype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* amc_vis::ctype_AllocMem() {
+void* amc_vis::ctype_AllocMem() throw() {
     u64 new_nelems     = _db.ctype_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -412,7 +412,7 @@ void* amc_vis::ctype_AllocMem() {
 
 // --- amc_vis.FDb.ctype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void amc_vis::ctype_RemoveLast() {
+void amc_vis::ctype_RemoveLast() throw() {
     u64 n = _db.ctype_n;
     if (n > 0) {
         n -= 1;
@@ -422,7 +422,7 @@ void amc_vis::ctype_RemoveLast() {
 }
 
 // --- amc_vis.FDb.ctype.InputMaybe
-static bool amc_vis::ctype_InputMaybe(dmmeta::Ctype &elem) {
+static bool amc_vis::ctype_InputMaybe(dmmeta::Ctype &elem) throw() {
     bool retval = true;
     retval = ctype_InsertMaybe(elem) != nullptr;
     return retval;
@@ -449,7 +449,7 @@ bool amc_vis::ctype_XrefMaybe(amc_vis::FCtype &row) {
 // --- amc_vis.FDb.field.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-amc_vis::FField& amc_vis::field_Alloc() {
+amc_vis::FField& amc_vis::field_Alloc() throw() {
     amc_vis::FField* row = field_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("amc_vis.out_of_mem  field:amc_vis.FDb.field  comment:'Alloc failed'");
@@ -459,7 +459,7 @@ amc_vis::FField& amc_vis::field_Alloc() {
 
 // --- amc_vis.FDb.field.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-amc_vis::FField* amc_vis::field_AllocMaybe() {
+amc_vis::FField* amc_vis::field_AllocMaybe() throw() {
     amc_vis::FField *row = (amc_vis::FField*)field_AllocMem();
     if (row) {
         new (row) amc_vis::FField; // call constructor
@@ -470,7 +470,7 @@ amc_vis::FField* amc_vis::field_AllocMaybe() {
 // --- amc_vis.FDb.field.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-amc_vis::FField* amc_vis::field_InsertMaybe(const dmmeta::Field &value) {
+amc_vis::FField* amc_vis::field_InsertMaybe(const dmmeta::Field &value) throw() {
     amc_vis::FField *row = &field_Alloc(); // if out of memory, process dies. if input error, return NULL.
     field_CopyIn(*row,const_cast<dmmeta::Field&>(value));
     bool ok = field_XrefMaybe(*row); // this may return false
@@ -483,7 +483,7 @@ amc_vis::FField* amc_vis::field_InsertMaybe(const dmmeta::Field &value) {
 
 // --- amc_vis.FDb.field.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* amc_vis::field_AllocMem() {
+void* amc_vis::field_AllocMem() throw() {
     u64 new_nelems     = _db.field_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -509,7 +509,7 @@ void* amc_vis::field_AllocMem() {
 
 // --- amc_vis.FDb.field.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void amc_vis::field_RemoveLast() {
+void amc_vis::field_RemoveLast() throw() {
     u64 n = _db.field_n;
     if (n > 0) {
         n -= 1;
@@ -519,7 +519,7 @@ void amc_vis::field_RemoveLast() {
 }
 
 // --- amc_vis.FDb.field.InputMaybe
-static bool amc_vis::field_InputMaybe(dmmeta::Field &elem) {
+static bool amc_vis::field_InputMaybe(dmmeta::Field &elem) throw() {
     bool retval = true;
     retval = field_InsertMaybe(elem) != nullptr;
     return retval;
@@ -579,7 +579,7 @@ bool amc_vis::field_XrefMaybe(amc_vis::FField &row) {
 // The following fields are updated:
 //     amc_vis.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void amc_vis::ReadArgv() {
+void amc_vis::ReadArgv() throw() {
     command::amc_vis &cmd = amc_vis::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -807,7 +807,7 @@ bool amc_vis::InsertStrptrMaybe(algo::strptr str) {
 
 // --- amc_vis.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool amc_vis::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool amc_vis::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = amc_vis::LoadTuplesFile(root, recursive);
@@ -834,7 +834,7 @@ bool amc_vis::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool amc_vis::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool amc_vis::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -847,7 +847,7 @@ bool amc_vis::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- amc_vis.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool amc_vis::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool amc_vis::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -867,7 +867,7 @@ bool amc_vis::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) 
 
 // --- amc_vis.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool amc_vis::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool amc_vis::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = amc_vis::LoadTuplesFile(fname, recursive);
@@ -891,7 +891,7 @@ bool amc_vis::_db_XrefMaybe() {
 
 // --- amc_vis.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
-amc_vis::FCtype* amc_vis::ind_ctype_Find(const algo::strptr& key) {
+amc_vis::FCtype* amc_vis::ind_ctype_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     amc_vis::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     amc_vis::FCtype* ret=NULL;
@@ -914,7 +914,7 @@ amc_vis::FCtype& amc_vis::ind_ctype_FindX(const algo::strptr& key) {
 
 // --- amc_vis.FDb.ind_ctype.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-amc_vis::FCtype& amc_vis::ind_ctype_GetOrCreate(const algo::strptr& key) {
+amc_vis::FCtype& amc_vis::ind_ctype_GetOrCreate(const algo::strptr& key) throw() {
     amc_vis::FCtype* ret = ind_ctype_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &ctype_Alloc();
@@ -931,7 +931,7 @@ amc_vis::FCtype& amc_vis::ind_ctype_GetOrCreate(const algo::strptr& key) {
 
 // --- amc_vis.FDb.ind_ctype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool amc_vis::ind_ctype_InsertMaybe(amc_vis::FCtype& row) {
+bool amc_vis::ind_ctype_InsertMaybe(amc_vis::FCtype& row) throw() {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (amc_vis::FCtype*)-1)) {// check if in hash already
@@ -959,7 +959,7 @@ bool amc_vis::ind_ctype_InsertMaybe(amc_vis::FCtype& row) {
 
 // --- amc_vis.FDb.ind_ctype.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void amc_vis::ind_ctype_Remove(amc_vis::FCtype& row) {
+void amc_vis::ind_ctype_Remove(amc_vis::FCtype& row) throw() {
     if (LIKELY(row.ind_ctype_next != (amc_vis::FCtype*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         amc_vis::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
@@ -977,7 +977,7 @@ void amc_vis::ind_ctype_Remove(amc_vis::FCtype& row) {
 
 // --- amc_vis.FDb.ind_ctype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void amc_vis::ind_ctype_Reserve(int n) {
+void amc_vis::ind_ctype_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_ctype_buckets_n;
     u32 new_nelems   = _db.ind_ctype_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1013,7 +1013,7 @@ void amc_vis::ind_ctype_Reserve(int n) {
 
 // --- amc_vis.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
-amc_vis::FField* amc_vis::ind_field_Find(const algo::strptr& key) {
+amc_vis::FField* amc_vis::ind_field_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     amc_vis::FField* *e = &_db.ind_field_buckets_elems[index];
     amc_vis::FField* ret=NULL;
@@ -1036,7 +1036,7 @@ amc_vis::FField& amc_vis::ind_field_FindX(const algo::strptr& key) {
 
 // --- amc_vis.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool amc_vis::ind_field_InsertMaybe(amc_vis::FField& row) {
+bool amc_vis::ind_field_InsertMaybe(amc_vis::FField& row) throw() {
     ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (amc_vis::FField*)-1)) {// check if in hash already
@@ -1064,7 +1064,7 @@ bool amc_vis::ind_field_InsertMaybe(amc_vis::FField& row) {
 
 // --- amc_vis.FDb.ind_field.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void amc_vis::ind_field_Remove(amc_vis::FField& row) {
+void amc_vis::ind_field_Remove(amc_vis::FField& row) throw() {
     if (LIKELY(row.ind_field_next != (amc_vis::FField*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         amc_vis::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
@@ -1082,7 +1082,7 @@ void amc_vis::ind_field_Remove(amc_vis::FField& row) {
 
 // --- amc_vis.FDb.ind_field.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void amc_vis::ind_field_Reserve(int n) {
+void amc_vis::ind_field_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_field_buckets_n;
     u32 new_nelems   = _db.ind_field_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1119,7 +1119,7 @@ void amc_vis::ind_field_Reserve(int n) {
 // --- amc_vis.FDb.node.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-amc_vis::FNode& amc_vis::node_Alloc() {
+amc_vis::FNode& amc_vis::node_Alloc() throw() {
     amc_vis::FNode* row = node_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("amc_vis.out_of_mem  field:amc_vis.FDb.node  comment:'Alloc failed'");
@@ -1129,7 +1129,7 @@ amc_vis::FNode& amc_vis::node_Alloc() {
 
 // --- amc_vis.FDb.node.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-amc_vis::FNode* amc_vis::node_AllocMaybe() {
+amc_vis::FNode* amc_vis::node_AllocMaybe() throw() {
     amc_vis::FNode *row = (amc_vis::FNode*)node_AllocMem();
     if (row) {
         new (row) amc_vis::FNode; // call constructor
@@ -1140,7 +1140,7 @@ amc_vis::FNode* amc_vis::node_AllocMaybe() {
 
 // --- amc_vis.FDb.node.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* amc_vis::node_AllocMem() {
+void* amc_vis::node_AllocMem() throw() {
     u64 new_nelems     = _db.node_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1166,7 +1166,7 @@ void* amc_vis::node_AllocMem() {
 
 // --- amc_vis.FDb.node.RemoveAll
 // Remove all elements from Lary
-void amc_vis::node_RemoveAll() {
+void amc_vis::node_RemoveAll() throw() {
     for (u64 n = _db.node_n; n>0; ) {
         n--;
         node_qFind(i32(n)).~FNode(); // destroy last element
@@ -1176,7 +1176,7 @@ void amc_vis::node_RemoveAll() {
 
 // --- amc_vis.FDb.node.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void amc_vis::node_RemoveLast() {
+void amc_vis::node_RemoveLast() throw() {
     u64 n = _db.node_n;
     if (n > 0) {
         n -= 1;
@@ -1205,7 +1205,7 @@ bool amc_vis::node_XrefMaybe(amc_vis::FNode &row) {
 
 // --- amc_vis.FDb.ind_node.Find
 // Find row by key. Return NULL if not found.
-amc_vis::FNode* amc_vis::ind_node_Find(const algo::strptr& key) {
+amc_vis::FNode* amc_vis::ind_node_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_node_buckets_n - 1);
     amc_vis::FNode* *e = &_db.ind_node_buckets_elems[index];
     amc_vis::FNode* ret=NULL;
@@ -1228,7 +1228,7 @@ amc_vis::FNode& amc_vis::ind_node_FindX(const algo::strptr& key) {
 
 // --- amc_vis.FDb.ind_node.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-amc_vis::FNode& amc_vis::ind_node_GetOrCreate(const algo::strptr& key) {
+amc_vis::FNode& amc_vis::ind_node_GetOrCreate(const algo::strptr& key) throw() {
     amc_vis::FNode* ret = ind_node_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &node_Alloc();
@@ -1245,7 +1245,7 @@ amc_vis::FNode& amc_vis::ind_node_GetOrCreate(const algo::strptr& key) {
 
 // --- amc_vis.FDb.ind_node.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool amc_vis::ind_node_InsertMaybe(amc_vis::FNode& row) {
+bool amc_vis::ind_node_InsertMaybe(amc_vis::FNode& row) throw() {
     ind_node_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_node_next == (amc_vis::FNode*)-1)) {// check if in hash already
@@ -1273,7 +1273,7 @@ bool amc_vis::ind_node_InsertMaybe(amc_vis::FNode& row) {
 
 // --- amc_vis.FDb.ind_node.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void amc_vis::ind_node_Remove(amc_vis::FNode& row) {
+void amc_vis::ind_node_Remove(amc_vis::FNode& row) throw() {
     if (LIKELY(row.ind_node_next != (amc_vis::FNode*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.node) & (_db.ind_node_buckets_n - 1);
         amc_vis::FNode* *prev = &_db.ind_node_buckets_elems[index]; // addr of pointer to current element
@@ -1291,7 +1291,7 @@ void amc_vis::ind_node_Remove(amc_vis::FNode& row) {
 
 // --- amc_vis.FDb.ind_node.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void amc_vis::ind_node_Reserve(int n) {
+void amc_vis::ind_node_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_node_buckets_n;
     u32 new_nelems   = _db.ind_node_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1328,7 +1328,7 @@ void amc_vis::ind_node_Reserve(int n) {
 // --- amc_vis.FDb.link.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-amc_vis::Link& amc_vis::link_Alloc() {
+amc_vis::Link& amc_vis::link_Alloc() throw() {
     amc_vis::Link* row = link_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("amc_vis.out_of_mem  field:amc_vis.FDb.link  comment:'Alloc failed'");
@@ -1338,7 +1338,7 @@ amc_vis::Link& amc_vis::link_Alloc() {
 
 // --- amc_vis.FDb.link.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-amc_vis::Link* amc_vis::link_AllocMaybe() {
+amc_vis::Link* amc_vis::link_AllocMaybe() throw() {
     amc_vis::Link *row = (amc_vis::Link*)link_AllocMem();
     if (row) {
         new (row) amc_vis::Link; // call constructor
@@ -1348,7 +1348,7 @@ amc_vis::Link* amc_vis::link_AllocMaybe() {
 
 // --- amc_vis.FDb.link.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* amc_vis::link_AllocMem() {
+void* amc_vis::link_AllocMem() throw() {
     u64 new_nelems     = _db.link_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1374,7 +1374,7 @@ void* amc_vis::link_AllocMem() {
 
 // --- amc_vis.FDb.link.RemoveAll
 // Remove all elements from Lary
-void amc_vis::link_RemoveAll() {
+void amc_vis::link_RemoveAll() throw() {
     for (u64 n = _db.link_n; n>0; ) {
         n--;
         link_qFind(u64(n)).~Link(); // destroy last element
@@ -1384,7 +1384,7 @@ void amc_vis::link_RemoveAll() {
 
 // --- amc_vis.FDb.link.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void amc_vis::link_RemoveLast() {
+void amc_vis::link_RemoveLast() throw() {
     u64 n = _db.link_n;
     if (n > 0) {
         n -= 1;
@@ -1431,7 +1431,7 @@ bool amc_vis::link_XrefMaybe(amc_vis::Link &row) {
 
 // --- amc_vis.FDb.ind_link.Find
 // Find row by key. Return NULL if not found.
-amc_vis::Link* amc_vis::ind_link_Find(const algo::strptr& key) {
+amc_vis::Link* amc_vis::ind_link_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_link_buckets_n - 1);
     amc_vis::Link* *e = &_db.ind_link_buckets_elems[index];
     amc_vis::Link* ret=NULL;
@@ -1454,7 +1454,7 @@ amc_vis::Link& amc_vis::ind_link_FindX(const algo::strptr& key) {
 
 // --- amc_vis.FDb.ind_link.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool amc_vis::ind_link_InsertMaybe(amc_vis::Link& row) {
+bool amc_vis::ind_link_InsertMaybe(amc_vis::Link& row) throw() {
     ind_link_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_link_next == (amc_vis::Link*)-1)) {// check if in hash already
@@ -1482,7 +1482,7 @@ bool amc_vis::ind_link_InsertMaybe(amc_vis::Link& row) {
 
 // --- amc_vis.FDb.ind_link.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void amc_vis::ind_link_Remove(amc_vis::Link& row) {
+void amc_vis::ind_link_Remove(amc_vis::Link& row) throw() {
     if (LIKELY(row.ind_link_next != (amc_vis::Link*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.link) & (_db.ind_link_buckets_n - 1);
         amc_vis::Link* *prev = &_db.ind_link_buckets_elems[index]; // addr of pointer to current element
@@ -1500,7 +1500,7 @@ void amc_vis::ind_link_Remove(amc_vis::Link& row) {
 
 // --- amc_vis.FDb.ind_link.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void amc_vis::ind_link_Reserve(int n) {
+void amc_vis::ind_link_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_link_buckets_n;
     u32 new_nelems   = _db.ind_link_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1537,7 +1537,7 @@ void amc_vis::ind_link_Reserve(int n) {
 // --- amc_vis.FDb.linkdep.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-amc_vis::Linkdep& amc_vis::linkdep_Alloc() {
+amc_vis::Linkdep& amc_vis::linkdep_Alloc() throw() {
     amc_vis::Linkdep* row = linkdep_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("amc_vis.out_of_mem  field:amc_vis.FDb.linkdep  comment:'Alloc failed'");
@@ -1547,7 +1547,7 @@ amc_vis::Linkdep& amc_vis::linkdep_Alloc() {
 
 // --- amc_vis.FDb.linkdep.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-amc_vis::Linkdep* amc_vis::linkdep_AllocMaybe() {
+amc_vis::Linkdep* amc_vis::linkdep_AllocMaybe() throw() {
     amc_vis::Linkdep *row = (amc_vis::Linkdep*)linkdep_AllocMem();
     if (row) {
         new (row) amc_vis::Linkdep; // call constructor
@@ -1558,7 +1558,7 @@ amc_vis::Linkdep* amc_vis::linkdep_AllocMaybe() {
 
 // --- amc_vis.FDb.linkdep.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* amc_vis::linkdep_AllocMem() {
+void* amc_vis::linkdep_AllocMem() throw() {
     u64 new_nelems     = _db.linkdep_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1584,7 +1584,7 @@ void* amc_vis::linkdep_AllocMem() {
 
 // --- amc_vis.FDb.linkdep.RemoveAll
 // Remove all elements from Lary
-void amc_vis::linkdep_RemoveAll() {
+void amc_vis::linkdep_RemoveAll() throw() {
     for (u64 n = _db.linkdep_n; n>0; ) {
         n--;
         linkdep_qFind(i32(n)).~Linkdep(); // destroy last element
@@ -1594,7 +1594,7 @@ void amc_vis::linkdep_RemoveAll() {
 
 // --- amc_vis.FDb.linkdep.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void amc_vis::linkdep_RemoveLast() {
+void amc_vis::linkdep_RemoveLast() throw() {
     u64 n = _db.linkdep_n;
     if (n > 0) {
         n -= 1;
@@ -1633,7 +1633,7 @@ bool amc_vis::linkdep_XrefMaybe(amc_vis::Linkdep &row) {
 // --- amc_vis.FDb.c_linklist.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void amc_vis::c_linklist_Insert(amc_vis::Link& row) {
+void amc_vis::c_linklist_Insert(amc_vis::Link& row) throw() {
     if (bool_Update(row._db_c_linklist_in_ary,true)) {
         // reserve space
         c_linklist_Reserve(1);
@@ -1650,7 +1650,7 @@ void amc_vis::c_linklist_Insert(amc_vis::Link& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool amc_vis::c_linklist_InsertMaybe(amc_vis::Link& row) {
+bool amc_vis::c_linklist_InsertMaybe(amc_vis::Link& row) throw() {
     bool retval = !row._db_c_linklist_in_ary;
     c_linklist_Insert(row); // check is performed in _Insert again
     return retval;
@@ -1658,7 +1658,7 @@ bool amc_vis::c_linklist_InsertMaybe(amc_vis::Link& row) {
 
 // --- amc_vis.FDb.c_linklist.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void amc_vis::c_linklist_Remove(amc_vis::Link& row) {
+void amc_vis::c_linklist_Remove(amc_vis::Link& row) throw() {
     if (bool_Update(row._db_c_linklist_in_ary,false)) {
         int lim = _db.c_linklist_n;
         amc_vis::Link* *elems = _db.c_linklist_elems;
@@ -1679,7 +1679,7 @@ void amc_vis::c_linklist_Remove(amc_vis::Link& row) {
 
 // --- amc_vis.FDb.c_linklist.Reserve
 // Reserve space in index for N more elements;
-void amc_vis::c_linklist_Reserve(u32 n) {
+void amc_vis::c_linklist_Reserve(u32 n) throw() {
     u32 old_max = _db.c_linklist_max;
     if (UNLIKELY(_db.c_linklist_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -1696,7 +1696,7 @@ void amc_vis::c_linklist_Reserve(u32 n) {
 
 // --- amc_vis.FDb.bh_node.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void amc_vis::bh_node_Dealloc() {
+void amc_vis::bh_node_Dealloc() throw() {
     bh_node_RemoveAll();
     algo_lib::malloc_FreeMem(_db.bh_node_elems, sizeof(amc_vis::FNode*)*_db.bh_node_max);
     _db.bh_node_max   = 0;
@@ -1706,7 +1706,7 @@ void amc_vis::bh_node_Dealloc() {
 // --- amc_vis.FDb.bh_node.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int amc_vis::bh_node_Downheap(amc_vis::FNode& row, int idx) {
+static int amc_vis::bh_node_Downheap(amc_vis::FNode& row, int idx) throw() {
     amc_vis::FNode* *elems = _db.bh_node_elems;
     int n = _db.bh_node_n;
     int child = idx*2+1;
@@ -1733,7 +1733,7 @@ static int amc_vis::bh_node_Downheap(amc_vis::FNode& row, int idx) {
 
 // --- amc_vis.FDb.bh_node.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void amc_vis::bh_node_Insert(amc_vis::FNode& row) {
+void amc_vis::bh_node_Insert(amc_vis::FNode& row) throw() {
     if (LIKELY(row.bh_node_idx == -1)) {
         bh_node_Reserve(1);
         int n = _db.bh_node_n;
@@ -1747,7 +1747,7 @@ void amc_vis::bh_node_Insert(amc_vis::FNode& row) {
 // --- amc_vis.FDb.bh_node.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 amc_vis::bh_node_Reheap(amc_vis::FNode& row) {
+i32 amc_vis::bh_node_Reheap(amc_vis::FNode& row) throw() {
     int old_idx = row.bh_node_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
@@ -1768,7 +1768,7 @@ i32 amc_vis::bh_node_Reheap(amc_vis::FNode& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 amc_vis::bh_node_ReheapFirst() {
+i32 amc_vis::bh_node_ReheapFirst() throw() {
     amc_vis::FNode &row = *_db.bh_node_elems[0];
     i32 new_idx = bh_node_Downheap(row, 0);
     row.bh_node_idx = new_idx;
@@ -1778,7 +1778,7 @@ i32 amc_vis::bh_node_ReheapFirst() {
 
 // --- amc_vis.FDb.bh_node.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc_vis::bh_node_Remove(amc_vis::FNode& row) {
+void amc_vis::bh_node_Remove(amc_vis::FNode& row) throw() {
     if (bh_node_InBheapQ(row)) {
         int old_idx = row.bh_node_idx;
         if (_db.bh_node_elems[old_idx] == &row) { // sanity check: heap points back to row
@@ -1800,7 +1800,7 @@ void amc_vis::bh_node_Remove(amc_vis::FNode& row) {
 
 // --- amc_vis.FDb.bh_node.RemoveAll
 // Remove all elements from binary heap
-void amc_vis::bh_node_RemoveAll() {
+void amc_vis::bh_node_RemoveAll() throw() {
     int n = _db.bh_node_n;
     for (int i = n - 1; i>=0; i--) {
         _db.bh_node_elems[i]->bh_node_idx = -1; // mark not-in-heap
@@ -1811,7 +1811,7 @@ void amc_vis::bh_node_RemoveAll() {
 // --- amc_vis.FDb.bh_node.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-amc_vis::FNode* amc_vis::bh_node_RemoveFirst() {
+amc_vis::FNode* amc_vis::bh_node_RemoveFirst() throw() {
     amc_vis::FNode *row = NULL;
     if (_db.bh_node_n > 0) {
         row = _db.bh_node_elems[0];
@@ -1830,7 +1830,7 @@ amc_vis::FNode* amc_vis::bh_node_RemoveFirst() {
 
 // --- amc_vis.FDb.bh_node.Reserve
 // Reserve space in index for N more elements
-void amc_vis::bh_node_Reserve(int n) {
+void amc_vis::bh_node_Reserve(int n) throw() {
     i32 old_max = _db.bh_node_max;
     if (UNLIKELY(_db.bh_node_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -1848,7 +1848,7 @@ void amc_vis::bh_node_Reserve(int n) {
 // --- amc_vis.FDb.bh_node.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int amc_vis::bh_node_Upheap(amc_vis::FNode& row, int idx) {
+static int amc_vis::bh_node_Upheap(amc_vis::FNode& row, int idx) throw() {
     amc_vis::FNode* *elems = _db.bh_node_elems;
     while (idx>0) {
         int j = (idx-1)/2;
@@ -1864,14 +1864,14 @@ static int amc_vis::bh_node_Upheap(amc_vis::FNode& row, int idx) {
 }
 
 // --- amc_vis.FDb.bh_node.ElemLt
-inline static bool amc_vis::bh_node_ElemLt(amc_vis::FNode &a, amc_vis::FNode &b) {
+inline static bool amc_vis::bh_node_ElemLt(amc_vis::FNode &a, amc_vis::FNode &b) throw() {
     (void)_db;
     return nodekey_Lt(a, b);
 }
 
 // --- amc_vis.FDb.bh_link.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void amc_vis::bh_link_Dealloc() {
+void amc_vis::bh_link_Dealloc() throw() {
     bh_link_RemoveAll();
     algo_lib::malloc_FreeMem(_db.bh_link_elems, sizeof(amc_vis::Link*)*_db.bh_link_max);
     _db.bh_link_max   = 0;
@@ -1881,7 +1881,7 @@ void amc_vis::bh_link_Dealloc() {
 // --- amc_vis.FDb.bh_link.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int amc_vis::bh_link_Downheap(amc_vis::Link& row, int idx) {
+static int amc_vis::bh_link_Downheap(amc_vis::Link& row, int idx) throw() {
     amc_vis::Link* *elems = _db.bh_link_elems;
     int n = _db.bh_link_n;
     int child = idx*2+1;
@@ -1908,7 +1908,7 @@ static int amc_vis::bh_link_Downheap(amc_vis::Link& row, int idx) {
 
 // --- amc_vis.FDb.bh_link.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void amc_vis::bh_link_Insert(amc_vis::Link& row) {
+void amc_vis::bh_link_Insert(amc_vis::Link& row) throw() {
     if (LIKELY(row.bh_link_idx == -1)) {
         bh_link_Reserve(1);
         int n = _db.bh_link_n;
@@ -1922,7 +1922,7 @@ void amc_vis::bh_link_Insert(amc_vis::Link& row) {
 // --- amc_vis.FDb.bh_link.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 amc_vis::bh_link_Reheap(amc_vis::Link& row) {
+i32 amc_vis::bh_link_Reheap(amc_vis::Link& row) throw() {
     int old_idx = row.bh_link_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
@@ -1943,7 +1943,7 @@ i32 amc_vis::bh_link_Reheap(amc_vis::Link& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 amc_vis::bh_link_ReheapFirst() {
+i32 amc_vis::bh_link_ReheapFirst() throw() {
     amc_vis::Link &row = *_db.bh_link_elems[0];
     i32 new_idx = bh_link_Downheap(row, 0);
     row.bh_link_idx = new_idx;
@@ -1953,7 +1953,7 @@ i32 amc_vis::bh_link_ReheapFirst() {
 
 // --- amc_vis.FDb.bh_link.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc_vis::bh_link_Remove(amc_vis::Link& row) {
+void amc_vis::bh_link_Remove(amc_vis::Link& row) throw() {
     if (bh_link_InBheapQ(row)) {
         int old_idx = row.bh_link_idx;
         if (_db.bh_link_elems[old_idx] == &row) { // sanity check: heap points back to row
@@ -1975,7 +1975,7 @@ void amc_vis::bh_link_Remove(amc_vis::Link& row) {
 
 // --- amc_vis.FDb.bh_link.RemoveAll
 // Remove all elements from binary heap
-void amc_vis::bh_link_RemoveAll() {
+void amc_vis::bh_link_RemoveAll() throw() {
     int n = _db.bh_link_n;
     for (int i = n - 1; i>=0; i--) {
         _db.bh_link_elems[i]->bh_link_idx = -1; // mark not-in-heap
@@ -1986,7 +1986,7 @@ void amc_vis::bh_link_RemoveAll() {
 // --- amc_vis.FDb.bh_link.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-amc_vis::Link* amc_vis::bh_link_RemoveFirst() {
+amc_vis::Link* amc_vis::bh_link_RemoveFirst() throw() {
     amc_vis::Link *row = NULL;
     if (_db.bh_link_n > 0) {
         row = _db.bh_link_elems[0];
@@ -2005,7 +2005,7 @@ amc_vis::Link* amc_vis::bh_link_RemoveFirst() {
 
 // --- amc_vis.FDb.bh_link.Reserve
 // Reserve space in index for N more elements
-void amc_vis::bh_link_Reserve(int n) {
+void amc_vis::bh_link_Reserve(int n) throw() {
     i32 old_max = _db.bh_link_max;
     if (UNLIKELY(_db.bh_link_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -2023,7 +2023,7 @@ void amc_vis::bh_link_Reserve(int n) {
 // --- amc_vis.FDb.bh_link.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int amc_vis::bh_link_Upheap(amc_vis::Link& row, int idx) {
+static int amc_vis::bh_link_Upheap(amc_vis::Link& row, int idx) throw() {
     amc_vis::Link* *elems = _db.bh_link_elems;
     while (idx>0) {
         int j = (idx-1)/2;
@@ -2039,7 +2039,7 @@ static int amc_vis::bh_link_Upheap(amc_vis::Link& row, int idx) {
 }
 
 // --- amc_vis.FDb.bh_link.ElemLt
-inline static bool amc_vis::bh_link_ElemLt(amc_vis::Link &a, amc_vis::Link &b) {
+inline static bool amc_vis::bh_link_ElemLt(amc_vis::Link &a, amc_vis::Link &b) throw() {
     (void)_db;
     return linkkey_Lt(a, b);
 }
@@ -2047,7 +2047,7 @@ inline static bool amc_vis::bh_link_ElemLt(amc_vis::Link &a, amc_vis::Link &b) {
 // --- amc_vis.FDb.reftype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-amc_vis::FReftype& amc_vis::reftype_Alloc() {
+amc_vis::FReftype& amc_vis::reftype_Alloc() throw() {
     amc_vis::FReftype* row = reftype_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("amc_vis.out_of_mem  field:amc_vis.FDb.reftype  comment:'Alloc failed'");
@@ -2057,7 +2057,7 @@ amc_vis::FReftype& amc_vis::reftype_Alloc() {
 
 // --- amc_vis.FDb.reftype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-amc_vis::FReftype* amc_vis::reftype_AllocMaybe() {
+amc_vis::FReftype* amc_vis::reftype_AllocMaybe() throw() {
     amc_vis::FReftype *row = (amc_vis::FReftype*)reftype_AllocMem();
     if (row) {
         new (row) amc_vis::FReftype; // call constructor
@@ -2068,7 +2068,7 @@ amc_vis::FReftype* amc_vis::reftype_AllocMaybe() {
 // --- amc_vis.FDb.reftype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-amc_vis::FReftype* amc_vis::reftype_InsertMaybe(const dmmeta::Reftype &value) {
+amc_vis::FReftype* amc_vis::reftype_InsertMaybe(const dmmeta::Reftype &value) throw() {
     amc_vis::FReftype *row = &reftype_Alloc(); // if out of memory, process dies. if input error, return NULL.
     reftype_CopyIn(*row,const_cast<dmmeta::Reftype&>(value));
     bool ok = reftype_XrefMaybe(*row); // this may return false
@@ -2081,7 +2081,7 @@ amc_vis::FReftype* amc_vis::reftype_InsertMaybe(const dmmeta::Reftype &value) {
 
 // --- amc_vis.FDb.reftype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* amc_vis::reftype_AllocMem() {
+void* amc_vis::reftype_AllocMem() throw() {
     u64 new_nelems     = _db.reftype_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2107,7 +2107,7 @@ void* amc_vis::reftype_AllocMem() {
 
 // --- amc_vis.FDb.reftype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void amc_vis::reftype_RemoveLast() {
+void amc_vis::reftype_RemoveLast() throw() {
     u64 n = _db.reftype_n;
     if (n > 0) {
         n -= 1;
@@ -2117,7 +2117,7 @@ void amc_vis::reftype_RemoveLast() {
 }
 
 // --- amc_vis.FDb.reftype.InputMaybe
-static bool amc_vis::reftype_InputMaybe(dmmeta::Reftype &elem) {
+static bool amc_vis::reftype_InputMaybe(dmmeta::Reftype &elem) throw() {
     bool retval = true;
     retval = reftype_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2143,7 +2143,7 @@ bool amc_vis::reftype_XrefMaybe(amc_vis::FReftype &row) {
 
 // --- amc_vis.FDb.ind_reftype.Find
 // Find row by key. Return NULL if not found.
-amc_vis::FReftype* amc_vis::ind_reftype_Find(const algo::strptr& key) {
+amc_vis::FReftype* amc_vis::ind_reftype_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_reftype_buckets_n - 1);
     amc_vis::FReftype* *e = &_db.ind_reftype_buckets_elems[index];
     amc_vis::FReftype* ret=NULL;
@@ -2166,7 +2166,7 @@ amc_vis::FReftype& amc_vis::ind_reftype_FindX(const algo::strptr& key) {
 
 // --- amc_vis.FDb.ind_reftype.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-amc_vis::FReftype& amc_vis::ind_reftype_GetOrCreate(const algo::strptr& key) {
+amc_vis::FReftype& amc_vis::ind_reftype_GetOrCreate(const algo::strptr& key) throw() {
     amc_vis::FReftype* ret = ind_reftype_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &reftype_Alloc();
@@ -2183,7 +2183,7 @@ amc_vis::FReftype& amc_vis::ind_reftype_GetOrCreate(const algo::strptr& key) {
 
 // --- amc_vis.FDb.ind_reftype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool amc_vis::ind_reftype_InsertMaybe(amc_vis::FReftype& row) {
+bool amc_vis::ind_reftype_InsertMaybe(amc_vis::FReftype& row) throw() {
     ind_reftype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_reftype_next == (amc_vis::FReftype*)-1)) {// check if in hash already
@@ -2211,7 +2211,7 @@ bool amc_vis::ind_reftype_InsertMaybe(amc_vis::FReftype& row) {
 
 // --- amc_vis.FDb.ind_reftype.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void amc_vis::ind_reftype_Remove(amc_vis::FReftype& row) {
+void amc_vis::ind_reftype_Remove(amc_vis::FReftype& row) throw() {
     if (LIKELY(row.ind_reftype_next != (amc_vis::FReftype*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.reftype) & (_db.ind_reftype_buckets_n - 1);
         amc_vis::FReftype* *prev = &_db.ind_reftype_buckets_elems[index]; // addr of pointer to current element
@@ -2229,7 +2229,7 @@ void amc_vis::ind_reftype_Remove(amc_vis::FReftype& row) {
 
 // --- amc_vis.FDb.ind_reftype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void amc_vis::ind_reftype_Reserve(int n) {
+void amc_vis::ind_reftype_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_reftype_buckets_n;
     u32 new_nelems   = _db.ind_reftype_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2266,7 +2266,7 @@ void amc_vis::ind_reftype_Reserve(int n) {
 // --- amc_vis.FDb.nodedep.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-amc_vis::FNodedep& amc_vis::nodedep_Alloc() {
+amc_vis::FNodedep& amc_vis::nodedep_Alloc() throw() {
     amc_vis::FNodedep* row = nodedep_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("amc_vis.out_of_mem  field:amc_vis.FDb.nodedep  comment:'Alloc failed'");
@@ -2276,7 +2276,7 @@ amc_vis::FNodedep& amc_vis::nodedep_Alloc() {
 
 // --- amc_vis.FDb.nodedep.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-amc_vis::FNodedep* amc_vis::nodedep_AllocMaybe() {
+amc_vis::FNodedep* amc_vis::nodedep_AllocMaybe() throw() {
     amc_vis::FNodedep *row = (amc_vis::FNodedep*)nodedep_AllocMem();
     if (row) {
         new (row) amc_vis::FNodedep; // call constructor
@@ -2287,7 +2287,7 @@ amc_vis::FNodedep* amc_vis::nodedep_AllocMaybe() {
 
 // --- amc_vis.FDb.nodedep.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* amc_vis::nodedep_AllocMem() {
+void* amc_vis::nodedep_AllocMem() throw() {
     u64 new_nelems     = _db.nodedep_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2313,7 +2313,7 @@ void* amc_vis::nodedep_AllocMem() {
 
 // --- amc_vis.FDb.nodedep.RemoveAll
 // Remove all elements from Lary
-void amc_vis::nodedep_RemoveAll() {
+void amc_vis::nodedep_RemoveAll() throw() {
     for (u64 n = _db.nodedep_n; n>0; ) {
         n--;
         nodedep_qFind(i32(n)).~FNodedep(); // destroy last element
@@ -2323,7 +2323,7 @@ void amc_vis::nodedep_RemoveAll() {
 
 // --- amc_vis.FDb.nodedep.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void amc_vis::nodedep_RemoveLast() {
+void amc_vis::nodedep_RemoveLast() throw() {
     u64 n = _db.nodedep_n;
     if (n > 0) {
         n -= 1;
@@ -2362,7 +2362,7 @@ bool amc_vis::nodedep_XrefMaybe(amc_vis::FNodedep &row) {
 // --- amc_vis.FDb.outrow.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-amc_vis::Outrow& amc_vis::outrow_Alloc() {
+amc_vis::Outrow& amc_vis::outrow_Alloc() throw() {
     amc_vis::Outrow* row = outrow_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("amc_vis.out_of_mem  field:amc_vis.FDb.outrow  comment:'Alloc failed'");
@@ -2372,7 +2372,7 @@ amc_vis::Outrow& amc_vis::outrow_Alloc() {
 
 // --- amc_vis.FDb.outrow.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-amc_vis::Outrow* amc_vis::outrow_AllocMaybe() {
+amc_vis::Outrow* amc_vis::outrow_AllocMaybe() throw() {
     amc_vis::Outrow *row = (amc_vis::Outrow*)outrow_AllocMem();
     if (row) {
         new (row) amc_vis::Outrow; // call constructor
@@ -2383,7 +2383,7 @@ amc_vis::Outrow* amc_vis::outrow_AllocMaybe() {
 
 // --- amc_vis.FDb.outrow.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* amc_vis::outrow_AllocMem() {
+void* amc_vis::outrow_AllocMem() throw() {
     u64 new_nelems     = _db.outrow_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2409,7 +2409,7 @@ void* amc_vis::outrow_AllocMem() {
 
 // --- amc_vis.FDb.outrow.RemoveAll
 // Remove all elements from Lary
-void amc_vis::outrow_RemoveAll() {
+void amc_vis::outrow_RemoveAll() throw() {
     for (u64 n = _db.outrow_n; n>0; ) {
         n--;
         outrow_qFind(i32(n)).~Outrow(); // destroy last element
@@ -2419,7 +2419,7 @@ void amc_vis::outrow_RemoveAll() {
 
 // --- amc_vis.FDb.outrow.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void amc_vis::outrow_RemoveLast() {
+void amc_vis::outrow_RemoveLast() throw() {
     u64 n = _db.outrow_n;
     if (n > 0) {
         n -= 1;
@@ -2439,7 +2439,7 @@ bool amc_vis::outrow_XrefMaybe(amc_vis::Outrow &row) {
 
 // --- amc_vis.FDb.zd_select.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc_vis::zd_select_Insert(amc_vis::FCtype& row) {
+void amc_vis::zd_select_Insert(amc_vis::FCtype& row) throw() {
     if (!zd_select_InLlistQ(row)) {
         amc_vis::FCtype* old_tail = _db.zd_select_tail;
         row.zd_select_next = NULL;
@@ -2455,7 +2455,7 @@ void amc_vis::zd_select_Insert(amc_vis::FCtype& row) {
 
 // --- amc_vis.FDb.zd_select.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc_vis::zd_select_Remove(amc_vis::FCtype& row) {
+void amc_vis::zd_select_Remove(amc_vis::FCtype& row) throw() {
     if (zd_select_InLlistQ(row)) {
         amc_vis::FCtype* old_head       = _db.zd_select_head;
         (void)old_head; // in case it's not used
@@ -2478,7 +2478,7 @@ void amc_vis::zd_select_Remove(amc_vis::FCtype& row) {
 
 // --- amc_vis.FDb.zd_select.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc_vis::zd_select_RemoveAll() {
+void amc_vis::zd_select_RemoveAll() throw() {
     amc_vis::FCtype* row = _db.zd_select_head;
     _db.zd_select_head = NULL;
     _db.zd_select_tail = NULL;
@@ -2493,7 +2493,7 @@ void amc_vis::zd_select_RemoveAll() {
 
 // --- amc_vis.FDb.zd_select.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc_vis::FCtype* amc_vis::zd_select_RemoveFirst() {
+amc_vis::FCtype* amc_vis::zd_select_RemoveFirst() throw() {
     amc_vis::FCtype *row = NULL;
     row = _db.zd_select_head;
     if (row) {
@@ -2512,7 +2512,7 @@ amc_vis::FCtype* amc_vis::zd_select_RemoveFirst() {
 // --- amc_vis.FDb.finput.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-amc_vis::FFinput& amc_vis::finput_Alloc() {
+amc_vis::FFinput& amc_vis::finput_Alloc() throw() {
     amc_vis::FFinput* row = finput_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("amc_vis.out_of_mem  field:amc_vis.FDb.finput  comment:'Alloc failed'");
@@ -2522,7 +2522,7 @@ amc_vis::FFinput& amc_vis::finput_Alloc() {
 
 // --- amc_vis.FDb.finput.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-amc_vis::FFinput* amc_vis::finput_AllocMaybe() {
+amc_vis::FFinput* amc_vis::finput_AllocMaybe() throw() {
     amc_vis::FFinput *row = (amc_vis::FFinput*)finput_AllocMem();
     if (row) {
         new (row) amc_vis::FFinput; // call constructor
@@ -2533,7 +2533,7 @@ amc_vis::FFinput* amc_vis::finput_AllocMaybe() {
 // --- amc_vis.FDb.finput.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-amc_vis::FFinput* amc_vis::finput_InsertMaybe(const dmmeta::Finput &value) {
+amc_vis::FFinput* amc_vis::finput_InsertMaybe(const dmmeta::Finput &value) throw() {
     amc_vis::FFinput *row = &finput_Alloc(); // if out of memory, process dies. if input error, return NULL.
     finput_CopyIn(*row,const_cast<dmmeta::Finput&>(value));
     bool ok = finput_XrefMaybe(*row); // this may return false
@@ -2546,7 +2546,7 @@ amc_vis::FFinput* amc_vis::finput_InsertMaybe(const dmmeta::Finput &value) {
 
 // --- amc_vis.FDb.finput.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* amc_vis::finput_AllocMem() {
+void* amc_vis::finput_AllocMem() throw() {
     u64 new_nelems     = _db.finput_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2572,7 +2572,7 @@ void* amc_vis::finput_AllocMem() {
 
 // --- amc_vis.FDb.finput.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void amc_vis::finput_RemoveLast() {
+void amc_vis::finput_RemoveLast() throw() {
     u64 n = _db.finput_n;
     if (n > 0) {
         n -= 1;
@@ -2582,7 +2582,7 @@ void amc_vis::finput_RemoveLast() {
 }
 
 // --- amc_vis.FDb.finput.InputMaybe
-static bool amc_vis::finput_InputMaybe(dmmeta::Finput &elem) {
+static bool amc_vis::finput_InputMaybe(dmmeta::Finput &elem) throw() {
     bool retval = true;
     retval = finput_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2613,13 +2613,13 @@ bool amc_vis::finput_XrefMaybe(amc_vis::FFinput &row) {
 
 // --- amc_vis.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr amc_vis::trace_RowidFind(int t) {
+static algo::ImrowPtr amc_vis::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- amc_vis.FDb.trace.N
 // Function return 1
-inline static i32 amc_vis::trace_N() {
+inline static i32 amc_vis::trace_N() throw() {
     return 1;
 }
 
@@ -2959,7 +2959,7 @@ void amc_vis::FDb_Init() {
 }
 
 // --- amc_vis.FDb..Uninit
-void amc_vis::FDb_Uninit() {
+void amc_vis::FDb_Uninit() throw() {
     amc_vis::FDb &row = _db; (void)row;
 
     // amc_vis.FDb.finput.Uninit (Lary)  //
@@ -3016,7 +3016,7 @@ void amc_vis::FDb_Uninit() {
 
 // --- amc_vis.FField.msghdr.CopyOut
 // Copy fields out of row
-void amc_vis::field_CopyOut(amc_vis::FField &row, dmmeta::Field &out) {
+void amc_vis::field_CopyOut(amc_vis::FField &row, dmmeta::Field &out) throw() {
     out.field = row.field;
     out.arg = row.arg;
     out.reftype = row.reftype;
@@ -3026,7 +3026,7 @@ void amc_vis::field_CopyOut(amc_vis::FField &row, dmmeta::Field &out) {
 
 // --- amc_vis.FField.msghdr.CopyIn
 // Copy fields in to row
-void amc_vis::field_CopyIn(amc_vis::FField &row, dmmeta::Field &in) {
+void amc_vis::field_CopyIn(amc_vis::FField &row, dmmeta::Field &in) throw() {
     row.field = in.field;
     row.arg = in.arg;
     row.reftype = in.reftype;
@@ -3035,19 +3035,19 @@ void amc_vis::field_CopyIn(amc_vis::FField &row, dmmeta::Field &in) {
 }
 
 // --- amc_vis.FField.ctype.Get
-algo::Smallstr100 amc_vis::ctype_Get(amc_vis::FField& field) {
+algo::Smallstr100 amc_vis::ctype_Get(amc_vis::FField& field) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
     return ret;
 }
 
 // --- amc_vis.FField.ns.Get
-algo::Smallstr16 amc_vis::ns_Get(amc_vis::FField& field) {
+algo::Smallstr16 amc_vis::ns_Get(amc_vis::FField& field) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(field.field, ".RL.RL"));
     return ret;
 }
 
 // --- amc_vis.FField.name.Get
-algo::Smallstr50 amc_vis::name_Get(amc_vis::FField& field) {
+algo::Smallstr50 amc_vis::name_Get(amc_vis::FField& field) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RR"));
     return ret;
 }
@@ -3065,7 +3065,7 @@ void amc_vis::FField_Init(amc_vis::FField& field) {
 }
 
 // --- amc_vis.FField..Uninit
-void amc_vis::FField_Uninit(amc_vis::FField& field) {
+void amc_vis::FField_Uninit(amc_vis::FField& field) throw() {
     amc_vis::FField &row = field; (void)row;
     ind_field_Remove(row); // remove field from index ind_field
     amc_vis::FCtype* p_ctype = amc_vis::ind_ctype_Find(ctype_Get(row));
@@ -3076,7 +3076,7 @@ void amc_vis::FField_Uninit(amc_vis::FField& field) {
 
 // --- amc_vis.FFinput.msghdr.CopyOut
 // Copy fields out of row
-void amc_vis::finput_CopyOut(amc_vis::FFinput &row, dmmeta::Finput &out) {
+void amc_vis::finput_CopyOut(amc_vis::FFinput &row, dmmeta::Finput &out) throw() {
     out.field = row.field;
     out.extrn = row.extrn;
     out.update = row.update;
@@ -3086,7 +3086,7 @@ void amc_vis::finput_CopyOut(amc_vis::FFinput &row, dmmeta::Finput &out) {
 
 // --- amc_vis.FFinput.msghdr.CopyIn
 // Copy fields in to row
-void amc_vis::finput_CopyIn(amc_vis::FFinput &row, dmmeta::Finput &in) {
+void amc_vis::finput_CopyIn(amc_vis::FFinput &row, dmmeta::Finput &in) throw() {
     row.field = in.field;
     row.extrn = in.extrn;
     row.update = in.update;
@@ -3095,13 +3095,13 @@ void amc_vis::finput_CopyIn(amc_vis::FFinput &row, dmmeta::Finput &in) {
 }
 
 // --- amc_vis.FFinput.ns.Get
-algo::Smallstr16 amc_vis::ns_Get(amc_vis::FFinput& finput) {
+algo::Smallstr16 amc_vis::ns_Get(amc_vis::FFinput& finput) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(finput.field, ".LL"));
     return ret;
 }
 
 // --- amc_vis.FFinput..Uninit
-void amc_vis::FFinput_Uninit(amc_vis::FFinput& finput) {
+void amc_vis::FFinput_Uninit(amc_vis::FFinput& finput) throw() {
     amc_vis::FFinput &row = finput; (void)row;
     amc_vis::FField* p_field = amc_vis::ind_field_Find(row.field);
     if (p_field)  {
@@ -3112,7 +3112,7 @@ void amc_vis::FFinput_Uninit(amc_vis::FFinput& finput) {
 // --- amc_vis.Nodekey..Print
 // print string representation of ROW to string STR
 // cfmt:amc_vis.Nodekey.String  printfmt:Sep
-void amc_vis::Nodekey_Print(amc_vis::Nodekey row, algo::cstring& str) {
+void amc_vis::Nodekey_Print(amc_vis::Nodekey row, algo::cstring& str) throw() {
     u32_Print(row.n_ct_in, str);
     str << '.';
     i32_Print(row.idx, str);
@@ -3122,7 +3122,7 @@ void amc_vis::Nodekey_Print(amc_vis::Nodekey row, algo::cstring& str) {
 
 // --- amc_vis.FNode.zd_nodedep_out.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc_vis::zd_nodedep_out_Insert(amc_vis::FNode& node, amc_vis::FNodedep& row) {
+void amc_vis::zd_nodedep_out_Insert(amc_vis::FNode& node, amc_vis::FNodedep& row) throw() {
     if (!zd_nodedep_out_InLlistQ(row)) {
         amc_vis::FNodedep* old_tail = node.zd_nodedep_out_tail;
         row.zd_nodedep_out_next = NULL;
@@ -3137,7 +3137,7 @@ void amc_vis::zd_nodedep_out_Insert(amc_vis::FNode& node, amc_vis::FNodedep& row
 
 // --- amc_vis.FNode.zd_nodedep_out.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc_vis::zd_nodedep_out_Remove(amc_vis::FNode& node, amc_vis::FNodedep& row) {
+void amc_vis::zd_nodedep_out_Remove(amc_vis::FNode& node, amc_vis::FNodedep& row) throw() {
     if (zd_nodedep_out_InLlistQ(row)) {
         amc_vis::FNodedep* old_head       = node.zd_nodedep_out_head;
         (void)old_head; // in case it's not used
@@ -3159,7 +3159,7 @@ void amc_vis::zd_nodedep_out_Remove(amc_vis::FNode& node, amc_vis::FNodedep& row
 
 // --- amc_vis.FNode.zd_nodedep_out.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc_vis::zd_nodedep_out_RemoveAll(amc_vis::FNode& node) {
+void amc_vis::zd_nodedep_out_RemoveAll(amc_vis::FNode& node) throw() {
     amc_vis::FNodedep* row = node.zd_nodedep_out_head;
     node.zd_nodedep_out_head = NULL;
     node.zd_nodedep_out_tail = NULL;
@@ -3173,7 +3173,7 @@ void amc_vis::zd_nodedep_out_RemoveAll(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_nodedep_out.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc_vis::FNodedep* amc_vis::zd_nodedep_out_RemoveFirst(amc_vis::FNode& node) {
+amc_vis::FNodedep* amc_vis::zd_nodedep_out_RemoveFirst(amc_vis::FNode& node) throw() {
     amc_vis::FNodedep *row = NULL;
     row = node.zd_nodedep_out_head;
     if (row) {
@@ -3190,7 +3190,7 @@ amc_vis::FNodedep* amc_vis::zd_nodedep_out_RemoveFirst(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_nodedep_in.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc_vis::zd_nodedep_in_Insert(amc_vis::FNode& node, amc_vis::FNodedep& row) {
+void amc_vis::zd_nodedep_in_Insert(amc_vis::FNode& node, amc_vis::FNodedep& row) throw() {
     if (!zd_nodedep_in_InLlistQ(row)) {
         amc_vis::FNodedep* old_tail = node.zd_nodedep_in_tail;
         row.zd_nodedep_in_next = NULL;
@@ -3206,7 +3206,7 @@ void amc_vis::zd_nodedep_in_Insert(amc_vis::FNode& node, amc_vis::FNodedep& row)
 
 // --- amc_vis.FNode.zd_nodedep_in.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc_vis::zd_nodedep_in_Remove(amc_vis::FNode& node, amc_vis::FNodedep& row) {
+void amc_vis::zd_nodedep_in_Remove(amc_vis::FNode& node, amc_vis::FNodedep& row) throw() {
     if (zd_nodedep_in_InLlistQ(row)) {
         amc_vis::FNodedep* old_head       = node.zd_nodedep_in_head;
         (void)old_head; // in case it's not used
@@ -3229,7 +3229,7 @@ void amc_vis::zd_nodedep_in_Remove(amc_vis::FNode& node, amc_vis::FNodedep& row)
 
 // --- amc_vis.FNode.zd_nodedep_in.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc_vis::zd_nodedep_in_RemoveAll(amc_vis::FNode& node) {
+void amc_vis::zd_nodedep_in_RemoveAll(amc_vis::FNode& node) throw() {
     amc_vis::FNodedep* row = node.zd_nodedep_in_head;
     node.zd_nodedep_in_head = NULL;
     node.zd_nodedep_in_tail = NULL;
@@ -3244,7 +3244,7 @@ void amc_vis::zd_nodedep_in_RemoveAll(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_nodedep_in.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc_vis::FNodedep* amc_vis::zd_nodedep_in_RemoveFirst(amc_vis::FNode& node) {
+amc_vis::FNodedep* amc_vis::zd_nodedep_in_RemoveFirst(amc_vis::FNode& node) throw() {
     amc_vis::FNodedep *row = NULL;
     row = node.zd_nodedep_in_head;
     if (row) {
@@ -3262,7 +3262,7 @@ amc_vis::FNodedep* amc_vis::zd_nodedep_in_RemoveFirst(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_link_out.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc_vis::zd_link_out_Insert(amc_vis::FNode& node, amc_vis::Link& row) {
+void amc_vis::zd_link_out_Insert(amc_vis::FNode& node, amc_vis::Link& row) throw() {
     if (!zd_link_out_InLlistQ(row)) {
         amc_vis::Link* old_tail = node.zd_link_out_tail;
         row.zd_link_out_next = NULL;
@@ -3278,7 +3278,7 @@ void amc_vis::zd_link_out_Insert(amc_vis::FNode& node, amc_vis::Link& row) {
 
 // --- amc_vis.FNode.zd_link_out.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc_vis::zd_link_out_Remove(amc_vis::FNode& node, amc_vis::Link& row) {
+void amc_vis::zd_link_out_Remove(amc_vis::FNode& node, amc_vis::Link& row) throw() {
     if (zd_link_out_InLlistQ(row)) {
         amc_vis::Link* old_head       = node.zd_link_out_head;
         (void)old_head; // in case it's not used
@@ -3301,7 +3301,7 @@ void amc_vis::zd_link_out_Remove(amc_vis::FNode& node, amc_vis::Link& row) {
 
 // --- amc_vis.FNode.zd_link_out.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc_vis::zd_link_out_RemoveAll(amc_vis::FNode& node) {
+void amc_vis::zd_link_out_RemoveAll(amc_vis::FNode& node) throw() {
     amc_vis::Link* row = node.zd_link_out_head;
     node.zd_link_out_head = NULL;
     node.zd_link_out_tail = NULL;
@@ -3316,7 +3316,7 @@ void amc_vis::zd_link_out_RemoveAll(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_link_out.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc_vis::Link* amc_vis::zd_link_out_RemoveFirst(amc_vis::FNode& node) {
+amc_vis::Link* amc_vis::zd_link_out_RemoveFirst(amc_vis::FNode& node) throw() {
     amc_vis::Link *row = NULL;
     row = node.zd_link_out_head;
     if (row) {
@@ -3334,7 +3334,7 @@ amc_vis::Link* amc_vis::zd_link_out_RemoveFirst(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_link_in.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc_vis::zd_link_in_Insert(amc_vis::FNode& node, amc_vis::Link& row) {
+void amc_vis::zd_link_in_Insert(amc_vis::FNode& node, amc_vis::Link& row) throw() {
     if (!zd_link_in_InLlistQ(row)) {
         amc_vis::Link* old_tail = node.zd_link_in_tail;
         row.zd_link_in_next = NULL;
@@ -3350,7 +3350,7 @@ void amc_vis::zd_link_in_Insert(amc_vis::FNode& node, amc_vis::Link& row) {
 
 // --- amc_vis.FNode.zd_link_in.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc_vis::zd_link_in_Remove(amc_vis::FNode& node, amc_vis::Link& row) {
+void amc_vis::zd_link_in_Remove(amc_vis::FNode& node, amc_vis::Link& row) throw() {
     if (zd_link_in_InLlistQ(row)) {
         amc_vis::Link* old_head       = node.zd_link_in_head;
         (void)old_head; // in case it's not used
@@ -3373,7 +3373,7 @@ void amc_vis::zd_link_in_Remove(amc_vis::FNode& node, amc_vis::Link& row) {
 
 // --- amc_vis.FNode.zd_link_in.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc_vis::zd_link_in_RemoveAll(amc_vis::FNode& node) {
+void amc_vis::zd_link_in_RemoveAll(amc_vis::FNode& node) throw() {
     amc_vis::Link* row = node.zd_link_in_head;
     node.zd_link_in_head = NULL;
     node.zd_link_in_tail = NULL;
@@ -3388,7 +3388,7 @@ void amc_vis::zd_link_in_RemoveAll(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_link_in.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc_vis::Link* amc_vis::zd_link_in_RemoveFirst(amc_vis::FNode& node) {
+amc_vis::Link* amc_vis::zd_link_in_RemoveFirst(amc_vis::FNode& node) throw() {
     amc_vis::Link *row = NULL;
     row = node.zd_link_in_head;
     if (row) {
@@ -3428,14 +3428,14 @@ void amc_vis::FNode_Init(amc_vis::FNode& node) {
 }
 
 // --- amc_vis.FNode..Uninit
-void amc_vis::FNode_Uninit(amc_vis::FNode& node) {
+void amc_vis::FNode_Uninit(amc_vis::FNode& node) throw() {
     amc_vis::FNode &row = node; (void)row;
     ind_node_Remove(row); // remove node from index ind_node
     bh_node_Remove(row); // remove node from index bh_node
 }
 
 // --- amc_vis.FNodedep..Uninit
-void amc_vis::FNodedep_Uninit(amc_vis::FNodedep& nodedep) {
+void amc_vis::FNodedep_Uninit(amc_vis::FNodedep& nodedep) throw() {
     amc_vis::FNodedep &row = nodedep; (void)row;
     amc_vis::FNode* p_p_node1 = row.p_node1;
     if (p_p_node1)  {
@@ -3449,7 +3449,7 @@ void amc_vis::FNodedep_Uninit(amc_vis::FNodedep& nodedep) {
 
 // --- amc_vis.FReftype.msghdr.CopyOut
 // Copy fields out of row
-void amc_vis::reftype_CopyOut(amc_vis::FReftype &row, dmmeta::Reftype &out) {
+void amc_vis::reftype_CopyOut(amc_vis::FReftype &row, dmmeta::Reftype &out) throw() {
     out.reftype = row.reftype;
     out.isval = row.isval;
     out.cascins = row.cascins;
@@ -3466,7 +3466,7 @@ void amc_vis::reftype_CopyOut(amc_vis::FReftype &row, dmmeta::Reftype &out) {
 
 // --- amc_vis.FReftype.msghdr.CopyIn
 // Copy fields in to row
-void amc_vis::reftype_CopyIn(amc_vis::FReftype &row, dmmeta::Reftype &in) {
+void amc_vis::reftype_CopyIn(amc_vis::FReftype &row, dmmeta::Reftype &in) throw() {
     row.reftype = in.reftype;
     row.isval = in.isval;
     row.cascins = in.cascins;
@@ -3500,7 +3500,7 @@ void amc_vis::FReftype_Init(amc_vis::FReftype& reftype) {
 }
 
 // --- amc_vis.FReftype..Uninit
-void amc_vis::FReftype_Uninit(amc_vis::FReftype& reftype) {
+void amc_vis::FReftype_Uninit(amc_vis::FReftype& reftype) throw() {
     amc_vis::FReftype &row = reftype; (void)row;
     ind_reftype_Remove(row); // remove reftype from index ind_reftype
 }
@@ -3508,7 +3508,7 @@ void amc_vis::FReftype_Uninit(amc_vis::FReftype& reftype) {
 // --- amc_vis.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* amc_vis::value_ToCstr(const amc_vis::FieldId& parent) {
+const char* amc_vis::value_ToCstr(const amc_vis::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case amc_vis_FieldId_value         : ret = "value";  break;
@@ -3519,7 +3519,7 @@ const char* amc_vis::value_ToCstr(const amc_vis::FieldId& parent) {
 // --- amc_vis.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void amc_vis::value_Print(const amc_vis::FieldId& parent, algo::cstring &lhs) {
+void amc_vis::value_Print(const amc_vis::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -3532,7 +3532,7 @@ void amc_vis::value_Print(const amc_vis::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool amc_vis::value_SetStrptrMaybe(amc_vis::FieldId& parent, algo::strptr rhs) {
+bool amc_vis::value_SetStrptrMaybe(amc_vis::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -3550,13 +3550,13 @@ bool amc_vis::value_SetStrptrMaybe(amc_vis::FieldId& parent, algo::strptr rhs) {
 // --- amc_vis.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void amc_vis::value_SetStrptr(amc_vis::FieldId& parent, algo::strptr rhs, amc_vis_FieldIdEnum dflt) {
+void amc_vis::value_SetStrptr(amc_vis::FieldId& parent, algo::strptr rhs, amc_vis_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- amc_vis.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool amc_vis::value_ReadStrptrMaybe(amc_vis::FieldId& parent, algo::strptr rhs) {
+bool amc_vis::value_ReadStrptrMaybe(amc_vis::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -3568,7 +3568,7 @@ bool amc_vis::value_ReadStrptrMaybe(amc_vis::FieldId& parent, algo::strptr rhs) 
 // --- amc_vis.FieldId..ReadStrptrMaybe
 // Read fields of amc_vis::FieldId from an ascii string.
 // The format of the string is the format of the amc_vis::FieldId's only field
-bool amc_vis::FieldId_ReadStrptrMaybe(amc_vis::FieldId &parent, algo::strptr in_str) {
+bool amc_vis::FieldId_ReadStrptrMaybe(amc_vis::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3577,12 +3577,12 @@ bool amc_vis::FieldId_ReadStrptrMaybe(amc_vis::FieldId &parent, algo::strptr in_
 // --- amc_vis.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:amc_vis.FieldId.String  printfmt:Raw
-void amc_vis::FieldId_Print(amc_vis::FieldId& row, algo::cstring& str) {
+void amc_vis::FieldId_Print(amc_vis::FieldId& row, algo::cstring& str) throw() {
     amc_vis::value_Print(row, str);
 }
 
 // --- amc_vis.Linkkey..Cmp
-i32 amc_vis::Linkkey_Cmp(amc_vis::Linkkey lhs, amc_vis::Linkkey rhs) {
+i32 amc_vis::Linkkey_Cmp(amc_vis::Linkkey lhs, amc_vis::Linkkey rhs) throw() {
     i32 retval = 0;
     retval = u32_Cmp(lhs.n_link_in, rhs.n_link_in);
     if (retval != 0) {
@@ -3601,7 +3601,7 @@ i32 amc_vis::Linkkey_Cmp(amc_vis::Linkkey lhs, amc_vis::Linkkey rhs) {
 }
 
 // --- amc_vis.Linkkey..Eq
-bool amc_vis::Linkkey_Eq(amc_vis::Linkkey lhs, amc_vis::Linkkey rhs) {
+bool amc_vis::Linkkey_Eq(amc_vis::Linkkey lhs, amc_vis::Linkkey rhs) throw() {
     bool retval = true;
     retval = u32_Eq(lhs.n_link_in, rhs.n_link_in);
     if (!retval) {
@@ -3622,7 +3622,7 @@ bool amc_vis::Linkkey_Eq(amc_vis::Linkkey lhs, amc_vis::Linkkey rhs) {
 // --- amc_vis.Linkkey..Print
 // print string representation of ROW to string STR
 // cfmt:amc_vis.Linkkey.String  printfmt:Tuple
-void amc_vis::Linkkey_Print(amc_vis::Linkkey row, algo::cstring& str) {
+void amc_vis::Linkkey_Print(amc_vis::Linkkey row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amc_vis.Linkkey";
 
@@ -3641,7 +3641,7 @@ void amc_vis::Linkkey_Print(amc_vis::Linkkey row, algo::cstring& str) {
 
 // --- amc_vis.Link.zd_linkdep_out.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc_vis::zd_linkdep_out_Insert(amc_vis::Link& link, amc_vis::Linkdep& row) {
+void amc_vis::zd_linkdep_out_Insert(amc_vis::Link& link, amc_vis::Linkdep& row) throw() {
     if (!zd_linkdep_out_InLlistQ(row)) {
         amc_vis::Linkdep* old_tail = link.zd_linkdep_out_tail;
         row.zd_linkdep_out_next = NULL;
@@ -3656,7 +3656,7 @@ void amc_vis::zd_linkdep_out_Insert(amc_vis::Link& link, amc_vis::Linkdep& row) 
 
 // --- amc_vis.Link.zd_linkdep_out.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc_vis::zd_linkdep_out_Remove(amc_vis::Link& link, amc_vis::Linkdep& row) {
+void amc_vis::zd_linkdep_out_Remove(amc_vis::Link& link, amc_vis::Linkdep& row) throw() {
     if (zd_linkdep_out_InLlistQ(row)) {
         amc_vis::Linkdep* old_head       = link.zd_linkdep_out_head;
         (void)old_head; // in case it's not used
@@ -3678,7 +3678,7 @@ void amc_vis::zd_linkdep_out_Remove(amc_vis::Link& link, amc_vis::Linkdep& row) 
 
 // --- amc_vis.Link.zd_linkdep_out.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc_vis::zd_linkdep_out_RemoveAll(amc_vis::Link& link) {
+void amc_vis::zd_linkdep_out_RemoveAll(amc_vis::Link& link) throw() {
     amc_vis::Linkdep* row = link.zd_linkdep_out_head;
     link.zd_linkdep_out_head = NULL;
     link.zd_linkdep_out_tail = NULL;
@@ -3692,7 +3692,7 @@ void amc_vis::zd_linkdep_out_RemoveAll(amc_vis::Link& link) {
 
 // --- amc_vis.Link.zd_linkdep_out.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc_vis::Linkdep* amc_vis::zd_linkdep_out_RemoveFirst(amc_vis::Link& link) {
+amc_vis::Linkdep* amc_vis::zd_linkdep_out_RemoveFirst(amc_vis::Link& link) throw() {
     amc_vis::Linkdep *row = NULL;
     row = link.zd_linkdep_out_head;
     if (row) {
@@ -3709,7 +3709,7 @@ amc_vis::Linkdep* amc_vis::zd_linkdep_out_RemoveFirst(amc_vis::Link& link) {
 
 // --- amc_vis.Link.zd_linkdep_in.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void amc_vis::zd_linkdep_in_Insert(amc_vis::Link& link, amc_vis::Linkdep& row) {
+void amc_vis::zd_linkdep_in_Insert(amc_vis::Link& link, amc_vis::Linkdep& row) throw() {
     if (!zd_linkdep_in_InLlistQ(row)) {
         amc_vis::Linkdep* old_tail = link.zd_linkdep_in_tail;
         row.zd_linkdep_in_next = NULL;
@@ -3724,7 +3724,7 @@ void amc_vis::zd_linkdep_in_Insert(amc_vis::Link& link, amc_vis::Linkdep& row) {
 
 // --- amc_vis.Link.zd_linkdep_in.Remove
 // Remove element from index. If element is not in index, do nothing.
-void amc_vis::zd_linkdep_in_Remove(amc_vis::Link& link, amc_vis::Linkdep& row) {
+void amc_vis::zd_linkdep_in_Remove(amc_vis::Link& link, amc_vis::Linkdep& row) throw() {
     if (zd_linkdep_in_InLlistQ(row)) {
         amc_vis::Linkdep* old_head       = link.zd_linkdep_in_head;
         (void)old_head; // in case it's not used
@@ -3746,7 +3746,7 @@ void amc_vis::zd_linkdep_in_Remove(amc_vis::Link& link, amc_vis::Linkdep& row) {
 
 // --- amc_vis.Link.zd_linkdep_in.RemoveAll
 // Empty the index. (The rows are not deleted)
-void amc_vis::zd_linkdep_in_RemoveAll(amc_vis::Link& link) {
+void amc_vis::zd_linkdep_in_RemoveAll(amc_vis::Link& link) throw() {
     amc_vis::Linkdep* row = link.zd_linkdep_in_head;
     link.zd_linkdep_in_head = NULL;
     link.zd_linkdep_in_tail = NULL;
@@ -3760,7 +3760,7 @@ void amc_vis::zd_linkdep_in_RemoveAll(amc_vis::Link& link) {
 
 // --- amc_vis.Link.zd_linkdep_in.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-amc_vis::Linkdep* amc_vis::zd_linkdep_in_RemoveFirst(amc_vis::Link& link) {
+amc_vis::Linkdep* amc_vis::zd_linkdep_in_RemoveFirst(amc_vis::Link& link) throw() {
     amc_vis::Linkdep *row = NULL;
     row = link.zd_linkdep_in_head;
     if (row) {
@@ -3796,7 +3796,7 @@ void amc_vis::Link_Init(amc_vis::Link& link) {
 }
 
 // --- amc_vis.Link..Uninit
-void amc_vis::Link_Uninit(amc_vis::Link& link) {
+void amc_vis::Link_Uninit(amc_vis::Link& link) throw() {
     amc_vis::Link &row = link; (void)row;
     ind_link_Remove(row); // remove link from index ind_link
     c_linklist_Remove(row); // remove link from index c_linklist
@@ -3814,7 +3814,7 @@ void amc_vis::Link_Uninit(amc_vis::Link& link) {
 // --- amc_vis.Link..Print
 // print string representation of ROW to string STR
 // cfmt:amc_vis.Link.String  printfmt:Tuple
-void amc_vis::Link_Print(amc_vis::Link& row, algo::cstring& str) {
+void amc_vis::Link_Print(amc_vis::Link& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amc_vis.Link";
 
@@ -3841,7 +3841,7 @@ void amc_vis::Link_Print(amc_vis::Link& row, algo::cstring& str) {
 }
 
 // --- amc_vis.Linkdep..Uninit
-void amc_vis::Linkdep_Uninit(amc_vis::Linkdep& linkdep) {
+void amc_vis::Linkdep_Uninit(amc_vis::Linkdep& linkdep) throw() {
     amc_vis::Linkdep &row = linkdep; (void)row;
     amc_vis::Link* p_p_link_from = row.p_link_from;
     if (p_p_link_from)  {
@@ -3856,7 +3856,7 @@ void amc_vis::Linkdep_Uninit(amc_vis::Linkdep& linkdep) {
 // --- amc_vis.Linkdep..Print
 // print string representation of ROW to string STR
 // cfmt:amc_vis.Linkdep.String  printfmt:Tuple
-void amc_vis::Linkdep_Print(amc_vis::Linkdep& row, algo::cstring& str) {
+void amc_vis::Linkdep_Print(amc_vis::Linkdep& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amc_vis.Linkdep";
 
@@ -3877,7 +3877,7 @@ void amc_vis::Linkdep_Print(amc_vis::Linkdep& row, algo::cstring& str) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<u8> amc_vis::text_Addary(amc_vis::Outrow& outrow, algo::aryptr<u8> rhs) {
+algo::aryptr<u8> amc_vis::text_Addary(amc_vis::Outrow& outrow, algo::aryptr<u8> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= outrow.text_elems && rhs.elems < outrow.text_elems + outrow.text_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("amc_vis.tary_alias  field:amc_vis.Outrow.text  comment:'alias error: sub-array is being appended to the whole'");
@@ -3893,7 +3893,7 @@ algo::aryptr<u8> amc_vis::text_Addary(amc_vis::Outrow& outrow, algo::aryptr<u8> 
 // --- amc_vis.Outrow.text.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-u8& amc_vis::text_Alloc(amc_vis::Outrow& outrow) {
+u8& amc_vis::text_Alloc(amc_vis::Outrow& outrow) throw() {
     text_Reserve(outrow, 1);
     int n  = outrow.text_n;
     int at = n;
@@ -3906,7 +3906,7 @@ u8& amc_vis::text_Alloc(amc_vis::Outrow& outrow) {
 // --- amc_vis.Outrow.text.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-u8& amc_vis::text_AllocAt(amc_vis::Outrow& outrow, int at) {
+u8& amc_vis::text_AllocAt(amc_vis::Outrow& outrow, int at) throw() {
     text_Reserve(outrow, 1);
     int n  = outrow.text_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -3921,7 +3921,7 @@ u8& amc_vis::text_AllocAt(amc_vis::Outrow& outrow, int at) {
 
 // --- amc_vis.Outrow.text.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8> amc_vis::text_AllocN(amc_vis::Outrow& outrow, int n_elems) {
+algo::aryptr<u8> amc_vis::text_AllocN(amc_vis::Outrow& outrow, int n_elems) throw() {
     text_Reserve(outrow, n_elems);
     int old_n  = outrow.text_n;
     int new_n = old_n + n_elems;
@@ -3933,7 +3933,7 @@ algo::aryptr<u8> amc_vis::text_AllocN(amc_vis::Outrow& outrow, int n_elems) {
 
 // --- amc_vis.Outrow.text.Remove
 // Remove item by index. If index outside of range, do nothing.
-void amc_vis::text_Remove(amc_vis::Outrow& outrow, u32 i) {
+void amc_vis::text_Remove(amc_vis::Outrow& outrow, u32 i) throw() {
     u32 lim = outrow.text_n;
     u8 *elems = outrow.text_elems;
     if (i < lim) {
@@ -3944,7 +3944,7 @@ void amc_vis::text_Remove(amc_vis::Outrow& outrow, u32 i) {
 
 // --- amc_vis.Outrow.text.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void amc_vis::text_RemoveLast(amc_vis::Outrow& outrow) {
+void amc_vis::text_RemoveLast(amc_vis::Outrow& outrow) throw() {
     u64 n = outrow.text_n;
     if (n > 0) {
         n -= 1;
@@ -3954,7 +3954,7 @@ void amc_vis::text_RemoveLast(amc_vis::Outrow& outrow) {
 
 // --- amc_vis.Outrow.text.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void amc_vis::text_AbsReserve(amc_vis::Outrow& outrow, int n) {
+void amc_vis::text_AbsReserve(amc_vis::Outrow& outrow, int n) throw() {
     u32 old_max  = outrow.text_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -3970,13 +3970,13 @@ void amc_vis::text_AbsReserve(amc_vis::Outrow& outrow, int n) {
 // --- amc_vis.Outrow.text.Print
 // Convert text to a string.
 // Array is printed as a regular string.
-void amc_vis::text_Print(amc_vis::Outrow& outrow, algo::cstring &rhs) {
+void amc_vis::text_Print(amc_vis::Outrow& outrow, algo::cstring &rhs) throw() {
     rhs << algo::memptr_ToStrptr(text_Getary(outrow));
 }
 
 // --- amc_vis.Outrow.text.Setary
 // Copy contents of RHS to PARENT.
-void amc_vis::text_Setary(amc_vis::Outrow& outrow, amc_vis::Outrow &rhs) {
+void amc_vis::text_Setary(amc_vis::Outrow& outrow, amc_vis::Outrow &rhs) throw() {
     text_RemoveAll(outrow);
     int nnew = rhs.text_n;
     text_Reserve(outrow, nnew); // reserve space
@@ -3987,14 +3987,14 @@ void amc_vis::text_Setary(amc_vis::Outrow& outrow, amc_vis::Outrow &rhs) {
 // --- amc_vis.Outrow.text.Setary2
 // Copy specified array into text, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void amc_vis::text_Setary(amc_vis::Outrow& outrow, const algo::aryptr<u8> &rhs) {
+void amc_vis::text_Setary(amc_vis::Outrow& outrow, const algo::aryptr<u8> &rhs) throw() {
     text_RemoveAll(outrow);
     text_Addary(outrow, rhs);
 }
 
 // --- amc_vis.Outrow.text.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8> amc_vis::text_AllocNVal(amc_vis::Outrow& outrow, int n_elems, const u8& val) {
+algo::aryptr<u8> amc_vis::text_AllocNVal(amc_vis::Outrow& outrow, int n_elems, const u8& val) throw() {
     text_Reserve(outrow, n_elems);
     int old_n  = outrow.text_n;
     int new_n = old_n + n_elems;
@@ -4006,7 +4006,7 @@ algo::aryptr<u8> amc_vis::text_AllocNVal(amc_vis::Outrow& outrow, int n_elems, c
 
 // --- amc_vis.Outrow.text.ReadStrptrMaybe
 // The array is replaced with the input string. Function always succeeds.
-bool amc_vis::text_ReadStrptrMaybe(amc_vis::Outrow& outrow, algo::strptr in_str) {
+bool amc_vis::text_ReadStrptrMaybe(amc_vis::Outrow& outrow, algo::strptr in_str) throw() {
     bool retval = true;
     text_RemoveAll(outrow);
     text_Addary(outrow,algo::strptr_ToMemptr(in_str));
@@ -4014,7 +4014,7 @@ bool amc_vis::text_ReadStrptrMaybe(amc_vis::Outrow& outrow, algo::strptr in_str)
 }
 
 // --- amc_vis.Outrow..Uninit
-void amc_vis::Outrow_Uninit(amc_vis::Outrow& outrow) {
+void amc_vis::Outrow_Uninit(amc_vis::Outrow& outrow) throw() {
     amc_vis::Outrow &row = outrow; (void)row;
 
     // amc_vis.Outrow.text.Uninit (Tary)  //text
@@ -4027,7 +4027,7 @@ void amc_vis::Outrow_Uninit(amc_vis::Outrow& outrow) {
 // --- amc_vis.Outrow..Print
 // print string representation of ROW to string STR
 // cfmt:amc_vis.Outrow.String  printfmt:Tuple
-void amc_vis::Outrow_Print(amc_vis::Outrow& row, algo::cstring& str) {
+void amc_vis::Outrow_Print(amc_vis::Outrow& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amc_vis.Outrow";
 
@@ -4039,14 +4039,14 @@ void amc_vis::Outrow_Print(amc_vis::Outrow& row, algo::cstring& str) {
 }
 
 // --- amc_vis.Outrow..AssignOp
-amc_vis::Outrow& amc_vis::Outrow::operator =(const amc_vis::Outrow &rhs) {
+amc_vis::Outrow& amc_vis::Outrow::operator =(const amc_vis::Outrow &rhs) throw() {
     rowid = rhs.rowid;
     text_Setary(*this, text_Getary(const_cast<amc_vis::Outrow&>(rhs)));
     return *this;
 }
 
 // --- amc_vis.Outrow..CopyCtor
- amc_vis::Outrow::Outrow(const amc_vis::Outrow &rhs)
+ amc_vis::Outrow::Outrow(const amc_vis::Outrow &rhs) throw()
     : rowid(rhs.rowid)
  {
     text_elems 	= 0; // (amc_vis.Outrow.text)
@@ -4058,7 +4058,7 @@ amc_vis::Outrow& amc_vis::Outrow::operator =(const amc_vis::Outrow &rhs) {
 // --- amc_vis.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* amc_vis::value_ToCstr(const amc_vis::TableId& parent) {
+const char* amc_vis::value_ToCstr(const amc_vis::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case amc_vis_TableId_dmmeta_Ctype  : ret = "dmmeta.Ctype";  break;
@@ -4072,7 +4072,7 @@ const char* amc_vis::value_ToCstr(const amc_vis::TableId& parent) {
 // --- amc_vis.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void amc_vis::value_Print(const amc_vis::TableId& parent, algo::cstring &lhs) {
+void amc_vis::value_Print(const amc_vis::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -4085,7 +4085,7 @@ void amc_vis::value_Print(const amc_vis::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool amc_vis::value_SetStrptrMaybe(amc_vis::TableId& parent, algo::strptr rhs) {
+bool amc_vis::value_SetStrptrMaybe(amc_vis::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 12: {
@@ -4142,13 +4142,13 @@ bool amc_vis::value_SetStrptrMaybe(amc_vis::TableId& parent, algo::strptr rhs) {
 // --- amc_vis.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void amc_vis::value_SetStrptr(amc_vis::TableId& parent, algo::strptr rhs, amc_vis_TableIdEnum dflt) {
+void amc_vis::value_SetStrptr(amc_vis::TableId& parent, algo::strptr rhs, amc_vis_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- amc_vis.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool amc_vis::value_ReadStrptrMaybe(amc_vis::TableId& parent, algo::strptr rhs) {
+bool amc_vis::value_ReadStrptrMaybe(amc_vis::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -4160,7 +4160,7 @@ bool amc_vis::value_ReadStrptrMaybe(amc_vis::TableId& parent, algo::strptr rhs) 
 // --- amc_vis.TableId..ReadStrptrMaybe
 // Read fields of amc_vis::TableId from an ascii string.
 // The format of the string is the format of the amc_vis::TableId's only field
-bool amc_vis::TableId_ReadStrptrMaybe(amc_vis::TableId &parent, algo::strptr in_str) {
+bool amc_vis::TableId_ReadStrptrMaybe(amc_vis::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -4169,7 +4169,7 @@ bool amc_vis::TableId_ReadStrptrMaybe(amc_vis::TableId &parent, algo::strptr in_
 // --- amc_vis.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:amc_vis.TableId.String  printfmt:Raw
-void amc_vis::TableId_Print(amc_vis::TableId& row, algo::cstring& str) {
+void amc_vis::TableId_Print(amc_vis::TableId& row, algo::cstring& str) throw() {
     amc_vis::value_Print(row, str);
 }
 

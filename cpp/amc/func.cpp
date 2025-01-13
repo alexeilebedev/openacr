@@ -393,6 +393,10 @@ void amc::PrintFuncBody(amc::FNs& ns, amc::FFunc& func) {
             }
         }
         proto << func.proto;
+        // this is here to appease clang. can't output __attribute__ here.
+        if (func.nothrow) {
+            proto << " throw()";
+        }
         if (ary_N(func.initializer)) {
             ind_beg(algo::StringAry_ary_curs,initializer,func.initializer) {
                 proto << (ind_curs(initializer).index==0 ? "\n    : " : "\n    , ");

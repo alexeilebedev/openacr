@@ -89,44 +89,44 @@ namespace mdbg { // gen:ns_print_proto
 
 // --- mdbg.FBuilddir.base.CopyOut
 // Copy fields out of row
-void mdbg::builddir_CopyOut(mdbg::FBuilddir &row, dev::Builddir &out) {
+void mdbg::builddir_CopyOut(mdbg::FBuilddir &row, dev::Builddir &out) throw() {
     out.builddir = row.builddir;
     out.comment = row.comment;
 }
 
 // --- mdbg.FBuilddir.base.CopyIn
 // Copy fields in to row
-void mdbg::builddir_CopyIn(mdbg::FBuilddir &row, dev::Builddir &in) {
+void mdbg::builddir_CopyIn(mdbg::FBuilddir &row, dev::Builddir &in) throw() {
     row.builddir = in.builddir;
     row.comment = in.comment;
 }
 
 // --- mdbg.FBuilddir.uname.Get
-algo::Smallstr50 mdbg::uname_Get(mdbg::FBuilddir& builddir) {
+algo::Smallstr50 mdbg::uname_Get(mdbg::FBuilddir& builddir) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LL"));
     return ret;
 }
 
 // --- mdbg.FBuilddir.compiler.Get
-algo::Smallstr50 mdbg::compiler_Get(mdbg::FBuilddir& builddir) {
+algo::Smallstr50 mdbg::compiler_Get(mdbg::FBuilddir& builddir) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LR"));
     return ret;
 }
 
 // --- mdbg.FBuilddir.cfg.Get
-algo::Smallstr50 mdbg::cfg_Get(mdbg::FBuilddir& builddir) {
+algo::Smallstr50 mdbg::cfg_Get(mdbg::FBuilddir& builddir) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LL"));
     return ret;
 }
 
 // --- mdbg.FBuilddir.arch.Get
-algo::Smallstr50 mdbg::arch_Get(mdbg::FBuilddir& builddir) {
+algo::Smallstr50 mdbg::arch_Get(mdbg::FBuilddir& builddir) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LR"));
     return ret;
 }
 
 // --- mdbg.FBuilddir..Uninit
-void mdbg::FBuilddir_Uninit(mdbg::FBuilddir& builddir) {
+void mdbg::FBuilddir_Uninit(mdbg::FBuilddir& builddir) throw() {
     mdbg::FBuilddir &row = builddir; (void)row;
     mdbg::FCfg* p_cfg = mdbg::ind_cfg_Find(cfg_Get(row));
     if (p_cfg)  {
@@ -136,7 +136,7 @@ void mdbg::FBuilddir_Uninit(mdbg::FBuilddir& builddir) {
 
 // --- mdbg.FCfg.base.CopyOut
 // Copy fields out of row
-void mdbg::cfg_CopyOut(mdbg::FCfg &row, dev::Cfg &out) {
+void mdbg::cfg_CopyOut(mdbg::FCfg &row, dev::Cfg &out) throw() {
     out.cfg = row.cfg;
     out.suffix = row.suffix;
     out.comment = row.comment;
@@ -144,7 +144,7 @@ void mdbg::cfg_CopyOut(mdbg::FCfg &row, dev::Cfg &out) {
 
 // --- mdbg.FCfg.base.CopyIn
 // Copy fields in to row
-void mdbg::cfg_CopyIn(mdbg::FCfg &row, dev::Cfg &in) {
+void mdbg::cfg_CopyIn(mdbg::FCfg &row, dev::Cfg &in) throw() {
     row.cfg = in.cfg;
     row.suffix = in.suffix;
     row.comment = in.comment;
@@ -153,7 +153,7 @@ void mdbg::cfg_CopyIn(mdbg::FCfg &row, dev::Cfg &in) {
 // --- mdbg.FCfg.c_builddir.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void mdbg::c_builddir_Insert(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
+void mdbg::c_builddir_Insert(mdbg::FCfg& cfg, mdbg::FBuilddir& row) throw() {
     if (bool_Update(row.cfg_c_builddir_in_ary,true)) {
         // reserve space
         c_builddir_Reserve(cfg, 1);
@@ -170,7 +170,7 @@ void mdbg::c_builddir_Insert(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool mdbg::c_builddir_InsertMaybe(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
+bool mdbg::c_builddir_InsertMaybe(mdbg::FCfg& cfg, mdbg::FBuilddir& row) throw() {
     bool retval = !row.cfg_c_builddir_in_ary;
     c_builddir_Insert(cfg,row); // check is performed in _Insert again
     return retval;
@@ -178,7 +178,7 @@ bool mdbg::c_builddir_InsertMaybe(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
 
 // --- mdbg.FCfg.c_builddir.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void mdbg::c_builddir_Remove(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
+void mdbg::c_builddir_Remove(mdbg::FCfg& cfg, mdbg::FBuilddir& row) throw() {
     if (bool_Update(row.cfg_c_builddir_in_ary,false)) {
         int lim = cfg.c_builddir_n;
         mdbg::FBuilddir* *elems = cfg.c_builddir_elems;
@@ -199,7 +199,7 @@ void mdbg::c_builddir_Remove(mdbg::FCfg& cfg, mdbg::FBuilddir& row) {
 
 // --- mdbg.FCfg.c_builddir.Reserve
 // Reserve space in index for N more elements;
-void mdbg::c_builddir_Reserve(mdbg::FCfg& cfg, u32 n) {
+void mdbg::c_builddir_Reserve(mdbg::FCfg& cfg, u32 n) throw() {
     u32 old_max = cfg.c_builddir_max;
     if (UNLIKELY(cfg.c_builddir_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -215,7 +215,7 @@ void mdbg::c_builddir_Reserve(mdbg::FCfg& cfg, u32 n) {
 }
 
 // --- mdbg.FCfg..Uninit
-void mdbg::FCfg_Uninit(mdbg::FCfg& cfg) {
+void mdbg::FCfg_Uninit(mdbg::FCfg& cfg) throw() {
     mdbg::FCfg &row = cfg; (void)row;
     ind_cfg_Remove(row); // remove cfg from index ind_cfg
 
@@ -226,7 +226,7 @@ void mdbg::FCfg_Uninit(mdbg::FCfg& cfg) {
 // --- mdbg.trace..Print
 // print string representation of ROW to string STR
 // cfmt:mdbg.trace.String  printfmt:Tuple
-void mdbg::trace_Print(mdbg::trace& row, algo::cstring& str) {
+void mdbg::trace_Print(mdbg::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "mdbg.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -234,7 +234,7 @@ void mdbg::trace_Print(mdbg::trace& row, algo::cstring& str) {
 
 // --- mdbg.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
-void mdbg::lpool_FreeMem(void* mem, u64 size) {
+void mdbg::lpool_FreeMem(void* mem, u64 size) throw() {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
     if (mem && cell < 36) {
@@ -249,7 +249,7 @@ void mdbg::lpool_FreeMem(void* mem, u64 size) {
 // If not successful, return NULL
 // The allocated block is at least 1<<4
 // The maximum allocation size is at most 1<<(36+4)
-void* mdbg::lpool_AllocMem(u64 size) {
+void* mdbg::lpool_AllocMem(u64 size) throw() {
     void *retval = NULL;
     size     = u64_Max(size,1<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
@@ -289,7 +289,7 @@ void* mdbg::lpool_AllocMem(u64 size) {
 // --- mdbg.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
 // Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
-bool mdbg::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
+bool mdbg::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) throw() {
     bool retval = true;
     bufsize = u64_Max(bufsize, 1<<4);
     u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
@@ -314,7 +314,7 @@ bool mdbg::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
 // If the new size is same as old size, do nothing.
 // In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL; old memory remains untouched
-void* mdbg::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+void* mdbg::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) throw() {
     void *ret = oldmem;
     if (new_size != old_size) {
         ret = lpool_AllocMem(new_size);
@@ -329,7 +329,7 @@ void* mdbg::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
 // --- mdbg.FDb.lpool.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-u8& mdbg::lpool_Alloc() {
+u8& mdbg::lpool_Alloc() throw() {
     u8* row = lpool_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("mdbg.out_of_mem  field:mdbg.FDb.lpool  comment:'Alloc failed'");
@@ -339,7 +339,7 @@ u8& mdbg::lpool_Alloc() {
 
 // --- mdbg.FDb.lpool.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-u8* mdbg::lpool_AllocMaybe() {
+u8* mdbg::lpool_AllocMaybe() throw() {
     u8 *row = (u8*)lpool_AllocMem(sizeof(u8));
     if (row) {
         new (row) u8; // call constructor
@@ -349,7 +349,7 @@ u8* mdbg::lpool_AllocMaybe() {
 
 // --- mdbg.FDb.lpool.Delete
 // Remove row from all global and cross indices, then deallocate row
-void mdbg::lpool_Delete(u8 &row) {
+void mdbg::lpool_Delete(u8 &row) throw() {
     int length = sizeof(u8);
     lpool_FreeMem(&row, length);
 }
@@ -359,7 +359,7 @@ void mdbg::lpool_Delete(u8 &row) {
 // The following fields are updated:
 //     mdbg.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void mdbg::ReadArgv() {
+void mdbg::ReadArgv() throw() {
     command::mdbg &cmd = mdbg::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -581,7 +581,7 @@ bool mdbg::InsertStrptrMaybe(algo::strptr str) {
 
 // --- mdbg.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool mdbg::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool mdbg::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = mdbg::LoadTuplesFile(root, recursive);
@@ -606,7 +606,7 @@ bool mdbg::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool mdbg::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool mdbg::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -619,7 +619,7 @@ bool mdbg::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- mdbg.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool mdbg::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool mdbg::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -639,7 +639,7 @@ bool mdbg::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
 
 // --- mdbg.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool mdbg::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool mdbg::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = mdbg::LoadTuplesFile(fname, recursive);
@@ -664,7 +664,7 @@ bool mdbg::_db_XrefMaybe() {
 // --- mdbg.FDb.cfg.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-mdbg::FCfg& mdbg::cfg_Alloc() {
+mdbg::FCfg& mdbg::cfg_Alloc() throw() {
     mdbg::FCfg* row = cfg_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("mdbg.out_of_mem  field:mdbg.FDb.cfg  comment:'Alloc failed'");
@@ -674,7 +674,7 @@ mdbg::FCfg& mdbg::cfg_Alloc() {
 
 // --- mdbg.FDb.cfg.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-mdbg::FCfg* mdbg::cfg_AllocMaybe() {
+mdbg::FCfg* mdbg::cfg_AllocMaybe() throw() {
     mdbg::FCfg *row = (mdbg::FCfg*)cfg_AllocMem();
     if (row) {
         new (row) mdbg::FCfg; // call constructor
@@ -685,7 +685,7 @@ mdbg::FCfg* mdbg::cfg_AllocMaybe() {
 // --- mdbg.FDb.cfg.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-mdbg::FCfg* mdbg::cfg_InsertMaybe(const dev::Cfg &value) {
+mdbg::FCfg* mdbg::cfg_InsertMaybe(const dev::Cfg &value) throw() {
     mdbg::FCfg *row = &cfg_Alloc(); // if out of memory, process dies. if input error, return NULL.
     cfg_CopyIn(*row,const_cast<dev::Cfg&>(value));
     bool ok = cfg_XrefMaybe(*row); // this may return false
@@ -698,7 +698,7 @@ mdbg::FCfg* mdbg::cfg_InsertMaybe(const dev::Cfg &value) {
 
 // --- mdbg.FDb.cfg.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* mdbg::cfg_AllocMem() {
+void* mdbg::cfg_AllocMem() throw() {
     u64 new_nelems     = _db.cfg_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -724,7 +724,7 @@ void* mdbg::cfg_AllocMem() {
 
 // --- mdbg.FDb.cfg.RemoveAll
 // Remove all elements from Lary
-void mdbg::cfg_RemoveAll() {
+void mdbg::cfg_RemoveAll() throw() {
     for (u64 n = _db.cfg_n; n>0; ) {
         n--;
         cfg_qFind(u64(n)).~FCfg(); // destroy last element
@@ -734,7 +734,7 @@ void mdbg::cfg_RemoveAll() {
 
 // --- mdbg.FDb.cfg.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void mdbg::cfg_RemoveLast() {
+void mdbg::cfg_RemoveLast() throw() {
     u64 n = _db.cfg_n;
     if (n > 0) {
         n -= 1;
@@ -744,7 +744,7 @@ void mdbg::cfg_RemoveLast() {
 }
 
 // --- mdbg.FDb.cfg.InputMaybe
-static bool mdbg::cfg_InputMaybe(dev::Cfg &elem) {
+static bool mdbg::cfg_InputMaybe(dev::Cfg &elem) throw() {
     bool retval = true;
     retval = cfg_InsertMaybe(elem) != nullptr;
     return retval;
@@ -770,7 +770,7 @@ bool mdbg::cfg_XrefMaybe(mdbg::FCfg &row) {
 
 // --- mdbg.FDb.ind_cfg.Find
 // Find row by key. Return NULL if not found.
-mdbg::FCfg* mdbg::ind_cfg_Find(const algo::strptr& key) {
+mdbg::FCfg* mdbg::ind_cfg_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_cfg_buckets_n - 1);
     mdbg::FCfg* *e = &_db.ind_cfg_buckets_elems[index];
     mdbg::FCfg* ret=NULL;
@@ -785,7 +785,7 @@ mdbg::FCfg* mdbg::ind_cfg_Find(const algo::strptr& key) {
 
 // --- mdbg.FDb.ind_cfg.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-mdbg::FCfg& mdbg::ind_cfg_GetOrCreate(const algo::strptr& key) {
+mdbg::FCfg& mdbg::ind_cfg_GetOrCreate(const algo::strptr& key) throw() {
     mdbg::FCfg* ret = ind_cfg_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &cfg_Alloc();
@@ -802,7 +802,7 @@ mdbg::FCfg& mdbg::ind_cfg_GetOrCreate(const algo::strptr& key) {
 
 // --- mdbg.FDb.ind_cfg.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool mdbg::ind_cfg_InsertMaybe(mdbg::FCfg& row) {
+bool mdbg::ind_cfg_InsertMaybe(mdbg::FCfg& row) throw() {
     ind_cfg_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_cfg_next == (mdbg::FCfg*)-1)) {// check if in hash already
@@ -830,7 +830,7 @@ bool mdbg::ind_cfg_InsertMaybe(mdbg::FCfg& row) {
 
 // --- mdbg.FDb.ind_cfg.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void mdbg::ind_cfg_Remove(mdbg::FCfg& row) {
+void mdbg::ind_cfg_Remove(mdbg::FCfg& row) throw() {
     if (LIKELY(row.ind_cfg_next != (mdbg::FCfg*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.cfg) & (_db.ind_cfg_buckets_n - 1);
         mdbg::FCfg* *prev = &_db.ind_cfg_buckets_elems[index]; // addr of pointer to current element
@@ -848,7 +848,7 @@ void mdbg::ind_cfg_Remove(mdbg::FCfg& row) {
 
 // --- mdbg.FDb.ind_cfg.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void mdbg::ind_cfg_Reserve(int n) {
+void mdbg::ind_cfg_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_cfg_buckets_n;
     u32 new_nelems   = _db.ind_cfg_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -885,7 +885,7 @@ void mdbg::ind_cfg_Reserve(int n) {
 // --- mdbg.FDb.builddir.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-mdbg::FBuilddir& mdbg::builddir_Alloc() {
+mdbg::FBuilddir& mdbg::builddir_Alloc() throw() {
     mdbg::FBuilddir* row = builddir_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("mdbg.out_of_mem  field:mdbg.FDb.builddir  comment:'Alloc failed'");
@@ -895,7 +895,7 @@ mdbg::FBuilddir& mdbg::builddir_Alloc() {
 
 // --- mdbg.FDb.builddir.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-mdbg::FBuilddir* mdbg::builddir_AllocMaybe() {
+mdbg::FBuilddir* mdbg::builddir_AllocMaybe() throw() {
     mdbg::FBuilddir *row = (mdbg::FBuilddir*)builddir_AllocMem();
     if (row) {
         new (row) mdbg::FBuilddir; // call constructor
@@ -906,7 +906,7 @@ mdbg::FBuilddir* mdbg::builddir_AllocMaybe() {
 // --- mdbg.FDb.builddir.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-mdbg::FBuilddir* mdbg::builddir_InsertMaybe(const dev::Builddir &value) {
+mdbg::FBuilddir* mdbg::builddir_InsertMaybe(const dev::Builddir &value) throw() {
     mdbg::FBuilddir *row = &builddir_Alloc(); // if out of memory, process dies. if input error, return NULL.
     builddir_CopyIn(*row,const_cast<dev::Builddir&>(value));
     bool ok = builddir_XrefMaybe(*row); // this may return false
@@ -919,7 +919,7 @@ mdbg::FBuilddir* mdbg::builddir_InsertMaybe(const dev::Builddir &value) {
 
 // --- mdbg.FDb.builddir.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* mdbg::builddir_AllocMem() {
+void* mdbg::builddir_AllocMem() throw() {
     u64 new_nelems     = _db.builddir_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -945,7 +945,7 @@ void* mdbg::builddir_AllocMem() {
 
 // --- mdbg.FDb.builddir.RemoveAll
 // Remove all elements from Lary
-void mdbg::builddir_RemoveAll() {
+void mdbg::builddir_RemoveAll() throw() {
     for (u64 n = _db.builddir_n; n>0; ) {
         n--;
         builddir_qFind(u64(n)).~FBuilddir(); // destroy last element
@@ -955,7 +955,7 @@ void mdbg::builddir_RemoveAll() {
 
 // --- mdbg.FDb.builddir.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void mdbg::builddir_RemoveLast() {
+void mdbg::builddir_RemoveLast() throw() {
     u64 n = _db.builddir_n;
     if (n > 0) {
         n -= 1;
@@ -965,7 +965,7 @@ void mdbg::builddir_RemoveLast() {
 }
 
 // --- mdbg.FDb.builddir.InputMaybe
-static bool mdbg::builddir_InputMaybe(dev::Builddir &elem) {
+static bool mdbg::builddir_InputMaybe(dev::Builddir &elem) throw() {
     bool retval = true;
     retval = builddir_InsertMaybe(elem) != nullptr;
     return retval;
@@ -991,13 +991,13 @@ bool mdbg::builddir_XrefMaybe(mdbg::FBuilddir &row) {
 
 // --- mdbg.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr mdbg::trace_RowidFind(int t) {
+static algo::ImrowPtr mdbg::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- mdbg.FDb.trace.N
 // Function return 1
-inline static i32 mdbg::trace_N() {
+inline static i32 mdbg::trace_N() throw() {
     return 1;
 }
 
@@ -1042,7 +1042,7 @@ void mdbg::FDb_Init() {
 }
 
 // --- mdbg.FDb..Uninit
-void mdbg::FDb_Uninit() {
+void mdbg::FDb_Uninit() throw() {
     mdbg::FDb &row = _db; (void)row;
 
     // mdbg.FDb.builddir.Uninit (Lary)  //
@@ -1058,7 +1058,7 @@ void mdbg::FDb_Uninit() {
 // --- mdbg.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* mdbg::value_ToCstr(const mdbg::FieldId& parent) {
+const char* mdbg::value_ToCstr(const mdbg::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case mdbg_FieldId_value            : ret = "value";  break;
@@ -1069,7 +1069,7 @@ const char* mdbg::value_ToCstr(const mdbg::FieldId& parent) {
 // --- mdbg.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void mdbg::value_Print(const mdbg::FieldId& parent, algo::cstring &lhs) {
+void mdbg::value_Print(const mdbg::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1082,7 +1082,7 @@ void mdbg::value_Print(const mdbg::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool mdbg::value_SetStrptrMaybe(mdbg::FieldId& parent, algo::strptr rhs) {
+bool mdbg::value_SetStrptrMaybe(mdbg::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -1100,13 +1100,13 @@ bool mdbg::value_SetStrptrMaybe(mdbg::FieldId& parent, algo::strptr rhs) {
 // --- mdbg.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void mdbg::value_SetStrptr(mdbg::FieldId& parent, algo::strptr rhs, mdbg_FieldIdEnum dflt) {
+void mdbg::value_SetStrptr(mdbg::FieldId& parent, algo::strptr rhs, mdbg_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- mdbg.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool mdbg::value_ReadStrptrMaybe(mdbg::FieldId& parent, algo::strptr rhs) {
+bool mdbg::value_ReadStrptrMaybe(mdbg::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1118,7 +1118,7 @@ bool mdbg::value_ReadStrptrMaybe(mdbg::FieldId& parent, algo::strptr rhs) {
 // --- mdbg.FieldId..ReadStrptrMaybe
 // Read fields of mdbg::FieldId from an ascii string.
 // The format of the string is the format of the mdbg::FieldId's only field
-bool mdbg::FieldId_ReadStrptrMaybe(mdbg::FieldId &parent, algo::strptr in_str) {
+bool mdbg::FieldId_ReadStrptrMaybe(mdbg::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1127,14 +1127,14 @@ bool mdbg::FieldId_ReadStrptrMaybe(mdbg::FieldId &parent, algo::strptr in_str) {
 // --- mdbg.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:mdbg.FieldId.String  printfmt:Raw
-void mdbg::FieldId_Print(mdbg::FieldId& row, algo::cstring& str) {
+void mdbg::FieldId_Print(mdbg::FieldId& row, algo::cstring& str) throw() {
     mdbg::value_Print(row, str);
 }
 
 // --- mdbg.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* mdbg::value_ToCstr(const mdbg::TableId& parent) {
+const char* mdbg::value_ToCstr(const mdbg::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case mdbg_TableId_dev_Builddir     : ret = "dev.Builddir";  break;
@@ -1146,7 +1146,7 @@ const char* mdbg::value_ToCstr(const mdbg::TableId& parent) {
 // --- mdbg.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void mdbg::value_Print(const mdbg::TableId& parent, algo::cstring &lhs) {
+void mdbg::value_Print(const mdbg::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1159,7 +1159,7 @@ void mdbg::value_Print(const mdbg::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool mdbg::value_SetStrptrMaybe(mdbg::TableId& parent, algo::strptr rhs) {
+bool mdbg::value_SetStrptrMaybe(mdbg::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 7: {
@@ -1193,13 +1193,13 @@ bool mdbg::value_SetStrptrMaybe(mdbg::TableId& parent, algo::strptr rhs) {
 // --- mdbg.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void mdbg::value_SetStrptr(mdbg::TableId& parent, algo::strptr rhs, mdbg_TableIdEnum dflt) {
+void mdbg::value_SetStrptr(mdbg::TableId& parent, algo::strptr rhs, mdbg_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- mdbg.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool mdbg::value_ReadStrptrMaybe(mdbg::TableId& parent, algo::strptr rhs) {
+bool mdbg::value_ReadStrptrMaybe(mdbg::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1211,7 +1211,7 @@ bool mdbg::value_ReadStrptrMaybe(mdbg::TableId& parent, algo::strptr rhs) {
 // --- mdbg.TableId..ReadStrptrMaybe
 // Read fields of mdbg::TableId from an ascii string.
 // The format of the string is the format of the mdbg::TableId's only field
-bool mdbg::TableId_ReadStrptrMaybe(mdbg::TableId &parent, algo::strptr in_str) {
+bool mdbg::TableId_ReadStrptrMaybe(mdbg::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1220,7 +1220,7 @@ bool mdbg::TableId_ReadStrptrMaybe(mdbg::TableId &parent, algo::strptr in_str) {
 // --- mdbg.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:mdbg.TableId.String  printfmt:Raw
-void mdbg::TableId_Print(mdbg::TableId& row, algo::cstring& str) {
+void mdbg::TableId_Print(mdbg::TableId& row, algo::cstring& str) throw() {
     mdbg::value_Print(row, str);
 }
 

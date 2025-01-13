@@ -30,13 +30,13 @@
 
 // --- amc_vis.FCtype.c_field.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::c_field_EmptyQ(amc_vis::FCtype& ctype) {
+inline bool amc_vis::c_field_EmptyQ(amc_vis::FCtype& ctype) throw() {
     return ctype.c_field_n == 0;
 }
 
 // --- amc_vis.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::FField* amc_vis::c_field_Find(amc_vis::FCtype& ctype, u32 t) {
+inline amc_vis::FField* amc_vis::c_field_Find(amc_vis::FCtype& ctype, u32 t) throw() {
     amc_vis::FField *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_field_n;
@@ -48,19 +48,19 @@ inline amc_vis::FField* amc_vis::c_field_Find(amc_vis::FCtype& ctype, u32 t) {
 
 // --- amc_vis.FCtype.c_field.Getary
 // Return array of pointers
-inline algo::aryptr<amc_vis::FField*> amc_vis::c_field_Getary(amc_vis::FCtype& ctype) {
+inline algo::aryptr<amc_vis::FField*> amc_vis::c_field_Getary(amc_vis::FCtype& ctype) throw() {
     return algo::aryptr<amc_vis::FField*>(ctype.c_field_elems, ctype.c_field_n);
 }
 
 // --- amc_vis.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i32 amc_vis::c_field_N(const amc_vis::FCtype& ctype) {
+inline i32 amc_vis::c_field_N(const amc_vis::FCtype& ctype) throw() {
     return ctype.c_field_n;
 }
 
 // --- amc_vis.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc_vis::c_field_RemoveAll(amc_vis::FCtype& ctype) {
+inline void amc_vis::c_field_RemoveAll(amc_vis::FCtype& ctype) throw() {
     for (u32 i = 0; i < ctype.c_field_n; i++) {
         // mark all elements as not-in-array
         ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
@@ -70,24 +70,24 @@ inline void amc_vis::c_field_RemoveAll(amc_vis::FCtype& ctype) {
 
 // --- amc_vis.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline amc_vis::FField& amc_vis::c_field_qFind(amc_vis::FCtype& ctype, u32 idx) {
+inline amc_vis::FField& amc_vis::c_field_qFind(amc_vis::FCtype& ctype, u32 idx) throw() {
     return *ctype.c_field_elems[idx];
 }
 
 // --- amc_vis.FCtype.c_field.InAryQ
 // True if row is in any ptrary instance
-inline bool amc_vis::ctype_c_field_InAryQ(amc_vis::FField& row) {
+inline bool amc_vis::ctype_c_field_InAryQ(amc_vis::FField& row) throw() {
     return row.ctype_c_field_in_ary;
 }
 
 // --- amc_vis.FCtype.c_field.qLast
 // Reference to last element without bounds checking
-inline amc_vis::FField& amc_vis::c_field_qLast(amc_vis::FCtype& ctype) {
+inline amc_vis::FField& amc_vis::c_field_qLast(amc_vis::FCtype& ctype) throw() {
     return *ctype.c_field_elems[ctype.c_field_n-1];
 }
 
 // --- amc_vis.FCtype.c_field_curs.Reset
-inline void amc_vis::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, amc_vis::FCtype &parent) {
+inline void amc_vis::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, amc_vis::FCtype &parent) throw() {
     curs.elems = parent.c_field_elems;
     curs.n_elems = parent.c_field_n;
     curs.index = 0;
@@ -95,19 +95,19 @@ inline void amc_vis::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, amc_vis:
 
 // --- amc_vis.FCtype.c_field_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) {
+inline bool amc_vis::ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- amc_vis.FCtype.c_field_curs.Next
 // proceed to next item
-inline void amc_vis::ctype_c_field_curs_Next(ctype_c_field_curs &curs) {
+inline void amc_vis::ctype_c_field_curs_Next(ctype_c_field_curs &curs) throw() {
     curs.index++;
 }
 
 // --- amc_vis.FCtype.c_field_curs.Access
 // item access
-inline amc_vis::FField& amc_vis::ctype_c_field_curs_Access(ctype_c_field_curs &curs) {
+inline amc_vis::FField& amc_vis::ctype_c_field_curs_Access(ctype_c_field_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
@@ -126,28 +126,28 @@ inline void amc_vis::FCtype_Init(amc_vis::FCtype& ctype) {
 }
 
 // --- amc_vis.FCtype..Ctor
-inline  amc_vis::FCtype::FCtype() {
+inline  amc_vis::FCtype::FCtype() throw() {
     amc_vis::FCtype_Init(*this);
 }
 
 // --- amc_vis.FCtype..Dtor
-inline  amc_vis::FCtype::~FCtype() {
+inline  amc_vis::FCtype::~FCtype() throw() {
     amc_vis::FCtype_Uninit(*this);
 }
 
 // --- amc_vis.trace..Ctor
-inline  amc_vis::trace::trace() {
+inline  amc_vis::trace::trace() throw() {
 }
 
 // --- amc_vis.FDb.ctype.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::ctype_EmptyQ() {
+inline bool amc_vis::ctype_EmptyQ() throw() {
     return _db.ctype_n == 0;
 }
 
 // --- amc_vis.FDb.ctype.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::FCtype* amc_vis::ctype_Find(u64 t) {
+inline amc_vis::FCtype* amc_vis::ctype_Find(u64 t) throw() {
     amc_vis::FCtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctype_n))) {
         u64 x = t + 1;
@@ -161,19 +161,19 @@ inline amc_vis::FCtype* amc_vis::ctype_Find(u64 t) {
 
 // --- amc_vis.FDb.ctype.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline amc_vis::FCtype* amc_vis::ctype_Last() {
+inline amc_vis::FCtype* amc_vis::ctype_Last() throw() {
     return ctype_Find(u64(_db.ctype_n-1));
 }
 
 // --- amc_vis.FDb.ctype.N
 // Return number of items in the pool
-inline i32 amc_vis::ctype_N() {
+inline i32 amc_vis::ctype_N() throw() {
     return _db.ctype_n;
 }
 
 // --- amc_vis.FDb.ctype.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline amc_vis::FCtype& amc_vis::ctype_qFind(u64 t) {
+inline amc_vis::FCtype& amc_vis::ctype_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -183,13 +183,13 @@ inline amc_vis::FCtype& amc_vis::ctype_qFind(u64 t) {
 
 // --- amc_vis.FDb.field.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::field_EmptyQ() {
+inline bool amc_vis::field_EmptyQ() throw() {
     return _db.field_n == 0;
 }
 
 // --- amc_vis.FDb.field.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::FField* amc_vis::field_Find(u64 t) {
+inline amc_vis::FField* amc_vis::field_Find(u64 t) throw() {
     amc_vis::FField *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.field_n))) {
         u64 x = t + 1;
@@ -203,19 +203,19 @@ inline amc_vis::FField* amc_vis::field_Find(u64 t) {
 
 // --- amc_vis.FDb.field.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline amc_vis::FField* amc_vis::field_Last() {
+inline amc_vis::FField* amc_vis::field_Last() throw() {
     return field_Find(u64(_db.field_n-1));
 }
 
 // --- amc_vis.FDb.field.N
 // Return number of items in the pool
-inline i32 amc_vis::field_N() {
+inline i32 amc_vis::field_N() throw() {
     return _db.field_n;
 }
 
 // --- amc_vis.FDb.field.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline amc_vis::FField& amc_vis::field_qFind(u64 t) {
+inline amc_vis::FField& amc_vis::field_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -225,37 +225,37 @@ inline amc_vis::FField& amc_vis::field_qFind(u64 t) {
 
 // --- amc_vis.FDb.ind_ctype.EmptyQ
 // Return true if hash is empty
-inline bool amc_vis::ind_ctype_EmptyQ() {
+inline bool amc_vis::ind_ctype_EmptyQ() throw() {
     return _db.ind_ctype_n == 0;
 }
 
 // --- amc_vis.FDb.ind_ctype.N
 // Return number of items in the hash
-inline i32 amc_vis::ind_ctype_N() {
+inline i32 amc_vis::ind_ctype_N() throw() {
     return _db.ind_ctype_n;
 }
 
 // --- amc_vis.FDb.ind_field.EmptyQ
 // Return true if hash is empty
-inline bool amc_vis::ind_field_EmptyQ() {
+inline bool amc_vis::ind_field_EmptyQ() throw() {
     return _db.ind_field_n == 0;
 }
 
 // --- amc_vis.FDb.ind_field.N
 // Return number of items in the hash
-inline i32 amc_vis::ind_field_N() {
+inline i32 amc_vis::ind_field_N() throw() {
     return _db.ind_field_n;
 }
 
 // --- amc_vis.FDb.node.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::node_EmptyQ() {
+inline bool amc_vis::node_EmptyQ() throw() {
     return _db.node_n == 0;
 }
 
 // --- amc_vis.FDb.node.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::FNode* amc_vis::node_Find(i32 t) {
+inline amc_vis::FNode* amc_vis::node_Find(i32 t) throw() {
     amc_vis::FNode *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.node_n))) {
         u64 x = t + 1;
@@ -269,19 +269,19 @@ inline amc_vis::FNode* amc_vis::node_Find(i32 t) {
 
 // --- amc_vis.FDb.node.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline amc_vis::FNode* amc_vis::node_Last() {
+inline amc_vis::FNode* amc_vis::node_Last() throw() {
     return node_Find(i32(_db.node_n-1));
 }
 
 // --- amc_vis.FDb.node.N
 // Return number of items in the pool
-inline i32 amc_vis::node_N() {
+inline i32 amc_vis::node_N() throw() {
     return _db.node_n;
 }
 
 // --- amc_vis.FDb.node.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline amc_vis::FNode& amc_vis::node_qFind(i32 t) {
+inline amc_vis::FNode& amc_vis::node_qFind(i32 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -291,25 +291,25 @@ inline amc_vis::FNode& amc_vis::node_qFind(i32 t) {
 
 // --- amc_vis.FDb.ind_node.EmptyQ
 // Return true if hash is empty
-inline bool amc_vis::ind_node_EmptyQ() {
+inline bool amc_vis::ind_node_EmptyQ() throw() {
     return _db.ind_node_n == 0;
 }
 
 // --- amc_vis.FDb.ind_node.N
 // Return number of items in the hash
-inline i32 amc_vis::ind_node_N() {
+inline i32 amc_vis::ind_node_N() throw() {
     return _db.ind_node_n;
 }
 
 // --- amc_vis.FDb.link.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::link_EmptyQ() {
+inline bool amc_vis::link_EmptyQ() throw() {
     return _db.link_n == 0;
 }
 
 // --- amc_vis.FDb.link.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::Link* amc_vis::link_Find(u64 t) {
+inline amc_vis::Link* amc_vis::link_Find(u64 t) throw() {
     amc_vis::Link *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.link_n))) {
         u64 x = t + 1;
@@ -323,19 +323,19 @@ inline amc_vis::Link* amc_vis::link_Find(u64 t) {
 
 // --- amc_vis.FDb.link.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline amc_vis::Link* amc_vis::link_Last() {
+inline amc_vis::Link* amc_vis::link_Last() throw() {
     return link_Find(u64(_db.link_n-1));
 }
 
 // --- amc_vis.FDb.link.N
 // Return number of items in the pool
-inline i32 amc_vis::link_N() {
+inline i32 amc_vis::link_N() throw() {
     return _db.link_n;
 }
 
 // --- amc_vis.FDb.link.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline amc_vis::Link& amc_vis::link_qFind(u64 t) {
+inline amc_vis::Link& amc_vis::link_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -345,25 +345,25 @@ inline amc_vis::Link& amc_vis::link_qFind(u64 t) {
 
 // --- amc_vis.FDb.ind_link.EmptyQ
 // Return true if hash is empty
-inline bool amc_vis::ind_link_EmptyQ() {
+inline bool amc_vis::ind_link_EmptyQ() throw() {
     return _db.ind_link_n == 0;
 }
 
 // --- amc_vis.FDb.ind_link.N
 // Return number of items in the hash
-inline i32 amc_vis::ind_link_N() {
+inline i32 amc_vis::ind_link_N() throw() {
     return _db.ind_link_n;
 }
 
 // --- amc_vis.FDb.linkdep.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::linkdep_EmptyQ() {
+inline bool amc_vis::linkdep_EmptyQ() throw() {
     return _db.linkdep_n == 0;
 }
 
 // --- amc_vis.FDb.linkdep.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::Linkdep* amc_vis::linkdep_Find(i32 t) {
+inline amc_vis::Linkdep* amc_vis::linkdep_Find(i32 t) throw() {
     amc_vis::Linkdep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.linkdep_n))) {
         u64 x = t + 1;
@@ -377,19 +377,19 @@ inline amc_vis::Linkdep* amc_vis::linkdep_Find(i32 t) {
 
 // --- amc_vis.FDb.linkdep.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline amc_vis::Linkdep* amc_vis::linkdep_Last() {
+inline amc_vis::Linkdep* amc_vis::linkdep_Last() throw() {
     return linkdep_Find(i32(_db.linkdep_n-1));
 }
 
 // --- amc_vis.FDb.linkdep.N
 // Return number of items in the pool
-inline i32 amc_vis::linkdep_N() {
+inline i32 amc_vis::linkdep_N() throw() {
     return _db.linkdep_n;
 }
 
 // --- amc_vis.FDb.linkdep.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline amc_vis::Linkdep& amc_vis::linkdep_qFind(i32 t) {
+inline amc_vis::Linkdep& amc_vis::linkdep_qFind(i32 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -399,13 +399,13 @@ inline amc_vis::Linkdep& amc_vis::linkdep_qFind(i32 t) {
 
 // --- amc_vis.FDb.c_linklist.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::c_linklist_EmptyQ() {
+inline bool amc_vis::c_linklist_EmptyQ() throw() {
     return _db.c_linklist_n == 0;
 }
 
 // --- amc_vis.FDb.c_linklist.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::Link* amc_vis::c_linklist_Find(u32 t) {
+inline amc_vis::Link* amc_vis::c_linklist_Find(u32 t) throw() {
     amc_vis::Link *retval = NULL;
     u64 idx = t;
     u64 lim = _db.c_linklist_n;
@@ -417,19 +417,19 @@ inline amc_vis::Link* amc_vis::c_linklist_Find(u32 t) {
 
 // --- amc_vis.FDb.c_linklist.Getary
 // Return array of pointers
-inline algo::aryptr<amc_vis::Link*> amc_vis::c_linklist_Getary() {
+inline algo::aryptr<amc_vis::Link*> amc_vis::c_linklist_Getary() throw() {
     return algo::aryptr<amc_vis::Link*>(_db.c_linklist_elems, _db.c_linklist_n);
 }
 
 // --- amc_vis.FDb.c_linklist.N
 // Return number of items in the pointer array
-inline i32 amc_vis::c_linklist_N() {
+inline i32 amc_vis::c_linklist_N() throw() {
     return _db.c_linklist_n;
 }
 
 // --- amc_vis.FDb.c_linklist.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void amc_vis::c_linklist_RemoveAll() {
+inline void amc_vis::c_linklist_RemoveAll() throw() {
     for (u32 i = 0; i < _db.c_linklist_n; i++) {
         // mark all elements as not-in-array
         _db.c_linklist_elems[i]->_db_c_linklist_in_ary = false;
@@ -439,31 +439,31 @@ inline void amc_vis::c_linklist_RemoveAll() {
 
 // --- amc_vis.FDb.c_linklist.qFind
 // Return reference without bounds checking
-inline amc_vis::Link& amc_vis::c_linklist_qFind(u32 idx) {
+inline amc_vis::Link& amc_vis::c_linklist_qFind(u32 idx) throw() {
     return *_db.c_linklist_elems[idx];
 }
 
 // --- amc_vis.FDb.c_linklist.InAryQ
 // True if row is in any ptrary instance
-inline bool amc_vis::c_linklist_InAryQ(amc_vis::Link& row) {
+inline bool amc_vis::c_linklist_InAryQ(amc_vis::Link& row) throw() {
     return row._db_c_linklist_in_ary;
 }
 
 // --- amc_vis.FDb.c_linklist.qLast
 // Reference to last element without bounds checking
-inline amc_vis::Link& amc_vis::c_linklist_qLast() {
+inline amc_vis::Link& amc_vis::c_linklist_qLast() throw() {
     return *_db.c_linklist_elems[_db.c_linklist_n-1];
 }
 
 // --- amc_vis.FDb.bh_node.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::bh_node_EmptyQ() {
+inline bool amc_vis::bh_node_EmptyQ() throw() {
     return _db.bh_node_n == 0;
 }
 
 // --- amc_vis.FDb.bh_node.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc_vis::FNode* amc_vis::bh_node_First() {
+inline amc_vis::FNode* amc_vis::bh_node_First() throw() {
     amc_vis::FNode *row = NULL;
     if (_db.bh_node_n > 0) {
         row = _db.bh_node_elems[0];
@@ -473,7 +473,7 @@ inline amc_vis::FNode* amc_vis::bh_node_First() {
 
 // --- amc_vis.FDb.bh_node.InBheapQ
 // Return true if row is in index, false otherwise
-inline bool amc_vis::bh_node_InBheapQ(amc_vis::FNode& row) {
+inline bool amc_vis::bh_node_InBheapQ(amc_vis::FNode& row) throw() {
     bool result = false;
     result = row.bh_node_idx != -1;
     return result;
@@ -481,19 +481,19 @@ inline bool amc_vis::bh_node_InBheapQ(amc_vis::FNode& row) {
 
 // --- amc_vis.FDb.bh_node.N
 // Return number of items in the heap
-inline i32 amc_vis::bh_node_N() {
+inline i32 amc_vis::bh_node_N() throw() {
     return _db.bh_node_n;
 }
 
 // --- amc_vis.FDb.bh_link.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::bh_link_EmptyQ() {
+inline bool amc_vis::bh_link_EmptyQ() throw() {
     return _db.bh_link_n == 0;
 }
 
 // --- amc_vis.FDb.bh_link.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc_vis::Link* amc_vis::bh_link_First() {
+inline amc_vis::Link* amc_vis::bh_link_First() throw() {
     amc_vis::Link *row = NULL;
     if (_db.bh_link_n > 0) {
         row = _db.bh_link_elems[0];
@@ -503,7 +503,7 @@ inline amc_vis::Link* amc_vis::bh_link_First() {
 
 // --- amc_vis.FDb.bh_link.InBheapQ
 // Return true if row is in index, false otherwise
-inline bool amc_vis::bh_link_InBheapQ(amc_vis::Link& row) {
+inline bool amc_vis::bh_link_InBheapQ(amc_vis::Link& row) throw() {
     bool result = false;
     result = row.bh_link_idx != -1;
     return result;
@@ -511,19 +511,19 @@ inline bool amc_vis::bh_link_InBheapQ(amc_vis::Link& row) {
 
 // --- amc_vis.FDb.bh_link.N
 // Return number of items in the heap
-inline i32 amc_vis::bh_link_N() {
+inline i32 amc_vis::bh_link_N() throw() {
     return _db.bh_link_n;
 }
 
 // --- amc_vis.FDb.reftype.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::reftype_EmptyQ() {
+inline bool amc_vis::reftype_EmptyQ() throw() {
     return _db.reftype_n == 0;
 }
 
 // --- amc_vis.FDb.reftype.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::FReftype* amc_vis::reftype_Find(u64 t) {
+inline amc_vis::FReftype* amc_vis::reftype_Find(u64 t) throw() {
     amc_vis::FReftype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.reftype_n))) {
         u64 x = t + 1;
@@ -537,19 +537,19 @@ inline amc_vis::FReftype* amc_vis::reftype_Find(u64 t) {
 
 // --- amc_vis.FDb.reftype.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline amc_vis::FReftype* amc_vis::reftype_Last() {
+inline amc_vis::FReftype* amc_vis::reftype_Last() throw() {
     return reftype_Find(u64(_db.reftype_n-1));
 }
 
 // --- amc_vis.FDb.reftype.N
 // Return number of items in the pool
-inline i32 amc_vis::reftype_N() {
+inline i32 amc_vis::reftype_N() throw() {
     return _db.reftype_n;
 }
 
 // --- amc_vis.FDb.reftype.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline amc_vis::FReftype& amc_vis::reftype_qFind(u64 t) {
+inline amc_vis::FReftype& amc_vis::reftype_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -559,25 +559,25 @@ inline amc_vis::FReftype& amc_vis::reftype_qFind(u64 t) {
 
 // --- amc_vis.FDb.ind_reftype.EmptyQ
 // Return true if hash is empty
-inline bool amc_vis::ind_reftype_EmptyQ() {
+inline bool amc_vis::ind_reftype_EmptyQ() throw() {
     return _db.ind_reftype_n == 0;
 }
 
 // --- amc_vis.FDb.ind_reftype.N
 // Return number of items in the hash
-inline i32 amc_vis::ind_reftype_N() {
+inline i32 amc_vis::ind_reftype_N() throw() {
     return _db.ind_reftype_n;
 }
 
 // --- amc_vis.FDb.nodedep.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::nodedep_EmptyQ() {
+inline bool amc_vis::nodedep_EmptyQ() throw() {
     return _db.nodedep_n == 0;
 }
 
 // --- amc_vis.FDb.nodedep.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::FNodedep* amc_vis::nodedep_Find(i32 t) {
+inline amc_vis::FNodedep* amc_vis::nodedep_Find(i32 t) throw() {
     amc_vis::FNodedep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.nodedep_n))) {
         u64 x = t + 1;
@@ -591,19 +591,19 @@ inline amc_vis::FNodedep* amc_vis::nodedep_Find(i32 t) {
 
 // --- amc_vis.FDb.nodedep.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline amc_vis::FNodedep* amc_vis::nodedep_Last() {
+inline amc_vis::FNodedep* amc_vis::nodedep_Last() throw() {
     return nodedep_Find(i32(_db.nodedep_n-1));
 }
 
 // --- amc_vis.FDb.nodedep.N
 // Return number of items in the pool
-inline i32 amc_vis::nodedep_N() {
+inline i32 amc_vis::nodedep_N() throw() {
     return _db.nodedep_n;
 }
 
 // --- amc_vis.FDb.nodedep.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline amc_vis::FNodedep& amc_vis::nodedep_qFind(i32 t) {
+inline amc_vis::FNodedep& amc_vis::nodedep_qFind(i32 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -613,13 +613,13 @@ inline amc_vis::FNodedep& amc_vis::nodedep_qFind(i32 t) {
 
 // --- amc_vis.FDb.outrow.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::outrow_EmptyQ() {
+inline bool amc_vis::outrow_EmptyQ() throw() {
     return _db.outrow_n == 0;
 }
 
 // --- amc_vis.FDb.outrow.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::Outrow* amc_vis::outrow_Find(i32 t) {
+inline amc_vis::Outrow* amc_vis::outrow_Find(i32 t) throw() {
     amc_vis::Outrow *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.outrow_n))) {
         u64 x = t + 1;
@@ -633,19 +633,19 @@ inline amc_vis::Outrow* amc_vis::outrow_Find(i32 t) {
 
 // --- amc_vis.FDb.outrow.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline amc_vis::Outrow* amc_vis::outrow_Last() {
+inline amc_vis::Outrow* amc_vis::outrow_Last() throw() {
     return outrow_Find(i32(_db.outrow_n-1));
 }
 
 // --- amc_vis.FDb.outrow.N
 // Return number of items in the pool
-inline i32 amc_vis::outrow_N() {
+inline i32 amc_vis::outrow_N() throw() {
     return _db.outrow_n;
 }
 
 // --- amc_vis.FDb.outrow.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline amc_vis::Outrow& amc_vis::outrow_qFind(i32 t) {
+inline amc_vis::Outrow& amc_vis::outrow_qFind(i32 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -655,13 +655,13 @@ inline amc_vis::Outrow& amc_vis::outrow_qFind(i32 t) {
 
 // --- amc_vis.FDb.zd_select.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::zd_select_EmptyQ() {
+inline bool amc_vis::zd_select_EmptyQ() throw() {
     return _db.zd_select_head == NULL;
 }
 
 // --- amc_vis.FDb.zd_select.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc_vis::FCtype* amc_vis::zd_select_First() {
+inline amc_vis::FCtype* amc_vis::zd_select_First() throw() {
     amc_vis::FCtype *row = NULL;
     row = _db.zd_select_head;
     return row;
@@ -669,7 +669,7 @@ inline amc_vis::FCtype* amc_vis::zd_select_First() {
 
 // --- amc_vis.FDb.zd_select.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool amc_vis::zd_select_InLlistQ(amc_vis::FCtype& row) {
+inline bool amc_vis::zd_select_InLlistQ(amc_vis::FCtype& row) throw() {
     bool result = false;
     result = !(row.zd_select_next == (amc_vis::FCtype*)-1);
     return result;
@@ -677,7 +677,7 @@ inline bool amc_vis::zd_select_InLlistQ(amc_vis::FCtype& row) {
 
 // --- amc_vis.FDb.zd_select.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc_vis::FCtype* amc_vis::zd_select_Last() {
+inline amc_vis::FCtype* amc_vis::zd_select_Last() throw() {
     amc_vis::FCtype *row = NULL;
     row = _db.zd_select_tail;
     return row;
@@ -685,25 +685,25 @@ inline amc_vis::FCtype* amc_vis::zd_select_Last() {
 
 // --- amc_vis.FDb.zd_select.N
 // Return number of items in the linked list
-inline i32 amc_vis::zd_select_N() {
+inline i32 amc_vis::zd_select_N() throw() {
     return _db.zd_select_n;
 }
 
 // --- amc_vis.FDb.zd_select.Next
 // Return pointer to next element in the list
-inline amc_vis::FCtype* amc_vis::zd_select_Next(amc_vis::FCtype &row) {
+inline amc_vis::FCtype* amc_vis::zd_select_Next(amc_vis::FCtype &row) throw() {
     return row.zd_select_next;
 }
 
 // --- amc_vis.FDb.zd_select.Prev
 // Return pointer to previous element in the list
-inline amc_vis::FCtype* amc_vis::zd_select_Prev(amc_vis::FCtype &row) {
+inline amc_vis::FCtype* amc_vis::zd_select_Prev(amc_vis::FCtype &row) throw() {
     return row.zd_select_prev;
 }
 
 // --- amc_vis.FDb.zd_select.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc_vis::FCtype& amc_vis::zd_select_qLast() {
+inline amc_vis::FCtype& amc_vis::zd_select_qLast() throw() {
     amc_vis::FCtype *row = NULL;
     row = _db.zd_select_tail;
     return *row;
@@ -711,13 +711,13 @@ inline amc_vis::FCtype& amc_vis::zd_select_qLast() {
 
 // --- amc_vis.FDb.finput.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::finput_EmptyQ() {
+inline bool amc_vis::finput_EmptyQ() throw() {
     return _db.finput_n == 0;
 }
 
 // --- amc_vis.FDb.finput.Find
 // Look up row by row id. Return NULL if out of range
-inline amc_vis::FFinput* amc_vis::finput_Find(u64 t) {
+inline amc_vis::FFinput* amc_vis::finput_Find(u64 t) throw() {
     amc_vis::FFinput *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.finput_n))) {
         u64 x = t + 1;
@@ -731,19 +731,19 @@ inline amc_vis::FFinput* amc_vis::finput_Find(u64 t) {
 
 // --- amc_vis.FDb.finput.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline amc_vis::FFinput* amc_vis::finput_Last() {
+inline amc_vis::FFinput* amc_vis::finput_Last() throw() {
     return finput_Find(u64(_db.finput_n-1));
 }
 
 // --- amc_vis.FDb.finput.N
 // Return number of items in the pool
-inline i32 amc_vis::finput_N() {
+inline i32 amc_vis::finput_N() throw() {
     return _db.finput_n;
 }
 
 // --- amc_vis.FDb.finput.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline amc_vis::FFinput& amc_vis::finput_qFind(u64 t) {
+inline amc_vis::FFinput& amc_vis::finput_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -753,131 +753,131 @@ inline amc_vis::FFinput& amc_vis::finput_qFind(u64 t) {
 
 // --- amc_vis.FDb.ctype_curs.Reset
 // cursor points to valid item
-inline void amc_vis::_db_ctype_curs_Reset(_db_ctype_curs &curs, amc_vis::FDb &parent) {
+inline void amc_vis::_db_ctype_curs_Reset(_db_ctype_curs &curs, amc_vis::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- amc_vis.FDb.ctype_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::_db_ctype_curs_ValidQ(_db_ctype_curs &curs) {
+inline bool amc_vis::_db_ctype_curs_ValidQ(_db_ctype_curs &curs) throw() {
     return curs.index < _db.ctype_n;
 }
 
 // --- amc_vis.FDb.ctype_curs.Next
 // proceed to next item
-inline void amc_vis::_db_ctype_curs_Next(_db_ctype_curs &curs) {
+inline void amc_vis::_db_ctype_curs_Next(_db_ctype_curs &curs) throw() {
     curs.index++;
 }
 
 // --- amc_vis.FDb.ctype_curs.Access
 // item access
-inline amc_vis::FCtype& amc_vis::_db_ctype_curs_Access(_db_ctype_curs &curs) {
+inline amc_vis::FCtype& amc_vis::_db_ctype_curs_Access(_db_ctype_curs &curs) throw() {
     return ctype_qFind(u64(curs.index));
 }
 
 // --- amc_vis.FDb.field_curs.Reset
 // cursor points to valid item
-inline void amc_vis::_db_field_curs_Reset(_db_field_curs &curs, amc_vis::FDb &parent) {
+inline void amc_vis::_db_field_curs_Reset(_db_field_curs &curs, amc_vis::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- amc_vis.FDb.field_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::_db_field_curs_ValidQ(_db_field_curs &curs) {
+inline bool amc_vis::_db_field_curs_ValidQ(_db_field_curs &curs) throw() {
     return curs.index < _db.field_n;
 }
 
 // --- amc_vis.FDb.field_curs.Next
 // proceed to next item
-inline void amc_vis::_db_field_curs_Next(_db_field_curs &curs) {
+inline void amc_vis::_db_field_curs_Next(_db_field_curs &curs) throw() {
     curs.index++;
 }
 
 // --- amc_vis.FDb.field_curs.Access
 // item access
-inline amc_vis::FField& amc_vis::_db_field_curs_Access(_db_field_curs &curs) {
+inline amc_vis::FField& amc_vis::_db_field_curs_Access(_db_field_curs &curs) throw() {
     return field_qFind(u64(curs.index));
 }
 
 // --- amc_vis.FDb.node_curs.Reset
 // cursor points to valid item
-inline void amc_vis::_db_node_curs_Reset(_db_node_curs &curs, amc_vis::FDb &parent) {
+inline void amc_vis::_db_node_curs_Reset(_db_node_curs &curs, amc_vis::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- amc_vis.FDb.node_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::_db_node_curs_ValidQ(_db_node_curs &curs) {
+inline bool amc_vis::_db_node_curs_ValidQ(_db_node_curs &curs) throw() {
     return curs.index < _db.node_n;
 }
 
 // --- amc_vis.FDb.node_curs.Next
 // proceed to next item
-inline void amc_vis::_db_node_curs_Next(_db_node_curs &curs) {
+inline void amc_vis::_db_node_curs_Next(_db_node_curs &curs) throw() {
     curs.index++;
 }
 
 // --- amc_vis.FDb.node_curs.Access
 // item access
-inline amc_vis::FNode& amc_vis::_db_node_curs_Access(_db_node_curs &curs) {
+inline amc_vis::FNode& amc_vis::_db_node_curs_Access(_db_node_curs &curs) throw() {
     return node_qFind(i32(curs.index));
 }
 
 // --- amc_vis.FDb.link_curs.Reset
 // cursor points to valid item
-inline void amc_vis::_db_link_curs_Reset(_db_link_curs &curs, amc_vis::FDb &parent) {
+inline void amc_vis::_db_link_curs_Reset(_db_link_curs &curs, amc_vis::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- amc_vis.FDb.link_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::_db_link_curs_ValidQ(_db_link_curs &curs) {
+inline bool amc_vis::_db_link_curs_ValidQ(_db_link_curs &curs) throw() {
     return curs.index < _db.link_n;
 }
 
 // --- amc_vis.FDb.link_curs.Next
 // proceed to next item
-inline void amc_vis::_db_link_curs_Next(_db_link_curs &curs) {
+inline void amc_vis::_db_link_curs_Next(_db_link_curs &curs) throw() {
     curs.index++;
 }
 
 // --- amc_vis.FDb.link_curs.Access
 // item access
-inline amc_vis::Link& amc_vis::_db_link_curs_Access(_db_link_curs &curs) {
+inline amc_vis::Link& amc_vis::_db_link_curs_Access(_db_link_curs &curs) throw() {
     return link_qFind(u64(curs.index));
 }
 
 // --- amc_vis.FDb.linkdep_curs.Reset
 // cursor points to valid item
-inline void amc_vis::_db_linkdep_curs_Reset(_db_linkdep_curs &curs, amc_vis::FDb &parent) {
+inline void amc_vis::_db_linkdep_curs_Reset(_db_linkdep_curs &curs, amc_vis::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- amc_vis.FDb.linkdep_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::_db_linkdep_curs_ValidQ(_db_linkdep_curs &curs) {
+inline bool amc_vis::_db_linkdep_curs_ValidQ(_db_linkdep_curs &curs) throw() {
     return curs.index < _db.linkdep_n;
 }
 
 // --- amc_vis.FDb.linkdep_curs.Next
 // proceed to next item
-inline void amc_vis::_db_linkdep_curs_Next(_db_linkdep_curs &curs) {
+inline void amc_vis::_db_linkdep_curs_Next(_db_linkdep_curs &curs) throw() {
     curs.index++;
 }
 
 // --- amc_vis.FDb.linkdep_curs.Access
 // item access
-inline amc_vis::Linkdep& amc_vis::_db_linkdep_curs_Access(_db_linkdep_curs &curs) {
+inline amc_vis::Linkdep& amc_vis::_db_linkdep_curs_Access(_db_linkdep_curs &curs) throw() {
     return linkdep_qFind(i32(curs.index));
 }
 
 // --- amc_vis.FDb.c_linklist_curs.Reset
-inline void amc_vis::_db_c_linklist_curs_Reset(_db_c_linklist_curs &curs, amc_vis::FDb &parent) {
+inline void amc_vis::_db_c_linklist_curs_Reset(_db_c_linklist_curs &curs, amc_vis::FDb &parent) throw() {
     curs.elems = parent.c_linklist_elems;
     curs.n_elems = parent.c_linklist_n;
     curs.index = 0;
@@ -885,174 +885,174 @@ inline void amc_vis::_db_c_linklist_curs_Reset(_db_c_linklist_curs &curs, amc_vi
 
 // --- amc_vis.FDb.c_linklist_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::_db_c_linklist_curs_ValidQ(_db_c_linklist_curs &curs) {
+inline bool amc_vis::_db_c_linklist_curs_ValidQ(_db_c_linklist_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- amc_vis.FDb.c_linklist_curs.Next
 // proceed to next item
-inline void amc_vis::_db_c_linklist_curs_Next(_db_c_linklist_curs &curs) {
+inline void amc_vis::_db_c_linklist_curs_Next(_db_c_linklist_curs &curs) throw() {
     curs.index++;
 }
 
 // --- amc_vis.FDb.c_linklist_curs.Access
 // item access
-inline amc_vis::Link& amc_vis::_db_c_linklist_curs_Access(_db_c_linklist_curs &curs) {
+inline amc_vis::Link& amc_vis::_db_c_linklist_curs_Access(_db_c_linklist_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- amc_vis.FDb.bh_node_curs.Access
 // Access current element. If not more elements, return NULL
-inline amc_vis::FNode& amc_vis::_db_bh_node_curs_Access(_db_bh_node_curs &curs) {
+inline amc_vis::FNode& amc_vis::_db_bh_node_curs_Access(_db_bh_node_curs &curs) throw() {
     return *curs.temp_elems[0];
 }
 
 // --- amc_vis.FDb.bh_node_curs.ValidQ
 // Return true if Access() will return non-NULL.
-inline bool amc_vis::_db_bh_node_curs_ValidQ(_db_bh_node_curs &curs) {
+inline bool amc_vis::_db_bh_node_curs_ValidQ(_db_bh_node_curs &curs) throw() {
     return curs.temp_n > 0;
 }
 
 // --- amc_vis.FDb.bh_link_curs.Access
 // Access current element. If not more elements, return NULL
-inline amc_vis::Link& amc_vis::_db_bh_link_curs_Access(_db_bh_link_curs &curs) {
+inline amc_vis::Link& amc_vis::_db_bh_link_curs_Access(_db_bh_link_curs &curs) throw() {
     return *curs.temp_elems[0];
 }
 
 // --- amc_vis.FDb.bh_link_curs.ValidQ
 // Return true if Access() will return non-NULL.
-inline bool amc_vis::_db_bh_link_curs_ValidQ(_db_bh_link_curs &curs) {
+inline bool amc_vis::_db_bh_link_curs_ValidQ(_db_bh_link_curs &curs) throw() {
     return curs.temp_n > 0;
 }
 
 // --- amc_vis.FDb.reftype_curs.Reset
 // cursor points to valid item
-inline void amc_vis::_db_reftype_curs_Reset(_db_reftype_curs &curs, amc_vis::FDb &parent) {
+inline void amc_vis::_db_reftype_curs_Reset(_db_reftype_curs &curs, amc_vis::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- amc_vis.FDb.reftype_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::_db_reftype_curs_ValidQ(_db_reftype_curs &curs) {
+inline bool amc_vis::_db_reftype_curs_ValidQ(_db_reftype_curs &curs) throw() {
     return curs.index < _db.reftype_n;
 }
 
 // --- amc_vis.FDb.reftype_curs.Next
 // proceed to next item
-inline void amc_vis::_db_reftype_curs_Next(_db_reftype_curs &curs) {
+inline void amc_vis::_db_reftype_curs_Next(_db_reftype_curs &curs) throw() {
     curs.index++;
 }
 
 // --- amc_vis.FDb.reftype_curs.Access
 // item access
-inline amc_vis::FReftype& amc_vis::_db_reftype_curs_Access(_db_reftype_curs &curs) {
+inline amc_vis::FReftype& amc_vis::_db_reftype_curs_Access(_db_reftype_curs &curs) throw() {
     return reftype_qFind(u64(curs.index));
 }
 
 // --- amc_vis.FDb.nodedep_curs.Reset
 // cursor points to valid item
-inline void amc_vis::_db_nodedep_curs_Reset(_db_nodedep_curs &curs, amc_vis::FDb &parent) {
+inline void amc_vis::_db_nodedep_curs_Reset(_db_nodedep_curs &curs, amc_vis::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- amc_vis.FDb.nodedep_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::_db_nodedep_curs_ValidQ(_db_nodedep_curs &curs) {
+inline bool amc_vis::_db_nodedep_curs_ValidQ(_db_nodedep_curs &curs) throw() {
     return curs.index < _db.nodedep_n;
 }
 
 // --- amc_vis.FDb.nodedep_curs.Next
 // proceed to next item
-inline void amc_vis::_db_nodedep_curs_Next(_db_nodedep_curs &curs) {
+inline void amc_vis::_db_nodedep_curs_Next(_db_nodedep_curs &curs) throw() {
     curs.index++;
 }
 
 // --- amc_vis.FDb.nodedep_curs.Access
 // item access
-inline amc_vis::FNodedep& amc_vis::_db_nodedep_curs_Access(_db_nodedep_curs &curs) {
+inline amc_vis::FNodedep& amc_vis::_db_nodedep_curs_Access(_db_nodedep_curs &curs) throw() {
     return nodedep_qFind(i32(curs.index));
 }
 
 // --- amc_vis.FDb.outrow_curs.Reset
 // cursor points to valid item
-inline void amc_vis::_db_outrow_curs_Reset(_db_outrow_curs &curs, amc_vis::FDb &parent) {
+inline void amc_vis::_db_outrow_curs_Reset(_db_outrow_curs &curs, amc_vis::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- amc_vis.FDb.outrow_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::_db_outrow_curs_ValidQ(_db_outrow_curs &curs) {
+inline bool amc_vis::_db_outrow_curs_ValidQ(_db_outrow_curs &curs) throw() {
     return curs.index < _db.outrow_n;
 }
 
 // --- amc_vis.FDb.outrow_curs.Next
 // proceed to next item
-inline void amc_vis::_db_outrow_curs_Next(_db_outrow_curs &curs) {
+inline void amc_vis::_db_outrow_curs_Next(_db_outrow_curs &curs) throw() {
     curs.index++;
 }
 
 // --- amc_vis.FDb.outrow_curs.Access
 // item access
-inline amc_vis::Outrow& amc_vis::_db_outrow_curs_Access(_db_outrow_curs &curs) {
+inline amc_vis::Outrow& amc_vis::_db_outrow_curs_Access(_db_outrow_curs &curs) throw() {
     return outrow_qFind(i32(curs.index));
 }
 
 // --- amc_vis.FDb.zd_select_curs.Reset
 // cursor points to valid item
-inline void amc_vis::_db_zd_select_curs_Reset(_db_zd_select_curs &curs, amc_vis::FDb &parent) {
+inline void amc_vis::_db_zd_select_curs_Reset(_db_zd_select_curs &curs, amc_vis::FDb &parent) throw() {
     curs.row = parent.zd_select_head;
 }
 
 // --- amc_vis.FDb.zd_select_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::_db_zd_select_curs_ValidQ(_db_zd_select_curs &curs) {
+inline bool amc_vis::_db_zd_select_curs_ValidQ(_db_zd_select_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- amc_vis.FDb.zd_select_curs.Next
 // proceed to next item
-inline void amc_vis::_db_zd_select_curs_Next(_db_zd_select_curs &curs) {
+inline void amc_vis::_db_zd_select_curs_Next(_db_zd_select_curs &curs) throw() {
     amc_vis::FCtype *next = (*curs.row).zd_select_next;
     curs.row = next;
 }
 
 // --- amc_vis.FDb.zd_select_curs.Access
 // item access
-inline amc_vis::FCtype& amc_vis::_db_zd_select_curs_Access(_db_zd_select_curs &curs) {
+inline amc_vis::FCtype& amc_vis::_db_zd_select_curs_Access(_db_zd_select_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- amc_vis.FDb.finput_curs.Reset
 // cursor points to valid item
-inline void amc_vis::_db_finput_curs_Reset(_db_finput_curs &curs, amc_vis::FDb &parent) {
+inline void amc_vis::_db_finput_curs_Reset(_db_finput_curs &curs, amc_vis::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- amc_vis.FDb.finput_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::_db_finput_curs_ValidQ(_db_finput_curs &curs) {
+inline bool amc_vis::_db_finput_curs_ValidQ(_db_finput_curs &curs) throw() {
     return curs.index < _db.finput_n;
 }
 
 // --- amc_vis.FDb.finput_curs.Next
 // proceed to next item
-inline void amc_vis::_db_finput_curs_Next(_db_finput_curs &curs) {
+inline void amc_vis::_db_finput_curs_Next(_db_finput_curs &curs) throw() {
     curs.index++;
 }
 
 // --- amc_vis.FDb.finput_curs.Access
 // item access
-inline amc_vis::FFinput& amc_vis::_db_finput_curs_Access(_db_finput_curs &curs) {
+inline amc_vis::FFinput& amc_vis::_db_finput_curs_Access(_db_finput_curs &curs) throw() {
     return finput_qFind(u64(curs.index));
 }
 
 // --- amc_vis.FField.c_finput.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool amc_vis::c_finput_InsertMaybe(amc_vis::FField& field, amc_vis::FFinput& row) {
+inline bool amc_vis::c_finput_InsertMaybe(amc_vis::FField& field, amc_vis::FFinput& row) throw() {
     amc_vis::FFinput* ptr = field.c_finput;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
@@ -1063,7 +1063,7 @@ inline bool amc_vis::c_finput_InsertMaybe(amc_vis::FField& field, amc_vis::FFinp
 
 // --- amc_vis.FField.c_finput.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void amc_vis::c_finput_Remove(amc_vis::FField& field, amc_vis::FFinput& row) {
+inline void amc_vis::c_finput_Remove(amc_vis::FField& field, amc_vis::FFinput& row) throw() {
     amc_vis::FFinput *ptr = field.c_finput;
     if (LIKELY(ptr == &row)) {
         field.c_finput = NULL;
@@ -1071,12 +1071,12 @@ inline void amc_vis::c_finput_Remove(amc_vis::FField& field, amc_vis::FFinput& r
 }
 
 // --- amc_vis.FField..Ctor
-inline  amc_vis::FField::FField() {
+inline  amc_vis::FField::FField() throw() {
     amc_vis::FField_Init(*this);
 }
 
 // --- amc_vis.FField..Dtor
-inline  amc_vis::FField::~FField() {
+inline  amc_vis::FField::~FField() throw() {
     amc_vis::FField_Uninit(*this);
 }
 
@@ -1089,17 +1089,17 @@ inline void amc_vis::FFinput_Init(amc_vis::FFinput& finput) {
 }
 
 // --- amc_vis.FFinput..Ctor
-inline  amc_vis::FFinput::FFinput() {
+inline  amc_vis::FFinput::FFinput() throw() {
     amc_vis::FFinput_Init(*this);
 }
 
 // --- amc_vis.FFinput..Dtor
-inline  amc_vis::FFinput::~FFinput() {
+inline  amc_vis::FFinput::~FFinput() throw() {
     amc_vis::FFinput_Uninit(*this);
 }
 
 // --- amc_vis.Nodekey..Hash
-inline u32 amc_vis::Nodekey_Hash(u32 prev, amc_vis::Nodekey rhs) {
+inline u32 amc_vis::Nodekey_Hash(u32 prev, amc_vis::Nodekey rhs) throw() {
     prev = u32_Hash(prev, rhs.n_ct_in);
     prev = i32_Hash(prev, rhs.idx);
     prev = i32_Hash(prev, rhs.prev_xpos);
@@ -1107,42 +1107,42 @@ inline u32 amc_vis::Nodekey_Hash(u32 prev, amc_vis::Nodekey rhs) {
 }
 
 // --- amc_vis.Nodekey..EqOp
-inline bool amc_vis::Nodekey::operator ==(const amc_vis::Nodekey &rhs) const {
+inline bool amc_vis::Nodekey::operator ==(const amc_vis::Nodekey &rhs) const throw() {
     return amc_vis::Nodekey_Eq(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
 }
 
 // --- amc_vis.Nodekey..NeOp
-inline bool amc_vis::Nodekey::operator !=(const amc_vis::Nodekey &rhs) const {
+inline bool amc_vis::Nodekey::operator !=(const amc_vis::Nodekey &rhs) const throw() {
     return !amc_vis::Nodekey_Eq(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
 }
 
 // --- amc_vis.Nodekey..LtOp
-inline bool amc_vis::Nodekey::operator <(const amc_vis::Nodekey &rhs) const {
+inline bool amc_vis::Nodekey::operator <(const amc_vis::Nodekey &rhs) const throw() {
     return amc_vis::Nodekey_Lt(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
 }
 
 // --- amc_vis.Nodekey..GtOp
-inline bool amc_vis::Nodekey::operator >(const amc_vis::Nodekey &rhs) const {
+inline bool amc_vis::Nodekey::operator >(const amc_vis::Nodekey &rhs) const throw() {
     return amc_vis::Nodekey_Lt(const_cast<amc_vis::Nodekey&>(rhs),const_cast<amc_vis::Nodekey&>(*this));
 }
 
 // --- amc_vis.Nodekey..LeOp
-inline bool amc_vis::Nodekey::operator <=(const amc_vis::Nodekey &rhs) const {
+inline bool amc_vis::Nodekey::operator <=(const amc_vis::Nodekey &rhs) const throw() {
     return !amc_vis::Nodekey_Lt(const_cast<amc_vis::Nodekey&>(rhs),const_cast<amc_vis::Nodekey&>(*this));
 }
 
 // --- amc_vis.Nodekey..GeOp
-inline bool amc_vis::Nodekey::operator >=(const amc_vis::Nodekey &rhs) const {
+inline bool amc_vis::Nodekey::operator >=(const amc_vis::Nodekey &rhs) const throw() {
     return !amc_vis::Nodekey_Lt(const_cast<amc_vis::Nodekey&>(*this),const_cast<amc_vis::Nodekey&>(rhs));
 }
 
 // --- amc_vis.Nodekey..Lt
-inline bool amc_vis::Nodekey_Lt(amc_vis::Nodekey lhs, amc_vis::Nodekey rhs) {
+inline bool amc_vis::Nodekey_Lt(amc_vis::Nodekey lhs, amc_vis::Nodekey rhs) throw() {
     return Nodekey_Cmp(lhs,rhs) < 0;
 }
 
 // --- amc_vis.Nodekey..Cmp
-inline i32 amc_vis::Nodekey_Cmp(amc_vis::Nodekey lhs, amc_vis::Nodekey rhs) {
+inline i32 amc_vis::Nodekey_Cmp(amc_vis::Nodekey lhs, amc_vis::Nodekey rhs) throw() {
     i32 retval = 0;
     retval = u32_Cmp(lhs.n_ct_in, rhs.n_ct_in);
     if (retval != 0) {
@@ -1165,7 +1165,7 @@ inline void amc_vis::Nodekey_Init(amc_vis::Nodekey& parent) {
 }
 
 // --- amc_vis.Nodekey..Eq
-inline bool amc_vis::Nodekey_Eq(amc_vis::Nodekey lhs, amc_vis::Nodekey rhs) {
+inline bool amc_vis::Nodekey_Eq(amc_vis::Nodekey lhs, amc_vis::Nodekey rhs) throw() {
     bool retval = true;
     retval = u32_Eq(lhs.n_ct_in, rhs.n_ct_in);
     if (!retval) {
@@ -1181,7 +1181,7 @@ inline bool amc_vis::Nodekey_Eq(amc_vis::Nodekey lhs, amc_vis::Nodekey rhs) {
 
 // --- amc_vis.Nodekey..Update
 // Set value. Return true if new value is different from old value.
-inline bool amc_vis::Nodekey_Update(amc_vis::Nodekey &lhs, amc_vis::Nodekey rhs) {
+inline bool amc_vis::Nodekey_Update(amc_vis::Nodekey &lhs, amc_vis::Nodekey rhs) throw() {
     bool ret = !Nodekey_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -1190,12 +1190,12 @@ inline bool amc_vis::Nodekey_Update(amc_vis::Nodekey &lhs, amc_vis::Nodekey rhs)
 }
 
 // --- amc_vis.Nodekey..Ctor
-inline  amc_vis::Nodekey::Nodekey() {
+inline  amc_vis::Nodekey::Nodekey() throw() {
     amc_vis::Nodekey_Init(*this);
 }
 
 // --- amc_vis.Nodekey..FieldwiseCtor
-inline  amc_vis::Nodekey::Nodekey(u32 in_n_ct_in, i32 in_idx, i32 in_prev_xpos)
+inline  amc_vis::Nodekey::Nodekey(u32 in_n_ct_in, i32 in_idx, i32 in_prev_xpos) throw()
     : n_ct_in(in_n_ct_in)
     , idx(in_idx)
     , prev_xpos(in_prev_xpos)
@@ -1204,13 +1204,13 @@ inline  amc_vis::Nodekey::Nodekey(u32 in_n_ct_in, i32 in_idx, i32 in_prev_xpos)
 
 // --- amc_vis.FNode.nodekey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool amc_vis::nodekey_Lt(amc_vis::FNode& node, amc_vis::FNode &rhs) {
+inline bool amc_vis::nodekey_Lt(amc_vis::FNode& node, amc_vis::FNode &rhs) throw() {
     return amc_vis::Nodekey_Lt(node.nodekey,rhs.nodekey);
 }
 
 // --- amc_vis.FNode.nodekey.Cmp
 // Compare two fields.
-inline i32 amc_vis::nodekey_Cmp(amc_vis::FNode& node, amc_vis::FNode &rhs) {
+inline i32 amc_vis::nodekey_Cmp(amc_vis::FNode& node, amc_vis::FNode &rhs) throw() {
     i32 retval = 0;
     retval = amc_vis::Nodekey_Cmp(node.nodekey, rhs.nodekey);
     return retval;
@@ -1218,13 +1218,13 @@ inline i32 amc_vis::nodekey_Cmp(amc_vis::FNode& node, amc_vis::FNode &rhs) {
 
 // --- amc_vis.FNode.zd_nodedep_out.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::zd_nodedep_out_EmptyQ(amc_vis::FNode& node) {
+inline bool amc_vis::zd_nodedep_out_EmptyQ(amc_vis::FNode& node) throw() {
     return node.zd_nodedep_out_head == NULL;
 }
 
 // --- amc_vis.FNode.zd_nodedep_out.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc_vis::FNodedep* amc_vis::zd_nodedep_out_First(amc_vis::FNode& node) {
+inline amc_vis::FNodedep* amc_vis::zd_nodedep_out_First(amc_vis::FNode& node) throw() {
     amc_vis::FNodedep *row = NULL;
     row = node.zd_nodedep_out_head;
     return row;
@@ -1232,7 +1232,7 @@ inline amc_vis::FNodedep* amc_vis::zd_nodedep_out_First(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_nodedep_out.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool amc_vis::zd_nodedep_out_InLlistQ(amc_vis::FNodedep& row) {
+inline bool amc_vis::zd_nodedep_out_InLlistQ(amc_vis::FNodedep& row) throw() {
     bool result = false;
     result = !(row.zd_nodedep_out_next == (amc_vis::FNodedep*)-1);
     return result;
@@ -1240,7 +1240,7 @@ inline bool amc_vis::zd_nodedep_out_InLlistQ(amc_vis::FNodedep& row) {
 
 // --- amc_vis.FNode.zd_nodedep_out.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc_vis::FNodedep* amc_vis::zd_nodedep_out_Last(amc_vis::FNode& node) {
+inline amc_vis::FNodedep* amc_vis::zd_nodedep_out_Last(amc_vis::FNode& node) throw() {
     amc_vis::FNodedep *row = NULL;
     row = node.zd_nodedep_out_tail;
     return row;
@@ -1248,19 +1248,19 @@ inline amc_vis::FNodedep* amc_vis::zd_nodedep_out_Last(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_nodedep_out.Next
 // Return pointer to next element in the list
-inline amc_vis::FNodedep* amc_vis::zd_nodedep_out_Next(amc_vis::FNodedep &row) {
+inline amc_vis::FNodedep* amc_vis::zd_nodedep_out_Next(amc_vis::FNodedep &row) throw() {
     return row.zd_nodedep_out_next;
 }
 
 // --- amc_vis.FNode.zd_nodedep_out.Prev
 // Return pointer to previous element in the list
-inline amc_vis::FNodedep* amc_vis::zd_nodedep_out_Prev(amc_vis::FNodedep &row) {
+inline amc_vis::FNodedep* amc_vis::zd_nodedep_out_Prev(amc_vis::FNodedep &row) throw() {
     return row.zd_nodedep_out_prev;
 }
 
 // --- amc_vis.FNode.zd_nodedep_out.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc_vis::FNodedep& amc_vis::zd_nodedep_out_qLast(amc_vis::FNode& node) {
+inline amc_vis::FNodedep& amc_vis::zd_nodedep_out_qLast(amc_vis::FNode& node) throw() {
     amc_vis::FNodedep *row = NULL;
     row = node.zd_nodedep_out_tail;
     return *row;
@@ -1268,13 +1268,13 @@ inline amc_vis::FNodedep& amc_vis::zd_nodedep_out_qLast(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_nodedep_in.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::zd_nodedep_in_EmptyQ(amc_vis::FNode& node) {
+inline bool amc_vis::zd_nodedep_in_EmptyQ(amc_vis::FNode& node) throw() {
     return node.zd_nodedep_in_head == NULL;
 }
 
 // --- amc_vis.FNode.zd_nodedep_in.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc_vis::FNodedep* amc_vis::zd_nodedep_in_First(amc_vis::FNode& node) {
+inline amc_vis::FNodedep* amc_vis::zd_nodedep_in_First(amc_vis::FNode& node) throw() {
     amc_vis::FNodedep *row = NULL;
     row = node.zd_nodedep_in_head;
     return row;
@@ -1282,7 +1282,7 @@ inline amc_vis::FNodedep* amc_vis::zd_nodedep_in_First(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_nodedep_in.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool amc_vis::zd_nodedep_in_InLlistQ(amc_vis::FNodedep& row) {
+inline bool amc_vis::zd_nodedep_in_InLlistQ(amc_vis::FNodedep& row) throw() {
     bool result = false;
     result = !(row.zd_nodedep_in_next == (amc_vis::FNodedep*)-1);
     return result;
@@ -1290,7 +1290,7 @@ inline bool amc_vis::zd_nodedep_in_InLlistQ(amc_vis::FNodedep& row) {
 
 // --- amc_vis.FNode.zd_nodedep_in.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc_vis::FNodedep* amc_vis::zd_nodedep_in_Last(amc_vis::FNode& node) {
+inline amc_vis::FNodedep* amc_vis::zd_nodedep_in_Last(amc_vis::FNode& node) throw() {
     amc_vis::FNodedep *row = NULL;
     row = node.zd_nodedep_in_tail;
     return row;
@@ -1298,25 +1298,25 @@ inline amc_vis::FNodedep* amc_vis::zd_nodedep_in_Last(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_nodedep_in.N
 // Return number of items in the linked list
-inline i32 amc_vis::zd_nodedep_in_N(const amc_vis::FNode& node) {
+inline i32 amc_vis::zd_nodedep_in_N(const amc_vis::FNode& node) throw() {
     return node.zd_nodedep_in_n;
 }
 
 // --- amc_vis.FNode.zd_nodedep_in.Next
 // Return pointer to next element in the list
-inline amc_vis::FNodedep* amc_vis::zd_nodedep_in_Next(amc_vis::FNodedep &row) {
+inline amc_vis::FNodedep* amc_vis::zd_nodedep_in_Next(amc_vis::FNodedep &row) throw() {
     return row.zd_nodedep_in_next;
 }
 
 // --- amc_vis.FNode.zd_nodedep_in.Prev
 // Return pointer to previous element in the list
-inline amc_vis::FNodedep* amc_vis::zd_nodedep_in_Prev(amc_vis::FNodedep &row) {
+inline amc_vis::FNodedep* amc_vis::zd_nodedep_in_Prev(amc_vis::FNodedep &row) throw() {
     return row.zd_nodedep_in_prev;
 }
 
 // --- amc_vis.FNode.zd_nodedep_in.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc_vis::FNodedep& amc_vis::zd_nodedep_in_qLast(amc_vis::FNode& node) {
+inline amc_vis::FNodedep& amc_vis::zd_nodedep_in_qLast(amc_vis::FNode& node) throw() {
     amc_vis::FNodedep *row = NULL;
     row = node.zd_nodedep_in_tail;
     return *row;
@@ -1324,13 +1324,13 @@ inline amc_vis::FNodedep& amc_vis::zd_nodedep_in_qLast(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_link_out.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::zd_link_out_EmptyQ(amc_vis::FNode& node) {
+inline bool amc_vis::zd_link_out_EmptyQ(amc_vis::FNode& node) throw() {
     return node.zd_link_out_head == NULL;
 }
 
 // --- amc_vis.FNode.zd_link_out.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc_vis::Link* amc_vis::zd_link_out_First(amc_vis::FNode& node) {
+inline amc_vis::Link* amc_vis::zd_link_out_First(amc_vis::FNode& node) throw() {
     amc_vis::Link *row = NULL;
     row = node.zd_link_out_head;
     return row;
@@ -1338,7 +1338,7 @@ inline amc_vis::Link* amc_vis::zd_link_out_First(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_link_out.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool amc_vis::zd_link_out_InLlistQ(amc_vis::Link& row) {
+inline bool amc_vis::zd_link_out_InLlistQ(amc_vis::Link& row) throw() {
     bool result = false;
     result = !(row.zd_link_out_next == (amc_vis::Link*)-1);
     return result;
@@ -1346,7 +1346,7 @@ inline bool amc_vis::zd_link_out_InLlistQ(amc_vis::Link& row) {
 
 // --- amc_vis.FNode.zd_link_out.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc_vis::Link* amc_vis::zd_link_out_Last(amc_vis::FNode& node) {
+inline amc_vis::Link* amc_vis::zd_link_out_Last(amc_vis::FNode& node) throw() {
     amc_vis::Link *row = NULL;
     row = node.zd_link_out_tail;
     return row;
@@ -1354,25 +1354,25 @@ inline amc_vis::Link* amc_vis::zd_link_out_Last(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_link_out.N
 // Return number of items in the linked list
-inline i32 amc_vis::zd_link_out_N(const amc_vis::FNode& node) {
+inline i32 amc_vis::zd_link_out_N(const amc_vis::FNode& node) throw() {
     return node.zd_link_out_n;
 }
 
 // --- amc_vis.FNode.zd_link_out.Next
 // Return pointer to next element in the list
-inline amc_vis::Link* amc_vis::zd_link_out_Next(amc_vis::Link &row) {
+inline amc_vis::Link* amc_vis::zd_link_out_Next(amc_vis::Link &row) throw() {
     return row.zd_link_out_next;
 }
 
 // --- amc_vis.FNode.zd_link_out.Prev
 // Return pointer to previous element in the list
-inline amc_vis::Link* amc_vis::zd_link_out_Prev(amc_vis::Link &row) {
+inline amc_vis::Link* amc_vis::zd_link_out_Prev(amc_vis::Link &row) throw() {
     return row.zd_link_out_prev;
 }
 
 // --- amc_vis.FNode.zd_link_out.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc_vis::Link& amc_vis::zd_link_out_qLast(amc_vis::FNode& node) {
+inline amc_vis::Link& amc_vis::zd_link_out_qLast(amc_vis::FNode& node) throw() {
     amc_vis::Link *row = NULL;
     row = node.zd_link_out_tail;
     return *row;
@@ -1380,13 +1380,13 @@ inline amc_vis::Link& amc_vis::zd_link_out_qLast(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_link_in.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::zd_link_in_EmptyQ(amc_vis::FNode& node) {
+inline bool amc_vis::zd_link_in_EmptyQ(amc_vis::FNode& node) throw() {
     return node.zd_link_in_head == NULL;
 }
 
 // --- amc_vis.FNode.zd_link_in.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc_vis::Link* amc_vis::zd_link_in_First(amc_vis::FNode& node) {
+inline amc_vis::Link* amc_vis::zd_link_in_First(amc_vis::FNode& node) throw() {
     amc_vis::Link *row = NULL;
     row = node.zd_link_in_head;
     return row;
@@ -1394,7 +1394,7 @@ inline amc_vis::Link* amc_vis::zd_link_in_First(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_link_in.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool amc_vis::zd_link_in_InLlistQ(amc_vis::Link& row) {
+inline bool amc_vis::zd_link_in_InLlistQ(amc_vis::Link& row) throw() {
     bool result = false;
     result = !(row.zd_link_in_next == (amc_vis::Link*)-1);
     return result;
@@ -1402,7 +1402,7 @@ inline bool amc_vis::zd_link_in_InLlistQ(amc_vis::Link& row) {
 
 // --- amc_vis.FNode.zd_link_in.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc_vis::Link* amc_vis::zd_link_in_Last(amc_vis::FNode& node) {
+inline amc_vis::Link* amc_vis::zd_link_in_Last(amc_vis::FNode& node) throw() {
     amc_vis::Link *row = NULL;
     row = node.zd_link_in_tail;
     return row;
@@ -1410,25 +1410,25 @@ inline amc_vis::Link* amc_vis::zd_link_in_Last(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_link_in.N
 // Return number of items in the linked list
-inline i32 amc_vis::zd_link_in_N(const amc_vis::FNode& node) {
+inline i32 amc_vis::zd_link_in_N(const amc_vis::FNode& node) throw() {
     return node.zd_link_in_n;
 }
 
 // --- amc_vis.FNode.zd_link_in.Next
 // Return pointer to next element in the list
-inline amc_vis::Link* amc_vis::zd_link_in_Next(amc_vis::Link &row) {
+inline amc_vis::Link* amc_vis::zd_link_in_Next(amc_vis::Link &row) throw() {
     return row.zd_link_in_next;
 }
 
 // --- amc_vis.FNode.zd_link_in.Prev
 // Return pointer to previous element in the list
-inline amc_vis::Link* amc_vis::zd_link_in_Prev(amc_vis::Link &row) {
+inline amc_vis::Link* amc_vis::zd_link_in_Prev(amc_vis::Link &row) throw() {
     return row.zd_link_in_prev;
 }
 
 // --- amc_vis.FNode.zd_link_in.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc_vis::Link& amc_vis::zd_link_in_qLast(amc_vis::FNode& node) {
+inline amc_vis::Link& amc_vis::zd_link_in_qLast(amc_vis::FNode& node) throw() {
     amc_vis::Link *row = NULL;
     row = node.zd_link_in_tail;
     return *row;
@@ -1436,111 +1436,111 @@ inline amc_vis::Link& amc_vis::zd_link_in_qLast(amc_vis::FNode& node) {
 
 // --- amc_vis.FNode.zd_nodedep_out_curs.Reset
 // cursor points to valid item
-inline void amc_vis::node_zd_nodedep_out_curs_Reset(node_zd_nodedep_out_curs &curs, amc_vis::FNode &parent) {
+inline void amc_vis::node_zd_nodedep_out_curs_Reset(node_zd_nodedep_out_curs &curs, amc_vis::FNode &parent) throw() {
     curs.row = parent.zd_nodedep_out_head;
 }
 
 // --- amc_vis.FNode.zd_nodedep_out_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::node_zd_nodedep_out_curs_ValidQ(node_zd_nodedep_out_curs &curs) {
+inline bool amc_vis::node_zd_nodedep_out_curs_ValidQ(node_zd_nodedep_out_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- amc_vis.FNode.zd_nodedep_out_curs.Next
 // proceed to next item
-inline void amc_vis::node_zd_nodedep_out_curs_Next(node_zd_nodedep_out_curs &curs) {
+inline void amc_vis::node_zd_nodedep_out_curs_Next(node_zd_nodedep_out_curs &curs) throw() {
     amc_vis::FNodedep *next = (*curs.row).zd_nodedep_out_next;
     curs.row = next;
 }
 
 // --- amc_vis.FNode.zd_nodedep_out_curs.Access
 // item access
-inline amc_vis::FNodedep& amc_vis::node_zd_nodedep_out_curs_Access(node_zd_nodedep_out_curs &curs) {
+inline amc_vis::FNodedep& amc_vis::node_zd_nodedep_out_curs_Access(node_zd_nodedep_out_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- amc_vis.FNode.zd_nodedep_in_curs.Reset
 // cursor points to valid item
-inline void amc_vis::node_zd_nodedep_in_curs_Reset(node_zd_nodedep_in_curs &curs, amc_vis::FNode &parent) {
+inline void amc_vis::node_zd_nodedep_in_curs_Reset(node_zd_nodedep_in_curs &curs, amc_vis::FNode &parent) throw() {
     curs.row = parent.zd_nodedep_in_head;
 }
 
 // --- amc_vis.FNode.zd_nodedep_in_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::node_zd_nodedep_in_curs_ValidQ(node_zd_nodedep_in_curs &curs) {
+inline bool amc_vis::node_zd_nodedep_in_curs_ValidQ(node_zd_nodedep_in_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- amc_vis.FNode.zd_nodedep_in_curs.Next
 // proceed to next item
-inline void amc_vis::node_zd_nodedep_in_curs_Next(node_zd_nodedep_in_curs &curs) {
+inline void amc_vis::node_zd_nodedep_in_curs_Next(node_zd_nodedep_in_curs &curs) throw() {
     amc_vis::FNodedep *next = (*curs.row).zd_nodedep_in_next;
     curs.row = next;
 }
 
 // --- amc_vis.FNode.zd_nodedep_in_curs.Access
 // item access
-inline amc_vis::FNodedep& amc_vis::node_zd_nodedep_in_curs_Access(node_zd_nodedep_in_curs &curs) {
+inline amc_vis::FNodedep& amc_vis::node_zd_nodedep_in_curs_Access(node_zd_nodedep_in_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- amc_vis.FNode.zd_link_out_curs.Reset
 // cursor points to valid item
-inline void amc_vis::node_zd_link_out_curs_Reset(node_zd_link_out_curs &curs, amc_vis::FNode &parent) {
+inline void amc_vis::node_zd_link_out_curs_Reset(node_zd_link_out_curs &curs, amc_vis::FNode &parent) throw() {
     curs.row = parent.zd_link_out_head;
 }
 
 // --- amc_vis.FNode.zd_link_out_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::node_zd_link_out_curs_ValidQ(node_zd_link_out_curs &curs) {
+inline bool amc_vis::node_zd_link_out_curs_ValidQ(node_zd_link_out_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- amc_vis.FNode.zd_link_out_curs.Next
 // proceed to next item
-inline void amc_vis::node_zd_link_out_curs_Next(node_zd_link_out_curs &curs) {
+inline void amc_vis::node_zd_link_out_curs_Next(node_zd_link_out_curs &curs) throw() {
     amc_vis::Link *next = (*curs.row).zd_link_out_next;
     curs.row = next;
 }
 
 // --- amc_vis.FNode.zd_link_out_curs.Access
 // item access
-inline amc_vis::Link& amc_vis::node_zd_link_out_curs_Access(node_zd_link_out_curs &curs) {
+inline amc_vis::Link& amc_vis::node_zd_link_out_curs_Access(node_zd_link_out_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- amc_vis.FNode.zd_link_in_curs.Reset
 // cursor points to valid item
-inline void amc_vis::node_zd_link_in_curs_Reset(node_zd_link_in_curs &curs, amc_vis::FNode &parent) {
+inline void amc_vis::node_zd_link_in_curs_Reset(node_zd_link_in_curs &curs, amc_vis::FNode &parent) throw() {
     curs.row = parent.zd_link_in_head;
 }
 
 // --- amc_vis.FNode.zd_link_in_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::node_zd_link_in_curs_ValidQ(node_zd_link_in_curs &curs) {
+inline bool amc_vis::node_zd_link_in_curs_ValidQ(node_zd_link_in_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- amc_vis.FNode.zd_link_in_curs.Next
 // proceed to next item
-inline void amc_vis::node_zd_link_in_curs_Next(node_zd_link_in_curs &curs) {
+inline void amc_vis::node_zd_link_in_curs_Next(node_zd_link_in_curs &curs) throw() {
     amc_vis::Link *next = (*curs.row).zd_link_in_next;
     curs.row = next;
 }
 
 // --- amc_vis.FNode.zd_link_in_curs.Access
 // item access
-inline amc_vis::Link& amc_vis::node_zd_link_in_curs_Access(node_zd_link_in_curs &curs) {
+inline amc_vis::Link& amc_vis::node_zd_link_in_curs_Access(node_zd_link_in_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- amc_vis.FNode..Ctor
-inline  amc_vis::FNode::FNode() {
+inline  amc_vis::FNode::FNode() throw() {
     amc_vis::FNode_Init(*this);
 }
 
 // --- amc_vis.FNode..Dtor
-inline  amc_vis::FNode::~FNode() {
+inline  amc_vis::FNode::~FNode() throw() {
     amc_vis::FNode_Uninit(*this);
 }
 
@@ -1560,17 +1560,17 @@ inline void amc_vis::FNodedep_Init(amc_vis::FNodedep& nodedep) {
 }
 
 // --- amc_vis.FNodedep..Ctor
-inline  amc_vis::FNodedep::FNodedep() {
+inline  amc_vis::FNodedep::FNodedep() throw() {
     amc_vis::FNodedep_Init(*this);
 }
 
 // --- amc_vis.FNodedep..Dtor
-inline  amc_vis::FNodedep::~FNodedep() {
+inline  amc_vis::FNodedep::~FNodedep() throw() {
     amc_vis::FNodedep_Uninit(*this);
 }
 
 // --- amc_vis.FNodedep..FieldwiseCtor
-inline  amc_vis::FNodedep::FNodedep(i32 in_row, i32 in_rowid, bool in_up, bool in_inst, amc_vis::FNode* in_p_node1, amc_vis::FNode* in_p_node2, const algo::strptr& in_name, const algo::strptr& in_reftype)
+inline  amc_vis::FNodedep::FNodedep(i32 in_row, i32 in_rowid, bool in_up, bool in_inst, amc_vis::FNode* in_p_node1, amc_vis::FNode* in_p_node2, const algo::strptr& in_name, const algo::strptr& in_reftype) throw()
     : row(in_row)
     , rowid(in_rowid)
     , up(in_up)
@@ -1583,29 +1583,29 @@ inline  amc_vis::FNodedep::FNodedep(i32 in_row, i32 in_rowid, bool in_up, bool i
 }
 
 // --- amc_vis.FReftype..Ctor
-inline  amc_vis::FReftype::FReftype() {
+inline  amc_vis::FReftype::FReftype() throw() {
     amc_vis::FReftype_Init(*this);
 }
 
 // --- amc_vis.FReftype..Dtor
-inline  amc_vis::FReftype::~FReftype() {
+inline  amc_vis::FReftype::~FReftype() throw() {
     amc_vis::FReftype_Uninit(*this);
 }
 
 // --- amc_vis.FieldId.value.GetEnum
 // Get value of field as enum type
-inline amc_vis_FieldIdEnum amc_vis::value_GetEnum(const amc_vis::FieldId& parent) {
+inline amc_vis_FieldIdEnum amc_vis::value_GetEnum(const amc_vis::FieldId& parent) throw() {
     return amc_vis_FieldIdEnum(parent.value);
 }
 
 // --- amc_vis.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void amc_vis::value_SetEnum(amc_vis::FieldId& parent, amc_vis_FieldIdEnum rhs) {
+inline void amc_vis::value_SetEnum(amc_vis::FieldId& parent, amc_vis_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- amc_vis.FieldId.value.Cast
-inline  amc_vis::FieldId::operator amc_vis_FieldIdEnum() const {
+inline  amc_vis::FieldId::operator amc_vis_FieldIdEnum() const throw() {
     return amc_vis_FieldIdEnum((*this).value);
 }
 
@@ -1616,23 +1616,23 @@ inline void amc_vis::FieldId_Init(amc_vis::FieldId& parent) {
 }
 
 // --- amc_vis.FieldId..Ctor
-inline  amc_vis::FieldId::FieldId() {
+inline  amc_vis::FieldId::FieldId() throw() {
     amc_vis::FieldId_Init(*this);
 }
 
 // --- amc_vis.FieldId..FieldwiseCtor
-inline  amc_vis::FieldId::FieldId(i32 in_value)
+inline  amc_vis::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- amc_vis.FieldId..EnumCtor
-inline  amc_vis::FieldId::FieldId(amc_vis_FieldIdEnum arg) {
+inline  amc_vis::FieldId::FieldId(amc_vis_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- amc_vis.Linkkey..Hash
-inline u32 amc_vis::Linkkey_Hash(u32 prev, amc_vis::Linkkey rhs) {
+inline u32 amc_vis::Linkkey_Hash(u32 prev, amc_vis::Linkkey rhs) throw() {
     prev = u32_Hash(prev, rhs.n_link_in);
     prev = i32_Hash(prev, rhs.samecol);
     prev = i32_Hash(prev, rhs.colweight);
@@ -1641,37 +1641,37 @@ inline u32 amc_vis::Linkkey_Hash(u32 prev, amc_vis::Linkkey rhs) {
 }
 
 // --- amc_vis.Linkkey..EqOp
-inline bool amc_vis::Linkkey::operator ==(const amc_vis::Linkkey &rhs) const {
+inline bool amc_vis::Linkkey::operator ==(const amc_vis::Linkkey &rhs) const throw() {
     return amc_vis::Linkkey_Eq(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
 }
 
 // --- amc_vis.Linkkey..NeOp
-inline bool amc_vis::Linkkey::operator !=(const amc_vis::Linkkey &rhs) const {
+inline bool amc_vis::Linkkey::operator !=(const amc_vis::Linkkey &rhs) const throw() {
     return !amc_vis::Linkkey_Eq(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
 }
 
 // --- amc_vis.Linkkey..LtOp
-inline bool amc_vis::Linkkey::operator <(const amc_vis::Linkkey &rhs) const {
+inline bool amc_vis::Linkkey::operator <(const amc_vis::Linkkey &rhs) const throw() {
     return amc_vis::Linkkey_Lt(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
 }
 
 // --- amc_vis.Linkkey..GtOp
-inline bool amc_vis::Linkkey::operator >(const amc_vis::Linkkey &rhs) const {
+inline bool amc_vis::Linkkey::operator >(const amc_vis::Linkkey &rhs) const throw() {
     return amc_vis::Linkkey_Lt(const_cast<amc_vis::Linkkey&>(rhs),const_cast<amc_vis::Linkkey&>(*this));
 }
 
 // --- amc_vis.Linkkey..LeOp
-inline bool amc_vis::Linkkey::operator <=(const amc_vis::Linkkey &rhs) const {
+inline bool amc_vis::Linkkey::operator <=(const amc_vis::Linkkey &rhs) const throw() {
     return !amc_vis::Linkkey_Lt(const_cast<amc_vis::Linkkey&>(rhs),const_cast<amc_vis::Linkkey&>(*this));
 }
 
 // --- amc_vis.Linkkey..GeOp
-inline bool amc_vis::Linkkey::operator >=(const amc_vis::Linkkey &rhs) const {
+inline bool amc_vis::Linkkey::operator >=(const amc_vis::Linkkey &rhs) const throw() {
     return !amc_vis::Linkkey_Lt(const_cast<amc_vis::Linkkey&>(*this),const_cast<amc_vis::Linkkey&>(rhs));
 }
 
 // --- amc_vis.Linkkey..Lt
-inline bool amc_vis::Linkkey_Lt(amc_vis::Linkkey lhs, amc_vis::Linkkey rhs) {
+inline bool amc_vis::Linkkey_Lt(amc_vis::Linkkey lhs, amc_vis::Linkkey rhs) throw() {
     return Linkkey_Cmp(lhs,rhs) < 0;
 }
 
@@ -1686,7 +1686,7 @@ inline void amc_vis::Linkkey_Init(amc_vis::Linkkey& parent) {
 
 // --- amc_vis.Linkkey..Update
 // Set value. Return true if new value is different from old value.
-inline bool amc_vis::Linkkey_Update(amc_vis::Linkkey &lhs, amc_vis::Linkkey rhs) {
+inline bool amc_vis::Linkkey_Update(amc_vis::Linkkey &lhs, amc_vis::Linkkey rhs) throw() {
     bool ret = !Linkkey_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -1695,12 +1695,12 @@ inline bool amc_vis::Linkkey_Update(amc_vis::Linkkey &lhs, amc_vis::Linkkey rhs)
 }
 
 // --- amc_vis.Linkkey..Ctor
-inline  amc_vis::Linkkey::Linkkey() {
+inline  amc_vis::Linkkey::Linkkey() throw() {
     amc_vis::Linkkey_Init(*this);
 }
 
 // --- amc_vis.Linkkey..FieldwiseCtor
-inline  amc_vis::Linkkey::Linkkey(u32 in_n_link_in, i32 in_samecol, i32 in_colweight, i32 in_topbot)
+inline  amc_vis::Linkkey::Linkkey(u32 in_n_link_in, i32 in_samecol, i32 in_colweight, i32 in_topbot) throw()
     : n_link_in(in_n_link_in)
     , samecol(in_samecol)
     , colweight(in_colweight)
@@ -1710,13 +1710,13 @@ inline  amc_vis::Linkkey::Linkkey(u32 in_n_link_in, i32 in_samecol, i32 in_colwe
 
 // --- amc_vis.Link.linkkey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool amc_vis::linkkey_Lt(amc_vis::Link& link, amc_vis::Link &rhs) {
+inline bool amc_vis::linkkey_Lt(amc_vis::Link& link, amc_vis::Link &rhs) throw() {
     return amc_vis::Linkkey_Lt(link.linkkey,rhs.linkkey);
 }
 
 // --- amc_vis.Link.linkkey.Cmp
 // Compare two fields.
-inline i32 amc_vis::linkkey_Cmp(amc_vis::Link& link, amc_vis::Link &rhs) {
+inline i32 amc_vis::linkkey_Cmp(amc_vis::Link& link, amc_vis::Link &rhs) throw() {
     i32 retval = 0;
     retval = amc_vis::Linkkey_Cmp(link.linkkey, rhs.linkkey);
     return retval;
@@ -1724,13 +1724,13 @@ inline i32 amc_vis::linkkey_Cmp(amc_vis::Link& link, amc_vis::Link &rhs) {
 
 // --- amc_vis.Link.zd_linkdep_out.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::zd_linkdep_out_EmptyQ(amc_vis::Link& link) {
+inline bool amc_vis::zd_linkdep_out_EmptyQ(amc_vis::Link& link) throw() {
     return link.zd_linkdep_out_head == NULL;
 }
 
 // --- amc_vis.Link.zd_linkdep_out.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc_vis::Linkdep* amc_vis::zd_linkdep_out_First(amc_vis::Link& link) {
+inline amc_vis::Linkdep* amc_vis::zd_linkdep_out_First(amc_vis::Link& link) throw() {
     amc_vis::Linkdep *row = NULL;
     row = link.zd_linkdep_out_head;
     return row;
@@ -1738,7 +1738,7 @@ inline amc_vis::Linkdep* amc_vis::zd_linkdep_out_First(amc_vis::Link& link) {
 
 // --- amc_vis.Link.zd_linkdep_out.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool amc_vis::zd_linkdep_out_InLlistQ(amc_vis::Linkdep& row) {
+inline bool amc_vis::zd_linkdep_out_InLlistQ(amc_vis::Linkdep& row) throw() {
     bool result = false;
     result = !(row.zd_linkdep_out_next == (amc_vis::Linkdep*)-1);
     return result;
@@ -1746,7 +1746,7 @@ inline bool amc_vis::zd_linkdep_out_InLlistQ(amc_vis::Linkdep& row) {
 
 // --- amc_vis.Link.zd_linkdep_out.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc_vis::Linkdep* amc_vis::zd_linkdep_out_Last(amc_vis::Link& link) {
+inline amc_vis::Linkdep* amc_vis::zd_linkdep_out_Last(amc_vis::Link& link) throw() {
     amc_vis::Linkdep *row = NULL;
     row = link.zd_linkdep_out_tail;
     return row;
@@ -1754,19 +1754,19 @@ inline amc_vis::Linkdep* amc_vis::zd_linkdep_out_Last(amc_vis::Link& link) {
 
 // --- amc_vis.Link.zd_linkdep_out.Next
 // Return pointer to next element in the list
-inline amc_vis::Linkdep* amc_vis::zd_linkdep_out_Next(amc_vis::Linkdep &row) {
+inline amc_vis::Linkdep* amc_vis::zd_linkdep_out_Next(amc_vis::Linkdep &row) throw() {
     return row.zd_linkdep_out_next;
 }
 
 // --- amc_vis.Link.zd_linkdep_out.Prev
 // Return pointer to previous element in the list
-inline amc_vis::Linkdep* amc_vis::zd_linkdep_out_Prev(amc_vis::Linkdep &row) {
+inline amc_vis::Linkdep* amc_vis::zd_linkdep_out_Prev(amc_vis::Linkdep &row) throw() {
     return row.zd_linkdep_out_prev;
 }
 
 // --- amc_vis.Link.zd_linkdep_out.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc_vis::Linkdep& amc_vis::zd_linkdep_out_qLast(amc_vis::Link& link) {
+inline amc_vis::Linkdep& amc_vis::zd_linkdep_out_qLast(amc_vis::Link& link) throw() {
     amc_vis::Linkdep *row = NULL;
     row = link.zd_linkdep_out_tail;
     return *row;
@@ -1774,13 +1774,13 @@ inline amc_vis::Linkdep& amc_vis::zd_linkdep_out_qLast(amc_vis::Link& link) {
 
 // --- amc_vis.Link.zd_linkdep_in.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::zd_linkdep_in_EmptyQ(amc_vis::Link& link) {
+inline bool amc_vis::zd_linkdep_in_EmptyQ(amc_vis::Link& link) throw() {
     return link.zd_linkdep_in_head == NULL;
 }
 
 // --- amc_vis.Link.zd_linkdep_in.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline amc_vis::Linkdep* amc_vis::zd_linkdep_in_First(amc_vis::Link& link) {
+inline amc_vis::Linkdep* amc_vis::zd_linkdep_in_First(amc_vis::Link& link) throw() {
     amc_vis::Linkdep *row = NULL;
     row = link.zd_linkdep_in_head;
     return row;
@@ -1788,7 +1788,7 @@ inline amc_vis::Linkdep* amc_vis::zd_linkdep_in_First(amc_vis::Link& link) {
 
 // --- amc_vis.Link.zd_linkdep_in.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool amc_vis::zd_linkdep_in_InLlistQ(amc_vis::Linkdep& row) {
+inline bool amc_vis::zd_linkdep_in_InLlistQ(amc_vis::Linkdep& row) throw() {
     bool result = false;
     result = !(row.zd_linkdep_in_next == (amc_vis::Linkdep*)-1);
     return result;
@@ -1796,7 +1796,7 @@ inline bool amc_vis::zd_linkdep_in_InLlistQ(amc_vis::Linkdep& row) {
 
 // --- amc_vis.Link.zd_linkdep_in.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline amc_vis::Linkdep* amc_vis::zd_linkdep_in_Last(amc_vis::Link& link) {
+inline amc_vis::Linkdep* amc_vis::zd_linkdep_in_Last(amc_vis::Link& link) throw() {
     amc_vis::Linkdep *row = NULL;
     row = link.zd_linkdep_in_tail;
     return row;
@@ -1804,19 +1804,19 @@ inline amc_vis::Linkdep* amc_vis::zd_linkdep_in_Last(amc_vis::Link& link) {
 
 // --- amc_vis.Link.zd_linkdep_in.Next
 // Return pointer to next element in the list
-inline amc_vis::Linkdep* amc_vis::zd_linkdep_in_Next(amc_vis::Linkdep &row) {
+inline amc_vis::Linkdep* amc_vis::zd_linkdep_in_Next(amc_vis::Linkdep &row) throw() {
     return row.zd_linkdep_in_next;
 }
 
 // --- amc_vis.Link.zd_linkdep_in.Prev
 // Return pointer to previous element in the list
-inline amc_vis::Linkdep* amc_vis::zd_linkdep_in_Prev(amc_vis::Linkdep &row) {
+inline amc_vis::Linkdep* amc_vis::zd_linkdep_in_Prev(amc_vis::Linkdep &row) throw() {
     return row.zd_linkdep_in_prev;
 }
 
 // --- amc_vis.Link.zd_linkdep_in.qLast
 // Return reference to last element in the index. No bounds checking.
-inline amc_vis::Linkdep& amc_vis::zd_linkdep_in_qLast(amc_vis::Link& link) {
+inline amc_vis::Linkdep& amc_vis::zd_linkdep_in_qLast(amc_vis::Link& link) throw() {
     amc_vis::Linkdep *row = NULL;
     row = link.zd_linkdep_in_tail;
     return *row;
@@ -1824,61 +1824,61 @@ inline amc_vis::Linkdep& amc_vis::zd_linkdep_in_qLast(amc_vis::Link& link) {
 
 // --- amc_vis.Link.zd_linkdep_out_curs.Reset
 // cursor points to valid item
-inline void amc_vis::link_zd_linkdep_out_curs_Reset(link_zd_linkdep_out_curs &curs, amc_vis::Link &parent) {
+inline void amc_vis::link_zd_linkdep_out_curs_Reset(link_zd_linkdep_out_curs &curs, amc_vis::Link &parent) throw() {
     curs.row = parent.zd_linkdep_out_head;
 }
 
 // --- amc_vis.Link.zd_linkdep_out_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::link_zd_linkdep_out_curs_ValidQ(link_zd_linkdep_out_curs &curs) {
+inline bool amc_vis::link_zd_linkdep_out_curs_ValidQ(link_zd_linkdep_out_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- amc_vis.Link.zd_linkdep_out_curs.Next
 // proceed to next item
-inline void amc_vis::link_zd_linkdep_out_curs_Next(link_zd_linkdep_out_curs &curs) {
+inline void amc_vis::link_zd_linkdep_out_curs_Next(link_zd_linkdep_out_curs &curs) throw() {
     amc_vis::Linkdep *next = (*curs.row).zd_linkdep_out_next;
     curs.row = next;
 }
 
 // --- amc_vis.Link.zd_linkdep_out_curs.Access
 // item access
-inline amc_vis::Linkdep& amc_vis::link_zd_linkdep_out_curs_Access(link_zd_linkdep_out_curs &curs) {
+inline amc_vis::Linkdep& amc_vis::link_zd_linkdep_out_curs_Access(link_zd_linkdep_out_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- amc_vis.Link.zd_linkdep_in_curs.Reset
 // cursor points to valid item
-inline void amc_vis::link_zd_linkdep_in_curs_Reset(link_zd_linkdep_in_curs &curs, amc_vis::Link &parent) {
+inline void amc_vis::link_zd_linkdep_in_curs_Reset(link_zd_linkdep_in_curs &curs, amc_vis::Link &parent) throw() {
     curs.row = parent.zd_linkdep_in_head;
 }
 
 // --- amc_vis.Link.zd_linkdep_in_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::link_zd_linkdep_in_curs_ValidQ(link_zd_linkdep_in_curs &curs) {
+inline bool amc_vis::link_zd_linkdep_in_curs_ValidQ(link_zd_linkdep_in_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- amc_vis.Link.zd_linkdep_in_curs.Next
 // proceed to next item
-inline void amc_vis::link_zd_linkdep_in_curs_Next(link_zd_linkdep_in_curs &curs) {
+inline void amc_vis::link_zd_linkdep_in_curs_Next(link_zd_linkdep_in_curs &curs) throw() {
     amc_vis::Linkdep *next = (*curs.row).zd_linkdep_in_next;
     curs.row = next;
 }
 
 // --- amc_vis.Link.zd_linkdep_in_curs.Access
 // item access
-inline amc_vis::Linkdep& amc_vis::link_zd_linkdep_in_curs_Access(link_zd_linkdep_in_curs &curs) {
+inline amc_vis::Linkdep& amc_vis::link_zd_linkdep_in_curs_Access(link_zd_linkdep_in_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- amc_vis.Link..Ctor
-inline  amc_vis::Link::Link() {
+inline  amc_vis::Link::Link() throw() {
     amc_vis::Link_Init(*this);
 }
 
 // --- amc_vis.Link..Dtor
-inline  amc_vis::Link::~Link() {
+inline  amc_vis::Link::~Link() throw() {
     amc_vis::Link_Uninit(*this);
 }
 
@@ -1898,17 +1898,17 @@ inline void amc_vis::Linkdep_Init(amc_vis::Linkdep& linkdep) {
 }
 
 // --- amc_vis.Linkdep..Ctor
-inline  amc_vis::Linkdep::Linkdep() {
+inline  amc_vis::Linkdep::Linkdep() throw() {
     amc_vis::Linkdep_Init(*this);
 }
 
 // --- amc_vis.Linkdep..Dtor
-inline  amc_vis::Linkdep::~Linkdep() {
+inline  amc_vis::Linkdep::~Linkdep() throw() {
     amc_vis::Linkdep_Uninit(*this);
 }
 
 // --- amc_vis.Linkdep..FieldwiseCtor
-inline  amc_vis::Linkdep::Linkdep(i32 in_row, i32 in_rowid, bool in_up, bool in_inst, amc_vis::Link* in_p_link_from, amc_vis::Link* in_p_link_to)
+inline  amc_vis::Linkdep::Linkdep(i32 in_row, i32 in_rowid, bool in_up, bool in_inst, amc_vis::Link* in_p_link_from, amc_vis::Link* in_p_link_to) throw()
     : row(in_row)
     , rowid(in_rowid)
     , up(in_up)
@@ -1920,13 +1920,13 @@ inline  amc_vis::Linkdep::Linkdep(i32 in_row, i32 in_rowid, bool in_up, bool in_
 
 // --- amc_vis.Outrow.text.EmptyQ
 // Return true if index is empty
-inline bool amc_vis::text_EmptyQ(amc_vis::Outrow& outrow) {
+inline bool amc_vis::text_EmptyQ(amc_vis::Outrow& outrow) throw() {
     return outrow.text_n == 0;
 }
 
 // --- amc_vis.Outrow.text.Find
 // Look up row by row id. Return NULL if out of range
-inline u8* amc_vis::text_Find(amc_vis::Outrow& outrow, u64 t) {
+inline u8* amc_vis::text_Find(amc_vis::Outrow& outrow, u64 t) throw() {
     u64 idx = t;
     u64 lim = outrow.text_n;
     if (idx >= lim) return NULL;
@@ -1935,37 +1935,37 @@ inline u8* amc_vis::text_Find(amc_vis::Outrow& outrow, u64 t) {
 
 // --- amc_vis.Outrow.text.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> amc_vis::text_Getary(const amc_vis::Outrow& outrow) {
+inline algo::aryptr<u8> amc_vis::text_Getary(const amc_vis::Outrow& outrow) throw() {
     return algo::aryptr<u8>(outrow.text_elems, outrow.text_n);
 }
 
 // --- amc_vis.Outrow.text.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline u8* amc_vis::text_Last(amc_vis::Outrow& outrow) {
+inline u8* amc_vis::text_Last(amc_vis::Outrow& outrow) throw() {
     return text_Find(outrow, u64(outrow.text_n-1));
 }
 
 // --- amc_vis.Outrow.text.Max
 // Return max. number of items in the array
-inline i32 amc_vis::text_Max(amc_vis::Outrow& outrow) {
+inline i32 amc_vis::text_Max(amc_vis::Outrow& outrow) throw() {
     (void)outrow;
     return outrow.text_max;
 }
 
 // --- amc_vis.Outrow.text.N
 // Return number of items in the array
-inline i32 amc_vis::text_N(const amc_vis::Outrow& outrow) {
+inline i32 amc_vis::text_N(const amc_vis::Outrow& outrow) throw() {
     return outrow.text_n;
 }
 
 // --- amc_vis.Outrow.text.RemoveAll
-inline void amc_vis::text_RemoveAll(amc_vis::Outrow& outrow) {
+inline void amc_vis::text_RemoveAll(amc_vis::Outrow& outrow) throw() {
     outrow.text_n = 0;
 }
 
 // --- amc_vis.Outrow.text.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void amc_vis::text_Reserve(amc_vis::Outrow& outrow, int n) {
+inline void amc_vis::text_Reserve(amc_vis::Outrow& outrow, int n) throw() {
     u32 new_n = outrow.text_n + n;
     if (UNLIKELY(new_n > outrow.text_max)) {
         text_AbsReserve(outrow, new_n);
@@ -1974,31 +1974,31 @@ inline void amc_vis::text_Reserve(amc_vis::Outrow& outrow, int n) {
 
 // --- amc_vis.Outrow.text.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline u8& amc_vis::text_qFind(amc_vis::Outrow& outrow, u64 t) {
+inline u8& amc_vis::text_qFind(amc_vis::Outrow& outrow, u64 t) throw() {
     return outrow.text_elems[t];
 }
 
 // --- amc_vis.Outrow.text.qLast
 // Return reference to last element of array. No bounds checking
-inline u8& amc_vis::text_qLast(amc_vis::Outrow& outrow) {
+inline u8& amc_vis::text_qLast(amc_vis::Outrow& outrow) throw() {
     return text_qFind(outrow, u64(outrow.text_n-1));
 }
 
 // --- amc_vis.Outrow.text.rowid_Get
 // Return row id of specified element
-inline u64 amc_vis::text_rowid_Get(amc_vis::Outrow& outrow, u8 &elem) {
+inline u64 amc_vis::text_rowid_Get(amc_vis::Outrow& outrow, u8 &elem) throw() {
     u64 id = &elem - outrow.text_elems;
     return u64(id);
 }
 
 // --- amc_vis.Outrow.text_curs.Next
 // proceed to next item
-inline void amc_vis::outrow_text_curs_Next(outrow_text_curs &curs) {
+inline void amc_vis::outrow_text_curs_Next(outrow_text_curs &curs) throw() {
     curs.index++;
 }
 
 // --- amc_vis.Outrow.text_curs.Reset
-inline void amc_vis::outrow_text_curs_Reset(outrow_text_curs &curs, amc_vis::Outrow &parent) {
+inline void amc_vis::outrow_text_curs_Reset(outrow_text_curs &curs, amc_vis::Outrow &parent) throw() {
     curs.elems = parent.text_elems;
     curs.n_elems = parent.text_n;
     curs.index = 0;
@@ -2006,13 +2006,13 @@ inline void amc_vis::outrow_text_curs_Reset(outrow_text_curs &curs, amc_vis::Out
 
 // --- amc_vis.Outrow.text_curs.ValidQ
 // cursor points to valid item
-inline bool amc_vis::outrow_text_curs_ValidQ(outrow_text_curs &curs) {
+inline bool amc_vis::outrow_text_curs_ValidQ(outrow_text_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- amc_vis.Outrow.text_curs.Access
 // item access
-inline u8& amc_vis::outrow_text_curs_Access(outrow_text_curs &curs) {
+inline u8& amc_vis::outrow_text_curs_Access(outrow_text_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -2026,29 +2026,29 @@ inline void amc_vis::Outrow_Init(amc_vis::Outrow& outrow) {
 }
 
 // --- amc_vis.Outrow..Ctor
-inline  amc_vis::Outrow::Outrow() {
+inline  amc_vis::Outrow::Outrow() throw() {
     amc_vis::Outrow_Init(*this);
 }
 
 // --- amc_vis.Outrow..Dtor
-inline  amc_vis::Outrow::~Outrow() {
+inline  amc_vis::Outrow::~Outrow() throw() {
     amc_vis::Outrow_Uninit(*this);
 }
 
 // --- amc_vis.TableId.value.GetEnum
 // Get value of field as enum type
-inline amc_vis_TableIdEnum amc_vis::value_GetEnum(const amc_vis::TableId& parent) {
+inline amc_vis_TableIdEnum amc_vis::value_GetEnum(const amc_vis::TableId& parent) throw() {
     return amc_vis_TableIdEnum(parent.value);
 }
 
 // --- amc_vis.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void amc_vis::value_SetEnum(amc_vis::TableId& parent, amc_vis_TableIdEnum rhs) {
+inline void amc_vis::value_SetEnum(amc_vis::TableId& parent, amc_vis_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- amc_vis.TableId.value.Cast
-inline  amc_vis::TableId::operator amc_vis_TableIdEnum() const {
+inline  amc_vis::TableId::operator amc_vis_TableIdEnum() const throw() {
     return amc_vis_TableIdEnum((*this).value);
 }
 
@@ -2059,18 +2059,18 @@ inline void amc_vis::TableId_Init(amc_vis::TableId& parent) {
 }
 
 // --- amc_vis.TableId..Ctor
-inline  amc_vis::TableId::TableId() {
+inline  amc_vis::TableId::TableId() throw() {
     amc_vis::TableId_Init(*this);
 }
 
 // --- amc_vis.TableId..FieldwiseCtor
-inline  amc_vis::TableId::TableId(i32 in_value)
+inline  amc_vis::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- amc_vis.TableId..EnumCtor
-inline  amc_vis::TableId::TableId(amc_vis_TableIdEnum arg) {
+inline  amc_vis::TableId::TableId(amc_vis_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

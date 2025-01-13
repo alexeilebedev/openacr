@@ -82,7 +82,7 @@ namespace atf_nrun { // gen:ns_print_proto
 // --- atf_nrun.trace..Print
 // print string representation of ROW to string STR
 // cfmt:atf_nrun.trace.String  printfmt:Tuple
-void atf_nrun::trace_Print(atf_nrun::trace& row, algo::cstring& str) {
+void atf_nrun::trace_Print(atf_nrun::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_nrun.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -93,7 +93,7 @@ void atf_nrun::trace_Print(atf_nrun::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     atf_nrun.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void atf_nrun::ReadArgv() {
+void atf_nrun::ReadArgv() throw() {
     command::atf_nrun &cmd = atf_nrun::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -290,7 +290,7 @@ bool atf_nrun::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_nrun.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_nrun::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool atf_nrun::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = atf_nrun::LoadTuplesFile(root, recursive);
@@ -313,7 +313,7 @@ bool atf_nrun::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool atf_nrun::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool atf_nrun::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -326,7 +326,7 @@ bool atf_nrun::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- atf_nrun.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool atf_nrun::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool atf_nrun::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -345,7 +345,7 @@ bool atf_nrun::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
 
 // --- atf_nrun.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_nrun::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool atf_nrun::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = atf_nrun::LoadTuplesFile(fname, recursive);
@@ -371,7 +371,7 @@ bool atf_nrun::_db_XrefMaybe() {
 // --- atf_nrun.FDb.fentry.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_nrun::FEntry& atf_nrun::fentry_Alloc() {
+atf_nrun::FEntry& atf_nrun::fentry_Alloc() throw() {
     atf_nrun::FEntry* row = fentry_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_nrun.out_of_mem  field:atf_nrun.FDb.fentry  comment:'Alloc failed'");
@@ -381,7 +381,7 @@ atf_nrun::FEntry& atf_nrun::fentry_Alloc() {
 
 // --- atf_nrun.FDb.fentry.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_nrun::FEntry* atf_nrun::fentry_AllocMaybe() {
+atf_nrun::FEntry* atf_nrun::fentry_AllocMaybe() throw() {
     atf_nrun::FEntry *row = (atf_nrun::FEntry*)fentry_AllocMem();
     if (row) {
         new (row) atf_nrun::FEntry; // call constructor
@@ -391,7 +391,7 @@ atf_nrun::FEntry* atf_nrun::fentry_AllocMaybe() {
 
 // --- atf_nrun.FDb.fentry.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_nrun::fentry_AllocMem() {
+void* atf_nrun::fentry_AllocMem() throw() {
     u64 new_nelems     = _db.fentry_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -417,7 +417,7 @@ void* atf_nrun::fentry_AllocMem() {
 
 // --- atf_nrun.FDb.fentry.RemoveAll
 // Remove all elements from Lary
-void atf_nrun::fentry_RemoveAll() {
+void atf_nrun::fentry_RemoveAll() throw() {
     for (u64 n = _db.fentry_n; n>0; ) {
         n--;
         fentry_qFind(u64(n)).~FEntry(); // destroy last element
@@ -427,7 +427,7 @@ void atf_nrun::fentry_RemoveAll() {
 
 // --- atf_nrun.FDb.fentry.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_nrun::fentry_RemoveLast() {
+void atf_nrun::fentry_RemoveLast() throw() {
     u64 n = _db.fentry_n;
     if (n > 0) {
         n -= 1;
@@ -447,7 +447,7 @@ bool atf_nrun::fentry_XrefMaybe(atf_nrun::FEntry &row) {
 
 // --- atf_nrun.FDb.ind_running.Find
 // Find row by key. Return NULL if not found.
-atf_nrun::FEntry* atf_nrun::ind_running_Find(i32 key) {
+atf_nrun::FEntry* atf_nrun::ind_running_Find(i32 key) throw() {
     u32 index = ::i32_Hash(0, key) & (_db.ind_running_buckets_n - 1);
     atf_nrun::FEntry* *e = &_db.ind_running_buckets_elems[index];
     atf_nrun::FEntry* ret=NULL;
@@ -470,7 +470,7 @@ atf_nrun::FEntry& atf_nrun::ind_running_FindX(i32 key) {
 
 // --- atf_nrun.FDb.ind_running.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_nrun::FEntry& atf_nrun::ind_running_GetOrCreate(i32 key) {
+atf_nrun::FEntry& atf_nrun::ind_running_GetOrCreate(i32 key) throw() {
     atf_nrun::FEntry* ret = ind_running_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &fentry_Alloc();
@@ -487,7 +487,7 @@ atf_nrun::FEntry& atf_nrun::ind_running_GetOrCreate(i32 key) {
 
 // --- atf_nrun.FDb.ind_running.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_nrun::ind_running_InsertMaybe(atf_nrun::FEntry& row) {
+bool atf_nrun::ind_running_InsertMaybe(atf_nrun::FEntry& row) throw() {
     ind_running_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_running_next == (atf_nrun::FEntry*)-1)) {// check if in hash already
@@ -515,7 +515,7 @@ bool atf_nrun::ind_running_InsertMaybe(atf_nrun::FEntry& row) {
 
 // --- atf_nrun.FDb.ind_running.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_nrun::ind_running_Remove(atf_nrun::FEntry& row) {
+void atf_nrun::ind_running_Remove(atf_nrun::FEntry& row) throw() {
     if (LIKELY(row.ind_running_next != (atf_nrun::FEntry*)-1)) {// check if in hash already
         u32 index = ::i32_Hash(0, row.pid) & (_db.ind_running_buckets_n - 1);
         atf_nrun::FEntry* *prev = &_db.ind_running_buckets_elems[index]; // addr of pointer to current element
@@ -533,7 +533,7 @@ void atf_nrun::ind_running_Remove(atf_nrun::FEntry& row) {
 
 // --- atf_nrun.FDb.ind_running.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_nrun::ind_running_Reserve(int n) {
+void atf_nrun::ind_running_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_running_buckets_n;
     u32 new_nelems   = _db.ind_running_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -569,13 +569,13 @@ void atf_nrun::ind_running_Reserve(int n) {
 
 // --- atf_nrun.FDb.ind_running.UpdateCycles
 // Update cycles count from previous clock capture
-inline static void atf_nrun::ind_running_UpdateCycles() {
+inline static void atf_nrun::ind_running_UpdateCycles() throw() {
     u64 cur_cycles                      = algo::get_cycles();
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- atf_nrun.FDb.ind_running.Call
-inline static void atf_nrun::ind_running_Call() {
+inline static void atf_nrun::ind_running_Call() throw() {
     if (!atf_nrun::ind_running_EmptyQ()) { // fstep:atf_nrun.FDb.ind_running
         if (atf_nrun::_db.ind_running_next < algo_lib::_db.clock) {
             atf_nrun::_db.ind_running_next = algo_lib::_db.clock + atf_nrun::_db.ind_running_delay;
@@ -589,7 +589,7 @@ inline static void atf_nrun::ind_running_Call() {
 // --- atf_nrun.FDb.ind_running.SetDelay
 // Set inter-step delay to specified value.
 // The difference between new delay and current delay is added to the next scheduled time.
-void atf_nrun::ind_running_SetDelay(algo::SchedTime delay) {
+void atf_nrun::ind_running_SetDelay(algo::SchedTime delay) throw() {
     i64 diff = delay.value - atf_nrun::_db.ind_running_delay.value;
     atf_nrun::_db.ind_running_delay = delay;
     if (diff > 0) {
@@ -601,7 +601,7 @@ void atf_nrun::ind_running_SetDelay(algo::SchedTime delay) {
 
 // --- atf_nrun.FDb.zd_todo.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void atf_nrun::zd_todo_Insert(atf_nrun::FEntry& row) {
+void atf_nrun::zd_todo_Insert(atf_nrun::FEntry& row) throw() {
     if (!zd_todo_InLlistQ(row)) {
         atf_nrun::FEntry* old_tail = _db.zd_todo_tail;
         row.zd_todo_next = NULL;
@@ -620,7 +620,7 @@ void atf_nrun::zd_todo_Insert(atf_nrun::FEntry& row) {
 
 // --- atf_nrun.FDb.zd_todo.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_nrun::zd_todo_Remove(atf_nrun::FEntry& row) {
+void atf_nrun::zd_todo_Remove(atf_nrun::FEntry& row) throw() {
     if (zd_todo_InLlistQ(row)) {
         atf_nrun::FEntry* old_head       = _db.zd_todo_head;
         (void)old_head; // in case it's not used
@@ -646,7 +646,7 @@ void atf_nrun::zd_todo_Remove(atf_nrun::FEntry& row) {
 
 // --- atf_nrun.FDb.zd_todo.RemoveAll
 // Empty the index. (The rows are not deleted)
-void atf_nrun::zd_todo_RemoveAll() {
+void atf_nrun::zd_todo_RemoveAll() throw() {
     atf_nrun::FEntry* row = _db.zd_todo_head;
     _db.zd_todo_head = NULL;
     _db.zd_todo_tail = NULL;
@@ -666,7 +666,7 @@ void atf_nrun::zd_todo_RemoveAll() {
 // --- atf_nrun.FDb.zd_todo.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
 // Call FirstChanged trigger.
-atf_nrun::FEntry* atf_nrun::zd_todo_RemoveFirst() {
+atf_nrun::FEntry* atf_nrun::zd_todo_RemoveFirst() throw() {
     atf_nrun::FEntry *row = NULL;
     row = _db.zd_todo_head;
     if (row) {
@@ -685,18 +685,18 @@ atf_nrun::FEntry* atf_nrun::zd_todo_RemoveFirst() {
 
 // --- atf_nrun.FDb.zd_todo.FirstChanged
 // First element of index changed.
-void atf_nrun::zd_todo_FirstChanged() {
+void atf_nrun::zd_todo_FirstChanged() throw() {
 }
 
 // --- atf_nrun.FDb.zd_todo.UpdateCycles
 // Update cycles count from previous clock capture
-inline static void atf_nrun::zd_todo_UpdateCycles() {
+inline static void atf_nrun::zd_todo_UpdateCycles() throw() {
     u64 cur_cycles                      = algo::get_cycles();
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- atf_nrun.FDb.zd_todo.Call
-inline static void atf_nrun::zd_todo_Call() {
+inline static void atf_nrun::zd_todo_Call() throw() {
     if (!atf_nrun::zd_todo_EmptyQ()) { // fstep:atf_nrun.FDb.zd_todo
         if (atf_nrun::_db.zd_todo_next < algo_lib::_db.clock) {
             atf_nrun::_db.zd_todo_next = algo_lib::_db.clock + atf_nrun::_db.zd_todo_delay;
@@ -710,7 +710,7 @@ inline static void atf_nrun::zd_todo_Call() {
 // --- atf_nrun.FDb.zd_todo.SetDelay
 // Set inter-step delay to specified value.
 // The difference between new delay and current delay is added to the next scheduled time.
-void atf_nrun::zd_todo_SetDelay(algo::SchedTime delay) {
+void atf_nrun::zd_todo_SetDelay(algo::SchedTime delay) throw() {
     i64 diff = delay.value - atf_nrun::_db.zd_todo_delay.value;
     atf_nrun::_db.zd_todo_delay = delay;
     if (diff > 0) {
@@ -722,13 +722,13 @@ void atf_nrun::zd_todo_SetDelay(algo::SchedTime delay) {
 
 // --- atf_nrun.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr atf_nrun::trace_RowidFind(int t) {
+static algo::ImrowPtr atf_nrun::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- atf_nrun.FDb.trace.N
 // Function return 1
-inline static i32 atf_nrun::trace_N() {
+inline static i32 atf_nrun::trace_N() throw() {
     return 1;
 }
 
@@ -762,7 +762,7 @@ void atf_nrun::FDb_Init() {
 }
 
 // --- atf_nrun.FDb..Uninit
-void atf_nrun::FDb_Uninit() {
+void atf_nrun::FDb_Uninit() throw() {
     atf_nrun::FDb &row = _db; (void)row;
 
     // atf_nrun.FDb.ind_running.Uninit (Thash)  //Running job
@@ -775,7 +775,7 @@ void atf_nrun::FDb_Uninit() {
 // --- atf_nrun.FEntry.job.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int atf_nrun::job_Start(atf_nrun::FEntry& fentry) {
+int atf_nrun::job_Start(atf_nrun::FEntry& fentry) throw() {
     int retval = 0;
     if (fentry.job_pid == 0) {
         verblog(job_ToCmdline(fentry)); // maybe print command
@@ -813,7 +813,7 @@ int atf_nrun::job_Start(atf_nrun::FEntry& fentry) {
 
 // --- atf_nrun.FEntry.job.StartRead
 // Start subprocess & Read output
-algo::Fildes atf_nrun::job_StartRead(atf_nrun::FEntry& fentry, algo_lib::FFildes &read) {
+algo::Fildes atf_nrun::job_StartRead(atf_nrun::FEntry& fentry, algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -835,7 +835,7 @@ void atf_nrun::job_Kill(atf_nrun::FEntry& fentry) {
 
 // --- atf_nrun.FEntry.job.Wait
 // Wait for subprocess to return
-void atf_nrun::job_Wait(atf_nrun::FEntry& fentry) {
+void atf_nrun::job_Wait(atf_nrun::FEntry& fentry) throw() {
     if (fentry.job_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -854,7 +854,7 @@ void atf_nrun::job_Wait(atf_nrun::FEntry& fentry) {
 // --- atf_nrun.FEntry.job.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int atf_nrun::job_Exec(atf_nrun::FEntry& fentry) {
+int atf_nrun::job_Exec(atf_nrun::FEntry& fentry) throw() {
     job_Start(fentry);
     job_Wait(fentry);
     return fentry.job_status;
@@ -872,7 +872,7 @@ void atf_nrun::job_ExecX(atf_nrun::FEntry& fentry) {
 // --- atf_nrun.FEntry.job.Execv
 // Call execv()
 // Call execv with specified parameters
-int atf_nrun::job_Execv(atf_nrun::FEntry& fentry) {
+int atf_nrun::job_Execv(atf_nrun::FEntry& fentry) throw() {
     int ret = 0;
     algo::StringAry args;
     job_ToArgv(fentry, args);
@@ -888,7 +888,7 @@ int atf_nrun::job_Execv(atf_nrun::FEntry& fentry) {
 }
 
 // --- atf_nrun.FEntry.job.ToCmdline
-algo::tempstr atf_nrun::job_ToCmdline(atf_nrun::FEntry& fentry) {
+algo::tempstr atf_nrun::job_ToCmdline(atf_nrun::FEntry& fentry) throw() {
     algo::tempstr retval;
     retval << fentry.job_path << " ";
     command::bash_PrintArgv(fentry.job_cmd,retval);
@@ -906,7 +906,7 @@ algo::tempstr atf_nrun::job_ToCmdline(atf_nrun::FEntry& fentry) {
 
 // --- atf_nrun.FEntry.job.ToArgv
 // Form array from the command line
-void atf_nrun::job_ToArgv(atf_nrun::FEntry& fentry, algo::StringAry& args) {
+void atf_nrun::job_ToArgv(atf_nrun::FEntry& fentry, algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << fentry.job_path;
 
@@ -931,7 +931,7 @@ void atf_nrun::FEntry_Init(atf_nrun::FEntry& fentry) {
 }
 
 // --- atf_nrun.FEntry..Uninit
-void atf_nrun::FEntry_Uninit(atf_nrun::FEntry& fentry) {
+void atf_nrun::FEntry_Uninit(atf_nrun::FEntry& fentry) throw() {
     atf_nrun::FEntry &row = fentry; (void)row;
     ind_running_Remove(row); // remove fentry from index ind_running
     zd_todo_Remove(row); // remove fentry from index zd_todo
@@ -943,7 +943,7 @@ void atf_nrun::FEntry_Uninit(atf_nrun::FEntry& fentry) {
 // --- atf_nrun.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_nrun::value_ToCstr(const atf_nrun::FieldId& parent) {
+const char* atf_nrun::value_ToCstr(const atf_nrun::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_nrun_FieldId_value        : ret = "value";  break;
@@ -954,7 +954,7 @@ const char* atf_nrun::value_ToCstr(const atf_nrun::FieldId& parent) {
 // --- atf_nrun.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_nrun::value_Print(const atf_nrun::FieldId& parent, algo::cstring &lhs) {
+void atf_nrun::value_Print(const atf_nrun::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -967,7 +967,7 @@ void atf_nrun::value_Print(const atf_nrun::FieldId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_nrun::value_SetStrptrMaybe(atf_nrun::FieldId& parent, algo::strptr rhs) {
+bool atf_nrun::value_SetStrptrMaybe(atf_nrun::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -985,13 +985,13 @@ bool atf_nrun::value_SetStrptrMaybe(atf_nrun::FieldId& parent, algo::strptr rhs)
 // --- atf_nrun.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_nrun::value_SetStrptr(atf_nrun::FieldId& parent, algo::strptr rhs, atf_nrun_FieldIdEnum dflt) {
+void atf_nrun::value_SetStrptr(atf_nrun::FieldId& parent, algo::strptr rhs, atf_nrun_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_nrun.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_nrun::value_ReadStrptrMaybe(atf_nrun::FieldId& parent, algo::strptr rhs) {
+bool atf_nrun::value_ReadStrptrMaybe(atf_nrun::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1003,7 +1003,7 @@ bool atf_nrun::value_ReadStrptrMaybe(atf_nrun::FieldId& parent, algo::strptr rhs
 // --- atf_nrun.FieldId..ReadStrptrMaybe
 // Read fields of atf_nrun::FieldId from an ascii string.
 // The format of the string is the format of the atf_nrun::FieldId's only field
-bool atf_nrun::FieldId_ReadStrptrMaybe(atf_nrun::FieldId &parent, algo::strptr in_str) {
+bool atf_nrun::FieldId_ReadStrptrMaybe(atf_nrun::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1012,7 +1012,7 @@ bool atf_nrun::FieldId_ReadStrptrMaybe(atf_nrun::FieldId &parent, algo::strptr i
 // --- atf_nrun.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_nrun.FieldId.String  printfmt:Raw
-void atf_nrun::FieldId_Print(atf_nrun::FieldId& row, algo::cstring& str) {
+void atf_nrun::FieldId_Print(atf_nrun::FieldId& row, algo::cstring& str) throw() {
     atf_nrun::value_Print(row, str);
 }
 

@@ -57,7 +57,7 @@ namespace lib_sqlite { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- lib_sqlite.FConn..Uninit
-void lib_sqlite::FConn_Uninit(lib_sqlite::FConn& conn) {
+void lib_sqlite::FConn_Uninit(lib_sqlite::FConn& conn) throw() {
     lib_sqlite::FConn &row = conn; (void)row;
     ind_conn_Remove(row); // remove conn from index ind_conn
     db_Cleanup(conn); // dmmeta.fcleanup:lib_sqlite.FConn.db
@@ -66,7 +66,7 @@ void lib_sqlite::FConn_Uninit(lib_sqlite::FConn& conn) {
 // --- lib_sqlite.trace..Print
 // print string representation of ROW to string STR
 // cfmt:lib_sqlite.trace.String  printfmt:Tuple
-void lib_sqlite::trace_Print(lib_sqlite::trace& row, algo::cstring& str) {
+void lib_sqlite::trace_Print(lib_sqlite::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_sqlite.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -117,7 +117,7 @@ bool lib_sqlite::InsertStrptrMaybe(algo::strptr str) {
 
 // --- lib_sqlite.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool lib_sqlite::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool lib_sqlite::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = lib_sqlite::LoadTuplesFile(root, recursive);
@@ -152,7 +152,7 @@ bool lib_sqlite::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool lib_sqlite::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool lib_sqlite::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -165,7 +165,7 @@ bool lib_sqlite::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- lib_sqlite.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool lib_sqlite::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool lib_sqlite::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -186,7 +186,7 @@ bool lib_sqlite::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursiv
 
 // --- lib_sqlite.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool lib_sqlite::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool lib_sqlite::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = lib_sqlite::LoadTuplesFile(fname, recursive);
@@ -211,7 +211,7 @@ bool lib_sqlite::_db_XrefMaybe() {
 // --- lib_sqlite.FDb.conn.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_sqlite::FConn& lib_sqlite::conn_Alloc() {
+lib_sqlite::FConn& lib_sqlite::conn_Alloc() throw() {
     lib_sqlite::FConn* row = conn_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_sqlite.out_of_mem  field:lib_sqlite.FDb.conn  comment:'Alloc failed'");
@@ -221,7 +221,7 @@ lib_sqlite::FConn& lib_sqlite::conn_Alloc() {
 
 // --- lib_sqlite.FDb.conn.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_sqlite::FConn* lib_sqlite::conn_AllocMaybe() {
+lib_sqlite::FConn* lib_sqlite::conn_AllocMaybe() throw() {
     lib_sqlite::FConn *row = (lib_sqlite::FConn*)conn_AllocMem();
     if (row) {
         new (row) lib_sqlite::FConn; // call constructor
@@ -231,7 +231,7 @@ lib_sqlite::FConn* lib_sqlite::conn_AllocMaybe() {
 
 // --- lib_sqlite.FDb.conn.Delete
 // Remove row from all global and cross indices, then deallocate row
-void lib_sqlite::conn_Delete(lib_sqlite::FConn &row) {
+void lib_sqlite::conn_Delete(lib_sqlite::FConn &row) throw() {
     row.~FConn();
     conn_FreeMem(row);
 }
@@ -239,7 +239,7 @@ void lib_sqlite::conn_Delete(lib_sqlite::FConn &row) {
 // --- lib_sqlite.FDb.conn.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* lib_sqlite::conn_AllocMem() {
+void* lib_sqlite::conn_AllocMem() throw() {
     lib_sqlite::FConn *row = _db.conn_free;
     if (UNLIKELY(!row)) {
         conn_Reserve(1);
@@ -253,7 +253,7 @@ void* lib_sqlite::conn_AllocMem() {
 
 // --- lib_sqlite.FDb.conn.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void lib_sqlite::conn_FreeMem(lib_sqlite::FConn &row) {
+void lib_sqlite::conn_FreeMem(lib_sqlite::FConn &row) throw() {
     if (UNLIKELY(row.conn_next != (lib_sqlite::FConn*)-1)) {
         FatalErrorExit("lib_sqlite.tpool_double_delete  pool:lib_sqlite.FDb.conn  comment:'double deletion caught'");
     }
@@ -264,7 +264,7 @@ void lib_sqlite::conn_FreeMem(lib_sqlite::FConn &row) {
 // --- lib_sqlite.FDb.conn.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 lib_sqlite::conn_Reserve(u64 n_elems) {
+u64 lib_sqlite::conn_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.conn_blocksize; // underlying allocator is probably Lpool
@@ -280,7 +280,7 @@ u64 lib_sqlite::conn_Reserve(u64 n_elems) {
 // --- lib_sqlite.FDb.conn.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 lib_sqlite::conn_ReserveMem(u64 size) {
+u64 lib_sqlite::conn_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(lib_sqlite::FConn)) {
         lib_sqlite::FConn *mem = (lib_sqlite::FConn*)algo_lib::malloc_AllocMem(size);
@@ -314,7 +314,7 @@ bool lib_sqlite::conn_XrefMaybe(lib_sqlite::FConn &row) {
 
 // --- lib_sqlite.FDb.ind_conn.Find
 // Find row by key. Return NULL if not found.
-lib_sqlite::FConn* lib_sqlite::ind_conn_Find(const algo::strptr& key) {
+lib_sqlite::FConn* lib_sqlite::ind_conn_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_conn_buckets_n - 1);
     lib_sqlite::FConn* *e = &_db.ind_conn_buckets_elems[index];
     lib_sqlite::FConn* ret=NULL;
@@ -337,7 +337,7 @@ lib_sqlite::FConn& lib_sqlite::ind_conn_FindX(const algo::strptr& key) {
 
 // --- lib_sqlite.FDb.ind_conn.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-lib_sqlite::FConn& lib_sqlite::ind_conn_GetOrCreate(const algo::strptr& key) {
+lib_sqlite::FConn& lib_sqlite::ind_conn_GetOrCreate(const algo::strptr& key) throw() {
     lib_sqlite::FConn* ret = ind_conn_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &conn_Alloc();
@@ -354,7 +354,7 @@ lib_sqlite::FConn& lib_sqlite::ind_conn_GetOrCreate(const algo::strptr& key) {
 
 // --- lib_sqlite.FDb.ind_conn.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_sqlite::ind_conn_InsertMaybe(lib_sqlite::FConn& row) {
+bool lib_sqlite::ind_conn_InsertMaybe(lib_sqlite::FConn& row) throw() {
     ind_conn_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_conn_next == (lib_sqlite::FConn*)-1)) {// check if in hash already
@@ -382,7 +382,7 @@ bool lib_sqlite::ind_conn_InsertMaybe(lib_sqlite::FConn& row) {
 
 // --- lib_sqlite.FDb.ind_conn.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_sqlite::ind_conn_Remove(lib_sqlite::FConn& row) {
+void lib_sqlite::ind_conn_Remove(lib_sqlite::FConn& row) throw() {
     if (LIKELY(row.ind_conn_next != (lib_sqlite::FConn*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.name) & (_db.ind_conn_buckets_n - 1);
         lib_sqlite::FConn* *prev = &_db.ind_conn_buckets_elems[index]; // addr of pointer to current element
@@ -400,7 +400,7 @@ void lib_sqlite::ind_conn_Remove(lib_sqlite::FConn& row) {
 
 // --- lib_sqlite.FDb.ind_conn.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_sqlite::ind_conn_Reserve(int n) {
+void lib_sqlite::ind_conn_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_conn_buckets_n;
     u32 new_nelems   = _db.ind_conn_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -437,7 +437,7 @@ void lib_sqlite::ind_conn_Reserve(int n) {
 // --- lib_sqlite.FDb.substr.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_sqlite::FSubstr& lib_sqlite::substr_Alloc() {
+lib_sqlite::FSubstr& lib_sqlite::substr_Alloc() throw() {
     lib_sqlite::FSubstr* row = substr_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_sqlite.out_of_mem  field:lib_sqlite.FDb.substr  comment:'Alloc failed'");
@@ -447,7 +447,7 @@ lib_sqlite::FSubstr& lib_sqlite::substr_Alloc() {
 
 // --- lib_sqlite.FDb.substr.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_sqlite::FSubstr* lib_sqlite::substr_AllocMaybe() {
+lib_sqlite::FSubstr* lib_sqlite::substr_AllocMaybe() throw() {
     lib_sqlite::FSubstr *row = (lib_sqlite::FSubstr*)substr_AllocMem();
     if (row) {
         new (row) lib_sqlite::FSubstr; // call constructor
@@ -458,7 +458,7 @@ lib_sqlite::FSubstr* lib_sqlite::substr_AllocMaybe() {
 // --- lib_sqlite.FDb.substr.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_sqlite::FSubstr* lib_sqlite::substr_InsertMaybe(const dmmeta::Substr &value) {
+lib_sqlite::FSubstr* lib_sqlite::substr_InsertMaybe(const dmmeta::Substr &value) throw() {
     lib_sqlite::FSubstr *row = &substr_Alloc(); // if out of memory, process dies. if input error, return NULL.
     substr_CopyIn(*row,const_cast<dmmeta::Substr&>(value));
     bool ok = substr_XrefMaybe(*row); // this may return false
@@ -471,7 +471,7 @@ lib_sqlite::FSubstr* lib_sqlite::substr_InsertMaybe(const dmmeta::Substr &value)
 
 // --- lib_sqlite.FDb.substr.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_sqlite::substr_AllocMem() {
+void* lib_sqlite::substr_AllocMem() throw() {
     u64 new_nelems     = _db.substr_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -497,7 +497,7 @@ void* lib_sqlite::substr_AllocMem() {
 
 // --- lib_sqlite.FDb.substr.RemoveAll
 // Remove all elements from Lary
-void lib_sqlite::substr_RemoveAll() {
+void lib_sqlite::substr_RemoveAll() throw() {
     for (u64 n = _db.substr_n; n>0; ) {
         n--;
         substr_qFind(u64(n)).~FSubstr(); // destroy last element
@@ -507,7 +507,7 @@ void lib_sqlite::substr_RemoveAll() {
 
 // --- lib_sqlite.FDb.substr.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_sqlite::substr_RemoveLast() {
+void lib_sqlite::substr_RemoveLast() throw() {
     u64 n = _db.substr_n;
     if (n > 0) {
         n -= 1;
@@ -517,7 +517,7 @@ void lib_sqlite::substr_RemoveLast() {
 }
 
 // --- lib_sqlite.FDb.substr.InputMaybe
-static bool lib_sqlite::substr_InputMaybe(dmmeta::Substr &elem) {
+static bool lib_sqlite::substr_InputMaybe(dmmeta::Substr &elem) throw() {
     bool retval = true;
     retval = substr_InsertMaybe(elem) != nullptr;
     return retval;
@@ -534,13 +534,13 @@ bool lib_sqlite::substr_XrefMaybe(lib_sqlite::FSubstr &row) {
 
 // --- lib_sqlite.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr lib_sqlite::trace_RowidFind(int t) {
+static algo::ImrowPtr lib_sqlite::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- lib_sqlite.FDb.trace.N
 // Function return 1
-inline static i32 lib_sqlite::trace_N() {
+inline static i32 lib_sqlite::trace_N() throw() {
     return 1;
 }
 
@@ -574,7 +574,7 @@ void lib_sqlite::FDb_Init() {
 }
 
 // --- lib_sqlite.FDb..Uninit
-void lib_sqlite::FDb_Uninit() {
+void lib_sqlite::FDb_Uninit() throw() {
     lib_sqlite::FDb &row = _db; (void)row;
 
     // lib_sqlite.FDb.substr.Uninit (Lary)  //
@@ -586,7 +586,7 @@ void lib_sqlite::FDb_Uninit() {
 
 // --- lib_sqlite.FSubstr.base.CopyOut
 // Copy fields out of row
-void lib_sqlite::substr_CopyOut(lib_sqlite::FSubstr &row, dmmeta::Substr &out) {
+void lib_sqlite::substr_CopyOut(lib_sqlite::FSubstr &row, dmmeta::Substr &out) throw() {
     out.field = row.field;
     out.expr = row.expr;
     out.srcfield = row.srcfield;
@@ -594,7 +594,7 @@ void lib_sqlite::substr_CopyOut(lib_sqlite::FSubstr &row, dmmeta::Substr &out) {
 
 // --- lib_sqlite.FSubstr.base.CopyIn
 // Copy fields in to row
-void lib_sqlite::substr_CopyIn(lib_sqlite::FSubstr &row, dmmeta::Substr &in) {
+void lib_sqlite::substr_CopyIn(lib_sqlite::FSubstr &row, dmmeta::Substr &in) throw() {
     row.field = in.field;
     row.expr = in.expr;
     row.srcfield = in.srcfield;
@@ -603,7 +603,7 @@ void lib_sqlite::substr_CopyIn(lib_sqlite::FSubstr &row, dmmeta::Substr &in) {
 // --- lib_sqlite.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_sqlite::value_ToCstr(const lib_sqlite::FieldId& parent) {
+const char* lib_sqlite::value_ToCstr(const lib_sqlite::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_sqlite_FieldId_value      : ret = "value";  break;
@@ -614,7 +614,7 @@ const char* lib_sqlite::value_ToCstr(const lib_sqlite::FieldId& parent) {
 // --- lib_sqlite.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_sqlite::value_Print(const lib_sqlite::FieldId& parent, algo::cstring &lhs) {
+void lib_sqlite::value_Print(const lib_sqlite::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -627,7 +627,7 @@ void lib_sqlite::value_Print(const lib_sqlite::FieldId& parent, algo::cstring &l
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_sqlite::value_SetStrptrMaybe(lib_sqlite::FieldId& parent, algo::strptr rhs) {
+bool lib_sqlite::value_SetStrptrMaybe(lib_sqlite::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -645,13 +645,13 @@ bool lib_sqlite::value_SetStrptrMaybe(lib_sqlite::FieldId& parent, algo::strptr 
 // --- lib_sqlite.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_sqlite::value_SetStrptr(lib_sqlite::FieldId& parent, algo::strptr rhs, lib_sqlite_FieldIdEnum dflt) {
+void lib_sqlite::value_SetStrptr(lib_sqlite::FieldId& parent, algo::strptr rhs, lib_sqlite_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_sqlite.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_sqlite::value_ReadStrptrMaybe(lib_sqlite::FieldId& parent, algo::strptr rhs) {
+bool lib_sqlite::value_ReadStrptrMaybe(lib_sqlite::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -663,7 +663,7 @@ bool lib_sqlite::value_ReadStrptrMaybe(lib_sqlite::FieldId& parent, algo::strptr
 // --- lib_sqlite.FieldId..ReadStrptrMaybe
 // Read fields of lib_sqlite::FieldId from an ascii string.
 // The format of the string is the format of the lib_sqlite::FieldId's only field
-bool lib_sqlite::FieldId_ReadStrptrMaybe(lib_sqlite::FieldId &parent, algo::strptr in_str) {
+bool lib_sqlite::FieldId_ReadStrptrMaybe(lib_sqlite::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -672,14 +672,14 @@ bool lib_sqlite::FieldId_ReadStrptrMaybe(lib_sqlite::FieldId &parent, algo::strp
 // --- lib_sqlite.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_sqlite.FieldId.String  printfmt:Raw
-void lib_sqlite::FieldId_Print(lib_sqlite::FieldId& row, algo::cstring& str) {
+void lib_sqlite::FieldId_Print(lib_sqlite::FieldId& row, algo::cstring& str) throw() {
     lib_sqlite::value_Print(row, str);
 }
 
 // --- lib_sqlite.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_sqlite::value_ToCstr(const lib_sqlite::TableId& parent) {
+const char* lib_sqlite::value_ToCstr(const lib_sqlite::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_sqlite_TableId_dmmeta_Substr: ret = "dmmeta.Substr";  break;
@@ -690,7 +690,7 @@ const char* lib_sqlite::value_ToCstr(const lib_sqlite::TableId& parent) {
 // --- lib_sqlite.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_sqlite::value_Print(const lib_sqlite::TableId& parent, algo::cstring &lhs) {
+void lib_sqlite::value_Print(const lib_sqlite::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -703,7 +703,7 @@ void lib_sqlite::value_Print(const lib_sqlite::TableId& parent, algo::cstring &l
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_sqlite::value_SetStrptrMaybe(lib_sqlite::TableId& parent, algo::strptr rhs) {
+bool lib_sqlite::value_SetStrptrMaybe(lib_sqlite::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 13: {
@@ -726,13 +726,13 @@ bool lib_sqlite::value_SetStrptrMaybe(lib_sqlite::TableId& parent, algo::strptr 
 // --- lib_sqlite.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_sqlite::value_SetStrptr(lib_sqlite::TableId& parent, algo::strptr rhs, lib_sqlite_TableIdEnum dflt) {
+void lib_sqlite::value_SetStrptr(lib_sqlite::TableId& parent, algo::strptr rhs, lib_sqlite_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_sqlite.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_sqlite::value_ReadStrptrMaybe(lib_sqlite::TableId& parent, algo::strptr rhs) {
+bool lib_sqlite::value_ReadStrptrMaybe(lib_sqlite::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -744,7 +744,7 @@ bool lib_sqlite::value_ReadStrptrMaybe(lib_sqlite::TableId& parent, algo::strptr
 // --- lib_sqlite.TableId..ReadStrptrMaybe
 // Read fields of lib_sqlite::TableId from an ascii string.
 // The format of the string is the format of the lib_sqlite::TableId's only field
-bool lib_sqlite::TableId_ReadStrptrMaybe(lib_sqlite::TableId &parent, algo::strptr in_str) {
+bool lib_sqlite::TableId_ReadStrptrMaybe(lib_sqlite::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -753,7 +753,7 @@ bool lib_sqlite::TableId_ReadStrptrMaybe(lib_sqlite::TableId &parent, algo::strp
 // --- lib_sqlite.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_sqlite.TableId.String  printfmt:Raw
-void lib_sqlite::TableId_Print(lib_sqlite::TableId& row, algo::cstring& str) {
+void lib_sqlite::TableId_Print(lib_sqlite::TableId& row, algo::cstring& str) throw() {
     lib_sqlite::value_Print(row, str);
 }
 

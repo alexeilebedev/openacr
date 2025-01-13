@@ -29,18 +29,18 @@
 
 // --- amsdb.FieldId.value.GetEnum
 // Get value of field as enum type
-inline amsdb_FieldIdEnum amsdb::value_GetEnum(const amsdb::FieldId& parent) {
+inline amsdb_FieldIdEnum amsdb::value_GetEnum(const amsdb::FieldId& parent) throw() {
     return amsdb_FieldIdEnum(parent.value);
 }
 
 // --- amsdb.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void amsdb::value_SetEnum(amsdb::FieldId& parent, amsdb_FieldIdEnum rhs) {
+inline void amsdb::value_SetEnum(amsdb::FieldId& parent, amsdb_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- amsdb.FieldId.value.Cast
-inline  amsdb::FieldId::operator amsdb_FieldIdEnum() const {
+inline  amsdb::FieldId::operator amsdb_FieldIdEnum() const throw() {
     return amsdb_FieldIdEnum((*this).value);
 }
 
@@ -51,18 +51,18 @@ inline void amsdb::FieldId_Init(amsdb::FieldId& parent) {
 }
 
 // --- amsdb.FieldId..Ctor
-inline  amsdb::FieldId::FieldId() {
+inline  amsdb::FieldId::FieldId() throw() {
     amsdb::FieldId_Init(*this);
 }
 
 // --- amsdb.FieldId..FieldwiseCtor
-inline  amsdb::FieldId::FieldId(i32 in_value)
+inline  amsdb::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- amsdb.FieldId..EnumCtor
-inline  amsdb::FieldId::FieldId(amsdb_FieldIdEnum arg) {
+inline  amsdb::FieldId::FieldId(amsdb_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
@@ -73,12 +73,12 @@ inline void amsdb::ProcType_Init(amsdb::ProcType& parent) {
 }
 
 // --- amsdb.ProcType..Ctor
-inline  amsdb::ProcType::ProcType() {
+inline  amsdb::ProcType::ProcType() throw() {
     amsdb::ProcType_Init(*this);
 }
 
 // --- amsdb.StreamType..Ctor
-inline  amsdb::StreamType::StreamType() {
+inline  amsdb::StreamType::StreamType() throw() {
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::FieldId &row) {// cfmt:amsdb.FieldId.String

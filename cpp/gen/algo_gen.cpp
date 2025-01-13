@@ -66,7 +66,7 @@ namespace algo { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- algo.cstring.ch.Eq
-bool algo::ch_Eq(const algo::cstring& parent,const algo::cstring &rhs) {
+bool algo::ch_Eq(const algo::cstring& parent,const algo::cstring &rhs) throw() {
     int len = ch_N(parent);
     if (len != ch_N(rhs)) {
         return false;
@@ -80,7 +80,7 @@ bool algo::ch_Eq(const algo::cstring& parent,const algo::cstring &rhs) {
 }
 
 // --- algo.cstring.ch.Cmp
-int algo::ch_Cmp(algo::cstring& parent, algo::cstring &rhs) {
+int algo::ch_Cmp(algo::cstring& parent, algo::cstring &rhs) throw() {
     int len = i32_Min(ch_N(parent), ch_N(rhs));
     int retval = 0;
     for (int i = 0; i < len; i++) {
@@ -96,7 +96,7 @@ int algo::ch_Cmp(algo::cstring& parent, algo::cstring &rhs) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<char> algo::ch_Addary(algo::cstring& parent, algo::aryptr<char> rhs) {
+algo::aryptr<char> algo::ch_Addary(algo::cstring& parent, algo::aryptr<char> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ch_elems && rhs.elems < parent.ch_elems + parent.ch_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo.tary_alias  field:algo.cstring.ch  comment:'alias error: sub-array is being appended to the whole'");
@@ -112,7 +112,7 @@ algo::aryptr<char> algo::ch_Addary(algo::cstring& parent, algo::aryptr<char> rhs
 // --- algo.cstring.ch.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-char& algo::ch_Alloc(algo::cstring& parent) {
+char& algo::ch_Alloc(algo::cstring& parent) throw() {
     ch_Reserve(parent, 1);
     int n  = parent.ch_n;
     int at = n;
@@ -125,7 +125,7 @@ char& algo::ch_Alloc(algo::cstring& parent) {
 // --- algo.cstring.ch.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-char& algo::ch_AllocAt(algo::cstring& parent, int at) {
+char& algo::ch_AllocAt(algo::cstring& parent, int at) throw() {
     ch_Reserve(parent, 1);
     int n  = parent.ch_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -140,7 +140,7 @@ char& algo::ch_AllocAt(algo::cstring& parent, int at) {
 
 // --- algo.cstring.ch.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<char> algo::ch_AllocN(algo::cstring& parent, int n_elems) {
+algo::aryptr<char> algo::ch_AllocN(algo::cstring& parent, int n_elems) throw() {
     ch_Reserve(parent, n_elems);
     int old_n  = parent.ch_n;
     int new_n = old_n + n_elems;
@@ -152,7 +152,7 @@ algo::aryptr<char> algo::ch_AllocN(algo::cstring& parent, int n_elems) {
 
 // --- algo.cstring.ch.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo::ch_Remove(algo::cstring& parent, u32 i) {
+void algo::ch_Remove(algo::cstring& parent, u32 i) throw() {
     u32 lim = parent.ch_n;
     char *elems = parent.ch_elems;
     if (i < lim) {
@@ -163,7 +163,7 @@ void algo::ch_Remove(algo::cstring& parent, u32 i) {
 
 // --- algo.cstring.ch.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void algo::ch_RemoveLast(algo::cstring& parent) {
+void algo::ch_RemoveLast(algo::cstring& parent) throw() {
     u64 n = parent.ch_n;
     if (n > 0) {
         n -= 1;
@@ -173,7 +173,7 @@ void algo::ch_RemoveLast(algo::cstring& parent) {
 
 // --- algo.cstring.ch.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo::ch_AbsReserve(algo::cstring& parent, int n) {
+void algo::ch_AbsReserve(algo::cstring& parent, int n) throw() {
     u32 old_max  = parent.ch_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -189,13 +189,13 @@ void algo::ch_AbsReserve(algo::cstring& parent, int n) {
 // --- algo.cstring.ch.Print
 // Convert ch to a string.
 // Array is printed as a regular string.
-void algo::ch_Print(algo::cstring& parent, algo::cstring &rhs) {
+void algo::ch_Print(algo::cstring& parent, algo::cstring &rhs) throw() {
     rhs << ch_Getary(parent);
 }
 
 // --- algo.cstring.ch.Setary
 // Copy contents of RHS to PARENT.
-void algo::ch_Setary(algo::cstring& parent, algo::cstring &rhs) {
+void algo::ch_Setary(algo::cstring& parent, algo::cstring &rhs) throw() {
     ch_RemoveAll(parent);
     int nnew = rhs.ch_n;
     ch_Reserve(parent, nnew); // reserve space
@@ -206,14 +206,14 @@ void algo::ch_Setary(algo::cstring& parent, algo::cstring &rhs) {
 // --- algo.cstring.ch.Setary2
 // Copy specified array into ch, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void algo::ch_Setary(algo::cstring& parent, const algo::aryptr<char> &rhs) {
+void algo::ch_Setary(algo::cstring& parent, const algo::aryptr<char> &rhs) throw() {
     ch_RemoveAll(parent);
     ch_Addary(parent, rhs);
 }
 
 // --- algo.cstring.ch.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<char> algo::ch_AllocNVal(algo::cstring& parent, int n_elems, const char& val) {
+algo::aryptr<char> algo::ch_AllocNVal(algo::cstring& parent, int n_elems, const char& val) throw() {
     ch_Reserve(parent, n_elems);
     int old_n  = parent.ch_n;
     int new_n = old_n + n_elems;
@@ -225,7 +225,7 @@ algo::aryptr<char> algo::ch_AllocNVal(algo::cstring& parent, int n_elems, const 
 
 // --- algo.cstring.ch.ReadStrptrMaybe
 // The array is replaced with the input string. Function always succeeds.
-bool algo::ch_ReadStrptrMaybe(algo::cstring& parent, algo::strptr in_str) {
+bool algo::ch_ReadStrptrMaybe(algo::cstring& parent, algo::strptr in_str) throw() {
     bool retval = true;
     ch_RemoveAll(parent);
     ch_Addary(parent,in_str);
@@ -233,7 +233,7 @@ bool algo::ch_ReadStrptrMaybe(algo::cstring& parent, algo::strptr in_str) {
 }
 
 // --- algo.cstring..Uninit
-void algo::cstring_Uninit(algo::cstring& parent) {
+void algo::cstring_Uninit(algo::cstring& parent) throw() {
     algo::cstring &row = parent; (void)row;
 
     // algo.cstring.ch.Uninit (Tary)  //
@@ -244,13 +244,13 @@ void algo::cstring_Uninit(algo::cstring& parent) {
 }
 
 // --- algo.cstring..AssignOp
-algo::cstring& algo::cstring::operator =(const algo::cstring &rhs) {
+algo::cstring& algo::cstring::operator =(const algo::cstring &rhs) throw() {
     ch_Setary(*this, ch_Getary(const_cast<algo::cstring&>(rhs)));
     return *this;
 }
 
 // --- algo.cstring..CopyCtor
- algo::cstring::cstring(const algo::cstring &rhs) {
+ algo::cstring::cstring(const algo::cstring &rhs) throw() {
     ch_elems 	= 0; // (algo.cstring.ch)
     ch_n     	= 0; // (algo.cstring.ch)
     ch_max   	= 0; // (algo.cstring.ch)
@@ -260,7 +260,7 @@ algo::cstring& algo::cstring::operator =(const algo::cstring &rhs) {
 // --- algo.Bool.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* algo::value_ToCstr(const algo::Bool& parent) {
+const char* algo::value_ToCstr(const algo::Bool& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case algo_Bool_N                   : ret = "N";  break;
@@ -272,7 +272,7 @@ const char* algo::value_ToCstr(const algo::Bool& parent) {
 // --- algo.Bool.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void algo::value_Print(const algo::Bool& parent, algo::cstring &lhs) {
+void algo::value_Print(const algo::Bool& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -285,7 +285,7 @@ void algo::value_Print(const algo::Bool& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool algo::value_SetStrptrMaybe(algo::Bool& parent, algo::strptr rhs) {
+bool algo::value_SetStrptrMaybe(algo::Bool& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
@@ -350,7 +350,7 @@ bool algo::value_SetStrptrMaybe(algo::Bool& parent, algo::strptr rhs) {
 // --- algo.Bool.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void algo::value_SetStrptr(algo::Bool& parent, algo::strptr rhs, algo_BoolEnum dflt) {
+void algo::value_SetStrptr(algo::Bool& parent, algo::strptr rhs, algo_BoolEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
@@ -358,7 +358,7 @@ void algo::value_SetStrptr(algo::Bool& parent, algo::strptr rhs, algo_BoolEnum d
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<u8> algo::ary_Addary(algo::ByteAry& parent, algo::aryptr<u8> rhs) {
+algo::aryptr<u8> algo::ary_Addary(algo::ByteAry& parent, algo::aryptr<u8> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo.tary_alias  field:algo.ByteAry.ary  comment:'alias error: sub-array is being appended to the whole'");
@@ -374,7 +374,7 @@ algo::aryptr<u8> algo::ary_Addary(algo::ByteAry& parent, algo::aryptr<u8> rhs) {
 // --- algo.ByteAry.ary.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-u8& algo::ary_Alloc(algo::ByteAry& parent) {
+u8& algo::ary_Alloc(algo::ByteAry& parent) throw() {
     ary_Reserve(parent, 1);
     int n  = parent.ary_n;
     int at = n;
@@ -387,7 +387,7 @@ u8& algo::ary_Alloc(algo::ByteAry& parent) {
 // --- algo.ByteAry.ary.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-u8& algo::ary_AllocAt(algo::ByteAry& parent, int at) {
+u8& algo::ary_AllocAt(algo::ByteAry& parent, int at) throw() {
     ary_Reserve(parent, 1);
     int n  = parent.ary_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -402,7 +402,7 @@ u8& algo::ary_AllocAt(algo::ByteAry& parent, int at) {
 
 // --- algo.ByteAry.ary.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8> algo::ary_AllocN(algo::ByteAry& parent, int n_elems) {
+algo::aryptr<u8> algo::ary_AllocN(algo::ByteAry& parent, int n_elems) throw() {
     ary_Reserve(parent, n_elems);
     int old_n  = parent.ary_n;
     int new_n = old_n + n_elems;
@@ -414,7 +414,7 @@ algo::aryptr<u8> algo::ary_AllocN(algo::ByteAry& parent, int n_elems) {
 
 // --- algo.ByteAry.ary.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo::ary_Remove(algo::ByteAry& parent, u32 i) {
+void algo::ary_Remove(algo::ByteAry& parent, u32 i) throw() {
     u32 lim = parent.ary_n;
     u8 *elems = parent.ary_elems;
     if (i < lim) {
@@ -425,7 +425,7 @@ void algo::ary_Remove(algo::ByteAry& parent, u32 i) {
 
 // --- algo.ByteAry.ary.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void algo::ary_RemoveLast(algo::ByteAry& parent) {
+void algo::ary_RemoveLast(algo::ByteAry& parent) throw() {
     u64 n = parent.ary_n;
     if (n > 0) {
         n -= 1;
@@ -435,7 +435,7 @@ void algo::ary_RemoveLast(algo::ByteAry& parent) {
 
 // --- algo.ByteAry.ary.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo::ary_AbsReserve(algo::ByteAry& parent, int n) {
+void algo::ary_AbsReserve(algo::ByteAry& parent, int n) throw() {
     u32 old_max  = parent.ary_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -451,13 +451,13 @@ void algo::ary_AbsReserve(algo::ByteAry& parent, int n) {
 // --- algo.ByteAry.ary.Print
 // Convert ary to a string.
 // Array is printed as a regular string.
-void algo::ary_Print(algo::ByteAry& parent, algo::cstring &rhs) {
+void algo::ary_Print(algo::ByteAry& parent, algo::cstring &rhs) throw() {
     rhs << algo::memptr_ToStrptr(ary_Getary(parent));
 }
 
 // --- algo.ByteAry.ary.Setary
 // Copy contents of RHS to PARENT.
-void algo::ary_Setary(algo::ByteAry& parent, algo::ByteAry &rhs) {
+void algo::ary_Setary(algo::ByteAry& parent, algo::ByteAry &rhs) throw() {
     ary_RemoveAll(parent);
     int nnew = rhs.ary_n;
     ary_Reserve(parent, nnew); // reserve space
@@ -468,14 +468,14 @@ void algo::ary_Setary(algo::ByteAry& parent, algo::ByteAry &rhs) {
 // --- algo.ByteAry.ary.Setary2
 // Copy specified array into ary, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void algo::ary_Setary(algo::ByteAry& parent, const algo::aryptr<u8> &rhs) {
+void algo::ary_Setary(algo::ByteAry& parent, const algo::aryptr<u8> &rhs) throw() {
     ary_RemoveAll(parent);
     ary_Addary(parent, rhs);
 }
 
 // --- algo.ByteAry.ary.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u8> algo::ary_AllocNVal(algo::ByteAry& parent, int n_elems, const u8& val) {
+algo::aryptr<u8> algo::ary_AllocNVal(algo::ByteAry& parent, int n_elems, const u8& val) throw() {
     ary_Reserve(parent, n_elems);
     int old_n  = parent.ary_n;
     int new_n = old_n + n_elems;
@@ -487,7 +487,7 @@ algo::aryptr<u8> algo::ary_AllocNVal(algo::ByteAry& parent, int n_elems, const u
 
 // --- algo.ByteAry.ary.ReadStrptrMaybe
 // The array is replaced with the input string. Function always succeeds.
-bool algo::ary_ReadStrptrMaybe(algo::ByteAry& parent, algo::strptr in_str) {
+bool algo::ary_ReadStrptrMaybe(algo::ByteAry& parent, algo::strptr in_str) throw() {
     bool retval = true;
     ary_RemoveAll(parent);
     ary_Addary(parent,algo::strptr_ToMemptr(in_str));
@@ -495,7 +495,7 @@ bool algo::ary_ReadStrptrMaybe(algo::ByteAry& parent, algo::strptr in_str) {
 }
 
 // --- algo.ByteAry..Uninit
-void algo::ByteAry_Uninit(algo::ByteAry& parent) {
+void algo::ByteAry_Uninit(algo::ByteAry& parent) throw() {
     algo::ByteAry &row = parent; (void)row;
 
     // algo.ByteAry.ary.Uninit (Tary)  //
@@ -506,13 +506,13 @@ void algo::ByteAry_Uninit(algo::ByteAry& parent) {
 }
 
 // --- algo.ByteAry..AssignOp
-algo::ByteAry& algo::ByteAry::operator =(const algo::ByteAry &rhs) {
+algo::ByteAry& algo::ByteAry::operator =(const algo::ByteAry &rhs) throw() {
     ary_Setary(*this, ary_Getary(const_cast<algo::ByteAry&>(rhs)));
     return *this;
 }
 
 // --- algo.ByteAry..CopyCtor
- algo::ByteAry::ByteAry(const algo::ByteAry &rhs) {
+ algo::ByteAry::ByteAry(const algo::ByteAry &rhs) throw() {
     ary_elems 	= 0; // (algo.ByteAry.ary)
     ary_n     	= 0; // (algo.ByteAry.ary)
     ary_max   	= 0; // (algo.ByteAry.ary)
@@ -522,7 +522,7 @@ algo::ByteAry& algo::ByteAry::operator =(const algo::ByteAry &rhs) {
 // --- algo.Charset.ch.Print
 // Convert ch to a string.
 // The separator character is ','.
-void algo::ch_Print(algo::Charset& parent, algo::cstring &rhs) {
+void algo::ch_Print(algo::Charset& parent, algo::cstring &rhs) throw() {
     ind_beg(Charset_ch_curs,ch_elem,parent) {
         if (ind_curs(ch_elem).index > 0) {
             rhs << ',';
@@ -534,7 +534,7 @@ void algo::ch_Print(algo::Charset& parent, algo::cstring &rhs) {
 // --- algo.Charset.ch.ReadStrptrMaybe
 // Read array from string
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Charset& parent, algo::strptr in_str) {
+bool algo::ch_ReadStrptrMaybe(algo::Charset& parent, algo::strptr in_str) throw() {
     bool retval = true;
     for (int i=0; in_str != "" && i < 8; i++) {
         algo::strptr token;
@@ -564,13 +564,13 @@ void algo::Charset_ch_bitcurs_Next(Charset_ch_bitcurs &curs) {
 }
 
 // --- algo.Smallstr150.ch.Print
-void algo::ch_Print(algo::Smallstr150& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr150& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr150.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr150& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr150& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 150) {
         ch_SetStrptr(parent, rhs);
@@ -585,7 +585,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr150& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr150& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr150& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 150);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -597,7 +597,7 @@ void algo::ch_SetStrptr(algo::Smallstr150& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr150..Hash
-u32 algo::Smallstr150_Hash(u32 prev, const algo::Smallstr150& rhs) {
+u32 algo::Smallstr150_Hash(u32 prev, const algo::Smallstr150& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -606,7 +606,7 @@ u32 algo::Smallstr150_Hash(u32 prev, const algo::Smallstr150& rhs) {
 // --- algo.Smallstr150..ReadStrptrMaybe
 // Read fields of algo::Smallstr150 from an ascii string.
 // The format of the string is the format of the algo::Smallstr150's only field
-bool algo::Smallstr150_ReadStrptrMaybe(algo::Smallstr150 &parent, algo::strptr in_str) {
+bool algo::Smallstr150_ReadStrptrMaybe(algo::Smallstr150 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -615,14 +615,14 @@ bool algo::Smallstr150_ReadStrptrMaybe(algo::Smallstr150 &parent, algo::strptr i
 // --- algo.Smallstr150..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr150.String  printfmt:Raw
-void algo::Smallstr150_Print(algo::Smallstr150& row, algo::cstring& str) {
+void algo::Smallstr150_Print(algo::Smallstr150& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Comment..ReadStrptrMaybe
 // Read fields of algo::Comment from an ascii string.
 // The format of the string is the format of the algo::Comment's only field
-bool algo::Comment_ReadStrptrMaybe(algo::Comment &parent, algo::strptr in_str) {
+bool algo::Comment_ReadStrptrMaybe(algo::Comment &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && algo::Smallstr150_ReadStrptrMaybe(parent.value, in_str);
     return retval;
@@ -631,18 +631,18 @@ bool algo::Comment_ReadStrptrMaybe(algo::Comment &parent, algo::strptr in_str) {
 // --- algo.Comment..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Comment.String  printfmt:Raw
-void algo::Comment_Print(algo::Comment& row, algo::cstring& str) {
+void algo::Comment_Print(algo::Comment& row, algo::cstring& str) throw() {
     algo::Smallstr150_Print(row.value, str);
 }
 
 // --- algo.Smallstr250.ch.Print
-void algo::ch_Print(algo::Smallstr250& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr250& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr250.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr250& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr250& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 250) {
         ch_SetStrptr(parent, rhs);
@@ -657,7 +657,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr250& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr250& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr250& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 250);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -669,7 +669,7 @@ void algo::ch_SetStrptr(algo::Smallstr250& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr250..Hash
-u32 algo::Smallstr250_Hash(u32 prev, const algo::Smallstr250& rhs) {
+u32 algo::Smallstr250_Hash(u32 prev, const algo::Smallstr250& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -678,7 +678,7 @@ u32 algo::Smallstr250_Hash(u32 prev, const algo::Smallstr250& rhs) {
 // --- algo.Smallstr250..ReadStrptrMaybe
 // Read fields of algo::Smallstr250 from an ascii string.
 // The format of the string is the format of the algo::Smallstr250's only field
-bool algo::Smallstr250_ReadStrptrMaybe(algo::Smallstr250 &parent, algo::strptr in_str) {
+bool algo::Smallstr250_ReadStrptrMaybe(algo::Smallstr250 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -687,14 +687,14 @@ bool algo::Smallstr250_ReadStrptrMaybe(algo::Smallstr250 &parent, algo::strptr i
 // --- algo.Smallstr250..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr250.String  printfmt:Raw
-void algo::Smallstr250_Print(algo::Smallstr250& row, algo::cstring& str) {
+void algo::Smallstr250_Print(algo::Smallstr250& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.CppExpr..ReadStrptrMaybe
 // Read fields of algo::CppExpr from an ascii string.
 // The format of the string is the format of the algo::CppExpr's only field
-bool algo::CppExpr_ReadStrptrMaybe(algo::CppExpr &parent, algo::strptr in_str) {
+bool algo::CppExpr_ReadStrptrMaybe(algo::CppExpr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && algo::Smallstr250_ReadStrptrMaybe(parent.value, in_str);
     return retval;
@@ -703,7 +703,7 @@ bool algo::CppExpr_ReadStrptrMaybe(algo::CppExpr &parent, algo::strptr in_str) {
 // --- algo.CppExpr..Print
 // print string representation of ROW to string STR
 // cfmt:algo.CppExpr.String  printfmt:Raw
-void algo::CppExpr_Print(algo::CppExpr& row, algo::cstring& str) {
+void algo::CppExpr_Print(algo::CppExpr& row, algo::cstring& str) throw() {
     algo::Smallstr250_Print(row.value, str);
 }
 
@@ -719,7 +719,7 @@ void algo::DirEntry_Init(algo::DirEntry& parent) {
 }
 
 // --- algo.DirEntry..Uninit
-void algo::DirEntry_Uninit(algo::DirEntry& parent) {
+void algo::DirEntry_Uninit(algo::DirEntry& parent) throw() {
     algo::DirEntry &row = parent; (void)row;
     dir_handle_Cleanup(parent); // dmmeta.fcleanup:algo.DirEntry.dir_handle
 }
@@ -727,14 +727,14 @@ void algo::DirEntry_Uninit(algo::DirEntry& parent) {
 // --- algo.DryrunQ..Print
 // print string representation of ROW to string STR
 // cfmt:algo.DryrunQ.String  printfmt:Raw
-void algo::DryrunQ_Print(algo::DryrunQ row, algo::cstring& str) {
+void algo::DryrunQ_Print(algo::DryrunQ row, algo::cstring& str) throw() {
     bool_Print(row.value, str);
 }
 
 // --- algo.EchoQ.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* algo::value_ToCstr(const algo::EchoQ& parent) {
+const char* algo::value_ToCstr(const algo::EchoQ& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case algo_EchoQ_true               : ret = "true";  break;
@@ -746,7 +746,7 @@ const char* algo::value_ToCstr(const algo::EchoQ& parent) {
 // --- algo.EchoQ.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void algo::value_Print(const algo::EchoQ& parent, algo::cstring &lhs) {
+void algo::value_Print(const algo::EchoQ& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -759,7 +759,7 @@ void algo::value_Print(const algo::EchoQ& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool algo::value_SetStrptrMaybe(algo::EchoQ& parent, algo::strptr rhs) {
+bool algo::value_SetStrptrMaybe(algo::EchoQ& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
@@ -785,21 +785,21 @@ bool algo::value_SetStrptrMaybe(algo::EchoQ& parent, algo::strptr rhs) {
 // --- algo.EchoQ.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void algo::value_SetStrptr(algo::EchoQ& parent, algo::strptr rhs, algo_EchoQEnum dflt) {
+void algo::value_SetStrptr(algo::EchoQ& parent, algo::strptr rhs, algo_EchoQEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- algo.EchoQ..Print
 // print string representation of ROW to string STR
 // cfmt:algo.EchoQ.String  printfmt:Raw
-void algo::EchoQ_Print(algo::EchoQ row, algo::cstring& str) {
+void algo::EchoQ_Print(algo::EchoQ row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.Errns.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* algo::value_ToCstr(const algo::Errns& parent) {
+const char* algo::value_ToCstr(const algo::Errns& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case algo_Errns_unix               : ret = "unix";  break;
@@ -811,7 +811,7 @@ const char* algo::value_ToCstr(const algo::Errns& parent) {
 // --- algo.Errns.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void algo::value_Print(const algo::Errns& parent, algo::cstring &lhs) {
+void algo::value_Print(const algo::Errns& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -824,7 +824,7 @@ void algo::value_Print(const algo::Errns& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool algo::value_SetStrptrMaybe(algo::Errns& parent, algo::strptr rhs) {
+bool algo::value_SetStrptrMaybe(algo::Errns& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -850,14 +850,14 @@ bool algo::value_SetStrptrMaybe(algo::Errns& parent, algo::strptr rhs) {
 // --- algo.Errns.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void algo::value_SetStrptr(algo::Errns& parent, algo::strptr rhs, algo_ErrnsEnum dflt) {
+void algo::value_SetStrptr(algo::Errns& parent, algo::strptr rhs, algo_ErrnsEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- algo.FailokQ.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* algo::value_ToCstr(const algo::FailokQ& parent) {
+const char* algo::value_ToCstr(const algo::FailokQ& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case algo_FailokQ_true             : ret = "true";  break;
@@ -869,7 +869,7 @@ const char* algo::value_ToCstr(const algo::FailokQ& parent) {
 // --- algo.FailokQ.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void algo::value_Print(const algo::FailokQ& parent, algo::cstring &lhs) {
+void algo::value_Print(const algo::FailokQ& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -882,7 +882,7 @@ void algo::value_Print(const algo::FailokQ& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool algo::value_SetStrptrMaybe(algo::FailokQ& parent, algo::strptr rhs) {
+bool algo::value_SetStrptrMaybe(algo::FailokQ& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
@@ -908,21 +908,21 @@ bool algo::value_SetStrptrMaybe(algo::FailokQ& parent, algo::strptr rhs) {
 // --- algo.FailokQ.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void algo::value_SetStrptr(algo::FailokQ& parent, algo::strptr rhs, algo_FailokQEnum dflt) {
+void algo::value_SetStrptr(algo::FailokQ& parent, algo::strptr rhs, algo_FailokQEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- algo.FailokQ..Print
 // print string representation of ROW to string STR
 // cfmt:algo.FailokQ.String  printfmt:Raw
-void algo::FailokQ_Print(algo::FailokQ row, algo::cstring& str) {
+void algo::FailokQ_Print(algo::FailokQ row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* algo::value_ToCstr(const algo::FieldId& parent) {
+const char* algo::value_ToCstr(const algo::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case algo_FieldId_name             : ret = "name";  break;
@@ -967,7 +967,7 @@ const char* algo::value_ToCstr(const algo::FieldId& parent) {
 // --- algo.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void algo::value_Print(const algo::FieldId& parent, algo::cstring &lhs) {
+void algo::value_Print(const algo::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -980,7 +980,7 @@ void algo::value_Print(const algo::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
+bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
@@ -1141,13 +1141,13 @@ bool algo::value_SetStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
 // --- algo.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void algo::value_SetStrptr(algo::FieldId& parent, algo::strptr rhs, algo_FieldIdEnum dflt) {
+void algo::value_SetStrptr(algo::FieldId& parent, algo::strptr rhs, algo_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- algo.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::value_ReadStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
+bool algo::value_ReadStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1159,7 +1159,7 @@ bool algo::value_ReadStrptrMaybe(algo::FieldId& parent, algo::strptr rhs) {
 // --- algo.FieldId..ReadStrptrMaybe
 // Read fields of algo::FieldId from an ascii string.
 // The format of the string is the format of the algo::FieldId's only field
-bool algo::FieldId_ReadStrptrMaybe(algo::FieldId &parent, algo::strptr in_str) {
+bool algo::FieldId_ReadStrptrMaybe(algo::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1168,14 +1168,14 @@ bool algo::FieldId_ReadStrptrMaybe(algo::FieldId &parent, algo::strptr in_str) {
 // --- algo.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:algo.FieldId.String  printfmt:Raw
-void algo::FieldId_Print(algo::FieldId& row, algo::cstring& str) {
+void algo::FieldId_Print(algo::FieldId& row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.Fildes..ReadStrptrMaybe
 // Read fields of algo::Fildes from an ascii string.
 // The format of the string is the format of the algo::Fildes's only field
-bool algo::Fildes_ReadStrptrMaybe(algo::Fildes &parent, algo::strptr in_str) {
+bool algo::Fildes_ReadStrptrMaybe(algo::Fildes &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && i32_ReadStrptrMaybe(parent.value, in_str);
     return retval;
@@ -1184,12 +1184,12 @@ bool algo::Fildes_ReadStrptrMaybe(algo::Fildes &parent, algo::strptr in_str) {
 // --- algo.Fildes..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Fildes.String  printfmt:Raw
-void algo::Fildes_Print(algo::Fildes& row, algo::cstring& str) {
+void algo::Fildes_Print(algo::Fildes& row, algo::cstring& str) throw() {
     i32_Print(row.value, str);
 }
 
 // --- algo.FileFlags.append.ReadStrptrMaybe
-inline static bool algo::append_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+inline static bool algo::append_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool append_tmp;
     retval = bool_ReadStrptrMaybe(append_tmp, in_str);
@@ -1200,7 +1200,7 @@ inline static bool algo::append_ReadStrptrMaybe(algo::FileFlags &parent, algo::s
 }
 
 // --- algo.FileFlags.read.ReadStrptrMaybe
-inline static bool algo::read_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+inline static bool algo::read_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool read_tmp;
     retval = bool_ReadStrptrMaybe(read_tmp, in_str);
@@ -1211,7 +1211,7 @@ inline static bool algo::read_ReadStrptrMaybe(algo::FileFlags &parent, algo::str
 }
 
 // --- algo.FileFlags.write.ReadStrptrMaybe
-inline static bool algo::write_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+inline static bool algo::write_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool write_tmp;
     retval = bool_ReadStrptrMaybe(write_tmp, in_str);
@@ -1222,7 +1222,7 @@ inline static bool algo::write_ReadStrptrMaybe(algo::FileFlags &parent, algo::st
 }
 
 // --- algo.FileFlags._throw.ReadStrptrMaybe
-inline static bool algo::_throw_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+inline static bool algo::_throw_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool _throw_tmp;
     retval = bool_ReadStrptrMaybe(_throw_tmp, in_str);
@@ -1233,7 +1233,7 @@ inline static bool algo::_throw_ReadStrptrMaybe(algo::FileFlags &parent, algo::s
 }
 
 // --- algo.FileFlags.temp.ReadStrptrMaybe
-inline static bool algo::temp_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+inline static bool algo::temp_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool temp_tmp;
     retval = bool_ReadStrptrMaybe(temp_tmp, in_str);
@@ -1244,7 +1244,7 @@ inline static bool algo::temp_ReadStrptrMaybe(algo::FileFlags &parent, algo::str
 }
 
 // --- algo.FileFlags.overlap.ReadStrptrMaybe
-inline static bool algo::overlap_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+inline static bool algo::overlap_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool overlap_tmp;
     retval = bool_ReadStrptrMaybe(overlap_tmp, in_str);
@@ -1255,7 +1255,7 @@ inline static bool algo::overlap_ReadStrptrMaybe(algo::FileFlags &parent, algo::
 }
 
 // --- algo.FileFlags.linear.ReadStrptrMaybe
-inline static bool algo::linear_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+inline static bool algo::linear_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool linear_tmp;
     retval = bool_ReadStrptrMaybe(linear_tmp, in_str);
@@ -1266,7 +1266,7 @@ inline static bool algo::linear_ReadStrptrMaybe(algo::FileFlags &parent, algo::s
 }
 
 // --- algo.FileFlags.printerr.ReadStrptrMaybe
-inline static bool algo::printerr_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+inline static bool algo::printerr_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool printerr_tmp;
     retval = bool_ReadStrptrMaybe(printerr_tmp, in_str);
@@ -1277,7 +1277,7 @@ inline static bool algo::printerr_ReadStrptrMaybe(algo::FileFlags &parent, algo:
 }
 
 // --- algo.FileFlags..ReadFieldMaybe
-bool algo::FileFlags_ReadFieldMaybe(algo::FileFlags& parent, algo::strptr field, algo::strptr strval) {
+bool algo::FileFlags_ReadFieldMaybe(algo::FileFlags& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     algo::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1328,7 +1328,7 @@ bool algo::FileFlags_ReadFieldMaybe(algo::FileFlags& parent, algo::strptr field,
 
 // --- algo.FileFlags..ReadStrptrMaybe
 // Read fields of algo::FileFlags from an ascii string.
-bool algo::FileFlags_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) {
+bool algo::FileFlags_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     // Clear affected bits first)
     append_Set(parent, false);
@@ -1388,7 +1388,7 @@ bool algo::FileFlags_ReadStrptrMaybe(algo::FileFlags &parent, algo::strptr in_st
 // --- algo.FileFlags..Print
 // print string representation of ROW to string STR
 // cfmt:algo.FileFlags.String  printfmt:Bitset
-void algo::FileFlags_Print(algo::FileFlags& row, algo::cstring& str) {
+void algo::FileFlags_Print(algo::FileFlags& row, algo::cstring& str) throw() {
     algo::ListSep ls(",");
     if (append_Get(row)) {
         str << ls << "append";
@@ -1417,7 +1417,7 @@ void algo::FileFlags_Print(algo::FileFlags& row, algo::cstring& str) {
 }
 
 // --- algo.FileFlags..GetAnon
-algo::strptr algo::FileFlags_GetAnon(algo::FileFlags &parent, i32 idx) {
+algo::strptr algo::FileFlags_GetAnon(algo::FileFlags &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("value", 5);
@@ -1428,7 +1428,7 @@ algo::strptr algo::FileFlags_GetAnon(algo::FileFlags &parent, i32 idx) {
 // --- algo.I32Dec1.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I32Dec1& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I32Dec1& parent, double val) throw() {
     double intval = val * 10;
     i32 minval = i32(-2147483648LL);
     i32 maxval = i32(2147483647LL);
@@ -1442,7 +1442,7 @@ bool algo::value_SetDoubleMaybe(algo::I32Dec1& parent, double val) {
 }
 
 // --- algo.I32Dec1.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I32Dec1& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I32Dec1& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -1490,7 +1490,7 @@ bool algo::value_ReadStrptrMaybe(algo::I32Dec1& parent, algo::strptr in) {
 }
 
 // --- algo.I32Dec1.value.Print
-void algo::value_Print(algo::I32Dec1& parent, cstring &outstr) {
+void algo::value_Print(algo::I32Dec1& parent, cstring &outstr) throw() {
     i32 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -1504,7 +1504,7 @@ void algo::value_Print(algo::I32Dec1& parent, cstring &outstr) {
 // --- algo.I32Dec1..ReadStrptrMaybe
 // Read fields of algo::I32Dec1 from an ascii string.
 // The format of the string is the format of the algo::I32Dec1's only field
-bool algo::I32Dec1_ReadStrptrMaybe(algo::I32Dec1 &parent, algo::strptr in_str) {
+bool algo::I32Dec1_ReadStrptrMaybe(algo::I32Dec1 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1513,14 +1513,14 @@ bool algo::I32Dec1_ReadStrptrMaybe(algo::I32Dec1 &parent, algo::strptr in_str) {
 // --- algo.I32Dec1..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I32Dec1.String  printfmt:Raw
-void algo::I32Dec1_Print(algo::I32Dec1 row, algo::cstring& str) {
+void algo::I32Dec1_Print(algo::I32Dec1 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I32Dec2.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I32Dec2& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I32Dec2& parent, double val) throw() {
     double intval = val * 100;
     i32 minval = i32(-2147483648LL);
     i32 maxval = i32(2147483647LL);
@@ -1534,7 +1534,7 @@ bool algo::value_SetDoubleMaybe(algo::I32Dec2& parent, double val) {
 }
 
 // --- algo.I32Dec2.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I32Dec2& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I32Dec2& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -1582,7 +1582,7 @@ bool algo::value_ReadStrptrMaybe(algo::I32Dec2& parent, algo::strptr in) {
 }
 
 // --- algo.I32Dec2.value.Print
-void algo::value_Print(algo::I32Dec2& parent, cstring &outstr) {
+void algo::value_Print(algo::I32Dec2& parent, cstring &outstr) throw() {
     i32 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -1596,7 +1596,7 @@ void algo::value_Print(algo::I32Dec2& parent, cstring &outstr) {
 // --- algo.I32Dec2..ReadStrptrMaybe
 // Read fields of algo::I32Dec2 from an ascii string.
 // The format of the string is the format of the algo::I32Dec2's only field
-bool algo::I32Dec2_ReadStrptrMaybe(algo::I32Dec2 &parent, algo::strptr in_str) {
+bool algo::I32Dec2_ReadStrptrMaybe(algo::I32Dec2 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1605,14 +1605,14 @@ bool algo::I32Dec2_ReadStrptrMaybe(algo::I32Dec2 &parent, algo::strptr in_str) {
 // --- algo.I32Dec2..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I32Dec2.String  printfmt:Raw
-void algo::I32Dec2_Print(algo::I32Dec2 row, algo::cstring& str) {
+void algo::I32Dec2_Print(algo::I32Dec2 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I32Dec3.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I32Dec3& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I32Dec3& parent, double val) throw() {
     double intval = val * 1000;
     i32 minval = i32(-2147483648LL);
     i32 maxval = i32(2147483647LL);
@@ -1626,7 +1626,7 @@ bool algo::value_SetDoubleMaybe(algo::I32Dec3& parent, double val) {
 }
 
 // --- algo.I32Dec3.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I32Dec3& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I32Dec3& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -1674,7 +1674,7 @@ bool algo::value_ReadStrptrMaybe(algo::I32Dec3& parent, algo::strptr in) {
 }
 
 // --- algo.I32Dec3.value.Print
-void algo::value_Print(algo::I32Dec3& parent, cstring &outstr) {
+void algo::value_Print(algo::I32Dec3& parent, cstring &outstr) throw() {
     i32 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -1688,7 +1688,7 @@ void algo::value_Print(algo::I32Dec3& parent, cstring &outstr) {
 // --- algo.I32Dec3..ReadStrptrMaybe
 // Read fields of algo::I32Dec3 from an ascii string.
 // The format of the string is the format of the algo::I32Dec3's only field
-bool algo::I32Dec3_ReadStrptrMaybe(algo::I32Dec3 &parent, algo::strptr in_str) {
+bool algo::I32Dec3_ReadStrptrMaybe(algo::I32Dec3 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1697,14 +1697,14 @@ bool algo::I32Dec3_ReadStrptrMaybe(algo::I32Dec3 &parent, algo::strptr in_str) {
 // --- algo.I32Dec3..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I32Dec3.String  printfmt:Raw
-void algo::I32Dec3_Print(algo::I32Dec3 row, algo::cstring& str) {
+void algo::I32Dec3_Print(algo::I32Dec3 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I32Dec4.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I32Dec4& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I32Dec4& parent, double val) throw() {
     double intval = val * 10000;
     i32 minval = i32(-2147483648LL);
     i32 maxval = i32(2147483647LL);
@@ -1718,7 +1718,7 @@ bool algo::value_SetDoubleMaybe(algo::I32Dec4& parent, double val) {
 }
 
 // --- algo.I32Dec4.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I32Dec4& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I32Dec4& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -1766,7 +1766,7 @@ bool algo::value_ReadStrptrMaybe(algo::I32Dec4& parent, algo::strptr in) {
 }
 
 // --- algo.I32Dec4.value.Print
-void algo::value_Print(algo::I32Dec4& parent, cstring &outstr) {
+void algo::value_Print(algo::I32Dec4& parent, cstring &outstr) throw() {
     i32 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -1780,7 +1780,7 @@ void algo::value_Print(algo::I32Dec4& parent, cstring &outstr) {
 // --- algo.I32Dec4..ReadStrptrMaybe
 // Read fields of algo::I32Dec4 from an ascii string.
 // The format of the string is the format of the algo::I32Dec4's only field
-bool algo::I32Dec4_ReadStrptrMaybe(algo::I32Dec4 &parent, algo::strptr in_str) {
+bool algo::I32Dec4_ReadStrptrMaybe(algo::I32Dec4 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1789,14 +1789,14 @@ bool algo::I32Dec4_ReadStrptrMaybe(algo::I32Dec4 &parent, algo::strptr in_str) {
 // --- algo.I32Dec4..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I32Dec4.String  printfmt:Raw
-void algo::I32Dec4_Print(algo::I32Dec4 row, algo::cstring& str) {
+void algo::I32Dec4_Print(algo::I32Dec4 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I32Dec5.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I32Dec5& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I32Dec5& parent, double val) throw() {
     double intval = val * 100000;
     i32 minval = i32(-2147483648LL);
     i32 maxval = i32(2147483647LL);
@@ -1810,7 +1810,7 @@ bool algo::value_SetDoubleMaybe(algo::I32Dec5& parent, double val) {
 }
 
 // --- algo.I32Dec5.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I32Dec5& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I32Dec5& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -1858,7 +1858,7 @@ bool algo::value_ReadStrptrMaybe(algo::I32Dec5& parent, algo::strptr in) {
 }
 
 // --- algo.I32Dec5.value.Print
-void algo::value_Print(algo::I32Dec5& parent, cstring &outstr) {
+void algo::value_Print(algo::I32Dec5& parent, cstring &outstr) throw() {
     i32 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -1872,7 +1872,7 @@ void algo::value_Print(algo::I32Dec5& parent, cstring &outstr) {
 // --- algo.I32Dec5..ReadStrptrMaybe
 // Read fields of algo::I32Dec5 from an ascii string.
 // The format of the string is the format of the algo::I32Dec5's only field
-bool algo::I32Dec5_ReadStrptrMaybe(algo::I32Dec5 &parent, algo::strptr in_str) {
+bool algo::I32Dec5_ReadStrptrMaybe(algo::I32Dec5 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1881,14 +1881,14 @@ bool algo::I32Dec5_ReadStrptrMaybe(algo::I32Dec5 &parent, algo::strptr in_str) {
 // --- algo.I32Dec5..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I32Dec5.String  printfmt:Raw
-void algo::I32Dec5_Print(algo::I32Dec5 row, algo::cstring& str) {
+void algo::I32Dec5_Print(algo::I32Dec5 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I64Dec1.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I64Dec1& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I64Dec1& parent, double val) throw() {
     double intval = val * 10;
     i64 minval = i64(-9223372036854775807LL);
     i64 maxval = i64(9223372036854775807LL);
@@ -1902,7 +1902,7 @@ bool algo::value_SetDoubleMaybe(algo::I64Dec1& parent, double val) {
 }
 
 // --- algo.I64Dec1.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I64Dec1& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I64Dec1& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -1950,7 +1950,7 @@ bool algo::value_ReadStrptrMaybe(algo::I64Dec1& parent, algo::strptr in) {
 }
 
 // --- algo.I64Dec1.value.Print
-void algo::value_Print(algo::I64Dec1& parent, cstring &outstr) {
+void algo::value_Print(algo::I64Dec1& parent, cstring &outstr) throw() {
     i64 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -1964,7 +1964,7 @@ void algo::value_Print(algo::I64Dec1& parent, cstring &outstr) {
 // --- algo.I64Dec1..ReadStrptrMaybe
 // Read fields of algo::I64Dec1 from an ascii string.
 // The format of the string is the format of the algo::I64Dec1's only field
-bool algo::I64Dec1_ReadStrptrMaybe(algo::I64Dec1 &parent, algo::strptr in_str) {
+bool algo::I64Dec1_ReadStrptrMaybe(algo::I64Dec1 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1973,14 +1973,14 @@ bool algo::I64Dec1_ReadStrptrMaybe(algo::I64Dec1 &parent, algo::strptr in_str) {
 // --- algo.I64Dec1..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I64Dec1.String  printfmt:Raw
-void algo::I64Dec1_Print(algo::I64Dec1 row, algo::cstring& str) {
+void algo::I64Dec1_Print(algo::I64Dec1 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I64Dec10.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I64Dec10& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I64Dec10& parent, double val) throw() {
     double intval = val * 10000000000;
     i64 minval = i64(-9223372036854775807LL);
     i64 maxval = i64(9223372036854775807LL);
@@ -1994,7 +1994,7 @@ bool algo::value_SetDoubleMaybe(algo::I64Dec10& parent, double val) {
 }
 
 // --- algo.I64Dec10.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I64Dec10& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I64Dec10& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -2042,7 +2042,7 @@ bool algo::value_ReadStrptrMaybe(algo::I64Dec10& parent, algo::strptr in) {
 }
 
 // --- algo.I64Dec10.value.Print
-void algo::value_Print(algo::I64Dec10& parent, cstring &outstr) {
+void algo::value_Print(algo::I64Dec10& parent, cstring &outstr) throw() {
     i64 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -2056,7 +2056,7 @@ void algo::value_Print(algo::I64Dec10& parent, cstring &outstr) {
 // --- algo.I64Dec10..ReadStrptrMaybe
 // Read fields of algo::I64Dec10 from an ascii string.
 // The format of the string is the format of the algo::I64Dec10's only field
-bool algo::I64Dec10_ReadStrptrMaybe(algo::I64Dec10 &parent, algo::strptr in_str) {
+bool algo::I64Dec10_ReadStrptrMaybe(algo::I64Dec10 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2065,14 +2065,14 @@ bool algo::I64Dec10_ReadStrptrMaybe(algo::I64Dec10 &parent, algo::strptr in_str)
 // --- algo.I64Dec10..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I64Dec10.String  printfmt:Raw
-void algo::I64Dec10_Print(algo::I64Dec10 row, algo::cstring& str) {
+void algo::I64Dec10_Print(algo::I64Dec10 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I64Dec2.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I64Dec2& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I64Dec2& parent, double val) throw() {
     double intval = val * 100;
     i64 minval = i64(-9223372036854775807LL);
     i64 maxval = i64(9223372036854775807LL);
@@ -2086,7 +2086,7 @@ bool algo::value_SetDoubleMaybe(algo::I64Dec2& parent, double val) {
 }
 
 // --- algo.I64Dec2.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I64Dec2& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I64Dec2& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -2134,7 +2134,7 @@ bool algo::value_ReadStrptrMaybe(algo::I64Dec2& parent, algo::strptr in) {
 }
 
 // --- algo.I64Dec2.value.Print
-void algo::value_Print(algo::I64Dec2& parent, cstring &outstr) {
+void algo::value_Print(algo::I64Dec2& parent, cstring &outstr) throw() {
     i64 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -2148,7 +2148,7 @@ void algo::value_Print(algo::I64Dec2& parent, cstring &outstr) {
 // --- algo.I64Dec2..ReadStrptrMaybe
 // Read fields of algo::I64Dec2 from an ascii string.
 // The format of the string is the format of the algo::I64Dec2's only field
-bool algo::I64Dec2_ReadStrptrMaybe(algo::I64Dec2 &parent, algo::strptr in_str) {
+bool algo::I64Dec2_ReadStrptrMaybe(algo::I64Dec2 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2157,14 +2157,14 @@ bool algo::I64Dec2_ReadStrptrMaybe(algo::I64Dec2 &parent, algo::strptr in_str) {
 // --- algo.I64Dec2..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I64Dec2.String  printfmt:Raw
-void algo::I64Dec2_Print(algo::I64Dec2 row, algo::cstring& str) {
+void algo::I64Dec2_Print(algo::I64Dec2 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I64Dec3.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I64Dec3& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I64Dec3& parent, double val) throw() {
     double intval = val * 1000;
     i64 minval = i64(-9223372036854775807LL);
     i64 maxval = i64(9223372036854775807LL);
@@ -2178,7 +2178,7 @@ bool algo::value_SetDoubleMaybe(algo::I64Dec3& parent, double val) {
 }
 
 // --- algo.I64Dec3.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I64Dec3& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I64Dec3& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -2226,7 +2226,7 @@ bool algo::value_ReadStrptrMaybe(algo::I64Dec3& parent, algo::strptr in) {
 }
 
 // --- algo.I64Dec3.value.Print
-void algo::value_Print(algo::I64Dec3& parent, cstring &outstr) {
+void algo::value_Print(algo::I64Dec3& parent, cstring &outstr) throw() {
     i64 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -2240,7 +2240,7 @@ void algo::value_Print(algo::I64Dec3& parent, cstring &outstr) {
 // --- algo.I64Dec3..ReadStrptrMaybe
 // Read fields of algo::I64Dec3 from an ascii string.
 // The format of the string is the format of the algo::I64Dec3's only field
-bool algo::I64Dec3_ReadStrptrMaybe(algo::I64Dec3 &parent, algo::strptr in_str) {
+bool algo::I64Dec3_ReadStrptrMaybe(algo::I64Dec3 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2249,14 +2249,14 @@ bool algo::I64Dec3_ReadStrptrMaybe(algo::I64Dec3 &parent, algo::strptr in_str) {
 // --- algo.I64Dec3..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I64Dec3.String  printfmt:Raw
-void algo::I64Dec3_Print(algo::I64Dec3 row, algo::cstring& str) {
+void algo::I64Dec3_Print(algo::I64Dec3 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I64Dec4.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I64Dec4& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I64Dec4& parent, double val) throw() {
     double intval = val * 10000;
     i64 minval = i64(-9223372036854775807LL);
     i64 maxval = i64(9223372036854775807LL);
@@ -2270,7 +2270,7 @@ bool algo::value_SetDoubleMaybe(algo::I64Dec4& parent, double val) {
 }
 
 // --- algo.I64Dec4.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I64Dec4& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I64Dec4& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -2318,7 +2318,7 @@ bool algo::value_ReadStrptrMaybe(algo::I64Dec4& parent, algo::strptr in) {
 }
 
 // --- algo.I64Dec4.value.Print
-void algo::value_Print(algo::I64Dec4& parent, cstring &outstr) {
+void algo::value_Print(algo::I64Dec4& parent, cstring &outstr) throw() {
     i64 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -2332,7 +2332,7 @@ void algo::value_Print(algo::I64Dec4& parent, cstring &outstr) {
 // --- algo.I64Dec4..ReadStrptrMaybe
 // Read fields of algo::I64Dec4 from an ascii string.
 // The format of the string is the format of the algo::I64Dec4's only field
-bool algo::I64Dec4_ReadStrptrMaybe(algo::I64Dec4 &parent, algo::strptr in_str) {
+bool algo::I64Dec4_ReadStrptrMaybe(algo::I64Dec4 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2341,14 +2341,14 @@ bool algo::I64Dec4_ReadStrptrMaybe(algo::I64Dec4 &parent, algo::strptr in_str) {
 // --- algo.I64Dec4..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I64Dec4.String  printfmt:Raw
-void algo::I64Dec4_Print(algo::I64Dec4 row, algo::cstring& str) {
+void algo::I64Dec4_Print(algo::I64Dec4 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I64Dec5.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I64Dec5& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I64Dec5& parent, double val) throw() {
     double intval = val * 100000;
     i64 minval = i64(-9223372036854775807LL);
     i64 maxval = i64(9223372036854775807LL);
@@ -2362,7 +2362,7 @@ bool algo::value_SetDoubleMaybe(algo::I64Dec5& parent, double val) {
 }
 
 // --- algo.I64Dec5.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I64Dec5& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I64Dec5& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -2410,7 +2410,7 @@ bool algo::value_ReadStrptrMaybe(algo::I64Dec5& parent, algo::strptr in) {
 }
 
 // --- algo.I64Dec5.value.Print
-void algo::value_Print(algo::I64Dec5& parent, cstring &outstr) {
+void algo::value_Print(algo::I64Dec5& parent, cstring &outstr) throw() {
     i64 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -2424,7 +2424,7 @@ void algo::value_Print(algo::I64Dec5& parent, cstring &outstr) {
 // --- algo.I64Dec5..ReadStrptrMaybe
 // Read fields of algo::I64Dec5 from an ascii string.
 // The format of the string is the format of the algo::I64Dec5's only field
-bool algo::I64Dec5_ReadStrptrMaybe(algo::I64Dec5 &parent, algo::strptr in_str) {
+bool algo::I64Dec5_ReadStrptrMaybe(algo::I64Dec5 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2433,14 +2433,14 @@ bool algo::I64Dec5_ReadStrptrMaybe(algo::I64Dec5 &parent, algo::strptr in_str) {
 // --- algo.I64Dec5..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I64Dec5.String  printfmt:Raw
-void algo::I64Dec5_Print(algo::I64Dec5 row, algo::cstring& str) {
+void algo::I64Dec5_Print(algo::I64Dec5 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I64Dec6.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I64Dec6& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I64Dec6& parent, double val) throw() {
     double intval = val * 1000000;
     i64 minval = i64(-9223372036854775807LL);
     i64 maxval = i64(9223372036854775807LL);
@@ -2454,7 +2454,7 @@ bool algo::value_SetDoubleMaybe(algo::I64Dec6& parent, double val) {
 }
 
 // --- algo.I64Dec6.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I64Dec6& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I64Dec6& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -2502,7 +2502,7 @@ bool algo::value_ReadStrptrMaybe(algo::I64Dec6& parent, algo::strptr in) {
 }
 
 // --- algo.I64Dec6.value.Print
-void algo::value_Print(algo::I64Dec6& parent, cstring &outstr) {
+void algo::value_Print(algo::I64Dec6& parent, cstring &outstr) throw() {
     i64 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -2516,7 +2516,7 @@ void algo::value_Print(algo::I64Dec6& parent, cstring &outstr) {
 // --- algo.I64Dec6..ReadStrptrMaybe
 // Read fields of algo::I64Dec6 from an ascii string.
 // The format of the string is the format of the algo::I64Dec6's only field
-bool algo::I64Dec6_ReadStrptrMaybe(algo::I64Dec6 &parent, algo::strptr in_str) {
+bool algo::I64Dec6_ReadStrptrMaybe(algo::I64Dec6 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2525,14 +2525,14 @@ bool algo::I64Dec6_ReadStrptrMaybe(algo::I64Dec6 &parent, algo::strptr in_str) {
 // --- algo.I64Dec6..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I64Dec6.String  printfmt:Raw
-void algo::I64Dec6_Print(algo::I64Dec6 row, algo::cstring& str) {
+void algo::I64Dec6_Print(algo::I64Dec6 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I64Dec7.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I64Dec7& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I64Dec7& parent, double val) throw() {
     double intval = val * 10000000;
     i64 minval = i64(-9223372036854775807LL);
     i64 maxval = i64(9223372036854775807LL);
@@ -2546,7 +2546,7 @@ bool algo::value_SetDoubleMaybe(algo::I64Dec7& parent, double val) {
 }
 
 // --- algo.I64Dec7.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I64Dec7& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I64Dec7& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -2594,7 +2594,7 @@ bool algo::value_ReadStrptrMaybe(algo::I64Dec7& parent, algo::strptr in) {
 }
 
 // --- algo.I64Dec7.value.Print
-void algo::value_Print(algo::I64Dec7& parent, cstring &outstr) {
+void algo::value_Print(algo::I64Dec7& parent, cstring &outstr) throw() {
     i64 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -2608,7 +2608,7 @@ void algo::value_Print(algo::I64Dec7& parent, cstring &outstr) {
 // --- algo.I64Dec7..ReadStrptrMaybe
 // Read fields of algo::I64Dec7 from an ascii string.
 // The format of the string is the format of the algo::I64Dec7's only field
-bool algo::I64Dec7_ReadStrptrMaybe(algo::I64Dec7 &parent, algo::strptr in_str) {
+bool algo::I64Dec7_ReadStrptrMaybe(algo::I64Dec7 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2617,14 +2617,14 @@ bool algo::I64Dec7_ReadStrptrMaybe(algo::I64Dec7 &parent, algo::strptr in_str) {
 // --- algo.I64Dec7..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I64Dec7.String  printfmt:Raw
-void algo::I64Dec7_Print(algo::I64Dec7 row, algo::cstring& str) {
+void algo::I64Dec7_Print(algo::I64Dec7 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I64Dec8.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I64Dec8& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I64Dec8& parent, double val) throw() {
     double intval = val * 100000000;
     i64 minval = i64(-9223372036854775807LL);
     i64 maxval = i64(9223372036854775807LL);
@@ -2638,7 +2638,7 @@ bool algo::value_SetDoubleMaybe(algo::I64Dec8& parent, double val) {
 }
 
 // --- algo.I64Dec8.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I64Dec8& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I64Dec8& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -2686,7 +2686,7 @@ bool algo::value_ReadStrptrMaybe(algo::I64Dec8& parent, algo::strptr in) {
 }
 
 // --- algo.I64Dec8.value.Print
-void algo::value_Print(algo::I64Dec8& parent, cstring &outstr) {
+void algo::value_Print(algo::I64Dec8& parent, cstring &outstr) throw() {
     i64 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -2700,7 +2700,7 @@ void algo::value_Print(algo::I64Dec8& parent, cstring &outstr) {
 // --- algo.I64Dec8..ReadStrptrMaybe
 // Read fields of algo::I64Dec8 from an ascii string.
 // The format of the string is the format of the algo::I64Dec8's only field
-bool algo::I64Dec8_ReadStrptrMaybe(algo::I64Dec8 &parent, algo::strptr in_str) {
+bool algo::I64Dec8_ReadStrptrMaybe(algo::I64Dec8 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2709,14 +2709,14 @@ bool algo::I64Dec8_ReadStrptrMaybe(algo::I64Dec8 &parent, algo::strptr in_str) {
 // --- algo.I64Dec8..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I64Dec8.String  printfmt:Raw
-void algo::I64Dec8_Print(algo::I64Dec8 row, algo::cstring& str) {
+void algo::I64Dec8_Print(algo::I64Dec8 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.I64Dec9.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::I64Dec9& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::I64Dec9& parent, double val) throw() {
     double intval = val * 1000000000;
     i64 minval = i64(-9223372036854775807LL);
     i64 maxval = i64(9223372036854775807LL);
@@ -2730,7 +2730,7 @@ bool algo::value_SetDoubleMaybe(algo::I64Dec9& parent, double val) {
 }
 
 // --- algo.I64Dec9.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::I64Dec9& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::I64Dec9& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -2778,7 +2778,7 @@ bool algo::value_ReadStrptrMaybe(algo::I64Dec9& parent, algo::strptr in) {
 }
 
 // --- algo.I64Dec9.value.Print
-void algo::value_Print(algo::I64Dec9& parent, cstring &outstr) {
+void algo::value_Print(algo::I64Dec9& parent, cstring &outstr) throw() {
     i64 value = parent.value;
     ch_Reserve(outstr, 64);
     if (value < 0) {
@@ -2792,7 +2792,7 @@ void algo::value_Print(algo::I64Dec9& parent, cstring &outstr) {
 // --- algo.I64Dec9..ReadStrptrMaybe
 // Read fields of algo::I64Dec9 from an ascii string.
 // The format of the string is the format of the algo::I64Dec9's only field
-bool algo::I64Dec9_ReadStrptrMaybe(algo::I64Dec9 &parent, algo::strptr in_str) {
+bool algo::I64Dec9_ReadStrptrMaybe(algo::I64Dec9 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2801,12 +2801,12 @@ bool algo::I64Dec9_ReadStrptrMaybe(algo::I64Dec9 &parent, algo::strptr in_str) {
 // --- algo.I64Dec9..Print
 // print string representation of ROW to string STR
 // cfmt:algo.I64Dec9.String  printfmt:Raw
-void algo::I64Dec9_Print(algo::I64Dec9 row, algo::cstring& str) {
+void algo::I64Dec9_Print(algo::I64Dec9 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.IOEvtFlags.read.ReadStrptrMaybe
-inline static bool algo::read_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) {
+inline static bool algo::read_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool read_tmp;
     retval = bool_ReadStrptrMaybe(read_tmp, in_str);
@@ -2817,7 +2817,7 @@ inline static bool algo::read_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::st
 }
 
 // --- algo.IOEvtFlags.write.ReadStrptrMaybe
-inline static bool algo::write_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) {
+inline static bool algo::write_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool write_tmp;
     retval = bool_ReadStrptrMaybe(write_tmp, in_str);
@@ -2828,7 +2828,7 @@ inline static bool algo::write_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::s
 }
 
 // --- algo.IOEvtFlags.eof.ReadStrptrMaybe
-inline static bool algo::eof_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) {
+inline static bool algo::eof_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool eof_tmp;
     retval = bool_ReadStrptrMaybe(eof_tmp, in_str);
@@ -2839,7 +2839,7 @@ inline static bool algo::eof_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::str
 }
 
 // --- algo.IOEvtFlags.err.ReadStrptrMaybe
-inline static bool algo::err_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) {
+inline static bool algo::err_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool err_tmp;
     retval = bool_ReadStrptrMaybe(err_tmp, in_str);
@@ -2850,7 +2850,7 @@ inline static bool algo::err_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::str
 }
 
 // --- algo.IOEvtFlags..ReadFieldMaybe
-bool algo::IOEvtFlags_ReadFieldMaybe(algo::IOEvtFlags& parent, algo::strptr field, algo::strptr strval) {
+bool algo::IOEvtFlags_ReadFieldMaybe(algo::IOEvtFlags& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     algo::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2885,7 +2885,7 @@ bool algo::IOEvtFlags_ReadFieldMaybe(algo::IOEvtFlags& parent, algo::strptr fiel
 
 // --- algo.IOEvtFlags..ReadStrptrMaybe
 // Read fields of algo::IOEvtFlags from an ascii string.
-bool algo::IOEvtFlags_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) {
+bool algo::IOEvtFlags_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     // Clear affected bits first)
     read_Set(parent, false);
@@ -2929,7 +2929,7 @@ bool algo::IOEvtFlags_ReadStrptrMaybe(algo::IOEvtFlags &parent, algo::strptr in_
 // --- algo.IOEvtFlags..Print
 // print string representation of ROW to string STR
 // cfmt:algo.IOEvtFlags.String  printfmt:Bitset
-void algo::IOEvtFlags_Print(algo::IOEvtFlags& row, algo::cstring& str) {
+void algo::IOEvtFlags_Print(algo::IOEvtFlags& row, algo::cstring& str) throw() {
     algo::ListSep ls(",");
     if (read_Get(row)) {
         str << ls << "read";
@@ -2946,7 +2946,7 @@ void algo::IOEvtFlags_Print(algo::IOEvtFlags& row, algo::cstring& str) {
 }
 
 // --- algo.IOEvtFlags..GetAnon
-algo::strptr algo::IOEvtFlags_GetAnon(algo::IOEvtFlags &parent, i32 idx) {
+algo::strptr algo::IOEvtFlags_GetAnon(algo::IOEvtFlags &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("value", 5);
@@ -2955,7 +2955,7 @@ algo::strptr algo::IOEvtFlags_GetAnon(algo::IOEvtFlags &parent, i32 idx) {
 }
 
 // --- algo.IPoint..ReadFieldMaybe
-bool algo::IPoint_ReadFieldMaybe(algo::IPoint& parent, algo::strptr field, algo::strptr strval) {
+bool algo::IPoint_ReadFieldMaybe(algo::IPoint& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     algo::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2979,7 +2979,7 @@ bool algo::IPoint_ReadFieldMaybe(algo::IPoint& parent, algo::strptr field, algo:
 // --- algo.IPoint..ReadStrptrMaybe
 // Read fields of algo::IPoint from an ascii string.
 // The format of the string is a string with separated values
-bool algo::IPoint_ReadStrptrMaybe(algo::IPoint &parent, algo::strptr in_str) {
+bool algo::IPoint_ReadStrptrMaybe(algo::IPoint &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::strptr value;
 
@@ -2994,20 +2994,20 @@ bool algo::IPoint_ReadStrptrMaybe(algo::IPoint &parent, algo::strptr in_str) {
 // --- algo.IPoint..Print
 // print string representation of ROW to string STR
 // cfmt:algo.IPoint.String  printfmt:Sep
-void algo::IPoint_Print(algo::IPoint& row, algo::cstring& str) {
+void algo::IPoint_Print(algo::IPoint& row, algo::cstring& str) throw() {
     i32_Print(row.x, str);
     str << ' ';
     i32_Print(row.y, str);
 }
 
 // --- algo.Smallstr50.ch.Print
-void algo::ch_Print(algo::Smallstr50& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr50& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr50.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr50& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr50& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 50) {
         ch_SetStrptr(parent, rhs);
@@ -3022,7 +3022,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr50& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr50& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr50& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 50);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3034,7 +3034,7 @@ void algo::ch_SetStrptr(algo::Smallstr50& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr50..Hash
-u32 algo::Smallstr50_Hash(u32 prev, const algo::Smallstr50& rhs) {
+u32 algo::Smallstr50_Hash(u32 prev, const algo::Smallstr50& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -3043,7 +3043,7 @@ u32 algo::Smallstr50_Hash(u32 prev, const algo::Smallstr50& rhs) {
 // --- algo.Smallstr50..ReadStrptrMaybe
 // Read fields of algo::Smallstr50 from an ascii string.
 // The format of the string is the format of the algo::Smallstr50's only field
-bool algo::Smallstr50_ReadStrptrMaybe(algo::Smallstr50 &parent, algo::strptr in_str) {
+bool algo::Smallstr50_ReadStrptrMaybe(algo::Smallstr50 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3052,14 +3052,14 @@ bool algo::Smallstr50_ReadStrptrMaybe(algo::Smallstr50 &parent, algo::strptr in_
 // --- algo.Smallstr50..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr50.String  printfmt:Raw
-void algo::Smallstr50_Print(algo::Smallstr50& row, algo::cstring& str) {
+void algo::Smallstr50_Print(algo::Smallstr50& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Imdb..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Imdb.String  printfmt:Tuple
-void algo::Imdb_Print(algo::Imdb& row, algo::cstring& str) {
+void algo::Imdb_Print(algo::Imdb& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "algo.Imdb";
 
@@ -3077,18 +3077,18 @@ void algo::Imdb_Print(algo::Imdb& row, algo::cstring& str) {
 // --- algo.ImrowPtr..Print
 // print string representation of ROW to string STR
 // cfmt:algo.ImrowPtr.String  printfmt:Raw
-void algo::ImrowPtr_Print(algo::ImrowPtr& row, algo::cstring& str) {
+void algo::ImrowPtr_Print(algo::ImrowPtr& row, algo::cstring& str) throw() {
     u64_Print(row.value, str);
 }
 
 // --- algo.Smallstr100.ch.Print
-void algo::ch_Print(algo::Smallstr100& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr100& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr100.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr100& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr100& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 100) {
         ch_SetStrptr(parent, rhs);
@@ -3103,7 +3103,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr100& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr100& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr100& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 100);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3115,7 +3115,7 @@ void algo::ch_SetStrptr(algo::Smallstr100& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr100..Hash
-u32 algo::Smallstr100_Hash(u32 prev, const algo::Smallstr100& rhs) {
+u32 algo::Smallstr100_Hash(u32 prev, const algo::Smallstr100& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -3124,7 +3124,7 @@ u32 algo::Smallstr100_Hash(u32 prev, const algo::Smallstr100& rhs) {
 // --- algo.Smallstr100..ReadStrptrMaybe
 // Read fields of algo::Smallstr100 from an ascii string.
 // The format of the string is the format of the algo::Smallstr100's only field
-bool algo::Smallstr100_ReadStrptrMaybe(algo::Smallstr100 &parent, algo::strptr in_str) {
+bool algo::Smallstr100_ReadStrptrMaybe(algo::Smallstr100 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3133,14 +3133,14 @@ bool algo::Smallstr100_ReadStrptrMaybe(algo::Smallstr100 &parent, algo::strptr i
 // --- algo.Smallstr100..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr100.String  printfmt:Raw
-void algo::Smallstr100_Print(algo::Smallstr100& row, algo::cstring& str) {
+void algo::Smallstr100_Print(algo::Smallstr100& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Imtable..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Imtable.String  printfmt:Tuple
-void algo::Imtable_Print(algo::Imtable& row, algo::cstring& str) {
+void algo::Imtable_Print(algo::Imtable& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "algo.Imtable";
 
@@ -3168,7 +3168,7 @@ void algo::Imtable_Print(algo::Imtable& row, algo::cstring& str) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<char> algo::buf_Addary(algo::LineBuf& parent, algo::aryptr<char> rhs) {
+algo::aryptr<char> algo::buf_Addary(algo::LineBuf& parent, algo::aryptr<char> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.buf_elems && rhs.elems < parent.buf_elems + parent.buf_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo.tary_alias  field:algo.LineBuf.buf  comment:'alias error: sub-array is being appended to the whole'");
@@ -3184,7 +3184,7 @@ algo::aryptr<char> algo::buf_Addary(algo::LineBuf& parent, algo::aryptr<char> rh
 // --- algo.LineBuf.buf.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-char& algo::buf_Alloc(algo::LineBuf& parent) {
+char& algo::buf_Alloc(algo::LineBuf& parent) throw() {
     buf_Reserve(parent, 1);
     int n  = parent.buf_n;
     int at = n;
@@ -3197,7 +3197,7 @@ char& algo::buf_Alloc(algo::LineBuf& parent) {
 // --- algo.LineBuf.buf.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-char& algo::buf_AllocAt(algo::LineBuf& parent, int at) {
+char& algo::buf_AllocAt(algo::LineBuf& parent, int at) throw() {
     buf_Reserve(parent, 1);
     int n  = parent.buf_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -3212,7 +3212,7 @@ char& algo::buf_AllocAt(algo::LineBuf& parent, int at) {
 
 // --- algo.LineBuf.buf.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<char> algo::buf_AllocN(algo::LineBuf& parent, int n_elems) {
+algo::aryptr<char> algo::buf_AllocN(algo::LineBuf& parent, int n_elems) throw() {
     buf_Reserve(parent, n_elems);
     int old_n  = parent.buf_n;
     int new_n = old_n + n_elems;
@@ -3224,7 +3224,7 @@ algo::aryptr<char> algo::buf_AllocN(algo::LineBuf& parent, int n_elems) {
 
 // --- algo.LineBuf.buf.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo::buf_Remove(algo::LineBuf& parent, u32 i) {
+void algo::buf_Remove(algo::LineBuf& parent, u32 i) throw() {
     u32 lim = parent.buf_n;
     char *elems = parent.buf_elems;
     if (i < lim) {
@@ -3235,7 +3235,7 @@ void algo::buf_Remove(algo::LineBuf& parent, u32 i) {
 
 // --- algo.LineBuf.buf.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void algo::buf_RemoveLast(algo::LineBuf& parent) {
+void algo::buf_RemoveLast(algo::LineBuf& parent) throw() {
     u64 n = parent.buf_n;
     if (n > 0) {
         n -= 1;
@@ -3245,7 +3245,7 @@ void algo::buf_RemoveLast(algo::LineBuf& parent) {
 
 // --- algo.LineBuf.buf.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo::buf_AbsReserve(algo::LineBuf& parent, int n) {
+void algo::buf_AbsReserve(algo::LineBuf& parent, int n) throw() {
     u32 old_max  = parent.buf_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -3261,13 +3261,13 @@ void algo::buf_AbsReserve(algo::LineBuf& parent, int n) {
 // --- algo.LineBuf.buf.Print
 // Convert buf to a string.
 // Array is printed as a regular string.
-void algo::buf_Print(algo::LineBuf& parent, algo::cstring &rhs) {
+void algo::buf_Print(algo::LineBuf& parent, algo::cstring &rhs) throw() {
     rhs << buf_Getary(parent);
 }
 
 // --- algo.LineBuf.buf.Setary
 // Copy contents of RHS to PARENT.
-void algo::buf_Setary(algo::LineBuf& parent, algo::LineBuf &rhs) {
+void algo::buf_Setary(algo::LineBuf& parent, algo::LineBuf &rhs) throw() {
     buf_RemoveAll(parent);
     int nnew = rhs.buf_n;
     buf_Reserve(parent, nnew); // reserve space
@@ -3278,14 +3278,14 @@ void algo::buf_Setary(algo::LineBuf& parent, algo::LineBuf &rhs) {
 // --- algo.LineBuf.buf.Setary2
 // Copy specified array into buf, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void algo::buf_Setary(algo::LineBuf& parent, const algo::aryptr<char> &rhs) {
+void algo::buf_Setary(algo::LineBuf& parent, const algo::aryptr<char> &rhs) throw() {
     buf_RemoveAll(parent);
     buf_Addary(parent, rhs);
 }
 
 // --- algo.LineBuf.buf.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<char> algo::buf_AllocNVal(algo::LineBuf& parent, int n_elems, const char& val) {
+algo::aryptr<char> algo::buf_AllocNVal(algo::LineBuf& parent, int n_elems, const char& val) throw() {
     buf_Reserve(parent, n_elems);
     int old_n  = parent.buf_n;
     int new_n = old_n + n_elems;
@@ -3297,7 +3297,7 @@ algo::aryptr<char> algo::buf_AllocNVal(algo::LineBuf& parent, int n_elems, const
 
 // --- algo.LineBuf.buf.ReadStrptrMaybe
 // The array is replaced with the input string. Function always succeeds.
-bool algo::buf_ReadStrptrMaybe(algo::LineBuf& parent, algo::strptr in_str) {
+bool algo::buf_ReadStrptrMaybe(algo::LineBuf& parent, algo::strptr in_str) throw() {
     bool retval = true;
     buf_RemoveAll(parent);
     buf_Addary(parent,in_str);
@@ -3305,7 +3305,7 @@ bool algo::buf_ReadStrptrMaybe(algo::LineBuf& parent, algo::strptr in_str) {
 }
 
 // --- algo.LineBuf..Uninit
-void algo::LineBuf_Uninit(algo::LineBuf& parent) {
+void algo::LineBuf_Uninit(algo::LineBuf& parent) throw() {
     algo::LineBuf &row = parent; (void)row;
 
     // algo.LineBuf.buf.Uninit (Tary)  //
@@ -3316,7 +3316,7 @@ void algo::LineBuf_Uninit(algo::LineBuf& parent) {
 }
 
 // --- algo.LineBuf..AssignOp
-algo::LineBuf& algo::LineBuf::operator =(const algo::LineBuf &rhs) {
+algo::LineBuf& algo::LineBuf::operator =(const algo::LineBuf &rhs) throw() {
     buf_Setary(*this, buf_Getary(const_cast<algo::LineBuf&>(rhs)));
     incoming = rhs.incoming;
     implied_eof = rhs.implied_eof;
@@ -3325,7 +3325,7 @@ algo::LineBuf& algo::LineBuf::operator =(const algo::LineBuf &rhs) {
 }
 
 // --- algo.LineBuf..CopyCtor
- algo::LineBuf::LineBuf(const algo::LineBuf &rhs)
+ algo::LineBuf::LineBuf(const algo::LineBuf &rhs) throw()
     : incoming(rhs.incoming)
     , implied_eof(rhs.implied_eof)
     , eof(rhs.eof)
@@ -3337,13 +3337,13 @@ algo::LineBuf& algo::LineBuf::operator =(const algo::LineBuf &rhs) {
 }
 
 // --- algo.LnumStr10_U64.ch.Print
-void algo::ch_Print(algo::LnumStr10_U64& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr10_U64& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr10_U64.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr10_U64& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr10_U64& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 10) {
         ch_SetStrptr(parent, rhs);
@@ -3358,7 +3358,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr10_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr10_U64& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr10_U64& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 10);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3376,7 +3376,7 @@ void algo::ch_SetStrptr(algo::LnumStr10_U64& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u64 algo::ch_Getnum(algo::LnumStr10_U64& parent, bool &and_ok) {
+u64 algo::ch_Getnum(algo::LnumStr10_U64& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -3391,7 +3391,7 @@ u64 algo::ch_Getnum(algo::LnumStr10_U64& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u64 algo::ch_GetnumDflt(algo::LnumStr10_U64& parent, u64 dflt) {
+u64 algo::ch_GetnumDflt(algo::LnumStr10_U64& parent, u64 dflt) throw() {
     bool ok = true;
     u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -3401,7 +3401,7 @@ u64 algo::ch_GetnumDflt(algo::LnumStr10_U64& parent, u64 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr10_U64& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr10_U64& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -3410,7 +3410,7 @@ i64 algo::ch_Geti64(algo::LnumStr10_U64& parent, bool &out_ok) {
 // --- algo.LnumStr10_U64.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr10_U64& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr10_U64& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -3424,7 +3424,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr10_U64& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr10_U64..Hash
-u32 algo::LnumStr10_U64_Hash(u32 prev, const algo::LnumStr10_U64& rhs) {
+u32 algo::LnumStr10_U64_Hash(u32 prev, const algo::LnumStr10_U64& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -3433,7 +3433,7 @@ u32 algo::LnumStr10_U64_Hash(u32 prev, const algo::LnumStr10_U64& rhs) {
 // --- algo.LnumStr10_U64..ReadStrptrMaybe
 // Read fields of algo::LnumStr10_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr10_U64's only field
-bool algo::LnumStr10_U64_ReadStrptrMaybe(algo::LnumStr10_U64 &parent, algo::strptr in_str) {
+bool algo::LnumStr10_U64_ReadStrptrMaybe(algo::LnumStr10_U64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3442,18 +3442,18 @@ bool algo::LnumStr10_U64_ReadStrptrMaybe(algo::LnumStr10_U64 &parent, algo::strp
 // --- algo.LnumStr10_U64..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr10_U64.String  printfmt:Raw
-void algo::LnumStr10_U64_Print(algo::LnumStr10_U64& row, algo::cstring& str) {
+void algo::LnumStr10_U64_Print(algo::LnumStr10_U64& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr11_U64.ch.Print
-void algo::ch_Print(algo::LnumStr11_U64& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr11_U64& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr11_U64.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr11_U64& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr11_U64& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 11) {
         ch_SetStrptr(parent, rhs);
@@ -3468,7 +3468,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr11_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr11_U64& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr11_U64& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 11);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3486,7 +3486,7 @@ void algo::ch_SetStrptr(algo::LnumStr11_U64& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u64 algo::ch_Getnum(algo::LnumStr11_U64& parent, bool &and_ok) {
+u64 algo::ch_Getnum(algo::LnumStr11_U64& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -3501,7 +3501,7 @@ u64 algo::ch_Getnum(algo::LnumStr11_U64& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u64 algo::ch_GetnumDflt(algo::LnumStr11_U64& parent, u64 dflt) {
+u64 algo::ch_GetnumDflt(algo::LnumStr11_U64& parent, u64 dflt) throw() {
     bool ok = true;
     u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -3511,7 +3511,7 @@ u64 algo::ch_GetnumDflt(algo::LnumStr11_U64& parent, u64 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr11_U64& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr11_U64& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -3520,7 +3520,7 @@ i64 algo::ch_Geti64(algo::LnumStr11_U64& parent, bool &out_ok) {
 // --- algo.LnumStr11_U64.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr11_U64& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr11_U64& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -3534,7 +3534,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr11_U64& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr11_U64..Hash
-u32 algo::LnumStr11_U64_Hash(u32 prev, const algo::LnumStr11_U64& rhs) {
+u32 algo::LnumStr11_U64_Hash(u32 prev, const algo::LnumStr11_U64& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -3543,7 +3543,7 @@ u32 algo::LnumStr11_U64_Hash(u32 prev, const algo::LnumStr11_U64& rhs) {
 // --- algo.LnumStr11_U64..ReadStrptrMaybe
 // Read fields of algo::LnumStr11_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr11_U64's only field
-bool algo::LnumStr11_U64_ReadStrptrMaybe(algo::LnumStr11_U64 &parent, algo::strptr in_str) {
+bool algo::LnumStr11_U64_ReadStrptrMaybe(algo::LnumStr11_U64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3552,18 +3552,18 @@ bool algo::LnumStr11_U64_ReadStrptrMaybe(algo::LnumStr11_U64 &parent, algo::strp
 // --- algo.LnumStr11_U64..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr11_U64.String  printfmt:Raw
-void algo::LnumStr11_U64_Print(algo::LnumStr11_U64& row, algo::cstring& str) {
+void algo::LnumStr11_U64_Print(algo::LnumStr11_U64& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr12_U64.ch.Print
-void algo::ch_Print(algo::LnumStr12_U64& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr12_U64& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr12_U64.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr12_U64& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr12_U64& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 12) {
         ch_SetStrptr(parent, rhs);
@@ -3578,7 +3578,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr12_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr12_U64& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr12_U64& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 12);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3596,7 +3596,7 @@ void algo::ch_SetStrptr(algo::LnumStr12_U64& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u64 algo::ch_Getnum(algo::LnumStr12_U64& parent, bool &and_ok) {
+u64 algo::ch_Getnum(algo::LnumStr12_U64& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -3611,7 +3611,7 @@ u64 algo::ch_Getnum(algo::LnumStr12_U64& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u64 algo::ch_GetnumDflt(algo::LnumStr12_U64& parent, u64 dflt) {
+u64 algo::ch_GetnumDflt(algo::LnumStr12_U64& parent, u64 dflt) throw() {
     bool ok = true;
     u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -3621,7 +3621,7 @@ u64 algo::ch_GetnumDflt(algo::LnumStr12_U64& parent, u64 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr12_U64& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr12_U64& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -3630,7 +3630,7 @@ i64 algo::ch_Geti64(algo::LnumStr12_U64& parent, bool &out_ok) {
 // --- algo.LnumStr12_U64.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr12_U64& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr12_U64& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -3644,7 +3644,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr12_U64& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr12_U64..Hash
-u32 algo::LnumStr12_U64_Hash(u32 prev, const algo::LnumStr12_U64& rhs) {
+u32 algo::LnumStr12_U64_Hash(u32 prev, const algo::LnumStr12_U64& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -3653,7 +3653,7 @@ u32 algo::LnumStr12_U64_Hash(u32 prev, const algo::LnumStr12_U64& rhs) {
 // --- algo.LnumStr12_U64..ReadStrptrMaybe
 // Read fields of algo::LnumStr12_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr12_U64's only field
-bool algo::LnumStr12_U64_ReadStrptrMaybe(algo::LnumStr12_U64 &parent, algo::strptr in_str) {
+bool algo::LnumStr12_U64_ReadStrptrMaybe(algo::LnumStr12_U64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3662,18 +3662,18 @@ bool algo::LnumStr12_U64_ReadStrptrMaybe(algo::LnumStr12_U64 &parent, algo::strp
 // --- algo.LnumStr12_U64..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr12_U64.String  printfmt:Raw
-void algo::LnumStr12_U64_Print(algo::LnumStr12_U64& row, algo::cstring& str) {
+void algo::LnumStr12_U64_Print(algo::LnumStr12_U64& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr13_U64_Base36.ch.Print
-void algo::ch_Print(algo::LnumStr13_U64_Base36& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr13_U64_Base36& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr13_U64_Base36.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr13_U64_Base36& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr13_U64_Base36& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 13) {
         ch_SetStrptr(parent, rhs);
@@ -3688,7 +3688,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr13_U64_Base36& parent, algo::strptr r
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr13_U64_Base36& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr13_U64_Base36& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 13);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3706,7 +3706,7 @@ void algo::ch_SetStrptr(algo::LnumStr13_U64_Base36& parent, const algo::strptr& 
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u64 algo::ch_Getnum(algo::LnumStr13_U64_Base36& parent, bool &and_ok) {
+u64 algo::ch_Getnum(algo::LnumStr13_U64_Base36& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -3733,7 +3733,7 @@ u64 algo::ch_Getnum(algo::LnumStr13_U64_Base36& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u64 algo::ch_GetnumDflt(algo::LnumStr13_U64_Base36& parent, u64 dflt) {
+u64 algo::ch_GetnumDflt(algo::LnumStr13_U64_Base36& parent, u64 dflt) throw() {
     bool ok = true;
     u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -3743,7 +3743,7 @@ u64 algo::ch_GetnumDflt(algo::LnumStr13_U64_Base36& parent, u64 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr13_U64_Base36& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr13_U64_Base36& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -3752,7 +3752,7 @@ i64 algo::ch_Geti64(algo::LnumStr13_U64_Base36& parent, bool &out_ok) {
 // --- algo.LnumStr13_U64_Base36.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-36 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr13_U64_Base36& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr13_U64_Base36& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -3774,7 +3774,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr13_U64_Base36& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr13_U64_Base36..Hash
-u32 algo::LnumStr13_U64_Base36_Hash(u32 prev, const algo::LnumStr13_U64_Base36& rhs) {
+u32 algo::LnumStr13_U64_Base36_Hash(u32 prev, const algo::LnumStr13_U64_Base36& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -3783,7 +3783,7 @@ u32 algo::LnumStr13_U64_Base36_Hash(u32 prev, const algo::LnumStr13_U64_Base36& 
 // --- algo.LnumStr13_U64_Base36..ReadStrptrMaybe
 // Read fields of algo::LnumStr13_U64_Base36 from an ascii string.
 // The format of the string is the format of the algo::LnumStr13_U64_Base36's only field
-bool algo::LnumStr13_U64_Base36_ReadStrptrMaybe(algo::LnumStr13_U64_Base36 &parent, algo::strptr in_str) {
+bool algo::LnumStr13_U64_Base36_ReadStrptrMaybe(algo::LnumStr13_U64_Base36 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3792,18 +3792,18 @@ bool algo::LnumStr13_U64_Base36_ReadStrptrMaybe(algo::LnumStr13_U64_Base36 &pare
 // --- algo.LnumStr13_U64_Base36..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr13_U64_Base36.String  printfmt:Raw
-void algo::LnumStr13_U64_Base36_Print(algo::LnumStr13_U64_Base36& row, algo::cstring& str) {
+void algo::LnumStr13_U64_Base36_Print(algo::LnumStr13_U64_Base36& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr16_U64_Base16.ch.Print
-void algo::ch_Print(algo::LnumStr16_U64_Base16& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr16_U64_Base16& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr16_U64_Base16.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr16_U64_Base16& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr16_U64_Base16& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 16) {
         ch_SetStrptr(parent, rhs);
@@ -3818,7 +3818,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr16_U64_Base16& parent, algo::strptr r
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr16_U64_Base16& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr16_U64_Base16& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 16);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3836,7 +3836,7 @@ void algo::ch_SetStrptr(algo::LnumStr16_U64_Base16& parent, const algo::strptr& 
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u64 algo::ch_Getnum(algo::LnumStr16_U64_Base16& parent, bool &and_ok) {
+u64 algo::ch_Getnum(algo::LnumStr16_U64_Base16& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -3861,7 +3861,7 @@ u64 algo::ch_Getnum(algo::LnumStr16_U64_Base16& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u64 algo::ch_GetnumDflt(algo::LnumStr16_U64_Base16& parent, u64 dflt) {
+u64 algo::ch_GetnumDflt(algo::LnumStr16_U64_Base16& parent, u64 dflt) throw() {
     bool ok = true;
     u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -3871,7 +3871,7 @@ u64 algo::ch_GetnumDflt(algo::LnumStr16_U64_Base16& parent, u64 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr16_U64_Base16& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr16_U64_Base16& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -3880,7 +3880,7 @@ i64 algo::ch_Geti64(algo::LnumStr16_U64_Base16& parent, bool &out_ok) {
 // --- algo.LnumStr16_U64_Base16.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-16 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr16_U64_Base16& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr16_U64_Base16& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -3902,7 +3902,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr16_U64_Base16& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr16_U64_Base16..Hash
-u32 algo::LnumStr16_U64_Base16_Hash(u32 prev, const algo::LnumStr16_U64_Base16& rhs) {
+u32 algo::LnumStr16_U64_Base16_Hash(u32 prev, const algo::LnumStr16_U64_Base16& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -3911,7 +3911,7 @@ u32 algo::LnumStr16_U64_Base16_Hash(u32 prev, const algo::LnumStr16_U64_Base16& 
 // --- algo.LnumStr16_U64_Base16..ReadStrptrMaybe
 // Read fields of algo::LnumStr16_U64_Base16 from an ascii string.
 // The format of the string is the format of the algo::LnumStr16_U64_Base16's only field
-bool algo::LnumStr16_U64_Base16_ReadStrptrMaybe(algo::LnumStr16_U64_Base16 &parent, algo::strptr in_str) {
+bool algo::LnumStr16_U64_Base16_ReadStrptrMaybe(algo::LnumStr16_U64_Base16 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -3920,18 +3920,18 @@ bool algo::LnumStr16_U64_Base16_ReadStrptrMaybe(algo::LnumStr16_U64_Base16 &pare
 // --- algo.LnumStr16_U64_Base16..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr16_U64_Base16.String  printfmt:Raw
-void algo::LnumStr16_U64_Base16_Print(algo::LnumStr16_U64_Base16& row, algo::cstring& str) {
+void algo::LnumStr16_U64_Base16_Print(algo::LnumStr16_U64_Base16& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr1_U32.ch.Print
-void algo::ch_Print(algo::LnumStr1_U32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr1_U32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr1_U32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr1_U32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr1_U32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 1) {
         ch_SetStrptr(parent, rhs);
@@ -3946,7 +3946,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr1_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr1_U32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr1_U32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 1);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -3964,7 +3964,7 @@ void algo::ch_SetStrptr(algo::LnumStr1_U32& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LnumStr1_U32& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LnumStr1_U32& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -3979,7 +3979,7 @@ u32 algo::ch_Getnum(algo::LnumStr1_U32& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LnumStr1_U32& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LnumStr1_U32& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -3989,7 +3989,7 @@ u32 algo::ch_GetnumDflt(algo::LnumStr1_U32& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr1_U32& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr1_U32& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -3998,7 +3998,7 @@ i64 algo::ch_Geti64(algo::LnumStr1_U32& parent, bool &out_ok) {
 // --- algo.LnumStr1_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr1_U32& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr1_U32& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -4012,7 +4012,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr1_U32& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr1_U32..Hash
-u32 algo::LnumStr1_U32_Hash(u32 prev, const algo::LnumStr1_U32& rhs) {
+u32 algo::LnumStr1_U32_Hash(u32 prev, const algo::LnumStr1_U32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -4021,7 +4021,7 @@ u32 algo::LnumStr1_U32_Hash(u32 prev, const algo::LnumStr1_U32& rhs) {
 // --- algo.LnumStr1_U32..ReadStrptrMaybe
 // Read fields of algo::LnumStr1_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr1_U32's only field
-bool algo::LnumStr1_U32_ReadStrptrMaybe(algo::LnumStr1_U32 &parent, algo::strptr in_str) {
+bool algo::LnumStr1_U32_ReadStrptrMaybe(algo::LnumStr1_U32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -4030,18 +4030,18 @@ bool algo::LnumStr1_U32_ReadStrptrMaybe(algo::LnumStr1_U32 &parent, algo::strptr
 // --- algo.LnumStr1_U32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr1_U32.String  printfmt:Raw
-void algo::LnumStr1_U32_Print(algo::LnumStr1_U32& row, algo::cstring& str) {
+void algo::LnumStr1_U32_Print(algo::LnumStr1_U32& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr20_U64.ch.Print
-void algo::ch_Print(algo::LnumStr20_U64& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr20_U64& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr20_U64.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr20_U64& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr20_U64& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 20) {
         ch_SetStrptr(parent, rhs);
@@ -4056,7 +4056,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr20_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr20_U64& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr20_U64& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 20);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4074,7 +4074,7 @@ void algo::ch_SetStrptr(algo::LnumStr20_U64& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u64 algo::ch_Getnum(algo::LnumStr20_U64& parent, bool &and_ok) {
+u64 algo::ch_Getnum(algo::LnumStr20_U64& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -4097,7 +4097,7 @@ u64 algo::ch_Getnum(algo::LnumStr20_U64& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u64 algo::ch_GetnumDflt(algo::LnumStr20_U64& parent, u64 dflt) {
+u64 algo::ch_GetnumDflt(algo::LnumStr20_U64& parent, u64 dflt) throw() {
     bool ok = true;
     u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -4107,7 +4107,7 @@ u64 algo::ch_GetnumDflt(algo::LnumStr20_U64& parent, u64 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr20_U64& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr20_U64& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -4116,7 +4116,7 @@ i64 algo::ch_Geti64(algo::LnumStr20_U64& parent, bool &out_ok) {
 // --- algo.LnumStr20_U64.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr20_U64& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr20_U64& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -4130,7 +4130,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr20_U64& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr20_U64..Hash
-u32 algo::LnumStr20_U64_Hash(u32 prev, const algo::LnumStr20_U64& rhs) {
+u32 algo::LnumStr20_U64_Hash(u32 prev, const algo::LnumStr20_U64& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -4139,7 +4139,7 @@ u32 algo::LnumStr20_U64_Hash(u32 prev, const algo::LnumStr20_U64& rhs) {
 // --- algo.LnumStr20_U64..ReadStrptrMaybe
 // Read fields of algo::LnumStr20_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr20_U64's only field
-bool algo::LnumStr20_U64_ReadStrptrMaybe(algo::LnumStr20_U64 &parent, algo::strptr in_str) {
+bool algo::LnumStr20_U64_ReadStrptrMaybe(algo::LnumStr20_U64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -4148,18 +4148,18 @@ bool algo::LnumStr20_U64_ReadStrptrMaybe(algo::LnumStr20_U64 &parent, algo::strp
 // --- algo.LnumStr20_U64..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr20_U64.String  printfmt:Raw
-void algo::LnumStr20_U64_Print(algo::LnumStr20_U64& row, algo::cstring& str) {
+void algo::LnumStr20_U64_Print(algo::LnumStr20_U64& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr22_U64.ch.Print
-void algo::ch_Print(algo::LnumStr22_U64& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr22_U64& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr22_U64.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr22_U64& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr22_U64& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 22) {
         ch_SetStrptr(parent, rhs);
@@ -4174,7 +4174,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr22_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr22_U64& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr22_U64& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 22);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4192,7 +4192,7 @@ void algo::ch_SetStrptr(algo::LnumStr22_U64& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u64 algo::ch_Getnum(algo::LnumStr22_U64& parent, bool &and_ok) {
+u64 algo::ch_Getnum(algo::LnumStr22_U64& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -4215,7 +4215,7 @@ u64 algo::ch_Getnum(algo::LnumStr22_U64& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u64 algo::ch_GetnumDflt(algo::LnumStr22_U64& parent, u64 dflt) {
+u64 algo::ch_GetnumDflt(algo::LnumStr22_U64& parent, u64 dflt) throw() {
     bool ok = true;
     u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -4225,7 +4225,7 @@ u64 algo::ch_GetnumDflt(algo::LnumStr22_U64& parent, u64 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr22_U64& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr22_U64& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -4234,7 +4234,7 @@ i64 algo::ch_Geti64(algo::LnumStr22_U64& parent, bool &out_ok) {
 // --- algo.LnumStr22_U64.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr22_U64& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr22_U64& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -4248,7 +4248,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr22_U64& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr22_U64..Hash
-u32 algo::LnumStr22_U64_Hash(u32 prev, const algo::LnumStr22_U64& rhs) {
+u32 algo::LnumStr22_U64_Hash(u32 prev, const algo::LnumStr22_U64& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -4257,7 +4257,7 @@ u32 algo::LnumStr22_U64_Hash(u32 prev, const algo::LnumStr22_U64& rhs) {
 // --- algo.LnumStr22_U64..ReadStrptrMaybe
 // Read fields of algo::LnumStr22_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr22_U64's only field
-bool algo::LnumStr22_U64_ReadStrptrMaybe(algo::LnumStr22_U64 &parent, algo::strptr in_str) {
+bool algo::LnumStr22_U64_ReadStrptrMaybe(algo::LnumStr22_U64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -4266,18 +4266,18 @@ bool algo::LnumStr22_U64_ReadStrptrMaybe(algo::LnumStr22_U64 &parent, algo::strp
 // --- algo.LnumStr22_U64..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr22_U64.String  printfmt:Raw
-void algo::LnumStr22_U64_Print(algo::LnumStr22_U64& row, algo::cstring& str) {
+void algo::LnumStr22_U64_Print(algo::LnumStr22_U64& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr2_U32.ch.Print
-void algo::ch_Print(algo::LnumStr2_U32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr2_U32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr2_U32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr2_U32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr2_U32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 2) {
         ch_SetStrptr(parent, rhs);
@@ -4292,7 +4292,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr2_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr2_U32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr2_U32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 2);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4310,7 +4310,7 @@ void algo::ch_SetStrptr(algo::LnumStr2_U32& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LnumStr2_U32& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LnumStr2_U32& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -4325,7 +4325,7 @@ u32 algo::ch_Getnum(algo::LnumStr2_U32& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LnumStr2_U32& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LnumStr2_U32& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -4335,7 +4335,7 @@ u32 algo::ch_GetnumDflt(algo::LnumStr2_U32& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr2_U32& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr2_U32& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -4344,7 +4344,7 @@ i64 algo::ch_Geti64(algo::LnumStr2_U32& parent, bool &out_ok) {
 // --- algo.LnumStr2_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr2_U32& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr2_U32& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -4358,7 +4358,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr2_U32& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr2_U32..Hash
-u32 algo::LnumStr2_U32_Hash(u32 prev, const algo::LnumStr2_U32& rhs) {
+u32 algo::LnumStr2_U32_Hash(u32 prev, const algo::LnumStr2_U32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -4367,7 +4367,7 @@ u32 algo::LnumStr2_U32_Hash(u32 prev, const algo::LnumStr2_U32& rhs) {
 // --- algo.LnumStr2_U32..ReadStrptrMaybe
 // Read fields of algo::LnumStr2_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr2_U32's only field
-bool algo::LnumStr2_U32_ReadStrptrMaybe(algo::LnumStr2_U32 &parent, algo::strptr in_str) {
+bool algo::LnumStr2_U32_ReadStrptrMaybe(algo::LnumStr2_U32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -4376,18 +4376,18 @@ bool algo::LnumStr2_U32_ReadStrptrMaybe(algo::LnumStr2_U32 &parent, algo::strptr
 // --- algo.LnumStr2_U32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr2_U32.String  printfmt:Raw
-void algo::LnumStr2_U32_Print(algo::LnumStr2_U32& row, algo::cstring& str) {
+void algo::LnumStr2_U32_Print(algo::LnumStr2_U32& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr3_U32.ch.Print
-void algo::ch_Print(algo::LnumStr3_U32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr3_U32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr3_U32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr3_U32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr3_U32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 3) {
         ch_SetStrptr(parent, rhs);
@@ -4402,7 +4402,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr3_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr3_U32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr3_U32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 3);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4420,7 +4420,7 @@ void algo::ch_SetStrptr(algo::LnumStr3_U32& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LnumStr3_U32& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LnumStr3_U32& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -4435,7 +4435,7 @@ u32 algo::ch_Getnum(algo::LnumStr3_U32& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LnumStr3_U32& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LnumStr3_U32& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -4445,7 +4445,7 @@ u32 algo::ch_GetnumDflt(algo::LnumStr3_U32& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr3_U32& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr3_U32& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -4454,7 +4454,7 @@ i64 algo::ch_Geti64(algo::LnumStr3_U32& parent, bool &out_ok) {
 // --- algo.LnumStr3_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr3_U32& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr3_U32& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -4468,7 +4468,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr3_U32& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr3_U32..Hash
-u32 algo::LnumStr3_U32_Hash(u32 prev, const algo::LnumStr3_U32& rhs) {
+u32 algo::LnumStr3_U32_Hash(u32 prev, const algo::LnumStr3_U32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -4477,7 +4477,7 @@ u32 algo::LnumStr3_U32_Hash(u32 prev, const algo::LnumStr3_U32& rhs) {
 // --- algo.LnumStr3_U32..ReadStrptrMaybe
 // Read fields of algo::LnumStr3_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr3_U32's only field
-bool algo::LnumStr3_U32_ReadStrptrMaybe(algo::LnumStr3_U32 &parent, algo::strptr in_str) {
+bool algo::LnumStr3_U32_ReadStrptrMaybe(algo::LnumStr3_U32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -4486,18 +4486,18 @@ bool algo::LnumStr3_U32_ReadStrptrMaybe(algo::LnumStr3_U32 &parent, algo::strptr
 // --- algo.LnumStr3_U32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr3_U32.String  printfmt:Raw
-void algo::LnumStr3_U32_Print(algo::LnumStr3_U32& row, algo::cstring& str) {
+void algo::LnumStr3_U32_Print(algo::LnumStr3_U32& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr4_U32.ch.Print
-void algo::ch_Print(algo::LnumStr4_U32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr4_U32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr4_U32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr4_U32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr4_U32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 4) {
         ch_SetStrptr(parent, rhs);
@@ -4512,7 +4512,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr4_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr4_U32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr4_U32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 4);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4530,7 +4530,7 @@ void algo::ch_SetStrptr(algo::LnumStr4_U32& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LnumStr4_U32& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LnumStr4_U32& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -4545,7 +4545,7 @@ u32 algo::ch_Getnum(algo::LnumStr4_U32& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LnumStr4_U32& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LnumStr4_U32& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -4555,7 +4555,7 @@ u32 algo::ch_GetnumDflt(algo::LnumStr4_U32& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr4_U32& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr4_U32& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -4564,7 +4564,7 @@ i64 algo::ch_Geti64(algo::LnumStr4_U32& parent, bool &out_ok) {
 // --- algo.LnumStr4_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr4_U32& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr4_U32& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -4578,7 +4578,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr4_U32& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr4_U32..Hash
-u32 algo::LnumStr4_U32_Hash(u32 prev, const algo::LnumStr4_U32& rhs) {
+u32 algo::LnumStr4_U32_Hash(u32 prev, const algo::LnumStr4_U32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -4587,7 +4587,7 @@ u32 algo::LnumStr4_U32_Hash(u32 prev, const algo::LnumStr4_U32& rhs) {
 // --- algo.LnumStr4_U32..ReadStrptrMaybe
 // Read fields of algo::LnumStr4_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr4_U32's only field
-bool algo::LnumStr4_U32_ReadStrptrMaybe(algo::LnumStr4_U32 &parent, algo::strptr in_str) {
+bool algo::LnumStr4_U32_ReadStrptrMaybe(algo::LnumStr4_U32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -4596,18 +4596,18 @@ bool algo::LnumStr4_U32_ReadStrptrMaybe(algo::LnumStr4_U32 &parent, algo::strptr
 // --- algo.LnumStr4_U32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr4_U32.String  printfmt:Raw
-void algo::LnumStr4_U32_Print(algo::LnumStr4_U32& row, algo::cstring& str) {
+void algo::LnumStr4_U32_Print(algo::LnumStr4_U32& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr5_U32.ch.Print
-void algo::ch_Print(algo::LnumStr5_U32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr5_U32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr5_U32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 5) {
         ch_SetStrptr(parent, rhs);
@@ -4622,7 +4622,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr5_U32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr5_U32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4640,7 +4640,7 @@ void algo::ch_SetStrptr(algo::LnumStr5_U32& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LnumStr5_U32& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LnumStr5_U32& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -4655,7 +4655,7 @@ u32 algo::ch_Getnum(algo::LnumStr5_U32& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LnumStr5_U32& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LnumStr5_U32& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -4665,7 +4665,7 @@ u32 algo::ch_GetnumDflt(algo::LnumStr5_U32& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr5_U32& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr5_U32& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -4674,7 +4674,7 @@ i64 algo::ch_Geti64(algo::LnumStr5_U32& parent, bool &out_ok) {
 // --- algo.LnumStr5_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr5_U32& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr5_U32& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -4688,7 +4688,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr5_U32& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr5_U32..Hash
-u32 algo::LnumStr5_U32_Hash(u32 prev, const algo::LnumStr5_U32& rhs) {
+u32 algo::LnumStr5_U32_Hash(u32 prev, const algo::LnumStr5_U32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -4697,7 +4697,7 @@ u32 algo::LnumStr5_U32_Hash(u32 prev, const algo::LnumStr5_U32& rhs) {
 // --- algo.LnumStr5_U32..ReadStrptrMaybe
 // Read fields of algo::LnumStr5_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr5_U32's only field
-bool algo::LnumStr5_U32_ReadStrptrMaybe(algo::LnumStr5_U32 &parent, algo::strptr in_str) {
+bool algo::LnumStr5_U32_ReadStrptrMaybe(algo::LnumStr5_U32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -4706,18 +4706,18 @@ bool algo::LnumStr5_U32_ReadStrptrMaybe(algo::LnumStr5_U32 &parent, algo::strptr
 // --- algo.LnumStr5_U32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr5_U32.String  printfmt:Raw
-void algo::LnumStr5_U32_Print(algo::LnumStr5_U32& row, algo::cstring& str) {
+void algo::LnumStr5_U32_Print(algo::LnumStr5_U32& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr5_U32_Base36.ch.Print
-void algo::ch_Print(algo::LnumStr5_U32_Base36& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr5_U32_Base36& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr5_U32_Base36.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32_Base36& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32_Base36& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 5) {
         ch_SetStrptr(parent, rhs);
@@ -4732,7 +4732,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr5_U32_Base36& parent, algo::strptr rh
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr5_U32_Base36& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr5_U32_Base36& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4750,7 +4750,7 @@ void algo::ch_SetStrptr(algo::LnumStr5_U32_Base36& parent, const algo::strptr& r
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LnumStr5_U32_Base36& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LnumStr5_U32_Base36& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -4774,7 +4774,7 @@ u32 algo::ch_Getnum(algo::LnumStr5_U32_Base36& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LnumStr5_U32_Base36& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LnumStr5_U32_Base36& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -4784,7 +4784,7 @@ u32 algo::ch_GetnumDflt(algo::LnumStr5_U32_Base36& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr5_U32_Base36& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr5_U32_Base36& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -4793,7 +4793,7 @@ i64 algo::ch_Geti64(algo::LnumStr5_U32_Base36& parent, bool &out_ok) {
 // --- algo.LnumStr5_U32_Base36.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-36 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr5_U32_Base36& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr5_U32_Base36& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -4815,7 +4815,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr5_U32_Base36& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr5_U32_Base36..Hash
-u32 algo::LnumStr5_U32_Base36_Hash(u32 prev, const algo::LnumStr5_U32_Base36& rhs) {
+u32 algo::LnumStr5_U32_Base36_Hash(u32 prev, const algo::LnumStr5_U32_Base36& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -4824,7 +4824,7 @@ u32 algo::LnumStr5_U32_Base36_Hash(u32 prev, const algo::LnumStr5_U32_Base36& rh
 // --- algo.LnumStr5_U32_Base36..ReadStrptrMaybe
 // Read fields of algo::LnumStr5_U32_Base36 from an ascii string.
 // The format of the string is the format of the algo::LnumStr5_U32_Base36's only field
-bool algo::LnumStr5_U32_Base36_ReadStrptrMaybe(algo::LnumStr5_U32_Base36 &parent, algo::strptr in_str) {
+bool algo::LnumStr5_U32_Base36_ReadStrptrMaybe(algo::LnumStr5_U32_Base36 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -4833,18 +4833,18 @@ bool algo::LnumStr5_U32_Base36_ReadStrptrMaybe(algo::LnumStr5_U32_Base36 &parent
 // --- algo.LnumStr5_U32_Base36..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr5_U32_Base36.String  printfmt:Raw
-void algo::LnumStr5_U32_Base36_Print(algo::LnumStr5_U32_Base36& row, algo::cstring& str) {
+void algo::LnumStr5_U32_Base36_Print(algo::LnumStr5_U32_Base36& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr6_U32.ch.Print
-void algo::ch_Print(algo::LnumStr6_U32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr6_U32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr6_U32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr6_U32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr6_U32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 6) {
         ch_SetStrptr(parent, rhs);
@@ -4859,7 +4859,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr6_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr6_U32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr6_U32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4877,7 +4877,7 @@ void algo::ch_SetStrptr(algo::LnumStr6_U32& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LnumStr6_U32& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LnumStr6_U32& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -4892,7 +4892,7 @@ u32 algo::ch_Getnum(algo::LnumStr6_U32& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LnumStr6_U32& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LnumStr6_U32& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -4902,7 +4902,7 @@ u32 algo::ch_GetnumDflt(algo::LnumStr6_U32& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr6_U32& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr6_U32& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -4911,7 +4911,7 @@ i64 algo::ch_Geti64(algo::LnumStr6_U32& parent, bool &out_ok) {
 // --- algo.LnumStr6_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr6_U32& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr6_U32& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -4925,7 +4925,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr6_U32& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr6_U32..Hash
-u32 algo::LnumStr6_U32_Hash(u32 prev, const algo::LnumStr6_U32& rhs) {
+u32 algo::LnumStr6_U32_Hash(u32 prev, const algo::LnumStr6_U32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -4934,7 +4934,7 @@ u32 algo::LnumStr6_U32_Hash(u32 prev, const algo::LnumStr6_U32& rhs) {
 // --- algo.LnumStr6_U32..ReadStrptrMaybe
 // Read fields of algo::LnumStr6_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr6_U32's only field
-bool algo::LnumStr6_U32_ReadStrptrMaybe(algo::LnumStr6_U32 &parent, algo::strptr in_str) {
+bool algo::LnumStr6_U32_ReadStrptrMaybe(algo::LnumStr6_U32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -4943,18 +4943,18 @@ bool algo::LnumStr6_U32_ReadStrptrMaybe(algo::LnumStr6_U32 &parent, algo::strptr
 // --- algo.LnumStr6_U32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr6_U32.String  printfmt:Raw
-void algo::LnumStr6_U32_Print(algo::LnumStr6_U32& row, algo::cstring& str) {
+void algo::LnumStr6_U32_Print(algo::LnumStr6_U32& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr7_U32.ch.Print
-void algo::ch_Print(algo::LnumStr7_U32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr7_U32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr7_U32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 7) {
         ch_SetStrptr(parent, rhs);
@@ -4969,7 +4969,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr7_U32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr7_U32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 7);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -4987,7 +4987,7 @@ void algo::ch_SetStrptr(algo::LnumStr7_U32& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LnumStr7_U32& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LnumStr7_U32& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -5002,7 +5002,7 @@ u32 algo::ch_Getnum(algo::LnumStr7_U32& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LnumStr7_U32& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LnumStr7_U32& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -5012,7 +5012,7 @@ u32 algo::ch_GetnumDflt(algo::LnumStr7_U32& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr7_U32& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr7_U32& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -5021,7 +5021,7 @@ i64 algo::ch_Geti64(algo::LnumStr7_U32& parent, bool &out_ok) {
 // --- algo.LnumStr7_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr7_U32& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr7_U32& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -5035,7 +5035,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr7_U32& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr7_U32..Hash
-u32 algo::LnumStr7_U32_Hash(u32 prev, const algo::LnumStr7_U32& rhs) {
+u32 algo::LnumStr7_U32_Hash(u32 prev, const algo::LnumStr7_U32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -5044,7 +5044,7 @@ u32 algo::LnumStr7_U32_Hash(u32 prev, const algo::LnumStr7_U32& rhs) {
 // --- algo.LnumStr7_U32..ReadStrptrMaybe
 // Read fields of algo::LnumStr7_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr7_U32's only field
-bool algo::LnumStr7_U32_ReadStrptrMaybe(algo::LnumStr7_U32 &parent, algo::strptr in_str) {
+bool algo::LnumStr7_U32_ReadStrptrMaybe(algo::LnumStr7_U32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -5053,18 +5053,18 @@ bool algo::LnumStr7_U32_ReadStrptrMaybe(algo::LnumStr7_U32 &parent, algo::strptr
 // --- algo.LnumStr7_U32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr7_U32.String  printfmt:Raw
-void algo::LnumStr7_U32_Print(algo::LnumStr7_U32& row, algo::cstring& str) {
+void algo::LnumStr7_U32_Print(algo::LnumStr7_U32& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr7_U32_Base36.ch.Print
-void algo::ch_Print(algo::LnumStr7_U32_Base36& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr7_U32_Base36& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr7_U32_Base36.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32_Base36& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32_Base36& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 7) {
         ch_SetStrptr(parent, rhs);
@@ -5079,7 +5079,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr7_U32_Base36& parent, algo::strptr rh
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr7_U32_Base36& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr7_U32_Base36& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 7);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5097,7 +5097,7 @@ void algo::ch_SetStrptr(algo::LnumStr7_U32_Base36& parent, const algo::strptr& r
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LnumStr7_U32_Base36& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LnumStr7_U32_Base36& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -5122,7 +5122,7 @@ u32 algo::ch_Getnum(algo::LnumStr7_U32_Base36& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LnumStr7_U32_Base36& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LnumStr7_U32_Base36& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -5132,7 +5132,7 @@ u32 algo::ch_GetnumDflt(algo::LnumStr7_U32_Base36& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr7_U32_Base36& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr7_U32_Base36& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -5141,7 +5141,7 @@ i64 algo::ch_Geti64(algo::LnumStr7_U32_Base36& parent, bool &out_ok) {
 // --- algo.LnumStr7_U32_Base36.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-36 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr7_U32_Base36& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr7_U32_Base36& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -5163,7 +5163,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr7_U32_Base36& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr7_U32_Base36..Hash
-u32 algo::LnumStr7_U32_Base36_Hash(u32 prev, const algo::LnumStr7_U32_Base36& rhs) {
+u32 algo::LnumStr7_U32_Base36_Hash(u32 prev, const algo::LnumStr7_U32_Base36& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -5172,7 +5172,7 @@ u32 algo::LnumStr7_U32_Base36_Hash(u32 prev, const algo::LnumStr7_U32_Base36& rh
 // --- algo.LnumStr7_U32_Base36..ReadStrptrMaybe
 // Read fields of algo::LnumStr7_U32_Base36 from an ascii string.
 // The format of the string is the format of the algo::LnumStr7_U32_Base36's only field
-bool algo::LnumStr7_U32_Base36_ReadStrptrMaybe(algo::LnumStr7_U32_Base36 &parent, algo::strptr in_str) {
+bool algo::LnumStr7_U32_Base36_ReadStrptrMaybe(algo::LnumStr7_U32_Base36 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -5181,18 +5181,18 @@ bool algo::LnumStr7_U32_Base36_ReadStrptrMaybe(algo::LnumStr7_U32_Base36 &parent
 // --- algo.LnumStr7_U32_Base36..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr7_U32_Base36.String  printfmt:Raw
-void algo::LnumStr7_U32_Base36_Print(algo::LnumStr7_U32_Base36& row, algo::cstring& str) {
+void algo::LnumStr7_U32_Base36_Print(algo::LnumStr7_U32_Base36& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr8_U32.ch.Print
-void algo::ch_Print(algo::LnumStr8_U32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr8_U32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr8_U32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 8) {
         ch_SetStrptr(parent, rhs);
@@ -5207,7 +5207,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr8_U32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr8_U32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 8);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5225,7 +5225,7 @@ void algo::ch_SetStrptr(algo::LnumStr8_U32& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LnumStr8_U32& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LnumStr8_U32& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -5240,7 +5240,7 @@ u32 algo::ch_Getnum(algo::LnumStr8_U32& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LnumStr8_U32& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LnumStr8_U32& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -5250,7 +5250,7 @@ u32 algo::ch_GetnumDflt(algo::LnumStr8_U32& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr8_U32& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr8_U32& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -5259,7 +5259,7 @@ i64 algo::ch_Geti64(algo::LnumStr8_U32& parent, bool &out_ok) {
 // --- algo.LnumStr8_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr8_U32& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr8_U32& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -5273,7 +5273,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr8_U32& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr8_U32..Hash
-u32 algo::LnumStr8_U32_Hash(u32 prev, const algo::LnumStr8_U32& rhs) {
+u32 algo::LnumStr8_U32_Hash(u32 prev, const algo::LnumStr8_U32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -5282,7 +5282,7 @@ u32 algo::LnumStr8_U32_Hash(u32 prev, const algo::LnumStr8_U32& rhs) {
 // --- algo.LnumStr8_U32..ReadStrptrMaybe
 // Read fields of algo::LnumStr8_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr8_U32's only field
-bool algo::LnumStr8_U32_ReadStrptrMaybe(algo::LnumStr8_U32 &parent, algo::strptr in_str) {
+bool algo::LnumStr8_U32_ReadStrptrMaybe(algo::LnumStr8_U32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -5291,18 +5291,18 @@ bool algo::LnumStr8_U32_ReadStrptrMaybe(algo::LnumStr8_U32 &parent, algo::strptr
 // --- algo.LnumStr8_U32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr8_U32.String  printfmt:Raw
-void algo::LnumStr8_U32_Print(algo::LnumStr8_U32& row, algo::cstring& str) {
+void algo::LnumStr8_U32_Print(algo::LnumStr8_U32& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr8_U32_Base16.ch.Print
-void algo::ch_Print(algo::LnumStr8_U32_Base16& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr8_U32_Base16& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr8_U32_Base16.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32_Base16& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32_Base16& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 8) {
         ch_SetStrptr(parent, rhs);
@@ -5317,7 +5317,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U32_Base16& parent, algo::strptr rh
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr8_U32_Base16& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr8_U32_Base16& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 8);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5335,7 +5335,7 @@ void algo::ch_SetStrptr(algo::LnumStr8_U32_Base16& parent, const algo::strptr& r
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LnumStr8_U32_Base16& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LnumStr8_U32_Base16& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -5360,7 +5360,7 @@ u32 algo::ch_Getnum(algo::LnumStr8_U32_Base16& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LnumStr8_U32_Base16& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LnumStr8_U32_Base16& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -5370,7 +5370,7 @@ u32 algo::ch_GetnumDflt(algo::LnumStr8_U32_Base16& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr8_U32_Base16& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr8_U32_Base16& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -5379,7 +5379,7 @@ i64 algo::ch_Geti64(algo::LnumStr8_U32_Base16& parent, bool &out_ok) {
 // --- algo.LnumStr8_U32_Base16.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-16 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr8_U32_Base16& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr8_U32_Base16& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -5401,7 +5401,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr8_U32_Base16& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr8_U32_Base16..Hash
-u32 algo::LnumStr8_U32_Base16_Hash(u32 prev, const algo::LnumStr8_U32_Base16& rhs) {
+u32 algo::LnumStr8_U32_Base16_Hash(u32 prev, const algo::LnumStr8_U32_Base16& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -5410,7 +5410,7 @@ u32 algo::LnumStr8_U32_Base16_Hash(u32 prev, const algo::LnumStr8_U32_Base16& rh
 // --- algo.LnumStr8_U32_Base16..ReadStrptrMaybe
 // Read fields of algo::LnumStr8_U32_Base16 from an ascii string.
 // The format of the string is the format of the algo::LnumStr8_U32_Base16's only field
-bool algo::LnumStr8_U32_Base16_ReadStrptrMaybe(algo::LnumStr8_U32_Base16 &parent, algo::strptr in_str) {
+bool algo::LnumStr8_U32_Base16_ReadStrptrMaybe(algo::LnumStr8_U32_Base16 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -5419,18 +5419,18 @@ bool algo::LnumStr8_U32_Base16_ReadStrptrMaybe(algo::LnumStr8_U32_Base16 &parent
 // --- algo.LnumStr8_U32_Base16..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr8_U32_Base16.String  printfmt:Raw
-void algo::LnumStr8_U32_Base16_Print(algo::LnumStr8_U32_Base16& row, algo::cstring& str) {
+void algo::LnumStr8_U32_Base16_Print(algo::LnumStr8_U32_Base16& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr8_U64.ch.Print
-void algo::ch_Print(algo::LnumStr8_U64& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr8_U64& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr8_U64.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U64& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U64& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 8) {
         ch_SetStrptr(parent, rhs);
@@ -5445,7 +5445,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr8_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr8_U64& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr8_U64& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 8);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5463,7 +5463,7 @@ void algo::ch_SetStrptr(algo::LnumStr8_U64& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u64 algo::ch_Getnum(algo::LnumStr8_U64& parent, bool &and_ok) {
+u64 algo::ch_Getnum(algo::LnumStr8_U64& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -5478,7 +5478,7 @@ u64 algo::ch_Getnum(algo::LnumStr8_U64& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u64 algo::ch_GetnumDflt(algo::LnumStr8_U64& parent, u64 dflt) {
+u64 algo::ch_GetnumDflt(algo::LnumStr8_U64& parent, u64 dflt) throw() {
     bool ok = true;
     u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -5488,7 +5488,7 @@ u64 algo::ch_GetnumDflt(algo::LnumStr8_U64& parent, u64 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr8_U64& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr8_U64& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -5497,7 +5497,7 @@ i64 algo::ch_Geti64(algo::LnumStr8_U64& parent, bool &out_ok) {
 // --- algo.LnumStr8_U64.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr8_U64& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr8_U64& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -5511,7 +5511,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr8_U64& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr8_U64..Hash
-u32 algo::LnumStr8_U64_Hash(u32 prev, const algo::LnumStr8_U64& rhs) {
+u32 algo::LnumStr8_U64_Hash(u32 prev, const algo::LnumStr8_U64& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -5520,7 +5520,7 @@ u32 algo::LnumStr8_U64_Hash(u32 prev, const algo::LnumStr8_U64& rhs) {
 // --- algo.LnumStr8_U64..ReadStrptrMaybe
 // Read fields of algo::LnumStr8_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr8_U64's only field
-bool algo::LnumStr8_U64_ReadStrptrMaybe(algo::LnumStr8_U64 &parent, algo::strptr in_str) {
+bool algo::LnumStr8_U64_ReadStrptrMaybe(algo::LnumStr8_U64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -5529,18 +5529,18 @@ bool algo::LnumStr8_U64_ReadStrptrMaybe(algo::LnumStr8_U64 &parent, algo::strptr
 // --- algo.LnumStr8_U64..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr8_U64.String  printfmt:Raw
-void algo::LnumStr8_U64_Print(algo::LnumStr8_U64& row, algo::cstring& str) {
+void algo::LnumStr8_U64_Print(algo::LnumStr8_U64& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr9_U32.ch.Print
-void algo::ch_Print(algo::LnumStr9_U32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr9_U32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr9_U32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 9) {
         ch_SetStrptr(parent, rhs);
@@ -5555,7 +5555,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr9_U32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr9_U32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 9);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5573,7 +5573,7 @@ void algo::ch_SetStrptr(algo::LnumStr9_U32& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LnumStr9_U32& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LnumStr9_U32& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -5588,7 +5588,7 @@ u32 algo::ch_Getnum(algo::LnumStr9_U32& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LnumStr9_U32& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LnumStr9_U32& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -5598,7 +5598,7 @@ u32 algo::ch_GetnumDflt(algo::LnumStr9_U32& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr9_U32& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr9_U32& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -5607,7 +5607,7 @@ i64 algo::ch_Geti64(algo::LnumStr9_U32& parent, bool &out_ok) {
 // --- algo.LnumStr9_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr9_U32& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr9_U32& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -5621,7 +5621,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr9_U32& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr9_U32..Hash
-u32 algo::LnumStr9_U32_Hash(u32 prev, const algo::LnumStr9_U32& rhs) {
+u32 algo::LnumStr9_U32_Hash(u32 prev, const algo::LnumStr9_U32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -5630,7 +5630,7 @@ u32 algo::LnumStr9_U32_Hash(u32 prev, const algo::LnumStr9_U32& rhs) {
 // --- algo.LnumStr9_U32..ReadStrptrMaybe
 // Read fields of algo::LnumStr9_U32 from an ascii string.
 // The format of the string is the format of the algo::LnumStr9_U32's only field
-bool algo::LnumStr9_U32_ReadStrptrMaybe(algo::LnumStr9_U32 &parent, algo::strptr in_str) {
+bool algo::LnumStr9_U32_ReadStrptrMaybe(algo::LnumStr9_U32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -5639,18 +5639,18 @@ bool algo::LnumStr9_U32_ReadStrptrMaybe(algo::LnumStr9_U32 &parent, algo::strptr
 // --- algo.LnumStr9_U32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr9_U32.String  printfmt:Raw
-void algo::LnumStr9_U32_Print(algo::LnumStr9_U32& row, algo::cstring& str) {
+void algo::LnumStr9_U32_Print(algo::LnumStr9_U32& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LnumStr9_U64.ch.Print
-void algo::ch_Print(algo::LnumStr9_U64& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LnumStr9_U64& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LnumStr9_U64.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U64& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U64& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 9) {
         ch_SetStrptr(parent, rhs);
@@ -5665,7 +5665,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LnumStr9_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LnumStr9_U64& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LnumStr9_U64& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 9);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5683,7 +5683,7 @@ void algo::ch_SetStrptr(algo::LnumStr9_U64& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u64 algo::ch_Getnum(algo::LnumStr9_U64& parent, bool &and_ok) {
+u64 algo::ch_Getnum(algo::LnumStr9_U64& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -5698,7 +5698,7 @@ u64 algo::ch_Getnum(algo::LnumStr9_U64& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u64 algo::ch_GetnumDflt(algo::LnumStr9_U64& parent, u64 dflt) {
+u64 algo::ch_GetnumDflt(algo::LnumStr9_U64& parent, u64 dflt) throw() {
     bool ok = true;
     u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -5708,7 +5708,7 @@ u64 algo::ch_GetnumDflt(algo::LnumStr9_U64& parent, u64 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LnumStr9_U64& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LnumStr9_U64& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -5717,7 +5717,7 @@ i64 algo::ch_Geti64(algo::LnumStr9_U64& parent, bool &out_ok) {
 // --- algo.LnumStr9_U64.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LnumStr9_U64& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LnumStr9_U64& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -5731,7 +5731,7 @@ bool algo::ch_SetnumMaybe(algo::LnumStr9_U64& parent, i64 rhs) {
 }
 
 // --- algo.LnumStr9_U64..Hash
-u32 algo::LnumStr9_U64_Hash(u32 prev, const algo::LnumStr9_U64& rhs) {
+u32 algo::LnumStr9_U64_Hash(u32 prev, const algo::LnumStr9_U64& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -5740,7 +5740,7 @@ u32 algo::LnumStr9_U64_Hash(u32 prev, const algo::LnumStr9_U64& rhs) {
 // --- algo.LnumStr9_U64..ReadStrptrMaybe
 // Read fields of algo::LnumStr9_U64 from an ascii string.
 // The format of the string is the format of the algo::LnumStr9_U64's only field
-bool algo::LnumStr9_U64_ReadStrptrMaybe(algo::LnumStr9_U64 &parent, algo::strptr in_str) {
+bool algo::LnumStr9_U64_ReadStrptrMaybe(algo::LnumStr9_U64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -5749,18 +5749,18 @@ bool algo::LnumStr9_U64_ReadStrptrMaybe(algo::LnumStr9_U64 &parent, algo::strptr
 // --- algo.LnumStr9_U64..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LnumStr9_U64.String  printfmt:Raw
-void algo::LnumStr9_U64_Print(algo::LnumStr9_U64& row, algo::cstring& str) {
+void algo::LnumStr9_U64_Print(algo::LnumStr9_U64& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr10.ch.Print
-void algo::ch_Print(algo::LspaceStr10& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr10& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr10.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr10& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr10& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 10) {
         ch_SetStrptr(parent, rhs);
@@ -5775,7 +5775,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr10& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr10& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr10& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 10);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5789,7 +5789,7 @@ void algo::ch_SetStrptr(algo::LspaceStr10& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.LspaceStr10..Hash
-u32 algo::LspaceStr10_Hash(u32 prev, const algo::LspaceStr10& rhs) {
+u32 algo::LspaceStr10_Hash(u32 prev, const algo::LspaceStr10& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -5798,7 +5798,7 @@ u32 algo::LspaceStr10_Hash(u32 prev, const algo::LspaceStr10& rhs) {
 // --- algo.LspaceStr10..ReadStrptrMaybe
 // Read fields of algo::LspaceStr10 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr10's only field
-bool algo::LspaceStr10_ReadStrptrMaybe(algo::LspaceStr10 &parent, algo::strptr in_str) {
+bool algo::LspaceStr10_ReadStrptrMaybe(algo::LspaceStr10 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -5807,18 +5807,18 @@ bool algo::LspaceStr10_ReadStrptrMaybe(algo::LspaceStr10 &parent, algo::strptr i
 // --- algo.LspaceStr10..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr10.String  printfmt:Raw
-void algo::LspaceStr10_Print(algo::LspaceStr10& row, algo::cstring& str) {
+void algo::LspaceStr10_Print(algo::LspaceStr10& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr12.ch.Print
-void algo::ch_Print(algo::LspaceStr12& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr12& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr12.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr12& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr12& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 12) {
         ch_SetStrptr(parent, rhs);
@@ -5833,7 +5833,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr12& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr12& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr12& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 12);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5847,7 +5847,7 @@ void algo::ch_SetStrptr(algo::LspaceStr12& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.LspaceStr12..Hash
-u32 algo::LspaceStr12_Hash(u32 prev, const algo::LspaceStr12& rhs) {
+u32 algo::LspaceStr12_Hash(u32 prev, const algo::LspaceStr12& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -5856,7 +5856,7 @@ u32 algo::LspaceStr12_Hash(u32 prev, const algo::LspaceStr12& rhs) {
 // --- algo.LspaceStr12..ReadStrptrMaybe
 // Read fields of algo::LspaceStr12 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr12's only field
-bool algo::LspaceStr12_ReadStrptrMaybe(algo::LspaceStr12 &parent, algo::strptr in_str) {
+bool algo::LspaceStr12_ReadStrptrMaybe(algo::LspaceStr12 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -5865,18 +5865,18 @@ bool algo::LspaceStr12_ReadStrptrMaybe(algo::LspaceStr12 &parent, algo::strptr i
 // --- algo.LspaceStr12..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr12.String  printfmt:Raw
-void algo::LspaceStr12_Print(algo::LspaceStr12& row, algo::cstring& str) {
+void algo::LspaceStr12_Print(algo::LspaceStr12& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr14.ch.Print
-void algo::ch_Print(algo::LspaceStr14& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr14& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr14.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr14& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr14& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 14) {
         ch_SetStrptr(parent, rhs);
@@ -5891,7 +5891,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr14& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr14& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr14& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 14);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5905,7 +5905,7 @@ void algo::ch_SetStrptr(algo::LspaceStr14& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.LspaceStr14..Hash
-u32 algo::LspaceStr14_Hash(u32 prev, const algo::LspaceStr14& rhs) {
+u32 algo::LspaceStr14_Hash(u32 prev, const algo::LspaceStr14& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -5914,7 +5914,7 @@ u32 algo::LspaceStr14_Hash(u32 prev, const algo::LspaceStr14& rhs) {
 // --- algo.LspaceStr14..ReadStrptrMaybe
 // Read fields of algo::LspaceStr14 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr14's only field
-bool algo::LspaceStr14_ReadStrptrMaybe(algo::LspaceStr14 &parent, algo::strptr in_str) {
+bool algo::LspaceStr14_ReadStrptrMaybe(algo::LspaceStr14 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -5923,18 +5923,18 @@ bool algo::LspaceStr14_ReadStrptrMaybe(algo::LspaceStr14 &parent, algo::strptr i
 // --- algo.LspaceStr14..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr14.String  printfmt:Raw
-void algo::LspaceStr14_Print(algo::LspaceStr14& row, algo::cstring& str) {
+void algo::LspaceStr14_Print(algo::LspaceStr14& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr15.ch.Print
-void algo::ch_Print(algo::LspaceStr15& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr15& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr15.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr15& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr15& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 15) {
         ch_SetStrptr(parent, rhs);
@@ -5949,7 +5949,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr15& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr15& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr15& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 15);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -5963,7 +5963,7 @@ void algo::ch_SetStrptr(algo::LspaceStr15& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.LspaceStr15..Hash
-u32 algo::LspaceStr15_Hash(u32 prev, const algo::LspaceStr15& rhs) {
+u32 algo::LspaceStr15_Hash(u32 prev, const algo::LspaceStr15& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -5972,7 +5972,7 @@ u32 algo::LspaceStr15_Hash(u32 prev, const algo::LspaceStr15& rhs) {
 // --- algo.LspaceStr15..ReadStrptrMaybe
 // Read fields of algo::LspaceStr15 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr15's only field
-bool algo::LspaceStr15_ReadStrptrMaybe(algo::LspaceStr15 &parent, algo::strptr in_str) {
+bool algo::LspaceStr15_ReadStrptrMaybe(algo::LspaceStr15 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -5981,18 +5981,18 @@ bool algo::LspaceStr15_ReadStrptrMaybe(algo::LspaceStr15 &parent, algo::strptr i
 // --- algo.LspaceStr15..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr15.String  printfmt:Raw
-void algo::LspaceStr15_Print(algo::LspaceStr15& row, algo::cstring& str) {
+void algo::LspaceStr15_Print(algo::LspaceStr15& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr20_I64.ch.Print
-void algo::ch_Print(algo::LspaceStr20_I64& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr20_I64& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr20_I64.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_I64& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_I64& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 20) {
         ch_SetStrptr(parent, rhs);
@@ -6007,7 +6007,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_I64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr20_I64& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr20_I64& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 20);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6025,7 +6025,7 @@ void algo::ch_SetStrptr(algo::LspaceStr20_I64& parent, const algo::strptr& rhs) 
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-i64 algo::ch_Getnum(algo::LspaceStr20_I64& parent, bool &and_ok) {
+i64 algo::ch_Getnum(algo::LspaceStr20_I64& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     bool is_neg = (str.n_elems > 0) && (str.elems[0] == '-');
@@ -6054,7 +6054,7 @@ i64 algo::ch_Getnum(algo::LspaceStr20_I64& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-i64 algo::ch_GetnumDflt(algo::LspaceStr20_I64& parent, i64 dflt) {
+i64 algo::ch_GetnumDflt(algo::LspaceStr20_I64& parent, i64 dflt) throw() {
     bool ok = true;
     i64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -6064,7 +6064,7 @@ i64 algo::ch_GetnumDflt(algo::LspaceStr20_I64& parent, i64 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LspaceStr20_I64& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LspaceStr20_I64& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -6073,7 +6073,7 @@ i64 algo::ch_Geti64(algo::LspaceStr20_I64& parent, bool &out_ok) {
 // --- algo.LspaceStr20_I64.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LspaceStr20_I64& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LspaceStr20_I64& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -6094,7 +6094,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr20_I64& parent, i64 rhs) {
 }
 
 // --- algo.LspaceStr20_I64..Hash
-u32 algo::LspaceStr20_I64_Hash(u32 prev, const algo::LspaceStr20_I64& rhs) {
+u32 algo::LspaceStr20_I64_Hash(u32 prev, const algo::LspaceStr20_I64& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -6103,7 +6103,7 @@ u32 algo::LspaceStr20_I64_Hash(u32 prev, const algo::LspaceStr20_I64& rhs) {
 // --- algo.LspaceStr20_I64..ReadStrptrMaybe
 // Read fields of algo::LspaceStr20_I64 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr20_I64's only field
-bool algo::LspaceStr20_I64_ReadStrptrMaybe(algo::LspaceStr20_I64 &parent, algo::strptr in_str) {
+bool algo::LspaceStr20_I64_ReadStrptrMaybe(algo::LspaceStr20_I64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -6112,18 +6112,18 @@ bool algo::LspaceStr20_I64_ReadStrptrMaybe(algo::LspaceStr20_I64 &parent, algo::
 // --- algo.LspaceStr20_I64..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr20_I64.String  printfmt:Raw
-void algo::LspaceStr20_I64_Print(algo::LspaceStr20_I64& row, algo::cstring& str) {
+void algo::LspaceStr20_I64_Print(algo::LspaceStr20_I64& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr20_U64.ch.Print
-void algo::ch_Print(algo::LspaceStr20_U64& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr20_U64& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr20_U64.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_U64& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_U64& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 20) {
         ch_SetStrptr(parent, rhs);
@@ -6138,7 +6138,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr20_U64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr20_U64& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr20_U64& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 20);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6156,7 +6156,7 @@ void algo::ch_SetStrptr(algo::LspaceStr20_U64& parent, const algo::strptr& rhs) 
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u64 algo::ch_Getnum(algo::LspaceStr20_U64& parent, bool &and_ok) {
+u64 algo::ch_Getnum(algo::LspaceStr20_U64& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     for (int i = 0; i < str.n_elems; i++) {
@@ -6179,7 +6179,7 @@ u64 algo::ch_Getnum(algo::LspaceStr20_U64& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u64 algo::ch_GetnumDflt(algo::LspaceStr20_U64& parent, u64 dflt) {
+u64 algo::ch_GetnumDflt(algo::LspaceStr20_U64& parent, u64 dflt) throw() {
     bool ok = true;
     u64 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -6189,7 +6189,7 @@ u64 algo::ch_GetnumDflt(algo::LspaceStr20_U64& parent, u64 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LspaceStr20_U64& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LspaceStr20_U64& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -6198,7 +6198,7 @@ i64 algo::ch_Geti64(algo::LspaceStr20_U64& parent, bool &out_ok) {
 // --- algo.LspaceStr20_U64.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LspaceStr20_U64& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LspaceStr20_U64& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -6212,7 +6212,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr20_U64& parent, i64 rhs) {
 }
 
 // --- algo.LspaceStr20_U64..Hash
-u32 algo::LspaceStr20_U64_Hash(u32 prev, const algo::LspaceStr20_U64& rhs) {
+u32 algo::LspaceStr20_U64_Hash(u32 prev, const algo::LspaceStr20_U64& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -6221,7 +6221,7 @@ u32 algo::LspaceStr20_U64_Hash(u32 prev, const algo::LspaceStr20_U64& rhs) {
 // --- algo.LspaceStr20_U64..ReadStrptrMaybe
 // Read fields of algo::LspaceStr20_U64 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr20_U64's only field
-bool algo::LspaceStr20_U64_ReadStrptrMaybe(algo::LspaceStr20_U64 &parent, algo::strptr in_str) {
+bool algo::LspaceStr20_U64_ReadStrptrMaybe(algo::LspaceStr20_U64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -6230,18 +6230,18 @@ bool algo::LspaceStr20_U64_ReadStrptrMaybe(algo::LspaceStr20_U64 &parent, algo::
 // --- algo.LspaceStr20_U64..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr20_U64.String  printfmt:Raw
-void algo::LspaceStr20_U64_Print(algo::LspaceStr20_U64& row, algo::cstring& str) {
+void algo::LspaceStr20_U64_Print(algo::LspaceStr20_U64& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr3.ch.Print
-void algo::ch_Print(algo::LspaceStr3& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr3& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr3.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 3) {
         ch_SetStrptr(parent, rhs);
@@ -6256,7 +6256,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr3& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr3& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 3);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6270,7 +6270,7 @@ void algo::ch_SetStrptr(algo::LspaceStr3& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.LspaceStr3..Hash
-u32 algo::LspaceStr3_Hash(u32 prev, const algo::LspaceStr3& rhs) {
+u32 algo::LspaceStr3_Hash(u32 prev, const algo::LspaceStr3& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -6279,7 +6279,7 @@ u32 algo::LspaceStr3_Hash(u32 prev, const algo::LspaceStr3& rhs) {
 // --- algo.LspaceStr3..ReadStrptrMaybe
 // Read fields of algo::LspaceStr3 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr3's only field
-bool algo::LspaceStr3_ReadStrptrMaybe(algo::LspaceStr3 &parent, algo::strptr in_str) {
+bool algo::LspaceStr3_ReadStrptrMaybe(algo::LspaceStr3 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -6288,18 +6288,18 @@ bool algo::LspaceStr3_ReadStrptrMaybe(algo::LspaceStr3 &parent, algo::strptr in_
 // --- algo.LspaceStr3..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr3.String  printfmt:Raw
-void algo::LspaceStr3_Print(algo::LspaceStr3& row, algo::cstring& str) {
+void algo::LspaceStr3_Print(algo::LspaceStr3& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr3_I16.ch.Print
-void algo::ch_Print(algo::LspaceStr3_I16& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr3_I16& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr3_I16.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3_I16& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3_I16& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 3) {
         ch_SetStrptr(parent, rhs);
@@ -6314,7 +6314,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr3_I16& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr3_I16& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr3_I16& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 3);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6332,7 +6332,7 @@ void algo::ch_SetStrptr(algo::LspaceStr3_I16& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-i16 algo::ch_Getnum(algo::LspaceStr3_I16& parent, bool &and_ok) {
+i16 algo::ch_Getnum(algo::LspaceStr3_I16& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     bool is_neg = (str.n_elems > 0) && (str.elems[0] == '-');
@@ -6353,7 +6353,7 @@ i16 algo::ch_Getnum(algo::LspaceStr3_I16& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-i16 algo::ch_GetnumDflt(algo::LspaceStr3_I16& parent, i16 dflt) {
+i16 algo::ch_GetnumDflt(algo::LspaceStr3_I16& parent, i16 dflt) throw() {
     bool ok = true;
     i16 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -6363,7 +6363,7 @@ i16 algo::ch_GetnumDflt(algo::LspaceStr3_I16& parent, i16 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LspaceStr3_I16& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LspaceStr3_I16& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -6372,7 +6372,7 @@ i64 algo::ch_Geti64(algo::LspaceStr3_I16& parent, bool &out_ok) {
 // --- algo.LspaceStr3_I16.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LspaceStr3_I16& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LspaceStr3_I16& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -6393,7 +6393,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr3_I16& parent, i64 rhs) {
 }
 
 // --- algo.LspaceStr3_I16..Hash
-u32 algo::LspaceStr3_I16_Hash(u32 prev, const algo::LspaceStr3_I16& rhs) {
+u32 algo::LspaceStr3_I16_Hash(u32 prev, const algo::LspaceStr3_I16& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -6402,7 +6402,7 @@ u32 algo::LspaceStr3_I16_Hash(u32 prev, const algo::LspaceStr3_I16& rhs) {
 // --- algo.LspaceStr3_I16..ReadStrptrMaybe
 // Read fields of algo::LspaceStr3_I16 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr3_I16's only field
-bool algo::LspaceStr3_I16_ReadStrptrMaybe(algo::LspaceStr3_I16 &parent, algo::strptr in_str) {
+bool algo::LspaceStr3_I16_ReadStrptrMaybe(algo::LspaceStr3_I16 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -6411,18 +6411,18 @@ bool algo::LspaceStr3_I16_ReadStrptrMaybe(algo::LspaceStr3_I16 &parent, algo::st
 // --- algo.LspaceStr3_I16..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr3_I16.String  printfmt:Raw
-void algo::LspaceStr3_I16_Print(algo::LspaceStr3_I16& row, algo::cstring& str) {
+void algo::LspaceStr3_I16_Print(algo::LspaceStr3_I16& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr4.ch.Print
-void algo::ch_Print(algo::LspaceStr4& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr4& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr4.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr4& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr4& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 4) {
         ch_SetStrptr(parent, rhs);
@@ -6437,7 +6437,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr4& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr4& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr4& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 4);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6451,7 +6451,7 @@ void algo::ch_SetStrptr(algo::LspaceStr4& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.LspaceStr4..Hash
-u32 algo::LspaceStr4_Hash(u32 prev, const algo::LspaceStr4& rhs) {
+u32 algo::LspaceStr4_Hash(u32 prev, const algo::LspaceStr4& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -6460,7 +6460,7 @@ u32 algo::LspaceStr4_Hash(u32 prev, const algo::LspaceStr4& rhs) {
 // --- algo.LspaceStr4..ReadStrptrMaybe
 // Read fields of algo::LspaceStr4 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr4's only field
-bool algo::LspaceStr4_ReadStrptrMaybe(algo::LspaceStr4 &parent, algo::strptr in_str) {
+bool algo::LspaceStr4_ReadStrptrMaybe(algo::LspaceStr4 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -6469,18 +6469,18 @@ bool algo::LspaceStr4_ReadStrptrMaybe(algo::LspaceStr4 &parent, algo::strptr in_
 // --- algo.LspaceStr4..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr4.String  printfmt:Raw
-void algo::LspaceStr4_Print(algo::LspaceStr4& row, algo::cstring& str) {
+void algo::LspaceStr4_Print(algo::LspaceStr4& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr5.ch.Print
-void algo::ch_Print(algo::LspaceStr5& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr5& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr5.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 5) {
         ch_SetStrptr(parent, rhs);
@@ -6495,7 +6495,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr5& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr5& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6509,7 +6509,7 @@ void algo::ch_SetStrptr(algo::LspaceStr5& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.LspaceStr5..Hash
-u32 algo::LspaceStr5_Hash(u32 prev, const algo::LspaceStr5& rhs) {
+u32 algo::LspaceStr5_Hash(u32 prev, const algo::LspaceStr5& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -6518,7 +6518,7 @@ u32 algo::LspaceStr5_Hash(u32 prev, const algo::LspaceStr5& rhs) {
 // --- algo.LspaceStr5..ReadStrptrMaybe
 // Read fields of algo::LspaceStr5 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr5's only field
-bool algo::LspaceStr5_ReadStrptrMaybe(algo::LspaceStr5 &parent, algo::strptr in_str) {
+bool algo::LspaceStr5_ReadStrptrMaybe(algo::LspaceStr5 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -6527,18 +6527,18 @@ bool algo::LspaceStr5_ReadStrptrMaybe(algo::LspaceStr5 &parent, algo::strptr in_
 // --- algo.LspaceStr5..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr5.String  printfmt:Raw
-void algo::LspaceStr5_Print(algo::LspaceStr5& row, algo::cstring& str) {
+void algo::LspaceStr5_Print(algo::LspaceStr5& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr5_I16.ch.Print
-void algo::ch_Print(algo::LspaceStr5_I16& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr5_I16& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr5_I16.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5_I16& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5_I16& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 5) {
         ch_SetStrptr(parent, rhs);
@@ -6553,7 +6553,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr5_I16& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr5_I16& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr5_I16& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6571,7 +6571,7 @@ void algo::ch_SetStrptr(algo::LspaceStr5_I16& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u16 algo::ch_Getnum(algo::LspaceStr5_I16& parent, bool &and_ok) {
+u16 algo::ch_Getnum(algo::LspaceStr5_I16& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -6587,7 +6587,7 @@ u16 algo::ch_Getnum(algo::LspaceStr5_I16& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u16 algo::ch_GetnumDflt(algo::LspaceStr5_I16& parent, u16 dflt) {
+u16 algo::ch_GetnumDflt(algo::LspaceStr5_I16& parent, u16 dflt) throw() {
     bool ok = true;
     u16 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -6597,7 +6597,7 @@ u16 algo::ch_GetnumDflt(algo::LspaceStr5_I16& parent, u16 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LspaceStr5_I16& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LspaceStr5_I16& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -6606,7 +6606,7 @@ i64 algo::ch_Geti64(algo::LspaceStr5_I16& parent, bool &out_ok) {
 // --- algo.LspaceStr5_I16.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LspaceStr5_I16& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LspaceStr5_I16& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -6625,7 +6625,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr5_I16& parent, i64 rhs) {
 }
 
 // --- algo.LspaceStr5_I16..Hash
-u32 algo::LspaceStr5_I16_Hash(u32 prev, const algo::LspaceStr5_I16& rhs) {
+u32 algo::LspaceStr5_I16_Hash(u32 prev, const algo::LspaceStr5_I16& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -6634,7 +6634,7 @@ u32 algo::LspaceStr5_I16_Hash(u32 prev, const algo::LspaceStr5_I16& rhs) {
 // --- algo.LspaceStr5_I16..ReadStrptrMaybe
 // Read fields of algo::LspaceStr5_I16 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr5_I16's only field
-bool algo::LspaceStr5_I16_ReadStrptrMaybe(algo::LspaceStr5_I16 &parent, algo::strptr in_str) {
+bool algo::LspaceStr5_I16_ReadStrptrMaybe(algo::LspaceStr5_I16 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -6643,18 +6643,18 @@ bool algo::LspaceStr5_I16_ReadStrptrMaybe(algo::LspaceStr5_I16 &parent, algo::st
 // --- algo.LspaceStr5_I16..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr5_I16.String  printfmt:Raw
-void algo::LspaceStr5_I16_Print(algo::LspaceStr5_I16& row, algo::cstring& str) {
+void algo::LspaceStr5_I16_Print(algo::LspaceStr5_I16& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr6.ch.Print
-void algo::ch_Print(algo::LspaceStr6& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr6& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr6.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 6) {
         ch_SetStrptr(parent, rhs);
@@ -6669,7 +6669,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr6& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr6& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6683,7 +6683,7 @@ void algo::ch_SetStrptr(algo::LspaceStr6& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.LspaceStr6..Hash
-u32 algo::LspaceStr6_Hash(u32 prev, const algo::LspaceStr6& rhs) {
+u32 algo::LspaceStr6_Hash(u32 prev, const algo::LspaceStr6& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -6692,7 +6692,7 @@ u32 algo::LspaceStr6_Hash(u32 prev, const algo::LspaceStr6& rhs) {
 // --- algo.LspaceStr6..ReadStrptrMaybe
 // Read fields of algo::LspaceStr6 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr6's only field
-bool algo::LspaceStr6_ReadStrptrMaybe(algo::LspaceStr6 &parent, algo::strptr in_str) {
+bool algo::LspaceStr6_ReadStrptrMaybe(algo::LspaceStr6 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -6701,18 +6701,18 @@ bool algo::LspaceStr6_ReadStrptrMaybe(algo::LspaceStr6 &parent, algo::strptr in_
 // --- algo.LspaceStr6..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr6.String  printfmt:Raw
-void algo::LspaceStr6_Print(algo::LspaceStr6& row, algo::cstring& str) {
+void algo::LspaceStr6_Print(algo::LspaceStr6& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr6_U32.ch.Print
-void algo::ch_Print(algo::LspaceStr6_U32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr6_U32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr6_U32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6_U32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6_U32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 6) {
         ch_SetStrptr(parent, rhs);
@@ -6727,7 +6727,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr6_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr6_U32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr6_U32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6745,7 +6745,7 @@ void algo::ch_SetStrptr(algo::LspaceStr6_U32& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::LspaceStr6_U32& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::LspaceStr6_U32& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -6760,7 +6760,7 @@ u32 algo::ch_Getnum(algo::LspaceStr6_U32& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::LspaceStr6_U32& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::LspaceStr6_U32& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -6770,7 +6770,7 @@ u32 algo::ch_GetnumDflt(algo::LspaceStr6_U32& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LspaceStr6_U32& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LspaceStr6_U32& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -6779,7 +6779,7 @@ i64 algo::ch_Geti64(algo::LspaceStr6_U32& parent, bool &out_ok) {
 // --- algo.LspaceStr6_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LspaceStr6_U32& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LspaceStr6_U32& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -6793,7 +6793,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr6_U32& parent, i64 rhs) {
 }
 
 // --- algo.LspaceStr6_U32..Hash
-u32 algo::LspaceStr6_U32_Hash(u32 prev, const algo::LspaceStr6_U32& rhs) {
+u32 algo::LspaceStr6_U32_Hash(u32 prev, const algo::LspaceStr6_U32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -6802,7 +6802,7 @@ u32 algo::LspaceStr6_U32_Hash(u32 prev, const algo::LspaceStr6_U32& rhs) {
 // --- algo.LspaceStr6_U32..ReadStrptrMaybe
 // Read fields of algo::LspaceStr6_U32 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr6_U32's only field
-bool algo::LspaceStr6_U32_ReadStrptrMaybe(algo::LspaceStr6_U32 &parent, algo::strptr in_str) {
+bool algo::LspaceStr6_U32_ReadStrptrMaybe(algo::LspaceStr6_U32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -6811,18 +6811,18 @@ bool algo::LspaceStr6_U32_ReadStrptrMaybe(algo::LspaceStr6_U32 &parent, algo::st
 // --- algo.LspaceStr6_U32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr6_U32.String  printfmt:Raw
-void algo::LspaceStr6_U32_Print(algo::LspaceStr6_U32& row, algo::cstring& str) {
+void algo::LspaceStr6_U32_Print(algo::LspaceStr6_U32& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr7_I32_Base36.ch.Print
-void algo::ch_Print(algo::LspaceStr7_I32_Base36& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr7_I32_Base36& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr7_I32_Base36.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 7) {
         ch_SetStrptr(parent, rhs);
@@ -6837,7 +6837,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36& parent, algo::strptr 
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr7_I32_Base36& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr7_I32_Base36& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 7);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6855,7 +6855,7 @@ void algo::ch_SetStrptr(algo::LspaceStr7_I32_Base36& parent, const algo::strptr&
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-i32 algo::ch_Getnum(algo::LspaceStr7_I32_Base36& parent, bool &and_ok) {
+i32 algo::ch_Getnum(algo::LspaceStr7_I32_Base36& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     bool is_neg = (str.n_elems > 0) && (str.elems[0] == '-');
@@ -6886,7 +6886,7 @@ i32 algo::ch_Getnum(algo::LspaceStr7_I32_Base36& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-i32 algo::ch_GetnumDflt(algo::LspaceStr7_I32_Base36& parent, i32 dflt) {
+i32 algo::ch_GetnumDflt(algo::LspaceStr7_I32_Base36& parent, i32 dflt) throw() {
     bool ok = true;
     i32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -6896,7 +6896,7 @@ i32 algo::ch_GetnumDflt(algo::LspaceStr7_I32_Base36& parent, i32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::LspaceStr7_I32_Base36& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::LspaceStr7_I32_Base36& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -6905,7 +6905,7 @@ i64 algo::ch_Geti64(algo::LspaceStr7_I32_Base36& parent, bool &out_ok) {
 // --- algo.LspaceStr7_I32_Base36.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-36 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::LspaceStr7_I32_Base36& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::LspaceStr7_I32_Base36& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -6934,7 +6934,7 @@ bool algo::ch_SetnumMaybe(algo::LspaceStr7_I32_Base36& parent, i64 rhs) {
 }
 
 // --- algo.LspaceStr7_I32_Base36..Hash
-u32 algo::LspaceStr7_I32_Base36_Hash(u32 prev, const algo::LspaceStr7_I32_Base36& rhs) {
+u32 algo::LspaceStr7_I32_Base36_Hash(u32 prev, const algo::LspaceStr7_I32_Base36& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -6943,7 +6943,7 @@ u32 algo::LspaceStr7_I32_Base36_Hash(u32 prev, const algo::LspaceStr7_I32_Base36
 // --- algo.LspaceStr7_I32_Base36..ReadStrptrMaybe
 // Read fields of algo::LspaceStr7_I32_Base36 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr7_I32_Base36's only field
-bool algo::LspaceStr7_I32_Base36_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36 &parent, algo::strptr in_str) {
+bool algo::LspaceStr7_I32_Base36_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -6952,18 +6952,18 @@ bool algo::LspaceStr7_I32_Base36_ReadStrptrMaybe(algo::LspaceStr7_I32_Base36 &pa
 // --- algo.LspaceStr7_I32_Base36..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr7_I32_Base36.String  printfmt:Raw
-void algo::LspaceStr7_I32_Base36_Print(algo::LspaceStr7_I32_Base36& row, algo::cstring& str) {
+void algo::LspaceStr7_I32_Base36_Print(algo::LspaceStr7_I32_Base36& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr8.ch.Print
-void algo::ch_Print(algo::LspaceStr8& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr8& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr8.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr8& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr8& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 8) {
         ch_SetStrptr(parent, rhs);
@@ -6978,7 +6978,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr8& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr8& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr8& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 8);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -6992,7 +6992,7 @@ void algo::ch_SetStrptr(algo::LspaceStr8& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.LspaceStr8..Hash
-u32 algo::LspaceStr8_Hash(u32 prev, const algo::LspaceStr8& rhs) {
+u32 algo::LspaceStr8_Hash(u32 prev, const algo::LspaceStr8& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -7001,7 +7001,7 @@ u32 algo::LspaceStr8_Hash(u32 prev, const algo::LspaceStr8& rhs) {
 // --- algo.LspaceStr8..ReadStrptrMaybe
 // Read fields of algo::LspaceStr8 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr8's only field
-bool algo::LspaceStr8_ReadStrptrMaybe(algo::LspaceStr8 &parent, algo::strptr in_str) {
+bool algo::LspaceStr8_ReadStrptrMaybe(algo::LspaceStr8 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7010,18 +7010,18 @@ bool algo::LspaceStr8_ReadStrptrMaybe(algo::LspaceStr8 &parent, algo::strptr in_
 // --- algo.LspaceStr8..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr8.String  printfmt:Raw
-void algo::LspaceStr8_Print(algo::LspaceStr8& row, algo::cstring& str) {
+void algo::LspaceStr8_Print(algo::LspaceStr8& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.LspaceStr9.ch.Print
-void algo::ch_Print(algo::LspaceStr9& parent, algo::cstring &out) {
+void algo::ch_Print(algo::LspaceStr9& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.LspaceStr9.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::LspaceStr9& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::LspaceStr9& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 9) {
         ch_SetStrptr(parent, rhs);
@@ -7036,7 +7036,7 @@ bool algo::ch_ReadStrptrMaybe(algo::LspaceStr9& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::LspaceStr9& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::LspaceStr9& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 9);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7050,7 +7050,7 @@ void algo::ch_SetStrptr(algo::LspaceStr9& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.LspaceStr9..Hash
-u32 algo::LspaceStr9_Hash(u32 prev, const algo::LspaceStr9& rhs) {
+u32 algo::LspaceStr9_Hash(u32 prev, const algo::LspaceStr9& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -7059,7 +7059,7 @@ u32 algo::LspaceStr9_Hash(u32 prev, const algo::LspaceStr9& rhs) {
 // --- algo.LspaceStr9..ReadStrptrMaybe
 // Read fields of algo::LspaceStr9 from an ascii string.
 // The format of the string is the format of the algo::LspaceStr9's only field
-bool algo::LspaceStr9_ReadStrptrMaybe(algo::LspaceStr9 &parent, algo::strptr in_str) {
+bool algo::LspaceStr9_ReadStrptrMaybe(algo::LspaceStr9 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7068,21 +7068,21 @@ bool algo::LspaceStr9_ReadStrptrMaybe(algo::LspaceStr9 &parent, algo::strptr in_
 // --- algo.LspaceStr9..Print
 // print string representation of ROW to string STR
 // cfmt:algo.LspaceStr9.String  printfmt:Raw
-void algo::LspaceStr9_Print(algo::LspaceStr9& row, algo::cstring& str) {
+void algo::LspaceStr9_Print(algo::LspaceStr9& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Md5Digest.value.Print
 // Convert value to a string.
 // Array is printed as a regular string.
-void algo::value_Print(algo::Md5Digest& parent, algo::cstring &rhs) {
+void algo::value_Print(algo::Md5Digest& parent, algo::cstring &rhs) throw() {
     rhs << algo::memptr_ToStrptr(value_Getary(parent));
 }
 
 // --- algo.Md5Digest.value.ReadStrptrMaybe
 // Read array from string
 // Convert string to field. Return success value
-bool algo::value_ReadStrptrMaybe(algo::Md5Digest& parent, algo::strptr in_str) {
+bool algo::value_ReadStrptrMaybe(algo::Md5Digest& parent, algo::strptr in_str) throw() {
     bool retval = true;
     i32 newlen = i32_Min(in_str.n_elems, 16);
     memcpy(parent.value_elems, in_str.elems, newlen);
@@ -7092,7 +7092,7 @@ bool algo::value_ReadStrptrMaybe(algo::Md5Digest& parent, algo::strptr in_str) {
 // --- algo.Md5Digest..ReadStrptrMaybe
 // Read fields of algo::Md5Digest from an ascii string.
 // The format of the string is the format of the algo::Md5Digest's only field
-bool algo::Md5Digest_ReadStrptrMaybe(algo::Md5Digest &parent, algo::strptr in_str) {
+bool algo::Md5Digest_ReadStrptrMaybe(algo::Md5Digest &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7101,14 +7101,14 @@ bool algo::Md5Digest_ReadStrptrMaybe(algo::Md5Digest &parent, algo::strptr in_st
 // --- algo.Md5Digest..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Md5Digest.String  printfmt:Raw
-void algo::Md5Digest_Print(algo::Md5Digest row, algo::cstring& str) {
+void algo::Md5Digest_Print(algo::Md5Digest row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.Month.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* algo::value_ToCstr(const algo::Month& parent) {
+const char* algo::value_ToCstr(const algo::Month& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case algo_Month_January            : ret = "January";  break;
@@ -7131,7 +7131,7 @@ const char* algo::value_ToCstr(const algo::Month& parent) {
 // --- algo.Month.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void algo::value_Print(const algo::Month& parent, algo::cstring &lhs) {
+void algo::value_Print(const algo::Month& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -7144,7 +7144,7 @@ void algo::value_Print(const algo::Month& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool algo::value_SetStrptrMaybe(algo::Month& parent, algo::strptr rhs) {
+bool algo::value_SetStrptrMaybe(algo::Month& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -7229,13 +7229,13 @@ bool algo::value_SetStrptrMaybe(algo::Month& parent, algo::strptr rhs) {
 // --- algo.Month.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void algo::value_SetStrptr(algo::Month& parent, algo::strptr rhs, algo_MonthEnum dflt) {
+void algo::value_SetStrptr(algo::Month& parent, algo::strptr rhs, algo_MonthEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- algo.Month.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::value_ReadStrptrMaybe(algo::Month& parent, algo::strptr rhs) {
+bool algo::value_ReadStrptrMaybe(algo::Month& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -7247,7 +7247,7 @@ bool algo::value_ReadStrptrMaybe(algo::Month& parent, algo::strptr rhs) {
 // --- algo.Month..ReadStrptrMaybe
 // Read fields of algo::Month from an ascii string.
 // The format of the string is the format of the algo::Month's only field
-bool algo::Month_ReadStrptrMaybe(algo::Month &parent, algo::strptr in_str) {
+bool algo::Month_ReadStrptrMaybe(algo::Month &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7256,12 +7256,12 @@ bool algo::Month_ReadStrptrMaybe(algo::Month &parent, algo::strptr in_str) {
 // --- algo.Month..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Month.String  printfmt:Raw
-void algo::Month_Print(algo::Month row, algo::cstring& str) {
+void algo::Month_Print(algo::Month row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.NumParseFlags.err.ReadStrptrMaybe
-inline static bool algo::err_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) {
+inline static bool algo::err_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool err_tmp;
     retval = bool_ReadStrptrMaybe(err_tmp, in_str);
@@ -7272,7 +7272,7 @@ inline static bool algo::err_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::
 }
 
 // --- algo.NumParseFlags.ok.ReadStrptrMaybe
-inline static bool algo::ok_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) {
+inline static bool algo::ok_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool ok_tmp;
     retval = bool_ReadStrptrMaybe(ok_tmp, in_str);
@@ -7283,7 +7283,7 @@ inline static bool algo::ok_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::s
 }
 
 // --- algo.NumParseFlags.neg.ReadStrptrMaybe
-inline static bool algo::neg_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) {
+inline static bool algo::neg_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool neg_tmp;
     retval = bool_ReadStrptrMaybe(neg_tmp, in_str);
@@ -7294,7 +7294,7 @@ inline static bool algo::neg_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::
 }
 
 // --- algo.NumParseFlags.overflow.ReadStrptrMaybe
-inline static bool algo::overflow_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) {
+inline static bool algo::overflow_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool overflow_tmp;
     retval = bool_ReadStrptrMaybe(overflow_tmp, in_str);
@@ -7305,7 +7305,7 @@ inline static bool algo::overflow_ReadStrptrMaybe(algo::NumParseFlags &parent, a
 }
 
 // --- algo.NumParseFlags.hex.ReadStrptrMaybe
-inline static bool algo::hex_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) {
+inline static bool algo::hex_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool hex_tmp;
     retval = bool_ReadStrptrMaybe(hex_tmp, in_str);
@@ -7316,7 +7316,7 @@ inline static bool algo::hex_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::
 }
 
 // --- algo.NumParseFlags..ReadFieldMaybe
-bool algo::NumParseFlags_ReadFieldMaybe(algo::NumParseFlags& parent, algo::strptr field, algo::strptr strval) {
+bool algo::NumParseFlags_ReadFieldMaybe(algo::NumParseFlags& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     algo::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7355,7 +7355,7 @@ bool algo::NumParseFlags_ReadFieldMaybe(algo::NumParseFlags& parent, algo::strpt
 
 // --- algo.NumParseFlags..ReadStrptrMaybe
 // Read fields of algo::NumParseFlags from an ascii string.
-bool algo::NumParseFlags_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) {
+bool algo::NumParseFlags_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     // Clear affected bits first)
     err_Set(parent, false);
@@ -7403,7 +7403,7 @@ bool algo::NumParseFlags_ReadStrptrMaybe(algo::NumParseFlags &parent, algo::strp
 // --- algo.NumParseFlags..Print
 // print string representation of ROW to string STR
 // cfmt:algo.NumParseFlags.String  printfmt:Bitset
-void algo::NumParseFlags_Print(algo::NumParseFlags& row, algo::cstring& str) {
+void algo::NumParseFlags_Print(algo::NumParseFlags& row, algo::cstring& str) throw() {
     algo::ListSep ls(",");
     if (err_Get(row)) {
         str << ls << "err";
@@ -7423,7 +7423,7 @@ void algo::NumParseFlags_Print(algo::NumParseFlags& row, algo::cstring& str) {
 }
 
 // --- algo.NumParseFlags..GetAnon
-algo::strptr algo::NumParseFlags_GetAnon(algo::NumParseFlags &parent, i32 idx) {
+algo::strptr algo::NumParseFlags_GetAnon(algo::NumParseFlags &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("value", 5);
@@ -7432,13 +7432,13 @@ algo::strptr algo::NumParseFlags_GetAnon(algo::NumParseFlags &parent, i32 idx) {
 }
 
 // --- algo.RnullStr1.ch.Print
-void algo::ch_Print(algo::RnullStr1& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr1& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr1.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr1& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr1& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 1) {
         ch_SetStrptr(parent, rhs);
@@ -7453,7 +7453,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr1& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr1& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr1& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 1);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7467,7 +7467,7 @@ void algo::ch_SetStrptr(algo::RnullStr1& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr1..Hash
-u32 algo::RnullStr1_Hash(u32 prev, algo::RnullStr1 rhs) {
+u32 algo::RnullStr1_Hash(u32 prev, algo::RnullStr1 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -7476,7 +7476,7 @@ u32 algo::RnullStr1_Hash(u32 prev, algo::RnullStr1 rhs) {
 // --- algo.RnullStr1..ReadStrptrMaybe
 // Read fields of algo::RnullStr1 from an ascii string.
 // The format of the string is the format of the algo::RnullStr1's only field
-bool algo::RnullStr1_ReadStrptrMaybe(algo::RnullStr1 &parent, algo::strptr in_str) {
+bool algo::RnullStr1_ReadStrptrMaybe(algo::RnullStr1 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7485,18 +7485,18 @@ bool algo::RnullStr1_ReadStrptrMaybe(algo::RnullStr1 &parent, algo::strptr in_st
 // --- algo.RnullStr1..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr1.String  printfmt:Raw
-void algo::RnullStr1_Print(algo::RnullStr1 row, algo::cstring& str) {
+void algo::RnullStr1_Print(algo::RnullStr1 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr10.ch.Print
-void algo::ch_Print(algo::RnullStr10& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr10& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr10.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr10& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr10& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 10) {
         ch_SetStrptr(parent, rhs);
@@ -7511,7 +7511,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr10& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr10& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr10& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 10);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7525,7 +7525,7 @@ void algo::ch_SetStrptr(algo::RnullStr10& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr10..Hash
-u32 algo::RnullStr10_Hash(u32 prev, algo::RnullStr10 rhs) {
+u32 algo::RnullStr10_Hash(u32 prev, algo::RnullStr10 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -7534,7 +7534,7 @@ u32 algo::RnullStr10_Hash(u32 prev, algo::RnullStr10 rhs) {
 // --- algo.RnullStr10..ReadStrptrMaybe
 // Read fields of algo::RnullStr10 from an ascii string.
 // The format of the string is the format of the algo::RnullStr10's only field
-bool algo::RnullStr10_ReadStrptrMaybe(algo::RnullStr10 &parent, algo::strptr in_str) {
+bool algo::RnullStr10_ReadStrptrMaybe(algo::RnullStr10 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7543,18 +7543,18 @@ bool algo::RnullStr10_ReadStrptrMaybe(algo::RnullStr10 &parent, algo::strptr in_
 // --- algo.RnullStr10..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr10.String  printfmt:Raw
-void algo::RnullStr10_Print(algo::RnullStr10 row, algo::cstring& str) {
+void algo::RnullStr10_Print(algo::RnullStr10 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr100.ch.Print
-void algo::ch_Print(algo::RnullStr100& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr100& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr100.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr100& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr100& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 100) {
         ch_SetStrptr(parent, rhs);
@@ -7569,7 +7569,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr100& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr100& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr100& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 100);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7583,7 +7583,7 @@ void algo::ch_SetStrptr(algo::RnullStr100& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr100..Hash
-u32 algo::RnullStr100_Hash(u32 prev, const algo::RnullStr100& rhs) {
+u32 algo::RnullStr100_Hash(u32 prev, const algo::RnullStr100& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -7592,7 +7592,7 @@ u32 algo::RnullStr100_Hash(u32 prev, const algo::RnullStr100& rhs) {
 // --- algo.RnullStr100..ReadStrptrMaybe
 // Read fields of algo::RnullStr100 from an ascii string.
 // The format of the string is the format of the algo::RnullStr100's only field
-bool algo::RnullStr100_ReadStrptrMaybe(algo::RnullStr100 &parent, algo::strptr in_str) {
+bool algo::RnullStr100_ReadStrptrMaybe(algo::RnullStr100 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7601,18 +7601,18 @@ bool algo::RnullStr100_ReadStrptrMaybe(algo::RnullStr100 &parent, algo::strptr i
 // --- algo.RnullStr100..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr100.String  printfmt:Raw
-void algo::RnullStr100_Print(algo::RnullStr100& row, algo::cstring& str) {
+void algo::RnullStr100_Print(algo::RnullStr100& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr1000.ch.Print
-void algo::ch_Print(algo::RnullStr1000& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr1000& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr1000.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr1000& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr1000& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 1000) {
         ch_SetStrptr(parent, rhs);
@@ -7627,7 +7627,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr1000& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr1000& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr1000& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 1000);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7641,7 +7641,7 @@ void algo::ch_SetStrptr(algo::RnullStr1000& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr1000..Hash
-u32 algo::RnullStr1000_Hash(u32 prev, const algo::RnullStr1000& rhs) {
+u32 algo::RnullStr1000_Hash(u32 prev, const algo::RnullStr1000& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -7650,7 +7650,7 @@ u32 algo::RnullStr1000_Hash(u32 prev, const algo::RnullStr1000& rhs) {
 // --- algo.RnullStr1000..ReadStrptrMaybe
 // Read fields of algo::RnullStr1000 from an ascii string.
 // The format of the string is the format of the algo::RnullStr1000's only field
-bool algo::RnullStr1000_ReadStrptrMaybe(algo::RnullStr1000 &parent, algo::strptr in_str) {
+bool algo::RnullStr1000_ReadStrptrMaybe(algo::RnullStr1000 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7659,18 +7659,18 @@ bool algo::RnullStr1000_ReadStrptrMaybe(algo::RnullStr1000 &parent, algo::strptr
 // --- algo.RnullStr1000..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr1000.String  printfmt:Raw
-void algo::RnullStr1000_Print(algo::RnullStr1000& row, algo::cstring& str) {
+void algo::RnullStr1000_Print(algo::RnullStr1000& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr11.ch.Print
-void algo::ch_Print(algo::RnullStr11& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr11& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr11.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr11& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr11& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 11) {
         ch_SetStrptr(parent, rhs);
@@ -7685,7 +7685,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr11& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr11& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr11& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 11);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7699,7 +7699,7 @@ void algo::ch_SetStrptr(algo::RnullStr11& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr11..Hash
-u32 algo::RnullStr11_Hash(u32 prev, const algo::RnullStr11& rhs) {
+u32 algo::RnullStr11_Hash(u32 prev, const algo::RnullStr11& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -7708,7 +7708,7 @@ u32 algo::RnullStr11_Hash(u32 prev, const algo::RnullStr11& rhs) {
 // --- algo.RnullStr11..ReadStrptrMaybe
 // Read fields of algo::RnullStr11 from an ascii string.
 // The format of the string is the format of the algo::RnullStr11's only field
-bool algo::RnullStr11_ReadStrptrMaybe(algo::RnullStr11 &parent, algo::strptr in_str) {
+bool algo::RnullStr11_ReadStrptrMaybe(algo::RnullStr11 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7717,18 +7717,18 @@ bool algo::RnullStr11_ReadStrptrMaybe(algo::RnullStr11 &parent, algo::strptr in_
 // --- algo.RnullStr11..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr11.String  printfmt:Raw
-void algo::RnullStr11_Print(algo::RnullStr11& row, algo::cstring& str) {
+void algo::RnullStr11_Print(algo::RnullStr11& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr12.ch.Print
-void algo::ch_Print(algo::RnullStr12& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr12& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr12.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr12& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr12& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 12) {
         ch_SetStrptr(parent, rhs);
@@ -7743,7 +7743,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr12& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr12& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr12& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 12);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7757,7 +7757,7 @@ void algo::ch_SetStrptr(algo::RnullStr12& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr12..Hash
-u32 algo::RnullStr12_Hash(u32 prev, const algo::RnullStr12& rhs) {
+u32 algo::RnullStr12_Hash(u32 prev, const algo::RnullStr12& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -7766,7 +7766,7 @@ u32 algo::RnullStr12_Hash(u32 prev, const algo::RnullStr12& rhs) {
 // --- algo.RnullStr12..ReadStrptrMaybe
 // Read fields of algo::RnullStr12 from an ascii string.
 // The format of the string is the format of the algo::RnullStr12's only field
-bool algo::RnullStr12_ReadStrptrMaybe(algo::RnullStr12 &parent, algo::strptr in_str) {
+bool algo::RnullStr12_ReadStrptrMaybe(algo::RnullStr12 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7775,18 +7775,18 @@ bool algo::RnullStr12_ReadStrptrMaybe(algo::RnullStr12 &parent, algo::strptr in_
 // --- algo.RnullStr12..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr12.String  printfmt:Raw
-void algo::RnullStr12_Print(algo::RnullStr12& row, algo::cstring& str) {
+void algo::RnullStr12_Print(algo::RnullStr12& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr129.ch.Print
-void algo::ch_Print(algo::RnullStr129& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr129& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr129.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr129& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr129& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 129) {
         ch_SetStrptr(parent, rhs);
@@ -7801,7 +7801,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr129& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr129& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr129& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 129);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7815,7 +7815,7 @@ void algo::ch_SetStrptr(algo::RnullStr129& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr129..Hash
-u32 algo::RnullStr129_Hash(u32 prev, const algo::RnullStr129& rhs) {
+u32 algo::RnullStr129_Hash(u32 prev, const algo::RnullStr129& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -7824,7 +7824,7 @@ u32 algo::RnullStr129_Hash(u32 prev, const algo::RnullStr129& rhs) {
 // --- algo.RnullStr129..ReadStrptrMaybe
 // Read fields of algo::RnullStr129 from an ascii string.
 // The format of the string is the format of the algo::RnullStr129's only field
-bool algo::RnullStr129_ReadStrptrMaybe(algo::RnullStr129 &parent, algo::strptr in_str) {
+bool algo::RnullStr129_ReadStrptrMaybe(algo::RnullStr129 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7833,18 +7833,18 @@ bool algo::RnullStr129_ReadStrptrMaybe(algo::RnullStr129 &parent, algo::strptr i
 // --- algo.RnullStr129..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr129.String  printfmt:Raw
-void algo::RnullStr129_Print(algo::RnullStr129& row, algo::cstring& str) {
+void algo::RnullStr129_Print(algo::RnullStr129& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr13.ch.Print
-void algo::ch_Print(algo::RnullStr13& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr13& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr13.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr13& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr13& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 13) {
         ch_SetStrptr(parent, rhs);
@@ -7859,7 +7859,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr13& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr13& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr13& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 13);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7873,7 +7873,7 @@ void algo::ch_SetStrptr(algo::RnullStr13& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr13..Hash
-u32 algo::RnullStr13_Hash(u32 prev, const algo::RnullStr13& rhs) {
+u32 algo::RnullStr13_Hash(u32 prev, const algo::RnullStr13& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -7882,7 +7882,7 @@ u32 algo::RnullStr13_Hash(u32 prev, const algo::RnullStr13& rhs) {
 // --- algo.RnullStr13..ReadStrptrMaybe
 // Read fields of algo::RnullStr13 from an ascii string.
 // The format of the string is the format of the algo::RnullStr13's only field
-bool algo::RnullStr13_ReadStrptrMaybe(algo::RnullStr13 &parent, algo::strptr in_str) {
+bool algo::RnullStr13_ReadStrptrMaybe(algo::RnullStr13 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7891,18 +7891,18 @@ bool algo::RnullStr13_ReadStrptrMaybe(algo::RnullStr13 &parent, algo::strptr in_
 // --- algo.RnullStr13..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr13.String  printfmt:Raw
-void algo::RnullStr13_Print(algo::RnullStr13& row, algo::cstring& str) {
+void algo::RnullStr13_Print(algo::RnullStr13& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr14.ch.Print
-void algo::ch_Print(algo::RnullStr14& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr14& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr14.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr14& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr14& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 14) {
         ch_SetStrptr(parent, rhs);
@@ -7917,7 +7917,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr14& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr14& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr14& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 14);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7931,7 +7931,7 @@ void algo::ch_SetStrptr(algo::RnullStr14& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr14..Hash
-u32 algo::RnullStr14_Hash(u32 prev, const algo::RnullStr14& rhs) {
+u32 algo::RnullStr14_Hash(u32 prev, const algo::RnullStr14& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -7940,7 +7940,7 @@ u32 algo::RnullStr14_Hash(u32 prev, const algo::RnullStr14& rhs) {
 // --- algo.RnullStr14..ReadStrptrMaybe
 // Read fields of algo::RnullStr14 from an ascii string.
 // The format of the string is the format of the algo::RnullStr14's only field
-bool algo::RnullStr14_ReadStrptrMaybe(algo::RnullStr14 &parent, algo::strptr in_str) {
+bool algo::RnullStr14_ReadStrptrMaybe(algo::RnullStr14 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7949,18 +7949,18 @@ bool algo::RnullStr14_ReadStrptrMaybe(algo::RnullStr14 &parent, algo::strptr in_
 // --- algo.RnullStr14..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr14.String  printfmt:Raw
-void algo::RnullStr14_Print(algo::RnullStr14& row, algo::cstring& str) {
+void algo::RnullStr14_Print(algo::RnullStr14& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr15.ch.Print
-void algo::ch_Print(algo::RnullStr15& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr15& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr15.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr15& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr15& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 15) {
         ch_SetStrptr(parent, rhs);
@@ -7975,7 +7975,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr15& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr15& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr15& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 15);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -7989,7 +7989,7 @@ void algo::ch_SetStrptr(algo::RnullStr15& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr15..Hash
-u32 algo::RnullStr15_Hash(u32 prev, const algo::RnullStr15& rhs) {
+u32 algo::RnullStr15_Hash(u32 prev, const algo::RnullStr15& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -7998,7 +7998,7 @@ u32 algo::RnullStr15_Hash(u32 prev, const algo::RnullStr15& rhs) {
 // --- algo.RnullStr15..ReadStrptrMaybe
 // Read fields of algo::RnullStr15 from an ascii string.
 // The format of the string is the format of the algo::RnullStr15's only field
-bool algo::RnullStr15_ReadStrptrMaybe(algo::RnullStr15 &parent, algo::strptr in_str) {
+bool algo::RnullStr15_ReadStrptrMaybe(algo::RnullStr15 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8007,18 +8007,18 @@ bool algo::RnullStr15_ReadStrptrMaybe(algo::RnullStr15 &parent, algo::strptr in_
 // --- algo.RnullStr15..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr15.String  printfmt:Raw
-void algo::RnullStr15_Print(algo::RnullStr15& row, algo::cstring& str) {
+void algo::RnullStr15_Print(algo::RnullStr15& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr151.ch.Print
-void algo::ch_Print(algo::RnullStr151& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr151& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr151.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr151& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr151& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 151) {
         ch_SetStrptr(parent, rhs);
@@ -8033,7 +8033,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr151& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr151& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr151& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 151);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8047,7 +8047,7 @@ void algo::ch_SetStrptr(algo::RnullStr151& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr151..Hash
-u32 algo::RnullStr151_Hash(u32 prev, const algo::RnullStr151& rhs) {
+u32 algo::RnullStr151_Hash(u32 prev, const algo::RnullStr151& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8056,7 +8056,7 @@ u32 algo::RnullStr151_Hash(u32 prev, const algo::RnullStr151& rhs) {
 // --- algo.RnullStr151..ReadStrptrMaybe
 // Read fields of algo::RnullStr151 from an ascii string.
 // The format of the string is the format of the algo::RnullStr151's only field
-bool algo::RnullStr151_ReadStrptrMaybe(algo::RnullStr151 &parent, algo::strptr in_str) {
+bool algo::RnullStr151_ReadStrptrMaybe(algo::RnullStr151 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8065,18 +8065,18 @@ bool algo::RnullStr151_ReadStrptrMaybe(algo::RnullStr151 &parent, algo::strptr i
 // --- algo.RnullStr151..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr151.String  printfmt:Raw
-void algo::RnullStr151_Print(algo::RnullStr151& row, algo::cstring& str) {
+void algo::RnullStr151_Print(algo::RnullStr151& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr16.ch.Print
-void algo::ch_Print(algo::RnullStr16& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr16& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr16.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr16& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr16& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 16) {
         ch_SetStrptr(parent, rhs);
@@ -8091,7 +8091,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr16& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr16& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr16& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 16);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8105,7 +8105,7 @@ void algo::ch_SetStrptr(algo::RnullStr16& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr16..Hash
-u32 algo::RnullStr16_Hash(u32 prev, algo::RnullStr16 rhs) {
+u32 algo::RnullStr16_Hash(u32 prev, algo::RnullStr16 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8114,7 +8114,7 @@ u32 algo::RnullStr16_Hash(u32 prev, algo::RnullStr16 rhs) {
 // --- algo.RnullStr16..ReadStrptrMaybe
 // Read fields of algo::RnullStr16 from an ascii string.
 // The format of the string is the format of the algo::RnullStr16's only field
-bool algo::RnullStr16_ReadStrptrMaybe(algo::RnullStr16 &parent, algo::strptr in_str) {
+bool algo::RnullStr16_ReadStrptrMaybe(algo::RnullStr16 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8123,18 +8123,18 @@ bool algo::RnullStr16_ReadStrptrMaybe(algo::RnullStr16 &parent, algo::strptr in_
 // --- algo.RnullStr16..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr16.String  printfmt:Raw
-void algo::RnullStr16_Print(algo::RnullStr16 row, algo::cstring& str) {
+void algo::RnullStr16_Print(algo::RnullStr16 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr17.ch.Print
-void algo::ch_Print(algo::RnullStr17& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr17& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr17.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr17& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr17& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 17) {
         ch_SetStrptr(parent, rhs);
@@ -8149,7 +8149,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr17& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr17& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr17& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 17);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8163,7 +8163,7 @@ void algo::ch_SetStrptr(algo::RnullStr17& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr17..Hash
-u32 algo::RnullStr17_Hash(u32 prev, const algo::RnullStr17& rhs) {
+u32 algo::RnullStr17_Hash(u32 prev, const algo::RnullStr17& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8172,7 +8172,7 @@ u32 algo::RnullStr17_Hash(u32 prev, const algo::RnullStr17& rhs) {
 // --- algo.RnullStr17..ReadStrptrMaybe
 // Read fields of algo::RnullStr17 from an ascii string.
 // The format of the string is the format of the algo::RnullStr17's only field
-bool algo::RnullStr17_ReadStrptrMaybe(algo::RnullStr17 &parent, algo::strptr in_str) {
+bool algo::RnullStr17_ReadStrptrMaybe(algo::RnullStr17 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8181,18 +8181,18 @@ bool algo::RnullStr17_ReadStrptrMaybe(algo::RnullStr17 &parent, algo::strptr in_
 // --- algo.RnullStr17..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr17.String  printfmt:Raw
-void algo::RnullStr17_Print(algo::RnullStr17& row, algo::cstring& str) {
+void algo::RnullStr17_Print(algo::RnullStr17& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr18.ch.Print
-void algo::ch_Print(algo::RnullStr18& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr18& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr18.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr18& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr18& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 18) {
         ch_SetStrptr(parent, rhs);
@@ -8207,7 +8207,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr18& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr18& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr18& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 18);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8221,7 +8221,7 @@ void algo::ch_SetStrptr(algo::RnullStr18& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr18..Hash
-u32 algo::RnullStr18_Hash(u32 prev, algo::RnullStr18 rhs) {
+u32 algo::RnullStr18_Hash(u32 prev, algo::RnullStr18 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8230,7 +8230,7 @@ u32 algo::RnullStr18_Hash(u32 prev, algo::RnullStr18 rhs) {
 // --- algo.RnullStr18..ReadStrptrMaybe
 // Read fields of algo::RnullStr18 from an ascii string.
 // The format of the string is the format of the algo::RnullStr18's only field
-bool algo::RnullStr18_ReadStrptrMaybe(algo::RnullStr18 &parent, algo::strptr in_str) {
+bool algo::RnullStr18_ReadStrptrMaybe(algo::RnullStr18 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8239,18 +8239,18 @@ bool algo::RnullStr18_ReadStrptrMaybe(algo::RnullStr18 &parent, algo::strptr in_
 // --- algo.RnullStr18..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr18.String  printfmt:Raw
-void algo::RnullStr18_Print(algo::RnullStr18 row, algo::cstring& str) {
+void algo::RnullStr18_Print(algo::RnullStr18 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr19.ch.Print
-void algo::ch_Print(algo::RnullStr19& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr19& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr19.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr19& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr19& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 19) {
         ch_SetStrptr(parent, rhs);
@@ -8265,7 +8265,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr19& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr19& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr19& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 19);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8279,7 +8279,7 @@ void algo::ch_SetStrptr(algo::RnullStr19& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr19..Hash
-u32 algo::RnullStr19_Hash(u32 prev, const algo::RnullStr19& rhs) {
+u32 algo::RnullStr19_Hash(u32 prev, const algo::RnullStr19& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8288,7 +8288,7 @@ u32 algo::RnullStr19_Hash(u32 prev, const algo::RnullStr19& rhs) {
 // --- algo.RnullStr19..ReadStrptrMaybe
 // Read fields of algo::RnullStr19 from an ascii string.
 // The format of the string is the format of the algo::RnullStr19's only field
-bool algo::RnullStr19_ReadStrptrMaybe(algo::RnullStr19 &parent, algo::strptr in_str) {
+bool algo::RnullStr19_ReadStrptrMaybe(algo::RnullStr19 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8297,18 +8297,18 @@ bool algo::RnullStr19_ReadStrptrMaybe(algo::RnullStr19 &parent, algo::strptr in_
 // --- algo.RnullStr19..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr19.String  printfmt:Raw
-void algo::RnullStr19_Print(algo::RnullStr19& row, algo::cstring& str) {
+void algo::RnullStr19_Print(algo::RnullStr19& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr2.ch.Print
-void algo::ch_Print(algo::RnullStr2& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr2& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr2.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr2& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr2& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 2) {
         ch_SetStrptr(parent, rhs);
@@ -8323,7 +8323,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr2& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr2& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr2& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 2);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8337,7 +8337,7 @@ void algo::ch_SetStrptr(algo::RnullStr2& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr2..Hash
-u32 algo::RnullStr2_Hash(u32 prev, algo::RnullStr2 rhs) {
+u32 algo::RnullStr2_Hash(u32 prev, algo::RnullStr2 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8346,7 +8346,7 @@ u32 algo::RnullStr2_Hash(u32 prev, algo::RnullStr2 rhs) {
 // --- algo.RnullStr2..ReadStrptrMaybe
 // Read fields of algo::RnullStr2 from an ascii string.
 // The format of the string is the format of the algo::RnullStr2's only field
-bool algo::RnullStr2_ReadStrptrMaybe(algo::RnullStr2 &parent, algo::strptr in_str) {
+bool algo::RnullStr2_ReadStrptrMaybe(algo::RnullStr2 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8355,18 +8355,18 @@ bool algo::RnullStr2_ReadStrptrMaybe(algo::RnullStr2 &parent, algo::strptr in_st
 // --- algo.RnullStr2..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr2.String  printfmt:Raw
-void algo::RnullStr2_Print(algo::RnullStr2 row, algo::cstring& str) {
+void algo::RnullStr2_Print(algo::RnullStr2 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr20.ch.Print
-void algo::ch_Print(algo::RnullStr20& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr20& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr20.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr20& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr20& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 20) {
         ch_SetStrptr(parent, rhs);
@@ -8381,7 +8381,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr20& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr20& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr20& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 20);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8395,7 +8395,7 @@ void algo::ch_SetStrptr(algo::RnullStr20& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr20..Hash
-u32 algo::RnullStr20_Hash(u32 prev, algo::RnullStr20 rhs) {
+u32 algo::RnullStr20_Hash(u32 prev, algo::RnullStr20 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8404,7 +8404,7 @@ u32 algo::RnullStr20_Hash(u32 prev, algo::RnullStr20 rhs) {
 // --- algo.RnullStr20..ReadStrptrMaybe
 // Read fields of algo::RnullStr20 from an ascii string.
 // The format of the string is the format of the algo::RnullStr20's only field
-bool algo::RnullStr20_ReadStrptrMaybe(algo::RnullStr20 &parent, algo::strptr in_str) {
+bool algo::RnullStr20_ReadStrptrMaybe(algo::RnullStr20 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8413,18 +8413,18 @@ bool algo::RnullStr20_ReadStrptrMaybe(algo::RnullStr20 &parent, algo::strptr in_
 // --- algo.RnullStr20..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr20.String  printfmt:Raw
-void algo::RnullStr20_Print(algo::RnullStr20 row, algo::cstring& str) {
+void algo::RnullStr20_Print(algo::RnullStr20 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr21.ch.Print
-void algo::ch_Print(algo::RnullStr21& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr21& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr21.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr21& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr21& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 21) {
         ch_SetStrptr(parent, rhs);
@@ -8439,7 +8439,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr21& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr21& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr21& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 21);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8453,7 +8453,7 @@ void algo::ch_SetStrptr(algo::RnullStr21& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr21..Hash
-u32 algo::RnullStr21_Hash(u32 prev, const algo::RnullStr21& rhs) {
+u32 algo::RnullStr21_Hash(u32 prev, const algo::RnullStr21& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8462,7 +8462,7 @@ u32 algo::RnullStr21_Hash(u32 prev, const algo::RnullStr21& rhs) {
 // --- algo.RnullStr21..ReadStrptrMaybe
 // Read fields of algo::RnullStr21 from an ascii string.
 // The format of the string is the format of the algo::RnullStr21's only field
-bool algo::RnullStr21_ReadStrptrMaybe(algo::RnullStr21 &parent, algo::strptr in_str) {
+bool algo::RnullStr21_ReadStrptrMaybe(algo::RnullStr21 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8471,18 +8471,18 @@ bool algo::RnullStr21_ReadStrptrMaybe(algo::RnullStr21 &parent, algo::strptr in_
 // --- algo.RnullStr21..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr21.String  printfmt:Raw
-void algo::RnullStr21_Print(algo::RnullStr21& row, algo::cstring& str) {
+void algo::RnullStr21_Print(algo::RnullStr21& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr24.ch.Print
-void algo::ch_Print(algo::RnullStr24& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr24& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr24.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr24& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr24& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 24) {
         ch_SetStrptr(parent, rhs);
@@ -8497,7 +8497,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr24& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr24& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr24& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 24);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8511,7 +8511,7 @@ void algo::ch_SetStrptr(algo::RnullStr24& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr24..Hash
-u32 algo::RnullStr24_Hash(u32 prev, const algo::RnullStr24& rhs) {
+u32 algo::RnullStr24_Hash(u32 prev, const algo::RnullStr24& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8520,7 +8520,7 @@ u32 algo::RnullStr24_Hash(u32 prev, const algo::RnullStr24& rhs) {
 // --- algo.RnullStr24..ReadStrptrMaybe
 // Read fields of algo::RnullStr24 from an ascii string.
 // The format of the string is the format of the algo::RnullStr24's only field
-bool algo::RnullStr24_ReadStrptrMaybe(algo::RnullStr24 &parent, algo::strptr in_str) {
+bool algo::RnullStr24_ReadStrptrMaybe(algo::RnullStr24 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8529,18 +8529,18 @@ bool algo::RnullStr24_ReadStrptrMaybe(algo::RnullStr24 &parent, algo::strptr in_
 // --- algo.RnullStr24..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr24.String  printfmt:Raw
-void algo::RnullStr24_Print(algo::RnullStr24& row, algo::cstring& str) {
+void algo::RnullStr24_Print(algo::RnullStr24& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr25.ch.Print
-void algo::ch_Print(algo::RnullStr25& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr25& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr25.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr25& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr25& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 25) {
         ch_SetStrptr(parent, rhs);
@@ -8555,7 +8555,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr25& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr25& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr25& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 25);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8569,7 +8569,7 @@ void algo::ch_SetStrptr(algo::RnullStr25& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr25..Hash
-u32 algo::RnullStr25_Hash(u32 prev, const algo::RnullStr25& rhs) {
+u32 algo::RnullStr25_Hash(u32 prev, const algo::RnullStr25& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8578,7 +8578,7 @@ u32 algo::RnullStr25_Hash(u32 prev, const algo::RnullStr25& rhs) {
 // --- algo.RnullStr25..ReadStrptrMaybe
 // Read fields of algo::RnullStr25 from an ascii string.
 // The format of the string is the format of the algo::RnullStr25's only field
-bool algo::RnullStr25_ReadStrptrMaybe(algo::RnullStr25 &parent, algo::strptr in_str) {
+bool algo::RnullStr25_ReadStrptrMaybe(algo::RnullStr25 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8587,18 +8587,18 @@ bool algo::RnullStr25_ReadStrptrMaybe(algo::RnullStr25 &parent, algo::strptr in_
 // --- algo.RnullStr25..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr25.String  printfmt:Raw
-void algo::RnullStr25_Print(algo::RnullStr25& row, algo::cstring& str) {
+void algo::RnullStr25_Print(algo::RnullStr25& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr28.ch.Print
-void algo::ch_Print(algo::RnullStr28& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr28& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr28.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr28& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr28& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 28) {
         ch_SetStrptr(parent, rhs);
@@ -8613,7 +8613,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr28& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr28& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr28& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 28);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8627,7 +8627,7 @@ void algo::ch_SetStrptr(algo::RnullStr28& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr28..Hash
-u32 algo::RnullStr28_Hash(u32 prev, const algo::RnullStr28& rhs) {
+u32 algo::RnullStr28_Hash(u32 prev, const algo::RnullStr28& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8636,7 +8636,7 @@ u32 algo::RnullStr28_Hash(u32 prev, const algo::RnullStr28& rhs) {
 // --- algo.RnullStr28..ReadStrptrMaybe
 // Read fields of algo::RnullStr28 from an ascii string.
 // The format of the string is the format of the algo::RnullStr28's only field
-bool algo::RnullStr28_ReadStrptrMaybe(algo::RnullStr28 &parent, algo::strptr in_str) {
+bool algo::RnullStr28_ReadStrptrMaybe(algo::RnullStr28 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8645,18 +8645,18 @@ bool algo::RnullStr28_ReadStrptrMaybe(algo::RnullStr28 &parent, algo::strptr in_
 // --- algo.RnullStr28..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr28.String  printfmt:Raw
-void algo::RnullStr28_Print(algo::RnullStr28& row, algo::cstring& str) {
+void algo::RnullStr28_Print(algo::RnullStr28& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr3.ch.Print
-void algo::ch_Print(algo::RnullStr3& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr3& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr3.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr3& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr3& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 3) {
         ch_SetStrptr(parent, rhs);
@@ -8671,7 +8671,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr3& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr3& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr3& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 3);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8685,7 +8685,7 @@ void algo::ch_SetStrptr(algo::RnullStr3& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr3..Hash
-u32 algo::RnullStr3_Hash(u32 prev, algo::RnullStr3 rhs) {
+u32 algo::RnullStr3_Hash(u32 prev, algo::RnullStr3 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8694,7 +8694,7 @@ u32 algo::RnullStr3_Hash(u32 prev, algo::RnullStr3 rhs) {
 // --- algo.RnullStr3..ReadStrptrMaybe
 // Read fields of algo::RnullStr3 from an ascii string.
 // The format of the string is the format of the algo::RnullStr3's only field
-bool algo::RnullStr3_ReadStrptrMaybe(algo::RnullStr3 &parent, algo::strptr in_str) {
+bool algo::RnullStr3_ReadStrptrMaybe(algo::RnullStr3 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8703,18 +8703,18 @@ bool algo::RnullStr3_ReadStrptrMaybe(algo::RnullStr3 &parent, algo::strptr in_st
 // --- algo.RnullStr3..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr3.String  printfmt:Raw
-void algo::RnullStr3_Print(algo::RnullStr3 row, algo::cstring& str) {
+void algo::RnullStr3_Print(algo::RnullStr3 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr30.ch.Print
-void algo::ch_Print(algo::RnullStr30& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr30& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr30.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr30& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr30& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 30) {
         ch_SetStrptr(parent, rhs);
@@ -8729,7 +8729,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr30& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr30& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr30& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 30);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8743,7 +8743,7 @@ void algo::ch_SetStrptr(algo::RnullStr30& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr30..Hash
-u32 algo::RnullStr30_Hash(u32 prev, algo::RnullStr30 rhs) {
+u32 algo::RnullStr30_Hash(u32 prev, algo::RnullStr30 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8752,7 +8752,7 @@ u32 algo::RnullStr30_Hash(u32 prev, algo::RnullStr30 rhs) {
 // --- algo.RnullStr30..ReadStrptrMaybe
 // Read fields of algo::RnullStr30 from an ascii string.
 // The format of the string is the format of the algo::RnullStr30's only field
-bool algo::RnullStr30_ReadStrptrMaybe(algo::RnullStr30 &parent, algo::strptr in_str) {
+bool algo::RnullStr30_ReadStrptrMaybe(algo::RnullStr30 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8761,18 +8761,18 @@ bool algo::RnullStr30_ReadStrptrMaybe(algo::RnullStr30 &parent, algo::strptr in_
 // --- algo.RnullStr30..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr30.String  printfmt:Raw
-void algo::RnullStr30_Print(algo::RnullStr30 row, algo::cstring& str) {
+void algo::RnullStr30_Print(algo::RnullStr30 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr32.ch.Print
-void algo::ch_Print(algo::RnullStr32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 32) {
         ch_SetStrptr(parent, rhs);
@@ -8787,7 +8787,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 32);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8801,7 +8801,7 @@ void algo::ch_SetStrptr(algo::RnullStr32& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr32..Hash
-u32 algo::RnullStr32_Hash(u32 prev, algo::RnullStr32 rhs) {
+u32 algo::RnullStr32_Hash(u32 prev, algo::RnullStr32 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8810,7 +8810,7 @@ u32 algo::RnullStr32_Hash(u32 prev, algo::RnullStr32 rhs) {
 // --- algo.RnullStr32..ReadStrptrMaybe
 // Read fields of algo::RnullStr32 from an ascii string.
 // The format of the string is the format of the algo::RnullStr32's only field
-bool algo::RnullStr32_ReadStrptrMaybe(algo::RnullStr32 &parent, algo::strptr in_str) {
+bool algo::RnullStr32_ReadStrptrMaybe(algo::RnullStr32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8819,18 +8819,18 @@ bool algo::RnullStr32_ReadStrptrMaybe(algo::RnullStr32 &parent, algo::strptr in_
 // --- algo.RnullStr32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr32.String  printfmt:Raw
-void algo::RnullStr32_Print(algo::RnullStr32 row, algo::cstring& str) {
+void algo::RnullStr32_Print(algo::RnullStr32 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr33.ch.Print
-void algo::ch_Print(algo::RnullStr33& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr33& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr33.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr33& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr33& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 33) {
         ch_SetStrptr(parent, rhs);
@@ -8845,7 +8845,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr33& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr33& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr33& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 33);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8859,7 +8859,7 @@ void algo::ch_SetStrptr(algo::RnullStr33& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr33..Hash
-u32 algo::RnullStr33_Hash(u32 prev, const algo::RnullStr33& rhs) {
+u32 algo::RnullStr33_Hash(u32 prev, const algo::RnullStr33& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8868,7 +8868,7 @@ u32 algo::RnullStr33_Hash(u32 prev, const algo::RnullStr33& rhs) {
 // --- algo.RnullStr33..ReadStrptrMaybe
 // Read fields of algo::RnullStr33 from an ascii string.
 // The format of the string is the format of the algo::RnullStr33's only field
-bool algo::RnullStr33_ReadStrptrMaybe(algo::RnullStr33 &parent, algo::strptr in_str) {
+bool algo::RnullStr33_ReadStrptrMaybe(algo::RnullStr33 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8877,18 +8877,18 @@ bool algo::RnullStr33_ReadStrptrMaybe(algo::RnullStr33 &parent, algo::strptr in_
 // --- algo.RnullStr33..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr33.String  printfmt:Raw
-void algo::RnullStr33_Print(algo::RnullStr33& row, algo::cstring& str) {
+void algo::RnullStr33_Print(algo::RnullStr33& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr35.ch.Print
-void algo::ch_Print(algo::RnullStr35& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr35& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr35.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr35& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr35& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 35) {
         ch_SetStrptr(parent, rhs);
@@ -8903,7 +8903,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr35& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr35& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr35& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 35);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8917,7 +8917,7 @@ void algo::ch_SetStrptr(algo::RnullStr35& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr35..Hash
-u32 algo::RnullStr35_Hash(u32 prev, const algo::RnullStr35& rhs) {
+u32 algo::RnullStr35_Hash(u32 prev, const algo::RnullStr35& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8926,7 +8926,7 @@ u32 algo::RnullStr35_Hash(u32 prev, const algo::RnullStr35& rhs) {
 // --- algo.RnullStr35..ReadStrptrMaybe
 // Read fields of algo::RnullStr35 from an ascii string.
 // The format of the string is the format of the algo::RnullStr35's only field
-bool algo::RnullStr35_ReadStrptrMaybe(algo::RnullStr35 &parent, algo::strptr in_str) {
+bool algo::RnullStr35_ReadStrptrMaybe(algo::RnullStr35 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8935,18 +8935,18 @@ bool algo::RnullStr35_ReadStrptrMaybe(algo::RnullStr35 &parent, algo::strptr in_
 // --- algo.RnullStr35..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr35.String  printfmt:Raw
-void algo::RnullStr35_Print(algo::RnullStr35& row, algo::cstring& str) {
+void algo::RnullStr35_Print(algo::RnullStr35& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr36.ch.Print
-void algo::ch_Print(algo::RnullStr36& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr36& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr36.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr36& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr36& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 36) {
         ch_SetStrptr(parent, rhs);
@@ -8961,7 +8961,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr36& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr36& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr36& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 36);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -8975,7 +8975,7 @@ void algo::ch_SetStrptr(algo::RnullStr36& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr36..Hash
-u32 algo::RnullStr36_Hash(u32 prev, const algo::RnullStr36& rhs) {
+u32 algo::RnullStr36_Hash(u32 prev, const algo::RnullStr36& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -8984,7 +8984,7 @@ u32 algo::RnullStr36_Hash(u32 prev, const algo::RnullStr36& rhs) {
 // --- algo.RnullStr36..ReadStrptrMaybe
 // Read fields of algo::RnullStr36 from an ascii string.
 // The format of the string is the format of the algo::RnullStr36's only field
-bool algo::RnullStr36_ReadStrptrMaybe(algo::RnullStr36 &parent, algo::strptr in_str) {
+bool algo::RnullStr36_ReadStrptrMaybe(algo::RnullStr36 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -8993,18 +8993,18 @@ bool algo::RnullStr36_ReadStrptrMaybe(algo::RnullStr36 &parent, algo::strptr in_
 // --- algo.RnullStr36..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr36.String  printfmt:Raw
-void algo::RnullStr36_Print(algo::RnullStr36& row, algo::cstring& str) {
+void algo::RnullStr36_Print(algo::RnullStr36& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr4.ch.Print
-void algo::ch_Print(algo::RnullStr4& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr4& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr4.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr4& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr4& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 4) {
         ch_SetStrptr(parent, rhs);
@@ -9019,7 +9019,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr4& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr4& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr4& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 4);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9033,7 +9033,7 @@ void algo::ch_SetStrptr(algo::RnullStr4& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr4..Hash
-u32 algo::RnullStr4_Hash(u32 prev, algo::RnullStr4 rhs) {
+u32 algo::RnullStr4_Hash(u32 prev, algo::RnullStr4 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9042,7 +9042,7 @@ u32 algo::RnullStr4_Hash(u32 prev, algo::RnullStr4 rhs) {
 // --- algo.RnullStr4..ReadStrptrMaybe
 // Read fields of algo::RnullStr4 from an ascii string.
 // The format of the string is the format of the algo::RnullStr4's only field
-bool algo::RnullStr4_ReadStrptrMaybe(algo::RnullStr4 &parent, algo::strptr in_str) {
+bool algo::RnullStr4_ReadStrptrMaybe(algo::RnullStr4 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9051,18 +9051,18 @@ bool algo::RnullStr4_ReadStrptrMaybe(algo::RnullStr4 &parent, algo::strptr in_st
 // --- algo.RnullStr4..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr4.String  printfmt:Raw
-void algo::RnullStr4_Print(algo::RnullStr4 row, algo::cstring& str) {
+void algo::RnullStr4_Print(algo::RnullStr4 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr40.ch.Print
-void algo::ch_Print(algo::RnullStr40& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr40& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr40.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr40& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr40& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 40) {
         ch_SetStrptr(parent, rhs);
@@ -9077,7 +9077,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr40& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr40& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr40& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 40);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9091,7 +9091,7 @@ void algo::ch_SetStrptr(algo::RnullStr40& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr40..Hash
-u32 algo::RnullStr40_Hash(u32 prev, const algo::RnullStr40& rhs) {
+u32 algo::RnullStr40_Hash(u32 prev, const algo::RnullStr40& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9100,7 +9100,7 @@ u32 algo::RnullStr40_Hash(u32 prev, const algo::RnullStr40& rhs) {
 // --- algo.RnullStr40..ReadStrptrMaybe
 // Read fields of algo::RnullStr40 from an ascii string.
 // The format of the string is the format of the algo::RnullStr40's only field
-bool algo::RnullStr40_ReadStrptrMaybe(algo::RnullStr40 &parent, algo::strptr in_str) {
+bool algo::RnullStr40_ReadStrptrMaybe(algo::RnullStr40 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9109,18 +9109,18 @@ bool algo::RnullStr40_ReadStrptrMaybe(algo::RnullStr40 &parent, algo::strptr in_
 // --- algo.RnullStr40..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr40.String  printfmt:Raw
-void algo::RnullStr40_Print(algo::RnullStr40& row, algo::cstring& str) {
+void algo::RnullStr40_Print(algo::RnullStr40& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr41.ch.Print
-void algo::ch_Print(algo::RnullStr41& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr41& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr41.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr41& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr41& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 41) {
         ch_SetStrptr(parent, rhs);
@@ -9135,7 +9135,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr41& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr41& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr41& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 41);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9149,7 +9149,7 @@ void algo::ch_SetStrptr(algo::RnullStr41& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr41..Hash
-u32 algo::RnullStr41_Hash(u32 prev, const algo::RnullStr41& rhs) {
+u32 algo::RnullStr41_Hash(u32 prev, const algo::RnullStr41& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9158,7 +9158,7 @@ u32 algo::RnullStr41_Hash(u32 prev, const algo::RnullStr41& rhs) {
 // --- algo.RnullStr41..ReadStrptrMaybe
 // Read fields of algo::RnullStr41 from an ascii string.
 // The format of the string is the format of the algo::RnullStr41's only field
-bool algo::RnullStr41_ReadStrptrMaybe(algo::RnullStr41 &parent, algo::strptr in_str) {
+bool algo::RnullStr41_ReadStrptrMaybe(algo::RnullStr41 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9167,18 +9167,18 @@ bool algo::RnullStr41_ReadStrptrMaybe(algo::RnullStr41 &parent, algo::strptr in_
 // --- algo.RnullStr41..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr41.String  printfmt:Raw
-void algo::RnullStr41_Print(algo::RnullStr41& row, algo::cstring& str) {
+void algo::RnullStr41_Print(algo::RnullStr41& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr43.ch.Print
-void algo::ch_Print(algo::RnullStr43& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr43& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr43.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr43& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr43& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 43) {
         ch_SetStrptr(parent, rhs);
@@ -9193,7 +9193,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr43& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr43& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr43& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 43);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9207,7 +9207,7 @@ void algo::ch_SetStrptr(algo::RnullStr43& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr43..Hash
-u32 algo::RnullStr43_Hash(u32 prev, const algo::RnullStr43& rhs) {
+u32 algo::RnullStr43_Hash(u32 prev, const algo::RnullStr43& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9216,7 +9216,7 @@ u32 algo::RnullStr43_Hash(u32 prev, const algo::RnullStr43& rhs) {
 // --- algo.RnullStr43..ReadStrptrMaybe
 // Read fields of algo::RnullStr43 from an ascii string.
 // The format of the string is the format of the algo::RnullStr43's only field
-bool algo::RnullStr43_ReadStrptrMaybe(algo::RnullStr43 &parent, algo::strptr in_str) {
+bool algo::RnullStr43_ReadStrptrMaybe(algo::RnullStr43 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9225,18 +9225,18 @@ bool algo::RnullStr43_ReadStrptrMaybe(algo::RnullStr43 &parent, algo::strptr in_
 // --- algo.RnullStr43..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr43.String  printfmt:Raw
-void algo::RnullStr43_Print(algo::RnullStr43& row, algo::cstring& str) {
+void algo::RnullStr43_Print(algo::RnullStr43& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr44.ch.Print
-void algo::ch_Print(algo::RnullStr44& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr44& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr44.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr44& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr44& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 44) {
         ch_SetStrptr(parent, rhs);
@@ -9251,7 +9251,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr44& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr44& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr44& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 44);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9265,7 +9265,7 @@ void algo::ch_SetStrptr(algo::RnullStr44& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr44..Hash
-u32 algo::RnullStr44_Hash(u32 prev, const algo::RnullStr44& rhs) {
+u32 algo::RnullStr44_Hash(u32 prev, const algo::RnullStr44& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9274,7 +9274,7 @@ u32 algo::RnullStr44_Hash(u32 prev, const algo::RnullStr44& rhs) {
 // --- algo.RnullStr44..ReadStrptrMaybe
 // Read fields of algo::RnullStr44 from an ascii string.
 // The format of the string is the format of the algo::RnullStr44's only field
-bool algo::RnullStr44_ReadStrptrMaybe(algo::RnullStr44 &parent, algo::strptr in_str) {
+bool algo::RnullStr44_ReadStrptrMaybe(algo::RnullStr44 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9283,18 +9283,18 @@ bool algo::RnullStr44_ReadStrptrMaybe(algo::RnullStr44 &parent, algo::strptr in_
 // --- algo.RnullStr44..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr44.String  printfmt:Raw
-void algo::RnullStr44_Print(algo::RnullStr44& row, algo::cstring& str) {
+void algo::RnullStr44_Print(algo::RnullStr44& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr48.ch.Print
-void algo::ch_Print(algo::RnullStr48& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr48& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr48.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr48& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr48& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 48) {
         ch_SetStrptr(parent, rhs);
@@ -9309,7 +9309,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr48& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr48& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr48& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 48);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9323,7 +9323,7 @@ void algo::ch_SetStrptr(algo::RnullStr48& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr48..Hash
-u32 algo::RnullStr48_Hash(u32 prev, const algo::RnullStr48& rhs) {
+u32 algo::RnullStr48_Hash(u32 prev, const algo::RnullStr48& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9332,7 +9332,7 @@ u32 algo::RnullStr48_Hash(u32 prev, const algo::RnullStr48& rhs) {
 // --- algo.RnullStr48..ReadStrptrMaybe
 // Read fields of algo::RnullStr48 from an ascii string.
 // The format of the string is the format of the algo::RnullStr48's only field
-bool algo::RnullStr48_ReadStrptrMaybe(algo::RnullStr48 &parent, algo::strptr in_str) {
+bool algo::RnullStr48_ReadStrptrMaybe(algo::RnullStr48 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9341,18 +9341,18 @@ bool algo::RnullStr48_ReadStrptrMaybe(algo::RnullStr48 &parent, algo::strptr in_
 // --- algo.RnullStr48..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr48.String  printfmt:Raw
-void algo::RnullStr48_Print(algo::RnullStr48& row, algo::cstring& str) {
+void algo::RnullStr48_Print(algo::RnullStr48& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr5.ch.Print
-void algo::ch_Print(algo::RnullStr5& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr5& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr5.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr5& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr5& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 5) {
         ch_SetStrptr(parent, rhs);
@@ -9367,7 +9367,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr5& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr5& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr5& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9381,7 +9381,7 @@ void algo::ch_SetStrptr(algo::RnullStr5& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr5..Hash
-u32 algo::RnullStr5_Hash(u32 prev, algo::RnullStr5 rhs) {
+u32 algo::RnullStr5_Hash(u32 prev, algo::RnullStr5 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9390,7 +9390,7 @@ u32 algo::RnullStr5_Hash(u32 prev, algo::RnullStr5 rhs) {
 // --- algo.RnullStr5..ReadStrptrMaybe
 // Read fields of algo::RnullStr5 from an ascii string.
 // The format of the string is the format of the algo::RnullStr5's only field
-bool algo::RnullStr5_ReadStrptrMaybe(algo::RnullStr5 &parent, algo::strptr in_str) {
+bool algo::RnullStr5_ReadStrptrMaybe(algo::RnullStr5 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9399,18 +9399,18 @@ bool algo::RnullStr5_ReadStrptrMaybe(algo::RnullStr5 &parent, algo::strptr in_st
 // --- algo.RnullStr5..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr5.String  printfmt:Raw
-void algo::RnullStr5_Print(algo::RnullStr5 row, algo::cstring& str) {
+void algo::RnullStr5_Print(algo::RnullStr5 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr50.ch.Print
-void algo::ch_Print(algo::RnullStr50& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr50& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr50.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr50& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr50& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 50) {
         ch_SetStrptr(parent, rhs);
@@ -9425,7 +9425,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr50& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr50& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr50& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 50);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9439,7 +9439,7 @@ void algo::ch_SetStrptr(algo::RnullStr50& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr50..Hash
-u32 algo::RnullStr50_Hash(u32 prev, const algo::RnullStr50& rhs) {
+u32 algo::RnullStr50_Hash(u32 prev, const algo::RnullStr50& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9448,7 +9448,7 @@ u32 algo::RnullStr50_Hash(u32 prev, const algo::RnullStr50& rhs) {
 // --- algo.RnullStr50..ReadStrptrMaybe
 // Read fields of algo::RnullStr50 from an ascii string.
 // The format of the string is the format of the algo::RnullStr50's only field
-bool algo::RnullStr50_ReadStrptrMaybe(algo::RnullStr50 &parent, algo::strptr in_str) {
+bool algo::RnullStr50_ReadStrptrMaybe(algo::RnullStr50 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9457,18 +9457,18 @@ bool algo::RnullStr50_ReadStrptrMaybe(algo::RnullStr50 &parent, algo::strptr in_
 // --- algo.RnullStr50..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr50.String  printfmt:Raw
-void algo::RnullStr50_Print(algo::RnullStr50& row, algo::cstring& str) {
+void algo::RnullStr50_Print(algo::RnullStr50& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr54.ch.Print
-void algo::ch_Print(algo::RnullStr54& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr54& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr54.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr54& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr54& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 54) {
         ch_SetStrptr(parent, rhs);
@@ -9483,7 +9483,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr54& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr54& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr54& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 54);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9497,7 +9497,7 @@ void algo::ch_SetStrptr(algo::RnullStr54& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr54..Hash
-u32 algo::RnullStr54_Hash(u32 prev, const algo::RnullStr54& rhs) {
+u32 algo::RnullStr54_Hash(u32 prev, const algo::RnullStr54& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9506,7 +9506,7 @@ u32 algo::RnullStr54_Hash(u32 prev, const algo::RnullStr54& rhs) {
 // --- algo.RnullStr54..ReadStrptrMaybe
 // Read fields of algo::RnullStr54 from an ascii string.
 // The format of the string is the format of the algo::RnullStr54's only field
-bool algo::RnullStr54_ReadStrptrMaybe(algo::RnullStr54 &parent, algo::strptr in_str) {
+bool algo::RnullStr54_ReadStrptrMaybe(algo::RnullStr54 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9515,18 +9515,18 @@ bool algo::RnullStr54_ReadStrptrMaybe(algo::RnullStr54 &parent, algo::strptr in_
 // --- algo.RnullStr54..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr54.String  printfmt:Raw
-void algo::RnullStr54_Print(algo::RnullStr54& row, algo::cstring& str) {
+void algo::RnullStr54_Print(algo::RnullStr54& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr55.ch.Print
-void algo::ch_Print(algo::RnullStr55& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr55& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr55.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr55& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr55& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 55) {
         ch_SetStrptr(parent, rhs);
@@ -9541,7 +9541,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr55& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr55& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr55& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 55);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9555,7 +9555,7 @@ void algo::ch_SetStrptr(algo::RnullStr55& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr55..Hash
-u32 algo::RnullStr55_Hash(u32 prev, const algo::RnullStr55& rhs) {
+u32 algo::RnullStr55_Hash(u32 prev, const algo::RnullStr55& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9564,7 +9564,7 @@ u32 algo::RnullStr55_Hash(u32 prev, const algo::RnullStr55& rhs) {
 // --- algo.RnullStr55..ReadStrptrMaybe
 // Read fields of algo::RnullStr55 from an ascii string.
 // The format of the string is the format of the algo::RnullStr55's only field
-bool algo::RnullStr55_ReadStrptrMaybe(algo::RnullStr55 &parent, algo::strptr in_str) {
+bool algo::RnullStr55_ReadStrptrMaybe(algo::RnullStr55 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9573,18 +9573,18 @@ bool algo::RnullStr55_ReadStrptrMaybe(algo::RnullStr55 &parent, algo::strptr in_
 // --- algo.RnullStr55..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr55.String  printfmt:Raw
-void algo::RnullStr55_Print(algo::RnullStr55& row, algo::cstring& str) {
+void algo::RnullStr55_Print(algo::RnullStr55& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr6.ch.Print
-void algo::ch_Print(algo::RnullStr6& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr6& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr6.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr6& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr6& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 6) {
         ch_SetStrptr(parent, rhs);
@@ -9599,7 +9599,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr6& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr6& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr6& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9613,7 +9613,7 @@ void algo::ch_SetStrptr(algo::RnullStr6& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr6..Hash
-u32 algo::RnullStr6_Hash(u32 prev, algo::RnullStr6 rhs) {
+u32 algo::RnullStr6_Hash(u32 prev, algo::RnullStr6 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9622,7 +9622,7 @@ u32 algo::RnullStr6_Hash(u32 prev, algo::RnullStr6 rhs) {
 // --- algo.RnullStr6..ReadStrptrMaybe
 // Read fields of algo::RnullStr6 from an ascii string.
 // The format of the string is the format of the algo::RnullStr6's only field
-bool algo::RnullStr6_ReadStrptrMaybe(algo::RnullStr6 &parent, algo::strptr in_str) {
+bool algo::RnullStr6_ReadStrptrMaybe(algo::RnullStr6 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9631,18 +9631,18 @@ bool algo::RnullStr6_ReadStrptrMaybe(algo::RnullStr6 &parent, algo::strptr in_st
 // --- algo.RnullStr6..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr6.String  printfmt:Raw
-void algo::RnullStr6_Print(algo::RnullStr6 row, algo::cstring& str) {
+void algo::RnullStr6_Print(algo::RnullStr6 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr60.ch.Print
-void algo::ch_Print(algo::RnullStr60& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr60& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr60.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr60& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr60& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 60) {
         ch_SetStrptr(parent, rhs);
@@ -9657,7 +9657,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr60& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr60& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr60& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 60);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9671,7 +9671,7 @@ void algo::ch_SetStrptr(algo::RnullStr60& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr60..Hash
-u32 algo::RnullStr60_Hash(u32 prev, const algo::RnullStr60& rhs) {
+u32 algo::RnullStr60_Hash(u32 prev, const algo::RnullStr60& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9680,7 +9680,7 @@ u32 algo::RnullStr60_Hash(u32 prev, const algo::RnullStr60& rhs) {
 // --- algo.RnullStr60..ReadStrptrMaybe
 // Read fields of algo::RnullStr60 from an ascii string.
 // The format of the string is the format of the algo::RnullStr60's only field
-bool algo::RnullStr60_ReadStrptrMaybe(algo::RnullStr60 &parent, algo::strptr in_str) {
+bool algo::RnullStr60_ReadStrptrMaybe(algo::RnullStr60 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9689,18 +9689,18 @@ bool algo::RnullStr60_ReadStrptrMaybe(algo::RnullStr60 &parent, algo::strptr in_
 // --- algo.RnullStr60..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr60.String  printfmt:Raw
-void algo::RnullStr60_Print(algo::RnullStr60& row, algo::cstring& str) {
+void algo::RnullStr60_Print(algo::RnullStr60& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr62.ch.Print
-void algo::ch_Print(algo::RnullStr62& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr62& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr62.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr62& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr62& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 62) {
         ch_SetStrptr(parent, rhs);
@@ -9715,7 +9715,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr62& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr62& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr62& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 62);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9729,7 +9729,7 @@ void algo::ch_SetStrptr(algo::RnullStr62& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr62..Hash
-u32 algo::RnullStr62_Hash(u32 prev, const algo::RnullStr62& rhs) {
+u32 algo::RnullStr62_Hash(u32 prev, const algo::RnullStr62& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9738,7 +9738,7 @@ u32 algo::RnullStr62_Hash(u32 prev, const algo::RnullStr62& rhs) {
 // --- algo.RnullStr62..ReadStrptrMaybe
 // Read fields of algo::RnullStr62 from an ascii string.
 // The format of the string is the format of the algo::RnullStr62's only field
-bool algo::RnullStr62_ReadStrptrMaybe(algo::RnullStr62 &parent, algo::strptr in_str) {
+bool algo::RnullStr62_ReadStrptrMaybe(algo::RnullStr62 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9747,18 +9747,18 @@ bool algo::RnullStr62_ReadStrptrMaybe(algo::RnullStr62 &parent, algo::strptr in_
 // --- algo.RnullStr62..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr62.String  printfmt:Raw
-void algo::RnullStr62_Print(algo::RnullStr62& row, algo::cstring& str) {
+void algo::RnullStr62_Print(algo::RnullStr62& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr66.ch.Print
-void algo::ch_Print(algo::RnullStr66& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr66& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr66.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr66& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr66& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 66) {
         ch_SetStrptr(parent, rhs);
@@ -9773,7 +9773,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr66& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr66& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr66& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 66);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9787,7 +9787,7 @@ void algo::ch_SetStrptr(algo::RnullStr66& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr66..Hash
-u32 algo::RnullStr66_Hash(u32 prev, const algo::RnullStr66& rhs) {
+u32 algo::RnullStr66_Hash(u32 prev, const algo::RnullStr66& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9796,7 +9796,7 @@ u32 algo::RnullStr66_Hash(u32 prev, const algo::RnullStr66& rhs) {
 // --- algo.RnullStr66..ReadStrptrMaybe
 // Read fields of algo::RnullStr66 from an ascii string.
 // The format of the string is the format of the algo::RnullStr66's only field
-bool algo::RnullStr66_ReadStrptrMaybe(algo::RnullStr66 &parent, algo::strptr in_str) {
+bool algo::RnullStr66_ReadStrptrMaybe(algo::RnullStr66 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9805,18 +9805,18 @@ bool algo::RnullStr66_ReadStrptrMaybe(algo::RnullStr66 &parent, algo::strptr in_
 // --- algo.RnullStr66..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr66.String  printfmt:Raw
-void algo::RnullStr66_Print(algo::RnullStr66& row, algo::cstring& str) {
+void algo::RnullStr66_Print(algo::RnullStr66& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr6_U32.ch.Print
-void algo::ch_Print(algo::RnullStr6_U32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr6_U32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr6_U32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr6_U32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr6_U32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 6) {
         ch_SetStrptr(parent, rhs);
@@ -9831,7 +9831,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr6_U32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr6_U32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr6_U32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9849,7 +9849,7 @@ void algo::ch_SetStrptr(algo::RnullStr6_U32& parent, const algo::strptr& rhs) {
 // for the target type, or the string is invalid, the result
 // is undefined, and and_ok is set to false.
 // Empty string is evaluated to zero.
-u32 algo::ch_Getnum(algo::RnullStr6_U32& parent, bool &and_ok) {
+u32 algo::ch_Getnum(algo::RnullStr6_U32& parent, bool &and_ok) throw() {
     u64 val = 0;
     algo::strptr str = ch_Getary(parent);
     if (elems_N(str)>0) { // empty string maps to zero
@@ -9864,7 +9864,7 @@ u32 algo::ch_Getnum(algo::RnullStr6_U32& parent, bool &and_ok) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, return default value.
 // Empty string is evaluated to zero.
-u32 algo::ch_GetnumDflt(algo::RnullStr6_U32& parent, u32 dflt) {
+u32 algo::ch_GetnumDflt(algo::RnullStr6_U32& parent, u32 dflt) throw() {
     bool ok = true;
     u32 result = ch_Getnum(parent, ok);
     return ok ? result : dflt;
@@ -9874,7 +9874,7 @@ u32 algo::ch_GetnumDflt(algo::RnullStr6_U32& parent, u32 dflt) {
 // Convert field to numeric value. If the value is too large
 // for the target type, or the string is invalid, throw an exception.
 // Empty string is evaluated to zero.
-i64 algo::ch_Geti64(algo::RnullStr6_U32& parent, bool &out_ok) {
+i64 algo::ch_Geti64(algo::RnullStr6_U32& parent, bool &out_ok) throw() {
     out_ok = true;
     i64 result = ch_Getnum(parent, out_ok);
     return result;
@@ -9883,7 +9883,7 @@ i64 algo::ch_Geti64(algo::RnullStr6_U32& parent, bool &out_ok) {
 // --- algo.RnullStr6_U32.ch.SetnumMaybe
 // Set string to number specified in RHS performing base-10 conversion.
 // If the number is too large for the string, return false.
-bool algo::ch_SetnumMaybe(algo::RnullStr6_U32& parent, i64 rhs) {
+bool algo::ch_SetnumMaybe(algo::RnullStr6_U32& parent, i64 rhs) throw() {
     char buf[128];
     int length = 0;
     int charpos = 64;
@@ -9897,7 +9897,7 @@ bool algo::ch_SetnumMaybe(algo::RnullStr6_U32& parent, i64 rhs) {
 }
 
 // --- algo.RnullStr6_U32..Hash
-u32 algo::RnullStr6_U32_Hash(u32 prev, const algo::RnullStr6_U32& rhs) {
+u32 algo::RnullStr6_U32_Hash(u32 prev, const algo::RnullStr6_U32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9906,7 +9906,7 @@ u32 algo::RnullStr6_U32_Hash(u32 prev, const algo::RnullStr6_U32& rhs) {
 // --- algo.RnullStr6_U32..ReadStrptrMaybe
 // Read fields of algo::RnullStr6_U32 from an ascii string.
 // The format of the string is the format of the algo::RnullStr6_U32's only field
-bool algo::RnullStr6_U32_ReadStrptrMaybe(algo::RnullStr6_U32 &parent, algo::strptr in_str) {
+bool algo::RnullStr6_U32_ReadStrptrMaybe(algo::RnullStr6_U32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9915,18 +9915,18 @@ bool algo::RnullStr6_U32_ReadStrptrMaybe(algo::RnullStr6_U32 &parent, algo::strp
 // --- algo.RnullStr6_U32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr6_U32.String  printfmt:Raw
-void algo::RnullStr6_U32_Print(algo::RnullStr6_U32& row, algo::cstring& str) {
+void algo::RnullStr6_U32_Print(algo::RnullStr6_U32& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr7.ch.Print
-void algo::ch_Print(algo::RnullStr7& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr7& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr7.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr7& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr7& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 7) {
         ch_SetStrptr(parent, rhs);
@@ -9941,7 +9941,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr7& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr7& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr7& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 7);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -9955,7 +9955,7 @@ void algo::ch_SetStrptr(algo::RnullStr7& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr7..Hash
-u32 algo::RnullStr7_Hash(u32 prev, algo::RnullStr7 rhs) {
+u32 algo::RnullStr7_Hash(u32 prev, algo::RnullStr7 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -9964,7 +9964,7 @@ u32 algo::RnullStr7_Hash(u32 prev, algo::RnullStr7 rhs) {
 // --- algo.RnullStr7..ReadStrptrMaybe
 // Read fields of algo::RnullStr7 from an ascii string.
 // The format of the string is the format of the algo::RnullStr7's only field
-bool algo::RnullStr7_ReadStrptrMaybe(algo::RnullStr7 &parent, algo::strptr in_str) {
+bool algo::RnullStr7_ReadStrptrMaybe(algo::RnullStr7 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9973,18 +9973,18 @@ bool algo::RnullStr7_ReadStrptrMaybe(algo::RnullStr7 &parent, algo::strptr in_st
 // --- algo.RnullStr7..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr7.String  printfmt:Raw
-void algo::RnullStr7_Print(algo::RnullStr7 row, algo::cstring& str) {
+void algo::RnullStr7_Print(algo::RnullStr7 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr8.ch.Print
-void algo::ch_Print(algo::RnullStr8& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr8& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr8.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr8& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr8& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 8) {
         ch_SetStrptr(parent, rhs);
@@ -9999,7 +9999,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr8& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr8& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr8& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 8);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10013,7 +10013,7 @@ void algo::ch_SetStrptr(algo::RnullStr8& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr8..Hash
-u32 algo::RnullStr8_Hash(u32 prev, algo::RnullStr8 rhs) {
+u32 algo::RnullStr8_Hash(u32 prev, algo::RnullStr8 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10022,7 +10022,7 @@ u32 algo::RnullStr8_Hash(u32 prev, algo::RnullStr8 rhs) {
 // --- algo.RnullStr8..ReadStrptrMaybe
 // Read fields of algo::RnullStr8 from an ascii string.
 // The format of the string is the format of the algo::RnullStr8's only field
-bool algo::RnullStr8_ReadStrptrMaybe(algo::RnullStr8 &parent, algo::strptr in_str) {
+bool algo::RnullStr8_ReadStrptrMaybe(algo::RnullStr8 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10031,18 +10031,18 @@ bool algo::RnullStr8_ReadStrptrMaybe(algo::RnullStr8 &parent, algo::strptr in_st
 // --- algo.RnullStr8..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr8.String  printfmt:Raw
-void algo::RnullStr8_Print(algo::RnullStr8 row, algo::cstring& str) {
+void algo::RnullStr8_Print(algo::RnullStr8 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr80.ch.Print
-void algo::ch_Print(algo::RnullStr80& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr80& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr80.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr80& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr80& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 80) {
         ch_SetStrptr(parent, rhs);
@@ -10057,7 +10057,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr80& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr80& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr80& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 80);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10071,7 +10071,7 @@ void algo::ch_SetStrptr(algo::RnullStr80& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr80..Hash
-u32 algo::RnullStr80_Hash(u32 prev, const algo::RnullStr80& rhs) {
+u32 algo::RnullStr80_Hash(u32 prev, const algo::RnullStr80& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10080,7 +10080,7 @@ u32 algo::RnullStr80_Hash(u32 prev, const algo::RnullStr80& rhs) {
 // --- algo.RnullStr80..ReadStrptrMaybe
 // Read fields of algo::RnullStr80 from an ascii string.
 // The format of the string is the format of the algo::RnullStr80's only field
-bool algo::RnullStr80_ReadStrptrMaybe(algo::RnullStr80 &parent, algo::strptr in_str) {
+bool algo::RnullStr80_ReadStrptrMaybe(algo::RnullStr80 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10089,18 +10089,18 @@ bool algo::RnullStr80_ReadStrptrMaybe(algo::RnullStr80 &parent, algo::strptr in_
 // --- algo.RnullStr80..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr80.String  printfmt:Raw
-void algo::RnullStr80_Print(algo::RnullStr80& row, algo::cstring& str) {
+void algo::RnullStr80_Print(algo::RnullStr80& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RnullStr9.ch.Print
-void algo::ch_Print(algo::RnullStr9& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RnullStr9& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RnullStr9.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RnullStr9& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RnullStr9& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 9) {
         ch_SetStrptr(parent, rhs);
@@ -10115,7 +10115,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RnullStr9& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RnullStr9& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RnullStr9& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 9);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10129,7 +10129,7 @@ void algo::ch_SetStrptr(algo::RnullStr9& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RnullStr9..Hash
-u32 algo::RnullStr9_Hash(u32 prev, const algo::RnullStr9& rhs) {
+u32 algo::RnullStr9_Hash(u32 prev, const algo::RnullStr9& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10138,7 +10138,7 @@ u32 algo::RnullStr9_Hash(u32 prev, const algo::RnullStr9& rhs) {
 // --- algo.RnullStr9..ReadStrptrMaybe
 // Read fields of algo::RnullStr9 from an ascii string.
 // The format of the string is the format of the algo::RnullStr9's only field
-bool algo::RnullStr9_ReadStrptrMaybe(algo::RnullStr9 &parent, algo::strptr in_str) {
+bool algo::RnullStr9_ReadStrptrMaybe(algo::RnullStr9 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10147,18 +10147,18 @@ bool algo::RnullStr9_ReadStrptrMaybe(algo::RnullStr9 &parent, algo::strptr in_st
 // --- algo.RnullStr9..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RnullStr9.String  printfmt:Raw
-void algo::RnullStr9_Print(algo::RnullStr9& row, algo::cstring& str) {
+void algo::RnullStr9_Print(algo::RnullStr9& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr10.ch.Print
-void algo::ch_Print(algo::RspaceStr10& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr10& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr10.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr10& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr10& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 10) {
         ch_SetStrptr(parent, rhs);
@@ -10173,7 +10173,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr10& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr10& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr10& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 10);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10187,7 +10187,7 @@ void algo::ch_SetStrptr(algo::RspaceStr10& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr10..Hash
-u32 algo::RspaceStr10_Hash(u32 prev, algo::RspaceStr10 rhs) {
+u32 algo::RspaceStr10_Hash(u32 prev, algo::RspaceStr10 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10196,7 +10196,7 @@ u32 algo::RspaceStr10_Hash(u32 prev, algo::RspaceStr10 rhs) {
 // --- algo.RspaceStr10..ReadStrptrMaybe
 // Read fields of algo::RspaceStr10 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr10's only field
-bool algo::RspaceStr10_ReadStrptrMaybe(algo::RspaceStr10 &parent, algo::strptr in_str) {
+bool algo::RspaceStr10_ReadStrptrMaybe(algo::RspaceStr10 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10205,18 +10205,18 @@ bool algo::RspaceStr10_ReadStrptrMaybe(algo::RspaceStr10 &parent, algo::strptr i
 // --- algo.RspaceStr10..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr10.String  printfmt:Raw
-void algo::RspaceStr10_Print(algo::RspaceStr10 row, algo::cstring& str) {
+void algo::RspaceStr10_Print(algo::RspaceStr10 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr100.ch.Print
-void algo::ch_Print(algo::RspaceStr100& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr100& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr100.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr100& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr100& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 100) {
         ch_SetStrptr(parent, rhs);
@@ -10231,7 +10231,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr100& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr100& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr100& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 100);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10245,7 +10245,7 @@ void algo::ch_SetStrptr(algo::RspaceStr100& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr100..Hash
-u32 algo::RspaceStr100_Hash(u32 prev, const algo::RspaceStr100& rhs) {
+u32 algo::RspaceStr100_Hash(u32 prev, const algo::RspaceStr100& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10254,7 +10254,7 @@ u32 algo::RspaceStr100_Hash(u32 prev, const algo::RspaceStr100& rhs) {
 // --- algo.RspaceStr100..ReadStrptrMaybe
 // Read fields of algo::RspaceStr100 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr100's only field
-bool algo::RspaceStr100_ReadStrptrMaybe(algo::RspaceStr100 &parent, algo::strptr in_str) {
+bool algo::RspaceStr100_ReadStrptrMaybe(algo::RspaceStr100 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10263,18 +10263,18 @@ bool algo::RspaceStr100_ReadStrptrMaybe(algo::RspaceStr100 &parent, algo::strptr
 // --- algo.RspaceStr100..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr100.String  printfmt:Raw
-void algo::RspaceStr100_Print(algo::RspaceStr100& row, algo::cstring& str) {
+void algo::RspaceStr100_Print(algo::RspaceStr100& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr11.ch.Print
-void algo::ch_Print(algo::RspaceStr11& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr11& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr11.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr11& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr11& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 11) {
         ch_SetStrptr(parent, rhs);
@@ -10289,7 +10289,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr11& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr11& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr11& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 11);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10303,7 +10303,7 @@ void algo::ch_SetStrptr(algo::RspaceStr11& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr11..Hash
-u32 algo::RspaceStr11_Hash(u32 prev, const algo::RspaceStr11& rhs) {
+u32 algo::RspaceStr11_Hash(u32 prev, const algo::RspaceStr11& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10312,7 +10312,7 @@ u32 algo::RspaceStr11_Hash(u32 prev, const algo::RspaceStr11& rhs) {
 // --- algo.RspaceStr11..ReadStrptrMaybe
 // Read fields of algo::RspaceStr11 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr11's only field
-bool algo::RspaceStr11_ReadStrptrMaybe(algo::RspaceStr11 &parent, algo::strptr in_str) {
+bool algo::RspaceStr11_ReadStrptrMaybe(algo::RspaceStr11 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10321,18 +10321,18 @@ bool algo::RspaceStr11_ReadStrptrMaybe(algo::RspaceStr11 &parent, algo::strptr i
 // --- algo.RspaceStr11..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr11.String  printfmt:Raw
-void algo::RspaceStr11_Print(algo::RspaceStr11& row, algo::cstring& str) {
+void algo::RspaceStr11_Print(algo::RspaceStr11& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr12.ch.Print
-void algo::ch_Print(algo::RspaceStr12& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr12& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr12.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr12& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr12& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 12) {
         ch_SetStrptr(parent, rhs);
@@ -10347,7 +10347,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr12& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr12& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr12& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 12);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10361,7 +10361,7 @@ void algo::ch_SetStrptr(algo::RspaceStr12& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr12..Hash
-u32 algo::RspaceStr12_Hash(u32 prev, algo::RspaceStr12 rhs) {
+u32 algo::RspaceStr12_Hash(u32 prev, algo::RspaceStr12 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10370,7 +10370,7 @@ u32 algo::RspaceStr12_Hash(u32 prev, algo::RspaceStr12 rhs) {
 // --- algo.RspaceStr12..ReadStrptrMaybe
 // Read fields of algo::RspaceStr12 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr12's only field
-bool algo::RspaceStr12_ReadStrptrMaybe(algo::RspaceStr12 &parent, algo::strptr in_str) {
+bool algo::RspaceStr12_ReadStrptrMaybe(algo::RspaceStr12 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10379,18 +10379,18 @@ bool algo::RspaceStr12_ReadStrptrMaybe(algo::RspaceStr12 &parent, algo::strptr i
 // --- algo.RspaceStr12..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr12.String  printfmt:Raw
-void algo::RspaceStr12_Print(algo::RspaceStr12 row, algo::cstring& str) {
+void algo::RspaceStr12_Print(algo::RspaceStr12 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr128.ch.Print
-void algo::ch_Print(algo::RspaceStr128& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr128& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr128.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr128& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr128& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 128) {
         ch_SetStrptr(parent, rhs);
@@ -10405,7 +10405,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr128& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr128& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr128& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 128);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10419,7 +10419,7 @@ void algo::ch_SetStrptr(algo::RspaceStr128& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr128..Hash
-u32 algo::RspaceStr128_Hash(u32 prev, algo::RspaceStr128 rhs) {
+u32 algo::RspaceStr128_Hash(u32 prev, algo::RspaceStr128 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10428,7 +10428,7 @@ u32 algo::RspaceStr128_Hash(u32 prev, algo::RspaceStr128 rhs) {
 // --- algo.RspaceStr128..ReadStrptrMaybe
 // Read fields of algo::RspaceStr128 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr128's only field
-bool algo::RspaceStr128_ReadStrptrMaybe(algo::RspaceStr128 &parent, algo::strptr in_str) {
+bool algo::RspaceStr128_ReadStrptrMaybe(algo::RspaceStr128 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10437,18 +10437,18 @@ bool algo::RspaceStr128_ReadStrptrMaybe(algo::RspaceStr128 &parent, algo::strptr
 // --- algo.RspaceStr128..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr128.String  printfmt:Raw
-void algo::RspaceStr128_Print(algo::RspaceStr128 row, algo::cstring& str) {
+void algo::RspaceStr128_Print(algo::RspaceStr128 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr14.ch.Print
-void algo::ch_Print(algo::RspaceStr14& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr14& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr14.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr14& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr14& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 14) {
         ch_SetStrptr(parent, rhs);
@@ -10463,7 +10463,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr14& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr14& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr14& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 14);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10477,7 +10477,7 @@ void algo::ch_SetStrptr(algo::RspaceStr14& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr14..Hash
-u32 algo::RspaceStr14_Hash(u32 prev, algo::RspaceStr14 rhs) {
+u32 algo::RspaceStr14_Hash(u32 prev, algo::RspaceStr14 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10486,7 +10486,7 @@ u32 algo::RspaceStr14_Hash(u32 prev, algo::RspaceStr14 rhs) {
 // --- algo.RspaceStr14..ReadStrptrMaybe
 // Read fields of algo::RspaceStr14 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr14's only field
-bool algo::RspaceStr14_ReadStrptrMaybe(algo::RspaceStr14 &parent, algo::strptr in_str) {
+bool algo::RspaceStr14_ReadStrptrMaybe(algo::RspaceStr14 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10495,18 +10495,18 @@ bool algo::RspaceStr14_ReadStrptrMaybe(algo::RspaceStr14 &parent, algo::strptr i
 // --- algo.RspaceStr14..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr14.String  printfmt:Raw
-void algo::RspaceStr14_Print(algo::RspaceStr14 row, algo::cstring& str) {
+void algo::RspaceStr14_Print(algo::RspaceStr14 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr15.ch.Print
-void algo::ch_Print(algo::RspaceStr15& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr15& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr15.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr15& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr15& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 15) {
         ch_SetStrptr(parent, rhs);
@@ -10521,7 +10521,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr15& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr15& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr15& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 15);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10535,7 +10535,7 @@ void algo::ch_SetStrptr(algo::RspaceStr15& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr15..Hash
-u32 algo::RspaceStr15_Hash(u32 prev, algo::RspaceStr15 rhs) {
+u32 algo::RspaceStr15_Hash(u32 prev, algo::RspaceStr15 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10544,7 +10544,7 @@ u32 algo::RspaceStr15_Hash(u32 prev, algo::RspaceStr15 rhs) {
 // --- algo.RspaceStr15..ReadStrptrMaybe
 // Read fields of algo::RspaceStr15 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr15's only field
-bool algo::RspaceStr15_ReadStrptrMaybe(algo::RspaceStr15 &parent, algo::strptr in_str) {
+bool algo::RspaceStr15_ReadStrptrMaybe(algo::RspaceStr15 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10553,18 +10553,18 @@ bool algo::RspaceStr15_ReadStrptrMaybe(algo::RspaceStr15 &parent, algo::strptr i
 // --- algo.RspaceStr15..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr15.String  printfmt:Raw
-void algo::RspaceStr15_Print(algo::RspaceStr15 row, algo::cstring& str) {
+void algo::RspaceStr15_Print(algo::RspaceStr15 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr16.ch.Print
-void algo::ch_Print(algo::RspaceStr16& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr16& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr16.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr16& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr16& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 16) {
         ch_SetStrptr(parent, rhs);
@@ -10579,7 +10579,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr16& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr16& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr16& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 16);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10593,7 +10593,7 @@ void algo::ch_SetStrptr(algo::RspaceStr16& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr16..Hash
-u32 algo::RspaceStr16_Hash(u32 prev, algo::RspaceStr16 rhs) {
+u32 algo::RspaceStr16_Hash(u32 prev, algo::RspaceStr16 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10602,7 +10602,7 @@ u32 algo::RspaceStr16_Hash(u32 prev, algo::RspaceStr16 rhs) {
 // --- algo.RspaceStr16..ReadStrptrMaybe
 // Read fields of algo::RspaceStr16 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr16's only field
-bool algo::RspaceStr16_ReadStrptrMaybe(algo::RspaceStr16 &parent, algo::strptr in_str) {
+bool algo::RspaceStr16_ReadStrptrMaybe(algo::RspaceStr16 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10611,18 +10611,18 @@ bool algo::RspaceStr16_ReadStrptrMaybe(algo::RspaceStr16 &parent, algo::strptr i
 // --- algo.RspaceStr16..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr16.String  printfmt:Raw
-void algo::RspaceStr16_Print(algo::RspaceStr16 row, algo::cstring& str) {
+void algo::RspaceStr16_Print(algo::RspaceStr16 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr18.ch.Print
-void algo::ch_Print(algo::RspaceStr18& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr18& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr18.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr18& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr18& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 18) {
         ch_SetStrptr(parent, rhs);
@@ -10637,7 +10637,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr18& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr18& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr18& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 18);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10651,7 +10651,7 @@ void algo::ch_SetStrptr(algo::RspaceStr18& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr18..Hash
-u32 algo::RspaceStr18_Hash(u32 prev, algo::RspaceStr18 rhs) {
+u32 algo::RspaceStr18_Hash(u32 prev, algo::RspaceStr18 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10660,7 +10660,7 @@ u32 algo::RspaceStr18_Hash(u32 prev, algo::RspaceStr18 rhs) {
 // --- algo.RspaceStr18..ReadStrptrMaybe
 // Read fields of algo::RspaceStr18 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr18's only field
-bool algo::RspaceStr18_ReadStrptrMaybe(algo::RspaceStr18 &parent, algo::strptr in_str) {
+bool algo::RspaceStr18_ReadStrptrMaybe(algo::RspaceStr18 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10669,18 +10669,18 @@ bool algo::RspaceStr18_ReadStrptrMaybe(algo::RspaceStr18 &parent, algo::strptr i
 // --- algo.RspaceStr18..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr18.String  printfmt:Raw
-void algo::RspaceStr18_Print(algo::RspaceStr18 row, algo::cstring& str) {
+void algo::RspaceStr18_Print(algo::RspaceStr18 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr2.ch.Print
-void algo::ch_Print(algo::RspaceStr2& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr2& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr2.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr2& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr2& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 2) {
         ch_SetStrptr(parent, rhs);
@@ -10695,7 +10695,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr2& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr2& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr2& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 2);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10709,7 +10709,7 @@ void algo::ch_SetStrptr(algo::RspaceStr2& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr2..Hash
-u32 algo::RspaceStr2_Hash(u32 prev, algo::RspaceStr2 rhs) {
+u32 algo::RspaceStr2_Hash(u32 prev, algo::RspaceStr2 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10718,7 +10718,7 @@ u32 algo::RspaceStr2_Hash(u32 prev, algo::RspaceStr2 rhs) {
 // --- algo.RspaceStr2..ReadStrptrMaybe
 // Read fields of algo::RspaceStr2 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr2's only field
-bool algo::RspaceStr2_ReadStrptrMaybe(algo::RspaceStr2 &parent, algo::strptr in_str) {
+bool algo::RspaceStr2_ReadStrptrMaybe(algo::RspaceStr2 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10727,18 +10727,18 @@ bool algo::RspaceStr2_ReadStrptrMaybe(algo::RspaceStr2 &parent, algo::strptr in_
 // --- algo.RspaceStr2..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr2.String  printfmt:Raw
-void algo::RspaceStr2_Print(algo::RspaceStr2 row, algo::cstring& str) {
+void algo::RspaceStr2_Print(algo::RspaceStr2 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr20.ch.Print
-void algo::ch_Print(algo::RspaceStr20& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr20& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr20.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr20& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr20& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 20) {
         ch_SetStrptr(parent, rhs);
@@ -10753,7 +10753,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr20& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr20& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr20& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 20);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10767,7 +10767,7 @@ void algo::ch_SetStrptr(algo::RspaceStr20& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr20..Hash
-u32 algo::RspaceStr20_Hash(u32 prev, algo::RspaceStr20 rhs) {
+u32 algo::RspaceStr20_Hash(u32 prev, algo::RspaceStr20 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10776,7 +10776,7 @@ u32 algo::RspaceStr20_Hash(u32 prev, algo::RspaceStr20 rhs) {
 // --- algo.RspaceStr20..ReadStrptrMaybe
 // Read fields of algo::RspaceStr20 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr20's only field
-bool algo::RspaceStr20_ReadStrptrMaybe(algo::RspaceStr20 &parent, algo::strptr in_str) {
+bool algo::RspaceStr20_ReadStrptrMaybe(algo::RspaceStr20 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10785,18 +10785,18 @@ bool algo::RspaceStr20_ReadStrptrMaybe(algo::RspaceStr20 &parent, algo::strptr i
 // --- algo.RspaceStr20..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr20.String  printfmt:Raw
-void algo::RspaceStr20_Print(algo::RspaceStr20 row, algo::cstring& str) {
+void algo::RspaceStr20_Print(algo::RspaceStr20 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr200.ch.Print
-void algo::ch_Print(algo::RspaceStr200& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr200& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr200.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr200& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr200& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 200) {
         ch_SetStrptr(parent, rhs);
@@ -10811,7 +10811,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr200& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr200& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr200& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 200);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10825,7 +10825,7 @@ void algo::ch_SetStrptr(algo::RspaceStr200& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr200..Hash
-u32 algo::RspaceStr200_Hash(u32 prev, const algo::RspaceStr200& rhs) {
+u32 algo::RspaceStr200_Hash(u32 prev, const algo::RspaceStr200& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10834,7 +10834,7 @@ u32 algo::RspaceStr200_Hash(u32 prev, const algo::RspaceStr200& rhs) {
 // --- algo.RspaceStr200..ReadStrptrMaybe
 // Read fields of algo::RspaceStr200 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr200's only field
-bool algo::RspaceStr200_ReadStrptrMaybe(algo::RspaceStr200 &parent, algo::strptr in_str) {
+bool algo::RspaceStr200_ReadStrptrMaybe(algo::RspaceStr200 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10843,18 +10843,18 @@ bool algo::RspaceStr200_ReadStrptrMaybe(algo::RspaceStr200 &parent, algo::strptr
 // --- algo.RspaceStr200..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr200.String  printfmt:Raw
-void algo::RspaceStr200_Print(algo::RspaceStr200& row, algo::cstring& str) {
+void algo::RspaceStr200_Print(algo::RspaceStr200& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr21.ch.Print
-void algo::ch_Print(algo::RspaceStr21& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr21& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr21.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr21& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr21& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 21) {
         ch_SetStrptr(parent, rhs);
@@ -10869,7 +10869,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr21& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr21& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr21& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 21);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10883,7 +10883,7 @@ void algo::ch_SetStrptr(algo::RspaceStr21& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr21..Hash
-u32 algo::RspaceStr21_Hash(u32 prev, const algo::RspaceStr21& rhs) {
+u32 algo::RspaceStr21_Hash(u32 prev, const algo::RspaceStr21& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10892,7 +10892,7 @@ u32 algo::RspaceStr21_Hash(u32 prev, const algo::RspaceStr21& rhs) {
 // --- algo.RspaceStr21..ReadStrptrMaybe
 // Read fields of algo::RspaceStr21 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr21's only field
-bool algo::RspaceStr21_ReadStrptrMaybe(algo::RspaceStr21 &parent, algo::strptr in_str) {
+bool algo::RspaceStr21_ReadStrptrMaybe(algo::RspaceStr21 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10901,18 +10901,18 @@ bool algo::RspaceStr21_ReadStrptrMaybe(algo::RspaceStr21 &parent, algo::strptr i
 // --- algo.RspaceStr21..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr21.String  printfmt:Raw
-void algo::RspaceStr21_Print(algo::RspaceStr21& row, algo::cstring& str) {
+void algo::RspaceStr21_Print(algo::RspaceStr21& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr24.ch.Print
-void algo::ch_Print(algo::RspaceStr24& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr24& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr24.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr24& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr24& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 24) {
         ch_SetStrptr(parent, rhs);
@@ -10927,7 +10927,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr24& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr24& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr24& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 24);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10941,7 +10941,7 @@ void algo::ch_SetStrptr(algo::RspaceStr24& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr24..Hash
-u32 algo::RspaceStr24_Hash(u32 prev, algo::RspaceStr24 rhs) {
+u32 algo::RspaceStr24_Hash(u32 prev, algo::RspaceStr24 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -10950,7 +10950,7 @@ u32 algo::RspaceStr24_Hash(u32 prev, algo::RspaceStr24 rhs) {
 // --- algo.RspaceStr24..ReadStrptrMaybe
 // Read fields of algo::RspaceStr24 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr24's only field
-bool algo::RspaceStr24_ReadStrptrMaybe(algo::RspaceStr24 &parent, algo::strptr in_str) {
+bool algo::RspaceStr24_ReadStrptrMaybe(algo::RspaceStr24 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10959,18 +10959,18 @@ bool algo::RspaceStr24_ReadStrptrMaybe(algo::RspaceStr24 &parent, algo::strptr i
 // --- algo.RspaceStr24..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr24.String  printfmt:Raw
-void algo::RspaceStr24_Print(algo::RspaceStr24 row, algo::cstring& str) {
+void algo::RspaceStr24_Print(algo::RspaceStr24 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr240.ch.Print
-void algo::ch_Print(algo::RspaceStr240& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr240& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr240.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr240& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr240& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 240) {
         ch_SetStrptr(parent, rhs);
@@ -10985,7 +10985,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr240& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr240& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr240& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 240);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -10999,7 +10999,7 @@ void algo::ch_SetStrptr(algo::RspaceStr240& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr240..Hash
-u32 algo::RspaceStr240_Hash(u32 prev, const algo::RspaceStr240& rhs) {
+u32 algo::RspaceStr240_Hash(u32 prev, const algo::RspaceStr240& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11008,7 +11008,7 @@ u32 algo::RspaceStr240_Hash(u32 prev, const algo::RspaceStr240& rhs) {
 // --- algo.RspaceStr240..ReadStrptrMaybe
 // Read fields of algo::RspaceStr240 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr240's only field
-bool algo::RspaceStr240_ReadStrptrMaybe(algo::RspaceStr240 &parent, algo::strptr in_str) {
+bool algo::RspaceStr240_ReadStrptrMaybe(algo::RspaceStr240 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11017,18 +11017,18 @@ bool algo::RspaceStr240_ReadStrptrMaybe(algo::RspaceStr240 &parent, algo::strptr
 // --- algo.RspaceStr240..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr240.String  printfmt:Raw
-void algo::RspaceStr240_Print(algo::RspaceStr240& row, algo::cstring& str) {
+void algo::RspaceStr240_Print(algo::RspaceStr240& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr25.ch.Print
-void algo::ch_Print(algo::RspaceStr25& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr25& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr25.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr25& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr25& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 25) {
         ch_SetStrptr(parent, rhs);
@@ -11043,7 +11043,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr25& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr25& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr25& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 25);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11057,7 +11057,7 @@ void algo::ch_SetStrptr(algo::RspaceStr25& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr25..Hash
-u32 algo::RspaceStr25_Hash(u32 prev, algo::RspaceStr25 rhs) {
+u32 algo::RspaceStr25_Hash(u32 prev, algo::RspaceStr25 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11066,7 +11066,7 @@ u32 algo::RspaceStr25_Hash(u32 prev, algo::RspaceStr25 rhs) {
 // --- algo.RspaceStr25..ReadStrptrMaybe
 // Read fields of algo::RspaceStr25 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr25's only field
-bool algo::RspaceStr25_ReadStrptrMaybe(algo::RspaceStr25 &parent, algo::strptr in_str) {
+bool algo::RspaceStr25_ReadStrptrMaybe(algo::RspaceStr25 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11075,18 +11075,18 @@ bool algo::RspaceStr25_ReadStrptrMaybe(algo::RspaceStr25 &parent, algo::strptr i
 // --- algo.RspaceStr25..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr25.String  printfmt:Raw
-void algo::RspaceStr25_Print(algo::RspaceStr25 row, algo::cstring& str) {
+void algo::RspaceStr25_Print(algo::RspaceStr25 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr26.ch.Print
-void algo::ch_Print(algo::RspaceStr26& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr26& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr26.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr26& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr26& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 26) {
         ch_SetStrptr(parent, rhs);
@@ -11101,7 +11101,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr26& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr26& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr26& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 26);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11115,7 +11115,7 @@ void algo::ch_SetStrptr(algo::RspaceStr26& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr26..Hash
-u32 algo::RspaceStr26_Hash(u32 prev, const algo::RspaceStr26& rhs) {
+u32 algo::RspaceStr26_Hash(u32 prev, const algo::RspaceStr26& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11124,7 +11124,7 @@ u32 algo::RspaceStr26_Hash(u32 prev, const algo::RspaceStr26& rhs) {
 // --- algo.RspaceStr26..ReadStrptrMaybe
 // Read fields of algo::RspaceStr26 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr26's only field
-bool algo::RspaceStr26_ReadStrptrMaybe(algo::RspaceStr26 &parent, algo::strptr in_str) {
+bool algo::RspaceStr26_ReadStrptrMaybe(algo::RspaceStr26 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11133,18 +11133,18 @@ bool algo::RspaceStr26_ReadStrptrMaybe(algo::RspaceStr26 &parent, algo::strptr i
 // --- algo.RspaceStr26..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr26.String  printfmt:Raw
-void algo::RspaceStr26_Print(algo::RspaceStr26& row, algo::cstring& str) {
+void algo::RspaceStr26_Print(algo::RspaceStr26& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr3.ch.Print
-void algo::ch_Print(algo::RspaceStr3& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr3& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr3.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr3& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr3& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 3) {
         ch_SetStrptr(parent, rhs);
@@ -11159,7 +11159,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr3& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr3& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr3& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 3);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11173,7 +11173,7 @@ void algo::ch_SetStrptr(algo::RspaceStr3& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr3..Hash
-u32 algo::RspaceStr3_Hash(u32 prev, algo::RspaceStr3 rhs) {
+u32 algo::RspaceStr3_Hash(u32 prev, algo::RspaceStr3 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11182,7 +11182,7 @@ u32 algo::RspaceStr3_Hash(u32 prev, algo::RspaceStr3 rhs) {
 // --- algo.RspaceStr3..ReadStrptrMaybe
 // Read fields of algo::RspaceStr3 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr3's only field
-bool algo::RspaceStr3_ReadStrptrMaybe(algo::RspaceStr3 &parent, algo::strptr in_str) {
+bool algo::RspaceStr3_ReadStrptrMaybe(algo::RspaceStr3 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11191,18 +11191,18 @@ bool algo::RspaceStr3_ReadStrptrMaybe(algo::RspaceStr3 &parent, algo::strptr in_
 // --- algo.RspaceStr3..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr3.String  printfmt:Raw
-void algo::RspaceStr3_Print(algo::RspaceStr3 row, algo::cstring& str) {
+void algo::RspaceStr3_Print(algo::RspaceStr3 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr31.ch.Print
-void algo::ch_Print(algo::RspaceStr31& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr31& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr31.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr31& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr31& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 31) {
         ch_SetStrptr(parent, rhs);
@@ -11217,7 +11217,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr31& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr31& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr31& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 31);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11231,7 +11231,7 @@ void algo::ch_SetStrptr(algo::RspaceStr31& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr31..Hash
-u32 algo::RspaceStr31_Hash(u32 prev, const algo::RspaceStr31& rhs) {
+u32 algo::RspaceStr31_Hash(u32 prev, const algo::RspaceStr31& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11240,7 +11240,7 @@ u32 algo::RspaceStr31_Hash(u32 prev, const algo::RspaceStr31& rhs) {
 // --- algo.RspaceStr31..ReadStrptrMaybe
 // Read fields of algo::RspaceStr31 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr31's only field
-bool algo::RspaceStr31_ReadStrptrMaybe(algo::RspaceStr31 &parent, algo::strptr in_str) {
+bool algo::RspaceStr31_ReadStrptrMaybe(algo::RspaceStr31 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11249,18 +11249,18 @@ bool algo::RspaceStr31_ReadStrptrMaybe(algo::RspaceStr31 &parent, algo::strptr i
 // --- algo.RspaceStr31..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr31.String  printfmt:Raw
-void algo::RspaceStr31_Print(algo::RspaceStr31& row, algo::cstring& str) {
+void algo::RspaceStr31_Print(algo::RspaceStr31& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr32.ch.Print
-void algo::ch_Print(algo::RspaceStr32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 32) {
         ch_SetStrptr(parent, rhs);
@@ -11275,7 +11275,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 32);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11289,7 +11289,7 @@ void algo::ch_SetStrptr(algo::RspaceStr32& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr32..Hash
-u32 algo::RspaceStr32_Hash(u32 prev, algo::RspaceStr32 rhs) {
+u32 algo::RspaceStr32_Hash(u32 prev, algo::RspaceStr32 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11298,7 +11298,7 @@ u32 algo::RspaceStr32_Hash(u32 prev, algo::RspaceStr32 rhs) {
 // --- algo.RspaceStr32..ReadStrptrMaybe
 // Read fields of algo::RspaceStr32 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr32's only field
-bool algo::RspaceStr32_ReadStrptrMaybe(algo::RspaceStr32 &parent, algo::strptr in_str) {
+bool algo::RspaceStr32_ReadStrptrMaybe(algo::RspaceStr32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11307,18 +11307,18 @@ bool algo::RspaceStr32_ReadStrptrMaybe(algo::RspaceStr32 &parent, algo::strptr i
 // --- algo.RspaceStr32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr32.String  printfmt:Raw
-void algo::RspaceStr32_Print(algo::RspaceStr32 row, algo::cstring& str) {
+void algo::RspaceStr32_Print(algo::RspaceStr32 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr4.ch.Print
-void algo::ch_Print(algo::RspaceStr4& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr4& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr4.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr4& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr4& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 4) {
         ch_SetStrptr(parent, rhs);
@@ -11333,7 +11333,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr4& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr4& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr4& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 4);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11347,7 +11347,7 @@ void algo::ch_SetStrptr(algo::RspaceStr4& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr4..Hash
-u32 algo::RspaceStr4_Hash(u32 prev, algo::RspaceStr4 rhs) {
+u32 algo::RspaceStr4_Hash(u32 prev, algo::RspaceStr4 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11356,7 +11356,7 @@ u32 algo::RspaceStr4_Hash(u32 prev, algo::RspaceStr4 rhs) {
 // --- algo.RspaceStr4..ReadStrptrMaybe
 // Read fields of algo::RspaceStr4 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr4's only field
-bool algo::RspaceStr4_ReadStrptrMaybe(algo::RspaceStr4 &parent, algo::strptr in_str) {
+bool algo::RspaceStr4_ReadStrptrMaybe(algo::RspaceStr4 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11365,18 +11365,18 @@ bool algo::RspaceStr4_ReadStrptrMaybe(algo::RspaceStr4 &parent, algo::strptr in_
 // --- algo.RspaceStr4..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr4.String  printfmt:Raw
-void algo::RspaceStr4_Print(algo::RspaceStr4 row, algo::cstring& str) {
+void algo::RspaceStr4_Print(algo::RspaceStr4 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr40.ch.Print
-void algo::ch_Print(algo::RspaceStr40& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr40& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr40.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr40& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr40& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 40) {
         ch_SetStrptr(parent, rhs);
@@ -11391,7 +11391,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr40& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr40& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr40& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 40);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11405,7 +11405,7 @@ void algo::ch_SetStrptr(algo::RspaceStr40& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr40..Hash
-u32 algo::RspaceStr40_Hash(u32 prev, algo::RspaceStr40 rhs) {
+u32 algo::RspaceStr40_Hash(u32 prev, algo::RspaceStr40 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11414,7 +11414,7 @@ u32 algo::RspaceStr40_Hash(u32 prev, algo::RspaceStr40 rhs) {
 // --- algo.RspaceStr40..ReadStrptrMaybe
 // Read fields of algo::RspaceStr40 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr40's only field
-bool algo::RspaceStr40_ReadStrptrMaybe(algo::RspaceStr40 &parent, algo::strptr in_str) {
+bool algo::RspaceStr40_ReadStrptrMaybe(algo::RspaceStr40 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11423,18 +11423,18 @@ bool algo::RspaceStr40_ReadStrptrMaybe(algo::RspaceStr40 &parent, algo::strptr i
 // --- algo.RspaceStr40..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr40.String  printfmt:Raw
-void algo::RspaceStr40_Print(algo::RspaceStr40 row, algo::cstring& str) {
+void algo::RspaceStr40_Print(algo::RspaceStr40 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr5.ch.Print
-void algo::ch_Print(algo::RspaceStr5& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr5& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr5.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr5& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr5& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 5) {
         ch_SetStrptr(parent, rhs);
@@ -11449,7 +11449,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr5& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr5& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr5& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11463,7 +11463,7 @@ void algo::ch_SetStrptr(algo::RspaceStr5& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr5..Hash
-u32 algo::RspaceStr5_Hash(u32 prev, algo::RspaceStr5 rhs) {
+u32 algo::RspaceStr5_Hash(u32 prev, algo::RspaceStr5 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11472,7 +11472,7 @@ u32 algo::RspaceStr5_Hash(u32 prev, algo::RspaceStr5 rhs) {
 // --- algo.RspaceStr5..ReadStrptrMaybe
 // Read fields of algo::RspaceStr5 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr5's only field
-bool algo::RspaceStr5_ReadStrptrMaybe(algo::RspaceStr5 &parent, algo::strptr in_str) {
+bool algo::RspaceStr5_ReadStrptrMaybe(algo::RspaceStr5 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11481,18 +11481,18 @@ bool algo::RspaceStr5_ReadStrptrMaybe(algo::RspaceStr5 &parent, algo::strptr in_
 // --- algo.RspaceStr5..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr5.String  printfmt:Raw
-void algo::RspaceStr5_Print(algo::RspaceStr5 row, algo::cstring& str) {
+void algo::RspaceStr5_Print(algo::RspaceStr5 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr50.ch.Print
-void algo::ch_Print(algo::RspaceStr50& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr50& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr50.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr50& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr50& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 50) {
         ch_SetStrptr(parent, rhs);
@@ -11507,7 +11507,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr50& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr50& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr50& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 50);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11521,7 +11521,7 @@ void algo::ch_SetStrptr(algo::RspaceStr50& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr50..Hash
-u32 algo::RspaceStr50_Hash(u32 prev, algo::RspaceStr50 rhs) {
+u32 algo::RspaceStr50_Hash(u32 prev, algo::RspaceStr50 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11530,7 +11530,7 @@ u32 algo::RspaceStr50_Hash(u32 prev, algo::RspaceStr50 rhs) {
 // --- algo.RspaceStr50..ReadStrptrMaybe
 // Read fields of algo::RspaceStr50 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr50's only field
-bool algo::RspaceStr50_ReadStrptrMaybe(algo::RspaceStr50 &parent, algo::strptr in_str) {
+bool algo::RspaceStr50_ReadStrptrMaybe(algo::RspaceStr50 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11539,18 +11539,18 @@ bool algo::RspaceStr50_ReadStrptrMaybe(algo::RspaceStr50 &parent, algo::strptr i
 // --- algo.RspaceStr50..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr50.String  printfmt:Raw
-void algo::RspaceStr50_Print(algo::RspaceStr50 row, algo::cstring& str) {
+void algo::RspaceStr50_Print(algo::RspaceStr50 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr6.ch.Print
-void algo::ch_Print(algo::RspaceStr6& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr6& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr6.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr6& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr6& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 6) {
         ch_SetStrptr(parent, rhs);
@@ -11565,7 +11565,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr6& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr6& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr6& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 6);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11579,7 +11579,7 @@ void algo::ch_SetStrptr(algo::RspaceStr6& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr6..Hash
-u32 algo::RspaceStr6_Hash(u32 prev, algo::RspaceStr6 rhs) {
+u32 algo::RspaceStr6_Hash(u32 prev, algo::RspaceStr6 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11588,7 +11588,7 @@ u32 algo::RspaceStr6_Hash(u32 prev, algo::RspaceStr6 rhs) {
 // --- algo.RspaceStr6..ReadStrptrMaybe
 // Read fields of algo::RspaceStr6 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr6's only field
-bool algo::RspaceStr6_ReadStrptrMaybe(algo::RspaceStr6 &parent, algo::strptr in_str) {
+bool algo::RspaceStr6_ReadStrptrMaybe(algo::RspaceStr6 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11597,18 +11597,18 @@ bool algo::RspaceStr6_ReadStrptrMaybe(algo::RspaceStr6 &parent, algo::strptr in_
 // --- algo.RspaceStr6..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr6.String  printfmt:Raw
-void algo::RspaceStr6_Print(algo::RspaceStr6 row, algo::cstring& str) {
+void algo::RspaceStr6_Print(algo::RspaceStr6 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr64.ch.Print
-void algo::ch_Print(algo::RspaceStr64& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr64& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr64.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr64& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr64& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 64) {
         ch_SetStrptr(parent, rhs);
@@ -11623,7 +11623,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr64& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr64& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr64& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 64);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11637,7 +11637,7 @@ void algo::ch_SetStrptr(algo::RspaceStr64& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr64..Hash
-u32 algo::RspaceStr64_Hash(u32 prev, const algo::RspaceStr64& rhs) {
+u32 algo::RspaceStr64_Hash(u32 prev, const algo::RspaceStr64& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11646,7 +11646,7 @@ u32 algo::RspaceStr64_Hash(u32 prev, const algo::RspaceStr64& rhs) {
 // --- algo.RspaceStr64..ReadStrptrMaybe
 // Read fields of algo::RspaceStr64 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr64's only field
-bool algo::RspaceStr64_ReadStrptrMaybe(algo::RspaceStr64 &parent, algo::strptr in_str) {
+bool algo::RspaceStr64_ReadStrptrMaybe(algo::RspaceStr64 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11655,18 +11655,18 @@ bool algo::RspaceStr64_ReadStrptrMaybe(algo::RspaceStr64 &parent, algo::strptr i
 // --- algo.RspaceStr64..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr64.String  printfmt:Raw
-void algo::RspaceStr64_Print(algo::RspaceStr64& row, algo::cstring& str) {
+void algo::RspaceStr64_Print(algo::RspaceStr64& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr7.ch.Print
-void algo::ch_Print(algo::RspaceStr7& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr7& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr7.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr7& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr7& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 7) {
         ch_SetStrptr(parent, rhs);
@@ -11681,7 +11681,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr7& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr7& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr7& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 7);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11695,7 +11695,7 @@ void algo::ch_SetStrptr(algo::RspaceStr7& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr7..Hash
-u32 algo::RspaceStr7_Hash(u32 prev, algo::RspaceStr7 rhs) {
+u32 algo::RspaceStr7_Hash(u32 prev, algo::RspaceStr7 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11704,7 +11704,7 @@ u32 algo::RspaceStr7_Hash(u32 prev, algo::RspaceStr7 rhs) {
 // --- algo.RspaceStr7..ReadStrptrMaybe
 // Read fields of algo::RspaceStr7 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr7's only field
-bool algo::RspaceStr7_ReadStrptrMaybe(algo::RspaceStr7 &parent, algo::strptr in_str) {
+bool algo::RspaceStr7_ReadStrptrMaybe(algo::RspaceStr7 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11713,18 +11713,18 @@ bool algo::RspaceStr7_ReadStrptrMaybe(algo::RspaceStr7 &parent, algo::strptr in_
 // --- algo.RspaceStr7..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr7.String  printfmt:Raw
-void algo::RspaceStr7_Print(algo::RspaceStr7 row, algo::cstring& str) {
+void algo::RspaceStr7_Print(algo::RspaceStr7 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr75.ch.Print
-void algo::ch_Print(algo::RspaceStr75& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr75& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr75.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr75& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr75& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 75) {
         ch_SetStrptr(parent, rhs);
@@ -11739,7 +11739,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr75& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr75& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr75& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 75);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11753,7 +11753,7 @@ void algo::ch_SetStrptr(algo::RspaceStr75& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr75..Hash
-u32 algo::RspaceStr75_Hash(u32 prev, algo::RspaceStr75 rhs) {
+u32 algo::RspaceStr75_Hash(u32 prev, algo::RspaceStr75 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11762,7 +11762,7 @@ u32 algo::RspaceStr75_Hash(u32 prev, algo::RspaceStr75 rhs) {
 // --- algo.RspaceStr75..ReadStrptrMaybe
 // Read fields of algo::RspaceStr75 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr75's only field
-bool algo::RspaceStr75_ReadStrptrMaybe(algo::RspaceStr75 &parent, algo::strptr in_str) {
+bool algo::RspaceStr75_ReadStrptrMaybe(algo::RspaceStr75 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11771,18 +11771,18 @@ bool algo::RspaceStr75_ReadStrptrMaybe(algo::RspaceStr75 &parent, algo::strptr i
 // --- algo.RspaceStr75..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr75.String  printfmt:Raw
-void algo::RspaceStr75_Print(algo::RspaceStr75 row, algo::cstring& str) {
+void algo::RspaceStr75_Print(algo::RspaceStr75 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr8.ch.Print
-void algo::ch_Print(algo::RspaceStr8& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr8& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr8.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr8& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr8& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 8) {
         ch_SetStrptr(parent, rhs);
@@ -11797,7 +11797,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr8& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr8& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr8& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 8);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11811,7 +11811,7 @@ void algo::ch_SetStrptr(algo::RspaceStr8& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr8..Hash
-u32 algo::RspaceStr8_Hash(u32 prev, algo::RspaceStr8 rhs) {
+u32 algo::RspaceStr8_Hash(u32 prev, algo::RspaceStr8 rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11820,7 +11820,7 @@ u32 algo::RspaceStr8_Hash(u32 prev, algo::RspaceStr8 rhs) {
 // --- algo.RspaceStr8..ReadStrptrMaybe
 // Read fields of algo::RspaceStr8 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr8's only field
-bool algo::RspaceStr8_ReadStrptrMaybe(algo::RspaceStr8 &parent, algo::strptr in_str) {
+bool algo::RspaceStr8_ReadStrptrMaybe(algo::RspaceStr8 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11829,18 +11829,18 @@ bool algo::RspaceStr8_ReadStrptrMaybe(algo::RspaceStr8 &parent, algo::strptr in_
 // --- algo.RspaceStr8..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr8.String  printfmt:Raw
-void algo::RspaceStr8_Print(algo::RspaceStr8 row, algo::cstring& str) {
+void algo::RspaceStr8_Print(algo::RspaceStr8 row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.RspaceStr9.ch.Print
-void algo::ch_Print(algo::RspaceStr9& parent, algo::cstring &out) {
+void algo::ch_Print(algo::RspaceStr9& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.RspaceStr9.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::RspaceStr9& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::RspaceStr9& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 9) {
         ch_SetStrptr(parent, rhs);
@@ -11855,7 +11855,7 @@ bool algo::ch_ReadStrptrMaybe(algo::RspaceStr9& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::RspaceStr9& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::RspaceStr9& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 9);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11869,7 +11869,7 @@ void algo::ch_SetStrptr(algo::RspaceStr9& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.RspaceStr9..Hash
-u32 algo::RspaceStr9_Hash(u32 prev, const algo::RspaceStr9& rhs) {
+u32 algo::RspaceStr9_Hash(u32 prev, const algo::RspaceStr9& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -11878,7 +11878,7 @@ u32 algo::RspaceStr9_Hash(u32 prev, const algo::RspaceStr9& rhs) {
 // --- algo.RspaceStr9..ReadStrptrMaybe
 // Read fields of algo::RspaceStr9 from an ascii string.
 // The format of the string is the format of the algo::RspaceStr9's only field
-bool algo::RspaceStr9_ReadStrptrMaybe(algo::RspaceStr9 &parent, algo::strptr in_str) {
+bool algo::RspaceStr9_ReadStrptrMaybe(algo::RspaceStr9 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -11887,14 +11887,14 @@ bool algo::RspaceStr9_ReadStrptrMaybe(algo::RspaceStr9 &parent, algo::strptr in_
 // --- algo.RspaceStr9..Print
 // print string representation of ROW to string STR
 // cfmt:algo.RspaceStr9.String  printfmt:Raw
-void algo::RspaceStr9_Print(algo::RspaceStr9& row, algo::cstring& str) {
+void algo::RspaceStr9_Print(algo::RspaceStr9& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.SchedTime..ReadStrptrMaybe
 // Read fields of algo::SchedTime from an ascii string.
 // The format of the string is the format of the algo::SchedTime's only field
-bool algo::SchedTime_ReadStrptrMaybe(algo::SchedTime &parent, algo::strptr in_str) {
+bool algo::SchedTime_ReadStrptrMaybe(algo::SchedTime &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && u64_ReadStrptrMaybe(parent.value, in_str);
     return retval;
@@ -11903,14 +11903,14 @@ bool algo::SchedTime_ReadStrptrMaybe(algo::SchedTime &parent, algo::strptr in_st
 // --- algo.SchedTime..Print
 // print string representation of ROW to string STR
 // cfmt:algo.SchedTime.String  printfmt:Raw
-void algo::SchedTime_Print(algo::SchedTime row, algo::cstring& str) {
+void algo::SchedTime_Print(algo::SchedTime row, algo::cstring& str) throw() {
     u64_Print(row.value, str);
 }
 
 // --- algo.SeqType..ReadStrptrMaybe
 // Read fields of algo::SeqType from an ascii string.
 // The format of the string is the format of the algo::SeqType's only field
-bool algo::SeqType_ReadStrptrMaybe(algo::SeqType &parent, algo::strptr in_str) {
+bool algo::SeqType_ReadStrptrMaybe(algo::SeqType &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && u64_ReadStrptrMaybe(parent.value, in_str);
     return retval;
@@ -11919,12 +11919,12 @@ bool algo::SeqType_ReadStrptrMaybe(algo::SeqType &parent, algo::strptr in_str) {
 // --- algo.SeqType..Print
 // print string representation of ROW to string STR
 // cfmt:algo.SeqType.String  printfmt:Raw
-void algo::SeqType_Print(algo::SeqType row, algo::cstring& str) {
+void algo::SeqType_Print(algo::SeqType row, algo::cstring& str) throw() {
     u64_Print(row.value, str);
 }
 
 // --- algo.Sha1sig.sha1sig.Eq
-bool algo::sha1sig_Eq(algo::Sha1sig& parent, algo::Sha1sig &rhs) {
+bool algo::sha1sig_Eq(algo::Sha1sig& parent, algo::Sha1sig &rhs) throw() {
     int len = 20;
     for (int i = 0; i < len; i++) {
         if (!(parent.sha1sig_elems[i] == sha1sig_qFind(rhs,i))) {
@@ -11935,7 +11935,7 @@ bool algo::sha1sig_Eq(algo::Sha1sig& parent, algo::Sha1sig &rhs) {
 }
 
 // --- algo.Sha1sig.sha1sig.Cmp
-int algo::sha1sig_Cmp(algo::Sha1sig& parent, algo::Sha1sig &rhs) {
+int algo::sha1sig_Cmp(algo::Sha1sig& parent, algo::Sha1sig &rhs) throw() {
     int len = 20;
     int retval = 0;
     for (int i = 0; i < len; i++) {
@@ -11950,14 +11950,14 @@ int algo::sha1sig_Cmp(algo::Sha1sig& parent, algo::Sha1sig &rhs) {
 // --- algo.Sha1sig.sha1sig.Print
 // Convert sha1sig to a string.
 // Array is printed as a regular string.
-void algo::sha1sig_Print(algo::Sha1sig& parent, algo::cstring &rhs) {
+void algo::sha1sig_Print(algo::Sha1sig& parent, algo::cstring &rhs) throw() {
     rhs << algo::memptr_ToStrptr(sha1sig_Getary(parent));
 }
 
 // --- algo.Sha1sig.sha1sig.ReadStrptrMaybe
 // Read array from string
 // Convert string to field. Return success value
-bool algo::sha1sig_ReadStrptrMaybe(algo::Sha1sig& parent, algo::strptr in_str) {
+bool algo::sha1sig_ReadStrptrMaybe(algo::Sha1sig& parent, algo::strptr in_str) throw() {
     bool retval = true;
     i32 newlen = i32_Min(in_str.n_elems, 20);
     memcpy(parent.sha1sig_elems, in_str.elems, newlen);
@@ -11965,13 +11965,13 @@ bool algo::sha1sig_ReadStrptrMaybe(algo::Sha1sig& parent, algo::strptr in_str) {
 }
 
 // --- algo.Smallstr1.ch.Print
-void algo::ch_Print(algo::Smallstr1& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr1& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr1.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr1& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr1& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 1) {
         ch_SetStrptr(parent, rhs);
@@ -11986,7 +11986,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr1& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr1& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr1& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 1);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -11998,7 +11998,7 @@ void algo::ch_SetStrptr(algo::Smallstr1& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr1..Hash
-u32 algo::Smallstr1_Hash(u32 prev, const algo::Smallstr1& rhs) {
+u32 algo::Smallstr1_Hash(u32 prev, const algo::Smallstr1& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12007,7 +12007,7 @@ u32 algo::Smallstr1_Hash(u32 prev, const algo::Smallstr1& rhs) {
 // --- algo.Smallstr1..ReadStrptrMaybe
 // Read fields of algo::Smallstr1 from an ascii string.
 // The format of the string is the format of the algo::Smallstr1's only field
-bool algo::Smallstr1_ReadStrptrMaybe(algo::Smallstr1 &parent, algo::strptr in_str) {
+bool algo::Smallstr1_ReadStrptrMaybe(algo::Smallstr1 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12016,18 +12016,18 @@ bool algo::Smallstr1_ReadStrptrMaybe(algo::Smallstr1 &parent, algo::strptr in_st
 // --- algo.Smallstr1..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr1.String  printfmt:Raw
-void algo::Smallstr1_Print(algo::Smallstr1& row, algo::cstring& str) {
+void algo::Smallstr1_Print(algo::Smallstr1& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Smallstr10.ch.Print
-void algo::ch_Print(algo::Smallstr10& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr10& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr10.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr10& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr10& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 10) {
         ch_SetStrptr(parent, rhs);
@@ -12042,7 +12042,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr10& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr10& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr10& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 10);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12054,7 +12054,7 @@ void algo::ch_SetStrptr(algo::Smallstr10& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr10..Hash
-u32 algo::Smallstr10_Hash(u32 prev, const algo::Smallstr10& rhs) {
+u32 algo::Smallstr10_Hash(u32 prev, const algo::Smallstr10& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12063,7 +12063,7 @@ u32 algo::Smallstr10_Hash(u32 prev, const algo::Smallstr10& rhs) {
 // --- algo.Smallstr10..ReadStrptrMaybe
 // Read fields of algo::Smallstr10 from an ascii string.
 // The format of the string is the format of the algo::Smallstr10's only field
-bool algo::Smallstr10_ReadStrptrMaybe(algo::Smallstr10 &parent, algo::strptr in_str) {
+bool algo::Smallstr10_ReadStrptrMaybe(algo::Smallstr10 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12072,18 +12072,18 @@ bool algo::Smallstr10_ReadStrptrMaybe(algo::Smallstr10 &parent, algo::strptr in_
 // --- algo.Smallstr10..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr10.String  printfmt:Raw
-void algo::Smallstr10_Print(algo::Smallstr10& row, algo::cstring& str) {
+void algo::Smallstr10_Print(algo::Smallstr10& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Smallstr16.ch.Print
-void algo::ch_Print(algo::Smallstr16& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr16& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr16.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr16& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr16& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 16) {
         ch_SetStrptr(parent, rhs);
@@ -12098,7 +12098,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr16& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr16& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr16& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 16);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12110,7 +12110,7 @@ void algo::ch_SetStrptr(algo::Smallstr16& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr16..Hash
-u32 algo::Smallstr16_Hash(u32 prev, const algo::Smallstr16& rhs) {
+u32 algo::Smallstr16_Hash(u32 prev, const algo::Smallstr16& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12119,7 +12119,7 @@ u32 algo::Smallstr16_Hash(u32 prev, const algo::Smallstr16& rhs) {
 // --- algo.Smallstr16..ReadStrptrMaybe
 // Read fields of algo::Smallstr16 from an ascii string.
 // The format of the string is the format of the algo::Smallstr16's only field
-bool algo::Smallstr16_ReadStrptrMaybe(algo::Smallstr16 &parent, algo::strptr in_str) {
+bool algo::Smallstr16_ReadStrptrMaybe(algo::Smallstr16 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12128,18 +12128,18 @@ bool algo::Smallstr16_ReadStrptrMaybe(algo::Smallstr16 &parent, algo::strptr in_
 // --- algo.Smallstr16..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr16.String  printfmt:Raw
-void algo::Smallstr16_Print(algo::Smallstr16& row, algo::cstring& str) {
+void algo::Smallstr16_Print(algo::Smallstr16& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Smallstr2.ch.Print
-void algo::ch_Print(algo::Smallstr2& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr2& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr2.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr2& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr2& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 2) {
         ch_SetStrptr(parent, rhs);
@@ -12154,7 +12154,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr2& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr2& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr2& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 2);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12166,7 +12166,7 @@ void algo::ch_SetStrptr(algo::Smallstr2& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr2..Hash
-u32 algo::Smallstr2_Hash(u32 prev, const algo::Smallstr2& rhs) {
+u32 algo::Smallstr2_Hash(u32 prev, const algo::Smallstr2& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12175,7 +12175,7 @@ u32 algo::Smallstr2_Hash(u32 prev, const algo::Smallstr2& rhs) {
 // --- algo.Smallstr2..ReadStrptrMaybe
 // Read fields of algo::Smallstr2 from an ascii string.
 // The format of the string is the format of the algo::Smallstr2's only field
-bool algo::Smallstr2_ReadStrptrMaybe(algo::Smallstr2 &parent, algo::strptr in_str) {
+bool algo::Smallstr2_ReadStrptrMaybe(algo::Smallstr2 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12184,18 +12184,18 @@ bool algo::Smallstr2_ReadStrptrMaybe(algo::Smallstr2 &parent, algo::strptr in_st
 // --- algo.Smallstr2..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr2.String  printfmt:Raw
-void algo::Smallstr2_Print(algo::Smallstr2& row, algo::cstring& str) {
+void algo::Smallstr2_Print(algo::Smallstr2& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Smallstr20.ch.Print
-void algo::ch_Print(algo::Smallstr20& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr20& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr20.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr20& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr20& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 20) {
         ch_SetStrptr(parent, rhs);
@@ -12210,7 +12210,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr20& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr20& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr20& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 20);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12222,7 +12222,7 @@ void algo::ch_SetStrptr(algo::Smallstr20& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr20..Hash
-u32 algo::Smallstr20_Hash(u32 prev, const algo::Smallstr20& rhs) {
+u32 algo::Smallstr20_Hash(u32 prev, const algo::Smallstr20& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12231,7 +12231,7 @@ u32 algo::Smallstr20_Hash(u32 prev, const algo::Smallstr20& rhs) {
 // --- algo.Smallstr20..ReadStrptrMaybe
 // Read fields of algo::Smallstr20 from an ascii string.
 // The format of the string is the format of the algo::Smallstr20's only field
-bool algo::Smallstr20_ReadStrptrMaybe(algo::Smallstr20 &parent, algo::strptr in_str) {
+bool algo::Smallstr20_ReadStrptrMaybe(algo::Smallstr20 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12240,18 +12240,18 @@ bool algo::Smallstr20_ReadStrptrMaybe(algo::Smallstr20 &parent, algo::strptr in_
 // --- algo.Smallstr20..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr20.String  printfmt:Raw
-void algo::Smallstr20_Print(algo::Smallstr20& row, algo::cstring& str) {
+void algo::Smallstr20_Print(algo::Smallstr20& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Smallstr200.ch.Print
-void algo::ch_Print(algo::Smallstr200& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr200& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr200.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr200& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr200& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 200) {
         ch_SetStrptr(parent, rhs);
@@ -12266,7 +12266,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr200& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr200& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr200& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 200);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12278,7 +12278,7 @@ void algo::ch_SetStrptr(algo::Smallstr200& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr200..Hash
-u32 algo::Smallstr200_Hash(u32 prev, const algo::Smallstr200& rhs) {
+u32 algo::Smallstr200_Hash(u32 prev, const algo::Smallstr200& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12287,7 +12287,7 @@ u32 algo::Smallstr200_Hash(u32 prev, const algo::Smallstr200& rhs) {
 // --- algo.Smallstr200..ReadStrptrMaybe
 // Read fields of algo::Smallstr200 from an ascii string.
 // The format of the string is the format of the algo::Smallstr200's only field
-bool algo::Smallstr200_ReadStrptrMaybe(algo::Smallstr200 &parent, algo::strptr in_str) {
+bool algo::Smallstr200_ReadStrptrMaybe(algo::Smallstr200 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12296,18 +12296,18 @@ bool algo::Smallstr200_ReadStrptrMaybe(algo::Smallstr200 &parent, algo::strptr i
 // --- algo.Smallstr200..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr200.String  printfmt:Raw
-void algo::Smallstr200_Print(algo::Smallstr200& row, algo::cstring& str) {
+void algo::Smallstr200_Print(algo::Smallstr200& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Smallstr25.ch.Print
-void algo::ch_Print(algo::Smallstr25& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr25& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr25.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr25& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr25& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 25) {
         ch_SetStrptr(parent, rhs);
@@ -12322,7 +12322,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr25& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr25& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr25& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 25);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12334,7 +12334,7 @@ void algo::ch_SetStrptr(algo::Smallstr25& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr25..Hash
-u32 algo::Smallstr25_Hash(u32 prev, const algo::Smallstr25& rhs) {
+u32 algo::Smallstr25_Hash(u32 prev, const algo::Smallstr25& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12343,7 +12343,7 @@ u32 algo::Smallstr25_Hash(u32 prev, const algo::Smallstr25& rhs) {
 // --- algo.Smallstr25..ReadStrptrMaybe
 // Read fields of algo::Smallstr25 from an ascii string.
 // The format of the string is the format of the algo::Smallstr25's only field
-bool algo::Smallstr25_ReadStrptrMaybe(algo::Smallstr25 &parent, algo::strptr in_str) {
+bool algo::Smallstr25_ReadStrptrMaybe(algo::Smallstr25 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12352,18 +12352,18 @@ bool algo::Smallstr25_ReadStrptrMaybe(algo::Smallstr25 &parent, algo::strptr in_
 // --- algo.Smallstr25..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr25.String  printfmt:Raw
-void algo::Smallstr25_Print(algo::Smallstr25& row, algo::cstring& str) {
+void algo::Smallstr25_Print(algo::Smallstr25& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Smallstr3.ch.Print
-void algo::ch_Print(algo::Smallstr3& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr3& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr3.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr3& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr3& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 3) {
         ch_SetStrptr(parent, rhs);
@@ -12378,7 +12378,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr3& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr3& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr3& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 3);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12390,7 +12390,7 @@ void algo::ch_SetStrptr(algo::Smallstr3& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr3..Hash
-u32 algo::Smallstr3_Hash(u32 prev, const algo::Smallstr3& rhs) {
+u32 algo::Smallstr3_Hash(u32 prev, const algo::Smallstr3& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12399,7 +12399,7 @@ u32 algo::Smallstr3_Hash(u32 prev, const algo::Smallstr3& rhs) {
 // --- algo.Smallstr3..ReadStrptrMaybe
 // Read fields of algo::Smallstr3 from an ascii string.
 // The format of the string is the format of the algo::Smallstr3's only field
-bool algo::Smallstr3_ReadStrptrMaybe(algo::Smallstr3 &parent, algo::strptr in_str) {
+bool algo::Smallstr3_ReadStrptrMaybe(algo::Smallstr3 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12408,18 +12408,18 @@ bool algo::Smallstr3_ReadStrptrMaybe(algo::Smallstr3 &parent, algo::strptr in_st
 // --- algo.Smallstr3..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr3.String  printfmt:Raw
-void algo::Smallstr3_Print(algo::Smallstr3& row, algo::cstring& str) {
+void algo::Smallstr3_Print(algo::Smallstr3& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Smallstr30.ch.Print
-void algo::ch_Print(algo::Smallstr30& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr30& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr30.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr30& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr30& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 30) {
         ch_SetStrptr(parent, rhs);
@@ -12434,7 +12434,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr30& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr30& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr30& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 30);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12446,7 +12446,7 @@ void algo::ch_SetStrptr(algo::Smallstr30& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr30..Hash
-u32 algo::Smallstr30_Hash(u32 prev, const algo::Smallstr30& rhs) {
+u32 algo::Smallstr30_Hash(u32 prev, const algo::Smallstr30& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12455,7 +12455,7 @@ u32 algo::Smallstr30_Hash(u32 prev, const algo::Smallstr30& rhs) {
 // --- algo.Smallstr30..ReadStrptrMaybe
 // Read fields of algo::Smallstr30 from an ascii string.
 // The format of the string is the format of the algo::Smallstr30's only field
-bool algo::Smallstr30_ReadStrptrMaybe(algo::Smallstr30 &parent, algo::strptr in_str) {
+bool algo::Smallstr30_ReadStrptrMaybe(algo::Smallstr30 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12464,18 +12464,18 @@ bool algo::Smallstr30_ReadStrptrMaybe(algo::Smallstr30 &parent, algo::strptr in_
 // --- algo.Smallstr30..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr30.String  printfmt:Raw
-void algo::Smallstr30_Print(algo::Smallstr30& row, algo::cstring& str) {
+void algo::Smallstr30_Print(algo::Smallstr30& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Smallstr32.ch.Print
-void algo::ch_Print(algo::Smallstr32& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr32& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr32.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr32& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr32& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 32) {
         ch_SetStrptr(parent, rhs);
@@ -12490,7 +12490,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr32& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr32& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr32& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 32);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12502,7 +12502,7 @@ void algo::ch_SetStrptr(algo::Smallstr32& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr32..Hash
-u32 algo::Smallstr32_Hash(u32 prev, const algo::Smallstr32& rhs) {
+u32 algo::Smallstr32_Hash(u32 prev, const algo::Smallstr32& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12511,7 +12511,7 @@ u32 algo::Smallstr32_Hash(u32 prev, const algo::Smallstr32& rhs) {
 // --- algo.Smallstr32..ReadStrptrMaybe
 // Read fields of algo::Smallstr32 from an ascii string.
 // The format of the string is the format of the algo::Smallstr32's only field
-bool algo::Smallstr32_ReadStrptrMaybe(algo::Smallstr32 &parent, algo::strptr in_str) {
+bool algo::Smallstr32_ReadStrptrMaybe(algo::Smallstr32 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12520,18 +12520,18 @@ bool algo::Smallstr32_ReadStrptrMaybe(algo::Smallstr32 &parent, algo::strptr in_
 // --- algo.Smallstr32..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr32.String  printfmt:Raw
-void algo::Smallstr32_Print(algo::Smallstr32& row, algo::cstring& str) {
+void algo::Smallstr32_Print(algo::Smallstr32& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Smallstr4.ch.Print
-void algo::ch_Print(algo::Smallstr4& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr4& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr4.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr4& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr4& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 4) {
         ch_SetStrptr(parent, rhs);
@@ -12546,7 +12546,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr4& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr4& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr4& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 4);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12558,7 +12558,7 @@ void algo::ch_SetStrptr(algo::Smallstr4& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr4..Hash
-u32 algo::Smallstr4_Hash(u32 prev, const algo::Smallstr4& rhs) {
+u32 algo::Smallstr4_Hash(u32 prev, const algo::Smallstr4& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12567,7 +12567,7 @@ u32 algo::Smallstr4_Hash(u32 prev, const algo::Smallstr4& rhs) {
 // --- algo.Smallstr4..ReadStrptrMaybe
 // Read fields of algo::Smallstr4 from an ascii string.
 // The format of the string is the format of the algo::Smallstr4's only field
-bool algo::Smallstr4_ReadStrptrMaybe(algo::Smallstr4 &parent, algo::strptr in_str) {
+bool algo::Smallstr4_ReadStrptrMaybe(algo::Smallstr4 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12576,18 +12576,18 @@ bool algo::Smallstr4_ReadStrptrMaybe(algo::Smallstr4 &parent, algo::strptr in_st
 // --- algo.Smallstr4..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr4.String  printfmt:Raw
-void algo::Smallstr4_Print(algo::Smallstr4& row, algo::cstring& str) {
+void algo::Smallstr4_Print(algo::Smallstr4& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Smallstr40.ch.Print
-void algo::ch_Print(algo::Smallstr40& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr40& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr40.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr40& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr40& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 40) {
         ch_SetStrptr(parent, rhs);
@@ -12602,7 +12602,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr40& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr40& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr40& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 40);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12614,7 +12614,7 @@ void algo::ch_SetStrptr(algo::Smallstr40& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr40..Hash
-u32 algo::Smallstr40_Hash(u32 prev, const algo::Smallstr40& rhs) {
+u32 algo::Smallstr40_Hash(u32 prev, const algo::Smallstr40& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12623,7 +12623,7 @@ u32 algo::Smallstr40_Hash(u32 prev, const algo::Smallstr40& rhs) {
 // --- algo.Smallstr40..ReadStrptrMaybe
 // Read fields of algo::Smallstr40 from an ascii string.
 // The format of the string is the format of the algo::Smallstr40's only field
-bool algo::Smallstr40_ReadStrptrMaybe(algo::Smallstr40 &parent, algo::strptr in_str) {
+bool algo::Smallstr40_ReadStrptrMaybe(algo::Smallstr40 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12632,18 +12632,18 @@ bool algo::Smallstr40_ReadStrptrMaybe(algo::Smallstr40 &parent, algo::strptr in_
 // --- algo.Smallstr40..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr40.String  printfmt:Raw
-void algo::Smallstr40_Print(algo::Smallstr40& row, algo::cstring& str) {
+void algo::Smallstr40_Print(algo::Smallstr40& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
 // --- algo.Smallstr5.ch.Print
-void algo::ch_Print(algo::Smallstr5& parent, algo::cstring &out) {
+void algo::ch_Print(algo::Smallstr5& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- algo.Smallstr5.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::ch_ReadStrptrMaybe(algo::Smallstr5& parent, algo::strptr rhs) {
+bool algo::ch_ReadStrptrMaybe(algo::Smallstr5& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 5) {
         ch_SetStrptr(parent, rhs);
@@ -12658,7 +12658,7 @@ bool algo::ch_ReadStrptrMaybe(algo::Smallstr5& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void algo::ch_SetStrptr(algo::Smallstr5& parent, const algo::strptr& rhs) {
+void algo::ch_SetStrptr(algo::Smallstr5& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 5);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -12670,7 +12670,7 @@ void algo::ch_SetStrptr(algo::Smallstr5& parent, const algo::strptr& rhs) {
 }
 
 // --- algo.Smallstr5..Hash
-u32 algo::Smallstr5_Hash(u32 prev, const algo::Smallstr5& rhs) {
+u32 algo::Smallstr5_Hash(u32 prev, const algo::Smallstr5& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -12679,7 +12679,7 @@ u32 algo::Smallstr5_Hash(u32 prev, const algo::Smallstr5& rhs) {
 // --- algo.Smallstr5..ReadStrptrMaybe
 // Read fields of algo::Smallstr5 from an ascii string.
 // The format of the string is the format of the algo::Smallstr5's only field
-bool algo::Smallstr5_ReadStrptrMaybe(algo::Smallstr5 &parent, algo::strptr in_str) {
+bool algo::Smallstr5_ReadStrptrMaybe(algo::Smallstr5 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12688,7 +12688,7 @@ bool algo::Smallstr5_ReadStrptrMaybe(algo::Smallstr5 &parent, algo::strptr in_st
 // --- algo.Smallstr5..Print
 // print string representation of ROW to string STR
 // cfmt:algo.Smallstr5.String  printfmt:Raw
-void algo::Smallstr5_Print(algo::Smallstr5& row, algo::cstring& str) {
+void algo::Smallstr5_Print(algo::Smallstr5& row, algo::cstring& str) throw() {
     algo::ch_Print(row, str);
 }
 
@@ -12696,7 +12696,7 @@ void algo::Smallstr5_Print(algo::Smallstr5& row, algo::cstring& str) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> algo::ary_Addary(algo::StringAry& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> algo::ary_Addary(algo::StringAry& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo.tary_alias  field:algo.StringAry.ary  comment:'alias error: sub-array is being appended to the whole'");
@@ -12714,7 +12714,7 @@ algo::aryptr<algo::cstring> algo::ary_Addary(algo::StringAry& parent, algo::aryp
 // --- algo.StringAry.ary.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& algo::ary_Alloc(algo::StringAry& parent) {
+algo::cstring& algo::ary_Alloc(algo::StringAry& parent) throw() {
     ary_Reserve(parent, 1);
     int n  = parent.ary_n;
     int at = n;
@@ -12727,7 +12727,7 @@ algo::cstring& algo::ary_Alloc(algo::StringAry& parent) {
 // --- algo.StringAry.ary.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& algo::ary_AllocAt(algo::StringAry& parent, int at) {
+algo::cstring& algo::ary_AllocAt(algo::StringAry& parent, int at) throw() {
     ary_Reserve(parent, 1);
     int n  = parent.ary_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -12742,7 +12742,7 @@ algo::cstring& algo::ary_AllocAt(algo::StringAry& parent, int at) {
 
 // --- algo.StringAry.ary.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> algo::ary_AllocN(algo::StringAry& parent, int n_elems) {
+algo::aryptr<algo::cstring> algo::ary_AllocN(algo::StringAry& parent, int n_elems) throw() {
     ary_Reserve(parent, n_elems);
     int old_n  = parent.ary_n;
     int new_n = old_n + n_elems;
@@ -12756,7 +12756,7 @@ algo::aryptr<algo::cstring> algo::ary_AllocN(algo::StringAry& parent, int n_elem
 
 // --- algo.StringAry.ary.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo::ary_Remove(algo::StringAry& parent, u32 i) {
+void algo::ary_Remove(algo::StringAry& parent, u32 i) throw() {
     u32 lim = parent.ary_n;
     algo::cstring *elems = parent.ary_elems;
     if (i < lim) {
@@ -12767,7 +12767,7 @@ void algo::ary_Remove(algo::StringAry& parent, u32 i) {
 }
 
 // --- algo.StringAry.ary.RemoveAll
-void algo::ary_RemoveAll(algo::StringAry& parent) {
+void algo::ary_RemoveAll(algo::StringAry& parent) throw() {
     u32 n = parent.ary_n;
     while (n > 0) {
         n -= 1;
@@ -12778,7 +12778,7 @@ void algo::ary_RemoveAll(algo::StringAry& parent) {
 
 // --- algo.StringAry.ary.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void algo::ary_RemoveLast(algo::StringAry& parent) {
+void algo::ary_RemoveLast(algo::StringAry& parent) throw() {
     u64 n = parent.ary_n;
     if (n > 0) {
         n -= 1;
@@ -12789,7 +12789,7 @@ void algo::ary_RemoveLast(algo::StringAry& parent) {
 
 // --- algo.StringAry.ary.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo::ary_AbsReserve(algo::StringAry& parent, int n) {
+void algo::ary_AbsReserve(algo::StringAry& parent, int n) throw() {
     u32 old_max  = parent.ary_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -12804,7 +12804,7 @@ void algo::ary_AbsReserve(algo::StringAry& parent, int n) {
 
 // --- algo.StringAry.ary.Setary
 // Copy contents of RHS to PARENT.
-void algo::ary_Setary(algo::StringAry& parent, algo::StringAry &rhs) {
+void algo::ary_Setary(algo::StringAry& parent, algo::StringAry &rhs) throw() {
     ary_RemoveAll(parent);
     int nnew = rhs.ary_n;
     ary_Reserve(parent, nnew); // reserve space
@@ -12817,14 +12817,14 @@ void algo::ary_Setary(algo::StringAry& parent, algo::StringAry &rhs) {
 // --- algo.StringAry.ary.Setary2
 // Copy specified array into ary, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void algo::ary_Setary(algo::StringAry& parent, const algo::aryptr<algo::cstring> &rhs) {
+void algo::ary_Setary(algo::StringAry& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     ary_RemoveAll(parent);
     ary_Addary(parent, rhs);
 }
 
 // --- algo.StringAry.ary.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> algo::ary_AllocNVal(algo::StringAry& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> algo::ary_AllocNVal(algo::StringAry& parent, int n_elems, const algo::cstring& val) throw() {
     ary_Reserve(parent, n_elems);
     int old_n  = parent.ary_n;
     int new_n = old_n + n_elems;
@@ -12840,7 +12840,7 @@ algo::aryptr<algo::cstring> algo::ary_AllocNVal(algo::StringAry& parent, int n_e
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool algo::ary_ReadStrptrMaybe(algo::StringAry& parent, algo::strptr in_str) {
+bool algo::ary_ReadStrptrMaybe(algo::StringAry& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = ary_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -12853,14 +12853,14 @@ bool algo::ary_ReadStrptrMaybe(algo::StringAry& parent, algo::strptr in_str) {
 // --- algo.StringAry..ReadStrptrMaybe
 // Read fields of algo::StringAry from an ascii string.
 // The format of the string is the format of the algo::StringAry's only field
-bool algo::StringAry_ReadStrptrMaybe(algo::StringAry &parent, algo::strptr in_str) {
+bool algo::StringAry_ReadStrptrMaybe(algo::StringAry &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ary_ReadStrptrMaybe(parent, in_str);
     return retval;
 }
 
 // --- algo.StringAry..Uninit
-void algo::StringAry_Uninit(algo::StringAry& parent) {
+void algo::StringAry_Uninit(algo::StringAry& parent) throw() {
     algo::StringAry &row = parent; (void)row;
 
     // algo.StringAry.ary.Uninit (Tary)  //
@@ -12873,19 +12873,19 @@ void algo::StringAry_Uninit(algo::StringAry& parent) {
 // --- algo.StringAry..Print
 // print string representation of ROW to string STR
 // cfmt:algo.StringAry.String  printfmt:Raw
-void algo::StringAry_Print(algo::StringAry& row, algo::cstring& str) {
+void algo::StringAry_Print(algo::StringAry& row, algo::cstring& str) throw() {
     (void)row;//only to avoid -Wunused-parameter
     (void)str;//only to avoid -Wunused-parameter
 }
 
 // --- algo.StringAry..AssignOp
-algo::StringAry& algo::StringAry::operator =(const algo::StringAry &rhs) {
+algo::StringAry& algo::StringAry::operator =(const algo::StringAry &rhs) throw() {
     ary_Setary(*this, ary_Getary(const_cast<algo::StringAry&>(rhs)));
     return *this;
 }
 
 // --- algo.StringAry..CopyCtor
- algo::StringAry::StringAry(const algo::StringAry &rhs) {
+ algo::StringAry::StringAry(const algo::StringAry &rhs) throw() {
     ary_elems 	= 0; // (algo.StringAry.ary)
     ary_n     	= 0; // (algo.StringAry.ary)
     ary_max   	= 0; // (algo.StringAry.ary)
@@ -12895,7 +12895,7 @@ algo::StringAry& algo::StringAry::operator =(const algo::StringAry &rhs) {
 // --- algo.TermStyle.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* algo::value_ToCstr(const algo::TermStyle& parent) {
+const char* algo::value_ToCstr(const algo::TermStyle& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case algo_TermStyle_default        : ret = "default";  break;
@@ -12910,7 +12910,7 @@ const char* algo::value_ToCstr(const algo::TermStyle& parent) {
 // --- algo.TermStyle.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void algo::value_Print(const algo::TermStyle& parent, algo::cstring &lhs) {
+void algo::value_Print(const algo::TermStyle& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -12923,7 +12923,7 @@ void algo::value_Print(const algo::TermStyle& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool algo::value_SetStrptrMaybe(algo::TermStyle& parent, algo::strptr rhs) {
+bool algo::value_SetStrptrMaybe(algo::TermStyle& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -12968,13 +12968,13 @@ bool algo::value_SetStrptrMaybe(algo::TermStyle& parent, algo::strptr rhs) {
 // --- algo.TermStyle.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void algo::value_SetStrptr(algo::TermStyle& parent, algo::strptr rhs, algo_TermStyleEnum dflt) {
+void algo::value_SetStrptr(algo::TermStyle& parent, algo::strptr rhs, algo_TermStyleEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- algo.TermStyle.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::value_ReadStrptrMaybe(algo::TermStyle& parent, algo::strptr rhs) {
+bool algo::value_ReadStrptrMaybe(algo::TermStyle& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -12986,7 +12986,7 @@ bool algo::value_ReadStrptrMaybe(algo::TermStyle& parent, algo::strptr rhs) {
 // --- algo.TermStyle..ReadStrptrMaybe
 // Read fields of algo::TermStyle from an ascii string.
 // The format of the string is the format of the algo::TermStyle's only field
-bool algo::TermStyle_ReadStrptrMaybe(algo::TermStyle &parent, algo::strptr in_str) {
+bool algo::TermStyle_ReadStrptrMaybe(algo::TermStyle &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -12995,14 +12995,14 @@ bool algo::TermStyle_ReadStrptrMaybe(algo::TermStyle &parent, algo::strptr in_st
 // --- algo.TermStyle..Print
 // print string representation of ROW to string STR
 // cfmt:algo.TermStyle.String  printfmt:Raw
-void algo::TermStyle_Print(algo::TermStyle row, algo::cstring& str) {
+void algo::TermStyle_Print(algo::TermStyle row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.TextJust.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* algo::value_ToCstr(const algo::TextJust& parent) {
+const char* algo::value_ToCstr(const algo::TextJust& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case algo_TextJust_j_right         : ret = "j_right";  break;
@@ -13015,7 +13015,7 @@ const char* algo::value_ToCstr(const algo::TextJust& parent) {
 // --- algo.TextJust.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void algo::value_Print(const algo::TextJust& parent, algo::cstring &lhs) {
+void algo::value_Print(const algo::TextJust& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -13028,7 +13028,7 @@ void algo::value_Print(const algo::TextJust& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool algo::value_SetStrptrMaybe(algo::TextJust& parent, algo::strptr rhs) {
+bool algo::value_SetStrptrMaybe(algo::TextJust& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 6: {
@@ -13062,13 +13062,13 @@ bool algo::value_SetStrptrMaybe(algo::TextJust& parent, algo::strptr rhs) {
 // --- algo.TextJust.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void algo::value_SetStrptr(algo::TextJust& parent, algo::strptr rhs, algo_TextJustEnum dflt) {
+void algo::value_SetStrptr(algo::TextJust& parent, algo::strptr rhs, algo_TextJustEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- algo.TextJust.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool algo::value_ReadStrptrMaybe(algo::TextJust& parent, algo::strptr rhs) {
+bool algo::value_ReadStrptrMaybe(algo::TextJust& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -13080,7 +13080,7 @@ bool algo::value_ReadStrptrMaybe(algo::TextJust& parent, algo::strptr rhs) {
 // --- algo.TextJust..ReadStrptrMaybe
 // Read fields of algo::TextJust from an ascii string.
 // The format of the string is the format of the algo::TextJust's only field
-bool algo::TextJust_ReadStrptrMaybe(algo::TextJust &parent, algo::strptr in_str) {
+bool algo::TextJust_ReadStrptrMaybe(algo::TextJust &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -13089,7 +13089,7 @@ bool algo::TextJust_ReadStrptrMaybe(algo::TextJust &parent, algo::strptr in_str)
 // --- algo.TextJust..Print
 // print string representation of ROW to string STR
 // cfmt:algo.TextJust.String  printfmt:Raw
-void algo::TextJust_Print(algo::TextJust row, algo::cstring& str) {
+void algo::TextJust_Print(algo::TextJust row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
@@ -13105,7 +13105,7 @@ void algo::TstampCache_Init(algo::TstampCache& parent) {
 }
 
 // --- algo.Tuple.attrs.Eq
-bool algo::attrs_Eq(const algo::Tuple& parent,const algo::Tuple &rhs) {
+bool algo::attrs_Eq(const algo::Tuple& parent,const algo::Tuple &rhs) throw() {
     int len = attrs_N(parent);
     if (len != attrs_N(rhs)) {
         return false;
@@ -13119,7 +13119,7 @@ bool algo::attrs_Eq(const algo::Tuple& parent,const algo::Tuple &rhs) {
 }
 
 // --- algo.Tuple.attrs.Cmp
-int algo::attrs_Cmp(algo::Tuple& parent, algo::Tuple &rhs) {
+int algo::attrs_Cmp(algo::Tuple& parent, algo::Tuple &rhs) throw() {
     int len = i32_Min(attrs_N(parent), attrs_N(rhs));
     int retval = 0;
     for (int i = 0; i < len; i++) {
@@ -13135,7 +13135,7 @@ int algo::attrs_Cmp(algo::Tuple& parent, algo::Tuple &rhs) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::Attr> algo::attrs_Addary(algo::Tuple& parent, algo::aryptr<algo::Attr> rhs) {
+algo::aryptr<algo::Attr> algo::attrs_Addary(algo::Tuple& parent, algo::aryptr<algo::Attr> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.attrs_elems && rhs.elems < parent.attrs_elems + parent.attrs_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo.tary_alias  field:algo.Tuple.attrs  comment:'alias error: sub-array is being appended to the whole'");
@@ -13153,7 +13153,7 @@ algo::aryptr<algo::Attr> algo::attrs_Addary(algo::Tuple& parent, algo::aryptr<al
 // --- algo.Tuple.attrs.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::Attr& algo::attrs_Alloc(algo::Tuple& parent) {
+algo::Attr& algo::attrs_Alloc(algo::Tuple& parent) throw() {
     attrs_Reserve(parent, 1);
     int n  = parent.attrs_n;
     int at = n;
@@ -13166,7 +13166,7 @@ algo::Attr& algo::attrs_Alloc(algo::Tuple& parent) {
 // --- algo.Tuple.attrs.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::Attr& algo::attrs_AllocAt(algo::Tuple& parent, int at) {
+algo::Attr& algo::attrs_AllocAt(algo::Tuple& parent, int at) throw() {
     attrs_Reserve(parent, 1);
     int n  = parent.attrs_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -13181,7 +13181,7 @@ algo::Attr& algo::attrs_AllocAt(algo::Tuple& parent, int at) {
 
 // --- algo.Tuple.attrs.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::Attr> algo::attrs_AllocN(algo::Tuple& parent, int n_elems) {
+algo::aryptr<algo::Attr> algo::attrs_AllocN(algo::Tuple& parent, int n_elems) throw() {
     attrs_Reserve(parent, n_elems);
     int old_n  = parent.attrs_n;
     int new_n = old_n + n_elems;
@@ -13195,7 +13195,7 @@ algo::aryptr<algo::Attr> algo::attrs_AllocN(algo::Tuple& parent, int n_elems) {
 
 // --- algo.Tuple.attrs.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo::attrs_Remove(algo::Tuple& parent, u32 i) {
+void algo::attrs_Remove(algo::Tuple& parent, u32 i) throw() {
     u32 lim = parent.attrs_n;
     algo::Attr *elems = parent.attrs_elems;
     if (i < lim) {
@@ -13206,7 +13206,7 @@ void algo::attrs_Remove(algo::Tuple& parent, u32 i) {
 }
 
 // --- algo.Tuple.attrs.RemoveAll
-void algo::attrs_RemoveAll(algo::Tuple& parent) {
+void algo::attrs_RemoveAll(algo::Tuple& parent) throw() {
     u32 n = parent.attrs_n;
     while (n > 0) {
         n -= 1;
@@ -13217,7 +13217,7 @@ void algo::attrs_RemoveAll(algo::Tuple& parent) {
 
 // --- algo.Tuple.attrs.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void algo::attrs_RemoveLast(algo::Tuple& parent) {
+void algo::attrs_RemoveLast(algo::Tuple& parent) throw() {
     u64 n = parent.attrs_n;
     if (n > 0) {
         n -= 1;
@@ -13228,7 +13228,7 @@ void algo::attrs_RemoveLast(algo::Tuple& parent) {
 
 // --- algo.Tuple.attrs.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo::attrs_AbsReserve(algo::Tuple& parent, int n) {
+void algo::attrs_AbsReserve(algo::Tuple& parent, int n) throw() {
     u32 old_max  = parent.attrs_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -13243,7 +13243,7 @@ void algo::attrs_AbsReserve(algo::Tuple& parent, int n) {
 
 // --- algo.Tuple.attrs.Setary
 // Copy contents of RHS to PARENT.
-void algo::attrs_Setary(algo::Tuple& parent, algo::Tuple &rhs) {
+void algo::attrs_Setary(algo::Tuple& parent, algo::Tuple &rhs) throw() {
     attrs_RemoveAll(parent);
     int nnew = rhs.attrs_n;
     attrs_Reserve(parent, nnew); // reserve space
@@ -13256,14 +13256,14 @@ void algo::attrs_Setary(algo::Tuple& parent, algo::Tuple &rhs) {
 // --- algo.Tuple.attrs.Setary2
 // Copy specified array into attrs, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void algo::attrs_Setary(algo::Tuple& parent, const algo::aryptr<algo::Attr> &rhs) {
+void algo::attrs_Setary(algo::Tuple& parent, const algo::aryptr<algo::Attr> &rhs) throw() {
     attrs_RemoveAll(parent);
     attrs_Addary(parent, rhs);
 }
 
 // --- algo.Tuple.attrs.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::Attr> algo::attrs_AllocNVal(algo::Tuple& parent, int n_elems, const algo::Attr& val) {
+algo::aryptr<algo::Attr> algo::attrs_AllocNVal(algo::Tuple& parent, int n_elems, const algo::Attr& val) throw() {
     attrs_Reserve(parent, n_elems);
     int old_n  = parent.attrs_n;
     int new_n = old_n + n_elems;
@@ -13279,7 +13279,7 @@ algo::aryptr<algo::Attr> algo::attrs_AllocNVal(algo::Tuple& parent, int n_elems,
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool algo::attrs_ReadStrptrMaybe(algo::Tuple& parent, algo::strptr in_str) {
+bool algo::attrs_ReadStrptrMaybe(algo::Tuple& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::Attr &elem = attrs_Alloc(parent);
     retval = algo::Attr_ReadStrptrMaybe(elem, in_str);
@@ -13290,7 +13290,7 @@ bool algo::attrs_ReadStrptrMaybe(algo::Tuple& parent, algo::strptr in_str) {
 }
 
 // --- algo.Tuple..Uninit
-void algo::Tuple_Uninit(algo::Tuple& parent) {
+void algo::Tuple_Uninit(algo::Tuple& parent) throw() {
     algo::Tuple &row = parent; (void)row;
 
     // algo.Tuple.attrs.Uninit (Tary)  //Array of attributes
@@ -13301,14 +13301,14 @@ void algo::Tuple_Uninit(algo::Tuple& parent) {
 }
 
 // --- algo.Tuple..AssignOp
-algo::Tuple& algo::Tuple::operator =(const algo::Tuple &rhs) {
+algo::Tuple& algo::Tuple::operator =(const algo::Tuple &rhs) throw() {
     attrs_Setary(*this, attrs_Getary(const_cast<algo::Tuple&>(rhs)));
     head = rhs.head;
     return *this;
 }
 
 // --- algo.Tuple..CopyCtor
- algo::Tuple::Tuple(const algo::Tuple &rhs)
+ algo::Tuple::Tuple(const algo::Tuple &rhs) throw()
     : head(rhs.head)
  {
     attrs_elems 	= 0; // (algo.Tuple.attrs)
@@ -13320,7 +13320,7 @@ algo::Tuple& algo::Tuple::operator =(const algo::Tuple &rhs) {
 // --- algo.U16Dec2.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U16Dec2& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U16Dec2& parent, double val) throw() {
     double intval = val * 100;
     u16 minval = u16(0ULL);
     u16 maxval = u16(65535ULL);
@@ -13334,7 +13334,7 @@ bool algo::value_SetDoubleMaybe(algo::U16Dec2& parent, double val) {
 }
 
 // --- algo.U16Dec2.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U16Dec2& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U16Dec2& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -13378,7 +13378,7 @@ bool algo::value_ReadStrptrMaybe(algo::U16Dec2& parent, algo::strptr in) {
 }
 
 // --- algo.U16Dec2.value.Print
-void algo::value_Print(algo::U16Dec2& parent, cstring &outstr) {
+void algo::value_Print(algo::U16Dec2& parent, cstring &outstr) throw() {
     u16 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -13388,7 +13388,7 @@ void algo::value_Print(algo::U16Dec2& parent, cstring &outstr) {
 // --- algo.U16Dec2..ReadStrptrMaybe
 // Read fields of algo::U16Dec2 from an ascii string.
 // The format of the string is the format of the algo::U16Dec2's only field
-bool algo::U16Dec2_ReadStrptrMaybe(algo::U16Dec2 &parent, algo::strptr in_str) {
+bool algo::U16Dec2_ReadStrptrMaybe(algo::U16Dec2 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -13397,14 +13397,14 @@ bool algo::U16Dec2_ReadStrptrMaybe(algo::U16Dec2 &parent, algo::strptr in_str) {
 // --- algo.U16Dec2..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U16Dec2.String  printfmt:Raw
-void algo::U16Dec2_Print(algo::U16Dec2 row, algo::cstring& str) {
+void algo::U16Dec2_Print(algo::U16Dec2 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.U32Dec1.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U32Dec1& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U32Dec1& parent, double val) throw() {
     double intval = val * 10;
     u32 minval = u32(0ULL);
     u32 maxval = u32(4294967295ULL);
@@ -13418,7 +13418,7 @@ bool algo::value_SetDoubleMaybe(algo::U32Dec1& parent, double val) {
 }
 
 // --- algo.U32Dec1.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U32Dec1& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U32Dec1& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -13462,7 +13462,7 @@ bool algo::value_ReadStrptrMaybe(algo::U32Dec1& parent, algo::strptr in) {
 }
 
 // --- algo.U32Dec1.value.Print
-void algo::value_Print(algo::U32Dec1& parent, cstring &outstr) {
+void algo::value_Print(algo::U32Dec1& parent, cstring &outstr) throw() {
     u32 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -13472,7 +13472,7 @@ void algo::value_Print(algo::U32Dec1& parent, cstring &outstr) {
 // --- algo.U32Dec1..ReadStrptrMaybe
 // Read fields of algo::U32Dec1 from an ascii string.
 // The format of the string is the format of the algo::U32Dec1's only field
-bool algo::U32Dec1_ReadStrptrMaybe(algo::U32Dec1 &parent, algo::strptr in_str) {
+bool algo::U32Dec1_ReadStrptrMaybe(algo::U32Dec1 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -13481,14 +13481,14 @@ bool algo::U32Dec1_ReadStrptrMaybe(algo::U32Dec1 &parent, algo::strptr in_str) {
 // --- algo.U32Dec1..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U32Dec1.String  printfmt:Raw
-void algo::U32Dec1_Print(algo::U32Dec1 row, algo::cstring& str) {
+void algo::U32Dec1_Print(algo::U32Dec1 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.U32Dec2.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U32Dec2& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U32Dec2& parent, double val) throw() {
     double intval = val * 100;
     u32 minval = u32(0ULL);
     u32 maxval = u32(4294967295ULL);
@@ -13502,7 +13502,7 @@ bool algo::value_SetDoubleMaybe(algo::U32Dec2& parent, double val) {
 }
 
 // --- algo.U32Dec2.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U32Dec2& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U32Dec2& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -13546,7 +13546,7 @@ bool algo::value_ReadStrptrMaybe(algo::U32Dec2& parent, algo::strptr in) {
 }
 
 // --- algo.U32Dec2.value.Print
-void algo::value_Print(algo::U32Dec2& parent, cstring &outstr) {
+void algo::value_Print(algo::U32Dec2& parent, cstring &outstr) throw() {
     u32 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -13556,7 +13556,7 @@ void algo::value_Print(algo::U32Dec2& parent, cstring &outstr) {
 // --- algo.U32Dec2..ReadStrptrMaybe
 // Read fields of algo::U32Dec2 from an ascii string.
 // The format of the string is the format of the algo::U32Dec2's only field
-bool algo::U32Dec2_ReadStrptrMaybe(algo::U32Dec2 &parent, algo::strptr in_str) {
+bool algo::U32Dec2_ReadStrptrMaybe(algo::U32Dec2 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -13565,14 +13565,14 @@ bool algo::U32Dec2_ReadStrptrMaybe(algo::U32Dec2 &parent, algo::strptr in_str) {
 // --- algo.U32Dec2..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U32Dec2.String  printfmt:Raw
-void algo::U32Dec2_Print(algo::U32Dec2 row, algo::cstring& str) {
+void algo::U32Dec2_Print(algo::U32Dec2 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.U32Dec3.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U32Dec3& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U32Dec3& parent, double val) throw() {
     double intval = val * 1000;
     u32 minval = u32(0ULL);
     u32 maxval = u32(4294967295ULL);
@@ -13586,7 +13586,7 @@ bool algo::value_SetDoubleMaybe(algo::U32Dec3& parent, double val) {
 }
 
 // --- algo.U32Dec3.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U32Dec3& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U32Dec3& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -13630,7 +13630,7 @@ bool algo::value_ReadStrptrMaybe(algo::U32Dec3& parent, algo::strptr in) {
 }
 
 // --- algo.U32Dec3.value.Print
-void algo::value_Print(algo::U32Dec3& parent, cstring &outstr) {
+void algo::value_Print(algo::U32Dec3& parent, cstring &outstr) throw() {
     u32 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -13640,7 +13640,7 @@ void algo::value_Print(algo::U32Dec3& parent, cstring &outstr) {
 // --- algo.U32Dec3..ReadStrptrMaybe
 // Read fields of algo::U32Dec3 from an ascii string.
 // The format of the string is the format of the algo::U32Dec3's only field
-bool algo::U32Dec3_ReadStrptrMaybe(algo::U32Dec3 &parent, algo::strptr in_str) {
+bool algo::U32Dec3_ReadStrptrMaybe(algo::U32Dec3 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -13649,14 +13649,14 @@ bool algo::U32Dec3_ReadStrptrMaybe(algo::U32Dec3 &parent, algo::strptr in_str) {
 // --- algo.U32Dec3..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U32Dec3.String  printfmt:Raw
-void algo::U32Dec3_Print(algo::U32Dec3 row, algo::cstring& str) {
+void algo::U32Dec3_Print(algo::U32Dec3 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.U32Dec4.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U32Dec4& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U32Dec4& parent, double val) throw() {
     double intval = val * 10000;
     u32 minval = u32(0ULL);
     u32 maxval = u32(4294967295ULL);
@@ -13670,7 +13670,7 @@ bool algo::value_SetDoubleMaybe(algo::U32Dec4& parent, double val) {
 }
 
 // --- algo.U32Dec4.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U32Dec4& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U32Dec4& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -13714,7 +13714,7 @@ bool algo::value_ReadStrptrMaybe(algo::U32Dec4& parent, algo::strptr in) {
 }
 
 // --- algo.U32Dec4.value.Print
-void algo::value_Print(algo::U32Dec4& parent, cstring &outstr) {
+void algo::value_Print(algo::U32Dec4& parent, cstring &outstr) throw() {
     u32 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -13724,7 +13724,7 @@ void algo::value_Print(algo::U32Dec4& parent, cstring &outstr) {
 // --- algo.U32Dec4..ReadStrptrMaybe
 // Read fields of algo::U32Dec4 from an ascii string.
 // The format of the string is the format of the algo::U32Dec4's only field
-bool algo::U32Dec4_ReadStrptrMaybe(algo::U32Dec4 &parent, algo::strptr in_str) {
+bool algo::U32Dec4_ReadStrptrMaybe(algo::U32Dec4 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -13733,14 +13733,14 @@ bool algo::U32Dec4_ReadStrptrMaybe(algo::U32Dec4 &parent, algo::strptr in_str) {
 // --- algo.U32Dec4..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U32Dec4.String  printfmt:Raw
-void algo::U32Dec4_Print(algo::U32Dec4 row, algo::cstring& str) {
+void algo::U32Dec4_Print(algo::U32Dec4 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.U32Dec5.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U32Dec5& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U32Dec5& parent, double val) throw() {
     double intval = val * 100000;
     u32 minval = u32(0ULL);
     u32 maxval = u32(4294967295ULL);
@@ -13754,7 +13754,7 @@ bool algo::value_SetDoubleMaybe(algo::U32Dec5& parent, double val) {
 }
 
 // --- algo.U32Dec5.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U32Dec5& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U32Dec5& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -13798,7 +13798,7 @@ bool algo::value_ReadStrptrMaybe(algo::U32Dec5& parent, algo::strptr in) {
 }
 
 // --- algo.U32Dec5.value.Print
-void algo::value_Print(algo::U32Dec5& parent, cstring &outstr) {
+void algo::value_Print(algo::U32Dec5& parent, cstring &outstr) throw() {
     u32 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -13808,7 +13808,7 @@ void algo::value_Print(algo::U32Dec5& parent, cstring &outstr) {
 // --- algo.U32Dec5..ReadStrptrMaybe
 // Read fields of algo::U32Dec5 from an ascii string.
 // The format of the string is the format of the algo::U32Dec5's only field
-bool algo::U32Dec5_ReadStrptrMaybe(algo::U32Dec5 &parent, algo::strptr in_str) {
+bool algo::U32Dec5_ReadStrptrMaybe(algo::U32Dec5 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -13817,7 +13817,7 @@ bool algo::U32Dec5_ReadStrptrMaybe(algo::U32Dec5 &parent, algo::strptr in_str) {
 // --- algo.U32Dec5..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U32Dec5.String  printfmt:Raw
-void algo::U32Dec5_Print(algo::U32Dec5 row, algo::cstring& str) {
+void algo::U32Dec5_Print(algo::U32Dec5 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
@@ -13825,7 +13825,7 @@ void algo::U32Dec5_Print(algo::U32Dec5 row, algo::cstring& str) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<u64> algo::ary_Addary(algo::U64Ary& parent, algo::aryptr<u64> rhs) {
+algo::aryptr<u64> algo::ary_Addary(algo::U64Ary& parent, algo::aryptr<u64> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("algo.tary_alias  field:algo.U64Ary.ary  comment:'alias error: sub-array is being appended to the whole'");
@@ -13841,7 +13841,7 @@ algo::aryptr<u64> algo::ary_Addary(algo::U64Ary& parent, algo::aryptr<u64> rhs) 
 // --- algo.U64Ary.ary.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-u64& algo::ary_Alloc(algo::U64Ary& parent) {
+u64& algo::ary_Alloc(algo::U64Ary& parent) throw() {
     ary_Reserve(parent, 1);
     int n  = parent.ary_n;
     int at = n;
@@ -13854,7 +13854,7 @@ u64& algo::ary_Alloc(algo::U64Ary& parent) {
 // --- algo.U64Ary.ary.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-u64& algo::ary_AllocAt(algo::U64Ary& parent, int at) {
+u64& algo::ary_AllocAt(algo::U64Ary& parent, int at) throw() {
     ary_Reserve(parent, 1);
     int n  = parent.ary_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -13869,7 +13869,7 @@ u64& algo::ary_AllocAt(algo::U64Ary& parent, int at) {
 
 // --- algo.U64Ary.ary.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u64> algo::ary_AllocN(algo::U64Ary& parent, int n_elems) {
+algo::aryptr<u64> algo::ary_AllocN(algo::U64Ary& parent, int n_elems) throw() {
     ary_Reserve(parent, n_elems);
     int old_n  = parent.ary_n;
     int new_n = old_n + n_elems;
@@ -13883,7 +13883,7 @@ algo::aryptr<u64> algo::ary_AllocN(algo::U64Ary& parent, int n_elems) {
 
 // --- algo.U64Ary.ary.Remove
 // Remove item by index. If index outside of range, do nothing.
-void algo::ary_Remove(algo::U64Ary& parent, u32 i) {
+void algo::ary_Remove(algo::U64Ary& parent, u32 i) throw() {
     u32 lim = parent.ary_n;
     u64 *elems = parent.ary_elems;
     if (i < lim) {
@@ -13894,7 +13894,7 @@ void algo::ary_Remove(algo::U64Ary& parent, u32 i) {
 
 // --- algo.U64Ary.ary.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void algo::ary_RemoveLast(algo::U64Ary& parent) {
+void algo::ary_RemoveLast(algo::U64Ary& parent) throw() {
     u64 n = parent.ary_n;
     if (n > 0) {
         n -= 1;
@@ -13904,7 +13904,7 @@ void algo::ary_RemoveLast(algo::U64Ary& parent) {
 
 // --- algo.U64Ary.ary.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void algo::ary_AbsReserve(algo::U64Ary& parent, int n) {
+void algo::ary_AbsReserve(algo::U64Ary& parent, int n) throw() {
     u32 old_max  = parent.ary_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -13919,7 +13919,7 @@ void algo::ary_AbsReserve(algo::U64Ary& parent, int n) {
 
 // --- algo.U64Ary.ary.Setary
 // Copy contents of RHS to PARENT.
-void algo::ary_Setary(algo::U64Ary& parent, algo::U64Ary &rhs) {
+void algo::ary_Setary(algo::U64Ary& parent, algo::U64Ary &rhs) throw() {
     ary_RemoveAll(parent);
     int nnew = rhs.ary_n;
     ary_Reserve(parent, nnew); // reserve space
@@ -13932,14 +13932,14 @@ void algo::ary_Setary(algo::U64Ary& parent, algo::U64Ary &rhs) {
 // --- algo.U64Ary.ary.Setary2
 // Copy specified array into ary, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void algo::ary_Setary(algo::U64Ary& parent, const algo::aryptr<u64> &rhs) {
+void algo::ary_Setary(algo::U64Ary& parent, const algo::aryptr<u64> &rhs) throw() {
     ary_RemoveAll(parent);
     ary_Addary(parent, rhs);
 }
 
 // --- algo.U64Ary.ary.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<u64> algo::ary_AllocNVal(algo::U64Ary& parent, int n_elems, const u64& val) {
+algo::aryptr<u64> algo::ary_AllocNVal(algo::U64Ary& parent, int n_elems, const u64& val) throw() {
     ary_Reserve(parent, n_elems);
     int old_n  = parent.ary_n;
     int new_n = old_n + n_elems;
@@ -13955,7 +13955,7 @@ algo::aryptr<u64> algo::ary_AllocNVal(algo::U64Ary& parent, int n_elems, const u
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool algo::ary_ReadStrptrMaybe(algo::U64Ary& parent, algo::strptr in_str) {
+bool algo::ary_ReadStrptrMaybe(algo::U64Ary& parent, algo::strptr in_str) throw() {
     bool retval = true;
     u64 &elem = ary_Alloc(parent);
     retval = u64_ReadStrptrMaybe(elem, in_str);
@@ -13966,7 +13966,7 @@ bool algo::ary_ReadStrptrMaybe(algo::U64Ary& parent, algo::strptr in_str) {
 }
 
 // --- algo.U64Ary..Uninit
-void algo::U64Ary_Uninit(algo::U64Ary& parent) {
+void algo::U64Ary_Uninit(algo::U64Ary& parent) throw() {
     algo::U64Ary &row = parent; (void)row;
 
     // algo.U64Ary.ary.Uninit (Tary)  //Array of u64 values
@@ -13977,13 +13977,13 @@ void algo::U64Ary_Uninit(algo::U64Ary& parent) {
 }
 
 // --- algo.U64Ary..AssignOp
-algo::U64Ary& algo::U64Ary::operator =(const algo::U64Ary &rhs) {
+algo::U64Ary& algo::U64Ary::operator =(const algo::U64Ary &rhs) throw() {
     ary_Setary(*this, ary_Getary(const_cast<algo::U64Ary&>(rhs)));
     return *this;
 }
 
 // --- algo.U64Ary..CopyCtor
- algo::U64Ary::U64Ary(const algo::U64Ary &rhs) {
+ algo::U64Ary::U64Ary(const algo::U64Ary &rhs) throw() {
     ary_elems 	= 0; // (algo.U64Ary.ary)
     ary_n     	= 0; // (algo.U64Ary.ary)
     ary_max   	= 0; // (algo.U64Ary.ary)
@@ -13993,7 +13993,7 @@ algo::U64Ary& algo::U64Ary::operator =(const algo::U64Ary &rhs) {
 // --- algo.U64Dec10.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U64Dec10& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U64Dec10& parent, double val) throw() {
     double intval = val * 10000000000;
     u64 minval = u64(0ULL);
     u64 maxval = u64(18446744073709551615ULL);
@@ -14007,7 +14007,7 @@ bool algo::value_SetDoubleMaybe(algo::U64Dec10& parent, double val) {
 }
 
 // --- algo.U64Dec10.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U64Dec10& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U64Dec10& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -14051,7 +14051,7 @@ bool algo::value_ReadStrptrMaybe(algo::U64Dec10& parent, algo::strptr in) {
 }
 
 // --- algo.U64Dec10.value.Print
-void algo::value_Print(algo::U64Dec10& parent, cstring &outstr) {
+void algo::value_Print(algo::U64Dec10& parent, cstring &outstr) throw() {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -14061,7 +14061,7 @@ void algo::value_Print(algo::U64Dec10& parent, cstring &outstr) {
 // --- algo.U64Dec10..ReadStrptrMaybe
 // Read fields of algo::U64Dec10 from an ascii string.
 // The format of the string is the format of the algo::U64Dec10's only field
-bool algo::U64Dec10_ReadStrptrMaybe(algo::U64Dec10 &parent, algo::strptr in_str) {
+bool algo::U64Dec10_ReadStrptrMaybe(algo::U64Dec10 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -14070,14 +14070,14 @@ bool algo::U64Dec10_ReadStrptrMaybe(algo::U64Dec10 &parent, algo::strptr in_str)
 // --- algo.U64Dec10..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U64Dec10.String  printfmt:Raw
-void algo::U64Dec10_Print(algo::U64Dec10 row, algo::cstring& str) {
+void algo::U64Dec10_Print(algo::U64Dec10 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.U64Dec2.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U64Dec2& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U64Dec2& parent, double val) throw() {
     double intval = val * 100;
     u64 minval = u64(0ULL);
     u64 maxval = u64(18446744073709551615ULL);
@@ -14091,7 +14091,7 @@ bool algo::value_SetDoubleMaybe(algo::U64Dec2& parent, double val) {
 }
 
 // --- algo.U64Dec2.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U64Dec2& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U64Dec2& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -14135,7 +14135,7 @@ bool algo::value_ReadStrptrMaybe(algo::U64Dec2& parent, algo::strptr in) {
 }
 
 // --- algo.U64Dec2.value.Print
-void algo::value_Print(algo::U64Dec2& parent, cstring &outstr) {
+void algo::value_Print(algo::U64Dec2& parent, cstring &outstr) throw() {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -14145,7 +14145,7 @@ void algo::value_Print(algo::U64Dec2& parent, cstring &outstr) {
 // --- algo.U64Dec2..ReadStrptrMaybe
 // Read fields of algo::U64Dec2 from an ascii string.
 // The format of the string is the format of the algo::U64Dec2's only field
-bool algo::U64Dec2_ReadStrptrMaybe(algo::U64Dec2 &parent, algo::strptr in_str) {
+bool algo::U64Dec2_ReadStrptrMaybe(algo::U64Dec2 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -14154,14 +14154,14 @@ bool algo::U64Dec2_ReadStrptrMaybe(algo::U64Dec2 &parent, algo::strptr in_str) {
 // --- algo.U64Dec2..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U64Dec2.String  printfmt:Raw
-void algo::U64Dec2_Print(algo::U64Dec2 row, algo::cstring& str) {
+void algo::U64Dec2_Print(algo::U64Dec2 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.U64Dec4.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U64Dec4& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U64Dec4& parent, double val) throw() {
     double intval = val * 10000;
     u64 minval = u64(0ULL);
     u64 maxval = u64(18446744073709551615ULL);
@@ -14175,7 +14175,7 @@ bool algo::value_SetDoubleMaybe(algo::U64Dec4& parent, double val) {
 }
 
 // --- algo.U64Dec4.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U64Dec4& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U64Dec4& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -14219,7 +14219,7 @@ bool algo::value_ReadStrptrMaybe(algo::U64Dec4& parent, algo::strptr in) {
 }
 
 // --- algo.U64Dec4.value.Print
-void algo::value_Print(algo::U64Dec4& parent, cstring &outstr) {
+void algo::value_Print(algo::U64Dec4& parent, cstring &outstr) throw() {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -14229,7 +14229,7 @@ void algo::value_Print(algo::U64Dec4& parent, cstring &outstr) {
 // --- algo.U64Dec4..ReadStrptrMaybe
 // Read fields of algo::U64Dec4 from an ascii string.
 // The format of the string is the format of the algo::U64Dec4's only field
-bool algo::U64Dec4_ReadStrptrMaybe(algo::U64Dec4 &parent, algo::strptr in_str) {
+bool algo::U64Dec4_ReadStrptrMaybe(algo::U64Dec4 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -14238,14 +14238,14 @@ bool algo::U64Dec4_ReadStrptrMaybe(algo::U64Dec4 &parent, algo::strptr in_str) {
 // --- algo.U64Dec4..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U64Dec4.String  printfmt:Raw
-void algo::U64Dec4_Print(algo::U64Dec4 row, algo::cstring& str) {
+void algo::U64Dec4_Print(algo::U64Dec4 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.U64Dec5.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U64Dec5& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U64Dec5& parent, double val) throw() {
     double intval = val * 100000;
     u64 minval = u64(0ULL);
     u64 maxval = u64(18446744073709551615ULL);
@@ -14259,7 +14259,7 @@ bool algo::value_SetDoubleMaybe(algo::U64Dec5& parent, double val) {
 }
 
 // --- algo.U64Dec5.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U64Dec5& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U64Dec5& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -14303,7 +14303,7 @@ bool algo::value_ReadStrptrMaybe(algo::U64Dec5& parent, algo::strptr in) {
 }
 
 // --- algo.U64Dec5.value.Print
-void algo::value_Print(algo::U64Dec5& parent, cstring &outstr) {
+void algo::value_Print(algo::U64Dec5& parent, cstring &outstr) throw() {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -14313,7 +14313,7 @@ void algo::value_Print(algo::U64Dec5& parent, cstring &outstr) {
 // --- algo.U64Dec5..ReadStrptrMaybe
 // Read fields of algo::U64Dec5 from an ascii string.
 // The format of the string is the format of the algo::U64Dec5's only field
-bool algo::U64Dec5_ReadStrptrMaybe(algo::U64Dec5 &parent, algo::strptr in_str) {
+bool algo::U64Dec5_ReadStrptrMaybe(algo::U64Dec5 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -14322,14 +14322,14 @@ bool algo::U64Dec5_ReadStrptrMaybe(algo::U64Dec5 &parent, algo::strptr in_str) {
 // --- algo.U64Dec5..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U64Dec5.String  printfmt:Raw
-void algo::U64Dec5_Print(algo::U64Dec5 row, algo::cstring& str) {
+void algo::U64Dec5_Print(algo::U64Dec5 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.U64Dec6.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U64Dec6& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U64Dec6& parent, double val) throw() {
     double intval = val * 1000000;
     u64 minval = u64(0ULL);
     u64 maxval = u64(18446744073709551615ULL);
@@ -14343,7 +14343,7 @@ bool algo::value_SetDoubleMaybe(algo::U64Dec6& parent, double val) {
 }
 
 // --- algo.U64Dec6.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U64Dec6& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U64Dec6& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -14387,7 +14387,7 @@ bool algo::value_ReadStrptrMaybe(algo::U64Dec6& parent, algo::strptr in) {
 }
 
 // --- algo.U64Dec6.value.Print
-void algo::value_Print(algo::U64Dec6& parent, cstring &outstr) {
+void algo::value_Print(algo::U64Dec6& parent, cstring &outstr) throw() {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -14397,7 +14397,7 @@ void algo::value_Print(algo::U64Dec6& parent, cstring &outstr) {
 // --- algo.U64Dec6..ReadStrptrMaybe
 // Read fields of algo::U64Dec6 from an ascii string.
 // The format of the string is the format of the algo::U64Dec6's only field
-bool algo::U64Dec6_ReadStrptrMaybe(algo::U64Dec6 &parent, algo::strptr in_str) {
+bool algo::U64Dec6_ReadStrptrMaybe(algo::U64Dec6 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -14406,14 +14406,14 @@ bool algo::U64Dec6_ReadStrptrMaybe(algo::U64Dec6 &parent, algo::strptr in_str) {
 // --- algo.U64Dec6..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U64Dec6.String  printfmt:Raw
-void algo::U64Dec6_Print(algo::U64Dec6 row, algo::cstring& str) {
+void algo::U64Dec6_Print(algo::U64Dec6 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.U64Dec7.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U64Dec7& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U64Dec7& parent, double val) throw() {
     double intval = val * 10000000;
     u64 minval = u64(0ULL);
     u64 maxval = u64(18446744073709551615ULL);
@@ -14427,7 +14427,7 @@ bool algo::value_SetDoubleMaybe(algo::U64Dec7& parent, double val) {
 }
 
 // --- algo.U64Dec7.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U64Dec7& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U64Dec7& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -14471,7 +14471,7 @@ bool algo::value_ReadStrptrMaybe(algo::U64Dec7& parent, algo::strptr in) {
 }
 
 // --- algo.U64Dec7.value.Print
-void algo::value_Print(algo::U64Dec7& parent, cstring &outstr) {
+void algo::value_Print(algo::U64Dec7& parent, cstring &outstr) throw() {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -14481,7 +14481,7 @@ void algo::value_Print(algo::U64Dec7& parent, cstring &outstr) {
 // --- algo.U64Dec7..ReadStrptrMaybe
 // Read fields of algo::U64Dec7 from an ascii string.
 // The format of the string is the format of the algo::U64Dec7's only field
-bool algo::U64Dec7_ReadStrptrMaybe(algo::U64Dec7 &parent, algo::strptr in_str) {
+bool algo::U64Dec7_ReadStrptrMaybe(algo::U64Dec7 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -14490,14 +14490,14 @@ bool algo::U64Dec7_ReadStrptrMaybe(algo::U64Dec7 &parent, algo::strptr in_str) {
 // --- algo.U64Dec7..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U64Dec7.String  printfmt:Raw
-void algo::U64Dec7_Print(algo::U64Dec7 row, algo::cstring& str) {
+void algo::U64Dec7_Print(algo::U64Dec7 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.U64Dec8.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U64Dec8& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U64Dec8& parent, double val) throw() {
     double intval = val * 100000000;
     u64 minval = u64(0ULL);
     u64 maxval = u64(18446744073709551615ULL);
@@ -14511,7 +14511,7 @@ bool algo::value_SetDoubleMaybe(algo::U64Dec8& parent, double val) {
 }
 
 // --- algo.U64Dec8.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U64Dec8& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U64Dec8& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -14555,7 +14555,7 @@ bool algo::value_ReadStrptrMaybe(algo::U64Dec8& parent, algo::strptr in) {
 }
 
 // --- algo.U64Dec8.value.Print
-void algo::value_Print(algo::U64Dec8& parent, cstring &outstr) {
+void algo::value_Print(algo::U64Dec8& parent, cstring &outstr) throw() {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -14565,7 +14565,7 @@ void algo::value_Print(algo::U64Dec8& parent, cstring &outstr) {
 // --- algo.U64Dec8..ReadStrptrMaybe
 // Read fields of algo::U64Dec8 from an ascii string.
 // The format of the string is the format of the algo::U64Dec8's only field
-bool algo::U64Dec8_ReadStrptrMaybe(algo::U64Dec8 &parent, algo::strptr in_str) {
+bool algo::U64Dec8_ReadStrptrMaybe(algo::U64Dec8 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -14574,14 +14574,14 @@ bool algo::U64Dec8_ReadStrptrMaybe(algo::U64Dec8 &parent, algo::strptr in_str) {
 // --- algo.U64Dec8..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U64Dec8.String  printfmt:Raw
-void algo::U64Dec8_Print(algo::U64Dec8 row, algo::cstring& str) {
+void algo::U64Dec8_Print(algo::U64Dec8 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.U64Dec9.value.SetDoubleMaybe
 // Set value of field value, using rounding.
 // If value is out of range for the target type, return false.
-bool algo::value_SetDoubleMaybe(algo::U64Dec9& parent, double val) {
+bool algo::value_SetDoubleMaybe(algo::U64Dec9& parent, double val) throw() {
     double intval = val * 1000000000;
     u64 minval = u64(0ULL);
     u64 maxval = u64(18446744073709551615ULL);
@@ -14595,7 +14595,7 @@ bool algo::value_SetDoubleMaybe(algo::U64Dec9& parent, double val) {
 }
 
 // --- algo.U64Dec9.value.ReadStrptrMaybe
-bool algo::value_ReadStrptrMaybe(algo::U64Dec9& parent, algo::strptr in) {
+bool algo::value_ReadStrptrMaybe(algo::U64Dec9& parent, algo::strptr in) throw() {
     int index = 0;
     int neg = false;
     // skip leading sign
@@ -14639,7 +14639,7 @@ bool algo::value_ReadStrptrMaybe(algo::U64Dec9& parent, algo::strptr in) {
 }
 
 // --- algo.U64Dec9.value.Print
-void algo::value_Print(algo::U64Dec9& parent, cstring &outstr) {
+void algo::value_Print(algo::U64Dec9& parent, cstring &outstr) throw() {
     u64 value = parent.value;
     ch_Reserve(outstr, 64);
     u8 *value_start = (u8*)(outstr.ch_elems + outstr.ch_n);
@@ -14649,7 +14649,7 @@ void algo::value_Print(algo::U64Dec9& parent, cstring &outstr) {
 // --- algo.U64Dec9..ReadStrptrMaybe
 // Read fields of algo::U64Dec9 from an ascii string.
 // The format of the string is the format of the algo::U64Dec9's only field
-bool algo::U64Dec9_ReadStrptrMaybe(algo::U64Dec9 &parent, algo::strptr in_str) {
+bool algo::U64Dec9_ReadStrptrMaybe(algo::U64Dec9 &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -14658,12 +14658,12 @@ bool algo::U64Dec9_ReadStrptrMaybe(algo::U64Dec9 &parent, algo::strptr in_str) {
 // --- algo.U64Dec9..Print
 // print string representation of ROW to string STR
 // cfmt:algo.U64Dec9.String  printfmt:Raw
-void algo::U64Dec9_Print(algo::U64Dec9 row, algo::cstring& str) {
+void algo::U64Dec9_Print(algo::U64Dec9 row, algo::cstring& str) throw() {
     algo::value_Print(row, str);
 }
 
 // --- algo.Uuid.value.Eq
-bool algo::value_Eq(algo::Uuid& parent, algo::Uuid &rhs) {
+bool algo::value_Eq(algo::Uuid& parent, algo::Uuid &rhs) throw() {
     int len = 16;
     for (int i = 0; i < len; i++) {
         if (!(parent.value_elems[i] == value_qFind(rhs,i))) {
@@ -14674,7 +14674,7 @@ bool algo::value_Eq(algo::Uuid& parent, algo::Uuid &rhs) {
 }
 
 // --- algo.Uuid.value.Cmp
-int algo::value_Cmp(algo::Uuid& parent, algo::Uuid &rhs) {
+int algo::value_Cmp(algo::Uuid& parent, algo::Uuid &rhs) throw() {
     int len = 16;
     int retval = 0;
     for (int i = 0; i < len; i++) {
@@ -14689,14 +14689,14 @@ int algo::value_Cmp(algo::Uuid& parent, algo::Uuid &rhs) {
 // --- algo.Uuid.value.Print
 // Convert value to a string.
 // Array is printed as a regular string.
-void algo::value_Print(algo::Uuid& parent, algo::cstring &rhs) {
+void algo::value_Print(algo::Uuid& parent, algo::cstring &rhs) throw() {
     rhs << algo::memptr_ToStrptr(value_Getary(parent));
 }
 
 // --- algo.Uuid.value.ReadStrptrMaybe
 // Read array from string
 // Convert string to field. Return success value
-bool algo::value_ReadStrptrMaybe(algo::Uuid& parent, algo::strptr in_str) {
+bool algo::value_ReadStrptrMaybe(algo::Uuid& parent, algo::strptr in_str) throw() {
     bool retval = true;
     i32 newlen = i32_Min(in_str.n_elems, 16);
     memcpy(parent.value_elems, in_str.elems, newlen);

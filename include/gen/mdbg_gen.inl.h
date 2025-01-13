@@ -35,24 +35,24 @@ inline void mdbg::FBuilddir_Init(mdbg::FBuilddir& builddir) {
 }
 
 // --- mdbg.FBuilddir..Ctor
-inline  mdbg::FBuilddir::FBuilddir() {
+inline  mdbg::FBuilddir::FBuilddir() throw() {
     mdbg::FBuilddir_Init(*this);
 }
 
 // --- mdbg.FBuilddir..Dtor
-inline  mdbg::FBuilddir::~FBuilddir() {
+inline  mdbg::FBuilddir::~FBuilddir() throw() {
     mdbg::FBuilddir_Uninit(*this);
 }
 
 // --- mdbg.FCfg.c_builddir.EmptyQ
 // Return true if index is empty
-inline bool mdbg::c_builddir_EmptyQ(mdbg::FCfg& cfg) {
+inline bool mdbg::c_builddir_EmptyQ(mdbg::FCfg& cfg) throw() {
     return cfg.c_builddir_n == 0;
 }
 
 // --- mdbg.FCfg.c_builddir.Find
 // Look up row by row id. Return NULL if out of range
-inline mdbg::FBuilddir* mdbg::c_builddir_Find(mdbg::FCfg& cfg, u32 t) {
+inline mdbg::FBuilddir* mdbg::c_builddir_Find(mdbg::FCfg& cfg, u32 t) throw() {
     mdbg::FBuilddir *retval = NULL;
     u64 idx = t;
     u64 lim = cfg.c_builddir_n;
@@ -64,19 +64,19 @@ inline mdbg::FBuilddir* mdbg::c_builddir_Find(mdbg::FCfg& cfg, u32 t) {
 
 // --- mdbg.FCfg.c_builddir.Getary
 // Return array of pointers
-inline algo::aryptr<mdbg::FBuilddir*> mdbg::c_builddir_Getary(mdbg::FCfg& cfg) {
+inline algo::aryptr<mdbg::FBuilddir*> mdbg::c_builddir_Getary(mdbg::FCfg& cfg) throw() {
     return algo::aryptr<mdbg::FBuilddir*>(cfg.c_builddir_elems, cfg.c_builddir_n);
 }
 
 // --- mdbg.FCfg.c_builddir.N
 // Return number of items in the pointer array
-inline i32 mdbg::c_builddir_N(const mdbg::FCfg& cfg) {
+inline i32 mdbg::c_builddir_N(const mdbg::FCfg& cfg) throw() {
     return cfg.c_builddir_n;
 }
 
 // --- mdbg.FCfg.c_builddir.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void mdbg::c_builddir_RemoveAll(mdbg::FCfg& cfg) {
+inline void mdbg::c_builddir_RemoveAll(mdbg::FCfg& cfg) throw() {
     for (u32 i = 0; i < cfg.c_builddir_n; i++) {
         // mark all elements as not-in-array
         cfg.c_builddir_elems[i]->cfg_c_builddir_in_ary = false;
@@ -86,24 +86,24 @@ inline void mdbg::c_builddir_RemoveAll(mdbg::FCfg& cfg) {
 
 // --- mdbg.FCfg.c_builddir.qFind
 // Return reference without bounds checking
-inline mdbg::FBuilddir& mdbg::c_builddir_qFind(mdbg::FCfg& cfg, u32 idx) {
+inline mdbg::FBuilddir& mdbg::c_builddir_qFind(mdbg::FCfg& cfg, u32 idx) throw() {
     return *cfg.c_builddir_elems[idx];
 }
 
 // --- mdbg.FCfg.c_builddir.InAryQ
 // True if row is in any ptrary instance
-inline bool mdbg::cfg_c_builddir_InAryQ(mdbg::FBuilddir& row) {
+inline bool mdbg::cfg_c_builddir_InAryQ(mdbg::FBuilddir& row) throw() {
     return row.cfg_c_builddir_in_ary;
 }
 
 // --- mdbg.FCfg.c_builddir.qLast
 // Reference to last element without bounds checking
-inline mdbg::FBuilddir& mdbg::c_builddir_qLast(mdbg::FCfg& cfg) {
+inline mdbg::FBuilddir& mdbg::c_builddir_qLast(mdbg::FCfg& cfg) throw() {
     return *cfg.c_builddir_elems[cfg.c_builddir_n-1];
 }
 
 // --- mdbg.FCfg.c_builddir_curs.Reset
-inline void mdbg::cfg_c_builddir_curs_Reset(cfg_c_builddir_curs &curs, mdbg::FCfg &parent) {
+inline void mdbg::cfg_c_builddir_curs_Reset(cfg_c_builddir_curs &curs, mdbg::FCfg &parent) throw() {
     curs.elems = parent.c_builddir_elems;
     curs.n_elems = parent.c_builddir_n;
     curs.index = 0;
@@ -111,19 +111,19 @@ inline void mdbg::cfg_c_builddir_curs_Reset(cfg_c_builddir_curs &curs, mdbg::FCf
 
 // --- mdbg.FCfg.c_builddir_curs.ValidQ
 // cursor points to valid item
-inline bool mdbg::cfg_c_builddir_curs_ValidQ(cfg_c_builddir_curs &curs) {
+inline bool mdbg::cfg_c_builddir_curs_ValidQ(cfg_c_builddir_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- mdbg.FCfg.c_builddir_curs.Next
 // proceed to next item
-inline void mdbg::cfg_c_builddir_curs_Next(cfg_c_builddir_curs &curs) {
+inline void mdbg::cfg_c_builddir_curs_Next(cfg_c_builddir_curs &curs) throw() {
     curs.index++;
 }
 
 // --- mdbg.FCfg.c_builddir_curs.Access
 // item access
-inline mdbg::FBuilddir& mdbg::cfg_c_builddir_curs_Access(cfg_c_builddir_curs &curs) {
+inline mdbg::FBuilddir& mdbg::cfg_c_builddir_curs_Access(cfg_c_builddir_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
@@ -137,28 +137,28 @@ inline void mdbg::FCfg_Init(mdbg::FCfg& cfg) {
 }
 
 // --- mdbg.FCfg..Ctor
-inline  mdbg::FCfg::FCfg() {
+inline  mdbg::FCfg::FCfg() throw() {
     mdbg::FCfg_Init(*this);
 }
 
 // --- mdbg.FCfg..Dtor
-inline  mdbg::FCfg::~FCfg() {
+inline  mdbg::FCfg::~FCfg() throw() {
     mdbg::FCfg_Uninit(*this);
 }
 
 // --- mdbg.trace..Ctor
-inline  mdbg::trace::trace() {
+inline  mdbg::trace::trace() throw() {
 }
 
 // --- mdbg.FDb.cfg.EmptyQ
 // Return true if index is empty
-inline bool mdbg::cfg_EmptyQ() {
+inline bool mdbg::cfg_EmptyQ() throw() {
     return _db.cfg_n == 0;
 }
 
 // --- mdbg.FDb.cfg.Find
 // Look up row by row id. Return NULL if out of range
-inline mdbg::FCfg* mdbg::cfg_Find(u64 t) {
+inline mdbg::FCfg* mdbg::cfg_Find(u64 t) throw() {
     mdbg::FCfg *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cfg_n))) {
         u64 x = t + 1;
@@ -172,19 +172,19 @@ inline mdbg::FCfg* mdbg::cfg_Find(u64 t) {
 
 // --- mdbg.FDb.cfg.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline mdbg::FCfg* mdbg::cfg_Last() {
+inline mdbg::FCfg* mdbg::cfg_Last() throw() {
     return cfg_Find(u64(_db.cfg_n-1));
 }
 
 // --- mdbg.FDb.cfg.N
 // Return number of items in the pool
-inline i32 mdbg::cfg_N() {
+inline i32 mdbg::cfg_N() throw() {
     return _db.cfg_n;
 }
 
 // --- mdbg.FDb.cfg.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline mdbg::FCfg& mdbg::cfg_qFind(u64 t) {
+inline mdbg::FCfg& mdbg::cfg_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -194,25 +194,25 @@ inline mdbg::FCfg& mdbg::cfg_qFind(u64 t) {
 
 // --- mdbg.FDb.ind_cfg.EmptyQ
 // Return true if hash is empty
-inline bool mdbg::ind_cfg_EmptyQ() {
+inline bool mdbg::ind_cfg_EmptyQ() throw() {
     return _db.ind_cfg_n == 0;
 }
 
 // --- mdbg.FDb.ind_cfg.N
 // Return number of items in the hash
-inline i32 mdbg::ind_cfg_N() {
+inline i32 mdbg::ind_cfg_N() throw() {
     return _db.ind_cfg_n;
 }
 
 // --- mdbg.FDb.builddir.EmptyQ
 // Return true if index is empty
-inline bool mdbg::builddir_EmptyQ() {
+inline bool mdbg::builddir_EmptyQ() throw() {
     return _db.builddir_n == 0;
 }
 
 // --- mdbg.FDb.builddir.Find
 // Look up row by row id. Return NULL if out of range
-inline mdbg::FBuilddir* mdbg::builddir_Find(u64 t) {
+inline mdbg::FBuilddir* mdbg::builddir_Find(u64 t) throw() {
     mdbg::FBuilddir *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.builddir_n))) {
         u64 x = t + 1;
@@ -226,19 +226,19 @@ inline mdbg::FBuilddir* mdbg::builddir_Find(u64 t) {
 
 // --- mdbg.FDb.builddir.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline mdbg::FBuilddir* mdbg::builddir_Last() {
+inline mdbg::FBuilddir* mdbg::builddir_Last() throw() {
     return builddir_Find(u64(_db.builddir_n-1));
 }
 
 // --- mdbg.FDb.builddir.N
 // Return number of items in the pool
-inline i32 mdbg::builddir_N() {
+inline i32 mdbg::builddir_N() throw() {
     return _db.builddir_n;
 }
 
 // --- mdbg.FDb.builddir.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline mdbg::FBuilddir& mdbg::builddir_qFind(u64 t) {
+inline mdbg::FBuilddir& mdbg::builddir_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -248,68 +248,68 @@ inline mdbg::FBuilddir& mdbg::builddir_qFind(u64 t) {
 
 // --- mdbg.FDb.cfg_curs.Reset
 // cursor points to valid item
-inline void mdbg::_db_cfg_curs_Reset(_db_cfg_curs &curs, mdbg::FDb &parent) {
+inline void mdbg::_db_cfg_curs_Reset(_db_cfg_curs &curs, mdbg::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- mdbg.FDb.cfg_curs.ValidQ
 // cursor points to valid item
-inline bool mdbg::_db_cfg_curs_ValidQ(_db_cfg_curs &curs) {
+inline bool mdbg::_db_cfg_curs_ValidQ(_db_cfg_curs &curs) throw() {
     return curs.index < _db.cfg_n;
 }
 
 // --- mdbg.FDb.cfg_curs.Next
 // proceed to next item
-inline void mdbg::_db_cfg_curs_Next(_db_cfg_curs &curs) {
+inline void mdbg::_db_cfg_curs_Next(_db_cfg_curs &curs) throw() {
     curs.index++;
 }
 
 // --- mdbg.FDb.cfg_curs.Access
 // item access
-inline mdbg::FCfg& mdbg::_db_cfg_curs_Access(_db_cfg_curs &curs) {
+inline mdbg::FCfg& mdbg::_db_cfg_curs_Access(_db_cfg_curs &curs) throw() {
     return cfg_qFind(u64(curs.index));
 }
 
 // --- mdbg.FDb.builddir_curs.Reset
 // cursor points to valid item
-inline void mdbg::_db_builddir_curs_Reset(_db_builddir_curs &curs, mdbg::FDb &parent) {
+inline void mdbg::_db_builddir_curs_Reset(_db_builddir_curs &curs, mdbg::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- mdbg.FDb.builddir_curs.ValidQ
 // cursor points to valid item
-inline bool mdbg::_db_builddir_curs_ValidQ(_db_builddir_curs &curs) {
+inline bool mdbg::_db_builddir_curs_ValidQ(_db_builddir_curs &curs) throw() {
     return curs.index < _db.builddir_n;
 }
 
 // --- mdbg.FDb.builddir_curs.Next
 // proceed to next item
-inline void mdbg::_db_builddir_curs_Next(_db_builddir_curs &curs) {
+inline void mdbg::_db_builddir_curs_Next(_db_builddir_curs &curs) throw() {
     curs.index++;
 }
 
 // --- mdbg.FDb.builddir_curs.Access
 // item access
-inline mdbg::FBuilddir& mdbg::_db_builddir_curs_Access(_db_builddir_curs &curs) {
+inline mdbg::FBuilddir& mdbg::_db_builddir_curs_Access(_db_builddir_curs &curs) throw() {
     return builddir_qFind(u64(curs.index));
 }
 
 // --- mdbg.FieldId.value.GetEnum
 // Get value of field as enum type
-inline mdbg_FieldIdEnum mdbg::value_GetEnum(const mdbg::FieldId& parent) {
+inline mdbg_FieldIdEnum mdbg::value_GetEnum(const mdbg::FieldId& parent) throw() {
     return mdbg_FieldIdEnum(parent.value);
 }
 
 // --- mdbg.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void mdbg::value_SetEnum(mdbg::FieldId& parent, mdbg_FieldIdEnum rhs) {
+inline void mdbg::value_SetEnum(mdbg::FieldId& parent, mdbg_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- mdbg.FieldId.value.Cast
-inline  mdbg::FieldId::operator mdbg_FieldIdEnum() const {
+inline  mdbg::FieldId::operator mdbg_FieldIdEnum() const throw() {
     return mdbg_FieldIdEnum((*this).value);
 }
 
@@ -320,35 +320,35 @@ inline void mdbg::FieldId_Init(mdbg::FieldId& parent) {
 }
 
 // --- mdbg.FieldId..Ctor
-inline  mdbg::FieldId::FieldId() {
+inline  mdbg::FieldId::FieldId() throw() {
     mdbg::FieldId_Init(*this);
 }
 
 // --- mdbg.FieldId..FieldwiseCtor
-inline  mdbg::FieldId::FieldId(i32 in_value)
+inline  mdbg::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- mdbg.FieldId..EnumCtor
-inline  mdbg::FieldId::FieldId(mdbg_FieldIdEnum arg) {
+inline  mdbg::FieldId::FieldId(mdbg_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- mdbg.TableId.value.GetEnum
 // Get value of field as enum type
-inline mdbg_TableIdEnum mdbg::value_GetEnum(const mdbg::TableId& parent) {
+inline mdbg_TableIdEnum mdbg::value_GetEnum(const mdbg::TableId& parent) throw() {
     return mdbg_TableIdEnum(parent.value);
 }
 
 // --- mdbg.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void mdbg::value_SetEnum(mdbg::TableId& parent, mdbg_TableIdEnum rhs) {
+inline void mdbg::value_SetEnum(mdbg::TableId& parent, mdbg_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- mdbg.TableId.value.Cast
-inline  mdbg::TableId::operator mdbg_TableIdEnum() const {
+inline  mdbg::TableId::operator mdbg_TableIdEnum() const throw() {
     return mdbg_TableIdEnum((*this).value);
 }
 
@@ -359,18 +359,18 @@ inline void mdbg::TableId_Init(mdbg::TableId& parent) {
 }
 
 // --- mdbg.TableId..Ctor
-inline  mdbg::TableId::TableId() {
+inline  mdbg::TableId::TableId() throw() {
     mdbg::TableId_Init(*this);
 }
 
 // --- mdbg.TableId..FieldwiseCtor
-inline  mdbg::TableId::TableId(i32 in_value)
+inline  mdbg::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- mdbg.TableId..EnumCtor
-inline  mdbg::TableId::TableId(mdbg_TableIdEnum arg) {
+inline  mdbg::TableId::TableId(mdbg_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

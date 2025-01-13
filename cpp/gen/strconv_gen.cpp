@@ -72,7 +72,7 @@ namespace strconv { // gen:ns_print_proto
 // --- strconv.trace..Print
 // print string representation of ROW to string STR
 // cfmt:strconv.trace.String  printfmt:Tuple
-void strconv::trace_Print(strconv::trace& row, algo::cstring& str) {
+void strconv::trace_Print(strconv::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "strconv.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -83,7 +83,7 @@ void strconv::trace_Print(strconv::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     strconv.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void strconv::ReadArgv() {
+void strconv::ReadArgv() throw() {
     command::strconv &cmd = strconv::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -284,7 +284,7 @@ bool strconv::InsertStrptrMaybe(algo::strptr str) {
 
 // --- strconv.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool strconv::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool strconv::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = strconv::LoadTuplesFile(root, recursive);
@@ -307,7 +307,7 @@ bool strconv::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool strconv::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool strconv::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -320,7 +320,7 @@ bool strconv::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- strconv.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool strconv::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool strconv::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -339,7 +339,7 @@ bool strconv::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) 
 
 // --- strconv.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool strconv::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool strconv::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = strconv::LoadTuplesFile(fname, recursive);
@@ -363,13 +363,13 @@ bool strconv::_db_XrefMaybe() {
 
 // --- strconv.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr strconv::trace_RowidFind(int t) {
+static algo::ImrowPtr strconv::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- strconv.FDb.trace.N
 // Function return 1
-inline static i32 strconv::trace_N() {
+inline static i32 strconv::trace_N() throw() {
     return 1;
 }
 
@@ -383,7 +383,7 @@ void strconv::FDb_Init() {
 // --- strconv.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* strconv::value_ToCstr(const strconv::FieldId& parent) {
+const char* strconv::value_ToCstr(const strconv::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case strconv_FieldId_value         : ret = "value";  break;
@@ -394,7 +394,7 @@ const char* strconv::value_ToCstr(const strconv::FieldId& parent) {
 // --- strconv.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void strconv::value_Print(const strconv::FieldId& parent, algo::cstring &lhs) {
+void strconv::value_Print(const strconv::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -407,7 +407,7 @@ void strconv::value_Print(const strconv::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool strconv::value_SetStrptrMaybe(strconv::FieldId& parent, algo::strptr rhs) {
+bool strconv::value_SetStrptrMaybe(strconv::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -425,13 +425,13 @@ bool strconv::value_SetStrptrMaybe(strconv::FieldId& parent, algo::strptr rhs) {
 // --- strconv.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void strconv::value_SetStrptr(strconv::FieldId& parent, algo::strptr rhs, strconv_FieldIdEnum dflt) {
+void strconv::value_SetStrptr(strconv::FieldId& parent, algo::strptr rhs, strconv_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- strconv.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool strconv::value_ReadStrptrMaybe(strconv::FieldId& parent, algo::strptr rhs) {
+bool strconv::value_ReadStrptrMaybe(strconv::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -443,7 +443,7 @@ bool strconv::value_ReadStrptrMaybe(strconv::FieldId& parent, algo::strptr rhs) 
 // --- strconv.FieldId..ReadStrptrMaybe
 // Read fields of strconv::FieldId from an ascii string.
 // The format of the string is the format of the strconv::FieldId's only field
-bool strconv::FieldId_ReadStrptrMaybe(strconv::FieldId &parent, algo::strptr in_str) {
+bool strconv::FieldId_ReadStrptrMaybe(strconv::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -452,7 +452,7 @@ bool strconv::FieldId_ReadStrptrMaybe(strconv::FieldId &parent, algo::strptr in_
 // --- strconv.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:strconv.FieldId.String  printfmt:Raw
-void strconv::FieldId_Print(strconv::FieldId& row, algo::cstring& str) {
+void strconv::FieldId_Print(strconv::FieldId& row, algo::cstring& str) throw() {
     strconv::value_Print(row, str);
 }
 

@@ -34,28 +34,28 @@ inline void lib_sql::FAttr_Init(lib_sql::FAttr& attr) {
 }
 
 // --- lib_sql.FAttr..Ctor
-inline  lib_sql::FAttr::FAttr() {
+inline  lib_sql::FAttr::FAttr() throw() {
     lib_sql::FAttr_Init(*this);
 }
 
 // --- lib_sql.FAttr..Dtor
-inline  lib_sql::FAttr::~FAttr() {
+inline  lib_sql::FAttr::~FAttr() throw() {
     lib_sql::FAttr_Uninit(*this);
 }
 
 // --- lib_sql.trace..Ctor
-inline  lib_sql::trace::trace() {
+inline  lib_sql::trace::trace() throw() {
 }
 
 // --- lib_sql.FDb.attr.EmptyQ
 // Return true if index is empty
-inline bool lib_sql::attr_EmptyQ() {
+inline bool lib_sql::attr_EmptyQ() throw() {
     return _db.attr_n == 0;
 }
 
 // --- lib_sql.FDb.attr.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_sql::FAttr* lib_sql::attr_Find(u64 t) {
+inline lib_sql::FAttr* lib_sql::attr_Find(u64 t) throw() {
     lib_sql::FAttr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.attr_n))) {
         u64 x = t + 1;
@@ -69,19 +69,19 @@ inline lib_sql::FAttr* lib_sql::attr_Find(u64 t) {
 
 // --- lib_sql.FDb.attr.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline lib_sql::FAttr* lib_sql::attr_Last() {
+inline lib_sql::FAttr* lib_sql::attr_Last() throw() {
     return attr_Find(u64(_db.attr_n-1));
 }
 
 // --- lib_sql.FDb.attr.N
 // Return number of items in the pool
-inline i32 lib_sql::attr_N() {
+inline i32 lib_sql::attr_N() throw() {
     return _db.attr_n;
 }
 
 // --- lib_sql.FDb.attr.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline lib_sql::FAttr& lib_sql::attr_qFind(u64 t) {
+inline lib_sql::FAttr& lib_sql::attr_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -91,55 +91,55 @@ inline lib_sql::FAttr& lib_sql::attr_qFind(u64 t) {
 
 // --- lib_sql.FDb.ind_attr.EmptyQ
 // Return true if hash is empty
-inline bool lib_sql::ind_attr_EmptyQ() {
+inline bool lib_sql::ind_attr_EmptyQ() throw() {
     return _db.ind_attr_n == 0;
 }
 
 // --- lib_sql.FDb.ind_attr.N
 // Return number of items in the hash
-inline i32 lib_sql::ind_attr_N() {
+inline i32 lib_sql::ind_attr_N() throw() {
     return _db.ind_attr_n;
 }
 
 // --- lib_sql.FDb.attr_curs.Reset
 // cursor points to valid item
-inline void lib_sql::_db_attr_curs_Reset(_db_attr_curs &curs, lib_sql::FDb &parent) {
+inline void lib_sql::_db_attr_curs_Reset(_db_attr_curs &curs, lib_sql::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- lib_sql.FDb.attr_curs.ValidQ
 // cursor points to valid item
-inline bool lib_sql::_db_attr_curs_ValidQ(_db_attr_curs &curs) {
+inline bool lib_sql::_db_attr_curs_ValidQ(_db_attr_curs &curs) throw() {
     return curs.index < _db.attr_n;
 }
 
 // --- lib_sql.FDb.attr_curs.Next
 // proceed to next item
-inline void lib_sql::_db_attr_curs_Next(_db_attr_curs &curs) {
+inline void lib_sql::_db_attr_curs_Next(_db_attr_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_sql.FDb.attr_curs.Access
 // item access
-inline lib_sql::FAttr& lib_sql::_db_attr_curs_Access(_db_attr_curs &curs) {
+inline lib_sql::FAttr& lib_sql::_db_attr_curs_Access(_db_attr_curs &curs) throw() {
     return attr_qFind(u64(curs.index));
 }
 
 // --- lib_sql.FieldId.value.GetEnum
 // Get value of field as enum type
-inline lib_sql_FieldIdEnum lib_sql::value_GetEnum(const lib_sql::FieldId& parent) {
+inline lib_sql_FieldIdEnum lib_sql::value_GetEnum(const lib_sql::FieldId& parent) throw() {
     return lib_sql_FieldIdEnum(parent.value);
 }
 
 // --- lib_sql.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void lib_sql::value_SetEnum(lib_sql::FieldId& parent, lib_sql_FieldIdEnum rhs) {
+inline void lib_sql::value_SetEnum(lib_sql::FieldId& parent, lib_sql_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- lib_sql.FieldId.value.Cast
-inline  lib_sql::FieldId::operator lib_sql_FieldIdEnum() const {
+inline  lib_sql::FieldId::operator lib_sql_FieldIdEnum() const throw() {
     return lib_sql_FieldIdEnum((*this).value);
 }
 
@@ -150,18 +150,18 @@ inline void lib_sql::FieldId_Init(lib_sql::FieldId& parent) {
 }
 
 // --- lib_sql.FieldId..Ctor
-inline  lib_sql::FieldId::FieldId() {
+inline  lib_sql::FieldId::FieldId() throw() {
     lib_sql::FieldId_Init(*this);
 }
 
 // --- lib_sql.FieldId..FieldwiseCtor
-inline  lib_sql::FieldId::FieldId(i32 in_value)
+inline  lib_sql::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_sql.FieldId..EnumCtor
-inline  lib_sql::FieldId::FieldId(lib_sql_FieldIdEnum arg) {
+inline  lib_sql::FieldId::FieldId(lib_sql_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

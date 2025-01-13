@@ -38,7 +38,7 @@ namespace atfdb { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- atfdb.Amctest..ReadFieldMaybe
-bool atfdb::Amctest_ReadFieldMaybe(atfdb::Amctest& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::Amctest_ReadFieldMaybe(atfdb::Amctest& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -62,7 +62,7 @@ bool atfdb::Amctest_ReadFieldMaybe(atfdb::Amctest& parent, algo::strptr field, a
 // --- atfdb.Amctest..ReadStrptrMaybe
 // Read fields of atfdb::Amctest from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::Amctest_ReadStrptrMaybe(atfdb::Amctest &parent, algo::strptr in_str) {
+bool atfdb::Amctest_ReadStrptrMaybe(atfdb::Amctest &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.amctest") || algo::StripTypeTag(in_str, "atfdb.Amctest");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -74,7 +74,7 @@ bool atfdb::Amctest_ReadStrptrMaybe(atfdb::Amctest &parent, algo::strptr in_str)
 // --- atfdb.Amctest..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Amctest.String  printfmt:Tuple
-void atfdb::Amctest_Print(atfdb::Amctest& row, algo::cstring& str) {
+void atfdb::Amctest_Print(atfdb::Amctest& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.amctest";
 
@@ -86,7 +86,7 @@ void atfdb::Amctest_Print(atfdb::Amctest& row, algo::cstring& str) {
 }
 
 // --- atfdb.Cijob..ReadFieldMaybe
-bool atfdb::Cijob_ReadFieldMaybe(atfdb::Cijob& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::Cijob_ReadFieldMaybe(atfdb::Cijob& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -110,7 +110,7 @@ bool atfdb::Cijob_ReadFieldMaybe(atfdb::Cijob& parent, algo::strptr field, algo:
 // --- atfdb.Cijob..ReadStrptrMaybe
 // Read fields of atfdb::Cijob from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::Cijob_ReadStrptrMaybe(atfdb::Cijob &parent, algo::strptr in_str) {
+bool atfdb::Cijob_ReadStrptrMaybe(atfdb::Cijob &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.cijob") || algo::StripTypeTag(in_str, "atfdb.Cijob");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -122,7 +122,7 @@ bool atfdb::Cijob_ReadStrptrMaybe(atfdb::Cijob &parent, algo::strptr in_str) {
 // --- atfdb.Cijob..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Cijob.String  printfmt:Tuple
-void atfdb::Cijob_Print(atfdb::Cijob& row, algo::cstring& str) {
+void atfdb::Cijob_Print(atfdb::Cijob& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.cijob";
 
@@ -134,7 +134,7 @@ void atfdb::Cijob_Print(atfdb::Cijob& row, algo::cstring& str) {
 }
 
 // --- atfdb.Cipackage..ReadFieldMaybe
-bool atfdb::Cipackage_ReadFieldMaybe(atfdb::Cipackage& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::Cipackage_ReadFieldMaybe(atfdb::Cipackage& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -170,7 +170,7 @@ bool atfdb::Cipackage_ReadFieldMaybe(atfdb::Cipackage& parent, algo::strptr fiel
 // --- atfdb.Cipackage..ReadStrptrMaybe
 // Read fields of atfdb::Cipackage from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::Cipackage_ReadStrptrMaybe(atfdb::Cipackage &parent, algo::strptr in_str) {
+bool atfdb::Cipackage_ReadStrptrMaybe(atfdb::Cipackage &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.cipackage") || algo::StripTypeTag(in_str, "atfdb.Cipackage");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -182,7 +182,7 @@ bool atfdb::Cipackage_ReadStrptrMaybe(atfdb::Cipackage &parent, algo::strptr in_
 // --- atfdb.Cipackage..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Cipackage.String  printfmt:Tuple
-void atfdb::Cipackage_Print(atfdb::Cipackage& row, algo::cstring& str) {
+void atfdb::Cipackage_Print(atfdb::Cipackage& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.cipackage";
 
@@ -203,7 +203,7 @@ void atfdb::Cipackage_Print(atfdb::Cipackage& row, algo::cstring& str) {
 }
 
 // --- atfdb.Citest..ReadFieldMaybe
-bool atfdb::Citest_ReadFieldMaybe(atfdb::Citest& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::Citest_ReadFieldMaybe(atfdb::Citest& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -235,7 +235,7 @@ bool atfdb::Citest_ReadFieldMaybe(atfdb::Citest& parent, algo::strptr field, alg
 // --- atfdb.Citest..ReadStrptrMaybe
 // Read fields of atfdb::Citest from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::Citest_ReadStrptrMaybe(atfdb::Citest &parent, algo::strptr in_str) {
+bool atfdb::Citest_ReadStrptrMaybe(atfdb::Citest &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.citest") || algo::StripTypeTag(in_str, "atfdb.Citest");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -247,7 +247,7 @@ bool atfdb::Citest_ReadStrptrMaybe(atfdb::Citest &parent, algo::strptr in_str) {
 // --- atfdb.Citest..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Citest.String  printfmt:Tuple
-void atfdb::Citest_Print(atfdb::Citest& row, algo::cstring& str) {
+void atfdb::Citest_Print(atfdb::Citest& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.citest";
 
@@ -265,25 +265,25 @@ void atfdb::Citest_Print(atfdb::Citest& row, algo::cstring& str) {
 }
 
 // --- atfdb.Comptest.target.Get
-algo::Smallstr16 atfdb::target_Get(atfdb::Comptest& parent) {
+algo::Smallstr16 atfdb::target_Get(atfdb::Comptest& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.comptest, ".LL"));
     return ret;
 }
 
 // --- atfdb.Comptest.target.Get2
-algo::Smallstr16 atfdb::Comptest_target_Get(algo::strptr arg) {
+algo::Smallstr16 atfdb::Comptest_target_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
 
 // --- atfdb.Comptest.testname.Get
-algo::Smallstr50 atfdb::testname_Get(atfdb::Comptest& parent) {
+algo::Smallstr50 atfdb::testname_Get(atfdb::Comptest& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.comptest, ".LR"));
     return ret;
 }
 
 // --- atfdb.Comptest.testname.Get2
-algo::Smallstr50 atfdb::Comptest_testname_Get(algo::strptr arg) {
+algo::Smallstr50 atfdb::Comptest_testname_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LR"));
     return ret;
 }
@@ -294,7 +294,7 @@ tempstr atfdb::Comptest_Concat_target_testname( const algo::strptr& target ,cons
 }
 
 // --- atfdb.Comptest..ReadFieldMaybe
-bool atfdb::Comptest_ReadFieldMaybe(atfdb::Comptest& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::Comptest_ReadFieldMaybe(atfdb::Comptest& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -338,7 +338,7 @@ bool atfdb::Comptest_ReadFieldMaybe(atfdb::Comptest& parent, algo::strptr field,
 // --- atfdb.Comptest..ReadStrptrMaybe
 // Read fields of atfdb::Comptest from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::Comptest_ReadStrptrMaybe(atfdb::Comptest &parent, algo::strptr in_str) {
+bool atfdb::Comptest_ReadStrptrMaybe(atfdb::Comptest &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.comptest") || algo::StripTypeTag(in_str, "atfdb.Comptest");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -350,7 +350,7 @@ bool atfdb::Comptest_ReadStrptrMaybe(atfdb::Comptest &parent, algo::strptr in_st
 // --- atfdb.Comptest..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Comptest.String  printfmt:Tuple
-void atfdb::Comptest_Print(atfdb::Comptest& row, algo::cstring& str) {
+void atfdb::Comptest_Print(atfdb::Comptest& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.comptest";
 
@@ -373,7 +373,7 @@ void atfdb::Comptest_Print(atfdb::Comptest& row, algo::cstring& str) {
 // --- atfdb.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atfdb::value_ToCstr(const atfdb::FieldId& parent) {
+const char* atfdb::value_ToCstr(const atfdb::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atfdb_FieldId_amctest         : ret = "amctest";  break;
@@ -412,7 +412,7 @@ const char* atfdb::value_ToCstr(const atfdb::FieldId& parent) {
 // --- atfdb.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atfdb::value_Print(const atfdb::FieldId& parent, algo::cstring &lhs) {
+void atfdb::value_Print(const atfdb::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -425,7 +425,7 @@ void atfdb::value_Print(const atfdb::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
+bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -570,13 +570,13 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
 // --- atfdb.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atfdb::value_SetStrptr(atfdb::FieldId& parent, algo::strptr rhs, atfdb_FieldIdEnum dflt) {
+void atfdb::value_SetStrptr(atfdb::FieldId& parent, algo::strptr rhs, atfdb_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atfdb.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atfdb::value_ReadStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
+bool atfdb::value_ReadStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -588,7 +588,7 @@ bool atfdb::value_ReadStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
 // --- atfdb.FieldId..ReadStrptrMaybe
 // Read fields of atfdb::FieldId from an ascii string.
 // The format of the string is the format of the atfdb::FieldId's only field
-bool atfdb::FieldId_ReadStrptrMaybe(atfdb::FieldId &parent, algo::strptr in_str) {
+bool atfdb::FieldId_ReadStrptrMaybe(atfdb::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -597,12 +597,12 @@ bool atfdb::FieldId_ReadStrptrMaybe(atfdb::FieldId &parent, algo::strptr in_str)
 // --- atfdb.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.FieldId.String  printfmt:Raw
-void atfdb::FieldId_Print(atfdb::FieldId& row, algo::cstring& str) {
+void atfdb::FieldId_Print(atfdb::FieldId& row, algo::cstring& str) throw() {
     atfdb::value_Print(row, str);
 }
 
 // --- atfdb.Fuzzstrat..ReadFieldMaybe
-bool atfdb::Fuzzstrat_ReadFieldMaybe(atfdb::Fuzzstrat& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::Fuzzstrat_ReadFieldMaybe(atfdb::Fuzzstrat& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -626,7 +626,7 @@ bool atfdb::Fuzzstrat_ReadFieldMaybe(atfdb::Fuzzstrat& parent, algo::strptr fiel
 // --- atfdb.Fuzzstrat..ReadStrptrMaybe
 // Read fields of atfdb::Fuzzstrat from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::Fuzzstrat_ReadStrptrMaybe(atfdb::Fuzzstrat &parent, algo::strptr in_str) {
+bool atfdb::Fuzzstrat_ReadStrptrMaybe(atfdb::Fuzzstrat &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.fuzzstrat") || algo::StripTypeTag(in_str, "atfdb.Fuzzstrat");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -638,7 +638,7 @@ bool atfdb::Fuzzstrat_ReadStrptrMaybe(atfdb::Fuzzstrat &parent, algo::strptr in_
 // --- atfdb.Fuzzstrat..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Fuzzstrat.String  printfmt:Tuple
-void atfdb::Fuzzstrat_Print(atfdb::Fuzzstrat& row, algo::cstring& str) {
+void atfdb::Fuzzstrat_Print(atfdb::Fuzzstrat& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.fuzzstrat";
 
@@ -650,7 +650,7 @@ void atfdb::Fuzzstrat_Print(atfdb::Fuzzstrat& row, algo::cstring& str) {
 }
 
 // --- atfdb.Msgdir..ReadFieldMaybe
-bool atfdb::Msgdir_ReadFieldMaybe(atfdb::Msgdir& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::Msgdir_ReadFieldMaybe(atfdb::Msgdir& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -674,7 +674,7 @@ bool atfdb::Msgdir_ReadFieldMaybe(atfdb::Msgdir& parent, algo::strptr field, alg
 // --- atfdb.Msgdir..ReadStrptrMaybe
 // Read fields of atfdb::Msgdir from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::Msgdir_ReadStrptrMaybe(atfdb::Msgdir &parent, algo::strptr in_str) {
+bool atfdb::Msgdir_ReadStrptrMaybe(atfdb::Msgdir &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.msgdir") || algo::StripTypeTag(in_str, "atfdb.Msgdir");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -686,7 +686,7 @@ bool atfdb::Msgdir_ReadStrptrMaybe(atfdb::Msgdir &parent, algo::strptr in_str) {
 // --- atfdb.Msgdir..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Msgdir.String  printfmt:Tuple
-void atfdb::Msgdir_Print(atfdb::Msgdir& row, algo::cstring& str) {
+void atfdb::Msgdir_Print(atfdb::Msgdir& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.msgdir";
 
@@ -698,7 +698,7 @@ void atfdb::Msgdir_Print(atfdb::Msgdir& row, algo::cstring& str) {
 }
 
 // --- atfdb.Targs..ReadFieldMaybe
-bool atfdb::Targs_ReadFieldMaybe(atfdb::Targs& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::Targs_ReadFieldMaybe(atfdb::Targs& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -722,7 +722,7 @@ bool atfdb::Targs_ReadFieldMaybe(atfdb::Targs& parent, algo::strptr field, algo:
 // --- atfdb.Targs..ReadStrptrMaybe
 // Read fields of atfdb::Targs from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::Targs_ReadStrptrMaybe(atfdb::Targs &parent, algo::strptr in_str) {
+bool atfdb::Targs_ReadStrptrMaybe(atfdb::Targs &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.targs") || algo::StripTypeTag(in_str, "atfdb.Targs");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -734,7 +734,7 @@ bool atfdb::Targs_ReadStrptrMaybe(atfdb::Targs &parent, algo::strptr in_str) {
 // --- atfdb.Targs..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Targs.String  printfmt:Tuple
-void atfdb::Targs_Print(atfdb::Targs& row, algo::cstring& str) {
+void atfdb::Targs_Print(atfdb::Targs& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.targs";
 
@@ -746,7 +746,7 @@ void atfdb::Targs_Print(atfdb::Targs& row, algo::cstring& str) {
 }
 
 // --- atfdb.TestGsymbolChar..ReadFieldMaybe
-bool atfdb::TestGsymbolChar_ReadFieldMaybe(atfdb::TestGsymbolChar& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::TestGsymbolChar_ReadFieldMaybe(atfdb::TestGsymbolChar& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -770,7 +770,7 @@ bool atfdb::TestGsymbolChar_ReadFieldMaybe(atfdb::TestGsymbolChar& parent, algo:
 // --- atfdb.TestGsymbolChar..ReadStrptrMaybe
 // Read fields of atfdb::TestGsymbolChar from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::TestGsymbolChar_ReadStrptrMaybe(atfdb::TestGsymbolChar &parent, algo::strptr in_str) {
+bool atfdb::TestGsymbolChar_ReadStrptrMaybe(atfdb::TestGsymbolChar &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.test_gsymbol_char") || algo::StripTypeTag(in_str, "atfdb.TestGsymbolChar");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -782,7 +782,7 @@ bool atfdb::TestGsymbolChar_ReadStrptrMaybe(atfdb::TestGsymbolChar &parent, algo
 // --- atfdb.TestGsymbolChar..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.TestGsymbolChar.String  printfmt:Tuple
-void atfdb::TestGsymbolChar_Print(atfdb::TestGsymbolChar& row, algo::cstring& str) {
+void atfdb::TestGsymbolChar_Print(atfdb::TestGsymbolChar& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.test_gsymbol_char";
 
@@ -794,7 +794,7 @@ void atfdb::TestGsymbolChar_Print(atfdb::TestGsymbolChar& row, algo::cstring& st
 }
 
 // --- atfdb.TestGsymbolPkey..ReadFieldMaybe
-bool atfdb::TestGsymbolPkey_ReadFieldMaybe(atfdb::TestGsymbolPkey& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::TestGsymbolPkey_ReadFieldMaybe(atfdb::TestGsymbolPkey& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -818,7 +818,7 @@ bool atfdb::TestGsymbolPkey_ReadFieldMaybe(atfdb::TestGsymbolPkey& parent, algo:
 // --- atfdb.TestGsymbolPkey..ReadStrptrMaybe
 // Read fields of atfdb::TestGsymbolPkey from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::TestGsymbolPkey_ReadStrptrMaybe(atfdb::TestGsymbolPkey &parent, algo::strptr in_str) {
+bool atfdb::TestGsymbolPkey_ReadStrptrMaybe(atfdb::TestGsymbolPkey &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.test_gsymbol_pkey") || algo::StripTypeTag(in_str, "atfdb.TestGsymbolPkey");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -830,7 +830,7 @@ bool atfdb::TestGsymbolPkey_ReadStrptrMaybe(atfdb::TestGsymbolPkey &parent, algo
 // --- atfdb.TestGsymbolPkey..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.TestGsymbolPkey.String  printfmt:Tuple
-void atfdb::TestGsymbolPkey_Print(atfdb::TestGsymbolPkey& row, algo::cstring& str) {
+void atfdb::TestGsymbolPkey_Print(atfdb::TestGsymbolPkey& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.test_gsymbol_pkey";
 
@@ -842,7 +842,7 @@ void atfdb::TestGsymbolPkey_Print(atfdb::TestGsymbolPkey& row, algo::cstring& st
 }
 
 // --- atfdb.TestGsymbolStrptr..ReadFieldMaybe
-bool atfdb::TestGsymbolStrptr_ReadFieldMaybe(atfdb::TestGsymbolStrptr& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::TestGsymbolStrptr_ReadFieldMaybe(atfdb::TestGsymbolStrptr& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -866,7 +866,7 @@ bool atfdb::TestGsymbolStrptr_ReadFieldMaybe(atfdb::TestGsymbolStrptr& parent, a
 // --- atfdb.TestGsymbolStrptr..ReadStrptrMaybe
 // Read fields of atfdb::TestGsymbolStrptr from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::TestGsymbolStrptr_ReadStrptrMaybe(atfdb::TestGsymbolStrptr &parent, algo::strptr in_str) {
+bool atfdb::TestGsymbolStrptr_ReadStrptrMaybe(atfdb::TestGsymbolStrptr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.test_gsymbol_strptr") || algo::StripTypeTag(in_str, "atfdb.TestGsymbolStrptr");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -878,7 +878,7 @@ bool atfdb::TestGsymbolStrptr_ReadStrptrMaybe(atfdb::TestGsymbolStrptr &parent, 
 // --- atfdb.TestGsymbolStrptr..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.TestGsymbolStrptr.String  printfmt:Tuple
-void atfdb::TestGsymbolStrptr_Print(atfdb::TestGsymbolStrptr& row, algo::cstring& str) {
+void atfdb::TestGsymbolStrptr_Print(atfdb::TestGsymbolStrptr& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.test_gsymbol_strptr";
 
@@ -890,7 +890,7 @@ void atfdb::TestGsymbolStrptr_Print(atfdb::TestGsymbolStrptr& row, algo::cstring
 }
 
 // --- atfdb.Tfilt..ReadFieldMaybe
-bool atfdb::Tfilt_ReadFieldMaybe(atfdb::Tfilt& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::Tfilt_ReadFieldMaybe(atfdb::Tfilt& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -918,7 +918,7 @@ bool atfdb::Tfilt_ReadFieldMaybe(atfdb::Tfilt& parent, algo::strptr field, algo:
 // --- atfdb.Tfilt..ReadStrptrMaybe
 // Read fields of atfdb::Tfilt from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::Tfilt_ReadStrptrMaybe(atfdb::Tfilt &parent, algo::strptr in_str) {
+bool atfdb::Tfilt_ReadStrptrMaybe(atfdb::Tfilt &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.tfilt") || algo::StripTypeTag(in_str, "atfdb.Tfilt");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -930,7 +930,7 @@ bool atfdb::Tfilt_ReadStrptrMaybe(atfdb::Tfilt &parent, algo::strptr in_str) {
 // --- atfdb.Tfilt..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Tfilt.String  printfmt:Tuple
-void atfdb::Tfilt_Print(atfdb::Tfilt& row, algo::cstring& str) {
+void atfdb::Tfilt_Print(atfdb::Tfilt& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.tfilt";
 
@@ -945,19 +945,19 @@ void atfdb::Tfilt_Print(atfdb::Tfilt& row, algo::cstring& str) {
 }
 
 // --- atfdb.Tmsg.comptest.Get
-algo::Smallstr50 atfdb::comptest_Get(atfdb::Tmsg& parent) {
+algo::Smallstr50 atfdb::comptest_Get(atfdb::Tmsg& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tmsg, "/LL"));
     return ret;
 }
 
 // --- atfdb.Tmsg.comptest.Get2
-algo::Smallstr50 atfdb::Tmsg_comptest_Get(algo::strptr arg) {
+algo::Smallstr50 atfdb::Tmsg_comptest_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LL"));
     return ret;
 }
 
 // --- atfdb.Tmsg.rank.Get
-i32 atfdb::rank_Get(atfdb::Tmsg& parent) {
+i32 atfdb::rank_Get(atfdb::Tmsg& parent) throw() {
     i32 ret;
     ret = 0; // default value
     (void)i32_ReadStrptrMaybe(ret, algo::Pathcomp(parent.tmsg, "/LR.LL"));
@@ -965,7 +965,7 @@ i32 atfdb::rank_Get(atfdb::Tmsg& parent) {
 }
 
 // --- atfdb.Tmsg.rank.Get2
-i32 atfdb::Tmsg_rank_Get(algo::strptr arg) {
+i32 atfdb::Tmsg_rank_Get(algo::strptr arg) throw() {
     i32 ret;
     ret = 0; // default value
     (void)i32_ReadStrptrMaybe(ret, algo::Pathcomp(arg, "/LR.LL"));
@@ -973,13 +973,13 @@ i32 atfdb::Tmsg_rank_Get(algo::strptr arg) {
 }
 
 // --- atfdb.Tmsg.dir.Get
-algo::Smallstr50 atfdb::dir_Get(atfdb::Tmsg& parent) {
+algo::Smallstr50 atfdb::dir_Get(atfdb::Tmsg& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tmsg, "/LR.LR"));
     return ret;
 }
 
 // --- atfdb.Tmsg.dir.Get2
-algo::Smallstr50 atfdb::Tmsg_dir_Get(algo::strptr arg) {
+algo::Smallstr50 atfdb::Tmsg_dir_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LR.LR"));
     return ret;
 }
@@ -990,7 +990,7 @@ tempstr atfdb::Tmsg_Concat_comptest_rank_dir( const algo::strptr& comptest ,i32 
 }
 
 // --- atfdb.Tmsg..ReadFieldMaybe
-bool atfdb::Tmsg_ReadFieldMaybe(atfdb::Tmsg& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::Tmsg_ReadFieldMaybe(atfdb::Tmsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1030,7 +1030,7 @@ bool atfdb::Tmsg_ReadFieldMaybe(atfdb::Tmsg& parent, algo::strptr field, algo::s
 // --- atfdb.Tmsg..ReadStrptrMaybe
 // Read fields of atfdb::Tmsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::Tmsg_ReadStrptrMaybe(atfdb::Tmsg &parent, algo::strptr in_str) {
+bool atfdb::Tmsg_ReadStrptrMaybe(atfdb::Tmsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.tmsg") || algo::StripTypeTag(in_str, "atfdb.Tmsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1042,7 +1042,7 @@ bool atfdb::Tmsg_ReadStrptrMaybe(atfdb::Tmsg &parent, algo::strptr in_str) {
 // --- atfdb.Tmsg..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Tmsg.String  printfmt:Tuple
-void atfdb::Tmsg_Print(atfdb::Tmsg& row, algo::cstring& str) {
+void atfdb::Tmsg_Print(atfdb::Tmsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.tmsg";
 
@@ -1057,25 +1057,25 @@ void atfdb::Tmsg_Print(atfdb::Tmsg& row, algo::cstring& str) {
 }
 
 // --- atfdb.Unittest.target.Get
-algo::Smallstr16 atfdb::target_Get(atfdb::Unittest& parent) {
+algo::Smallstr16 atfdb::target_Get(atfdb::Unittest& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.unittest, ".RL"));
     return ret;
 }
 
 // --- atfdb.Unittest.target.Get2
-algo::Smallstr16 atfdb::Unittest_target_Get(algo::strptr arg) {
+algo::Smallstr16 atfdb::Unittest_target_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- atfdb.Unittest.testname.Get
-algo::Smallstr50 atfdb::testname_Get(atfdb::Unittest& parent) {
+algo::Smallstr50 atfdb::testname_Get(atfdb::Unittest& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.unittest, ".RR"));
     return ret;
 }
 
 // --- atfdb.Unittest.testname.Get2
-algo::Smallstr50 atfdb::Unittest_testname_Get(algo::strptr arg) {
+algo::Smallstr50 atfdb::Unittest_testname_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -1086,7 +1086,7 @@ tempstr atfdb::Unittest_Concat_target_testname( const algo::strptr& target ,cons
 }
 
 // --- atfdb.Unittest..ReadFieldMaybe
-bool atfdb::Unittest_ReadFieldMaybe(atfdb::Unittest& parent, algo::strptr field, algo::strptr strval) {
+bool atfdb::Unittest_ReadFieldMaybe(atfdb::Unittest& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atfdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1118,7 +1118,7 @@ bool atfdb::Unittest_ReadFieldMaybe(atfdb::Unittest& parent, algo::strptr field,
 // --- atfdb.Unittest..ReadStrptrMaybe
 // Read fields of atfdb::Unittest from an ascii string.
 // The format of the string is an ssim Tuple
-bool atfdb::Unittest_ReadStrptrMaybe(atfdb::Unittest &parent, algo::strptr in_str) {
+bool atfdb::Unittest_ReadStrptrMaybe(atfdb::Unittest &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atfdb.unittest") || algo::StripTypeTag(in_str, "atfdb.Unittest");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1129,7 +1129,7 @@ bool atfdb::Unittest_ReadStrptrMaybe(atfdb::Unittest &parent, algo::strptr in_st
 
 // --- atfdb.Unittest..ReadTupleMaybe
 // Read fields of atfdb::Unittest from attributes of ascii tuple TUPLE
-bool atfdb::Unittest_ReadTupleMaybe(atfdb::Unittest &parent, algo::Tuple &tuple) {
+bool atfdb::Unittest_ReadTupleMaybe(atfdb::Unittest &parent, algo::Tuple &tuple) throw() {
     bool retval = true;
     ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
         retval = Unittest_ReadFieldMaybe(parent, attr.name, attr.value);
@@ -1143,7 +1143,7 @@ bool atfdb::Unittest_ReadTupleMaybe(atfdb::Unittest &parent, algo::Tuple &tuple)
 // --- atfdb.Unittest..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Unittest.String  printfmt:Tuple
-void atfdb::Unittest_Print(atfdb::Unittest& row, algo::cstring& str) {
+void atfdb::Unittest_Print(atfdb::Unittest& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atfdb.unittest";
 

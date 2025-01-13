@@ -38,7 +38,7 @@ namespace lib_prot { // gen:ns_print_proto
 // --- lib_prot.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_prot::value_ToCstr(const lib_prot::FieldId& parent) {
+const char* lib_prot::value_ToCstr(const lib_prot::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_prot_FieldId_value        : ret = "value";  break;
@@ -49,7 +49,7 @@ const char* lib_prot::value_ToCstr(const lib_prot::FieldId& parent) {
 // --- lib_prot.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_prot::value_Print(const lib_prot::FieldId& parent, algo::cstring &lhs) {
+void lib_prot::value_Print(const lib_prot::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -62,7 +62,7 @@ void lib_prot::value_Print(const lib_prot::FieldId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_prot::value_SetStrptrMaybe(lib_prot::FieldId& parent, algo::strptr rhs) {
+bool lib_prot::value_SetStrptrMaybe(lib_prot::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -80,13 +80,13 @@ bool lib_prot::value_SetStrptrMaybe(lib_prot::FieldId& parent, algo::strptr rhs)
 // --- lib_prot.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_prot::value_SetStrptr(lib_prot::FieldId& parent, algo::strptr rhs, lib_prot_FieldIdEnum dflt) {
+void lib_prot::value_SetStrptr(lib_prot::FieldId& parent, algo::strptr rhs, lib_prot_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_prot.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_prot::value_ReadStrptrMaybe(lib_prot::FieldId& parent, algo::strptr rhs) {
+bool lib_prot::value_ReadStrptrMaybe(lib_prot::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -98,7 +98,7 @@ bool lib_prot::value_ReadStrptrMaybe(lib_prot::FieldId& parent, algo::strptr rhs
 // --- lib_prot.FieldId..ReadStrptrMaybe
 // Read fields of lib_prot::FieldId from an ascii string.
 // The format of the string is the format of the lib_prot::FieldId's only field
-bool lib_prot::FieldId_ReadStrptrMaybe(lib_prot::FieldId &parent, algo::strptr in_str) {
+bool lib_prot::FieldId_ReadStrptrMaybe(lib_prot::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -107,7 +107,7 @@ bool lib_prot::FieldId_ReadStrptrMaybe(lib_prot::FieldId &parent, algo::strptr i
 // --- lib_prot.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_prot.FieldId.String  printfmt:Raw
-void lib_prot::FieldId_Print(lib_prot::FieldId& row, algo::cstring& str) {
+void lib_prot::FieldId_Print(lib_prot::FieldId& row, algo::cstring& str) throw() {
     lib_prot::value_Print(row, str);
 }
 

@@ -125,7 +125,7 @@ namespace gcli { // gen:ns_print_proto
 // --- gcli.trace..Print
 // print string representation of ROW to string STR
 // cfmt:gcli.trace.String  printfmt:Tuple
-void gcli::trace_Print(gcli::trace& row, algo::cstring& str) {
+void gcli::trace_Print(gcli::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gcli.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -136,7 +136,7 @@ void gcli::trace_Print(gcli::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     gcli.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void gcli::ReadArgv() {
+void gcli::ReadArgv() throw() {
     command::gcli &cmd = gcli::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -424,7 +424,7 @@ bool gcli::InsertStrptrMaybe(algo::strptr str) {
 
 // --- gcli.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool gcli::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool gcli::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = gcli::LoadTuplesFile(root, recursive);
@@ -461,7 +461,7 @@ bool gcli::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool gcli::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool gcli::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -474,7 +474,7 @@ bool gcli::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- gcli.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool gcli::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool gcli::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -494,7 +494,7 @@ bool gcli::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
 
 // --- gcli.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool gcli::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool gcli::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = gcli::LoadTuplesFile(fname, recursive);
@@ -519,7 +519,7 @@ bool gcli::_db_XrefMaybe() {
 // --- gcli.FDb.gtype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGtype& gcli::gtype_Alloc() {
+gcli::FGtype& gcli::gtype_Alloc() throw() {
     gcli::FGtype* row = gtype_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gtype  comment:'Alloc failed'");
@@ -529,7 +529,7 @@ gcli::FGtype& gcli::gtype_Alloc() {
 
 // --- gcli.FDb.gtype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGtype* gcli::gtype_AllocMaybe() {
+gcli::FGtype* gcli::gtype_AllocMaybe() throw() {
     gcli::FGtype *row = (gcli::FGtype*)gtype_AllocMem();
     if (row) {
         new (row) gcli::FGtype; // call constructor
@@ -540,7 +540,7 @@ gcli::FGtype* gcli::gtype_AllocMaybe() {
 // --- gcli.FDb.gtype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGtype* gcli::gtype_InsertMaybe(const gclidb::Gtype &value) {
+gcli::FGtype* gcli::gtype_InsertMaybe(const gclidb::Gtype &value) throw() {
     gcli::FGtype *row = &gtype_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gtype_CopyIn(*row,const_cast<gclidb::Gtype&>(value));
     bool ok = gtype_XrefMaybe(*row); // this may return false
@@ -553,7 +553,7 @@ gcli::FGtype* gcli::gtype_InsertMaybe(const gclidb::Gtype &value) {
 
 // --- gcli.FDb.gtype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gtype_AllocMem() {
+void* gcli::gtype_AllocMem() throw() {
     u64 new_nelems     = _db.gtype_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -579,7 +579,7 @@ void* gcli::gtype_AllocMem() {
 
 // --- gcli.FDb.gtype.RemoveAll
 // Remove all elements from Lary
-void gcli::gtype_RemoveAll() {
+void gcli::gtype_RemoveAll() throw() {
     for (u64 n = _db.gtype_n; n>0; ) {
         n--;
         gtype_qFind(u64(n)).~FGtype(); // destroy last element
@@ -589,7 +589,7 @@ void gcli::gtype_RemoveAll() {
 
 // --- gcli.FDb.gtype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gtype_RemoveLast() {
+void gcli::gtype_RemoveLast() throw() {
     u64 n = _db.gtype_n;
     if (n > 0) {
         n -= 1;
@@ -599,7 +599,7 @@ void gcli::gtype_RemoveLast() {
 }
 
 // --- gcli.FDb.gtype.InputMaybe
-static bool gcli::gtype_InputMaybe(gclidb::Gtype &elem) {
+static bool gcli::gtype_InputMaybe(gclidb::Gtype &elem) throw() {
     bool retval = true;
     retval = gtype_InsertMaybe(elem) != nullptr;
     return retval;
@@ -626,7 +626,7 @@ bool gcli::gtype_XrefMaybe(gcli::FGtype &row) {
 // --- gcli.FDb.grepossh.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGrepossh& gcli::grepossh_Alloc() {
+gcli::FGrepossh& gcli::grepossh_Alloc() throw() {
     gcli::FGrepossh* row = grepossh_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.grepossh  comment:'Alloc failed'");
@@ -636,7 +636,7 @@ gcli::FGrepossh& gcli::grepossh_Alloc() {
 
 // --- gcli.FDb.grepossh.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGrepossh* gcli::grepossh_AllocMaybe() {
+gcli::FGrepossh* gcli::grepossh_AllocMaybe() throw() {
     gcli::FGrepossh *row = (gcli::FGrepossh*)grepossh_AllocMem();
     if (row) {
         new (row) gcli::FGrepossh; // call constructor
@@ -647,7 +647,7 @@ gcli::FGrepossh* gcli::grepossh_AllocMaybe() {
 // --- gcli.FDb.grepossh.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGrepossh* gcli::grepossh_InsertMaybe(const gclidb::Grepossh &value) {
+gcli::FGrepossh* gcli::grepossh_InsertMaybe(const gclidb::Grepossh &value) throw() {
     gcli::FGrepossh *row = &grepossh_Alloc(); // if out of memory, process dies. if input error, return NULL.
     grepossh_CopyIn(*row,const_cast<gclidb::Grepossh&>(value));
     bool ok = grepossh_XrefMaybe(*row); // this may return false
@@ -660,7 +660,7 @@ gcli::FGrepossh* gcli::grepossh_InsertMaybe(const gclidb::Grepossh &value) {
 
 // --- gcli.FDb.grepossh.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::grepossh_AllocMem() {
+void* gcli::grepossh_AllocMem() throw() {
     u64 new_nelems     = _db.grepossh_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -686,7 +686,7 @@ void* gcli::grepossh_AllocMem() {
 
 // --- gcli.FDb.grepossh.RemoveAll
 // Remove all elements from Lary
-void gcli::grepossh_RemoveAll() {
+void gcli::grepossh_RemoveAll() throw() {
     for (u64 n = _db.grepossh_n; n>0; ) {
         n--;
         grepossh_qFind(u64(n)).~FGrepossh(); // destroy last element
@@ -696,7 +696,7 @@ void gcli::grepossh_RemoveAll() {
 
 // --- gcli.FDb.grepossh.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::grepossh_RemoveLast() {
+void gcli::grepossh_RemoveLast() throw() {
     u64 n = _db.grepossh_n;
     if (n > 0) {
         n -= 1;
@@ -706,7 +706,7 @@ void gcli::grepossh_RemoveLast() {
 }
 
 // --- gcli.FDb.grepossh.InputMaybe
-static bool gcli::grepossh_InputMaybe(gclidb::Grepossh &elem) {
+static bool gcli::grepossh_InputMaybe(gclidb::Grepossh &elem) throw() {
     bool retval = true;
     retval = grepossh_InsertMaybe(elem) != nullptr;
     return retval;
@@ -733,7 +733,7 @@ bool gcli::grepossh_XrefMaybe(gcli::FGrepossh &row) {
 // --- gcli.FDb.grepogitport.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGrepogitport& gcli::grepogitport_Alloc() {
+gcli::FGrepogitport& gcli::grepogitport_Alloc() throw() {
     gcli::FGrepogitport* row = grepogitport_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.grepogitport  comment:'Alloc failed'");
@@ -743,7 +743,7 @@ gcli::FGrepogitport& gcli::grepogitport_Alloc() {
 
 // --- gcli.FDb.grepogitport.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGrepogitport* gcli::grepogitport_AllocMaybe() {
+gcli::FGrepogitport* gcli::grepogitport_AllocMaybe() throw() {
     gcli::FGrepogitport *row = (gcli::FGrepogitport*)grepogitport_AllocMem();
     if (row) {
         new (row) gcli::FGrepogitport; // call constructor
@@ -754,7 +754,7 @@ gcli::FGrepogitport* gcli::grepogitport_AllocMaybe() {
 // --- gcli.FDb.grepogitport.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGrepogitport* gcli::grepogitport_InsertMaybe(const gclidb::Grepogitport &value) {
+gcli::FGrepogitport* gcli::grepogitport_InsertMaybe(const gclidb::Grepogitport &value) throw() {
     gcli::FGrepogitport *row = &grepogitport_Alloc(); // if out of memory, process dies. if input error, return NULL.
     grepogitport_CopyIn(*row,const_cast<gclidb::Grepogitport&>(value));
     bool ok = grepogitport_XrefMaybe(*row); // this may return false
@@ -767,7 +767,7 @@ gcli::FGrepogitport* gcli::grepogitport_InsertMaybe(const gclidb::Grepogitport &
 
 // --- gcli.FDb.grepogitport.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::grepogitport_AllocMem() {
+void* gcli::grepogitport_AllocMem() throw() {
     u64 new_nelems     = _db.grepogitport_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -793,7 +793,7 @@ void* gcli::grepogitport_AllocMem() {
 
 // --- gcli.FDb.grepogitport.RemoveAll
 // Remove all elements from Lary
-void gcli::grepogitport_RemoveAll() {
+void gcli::grepogitport_RemoveAll() throw() {
     for (u64 n = _db.grepogitport_n; n>0; ) {
         n--;
         grepogitport_qFind(u64(n)).~FGrepogitport(); // destroy last element
@@ -803,7 +803,7 @@ void gcli::grepogitport_RemoveAll() {
 
 // --- gcli.FDb.grepogitport.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::grepogitport_RemoveLast() {
+void gcli::grepogitport_RemoveLast() throw() {
     u64 n = _db.grepogitport_n;
     if (n > 0) {
         n -= 1;
@@ -813,7 +813,7 @@ void gcli::grepogitport_RemoveLast() {
 }
 
 // --- gcli.FDb.grepogitport.InputMaybe
-static bool gcli::grepogitport_InputMaybe(gclidb::Grepogitport &elem) {
+static bool gcli::grepogitport_InputMaybe(gclidb::Grepogitport &elem) throw() {
     bool retval = true;
     retval = grepogitport_InsertMaybe(elem) != nullptr;
     return retval;
@@ -840,7 +840,7 @@ bool gcli::grepogitport_XrefMaybe(gcli::FGrepogitport &row) {
 // --- gcli.FDb.githost.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGithost& gcli::githost_Alloc() {
+gcli::FGithost& gcli::githost_Alloc() throw() {
     gcli::FGithost* row = githost_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.githost  comment:'Alloc failed'");
@@ -850,7 +850,7 @@ gcli::FGithost& gcli::githost_Alloc() {
 
 // --- gcli.FDb.githost.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGithost* gcli::githost_AllocMaybe() {
+gcli::FGithost* gcli::githost_AllocMaybe() throw() {
     gcli::FGithost *row = (gcli::FGithost*)githost_AllocMem();
     if (row) {
         new (row) gcli::FGithost; // call constructor
@@ -860,7 +860,7 @@ gcli::FGithost* gcli::githost_AllocMaybe() {
 
 // --- gcli.FDb.githost.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::githost_AllocMem() {
+void* gcli::githost_AllocMem() throw() {
     u64 new_nelems     = _db.githost_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -886,7 +886,7 @@ void* gcli::githost_AllocMem() {
 
 // --- gcli.FDb.githost.RemoveAll
 // Remove all elements from Lary
-void gcli::githost_RemoveAll() {
+void gcli::githost_RemoveAll() throw() {
     for (u64 n = _db.githost_n; n>0; ) {
         n--;
         githost_qFind(u64(n)).~FGithost(); // destroy last element
@@ -896,7 +896,7 @@ void gcli::githost_RemoveAll() {
 
 // --- gcli.FDb.githost.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::githost_RemoveLast() {
+void gcli::githost_RemoveLast() throw() {
     u64 n = _db.githost_n;
     if (n > 0) {
         n -= 1;
@@ -926,7 +926,7 @@ bool gcli::githost_XrefMaybe(gcli::FGithost &row) {
 // --- gcli.FDb.gstatet.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGstatet& gcli::gstatet_Alloc() {
+gcli::FGstatet& gcli::gstatet_Alloc() throw() {
     gcli::FGstatet* row = gstatet_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gstatet  comment:'Alloc failed'");
@@ -936,7 +936,7 @@ gcli::FGstatet& gcli::gstatet_Alloc() {
 
 // --- gcli.FDb.gstatet.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGstatet* gcli::gstatet_AllocMaybe() {
+gcli::FGstatet* gcli::gstatet_AllocMaybe() throw() {
     gcli::FGstatet *row = (gcli::FGstatet*)gstatet_AllocMem();
     if (row) {
         new (row) gcli::FGstatet; // call constructor
@@ -947,7 +947,7 @@ gcli::FGstatet* gcli::gstatet_AllocMaybe() {
 // --- gcli.FDb.gstatet.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGstatet* gcli::gstatet_InsertMaybe(const gclidb::Gstatet &value) {
+gcli::FGstatet* gcli::gstatet_InsertMaybe(const gclidb::Gstatet &value) throw() {
     gcli::FGstatet *row = &gstatet_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gstatet_CopyIn(*row,const_cast<gclidb::Gstatet&>(value));
     bool ok = gstatet_XrefMaybe(*row); // this may return false
@@ -960,7 +960,7 @@ gcli::FGstatet* gcli::gstatet_InsertMaybe(const gclidb::Gstatet &value) {
 
 // --- gcli.FDb.gstatet.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gstatet_AllocMem() {
+void* gcli::gstatet_AllocMem() throw() {
     u64 new_nelems     = _db.gstatet_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -986,7 +986,7 @@ void* gcli::gstatet_AllocMem() {
 
 // --- gcli.FDb.gstatet.RemoveAll
 // Remove all elements from Lary
-void gcli::gstatet_RemoveAll() {
+void gcli::gstatet_RemoveAll() throw() {
     for (u64 n = _db.gstatet_n; n>0; ) {
         n--;
         gstatet_qFind(u64(n)).~FGstatet(); // destroy last element
@@ -996,7 +996,7 @@ void gcli::gstatet_RemoveAll() {
 
 // --- gcli.FDb.gstatet.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gstatet_RemoveLast() {
+void gcli::gstatet_RemoveLast() throw() {
     u64 n = _db.gstatet_n;
     if (n > 0) {
         n -= 1;
@@ -1006,7 +1006,7 @@ void gcli::gstatet_RemoveLast() {
 }
 
 // --- gcli.FDb.gstatet.InputMaybe
-static bool gcli::gstatet_InputMaybe(gclidb::Gstatet &elem) {
+static bool gcli::gstatet_InputMaybe(gclidb::Gstatet &elem) throw() {
     bool retval = true;
     retval = gstatet_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1033,7 +1033,7 @@ bool gcli::gstatet_XrefMaybe(gcli::FGstatet &row) {
 // --- gcli.FDb.gmethod.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGmethod& gcli::gmethod_Alloc() {
+gcli::FGmethod& gcli::gmethod_Alloc() throw() {
     gcli::FGmethod* row = gmethod_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gmethod  comment:'Alloc failed'");
@@ -1043,7 +1043,7 @@ gcli::FGmethod& gcli::gmethod_Alloc() {
 
 // --- gcli.FDb.gmethod.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGmethod* gcli::gmethod_AllocMaybe() {
+gcli::FGmethod* gcli::gmethod_AllocMaybe() throw() {
     gcli::FGmethod *row = (gcli::FGmethod*)gmethod_AllocMem();
     if (row) {
         new (row) gcli::FGmethod; // call constructor
@@ -1054,7 +1054,7 @@ gcli::FGmethod* gcli::gmethod_AllocMaybe() {
 // --- gcli.FDb.gmethod.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGmethod* gcli::gmethod_InsertMaybe(const gclidb::Gmethod &value) {
+gcli::FGmethod* gcli::gmethod_InsertMaybe(const gclidb::Gmethod &value) throw() {
     gcli::FGmethod *row = &gmethod_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gmethod_CopyIn(*row,const_cast<gclidb::Gmethod&>(value));
     bool ok = gmethod_XrefMaybe(*row); // this may return false
@@ -1067,7 +1067,7 @@ gcli::FGmethod* gcli::gmethod_InsertMaybe(const gclidb::Gmethod &value) {
 
 // --- gcli.FDb.gmethod.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gmethod_AllocMem() {
+void* gcli::gmethod_AllocMem() throw() {
     u64 new_nelems     = _db.gmethod_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1093,7 +1093,7 @@ void* gcli::gmethod_AllocMem() {
 
 // --- gcli.FDb.gmethod.RemoveAll
 // Remove all elements from Lary
-void gcli::gmethod_RemoveAll() {
+void gcli::gmethod_RemoveAll() throw() {
     for (u64 n = _db.gmethod_n; n>0; ) {
         n--;
         gmethod_qFind(u64(n)).~FGmethod(); // destroy last element
@@ -1103,7 +1103,7 @@ void gcli::gmethod_RemoveAll() {
 
 // --- gcli.FDb.gmethod.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gmethod_RemoveLast() {
+void gcli::gmethod_RemoveLast() throw() {
     u64 n = _db.gmethod_n;
     if (n > 0) {
         n -= 1;
@@ -1113,7 +1113,7 @@ void gcli::gmethod_RemoveLast() {
 }
 
 // --- gcli.FDb.gmethod.InputMaybe
-static bool gcli::gmethod_InputMaybe(gclidb::Gmethod &elem) {
+static bool gcli::gmethod_InputMaybe(gclidb::Gmethod &elem) throw() {
     bool retval = true;
     retval = gmethod_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1140,7 +1140,7 @@ bool gcli::gmethod_XrefMaybe(gcli::FGmethod &row) {
 // --- gcli.FDb.gclicmdt.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGclicmdt& gcli::gclicmdt_Alloc() {
+gcli::FGclicmdt& gcli::gclicmdt_Alloc() throw() {
     gcli::FGclicmdt* row = gclicmdt_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gclicmdt  comment:'Alloc failed'");
@@ -1150,7 +1150,7 @@ gcli::FGclicmdt& gcli::gclicmdt_Alloc() {
 
 // --- gcli.FDb.gclicmdt.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGclicmdt* gcli::gclicmdt_AllocMaybe() {
+gcli::FGclicmdt* gcli::gclicmdt_AllocMaybe() throw() {
     gcli::FGclicmdt *row = (gcli::FGclicmdt*)gclicmdt_AllocMem();
     if (row) {
         new (row) gcli::FGclicmdt; // call constructor
@@ -1161,7 +1161,7 @@ gcli::FGclicmdt* gcli::gclicmdt_AllocMaybe() {
 // --- gcli.FDb.gclicmdt.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGclicmdt* gcli::gclicmdt_InsertMaybe(const gclidb::Gclicmdt &value) {
+gcli::FGclicmdt* gcli::gclicmdt_InsertMaybe(const gclidb::Gclicmdt &value) throw() {
     gcli::FGclicmdt *row = &gclicmdt_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gclicmdt_CopyIn(*row,const_cast<gclidb::Gclicmdt&>(value));
     bool ok = gclicmdt_XrefMaybe(*row); // this may return false
@@ -1174,7 +1174,7 @@ gcli::FGclicmdt* gcli::gclicmdt_InsertMaybe(const gclidb::Gclicmdt &value) {
 
 // --- gcli.FDb.gclicmdt.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gclicmdt_AllocMem() {
+void* gcli::gclicmdt_AllocMem() throw() {
     u64 new_nelems     = _db.gclicmdt_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1200,7 +1200,7 @@ void* gcli::gclicmdt_AllocMem() {
 
 // --- gcli.FDb.gclicmdt.RemoveAll
 // Remove all elements from Lary
-void gcli::gclicmdt_RemoveAll() {
+void gcli::gclicmdt_RemoveAll() throw() {
     for (u64 n = _db.gclicmdt_n; n>0; ) {
         n--;
         gclicmdt_qFind(u64(n)).~FGclicmdt(); // destroy last element
@@ -1210,7 +1210,7 @@ void gcli::gclicmdt_RemoveAll() {
 
 // --- gcli.FDb.gclicmdt.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gclicmdt_RemoveLast() {
+void gcli::gclicmdt_RemoveLast() throw() {
     u64 n = _db.gclicmdt_n;
     if (n > 0) {
         n -= 1;
@@ -1220,7 +1220,7 @@ void gcli::gclicmdt_RemoveLast() {
 }
 
 // --- gcli.FDb.gclicmdt.InputMaybe
-static bool gcli::gclicmdt_InputMaybe(gclidb::Gclicmdt &elem) {
+static bool gcli::gclicmdt_InputMaybe(gclidb::Gclicmdt &elem) throw() {
     bool retval = true;
     retval = gclicmdt_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1265,7 +1265,7 @@ bool gcli::gclicmdt_XrefMaybe(gcli::FGclicmdt &row) {
 // --- gcli.FDb.gclicmdf.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGclicmdf& gcli::gclicmdf_Alloc() {
+gcli::FGclicmdf& gcli::gclicmdf_Alloc() throw() {
     gcli::FGclicmdf* row = gclicmdf_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gclicmdf  comment:'Alloc failed'");
@@ -1275,7 +1275,7 @@ gcli::FGclicmdf& gcli::gclicmdf_Alloc() {
 
 // --- gcli.FDb.gclicmdf.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGclicmdf* gcli::gclicmdf_AllocMaybe() {
+gcli::FGclicmdf* gcli::gclicmdf_AllocMaybe() throw() {
     gcli::FGclicmdf *row = (gcli::FGclicmdf*)gclicmdf_AllocMem();
     if (row) {
         new (row) gcli::FGclicmdf; // call constructor
@@ -1285,7 +1285,7 @@ gcli::FGclicmdf* gcli::gclicmdf_AllocMaybe() {
 
 // --- gcli.FDb.gclicmdf.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gclicmdf_AllocMem() {
+void* gcli::gclicmdf_AllocMem() throw() {
     u64 new_nelems     = _db.gclicmdf_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1311,7 +1311,7 @@ void* gcli::gclicmdf_AllocMem() {
 
 // --- gcli.FDb.gclicmdf.RemoveAll
 // Remove all elements from Lary
-void gcli::gclicmdf_RemoveAll() {
+void gcli::gclicmdf_RemoveAll() throw() {
     for (u64 n = _db.gclicmdf_n; n>0; ) {
         n--;
         gclicmdf_qFind(u64(n)).~FGclicmdf(); // destroy last element
@@ -1321,7 +1321,7 @@ void gcli::gclicmdf_RemoveAll() {
 
 // --- gcli.FDb.gclicmdf.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gclicmdf_RemoveLast() {
+void gcli::gclicmdf_RemoveLast() throw() {
     u64 n = _db.gclicmdf_n;
     if (n > 0) {
         n -= 1;
@@ -1351,7 +1351,7 @@ bool gcli::gclicmdf_XrefMaybe(gcli::FGclicmdf &row) {
 // --- gcli.FDb.gclicmdf2j.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGclicmdf2j& gcli::gclicmdf2j_Alloc() {
+gcli::FGclicmdf2j& gcli::gclicmdf2j_Alloc() throw() {
     gcli::FGclicmdf2j* row = gclicmdf2j_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gclicmdf2j  comment:'Alloc failed'");
@@ -1361,7 +1361,7 @@ gcli::FGclicmdf2j& gcli::gclicmdf2j_Alloc() {
 
 // --- gcli.FDb.gclicmdf2j.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGclicmdf2j* gcli::gclicmdf2j_AllocMaybe() {
+gcli::FGclicmdf2j* gcli::gclicmdf2j_AllocMaybe() throw() {
     gcli::FGclicmdf2j *row = (gcli::FGclicmdf2j*)gclicmdf2j_AllocMem();
     if (row) {
         new (row) gcli::FGclicmdf2j; // call constructor
@@ -1372,7 +1372,7 @@ gcli::FGclicmdf2j* gcli::gclicmdf2j_AllocMaybe() {
 // --- gcli.FDb.gclicmdf2j.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGclicmdf2j* gcli::gclicmdf2j_InsertMaybe(const gclidb::Gclicmdf2j &value) {
+gcli::FGclicmdf2j* gcli::gclicmdf2j_InsertMaybe(const gclidb::Gclicmdf2j &value) throw() {
     gcli::FGclicmdf2j *row = &gclicmdf2j_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gclicmdf2j_CopyIn(*row,const_cast<gclidb::Gclicmdf2j&>(value));
     bool ok = gclicmdf2j_XrefMaybe(*row); // this may return false
@@ -1385,7 +1385,7 @@ gcli::FGclicmdf2j* gcli::gclicmdf2j_InsertMaybe(const gclidb::Gclicmdf2j &value)
 
 // --- gcli.FDb.gclicmdf2j.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gclicmdf2j_AllocMem() {
+void* gcli::gclicmdf2j_AllocMem() throw() {
     u64 new_nelems     = _db.gclicmdf2j_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1411,7 +1411,7 @@ void* gcli::gclicmdf2j_AllocMem() {
 
 // --- gcli.FDb.gclicmdf2j.RemoveAll
 // Remove all elements from Lary
-void gcli::gclicmdf2j_RemoveAll() {
+void gcli::gclicmdf2j_RemoveAll() throw() {
     for (u64 n = _db.gclicmdf2j_n; n>0; ) {
         n--;
         gclicmdf2j_qFind(u64(n)).~FGclicmdf2j(); // destroy last element
@@ -1421,7 +1421,7 @@ void gcli::gclicmdf2j_RemoveAll() {
 
 // --- gcli.FDb.gclicmdf2j.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gclicmdf2j_RemoveLast() {
+void gcli::gclicmdf2j_RemoveLast() throw() {
     u64 n = _db.gclicmdf2j_n;
     if (n > 0) {
         n -= 1;
@@ -1431,7 +1431,7 @@ void gcli::gclicmdf2j_RemoveLast() {
 }
 
 // --- gcli.FDb.gclicmdf2j.InputMaybe
-static bool gcli::gclicmdf2j_InputMaybe(gclidb::Gclicmdf2j &elem) {
+static bool gcli::gclicmdf2j_InputMaybe(gclidb::Gclicmdf2j &elem) throw() {
     bool retval = true;
     retval = gclicmdf2j_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1462,7 +1462,7 @@ bool gcli::gclicmdf2j_XrefMaybe(gcli::FGclicmdf2j &row) {
 // --- gcli.FDb.gclicmd.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGclicmd& gcli::gclicmd_Alloc() {
+gcli::FGclicmd& gcli::gclicmd_Alloc() throw() {
     gcli::FGclicmd* row = gclicmd_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gclicmd  comment:'Alloc failed'");
@@ -1472,7 +1472,7 @@ gcli::FGclicmd& gcli::gclicmd_Alloc() {
 
 // --- gcli.FDb.gclicmd.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGclicmd* gcli::gclicmd_AllocMaybe() {
+gcli::FGclicmd* gcli::gclicmd_AllocMaybe() throw() {
     gcli::FGclicmd *row = (gcli::FGclicmd*)gclicmd_AllocMem();
     if (row) {
         new (row) gcli::FGclicmd; // call constructor
@@ -1483,7 +1483,7 @@ gcli::FGclicmd* gcli::gclicmd_AllocMaybe() {
 // --- gcli.FDb.gclicmd.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGclicmd* gcli::gclicmd_InsertMaybe(const gclidb::Gclicmd &value) {
+gcli::FGclicmd* gcli::gclicmd_InsertMaybe(const gclidb::Gclicmd &value) throw() {
     gcli::FGclicmd *row = &gclicmd_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gclicmd_CopyIn(*row,const_cast<gclidb::Gclicmd&>(value));
     bool ok = gclicmd_XrefMaybe(*row); // this may return false
@@ -1496,7 +1496,7 @@ gcli::FGclicmd* gcli::gclicmd_InsertMaybe(const gclidb::Gclicmd &value) {
 
 // --- gcli.FDb.gclicmd.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gclicmd_AllocMem() {
+void* gcli::gclicmd_AllocMem() throw() {
     u64 new_nelems     = _db.gclicmd_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1522,7 +1522,7 @@ void* gcli::gclicmd_AllocMem() {
 
 // --- gcli.FDb.gclicmd.RemoveAll
 // Remove all elements from Lary
-void gcli::gclicmd_RemoveAll() {
+void gcli::gclicmd_RemoveAll() throw() {
     for (u64 n = _db.gclicmd_n; n>0; ) {
         n--;
         gclicmd_qFind(u64(n)).~FGclicmd(); // destroy last element
@@ -1532,7 +1532,7 @@ void gcli::gclicmd_RemoveAll() {
 
 // --- gcli.FDb.gclicmd.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gclicmd_RemoveLast() {
+void gcli::gclicmd_RemoveLast() throw() {
     u64 n = _db.gclicmd_n;
     if (n > 0) {
         n -= 1;
@@ -1542,7 +1542,7 @@ void gcli::gclicmd_RemoveLast() {
 }
 
 // --- gcli.FDb.gclicmd.LoadStatic
-static void gcli::gclicmd_LoadStatic() {
+static void gcli::gclicmd_LoadStatic() throw() {
     static struct _t {
         const char *s;
         void (*step)(gcli::FGclicmd&);
@@ -1608,7 +1608,7 @@ bool gcli::gclicmd_XrefMaybe(gcli::FGclicmd &row) {
 // --- gcli.FDb.gtypeh.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGtypeh& gcli::gtypeh_Alloc() {
+gcli::FGtypeh& gcli::gtypeh_Alloc() throw() {
     gcli::FGtypeh* row = gtypeh_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gtypeh  comment:'Alloc failed'");
@@ -1618,7 +1618,7 @@ gcli::FGtypeh& gcli::gtypeh_Alloc() {
 
 // --- gcli.FDb.gtypeh.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGtypeh* gcli::gtypeh_AllocMaybe() {
+gcli::FGtypeh* gcli::gtypeh_AllocMaybe() throw() {
     gcli::FGtypeh *row = (gcli::FGtypeh*)gtypeh_AllocMem();
     if (row) {
         new (row) gcli::FGtypeh; // call constructor
@@ -1629,7 +1629,7 @@ gcli::FGtypeh* gcli::gtypeh_AllocMaybe() {
 // --- gcli.FDb.gtypeh.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGtypeh* gcli::gtypeh_InsertMaybe(const gclidb::Gtypeh &value) {
+gcli::FGtypeh* gcli::gtypeh_InsertMaybe(const gclidb::Gtypeh &value) throw() {
     gcli::FGtypeh *row = &gtypeh_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gtypeh_CopyIn(*row,const_cast<gclidb::Gtypeh&>(value));
     bool ok = gtypeh_XrefMaybe(*row); // this may return false
@@ -1642,7 +1642,7 @@ gcli::FGtypeh* gcli::gtypeh_InsertMaybe(const gclidb::Gtypeh &value) {
 
 // --- gcli.FDb.gtypeh.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gtypeh_AllocMem() {
+void* gcli::gtypeh_AllocMem() throw() {
     u64 new_nelems     = _db.gtypeh_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1668,7 +1668,7 @@ void* gcli::gtypeh_AllocMem() {
 
 // --- gcli.FDb.gtypeh.RemoveAll
 // Remove all elements from Lary
-void gcli::gtypeh_RemoveAll() {
+void gcli::gtypeh_RemoveAll() throw() {
     for (u64 n = _db.gtypeh_n; n>0; ) {
         n--;
         gtypeh_qFind(u64(n)).~FGtypeh(); // destroy last element
@@ -1678,7 +1678,7 @@ void gcli::gtypeh_RemoveAll() {
 
 // --- gcli.FDb.gtypeh.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gtypeh_RemoveLast() {
+void gcli::gtypeh_RemoveLast() throw() {
     u64 n = _db.gtypeh_n;
     if (n > 0) {
         n -= 1;
@@ -1688,7 +1688,7 @@ void gcli::gtypeh_RemoveLast() {
 }
 
 // --- gcli.FDb.gtypeh.InputMaybe
-static bool gcli::gtypeh_InputMaybe(gclidb::Gtypeh &elem) {
+static bool gcli::gtypeh_InputMaybe(gclidb::Gtypeh &elem) throw() {
     bool retval = true;
     retval = gtypeh_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1714,7 +1714,7 @@ bool gcli::gtypeh_XrefMaybe(gcli::FGtypeh &row) {
 
 // --- gcli.FDb.ind_gclicmd.Find
 // Find row by key. Return NULL if not found.
-gcli::FGclicmd* gcli::ind_gclicmd_Find(const algo::strptr& key) {
+gcli::FGclicmd* gcli::ind_gclicmd_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gclicmd_buckets_n - 1);
     gcli::FGclicmd* *e = &_db.ind_gclicmd_buckets_elems[index];
     gcli::FGclicmd* ret=NULL;
@@ -1737,7 +1737,7 @@ gcli::FGclicmd& gcli::ind_gclicmd_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gclicmd.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGclicmd& gcli::ind_gclicmd_GetOrCreate(const algo::strptr& key) {
+gcli::FGclicmd& gcli::ind_gclicmd_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGclicmd* ret = ind_gclicmd_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gclicmd_Alloc();
@@ -1754,7 +1754,7 @@ gcli::FGclicmd& gcli::ind_gclicmd_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gclicmd.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gclicmd_InsertMaybe(gcli::FGclicmd& row) {
+bool gcli::ind_gclicmd_InsertMaybe(gcli::FGclicmd& row) throw() {
     ind_gclicmd_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclicmd_next == (gcli::FGclicmd*)-1)) {// check if in hash already
@@ -1782,7 +1782,7 @@ bool gcli::ind_gclicmd_InsertMaybe(gcli::FGclicmd& row) {
 
 // --- gcli.FDb.ind_gclicmd.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gclicmd_Remove(gcli::FGclicmd& row) {
+void gcli::ind_gclicmd_Remove(gcli::FGclicmd& row) throw() {
     if (LIKELY(row.ind_gclicmd_next != (gcli::FGclicmd*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.gclicmd) & (_db.ind_gclicmd_buckets_n - 1);
         gcli::FGclicmd* *prev = &_db.ind_gclicmd_buckets_elems[index]; // addr of pointer to current element
@@ -1800,7 +1800,7 @@ void gcli::ind_gclicmd_Remove(gcli::FGclicmd& row) {
 
 // --- gcli.FDb.ind_gclicmd.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gclicmd_Reserve(int n) {
+void gcli::ind_gclicmd_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gclicmd_buckets_n;
     u32 new_nelems   = _db.ind_gclicmd_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1836,7 +1836,7 @@ void gcli::ind_gclicmd_Reserve(int n) {
 
 // --- gcli.FDb.ind_gclicmdf.Find
 // Find row by key. Return NULL if not found.
-gcli::FGclicmdf* gcli::ind_gclicmdf_Find(const algo::strptr& key) {
+gcli::FGclicmdf* gcli::ind_gclicmdf_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gclicmdf_buckets_n - 1);
     gcli::FGclicmdf* *e = &_db.ind_gclicmdf_buckets_elems[index];
     gcli::FGclicmdf* ret=NULL;
@@ -1859,7 +1859,7 @@ gcli::FGclicmdf& gcli::ind_gclicmdf_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gclicmdf.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGclicmdf& gcli::ind_gclicmdf_GetOrCreate(const algo::strptr& key) {
+gcli::FGclicmdf& gcli::ind_gclicmdf_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGclicmdf* ret = ind_gclicmdf_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gclicmdf_Alloc();
@@ -1876,7 +1876,7 @@ gcli::FGclicmdf& gcli::ind_gclicmdf_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gclicmdf.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gclicmdf_InsertMaybe(gcli::FGclicmdf& row) {
+bool gcli::ind_gclicmdf_InsertMaybe(gcli::FGclicmdf& row) throw() {
     ind_gclicmdf_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclicmdf_next == (gcli::FGclicmdf*)-1)) {// check if in hash already
@@ -1904,7 +1904,7 @@ bool gcli::ind_gclicmdf_InsertMaybe(gcli::FGclicmdf& row) {
 
 // --- gcli.FDb.ind_gclicmdf.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gclicmdf_Remove(gcli::FGclicmdf& row) {
+void gcli::ind_gclicmdf_Remove(gcli::FGclicmdf& row) throw() {
     if (LIKELY(row.ind_gclicmdf_next != (gcli::FGclicmdf*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.gclicmdf) & (_db.ind_gclicmdf_buckets_n - 1);
         gcli::FGclicmdf* *prev = &_db.ind_gclicmdf_buckets_elems[index]; // addr of pointer to current element
@@ -1922,7 +1922,7 @@ void gcli::ind_gclicmdf_Remove(gcli::FGclicmdf& row) {
 
 // --- gcli.FDb.ind_gclicmdf.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gclicmdf_Reserve(int n) {
+void gcli::ind_gclicmdf_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gclicmdf_buckets_n;
     u32 new_nelems   = _db.ind_gclicmdf_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1958,7 +1958,7 @@ void gcli::ind_gclicmdf_Reserve(int n) {
 
 // --- gcli.FDb.ind_gclicmdt.Find
 // Find row by key. Return NULL if not found.
-gcli::FGclicmdt* gcli::ind_gclicmdt_Find(const algo::strptr& key) {
+gcli::FGclicmdt* gcli::ind_gclicmdt_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gclicmdt_buckets_n - 1);
     gcli::FGclicmdt* *e = &_db.ind_gclicmdt_buckets_elems[index];
     gcli::FGclicmdt* ret=NULL;
@@ -1981,7 +1981,7 @@ gcli::FGclicmdt& gcli::ind_gclicmdt_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gclicmdt.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gclicmdt_InsertMaybe(gcli::FGclicmdt& row) {
+bool gcli::ind_gclicmdt_InsertMaybe(gcli::FGclicmdt& row) throw() {
     ind_gclicmdt_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclicmdt_next == (gcli::FGclicmdt*)-1)) {// check if in hash already
@@ -2009,7 +2009,7 @@ bool gcli::ind_gclicmdt_InsertMaybe(gcli::FGclicmdt& row) {
 
 // --- gcli.FDb.ind_gclicmdt.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gclicmdt_Remove(gcli::FGclicmdt& row) {
+void gcli::ind_gclicmdt_Remove(gcli::FGclicmdt& row) throw() {
     if (LIKELY(row.ind_gclicmdt_next != (gcli::FGclicmdt*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.gclicmdt) & (_db.ind_gclicmdt_buckets_n - 1);
         gcli::FGclicmdt* *prev = &_db.ind_gclicmdt_buckets_elems[index]; // addr of pointer to current element
@@ -2027,7 +2027,7 @@ void gcli::ind_gclicmdt_Remove(gcli::FGclicmdt& row) {
 
 // --- gcli.FDb.ind_gclicmdt.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gclicmdt_Reserve(int n) {
+void gcli::ind_gclicmdt_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gclicmdt_buckets_n;
     u32 new_nelems   = _db.ind_gclicmdt_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2063,7 +2063,7 @@ void gcli::ind_gclicmdt_Reserve(int n) {
 
 // --- gcli.FDb.ind_gmethod.Find
 // Find row by key. Return NULL if not found.
-gcli::FGmethod* gcli::ind_gmethod_Find(const algo::strptr& key) {
+gcli::FGmethod* gcli::ind_gmethod_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gmethod_buckets_n - 1);
     gcli::FGmethod* *e = &_db.ind_gmethod_buckets_elems[index];
     gcli::FGmethod* ret=NULL;
@@ -2086,7 +2086,7 @@ gcli::FGmethod& gcli::ind_gmethod_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gmethod.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGmethod& gcli::ind_gmethod_GetOrCreate(const algo::strptr& key) {
+gcli::FGmethod& gcli::ind_gmethod_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGmethod* ret = ind_gmethod_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gmethod_Alloc();
@@ -2103,7 +2103,7 @@ gcli::FGmethod& gcli::ind_gmethod_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gmethod.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gmethod_InsertMaybe(gcli::FGmethod& row) {
+bool gcli::ind_gmethod_InsertMaybe(gcli::FGmethod& row) throw() {
     ind_gmethod_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gmethod_next == (gcli::FGmethod*)-1)) {// check if in hash already
@@ -2131,7 +2131,7 @@ bool gcli::ind_gmethod_InsertMaybe(gcli::FGmethod& row) {
 
 // --- gcli.FDb.ind_gmethod.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gmethod_Remove(gcli::FGmethod& row) {
+void gcli::ind_gmethod_Remove(gcli::FGmethod& row) throw() {
     if (LIKELY(row.ind_gmethod_next != (gcli::FGmethod*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.gmethod) & (_db.ind_gmethod_buckets_n - 1);
         gcli::FGmethod* *prev = &_db.ind_gmethod_buckets_elems[index]; // addr of pointer to current element
@@ -2149,7 +2149,7 @@ void gcli::ind_gmethod_Remove(gcli::FGmethod& row) {
 
 // --- gcli.FDb.ind_gmethod.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gmethod_Reserve(int n) {
+void gcli::ind_gmethod_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gmethod_buckets_n;
     u32 new_nelems   = _db.ind_gmethod_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2185,7 +2185,7 @@ void gcli::ind_gmethod_Reserve(int n) {
 
 // --- gcli.FDb.ind_grepo.Find
 // Find row by key. Return NULL if not found.
-gcli::FGrepo* gcli::ind_grepo_Find(const algo::strptr& key) {
+gcli::FGrepo* gcli::ind_grepo_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_grepo_buckets_n - 1);
     gcli::FGrepo* *e = &_db.ind_grepo_buckets_elems[index];
     gcli::FGrepo* ret=NULL;
@@ -2208,7 +2208,7 @@ gcli::FGrepo& gcli::ind_grepo_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_grepo.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGrepo& gcli::ind_grepo_GetOrCreate(const algo::strptr& key) {
+gcli::FGrepo& gcli::ind_grepo_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGrepo* ret = ind_grepo_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &grepo_Alloc();
@@ -2225,7 +2225,7 @@ gcli::FGrepo& gcli::ind_grepo_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_grepo.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_grepo_InsertMaybe(gcli::FGrepo& row) {
+bool gcli::ind_grepo_InsertMaybe(gcli::FGrepo& row) throw() {
     ind_grepo_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_grepo_next == (gcli::FGrepo*)-1)) {// check if in hash already
@@ -2253,7 +2253,7 @@ bool gcli::ind_grepo_InsertMaybe(gcli::FGrepo& row) {
 
 // --- gcli.FDb.ind_grepo.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_grepo_Remove(gcli::FGrepo& row) {
+void gcli::ind_grepo_Remove(gcli::FGrepo& row) throw() {
     if (LIKELY(row.ind_grepo_next != (gcli::FGrepo*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.grepo) & (_db.ind_grepo_buckets_n - 1);
         gcli::FGrepo* *prev = &_db.ind_grepo_buckets_elems[index]; // addr of pointer to current element
@@ -2271,7 +2271,7 @@ void gcli::ind_grepo_Remove(gcli::FGrepo& row) {
 
 // --- gcli.FDb.ind_grepo.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_grepo_Reserve(int n) {
+void gcli::ind_grepo_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_grepo_buckets_n;
     u32 new_nelems   = _db.ind_grepo_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2307,7 +2307,7 @@ void gcli::ind_grepo_Reserve(int n) {
 
 // --- gcli.FDb.ind_issue.Find
 // Find row by key. Return NULL if not found.
-gcli::FIssue* gcli::ind_issue_Find(const algo::strptr& key) {
+gcli::FIssue* gcli::ind_issue_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_issue_buckets_n - 1);
     gcli::FIssue* *e = &_db.ind_issue_buckets_elems[index];
     gcli::FIssue* ret=NULL;
@@ -2330,7 +2330,7 @@ gcli::FIssue& gcli::ind_issue_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_issue.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FIssue& gcli::ind_issue_GetOrCreate(const algo::strptr& key) {
+gcli::FIssue& gcli::ind_issue_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FIssue* ret = ind_issue_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &issue_Alloc();
@@ -2347,7 +2347,7 @@ gcli::FIssue& gcli::ind_issue_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_issue.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_issue_InsertMaybe(gcli::FIssue& row) {
+bool gcli::ind_issue_InsertMaybe(gcli::FIssue& row) throw() {
     ind_issue_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_issue_next == (gcli::FIssue*)-1)) {// check if in hash already
@@ -2375,7 +2375,7 @@ bool gcli::ind_issue_InsertMaybe(gcli::FIssue& row) {
 
 // --- gcli.FDb.ind_issue.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_issue_Remove(gcli::FIssue& row) {
+void gcli::ind_issue_Remove(gcli::FIssue& row) throw() {
     if (LIKELY(row.ind_issue_next != (gcli::FIssue*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.issue) & (_db.ind_issue_buckets_n - 1);
         gcli::FIssue* *prev = &_db.ind_issue_buckets_elems[index]; // addr of pointer to current element
@@ -2393,7 +2393,7 @@ void gcli::ind_issue_Remove(gcli::FIssue& row) {
 
 // --- gcli.FDb.ind_issue.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_issue_Reserve(int n) {
+void gcli::ind_issue_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_issue_buckets_n;
     u32 new_nelems   = _db.ind_issue_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2429,13 +2429,13 @@ void gcli::ind_issue_Reserve(int n) {
 
 // --- gcli.FDb.regx_repo.Print
 // Print back to string
-void gcli::regx_repo_Print(algo::cstring &out) {
+void gcli::regx_repo_Print(algo::cstring &out) throw() {
     Regx_Print(_db.regx_repo, out);
 }
 
 // --- gcli.FDb.ind_gstatet.Find
 // Find row by key. Return NULL if not found.
-gcli::FGstatet* gcli::ind_gstatet_Find(const algo::strptr& key) {
+gcli::FGstatet* gcli::ind_gstatet_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gstatet_buckets_n - 1);
     gcli::FGstatet* *e = &_db.ind_gstatet_buckets_elems[index];
     gcli::FGstatet* ret=NULL;
@@ -2458,7 +2458,7 @@ gcli::FGstatet& gcli::ind_gstatet_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gstatet.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGstatet& gcli::ind_gstatet_GetOrCreate(const algo::strptr& key) {
+gcli::FGstatet& gcli::ind_gstatet_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGstatet* ret = ind_gstatet_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gstatet_Alloc();
@@ -2475,7 +2475,7 @@ gcli::FGstatet& gcli::ind_gstatet_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gstatet.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gstatet_InsertMaybe(gcli::FGstatet& row) {
+bool gcli::ind_gstatet_InsertMaybe(gcli::FGstatet& row) throw() {
     ind_gstatet_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gstatet_next == (gcli::FGstatet*)-1)) {// check if in hash already
@@ -2503,7 +2503,7 @@ bool gcli::ind_gstatet_InsertMaybe(gcli::FGstatet& row) {
 
 // --- gcli.FDb.ind_gstatet.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gstatet_Remove(gcli::FGstatet& row) {
+void gcli::ind_gstatet_Remove(gcli::FGstatet& row) throw() {
     if (LIKELY(row.ind_gstatet_next != (gcli::FGstatet*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.gstatet) & (_db.ind_gstatet_buckets_n - 1);
         gcli::FGstatet* *prev = &_db.ind_gstatet_buckets_elems[index]; // addr of pointer to current element
@@ -2521,7 +2521,7 @@ void gcli::ind_gstatet_Remove(gcli::FGstatet& row) {
 
 // --- gcli.FDb.ind_gstatet.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gstatet_Reserve(int n) {
+void gcli::ind_gstatet_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gstatet_buckets_n;
     u32 new_nelems   = _db.ind_gstatet_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2557,7 +2557,7 @@ void gcli::ind_gstatet_Reserve(int n) {
 
 // --- gcli.FDb.ind_githost.Find
 // Find row by key. Return NULL if not found.
-gcli::FGithost* gcli::ind_githost_Find(const algo::strptr& key) {
+gcli::FGithost* gcli::ind_githost_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_githost_buckets_n - 1);
     gcli::FGithost* *e = &_db.ind_githost_buckets_elems[index];
     gcli::FGithost* ret=NULL;
@@ -2580,7 +2580,7 @@ gcli::FGithost& gcli::ind_githost_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_githost.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGithost& gcli::ind_githost_GetOrCreate(const algo::strptr& key) {
+gcli::FGithost& gcli::ind_githost_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGithost* ret = ind_githost_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &githost_Alloc();
@@ -2597,7 +2597,7 @@ gcli::FGithost& gcli::ind_githost_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_githost.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_githost_InsertMaybe(gcli::FGithost& row) {
+bool gcli::ind_githost_InsertMaybe(gcli::FGithost& row) throw() {
     ind_githost_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_githost_next == (gcli::FGithost*)-1)) {// check if in hash already
@@ -2625,7 +2625,7 @@ bool gcli::ind_githost_InsertMaybe(gcli::FGithost& row) {
 
 // --- gcli.FDb.ind_githost.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_githost_Remove(gcli::FGithost& row) {
+void gcli::ind_githost_Remove(gcli::FGithost& row) throw() {
     if (LIKELY(row.ind_githost_next != (gcli::FGithost*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.githost) & (_db.ind_githost_buckets_n - 1);
         gcli::FGithost* *prev = &_db.ind_githost_buckets_elems[index]; // addr of pointer to current element
@@ -2643,7 +2643,7 @@ void gcli::ind_githost_Remove(gcli::FGithost& row) {
 
 // --- gcli.FDb.ind_githost.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_githost_Reserve(int n) {
+void gcli::ind_githost_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_githost_buckets_n;
     u32 new_nelems   = _db.ind_githost_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2679,7 +2679,7 @@ void gcli::ind_githost_Reserve(int n) {
 
 // --- gcli.FDb.ind_grepogitport.Find
 // Find row by key. Return NULL if not found.
-gcli::FGrepogitport* gcli::ind_grepogitport_Find(const algo::strptr& key) {
+gcli::FGrepogitport* gcli::ind_grepogitport_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_grepogitport_buckets_n - 1);
     gcli::FGrepogitport* *e = &_db.ind_grepogitport_buckets_elems[index];
     gcli::FGrepogitport* ret=NULL;
@@ -2702,7 +2702,7 @@ gcli::FGrepogitport& gcli::ind_grepogitport_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_grepogitport.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGrepogitport& gcli::ind_grepogitport_GetOrCreate(const algo::strptr& key) {
+gcli::FGrepogitport& gcli::ind_grepogitport_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGrepogitport* ret = ind_grepogitport_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &grepogitport_Alloc();
@@ -2719,7 +2719,7 @@ gcli::FGrepogitport& gcli::ind_grepogitport_GetOrCreate(const algo::strptr& key)
 
 // --- gcli.FDb.ind_grepogitport.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_grepogitport_InsertMaybe(gcli::FGrepogitport& row) {
+bool gcli::ind_grepogitport_InsertMaybe(gcli::FGrepogitport& row) throw() {
     ind_grepogitport_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_grepogitport_next == (gcli::FGrepogitport*)-1)) {// check if in hash already
@@ -2747,7 +2747,7 @@ bool gcli::ind_grepogitport_InsertMaybe(gcli::FGrepogitport& row) {
 
 // --- gcli.FDb.ind_grepogitport.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_grepogitport_Remove(gcli::FGrepogitport& row) {
+void gcli::ind_grepogitport_Remove(gcli::FGrepogitport& row) throw() {
     if (LIKELY(row.ind_grepogitport_next != (gcli::FGrepogitport*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.grepogitport) & (_db.ind_grepogitport_buckets_n - 1);
         gcli::FGrepogitport* *prev = &_db.ind_grepogitport_buckets_elems[index]; // addr of pointer to current element
@@ -2765,7 +2765,7 @@ void gcli::ind_grepogitport_Remove(gcli::FGrepogitport& row) {
 
 // --- gcli.FDb.ind_grepogitport.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_grepogitport_Reserve(int n) {
+void gcli::ind_grepogitport_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_grepogitport_buckets_n;
     u32 new_nelems   = _db.ind_grepogitport_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2801,7 +2801,7 @@ void gcli::ind_grepogitport_Reserve(int n) {
 
 // --- gcli.FDb.ind_grepossh.Find
 // Find row by key. Return NULL if not found.
-gcli::FGrepossh* gcli::ind_grepossh_Find(const algo::strptr& key) {
+gcli::FGrepossh* gcli::ind_grepossh_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_grepossh_buckets_n - 1);
     gcli::FGrepossh* *e = &_db.ind_grepossh_buckets_elems[index];
     gcli::FGrepossh* ret=NULL;
@@ -2824,7 +2824,7 @@ gcli::FGrepossh& gcli::ind_grepossh_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_grepossh.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGrepossh& gcli::ind_grepossh_GetOrCreate(const algo::strptr& key) {
+gcli::FGrepossh& gcli::ind_grepossh_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGrepossh* ret = ind_grepossh_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &grepossh_Alloc();
@@ -2841,7 +2841,7 @@ gcli::FGrepossh& gcli::ind_grepossh_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_grepossh.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_grepossh_InsertMaybe(gcli::FGrepossh& row) {
+bool gcli::ind_grepossh_InsertMaybe(gcli::FGrepossh& row) throw() {
     ind_grepossh_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_grepossh_next == (gcli::FGrepossh*)-1)) {// check if in hash already
@@ -2869,7 +2869,7 @@ bool gcli::ind_grepossh_InsertMaybe(gcli::FGrepossh& row) {
 
 // --- gcli.FDb.ind_grepossh.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_grepossh_Remove(gcli::FGrepossh& row) {
+void gcli::ind_grepossh_Remove(gcli::FGrepossh& row) throw() {
     if (LIKELY(row.ind_grepossh_next != (gcli::FGrepossh*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.grepossh) & (_db.ind_grepossh_buckets_n - 1);
         gcli::FGrepossh* *prev = &_db.ind_grepossh_buckets_elems[index]; // addr of pointer to current element
@@ -2887,7 +2887,7 @@ void gcli::ind_grepossh_Remove(gcli::FGrepossh& row) {
 
 // --- gcli.FDb.ind_grepossh.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_grepossh_Reserve(int n) {
+void gcli::ind_grepossh_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_grepossh_buckets_n;
     u32 new_nelems   = _db.ind_grepossh_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2923,7 +2923,7 @@ void gcli::ind_grepossh_Reserve(int n) {
 
 // --- gcli.FDb.ind_gtype.Find
 // Find row by key. Return NULL if not found.
-gcli::FGtype* gcli::ind_gtype_Find(const algo::strptr& key) {
+gcli::FGtype* gcli::ind_gtype_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gtype_buckets_n - 1);
     gcli::FGtype* *e = &_db.ind_gtype_buckets_elems[index];
     gcli::FGtype* ret=NULL;
@@ -2946,7 +2946,7 @@ gcli::FGtype& gcli::ind_gtype_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gtype.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGtype& gcli::ind_gtype_GetOrCreate(const algo::strptr& key) {
+gcli::FGtype& gcli::ind_gtype_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGtype* ret = ind_gtype_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gtype_Alloc();
@@ -2963,7 +2963,7 @@ gcli::FGtype& gcli::ind_gtype_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gtype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gtype_InsertMaybe(gcli::FGtype& row) {
+bool gcli::ind_gtype_InsertMaybe(gcli::FGtype& row) throw() {
     ind_gtype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gtype_next == (gcli::FGtype*)-1)) {// check if in hash already
@@ -2991,7 +2991,7 @@ bool gcli::ind_gtype_InsertMaybe(gcli::FGtype& row) {
 
 // --- gcli.FDb.ind_gtype.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gtype_Remove(gcli::FGtype& row) {
+void gcli::ind_gtype_Remove(gcli::FGtype& row) throw() {
     if (LIKELY(row.ind_gtype_next != (gcli::FGtype*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.gtype) & (_db.ind_gtype_buckets_n - 1);
         gcli::FGtype* *prev = &_db.ind_gtype_buckets_elems[index]; // addr of pointer to current element
@@ -3009,7 +3009,7 @@ void gcli::ind_gtype_Remove(gcli::FGtype& row) {
 
 // --- gcli.FDb.ind_gtype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gtype_Reserve(int n) {
+void gcli::ind_gtype_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gtype_buckets_n;
     u32 new_nelems   = _db.ind_gtype_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -3046,7 +3046,7 @@ void gcli::ind_gtype_Reserve(int n) {
 // --- gcli.FDb.c_gclicmd.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_gclicmd_Insert(gcli::FGclicmd& row) {
+void gcli::c_gclicmd_Insert(gcli::FGclicmd& row) throw() {
     if (bool_Update(row._db_c_gclicmd_in_ary,true)) {
         // reserve space
         c_gclicmd_Reserve(1);
@@ -3063,7 +3063,7 @@ void gcli::c_gclicmd_Insert(gcli::FGclicmd& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_gclicmd_InsertMaybe(gcli::FGclicmd& row) {
+bool gcli::c_gclicmd_InsertMaybe(gcli::FGclicmd& row) throw() {
     bool retval = !row._db_c_gclicmd_in_ary;
     c_gclicmd_Insert(row); // check is performed in _Insert again
     return retval;
@@ -3071,7 +3071,7 @@ bool gcli::c_gclicmd_InsertMaybe(gcli::FGclicmd& row) {
 
 // --- gcli.FDb.c_gclicmd.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_gclicmd_Remove(gcli::FGclicmd& row) {
+void gcli::c_gclicmd_Remove(gcli::FGclicmd& row) throw() {
     if (bool_Update(row._db_c_gclicmd_in_ary,false)) {
         int lim = _db.c_gclicmd_n;
         gcli::FGclicmd* *elems = _db.c_gclicmd_elems;
@@ -3092,7 +3092,7 @@ void gcli::c_gclicmd_Remove(gcli::FGclicmd& row) {
 
 // --- gcli.FDb.c_gclicmd.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_gclicmd_Reserve(u32 n) {
+void gcli::c_gclicmd_Reserve(u32 n) throw() {
     u32 old_max = _db.c_gclicmd_max;
     if (UNLIKELY(_db.c_gclicmd_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -3110,7 +3110,7 @@ void gcli::c_gclicmd_Reserve(u32 n) {
 // --- gcli.FDb.gclicmdj2f.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGclicmdj2f& gcli::gclicmdj2f_Alloc() {
+gcli::FGclicmdj2f& gcli::gclicmdj2f_Alloc() throw() {
     gcli::FGclicmdj2f* row = gclicmdj2f_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gclicmdj2f  comment:'Alloc failed'");
@@ -3120,7 +3120,7 @@ gcli::FGclicmdj2f& gcli::gclicmdj2f_Alloc() {
 
 // --- gcli.FDb.gclicmdj2f.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGclicmdj2f* gcli::gclicmdj2f_AllocMaybe() {
+gcli::FGclicmdj2f* gcli::gclicmdj2f_AllocMaybe() throw() {
     gcli::FGclicmdj2f *row = (gcli::FGclicmdj2f*)gclicmdj2f_AllocMem();
     if (row) {
         new (row) gcli::FGclicmdj2f; // call constructor
@@ -3130,7 +3130,7 @@ gcli::FGclicmdj2f* gcli::gclicmdj2f_AllocMaybe() {
 
 // --- gcli.FDb.gclicmdj2f.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gclicmdj2f_AllocMem() {
+void* gcli::gclicmdj2f_AllocMem() throw() {
     u64 new_nelems     = _db.gclicmdj2f_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3156,7 +3156,7 @@ void* gcli::gclicmdj2f_AllocMem() {
 
 // --- gcli.FDb.gclicmdj2f.RemoveAll
 // Remove all elements from Lary
-void gcli::gclicmdj2f_RemoveAll() {
+void gcli::gclicmdj2f_RemoveAll() throw() {
     for (u64 n = _db.gclicmdj2f_n; n>0; ) {
         n--;
         gclicmdj2f_qFind(u64(n)).~FGclicmdj2f(); // destroy last element
@@ -3166,7 +3166,7 @@ void gcli::gclicmdj2f_RemoveAll() {
 
 // --- gcli.FDb.gclicmdj2f.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gclicmdj2f_RemoveLast() {
+void gcli::gclicmdj2f_RemoveLast() throw() {
     u64 n = _db.gclicmdj2f_n;
     if (n > 0) {
         n -= 1;
@@ -3196,7 +3196,7 @@ bool gcli::gclicmdj2f_XrefMaybe(gcli::FGclicmdj2f &row) {
 // --- gcli.FDb.gclicmdc.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGclicmdc& gcli::gclicmdc_Alloc() {
+gcli::FGclicmdc& gcli::gclicmdc_Alloc() throw() {
     gcli::FGclicmdc* row = gclicmdc_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gclicmdc  comment:'Alloc failed'");
@@ -3206,7 +3206,7 @@ gcli::FGclicmdc& gcli::gclicmdc_Alloc() {
 
 // --- gcli.FDb.gclicmdc.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGclicmdc* gcli::gclicmdc_AllocMaybe() {
+gcli::FGclicmdc* gcli::gclicmdc_AllocMaybe() throw() {
     gcli::FGclicmdc *row = (gcli::FGclicmdc*)gclicmdc_AllocMem();
     if (row) {
         new (row) gcli::FGclicmdc; // call constructor
@@ -3216,7 +3216,7 @@ gcli::FGclicmdc* gcli::gclicmdc_AllocMaybe() {
 
 // --- gcli.FDb.gclicmdc.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gclicmdc_AllocMem() {
+void* gcli::gclicmdc_AllocMem() throw() {
     u64 new_nelems     = _db.gclicmdc_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3242,7 +3242,7 @@ void* gcli::gclicmdc_AllocMem() {
 
 // --- gcli.FDb.gclicmdc.RemoveAll
 // Remove all elements from Lary
-void gcli::gclicmdc_RemoveAll() {
+void gcli::gclicmdc_RemoveAll() throw() {
     for (u64 n = _db.gclicmdc_n; n>0; ) {
         n--;
         gclicmdc_qFind(u64(n)).~FGclicmdc(); // destroy last element
@@ -3252,7 +3252,7 @@ void gcli::gclicmdc_RemoveAll() {
 
 // --- gcli.FDb.gclicmdc.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gclicmdc_RemoveLast() {
+void gcli::gclicmdc_RemoveLast() throw() {
     u64 n = _db.gclicmdc_n;
     if (n > 0) {
         n -= 1;
@@ -3282,7 +3282,7 @@ bool gcli::gclicmdc_XrefMaybe(gcli::FGclicmdc &row) {
 // --- gcli.FDb.gclicmdarg.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGclicmdarg& gcli::gclicmdarg_Alloc() {
+gcli::FGclicmdarg& gcli::gclicmdarg_Alloc() throw() {
     gcli::FGclicmdarg* row = gclicmdarg_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gclicmdarg  comment:'Alloc failed'");
@@ -3292,7 +3292,7 @@ gcli::FGclicmdarg& gcli::gclicmdarg_Alloc() {
 
 // --- gcli.FDb.gclicmdarg.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGclicmdarg* gcli::gclicmdarg_AllocMaybe() {
+gcli::FGclicmdarg* gcli::gclicmdarg_AllocMaybe() throw() {
     gcli::FGclicmdarg *row = (gcli::FGclicmdarg*)gclicmdarg_AllocMem();
     if (row) {
         new (row) gcli::FGclicmdarg; // call constructor
@@ -3302,7 +3302,7 @@ gcli::FGclicmdarg* gcli::gclicmdarg_AllocMaybe() {
 
 // --- gcli.FDb.gclicmdarg.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gclicmdarg_AllocMem() {
+void* gcli::gclicmdarg_AllocMem() throw() {
     u64 new_nelems     = _db.gclicmdarg_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3328,7 +3328,7 @@ void* gcli::gclicmdarg_AllocMem() {
 
 // --- gcli.FDb.gclicmdarg.RemoveAll
 // Remove all elements from Lary
-void gcli::gclicmdarg_RemoveAll() {
+void gcli::gclicmdarg_RemoveAll() throw() {
     for (u64 n = _db.gclicmdarg_n; n>0; ) {
         n--;
         gclicmdarg_qFind(u64(n)).~FGclicmdarg(); // destroy last element
@@ -3338,7 +3338,7 @@ void gcli::gclicmdarg_RemoveAll() {
 
 // --- gcli.FDb.gclicmdarg.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gclicmdarg_RemoveLast() {
+void gcli::gclicmdarg_RemoveLast() throw() {
     u64 n = _db.gclicmdarg_n;
     if (n > 0) {
         n -= 1;
@@ -3367,7 +3367,7 @@ bool gcli::gclicmdarg_XrefMaybe(gcli::FGclicmdarg &row) {
 
 // --- gcli.FDb.ind_gclicmdj2f.Find
 // Find row by key. Return NULL if not found.
-gcli::FGclicmdj2f* gcli::ind_gclicmdj2f_Find(const algo::strptr& key) {
+gcli::FGclicmdj2f* gcli::ind_gclicmdj2f_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gclicmdj2f_buckets_n - 1);
     gcli::FGclicmdj2f* *e = &_db.ind_gclicmdj2f_buckets_elems[index];
     gcli::FGclicmdj2f* ret=NULL;
@@ -3390,7 +3390,7 @@ gcli::FGclicmdj2f& gcli::ind_gclicmdj2f_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gclicmdj2f.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGclicmdj2f& gcli::ind_gclicmdj2f_GetOrCreate(const algo::strptr& key) {
+gcli::FGclicmdj2f& gcli::ind_gclicmdj2f_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGclicmdj2f* ret = ind_gclicmdj2f_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gclicmdj2f_Alloc();
@@ -3407,7 +3407,7 @@ gcli::FGclicmdj2f& gcli::ind_gclicmdj2f_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gclicmdj2f.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gclicmdj2f_InsertMaybe(gcli::FGclicmdj2f& row) {
+bool gcli::ind_gclicmdj2f_InsertMaybe(gcli::FGclicmdj2f& row) throw() {
     ind_gclicmdj2f_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclicmdj2f_next == (gcli::FGclicmdj2f*)-1)) {// check if in hash already
@@ -3435,7 +3435,7 @@ bool gcli::ind_gclicmdj2f_InsertMaybe(gcli::FGclicmdj2f& row) {
 
 // --- gcli.FDb.ind_gclicmdj2f.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gclicmdj2f_Remove(gcli::FGclicmdj2f& row) {
+void gcli::ind_gclicmdj2f_Remove(gcli::FGclicmdj2f& row) throw() {
     if (LIKELY(row.ind_gclicmdj2f_next != (gcli::FGclicmdj2f*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.gclicmdj2f) & (_db.ind_gclicmdj2f_buckets_n - 1);
         gcli::FGclicmdj2f* *prev = &_db.ind_gclicmdj2f_buckets_elems[index]; // addr of pointer to current element
@@ -3453,7 +3453,7 @@ void gcli::ind_gclicmdj2f_Remove(gcli::FGclicmdj2f& row) {
 
 // --- gcli.FDb.ind_gclicmdj2f.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gclicmdj2f_Reserve(int n) {
+void gcli::ind_gclicmdj2f_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gclicmdj2f_buckets_n;
     u32 new_nelems   = _db.ind_gclicmdj2f_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -3489,7 +3489,7 @@ void gcli::ind_gclicmdj2f_Reserve(int n) {
 
 // --- gcli.FDb.ind_gclicmdarg.Find
 // Find row by key. Return NULL if not found.
-gcli::FGclicmdarg* gcli::ind_gclicmdarg_Find(const algo::strptr& key) {
+gcli::FGclicmdarg* gcli::ind_gclicmdarg_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gclicmdarg_buckets_n - 1);
     gcli::FGclicmdarg* *e = &_db.ind_gclicmdarg_buckets_elems[index];
     gcli::FGclicmdarg* ret=NULL;
@@ -3512,7 +3512,7 @@ gcli::FGclicmdarg& gcli::ind_gclicmdarg_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gclicmdarg.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGclicmdarg& gcli::ind_gclicmdarg_GetOrCreate(const algo::strptr& key) {
+gcli::FGclicmdarg& gcli::ind_gclicmdarg_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGclicmdarg* ret = ind_gclicmdarg_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gclicmdarg_Alloc();
@@ -3529,7 +3529,7 @@ gcli::FGclicmdarg& gcli::ind_gclicmdarg_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gclicmdarg.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gclicmdarg_InsertMaybe(gcli::FGclicmdarg& row) {
+bool gcli::ind_gclicmdarg_InsertMaybe(gcli::FGclicmdarg& row) throw() {
     ind_gclicmdarg_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclicmdarg_next == (gcli::FGclicmdarg*)-1)) {// check if in hash already
@@ -3557,7 +3557,7 @@ bool gcli::ind_gclicmdarg_InsertMaybe(gcli::FGclicmdarg& row) {
 
 // --- gcli.FDb.ind_gclicmdarg.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gclicmdarg_Remove(gcli::FGclicmdarg& row) {
+void gcli::ind_gclicmdarg_Remove(gcli::FGclicmdarg& row) throw() {
     if (LIKELY(row.ind_gclicmdarg_next != (gcli::FGclicmdarg*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.gclicmdarg) & (_db.ind_gclicmdarg_buckets_n - 1);
         gcli::FGclicmdarg* *prev = &_db.ind_gclicmdarg_buckets_elems[index]; // addr of pointer to current element
@@ -3575,7 +3575,7 @@ void gcli::ind_gclicmdarg_Remove(gcli::FGclicmdarg& row) {
 
 // --- gcli.FDb.ind_gclicmdarg.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gclicmdarg_Reserve(int n) {
+void gcli::ind_gclicmdarg_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gclicmdarg_buckets_n;
     u32 new_nelems   = _db.ind_gclicmdarg_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -3611,7 +3611,7 @@ void gcli::ind_gclicmdarg_Reserve(int n) {
 
 // --- gcli.FDb.ind_gclicmdc.Find
 // Find row by key. Return NULL if not found.
-gcli::FGclicmdc* gcli::ind_gclicmdc_Find(const algo::strptr& key) {
+gcli::FGclicmdc* gcli::ind_gclicmdc_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gclicmdc_buckets_n - 1);
     gcli::FGclicmdc* *e = &_db.ind_gclicmdc_buckets_elems[index];
     gcli::FGclicmdc* ret=NULL;
@@ -3634,7 +3634,7 @@ gcli::FGclicmdc& gcli::ind_gclicmdc_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gclicmdc.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGclicmdc& gcli::ind_gclicmdc_GetOrCreate(const algo::strptr& key) {
+gcli::FGclicmdc& gcli::ind_gclicmdc_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGclicmdc* ret = ind_gclicmdc_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gclicmdc_Alloc();
@@ -3651,7 +3651,7 @@ gcli::FGclicmdc& gcli::ind_gclicmdc_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gclicmdc.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gclicmdc_InsertMaybe(gcli::FGclicmdc& row) {
+bool gcli::ind_gclicmdc_InsertMaybe(gcli::FGclicmdc& row) throw() {
     ind_gclicmdc_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclicmdc_next == (gcli::FGclicmdc*)-1)) {// check if in hash already
@@ -3679,7 +3679,7 @@ bool gcli::ind_gclicmdc_InsertMaybe(gcli::FGclicmdc& row) {
 
 // --- gcli.FDb.ind_gclicmdc.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gclicmdc_Remove(gcli::FGclicmdc& row) {
+void gcli::ind_gclicmdc_Remove(gcli::FGclicmdc& row) throw() {
     if (LIKELY(row.ind_gclicmdc_next != (gcli::FGclicmdc*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.gclicmdc) & (_db.ind_gclicmdc_buckets_n - 1);
         gcli::FGclicmdc* *prev = &_db.ind_gclicmdc_buckets_elems[index]; // addr of pointer to current element
@@ -3697,7 +3697,7 @@ void gcli::ind_gclicmdc_Remove(gcli::FGclicmdc& row) {
 
 // --- gcli.FDb.ind_gclicmdc.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gclicmdc_Reserve(int n) {
+void gcli::ind_gclicmdc_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gclicmdc_buckets_n;
     u32 new_nelems   = _db.ind_gclicmdc_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -3734,7 +3734,7 @@ void gcli::ind_gclicmdc_Reserve(int n) {
 // --- gcli.FDb.issue.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FIssue& gcli::issue_Alloc() {
+gcli::FIssue& gcli::issue_Alloc() throw() {
     gcli::FIssue* row = issue_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.issue  comment:'Alloc failed'");
@@ -3744,7 +3744,7 @@ gcli::FIssue& gcli::issue_Alloc() {
 
 // --- gcli.FDb.issue.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FIssue* gcli::issue_AllocMaybe() {
+gcli::FIssue* gcli::issue_AllocMaybe() throw() {
     gcli::FIssue *row = (gcli::FIssue*)issue_AllocMem();
     if (row) {
         new (row) gcli::FIssue; // call constructor
@@ -3755,7 +3755,7 @@ gcli::FIssue* gcli::issue_AllocMaybe() {
 // --- gcli.FDb.issue.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FIssue* gcli::issue_InsertMaybe(const gclidb::Issue &value) {
+gcli::FIssue* gcli::issue_InsertMaybe(const gclidb::Issue &value) throw() {
     gcli::FIssue *row = &issue_Alloc(); // if out of memory, process dies. if input error, return NULL.
     issue_CopyIn(*row,const_cast<gclidb::Issue&>(value));
     bool ok = issue_XrefMaybe(*row); // this may return false
@@ -3768,7 +3768,7 @@ gcli::FIssue* gcli::issue_InsertMaybe(const gclidb::Issue &value) {
 
 // --- gcli.FDb.issue.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::issue_AllocMem() {
+void* gcli::issue_AllocMem() throw() {
     u64 new_nelems     = _db.issue_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3794,7 +3794,7 @@ void* gcli::issue_AllocMem() {
 
 // --- gcli.FDb.issue.RemoveAll
 // Remove all elements from Lary
-void gcli::issue_RemoveAll() {
+void gcli::issue_RemoveAll() throw() {
     for (u64 n = _db.issue_n; n>0; ) {
         n--;
         issue_qFind(u64(n)).~FIssue(); // destroy last element
@@ -3804,7 +3804,7 @@ void gcli::issue_RemoveAll() {
 
 // --- gcli.FDb.issue.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::issue_RemoveLast() {
+void gcli::issue_RemoveLast() throw() {
     u64 n = _db.issue_n;
     if (n > 0) {
         n -= 1;
@@ -3834,7 +3834,7 @@ bool gcli::issue_XrefMaybe(gcli::FIssue &row) {
 // --- gcli.FDb.grepo.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGrepo& gcli::grepo_Alloc() {
+gcli::FGrepo& gcli::grepo_Alloc() throw() {
     gcli::FGrepo* row = grepo_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.grepo  comment:'Alloc failed'");
@@ -3844,7 +3844,7 @@ gcli::FGrepo& gcli::grepo_Alloc() {
 
 // --- gcli.FDb.grepo.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGrepo* gcli::grepo_AllocMaybe() {
+gcli::FGrepo* gcli::grepo_AllocMaybe() throw() {
     gcli::FGrepo *row = (gcli::FGrepo*)grepo_AllocMem();
     if (row) {
         new (row) gcli::FGrepo; // call constructor
@@ -3855,7 +3855,7 @@ gcli::FGrepo* gcli::grepo_AllocMaybe() {
 // --- gcli.FDb.grepo.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGrepo* gcli::grepo_InsertMaybe(const gclidb::Grepo &value) {
+gcli::FGrepo* gcli::grepo_InsertMaybe(const gclidb::Grepo &value) throw() {
     gcli::FGrepo *row = &grepo_Alloc(); // if out of memory, process dies. if input error, return NULL.
     grepo_CopyIn(*row,const_cast<gclidb::Grepo&>(value));
     bool ok = grepo_XrefMaybe(*row); // this may return false
@@ -3868,7 +3868,7 @@ gcli::FGrepo* gcli::grepo_InsertMaybe(const gclidb::Grepo &value) {
 
 // --- gcli.FDb.grepo.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::grepo_AllocMem() {
+void* gcli::grepo_AllocMem() throw() {
     u64 new_nelems     = _db.grepo_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3894,7 +3894,7 @@ void* gcli::grepo_AllocMem() {
 
 // --- gcli.FDb.grepo.RemoveAll
 // Remove all elements from Lary
-void gcli::grepo_RemoveAll() {
+void gcli::grepo_RemoveAll() throw() {
     for (u64 n = _db.grepo_n; n>0; ) {
         n--;
         grepo_qFind(u64(n)).~FGrepo(); // destroy last element
@@ -3904,7 +3904,7 @@ void gcli::grepo_RemoveAll() {
 
 // --- gcli.FDb.grepo.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::grepo_RemoveLast() {
+void gcli::grepo_RemoveLast() throw() {
     u64 n = _db.grepo_n;
     if (n > 0) {
         n -= 1;
@@ -3914,7 +3914,7 @@ void gcli::grepo_RemoveLast() {
 }
 
 // --- gcli.FDb.grepo.InputMaybe
-static bool gcli::grepo_InputMaybe(gclidb::Grepo &elem) {
+static bool gcli::grepo_InputMaybe(gclidb::Grepo &elem) throw() {
     bool retval = true;
     retval = grepo_InsertMaybe(elem) != nullptr;
     return retval;
@@ -3941,7 +3941,7 @@ bool gcli::grepo_XrefMaybe(gcli::FGrepo &row) {
 // --- gcli.FDb.tuples.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FTuples& gcli::tuples_Alloc() {
+gcli::FTuples& gcli::tuples_Alloc() throw() {
     gcli::FTuples* row = tuples_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.tuples  comment:'Alloc failed'");
@@ -3951,7 +3951,7 @@ gcli::FTuples& gcli::tuples_Alloc() {
 
 // --- gcli.FDb.tuples.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FTuples* gcli::tuples_AllocMaybe() {
+gcli::FTuples* gcli::tuples_AllocMaybe() throw() {
     gcli::FTuples *row = (gcli::FTuples*)tuples_AllocMem();
     if (row) {
         new (row) gcli::FTuples; // call constructor
@@ -3961,7 +3961,7 @@ gcli::FTuples* gcli::tuples_AllocMaybe() {
 
 // --- gcli.FDb.tuples.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::tuples_AllocMem() {
+void* gcli::tuples_AllocMem() throw() {
     u64 new_nelems     = _db.tuples_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3987,7 +3987,7 @@ void* gcli::tuples_AllocMem() {
 
 // --- gcli.FDb.tuples.RemoveAll
 // Remove all elements from Lary
-void gcli::tuples_RemoveAll() {
+void gcli::tuples_RemoveAll() throw() {
     for (u64 n = _db.tuples_n; n>0; ) {
         n--;
         tuples_qFind(u64(n)).~FTuples(); // destroy last element
@@ -3997,7 +3997,7 @@ void gcli::tuples_RemoveAll() {
 
 // --- gcli.FDb.tuples.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::tuples_RemoveLast() {
+void gcli::tuples_RemoveLast() throw() {
     u64 n = _db.tuples_n;
     if (n > 0) {
         n -= 1;
@@ -4018,7 +4018,7 @@ bool gcli::tuples_XrefMaybe(gcli::FTuples &row) {
 // --- gcli.FDb.issuenote.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FIssuenote& gcli::issuenote_Alloc() {
+gcli::FIssuenote& gcli::issuenote_Alloc() throw() {
     gcli::FIssuenote* row = issuenote_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.issuenote  comment:'Alloc failed'");
@@ -4028,7 +4028,7 @@ gcli::FIssuenote& gcli::issuenote_Alloc() {
 
 // --- gcli.FDb.issuenote.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FIssuenote* gcli::issuenote_AllocMaybe() {
+gcli::FIssuenote* gcli::issuenote_AllocMaybe() throw() {
     gcli::FIssuenote *row = (gcli::FIssuenote*)issuenote_AllocMem();
     if (row) {
         new (row) gcli::FIssuenote; // call constructor
@@ -4039,7 +4039,7 @@ gcli::FIssuenote* gcli::issuenote_AllocMaybe() {
 // --- gcli.FDb.issuenote.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FIssuenote* gcli::issuenote_InsertMaybe(const gclidb::Issuenote &value) {
+gcli::FIssuenote* gcli::issuenote_InsertMaybe(const gclidb::Issuenote &value) throw() {
     gcli::FIssuenote *row = &issuenote_Alloc(); // if out of memory, process dies. if input error, return NULL.
     issuenote_CopyIn(*row,const_cast<gclidb::Issuenote&>(value));
     bool ok = issuenote_XrefMaybe(*row); // this may return false
@@ -4052,7 +4052,7 @@ gcli::FIssuenote* gcli::issuenote_InsertMaybe(const gclidb::Issuenote &value) {
 
 // --- gcli.FDb.issuenote.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::issuenote_AllocMem() {
+void* gcli::issuenote_AllocMem() throw() {
     u64 new_nelems     = _db.issuenote_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4078,7 +4078,7 @@ void* gcli::issuenote_AllocMem() {
 
 // --- gcli.FDb.issuenote.RemoveAll
 // Remove all elements from Lary
-void gcli::issuenote_RemoveAll() {
+void gcli::issuenote_RemoveAll() throw() {
     for (u64 n = _db.issuenote_n; n>0; ) {
         n--;
         issuenote_qFind(u64(n)).~FIssuenote(); // destroy last element
@@ -4088,7 +4088,7 @@ void gcli::issuenote_RemoveAll() {
 
 // --- gcli.FDb.issuenote.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::issuenote_RemoveLast() {
+void gcli::issuenote_RemoveLast() throw() {
     u64 n = _db.issuenote_n;
     if (n > 0) {
         n -= 1;
@@ -4127,7 +4127,7 @@ bool gcli::issuenote_XrefMaybe(gcli::FIssuenote &row) {
 // --- gcli.FDb.mrjob.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FMrjob& gcli::mrjob_Alloc() {
+gcli::FMrjob& gcli::mrjob_Alloc() throw() {
     gcli::FMrjob* row = mrjob_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.mrjob  comment:'Alloc failed'");
@@ -4137,7 +4137,7 @@ gcli::FMrjob& gcli::mrjob_Alloc() {
 
 // --- gcli.FDb.mrjob.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FMrjob* gcli::mrjob_AllocMaybe() {
+gcli::FMrjob* gcli::mrjob_AllocMaybe() throw() {
     gcli::FMrjob *row = (gcli::FMrjob*)mrjob_AllocMem();
     if (row) {
         new (row) gcli::FMrjob; // call constructor
@@ -4148,7 +4148,7 @@ gcli::FMrjob* gcli::mrjob_AllocMaybe() {
 // --- gcli.FDb.mrjob.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FMrjob* gcli::mrjob_InsertMaybe(const gclidb::Mrjob &value) {
+gcli::FMrjob* gcli::mrjob_InsertMaybe(const gclidb::Mrjob &value) throw() {
     gcli::FMrjob *row = &mrjob_Alloc(); // if out of memory, process dies. if input error, return NULL.
     mrjob_CopyIn(*row,const_cast<gclidb::Mrjob&>(value));
     bool ok = mrjob_XrefMaybe(*row); // this may return false
@@ -4161,7 +4161,7 @@ gcli::FMrjob* gcli::mrjob_InsertMaybe(const gclidb::Mrjob &value) {
 
 // --- gcli.FDb.mrjob.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::mrjob_AllocMem() {
+void* gcli::mrjob_AllocMem() throw() {
     u64 new_nelems     = _db.mrjob_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4187,7 +4187,7 @@ void* gcli::mrjob_AllocMem() {
 
 // --- gcli.FDb.mrjob.RemoveAll
 // Remove all elements from Lary
-void gcli::mrjob_RemoveAll() {
+void gcli::mrjob_RemoveAll() throw() {
     for (u64 n = _db.mrjob_n; n>0; ) {
         n--;
         mrjob_qFind(u64(n)).~FMrjob(); // destroy last element
@@ -4197,7 +4197,7 @@ void gcli::mrjob_RemoveAll() {
 
 // --- gcli.FDb.mrjob.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::mrjob_RemoveLast() {
+void gcli::mrjob_RemoveLast() throw() {
     u64 n = _db.mrjob_n;
     if (n > 0) {
         n -= 1;
@@ -4236,7 +4236,7 @@ bool gcli::mrjob_XrefMaybe(gcli::FMrjob &row) {
 // --- gcli.FDb.mrnote.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FMrnote& gcli::mrnote_Alloc() {
+gcli::FMrnote& gcli::mrnote_Alloc() throw() {
     gcli::FMrnote* row = mrnote_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.mrnote  comment:'Alloc failed'");
@@ -4246,7 +4246,7 @@ gcli::FMrnote& gcli::mrnote_Alloc() {
 
 // --- gcli.FDb.mrnote.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FMrnote* gcli::mrnote_AllocMaybe() {
+gcli::FMrnote* gcli::mrnote_AllocMaybe() throw() {
     gcli::FMrnote *row = (gcli::FMrnote*)mrnote_AllocMem();
     if (row) {
         new (row) gcli::FMrnote; // call constructor
@@ -4257,7 +4257,7 @@ gcli::FMrnote* gcli::mrnote_AllocMaybe() {
 // --- gcli.FDb.mrnote.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FMrnote* gcli::mrnote_InsertMaybe(const gclidb::Mrnote &value) {
+gcli::FMrnote* gcli::mrnote_InsertMaybe(const gclidb::Mrnote &value) throw() {
     gcli::FMrnote *row = &mrnote_Alloc(); // if out of memory, process dies. if input error, return NULL.
     mrnote_CopyIn(*row,const_cast<gclidb::Mrnote&>(value));
     bool ok = mrnote_XrefMaybe(*row); // this may return false
@@ -4270,7 +4270,7 @@ gcli::FMrnote* gcli::mrnote_InsertMaybe(const gclidb::Mrnote &value) {
 
 // --- gcli.FDb.mrnote.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::mrnote_AllocMem() {
+void* gcli::mrnote_AllocMem() throw() {
     u64 new_nelems     = _db.mrnote_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4296,7 +4296,7 @@ void* gcli::mrnote_AllocMem() {
 
 // --- gcli.FDb.mrnote.RemoveAll
 // Remove all elements from Lary
-void gcli::mrnote_RemoveAll() {
+void gcli::mrnote_RemoveAll() throw() {
     for (u64 n = _db.mrnote_n; n>0; ) {
         n--;
         mrnote_qFind(u64(n)).~FMrnote(); // destroy last element
@@ -4306,7 +4306,7 @@ void gcli::mrnote_RemoveAll() {
 
 // --- gcli.FDb.mrnote.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::mrnote_RemoveLast() {
+void gcli::mrnote_RemoveLast() throw() {
     u64 n = _db.mrnote_n;
     if (n > 0) {
         n -= 1;
@@ -4344,7 +4344,7 @@ bool gcli::mrnote_XrefMaybe(gcli::FMrnote &row) {
 
 // --- gcli.FDb.ind_mrnote.Find
 // Find row by key. Return NULL if not found.
-gcli::FMrnote* gcli::ind_mrnote_Find(const algo::strptr& key) {
+gcli::FMrnote* gcli::ind_mrnote_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_mrnote_buckets_n - 1);
     gcli::FMrnote* *e = &_db.ind_mrnote_buckets_elems[index];
     gcli::FMrnote* ret=NULL;
@@ -4367,7 +4367,7 @@ gcli::FMrnote& gcli::ind_mrnote_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_mrnote.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_mrnote_InsertMaybe(gcli::FMrnote& row) {
+bool gcli::ind_mrnote_InsertMaybe(gcli::FMrnote& row) throw() {
     ind_mrnote_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_mrnote_next == (gcli::FMrnote*)-1)) {// check if in hash already
@@ -4395,7 +4395,7 @@ bool gcli::ind_mrnote_InsertMaybe(gcli::FMrnote& row) {
 
 // --- gcli.FDb.ind_mrnote.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_mrnote_Remove(gcli::FMrnote& row) {
+void gcli::ind_mrnote_Remove(gcli::FMrnote& row) throw() {
     if (LIKELY(row.ind_mrnote_next != (gcli::FMrnote*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.mrnote) & (_db.ind_mrnote_buckets_n - 1);
         gcli::FMrnote* *prev = &_db.ind_mrnote_buckets_elems[index]; // addr of pointer to current element
@@ -4413,7 +4413,7 @@ void gcli::ind_mrnote_Remove(gcli::FMrnote& row) {
 
 // --- gcli.FDb.ind_mrnote.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_mrnote_Reserve(int n) {
+void gcli::ind_mrnote_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_mrnote_buckets_n;
     u32 new_nelems   = _db.ind_mrnote_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -4449,7 +4449,7 @@ void gcli::ind_mrnote_Reserve(int n) {
 
 // --- gcli.FDb.ind_issuenote.Find
 // Find row by key. Return NULL if not found.
-gcli::FIssuenote* gcli::ind_issuenote_Find(const algo::strptr& key) {
+gcli::FIssuenote* gcli::ind_issuenote_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_issuenote_buckets_n - 1);
     gcli::FIssuenote* *e = &_db.ind_issuenote_buckets_elems[index];
     gcli::FIssuenote* ret=NULL;
@@ -4472,7 +4472,7 @@ gcli::FIssuenote& gcli::ind_issuenote_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_issuenote.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_issuenote_InsertMaybe(gcli::FIssuenote& row) {
+bool gcli::ind_issuenote_InsertMaybe(gcli::FIssuenote& row) throw() {
     ind_issuenote_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_issuenote_next == (gcli::FIssuenote*)-1)) {// check if in hash already
@@ -4500,7 +4500,7 @@ bool gcli::ind_issuenote_InsertMaybe(gcli::FIssuenote& row) {
 
 // --- gcli.FDb.ind_issuenote.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_issuenote_Remove(gcli::FIssuenote& row) {
+void gcli::ind_issuenote_Remove(gcli::FIssuenote& row) throw() {
     if (LIKELY(row.ind_issuenote_next != (gcli::FIssuenote*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.issuenote) & (_db.ind_issuenote_buckets_n - 1);
         gcli::FIssuenote* *prev = &_db.ind_issuenote_buckets_elems[index]; // addr of pointer to current element
@@ -4518,7 +4518,7 @@ void gcli::ind_issuenote_Remove(gcli::FIssuenote& row) {
 
 // --- gcli.FDb.ind_issuenote.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_issuenote_Reserve(int n) {
+void gcli::ind_issuenote_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_issuenote_buckets_n;
     u32 new_nelems   = _db.ind_issuenote_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -4554,7 +4554,7 @@ void gcli::ind_issuenote_Reserve(int n) {
 
 // --- gcli.FDb.ind_mrjob.Find
 // Find row by key. Return NULL if not found.
-gcli::FMrjob* gcli::ind_mrjob_Find(const algo::strptr& key) {
+gcli::FMrjob* gcli::ind_mrjob_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_mrjob_buckets_n - 1);
     gcli::FMrjob* *e = &_db.ind_mrjob_buckets_elems[index];
     gcli::FMrjob* ret=NULL;
@@ -4577,7 +4577,7 @@ gcli::FMrjob& gcli::ind_mrjob_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_mrjob.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_mrjob_InsertMaybe(gcli::FMrjob& row) {
+bool gcli::ind_mrjob_InsertMaybe(gcli::FMrjob& row) throw() {
     ind_mrjob_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_mrjob_next == (gcli::FMrjob*)-1)) {// check if in hash already
@@ -4605,7 +4605,7 @@ bool gcli::ind_mrjob_InsertMaybe(gcli::FMrjob& row) {
 
 // --- gcli.FDb.ind_mrjob.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_mrjob_Remove(gcli::FMrjob& row) {
+void gcli::ind_mrjob_Remove(gcli::FMrjob& row) throw() {
     if (LIKELY(row.ind_mrjob_next != (gcli::FMrjob*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.mrjob) & (_db.ind_mrjob_buckets_n - 1);
         gcli::FMrjob* *prev = &_db.ind_mrjob_buckets_elems[index]; // addr of pointer to current element
@@ -4623,7 +4623,7 @@ void gcli::ind_mrjob_Remove(gcli::FMrjob& row) {
 
 // --- gcli.FDb.ind_mrjob.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_mrjob_Reserve(int n) {
+void gcli::ind_mrjob_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_mrjob_buckets_n;
     u32 new_nelems   = _db.ind_mrjob_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -4660,7 +4660,7 @@ void gcli::ind_mrjob_Reserve(int n) {
 // --- gcli.FDb.user.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FUser& gcli::user_Alloc() {
+gcli::FUser& gcli::user_Alloc() throw() {
     gcli::FUser* row = user_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.user  comment:'Alloc failed'");
@@ -4670,7 +4670,7 @@ gcli::FUser& gcli::user_Alloc() {
 
 // --- gcli.FDb.user.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FUser* gcli::user_AllocMaybe() {
+gcli::FUser* gcli::user_AllocMaybe() throw() {
     gcli::FUser *row = (gcli::FUser*)user_AllocMem();
     if (row) {
         new (row) gcli::FUser; // call constructor
@@ -4681,7 +4681,7 @@ gcli::FUser* gcli::user_AllocMaybe() {
 // --- gcli.FDb.user.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FUser* gcli::user_InsertMaybe(const gclidb::User &value) {
+gcli::FUser* gcli::user_InsertMaybe(const gclidb::User &value) throw() {
     gcli::FUser *row = &user_Alloc(); // if out of memory, process dies. if input error, return NULL.
     user_CopyIn(*row,const_cast<gclidb::User&>(value));
     bool ok = user_XrefMaybe(*row); // this may return false
@@ -4694,7 +4694,7 @@ gcli::FUser* gcli::user_InsertMaybe(const gclidb::User &value) {
 
 // --- gcli.FDb.user.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::user_AllocMem() {
+void* gcli::user_AllocMem() throw() {
     u64 new_nelems     = _db.user_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4720,7 +4720,7 @@ void* gcli::user_AllocMem() {
 
 // --- gcli.FDb.user.RemoveAll
 // Remove all elements from Lary
-void gcli::user_RemoveAll() {
+void gcli::user_RemoveAll() throw() {
     for (u64 n = _db.user_n; n>0; ) {
         n--;
         user_qFind(u64(n)).~FUser(); // destroy last element
@@ -4730,7 +4730,7 @@ void gcli::user_RemoveAll() {
 
 // --- gcli.FDb.user.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::user_RemoveLast() {
+void gcli::user_RemoveLast() throw() {
     u64 n = _db.user_n;
     if (n > 0) {
         n -= 1;
@@ -4759,7 +4759,7 @@ bool gcli::user_XrefMaybe(gcli::FUser &row) {
 
 // --- gcli.FDb.ind_user.Find
 // Find row by key. Return NULL if not found.
-gcli::FUser* gcli::ind_user_Find(const algo::strptr& key) {
+gcli::FUser* gcli::ind_user_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_user_buckets_n - 1);
     gcli::FUser* *e = &_db.ind_user_buckets_elems[index];
     gcli::FUser* ret=NULL;
@@ -4782,7 +4782,7 @@ gcli::FUser& gcli::ind_user_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_user.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FUser& gcli::ind_user_GetOrCreate(const algo::strptr& key) {
+gcli::FUser& gcli::ind_user_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FUser* ret = ind_user_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &user_Alloc();
@@ -4799,7 +4799,7 @@ gcli::FUser& gcli::ind_user_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_user.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_user_InsertMaybe(gcli::FUser& row) {
+bool gcli::ind_user_InsertMaybe(gcli::FUser& row) throw() {
     ind_user_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_user_next == (gcli::FUser*)-1)) {// check if in hash already
@@ -4827,7 +4827,7 @@ bool gcli::ind_user_InsertMaybe(gcli::FUser& row) {
 
 // --- gcli.FDb.ind_user.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_user_Remove(gcli::FUser& row) {
+void gcli::ind_user_Remove(gcli::FUser& row) throw() {
     if (LIKELY(row.ind_user_next != (gcli::FUser*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.user) & (_db.ind_user_buckets_n - 1);
         gcli::FUser* *prev = &_db.ind_user_buckets_elems[index]; // addr of pointer to current element
@@ -4845,7 +4845,7 @@ void gcli::ind_user_Remove(gcli::FUser& row) {
 
 // --- gcli.FDb.ind_user.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_user_Reserve(int n) {
+void gcli::ind_user_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_user_buckets_n;
     u32 new_nelems   = _db.ind_user_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -4881,7 +4881,7 @@ void gcli::ind_user_Reserve(int n) {
 
 // --- gcli.FDb.ind_mr.Find
 // Find row by key. Return NULL if not found.
-gcli::FMr* gcli::ind_mr_Find(const algo::strptr& key) {
+gcli::FMr* gcli::ind_mr_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_mr_buckets_n - 1);
     gcli::FMr* *e = &_db.ind_mr_buckets_elems[index];
     gcli::FMr* ret=NULL;
@@ -4904,7 +4904,7 @@ gcli::FMr& gcli::ind_mr_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_mr.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FMr& gcli::ind_mr_GetOrCreate(const algo::strptr& key) {
+gcli::FMr& gcli::ind_mr_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FMr* ret = ind_mr_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &mr_Alloc();
@@ -4921,7 +4921,7 @@ gcli::FMr& gcli::ind_mr_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_mr.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_mr_InsertMaybe(gcli::FMr& row) {
+bool gcli::ind_mr_InsertMaybe(gcli::FMr& row) throw() {
     ind_mr_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_mr_next == (gcli::FMr*)-1)) {// check if in hash already
@@ -4949,7 +4949,7 @@ bool gcli::ind_mr_InsertMaybe(gcli::FMr& row) {
 
 // --- gcli.FDb.ind_mr.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_mr_Remove(gcli::FMr& row) {
+void gcli::ind_mr_Remove(gcli::FMr& row) throw() {
     if (LIKELY(row.ind_mr_next != (gcli::FMr*)-1)) {// check if in hash already
         u32 index = algo::Smallstr150_Hash(0, row.mr) & (_db.ind_mr_buckets_n - 1);
         gcli::FMr* *prev = &_db.ind_mr_buckets_elems[index]; // addr of pointer to current element
@@ -4967,7 +4967,7 @@ void gcli::ind_mr_Remove(gcli::FMr& row) {
 
 // --- gcli.FDb.ind_mr.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_mr_Reserve(int n) {
+void gcli::ind_mr_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_mr_buckets_n;
     u32 new_nelems   = _db.ind_mr_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -5003,7 +5003,7 @@ void gcli::ind_mr_Reserve(int n) {
 
 // --- gcli.FDb.ind_milestone.Find
 // Find row by key. Return NULL if not found.
-gcli::FMilestone* gcli::ind_milestone_Find(const algo::strptr& key) {
+gcli::FMilestone* gcli::ind_milestone_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_milestone_buckets_n - 1);
     gcli::FMilestone* *e = &_db.ind_milestone_buckets_elems[index];
     gcli::FMilestone* ret=NULL;
@@ -5026,7 +5026,7 @@ gcli::FMilestone& gcli::ind_milestone_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_milestone.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FMilestone& gcli::ind_milestone_GetOrCreate(const algo::strptr& key) {
+gcli::FMilestone& gcli::ind_milestone_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FMilestone* ret = ind_milestone_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &milestone_Alloc();
@@ -5043,7 +5043,7 @@ gcli::FMilestone& gcli::ind_milestone_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_milestone.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_milestone_InsertMaybe(gcli::FMilestone& row) {
+bool gcli::ind_milestone_InsertMaybe(gcli::FMilestone& row) throw() {
     ind_milestone_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_milestone_next == (gcli::FMilestone*)-1)) {// check if in hash already
@@ -5071,7 +5071,7 @@ bool gcli::ind_milestone_InsertMaybe(gcli::FMilestone& row) {
 
 // --- gcli.FDb.ind_milestone.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_milestone_Remove(gcli::FMilestone& row) {
+void gcli::ind_milestone_Remove(gcli::FMilestone& row) throw() {
     if (LIKELY(row.ind_milestone_next != (gcli::FMilestone*)-1)) {// check if in hash already
         u32 index = algo::Smallstr200_Hash(0, row.milestone) & (_db.ind_milestone_buckets_n - 1);
         gcli::FMilestone* *prev = &_db.ind_milestone_buckets_elems[index]; // addr of pointer to current element
@@ -5089,7 +5089,7 @@ void gcli::ind_milestone_Remove(gcli::FMilestone& row) {
 
 // --- gcli.FDb.ind_milestone.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_milestone_Reserve(int n) {
+void gcli::ind_milestone_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_milestone_buckets_n;
     u32 new_nelems   = _db.ind_milestone_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -5126,7 +5126,7 @@ void gcli::ind_milestone_Reserve(int n) {
 // --- gcli.FDb.milestone.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FMilestone& gcli::milestone_Alloc() {
+gcli::FMilestone& gcli::milestone_Alloc() throw() {
     gcli::FMilestone* row = milestone_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.milestone  comment:'Alloc failed'");
@@ -5136,7 +5136,7 @@ gcli::FMilestone& gcli::milestone_Alloc() {
 
 // --- gcli.FDb.milestone.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FMilestone* gcli::milestone_AllocMaybe() {
+gcli::FMilestone* gcli::milestone_AllocMaybe() throw() {
     gcli::FMilestone *row = (gcli::FMilestone*)milestone_AllocMem();
     if (row) {
         new (row) gcli::FMilestone; // call constructor
@@ -5147,7 +5147,7 @@ gcli::FMilestone* gcli::milestone_AllocMaybe() {
 // --- gcli.FDb.milestone.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FMilestone* gcli::milestone_InsertMaybe(const gclidb::Milestone &value) {
+gcli::FMilestone* gcli::milestone_InsertMaybe(const gclidb::Milestone &value) throw() {
     gcli::FMilestone *row = &milestone_Alloc(); // if out of memory, process dies. if input error, return NULL.
     milestone_CopyIn(*row,const_cast<gclidb::Milestone&>(value));
     bool ok = milestone_XrefMaybe(*row); // this may return false
@@ -5160,7 +5160,7 @@ gcli::FMilestone* gcli::milestone_InsertMaybe(const gclidb::Milestone &value) {
 
 // --- gcli.FDb.milestone.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::milestone_AllocMem() {
+void* gcli::milestone_AllocMem() throw() {
     u64 new_nelems     = _db.milestone_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -5186,7 +5186,7 @@ void* gcli::milestone_AllocMem() {
 
 // --- gcli.FDb.milestone.RemoveAll
 // Remove all elements from Lary
-void gcli::milestone_RemoveAll() {
+void gcli::milestone_RemoveAll() throw() {
     for (u64 n = _db.milestone_n; n>0; ) {
         n--;
         milestone_qFind(u64(n)).~FMilestone(); // destroy last element
@@ -5196,7 +5196,7 @@ void gcli::milestone_RemoveAll() {
 
 // --- gcli.FDb.milestone.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::milestone_RemoveLast() {
+void gcli::milestone_RemoveLast() throw() {
     u64 n = _db.milestone_n;
     if (n > 0) {
         n -= 1;
@@ -5226,7 +5226,7 @@ bool gcli::milestone_XrefMaybe(gcli::FMilestone &row) {
 // --- gcli.FDb.mr.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FMr& gcli::mr_Alloc() {
+gcli::FMr& gcli::mr_Alloc() throw() {
     gcli::FMr* row = mr_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.mr  comment:'Alloc failed'");
@@ -5236,7 +5236,7 @@ gcli::FMr& gcli::mr_Alloc() {
 
 // --- gcli.FDb.mr.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FMr* gcli::mr_AllocMaybe() {
+gcli::FMr* gcli::mr_AllocMaybe() throw() {
     gcli::FMr *row = (gcli::FMr*)mr_AllocMem();
     if (row) {
         new (row) gcli::FMr; // call constructor
@@ -5247,7 +5247,7 @@ gcli::FMr* gcli::mr_AllocMaybe() {
 // --- gcli.FDb.mr.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FMr* gcli::mr_InsertMaybe(const gclidb::Mr &value) {
+gcli::FMr* gcli::mr_InsertMaybe(const gclidb::Mr &value) throw() {
     gcli::FMr *row = &mr_Alloc(); // if out of memory, process dies. if input error, return NULL.
     mr_CopyIn(*row,const_cast<gclidb::Mr&>(value));
     bool ok = mr_XrefMaybe(*row); // this may return false
@@ -5260,7 +5260,7 @@ gcli::FMr* gcli::mr_InsertMaybe(const gclidb::Mr &value) {
 
 // --- gcli.FDb.mr.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::mr_AllocMem() {
+void* gcli::mr_AllocMem() throw() {
     u64 new_nelems     = _db.mr_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -5286,7 +5286,7 @@ void* gcli::mr_AllocMem() {
 
 // --- gcli.FDb.mr.RemoveAll
 // Remove all elements from Lary
-void gcli::mr_RemoveAll() {
+void gcli::mr_RemoveAll() throw() {
     for (u64 n = _db.mr_n; n>0; ) {
         n--;
         mr_qFind(u64(n)).~FMr(); // destroy last element
@@ -5296,7 +5296,7 @@ void gcli::mr_RemoveAll() {
 
 // --- gcli.FDb.mr.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::mr_RemoveLast() {
+void gcli::mr_RemoveLast() throw() {
     u64 n = _db.mr_n;
     if (n > 0) {
         n -= 1;
@@ -5326,7 +5326,7 @@ bool gcli::mr_XrefMaybe(gcli::FMr &row) {
 // --- gcli.FDb.gtypeprefix.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGtypeprefix& gcli::gtypeprefix_Alloc() {
+gcli::FGtypeprefix& gcli::gtypeprefix_Alloc() throw() {
     gcli::FGtypeprefix* row = gtypeprefix_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gtypeprefix  comment:'Alloc failed'");
@@ -5336,7 +5336,7 @@ gcli::FGtypeprefix& gcli::gtypeprefix_Alloc() {
 
 // --- gcli.FDb.gtypeprefix.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGtypeprefix* gcli::gtypeprefix_AllocMaybe() {
+gcli::FGtypeprefix* gcli::gtypeprefix_AllocMaybe() throw() {
     gcli::FGtypeprefix *row = (gcli::FGtypeprefix*)gtypeprefix_AllocMem();
     if (row) {
         new (row) gcli::FGtypeprefix; // call constructor
@@ -5347,7 +5347,7 @@ gcli::FGtypeprefix* gcli::gtypeprefix_AllocMaybe() {
 // --- gcli.FDb.gtypeprefix.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGtypeprefix* gcli::gtypeprefix_InsertMaybe(const gclidb::Gtypeprefix &value) {
+gcli::FGtypeprefix* gcli::gtypeprefix_InsertMaybe(const gclidb::Gtypeprefix &value) throw() {
     gcli::FGtypeprefix *row = &gtypeprefix_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gtypeprefix_CopyIn(*row,const_cast<gclidb::Gtypeprefix&>(value));
     bool ok = gtypeprefix_XrefMaybe(*row); // this may return false
@@ -5360,7 +5360,7 @@ gcli::FGtypeprefix* gcli::gtypeprefix_InsertMaybe(const gclidb::Gtypeprefix &val
 
 // --- gcli.FDb.gtypeprefix.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gtypeprefix_AllocMem() {
+void* gcli::gtypeprefix_AllocMem() throw() {
     u64 new_nelems     = _db.gtypeprefix_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -5386,7 +5386,7 @@ void* gcli::gtypeprefix_AllocMem() {
 
 // --- gcli.FDb.gtypeprefix.RemoveAll
 // Remove all elements from Lary
-void gcli::gtypeprefix_RemoveAll() {
+void gcli::gtypeprefix_RemoveAll() throw() {
     for (u64 n = _db.gtypeprefix_n; n>0; ) {
         n--;
         gtypeprefix_qFind(u64(n)).~FGtypeprefix(); // destroy last element
@@ -5396,7 +5396,7 @@ void gcli::gtypeprefix_RemoveAll() {
 
 // --- gcli.FDb.gtypeprefix.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gtypeprefix_RemoveLast() {
+void gcli::gtypeprefix_RemoveLast() throw() {
     u64 n = _db.gtypeprefix_n;
     if (n > 0) {
         n -= 1;
@@ -5406,7 +5406,7 @@ void gcli::gtypeprefix_RemoveLast() {
 }
 
 // --- gcli.FDb.gtypeprefix.InputMaybe
-static bool gcli::gtypeprefix_InputMaybe(gclidb::Gtypeprefix &elem) {
+static bool gcli::gtypeprefix_InputMaybe(gclidb::Gtypeprefix &elem) throw() {
     bool retval = true;
     retval = gtypeprefix_InsertMaybe(elem) != nullptr;
     return retval;
@@ -5437,7 +5437,7 @@ bool gcli::gtypeprefix_XrefMaybe(gcli::FGtypeprefix &row) {
 // --- gcli.FDb.gtblact.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGtblact& gcli::gtblact_Alloc() {
+gcli::FGtblact& gcli::gtblact_Alloc() throw() {
     gcli::FGtblact* row = gtblact_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gtblact  comment:'Alloc failed'");
@@ -5447,7 +5447,7 @@ gcli::FGtblact& gcli::gtblact_Alloc() {
 
 // --- gcli.FDb.gtblact.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGtblact* gcli::gtblact_AllocMaybe() {
+gcli::FGtblact* gcli::gtblact_AllocMaybe() throw() {
     gcli::FGtblact *row = (gcli::FGtblact*)gtblact_AllocMem();
     if (row) {
         new (row) gcli::FGtblact; // call constructor
@@ -5458,7 +5458,7 @@ gcli::FGtblact* gcli::gtblact_AllocMaybe() {
 // --- gcli.FDb.gtblact.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGtblact* gcli::gtblact_InsertMaybe(const gclidb::Gtblact &value) {
+gcli::FGtblact* gcli::gtblact_InsertMaybe(const gclidb::Gtblact &value) throw() {
     gcli::FGtblact *row = &gtblact_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gtblact_CopyIn(*row,const_cast<gclidb::Gtblact&>(value));
     bool ok = gtblact_XrefMaybe(*row); // this may return false
@@ -5471,7 +5471,7 @@ gcli::FGtblact* gcli::gtblact_InsertMaybe(const gclidb::Gtblact &value) {
 
 // --- gcli.FDb.gtblact.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gtblact_AllocMem() {
+void* gcli::gtblact_AllocMem() throw() {
     u64 new_nelems     = _db.gtblact_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -5497,7 +5497,7 @@ void* gcli::gtblact_AllocMem() {
 
 // --- gcli.FDb.gtblact.RemoveAll
 // Remove all elements from Lary
-void gcli::gtblact_RemoveAll() {
+void gcli::gtblact_RemoveAll() throw() {
     for (u64 n = _db.gtblact_n; n>0; ) {
         n--;
         gtblact_qFind(u64(n)).~FGtblact(); // destroy last element
@@ -5507,7 +5507,7 @@ void gcli::gtblact_RemoveAll() {
 
 // --- gcli.FDb.gtblact.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gtblact_RemoveLast() {
+void gcli::gtblact_RemoveLast() throw() {
     u64 n = _db.gtblact_n;
     if (n > 0) {
         n -= 1;
@@ -5517,7 +5517,7 @@ void gcli::gtblact_RemoveLast() {
 }
 
 // --- gcli.FDb.gtblact.LoadStatic
-static void gcli::gtblact_LoadStatic() {
+static void gcli::gtblact_LoadStatic() throw() {
     static struct _t {
         const char *s;
         void (*step)(gcli::FGtblact&);
@@ -5587,7 +5587,7 @@ bool gcli::gtblact_XrefMaybe(gcli::FGtblact &row) {
 // --- gcli.FDb.gtblactfld.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGtblactfld& gcli::gtblactfld_Alloc() {
+gcli::FGtblactfld& gcli::gtblactfld_Alloc() throw() {
     gcli::FGtblactfld* row = gtblactfld_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gtblactfld  comment:'Alloc failed'");
@@ -5597,7 +5597,7 @@ gcli::FGtblactfld& gcli::gtblactfld_Alloc() {
 
 // --- gcli.FDb.gtblactfld.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGtblactfld* gcli::gtblactfld_AllocMaybe() {
+gcli::FGtblactfld* gcli::gtblactfld_AllocMaybe() throw() {
     gcli::FGtblactfld *row = (gcli::FGtblactfld*)gtblactfld_AllocMem();
     if (row) {
         new (row) gcli::FGtblactfld; // call constructor
@@ -5608,7 +5608,7 @@ gcli::FGtblactfld* gcli::gtblactfld_AllocMaybe() {
 // --- gcli.FDb.gtblactfld.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGtblactfld* gcli::gtblactfld_InsertMaybe(const gclidb::Gtblactfld &value) {
+gcli::FGtblactfld* gcli::gtblactfld_InsertMaybe(const gclidb::Gtblactfld &value) throw() {
     gcli::FGtblactfld *row = &gtblactfld_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gtblactfld_CopyIn(*row,const_cast<gclidb::Gtblactfld&>(value));
     bool ok = gtblactfld_XrefMaybe(*row); // this may return false
@@ -5621,7 +5621,7 @@ gcli::FGtblactfld* gcli::gtblactfld_InsertMaybe(const gclidb::Gtblactfld &value)
 
 // --- gcli.FDb.gtblactfld.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gtblactfld_AllocMem() {
+void* gcli::gtblactfld_AllocMem() throw() {
     u64 new_nelems     = _db.gtblactfld_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -5647,7 +5647,7 @@ void* gcli::gtblactfld_AllocMem() {
 
 // --- gcli.FDb.gtblactfld.RemoveAll
 // Remove all elements from Lary
-void gcli::gtblactfld_RemoveAll() {
+void gcli::gtblactfld_RemoveAll() throw() {
     for (u64 n = _db.gtblactfld_n; n>0; ) {
         n--;
         gtblactfld_qFind(u64(n)).~FGtblactfld(); // destroy last element
@@ -5657,7 +5657,7 @@ void gcli::gtblactfld_RemoveAll() {
 
 // --- gcli.FDb.gtblactfld.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gtblactfld_RemoveLast() {
+void gcli::gtblactfld_RemoveLast() throw() {
     u64 n = _db.gtblactfld_n;
     if (n > 0) {
         n -= 1;
@@ -5667,7 +5667,7 @@ void gcli::gtblactfld_RemoveLast() {
 }
 
 // --- gcli.FDb.gtblactfld.InputMaybe
-static bool gcli::gtblactfld_InputMaybe(gclidb::Gtblactfld &elem) {
+static bool gcli::gtblactfld_InputMaybe(gclidb::Gtblactfld &elem) throw() {
     bool retval = true;
     retval = gtblactfld_InsertMaybe(elem) != nullptr;
     return retval;
@@ -5715,7 +5715,7 @@ bool gcli::gtblactfld_XrefMaybe(gcli::FGtblactfld &row) {
 
 // --- gcli.FDb.ind_gtblact.Find
 // Find row by key. Return NULL if not found.
-gcli::FGtblact* gcli::ind_gtblact_Find(const algo::strptr& key) {
+gcli::FGtblact* gcli::ind_gtblact_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gtblact_buckets_n - 1);
     gcli::FGtblact* *e = &_db.ind_gtblact_buckets_elems[index];
     gcli::FGtblact* ret=NULL;
@@ -5738,7 +5738,7 @@ gcli::FGtblact& gcli::ind_gtblact_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gtblact.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGtblact& gcli::ind_gtblact_GetOrCreate(const algo::strptr& key) {
+gcli::FGtblact& gcli::ind_gtblact_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGtblact* ret = ind_gtblact_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gtblact_Alloc();
@@ -5755,7 +5755,7 @@ gcli::FGtblact& gcli::ind_gtblact_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gtblact.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gtblact_InsertMaybe(gcli::FGtblact& row) {
+bool gcli::ind_gtblact_InsertMaybe(gcli::FGtblact& row) throw() {
     ind_gtblact_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gtblact_next == (gcli::FGtblact*)-1)) {// check if in hash already
@@ -5783,7 +5783,7 @@ bool gcli::ind_gtblact_InsertMaybe(gcli::FGtblact& row) {
 
 // --- gcli.FDb.ind_gtblact.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gtblact_Remove(gcli::FGtblact& row) {
+void gcli::ind_gtblact_Remove(gcli::FGtblact& row) throw() {
     if (LIKELY(row.ind_gtblact_next != (gcli::FGtblact*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.gtblact) & (_db.ind_gtblact_buckets_n - 1);
         gcli::FGtblact* *prev = &_db.ind_gtblact_buckets_elems[index]; // addr of pointer to current element
@@ -5801,7 +5801,7 @@ void gcli::ind_gtblact_Remove(gcli::FGtblact& row) {
 
 // --- gcli.FDb.ind_gtblact.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gtblact_Reserve(int n) {
+void gcli::ind_gtblact_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gtblact_buckets_n;
     u32 new_nelems   = _db.ind_gtblact_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -5837,7 +5837,7 @@ void gcli::ind_gtblact_Reserve(int n) {
 
 // --- gcli.FDb.zd_gtblact.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void gcli::zd_gtblact_Insert(gcli::FGtblact& row) {
+void gcli::zd_gtblact_Insert(gcli::FGtblact& row) throw() {
     if (!zd_gtblact_InLlistQ(row)) {
         gcli::FGtblact* old_tail = _db.zd_gtblact_tail;
         row.zd_gtblact_next = NULL;
@@ -5853,7 +5853,7 @@ void gcli::zd_gtblact_Insert(gcli::FGtblact& row) {
 
 // --- gcli.FDb.zd_gtblact.Remove
 // Remove element from index. If element is not in index, do nothing.
-void gcli::zd_gtblact_Remove(gcli::FGtblact& row) {
+void gcli::zd_gtblact_Remove(gcli::FGtblact& row) throw() {
     if (zd_gtblact_InLlistQ(row)) {
         gcli::FGtblact* old_head       = _db.zd_gtblact_head;
         (void)old_head; // in case it's not used
@@ -5876,7 +5876,7 @@ void gcli::zd_gtblact_Remove(gcli::FGtblact& row) {
 
 // --- gcli.FDb.zd_gtblact.RemoveAll
 // Empty the index. (The rows are not deleted)
-void gcli::zd_gtblact_RemoveAll() {
+void gcli::zd_gtblact_RemoveAll() throw() {
     gcli::FGtblact* row = _db.zd_gtblact_head;
     _db.zd_gtblact_head = NULL;
     _db.zd_gtblact_tail = NULL;
@@ -5891,7 +5891,7 @@ void gcli::zd_gtblact_RemoveAll() {
 
 // --- gcli.FDb.zd_gtblact.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-gcli::FGtblact* gcli::zd_gtblact_RemoveFirst() {
+gcli::FGtblact* gcli::zd_gtblact_RemoveFirst() throw() {
     gcli::FGtblact *row = NULL;
     row = _db.zd_gtblact_head;
     if (row) {
@@ -5909,7 +5909,7 @@ gcli::FGtblact* gcli::zd_gtblact_RemoveFirst() {
 
 // --- gcli.FDb.ind_gtblactfld.Find
 // Find row by key. Return NULL if not found.
-gcli::FGtblactfld* gcli::ind_gtblactfld_Find(const algo::strptr& key) {
+gcli::FGtblactfld* gcli::ind_gtblactfld_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gtblactfld_buckets_n - 1);
     gcli::FGtblactfld* *e = &_db.ind_gtblactfld_buckets_elems[index];
     gcli::FGtblactfld* ret=NULL;
@@ -5932,7 +5932,7 @@ gcli::FGtblactfld& gcli::ind_gtblactfld_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gtblactfld.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gtblactfld_InsertMaybe(gcli::FGtblactfld& row) {
+bool gcli::ind_gtblactfld_InsertMaybe(gcli::FGtblactfld& row) throw() {
     ind_gtblactfld_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gtblactfld_next == (gcli::FGtblactfld*)-1)) {// check if in hash already
@@ -5960,7 +5960,7 @@ bool gcli::ind_gtblactfld_InsertMaybe(gcli::FGtblactfld& row) {
 
 // --- gcli.FDb.ind_gtblactfld.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gtblactfld_Remove(gcli::FGtblactfld& row) {
+void gcli::ind_gtblactfld_Remove(gcli::FGtblactfld& row) throw() {
     if (LIKELY(row.ind_gtblactfld_next != (gcli::FGtblactfld*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.gtblactfld) & (_db.ind_gtblactfld_buckets_n - 1);
         gcli::FGtblactfld* *prev = &_db.ind_gtblactfld_buckets_elems[index]; // addr of pointer to current element
@@ -5978,7 +5978,7 @@ void gcli::ind_gtblactfld_Remove(gcli::FGtblactfld& row) {
 
 // --- gcli.FDb.ind_gtblactfld.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gtblactfld_Reserve(int n) {
+void gcli::ind_gtblactfld_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gtblactfld_buckets_n;
     u32 new_nelems   = _db.ind_gtblactfld_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -6015,7 +6015,7 @@ void gcli::ind_gtblactfld_Reserve(int n) {
 // --- gcli.FDb.gfld.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGfld& gcli::gfld_Alloc() {
+gcli::FGfld& gcli::gfld_Alloc() throw() {
     gcli::FGfld* row = gfld_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gfld  comment:'Alloc failed'");
@@ -6025,7 +6025,7 @@ gcli::FGfld& gcli::gfld_Alloc() {
 
 // --- gcli.FDb.gfld.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGfld* gcli::gfld_AllocMaybe() {
+gcli::FGfld* gcli::gfld_AllocMaybe() throw() {
     gcli::FGfld *row = (gcli::FGfld*)gfld_AllocMem();
     if (row) {
         new (row) gcli::FGfld; // call constructor
@@ -6036,7 +6036,7 @@ gcli::FGfld* gcli::gfld_AllocMaybe() {
 // --- gcli.FDb.gfld.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGfld* gcli::gfld_InsertMaybe(const gclidb::Gfld &value) {
+gcli::FGfld* gcli::gfld_InsertMaybe(const gclidb::Gfld &value) throw() {
     gcli::FGfld *row = &gfld_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gfld_CopyIn(*row,const_cast<gclidb::Gfld&>(value));
     bool ok = gfld_XrefMaybe(*row); // this may return false
@@ -6049,7 +6049,7 @@ gcli::FGfld* gcli::gfld_InsertMaybe(const gclidb::Gfld &value) {
 
 // --- gcli.FDb.gfld.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gfld_AllocMem() {
+void* gcli::gfld_AllocMem() throw() {
     u64 new_nelems     = _db.gfld_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -6075,7 +6075,7 @@ void* gcli::gfld_AllocMem() {
 
 // --- gcli.FDb.gfld.RemoveAll
 // Remove all elements from Lary
-void gcli::gfld_RemoveAll() {
+void gcli::gfld_RemoveAll() throw() {
     for (u64 n = _db.gfld_n; n>0; ) {
         n--;
         gfld_qFind(u64(n)).~FGfld(); // destroy last element
@@ -6085,7 +6085,7 @@ void gcli::gfld_RemoveAll() {
 
 // --- gcli.FDb.gfld.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gfld_RemoveLast() {
+void gcli::gfld_RemoveLast() throw() {
     u64 n = _db.gfld_n;
     if (n > 0) {
         n -= 1;
@@ -6095,7 +6095,7 @@ void gcli::gfld_RemoveLast() {
 }
 
 // --- gcli.FDb.gfld.InputMaybe
-static bool gcli::gfld_InputMaybe(gclidb::Gfld &elem) {
+static bool gcli::gfld_InputMaybe(gclidb::Gfld &elem) throw() {
     bool retval = true;
     retval = gfld_InsertMaybe(elem) != nullptr;
     return retval;
@@ -6121,7 +6121,7 @@ bool gcli::gfld_XrefMaybe(gcli::FGfld &row) {
 
 // --- gcli.FDb.ind_gfld.Find
 // Find row by key. Return NULL if not found.
-gcli::FGfld* gcli::ind_gfld_Find(const algo::strptr& key) {
+gcli::FGfld* gcli::ind_gfld_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gfld_buckets_n - 1);
     gcli::FGfld* *e = &_db.ind_gfld_buckets_elems[index];
     gcli::FGfld* ret=NULL;
@@ -6144,7 +6144,7 @@ gcli::FGfld& gcli::ind_gfld_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gfld.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGfld& gcli::ind_gfld_GetOrCreate(const algo::strptr& key) {
+gcli::FGfld& gcli::ind_gfld_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGfld* ret = ind_gfld_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gfld_Alloc();
@@ -6161,7 +6161,7 @@ gcli::FGfld& gcli::ind_gfld_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gfld.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gfld_InsertMaybe(gcli::FGfld& row) {
+bool gcli::ind_gfld_InsertMaybe(gcli::FGfld& row) throw() {
     ind_gfld_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gfld_next == (gcli::FGfld*)-1)) {// check if in hash already
@@ -6189,7 +6189,7 @@ bool gcli::ind_gfld_InsertMaybe(gcli::FGfld& row) {
 
 // --- gcli.FDb.ind_gfld.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gfld_Remove(gcli::FGfld& row) {
+void gcli::ind_gfld_Remove(gcli::FGfld& row) throw() {
     if (LIKELY(row.ind_gfld_next != (gcli::FGfld*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.gfld) & (_db.ind_gfld_buckets_n - 1);
         gcli::FGfld* *prev = &_db.ind_gfld_buckets_elems[index]; // addr of pointer to current element
@@ -6207,7 +6207,7 @@ void gcli::ind_gfld_Remove(gcli::FGfld& row) {
 
 // --- gcli.FDb.ind_gfld.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gfld_Reserve(int n) {
+void gcli::ind_gfld_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gfld_buckets_n;
     u32 new_nelems   = _db.ind_gfld_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -6244,7 +6244,7 @@ void gcli::ind_gfld_Reserve(int n) {
 // --- gcli.FDb.c_gfld.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_gfld_Insert(gcli::FGfld& row) {
+void gcli::c_gfld_Insert(gcli::FGfld& row) throw() {
     if (bool_Update(row._db_c_gfld_in_ary,true)) {
         // reserve space
         c_gfld_Reserve(1);
@@ -6261,7 +6261,7 @@ void gcli::c_gfld_Insert(gcli::FGfld& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_gfld_InsertMaybe(gcli::FGfld& row) {
+bool gcli::c_gfld_InsertMaybe(gcli::FGfld& row) throw() {
     bool retval = !row._db_c_gfld_in_ary;
     c_gfld_Insert(row); // check is performed in _Insert again
     return retval;
@@ -6269,7 +6269,7 @@ bool gcli::c_gfld_InsertMaybe(gcli::FGfld& row) {
 
 // --- gcli.FDb.c_gfld.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_gfld_Remove(gcli::FGfld& row) {
+void gcli::c_gfld_Remove(gcli::FGfld& row) throw() {
     if (bool_Update(row._db_c_gfld_in_ary,false)) {
         int lim = _db.c_gfld_n;
         gcli::FGfld* *elems = _db.c_gfld_elems;
@@ -6290,7 +6290,7 @@ void gcli::c_gfld_Remove(gcli::FGfld& row) {
 
 // --- gcli.FDb.c_gfld.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_gfld_Reserve(u32 n) {
+void gcli::c_gfld_Reserve(u32 n) throw() {
     u32 old_max = _db.c_gfld_max;
     if (UNLIKELY(_db.c_gfld_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -6308,7 +6308,7 @@ void gcli::c_gfld_Reserve(u32 n) {
 // --- gcli.FDb.gtbl.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGtbl& gcli::gtbl_Alloc() {
+gcli::FGtbl& gcli::gtbl_Alloc() throw() {
     gcli::FGtbl* row = gtbl_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gtbl  comment:'Alloc failed'");
@@ -6318,7 +6318,7 @@ gcli::FGtbl& gcli::gtbl_Alloc() {
 
 // --- gcli.FDb.gtbl.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGtbl* gcli::gtbl_AllocMaybe() {
+gcli::FGtbl* gcli::gtbl_AllocMaybe() throw() {
     gcli::FGtbl *row = (gcli::FGtbl*)gtbl_AllocMem();
     if (row) {
         new (row) gcli::FGtbl; // call constructor
@@ -6329,7 +6329,7 @@ gcli::FGtbl* gcli::gtbl_AllocMaybe() {
 // --- gcli.FDb.gtbl.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGtbl* gcli::gtbl_InsertMaybe(const gclidb::Gtbl &value) {
+gcli::FGtbl* gcli::gtbl_InsertMaybe(const gclidb::Gtbl &value) throw() {
     gcli::FGtbl *row = &gtbl_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gtbl_CopyIn(*row,const_cast<gclidb::Gtbl&>(value));
     bool ok = gtbl_XrefMaybe(*row); // this may return false
@@ -6342,7 +6342,7 @@ gcli::FGtbl* gcli::gtbl_InsertMaybe(const gclidb::Gtbl &value) {
 
 // --- gcli.FDb.gtbl.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gtbl_AllocMem() {
+void* gcli::gtbl_AllocMem() throw() {
     u64 new_nelems     = _db.gtbl_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -6368,7 +6368,7 @@ void* gcli::gtbl_AllocMem() {
 
 // --- gcli.FDb.gtbl.RemoveAll
 // Remove all elements from Lary
-void gcli::gtbl_RemoveAll() {
+void gcli::gtbl_RemoveAll() throw() {
     for (u64 n = _db.gtbl_n; n>0; ) {
         n--;
         gtbl_qFind(u64(n)).~FGtbl(); // destroy last element
@@ -6378,7 +6378,7 @@ void gcli::gtbl_RemoveAll() {
 
 // --- gcli.FDb.gtbl.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gtbl_RemoveLast() {
+void gcli::gtbl_RemoveLast() throw() {
     u64 n = _db.gtbl_n;
     if (n > 0) {
         n -= 1;
@@ -6388,7 +6388,7 @@ void gcli::gtbl_RemoveLast() {
 }
 
 // --- gcli.FDb.gtbl.InputMaybe
-static bool gcli::gtbl_InputMaybe(gclidb::Gtbl &elem) {
+static bool gcli::gtbl_InputMaybe(gclidb::Gtbl &elem) throw() {
     bool retval = true;
     retval = gtbl_InsertMaybe(elem) != nullptr;
     return retval;
@@ -6414,7 +6414,7 @@ bool gcli::gtbl_XrefMaybe(gcli::FGtbl &row) {
 
 // --- gcli.FDb.ind_gtbl.Find
 // Find row by key. Return NULL if not found.
-gcli::FGtbl* gcli::ind_gtbl_Find(const algo::strptr& key) {
+gcli::FGtbl* gcli::ind_gtbl_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gtbl_buckets_n - 1);
     gcli::FGtbl* *e = &_db.ind_gtbl_buckets_elems[index];
     gcli::FGtbl* ret=NULL;
@@ -6437,7 +6437,7 @@ gcli::FGtbl& gcli::ind_gtbl_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gtbl.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGtbl& gcli::ind_gtbl_GetOrCreate(const algo::strptr& key) {
+gcli::FGtbl& gcli::ind_gtbl_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGtbl* ret = ind_gtbl_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gtbl_Alloc();
@@ -6454,7 +6454,7 @@ gcli::FGtbl& gcli::ind_gtbl_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gtbl.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gtbl_InsertMaybe(gcli::FGtbl& row) {
+bool gcli::ind_gtbl_InsertMaybe(gcli::FGtbl& row) throw() {
     ind_gtbl_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gtbl_next == (gcli::FGtbl*)-1)) {// check if in hash already
@@ -6482,7 +6482,7 @@ bool gcli::ind_gtbl_InsertMaybe(gcli::FGtbl& row) {
 
 // --- gcli.FDb.ind_gtbl.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gtbl_Remove(gcli::FGtbl& row) {
+void gcli::ind_gtbl_Remove(gcli::FGtbl& row) throw() {
     if (LIKELY(row.ind_gtbl_next != (gcli::FGtbl*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.gtbl) & (_db.ind_gtbl_buckets_n - 1);
         gcli::FGtbl* *prev = &_db.ind_gtbl_buckets_elems[index]; // addr of pointer to current element
@@ -6500,7 +6500,7 @@ void gcli::ind_gtbl_Remove(gcli::FGtbl& row) {
 
 // --- gcli.FDb.ind_gtbl.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gtbl_Reserve(int n) {
+void gcli::ind_gtbl_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gtbl_buckets_n;
     u32 new_nelems   = _db.ind_gtbl_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -6537,7 +6537,7 @@ void gcli::ind_gtbl_Reserve(int n) {
 // --- gcli.FDb.gact.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcli::FGact& gcli::gact_Alloc() {
+gcli::FGact& gcli::gact_Alloc() throw() {
     gcli::FGact* row = gact_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.gact  comment:'Alloc failed'");
@@ -6547,7 +6547,7 @@ gcli::FGact& gcli::gact_Alloc() {
 
 // --- gcli.FDb.gact.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcli::FGact* gcli::gact_AllocMaybe() {
+gcli::FGact* gcli::gact_AllocMaybe() throw() {
     gcli::FGact *row = (gcli::FGact*)gact_AllocMem();
     if (row) {
         new (row) gcli::FGact; // call constructor
@@ -6558,7 +6558,7 @@ gcli::FGact* gcli::gact_AllocMaybe() {
 // --- gcli.FDb.gact.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGact* gcli::gact_InsertMaybe(const gclidb::Gact &value) {
+gcli::FGact* gcli::gact_InsertMaybe(const gclidb::Gact &value) throw() {
     gcli::FGact *row = &gact_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gact_CopyIn(*row,const_cast<gclidb::Gact&>(value));
     bool ok = gact_XrefMaybe(*row); // this may return false
@@ -6571,7 +6571,7 @@ gcli::FGact* gcli::gact_InsertMaybe(const gclidb::Gact &value) {
 
 // --- gcli.FDb.gact.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcli::gact_AllocMem() {
+void* gcli::gact_AllocMem() throw() {
     u64 new_nelems     = _db.gact_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -6597,7 +6597,7 @@ void* gcli::gact_AllocMem() {
 
 // --- gcli.FDb.gact.RemoveAll
 // Remove all elements from Lary
-void gcli::gact_RemoveAll() {
+void gcli::gact_RemoveAll() throw() {
     for (u64 n = _db.gact_n; n>0; ) {
         n--;
         gact_qFind(u64(n)).~FGact(); // destroy last element
@@ -6607,7 +6607,7 @@ void gcli::gact_RemoveAll() {
 
 // --- gcli.FDb.gact.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::gact_RemoveLast() {
+void gcli::gact_RemoveLast() throw() {
     u64 n = _db.gact_n;
     if (n > 0) {
         n -= 1;
@@ -6617,7 +6617,7 @@ void gcli::gact_RemoveLast() {
 }
 
 // --- gcli.FDb.gact.InputMaybe
-static bool gcli::gact_InputMaybe(gclidb::Gact &elem) {
+static bool gcli::gact_InputMaybe(gclidb::Gact &elem) throw() {
     bool retval = true;
     retval = gact_InsertMaybe(elem) != nullptr;
     return retval;
@@ -6643,7 +6643,7 @@ bool gcli::gact_XrefMaybe(gcli::FGact &row) {
 
 // --- gcli.FDb.ind_gact.Find
 // Find row by key. Return NULL if not found.
-gcli::FGact* gcli::ind_gact_Find(const algo::strptr& key) {
+gcli::FGact* gcli::ind_gact_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gact_buckets_n - 1);
     gcli::FGact* *e = &_db.ind_gact_buckets_elems[index];
     gcli::FGact* ret=NULL;
@@ -6666,7 +6666,7 @@ gcli::FGact& gcli::ind_gact_FindX(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gact.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGact& gcli::ind_gact_GetOrCreate(const algo::strptr& key) {
+gcli::FGact& gcli::ind_gact_GetOrCreate(const algo::strptr& key) throw() {
     gcli::FGact* ret = ind_gact_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gact_Alloc();
@@ -6683,7 +6683,7 @@ gcli::FGact& gcli::ind_gact_GetOrCreate(const algo::strptr& key) {
 
 // --- gcli.FDb.ind_gact.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_gact_InsertMaybe(gcli::FGact& row) {
+bool gcli::ind_gact_InsertMaybe(gcli::FGact& row) throw() {
     ind_gact_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gact_next == (gcli::FGact*)-1)) {// check if in hash already
@@ -6711,7 +6711,7 @@ bool gcli::ind_gact_InsertMaybe(gcli::FGact& row) {
 
 // --- gcli.FDb.ind_gact.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_gact_Remove(gcli::FGact& row) {
+void gcli::ind_gact_Remove(gcli::FGact& row) throw() {
     if (LIKELY(row.ind_gact_next != (gcli::FGact*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.gact) & (_db.ind_gact_buckets_n - 1);
         gcli::FGact* *prev = &_db.ind_gact_buckets_elems[index]; // addr of pointer to current element
@@ -6729,7 +6729,7 @@ void gcli::ind_gact_Remove(gcli::FGact& row) {
 
 // --- gcli.FDb.ind_gact.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_gact_Reserve(int n) {
+void gcli::ind_gact_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gact_buckets_n;
     u32 new_nelems   = _db.ind_gact_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -6765,13 +6765,13 @@ void gcli::ind_gact_Reserve(int n) {
 
 // --- gcli.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr gcli::trace_RowidFind(int t) {
+static algo::ImrowPtr gcli::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- gcli.FDb.trace.N
 // Function return 1
-inline static i32 gcli::trace_N() {
+inline static i32 gcli::trace_N() throw() {
     return 1;
 }
 
@@ -7317,7 +7317,7 @@ void gcli::FDb_Init() {
 }
 
 // --- gcli.FDb..Uninit
-void gcli::FDb_Uninit() {
+void gcli::FDb_Uninit() throw() {
     gcli::FDb &row = _db; (void)row;
 
     // gcli.FDb.ind_gact.Uninit (Thash)  //
@@ -7491,27 +7491,27 @@ void gcli::FDb_Uninit() {
 
 // --- gcli.FGact.base.CopyOut
 // Copy fields out of row
-void gcli::gact_CopyOut(gcli::FGact &row, gclidb::Gact &out) {
+void gcli::gact_CopyOut(gcli::FGact &row, gclidb::Gact &out) throw() {
     out.gact = row.gact;
     out.comment = row.comment;
 }
 
 // --- gcli.FGact.base.CopyIn
 // Copy fields in to row
-void gcli::gact_CopyIn(gcli::FGact &row, gclidb::Gact &in) {
+void gcli::gact_CopyIn(gcli::FGact &row, gclidb::Gact &in) throw() {
     row.gact = in.gact;
     row.comment = in.comment;
 }
 
 // --- gcli.FGact..Uninit
-void gcli::FGact_Uninit(gcli::FGact& gact) {
+void gcli::FGact_Uninit(gcli::FGact& gact) throw() {
     gcli::FGact &row = gact; (void)row;
     ind_gact_Remove(row); // remove gact from index ind_gact
 }
 
 // --- gcli.FGclicmd.base.CopyOut
 // Copy fields out of row
-void gcli::gclicmd_CopyOut(gcli::FGclicmd &row, gclidb::Gclicmd &out) {
+void gcli::gclicmd_CopyOut(gcli::FGclicmd &row, gclidb::Gclicmd &out) throw() {
     out.gclicmd = row.gclicmd;
     out.gclicmdf2j = row.gclicmdf2j;
     out.comment = row.comment;
@@ -7519,7 +7519,7 @@ void gcli::gclicmd_CopyOut(gcli::FGclicmd &row, gclidb::Gclicmd &out) {
 
 // --- gcli.FGclicmd.base.CopyIn
 // Copy fields in to row
-void gcli::gclicmd_CopyIn(gcli::FGclicmd &row, gclidb::Gclicmd &in) {
+void gcli::gclicmd_CopyIn(gcli::FGclicmd &row, gclidb::Gclicmd &in) throw() {
     row.gclicmd = in.gclicmd;
     row.gclicmdf2j = in.gclicmdf2j;
     row.comment = in.comment;
@@ -7528,7 +7528,7 @@ void gcli::gclicmd_CopyIn(gcli::FGclicmd &row, gclidb::Gclicmd &in) {
 // --- gcli.FGclicmd.c_tuples.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_tuples_Insert(gcli::FGclicmd& gclicmd, gcli::FTuples& row) {
+void gcli::c_tuples_Insert(gcli::FGclicmd& gclicmd, gcli::FTuples& row) throw() {
     // reserve space
     c_tuples_Reserve(gclicmd, 1);
     u32 n  = gclicmd.c_tuples_n;
@@ -7544,7 +7544,7 @@ void gcli::c_tuples_Insert(gcli::FGclicmd& gclicmd, gcli::FTuples& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool gcli::c_tuples_ScanInsertMaybe(gcli::FGclicmd& gclicmd, gcli::FTuples& row) {
+bool gcli::c_tuples_ScanInsertMaybe(gcli::FGclicmd& gclicmd, gcli::FTuples& row) throw() {
     bool retval = true;
     u32 n  = gclicmd.c_tuples_n;
     for (u32 i = 0; i < n; i++) {
@@ -7564,7 +7564,7 @@ bool gcli::c_tuples_ScanInsertMaybe(gcli::FGclicmd& gclicmd, gcli::FTuples& row)
 
 // --- gcli.FGclicmd.c_tuples.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_tuples_Remove(gcli::FGclicmd& gclicmd, gcli::FTuples& row) {
+void gcli::c_tuples_Remove(gcli::FGclicmd& gclicmd, gcli::FTuples& row) throw() {
     int lim = gclicmd.c_tuples_n;
     gcli::FTuples* *elems = gclicmd.c_tuples_elems;
     // search backward, so that most recently added element is found first.
@@ -7583,7 +7583,7 @@ void gcli::c_tuples_Remove(gcli::FGclicmd& gclicmd, gcli::FTuples& row) {
 
 // --- gcli.FGclicmd.c_tuples.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_tuples_Reserve(gcli::FGclicmd& gclicmd, u32 n) {
+void gcli::c_tuples_Reserve(gcli::FGclicmd& gclicmd, u32 n) throw() {
     u32 old_max = gclicmd.c_tuples_max;
     if (UNLIKELY(gclicmd.c_tuples_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -7601,7 +7601,7 @@ void gcli::c_tuples_Reserve(gcli::FGclicmd& gclicmd, u32 n) {
 // --- gcli.FGclicmd.c_gclicmdarg.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_gclicmdarg_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) {
+void gcli::c_gclicmdarg_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) throw() {
     if (bool_Update(row.gclicmd_c_gclicmdarg_in_ary,true)) {
         // reserve space
         c_gclicmdarg_Reserve(gclicmd, 1);
@@ -7618,7 +7618,7 @@ void gcli::c_gclicmdarg_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) 
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_gclicmdarg_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) {
+bool gcli::c_gclicmdarg_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) throw() {
     bool retval = !row.gclicmd_c_gclicmdarg_in_ary;
     c_gclicmdarg_Insert(gclicmd,row); // check is performed in _Insert again
     return retval;
@@ -7626,7 +7626,7 @@ bool gcli::c_gclicmdarg_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& 
 
 // --- gcli.FGclicmd.c_gclicmdarg.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_gclicmdarg_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) {
+void gcli::c_gclicmdarg_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) throw() {
     if (bool_Update(row.gclicmd_c_gclicmdarg_in_ary,false)) {
         int lim = gclicmd.c_gclicmdarg_n;
         gcli::FGclicmdarg* *elems = gclicmd.c_gclicmdarg_elems;
@@ -7647,7 +7647,7 @@ void gcli::c_gclicmdarg_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) 
 
 // --- gcli.FGclicmd.c_gclicmdarg.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_gclicmdarg_Reserve(gcli::FGclicmd& gclicmd, u32 n) {
+void gcli::c_gclicmdarg_Reserve(gcli::FGclicmd& gclicmd, u32 n) throw() {
     u32 old_max = gclicmd.c_gclicmdarg_max;
     if (UNLIKELY(gclicmd.c_gclicmdarg_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -7665,7 +7665,7 @@ void gcli::c_gclicmdarg_Reserve(gcli::FGclicmd& gclicmd, u32 n) {
 // --- gcli.FGclicmd.c_gclicmdc.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_gclicmdc_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) {
+void gcli::c_gclicmdc_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) throw() {
     if (bool_Update(row.gclicmd_c_gclicmdc_in_ary,true)) {
         // reserve space
         c_gclicmdc_Reserve(gclicmd, 1);
@@ -7682,7 +7682,7 @@ void gcli::c_gclicmdc_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_gclicmdc_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) {
+bool gcli::c_gclicmdc_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) throw() {
     bool retval = !row.gclicmd_c_gclicmdc_in_ary;
     c_gclicmdc_Insert(gclicmd,row); // check is performed in _Insert again
     return retval;
@@ -7690,7 +7690,7 @@ bool gcli::c_gclicmdc_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row)
 
 // --- gcli.FGclicmd.c_gclicmdc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_gclicmdc_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) {
+void gcli::c_gclicmdc_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) throw() {
     if (bool_Update(row.gclicmd_c_gclicmdc_in_ary,false)) {
         int lim = gclicmd.c_gclicmdc_n;
         gcli::FGclicmdc* *elems = gclicmd.c_gclicmdc_elems;
@@ -7711,7 +7711,7 @@ void gcli::c_gclicmdc_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) {
 
 // --- gcli.FGclicmd.c_gclicmdc.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_gclicmdc_Reserve(gcli::FGclicmd& gclicmd, u32 n) {
+void gcli::c_gclicmdc_Reserve(gcli::FGclicmd& gclicmd, u32 n) throw() {
     u32 old_max = gclicmd.c_gclicmdc_max;
     if (UNLIKELY(gclicmd.c_gclicmdc_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -7729,7 +7729,7 @@ void gcli::c_gclicmdc_Reserve(gcli::FGclicmd& gclicmd, u32 n) {
 // --- gcli.FGclicmd.c_gclicmdf2j.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_gclicmdf2j_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) {
+void gcli::c_gclicmdf2j_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) throw() {
     if (bool_Update(row.gclicmd_c_gclicmdf2j_in_ary,true)) {
         // reserve space
         c_gclicmdf2j_Reserve(gclicmd, 1);
@@ -7746,7 +7746,7 @@ void gcli::c_gclicmdf2j_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) 
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_gclicmdf2j_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) {
+bool gcli::c_gclicmdf2j_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) throw() {
     bool retval = !row.gclicmd_c_gclicmdf2j_in_ary;
     c_gclicmdf2j_Insert(gclicmd,row); // check is performed in _Insert again
     return retval;
@@ -7754,7 +7754,7 @@ bool gcli::c_gclicmdf2j_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& 
 
 // --- gcli.FGclicmd.c_gclicmdf2j.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_gclicmdf2j_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) {
+void gcli::c_gclicmdf2j_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) throw() {
     if (bool_Update(row.gclicmd_c_gclicmdf2j_in_ary,false)) {
         int lim = gclicmd.c_gclicmdf2j_n;
         gcli::FGclicmdf2j* *elems = gclicmd.c_gclicmdf2j_elems;
@@ -7775,7 +7775,7 @@ void gcli::c_gclicmdf2j_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) 
 
 // --- gcli.FGclicmd.c_gclicmdf2j.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_gclicmdf2j_Reserve(gcli::FGclicmd& gclicmd, u32 n) {
+void gcli::c_gclicmdf2j_Reserve(gcli::FGclicmd& gclicmd, u32 n) throw() {
     u32 old_max = gclicmd.c_gclicmdf2j_max;
     if (UNLIKELY(gclicmd.c_gclicmdf2j_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -7818,7 +7818,7 @@ void gcli::FGclicmd_Init(gcli::FGclicmd& gclicmd) {
 }
 
 // --- gcli.FGclicmd..Uninit
-void gcli::FGclicmd_Uninit(gcli::FGclicmd& gclicmd) {
+void gcli::FGclicmd_Uninit(gcli::FGclicmd& gclicmd) throw() {
     gcli::FGclicmd &row = gclicmd; (void)row;
     ind_gclicmd_Remove(row); // remove gclicmd from index ind_gclicmd
 
@@ -7836,13 +7836,13 @@ void gcli::FGclicmd_Uninit(gcli::FGclicmd& gclicmd) {
 }
 
 // --- gcli.FGclicmdarg.gclicmd.Get
-algo::Smallstr250 gcli::gclicmd_Get(gcli::FGclicmdarg& gclicmdarg) {
+algo::Smallstr250 gcli::gclicmd_Get(gcli::FGclicmdarg& gclicmdarg) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(gclicmdarg.gclicmdarg, "@LL"));
     return ret;
 }
 
 // --- gcli.FGclicmdarg.arg.Get
-algo::cstring gcli::arg_Get(gcli::FGclicmdarg& gclicmdarg) {
+algo::cstring gcli::arg_Get(gcli::FGclicmdarg& gclicmdarg) throw() {
     algo::cstring ret(algo::Pathcomp(gclicmdarg.gclicmdarg, "@LR"));
     return ret;
 }
@@ -7853,19 +7853,19 @@ tempstr gcli::FGclicmdarg_Concat_gclicmd_arg( const algo::strptr& gclicmd ,const
 }
 
 // --- gcli.FGclicmdarg..Uninit
-void gcli::FGclicmdarg_Uninit(gcli::FGclicmdarg& gclicmdarg) {
+void gcli::FGclicmdarg_Uninit(gcli::FGclicmdarg& gclicmdarg) throw() {
     gcli::FGclicmdarg &row = gclicmdarg; (void)row;
     ind_gclicmdarg_Remove(row); // remove gclicmdarg from index ind_gclicmdarg
 }
 
 // --- gcli.FGclicmdc.gclicmd.Get
-algo::Smallstr250 gcli::gclicmd_Get(gcli::FGclicmdc& gclicmdc) {
+algo::Smallstr250 gcli::gclicmd_Get(gcli::FGclicmdc& gclicmdc) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(gclicmdc.gclicmdc, "/LL"));
     return ret;
 }
 
 // --- gcli.FGclicmdc.ctype.Get
-algo::cstring gcli::ctype_Get(gcli::FGclicmdc& gclicmdc) {
+algo::cstring gcli::ctype_Get(gcli::FGclicmdc& gclicmdc) throw() {
     algo::cstring ret(algo::Pathcomp(gclicmdc.gclicmdc, "/LR"));
     return ret;
 }
@@ -7873,7 +7873,7 @@ algo::cstring gcli::ctype_Get(gcli::FGclicmdc& gclicmdc) {
 // --- gcli.FGclicmdc.c_gclicmdf.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_gclicmdf_Insert(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) {
+void gcli::c_gclicmdf_Insert(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) throw() {
     if (bool_Update(row.gclicmdc_c_gclicmdf_in_ary,true)) {
         // reserve space
         c_gclicmdf_Reserve(gclicmdc, 1);
@@ -7890,7 +7890,7 @@ void gcli::c_gclicmdf_Insert(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_gclicmdf_InsertMaybe(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) {
+bool gcli::c_gclicmdf_InsertMaybe(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) throw() {
     bool retval = !row.gclicmdc_c_gclicmdf_in_ary;
     c_gclicmdf_Insert(gclicmdc,row); // check is performed in _Insert again
     return retval;
@@ -7898,7 +7898,7 @@ bool gcli::c_gclicmdf_InsertMaybe(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& ro
 
 // --- gcli.FGclicmdc.c_gclicmdf.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_gclicmdf_Remove(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) {
+void gcli::c_gclicmdf_Remove(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) throw() {
     if (bool_Update(row.gclicmdc_c_gclicmdf_in_ary,false)) {
         int lim = gclicmdc.c_gclicmdf_n;
         gcli::FGclicmdf* *elems = gclicmdc.c_gclicmdf_elems;
@@ -7919,7 +7919,7 @@ void gcli::c_gclicmdf_Remove(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) {
 
 // --- gcli.FGclicmdc.c_gclicmdf.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_gclicmdf_Reserve(gcli::FGclicmdc& gclicmdc, u32 n) {
+void gcli::c_gclicmdf_Reserve(gcli::FGclicmdc& gclicmdc, u32 n) throw() {
     u32 old_max = gclicmdc.c_gclicmdf_max;
     if (UNLIKELY(gclicmdc.c_gclicmdf_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -7940,7 +7940,7 @@ tempstr gcli::FGclicmdc_Concat_gclicmd_ctype( const algo::strptr& gclicmd ,const
 }
 
 // --- gcli.FGclicmdc..Uninit
-void gcli::FGclicmdc_Uninit(gcli::FGclicmdc& gclicmdc) {
+void gcli::FGclicmdc_Uninit(gcli::FGclicmdc& gclicmdc) throw() {
     gcli::FGclicmdc &row = gclicmdc; (void)row;
     ind_gclicmdc_Remove(row); // remove gclicmdc from index ind_gclicmdc
 
@@ -7949,25 +7949,25 @@ void gcli::FGclicmdc_Uninit(gcli::FGclicmdc& gclicmdc) {
 }
 
 // --- gcli.FGclicmdf.gclicmd.Get
-algo::Smallstr250 gcli::gclicmd_Get(gcli::FGclicmdf& gclicmdf) {
+algo::Smallstr250 gcli::gclicmd_Get(gcli::FGclicmdf& gclicmdf) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(gclicmdf.gclicmdf, "/RL"));
     return ret;
 }
 
 // --- gcli.FGclicmdf.field.Get
-algo::Smallstr100 gcli::field_Get(gcli::FGclicmdf& gclicmdf) {
+algo::Smallstr100 gcli::field_Get(gcli::FGclicmdf& gclicmdf) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(gclicmdf.gclicmdf, "/RR"));
     return ret;
 }
 
 // --- gcli.FGclicmdf.name.Get
-algo::cstring gcli::name_Get(gcli::FGclicmdf& gclicmdf) {
+algo::cstring gcli::name_Get(gcli::FGclicmdf& gclicmdf) throw() {
     algo::cstring ret(algo::Pathcomp(gclicmdf.gclicmdf, ".RR"));
     return ret;
 }
 
 // --- gcli.FGclicmdf.gclicmdc.Get
-algo::cstring gcli::gclicmdc_Get(gcli::FGclicmdf& gclicmdf) {
+algo::cstring gcli::gclicmdc_Get(gcli::FGclicmdf& gclicmdf) throw() {
     algo::cstring ret(algo::Pathcomp(gclicmdf.gclicmdf, ".RL"));
     return ret;
 }
@@ -7983,14 +7983,14 @@ tempstr gcli::FGclicmdf_Concat_gclicmdc_name( const algo::strptr& gclicmdc ,cons
 }
 
 // --- gcli.FGclicmdf..Uninit
-void gcli::FGclicmdf_Uninit(gcli::FGclicmdf& gclicmdf) {
+void gcli::FGclicmdf_Uninit(gcli::FGclicmdf& gclicmdf) throw() {
     gcli::FGclicmdf &row = gclicmdf; (void)row;
     ind_gclicmdf_Remove(row); // remove gclicmdf from index ind_gclicmdf
 }
 
 // --- gcli.FGclicmdf2j.base.CopyOut
 // Copy fields out of row
-void gcli::gclicmdf2j_CopyOut(gcli::FGclicmdf2j &row, gclidb::Gclicmdf2j &out) {
+void gcli::gclicmdf2j_CopyOut(gcli::FGclicmdf2j &row, gclidb::Gclicmdf2j &out) throw() {
     out.gclicmdf2j = row.gclicmdf2j;
     out.dup = row.dup;
     out.comment = row.comment;
@@ -7998,38 +7998,38 @@ void gcli::gclicmdf2j_CopyOut(gcli::FGclicmdf2j &row, gclidb::Gclicmdf2j &out) {
 
 // --- gcli.FGclicmdf2j.base.CopyIn
 // Copy fields in to row
-void gcli::gclicmdf2j_CopyIn(gcli::FGclicmdf2j &row, gclidb::Gclicmdf2j &in) {
+void gcli::gclicmdf2j_CopyIn(gcli::FGclicmdf2j &row, gclidb::Gclicmdf2j &in) throw() {
     row.gclicmdf2j = in.gclicmdf2j;
     row.dup = in.dup;
     row.comment = in.comment;
 }
 
 // --- gcli.FGclicmdf2j.gclicmdf.Get
-algo::cstring gcli::gclicmdf_Get(gcli::FGclicmdf2j& gclicmdf2j) {
+algo::cstring gcli::gclicmdf_Get(gcli::FGclicmdf2j& gclicmdf2j) throw() {
     algo::cstring ret(algo::Pathcomp(gclicmdf2j.gclicmdf2j, "@LL"));
     return ret;
 }
 
 // --- gcli.FGclicmdf2j.gclicmd.Get
-algo::Smallstr250 gcli::gclicmd_Get(gcli::FGclicmdf2j& gclicmdf2j) {
+algo::Smallstr250 gcli::gclicmd_Get(gcli::FGclicmdf2j& gclicmdf2j) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(gclicmdf2j.gclicmdf2j, "/LL"));
     return ret;
 }
 
 // --- gcli.FGclicmdf2j.field.Get
-algo::Smallstr100 gcli::field_Get(gcli::FGclicmdf2j& gclicmdf2j) {
+algo::Smallstr100 gcli::field_Get(gcli::FGclicmdf2j& gclicmdf2j) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(gclicmdf2j.gclicmdf2j, "/LR@LL"));
     return ret;
 }
 
 // --- gcli.FGclicmdf2j.jkey.Get
-algo::cstring gcli::jkey_Get(gcli::FGclicmdf2j& gclicmdf2j) {
+algo::cstring gcli::jkey_Get(gcli::FGclicmdf2j& gclicmdf2j) throw() {
     algo::cstring ret(algo::Pathcomp(gclicmdf2j.gclicmdf2j, "/LR@LR"));
     return ret;
 }
 
 // --- gcli.FGclicmdf2j..Uninit
-void gcli::FGclicmdf2j_Uninit(gcli::FGclicmdf2j& gclicmdf2j) {
+void gcli::FGclicmdf2j_Uninit(gcli::FGclicmdf2j& gclicmdf2j) throw() {
     gcli::FGclicmdf2j &row = gclicmdf2j; (void)row;
     gcli::FGclicmd* p_gclicmd = gcli::ind_gclicmd_Find(gclicmd_Get(row));
     if (p_gclicmd)  {
@@ -8038,13 +8038,13 @@ void gcli::FGclicmdf2j_Uninit(gcli::FGclicmdf2j& gclicmdf2j) {
 }
 
 // --- gcli.FGclicmdj2f.gclicmd.Get
-algo::Smallstr250 gcli::gclicmd_Get(gcli::FGclicmdj2f& gclicmdj2f) {
+algo::Smallstr250 gcli::gclicmd_Get(gcli::FGclicmdj2f& gclicmdj2f) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(gclicmdj2f.gclicmdj2f, "/LL"));
     return ret;
 }
 
 // --- gcli.FGclicmdj2f.jkey.Get
-algo::cstring gcli::jkey_Get(gcli::FGclicmdj2f& gclicmdj2f) {
+algo::cstring gcli::jkey_Get(gcli::FGclicmdj2f& gclicmdj2f) throw() {
     algo::cstring ret(algo::Pathcomp(gclicmdj2f.gclicmdj2f, "/LR"));
     return ret;
 }
@@ -8052,7 +8052,7 @@ algo::cstring gcli::jkey_Get(gcli::FGclicmdj2f& gclicmdj2f) {
 // --- gcli.FGclicmdj2f.c_gclicmdf.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_gclicmdf_Insert(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGclicmdf& row) {
+void gcli::c_gclicmdf_Insert(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGclicmdf& row) throw() {
     // reserve space
     c_gclicmdf_Reserve(gclicmdj2f, 1);
     u32 n  = gclicmdj2f.c_gclicmdf_n;
@@ -8068,7 +8068,7 @@ void gcli::c_gclicmdf_Insert(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGclicmdf& row
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool gcli::c_gclicmdf_ScanInsertMaybe(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGclicmdf& row) {
+bool gcli::c_gclicmdf_ScanInsertMaybe(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGclicmdf& row) throw() {
     bool retval = true;
     u32 n  = gclicmdj2f.c_gclicmdf_n;
     for (u32 i = 0; i < n; i++) {
@@ -8088,7 +8088,7 @@ bool gcli::c_gclicmdf_ScanInsertMaybe(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGcli
 
 // --- gcli.FGclicmdj2f.c_gclicmdf.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_gclicmdf_Remove(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGclicmdf& row) {
+void gcli::c_gclicmdf_Remove(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGclicmdf& row) throw() {
     int lim = gclicmdj2f.c_gclicmdf_n;
     gcli::FGclicmdf* *elems = gclicmdj2f.c_gclicmdf_elems;
     // search backward, so that most recently added element is found first.
@@ -8107,7 +8107,7 @@ void gcli::c_gclicmdf_Remove(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGclicmdf& row
 
 // --- gcli.FGclicmdj2f.c_gclicmdf.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_gclicmdf_Reserve(gcli::FGclicmdj2f& gclicmdj2f, u32 n) {
+void gcli::c_gclicmdf_Reserve(gcli::FGclicmdj2f& gclicmdj2f, u32 n) throw() {
     u32 old_max = gclicmdj2f.c_gclicmdf_max;
     if (UNLIKELY(gclicmdj2f.c_gclicmdf_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -8128,7 +8128,7 @@ tempstr gcli::FGclicmdj2f_Concat_gclicmd_jkey( const algo::strptr& gclicmd ,cons
 }
 
 // --- gcli.FGclicmdj2f..Uninit
-void gcli::FGclicmdj2f_Uninit(gcli::FGclicmdj2f& gclicmdj2f) {
+void gcli::FGclicmdj2f_Uninit(gcli::FGclicmdj2f& gclicmdj2f) throw() {
     gcli::FGclicmdj2f &row = gclicmdj2f; (void)row;
     ind_gclicmdj2f_Remove(row); // remove gclicmdj2f from index ind_gclicmdj2f
 
@@ -8138,7 +8138,7 @@ void gcli::FGclicmdj2f_Uninit(gcli::FGclicmdj2f& gclicmdj2f) {
 
 // --- gcli.FGclicmdt.base.CopyOut
 // Copy fields out of row
-void gcli::gclicmdt_CopyOut(gcli::FGclicmdt &row, gclidb::Gclicmdt &out) {
+void gcli::gclicmdt_CopyOut(gcli::FGclicmdt &row, gclidb::Gclicmdt &out) throw() {
     out.gclicmdt = row.gclicmdt;
     out.gmethod = row.gmethod;
     out.uri = row.uri;
@@ -8147,7 +8147,7 @@ void gcli::gclicmdt_CopyOut(gcli::FGclicmdt &row, gclidb::Gclicmdt &out) {
 
 // --- gcli.FGclicmdt.base.CopyIn
 // Copy fields in to row
-void gcli::gclicmdt_CopyIn(gcli::FGclicmdt &row, gclidb::Gclicmdt &in) {
+void gcli::gclicmdt_CopyIn(gcli::FGclicmdt &row, gclidb::Gclicmdt &in) throw() {
     row.gclicmdt = in.gclicmdt;
     row.gmethod = in.gmethod;
     row.uri = in.uri;
@@ -8155,33 +8155,33 @@ void gcli::gclicmdt_CopyIn(gcli::FGclicmdt &row, gclidb::Gclicmdt &in) {
 }
 
 // --- gcli.FGclicmdt.gclicmd.Get
-algo::Smallstr250 gcli::gclicmd_Get(gcli::FGclicmdt& gclicmdt) {
+algo::Smallstr250 gcli::gclicmd_Get(gcli::FGclicmdt& gclicmdt) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(gclicmdt.gclicmdt, ".RL"));
     return ret;
 }
 
 // --- gcli.FGclicmdt.gtype.Get
-algo::Smallstr50 gcli::gtype_Get(gcli::FGclicmdt& gclicmdt) {
+algo::Smallstr50 gcli::gtype_Get(gcli::FGclicmdt& gclicmdt) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gclicmdt.gclicmdt, ".RR"));
     return ret;
 }
 
 // --- gcli.FGclicmdt..Uninit
-void gcli::FGclicmdt_Uninit(gcli::FGclicmdt& gclicmdt) {
+void gcli::FGclicmdt_Uninit(gcli::FGclicmdt& gclicmdt) throw() {
     gcli::FGclicmdt &row = gclicmdt; (void)row;
     ind_gclicmdt_Remove(row); // remove gclicmdt from index ind_gclicmdt
 }
 
 // --- gcli.FGfld.base.CopyOut
 // Copy fields out of row
-void gcli::gfld_CopyOut(gcli::FGfld &row, gclidb::Gfld &out) {
+void gcli::gfld_CopyOut(gcli::FGfld &row, gclidb::Gfld &out) throw() {
     out.gfld = row.gfld;
     out.comment = row.comment;
 }
 
 // --- gcli.FGfld.base.CopyIn
 // Copy fields in to row
-void gcli::gfld_CopyIn(gcli::FGfld &row, gclidb::Gfld &in) {
+void gcli::gfld_CopyIn(gcli::FGfld &row, gclidb::Gfld &in) throw() {
     row.gfld = in.gfld;
     row.comment = in.comment;
 }
@@ -8189,7 +8189,7 @@ void gcli::gfld_CopyIn(gcli::FGfld &row, gclidb::Gfld &in) {
 // --- gcli.FGfld.c_gtblactfld.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_gtblactfld_Insert(gcli::FGfld& gfld, gcli::FGtblactfld& row) {
+void gcli::c_gtblactfld_Insert(gcli::FGfld& gfld, gcli::FGtblactfld& row) throw() {
     if (bool_Update(row.gfld_c_gtblactfld_in_ary,true)) {
         // reserve space
         c_gtblactfld_Reserve(gfld, 1);
@@ -8206,7 +8206,7 @@ void gcli::c_gtblactfld_Insert(gcli::FGfld& gfld, gcli::FGtblactfld& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_gtblactfld_InsertMaybe(gcli::FGfld& gfld, gcli::FGtblactfld& row) {
+bool gcli::c_gtblactfld_InsertMaybe(gcli::FGfld& gfld, gcli::FGtblactfld& row) throw() {
     bool retval = !row.gfld_c_gtblactfld_in_ary;
     c_gtblactfld_Insert(gfld,row); // check is performed in _Insert again
     return retval;
@@ -8214,7 +8214,7 @@ bool gcli::c_gtblactfld_InsertMaybe(gcli::FGfld& gfld, gcli::FGtblactfld& row) {
 
 // --- gcli.FGfld.c_gtblactfld.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_gtblactfld_Remove(gcli::FGfld& gfld, gcli::FGtblactfld& row) {
+void gcli::c_gtblactfld_Remove(gcli::FGfld& gfld, gcli::FGtblactfld& row) throw() {
     if (bool_Update(row.gfld_c_gtblactfld_in_ary,false)) {
         int lim = gfld.c_gtblactfld_n;
         gcli::FGtblactfld* *elems = gfld.c_gtblactfld_elems;
@@ -8235,7 +8235,7 @@ void gcli::c_gtblactfld_Remove(gcli::FGfld& gfld, gcli::FGtblactfld& row) {
 
 // --- gcli.FGfld.c_gtblactfld.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_gtblactfld_Reserve(gcli::FGfld& gfld, u32 n) {
+void gcli::c_gtblactfld_Reserve(gcli::FGfld& gfld, u32 n) throw() {
     u32 old_max = gfld.c_gtblactfld_max;
     if (UNLIKELY(gfld.c_gtblactfld_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -8251,7 +8251,7 @@ void gcli::c_gtblactfld_Reserve(gcli::FGfld& gfld, u32 n) {
 }
 
 // --- gcli.FGfld..Uninit
-void gcli::FGfld_Uninit(gcli::FGfld& gfld) {
+void gcli::FGfld_Uninit(gcli::FGfld& gfld) throw() {
     gcli::FGfld &row = gfld; (void)row;
     ind_gfld_Remove(row); // remove gfld from index ind_gfld
 
@@ -8260,14 +8260,14 @@ void gcli::FGfld_Uninit(gcli::FGfld& gfld) {
 }
 
 // --- gcli.FGithost..Uninit
-void gcli::FGithost_Uninit(gcli::FGithost& githost) {
+void gcli::FGithost_Uninit(gcli::FGithost& githost) throw() {
     gcli::FGithost &row = githost; (void)row;
     ind_githost_Remove(row); // remove githost from index ind_githost
 }
 
 // --- gcli.FGmethod.base.CopyOut
 // Copy fields out of row
-void gcli::gmethod_CopyOut(gcli::FGmethod &row, gclidb::Gmethod &out) {
+void gcli::gmethod_CopyOut(gcli::FGmethod &row, gclidb::Gmethod &out) throw() {
     out.gmethod = row.gmethod;
     out.val = row.val;
     out.comment = row.comment;
@@ -8275,21 +8275,21 @@ void gcli::gmethod_CopyOut(gcli::FGmethod &row, gclidb::Gmethod &out) {
 
 // --- gcli.FGmethod.base.CopyIn
 // Copy fields in to row
-void gcli::gmethod_CopyIn(gcli::FGmethod &row, gclidb::Gmethod &in) {
+void gcli::gmethod_CopyIn(gcli::FGmethod &row, gclidb::Gmethod &in) throw() {
     row.gmethod = in.gmethod;
     row.val = in.val;
     row.comment = in.comment;
 }
 
 // --- gcli.FGmethod..Uninit
-void gcli::FGmethod_Uninit(gcli::FGmethod& gmethod) {
+void gcli::FGmethod_Uninit(gcli::FGmethod& gmethod) throw() {
     gcli::FGmethod &row = gmethod; (void)row;
     ind_gmethod_Remove(row); // remove gmethod from index ind_gmethod
 }
 
 // --- gcli.FGrepo.base.CopyOut
 // Copy fields out of row
-void gcli::grepo_CopyOut(gcli::FGrepo &row, gclidb::Grepo &out) {
+void gcli::grepo_CopyOut(gcli::FGrepo &row, gclidb::Grepo &out) throw() {
     out.grepo = row.grepo;
     out.name = row.name;
     out.token = row.token;
@@ -8304,7 +8304,7 @@ void gcli::grepo_CopyOut(gcli::FGrepo &row, gclidb::Grepo &out) {
 
 // --- gcli.FGrepo.base.CopyIn
 // Copy fields in to row
-void gcli::grepo_CopyIn(gcli::FGrepo &row, gclidb::Grepo &in) {
+void gcli::grepo_CopyIn(gcli::FGrepo &row, gclidb::Grepo &in) throw() {
     row.grepo = in.grepo;
     row.name = in.name;
     row.token = in.token;
@@ -8318,13 +8318,13 @@ void gcli::grepo_CopyIn(gcli::FGrepo &row, gclidb::Grepo &in) {
 }
 
 // --- gcli.FGrepo.host.Get
-algo::cstring gcli::host_Get(gcli::FGrepo& grepo) {
+algo::cstring gcli::host_Get(gcli::FGrepo& grepo) throw() {
     algo::cstring ret(algo::Pathcomp(grepo.grepo, "@LL"));
     return ret;
 }
 
 // --- gcli.FGrepo.fname.Get
-algo::cstring gcli::fname_Get(gcli::FGrepo& grepo) {
+algo::cstring gcli::fname_Get(gcli::FGrepo& grepo) throw() {
     algo::cstring ret(algo::Pathcomp(grepo.grepo, "@LR"));
     return ret;
 }
@@ -8339,14 +8339,14 @@ void gcli::FGrepo_Init(gcli::FGrepo& grepo) {
 }
 
 // --- gcli.FGrepo..Uninit
-void gcli::FGrepo_Uninit(gcli::FGrepo& grepo) {
+void gcli::FGrepo_Uninit(gcli::FGrepo& grepo) throw() {
     gcli::FGrepo &row = grepo; (void)row;
     ind_grepo_Remove(row); // remove grepo from index ind_grepo
 }
 
 // --- gcli.FGrepogitport.base.CopyOut
 // Copy fields out of row
-void gcli::grepogitport_CopyOut(gcli::FGrepogitport &row, gclidb::Grepogitport &out) {
+void gcli::grepogitport_CopyOut(gcli::FGrepogitport &row, gclidb::Grepogitport &out) throw() {
     out.grepogitport = row.grepogitport;
     out.port = row.port;
     out.comment = row.comment;
@@ -8354,21 +8354,21 @@ void gcli::grepogitport_CopyOut(gcli::FGrepogitport &row, gclidb::Grepogitport &
 
 // --- gcli.FGrepogitport.base.CopyIn
 // Copy fields in to row
-void gcli::grepogitport_CopyIn(gcli::FGrepogitport &row, gclidb::Grepogitport &in) {
+void gcli::grepogitport_CopyIn(gcli::FGrepogitport &row, gclidb::Grepogitport &in) throw() {
     row.grepogitport = in.grepogitport;
     row.port = in.port;
     row.comment = in.comment;
 }
 
 // --- gcli.FGrepogitport..Uninit
-void gcli::FGrepogitport_Uninit(gcli::FGrepogitport& grepogitport) {
+void gcli::FGrepogitport_Uninit(gcli::FGrepogitport& grepogitport) throw() {
     gcli::FGrepogitport &row = grepogitport; (void)row;
     ind_grepogitport_Remove(row); // remove grepogitport from index ind_grepogitport
 }
 
 // --- gcli.FGrepossh.base.CopyOut
 // Copy fields out of row
-void gcli::grepossh_CopyOut(gcli::FGrepossh &row, gclidb::Grepossh &out) {
+void gcli::grepossh_CopyOut(gcli::FGrepossh &row, gclidb::Grepossh &out) throw() {
     out.grepossh = row.grepossh;
     out.sshid = row.sshid;
     out.comment = row.comment;
@@ -8376,66 +8376,66 @@ void gcli::grepossh_CopyOut(gcli::FGrepossh &row, gclidb::Grepossh &out) {
 
 // --- gcli.FGrepossh.base.CopyIn
 // Copy fields in to row
-void gcli::grepossh_CopyIn(gcli::FGrepossh &row, gclidb::Grepossh &in) {
+void gcli::grepossh_CopyIn(gcli::FGrepossh &row, gclidb::Grepossh &in) throw() {
     row.grepossh = in.grepossh;
     row.sshid = in.sshid;
     row.comment = in.comment;
 }
 
 // --- gcli.FGrepossh.name.Get
-algo::cstring gcli::name_Get(gcli::FGrepossh& grepossh) {
+algo::cstring gcli::name_Get(gcli::FGrepossh& grepossh) throw() {
     algo::cstring ret(algo::Pathcomp(grepossh.sshid, "/RR"));
     return ret;
 }
 
 // --- gcli.FGrepossh..Uninit
-void gcli::FGrepossh_Uninit(gcli::FGrepossh& grepossh) {
+void gcli::FGrepossh_Uninit(gcli::FGrepossh& grepossh) throw() {
     gcli::FGrepossh &row = grepossh; (void)row;
     ind_grepossh_Remove(row); // remove grepossh from index ind_grepossh
 }
 
 // --- gcli.FGstatet.base.CopyOut
 // Copy fields out of row
-void gcli::gstatet_CopyOut(gcli::FGstatet &row, gclidb::Gstatet &out) {
+void gcli::gstatet_CopyOut(gcli::FGstatet &row, gclidb::Gstatet &out) throw() {
     out.gstatet = row.gstatet;
     out.state = row.state;
 }
 
 // --- gcli.FGstatet.base.CopyIn
 // Copy fields in to row
-void gcli::gstatet_CopyIn(gcli::FGstatet &row, gclidb::Gstatet &in) {
+void gcli::gstatet_CopyIn(gcli::FGstatet &row, gclidb::Gstatet &in) throw() {
     row.gstatet = in.gstatet;
     row.state = in.state;
 }
 
 // --- gcli.FGstatet.gtype.Get
-algo::Smallstr50 gcli::gtype_Get(gcli::FGstatet& gstatet) {
+algo::Smallstr50 gcli::gtype_Get(gcli::FGstatet& gstatet) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gstatet.gstatet, ".RR"));
     return ret;
 }
 
 // --- gcli.FGstatet.gstate.Get
-algo::Smallstr50 gcli::gstate_Get(gcli::FGstatet& gstatet) {
+algo::Smallstr50 gcli::gstate_Get(gcli::FGstatet& gstatet) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gstatet.gstatet, ".RL"));
     return ret;
 }
 
 // --- gcli.FGstatet..Uninit
-void gcli::FGstatet_Uninit(gcli::FGstatet& gstatet) {
+void gcli::FGstatet_Uninit(gcli::FGstatet& gstatet) throw() {
     gcli::FGstatet &row = gstatet; (void)row;
     ind_gstatet_Remove(row); // remove gstatet from index ind_gstatet
 }
 
 // --- gcli.FGtbl.base.CopyOut
 // Copy fields out of row
-void gcli::gtbl_CopyOut(gcli::FGtbl &row, gclidb::Gtbl &out) {
+void gcli::gtbl_CopyOut(gcli::FGtbl &row, gclidb::Gtbl &out) throw() {
     out.gtbl = row.gtbl;
     out.comment = row.comment;
 }
 
 // --- gcli.FGtbl.base.CopyIn
 // Copy fields in to row
-void gcli::gtbl_CopyIn(gcli::FGtbl &row, gclidb::Gtbl &in) {
+void gcli::gtbl_CopyIn(gcli::FGtbl &row, gclidb::Gtbl &in) throw() {
     row.gtbl = in.gtbl;
     row.comment = in.comment;
 }
@@ -8443,7 +8443,7 @@ void gcli::gtbl_CopyIn(gcli::FGtbl &row, gclidb::Gtbl &in) {
 // --- gcli.FGtbl.c_gtblact.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_gtblact_Insert(gcli::FGtbl& gtbl, gcli::FGtblact& row) {
+void gcli::c_gtblact_Insert(gcli::FGtbl& gtbl, gcli::FGtblact& row) throw() {
     if (bool_Update(row.gtbl_c_gtblact_in_ary,true)) {
         // reserve space
         c_gtblact_Reserve(gtbl, 1);
@@ -8460,7 +8460,7 @@ void gcli::c_gtblact_Insert(gcli::FGtbl& gtbl, gcli::FGtblact& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_gtblact_InsertMaybe(gcli::FGtbl& gtbl, gcli::FGtblact& row) {
+bool gcli::c_gtblact_InsertMaybe(gcli::FGtbl& gtbl, gcli::FGtblact& row) throw() {
     bool retval = !row.gtbl_c_gtblact_in_ary;
     c_gtblact_Insert(gtbl,row); // check is performed in _Insert again
     return retval;
@@ -8468,7 +8468,7 @@ bool gcli::c_gtblact_InsertMaybe(gcli::FGtbl& gtbl, gcli::FGtblact& row) {
 
 // --- gcli.FGtbl.c_gtblact.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_gtblact_Remove(gcli::FGtbl& gtbl, gcli::FGtblact& row) {
+void gcli::c_gtblact_Remove(gcli::FGtbl& gtbl, gcli::FGtblact& row) throw() {
     if (bool_Update(row.gtbl_c_gtblact_in_ary,false)) {
         int lim = gtbl.c_gtblact_n;
         gcli::FGtblact* *elems = gtbl.c_gtblact_elems;
@@ -8489,7 +8489,7 @@ void gcli::c_gtblact_Remove(gcli::FGtbl& gtbl, gcli::FGtblact& row) {
 
 // --- gcli.FGtbl.c_gtblact.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_gtblact_Reserve(gcli::FGtbl& gtbl, u32 n) {
+void gcli::c_gtblact_Reserve(gcli::FGtbl& gtbl, u32 n) throw() {
     u32 old_max = gtbl.c_gtblact_max;
     if (UNLIKELY(gtbl.c_gtblact_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -8505,7 +8505,7 @@ void gcli::c_gtblact_Reserve(gcli::FGtbl& gtbl, u32 n) {
 }
 
 // --- gcli.FGtbl..Uninit
-void gcli::FGtbl_Uninit(gcli::FGtbl& gtbl) {
+void gcli::FGtbl_Uninit(gcli::FGtbl& gtbl) throw() {
     gcli::FGtbl &row = gtbl; (void)row;
     ind_gtbl_Remove(row); // remove gtbl from index ind_gtbl
 
@@ -8515,7 +8515,7 @@ void gcli::FGtbl_Uninit(gcli::FGtbl& gtbl) {
 
 // --- gcli.FGtblact.base.CopyOut
 // Copy fields out of row
-void gcli::gtblact_CopyOut(gcli::FGtblact &row, gclidb::Gtblact &out) {
+void gcli::gtblact_CopyOut(gcli::FGtblact &row, gclidb::Gtblact &out) throw() {
     out.gtblact = row.gtblact;
     out.t = row.t;
     out.e = row.e;
@@ -8524,7 +8524,7 @@ void gcli::gtblact_CopyOut(gcli::FGtblact &row, gclidb::Gtblact &out) {
 
 // --- gcli.FGtblact.base.CopyIn
 // Copy fields in to row
-void gcli::gtblact_CopyIn(gcli::FGtblact &row, gclidb::Gtblact &in) {
+void gcli::gtblact_CopyIn(gcli::FGtblact &row, gclidb::Gtblact &in) throw() {
     row.gtblact = in.gtblact;
     row.t = in.t;
     row.e = in.e;
@@ -8532,13 +8532,13 @@ void gcli::gtblact_CopyIn(gcli::FGtblact &row, gclidb::Gtblact &in) {
 }
 
 // --- gcli.FGtblact.gtbl.Get
-algo::Smallstr250 gcli::gtbl_Get(gcli::FGtblact& gtblact) {
+algo::Smallstr250 gcli::gtbl_Get(gcli::FGtblact& gtblact) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(gtblact.gtblact, "_LL"));
     return ret;
 }
 
 // --- gcli.FGtblact.gact.Get
-algo::Smallstr50 gcli::gact_Get(gcli::FGtblact& gtblact) {
+algo::Smallstr50 gcli::gact_Get(gcli::FGtblact& gtblact) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gtblact.gtblact, "_LR"));
     return ret;
 }
@@ -8546,7 +8546,7 @@ algo::Smallstr50 gcli::gact_Get(gcli::FGtblact& gtblact) {
 // --- gcli.FGtblact.c_gtblactfld.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_gtblactfld_Insert(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) {
+void gcli::c_gtblactfld_Insert(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) throw() {
     if (bool_Update(row.gtblact_c_gtblactfld_in_ary,true)) {
         // reserve space
         c_gtblactfld_Reserve(gtblact, 1);
@@ -8563,7 +8563,7 @@ void gcli::c_gtblactfld_Insert(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) 
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_gtblactfld_InsertMaybe(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) {
+bool gcli::c_gtblactfld_InsertMaybe(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) throw() {
     bool retval = !row.gtblact_c_gtblactfld_in_ary;
     c_gtblactfld_Insert(gtblact,row); // check is performed in _Insert again
     return retval;
@@ -8571,7 +8571,7 @@ bool gcli::c_gtblactfld_InsertMaybe(gcli::FGtblact& gtblact, gcli::FGtblactfld& 
 
 // --- gcli.FGtblact.c_gtblactfld.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_gtblactfld_Remove(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) {
+void gcli::c_gtblactfld_Remove(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) throw() {
     if (bool_Update(row.gtblact_c_gtblactfld_in_ary,false)) {
         int lim = gtblact.c_gtblactfld_n;
         gcli::FGtblactfld* *elems = gtblact.c_gtblactfld_elems;
@@ -8592,7 +8592,7 @@ void gcli::c_gtblactfld_Remove(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) 
 
 // --- gcli.FGtblact.c_gtblactfld.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_gtblactfld_Reserve(gcli::FGtblact& gtblact, u32 n) {
+void gcli::c_gtblactfld_Reserve(gcli::FGtblact& gtblact, u32 n) throw() {
     u32 old_max = gtblact.c_gtblactfld_max;
     if (UNLIKELY(gtblact.c_gtblactfld_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -8625,7 +8625,7 @@ void gcli::FGtblact_Init(gcli::FGtblact& gtblact) {
 }
 
 // --- gcli.FGtblact..Uninit
-void gcli::FGtblact_Uninit(gcli::FGtblact& gtblact) {
+void gcli::FGtblact_Uninit(gcli::FGtblact& gtblact) throw() {
     gcli::FGtblact &row = gtblact; (void)row;
     zd_gtblact_Remove(row); // remove gtblact from index zd_gtblact
     ind_gtblact_Remove(row); // remove gtblact from index ind_gtblact
@@ -8636,7 +8636,7 @@ void gcli::FGtblact_Uninit(gcli::FGtblact& gtblact) {
 
 // --- gcli.FGtblactfld.base.CopyOut
 // Copy fields out of row
-void gcli::gtblactfld_CopyOut(gcli::FGtblactfld &row, gclidb::Gtblactfld &out) {
+void gcli::gtblactfld_CopyOut(gcli::FGtblactfld &row, gclidb::Gtblactfld &out) throw() {
     out.gtblactfld = row.gtblactfld;
     out.dflt = row.dflt;
     out.field_name_dflt = row.field_name_dflt;
@@ -8647,7 +8647,7 @@ void gcli::gtblactfld_CopyOut(gcli::FGtblactfld &row, gclidb::Gtblactfld &out) {
 
 // --- gcli.FGtblactfld.base.CopyIn
 // Copy fields in to row
-void gcli::gtblactfld_CopyIn(gcli::FGtblactfld &row, gclidb::Gtblactfld &in) {
+void gcli::gtblactfld_CopyIn(gcli::FGtblactfld &row, gclidb::Gtblactfld &in) throw() {
     row.gtblactfld = in.gtblactfld;
     row.dflt = in.dflt;
     row.field_name_dflt = in.field_name_dflt;
@@ -8657,13 +8657,13 @@ void gcli::gtblactfld_CopyIn(gcli::FGtblactfld &row, gclidb::Gtblactfld &in) {
 }
 
 // --- gcli.FGtblactfld.gtblact.Get
-algo::Smallstr50 gcli::gtblact_Get(gcli::FGtblactfld& gtblactfld) {
+algo::Smallstr50 gcli::gtblact_Get(gcli::FGtblactfld& gtblactfld) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gtblactfld.gtblactfld, ".RL"));
     return ret;
 }
 
 // --- gcli.FGtblactfld.field.Get
-algo::Smallstr50 gcli::field_Get(gcli::FGtblactfld& gtblactfld) {
+algo::Smallstr50 gcli::field_Get(gcli::FGtblactfld& gtblactfld) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gtblactfld.gtblactfld, ".RR"));
     return ret;
 }
@@ -8684,7 +8684,7 @@ void gcli::FGtblactfld_Init(gcli::FGtblactfld& gtblactfld) {
 }
 
 // --- gcli.FGtblactfld..Uninit
-void gcli::FGtblactfld_Uninit(gcli::FGtblactfld& gtblactfld) {
+void gcli::FGtblactfld_Uninit(gcli::FGtblactfld& gtblactfld) throw() {
     gcli::FGtblactfld &row = gtblactfld; (void)row;
     gcli::FGtblact* p_gtblact = gcli::ind_gtblact_Find(gtblact_Get(row));
     if (p_gtblact)  {
@@ -8699,7 +8699,7 @@ void gcli::FGtblactfld_Uninit(gcli::FGtblactfld& gtblactfld) {
 
 // --- gcli.FGtype.base.CopyOut
 // Copy fields out of row
-void gcli::gtype_CopyOut(gcli::FGtype &row, gclidb::Gtype &out) {
+void gcli::gtype_CopyOut(gcli::FGtype &row, gclidb::Gtype &out) throw() {
     out.gtype = row.gtype;
     out.default_url = row.default_url;
     out.comment = row.comment;
@@ -8707,7 +8707,7 @@ void gcli::gtype_CopyOut(gcli::FGtype &row, gclidb::Gtype &out) {
 
 // --- gcli.FGtype.base.CopyIn
 // Copy fields in to row
-void gcli::gtype_CopyIn(gcli::FGtype &row, gclidb::Gtype &in) {
+void gcli::gtype_CopyIn(gcli::FGtype &row, gclidb::Gtype &in) throw() {
     row.gtype = in.gtype;
     row.default_url = in.default_url;
     row.comment = in.comment;
@@ -8716,7 +8716,7 @@ void gcli::gtype_CopyIn(gcli::FGtype &row, gclidb::Gtype &in) {
 // --- gcli.FGtype.c_gtypeh.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_gtypeh_Insert(gcli::FGtype& gtype, gcli::FGtypeh& row) {
+void gcli::c_gtypeh_Insert(gcli::FGtype& gtype, gcli::FGtypeh& row) throw() {
     if (bool_Update(row.gtype_c_gtypeh_in_ary,true)) {
         // reserve space
         c_gtypeh_Reserve(gtype, 1);
@@ -8733,7 +8733,7 @@ void gcli::c_gtypeh_Insert(gcli::FGtype& gtype, gcli::FGtypeh& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_gtypeh_InsertMaybe(gcli::FGtype& gtype, gcli::FGtypeh& row) {
+bool gcli::c_gtypeh_InsertMaybe(gcli::FGtype& gtype, gcli::FGtypeh& row) throw() {
     bool retval = !row.gtype_c_gtypeh_in_ary;
     c_gtypeh_Insert(gtype,row); // check is performed in _Insert again
     return retval;
@@ -8741,7 +8741,7 @@ bool gcli::c_gtypeh_InsertMaybe(gcli::FGtype& gtype, gcli::FGtypeh& row) {
 
 // --- gcli.FGtype.c_gtypeh.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_gtypeh_Remove(gcli::FGtype& gtype, gcli::FGtypeh& row) {
+void gcli::c_gtypeh_Remove(gcli::FGtype& gtype, gcli::FGtypeh& row) throw() {
     if (bool_Update(row.gtype_c_gtypeh_in_ary,false)) {
         int lim = gtype.c_gtypeh_n;
         gcli::FGtypeh* *elems = gtype.c_gtypeh_elems;
@@ -8762,7 +8762,7 @@ void gcli::c_gtypeh_Remove(gcli::FGtype& gtype, gcli::FGtypeh& row) {
 
 // --- gcli.FGtype.c_gtypeh.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_gtypeh_Reserve(gcli::FGtype& gtype, u32 n) {
+void gcli::c_gtypeh_Reserve(gcli::FGtype& gtype, u32 n) throw() {
     u32 old_max = gtype.c_gtypeh_max;
     if (UNLIKELY(gtype.c_gtypeh_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -8780,7 +8780,7 @@ void gcli::c_gtypeh_Reserve(gcli::FGtype& gtype, u32 n) {
 // --- gcli.FGtype.c_gtypeprefix.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_gtypeprefix_Insert(gcli::FGtype& gtype, gcli::FGtypeprefix& row) {
+void gcli::c_gtypeprefix_Insert(gcli::FGtype& gtype, gcli::FGtypeprefix& row) throw() {
     if (bool_Update(row.gtype_c_gtypeprefix_in_ary,true)) {
         // reserve space
         c_gtypeprefix_Reserve(gtype, 1);
@@ -8797,7 +8797,7 @@ void gcli::c_gtypeprefix_Insert(gcli::FGtype& gtype, gcli::FGtypeprefix& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_gtypeprefix_InsertMaybe(gcli::FGtype& gtype, gcli::FGtypeprefix& row) {
+bool gcli::c_gtypeprefix_InsertMaybe(gcli::FGtype& gtype, gcli::FGtypeprefix& row) throw() {
     bool retval = !row.gtype_c_gtypeprefix_in_ary;
     c_gtypeprefix_Insert(gtype,row); // check is performed in _Insert again
     return retval;
@@ -8805,7 +8805,7 @@ bool gcli::c_gtypeprefix_InsertMaybe(gcli::FGtype& gtype, gcli::FGtypeprefix& ro
 
 // --- gcli.FGtype.c_gtypeprefix.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_gtypeprefix_Remove(gcli::FGtype& gtype, gcli::FGtypeprefix& row) {
+void gcli::c_gtypeprefix_Remove(gcli::FGtype& gtype, gcli::FGtypeprefix& row) throw() {
     if (bool_Update(row.gtype_c_gtypeprefix_in_ary,false)) {
         int lim = gtype.c_gtypeprefix_n;
         gcli::FGtypeprefix* *elems = gtype.c_gtypeprefix_elems;
@@ -8826,7 +8826,7 @@ void gcli::c_gtypeprefix_Remove(gcli::FGtype& gtype, gcli::FGtypeprefix& row) {
 
 // --- gcli.FGtype.c_gtypeprefix.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_gtypeprefix_Reserve(gcli::FGtype& gtype, u32 n) {
+void gcli::c_gtypeprefix_Reserve(gcli::FGtype& gtype, u32 n) throw() {
     u32 old_max = gtype.c_gtypeprefix_max;
     if (UNLIKELY(gtype.c_gtypeprefix_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -8842,7 +8842,7 @@ void gcli::c_gtypeprefix_Reserve(gcli::FGtype& gtype, u32 n) {
 }
 
 // --- gcli.FGtype..Uninit
-void gcli::FGtype_Uninit(gcli::FGtype& gtype) {
+void gcli::FGtype_Uninit(gcli::FGtype& gtype) throw() {
     gcli::FGtype &row = gtype; (void)row;
     ind_gtype_Remove(row); // remove gtype from index ind_gtype
 
@@ -8855,32 +8855,32 @@ void gcli::FGtype_Uninit(gcli::FGtype& gtype) {
 
 // --- gcli.FGtypeh.base.CopyOut
 // Copy fields out of row
-void gcli::gtypeh_CopyOut(gcli::FGtypeh &row, gclidb::Gtypeh &out) {
+void gcli::gtypeh_CopyOut(gcli::FGtypeh &row, gclidb::Gtypeh &out) throw() {
     out.gtypeh = row.gtypeh;
     out.header = row.header;
 }
 
 // --- gcli.FGtypeh.base.CopyIn
 // Copy fields in to row
-void gcli::gtypeh_CopyIn(gcli::FGtypeh &row, gclidb::Gtypeh &in) {
+void gcli::gtypeh_CopyIn(gcli::FGtypeh &row, gclidb::Gtypeh &in) throw() {
     row.gtypeh = in.gtypeh;
     row.header = in.header;
 }
 
 // --- gcli.FGtypeh.gtype.Get
-algo::Smallstr50 gcli::gtype_Get(gcli::FGtypeh& gtypeh) {
+algo::Smallstr50 gcli::gtype_Get(gcli::FGtypeh& gtypeh) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gtypeh.gtypeh, ".RL"));
     return ret;
 }
 
 // --- gcli.FGtypeh.name.Get
-algo::cstring gcli::name_Get(gcli::FGtypeh& gtypeh) {
+algo::cstring gcli::name_Get(gcli::FGtypeh& gtypeh) throw() {
     algo::cstring ret(algo::Pathcomp(gtypeh.gtypeh, ".RR"));
     return ret;
 }
 
 // --- gcli.FGtypeh..Uninit
-void gcli::FGtypeh_Uninit(gcli::FGtypeh& gtypeh) {
+void gcli::FGtypeh_Uninit(gcli::FGtypeh& gtypeh) throw() {
     gcli::FGtypeh &row = gtypeh; (void)row;
     gcli::FGtype* p_gtype = gcli::ind_gtype_Find(gtype_Get(row));
     if (p_gtype)  {
@@ -8890,32 +8890,32 @@ void gcli::FGtypeh_Uninit(gcli::FGtypeh& gtypeh) {
 
 // --- gcli.FGtypeprefix.base.CopyOut
 // Copy fields out of row
-void gcli::gtypeprefix_CopyOut(gcli::FGtypeprefix &row, gclidb::Gtypeprefix &out) {
+void gcli::gtypeprefix_CopyOut(gcli::FGtypeprefix &row, gclidb::Gtypeprefix &out) throw() {
     out.gtypeprefix = row.gtypeprefix;
     out.comment = row.comment;
 }
 
 // --- gcli.FGtypeprefix.base.CopyIn
 // Copy fields in to row
-void gcli::gtypeprefix_CopyIn(gcli::FGtypeprefix &row, gclidb::Gtypeprefix &in) {
+void gcli::gtypeprefix_CopyIn(gcli::FGtypeprefix &row, gclidb::Gtypeprefix &in) throw() {
     row.gtypeprefix = in.gtypeprefix;
     row.comment = in.comment;
 }
 
 // --- gcli.FGtypeprefix.gtype.Get
-algo::Smallstr50 gcli::gtype_Get(gcli::FGtypeprefix& gtypeprefix) {
+algo::Smallstr50 gcli::gtype_Get(gcli::FGtypeprefix& gtypeprefix) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gtypeprefix.gtypeprefix, ".RL"));
     return ret;
 }
 
 // --- gcli.FGtypeprefix.prefix.Get
-algo::cstring gcli::prefix_Get(gcli::FGtypeprefix& gtypeprefix) {
+algo::cstring gcli::prefix_Get(gcli::FGtypeprefix& gtypeprefix) throw() {
     algo::cstring ret(algo::Pathcomp(gtypeprefix.gtypeprefix, ".RR"));
     return ret;
 }
 
 // --- gcli.FGtypeprefix..Uninit
-void gcli::FGtypeprefix_Uninit(gcli::FGtypeprefix& gtypeprefix) {
+void gcli::FGtypeprefix_Uninit(gcli::FGtypeprefix& gtypeprefix) throw() {
     gcli::FGtypeprefix &row = gtypeprefix; (void)row;
     gcli::FGtype* p_gtype = gcli::ind_gtype_Find(gtype_Get(row));
     if (p_gtype)  {
@@ -8926,7 +8926,7 @@ void gcli::FGtypeprefix_Uninit(gcli::FGtypeprefix& gtypeprefix) {
 // --- gcli.FHttp.request_method.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* gcli::request_method_ToCstr(const gcli::FHttp& parent) {
+const char* gcli::request_method_ToCstr(const gcli::FHttp& parent) throw() {
     const char *ret = NULL;
     switch(request_method_GetEnum(parent)) {
         case gcli_FHttp_request_method_GET : ret = "GET";  break;
@@ -8941,7 +8941,7 @@ const char* gcli::request_method_ToCstr(const gcli::FHttp& parent) {
 // --- gcli.FHttp.request_method.Print
 // Convert request_method to a string. First, attempt conversion to a known string.
 // If no string matches, print request_method as a numeric value.
-void gcli::request_method_Print(const gcli::FHttp& parent, algo::cstring &lhs) {
+void gcli::request_method_Print(const gcli::FHttp& parent, algo::cstring &lhs) throw() {
     const char *strval = request_method_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -8954,7 +8954,7 @@ void gcli::request_method_Print(const gcli::FHttp& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool gcli::request_method_SetStrptrMaybe(gcli::FHttp& parent, algo::strptr rhs) {
+bool gcli::request_method_SetStrptrMaybe(gcli::FHttp& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -8999,7 +8999,7 @@ bool gcli::request_method_SetStrptrMaybe(gcli::FHttp& parent, algo::strptr rhs) 
 // --- gcli.FHttp.request_method.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void gcli::request_method_SetStrptr(gcli::FHttp& parent, algo::strptr rhs, gcli_FHttp_request_method_Enum dflt) {
+void gcli::request_method_SetStrptr(gcli::FHttp& parent, algo::strptr rhs, gcli_FHttp_request_method_Enum dflt) throw() {
     if (!request_method_SetStrptrMaybe(parent,rhs)) request_method_SetEnum(parent,dflt);
 }
 
@@ -9007,7 +9007,7 @@ void gcli::request_method_SetStrptr(gcli::FHttp& parent, algo::strptr rhs, gcli_
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> gcli::response_header_Addary(gcli::FHttp& parent, algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> gcli::response_header_Addary(gcli::FHttp& parent, algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.response_header_elems && rhs.elems < parent.response_header_elems + parent.response_header_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("gcli.tary_alias  field:gcli.FHttp.response_header  comment:'alias error: sub-array is being appended to the whole'");
@@ -9025,7 +9025,7 @@ algo::aryptr<algo::cstring> gcli::response_header_Addary(gcli::FHttp& parent, al
 // --- gcli.FHttp.response_header.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& gcli::response_header_Alloc(gcli::FHttp& parent) {
+algo::cstring& gcli::response_header_Alloc(gcli::FHttp& parent) throw() {
     response_header_Reserve(parent, 1);
     int n  = parent.response_header_n;
     int at = n;
@@ -9038,7 +9038,7 @@ algo::cstring& gcli::response_header_Alloc(gcli::FHttp& parent) {
 // --- gcli.FHttp.response_header.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& gcli::response_header_AllocAt(gcli::FHttp& parent, int at) {
+algo::cstring& gcli::response_header_AllocAt(gcli::FHttp& parent, int at) throw() {
     response_header_Reserve(parent, 1);
     int n  = parent.response_header_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -9053,7 +9053,7 @@ algo::cstring& gcli::response_header_AllocAt(gcli::FHttp& parent, int at) {
 
 // --- gcli.FHttp.response_header.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> gcli::response_header_AllocN(gcli::FHttp& parent, int n_elems) {
+algo::aryptr<algo::cstring> gcli::response_header_AllocN(gcli::FHttp& parent, int n_elems) throw() {
     response_header_Reserve(parent, n_elems);
     int old_n  = parent.response_header_n;
     int new_n = old_n + n_elems;
@@ -9067,7 +9067,7 @@ algo::aryptr<algo::cstring> gcli::response_header_AllocN(gcli::FHttp& parent, in
 
 // --- gcli.FHttp.response_header.Remove
 // Remove item by index. If index outside of range, do nothing.
-void gcli::response_header_Remove(gcli::FHttp& parent, u32 i) {
+void gcli::response_header_Remove(gcli::FHttp& parent, u32 i) throw() {
     u32 lim = parent.response_header_n;
     algo::cstring *elems = parent.response_header_elems;
     if (i < lim) {
@@ -9078,7 +9078,7 @@ void gcli::response_header_Remove(gcli::FHttp& parent, u32 i) {
 }
 
 // --- gcli.FHttp.response_header.RemoveAll
-void gcli::response_header_RemoveAll(gcli::FHttp& parent) {
+void gcli::response_header_RemoveAll(gcli::FHttp& parent) throw() {
     u32 n = parent.response_header_n;
     while (n > 0) {
         n -= 1;
@@ -9089,7 +9089,7 @@ void gcli::response_header_RemoveAll(gcli::FHttp& parent) {
 
 // --- gcli.FHttp.response_header.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcli::response_header_RemoveLast(gcli::FHttp& parent) {
+void gcli::response_header_RemoveLast(gcli::FHttp& parent) throw() {
     u64 n = parent.response_header_n;
     if (n > 0) {
         n -= 1;
@@ -9100,7 +9100,7 @@ void gcli::response_header_RemoveLast(gcli::FHttp& parent) {
 
 // --- gcli.FHttp.response_header.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void gcli::response_header_AbsReserve(gcli::FHttp& parent, int n) {
+void gcli::response_header_AbsReserve(gcli::FHttp& parent, int n) throw() {
     u32 old_max  = parent.response_header_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -9115,7 +9115,7 @@ void gcli::response_header_AbsReserve(gcli::FHttp& parent, int n) {
 
 // --- gcli.FHttp.response_header.Setary
 // Copy contents of RHS to PARENT.
-void gcli::response_header_Setary(gcli::FHttp& parent, gcli::FHttp &rhs) {
+void gcli::response_header_Setary(gcli::FHttp& parent, gcli::FHttp &rhs) throw() {
     response_header_RemoveAll(parent);
     int nnew = rhs.response_header_n;
     response_header_Reserve(parent, nnew); // reserve space
@@ -9128,14 +9128,14 @@ void gcli::response_header_Setary(gcli::FHttp& parent, gcli::FHttp &rhs) {
 // --- gcli.FHttp.response_header.Setary2
 // Copy specified array into response_header, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void gcli::response_header_Setary(gcli::FHttp& parent, const algo::aryptr<algo::cstring> &rhs) {
+void gcli::response_header_Setary(gcli::FHttp& parent, const algo::aryptr<algo::cstring> &rhs) throw() {
     response_header_RemoveAll(parent);
     response_header_Addary(parent, rhs);
 }
 
 // --- gcli.FHttp.response_header.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> gcli::response_header_AllocNVal(gcli::FHttp& parent, int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> gcli::response_header_AllocNVal(gcli::FHttp& parent, int n_elems, const algo::cstring& val) throw() {
     response_header_Reserve(parent, n_elems);
     int old_n  = parent.response_header_n;
     int new_n = old_n + n_elems;
@@ -9151,7 +9151,7 @@ algo::aryptr<algo::cstring> gcli::response_header_AllocNVal(gcli::FHttp& parent,
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool gcli::response_header_ReadStrptrMaybe(gcli::FHttp& parent, algo::strptr in_str) {
+bool gcli::response_header_ReadStrptrMaybe(gcli::FHttp& parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = response_header_Alloc(parent);
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -9174,7 +9174,7 @@ void gcli::FHttp_Init(gcli::FHttp& parent) {
 }
 
 // --- gcli.FHttp..Uninit
-void gcli::FHttp_Uninit(gcli::FHttp& parent) {
+void gcli::FHttp_Uninit(gcli::FHttp& parent) throw() {
     gcli::FHttp &row = parent; (void)row;
 
     // gcli.FHttp.response_header.Uninit (Tary)  //Array of request headers
@@ -9187,7 +9187,7 @@ void gcli::FHttp_Uninit(gcli::FHttp& parent) {
 // --- gcli.FHttp..Print
 // print string representation of ROW to string STR
 // cfmt:gcli.FHttp.String  printfmt:Tuple
-void gcli::FHttp_Print(gcli::FHttp& row, algo::cstring& str) {
+void gcli::FHttp_Print(gcli::FHttp& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gcli.FHttp";
 
@@ -9238,7 +9238,7 @@ void gcli::FHttp_Print(gcli::FHttp& row, algo::cstring& str) {
 
 // --- gcli.FIssue.base.CopyOut
 // Copy fields out of row
-void gcli::issue_CopyOut(gcli::FIssue &row, gclidb::Issue &out) {
+void gcli::issue_CopyOut(gcli::FIssue &row, gclidb::Issue &out) throw() {
     out.issue = row.issue;
     out.assignee = row.assignee;
     out.labels = row.labels;
@@ -9254,7 +9254,7 @@ void gcli::issue_CopyOut(gcli::FIssue &row, gclidb::Issue &out) {
 
 // --- gcli.FIssue.base.CopyIn
 // Copy fields in to row
-void gcli::issue_CopyIn(gcli::FIssue &row, gclidb::Issue &in) {
+void gcli::issue_CopyIn(gcli::FIssue &row, gclidb::Issue &in) throw() {
     row.issue = in.issue;
     row.assignee = in.assignee;
     row.labels = in.labels;
@@ -9269,13 +9269,13 @@ void gcli::issue_CopyIn(gcli::FIssue &row, gclidb::Issue &in) {
 }
 
 // --- gcli.FIssue.project.Get
-algo::Smallstr50 gcli::project_Get(gcli::FIssue& issue) {
+algo::Smallstr50 gcli::project_Get(gcli::FIssue& issue) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(issue.issue, ".RL"));
     return ret;
 }
 
 // --- gcli.FIssue.iid.Get
-algo::cstring gcli::iid_Get(gcli::FIssue& issue) {
+algo::cstring gcli::iid_Get(gcli::FIssue& issue) throw() {
     algo::cstring ret(algo::Pathcomp(issue.issue, ".RR"));
     return ret;
 }
@@ -9283,7 +9283,7 @@ algo::cstring gcli::iid_Get(gcli::FIssue& issue) {
 // --- gcli.FIssue.c_mrjob.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_mrjob_Insert(gcli::FIssue& issue, gcli::FMrjob& row) {
+void gcli::c_mrjob_Insert(gcli::FIssue& issue, gcli::FMrjob& row) throw() {
     if (bool_Update(row.issue_c_mrjob_in_ary,true)) {
         // reserve space
         c_mrjob_Reserve(issue, 1);
@@ -9300,7 +9300,7 @@ void gcli::c_mrjob_Insert(gcli::FIssue& issue, gcli::FMrjob& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_mrjob_InsertMaybe(gcli::FIssue& issue, gcli::FMrjob& row) {
+bool gcli::c_mrjob_InsertMaybe(gcli::FIssue& issue, gcli::FMrjob& row) throw() {
     bool retval = !row.issue_c_mrjob_in_ary;
     c_mrjob_Insert(issue,row); // check is performed in _Insert again
     return retval;
@@ -9308,7 +9308,7 @@ bool gcli::c_mrjob_InsertMaybe(gcli::FIssue& issue, gcli::FMrjob& row) {
 
 // --- gcli.FIssue.c_mrjob.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_mrjob_Remove(gcli::FIssue& issue, gcli::FMrjob& row) {
+void gcli::c_mrjob_Remove(gcli::FIssue& issue, gcli::FMrjob& row) throw() {
     if (bool_Update(row.issue_c_mrjob_in_ary,false)) {
         int lim = issue.c_mrjob_n;
         gcli::FMrjob* *elems = issue.c_mrjob_elems;
@@ -9329,7 +9329,7 @@ void gcli::c_mrjob_Remove(gcli::FIssue& issue, gcli::FMrjob& row) {
 
 // --- gcli.FIssue.c_mrjob.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_mrjob_Reserve(gcli::FIssue& issue, u32 n) {
+void gcli::c_mrjob_Reserve(gcli::FIssue& issue, u32 n) throw() {
     u32 old_max = issue.c_mrjob_max;
     if (UNLIKELY(issue.c_mrjob_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -9347,7 +9347,7 @@ void gcli::c_mrjob_Reserve(gcli::FIssue& issue, u32 n) {
 // --- gcli.FIssue.c_issuenote.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_issuenote_Insert(gcli::FIssue& issue, gcli::FIssuenote& row) {
+void gcli::c_issuenote_Insert(gcli::FIssue& issue, gcli::FIssuenote& row) throw() {
     if (bool_Update(row.issue_c_issuenote_in_ary,true)) {
         // reserve space
         c_issuenote_Reserve(issue, 1);
@@ -9364,7 +9364,7 @@ void gcli::c_issuenote_Insert(gcli::FIssue& issue, gcli::FIssuenote& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_issuenote_InsertMaybe(gcli::FIssue& issue, gcli::FIssuenote& row) {
+bool gcli::c_issuenote_InsertMaybe(gcli::FIssue& issue, gcli::FIssuenote& row) throw() {
     bool retval = !row.issue_c_issuenote_in_ary;
     c_issuenote_Insert(issue,row); // check is performed in _Insert again
     return retval;
@@ -9372,7 +9372,7 @@ bool gcli::c_issuenote_InsertMaybe(gcli::FIssue& issue, gcli::FIssuenote& row) {
 
 // --- gcli.FIssue.c_issuenote.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_issuenote_Remove(gcli::FIssue& issue, gcli::FIssuenote& row) {
+void gcli::c_issuenote_Remove(gcli::FIssue& issue, gcli::FIssuenote& row) throw() {
     if (bool_Update(row.issue_c_issuenote_in_ary,false)) {
         int lim = issue.c_issuenote_n;
         gcli::FIssuenote* *elems = issue.c_issuenote_elems;
@@ -9393,7 +9393,7 @@ void gcli::c_issuenote_Remove(gcli::FIssue& issue, gcli::FIssuenote& row) {
 
 // --- gcli.FIssue.c_issuenote.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_issuenote_Reserve(gcli::FIssue& issue, u32 n) {
+void gcli::c_issuenote_Reserve(gcli::FIssue& issue, u32 n) throw() {
     u32 old_max = issue.c_issuenote_max;
     if (UNLIKELY(issue.c_issuenote_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -9423,7 +9423,7 @@ void gcli::FIssue_Init(gcli::FIssue& issue) {
 }
 
 // --- gcli.FIssue..Uninit
-void gcli::FIssue_Uninit(gcli::FIssue& issue) {
+void gcli::FIssue_Uninit(gcli::FIssue& issue) throw() {
     gcli::FIssue &row = issue; (void)row;
     ind_issue_Remove(row); // remove issue from index ind_issue
 
@@ -9436,7 +9436,7 @@ void gcli::FIssue_Uninit(gcli::FIssue& issue) {
 
 // --- gcli.FIssuenote.base.CopyOut
 // Copy fields out of row
-void gcli::issuenote_CopyOut(gcli::FIssuenote &row, gclidb::Issuenote &out) {
+void gcli::issuenote_CopyOut(gcli::FIssuenote &row, gclidb::Issuenote &out) throw() {
     out.issuenote = row.issuenote;
     out.note = row.note;
     out.system = row.system;
@@ -9445,7 +9445,7 @@ void gcli::issuenote_CopyOut(gcli::FIssuenote &row, gclidb::Issuenote &out) {
 
 // --- gcli.FIssuenote.base.CopyIn
 // Copy fields in to row
-void gcli::issuenote_CopyIn(gcli::FIssuenote &row, gclidb::Issuenote &in) {
+void gcli::issuenote_CopyIn(gcli::FIssuenote &row, gclidb::Issuenote &in) throw() {
     row.issuenote = in.issuenote;
     row.note = in.note;
     row.system = in.system;
@@ -9453,19 +9453,19 @@ void gcli::issuenote_CopyIn(gcli::FIssuenote &row, gclidb::Issuenote &in) {
 }
 
 // --- gcli.FIssuenote.issue.Get
-algo::Smallstr50 gcli::issue_Get(gcli::FIssuenote& issuenote) {
+algo::Smallstr50 gcli::issue_Get(gcli::FIssuenote& issuenote) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(issuenote.issuenote, ".RL"));
     return ret;
 }
 
 // --- gcli.FIssuenote.nid.Get
-algo::cstring gcli::nid_Get(gcli::FIssuenote& issuenote) {
+algo::cstring gcli::nid_Get(gcli::FIssuenote& issuenote) throw() {
     algo::cstring ret(algo::Pathcomp(issuenote.issuenote, ".RR"));
     return ret;
 }
 
 // --- gcli.FIssuenote..Uninit
-void gcli::FIssuenote_Uninit(gcli::FIssuenote& issuenote) {
+void gcli::FIssuenote_Uninit(gcli::FIssuenote& issuenote) throw() {
     gcli::FIssuenote &row = issuenote; (void)row;
     ind_issuenote_Remove(row); // remove issuenote from index ind_issuenote
     gcli::FIssue* p_issue = gcli::ind_issue_Find(issue_Get(row));
@@ -9476,7 +9476,7 @@ void gcli::FIssuenote_Uninit(gcli::FIssuenote& issuenote) {
 
 // --- gcli.FMilestone.base.CopyOut
 // Copy fields out of row
-void gcli::milestone_CopyOut(gcli::FMilestone &row, gclidb::Milestone &out) {
+void gcli::milestone_CopyOut(gcli::FMilestone &row, gclidb::Milestone &out) throw() {
     out.milestone = row.milestone;
     out.description = row.description;
     out.title = row.title;
@@ -9484,26 +9484,26 @@ void gcli::milestone_CopyOut(gcli::FMilestone &row, gclidb::Milestone &out) {
 
 // --- gcli.FMilestone.base.CopyIn
 // Copy fields in to row
-void gcli::milestone_CopyIn(gcli::FMilestone &row, gclidb::Milestone &in) {
+void gcli::milestone_CopyIn(gcli::FMilestone &row, gclidb::Milestone &in) throw() {
     row.milestone = in.milestone;
     row.description = in.description;
     row.title = in.title;
 }
 
 // --- gcli.FMilestone.project.Get
-algo::Smallstr50 gcli::project_Get(gcli::FMilestone& milestone) {
+algo::Smallstr50 gcli::project_Get(gcli::FMilestone& milestone) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(milestone.milestone, ".RL"));
     return ret;
 }
 
 // --- gcli.FMilestone.iid.Get
-algo::cstring gcli::iid_Get(gcli::FMilestone& milestone) {
+algo::cstring gcli::iid_Get(gcli::FMilestone& milestone) throw() {
     algo::cstring ret(algo::Pathcomp(milestone.milestone, ".RR"));
     return ret;
 }
 
 // --- gcli.FMilestone..Uninit
-void gcli::FMilestone_Uninit(gcli::FMilestone& milestone) {
+void gcli::FMilestone_Uninit(gcli::FMilestone& milestone) throw() {
     gcli::FMilestone &row = milestone; (void)row;
     ind_milestone_Remove(row); // remove milestone from index ind_milestone
 }
@@ -9511,7 +9511,7 @@ void gcli::FMilestone_Uninit(gcli::FMilestone& milestone) {
 // --- gcli.FMilestone..Print
 // print string representation of ROW to string STR
 // cfmt:gcli.FMilestone.String  printfmt:Tuple
-void gcli::FMilestone_Print(gcli::FMilestone& row, algo::cstring& str) {
+void gcli::FMilestone_Print(gcli::FMilestone& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gcli.FMilestone";
 
@@ -9530,7 +9530,7 @@ void gcli::FMilestone_Print(gcli::FMilestone& row, algo::cstring& str) {
 
 // --- gcli.FMr.base.CopyOut
 // Copy fields out of row
-void gcli::mr_CopyOut(gcli::FMr &row, gclidb::Mr &out) {
+void gcli::mr_CopyOut(gcli::FMr &row, gclidb::Mr &out) throw() {
     out.mr = row.mr;
     out.state = row.state;
     out.title = row.title;
@@ -9547,7 +9547,7 @@ void gcli::mr_CopyOut(gcli::FMr &row, gclidb::Mr &out) {
 
 // --- gcli.FMr.base.CopyIn
 // Copy fields in to row
-void gcli::mr_CopyIn(gcli::FMr &row, gclidb::Mr &in) {
+void gcli::mr_CopyIn(gcli::FMr &row, gclidb::Mr &in) throw() {
     row.mr = in.mr;
     row.state = in.state;
     row.title = in.title;
@@ -9563,13 +9563,13 @@ void gcli::mr_CopyIn(gcli::FMr &row, gclidb::Mr &in) {
 }
 
 // --- gcli.FMr.proj.Get
-algo::Smallstr50 gcli::proj_Get(gcli::FMr& mr) {
+algo::Smallstr50 gcli::proj_Get(gcli::FMr& mr) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(mr.mr, ".RL"));
     return ret;
 }
 
 // --- gcli.FMr.iid.Get
-algo::cstring gcli::iid_Get(gcli::FMr& mr) {
+algo::cstring gcli::iid_Get(gcli::FMr& mr) throw() {
     algo::cstring ret(algo::Pathcomp(mr.mr, ".RR"));
     return ret;
 }
@@ -9577,7 +9577,7 @@ algo::cstring gcli::iid_Get(gcli::FMr& mr) {
 // --- gcli.FMr.c_mrnote.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_mrnote_Insert(gcli::FMr& mr, gcli::FMrnote& row) {
+void gcli::c_mrnote_Insert(gcli::FMr& mr, gcli::FMrnote& row) throw() {
     if (bool_Update(row.mr_c_mrnote_in_ary,true)) {
         // reserve space
         c_mrnote_Reserve(mr, 1);
@@ -9594,7 +9594,7 @@ void gcli::c_mrnote_Insert(gcli::FMr& mr, gcli::FMrnote& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_mrnote_InsertMaybe(gcli::FMr& mr, gcli::FMrnote& row) {
+bool gcli::c_mrnote_InsertMaybe(gcli::FMr& mr, gcli::FMrnote& row) throw() {
     bool retval = !row.mr_c_mrnote_in_ary;
     c_mrnote_Insert(mr,row); // check is performed in _Insert again
     return retval;
@@ -9602,7 +9602,7 @@ bool gcli::c_mrnote_InsertMaybe(gcli::FMr& mr, gcli::FMrnote& row) {
 
 // --- gcli.FMr.c_mrnote.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_mrnote_Remove(gcli::FMr& mr, gcli::FMrnote& row) {
+void gcli::c_mrnote_Remove(gcli::FMr& mr, gcli::FMrnote& row) throw() {
     if (bool_Update(row.mr_c_mrnote_in_ary,false)) {
         int lim = mr.c_mrnote_n;
         gcli::FMrnote* *elems = mr.c_mrnote_elems;
@@ -9623,7 +9623,7 @@ void gcli::c_mrnote_Remove(gcli::FMr& mr, gcli::FMrnote& row) {
 
 // --- gcli.FMr.c_mrnote.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_mrnote_Reserve(gcli::FMr& mr, u32 n) {
+void gcli::c_mrnote_Reserve(gcli::FMr& mr, u32 n) throw() {
     u32 old_max = mr.c_mrnote_max;
     if (UNLIKELY(mr.c_mrnote_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -9641,7 +9641,7 @@ void gcli::c_mrnote_Reserve(gcli::FMr& mr, u32 n) {
 // --- gcli.FMr.c_mrjob.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void gcli::c_mrjob_Insert(gcli::FMr& mr, gcli::FMrjob& row) {
+void gcli::c_mrjob_Insert(gcli::FMr& mr, gcli::FMrjob& row) throw() {
     if (bool_Update(row.mr_c_mrjob_in_ary,true)) {
         // reserve space
         c_mrjob_Reserve(mr, 1);
@@ -9658,7 +9658,7 @@ void gcli::c_mrjob_Insert(gcli::FMr& mr, gcli::FMrjob& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool gcli::c_mrjob_InsertMaybe(gcli::FMr& mr, gcli::FMrjob& row) {
+bool gcli::c_mrjob_InsertMaybe(gcli::FMr& mr, gcli::FMrjob& row) throw() {
     bool retval = !row.mr_c_mrjob_in_ary;
     c_mrjob_Insert(mr,row); // check is performed in _Insert again
     return retval;
@@ -9666,7 +9666,7 @@ bool gcli::c_mrjob_InsertMaybe(gcli::FMr& mr, gcli::FMrjob& row) {
 
 // --- gcli.FMr.c_mrjob.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void gcli::c_mrjob_Remove(gcli::FMr& mr, gcli::FMrjob& row) {
+void gcli::c_mrjob_Remove(gcli::FMr& mr, gcli::FMrjob& row) throw() {
     if (bool_Update(row.mr_c_mrjob_in_ary,false)) {
         int lim = mr.c_mrjob_n;
         gcli::FMrjob* *elems = mr.c_mrjob_elems;
@@ -9687,7 +9687,7 @@ void gcli::c_mrjob_Remove(gcli::FMr& mr, gcli::FMrjob& row) {
 
 // --- gcli.FMr.c_mrjob.Reserve
 // Reserve space in index for N more elements;
-void gcli::c_mrjob_Reserve(gcli::FMr& mr, u32 n) {
+void gcli::c_mrjob_Reserve(gcli::FMr& mr, u32 n) throw() {
     u32 old_max = mr.c_mrjob_max;
     if (UNLIKELY(mr.c_mrjob_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -9716,7 +9716,7 @@ void gcli::FMr_Init(gcli::FMr& mr) {
 }
 
 // --- gcli.FMr..Uninit
-void gcli::FMr_Uninit(gcli::FMr& mr) {
+void gcli::FMr_Uninit(gcli::FMr& mr) throw() {
     gcli::FMr &row = mr; (void)row;
     ind_mr_Remove(row); // remove mr from index ind_mr
 
@@ -9730,7 +9730,7 @@ void gcli::FMr_Uninit(gcli::FMr& mr) {
 // --- gcli.FMr..Print
 // print string representation of ROW to string STR
 // cfmt:gcli.FMr.String  printfmt:Tuple
-void gcli::FMr_Print(gcli::FMr& row, algo::cstring& str) {
+void gcli::FMr_Print(gcli::FMr& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gcli.FMr";
 
@@ -9776,7 +9776,7 @@ void gcli::FMr_Print(gcli::FMr& row, algo::cstring& str) {
 
 // --- gcli.FMrjob.base.CopyOut
 // Copy fields out of row
-void gcli::mrjob_CopyOut(gcli::FMrjob &row, gclidb::Mrjob &out) {
+void gcli::mrjob_CopyOut(gcli::FMrjob &row, gclidb::Mrjob &out) throw() {
     out.mrjob = row.mrjob;
     out.ref = row.ref;
     out.id = row.id;
@@ -9788,7 +9788,7 @@ void gcli::mrjob_CopyOut(gcli::FMrjob &row, gclidb::Mrjob &out) {
 
 // --- gcli.FMrjob.base.CopyIn
 // Copy fields in to row
-void gcli::mrjob_CopyIn(gcli::FMrjob &row, gclidb::Mrjob &in) {
+void gcli::mrjob_CopyIn(gcli::FMrjob &row, gclidb::Mrjob &in) throw() {
     row.mrjob = in.mrjob;
     row.ref = in.ref;
     row.id = in.id;
@@ -9799,13 +9799,13 @@ void gcli::mrjob_CopyIn(gcli::FMrjob &row, gclidb::Mrjob &in) {
 }
 
 // --- gcli.FMrjob.mr.Get
-algo::Smallstr150 gcli::mr_Get(gcli::FMrjob& mrjob) {
+algo::Smallstr150 gcli::mr_Get(gcli::FMrjob& mrjob) throw() {
     algo::Smallstr150 ret(algo::Pathcomp(mrjob.mrjob, "/RL"));
     return ret;
 }
 
 // --- gcli.FMrjob.job.Get
-algo::cstring gcli::job_Get(gcli::FMrjob& mrjob) {
+algo::cstring gcli::job_Get(gcli::FMrjob& mrjob) throw() {
     algo::cstring ret(algo::Pathcomp(mrjob.mrjob, "/RR"));
     return ret;
 }
@@ -9820,7 +9820,7 @@ void gcli::FMrjob_Init(gcli::FMrjob& mrjob) {
 }
 
 // --- gcli.FMrjob..Uninit
-void gcli::FMrjob_Uninit(gcli::FMrjob& mrjob) {
+void gcli::FMrjob_Uninit(gcli::FMrjob& mrjob) throw() {
     gcli::FMrjob &row = mrjob; (void)row;
     ind_mrjob_Remove(row); // remove mrjob from index ind_mrjob
     gcli::FMr* p_mr = gcli::ind_mr_Find(mr_Get(row));
@@ -9831,7 +9831,7 @@ void gcli::FMrjob_Uninit(gcli::FMrjob& mrjob) {
 
 // --- gcli.FMrnote.base.CopyOut
 // Copy fields out of row
-void gcli::mrnote_CopyOut(gcli::FMrnote &row, gclidb::Mrnote &out) {
+void gcli::mrnote_CopyOut(gcli::FMrnote &row, gclidb::Mrnote &out) throw() {
     out.system = row.system;
     out.mrnote = row.mrnote;
     out.note = row.note;
@@ -9840,7 +9840,7 @@ void gcli::mrnote_CopyOut(gcli::FMrnote &row, gclidb::Mrnote &out) {
 
 // --- gcli.FMrnote.base.CopyIn
 // Copy fields in to row
-void gcli::mrnote_CopyIn(gcli::FMrnote &row, gclidb::Mrnote &in) {
+void gcli::mrnote_CopyIn(gcli::FMrnote &row, gclidb::Mrnote &in) throw() {
     row.system = in.system;
     row.mrnote = in.mrnote;
     row.note = in.note;
@@ -9848,19 +9848,19 @@ void gcli::mrnote_CopyIn(gcli::FMrnote &row, gclidb::Mrnote &in) {
 }
 
 // --- gcli.FMrnote.nid.Get
-algo::cstring gcli::nid_Get(gcli::FMrnote& mrnote) {
+algo::cstring gcli::nid_Get(gcli::FMrnote& mrnote) throw() {
     algo::cstring ret(algo::Pathcomp(mrnote.mrnote, ".RR"));
     return ret;
 }
 
 // --- gcli.FMrnote.mr.Get
-algo::Smallstr150 gcli::mr_Get(gcli::FMrnote& mrnote) {
+algo::Smallstr150 gcli::mr_Get(gcli::FMrnote& mrnote) throw() {
     algo::Smallstr150 ret(algo::Pathcomp(mrnote.mrnote, ".RL"));
     return ret;
 }
 
 // --- gcli.FMrnote..Uninit
-void gcli::FMrnote_Uninit(gcli::FMrnote& mrnote) {
+void gcli::FMrnote_Uninit(gcli::FMrnote& mrnote) throw() {
     gcli::FMrnote &row = mrnote; (void)row;
     ind_mrnote_Remove(row); // remove mrnote from index ind_mrnote
     gcli::FMr* p_mr = gcli::ind_mr_Find(mr_Get(row));
@@ -9871,7 +9871,7 @@ void gcli::FMrnote_Uninit(gcli::FMrnote& mrnote) {
 
 // --- gcli.FUser.base.CopyOut
 // Copy fields out of row
-void gcli::user_CopyOut(gcli::FUser &row, gclidb::User &out) {
+void gcli::user_CopyOut(gcli::FUser &row, gclidb::User &out) throw() {
     out.user = row.user;
     out.id = row.id;
     out.name = row.name;
@@ -9879,14 +9879,14 @@ void gcli::user_CopyOut(gcli::FUser &row, gclidb::User &out) {
 
 // --- gcli.FUser.base.CopyIn
 // Copy fields in to row
-void gcli::user_CopyIn(gcli::FUser &row, gclidb::User &in) {
+void gcli::user_CopyIn(gcli::FUser &row, gclidb::User &in) throw() {
     row.user = in.user;
     row.id = in.id;
     row.name = in.name;
 }
 
 // --- gcli.FUser..Uninit
-void gcli::FUser_Uninit(gcli::FUser& user) {
+void gcli::FUser_Uninit(gcli::FUser& user) throw() {
     gcli::FUser &row = user; (void)row;
     ind_user_Remove(row); // remove user from index ind_user
 }
@@ -9894,7 +9894,7 @@ void gcli::FUser_Uninit(gcli::FUser& user) {
 // --- gcli.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* gcli::value_ToCstr(const gcli::FieldId& parent) {
+const char* gcli::value_ToCstr(const gcli::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case gcli_FieldId_value            : ret = "value";  break;
@@ -9905,7 +9905,7 @@ const char* gcli::value_ToCstr(const gcli::FieldId& parent) {
 // --- gcli.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void gcli::value_Print(const gcli::FieldId& parent, algo::cstring &lhs) {
+void gcli::value_Print(const gcli::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -9918,7 +9918,7 @@ void gcli::value_Print(const gcli::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool gcli::value_SetStrptrMaybe(gcli::FieldId& parent, algo::strptr rhs) {
+bool gcli::value_SetStrptrMaybe(gcli::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -9936,13 +9936,13 @@ bool gcli::value_SetStrptrMaybe(gcli::FieldId& parent, algo::strptr rhs) {
 // --- gcli.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void gcli::value_SetStrptr(gcli::FieldId& parent, algo::strptr rhs, gcli_FieldIdEnum dflt) {
+void gcli::value_SetStrptr(gcli::FieldId& parent, algo::strptr rhs, gcli_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- gcli.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool gcli::value_ReadStrptrMaybe(gcli::FieldId& parent, algo::strptr rhs) {
+bool gcli::value_ReadStrptrMaybe(gcli::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -9954,7 +9954,7 @@ bool gcli::value_ReadStrptrMaybe(gcli::FieldId& parent, algo::strptr rhs) {
 // --- gcli.FieldId..ReadStrptrMaybe
 // Read fields of gcli::FieldId from an ascii string.
 // The format of the string is the format of the gcli::FieldId's only field
-bool gcli::FieldId_ReadStrptrMaybe(gcli::FieldId &parent, algo::strptr in_str) {
+bool gcli::FieldId_ReadStrptrMaybe(gcli::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -9963,14 +9963,14 @@ bool gcli::FieldId_ReadStrptrMaybe(gcli::FieldId &parent, algo::strptr in_str) {
 // --- gcli.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:gcli.FieldId.String  printfmt:Raw
-void gcli::FieldId_Print(gcli::FieldId& row, algo::cstring& str) {
+void gcli::FieldId_Print(gcli::FieldId& row, algo::cstring& str) throw() {
     gcli::value_Print(row, str);
 }
 
 // --- gcli.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* gcli::value_ToCstr(const gcli::TableId& parent) {
+const char* gcli::value_ToCstr(const gcli::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case gcli_TableId_gclidb_Gact      : ret = "gclidb.Gact";  break;
@@ -9994,7 +9994,7 @@ const char* gcli::value_ToCstr(const gcli::TableId& parent) {
 // --- gcli.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void gcli::value_Print(const gcli::TableId& parent, algo::cstring &lhs) {
+void gcli::value_Print(const gcli::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -10007,7 +10007,7 @@ void gcli::value_Print(const gcli::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool gcli::value_SetStrptrMaybe(gcli::TableId& parent, algo::strptr rhs) {
+bool gcli::value_SetStrptrMaybe(gcli::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 11: {
@@ -10133,13 +10133,13 @@ bool gcli::value_SetStrptrMaybe(gcli::TableId& parent, algo::strptr rhs) {
 // --- gcli.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void gcli::value_SetStrptr(gcli::TableId& parent, algo::strptr rhs, gcli_TableIdEnum dflt) {
+void gcli::value_SetStrptr(gcli::TableId& parent, algo::strptr rhs, gcli_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- gcli.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool gcli::value_ReadStrptrMaybe(gcli::TableId& parent, algo::strptr rhs) {
+bool gcli::value_ReadStrptrMaybe(gcli::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -10151,7 +10151,7 @@ bool gcli::value_ReadStrptrMaybe(gcli::TableId& parent, algo::strptr rhs) {
 // --- gcli.TableId..ReadStrptrMaybe
 // Read fields of gcli::TableId from an ascii string.
 // The format of the string is the format of the gcli::TableId's only field
-bool gcli::TableId_ReadStrptrMaybe(gcli::TableId &parent, algo::strptr in_str) {
+bool gcli::TableId_ReadStrptrMaybe(gcli::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -10160,7 +10160,7 @@ bool gcli::TableId_ReadStrptrMaybe(gcli::TableId &parent, algo::strptr in_str) {
 // --- gcli.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:gcli.TableId.String  printfmt:Raw
-void gcli::TableId_Print(gcli::TableId& row, algo::cstring& str) {
+void gcli::TableId_Print(gcli::TableId& row, algo::cstring& str) throw() {
     gcli::value_Print(row, str);
 }
 

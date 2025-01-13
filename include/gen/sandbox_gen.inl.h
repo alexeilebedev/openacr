@@ -29,18 +29,18 @@
 //#pragma endinclude
 
 // --- sandbox.trace..Ctor
-inline  sandbox::trace::trace() {
+inline  sandbox::trace::trace() throw() {
 }
 
 // --- sandbox.FDb.sandbox.EmptyQ
 // Return true if index is empty
-inline bool sandbox::sandbox_EmptyQ() {
+inline bool sandbox::sandbox_EmptyQ() throw() {
     return _db.sandbox_n == 0;
 }
 
 // --- sandbox.FDb.sandbox.Find
 // Look up row by row id. Return NULL if out of range
-inline sandbox::FSandbox* sandbox::sandbox_Find(u64 t) {
+inline sandbox::FSandbox* sandbox::sandbox_Find(u64 t) throw() {
     sandbox::FSandbox *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.sandbox_n))) {
         u64 x = t + 1;
@@ -54,19 +54,19 @@ inline sandbox::FSandbox* sandbox::sandbox_Find(u64 t) {
 
 // --- sandbox.FDb.sandbox.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline sandbox::FSandbox* sandbox::sandbox_Last() {
+inline sandbox::FSandbox* sandbox::sandbox_Last() throw() {
     return sandbox_Find(u64(_db.sandbox_n-1));
 }
 
 // --- sandbox.FDb.sandbox.N
 // Return number of items in the pool
-inline i32 sandbox::sandbox_N() {
+inline i32 sandbox::sandbox_N() throw() {
     return _db.sandbox_n;
 }
 
 // --- sandbox.FDb.sandbox.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline sandbox::FSandbox& sandbox::sandbox_qFind(u64 t) {
+inline sandbox::FSandbox& sandbox::sandbox_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -76,25 +76,25 @@ inline sandbox::FSandbox& sandbox::sandbox_qFind(u64 t) {
 
 // --- sandbox.FDb.ind_sandbox.EmptyQ
 // Return true if hash is empty
-inline bool sandbox::ind_sandbox_EmptyQ() {
+inline bool sandbox::ind_sandbox_EmptyQ() throw() {
     return _db.ind_sandbox_n == 0;
 }
 
 // --- sandbox.FDb.ind_sandbox.N
 // Return number of items in the hash
-inline i32 sandbox::ind_sandbox_N() {
+inline i32 sandbox::ind_sandbox_N() throw() {
     return _db.ind_sandbox_n;
 }
 
 // --- sandbox.FDb.sbpath.EmptyQ
 // Return true if index is empty
-inline bool sandbox::sbpath_EmptyQ() {
+inline bool sandbox::sbpath_EmptyQ() throw() {
     return _db.sbpath_n == 0;
 }
 
 // --- sandbox.FDb.sbpath.Find
 // Look up row by row id. Return NULL if out of range
-inline sandbox::FSbpath* sandbox::sbpath_Find(u64 t) {
+inline sandbox::FSbpath* sandbox::sbpath_Find(u64 t) throw() {
     sandbox::FSbpath *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.sbpath_n))) {
         u64 x = t + 1;
@@ -108,19 +108,19 @@ inline sandbox::FSbpath* sandbox::sbpath_Find(u64 t) {
 
 // --- sandbox.FDb.sbpath.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline sandbox::FSbpath* sandbox::sbpath_Last() {
+inline sandbox::FSbpath* sandbox::sbpath_Last() throw() {
     return sbpath_Find(u64(_db.sbpath_n-1));
 }
 
 // --- sandbox.FDb.sbpath.N
 // Return number of items in the pool
-inline i32 sandbox::sbpath_N() {
+inline i32 sandbox::sbpath_N() throw() {
     return _db.sbpath_n;
 }
 
 // --- sandbox.FDb.sbpath.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline sandbox::FSbpath& sandbox::sbpath_qFind(u64 t) {
+inline sandbox::FSbpath& sandbox::sbpath_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -130,51 +130,51 @@ inline sandbox::FSbpath& sandbox::sbpath_qFind(u64 t) {
 
 // --- sandbox.FDb.sandbox_curs.Reset
 // cursor points to valid item
-inline void sandbox::_db_sandbox_curs_Reset(_db_sandbox_curs &curs, sandbox::FDb &parent) {
+inline void sandbox::_db_sandbox_curs_Reset(_db_sandbox_curs &curs, sandbox::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- sandbox.FDb.sandbox_curs.ValidQ
 // cursor points to valid item
-inline bool sandbox::_db_sandbox_curs_ValidQ(_db_sandbox_curs &curs) {
+inline bool sandbox::_db_sandbox_curs_ValidQ(_db_sandbox_curs &curs) throw() {
     return curs.index < _db.sandbox_n;
 }
 
 // --- sandbox.FDb.sandbox_curs.Next
 // proceed to next item
-inline void sandbox::_db_sandbox_curs_Next(_db_sandbox_curs &curs) {
+inline void sandbox::_db_sandbox_curs_Next(_db_sandbox_curs &curs) throw() {
     curs.index++;
 }
 
 // --- sandbox.FDb.sandbox_curs.Access
 // item access
-inline sandbox::FSandbox& sandbox::_db_sandbox_curs_Access(_db_sandbox_curs &curs) {
+inline sandbox::FSandbox& sandbox::_db_sandbox_curs_Access(_db_sandbox_curs &curs) throw() {
     return sandbox_qFind(u64(curs.index));
 }
 
 // --- sandbox.FDb.sbpath_curs.Reset
 // cursor points to valid item
-inline void sandbox::_db_sbpath_curs_Reset(_db_sbpath_curs &curs, sandbox::FDb &parent) {
+inline void sandbox::_db_sbpath_curs_Reset(_db_sbpath_curs &curs, sandbox::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- sandbox.FDb.sbpath_curs.ValidQ
 // cursor points to valid item
-inline bool sandbox::_db_sbpath_curs_ValidQ(_db_sbpath_curs &curs) {
+inline bool sandbox::_db_sbpath_curs_ValidQ(_db_sbpath_curs &curs) throw() {
     return curs.index < _db.sbpath_n;
 }
 
 // --- sandbox.FDb.sbpath_curs.Next
 // proceed to next item
-inline void sandbox::_db_sbpath_curs_Next(_db_sbpath_curs &curs) {
+inline void sandbox::_db_sbpath_curs_Next(_db_sbpath_curs &curs) throw() {
     curs.index++;
 }
 
 // --- sandbox.FDb.sbpath_curs.Access
 // item access
-inline sandbox::FSbpath& sandbox::_db_sbpath_curs_Access(_db_sbpath_curs &curs) {
+inline sandbox::FSbpath& sandbox::_db_sbpath_curs_Access(_db_sbpath_curs &curs) throw() {
     return sbpath_qFind(u64(curs.index));
 }
 
@@ -186,33 +186,33 @@ inline void sandbox::FSandbox_Init(sandbox::FSandbox& sandbox) {
 }
 
 // --- sandbox.FSandbox..Ctor
-inline  sandbox::FSandbox::FSandbox() {
+inline  sandbox::FSandbox::FSandbox() throw() {
     sandbox::FSandbox_Init(*this);
 }
 
 // --- sandbox.FSandbox..Dtor
-inline  sandbox::FSandbox::~FSandbox() {
+inline  sandbox::FSandbox::~FSandbox() throw() {
     sandbox::FSandbox_Uninit(*this);
 }
 
 // --- sandbox.FSbpath..Ctor
-inline  sandbox::FSbpath::FSbpath() {
+inline  sandbox::FSbpath::FSbpath() throw() {
 }
 
 // --- sandbox.FieldId.value.GetEnum
 // Get value of field as enum type
-inline sandbox_FieldIdEnum sandbox::value_GetEnum(const sandbox::FieldId& parent) {
+inline sandbox_FieldIdEnum sandbox::value_GetEnum(const sandbox::FieldId& parent) throw() {
     return sandbox_FieldIdEnum(parent.value);
 }
 
 // --- sandbox.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void sandbox::value_SetEnum(sandbox::FieldId& parent, sandbox_FieldIdEnum rhs) {
+inline void sandbox::value_SetEnum(sandbox::FieldId& parent, sandbox_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- sandbox.FieldId.value.Cast
-inline  sandbox::FieldId::operator sandbox_FieldIdEnum() const {
+inline  sandbox::FieldId::operator sandbox_FieldIdEnum() const throw() {
     return sandbox_FieldIdEnum((*this).value);
 }
 
@@ -223,35 +223,35 @@ inline void sandbox::FieldId_Init(sandbox::FieldId& parent) {
 }
 
 // --- sandbox.FieldId..Ctor
-inline  sandbox::FieldId::FieldId() {
+inline  sandbox::FieldId::FieldId() throw() {
     sandbox::FieldId_Init(*this);
 }
 
 // --- sandbox.FieldId..FieldwiseCtor
-inline  sandbox::FieldId::FieldId(i32 in_value)
+inline  sandbox::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- sandbox.FieldId..EnumCtor
-inline  sandbox::FieldId::FieldId(sandbox_FieldIdEnum arg) {
+inline  sandbox::FieldId::FieldId(sandbox_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- sandbox.TableId.value.GetEnum
 // Get value of field as enum type
-inline sandbox_TableIdEnum sandbox::value_GetEnum(const sandbox::TableId& parent) {
+inline sandbox_TableIdEnum sandbox::value_GetEnum(const sandbox::TableId& parent) throw() {
     return sandbox_TableIdEnum(parent.value);
 }
 
 // --- sandbox.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void sandbox::value_SetEnum(sandbox::TableId& parent, sandbox_TableIdEnum rhs) {
+inline void sandbox::value_SetEnum(sandbox::TableId& parent, sandbox_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- sandbox.TableId.value.Cast
-inline  sandbox::TableId::operator sandbox_TableIdEnum() const {
+inline  sandbox::TableId::operator sandbox_TableIdEnum() const throw() {
     return sandbox_TableIdEnum((*this).value);
 }
 
@@ -262,18 +262,18 @@ inline void sandbox::TableId_Init(sandbox::TableId& parent) {
 }
 
 // --- sandbox.TableId..Ctor
-inline  sandbox::TableId::TableId() {
+inline  sandbox::TableId::TableId() throw() {
     sandbox::TableId_Init(*this);
 }
 
 // --- sandbox.TableId..FieldwiseCtor
-inline  sandbox::TableId::TableId(i32 in_value)
+inline  sandbox::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- sandbox.TableId..EnumCtor
-inline  sandbox::TableId::TableId(sandbox_TableIdEnum arg) {
+inline  sandbox::TableId::TableId(sandbox_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

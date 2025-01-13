@@ -111,14 +111,14 @@ namespace src_hdr { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- src_hdr.FCopyline..Uninit
-void src_hdr::FCopyline_Uninit(src_hdr::FCopyline& fcopyline) {
+void src_hdr::FCopyline_Uninit(src_hdr::FCopyline& fcopyline) throw() {
     src_hdr::FCopyline &row = fcopyline; (void)row;
     ind_fcopyline_Remove(row); // remove fcopyline from index ind_fcopyline
 }
 
 // --- src_hdr.FCopyright.base.CopyOut
 // Copy fields out of row
-void src_hdr::copyright_CopyOut(src_hdr::FCopyright &row, dev::Copyright &out) {
+void src_hdr::copyright_CopyOut(src_hdr::FCopyright &row, dev::Copyright &out) throw() {
     out.copyright = row.copyright;
     out.dflt = row.dflt;
     out.comment = row.comment;
@@ -126,14 +126,14 @@ void src_hdr::copyright_CopyOut(src_hdr::FCopyright &row, dev::Copyright &out) {
 
 // --- src_hdr.FCopyright.base.CopyIn
 // Copy fields in to row
-void src_hdr::copyright_CopyIn(src_hdr::FCopyright &row, dev::Copyright &in) {
+void src_hdr::copyright_CopyIn(src_hdr::FCopyright &row, dev::Copyright &in) throw() {
     row.copyright = in.copyright;
     row.dflt = in.dflt;
     row.comment = in.comment;
 }
 
 // --- src_hdr.FCopyright..Uninit
-void src_hdr::FCopyright_Uninit(src_hdr::FCopyright& copyright) {
+void src_hdr::FCopyright_Uninit(src_hdr::FCopyright& copyright) throw() {
     src_hdr::FCopyright &row = copyright; (void)row;
     c_dflt_copyright_Remove(row); // remove copyright from index c_dflt_copyright
     ind_copyright_Remove(row); // remove copyright from index ind_copyright
@@ -143,7 +143,7 @@ void src_hdr::FCopyright_Uninit(src_hdr::FCopyright& copyright) {
 // --- src_hdr.trace..Print
 // print string representation of ROW to string STR
 // cfmt:src_hdr.trace.String  printfmt:Tuple
-void src_hdr::trace_Print(src_hdr::trace& row, algo::cstring& str) {
+void src_hdr::trace_Print(src_hdr::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "src_hdr.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -154,7 +154,7 @@ void src_hdr::trace_Print(src_hdr::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     src_hdr.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void src_hdr::ReadArgv() {
+void src_hdr::ReadArgv() throw() {
     command::src_hdr &cmd = src_hdr::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -383,7 +383,7 @@ bool src_hdr::InsertStrptrMaybe(algo::strptr str) {
 
 // --- src_hdr.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool src_hdr::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool src_hdr::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = src_hdr::LoadTuplesFile(root, recursive);
@@ -413,7 +413,7 @@ bool src_hdr::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool src_hdr::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool src_hdr::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -426,7 +426,7 @@ bool src_hdr::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- src_hdr.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool src_hdr::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool src_hdr::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -446,7 +446,7 @@ bool src_hdr::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) 
 
 // --- src_hdr.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool src_hdr::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool src_hdr::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = src_hdr::LoadTuplesFile(fname, recursive);
@@ -471,7 +471,7 @@ bool src_hdr::_db_XrefMaybe() {
 // --- src_hdr.FDb.targsrc.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_hdr::FTargsrc& src_hdr::targsrc_Alloc() {
+src_hdr::FTargsrc& src_hdr::targsrc_Alloc() throw() {
     src_hdr::FTargsrc* row = targsrc_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_hdr.out_of_mem  field:src_hdr.FDb.targsrc  comment:'Alloc failed'");
@@ -481,7 +481,7 @@ src_hdr::FTargsrc& src_hdr::targsrc_Alloc() {
 
 // --- src_hdr.FDb.targsrc.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_hdr::FTargsrc* src_hdr::targsrc_AllocMaybe() {
+src_hdr::FTargsrc* src_hdr::targsrc_AllocMaybe() throw() {
     src_hdr::FTargsrc *row = (src_hdr::FTargsrc*)targsrc_AllocMem();
     if (row) {
         new (row) src_hdr::FTargsrc; // call constructor
@@ -492,7 +492,7 @@ src_hdr::FTargsrc* src_hdr::targsrc_AllocMaybe() {
 // --- src_hdr.FDb.targsrc.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_hdr::FTargsrc* src_hdr::targsrc_InsertMaybe(const dev::Targsrc &value) {
+src_hdr::FTargsrc* src_hdr::targsrc_InsertMaybe(const dev::Targsrc &value) throw() {
     src_hdr::FTargsrc *row = &targsrc_Alloc(); // if out of memory, process dies. if input error, return NULL.
     targsrc_CopyIn(*row,const_cast<dev::Targsrc&>(value));
     bool ok = targsrc_XrefMaybe(*row); // this may return false
@@ -505,7 +505,7 @@ src_hdr::FTargsrc* src_hdr::targsrc_InsertMaybe(const dev::Targsrc &value) {
 
 // --- src_hdr.FDb.targsrc.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_hdr::targsrc_AllocMem() {
+void* src_hdr::targsrc_AllocMem() throw() {
     u64 new_nelems     = _db.targsrc_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -531,7 +531,7 @@ void* src_hdr::targsrc_AllocMem() {
 
 // --- src_hdr.FDb.targsrc.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_hdr::targsrc_RemoveLast() {
+void src_hdr::targsrc_RemoveLast() throw() {
     u64 n = _db.targsrc_n;
     if (n > 0) {
         n -= 1;
@@ -541,7 +541,7 @@ void src_hdr::targsrc_RemoveLast() {
 }
 
 // --- src_hdr.FDb.targsrc.InputMaybe
-static bool src_hdr::targsrc_InputMaybe(dev::Targsrc &elem) {
+static bool src_hdr::targsrc_InputMaybe(dev::Targsrc &elem) throw() {
     bool retval = true;
     retval = targsrc_InsertMaybe(elem) != nullptr;
     return retval;
@@ -572,7 +572,7 @@ bool src_hdr::targsrc_XrefMaybe(src_hdr::FTargsrc &row) {
 // --- src_hdr.FDb.ns.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_hdr::FNs& src_hdr::ns_Alloc() {
+src_hdr::FNs& src_hdr::ns_Alloc() throw() {
     src_hdr::FNs* row = ns_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_hdr.out_of_mem  field:src_hdr.FDb.ns  comment:'Alloc failed'");
@@ -582,7 +582,7 @@ src_hdr::FNs& src_hdr::ns_Alloc() {
 
 // --- src_hdr.FDb.ns.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_hdr::FNs* src_hdr::ns_AllocMaybe() {
+src_hdr::FNs* src_hdr::ns_AllocMaybe() throw() {
     src_hdr::FNs *row = (src_hdr::FNs*)ns_AllocMem();
     if (row) {
         new (row) src_hdr::FNs; // call constructor
@@ -593,7 +593,7 @@ src_hdr::FNs* src_hdr::ns_AllocMaybe() {
 // --- src_hdr.FDb.ns.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_hdr::FNs* src_hdr::ns_InsertMaybe(const dmmeta::Ns &value) {
+src_hdr::FNs* src_hdr::ns_InsertMaybe(const dmmeta::Ns &value) throw() {
     src_hdr::FNs *row = &ns_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ns_CopyIn(*row,const_cast<dmmeta::Ns&>(value));
     bool ok = ns_XrefMaybe(*row); // this may return false
@@ -606,7 +606,7 @@ src_hdr::FNs* src_hdr::ns_InsertMaybe(const dmmeta::Ns &value) {
 
 // --- src_hdr.FDb.ns.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_hdr::ns_AllocMem() {
+void* src_hdr::ns_AllocMem() throw() {
     u64 new_nelems     = _db.ns_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -632,7 +632,7 @@ void* src_hdr::ns_AllocMem() {
 
 // --- src_hdr.FDb.ns.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_hdr::ns_RemoveLast() {
+void src_hdr::ns_RemoveLast() throw() {
     u64 n = _db.ns_n;
     if (n > 0) {
         n -= 1;
@@ -642,7 +642,7 @@ void src_hdr::ns_RemoveLast() {
 }
 
 // --- src_hdr.FDb.ns.InputMaybe
-static bool src_hdr::ns_InputMaybe(dmmeta::Ns &elem) {
+static bool src_hdr::ns_InputMaybe(dmmeta::Ns &elem) throw() {
     bool retval = true;
     retval = ns_InsertMaybe(elem) != nullptr;
     return retval;
@@ -677,7 +677,7 @@ bool src_hdr::ns_XrefMaybe(src_hdr::FNs &row) {
 
 // --- src_hdr.FDb.ind_ns.Find
 // Find row by key. Return NULL if not found.
-src_hdr::FNs* src_hdr::ind_ns_Find(const algo::strptr& key) {
+src_hdr::FNs* src_hdr::ind_ns_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
     src_hdr::FNs* *e = &_db.ind_ns_buckets_elems[index];
     src_hdr::FNs* ret=NULL;
@@ -700,7 +700,7 @@ src_hdr::FNs& src_hdr::ind_ns_FindX(const algo::strptr& key) {
 
 // --- src_hdr.FDb.ind_ns.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool src_hdr::ind_ns_InsertMaybe(src_hdr::FNs& row) {
+bool src_hdr::ind_ns_InsertMaybe(src_hdr::FNs& row) throw() {
     ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (src_hdr::FNs*)-1)) {// check if in hash already
@@ -728,7 +728,7 @@ bool src_hdr::ind_ns_InsertMaybe(src_hdr::FNs& row) {
 
 // --- src_hdr.FDb.ind_ns.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void src_hdr::ind_ns_Remove(src_hdr::FNs& row) {
+void src_hdr::ind_ns_Remove(src_hdr::FNs& row) throw() {
     if (LIKELY(row.ind_ns_next != (src_hdr::FNs*)-1)) {// check if in hash already
         u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         src_hdr::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
@@ -746,7 +746,7 @@ void src_hdr::ind_ns_Remove(src_hdr::FNs& row) {
 
 // --- src_hdr.FDb.ind_ns.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void src_hdr::ind_ns_Reserve(int n) {
+void src_hdr::ind_ns_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_ns_buckets_n;
     u32 new_nelems   = _db.ind_ns_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -783,7 +783,7 @@ void src_hdr::ind_ns_Reserve(int n) {
 // --- src_hdr.FDb.nsx.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_hdr::FNsx& src_hdr::nsx_Alloc() {
+src_hdr::FNsx& src_hdr::nsx_Alloc() throw() {
     src_hdr::FNsx* row = nsx_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_hdr.out_of_mem  field:src_hdr.FDb.nsx  comment:'Alloc failed'");
@@ -793,7 +793,7 @@ src_hdr::FNsx& src_hdr::nsx_Alloc() {
 
 // --- src_hdr.FDb.nsx.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_hdr::FNsx* src_hdr::nsx_AllocMaybe() {
+src_hdr::FNsx* src_hdr::nsx_AllocMaybe() throw() {
     src_hdr::FNsx *row = (src_hdr::FNsx*)nsx_AllocMem();
     if (row) {
         new (row) src_hdr::FNsx; // call constructor
@@ -804,7 +804,7 @@ src_hdr::FNsx* src_hdr::nsx_AllocMaybe() {
 // --- src_hdr.FDb.nsx.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_hdr::FNsx* src_hdr::nsx_InsertMaybe(const dmmeta::Nsx &value) {
+src_hdr::FNsx* src_hdr::nsx_InsertMaybe(const dmmeta::Nsx &value) throw() {
     src_hdr::FNsx *row = &nsx_Alloc(); // if out of memory, process dies. if input error, return NULL.
     nsx_CopyIn(*row,const_cast<dmmeta::Nsx&>(value));
     bool ok = nsx_XrefMaybe(*row); // this may return false
@@ -817,7 +817,7 @@ src_hdr::FNsx* src_hdr::nsx_InsertMaybe(const dmmeta::Nsx &value) {
 
 // --- src_hdr.FDb.nsx.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_hdr::nsx_AllocMem() {
+void* src_hdr::nsx_AllocMem() throw() {
     u64 new_nelems     = _db.nsx_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -843,7 +843,7 @@ void* src_hdr::nsx_AllocMem() {
 
 // --- src_hdr.FDb.nsx.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_hdr::nsx_RemoveLast() {
+void src_hdr::nsx_RemoveLast() throw() {
     u64 n = _db.nsx_n;
     if (n > 0) {
         n -= 1;
@@ -853,7 +853,7 @@ void src_hdr::nsx_RemoveLast() {
 }
 
 // --- src_hdr.FDb.nsx.InputMaybe
-static bool src_hdr::nsx_InputMaybe(dmmeta::Nsx &elem) {
+static bool src_hdr::nsx_InputMaybe(dmmeta::Nsx &elem) throw() {
     bool retval = true;
     retval = nsx_InsertMaybe(elem) != nullptr;
     return retval;
@@ -885,7 +885,7 @@ bool src_hdr::nsx_XrefMaybe(src_hdr::FNsx &row) {
 // --- src_hdr.FDb.license.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_hdr::FLicense& src_hdr::license_Alloc() {
+src_hdr::FLicense& src_hdr::license_Alloc() throw() {
     src_hdr::FLicense* row = license_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_hdr.out_of_mem  field:src_hdr.FDb.license  comment:'Alloc failed'");
@@ -895,7 +895,7 @@ src_hdr::FLicense& src_hdr::license_Alloc() {
 
 // --- src_hdr.FDb.license.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_hdr::FLicense* src_hdr::license_AllocMaybe() {
+src_hdr::FLicense* src_hdr::license_AllocMaybe() throw() {
     src_hdr::FLicense *row = (src_hdr::FLicense*)license_AllocMem();
     if (row) {
         new (row) src_hdr::FLicense; // call constructor
@@ -906,7 +906,7 @@ src_hdr::FLicense* src_hdr::license_AllocMaybe() {
 // --- src_hdr.FDb.license.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_hdr::FLicense* src_hdr::license_InsertMaybe(const dev::License &value) {
+src_hdr::FLicense* src_hdr::license_InsertMaybe(const dev::License &value) throw() {
     src_hdr::FLicense *row = &license_Alloc(); // if out of memory, process dies. if input error, return NULL.
     license_CopyIn(*row,const_cast<dev::License&>(value));
     bool ok = license_XrefMaybe(*row); // this may return false
@@ -919,7 +919,7 @@ src_hdr::FLicense* src_hdr::license_InsertMaybe(const dev::License &value) {
 
 // --- src_hdr.FDb.license.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_hdr::license_AllocMem() {
+void* src_hdr::license_AllocMem() throw() {
     u64 new_nelems     = _db.license_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -945,7 +945,7 @@ void* src_hdr::license_AllocMem() {
 
 // --- src_hdr.FDb.license.RemoveAll
 // Remove all elements from Lary
-void src_hdr::license_RemoveAll() {
+void src_hdr::license_RemoveAll() throw() {
     for (u64 n = _db.license_n; n>0; ) {
         n--;
         license_qFind(u64(n)).~FLicense(); // destroy last element
@@ -955,7 +955,7 @@ void src_hdr::license_RemoveAll() {
 
 // --- src_hdr.FDb.license.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_hdr::license_RemoveLast() {
+void src_hdr::license_RemoveLast() throw() {
     u64 n = _db.license_n;
     if (n > 0) {
         n -= 1;
@@ -965,7 +965,7 @@ void src_hdr::license_RemoveLast() {
 }
 
 // --- src_hdr.FDb.license.InputMaybe
-static bool src_hdr::license_InputMaybe(dev::License &elem) {
+static bool src_hdr::license_InputMaybe(dev::License &elem) throw() {
     bool retval = true;
     retval = license_InsertMaybe(elem) != nullptr;
     return retval;
@@ -991,7 +991,7 @@ bool src_hdr::license_XrefMaybe(src_hdr::FLicense &row) {
 
 // --- src_hdr.FDb.ind_license.Find
 // Find row by key. Return NULL if not found.
-src_hdr::FLicense* src_hdr::ind_license_Find(const algo::strptr& key) {
+src_hdr::FLicense* src_hdr::ind_license_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_license_buckets_n - 1);
     src_hdr::FLicense* *e = &_db.ind_license_buckets_elems[index];
     src_hdr::FLicense* ret=NULL;
@@ -1014,7 +1014,7 @@ src_hdr::FLicense& src_hdr::ind_license_FindX(const algo::strptr& key) {
 
 // --- src_hdr.FDb.ind_license.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-src_hdr::FLicense& src_hdr::ind_license_GetOrCreate(const algo::strptr& key) {
+src_hdr::FLicense& src_hdr::ind_license_GetOrCreate(const algo::strptr& key) throw() {
     src_hdr::FLicense* ret = ind_license_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &license_Alloc();
@@ -1031,7 +1031,7 @@ src_hdr::FLicense& src_hdr::ind_license_GetOrCreate(const algo::strptr& key) {
 
 // --- src_hdr.FDb.ind_license.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool src_hdr::ind_license_InsertMaybe(src_hdr::FLicense& row) {
+bool src_hdr::ind_license_InsertMaybe(src_hdr::FLicense& row) throw() {
     ind_license_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_license_next == (src_hdr::FLicense*)-1)) {// check if in hash already
@@ -1059,7 +1059,7 @@ bool src_hdr::ind_license_InsertMaybe(src_hdr::FLicense& row) {
 
 // --- src_hdr.FDb.ind_license.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void src_hdr::ind_license_Remove(src_hdr::FLicense& row) {
+void src_hdr::ind_license_Remove(src_hdr::FLicense& row) throw() {
     if (LIKELY(row.ind_license_next != (src_hdr::FLicense*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.license) & (_db.ind_license_buckets_n - 1);
         src_hdr::FLicense* *prev = &_db.ind_license_buckets_elems[index]; // addr of pointer to current element
@@ -1077,7 +1077,7 @@ void src_hdr::ind_license_Remove(src_hdr::FLicense& row) {
 
 // --- src_hdr.FDb.ind_license.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void src_hdr::ind_license_Reserve(int n) {
+void src_hdr::ind_license_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_license_buckets_n;
     u32 new_nelems   = _db.ind_license_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1114,7 +1114,7 @@ void src_hdr::ind_license_Reserve(int n) {
 // --- src_hdr.FDb.target.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_hdr::FTarget& src_hdr::target_Alloc() {
+src_hdr::FTarget& src_hdr::target_Alloc() throw() {
     src_hdr::FTarget* row = target_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_hdr.out_of_mem  field:src_hdr.FDb.target  comment:'Alloc failed'");
@@ -1124,7 +1124,7 @@ src_hdr::FTarget& src_hdr::target_Alloc() {
 
 // --- src_hdr.FDb.target.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_hdr::FTarget* src_hdr::target_AllocMaybe() {
+src_hdr::FTarget* src_hdr::target_AllocMaybe() throw() {
     src_hdr::FTarget *row = (src_hdr::FTarget*)target_AllocMem();
     if (row) {
         new (row) src_hdr::FTarget; // call constructor
@@ -1135,7 +1135,7 @@ src_hdr::FTarget* src_hdr::target_AllocMaybe() {
 // --- src_hdr.FDb.target.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_hdr::FTarget* src_hdr::target_InsertMaybe(const dev::Target &value) {
+src_hdr::FTarget* src_hdr::target_InsertMaybe(const dev::Target &value) throw() {
     src_hdr::FTarget *row = &target_Alloc(); // if out of memory, process dies. if input error, return NULL.
     target_CopyIn(*row,const_cast<dev::Target&>(value));
     bool ok = target_XrefMaybe(*row); // this may return false
@@ -1148,7 +1148,7 @@ src_hdr::FTarget* src_hdr::target_InsertMaybe(const dev::Target &value) {
 
 // --- src_hdr.FDb.target.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_hdr::target_AllocMem() {
+void* src_hdr::target_AllocMem() throw() {
     u64 new_nelems     = _db.target_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1174,7 +1174,7 @@ void* src_hdr::target_AllocMem() {
 
 // --- src_hdr.FDb.target.RemoveAll
 // Remove all elements from Lary
-void src_hdr::target_RemoveAll() {
+void src_hdr::target_RemoveAll() throw() {
     for (u64 n = _db.target_n; n>0; ) {
         n--;
         target_qFind(u64(n)).~FTarget(); // destroy last element
@@ -1184,7 +1184,7 @@ void src_hdr::target_RemoveAll() {
 
 // --- src_hdr.FDb.target.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_hdr::target_RemoveLast() {
+void src_hdr::target_RemoveLast() throw() {
     u64 n = _db.target_n;
     if (n > 0) {
         n -= 1;
@@ -1194,7 +1194,7 @@ void src_hdr::target_RemoveLast() {
 }
 
 // --- src_hdr.FDb.target.InputMaybe
-static bool src_hdr::target_InputMaybe(dev::Target &elem) {
+static bool src_hdr::target_InputMaybe(dev::Target &elem) throw() {
     bool retval = true;
     retval = target_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1229,7 +1229,7 @@ bool src_hdr::target_XrefMaybe(src_hdr::FTarget &row) {
 
 // --- src_hdr.FDb.ind_target.Find
 // Find row by key. Return NULL if not found.
-src_hdr::FTarget* src_hdr::ind_target_Find(const algo::strptr& key) {
+src_hdr::FTarget* src_hdr::ind_target_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
     src_hdr::FTarget* *e = &_db.ind_target_buckets_elems[index];
     src_hdr::FTarget* ret=NULL;
@@ -1252,7 +1252,7 @@ src_hdr::FTarget& src_hdr::ind_target_FindX(const algo::strptr& key) {
 
 // --- src_hdr.FDb.ind_target.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool src_hdr::ind_target_InsertMaybe(src_hdr::FTarget& row) {
+bool src_hdr::ind_target_InsertMaybe(src_hdr::FTarget& row) throw() {
     ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (src_hdr::FTarget*)-1)) {// check if in hash already
@@ -1280,7 +1280,7 @@ bool src_hdr::ind_target_InsertMaybe(src_hdr::FTarget& row) {
 
 // --- src_hdr.FDb.ind_target.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void src_hdr::ind_target_Remove(src_hdr::FTarget& row) {
+void src_hdr::ind_target_Remove(src_hdr::FTarget& row) throw() {
     if (LIKELY(row.ind_target_next != (src_hdr::FTarget*)-1)) {// check if in hash already
         u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
         src_hdr::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
@@ -1298,7 +1298,7 @@ void src_hdr::ind_target_Remove(src_hdr::FTarget& row) {
 
 // --- src_hdr.FDb.ind_target.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void src_hdr::ind_target_Reserve(int n) {
+void src_hdr::ind_target_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_target_buckets_n;
     u32 new_nelems   = _db.ind_target_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1335,7 +1335,7 @@ void src_hdr::ind_target_Reserve(int n) {
 // --- src_hdr.FDb.scriptfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_hdr::FScriptfile& src_hdr::scriptfile_Alloc() {
+src_hdr::FScriptfile& src_hdr::scriptfile_Alloc() throw() {
     src_hdr::FScriptfile* row = scriptfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_hdr.out_of_mem  field:src_hdr.FDb.scriptfile  comment:'Alloc failed'");
@@ -1345,7 +1345,7 @@ src_hdr::FScriptfile& src_hdr::scriptfile_Alloc() {
 
 // --- src_hdr.FDb.scriptfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_hdr::FScriptfile* src_hdr::scriptfile_AllocMaybe() {
+src_hdr::FScriptfile* src_hdr::scriptfile_AllocMaybe() throw() {
     src_hdr::FScriptfile *row = (src_hdr::FScriptfile*)scriptfile_AllocMem();
     if (row) {
         new (row) src_hdr::FScriptfile; // call constructor
@@ -1356,7 +1356,7 @@ src_hdr::FScriptfile* src_hdr::scriptfile_AllocMaybe() {
 // --- src_hdr.FDb.scriptfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_hdr::FScriptfile* src_hdr::scriptfile_InsertMaybe(const dev::Scriptfile &value) {
+src_hdr::FScriptfile* src_hdr::scriptfile_InsertMaybe(const dev::Scriptfile &value) throw() {
     src_hdr::FScriptfile *row = &scriptfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     scriptfile_CopyIn(*row,const_cast<dev::Scriptfile&>(value));
     bool ok = scriptfile_XrefMaybe(*row); // this may return false
@@ -1369,7 +1369,7 @@ src_hdr::FScriptfile* src_hdr::scriptfile_InsertMaybe(const dev::Scriptfile &val
 
 // --- src_hdr.FDb.scriptfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_hdr::scriptfile_AllocMem() {
+void* src_hdr::scriptfile_AllocMem() throw() {
     u64 new_nelems     = _db.scriptfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1395,7 +1395,7 @@ void* src_hdr::scriptfile_AllocMem() {
 
 // --- src_hdr.FDb.scriptfile.RemoveAll
 // Remove all elements from Lary
-void src_hdr::scriptfile_RemoveAll() {
+void src_hdr::scriptfile_RemoveAll() throw() {
     for (u64 n = _db.scriptfile_n; n>0; ) {
         n--;
         scriptfile_qFind(u64(n)).~FScriptfile(); // destroy last element
@@ -1405,7 +1405,7 @@ void src_hdr::scriptfile_RemoveAll() {
 
 // --- src_hdr.FDb.scriptfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_hdr::scriptfile_RemoveLast() {
+void src_hdr::scriptfile_RemoveLast() throw() {
     u64 n = _db.scriptfile_n;
     if (n > 0) {
         n -= 1;
@@ -1415,7 +1415,7 @@ void src_hdr::scriptfile_RemoveLast() {
 }
 
 // --- src_hdr.FDb.scriptfile.InputMaybe
-static bool src_hdr::scriptfile_InputMaybe(dev::Scriptfile &elem) {
+static bool src_hdr::scriptfile_InputMaybe(dev::Scriptfile &elem) throw() {
     bool retval = true;
     retval = scriptfile_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1442,7 +1442,7 @@ bool src_hdr::scriptfile_XrefMaybe(src_hdr::FScriptfile &row) {
 // --- src_hdr.FDb.fcopyline.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_hdr::FCopyline& src_hdr::fcopyline_Alloc() {
+src_hdr::FCopyline& src_hdr::fcopyline_Alloc() throw() {
     src_hdr::FCopyline* row = fcopyline_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_hdr.out_of_mem  field:src_hdr.FDb.fcopyline  comment:'Alloc failed'");
@@ -1452,7 +1452,7 @@ src_hdr::FCopyline& src_hdr::fcopyline_Alloc() {
 
 // --- src_hdr.FDb.fcopyline.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_hdr::FCopyline* src_hdr::fcopyline_AllocMaybe() {
+src_hdr::FCopyline* src_hdr::fcopyline_AllocMaybe() throw() {
     src_hdr::FCopyline *row = (src_hdr::FCopyline*)fcopyline_AllocMem();
     if (row) {
         new (row) src_hdr::FCopyline; // call constructor
@@ -1462,7 +1462,7 @@ src_hdr::FCopyline* src_hdr::fcopyline_AllocMaybe() {
 
 // --- src_hdr.FDb.fcopyline.Delete
 // Remove row from all global and cross indices, then deallocate row
-void src_hdr::fcopyline_Delete(src_hdr::FCopyline &row) {
+void src_hdr::fcopyline_Delete(src_hdr::FCopyline &row) throw() {
     row.~FCopyline();
     fcopyline_FreeMem(row);
 }
@@ -1470,7 +1470,7 @@ void src_hdr::fcopyline_Delete(src_hdr::FCopyline &row) {
 // --- src_hdr.FDb.fcopyline.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* src_hdr::fcopyline_AllocMem() {
+void* src_hdr::fcopyline_AllocMem() throw() {
     src_hdr::FCopyline *row = _db.fcopyline_free;
     if (UNLIKELY(!row)) {
         fcopyline_Reserve(1);
@@ -1484,7 +1484,7 @@ void* src_hdr::fcopyline_AllocMem() {
 
 // --- src_hdr.FDb.fcopyline.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void src_hdr::fcopyline_FreeMem(src_hdr::FCopyline &row) {
+void src_hdr::fcopyline_FreeMem(src_hdr::FCopyline &row) throw() {
     if (UNLIKELY(row.fcopyline_next != (src_hdr::FCopyline*)-1)) {
         FatalErrorExit("src_hdr.tpool_double_delete  pool:src_hdr.FDb.fcopyline  comment:'double deletion caught'");
     }
@@ -1495,7 +1495,7 @@ void src_hdr::fcopyline_FreeMem(src_hdr::FCopyline &row) {
 // --- src_hdr.FDb.fcopyline.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 src_hdr::fcopyline_Reserve(u64 n_elems) {
+u64 src_hdr::fcopyline_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.fcopyline_blocksize; // underlying allocator is probably Lpool
@@ -1511,7 +1511,7 @@ u64 src_hdr::fcopyline_Reserve(u64 n_elems) {
 // --- src_hdr.FDb.fcopyline.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 src_hdr::fcopyline_ReserveMem(u64 size) {
+u64 src_hdr::fcopyline_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(src_hdr::FCopyline)) {
         src_hdr::FCopyline *mem = (src_hdr::FCopyline*)algo_lib::malloc_AllocMem(size);
@@ -1545,7 +1545,7 @@ bool src_hdr::fcopyline_XrefMaybe(src_hdr::FCopyline &row) {
 
 // --- src_hdr.FDb.ind_fcopyline.Find
 // Find row by key. Return NULL if not found.
-src_hdr::FCopyline* src_hdr::ind_fcopyline_Find(const algo::strptr& key) {
+src_hdr::FCopyline* src_hdr::ind_fcopyline_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_fcopyline_buckets_n - 1);
     src_hdr::FCopyline* *e = &_db.ind_fcopyline_buckets_elems[index];
     src_hdr::FCopyline* ret=NULL;
@@ -1568,7 +1568,7 @@ src_hdr::FCopyline& src_hdr::ind_fcopyline_FindX(const algo::strptr& key) {
 
 // --- src_hdr.FDb.ind_fcopyline.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-src_hdr::FCopyline& src_hdr::ind_fcopyline_GetOrCreate(const algo::strptr& key) {
+src_hdr::FCopyline& src_hdr::ind_fcopyline_GetOrCreate(const algo::strptr& key) throw() {
     src_hdr::FCopyline* ret = ind_fcopyline_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &fcopyline_Alloc();
@@ -1585,7 +1585,7 @@ src_hdr::FCopyline& src_hdr::ind_fcopyline_GetOrCreate(const algo::strptr& key) 
 
 // --- src_hdr.FDb.ind_fcopyline.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool src_hdr::ind_fcopyline_InsertMaybe(src_hdr::FCopyline& row) {
+bool src_hdr::ind_fcopyline_InsertMaybe(src_hdr::FCopyline& row) throw() {
     ind_fcopyline_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_fcopyline_next == (src_hdr::FCopyline*)-1)) {// check if in hash already
@@ -1613,7 +1613,7 @@ bool src_hdr::ind_fcopyline_InsertMaybe(src_hdr::FCopyline& row) {
 
 // --- src_hdr.FDb.ind_fcopyline.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void src_hdr::ind_fcopyline_Remove(src_hdr::FCopyline& row) {
+void src_hdr::ind_fcopyline_Remove(src_hdr::FCopyline& row) throw() {
     if (LIKELY(row.ind_fcopyline_next != (src_hdr::FCopyline*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.fcopyline) & (_db.ind_fcopyline_buckets_n - 1);
         src_hdr::FCopyline* *prev = &_db.ind_fcopyline_buckets_elems[index]; // addr of pointer to current element
@@ -1631,7 +1631,7 @@ void src_hdr::ind_fcopyline_Remove(src_hdr::FCopyline& row) {
 
 // --- src_hdr.FDb.ind_fcopyline.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void src_hdr::ind_fcopyline_Reserve(int n) {
+void src_hdr::ind_fcopyline_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_fcopyline_buckets_n;
     u32 new_nelems   = _db.ind_fcopyline_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1668,7 +1668,7 @@ void src_hdr::ind_fcopyline_Reserve(int n) {
 // --- src_hdr.FDb.copyright.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_hdr::FCopyright& src_hdr::copyright_Alloc() {
+src_hdr::FCopyright& src_hdr::copyright_Alloc() throw() {
     src_hdr::FCopyright* row = copyright_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_hdr.out_of_mem  field:src_hdr.FDb.copyright  comment:'Alloc failed'");
@@ -1678,7 +1678,7 @@ src_hdr::FCopyright& src_hdr::copyright_Alloc() {
 
 // --- src_hdr.FDb.copyright.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_hdr::FCopyright* src_hdr::copyright_AllocMaybe() {
+src_hdr::FCopyright* src_hdr::copyright_AllocMaybe() throw() {
     src_hdr::FCopyright *row = (src_hdr::FCopyright*)copyright_AllocMem();
     if (row) {
         new (row) src_hdr::FCopyright; // call constructor
@@ -1689,7 +1689,7 @@ src_hdr::FCopyright* src_hdr::copyright_AllocMaybe() {
 // --- src_hdr.FDb.copyright.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_hdr::FCopyright* src_hdr::copyright_InsertMaybe(const dev::Copyright &value) {
+src_hdr::FCopyright* src_hdr::copyright_InsertMaybe(const dev::Copyright &value) throw() {
     src_hdr::FCopyright *row = &copyright_Alloc(); // if out of memory, process dies. if input error, return NULL.
     copyright_CopyIn(*row,const_cast<dev::Copyright&>(value));
     bool ok = copyright_XrefMaybe(*row); // this may return false
@@ -1702,7 +1702,7 @@ src_hdr::FCopyright* src_hdr::copyright_InsertMaybe(const dev::Copyright &value)
 
 // --- src_hdr.FDb.copyright.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_hdr::copyright_AllocMem() {
+void* src_hdr::copyright_AllocMem() throw() {
     u64 new_nelems     = _db.copyright_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1728,7 +1728,7 @@ void* src_hdr::copyright_AllocMem() {
 
 // --- src_hdr.FDb.copyright.RemoveAll
 // Remove all elements from Lary
-void src_hdr::copyright_RemoveAll() {
+void src_hdr::copyright_RemoveAll() throw() {
     for (u64 n = _db.copyright_n; n>0; ) {
         n--;
         copyright_qFind(u64(n)).~FCopyright(); // destroy last element
@@ -1738,7 +1738,7 @@ void src_hdr::copyright_RemoveAll() {
 
 // --- src_hdr.FDb.copyright.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_hdr::copyright_RemoveLast() {
+void src_hdr::copyright_RemoveLast() throw() {
     u64 n = _db.copyright_n;
     if (n > 0) {
         n -= 1;
@@ -1748,7 +1748,7 @@ void src_hdr::copyright_RemoveLast() {
 }
 
 // --- src_hdr.FDb.copyright.InputMaybe
-static bool src_hdr::copyright_InputMaybe(dev::Copyright &elem) {
+static bool src_hdr::copyright_InputMaybe(dev::Copyright &elem) throw() {
     bool retval = true;
     retval = copyright_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1787,7 +1787,7 @@ bool src_hdr::copyright_XrefMaybe(src_hdr::FCopyright &row) {
 
 // --- src_hdr.FDb.ind_copyright.Find
 // Find row by key. Return NULL if not found.
-src_hdr::FCopyright* src_hdr::ind_copyright_Find(const algo::strptr& key) {
+src_hdr::FCopyright* src_hdr::ind_copyright_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_copyright_buckets_n - 1);
     src_hdr::FCopyright* *e = &_db.ind_copyright_buckets_elems[index];
     src_hdr::FCopyright* ret=NULL;
@@ -1810,7 +1810,7 @@ src_hdr::FCopyright& src_hdr::ind_copyright_FindX(const algo::strptr& key) {
 
 // --- src_hdr.FDb.ind_copyright.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool src_hdr::ind_copyright_InsertMaybe(src_hdr::FCopyright& row) {
+bool src_hdr::ind_copyright_InsertMaybe(src_hdr::FCopyright& row) throw() {
     ind_copyright_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_copyright_next == (src_hdr::FCopyright*)-1)) {// check if in hash already
@@ -1838,7 +1838,7 @@ bool src_hdr::ind_copyright_InsertMaybe(src_hdr::FCopyright& row) {
 
 // --- src_hdr.FDb.ind_copyright.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void src_hdr::ind_copyright_Remove(src_hdr::FCopyright& row) {
+void src_hdr::ind_copyright_Remove(src_hdr::FCopyright& row) throw() {
     if (LIKELY(row.ind_copyright_next != (src_hdr::FCopyright*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.copyright) & (_db.ind_copyright_buckets_n - 1);
         src_hdr::FCopyright* *prev = &_db.ind_copyright_buckets_elems[index]; // addr of pointer to current element
@@ -1856,7 +1856,7 @@ void src_hdr::ind_copyright_Remove(src_hdr::FCopyright& row) {
 
 // --- src_hdr.FDb.ind_copyright.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void src_hdr::ind_copyright_Reserve(int n) {
+void src_hdr::ind_copyright_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_copyright_buckets_n;
     u32 new_nelems   = _db.ind_copyright_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1892,7 +1892,7 @@ void src_hdr::ind_copyright_Reserve(int n) {
 
 // --- src_hdr.FDb.bh_copyright.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void src_hdr::bh_copyright_Dealloc() {
+void src_hdr::bh_copyright_Dealloc() throw() {
     bh_copyright_RemoveAll();
     algo_lib::malloc_FreeMem(_db.bh_copyright_elems, sizeof(src_hdr::FCopyright*)*_db.bh_copyright_max);
     _db.bh_copyright_max   = 0;
@@ -1902,7 +1902,7 @@ void src_hdr::bh_copyright_Dealloc() {
 // --- src_hdr.FDb.bh_copyright.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int src_hdr::bh_copyright_Downheap(src_hdr::FCopyright& row, int idx) {
+static int src_hdr::bh_copyright_Downheap(src_hdr::FCopyright& row, int idx) throw() {
     src_hdr::FCopyright* *elems = _db.bh_copyright_elems;
     int n = _db.bh_copyright_n;
     int child = idx*2+1;
@@ -1929,7 +1929,7 @@ static int src_hdr::bh_copyright_Downheap(src_hdr::FCopyright& row, int idx) {
 
 // --- src_hdr.FDb.bh_copyright.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void src_hdr::bh_copyright_Insert(src_hdr::FCopyright& row) {
+void src_hdr::bh_copyright_Insert(src_hdr::FCopyright& row) throw() {
     if (LIKELY(row.bh_copyright_idx == -1)) {
         bh_copyright_Reserve(1);
         int n = _db.bh_copyright_n;
@@ -1943,7 +1943,7 @@ void src_hdr::bh_copyright_Insert(src_hdr::FCopyright& row) {
 // --- src_hdr.FDb.bh_copyright.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 src_hdr::bh_copyright_Reheap(src_hdr::FCopyright& row) {
+i32 src_hdr::bh_copyright_Reheap(src_hdr::FCopyright& row) throw() {
     int old_idx = row.bh_copyright_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
@@ -1964,7 +1964,7 @@ i32 src_hdr::bh_copyright_Reheap(src_hdr::FCopyright& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 src_hdr::bh_copyright_ReheapFirst() {
+i32 src_hdr::bh_copyright_ReheapFirst() throw() {
     src_hdr::FCopyright &row = *_db.bh_copyright_elems[0];
     i32 new_idx = bh_copyright_Downheap(row, 0);
     row.bh_copyright_idx = new_idx;
@@ -1974,7 +1974,7 @@ i32 src_hdr::bh_copyright_ReheapFirst() {
 
 // --- src_hdr.FDb.bh_copyright.Remove
 // Remove element from index. If element is not in index, do nothing.
-void src_hdr::bh_copyright_Remove(src_hdr::FCopyright& row) {
+void src_hdr::bh_copyright_Remove(src_hdr::FCopyright& row) throw() {
     if (bh_copyright_InBheapQ(row)) {
         int old_idx = row.bh_copyright_idx;
         if (_db.bh_copyright_elems[old_idx] == &row) { // sanity check: heap points back to row
@@ -1996,7 +1996,7 @@ void src_hdr::bh_copyright_Remove(src_hdr::FCopyright& row) {
 
 // --- src_hdr.FDb.bh_copyright.RemoveAll
 // Remove all elements from binary heap
-void src_hdr::bh_copyright_RemoveAll() {
+void src_hdr::bh_copyright_RemoveAll() throw() {
     int n = _db.bh_copyright_n;
     for (int i = n - 1; i>=0; i--) {
         _db.bh_copyright_elems[i]->bh_copyright_idx = -1; // mark not-in-heap
@@ -2007,7 +2007,7 @@ void src_hdr::bh_copyright_RemoveAll() {
 // --- src_hdr.FDb.bh_copyright.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-src_hdr::FCopyright* src_hdr::bh_copyright_RemoveFirst() {
+src_hdr::FCopyright* src_hdr::bh_copyright_RemoveFirst() throw() {
     src_hdr::FCopyright *row = NULL;
     if (_db.bh_copyright_n > 0) {
         row = _db.bh_copyright_elems[0];
@@ -2026,7 +2026,7 @@ src_hdr::FCopyright* src_hdr::bh_copyright_RemoveFirst() {
 
 // --- src_hdr.FDb.bh_copyright.Reserve
 // Reserve space in index for N more elements
-void src_hdr::bh_copyright_Reserve(int n) {
+void src_hdr::bh_copyright_Reserve(int n) throw() {
     i32 old_max = _db.bh_copyright_max;
     if (UNLIKELY(_db.bh_copyright_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -2044,7 +2044,7 @@ void src_hdr::bh_copyright_Reserve(int n) {
 // --- src_hdr.FDb.bh_copyright.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int src_hdr::bh_copyright_Upheap(src_hdr::FCopyright& row, int idx) {
+static int src_hdr::bh_copyright_Upheap(src_hdr::FCopyright& row, int idx) throw() {
     src_hdr::FCopyright* *elems = _db.bh_copyright_elems;
     while (idx>0) {
         int j = (idx-1)/2;
@@ -2060,20 +2060,20 @@ static int src_hdr::bh_copyright_Upheap(src_hdr::FCopyright& row, int idx) {
 }
 
 // --- src_hdr.FDb.bh_copyright.ElemLt
-inline static bool src_hdr::bh_copyright_ElemLt(src_hdr::FCopyright &a, src_hdr::FCopyright &b) {
+inline static bool src_hdr::bh_copyright_ElemLt(src_hdr::FCopyright &a, src_hdr::FCopyright &b) throw() {
     (void)_db;
     return a.sortkey < b.sortkey;
 }
 
 // --- src_hdr.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr src_hdr::trace_RowidFind(int t) {
+static algo::ImrowPtr src_hdr::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- src_hdr.FDb.trace.N
 // Function return 1
-inline static i32 src_hdr::trace_N() {
+inline static i32 src_hdr::trace_N() throw() {
     return 1;
 }
 
@@ -2297,7 +2297,7 @@ void src_hdr::FDb_Init() {
 }
 
 // --- src_hdr.FDb..Uninit
-void src_hdr::FDb_Uninit() {
+void src_hdr::FDb_Uninit() throw() {
     src_hdr::FDb &row = _db; (void)row;
 
     // src_hdr.FDb.bh_copyright.Uninit (Bheap)  //
@@ -2342,27 +2342,27 @@ void src_hdr::FDb_Uninit() {
 
 // --- src_hdr.FLicense.base.CopyOut
 // Copy fields out of row
-void src_hdr::license_CopyOut(src_hdr::FLicense &row, dev::License &out) {
+void src_hdr::license_CopyOut(src_hdr::FLicense &row, dev::License &out) throw() {
     out.license = row.license;
     out.comment = row.comment;
 }
 
 // --- src_hdr.FLicense.base.CopyIn
 // Copy fields in to row
-void src_hdr::license_CopyIn(src_hdr::FLicense &row, dev::License &in) {
+void src_hdr::license_CopyIn(src_hdr::FLicense &row, dev::License &in) throw() {
     row.license = in.license;
     row.comment = in.comment;
 }
 
 // --- src_hdr.FLicense..Uninit
-void src_hdr::FLicense_Uninit(src_hdr::FLicense& license) {
+void src_hdr::FLicense_Uninit(src_hdr::FLicense& license) throw() {
     src_hdr::FLicense &row = license; (void)row;
     ind_license_Remove(row); // remove license from index ind_license
 }
 
 // --- src_hdr.FNs.base.CopyOut
 // Copy fields out of row
-void src_hdr::ns_CopyOut(src_hdr::FNs &row, dmmeta::Ns &out) {
+void src_hdr::ns_CopyOut(src_hdr::FNs &row, dmmeta::Ns &out) throw() {
     out.ns = row.ns;
     out.nstype = row.nstype;
     out.license = row.license;
@@ -2371,7 +2371,7 @@ void src_hdr::ns_CopyOut(src_hdr::FNs &row, dmmeta::Ns &out) {
 
 // --- src_hdr.FNs.base.CopyIn
 // Copy fields in to row
-void src_hdr::ns_CopyIn(src_hdr::FNs &row, dmmeta::Ns &in) {
+void src_hdr::ns_CopyIn(src_hdr::FNs &row, dmmeta::Ns &in) throw() {
     row.ns = in.ns;
     row.nstype = in.nstype;
     row.license = in.license;
@@ -2379,14 +2379,14 @@ void src_hdr::ns_CopyIn(src_hdr::FNs &row, dmmeta::Ns &in) {
 }
 
 // --- src_hdr.FNs..Uninit
-void src_hdr::FNs_Uninit(src_hdr::FNs& ns) {
+void src_hdr::FNs_Uninit(src_hdr::FNs& ns) throw() {
     src_hdr::FNs &row = ns; (void)row;
     ind_ns_Remove(row); // remove ns from index ind_ns
 }
 
 // --- src_hdr.FNsx.base.CopyOut
 // Copy fields out of row
-void src_hdr::nsx_CopyOut(src_hdr::FNsx &row, dmmeta::Nsx &out) {
+void src_hdr::nsx_CopyOut(src_hdr::FNsx &row, dmmeta::Nsx &out) throw() {
     out.ns = row.ns;
     out.genthrow = row.genthrow;
     out.correct_getorcreate = row.correct_getorcreate;
@@ -2398,7 +2398,7 @@ void src_hdr::nsx_CopyOut(src_hdr::FNsx &row, dmmeta::Nsx &out) {
 
 // --- src_hdr.FNsx.base.CopyIn
 // Copy fields in to row
-void src_hdr::nsx_CopyIn(src_hdr::FNsx &row, dmmeta::Nsx &in) {
+void src_hdr::nsx_CopyIn(src_hdr::FNsx &row, dmmeta::Nsx &in) throw() {
     row.ns = in.ns;
     row.genthrow = in.genthrow;
     row.correct_getorcreate = in.correct_getorcreate;
@@ -2409,7 +2409,7 @@ void src_hdr::nsx_CopyIn(src_hdr::FNsx &row, dmmeta::Nsx &in) {
 }
 
 // --- src_hdr.FNsx..Uninit
-void src_hdr::FNsx_Uninit(src_hdr::FNsx& nsx) {
+void src_hdr::FNsx_Uninit(src_hdr::FNsx& nsx) throw() {
     src_hdr::FNsx &row = nsx; (void)row;
     src_hdr::FNs* p_ns = src_hdr::ind_ns_Find(row.ns);
     if (p_ns)  {
@@ -2419,7 +2419,7 @@ void src_hdr::FNsx_Uninit(src_hdr::FNsx& nsx) {
 
 // --- src_hdr.FScriptfile.base.CopyOut
 // Copy fields out of row
-void src_hdr::scriptfile_CopyOut(src_hdr::FScriptfile &row, dev::Scriptfile &out) {
+void src_hdr::scriptfile_CopyOut(src_hdr::FScriptfile &row, dev::Scriptfile &out) throw() {
     out.gitfile = row.gitfile;
     out.license = row.license;
     out.comment = row.comment;
@@ -2427,14 +2427,14 @@ void src_hdr::scriptfile_CopyOut(src_hdr::FScriptfile &row, dev::Scriptfile &out
 
 // --- src_hdr.FScriptfile.base.CopyIn
 // Copy fields in to row
-void src_hdr::scriptfile_CopyIn(src_hdr::FScriptfile &row, dev::Scriptfile &in) {
+void src_hdr::scriptfile_CopyIn(src_hdr::FScriptfile &row, dev::Scriptfile &in) throw() {
     row.gitfile = in.gitfile;
     row.license = in.license;
     row.comment = in.comment;
 }
 
 // --- src_hdr.FScriptfile.name.Get
-algo::Smallstr50 src_hdr::name_Get(src_hdr::FScriptfile& scriptfile) {
+algo::Smallstr50 src_hdr::name_Get(src_hdr::FScriptfile& scriptfile) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(scriptfile.gitfile, "/RR"));
     return ret;
 }
@@ -2449,20 +2449,20 @@ void src_hdr::FSrc_Init(src_hdr::FSrc& parent) {
 
 // --- src_hdr.FTarget.base.CopyOut
 // Copy fields out of row
-void src_hdr::target_CopyOut(src_hdr::FTarget &row, dev::Target &out) {
+void src_hdr::target_CopyOut(src_hdr::FTarget &row, dev::Target &out) throw() {
     out.target = row.target;
 }
 
 // --- src_hdr.FTarget.base.CopyIn
 // Copy fields in to row
-void src_hdr::target_CopyIn(src_hdr::FTarget &row, dev::Target &in) {
+void src_hdr::target_CopyIn(src_hdr::FTarget &row, dev::Target &in) throw() {
     row.target = in.target;
 }
 
 // --- src_hdr.FTarget.c_targsrc.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void src_hdr::c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
+void src_hdr::c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row) throw() {
     if (bool_Update(row.target_c_targsrc_in_ary,true)) {
         // reserve space
         c_targsrc_Reserve(target, 1);
@@ -2479,7 +2479,7 @@ void src_hdr::c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row)
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool src_hdr::c_targsrc_InsertMaybe(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
+bool src_hdr::c_targsrc_InsertMaybe(src_hdr::FTarget& target, src_hdr::FTargsrc& row) throw() {
     bool retval = !row.target_c_targsrc_in_ary;
     c_targsrc_Insert(target,row); // check is performed in _Insert again
     return retval;
@@ -2487,7 +2487,7 @@ bool src_hdr::c_targsrc_InsertMaybe(src_hdr::FTarget& target, src_hdr::FTargsrc&
 
 // --- src_hdr.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void src_hdr::c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
+void src_hdr::c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row) throw() {
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
         int lim = target.c_targsrc_n;
         src_hdr::FTargsrc* *elems = target.c_targsrc_elems;
@@ -2508,7 +2508,7 @@ void src_hdr::c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row)
 
 // --- src_hdr.FTarget.c_targsrc.Reserve
 // Reserve space in index for N more elements;
-void src_hdr::c_targsrc_Reserve(src_hdr::FTarget& target, u32 n) {
+void src_hdr::c_targsrc_Reserve(src_hdr::FTarget& target, u32 n) throw() {
     u32 old_max = target.c_targsrc_max;
     if (UNLIKELY(target.c_targsrc_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -2524,7 +2524,7 @@ void src_hdr::c_targsrc_Reserve(src_hdr::FTarget& target, u32 n) {
 }
 
 // --- src_hdr.FTarget..Uninit
-void src_hdr::FTarget_Uninit(src_hdr::FTarget& target) {
+void src_hdr::FTarget_Uninit(src_hdr::FTarget& target) throw() {
     src_hdr::FTarget &row = target; (void)row;
     ind_target_Remove(row); // remove target from index ind_target
 
@@ -2534,38 +2534,38 @@ void src_hdr::FTarget_Uninit(src_hdr::FTarget& target) {
 
 // --- src_hdr.FTargsrc.base.CopyOut
 // Copy fields out of row
-void src_hdr::targsrc_CopyOut(src_hdr::FTargsrc &row, dev::Targsrc &out) {
+void src_hdr::targsrc_CopyOut(src_hdr::FTargsrc &row, dev::Targsrc &out) throw() {
     out.targsrc = row.targsrc;
     out.comment = row.comment;
 }
 
 // --- src_hdr.FTargsrc.base.CopyIn
 // Copy fields in to row
-void src_hdr::targsrc_CopyIn(src_hdr::FTargsrc &row, dev::Targsrc &in) {
+void src_hdr::targsrc_CopyIn(src_hdr::FTargsrc &row, dev::Targsrc &in) throw() {
     row.targsrc = in.targsrc;
     row.comment = in.comment;
 }
 
 // --- src_hdr.FTargsrc.target.Get
-algo::Smallstr16 src_hdr::target_Get(src_hdr::FTargsrc& targsrc) {
+algo::Smallstr16 src_hdr::target_Get(src_hdr::FTargsrc& targsrc) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
     return ret;
 }
 
 // --- src_hdr.FTargsrc.src.Get
-algo::Smallstr200 src_hdr::src_Get(src_hdr::FTargsrc& targsrc) {
+algo::Smallstr200 src_hdr::src_Get(src_hdr::FTargsrc& targsrc) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
     return ret;
 }
 
 // --- src_hdr.FTargsrc.ext.Get
-algo::Smallstr10 src_hdr::ext_Get(src_hdr::FTargsrc& targsrc) {
+algo::Smallstr10 src_hdr::ext_Get(src_hdr::FTargsrc& targsrc) throw() {
     algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
     return ret;
 }
 
 // --- src_hdr.FTargsrc..Uninit
-void src_hdr::FTargsrc_Uninit(src_hdr::FTargsrc& targsrc) {
+void src_hdr::FTargsrc_Uninit(src_hdr::FTargsrc& targsrc) throw() {
     src_hdr::FTargsrc &row = targsrc; (void)row;
     src_hdr::FTarget* p_target = src_hdr::ind_target_Find(target_Get(row));
     if (p_target)  {
@@ -2576,7 +2576,7 @@ void src_hdr::FTargsrc_Uninit(src_hdr::FTargsrc& targsrc) {
 // --- src_hdr.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* src_hdr::value_ToCstr(const src_hdr::FieldId& parent) {
+const char* src_hdr::value_ToCstr(const src_hdr::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case src_hdr_FieldId_value         : ret = "value";  break;
@@ -2587,7 +2587,7 @@ const char* src_hdr::value_ToCstr(const src_hdr::FieldId& parent) {
 // --- src_hdr.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void src_hdr::value_Print(const src_hdr::FieldId& parent, algo::cstring &lhs) {
+void src_hdr::value_Print(const src_hdr::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2600,7 +2600,7 @@ void src_hdr::value_Print(const src_hdr::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool src_hdr::value_SetStrptrMaybe(src_hdr::FieldId& parent, algo::strptr rhs) {
+bool src_hdr::value_SetStrptrMaybe(src_hdr::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -2618,13 +2618,13 @@ bool src_hdr::value_SetStrptrMaybe(src_hdr::FieldId& parent, algo::strptr rhs) {
 // --- src_hdr.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void src_hdr::value_SetStrptr(src_hdr::FieldId& parent, algo::strptr rhs, src_hdr_FieldIdEnum dflt) {
+void src_hdr::value_SetStrptr(src_hdr::FieldId& parent, algo::strptr rhs, src_hdr_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- src_hdr.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool src_hdr::value_ReadStrptrMaybe(src_hdr::FieldId& parent, algo::strptr rhs) {
+bool src_hdr::value_ReadStrptrMaybe(src_hdr::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2636,7 +2636,7 @@ bool src_hdr::value_ReadStrptrMaybe(src_hdr::FieldId& parent, algo::strptr rhs) 
 // --- src_hdr.FieldId..ReadStrptrMaybe
 // Read fields of src_hdr::FieldId from an ascii string.
 // The format of the string is the format of the src_hdr::FieldId's only field
-bool src_hdr::FieldId_ReadStrptrMaybe(src_hdr::FieldId &parent, algo::strptr in_str) {
+bool src_hdr::FieldId_ReadStrptrMaybe(src_hdr::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2645,14 +2645,14 @@ bool src_hdr::FieldId_ReadStrptrMaybe(src_hdr::FieldId &parent, algo::strptr in_
 // --- src_hdr.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:src_hdr.FieldId.String  printfmt:Raw
-void src_hdr::FieldId_Print(src_hdr::FieldId& row, algo::cstring& str) {
+void src_hdr::FieldId_Print(src_hdr::FieldId& row, algo::cstring& str) throw() {
     src_hdr::value_Print(row, str);
 }
 
 // --- src_hdr.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* src_hdr::value_ToCstr(const src_hdr::TableId& parent) {
+const char* src_hdr::value_ToCstr(const src_hdr::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case src_hdr_TableId_dev_Copyright : ret = "dev.Copyright";  break;
@@ -2669,7 +2669,7 @@ const char* src_hdr::value_ToCstr(const src_hdr::TableId& parent) {
 // --- src_hdr.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void src_hdr::value_Print(const src_hdr::TableId& parent, algo::cstring &lhs) {
+void src_hdr::value_Print(const src_hdr::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2682,7 +2682,7 @@ void src_hdr::value_Print(const src_hdr::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool src_hdr::value_SetStrptrMaybe(src_hdr::TableId& parent, algo::strptr rhs) {
+bool src_hdr::value_SetStrptrMaybe(src_hdr::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 9: {
@@ -2773,13 +2773,13 @@ bool src_hdr::value_SetStrptrMaybe(src_hdr::TableId& parent, algo::strptr rhs) {
 // --- src_hdr.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void src_hdr::value_SetStrptr(src_hdr::TableId& parent, algo::strptr rhs, src_hdr_TableIdEnum dflt) {
+void src_hdr::value_SetStrptr(src_hdr::TableId& parent, algo::strptr rhs, src_hdr_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- src_hdr.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool src_hdr::value_ReadStrptrMaybe(src_hdr::TableId& parent, algo::strptr rhs) {
+bool src_hdr::value_ReadStrptrMaybe(src_hdr::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2791,7 +2791,7 @@ bool src_hdr::value_ReadStrptrMaybe(src_hdr::TableId& parent, algo::strptr rhs) 
 // --- src_hdr.TableId..ReadStrptrMaybe
 // Read fields of src_hdr::TableId from an ascii string.
 // The format of the string is the format of the src_hdr::TableId's only field
-bool src_hdr::TableId_ReadStrptrMaybe(src_hdr::TableId &parent, algo::strptr in_str) {
+bool src_hdr::TableId_ReadStrptrMaybe(src_hdr::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2800,7 +2800,7 @@ bool src_hdr::TableId_ReadStrptrMaybe(src_hdr::TableId &parent, algo::strptr in_
 // --- src_hdr.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:src_hdr.TableId.String  printfmt:Raw
-void src_hdr::TableId_Print(src_hdr::TableId& row, algo::cstring& str) {
+void src_hdr::TableId_Print(src_hdr::TableId& row, algo::cstring& str) throw() {
     src_hdr::value_Print(row, str);
 }
 

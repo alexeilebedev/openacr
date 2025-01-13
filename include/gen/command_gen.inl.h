@@ -28,18 +28,18 @@
 
 // --- command.FieldId.value.GetEnum
 // Get value of field as enum type
-inline command_FieldIdEnum command::value_GetEnum(const command::FieldId& parent) {
+inline command_FieldIdEnum command::value_GetEnum(const command::FieldId& parent) throw() {
     return command_FieldIdEnum(parent.value);
 }
 
 // --- command.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void command::value_SetEnum(command::FieldId& parent, command_FieldIdEnum rhs) {
+inline void command::value_SetEnum(command::FieldId& parent, command_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- command.FieldId.value.Cast
-inline  command::FieldId::operator command_FieldIdEnum() const {
+inline  command::FieldId::operator command_FieldIdEnum() const throw() {
     return command_FieldIdEnum((*this).value);
 }
 
@@ -50,40 +50,40 @@ inline void command::FieldId_Init(command::FieldId& parent) {
 }
 
 // --- command.FieldId..Ctor
-inline  command::FieldId::FieldId() {
+inline  command::FieldId::FieldId() throw() {
     command::FieldId_Init(*this);
 }
 
 // --- command.FieldId..FieldwiseCtor
-inline  command::FieldId::FieldId(i32 in_value)
+inline  command::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- command.FieldId..EnumCtor
-inline  command::FieldId::FieldId(command_FieldIdEnum arg) {
+inline  command::FieldId::FieldId(command_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- command.abt.cache.GetEnum
 // Get value of field as enum type
-inline command_abt_cache_Enum command::cache_GetEnum(const command::abt& parent) {
+inline command_abt_cache_Enum command::cache_GetEnum(const command::abt& parent) throw() {
     return command_abt_cache_Enum(parent.cache);
 }
 
 // --- command.abt.cache.SetEnum
 // Set value of field from enum type.
-inline void command::cache_SetEnum(command::abt& parent, command_abt_cache_Enum rhs) {
+inline void command::cache_SetEnum(command::abt& parent, command_abt_cache_Enum rhs) throw() {
     parent.cache = u8(rhs);
 }
 
 // --- command.abt..Ctor
-inline  command::abt::abt() {
+inline  command::abt::abt() throw() {
     command::abt_Init(*this);
 }
 
 // --- command.abt_md..Ctor
-inline  command::abt_md::abt_md() {
+inline  command::abt_md::abt_md() throw() {
     command::abt_md_Init(*this);
 }
 
@@ -97,12 +97,12 @@ inline void command::abt_md_proc_Init(command::abt_md_proc& parent) {
 }
 
 // --- command.abt_md_proc..Ctor
-inline  command::abt_md_proc::abt_md_proc() {
+inline  command::abt_md_proc::abt_md_proc() throw() {
     command::abt_md_proc_Init(*this);
 }
 
 // --- command.abt_md_proc..Dtor
-inline  command::abt_md_proc::~abt_md_proc() {
+inline  command::abt_md_proc::~abt_md_proc() throw() {
     command::abt_md_proc_Uninit(*this);
 }
 
@@ -116,24 +116,24 @@ inline void command::abt_proc_Init(command::abt_proc& parent) {
 }
 
 // --- command.abt_proc..Ctor
-inline  command::abt_proc::abt_proc() {
+inline  command::abt_proc::abt_proc() throw() {
     command::abt_proc_Init(*this);
 }
 
 // --- command.abt_proc..Dtor
-inline  command::abt_proc::~abt_proc() {
+inline  command::abt_proc::~abt_proc() throw() {
     command::abt_proc_Uninit(*this);
 }
 
 // --- command.acr.where.EmptyQ
 // Return true if index is empty
-inline bool command::where_EmptyQ(command::acr& parent) {
+inline bool command::where_EmptyQ(command::acr& parent) throw() {
     return parent.where_n == 0;
 }
 
 // --- command.acr.where.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* command::where_Find(command::acr& parent, u64 t) {
+inline algo::cstring* command::where_Find(command::acr& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.where_n;
     if (idx >= lim) return NULL;
@@ -142,32 +142,32 @@ inline algo::cstring* command::where_Find(command::acr& parent, u64 t) {
 
 // --- command.acr.where.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::where_Getary(const command::acr& parent) {
+inline algo::aryptr<algo::cstring> command::where_Getary(const command::acr& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.where_elems, parent.where_n);
 }
 
 // --- command.acr.where.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* command::where_Last(command::acr& parent) {
+inline algo::cstring* command::where_Last(command::acr& parent) throw() {
     return where_Find(parent, u64(parent.where_n-1));
 }
 
 // --- command.acr.where.Max
 // Return max. number of items in the array
-inline i32 command::where_Max(command::acr& parent) {
+inline i32 command::where_Max(command::acr& parent) throw() {
     (void)parent;
     return parent.where_max;
 }
 
 // --- command.acr.where.N
 // Return number of items in the array
-inline i32 command::where_N(const command::acr& parent) {
+inline i32 command::where_N(const command::acr& parent) throw() {
     return parent.where_n;
 }
 
 // --- command.acr.where.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::where_Reserve(command::acr& parent, int n) {
+inline void command::where_Reserve(command::acr& parent, int n) throw() {
     u32 new_n = parent.where_n + n;
     if (UNLIKELY(new_n > parent.where_max)) {
         where_AbsReserve(parent, new_n);
@@ -176,32 +176,32 @@ inline void command::where_Reserve(command::acr& parent, int n) {
 
 // --- command.acr.where.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& command::where_qFind(command::acr& parent, u64 t) {
+inline algo::cstring& command::where_qFind(command::acr& parent, u64 t) throw() {
     return parent.where_elems[t];
 }
 
 // --- command.acr.where.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& command::where_qLast(command::acr& parent) {
+inline algo::cstring& command::where_qLast(command::acr& parent) throw() {
     return where_qFind(parent, u64(parent.where_n-1));
 }
 
 // --- command.acr.where.rowid_Get
 // Return row id of specified element
-inline u64 command::where_rowid_Get(command::acr& parent, algo::cstring &elem) {
+inline u64 command::where_rowid_Get(command::acr& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.where_elems;
     return u64(id);
 }
 
 // --- command.acr.field.EmptyQ
 // Return true if index is empty
-inline bool command::field_EmptyQ(command::acr& parent) {
+inline bool command::field_EmptyQ(command::acr& parent) throw() {
     return parent.field_n == 0;
 }
 
 // --- command.acr.field.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* command::field_Find(command::acr& parent, u64 t) {
+inline algo::cstring* command::field_Find(command::acr& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.field_n;
     if (idx >= lim) return NULL;
@@ -210,32 +210,32 @@ inline algo::cstring* command::field_Find(command::acr& parent, u64 t) {
 
 // --- command.acr.field.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::field_Getary(const command::acr& parent) {
+inline algo::aryptr<algo::cstring> command::field_Getary(const command::acr& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.field_elems, parent.field_n);
 }
 
 // --- command.acr.field.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* command::field_Last(command::acr& parent) {
+inline algo::cstring* command::field_Last(command::acr& parent) throw() {
     return field_Find(parent, u64(parent.field_n-1));
 }
 
 // --- command.acr.field.Max
 // Return max. number of items in the array
-inline i32 command::field_Max(command::acr& parent) {
+inline i32 command::field_Max(command::acr& parent) throw() {
     (void)parent;
     return parent.field_max;
 }
 
 // --- command.acr.field.N
 // Return number of items in the array
-inline i32 command::field_N(const command::acr& parent) {
+inline i32 command::field_N(const command::acr& parent) throw() {
     return parent.field_n;
 }
 
 // --- command.acr.field.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::field_Reserve(command::acr& parent, int n) {
+inline void command::field_Reserve(command::acr& parent, int n) throw() {
     u32 new_n = parent.field_n + n;
     if (UNLIKELY(new_n > parent.field_max)) {
         field_AbsReserve(parent, new_n);
@@ -244,31 +244,31 @@ inline void command::field_Reserve(command::acr& parent, int n) {
 
 // --- command.acr.field.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& command::field_qFind(command::acr& parent, u64 t) {
+inline algo::cstring& command::field_qFind(command::acr& parent, u64 t) throw() {
     return parent.field_elems[t];
 }
 
 // --- command.acr.field.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& command::field_qLast(command::acr& parent) {
+inline algo::cstring& command::field_qLast(command::acr& parent) throw() {
     return field_qFind(parent, u64(parent.field_n-1));
 }
 
 // --- command.acr.field.rowid_Get
 // Return row id of specified element
-inline u64 command::field_rowid_Get(command::acr& parent, algo::cstring &elem) {
+inline u64 command::field_rowid_Get(command::acr& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.field_elems;
     return u64(id);
 }
 
 // --- command.acr.where_curs.Next
 // proceed to next item
-inline void command::acr_where_curs_Next(acr_where_curs &curs) {
+inline void command::acr_where_curs_Next(acr_where_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.acr.where_curs.Reset
-inline void command::acr_where_curs_Reset(acr_where_curs &curs, command::acr &parent) {
+inline void command::acr_where_curs_Reset(acr_where_curs &curs, command::acr &parent) throw() {
     curs.elems = parent.where_elems;
     curs.n_elems = parent.where_n;
     curs.index = 0;
@@ -276,24 +276,24 @@ inline void command::acr_where_curs_Reset(acr_where_curs &curs, command::acr &pa
 
 // --- command.acr.where_curs.ValidQ
 // cursor points to valid item
-inline bool command::acr_where_curs_ValidQ(acr_where_curs &curs) {
+inline bool command::acr_where_curs_ValidQ(acr_where_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.acr.where_curs.Access
 // item access
-inline algo::cstring& command::acr_where_curs_Access(acr_where_curs &curs) {
+inline algo::cstring& command::acr_where_curs_Access(acr_where_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.acr.field_curs.Next
 // proceed to next item
-inline void command::acr_field_curs_Next(acr_field_curs &curs) {
+inline void command::acr_field_curs_Next(acr_field_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.acr.field_curs.Reset
-inline void command::acr_field_curs_Reset(acr_field_curs &curs, command::acr &parent) {
+inline void command::acr_field_curs_Reset(acr_field_curs &curs, command::acr &parent) throw() {
     curs.elems = parent.field_elems;
     curs.n_elems = parent.field_n;
     curs.index = 0;
@@ -301,23 +301,23 @@ inline void command::acr_field_curs_Reset(acr_field_curs &curs, command::acr &pa
 
 // --- command.acr.field_curs.ValidQ
 // cursor points to valid item
-inline bool command::acr_field_curs_ValidQ(acr_field_curs &curs) {
+inline bool command::acr_field_curs_ValidQ(acr_field_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.acr.field_curs.Access
 // item access
-inline algo::cstring& command::acr_field_curs_Access(acr_field_curs &curs) {
+inline algo::cstring& command::acr_field_curs_Access(acr_field_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.acr..Ctor
-inline  command::acr::acr() {
+inline  command::acr::acr() throw() {
     command::acr_Init(*this);
 }
 
 // --- command.acr..Dtor
-inline  command::acr::~acr() {
+inline  command::acr::~acr() throw() {
     command::acr_Uninit(*this);
 }
 
@@ -334,7 +334,7 @@ inline void command::acr_compl_Init(command::acr_compl& parent) {
 }
 
 // --- command.acr_compl..Ctor
-inline  command::acr_compl::acr_compl() {
+inline  command::acr_compl::acr_compl() throw() {
     command::acr_compl_Init(*this);
 }
 
@@ -348,24 +348,24 @@ inline void command::acr_compl_proc_Init(command::acr_compl_proc& parent) {
 }
 
 // --- command.acr_compl_proc..Ctor
-inline  command::acr_compl_proc::acr_compl_proc() {
+inline  command::acr_compl_proc::acr_compl_proc() throw() {
     command::acr_compl_proc_Init(*this);
 }
 
 // --- command.acr_compl_proc..Dtor
-inline  command::acr_compl_proc::~acr_compl_proc() {
+inline  command::acr_compl_proc::~acr_compl_proc() throw() {
     command::acr_compl_proc_Uninit(*this);
 }
 
 // --- command.acr_dm.arg.EmptyQ
 // Return true if index is empty
-inline bool command::arg_EmptyQ(command::acr_dm& parent) {
+inline bool command::arg_EmptyQ(command::acr_dm& parent) throw() {
     return parent.arg_n == 0;
 }
 
 // --- command.acr_dm.arg.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* command::arg_Find(command::acr_dm& parent, u64 t) {
+inline algo::cstring* command::arg_Find(command::acr_dm& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.arg_n;
     if (idx >= lim) return NULL;
@@ -374,32 +374,32 @@ inline algo::cstring* command::arg_Find(command::acr_dm& parent, u64 t) {
 
 // --- command.acr_dm.arg.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::arg_Getary(const command::acr_dm& parent) {
+inline algo::aryptr<algo::cstring> command::arg_Getary(const command::acr_dm& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.arg_elems, parent.arg_n);
 }
 
 // --- command.acr_dm.arg.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* command::arg_Last(command::acr_dm& parent) {
+inline algo::cstring* command::arg_Last(command::acr_dm& parent) throw() {
     return arg_Find(parent, u64(parent.arg_n-1));
 }
 
 // --- command.acr_dm.arg.Max
 // Return max. number of items in the array
-inline i32 command::arg_Max(command::acr_dm& parent) {
+inline i32 command::arg_Max(command::acr_dm& parent) throw() {
     (void)parent;
     return parent.arg_max;
 }
 
 // --- command.acr_dm.arg.N
 // Return number of items in the array
-inline i32 command::arg_N(const command::acr_dm& parent) {
+inline i32 command::arg_N(const command::acr_dm& parent) throw() {
     return parent.arg_n;
 }
 
 // --- command.acr_dm.arg.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::arg_Reserve(command::acr_dm& parent, int n) {
+inline void command::arg_Reserve(command::acr_dm& parent, int n) throw() {
     u32 new_n = parent.arg_n + n;
     if (UNLIKELY(new_n > parent.arg_max)) {
         arg_AbsReserve(parent, new_n);
@@ -408,31 +408,31 @@ inline void command::arg_Reserve(command::acr_dm& parent, int n) {
 
 // --- command.acr_dm.arg.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& command::arg_qFind(command::acr_dm& parent, u64 t) {
+inline algo::cstring& command::arg_qFind(command::acr_dm& parent, u64 t) throw() {
     return parent.arg_elems[t];
 }
 
 // --- command.acr_dm.arg.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& command::arg_qLast(command::acr_dm& parent) {
+inline algo::cstring& command::arg_qLast(command::acr_dm& parent) throw() {
     return arg_qFind(parent, u64(parent.arg_n-1));
 }
 
 // --- command.acr_dm.arg.rowid_Get
 // Return row id of specified element
-inline u64 command::arg_rowid_Get(command::acr_dm& parent, algo::cstring &elem) {
+inline u64 command::arg_rowid_Get(command::acr_dm& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.arg_elems;
     return u64(id);
 }
 
 // --- command.acr_dm.arg_curs.Next
 // proceed to next item
-inline void command::acr_dm_arg_curs_Next(acr_dm_arg_curs &curs) {
+inline void command::acr_dm_arg_curs_Next(acr_dm_arg_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.acr_dm.arg_curs.Reset
-inline void command::acr_dm_arg_curs_Reset(acr_dm_arg_curs &curs, command::acr_dm &parent) {
+inline void command::acr_dm_arg_curs_Reset(acr_dm_arg_curs &curs, command::acr_dm &parent) throw() {
     curs.elems = parent.arg_elems;
     curs.n_elems = parent.arg_n;
     curs.index = 0;
@@ -440,13 +440,13 @@ inline void command::acr_dm_arg_curs_Reset(acr_dm_arg_curs &curs, command::acr_d
 
 // --- command.acr_dm.arg_curs.ValidQ
 // cursor points to valid item
-inline bool command::acr_dm_arg_curs_ValidQ(acr_dm_arg_curs &curs) {
+inline bool command::acr_dm_arg_curs_ValidQ(acr_dm_arg_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.acr_dm.arg_curs.Access
 // item access
-inline algo::cstring& command::acr_dm_arg_curs_Access(acr_dm_arg_curs &curs) {
+inline algo::cstring& command::acr_dm_arg_curs_Access(acr_dm_arg_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -463,12 +463,12 @@ inline void command::acr_dm_Init(command::acr_dm& parent) {
 }
 
 // --- command.acr_dm..Ctor
-inline  command::acr_dm::acr_dm() {
+inline  command::acr_dm::acr_dm() throw() {
     command::acr_dm_Init(*this);
 }
 
 // --- command.acr_dm..Dtor
-inline  command::acr_dm::~acr_dm() {
+inline  command::acr_dm::~acr_dm() throw() {
     command::acr_dm_Uninit(*this);
 }
 
@@ -482,17 +482,17 @@ inline void command::acr_dm_proc_Init(command::acr_dm_proc& parent) {
 }
 
 // --- command.acr_dm_proc..Ctor
-inline  command::acr_dm_proc::acr_dm_proc() {
+inline  command::acr_dm_proc::acr_dm_proc() throw() {
     command::acr_dm_proc_Init(*this);
 }
 
 // --- command.acr_dm_proc..Dtor
-inline  command::acr_dm_proc::~acr_dm_proc() {
+inline  command::acr_dm_proc::~acr_dm_proc() throw() {
     command::acr_dm_proc_Uninit(*this);
 }
 
 // --- command.acr_ed..Ctor
-inline  command::acr_ed::acr_ed() {
+inline  command::acr_ed::acr_ed() throw() {
     command::acr_ed_Init(*this);
 }
 
@@ -506,17 +506,17 @@ inline void command::acr_ed_proc_Init(command::acr_ed_proc& parent) {
 }
 
 // --- command.acr_ed_proc..Ctor
-inline  command::acr_ed_proc::acr_ed_proc() {
+inline  command::acr_ed_proc::acr_ed_proc() throw() {
     command::acr_ed_proc_Init(*this);
 }
 
 // --- command.acr_ed_proc..Dtor
-inline  command::acr_ed_proc::~acr_ed_proc() {
+inline  command::acr_ed_proc::~acr_ed_proc() throw() {
     command::acr_ed_proc_Uninit(*this);
 }
 
 // --- command.acr_in..Ctor
-inline  command::acr_in::acr_in() {
+inline  command::acr_in::acr_in() throw() {
     command::acr_in_Init(*this);
 }
 
@@ -530,17 +530,17 @@ inline void command::acr_in_proc_Init(command::acr_in_proc& parent) {
 }
 
 // --- command.acr_in_proc..Ctor
-inline  command::acr_in_proc::acr_in_proc() {
+inline  command::acr_in_proc::acr_in_proc() throw() {
     command::acr_in_proc_Init(*this);
 }
 
 // --- command.acr_in_proc..Dtor
-inline  command::acr_in_proc::~acr_in_proc() {
+inline  command::acr_in_proc::~acr_in_proc() throw() {
     command::acr_in_proc_Uninit(*this);
 }
 
 // --- command.acr_my..Ctor
-inline  command::acr_my::acr_my() {
+inline  command::acr_my::acr_my() throw() {
     command::acr_my_Init(*this);
 }
 
@@ -554,12 +554,12 @@ inline void command::acr_my_proc_Init(command::acr_my_proc& parent) {
 }
 
 // --- command.acr_my_proc..Ctor
-inline  command::acr_my_proc::acr_my_proc() {
+inline  command::acr_my_proc::acr_my_proc() throw() {
     command::acr_my_proc_Init(*this);
 }
 
 // --- command.acr_my_proc..Dtor
-inline  command::acr_my_proc::~acr_my_proc() {
+inline  command::acr_my_proc::~acr_my_proc() throw() {
     command::acr_my_proc_Uninit(*this);
 }
 
@@ -573,22 +573,22 @@ inline void command::acr_proc_Init(command::acr_proc& parent) {
 }
 
 // --- command.acr_proc..Ctor
-inline  command::acr_proc::acr_proc() {
+inline  command::acr_proc::acr_proc() throw() {
     command::acr_proc_Init(*this);
 }
 
 // --- command.acr_proc..Dtor
-inline  command::acr_proc::~acr_proc() {
+inline  command::acr_proc::~acr_proc() throw() {
     command::acr_proc_Uninit(*this);
 }
 
 // --- command.amc..Ctor
-inline  command::amc::amc() {
+inline  command::amc::amc() throw() {
     command::amc_Init(*this);
 }
 
 // --- command.amc_gc..Ctor
-inline  command::amc_gc::amc_gc() {
+inline  command::amc_gc::amc_gc() throw() {
     command::amc_gc_Init(*this);
 }
 
@@ -602,12 +602,12 @@ inline void command::amc_gc_proc_Init(command::amc_gc_proc& parent) {
 }
 
 // --- command.amc_gc_proc..Ctor
-inline  command::amc_gc_proc::amc_gc_proc() {
+inline  command::amc_gc_proc::amc_gc_proc() throw() {
     command::amc_gc_proc_Init(*this);
 }
 
 // --- command.amc_gc_proc..Dtor
-inline  command::amc_gc_proc::~amc_gc_proc() {
+inline  command::amc_gc_proc::~amc_gc_proc() throw() {
     command::amc_gc_proc_Uninit(*this);
 }
 
@@ -621,17 +621,17 @@ inline void command::amc_proc_Init(command::amc_proc& parent) {
 }
 
 // --- command.amc_proc..Ctor
-inline  command::amc_proc::amc_proc() {
+inline  command::amc_proc::amc_proc() throw() {
     command::amc_proc_Init(*this);
 }
 
 // --- command.amc_proc..Dtor
-inline  command::amc_proc::~amc_proc() {
+inline  command::amc_proc::~amc_proc() throw() {
     command::amc_proc_Uninit(*this);
 }
 
 // --- command.amc_vis..Ctor
-inline  command::amc_vis::amc_vis() {
+inline  command::amc_vis::amc_vis() throw() {
     command::amc_vis_Init(*this);
 }
 
@@ -645,12 +645,12 @@ inline void command::amc_vis_proc_Init(command::amc_vis_proc& parent) {
 }
 
 // --- command.amc_vis_proc..Ctor
-inline  command::amc_vis_proc::amc_vis_proc() {
+inline  command::amc_vis_proc::amc_vis_proc() throw() {
     command::amc_vis_proc_Init(*this);
 }
 
 // --- command.amc_vis_proc..Dtor
-inline  command::amc_vis_proc::~amc_vis_proc() {
+inline  command::amc_vis_proc::~amc_vis_proc() throw() {
     command::amc_vis_proc_Uninit(*this);
 }
 
@@ -661,7 +661,7 @@ inline void command::ams_cat_Init(command::ams_cat& parent) {
 }
 
 // --- command.ams_cat..Ctor
-inline  command::ams_cat::ams_cat() {
+inline  command::ams_cat::ams_cat() throw() {
     command::ams_cat_Init(*this);
 }
 
@@ -675,17 +675,17 @@ inline void command::ams_cat_proc_Init(command::ams_cat_proc& parent) {
 }
 
 // --- command.ams_cat_proc..Ctor
-inline  command::ams_cat_proc::ams_cat_proc() {
+inline  command::ams_cat_proc::ams_cat_proc() throw() {
     command::ams_cat_proc_Init(*this);
 }
 
 // --- command.ams_cat_proc..Dtor
-inline  command::ams_cat_proc::~ams_cat_proc() {
+inline  command::ams_cat_proc::~ams_cat_proc() throw() {
     command::ams_cat_proc_Uninit(*this);
 }
 
 // --- command.ams_sendtest..Ctor
-inline  command::ams_sendtest::ams_sendtest() {
+inline  command::ams_sendtest::ams_sendtest() throw() {
     command::ams_sendtest_Init(*this);
 }
 
@@ -699,17 +699,17 @@ inline void command::ams_sendtest_proc_Init(command::ams_sendtest_proc& parent) 
 }
 
 // --- command.ams_sendtest_proc..Ctor
-inline  command::ams_sendtest_proc::ams_sendtest_proc() {
+inline  command::ams_sendtest_proc::ams_sendtest_proc() throw() {
     command::ams_sendtest_proc_Init(*this);
 }
 
 // --- command.ams_sendtest_proc..Dtor
-inline  command::ams_sendtest_proc::~ams_sendtest_proc() {
+inline  command::ams_sendtest_proc::~ams_sendtest_proc() throw() {
     command::ams_sendtest_proc_Uninit(*this);
 }
 
 // --- command.apm..Ctor
-inline  command::apm::apm() {
+inline  command::apm::apm() throw() {
     command::apm_Init(*this);
 }
 
@@ -723,17 +723,17 @@ inline void command::apm_proc_Init(command::apm_proc& parent) {
 }
 
 // --- command.apm_proc..Ctor
-inline  command::apm_proc::apm_proc() {
+inline  command::apm_proc::apm_proc() throw() {
     command::apm_proc_Init(*this);
 }
 
 // --- command.apm_proc..Dtor
-inline  command::apm_proc::~apm_proc() {
+inline  command::apm_proc::~apm_proc() throw() {
     command::apm_proc_Uninit(*this);
 }
 
 // --- command.aqlite..Ctor
-inline  command::aqlite::aqlite() {
+inline  command::aqlite::aqlite() throw() {
     command::aqlite_Init(*this);
 }
 
@@ -747,17 +747,17 @@ inline void command::aqlite_proc_Init(command::aqlite_proc& parent) {
 }
 
 // --- command.aqlite_proc..Ctor
-inline  command::aqlite_proc::aqlite_proc() {
+inline  command::aqlite_proc::aqlite_proc() throw() {
     command::aqlite_proc_Init(*this);
 }
 
 // --- command.aqlite_proc..Dtor
-inline  command::aqlite_proc::~aqlite_proc() {
+inline  command::aqlite_proc::~aqlite_proc() throw() {
     command::aqlite_proc_Uninit(*this);
 }
 
 // --- command.atf_amc..Ctor
-inline  command::atf_amc::atf_amc() {
+inline  command::atf_amc::atf_amc() throw() {
     command::atf_amc_Init(*this);
 }
 
@@ -771,17 +771,17 @@ inline void command::atf_amc_proc_Init(command::atf_amc_proc& parent) {
 }
 
 // --- command.atf_amc_proc..Ctor
-inline  command::atf_amc_proc::atf_amc_proc() {
+inline  command::atf_amc_proc::atf_amc_proc() throw() {
     command::atf_amc_proc_Init(*this);
 }
 
 // --- command.atf_amc_proc..Dtor
-inline  command::atf_amc_proc::~atf_amc_proc() {
+inline  command::atf_amc_proc::~atf_amc_proc() throw() {
     command::atf_amc_proc_Uninit(*this);
 }
 
 // --- command.atf_ci..Ctor
-inline  command::atf_ci::atf_ci() {
+inline  command::atf_ci::atf_ci() throw() {
     command::atf_ci_Init(*this);
 }
 
@@ -795,24 +795,24 @@ inline void command::atf_ci_proc_Init(command::atf_ci_proc& parent) {
 }
 
 // --- command.atf_ci_proc..Ctor
-inline  command::atf_ci_proc::atf_ci_proc() {
+inline  command::atf_ci_proc::atf_ci_proc() throw() {
     command::atf_ci_proc_Init(*this);
 }
 
 // --- command.atf_ci_proc..Dtor
-inline  command::atf_ci_proc::~atf_ci_proc() {
+inline  command::atf_ci_proc::~atf_ci_proc() throw() {
     command::atf_ci_proc_Uninit(*this);
 }
 
 // --- command.atf_cmdline.mstr.EmptyQ
 // Return true if index is empty
-inline bool command::mstr_EmptyQ(command::atf_cmdline& parent) {
+inline bool command::mstr_EmptyQ(command::atf_cmdline& parent) throw() {
     return parent.mstr_n == 0;
 }
 
 // --- command.atf_cmdline.mstr.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* command::mstr_Find(command::atf_cmdline& parent, u64 t) {
+inline algo::cstring* command::mstr_Find(command::atf_cmdline& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.mstr_n;
     if (idx >= lim) return NULL;
@@ -821,32 +821,32 @@ inline algo::cstring* command::mstr_Find(command::atf_cmdline& parent, u64 t) {
 
 // --- command.atf_cmdline.mstr.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::mstr_Getary(const command::atf_cmdline& parent) {
+inline algo::aryptr<algo::cstring> command::mstr_Getary(const command::atf_cmdline& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.mstr_elems, parent.mstr_n);
 }
 
 // --- command.atf_cmdline.mstr.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* command::mstr_Last(command::atf_cmdline& parent) {
+inline algo::cstring* command::mstr_Last(command::atf_cmdline& parent) throw() {
     return mstr_Find(parent, u64(parent.mstr_n-1));
 }
 
 // --- command.atf_cmdline.mstr.Max
 // Return max. number of items in the array
-inline i32 command::mstr_Max(command::atf_cmdline& parent) {
+inline i32 command::mstr_Max(command::atf_cmdline& parent) throw() {
     (void)parent;
     return parent.mstr_max;
 }
 
 // --- command.atf_cmdline.mstr.N
 // Return number of items in the array
-inline i32 command::mstr_N(const command::atf_cmdline& parent) {
+inline i32 command::mstr_N(const command::atf_cmdline& parent) throw() {
     return parent.mstr_n;
 }
 
 // --- command.atf_cmdline.mstr.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::mstr_Reserve(command::atf_cmdline& parent, int n) {
+inline void command::mstr_Reserve(command::atf_cmdline& parent, int n) throw() {
     u32 new_n = parent.mstr_n + n;
     if (UNLIKELY(new_n > parent.mstr_max)) {
         mstr_AbsReserve(parent, new_n);
@@ -855,32 +855,32 @@ inline void command::mstr_Reserve(command::atf_cmdline& parent, int n) {
 
 // --- command.atf_cmdline.mstr.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& command::mstr_qFind(command::atf_cmdline& parent, u64 t) {
+inline algo::cstring& command::mstr_qFind(command::atf_cmdline& parent, u64 t) throw() {
     return parent.mstr_elems[t];
 }
 
 // --- command.atf_cmdline.mstr.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& command::mstr_qLast(command::atf_cmdline& parent) {
+inline algo::cstring& command::mstr_qLast(command::atf_cmdline& parent) throw() {
     return mstr_qFind(parent, u64(parent.mstr_n-1));
 }
 
 // --- command.atf_cmdline.mstr.rowid_Get
 // Return row id of specified element
-inline u64 command::mstr_rowid_Get(command::atf_cmdline& parent, algo::cstring &elem) {
+inline u64 command::mstr_rowid_Get(command::atf_cmdline& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.mstr_elems;
     return u64(id);
 }
 
 // --- command.atf_cmdline.mnum.EmptyQ
 // Return true if index is empty
-inline bool command::mnum_EmptyQ(command::atf_cmdline& parent) {
+inline bool command::mnum_EmptyQ(command::atf_cmdline& parent) throw() {
     return parent.mnum_n == 0;
 }
 
 // --- command.atf_cmdline.mnum.Find
 // Look up row by row id. Return NULL if out of range
-inline i32* command::mnum_Find(command::atf_cmdline& parent, u64 t) {
+inline i32* command::mnum_Find(command::atf_cmdline& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.mnum_n;
     if (idx >= lim) return NULL;
@@ -889,37 +889,37 @@ inline i32* command::mnum_Find(command::atf_cmdline& parent, u64 t) {
 
 // --- command.atf_cmdline.mnum.Getary
 // Return array pointer by value
-inline algo::aryptr<i32> command::mnum_Getary(const command::atf_cmdline& parent) {
+inline algo::aryptr<i32> command::mnum_Getary(const command::atf_cmdline& parent) throw() {
     return algo::aryptr<i32>(parent.mnum_elems, parent.mnum_n);
 }
 
 // --- command.atf_cmdline.mnum.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline i32* command::mnum_Last(command::atf_cmdline& parent) {
+inline i32* command::mnum_Last(command::atf_cmdline& parent) throw() {
     return mnum_Find(parent, u64(parent.mnum_n-1));
 }
 
 // --- command.atf_cmdline.mnum.Max
 // Return max. number of items in the array
-inline i32 command::mnum_Max(command::atf_cmdline& parent) {
+inline i32 command::mnum_Max(command::atf_cmdline& parent) throw() {
     (void)parent;
     return parent.mnum_max;
 }
 
 // --- command.atf_cmdline.mnum.N
 // Return number of items in the array
-inline i32 command::mnum_N(const command::atf_cmdline& parent) {
+inline i32 command::mnum_N(const command::atf_cmdline& parent) throw() {
     return parent.mnum_n;
 }
 
 // --- command.atf_cmdline.mnum.RemoveAll
-inline void command::mnum_RemoveAll(command::atf_cmdline& parent) {
+inline void command::mnum_RemoveAll(command::atf_cmdline& parent) throw() {
     parent.mnum_n = 0;
 }
 
 // --- command.atf_cmdline.mnum.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::mnum_Reserve(command::atf_cmdline& parent, int n) {
+inline void command::mnum_Reserve(command::atf_cmdline& parent, int n) throw() {
     u32 new_n = parent.mnum_n + n;
     if (UNLIKELY(new_n > parent.mnum_max)) {
         mnum_AbsReserve(parent, new_n);
@@ -928,32 +928,32 @@ inline void command::mnum_Reserve(command::atf_cmdline& parent, int n) {
 
 // --- command.atf_cmdline.mnum.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline i32& command::mnum_qFind(command::atf_cmdline& parent, u64 t) {
+inline i32& command::mnum_qFind(command::atf_cmdline& parent, u64 t) throw() {
     return parent.mnum_elems[t];
 }
 
 // --- command.atf_cmdline.mnum.qLast
 // Return reference to last element of array. No bounds checking
-inline i32& command::mnum_qLast(command::atf_cmdline& parent) {
+inline i32& command::mnum_qLast(command::atf_cmdline& parent) throw() {
     return mnum_qFind(parent, u64(parent.mnum_n-1));
 }
 
 // --- command.atf_cmdline.mnum.rowid_Get
 // Return row id of specified element
-inline u64 command::mnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) {
+inline u64 command::mnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) throw() {
     u64 id = &elem - parent.mnum_elems;
     return u64(id);
 }
 
 // --- command.atf_cmdline.mdbl.EmptyQ
 // Return true if index is empty
-inline bool command::mdbl_EmptyQ(command::atf_cmdline& parent) {
+inline bool command::mdbl_EmptyQ(command::atf_cmdline& parent) throw() {
     return parent.mdbl_n == 0;
 }
 
 // --- command.atf_cmdline.mdbl.Find
 // Look up row by row id. Return NULL if out of range
-inline double* command::mdbl_Find(command::atf_cmdline& parent, u64 t) {
+inline double* command::mdbl_Find(command::atf_cmdline& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.mdbl_n;
     if (idx >= lim) return NULL;
@@ -962,37 +962,37 @@ inline double* command::mdbl_Find(command::atf_cmdline& parent, u64 t) {
 
 // --- command.atf_cmdline.mdbl.Getary
 // Return array pointer by value
-inline algo::aryptr<double> command::mdbl_Getary(const command::atf_cmdline& parent) {
+inline algo::aryptr<double> command::mdbl_Getary(const command::atf_cmdline& parent) throw() {
     return algo::aryptr<double>(parent.mdbl_elems, parent.mdbl_n);
 }
 
 // --- command.atf_cmdline.mdbl.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline double* command::mdbl_Last(command::atf_cmdline& parent) {
+inline double* command::mdbl_Last(command::atf_cmdline& parent) throw() {
     return mdbl_Find(parent, u64(parent.mdbl_n-1));
 }
 
 // --- command.atf_cmdline.mdbl.Max
 // Return max. number of items in the array
-inline i32 command::mdbl_Max(command::atf_cmdline& parent) {
+inline i32 command::mdbl_Max(command::atf_cmdline& parent) throw() {
     (void)parent;
     return parent.mdbl_max;
 }
 
 // --- command.atf_cmdline.mdbl.N
 // Return number of items in the array
-inline i32 command::mdbl_N(const command::atf_cmdline& parent) {
+inline i32 command::mdbl_N(const command::atf_cmdline& parent) throw() {
     return parent.mdbl_n;
 }
 
 // --- command.atf_cmdline.mdbl.RemoveAll
-inline void command::mdbl_RemoveAll(command::atf_cmdline& parent) {
+inline void command::mdbl_RemoveAll(command::atf_cmdline& parent) throw() {
     parent.mdbl_n = 0;
 }
 
 // --- command.atf_cmdline.mdbl.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::mdbl_Reserve(command::atf_cmdline& parent, int n) {
+inline void command::mdbl_Reserve(command::atf_cmdline& parent, int n) throw() {
     u32 new_n = parent.mdbl_n + n;
     if (UNLIKELY(new_n > parent.mdbl_max)) {
         mdbl_AbsReserve(parent, new_n);
@@ -1001,32 +1001,32 @@ inline void command::mdbl_Reserve(command::atf_cmdline& parent, int n) {
 
 // --- command.atf_cmdline.mdbl.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline double& command::mdbl_qFind(command::atf_cmdline& parent, u64 t) {
+inline double& command::mdbl_qFind(command::atf_cmdline& parent, u64 t) throw() {
     return parent.mdbl_elems[t];
 }
 
 // --- command.atf_cmdline.mdbl.qLast
 // Return reference to last element of array. No bounds checking
-inline double& command::mdbl_qLast(command::atf_cmdline& parent) {
+inline double& command::mdbl_qLast(command::atf_cmdline& parent) throw() {
     return mdbl_qFind(parent, u64(parent.mdbl_n-1));
 }
 
 // --- command.atf_cmdline.mdbl.rowid_Get
 // Return row id of specified element
-inline u64 command::mdbl_rowid_Get(command::atf_cmdline& parent, double &elem) {
+inline u64 command::mdbl_rowid_Get(command::atf_cmdline& parent, double &elem) throw() {
     u64 id = &elem - parent.mdbl_elems;
     return u64(id);
 }
 
 // --- command.atf_cmdline.amnum.EmptyQ
 // Return true if index is empty
-inline bool command::amnum_EmptyQ(command::atf_cmdline& parent) {
+inline bool command::amnum_EmptyQ(command::atf_cmdline& parent) throw() {
     return parent.amnum_n == 0;
 }
 
 // --- command.atf_cmdline.amnum.Find
 // Look up row by row id. Return NULL if out of range
-inline i32* command::amnum_Find(command::atf_cmdline& parent, u64 t) {
+inline i32* command::amnum_Find(command::atf_cmdline& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.amnum_n;
     if (idx >= lim) return NULL;
@@ -1035,37 +1035,37 @@ inline i32* command::amnum_Find(command::atf_cmdline& parent, u64 t) {
 
 // --- command.atf_cmdline.amnum.Getary
 // Return array pointer by value
-inline algo::aryptr<i32> command::amnum_Getary(const command::atf_cmdline& parent) {
+inline algo::aryptr<i32> command::amnum_Getary(const command::atf_cmdline& parent) throw() {
     return algo::aryptr<i32>(parent.amnum_elems, parent.amnum_n);
 }
 
 // --- command.atf_cmdline.amnum.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline i32* command::amnum_Last(command::atf_cmdline& parent) {
+inline i32* command::amnum_Last(command::atf_cmdline& parent) throw() {
     return amnum_Find(parent, u64(parent.amnum_n-1));
 }
 
 // --- command.atf_cmdline.amnum.Max
 // Return max. number of items in the array
-inline i32 command::amnum_Max(command::atf_cmdline& parent) {
+inline i32 command::amnum_Max(command::atf_cmdline& parent) throw() {
     (void)parent;
     return parent.amnum_max;
 }
 
 // --- command.atf_cmdline.amnum.N
 // Return number of items in the array
-inline i32 command::amnum_N(const command::atf_cmdline& parent) {
+inline i32 command::amnum_N(const command::atf_cmdline& parent) throw() {
     return parent.amnum_n;
 }
 
 // --- command.atf_cmdline.amnum.RemoveAll
-inline void command::amnum_RemoveAll(command::atf_cmdline& parent) {
+inline void command::amnum_RemoveAll(command::atf_cmdline& parent) throw() {
     parent.amnum_n = 0;
 }
 
 // --- command.atf_cmdline.amnum.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::amnum_Reserve(command::atf_cmdline& parent, int n) {
+inline void command::amnum_Reserve(command::atf_cmdline& parent, int n) throw() {
     u32 new_n = parent.amnum_n + n;
     if (UNLIKELY(new_n > parent.amnum_max)) {
         amnum_AbsReserve(parent, new_n);
@@ -1074,43 +1074,43 @@ inline void command::amnum_Reserve(command::atf_cmdline& parent, int n) {
 
 // --- command.atf_cmdline.amnum.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline i32& command::amnum_qFind(command::atf_cmdline& parent, u64 t) {
+inline i32& command::amnum_qFind(command::atf_cmdline& parent, u64 t) throw() {
     return parent.amnum_elems[t];
 }
 
 // --- command.atf_cmdline.amnum.qLast
 // Return reference to last element of array. No bounds checking
-inline i32& command::amnum_qLast(command::atf_cmdline& parent) {
+inline i32& command::amnum_qLast(command::atf_cmdline& parent) throw() {
     return amnum_qFind(parent, u64(parent.amnum_n-1));
 }
 
 // --- command.atf_cmdline.amnum.rowid_Get
 // Return row id of specified element
-inline u64 command::amnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) {
+inline u64 command::amnum_rowid_Get(command::atf_cmdline& parent, i32 &elem) throw() {
     u64 id = &elem - parent.amnum_elems;
     return u64(id);
 }
 
 // --- command.atf_cmdline.fconst.GetEnum
 // Get value of field as enum type
-inline command_atf_cmdline_fconst_Enum command::fconst_GetEnum(const command::atf_cmdline& parent) {
+inline command_atf_cmdline_fconst_Enum command::fconst_GetEnum(const command::atf_cmdline& parent) throw() {
     return command_atf_cmdline_fconst_Enum(parent.fconst);
 }
 
 // --- command.atf_cmdline.fconst.SetEnum
 // Set value of field from enum type.
-inline void command::fconst_SetEnum(command::atf_cmdline& parent, command_atf_cmdline_fconst_Enum rhs) {
+inline void command::fconst_SetEnum(command::atf_cmdline& parent, command_atf_cmdline_fconst_Enum rhs) throw() {
     parent.fconst = u8(rhs);
 }
 
 // --- command.atf_cmdline.mstr_curs.Next
 // proceed to next item
-inline void command::atf_cmdline_mstr_curs_Next(atf_cmdline_mstr_curs &curs) {
+inline void command::atf_cmdline_mstr_curs_Next(atf_cmdline_mstr_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.atf_cmdline.mstr_curs.Reset
-inline void command::atf_cmdline_mstr_curs_Reset(atf_cmdline_mstr_curs &curs, command::atf_cmdline &parent) {
+inline void command::atf_cmdline_mstr_curs_Reset(atf_cmdline_mstr_curs &curs, command::atf_cmdline &parent) throw() {
     curs.elems = parent.mstr_elems;
     curs.n_elems = parent.mstr_n;
     curs.index = 0;
@@ -1118,24 +1118,24 @@ inline void command::atf_cmdline_mstr_curs_Reset(atf_cmdline_mstr_curs &curs, co
 
 // --- command.atf_cmdline.mstr_curs.ValidQ
 // cursor points to valid item
-inline bool command::atf_cmdline_mstr_curs_ValidQ(atf_cmdline_mstr_curs &curs) {
+inline bool command::atf_cmdline_mstr_curs_ValidQ(atf_cmdline_mstr_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.atf_cmdline.mstr_curs.Access
 // item access
-inline algo::cstring& command::atf_cmdline_mstr_curs_Access(atf_cmdline_mstr_curs &curs) {
+inline algo::cstring& command::atf_cmdline_mstr_curs_Access(atf_cmdline_mstr_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.atf_cmdline.mnum_curs.Next
 // proceed to next item
-inline void command::atf_cmdline_mnum_curs_Next(atf_cmdline_mnum_curs &curs) {
+inline void command::atf_cmdline_mnum_curs_Next(atf_cmdline_mnum_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.atf_cmdline.mnum_curs.Reset
-inline void command::atf_cmdline_mnum_curs_Reset(atf_cmdline_mnum_curs &curs, command::atf_cmdline &parent) {
+inline void command::atf_cmdline_mnum_curs_Reset(atf_cmdline_mnum_curs &curs, command::atf_cmdline &parent) throw() {
     curs.elems = parent.mnum_elems;
     curs.n_elems = parent.mnum_n;
     curs.index = 0;
@@ -1143,24 +1143,24 @@ inline void command::atf_cmdline_mnum_curs_Reset(atf_cmdline_mnum_curs &curs, co
 
 // --- command.atf_cmdline.mnum_curs.ValidQ
 // cursor points to valid item
-inline bool command::atf_cmdline_mnum_curs_ValidQ(atf_cmdline_mnum_curs &curs) {
+inline bool command::atf_cmdline_mnum_curs_ValidQ(atf_cmdline_mnum_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.atf_cmdline.mnum_curs.Access
 // item access
-inline i32& command::atf_cmdline_mnum_curs_Access(atf_cmdline_mnum_curs &curs) {
+inline i32& command::atf_cmdline_mnum_curs_Access(atf_cmdline_mnum_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.atf_cmdline.mdbl_curs.Next
 // proceed to next item
-inline void command::atf_cmdline_mdbl_curs_Next(atf_cmdline_mdbl_curs &curs) {
+inline void command::atf_cmdline_mdbl_curs_Next(atf_cmdline_mdbl_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.atf_cmdline.mdbl_curs.Reset
-inline void command::atf_cmdline_mdbl_curs_Reset(atf_cmdline_mdbl_curs &curs, command::atf_cmdline &parent) {
+inline void command::atf_cmdline_mdbl_curs_Reset(atf_cmdline_mdbl_curs &curs, command::atf_cmdline &parent) throw() {
     curs.elems = parent.mdbl_elems;
     curs.n_elems = parent.mdbl_n;
     curs.index = 0;
@@ -1168,24 +1168,24 @@ inline void command::atf_cmdline_mdbl_curs_Reset(atf_cmdline_mdbl_curs &curs, co
 
 // --- command.atf_cmdline.mdbl_curs.ValidQ
 // cursor points to valid item
-inline bool command::atf_cmdline_mdbl_curs_ValidQ(atf_cmdline_mdbl_curs &curs) {
+inline bool command::atf_cmdline_mdbl_curs_ValidQ(atf_cmdline_mdbl_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.atf_cmdline.mdbl_curs.Access
 // item access
-inline double& command::atf_cmdline_mdbl_curs_Access(atf_cmdline_mdbl_curs &curs) {
+inline double& command::atf_cmdline_mdbl_curs_Access(atf_cmdline_mdbl_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.atf_cmdline.amnum_curs.Next
 // proceed to next item
-inline void command::atf_cmdline_amnum_curs_Next(atf_cmdline_amnum_curs &curs) {
+inline void command::atf_cmdline_amnum_curs_Next(atf_cmdline_amnum_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.atf_cmdline.amnum_curs.Reset
-inline void command::atf_cmdline_amnum_curs_Reset(atf_cmdline_amnum_curs &curs, command::atf_cmdline &parent) {
+inline void command::atf_cmdline_amnum_curs_Reset(atf_cmdline_amnum_curs &curs, command::atf_cmdline &parent) throw() {
     curs.elems = parent.amnum_elems;
     curs.n_elems = parent.amnum_n;
     curs.index = 0;
@@ -1193,23 +1193,23 @@ inline void command::atf_cmdline_amnum_curs_Reset(atf_cmdline_amnum_curs &curs, 
 
 // --- command.atf_cmdline.amnum_curs.ValidQ
 // cursor points to valid item
-inline bool command::atf_cmdline_amnum_curs_ValidQ(atf_cmdline_amnum_curs &curs) {
+inline bool command::atf_cmdline_amnum_curs_ValidQ(atf_cmdline_amnum_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.atf_cmdline.amnum_curs.Access
 // item access
-inline i32& command::atf_cmdline_amnum_curs_Access(atf_cmdline_amnum_curs &curs) {
+inline i32& command::atf_cmdline_amnum_curs_Access(atf_cmdline_amnum_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.atf_cmdline..Ctor
-inline  command::atf_cmdline::atf_cmdline() {
+inline  command::atf_cmdline::atf_cmdline() throw() {
     command::atf_cmdline_Init(*this);
 }
 
 // --- command.atf_cmdline..Dtor
-inline  command::atf_cmdline::~atf_cmdline() {
+inline  command::atf_cmdline::~atf_cmdline() throw() {
     command::atf_cmdline_Uninit(*this);
 }
 
@@ -1223,17 +1223,17 @@ inline void command::atf_cmdline_proc_Init(command::atf_cmdline_proc& parent) {
 }
 
 // --- command.atf_cmdline_proc..Ctor
-inline  command::atf_cmdline_proc::atf_cmdline_proc() {
+inline  command::atf_cmdline_proc::atf_cmdline_proc() throw() {
     command::atf_cmdline_proc_Init(*this);
 }
 
 // --- command.atf_cmdline_proc..Dtor
-inline  command::atf_cmdline_proc::~atf_cmdline_proc() {
+inline  command::atf_cmdline_proc::~atf_cmdline_proc() throw() {
     command::atf_cmdline_proc_Uninit(*this);
 }
 
 // --- command.atf_comp..Ctor
-inline  command::atf_comp::atf_comp() {
+inline  command::atf_comp::atf_comp() throw() {
     command::atf_comp_Init(*this);
 }
 
@@ -1247,17 +1247,17 @@ inline void command::atf_comp_proc_Init(command::atf_comp_proc& parent) {
 }
 
 // --- command.atf_comp_proc..Ctor
-inline  command::atf_comp_proc::atf_comp_proc() {
+inline  command::atf_comp_proc::atf_comp_proc() throw() {
     command::atf_comp_proc_Init(*this);
 }
 
 // --- command.atf_comp_proc..Dtor
-inline  command::atf_comp_proc::~atf_comp_proc() {
+inline  command::atf_comp_proc::~atf_comp_proc() throw() {
     command::atf_comp_proc_Uninit(*this);
 }
 
 // --- command.atf_cov..Ctor
-inline  command::atf_cov::atf_cov() {
+inline  command::atf_cov::atf_cov() throw() {
     command::atf_cov_Init(*this);
 }
 
@@ -1271,17 +1271,17 @@ inline void command::atf_cov_proc_Init(command::atf_cov_proc& parent) {
 }
 
 // --- command.atf_cov_proc..Ctor
-inline  command::atf_cov_proc::atf_cov_proc() {
+inline  command::atf_cov_proc::atf_cov_proc() throw() {
     command::atf_cov_proc_Init(*this);
 }
 
 // --- command.atf_cov_proc..Dtor
-inline  command::atf_cov_proc::~atf_cov_proc() {
+inline  command::atf_cov_proc::~atf_cov_proc() throw() {
     command::atf_cov_proc_Uninit(*this);
 }
 
 // --- command.atf_fuzz..Ctor
-inline  command::atf_fuzz::atf_fuzz() {
+inline  command::atf_fuzz::atf_fuzz() throw() {
     command::atf_fuzz_Init(*this);
 }
 
@@ -1295,17 +1295,17 @@ inline void command::atf_fuzz_proc_Init(command::atf_fuzz_proc& parent) {
 }
 
 // --- command.atf_fuzz_proc..Ctor
-inline  command::atf_fuzz_proc::atf_fuzz_proc() {
+inline  command::atf_fuzz_proc::atf_fuzz_proc() throw() {
     command::atf_fuzz_proc_Init(*this);
 }
 
 // --- command.atf_fuzz_proc..Dtor
-inline  command::atf_fuzz_proc::~atf_fuzz_proc() {
+inline  command::atf_fuzz_proc::~atf_fuzz_proc() throw() {
     command::atf_fuzz_proc_Uninit(*this);
 }
 
 // --- command.atf_gcli..Ctor
-inline  command::atf_gcli::atf_gcli() {
+inline  command::atf_gcli::atf_gcli() throw() {
     command::atf_gcli_Init(*this);
 }
 
@@ -1319,12 +1319,12 @@ inline void command::atf_gcli_proc_Init(command::atf_gcli_proc& parent) {
 }
 
 // --- command.atf_gcli_proc..Ctor
-inline  command::atf_gcli_proc::atf_gcli_proc() {
+inline  command::atf_gcli_proc::atf_gcli_proc() throw() {
     command::atf_gcli_proc_Init(*this);
 }
 
 // --- command.atf_gcli_proc..Dtor
-inline  command::atf_gcli_proc::~atf_gcli_proc() {
+inline  command::atf_gcli_proc::~atf_gcli_proc() throw() {
     command::atf_gcli_proc_Uninit(*this);
 }
 
@@ -1337,7 +1337,7 @@ inline void command::atf_nrun_Init(command::atf_nrun& parent) {
 }
 
 // --- command.atf_nrun..Ctor
-inline  command::atf_nrun::atf_nrun() {
+inline  command::atf_nrun::atf_nrun() throw() {
     command::atf_nrun_Init(*this);
 }
 
@@ -1351,17 +1351,17 @@ inline void command::atf_nrun_proc_Init(command::atf_nrun_proc& parent) {
 }
 
 // --- command.atf_nrun_proc..Ctor
-inline  command::atf_nrun_proc::atf_nrun_proc() {
+inline  command::atf_nrun_proc::atf_nrun_proc() throw() {
     command::atf_nrun_proc_Init(*this);
 }
 
 // --- command.atf_nrun_proc..Dtor
-inline  command::atf_nrun_proc::~atf_nrun_proc() {
+inline  command::atf_nrun_proc::~atf_nrun_proc() throw() {
     command::atf_nrun_proc_Uninit(*this);
 }
 
 // --- command.atf_unit..Ctor
-inline  command::atf_unit::atf_unit() {
+inline  command::atf_unit::atf_unit() throw() {
     command::atf_unit_Init(*this);
 }
 
@@ -1375,12 +1375,12 @@ inline void command::atf_unit_proc_Init(command::atf_unit_proc& parent) {
 }
 
 // --- command.atf_unit_proc..Ctor
-inline  command::atf_unit_proc::atf_unit_proc() {
+inline  command::atf_unit_proc::atf_unit_proc() throw() {
     command::atf_unit_proc_Init(*this);
 }
 
 // --- command.atf_unit_proc..Dtor
-inline  command::atf_unit_proc::~atf_unit_proc() {
+inline  command::atf_unit_proc::~atf_unit_proc() throw() {
     command::atf_unit_proc_Uninit(*this);
 }
 
@@ -1391,7 +1391,7 @@ inline void command::bash_Init(command::bash& parent) {
 }
 
 // --- command.bash..Ctor
-inline  command::bash::bash() {
+inline  command::bash::bash() throw() {
     command::bash_Init(*this);
 }
 
@@ -1403,7 +1403,7 @@ inline void command::bash2html_Init(command::bash2html& parent) {
 }
 
 // --- command.bash2html..Ctor
-inline  command::bash2html::bash2html() {
+inline  command::bash2html::bash2html() throw() {
     command::bash2html_Init(*this);
 }
 
@@ -1417,12 +1417,12 @@ inline void command::bash2html_proc_Init(command::bash2html_proc& parent) {
 }
 
 // --- command.bash2html_proc..Ctor
-inline  command::bash2html_proc::bash2html_proc() {
+inline  command::bash2html_proc::bash2html_proc() throw() {
     command::bash2html_proc_Init(*this);
 }
 
 // --- command.bash2html_proc..Dtor
-inline  command::bash2html_proc::~bash2html_proc() {
+inline  command::bash2html_proc::~bash2html_proc() throw() {
     command::bash2html_proc_Uninit(*this);
 }
 
@@ -1436,24 +1436,24 @@ inline void command::bash_proc_Init(command::bash_proc& parent) {
 }
 
 // --- command.bash_proc..Ctor
-inline  command::bash_proc::bash_proc() {
+inline  command::bash_proc::bash_proc() throw() {
     command::bash_proc_Init(*this);
 }
 
 // --- command.bash_proc..Dtor
-inline  command::bash_proc::~bash_proc() {
+inline  command::bash_proc::~bash_proc() throw() {
     command::bash_proc_Uninit(*this);
 }
 
 // --- command.gcache.cmd.EmptyQ
 // Return true if index is empty
-inline bool command::cmd_EmptyQ(command::gcache& parent) {
+inline bool command::cmd_EmptyQ(command::gcache& parent) throw() {
     return parent.cmd_n == 0;
 }
 
 // --- command.gcache.cmd.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* command::cmd_Find(command::gcache& parent, u64 t) {
+inline algo::cstring* command::cmd_Find(command::gcache& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.cmd_n;
     if (idx >= lim) return NULL;
@@ -1462,32 +1462,32 @@ inline algo::cstring* command::cmd_Find(command::gcache& parent, u64 t) {
 
 // --- command.gcache.cmd.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::cmd_Getary(const command::gcache& parent) {
+inline algo::aryptr<algo::cstring> command::cmd_Getary(const command::gcache& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.cmd_elems, parent.cmd_n);
 }
 
 // --- command.gcache.cmd.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* command::cmd_Last(command::gcache& parent) {
+inline algo::cstring* command::cmd_Last(command::gcache& parent) throw() {
     return cmd_Find(parent, u64(parent.cmd_n-1));
 }
 
 // --- command.gcache.cmd.Max
 // Return max. number of items in the array
-inline i32 command::cmd_Max(command::gcache& parent) {
+inline i32 command::cmd_Max(command::gcache& parent) throw() {
     (void)parent;
     return parent.cmd_max;
 }
 
 // --- command.gcache.cmd.N
 // Return number of items in the array
-inline i32 command::cmd_N(const command::gcache& parent) {
+inline i32 command::cmd_N(const command::gcache& parent) throw() {
     return parent.cmd_n;
 }
 
 // --- command.gcache.cmd.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::cmd_Reserve(command::gcache& parent, int n) {
+inline void command::cmd_Reserve(command::gcache& parent, int n) throw() {
     u32 new_n = parent.cmd_n + n;
     if (UNLIKELY(new_n > parent.cmd_max)) {
         cmd_AbsReserve(parent, new_n);
@@ -1496,31 +1496,31 @@ inline void command::cmd_Reserve(command::gcache& parent, int n) {
 
 // --- command.gcache.cmd.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& command::cmd_qFind(command::gcache& parent, u64 t) {
+inline algo::cstring& command::cmd_qFind(command::gcache& parent, u64 t) throw() {
     return parent.cmd_elems[t];
 }
 
 // --- command.gcache.cmd.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& command::cmd_qLast(command::gcache& parent) {
+inline algo::cstring& command::cmd_qLast(command::gcache& parent) throw() {
     return cmd_qFind(parent, u64(parent.cmd_n-1));
 }
 
 // --- command.gcache.cmd.rowid_Get
 // Return row id of specified element
-inline u64 command::cmd_rowid_Get(command::gcache& parent, algo::cstring &elem) {
+inline u64 command::cmd_rowid_Get(command::gcache& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.cmd_elems;
     return u64(id);
 }
 
 // --- command.gcache.cmd_curs.Next
 // proceed to next item
-inline void command::gcache_cmd_curs_Next(gcache_cmd_curs &curs) {
+inline void command::gcache_cmd_curs_Next(gcache_cmd_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.gcache.cmd_curs.Reset
-inline void command::gcache_cmd_curs_Reset(gcache_cmd_curs &curs, command::gcache &parent) {
+inline void command::gcache_cmd_curs_Reset(gcache_cmd_curs &curs, command::gcache &parent) throw() {
     curs.elems = parent.cmd_elems;
     curs.n_elems = parent.cmd_n;
     curs.index = 0;
@@ -1528,23 +1528,23 @@ inline void command::gcache_cmd_curs_Reset(gcache_cmd_curs &curs, command::gcach
 
 // --- command.gcache.cmd_curs.ValidQ
 // cursor points to valid item
-inline bool command::gcache_cmd_curs_ValidQ(gcache_cmd_curs &curs) {
+inline bool command::gcache_cmd_curs_ValidQ(gcache_cmd_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.gcache.cmd_curs.Access
 // item access
-inline algo::cstring& command::gcache_cmd_curs_Access(gcache_cmd_curs &curs) {
+inline algo::cstring& command::gcache_cmd_curs_Access(gcache_cmd_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.gcache..Ctor
-inline  command::gcache::gcache() {
+inline  command::gcache::gcache() throw() {
     command::gcache_Init(*this);
 }
 
 // --- command.gcache..Dtor
-inline  command::gcache::~gcache() {
+inline  command::gcache::~gcache() throw() {
     command::gcache_Uninit(*this);
 }
 
@@ -1558,24 +1558,24 @@ inline void command::gcache_proc_Init(command::gcache_proc& parent) {
 }
 
 // --- command.gcache_proc..Ctor
-inline  command::gcache_proc::gcache_proc() {
+inline  command::gcache_proc::gcache_proc() throw() {
     command::gcache_proc_Init(*this);
 }
 
 // --- command.gcache_proc..Dtor
-inline  command::gcache_proc::~gcache_proc() {
+inline  command::gcache_proc::~gcache_proc() throw() {
     command::gcache_proc_Uninit(*this);
 }
 
 // --- command.gcli.fields.EmptyQ
 // Return true if index is empty
-inline bool command::fields_EmptyQ(command::gcli& parent) {
+inline bool command::fields_EmptyQ(command::gcli& parent) throw() {
     return parent.fields_n == 0;
 }
 
 // --- command.gcli.fields.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* command::fields_Find(command::gcli& parent, u64 t) {
+inline algo::cstring* command::fields_Find(command::gcli& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.fields_n;
     if (idx >= lim) return NULL;
@@ -1584,32 +1584,32 @@ inline algo::cstring* command::fields_Find(command::gcli& parent, u64 t) {
 
 // --- command.gcli.fields.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::fields_Getary(const command::gcli& parent) {
+inline algo::aryptr<algo::cstring> command::fields_Getary(const command::gcli& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.fields_elems, parent.fields_n);
 }
 
 // --- command.gcli.fields.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* command::fields_Last(command::gcli& parent) {
+inline algo::cstring* command::fields_Last(command::gcli& parent) throw() {
     return fields_Find(parent, u64(parent.fields_n-1));
 }
 
 // --- command.gcli.fields.Max
 // Return max. number of items in the array
-inline i32 command::fields_Max(command::gcli& parent) {
+inline i32 command::fields_Max(command::gcli& parent) throw() {
     (void)parent;
     return parent.fields_max;
 }
 
 // --- command.gcli.fields.N
 // Return number of items in the array
-inline i32 command::fields_N(const command::gcli& parent) {
+inline i32 command::fields_N(const command::gcli& parent) throw() {
     return parent.fields_n;
 }
 
 // --- command.gcli.fields.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::fields_Reserve(command::gcli& parent, int n) {
+inline void command::fields_Reserve(command::gcli& parent, int n) throw() {
     u32 new_n = parent.fields_n + n;
     if (UNLIKELY(new_n > parent.fields_max)) {
         fields_AbsReserve(parent, new_n);
@@ -1618,31 +1618,31 @@ inline void command::fields_Reserve(command::gcli& parent, int n) {
 
 // --- command.gcli.fields.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& command::fields_qFind(command::gcli& parent, u64 t) {
+inline algo::cstring& command::fields_qFind(command::gcli& parent, u64 t) throw() {
     return parent.fields_elems[t];
 }
 
 // --- command.gcli.fields.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& command::fields_qLast(command::gcli& parent) {
+inline algo::cstring& command::fields_qLast(command::gcli& parent) throw() {
     return fields_qFind(parent, u64(parent.fields_n-1));
 }
 
 // --- command.gcli.fields.rowid_Get
 // Return row id of specified element
-inline u64 command::fields_rowid_Get(command::gcli& parent, algo::cstring &elem) {
+inline u64 command::fields_rowid_Get(command::gcli& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.fields_elems;
     return u64(id);
 }
 
 // --- command.gcli.fields_curs.Next
 // proceed to next item
-inline void command::gcli_fields_curs_Next(gcli_fields_curs &curs) {
+inline void command::gcli_fields_curs_Next(gcli_fields_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.gcli.fields_curs.Reset
-inline void command::gcli_fields_curs_Reset(gcli_fields_curs &curs, command::gcli &parent) {
+inline void command::gcli_fields_curs_Reset(gcli_fields_curs &curs, command::gcli &parent) throw() {
     curs.elems = parent.fields_elems;
     curs.n_elems = parent.fields_n;
     curs.index = 0;
@@ -1650,23 +1650,23 @@ inline void command::gcli_fields_curs_Reset(gcli_fields_curs &curs, command::gcl
 
 // --- command.gcli.fields_curs.ValidQ
 // cursor points to valid item
-inline bool command::gcli_fields_curs_ValidQ(gcli_fields_curs &curs) {
+inline bool command::gcli_fields_curs_ValidQ(gcli_fields_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.gcli.fields_curs.Access
 // item access
-inline algo::cstring& command::gcli_fields_curs_Access(gcli_fields_curs &curs) {
+inline algo::cstring& command::gcli_fields_curs_Access(gcli_fields_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.gcli..Ctor
-inline  command::gcli::gcli() {
+inline  command::gcli::gcli() throw() {
     command::gcli_Init(*this);
 }
 
 // --- command.gcli..Dtor
-inline  command::gcli::~gcli() {
+inline  command::gcli::~gcli() throw() {
     command::gcli_Uninit(*this);
 }
 
@@ -1680,24 +1680,24 @@ inline void command::gcli_proc_Init(command::gcli_proc& parent) {
 }
 
 // --- command.gcli_proc..Ctor
-inline  command::gcli_proc::gcli_proc() {
+inline  command::gcli_proc::gcli_proc() throw() {
     command::gcli_proc_Init(*this);
 }
 
 // --- command.gcli_proc..Dtor
-inline  command::gcli_proc::~gcli_proc() {
+inline  command::gcli_proc::~gcli_proc() throw() {
     command::gcli_proc_Uninit(*this);
 }
 
 // --- command.mdbg.args.EmptyQ
 // Return true if index is empty
-inline bool command::args_EmptyQ(command::mdbg& parent) {
+inline bool command::args_EmptyQ(command::mdbg& parent) throw() {
     return parent.args_n == 0;
 }
 
 // --- command.mdbg.args.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* command::args_Find(command::mdbg& parent, u64 t) {
+inline algo::cstring* command::args_Find(command::mdbg& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.args_n;
     if (idx >= lim) return NULL;
@@ -1706,32 +1706,32 @@ inline algo::cstring* command::args_Find(command::mdbg& parent, u64 t) {
 
 // --- command.mdbg.args.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::args_Getary(const command::mdbg& parent) {
+inline algo::aryptr<algo::cstring> command::args_Getary(const command::mdbg& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.args_elems, parent.args_n);
 }
 
 // --- command.mdbg.args.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* command::args_Last(command::mdbg& parent) {
+inline algo::cstring* command::args_Last(command::mdbg& parent) throw() {
     return args_Find(parent, u64(parent.args_n-1));
 }
 
 // --- command.mdbg.args.Max
 // Return max. number of items in the array
-inline i32 command::args_Max(command::mdbg& parent) {
+inline i32 command::args_Max(command::mdbg& parent) throw() {
     (void)parent;
     return parent.args_max;
 }
 
 // --- command.mdbg.args.N
 // Return number of items in the array
-inline i32 command::args_N(const command::mdbg& parent) {
+inline i32 command::args_N(const command::mdbg& parent) throw() {
     return parent.args_n;
 }
 
 // --- command.mdbg.args.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::args_Reserve(command::mdbg& parent, int n) {
+inline void command::args_Reserve(command::mdbg& parent, int n) throw() {
     u32 new_n = parent.args_n + n;
     if (UNLIKELY(new_n > parent.args_max)) {
         args_AbsReserve(parent, new_n);
@@ -1740,32 +1740,32 @@ inline void command::args_Reserve(command::mdbg& parent, int n) {
 
 // --- command.mdbg.args.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& command::args_qFind(command::mdbg& parent, u64 t) {
+inline algo::cstring& command::args_qFind(command::mdbg& parent, u64 t) throw() {
     return parent.args_elems[t];
 }
 
 // --- command.mdbg.args.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& command::args_qLast(command::mdbg& parent) {
+inline algo::cstring& command::args_qLast(command::mdbg& parent) throw() {
     return args_qFind(parent, u64(parent.args_n-1));
 }
 
 // --- command.mdbg.args.rowid_Get
 // Return row id of specified element
-inline u64 command::args_rowid_Get(command::mdbg& parent, algo::cstring &elem) {
+inline u64 command::args_rowid_Get(command::mdbg& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.args_elems;
     return u64(id);
 }
 
 // --- command.mdbg.b.EmptyQ
 // Return true if index is empty
-inline bool command::b_EmptyQ(command::mdbg& parent) {
+inline bool command::b_EmptyQ(command::mdbg& parent) throw() {
     return parent.b_n == 0;
 }
 
 // --- command.mdbg.b.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* command::b_Find(command::mdbg& parent, u64 t) {
+inline algo::cstring* command::b_Find(command::mdbg& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.b_n;
     if (idx >= lim) return NULL;
@@ -1774,32 +1774,32 @@ inline algo::cstring* command::b_Find(command::mdbg& parent, u64 t) {
 
 // --- command.mdbg.b.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::b_Getary(const command::mdbg& parent) {
+inline algo::aryptr<algo::cstring> command::b_Getary(const command::mdbg& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.b_elems, parent.b_n);
 }
 
 // --- command.mdbg.b.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* command::b_Last(command::mdbg& parent) {
+inline algo::cstring* command::b_Last(command::mdbg& parent) throw() {
     return b_Find(parent, u64(parent.b_n-1));
 }
 
 // --- command.mdbg.b.Max
 // Return max. number of items in the array
-inline i32 command::b_Max(command::mdbg& parent) {
+inline i32 command::b_Max(command::mdbg& parent) throw() {
     (void)parent;
     return parent.b_max;
 }
 
 // --- command.mdbg.b.N
 // Return number of items in the array
-inline i32 command::b_N(const command::mdbg& parent) {
+inline i32 command::b_N(const command::mdbg& parent) throw() {
     return parent.b_n;
 }
 
 // --- command.mdbg.b.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::b_Reserve(command::mdbg& parent, int n) {
+inline void command::b_Reserve(command::mdbg& parent, int n) throw() {
     u32 new_n = parent.b_n + n;
     if (UNLIKELY(new_n > parent.b_max)) {
         b_AbsReserve(parent, new_n);
@@ -1808,31 +1808,31 @@ inline void command::b_Reserve(command::mdbg& parent, int n) {
 
 // --- command.mdbg.b.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& command::b_qFind(command::mdbg& parent, u64 t) {
+inline algo::cstring& command::b_qFind(command::mdbg& parent, u64 t) throw() {
     return parent.b_elems[t];
 }
 
 // --- command.mdbg.b.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& command::b_qLast(command::mdbg& parent) {
+inline algo::cstring& command::b_qLast(command::mdbg& parent) throw() {
     return b_qFind(parent, u64(parent.b_n-1));
 }
 
 // --- command.mdbg.b.rowid_Get
 // Return row id of specified element
-inline u64 command::b_rowid_Get(command::mdbg& parent, algo::cstring &elem) {
+inline u64 command::b_rowid_Get(command::mdbg& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.b_elems;
     return u64(id);
 }
 
 // --- command.mdbg.args_curs.Next
 // proceed to next item
-inline void command::mdbg_args_curs_Next(mdbg_args_curs &curs) {
+inline void command::mdbg_args_curs_Next(mdbg_args_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.mdbg.args_curs.Reset
-inline void command::mdbg_args_curs_Reset(mdbg_args_curs &curs, command::mdbg &parent) {
+inline void command::mdbg_args_curs_Reset(mdbg_args_curs &curs, command::mdbg &parent) throw() {
     curs.elems = parent.args_elems;
     curs.n_elems = parent.args_n;
     curs.index = 0;
@@ -1840,24 +1840,24 @@ inline void command::mdbg_args_curs_Reset(mdbg_args_curs &curs, command::mdbg &p
 
 // --- command.mdbg.args_curs.ValidQ
 // cursor points to valid item
-inline bool command::mdbg_args_curs_ValidQ(mdbg_args_curs &curs) {
+inline bool command::mdbg_args_curs_ValidQ(mdbg_args_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.mdbg.args_curs.Access
 // item access
-inline algo::cstring& command::mdbg_args_curs_Access(mdbg_args_curs &curs) {
+inline algo::cstring& command::mdbg_args_curs_Access(mdbg_args_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.mdbg.b_curs.Next
 // proceed to next item
-inline void command::mdbg_b_curs_Next(mdbg_b_curs &curs) {
+inline void command::mdbg_b_curs_Next(mdbg_b_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.mdbg.b_curs.Reset
-inline void command::mdbg_b_curs_Reset(mdbg_b_curs &curs, command::mdbg &parent) {
+inline void command::mdbg_b_curs_Reset(mdbg_b_curs &curs, command::mdbg &parent) throw() {
     curs.elems = parent.b_elems;
     curs.n_elems = parent.b_n;
     curs.index = 0;
@@ -1865,23 +1865,23 @@ inline void command::mdbg_b_curs_Reset(mdbg_b_curs &curs, command::mdbg &parent)
 
 // --- command.mdbg.b_curs.ValidQ
 // cursor points to valid item
-inline bool command::mdbg_b_curs_ValidQ(mdbg_b_curs &curs) {
+inline bool command::mdbg_b_curs_ValidQ(mdbg_b_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.mdbg.b_curs.Access
 // item access
-inline algo::cstring& command::mdbg_b_curs_Access(mdbg_b_curs &curs) {
+inline algo::cstring& command::mdbg_b_curs_Access(mdbg_b_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.mdbg..Ctor
-inline  command::mdbg::mdbg() {
+inline  command::mdbg::mdbg() throw() {
     command::mdbg_Init(*this);
 }
 
 // --- command.mdbg..Dtor
-inline  command::mdbg::~mdbg() {
+inline  command::mdbg::~mdbg() throw() {
     command::mdbg_Uninit(*this);
 }
 
@@ -1895,12 +1895,12 @@ inline void command::mdbg_proc_Init(command::mdbg_proc& parent) {
 }
 
 // --- command.mdbg_proc..Ctor
-inline  command::mdbg_proc::mdbg_proc() {
+inline  command::mdbg_proc::mdbg_proc() throw() {
     command::mdbg_proc_Init(*this);
 }
 
 // --- command.mdbg_proc..Dtor
-inline  command::mdbg_proc::~mdbg_proc() {
+inline  command::mdbg_proc::~mdbg_proc() throw() {
     command::mdbg_proc_Uninit(*this);
 }
 
@@ -1917,7 +1917,7 @@ inline void command::mysql2ssim_Init(command::mysql2ssim& parent) {
 }
 
 // --- command.mysql2ssim..Ctor
-inline  command::mysql2ssim::mysql2ssim() {
+inline  command::mysql2ssim::mysql2ssim() throw() {
     command::mysql2ssim_Init(*this);
 }
 
@@ -1931,17 +1931,17 @@ inline void command::mysql2ssim_proc_Init(command::mysql2ssim_proc& parent) {
 }
 
 // --- command.mysql2ssim_proc..Ctor
-inline  command::mysql2ssim_proc::mysql2ssim_proc() {
+inline  command::mysql2ssim_proc::mysql2ssim_proc() throw() {
     command::mysql2ssim_proc_Init(*this);
 }
 
 // --- command.mysql2ssim_proc..Dtor
-inline  command::mysql2ssim_proc::~mysql2ssim_proc() {
+inline  command::mysql2ssim_proc::~mysql2ssim_proc() throw() {
     command::mysql2ssim_proc_Uninit(*this);
 }
 
 // --- command.orgfile..Ctor
-inline  command::orgfile::orgfile() {
+inline  command::orgfile::orgfile() throw() {
     command::orgfile_Init(*this);
 }
 
@@ -1955,12 +1955,12 @@ inline void command::orgfile_proc_Init(command::orgfile_proc& parent) {
 }
 
 // --- command.orgfile_proc..Ctor
-inline  command::orgfile_proc::orgfile_proc() {
+inline  command::orgfile_proc::orgfile_proc() throw() {
     command::orgfile_proc_Init(*this);
 }
 
 // --- command.orgfile_proc..Dtor
-inline  command::orgfile_proc::~orgfile_proc() {
+inline  command::orgfile_proc::~orgfile_proc() throw() {
     command::orgfile_proc_Uninit(*this);
 }
 
@@ -1971,7 +1971,7 @@ inline void command::samp_meng_Init(command::samp_meng& parent) {
 }
 
 // --- command.samp_meng..Ctor
-inline  command::samp_meng::samp_meng() {
+inline  command::samp_meng::samp_meng() throw() {
     command::samp_meng_Init(*this);
 }
 
@@ -1985,24 +1985,24 @@ inline void command::samp_meng_proc_Init(command::samp_meng_proc& parent) {
 }
 
 // --- command.samp_meng_proc..Ctor
-inline  command::samp_meng_proc::samp_meng_proc() {
+inline  command::samp_meng_proc::samp_meng_proc() throw() {
     command::samp_meng_proc_Init(*this);
 }
 
 // --- command.samp_meng_proc..Dtor
-inline  command::samp_meng_proc::~samp_meng_proc() {
+inline  command::samp_meng_proc::~samp_meng_proc() throw() {
     command::samp_meng_proc_Uninit(*this);
 }
 
 // --- command.samp_regx.style.GetEnum
 // Get value of field as enum type
-inline command_samp_regx_style_Enum command::style_GetEnum(const command::samp_regx& parent) {
+inline command_samp_regx_style_Enum command::style_GetEnum(const command::samp_regx& parent) throw() {
     return command_samp_regx_style_Enum(parent.style);
 }
 
 // --- command.samp_regx.style.SetEnum
 // Set value of field from enum type.
-inline void command::style_SetEnum(command::samp_regx& parent, command_samp_regx_style_Enum rhs) {
+inline void command::style_SetEnum(command::samp_regx& parent, command_samp_regx_style_Enum rhs) throw() {
     parent.style = u8(rhs);
 }
 
@@ -2017,7 +2017,7 @@ inline void command::samp_regx_Init(command::samp_regx& parent) {
 }
 
 // --- command.samp_regx..Ctor
-inline  command::samp_regx::samp_regx() {
+inline  command::samp_regx::samp_regx() throw() {
     command::samp_regx_Init(*this);
 }
 
@@ -2031,24 +2031,24 @@ inline void command::samp_regx_proc_Init(command::samp_regx_proc& parent) {
 }
 
 // --- command.samp_regx_proc..Ctor
-inline  command::samp_regx_proc::samp_regx_proc() {
+inline  command::samp_regx_proc::samp_regx_proc() throw() {
     command::samp_regx_proc_Init(*this);
 }
 
 // --- command.samp_regx_proc..Dtor
-inline  command::samp_regx_proc::~samp_regx_proc() {
+inline  command::samp_regx_proc::~samp_regx_proc() throw() {
     command::samp_regx_proc_Uninit(*this);
 }
 
 // --- command.sandbox.cmd.EmptyQ
 // Return true if index is empty
-inline bool command::cmd_EmptyQ(command::sandbox& parent) {
+inline bool command::cmd_EmptyQ(command::sandbox& parent) throw() {
     return parent.cmd_n == 0;
 }
 
 // --- command.sandbox.cmd.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* command::cmd_Find(command::sandbox& parent, u64 t) {
+inline algo::cstring* command::cmd_Find(command::sandbox& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.cmd_n;
     if (idx >= lim) return NULL;
@@ -2057,32 +2057,32 @@ inline algo::cstring* command::cmd_Find(command::sandbox& parent, u64 t) {
 
 // --- command.sandbox.cmd.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::cmd_Getary(const command::sandbox& parent) {
+inline algo::aryptr<algo::cstring> command::cmd_Getary(const command::sandbox& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.cmd_elems, parent.cmd_n);
 }
 
 // --- command.sandbox.cmd.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* command::cmd_Last(command::sandbox& parent) {
+inline algo::cstring* command::cmd_Last(command::sandbox& parent) throw() {
     return cmd_Find(parent, u64(parent.cmd_n-1));
 }
 
 // --- command.sandbox.cmd.Max
 // Return max. number of items in the array
-inline i32 command::cmd_Max(command::sandbox& parent) {
+inline i32 command::cmd_Max(command::sandbox& parent) throw() {
     (void)parent;
     return parent.cmd_max;
 }
 
 // --- command.sandbox.cmd.N
 // Return number of items in the array
-inline i32 command::cmd_N(const command::sandbox& parent) {
+inline i32 command::cmd_N(const command::sandbox& parent) throw() {
     return parent.cmd_n;
 }
 
 // --- command.sandbox.cmd.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::cmd_Reserve(command::sandbox& parent, int n) {
+inline void command::cmd_Reserve(command::sandbox& parent, int n) throw() {
     u32 new_n = parent.cmd_n + n;
     if (UNLIKELY(new_n > parent.cmd_max)) {
         cmd_AbsReserve(parent, new_n);
@@ -2091,32 +2091,32 @@ inline void command::cmd_Reserve(command::sandbox& parent, int n) {
 
 // --- command.sandbox.cmd.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& command::cmd_qFind(command::sandbox& parent, u64 t) {
+inline algo::cstring& command::cmd_qFind(command::sandbox& parent, u64 t) throw() {
     return parent.cmd_elems[t];
 }
 
 // --- command.sandbox.cmd.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& command::cmd_qLast(command::sandbox& parent) {
+inline algo::cstring& command::cmd_qLast(command::sandbox& parent) throw() {
     return cmd_qFind(parent, u64(parent.cmd_n-1));
 }
 
 // --- command.sandbox.cmd.rowid_Get
 // Return row id of specified element
-inline u64 command::cmd_rowid_Get(command::sandbox& parent, algo::cstring &elem) {
+inline u64 command::cmd_rowid_Get(command::sandbox& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.cmd_elems;
     return u64(id);
 }
 
 // --- command.sandbox.files.EmptyQ
 // Return true if index is empty
-inline bool command::files_EmptyQ(command::sandbox& parent) {
+inline bool command::files_EmptyQ(command::sandbox& parent) throw() {
     return parent.files_n == 0;
 }
 
 // --- command.sandbox.files.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* command::files_Find(command::sandbox& parent, u64 t) {
+inline algo::cstring* command::files_Find(command::sandbox& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.files_n;
     if (idx >= lim) return NULL;
@@ -2125,32 +2125,32 @@ inline algo::cstring* command::files_Find(command::sandbox& parent, u64 t) {
 
 // --- command.sandbox.files.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::files_Getary(const command::sandbox& parent) {
+inline algo::aryptr<algo::cstring> command::files_Getary(const command::sandbox& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.files_elems, parent.files_n);
 }
 
 // --- command.sandbox.files.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* command::files_Last(command::sandbox& parent) {
+inline algo::cstring* command::files_Last(command::sandbox& parent) throw() {
     return files_Find(parent, u64(parent.files_n-1));
 }
 
 // --- command.sandbox.files.Max
 // Return max. number of items in the array
-inline i32 command::files_Max(command::sandbox& parent) {
+inline i32 command::files_Max(command::sandbox& parent) throw() {
     (void)parent;
     return parent.files_max;
 }
 
 // --- command.sandbox.files.N
 // Return number of items in the array
-inline i32 command::files_N(const command::sandbox& parent) {
+inline i32 command::files_N(const command::sandbox& parent) throw() {
     return parent.files_n;
 }
 
 // --- command.sandbox.files.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::files_Reserve(command::sandbox& parent, int n) {
+inline void command::files_Reserve(command::sandbox& parent, int n) throw() {
     u32 new_n = parent.files_n + n;
     if (UNLIKELY(new_n > parent.files_max)) {
         files_AbsReserve(parent, new_n);
@@ -2159,31 +2159,31 @@ inline void command::files_Reserve(command::sandbox& parent, int n) {
 
 // --- command.sandbox.files.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& command::files_qFind(command::sandbox& parent, u64 t) {
+inline algo::cstring& command::files_qFind(command::sandbox& parent, u64 t) throw() {
     return parent.files_elems[t];
 }
 
 // --- command.sandbox.files.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& command::files_qLast(command::sandbox& parent) {
+inline algo::cstring& command::files_qLast(command::sandbox& parent) throw() {
     return files_qFind(parent, u64(parent.files_n-1));
 }
 
 // --- command.sandbox.files.rowid_Get
 // Return row id of specified element
-inline u64 command::files_rowid_Get(command::sandbox& parent, algo::cstring &elem) {
+inline u64 command::files_rowid_Get(command::sandbox& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.files_elems;
     return u64(id);
 }
 
 // --- command.sandbox.cmd_curs.Next
 // proceed to next item
-inline void command::sandbox_cmd_curs_Next(sandbox_cmd_curs &curs) {
+inline void command::sandbox_cmd_curs_Next(sandbox_cmd_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.sandbox.cmd_curs.Reset
-inline void command::sandbox_cmd_curs_Reset(sandbox_cmd_curs &curs, command::sandbox &parent) {
+inline void command::sandbox_cmd_curs_Reset(sandbox_cmd_curs &curs, command::sandbox &parent) throw() {
     curs.elems = parent.cmd_elems;
     curs.n_elems = parent.cmd_n;
     curs.index = 0;
@@ -2191,24 +2191,24 @@ inline void command::sandbox_cmd_curs_Reset(sandbox_cmd_curs &curs, command::san
 
 // --- command.sandbox.cmd_curs.ValidQ
 // cursor points to valid item
-inline bool command::sandbox_cmd_curs_ValidQ(sandbox_cmd_curs &curs) {
+inline bool command::sandbox_cmd_curs_ValidQ(sandbox_cmd_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.sandbox.cmd_curs.Access
 // item access
-inline algo::cstring& command::sandbox_cmd_curs_Access(sandbox_cmd_curs &curs) {
+inline algo::cstring& command::sandbox_cmd_curs_Access(sandbox_cmd_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.sandbox.files_curs.Next
 // proceed to next item
-inline void command::sandbox_files_curs_Next(sandbox_files_curs &curs) {
+inline void command::sandbox_files_curs_Next(sandbox_files_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.sandbox.files_curs.Reset
-inline void command::sandbox_files_curs_Reset(sandbox_files_curs &curs, command::sandbox &parent) {
+inline void command::sandbox_files_curs_Reset(sandbox_files_curs &curs, command::sandbox &parent) throw() {
     curs.elems = parent.files_elems;
     curs.n_elems = parent.files_n;
     curs.index = 0;
@@ -2216,23 +2216,23 @@ inline void command::sandbox_files_curs_Reset(sandbox_files_curs &curs, command:
 
 // --- command.sandbox.files_curs.ValidQ
 // cursor points to valid item
-inline bool command::sandbox_files_curs_ValidQ(sandbox_files_curs &curs) {
+inline bool command::sandbox_files_curs_ValidQ(sandbox_files_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.sandbox.files_curs.Access
 // item access
-inline algo::cstring& command::sandbox_files_curs_Access(sandbox_files_curs &curs) {
+inline algo::cstring& command::sandbox_files_curs_Access(sandbox_files_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.sandbox..Ctor
-inline  command::sandbox::sandbox() {
+inline  command::sandbox::sandbox() throw() {
     command::sandbox_Init(*this);
 }
 
 // --- command.sandbox..Dtor
-inline  command::sandbox::~sandbox() {
+inline  command::sandbox::~sandbox() throw() {
     command::sandbox_Uninit(*this);
 }
 
@@ -2246,17 +2246,17 @@ inline void command::sandbox_proc_Init(command::sandbox_proc& parent) {
 }
 
 // --- command.sandbox_proc..Ctor
-inline  command::sandbox_proc::sandbox_proc() {
+inline  command::sandbox_proc::sandbox_proc() throw() {
     command::sandbox_proc_Init(*this);
 }
 
 // --- command.sandbox_proc..Dtor
-inline  command::sandbox_proc::~sandbox_proc() {
+inline  command::sandbox_proc::~sandbox_proc() throw() {
     command::sandbox_proc_Uninit(*this);
 }
 
 // --- command.src_func..Ctor
-inline  command::src_func::src_func() {
+inline  command::src_func::src_func() throw() {
     command::src_func_Init(*this);
 }
 
@@ -2270,17 +2270,17 @@ inline void command::src_func_proc_Init(command::src_func_proc& parent) {
 }
 
 // --- command.src_func_proc..Ctor
-inline  command::src_func_proc::src_func_proc() {
+inline  command::src_func_proc::src_func_proc() throw() {
     command::src_func_proc_Init(*this);
 }
 
 // --- command.src_func_proc..Dtor
-inline  command::src_func_proc::~src_func_proc() {
+inline  command::src_func_proc::~src_func_proc() throw() {
     command::src_func_proc_Uninit(*this);
 }
 
 // --- command.src_hdr..Ctor
-inline  command::src_hdr::src_hdr() {
+inline  command::src_hdr::src_hdr() throw() {
     command::src_hdr_Init(*this);
 }
 
@@ -2294,17 +2294,17 @@ inline void command::src_hdr_proc_Init(command::src_hdr_proc& parent) {
 }
 
 // --- command.src_hdr_proc..Ctor
-inline  command::src_hdr_proc::src_hdr_proc() {
+inline  command::src_hdr_proc::src_hdr_proc() throw() {
     command::src_hdr_proc_Init(*this);
 }
 
 // --- command.src_hdr_proc..Dtor
-inline  command::src_hdr_proc::~src_hdr_proc() {
+inline  command::src_hdr_proc::~src_hdr_proc() throw() {
     command::src_hdr_proc_Uninit(*this);
 }
 
 // --- command.src_lim..Ctor
-inline  command::src_lim::src_lim() {
+inline  command::src_lim::src_lim() throw() {
     command::src_lim_Init(*this);
 }
 
@@ -2318,12 +2318,12 @@ inline void command::src_lim_proc_Init(command::src_lim_proc& parent) {
 }
 
 // --- command.src_lim_proc..Ctor
-inline  command::src_lim_proc::src_lim_proc() {
+inline  command::src_lim_proc::src_lim_proc() throw() {
     command::src_lim_proc_Init(*this);
 }
 
 // --- command.src_lim_proc..Dtor
-inline  command::src_lim_proc::~src_lim_proc() {
+inline  command::src_lim_proc::~src_lim_proc() throw() {
     command::src_lim_proc_Uninit(*this);
 }
 
@@ -2335,7 +2335,7 @@ inline void command::ssim2csv_Init(command::ssim2csv& parent) {
 }
 
 // --- command.ssim2csv..Ctor
-inline  command::ssim2csv::ssim2csv() {
+inline  command::ssim2csv::ssim2csv() throw() {
     command::ssim2csv_Init(*this);
 }
 
@@ -2349,17 +2349,17 @@ inline void command::ssim2csv_proc_Init(command::ssim2csv_proc& parent) {
 }
 
 // --- command.ssim2csv_proc..Ctor
-inline  command::ssim2csv_proc::ssim2csv_proc() {
+inline  command::ssim2csv_proc::ssim2csv_proc() throw() {
     command::ssim2csv_proc_Init(*this);
 }
 
 // --- command.ssim2csv_proc..Dtor
-inline  command::ssim2csv_proc::~ssim2csv_proc() {
+inline  command::ssim2csv_proc::~ssim2csv_proc() throw() {
     command::ssim2csv_proc_Uninit(*this);
 }
 
 // --- command.ssim2mysql..Ctor
-inline  command::ssim2mysql::ssim2mysql() {
+inline  command::ssim2mysql::ssim2mysql() throw() {
     command::ssim2mysql_Init(*this);
 }
 
@@ -2373,24 +2373,24 @@ inline void command::ssim2mysql_proc_Init(command::ssim2mysql_proc& parent) {
 }
 
 // --- command.ssim2mysql_proc..Ctor
-inline  command::ssim2mysql_proc::ssim2mysql_proc() {
+inline  command::ssim2mysql_proc::ssim2mysql_proc() throw() {
     command::ssim2mysql_proc_Init(*this);
 }
 
 // --- command.ssim2mysql_proc..Dtor
-inline  command::ssim2mysql_proc::~ssim2mysql_proc() {
+inline  command::ssim2mysql_proc::~ssim2mysql_proc() throw() {
     command::ssim2mysql_proc_Uninit(*this);
 }
 
 // --- command.ssimfilt.match.EmptyQ
 // Return true if index is empty
-inline bool command::match_EmptyQ(command::ssimfilt& parent) {
+inline bool command::match_EmptyQ(command::ssimfilt& parent) throw() {
     return parent.match_n == 0;
 }
 
 // --- command.ssimfilt.match.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* command::match_Find(command::ssimfilt& parent, u64 t) {
+inline algo::cstring* command::match_Find(command::ssimfilt& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.match_n;
     if (idx >= lim) return NULL;
@@ -2399,32 +2399,32 @@ inline algo::cstring* command::match_Find(command::ssimfilt& parent, u64 t) {
 
 // --- command.ssimfilt.match.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::match_Getary(const command::ssimfilt& parent) {
+inline algo::aryptr<algo::cstring> command::match_Getary(const command::ssimfilt& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.match_elems, parent.match_n);
 }
 
 // --- command.ssimfilt.match.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* command::match_Last(command::ssimfilt& parent) {
+inline algo::cstring* command::match_Last(command::ssimfilt& parent) throw() {
     return match_Find(parent, u64(parent.match_n-1));
 }
 
 // --- command.ssimfilt.match.Max
 // Return max. number of items in the array
-inline i32 command::match_Max(command::ssimfilt& parent) {
+inline i32 command::match_Max(command::ssimfilt& parent) throw() {
     (void)parent;
     return parent.match_max;
 }
 
 // --- command.ssimfilt.match.N
 // Return number of items in the array
-inline i32 command::match_N(const command::ssimfilt& parent) {
+inline i32 command::match_N(const command::ssimfilt& parent) throw() {
     return parent.match_n;
 }
 
 // --- command.ssimfilt.match.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::match_Reserve(command::ssimfilt& parent, int n) {
+inline void command::match_Reserve(command::ssimfilt& parent, int n) throw() {
     u32 new_n = parent.match_n + n;
     if (UNLIKELY(new_n > parent.match_max)) {
         match_AbsReserve(parent, new_n);
@@ -2433,32 +2433,32 @@ inline void command::match_Reserve(command::ssimfilt& parent, int n) {
 
 // --- command.ssimfilt.match.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& command::match_qFind(command::ssimfilt& parent, u64 t) {
+inline algo::cstring& command::match_qFind(command::ssimfilt& parent, u64 t) throw() {
     return parent.match_elems[t];
 }
 
 // --- command.ssimfilt.match.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& command::match_qLast(command::ssimfilt& parent) {
+inline algo::cstring& command::match_qLast(command::ssimfilt& parent) throw() {
     return match_qFind(parent, u64(parent.match_n-1));
 }
 
 // --- command.ssimfilt.match.rowid_Get
 // Return row id of specified element
-inline u64 command::match_rowid_Get(command::ssimfilt& parent, algo::cstring &elem) {
+inline u64 command::match_rowid_Get(command::ssimfilt& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.match_elems;
     return u64(id);
 }
 
 // --- command.ssimfilt.field.EmptyQ
 // Return true if index is empty
-inline bool command::field_EmptyQ(command::ssimfilt& parent) {
+inline bool command::field_EmptyQ(command::ssimfilt& parent) throw() {
     return parent.field_n == 0;
 }
 
 // --- command.ssimfilt.field.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* command::field_Find(command::ssimfilt& parent, u64 t) {
+inline algo::cstring* command::field_Find(command::ssimfilt& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.field_n;
     if (idx >= lim) return NULL;
@@ -2467,32 +2467,32 @@ inline algo::cstring* command::field_Find(command::ssimfilt& parent, u64 t) {
 
 // --- command.ssimfilt.field.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> command::field_Getary(const command::ssimfilt& parent) {
+inline algo::aryptr<algo::cstring> command::field_Getary(const command::ssimfilt& parent) throw() {
     return algo::aryptr<algo::cstring>(parent.field_elems, parent.field_n);
 }
 
 // --- command.ssimfilt.field.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* command::field_Last(command::ssimfilt& parent) {
+inline algo::cstring* command::field_Last(command::ssimfilt& parent) throw() {
     return field_Find(parent, u64(parent.field_n-1));
 }
 
 // --- command.ssimfilt.field.Max
 // Return max. number of items in the array
-inline i32 command::field_Max(command::ssimfilt& parent) {
+inline i32 command::field_Max(command::ssimfilt& parent) throw() {
     (void)parent;
     return parent.field_max;
 }
 
 // --- command.ssimfilt.field.N
 // Return number of items in the array
-inline i32 command::field_N(const command::ssimfilt& parent) {
+inline i32 command::field_N(const command::ssimfilt& parent) throw() {
     return parent.field_n;
 }
 
 // --- command.ssimfilt.field.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void command::field_Reserve(command::ssimfilt& parent, int n) {
+inline void command::field_Reserve(command::ssimfilt& parent, int n) throw() {
     u32 new_n = parent.field_n + n;
     if (UNLIKELY(new_n > parent.field_max)) {
         field_AbsReserve(parent, new_n);
@@ -2501,43 +2501,43 @@ inline void command::field_Reserve(command::ssimfilt& parent, int n) {
 
 // --- command.ssimfilt.field.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& command::field_qFind(command::ssimfilt& parent, u64 t) {
+inline algo::cstring& command::field_qFind(command::ssimfilt& parent, u64 t) throw() {
     return parent.field_elems[t];
 }
 
 // --- command.ssimfilt.field.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& command::field_qLast(command::ssimfilt& parent) {
+inline algo::cstring& command::field_qLast(command::ssimfilt& parent) throw() {
     return field_qFind(parent, u64(parent.field_n-1));
 }
 
 // --- command.ssimfilt.field.rowid_Get
 // Return row id of specified element
-inline u64 command::field_rowid_Get(command::ssimfilt& parent, algo::cstring &elem) {
+inline u64 command::field_rowid_Get(command::ssimfilt& parent, algo::cstring &elem) throw() {
     u64 id = &elem - parent.field_elems;
     return u64(id);
 }
 
 // --- command.ssimfilt.format.GetEnum
 // Get value of field as enum type
-inline command_ssimfilt_format_Enum command::format_GetEnum(const command::ssimfilt& parent) {
+inline command_ssimfilt_format_Enum command::format_GetEnum(const command::ssimfilt& parent) throw() {
     return command_ssimfilt_format_Enum(parent.format);
 }
 
 // --- command.ssimfilt.format.SetEnum
 // Set value of field from enum type.
-inline void command::format_SetEnum(command::ssimfilt& parent, command_ssimfilt_format_Enum rhs) {
+inline void command::format_SetEnum(command::ssimfilt& parent, command_ssimfilt_format_Enum rhs) throw() {
     parent.format = u8(rhs);
 }
 
 // --- command.ssimfilt.match_curs.Next
 // proceed to next item
-inline void command::ssimfilt_match_curs_Next(ssimfilt_match_curs &curs) {
+inline void command::ssimfilt_match_curs_Next(ssimfilt_match_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.ssimfilt.match_curs.Reset
-inline void command::ssimfilt_match_curs_Reset(ssimfilt_match_curs &curs, command::ssimfilt &parent) {
+inline void command::ssimfilt_match_curs_Reset(ssimfilt_match_curs &curs, command::ssimfilt &parent) throw() {
     curs.elems = parent.match_elems;
     curs.n_elems = parent.match_n;
     curs.index = 0;
@@ -2545,24 +2545,24 @@ inline void command::ssimfilt_match_curs_Reset(ssimfilt_match_curs &curs, comman
 
 // --- command.ssimfilt.match_curs.ValidQ
 // cursor points to valid item
-inline bool command::ssimfilt_match_curs_ValidQ(ssimfilt_match_curs &curs) {
+inline bool command::ssimfilt_match_curs_ValidQ(ssimfilt_match_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.ssimfilt.match_curs.Access
 // item access
-inline algo::cstring& command::ssimfilt_match_curs_Access(ssimfilt_match_curs &curs) {
+inline algo::cstring& command::ssimfilt_match_curs_Access(ssimfilt_match_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.ssimfilt.field_curs.Next
 // proceed to next item
-inline void command::ssimfilt_field_curs_Next(ssimfilt_field_curs &curs) {
+inline void command::ssimfilt_field_curs_Next(ssimfilt_field_curs &curs) throw() {
     curs.index++;
 }
 
 // --- command.ssimfilt.field_curs.Reset
-inline void command::ssimfilt_field_curs_Reset(ssimfilt_field_curs &curs, command::ssimfilt &parent) {
+inline void command::ssimfilt_field_curs_Reset(ssimfilt_field_curs &curs, command::ssimfilt &parent) throw() {
     curs.elems = parent.field_elems;
     curs.n_elems = parent.field_n;
     curs.index = 0;
@@ -2570,23 +2570,23 @@ inline void command::ssimfilt_field_curs_Reset(ssimfilt_field_curs &curs, comman
 
 // --- command.ssimfilt.field_curs.ValidQ
 // cursor points to valid item
-inline bool command::ssimfilt_field_curs_ValidQ(ssimfilt_field_curs &curs) {
+inline bool command::ssimfilt_field_curs_ValidQ(ssimfilt_field_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- command.ssimfilt.field_curs.Access
 // item access
-inline algo::cstring& command::ssimfilt_field_curs_Access(ssimfilt_field_curs &curs) {
+inline algo::cstring& command::ssimfilt_field_curs_Access(ssimfilt_field_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- command.ssimfilt..Ctor
-inline  command::ssimfilt::ssimfilt() {
+inline  command::ssimfilt::ssimfilt() throw() {
     command::ssimfilt_Init(*this);
 }
 
 // --- command.ssimfilt..Dtor
-inline  command::ssimfilt::~ssimfilt() {
+inline  command::ssimfilt::~ssimfilt() throw() {
     command::ssimfilt_Uninit(*this);
 }
 
@@ -2600,12 +2600,12 @@ inline void command::ssimfilt_proc_Init(command::ssimfilt_proc& parent) {
 }
 
 // --- command.ssimfilt_proc..Ctor
-inline  command::ssimfilt_proc::ssimfilt_proc() {
+inline  command::ssimfilt_proc::ssimfilt_proc() throw() {
     command::ssimfilt_proc_Init(*this);
 }
 
 // --- command.ssimfilt_proc..Dtor
-inline  command::ssimfilt_proc::~ssimfilt_proc() {
+inline  command::ssimfilt_proc::~ssimfilt_proc() throw() {
     command::ssimfilt_proc_Uninit(*this);
 }
 
@@ -2619,7 +2619,7 @@ inline void command::strconv_Init(command::strconv& parent) {
 }
 
 // --- command.strconv..Ctor
-inline  command::strconv::strconv() {
+inline  command::strconv::strconv() throw() {
     command::strconv_Init(*this);
 }
 
@@ -2633,17 +2633,17 @@ inline void command::strconv_proc_Init(command::strconv_proc& parent) {
 }
 
 // --- command.strconv_proc..Ctor
-inline  command::strconv_proc::strconv_proc() {
+inline  command::strconv_proc::strconv_proc() throw() {
     command::strconv_proc_Init(*this);
 }
 
 // --- command.strconv_proc..Dtor
-inline  command::strconv_proc::~strconv_proc() {
+inline  command::strconv_proc::~strconv_proc() throw() {
     command::strconv_proc_Uninit(*this);
 }
 
 // --- command.sv2ssim..Ctor
-inline  command::sv2ssim::sv2ssim() {
+inline  command::sv2ssim::sv2ssim() throw() {
     command::sv2ssim_Init(*this);
 }
 
@@ -2657,12 +2657,12 @@ inline void command::sv2ssim_proc_Init(command::sv2ssim_proc& parent) {
 }
 
 // --- command.sv2ssim_proc..Ctor
-inline  command::sv2ssim_proc::sv2ssim_proc() {
+inline  command::sv2ssim_proc::sv2ssim_proc() throw() {
     command::sv2ssim_proc_Init(*this);
 }
 
 // --- command.sv2ssim_proc..Dtor
-inline  command::sv2ssim_proc::~sv2ssim_proc() {
+inline  command::sv2ssim_proc::~sv2ssim_proc() throw() {
     command::sv2ssim_proc_Uninit(*this);
 }
 

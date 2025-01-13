@@ -46,13 +46,13 @@ inline samp_meng::MsgHeader& samp_meng::Castbase(samp_meng::CancelOrderMsg& pare
 
 // --- samp_meng.CancelOrderMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 samp_meng::GetMsgLength(const samp_meng::CancelOrderMsg& parent) {
+inline i32 samp_meng::GetMsgLength(const samp_meng::CancelOrderMsg& parent) throw() {
     return i32(const_cast<samp_meng::CancelOrderMsg&>(parent).length);
 }
 
 // --- samp_meng.CancelOrderMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::CancelOrderMsg& row) {
+inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::CancelOrderMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<samp_meng::CancelOrderMsg&>(row).length));
 }
 
@@ -65,12 +65,12 @@ inline void samp_meng::CancelOrderMsg_Init(samp_meng::CancelOrderMsg& parent) {
 }
 
 // --- samp_meng.CancelOrderMsg..Ctor
-inline  samp_meng::CancelOrderMsg::CancelOrderMsg() {
+inline  samp_meng::CancelOrderMsg::CancelOrderMsg() throw() {
     samp_meng::CancelOrderMsg_Init(*this);
 }
 
 // --- samp_meng.CancelOrderMsg..FieldwiseCtor
-inline  samp_meng::CancelOrderMsg::CancelOrderMsg(u64 in_order)
+inline  samp_meng::CancelOrderMsg::CancelOrderMsg(u64 in_order) throw()
     : order(in_order)
  {
     this->type = u8(3);
@@ -95,13 +95,13 @@ inline samp_meng::MsgHeader& samp_meng::Castbase(samp_meng::CancelReqMsg& parent
 
 // --- samp_meng.CancelReqMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 samp_meng::GetMsgLength(const samp_meng::CancelReqMsg& parent) {
+inline i32 samp_meng::GetMsgLength(const samp_meng::CancelReqMsg& parent) throw() {
     return i32(const_cast<samp_meng::CancelReqMsg&>(parent).length);
 }
 
 // --- samp_meng.CancelReqMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::CancelReqMsg& row) {
+inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::CancelReqMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<samp_meng::CancelReqMsg&>(row).length));
 }
 
@@ -114,12 +114,12 @@ inline void samp_meng::CancelReqMsg_Init(samp_meng::CancelReqMsg& parent) {
 }
 
 // --- samp_meng.CancelReqMsg..Ctor
-inline  samp_meng::CancelReqMsg::CancelReqMsg() {
+inline  samp_meng::CancelReqMsg::CancelReqMsg() throw() {
     samp_meng::CancelReqMsg_Init(*this);
 }
 
 // --- samp_meng.CancelReqMsg..FieldwiseCtor
-inline  samp_meng::CancelReqMsg::CancelReqMsg(u64 in_order)
+inline  samp_meng::CancelReqMsg::CancelReqMsg(u64 in_order) throw()
     : order(in_order)
  {
     this->type = u8(11);
@@ -127,18 +127,18 @@ inline  samp_meng::CancelReqMsg::CancelReqMsg(u64 in_order)
 }
 
 // --- samp_meng.trace..Ctor
-inline  samp_meng::trace::trace() {
+inline  samp_meng::trace::trace() throw() {
 }
 
 // --- samp_meng.FDb.fdin.EmptyQ
 // Return true if index is empty
-inline bool samp_meng::fdin_EmptyQ() {
+inline bool samp_meng::fdin_EmptyQ() throw() {
     return _db.fdin_n == 0;
 }
 
 // --- samp_meng.FDb.fdin.Find
 // Look up row by row id. Return NULL if out of range
-inline samp_meng::FFdin* samp_meng::fdin_Find(u64 t) {
+inline samp_meng::FFdin* samp_meng::fdin_Find(u64 t) throw() {
     samp_meng::FFdin *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fdin_n))) {
         u64 x = t + 1;
@@ -152,19 +152,19 @@ inline samp_meng::FFdin* samp_meng::fdin_Find(u64 t) {
 
 // --- samp_meng.FDb.fdin.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline samp_meng::FFdin* samp_meng::fdin_Last() {
+inline samp_meng::FFdin* samp_meng::fdin_Last() throw() {
     return fdin_Find(u64(_db.fdin_n-1));
 }
 
 // --- samp_meng.FDb.fdin.N
 // Return number of items in the pool
-inline i32 samp_meng::fdin_N() {
+inline i32 samp_meng::fdin_N() throw() {
     return _db.fdin_n;
 }
 
 // --- samp_meng.FDb.fdin.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline samp_meng::FFdin& samp_meng::fdin_qFind(u64 t) {
+inline samp_meng::FFdin& samp_meng::fdin_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -174,13 +174,13 @@ inline samp_meng::FFdin& samp_meng::fdin_qFind(u64 t) {
 
 // --- samp_meng.FDb.cd_fdin_eof.EmptyQ
 // Return true if index is empty
-inline bool samp_meng::cd_fdin_eof_EmptyQ() {
+inline bool samp_meng::cd_fdin_eof_EmptyQ() throw() {
     return _db.cd_fdin_eof_head == NULL;
 }
 
 // --- samp_meng.FDb.cd_fdin_eof.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline samp_meng::FFdin* samp_meng::cd_fdin_eof_First() {
+inline samp_meng::FFdin* samp_meng::cd_fdin_eof_First() throw() {
     samp_meng::FFdin *row = NULL;
     row = _db.cd_fdin_eof_head;
     return row;
@@ -188,7 +188,7 @@ inline samp_meng::FFdin* samp_meng::cd_fdin_eof_First() {
 
 // --- samp_meng.FDb.cd_fdin_eof.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool samp_meng::cd_fdin_eof_InLlistQ(samp_meng::FFdin& row) {
+inline bool samp_meng::cd_fdin_eof_InLlistQ(samp_meng::FFdin& row) throw() {
     bool result = false;
     result = !(row.cd_fdin_eof_next == (samp_meng::FFdin*)-1);
     return result;
@@ -196,7 +196,7 @@ inline bool samp_meng::cd_fdin_eof_InLlistQ(samp_meng::FFdin& row) {
 
 // --- samp_meng.FDb.cd_fdin_eof.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline samp_meng::FFdin* samp_meng::cd_fdin_eof_Last() {
+inline samp_meng::FFdin* samp_meng::cd_fdin_eof_Last() throw() {
     samp_meng::FFdin *row = NULL;
     row = _db.cd_fdin_eof_head ? _db.cd_fdin_eof_head->cd_fdin_eof_prev : NULL;
     return row;
@@ -204,25 +204,25 @@ inline samp_meng::FFdin* samp_meng::cd_fdin_eof_Last() {
 
 // --- samp_meng.FDb.cd_fdin_eof.N
 // Return number of items in the linked list
-inline i32 samp_meng::cd_fdin_eof_N() {
+inline i32 samp_meng::cd_fdin_eof_N() throw() {
     return _db.cd_fdin_eof_n;
 }
 
 // --- samp_meng.FDb.cd_fdin_eof.Next
 // Return pointer to next element in the list
-inline samp_meng::FFdin* samp_meng::cd_fdin_eof_Next(samp_meng::FFdin &row) {
+inline samp_meng::FFdin* samp_meng::cd_fdin_eof_Next(samp_meng::FFdin &row) throw() {
     return row.cd_fdin_eof_next;
 }
 
 // --- samp_meng.FDb.cd_fdin_eof.Prev
 // Return pointer to previous element in the list
-inline samp_meng::FFdin* samp_meng::cd_fdin_eof_Prev(samp_meng::FFdin &row) {
+inline samp_meng::FFdin* samp_meng::cd_fdin_eof_Prev(samp_meng::FFdin &row) throw() {
     return row.cd_fdin_eof_prev;
 }
 
 // --- samp_meng.FDb.cd_fdin_eof.qLast
 // Return reference to last element in the index. No bounds checking.
-inline samp_meng::FFdin& samp_meng::cd_fdin_eof_qLast() {
+inline samp_meng::FFdin& samp_meng::cd_fdin_eof_qLast() throw() {
     samp_meng::FFdin *row = NULL;
     row = _db.cd_fdin_eof_head ? _db.cd_fdin_eof_head->cd_fdin_eof_prev : NULL;
     return *row;
@@ -230,13 +230,13 @@ inline samp_meng::FFdin& samp_meng::cd_fdin_eof_qLast() {
 
 // --- samp_meng.FDb.symbol.EmptyQ
 // Return true if index is empty
-inline bool samp_meng::symbol_EmptyQ() {
+inline bool samp_meng::symbol_EmptyQ() throw() {
     return _db.symbol_n == 0;
 }
 
 // --- samp_meng.FDb.symbol.Find
 // Look up row by row id. Return NULL if out of range
-inline samp_meng::FSymbol* samp_meng::symbol_Find(u64 t) {
+inline samp_meng::FSymbol* samp_meng::symbol_Find(u64 t) throw() {
     samp_meng::FSymbol *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.symbol_n))) {
         u64 x = t + 1;
@@ -250,19 +250,19 @@ inline samp_meng::FSymbol* samp_meng::symbol_Find(u64 t) {
 
 // --- samp_meng.FDb.symbol.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline samp_meng::FSymbol* samp_meng::symbol_Last() {
+inline samp_meng::FSymbol* samp_meng::symbol_Last() throw() {
     return symbol_Find(u64(_db.symbol_n-1));
 }
 
 // --- samp_meng.FDb.symbol.N
 // Return number of items in the pool
-inline i32 samp_meng::symbol_N() {
+inline i32 samp_meng::symbol_N() throw() {
     return _db.symbol_n;
 }
 
 // --- samp_meng.FDb.symbol.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline samp_meng::FSymbol& samp_meng::symbol_qFind(u64 t) {
+inline samp_meng::FSymbol& samp_meng::symbol_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -272,13 +272,13 @@ inline samp_meng::FSymbol& samp_meng::symbol_qFind(u64 t) {
 
 // --- samp_meng.FDb.cd_fdin_read.EmptyQ
 // Return true if index is empty
-inline bool samp_meng::cd_fdin_read_EmptyQ() {
+inline bool samp_meng::cd_fdin_read_EmptyQ() throw() {
     return _db.cd_fdin_read_head == NULL;
 }
 
 // --- samp_meng.FDb.cd_fdin_read.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline samp_meng::FFdin* samp_meng::cd_fdin_read_First() {
+inline samp_meng::FFdin* samp_meng::cd_fdin_read_First() throw() {
     samp_meng::FFdin *row = NULL;
     row = _db.cd_fdin_read_head;
     return row;
@@ -286,7 +286,7 @@ inline samp_meng::FFdin* samp_meng::cd_fdin_read_First() {
 
 // --- samp_meng.FDb.cd_fdin_read.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool samp_meng::cd_fdin_read_InLlistQ(samp_meng::FFdin& row) {
+inline bool samp_meng::cd_fdin_read_InLlistQ(samp_meng::FFdin& row) throw() {
     bool result = false;
     result = !(row.cd_fdin_read_next == (samp_meng::FFdin*)-1);
     return result;
@@ -294,7 +294,7 @@ inline bool samp_meng::cd_fdin_read_InLlistQ(samp_meng::FFdin& row) {
 
 // --- samp_meng.FDb.cd_fdin_read.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline samp_meng::FFdin* samp_meng::cd_fdin_read_Last() {
+inline samp_meng::FFdin* samp_meng::cd_fdin_read_Last() throw() {
     samp_meng::FFdin *row = NULL;
     row = _db.cd_fdin_read_head ? _db.cd_fdin_read_head->cd_fdin_read_prev : NULL;
     return row;
@@ -302,25 +302,25 @@ inline samp_meng::FFdin* samp_meng::cd_fdin_read_Last() {
 
 // --- samp_meng.FDb.cd_fdin_read.N
 // Return number of items in the linked list
-inline i32 samp_meng::cd_fdin_read_N() {
+inline i32 samp_meng::cd_fdin_read_N() throw() {
     return _db.cd_fdin_read_n;
 }
 
 // --- samp_meng.FDb.cd_fdin_read.Next
 // Return pointer to next element in the list
-inline samp_meng::FFdin* samp_meng::cd_fdin_read_Next(samp_meng::FFdin &row) {
+inline samp_meng::FFdin* samp_meng::cd_fdin_read_Next(samp_meng::FFdin &row) throw() {
     return row.cd_fdin_read_next;
 }
 
 // --- samp_meng.FDb.cd_fdin_read.Prev
 // Return pointer to previous element in the list
-inline samp_meng::FFdin* samp_meng::cd_fdin_read_Prev(samp_meng::FFdin &row) {
+inline samp_meng::FFdin* samp_meng::cd_fdin_read_Prev(samp_meng::FFdin &row) throw() {
     return row.cd_fdin_read_prev;
 }
 
 // --- samp_meng.FDb.cd_fdin_read.qLast
 // Return reference to last element in the index. No bounds checking.
-inline samp_meng::FFdin& samp_meng::cd_fdin_read_qLast() {
+inline samp_meng::FFdin& samp_meng::cd_fdin_read_qLast() throw() {
     samp_meng::FFdin *row = NULL;
     row = _db.cd_fdin_read_head ? _db.cd_fdin_read_head->cd_fdin_read_prev : NULL;
     return *row;
@@ -328,37 +328,37 @@ inline samp_meng::FFdin& samp_meng::cd_fdin_read_qLast() {
 
 // --- samp_meng.FDb.ind_symbol.EmptyQ
 // Return true if hash is empty
-inline bool samp_meng::ind_symbol_EmptyQ() {
+inline bool samp_meng::ind_symbol_EmptyQ() throw() {
     return _db.ind_symbol_n == 0;
 }
 
 // --- samp_meng.FDb.ind_symbol.N
 // Return number of items in the hash
-inline i32 samp_meng::ind_symbol_N() {
+inline i32 samp_meng::ind_symbol_N() throw() {
     return _db.ind_symbol_n;
 }
 
 // --- samp_meng.FDb.ind_order.EmptyQ
 // Return true if hash is empty
-inline bool samp_meng::ind_order_EmptyQ() {
+inline bool samp_meng::ind_order_EmptyQ() throw() {
     return _db.ind_order_n == 0;
 }
 
 // --- samp_meng.FDb.ind_order.N
 // Return number of items in the hash
-inline i32 samp_meng::ind_order_N() {
+inline i32 samp_meng::ind_order_N() throw() {
     return _db.ind_order_n;
 }
 
 // --- samp_meng.FDb.user.EmptyQ
 // Return true if index is empty
-inline bool samp_meng::user_EmptyQ() {
+inline bool samp_meng::user_EmptyQ() throw() {
     return _db.user_n == 0;
 }
 
 // --- samp_meng.FDb.user.Find
 // Look up row by row id. Return NULL if out of range
-inline samp_meng::FUser* samp_meng::user_Find(u64 t) {
+inline samp_meng::FUser* samp_meng::user_Find(u64 t) throw() {
     samp_meng::FUser *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.user_n))) {
         u64 x = t + 1;
@@ -372,19 +372,19 @@ inline samp_meng::FUser* samp_meng::user_Find(u64 t) {
 
 // --- samp_meng.FDb.user.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline samp_meng::FUser* samp_meng::user_Last() {
+inline samp_meng::FUser* samp_meng::user_Last() throw() {
     return user_Find(u64(_db.user_n-1));
 }
 
 // --- samp_meng.FDb.user.N
 // Return number of items in the pool
-inline i32 samp_meng::user_N() {
+inline i32 samp_meng::user_N() throw() {
     return _db.user_n;
 }
 
 // --- samp_meng.FDb.user.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline samp_meng::FUser& samp_meng::user_qFind(u64 t) {
+inline samp_meng::FUser& samp_meng::user_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -394,57 +394,57 @@ inline samp_meng::FUser& samp_meng::user_qFind(u64 t) {
 
 // --- samp_meng.FDb.ind_user.EmptyQ
 // Return true if hash is empty
-inline bool samp_meng::ind_user_EmptyQ() {
+inline bool samp_meng::ind_user_EmptyQ() throw() {
     return _db.ind_user_n == 0;
 }
 
 // --- samp_meng.FDb.ind_user.N
 // Return number of items in the hash
-inline i32 samp_meng::ind_user_N() {
+inline i32 samp_meng::ind_user_N() throw() {
     return _db.ind_user_n;
 }
 
 // --- samp_meng.FDb.fdin_curs.Reset
 // cursor points to valid item
-inline void samp_meng::_db_fdin_curs_Reset(_db_fdin_curs &curs, samp_meng::FDb &parent) {
+inline void samp_meng::_db_fdin_curs_Reset(_db_fdin_curs &curs, samp_meng::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- samp_meng.FDb.fdin_curs.ValidQ
 // cursor points to valid item
-inline bool samp_meng::_db_fdin_curs_ValidQ(_db_fdin_curs &curs) {
+inline bool samp_meng::_db_fdin_curs_ValidQ(_db_fdin_curs &curs) throw() {
     return curs.index < _db.fdin_n;
 }
 
 // --- samp_meng.FDb.fdin_curs.Next
 // proceed to next item
-inline void samp_meng::_db_fdin_curs_Next(_db_fdin_curs &curs) {
+inline void samp_meng::_db_fdin_curs_Next(_db_fdin_curs &curs) throw() {
     curs.index++;
 }
 
 // --- samp_meng.FDb.fdin_curs.Access
 // item access
-inline samp_meng::FFdin& samp_meng::_db_fdin_curs_Access(_db_fdin_curs &curs) {
+inline samp_meng::FFdin& samp_meng::_db_fdin_curs_Access(_db_fdin_curs &curs) throw() {
     return fdin_qFind(u64(curs.index));
 }
 
 // --- samp_meng.FDb.cd_fdin_eof_curs.Reset
 // cursor points to valid item
-inline void samp_meng::_db_cd_fdin_eof_curs_Reset(_db_cd_fdin_eof_curs &curs, samp_meng::FDb &parent) {
+inline void samp_meng::_db_cd_fdin_eof_curs_Reset(_db_cd_fdin_eof_curs &curs, samp_meng::FDb &parent) throw() {
     curs.row = parent.cd_fdin_eof_head;
     curs.head = &parent.cd_fdin_eof_head;
 }
 
 // --- samp_meng.FDb.cd_fdin_eof_curs.ValidQ
 // cursor points to valid item
-inline bool samp_meng::_db_cd_fdin_eof_curs_ValidQ(_db_cd_fdin_eof_curs &curs) {
+inline bool samp_meng::_db_cd_fdin_eof_curs_ValidQ(_db_cd_fdin_eof_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- samp_meng.FDb.cd_fdin_eof_curs.Next
 // proceed to next item
-inline void samp_meng::_db_cd_fdin_eof_curs_Next(_db_cd_fdin_eof_curs &curs) {
+inline void samp_meng::_db_cd_fdin_eof_curs_Next(_db_cd_fdin_eof_curs &curs) throw() {
     samp_meng::FFdin *next = (*curs.row).cd_fdin_eof_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -454,51 +454,51 @@ inline void samp_meng::_db_cd_fdin_eof_curs_Next(_db_cd_fdin_eof_curs &curs) {
 
 // --- samp_meng.FDb.cd_fdin_eof_curs.Access
 // item access
-inline samp_meng::FFdin& samp_meng::_db_cd_fdin_eof_curs_Access(_db_cd_fdin_eof_curs &curs) {
+inline samp_meng::FFdin& samp_meng::_db_cd_fdin_eof_curs_Access(_db_cd_fdin_eof_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- samp_meng.FDb.symbol_curs.Reset
 // cursor points to valid item
-inline void samp_meng::_db_symbol_curs_Reset(_db_symbol_curs &curs, samp_meng::FDb &parent) {
+inline void samp_meng::_db_symbol_curs_Reset(_db_symbol_curs &curs, samp_meng::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- samp_meng.FDb.symbol_curs.ValidQ
 // cursor points to valid item
-inline bool samp_meng::_db_symbol_curs_ValidQ(_db_symbol_curs &curs) {
+inline bool samp_meng::_db_symbol_curs_ValidQ(_db_symbol_curs &curs) throw() {
     return curs.index < _db.symbol_n;
 }
 
 // --- samp_meng.FDb.symbol_curs.Next
 // proceed to next item
-inline void samp_meng::_db_symbol_curs_Next(_db_symbol_curs &curs) {
+inline void samp_meng::_db_symbol_curs_Next(_db_symbol_curs &curs) throw() {
     curs.index++;
 }
 
 // --- samp_meng.FDb.symbol_curs.Access
 // item access
-inline samp_meng::FSymbol& samp_meng::_db_symbol_curs_Access(_db_symbol_curs &curs) {
+inline samp_meng::FSymbol& samp_meng::_db_symbol_curs_Access(_db_symbol_curs &curs) throw() {
     return symbol_qFind(u64(curs.index));
 }
 
 // --- samp_meng.FDb.cd_fdin_read_curs.Reset
 // cursor points to valid item
-inline void samp_meng::_db_cd_fdin_read_curs_Reset(_db_cd_fdin_read_curs &curs, samp_meng::FDb &parent) {
+inline void samp_meng::_db_cd_fdin_read_curs_Reset(_db_cd_fdin_read_curs &curs, samp_meng::FDb &parent) throw() {
     curs.row = parent.cd_fdin_read_head;
     curs.head = &parent.cd_fdin_read_head;
 }
 
 // --- samp_meng.FDb.cd_fdin_read_curs.ValidQ
 // cursor points to valid item
-inline bool samp_meng::_db_cd_fdin_read_curs_ValidQ(_db_cd_fdin_read_curs &curs) {
+inline bool samp_meng::_db_cd_fdin_read_curs_ValidQ(_db_cd_fdin_read_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- samp_meng.FDb.cd_fdin_read_curs.Next
 // proceed to next item
-inline void samp_meng::_db_cd_fdin_read_curs_Next(_db_cd_fdin_read_curs &curs) {
+inline void samp_meng::_db_cd_fdin_read_curs_Next(_db_cd_fdin_read_curs &curs) throw() {
     samp_meng::FFdin *next = (*curs.row).cd_fdin_read_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -508,57 +508,57 @@ inline void samp_meng::_db_cd_fdin_read_curs_Next(_db_cd_fdin_read_curs &curs) {
 
 // --- samp_meng.FDb.cd_fdin_read_curs.Access
 // item access
-inline samp_meng::FFdin& samp_meng::_db_cd_fdin_read_curs_Access(_db_cd_fdin_read_curs &curs) {
+inline samp_meng::FFdin& samp_meng::_db_cd_fdin_read_curs_Access(_db_cd_fdin_read_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- samp_meng.FDb.user_curs.Reset
 // cursor points to valid item
-inline void samp_meng::_db_user_curs_Reset(_db_user_curs &curs, samp_meng::FDb &parent) {
+inline void samp_meng::_db_user_curs_Reset(_db_user_curs &curs, samp_meng::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- samp_meng.FDb.user_curs.ValidQ
 // cursor points to valid item
-inline bool samp_meng::_db_user_curs_ValidQ(_db_user_curs &curs) {
+inline bool samp_meng::_db_user_curs_ValidQ(_db_user_curs &curs) throw() {
     return curs.index < _db.user_n;
 }
 
 // --- samp_meng.FDb.user_curs.Next
 // proceed to next item
-inline void samp_meng::_db_user_curs_Next(_db_user_curs &curs) {
+inline void samp_meng::_db_user_curs_Next(_db_user_curs &curs) throw() {
     curs.index++;
 }
 
 // --- samp_meng.FDb.user_curs.Access
 // item access
-inline samp_meng::FUser& samp_meng::_db_user_curs_Access(_db_user_curs &curs) {
+inline samp_meng::FUser& samp_meng::_db_user_curs_Access(_db_user_curs &curs) throw() {
     return user_qFind(u64(curs.index));
 }
 
 // --- samp_meng.FFdin.in.Max
 // Return max. number of bytes in the buffer.
-inline i32 samp_meng::in_Max(samp_meng::FFdin& fdin) {
+inline i32 samp_meng::in_Max(samp_meng::FFdin& fdin) throw() {
     return 8192;
     (void)fdin;//only to avoid -Wunused-parameter
 }
 
 // --- samp_meng.FFdin.in.N
 // Return number of bytes in the buffer.
-inline i32 samp_meng::in_N(samp_meng::FFdin& fdin) {
+inline i32 samp_meng::in_N(samp_meng::FFdin& fdin) throw() {
     return fdin.in_end - fdin.in_start;
 }
 
 // --- samp_meng.FFdin..Ctor
-inline  samp_meng::FFdin::FFdin() {
+inline  samp_meng::FFdin::FFdin() throw() {
     samp_meng::FFdin_Init(*this);
     // added because samp_meng.FFdin.in (Fbuf) does not need initialization
     // coverity[uninit_member]
 }
 
 // --- samp_meng.FFdin..Dtor
-inline  samp_meng::FFdin::~FFdin() {
+inline  samp_meng::FFdin::~FFdin() throw() {
     samp_meng::FFdin_Uninit(*this);
 }
 
@@ -569,14 +569,14 @@ inline  samp_meng::FFdin::~FFdin() {
 // Example: 1.3 cannot be represented exactly as a double, the actual
 // stored value will be 1.29999999. when we apply C truncation,
 // we want to end up with 1.3, not 1.2.
-inline void samp_meng::value_qSetDouble(samp_meng::I64Price8& parent, double val) {
+inline void samp_meng::value_qSetDouble(samp_meng::I64Price8& parent, double val) throw() {
     double intval = val * 100000000 + (val > 0 ? 0.5 : -0.5);
     // set underlying field.
     parent.value = intval;
 }
 
 // --- samp_meng.I64Price8.value.GetDouble
-inline double samp_meng::value_GetDouble(const samp_meng::I64Price8& parent) {
+inline double samp_meng::value_GetDouble(const samp_meng::I64Price8& parent) throw() {
     double ret;
     ret = parent.value / double(100000000);
     return ret;
@@ -584,7 +584,7 @@ inline double samp_meng::value_GetDouble(const samp_meng::I64Price8& parent) {
 
 // --- samp_meng.I64Price8.value.GetInt
 // Return integer portion (divide number by 100000000)
-inline i64 samp_meng::value_GetInt(const samp_meng::I64Price8& parent) {
+inline i64 samp_meng::value_GetInt(const samp_meng::I64Price8& parent) throw() {
     i64 ret;
     ret = parent.value / 100000000;
     return ret;
@@ -592,53 +592,53 @@ inline i64 samp_meng::value_GetInt(const samp_meng::I64Price8& parent) {
 
 // --- samp_meng.I64Price8.value.GetScale
 // Return constant 100000000
-inline i64 samp_meng::I64Price8_GetScale() {
+inline i64 samp_meng::I64Price8_GetScale() throw() {
     return 100000000;
 }
 
 // --- samp_meng.I64Price8..Hash
-inline u32 samp_meng::I64Price8_Hash(u32 prev, samp_meng::I64Price8 rhs) {
+inline u32 samp_meng::I64Price8_Hash(u32 prev, samp_meng::I64Price8 rhs) throw() {
     prev = i64_Hash(prev, rhs.value);
     return prev;
 }
 
 // --- samp_meng.I64Price8..EqOp
-inline bool samp_meng::I64Price8::operator ==(const samp_meng::I64Price8 &rhs) const {
+inline bool samp_meng::I64Price8::operator ==(const samp_meng::I64Price8 &rhs) const throw() {
     return samp_meng::I64Price8_Eq(const_cast<samp_meng::I64Price8&>(*this),const_cast<samp_meng::I64Price8&>(rhs));
 }
 
 // --- samp_meng.I64Price8..NeOp
-inline bool samp_meng::I64Price8::operator !=(const samp_meng::I64Price8 &rhs) const {
+inline bool samp_meng::I64Price8::operator !=(const samp_meng::I64Price8 &rhs) const throw() {
     return !samp_meng::I64Price8_Eq(const_cast<samp_meng::I64Price8&>(*this),const_cast<samp_meng::I64Price8&>(rhs));
 }
 
 // --- samp_meng.I64Price8..LtOp
-inline bool samp_meng::I64Price8::operator <(const samp_meng::I64Price8 &rhs) const {
+inline bool samp_meng::I64Price8::operator <(const samp_meng::I64Price8 &rhs) const throw() {
     return samp_meng::I64Price8_Lt(const_cast<samp_meng::I64Price8&>(*this),const_cast<samp_meng::I64Price8&>(rhs));
 }
 
 // --- samp_meng.I64Price8..GtOp
-inline bool samp_meng::I64Price8::operator >(const samp_meng::I64Price8 &rhs) const {
+inline bool samp_meng::I64Price8::operator >(const samp_meng::I64Price8 &rhs) const throw() {
     return samp_meng::I64Price8_Lt(const_cast<samp_meng::I64Price8&>(rhs),const_cast<samp_meng::I64Price8&>(*this));
 }
 
 // --- samp_meng.I64Price8..LeOp
-inline bool samp_meng::I64Price8::operator <=(const samp_meng::I64Price8 &rhs) const {
+inline bool samp_meng::I64Price8::operator <=(const samp_meng::I64Price8 &rhs) const throw() {
     return !samp_meng::I64Price8_Lt(const_cast<samp_meng::I64Price8&>(rhs),const_cast<samp_meng::I64Price8&>(*this));
 }
 
 // --- samp_meng.I64Price8..GeOp
-inline bool samp_meng::I64Price8::operator >=(const samp_meng::I64Price8 &rhs) const {
+inline bool samp_meng::I64Price8::operator >=(const samp_meng::I64Price8 &rhs) const throw() {
     return !samp_meng::I64Price8_Lt(const_cast<samp_meng::I64Price8&>(*this),const_cast<samp_meng::I64Price8&>(rhs));
 }
 
 // --- samp_meng.I64Price8..Lt
-inline bool samp_meng::I64Price8_Lt(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) {
+inline bool samp_meng::I64Price8_Lt(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) throw() {
     return i64_Lt(lhs.value, rhs.value);
 }
 
 // --- samp_meng.I64Price8..Cmp
-inline i32 samp_meng::I64Price8_Cmp(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) {
+inline i32 samp_meng::I64Price8_Cmp(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) throw() {
     i32 retval = 0;
     retval = i64_Cmp(lhs.value, rhs.value);
     return retval;
@@ -652,7 +652,7 @@ inline void samp_meng::I64Price8_Init(samp_meng::I64Price8& parent) {
 
 // --- samp_meng.I64Price8..UpdateMax
 // Attempt to make LHS bigger. Return true if it was changed
-inline bool samp_meng::I64Price8_UpdateMax(samp_meng::I64Price8 &lhs, samp_meng::I64Price8 rhs) {
+inline bool samp_meng::I64Price8_UpdateMax(samp_meng::I64Price8 &lhs, samp_meng::I64Price8 rhs) throw() {
     bool retval = lhs < rhs;
     if (retval) {
         lhs = rhs;
@@ -662,13 +662,13 @@ inline bool samp_meng::I64Price8_UpdateMax(samp_meng::I64Price8 &lhs, samp_meng:
 
 // --- samp_meng.I64Price8..Min
 // Return the lesser of two values
-inline samp_meng::I64Price8 samp_meng::I64Price8_Min(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) {
+inline samp_meng::I64Price8 samp_meng::I64Price8_Min(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) throw() {
     return lhs < rhs ? lhs : rhs;
 }
 
 // --- samp_meng.I64Price8..UpdateMin
 // Attempt to make LHS smaller. Return true if it was changed
-inline bool samp_meng::I64Price8_UpdateMin(samp_meng::I64Price8 &lhs, samp_meng::I64Price8 rhs) {
+inline bool samp_meng::I64Price8_UpdateMin(samp_meng::I64Price8 &lhs, samp_meng::I64Price8 rhs) throw() {
     bool retval = rhs < lhs;
     if (retval) {
         lhs = rhs;
@@ -678,12 +678,12 @@ inline bool samp_meng::I64Price8_UpdateMin(samp_meng::I64Price8 &lhs, samp_meng:
 
 // --- samp_meng.I64Price8..Max
 // Return the greater of two values
-inline samp_meng::I64Price8 samp_meng::I64Price8_Max(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) {
+inline samp_meng::I64Price8 samp_meng::I64Price8_Max(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) throw() {
     return rhs < lhs ? lhs : rhs;
 }
 
 // --- samp_meng.I64Price8..Eq
-inline bool samp_meng::I64Price8_Eq(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) {
+inline bool samp_meng::I64Price8_Eq(samp_meng::I64Price8 lhs, samp_meng::I64Price8 rhs) throw() {
     bool retval = true;
     retval = i64_Eq(lhs.value, rhs.value);
     return retval;
@@ -691,7 +691,7 @@ inline bool samp_meng::I64Price8_Eq(samp_meng::I64Price8 lhs, samp_meng::I64Pric
 
 // --- samp_meng.I64Price8..Update
 // Set value. Return true if new value is different from old value.
-inline bool samp_meng::I64Price8_Update(samp_meng::I64Price8 &lhs, samp_meng::I64Price8 rhs) {
+inline bool samp_meng::I64Price8_Update(samp_meng::I64Price8 &lhs, samp_meng::I64Price8 rhs) throw() {
     bool ret = !I64Price8_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -700,53 +700,53 @@ inline bool samp_meng::I64Price8_Update(samp_meng::I64Price8 &lhs, samp_meng::I6
 }
 
 // --- samp_meng.I64Price8..Ctor
-inline  samp_meng::I64Price8::I64Price8() {
+inline  samp_meng::I64Price8::I64Price8() throw() {
     samp_meng::I64Price8_Init(*this);
 }
 
 // --- samp_meng.I64Price8..FieldwiseCtor
-inline  samp_meng::I64Price8::I64Price8(i64 in_value)
+inline  samp_meng::I64Price8::I64Price8(i64 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- samp_meng.Ordkey..EqOp
-inline bool samp_meng::Ordkey::operator ==(const samp_meng::Ordkey &rhs) const {
+inline bool samp_meng::Ordkey::operator ==(const samp_meng::Ordkey &rhs) const throw() {
     return samp_meng::Ordkey_Eq(const_cast<samp_meng::Ordkey&>(*this),const_cast<samp_meng::Ordkey&>(rhs));
 }
 
 // --- samp_meng.Ordkey..NeOp
-inline bool samp_meng::Ordkey::operator !=(const samp_meng::Ordkey &rhs) const {
+inline bool samp_meng::Ordkey::operator !=(const samp_meng::Ordkey &rhs) const throw() {
     return !samp_meng::Ordkey_Eq(const_cast<samp_meng::Ordkey&>(*this),const_cast<samp_meng::Ordkey&>(rhs));
 }
 
 // --- samp_meng.Ordkey..LtOp
-inline bool samp_meng::Ordkey::operator <(const samp_meng::Ordkey &rhs) const {
+inline bool samp_meng::Ordkey::operator <(const samp_meng::Ordkey &rhs) const throw() {
     return samp_meng::Ordkey_Lt(const_cast<samp_meng::Ordkey&>(*this),const_cast<samp_meng::Ordkey&>(rhs));
 }
 
 // --- samp_meng.Ordkey..GtOp
-inline bool samp_meng::Ordkey::operator >(const samp_meng::Ordkey &rhs) const {
+inline bool samp_meng::Ordkey::operator >(const samp_meng::Ordkey &rhs) const throw() {
     return samp_meng::Ordkey_Lt(const_cast<samp_meng::Ordkey&>(rhs),const_cast<samp_meng::Ordkey&>(*this));
 }
 
 // --- samp_meng.Ordkey..LeOp
-inline bool samp_meng::Ordkey::operator <=(const samp_meng::Ordkey &rhs) const {
+inline bool samp_meng::Ordkey::operator <=(const samp_meng::Ordkey &rhs) const throw() {
     return !samp_meng::Ordkey_Lt(const_cast<samp_meng::Ordkey&>(rhs),const_cast<samp_meng::Ordkey&>(*this));
 }
 
 // --- samp_meng.Ordkey..GeOp
-inline bool samp_meng::Ordkey::operator >=(const samp_meng::Ordkey &rhs) const {
+inline bool samp_meng::Ordkey::operator >=(const samp_meng::Ordkey &rhs) const throw() {
     return !samp_meng::Ordkey_Lt(const_cast<samp_meng::Ordkey&>(*this),const_cast<samp_meng::Ordkey&>(rhs));
 }
 
 // --- samp_meng.Ordkey..Lt
-inline bool samp_meng::Ordkey_Lt(samp_meng::Ordkey& lhs, samp_meng::Ordkey& rhs) {
+inline bool samp_meng::Ordkey_Lt(samp_meng::Ordkey& lhs, samp_meng::Ordkey& rhs) throw() {
     return Ordkey_Cmp(lhs,rhs) < 0;
 }
 
 // --- samp_meng.Ordkey..Cmp
-inline i32 samp_meng::Ordkey_Cmp(samp_meng::Ordkey& lhs, samp_meng::Ordkey& rhs) {
+inline i32 samp_meng::Ordkey_Cmp(samp_meng::Ordkey& lhs, samp_meng::Ordkey& rhs) throw() {
     i32 retval = 0;
     retval = u64_Cmp(lhs.price, rhs.price);
     if (retval != 0) {
@@ -764,7 +764,7 @@ inline void samp_meng::Ordkey_Init(samp_meng::Ordkey& parent) {
 }
 
 // --- samp_meng.Ordkey..Eq
-inline bool samp_meng::Ordkey_Eq(samp_meng::Ordkey& lhs, samp_meng::Ordkey& rhs) {
+inline bool samp_meng::Ordkey_Eq(samp_meng::Ordkey& lhs, samp_meng::Ordkey& rhs) throw() {
     bool retval = true;
     retval = u64_Eq(lhs.price, rhs.price);
     if (!retval) {
@@ -776,7 +776,7 @@ inline bool samp_meng::Ordkey_Eq(samp_meng::Ordkey& lhs, samp_meng::Ordkey& rhs)
 
 // --- samp_meng.Ordkey..Update
 // Set value. Return true if new value is different from old value.
-inline bool samp_meng::Ordkey_Update(samp_meng::Ordkey &lhs, samp_meng::Ordkey& rhs) {
+inline bool samp_meng::Ordkey_Update(samp_meng::Ordkey &lhs, samp_meng::Ordkey& rhs) throw() {
     bool ret = !Ordkey_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -785,19 +785,19 @@ inline bool samp_meng::Ordkey_Update(samp_meng::Ordkey &lhs, samp_meng::Ordkey& 
 }
 
 // --- samp_meng.Ordkey..Ctor
-inline  samp_meng::Ordkey::Ordkey() {
+inline  samp_meng::Ordkey::Ordkey() throw() {
     samp_meng::Ordkey_Init(*this);
 }
 
 // --- samp_meng.FOrder.ordkey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool samp_meng::ordkey_Lt(samp_meng::FOrder& order, samp_meng::FOrder &rhs) {
+inline bool samp_meng::ordkey_Lt(samp_meng::FOrder& order, samp_meng::FOrder &rhs) throw() {
     return samp_meng::Ordkey_Lt(order.ordkey,rhs.ordkey);
 }
 
 // --- samp_meng.FOrder.ordkey.Cmp
 // Compare two fields.
-inline i32 samp_meng::ordkey_Cmp(samp_meng::FOrder& order, samp_meng::FOrder &rhs) {
+inline i32 samp_meng::ordkey_Cmp(samp_meng::FOrder& order, samp_meng::FOrder &rhs) throw() {
     i32 retval = 0;
     retval = samp_meng::Ordkey_Cmp(order.ordkey, rhs.ordkey);
     return retval;
@@ -818,24 +818,24 @@ inline void samp_meng::FOrder_Init(samp_meng::FOrder& order) {
 }
 
 // --- samp_meng.FOrder..Ctor
-inline  samp_meng::FOrder::FOrder() {
+inline  samp_meng::FOrder::FOrder() throw() {
     samp_meng::FOrder_Init(*this);
 }
 
 // --- samp_meng.FOrder..Dtor
-inline  samp_meng::FOrder::~FOrder() {
+inline  samp_meng::FOrder::~FOrder() throw() {
     samp_meng::FOrder_Uninit(*this);
 }
 
 // --- samp_meng.FOrdq.bh_order.EmptyQ
 // Return true if index is empty
-inline bool samp_meng::bh_order_EmptyQ(samp_meng::FOrdq& ordq) {
+inline bool samp_meng::bh_order_EmptyQ(samp_meng::FOrdq& ordq) throw() {
     return ordq.bh_order_n == 0;
 }
 
 // --- samp_meng.FOrdq.bh_order.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline samp_meng::FOrder* samp_meng::bh_order_First(samp_meng::FOrdq& ordq) {
+inline samp_meng::FOrder* samp_meng::bh_order_First(samp_meng::FOrdq& ordq) throw() {
     samp_meng::FOrder *row = NULL;
     if (ordq.bh_order_n > 0) {
         row = ordq.bh_order_elems[0];
@@ -845,7 +845,7 @@ inline samp_meng::FOrder* samp_meng::bh_order_First(samp_meng::FOrdq& ordq) {
 
 // --- samp_meng.FOrdq.bh_order.InBheapQ
 // Return true if row is in index, false otherwise
-inline bool samp_meng::bh_order_InBheapQ(samp_meng::FOrder& row) {
+inline bool samp_meng::bh_order_InBheapQ(samp_meng::FOrder& row) throw() {
     bool result = false;
     result = row.bh_order_idx != -1;
     return result;
@@ -853,7 +853,7 @@ inline bool samp_meng::bh_order_InBheapQ(samp_meng::FOrder& row) {
 
 // --- samp_meng.FOrdq.bh_order.N
 // Return number of items in the heap
-inline i32 samp_meng::bh_order_N(const samp_meng::FOrdq& ordq) {
+inline i32 samp_meng::bh_order_N(const samp_meng::FOrdq& ordq) throw() {
     return ordq.bh_order_n;
 }
 
@@ -871,69 +871,69 @@ inline void samp_meng::FOrdq_Init(samp_meng::FOrdq& ordq) {
 
 // --- samp_meng.FOrdq.bh_order_curs.Access
 // Access current element. If not more elements, return NULL
-inline samp_meng::FOrder& samp_meng::ordq_bh_order_curs_Access(ordq_bh_order_curs &curs) {
+inline samp_meng::FOrder& samp_meng::ordq_bh_order_curs_Access(ordq_bh_order_curs &curs) throw() {
     return *curs.temp_elems[0];
 }
 
 // --- samp_meng.FOrdq.bh_order_curs.ValidQ
 // Return true if Access() will return non-NULL.
-inline bool samp_meng::ordq_bh_order_curs_ValidQ(ordq_bh_order_curs &curs) {
+inline bool samp_meng::ordq_bh_order_curs_ValidQ(ordq_bh_order_curs &curs) throw() {
     return curs.temp_n > 0;
 }
 
 // --- samp_meng.FOrdq..Ctor
-inline  samp_meng::FOrdq::FOrdq() {
+inline  samp_meng::FOrdq::FOrdq() throw() {
     samp_meng::FOrdq_Init(*this);
 }
 
 // --- samp_meng.FOrdq..Dtor
-inline  samp_meng::FOrdq::~FOrdq() {
+inline  samp_meng::FOrdq::~FOrdq() throw() {
     samp_meng::FOrdq_Uninit(*this);
 }
 
 // --- samp_meng.Symbol..Hash
-inline u32 samp_meng::Symbol_Hash(u32 prev, const samp_meng::Symbol& rhs) {
+inline u32 samp_meng::Symbol_Hash(u32 prev, const samp_meng::Symbol& rhs) throw() {
     prev = RnullStr8_Hash(prev, rhs.symbol);
     return prev;
 }
 
 // --- samp_meng.Symbol..EqOp
-inline bool samp_meng::Symbol::operator ==(const samp_meng::Symbol &rhs) const {
+inline bool samp_meng::Symbol::operator ==(const samp_meng::Symbol &rhs) const throw() {
     return samp_meng::Symbol_Eq(const_cast<samp_meng::Symbol&>(*this),const_cast<samp_meng::Symbol&>(rhs));
 }
 
 // --- samp_meng.Symbol..NeOp
-inline bool samp_meng::Symbol::operator !=(const samp_meng::Symbol &rhs) const {
+inline bool samp_meng::Symbol::operator !=(const samp_meng::Symbol &rhs) const throw() {
     return !samp_meng::Symbol_Eq(const_cast<samp_meng::Symbol&>(*this),const_cast<samp_meng::Symbol&>(rhs));
 }
 
 // --- samp_meng.Symbol..Cmp
-inline i32 samp_meng::Symbol_Cmp(samp_meng::Symbol& lhs, samp_meng::Symbol& rhs) {
+inline i32 samp_meng::Symbol_Cmp(samp_meng::Symbol& lhs, samp_meng::Symbol& rhs) throw() {
     i32 retval = 0;
     retval = algo::RnullStr8_Cmp(lhs.symbol, rhs.symbol);
     return retval;
 }
 
 // --- samp_meng.Symbol..Eq
-inline bool samp_meng::Symbol_Eq(samp_meng::Symbol& lhs, samp_meng::Symbol& rhs) {
+inline bool samp_meng::Symbol_Eq(samp_meng::Symbol& lhs, samp_meng::Symbol& rhs) throw() {
     bool retval = true;
     retval = algo::RnullStr8_Eq(lhs.symbol, rhs.symbol);
     return retval;
 }
 
 // --- samp_meng.Symbol..Ctor
-inline  samp_meng::Symbol::Symbol() {
+inline  samp_meng::Symbol::Symbol() throw() {
 }
 
 // --- samp_meng.FSymbol.c_ordq.EmptyQ
 // Return true if index is empty
-inline bool samp_meng::c_ordq_EmptyQ(samp_meng::FSymbol& symbol) {
+inline bool samp_meng::c_ordq_EmptyQ(samp_meng::FSymbol& symbol) throw() {
     return symbol.c_ordq_n == 0;
 }
 
 // --- samp_meng.FSymbol.c_ordq.Find
 // Look up row by row id. Return NULL if out of range
-inline samp_meng::FOrdq* samp_meng::c_ordq_Find(samp_meng::FSymbol& symbol, u32 t) {
+inline samp_meng::FOrdq* samp_meng::c_ordq_Find(samp_meng::FSymbol& symbol, u32 t) throw() {
     samp_meng::FOrdq *retval = NULL;
     u64 idx = t;
     u64 lim = symbol.c_ordq_n;
@@ -945,19 +945,19 @@ inline samp_meng::FOrdq* samp_meng::c_ordq_Find(samp_meng::FSymbol& symbol, u32 
 
 // --- samp_meng.FSymbol.c_ordq.Getary
 // Return array of pointers
-inline algo::aryptr<samp_meng::FOrdq*> samp_meng::c_ordq_Getary(samp_meng::FSymbol& symbol) {
+inline algo::aryptr<samp_meng::FOrdq*> samp_meng::c_ordq_Getary(samp_meng::FSymbol& symbol) throw() {
     return algo::aryptr<samp_meng::FOrdq*>(symbol.c_ordq_elems, symbol.c_ordq_n);
 }
 
 // --- samp_meng.FSymbol.c_ordq.N
 // Return number of items in the pointer array
-inline i32 samp_meng::c_ordq_N(const samp_meng::FSymbol& symbol) {
+inline i32 samp_meng::c_ordq_N(const samp_meng::FSymbol& symbol) throw() {
     return symbol.c_ordq_n;
 }
 
 // --- samp_meng.FSymbol.c_ordq.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void samp_meng::c_ordq_RemoveAll(samp_meng::FSymbol& symbol) {
+inline void samp_meng::c_ordq_RemoveAll(samp_meng::FSymbol& symbol) throw() {
     for (u32 i = 0; i < symbol.c_ordq_n; i++) {
         // mark all elements as not-in-array
         symbol.c_ordq_elems[i]->symbol_c_ordq_in_ary = false;
@@ -967,19 +967,19 @@ inline void samp_meng::c_ordq_RemoveAll(samp_meng::FSymbol& symbol) {
 
 // --- samp_meng.FSymbol.c_ordq.qFind
 // Return reference without bounds checking
-inline samp_meng::FOrdq& samp_meng::c_ordq_qFind(samp_meng::FSymbol& symbol, u32 idx) {
+inline samp_meng::FOrdq& samp_meng::c_ordq_qFind(samp_meng::FSymbol& symbol, u32 idx) throw() {
     return *symbol.c_ordq_elems[idx];
 }
 
 // --- samp_meng.FSymbol.c_ordq.InAryQ
 // True if row is in any ptrary instance
-inline bool samp_meng::symbol_c_ordq_InAryQ(samp_meng::FOrdq& row) {
+inline bool samp_meng::symbol_c_ordq_InAryQ(samp_meng::FOrdq& row) throw() {
     return row.symbol_c_ordq_in_ary;
 }
 
 // --- samp_meng.FSymbol.c_ordq.qLast
 // Reference to last element without bounds checking
-inline samp_meng::FOrdq& samp_meng::c_ordq_qLast(samp_meng::FSymbol& symbol) {
+inline samp_meng::FOrdq& samp_meng::c_ordq_qLast(samp_meng::FSymbol& symbol) throw() {
     return *symbol.c_ordq_elems[symbol.c_ordq_n-1];
 }
 
@@ -994,7 +994,7 @@ inline void samp_meng::FSymbol_Init(samp_meng::FSymbol& symbol) {
 }
 
 // --- samp_meng.FSymbol.c_ordq_curs.Reset
-inline void samp_meng::symbol_c_ordq_curs_Reset(symbol_c_ordq_curs &curs, samp_meng::FSymbol &parent) {
+inline void samp_meng::symbol_c_ordq_curs_Reset(symbol_c_ordq_curs &curs, samp_meng::FSymbol &parent) throw() {
     curs.elems = parent.c_ordq_elems;
     curs.n_elems = parent.c_ordq_n;
     curs.index = 0;
@@ -1002,41 +1002,41 @@ inline void samp_meng::symbol_c_ordq_curs_Reset(symbol_c_ordq_curs &curs, samp_m
 
 // --- samp_meng.FSymbol.c_ordq_curs.ValidQ
 // cursor points to valid item
-inline bool samp_meng::symbol_c_ordq_curs_ValidQ(symbol_c_ordq_curs &curs) {
+inline bool samp_meng::symbol_c_ordq_curs_ValidQ(symbol_c_ordq_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- samp_meng.FSymbol.c_ordq_curs.Next
 // proceed to next item
-inline void samp_meng::symbol_c_ordq_curs_Next(symbol_c_ordq_curs &curs) {
+inline void samp_meng::symbol_c_ordq_curs_Next(symbol_c_ordq_curs &curs) throw() {
     curs.index++;
 }
 
 // --- samp_meng.FSymbol.c_ordq_curs.Access
 // item access
-inline samp_meng::FOrdq& samp_meng::symbol_c_ordq_curs_Access(symbol_c_ordq_curs &curs) {
+inline samp_meng::FOrdq& samp_meng::symbol_c_ordq_curs_Access(symbol_c_ordq_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- samp_meng.FSymbol..Ctor
-inline  samp_meng::FSymbol::FSymbol() {
+inline  samp_meng::FSymbol::FSymbol() throw() {
     samp_meng::FSymbol_Init(*this);
 }
 
 // --- samp_meng.FSymbol..Dtor
-inline  samp_meng::FSymbol::~FSymbol() {
+inline  samp_meng::FSymbol::~FSymbol() throw() {
     samp_meng::FSymbol_Uninit(*this);
 }
 
 // --- samp_meng.FUser.zd_order.EmptyQ
 // Return true if index is empty
-inline bool samp_meng::zd_order_EmptyQ(samp_meng::FUser& user) {
+inline bool samp_meng::zd_order_EmptyQ(samp_meng::FUser& user) throw() {
     return user.zd_order_head == NULL;
 }
 
 // --- samp_meng.FUser.zd_order.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline samp_meng::FOrder* samp_meng::zd_order_First(samp_meng::FUser& user) {
+inline samp_meng::FOrder* samp_meng::zd_order_First(samp_meng::FUser& user) throw() {
     samp_meng::FOrder *row = NULL;
     row = user.zd_order_head;
     return row;
@@ -1044,7 +1044,7 @@ inline samp_meng::FOrder* samp_meng::zd_order_First(samp_meng::FUser& user) {
 
 // --- samp_meng.FUser.zd_order.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool samp_meng::zd_order_InLlistQ(samp_meng::FOrder& row) {
+inline bool samp_meng::zd_order_InLlistQ(samp_meng::FOrder& row) throw() {
     bool result = false;
     result = !(row.zd_order_next == (samp_meng::FOrder*)-1);
     return result;
@@ -1052,7 +1052,7 @@ inline bool samp_meng::zd_order_InLlistQ(samp_meng::FOrder& row) {
 
 // --- samp_meng.FUser.zd_order.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline samp_meng::FOrder* samp_meng::zd_order_Last(samp_meng::FUser& user) {
+inline samp_meng::FOrder* samp_meng::zd_order_Last(samp_meng::FUser& user) throw() {
     samp_meng::FOrder *row = NULL;
     row = user.zd_order_tail;
     return row;
@@ -1060,25 +1060,25 @@ inline samp_meng::FOrder* samp_meng::zd_order_Last(samp_meng::FUser& user) {
 
 // --- samp_meng.FUser.zd_order.N
 // Return number of items in the linked list
-inline i32 samp_meng::zd_order_N(const samp_meng::FUser& user) {
+inline i32 samp_meng::zd_order_N(const samp_meng::FUser& user) throw() {
     return user.zd_order_n;
 }
 
 // --- samp_meng.FUser.zd_order.Next
 // Return pointer to next element in the list
-inline samp_meng::FOrder* samp_meng::zd_order_Next(samp_meng::FOrder &row) {
+inline samp_meng::FOrder* samp_meng::zd_order_Next(samp_meng::FOrder &row) throw() {
     return row.zd_order_next;
 }
 
 // --- samp_meng.FUser.zd_order.Prev
 // Return pointer to previous element in the list
-inline samp_meng::FOrder* samp_meng::zd_order_Prev(samp_meng::FOrder &row) {
+inline samp_meng::FOrder* samp_meng::zd_order_Prev(samp_meng::FOrder &row) throw() {
     return row.zd_order_prev;
 }
 
 // --- samp_meng.FUser.zd_order.qLast
 // Return reference to last element in the index. No bounds checking.
-inline samp_meng::FOrder& samp_meng::zd_order_qLast(samp_meng::FUser& user) {
+inline samp_meng::FOrder& samp_meng::zd_order_qLast(samp_meng::FUser& user) throw() {
     samp_meng::FOrder *row = NULL;
     row = user.zd_order_tail;
     return *row;
@@ -1096,53 +1096,53 @@ inline void samp_meng::FUser_Init(samp_meng::FUser& user) {
 
 // --- samp_meng.FUser.zd_order_curs.Reset
 // cursor points to valid item
-inline void samp_meng::user_zd_order_curs_Reset(user_zd_order_curs &curs, samp_meng::FUser &parent) {
+inline void samp_meng::user_zd_order_curs_Reset(user_zd_order_curs &curs, samp_meng::FUser &parent) throw() {
     curs.row = parent.zd_order_head;
 }
 
 // --- samp_meng.FUser.zd_order_curs.ValidQ
 // cursor points to valid item
-inline bool samp_meng::user_zd_order_curs_ValidQ(user_zd_order_curs &curs) {
+inline bool samp_meng::user_zd_order_curs_ValidQ(user_zd_order_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- samp_meng.FUser.zd_order_curs.Next
 // proceed to next item
-inline void samp_meng::user_zd_order_curs_Next(user_zd_order_curs &curs) {
+inline void samp_meng::user_zd_order_curs_Next(user_zd_order_curs &curs) throw() {
     samp_meng::FOrder *next = (*curs.row).zd_order_next;
     curs.row = next;
 }
 
 // --- samp_meng.FUser.zd_order_curs.Access
 // item access
-inline samp_meng::FOrder& samp_meng::user_zd_order_curs_Access(user_zd_order_curs &curs) {
+inline samp_meng::FOrder& samp_meng::user_zd_order_curs_Access(user_zd_order_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- samp_meng.FUser..Ctor
-inline  samp_meng::FUser::FUser() {
+inline  samp_meng::FUser::FUser() throw() {
     samp_meng::FUser_Init(*this);
 }
 
 // --- samp_meng.FUser..Dtor
-inline  samp_meng::FUser::~FUser() {
+inline  samp_meng::FUser::~FUser() throw() {
     samp_meng::FUser_Uninit(*this);
 }
 
 // --- samp_meng.FieldId.value.GetEnum
 // Get value of field as enum type
-inline samp_meng_FieldIdEnum samp_meng::value_GetEnum(const samp_meng::FieldId& parent) {
+inline samp_meng_FieldIdEnum samp_meng::value_GetEnum(const samp_meng::FieldId& parent) throw() {
     return samp_meng_FieldIdEnum(parent.value);
 }
 
 // --- samp_meng.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void samp_meng::value_SetEnum(samp_meng::FieldId& parent, samp_meng_FieldIdEnum rhs) {
+inline void samp_meng::value_SetEnum(samp_meng::FieldId& parent, samp_meng_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- samp_meng.FieldId.value.Cast
-inline  samp_meng::FieldId::operator samp_meng_FieldIdEnum() const {
+inline  samp_meng::FieldId::operator samp_meng_FieldIdEnum() const throw() {
     return samp_meng_FieldIdEnum((*this).value);
 }
 
@@ -1153,35 +1153,35 @@ inline void samp_meng::FieldId_Init(samp_meng::FieldId& parent) {
 }
 
 // --- samp_meng.FieldId..Ctor
-inline  samp_meng::FieldId::FieldId() {
+inline  samp_meng::FieldId::FieldId() throw() {
     samp_meng::FieldId_Init(*this);
 }
 
 // --- samp_meng.FieldId..FieldwiseCtor
-inline  samp_meng::FieldId::FieldId(i32 in_value)
+inline  samp_meng::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- samp_meng.FieldId..EnumCtor
-inline  samp_meng::FieldId::FieldId(samp_meng_FieldIdEnum arg) {
+inline  samp_meng::FieldId::FieldId(samp_meng_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- samp_meng.InCase.value.GetEnum
 // Get value of field as enum type
-inline samp_meng_InCaseEnum samp_meng::value_GetEnum(const samp_meng::InCase& parent) {
+inline samp_meng_InCaseEnum samp_meng::value_GetEnum(const samp_meng::InCase& parent) throw() {
     return samp_meng_InCaseEnum(parent.value);
 }
 
 // --- samp_meng.InCase.value.SetEnum
 // Set value of field from enum type.
-inline void samp_meng::value_SetEnum(samp_meng::InCase& parent, samp_meng_InCaseEnum rhs) {
+inline void samp_meng::value_SetEnum(samp_meng::InCase& parent, samp_meng_InCaseEnum rhs) throw() {
     parent.value = u32(rhs);
 }
 
 // --- samp_meng.InCase.value.Cast
-inline  samp_meng::InCase::operator samp_meng_InCaseEnum() const {
+inline  samp_meng::InCase::operator samp_meng_InCaseEnum() const throw() {
     return samp_meng_InCaseEnum((*this).value);
 }
 
@@ -1192,18 +1192,18 @@ inline void samp_meng::InCase_Init(samp_meng::InCase& parent) {
 }
 
 // --- samp_meng.InCase..Ctor
-inline  samp_meng::InCase::InCase() {
+inline  samp_meng::InCase::InCase() throw() {
     samp_meng::InCase_Init(*this);
 }
 
 // --- samp_meng.InCase..FieldwiseCtor
-inline  samp_meng::InCase::InCase(u32 in_value)
+inline  samp_meng::InCase::InCase(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- samp_meng.InCase..EnumCtor
-inline  samp_meng::InCase::InCase(samp_meng_InCaseEnum arg) {
+inline  samp_meng::InCase::InCase(samp_meng_InCaseEnum arg) throw() {
     this->value = u32(arg);
 }
 
@@ -1225,13 +1225,13 @@ inline samp_meng::MsgHeader& samp_meng::Castbase(samp_meng::MassCancelReqMsg& pa
 
 // --- samp_meng.MassCancelReqMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 samp_meng::GetMsgLength(const samp_meng::MassCancelReqMsg& parent) {
+inline i32 samp_meng::GetMsgLength(const samp_meng::MassCancelReqMsg& parent) throw() {
     return i32(const_cast<samp_meng::MassCancelReqMsg&>(parent).length);
 }
 
 // --- samp_meng.MassCancelReqMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::MassCancelReqMsg& row) {
+inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::MassCancelReqMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<samp_meng::MassCancelReqMsg&>(row).length));
 }
 
@@ -1244,12 +1244,12 @@ inline void samp_meng::MassCancelReqMsg_Init(samp_meng::MassCancelReqMsg& parent
 }
 
 // --- samp_meng.MassCancelReqMsg..Ctor
-inline  samp_meng::MassCancelReqMsg::MassCancelReqMsg() {
+inline  samp_meng::MassCancelReqMsg::MassCancelReqMsg() throw() {
     samp_meng::MassCancelReqMsg_Init(*this);
 }
 
 // --- samp_meng.MassCancelReqMsg..FieldwiseCtor
-inline  samp_meng::MassCancelReqMsg::MassCancelReqMsg(u32 in_user)
+inline  samp_meng::MassCancelReqMsg::MassCancelReqMsg(u32 in_user) throw()
     : user(in_user)
  {
     this->type = u8(12);
@@ -1258,25 +1258,25 @@ inline  samp_meng::MassCancelReqMsg::MassCancelReqMsg(u32 in_user)
 
 // --- samp_meng.MsgHeader.type.GetEnum
 // Get value of field as enum type
-inline samp_meng_MsgHeader_type_Enum samp_meng::type_GetEnum(const samp_meng::MsgHeader& parent) {
+inline samp_meng_MsgHeader_type_Enum samp_meng::type_GetEnum(const samp_meng::MsgHeader& parent) throw() {
     return samp_meng_MsgHeader_type_Enum(parent.type);
 }
 
 // --- samp_meng.MsgHeader.type.SetEnum
 // Set value of field from enum type.
-inline void samp_meng::type_SetEnum(samp_meng::MsgHeader& parent, samp_meng_MsgHeader_type_Enum rhs) {
+inline void samp_meng::type_SetEnum(samp_meng::MsgHeader& parent, samp_meng_MsgHeader_type_Enum rhs) throw() {
     parent.type = u8(rhs);
 }
 
 // --- samp_meng.MsgHeader..GetMsgLength
 // Message length (uses length field)
-inline i32 samp_meng::GetMsgLength(const samp_meng::MsgHeader& parent) {
+inline i32 samp_meng::GetMsgLength(const samp_meng::MsgHeader& parent) throw() {
     return i32(const_cast<samp_meng::MsgHeader&>(parent).length);
 }
 
 // --- samp_meng.MsgHeader..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::MsgHeader& row) {
+inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::MsgHeader& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<samp_meng::MsgHeader&>(row).length));
 }
 
@@ -1288,12 +1288,12 @@ inline void samp_meng::MsgHeader_Init(samp_meng::MsgHeader& parent) {
 }
 
 // --- samp_meng.MsgHeader..Ctor
-inline  samp_meng::MsgHeader::MsgHeader() {
+inline  samp_meng::MsgHeader::MsgHeader() throw() {
     samp_meng::MsgHeader_Init(*this);
 }
 
 // --- samp_meng.MsgHeader..FieldwiseCtor
-inline  samp_meng::MsgHeader::MsgHeader(u8 in_type, u8 in_length)
+inline  samp_meng::MsgHeader::MsgHeader(u8 in_type, u8 in_length) throw()
     : type(in_type)
     , length(in_length)
  {
@@ -1301,18 +1301,18 @@ inline  samp_meng::MsgHeader::MsgHeader(u8 in_type, u8 in_length)
 
 // --- samp_meng.MsgHeaderMsgsCase.value.GetEnum
 // Get value of field as enum type
-inline samp_meng_MsgHeaderMsgsCaseEnum samp_meng::value_GetEnum(const samp_meng::MsgHeaderMsgsCase& parent) {
+inline samp_meng_MsgHeaderMsgsCaseEnum samp_meng::value_GetEnum(const samp_meng::MsgHeaderMsgsCase& parent) throw() {
     return samp_meng_MsgHeaderMsgsCaseEnum(parent.value);
 }
 
 // --- samp_meng.MsgHeaderMsgsCase.value.SetEnum
 // Set value of field from enum type.
-inline void samp_meng::value_SetEnum(samp_meng::MsgHeaderMsgsCase& parent, samp_meng_MsgHeaderMsgsCaseEnum rhs) {
+inline void samp_meng::value_SetEnum(samp_meng::MsgHeaderMsgsCase& parent, samp_meng_MsgHeaderMsgsCaseEnum rhs) throw() {
     parent.value = u32(rhs);
 }
 
 // --- samp_meng.MsgHeaderMsgsCase.value.Cast
-inline  samp_meng::MsgHeaderMsgsCase::operator samp_meng_MsgHeaderMsgsCaseEnum() const {
+inline  samp_meng::MsgHeaderMsgsCase::operator samp_meng_MsgHeaderMsgsCaseEnum() const throw() {
     return samp_meng_MsgHeaderMsgsCaseEnum((*this).value);
 }
 
@@ -1323,28 +1323,28 @@ inline void samp_meng::MsgHeaderMsgsCase_Init(samp_meng::MsgHeaderMsgsCase& pare
 }
 
 // --- samp_meng.MsgHeaderMsgsCase..Ctor
-inline  samp_meng::MsgHeaderMsgsCase::MsgHeaderMsgsCase() {
+inline  samp_meng::MsgHeaderMsgsCase::MsgHeaderMsgsCase() throw() {
     samp_meng::MsgHeaderMsgsCase_Init(*this);
 }
 
 // --- samp_meng.MsgHeaderMsgsCase..FieldwiseCtor
-inline  samp_meng::MsgHeaderMsgsCase::MsgHeaderMsgsCase(u32 in_value)
+inline  samp_meng::MsgHeaderMsgsCase::MsgHeaderMsgsCase(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- samp_meng.MsgHeaderMsgsCase..EnumCtor
-inline  samp_meng::MsgHeaderMsgsCase::MsgHeaderMsgsCase(samp_meng_MsgHeaderMsgsCaseEnum arg) {
+inline  samp_meng::MsgHeaderMsgsCase::MsgHeaderMsgsCase(samp_meng_MsgHeaderMsgsCaseEnum arg) throw() {
     this->value = u32(arg);
 }
 
 // --- samp_meng.MsgHeader_curs..ValidQ
-inline bool samp_meng::MsgHeader_curs_ValidQ(samp_meng::MsgHeader_curs& curs) {
+inline bool samp_meng::MsgHeader_curs_ValidQ(samp_meng::MsgHeader_curs& curs) throw() {
     return curs.msg != NULL;
 }
 
 // --- samp_meng.MsgHeader_curs..Reset
-inline void samp_meng::MsgHeader_curs_Reset(samp_meng::MsgHeader_curs& curs, algo::memptr buf) {
+inline void samp_meng::MsgHeader_curs_Reset(samp_meng::MsgHeader_curs& curs, algo::memptr buf) throw() {
     curs.bytes = buf.elems;
     curs.limit = buf.n_elems;
     samp_meng::MsgHeader *msg = NULL;
@@ -1361,12 +1361,12 @@ inline void samp_meng::MsgHeader_curs_Reset(samp_meng::MsgHeader_curs& curs, alg
 }
 
 // --- samp_meng.MsgHeader_curs..Access
-inline samp_meng::MsgHeader*& samp_meng::MsgHeader_curs_Access(samp_meng::MsgHeader_curs& curs) {
+inline samp_meng::MsgHeader*& samp_meng::MsgHeader_curs_Access(samp_meng::MsgHeader_curs& curs) throw() {
     return curs.msg;
 }
 
 // --- samp_meng.MsgHeader_curs..Next
-inline void samp_meng::MsgHeader_curs_Next(samp_meng::MsgHeader_curs& curs) {
+inline void samp_meng::MsgHeader_curs_Next(samp_meng::MsgHeader_curs& curs) throw() {
     curs.bytes += curs.msglen;
     curs.limit -= curs.msglen;
     samp_meng::MsgHeader *msg = NULL;
@@ -1392,7 +1392,7 @@ inline void samp_meng::MsgHeader_curs_Init(samp_meng::MsgHeader_curs& parent) {
 }
 
 // --- samp_meng.MsgHeader_curs..Ctor
-inline  samp_meng::MsgHeader_curs::MsgHeader_curs() {
+inline  samp_meng::MsgHeader_curs::MsgHeader_curs() throw() {
     samp_meng::MsgHeader_curs_Init(*this);
 }
 
@@ -1414,13 +1414,13 @@ inline samp_meng::MsgHeader& samp_meng::Castbase(samp_meng::NewOrderMsg& parent)
 
 // --- samp_meng.NewOrderMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 samp_meng::GetMsgLength(const samp_meng::NewOrderMsg& parent) {
+inline i32 samp_meng::GetMsgLength(const samp_meng::NewOrderMsg& parent) throw() {
     return i32(const_cast<samp_meng::NewOrderMsg&>(parent).length);
 }
 
 // --- samp_meng.NewOrderMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::NewOrderMsg& row) {
+inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::NewOrderMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<samp_meng::NewOrderMsg&>(row).length));
 }
 
@@ -1434,12 +1434,12 @@ inline void samp_meng::NewOrderMsg_Init(samp_meng::NewOrderMsg& parent) {
 }
 
 // --- samp_meng.NewOrderMsg..Ctor
-inline  samp_meng::NewOrderMsg::NewOrderMsg() {
+inline  samp_meng::NewOrderMsg::NewOrderMsg() throw() {
     samp_meng::NewOrderMsg_Init(*this);
 }
 
 // --- samp_meng.NewOrderMsg..FieldwiseCtor
-inline  samp_meng::NewOrderMsg::NewOrderMsg(algo::UnTime in_time, samp_meng::I64Price8 in_price, u64 in_order, const samp_meng::Symbol& in_symbol, u32 in_qty)
+inline  samp_meng::NewOrderMsg::NewOrderMsg(algo::UnTime in_time, samp_meng::I64Price8 in_price, u64 in_order, const samp_meng::Symbol& in_symbol, u32 in_qty) throw()
     : time(in_time)
     , price(in_price)
     , order(in_order)
@@ -1468,13 +1468,13 @@ inline samp_meng::MsgHeader& samp_meng::Castbase(samp_meng::NewOrderReqMsg& pare
 
 // --- samp_meng.NewOrderReqMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 samp_meng::GetMsgLength(const samp_meng::NewOrderReqMsg& parent) {
+inline i32 samp_meng::GetMsgLength(const samp_meng::NewOrderReqMsg& parent) throw() {
     return i32(const_cast<samp_meng::NewOrderReqMsg&>(parent).length);
 }
 
 // --- samp_meng.NewOrderReqMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::NewOrderReqMsg& row) {
+inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::NewOrderReqMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<samp_meng::NewOrderReqMsg&>(row).length));
 }
 
@@ -1489,12 +1489,12 @@ inline void samp_meng::NewOrderReqMsg_Init(samp_meng::NewOrderReqMsg& parent) {
 }
 
 // --- samp_meng.NewOrderReqMsg..Ctor
-inline  samp_meng::NewOrderReqMsg::NewOrderReqMsg() {
+inline  samp_meng::NewOrderReqMsg::NewOrderReqMsg() throw() {
     samp_meng::NewOrderReqMsg_Init(*this);
 }
 
 // --- samp_meng.NewOrderReqMsg..FieldwiseCtor
-inline  samp_meng::NewOrderReqMsg::NewOrderReqMsg(bool in_ioc, i32 in_qty, samp_meng::I64Price8 in_price, const samp_meng::Symbol& in_symbol, u32 in_user)
+inline  samp_meng::NewOrderReqMsg::NewOrderReqMsg(bool in_ioc, i32 in_qty, samp_meng::I64Price8 in_price, const samp_meng::Symbol& in_symbol, u32 in_user) throw()
     : ioc(in_ioc)
     , qty(in_qty)
     , price(in_price)
@@ -1523,13 +1523,13 @@ inline samp_meng::MsgHeader& samp_meng::Castbase(samp_meng::NewSymbolMsg& parent
 
 // --- samp_meng.NewSymbolMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 samp_meng::GetMsgLength(const samp_meng::NewSymbolMsg& parent) {
+inline i32 samp_meng::GetMsgLength(const samp_meng::NewSymbolMsg& parent) throw() {
     return i32(const_cast<samp_meng::NewSymbolMsg&>(parent).length);
 }
 
 // --- samp_meng.NewSymbolMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::NewSymbolMsg& row) {
+inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::NewSymbolMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<samp_meng::NewSymbolMsg&>(row).length));
 }
 
@@ -1541,12 +1541,12 @@ inline void samp_meng::NewSymbolMsg_Init(samp_meng::NewSymbolMsg& parent) {
 }
 
 // --- samp_meng.NewSymbolMsg..Ctor
-inline  samp_meng::NewSymbolMsg::NewSymbolMsg() {
+inline  samp_meng::NewSymbolMsg::NewSymbolMsg() throw() {
     samp_meng::NewSymbolMsg_Init(*this);
 }
 
 // --- samp_meng.NewSymbolMsg..FieldwiseCtor
-inline  samp_meng::NewSymbolMsg::NewSymbolMsg(const samp_meng::Symbol& in_symbol)
+inline  samp_meng::NewSymbolMsg::NewSymbolMsg(const samp_meng::Symbol& in_symbol) throw()
     : symbol(in_symbol)
  {
     this->type = u8(5);
@@ -1571,13 +1571,13 @@ inline samp_meng::MsgHeader& samp_meng::Castbase(samp_meng::NewSymbolReqMsg& par
 
 // --- samp_meng.NewSymbolReqMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 samp_meng::GetMsgLength(const samp_meng::NewSymbolReqMsg& parent) {
+inline i32 samp_meng::GetMsgLength(const samp_meng::NewSymbolReqMsg& parent) throw() {
     return i32(const_cast<samp_meng::NewSymbolReqMsg&>(parent).length);
 }
 
 // --- samp_meng.NewSymbolReqMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::NewSymbolReqMsg& row) {
+inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::NewSymbolReqMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<samp_meng::NewSymbolReqMsg&>(row).length));
 }
 
@@ -1589,12 +1589,12 @@ inline void samp_meng::NewSymbolReqMsg_Init(samp_meng::NewSymbolReqMsg& parent) 
 }
 
 // --- samp_meng.NewSymbolReqMsg..Ctor
-inline  samp_meng::NewSymbolReqMsg::NewSymbolReqMsg() {
+inline  samp_meng::NewSymbolReqMsg::NewSymbolReqMsg() throw() {
     samp_meng::NewSymbolReqMsg_Init(*this);
 }
 
 // --- samp_meng.NewSymbolReqMsg..FieldwiseCtor
-inline  samp_meng::NewSymbolReqMsg::NewSymbolReqMsg(const samp_meng::Symbol& in_symbol)
+inline  samp_meng::NewSymbolReqMsg::NewSymbolReqMsg(const samp_meng::Symbol& in_symbol) throw()
     : symbol(in_symbol)
  {
     this->type = u8(13);
@@ -1619,13 +1619,13 @@ inline samp_meng::MsgHeader& samp_meng::Castbase(samp_meng::NewUserMsg& parent) 
 
 // --- samp_meng.NewUserMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 samp_meng::GetMsgLength(const samp_meng::NewUserMsg& parent) {
+inline i32 samp_meng::GetMsgLength(const samp_meng::NewUserMsg& parent) throw() {
     return i32(const_cast<samp_meng::NewUserMsg&>(parent).length);
 }
 
 // --- samp_meng.NewUserMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::NewUserMsg& row) {
+inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::NewUserMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<samp_meng::NewUserMsg&>(row).length));
 }
 
@@ -1638,12 +1638,12 @@ inline void samp_meng::NewUserMsg_Init(samp_meng::NewUserMsg& parent) {
 }
 
 // --- samp_meng.NewUserMsg..Ctor
-inline  samp_meng::NewUserMsg::NewUserMsg() {
+inline  samp_meng::NewUserMsg::NewUserMsg() throw() {
     samp_meng::NewUserMsg_Init(*this);
 }
 
 // --- samp_meng.NewUserMsg..FieldwiseCtor
-inline  samp_meng::NewUserMsg::NewUserMsg(u32 in_user)
+inline  samp_meng::NewUserMsg::NewUserMsg(u32 in_user) throw()
     : user(in_user)
  {
     this->type = u8(6);
@@ -1668,13 +1668,13 @@ inline samp_meng::MsgHeader& samp_meng::Castbase(samp_meng::NewUserReqMsg& paren
 
 // --- samp_meng.NewUserReqMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 samp_meng::GetMsgLength(const samp_meng::NewUserReqMsg& parent) {
+inline i32 samp_meng::GetMsgLength(const samp_meng::NewUserReqMsg& parent) throw() {
     return i32(const_cast<samp_meng::NewUserReqMsg&>(parent).length);
 }
 
 // --- samp_meng.NewUserReqMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::NewUserReqMsg& row) {
+inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::NewUserReqMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<samp_meng::NewUserReqMsg&>(row).length));
 }
 
@@ -1687,12 +1687,12 @@ inline void samp_meng::NewUserReqMsg_Init(samp_meng::NewUserReqMsg& parent) {
 }
 
 // --- samp_meng.NewUserReqMsg..Ctor
-inline  samp_meng::NewUserReqMsg::NewUserReqMsg() {
+inline  samp_meng::NewUserReqMsg::NewUserReqMsg() throw() {
     samp_meng::NewUserReqMsg_Init(*this);
 }
 
 // --- samp_meng.NewUserReqMsg..FieldwiseCtor
-inline  samp_meng::NewUserReqMsg::NewUserReqMsg(u32 in_user)
+inline  samp_meng::NewUserReqMsg::NewUserReqMsg(u32 in_user) throw()
     : user(in_user)
  {
     this->type = u8(14);
@@ -1717,13 +1717,13 @@ inline samp_meng::MsgHeader& samp_meng::Castbase(samp_meng::OrderTradeMsg& paren
 
 // --- samp_meng.OrderTradeMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 samp_meng::GetMsgLength(const samp_meng::OrderTradeMsg& parent) {
+inline i32 samp_meng::GetMsgLength(const samp_meng::OrderTradeMsg& parent) throw() {
     return i32(const_cast<samp_meng::OrderTradeMsg&>(parent).length);
 }
 
 // --- samp_meng.OrderTradeMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::OrderTradeMsg& row) {
+inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::OrderTradeMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<samp_meng::OrderTradeMsg&>(row).length));
 }
 
@@ -1737,12 +1737,12 @@ inline void samp_meng::OrderTradeMsg_Init(samp_meng::OrderTradeMsg& parent) {
 }
 
 // --- samp_meng.OrderTradeMsg..Ctor
-inline  samp_meng::OrderTradeMsg::OrderTradeMsg() {
+inline  samp_meng::OrderTradeMsg::OrderTradeMsg() throw() {
     samp_meng::OrderTradeMsg_Init(*this);
 }
 
 // --- samp_meng.OrderTradeMsg..FieldwiseCtor
-inline  samp_meng::OrderTradeMsg::OrderTradeMsg(u64 in_order, u32 in_qty, samp_meng::I64Price8 in_price)
+inline  samp_meng::OrderTradeMsg::OrderTradeMsg(u64 in_order, u32 in_qty, samp_meng::I64Price8 in_price) throw()
     : order(in_order)
     , qty(in_qty)
     , price(in_price)
@@ -1769,14 +1769,14 @@ inline samp_meng::MsgHeader& samp_meng::Castbase(samp_meng::TextMsg& parent) {
 
 // --- samp_meng.TextMsg.text.N
 // Return number of elements in varlen field
-inline u32 samp_meng::text_N(const samp_meng::TextMsg& parent) {
+inline u32 samp_meng::text_N(const samp_meng::TextMsg& parent) throw() {
     u32 length = i32(((samp_meng::TextMsg&)parent).length);
     u32 extra_bytes = u32_Max(length,sizeof(samp_meng::TextMsg)) - sizeof(samp_meng::TextMsg); // avoid unsigned subtraction underflow
     return u32(extra_bytes / sizeof(char));
 }
 
 // --- samp_meng.TextMsg.text_curs.Reset
-inline void samp_meng::TextMsg_text_curs_Reset(TextMsg_text_curs &curs, samp_meng::TextMsg &parent) {
+inline void samp_meng::TextMsg_text_curs_Reset(TextMsg_text_curs &curs, samp_meng::TextMsg &parent) throw() {
     curs.ptr = (u8*)&parent + sizeof(samp_meng::TextMsg);
     curs.length = i32(parent.length) - sizeof(samp_meng::TextMsg);
     curs.index = 0;
@@ -1784,14 +1784,14 @@ inline void samp_meng::TextMsg_text_curs_Reset(TextMsg_text_curs &curs, samp_men
 
 // --- samp_meng.TextMsg.text_curs.ValidQ
 // cursor points to valid item
-inline bool samp_meng::TextMsg_text_curs_ValidQ(TextMsg_text_curs &curs) {
+inline bool samp_meng::TextMsg_text_curs_ValidQ(TextMsg_text_curs &curs) throw() {
     bool valid = ssizeof(char) <= curs.length;
     return valid;
 }
 
 // --- samp_meng.TextMsg.text_curs.Next
 // proceed to next item
-inline void samp_meng::TextMsg_text_curs_Next(TextMsg_text_curs &curs) {
+inline void samp_meng::TextMsg_text_curs_Next(TextMsg_text_curs &curs) throw() {
     i32 len = i32(sizeof(char));
     curs.ptr += len;
     curs.length -= len;
@@ -1800,19 +1800,19 @@ inline void samp_meng::TextMsg_text_curs_Next(TextMsg_text_curs &curs) {
 
 // --- samp_meng.TextMsg.text_curs.Access
 // item access
-inline char& samp_meng::TextMsg_text_curs_Access(TextMsg_text_curs &curs) {
+inline char& samp_meng::TextMsg_text_curs_Access(TextMsg_text_curs &curs) throw() {
     return *(char*)curs.ptr;
 }
 
 // --- samp_meng.TextMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 samp_meng::GetMsgLength(const samp_meng::TextMsg& parent) {
+inline i32 samp_meng::GetMsgLength(const samp_meng::TextMsg& parent) throw() {
     return i32(const_cast<samp_meng::TextMsg&>(parent).length);
 }
 
 // --- samp_meng.TextMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::TextMsg& row) {
+inline algo::memptr samp_meng::GetMsgMemptr(const samp_meng::TextMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<samp_meng::TextMsg&>(row).length));
 }
 
@@ -1824,7 +1824,7 @@ inline void samp_meng::TextMsg_Init(samp_meng::TextMsg& parent) {
 }
 
 // --- samp_meng.TextMsg..Ctor
-inline  samp_meng::TextMsg::TextMsg() {
+inline  samp_meng::TextMsg::TextMsg() throw() {
     samp_meng::TextMsg_Init(*this);
 }
 

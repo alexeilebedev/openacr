@@ -27,30 +27,30 @@
 //#pragma endinclude
 
 // --- dev.Arch..Ctor
-inline  dev::Arch::Arch() {
+inline  dev::Arch::Arch() throw() {
 }
 
 // --- dev.Arch..FieldwiseCtor
-inline  dev::Arch::Arch(const algo::strptr& in_arch, const algo::Comment& in_comment)
+inline  dev::Arch::Arch(const algo::strptr& in_arch, const algo::Comment& in_comment) throw()
     : arch(in_arch)
     , comment(in_comment)
  {
 }
 
 // --- dev.Badline..Ctor
-inline  dev::Badline::Badline() {
+inline  dev::Badline::Badline() throw() {
 }
 
 // --- dev.Builddir..Ctor
-inline  dev::Builddir::Builddir() {
+inline  dev::Builddir::Builddir() throw() {
 }
 
 // --- dev.Cfg..Ctor
-inline  dev::Cfg::Cfg() {
+inline  dev::Cfg::Cfg() throw() {
 }
 
 // --- dev.Cfg..FieldwiseCtor
-inline  dev::Cfg::Cfg(const algo::strptr& in_cfg, const algo::strptr& in_suffix, const algo::Comment& in_comment)
+inline  dev::Cfg::Cfg(const algo::strptr& in_cfg, const algo::strptr& in_suffix, const algo::Comment& in_comment) throw()
     : cfg(in_cfg)
     , suffix(in_suffix)
     , comment(in_comment)
@@ -58,11 +58,11 @@ inline  dev::Cfg::Cfg(const algo::strptr& in_cfg, const algo::strptr& in_suffix,
 }
 
 // --- dev.Compiler..Ctor
-inline  dev::Compiler::Compiler() {
+inline  dev::Compiler::Compiler() throw() {
 }
 
 // --- dev.Compiler..FieldwiseCtor
-inline  dev::Compiler::Compiler(const algo::strptr& in_compiler, const algo::strptr& in_ranlib, const algo::strptr& in_ar, const algo::strptr& in_link, const algo::strptr& in_libext, const algo::strptr& in_exeext, const algo::strptr& in_pchext, const algo::strptr& in_objext, const algo::strptr& in_rc, const algo::Comment& in_comment)
+inline  dev::Compiler::Compiler(const algo::strptr& in_compiler, const algo::strptr& in_ranlib, const algo::strptr& in_ar, const algo::strptr& in_link, const algo::strptr& in_libext, const algo::strptr& in_exeext, const algo::strptr& in_pchext, const algo::strptr& in_objext, const algo::strptr& in_rc, const algo::Comment& in_comment) throw()
     : compiler(in_compiler)
     , ranlib(in_ranlib)
     , ar(in_ar)
@@ -83,7 +83,7 @@ inline void dev::Copyright_Init(dev::Copyright& parent) {
 }
 
 // --- dev.Copyright..Ctor
-inline  dev::Copyright::Copyright() {
+inline  dev::Copyright::Copyright() throw() {
     dev::Copyright_Init(*this);
 }
 
@@ -97,19 +97,19 @@ inline void dev::Covfile_Init(dev::Covfile& parent) {
 }
 
 // --- dev.Covfile..Ctor
-inline  dev::Covfile::Covfile() {
+inline  dev::Covfile::Covfile() throw() {
     dev::Covfile_Init(*this);
 }
 
 // --- dev.Covline.flag.GetEnum
 // Get value of field as enum type
-inline dev_Covline_flag_Enum dev::flag_GetEnum(const dev::Covline& parent) {
+inline dev_Covline_flag_Enum dev::flag_GetEnum(const dev::Covline& parent) throw() {
     return dev_Covline_flag_Enum(parent.flag);
 }
 
 // --- dev.Covline.flag.SetEnum
 // Set value of field from enum type.
-inline void dev::flag_SetEnum(dev::Covline& parent, dev_Covline_flag_Enum rhs) {
+inline void dev::flag_SetEnum(dev::Covline& parent, dev_Covline_flag_Enum rhs) throw() {
     parent.flag = char(rhs);
 }
 
@@ -121,7 +121,7 @@ inline void dev::Covline_Init(dev::Covline& parent) {
 }
 
 // --- dev.Covline..Ctor
-inline  dev::Covline::Covline() {
+inline  dev::Covline::Covline() throw() {
     dev::Covline_Init(*this);
 }
 
@@ -135,7 +135,7 @@ inline void dev::Covtarget_Init(dev::Covtarget& parent) {
 }
 
 // --- dev.Covtarget..Ctor
-inline  dev::Covtarget::Covtarget() {
+inline  dev::Covtarget::Covtarget() throw() {
     dev::Covtarget_Init(*this);
 }
 
@@ -146,28 +146,28 @@ inline void dev::Edaction_Init(dev::Edaction& parent) {
 }
 
 // --- dev.Edaction..Ctor
-inline  dev::Edaction::Edaction() {
+inline  dev::Edaction::Edaction() throw() {
     dev::Edaction_Init(*this);
 }
 
 // --- dev.Edacttype..Ctor
-inline  dev::Edacttype::Edacttype() {
+inline  dev::Edacttype::Edacttype() throw() {
 }
 
 // --- dev.FieldId.value.GetEnum
 // Get value of field as enum type
-inline dev_FieldIdEnum dev::value_GetEnum(const dev::FieldId& parent) {
+inline dev_FieldIdEnum dev::value_GetEnum(const dev::FieldId& parent) throw() {
     return dev_FieldIdEnum(parent.value);
 }
 
 // --- dev.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void dev::value_SetEnum(dev::FieldId& parent, dev_FieldIdEnum rhs) {
+inline void dev::value_SetEnum(dev::FieldId& parent, dev_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- dev.FieldId.value.Cast
-inline  dev::FieldId::operator dev_FieldIdEnum() const {
+inline  dev::FieldId::operator dev_FieldIdEnum() const throw() {
     return dev_FieldIdEnum((*this).value);
 }
 
@@ -178,37 +178,37 @@ inline void dev::FieldId_Init(dev::FieldId& parent) {
 }
 
 // --- dev.FieldId..Ctor
-inline  dev::FieldId::FieldId() {
+inline  dev::FieldId::FieldId() throw() {
     dev::FieldId_Init(*this);
 }
 
 // --- dev.FieldId..FieldwiseCtor
-inline  dev::FieldId::FieldId(i32 in_value)
+inline  dev::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- dev.FieldId..EnumCtor
-inline  dev::FieldId::FieldId(dev_FieldIdEnum arg) {
+inline  dev::FieldId::FieldId(dev_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- dev.Gitfile..Ctor
-inline  dev::Gitfile::Gitfile() {
+inline  dev::Gitfile::Gitfile() throw() {
 }
 
 // --- dev.Gitfile..FieldwiseCtor
-inline  dev::Gitfile::Gitfile(const algo::strptr& in_gitfile)
+inline  dev::Gitfile::Gitfile(const algo::strptr& in_gitfile) throw()
     : gitfile(in_gitfile)
  {
 }
 
 // --- dev.Gitinfo..Ctor
-inline  dev::Gitinfo::Gitinfo() {
+inline  dev::Gitinfo::Gitinfo() throw() {
 }
 
 // --- dev.Gitinfo..FieldwiseCtor
-inline  dev::Gitinfo::Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr& in_author, const algo::strptr& in_cfg, const algo::strptr& in_compver, const algo::strptr& in_package, const algo::Comment& in_comment)
+inline  dev::Gitinfo::Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr& in_author, const algo::strptr& in_cfg, const algo::strptr& in_compver, const algo::strptr& in_package, const algo::Comment& in_comment) throw()
     : gitinfo(in_gitinfo)
     , author(in_author)
     , cfg(in_cfg)
@@ -219,7 +219,7 @@ inline  dev::Gitinfo::Gitinfo(const algo::strptr& in_gitinfo, const algo::strptr
 }
 
 // --- dev.Hilite..Ctor
-inline  dev::Hilite::Hilite() {
+inline  dev::Hilite::Hilite() throw() {
 }
 
 // --- dev.Htmlentity..Init
@@ -229,7 +229,7 @@ inline void dev::Htmlentity_Init(dev::Htmlentity& parent) {
 }
 
 // --- dev.Htmlentity..Ctor
-inline  dev::Htmlentity::Htmlentity() {
+inline  dev::Htmlentity::Htmlentity() throw() {
     dev::Htmlentity_Init(*this);
 }
 
@@ -240,12 +240,12 @@ inline void dev::Include_Init(dev::Include& parent) {
 }
 
 // --- dev.Include..Ctor
-inline  dev::Include::Include() {
+inline  dev::Include::Include() throw() {
     dev::Include_Init(*this);
 }
 
 // --- dev.License..Ctor
-inline  dev::License::License() {
+inline  dev::License::License() throw() {
 }
 
 // --- dev.Linelim..Init
@@ -261,28 +261,28 @@ inline void dev::Linelim_Init(dev::Linelim& parent) {
 }
 
 // --- dev.Linelim..Ctor
-inline  dev::Linelim::Linelim() {
+inline  dev::Linelim::Linelim() throw() {
     dev::Linelim_Init(*this);
 }
 
 // --- dev.Mdmark..Ctor
-inline  dev::Mdmark::Mdmark() {
+inline  dev::Mdmark::Mdmark() throw() {
 }
 
 // --- dev.MdmarkCase.mdmark.GetEnum
 // Get value of field as enum type
-inline dev_MdmarkCaseEnum dev::mdmark_GetEnum(const dev::MdmarkCase& parent) {
+inline dev_MdmarkCaseEnum dev::mdmark_GetEnum(const dev::MdmarkCase& parent) throw() {
     return dev_MdmarkCaseEnum(parent.mdmark);
 }
 
 // --- dev.MdmarkCase.mdmark.SetEnum
 // Set value of field from enum type.
-inline void dev::mdmark_SetEnum(dev::MdmarkCase& parent, dev_MdmarkCaseEnum rhs) {
+inline void dev::mdmark_SetEnum(dev::MdmarkCase& parent, dev_MdmarkCaseEnum rhs) throw() {
     parent.mdmark = u8(rhs);
 }
 
 // --- dev.MdmarkCase.mdmark.Cast
-inline  dev::MdmarkCase::operator dev_MdmarkCaseEnum() const {
+inline  dev::MdmarkCase::operator dev_MdmarkCaseEnum() const throw() {
     return dev_MdmarkCaseEnum((*this).mdmark);
 }
 
@@ -293,23 +293,23 @@ inline void dev::MdmarkCase_Init(dev::MdmarkCase& parent) {
 }
 
 // --- dev.MdmarkCase..Ctor
-inline  dev::MdmarkCase::MdmarkCase() {
+inline  dev::MdmarkCase::MdmarkCase() throw() {
     dev::MdmarkCase_Init(*this);
 }
 
 // --- dev.MdmarkCase..FieldwiseCtor
-inline  dev::MdmarkCase::MdmarkCase(u8 in_mdmark)
+inline  dev::MdmarkCase::MdmarkCase(u8 in_mdmark) throw()
     : mdmark(in_mdmark)
  {
 }
 
 // --- dev.MdmarkCase..EnumCtor
-inline  dev::MdmarkCase::MdmarkCase(dev_MdmarkCaseEnum arg) {
+inline  dev::MdmarkCase::MdmarkCase(dev_MdmarkCaseEnum arg) throw() {
     this->mdmark = u8(arg);
 }
 
 // --- dev.Mdsection..Ctor
-inline  dev::Mdsection::Mdsection() {
+inline  dev::Mdsection::Mdsection() throw() {
 }
 
 // --- dev.Msgfile..Init
@@ -319,20 +319,20 @@ inline void dev::Msgfile_Init(dev::Msgfile& parent) {
 }
 
 // --- dev.Msgfile..Ctor
-inline  dev::Msgfile::Msgfile() {
+inline  dev::Msgfile::Msgfile() throw() {
     dev::Msgfile_Init(*this);
 }
 
 // --- dev.Noindent..Ctor
-inline  dev::Noindent::Noindent() {
+inline  dev::Noindent::Noindent() throw() {
 }
 
 // --- dev.OptType..Ctor
-inline  dev::OptType::OptType() {
+inline  dev::OptType::OptType() throw() {
 }
 
 // --- dev.OptType..FieldwiseCtor
-inline  dev::OptType::OptType(const algo::strptr& in_opt_type, const algo::strptr& in_sep, const algo::Comment& in_comment)
+inline  dev::OptType::OptType(const algo::strptr& in_opt_type, const algo::strptr& in_sep, const algo::Comment& in_comment) throw()
     : opt_type(in_opt_type)
     , sep(in_sep)
     , comment(in_comment)
@@ -340,11 +340,11 @@ inline  dev::OptType::OptType(const algo::strptr& in_opt_type, const algo::strpt
 }
 
 // --- dev.Package..Ctor
-inline  dev::Package::Package() {
+inline  dev::Package::Package() throw() {
 }
 
 // --- dev.Package..FieldwiseCtor
-inline  dev::Package::Package(const algo::strptr& in_package, const algo::strptr& in_baseref, const algo::strptr& in_origin, const algo::Comment& in_comment)
+inline  dev::Package::Package(const algo::strptr& in_package, const algo::strptr& in_baseref, const algo::strptr& in_origin, const algo::Comment& in_comment) throw()
     : package(in_package)
     , baseref(in_baseref)
     , origin(in_origin)
@@ -359,12 +359,12 @@ inline void dev::Pkgdep_Init(dev::Pkgdep& parent) {
 }
 
 // --- dev.Pkgdep..Ctor
-inline  dev::Pkgdep::Pkgdep() {
+inline  dev::Pkgdep::Pkgdep() throw() {
     dev::Pkgdep_Init(*this);
 }
 
 // --- dev.Pkgdep..FieldwiseCtor
-inline  dev::Pkgdep::Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const algo::Comment& in_comment)
+inline  dev::Pkgdep::Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const algo::Comment& in_comment) throw()
     : pkgdep(in_pkgdep)
     , soft(in_soft)
     , comment(in_comment)
@@ -372,11 +372,11 @@ inline  dev::Pkgdep::Pkgdep(const algo::strptr& in_pkgdep, bool in_soft, const a
 }
 
 // --- dev.Pkgkey..Ctor
-inline  dev::Pkgkey::Pkgkey() {
+inline  dev::Pkgkey::Pkgkey() throw() {
 }
 
 // --- dev.Pkgkey..FieldwiseCtor
-inline  dev::Pkgkey::Pkgkey(const algo::strptr& in_pkgkey, const algo::Comment& in_comment)
+inline  dev::Pkgkey::Pkgkey(const algo::strptr& in_pkgkey, const algo::Comment& in_comment) throw()
     : pkgkey(in_pkgkey)
     , comment(in_comment)
  {
@@ -390,12 +390,12 @@ inline void dev::Readme_Init(dev::Readme& parent) {
 }
 
 // --- dev.Readme..Ctor
-inline  dev::Readme::Readme() {
+inline  dev::Readme::Readme() throw() {
     dev::Readme_Init(*this);
 }
 
 // --- dev.Readme..FieldwiseCtor
-inline  dev::Readme::Readme(const algo::strptr& in_gitfile, bool in_inl, bool in_sandbox, const algo::strptr& in_filter, const algo::Comment& in_comment)
+inline  dev::Readme::Readme(const algo::strptr& in_gitfile, bool in_inl, bool in_sandbox, const algo::strptr& in_filter, const algo::Comment& in_comment) throw()
     : gitfile(in_gitfile)
     , inl(in_inl)
     , sandbox(in_sandbox)
@@ -405,23 +405,23 @@ inline  dev::Readme::Readme(const algo::strptr& in_gitfile, bool in_inl, bool in
 }
 
 // --- dev.Readmesort..Ctor
-inline  dev::Readmesort::Readmesort() {
+inline  dev::Readmesort::Readmesort() throw() {
 }
 
 // --- dev.Sandbox..Ctor
-inline  dev::Sandbox::Sandbox() {
+inline  dev::Sandbox::Sandbox() throw() {
 }
 
 // --- dev.Sbpath..Ctor
-inline  dev::Sbpath::Sbpath() {
+inline  dev::Sbpath::Sbpath() throw() {
 }
 
 // --- dev.Scriptfile..Ctor
-inline  dev::Scriptfile::Scriptfile() {
+inline  dev::Scriptfile::Scriptfile() throw() {
 }
 
 // --- dev.Srcfile..Ctor
-inline  dev::Srcfile::Srcfile() {
+inline  dev::Srcfile::Srcfile() throw() {
 }
 
 // --- dev.Syscmd..Init
@@ -437,12 +437,12 @@ inline void dev::Syscmd_Init(dev::Syscmd& parent) {
 }
 
 // --- dev.Syscmd..Ctor
-inline  dev::Syscmd::Syscmd() {
+inline  dev::Syscmd::Syscmd() throw() {
     dev::Syscmd_Init(*this);
 }
 
 // --- dev.Syscmd..FieldwiseCtor
-inline  dev::Syscmd::Syscmd(i64 in_syscmd, const algo::strptr& in_command, i32 in_pid, i32 in_status, i32 in_nprereq, bool in_fail_prereq, bool in_completed, i32 in_maxtime)
+inline  dev::Syscmd::Syscmd(i64 in_syscmd, const algo::strptr& in_command, i32 in_pid, i32 in_status, i32 in_nprereq, bool in_fail_prereq, bool in_completed, i32 in_maxtime) throw()
     : syscmd(in_syscmd)
     , command(in_command)
     , pid(in_pid)
@@ -462,59 +462,59 @@ inline void dev::Syscmddep_Init(dev::Syscmddep& parent) {
 }
 
 // --- dev.Syscmddep..Ctor
-inline  dev::Syscmddep::Syscmddep() {
+inline  dev::Syscmddep::Syscmddep() throw() {
     dev::Syscmddep_Init(*this);
 }
 
 // --- dev.Syscmddep..FieldwiseCtor
-inline  dev::Syscmddep::Syscmddep(i64 in_child, i64 in_parent)
+inline  dev::Syscmddep::Syscmddep(i64 in_child, i64 in_parent) throw()
     : child(in_child)
     , parent(in_parent)
  {
 }
 
 // --- dev.Syslib..Ctor
-inline  dev::Syslib::Syslib() {
+inline  dev::Syslib::Syslib() throw() {
 }
 
 // --- dev.Targdep..Ctor
-inline  dev::Targdep::Targdep() {
+inline  dev::Targdep::Targdep() throw() {
 }
 
 // --- dev.Targdep..FieldwiseCtor
-inline  dev::Targdep::Targdep(const algo::strptr& in_targdep, const algo::Comment& in_comment)
+inline  dev::Targdep::Targdep(const algo::strptr& in_targdep, const algo::Comment& in_comment) throw()
     : targdep(in_targdep)
     , comment(in_comment)
  {
 }
 
 // --- dev.Target..Ctor
-inline  dev::Target::Target() {
+inline  dev::Target::Target() throw() {
 }
 
 // --- dev.Target..FieldwiseCtor
-inline  dev::Target::Target(const algo::strptr& in_target)
+inline  dev::Target::Target(const algo::strptr& in_target) throw()
     : target(in_target)
  {
 }
 
 // --- dev.Targsrc..Ctor
-inline  dev::Targsrc::Targsrc() {
+inline  dev::Targsrc::Targsrc() throw() {
 }
 
 // --- dev.Targsrc..FieldwiseCtor
-inline  dev::Targsrc::Targsrc(const algo::strptr& in_targsrc, const algo::Comment& in_comment)
+inline  dev::Targsrc::Targsrc(const algo::strptr& in_targsrc, const algo::Comment& in_comment) throw()
     : targsrc(in_targsrc)
     , comment(in_comment)
  {
 }
 
 // --- dev.Targsyslib..Ctor
-inline  dev::Targsyslib::Targsyslib() {
+inline  dev::Targsyslib::Targsyslib() throw() {
 }
 
 // --- dev.Tgtcov..Ctor
-inline  dev::Tgtcov::Tgtcov() {
+inline  dev::Tgtcov::Tgtcov() throw() {
 }
 
 // --- dev.Timefmt..Init
@@ -524,34 +524,34 @@ inline void dev::Timefmt_Init(dev::Timefmt& parent) {
 }
 
 // --- dev.Timefmt..Ctor
-inline  dev::Timefmt::Timefmt() {
+inline  dev::Timefmt::Timefmt() throw() {
     dev::Timefmt_Init(*this);
 }
 
 // --- dev.ToolOpt..Ctor
-inline  dev::ToolOpt::ToolOpt() {
+inline  dev::ToolOpt::ToolOpt() throw() {
 }
 
 // --- dev.ToolOpt..FieldwiseCtor
-inline  dev::ToolOpt::ToolOpt(const algo::strptr& in_tool_opt, const algo::Comment& in_comment)
+inline  dev::ToolOpt::ToolOpt(const algo::strptr& in_tool_opt, const algo::Comment& in_comment) throw()
     : tool_opt(in_tool_opt)
     , comment(in_comment)
  {
 }
 
 // --- dev.Uname..Ctor
-inline  dev::Uname::Uname() {
+inline  dev::Uname::Uname() throw() {
 }
 
 // --- dev.Uname..FieldwiseCtor
-inline  dev::Uname::Uname(const algo::strptr& in_uname, const algo::Comment& in_comment)
+inline  dev::Uname::Uname(const algo::strptr& in_uname, const algo::Comment& in_comment) throw()
     : uname(in_uname)
     , comment(in_comment)
  {
 }
 
 // --- dev.Unstablefld..Ctor
-inline  dev::Unstablefld::Unstablefld() {
+inline  dev::Unstablefld::Unstablefld() throw() {
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const dev::Badline &row) {// cfmt:dev.Badline.String

@@ -89,7 +89,7 @@ namespace sandbox { // gen:ns_print_proto
 // --- sandbox.trace..Print
 // print string representation of ROW to string STR
 // cfmt:sandbox.trace.String  printfmt:Tuple
-void sandbox::trace_Print(sandbox::trace& row, algo::cstring& str) {
+void sandbox::trace_Print(sandbox::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "sandbox.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -100,7 +100,7 @@ void sandbox::trace_Print(sandbox::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     sandbox.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void sandbox::ReadArgv() {
+void sandbox::ReadArgv() throw() {
     command::sandbox &cmd = sandbox::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -322,7 +322,7 @@ bool sandbox::InsertStrptrMaybe(algo::strptr str) {
 
 // --- sandbox.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool sandbox::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool sandbox::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = sandbox::LoadTuplesFile(root, recursive);
@@ -347,7 +347,7 @@ bool sandbox::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool sandbox::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool sandbox::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -360,7 +360,7 @@ bool sandbox::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- sandbox.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool sandbox::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool sandbox::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -380,7 +380,7 @@ bool sandbox::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) 
 
 // --- sandbox.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool sandbox::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool sandbox::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = sandbox::LoadTuplesFile(fname, recursive);
@@ -405,7 +405,7 @@ bool sandbox::_db_XrefMaybe() {
 // --- sandbox.FDb.sandbox.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-sandbox::FSandbox& sandbox::sandbox_Alloc() {
+sandbox::FSandbox& sandbox::sandbox_Alloc() throw() {
     sandbox::FSandbox* row = sandbox_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("sandbox.out_of_mem  field:sandbox.FDb.sandbox  comment:'Alloc failed'");
@@ -415,7 +415,7 @@ sandbox::FSandbox& sandbox::sandbox_Alloc() {
 
 // --- sandbox.FDb.sandbox.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-sandbox::FSandbox* sandbox::sandbox_AllocMaybe() {
+sandbox::FSandbox* sandbox::sandbox_AllocMaybe() throw() {
     sandbox::FSandbox *row = (sandbox::FSandbox*)sandbox_AllocMem();
     if (row) {
         new (row) sandbox::FSandbox; // call constructor
@@ -426,7 +426,7 @@ sandbox::FSandbox* sandbox::sandbox_AllocMaybe() {
 // --- sandbox.FDb.sandbox.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-sandbox::FSandbox* sandbox::sandbox_InsertMaybe(const dev::Sandbox &value) {
+sandbox::FSandbox* sandbox::sandbox_InsertMaybe(const dev::Sandbox &value) throw() {
     sandbox::FSandbox *row = &sandbox_Alloc(); // if out of memory, process dies. if input error, return NULL.
     sandbox_CopyIn(*row,const_cast<dev::Sandbox&>(value));
     bool ok = sandbox_XrefMaybe(*row); // this may return false
@@ -439,7 +439,7 @@ sandbox::FSandbox* sandbox::sandbox_InsertMaybe(const dev::Sandbox &value) {
 
 // --- sandbox.FDb.sandbox.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* sandbox::sandbox_AllocMem() {
+void* sandbox::sandbox_AllocMem() throw() {
     u64 new_nelems     = _db.sandbox_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -465,7 +465,7 @@ void* sandbox::sandbox_AllocMem() {
 
 // --- sandbox.FDb.sandbox.RemoveAll
 // Remove all elements from Lary
-void sandbox::sandbox_RemoveAll() {
+void sandbox::sandbox_RemoveAll() throw() {
     for (u64 n = _db.sandbox_n; n>0; ) {
         n--;
         sandbox_qFind(u64(n)).~FSandbox(); // destroy last element
@@ -475,7 +475,7 @@ void sandbox::sandbox_RemoveAll() {
 
 // --- sandbox.FDb.sandbox.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void sandbox::sandbox_RemoveLast() {
+void sandbox::sandbox_RemoveLast() throw() {
     u64 n = _db.sandbox_n;
     if (n > 0) {
         n -= 1;
@@ -485,7 +485,7 @@ void sandbox::sandbox_RemoveLast() {
 }
 
 // --- sandbox.FDb.sandbox.InputMaybe
-static bool sandbox::sandbox_InputMaybe(dev::Sandbox &elem) {
+static bool sandbox::sandbox_InputMaybe(dev::Sandbox &elem) throw() {
     bool retval = true;
     retval = sandbox_InsertMaybe(elem) != nullptr;
     return retval;
@@ -511,7 +511,7 @@ bool sandbox::sandbox_XrefMaybe(sandbox::FSandbox &row) {
 
 // --- sandbox.FDb.ind_sandbox.Find
 // Find row by key. Return NULL if not found.
-sandbox::FSandbox* sandbox::ind_sandbox_Find(const algo::strptr& key) {
+sandbox::FSandbox* sandbox::ind_sandbox_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_sandbox_buckets_n - 1);
     sandbox::FSandbox* *e = &_db.ind_sandbox_buckets_elems[index];
     sandbox::FSandbox* ret=NULL;
@@ -534,7 +534,7 @@ sandbox::FSandbox& sandbox::ind_sandbox_FindX(const algo::strptr& key) {
 
 // --- sandbox.FDb.ind_sandbox.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-sandbox::FSandbox& sandbox::ind_sandbox_GetOrCreate(const algo::strptr& key) {
+sandbox::FSandbox& sandbox::ind_sandbox_GetOrCreate(const algo::strptr& key) throw() {
     sandbox::FSandbox* ret = ind_sandbox_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &sandbox_Alloc();
@@ -551,7 +551,7 @@ sandbox::FSandbox& sandbox::ind_sandbox_GetOrCreate(const algo::strptr& key) {
 
 // --- sandbox.FDb.ind_sandbox.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool sandbox::ind_sandbox_InsertMaybe(sandbox::FSandbox& row) {
+bool sandbox::ind_sandbox_InsertMaybe(sandbox::FSandbox& row) throw() {
     ind_sandbox_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_sandbox_next == (sandbox::FSandbox*)-1)) {// check if in hash already
@@ -579,7 +579,7 @@ bool sandbox::ind_sandbox_InsertMaybe(sandbox::FSandbox& row) {
 
 // --- sandbox.FDb.ind_sandbox.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void sandbox::ind_sandbox_Remove(sandbox::FSandbox& row) {
+void sandbox::ind_sandbox_Remove(sandbox::FSandbox& row) throw() {
     if (LIKELY(row.ind_sandbox_next != (sandbox::FSandbox*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.sandbox) & (_db.ind_sandbox_buckets_n - 1);
         sandbox::FSandbox* *prev = &_db.ind_sandbox_buckets_elems[index]; // addr of pointer to current element
@@ -597,7 +597,7 @@ void sandbox::ind_sandbox_Remove(sandbox::FSandbox& row) {
 
 // --- sandbox.FDb.ind_sandbox.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void sandbox::ind_sandbox_Reserve(int n) {
+void sandbox::ind_sandbox_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_sandbox_buckets_n;
     u32 new_nelems   = _db.ind_sandbox_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -634,7 +634,7 @@ void sandbox::ind_sandbox_Reserve(int n) {
 // --- sandbox.FDb.sbpath.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-sandbox::FSbpath& sandbox::sbpath_Alloc() {
+sandbox::FSbpath& sandbox::sbpath_Alloc() throw() {
     sandbox::FSbpath* row = sbpath_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("sandbox.out_of_mem  field:sandbox.FDb.sbpath  comment:'Alloc failed'");
@@ -644,7 +644,7 @@ sandbox::FSbpath& sandbox::sbpath_Alloc() {
 
 // --- sandbox.FDb.sbpath.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-sandbox::FSbpath* sandbox::sbpath_AllocMaybe() {
+sandbox::FSbpath* sandbox::sbpath_AllocMaybe() throw() {
     sandbox::FSbpath *row = (sandbox::FSbpath*)sbpath_AllocMem();
     if (row) {
         new (row) sandbox::FSbpath; // call constructor
@@ -655,7 +655,7 @@ sandbox::FSbpath* sandbox::sbpath_AllocMaybe() {
 // --- sandbox.FDb.sbpath.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-sandbox::FSbpath* sandbox::sbpath_InsertMaybe(const dev::Sbpath &value) {
+sandbox::FSbpath* sandbox::sbpath_InsertMaybe(const dev::Sbpath &value) throw() {
     sandbox::FSbpath *row = &sbpath_Alloc(); // if out of memory, process dies. if input error, return NULL.
     sbpath_CopyIn(*row,const_cast<dev::Sbpath&>(value));
     bool ok = sbpath_XrefMaybe(*row); // this may return false
@@ -668,7 +668,7 @@ sandbox::FSbpath* sandbox::sbpath_InsertMaybe(const dev::Sbpath &value) {
 
 // --- sandbox.FDb.sbpath.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* sandbox::sbpath_AllocMem() {
+void* sandbox::sbpath_AllocMem() throw() {
     u64 new_nelems     = _db.sbpath_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -694,7 +694,7 @@ void* sandbox::sbpath_AllocMem() {
 
 // --- sandbox.FDb.sbpath.RemoveAll
 // Remove all elements from Lary
-void sandbox::sbpath_RemoveAll() {
+void sandbox::sbpath_RemoveAll() throw() {
     for (u64 n = _db.sbpath_n; n>0; ) {
         n--;
         sbpath_qFind(u64(n)).~FSbpath(); // destroy last element
@@ -704,7 +704,7 @@ void sandbox::sbpath_RemoveAll() {
 
 // --- sandbox.FDb.sbpath.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void sandbox::sbpath_RemoveLast() {
+void sandbox::sbpath_RemoveLast() throw() {
     u64 n = _db.sbpath_n;
     if (n > 0) {
         n -= 1;
@@ -714,7 +714,7 @@ void sandbox::sbpath_RemoveLast() {
 }
 
 // --- sandbox.FDb.sbpath.InputMaybe
-static bool sandbox::sbpath_InputMaybe(dev::Sbpath &elem) {
+static bool sandbox::sbpath_InputMaybe(dev::Sbpath &elem) throw() {
     bool retval = true;
     retval = sbpath_InsertMaybe(elem) != nullptr;
     return retval;
@@ -731,13 +731,13 @@ bool sandbox::sbpath_XrefMaybe(sandbox::FSbpath &row) {
 
 // --- sandbox.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr sandbox::trace_RowidFind(int t) {
+static algo::ImrowPtr sandbox::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- sandbox.FDb.trace.N
 // Function return 1
-inline static i32 sandbox::trace_N() {
+inline static i32 sandbox::trace_N() throw() {
     return 1;
 }
 
@@ -779,7 +779,7 @@ void sandbox::FDb_Init() {
 }
 
 // --- sandbox.FDb..Uninit
-void sandbox::FDb_Uninit() {
+void sandbox::FDb_Uninit() throw() {
     sandbox::FDb &row = _db; (void)row;
 
     // sandbox.FDb.sbpath.Uninit (Lary)  //
@@ -794,34 +794,34 @@ void sandbox::FDb_Uninit() {
 
 // --- sandbox.FSandbox.base.CopyOut
 // Copy fields out of row
-void sandbox::sandbox_CopyOut(sandbox::FSandbox &row, dev::Sandbox &out) {
+void sandbox::sandbox_CopyOut(sandbox::FSandbox &row, dev::Sandbox &out) throw() {
     out.sandbox = row.sandbox;
     out.comment = row.comment;
 }
 
 // --- sandbox.FSandbox.base.CopyIn
 // Copy fields in to row
-void sandbox::sandbox_CopyIn(sandbox::FSandbox &row, dev::Sandbox &in) {
+void sandbox::sandbox_CopyIn(sandbox::FSandbox &row, dev::Sandbox &in) throw() {
     row.sandbox = in.sandbox;
     row.comment = in.comment;
 }
 
 // --- sandbox.FSandbox..Uninit
-void sandbox::FSandbox_Uninit(sandbox::FSandbox& sandbox) {
+void sandbox::FSandbox_Uninit(sandbox::FSandbox& sandbox) throw() {
     sandbox::FSandbox &row = sandbox; (void)row;
     ind_sandbox_Remove(row); // remove sandbox from index ind_sandbox
 }
 
 // --- sandbox.FSbpath.base.CopyOut
 // Copy fields out of row
-void sandbox::sbpath_CopyOut(sandbox::FSbpath &row, dev::Sbpath &out) {
+void sandbox::sbpath_CopyOut(sandbox::FSbpath &row, dev::Sbpath &out) throw() {
     out.sbpath = row.sbpath;
     out.comment = row.comment;
 }
 
 // --- sandbox.FSbpath.base.CopyIn
 // Copy fields in to row
-void sandbox::sbpath_CopyIn(sandbox::FSbpath &row, dev::Sbpath &in) {
+void sandbox::sbpath_CopyIn(sandbox::FSbpath &row, dev::Sbpath &in) throw() {
     row.sbpath = in.sbpath;
     row.comment = in.comment;
 }
@@ -829,7 +829,7 @@ void sandbox::sbpath_CopyIn(sandbox::FSbpath &row, dev::Sbpath &in) {
 // --- sandbox.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* sandbox::value_ToCstr(const sandbox::FieldId& parent) {
+const char* sandbox::value_ToCstr(const sandbox::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case sandbox_FieldId_value         : ret = "value";  break;
@@ -840,7 +840,7 @@ const char* sandbox::value_ToCstr(const sandbox::FieldId& parent) {
 // --- sandbox.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void sandbox::value_Print(const sandbox::FieldId& parent, algo::cstring &lhs) {
+void sandbox::value_Print(const sandbox::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -853,7 +853,7 @@ void sandbox::value_Print(const sandbox::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool sandbox::value_SetStrptrMaybe(sandbox::FieldId& parent, algo::strptr rhs) {
+bool sandbox::value_SetStrptrMaybe(sandbox::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -871,13 +871,13 @@ bool sandbox::value_SetStrptrMaybe(sandbox::FieldId& parent, algo::strptr rhs) {
 // --- sandbox.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void sandbox::value_SetStrptr(sandbox::FieldId& parent, algo::strptr rhs, sandbox_FieldIdEnum dflt) {
+void sandbox::value_SetStrptr(sandbox::FieldId& parent, algo::strptr rhs, sandbox_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- sandbox.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool sandbox::value_ReadStrptrMaybe(sandbox::FieldId& parent, algo::strptr rhs) {
+bool sandbox::value_ReadStrptrMaybe(sandbox::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -889,7 +889,7 @@ bool sandbox::value_ReadStrptrMaybe(sandbox::FieldId& parent, algo::strptr rhs) 
 // --- sandbox.FieldId..ReadStrptrMaybe
 // Read fields of sandbox::FieldId from an ascii string.
 // The format of the string is the format of the sandbox::FieldId's only field
-bool sandbox::FieldId_ReadStrptrMaybe(sandbox::FieldId &parent, algo::strptr in_str) {
+bool sandbox::FieldId_ReadStrptrMaybe(sandbox::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -898,14 +898,14 @@ bool sandbox::FieldId_ReadStrptrMaybe(sandbox::FieldId &parent, algo::strptr in_
 // --- sandbox.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:sandbox.FieldId.String  printfmt:Raw
-void sandbox::FieldId_Print(sandbox::FieldId& row, algo::cstring& str) {
+void sandbox::FieldId_Print(sandbox::FieldId& row, algo::cstring& str) throw() {
     sandbox::value_Print(row, str);
 }
 
 // --- sandbox.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* sandbox::value_ToCstr(const sandbox::TableId& parent) {
+const char* sandbox::value_ToCstr(const sandbox::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case sandbox_TableId_dev_Sandbox   : ret = "dev.Sandbox";  break;
@@ -917,7 +917,7 @@ const char* sandbox::value_ToCstr(const sandbox::TableId& parent) {
 // --- sandbox.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void sandbox::value_Print(const sandbox::TableId& parent, algo::cstring &lhs) {
+void sandbox::value_Print(const sandbox::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -930,7 +930,7 @@ void sandbox::value_Print(const sandbox::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool sandbox::value_SetStrptrMaybe(sandbox::TableId& parent, algo::strptr rhs) {
+bool sandbox::value_SetStrptrMaybe(sandbox::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 10: {
@@ -966,13 +966,13 @@ bool sandbox::value_SetStrptrMaybe(sandbox::TableId& parent, algo::strptr rhs) {
 // --- sandbox.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void sandbox::value_SetStrptr(sandbox::TableId& parent, algo::strptr rhs, sandbox_TableIdEnum dflt) {
+void sandbox::value_SetStrptr(sandbox::TableId& parent, algo::strptr rhs, sandbox_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- sandbox.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool sandbox::value_ReadStrptrMaybe(sandbox::TableId& parent, algo::strptr rhs) {
+bool sandbox::value_ReadStrptrMaybe(sandbox::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -984,7 +984,7 @@ bool sandbox::value_ReadStrptrMaybe(sandbox::TableId& parent, algo::strptr rhs) 
 // --- sandbox.TableId..ReadStrptrMaybe
 // Read fields of sandbox::TableId from an ascii string.
 // The format of the string is the format of the sandbox::TableId's only field
-bool sandbox::TableId_ReadStrptrMaybe(sandbox::TableId &parent, algo::strptr in_str) {
+bool sandbox::TableId_ReadStrptrMaybe(sandbox::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -993,7 +993,7 @@ bool sandbox::TableId_ReadStrptrMaybe(sandbox::TableId &parent, algo::strptr in_
 // --- sandbox.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:sandbox.TableId.String  printfmt:Raw
-void sandbox::TableId_Print(sandbox::TableId& row, algo::cstring& str) {
+void sandbox::TableId_Print(sandbox::TableId& row, algo::cstring& str) throw() {
     sandbox::value_Print(row, str);
 }
 

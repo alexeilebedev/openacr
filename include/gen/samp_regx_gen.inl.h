@@ -27,28 +27,28 @@
 //#pragma endinclude
 
 // --- samp_regx.trace..Ctor
-inline  samp_regx::trace::trace() {
+inline  samp_regx::trace::trace() throw() {
 }
 
 // --- samp_regx.FDb..Uninit
-inline void samp_regx::FDb_Uninit() {
+inline void samp_regx::FDb_Uninit() throw() {
     samp_regx::FDb &row = _db; (void)row;
 }
 
 // --- samp_regx.FieldId.value.GetEnum
 // Get value of field as enum type
-inline samp_regx_FieldIdEnum samp_regx::value_GetEnum(const samp_regx::FieldId& parent) {
+inline samp_regx_FieldIdEnum samp_regx::value_GetEnum(const samp_regx::FieldId& parent) throw() {
     return samp_regx_FieldIdEnum(parent.value);
 }
 
 // --- samp_regx.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void samp_regx::value_SetEnum(samp_regx::FieldId& parent, samp_regx_FieldIdEnum rhs) {
+inline void samp_regx::value_SetEnum(samp_regx::FieldId& parent, samp_regx_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- samp_regx.FieldId.value.Cast
-inline  samp_regx::FieldId::operator samp_regx_FieldIdEnum() const {
+inline  samp_regx::FieldId::operator samp_regx_FieldIdEnum() const throw() {
     return samp_regx_FieldIdEnum((*this).value);
 }
 
@@ -59,18 +59,18 @@ inline void samp_regx::FieldId_Init(samp_regx::FieldId& parent) {
 }
 
 // --- samp_regx.FieldId..Ctor
-inline  samp_regx::FieldId::FieldId() {
+inline  samp_regx::FieldId::FieldId() throw() {
     samp_regx::FieldId_Init(*this);
 }
 
 // --- samp_regx.FieldId..FieldwiseCtor
-inline  samp_regx::FieldId::FieldId(i32 in_value)
+inline  samp_regx::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- samp_regx.FieldId..EnumCtor
-inline  samp_regx::FieldId::FieldId(samp_regx_FieldIdEnum arg) {
+inline  samp_regx::FieldId::FieldId(samp_regx_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

@@ -32,43 +32,43 @@
 
 // --- atf_unit.Cstr.val.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool atf_unit::val_Lt(atf_unit::Cstr& parent, atf_unit::Cstr &rhs) {
+inline bool atf_unit::val_Lt(atf_unit::Cstr& parent, atf_unit::Cstr &rhs) throw() {
     return algo::cstring_Lt(parent.val,rhs.val);
 }
 
 // --- atf_unit.Cstr.val.Cmp
 // Compare two fields.
-inline i32 atf_unit::val_Cmp(atf_unit::Cstr& parent, atf_unit::Cstr &rhs) {
+inline i32 atf_unit::val_Cmp(atf_unit::Cstr& parent, atf_unit::Cstr &rhs) throw() {
     i32 retval = 0;
     retval = algo::cstring_Cmp(parent.val, rhs.val);
     return retval;
 }
 
 // --- atf_unit.Cstr.val.Cast
-inline  atf_unit::Cstr::operator algo::strptr() const {
+inline  atf_unit::Cstr::operator algo::strptr() const throw() {
     return algo::strptr((*this).val);
 }
 
 // --- atf_unit.Cstr..Hash
-inline u32 atf_unit::Cstr_Hash(u32 prev, const atf_unit::Cstr& rhs) {
+inline u32 atf_unit::Cstr_Hash(u32 prev, const atf_unit::Cstr& rhs) throw() {
     prev = cstring_Hash(prev, rhs.val);
     return prev;
 }
 
 // --- atf_unit.Cstr..Lt
-inline bool atf_unit::Cstr_Lt(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) {
+inline bool atf_unit::Cstr_Lt(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) throw() {
     return val_Lt(lhs,rhs);
 }
 
 // --- atf_unit.Cstr..Cmp
-inline i32 atf_unit::Cstr_Cmp(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) {
+inline i32 atf_unit::Cstr_Cmp(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) throw() {
     i32 retval = 0;
     retval = val_Cmp(lhs,rhs);
     return retval;
 }
 
 // --- atf_unit.Cstr..Eq
-inline bool atf_unit::Cstr_Eq(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) {
+inline bool atf_unit::Cstr_Eq(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) throw() {
     bool retval = true;
     retval = algo::cstring_Eq(lhs.val, rhs.val);
     return retval;
@@ -76,7 +76,7 @@ inline bool atf_unit::Cstr_Eq(atf_unit::Cstr& lhs, atf_unit::Cstr& rhs) {
 
 // --- atf_unit.Cstr..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_unit::Cstr_Update(atf_unit::Cstr &lhs, atf_unit::Cstr& rhs) {
+inline bool atf_unit::Cstr_Update(atf_unit::Cstr &lhs, atf_unit::Cstr& rhs) throw() {
     bool ret = !Cstr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -85,63 +85,63 @@ inline bool atf_unit::Cstr_Update(atf_unit::Cstr &lhs, atf_unit::Cstr& rhs) {
 }
 
 // --- atf_unit.Cstr..Ctor
-inline  atf_unit::Cstr::Cstr() {
+inline  atf_unit::Cstr::Cstr() throw() {
 }
 
 // --- atf_unit.Cstr..FieldwiseCtor
-inline  atf_unit::Cstr::Cstr(const algo::strptr& in_val)
+inline  atf_unit::Cstr::Cstr(const algo::strptr& in_val) throw()
     : val(in_val)
  {
 }
 
 // --- atf_unit.Dbl.val.Cast
-inline  atf_unit::Dbl::operator double() const {
+inline  atf_unit::Dbl::operator double() const throw() {
     return double((*this).val);
 }
 
 // --- atf_unit.Dbl..Hash
-inline u32 atf_unit::Dbl_Hash(u32 prev, atf_unit::Dbl rhs) {
+inline u32 atf_unit::Dbl_Hash(u32 prev, atf_unit::Dbl rhs) throw() {
     prev = double_Hash(prev, rhs.val);
     return prev;
 }
 
 // --- atf_unit.Dbl..EqOp
-inline bool atf_unit::Dbl::operator ==(const atf_unit::Dbl &rhs) const {
+inline bool atf_unit::Dbl::operator ==(const atf_unit::Dbl &rhs) const throw() {
     return atf_unit::Dbl_Eq(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
 }
 
 // --- atf_unit.Dbl..NeOp
-inline bool atf_unit::Dbl::operator !=(const atf_unit::Dbl &rhs) const {
+inline bool atf_unit::Dbl::operator !=(const atf_unit::Dbl &rhs) const throw() {
     return !atf_unit::Dbl_Eq(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
 }
 
 // --- atf_unit.Dbl..LtOp
-inline bool atf_unit::Dbl::operator <(const atf_unit::Dbl &rhs) const {
+inline bool atf_unit::Dbl::operator <(const atf_unit::Dbl &rhs) const throw() {
     return atf_unit::Dbl_Lt(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
 }
 
 // --- atf_unit.Dbl..GtOp
-inline bool atf_unit::Dbl::operator >(const atf_unit::Dbl &rhs) const {
+inline bool atf_unit::Dbl::operator >(const atf_unit::Dbl &rhs) const throw() {
     return atf_unit::Dbl_Lt(const_cast<atf_unit::Dbl&>(rhs),const_cast<atf_unit::Dbl&>(*this));
 }
 
 // --- atf_unit.Dbl..LeOp
-inline bool atf_unit::Dbl::operator <=(const atf_unit::Dbl &rhs) const {
+inline bool atf_unit::Dbl::operator <=(const atf_unit::Dbl &rhs) const throw() {
     return !atf_unit::Dbl_Lt(const_cast<atf_unit::Dbl&>(rhs),const_cast<atf_unit::Dbl&>(*this));
 }
 
 // --- atf_unit.Dbl..GeOp
-inline bool atf_unit::Dbl::operator >=(const atf_unit::Dbl &rhs) const {
+inline bool atf_unit::Dbl::operator >=(const atf_unit::Dbl &rhs) const throw() {
     return !atf_unit::Dbl_Lt(const_cast<atf_unit::Dbl&>(*this),const_cast<atf_unit::Dbl&>(rhs));
 }
 
 // --- atf_unit.Dbl..Lt
-inline bool atf_unit::Dbl_Lt(atf_unit::Dbl lhs, atf_unit::Dbl rhs) {
+inline bool atf_unit::Dbl_Lt(atf_unit::Dbl lhs, atf_unit::Dbl rhs) throw() {
     return double_Lt(lhs.val, rhs.val);
 }
 
 // --- atf_unit.Dbl..Cmp
-inline i32 atf_unit::Dbl_Cmp(atf_unit::Dbl lhs, atf_unit::Dbl rhs) {
+inline i32 atf_unit::Dbl_Cmp(atf_unit::Dbl lhs, atf_unit::Dbl rhs) throw() {
     i32 retval = 0;
     retval = double_Cmp(lhs.val, rhs.val);
     return retval;
@@ -154,7 +154,7 @@ inline void atf_unit::Dbl_Init(atf_unit::Dbl& parent) {
 }
 
 // --- atf_unit.Dbl..Eq
-inline bool atf_unit::Dbl_Eq(atf_unit::Dbl lhs, atf_unit::Dbl rhs) {
+inline bool atf_unit::Dbl_Eq(atf_unit::Dbl lhs, atf_unit::Dbl rhs) throw() {
     bool retval = true;
     retval = double_Eq(lhs.val, rhs.val);
     return retval;
@@ -162,7 +162,7 @@ inline bool atf_unit::Dbl_Eq(atf_unit::Dbl lhs, atf_unit::Dbl rhs) {
 
 // --- atf_unit.Dbl..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_unit::Dbl_Update(atf_unit::Dbl &lhs, atf_unit::Dbl rhs) {
+inline bool atf_unit::Dbl_Update(atf_unit::Dbl &lhs, atf_unit::Dbl rhs) throw() {
     bool ret = !Dbl_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -171,35 +171,35 @@ inline bool atf_unit::Dbl_Update(atf_unit::Dbl &lhs, atf_unit::Dbl rhs) {
 }
 
 // --- atf_unit.Dbl..Ctor
-inline  atf_unit::Dbl::Dbl() {
+inline  atf_unit::Dbl::Dbl() throw() {
     atf_unit::Dbl_Init(*this);
 }
 
 // --- atf_unit.Dbl..FieldwiseCtor
-inline  atf_unit::Dbl::Dbl(double in_val)
+inline  atf_unit::Dbl::Dbl(double in_val) throw()
     : val(in_val)
  {
 }
 
 // --- atf_unit.trace..Ctor
-inline  atf_unit::trace::trace() {
+inline  atf_unit::trace::trace() throw() {
 }
 
 // --- atf_unit.FDb.tr_number.EmptyQ
 // Return true if index is empty
-inline bool atf_unit::tr_number_EmptyQ() {
+inline bool atf_unit::tr_number_EmptyQ() throw() {
     return _db.tr_number_root == NULL;
 }
 
 // --- atf_unit.FDb.tr_number.InTreeQ
 // Return true if row is in the tree, false otherwise
-inline bool atf_unit::tr_number_InTreeQ(atf_unit::FNumber& row) {
+inline bool atf_unit::tr_number_InTreeQ(atf_unit::FNumber& row) throw() {
     return row.tr_number_up != (atf_unit::FNumber*)-1;
 }
 
 // --- atf_unit.FDb.tr_number.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void atf_unit::tr_number_RemoveAll() {
+inline void atf_unit::tr_number_RemoveAll() throw() {
     tr_number_RemoveAllImpl(_db.tr_number_root, false);
     _db.tr_number_root = NULL;
     _db.tr_number_n = 0;
@@ -207,13 +207,13 @@ inline void atf_unit::tr_number_RemoveAll() {
 
 // --- atf_unit.FDb.unittest.EmptyQ
 // Return true if index is empty
-inline bool atf_unit::unittest_EmptyQ() {
+inline bool atf_unit::unittest_EmptyQ() throw() {
     return _db.unittest_n == 0;
 }
 
 // --- atf_unit.FDb.unittest.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_unit::FUnittest* atf_unit::unittest_Find(u64 t) {
+inline atf_unit::FUnittest* atf_unit::unittest_Find(u64 t) throw() {
     atf_unit::FUnittest *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.unittest_n))) {
         u64 x = t + 1;
@@ -227,19 +227,19 @@ inline atf_unit::FUnittest* atf_unit::unittest_Find(u64 t) {
 
 // --- atf_unit.FDb.unittest.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_unit::FUnittest* atf_unit::unittest_Last() {
+inline atf_unit::FUnittest* atf_unit::unittest_Last() throw() {
     return unittest_Find(u64(_db.unittest_n-1));
 }
 
 // --- atf_unit.FDb.unittest.N
 // Return number of items in the pool
-inline i32 atf_unit::unittest_N() {
+inline i32 atf_unit::unittest_N() throw() {
     return _db.unittest_n;
 }
 
 // --- atf_unit.FDb.unittest.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_unit::FUnittest& atf_unit::unittest_qFind(u64 t) {
+inline atf_unit::FUnittest& atf_unit::unittest_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -249,62 +249,62 @@ inline atf_unit::FUnittest& atf_unit::unittest_qFind(u64 t) {
 
 // --- atf_unit.FDb.ind_unittest.EmptyQ
 // Return true if hash is empty
-inline bool atf_unit::ind_unittest_EmptyQ() {
+inline bool atf_unit::ind_unittest_EmptyQ() throw() {
     return _db.ind_unittest_n == 0;
 }
 
 // --- atf_unit.FDb.ind_unittest.N
 // Return number of items in the hash
-inline i32 atf_unit::ind_unittest_N() {
+inline i32 atf_unit::ind_unittest_N() throw() {
     return _db.ind_unittest_n;
 }
 
 // --- atf_unit.FDb.tr_number_curs.Reset
 // cursor points to valid item
-inline void atf_unit::_db_tr_number_curs_Reset(_db_tr_number_curs &curs, atf_unit::FDb& ) {
+inline void atf_unit::_db_tr_number_curs_Reset(_db_tr_number_curs &curs, atf_unit::FDb& ) throw() {
     curs.row = tr_number_First();
 }
 
 // --- atf_unit.FDb.tr_number_curs.ValidQ
 // cursor points to valid item
-inline bool atf_unit::_db_tr_number_curs_ValidQ(_db_tr_number_curs &curs) {
+inline bool atf_unit::_db_tr_number_curs_ValidQ(_db_tr_number_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_unit.FDb.tr_number_curs.Next
 // proceed to next item
-inline void atf_unit::_db_tr_number_curs_Next(_db_tr_number_curs &curs) {
+inline void atf_unit::_db_tr_number_curs_Next(_db_tr_number_curs &curs) throw() {
     curs.row = tr_number_Next(*curs.row);
 }
 
 // --- atf_unit.FDb.tr_number_curs.Access
 // item access
-inline atf_unit::FNumber& atf_unit::_db_tr_number_curs_Access(_db_tr_number_curs &curs) {
+inline atf_unit::FNumber& atf_unit::_db_tr_number_curs_Access(_db_tr_number_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_unit.FDb.unittest_curs.Reset
 // cursor points to valid item
-inline void atf_unit::_db_unittest_curs_Reset(_db_unittest_curs &curs, atf_unit::FDb &parent) {
+inline void atf_unit::_db_unittest_curs_Reset(_db_unittest_curs &curs, atf_unit::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_unit.FDb.unittest_curs.ValidQ
 // cursor points to valid item
-inline bool atf_unit::_db_unittest_curs_ValidQ(_db_unittest_curs &curs) {
+inline bool atf_unit::_db_unittest_curs_ValidQ(_db_unittest_curs &curs) throw() {
     return curs.index < _db.unittest_n;
 }
 
 // --- atf_unit.FDb.unittest_curs.Next
 // proceed to next item
-inline void atf_unit::_db_unittest_curs_Next(_db_unittest_curs &curs) {
+inline void atf_unit::_db_unittest_curs_Next(_db_unittest_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_unit.FDb.unittest_curs.Access
 // item access
-inline atf_unit::FUnittest& atf_unit::_db_unittest_curs_Access(_db_unittest_curs &curs) {
+inline atf_unit::FUnittest& atf_unit::_db_unittest_curs_Access(_db_unittest_curs &curs) throw() {
     return unittest_qFind(u64(curs.index));
 }
 
@@ -320,24 +320,24 @@ inline void atf_unit::FNumber_Init(atf_unit::FNumber& number) {
 }
 
 // --- atf_unit.FNumber..Ctor
-inline  atf_unit::FNumber::FNumber() {
+inline  atf_unit::FNumber::FNumber() throw() {
     atf_unit::FNumber_Init(*this);
 }
 
 // --- atf_unit.FNumber..Dtor
-inline  atf_unit::FNumber::~FNumber() {
+inline  atf_unit::FNumber::~FNumber() throw() {
     atf_unit::FNumber_Uninit(*this);
 }
 
 // --- atf_unit.FPerfSort.orig.EmptyQ
 // Return true if index is empty
-inline bool atf_unit::orig_EmptyQ(atf_unit::FPerfSort& parent) {
+inline bool atf_unit::orig_EmptyQ(atf_unit::FPerfSort& parent) throw() {
     return parent.orig_n == 0;
 }
 
 // --- atf_unit.FPerfSort.orig.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_unit::Dbl* atf_unit::orig_Find(atf_unit::FPerfSort& parent, u64 t) {
+inline atf_unit::Dbl* atf_unit::orig_Find(atf_unit::FPerfSort& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.orig_n;
     if (idx >= lim) return NULL;
@@ -346,37 +346,37 @@ inline atf_unit::Dbl* atf_unit::orig_Find(atf_unit::FPerfSort& parent, u64 t) {
 
 // --- atf_unit.FPerfSort.orig.Getary
 // Return array pointer by value
-inline algo::aryptr<atf_unit::Dbl> atf_unit::orig_Getary(const atf_unit::FPerfSort& parent) {
+inline algo::aryptr<atf_unit::Dbl> atf_unit::orig_Getary(const atf_unit::FPerfSort& parent) throw() {
     return algo::aryptr<atf_unit::Dbl>(parent.orig_elems, parent.orig_n);
 }
 
 // --- atf_unit.FPerfSort.orig.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_unit::Dbl* atf_unit::orig_Last(atf_unit::FPerfSort& parent) {
+inline atf_unit::Dbl* atf_unit::orig_Last(atf_unit::FPerfSort& parent) throw() {
     return orig_Find(parent, u64(parent.orig_n-1));
 }
 
 // --- atf_unit.FPerfSort.orig.Max
 // Return max. number of items in the array
-inline i32 atf_unit::orig_Max(atf_unit::FPerfSort& parent) {
+inline i32 atf_unit::orig_Max(atf_unit::FPerfSort& parent) throw() {
     (void)parent;
     return parent.orig_max;
 }
 
 // --- atf_unit.FPerfSort.orig.N
 // Return number of items in the array
-inline i32 atf_unit::orig_N(const atf_unit::FPerfSort& parent) {
+inline i32 atf_unit::orig_N(const atf_unit::FPerfSort& parent) throw() {
     return parent.orig_n;
 }
 
 // --- atf_unit.FPerfSort.orig.RemoveAll
-inline void atf_unit::orig_RemoveAll(atf_unit::FPerfSort& parent) {
+inline void atf_unit::orig_RemoveAll(atf_unit::FPerfSort& parent) throw() {
     parent.orig_n = 0;
 }
 
 // --- atf_unit.FPerfSort.orig.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void atf_unit::orig_Reserve(atf_unit::FPerfSort& parent, int n) {
+inline void atf_unit::orig_Reserve(atf_unit::FPerfSort& parent, int n) throw() {
     u32 new_n = parent.orig_n + n;
     if (UNLIKELY(new_n > parent.orig_max)) {
         orig_AbsReserve(parent, new_n);
@@ -385,32 +385,32 @@ inline void atf_unit::orig_Reserve(atf_unit::FPerfSort& parent, int n) {
 
 // --- atf_unit.FPerfSort.orig.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_unit::Dbl& atf_unit::orig_qFind(atf_unit::FPerfSort& parent, u64 t) {
+inline atf_unit::Dbl& atf_unit::orig_qFind(atf_unit::FPerfSort& parent, u64 t) throw() {
     return parent.orig_elems[t];
 }
 
 // --- atf_unit.FPerfSort.orig.qLast
 // Return reference to last element of array. No bounds checking
-inline atf_unit::Dbl& atf_unit::orig_qLast(atf_unit::FPerfSort& parent) {
+inline atf_unit::Dbl& atf_unit::orig_qLast(atf_unit::FPerfSort& parent) throw() {
     return orig_qFind(parent, u64(parent.orig_n-1));
 }
 
 // --- atf_unit.FPerfSort.orig.rowid_Get
 // Return row id of specified element
-inline u64 atf_unit::orig_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) {
+inline u64 atf_unit::orig_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) throw() {
     u64 id = &elem - parent.orig_elems;
     return u64(id);
 }
 
 // --- atf_unit.FPerfSort.sorted.EmptyQ
 // Return true if index is empty
-inline bool atf_unit::sorted_EmptyQ(atf_unit::FPerfSort& parent) {
+inline bool atf_unit::sorted_EmptyQ(atf_unit::FPerfSort& parent) throw() {
     return parent.sorted_n == 0;
 }
 
 // --- atf_unit.FPerfSort.sorted.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_unit::Dbl* atf_unit::sorted_Find(atf_unit::FPerfSort& parent, u64 t) {
+inline atf_unit::Dbl* atf_unit::sorted_Find(atf_unit::FPerfSort& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.sorted_n;
     if (idx >= lim) return NULL;
@@ -419,37 +419,37 @@ inline atf_unit::Dbl* atf_unit::sorted_Find(atf_unit::FPerfSort& parent, u64 t) 
 
 // --- atf_unit.FPerfSort.sorted.Getary
 // Return array pointer by value
-inline algo::aryptr<atf_unit::Dbl> atf_unit::sorted_Getary(const atf_unit::FPerfSort& parent) {
+inline algo::aryptr<atf_unit::Dbl> atf_unit::sorted_Getary(const atf_unit::FPerfSort& parent) throw() {
     return algo::aryptr<atf_unit::Dbl>(parent.sorted_elems, parent.sorted_n);
 }
 
 // --- atf_unit.FPerfSort.sorted.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_unit::Dbl* atf_unit::sorted_Last(atf_unit::FPerfSort& parent) {
+inline atf_unit::Dbl* atf_unit::sorted_Last(atf_unit::FPerfSort& parent) throw() {
     return sorted_Find(parent, u64(parent.sorted_n-1));
 }
 
 // --- atf_unit.FPerfSort.sorted.Max
 // Return max. number of items in the array
-inline i32 atf_unit::sorted_Max(atf_unit::FPerfSort& parent) {
+inline i32 atf_unit::sorted_Max(atf_unit::FPerfSort& parent) throw() {
     (void)parent;
     return parent.sorted_max;
 }
 
 // --- atf_unit.FPerfSort.sorted.N
 // Return number of items in the array
-inline i32 atf_unit::sorted_N(const atf_unit::FPerfSort& parent) {
+inline i32 atf_unit::sorted_N(const atf_unit::FPerfSort& parent) throw() {
     return parent.sorted_n;
 }
 
 // --- atf_unit.FPerfSort.sorted.RemoveAll
-inline void atf_unit::sorted_RemoveAll(atf_unit::FPerfSort& parent) {
+inline void atf_unit::sorted_RemoveAll(atf_unit::FPerfSort& parent) throw() {
     parent.sorted_n = 0;
 }
 
 // --- atf_unit.FPerfSort.sorted.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void atf_unit::sorted_Reserve(atf_unit::FPerfSort& parent, int n) {
+inline void atf_unit::sorted_Reserve(atf_unit::FPerfSort& parent, int n) throw() {
     u32 new_n = parent.sorted_n + n;
     if (UNLIKELY(new_n > parent.sorted_max)) {
         sorted_AbsReserve(parent, new_n);
@@ -458,32 +458,32 @@ inline void atf_unit::sorted_Reserve(atf_unit::FPerfSort& parent, int n) {
 
 // --- atf_unit.FPerfSort.sorted.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_unit::Dbl& atf_unit::sorted_qFind(atf_unit::FPerfSort& parent, u64 t) {
+inline atf_unit::Dbl& atf_unit::sorted_qFind(atf_unit::FPerfSort& parent, u64 t) throw() {
     return parent.sorted_elems[t];
 }
 
 // --- atf_unit.FPerfSort.sorted.qLast
 // Return reference to last element of array. No bounds checking
-inline atf_unit::Dbl& atf_unit::sorted_qLast(atf_unit::FPerfSort& parent) {
+inline atf_unit::Dbl& atf_unit::sorted_qLast(atf_unit::FPerfSort& parent) throw() {
     return sorted_qFind(parent, u64(parent.sorted_n-1));
 }
 
 // --- atf_unit.FPerfSort.sorted.rowid_Get
 // Return row id of specified element
-inline u64 atf_unit::sorted_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) {
+inline u64 atf_unit::sorted_rowid_Get(atf_unit::FPerfSort& parent, atf_unit::Dbl &elem) throw() {
     u64 id = &elem - parent.sorted_elems;
     return u64(id);
 }
 
 // --- atf_unit.FPerfSort.index.EmptyQ
 // Return true if index is empty
-inline bool atf_unit::index_EmptyQ(atf_unit::FPerfSort& parent) {
+inline bool atf_unit::index_EmptyQ(atf_unit::FPerfSort& parent) throw() {
     return parent.index_n == 0;
 }
 
 // --- atf_unit.FPerfSort.index.Find
 // Look up row by row id. Return NULL if out of range
-inline i32* atf_unit::index_Find(atf_unit::FPerfSort& parent, u64 t) {
+inline i32* atf_unit::index_Find(atf_unit::FPerfSort& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.index_n;
     if (idx >= lim) return NULL;
@@ -492,37 +492,37 @@ inline i32* atf_unit::index_Find(atf_unit::FPerfSort& parent, u64 t) {
 
 // --- atf_unit.FPerfSort.index.Getary
 // Return array pointer by value
-inline algo::aryptr<i32> atf_unit::index_Getary(const atf_unit::FPerfSort& parent) {
+inline algo::aryptr<i32> atf_unit::index_Getary(const atf_unit::FPerfSort& parent) throw() {
     return algo::aryptr<i32>(parent.index_elems, parent.index_n);
 }
 
 // --- atf_unit.FPerfSort.index.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline i32* atf_unit::index_Last(atf_unit::FPerfSort& parent) {
+inline i32* atf_unit::index_Last(atf_unit::FPerfSort& parent) throw() {
     return index_Find(parent, u64(parent.index_n-1));
 }
 
 // --- atf_unit.FPerfSort.index.Max
 // Return max. number of items in the array
-inline i32 atf_unit::index_Max(atf_unit::FPerfSort& parent) {
+inline i32 atf_unit::index_Max(atf_unit::FPerfSort& parent) throw() {
     (void)parent;
     return parent.index_max;
 }
 
 // --- atf_unit.FPerfSort.index.N
 // Return number of items in the array
-inline i32 atf_unit::index_N(const atf_unit::FPerfSort& parent) {
+inline i32 atf_unit::index_N(const atf_unit::FPerfSort& parent) throw() {
     return parent.index_n;
 }
 
 // --- atf_unit.FPerfSort.index.RemoveAll
-inline void atf_unit::index_RemoveAll(atf_unit::FPerfSort& parent) {
+inline void atf_unit::index_RemoveAll(atf_unit::FPerfSort& parent) throw() {
     parent.index_n = 0;
 }
 
 // --- atf_unit.FPerfSort.index.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void atf_unit::index_Reserve(atf_unit::FPerfSort& parent, int n) {
+inline void atf_unit::index_Reserve(atf_unit::FPerfSort& parent, int n) throw() {
     u32 new_n = parent.index_n + n;
     if (UNLIKELY(new_n > parent.index_max)) {
         index_AbsReserve(parent, new_n);
@@ -531,31 +531,31 @@ inline void atf_unit::index_Reserve(atf_unit::FPerfSort& parent, int n) {
 
 // --- atf_unit.FPerfSort.index.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline i32& atf_unit::index_qFind(atf_unit::FPerfSort& parent, u64 t) {
+inline i32& atf_unit::index_qFind(atf_unit::FPerfSort& parent, u64 t) throw() {
     return parent.index_elems[t];
 }
 
 // --- atf_unit.FPerfSort.index.qLast
 // Return reference to last element of array. No bounds checking
-inline i32& atf_unit::index_qLast(atf_unit::FPerfSort& parent) {
+inline i32& atf_unit::index_qLast(atf_unit::FPerfSort& parent) throw() {
     return index_qFind(parent, u64(parent.index_n-1));
 }
 
 // --- atf_unit.FPerfSort.index.rowid_Get
 // Return row id of specified element
-inline u64 atf_unit::index_rowid_Get(atf_unit::FPerfSort& parent, i32 &elem) {
+inline u64 atf_unit::index_rowid_Get(atf_unit::FPerfSort& parent, i32 &elem) throw() {
     u64 id = &elem - parent.index_elems;
     return u64(id);
 }
 
 // --- atf_unit.FPerfSort.orig_curs.Next
 // proceed to next item
-inline void atf_unit::FPerfSort_orig_curs_Next(FPerfSort_orig_curs &curs) {
+inline void atf_unit::FPerfSort_orig_curs_Next(FPerfSort_orig_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_unit.FPerfSort.orig_curs.Reset
-inline void atf_unit::FPerfSort_orig_curs_Reset(FPerfSort_orig_curs &curs, atf_unit::FPerfSort &parent) {
+inline void atf_unit::FPerfSort_orig_curs_Reset(FPerfSort_orig_curs &curs, atf_unit::FPerfSort &parent) throw() {
     curs.elems = parent.orig_elems;
     curs.n_elems = parent.orig_n;
     curs.index = 0;
@@ -563,24 +563,24 @@ inline void atf_unit::FPerfSort_orig_curs_Reset(FPerfSort_orig_curs &curs, atf_u
 
 // --- atf_unit.FPerfSort.orig_curs.ValidQ
 // cursor points to valid item
-inline bool atf_unit::FPerfSort_orig_curs_ValidQ(FPerfSort_orig_curs &curs) {
+inline bool atf_unit::FPerfSort_orig_curs_ValidQ(FPerfSort_orig_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_unit.FPerfSort.orig_curs.Access
 // item access
-inline atf_unit::Dbl& atf_unit::FPerfSort_orig_curs_Access(FPerfSort_orig_curs &curs) {
+inline atf_unit::Dbl& atf_unit::FPerfSort_orig_curs_Access(FPerfSort_orig_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- atf_unit.FPerfSort.sorted_curs.Next
 // proceed to next item
-inline void atf_unit::FPerfSort_sorted_curs_Next(FPerfSort_sorted_curs &curs) {
+inline void atf_unit::FPerfSort_sorted_curs_Next(FPerfSort_sorted_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_unit.FPerfSort.sorted_curs.Reset
-inline void atf_unit::FPerfSort_sorted_curs_Reset(FPerfSort_sorted_curs &curs, atf_unit::FPerfSort &parent) {
+inline void atf_unit::FPerfSort_sorted_curs_Reset(FPerfSort_sorted_curs &curs, atf_unit::FPerfSort &parent) throw() {
     curs.elems = parent.sorted_elems;
     curs.n_elems = parent.sorted_n;
     curs.index = 0;
@@ -588,24 +588,24 @@ inline void atf_unit::FPerfSort_sorted_curs_Reset(FPerfSort_sorted_curs &curs, a
 
 // --- atf_unit.FPerfSort.sorted_curs.ValidQ
 // cursor points to valid item
-inline bool atf_unit::FPerfSort_sorted_curs_ValidQ(FPerfSort_sorted_curs &curs) {
+inline bool atf_unit::FPerfSort_sorted_curs_ValidQ(FPerfSort_sorted_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_unit.FPerfSort.sorted_curs.Access
 // item access
-inline atf_unit::Dbl& atf_unit::FPerfSort_sorted_curs_Access(FPerfSort_sorted_curs &curs) {
+inline atf_unit::Dbl& atf_unit::FPerfSort_sorted_curs_Access(FPerfSort_sorted_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- atf_unit.FPerfSort.index_curs.Next
 // proceed to next item
-inline void atf_unit::FPerfSort_index_curs_Next(FPerfSort_index_curs &curs) {
+inline void atf_unit::FPerfSort_index_curs_Next(FPerfSort_index_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_unit.FPerfSort.index_curs.Reset
-inline void atf_unit::FPerfSort_index_curs_Reset(FPerfSort_index_curs &curs, atf_unit::FPerfSort &parent) {
+inline void atf_unit::FPerfSort_index_curs_Reset(FPerfSort_index_curs &curs, atf_unit::FPerfSort &parent) throw() {
     curs.elems = parent.index_elems;
     curs.n_elems = parent.index_n;
     curs.index = 0;
@@ -613,13 +613,13 @@ inline void atf_unit::FPerfSort_index_curs_Reset(FPerfSort_index_curs &curs, atf
 
 // --- atf_unit.FPerfSort.index_curs.ValidQ
 // cursor points to valid item
-inline bool atf_unit::FPerfSort_index_curs_ValidQ(FPerfSort_index_curs &curs) {
+inline bool atf_unit::FPerfSort_index_curs_ValidQ(FPerfSort_index_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_unit.FPerfSort.index_curs.Access
 // item access
-inline i32& atf_unit::FPerfSort_index_curs_Access(FPerfSort_index_curs &curs) {
+inline i32& atf_unit::FPerfSort_index_curs_Access(FPerfSort_index_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -638,18 +638,18 @@ inline void atf_unit::FPerfSort_Init(atf_unit::FPerfSort& parent) {
 }
 
 // --- atf_unit.FPerfSort..Ctor
-inline  atf_unit::FPerfSort::FPerfSort() {
+inline  atf_unit::FPerfSort::FPerfSort() throw() {
     atf_unit::FPerfSort_Init(*this);
 }
 
 // --- atf_unit.FPerfSort..Dtor
-inline  atf_unit::FPerfSort::~FPerfSort() {
+inline  atf_unit::FPerfSort::~FPerfSort() throw() {
     atf_unit::FPerfSort_Uninit(*this);
 }
 
 // --- atf_unit.FUnittest.step.Call
 // Invoke function by pointer
-inline void atf_unit::step_Call(atf_unit::FUnittest& unittest) {
+inline void atf_unit::step_Call(atf_unit::FUnittest& unittest) throw() {
     if (unittest.step) {
         unittest.step();
     }
@@ -666,29 +666,29 @@ inline void atf_unit::FUnittest_Init(atf_unit::FUnittest& unittest) {
 }
 
 // --- atf_unit.FUnittest..Ctor
-inline  atf_unit::FUnittest::FUnittest() {
+inline  atf_unit::FUnittest::FUnittest() throw() {
     atf_unit::FUnittest_Init(*this);
 }
 
 // --- atf_unit.FUnittest..Dtor
-inline  atf_unit::FUnittest::~FUnittest() {
+inline  atf_unit::FUnittest::~FUnittest() throw() {
     atf_unit::FUnittest_Uninit(*this);
 }
 
 // --- atf_unit.FieldId.value.GetEnum
 // Get value of field as enum type
-inline atf_unit_FieldIdEnum atf_unit::value_GetEnum(const atf_unit::FieldId& parent) {
+inline atf_unit_FieldIdEnum atf_unit::value_GetEnum(const atf_unit::FieldId& parent) throw() {
     return atf_unit_FieldIdEnum(parent.value);
 }
 
 // --- atf_unit.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void atf_unit::value_SetEnum(atf_unit::FieldId& parent, atf_unit_FieldIdEnum rhs) {
+inline void atf_unit::value_SetEnum(atf_unit::FieldId& parent, atf_unit_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- atf_unit.FieldId.value.Cast
-inline  atf_unit::FieldId::operator atf_unit_FieldIdEnum() const {
+inline  atf_unit::FieldId::operator atf_unit_FieldIdEnum() const throw() {
     return atf_unit_FieldIdEnum((*this).value);
 }
 
@@ -699,64 +699,64 @@ inline void atf_unit::FieldId_Init(atf_unit::FieldId& parent) {
 }
 
 // --- atf_unit.FieldId..Ctor
-inline  atf_unit::FieldId::FieldId() {
+inline  atf_unit::FieldId::FieldId() throw() {
     atf_unit::FieldId_Init(*this);
 }
 
 // --- atf_unit.FieldId..FieldwiseCtor
-inline  atf_unit::FieldId::FieldId(i32 in_value)
+inline  atf_unit::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_unit.FieldId..EnumCtor
-inline  atf_unit::FieldId::FieldId(atf_unit_FieldIdEnum arg) {
+inline  atf_unit::FieldId::FieldId(atf_unit_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- atf_unit.TypeA..Hash
-inline u32 atf_unit::TypeA_Hash(u32 prev, const atf_unit::TypeA& rhs) {
+inline u32 atf_unit::TypeA_Hash(u32 prev, const atf_unit::TypeA& rhs) throw() {
     prev = i32_Hash(prev, rhs.typea);
     return prev;
 }
 
 // --- atf_unit.TypeA..EqOp
-inline bool atf_unit::TypeA::operator ==(const atf_unit::TypeA &rhs) const {
+inline bool atf_unit::TypeA::operator ==(const atf_unit::TypeA &rhs) const throw() {
     return atf_unit::TypeA_Eq(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
 }
 
 // --- atf_unit.TypeA..NeOp
-inline bool atf_unit::TypeA::operator !=(const atf_unit::TypeA &rhs) const {
+inline bool atf_unit::TypeA::operator !=(const atf_unit::TypeA &rhs) const throw() {
     return !atf_unit::TypeA_Eq(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
 }
 
 // --- atf_unit.TypeA..LtOp
-inline bool atf_unit::TypeA::operator <(const atf_unit::TypeA &rhs) const {
+inline bool atf_unit::TypeA::operator <(const atf_unit::TypeA &rhs) const throw() {
     return atf_unit::TypeA_Lt(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
 }
 
 // --- atf_unit.TypeA..GtOp
-inline bool atf_unit::TypeA::operator >(const atf_unit::TypeA &rhs) const {
+inline bool atf_unit::TypeA::operator >(const atf_unit::TypeA &rhs) const throw() {
     return atf_unit::TypeA_Lt(const_cast<atf_unit::TypeA&>(rhs),const_cast<atf_unit::TypeA&>(*this));
 }
 
 // --- atf_unit.TypeA..LeOp
-inline bool atf_unit::TypeA::operator <=(const atf_unit::TypeA &rhs) const {
+inline bool atf_unit::TypeA::operator <=(const atf_unit::TypeA &rhs) const throw() {
     return !atf_unit::TypeA_Lt(const_cast<atf_unit::TypeA&>(rhs),const_cast<atf_unit::TypeA&>(*this));
 }
 
 // --- atf_unit.TypeA..GeOp
-inline bool atf_unit::TypeA::operator >=(const atf_unit::TypeA &rhs) const {
+inline bool atf_unit::TypeA::operator >=(const atf_unit::TypeA &rhs) const throw() {
     return !atf_unit::TypeA_Lt(const_cast<atf_unit::TypeA&>(*this),const_cast<atf_unit::TypeA&>(rhs));
 }
 
 // --- atf_unit.TypeA..Lt
-inline bool atf_unit::TypeA_Lt(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) {
+inline bool atf_unit::TypeA_Lt(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) throw() {
     return i32_Lt(lhs.typea, rhs.typea);
 }
 
 // --- atf_unit.TypeA..Cmp
-inline i32 atf_unit::TypeA_Cmp(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) {
+inline i32 atf_unit::TypeA_Cmp(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) throw() {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typea, rhs.typea);
     return retval;
@@ -769,7 +769,7 @@ inline void atf_unit::TypeA_Init(atf_unit::TypeA& parent) {
 }
 
 // --- atf_unit.TypeA..Eq
-inline bool atf_unit::TypeA_Eq(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) {
+inline bool atf_unit::TypeA_Eq(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) throw() {
     bool retval = true;
     retval = i32_Eq(lhs.typea, rhs.typea);
     return retval;
@@ -777,7 +777,7 @@ inline bool atf_unit::TypeA_Eq(atf_unit::TypeA& lhs, atf_unit::TypeA& rhs) {
 
 // --- atf_unit.TypeA..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_unit::TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA& rhs) {
+inline bool atf_unit::TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA& rhs) throw() {
     bool ret = !TypeA_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -786,54 +786,54 @@ inline bool atf_unit::TypeA_Update(atf_unit::TypeA &lhs, atf_unit::TypeA& rhs) {
 }
 
 // --- atf_unit.TypeA..Ctor
-inline  atf_unit::TypeA::TypeA() {
+inline  atf_unit::TypeA::TypeA() throw() {
     atf_unit::TypeA_Init(*this);
 }
 
 // --- atf_unit.TypeB..Hash
-inline u32 atf_unit::TypeB_Hash(u32 prev, const atf_unit::TypeB& rhs) {
+inline u32 atf_unit::TypeB_Hash(u32 prev, const atf_unit::TypeB& rhs) throw() {
     prev = i32_Hash(prev, rhs.typea);
     prev = i32_Hash(prev, rhs.j);
     return prev;
 }
 
 // --- atf_unit.TypeB..EqOp
-inline bool atf_unit::TypeB::operator ==(const atf_unit::TypeB &rhs) const {
+inline bool atf_unit::TypeB::operator ==(const atf_unit::TypeB &rhs) const throw() {
     return atf_unit::TypeB_Eq(const_cast<atf_unit::TypeB&>(*this),const_cast<atf_unit::TypeB&>(rhs));
 }
 
 // --- atf_unit.TypeB..NeOp
-inline bool atf_unit::TypeB::operator !=(const atf_unit::TypeB &rhs) const {
+inline bool atf_unit::TypeB::operator !=(const atf_unit::TypeB &rhs) const throw() {
     return !atf_unit::TypeB_Eq(const_cast<atf_unit::TypeB&>(*this),const_cast<atf_unit::TypeB&>(rhs));
 }
 
 // --- atf_unit.TypeB..LtOp
-inline bool atf_unit::TypeB::operator <(const atf_unit::TypeB &rhs) const {
+inline bool atf_unit::TypeB::operator <(const atf_unit::TypeB &rhs) const throw() {
     return atf_unit::TypeB_Lt(const_cast<atf_unit::TypeB&>(*this),const_cast<atf_unit::TypeB&>(rhs));
 }
 
 // --- atf_unit.TypeB..GtOp
-inline bool atf_unit::TypeB::operator >(const atf_unit::TypeB &rhs) const {
+inline bool atf_unit::TypeB::operator >(const atf_unit::TypeB &rhs) const throw() {
     return atf_unit::TypeB_Lt(const_cast<atf_unit::TypeB&>(rhs),const_cast<atf_unit::TypeB&>(*this));
 }
 
 // --- atf_unit.TypeB..LeOp
-inline bool atf_unit::TypeB::operator <=(const atf_unit::TypeB &rhs) const {
+inline bool atf_unit::TypeB::operator <=(const atf_unit::TypeB &rhs) const throw() {
     return !atf_unit::TypeB_Lt(const_cast<atf_unit::TypeB&>(rhs),const_cast<atf_unit::TypeB&>(*this));
 }
 
 // --- atf_unit.TypeB..GeOp
-inline bool atf_unit::TypeB::operator >=(const atf_unit::TypeB &rhs) const {
+inline bool atf_unit::TypeB::operator >=(const atf_unit::TypeB &rhs) const throw() {
     return !atf_unit::TypeB_Lt(const_cast<atf_unit::TypeB&>(*this),const_cast<atf_unit::TypeB&>(rhs));
 }
 
 // --- atf_unit.TypeB..Lt
-inline bool atf_unit::TypeB_Lt(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) {
+inline bool atf_unit::TypeB_Lt(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) throw() {
     return TypeB_Cmp(lhs,rhs) < 0;
 }
 
 // --- atf_unit.TypeB..Cmp
-inline i32 atf_unit::TypeB_Cmp(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) {
+inline i32 atf_unit::TypeB_Cmp(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) throw() {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typea, rhs.typea);
     if (retval != 0) {
@@ -851,7 +851,7 @@ inline void atf_unit::TypeB_Init(atf_unit::TypeB& parent) {
 }
 
 // --- atf_unit.TypeB..Eq
-inline bool atf_unit::TypeB_Eq(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) {
+inline bool atf_unit::TypeB_Eq(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) throw() {
     bool retval = true;
     retval = i32_Eq(lhs.typea, rhs.typea);
     if (!retval) {
@@ -863,7 +863,7 @@ inline bool atf_unit::TypeB_Eq(atf_unit::TypeB& lhs, atf_unit::TypeB& rhs) {
 
 // --- atf_unit.TypeB..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_unit::TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB& rhs) {
+inline bool atf_unit::TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB& rhs) throw() {
     bool ret = !TypeB_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -872,12 +872,12 @@ inline bool atf_unit::TypeB_Update(atf_unit::TypeB &lhs, atf_unit::TypeB& rhs) {
 }
 
 // --- atf_unit.TypeB..Ctor
-inline  atf_unit::TypeB::TypeB() {
+inline  atf_unit::TypeB::TypeB() throw() {
     atf_unit::TypeB_Init(*this);
 }
 
 // --- atf_unit.TestJson..Ctor
-inline  atf_unit::TestJson::TestJson() {
+inline  atf_unit::TestJson::TestJson() throw() {
     atf_unit::TestJson_Init(*this);
 }
 

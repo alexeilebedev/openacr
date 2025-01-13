@@ -28,18 +28,18 @@
 
 // --- atf.FieldId.value.GetEnum
 // Get value of field as enum type
-inline atf_FieldIdEnum atf::value_GetEnum(const atf::FieldId& parent) {
+inline atf_FieldIdEnum atf::value_GetEnum(const atf::FieldId& parent) throw() {
     return atf_FieldIdEnum(parent.value);
 }
 
 // --- atf.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void atf::value_SetEnum(atf::FieldId& parent, atf_FieldIdEnum rhs) {
+inline void atf::value_SetEnum(atf::FieldId& parent, atf_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- atf.FieldId.value.Cast
-inline  atf::FieldId::operator atf_FieldIdEnum() const {
+inline  atf::FieldId::operator atf_FieldIdEnum() const throw() {
     return atf_FieldIdEnum((*this).value);
 }
 
@@ -50,35 +50,35 @@ inline void atf::FieldId_Init(atf::FieldId& parent) {
 }
 
 // --- atf.FieldId..Ctor
-inline  atf::FieldId::FieldId() {
+inline  atf::FieldId::FieldId() throw() {
     atf::FieldId_Init(*this);
 }
 
 // --- atf.FieldId..FieldwiseCtor
-inline  atf::FieldId::FieldId(i32 in_value)
+inline  atf::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf.FieldId..EnumCtor
-inline  atf::FieldId::FieldId(atf_FieldIdEnum arg) {
+inline  atf::FieldId::FieldId(atf_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- atf.Testresult.value.GetEnum
 // Get value of field as enum type
-inline atf_TestresultEnum atf::value_GetEnum(const atf::Testresult& parent) {
+inline atf_TestresultEnum atf::value_GetEnum(const atf::Testresult& parent) throw() {
     return atf_TestresultEnum(parent.value);
 }
 
 // --- atf.Testresult.value.SetEnum
 // Set value of field from enum type.
-inline void atf::value_SetEnum(atf::Testresult& parent, atf_TestresultEnum rhs) {
+inline void atf::value_SetEnum(atf::Testresult& parent, atf_TestresultEnum rhs) throw() {
     parent.value = u32(rhs);
 }
 
 // --- atf.Testresult.value.Cast
-inline  atf::Testresult::operator atf_TestresultEnum() const {
+inline  atf::Testresult::operator atf_TestresultEnum() const throw() {
     return atf_TestresultEnum((*this).value);
 }
 
@@ -89,18 +89,18 @@ inline void atf::Testresult_Init(atf::Testresult& parent) {
 }
 
 // --- atf.Testresult..Ctor
-inline  atf::Testresult::Testresult() {
+inline  atf::Testresult::Testresult() throw() {
     atf::Testresult_Init(*this);
 }
 
 // --- atf.Testresult..FieldwiseCtor
-inline  atf::Testresult::Testresult(u32 in_value)
+inline  atf::Testresult::Testresult(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf.Testresult..EnumCtor
-inline  atf::Testresult::Testresult(atf_TestresultEnum arg) {
+inline  atf::Testresult::Testresult(atf_TestresultEnum arg) throw() {
     this->value = u32(arg);
 }
 
@@ -113,12 +113,12 @@ inline void atf::Testrun_Init(atf::Testrun& parent) {
 }
 
 // --- atf.Testrun..Ctor
-inline  atf::Testrun::Testrun() {
+inline  atf::Testrun::Testrun() throw() {
     atf::Testrun_Init(*this);
 }
 
 // --- atf.Testrun..FieldwiseCtor
-inline  atf::Testrun::Testrun(const algo::strptr& in_testrun, const atf::Testresult& in_testresult, u64 in_n_step, u64 in_n_cmp, const algo::strptr& in_comment)
+inline  atf::Testrun::Testrun(const algo::strptr& in_testrun, const atf::Testresult& in_testresult, u64 in_n_step, u64 in_n_cmp, const algo::strptr& in_comment) throw()
     : testrun(in_testrun)
     , testresult(in_testresult)
     , n_step(in_n_step)

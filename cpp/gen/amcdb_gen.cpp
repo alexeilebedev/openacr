@@ -101,7 +101,7 @@ namespace amcdb { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- amcdb.Bltin..ReadFieldMaybe
-bool amcdb::Bltin_ReadFieldMaybe(amcdb::Bltin& parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Bltin_ReadFieldMaybe(amcdb::Bltin& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -137,7 +137,7 @@ bool amcdb::Bltin_ReadFieldMaybe(amcdb::Bltin& parent, algo::strptr field, algo:
 // --- amcdb.Bltin..ReadStrptrMaybe
 // Read fields of amcdb::Bltin from an ascii string.
 // The format of the string is an ssim Tuple
-bool amcdb::Bltin_ReadStrptrMaybe(amcdb::Bltin &parent, algo::strptr in_str) {
+bool amcdb::Bltin_ReadStrptrMaybe(amcdb::Bltin &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "amcdb.bltin") || algo::StripTypeTag(in_str, "amcdb.Bltin");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -149,7 +149,7 @@ bool amcdb::Bltin_ReadStrptrMaybe(amcdb::Bltin &parent, algo::strptr in_str) {
 // --- amcdb.Bltin..Print
 // print string representation of ROW to string STR
 // cfmt:amcdb.Bltin.String  printfmt:Tuple
-void amcdb::Bltin_Print(amcdb::Bltin& row, algo::cstring& str) {
+void amcdb::Bltin_Print(amcdb::Bltin& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amcdb.bltin";
 
@@ -170,7 +170,7 @@ void amcdb::Bltin_Print(amcdb::Bltin& row, algo::cstring& str) {
 }
 
 // --- amcdb.Curstype..ReadFieldMaybe
-bool amcdb::Curstype_ReadFieldMaybe(amcdb::Curstype& parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Curstype_ReadFieldMaybe(amcdb::Curstype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -194,7 +194,7 @@ bool amcdb::Curstype_ReadFieldMaybe(amcdb::Curstype& parent, algo::strptr field,
 // --- amcdb.Curstype..ReadStrptrMaybe
 // Read fields of amcdb::Curstype from an ascii string.
 // The format of the string is an ssim Tuple
-bool amcdb::Curstype_ReadStrptrMaybe(amcdb::Curstype &parent, algo::strptr in_str) {
+bool amcdb::Curstype_ReadStrptrMaybe(amcdb::Curstype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "amcdb.curstype") || algo::StripTypeTag(in_str, "amcdb.Curstype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -206,7 +206,7 @@ bool amcdb::Curstype_ReadStrptrMaybe(amcdb::Curstype &parent, algo::strptr in_st
 // --- amcdb.Curstype..Print
 // print string representation of ROW to string STR
 // cfmt:amcdb.Curstype.String  printfmt:Tuple
-void amcdb::Curstype_Print(amcdb::Curstype& row, algo::cstring& str) {
+void amcdb::Curstype_Print(amcdb::Curstype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amcdb.curstype";
 
@@ -220,7 +220,7 @@ void amcdb::Curstype_Print(amcdb::Curstype& row, algo::cstring& str) {
 // --- amcdb.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* amcdb::value_ToCstr(const amcdb::FieldId& parent) {
+const char* amcdb::value_ToCstr(const amcdb::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case amcdb_FieldId_ctype           : ret = "ctype";  break;
@@ -251,7 +251,7 @@ const char* amcdb::value_ToCstr(const amcdb::FieldId& parent) {
 // --- amcdb.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void amcdb::value_Print(const amcdb::FieldId& parent, algo::cstring &lhs) {
+void amcdb::value_Print(const amcdb::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -264,7 +264,7 @@ void amcdb::value_Print(const amcdb::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
+bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -367,13 +367,13 @@ bool amcdb::value_SetStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
 // --- amcdb.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void amcdb::value_SetStrptr(amcdb::FieldId& parent, algo::strptr rhs, amcdb_FieldIdEnum dflt) {
+void amcdb::value_SetStrptr(amcdb::FieldId& parent, algo::strptr rhs, amcdb_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- amcdb.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool amcdb::value_ReadStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
+bool amcdb::value_ReadStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -385,7 +385,7 @@ bool amcdb::value_ReadStrptrMaybe(amcdb::FieldId& parent, algo::strptr rhs) {
 // --- amcdb.FieldId..ReadStrptrMaybe
 // Read fields of amcdb::FieldId from an ascii string.
 // The format of the string is the format of the amcdb::FieldId's only field
-bool amcdb::FieldId_ReadStrptrMaybe(amcdb::FieldId &parent, algo::strptr in_str) {
+bool amcdb::FieldId_ReadStrptrMaybe(amcdb::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -394,12 +394,12 @@ bool amcdb::FieldId_ReadStrptrMaybe(amcdb::FieldId &parent, algo::strptr in_str)
 // --- amcdb.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:amcdb.FieldId.String  printfmt:Raw
-void amcdb::FieldId_Print(amcdb::FieldId& row, algo::cstring& str) {
+void amcdb::FieldId_Print(amcdb::FieldId& row, algo::cstring& str) throw() {
     amcdb::value_Print(row, str);
 }
 
 // --- amcdb.Gen..ReadFieldMaybe
-bool amcdb::Gen_ReadFieldMaybe(amcdb::Gen& parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Gen_ReadFieldMaybe(amcdb::Gen& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -427,7 +427,7 @@ bool amcdb::Gen_ReadFieldMaybe(amcdb::Gen& parent, algo::strptr field, algo::str
 // --- amcdb.Gen..ReadStrptrMaybe
 // Read fields of amcdb::Gen from an ascii string.
 // The format of the string is an ssim Tuple
-bool amcdb::Gen_ReadStrptrMaybe(amcdb::Gen &parent, algo::strptr in_str) {
+bool amcdb::Gen_ReadStrptrMaybe(amcdb::Gen &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "amcdb.gen") || algo::StripTypeTag(in_str, "amcdb.Gen");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -439,7 +439,7 @@ bool amcdb::Gen_ReadStrptrMaybe(amcdb::Gen &parent, algo::strptr in_str) {
 // --- amcdb.Gen..Print
 // print string representation of ROW to string STR
 // cfmt:amcdb.Gen.String  printfmt:Tuple
-void amcdb::Gen_Print(amcdb::Gen& row, algo::cstring& str) {
+void amcdb::Gen_Print(amcdb::Gen& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amcdb.gen";
 
@@ -454,7 +454,7 @@ void amcdb::Gen_Print(amcdb::Gen& row, algo::cstring& str) {
 }
 
 // --- amcdb.Regxtype..ReadFieldMaybe
-bool amcdb::Regxtype_ReadFieldMaybe(amcdb::Regxtype& parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Regxtype_ReadFieldMaybe(amcdb::Regxtype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -478,7 +478,7 @@ bool amcdb::Regxtype_ReadFieldMaybe(amcdb::Regxtype& parent, algo::strptr field,
 // --- amcdb.Regxtype..ReadStrptrMaybe
 // Read fields of amcdb::Regxtype from an ascii string.
 // The format of the string is an ssim Tuple
-bool amcdb::Regxtype_ReadStrptrMaybe(amcdb::Regxtype &parent, algo::strptr in_str) {
+bool amcdb::Regxtype_ReadStrptrMaybe(amcdb::Regxtype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "amcdb.regxtype") || algo::StripTypeTag(in_str, "amcdb.Regxtype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -490,7 +490,7 @@ bool amcdb::Regxtype_ReadStrptrMaybe(amcdb::Regxtype &parent, algo::strptr in_st
 // --- amcdb.Regxtype..Print
 // print string representation of ROW to string STR
 // cfmt:amcdb.Regxtype.String  printfmt:Tuple
-void amcdb::Regxtype_Print(amcdb::Regxtype& row, algo::cstring& str) {
+void amcdb::Regxtype_Print(amcdb::Regxtype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amcdb.regxtype";
 
@@ -502,7 +502,7 @@ void amcdb::Regxtype_Print(amcdb::Regxtype& row, algo::cstring& str) {
 }
 
 // --- amcdb.Tclass..ReadFieldMaybe
-bool amcdb::Tclass_ReadFieldMaybe(amcdb::Tclass& parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Tclass_ReadFieldMaybe(amcdb::Tclass& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -526,7 +526,7 @@ bool amcdb::Tclass_ReadFieldMaybe(amcdb::Tclass& parent, algo::strptr field, alg
 // --- amcdb.Tclass..ReadStrptrMaybe
 // Read fields of amcdb::Tclass from an ascii string.
 // The format of the string is an ssim Tuple
-bool amcdb::Tclass_ReadStrptrMaybe(amcdb::Tclass &parent, algo::strptr in_str) {
+bool amcdb::Tclass_ReadStrptrMaybe(amcdb::Tclass &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "amcdb.tclass") || algo::StripTypeTag(in_str, "amcdb.Tclass");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -538,7 +538,7 @@ bool amcdb::Tclass_ReadStrptrMaybe(amcdb::Tclass &parent, algo::strptr in_str) {
 // --- amcdb.Tclass..Print
 // print string representation of ROW to string STR
 // cfmt:amcdb.Tclass.String  printfmt:Tuple
-void amcdb::Tclass_Print(amcdb::Tclass& row, algo::cstring& str) {
+void amcdb::Tclass_Print(amcdb::Tclass& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amcdb.tclass";
 
@@ -550,19 +550,19 @@ void amcdb::Tclass_Print(amcdb::Tclass& row, algo::cstring& str) {
 }
 
 // --- amcdb.Tcurs.curstype.Get
-algo::Smallstr50 amcdb::curstype_Get(amcdb::Tcurs& parent) {
+algo::Smallstr50 amcdb::curstype_Get(amcdb::Tcurs& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tfunc, ".RR"));
     return ret;
 }
 
 // --- amcdb.Tcurs.curstype.Get2
-algo::Smallstr50 amcdb::Tcurs_curstype_Get(algo::strptr arg) {
+algo::Smallstr50 amcdb::Tcurs_curstype_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
 
 // --- amcdb.Tcurs..ReadFieldMaybe
-bool amcdb::Tcurs_ReadFieldMaybe(amcdb::Tcurs& parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Tcurs_ReadFieldMaybe(amcdb::Tcurs& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -594,7 +594,7 @@ bool amcdb::Tcurs_ReadFieldMaybe(amcdb::Tcurs& parent, algo::strptr field, algo:
 // --- amcdb.Tcurs..ReadStrptrMaybe
 // Read fields of amcdb::Tcurs from an ascii string.
 // The format of the string is an ssim Tuple
-bool amcdb::Tcurs_ReadStrptrMaybe(amcdb::Tcurs &parent, algo::strptr in_str) {
+bool amcdb::Tcurs_ReadStrptrMaybe(amcdb::Tcurs &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "amcdb.tcurs") || algo::StripTypeTag(in_str, "amcdb.Tcurs");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -606,7 +606,7 @@ bool amcdb::Tcurs_ReadStrptrMaybe(amcdb::Tcurs &parent, algo::strptr in_str) {
 // --- amcdb.Tcurs..Print
 // print string representation of ROW to string STR
 // cfmt:amcdb.Tcurs.String  printfmt:Tuple
-void amcdb::Tcurs_Print(amcdb::Tcurs& row, algo::cstring& str) {
+void amcdb::Tcurs_Print(amcdb::Tcurs& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amcdb.tcurs";
 
@@ -621,25 +621,25 @@ void amcdb::Tcurs_Print(amcdb::Tcurs& row, algo::cstring& str) {
 }
 
 // --- amcdb.Tfunc.tclass.Get
-algo::Smallstr50 amcdb::tclass_Get(amcdb::Tfunc& parent) {
+algo::Smallstr50 amcdb::tclass_Get(amcdb::Tfunc& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tfunc, ".RL"));
     return ret;
 }
 
 // --- amcdb.Tfunc.tclass.Get2
-algo::Smallstr50 amcdb::Tfunc_tclass_Get(algo::strptr arg) {
+algo::Smallstr50 amcdb::Tfunc_tclass_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- amcdb.Tfunc.name.Get
-algo::Smallstr50 amcdb::name_Get(amcdb::Tfunc& parent) {
+algo::Smallstr50 amcdb::name_Get(amcdb::Tfunc& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tfunc, ".RR"));
     return ret;
 }
 
 // --- amcdb.Tfunc.name.Get2
-algo::Smallstr50 amcdb::Tfunc_name_Get(algo::strptr arg) {
+algo::Smallstr50 amcdb::Tfunc_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -650,7 +650,7 @@ tempstr amcdb::Tfunc_Concat_tclass_name( const algo::strptr& tclass ,const algo:
 }
 
 // --- amcdb.Tfunc..ReadFieldMaybe
-bool amcdb::Tfunc_ReadFieldMaybe(amcdb::Tfunc& parent, algo::strptr field, algo::strptr strval) {
+bool amcdb::Tfunc_ReadFieldMaybe(amcdb::Tfunc& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     amcdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -710,7 +710,7 @@ bool amcdb::Tfunc_ReadFieldMaybe(amcdb::Tfunc& parent, algo::strptr field, algo:
 // --- amcdb.Tfunc..ReadStrptrMaybe
 // Read fields of amcdb::Tfunc from an ascii string.
 // The format of the string is an ssim Tuple
-bool amcdb::Tfunc_ReadStrptrMaybe(amcdb::Tfunc &parent, algo::strptr in_str) {
+bool amcdb::Tfunc_ReadStrptrMaybe(amcdb::Tfunc &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "amcdb.tfunc") || algo::StripTypeTag(in_str, "amcdb.Tfunc");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -734,7 +734,7 @@ void amcdb::Tfunc_Init(amcdb::Tfunc& parent) {
 // --- amcdb.Tfunc..Print
 // print string representation of ROW to string STR
 // cfmt:amcdb.Tfunc.String  printfmt:Tuple
-void amcdb::Tfunc_Print(amcdb::Tfunc& row, algo::cstring& str) {
+void amcdb::Tfunc_Print(amcdb::Tfunc& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amcdb.tfunc";
 

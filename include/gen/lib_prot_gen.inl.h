@@ -27,18 +27,18 @@
 
 // --- lib_prot.FieldId.value.GetEnum
 // Get value of field as enum type
-inline lib_prot_FieldIdEnum lib_prot::value_GetEnum(const lib_prot::FieldId& parent) {
+inline lib_prot_FieldIdEnum lib_prot::value_GetEnum(const lib_prot::FieldId& parent) throw() {
     return lib_prot_FieldIdEnum(parent.value);
 }
 
 // --- lib_prot.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void lib_prot::value_SetEnum(lib_prot::FieldId& parent, lib_prot_FieldIdEnum rhs) {
+inline void lib_prot::value_SetEnum(lib_prot::FieldId& parent, lib_prot_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- lib_prot.FieldId.value.Cast
-inline  lib_prot::FieldId::operator lib_prot_FieldIdEnum() const {
+inline  lib_prot::FieldId::operator lib_prot_FieldIdEnum() const throw() {
     return lib_prot_FieldIdEnum((*this).value);
 }
 
@@ -49,18 +49,18 @@ inline void lib_prot::FieldId_Init(lib_prot::FieldId& parent) {
 }
 
 // --- lib_prot.FieldId..Ctor
-inline  lib_prot::FieldId::FieldId() {
+inline  lib_prot::FieldId::FieldId() throw() {
     lib_prot::FieldId_Init(*this);
 }
 
 // --- lib_prot.FieldId..FieldwiseCtor
-inline  lib_prot::FieldId::FieldId(i32 in_value)
+inline  lib_prot::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_prot.FieldId..EnumCtor
-inline  lib_prot::FieldId::FieldId(lib_prot_FieldIdEnum arg) {
+inline  lib_prot::FieldId::FieldId(lib_prot_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

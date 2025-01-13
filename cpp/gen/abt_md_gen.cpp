@@ -169,14 +169,14 @@ namespace abt_md { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- abt_md.FAnchor..Uninit
-void abt_md::FAnchor_Uninit(abt_md::FAnchor& anchor) {
+void abt_md::FAnchor_Uninit(abt_md::FAnchor& anchor) throw() {
     abt_md::FAnchor &row = anchor; (void)row;
     ind_anchor_Remove(row); // remove anchor from index ind_anchor
 }
 
 // --- abt_md.FComptest.base.CopyOut
 // Copy fields out of row
-void abt_md::comptest_CopyOut(abt_md::FComptest &row, atfdb::Comptest &out) {
+void abt_md::comptest_CopyOut(abt_md::FComptest &row, atfdb::Comptest &out) throw() {
     out.comptest = row.comptest;
     out.timeout = row.timeout;
     out.memcheck = row.memcheck;
@@ -186,7 +186,7 @@ void abt_md::comptest_CopyOut(abt_md::FComptest &row, atfdb::Comptest &out) {
 
 // --- abt_md.FComptest.base.CopyIn
 // Copy fields in to row
-void abt_md::comptest_CopyIn(abt_md::FComptest &row, atfdb::Comptest &in) {
+void abt_md::comptest_CopyIn(abt_md::FComptest &row, atfdb::Comptest &in) throw() {
     row.comptest = in.comptest;
     row.timeout = in.timeout;
     row.memcheck = in.memcheck;
@@ -195,19 +195,19 @@ void abt_md::comptest_CopyIn(abt_md::FComptest &row, atfdb::Comptest &in) {
 }
 
 // --- abt_md.FComptest.target.Get
-algo::Smallstr16 abt_md::target_Get(abt_md::FComptest& comptest) {
+algo::Smallstr16 abt_md::target_Get(abt_md::FComptest& comptest) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(comptest.comptest, ".LL"));
     return ret;
 }
 
 // --- abt_md.FComptest.testname.Get
-algo::Smallstr50 abt_md::testname_Get(abt_md::FComptest& comptest) {
+algo::Smallstr50 abt_md::testname_Get(abt_md::FComptest& comptest) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(comptest.comptest, ".LR"));
     return ret;
 }
 
 // --- abt_md.FComptest..Uninit
-void abt_md::FComptest_Uninit(abt_md::FComptest& comptest) {
+void abt_md::FComptest_Uninit(abt_md::FComptest& comptest) throw() {
     abt_md::FComptest &row = comptest; (void)row;
     abt_md::FNs* p_target = abt_md::ind_ns_Find(target_Get(row));
     if (p_target)  {
@@ -217,26 +217,26 @@ void abt_md::FComptest_Uninit(abt_md::FComptest& comptest) {
 
 // --- abt_md.FCtype.base.CopyOut
 // Copy fields out of row
-void abt_md::ctype_CopyOut(abt_md::FCtype &row, dmmeta::Ctype &out) {
+void abt_md::ctype_CopyOut(abt_md::FCtype &row, dmmeta::Ctype &out) throw() {
     out.ctype = row.ctype;
     out.comment = row.comment;
 }
 
 // --- abt_md.FCtype.base.CopyIn
 // Copy fields in to row
-void abt_md::ctype_CopyIn(abt_md::FCtype &row, dmmeta::Ctype &in) {
+void abt_md::ctype_CopyIn(abt_md::FCtype &row, dmmeta::Ctype &in) throw() {
     row.ctype = in.ctype;
     row.comment = in.comment;
 }
 
 // --- abt_md.FCtype.ns.Get
-algo::Smallstr16 abt_md::ns_Get(abt_md::FCtype& ctype) {
+algo::Smallstr16 abt_md::ns_Get(abt_md::FCtype& ctype) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(ctype.ctype, ".RL"));
     return ret;
 }
 
 // --- abt_md.FCtype.name.Get
-algo::Smallstr100 abt_md::name_Get(abt_md::FCtype& ctype) {
+algo::Smallstr100 abt_md::name_Get(abt_md::FCtype& ctype) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(ctype.ctype, ".RR"));
     return ret;
 }
@@ -244,7 +244,7 @@ algo::Smallstr100 abt_md::name_Get(abt_md::FCtype& ctype) {
 // --- abt_md.FCtype.c_field.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt_md::c_field_Insert(abt_md::FCtype& ctype, abt_md::FField& row) {
+void abt_md::c_field_Insert(abt_md::FCtype& ctype, abt_md::FField& row) throw() {
     if (bool_Update(row.ctype_c_field_in_ary,true)) {
         // reserve space
         c_field_Reserve(ctype, 1);
@@ -261,7 +261,7 @@ void abt_md::c_field_Insert(abt_md::FCtype& ctype, abt_md::FField& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool abt_md::c_field_InsertMaybe(abt_md::FCtype& ctype, abt_md::FField& row) {
+bool abt_md::c_field_InsertMaybe(abt_md::FCtype& ctype, abt_md::FField& row) throw() {
     bool retval = !row.ctype_c_field_in_ary;
     c_field_Insert(ctype,row); // check is performed in _Insert again
     return retval;
@@ -269,7 +269,7 @@ bool abt_md::c_field_InsertMaybe(abt_md::FCtype& ctype, abt_md::FField& row) {
 
 // --- abt_md.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt_md::c_field_Remove(abt_md::FCtype& ctype, abt_md::FField& row) {
+void abt_md::c_field_Remove(abt_md::FCtype& ctype, abt_md::FField& row) throw() {
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
         int lim = ctype.c_field_n;
         abt_md::FField* *elems = ctype.c_field_elems;
@@ -290,7 +290,7 @@ void abt_md::c_field_Remove(abt_md::FCtype& ctype, abt_md::FField& row) {
 
 // --- abt_md.FCtype.c_field.Reserve
 // Reserve space in index for N more elements;
-void abt_md::c_field_Reserve(abt_md::FCtype& ctype, u32 n) {
+void abt_md::c_field_Reserve(abt_md::FCtype& ctype, u32 n) throw() {
     u32 old_max = ctype.c_field_max;
     if (UNLIKELY(ctype.c_field_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -308,7 +308,7 @@ void abt_md::c_field_Reserve(abt_md::FCtype& ctype, u32 n) {
 // --- abt_md.FCtype.c_field_arg.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt_md::c_field_arg_Insert(abt_md::FCtype& ctype, abt_md::FField& row) {
+void abt_md::c_field_arg_Insert(abt_md::FCtype& ctype, abt_md::FField& row) throw() {
     if (bool_Update(row.ctype_c_field_arg_in_ary,true)) {
         // reserve space
         c_field_arg_Reserve(ctype, 1);
@@ -325,7 +325,7 @@ void abt_md::c_field_arg_Insert(abt_md::FCtype& ctype, abt_md::FField& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool abt_md::c_field_arg_InsertMaybe(abt_md::FCtype& ctype, abt_md::FField& row) {
+bool abt_md::c_field_arg_InsertMaybe(abt_md::FCtype& ctype, abt_md::FField& row) throw() {
     bool retval = !row.ctype_c_field_arg_in_ary;
     c_field_arg_Insert(ctype,row); // check is performed in _Insert again
     return retval;
@@ -333,7 +333,7 @@ bool abt_md::c_field_arg_InsertMaybe(abt_md::FCtype& ctype, abt_md::FField& row)
 
 // --- abt_md.FCtype.c_field_arg.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt_md::c_field_arg_Remove(abt_md::FCtype& ctype, abt_md::FField& row) {
+void abt_md::c_field_arg_Remove(abt_md::FCtype& ctype, abt_md::FField& row) throw() {
     if (bool_Update(row.ctype_c_field_arg_in_ary,false)) {
         int lim = ctype.c_field_arg_n;
         abt_md::FField* *elems = ctype.c_field_arg_elems;
@@ -354,7 +354,7 @@ void abt_md::c_field_arg_Remove(abt_md::FCtype& ctype, abt_md::FField& row) {
 
 // --- abt_md.FCtype.c_field_arg.Reserve
 // Reserve space in index for N more elements;
-void abt_md::c_field_arg_Reserve(abt_md::FCtype& ctype, u32 n) {
+void abt_md::c_field_arg_Reserve(abt_md::FCtype& ctype, u32 n) throw() {
     u32 old_max = ctype.c_field_arg_max;
     if (UNLIKELY(ctype.c_field_arg_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -370,7 +370,7 @@ void abt_md::c_field_arg_Reserve(abt_md::FCtype& ctype, u32 n) {
 }
 
 // --- abt_md.FCtype..Uninit
-void abt_md::FCtype_Uninit(abt_md::FCtype& ctype) {
+void abt_md::FCtype_Uninit(abt_md::FCtype& ctype) throw() {
     abt_md::FCtype &row = ctype; (void)row;
     ind_ctype_Remove(row); // remove ctype from index ind_ctype
     abt_md::FNs* p_ns = abt_md::ind_ns_Find(ns_Get(row));
@@ -387,7 +387,7 @@ void abt_md::FCtype_Uninit(abt_md::FCtype& ctype) {
 
 // --- abt_md.FMdsection.base.CopyOut
 // Copy fields out of row
-void abt_md::mdsection_CopyOut(abt_md::FMdsection &row, dev::Mdsection &out) {
+void abt_md::mdsection_CopyOut(abt_md::FMdsection &row, dev::Mdsection &out) throw() {
     out.mdsection = row.mdsection;
     out.match = row.match;
     out.path = row.path;
@@ -397,7 +397,7 @@ void abt_md::mdsection_CopyOut(abt_md::FMdsection &row, dev::Mdsection &out) {
 
 // --- abt_md.FMdsection.base.CopyIn
 // Copy fields in to row
-void abt_md::mdsection_CopyIn(abt_md::FMdsection &row, dev::Mdsection &in) {
+void abt_md::mdsection_CopyIn(abt_md::FMdsection &row, dev::Mdsection &in) throw() {
     row.mdsection = in.mdsection;
     row.match = in.match;
     row.path = in.path;
@@ -407,19 +407,19 @@ void abt_md::mdsection_CopyIn(abt_md::FMdsection &row, dev::Mdsection &in) {
 
 // --- abt_md.FMdsection.regx_match.Print
 // Print back to string
-void abt_md::regx_match_Print(abt_md::FMdsection& mdsection, algo::cstring &out) {
+void abt_md::regx_match_Print(abt_md::FMdsection& mdsection, algo::cstring &out) throw() {
     Regx_Print(mdsection.regx_match, out);
 }
 
 // --- abt_md.FMdsection.regx_path.Print
 // Print back to string
-void abt_md::regx_path_Print(abt_md::FMdsection& mdsection, algo::cstring &out) {
+void abt_md::regx_path_Print(abt_md::FMdsection& mdsection, algo::cstring &out) throw() {
     Regx_Print(mdsection.regx_path, out);
 }
 
 // --- abt_md.FMdsection.zd_file_section.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void abt_md::zd_file_section_Insert(abt_md::FMdsection& mdsection, abt_md::FFileSection& row) {
+void abt_md::zd_file_section_Insert(abt_md::FMdsection& mdsection, abt_md::FFileSection& row) throw() {
     if (!zd_file_section_InLlistQ(row)) {
         abt_md::FFileSection* old_tail = mdsection.zd_file_section_tail;
         row.zd_file_section_next = NULL;
@@ -435,7 +435,7 @@ void abt_md::zd_file_section_Insert(abt_md::FMdsection& mdsection, abt_md::FFile
 
 // --- abt_md.FMdsection.zd_file_section.Remove
 // Remove element from index. If element is not in index, do nothing.
-void abt_md::zd_file_section_Remove(abt_md::FMdsection& mdsection, abt_md::FFileSection& row) {
+void abt_md::zd_file_section_Remove(abt_md::FMdsection& mdsection, abt_md::FFileSection& row) throw() {
     if (zd_file_section_InLlistQ(row)) {
         abt_md::FFileSection* old_head       = mdsection.zd_file_section_head;
         (void)old_head; // in case it's not used
@@ -458,7 +458,7 @@ void abt_md::zd_file_section_Remove(abt_md::FMdsection& mdsection, abt_md::FFile
 
 // --- abt_md.FMdsection.zd_file_section.RemoveAll
 // Empty the index. (The rows are not deleted)
-void abt_md::zd_file_section_RemoveAll(abt_md::FMdsection& mdsection) {
+void abt_md::zd_file_section_RemoveAll(abt_md::FMdsection& mdsection) throw() {
     abt_md::FFileSection* row = mdsection.zd_file_section_head;
     mdsection.zd_file_section_head = NULL;
     mdsection.zd_file_section_tail = NULL;
@@ -473,7 +473,7 @@ void abt_md::zd_file_section_RemoveAll(abt_md::FMdsection& mdsection) {
 
 // --- abt_md.FMdsection.zd_file_section.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-abt_md::FFileSection* abt_md::zd_file_section_RemoveFirst(abt_md::FMdsection& mdsection) {
+abt_md::FFileSection* abt_md::zd_file_section_RemoveFirst(abt_md::FMdsection& mdsection) throw() {
     abt_md::FFileSection *row = NULL;
     row = mdsection.zd_file_section_head;
     if (row) {
@@ -502,7 +502,7 @@ void abt_md::FMdsection_Init(abt_md::FMdsection& mdsection) {
 // --- abt_md.trace..Print
 // print string representation of ROW to string STR
 // cfmt:abt_md.trace.String  printfmt:Tuple
-void abt_md::trace_Print(abt_md::trace& row, algo::cstring& str) {
+void abt_md::trace_Print(abt_md::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "abt_md.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -513,7 +513,7 @@ void abt_md::trace_Print(abt_md::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     abt_md.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void abt_md::ReadArgv() {
+void abt_md::ReadArgv() throw() {
     command::abt_md &cmd = abt_md::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -825,7 +825,7 @@ bool abt_md::InsertStrptrMaybe(algo::strptr str) {
 
 // --- abt_md.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool abt_md::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool abt_md::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = abt_md::LoadTuplesFile(root, recursive);
@@ -866,7 +866,7 @@ bool abt_md::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool abt_md::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool abt_md::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -879,7 +879,7 @@ bool abt_md::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- abt_md.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool abt_md::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool abt_md::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -899,7 +899,7 @@ bool abt_md::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
 
 // --- abt_md.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool abt_md::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool abt_md::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = abt_md::LoadTuplesFile(fname, recursive);
@@ -924,7 +924,7 @@ bool abt_md::_db_XrefMaybe() {
 // --- abt_md.FDb.readme.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FReadme& abt_md::readme_Alloc() {
+abt_md::FReadme& abt_md::readme_Alloc() throw() {
     abt_md::FReadme* row = readme_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.readme  comment:'Alloc failed'");
@@ -934,7 +934,7 @@ abt_md::FReadme& abt_md::readme_Alloc() {
 
 // --- abt_md.FDb.readme.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FReadme* abt_md::readme_AllocMaybe() {
+abt_md::FReadme* abt_md::readme_AllocMaybe() throw() {
     abt_md::FReadme *row = (abt_md::FReadme*)readme_AllocMem();
     if (row) {
         new (row) abt_md::FReadme; // call constructor
@@ -945,7 +945,7 @@ abt_md::FReadme* abt_md::readme_AllocMaybe() {
 // --- abt_md.FDb.readme.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FReadme* abt_md::readme_InsertMaybe(const dev::Readme &value) {
+abt_md::FReadme* abt_md::readme_InsertMaybe(const dev::Readme &value) throw() {
     abt_md::FReadme *row = &readme_Alloc(); // if out of memory, process dies. if input error, return NULL.
     readme_CopyIn(*row,const_cast<dev::Readme&>(value));
     bool ok = readme_XrefMaybe(*row); // this may return false
@@ -958,7 +958,7 @@ abt_md::FReadme* abt_md::readme_InsertMaybe(const dev::Readme &value) {
 
 // --- abt_md.FDb.readme.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::readme_AllocMem() {
+void* abt_md::readme_AllocMem() throw() {
     u64 new_nelems     = _db.readme_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -984,7 +984,7 @@ void* abt_md::readme_AllocMem() {
 
 // --- abt_md.FDb.readme.RemoveAll
 // Remove all elements from Lary
-void abt_md::readme_RemoveAll() {
+void abt_md::readme_RemoveAll() throw() {
     for (u64 n = _db.readme_n; n>0; ) {
         n--;
         readme_qFind(u64(n)).~FReadme(); // destroy last element
@@ -994,7 +994,7 @@ void abt_md::readme_RemoveAll() {
 
 // --- abt_md.FDb.readme.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::readme_RemoveLast() {
+void abt_md::readme_RemoveLast() throw() {
     u64 n = _db.readme_n;
     if (n > 0) {
         n -= 1;
@@ -1004,7 +1004,7 @@ void abt_md::readme_RemoveLast() {
 }
 
 // --- abt_md.FDb.readme.InputMaybe
-static bool abt_md::readme_InputMaybe(dev::Readme &elem) {
+static bool abt_md::readme_InputMaybe(dev::Readme &elem) throw() {
     bool retval = true;
     retval = readme_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1030,7 +1030,7 @@ bool abt_md::readme_XrefMaybe(abt_md::FReadme &row) {
 
 // --- abt_md.FDb.ind_readme.Find
 // Find row by key. Return NULL if not found.
-abt_md::FReadme* abt_md::ind_readme_Find(const algo::strptr& key) {
+abt_md::FReadme* abt_md::ind_readme_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_readme_buckets_n - 1);
     abt_md::FReadme* *e = &_db.ind_readme_buckets_elems[index];
     abt_md::FReadme* ret=NULL;
@@ -1053,7 +1053,7 @@ abt_md::FReadme& abt_md::ind_readme_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_readme.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt_md::FReadme& abt_md::ind_readme_GetOrCreate(const algo::strptr& key) {
+abt_md::FReadme& abt_md::ind_readme_GetOrCreate(const algo::strptr& key) throw() {
     abt_md::FReadme* ret = ind_readme_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &readme_Alloc();
@@ -1070,7 +1070,7 @@ abt_md::FReadme& abt_md::ind_readme_GetOrCreate(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_readme.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_readme_InsertMaybe(abt_md::FReadme& row) {
+bool abt_md::ind_readme_InsertMaybe(abt_md::FReadme& row) throw() {
     ind_readme_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_readme_next == (abt_md::FReadme*)-1)) {// check if in hash already
@@ -1098,7 +1098,7 @@ bool abt_md::ind_readme_InsertMaybe(abt_md::FReadme& row) {
 
 // --- abt_md.FDb.ind_readme.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_readme_Remove(abt_md::FReadme& row) {
+void abt_md::ind_readme_Remove(abt_md::FReadme& row) throw() {
     if (LIKELY(row.ind_readme_next != (abt_md::FReadme*)-1)) {// check if in hash already
         u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_readme_buckets_n - 1);
         abt_md::FReadme* *prev = &_db.ind_readme_buckets_elems[index]; // addr of pointer to current element
@@ -1116,7 +1116,7 @@ void abt_md::ind_readme_Remove(abt_md::FReadme& row) {
 
 // --- abt_md.FDb.ind_readme.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_readme_Reserve(int n) {
+void abt_md::ind_readme_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_readme_buckets_n;
     u32 new_nelems   = _db.ind_readme_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1153,7 +1153,7 @@ void abt_md::ind_readme_Reserve(int n) {
 // --- abt_md.FDb.mdsection.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FMdsection& abt_md::mdsection_Alloc() {
+abt_md::FMdsection& abt_md::mdsection_Alloc() throw() {
     abt_md::FMdsection* row = mdsection_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.mdsection  comment:'Alloc failed'");
@@ -1163,7 +1163,7 @@ abt_md::FMdsection& abt_md::mdsection_Alloc() {
 
 // --- abt_md.FDb.mdsection.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FMdsection* abt_md::mdsection_AllocMaybe() {
+abt_md::FMdsection* abt_md::mdsection_AllocMaybe() throw() {
     abt_md::FMdsection *row = (abt_md::FMdsection*)mdsection_AllocMem();
     if (row) {
         new (row) abt_md::FMdsection; // call constructor
@@ -1175,7 +1175,7 @@ abt_md::FMdsection* abt_md::mdsection_AllocMaybe() {
 // --- abt_md.FDb.mdsection.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FMdsection* abt_md::mdsection_InsertMaybe(const dev::Mdsection &value) {
+abt_md::FMdsection* abt_md::mdsection_InsertMaybe(const dev::Mdsection &value) throw() {
     abt_md::FMdsection *row = &mdsection_Alloc(); // if out of memory, process dies. if input error, return NULL.
     mdsection_CopyIn(*row,const_cast<dev::Mdsection&>(value));
     bool ok = mdsection_XrefMaybe(*row); // this may return false
@@ -1188,7 +1188,7 @@ abt_md::FMdsection* abt_md::mdsection_InsertMaybe(const dev::Mdsection &value) {
 
 // --- abt_md.FDb.mdsection.RemoveAll
 // Destroy all elements of Inlary
-void abt_md::mdsection_RemoveAll() {
+void abt_md::mdsection_RemoveAll() throw() {
     for (u64 n = _db.mdsection_n; n>0; ) {
         n--;
         reinterpret_cast<abt_md::FMdsection*>(_db.mdsection_data)[n].~FMdsection(); // destroy last element
@@ -1198,7 +1198,7 @@ void abt_md::mdsection_RemoveAll() {
 
 // --- abt_md.FDb.mdsection.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::mdsection_RemoveLast() {
+void abt_md::mdsection_RemoveLast() throw() {
     u64 n = _db.mdsection_n;
     if (n > 0) {
         n -= 1;
@@ -1208,7 +1208,7 @@ void abt_md::mdsection_RemoveLast() {
 }
 
 // --- abt_md.FDb.mdsection.LoadStatic
-static void abt_md::mdsection_LoadStatic() {
+static void abt_md::mdsection_LoadStatic() throw() {
     static struct _t {
         const char *s;
         void (*step)(abt_md::FFileSection&);
@@ -1264,7 +1264,7 @@ bool abt_md::mdsection_XrefMaybe(abt_md::FMdsection &row) {
 // --- abt_md.FDb.file_section.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FFileSection& abt_md::file_section_Alloc() {
+abt_md::FFileSection& abt_md::file_section_Alloc() throw() {
     abt_md::FFileSection* row = file_section_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.file_section  comment:'Alloc failed'");
@@ -1274,7 +1274,7 @@ abt_md::FFileSection& abt_md::file_section_Alloc() {
 
 // --- abt_md.FDb.file_section.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FFileSection* abt_md::file_section_AllocMaybe() {
+abt_md::FFileSection* abt_md::file_section_AllocMaybe() throw() {
     abt_md::FFileSection *row = (abt_md::FFileSection*)file_section_AllocMem();
     if (row) {
         new (row) abt_md::FFileSection; // call constructor
@@ -1284,7 +1284,7 @@ abt_md::FFileSection* abt_md::file_section_AllocMaybe() {
 
 // --- abt_md.FDb.file_section.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::file_section_AllocMem() {
+void* abt_md::file_section_AllocMem() throw() {
     u64 new_nelems     = _db.file_section_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1310,7 +1310,7 @@ void* abt_md::file_section_AllocMem() {
 
 // --- abt_md.FDb.file_section.RemoveAll
 // Remove all elements from Lary
-void abt_md::file_section_RemoveAll() {
+void abt_md::file_section_RemoveAll() throw() {
     for (u64 n = _db.file_section_n; n>0; ) {
         n--;
         file_section_qFind(u64(n)).~FFileSection(); // destroy last element
@@ -1320,7 +1320,7 @@ void abt_md::file_section_RemoveAll() {
 
 // --- abt_md.FDb.file_section.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::file_section_RemoveLast() {
+void abt_md::file_section_RemoveLast() throw() {
     u64 n = _db.file_section_n;
     if (n > 0) {
         n -= 1;
@@ -1353,7 +1353,7 @@ bool abt_md::file_section_XrefMaybe(abt_md::FFileSection &row) {
 
 // --- abt_md.FDb.bh_file_section.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void abt_md::bh_file_section_Dealloc() {
+void abt_md::bh_file_section_Dealloc() throw() {
     bh_file_section_RemoveAll();
     algo_lib::malloc_FreeMem(_db.bh_file_section_elems, sizeof(abt_md::FFileSection*)*_db.bh_file_section_max);
     _db.bh_file_section_max   = 0;
@@ -1363,7 +1363,7 @@ void abt_md::bh_file_section_Dealloc() {
 // --- abt_md.FDb.bh_file_section.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int abt_md::bh_file_section_Downheap(abt_md::FFileSection& row, int idx) {
+static int abt_md::bh_file_section_Downheap(abt_md::FFileSection& row, int idx) throw() {
     abt_md::FFileSection* *elems = _db.bh_file_section_elems;
     int n = _db.bh_file_section_n;
     int child = idx*2+1;
@@ -1390,7 +1390,7 @@ static int abt_md::bh_file_section_Downheap(abt_md::FFileSection& row, int idx) 
 
 // --- abt_md.FDb.bh_file_section.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void abt_md::bh_file_section_Insert(abt_md::FFileSection& row) {
+void abt_md::bh_file_section_Insert(abt_md::FFileSection& row) throw() {
     if (LIKELY(row.bh_file_section_idx == -1)) {
         bh_file_section_Reserve(1);
         int n = _db.bh_file_section_n;
@@ -1404,7 +1404,7 @@ void abt_md::bh_file_section_Insert(abt_md::FFileSection& row) {
 // --- abt_md.FDb.bh_file_section.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 abt_md::bh_file_section_Reheap(abt_md::FFileSection& row) {
+i32 abt_md::bh_file_section_Reheap(abt_md::FFileSection& row) throw() {
     int old_idx = row.bh_file_section_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
@@ -1425,7 +1425,7 @@ i32 abt_md::bh_file_section_Reheap(abt_md::FFileSection& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 abt_md::bh_file_section_ReheapFirst() {
+i32 abt_md::bh_file_section_ReheapFirst() throw() {
     abt_md::FFileSection &row = *_db.bh_file_section_elems[0];
     i32 new_idx = bh_file_section_Downheap(row, 0);
     row.bh_file_section_idx = new_idx;
@@ -1435,7 +1435,7 @@ i32 abt_md::bh_file_section_ReheapFirst() {
 
 // --- abt_md.FDb.bh_file_section.Remove
 // Remove element from index. If element is not in index, do nothing.
-void abt_md::bh_file_section_Remove(abt_md::FFileSection& row) {
+void abt_md::bh_file_section_Remove(abt_md::FFileSection& row) throw() {
     if (bh_file_section_InBheapQ(row)) {
         int old_idx = row.bh_file_section_idx;
         if (_db.bh_file_section_elems[old_idx] == &row) { // sanity check: heap points back to row
@@ -1457,7 +1457,7 @@ void abt_md::bh_file_section_Remove(abt_md::FFileSection& row) {
 
 // --- abt_md.FDb.bh_file_section.RemoveAll
 // Remove all elements from binary heap
-void abt_md::bh_file_section_RemoveAll() {
+void abt_md::bh_file_section_RemoveAll() throw() {
     int n = _db.bh_file_section_n;
     for (int i = n - 1; i>=0; i--) {
         _db.bh_file_section_elems[i]->bh_file_section_idx = -1; // mark not-in-heap
@@ -1468,7 +1468,7 @@ void abt_md::bh_file_section_RemoveAll() {
 // --- abt_md.FDb.bh_file_section.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-abt_md::FFileSection* abt_md::bh_file_section_RemoveFirst() {
+abt_md::FFileSection* abt_md::bh_file_section_RemoveFirst() throw() {
     abt_md::FFileSection *row = NULL;
     if (_db.bh_file_section_n > 0) {
         row = _db.bh_file_section_elems[0];
@@ -1487,7 +1487,7 @@ abt_md::FFileSection* abt_md::bh_file_section_RemoveFirst() {
 
 // --- abt_md.FDb.bh_file_section.Reserve
 // Reserve space in index for N more elements
-void abt_md::bh_file_section_Reserve(int n) {
+void abt_md::bh_file_section_Reserve(int n) throw() {
     i32 old_max = _db.bh_file_section_max;
     if (UNLIKELY(_db.bh_file_section_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -1505,7 +1505,7 @@ void abt_md::bh_file_section_Reserve(int n) {
 // --- abt_md.FDb.bh_file_section.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int abt_md::bh_file_section_Upheap(abt_md::FFileSection& row, int idx) {
+static int abt_md::bh_file_section_Upheap(abt_md::FFileSection& row, int idx) throw() {
     abt_md::FFileSection* *elems = _db.bh_file_section_elems;
     while (idx>0) {
         int j = (idx-1)/2;
@@ -1521,7 +1521,7 @@ static int abt_md::bh_file_section_Upheap(abt_md::FFileSection& row, int idx) {
 }
 
 // --- abt_md.FDb.bh_file_section.ElemLt
-inline static bool abt_md::bh_file_section_ElemLt(abt_md::FFileSection &a, abt_md::FFileSection &b) {
+inline static bool abt_md::bh_file_section_ElemLt(abt_md::FFileSection &a, abt_md::FFileSection &b) throw() {
     (void)_db;
     return a.sortkey < b.sortkey;
 }
@@ -1529,7 +1529,7 @@ inline static bool abt_md::bh_file_section_ElemLt(abt_md::FFileSection &a, abt_m
 // --- abt_md.FDb.ns.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FNs& abt_md::ns_Alloc() {
+abt_md::FNs& abt_md::ns_Alloc() throw() {
     abt_md::FNs* row = ns_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.ns  comment:'Alloc failed'");
@@ -1539,7 +1539,7 @@ abt_md::FNs& abt_md::ns_Alloc() {
 
 // --- abt_md.FDb.ns.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FNs* abt_md::ns_AllocMaybe() {
+abt_md::FNs* abt_md::ns_AllocMaybe() throw() {
     abt_md::FNs *row = (abt_md::FNs*)ns_AllocMem();
     if (row) {
         new (row) abt_md::FNs; // call constructor
@@ -1550,7 +1550,7 @@ abt_md::FNs* abt_md::ns_AllocMaybe() {
 // --- abt_md.FDb.ns.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FNs* abt_md::ns_InsertMaybe(const dmmeta::Ns &value) {
+abt_md::FNs* abt_md::ns_InsertMaybe(const dmmeta::Ns &value) throw() {
     abt_md::FNs *row = &ns_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ns_CopyIn(*row,const_cast<dmmeta::Ns&>(value));
     bool ok = ns_XrefMaybe(*row); // this may return false
@@ -1563,7 +1563,7 @@ abt_md::FNs* abt_md::ns_InsertMaybe(const dmmeta::Ns &value) {
 
 // --- abt_md.FDb.ns.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::ns_AllocMem() {
+void* abt_md::ns_AllocMem() throw() {
     u64 new_nelems     = _db.ns_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1589,7 +1589,7 @@ void* abt_md::ns_AllocMem() {
 
 // --- abt_md.FDb.ns.RemoveAll
 // Remove all elements from Lary
-void abt_md::ns_RemoveAll() {
+void abt_md::ns_RemoveAll() throw() {
     for (u64 n = _db.ns_n; n>0; ) {
         n--;
         ns_qFind(u64(n)).~FNs(); // destroy last element
@@ -1599,7 +1599,7 @@ void abt_md::ns_RemoveAll() {
 
 // --- abt_md.FDb.ns.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::ns_RemoveLast() {
+void abt_md::ns_RemoveLast() throw() {
     u64 n = _db.ns_n;
     if (n > 0) {
         n -= 1;
@@ -1609,7 +1609,7 @@ void abt_md::ns_RemoveLast() {
 }
 
 // --- abt_md.FDb.ns.InputMaybe
-static bool abt_md::ns_InputMaybe(dmmeta::Ns &elem) {
+static bool abt_md::ns_InputMaybe(dmmeta::Ns &elem) throw() {
     bool retval = true;
     retval = ns_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1635,7 +1635,7 @@ bool abt_md::ns_XrefMaybe(abt_md::FNs &row) {
 
 // --- abt_md.FDb.ind_ns.Find
 // Find row by key. Return NULL if not found.
-abt_md::FNs* abt_md::ind_ns_Find(const algo::strptr& key) {
+abt_md::FNs* abt_md::ind_ns_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
     abt_md::FNs* *e = &_db.ind_ns_buckets_elems[index];
     abt_md::FNs* ret=NULL;
@@ -1658,7 +1658,7 @@ abt_md::FNs& abt_md::ind_ns_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_ns.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt_md::FNs& abt_md::ind_ns_GetOrCreate(const algo::strptr& key) {
+abt_md::FNs& abt_md::ind_ns_GetOrCreate(const algo::strptr& key) throw() {
     abt_md::FNs* ret = ind_ns_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &ns_Alloc();
@@ -1675,7 +1675,7 @@ abt_md::FNs& abt_md::ind_ns_GetOrCreate(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_ns.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_ns_InsertMaybe(abt_md::FNs& row) {
+bool abt_md::ind_ns_InsertMaybe(abt_md::FNs& row) throw() {
     ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (abt_md::FNs*)-1)) {// check if in hash already
@@ -1703,7 +1703,7 @@ bool abt_md::ind_ns_InsertMaybe(abt_md::FNs& row) {
 
 // --- abt_md.FDb.ind_ns.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_ns_Remove(abt_md::FNs& row) {
+void abt_md::ind_ns_Remove(abt_md::FNs& row) throw() {
     if (LIKELY(row.ind_ns_next != (abt_md::FNs*)-1)) {// check if in hash already
         u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         abt_md::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
@@ -1721,7 +1721,7 @@ void abt_md::ind_ns_Remove(abt_md::FNs& row) {
 
 // --- abt_md.FDb.ind_ns.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_ns_Reserve(int n) {
+void abt_md::ind_ns_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_ns_buckets_n;
     u32 new_nelems   = _db.ind_ns_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1758,7 +1758,7 @@ void abt_md::ind_ns_Reserve(int n) {
 // --- abt_md.FDb.ssimfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FSsimfile& abt_md::ssimfile_Alloc() {
+abt_md::FSsimfile& abt_md::ssimfile_Alloc() throw() {
     abt_md::FSsimfile* row = ssimfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.ssimfile  comment:'Alloc failed'");
@@ -1768,7 +1768,7 @@ abt_md::FSsimfile& abt_md::ssimfile_Alloc() {
 
 // --- abt_md.FDb.ssimfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FSsimfile* abt_md::ssimfile_AllocMaybe() {
+abt_md::FSsimfile* abt_md::ssimfile_AllocMaybe() throw() {
     abt_md::FSsimfile *row = (abt_md::FSsimfile*)ssimfile_AllocMem();
     if (row) {
         new (row) abt_md::FSsimfile; // call constructor
@@ -1779,7 +1779,7 @@ abt_md::FSsimfile* abt_md::ssimfile_AllocMaybe() {
 // --- abt_md.FDb.ssimfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FSsimfile* abt_md::ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) {
+abt_md::FSsimfile* abt_md::ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) throw() {
     abt_md::FSsimfile *row = &ssimfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ssimfile_CopyIn(*row,const_cast<dmmeta::Ssimfile&>(value));
     bool ok = ssimfile_XrefMaybe(*row); // this may return false
@@ -1792,7 +1792,7 @@ abt_md::FSsimfile* abt_md::ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) {
 
 // --- abt_md.FDb.ssimfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::ssimfile_AllocMem() {
+void* abt_md::ssimfile_AllocMem() throw() {
     u64 new_nelems     = _db.ssimfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1818,7 +1818,7 @@ void* abt_md::ssimfile_AllocMem() {
 
 // --- abt_md.FDb.ssimfile.RemoveAll
 // Remove all elements from Lary
-void abt_md::ssimfile_RemoveAll() {
+void abt_md::ssimfile_RemoveAll() throw() {
     for (u64 n = _db.ssimfile_n; n>0; ) {
         n--;
         ssimfile_qFind(u64(n)).~FSsimfile(); // destroy last element
@@ -1828,7 +1828,7 @@ void abt_md::ssimfile_RemoveAll() {
 
 // --- abt_md.FDb.ssimfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::ssimfile_RemoveLast() {
+void abt_md::ssimfile_RemoveLast() throw() {
     u64 n = _db.ssimfile_n;
     if (n > 0) {
         n -= 1;
@@ -1838,7 +1838,7 @@ void abt_md::ssimfile_RemoveLast() {
 }
 
 // --- abt_md.FDb.ssimfile.InputMaybe
-static bool abt_md::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
+static bool abt_md::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) throw() {
     bool retval = true;
     retval = ssimfile_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1882,7 +1882,7 @@ bool abt_md::ssimfile_XrefMaybe(abt_md::FSsimfile &row) {
 
 // --- abt_md.FDb.ind_ssimfile.Find
 // Find row by key. Return NULL if not found.
-abt_md::FSsimfile* abt_md::ind_ssimfile_Find(const algo::strptr& key) {
+abt_md::FSsimfile* abt_md::ind_ssimfile_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
     abt_md::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
     abt_md::FSsimfile* ret=NULL;
@@ -1905,7 +1905,7 @@ abt_md::FSsimfile& abt_md::ind_ssimfile_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_ssimfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_ssimfile_InsertMaybe(abt_md::FSsimfile& row) {
+bool abt_md::ind_ssimfile_InsertMaybe(abt_md::FSsimfile& row) throw() {
     ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (abt_md::FSsimfile*)-1)) {// check if in hash already
@@ -1933,7 +1933,7 @@ bool abt_md::ind_ssimfile_InsertMaybe(abt_md::FSsimfile& row) {
 
 // --- abt_md.FDb.ind_ssimfile.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_ssimfile_Remove(abt_md::FSsimfile& row) {
+void abt_md::ind_ssimfile_Remove(abt_md::FSsimfile& row) throw() {
     if (LIKELY(row.ind_ssimfile_next != (abt_md::FSsimfile*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
         abt_md::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
@@ -1951,7 +1951,7 @@ void abt_md::ind_ssimfile_Remove(abt_md::FSsimfile& row) {
 
 // --- abt_md.FDb.ind_ssimfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_ssimfile_Reserve(int n) {
+void abt_md::ind_ssimfile_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_ssimfile_buckets_n;
     u32 new_nelems   = _db.ind_ssimfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1988,7 +1988,7 @@ void abt_md::ind_ssimfile_Reserve(int n) {
 // --- abt_md.FDb.ctype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FCtype& abt_md::ctype_Alloc() {
+abt_md::FCtype& abt_md::ctype_Alloc() throw() {
     abt_md::FCtype* row = ctype_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.ctype  comment:'Alloc failed'");
@@ -1998,7 +1998,7 @@ abt_md::FCtype& abt_md::ctype_Alloc() {
 
 // --- abt_md.FDb.ctype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FCtype* abt_md::ctype_AllocMaybe() {
+abt_md::FCtype* abt_md::ctype_AllocMaybe() throw() {
     abt_md::FCtype *row = (abt_md::FCtype*)ctype_AllocMem();
     if (row) {
         new (row) abt_md::FCtype; // call constructor
@@ -2009,7 +2009,7 @@ abt_md::FCtype* abt_md::ctype_AllocMaybe() {
 // --- abt_md.FDb.ctype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FCtype* abt_md::ctype_InsertMaybe(const dmmeta::Ctype &value) {
+abt_md::FCtype* abt_md::ctype_InsertMaybe(const dmmeta::Ctype &value) throw() {
     abt_md::FCtype *row = &ctype_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ctype_CopyIn(*row,const_cast<dmmeta::Ctype&>(value));
     bool ok = ctype_XrefMaybe(*row); // this may return false
@@ -2022,7 +2022,7 @@ abt_md::FCtype* abt_md::ctype_InsertMaybe(const dmmeta::Ctype &value) {
 
 // --- abt_md.FDb.ctype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::ctype_AllocMem() {
+void* abt_md::ctype_AllocMem() throw() {
     u64 new_nelems     = _db.ctype_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2048,7 +2048,7 @@ void* abt_md::ctype_AllocMem() {
 
 // --- abt_md.FDb.ctype.RemoveAll
 // Remove all elements from Lary
-void abt_md::ctype_RemoveAll() {
+void abt_md::ctype_RemoveAll() throw() {
     for (u64 n = _db.ctype_n; n>0; ) {
         n--;
         ctype_qFind(u64(n)).~FCtype(); // destroy last element
@@ -2058,7 +2058,7 @@ void abt_md::ctype_RemoveAll() {
 
 // --- abt_md.FDb.ctype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::ctype_RemoveLast() {
+void abt_md::ctype_RemoveLast() throw() {
     u64 n = _db.ctype_n;
     if (n > 0) {
         n -= 1;
@@ -2068,7 +2068,7 @@ void abt_md::ctype_RemoveLast() {
 }
 
 // --- abt_md.FDb.ctype.InputMaybe
-static bool abt_md::ctype_InputMaybe(dmmeta::Ctype &elem) {
+static bool abt_md::ctype_InputMaybe(dmmeta::Ctype &elem) throw() {
     bool retval = true;
     retval = ctype_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2107,7 +2107,7 @@ bool abt_md::ctype_XrefMaybe(abt_md::FCtype &row) {
 
 // --- abt_md.FDb.ind_ctype.Find
 // Find row by key. Return NULL if not found.
-abt_md::FCtype* abt_md::ind_ctype_Find(const algo::strptr& key) {
+abt_md::FCtype* abt_md::ind_ctype_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
     abt_md::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
     abt_md::FCtype* ret=NULL;
@@ -2130,7 +2130,7 @@ abt_md::FCtype& abt_md::ind_ctype_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_ctype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_ctype_InsertMaybe(abt_md::FCtype& row) {
+bool abt_md::ind_ctype_InsertMaybe(abt_md::FCtype& row) throw() {
     ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (abt_md::FCtype*)-1)) {// check if in hash already
@@ -2158,7 +2158,7 @@ bool abt_md::ind_ctype_InsertMaybe(abt_md::FCtype& row) {
 
 // --- abt_md.FDb.ind_ctype.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_ctype_Remove(abt_md::FCtype& row) {
+void abt_md::ind_ctype_Remove(abt_md::FCtype& row) throw() {
     if (LIKELY(row.ind_ctype_next != (abt_md::FCtype*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
         abt_md::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
@@ -2176,7 +2176,7 @@ void abt_md::ind_ctype_Remove(abt_md::FCtype& row) {
 
 // --- abt_md.FDb.ind_ctype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_ctype_Reserve(int n) {
+void abt_md::ind_ctype_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_ctype_buckets_n;
     u32 new_nelems   = _db.ind_ctype_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2213,7 +2213,7 @@ void abt_md::ind_ctype_Reserve(int n) {
 // --- abt_md.FDb.field.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FField& abt_md::field_Alloc() {
+abt_md::FField& abt_md::field_Alloc() throw() {
     abt_md::FField* row = field_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.field  comment:'Alloc failed'");
@@ -2223,7 +2223,7 @@ abt_md::FField& abt_md::field_Alloc() {
 
 // --- abt_md.FDb.field.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FField* abt_md::field_AllocMaybe() {
+abt_md::FField* abt_md::field_AllocMaybe() throw() {
     abt_md::FField *row = (abt_md::FField*)field_AllocMem();
     if (row) {
         new (row) abt_md::FField; // call constructor
@@ -2234,7 +2234,7 @@ abt_md::FField* abt_md::field_AllocMaybe() {
 // --- abt_md.FDb.field.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FField* abt_md::field_InsertMaybe(const dmmeta::Field &value) {
+abt_md::FField* abt_md::field_InsertMaybe(const dmmeta::Field &value) throw() {
     abt_md::FField *row = &field_Alloc(); // if out of memory, process dies. if input error, return NULL.
     field_CopyIn(*row,const_cast<dmmeta::Field&>(value));
     bool ok = field_XrefMaybe(*row); // this may return false
@@ -2247,7 +2247,7 @@ abt_md::FField* abt_md::field_InsertMaybe(const dmmeta::Field &value) {
 
 // --- abt_md.FDb.field.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::field_AllocMem() {
+void* abt_md::field_AllocMem() throw() {
     u64 new_nelems     = _db.field_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2273,7 +2273,7 @@ void* abt_md::field_AllocMem() {
 
 // --- abt_md.FDb.field.RemoveAll
 // Remove all elements from Lary
-void abt_md::field_RemoveAll() {
+void abt_md::field_RemoveAll() throw() {
     for (u64 n = _db.field_n; n>0; ) {
         n--;
         field_qFind(u64(n)).~FField(); // destroy last element
@@ -2283,7 +2283,7 @@ void abt_md::field_RemoveAll() {
 
 // --- abt_md.FDb.field.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::field_RemoveLast() {
+void abt_md::field_RemoveLast() throw() {
     u64 n = _db.field_n;
     if (n > 0) {
         n -= 1;
@@ -2293,7 +2293,7 @@ void abt_md::field_RemoveLast() {
 }
 
 // --- abt_md.FDb.field.InputMaybe
-static bool abt_md::field_InputMaybe(dmmeta::Field &elem) {
+static bool abt_md::field_InputMaybe(dmmeta::Field &elem) throw() {
     bool retval = true;
     retval = field_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2345,7 +2345,7 @@ bool abt_md::field_XrefMaybe(abt_md::FField &row) {
 
 // --- abt_md.FDb.ind_field.Find
 // Find row by key. Return NULL if not found.
-abt_md::FField* abt_md::ind_field_Find(const algo::strptr& key) {
+abt_md::FField* abt_md::ind_field_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
     abt_md::FField* *e = &_db.ind_field_buckets_elems[index];
     abt_md::FField* ret=NULL;
@@ -2368,7 +2368,7 @@ abt_md::FField& abt_md::ind_field_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_field_InsertMaybe(abt_md::FField& row) {
+bool abt_md::ind_field_InsertMaybe(abt_md::FField& row) throw() {
     ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (abt_md::FField*)-1)) {// check if in hash already
@@ -2396,7 +2396,7 @@ bool abt_md::ind_field_InsertMaybe(abt_md::FField& row) {
 
 // --- abt_md.FDb.ind_field.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_field_Remove(abt_md::FField& row) {
+void abt_md::ind_field_Remove(abt_md::FField& row) throw() {
     if (LIKELY(row.ind_field_next != (abt_md::FField*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
         abt_md::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
@@ -2414,7 +2414,7 @@ void abt_md::ind_field_Remove(abt_md::FField& row) {
 
 // --- abt_md.FDb.ind_field.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_field_Reserve(int n) {
+void abt_md::ind_field_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_field_buckets_n;
     u32 new_nelems   = _db.ind_field_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2451,7 +2451,7 @@ void abt_md::ind_field_Reserve(int n) {
 // --- abt_md.FDb.targsrc.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FTargsrc& abt_md::targsrc_Alloc() {
+abt_md::FTargsrc& abt_md::targsrc_Alloc() throw() {
     abt_md::FTargsrc* row = targsrc_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.targsrc  comment:'Alloc failed'");
@@ -2461,7 +2461,7 @@ abt_md::FTargsrc& abt_md::targsrc_Alloc() {
 
 // --- abt_md.FDb.targsrc.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FTargsrc* abt_md::targsrc_AllocMaybe() {
+abt_md::FTargsrc* abt_md::targsrc_AllocMaybe() throw() {
     abt_md::FTargsrc *row = (abt_md::FTargsrc*)targsrc_AllocMem();
     if (row) {
         new (row) abt_md::FTargsrc; // call constructor
@@ -2472,7 +2472,7 @@ abt_md::FTargsrc* abt_md::targsrc_AllocMaybe() {
 // --- abt_md.FDb.targsrc.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FTargsrc* abt_md::targsrc_InsertMaybe(const dev::Targsrc &value) {
+abt_md::FTargsrc* abt_md::targsrc_InsertMaybe(const dev::Targsrc &value) throw() {
     abt_md::FTargsrc *row = &targsrc_Alloc(); // if out of memory, process dies. if input error, return NULL.
     targsrc_CopyIn(*row,const_cast<dev::Targsrc&>(value));
     bool ok = targsrc_XrefMaybe(*row); // this may return false
@@ -2485,7 +2485,7 @@ abt_md::FTargsrc* abt_md::targsrc_InsertMaybe(const dev::Targsrc &value) {
 
 // --- abt_md.FDb.targsrc.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::targsrc_AllocMem() {
+void* abt_md::targsrc_AllocMem() throw() {
     u64 new_nelems     = _db.targsrc_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2511,7 +2511,7 @@ void* abt_md::targsrc_AllocMem() {
 
 // --- abt_md.FDb.targsrc.RemoveAll
 // Remove all elements from Lary
-void abt_md::targsrc_RemoveAll() {
+void abt_md::targsrc_RemoveAll() throw() {
     for (u64 n = _db.targsrc_n; n>0; ) {
         n--;
         targsrc_qFind(u64(n)).~FTargsrc(); // destroy last element
@@ -2521,7 +2521,7 @@ void abt_md::targsrc_RemoveAll() {
 
 // --- abt_md.FDb.targsrc.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::targsrc_RemoveLast() {
+void abt_md::targsrc_RemoveLast() throw() {
     u64 n = _db.targsrc_n;
     if (n > 0) {
         n -= 1;
@@ -2531,7 +2531,7 @@ void abt_md::targsrc_RemoveLast() {
 }
 
 // --- abt_md.FDb.targsrc.InputMaybe
-static bool abt_md::targsrc_InputMaybe(dev::Targsrc &elem) {
+static bool abt_md::targsrc_InputMaybe(dev::Targsrc &elem) throw() {
     bool retval = true;
     retval = targsrc_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2558,7 +2558,7 @@ bool abt_md::targsrc_XrefMaybe(abt_md::FTargsrc &row) {
 // --- abt_md.FDb.substr.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FSubstr& abt_md::substr_Alloc() {
+abt_md::FSubstr& abt_md::substr_Alloc() throw() {
     abt_md::FSubstr* row = substr_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.substr  comment:'Alloc failed'");
@@ -2568,7 +2568,7 @@ abt_md::FSubstr& abt_md::substr_Alloc() {
 
 // --- abt_md.FDb.substr.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FSubstr* abt_md::substr_AllocMaybe() {
+abt_md::FSubstr* abt_md::substr_AllocMaybe() throw() {
     abt_md::FSubstr *row = (abt_md::FSubstr*)substr_AllocMem();
     if (row) {
         new (row) abt_md::FSubstr; // call constructor
@@ -2579,7 +2579,7 @@ abt_md::FSubstr* abt_md::substr_AllocMaybe() {
 // --- abt_md.FDb.substr.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FSubstr* abt_md::substr_InsertMaybe(const dmmeta::Substr &value) {
+abt_md::FSubstr* abt_md::substr_InsertMaybe(const dmmeta::Substr &value) throw() {
     abt_md::FSubstr *row = &substr_Alloc(); // if out of memory, process dies. if input error, return NULL.
     substr_CopyIn(*row,const_cast<dmmeta::Substr&>(value));
     bool ok = substr_XrefMaybe(*row); // this may return false
@@ -2592,7 +2592,7 @@ abt_md::FSubstr* abt_md::substr_InsertMaybe(const dmmeta::Substr &value) {
 
 // --- abt_md.FDb.substr.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::substr_AllocMem() {
+void* abt_md::substr_AllocMem() throw() {
     u64 new_nelems     = _db.substr_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2618,7 +2618,7 @@ void* abt_md::substr_AllocMem() {
 
 // --- abt_md.FDb.substr.RemoveAll
 // Remove all elements from Lary
-void abt_md::substr_RemoveAll() {
+void abt_md::substr_RemoveAll() throw() {
     for (u64 n = _db.substr_n; n>0; ) {
         n--;
         substr_qFind(u64(n)).~FSubstr(); // destroy last element
@@ -2628,7 +2628,7 @@ void abt_md::substr_RemoveAll() {
 
 // --- abt_md.FDb.substr.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::substr_RemoveLast() {
+void abt_md::substr_RemoveLast() throw() {
     u64 n = _db.substr_n;
     if (n > 0) {
         n -= 1;
@@ -2638,7 +2638,7 @@ void abt_md::substr_RemoveLast() {
 }
 
 // --- abt_md.FDb.substr.InputMaybe
-static bool abt_md::substr_InputMaybe(dmmeta::Substr &elem) {
+static bool abt_md::substr_InputMaybe(dmmeta::Substr &elem) throw() {
     bool retval = true;
     retval = substr_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2679,7 +2679,7 @@ bool abt_md::substr_XrefMaybe(abt_md::FSubstr &row) {
 // --- abt_md.FDb.human_text.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FHumanText& abt_md::human_text_Alloc() {
+abt_md::FHumanText& abt_md::human_text_Alloc() throw() {
     abt_md::FHumanText* row = human_text_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.human_text  comment:'Alloc failed'");
@@ -2689,7 +2689,7 @@ abt_md::FHumanText& abt_md::human_text_Alloc() {
 
 // --- abt_md.FDb.human_text.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FHumanText* abt_md::human_text_AllocMaybe() {
+abt_md::FHumanText* abt_md::human_text_AllocMaybe() throw() {
     abt_md::FHumanText *row = (abt_md::FHumanText*)human_text_AllocMem();
     if (row) {
         new (row) abt_md::FHumanText; // call constructor
@@ -2699,7 +2699,7 @@ abt_md::FHumanText* abt_md::human_text_AllocMaybe() {
 
 // --- abt_md.FDb.human_text.Delete
 // Remove row from all global and cross indices, then deallocate row
-void abt_md::human_text_Delete(abt_md::FHumanText &row) {
+void abt_md::human_text_Delete(abt_md::FHumanText &row) throw() {
     row.~FHumanText();
     human_text_FreeMem(row);
 }
@@ -2707,7 +2707,7 @@ void abt_md::human_text_Delete(abt_md::FHumanText &row) {
 // --- abt_md.FDb.human_text.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* abt_md::human_text_AllocMem() {
+void* abt_md::human_text_AllocMem() throw() {
     abt_md::FHumanText *row = _db.human_text_free;
     if (UNLIKELY(!row)) {
         human_text_Reserve(1);
@@ -2721,7 +2721,7 @@ void* abt_md::human_text_AllocMem() {
 
 // --- abt_md.FDb.human_text.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void abt_md::human_text_FreeMem(abt_md::FHumanText &row) {
+void abt_md::human_text_FreeMem(abt_md::FHumanText &row) throw() {
     if (UNLIKELY(row.human_text_next != (abt_md::FHumanText*)-1)) {
         FatalErrorExit("abt_md.tpool_double_delete  pool:abt_md.FDb.human_text  comment:'double deletion caught'");
     }
@@ -2732,7 +2732,7 @@ void abt_md::human_text_FreeMem(abt_md::FHumanText &row) {
 // --- abt_md.FDb.human_text.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 abt_md::human_text_Reserve(u64 n_elems) {
+u64 abt_md::human_text_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.human_text_blocksize; // underlying allocator is probably Lpool
@@ -2748,7 +2748,7 @@ u64 abt_md::human_text_Reserve(u64 n_elems) {
 // --- abt_md.FDb.human_text.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 abt_md::human_text_ReserveMem(u64 size) {
+u64 abt_md::human_text_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(abt_md::FHumanText)) {
         abt_md::FHumanText *mem = (abt_md::FHumanText*)algo_lib::malloc_AllocMem(size);
@@ -2782,7 +2782,7 @@ bool abt_md::human_text_XrefMaybe(abt_md::FHumanText &row) {
 
 // --- abt_md.FDb.ind_human_text.Cascdel
 // Delete all rows reachable through the hash index
-void abt_md::ind_human_text_Cascdel() {
+void abt_md::ind_human_text_Cascdel() throw() {
     if (_db.ind_human_text_n) {
         for (int i = 0; i < _db.ind_human_text_buckets_n; i++) {
             abt_md::FHumanText *elem = _db.ind_human_text_buckets_elems[i];
@@ -2797,7 +2797,7 @@ void abt_md::ind_human_text_Cascdel() {
 
 // --- abt_md.FDb.ind_human_text.Find
 // Find row by key. Return NULL if not found.
-abt_md::FHumanText* abt_md::ind_human_text_Find(const algo::strptr& key) {
+abt_md::FHumanText* abt_md::ind_human_text_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_human_text_buckets_n - 1);
     abt_md::FHumanText* *e = &_db.ind_human_text_buckets_elems[index];
     abt_md::FHumanText* ret=NULL;
@@ -2820,7 +2820,7 @@ abt_md::FHumanText& abt_md::ind_human_text_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_human_text.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt_md::FHumanText& abt_md::ind_human_text_GetOrCreate(const algo::strptr& key) {
+abt_md::FHumanText& abt_md::ind_human_text_GetOrCreate(const algo::strptr& key) throw() {
     abt_md::FHumanText* ret = ind_human_text_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &human_text_Alloc();
@@ -2837,7 +2837,7 @@ abt_md::FHumanText& abt_md::ind_human_text_GetOrCreate(const algo::strptr& key) 
 
 // --- abt_md.FDb.ind_human_text.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_human_text_InsertMaybe(abt_md::FHumanText& row) {
+bool abt_md::ind_human_text_InsertMaybe(abt_md::FHumanText& row) throw() {
     ind_human_text_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_human_text_next == (abt_md::FHumanText*)-1)) {// check if in hash already
@@ -2865,7 +2865,7 @@ bool abt_md::ind_human_text_InsertMaybe(abt_md::FHumanText& row) {
 
 // --- abt_md.FDb.ind_human_text.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_human_text_Remove(abt_md::FHumanText& row) {
+void abt_md::ind_human_text_Remove(abt_md::FHumanText& row) throw() {
     if (LIKELY(row.ind_human_text_next != (abt_md::FHumanText*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.key) & (_db.ind_human_text_buckets_n - 1);
         abt_md::FHumanText* *prev = &_db.ind_human_text_buckets_elems[index]; // addr of pointer to current element
@@ -2883,7 +2883,7 @@ void abt_md::ind_human_text_Remove(abt_md::FHumanText& row) {
 
 // --- abt_md.FDb.ind_human_text.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_human_text_Reserve(int n) {
+void abt_md::ind_human_text_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_human_text_buckets_n;
     u32 new_nelems   = _db.ind_human_text_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2920,7 +2920,7 @@ void abt_md::ind_human_text_Reserve(int n) {
 // --- abt_md.FDb.scriptfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FScriptfile& abt_md::scriptfile_Alloc() {
+abt_md::FScriptfile& abt_md::scriptfile_Alloc() throw() {
     abt_md::FScriptfile* row = scriptfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.scriptfile  comment:'Alloc failed'");
@@ -2930,7 +2930,7 @@ abt_md::FScriptfile& abt_md::scriptfile_Alloc() {
 
 // --- abt_md.FDb.scriptfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FScriptfile* abt_md::scriptfile_AllocMaybe() {
+abt_md::FScriptfile* abt_md::scriptfile_AllocMaybe() throw() {
     abt_md::FScriptfile *row = (abt_md::FScriptfile*)scriptfile_AllocMem();
     if (row) {
         new (row) abt_md::FScriptfile; // call constructor
@@ -2941,7 +2941,7 @@ abt_md::FScriptfile* abt_md::scriptfile_AllocMaybe() {
 // --- abt_md.FDb.scriptfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FScriptfile* abt_md::scriptfile_InsertMaybe(const dev::Scriptfile &value) {
+abt_md::FScriptfile* abt_md::scriptfile_InsertMaybe(const dev::Scriptfile &value) throw() {
     abt_md::FScriptfile *row = &scriptfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     scriptfile_CopyIn(*row,const_cast<dev::Scriptfile&>(value));
     bool ok = scriptfile_XrefMaybe(*row); // this may return false
@@ -2954,7 +2954,7 @@ abt_md::FScriptfile* abt_md::scriptfile_InsertMaybe(const dev::Scriptfile &value
 
 // --- abt_md.FDb.scriptfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::scriptfile_AllocMem() {
+void* abt_md::scriptfile_AllocMem() throw() {
     u64 new_nelems     = _db.scriptfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2980,7 +2980,7 @@ void* abt_md::scriptfile_AllocMem() {
 
 // --- abt_md.FDb.scriptfile.RemoveAll
 // Remove all elements from Lary
-void abt_md::scriptfile_RemoveAll() {
+void abt_md::scriptfile_RemoveAll() throw() {
     for (u64 n = _db.scriptfile_n; n>0; ) {
         n--;
         scriptfile_qFind(u64(n)).~FScriptfile(); // destroy last element
@@ -2990,7 +2990,7 @@ void abt_md::scriptfile_RemoveAll() {
 
 // --- abt_md.FDb.scriptfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::scriptfile_RemoveLast() {
+void abt_md::scriptfile_RemoveLast() throw() {
     u64 n = _db.scriptfile_n;
     if (n > 0) {
         n -= 1;
@@ -3000,7 +3000,7 @@ void abt_md::scriptfile_RemoveLast() {
 }
 
 // --- abt_md.FDb.scriptfile.InputMaybe
-static bool abt_md::scriptfile_InputMaybe(dev::Scriptfile &elem) {
+static bool abt_md::scriptfile_InputMaybe(dev::Scriptfile &elem) throw() {
     bool retval = true;
     retval = scriptfile_InsertMaybe(elem) != nullptr;
     return retval;
@@ -3026,7 +3026,7 @@ bool abt_md::scriptfile_XrefMaybe(abt_md::FScriptfile &row) {
 
 // --- abt_md.FDb.ind_scriptfile.Find
 // Find row by key. Return NULL if not found.
-abt_md::FScriptfile* abt_md::ind_scriptfile_Find(const algo::strptr& key) {
+abt_md::FScriptfile* abt_md::ind_scriptfile_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_scriptfile_buckets_n - 1);
     abt_md::FScriptfile* *e = &_db.ind_scriptfile_buckets_elems[index];
     abt_md::FScriptfile* ret=NULL;
@@ -3049,7 +3049,7 @@ abt_md::FScriptfile& abt_md::ind_scriptfile_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_scriptfile.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt_md::FScriptfile& abt_md::ind_scriptfile_GetOrCreate(const algo::strptr& key) {
+abt_md::FScriptfile& abt_md::ind_scriptfile_GetOrCreate(const algo::strptr& key) throw() {
     abt_md::FScriptfile* ret = ind_scriptfile_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &scriptfile_Alloc();
@@ -3066,7 +3066,7 @@ abt_md::FScriptfile& abt_md::ind_scriptfile_GetOrCreate(const algo::strptr& key)
 
 // --- abt_md.FDb.ind_scriptfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_scriptfile_InsertMaybe(abt_md::FScriptfile& row) {
+bool abt_md::ind_scriptfile_InsertMaybe(abt_md::FScriptfile& row) throw() {
     ind_scriptfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_scriptfile_next == (abt_md::FScriptfile*)-1)) {// check if in hash already
@@ -3094,7 +3094,7 @@ bool abt_md::ind_scriptfile_InsertMaybe(abt_md::FScriptfile& row) {
 
 // --- abt_md.FDb.ind_scriptfile.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_scriptfile_Remove(abt_md::FScriptfile& row) {
+void abt_md::ind_scriptfile_Remove(abt_md::FScriptfile& row) throw() {
     if (LIKELY(row.ind_scriptfile_next != (abt_md::FScriptfile*)-1)) {// check if in hash already
         u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_scriptfile_buckets_n - 1);
         abt_md::FScriptfile* *prev = &_db.ind_scriptfile_buckets_elems[index]; // addr of pointer to current element
@@ -3112,7 +3112,7 @@ void abt_md::ind_scriptfile_Remove(abt_md::FScriptfile& row) {
 
 // --- abt_md.FDb.ind_scriptfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_scriptfile_Reserve(int n) {
+void abt_md::ind_scriptfile_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_scriptfile_buckets_n;
     u32 new_nelems   = _db.ind_scriptfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -3149,7 +3149,7 @@ void abt_md::ind_scriptfile_Reserve(int n) {
 // --- abt_md.FDb.nstype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FNstype& abt_md::nstype_Alloc() {
+abt_md::FNstype& abt_md::nstype_Alloc() throw() {
     abt_md::FNstype* row = nstype_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.nstype  comment:'Alloc failed'");
@@ -3159,7 +3159,7 @@ abt_md::FNstype& abt_md::nstype_Alloc() {
 
 // --- abt_md.FDb.nstype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FNstype* abt_md::nstype_AllocMaybe() {
+abt_md::FNstype* abt_md::nstype_AllocMaybe() throw() {
     abt_md::FNstype *row = (abt_md::FNstype*)nstype_AllocMem();
     if (row) {
         new (row) abt_md::FNstype; // call constructor
@@ -3170,7 +3170,7 @@ abt_md::FNstype* abt_md::nstype_AllocMaybe() {
 // --- abt_md.FDb.nstype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FNstype* abt_md::nstype_InsertMaybe(const dmmeta::Nstype &value) {
+abt_md::FNstype* abt_md::nstype_InsertMaybe(const dmmeta::Nstype &value) throw() {
     abt_md::FNstype *row = &nstype_Alloc(); // if out of memory, process dies. if input error, return NULL.
     nstype_CopyIn(*row,const_cast<dmmeta::Nstype&>(value));
     bool ok = nstype_XrefMaybe(*row); // this may return false
@@ -3183,7 +3183,7 @@ abt_md::FNstype* abt_md::nstype_InsertMaybe(const dmmeta::Nstype &value) {
 
 // --- abt_md.FDb.nstype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::nstype_AllocMem() {
+void* abt_md::nstype_AllocMem() throw() {
     u64 new_nelems     = _db.nstype_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3209,7 +3209,7 @@ void* abt_md::nstype_AllocMem() {
 
 // --- abt_md.FDb.nstype.RemoveAll
 // Remove all elements from Lary
-void abt_md::nstype_RemoveAll() {
+void abt_md::nstype_RemoveAll() throw() {
     for (u64 n = _db.nstype_n; n>0; ) {
         n--;
         nstype_qFind(u64(n)).~FNstype(); // destroy last element
@@ -3219,7 +3219,7 @@ void abt_md::nstype_RemoveAll() {
 
 // --- abt_md.FDb.nstype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::nstype_RemoveLast() {
+void abt_md::nstype_RemoveLast() throw() {
     u64 n = _db.nstype_n;
     if (n > 0) {
         n -= 1;
@@ -3229,7 +3229,7 @@ void abt_md::nstype_RemoveLast() {
 }
 
 // --- abt_md.FDb.nstype.InputMaybe
-static bool abt_md::nstype_InputMaybe(dmmeta::Nstype &elem) {
+static bool abt_md::nstype_InputMaybe(dmmeta::Nstype &elem) throw() {
     bool retval = true;
     retval = nstype_InsertMaybe(elem) != nullptr;
     return retval;
@@ -3255,7 +3255,7 @@ bool abt_md::nstype_XrefMaybe(abt_md::FNstype &row) {
 
 // --- abt_md.FDb.ind_nstype.Find
 // Find row by key. Return NULL if not found.
-abt_md::FNstype* abt_md::ind_nstype_Find(const algo::strptr& key) {
+abt_md::FNstype* abt_md::ind_nstype_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_nstype_buckets_n - 1);
     abt_md::FNstype* *e = &_db.ind_nstype_buckets_elems[index];
     abt_md::FNstype* ret=NULL;
@@ -3278,7 +3278,7 @@ abt_md::FNstype& abt_md::ind_nstype_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_nstype.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt_md::FNstype& abt_md::ind_nstype_GetOrCreate(const algo::strptr& key) {
+abt_md::FNstype& abt_md::ind_nstype_GetOrCreate(const algo::strptr& key) throw() {
     abt_md::FNstype* ret = ind_nstype_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &nstype_Alloc();
@@ -3295,7 +3295,7 @@ abt_md::FNstype& abt_md::ind_nstype_GetOrCreate(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_nstype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_nstype_InsertMaybe(abt_md::FNstype& row) {
+bool abt_md::ind_nstype_InsertMaybe(abt_md::FNstype& row) throw() {
     ind_nstype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_nstype_next == (abt_md::FNstype*)-1)) {// check if in hash already
@@ -3323,7 +3323,7 @@ bool abt_md::ind_nstype_InsertMaybe(abt_md::FNstype& row) {
 
 // --- abt_md.FDb.ind_nstype.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_nstype_Remove(abt_md::FNstype& row) {
+void abt_md::ind_nstype_Remove(abt_md::FNstype& row) throw() {
     if (LIKELY(row.ind_nstype_next != (abt_md::FNstype*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.nstype) & (_db.ind_nstype_buckets_n - 1);
         abt_md::FNstype* *prev = &_db.ind_nstype_buckets_elems[index]; // addr of pointer to current element
@@ -3341,7 +3341,7 @@ void abt_md::ind_nstype_Remove(abt_md::FNstype& row) {
 
 // --- abt_md.FDb.ind_nstype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_nstype_Reserve(int n) {
+void abt_md::ind_nstype_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_nstype_buckets_n;
     u32 new_nelems   = _db.ind_nstype_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -3378,7 +3378,7 @@ void abt_md::ind_nstype_Reserve(int n) {
 // --- abt_md.FDb.comptest.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FComptest& abt_md::comptest_Alloc() {
+abt_md::FComptest& abt_md::comptest_Alloc() throw() {
     abt_md::FComptest* row = comptest_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.comptest  comment:'Alloc failed'");
@@ -3388,7 +3388,7 @@ abt_md::FComptest& abt_md::comptest_Alloc() {
 
 // --- abt_md.FDb.comptest.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FComptest* abt_md::comptest_AllocMaybe() {
+abt_md::FComptest* abt_md::comptest_AllocMaybe() throw() {
     abt_md::FComptest *row = (abt_md::FComptest*)comptest_AllocMem();
     if (row) {
         new (row) abt_md::FComptest; // call constructor
@@ -3399,7 +3399,7 @@ abt_md::FComptest* abt_md::comptest_AllocMaybe() {
 // --- abt_md.FDb.comptest.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FComptest* abt_md::comptest_InsertMaybe(const atfdb::Comptest &value) {
+abt_md::FComptest* abt_md::comptest_InsertMaybe(const atfdb::Comptest &value) throw() {
     abt_md::FComptest *row = &comptest_Alloc(); // if out of memory, process dies. if input error, return NULL.
     comptest_CopyIn(*row,const_cast<atfdb::Comptest&>(value));
     bool ok = comptest_XrefMaybe(*row); // this may return false
@@ -3412,7 +3412,7 @@ abt_md::FComptest* abt_md::comptest_InsertMaybe(const atfdb::Comptest &value) {
 
 // --- abt_md.FDb.comptest.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::comptest_AllocMem() {
+void* abt_md::comptest_AllocMem() throw() {
     u64 new_nelems     = _db.comptest_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3438,7 +3438,7 @@ void* abt_md::comptest_AllocMem() {
 
 // --- abt_md.FDb.comptest.RemoveAll
 // Remove all elements from Lary
-void abt_md::comptest_RemoveAll() {
+void abt_md::comptest_RemoveAll() throw() {
     for (u64 n = _db.comptest_n; n>0; ) {
         n--;
         comptest_qFind(u64(n)).~FComptest(); // destroy last element
@@ -3448,7 +3448,7 @@ void abt_md::comptest_RemoveAll() {
 
 // --- abt_md.FDb.comptest.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::comptest_RemoveLast() {
+void abt_md::comptest_RemoveLast() throw() {
     u64 n = _db.comptest_n;
     if (n > 0) {
         n -= 1;
@@ -3458,7 +3458,7 @@ void abt_md::comptest_RemoveLast() {
 }
 
 // --- abt_md.FDb.comptest.InputMaybe
-static bool abt_md::comptest_InputMaybe(atfdb::Comptest &elem) {
+static bool abt_md::comptest_InputMaybe(atfdb::Comptest &elem) throw() {
     bool retval = true;
     retval = comptest_InsertMaybe(elem) != nullptr;
     return retval;
@@ -3485,7 +3485,7 @@ bool abt_md::comptest_XrefMaybe(abt_md::FComptest &row) {
 // --- abt_md.FDb.anchor.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FAnchor& abt_md::anchor_Alloc() {
+abt_md::FAnchor& abt_md::anchor_Alloc() throw() {
     abt_md::FAnchor* row = anchor_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.anchor  comment:'Alloc failed'");
@@ -3495,7 +3495,7 @@ abt_md::FAnchor& abt_md::anchor_Alloc() {
 
 // --- abt_md.FDb.anchor.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FAnchor* abt_md::anchor_AllocMaybe() {
+abt_md::FAnchor* abt_md::anchor_AllocMaybe() throw() {
     abt_md::FAnchor *row = (abt_md::FAnchor*)anchor_AllocMem();
     if (row) {
         new (row) abt_md::FAnchor; // call constructor
@@ -3505,7 +3505,7 @@ abt_md::FAnchor* abt_md::anchor_AllocMaybe() {
 
 // --- abt_md.FDb.anchor.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::anchor_AllocMem() {
+void* abt_md::anchor_AllocMem() throw() {
     u64 new_nelems     = _db.anchor_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3531,7 +3531,7 @@ void* abt_md::anchor_AllocMem() {
 
 // --- abt_md.FDb.anchor.RemoveAll
 // Remove all elements from Lary
-void abt_md::anchor_RemoveAll() {
+void abt_md::anchor_RemoveAll() throw() {
     for (u64 n = _db.anchor_n; n>0; ) {
         n--;
         anchor_qFind(u64(n)).~FAnchor(); // destroy last element
@@ -3541,7 +3541,7 @@ void abt_md::anchor_RemoveAll() {
 
 // --- abt_md.FDb.anchor.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::anchor_RemoveLast() {
+void abt_md::anchor_RemoveLast() throw() {
     u64 n = _db.anchor_n;
     if (n > 0) {
         n -= 1;
@@ -3570,7 +3570,7 @@ bool abt_md::anchor_XrefMaybe(abt_md::FAnchor &row) {
 
 // --- abt_md.FDb.ind_anchor.Find
 // Find row by key. Return NULL if not found.
-abt_md::FAnchor* abt_md::ind_anchor_Find(const algo::strptr& key) {
+abt_md::FAnchor* abt_md::ind_anchor_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_anchor_buckets_n - 1);
     abt_md::FAnchor* *e = &_db.ind_anchor_buckets_elems[index];
     abt_md::FAnchor* ret=NULL;
@@ -3593,7 +3593,7 @@ abt_md::FAnchor& abt_md::ind_anchor_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_anchor.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt_md::FAnchor& abt_md::ind_anchor_GetOrCreate(const algo::strptr& key) {
+abt_md::FAnchor& abt_md::ind_anchor_GetOrCreate(const algo::strptr& key) throw() {
     abt_md::FAnchor* ret = ind_anchor_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &anchor_Alloc();
@@ -3610,7 +3610,7 @@ abt_md::FAnchor& abt_md::ind_anchor_GetOrCreate(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_anchor.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_anchor_InsertMaybe(abt_md::FAnchor& row) {
+bool abt_md::ind_anchor_InsertMaybe(abt_md::FAnchor& row) throw() {
     ind_anchor_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_anchor_next == (abt_md::FAnchor*)-1)) {// check if in hash already
@@ -3638,7 +3638,7 @@ bool abt_md::ind_anchor_InsertMaybe(abt_md::FAnchor& row) {
 
 // --- abt_md.FDb.ind_anchor.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_anchor_Remove(abt_md::FAnchor& row) {
+void abt_md::ind_anchor_Remove(abt_md::FAnchor& row) throw() {
     if (LIKELY(row.ind_anchor_next != (abt_md::FAnchor*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.anchor) & (_db.ind_anchor_buckets_n - 1);
         abt_md::FAnchor* *prev = &_db.ind_anchor_buckets_elems[index]; // addr of pointer to current element
@@ -3656,7 +3656,7 @@ void abt_md::ind_anchor_Remove(abt_md::FAnchor& row) {
 
 // --- abt_md.FDb.ind_anchor.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_anchor_Reserve(int n) {
+void abt_md::ind_anchor_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_anchor_buckets_n;
     u32 new_nelems   = _db.ind_anchor_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -3693,7 +3693,7 @@ void abt_md::ind_anchor_Reserve(int n) {
 // --- abt_md.FDb.link.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FLink& abt_md::link_Alloc() {
+abt_md::FLink& abt_md::link_Alloc() throw() {
     abt_md::FLink* row = link_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.link  comment:'Alloc failed'");
@@ -3703,7 +3703,7 @@ abt_md::FLink& abt_md::link_Alloc() {
 
 // --- abt_md.FDb.link.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FLink* abt_md::link_AllocMaybe() {
+abt_md::FLink* abt_md::link_AllocMaybe() throw() {
     abt_md::FLink *row = (abt_md::FLink*)link_AllocMem();
     if (row) {
         new (row) abt_md::FLink; // call constructor
@@ -3713,7 +3713,7 @@ abt_md::FLink* abt_md::link_AllocMaybe() {
 
 // --- abt_md.FDb.link.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::link_AllocMem() {
+void* abt_md::link_AllocMem() throw() {
     u64 new_nelems     = _db.link_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3739,7 +3739,7 @@ void* abt_md::link_AllocMem() {
 
 // --- abt_md.FDb.link.RemoveAll
 // Remove all elements from Lary
-void abt_md::link_RemoveAll() {
+void abt_md::link_RemoveAll() throw() {
     for (u64 n = _db.link_n; n>0; ) {
         n--;
         link_qFind(u64(n)).~FLink(); // destroy last element
@@ -3749,7 +3749,7 @@ void abt_md::link_RemoveAll() {
 
 // --- abt_md.FDb.link.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::link_RemoveLast() {
+void abt_md::link_RemoveLast() throw() {
     u64 n = _db.link_n;
     if (n > 0) {
         n -= 1;
@@ -3770,7 +3770,7 @@ bool abt_md::link_XrefMaybe(abt_md::FLink &row) {
 // --- abt_md.FDb.reftype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FReftype& abt_md::reftype_Alloc() {
+abt_md::FReftype& abt_md::reftype_Alloc() throw() {
     abt_md::FReftype* row = reftype_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.reftype  comment:'Alloc failed'");
@@ -3780,7 +3780,7 @@ abt_md::FReftype& abt_md::reftype_Alloc() {
 
 // --- abt_md.FDb.reftype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FReftype* abt_md::reftype_AllocMaybe() {
+abt_md::FReftype* abt_md::reftype_AllocMaybe() throw() {
     abt_md::FReftype *row = (abt_md::FReftype*)reftype_AllocMem();
     if (row) {
         new (row) abt_md::FReftype; // call constructor
@@ -3791,7 +3791,7 @@ abt_md::FReftype* abt_md::reftype_AllocMaybe() {
 // --- abt_md.FDb.reftype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FReftype* abt_md::reftype_InsertMaybe(const dmmeta::Reftype &value) {
+abt_md::FReftype* abt_md::reftype_InsertMaybe(const dmmeta::Reftype &value) throw() {
     abt_md::FReftype *row = &reftype_Alloc(); // if out of memory, process dies. if input error, return NULL.
     reftype_CopyIn(*row,const_cast<dmmeta::Reftype&>(value));
     bool ok = reftype_XrefMaybe(*row); // this may return false
@@ -3804,7 +3804,7 @@ abt_md::FReftype* abt_md::reftype_InsertMaybe(const dmmeta::Reftype &value) {
 
 // --- abt_md.FDb.reftype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::reftype_AllocMem() {
+void* abt_md::reftype_AllocMem() throw() {
     u64 new_nelems     = _db.reftype_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3830,7 +3830,7 @@ void* abt_md::reftype_AllocMem() {
 
 // --- abt_md.FDb.reftype.RemoveAll
 // Remove all elements from Lary
-void abt_md::reftype_RemoveAll() {
+void abt_md::reftype_RemoveAll() throw() {
     for (u64 n = _db.reftype_n; n>0; ) {
         n--;
         reftype_qFind(u64(n)).~FReftype(); // destroy last element
@@ -3840,7 +3840,7 @@ void abt_md::reftype_RemoveAll() {
 
 // --- abt_md.FDb.reftype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::reftype_RemoveLast() {
+void abt_md::reftype_RemoveLast() throw() {
     u64 n = _db.reftype_n;
     if (n > 0) {
         n -= 1;
@@ -3850,7 +3850,7 @@ void abt_md::reftype_RemoveLast() {
 }
 
 // --- abt_md.FDb.reftype.InputMaybe
-static bool abt_md::reftype_InputMaybe(dmmeta::Reftype &elem) {
+static bool abt_md::reftype_InputMaybe(dmmeta::Reftype &elem) throw() {
     bool retval = true;
     retval = reftype_InsertMaybe(elem) != nullptr;
     return retval;
@@ -3877,7 +3877,7 @@ bool abt_md::reftype_XrefMaybe(abt_md::FReftype &row) {
 // --- abt_md.FDb.tclass.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FTclass& abt_md::tclass_Alloc() {
+abt_md::FTclass& abt_md::tclass_Alloc() throw() {
     abt_md::FTclass* row = tclass_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.tclass  comment:'Alloc failed'");
@@ -3887,7 +3887,7 @@ abt_md::FTclass& abt_md::tclass_Alloc() {
 
 // --- abt_md.FDb.tclass.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FTclass* abt_md::tclass_AllocMaybe() {
+abt_md::FTclass* abt_md::tclass_AllocMaybe() throw() {
     abt_md::FTclass *row = (abt_md::FTclass*)tclass_AllocMem();
     if (row) {
         new (row) abt_md::FTclass; // call constructor
@@ -3898,7 +3898,7 @@ abt_md::FTclass* abt_md::tclass_AllocMaybe() {
 // --- abt_md.FDb.tclass.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FTclass* abt_md::tclass_InsertMaybe(const amcdb::Tclass &value) {
+abt_md::FTclass* abt_md::tclass_InsertMaybe(const amcdb::Tclass &value) throw() {
     abt_md::FTclass *row = &tclass_Alloc(); // if out of memory, process dies. if input error, return NULL.
     tclass_CopyIn(*row,const_cast<amcdb::Tclass&>(value));
     bool ok = tclass_XrefMaybe(*row); // this may return false
@@ -3911,7 +3911,7 @@ abt_md::FTclass* abt_md::tclass_InsertMaybe(const amcdb::Tclass &value) {
 
 // --- abt_md.FDb.tclass.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::tclass_AllocMem() {
+void* abt_md::tclass_AllocMem() throw() {
     u64 new_nelems     = _db.tclass_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3937,7 +3937,7 @@ void* abt_md::tclass_AllocMem() {
 
 // --- abt_md.FDb.tclass.RemoveAll
 // Remove all elements from Lary
-void abt_md::tclass_RemoveAll() {
+void abt_md::tclass_RemoveAll() throw() {
     for (u64 n = _db.tclass_n; n>0; ) {
         n--;
         tclass_qFind(u64(n)).~FTclass(); // destroy last element
@@ -3947,7 +3947,7 @@ void abt_md::tclass_RemoveAll() {
 
 // --- abt_md.FDb.tclass.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::tclass_RemoveLast() {
+void abt_md::tclass_RemoveLast() throw() {
     u64 n = _db.tclass_n;
     if (n > 0) {
         n -= 1;
@@ -3957,7 +3957,7 @@ void abt_md::tclass_RemoveLast() {
 }
 
 // --- abt_md.FDb.tclass.InputMaybe
-static bool abt_md::tclass_InputMaybe(amcdb::Tclass &elem) {
+static bool abt_md::tclass_InputMaybe(amcdb::Tclass &elem) throw() {
     bool retval = true;
     retval = tclass_InsertMaybe(elem) != nullptr;
     return retval;
@@ -3983,7 +3983,7 @@ bool abt_md::tclass_XrefMaybe(abt_md::FTclass &row) {
 
 // --- abt_md.FDb.ind_tclass.Find
 // Find row by key. Return NULL if not found.
-abt_md::FTclass* abt_md::ind_tclass_Find(const algo::strptr& key) {
+abt_md::FTclass* abt_md::ind_tclass_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_tclass_buckets_n - 1);
     abt_md::FTclass* *e = &_db.ind_tclass_buckets_elems[index];
     abt_md::FTclass* ret=NULL;
@@ -4006,7 +4006,7 @@ abt_md::FTclass& abt_md::ind_tclass_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_tclass.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt_md::FTclass& abt_md::ind_tclass_GetOrCreate(const algo::strptr& key) {
+abt_md::FTclass& abt_md::ind_tclass_GetOrCreate(const algo::strptr& key) throw() {
     abt_md::FTclass* ret = ind_tclass_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &tclass_Alloc();
@@ -4023,7 +4023,7 @@ abt_md::FTclass& abt_md::ind_tclass_GetOrCreate(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_tclass.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_tclass_InsertMaybe(abt_md::FTclass& row) {
+bool abt_md::ind_tclass_InsertMaybe(abt_md::FTclass& row) throw() {
     ind_tclass_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_tclass_next == (abt_md::FTclass*)-1)) {// check if in hash already
@@ -4051,7 +4051,7 @@ bool abt_md::ind_tclass_InsertMaybe(abt_md::FTclass& row) {
 
 // --- abt_md.FDb.ind_tclass.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_tclass_Remove(abt_md::FTclass& row) {
+void abt_md::ind_tclass_Remove(abt_md::FTclass& row) throw() {
     if (LIKELY(row.ind_tclass_next != (abt_md::FTclass*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.tclass) & (_db.ind_tclass_buckets_n - 1);
         abt_md::FTclass* *prev = &_db.ind_tclass_buckets_elems[index]; // addr of pointer to current element
@@ -4069,7 +4069,7 @@ void abt_md::ind_tclass_Remove(abt_md::FTclass& row) {
 
 // --- abt_md.FDb.ind_tclass.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_tclass_Reserve(int n) {
+void abt_md::ind_tclass_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_tclass_buckets_n;
     u32 new_nelems   = _db.ind_tclass_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -4106,7 +4106,7 @@ void abt_md::ind_tclass_Reserve(int n) {
 // --- abt_md.FDb.fconst.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FFconst& abt_md::fconst_Alloc() {
+abt_md::FFconst& abt_md::fconst_Alloc() throw() {
     abt_md::FFconst* row = fconst_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.fconst  comment:'Alloc failed'");
@@ -4116,7 +4116,7 @@ abt_md::FFconst& abt_md::fconst_Alloc() {
 
 // --- abt_md.FDb.fconst.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FFconst* abt_md::fconst_AllocMaybe() {
+abt_md::FFconst* abt_md::fconst_AllocMaybe() throw() {
     abt_md::FFconst *row = (abt_md::FFconst*)fconst_AllocMem();
     if (row) {
         new (row) abt_md::FFconst; // call constructor
@@ -4127,7 +4127,7 @@ abt_md::FFconst* abt_md::fconst_AllocMaybe() {
 // --- abt_md.FDb.fconst.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FFconst* abt_md::fconst_InsertMaybe(const dmmeta::Fconst &value) {
+abt_md::FFconst* abt_md::fconst_InsertMaybe(const dmmeta::Fconst &value) throw() {
     abt_md::FFconst *row = &fconst_Alloc(); // if out of memory, process dies. if input error, return NULL.
     fconst_CopyIn(*row,const_cast<dmmeta::Fconst&>(value));
     bool ok = fconst_XrefMaybe(*row); // this may return false
@@ -4140,7 +4140,7 @@ abt_md::FFconst* abt_md::fconst_InsertMaybe(const dmmeta::Fconst &value) {
 
 // --- abt_md.FDb.fconst.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::fconst_AllocMem() {
+void* abt_md::fconst_AllocMem() throw() {
     u64 new_nelems     = _db.fconst_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4166,7 +4166,7 @@ void* abt_md::fconst_AllocMem() {
 
 // --- abt_md.FDb.fconst.RemoveAll
 // Remove all elements from Lary
-void abt_md::fconst_RemoveAll() {
+void abt_md::fconst_RemoveAll() throw() {
     for (u64 n = _db.fconst_n; n>0; ) {
         n--;
         fconst_qFind(u64(n)).~FFconst(); // destroy last element
@@ -4176,7 +4176,7 @@ void abt_md::fconst_RemoveAll() {
 
 // --- abt_md.FDb.fconst.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::fconst_RemoveLast() {
+void abt_md::fconst_RemoveLast() throw() {
     u64 n = _db.fconst_n;
     if (n > 0) {
         n -= 1;
@@ -4186,7 +4186,7 @@ void abt_md::fconst_RemoveLast() {
 }
 
 // --- abt_md.FDb.fconst.InputMaybe
-static bool abt_md::fconst_InputMaybe(dmmeta::Fconst &elem) {
+static bool abt_md::fconst_InputMaybe(dmmeta::Fconst &elem) throw() {
     bool retval = true;
     retval = fconst_InsertMaybe(elem) != nullptr;
     return retval;
@@ -4213,7 +4213,7 @@ bool abt_md::fconst_XrefMaybe(abt_md::FFconst &row) {
 // --- abt_md.FDb.gconst.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FGconst& abt_md::gconst_Alloc() {
+abt_md::FGconst& abt_md::gconst_Alloc() throw() {
     abt_md::FGconst* row = gconst_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.gconst  comment:'Alloc failed'");
@@ -4223,7 +4223,7 @@ abt_md::FGconst& abt_md::gconst_Alloc() {
 
 // --- abt_md.FDb.gconst.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FGconst* abt_md::gconst_AllocMaybe() {
+abt_md::FGconst* abt_md::gconst_AllocMaybe() throw() {
     abt_md::FGconst *row = (abt_md::FGconst*)gconst_AllocMem();
     if (row) {
         new (row) abt_md::FGconst; // call constructor
@@ -4234,7 +4234,7 @@ abt_md::FGconst* abt_md::gconst_AllocMaybe() {
 // --- abt_md.FDb.gconst.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FGconst* abt_md::gconst_InsertMaybe(const dmmeta::Gconst &value) {
+abt_md::FGconst* abt_md::gconst_InsertMaybe(const dmmeta::Gconst &value) throw() {
     abt_md::FGconst *row = &gconst_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gconst_CopyIn(*row,const_cast<dmmeta::Gconst&>(value));
     bool ok = gconst_XrefMaybe(*row); // this may return false
@@ -4247,7 +4247,7 @@ abt_md::FGconst* abt_md::gconst_InsertMaybe(const dmmeta::Gconst &value) {
 
 // --- abt_md.FDb.gconst.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::gconst_AllocMem() {
+void* abt_md::gconst_AllocMem() throw() {
     u64 new_nelems     = _db.gconst_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4273,7 +4273,7 @@ void* abt_md::gconst_AllocMem() {
 
 // --- abt_md.FDb.gconst.RemoveAll
 // Remove all elements from Lary
-void abt_md::gconst_RemoveAll() {
+void abt_md::gconst_RemoveAll() throw() {
     for (u64 n = _db.gconst_n; n>0; ) {
         n--;
         gconst_qFind(u64(n)).~FGconst(); // destroy last element
@@ -4283,7 +4283,7 @@ void abt_md::gconst_RemoveAll() {
 
 // --- abt_md.FDb.gconst.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::gconst_RemoveLast() {
+void abt_md::gconst_RemoveLast() throw() {
     u64 n = _db.gconst_n;
     if (n > 0) {
         n -= 1;
@@ -4293,7 +4293,7 @@ void abt_md::gconst_RemoveLast() {
 }
 
 // --- abt_md.FDb.gconst.InputMaybe
-static bool abt_md::gconst_InputMaybe(dmmeta::Gconst &elem) {
+static bool abt_md::gconst_InputMaybe(dmmeta::Gconst &elem) throw() {
     bool retval = true;
     retval = gconst_InsertMaybe(elem) != nullptr;
     return retval;
@@ -4325,7 +4325,7 @@ bool abt_md::gconst_XrefMaybe(abt_md::FGconst &row) {
 // --- abt_md.FDb.readmesort.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FReadmesort& abt_md::readmesort_Alloc() {
+abt_md::FReadmesort& abt_md::readmesort_Alloc() throw() {
     abt_md::FReadmesort* row = readmesort_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.readmesort  comment:'Alloc failed'");
@@ -4335,7 +4335,7 @@ abt_md::FReadmesort& abt_md::readmesort_Alloc() {
 
 // --- abt_md.FDb.readmesort.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FReadmesort* abt_md::readmesort_AllocMaybe() {
+abt_md::FReadmesort* abt_md::readmesort_AllocMaybe() throw() {
     abt_md::FReadmesort *row = (abt_md::FReadmesort*)readmesort_AllocMem();
     if (row) {
         new (row) abt_md::FReadmesort; // call constructor
@@ -4346,7 +4346,7 @@ abt_md::FReadmesort* abt_md::readmesort_AllocMaybe() {
 // --- abt_md.FDb.readmesort.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FReadmesort* abt_md::readmesort_InsertMaybe(const dev::Readmesort &value) {
+abt_md::FReadmesort* abt_md::readmesort_InsertMaybe(const dev::Readmesort &value) throw() {
     abt_md::FReadmesort *row = &readmesort_Alloc(); // if out of memory, process dies. if input error, return NULL.
     readmesort_CopyIn(*row,const_cast<dev::Readmesort&>(value));
     bool ok = readmesort_XrefMaybe(*row); // this may return false
@@ -4359,7 +4359,7 @@ abt_md::FReadmesort* abt_md::readmesort_InsertMaybe(const dev::Readmesort &value
 
 // --- abt_md.FDb.readmesort.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::readmesort_AllocMem() {
+void* abt_md::readmesort_AllocMem() throw() {
     u64 new_nelems     = _db.readmesort_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4385,7 +4385,7 @@ void* abt_md::readmesort_AllocMem() {
 
 // --- abt_md.FDb.readmesort.RemoveAll
 // Remove all elements from Lary
-void abt_md::readmesort_RemoveAll() {
+void abt_md::readmesort_RemoveAll() throw() {
     for (u64 n = _db.readmesort_n; n>0; ) {
         n--;
         readmesort_qFind(u64(n)).~FReadmesort(); // destroy last element
@@ -4395,7 +4395,7 @@ void abt_md::readmesort_RemoveAll() {
 
 // --- abt_md.FDb.readmesort.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::readmesort_RemoveLast() {
+void abt_md::readmesort_RemoveLast() throw() {
     u64 n = _db.readmesort_n;
     if (n > 0) {
         n -= 1;
@@ -4405,7 +4405,7 @@ void abt_md::readmesort_RemoveLast() {
 }
 
 // --- abt_md.FDb.readmesort.InputMaybe
-static bool abt_md::readmesort_InputMaybe(dev::Readmesort &elem) {
+static bool abt_md::readmesort_InputMaybe(dev::Readmesort &elem) throw() {
     bool retval = true;
     retval = readmesort_InsertMaybe(elem) != nullptr;
     return retval;
@@ -4431,7 +4431,7 @@ bool abt_md::readmesort_XrefMaybe(abt_md::FReadmesort &row) {
 
 // --- abt_md.FDb.ind_readmesort.Find
 // Find row by key. Return NULL if not found.
-abt_md::FReadmesort* abt_md::ind_readmesort_Find(const algo::strptr& key) {
+abt_md::FReadmesort* abt_md::ind_readmesort_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_readmesort_buckets_n - 1);
     abt_md::FReadmesort* *e = &_db.ind_readmesort_buckets_elems[index];
     abt_md::FReadmesort* ret=NULL;
@@ -4454,7 +4454,7 @@ abt_md::FReadmesort& abt_md::ind_readmesort_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_readmesort.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt_md::FReadmesort& abt_md::ind_readmesort_GetOrCreate(const algo::strptr& key) {
+abt_md::FReadmesort& abt_md::ind_readmesort_GetOrCreate(const algo::strptr& key) throw() {
     abt_md::FReadmesort* ret = ind_readmesort_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &readmesort_Alloc();
@@ -4471,7 +4471,7 @@ abt_md::FReadmesort& abt_md::ind_readmesort_GetOrCreate(const algo::strptr& key)
 
 // --- abt_md.FDb.ind_readmesort.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_readmesort_InsertMaybe(abt_md::FReadmesort& row) {
+bool abt_md::ind_readmesort_InsertMaybe(abt_md::FReadmesort& row) throw() {
     ind_readmesort_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_readmesort_next == (abt_md::FReadmesort*)-1)) {// check if in hash already
@@ -4499,7 +4499,7 @@ bool abt_md::ind_readmesort_InsertMaybe(abt_md::FReadmesort& row) {
 
 // --- abt_md.FDb.ind_readmesort.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_readmesort_Remove(abt_md::FReadmesort& row) {
+void abt_md::ind_readmesort_Remove(abt_md::FReadmesort& row) throw() {
     if (LIKELY(row.ind_readmesort_next != (abt_md::FReadmesort*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.readmesort) & (_db.ind_readmesort_buckets_n - 1);
         abt_md::FReadmesort* *prev = &_db.ind_readmesort_buckets_elems[index]; // addr of pointer to current element
@@ -4517,7 +4517,7 @@ void abt_md::ind_readmesort_Remove(abt_md::FReadmesort& row) {
 
 // --- abt_md.FDb.ind_readmesort.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_readmesort_Reserve(int n) {
+void abt_md::ind_readmesort_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_readmesort_buckets_n;
     u32 new_nelems   = _db.ind_readmesort_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -4554,7 +4554,7 @@ void abt_md::ind_readmesort_Reserve(int n) {
 // --- abt_md.FDb.gstatic.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FGstatic& abt_md::gstatic_Alloc() {
+abt_md::FGstatic& abt_md::gstatic_Alloc() throw() {
     abt_md::FGstatic* row = gstatic_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.gstatic  comment:'Alloc failed'");
@@ -4564,7 +4564,7 @@ abt_md::FGstatic& abt_md::gstatic_Alloc() {
 
 // --- abt_md.FDb.gstatic.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FGstatic* abt_md::gstatic_AllocMaybe() {
+abt_md::FGstatic* abt_md::gstatic_AllocMaybe() throw() {
     abt_md::FGstatic *row = (abt_md::FGstatic*)gstatic_AllocMem();
     if (row) {
         new (row) abt_md::FGstatic; // call constructor
@@ -4575,7 +4575,7 @@ abt_md::FGstatic* abt_md::gstatic_AllocMaybe() {
 // --- abt_md.FDb.gstatic.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FGstatic* abt_md::gstatic_InsertMaybe(const dmmeta::Gstatic &value) {
+abt_md::FGstatic* abt_md::gstatic_InsertMaybe(const dmmeta::Gstatic &value) throw() {
     abt_md::FGstatic *row = &gstatic_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gstatic_CopyIn(*row,const_cast<dmmeta::Gstatic&>(value));
     bool ok = gstatic_XrefMaybe(*row); // this may return false
@@ -4588,7 +4588,7 @@ abt_md::FGstatic* abt_md::gstatic_InsertMaybe(const dmmeta::Gstatic &value) {
 
 // --- abt_md.FDb.gstatic.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::gstatic_AllocMem() {
+void* abt_md::gstatic_AllocMem() throw() {
     u64 new_nelems     = _db.gstatic_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4614,7 +4614,7 @@ void* abt_md::gstatic_AllocMem() {
 
 // --- abt_md.FDb.gstatic.RemoveAll
 // Remove all elements from Lary
-void abt_md::gstatic_RemoveAll() {
+void abt_md::gstatic_RemoveAll() throw() {
     for (u64 n = _db.gstatic_n; n>0; ) {
         n--;
         gstatic_qFind(u64(n)).~FGstatic(); // destroy last element
@@ -4624,7 +4624,7 @@ void abt_md::gstatic_RemoveAll() {
 
 // --- abt_md.FDb.gstatic.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::gstatic_RemoveLast() {
+void abt_md::gstatic_RemoveLast() throw() {
     u64 n = _db.gstatic_n;
     if (n > 0) {
         n -= 1;
@@ -4634,7 +4634,7 @@ void abt_md::gstatic_RemoveLast() {
 }
 
 // --- abt_md.FDb.gstatic.InputMaybe
-static bool abt_md::gstatic_InputMaybe(dmmeta::Gstatic &elem) {
+static bool abt_md::gstatic_InputMaybe(dmmeta::Gstatic &elem) throw() {
     bool retval = true;
     retval = gstatic_InsertMaybe(elem) != nullptr;
     return retval;
@@ -4660,7 +4660,7 @@ bool abt_md::gstatic_XrefMaybe(abt_md::FGstatic &row) {
 
 // --- abt_md.FDb.ind_gstatic.Find
 // Find row by key. Return NULL if not found.
-abt_md::FGstatic* abt_md::ind_gstatic_Find(const algo::strptr& key) {
+abt_md::FGstatic* abt_md::ind_gstatic_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_gstatic_buckets_n - 1);
     abt_md::FGstatic* *e = &_db.ind_gstatic_buckets_elems[index];
     abt_md::FGstatic* ret=NULL;
@@ -4683,7 +4683,7 @@ abt_md::FGstatic& abt_md::ind_gstatic_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_gstatic.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt_md::FGstatic& abt_md::ind_gstatic_GetOrCreate(const algo::strptr& key) {
+abt_md::FGstatic& abt_md::ind_gstatic_GetOrCreate(const algo::strptr& key) throw() {
     abt_md::FGstatic* ret = ind_gstatic_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gstatic_Alloc();
@@ -4700,7 +4700,7 @@ abt_md::FGstatic& abt_md::ind_gstatic_GetOrCreate(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_gstatic.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_gstatic_InsertMaybe(abt_md::FGstatic& row) {
+bool abt_md::ind_gstatic_InsertMaybe(abt_md::FGstatic& row) throw() {
     ind_gstatic_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gstatic_next == (abt_md::FGstatic*)-1)) {// check if in hash already
@@ -4728,7 +4728,7 @@ bool abt_md::ind_gstatic_InsertMaybe(abt_md::FGstatic& row) {
 
 // --- abt_md.FDb.ind_gstatic.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_gstatic_Remove(abt_md::FGstatic& row) {
+void abt_md::ind_gstatic_Remove(abt_md::FGstatic& row) throw() {
     if (LIKELY(row.ind_gstatic_next != (abt_md::FGstatic*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_gstatic_buckets_n - 1);
         abt_md::FGstatic* *prev = &_db.ind_gstatic_buckets_elems[index]; // addr of pointer to current element
@@ -4746,7 +4746,7 @@ void abt_md::ind_gstatic_Remove(abt_md::FGstatic& row) {
 
 // --- abt_md.FDb.ind_gstatic.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_gstatic_Reserve(int n) {
+void abt_md::ind_gstatic_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gstatic_buckets_n;
     u32 new_nelems   = _db.ind_gstatic_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -4783,7 +4783,7 @@ void abt_md::ind_gstatic_Reserve(int n) {
 // --- abt_md.FDb.target.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FTarget& abt_md::target_Alloc() {
+abt_md::FTarget& abt_md::target_Alloc() throw() {
     abt_md::FTarget* row = target_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.target  comment:'Alloc failed'");
@@ -4793,7 +4793,7 @@ abt_md::FTarget& abt_md::target_Alloc() {
 
 // --- abt_md.FDb.target.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FTarget* abt_md::target_AllocMaybe() {
+abt_md::FTarget* abt_md::target_AllocMaybe() throw() {
     abt_md::FTarget *row = (abt_md::FTarget*)target_AllocMem();
     if (row) {
         new (row) abt_md::FTarget; // call constructor
@@ -4804,7 +4804,7 @@ abt_md::FTarget* abt_md::target_AllocMaybe() {
 // --- abt_md.FDb.target.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FTarget* abt_md::target_InsertMaybe(const dev::Target &value) {
+abt_md::FTarget* abt_md::target_InsertMaybe(const dev::Target &value) throw() {
     abt_md::FTarget *row = &target_Alloc(); // if out of memory, process dies. if input error, return NULL.
     target_CopyIn(*row,const_cast<dev::Target&>(value));
     bool ok = target_XrefMaybe(*row); // this may return false
@@ -4817,7 +4817,7 @@ abt_md::FTarget* abt_md::target_InsertMaybe(const dev::Target &value) {
 
 // --- abt_md.FDb.target.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::target_AllocMem() {
+void* abt_md::target_AllocMem() throw() {
     u64 new_nelems     = _db.target_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4843,7 +4843,7 @@ void* abt_md::target_AllocMem() {
 
 // --- abt_md.FDb.target.RemoveAll
 // Remove all elements from Lary
-void abt_md::target_RemoveAll() {
+void abt_md::target_RemoveAll() throw() {
     for (u64 n = _db.target_n; n>0; ) {
         n--;
         target_qFind(u64(n)).~FTarget(); // destroy last element
@@ -4853,7 +4853,7 @@ void abt_md::target_RemoveAll() {
 
 // --- abt_md.FDb.target.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::target_RemoveLast() {
+void abt_md::target_RemoveLast() throw() {
     u64 n = _db.target_n;
     if (n > 0) {
         n -= 1;
@@ -4863,7 +4863,7 @@ void abt_md::target_RemoveLast() {
 }
 
 // --- abt_md.FDb.target.InputMaybe
-static bool abt_md::target_InputMaybe(dev::Target &elem) {
+static bool abt_md::target_InputMaybe(dev::Target &elem) throw() {
     bool retval = true;
     retval = target_InsertMaybe(elem) != nullptr;
     return retval;
@@ -4908,7 +4908,7 @@ bool abt_md::target_XrefMaybe(abt_md::FTarget &row) {
 // --- abt_md.FDb.targdep.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FTargdep& abt_md::targdep_Alloc() {
+abt_md::FTargdep& abt_md::targdep_Alloc() throw() {
     abt_md::FTargdep* row = targdep_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDb.targdep  comment:'Alloc failed'");
@@ -4918,7 +4918,7 @@ abt_md::FTargdep& abt_md::targdep_Alloc() {
 
 // --- abt_md.FDb.targdep.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FTargdep* abt_md::targdep_AllocMaybe() {
+abt_md::FTargdep* abt_md::targdep_AllocMaybe() throw() {
     abt_md::FTargdep *row = (abt_md::FTargdep*)targdep_AllocMem();
     if (row) {
         new (row) abt_md::FTargdep; // call constructor
@@ -4929,7 +4929,7 @@ abt_md::FTargdep* abt_md::targdep_AllocMaybe() {
 // --- abt_md.FDb.targdep.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt_md::FTargdep* abt_md::targdep_InsertMaybe(const dev::Targdep &value) {
+abt_md::FTargdep* abt_md::targdep_InsertMaybe(const dev::Targdep &value) throw() {
     abt_md::FTargdep *row = &targdep_Alloc(); // if out of memory, process dies. if input error, return NULL.
     targdep_CopyIn(*row,const_cast<dev::Targdep&>(value));
     bool ok = targdep_XrefMaybe(*row); // this may return false
@@ -4942,7 +4942,7 @@ abt_md::FTargdep* abt_md::targdep_InsertMaybe(const dev::Targdep &value) {
 
 // --- abt_md.FDb.targdep.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::targdep_AllocMem() {
+void* abt_md::targdep_AllocMem() throw() {
     u64 new_nelems     = _db.targdep_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4968,7 +4968,7 @@ void* abt_md::targdep_AllocMem() {
 
 // --- abt_md.FDb.targdep.RemoveAll
 // Remove all elements from Lary
-void abt_md::targdep_RemoveAll() {
+void abt_md::targdep_RemoveAll() throw() {
     for (u64 n = _db.targdep_n; n>0; ) {
         n--;
         targdep_qFind(u64(n)).~FTargdep(); // destroy last element
@@ -4978,7 +4978,7 @@ void abt_md::targdep_RemoveAll() {
 
 // --- abt_md.FDb.targdep.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::targdep_RemoveLast() {
+void abt_md::targdep_RemoveLast() throw() {
     u64 n = _db.targdep_n;
     if (n > 0) {
         n -= 1;
@@ -4988,7 +4988,7 @@ void abt_md::targdep_RemoveLast() {
 }
 
 // --- abt_md.FDb.targdep.InputMaybe
-static bool abt_md::targdep_InputMaybe(dev::Targdep &elem) {
+static bool abt_md::targdep_InputMaybe(dev::Targdep &elem) throw() {
     bool retval = true;
     retval = targdep_InsertMaybe(elem) != nullptr;
     return retval;
@@ -5023,7 +5023,7 @@ bool abt_md::targdep_XrefMaybe(abt_md::FTargdep &row) {
 
 // --- abt_md.FDb.ind_target.Find
 // Find row by key. Return NULL if not found.
-abt_md::FTarget* abt_md::ind_target_Find(const algo::strptr& key) {
+abt_md::FTarget* abt_md::ind_target_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
     abt_md::FTarget* *e = &_db.ind_target_buckets_elems[index];
     abt_md::FTarget* ret=NULL;
@@ -5046,7 +5046,7 @@ abt_md::FTarget& abt_md::ind_target_FindX(const algo::strptr& key) {
 
 // --- abt_md.FDb.ind_target.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt_md::ind_target_InsertMaybe(abt_md::FTarget& row) {
+bool abt_md::ind_target_InsertMaybe(abt_md::FTarget& row) throw() {
     ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (abt_md::FTarget*)-1)) {// check if in hash already
@@ -5074,7 +5074,7 @@ bool abt_md::ind_target_InsertMaybe(abt_md::FTarget& row) {
 
 // --- abt_md.FDb.ind_target.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt_md::ind_target_Remove(abt_md::FTarget& row) {
+void abt_md::ind_target_Remove(abt_md::FTarget& row) throw() {
     if (LIKELY(row.ind_target_next != (abt_md::FTarget*)-1)) {// check if in hash already
         u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
         abt_md::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
@@ -5092,7 +5092,7 @@ void abt_md::ind_target_Remove(abt_md::FTarget& row) {
 
 // --- abt_md.FDb.ind_target.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt_md::ind_target_Reserve(int n) {
+void abt_md::ind_target_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_target_buckets_n;
     u32 new_nelems   = _db.ind_target_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -5128,13 +5128,13 @@ void abt_md::ind_target_Reserve(int n) {
 
 // --- abt_md.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr abt_md::trace_RowidFind(int t) {
+static algo::ImrowPtr abt_md::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- abt_md.FDb.trace.N
 // Function return 1
-inline static i32 abt_md::trace_N() {
+inline static i32 abt_md::trace_N() throw() {
     return 1;
 }
 
@@ -5227,7 +5227,7 @@ void abt_md::_db_bh_file_section_curs_Next(_db_bh_file_section_curs &curs) {
 }
 
 // --- abt_md.FDb.ind_human_text_curs.Reset
-void abt_md::_db_ind_human_text_curs_Reset(_db_ind_human_text_curs &curs, abt_md::FDb &parent) {
+void abt_md::_db_ind_human_text_curs_Reset(_db_ind_human_text_curs &curs, abt_md::FDb &parent) throw() {
     curs.bucket = 0;
     curs.parent = &parent;
     curs.prow = &parent.ind_human_text_buckets_elems[0]; // hash never has zero buckets
@@ -5590,7 +5590,7 @@ void abt_md::FDb_Init() {
 }
 
 // --- abt_md.FDb..Uninit
-void abt_md::FDb_Uninit() {
+void abt_md::FDb_Uninit() throw() {
     abt_md::FDb &row = _db; (void)row;
     ind_human_text_Cascdel(); // dmmeta.cascdel:abt_md.FDb.ind_human_text
 
@@ -5705,7 +5705,7 @@ void abt_md::FDb_Uninit() {
 
 // --- abt_md.FDirent.sortfld.Nextchar
 // Extract next character from STR and advance IDX
-inline static int abt_md::sortfld_Nextchar(const abt_md::FDirent& dirent, algo::strptr &str, int &idx) {
+inline static int abt_md::sortfld_Nextchar(const abt_md::FDirent& dirent, algo::strptr &str, int &idx) throw() {
     (void)dirent;
     int i = idx;
     int ch = str.elems[i];
@@ -5715,7 +5715,7 @@ inline static int abt_md::sortfld_Nextchar(const abt_md::FDirent& dirent, algo::
 }
 
 // --- abt_md.FDirent..Uninit
-void abt_md::FDirent_Uninit(abt_md::FDirent& dirent) {
+void abt_md::FDirent_Uninit(abt_md::FDirent& dirent) throw() {
     abt_md::FDirent &row = dirent; (void)row;
     abt_md::FDirscan* p_p_dirscan = row.p_dirscan;
     if (p_p_dirscan)  {
@@ -5725,7 +5725,7 @@ void abt_md::FDirent_Uninit(abt_md::FDirent& dirent) {
 
 // --- abt_md.FDirscan.bh_dirent.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void abt_md::bh_dirent_Dealloc(abt_md::FDirscan& parent) {
+void abt_md::bh_dirent_Dealloc(abt_md::FDirscan& parent) throw() {
     bh_dirent_RemoveAll(parent);
     algo_lib::malloc_FreeMem(parent.bh_dirent_elems, sizeof(abt_md::FDirent*)*parent.bh_dirent_max);
     parent.bh_dirent_max   = 0;
@@ -5735,7 +5735,7 @@ void abt_md::bh_dirent_Dealloc(abt_md::FDirscan& parent) {
 // --- abt_md.FDirscan.bh_dirent.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int abt_md::bh_dirent_Downheap(abt_md::FDirscan& parent, abt_md::FDirent& row, int idx) {
+static int abt_md::bh_dirent_Downheap(abt_md::FDirscan& parent, abt_md::FDirent& row, int idx) throw() {
     abt_md::FDirent* *elems = parent.bh_dirent_elems;
     int n = parent.bh_dirent_n;
     int child = idx*2+1;
@@ -5762,7 +5762,7 @@ static int abt_md::bh_dirent_Downheap(abt_md::FDirscan& parent, abt_md::FDirent&
 
 // --- abt_md.FDirscan.bh_dirent.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void abt_md::bh_dirent_Insert(abt_md::FDirscan& parent, abt_md::FDirent& row) {
+void abt_md::bh_dirent_Insert(abt_md::FDirscan& parent, abt_md::FDirent& row) throw() {
     if (LIKELY(row.bh_dirent_idx == -1)) {
         bh_dirent_Reserve(parent, 1);
         int n = parent.bh_dirent_n;
@@ -5776,7 +5776,7 @@ void abt_md::bh_dirent_Insert(abt_md::FDirscan& parent, abt_md::FDirent& row) {
 // --- abt_md.FDirscan.bh_dirent.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 abt_md::bh_dirent_Reheap(abt_md::FDirscan& parent, abt_md::FDirent& row) {
+i32 abt_md::bh_dirent_Reheap(abt_md::FDirscan& parent, abt_md::FDirent& row) throw() {
     int old_idx = row.bh_dirent_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
@@ -5797,7 +5797,7 @@ i32 abt_md::bh_dirent_Reheap(abt_md::FDirscan& parent, abt_md::FDirent& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 abt_md::bh_dirent_ReheapFirst(abt_md::FDirscan& parent) {
+i32 abt_md::bh_dirent_ReheapFirst(abt_md::FDirscan& parent) throw() {
     abt_md::FDirent &row = *parent.bh_dirent_elems[0];
     i32 new_idx = bh_dirent_Downheap(parent, row, 0);
     row.bh_dirent_idx = new_idx;
@@ -5807,7 +5807,7 @@ i32 abt_md::bh_dirent_ReheapFirst(abt_md::FDirscan& parent) {
 
 // --- abt_md.FDirscan.bh_dirent.Remove
 // Remove element from index. If element is not in index, do nothing.
-void abt_md::bh_dirent_Remove(abt_md::FDirscan& parent, abt_md::FDirent& row) {
+void abt_md::bh_dirent_Remove(abt_md::FDirscan& parent, abt_md::FDirent& row) throw() {
     if (bh_dirent_InBheapQ(row)) {
         int old_idx = row.bh_dirent_idx;
         if (parent.bh_dirent_elems[old_idx] == &row) { // sanity check: heap points back to row
@@ -5829,7 +5829,7 @@ void abt_md::bh_dirent_Remove(abt_md::FDirscan& parent, abt_md::FDirent& row) {
 
 // --- abt_md.FDirscan.bh_dirent.RemoveAll
 // Remove all elements from binary heap
-void abt_md::bh_dirent_RemoveAll(abt_md::FDirscan& parent) {
+void abt_md::bh_dirent_RemoveAll(abt_md::FDirscan& parent) throw() {
     int n = parent.bh_dirent_n;
     for (int i = n - 1; i>=0; i--) {
         parent.bh_dirent_elems[i]->bh_dirent_idx = -1; // mark not-in-heap
@@ -5840,7 +5840,7 @@ void abt_md::bh_dirent_RemoveAll(abt_md::FDirscan& parent) {
 // --- abt_md.FDirscan.bh_dirent.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-abt_md::FDirent* abt_md::bh_dirent_RemoveFirst(abt_md::FDirscan& parent) {
+abt_md::FDirent* abt_md::bh_dirent_RemoveFirst(abt_md::FDirscan& parent) throw() {
     abt_md::FDirent *row = NULL;
     if (parent.bh_dirent_n > 0) {
         row = parent.bh_dirent_elems[0];
@@ -5859,7 +5859,7 @@ abt_md::FDirent* abt_md::bh_dirent_RemoveFirst(abt_md::FDirscan& parent) {
 
 // --- abt_md.FDirscan.bh_dirent.Reserve
 // Reserve space in index for N more elements
-void abt_md::bh_dirent_Reserve(abt_md::FDirscan& parent, int n) {
+void abt_md::bh_dirent_Reserve(abt_md::FDirscan& parent, int n) throw() {
     i32 old_max = parent.bh_dirent_max;
     if (UNLIKELY(parent.bh_dirent_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -5877,7 +5877,7 @@ void abt_md::bh_dirent_Reserve(abt_md::FDirscan& parent, int n) {
 // --- abt_md.FDirscan.bh_dirent.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int abt_md::bh_dirent_Upheap(abt_md::FDirscan& parent, abt_md::FDirent& row, int idx) {
+static int abt_md::bh_dirent_Upheap(abt_md::FDirscan& parent, abt_md::FDirent& row, int idx) throw() {
     abt_md::FDirent* *elems = parent.bh_dirent_elems;
     while (idx>0) {
         int j = (idx-1)/2;
@@ -5893,7 +5893,7 @@ static int abt_md::bh_dirent_Upheap(abt_md::FDirscan& parent, abt_md::FDirent& r
 }
 
 // --- abt_md.FDirscan.bh_dirent.ElemLt
-inline static bool abt_md::bh_dirent_ElemLt(abt_md::FDirscan& parent, abt_md::FDirent &a, abt_md::FDirent &b) {
+inline static bool abt_md::bh_dirent_ElemLt(abt_md::FDirscan& parent, abt_md::FDirent &a, abt_md::FDirent &b) throw() {
     (void)parent;
     return sortfld_Lt(a, b);
 }
@@ -5901,7 +5901,7 @@ inline static bool abt_md::bh_dirent_ElemLt(abt_md::FDirscan& parent, abt_md::FD
 // --- abt_md.FDirscan.dirent.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt_md::FDirent& abt_md::dirent_Alloc(abt_md::FDirscan& parent) {
+abt_md::FDirent& abt_md::dirent_Alloc(abt_md::FDirscan& parent) throw() {
     abt_md::FDirent* row = dirent_AllocMaybe(parent);
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt_md.out_of_mem  field:abt_md.FDirscan.dirent  comment:'Alloc failed'");
@@ -5911,7 +5911,7 @@ abt_md::FDirent& abt_md::dirent_Alloc(abt_md::FDirscan& parent) {
 
 // --- abt_md.FDirscan.dirent.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt_md::FDirent* abt_md::dirent_AllocMaybe(abt_md::FDirscan& parent) {
+abt_md::FDirent* abt_md::dirent_AllocMaybe(abt_md::FDirscan& parent) throw() {
     abt_md::FDirent *row = (abt_md::FDirent*)dirent_AllocMem(parent);
     if (row) {
         new (row) abt_md::FDirent; // call constructor
@@ -5921,7 +5921,7 @@ abt_md::FDirent* abt_md::dirent_AllocMaybe(abt_md::FDirscan& parent) {
 
 // --- abt_md.FDirscan.dirent.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt_md::dirent_AllocMem(abt_md::FDirscan& parent) {
+void* abt_md::dirent_AllocMem(abt_md::FDirscan& parent) throw() {
     u64 new_nelems     = parent.dirent_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -5947,7 +5947,7 @@ void* abt_md::dirent_AllocMem(abt_md::FDirscan& parent) {
 
 // --- abt_md.FDirscan.dirent.RemoveAll
 // Remove all elements from Lary
-void abt_md::dirent_RemoveAll(abt_md::FDirscan& parent) {
+void abt_md::dirent_RemoveAll(abt_md::FDirscan& parent) throw() {
     for (u64 n = parent.dirent_n; n>0; ) {
         n--;
         dirent_qFind(parent, u64(n)).~FDirent(); // destroy last element
@@ -5957,7 +5957,7 @@ void abt_md::dirent_RemoveAll(abt_md::FDirscan& parent) {
 
 // --- abt_md.FDirscan.dirent.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt_md::dirent_RemoveLast(abt_md::FDirscan& parent) {
+void abt_md::dirent_RemoveLast(abt_md::FDirscan& parent) throw() {
     u64 n = parent.dirent_n;
     if (n > 0) {
         n -= 1;
@@ -6092,7 +6092,7 @@ void abt_md::FDirscan_Init(abt_md::FDirscan& parent) {
 }
 
 // --- abt_md.FDirscan..Uninit
-void abt_md::FDirscan_Uninit(abt_md::FDirscan& parent) {
+void abt_md::FDirscan_Uninit(abt_md::FDirscan& parent) throw() {
     abt_md::FDirscan &row = parent; (void)row;
 
     // abt_md.FDirscan.dirent.Uninit (Lary)  //
@@ -6111,7 +6111,7 @@ void abt_md::FDirscan_Uninit(abt_md::FDirscan& parent) {
 
 // --- abt_md.FFconst.base.CopyOut
 // Copy fields out of row
-void abt_md::fconst_CopyOut(abt_md::FFconst &row, dmmeta::Fconst &out) {
+void abt_md::fconst_CopyOut(abt_md::FFconst &row, dmmeta::Fconst &out) throw() {
     out.fconst = row.fconst;
     out.value = row.value;
     out.comment = row.comment;
@@ -6119,26 +6119,26 @@ void abt_md::fconst_CopyOut(abt_md::FFconst &row, dmmeta::Fconst &out) {
 
 // --- abt_md.FFconst.base.CopyIn
 // Copy fields in to row
-void abt_md::fconst_CopyIn(abt_md::FFconst &row, dmmeta::Fconst &in) {
+void abt_md::fconst_CopyIn(abt_md::FFconst &row, dmmeta::Fconst &in) throw() {
     row.fconst = in.fconst;
     row.value = in.value;
     row.comment = in.comment;
 }
 
 // --- abt_md.FFconst.field.Get
-algo::Smallstr100 abt_md::field_Get(abt_md::FFconst& fconst) {
+algo::Smallstr100 abt_md::field_Get(abt_md::FFconst& fconst) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(fconst.fconst, "/LL"));
     return ret;
 }
 
 // --- abt_md.FFconst.name.Get
-algo::Smallstr100 abt_md::name_Get(abt_md::FFconst& fconst) {
+algo::Smallstr100 abt_md::name_Get(abt_md::FFconst& fconst) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(fconst.fconst, "/LR"));
     return ret;
 }
 
 // --- abt_md.FFconst..Uninit
-void abt_md::FFconst_Uninit(abt_md::FFconst& fconst) {
+void abt_md::FFconst_Uninit(abt_md::FFconst& fconst) throw() {
     abt_md::FFconst &row = fconst; (void)row;
     abt_md::FField* p_field = abt_md::ind_field_Find(field_Get(row));
     if (p_field)  {
@@ -6148,7 +6148,7 @@ void abt_md::FFconst_Uninit(abt_md::FFconst& fconst) {
 
 // --- abt_md.FField.base.CopyOut
 // Copy fields out of row
-void abt_md::field_CopyOut(abt_md::FField &row, dmmeta::Field &out) {
+void abt_md::field_CopyOut(abt_md::FField &row, dmmeta::Field &out) throw() {
     out.field = row.field;
     out.arg = row.arg;
     out.reftype = row.reftype;
@@ -6158,7 +6158,7 @@ void abt_md::field_CopyOut(abt_md::FField &row, dmmeta::Field &out) {
 
 // --- abt_md.FField.base.CopyIn
 // Copy fields in to row
-void abt_md::field_CopyIn(abt_md::FField &row, dmmeta::Field &in) {
+void abt_md::field_CopyIn(abt_md::FField &row, dmmeta::Field &in) throw() {
     row.field = in.field;
     row.arg = in.arg;
     row.reftype = in.reftype;
@@ -6167,19 +6167,19 @@ void abt_md::field_CopyIn(abt_md::FField &row, dmmeta::Field &in) {
 }
 
 // --- abt_md.FField.ctype.Get
-algo::Smallstr100 abt_md::ctype_Get(abt_md::FField& field) {
+algo::Smallstr100 abt_md::ctype_Get(abt_md::FField& field) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(field.field, ".RL"));
     return ret;
 }
 
 // --- abt_md.FField.ns.Get
-algo::Smallstr16 abt_md::ns_Get(abt_md::FField& field) {
+algo::Smallstr16 abt_md::ns_Get(abt_md::FField& field) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(field.field, ".RL.RL"));
     return ret;
 }
 
 // --- abt_md.FField.name.Get
-algo::Smallstr50 abt_md::name_Get(abt_md::FField& field) {
+algo::Smallstr50 abt_md::name_Get(abt_md::FField& field) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(field.field, ".RR"));
     return ret;
 }
@@ -6187,7 +6187,7 @@ algo::Smallstr50 abt_md::name_Get(abt_md::FField& field) {
 // --- abt_md.FField.c_fconst.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt_md::c_fconst_Insert(abt_md::FField& field, abt_md::FFconst& row) {
+void abt_md::c_fconst_Insert(abt_md::FField& field, abt_md::FFconst& row) throw() {
     if (bool_Update(row.field_c_fconst_in_ary,true)) {
         // reserve space
         c_fconst_Reserve(field, 1);
@@ -6204,7 +6204,7 @@ void abt_md::c_fconst_Insert(abt_md::FField& field, abt_md::FFconst& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool abt_md::c_fconst_InsertMaybe(abt_md::FField& field, abt_md::FFconst& row) {
+bool abt_md::c_fconst_InsertMaybe(abt_md::FField& field, abt_md::FFconst& row) throw() {
     bool retval = !row.field_c_fconst_in_ary;
     c_fconst_Insert(field,row); // check is performed in _Insert again
     return retval;
@@ -6212,7 +6212,7 @@ bool abt_md::c_fconst_InsertMaybe(abt_md::FField& field, abt_md::FFconst& row) {
 
 // --- abt_md.FField.c_fconst.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt_md::c_fconst_Remove(abt_md::FField& field, abt_md::FFconst& row) {
+void abt_md::c_fconst_Remove(abt_md::FField& field, abt_md::FFconst& row) throw() {
     if (bool_Update(row.field_c_fconst_in_ary,false)) {
         int lim = field.c_fconst_n;
         abt_md::FFconst* *elems = field.c_fconst_elems;
@@ -6233,7 +6233,7 @@ void abt_md::c_fconst_Remove(abt_md::FField& field, abt_md::FFconst& row) {
 
 // --- abt_md.FField.c_fconst.Reserve
 // Reserve space in index for N more elements;
-void abt_md::c_fconst_Reserve(abt_md::FField& field, u32 n) {
+void abt_md::c_fconst_Reserve(abt_md::FField& field, u32 n) throw() {
     u32 old_max = field.c_fconst_max;
     if (UNLIKELY(field.c_fconst_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -6266,7 +6266,7 @@ void abt_md::FField_Init(abt_md::FField& field) {
 }
 
 // --- abt_md.FField..Uninit
-void abt_md::FField_Uninit(abt_md::FField& field) {
+void abt_md::FField_Uninit(abt_md::FField& field) throw() {
     abt_md::FField &row = field; (void)row;
     ind_field_Remove(row); // remove field from index ind_field
     abt_md::FCtype* p_ctype = abt_md::ind_ctype_Find(ctype_Get(row));
@@ -6283,7 +6283,7 @@ void abt_md::FField_Uninit(abt_md::FField& field) {
 }
 
 // --- abt_md.FFileSection..Uninit
-void abt_md::FFileSection_Uninit(abt_md::FFileSection& file_section) {
+void abt_md::FFileSection_Uninit(abt_md::FFileSection& file_section) throw() {
     abt_md::FFileSection &row = file_section; (void)row;
     bh_file_section_Remove(row); // remove file_section from index bh_file_section
     abt_md::FMdsection* p_p_mdsection = row.p_mdsection;
@@ -6294,7 +6294,7 @@ void abt_md::FFileSection_Uninit(abt_md::FFileSection& file_section) {
 
 // --- abt_md.FGconst.base.CopyOut
 // Copy fields out of row
-void abt_md::gconst_CopyOut(abt_md::FGconst &row, dmmeta::Gconst &out) {
+void abt_md::gconst_CopyOut(abt_md::FGconst &row, dmmeta::Gconst &out) throw() {
     out.field = row.field;
     out.namefld = row.namefld;
     out.idfld = row.idfld;
@@ -6303,7 +6303,7 @@ void abt_md::gconst_CopyOut(abt_md::FGconst &row, dmmeta::Gconst &out) {
 
 // --- abt_md.FGconst.base.CopyIn
 // Copy fields in to row
-void abt_md::gconst_CopyIn(abt_md::FGconst &row, dmmeta::Gconst &in) {
+void abt_md::gconst_CopyIn(abt_md::FGconst &row, dmmeta::Gconst &in) throw() {
     row.field = in.field;
     row.namefld = in.namefld;
     row.idfld = in.idfld;
@@ -6311,13 +6311,13 @@ void abt_md::gconst_CopyIn(abt_md::FGconst &row, dmmeta::Gconst &in) {
 }
 
 // --- abt_md.FGconst.namefldctyp.Get
-algo::Smallstr100 abt_md::namefldctyp_Get(abt_md::FGconst& gconst) {
+algo::Smallstr100 abt_md::namefldctyp_Get(abt_md::FGconst& gconst) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(gconst.namefld, ".RL"));
     return ret;
 }
 
 // --- abt_md.FGconst..Uninit
-void abt_md::FGconst_Uninit(abt_md::FGconst& gconst) {
+void abt_md::FGconst_Uninit(abt_md::FGconst& gconst) throw() {
     abt_md::FGconst &row = gconst; (void)row;
     abt_md::FField* p_field = abt_md::ind_field_Find(row.field);
     if (p_field)  {
@@ -6327,39 +6327,39 @@ void abt_md::FGconst_Uninit(abt_md::FGconst& gconst) {
 
 // --- abt_md.FGstatic.base.CopyOut
 // Copy fields out of row
-void abt_md::gstatic_CopyOut(abt_md::FGstatic &row, dmmeta::Gstatic &out) {
+void abt_md::gstatic_CopyOut(abt_md::FGstatic &row, dmmeta::Gstatic &out) throw() {
     out.field = row.field;
     out.comment = row.comment;
 }
 
 // --- abt_md.FGstatic.base.CopyIn
 // Copy fields in to row
-void abt_md::gstatic_CopyIn(abt_md::FGstatic &row, dmmeta::Gstatic &in) {
+void abt_md::gstatic_CopyIn(abt_md::FGstatic &row, dmmeta::Gstatic &in) throw() {
     row.field = in.field;
     row.comment = in.comment;
 }
 
 // --- abt_md.FGstatic.ns.Get
-algo::Smallstr16 abt_md::ns_Get(abt_md::FGstatic& gstatic) {
+algo::Smallstr16 abt_md::ns_Get(abt_md::FGstatic& gstatic) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(gstatic.field, ".LL"));
     return ret;
 }
 
 // --- abt_md.FGstatic..Uninit
-void abt_md::FGstatic_Uninit(abt_md::FGstatic& gstatic) {
+void abt_md::FGstatic_Uninit(abt_md::FGstatic& gstatic) throw() {
     abt_md::FGstatic &row = gstatic; (void)row;
     ind_gstatic_Remove(row); // remove gstatic from index ind_gstatic
 }
 
 // --- abt_md.FHumanText..Uninit
-void abt_md::FHumanText_Uninit(abt_md::FHumanText& human_text) {
+void abt_md::FHumanText_Uninit(abt_md::FHumanText& human_text) throw() {
     abt_md::FHumanText &row = human_text; (void)row;
     ind_human_text_Remove(row); // remove human_text from index ind_human_text
 }
 
 // --- abt_md.FNs.base.CopyOut
 // Copy fields out of row
-void abt_md::ns_CopyOut(abt_md::FNs &row, dmmeta::Ns &out) {
+void abt_md::ns_CopyOut(abt_md::FNs &row, dmmeta::Ns &out) throw() {
     out.ns = row.ns;
     out.nstype = row.nstype;
     out.license = row.license;
@@ -6368,7 +6368,7 @@ void abt_md::ns_CopyOut(abt_md::FNs &row, dmmeta::Ns &out) {
 
 // --- abt_md.FNs.base.CopyIn
 // Copy fields in to row
-void abt_md::ns_CopyIn(abt_md::FNs &row, dmmeta::Ns &in) {
+void abt_md::ns_CopyIn(abt_md::FNs &row, dmmeta::Ns &in) throw() {
     row.ns = in.ns;
     row.nstype = in.nstype;
     row.license = in.license;
@@ -6378,7 +6378,7 @@ void abt_md::ns_CopyIn(abt_md::FNs &row, dmmeta::Ns &in) {
 // --- abt_md.FNs.c_targsrc.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt_md::c_targsrc_Insert(abt_md::FNs& ns, abt_md::FTargsrc& row) {
+void abt_md::c_targsrc_Insert(abt_md::FNs& ns, abt_md::FTargsrc& row) throw() {
     if (bool_Update(row.ns_c_targsrc_in_ary,true)) {
         // reserve space
         c_targsrc_Reserve(ns, 1);
@@ -6395,7 +6395,7 @@ void abt_md::c_targsrc_Insert(abt_md::FNs& ns, abt_md::FTargsrc& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool abt_md::c_targsrc_InsertMaybe(abt_md::FNs& ns, abt_md::FTargsrc& row) {
+bool abt_md::c_targsrc_InsertMaybe(abt_md::FNs& ns, abt_md::FTargsrc& row) throw() {
     bool retval = !row.ns_c_targsrc_in_ary;
     c_targsrc_Insert(ns,row); // check is performed in _Insert again
     return retval;
@@ -6403,7 +6403,7 @@ bool abt_md::c_targsrc_InsertMaybe(abt_md::FNs& ns, abt_md::FTargsrc& row) {
 
 // --- abt_md.FNs.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt_md::c_targsrc_Remove(abt_md::FNs& ns, abt_md::FTargsrc& row) {
+void abt_md::c_targsrc_Remove(abt_md::FNs& ns, abt_md::FTargsrc& row) throw() {
     if (bool_Update(row.ns_c_targsrc_in_ary,false)) {
         int lim = ns.c_targsrc_n;
         abt_md::FTargsrc* *elems = ns.c_targsrc_elems;
@@ -6424,7 +6424,7 @@ void abt_md::c_targsrc_Remove(abt_md::FNs& ns, abt_md::FTargsrc& row) {
 
 // --- abt_md.FNs.c_targsrc.Reserve
 // Reserve space in index for N more elements;
-void abt_md::c_targsrc_Reserve(abt_md::FNs& ns, u32 n) {
+void abt_md::c_targsrc_Reserve(abt_md::FNs& ns, u32 n) throw() {
     u32 old_max = ns.c_targsrc_max;
     if (UNLIKELY(ns.c_targsrc_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -6442,7 +6442,7 @@ void abt_md::c_targsrc_Reserve(abt_md::FNs& ns, u32 n) {
 // --- abt_md.FNs.c_ctype.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt_md::c_ctype_Insert(abt_md::FNs& ns, abt_md::FCtype& row) {
+void abt_md::c_ctype_Insert(abt_md::FNs& ns, abt_md::FCtype& row) throw() {
     if (bool_Update(row.ns_c_ctype_in_ary,true)) {
         // reserve space
         c_ctype_Reserve(ns, 1);
@@ -6459,7 +6459,7 @@ void abt_md::c_ctype_Insert(abt_md::FNs& ns, abt_md::FCtype& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool abt_md::c_ctype_InsertMaybe(abt_md::FNs& ns, abt_md::FCtype& row) {
+bool abt_md::c_ctype_InsertMaybe(abt_md::FNs& ns, abt_md::FCtype& row) throw() {
     bool retval = !row.ns_c_ctype_in_ary;
     c_ctype_Insert(ns,row); // check is performed in _Insert again
     return retval;
@@ -6467,7 +6467,7 @@ bool abt_md::c_ctype_InsertMaybe(abt_md::FNs& ns, abt_md::FCtype& row) {
 
 // --- abt_md.FNs.c_ctype.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt_md::c_ctype_Remove(abt_md::FNs& ns, abt_md::FCtype& row) {
+void abt_md::c_ctype_Remove(abt_md::FNs& ns, abt_md::FCtype& row) throw() {
     if (bool_Update(row.ns_c_ctype_in_ary,false)) {
         int lim = ns.c_ctype_n;
         abt_md::FCtype* *elems = ns.c_ctype_elems;
@@ -6488,7 +6488,7 @@ void abt_md::c_ctype_Remove(abt_md::FNs& ns, abt_md::FCtype& row) {
 
 // --- abt_md.FNs.c_ctype.Reserve
 // Reserve space in index for N more elements;
-void abt_md::c_ctype_Reserve(abt_md::FNs& ns, u32 n) {
+void abt_md::c_ctype_Reserve(abt_md::FNs& ns, u32 n) throw() {
     u32 old_max = ns.c_ctype_max;
     if (UNLIKELY(ns.c_ctype_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -6506,7 +6506,7 @@ void abt_md::c_ctype_Reserve(abt_md::FNs& ns, u32 n) {
 // --- abt_md.FNs.c_comptest.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt_md::c_comptest_Insert(abt_md::FNs& ns, abt_md::FComptest& row) {
+void abt_md::c_comptest_Insert(abt_md::FNs& ns, abt_md::FComptest& row) throw() {
     if (bool_Update(row.ns_c_comptest_in_ary,true)) {
         // reserve space
         c_comptest_Reserve(ns, 1);
@@ -6523,7 +6523,7 @@ void abt_md::c_comptest_Insert(abt_md::FNs& ns, abt_md::FComptest& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool abt_md::c_comptest_InsertMaybe(abt_md::FNs& ns, abt_md::FComptest& row) {
+bool abt_md::c_comptest_InsertMaybe(abt_md::FNs& ns, abt_md::FComptest& row) throw() {
     bool retval = !row.ns_c_comptest_in_ary;
     c_comptest_Insert(ns,row); // check is performed in _Insert again
     return retval;
@@ -6531,7 +6531,7 @@ bool abt_md::c_comptest_InsertMaybe(abt_md::FNs& ns, abt_md::FComptest& row) {
 
 // --- abt_md.FNs.c_comptest.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt_md::c_comptest_Remove(abt_md::FNs& ns, abt_md::FComptest& row) {
+void abt_md::c_comptest_Remove(abt_md::FNs& ns, abt_md::FComptest& row) throw() {
     if (bool_Update(row.ns_c_comptest_in_ary,false)) {
         int lim = ns.c_comptest_n;
         abt_md::FComptest* *elems = ns.c_comptest_elems;
@@ -6552,7 +6552,7 @@ void abt_md::c_comptest_Remove(abt_md::FNs& ns, abt_md::FComptest& row) {
 
 // --- abt_md.FNs.c_comptest.Reserve
 // Reserve space in index for N more elements;
-void abt_md::c_comptest_Reserve(abt_md::FNs& ns, u32 n) {
+void abt_md::c_comptest_Reserve(abt_md::FNs& ns, u32 n) throw() {
     u32 old_max = ns.c_comptest_max;
     if (UNLIKELY(ns.c_comptest_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -6568,7 +6568,7 @@ void abt_md::c_comptest_Reserve(abt_md::FNs& ns, u32 n) {
 }
 
 // --- abt_md.FNs..Uninit
-void abt_md::FNs_Uninit(abt_md::FNs& ns) {
+void abt_md::FNs_Uninit(abt_md::FNs& ns) throw() {
     abt_md::FNs &row = ns; (void)row;
     ind_ns_Remove(row); // remove ns from index ind_ns
 
@@ -6584,27 +6584,27 @@ void abt_md::FNs_Uninit(abt_md::FNs& ns) {
 
 // --- abt_md.FNstype.base.CopyOut
 // Copy fields out of row
-void abt_md::nstype_CopyOut(abt_md::FNstype &row, dmmeta::Nstype &out) {
+void abt_md::nstype_CopyOut(abt_md::FNstype &row, dmmeta::Nstype &out) throw() {
     out.nstype = row.nstype;
     out.comment = row.comment;
 }
 
 // --- abt_md.FNstype.base.CopyIn
 // Copy fields in to row
-void abt_md::nstype_CopyIn(abt_md::FNstype &row, dmmeta::Nstype &in) {
+void abt_md::nstype_CopyIn(abt_md::FNstype &row, dmmeta::Nstype &in) throw() {
     row.nstype = in.nstype;
     row.comment = in.comment;
 }
 
 // --- abt_md.FNstype..Uninit
-void abt_md::FNstype_Uninit(abt_md::FNstype& nstype) {
+void abt_md::FNstype_Uninit(abt_md::FNstype& nstype) throw() {
     abt_md::FNstype &row = nstype; (void)row;
     ind_nstype_Remove(row); // remove nstype from index ind_nstype
 }
 
 // --- abt_md.FReadme.base.CopyOut
 // Copy fields out of row
-void abt_md::readme_CopyOut(abt_md::FReadme &row, dev::Readme &out) {
+void abt_md::readme_CopyOut(abt_md::FReadme &row, dev::Readme &out) throw() {
     out.gitfile = row.gitfile;
     out.inl = row.inl;
     out.sandbox = row.sandbox;
@@ -6614,7 +6614,7 @@ void abt_md::readme_CopyOut(abt_md::FReadme &row, dev::Readme &out) {
 
 // --- abt_md.FReadme.base.CopyIn
 // Copy fields in to row
-void abt_md::readme_CopyIn(abt_md::FReadme &row, dev::Readme &in) {
+void abt_md::readme_CopyIn(abt_md::FReadme &row, dev::Readme &in) throw() {
     row.gitfile = in.gitfile;
     row.inl = in.inl;
     row.sandbox = in.sandbox;
@@ -6636,34 +6636,34 @@ void abt_md::FReadme_Init(abt_md::FReadme& readme) {
 }
 
 // --- abt_md.FReadme..Uninit
-void abt_md::FReadme_Uninit(abt_md::FReadme& readme) {
+void abt_md::FReadme_Uninit(abt_md::FReadme& readme) throw() {
     abt_md::FReadme &row = readme; (void)row;
     ind_readme_Remove(row); // remove readme from index ind_readme
 }
 
 // --- abt_md.FReadmesort.base.CopyOut
 // Copy fields out of row
-void abt_md::readmesort_CopyOut(abt_md::FReadmesort &row, dev::Readmesort &out) {
+void abt_md::readmesort_CopyOut(abt_md::FReadmesort &row, dev::Readmesort &out) throw() {
     out.readmesort = row.readmesort;
     out.comment = row.comment;
 }
 
 // --- abt_md.FReadmesort.base.CopyIn
 // Copy fields in to row
-void abt_md::readmesort_CopyIn(abt_md::FReadmesort &row, dev::Readmesort &in) {
+void abt_md::readmesort_CopyIn(abt_md::FReadmesort &row, dev::Readmesort &in) throw() {
     row.readmesort = in.readmesort;
     row.comment = in.comment;
 }
 
 // --- abt_md.FReadmesort..Uninit
-void abt_md::FReadmesort_Uninit(abt_md::FReadmesort& readmesort) {
+void abt_md::FReadmesort_Uninit(abt_md::FReadmesort& readmesort) throw() {
     abt_md::FReadmesort &row = readmesort; (void)row;
     ind_readmesort_Remove(row); // remove readmesort from index ind_readmesort
 }
 
 // --- abt_md.FReftype.base.CopyOut
 // Copy fields out of row
-void abt_md::reftype_CopyOut(abt_md::FReftype &row, dmmeta::Reftype &out) {
+void abt_md::reftype_CopyOut(abt_md::FReftype &row, dmmeta::Reftype &out) throw() {
     out.reftype = row.reftype;
     out.isval = row.isval;
     out.cascins = row.cascins;
@@ -6680,7 +6680,7 @@ void abt_md::reftype_CopyOut(abt_md::FReftype &row, dmmeta::Reftype &out) {
 
 // --- abt_md.FReftype.base.CopyIn
 // Copy fields in to row
-void abt_md::reftype_CopyIn(abt_md::FReftype &row, dmmeta::Reftype &in) {
+void abt_md::reftype_CopyIn(abt_md::FReftype &row, dmmeta::Reftype &in) throw() {
     row.reftype = in.reftype;
     row.isval = in.isval;
     row.cascins = in.cascins;
@@ -6715,7 +6715,7 @@ void abt_md::FReftype_Init(abt_md::FReftype& reftype) {
 
 // --- abt_md.FScriptfile.base.CopyOut
 // Copy fields out of row
-void abt_md::scriptfile_CopyOut(abt_md::FScriptfile &row, dev::Scriptfile &out) {
+void abt_md::scriptfile_CopyOut(abt_md::FScriptfile &row, dev::Scriptfile &out) throw() {
     out.gitfile = row.gitfile;
     out.license = row.license;
     out.comment = row.comment;
@@ -6723,58 +6723,58 @@ void abt_md::scriptfile_CopyOut(abt_md::FScriptfile &row, dev::Scriptfile &out) 
 
 // --- abt_md.FScriptfile.base.CopyIn
 // Copy fields in to row
-void abt_md::scriptfile_CopyIn(abt_md::FScriptfile &row, dev::Scriptfile &in) {
+void abt_md::scriptfile_CopyIn(abt_md::FScriptfile &row, dev::Scriptfile &in) throw() {
     row.gitfile = in.gitfile;
     row.license = in.license;
     row.comment = in.comment;
 }
 
 // --- abt_md.FScriptfile.name.Get
-algo::Smallstr50 abt_md::name_Get(abt_md::FScriptfile& scriptfile) {
+algo::Smallstr50 abt_md::name_Get(abt_md::FScriptfile& scriptfile) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(scriptfile.gitfile, "/RR"));
     return ret;
 }
 
 // --- abt_md.FScriptfile..Uninit
-void abt_md::FScriptfile_Uninit(abt_md::FScriptfile& scriptfile) {
+void abt_md::FScriptfile_Uninit(abt_md::FScriptfile& scriptfile) throw() {
     abt_md::FScriptfile &row = scriptfile; (void)row;
     ind_scriptfile_Remove(row); // remove scriptfile from index ind_scriptfile
 }
 
 // --- abt_md.FSsimfile.base.CopyOut
 // Copy fields out of row
-void abt_md::ssimfile_CopyOut(abt_md::FSsimfile &row, dmmeta::Ssimfile &out) {
+void abt_md::ssimfile_CopyOut(abt_md::FSsimfile &row, dmmeta::Ssimfile &out) throw() {
     out.ssimfile = row.ssimfile;
     out.ctype = row.ctype;
 }
 
 // --- abt_md.FSsimfile.base.CopyIn
 // Copy fields in to row
-void abt_md::ssimfile_CopyIn(abt_md::FSsimfile &row, dmmeta::Ssimfile &in) {
+void abt_md::ssimfile_CopyIn(abt_md::FSsimfile &row, dmmeta::Ssimfile &in) throw() {
     row.ssimfile = in.ssimfile;
     row.ctype = in.ctype;
 }
 
 // --- abt_md.FSsimfile.ssimns.Get
-algo::Smallstr16 abt_md::ssimns_Get(abt_md::FSsimfile& ssimfile) {
+algo::Smallstr16 abt_md::ssimns_Get(abt_md::FSsimfile& ssimfile) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
     return ret;
 }
 
 // --- abt_md.FSsimfile.ns.Get
-algo::Smallstr16 abt_md::ns_Get(abt_md::FSsimfile& ssimfile) {
+algo::Smallstr16 abt_md::ns_Get(abt_md::FSsimfile& ssimfile) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
     return ret;
 }
 
 // --- abt_md.FSsimfile.name.Get
-algo::Smallstr50 abt_md::name_Get(abt_md::FSsimfile& ssimfile) {
+algo::Smallstr50 abt_md::name_Get(abt_md::FSsimfile& ssimfile) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(ssimfile.ssimfile, ".RR"));
     return ret;
 }
 
 // --- abt_md.FSsimfile..Uninit
-void abt_md::FSsimfile_Uninit(abt_md::FSsimfile& ssimfile) {
+void abt_md::FSsimfile_Uninit(abt_md::FSsimfile& ssimfile) throw() {
     abt_md::FSsimfile &row = ssimfile; (void)row;
     ind_ssimfile_Remove(row); // remove ssimfile from index ind_ssimfile
     abt_md::FCtype* p_ctype = abt_md::ind_ctype_Find(row.ctype);
@@ -6785,7 +6785,7 @@ void abt_md::FSsimfile_Uninit(abt_md::FSsimfile& ssimfile) {
 
 // --- abt_md.FSubstr.base.CopyOut
 // Copy fields out of row
-void abt_md::substr_CopyOut(abt_md::FSubstr &row, dmmeta::Substr &out) {
+void abt_md::substr_CopyOut(abt_md::FSubstr &row, dmmeta::Substr &out) throw() {
     out.field = row.field;
     out.expr = row.expr;
     out.srcfield = row.srcfield;
@@ -6793,14 +6793,14 @@ void abt_md::substr_CopyOut(abt_md::FSubstr &row, dmmeta::Substr &out) {
 
 // --- abt_md.FSubstr.base.CopyIn
 // Copy fields in to row
-void abt_md::substr_CopyIn(abt_md::FSubstr &row, dmmeta::Substr &in) {
+void abt_md::substr_CopyIn(abt_md::FSubstr &row, dmmeta::Substr &in) throw() {
     row.field = in.field;
     row.expr = in.expr;
     row.srcfield = in.srcfield;
 }
 
 // --- abt_md.FSubstr..Uninit
-void abt_md::FSubstr_Uninit(abt_md::FSubstr& substr) {
+void abt_md::FSubstr_Uninit(abt_md::FSubstr& substr) throw() {
     abt_md::FSubstr &row = substr; (void)row;
     abt_md::FField* p_field = abt_md::ind_field_Find(row.field);
     if (p_field)  {
@@ -6810,32 +6810,32 @@ void abt_md::FSubstr_Uninit(abt_md::FSubstr& substr) {
 
 // --- abt_md.FTargdep.base.CopyOut
 // Copy fields out of row
-void abt_md::targdep_CopyOut(abt_md::FTargdep &row, dev::Targdep &out) {
+void abt_md::targdep_CopyOut(abt_md::FTargdep &row, dev::Targdep &out) throw() {
     out.targdep = row.targdep;
     out.comment = row.comment;
 }
 
 // --- abt_md.FTargdep.base.CopyIn
 // Copy fields in to row
-void abt_md::targdep_CopyIn(abt_md::FTargdep &row, dev::Targdep &in) {
+void abt_md::targdep_CopyIn(abt_md::FTargdep &row, dev::Targdep &in) throw() {
     row.targdep = in.targdep;
     row.comment = in.comment;
 }
 
 // --- abt_md.FTargdep.target.Get
-algo::Smallstr16 abt_md::target_Get(abt_md::FTargdep& targdep) {
+algo::Smallstr16 abt_md::target_Get(abt_md::FTargdep& targdep) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(targdep.targdep, ".RL"));
     return ret;
 }
 
 // --- abt_md.FTargdep.parent.Get
-algo::Smallstr16 abt_md::parent_Get(abt_md::FTargdep& targdep) {
+algo::Smallstr16 abt_md::parent_Get(abt_md::FTargdep& targdep) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(targdep.targdep, ".RR"));
     return ret;
 }
 
 // --- abt_md.FTargdep..Uninit
-void abt_md::FTargdep_Uninit(abt_md::FTargdep& targdep) {
+void abt_md::FTargdep_Uninit(abt_md::FTargdep& targdep) throw() {
     abt_md::FTargdep &row = targdep; (void)row;
     abt_md::FTarget* p_target = abt_md::ind_target_Find(target_Get(row));
     if (p_target)  {
@@ -6845,20 +6845,20 @@ void abt_md::FTargdep_Uninit(abt_md::FTargdep& targdep) {
 
 // --- abt_md.FTarget.base.CopyOut
 // Copy fields out of row
-void abt_md::target_CopyOut(abt_md::FTarget &row, dev::Target &out) {
+void abt_md::target_CopyOut(abt_md::FTarget &row, dev::Target &out) throw() {
     out.target = row.target;
 }
 
 // --- abt_md.FTarget.base.CopyIn
 // Copy fields in to row
-void abt_md::target_CopyIn(abt_md::FTarget &row, dev::Target &in) {
+void abt_md::target_CopyIn(abt_md::FTarget &row, dev::Target &in) throw() {
     row.target = in.target;
 }
 
 // --- abt_md.FTarget.c_targdep.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt_md::c_targdep_Insert(abt_md::FTarget& target, abt_md::FTargdep& row) {
+void abt_md::c_targdep_Insert(abt_md::FTarget& target, abt_md::FTargdep& row) throw() {
     if (bool_Update(row.target_c_targdep_in_ary,true)) {
         // reserve space
         c_targdep_Reserve(target, 1);
@@ -6875,7 +6875,7 @@ void abt_md::c_targdep_Insert(abt_md::FTarget& target, abt_md::FTargdep& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool abt_md::c_targdep_InsertMaybe(abt_md::FTarget& target, abt_md::FTargdep& row) {
+bool abt_md::c_targdep_InsertMaybe(abt_md::FTarget& target, abt_md::FTargdep& row) throw() {
     bool retval = !row.target_c_targdep_in_ary;
     c_targdep_Insert(target,row); // check is performed in _Insert again
     return retval;
@@ -6883,7 +6883,7 @@ bool abt_md::c_targdep_InsertMaybe(abt_md::FTarget& target, abt_md::FTargdep& ro
 
 // --- abt_md.FTarget.c_targdep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt_md::c_targdep_Remove(abt_md::FTarget& target, abt_md::FTargdep& row) {
+void abt_md::c_targdep_Remove(abt_md::FTarget& target, abt_md::FTargdep& row) throw() {
     if (bool_Update(row.target_c_targdep_in_ary,false)) {
         int lim = target.c_targdep_n;
         abt_md::FTargdep* *elems = target.c_targdep_elems;
@@ -6904,7 +6904,7 @@ void abt_md::c_targdep_Remove(abt_md::FTarget& target, abt_md::FTargdep& row) {
 
 // --- abt_md.FTarget.c_targdep.Reserve
 // Reserve space in index for N more elements;
-void abt_md::c_targdep_Reserve(abt_md::FTarget& target, u32 n) {
+void abt_md::c_targdep_Reserve(abt_md::FTarget& target, u32 n) throw() {
     u32 old_max = target.c_targdep_max;
     if (UNLIKELY(target.c_targdep_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -6920,7 +6920,7 @@ void abt_md::c_targdep_Reserve(abt_md::FTarget& target, u32 n) {
 }
 
 // --- abt_md.FTarget..Uninit
-void abt_md::FTarget_Uninit(abt_md::FTarget& target) {
+void abt_md::FTarget_Uninit(abt_md::FTarget& target) throw() {
     abt_md::FTarget &row = target; (void)row;
     abt_md::FNs* p_target = abt_md::ind_ns_Find(row.target);
     if (p_target)  {
@@ -6934,38 +6934,38 @@ void abt_md::FTarget_Uninit(abt_md::FTarget& target) {
 
 // --- abt_md.FTargsrc.base.CopyOut
 // Copy fields out of row
-void abt_md::targsrc_CopyOut(abt_md::FTargsrc &row, dev::Targsrc &out) {
+void abt_md::targsrc_CopyOut(abt_md::FTargsrc &row, dev::Targsrc &out) throw() {
     out.targsrc = row.targsrc;
     out.comment = row.comment;
 }
 
 // --- abt_md.FTargsrc.base.CopyIn
 // Copy fields in to row
-void abt_md::targsrc_CopyIn(abt_md::FTargsrc &row, dev::Targsrc &in) {
+void abt_md::targsrc_CopyIn(abt_md::FTargsrc &row, dev::Targsrc &in) throw() {
     row.targsrc = in.targsrc;
     row.comment = in.comment;
 }
 
 // --- abt_md.FTargsrc.target.Get
-algo::Smallstr16 abt_md::target_Get(abt_md::FTargsrc& targsrc) {
+algo::Smallstr16 abt_md::target_Get(abt_md::FTargsrc& targsrc) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
     return ret;
 }
 
 // --- abt_md.FTargsrc.src.Get
-algo::Smallstr200 abt_md::src_Get(abt_md::FTargsrc& targsrc) {
+algo::Smallstr200 abt_md::src_Get(abt_md::FTargsrc& targsrc) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
     return ret;
 }
 
 // --- abt_md.FTargsrc.ext.Get
-algo::Smallstr10 abt_md::ext_Get(abt_md::FTargsrc& targsrc) {
+algo::Smallstr10 abt_md::ext_Get(abt_md::FTargsrc& targsrc) throw() {
     algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
     return ret;
 }
 
 // --- abt_md.FTargsrc..Uninit
-void abt_md::FTargsrc_Uninit(abt_md::FTargsrc& targsrc) {
+void abt_md::FTargsrc_Uninit(abt_md::FTargsrc& targsrc) throw() {
     abt_md::FTargsrc &row = targsrc; (void)row;
     abt_md::FNs* p_target = abt_md::ind_ns_Find(target_Get(row));
     if (p_target)  {
@@ -6975,20 +6975,20 @@ void abt_md::FTargsrc_Uninit(abt_md::FTargsrc& targsrc) {
 
 // --- abt_md.FTclass.base.CopyOut
 // Copy fields out of row
-void abt_md::tclass_CopyOut(abt_md::FTclass &row, amcdb::Tclass &out) {
+void abt_md::tclass_CopyOut(abt_md::FTclass &row, amcdb::Tclass &out) throw() {
     out.tclass = row.tclass;
     out.comment = row.comment;
 }
 
 // --- abt_md.FTclass.base.CopyIn
 // Copy fields in to row
-void abt_md::tclass_CopyIn(abt_md::FTclass &row, amcdb::Tclass &in) {
+void abt_md::tclass_CopyIn(abt_md::FTclass &row, amcdb::Tclass &in) throw() {
     row.tclass = in.tclass;
     row.comment = in.comment;
 }
 
 // --- abt_md.FTclass..Uninit
-void abt_md::FTclass_Uninit(abt_md::FTclass& tclass) {
+void abt_md::FTclass_Uninit(abt_md::FTclass& tclass) throw() {
     abt_md::FTclass &row = tclass; (void)row;
     ind_tclass_Remove(row); // remove tclass from index ind_tclass
 }
@@ -6996,7 +6996,7 @@ void abt_md::FTclass_Uninit(abt_md::FTclass& tclass) {
 // --- abt_md.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* abt_md::value_ToCstr(const abt_md::FieldId& parent) {
+const char* abt_md::value_ToCstr(const abt_md::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case abt_md_FieldId_value          : ret = "value";  break;
@@ -7007,7 +7007,7 @@ const char* abt_md::value_ToCstr(const abt_md::FieldId& parent) {
 // --- abt_md.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void abt_md::value_Print(const abt_md::FieldId& parent, algo::cstring &lhs) {
+void abt_md::value_Print(const abt_md::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -7020,7 +7020,7 @@ void abt_md::value_Print(const abt_md::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool abt_md::value_SetStrptrMaybe(abt_md::FieldId& parent, algo::strptr rhs) {
+bool abt_md::value_SetStrptrMaybe(abt_md::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -7038,13 +7038,13 @@ bool abt_md::value_SetStrptrMaybe(abt_md::FieldId& parent, algo::strptr rhs) {
 // --- abt_md.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void abt_md::value_SetStrptr(abt_md::FieldId& parent, algo::strptr rhs, abt_md_FieldIdEnum dflt) {
+void abt_md::value_SetStrptr(abt_md::FieldId& parent, algo::strptr rhs, abt_md_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- abt_md.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool abt_md::value_ReadStrptrMaybe(abt_md::FieldId& parent, algo::strptr rhs) {
+bool abt_md::value_ReadStrptrMaybe(abt_md::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -7056,7 +7056,7 @@ bool abt_md::value_ReadStrptrMaybe(abt_md::FieldId& parent, algo::strptr rhs) {
 // --- abt_md.FieldId..ReadStrptrMaybe
 // Read fields of abt_md::FieldId from an ascii string.
 // The format of the string is the format of the abt_md::FieldId's only field
-bool abt_md::FieldId_ReadStrptrMaybe(abt_md::FieldId &parent, algo::strptr in_str) {
+bool abt_md::FieldId_ReadStrptrMaybe(abt_md::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7065,14 +7065,14 @@ bool abt_md::FieldId_ReadStrptrMaybe(abt_md::FieldId &parent, algo::strptr in_st
 // --- abt_md.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:abt_md.FieldId.String  printfmt:Raw
-void abt_md::FieldId_Print(abt_md::FieldId& row, algo::cstring& str) {
+void abt_md::FieldId_Print(abt_md::FieldId& row, algo::cstring& str) throw() {
     abt_md::value_Print(row, str);
 }
 
 // --- abt_md.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* abt_md::value_ToCstr(const abt_md::TableId& parent) {
+const char* abt_md::value_ToCstr(const abt_md::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case abt_md_TableId_atfdb_Comptest : ret = "atfdb.Comptest";  break;
@@ -7100,7 +7100,7 @@ const char* abt_md::value_ToCstr(const abt_md::TableId& parent) {
 // --- abt_md.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void abt_md::value_Print(const abt_md::TableId& parent, algo::cstring &lhs) {
+void abt_md::value_Print(const abt_md::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -7113,7 +7113,7 @@ void abt_md::value_Print(const abt_md::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool abt_md::value_SetStrptrMaybe(abt_md::TableId& parent, algo::strptr rhs) {
+bool abt_md::value_SetStrptrMaybe(abt_md::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 9: {
@@ -7296,13 +7296,13 @@ bool abt_md::value_SetStrptrMaybe(abt_md::TableId& parent, algo::strptr rhs) {
 // --- abt_md.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void abt_md::value_SetStrptr(abt_md::TableId& parent, algo::strptr rhs, abt_md_TableIdEnum dflt) {
+void abt_md::value_SetStrptr(abt_md::TableId& parent, algo::strptr rhs, abt_md_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- abt_md.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool abt_md::value_ReadStrptrMaybe(abt_md::TableId& parent, algo::strptr rhs) {
+bool abt_md::value_ReadStrptrMaybe(abt_md::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -7314,7 +7314,7 @@ bool abt_md::value_ReadStrptrMaybe(abt_md::TableId& parent, algo::strptr rhs) {
 // --- abt_md.TableId..ReadStrptrMaybe
 // Read fields of abt_md::TableId from an ascii string.
 // The format of the string is the format of the abt_md::TableId's only field
-bool abt_md::TableId_ReadStrptrMaybe(abt_md::TableId &parent, algo::strptr in_str) {
+bool abt_md::TableId_ReadStrptrMaybe(abt_md::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -7323,7 +7323,7 @@ bool abt_md::TableId_ReadStrptrMaybe(abt_md::TableId &parent, algo::strptr in_st
 // --- abt_md.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:abt_md.TableId.String  printfmt:Raw
-void abt_md::TableId_Print(abt_md::TableId& row, algo::cstring& str) {
+void abt_md::TableId_Print(abt_md::TableId& row, algo::cstring& str) throw() {
     abt_md::value_Print(row, str);
 }
 

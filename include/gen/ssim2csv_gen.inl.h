@@ -29,18 +29,18 @@
 //#pragma endinclude
 
 // --- ssim2csv.trace..Ctor
-inline  ssim2csv::trace::trace() {
+inline  ssim2csv::trace::trace() throw() {
 }
 
 // --- ssim2csv.FDb.expand.EmptyQ
 // Return true if index is empty
-inline bool ssim2csv::expand_EmptyQ() {
+inline bool ssim2csv::expand_EmptyQ() throw() {
     return _db.expand_n == 0;
 }
 
 // --- ssim2csv.FDb.expand.Find
 // Look up row by row id. Return NULL if out of range
-inline ssim2csv::FExpand* ssim2csv::expand_Find(u64 t) {
+inline ssim2csv::FExpand* ssim2csv::expand_Find(u64 t) throw() {
     ssim2csv::FExpand *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.expand_n))) {
         u64 x = t + 1;
@@ -54,19 +54,19 @@ inline ssim2csv::FExpand* ssim2csv::expand_Find(u64 t) {
 
 // --- ssim2csv.FDb.expand.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline ssim2csv::FExpand* ssim2csv::expand_Last() {
+inline ssim2csv::FExpand* ssim2csv::expand_Last() throw() {
     return expand_Find(u64(_db.expand_n-1));
 }
 
 // --- ssim2csv.FDb.expand.N
 // Return number of items in the pool
-inline i32 ssim2csv::expand_N() {
+inline i32 ssim2csv::expand_N() throw() {
     return _db.expand_n;
 }
 
 // --- ssim2csv.FDb.expand.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline ssim2csv::FExpand& ssim2csv::expand_qFind(u64 t) {
+inline ssim2csv::FExpand& ssim2csv::expand_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -76,25 +76,25 @@ inline ssim2csv::FExpand& ssim2csv::expand_qFind(u64 t) {
 
 // --- ssim2csv.FDb.ind_expand.EmptyQ
 // Return true if hash is empty
-inline bool ssim2csv::ind_expand_EmptyQ() {
+inline bool ssim2csv::ind_expand_EmptyQ() throw() {
     return _db.ind_expand_n == 0;
 }
 
 // --- ssim2csv.FDb.ind_expand.N
 // Return number of items in the hash
-inline i32 ssim2csv::ind_expand_N() {
+inline i32 ssim2csv::ind_expand_N() throw() {
     return _db.ind_expand_n;
 }
 
 // --- ssim2csv.FDb.outfile.EmptyQ
 // Return true if index is empty
-inline bool ssim2csv::outfile_EmptyQ() {
+inline bool ssim2csv::outfile_EmptyQ() throw() {
     return _db.outfile_n == 0;
 }
 
 // --- ssim2csv.FDb.outfile.Find
 // Look up row by row id. Return NULL if out of range
-inline ssim2csv::FOutfile* ssim2csv::outfile_Find(u64 t) {
+inline ssim2csv::FOutfile* ssim2csv::outfile_Find(u64 t) throw() {
     ssim2csv::FOutfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.outfile_n))) {
         u64 x = t + 1;
@@ -108,19 +108,19 @@ inline ssim2csv::FOutfile* ssim2csv::outfile_Find(u64 t) {
 
 // --- ssim2csv.FDb.outfile.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline ssim2csv::FOutfile* ssim2csv::outfile_Last() {
+inline ssim2csv::FOutfile* ssim2csv::outfile_Last() throw() {
     return outfile_Find(u64(_db.outfile_n-1));
 }
 
 // --- ssim2csv.FDb.outfile.N
 // Return number of items in the pool
-inline i32 ssim2csv::outfile_N() {
+inline i32 ssim2csv::outfile_N() throw() {
     return _db.outfile_n;
 }
 
 // --- ssim2csv.FDb.outfile.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline ssim2csv::FOutfile& ssim2csv::outfile_qFind(u64 t) {
+inline ssim2csv::FOutfile& ssim2csv::outfile_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -130,25 +130,25 @@ inline ssim2csv::FOutfile& ssim2csv::outfile_qFind(u64 t) {
 
 // --- ssim2csv.FDb.ind_outfile.EmptyQ
 // Return true if hash is empty
-inline bool ssim2csv::ind_outfile_EmptyQ() {
+inline bool ssim2csv::ind_outfile_EmptyQ() throw() {
     return _db.ind_outfile_n == 0;
 }
 
 // --- ssim2csv.FDb.ind_outfile.N
 // Return number of items in the hash
-inline i32 ssim2csv::ind_outfile_N() {
+inline i32 ssim2csv::ind_outfile_N() throw() {
     return _db.ind_outfile_n;
 }
 
 // --- ssim2csv.FDb.name.EmptyQ
 // Return true if index is empty
-inline bool ssim2csv::name_EmptyQ() {
+inline bool ssim2csv::name_EmptyQ() throw() {
     return _db.name_n == 0;
 }
 
 // --- ssim2csv.FDb.name.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* ssim2csv::name_Find(u64 t) {
+inline algo::cstring* ssim2csv::name_Find(u64 t) throw() {
     u64 idx = t;
     u64 lim = _db.name_n;
     if (idx >= lim) return NULL;
@@ -157,31 +157,31 @@ inline algo::cstring* ssim2csv::name_Find(u64 t) {
 
 // --- ssim2csv.FDb.name.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> ssim2csv::name_Getary() {
+inline algo::aryptr<algo::cstring> ssim2csv::name_Getary() throw() {
     return algo::aryptr<algo::cstring>(_db.name_elems, _db.name_n);
 }
 
 // --- ssim2csv.FDb.name.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* ssim2csv::name_Last() {
+inline algo::cstring* ssim2csv::name_Last() throw() {
     return name_Find(u64(_db.name_n-1));
 }
 
 // --- ssim2csv.FDb.name.Max
 // Return max. number of items in the array
-inline i32 ssim2csv::name_Max() {
+inline i32 ssim2csv::name_Max() throw() {
     return _db.name_max;
 }
 
 // --- ssim2csv.FDb.name.N
 // Return number of items in the array
-inline i32 ssim2csv::name_N() {
+inline i32 ssim2csv::name_N() throw() {
     return _db.name_n;
 }
 
 // --- ssim2csv.FDb.name.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void ssim2csv::name_Reserve(int n) {
+inline void ssim2csv::name_Reserve(int n) throw() {
     u32 new_n = _db.name_n + n;
     if (UNLIKELY(new_n > _db.name_max)) {
         name_AbsReserve(new_n);
@@ -190,32 +190,32 @@ inline void ssim2csv::name_Reserve(int n) {
 
 // --- ssim2csv.FDb.name.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& ssim2csv::name_qFind(u64 t) {
+inline algo::cstring& ssim2csv::name_qFind(u64 t) throw() {
     return _db.name_elems[t];
 }
 
 // --- ssim2csv.FDb.name.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& ssim2csv::name_qLast() {
+inline algo::cstring& ssim2csv::name_qLast() throw() {
     return name_qFind(u64(_db.name_n-1));
 }
 
 // --- ssim2csv.FDb.name.rowid_Get
 // Return row id of specified element
-inline u64 ssim2csv::name_rowid_Get(algo::cstring &elem) {
+inline u64 ssim2csv::name_rowid_Get(algo::cstring &elem) throw() {
     u64 id = &elem - _db.name_elems;
     return u64(id);
 }
 
 // --- ssim2csv.FDb.value.EmptyQ
 // Return true if index is empty
-inline bool ssim2csv::value_EmptyQ() {
+inline bool ssim2csv::value_EmptyQ() throw() {
     return _db.value_n == 0;
 }
 
 // --- ssim2csv.FDb.value.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* ssim2csv::value_Find(u64 t) {
+inline algo::cstring* ssim2csv::value_Find(u64 t) throw() {
     u64 idx = t;
     u64 lim = _db.value_n;
     if (idx >= lim) return NULL;
@@ -224,31 +224,31 @@ inline algo::cstring* ssim2csv::value_Find(u64 t) {
 
 // --- ssim2csv.FDb.value.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> ssim2csv::value_Getary() {
+inline algo::aryptr<algo::cstring> ssim2csv::value_Getary() throw() {
     return algo::aryptr<algo::cstring>(_db.value_elems, _db.value_n);
 }
 
 // --- ssim2csv.FDb.value.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* ssim2csv::value_Last() {
+inline algo::cstring* ssim2csv::value_Last() throw() {
     return value_Find(u64(_db.value_n-1));
 }
 
 // --- ssim2csv.FDb.value.Max
 // Return max. number of items in the array
-inline i32 ssim2csv::value_Max() {
+inline i32 ssim2csv::value_Max() throw() {
     return _db.value_max;
 }
 
 // --- ssim2csv.FDb.value.N
 // Return number of items in the array
-inline i32 ssim2csv::value_N() {
+inline i32 ssim2csv::value_N() throw() {
     return _db.value_n;
 }
 
 // --- ssim2csv.FDb.value.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void ssim2csv::value_Reserve(int n) {
+inline void ssim2csv::value_Reserve(int n) throw() {
     u32 new_n = _db.value_n + n;
     if (UNLIKELY(new_n > _db.value_max)) {
         value_AbsReserve(new_n);
@@ -257,32 +257,32 @@ inline void ssim2csv::value_Reserve(int n) {
 
 // --- ssim2csv.FDb.value.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& ssim2csv::value_qFind(u64 t) {
+inline algo::cstring& ssim2csv::value_qFind(u64 t) throw() {
     return _db.value_elems[t];
 }
 
 // --- ssim2csv.FDb.value.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& ssim2csv::value_qLast() {
+inline algo::cstring& ssim2csv::value_qLast() throw() {
     return value_qFind(u64(_db.value_n-1));
 }
 
 // --- ssim2csv.FDb.value.rowid_Get
 // Return row id of specified element
-inline u64 ssim2csv::value_rowid_Get(algo::cstring &elem) {
+inline u64 ssim2csv::value_rowid_Get(algo::cstring &elem) throw() {
     u64 id = &elem - _db.value_elems;
     return u64(id);
 }
 
 // --- ssim2csv.FDb.flatten.EmptyQ
 // Return true if index is empty
-inline bool ssim2csv::flatten_EmptyQ() {
+inline bool ssim2csv::flatten_EmptyQ() throw() {
     return _db.flatten_n == 0;
 }
 
 // --- ssim2csv.FDb.flatten.Find
 // Look up row by row id. Return NULL if out of range
-inline ssim2csv::FFlatten* ssim2csv::flatten_Find(u64 t) {
+inline ssim2csv::FFlatten* ssim2csv::flatten_Find(u64 t) throw() {
     u64 idx = t;
     u64 lim = _db.flatten_n;
     if (idx >= lim) return NULL;
@@ -291,31 +291,31 @@ inline ssim2csv::FFlatten* ssim2csv::flatten_Find(u64 t) {
 
 // --- ssim2csv.FDb.flatten.Getary
 // Return array pointer by value
-inline algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_Getary() {
+inline algo::aryptr<ssim2csv::FFlatten> ssim2csv::flatten_Getary() throw() {
     return algo::aryptr<ssim2csv::FFlatten>(_db.flatten_elems, _db.flatten_n);
 }
 
 // --- ssim2csv.FDb.flatten.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline ssim2csv::FFlatten* ssim2csv::flatten_Last() {
+inline ssim2csv::FFlatten* ssim2csv::flatten_Last() throw() {
     return flatten_Find(u64(_db.flatten_n-1));
 }
 
 // --- ssim2csv.FDb.flatten.Max
 // Return max. number of items in the array
-inline i32 ssim2csv::flatten_Max() {
+inline i32 ssim2csv::flatten_Max() throw() {
     return _db.flatten_max;
 }
 
 // --- ssim2csv.FDb.flatten.N
 // Return number of items in the array
-inline i32 ssim2csv::flatten_N() {
+inline i32 ssim2csv::flatten_N() throw() {
     return _db.flatten_n;
 }
 
 // --- ssim2csv.FDb.flatten.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void ssim2csv::flatten_Reserve(int n) {
+inline void ssim2csv::flatten_Reserve(int n) throw() {
     u32 new_n = _db.flatten_n + n;
     if (UNLIKELY(new_n > _db.flatten_max)) {
         flatten_AbsReserve(new_n);
@@ -324,81 +324,81 @@ inline void ssim2csv::flatten_Reserve(int n) {
 
 // --- ssim2csv.FDb.flatten.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline ssim2csv::FFlatten& ssim2csv::flatten_qFind(u64 t) {
+inline ssim2csv::FFlatten& ssim2csv::flatten_qFind(u64 t) throw() {
     return _db.flatten_elems[t];
 }
 
 // --- ssim2csv.FDb.flatten.qLast
 // Return reference to last element of array. No bounds checking
-inline ssim2csv::FFlatten& ssim2csv::flatten_qLast() {
+inline ssim2csv::FFlatten& ssim2csv::flatten_qLast() throw() {
     return flatten_qFind(u64(_db.flatten_n-1));
 }
 
 // --- ssim2csv.FDb.flatten.rowid_Get
 // Return row id of specified element
-inline u64 ssim2csv::flatten_rowid_Get(ssim2csv::FFlatten &elem) {
+inline u64 ssim2csv::flatten_rowid_Get(ssim2csv::FFlatten &elem) throw() {
     u64 id = &elem - _db.flatten_elems;
     return u64(id);
 }
 
 // --- ssim2csv.FDb.expand_curs.Reset
 // cursor points to valid item
-inline void ssim2csv::_db_expand_curs_Reset(_db_expand_curs &curs, ssim2csv::FDb &parent) {
+inline void ssim2csv::_db_expand_curs_Reset(_db_expand_curs &curs, ssim2csv::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- ssim2csv.FDb.expand_curs.ValidQ
 // cursor points to valid item
-inline bool ssim2csv::_db_expand_curs_ValidQ(_db_expand_curs &curs) {
+inline bool ssim2csv::_db_expand_curs_ValidQ(_db_expand_curs &curs) throw() {
     return curs.index < _db.expand_n;
 }
 
 // --- ssim2csv.FDb.expand_curs.Next
 // proceed to next item
-inline void ssim2csv::_db_expand_curs_Next(_db_expand_curs &curs) {
+inline void ssim2csv::_db_expand_curs_Next(_db_expand_curs &curs) throw() {
     curs.index++;
 }
 
 // --- ssim2csv.FDb.expand_curs.Access
 // item access
-inline ssim2csv::FExpand& ssim2csv::_db_expand_curs_Access(_db_expand_curs &curs) {
+inline ssim2csv::FExpand& ssim2csv::_db_expand_curs_Access(_db_expand_curs &curs) throw() {
     return expand_qFind(u64(curs.index));
 }
 
 // --- ssim2csv.FDb.outfile_curs.Reset
 // cursor points to valid item
-inline void ssim2csv::_db_outfile_curs_Reset(_db_outfile_curs &curs, ssim2csv::FDb &parent) {
+inline void ssim2csv::_db_outfile_curs_Reset(_db_outfile_curs &curs, ssim2csv::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- ssim2csv.FDb.outfile_curs.ValidQ
 // cursor points to valid item
-inline bool ssim2csv::_db_outfile_curs_ValidQ(_db_outfile_curs &curs) {
+inline bool ssim2csv::_db_outfile_curs_ValidQ(_db_outfile_curs &curs) throw() {
     return curs.index < _db.outfile_n;
 }
 
 // --- ssim2csv.FDb.outfile_curs.Next
 // proceed to next item
-inline void ssim2csv::_db_outfile_curs_Next(_db_outfile_curs &curs) {
+inline void ssim2csv::_db_outfile_curs_Next(_db_outfile_curs &curs) throw() {
     curs.index++;
 }
 
 // --- ssim2csv.FDb.outfile_curs.Access
 // item access
-inline ssim2csv::FOutfile& ssim2csv::_db_outfile_curs_Access(_db_outfile_curs &curs) {
+inline ssim2csv::FOutfile& ssim2csv::_db_outfile_curs_Access(_db_outfile_curs &curs) throw() {
     return outfile_qFind(u64(curs.index));
 }
 
 // --- ssim2csv.FDb.name_curs.Next
 // proceed to next item
-inline void ssim2csv::_db_name_curs_Next(_db_name_curs &curs) {
+inline void ssim2csv::_db_name_curs_Next(_db_name_curs &curs) throw() {
     curs.index++;
 }
 
 // --- ssim2csv.FDb.name_curs.Reset
-inline void ssim2csv::_db_name_curs_Reset(_db_name_curs &curs, ssim2csv::FDb &parent) {
+inline void ssim2csv::_db_name_curs_Reset(_db_name_curs &curs, ssim2csv::FDb &parent) throw() {
     curs.elems = parent.name_elems;
     curs.n_elems = parent.name_n;
     curs.index = 0;
@@ -406,24 +406,24 @@ inline void ssim2csv::_db_name_curs_Reset(_db_name_curs &curs, ssim2csv::FDb &pa
 
 // --- ssim2csv.FDb.name_curs.ValidQ
 // cursor points to valid item
-inline bool ssim2csv::_db_name_curs_ValidQ(_db_name_curs &curs) {
+inline bool ssim2csv::_db_name_curs_ValidQ(_db_name_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- ssim2csv.FDb.name_curs.Access
 // item access
-inline algo::cstring& ssim2csv::_db_name_curs_Access(_db_name_curs &curs) {
+inline algo::cstring& ssim2csv::_db_name_curs_Access(_db_name_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- ssim2csv.FDb.value_curs.Next
 // proceed to next item
-inline void ssim2csv::_db_value_curs_Next(_db_value_curs &curs) {
+inline void ssim2csv::_db_value_curs_Next(_db_value_curs &curs) throw() {
     curs.index++;
 }
 
 // --- ssim2csv.FDb.value_curs.Reset
-inline void ssim2csv::_db_value_curs_Reset(_db_value_curs &curs, ssim2csv::FDb &parent) {
+inline void ssim2csv::_db_value_curs_Reset(_db_value_curs &curs, ssim2csv::FDb &parent) throw() {
     curs.elems = parent.value_elems;
     curs.n_elems = parent.value_n;
     curs.index = 0;
@@ -431,24 +431,24 @@ inline void ssim2csv::_db_value_curs_Reset(_db_value_curs &curs, ssim2csv::FDb &
 
 // --- ssim2csv.FDb.value_curs.ValidQ
 // cursor points to valid item
-inline bool ssim2csv::_db_value_curs_ValidQ(_db_value_curs &curs) {
+inline bool ssim2csv::_db_value_curs_ValidQ(_db_value_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- ssim2csv.FDb.value_curs.Access
 // item access
-inline algo::cstring& ssim2csv::_db_value_curs_Access(_db_value_curs &curs) {
+inline algo::cstring& ssim2csv::_db_value_curs_Access(_db_value_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- ssim2csv.FDb.flatten_curs.Next
 // proceed to next item
-inline void ssim2csv::_db_flatten_curs_Next(_db_flatten_curs &curs) {
+inline void ssim2csv::_db_flatten_curs_Next(_db_flatten_curs &curs) throw() {
     curs.index++;
 }
 
 // --- ssim2csv.FDb.flatten_curs.Reset
-inline void ssim2csv::_db_flatten_curs_Reset(_db_flatten_curs &curs, ssim2csv::FDb &parent) {
+inline void ssim2csv::_db_flatten_curs_Reset(_db_flatten_curs &curs, ssim2csv::FDb &parent) throw() {
     curs.elems = parent.flatten_elems;
     curs.n_elems = parent.flatten_n;
     curs.index = 0;
@@ -456,13 +456,13 @@ inline void ssim2csv::_db_flatten_curs_Reset(_db_flatten_curs &curs, ssim2csv::F
 
 // --- ssim2csv.FDb.flatten_curs.ValidQ
 // cursor points to valid item
-inline bool ssim2csv::_db_flatten_curs_ValidQ(_db_flatten_curs &curs) {
+inline bool ssim2csv::_db_flatten_curs_ValidQ(_db_flatten_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- ssim2csv.FDb.flatten_curs.Access
 // item access
-inline ssim2csv::FFlatten& ssim2csv::_db_flatten_curs_Access(_db_flatten_curs &curs) {
+inline ssim2csv::FFlatten& ssim2csv::_db_flatten_curs_Access(_db_flatten_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -473,17 +473,17 @@ inline void ssim2csv::FExpand_Init(ssim2csv::FExpand& expand) {
 }
 
 // --- ssim2csv.FExpand..Ctor
-inline  ssim2csv::FExpand::FExpand() {
+inline  ssim2csv::FExpand::FExpand() throw() {
     ssim2csv::FExpand_Init(*this);
 }
 
 // --- ssim2csv.FExpand..Dtor
-inline  ssim2csv::FExpand::~FExpand() {
+inline  ssim2csv::FExpand::~FExpand() throw() {
     ssim2csv::FExpand_Uninit(*this);
 }
 
 // --- ssim2csv.FFlatten..Ctor
-inline  ssim2csv::FFlatten::FFlatten() {
+inline  ssim2csv::FFlatten::FFlatten() throw() {
 }
 
 // --- ssim2csv.FOutfile..Init
@@ -493,29 +493,29 @@ inline void ssim2csv::FOutfile_Init(ssim2csv::FOutfile& outfile) {
 }
 
 // --- ssim2csv.FOutfile..Ctor
-inline  ssim2csv::FOutfile::FOutfile() {
+inline  ssim2csv::FOutfile::FOutfile() throw() {
     ssim2csv::FOutfile_Init(*this);
 }
 
 // --- ssim2csv.FOutfile..Dtor
-inline  ssim2csv::FOutfile::~FOutfile() {
+inline  ssim2csv::FOutfile::~FOutfile() throw() {
     ssim2csv::FOutfile_Uninit(*this);
 }
 
 // --- ssim2csv.FieldId.value.GetEnum
 // Get value of field as enum type
-inline ssim2csv_FieldIdEnum ssim2csv::value_GetEnum(const ssim2csv::FieldId& parent) {
+inline ssim2csv_FieldIdEnum ssim2csv::value_GetEnum(const ssim2csv::FieldId& parent) throw() {
     return ssim2csv_FieldIdEnum(parent.value);
 }
 
 // --- ssim2csv.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void ssim2csv::value_SetEnum(ssim2csv::FieldId& parent, ssim2csv_FieldIdEnum rhs) {
+inline void ssim2csv::value_SetEnum(ssim2csv::FieldId& parent, ssim2csv_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- ssim2csv.FieldId.value.Cast
-inline  ssim2csv::FieldId::operator ssim2csv_FieldIdEnum() const {
+inline  ssim2csv::FieldId::operator ssim2csv_FieldIdEnum() const throw() {
     return ssim2csv_FieldIdEnum((*this).value);
 }
 
@@ -526,18 +526,18 @@ inline void ssim2csv::FieldId_Init(ssim2csv::FieldId& parent) {
 }
 
 // --- ssim2csv.FieldId..Ctor
-inline  ssim2csv::FieldId::FieldId() {
+inline  ssim2csv::FieldId::FieldId() throw() {
     ssim2csv::FieldId_Init(*this);
 }
 
 // --- ssim2csv.FieldId..FieldwiseCtor
-inline  ssim2csv::FieldId::FieldId(i32 in_value)
+inline  ssim2csv::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- ssim2csv.FieldId..EnumCtor
-inline  ssim2csv::FieldId::FieldId(ssim2csv_FieldIdEnum arg) {
+inline  ssim2csv::FieldId::FieldId(ssim2csv_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

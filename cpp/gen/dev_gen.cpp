@@ -103,7 +103,7 @@ namespace dev { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- dev.Arch..ReadFieldMaybe
-bool dev::Arch_ReadFieldMaybe(dev::Arch& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Arch_ReadFieldMaybe(dev::Arch& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -127,7 +127,7 @@ bool dev::Arch_ReadFieldMaybe(dev::Arch& parent, algo::strptr field, algo::strpt
 // --- dev.Arch..ReadStrptrMaybe
 // Read fields of dev::Arch from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Arch_ReadStrptrMaybe(dev::Arch &parent, algo::strptr in_str) {
+bool dev::Arch_ReadStrptrMaybe(dev::Arch &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.arch") || algo::StripTypeTag(in_str, "dev.Arch");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -139,7 +139,7 @@ bool dev::Arch_ReadStrptrMaybe(dev::Arch &parent, algo::strptr in_str) {
 // --- dev.Arch..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Arch.String  printfmt:Tuple
-void dev::Arch_Print(dev::Arch& row, algo::cstring& str) {
+void dev::Arch_Print(dev::Arch& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.arch";
 
@@ -151,7 +151,7 @@ void dev::Arch_Print(dev::Arch& row, algo::cstring& str) {
 }
 
 // --- dev.Badline..ReadFieldMaybe
-bool dev::Badline_ReadFieldMaybe(dev::Badline& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Badline_ReadFieldMaybe(dev::Badline& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -183,7 +183,7 @@ bool dev::Badline_ReadFieldMaybe(dev::Badline& parent, algo::strptr field, algo:
 // --- dev.Badline..ReadStrptrMaybe
 // Read fields of dev::Badline from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Badline_ReadStrptrMaybe(dev::Badline &parent, algo::strptr in_str) {
+bool dev::Badline_ReadStrptrMaybe(dev::Badline &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.badline") || algo::StripTypeTag(in_str, "dev.Badline");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -195,7 +195,7 @@ bool dev::Badline_ReadStrptrMaybe(dev::Badline &parent, algo::strptr in_str) {
 // --- dev.Badline..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Badline.String  printfmt:Tuple
-void dev::Badline_Print(dev::Badline& row, algo::cstring& str) {
+void dev::Badline_Print(dev::Badline& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.badline";
 
@@ -213,49 +213,49 @@ void dev::Badline_Print(dev::Badline& row, algo::cstring& str) {
 }
 
 // --- dev.Builddir.uname.Get
-algo::Smallstr50 dev::uname_Get(dev::Builddir& parent) {
+algo::Smallstr50 dev::uname_Get(dev::Builddir& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.builddir, ".LL-LL"));
     return ret;
 }
 
 // --- dev.Builddir.uname.Get2
-algo::Smallstr50 dev::Builddir_uname_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Builddir_uname_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LL-LL"));
     return ret;
 }
 
 // --- dev.Builddir.compiler.Get
-algo::Smallstr50 dev::compiler_Get(dev::Builddir& parent) {
+algo::Smallstr50 dev::compiler_Get(dev::Builddir& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.builddir, ".LL-LR"));
     return ret;
 }
 
 // --- dev.Builddir.compiler.Get2
-algo::Smallstr50 dev::Builddir_compiler_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Builddir_compiler_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LL-LR"));
     return ret;
 }
 
 // --- dev.Builddir.cfg.Get
-algo::Smallstr50 dev::cfg_Get(dev::Builddir& parent) {
+algo::Smallstr50 dev::cfg_Get(dev::Builddir& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.builddir, ".LR-LL"));
     return ret;
 }
 
 // --- dev.Builddir.cfg.Get2
-algo::Smallstr50 dev::Builddir_cfg_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Builddir_cfg_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LR-LL"));
     return ret;
 }
 
 // --- dev.Builddir.arch.Get
-algo::Smallstr50 dev::arch_Get(dev::Builddir& parent) {
+algo::Smallstr50 dev::arch_Get(dev::Builddir& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.builddir, ".LR-LR"));
     return ret;
 }
 
 // --- dev.Builddir.arch.Get2
-algo::Smallstr50 dev::Builddir_arch_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Builddir_arch_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LR-LR"));
     return ret;
 }
@@ -266,7 +266,7 @@ tempstr dev::Builddir_Concat_uname_compiler_cfg_arch( const algo::strptr& uname 
 }
 
 // --- dev.Builddir..ReadFieldMaybe
-bool dev::Builddir_ReadFieldMaybe(dev::Builddir& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Builddir_ReadFieldMaybe(dev::Builddir& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -306,7 +306,7 @@ bool dev::Builddir_ReadFieldMaybe(dev::Builddir& parent, algo::strptr field, alg
 // --- dev.Builddir..ReadStrptrMaybe
 // Read fields of dev::Builddir from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Builddir_ReadStrptrMaybe(dev::Builddir &parent, algo::strptr in_str) {
+bool dev::Builddir_ReadStrptrMaybe(dev::Builddir &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.builddir") || algo::StripTypeTag(in_str, "dev.Builddir");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -318,7 +318,7 @@ bool dev::Builddir_ReadStrptrMaybe(dev::Builddir &parent, algo::strptr in_str) {
 // --- dev.Builddir..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Builddir.String  printfmt:Tuple
-void dev::Builddir_Print(dev::Builddir& row, algo::cstring& str) {
+void dev::Builddir_Print(dev::Builddir& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.builddir";
 
@@ -330,7 +330,7 @@ void dev::Builddir_Print(dev::Builddir& row, algo::cstring& str) {
 }
 
 // --- dev.Cfg..ReadFieldMaybe
-bool dev::Cfg_ReadFieldMaybe(dev::Cfg& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Cfg_ReadFieldMaybe(dev::Cfg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -358,7 +358,7 @@ bool dev::Cfg_ReadFieldMaybe(dev::Cfg& parent, algo::strptr field, algo::strptr 
 // --- dev.Cfg..ReadStrptrMaybe
 // Read fields of dev::Cfg from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Cfg_ReadStrptrMaybe(dev::Cfg &parent, algo::strptr in_str) {
+bool dev::Cfg_ReadStrptrMaybe(dev::Cfg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.cfg") || algo::StripTypeTag(in_str, "dev.Cfg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -370,7 +370,7 @@ bool dev::Cfg_ReadStrptrMaybe(dev::Cfg &parent, algo::strptr in_str) {
 // --- dev.Cfg..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Cfg.String  printfmt:Tuple
-void dev::Cfg_Print(dev::Cfg& row, algo::cstring& str) {
+void dev::Cfg_Print(dev::Cfg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.cfg";
 
@@ -385,7 +385,7 @@ void dev::Cfg_Print(dev::Cfg& row, algo::cstring& str) {
 }
 
 // --- dev.Compiler..ReadFieldMaybe
-bool dev::Compiler_ReadFieldMaybe(dev::Compiler& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Compiler_ReadFieldMaybe(dev::Compiler& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -441,7 +441,7 @@ bool dev::Compiler_ReadFieldMaybe(dev::Compiler& parent, algo::strptr field, alg
 // --- dev.Compiler..ReadStrptrMaybe
 // Read fields of dev::Compiler from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Compiler_ReadStrptrMaybe(dev::Compiler &parent, algo::strptr in_str) {
+bool dev::Compiler_ReadStrptrMaybe(dev::Compiler &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.compiler") || algo::StripTypeTag(in_str, "dev.Compiler");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -453,7 +453,7 @@ bool dev::Compiler_ReadStrptrMaybe(dev::Compiler &parent, algo::strptr in_str) {
 // --- dev.Compiler..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Compiler.String  printfmt:Tuple
-void dev::Compiler_Print(dev::Compiler& row, algo::cstring& str) {
+void dev::Compiler_Print(dev::Compiler& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.compiler";
 
@@ -489,7 +489,7 @@ void dev::Compiler_Print(dev::Compiler& row, algo::cstring& str) {
 }
 
 // --- dev.Copyright..ReadFieldMaybe
-bool dev::Copyright_ReadFieldMaybe(dev::Copyright& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Copyright_ReadFieldMaybe(dev::Copyright& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -517,7 +517,7 @@ bool dev::Copyright_ReadFieldMaybe(dev::Copyright& parent, algo::strptr field, a
 // --- dev.Copyright..ReadStrptrMaybe
 // Read fields of dev::Copyright from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Copyright_ReadStrptrMaybe(dev::Copyright &parent, algo::strptr in_str) {
+bool dev::Copyright_ReadStrptrMaybe(dev::Copyright &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.copyright") || algo::StripTypeTag(in_str, "dev.Copyright");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -529,7 +529,7 @@ bool dev::Copyright_ReadStrptrMaybe(dev::Copyright &parent, algo::strptr in_str)
 // --- dev.Copyright..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Copyright.String  printfmt:Tuple
-void dev::Copyright_Print(dev::Copyright& row, algo::cstring& str) {
+void dev::Copyright_Print(dev::Copyright& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.copyright";
 
@@ -544,7 +544,7 @@ void dev::Copyright_Print(dev::Copyright& row, algo::cstring& str) {
 }
 
 // --- dev.Covfile..ReadFieldMaybe
-bool dev::Covfile_ReadFieldMaybe(dev::Covfile& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Covfile_ReadFieldMaybe(dev::Covfile& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -588,7 +588,7 @@ bool dev::Covfile_ReadFieldMaybe(dev::Covfile& parent, algo::strptr field, algo:
 // --- dev.Covfile..ReadStrptrMaybe
 // Read fields of dev::Covfile from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Covfile_ReadStrptrMaybe(dev::Covfile &parent, algo::strptr in_str) {
+bool dev::Covfile_ReadStrptrMaybe(dev::Covfile &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.covfile") || algo::StripTypeTag(in_str, "dev.Covfile");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -600,7 +600,7 @@ bool dev::Covfile_ReadStrptrMaybe(dev::Covfile &parent, algo::strptr in_str) {
 // --- dev.Covfile..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Covfile.String  printfmt:Tuple
-void dev::Covfile_Print(dev::Covfile& row, algo::cstring& str) {
+void dev::Covfile_Print(dev::Covfile& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.covfile";
 
@@ -627,19 +627,19 @@ void dev::Covfile_Print(dev::Covfile& row, algo::cstring& str) {
 }
 
 // --- dev.Covline.src.Get
-algo::Smallstr200 dev::src_Get(dev::Covline& parent) {
+algo::Smallstr200 dev::src_Get(dev::Covline& parent) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(parent.covline, ":RL"));
     return ret;
 }
 
 // --- dev.Covline.src.Get2
-algo::Smallstr200 dev::Covline_src_Get(algo::strptr arg) {
+algo::Smallstr200 dev::Covline_src_Get(algo::strptr arg) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(arg, ":RL"));
     return ret;
 }
 
 // --- dev.Covline.line.Get
-u32 dev::line_Get(dev::Covline& parent) {
+u32 dev::line_Get(dev::Covline& parent) throw() {
     u32 ret;
     ret = 0; // default value
     (void)u32_ReadStrptrMaybe(ret, algo::Pathcomp(parent.covline, ":RR"));
@@ -647,7 +647,7 @@ u32 dev::line_Get(dev::Covline& parent) {
 }
 
 // --- dev.Covline.line.Get2
-u32 dev::Covline_line_Get(algo::strptr arg) {
+u32 dev::Covline_line_Get(algo::strptr arg) throw() {
     u32 ret;
     ret = 0; // default value
     (void)u32_ReadStrptrMaybe(ret, algo::Pathcomp(arg, ":RR"));
@@ -657,7 +657,7 @@ u32 dev::Covline_line_Get(algo::strptr arg) {
 // --- dev.Covline.flag.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* dev::flag_ToCstr(const dev::Covline& parent) {
+const char* dev::flag_ToCstr(const dev::Covline& parent) throw() {
     const char *ret = NULL;
     switch(flag_GetEnum(parent)) {
         case dev_Covline_flag_N            : ret = "N";  break;
@@ -670,7 +670,7 @@ const char* dev::flag_ToCstr(const dev::Covline& parent) {
 // --- dev.Covline.flag.Print
 // Convert flag to a string. First, attempt conversion to a known string.
 // If no string matches, print flag as a numeric value.
-void dev::flag_Print(const dev::Covline& parent, algo::cstring &lhs) {
+void dev::flag_Print(const dev::Covline& parent, algo::cstring &lhs) throw() {
     const char *strval = flag_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -683,7 +683,7 @@ void dev::flag_Print(const dev::Covline& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool dev::flag_SetStrptrMaybe(dev::Covline& parent, algo::strptr rhs) {
+bool dev::flag_SetStrptrMaybe(dev::Covline& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
@@ -707,13 +707,13 @@ bool dev::flag_SetStrptrMaybe(dev::Covline& parent, algo::strptr rhs) {
 // --- dev.Covline.flag.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void dev::flag_SetStrptr(dev::Covline& parent, algo::strptr rhs, dev_Covline_flag_Enum dflt) {
+void dev::flag_SetStrptr(dev::Covline& parent, algo::strptr rhs, dev_Covline_flag_Enum dflt) throw() {
     if (!flag_SetStrptrMaybe(parent,rhs)) flag_SetEnum(parent,dflt);
 }
 
 // --- dev.Covline.flag.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool dev::flag_ReadStrptrMaybe(dev::Covline& parent, algo::strptr rhs) {
+bool dev::flag_ReadStrptrMaybe(dev::Covline& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = flag_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -728,7 +728,7 @@ tempstr dev::Covline_Concat_src_line( const algo::strptr& src ,u32 line ) {
 }
 
 // --- dev.Covline..ReadFieldMaybe
-bool dev::Covline_ReadFieldMaybe(dev::Covline& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Covline_ReadFieldMaybe(dev::Covline& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -768,7 +768,7 @@ bool dev::Covline_ReadFieldMaybe(dev::Covline& parent, algo::strptr field, algo:
 // --- dev.Covline..ReadStrptrMaybe
 // Read fields of dev::Covline from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Covline_ReadStrptrMaybe(dev::Covline &parent, algo::strptr in_str) {
+bool dev::Covline_ReadStrptrMaybe(dev::Covline &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.covline") || algo::StripTypeTag(in_str, "dev.Covline");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -780,7 +780,7 @@ bool dev::Covline_ReadStrptrMaybe(dev::Covline &parent, algo::strptr in_str) {
 // --- dev.Covline..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Covline.String  printfmt:Tuple
-void dev::Covline_Print(dev::Covline& row, algo::cstring& str) {
+void dev::Covline_Print(dev::Covline& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.covline";
 
@@ -798,7 +798,7 @@ void dev::Covline_Print(dev::Covline& row, algo::cstring& str) {
 }
 
 // --- dev.Covtarget..ReadFieldMaybe
-bool dev::Covtarget_ReadFieldMaybe(dev::Covtarget& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Covtarget_ReadFieldMaybe(dev::Covtarget& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -842,7 +842,7 @@ bool dev::Covtarget_ReadFieldMaybe(dev::Covtarget& parent, algo::strptr field, a
 // --- dev.Covtarget..ReadStrptrMaybe
 // Read fields of dev::Covtarget from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Covtarget_ReadStrptrMaybe(dev::Covtarget &parent, algo::strptr in_str) {
+bool dev::Covtarget_ReadStrptrMaybe(dev::Covtarget &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.covtarget") || algo::StripTypeTag(in_str, "dev.Covtarget");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -854,7 +854,7 @@ bool dev::Covtarget_ReadStrptrMaybe(dev::Covtarget &parent, algo::strptr in_str)
 // --- dev.Covtarget..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Covtarget.String  printfmt:Tuple
-void dev::Covtarget_Print(dev::Covtarget& row, algo::cstring& str) {
+void dev::Covtarget_Print(dev::Covtarget& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.covtarget";
 
@@ -881,25 +881,25 @@ void dev::Covtarget_Print(dev::Covtarget& row, algo::cstring& str) {
 }
 
 // --- dev.Edaction.edacttype.Get
-algo::Smallstr50 dev::edacttype_Get(dev::Edaction& parent) {
+algo::Smallstr50 dev::edacttype_Get(dev::Edaction& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.edaction, "_LL"));
     return ret;
 }
 
 // --- dev.Edaction.edacttype.Get2
-algo::Smallstr50 dev::Edaction_edacttype_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Edaction_edacttype_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "_LL"));
     return ret;
 }
 
 // --- dev.Edaction.name.Get
-algo::Smallstr50 dev::name_Get(dev::Edaction& parent) {
+algo::Smallstr50 dev::name_Get(dev::Edaction& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.edaction, "_LR"));
     return ret;
 }
 
 // --- dev.Edaction.name.Get2
-algo::Smallstr50 dev::Edaction_name_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Edaction_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "_LR"));
     return ret;
 }
@@ -910,7 +910,7 @@ tempstr dev::Edaction_Concat_edacttype_name( const algo::strptr& edacttype ,cons
 }
 
 // --- dev.Edaction..ReadFieldMaybe
-bool dev::Edaction_ReadFieldMaybe(dev::Edaction& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Edaction_ReadFieldMaybe(dev::Edaction& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -946,7 +946,7 @@ bool dev::Edaction_ReadFieldMaybe(dev::Edaction& parent, algo::strptr field, alg
 // --- dev.Edaction..ReadStrptrMaybe
 // Read fields of dev::Edaction from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Edaction_ReadStrptrMaybe(dev::Edaction &parent, algo::strptr in_str) {
+bool dev::Edaction_ReadStrptrMaybe(dev::Edaction &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.edaction") || algo::StripTypeTag(in_str, "dev.Edaction");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -958,7 +958,7 @@ bool dev::Edaction_ReadStrptrMaybe(dev::Edaction &parent, algo::strptr in_str) {
 // --- dev.Edaction..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Edaction.String  printfmt:Tuple
-void dev::Edaction_Print(dev::Edaction& row, algo::cstring& str) {
+void dev::Edaction_Print(dev::Edaction& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.edaction";
 
@@ -973,7 +973,7 @@ void dev::Edaction_Print(dev::Edaction& row, algo::cstring& str) {
 }
 
 // --- dev.Edacttype..ReadFieldMaybe
-bool dev::Edacttype_ReadFieldMaybe(dev::Edacttype& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Edacttype_ReadFieldMaybe(dev::Edacttype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -997,7 +997,7 @@ bool dev::Edacttype_ReadFieldMaybe(dev::Edacttype& parent, algo::strptr field, a
 // --- dev.Edacttype..ReadStrptrMaybe
 // Read fields of dev::Edacttype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Edacttype_ReadStrptrMaybe(dev::Edacttype &parent, algo::strptr in_str) {
+bool dev::Edacttype_ReadStrptrMaybe(dev::Edacttype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.edacttype") || algo::StripTypeTag(in_str, "dev.Edacttype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1009,7 +1009,7 @@ bool dev::Edacttype_ReadStrptrMaybe(dev::Edacttype &parent, algo::strptr in_str)
 // --- dev.Edacttype..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Edacttype.String  printfmt:Tuple
-void dev::Edacttype_Print(dev::Edacttype& row, algo::cstring& str) {
+void dev::Edacttype_Print(dev::Edacttype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.edacttype";
 
@@ -1023,7 +1023,7 @@ void dev::Edacttype_Print(dev::Edacttype& row, algo::cstring& str) {
 // --- dev.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* dev::value_ToCstr(const dev::FieldId& parent) {
+const char* dev::value_ToCstr(const dev::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case dev_FieldId_arch              : ret = "arch";  break;
@@ -1140,7 +1140,7 @@ const char* dev::value_ToCstr(const dev::FieldId& parent) {
 // --- dev.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void dev::value_Print(const dev::FieldId& parent, algo::cstring &lhs) {
+void dev::value_Print(const dev::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1153,7 +1153,7 @@ void dev::value_Print(const dev::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
+bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 2: {
@@ -1555,13 +1555,13 @@ bool dev::value_SetStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
 // --- dev.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void dev::value_SetStrptr(dev::FieldId& parent, algo::strptr rhs, dev_FieldIdEnum dflt) {
+void dev::value_SetStrptr(dev::FieldId& parent, algo::strptr rhs, dev_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- dev.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool dev::value_ReadStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
+bool dev::value_ReadStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1573,7 +1573,7 @@ bool dev::value_ReadStrptrMaybe(dev::FieldId& parent, algo::strptr rhs) {
 // --- dev.FieldId..ReadStrptrMaybe
 // Read fields of dev::FieldId from an ascii string.
 // The format of the string is the format of the dev::FieldId's only field
-bool dev::FieldId_ReadStrptrMaybe(dev::FieldId &parent, algo::strptr in_str) {
+bool dev::FieldId_ReadStrptrMaybe(dev::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1582,24 +1582,24 @@ bool dev::FieldId_ReadStrptrMaybe(dev::FieldId &parent, algo::strptr in_str) {
 // --- dev.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:dev.FieldId.String  printfmt:Raw
-void dev::FieldId_Print(dev::FieldId& row, algo::cstring& str) {
+void dev::FieldId_Print(dev::FieldId& row, algo::cstring& str) throw() {
     dev::value_Print(row, str);
 }
 
 // --- dev.Gitfile.ext.Get
-algo::Smallstr50 dev::ext_Get(dev::Gitfile& parent) {
+algo::Smallstr50 dev::ext_Get(dev::Gitfile& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gitfile, "/RR.LR.RR"));
     return ret;
 }
 
 // --- dev.Gitfile.ext.Get2
-algo::Smallstr50 dev::Gitfile_ext_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Gitfile_ext_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/RR.LR.RR"));
     return ret;
 }
 
 // --- dev.Gitfile..ReadFieldMaybe
-bool dev::Gitfile_ReadFieldMaybe(dev::Gitfile& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Gitfile_ReadFieldMaybe(dev::Gitfile& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1623,7 +1623,7 @@ bool dev::Gitfile_ReadFieldMaybe(dev::Gitfile& parent, algo::strptr field, algo:
 // --- dev.Gitfile..ReadStrptrMaybe
 // Read fields of dev::Gitfile from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Gitfile_ReadStrptrMaybe(dev::Gitfile &parent, algo::strptr in_str) {
+bool dev::Gitfile_ReadStrptrMaybe(dev::Gitfile &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.gitfile") || algo::StripTypeTag(in_str, "dev.Gitfile");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1635,7 +1635,7 @@ bool dev::Gitfile_ReadStrptrMaybe(dev::Gitfile &parent, algo::strptr in_str) {
 // --- dev.Gitfile..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Gitfile.String  printfmt:Tuple
-void dev::Gitfile_Print(dev::Gitfile& row, algo::cstring& str) {
+void dev::Gitfile_Print(dev::Gitfile& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.gitfile";
 
@@ -1644,7 +1644,7 @@ void dev::Gitfile_Print(dev::Gitfile& row, algo::cstring& str) {
 }
 
 // --- dev.Gitinfo..ReadFieldMaybe
-bool dev::Gitinfo_ReadFieldMaybe(dev::Gitinfo& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Gitinfo_ReadFieldMaybe(dev::Gitinfo& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1684,7 +1684,7 @@ bool dev::Gitinfo_ReadFieldMaybe(dev::Gitinfo& parent, algo::strptr field, algo:
 // --- dev.Gitinfo..ReadStrptrMaybe
 // Read fields of dev::Gitinfo from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Gitinfo_ReadStrptrMaybe(dev::Gitinfo &parent, algo::strptr in_str) {
+bool dev::Gitinfo_ReadStrptrMaybe(dev::Gitinfo &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.gitinfo") || algo::StripTypeTag(in_str, "dev.Gitinfo");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1696,7 +1696,7 @@ bool dev::Gitinfo_ReadStrptrMaybe(dev::Gitinfo &parent, algo::strptr in_str) {
 // --- dev.Gitinfo..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Gitinfo.String  printfmt:Tuple
-void dev::Gitinfo_Print(dev::Gitinfo& row, algo::cstring& str) {
+void dev::Gitinfo_Print(dev::Gitinfo& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.gitinfo";
 
@@ -1720,7 +1720,7 @@ void dev::Gitinfo_Print(dev::Gitinfo& row, algo::cstring& str) {
 }
 
 // --- dev.Hilite..ReadFieldMaybe
-bool dev::Hilite_ReadFieldMaybe(dev::Hilite& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Hilite_ReadFieldMaybe(dev::Hilite& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1748,7 +1748,7 @@ bool dev::Hilite_ReadFieldMaybe(dev::Hilite& parent, algo::strptr field, algo::s
 // --- dev.Hilite..ReadStrptrMaybe
 // Read fields of dev::Hilite from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Hilite_ReadStrptrMaybe(dev::Hilite &parent, algo::strptr in_str) {
+bool dev::Hilite_ReadStrptrMaybe(dev::Hilite &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.hilite") || algo::StripTypeTag(in_str, "dev.Hilite");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1760,7 +1760,7 @@ bool dev::Hilite_ReadStrptrMaybe(dev::Hilite &parent, algo::strptr in_str) {
 // --- dev.Hilite..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Hilite.String  printfmt:Tuple
-void dev::Hilite_Print(dev::Hilite& row, algo::cstring& str) {
+void dev::Hilite_Print(dev::Hilite& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.hilite";
 
@@ -1775,7 +1775,7 @@ void dev::Hilite_Print(dev::Hilite& row, algo::cstring& str) {
 }
 
 // --- dev.Htmlentity..ReadFieldMaybe
-bool dev::Htmlentity_ReadFieldMaybe(dev::Htmlentity& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Htmlentity_ReadFieldMaybe(dev::Htmlentity& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1803,7 +1803,7 @@ bool dev::Htmlentity_ReadFieldMaybe(dev::Htmlentity& parent, algo::strptr field,
 // --- dev.Htmlentity..ReadStrptrMaybe
 // Read fields of dev::Htmlentity from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Htmlentity_ReadStrptrMaybe(dev::Htmlentity &parent, algo::strptr in_str) {
+bool dev::Htmlentity_ReadStrptrMaybe(dev::Htmlentity &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.htmlentity") || algo::StripTypeTag(in_str, "dev.Htmlentity");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1815,7 +1815,7 @@ bool dev::Htmlentity_ReadStrptrMaybe(dev::Htmlentity &parent, algo::strptr in_st
 // --- dev.Htmlentity..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Htmlentity.String  printfmt:Tuple
-void dev::Htmlentity_Print(dev::Htmlentity& row, algo::cstring& str) {
+void dev::Htmlentity_Print(dev::Htmlentity& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.htmlentity";
 
@@ -1830,25 +1830,25 @@ void dev::Htmlentity_Print(dev::Htmlentity& row, algo::cstring& str) {
 }
 
 // --- dev.Include.srcfile.Get
-algo::Smallstr200 dev::srcfile_Get(dev::Include& parent) {
+algo::Smallstr200 dev::srcfile_Get(dev::Include& parent) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(parent.include, ":LL"));
     return ret;
 }
 
 // --- dev.Include.srcfile.Get2
-algo::Smallstr200 dev::Include_srcfile_Get(algo::strptr arg) {
+algo::Smallstr200 dev::Include_srcfile_Get(algo::strptr arg) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(arg, ":LL"));
     return ret;
 }
 
 // --- dev.Include.filename.Get
-algo::Smallstr200 dev::filename_Get(dev::Include& parent) {
+algo::Smallstr200 dev::filename_Get(dev::Include& parent) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(parent.include, ":LR"));
     return ret;
 }
 
 // --- dev.Include.filename.Get2
-algo::Smallstr200 dev::Include_filename_Get(algo::strptr arg) {
+algo::Smallstr200 dev::Include_filename_Get(algo::strptr arg) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(arg, ":LR"));
     return ret;
 }
@@ -1859,7 +1859,7 @@ tempstr dev::Include_Concat_srcfile_filename( const algo::strptr& srcfile ,const
 }
 
 // --- dev.Include..ReadFieldMaybe
-bool dev::Include_ReadFieldMaybe(dev::Include& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Include_ReadFieldMaybe(dev::Include& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1895,7 +1895,7 @@ bool dev::Include_ReadFieldMaybe(dev::Include& parent, algo::strptr field, algo:
 // --- dev.Include..ReadStrptrMaybe
 // Read fields of dev::Include from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Include_ReadStrptrMaybe(dev::Include &parent, algo::strptr in_str) {
+bool dev::Include_ReadStrptrMaybe(dev::Include &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.include") || algo::StripTypeTag(in_str, "dev.Include");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1907,7 +1907,7 @@ bool dev::Include_ReadStrptrMaybe(dev::Include &parent, algo::strptr in_str) {
 // --- dev.Include..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Include.String  printfmt:Tuple
-void dev::Include_Print(dev::Include& row, algo::cstring& str) {
+void dev::Include_Print(dev::Include& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.include";
 
@@ -1922,7 +1922,7 @@ void dev::Include_Print(dev::Include& row, algo::cstring& str) {
 }
 
 // --- dev.License..ReadFieldMaybe
-bool dev::License_ReadFieldMaybe(dev::License& parent, algo::strptr field, algo::strptr strval) {
+bool dev::License_ReadFieldMaybe(dev::License& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1946,7 +1946,7 @@ bool dev::License_ReadFieldMaybe(dev::License& parent, algo::strptr field, algo:
 // --- dev.License..ReadStrptrMaybe
 // Read fields of dev::License from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::License_ReadStrptrMaybe(dev::License &parent, algo::strptr in_str) {
+bool dev::License_ReadStrptrMaybe(dev::License &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.license") || algo::StripTypeTag(in_str, "dev.License");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1958,7 +1958,7 @@ bool dev::License_ReadStrptrMaybe(dev::License &parent, algo::strptr in_str) {
 // --- dev.License..Print
 // print string representation of ROW to string STR
 // cfmt:dev.License.String  printfmt:Tuple
-void dev::License_Print(dev::License& row, algo::cstring& str) {
+void dev::License_Print(dev::License& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.license";
 
@@ -1970,7 +1970,7 @@ void dev::License_Print(dev::License& row, algo::cstring& str) {
 }
 
 // --- dev.Linelim..ReadFieldMaybe
-bool dev::Linelim_ReadFieldMaybe(dev::Linelim& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Linelim_ReadFieldMaybe(dev::Linelim& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2022,7 +2022,7 @@ bool dev::Linelim_ReadFieldMaybe(dev::Linelim& parent, algo::strptr field, algo:
 // --- dev.Linelim..ReadStrptrMaybe
 // Read fields of dev::Linelim from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Linelim_ReadStrptrMaybe(dev::Linelim &parent, algo::strptr in_str) {
+bool dev::Linelim_ReadStrptrMaybe(dev::Linelim &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.linelim") || algo::StripTypeTag(in_str, "dev.Linelim");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2034,7 +2034,7 @@ bool dev::Linelim_ReadStrptrMaybe(dev::Linelim &parent, algo::strptr in_str) {
 // --- dev.Linelim..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Linelim.String  printfmt:Tuple
-void dev::Linelim_Print(dev::Linelim& row, algo::cstring& str) {
+void dev::Linelim_Print(dev::Linelim& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.linelim";
 
@@ -2067,7 +2067,7 @@ void dev::Linelim_Print(dev::Linelim& row, algo::cstring& str) {
 }
 
 // --- dev.Mdmark..ReadFieldMaybe
-bool dev::Mdmark_ReadFieldMaybe(dev::Mdmark& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Mdmark_ReadFieldMaybe(dev::Mdmark& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2095,7 +2095,7 @@ bool dev::Mdmark_ReadFieldMaybe(dev::Mdmark& parent, algo::strptr field, algo::s
 // --- dev.Mdmark..ReadStrptrMaybe
 // Read fields of dev::Mdmark from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Mdmark_ReadStrptrMaybe(dev::Mdmark &parent, algo::strptr in_str) {
+bool dev::Mdmark_ReadStrptrMaybe(dev::Mdmark &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.mdmark") || algo::StripTypeTag(in_str, "dev.Mdmark");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2107,7 +2107,7 @@ bool dev::Mdmark_ReadStrptrMaybe(dev::Mdmark &parent, algo::strptr in_str) {
 // --- dev.Mdmark..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Mdmark.String  printfmt:Tuple
-void dev::Mdmark_Print(dev::Mdmark& row, algo::cstring& str) {
+void dev::Mdmark_Print(dev::Mdmark& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.mdmark";
 
@@ -2124,7 +2124,7 @@ void dev::Mdmark_Print(dev::Mdmark& row, algo::cstring& str) {
 // --- dev.MdmarkCase.mdmark.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* dev::mdmark_ToCstr(const dev::MdmarkCase& parent) {
+const char* dev::mdmark_ToCstr(const dev::MdmarkCase& parent) throw() {
     const char *ret = NULL;
     switch(mdmark_GetEnum(parent)) {
         case dev_MdmarkCase_MDSECTION      : ret = "MDSECTION";  break;
@@ -2137,7 +2137,7 @@ const char* dev::mdmark_ToCstr(const dev::MdmarkCase& parent) {
 // --- dev.MdmarkCase.mdmark.Print
 // Convert mdmark to a string. First, attempt conversion to a known string.
 // If no string matches, print mdmark as a numeric value.
-void dev::mdmark_Print(const dev::MdmarkCase& parent, algo::cstring &lhs) {
+void dev::mdmark_Print(const dev::MdmarkCase& parent, algo::cstring &lhs) throw() {
     const char *strval = mdmark_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2150,7 +2150,7 @@ void dev::mdmark_Print(const dev::MdmarkCase& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool dev::mdmark_SetStrptrMaybe(dev::MdmarkCase& parent, algo::strptr rhs) {
+bool dev::mdmark_SetStrptrMaybe(dev::MdmarkCase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -2180,12 +2180,12 @@ bool dev::mdmark_SetStrptrMaybe(dev::MdmarkCase& parent, algo::strptr rhs) {
 // --- dev.MdmarkCase.mdmark.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void dev::mdmark_SetStrptr(dev::MdmarkCase& parent, algo::strptr rhs, dev_MdmarkCaseEnum dflt) {
+void dev::mdmark_SetStrptr(dev::MdmarkCase& parent, algo::strptr rhs, dev_MdmarkCaseEnum dflt) throw() {
     if (!mdmark_SetStrptrMaybe(parent,rhs)) mdmark_SetEnum(parent,dflt);
 }
 
 // --- dev.Mdsection..ReadFieldMaybe
-bool dev::Mdsection_ReadFieldMaybe(dev::Mdsection& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Mdsection_ReadFieldMaybe(dev::Mdsection& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2221,7 +2221,7 @@ bool dev::Mdsection_ReadFieldMaybe(dev::Mdsection& parent, algo::strptr field, a
 // --- dev.Mdsection..ReadStrptrMaybe
 // Read fields of dev::Mdsection from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Mdsection_ReadStrptrMaybe(dev::Mdsection &parent, algo::strptr in_str) {
+bool dev::Mdsection_ReadStrptrMaybe(dev::Mdsection &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.mdsection") || algo::StripTypeTag(in_str, "dev.Mdsection");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2233,7 +2233,7 @@ bool dev::Mdsection_ReadStrptrMaybe(dev::Mdsection &parent, algo::strptr in_str)
 // --- dev.Mdsection..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Mdsection.String  printfmt:Tuple
-void dev::Mdsection_Print(dev::Mdsection& row, algo::cstring& str) {
+void dev::Mdsection_Print(dev::Mdsection& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.mdsection";
 
@@ -2254,7 +2254,7 @@ void dev::Mdsection_Print(dev::Mdsection& row, algo::cstring& str) {
 }
 
 // --- dev.Msgfile..ReadFieldMaybe
-bool dev::Msgfile_ReadFieldMaybe(dev::Msgfile& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Msgfile_ReadFieldMaybe(dev::Msgfile& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2282,7 +2282,7 @@ bool dev::Msgfile_ReadFieldMaybe(dev::Msgfile& parent, algo::strptr field, algo:
 // --- dev.Msgfile..ReadStrptrMaybe
 // Read fields of dev::Msgfile from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Msgfile_ReadStrptrMaybe(dev::Msgfile &parent, algo::strptr in_str) {
+bool dev::Msgfile_ReadStrptrMaybe(dev::Msgfile &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.msgfile") || algo::StripTypeTag(in_str, "dev.Msgfile");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2294,7 +2294,7 @@ bool dev::Msgfile_ReadStrptrMaybe(dev::Msgfile &parent, algo::strptr in_str) {
 // --- dev.Msgfile..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Msgfile.String  printfmt:Tuple
-void dev::Msgfile_Print(dev::Msgfile& row, algo::cstring& str) {
+void dev::Msgfile_Print(dev::Msgfile& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.msgfile";
 
@@ -2309,7 +2309,7 @@ void dev::Msgfile_Print(dev::Msgfile& row, algo::cstring& str) {
 }
 
 // --- dev.Noindent..ReadFieldMaybe
-bool dev::Noindent_ReadFieldMaybe(dev::Noindent& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Noindent_ReadFieldMaybe(dev::Noindent& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2333,7 +2333,7 @@ bool dev::Noindent_ReadFieldMaybe(dev::Noindent& parent, algo::strptr field, alg
 // --- dev.Noindent..ReadStrptrMaybe
 // Read fields of dev::Noindent from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Noindent_ReadStrptrMaybe(dev::Noindent &parent, algo::strptr in_str) {
+bool dev::Noindent_ReadStrptrMaybe(dev::Noindent &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.noindent") || algo::StripTypeTag(in_str, "dev.Noindent");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2345,7 +2345,7 @@ bool dev::Noindent_ReadStrptrMaybe(dev::Noindent &parent, algo::strptr in_str) {
 // --- dev.Noindent..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Noindent.String  printfmt:Tuple
-void dev::Noindent_Print(dev::Noindent& row, algo::cstring& str) {
+void dev::Noindent_Print(dev::Noindent& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.noindent";
 
@@ -2357,7 +2357,7 @@ void dev::Noindent_Print(dev::Noindent& row, algo::cstring& str) {
 }
 
 // --- dev.OptType..ReadFieldMaybe
-bool dev::OptType_ReadFieldMaybe(dev::OptType& parent, algo::strptr field, algo::strptr strval) {
+bool dev::OptType_ReadFieldMaybe(dev::OptType& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2385,7 +2385,7 @@ bool dev::OptType_ReadFieldMaybe(dev::OptType& parent, algo::strptr field, algo:
 // --- dev.OptType..ReadStrptrMaybe
 // Read fields of dev::OptType from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::OptType_ReadStrptrMaybe(dev::OptType &parent, algo::strptr in_str) {
+bool dev::OptType_ReadStrptrMaybe(dev::OptType &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.opt_type") || algo::StripTypeTag(in_str, "dev.OptType");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2397,7 +2397,7 @@ bool dev::OptType_ReadStrptrMaybe(dev::OptType &parent, algo::strptr in_str) {
 // --- dev.OptType..Print
 // print string representation of ROW to string STR
 // cfmt:dev.OptType.String  printfmt:Tuple
-void dev::OptType_Print(dev::OptType& row, algo::cstring& str) {
+void dev::OptType_Print(dev::OptType& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.opt_type";
 
@@ -2412,7 +2412,7 @@ void dev::OptType_Print(dev::OptType& row, algo::cstring& str) {
 }
 
 // --- dev.Package..ReadFieldMaybe
-bool dev::Package_ReadFieldMaybe(dev::Package& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Package_ReadFieldMaybe(dev::Package& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2444,7 +2444,7 @@ bool dev::Package_ReadFieldMaybe(dev::Package& parent, algo::strptr field, algo:
 // --- dev.Package..ReadStrptrMaybe
 // Read fields of dev::Package from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Package_ReadStrptrMaybe(dev::Package &parent, algo::strptr in_str) {
+bool dev::Package_ReadStrptrMaybe(dev::Package &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.package") || algo::StripTypeTag(in_str, "dev.Package");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2456,7 +2456,7 @@ bool dev::Package_ReadStrptrMaybe(dev::Package &parent, algo::strptr in_str) {
 // --- dev.Package..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Package.String  printfmt:Tuple
-void dev::Package_Print(dev::Package& row, algo::cstring& str) {
+void dev::Package_Print(dev::Package& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.package";
 
@@ -2474,25 +2474,25 @@ void dev::Package_Print(dev::Package& row, algo::cstring& str) {
 }
 
 // --- dev.Pkgdep.package.Get
-algo::Smallstr50 dev::package_Get(dev::Pkgdep& parent) {
+algo::Smallstr50 dev::package_Get(dev::Pkgdep& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.pkgdep, ".RL"));
     return ret;
 }
 
 // --- dev.Pkgdep.package.Get2
-algo::Smallstr50 dev::Pkgdep_package_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Pkgdep_package_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dev.Pkgdep.parent.Get
-algo::Smallstr50 dev::parent_Get(dev::Pkgdep& parent) {
+algo::Smallstr50 dev::parent_Get(dev::Pkgdep& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.pkgdep, ".RR"));
     return ret;
 }
 
 // --- dev.Pkgdep.parent.Get2
-algo::Smallstr50 dev::Pkgdep_parent_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Pkgdep_parent_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -2503,7 +2503,7 @@ tempstr dev::Pkgdep_Concat_package_parent( const algo::strptr& package ,const al
 }
 
 // --- dev.Pkgdep..ReadFieldMaybe
-bool dev::Pkgdep_ReadFieldMaybe(dev::Pkgdep& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Pkgdep_ReadFieldMaybe(dev::Pkgdep& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2539,7 +2539,7 @@ bool dev::Pkgdep_ReadFieldMaybe(dev::Pkgdep& parent, algo::strptr field, algo::s
 // --- dev.Pkgdep..ReadStrptrMaybe
 // Read fields of dev::Pkgdep from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Pkgdep_ReadStrptrMaybe(dev::Pkgdep &parent, algo::strptr in_str) {
+bool dev::Pkgdep_ReadStrptrMaybe(dev::Pkgdep &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.pkgdep") || algo::StripTypeTag(in_str, "dev.Pkgdep");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2551,7 +2551,7 @@ bool dev::Pkgdep_ReadStrptrMaybe(dev::Pkgdep &parent, algo::strptr in_str) {
 // --- dev.Pkgdep..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Pkgdep.String  printfmt:Tuple
-void dev::Pkgdep_Print(dev::Pkgdep& row, algo::cstring& str) {
+void dev::Pkgdep_Print(dev::Pkgdep& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.pkgdep";
 
@@ -2566,25 +2566,25 @@ void dev::Pkgdep_Print(dev::Pkgdep& row, algo::cstring& str) {
 }
 
 // --- dev.Pkgkey.package.Get
-algo::Smallstr50 dev::package_Get(dev::Pkgkey& parent) {
+algo::Smallstr50 dev::package_Get(dev::Pkgkey& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.pkgkey, "/LL"));
     return ret;
 }
 
 // --- dev.Pkgkey.package.Get2
-algo::Smallstr50 dev::Pkgkey_package_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Pkgkey_package_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LL"));
     return ret;
 }
 
 // --- dev.Pkgkey.key.Get
-algo::Smallstr150 dev::key_Get(dev::Pkgkey& parent) {
+algo::Smallstr150 dev::key_Get(dev::Pkgkey& parent) throw() {
     algo::Smallstr150 ret(algo::Pathcomp(parent.pkgkey, "/LR"));
     return ret;
 }
 
 // --- dev.Pkgkey.key.Get2
-algo::Smallstr150 dev::Pkgkey_key_Get(algo::strptr arg) {
+algo::Smallstr150 dev::Pkgkey_key_Get(algo::strptr arg) throw() {
     algo::Smallstr150 ret(algo::Pathcomp(arg, "/LR"));
     return ret;
 }
@@ -2595,7 +2595,7 @@ tempstr dev::Pkgkey_Concat_package_key( const algo::strptr& package ,const algo:
 }
 
 // --- dev.Pkgkey..ReadFieldMaybe
-bool dev::Pkgkey_ReadFieldMaybe(dev::Pkgkey& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Pkgkey_ReadFieldMaybe(dev::Pkgkey& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2627,7 +2627,7 @@ bool dev::Pkgkey_ReadFieldMaybe(dev::Pkgkey& parent, algo::strptr field, algo::s
 // --- dev.Pkgkey..ReadStrptrMaybe
 // Read fields of dev::Pkgkey from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Pkgkey_ReadStrptrMaybe(dev::Pkgkey &parent, algo::strptr in_str) {
+bool dev::Pkgkey_ReadStrptrMaybe(dev::Pkgkey &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.pkgkey") || algo::StripTypeTag(in_str, "dev.Pkgkey");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2639,7 +2639,7 @@ bool dev::Pkgkey_ReadStrptrMaybe(dev::Pkgkey &parent, algo::strptr in_str) {
 // --- dev.Pkgkey..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Pkgkey.String  printfmt:Tuple
-void dev::Pkgkey_Print(dev::Pkgkey& row, algo::cstring& str) {
+void dev::Pkgkey_Print(dev::Pkgkey& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.pkgkey";
 
@@ -2651,7 +2651,7 @@ void dev::Pkgkey_Print(dev::Pkgkey& row, algo::cstring& str) {
 }
 
 // --- dev.Readme..ReadFieldMaybe
-bool dev::Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2687,7 +2687,7 @@ bool dev::Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::s
 // --- dev.Readme..ReadStrptrMaybe
 // Read fields of dev::Readme from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Readme_ReadStrptrMaybe(dev::Readme &parent, algo::strptr in_str) {
+bool dev::Readme_ReadStrptrMaybe(dev::Readme &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.readme") || algo::StripTypeTag(in_str, "dev.Readme");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2699,7 +2699,7 @@ bool dev::Readme_ReadStrptrMaybe(dev::Readme &parent, algo::strptr in_str) {
 // --- dev.Readme..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Readme.String  printfmt:Tuple
-void dev::Readme_Print(dev::Readme& row, algo::cstring& str) {
+void dev::Readme_Print(dev::Readme& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.readme";
 
@@ -2720,7 +2720,7 @@ void dev::Readme_Print(dev::Readme& row, algo::cstring& str) {
 }
 
 // --- dev.Readmesort..ReadFieldMaybe
-bool dev::Readmesort_ReadFieldMaybe(dev::Readmesort& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Readmesort_ReadFieldMaybe(dev::Readmesort& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2744,7 +2744,7 @@ bool dev::Readmesort_ReadFieldMaybe(dev::Readmesort& parent, algo::strptr field,
 // --- dev.Readmesort..ReadStrptrMaybe
 // Read fields of dev::Readmesort from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Readmesort_ReadStrptrMaybe(dev::Readmesort &parent, algo::strptr in_str) {
+bool dev::Readmesort_ReadStrptrMaybe(dev::Readmesort &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.readmesort") || algo::StripTypeTag(in_str, "dev.Readmesort");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2756,7 +2756,7 @@ bool dev::Readmesort_ReadStrptrMaybe(dev::Readmesort &parent, algo::strptr in_st
 // --- dev.Readmesort..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Readmesort.String  printfmt:Tuple
-void dev::Readmesort_Print(dev::Readmesort& row, algo::cstring& str) {
+void dev::Readmesort_Print(dev::Readmesort& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.readmesort";
 
@@ -2768,7 +2768,7 @@ void dev::Readmesort_Print(dev::Readmesort& row, algo::cstring& str) {
 }
 
 // --- dev.Sandbox..ReadFieldMaybe
-bool dev::Sandbox_ReadFieldMaybe(dev::Sandbox& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Sandbox_ReadFieldMaybe(dev::Sandbox& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2792,7 +2792,7 @@ bool dev::Sandbox_ReadFieldMaybe(dev::Sandbox& parent, algo::strptr field, algo:
 // --- dev.Sandbox..ReadStrptrMaybe
 // Read fields of dev::Sandbox from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Sandbox_ReadStrptrMaybe(dev::Sandbox &parent, algo::strptr in_str) {
+bool dev::Sandbox_ReadStrptrMaybe(dev::Sandbox &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.sandbox") || algo::StripTypeTag(in_str, "dev.Sandbox");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2804,7 +2804,7 @@ bool dev::Sandbox_ReadStrptrMaybe(dev::Sandbox &parent, algo::strptr in_str) {
 // --- dev.Sandbox..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Sandbox.String  printfmt:Tuple
-void dev::Sandbox_Print(dev::Sandbox& row, algo::cstring& str) {
+void dev::Sandbox_Print(dev::Sandbox& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.sandbox";
 
@@ -2816,7 +2816,7 @@ void dev::Sandbox_Print(dev::Sandbox& row, algo::cstring& str) {
 }
 
 // --- dev.Sbpath..ReadFieldMaybe
-bool dev::Sbpath_ReadFieldMaybe(dev::Sbpath& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Sbpath_ReadFieldMaybe(dev::Sbpath& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2840,7 +2840,7 @@ bool dev::Sbpath_ReadFieldMaybe(dev::Sbpath& parent, algo::strptr field, algo::s
 // --- dev.Sbpath..ReadStrptrMaybe
 // Read fields of dev::Sbpath from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Sbpath_ReadStrptrMaybe(dev::Sbpath &parent, algo::strptr in_str) {
+bool dev::Sbpath_ReadStrptrMaybe(dev::Sbpath &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.sbpath") || algo::StripTypeTag(in_str, "dev.Sbpath");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2852,7 +2852,7 @@ bool dev::Sbpath_ReadStrptrMaybe(dev::Sbpath &parent, algo::strptr in_str) {
 // --- dev.Sbpath..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Sbpath.String  printfmt:Tuple
-void dev::Sbpath_Print(dev::Sbpath& row, algo::cstring& str) {
+void dev::Sbpath_Print(dev::Sbpath& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.sbpath";
 
@@ -2864,19 +2864,19 @@ void dev::Sbpath_Print(dev::Sbpath& row, algo::cstring& str) {
 }
 
 // --- dev.Scriptfile.name.Get
-algo::Smallstr50 dev::name_Get(dev::Scriptfile& parent) {
+algo::Smallstr50 dev::name_Get(dev::Scriptfile& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gitfile, "/RR"));
     return ret;
 }
 
 // --- dev.Scriptfile.name.Get2
-algo::Smallstr50 dev::Scriptfile_name_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Scriptfile_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/RR"));
     return ret;
 }
 
 // --- dev.Scriptfile..ReadFieldMaybe
-bool dev::Scriptfile_ReadFieldMaybe(dev::Scriptfile& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Scriptfile_ReadFieldMaybe(dev::Scriptfile& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2908,7 +2908,7 @@ bool dev::Scriptfile_ReadFieldMaybe(dev::Scriptfile& parent, algo::strptr field,
 // --- dev.Scriptfile..ReadStrptrMaybe
 // Read fields of dev::Scriptfile from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Scriptfile_ReadStrptrMaybe(dev::Scriptfile &parent, algo::strptr in_str) {
+bool dev::Scriptfile_ReadStrptrMaybe(dev::Scriptfile &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.scriptfile") || algo::StripTypeTag(in_str, "dev.Scriptfile");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2920,7 +2920,7 @@ bool dev::Scriptfile_ReadStrptrMaybe(dev::Scriptfile &parent, algo::strptr in_st
 // --- dev.Scriptfile..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Scriptfile.String  printfmt:Tuple
-void dev::Scriptfile_Print(dev::Scriptfile& row, algo::cstring& str) {
+void dev::Scriptfile_Print(dev::Scriptfile& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.scriptfile";
 
@@ -2935,19 +2935,19 @@ void dev::Scriptfile_Print(dev::Scriptfile& row, algo::cstring& str) {
 }
 
 // --- dev.Srcfile.ext.Get
-algo::Smallstr10 dev::ext_Get(dev::Srcfile& parent) {
+algo::Smallstr10 dev::ext_Get(dev::Srcfile& parent) throw() {
     algo::Smallstr10 ret(algo::Pathcomp(parent.srcfile, ".RR"));
     return ret;
 }
 
 // --- dev.Srcfile.ext.Get2
-algo::Smallstr10 dev::Srcfile_ext_Get(algo::strptr arg) {
+algo::Smallstr10 dev::Srcfile_ext_Get(algo::strptr arg) throw() {
     algo::Smallstr10 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
 
 // --- dev.Srcfile..ReadFieldMaybe
-bool dev::Srcfile_ReadFieldMaybe(dev::Srcfile& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Srcfile_ReadFieldMaybe(dev::Srcfile& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2971,7 +2971,7 @@ bool dev::Srcfile_ReadFieldMaybe(dev::Srcfile& parent, algo::strptr field, algo:
 // --- dev.Srcfile..ReadStrptrMaybe
 // Read fields of dev::Srcfile from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Srcfile_ReadStrptrMaybe(dev::Srcfile &parent, algo::strptr in_str) {
+bool dev::Srcfile_ReadStrptrMaybe(dev::Srcfile &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.srcfile") || algo::StripTypeTag(in_str, "dev.Srcfile");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2983,7 +2983,7 @@ bool dev::Srcfile_ReadStrptrMaybe(dev::Srcfile &parent, algo::strptr in_str) {
 // --- dev.Srcfile..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Srcfile.String  printfmt:Tuple
-void dev::Srcfile_Print(dev::Srcfile& row, algo::cstring& str) {
+void dev::Srcfile_Print(dev::Srcfile& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.srcfile";
 
@@ -2992,7 +2992,7 @@ void dev::Srcfile_Print(dev::Srcfile& row, algo::cstring& str) {
 }
 
 // --- dev.Syscmd..ReadFieldMaybe
-bool dev::Syscmd_ReadFieldMaybe(dev::Syscmd& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Syscmd_ReadFieldMaybe(dev::Syscmd& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3044,7 +3044,7 @@ bool dev::Syscmd_ReadFieldMaybe(dev::Syscmd& parent, algo::strptr field, algo::s
 // --- dev.Syscmd..ReadStrptrMaybe
 // Read fields of dev::Syscmd from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Syscmd_ReadStrptrMaybe(dev::Syscmd &parent, algo::strptr in_str) {
+bool dev::Syscmd_ReadStrptrMaybe(dev::Syscmd &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.syscmd") || algo::StripTypeTag(in_str, "dev.Syscmd");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3056,7 +3056,7 @@ bool dev::Syscmd_ReadStrptrMaybe(dev::Syscmd &parent, algo::strptr in_str) {
 // --- dev.Syscmd..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Syscmd.String  printfmt:Tuple
-void dev::Syscmd_Print(dev::Syscmd& row, algo::cstring& str) {
+void dev::Syscmd_Print(dev::Syscmd& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.syscmd";
 
@@ -3086,7 +3086,7 @@ void dev::Syscmd_Print(dev::Syscmd& row, algo::cstring& str) {
 }
 
 // --- dev.Syscmddep..ReadFieldMaybe
-bool dev::Syscmddep_ReadFieldMaybe(dev::Syscmddep& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Syscmddep_ReadFieldMaybe(dev::Syscmddep& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3114,7 +3114,7 @@ bool dev::Syscmddep_ReadFieldMaybe(dev::Syscmddep& parent, algo::strptr field, a
 // --- dev.Syscmddep..ReadStrptrMaybe
 // Read fields of dev::Syscmddep from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Syscmddep_ReadStrptrMaybe(dev::Syscmddep &parent, algo::strptr in_str) {
+bool dev::Syscmddep_ReadStrptrMaybe(dev::Syscmddep &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.syscmddep") || algo::StripTypeTag(in_str, "dev.Syscmddep");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3126,7 +3126,7 @@ bool dev::Syscmddep_ReadStrptrMaybe(dev::Syscmddep &parent, algo::strptr in_str)
 // --- dev.Syscmddep..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Syscmddep.String  printfmt:Tuple
-void dev::Syscmddep_Print(dev::Syscmddep& row, algo::cstring& str) {
+void dev::Syscmddep_Print(dev::Syscmddep& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.syscmddep";
 
@@ -3138,7 +3138,7 @@ void dev::Syscmddep_Print(dev::Syscmddep& row, algo::cstring& str) {
 }
 
 // --- dev.Syslib..ReadFieldMaybe
-bool dev::Syslib_ReadFieldMaybe(dev::Syslib& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Syslib_ReadFieldMaybe(dev::Syslib& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3162,7 +3162,7 @@ bool dev::Syslib_ReadFieldMaybe(dev::Syslib& parent, algo::strptr field, algo::s
 // --- dev.Syslib..ReadStrptrMaybe
 // Read fields of dev::Syslib from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Syslib_ReadStrptrMaybe(dev::Syslib &parent, algo::strptr in_str) {
+bool dev::Syslib_ReadStrptrMaybe(dev::Syslib &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.syslib") || algo::StripTypeTag(in_str, "dev.Syslib");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3174,7 +3174,7 @@ bool dev::Syslib_ReadStrptrMaybe(dev::Syslib &parent, algo::strptr in_str) {
 // --- dev.Syslib..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Syslib.String  printfmt:Tuple
-void dev::Syslib_Print(dev::Syslib& row, algo::cstring& str) {
+void dev::Syslib_Print(dev::Syslib& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.syslib";
 
@@ -3186,25 +3186,25 @@ void dev::Syslib_Print(dev::Syslib& row, algo::cstring& str) {
 }
 
 // --- dev.Targdep.target.Get
-algo::Smallstr16 dev::target_Get(dev::Targdep& parent) {
+algo::Smallstr16 dev::target_Get(dev::Targdep& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.targdep, ".RL"));
     return ret;
 }
 
 // --- dev.Targdep.target.Get2
-algo::Smallstr16 dev::Targdep_target_Get(algo::strptr arg) {
+algo::Smallstr16 dev::Targdep_target_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dev.Targdep.parent.Get
-algo::Smallstr16 dev::parent_Get(dev::Targdep& parent) {
+algo::Smallstr16 dev::parent_Get(dev::Targdep& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.targdep, ".RR"));
     return ret;
 }
 
 // --- dev.Targdep.parent.Get2
-algo::Smallstr16 dev::Targdep_parent_Get(algo::strptr arg) {
+algo::Smallstr16 dev::Targdep_parent_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -3215,7 +3215,7 @@ tempstr dev::Targdep_Concat_target_parent( const algo::strptr& target ,const alg
 }
 
 // --- dev.Targdep..ReadFieldMaybe
-bool dev::Targdep_ReadFieldMaybe(dev::Targdep& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Targdep_ReadFieldMaybe(dev::Targdep& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3247,7 +3247,7 @@ bool dev::Targdep_ReadFieldMaybe(dev::Targdep& parent, algo::strptr field, algo:
 // --- dev.Targdep..ReadStrptrMaybe
 // Read fields of dev::Targdep from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Targdep_ReadStrptrMaybe(dev::Targdep &parent, algo::strptr in_str) {
+bool dev::Targdep_ReadStrptrMaybe(dev::Targdep &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.targdep") || algo::StripTypeTag(in_str, "dev.Targdep");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3259,7 +3259,7 @@ bool dev::Targdep_ReadStrptrMaybe(dev::Targdep &parent, algo::strptr in_str) {
 // --- dev.Targdep..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Targdep.String  printfmt:Tuple
-void dev::Targdep_Print(dev::Targdep& row, algo::cstring& str) {
+void dev::Targdep_Print(dev::Targdep& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.targdep";
 
@@ -3271,7 +3271,7 @@ void dev::Targdep_Print(dev::Targdep& row, algo::cstring& str) {
 }
 
 // --- dev.Target..ReadFieldMaybe
-bool dev::Target_ReadFieldMaybe(dev::Target& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Target_ReadFieldMaybe(dev::Target& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3291,7 +3291,7 @@ bool dev::Target_ReadFieldMaybe(dev::Target& parent, algo::strptr field, algo::s
 // --- dev.Target..ReadStrptrMaybe
 // Read fields of dev::Target from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Target_ReadStrptrMaybe(dev::Target &parent, algo::strptr in_str) {
+bool dev::Target_ReadStrptrMaybe(dev::Target &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.target") || algo::StripTypeTag(in_str, "dev.Target");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3303,7 +3303,7 @@ bool dev::Target_ReadStrptrMaybe(dev::Target &parent, algo::strptr in_str) {
 // --- dev.Target..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Target.String  printfmt:Tuple
-void dev::Target_Print(dev::Target& row, algo::cstring& str) {
+void dev::Target_Print(dev::Target& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.target";
 
@@ -3312,37 +3312,37 @@ void dev::Target_Print(dev::Target& row, algo::cstring& str) {
 }
 
 // --- dev.Targsrc.target.Get
-algo::Smallstr16 dev::target_Get(dev::Targsrc& parent) {
+algo::Smallstr16 dev::target_Get(dev::Targsrc& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.targsrc, "/LL"));
     return ret;
 }
 
 // --- dev.Targsrc.target.Get2
-algo::Smallstr16 dev::Targsrc_target_Get(algo::strptr arg) {
+algo::Smallstr16 dev::Targsrc_target_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, "/LL"));
     return ret;
 }
 
 // --- dev.Targsrc.src.Get
-algo::Smallstr200 dev::src_Get(dev::Targsrc& parent) {
+algo::Smallstr200 dev::src_Get(dev::Targsrc& parent) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(parent.targsrc, "/LR"));
     return ret;
 }
 
 // --- dev.Targsrc.src.Get2
-algo::Smallstr200 dev::Targsrc_src_Get(algo::strptr arg) {
+algo::Smallstr200 dev::Targsrc_src_Get(algo::strptr arg) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(arg, "/LR"));
     return ret;
 }
 
 // --- dev.Targsrc.ext.Get
-algo::Smallstr10 dev::ext_Get(dev::Targsrc& parent) {
+algo::Smallstr10 dev::ext_Get(dev::Targsrc& parent) throw() {
     algo::Smallstr10 ret(algo::Pathcomp(parent.targsrc, ".RR"));
     return ret;
 }
 
 // --- dev.Targsrc.ext.Get2
-algo::Smallstr10 dev::Targsrc_ext_Get(algo::strptr arg) {
+algo::Smallstr10 dev::Targsrc_ext_Get(algo::strptr arg) throw() {
     algo::Smallstr10 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -3353,7 +3353,7 @@ tempstr dev::Targsrc_Concat_target_src( const algo::strptr& target ,const algo::
 }
 
 // --- dev.Targsrc..ReadFieldMaybe
-bool dev::Targsrc_ReadFieldMaybe(dev::Targsrc& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Targsrc_ReadFieldMaybe(dev::Targsrc& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3389,7 +3389,7 @@ bool dev::Targsrc_ReadFieldMaybe(dev::Targsrc& parent, algo::strptr field, algo:
 // --- dev.Targsrc..ReadStrptrMaybe
 // Read fields of dev::Targsrc from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Targsrc_ReadStrptrMaybe(dev::Targsrc &parent, algo::strptr in_str) {
+bool dev::Targsrc_ReadStrptrMaybe(dev::Targsrc &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.targsrc") || algo::StripTypeTag(in_str, "dev.Targsrc");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3401,7 +3401,7 @@ bool dev::Targsrc_ReadStrptrMaybe(dev::Targsrc &parent, algo::strptr in_str) {
 // --- dev.Targsrc..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Targsrc.String  printfmt:Tuple
-void dev::Targsrc_Print(dev::Targsrc& row, algo::cstring& str) {
+void dev::Targsrc_Print(dev::Targsrc& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.targsrc";
 
@@ -3413,37 +3413,37 @@ void dev::Targsrc_Print(dev::Targsrc& row, algo::cstring& str) {
 }
 
 // --- dev.Targsyslib.target.Get
-algo::Smallstr16 dev::target_Get(dev::Targsyslib& parent) {
+algo::Smallstr16 dev::target_Get(dev::Targsyslib& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.targsyslib, "/LR.LL"));
     return ret;
 }
 
 // --- dev.Targsyslib.target.Get2
-algo::Smallstr16 dev::Targsyslib_target_Get(algo::strptr arg) {
+algo::Smallstr16 dev::Targsyslib_target_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, "/LR.LL"));
     return ret;
 }
 
 // --- dev.Targsyslib.syslib.Get
-algo::Smallstr50 dev::syslib_Get(dev::Targsyslib& parent) {
+algo::Smallstr50 dev::syslib_Get(dev::Targsyslib& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.targsyslib, "/LR.LR"));
     return ret;
 }
 
 // --- dev.Targsyslib.syslib.Get2
-algo::Smallstr50 dev::Targsyslib_syslib_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Targsyslib_syslib_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LR.LR"));
     return ret;
 }
 
 // --- dev.Targsyslib.uname.Get
-algo::Smallstr50 dev::uname_Get(dev::Targsyslib& parent) {
+algo::Smallstr50 dev::uname_Get(dev::Targsyslib& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.targsyslib, "/LL"));
     return ret;
 }
 
 // --- dev.Targsyslib.uname.Get2
-algo::Smallstr50 dev::Targsyslib_uname_Get(algo::strptr arg) {
+algo::Smallstr50 dev::Targsyslib_uname_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LL"));
     return ret;
 }
@@ -3454,7 +3454,7 @@ tempstr dev::Targsyslib_Concat_uname_target_syslib( const algo::strptr& uname ,c
 }
 
 // --- dev.Targsyslib..ReadFieldMaybe
-bool dev::Targsyslib_ReadFieldMaybe(dev::Targsyslib& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Targsyslib_ReadFieldMaybe(dev::Targsyslib& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3490,7 +3490,7 @@ bool dev::Targsyslib_ReadFieldMaybe(dev::Targsyslib& parent, algo::strptr field,
 // --- dev.Targsyslib..ReadStrptrMaybe
 // Read fields of dev::Targsyslib from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Targsyslib_ReadStrptrMaybe(dev::Targsyslib &parent, algo::strptr in_str) {
+bool dev::Targsyslib_ReadStrptrMaybe(dev::Targsyslib &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.targsyslib") || algo::StripTypeTag(in_str, "dev.Targsyslib");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3502,7 +3502,7 @@ bool dev::Targsyslib_ReadStrptrMaybe(dev::Targsyslib &parent, algo::strptr in_st
 // --- dev.Targsyslib..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Targsyslib.String  printfmt:Tuple
-void dev::Targsyslib_Print(dev::Targsyslib& row, algo::cstring& str) {
+void dev::Targsyslib_Print(dev::Targsyslib& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.targsyslib";
 
@@ -3514,7 +3514,7 @@ void dev::Targsyslib_Print(dev::Targsyslib& row, algo::cstring& str) {
 }
 
 // --- dev.Tgtcov..ReadFieldMaybe
-bool dev::Tgtcov_ReadFieldMaybe(dev::Tgtcov& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Tgtcov_ReadFieldMaybe(dev::Tgtcov& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3546,7 +3546,7 @@ bool dev::Tgtcov_ReadFieldMaybe(dev::Tgtcov& parent, algo::strptr field, algo::s
 // --- dev.Tgtcov..ReadStrptrMaybe
 // Read fields of dev::Tgtcov from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Tgtcov_ReadStrptrMaybe(dev::Tgtcov &parent, algo::strptr in_str) {
+bool dev::Tgtcov_ReadStrptrMaybe(dev::Tgtcov &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.tgtcov") || algo::StripTypeTag(in_str, "dev.Tgtcov");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3558,7 +3558,7 @@ bool dev::Tgtcov_ReadStrptrMaybe(dev::Tgtcov &parent, algo::strptr in_str) {
 // --- dev.Tgtcov..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Tgtcov.String  printfmt:Tuple
-void dev::Tgtcov_Print(dev::Tgtcov& row, algo::cstring& str) {
+void dev::Tgtcov_Print(dev::Tgtcov& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.tgtcov";
 
@@ -3576,7 +3576,7 @@ void dev::Tgtcov_Print(dev::Tgtcov& row, algo::cstring& str) {
 }
 
 // --- dev.Timefmt..ReadFieldMaybe
-bool dev::Timefmt_ReadFieldMaybe(dev::Timefmt& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Timefmt_ReadFieldMaybe(dev::Timefmt& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3604,7 +3604,7 @@ bool dev::Timefmt_ReadFieldMaybe(dev::Timefmt& parent, algo::strptr field, algo:
 // --- dev.Timefmt..ReadStrptrMaybe
 // Read fields of dev::Timefmt from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Timefmt_ReadStrptrMaybe(dev::Timefmt &parent, algo::strptr in_str) {
+bool dev::Timefmt_ReadStrptrMaybe(dev::Timefmt &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.timefmt") || algo::StripTypeTag(in_str, "dev.Timefmt");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3616,7 +3616,7 @@ bool dev::Timefmt_ReadStrptrMaybe(dev::Timefmt &parent, algo::strptr in_str) {
 // --- dev.Timefmt..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Timefmt.String  printfmt:Tuple
-void dev::Timefmt_Print(dev::Timefmt& row, algo::cstring& str) {
+void dev::Timefmt_Print(dev::Timefmt& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.timefmt";
 
@@ -3631,97 +3631,97 @@ void dev::Timefmt_Print(dev::Timefmt& row, algo::cstring& str) {
 }
 
 // --- dev.ToolOpt.uname.Get
-algo::Smallstr50 dev::uname_Get(dev::ToolOpt& parent) {
+algo::Smallstr50 dev::uname_Get(dev::ToolOpt& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tool_opt, "/LL.LL-LL"));
     return ret;
 }
 
 // --- dev.ToolOpt.uname.Get2
-algo::Smallstr50 dev::ToolOpt_uname_Get(algo::strptr arg) {
+algo::Smallstr50 dev::ToolOpt_uname_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LL.LL-LL"));
     return ret;
 }
 
 // --- dev.ToolOpt.compiler.Get
-algo::Smallstr50 dev::compiler_Get(dev::ToolOpt& parent) {
+algo::Smallstr50 dev::compiler_Get(dev::ToolOpt& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tool_opt, "/LL.LL-LR"));
     return ret;
 }
 
 // --- dev.ToolOpt.compiler.Get2
-algo::Smallstr50 dev::ToolOpt_compiler_Get(algo::strptr arg) {
+algo::Smallstr50 dev::ToolOpt_compiler_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LL.LL-LR"));
     return ret;
 }
 
 // --- dev.ToolOpt.cfg.Get
-algo::Smallstr50 dev::cfg_Get(dev::ToolOpt& parent) {
+algo::Smallstr50 dev::cfg_Get(dev::ToolOpt& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tool_opt, "/LL.LR-LL"));
     return ret;
 }
 
 // --- dev.ToolOpt.cfg.Get2
-algo::Smallstr50 dev::ToolOpt_cfg_Get(algo::strptr arg) {
+algo::Smallstr50 dev::ToolOpt_cfg_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LL.LR-LL"));
     return ret;
 }
 
 // --- dev.ToolOpt.arch.Get
-algo::Smallstr50 dev::arch_Get(dev::ToolOpt& parent) {
+algo::Smallstr50 dev::arch_Get(dev::ToolOpt& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tool_opt, "/LL.LR-LR"));
     return ret;
 }
 
 // --- dev.ToolOpt.arch.Get2
-algo::Smallstr50 dev::ToolOpt_arch_Get(algo::strptr arg) {
+algo::Smallstr50 dev::ToolOpt_arch_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LL.LR-LR"));
     return ret;
 }
 
 // --- dev.ToolOpt.target.Get
-algo::Smallstr50 dev::target_Get(dev::ToolOpt& parent) {
+algo::Smallstr50 dev::target_Get(dev::ToolOpt& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tool_opt, "/LR:LL-LL"));
     return ret;
 }
 
 // --- dev.ToolOpt.target.Get2
-algo::Smallstr50 dev::ToolOpt_target_Get(algo::strptr arg) {
+algo::Smallstr50 dev::ToolOpt_target_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LR:LL-LL"));
     return ret;
 }
 
 // --- dev.ToolOpt.opt_type.Get
-algo::Smallstr50 dev::opt_type_Get(dev::ToolOpt& parent) {
+algo::Smallstr50 dev::opt_type_Get(dev::ToolOpt& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tool_opt, "/LR:LL-LR"));
     return ret;
 }
 
 // --- dev.ToolOpt.opt_type.Get2
-algo::Smallstr50 dev::ToolOpt_opt_type_Get(algo::strptr arg) {
+algo::Smallstr50 dev::ToolOpt_opt_type_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LR:LL-LR"));
     return ret;
 }
 
 // --- dev.ToolOpt.opt.Get
-algo::Smallstr100 dev::opt_Get(dev::ToolOpt& parent) {
+algo::Smallstr100 dev::opt_Get(dev::ToolOpt& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.tool_opt, "/LR:LR"));
     return ret;
 }
 
 // --- dev.ToolOpt.opt.Get2
-algo::Smallstr100 dev::ToolOpt_opt_Get(algo::strptr arg) {
+algo::Smallstr100 dev::ToolOpt_opt_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/LR:LR"));
     return ret;
 }
 
 // --- dev.ToolOpt.sortfld.Get
-algo::Smallstr50 dev::sortfld_Get(dev::ToolOpt& parent) {
+algo::Smallstr50 dev::sortfld_Get(dev::ToolOpt& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tool_opt, ".LL"));
     return ret;
 }
 
 // --- dev.ToolOpt.sortfld.Get2
-algo::Smallstr50 dev::ToolOpt_sortfld_Get(algo::strptr arg) {
+algo::Smallstr50 dev::ToolOpt_sortfld_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
@@ -3732,7 +3732,7 @@ tempstr dev::ToolOpt_Concat_uname_compiler_cfg_arch_target_opt_type_opt( const a
 }
 
 // --- dev.ToolOpt..ReadFieldMaybe
-bool dev::ToolOpt_ReadFieldMaybe(dev::ToolOpt& parent, algo::strptr field, algo::strptr strval) {
+bool dev::ToolOpt_ReadFieldMaybe(dev::ToolOpt& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3788,7 +3788,7 @@ bool dev::ToolOpt_ReadFieldMaybe(dev::ToolOpt& parent, algo::strptr field, algo:
 // --- dev.ToolOpt..ReadStrptrMaybe
 // Read fields of dev::ToolOpt from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::ToolOpt_ReadStrptrMaybe(dev::ToolOpt &parent, algo::strptr in_str) {
+bool dev::ToolOpt_ReadStrptrMaybe(dev::ToolOpt &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.tool_opt") || algo::StripTypeTag(in_str, "dev.ToolOpt");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3800,7 +3800,7 @@ bool dev::ToolOpt_ReadStrptrMaybe(dev::ToolOpt &parent, algo::strptr in_str) {
 // --- dev.ToolOpt..Print
 // print string representation of ROW to string STR
 // cfmt:dev.ToolOpt.String  printfmt:Tuple
-void dev::ToolOpt_Print(dev::ToolOpt& row, algo::cstring& str) {
+void dev::ToolOpt_Print(dev::ToolOpt& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.tool_opt";
 
@@ -3812,7 +3812,7 @@ void dev::ToolOpt_Print(dev::ToolOpt& row, algo::cstring& str) {
 }
 
 // --- dev.Uname..ReadFieldMaybe
-bool dev::Uname_ReadFieldMaybe(dev::Uname& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Uname_ReadFieldMaybe(dev::Uname& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3836,7 +3836,7 @@ bool dev::Uname_ReadFieldMaybe(dev::Uname& parent, algo::strptr field, algo::str
 // --- dev.Uname..ReadStrptrMaybe
 // Read fields of dev::Uname from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Uname_ReadStrptrMaybe(dev::Uname &parent, algo::strptr in_str) {
+bool dev::Uname_ReadStrptrMaybe(dev::Uname &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.uname") || algo::StripTypeTag(in_str, "dev.Uname");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3848,7 +3848,7 @@ bool dev::Uname_ReadStrptrMaybe(dev::Uname &parent, algo::strptr in_str) {
 // --- dev.Uname..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Uname.String  printfmt:Tuple
-void dev::Uname_Print(dev::Uname& row, algo::cstring& str) {
+void dev::Uname_Print(dev::Uname& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.uname";
 
@@ -3860,7 +3860,7 @@ void dev::Uname_Print(dev::Uname& row, algo::cstring& str) {
 }
 
 // --- dev.Unstablefld..ReadFieldMaybe
-bool dev::Unstablefld_ReadFieldMaybe(dev::Unstablefld& parent, algo::strptr field, algo::strptr strval) {
+bool dev::Unstablefld_ReadFieldMaybe(dev::Unstablefld& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dev::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3884,7 +3884,7 @@ bool dev::Unstablefld_ReadFieldMaybe(dev::Unstablefld& parent, algo::strptr fiel
 // --- dev.Unstablefld..ReadStrptrMaybe
 // Read fields of dev::Unstablefld from an ascii string.
 // The format of the string is an ssim Tuple
-bool dev::Unstablefld_ReadStrptrMaybe(dev::Unstablefld &parent, algo::strptr in_str) {
+bool dev::Unstablefld_ReadStrptrMaybe(dev::Unstablefld &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dev.unstablefld") || algo::StripTypeTag(in_str, "dev.Unstablefld");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3896,7 +3896,7 @@ bool dev::Unstablefld_ReadStrptrMaybe(dev::Unstablefld &parent, algo::strptr in_
 // --- dev.Unstablefld..Print
 // print string representation of ROW to string STR
 // cfmt:dev.Unstablefld.String  printfmt:Tuple
-void dev::Unstablefld_Print(dev::Unstablefld& row, algo::cstring& str) {
+void dev::Unstablefld_Print(dev::Unstablefld& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dev.unstablefld";
 

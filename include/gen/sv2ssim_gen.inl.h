@@ -39,28 +39,28 @@ inline void sv2ssim::FBltin_Init(sv2ssim::FBltin& bltin) {
 }
 
 // --- sv2ssim.FBltin..Ctor
-inline  sv2ssim::FBltin::FBltin() {
+inline  sv2ssim::FBltin::FBltin() throw() {
     sv2ssim::FBltin_Init(*this);
 }
 
 // --- sv2ssim.FBltin..Dtor
-inline  sv2ssim::FBltin::~FBltin() {
+inline  sv2ssim::FBltin::~FBltin() throw() {
     sv2ssim::FBltin_Uninit(*this);
 }
 
 // --- sv2ssim.trace..Ctor
-inline  sv2ssim::trace::trace() {
+inline  sv2ssim::trace::trace() throw() {
 }
 
 // --- sv2ssim.FDb.field.EmptyQ
 // Return true if index is empty
-inline bool sv2ssim::field_EmptyQ() {
+inline bool sv2ssim::field_EmptyQ() throw() {
     return _db.field_n == 0;
 }
 
 // --- sv2ssim.FDb.field.Find
 // Look up row by row id. Return NULL if out of range
-inline sv2ssim::FField* sv2ssim::field_Find(i32 t) {
+inline sv2ssim::FField* sv2ssim::field_Find(i32 t) throw() {
     sv2ssim::FField *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.field_n))) {
         u64 x = t + 1;
@@ -74,19 +74,19 @@ inline sv2ssim::FField* sv2ssim::field_Find(i32 t) {
 
 // --- sv2ssim.FDb.field.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline sv2ssim::FField* sv2ssim::field_Last() {
+inline sv2ssim::FField* sv2ssim::field_Last() throw() {
     return field_Find(i32(_db.field_n-1));
 }
 
 // --- sv2ssim.FDb.field.N
 // Return number of items in the pool
-inline i32 sv2ssim::field_N() {
+inline i32 sv2ssim::field_N() throw() {
     return _db.field_n;
 }
 
 // --- sv2ssim.FDb.field.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline sv2ssim::FField& sv2ssim::field_qFind(i32 t) {
+inline sv2ssim::FField& sv2ssim::field_qFind(i32 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -96,13 +96,13 @@ inline sv2ssim::FField& sv2ssim::field_qFind(i32 t) {
 
 // --- sv2ssim.FDb.linetok.EmptyQ
 // Return true if index is empty
-inline bool sv2ssim::linetok_EmptyQ() {
+inline bool sv2ssim::linetok_EmptyQ() throw() {
     return _db.linetok_n == 0;
 }
 
 // --- sv2ssim.FDb.linetok.Find
 // Look up row by row id. Return NULL if out of range
-inline algo::cstring* sv2ssim::linetok_Find(u64 t) {
+inline algo::cstring* sv2ssim::linetok_Find(u64 t) throw() {
     u64 idx = t;
     u64 lim = _db.linetok_n;
     if (idx >= lim) return NULL;
@@ -111,31 +111,31 @@ inline algo::cstring* sv2ssim::linetok_Find(u64 t) {
 
 // --- sv2ssim.FDb.linetok.Getary
 // Return array pointer by value
-inline algo::aryptr<algo::cstring> sv2ssim::linetok_Getary() {
+inline algo::aryptr<algo::cstring> sv2ssim::linetok_Getary() throw() {
     return algo::aryptr<algo::cstring>(_db.linetok_elems, _db.linetok_n);
 }
 
 // --- sv2ssim.FDb.linetok.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline algo::cstring* sv2ssim::linetok_Last() {
+inline algo::cstring* sv2ssim::linetok_Last() throw() {
     return linetok_Find(u64(_db.linetok_n-1));
 }
 
 // --- sv2ssim.FDb.linetok.Max
 // Return max. number of items in the array
-inline i32 sv2ssim::linetok_Max() {
+inline i32 sv2ssim::linetok_Max() throw() {
     return _db.linetok_max;
 }
 
 // --- sv2ssim.FDb.linetok.N
 // Return number of items in the array
-inline i32 sv2ssim::linetok_N() {
+inline i32 sv2ssim::linetok_N() throw() {
     return _db.linetok_n;
 }
 
 // --- sv2ssim.FDb.linetok.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void sv2ssim::linetok_Reserve(int n) {
+inline void sv2ssim::linetok_Reserve(int n) throw() {
     u32 new_n = _db.linetok_n + n;
     if (UNLIKELY(new_n > _db.linetok_max)) {
         linetok_AbsReserve(new_n);
@@ -144,32 +144,32 @@ inline void sv2ssim::linetok_Reserve(int n) {
 
 // --- sv2ssim.FDb.linetok.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline algo::cstring& sv2ssim::linetok_qFind(u64 t) {
+inline algo::cstring& sv2ssim::linetok_qFind(u64 t) throw() {
     return _db.linetok_elems[t];
 }
 
 // --- sv2ssim.FDb.linetok.qLast
 // Return reference to last element of array. No bounds checking
-inline algo::cstring& sv2ssim::linetok_qLast() {
+inline algo::cstring& sv2ssim::linetok_qLast() throw() {
     return linetok_qFind(u64(_db.linetok_n-1));
 }
 
 // --- sv2ssim.FDb.linetok.rowid_Get
 // Return row id of specified element
-inline u64 sv2ssim::linetok_rowid_Get(algo::cstring &elem) {
+inline u64 sv2ssim::linetok_rowid_Get(algo::cstring &elem) throw() {
     u64 id = &elem - _db.linetok_elems;
     return u64(id);
 }
 
 // --- sv2ssim.FDb.svtype.EmptyQ
 // Return true if index is empty
-inline bool sv2ssim::svtype_EmptyQ() {
+inline bool sv2ssim::svtype_EmptyQ() throw() {
     return _db.svtype_n == 0;
 }
 
 // --- sv2ssim.FDb.svtype.Find
 // Look up row by row id. Return NULL if out of range
-inline sv2ssim::FSvtype* sv2ssim::svtype_Find(u64 t) {
+inline sv2ssim::FSvtype* sv2ssim::svtype_Find(u64 t) throw() {
     sv2ssim::FSvtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.svtype_n))) {
         u64 x = t + 1;
@@ -183,19 +183,19 @@ inline sv2ssim::FSvtype* sv2ssim::svtype_Find(u64 t) {
 
 // --- sv2ssim.FDb.svtype.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline sv2ssim::FSvtype* sv2ssim::svtype_Last() {
+inline sv2ssim::FSvtype* sv2ssim::svtype_Last() throw() {
     return svtype_Find(u64(_db.svtype_n-1));
 }
 
 // --- sv2ssim.FDb.svtype.N
 // Return number of items in the pool
-inline i32 sv2ssim::svtype_N() {
+inline i32 sv2ssim::svtype_N() throw() {
     return _db.svtype_n;
 }
 
 // --- sv2ssim.FDb.svtype.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline sv2ssim::FSvtype& sv2ssim::svtype_qFind(u64 t) {
+inline sv2ssim::FSvtype& sv2ssim::svtype_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -205,25 +205,25 @@ inline sv2ssim::FSvtype& sv2ssim::svtype_qFind(u64 t) {
 
 // --- sv2ssim.FDb.ind_field.EmptyQ
 // Return true if hash is empty
-inline bool sv2ssim::ind_field_EmptyQ() {
+inline bool sv2ssim::ind_field_EmptyQ() throw() {
     return _db.ind_field_n == 0;
 }
 
 // --- sv2ssim.FDb.ind_field.N
 // Return number of items in the hash
-inline i32 sv2ssim::ind_field_N() {
+inline i32 sv2ssim::ind_field_N() throw() {
     return _db.ind_field_n;
 }
 
 // --- sv2ssim.FDb.zd_selfield.EmptyQ
 // Return true if index is empty
-inline bool sv2ssim::zd_selfield_EmptyQ() {
+inline bool sv2ssim::zd_selfield_EmptyQ() throw() {
     return _db.zd_selfield_head == NULL;
 }
 
 // --- sv2ssim.FDb.zd_selfield.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline sv2ssim::FField* sv2ssim::zd_selfield_First() {
+inline sv2ssim::FField* sv2ssim::zd_selfield_First() throw() {
     sv2ssim::FField *row = NULL;
     row = _db.zd_selfield_head;
     return row;
@@ -231,7 +231,7 @@ inline sv2ssim::FField* sv2ssim::zd_selfield_First() {
 
 // --- sv2ssim.FDb.zd_selfield.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool sv2ssim::zd_selfield_InLlistQ(sv2ssim::FField& row) {
+inline bool sv2ssim::zd_selfield_InLlistQ(sv2ssim::FField& row) throw() {
     bool result = false;
     result = !(row.zd_selfield_next == (sv2ssim::FField*)-1);
     return result;
@@ -239,7 +239,7 @@ inline bool sv2ssim::zd_selfield_InLlistQ(sv2ssim::FField& row) {
 
 // --- sv2ssim.FDb.zd_selfield.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline sv2ssim::FField* sv2ssim::zd_selfield_Last() {
+inline sv2ssim::FField* sv2ssim::zd_selfield_Last() throw() {
     sv2ssim::FField *row = NULL;
     row = _db.zd_selfield_tail;
     return row;
@@ -247,25 +247,25 @@ inline sv2ssim::FField* sv2ssim::zd_selfield_Last() {
 
 // --- sv2ssim.FDb.zd_selfield.N
 // Return number of items in the linked list
-inline i32 sv2ssim::zd_selfield_N() {
+inline i32 sv2ssim::zd_selfield_N() throw() {
     return _db.zd_selfield_n;
 }
 
 // --- sv2ssim.FDb.zd_selfield.Next
 // Return pointer to next element in the list
-inline sv2ssim::FField* sv2ssim::zd_selfield_Next(sv2ssim::FField &row) {
+inline sv2ssim::FField* sv2ssim::zd_selfield_Next(sv2ssim::FField &row) throw() {
     return row.zd_selfield_next;
 }
 
 // --- sv2ssim.FDb.zd_selfield.Prev
 // Return pointer to previous element in the list
-inline sv2ssim::FField* sv2ssim::zd_selfield_Prev(sv2ssim::FField &row) {
+inline sv2ssim::FField* sv2ssim::zd_selfield_Prev(sv2ssim::FField &row) throw() {
     return row.zd_selfield_prev;
 }
 
 // --- sv2ssim.FDb.zd_selfield.qLast
 // Return reference to last element in the index. No bounds checking.
-inline sv2ssim::FField& sv2ssim::zd_selfield_qLast() {
+inline sv2ssim::FField& sv2ssim::zd_selfield_qLast() throw() {
     sv2ssim::FField *row = NULL;
     row = _db.zd_selfield_tail;
     return *row;
@@ -273,13 +273,13 @@ inline sv2ssim::FField& sv2ssim::zd_selfield_qLast() {
 
 // --- sv2ssim.FDb.bltin.EmptyQ
 // Return true if index is empty
-inline bool sv2ssim::bltin_EmptyQ() {
+inline bool sv2ssim::bltin_EmptyQ() throw() {
     return _db.bltin_n == 0;
 }
 
 // --- sv2ssim.FDb.bltin.Find
 // Look up row by row id. Return NULL if out of range
-inline sv2ssim::FBltin* sv2ssim::bltin_Find(u64 t) {
+inline sv2ssim::FBltin* sv2ssim::bltin_Find(u64 t) throw() {
     sv2ssim::FBltin *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.bltin_n))) {
         u64 x = t + 1;
@@ -293,19 +293,19 @@ inline sv2ssim::FBltin* sv2ssim::bltin_Find(u64 t) {
 
 // --- sv2ssim.FDb.bltin.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline sv2ssim::FBltin* sv2ssim::bltin_Last() {
+inline sv2ssim::FBltin* sv2ssim::bltin_Last() throw() {
     return bltin_Find(u64(_db.bltin_n-1));
 }
 
 // --- sv2ssim.FDb.bltin.N
 // Return number of items in the pool
-inline i32 sv2ssim::bltin_N() {
+inline i32 sv2ssim::bltin_N() throw() {
     return _db.bltin_n;
 }
 
 // --- sv2ssim.FDb.bltin.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline sv2ssim::FBltin& sv2ssim::bltin_qFind(u64 t) {
+inline sv2ssim::FBltin& sv2ssim::bltin_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -315,49 +315,49 @@ inline sv2ssim::FBltin& sv2ssim::bltin_qFind(u64 t) {
 
 // --- sv2ssim.FDb.ind_bltin.EmptyQ
 // Return true if hash is empty
-inline bool sv2ssim::ind_bltin_EmptyQ() {
+inline bool sv2ssim::ind_bltin_EmptyQ() throw() {
     return _db.ind_bltin_n == 0;
 }
 
 // --- sv2ssim.FDb.ind_bltin.N
 // Return number of items in the hash
-inline i32 sv2ssim::ind_bltin_N() {
+inline i32 sv2ssim::ind_bltin_N() throw() {
     return _db.ind_bltin_n;
 }
 
 // --- sv2ssim.FDb.field_curs.Reset
 // cursor points to valid item
-inline void sv2ssim::_db_field_curs_Reset(_db_field_curs &curs, sv2ssim::FDb &parent) {
+inline void sv2ssim::_db_field_curs_Reset(_db_field_curs &curs, sv2ssim::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- sv2ssim.FDb.field_curs.ValidQ
 // cursor points to valid item
-inline bool sv2ssim::_db_field_curs_ValidQ(_db_field_curs &curs) {
+inline bool sv2ssim::_db_field_curs_ValidQ(_db_field_curs &curs) throw() {
     return curs.index < _db.field_n;
 }
 
 // --- sv2ssim.FDb.field_curs.Next
 // proceed to next item
-inline void sv2ssim::_db_field_curs_Next(_db_field_curs &curs) {
+inline void sv2ssim::_db_field_curs_Next(_db_field_curs &curs) throw() {
     curs.index++;
 }
 
 // --- sv2ssim.FDb.field_curs.Access
 // item access
-inline sv2ssim::FField& sv2ssim::_db_field_curs_Access(_db_field_curs &curs) {
+inline sv2ssim::FField& sv2ssim::_db_field_curs_Access(_db_field_curs &curs) throw() {
     return field_qFind(i32(curs.index));
 }
 
 // --- sv2ssim.FDb.linetok_curs.Next
 // proceed to next item
-inline void sv2ssim::_db_linetok_curs_Next(_db_linetok_curs &curs) {
+inline void sv2ssim::_db_linetok_curs_Next(_db_linetok_curs &curs) throw() {
     curs.index++;
 }
 
 // --- sv2ssim.FDb.linetok_curs.Reset
-inline void sv2ssim::_db_linetok_curs_Reset(_db_linetok_curs &curs, sv2ssim::FDb &parent) {
+inline void sv2ssim::_db_linetok_curs_Reset(_db_linetok_curs &curs, sv2ssim::FDb &parent) throw() {
     curs.elems = parent.linetok_elems;
     curs.n_elems = parent.linetok_n;
     curs.index = 0;
@@ -365,98 +365,98 @@ inline void sv2ssim::_db_linetok_curs_Reset(_db_linetok_curs &curs, sv2ssim::FDb
 
 // --- sv2ssim.FDb.linetok_curs.ValidQ
 // cursor points to valid item
-inline bool sv2ssim::_db_linetok_curs_ValidQ(_db_linetok_curs &curs) {
+inline bool sv2ssim::_db_linetok_curs_ValidQ(_db_linetok_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- sv2ssim.FDb.linetok_curs.Access
 // item access
-inline algo::cstring& sv2ssim::_db_linetok_curs_Access(_db_linetok_curs &curs) {
+inline algo::cstring& sv2ssim::_db_linetok_curs_Access(_db_linetok_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- sv2ssim.FDb.svtype_curs.Reset
 // cursor points to valid item
-inline void sv2ssim::_db_svtype_curs_Reset(_db_svtype_curs &curs, sv2ssim::FDb &parent) {
+inline void sv2ssim::_db_svtype_curs_Reset(_db_svtype_curs &curs, sv2ssim::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- sv2ssim.FDb.svtype_curs.ValidQ
 // cursor points to valid item
-inline bool sv2ssim::_db_svtype_curs_ValidQ(_db_svtype_curs &curs) {
+inline bool sv2ssim::_db_svtype_curs_ValidQ(_db_svtype_curs &curs) throw() {
     return curs.index < _db.svtype_n;
 }
 
 // --- sv2ssim.FDb.svtype_curs.Next
 // proceed to next item
-inline void sv2ssim::_db_svtype_curs_Next(_db_svtype_curs &curs) {
+inline void sv2ssim::_db_svtype_curs_Next(_db_svtype_curs &curs) throw() {
     curs.index++;
 }
 
 // --- sv2ssim.FDb.svtype_curs.Access
 // item access
-inline sv2ssim::FSvtype& sv2ssim::_db_svtype_curs_Access(_db_svtype_curs &curs) {
+inline sv2ssim::FSvtype& sv2ssim::_db_svtype_curs_Access(_db_svtype_curs &curs) throw() {
     return svtype_qFind(u64(curs.index));
 }
 
 // --- sv2ssim.FDb.zd_selfield_curs.Reset
 // cursor points to valid item
-inline void sv2ssim::_db_zd_selfield_curs_Reset(_db_zd_selfield_curs &curs, sv2ssim::FDb &parent) {
+inline void sv2ssim::_db_zd_selfield_curs_Reset(_db_zd_selfield_curs &curs, sv2ssim::FDb &parent) throw() {
     curs.row = parent.zd_selfield_head;
 }
 
 // --- sv2ssim.FDb.zd_selfield_curs.ValidQ
 // cursor points to valid item
-inline bool sv2ssim::_db_zd_selfield_curs_ValidQ(_db_zd_selfield_curs &curs) {
+inline bool sv2ssim::_db_zd_selfield_curs_ValidQ(_db_zd_selfield_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- sv2ssim.FDb.zd_selfield_curs.Next
 // proceed to next item
-inline void sv2ssim::_db_zd_selfield_curs_Next(_db_zd_selfield_curs &curs) {
+inline void sv2ssim::_db_zd_selfield_curs_Next(_db_zd_selfield_curs &curs) throw() {
     sv2ssim::FField *next = (*curs.row).zd_selfield_next;
     curs.row = next;
 }
 
 // --- sv2ssim.FDb.zd_selfield_curs.Access
 // item access
-inline sv2ssim::FField& sv2ssim::_db_zd_selfield_curs_Access(_db_zd_selfield_curs &curs) {
+inline sv2ssim::FField& sv2ssim::_db_zd_selfield_curs_Access(_db_zd_selfield_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- sv2ssim.FDb.bltin_curs.Reset
 // cursor points to valid item
-inline void sv2ssim::_db_bltin_curs_Reset(_db_bltin_curs &curs, sv2ssim::FDb &parent) {
+inline void sv2ssim::_db_bltin_curs_Reset(_db_bltin_curs &curs, sv2ssim::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- sv2ssim.FDb.bltin_curs.ValidQ
 // cursor points to valid item
-inline bool sv2ssim::_db_bltin_curs_ValidQ(_db_bltin_curs &curs) {
+inline bool sv2ssim::_db_bltin_curs_ValidQ(_db_bltin_curs &curs) throw() {
     return curs.index < _db.bltin_n;
 }
 
 // --- sv2ssim.FDb.bltin_curs.Next
 // proceed to next item
-inline void sv2ssim::_db_bltin_curs_Next(_db_bltin_curs &curs) {
+inline void sv2ssim::_db_bltin_curs_Next(_db_bltin_curs &curs) throw() {
     curs.index++;
 }
 
 // --- sv2ssim.FDb.bltin_curs.Access
 // item access
-inline sv2ssim::FBltin& sv2ssim::_db_bltin_curs_Access(_db_bltin_curs &curs) {
+inline sv2ssim::FBltin& sv2ssim::_db_bltin_curs_Access(_db_bltin_curs &curs) throw() {
     return bltin_qFind(u64(curs.index));
 }
 
 // --- sv2ssim.FField..Ctor
-inline  sv2ssim::FField::FField() {
+inline  sv2ssim::FField::FField() throw() {
     sv2ssim::FField_Init(*this);
 }
 
 // --- sv2ssim.FField..Dtor
-inline  sv2ssim::FField::~FField() {
+inline  sv2ssim::FField::~FField() throw() {
     sv2ssim::FField_Uninit(*this);
 }
 
@@ -469,24 +469,24 @@ inline void sv2ssim::FSvtype_Init(sv2ssim::FSvtype& svtype) {
 }
 
 // --- sv2ssim.FSvtype..Ctor
-inline  sv2ssim::FSvtype::FSvtype() {
+inline  sv2ssim::FSvtype::FSvtype() throw() {
     sv2ssim::FSvtype_Init(*this);
 }
 
 // --- sv2ssim.FieldId.value.GetEnum
 // Get value of field as enum type
-inline sv2ssim_FieldIdEnum sv2ssim::value_GetEnum(const sv2ssim::FieldId& parent) {
+inline sv2ssim_FieldIdEnum sv2ssim::value_GetEnum(const sv2ssim::FieldId& parent) throw() {
     return sv2ssim_FieldIdEnum(parent.value);
 }
 
 // --- sv2ssim.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void sv2ssim::value_SetEnum(sv2ssim::FieldId& parent, sv2ssim_FieldIdEnum rhs) {
+inline void sv2ssim::value_SetEnum(sv2ssim::FieldId& parent, sv2ssim_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- sv2ssim.FieldId.value.Cast
-inline  sv2ssim::FieldId::operator sv2ssim_FieldIdEnum() const {
+inline  sv2ssim::FieldId::operator sv2ssim_FieldIdEnum() const throw() {
     return sv2ssim_FieldIdEnum((*this).value);
 }
 
@@ -497,35 +497,35 @@ inline void sv2ssim::FieldId_Init(sv2ssim::FieldId& parent) {
 }
 
 // --- sv2ssim.FieldId..Ctor
-inline  sv2ssim::FieldId::FieldId() {
+inline  sv2ssim::FieldId::FieldId() throw() {
     sv2ssim::FieldId_Init(*this);
 }
 
 // --- sv2ssim.FieldId..FieldwiseCtor
-inline  sv2ssim::FieldId::FieldId(i32 in_value)
+inline  sv2ssim::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- sv2ssim.FieldId..EnumCtor
-inline  sv2ssim::FieldId::FieldId(sv2ssim_FieldIdEnum arg) {
+inline  sv2ssim::FieldId::FieldId(sv2ssim_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- sv2ssim.TableId.value.GetEnum
 // Get value of field as enum type
-inline sv2ssim_TableIdEnum sv2ssim::value_GetEnum(const sv2ssim::TableId& parent) {
+inline sv2ssim_TableIdEnum sv2ssim::value_GetEnum(const sv2ssim::TableId& parent) throw() {
     return sv2ssim_TableIdEnum(parent.value);
 }
 
 // --- sv2ssim.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void sv2ssim::value_SetEnum(sv2ssim::TableId& parent, sv2ssim_TableIdEnum rhs) {
+inline void sv2ssim::value_SetEnum(sv2ssim::TableId& parent, sv2ssim_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- sv2ssim.TableId.value.Cast
-inline  sv2ssim::TableId::operator sv2ssim_TableIdEnum() const {
+inline  sv2ssim::TableId::operator sv2ssim_TableIdEnum() const throw() {
     return sv2ssim_TableIdEnum((*this).value);
 }
 
@@ -536,18 +536,18 @@ inline void sv2ssim::TableId_Init(sv2ssim::TableId& parent) {
 }
 
 // --- sv2ssim.TableId..Ctor
-inline  sv2ssim::TableId::TableId() {
+inline  sv2ssim::TableId::TableId() throw() {
     sv2ssim::TableId_Init(*this);
 }
 
 // --- sv2ssim.TableId..FieldwiseCtor
-inline  sv2ssim::TableId::TableId(i32 in_value)
+inline  sv2ssim::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- sv2ssim.TableId..EnumCtor
-inline  sv2ssim::TableId::TableId(sv2ssim_TableIdEnum arg) {
+inline  sv2ssim::TableId::TableId(sv2ssim_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

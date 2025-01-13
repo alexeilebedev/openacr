@@ -28,36 +28,36 @@
 //#pragma endinclude
 
 // --- fmdb.Alarm..Ctor
-inline  fmdb::Alarm::Alarm() {
+inline  fmdb::Alarm::Alarm() throw() {
     fmdb::Alarm_Init(*this);
 }
 
 // --- fmdb.AlmCode..Ctor
-inline  fmdb::AlmCode::AlmCode() {
+inline  fmdb::AlmCode::AlmCode() throw() {
 }
 
 // --- fmdb.AlmObjtype..Ctor
-inline  fmdb::AlmObjtype::AlmObjtype() {
+inline  fmdb::AlmObjtype::AlmObjtype() throw() {
 }
 
 // --- fmdb.AlmSource..Ctor
-inline  fmdb::AlmSource::AlmSource() {
+inline  fmdb::AlmSource::AlmSource() throw() {
 }
 
 // --- fmdb.FieldId.value.GetEnum
 // Get value of field as enum type
-inline fmdb_FieldIdEnum fmdb::value_GetEnum(const fmdb::FieldId& parent) {
+inline fmdb_FieldIdEnum fmdb::value_GetEnum(const fmdb::FieldId& parent) throw() {
     return fmdb_FieldIdEnum(parent.value);
 }
 
 // --- fmdb.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void fmdb::value_SetEnum(fmdb::FieldId& parent, fmdb_FieldIdEnum rhs) {
+inline void fmdb::value_SetEnum(fmdb::FieldId& parent, fmdb_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- fmdb.FieldId.value.Cast
-inline  fmdb::FieldId::operator fmdb_FieldIdEnum() const {
+inline  fmdb::FieldId::operator fmdb_FieldIdEnum() const throw() {
     return fmdb_FieldIdEnum((*this).value);
 }
 
@@ -68,18 +68,18 @@ inline void fmdb::FieldId_Init(fmdb::FieldId& parent) {
 }
 
 // --- fmdb.FieldId..Ctor
-inline  fmdb::FieldId::FieldId() {
+inline  fmdb::FieldId::FieldId() throw() {
     fmdb::FieldId_Init(*this);
 }
 
 // --- fmdb.FieldId..FieldwiseCtor
-inline  fmdb::FieldId::FieldId(i32 in_value)
+inline  fmdb::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- fmdb.FieldId..EnumCtor
-inline  fmdb::FieldId::FieldId(fmdb_FieldIdEnum arg) {
+inline  fmdb::FieldId::FieldId(fmdb_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

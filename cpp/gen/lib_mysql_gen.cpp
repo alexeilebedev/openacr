@@ -45,7 +45,7 @@ namespace lib_mysql { // gen:ns_print_proto
 // --- lib_mysql.trace..Print
 // print string representation of ROW to string STR
 // cfmt:lib_mysql.trace.String  printfmt:Tuple
-void lib_mysql::trace_Print(lib_mysql::trace& row, algo::cstring& str) {
+void lib_mysql::trace_Print(lib_mysql::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_mysql.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -90,7 +90,7 @@ bool lib_mysql::InsertStrptrMaybe(algo::strptr str) {
 
 // --- lib_mysql.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool lib_mysql::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool lib_mysql::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = lib_mysql::LoadTuplesFile(root, recursive);
@@ -113,7 +113,7 @@ bool lib_mysql::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool lib_mysql::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool lib_mysql::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -126,7 +126,7 @@ bool lib_mysql::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- lib_mysql.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool lib_mysql::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool lib_mysql::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -145,7 +145,7 @@ bool lib_mysql::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive
 
 // --- lib_mysql.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool lib_mysql::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool lib_mysql::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = lib_mysql::LoadTuplesFile(fname, recursive);
@@ -169,13 +169,13 @@ bool lib_mysql::_db_XrefMaybe() {
 
 // --- lib_mysql.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr lib_mysql::trace_RowidFind(int t) {
+static algo::ImrowPtr lib_mysql::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- lib_mysql.FDb.trace.N
 // Function return 1
-inline static i32 lib_mysql::trace_N() {
+inline static i32 lib_mysql::trace_N() throw() {
     return 1;
 }
 
@@ -190,7 +190,7 @@ void lib_mysql::FDb_Init() {
 // --- lib_mysql.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_mysql::value_ToCstr(const lib_mysql::FieldId& parent) {
+const char* lib_mysql::value_ToCstr(const lib_mysql::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_mysql_FieldId_value       : ret = "value";  break;
@@ -201,7 +201,7 @@ const char* lib_mysql::value_ToCstr(const lib_mysql::FieldId& parent) {
 // --- lib_mysql.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_mysql::value_Print(const lib_mysql::FieldId& parent, algo::cstring &lhs) {
+void lib_mysql::value_Print(const lib_mysql::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -214,7 +214,7 @@ void lib_mysql::value_Print(const lib_mysql::FieldId& parent, algo::cstring &lhs
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_mysql::value_SetStrptrMaybe(lib_mysql::FieldId& parent, algo::strptr rhs) {
+bool lib_mysql::value_SetStrptrMaybe(lib_mysql::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -232,13 +232,13 @@ bool lib_mysql::value_SetStrptrMaybe(lib_mysql::FieldId& parent, algo::strptr rh
 // --- lib_mysql.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_mysql::value_SetStrptr(lib_mysql::FieldId& parent, algo::strptr rhs, lib_mysql_FieldIdEnum dflt) {
+void lib_mysql::value_SetStrptr(lib_mysql::FieldId& parent, algo::strptr rhs, lib_mysql_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_mysql.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_mysql::value_ReadStrptrMaybe(lib_mysql::FieldId& parent, algo::strptr rhs) {
+bool lib_mysql::value_ReadStrptrMaybe(lib_mysql::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -250,7 +250,7 @@ bool lib_mysql::value_ReadStrptrMaybe(lib_mysql::FieldId& parent, algo::strptr r
 // --- lib_mysql.FieldId..ReadStrptrMaybe
 // Read fields of lib_mysql::FieldId from an ascii string.
 // The format of the string is the format of the lib_mysql::FieldId's only field
-bool lib_mysql::FieldId_ReadStrptrMaybe(lib_mysql::FieldId &parent, algo::strptr in_str) {
+bool lib_mysql::FieldId_ReadStrptrMaybe(lib_mysql::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -259,7 +259,7 @@ bool lib_mysql::FieldId_ReadStrptrMaybe(lib_mysql::FieldId &parent, algo::strptr
 // --- lib_mysql.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_mysql.FieldId.String  printfmt:Raw
-void lib_mysql::FieldId_Print(lib_mysql::FieldId& row, algo::cstring& str) {
+void lib_mysql::FieldId_Print(lib_mysql::FieldId& row, algo::cstring& str) throw() {
     lib_mysql::value_Print(row, str);
 }
 

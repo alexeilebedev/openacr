@@ -47,7 +47,7 @@ namespace lib_json { // gen:ns_print_proto
 // --- lib_json.trace..Print
 // print string representation of ROW to string STR
 // cfmt:lib_json.trace.String  printfmt:Tuple
-void lib_json::trace_Print(lib_json::trace& row, algo::cstring& str) {
+void lib_json::trace_Print(lib_json::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_json.trace";
 
@@ -60,7 +60,7 @@ void lib_json::trace_Print(lib_json::trace& row, algo::cstring& str) {
 
 // --- lib_json.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
-void lib_json::lpool_FreeMem(void* mem, u64 size) {
+void lib_json::lpool_FreeMem(void* mem, u64 size) throw() {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
     if (mem && cell < 36) {
@@ -75,7 +75,7 @@ void lib_json::lpool_FreeMem(void* mem, u64 size) {
 // If not successful, return NULL
 // The allocated block is at least 1<<4
 // The maximum allocation size is at most 1<<(36+4)
-void* lib_json::lpool_AllocMem(u64 size) {
+void* lib_json::lpool_AllocMem(u64 size) throw() {
     void *retval = NULL;
     size     = u64_Max(size,1<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
@@ -115,7 +115,7 @@ void* lib_json::lpool_AllocMem(u64 size) {
 // --- lib_json.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
 // Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
-bool lib_json::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
+bool lib_json::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) throw() {
     bool retval = true;
     bufsize = u64_Max(bufsize, 1<<4);
     u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
@@ -140,7 +140,7 @@ bool lib_json::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
 // If the new size is same as old size, do nothing.
 // In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL; old memory remains untouched
-void* lib_json::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+void* lib_json::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) throw() {
     void *ret = oldmem;
     if (new_size != old_size) {
         ret = lpool_AllocMem(new_size);
@@ -155,7 +155,7 @@ void* lib_json::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
 // --- lib_json.FDb.lpool.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-u8& lib_json::lpool_Alloc() {
+u8& lib_json::lpool_Alloc() throw() {
     u8* row = lpool_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_json.out_of_mem  field:lib_json.FDb.lpool  comment:'Alloc failed'");
@@ -165,7 +165,7 @@ u8& lib_json::lpool_Alloc() {
 
 // --- lib_json.FDb.lpool.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-u8* lib_json::lpool_AllocMaybe() {
+u8* lib_json::lpool_AllocMaybe() throw() {
     u8 *row = (u8*)lpool_AllocMem(sizeof(u8));
     if (row) {
         new (row) u8; // call constructor
@@ -175,7 +175,7 @@ u8* lib_json::lpool_AllocMaybe() {
 
 // --- lib_json.FDb.lpool.Delete
 // Remove row from all global and cross indices, then deallocate row
-void lib_json::lpool_Delete(u8 &row) {
+void lib_json::lpool_Delete(u8 &row) throw() {
     int length = sizeof(u8);
     lpool_FreeMem(&row, length);
 }
@@ -210,7 +210,7 @@ bool lib_json::InsertStrptrMaybe(algo::strptr str) {
 
 // --- lib_json.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool lib_json::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool lib_json::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = lib_json::LoadTuplesFile(root, recursive);
@@ -233,7 +233,7 @@ bool lib_json::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool lib_json::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool lib_json::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -246,7 +246,7 @@ bool lib_json::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- lib_json.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool lib_json::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool lib_json::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -265,7 +265,7 @@ bool lib_json::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
 
 // --- lib_json.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool lib_json::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool lib_json::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = lib_json::LoadTuplesFile(fname, recursive);
@@ -290,7 +290,7 @@ bool lib_json::_db_XrefMaybe() {
 // --- lib_json.FDb.node.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_json::FNode& lib_json::node_Alloc() {
+lib_json::FNode& lib_json::node_Alloc() throw() {
     lib_json::FNode* row = node_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_json.out_of_mem  field:lib_json.FDb.node  comment:'Alloc failed'");
@@ -300,7 +300,7 @@ lib_json::FNode& lib_json::node_Alloc() {
 
 // --- lib_json.FDb.node.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_json::FNode* lib_json::node_AllocMaybe() {
+lib_json::FNode* lib_json::node_AllocMaybe() throw() {
     lib_json::FNode *row = (lib_json::FNode*)node_AllocMem();
     if (row) {
         new (row) lib_json::FNode; // call constructor
@@ -311,7 +311,7 @@ lib_json::FNode* lib_json::node_AllocMaybe() {
 
 // --- lib_json.FDb.node.Delete
 // Remove row from all global and cross indices, then deallocate row
-void lib_json::node_Delete(lib_json::FNode &row) {
+void lib_json::node_Delete(lib_json::FNode &row) throw() {
     row.~FNode();
     node_FreeMem(row);
     ++lib_json::_db.trace.del__db_node;
@@ -320,7 +320,7 @@ void lib_json::node_Delete(lib_json::FNode &row) {
 // --- lib_json.FDb.node.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* lib_json::node_AllocMem() {
+void* lib_json::node_AllocMem() throw() {
     lib_json::FNode *row = _db.node_free;
     if (UNLIKELY(!row)) {
         node_Reserve(1);
@@ -334,7 +334,7 @@ void* lib_json::node_AllocMem() {
 
 // --- lib_json.FDb.node.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void lib_json::node_FreeMem(lib_json::FNode &row) {
+void lib_json::node_FreeMem(lib_json::FNode &row) throw() {
     if (UNLIKELY(row.node_next != (lib_json::FNode*)-1)) {
         FatalErrorExit("lib_json.tpool_double_delete  pool:lib_json.FDb.node  comment:'double deletion caught'");
     }
@@ -345,7 +345,7 @@ void lib_json::node_FreeMem(lib_json::FNode &row) {
 // --- lib_json.FDb.node.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 lib_json::node_Reserve(u64 n_elems) {
+u64 lib_json::node_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.node_blocksize; // underlying allocator is probably Lpool
@@ -361,7 +361,7 @@ u64 lib_json::node_Reserve(u64 n_elems) {
 // --- lib_json.FDb.node.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 lib_json::node_ReserveMem(u64 size) {
+u64 lib_json::node_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(lib_json::FNode)) {
         lib_json::FNode *mem = (lib_json::FNode*)lib_json::lpool_AllocMem(size);
@@ -404,7 +404,7 @@ bool lib_json::node_XrefMaybe(lib_json::FNode &row) {
 
 // --- lib_json.FDb.ind_objfld.Find
 // Find row by key. Return NULL if not found.
-lib_json::FNode* lib_json::ind_objfld_Find(const lib_json::FldKey& key) {
+lib_json::FNode* lib_json::ind_objfld_Find(const lib_json::FldKey& key) throw() {
     u32 index = lib_json::FldKey_Hash(0, key) & (_db.ind_objfld_buckets_n - 1);
     lib_json::FNode* *e = &_db.ind_objfld_buckets_elems[index];
     lib_json::FNode* ret=NULL;
@@ -419,7 +419,7 @@ lib_json::FNode* lib_json::ind_objfld_Find(const lib_json::FldKey& key) {
 
 // --- lib_json.FDb.ind_objfld.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_json::ind_objfld_InsertMaybe(lib_json::FNode& row) {
+bool lib_json::ind_objfld_InsertMaybe(lib_json::FNode& row) throw() {
     ind_objfld_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_objfld_next == (lib_json::FNode*)-1)) {// check if in hash already
@@ -447,7 +447,7 @@ bool lib_json::ind_objfld_InsertMaybe(lib_json::FNode& row) {
 
 // --- lib_json.FDb.ind_objfld.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_json::ind_objfld_Remove(lib_json::FNode& row) {
+void lib_json::ind_objfld_Remove(lib_json::FNode& row) throw() {
     if (LIKELY(row.ind_objfld_next != (lib_json::FNode*)-1)) {// check if in hash already
         u32 index = lib_json::FldKey_Hash(0, fldkey_Get(row)) & (_db.ind_objfld_buckets_n - 1);
         lib_json::FNode* *prev = &_db.ind_objfld_buckets_elems[index]; // addr of pointer to current element
@@ -465,7 +465,7 @@ void lib_json::ind_objfld_Remove(lib_json::FNode& row) {
 
 // --- lib_json.FDb.ind_objfld.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_json::ind_objfld_Reserve(int n) {
+void lib_json::ind_objfld_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_objfld_buckets_n;
     u32 new_nelems   = _db.ind_objfld_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -501,13 +501,13 @@ void lib_json::ind_objfld_Reserve(int n) {
 
 // --- lib_json.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr lib_json::trace_RowidFind(int t) {
+static algo::ImrowPtr lib_json::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- lib_json.FDb.trace.N
 // Function return 1
-inline static i32 lib_json::trace_N() {
+inline static i32 lib_json::trace_N() throw() {
     return 1;
 }
 
@@ -531,7 +531,7 @@ void lib_json::FDb_Init() {
 }
 
 // --- lib_json.FDb..Uninit
-void lib_json::FDb_Uninit() {
+void lib_json::FDb_Uninit() throw() {
     lib_json::FDb &row = _db; (void)row;
 
     // lib_json.FDb.ind_objfld.Uninit (Thash)  //
@@ -541,7 +541,7 @@ void lib_json::FDb_Uninit() {
 // --- lib_json.FldKey..Print
 // print string representation of ROW to string STR
 // cfmt:lib_json.FldKey.String  printfmt:Tuple
-void lib_json::FldKey_Print(lib_json::FldKey& row, algo::cstring& str) {
+void lib_json::FldKey_Print(lib_json::FldKey& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_json.FldKey";
 
@@ -554,7 +554,7 @@ void lib_json::FldKey_Print(lib_json::FldKey& row, algo::cstring& str) {
 
 // --- lib_json.FNode.c_child.Cascdel
 // Delete all elements pointed to by the index.
-void lib_json::c_child_Cascdel(lib_json::FNode& node) {
+void lib_json::c_child_Cascdel(lib_json::FNode& node) throw() {
     // Clear c_child_n so that calls to lib_json.FNode.c_child.Remove do not have to scan
     // the array for pointers or shift anything.
     // This is somewhat of a hack.
@@ -570,7 +570,7 @@ void lib_json::c_child_Cascdel(lib_json::FNode& node) {
 // --- lib_json.FNode.c_child.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void lib_json::c_child_Insert(lib_json::FNode& node, lib_json::FNode& row) {
+void lib_json::c_child_Insert(lib_json::FNode& node, lib_json::FNode& row) throw() {
     if (bool_Update(row.node_c_child_in_ary,true)) {
         // reserve space
         c_child_Reserve(node, 1);
@@ -587,7 +587,7 @@ void lib_json::c_child_Insert(lib_json::FNode& node, lib_json::FNode& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool lib_json::c_child_InsertMaybe(lib_json::FNode& node, lib_json::FNode& row) {
+bool lib_json::c_child_InsertMaybe(lib_json::FNode& node, lib_json::FNode& row) throw() {
     bool retval = !row.node_c_child_in_ary;
     c_child_Insert(node,row); // check is performed in _Insert again
     return retval;
@@ -595,7 +595,7 @@ bool lib_json::c_child_InsertMaybe(lib_json::FNode& node, lib_json::FNode& row) 
 
 // --- lib_json.FNode.c_child.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void lib_json::c_child_Remove(lib_json::FNode& node, lib_json::FNode& row) {
+void lib_json::c_child_Remove(lib_json::FNode& node, lib_json::FNode& row) throw() {
     if (bool_Update(row.node_c_child_in_ary,false)) {
         int lim = node.c_child_n;
         lib_json::FNode* *elems = node.c_child_elems;
@@ -616,7 +616,7 @@ void lib_json::c_child_Remove(lib_json::FNode& node, lib_json::FNode& row) {
 
 // --- lib_json.FNode.c_child.Reserve
 // Reserve space in index for N more elements;
-void lib_json::c_child_Reserve(lib_json::FNode& node, u32 n) {
+void lib_json::c_child_Reserve(lib_json::FNode& node, u32 n) throw() {
     u32 old_max = node.c_child_max;
     if (UNLIKELY(node.c_child_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -634,7 +634,7 @@ void lib_json::c_child_Reserve(lib_json::FNode& node, u32 n) {
 // --- lib_json.FNode.type.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_json::type_ToCstr(const lib_json::FNode& node) {
+const char* lib_json::type_ToCstr(const lib_json::FNode& node) throw() {
     const char *ret = NULL;
     switch(type_GetEnum(node)) {
         case lib_json_FNode_type_null      : ret = "null";  break;
@@ -652,7 +652,7 @@ const char* lib_json::type_ToCstr(const lib_json::FNode& node) {
 // --- lib_json.FNode.type.Print
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
-void lib_json::type_Print(const lib_json::FNode& node, algo::cstring &lhs) {
+void lib_json::type_Print(const lib_json::FNode& node, algo::cstring &lhs) throw() {
     const char *strval = type_ToCstr(node);
     if (strval) {
         lhs << strval;
@@ -665,7 +665,7 @@ void lib_json::type_Print(const lib_json::FNode& node, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_json::type_SetStrptrMaybe(lib_json::FNode& node, algo::strptr rhs) {
+bool lib_json::type_SetStrptrMaybe(lib_json::FNode& node, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
@@ -714,12 +714,12 @@ bool lib_json::type_SetStrptrMaybe(lib_json::FNode& node, algo::strptr rhs) {
 // --- lib_json.FNode.type.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_json::type_SetStrptr(lib_json::FNode& node, algo::strptr rhs, lib_json_FNode_type_Enum dflt) {
+void lib_json::type_SetStrptr(lib_json::FNode& node, algo::strptr rhs, lib_json_FNode_type_Enum dflt) throw() {
     if (!type_SetStrptrMaybe(node,rhs)) type_SetEnum(node,dflt);
 }
 
 // --- lib_json.FNode..Uninit
-void lib_json::FNode_Uninit(lib_json::FNode& node) {
+void lib_json::FNode_Uninit(lib_json::FNode& node) throw() {
     lib_json::FNode &row = node; (void)row;
     c_child_Cascdel(node); // dmmeta.cascdel:lib_json.FNode.c_child
     ind_objfld_Remove(row); // remove node from index ind_objfld
@@ -735,7 +735,7 @@ void lib_json::FNode_Uninit(lib_json::FNode& node) {
 // --- lib_json.FNode..Print
 // print string representation of ROW to string STR
 // cfmt:lib_json.FNode.String  printfmt:Tuple
-void lib_json::FNode_Print(lib_json::FNode& row, algo::cstring& str) {
+void lib_json::FNode_Print(lib_json::FNode& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_json.FNode";
 
@@ -752,7 +752,7 @@ void lib_json::FNode_Print(lib_json::FNode& row, algo::cstring& str) {
 // --- lib_json.FParser.state.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_json::state_ToCstr(const lib_json::FParser& parent) {
+const char* lib_json::state_ToCstr(const lib_json::FParser& parent) throw() {
     const char *ret = NULL;
     switch(state_GetEnum(parent)) {
         case lib_json_FParser_state_ws     : ret = "ws";  break;
@@ -773,7 +773,7 @@ const char* lib_json::state_ToCstr(const lib_json::FParser& parent) {
 // --- lib_json.FParser.state.Print
 // Convert state to a string. First, attempt conversion to a known string.
 // If no string matches, print state as a numeric value.
-void lib_json::state_Print(const lib_json::FParser& parent, algo::cstring &lhs) {
+void lib_json::state_Print(const lib_json::FParser& parent, algo::cstring &lhs) throw() {
     const char *strval = state_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -786,7 +786,7 @@ void lib_json::state_Print(const lib_json::FParser& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_json::state_SetStrptrMaybe(lib_json::FParser& parent, algo::strptr rhs) {
+bool lib_json::state_SetStrptrMaybe(lib_json::FParser& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 2: {
@@ -863,7 +863,7 @@ bool lib_json::state_SetStrptrMaybe(lib_json::FParser& parent, algo::strptr rhs)
 // --- lib_json.FParser.state.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_json::state_SetStrptr(lib_json::FParser& parent, algo::strptr rhs, lib_json_FParser_state_Enum dflt) {
+void lib_json::state_SetStrptr(lib_json::FParser& parent, algo::strptr rhs, lib_json_FParser_state_Enum dflt) throw() {
     if (!state_SetStrptrMaybe(parent,rhs)) state_SetEnum(parent,dflt);
 }
 
@@ -884,7 +884,7 @@ void lib_json::FParser_Init(lib_json::FParser& parent) {
 }
 
 // --- lib_json.FParser..Uninit
-void lib_json::FParser_Uninit(lib_json::FParser& parent) {
+void lib_json::FParser_Uninit(lib_json::FParser& parent) throw() {
     lib_json::FParser &row = parent; (void)row;
     root_node_Cleanup(parent); // dmmeta.fcleanup:lib_json.FParser.root_node
 }
@@ -892,7 +892,7 @@ void lib_json::FParser_Uninit(lib_json::FParser& parent) {
 // --- lib_json.FParser..Print
 // print string representation of ROW to string STR
 // cfmt:lib_json.FParser.String  printfmt:Tuple
-void lib_json::FParser_Print(lib_json::FParser& row, algo::cstring& str) {
+void lib_json::FParser_Print(lib_json::FParser& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_json.FParser";
 
@@ -942,7 +942,7 @@ void lib_json::FParser_Print(lib_json::FParser& row, algo::cstring& str) {
 // --- lib_json.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_json::value_ToCstr(const lib_json::FieldId& parent) {
+const char* lib_json::value_ToCstr(const lib_json::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_json_FieldId_value        : ret = "value";  break;
@@ -953,7 +953,7 @@ const char* lib_json::value_ToCstr(const lib_json::FieldId& parent) {
 // --- lib_json.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_json::value_Print(const lib_json::FieldId& parent, algo::cstring &lhs) {
+void lib_json::value_Print(const lib_json::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -966,7 +966,7 @@ void lib_json::value_Print(const lib_json::FieldId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_json::value_SetStrptrMaybe(lib_json::FieldId& parent, algo::strptr rhs) {
+bool lib_json::value_SetStrptrMaybe(lib_json::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -984,13 +984,13 @@ bool lib_json::value_SetStrptrMaybe(lib_json::FieldId& parent, algo::strptr rhs)
 // --- lib_json.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_json::value_SetStrptr(lib_json::FieldId& parent, algo::strptr rhs, lib_json_FieldIdEnum dflt) {
+void lib_json::value_SetStrptr(lib_json::FieldId& parent, algo::strptr rhs, lib_json_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_json.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_json::value_ReadStrptrMaybe(lib_json::FieldId& parent, algo::strptr rhs) {
+bool lib_json::value_ReadStrptrMaybe(lib_json::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1002,7 +1002,7 @@ bool lib_json::value_ReadStrptrMaybe(lib_json::FieldId& parent, algo::strptr rhs
 // --- lib_json.FieldId..ReadStrptrMaybe
 // Read fields of lib_json::FieldId from an ascii string.
 // The format of the string is the format of the lib_json::FieldId's only field
-bool lib_json::FieldId_ReadStrptrMaybe(lib_json::FieldId &parent, algo::strptr in_str) {
+bool lib_json::FieldId_ReadStrptrMaybe(lib_json::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1011,7 +1011,7 @@ bool lib_json::FieldId_ReadStrptrMaybe(lib_json::FieldId &parent, algo::strptr i
 // --- lib_json.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_json.FieldId.String  printfmt:Raw
-void lib_json::FieldId_Print(lib_json::FieldId& row, algo::cstring& str) {
+void lib_json::FieldId_Print(lib_json::FieldId& row, algo::cstring& str) throw() {
     lib_json::value_Print(row, str);
 }
 

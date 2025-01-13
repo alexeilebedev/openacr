@@ -484,7 +484,7 @@ namespace dmmeta { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- dmmeta.Anonfld..ReadFieldMaybe
-bool dmmeta::Anonfld_ReadFieldMaybe(dmmeta::Anonfld& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Anonfld_ReadFieldMaybe(dmmeta::Anonfld& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -508,7 +508,7 @@ bool dmmeta::Anonfld_ReadFieldMaybe(dmmeta::Anonfld& parent, algo::strptr field,
 // --- dmmeta.Anonfld..ReadStrptrMaybe
 // Read fields of dmmeta::Anonfld from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Anonfld_ReadStrptrMaybe(dmmeta::Anonfld &parent, algo::strptr in_str) {
+bool dmmeta::Anonfld_ReadStrptrMaybe(dmmeta::Anonfld &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.anonfld") || algo::StripTypeTag(in_str, "dmmeta.Anonfld");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -520,7 +520,7 @@ bool dmmeta::Anonfld_ReadStrptrMaybe(dmmeta::Anonfld &parent, algo::strptr in_st
 // --- dmmeta.Anonfld..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Anonfld.String  printfmt:Tuple
-void dmmeta::Anonfld_Print(dmmeta::Anonfld& row, algo::cstring& str) {
+void dmmeta::Anonfld_Print(dmmeta::Anonfld& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.anonfld";
 
@@ -532,7 +532,7 @@ void dmmeta::Anonfld_Print(dmmeta::Anonfld& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Argvtype..ReadFieldMaybe
-bool dmmeta::Argvtype_ReadFieldMaybe(dmmeta::Argvtype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Argvtype_ReadFieldMaybe(dmmeta::Argvtype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -560,7 +560,7 @@ bool dmmeta::Argvtype_ReadFieldMaybe(dmmeta::Argvtype& parent, algo::strptr fiel
 // --- dmmeta.Argvtype..ReadStrptrMaybe
 // Read fields of dmmeta::Argvtype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Argvtype_ReadStrptrMaybe(dmmeta::Argvtype &parent, algo::strptr in_str) {
+bool dmmeta::Argvtype_ReadStrptrMaybe(dmmeta::Argvtype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.argvtype") || algo::StripTypeTag(in_str, "dmmeta.Argvtype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -572,7 +572,7 @@ bool dmmeta::Argvtype_ReadStrptrMaybe(dmmeta::Argvtype &parent, algo::strptr in_
 // --- dmmeta.Argvtype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Argvtype.String  printfmt:Tuple
-void dmmeta::Argvtype_Print(dmmeta::Argvtype& row, algo::cstring& str) {
+void dmmeta::Argvtype_Print(dmmeta::Argvtype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.argvtype";
 
@@ -587,7 +587,7 @@ void dmmeta::Argvtype_Print(dmmeta::Argvtype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Basepool..ReadFieldMaybe
-bool dmmeta::Basepool_ReadFieldMaybe(dmmeta::Basepool& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Basepool_ReadFieldMaybe(dmmeta::Basepool& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -611,7 +611,7 @@ bool dmmeta::Basepool_ReadFieldMaybe(dmmeta::Basepool& parent, algo::strptr fiel
 // --- dmmeta.Basepool..ReadStrptrMaybe
 // Read fields of dmmeta::Basepool from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Basepool_ReadStrptrMaybe(dmmeta::Basepool &parent, algo::strptr in_str) {
+bool dmmeta::Basepool_ReadStrptrMaybe(dmmeta::Basepool &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.basepool") || algo::StripTypeTag(in_str, "dmmeta.Basepool");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -623,7 +623,7 @@ bool dmmeta::Basepool_ReadStrptrMaybe(dmmeta::Basepool &parent, algo::strptr in_
 // --- dmmeta.Basepool..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Basepool.String  printfmt:Tuple
-void dmmeta::Basepool_Print(dmmeta::Basepool& row, algo::cstring& str) {
+void dmmeta::Basepool_Print(dmmeta::Basepool& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.basepool";
 
@@ -635,19 +635,19 @@ void dmmeta::Basepool_Print(dmmeta::Basepool& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Bitfld.name.Get
-algo::Smallstr50 dmmeta::name_Get(dmmeta::Bitfld& parent) {
+algo::Smallstr50 dmmeta::name_Get(dmmeta::Bitfld& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.field, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Bitfld.name.Get2
-algo::Smallstr50 dmmeta::Bitfld_name_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Bitfld_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Bitfld..ReadFieldMaybe
-bool dmmeta::Bitfld_ReadFieldMaybe(dmmeta::Bitfld& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Bitfld_ReadFieldMaybe(dmmeta::Bitfld& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -687,7 +687,7 @@ bool dmmeta::Bitfld_ReadFieldMaybe(dmmeta::Bitfld& parent, algo::strptr field, a
 // --- dmmeta.Bitfld..ReadStrptrMaybe
 // Read fields of dmmeta::Bitfld from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Bitfld_ReadStrptrMaybe(dmmeta::Bitfld &parent, algo::strptr in_str) {
+bool dmmeta::Bitfld_ReadStrptrMaybe(dmmeta::Bitfld &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.bitfld") || algo::StripTypeTag(in_str, "dmmeta.Bitfld");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -699,7 +699,7 @@ bool dmmeta::Bitfld_ReadStrptrMaybe(dmmeta::Bitfld &parent, algo::strptr in_str)
 // --- dmmeta.Bitfld..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Bitfld.String  printfmt:Tuple
-void dmmeta::Bitfld_Print(dmmeta::Bitfld& row, algo::cstring& str) {
+void dmmeta::Bitfld_Print(dmmeta::Bitfld& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.bitfld";
 
@@ -720,7 +720,7 @@ void dmmeta::Bitfld_Print(dmmeta::Bitfld& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Buftype..ReadFieldMaybe
-bool dmmeta::Buftype_ReadFieldMaybe(dmmeta::Buftype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Buftype_ReadFieldMaybe(dmmeta::Buftype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -744,7 +744,7 @@ bool dmmeta::Buftype_ReadFieldMaybe(dmmeta::Buftype& parent, algo::strptr field,
 // --- dmmeta.Buftype..ReadStrptrMaybe
 // Read fields of dmmeta::Buftype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Buftype_ReadStrptrMaybe(dmmeta::Buftype &parent, algo::strptr in_str) {
+bool dmmeta::Buftype_ReadStrptrMaybe(dmmeta::Buftype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.pnewtype") || algo::StripTypeTag(in_str, "dmmeta.Buftype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -756,7 +756,7 @@ bool dmmeta::Buftype_ReadStrptrMaybe(dmmeta::Buftype &parent, algo::strptr in_st
 // --- dmmeta.Buftype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Buftype.String  printfmt:Tuple
-void dmmeta::Buftype_Print(dmmeta::Buftype& row, algo::cstring& str) {
+void dmmeta::Buftype_Print(dmmeta::Buftype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.pnewtype";
 
@@ -768,25 +768,25 @@ void dmmeta::Buftype_Print(dmmeta::Buftype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Cafter.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Cafter& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Cafter& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.cafter, "/RL"));
     return ret;
 }
 
 // --- dmmeta.Cafter.ctype.Get2
-algo::Smallstr100 dmmeta::Cafter_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Cafter_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/RL"));
     return ret;
 }
 
 // --- dmmeta.Cafter.after.Get
-algo::Smallstr100 dmmeta::after_Get(dmmeta::Cafter& parent) {
+algo::Smallstr100 dmmeta::after_Get(dmmeta::Cafter& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.cafter, "/RR"));
     return ret;
 }
 
 // --- dmmeta.Cafter.after.Get2
-algo::Smallstr100 dmmeta::Cafter_after_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Cafter_after_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/RR"));
     return ret;
 }
@@ -797,7 +797,7 @@ tempstr dmmeta::Cafter_Concat_ctype_after( const algo::strptr& ctype ,const algo
 }
 
 // --- dmmeta.Cafter..ReadFieldMaybe
-bool dmmeta::Cafter_ReadFieldMaybe(dmmeta::Cafter& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Cafter_ReadFieldMaybe(dmmeta::Cafter& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -829,7 +829,7 @@ bool dmmeta::Cafter_ReadFieldMaybe(dmmeta::Cafter& parent, algo::strptr field, a
 // --- dmmeta.Cafter..ReadStrptrMaybe
 // Read fields of dmmeta::Cafter from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Cafter_ReadStrptrMaybe(dmmeta::Cafter &parent, algo::strptr in_str) {
+bool dmmeta::Cafter_ReadStrptrMaybe(dmmeta::Cafter &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.cafter") || algo::StripTypeTag(in_str, "dmmeta.Cafter");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -841,7 +841,7 @@ bool dmmeta::Cafter_ReadStrptrMaybe(dmmeta::Cafter &parent, algo::strptr in_str)
 // --- dmmeta.Cafter..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cafter.String  printfmt:Tuple
-void dmmeta::Cafter_Print(dmmeta::Cafter& row, algo::cstring& str) {
+void dmmeta::Cafter_Print(dmmeta::Cafter& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.cafter";
 
@@ -853,7 +853,7 @@ void dmmeta::Cafter_Print(dmmeta::Cafter& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Cascdel..ReadFieldMaybe
-bool dmmeta::Cascdel_ReadFieldMaybe(dmmeta::Cascdel& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Cascdel_ReadFieldMaybe(dmmeta::Cascdel& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -877,7 +877,7 @@ bool dmmeta::Cascdel_ReadFieldMaybe(dmmeta::Cascdel& parent, algo::strptr field,
 // --- dmmeta.Cascdel..ReadStrptrMaybe
 // Read fields of dmmeta::Cascdel from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Cascdel_ReadStrptrMaybe(dmmeta::Cascdel &parent, algo::strptr in_str) {
+bool dmmeta::Cascdel_ReadStrptrMaybe(dmmeta::Cascdel &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.cascdel") || algo::StripTypeTag(in_str, "dmmeta.Cascdel");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -889,7 +889,7 @@ bool dmmeta::Cascdel_ReadStrptrMaybe(dmmeta::Cascdel &parent, algo::strptr in_st
 // --- dmmeta.Cascdel..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cascdel.String  printfmt:Tuple
-void dmmeta::Cascdel_Print(dmmeta::Cascdel& row, algo::cstring& str) {
+void dmmeta::Cascdel_Print(dmmeta::Cascdel& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.cascdel";
 
@@ -901,7 +901,7 @@ void dmmeta::Cascdel_Print(dmmeta::Cascdel& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Ccmp..ReadFieldMaybe
-bool dmmeta::Ccmp_ReadFieldMaybe(dmmeta::Ccmp& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Ccmp_ReadFieldMaybe(dmmeta::Ccmp& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -941,7 +941,7 @@ bool dmmeta::Ccmp_ReadFieldMaybe(dmmeta::Ccmp& parent, algo::strptr field, algo:
 // --- dmmeta.Ccmp..ReadStrptrMaybe
 // Read fields of dmmeta::Ccmp from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Ccmp_ReadStrptrMaybe(dmmeta::Ccmp &parent, algo::strptr in_str) {
+bool dmmeta::Ccmp_ReadStrptrMaybe(dmmeta::Ccmp &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.ccmp") || algo::StripTypeTag(in_str, "dmmeta.Ccmp");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -953,7 +953,7 @@ bool dmmeta::Ccmp_ReadStrptrMaybe(dmmeta::Ccmp &parent, algo::strptr in_str) {
 // --- dmmeta.Ccmp..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ccmp.String  printfmt:Tuple
-void dmmeta::Ccmp_Print(dmmeta::Ccmp& row, algo::cstring& str) {
+void dmmeta::Ccmp_Print(dmmeta::Ccmp& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.ccmp";
 
@@ -977,7 +977,7 @@ void dmmeta::Ccmp_Print(dmmeta::Ccmp& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Cdflt..ReadFieldMaybe
-bool dmmeta::Cdflt_ReadFieldMaybe(dmmeta::Cdflt& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Cdflt_ReadFieldMaybe(dmmeta::Cdflt& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1017,7 +1017,7 @@ bool dmmeta::Cdflt_ReadFieldMaybe(dmmeta::Cdflt& parent, algo::strptr field, alg
 // --- dmmeta.Cdflt..ReadStrptrMaybe
 // Read fields of dmmeta::Cdflt from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Cdflt_ReadStrptrMaybe(dmmeta::Cdflt &parent, algo::strptr in_str) {
+bool dmmeta::Cdflt_ReadStrptrMaybe(dmmeta::Cdflt &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.cdflt") || algo::StripTypeTag(in_str, "dmmeta.Cdflt");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1029,7 +1029,7 @@ bool dmmeta::Cdflt_ReadStrptrMaybe(dmmeta::Cdflt &parent, algo::strptr in_str) {
 // --- dmmeta.Cdflt..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cdflt.String  printfmt:Tuple
-void dmmeta::Cdflt_Print(dmmeta::Cdflt& row, algo::cstring& str) {
+void dmmeta::Cdflt_Print(dmmeta::Cdflt& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.cdflt";
 
@@ -1053,7 +1053,7 @@ void dmmeta::Cdflt_Print(dmmeta::Cdflt& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Cextern..ReadFieldMaybe
-bool dmmeta::Cextern_ReadFieldMaybe(dmmeta::Cextern& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Cextern_ReadFieldMaybe(dmmeta::Cextern& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1085,7 +1085,7 @@ bool dmmeta::Cextern_ReadFieldMaybe(dmmeta::Cextern& parent, algo::strptr field,
 // --- dmmeta.Cextern..ReadStrptrMaybe
 // Read fields of dmmeta::Cextern from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Cextern_ReadStrptrMaybe(dmmeta::Cextern &parent, algo::strptr in_str) {
+bool dmmeta::Cextern_ReadStrptrMaybe(dmmeta::Cextern &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.cextern") || algo::StripTypeTag(in_str, "dmmeta.Cextern");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1097,7 +1097,7 @@ bool dmmeta::Cextern_ReadStrptrMaybe(dmmeta::Cextern &parent, algo::strptr in_st
 // --- dmmeta.Cextern..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cextern.String  printfmt:Tuple
-void dmmeta::Cextern_Print(dmmeta::Cextern& row, algo::cstring& str) {
+void dmmeta::Cextern_Print(dmmeta::Cextern& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.cextern";
 
@@ -1115,7 +1115,7 @@ void dmmeta::Cextern_Print(dmmeta::Cextern& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Cfast..ReadFieldMaybe
-bool dmmeta::Cfast_ReadFieldMaybe(dmmeta::Cfast& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Cfast_ReadFieldMaybe(dmmeta::Cfast& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1151,7 +1151,7 @@ bool dmmeta::Cfast_ReadFieldMaybe(dmmeta::Cfast& parent, algo::strptr field, alg
 // --- dmmeta.Cfast..ReadStrptrMaybe
 // Read fields of dmmeta::Cfast from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Cfast_ReadStrptrMaybe(dmmeta::Cfast &parent, algo::strptr in_str) {
+bool dmmeta::Cfast_ReadStrptrMaybe(dmmeta::Cfast &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.cfast") || algo::StripTypeTag(in_str, "dmmeta.Cfast");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1163,7 +1163,7 @@ bool dmmeta::Cfast_ReadStrptrMaybe(dmmeta::Cfast &parent, algo::strptr in_str) {
 // --- dmmeta.Cfast..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cfast.String  printfmt:Tuple
-void dmmeta::Cfast_Print(dmmeta::Cfast& row, algo::cstring& str) {
+void dmmeta::Cfast_Print(dmmeta::Cfast& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.cfast";
 
@@ -1184,25 +1184,25 @@ void dmmeta::Cfast_Print(dmmeta::Cfast& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Cfmt.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Cfmt& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Cfmt& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.cfmt, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Cfmt.ctype.Get2
-algo::Smallstr100 dmmeta::Cfmt_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Cfmt_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Cfmt.strfmt.Get
-algo::Smallstr50 dmmeta::strfmt_Get(dmmeta::Cfmt& parent) {
+algo::Smallstr50 dmmeta::strfmt_Get(dmmeta::Cfmt& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.cfmt, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Cfmt.strfmt.Get2
-algo::Smallstr50 dmmeta::Cfmt_strfmt_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Cfmt_strfmt_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -1213,7 +1213,7 @@ tempstr dmmeta::Cfmt_Concat_ctype_strfmt( const algo::strptr& ctype ,const algo:
 }
 
 // --- dmmeta.Cfmt..ReadFieldMaybe
-bool dmmeta::Cfmt_ReadFieldMaybe(dmmeta::Cfmt& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Cfmt_ReadFieldMaybe(dmmeta::Cfmt& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1265,7 +1265,7 @@ bool dmmeta::Cfmt_ReadFieldMaybe(dmmeta::Cfmt& parent, algo::strptr field, algo:
 // --- dmmeta.Cfmt..ReadStrptrMaybe
 // Read fields of dmmeta::Cfmt from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Cfmt_ReadStrptrMaybe(dmmeta::Cfmt &parent, algo::strptr in_str) {
+bool dmmeta::Cfmt_ReadStrptrMaybe(dmmeta::Cfmt &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.cfmt") || algo::StripTypeTag(in_str, "dmmeta.Cfmt");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1277,7 +1277,7 @@ bool dmmeta::Cfmt_ReadStrptrMaybe(dmmeta::Cfmt &parent, algo::strptr in_str) {
 // --- dmmeta.Cfmt..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cfmt.String  printfmt:Tuple
-void dmmeta::Cfmt_Print(dmmeta::Cfmt& row, algo::cstring& str) {
+void dmmeta::Cfmt_Print(dmmeta::Cfmt& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.cfmt";
 
@@ -1304,7 +1304,7 @@ void dmmeta::Cfmt_Print(dmmeta::Cfmt& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Cget..ReadFieldMaybe
-bool dmmeta::Cget_ReadFieldMaybe(dmmeta::Cget& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Cget_ReadFieldMaybe(dmmeta::Cget& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1328,7 +1328,7 @@ bool dmmeta::Cget_ReadFieldMaybe(dmmeta::Cget& parent, algo::strptr field, algo:
 // --- dmmeta.Cget..ReadStrptrMaybe
 // Read fields of dmmeta::Cget from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Cget_ReadStrptrMaybe(dmmeta::Cget &parent, algo::strptr in_str) {
+bool dmmeta::Cget_ReadStrptrMaybe(dmmeta::Cget &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.cget") || algo::StripTypeTag(in_str, "dmmeta.Cget");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1340,7 +1340,7 @@ bool dmmeta::Cget_ReadStrptrMaybe(dmmeta::Cget &parent, algo::strptr in_str) {
 // --- dmmeta.Cget..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cget.String  printfmt:Tuple
-void dmmeta::Cget_Print(dmmeta::Cget& row, algo::cstring& str) {
+void dmmeta::Cget_Print(dmmeta::Cget& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.cget";
 
@@ -1352,7 +1352,7 @@ void dmmeta::Cget_Print(dmmeta::Cget& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Charset..ReadFieldMaybe
-bool dmmeta::Charset_ReadFieldMaybe(dmmeta::Charset& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Charset_ReadFieldMaybe(dmmeta::Charset& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1388,7 +1388,7 @@ bool dmmeta::Charset_ReadFieldMaybe(dmmeta::Charset& parent, algo::strptr field,
 // --- dmmeta.Charset..ReadStrptrMaybe
 // Read fields of dmmeta::Charset from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Charset_ReadStrptrMaybe(dmmeta::Charset &parent, algo::strptr in_str) {
+bool dmmeta::Charset_ReadStrptrMaybe(dmmeta::Charset &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.charset") || algo::StripTypeTag(in_str, "dmmeta.Charset");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1400,7 +1400,7 @@ bool dmmeta::Charset_ReadStrptrMaybe(dmmeta::Charset &parent, algo::strptr in_st
 // --- dmmeta.Charset..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Charset.String  printfmt:Tuple
-void dmmeta::Charset_Print(dmmeta::Charset& row, algo::cstring& str) {
+void dmmeta::Charset_Print(dmmeta::Charset& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.charset";
 
@@ -1421,7 +1421,7 @@ void dmmeta::Charset_Print(dmmeta::Charset& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Chash..ReadFieldMaybe
-bool dmmeta::Chash_ReadFieldMaybe(dmmeta::Chash& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Chash_ReadFieldMaybe(dmmeta::Chash& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1449,7 +1449,7 @@ bool dmmeta::Chash_ReadFieldMaybe(dmmeta::Chash& parent, algo::strptr field, alg
 // --- dmmeta.Chash..ReadStrptrMaybe
 // Read fields of dmmeta::Chash from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Chash_ReadStrptrMaybe(dmmeta::Chash &parent, algo::strptr in_str) {
+bool dmmeta::Chash_ReadStrptrMaybe(dmmeta::Chash &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.chash") || algo::StripTypeTag(in_str, "dmmeta.Chash");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1461,7 +1461,7 @@ bool dmmeta::Chash_ReadStrptrMaybe(dmmeta::Chash &parent, algo::strptr in_str) {
 // --- dmmeta.Chash..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Chash.String  printfmt:Tuple
-void dmmeta::Chash_Print(dmmeta::Chash& row, algo::cstring& str) {
+void dmmeta::Chash_Print(dmmeta::Chash& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.chash";
 
@@ -1476,7 +1476,7 @@ void dmmeta::Chash_Print(dmmeta::Chash& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Cppfunc..ReadFieldMaybe
-bool dmmeta::Cppfunc_ReadFieldMaybe(dmmeta::Cppfunc& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Cppfunc_ReadFieldMaybe(dmmeta::Cppfunc& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1508,7 +1508,7 @@ bool dmmeta::Cppfunc_ReadFieldMaybe(dmmeta::Cppfunc& parent, algo::strptr field,
 // --- dmmeta.Cppfunc..ReadStrptrMaybe
 // Read fields of dmmeta::Cppfunc from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Cppfunc_ReadStrptrMaybe(dmmeta::Cppfunc &parent, algo::strptr in_str) {
+bool dmmeta::Cppfunc_ReadStrptrMaybe(dmmeta::Cppfunc &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.cppfunc") || algo::StripTypeTag(in_str, "dmmeta.Cppfunc");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1520,7 +1520,7 @@ bool dmmeta::Cppfunc_ReadStrptrMaybe(dmmeta::Cppfunc &parent, algo::strptr in_st
 // --- dmmeta.Cppfunc..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cppfunc.String  printfmt:Tuple
-void dmmeta::Cppfunc_Print(dmmeta::Cppfunc& row, algo::cstring& str) {
+void dmmeta::Cppfunc_Print(dmmeta::Cppfunc& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.cppfunc";
 
@@ -1538,7 +1538,7 @@ void dmmeta::Cppfunc_Print(dmmeta::Cppfunc& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Cppkeyword..ReadFieldMaybe
-bool dmmeta::Cppkeyword_ReadFieldMaybe(dmmeta::Cppkeyword& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Cppkeyword_ReadFieldMaybe(dmmeta::Cppkeyword& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1558,7 +1558,7 @@ bool dmmeta::Cppkeyword_ReadFieldMaybe(dmmeta::Cppkeyword& parent, algo::strptr 
 // --- dmmeta.Cppkeyword..ReadStrptrMaybe
 // Read fields of dmmeta::Cppkeyword from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Cppkeyword_ReadStrptrMaybe(dmmeta::Cppkeyword &parent, algo::strptr in_str) {
+bool dmmeta::Cppkeyword_ReadStrptrMaybe(dmmeta::Cppkeyword &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.cppkeyword") || algo::StripTypeTag(in_str, "dmmeta.Cppkeyword");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1570,7 +1570,7 @@ bool dmmeta::Cppkeyword_ReadStrptrMaybe(dmmeta::Cppkeyword &parent, algo::strptr
 // --- dmmeta.Cppkeyword..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cppkeyword.String  printfmt:Tuple
-void dmmeta::Cppkeyword_Print(dmmeta::Cppkeyword& row, algo::cstring& str) {
+void dmmeta::Cppkeyword_Print(dmmeta::Cppkeyword& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.cppkeyword";
 
@@ -1579,7 +1579,7 @@ void dmmeta::Cppkeyword_Print(dmmeta::Cppkeyword& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Cpptype..ReadFieldMaybe
-bool dmmeta::Cpptype_ReadFieldMaybe(dmmeta::Cpptype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Cpptype_ReadFieldMaybe(dmmeta::Cpptype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1611,7 +1611,7 @@ bool dmmeta::Cpptype_ReadFieldMaybe(dmmeta::Cpptype& parent, algo::strptr field,
 // --- dmmeta.Cpptype..ReadStrptrMaybe
 // Read fields of dmmeta::Cpptype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Cpptype_ReadStrptrMaybe(dmmeta::Cpptype &parent, algo::strptr in_str) {
+bool dmmeta::Cpptype_ReadStrptrMaybe(dmmeta::Cpptype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.cpptype") || algo::StripTypeTag(in_str, "dmmeta.Cpptype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1623,7 +1623,7 @@ bool dmmeta::Cpptype_ReadStrptrMaybe(dmmeta::Cpptype &parent, algo::strptr in_st
 // --- dmmeta.Cpptype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cpptype.String  printfmt:Tuple
-void dmmeta::Cpptype_Print(dmmeta::Cpptype& row, algo::cstring& str) {
+void dmmeta::Cpptype_Print(dmmeta::Cpptype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.cpptype";
 
@@ -1641,7 +1641,7 @@ void dmmeta::Cpptype_Print(dmmeta::Cpptype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Csize..ReadFieldMaybe
-bool dmmeta::Csize_ReadFieldMaybe(dmmeta::Csize& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Csize_ReadFieldMaybe(dmmeta::Csize& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1673,7 +1673,7 @@ bool dmmeta::Csize_ReadFieldMaybe(dmmeta::Csize& parent, algo::strptr field, alg
 // --- dmmeta.Csize..ReadStrptrMaybe
 // Read fields of dmmeta::Csize from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Csize_ReadStrptrMaybe(dmmeta::Csize &parent, algo::strptr in_str) {
+bool dmmeta::Csize_ReadStrptrMaybe(dmmeta::Csize &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.csize") || algo::StripTypeTag(in_str, "dmmeta.Csize");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1685,7 +1685,7 @@ bool dmmeta::Csize_ReadStrptrMaybe(dmmeta::Csize &parent, algo::strptr in_str) {
 // --- dmmeta.Csize..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Csize.String  printfmt:Tuple
-void dmmeta::Csize_Print(dmmeta::Csize& row, algo::cstring& str) {
+void dmmeta::Csize_Print(dmmeta::Csize& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.csize";
 
@@ -1703,7 +1703,7 @@ void dmmeta::Csize_Print(dmmeta::Csize& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Cstr..ReadFieldMaybe
-bool dmmeta::Cstr_ReadFieldMaybe(dmmeta::Cstr& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Cstr_ReadFieldMaybe(dmmeta::Cstr& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1731,7 +1731,7 @@ bool dmmeta::Cstr_ReadFieldMaybe(dmmeta::Cstr& parent, algo::strptr field, algo:
 // --- dmmeta.Cstr..ReadStrptrMaybe
 // Read fields of dmmeta::Cstr from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Cstr_ReadStrptrMaybe(dmmeta::Cstr &parent, algo::strptr in_str) {
+bool dmmeta::Cstr_ReadStrptrMaybe(dmmeta::Cstr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.cstr") || algo::StripTypeTag(in_str, "dmmeta.Cstr");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1743,7 +1743,7 @@ bool dmmeta::Cstr_ReadStrptrMaybe(dmmeta::Cstr &parent, algo::strptr in_str) {
 // --- dmmeta.Cstr..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Cstr.String  printfmt:Tuple
-void dmmeta::Cstr_Print(dmmeta::Cstr& row, algo::cstring& str) {
+void dmmeta::Cstr_Print(dmmeta::Cstr& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.cstr";
 
@@ -1758,25 +1758,25 @@ void dmmeta::Cstr_Print(dmmeta::Cstr& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Ctype.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Ctype& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Ctype& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.ctype, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Ctype.ns.Get2
-algo::Smallstr16 dmmeta::Ctype_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Ctype_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Ctype.name.Get
-algo::Smallstr100 dmmeta::name_Get(dmmeta::Ctype& parent) {
+algo::Smallstr100 dmmeta::name_Get(dmmeta::Ctype& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.ctype, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Ctype.name.Get2
-algo::Smallstr100 dmmeta::Ctype_name_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Ctype_name_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -1787,7 +1787,7 @@ tempstr dmmeta::Ctype_Concat_ns_name( const algo::strptr& ns ,const algo::strptr
 }
 
 // --- dmmeta.Ctype..ReadFieldMaybe
-bool dmmeta::Ctype_ReadFieldMaybe(dmmeta::Ctype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Ctype_ReadFieldMaybe(dmmeta::Ctype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1819,7 +1819,7 @@ bool dmmeta::Ctype_ReadFieldMaybe(dmmeta::Ctype& parent, algo::strptr field, alg
 // --- dmmeta.Ctype..ReadStrptrMaybe
 // Read fields of dmmeta::Ctype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Ctype_ReadStrptrMaybe(dmmeta::Ctype &parent, algo::strptr in_str) {
+bool dmmeta::Ctype_ReadStrptrMaybe(dmmeta::Ctype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.ctype") || algo::StripTypeTag(in_str, "dmmeta.Ctype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1831,7 +1831,7 @@ bool dmmeta::Ctype_ReadStrptrMaybe(dmmeta::Ctype &parent, algo::strptr in_str) {
 // --- dmmeta.Ctype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ctype.String  printfmt:Tuple
-void dmmeta::Ctype_Print(dmmeta::Ctype& row, algo::cstring& str) {
+void dmmeta::Ctype_Print(dmmeta::Ctype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.ctype";
 
@@ -1843,7 +1843,7 @@ void dmmeta::Ctype_Print(dmmeta::Ctype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Ctypelen..ReadFieldMaybe
-bool dmmeta::Ctypelen_ReadFieldMaybe(dmmeta::Ctypelen& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Ctypelen_ReadFieldMaybe(dmmeta::Ctypelen& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1879,7 +1879,7 @@ bool dmmeta::Ctypelen_ReadFieldMaybe(dmmeta::Ctypelen& parent, algo::strptr fiel
 // --- dmmeta.Ctypelen..ReadStrptrMaybe
 // Read fields of dmmeta::Ctypelen from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Ctypelen_ReadStrptrMaybe(dmmeta::Ctypelen &parent, algo::strptr in_str) {
+bool dmmeta::Ctypelen_ReadStrptrMaybe(dmmeta::Ctypelen &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.ctypelen") || algo::StripTypeTag(in_str, "dmmeta.Ctypelen");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1891,7 +1891,7 @@ bool dmmeta::Ctypelen_ReadStrptrMaybe(dmmeta::Ctypelen &parent, algo::strptr in_
 // --- dmmeta.Ctypelen..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ctypelen.String  printfmt:Tuple
-void dmmeta::Ctypelen_Print(dmmeta::Ctypelen& row, algo::cstring& str) {
+void dmmeta::Ctypelen_Print(dmmeta::Ctypelen& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.ctypelen";
 
@@ -1912,25 +1912,25 @@ void dmmeta::Ctypelen_Print(dmmeta::Ctypelen& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Dispatch.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Dispatch& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Dispatch& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.dispatch, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Dispatch.ns.Get2
-algo::Smallstr16 dmmeta::Dispatch_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Dispatch_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Dispatch.name.Get
-algo::Smallstr50 dmmeta::name_Get(dmmeta::Dispatch& parent) {
+algo::Smallstr50 dmmeta::name_Get(dmmeta::Dispatch& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.dispatch, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Dispatch.name.Get2
-algo::Smallstr50 dmmeta::Dispatch_name_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Dispatch_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -1941,7 +1941,7 @@ tempstr dmmeta::Dispatch_Concat_ns_name( const algo::strptr& ns ,const algo::str
 }
 
 // --- dmmeta.Dispatch..ReadFieldMaybe
-bool dmmeta::Dispatch_ReadFieldMaybe(dmmeta::Dispatch& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Dispatch_ReadFieldMaybe(dmmeta::Dispatch& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1997,7 +1997,7 @@ bool dmmeta::Dispatch_ReadFieldMaybe(dmmeta::Dispatch& parent, algo::strptr fiel
 // --- dmmeta.Dispatch..ReadStrptrMaybe
 // Read fields of dmmeta::Dispatch from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Dispatch_ReadStrptrMaybe(dmmeta::Dispatch &parent, algo::strptr in_str) {
+bool dmmeta::Dispatch_ReadStrptrMaybe(dmmeta::Dispatch &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.dispatch") || algo::StripTypeTag(in_str, "dmmeta.Dispatch");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2020,7 +2020,7 @@ void dmmeta::Dispatch_Init(dmmeta::Dispatch& parent) {
 // --- dmmeta.Dispatch..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Dispatch.String  printfmt:Tuple
-void dmmeta::Dispatch_Print(dmmeta::Dispatch& row, algo::cstring& str) {
+void dmmeta::Dispatch_Print(dmmeta::Dispatch& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.dispatch";
 
@@ -2050,25 +2050,25 @@ void dmmeta::Dispatch_Print(dmmeta::Dispatch& row, algo::cstring& str) {
 }
 
 // --- dmmeta.DispatchMsg.dispatch.Get
-algo::Smallstr50 dmmeta::dispatch_Get(dmmeta::DispatchMsg& parent) {
+algo::Smallstr50 dmmeta::dispatch_Get(dmmeta::DispatchMsg& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.dispatch_msg, "/RL"));
     return ret;
 }
 
 // --- dmmeta.DispatchMsg.dispatch.Get2
-algo::Smallstr50 dmmeta::DispatchMsg_dispatch_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::DispatchMsg_dispatch_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/RL"));
     return ret;
 }
 
 // --- dmmeta.DispatchMsg.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::DispatchMsg& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::DispatchMsg& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.dispatch_msg, "/RR"));
     return ret;
 }
 
 // --- dmmeta.DispatchMsg.ctype.Get2
-algo::Smallstr100 dmmeta::DispatchMsg_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::DispatchMsg_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/RR"));
     return ret;
 }
@@ -2079,7 +2079,7 @@ tempstr dmmeta::DispatchMsg_Concat_dispatch_ctype( const algo::strptr& dispatch 
 }
 
 // --- dmmeta.DispatchMsg..ReadFieldMaybe
-bool dmmeta::DispatchMsg_ReadFieldMaybe(dmmeta::DispatchMsg& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::DispatchMsg_ReadFieldMaybe(dmmeta::DispatchMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2111,7 +2111,7 @@ bool dmmeta::DispatchMsg_ReadFieldMaybe(dmmeta::DispatchMsg& parent, algo::strpt
 // --- dmmeta.DispatchMsg..ReadStrptrMaybe
 // Read fields of dmmeta::DispatchMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::DispatchMsg_ReadStrptrMaybe(dmmeta::DispatchMsg &parent, algo::strptr in_str) {
+bool dmmeta::DispatchMsg_ReadStrptrMaybe(dmmeta::DispatchMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.dispatch_msg") || algo::StripTypeTag(in_str, "dmmeta.DispatchMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2123,7 +2123,7 @@ bool dmmeta::DispatchMsg_ReadStrptrMaybe(dmmeta::DispatchMsg &parent, algo::strp
 // --- dmmeta.DispatchMsg..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.DispatchMsg.String  printfmt:Tuple
-void dmmeta::DispatchMsg_Print(dmmeta::DispatchMsg& row, algo::cstring& str) {
+void dmmeta::DispatchMsg_Print(dmmeta::DispatchMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.dispatch_msg";
 
@@ -2135,7 +2135,7 @@ void dmmeta::DispatchMsg_Print(dmmeta::DispatchMsg& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Dispctx..ReadFieldMaybe
-bool dmmeta::Dispctx_ReadFieldMaybe(dmmeta::Dispctx& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Dispctx_ReadFieldMaybe(dmmeta::Dispctx& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2163,7 +2163,7 @@ bool dmmeta::Dispctx_ReadFieldMaybe(dmmeta::Dispctx& parent, algo::strptr field,
 // --- dmmeta.Dispctx..ReadStrptrMaybe
 // Read fields of dmmeta::Dispctx from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Dispctx_ReadStrptrMaybe(dmmeta::Dispctx &parent, algo::strptr in_str) {
+bool dmmeta::Dispctx_ReadStrptrMaybe(dmmeta::Dispctx &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.dispctx") || algo::StripTypeTag(in_str, "dmmeta.Dispctx");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2175,7 +2175,7 @@ bool dmmeta::Dispctx_ReadStrptrMaybe(dmmeta::Dispctx &parent, algo::strptr in_st
 // --- dmmeta.Dispctx..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Dispctx.String  printfmt:Tuple
-void dmmeta::Dispctx_Print(dmmeta::Dispctx& row, algo::cstring& str) {
+void dmmeta::Dispctx_Print(dmmeta::Dispctx& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.dispctx";
 
@@ -2190,7 +2190,7 @@ void dmmeta::Dispctx_Print(dmmeta::Dispctx& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Dispfilter..ReadFieldMaybe
-bool dmmeta::Dispfilter_ReadFieldMaybe(dmmeta::Dispfilter& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Dispfilter_ReadFieldMaybe(dmmeta::Dispfilter& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2218,7 +2218,7 @@ bool dmmeta::Dispfilter_ReadFieldMaybe(dmmeta::Dispfilter& parent, algo::strptr 
 // --- dmmeta.Dispfilter..ReadStrptrMaybe
 // Read fields of dmmeta::Dispfilter from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Dispfilter_ReadStrptrMaybe(dmmeta::Dispfilter &parent, algo::strptr in_str) {
+bool dmmeta::Dispfilter_ReadStrptrMaybe(dmmeta::Dispfilter &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.dispfilter") || algo::StripTypeTag(in_str, "dmmeta.Dispfilter");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2230,7 +2230,7 @@ bool dmmeta::Dispfilter_ReadStrptrMaybe(dmmeta::Dispfilter &parent, algo::strptr
 // --- dmmeta.Dispfilter..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Dispfilter.String  printfmt:Tuple
-void dmmeta::Dispfilter_Print(dmmeta::Dispfilter& row, algo::cstring& str) {
+void dmmeta::Dispfilter_Print(dmmeta::Dispfilter& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.dispfilter";
 
@@ -2245,25 +2245,25 @@ void dmmeta::Dispfilter_Print(dmmeta::Dispfilter& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Dispsig.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Dispsig& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Dispsig& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.dispsig, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Dispsig.ns.Get2
-algo::Smallstr16 dmmeta::Dispsig_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Dispsig_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Dispsig.name.Get
-algo::Smallstr50 dmmeta::name_Get(dmmeta::Dispsig& parent) {
+algo::Smallstr50 dmmeta::name_Get(dmmeta::Dispsig& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.dispsig, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Dispsig.name.Get2
-algo::Smallstr50 dmmeta::Dispsig_name_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Dispsig_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -2274,7 +2274,7 @@ tempstr dmmeta::Dispsig_Concat_ns_name( const algo::strptr& ns ,const algo::strp
 }
 
 // --- dmmeta.Dispsig..ReadFieldMaybe
-bool dmmeta::Dispsig_ReadFieldMaybe(dmmeta::Dispsig& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Dispsig_ReadFieldMaybe(dmmeta::Dispsig& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2306,7 +2306,7 @@ bool dmmeta::Dispsig_ReadFieldMaybe(dmmeta::Dispsig& parent, algo::strptr field,
 // --- dmmeta.Dispsig..ReadStrptrMaybe
 // Read fields of dmmeta::Dispsig from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Dispsig_ReadStrptrMaybe(dmmeta::Dispsig &parent, algo::strptr in_str) {
+bool dmmeta::Dispsig_ReadStrptrMaybe(dmmeta::Dispsig &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.dispsig") || algo::StripTypeTag(in_str, "dmmeta.Dispsig");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2318,7 +2318,7 @@ bool dmmeta::Dispsig_ReadStrptrMaybe(dmmeta::Dispsig &parent, algo::strptr in_st
 // --- dmmeta.Dispsig..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Dispsig.String  printfmt:Tuple
-void dmmeta::Dispsig_Print(dmmeta::Dispsig& row, algo::cstring& str) {
+void dmmeta::Dispsig_Print(dmmeta::Dispsig& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.dispsig";
 
@@ -2330,7 +2330,7 @@ void dmmeta::Dispsig_Print(dmmeta::Dispsig& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Dispsigcheck..ReadFieldMaybe
-bool dmmeta::Dispsigcheck_ReadFieldMaybe(dmmeta::Dispsigcheck& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Dispsigcheck_ReadFieldMaybe(dmmeta::Dispsigcheck& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2354,7 +2354,7 @@ bool dmmeta::Dispsigcheck_ReadFieldMaybe(dmmeta::Dispsigcheck& parent, algo::str
 // --- dmmeta.Dispsigcheck..ReadStrptrMaybe
 // Read fields of dmmeta::Dispsigcheck from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Dispsigcheck_ReadStrptrMaybe(dmmeta::Dispsigcheck &parent, algo::strptr in_str) {
+bool dmmeta::Dispsigcheck_ReadStrptrMaybe(dmmeta::Dispsigcheck &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.dispsigcheck") || algo::StripTypeTag(in_str, "dmmeta.Dispsigcheck");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2366,7 +2366,7 @@ bool dmmeta::Dispsigcheck_ReadStrptrMaybe(dmmeta::Dispsigcheck &parent, algo::st
 // --- dmmeta.Dispsigcheck..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Dispsigcheck.String  printfmt:Tuple
-void dmmeta::Dispsigcheck_Print(dmmeta::Dispsigcheck& row, algo::cstring& str) {
+void dmmeta::Dispsigcheck_Print(dmmeta::Dispsigcheck& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.dispsigcheck";
 
@@ -2378,7 +2378,7 @@ void dmmeta::Dispsigcheck_Print(dmmeta::Dispsigcheck& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Disptrace..ReadFieldMaybe
-bool dmmeta::Disptrace_ReadFieldMaybe(dmmeta::Disptrace& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Disptrace_ReadFieldMaybe(dmmeta::Disptrace& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2406,7 +2406,7 @@ bool dmmeta::Disptrace_ReadFieldMaybe(dmmeta::Disptrace& parent, algo::strptr fi
 // --- dmmeta.Disptrace..ReadStrptrMaybe
 // Read fields of dmmeta::Disptrace from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Disptrace_ReadStrptrMaybe(dmmeta::Disptrace &parent, algo::strptr in_str) {
+bool dmmeta::Disptrace_ReadStrptrMaybe(dmmeta::Disptrace &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.disptrace") || algo::StripTypeTag(in_str, "dmmeta.Disptrace");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2418,7 +2418,7 @@ bool dmmeta::Disptrace_ReadStrptrMaybe(dmmeta::Disptrace &parent, algo::strptr i
 // --- dmmeta.Disptrace..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Disptrace.String  printfmt:Tuple
-void dmmeta::Disptrace_Print(dmmeta::Disptrace& row, algo::cstring& str) {
+void dmmeta::Disptrace_Print(dmmeta::Disptrace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.disptrace";
 
@@ -2433,7 +2433,7 @@ void dmmeta::Disptrace_Print(dmmeta::Disptrace& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Falias..ReadFieldMaybe
-bool dmmeta::Falias_ReadFieldMaybe(dmmeta::Falias& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Falias_ReadFieldMaybe(dmmeta::Falias& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2461,7 +2461,7 @@ bool dmmeta::Falias_ReadFieldMaybe(dmmeta::Falias& parent, algo::strptr field, a
 // --- dmmeta.Falias..ReadStrptrMaybe
 // Read fields of dmmeta::Falias from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Falias_ReadStrptrMaybe(dmmeta::Falias &parent, algo::strptr in_str) {
+bool dmmeta::Falias_ReadStrptrMaybe(dmmeta::Falias &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.falias") || algo::StripTypeTag(in_str, "dmmeta.Falias");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2473,7 +2473,7 @@ bool dmmeta::Falias_ReadStrptrMaybe(dmmeta::Falias &parent, algo::strptr in_str)
 // --- dmmeta.Falias..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Falias.String  printfmt:Tuple
-void dmmeta::Falias_Print(dmmeta::Falias& row, algo::cstring& str) {
+void dmmeta::Falias_Print(dmmeta::Falias& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.falias";
 
@@ -2488,7 +2488,7 @@ void dmmeta::Falias_Print(dmmeta::Falias& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fastenc..ReadFieldMaybe
-bool dmmeta::Fastenc_ReadFieldMaybe(dmmeta::Fastenc& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fastenc_ReadFieldMaybe(dmmeta::Fastenc& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2512,7 +2512,7 @@ bool dmmeta::Fastenc_ReadFieldMaybe(dmmeta::Fastenc& parent, algo::strptr field,
 // --- dmmeta.Fastenc..ReadStrptrMaybe
 // Read fields of dmmeta::Fastenc from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fastenc_ReadStrptrMaybe(dmmeta::Fastenc &parent, algo::strptr in_str) {
+bool dmmeta::Fastenc_ReadStrptrMaybe(dmmeta::Fastenc &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fastenc") || algo::StripTypeTag(in_str, "dmmeta.Fastenc");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2524,7 +2524,7 @@ bool dmmeta::Fastenc_ReadStrptrMaybe(dmmeta::Fastenc &parent, algo::strptr in_st
 // --- dmmeta.Fastenc..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fastenc.String  printfmt:Tuple
-void dmmeta::Fastenc_Print(dmmeta::Fastenc& row, algo::cstring& str) {
+void dmmeta::Fastenc_Print(dmmeta::Fastenc& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fastenc";
 
@@ -2538,7 +2538,7 @@ void dmmeta::Fastenc_Print(dmmeta::Fastenc& row, algo::cstring& str) {
 // --- dmmeta.FastencCase.fastenc.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* dmmeta::fastenc_ToCstr(const dmmeta::FastencCase& parent) {
+const char* dmmeta::fastenc_ToCstr(const dmmeta::FastencCase& parent) throw() {
     const char *ret = NULL;
     switch(fastenc_GetEnum(parent)) {
         case dmmeta_FastencCase_byteVector : ret = "byteVector";  break;
@@ -2557,7 +2557,7 @@ const char* dmmeta::fastenc_ToCstr(const dmmeta::FastencCase& parent) {
 // --- dmmeta.FastencCase.fastenc.Print
 // Convert fastenc to a string. First, attempt conversion to a known string.
 // If no string matches, print fastenc as a numeric value.
-void dmmeta::fastenc_Print(const dmmeta::FastencCase& parent, algo::cstring &lhs) {
+void dmmeta::fastenc_Print(const dmmeta::FastencCase& parent, algo::cstring &lhs) throw() {
     const char *strval = fastenc_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2570,7 +2570,7 @@ void dmmeta::fastenc_Print(const dmmeta::FastencCase& parent, algo::cstring &lhs
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool dmmeta::fastenc_SetStrptrMaybe(dmmeta::FastencCase& parent, algo::strptr rhs) {
+bool dmmeta::fastenc_SetStrptrMaybe(dmmeta::FastencCase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
@@ -2633,12 +2633,12 @@ bool dmmeta::fastenc_SetStrptrMaybe(dmmeta::FastencCase& parent, algo::strptr rh
 // --- dmmeta.FastencCase.fastenc.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void dmmeta::fastenc_SetStrptr(dmmeta::FastencCase& parent, algo::strptr rhs, dmmeta_FastencCaseEnum dflt) {
+void dmmeta::fastenc_SetStrptr(dmmeta::FastencCase& parent, algo::strptr rhs, dmmeta_FastencCaseEnum dflt) throw() {
     if (!fastenc_SetStrptrMaybe(parent,rhs)) fastenc_SetEnum(parent,dflt);
 }
 
 // --- dmmeta.Fastinstr..ReadFieldMaybe
-bool dmmeta::Fastinstr_ReadFieldMaybe(dmmeta::Fastinstr& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fastinstr_ReadFieldMaybe(dmmeta::Fastinstr& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2662,7 +2662,7 @@ bool dmmeta::Fastinstr_ReadFieldMaybe(dmmeta::Fastinstr& parent, algo::strptr fi
 // --- dmmeta.Fastinstr..ReadStrptrMaybe
 // Read fields of dmmeta::Fastinstr from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fastinstr_ReadStrptrMaybe(dmmeta::Fastinstr &parent, algo::strptr in_str) {
+bool dmmeta::Fastinstr_ReadStrptrMaybe(dmmeta::Fastinstr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fastinstr") || algo::StripTypeTag(in_str, "dmmeta.Fastinstr");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2674,7 +2674,7 @@ bool dmmeta::Fastinstr_ReadStrptrMaybe(dmmeta::Fastinstr &parent, algo::strptr i
 // --- dmmeta.Fastinstr..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fastinstr.String  printfmt:Tuple
-void dmmeta::Fastinstr_Print(dmmeta::Fastinstr& row, algo::cstring& str) {
+void dmmeta::Fastinstr_Print(dmmeta::Fastinstr& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fastinstr";
 
@@ -2688,7 +2688,7 @@ void dmmeta::Fastinstr_Print(dmmeta::Fastinstr& row, algo::cstring& str) {
 // --- dmmeta.FastinstrCase.fastinstr.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* dmmeta::fastinstr_ToCstr(const dmmeta::FastinstrCase& parent) {
+const char* dmmeta::fastinstr_ToCstr(const dmmeta::FastinstrCase& parent) throw() {
     const char *ret = NULL;
     switch(fastinstr_GetEnum(parent)) {
         case dmmeta_FastinstrCase_field    : ret = "field";  break;
@@ -2701,7 +2701,7 @@ const char* dmmeta::fastinstr_ToCstr(const dmmeta::FastinstrCase& parent) {
 // --- dmmeta.FastinstrCase.fastinstr.Print
 // Convert fastinstr to a string. First, attempt conversion to a known string.
 // If no string matches, print fastinstr as a numeric value.
-void dmmeta::fastinstr_Print(const dmmeta::FastinstrCase& parent, algo::cstring &lhs) {
+void dmmeta::fastinstr_Print(const dmmeta::FastinstrCase& parent, algo::cstring &lhs) throw() {
     const char *strval = fastinstr_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2714,7 +2714,7 @@ void dmmeta::fastinstr_Print(const dmmeta::FastinstrCase& parent, algo::cstring 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool dmmeta::fastinstr_SetStrptrMaybe(dmmeta::FastinstrCase& parent, algo::strptr rhs) {
+bool dmmeta::fastinstr_SetStrptrMaybe(dmmeta::FastinstrCase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -2748,12 +2748,12 @@ bool dmmeta::fastinstr_SetStrptrMaybe(dmmeta::FastinstrCase& parent, algo::strpt
 // --- dmmeta.FastinstrCase.fastinstr.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void dmmeta::fastinstr_SetStrptr(dmmeta::FastinstrCase& parent, algo::strptr rhs, dmmeta_FastinstrCaseEnum dflt) {
+void dmmeta::fastinstr_SetStrptr(dmmeta::FastinstrCase& parent, algo::strptr rhs, dmmeta_FastinstrCaseEnum dflt) throw() {
     if (!fastinstr_SetStrptrMaybe(parent,rhs)) fastinstr_SetEnum(parent,dflt);
 }
 
 // --- dmmeta.Fastop..ReadFieldMaybe
-bool dmmeta::Fastop_ReadFieldMaybe(dmmeta::Fastop& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fastop_ReadFieldMaybe(dmmeta::Fastop& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2777,7 +2777,7 @@ bool dmmeta::Fastop_ReadFieldMaybe(dmmeta::Fastop& parent, algo::strptr field, a
 // --- dmmeta.Fastop..ReadStrptrMaybe
 // Read fields of dmmeta::Fastop from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fastop_ReadStrptrMaybe(dmmeta::Fastop &parent, algo::strptr in_str) {
+bool dmmeta::Fastop_ReadStrptrMaybe(dmmeta::Fastop &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fastop") || algo::StripTypeTag(in_str, "dmmeta.Fastop");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2789,7 +2789,7 @@ bool dmmeta::Fastop_ReadStrptrMaybe(dmmeta::Fastop &parent, algo::strptr in_str)
 // --- dmmeta.Fastop..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fastop.String  printfmt:Tuple
-void dmmeta::Fastop_Print(dmmeta::Fastop& row, algo::cstring& str) {
+void dmmeta::Fastop_Print(dmmeta::Fastop& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fastop";
 
@@ -2803,7 +2803,7 @@ void dmmeta::Fastop_Print(dmmeta::Fastop& row, algo::cstring& str) {
 // --- dmmeta.FastopCase.fastop.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* dmmeta::fastop_ToCstr(const dmmeta::FastopCase& parent) {
+const char* dmmeta::fastop_ToCstr(const dmmeta::FastopCase& parent) throw() {
     const char *ret = NULL;
     switch(fastop_GetEnum(parent)) {
         case dmmeta_FastopCase_constant    : ret = "constant";  break;
@@ -2820,7 +2820,7 @@ const char* dmmeta::fastop_ToCstr(const dmmeta::FastopCase& parent) {
 // --- dmmeta.FastopCase.fastop.Print
 // Convert fastop to a string. First, attempt conversion to a known string.
 // If no string matches, print fastop as a numeric value.
-void dmmeta::fastop_Print(const dmmeta::FastopCase& parent, algo::cstring &lhs) {
+void dmmeta::fastop_Print(const dmmeta::FastopCase& parent, algo::cstring &lhs) throw() {
     const char *strval = fastop_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2833,7 +2833,7 @@ void dmmeta::fastop_Print(const dmmeta::FastopCase& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool dmmeta::fastop_SetStrptrMaybe(dmmeta::FastopCase& parent, algo::strptr rhs) {
+bool dmmeta::fastop_SetStrptrMaybe(dmmeta::FastopCase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
@@ -2890,12 +2890,12 @@ bool dmmeta::fastop_SetStrptrMaybe(dmmeta::FastopCase& parent, algo::strptr rhs)
 // --- dmmeta.FastopCase.fastop.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void dmmeta::fastop_SetStrptr(dmmeta::FastopCase& parent, algo::strptr rhs, dmmeta_FastopCaseEnum dflt) {
+void dmmeta::fastop_SetStrptr(dmmeta::FastopCase& parent, algo::strptr rhs, dmmeta_FastopCaseEnum dflt) throw() {
     if (!fastop_SetStrptrMaybe(parent,rhs)) fastop_SetEnum(parent,dflt);
 }
 
 // --- dmmeta.Fbase..ReadFieldMaybe
-bool dmmeta::Fbase_ReadFieldMaybe(dmmeta::Fbase& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fbase_ReadFieldMaybe(dmmeta::Fbase& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2923,7 +2923,7 @@ bool dmmeta::Fbase_ReadFieldMaybe(dmmeta::Fbase& parent, algo::strptr field, alg
 // --- dmmeta.Fbase..ReadStrptrMaybe
 // Read fields of dmmeta::Fbase from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fbase_ReadStrptrMaybe(dmmeta::Fbase &parent, algo::strptr in_str) {
+bool dmmeta::Fbase_ReadStrptrMaybe(dmmeta::Fbase &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fbase") || algo::StripTypeTag(in_str, "dmmeta.Fbase");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2935,7 +2935,7 @@ bool dmmeta::Fbase_ReadStrptrMaybe(dmmeta::Fbase &parent, algo::strptr in_str) {
 // --- dmmeta.Fbase..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fbase.String  printfmt:Tuple
-void dmmeta::Fbase_Print(dmmeta::Fbase& row, algo::cstring& str) {
+void dmmeta::Fbase_Print(dmmeta::Fbase& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fbase";
 
@@ -2950,7 +2950,7 @@ void dmmeta::Fbase_Print(dmmeta::Fbase& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fbigend..ReadFieldMaybe
-bool dmmeta::Fbigend_ReadFieldMaybe(dmmeta::Fbigend& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fbigend_ReadFieldMaybe(dmmeta::Fbigend& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2974,7 +2974,7 @@ bool dmmeta::Fbigend_ReadFieldMaybe(dmmeta::Fbigend& parent, algo::strptr field,
 // --- dmmeta.Fbigend..ReadStrptrMaybe
 // Read fields of dmmeta::Fbigend from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fbigend_ReadStrptrMaybe(dmmeta::Fbigend &parent, algo::strptr in_str) {
+bool dmmeta::Fbigend_ReadStrptrMaybe(dmmeta::Fbigend &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fbigend") || algo::StripTypeTag(in_str, "dmmeta.Fbigend");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2986,7 +2986,7 @@ bool dmmeta::Fbigend_ReadStrptrMaybe(dmmeta::Fbigend &parent, algo::strptr in_st
 // --- dmmeta.Fbigend..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fbigend.String  printfmt:Tuple
-void dmmeta::Fbigend_Print(dmmeta::Fbigend& row, algo::cstring& str) {
+void dmmeta::Fbigend_Print(dmmeta::Fbigend& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fbigend";
 
@@ -2998,7 +2998,7 @@ void dmmeta::Fbigend_Print(dmmeta::Fbigend& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fbitset..ReadFieldMaybe
-bool dmmeta::Fbitset_ReadFieldMaybe(dmmeta::Fbitset& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fbitset_ReadFieldMaybe(dmmeta::Fbitset& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3022,7 +3022,7 @@ bool dmmeta::Fbitset_ReadFieldMaybe(dmmeta::Fbitset& parent, algo::strptr field,
 // --- dmmeta.Fbitset..ReadStrptrMaybe
 // Read fields of dmmeta::Fbitset from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fbitset_ReadStrptrMaybe(dmmeta::Fbitset &parent, algo::strptr in_str) {
+bool dmmeta::Fbitset_ReadStrptrMaybe(dmmeta::Fbitset &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fbitset") || algo::StripTypeTag(in_str, "dmmeta.Fbitset");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3034,7 +3034,7 @@ bool dmmeta::Fbitset_ReadStrptrMaybe(dmmeta::Fbitset &parent, algo::strptr in_st
 // --- dmmeta.Fbitset..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fbitset.String  printfmt:Tuple
-void dmmeta::Fbitset_Print(dmmeta::Fbitset& row, algo::cstring& str) {
+void dmmeta::Fbitset_Print(dmmeta::Fbitset& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fbitset";
 
@@ -3046,19 +3046,19 @@ void dmmeta::Fbitset_Print(dmmeta::Fbitset& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fbuf.fbufdir.Get
-algo::Smallstr50 dmmeta::fbufdir_Get(dmmeta::Fbuf& parent) {
+algo::Smallstr50 dmmeta::fbufdir_Get(dmmeta::Fbuf& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.field, ".RR_LL"));
     return ret;
 }
 
 // --- dmmeta.Fbuf.fbufdir.Get2
-algo::Smallstr50 dmmeta::Fbuf_fbufdir_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Fbuf_fbufdir_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR_LL"));
     return ret;
 }
 
 // --- dmmeta.Fbuf..ReadFieldMaybe
-bool dmmeta::Fbuf_ReadFieldMaybe(dmmeta::Fbuf& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fbuf_ReadFieldMaybe(dmmeta::Fbuf& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3102,7 +3102,7 @@ bool dmmeta::Fbuf_ReadFieldMaybe(dmmeta::Fbuf& parent, algo::strptr field, algo:
 // --- dmmeta.Fbuf..ReadStrptrMaybe
 // Read fields of dmmeta::Fbuf from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fbuf_ReadStrptrMaybe(dmmeta::Fbuf &parent, algo::strptr in_str) {
+bool dmmeta::Fbuf_ReadStrptrMaybe(dmmeta::Fbuf &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fbuf") || algo::StripTypeTag(in_str, "dmmeta.Fbuf");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3114,7 +3114,7 @@ bool dmmeta::Fbuf_ReadStrptrMaybe(dmmeta::Fbuf &parent, algo::strptr in_str) {
 // --- dmmeta.Fbuf..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fbuf.String  printfmt:Tuple
-void dmmeta::Fbuf_Print(dmmeta::Fbuf& row, algo::cstring& str) {
+void dmmeta::Fbuf_Print(dmmeta::Fbuf& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fbuf";
 
@@ -3138,7 +3138,7 @@ void dmmeta::Fbuf_Print(dmmeta::Fbuf& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fbufdir..ReadFieldMaybe
-bool dmmeta::Fbufdir_ReadFieldMaybe(dmmeta::Fbufdir& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fbufdir_ReadFieldMaybe(dmmeta::Fbufdir& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3166,7 +3166,7 @@ bool dmmeta::Fbufdir_ReadFieldMaybe(dmmeta::Fbufdir& parent, algo::strptr field,
 // --- dmmeta.Fbufdir..ReadStrptrMaybe
 // Read fields of dmmeta::Fbufdir from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fbufdir_ReadStrptrMaybe(dmmeta::Fbufdir &parent, algo::strptr in_str) {
+bool dmmeta::Fbufdir_ReadStrptrMaybe(dmmeta::Fbufdir &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fbufdir") || algo::StripTypeTag(in_str, "dmmeta.Fbufdir");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3178,7 +3178,7 @@ bool dmmeta::Fbufdir_ReadStrptrMaybe(dmmeta::Fbufdir &parent, algo::strptr in_st
 // --- dmmeta.Fbufdir..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fbufdir.String  printfmt:Tuple
-void dmmeta::Fbufdir_Print(dmmeta::Fbufdir& row, algo::cstring& str) {
+void dmmeta::Fbufdir_Print(dmmeta::Fbufdir& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fbufdir";
 
@@ -3193,7 +3193,7 @@ void dmmeta::Fbufdir_Print(dmmeta::Fbufdir& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fbuftype..ReadFieldMaybe
-bool dmmeta::Fbuftype_ReadFieldMaybe(dmmeta::Fbuftype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fbuftype_ReadFieldMaybe(dmmeta::Fbuftype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3221,7 +3221,7 @@ bool dmmeta::Fbuftype_ReadFieldMaybe(dmmeta::Fbuftype& parent, algo::strptr fiel
 // --- dmmeta.Fbuftype..ReadStrptrMaybe
 // Read fields of dmmeta::Fbuftype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fbuftype_ReadStrptrMaybe(dmmeta::Fbuftype &parent, algo::strptr in_str) {
+bool dmmeta::Fbuftype_ReadStrptrMaybe(dmmeta::Fbuftype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fbuftype") || algo::StripTypeTag(in_str, "dmmeta.Fbuftype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3233,7 +3233,7 @@ bool dmmeta::Fbuftype_ReadStrptrMaybe(dmmeta::Fbuftype &parent, algo::strptr in_
 // --- dmmeta.Fbuftype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fbuftype.String  printfmt:Tuple
-void dmmeta::Fbuftype_Print(dmmeta::Fbuftype& row, algo::cstring& str) {
+void dmmeta::Fbuftype_Print(dmmeta::Fbuftype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fbuftype";
 
@@ -3248,7 +3248,7 @@ void dmmeta::Fbuftype_Print(dmmeta::Fbuftype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fcast..ReadFieldMaybe
-bool dmmeta::Fcast_ReadFieldMaybe(dmmeta::Fcast& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fcast_ReadFieldMaybe(dmmeta::Fcast& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3276,7 +3276,7 @@ bool dmmeta::Fcast_ReadFieldMaybe(dmmeta::Fcast& parent, algo::strptr field, alg
 // --- dmmeta.Fcast..ReadStrptrMaybe
 // Read fields of dmmeta::Fcast from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fcast_ReadStrptrMaybe(dmmeta::Fcast &parent, algo::strptr in_str) {
+bool dmmeta::Fcast_ReadStrptrMaybe(dmmeta::Fcast &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fcast") || algo::StripTypeTag(in_str, "dmmeta.Fcast");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3288,7 +3288,7 @@ bool dmmeta::Fcast_ReadStrptrMaybe(dmmeta::Fcast &parent, algo::strptr in_str) {
 // --- dmmeta.Fcast..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcast.String  printfmt:Tuple
-void dmmeta::Fcast_Print(dmmeta::Fcast& row, algo::cstring& str) {
+void dmmeta::Fcast_Print(dmmeta::Fcast& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fcast";
 
@@ -3303,7 +3303,7 @@ void dmmeta::Fcast_Print(dmmeta::Fcast& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fcleanup..ReadFieldMaybe
-bool dmmeta::Fcleanup_ReadFieldMaybe(dmmeta::Fcleanup& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fcleanup_ReadFieldMaybe(dmmeta::Fcleanup& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3327,7 +3327,7 @@ bool dmmeta::Fcleanup_ReadFieldMaybe(dmmeta::Fcleanup& parent, algo::strptr fiel
 // --- dmmeta.Fcleanup..ReadStrptrMaybe
 // Read fields of dmmeta::Fcleanup from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fcleanup_ReadStrptrMaybe(dmmeta::Fcleanup &parent, algo::strptr in_str) {
+bool dmmeta::Fcleanup_ReadStrptrMaybe(dmmeta::Fcleanup &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fcleanup") || algo::StripTypeTag(in_str, "dmmeta.Fcleanup");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3339,7 +3339,7 @@ bool dmmeta::Fcleanup_ReadStrptrMaybe(dmmeta::Fcleanup &parent, algo::strptr in_
 // --- dmmeta.Fcleanup..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcleanup.String  printfmt:Tuple
-void dmmeta::Fcleanup_Print(dmmeta::Fcleanup& row, algo::cstring& str) {
+void dmmeta::Fcleanup_Print(dmmeta::Fcleanup& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fcleanup";
 
@@ -3351,49 +3351,49 @@ void dmmeta::Fcleanup_Print(dmmeta::Fcleanup& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fcmap.leftField.Get
-algo::Smallstr100 dmmeta::leftField_Get(dmmeta::Fcmap& parent) {
+algo::Smallstr100 dmmeta::leftField_Get(dmmeta::Fcmap& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.fcmap, "=LL/LL"));
     return ret;
 }
 
 // --- dmmeta.Fcmap.leftField.Get2
-algo::Smallstr100 dmmeta::Fcmap_leftField_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Fcmap_leftField_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "=LL/LL"));
     return ret;
 }
 
 // --- dmmeta.Fcmap.leftVal.Get
-algo::Smallstr40 dmmeta::leftVal_Get(dmmeta::Fcmap& parent) {
+algo::Smallstr40 dmmeta::leftVal_Get(dmmeta::Fcmap& parent) throw() {
     algo::Smallstr40 ret(algo::Pathcomp(parent.fcmap, "=LL/LR"));
     return ret;
 }
 
 // --- dmmeta.Fcmap.leftVal.Get2
-algo::Smallstr40 dmmeta::Fcmap_leftVal_Get(algo::strptr arg) {
+algo::Smallstr40 dmmeta::Fcmap_leftVal_Get(algo::strptr arg) throw() {
     algo::Smallstr40 ret(algo::Pathcomp(arg, "=LL/LR"));
     return ret;
 }
 
 // --- dmmeta.Fcmap.rightVal.Get
-algo::Smallstr40 dmmeta::rightVal_Get(dmmeta::Fcmap& parent) {
+algo::Smallstr40 dmmeta::rightVal_Get(dmmeta::Fcmap& parent) throw() {
     algo::Smallstr40 ret(algo::Pathcomp(parent.fcmap, "=LR/LR"));
     return ret;
 }
 
 // --- dmmeta.Fcmap.rightVal.Get2
-algo::Smallstr40 dmmeta::Fcmap_rightVal_Get(algo::strptr arg) {
+algo::Smallstr40 dmmeta::Fcmap_rightVal_Get(algo::strptr arg) throw() {
     algo::Smallstr40 ret(algo::Pathcomp(arg, "=LR/LR"));
     return ret;
 }
 
 // --- dmmeta.Fcmap.rightField.Get
-algo::Smallstr100 dmmeta::rightField_Get(dmmeta::Fcmap& parent) {
+algo::Smallstr100 dmmeta::rightField_Get(dmmeta::Fcmap& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.fcmap, "=LR/LL"));
     return ret;
 }
 
 // --- dmmeta.Fcmap.rightField.Get2
-algo::Smallstr100 dmmeta::Fcmap_rightField_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Fcmap_rightField_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "=LR/LL"));
     return ret;
 }
@@ -3404,7 +3404,7 @@ tempstr dmmeta::Fcmap_Concat_leftField_leftVal_rightField_rightVal( const algo::
 }
 
 // --- dmmeta.Fcmap..ReadFieldMaybe
-bool dmmeta::Fcmap_ReadFieldMaybe(dmmeta::Fcmap& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fcmap_ReadFieldMaybe(dmmeta::Fcmap& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3448,7 +3448,7 @@ bool dmmeta::Fcmap_ReadFieldMaybe(dmmeta::Fcmap& parent, algo::strptr field, alg
 // --- dmmeta.Fcmap..ReadStrptrMaybe
 // Read fields of dmmeta::Fcmap from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fcmap_ReadStrptrMaybe(dmmeta::Fcmap &parent, algo::strptr in_str) {
+bool dmmeta::Fcmap_ReadStrptrMaybe(dmmeta::Fcmap &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fcmap") || algo::StripTypeTag(in_str, "dmmeta.Fcmap");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3460,7 +3460,7 @@ bool dmmeta::Fcmap_ReadStrptrMaybe(dmmeta::Fcmap &parent, algo::strptr in_str) {
 // --- dmmeta.Fcmap..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcmap.String  printfmt:Tuple
-void dmmeta::Fcmap_Print(dmmeta::Fcmap& row, algo::cstring& str) {
+void dmmeta::Fcmap_Print(dmmeta::Fcmap& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fcmap";
 
@@ -3475,19 +3475,19 @@ void dmmeta::Fcmap_Print(dmmeta::Fcmap& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fcmdline.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Fcmdline& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Fcmdline& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.field, ".RL.RL"));
     return ret;
 }
 
 // --- dmmeta.Fcmdline.ns.Get2
-algo::Smallstr16 dmmeta::Fcmdline_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Fcmdline_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".RL.RL"));
     return ret;
 }
 
 // --- dmmeta.Fcmdline..ReadFieldMaybe
-bool dmmeta::Fcmdline_ReadFieldMaybe(dmmeta::Fcmdline& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fcmdline_ReadFieldMaybe(dmmeta::Fcmdline& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3523,7 +3523,7 @@ bool dmmeta::Fcmdline_ReadFieldMaybe(dmmeta::Fcmdline& parent, algo::strptr fiel
 // --- dmmeta.Fcmdline..ReadStrptrMaybe
 // Read fields of dmmeta::Fcmdline from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fcmdline_ReadStrptrMaybe(dmmeta::Fcmdline &parent, algo::strptr in_str) {
+bool dmmeta::Fcmdline_ReadStrptrMaybe(dmmeta::Fcmdline &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fcmdline") || algo::StripTypeTag(in_str, "dmmeta.Fcmdline");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3535,7 +3535,7 @@ bool dmmeta::Fcmdline_ReadStrptrMaybe(dmmeta::Fcmdline &parent, algo::strptr in_
 // --- dmmeta.Fcmdline..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcmdline.String  printfmt:Tuple
-void dmmeta::Fcmdline_Print(dmmeta::Fcmdline& row, algo::cstring& str) {
+void dmmeta::Fcmdline_Print(dmmeta::Fcmdline& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fcmdline";
 
@@ -3553,7 +3553,7 @@ void dmmeta::Fcmdline_Print(dmmeta::Fcmdline& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fcmp..ReadFieldMaybe
-bool dmmeta::Fcmp_ReadFieldMaybe(dmmeta::Fcmp& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fcmp_ReadFieldMaybe(dmmeta::Fcmp& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3589,7 +3589,7 @@ bool dmmeta::Fcmp_ReadFieldMaybe(dmmeta::Fcmp& parent, algo::strptr field, algo:
 // --- dmmeta.Fcmp..ReadStrptrMaybe
 // Read fields of dmmeta::Fcmp from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fcmp_ReadStrptrMaybe(dmmeta::Fcmp &parent, algo::strptr in_str) {
+bool dmmeta::Fcmp_ReadStrptrMaybe(dmmeta::Fcmp &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fcmp") || algo::StripTypeTag(in_str, "dmmeta.Fcmp");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3601,7 +3601,7 @@ bool dmmeta::Fcmp_ReadStrptrMaybe(dmmeta::Fcmp &parent, algo::strptr in_str) {
 // --- dmmeta.Fcmp..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcmp.String  printfmt:Tuple
-void dmmeta::Fcmp_Print(dmmeta::Fcmp& row, algo::cstring& str) {
+void dmmeta::Fcmp_Print(dmmeta::Fcmp& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fcmp";
 
@@ -3622,7 +3622,7 @@ void dmmeta::Fcmp_Print(dmmeta::Fcmp& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fcompact..ReadFieldMaybe
-bool dmmeta::Fcompact_ReadFieldMaybe(dmmeta::Fcompact& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fcompact_ReadFieldMaybe(dmmeta::Fcompact& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3646,7 +3646,7 @@ bool dmmeta::Fcompact_ReadFieldMaybe(dmmeta::Fcompact& parent, algo::strptr fiel
 // --- dmmeta.Fcompact..ReadStrptrMaybe
 // Read fields of dmmeta::Fcompact from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fcompact_ReadStrptrMaybe(dmmeta::Fcompact &parent, algo::strptr in_str) {
+bool dmmeta::Fcompact_ReadStrptrMaybe(dmmeta::Fcompact &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fcompact") || algo::StripTypeTag(in_str, "dmmeta.Fcompact");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3658,7 +3658,7 @@ bool dmmeta::Fcompact_ReadStrptrMaybe(dmmeta::Fcompact &parent, algo::strptr in_
 // --- dmmeta.Fcompact..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcompact.String  printfmt:Tuple
-void dmmeta::Fcompact_Print(dmmeta::Fcompact& row, algo::cstring& str) {
+void dmmeta::Fcompact_Print(dmmeta::Fcompact& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fcompact";
 
@@ -3670,25 +3670,25 @@ void dmmeta::Fcompact_Print(dmmeta::Fcompact& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fconst.field.Get
-algo::Smallstr100 dmmeta::field_Get(dmmeta::Fconst& parent) {
+algo::Smallstr100 dmmeta::field_Get(dmmeta::Fconst& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.fconst, "/LL"));
     return ret;
 }
 
 // --- dmmeta.Fconst.field.Get2
-algo::Smallstr100 dmmeta::Fconst_field_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Fconst_field_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/LL"));
     return ret;
 }
 
 // --- dmmeta.Fconst.name.Get
-algo::Smallstr100 dmmeta::name_Get(dmmeta::Fconst& parent) {
+algo::Smallstr100 dmmeta::name_Get(dmmeta::Fconst& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.fconst, "/LR"));
     return ret;
 }
 
 // --- dmmeta.Fconst.name.Get2
-algo::Smallstr100 dmmeta::Fconst_name_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Fconst_name_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/LR"));
     return ret;
 }
@@ -3699,7 +3699,7 @@ tempstr dmmeta::Fconst_Concat_field_name( const algo::strptr& field ,const algo:
 }
 
 // --- dmmeta.Fconst..ReadFieldMaybe
-bool dmmeta::Fconst_ReadFieldMaybe(dmmeta::Fconst& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fconst_ReadFieldMaybe(dmmeta::Fconst& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3735,7 +3735,7 @@ bool dmmeta::Fconst_ReadFieldMaybe(dmmeta::Fconst& parent, algo::strptr field, a
 // --- dmmeta.Fconst..ReadStrptrMaybe
 // Read fields of dmmeta::Fconst from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fconst_ReadStrptrMaybe(dmmeta::Fconst &parent, algo::strptr in_str) {
+bool dmmeta::Fconst_ReadStrptrMaybe(dmmeta::Fconst &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fconst") || algo::StripTypeTag(in_str, "dmmeta.Fconst");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3747,7 +3747,7 @@ bool dmmeta::Fconst_ReadStrptrMaybe(dmmeta::Fconst &parent, algo::strptr in_str)
 // --- dmmeta.Fconst..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fconst.String  printfmt:Tuple
-void dmmeta::Fconst_Print(dmmeta::Fconst& row, algo::cstring& str) {
+void dmmeta::Fconst_Print(dmmeta::Fconst& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fconst";
 
@@ -3762,37 +3762,37 @@ void dmmeta::Fconst_Print(dmmeta::Fconst& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fcurs.field.Get
-algo::Smallstr100 dmmeta::field_Get(dmmeta::Fcurs& parent) {
+algo::Smallstr100 dmmeta::field_Get(dmmeta::Fcurs& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.fcurs, "/RL"));
     return ret;
 }
 
 // --- dmmeta.Fcurs.field.Get2
-algo::Smallstr100 dmmeta::Fcurs_field_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Fcurs_field_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/RL"));
     return ret;
 }
 
 // --- dmmeta.Fcurs.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Fcurs& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Fcurs& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.fcurs, "/RL.RL"));
     return ret;
 }
 
 // --- dmmeta.Fcurs.ctype.Get2
-algo::Smallstr100 dmmeta::Fcurs_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Fcurs_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/RL.RL"));
     return ret;
 }
 
 // --- dmmeta.Fcurs.curstype.Get
-algo::Smallstr50 dmmeta::curstype_Get(dmmeta::Fcurs& parent) {
+algo::Smallstr50 dmmeta::curstype_Get(dmmeta::Fcurs& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.fcurs, "/RR"));
     return ret;
 }
 
 // --- dmmeta.Fcurs.curstype.Get2
-algo::Smallstr50 dmmeta::Fcurs_curstype_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Fcurs_curstype_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/RR"));
     return ret;
 }
@@ -3803,7 +3803,7 @@ tempstr dmmeta::Fcurs_Concat_field_curstype( const algo::strptr& field ,const al
 }
 
 // --- dmmeta.Fcurs..ReadFieldMaybe
-bool dmmeta::Fcurs_ReadFieldMaybe(dmmeta::Fcurs& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fcurs_ReadFieldMaybe(dmmeta::Fcurs& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3839,7 +3839,7 @@ bool dmmeta::Fcurs_ReadFieldMaybe(dmmeta::Fcurs& parent, algo::strptr field, alg
 // --- dmmeta.Fcurs..ReadStrptrMaybe
 // Read fields of dmmeta::Fcurs from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fcurs_ReadStrptrMaybe(dmmeta::Fcurs &parent, algo::strptr in_str) {
+bool dmmeta::Fcurs_ReadStrptrMaybe(dmmeta::Fcurs &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fcurs") || algo::StripTypeTag(in_str, "dmmeta.Fcurs");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3851,7 +3851,7 @@ bool dmmeta::Fcurs_ReadStrptrMaybe(dmmeta::Fcurs &parent, algo::strptr in_str) {
 // --- dmmeta.Fcurs..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fcurs.String  printfmt:Tuple
-void dmmeta::Fcurs_Print(dmmeta::Fcurs& row, algo::cstring& str) {
+void dmmeta::Fcurs_Print(dmmeta::Fcurs& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fcurs";
 
@@ -3863,7 +3863,7 @@ void dmmeta::Fcurs_Print(dmmeta::Fcurs& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fdec..ReadFieldMaybe
-bool dmmeta::Fdec_ReadFieldMaybe(dmmeta::Fdec& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fdec_ReadFieldMaybe(dmmeta::Fdec& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3895,7 +3895,7 @@ bool dmmeta::Fdec_ReadFieldMaybe(dmmeta::Fdec& parent, algo::strptr field, algo:
 // --- dmmeta.Fdec..ReadStrptrMaybe
 // Read fields of dmmeta::Fdec from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fdec_ReadStrptrMaybe(dmmeta::Fdec &parent, algo::strptr in_str) {
+bool dmmeta::Fdec_ReadStrptrMaybe(dmmeta::Fdec &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fdec") || algo::StripTypeTag(in_str, "dmmeta.Fdec");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3907,7 +3907,7 @@ bool dmmeta::Fdec_ReadStrptrMaybe(dmmeta::Fdec &parent, algo::strptr in_str) {
 // --- dmmeta.Fdec..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fdec.String  printfmt:Tuple
-void dmmeta::Fdec_Print(dmmeta::Fdec& row, algo::cstring& str) {
+void dmmeta::Fdec_Print(dmmeta::Fdec& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fdec";
 
@@ -3925,7 +3925,7 @@ void dmmeta::Fdec_Print(dmmeta::Fdec& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fdelay..ReadFieldMaybe
-bool dmmeta::Fdelay_ReadFieldMaybe(dmmeta::Fdelay& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fdelay_ReadFieldMaybe(dmmeta::Fdelay& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3957,7 +3957,7 @@ bool dmmeta::Fdelay_ReadFieldMaybe(dmmeta::Fdelay& parent, algo::strptr field, a
 // --- dmmeta.Fdelay..ReadStrptrMaybe
 // Read fields of dmmeta::Fdelay from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fdelay_ReadStrptrMaybe(dmmeta::Fdelay &parent, algo::strptr in_str) {
+bool dmmeta::Fdelay_ReadStrptrMaybe(dmmeta::Fdelay &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fdelay") || algo::StripTypeTag(in_str, "dmmeta.Fdelay");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3969,7 +3969,7 @@ bool dmmeta::Fdelay_ReadStrptrMaybe(dmmeta::Fdelay &parent, algo::strptr in_str)
 // --- dmmeta.Fdelay..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fdelay.String  printfmt:Tuple
-void dmmeta::Fdelay_Print(dmmeta::Fdelay& row, algo::cstring& str) {
+void dmmeta::Fdelay_Print(dmmeta::Fdelay& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fdelay";
 
@@ -3987,37 +3987,37 @@ void dmmeta::Fdelay_Print(dmmeta::Fdelay& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Ffast.field.Get
-algo::Smallstr100 dmmeta::field_Get(dmmeta::Ffast& parent) {
+algo::Smallstr100 dmmeta::field_Get(dmmeta::Ffast& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.ffast, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Ffast.field.Get2
-algo::Smallstr100 dmmeta::Ffast_field_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Ffast_field_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Ffast.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Ffast& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Ffast& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.ffast, ".RL.RL"));
     return ret;
 }
 
 // --- dmmeta.Ffast.ctype.Get2
-algo::Smallstr100 dmmeta::Ffast_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Ffast_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RL.RL"));
     return ret;
 }
 
 // --- dmmeta.Ffast.fastinstr.Get
-algo::Smallstr50 dmmeta::fastinstr_Get(dmmeta::Ffast& parent) {
+algo::Smallstr50 dmmeta::fastinstr_Get(dmmeta::Ffast& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.ffast, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Ffast.fastinstr.Get2
-algo::Smallstr50 dmmeta::Ffast_fastinstr_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Ffast_fastinstr_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -4028,7 +4028,7 @@ tempstr dmmeta::Ffast_Concat_field_fastinstr( const algo::strptr& field ,const a
 }
 
 // --- dmmeta.Ffast..ReadFieldMaybe
-bool dmmeta::Ffast_ReadFieldMaybe(dmmeta::Ffast& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Ffast_ReadFieldMaybe(dmmeta::Ffast& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -4092,7 +4092,7 @@ bool dmmeta::Ffast_ReadFieldMaybe(dmmeta::Ffast& parent, algo::strptr field, alg
 // --- dmmeta.Ffast..ReadStrptrMaybe
 // Read fields of dmmeta::Ffast from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Ffast_ReadStrptrMaybe(dmmeta::Ffast &parent, algo::strptr in_str) {
+bool dmmeta::Ffast_ReadStrptrMaybe(dmmeta::Ffast &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.ffast") || algo::StripTypeTag(in_str, "dmmeta.Ffast");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -4112,7 +4112,7 @@ void dmmeta::Ffast_Init(dmmeta::Ffast& parent) {
 // --- dmmeta.Ffast..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ffast.String  printfmt:Tuple
-void dmmeta::Ffast_Print(dmmeta::Ffast& row, algo::cstring& str) {
+void dmmeta::Ffast_Print(dmmeta::Ffast& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.ffast";
 
@@ -4145,7 +4145,7 @@ void dmmeta::Ffast_Print(dmmeta::Ffast& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fflag..ReadFieldMaybe
-bool dmmeta::Fflag_ReadFieldMaybe(dmmeta::Fflag& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fflag_ReadFieldMaybe(dmmeta::Fflag& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -4177,7 +4177,7 @@ bool dmmeta::Fflag_ReadFieldMaybe(dmmeta::Fflag& parent, algo::strptr field, alg
 // --- dmmeta.Fflag..ReadStrptrMaybe
 // Read fields of dmmeta::Fflag from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fflag_ReadStrptrMaybe(dmmeta::Fflag &parent, algo::strptr in_str) {
+bool dmmeta::Fflag_ReadStrptrMaybe(dmmeta::Fflag &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fflag") || algo::StripTypeTag(in_str, "dmmeta.Fflag");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -4189,7 +4189,7 @@ bool dmmeta::Fflag_ReadStrptrMaybe(dmmeta::Fflag &parent, algo::strptr in_str) {
 // --- dmmeta.Fflag..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fflag.String  printfmt:Tuple
-void dmmeta::Fflag_Print(dmmeta::Fflag& row, algo::cstring& str) {
+void dmmeta::Fflag_Print(dmmeta::Fflag& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fflag";
 
@@ -4207,37 +4207,37 @@ void dmmeta::Fflag_Print(dmmeta::Fflag& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Field.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Field& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Field& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.field, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Field.ctype.Get2
-algo::Smallstr100 dmmeta::Field_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Field_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Field.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Field& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Field& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.field, ".RL.RL"));
     return ret;
 }
 
 // --- dmmeta.Field.ns.Get2
-algo::Smallstr16 dmmeta::Field_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Field_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".RL.RL"));
     return ret;
 }
 
 // --- dmmeta.Field.name.Get
-algo::Smallstr50 dmmeta::name_Get(dmmeta::Field& parent) {
+algo::Smallstr50 dmmeta::name_Get(dmmeta::Field& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.field, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Field.name.Get2
-algo::Smallstr50 dmmeta::Field_name_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Field_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -4248,7 +4248,7 @@ tempstr dmmeta::Field_Concat_ctype_name( const algo::strptr& ctype ,const algo::
 }
 
 // --- dmmeta.Field..ReadFieldMaybe
-bool dmmeta::Field_ReadFieldMaybe(dmmeta::Field& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Field_ReadFieldMaybe(dmmeta::Field& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -4296,7 +4296,7 @@ bool dmmeta::Field_ReadFieldMaybe(dmmeta::Field& parent, algo::strptr field, alg
 // --- dmmeta.Field..ReadStrptrMaybe
 // Read fields of dmmeta::Field from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Field_ReadStrptrMaybe(dmmeta::Field &parent, algo::strptr in_str) {
+bool dmmeta::Field_ReadStrptrMaybe(dmmeta::Field &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.field") || algo::StripTypeTag(in_str, "dmmeta.Field");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -4308,7 +4308,7 @@ bool dmmeta::Field_ReadStrptrMaybe(dmmeta::Field &parent, algo::strptr in_str) {
 // --- dmmeta.Field..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Field.String  printfmt:Tuple
-void dmmeta::Field_Print(dmmeta::Field& row, algo::cstring& str) {
+void dmmeta::Field_Print(dmmeta::Field& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.field";
 
@@ -4331,7 +4331,7 @@ void dmmeta::Field_Print(dmmeta::Field& row, algo::cstring& str) {
 // --- dmmeta.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
+const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case dmmeta_FieldId_field          : ret = "field";  break;
@@ -4516,7 +4516,7 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
 // --- dmmeta.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void dmmeta::value_Print(const dmmeta::FieldId& parent, algo::cstring &lhs) {
+void dmmeta::value_Print(const dmmeta::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -4529,7 +4529,7 @@ void dmmeta::value_Print(const dmmeta::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
+bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 2: {
@@ -5162,13 +5162,13 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
 // --- dmmeta.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void dmmeta::value_SetStrptr(dmmeta::FieldId& parent, algo::strptr rhs, dmmeta_FieldIdEnum dflt) {
+void dmmeta::value_SetStrptr(dmmeta::FieldId& parent, algo::strptr rhs, dmmeta_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- dmmeta.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool dmmeta::value_ReadStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
+bool dmmeta::value_ReadStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -5180,7 +5180,7 @@ bool dmmeta::value_ReadStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
 // --- dmmeta.FieldId..ReadStrptrMaybe
 // Read fields of dmmeta::FieldId from an ascii string.
 // The format of the string is the format of the dmmeta::FieldId's only field
-bool dmmeta::FieldId_ReadStrptrMaybe(dmmeta::FieldId &parent, algo::strptr in_str) {
+bool dmmeta::FieldId_ReadStrptrMaybe(dmmeta::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -5189,12 +5189,12 @@ bool dmmeta::FieldId_ReadStrptrMaybe(dmmeta::FieldId &parent, algo::strptr in_st
 // --- dmmeta.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.FieldId.String  printfmt:Raw
-void dmmeta::FieldId_Print(dmmeta::FieldId& row, algo::cstring& str) {
+void dmmeta::FieldId_Print(dmmeta::FieldId& row, algo::cstring& str) throw() {
     dmmeta::value_Print(row, str);
 }
 
 // --- dmmeta.Findrem..ReadFieldMaybe
-bool dmmeta::Findrem_ReadFieldMaybe(dmmeta::Findrem& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Findrem_ReadFieldMaybe(dmmeta::Findrem& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5218,7 +5218,7 @@ bool dmmeta::Findrem_ReadFieldMaybe(dmmeta::Findrem& parent, algo::strptr field,
 // --- dmmeta.Findrem..ReadStrptrMaybe
 // Read fields of dmmeta::Findrem from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Findrem_ReadStrptrMaybe(dmmeta::Findrem &parent, algo::strptr in_str) {
+bool dmmeta::Findrem_ReadStrptrMaybe(dmmeta::Findrem &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.findrem") || algo::StripTypeTag(in_str, "dmmeta.Findrem");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -5230,7 +5230,7 @@ bool dmmeta::Findrem_ReadStrptrMaybe(dmmeta::Findrem &parent, algo::strptr in_st
 // --- dmmeta.Findrem..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Findrem.String  printfmt:Tuple
-void dmmeta::Findrem_Print(dmmeta::Findrem& row, algo::cstring& str) {
+void dmmeta::Findrem_Print(dmmeta::Findrem& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.findrem";
 
@@ -5242,19 +5242,19 @@ void dmmeta::Findrem_Print(dmmeta::Findrem& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Finput.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Finput& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Finput& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.field, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Finput.ns.Get2
-algo::Smallstr16 dmmeta::Finput_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Finput_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Finput..ReadFieldMaybe
-bool dmmeta::Finput_ReadFieldMaybe(dmmeta::Finput& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Finput_ReadFieldMaybe(dmmeta::Finput& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5294,7 +5294,7 @@ bool dmmeta::Finput_ReadFieldMaybe(dmmeta::Finput& parent, algo::strptr field, a
 // --- dmmeta.Finput..ReadStrptrMaybe
 // Read fields of dmmeta::Finput from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Finput_ReadStrptrMaybe(dmmeta::Finput &parent, algo::strptr in_str) {
+bool dmmeta::Finput_ReadStrptrMaybe(dmmeta::Finput &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.finput") || algo::StripTypeTag(in_str, "dmmeta.Finput");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -5306,7 +5306,7 @@ bool dmmeta::Finput_ReadStrptrMaybe(dmmeta::Finput &parent, algo::strptr in_str)
 // --- dmmeta.Finput..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Finput.String  printfmt:Tuple
-void dmmeta::Finput_Print(dmmeta::Finput& row, algo::cstring& str) {
+void dmmeta::Finput_Print(dmmeta::Finput& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.finput";
 
@@ -5327,7 +5327,7 @@ void dmmeta::Finput_Print(dmmeta::Finput& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fldoffset..ReadFieldMaybe
-bool dmmeta::Fldoffset_ReadFieldMaybe(dmmeta::Fldoffset& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fldoffset_ReadFieldMaybe(dmmeta::Fldoffset& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5351,7 +5351,7 @@ bool dmmeta::Fldoffset_ReadFieldMaybe(dmmeta::Fldoffset& parent, algo::strptr fi
 // --- dmmeta.Fldoffset..ReadStrptrMaybe
 // Read fields of dmmeta::Fldoffset from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fldoffset_ReadStrptrMaybe(dmmeta::Fldoffset &parent, algo::strptr in_str) {
+bool dmmeta::Fldoffset_ReadStrptrMaybe(dmmeta::Fldoffset &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fldoffset") || algo::StripTypeTag(in_str, "dmmeta.Fldoffset");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -5363,7 +5363,7 @@ bool dmmeta::Fldoffset_ReadStrptrMaybe(dmmeta::Fldoffset &parent, algo::strptr i
 // --- dmmeta.Fldoffset..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fldoffset.String  printfmt:Tuple
-void dmmeta::Fldoffset_Print(dmmeta::Fldoffset& row, algo::cstring& str) {
+void dmmeta::Fldoffset_Print(dmmeta::Fldoffset& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fldoffset";
 
@@ -5375,19 +5375,19 @@ void dmmeta::Fldoffset_Print(dmmeta::Fldoffset& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Floadtuples.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Floadtuples& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Floadtuples& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.field, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Floadtuples.ctype.Get2
-algo::Smallstr100 dmmeta::Floadtuples_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Floadtuples_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Floadtuples..ReadFieldMaybe
-bool dmmeta::Floadtuples_ReadFieldMaybe(dmmeta::Floadtuples& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Floadtuples_ReadFieldMaybe(dmmeta::Floadtuples& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5415,7 +5415,7 @@ bool dmmeta::Floadtuples_ReadFieldMaybe(dmmeta::Floadtuples& parent, algo::strpt
 // --- dmmeta.Floadtuples..ReadStrptrMaybe
 // Read fields of dmmeta::Floadtuples from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Floadtuples_ReadStrptrMaybe(dmmeta::Floadtuples &parent, algo::strptr in_str) {
+bool dmmeta::Floadtuples_ReadStrptrMaybe(dmmeta::Floadtuples &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.floadtuples") || algo::StripTypeTag(in_str, "dmmeta.Floadtuples");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -5427,7 +5427,7 @@ bool dmmeta::Floadtuples_ReadStrptrMaybe(dmmeta::Floadtuples &parent, algo::strp
 // --- dmmeta.Floadtuples..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Floadtuples.String  printfmt:Tuple
-void dmmeta::Floadtuples_Print(dmmeta::Floadtuples& row, algo::cstring& str) {
+void dmmeta::Floadtuples_Print(dmmeta::Floadtuples& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.floadtuples";
 
@@ -5439,7 +5439,7 @@ void dmmeta::Floadtuples_Print(dmmeta::Floadtuples& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fnoremove..ReadFieldMaybe
-bool dmmeta::Fnoremove_ReadFieldMaybe(dmmeta::Fnoremove& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fnoremove_ReadFieldMaybe(dmmeta::Fnoremove& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5463,7 +5463,7 @@ bool dmmeta::Fnoremove_ReadFieldMaybe(dmmeta::Fnoremove& parent, algo::strptr fi
 // --- dmmeta.Fnoremove..ReadStrptrMaybe
 // Read fields of dmmeta::Fnoremove from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fnoremove_ReadStrptrMaybe(dmmeta::Fnoremove &parent, algo::strptr in_str) {
+bool dmmeta::Fnoremove_ReadStrptrMaybe(dmmeta::Fnoremove &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fnoremove") || algo::StripTypeTag(in_str, "dmmeta.Fnoremove");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -5475,7 +5475,7 @@ bool dmmeta::Fnoremove_ReadStrptrMaybe(dmmeta::Fnoremove &parent, algo::strptr i
 // --- dmmeta.Fnoremove..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fnoremove.String  printfmt:Tuple
-void dmmeta::Fnoremove_Print(dmmeta::Fnoremove& row, algo::cstring& str) {
+void dmmeta::Fnoremove_Print(dmmeta::Fnoremove& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fnoremove";
 
@@ -5487,19 +5487,19 @@ void dmmeta::Fnoremove_Print(dmmeta::Fnoremove& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Foutput.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Foutput& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Foutput& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.field, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Foutput.ns.Get2
-algo::Smallstr16 dmmeta::Foutput_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Foutput_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Foutput..ReadFieldMaybe
-bool dmmeta::Foutput_ReadFieldMaybe(dmmeta::Foutput& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Foutput_ReadFieldMaybe(dmmeta::Foutput& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5527,7 +5527,7 @@ bool dmmeta::Foutput_ReadFieldMaybe(dmmeta::Foutput& parent, algo::strptr field,
 // --- dmmeta.Foutput..ReadStrptrMaybe
 // Read fields of dmmeta::Foutput from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Foutput_ReadStrptrMaybe(dmmeta::Foutput &parent, algo::strptr in_str) {
+bool dmmeta::Foutput_ReadStrptrMaybe(dmmeta::Foutput &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.foutput") || algo::StripTypeTag(in_str, "dmmeta.Foutput");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -5539,7 +5539,7 @@ bool dmmeta::Foutput_ReadStrptrMaybe(dmmeta::Foutput &parent, algo::strptr in_st
 // --- dmmeta.Foutput..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Foutput.String  printfmt:Tuple
-void dmmeta::Foutput_Print(dmmeta::Foutput& row, algo::cstring& str) {
+void dmmeta::Foutput_Print(dmmeta::Foutput& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.foutput";
 
@@ -5551,7 +5551,7 @@ void dmmeta::Foutput_Print(dmmeta::Foutput& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fprefix..ReadFieldMaybe
-bool dmmeta::Fprefix_ReadFieldMaybe(dmmeta::Fprefix& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fprefix_ReadFieldMaybe(dmmeta::Fprefix& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5579,7 +5579,7 @@ bool dmmeta::Fprefix_ReadFieldMaybe(dmmeta::Fprefix& parent, algo::strptr field,
 // --- dmmeta.Fprefix..ReadStrptrMaybe
 // Read fields of dmmeta::Fprefix from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fprefix_ReadStrptrMaybe(dmmeta::Fprefix &parent, algo::strptr in_str) {
+bool dmmeta::Fprefix_ReadStrptrMaybe(dmmeta::Fprefix &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fprefix") || algo::StripTypeTag(in_str, "dmmeta.Fprefix");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -5591,7 +5591,7 @@ bool dmmeta::Fprefix_ReadStrptrMaybe(dmmeta::Fprefix &parent, algo::strptr in_st
 // --- dmmeta.Fprefix..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fprefix.String  printfmt:Tuple
-void dmmeta::Fprefix_Print(dmmeta::Fprefix& row, algo::cstring& str) {
+void dmmeta::Fprefix_Print(dmmeta::Fprefix& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fprefix";
 
@@ -5606,7 +5606,7 @@ void dmmeta::Fprefix_Print(dmmeta::Fprefix& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fregx..ReadFieldMaybe
-bool dmmeta::Fregx_ReadFieldMaybe(dmmeta::Fregx& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fregx_ReadFieldMaybe(dmmeta::Fregx& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5638,7 +5638,7 @@ bool dmmeta::Fregx_ReadFieldMaybe(dmmeta::Fregx& parent, algo::strptr field, alg
 // --- dmmeta.Fregx..ReadStrptrMaybe
 // Read fields of dmmeta::Fregx from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fregx_ReadStrptrMaybe(dmmeta::Fregx &parent, algo::strptr in_str) {
+bool dmmeta::Fregx_ReadStrptrMaybe(dmmeta::Fregx &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fregx") || algo::StripTypeTag(in_str, "dmmeta.Fregx");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -5650,7 +5650,7 @@ bool dmmeta::Fregx_ReadStrptrMaybe(dmmeta::Fregx &parent, algo::strptr in_str) {
 // --- dmmeta.Fregx..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fregx.String  printfmt:Tuple
-void dmmeta::Fregx_Print(dmmeta::Fregx& row, algo::cstring& str) {
+void dmmeta::Fregx_Print(dmmeta::Fregx& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fregx";
 
@@ -5668,7 +5668,7 @@ void dmmeta::Fregx_Print(dmmeta::Fregx& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fsort..ReadFieldMaybe
-bool dmmeta::Fsort_ReadFieldMaybe(dmmeta::Fsort& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fsort_ReadFieldMaybe(dmmeta::Fsort& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5700,7 +5700,7 @@ bool dmmeta::Fsort_ReadFieldMaybe(dmmeta::Fsort& parent, algo::strptr field, alg
 // --- dmmeta.Fsort..ReadStrptrMaybe
 // Read fields of dmmeta::Fsort from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fsort_ReadStrptrMaybe(dmmeta::Fsort &parent, algo::strptr in_str) {
+bool dmmeta::Fsort_ReadStrptrMaybe(dmmeta::Fsort &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fsort") || algo::StripTypeTag(in_str, "dmmeta.Fsort");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -5712,7 +5712,7 @@ bool dmmeta::Fsort_ReadStrptrMaybe(dmmeta::Fsort &parent, algo::strptr in_str) {
 // --- dmmeta.Fsort..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fsort.String  printfmt:Tuple
-void dmmeta::Fsort_Print(dmmeta::Fsort& row, algo::cstring& str) {
+void dmmeta::Fsort_Print(dmmeta::Fsort& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fsort";
 
@@ -5730,37 +5730,37 @@ void dmmeta::Fsort_Print(dmmeta::Fsort& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fstep.field.Get
-algo::Smallstr100 dmmeta::field_Get(dmmeta::Fstep& parent) {
+algo::Smallstr100 dmmeta::field_Get(dmmeta::Fstep& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.fstep, ""));
     return ret;
 }
 
 // --- dmmeta.Fstep.field.Get2
-algo::Smallstr100 dmmeta::Fstep_field_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Fstep_field_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ""));
     return ret;
 }
 
 // --- dmmeta.Fstep.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Fstep& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Fstep& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.fstep, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Fstep.ns.Get2
-algo::Smallstr16 dmmeta::Fstep_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Fstep_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Fstep.name.Get
-algo::Smallstr50 dmmeta::name_Get(dmmeta::Fstep& parent) {
+algo::Smallstr50 dmmeta::name_Get(dmmeta::Fstep& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.fstep, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Fstep.name.Get2
-algo::Smallstr50 dmmeta::Fstep_name_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Fstep_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -5771,7 +5771,7 @@ tempstr dmmeta::Fstep_Concat_field( const algo::strptr& field ) {
 }
 
 // --- dmmeta.Fstep..ReadFieldMaybe
-bool dmmeta::Fstep_ReadFieldMaybe(dmmeta::Fstep& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fstep_ReadFieldMaybe(dmmeta::Fstep& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5811,7 +5811,7 @@ bool dmmeta::Fstep_ReadFieldMaybe(dmmeta::Fstep& parent, algo::strptr field, alg
 // --- dmmeta.Fstep..ReadStrptrMaybe
 // Read fields of dmmeta::Fstep from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fstep_ReadStrptrMaybe(dmmeta::Fstep &parent, algo::strptr in_str) {
+bool dmmeta::Fstep_ReadStrptrMaybe(dmmeta::Fstep &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fstep") || algo::StripTypeTag(in_str, "dmmeta.Fstep");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -5823,7 +5823,7 @@ bool dmmeta::Fstep_ReadStrptrMaybe(dmmeta::Fstep &parent, algo::strptr in_str) {
 // --- dmmeta.Fstep..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fstep.String  printfmt:Tuple
-void dmmeta::Fstep_Print(dmmeta::Fstep& row, algo::cstring& str) {
+void dmmeta::Fstep_Print(dmmeta::Fstep& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fstep";
 
@@ -5838,7 +5838,7 @@ void dmmeta::Fstep_Print(dmmeta::Fstep& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Ftrace..ReadFieldMaybe
-bool dmmeta::Ftrace_ReadFieldMaybe(dmmeta::Ftrace& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Ftrace_ReadFieldMaybe(dmmeta::Ftrace& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5862,7 +5862,7 @@ bool dmmeta::Ftrace_ReadFieldMaybe(dmmeta::Ftrace& parent, algo::strptr field, a
 // --- dmmeta.Ftrace..ReadStrptrMaybe
 // Read fields of dmmeta::Ftrace from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Ftrace_ReadStrptrMaybe(dmmeta::Ftrace &parent, algo::strptr in_str) {
+bool dmmeta::Ftrace_ReadStrptrMaybe(dmmeta::Ftrace &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.ftrace") || algo::StripTypeTag(in_str, "dmmeta.Ftrace");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -5874,7 +5874,7 @@ bool dmmeta::Ftrace_ReadStrptrMaybe(dmmeta::Ftrace &parent, algo::strptr in_str)
 // --- dmmeta.Ftrace..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ftrace.String  printfmt:Tuple
-void dmmeta::Ftrace_Print(dmmeta::Ftrace& row, algo::cstring& str) {
+void dmmeta::Ftrace_Print(dmmeta::Ftrace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.ftrace";
 
@@ -5886,7 +5886,7 @@ void dmmeta::Ftrace_Print(dmmeta::Ftrace& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Ftuple..ReadFieldMaybe
-bool dmmeta::Ftuple_ReadFieldMaybe(dmmeta::Ftuple& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Ftuple_ReadFieldMaybe(dmmeta::Ftuple& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -5910,7 +5910,7 @@ bool dmmeta::Ftuple_ReadFieldMaybe(dmmeta::Ftuple& parent, algo::strptr field, a
 // --- dmmeta.Ftuple..ReadStrptrMaybe
 // Read fields of dmmeta::Ftuple from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Ftuple_ReadStrptrMaybe(dmmeta::Ftuple &parent, algo::strptr in_str) {
+bool dmmeta::Ftuple_ReadStrptrMaybe(dmmeta::Ftuple &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.ftuple") || algo::StripTypeTag(in_str, "dmmeta.Ftuple");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -5922,7 +5922,7 @@ bool dmmeta::Ftuple_ReadStrptrMaybe(dmmeta::Ftuple &parent, algo::strptr in_str)
 // --- dmmeta.Ftuple..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ftuple.String  printfmt:Tuple
-void dmmeta::Ftuple_Print(dmmeta::Ftuple& row, algo::cstring& str) {
+void dmmeta::Ftuple_Print(dmmeta::Ftuple& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.ftuple";
 
@@ -5934,49 +5934,49 @@ void dmmeta::Ftuple_Print(dmmeta::Ftuple& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Func.field.Get
-algo::Smallstr100 dmmeta::field_Get(dmmeta::Func& parent) {
+algo::Smallstr100 dmmeta::field_Get(dmmeta::Func& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.func, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Func.field.Get2
-algo::Smallstr100 dmmeta::Func_field_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Func_field_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Func.name.Get
-algo::Smallstr50 dmmeta::name_Get(dmmeta::Func& parent) {
+algo::Smallstr50 dmmeta::name_Get(dmmeta::Func& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.func, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Func.name.Get2
-algo::Smallstr50 dmmeta::Func_name_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Func_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Func.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Func& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Func& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.func, ".RL.RL"));
     return ret;
 }
 
 // --- dmmeta.Func.ctype.Get2
-algo::Smallstr100 dmmeta::Func_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Func_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RL.RL"));
     return ret;
 }
 
 // --- dmmeta.Func.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Func& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Func& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.func, ".RL.RL.RL"));
     return ret;
 }
 
 // --- dmmeta.Func.ns.Get2
-algo::Smallstr16 dmmeta::Func_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Func_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".RL.RL.RL"));
     return ret;
 }
@@ -5987,7 +5987,7 @@ tempstr dmmeta::Func_Concat_field_name( const algo::strptr& field ,const algo::s
 }
 
 // --- dmmeta.Func..ReadFieldMaybe
-bool dmmeta::Func_ReadFieldMaybe(dmmeta::Func& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Func_ReadFieldMaybe(dmmeta::Func& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6031,7 +6031,7 @@ bool dmmeta::Func_ReadFieldMaybe(dmmeta::Func& parent, algo::strptr field, algo:
 // --- dmmeta.Func..ReadStrptrMaybe
 // Read fields of dmmeta::Func from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Func_ReadStrptrMaybe(dmmeta::Func &parent, algo::strptr in_str) {
+bool dmmeta::Func_ReadStrptrMaybe(dmmeta::Func &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.func") || algo::StripTypeTag(in_str, "dmmeta.Func");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6043,7 +6043,7 @@ bool dmmeta::Func_ReadStrptrMaybe(dmmeta::Func &parent, algo::strptr in_str) {
 // --- dmmeta.Func..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Func.String  printfmt:Tuple
-void dmmeta::Func_Print(dmmeta::Func& row, algo::cstring& str) {
+void dmmeta::Func_Print(dmmeta::Func& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.func";
 
@@ -6058,7 +6058,7 @@ void dmmeta::Func_Print(dmmeta::Func& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Funique..ReadFieldMaybe
-bool dmmeta::Funique_ReadFieldMaybe(dmmeta::Funique& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Funique_ReadFieldMaybe(dmmeta::Funique& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6082,7 +6082,7 @@ bool dmmeta::Funique_ReadFieldMaybe(dmmeta::Funique& parent, algo::strptr field,
 // --- dmmeta.Funique..ReadStrptrMaybe
 // Read fields of dmmeta::Funique from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Funique_ReadStrptrMaybe(dmmeta::Funique &parent, algo::strptr in_str) {
+bool dmmeta::Funique_ReadStrptrMaybe(dmmeta::Funique &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.funique") || algo::StripTypeTag(in_str, "dmmeta.Funique");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6094,7 +6094,7 @@ bool dmmeta::Funique_ReadStrptrMaybe(dmmeta::Funique &parent, algo::strptr in_st
 // --- dmmeta.Funique..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Funique.String  printfmt:Tuple
-void dmmeta::Funique_Print(dmmeta::Funique& row, algo::cstring& str) {
+void dmmeta::Funique_Print(dmmeta::Funique& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.funique";
 
@@ -6106,7 +6106,7 @@ void dmmeta::Funique_Print(dmmeta::Funique& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fuserinit..ReadFieldMaybe
-bool dmmeta::Fuserinit_ReadFieldMaybe(dmmeta::Fuserinit& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fuserinit_ReadFieldMaybe(dmmeta::Fuserinit& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6130,7 +6130,7 @@ bool dmmeta::Fuserinit_ReadFieldMaybe(dmmeta::Fuserinit& parent, algo::strptr fi
 // --- dmmeta.Fuserinit..ReadStrptrMaybe
 // Read fields of dmmeta::Fuserinit from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fuserinit_ReadStrptrMaybe(dmmeta::Fuserinit &parent, algo::strptr in_str) {
+bool dmmeta::Fuserinit_ReadStrptrMaybe(dmmeta::Fuserinit &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fuserinit") || algo::StripTypeTag(in_str, "dmmeta.Fuserinit");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6142,7 +6142,7 @@ bool dmmeta::Fuserinit_ReadStrptrMaybe(dmmeta::Fuserinit &parent, algo::strptr i
 // --- dmmeta.Fuserinit..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fuserinit.String  printfmt:Tuple
-void dmmeta::Fuserinit_Print(dmmeta::Fuserinit& row, algo::cstring& str) {
+void dmmeta::Fuserinit_Print(dmmeta::Fuserinit& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fuserinit";
 
@@ -6154,25 +6154,25 @@ void dmmeta::Fuserinit_Print(dmmeta::Fuserinit& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Fwddecl.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Fwddecl& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Fwddecl& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.fwddecl, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Fwddecl.ns.Get2
-algo::Smallstr16 dmmeta::Fwddecl_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Fwddecl_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Fwddecl.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Fwddecl& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Fwddecl& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.fwddecl, ".LR"));
     return ret;
 }
 
 // --- dmmeta.Fwddecl.ctype.Get2
-algo::Smallstr100 dmmeta::Fwddecl_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Fwddecl_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".LR"));
     return ret;
 }
@@ -6183,7 +6183,7 @@ tempstr dmmeta::Fwddecl_Concat_ns_ctype( const algo::strptr& ns ,const algo::str
 }
 
 // --- dmmeta.Fwddecl..ReadFieldMaybe
-bool dmmeta::Fwddecl_ReadFieldMaybe(dmmeta::Fwddecl& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Fwddecl_ReadFieldMaybe(dmmeta::Fwddecl& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6215,7 +6215,7 @@ bool dmmeta::Fwddecl_ReadFieldMaybe(dmmeta::Fwddecl& parent, algo::strptr field,
 // --- dmmeta.Fwddecl..ReadStrptrMaybe
 // Read fields of dmmeta::Fwddecl from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Fwddecl_ReadStrptrMaybe(dmmeta::Fwddecl &parent, algo::strptr in_str) {
+bool dmmeta::Fwddecl_ReadStrptrMaybe(dmmeta::Fwddecl &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.fwddecl") || algo::StripTypeTag(in_str, "dmmeta.Fwddecl");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6227,7 +6227,7 @@ bool dmmeta::Fwddecl_ReadStrptrMaybe(dmmeta::Fwddecl &parent, algo::strptr in_st
 // --- dmmeta.Fwddecl..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Fwddecl.String  printfmt:Tuple
-void dmmeta::Fwddecl_Print(dmmeta::Fwddecl& row, algo::cstring& str) {
+void dmmeta::Fwddecl_Print(dmmeta::Fwddecl& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.fwddecl";
 
@@ -6239,19 +6239,19 @@ void dmmeta::Fwddecl_Print(dmmeta::Fwddecl& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Gconst.namefldctyp.Get
-algo::Smallstr100 dmmeta::namefldctyp_Get(dmmeta::Gconst& parent) {
+algo::Smallstr100 dmmeta::namefldctyp_Get(dmmeta::Gconst& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.namefld, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Gconst.namefldctyp.Get2
-algo::Smallstr100 dmmeta::Gconst_namefldctyp_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Gconst_namefldctyp_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Gconst..ReadFieldMaybe
-bool dmmeta::Gconst_ReadFieldMaybe(dmmeta::Gconst& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Gconst_ReadFieldMaybe(dmmeta::Gconst& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6287,7 +6287,7 @@ bool dmmeta::Gconst_ReadFieldMaybe(dmmeta::Gconst& parent, algo::strptr field, a
 // --- dmmeta.Gconst..ReadStrptrMaybe
 // Read fields of dmmeta::Gconst from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Gconst_ReadStrptrMaybe(dmmeta::Gconst &parent, algo::strptr in_str) {
+bool dmmeta::Gconst_ReadStrptrMaybe(dmmeta::Gconst &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.gconst") || algo::StripTypeTag(in_str, "dmmeta.Gconst");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6299,7 +6299,7 @@ bool dmmeta::Gconst_ReadStrptrMaybe(dmmeta::Gconst &parent, algo::strptr in_str)
 // --- dmmeta.Gconst..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Gconst.String  printfmt:Tuple
-void dmmeta::Gconst_Print(dmmeta::Gconst& row, algo::cstring& str) {
+void dmmeta::Gconst_Print(dmmeta::Gconst& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.gconst";
 
@@ -6317,19 +6317,19 @@ void dmmeta::Gconst_Print(dmmeta::Gconst& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Gstatic.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Gstatic& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Gstatic& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.field, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Gstatic.ns.Get2
-algo::Smallstr16 dmmeta::Gstatic_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Gstatic_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Gstatic..ReadFieldMaybe
-bool dmmeta::Gstatic_ReadFieldMaybe(dmmeta::Gstatic& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Gstatic_ReadFieldMaybe(dmmeta::Gstatic& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6357,7 +6357,7 @@ bool dmmeta::Gstatic_ReadFieldMaybe(dmmeta::Gstatic& parent, algo::strptr field,
 // --- dmmeta.Gstatic..ReadStrptrMaybe
 // Read fields of dmmeta::Gstatic from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Gstatic_ReadStrptrMaybe(dmmeta::Gstatic &parent, algo::strptr in_str) {
+bool dmmeta::Gstatic_ReadStrptrMaybe(dmmeta::Gstatic &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.gstatic") || algo::StripTypeTag(in_str, "dmmeta.Gstatic");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6369,7 +6369,7 @@ bool dmmeta::Gstatic_ReadStrptrMaybe(dmmeta::Gstatic &parent, algo::strptr in_st
 // --- dmmeta.Gstatic..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Gstatic.String  printfmt:Tuple
-void dmmeta::Gstatic_Print(dmmeta::Gstatic& row, algo::cstring& str) {
+void dmmeta::Gstatic_Print(dmmeta::Gstatic& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.gstatic";
 
@@ -6381,25 +6381,25 @@ void dmmeta::Gstatic_Print(dmmeta::Gstatic& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Gsymbol.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Gsymbol& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Gsymbol& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.gsymbol, "/RL"));
     return ret;
 }
 
 // --- dmmeta.Gsymbol.ns.Get2
-algo::Smallstr16 dmmeta::Gsymbol_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Gsymbol_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, "/RL"));
     return ret;
 }
 
 // --- dmmeta.Gsymbol.ssimfile.Get
-algo::Smallstr50 dmmeta::ssimfile_Get(dmmeta::Gsymbol& parent) {
+algo::Smallstr50 dmmeta::ssimfile_Get(dmmeta::Gsymbol& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gsymbol, "/RR"));
     return ret;
 }
 
 // --- dmmeta.Gsymbol.ssimfile.Get2
-algo::Smallstr50 dmmeta::Gsymbol_ssimfile_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Gsymbol_ssimfile_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/RR"));
     return ret;
 }
@@ -6410,7 +6410,7 @@ tempstr dmmeta::Gsymbol_Concat_ns_ssimfile( const algo::strptr& ns ,const algo::
 }
 
 // --- dmmeta.Gsymbol..ReadFieldMaybe
-bool dmmeta::Gsymbol_ReadFieldMaybe(dmmeta::Gsymbol& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Gsymbol_ReadFieldMaybe(dmmeta::Gsymbol& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6450,7 +6450,7 @@ bool dmmeta::Gsymbol_ReadFieldMaybe(dmmeta::Gsymbol& parent, algo::strptr field,
 // --- dmmeta.Gsymbol..ReadStrptrMaybe
 // Read fields of dmmeta::Gsymbol from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Gsymbol_ReadStrptrMaybe(dmmeta::Gsymbol &parent, algo::strptr in_str) {
+bool dmmeta::Gsymbol_ReadStrptrMaybe(dmmeta::Gsymbol &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.gsymbol") || algo::StripTypeTag(in_str, "dmmeta.Gsymbol");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6462,7 +6462,7 @@ bool dmmeta::Gsymbol_ReadStrptrMaybe(dmmeta::Gsymbol &parent, algo::strptr in_st
 // --- dmmeta.Gsymbol..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Gsymbol.String  printfmt:Tuple
-void dmmeta::Gsymbol_Print(dmmeta::Gsymbol& row, algo::cstring& str) {
+void dmmeta::Gsymbol_Print(dmmeta::Gsymbol& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.gsymbol";
 
@@ -6480,7 +6480,7 @@ void dmmeta::Gsymbol_Print(dmmeta::Gsymbol& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Hashtype..ReadFieldMaybe
-bool dmmeta::Hashtype_ReadFieldMaybe(dmmeta::Hashtype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Hashtype_ReadFieldMaybe(dmmeta::Hashtype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6504,7 +6504,7 @@ bool dmmeta::Hashtype_ReadFieldMaybe(dmmeta::Hashtype& parent, algo::strptr fiel
 // --- dmmeta.Hashtype..ReadStrptrMaybe
 // Read fields of dmmeta::Hashtype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Hashtype_ReadStrptrMaybe(dmmeta::Hashtype &parent, algo::strptr in_str) {
+bool dmmeta::Hashtype_ReadStrptrMaybe(dmmeta::Hashtype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.hashtype") || algo::StripTypeTag(in_str, "dmmeta.Hashtype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6516,7 +6516,7 @@ bool dmmeta::Hashtype_ReadStrptrMaybe(dmmeta::Hashtype &parent, algo::strptr in_
 // --- dmmeta.Hashtype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Hashtype.String  printfmt:Tuple
-void dmmeta::Hashtype_Print(dmmeta::Hashtype& row, algo::cstring& str) {
+void dmmeta::Hashtype_Print(dmmeta::Hashtype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.hashtype";
 
@@ -6528,7 +6528,7 @@ void dmmeta::Hashtype_Print(dmmeta::Hashtype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Hook..ReadFieldMaybe
-bool dmmeta::Hook_ReadFieldMaybe(dmmeta::Hook& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Hook_ReadFieldMaybe(dmmeta::Hook& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6552,7 +6552,7 @@ bool dmmeta::Hook_ReadFieldMaybe(dmmeta::Hook& parent, algo::strptr field, algo:
 // --- dmmeta.Hook..ReadStrptrMaybe
 // Read fields of dmmeta::Hook from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Hook_ReadStrptrMaybe(dmmeta::Hook &parent, algo::strptr in_str) {
+bool dmmeta::Hook_ReadStrptrMaybe(dmmeta::Hook &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.hook") || algo::StripTypeTag(in_str, "dmmeta.Hook");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6564,7 +6564,7 @@ bool dmmeta::Hook_ReadStrptrMaybe(dmmeta::Hook &parent, algo::strptr in_str) {
 // --- dmmeta.Hook..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Hook.String  printfmt:Tuple
-void dmmeta::Hook_Print(dmmeta::Hook& row, algo::cstring& str) {
+void dmmeta::Hook_Print(dmmeta::Hook& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.hook";
 
@@ -6576,7 +6576,7 @@ void dmmeta::Hook_Print(dmmeta::Hook& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Inlary..ReadFieldMaybe
-bool dmmeta::Inlary_ReadFieldMaybe(dmmeta::Inlary& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Inlary_ReadFieldMaybe(dmmeta::Inlary& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6608,7 +6608,7 @@ bool dmmeta::Inlary_ReadFieldMaybe(dmmeta::Inlary& parent, algo::strptr field, a
 // --- dmmeta.Inlary..ReadStrptrMaybe
 // Read fields of dmmeta::Inlary from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Inlary_ReadStrptrMaybe(dmmeta::Inlary &parent, algo::strptr in_str) {
+bool dmmeta::Inlary_ReadStrptrMaybe(dmmeta::Inlary &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.inlary") || algo::StripTypeTag(in_str, "dmmeta.Inlary");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6620,7 +6620,7 @@ bool dmmeta::Inlary_ReadStrptrMaybe(dmmeta::Inlary &parent, algo::strptr in_str)
 // --- dmmeta.Inlary..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Inlary.String  printfmt:Tuple
-void dmmeta::Inlary_Print(dmmeta::Inlary& row, algo::cstring& str) {
+void dmmeta::Inlary_Print(dmmeta::Inlary& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.inlary";
 
@@ -6638,19 +6638,19 @@ void dmmeta::Inlary_Print(dmmeta::Inlary& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Lenfld.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Lenfld& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Lenfld& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.field, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Lenfld.ctype.Get2
-algo::Smallstr100 dmmeta::Lenfld_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Lenfld_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Lenfld..ReadFieldMaybe
-bool dmmeta::Lenfld_ReadFieldMaybe(dmmeta::Lenfld& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Lenfld_ReadFieldMaybe(dmmeta::Lenfld& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6678,7 +6678,7 @@ bool dmmeta::Lenfld_ReadFieldMaybe(dmmeta::Lenfld& parent, algo::strptr field, a
 // --- dmmeta.Lenfld..ReadStrptrMaybe
 // Read fields of dmmeta::Lenfld from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Lenfld_ReadStrptrMaybe(dmmeta::Lenfld &parent, algo::strptr in_str) {
+bool dmmeta::Lenfld_ReadStrptrMaybe(dmmeta::Lenfld &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.lenfld") || algo::StripTypeTag(in_str, "dmmeta.Lenfld");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6690,7 +6690,7 @@ bool dmmeta::Lenfld_ReadStrptrMaybe(dmmeta::Lenfld &parent, algo::strptr in_str)
 // --- dmmeta.Lenfld..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Lenfld.String  printfmt:Tuple
-void dmmeta::Lenfld_Print(dmmeta::Lenfld& row, algo::cstring& str) {
+void dmmeta::Lenfld_Print(dmmeta::Lenfld& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.lenfld";
 
@@ -6702,7 +6702,7 @@ void dmmeta::Lenfld_Print(dmmeta::Lenfld& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Listtype..ReadFieldMaybe
-bool dmmeta::Listtype_ReadFieldMaybe(dmmeta::Listtype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Listtype_ReadFieldMaybe(dmmeta::Listtype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6738,7 +6738,7 @@ bool dmmeta::Listtype_ReadFieldMaybe(dmmeta::Listtype& parent, algo::strptr fiel
 // --- dmmeta.Listtype..ReadStrptrMaybe
 // Read fields of dmmeta::Listtype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Listtype_ReadStrptrMaybe(dmmeta::Listtype &parent, algo::strptr in_str) {
+bool dmmeta::Listtype_ReadStrptrMaybe(dmmeta::Listtype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.listtype") || algo::StripTypeTag(in_str, "dmmeta.Listtype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6750,7 +6750,7 @@ bool dmmeta::Listtype_ReadStrptrMaybe(dmmeta::Listtype &parent, algo::strptr in_
 // --- dmmeta.Listtype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Listtype.String  printfmt:Tuple
-void dmmeta::Listtype_Print(dmmeta::Listtype& row, algo::cstring& str) {
+void dmmeta::Listtype_Print(dmmeta::Listtype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.listtype";
 
@@ -6771,19 +6771,19 @@ void dmmeta::Listtype_Print(dmmeta::Listtype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Llist.listtype.Get
-algo::Smallstr5 dmmeta::listtype_Get(dmmeta::Llist& parent) {
+algo::Smallstr5 dmmeta::listtype_Get(dmmeta::Llist& parent) throw() {
     algo::Smallstr5 ret(algo::Pathcomp(parent.field, ".RR_LL"));
     return ret;
 }
 
 // --- dmmeta.Llist.listtype.Get2
-algo::Smallstr5 dmmeta::Llist_listtype_Get(algo::strptr arg) {
+algo::Smallstr5 dmmeta::Llist_listtype_Get(algo::strptr arg) throw() {
     algo::Smallstr5 ret(algo::Pathcomp(arg, ".RR_LL"));
     return ret;
 }
 
 // --- dmmeta.Llist..ReadFieldMaybe
-bool dmmeta::Llist_ReadFieldMaybe(dmmeta::Llist& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Llist_ReadFieldMaybe(dmmeta::Llist& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6819,7 +6819,7 @@ bool dmmeta::Llist_ReadFieldMaybe(dmmeta::Llist& parent, algo::strptr field, alg
 // --- dmmeta.Llist..ReadStrptrMaybe
 // Read fields of dmmeta::Llist from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Llist_ReadStrptrMaybe(dmmeta::Llist &parent, algo::strptr in_str) {
+bool dmmeta::Llist_ReadStrptrMaybe(dmmeta::Llist &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.llist") || algo::StripTypeTag(in_str, "dmmeta.Llist");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6831,7 +6831,7 @@ bool dmmeta::Llist_ReadStrptrMaybe(dmmeta::Llist &parent, algo::strptr in_str) {
 // --- dmmeta.Llist..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Llist.String  printfmt:Tuple
-void dmmeta::Llist_Print(dmmeta::Llist& row, algo::cstring& str) {
+void dmmeta::Llist_Print(dmmeta::Llist& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.llist";
 
@@ -6849,7 +6849,7 @@ void dmmeta::Llist_Print(dmmeta::Llist& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Logcat..ReadFieldMaybe
-bool dmmeta::Logcat_ReadFieldMaybe(dmmeta::Logcat& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Logcat_ReadFieldMaybe(dmmeta::Logcat& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6881,7 +6881,7 @@ bool dmmeta::Logcat_ReadFieldMaybe(dmmeta::Logcat& parent, algo::strptr field, a
 // --- dmmeta.Logcat..ReadStrptrMaybe
 // Read fields of dmmeta::Logcat from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Logcat_ReadStrptrMaybe(dmmeta::Logcat &parent, algo::strptr in_str) {
+bool dmmeta::Logcat_ReadStrptrMaybe(dmmeta::Logcat &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.logcat") || algo::StripTypeTag(in_str, "dmmeta.Logcat");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6893,7 +6893,7 @@ bool dmmeta::Logcat_ReadStrptrMaybe(dmmeta::Logcat &parent, algo::strptr in_str)
 // --- dmmeta.Logcat..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Logcat.String  printfmt:Tuple
-void dmmeta::Logcat_Print(dmmeta::Logcat& row, algo::cstring& str) {
+void dmmeta::Logcat_Print(dmmeta::Logcat& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.logcat";
 
@@ -6911,7 +6911,7 @@ void dmmeta::Logcat_Print(dmmeta::Logcat& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Main..ReadFieldMaybe
-bool dmmeta::Main_ReadFieldMaybe(dmmeta::Main& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Main_ReadFieldMaybe(dmmeta::Main& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6935,7 +6935,7 @@ bool dmmeta::Main_ReadFieldMaybe(dmmeta::Main& parent, algo::strptr field, algo:
 // --- dmmeta.Main..ReadStrptrMaybe
 // Read fields of dmmeta::Main from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Main_ReadStrptrMaybe(dmmeta::Main &parent, algo::strptr in_str) {
+bool dmmeta::Main_ReadStrptrMaybe(dmmeta::Main &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.main") || algo::StripTypeTag(in_str, "dmmeta.Main");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6947,7 +6947,7 @@ bool dmmeta::Main_ReadStrptrMaybe(dmmeta::Main &parent, algo::strptr in_str) {
 // --- dmmeta.Main..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Main.String  printfmt:Tuple
-void dmmeta::Main_Print(dmmeta::Main& row, algo::cstring& str) {
+void dmmeta::Main_Print(dmmeta::Main& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.main";
 
@@ -6959,7 +6959,7 @@ void dmmeta::Main_Print(dmmeta::Main& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Msgtype..ReadFieldMaybe
-bool dmmeta::Msgtype_ReadFieldMaybe(dmmeta::Msgtype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Msgtype_ReadFieldMaybe(dmmeta::Msgtype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -6983,7 +6983,7 @@ bool dmmeta::Msgtype_ReadFieldMaybe(dmmeta::Msgtype& parent, algo::strptr field,
 // --- dmmeta.Msgtype..ReadStrptrMaybe
 // Read fields of dmmeta::Msgtype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Msgtype_ReadStrptrMaybe(dmmeta::Msgtype &parent, algo::strptr in_str) {
+bool dmmeta::Msgtype_ReadStrptrMaybe(dmmeta::Msgtype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.msgtype") || algo::StripTypeTag(in_str, "dmmeta.Msgtype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -6995,7 +6995,7 @@ bool dmmeta::Msgtype_ReadStrptrMaybe(dmmeta::Msgtype &parent, algo::strptr in_st
 // --- dmmeta.Msgtype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Msgtype.String  printfmt:Tuple
-void dmmeta::Msgtype_Print(dmmeta::Msgtype& row, algo::cstring& str) {
+void dmmeta::Msgtype_Print(dmmeta::Msgtype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.msgtype";
 
@@ -7007,7 +7007,7 @@ void dmmeta::Msgtype_Print(dmmeta::Msgtype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Nocascdel..ReadFieldMaybe
-bool dmmeta::Nocascdel_ReadFieldMaybe(dmmeta::Nocascdel& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Nocascdel_ReadFieldMaybe(dmmeta::Nocascdel& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7031,7 +7031,7 @@ bool dmmeta::Nocascdel_ReadFieldMaybe(dmmeta::Nocascdel& parent, algo::strptr fi
 // --- dmmeta.Nocascdel..ReadStrptrMaybe
 // Read fields of dmmeta::Nocascdel from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Nocascdel_ReadStrptrMaybe(dmmeta::Nocascdel &parent, algo::strptr in_str) {
+bool dmmeta::Nocascdel_ReadStrptrMaybe(dmmeta::Nocascdel &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.nocascdel") || algo::StripTypeTag(in_str, "dmmeta.Nocascdel");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7043,7 +7043,7 @@ bool dmmeta::Nocascdel_ReadStrptrMaybe(dmmeta::Nocascdel &parent, algo::strptr i
 // --- dmmeta.Nocascdel..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nocascdel.String  printfmt:Tuple
-void dmmeta::Nocascdel_Print(dmmeta::Nocascdel& row, algo::cstring& str) {
+void dmmeta::Nocascdel_Print(dmmeta::Nocascdel& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.nocascdel";
 
@@ -7055,7 +7055,7 @@ void dmmeta::Nocascdel_Print(dmmeta::Nocascdel& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Nossimfile..ReadFieldMaybe
-bool dmmeta::Nossimfile_ReadFieldMaybe(dmmeta::Nossimfile& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Nossimfile_ReadFieldMaybe(dmmeta::Nossimfile& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7079,7 +7079,7 @@ bool dmmeta::Nossimfile_ReadFieldMaybe(dmmeta::Nossimfile& parent, algo::strptr 
 // --- dmmeta.Nossimfile..ReadStrptrMaybe
 // Read fields of dmmeta::Nossimfile from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Nossimfile_ReadStrptrMaybe(dmmeta::Nossimfile &parent, algo::strptr in_str) {
+bool dmmeta::Nossimfile_ReadStrptrMaybe(dmmeta::Nossimfile &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.nossimfile") || algo::StripTypeTag(in_str, "dmmeta.Nossimfile");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7091,7 +7091,7 @@ bool dmmeta::Nossimfile_ReadStrptrMaybe(dmmeta::Nossimfile &parent, algo::strptr
 // --- dmmeta.Nossimfile..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nossimfile.String  printfmt:Tuple
-void dmmeta::Nossimfile_Print(dmmeta::Nossimfile& row, algo::cstring& str) {
+void dmmeta::Nossimfile_Print(dmmeta::Nossimfile& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.nossimfile";
 
@@ -7103,7 +7103,7 @@ void dmmeta::Nossimfile_Print(dmmeta::Nossimfile& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Noxref..ReadFieldMaybe
-bool dmmeta::Noxref_ReadFieldMaybe(dmmeta::Noxref& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Noxref_ReadFieldMaybe(dmmeta::Noxref& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7127,7 +7127,7 @@ bool dmmeta::Noxref_ReadFieldMaybe(dmmeta::Noxref& parent, algo::strptr field, a
 // --- dmmeta.Noxref..ReadStrptrMaybe
 // Read fields of dmmeta::Noxref from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Noxref_ReadStrptrMaybe(dmmeta::Noxref &parent, algo::strptr in_str) {
+bool dmmeta::Noxref_ReadStrptrMaybe(dmmeta::Noxref &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.noxref") || algo::StripTypeTag(in_str, "dmmeta.Noxref");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7139,7 +7139,7 @@ bool dmmeta::Noxref_ReadStrptrMaybe(dmmeta::Noxref &parent, algo::strptr in_str)
 // --- dmmeta.Noxref..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Noxref.String  printfmt:Tuple
-void dmmeta::Noxref_Print(dmmeta::Noxref& row, algo::cstring& str) {
+void dmmeta::Noxref_Print(dmmeta::Noxref& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.noxref";
 
@@ -7151,7 +7151,7 @@ void dmmeta::Noxref_Print(dmmeta::Noxref& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Ns..ReadFieldMaybe
-bool dmmeta::Ns_ReadFieldMaybe(dmmeta::Ns& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Ns_ReadFieldMaybe(dmmeta::Ns& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7183,7 +7183,7 @@ bool dmmeta::Ns_ReadFieldMaybe(dmmeta::Ns& parent, algo::strptr field, algo::str
 // --- dmmeta.Ns..ReadStrptrMaybe
 // Read fields of dmmeta::Ns from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Ns_ReadStrptrMaybe(dmmeta::Ns &parent, algo::strptr in_str) {
+bool dmmeta::Ns_ReadStrptrMaybe(dmmeta::Ns &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.ns") || algo::StripTypeTag(in_str, "dmmeta.Ns");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7195,7 +7195,7 @@ bool dmmeta::Ns_ReadStrptrMaybe(dmmeta::Ns &parent, algo::strptr in_str) {
 // --- dmmeta.Ns..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ns.String  printfmt:Tuple
-void dmmeta::Ns_Print(dmmeta::Ns& row, algo::cstring& str) {
+void dmmeta::Ns_Print(dmmeta::Ns& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.ns";
 
@@ -7213,7 +7213,7 @@ void dmmeta::Ns_Print(dmmeta::Ns& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Nscpp..ReadFieldMaybe
-bool dmmeta::Nscpp_ReadFieldMaybe(dmmeta::Nscpp& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Nscpp_ReadFieldMaybe(dmmeta::Nscpp& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7237,7 +7237,7 @@ bool dmmeta::Nscpp_ReadFieldMaybe(dmmeta::Nscpp& parent, algo::strptr field, alg
 // --- dmmeta.Nscpp..ReadStrptrMaybe
 // Read fields of dmmeta::Nscpp from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Nscpp_ReadStrptrMaybe(dmmeta::Nscpp &parent, algo::strptr in_str) {
+bool dmmeta::Nscpp_ReadStrptrMaybe(dmmeta::Nscpp &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.nscpp") || algo::StripTypeTag(in_str, "dmmeta.Nscpp");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7249,7 +7249,7 @@ bool dmmeta::Nscpp_ReadStrptrMaybe(dmmeta::Nscpp &parent, algo::strptr in_str) {
 // --- dmmeta.Nscpp..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nscpp.String  printfmt:Tuple
-void dmmeta::Nscpp_Print(dmmeta::Nscpp& row, algo::cstring& str) {
+void dmmeta::Nscpp_Print(dmmeta::Nscpp& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.nscpp";
 
@@ -7261,7 +7261,7 @@ void dmmeta::Nscpp_Print(dmmeta::Nscpp& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Nsdb..ReadFieldMaybe
-bool dmmeta::Nsdb_ReadFieldMaybe(dmmeta::Nsdb& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Nsdb_ReadFieldMaybe(dmmeta::Nsdb& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7285,7 +7285,7 @@ bool dmmeta::Nsdb_ReadFieldMaybe(dmmeta::Nsdb& parent, algo::strptr field, algo:
 // --- dmmeta.Nsdb..ReadStrptrMaybe
 // Read fields of dmmeta::Nsdb from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Nsdb_ReadStrptrMaybe(dmmeta::Nsdb &parent, algo::strptr in_str) {
+bool dmmeta::Nsdb_ReadStrptrMaybe(dmmeta::Nsdb &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.nsdb") || algo::StripTypeTag(in_str, "dmmeta.Nsdb");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7297,7 +7297,7 @@ bool dmmeta::Nsdb_ReadStrptrMaybe(dmmeta::Nsdb &parent, algo::strptr in_str) {
 // --- dmmeta.Nsdb..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nsdb.String  printfmt:Tuple
-void dmmeta::Nsdb_Print(dmmeta::Nsdb& row, algo::cstring& str) {
+void dmmeta::Nsdb_Print(dmmeta::Nsdb& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.nsdb";
 
@@ -7309,7 +7309,7 @@ void dmmeta::Nsdb_Print(dmmeta::Nsdb& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Nsfast..ReadFieldMaybe
-bool dmmeta::Nsfast_ReadFieldMaybe(dmmeta::Nsfast& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Nsfast_ReadFieldMaybe(dmmeta::Nsfast& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7333,7 +7333,7 @@ bool dmmeta::Nsfast_ReadFieldMaybe(dmmeta::Nsfast& parent, algo::strptr field, a
 // --- dmmeta.Nsfast..ReadStrptrMaybe
 // Read fields of dmmeta::Nsfast from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Nsfast_ReadStrptrMaybe(dmmeta::Nsfast &parent, algo::strptr in_str) {
+bool dmmeta::Nsfast_ReadStrptrMaybe(dmmeta::Nsfast &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.nsfast") || algo::StripTypeTag(in_str, "dmmeta.Nsfast");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7345,7 +7345,7 @@ bool dmmeta::Nsfast_ReadStrptrMaybe(dmmeta::Nsfast &parent, algo::strptr in_str)
 // --- dmmeta.Nsfast..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nsfast.String  printfmt:Tuple
-void dmmeta::Nsfast_Print(dmmeta::Nsfast& row, algo::cstring& str) {
+void dmmeta::Nsfast_Print(dmmeta::Nsfast& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.nsfast";
 
@@ -7357,25 +7357,25 @@ void dmmeta::Nsfast_Print(dmmeta::Nsfast& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Nsinclude.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Nsinclude& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Nsinclude& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.nsinclude, "/LL"));
     return ret;
 }
 
 // --- dmmeta.Nsinclude.ns.Get2
-algo::Smallstr16 dmmeta::Nsinclude_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Nsinclude_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, "/LL"));
     return ret;
 }
 
 // --- dmmeta.Nsinclude.name.Get
-algo::Smallstr50 dmmeta::name_Get(dmmeta::Nsinclude& parent) {
+algo::Smallstr50 dmmeta::name_Get(dmmeta::Nsinclude& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.nsinclude, "/LR"));
     return ret;
 }
 
 // --- dmmeta.Nsinclude.name.Get2
-algo::Smallstr50 dmmeta::Nsinclude_name_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Nsinclude_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LR"));
     return ret;
 }
@@ -7386,7 +7386,7 @@ tempstr dmmeta::Nsinclude_Concat_ns_name( const algo::strptr& ns ,const algo::st
 }
 
 // --- dmmeta.Nsinclude..ReadFieldMaybe
-bool dmmeta::Nsinclude_ReadFieldMaybe(dmmeta::Nsinclude& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Nsinclude_ReadFieldMaybe(dmmeta::Nsinclude& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7422,7 +7422,7 @@ bool dmmeta::Nsinclude_ReadFieldMaybe(dmmeta::Nsinclude& parent, algo::strptr fi
 // --- dmmeta.Nsinclude..ReadStrptrMaybe
 // Read fields of dmmeta::Nsinclude from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Nsinclude_ReadStrptrMaybe(dmmeta::Nsinclude &parent, algo::strptr in_str) {
+bool dmmeta::Nsinclude_ReadStrptrMaybe(dmmeta::Nsinclude &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.nsinclude") || algo::StripTypeTag(in_str, "dmmeta.Nsinclude");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7434,7 +7434,7 @@ bool dmmeta::Nsinclude_ReadStrptrMaybe(dmmeta::Nsinclude &parent, algo::strptr i
 // --- dmmeta.Nsinclude..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nsinclude.String  printfmt:Tuple
-void dmmeta::Nsinclude_Print(dmmeta::Nsinclude& row, algo::cstring& str) {
+void dmmeta::Nsinclude_Print(dmmeta::Nsinclude& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.nsinclude";
 
@@ -7449,7 +7449,7 @@ void dmmeta::Nsinclude_Print(dmmeta::Nsinclude& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Nsproto..ReadFieldMaybe
-bool dmmeta::Nsproto_ReadFieldMaybe(dmmeta::Nsproto& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Nsproto_ReadFieldMaybe(dmmeta::Nsproto& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7473,7 +7473,7 @@ bool dmmeta::Nsproto_ReadFieldMaybe(dmmeta::Nsproto& parent, algo::strptr field,
 // --- dmmeta.Nsproto..ReadStrptrMaybe
 // Read fields of dmmeta::Nsproto from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Nsproto_ReadStrptrMaybe(dmmeta::Nsproto &parent, algo::strptr in_str) {
+bool dmmeta::Nsproto_ReadStrptrMaybe(dmmeta::Nsproto &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.nsproto") || algo::StripTypeTag(in_str, "dmmeta.Nsproto");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7485,7 +7485,7 @@ bool dmmeta::Nsproto_ReadStrptrMaybe(dmmeta::Nsproto &parent, algo::strptr in_st
 // --- dmmeta.Nsproto..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nsproto.String  printfmt:Tuple
-void dmmeta::Nsproto_Print(dmmeta::Nsproto& row, algo::cstring& str) {
+void dmmeta::Nsproto_Print(dmmeta::Nsproto& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.nsproto";
 
@@ -7497,7 +7497,7 @@ void dmmeta::Nsproto_Print(dmmeta::Nsproto& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Nstype..ReadFieldMaybe
-bool dmmeta::Nstype_ReadFieldMaybe(dmmeta::Nstype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Nstype_ReadFieldMaybe(dmmeta::Nstype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7521,7 +7521,7 @@ bool dmmeta::Nstype_ReadFieldMaybe(dmmeta::Nstype& parent, algo::strptr field, a
 // --- dmmeta.Nstype..ReadStrptrMaybe
 // Read fields of dmmeta::Nstype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Nstype_ReadStrptrMaybe(dmmeta::Nstype &parent, algo::strptr in_str) {
+bool dmmeta::Nstype_ReadStrptrMaybe(dmmeta::Nstype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.nstype") || algo::StripTypeTag(in_str, "dmmeta.Nstype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7533,7 +7533,7 @@ bool dmmeta::Nstype_ReadStrptrMaybe(dmmeta::Nstype &parent, algo::strptr in_str)
 // --- dmmeta.Nstype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nstype.String  printfmt:Tuple
-void dmmeta::Nstype_Print(dmmeta::Nstype& row, algo::cstring& str) {
+void dmmeta::Nstype_Print(dmmeta::Nstype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.nstype";
 
@@ -7545,7 +7545,7 @@ void dmmeta::Nstype_Print(dmmeta::Nstype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Nsversion..ReadFieldMaybe
-bool dmmeta::Nsversion_ReadFieldMaybe(dmmeta::Nsversion& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Nsversion_ReadFieldMaybe(dmmeta::Nsversion& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7573,7 +7573,7 @@ bool dmmeta::Nsversion_ReadFieldMaybe(dmmeta::Nsversion& parent, algo::strptr fi
 // --- dmmeta.Nsversion..ReadStrptrMaybe
 // Read fields of dmmeta::Nsversion from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Nsversion_ReadStrptrMaybe(dmmeta::Nsversion &parent, algo::strptr in_str) {
+bool dmmeta::Nsversion_ReadStrptrMaybe(dmmeta::Nsversion &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.nsversion") || algo::StripTypeTag(in_str, "dmmeta.Nsversion");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7585,7 +7585,7 @@ bool dmmeta::Nsversion_ReadStrptrMaybe(dmmeta::Nsversion &parent, algo::strptr i
 // --- dmmeta.Nsversion..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nsversion.String  printfmt:Tuple
-void dmmeta::Nsversion_Print(dmmeta::Nsversion& row, algo::cstring& str) {
+void dmmeta::Nsversion_Print(dmmeta::Nsversion& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.nsversion";
 
@@ -7600,7 +7600,7 @@ void dmmeta::Nsversion_Print(dmmeta::Nsversion& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Nsx..ReadFieldMaybe
-bool dmmeta::Nsx_ReadFieldMaybe(dmmeta::Nsx& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Nsx_ReadFieldMaybe(dmmeta::Nsx& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7644,7 +7644,7 @@ bool dmmeta::Nsx_ReadFieldMaybe(dmmeta::Nsx& parent, algo::strptr field, algo::s
 // --- dmmeta.Nsx..ReadStrptrMaybe
 // Read fields of dmmeta::Nsx from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Nsx_ReadStrptrMaybe(dmmeta::Nsx &parent, algo::strptr in_str) {
+bool dmmeta::Nsx_ReadStrptrMaybe(dmmeta::Nsx &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.nsx") || algo::StripTypeTag(in_str, "dmmeta.Nsx");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7656,7 +7656,7 @@ bool dmmeta::Nsx_ReadStrptrMaybe(dmmeta::Nsx &parent, algo::strptr in_str) {
 // --- dmmeta.Nsx..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Nsx.String  printfmt:Tuple
-void dmmeta::Nsx_Print(dmmeta::Nsx& row, algo::cstring& str) {
+void dmmeta::Nsx_Print(dmmeta::Nsx& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.nsx";
 
@@ -7683,7 +7683,7 @@ void dmmeta::Nsx_Print(dmmeta::Nsx& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Numstr..ReadFieldMaybe
-bool dmmeta::Numstr_ReadFieldMaybe(dmmeta::Numstr& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Numstr_ReadFieldMaybe(dmmeta::Numstr& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7715,7 +7715,7 @@ bool dmmeta::Numstr_ReadFieldMaybe(dmmeta::Numstr& parent, algo::strptr field, a
 // --- dmmeta.Numstr..ReadStrptrMaybe
 // Read fields of dmmeta::Numstr from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Numstr_ReadStrptrMaybe(dmmeta::Numstr &parent, algo::strptr in_str) {
+bool dmmeta::Numstr_ReadStrptrMaybe(dmmeta::Numstr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.numstr") || algo::StripTypeTag(in_str, "dmmeta.Numstr");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7727,7 +7727,7 @@ bool dmmeta::Numstr_ReadStrptrMaybe(dmmeta::Numstr &parent, algo::strptr in_str)
 // --- dmmeta.Numstr..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Numstr.String  printfmt:Tuple
-void dmmeta::Numstr_Print(dmmeta::Numstr& row, algo::cstring& str) {
+void dmmeta::Numstr_Print(dmmeta::Numstr& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.numstr";
 
@@ -7745,7 +7745,7 @@ void dmmeta::Numstr_Print(dmmeta::Numstr& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Pack..ReadFieldMaybe
-bool dmmeta::Pack_ReadFieldMaybe(dmmeta::Pack& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Pack_ReadFieldMaybe(dmmeta::Pack& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7769,7 +7769,7 @@ bool dmmeta::Pack_ReadFieldMaybe(dmmeta::Pack& parent, algo::strptr field, algo:
 // --- dmmeta.Pack..ReadStrptrMaybe
 // Read fields of dmmeta::Pack from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Pack_ReadStrptrMaybe(dmmeta::Pack &parent, algo::strptr in_str) {
+bool dmmeta::Pack_ReadStrptrMaybe(dmmeta::Pack &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.pack") || algo::StripTypeTag(in_str, "dmmeta.Pack");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7781,7 +7781,7 @@ bool dmmeta::Pack_ReadStrptrMaybe(dmmeta::Pack &parent, algo::strptr in_str) {
 // --- dmmeta.Pack..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Pack.String  printfmt:Tuple
-void dmmeta::Pack_Print(dmmeta::Pack& row, algo::cstring& str) {
+void dmmeta::Pack_Print(dmmeta::Pack& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.pack";
 
@@ -7793,19 +7793,19 @@ void dmmeta::Pack_Print(dmmeta::Pack& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Pmaskfld.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Pmaskfld& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Pmaskfld& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.field, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Pmaskfld.ctype.Get2
-algo::Smallstr100 dmmeta::Pmaskfld_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Pmaskfld_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Pmaskfld..ReadFieldMaybe
-bool dmmeta::Pmaskfld_ReadFieldMaybe(dmmeta::Pmaskfld& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Pmaskfld_ReadFieldMaybe(dmmeta::Pmaskfld& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7837,7 +7837,7 @@ bool dmmeta::Pmaskfld_ReadFieldMaybe(dmmeta::Pmaskfld& parent, algo::strptr fiel
 // --- dmmeta.Pmaskfld..ReadStrptrMaybe
 // Read fields of dmmeta::Pmaskfld from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Pmaskfld_ReadStrptrMaybe(dmmeta::Pmaskfld &parent, algo::strptr in_str) {
+bool dmmeta::Pmaskfld_ReadStrptrMaybe(dmmeta::Pmaskfld &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.pmaskfld") || algo::StripTypeTag(in_str, "dmmeta.Pmaskfld");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7849,7 +7849,7 @@ bool dmmeta::Pmaskfld_ReadStrptrMaybe(dmmeta::Pmaskfld &parent, algo::strptr in_
 // --- dmmeta.Pmaskfld..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Pmaskfld.String  printfmt:Tuple
-void dmmeta::Pmaskfld_Print(dmmeta::Pmaskfld& row, algo::cstring& str) {
+void dmmeta::Pmaskfld_Print(dmmeta::Pmaskfld& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.pmaskfld";
 
@@ -7864,25 +7864,25 @@ void dmmeta::Pmaskfld_Print(dmmeta::Pmaskfld& row, algo::cstring& str) {
 }
 
 // --- dmmeta.PmaskfldMember.pmaskfld.Get
-algo::Smallstr100 dmmeta::pmaskfld_Get(dmmeta::PmaskfldMember& parent) {
+algo::Smallstr100 dmmeta::pmaskfld_Get(dmmeta::PmaskfldMember& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.pmaskfld_member, "/RL"));
     return ret;
 }
 
 // --- dmmeta.PmaskfldMember.pmaskfld.Get2
-algo::Smallstr100 dmmeta::PmaskfldMember_pmaskfld_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::PmaskfldMember_pmaskfld_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/RL"));
     return ret;
 }
 
 // --- dmmeta.PmaskfldMember.field.Get
-algo::Smallstr100 dmmeta::field_Get(dmmeta::PmaskfldMember& parent) {
+algo::Smallstr100 dmmeta::field_Get(dmmeta::PmaskfldMember& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.pmaskfld_member, "/RR"));
     return ret;
 }
 
 // --- dmmeta.PmaskfldMember.field.Get2
-algo::Smallstr100 dmmeta::PmaskfldMember_field_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::PmaskfldMember_field_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/RR"));
     return ret;
 }
@@ -7893,7 +7893,7 @@ tempstr dmmeta::PmaskfldMember_Concat_pmaskfld_field( const algo::strptr& pmaskf
 }
 
 // --- dmmeta.PmaskfldMember..ReadFieldMaybe
-bool dmmeta::PmaskfldMember_ReadFieldMaybe(dmmeta::PmaskfldMember& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::PmaskfldMember_ReadFieldMaybe(dmmeta::PmaskfldMember& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -7925,7 +7925,7 @@ bool dmmeta::PmaskfldMember_ReadFieldMaybe(dmmeta::PmaskfldMember& parent, algo:
 // --- dmmeta.PmaskfldMember..ReadStrptrMaybe
 // Read fields of dmmeta::PmaskfldMember from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::PmaskfldMember_ReadStrptrMaybe(dmmeta::PmaskfldMember &parent, algo::strptr in_str) {
+bool dmmeta::PmaskfldMember_ReadStrptrMaybe(dmmeta::PmaskfldMember &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.pmaskfld_member") || algo::StripTypeTag(in_str, "dmmeta.PmaskfldMember");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -7937,7 +7937,7 @@ bool dmmeta::PmaskfldMember_ReadStrptrMaybe(dmmeta::PmaskfldMember &parent, algo
 // --- dmmeta.PmaskfldMember..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.PmaskfldMember.String  printfmt:Tuple
-void dmmeta::PmaskfldMember_Print(dmmeta::PmaskfldMember& row, algo::cstring& str) {
+void dmmeta::PmaskfldMember_Print(dmmeta::PmaskfldMember& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.pmaskfld_member";
 
@@ -7949,37 +7949,37 @@ void dmmeta::PmaskfldMember_Print(dmmeta::PmaskfldMember& row, algo::cstring& st
 }
 
 // --- dmmeta.Pnew.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Pnew& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Pnew& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.pnew, "/LL"));
     return ret;
 }
 
 // --- dmmeta.Pnew.ns.Get2
-algo::Smallstr16 dmmeta::Pnew_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Pnew_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, "/LL"));
     return ret;
 }
 
 // --- dmmeta.Pnew.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Pnew& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Pnew& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.pnew, "/LR.RL"));
     return ret;
 }
 
 // --- dmmeta.Pnew.ctype.Get2
-algo::Smallstr100 dmmeta::Pnew_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Pnew_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/LR.RL"));
     return ret;
 }
 
 // --- dmmeta.Pnew.buftype.Get
-algo::Smallstr50 dmmeta::buftype_Get(dmmeta::Pnew& parent) {
+algo::Smallstr50 dmmeta::buftype_Get(dmmeta::Pnew& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.pnew, "/LR.RR"));
     return ret;
 }
 
 // --- dmmeta.Pnew.buftype.Get2
-algo::Smallstr50 dmmeta::Pnew_buftype_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Pnew_buftype_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "/LR.RR"));
     return ret;
 }
@@ -7990,7 +7990,7 @@ tempstr dmmeta::Pnew_Concat_ns_ctype_buftype( const algo::strptr& ns ,const algo
 }
 
 // --- dmmeta.Pnew..ReadFieldMaybe
-bool dmmeta::Pnew_ReadFieldMaybe(dmmeta::Pnew& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Pnew_ReadFieldMaybe(dmmeta::Pnew& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8026,7 +8026,7 @@ bool dmmeta::Pnew_ReadFieldMaybe(dmmeta::Pnew& parent, algo::strptr field, algo:
 // --- dmmeta.Pnew..ReadStrptrMaybe
 // Read fields of dmmeta::Pnew from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Pnew_ReadStrptrMaybe(dmmeta::Pnew &parent, algo::strptr in_str) {
+bool dmmeta::Pnew_ReadStrptrMaybe(dmmeta::Pnew &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.pnew") || algo::StripTypeTag(in_str, "dmmeta.Pnew");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -8038,7 +8038,7 @@ bool dmmeta::Pnew_ReadStrptrMaybe(dmmeta::Pnew &parent, algo::strptr in_str) {
 // --- dmmeta.Pnew..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Pnew.String  printfmt:Tuple
-void dmmeta::Pnew_Print(dmmeta::Pnew& row, algo::cstring& str) {
+void dmmeta::Pnew_Print(dmmeta::Pnew& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.pnew";
 
@@ -8050,7 +8050,7 @@ void dmmeta::Pnew_Print(dmmeta::Pnew& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Printfmt..ReadFieldMaybe
-bool dmmeta::Printfmt_ReadFieldMaybe(dmmeta::Printfmt& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Printfmt_ReadFieldMaybe(dmmeta::Printfmt& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8074,7 +8074,7 @@ bool dmmeta::Printfmt_ReadFieldMaybe(dmmeta::Printfmt& parent, algo::strptr fiel
 // --- dmmeta.Printfmt..ReadStrptrMaybe
 // Read fields of dmmeta::Printfmt from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Printfmt_ReadStrptrMaybe(dmmeta::Printfmt &parent, algo::strptr in_str) {
+bool dmmeta::Printfmt_ReadStrptrMaybe(dmmeta::Printfmt &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.printfmt") || algo::StripTypeTag(in_str, "dmmeta.Printfmt");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -8086,7 +8086,7 @@ bool dmmeta::Printfmt_ReadStrptrMaybe(dmmeta::Printfmt &parent, algo::strptr in_
 // --- dmmeta.Printfmt..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Printfmt.String  printfmt:Tuple
-void dmmeta::Printfmt_Print(dmmeta::Printfmt& row, algo::cstring& str) {
+void dmmeta::Printfmt_Print(dmmeta::Printfmt& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.printfmt";
 
@@ -8098,7 +8098,7 @@ void dmmeta::Printfmt_Print(dmmeta::Printfmt& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Ptrary..ReadFieldMaybe
-bool dmmeta::Ptrary_ReadFieldMaybe(dmmeta::Ptrary& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Ptrary_ReadFieldMaybe(dmmeta::Ptrary& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8122,7 +8122,7 @@ bool dmmeta::Ptrary_ReadFieldMaybe(dmmeta::Ptrary& parent, algo::strptr field, a
 // --- dmmeta.Ptrary..ReadStrptrMaybe
 // Read fields of dmmeta::Ptrary from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Ptrary_ReadStrptrMaybe(dmmeta::Ptrary &parent, algo::strptr in_str) {
+bool dmmeta::Ptrary_ReadStrptrMaybe(dmmeta::Ptrary &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.ptrary") || algo::StripTypeTag(in_str, "dmmeta.Ptrary");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -8134,7 +8134,7 @@ bool dmmeta::Ptrary_ReadStrptrMaybe(dmmeta::Ptrary &parent, algo::strptr in_str)
 // --- dmmeta.Ptrary..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ptrary.String  printfmt:Tuple
-void dmmeta::Ptrary_Print(dmmeta::Ptrary& row, algo::cstring& str) {
+void dmmeta::Ptrary_Print(dmmeta::Ptrary& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.ptrary";
 
@@ -8146,7 +8146,7 @@ void dmmeta::Ptrary_Print(dmmeta::Ptrary& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Reftype..ReadFieldMaybe
-bool dmmeta::Reftype_ReadFieldMaybe(dmmeta::Reftype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Reftype_ReadFieldMaybe(dmmeta::Reftype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8210,7 +8210,7 @@ bool dmmeta::Reftype_ReadFieldMaybe(dmmeta::Reftype& parent, algo::strptr field,
 // --- dmmeta.Reftype..ReadStrptrMaybe
 // Read fields of dmmeta::Reftype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Reftype_ReadStrptrMaybe(dmmeta::Reftype &parent, algo::strptr in_str) {
+bool dmmeta::Reftype_ReadStrptrMaybe(dmmeta::Reftype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.reftype") || algo::StripTypeTag(in_str, "dmmeta.Reftype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -8239,7 +8239,7 @@ void dmmeta::Reftype_Init(dmmeta::Reftype& parent) {
 // --- dmmeta.Reftype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Reftype.String  printfmt:Tuple
-void dmmeta::Reftype_Print(dmmeta::Reftype& row, algo::cstring& str) {
+void dmmeta::Reftype_Print(dmmeta::Reftype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.reftype";
 
@@ -8283,7 +8283,7 @@ void dmmeta::Reftype_Print(dmmeta::Reftype& row, algo::cstring& str) {
 // --- dmmeta.ReftypeCase.reftype.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* dmmeta::reftype_ToCstr(const dmmeta::ReftypeCase& parent) {
+const char* dmmeta::reftype_ToCstr(const dmmeta::ReftypeCase& parent) throw() {
     const char *ret = NULL;
     switch(reftype_GetEnum(parent)) {
         case dmmeta_ReftypeCase_Alias      : ret = "Alias";  break;
@@ -8328,7 +8328,7 @@ const char* dmmeta::reftype_ToCstr(const dmmeta::ReftypeCase& parent) {
 // --- dmmeta.ReftypeCase.reftype.Print
 // Convert reftype to a string. First, attempt conversion to a known string.
 // If no string matches, print reftype as a numeric value.
-void dmmeta::reftype_Print(const dmmeta::ReftypeCase& parent, algo::cstring &lhs) {
+void dmmeta::reftype_Print(const dmmeta::ReftypeCase& parent, algo::cstring &lhs) throw() {
     const char *strval = reftype_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -8341,7 +8341,7 @@ void dmmeta::reftype_Print(const dmmeta::ReftypeCase& parent, algo::cstring &lhs
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool dmmeta::reftype_SetStrptrMaybe(dmmeta::ReftypeCase& parent, algo::strptr rhs) {
+bool dmmeta::reftype_SetStrptrMaybe(dmmeta::ReftypeCase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -8486,12 +8486,12 @@ bool dmmeta::reftype_SetStrptrMaybe(dmmeta::ReftypeCase& parent, algo::strptr rh
 // --- dmmeta.ReftypeCase.reftype.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void dmmeta::reftype_SetStrptr(dmmeta::ReftypeCase& parent, algo::strptr rhs, dmmeta_ReftypeCaseEnum dflt) {
+void dmmeta::reftype_SetStrptr(dmmeta::ReftypeCase& parent, algo::strptr rhs, dmmeta_ReftypeCaseEnum dflt) throw() {
     if (!reftype_SetStrptrMaybe(parent,rhs)) reftype_SetEnum(parent,dflt);
 }
 
 // --- dmmeta.Rowid..ReadFieldMaybe
-bool dmmeta::Rowid_ReadFieldMaybe(dmmeta::Rowid& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Rowid_ReadFieldMaybe(dmmeta::Rowid& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8515,7 +8515,7 @@ bool dmmeta::Rowid_ReadFieldMaybe(dmmeta::Rowid& parent, algo::strptr field, alg
 // --- dmmeta.Rowid..ReadStrptrMaybe
 // Read fields of dmmeta::Rowid from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Rowid_ReadStrptrMaybe(dmmeta::Rowid &parent, algo::strptr in_str) {
+bool dmmeta::Rowid_ReadStrptrMaybe(dmmeta::Rowid &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.rowid") || algo::StripTypeTag(in_str, "dmmeta.Rowid");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -8527,7 +8527,7 @@ bool dmmeta::Rowid_ReadStrptrMaybe(dmmeta::Rowid &parent, algo::strptr in_str) {
 // --- dmmeta.Rowid..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Rowid.String  printfmt:Tuple
-void dmmeta::Rowid_Print(dmmeta::Rowid& row, algo::cstring& str) {
+void dmmeta::Rowid_Print(dmmeta::Rowid& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.rowid";
 
@@ -8539,19 +8539,19 @@ void dmmeta::Rowid_Print(dmmeta::Rowid& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Smallstr.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Smallstr& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Smallstr& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.field, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Smallstr.ctype.Get2
-algo::Smallstr100 dmmeta::Smallstr_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Smallstr_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Smallstr..ReadFieldMaybe
-bool dmmeta::Smallstr_ReadFieldMaybe(dmmeta::Smallstr& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Smallstr_ReadFieldMaybe(dmmeta::Smallstr& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8591,7 +8591,7 @@ bool dmmeta::Smallstr_ReadFieldMaybe(dmmeta::Smallstr& parent, algo::strptr fiel
 // --- dmmeta.Smallstr..ReadStrptrMaybe
 // Read fields of dmmeta::Smallstr from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Smallstr_ReadStrptrMaybe(dmmeta::Smallstr &parent, algo::strptr in_str) {
+bool dmmeta::Smallstr_ReadStrptrMaybe(dmmeta::Smallstr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.smallstr") || algo::StripTypeTag(in_str, "dmmeta.Smallstr");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -8603,7 +8603,7 @@ bool dmmeta::Smallstr_ReadStrptrMaybe(dmmeta::Smallstr &parent, algo::strptr in_
 // --- dmmeta.Smallstr..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Smallstr.String  printfmt:Tuple
-void dmmeta::Smallstr_Print(dmmeta::Smallstr& row, algo::cstring& str) {
+void dmmeta::Smallstr_Print(dmmeta::Smallstr& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.smallstr";
 
@@ -8624,7 +8624,7 @@ void dmmeta::Smallstr_Print(dmmeta::Smallstr& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Sortfld..ReadFieldMaybe
-bool dmmeta::Sortfld_ReadFieldMaybe(dmmeta::Sortfld& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Sortfld_ReadFieldMaybe(dmmeta::Sortfld& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8648,7 +8648,7 @@ bool dmmeta::Sortfld_ReadFieldMaybe(dmmeta::Sortfld& parent, algo::strptr field,
 // --- dmmeta.Sortfld..ReadStrptrMaybe
 // Read fields of dmmeta::Sortfld from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Sortfld_ReadStrptrMaybe(dmmeta::Sortfld &parent, algo::strptr in_str) {
+bool dmmeta::Sortfld_ReadStrptrMaybe(dmmeta::Sortfld &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.sortfld") || algo::StripTypeTag(in_str, "dmmeta.Sortfld");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -8660,7 +8660,7 @@ bool dmmeta::Sortfld_ReadStrptrMaybe(dmmeta::Sortfld &parent, algo::strptr in_st
 // --- dmmeta.Sortfld..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Sortfld.String  printfmt:Tuple
-void dmmeta::Sortfld_Print(dmmeta::Sortfld& row, algo::cstring& str) {
+void dmmeta::Sortfld_Print(dmmeta::Sortfld& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.sortfld";
 
@@ -8672,7 +8672,7 @@ void dmmeta::Sortfld_Print(dmmeta::Sortfld& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Sorttype..ReadFieldMaybe
-bool dmmeta::Sorttype_ReadFieldMaybe(dmmeta::Sorttype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Sorttype_ReadFieldMaybe(dmmeta::Sorttype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8696,7 +8696,7 @@ bool dmmeta::Sorttype_ReadFieldMaybe(dmmeta::Sorttype& parent, algo::strptr fiel
 // --- dmmeta.Sorttype..ReadStrptrMaybe
 // Read fields of dmmeta::Sorttype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Sorttype_ReadStrptrMaybe(dmmeta::Sorttype &parent, algo::strptr in_str) {
+bool dmmeta::Sorttype_ReadStrptrMaybe(dmmeta::Sorttype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.sorttype") || algo::StripTypeTag(in_str, "dmmeta.Sorttype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -8708,7 +8708,7 @@ bool dmmeta::Sorttype_ReadStrptrMaybe(dmmeta::Sorttype &parent, algo::strptr in_
 // --- dmmeta.Sorttype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Sorttype.String  printfmt:Tuple
-void dmmeta::Sorttype_Print(dmmeta::Sorttype& row, algo::cstring& str) {
+void dmmeta::Sorttype_Print(dmmeta::Sorttype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.sorttype";
 
@@ -8720,7 +8720,7 @@ void dmmeta::Sorttype_Print(dmmeta::Sorttype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Sqltype..ReadFieldMaybe
-bool dmmeta::Sqltype_ReadFieldMaybe(dmmeta::Sqltype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Sqltype_ReadFieldMaybe(dmmeta::Sqltype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8748,7 +8748,7 @@ bool dmmeta::Sqltype_ReadFieldMaybe(dmmeta::Sqltype& parent, algo::strptr field,
 // --- dmmeta.Sqltype..ReadStrptrMaybe
 // Read fields of dmmeta::Sqltype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Sqltype_ReadStrptrMaybe(dmmeta::Sqltype &parent, algo::strptr in_str) {
+bool dmmeta::Sqltype_ReadStrptrMaybe(dmmeta::Sqltype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.sqltype") || algo::StripTypeTag(in_str, "dmmeta.Sqltype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -8760,7 +8760,7 @@ bool dmmeta::Sqltype_ReadStrptrMaybe(dmmeta::Sqltype &parent, algo::strptr in_st
 // --- dmmeta.Sqltype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Sqltype.String  printfmt:Tuple
-void dmmeta::Sqltype_Print(dmmeta::Sqltype& row, algo::cstring& str) {
+void dmmeta::Sqltype_Print(dmmeta::Sqltype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.sqltype";
 
@@ -8775,43 +8775,43 @@ void dmmeta::Sqltype_Print(dmmeta::Sqltype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Ssimfile.ssimns.Get
-algo::Smallstr16 dmmeta::ssimns_Get(dmmeta::Ssimfile& parent) {
+algo::Smallstr16 dmmeta::ssimns_Get(dmmeta::Ssimfile& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.ssimfile, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Ssimfile.ssimns.Get2
-algo::Smallstr16 dmmeta::Ssimfile_ssimns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Ssimfile_ssimns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Ssimfile.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Ssimfile& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Ssimfile& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.ssimfile, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Ssimfile.ns.Get2
-algo::Smallstr16 dmmeta::Ssimfile_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Ssimfile_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Ssimfile.name.Get
-algo::Smallstr50 dmmeta::name_Get(dmmeta::Ssimfile& parent) {
+algo::Smallstr50 dmmeta::name_Get(dmmeta::Ssimfile& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.ssimfile, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Ssimfile.name.Get2
-algo::Smallstr50 dmmeta::Ssimfile_name_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Ssimfile_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Ssimfile..ReadFieldMaybe
-bool dmmeta::Ssimfile_ReadFieldMaybe(dmmeta::Ssimfile& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Ssimfile_ReadFieldMaybe(dmmeta::Ssimfile& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8847,7 +8847,7 @@ bool dmmeta::Ssimfile_ReadFieldMaybe(dmmeta::Ssimfile& parent, algo::strptr fiel
 // --- dmmeta.Ssimfile..ReadStrptrMaybe
 // Read fields of dmmeta::Ssimfile from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Ssimfile_ReadStrptrMaybe(dmmeta::Ssimfile &parent, algo::strptr in_str) {
+bool dmmeta::Ssimfile_ReadStrptrMaybe(dmmeta::Ssimfile &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.ssimfile") || algo::StripTypeTag(in_str, "dmmeta.Ssimfile");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -8859,7 +8859,7 @@ bool dmmeta::Ssimfile_ReadStrptrMaybe(dmmeta::Ssimfile &parent, algo::strptr in_
 // --- dmmeta.Ssimfile..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ssimfile.String  printfmt:Tuple
-void dmmeta::Ssimfile_Print(dmmeta::Ssimfile& row, algo::cstring& str) {
+void dmmeta::Ssimfile_Print(dmmeta::Ssimfile& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.ssimfile";
 
@@ -8871,61 +8871,61 @@ void dmmeta::Ssimfile_Print(dmmeta::Ssimfile& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Ssimreq.parent_field.Get
-algo::Smallstr100 dmmeta::parent_field_Get(dmmeta::Ssimreq& parent) {
+algo::Smallstr100 dmmeta::parent_field_Get(dmmeta::Ssimreq& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.parent, ":LL"));
     return ret;
 }
 
 // --- dmmeta.Ssimreq.parent_field.Get2
-algo::Smallstr100 dmmeta::Ssimreq_parent_field_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Ssimreq_parent_field_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ":LL"));
     return ret;
 }
 
 // --- dmmeta.Ssimreq.parent_ctype.Get
-algo::Smallstr100 dmmeta::parent_ctype_Get(dmmeta::Ssimreq& parent) {
+algo::Smallstr100 dmmeta::parent_ctype_Get(dmmeta::Ssimreq& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.parent, ":LL.RL"));
     return ret;
 }
 
 // --- dmmeta.Ssimreq.parent_ctype.Get2
-algo::Smallstr100 dmmeta::Ssimreq_parent_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Ssimreq_parent_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ":LL.RL"));
     return ret;
 }
 
 // --- dmmeta.Ssimreq.value.Get
-algo::Smallstr100 dmmeta::value_Get(dmmeta::Ssimreq& parent) {
+algo::Smallstr100 dmmeta::value_Get(dmmeta::Ssimreq& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.parent, ":LR"));
     return ret;
 }
 
 // --- dmmeta.Ssimreq.value.Get2
-algo::Smallstr100 dmmeta::Ssimreq_value_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Ssimreq_value_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ":LR"));
     return ret;
 }
 
 // --- dmmeta.Ssimreq.child_ssimfile.Get
-algo::Smallstr50 dmmeta::child_ssimfile_Get(dmmeta::Ssimreq& parent) {
+algo::Smallstr50 dmmeta::child_ssimfile_Get(dmmeta::Ssimreq& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.ssimreq, ":LL"));
     return ret;
 }
 
 // --- dmmeta.Ssimreq.child_ssimfile.Get2
-algo::Smallstr50 dmmeta::Ssimreq_child_ssimfile_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Ssimreq_child_ssimfile_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ":LL"));
     return ret;
 }
 
 // --- dmmeta.Ssimreq.child_key.Get
-algo::Smallstr100 dmmeta::child_key_Get(dmmeta::Ssimreq& parent) {
+algo::Smallstr100 dmmeta::child_key_Get(dmmeta::Ssimreq& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.ssimreq, ":RR"));
     return ret;
 }
 
 // --- dmmeta.Ssimreq.child_key.Get2
-algo::Smallstr100 dmmeta::Ssimreq_child_key_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Ssimreq_child_key_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ":RR"));
     return ret;
 }
@@ -8936,7 +8936,7 @@ tempstr dmmeta::Ssimreq_Concat_parent_field_value( const algo::strptr& parent_fi
 }
 
 // --- dmmeta.Ssimreq..ReadFieldMaybe
-bool dmmeta::Ssimreq_ReadFieldMaybe(dmmeta::Ssimreq& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Ssimreq_ReadFieldMaybe(dmmeta::Ssimreq& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -8992,7 +8992,7 @@ bool dmmeta::Ssimreq_ReadFieldMaybe(dmmeta::Ssimreq& parent, algo::strptr field,
 // --- dmmeta.Ssimreq..ReadStrptrMaybe
 // Read fields of dmmeta::Ssimreq from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Ssimreq_ReadStrptrMaybe(dmmeta::Ssimreq &parent, algo::strptr in_str) {
+bool dmmeta::Ssimreq_ReadStrptrMaybe(dmmeta::Ssimreq &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.ssimreq") || algo::StripTypeTag(in_str, "dmmeta.Ssimreq");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9011,7 +9011,7 @@ void dmmeta::Ssimreq_Init(dmmeta::Ssimreq& parent) {
 // --- dmmeta.Ssimreq..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ssimreq.String  printfmt:Tuple
-void dmmeta::Ssimreq_Print(dmmeta::Ssimreq& row, algo::cstring& str) {
+void dmmeta::Ssimreq_Print(dmmeta::Ssimreq& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.ssimreq";
 
@@ -9032,7 +9032,7 @@ void dmmeta::Ssimreq_Print(dmmeta::Ssimreq& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Ssimsort..ReadFieldMaybe
-bool dmmeta::Ssimsort_ReadFieldMaybe(dmmeta::Ssimsort& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Ssimsort_ReadFieldMaybe(dmmeta::Ssimsort& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9060,7 +9060,7 @@ bool dmmeta::Ssimsort_ReadFieldMaybe(dmmeta::Ssimsort& parent, algo::strptr fiel
 // --- dmmeta.Ssimsort..ReadStrptrMaybe
 // Read fields of dmmeta::Ssimsort from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Ssimsort_ReadStrptrMaybe(dmmeta::Ssimsort &parent, algo::strptr in_str) {
+bool dmmeta::Ssimsort_ReadStrptrMaybe(dmmeta::Ssimsort &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.ssimsort") || algo::StripTypeTag(in_str, "dmmeta.Ssimsort");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9072,7 +9072,7 @@ bool dmmeta::Ssimsort_ReadStrptrMaybe(dmmeta::Ssimsort &parent, algo::strptr in_
 // --- dmmeta.Ssimsort..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ssimsort.String  printfmt:Tuple
-void dmmeta::Ssimsort_Print(dmmeta::Ssimsort& row, algo::cstring& str) {
+void dmmeta::Ssimsort_Print(dmmeta::Ssimsort& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.ssimsort";
 
@@ -9087,7 +9087,7 @@ void dmmeta::Ssimsort_Print(dmmeta::Ssimsort& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Ssimvolatile..ReadFieldMaybe
-bool dmmeta::Ssimvolatile_ReadFieldMaybe(dmmeta::Ssimvolatile& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Ssimvolatile_ReadFieldMaybe(dmmeta::Ssimvolatile& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9111,7 +9111,7 @@ bool dmmeta::Ssimvolatile_ReadFieldMaybe(dmmeta::Ssimvolatile& parent, algo::str
 // --- dmmeta.Ssimvolatile..ReadStrptrMaybe
 // Read fields of dmmeta::Ssimvolatile from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Ssimvolatile_ReadStrptrMaybe(dmmeta::Ssimvolatile &parent, algo::strptr in_str) {
+bool dmmeta::Ssimvolatile_ReadStrptrMaybe(dmmeta::Ssimvolatile &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.ssimvolatile") || algo::StripTypeTag(in_str, "dmmeta.Ssimvolatile");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9123,7 +9123,7 @@ bool dmmeta::Ssimvolatile_ReadStrptrMaybe(dmmeta::Ssimvolatile &parent, algo::st
 // --- dmmeta.Ssimvolatile..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Ssimvolatile.String  printfmt:Tuple
-void dmmeta::Ssimvolatile_Print(dmmeta::Ssimvolatile& row, algo::cstring& str) {
+void dmmeta::Ssimvolatile_Print(dmmeta::Ssimvolatile& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.ssimvolatile";
 
@@ -9135,7 +9135,7 @@ void dmmeta::Ssimvolatile_Print(dmmeta::Ssimvolatile& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Steptype..ReadFieldMaybe
-bool dmmeta::Steptype_ReadFieldMaybe(dmmeta::Steptype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Steptype_ReadFieldMaybe(dmmeta::Steptype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9159,7 +9159,7 @@ bool dmmeta::Steptype_ReadFieldMaybe(dmmeta::Steptype& parent, algo::strptr fiel
 // --- dmmeta.Steptype..ReadStrptrMaybe
 // Read fields of dmmeta::Steptype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Steptype_ReadStrptrMaybe(dmmeta::Steptype &parent, algo::strptr in_str) {
+bool dmmeta::Steptype_ReadStrptrMaybe(dmmeta::Steptype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.steptype") || algo::StripTypeTag(in_str, "dmmeta.Steptype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9171,7 +9171,7 @@ bool dmmeta::Steptype_ReadStrptrMaybe(dmmeta::Steptype &parent, algo::strptr in_
 // --- dmmeta.Steptype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Steptype.String  printfmt:Tuple
-void dmmeta::Steptype_Print(dmmeta::Steptype& row, algo::cstring& str) {
+void dmmeta::Steptype_Print(dmmeta::Steptype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.steptype";
 
@@ -9183,7 +9183,7 @@ void dmmeta::Steptype_Print(dmmeta::Steptype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Strtype..ReadFieldMaybe
-bool dmmeta::Strtype_ReadFieldMaybe(dmmeta::Strtype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Strtype_ReadFieldMaybe(dmmeta::Strtype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9207,7 +9207,7 @@ bool dmmeta::Strtype_ReadFieldMaybe(dmmeta::Strtype& parent, algo::strptr field,
 // --- dmmeta.Strtype..ReadStrptrMaybe
 // Read fields of dmmeta::Strtype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Strtype_ReadStrptrMaybe(dmmeta::Strtype &parent, algo::strptr in_str) {
+bool dmmeta::Strtype_ReadStrptrMaybe(dmmeta::Strtype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.strtype") || algo::StripTypeTag(in_str, "dmmeta.Strtype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9219,7 +9219,7 @@ bool dmmeta::Strtype_ReadStrptrMaybe(dmmeta::Strtype &parent, algo::strptr in_st
 // --- dmmeta.Strtype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Strtype.String  printfmt:Tuple
-void dmmeta::Strtype_Print(dmmeta::Strtype& row, algo::cstring& str) {
+void dmmeta::Strtype_Print(dmmeta::Strtype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.strtype";
 
@@ -9231,7 +9231,7 @@ void dmmeta::Strtype_Print(dmmeta::Strtype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Substr..ReadFieldMaybe
-bool dmmeta::Substr_ReadFieldMaybe(dmmeta::Substr& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Substr_ReadFieldMaybe(dmmeta::Substr& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9259,7 +9259,7 @@ bool dmmeta::Substr_ReadFieldMaybe(dmmeta::Substr& parent, algo::strptr field, a
 // --- dmmeta.Substr..ReadStrptrMaybe
 // Read fields of dmmeta::Substr from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Substr_ReadStrptrMaybe(dmmeta::Substr &parent, algo::strptr in_str) {
+bool dmmeta::Substr_ReadStrptrMaybe(dmmeta::Substr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.substr") || algo::StripTypeTag(in_str, "dmmeta.Substr");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9271,7 +9271,7 @@ bool dmmeta::Substr_ReadStrptrMaybe(dmmeta::Substr &parent, algo::strptr in_str)
 // --- dmmeta.Substr..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Substr.String  printfmt:Tuple
-void dmmeta::Substr_Print(dmmeta::Substr& row, algo::cstring& str) {
+void dmmeta::Substr_Print(dmmeta::Substr& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.substr";
 
@@ -9286,7 +9286,7 @@ void dmmeta::Substr_Print(dmmeta::Substr& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Svtype..ReadFieldMaybe
-bool dmmeta::Svtype_ReadFieldMaybe(dmmeta::Svtype& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Svtype_ReadFieldMaybe(dmmeta::Svtype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9322,7 +9322,7 @@ bool dmmeta::Svtype_ReadFieldMaybe(dmmeta::Svtype& parent, algo::strptr field, a
 // --- dmmeta.Svtype..ReadStrptrMaybe
 // Read fields of dmmeta::Svtype from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Svtype_ReadStrptrMaybe(dmmeta::Svtype &parent, algo::strptr in_str) {
+bool dmmeta::Svtype_ReadStrptrMaybe(dmmeta::Svtype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.svtype") || algo::StripTypeTag(in_str, "dmmeta.Svtype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9334,7 +9334,7 @@ bool dmmeta::Svtype_ReadStrptrMaybe(dmmeta::Svtype &parent, algo::strptr in_str)
 // --- dmmeta.Svtype..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Svtype.String  printfmt:Tuple
-void dmmeta::Svtype_Print(dmmeta::Svtype& row, algo::cstring& str) {
+void dmmeta::Svtype_Print(dmmeta::Svtype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.svtype";
 
@@ -9355,7 +9355,7 @@ void dmmeta::Svtype_Print(dmmeta::Svtype& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Tary..ReadFieldMaybe
-bool dmmeta::Tary_ReadFieldMaybe(dmmeta::Tary& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Tary_ReadFieldMaybe(dmmeta::Tary& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9383,7 +9383,7 @@ bool dmmeta::Tary_ReadFieldMaybe(dmmeta::Tary& parent, algo::strptr field, algo:
 // --- dmmeta.Tary..ReadStrptrMaybe
 // Read fields of dmmeta::Tary from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Tary_ReadStrptrMaybe(dmmeta::Tary &parent, algo::strptr in_str) {
+bool dmmeta::Tary_ReadStrptrMaybe(dmmeta::Tary &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.tary") || algo::StripTypeTag(in_str, "dmmeta.Tary");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9395,7 +9395,7 @@ bool dmmeta::Tary_ReadStrptrMaybe(dmmeta::Tary &parent, algo::strptr in_str) {
 // --- dmmeta.Tary..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Tary.String  printfmt:Tuple
-void dmmeta::Tary_Print(dmmeta::Tary& row, algo::cstring& str) {
+void dmmeta::Tary_Print(dmmeta::Tary& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.tary";
 
@@ -9410,7 +9410,7 @@ void dmmeta::Tary_Print(dmmeta::Tary& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Thash..ReadFieldMaybe
-bool dmmeta::Thash_ReadFieldMaybe(dmmeta::Thash& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Thash_ReadFieldMaybe(dmmeta::Thash& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9442,7 +9442,7 @@ bool dmmeta::Thash_ReadFieldMaybe(dmmeta::Thash& parent, algo::strptr field, alg
 // --- dmmeta.Thash..ReadStrptrMaybe
 // Read fields of dmmeta::Thash from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Thash_ReadStrptrMaybe(dmmeta::Thash &parent, algo::strptr in_str) {
+bool dmmeta::Thash_ReadStrptrMaybe(dmmeta::Thash &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.thash") || algo::StripTypeTag(in_str, "dmmeta.Thash");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9454,7 +9454,7 @@ bool dmmeta::Thash_ReadStrptrMaybe(dmmeta::Thash &parent, algo::strptr in_str) {
 // --- dmmeta.Thash..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Thash.String  printfmt:Tuple
-void dmmeta::Thash_Print(dmmeta::Thash& row, algo::cstring& str) {
+void dmmeta::Thash_Print(dmmeta::Thash& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.thash";
 
@@ -9472,25 +9472,25 @@ void dmmeta::Thash_Print(dmmeta::Thash& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Tracefld.tracerec.Get
-algo::Smallstr50 dmmeta::tracerec_Get(dmmeta::Tracefld& parent) {
+algo::Smallstr50 dmmeta::tracerec_Get(dmmeta::Tracefld& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tracefld, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Tracefld.tracerec.Get2
-algo::Smallstr50 dmmeta::Tracefld_tracerec_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Tracefld_tracerec_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Tracefld.name.Get
-algo::Smallstr50 dmmeta::name_Get(dmmeta::Tracefld& parent) {
+algo::Smallstr50 dmmeta::name_Get(dmmeta::Tracefld& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tracefld, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Tracefld.name.Get2
-algo::Smallstr50 dmmeta::Tracefld_name_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Tracefld_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -9501,7 +9501,7 @@ tempstr dmmeta::Tracefld_Concat_tracerec_name( const algo::strptr& tracerec ,con
 }
 
 // --- dmmeta.Tracefld..ReadFieldMaybe
-bool dmmeta::Tracefld_ReadFieldMaybe(dmmeta::Tracefld& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Tracefld_ReadFieldMaybe(dmmeta::Tracefld& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9533,7 +9533,7 @@ bool dmmeta::Tracefld_ReadFieldMaybe(dmmeta::Tracefld& parent, algo::strptr fiel
 // --- dmmeta.Tracefld..ReadStrptrMaybe
 // Read fields of dmmeta::Tracefld from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Tracefld_ReadStrptrMaybe(dmmeta::Tracefld &parent, algo::strptr in_str) {
+bool dmmeta::Tracefld_ReadStrptrMaybe(dmmeta::Tracefld &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.tracefld") || algo::StripTypeTag(in_str, "dmmeta.Tracefld");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9545,7 +9545,7 @@ bool dmmeta::Tracefld_ReadStrptrMaybe(dmmeta::Tracefld &parent, algo::strptr in_
 // --- dmmeta.Tracefld..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Tracefld.String  printfmt:Tuple
-void dmmeta::Tracefld_Print(dmmeta::Tracefld& row, algo::cstring& str) {
+void dmmeta::Tracefld_Print(dmmeta::Tracefld& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.tracefld";
 
@@ -9557,25 +9557,25 @@ void dmmeta::Tracefld_Print(dmmeta::Tracefld& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Tracerec.name.Get
-algo::Smallstr50 dmmeta::name_Get(dmmeta::Tracerec& parent) {
+algo::Smallstr50 dmmeta::name_Get(dmmeta::Tracerec& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.tracerec, ".LR"));
     return ret;
 }
 
 // --- dmmeta.Tracerec.name.Get2
-algo::Smallstr50 dmmeta::Tracerec_name_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Tracerec_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LR"));
     return ret;
 }
 
 // --- dmmeta.Tracerec.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Tracerec& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Tracerec& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.tracerec, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Tracerec.ns.Get2
-algo::Smallstr16 dmmeta::Tracerec_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Tracerec_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
@@ -9586,7 +9586,7 @@ tempstr dmmeta::Tracerec_Concat_ns_name( const algo::strptr& ns ,const algo::str
 }
 
 // --- dmmeta.Tracerec..ReadFieldMaybe
-bool dmmeta::Tracerec_ReadFieldMaybe(dmmeta::Tracerec& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Tracerec_ReadFieldMaybe(dmmeta::Tracerec& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9618,7 +9618,7 @@ bool dmmeta::Tracerec_ReadFieldMaybe(dmmeta::Tracerec& parent, algo::strptr fiel
 // --- dmmeta.Tracerec..ReadStrptrMaybe
 // Read fields of dmmeta::Tracerec from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Tracerec_ReadStrptrMaybe(dmmeta::Tracerec &parent, algo::strptr in_str) {
+bool dmmeta::Tracerec_ReadStrptrMaybe(dmmeta::Tracerec &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.tracerec") || algo::StripTypeTag(in_str, "dmmeta.Tracerec");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9630,7 +9630,7 @@ bool dmmeta::Tracerec_ReadStrptrMaybe(dmmeta::Tracerec &parent, algo::strptr in_
 // --- dmmeta.Tracerec..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Tracerec.String  printfmt:Tuple
-void dmmeta::Tracerec_Print(dmmeta::Tracerec& row, algo::cstring& str) {
+void dmmeta::Tracerec_Print(dmmeta::Tracerec& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.tracerec";
 
@@ -9642,19 +9642,19 @@ void dmmeta::Tracerec_Print(dmmeta::Tracerec& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Typefld.ctype.Get
-algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Typefld& parent) {
+algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Typefld& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.field, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Typefld.ctype.Get2
-algo::Smallstr100 dmmeta::Typefld_ctype_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Typefld_ctype_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- dmmeta.Typefld..ReadFieldMaybe
-bool dmmeta::Typefld_ReadFieldMaybe(dmmeta::Typefld& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Typefld_ReadFieldMaybe(dmmeta::Typefld& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9682,7 +9682,7 @@ bool dmmeta::Typefld_ReadFieldMaybe(dmmeta::Typefld& parent, algo::strptr field,
 // --- dmmeta.Typefld..ReadStrptrMaybe
 // Read fields of dmmeta::Typefld from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Typefld_ReadStrptrMaybe(dmmeta::Typefld &parent, algo::strptr in_str) {
+bool dmmeta::Typefld_ReadStrptrMaybe(dmmeta::Typefld &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.typefld") || algo::StripTypeTag(in_str, "dmmeta.Typefld");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9694,7 +9694,7 @@ bool dmmeta::Typefld_ReadStrptrMaybe(dmmeta::Typefld &parent, algo::strptr in_st
 // --- dmmeta.Typefld..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Typefld.String  printfmt:Tuple
-void dmmeta::Typefld_Print(dmmeta::Typefld& row, algo::cstring& str) {
+void dmmeta::Typefld_Print(dmmeta::Typefld& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.typefld";
 
@@ -9706,7 +9706,7 @@ void dmmeta::Typefld_Print(dmmeta::Typefld& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Usertracefld..ReadFieldMaybe
-bool dmmeta::Usertracefld_ReadFieldMaybe(dmmeta::Usertracefld& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Usertracefld_ReadFieldMaybe(dmmeta::Usertracefld& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9730,7 +9730,7 @@ bool dmmeta::Usertracefld_ReadFieldMaybe(dmmeta::Usertracefld& parent, algo::str
 // --- dmmeta.Usertracefld..ReadStrptrMaybe
 // Read fields of dmmeta::Usertracefld from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Usertracefld_ReadStrptrMaybe(dmmeta::Usertracefld &parent, algo::strptr in_str) {
+bool dmmeta::Usertracefld_ReadStrptrMaybe(dmmeta::Usertracefld &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.usertracefld") || algo::StripTypeTag(in_str, "dmmeta.Usertracefld");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9742,7 +9742,7 @@ bool dmmeta::Usertracefld_ReadStrptrMaybe(dmmeta::Usertracefld &parent, algo::st
 // --- dmmeta.Usertracefld..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Usertracefld.String  printfmt:Tuple
-void dmmeta::Usertracefld_Print(dmmeta::Usertracefld& row, algo::cstring& str) {
+void dmmeta::Usertracefld_Print(dmmeta::Usertracefld& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.usertracefld";
 
@@ -9754,55 +9754,55 @@ void dmmeta::Usertracefld_Print(dmmeta::Usertracefld& row, algo::cstring& str) {
 }
 
 // --- dmmeta.Xref.name.Get
-algo::Smallstr50 dmmeta::name_Get(dmmeta::Xref& parent) {
+algo::Smallstr50 dmmeta::name_Get(dmmeta::Xref& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.field, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Xref.name.Get2
-algo::Smallstr50 dmmeta::Xref_name_Get(algo::strptr arg) {
+algo::Smallstr50 dmmeta::Xref_name_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
 
 // --- dmmeta.Xref.ns.Get
-algo::Smallstr16 dmmeta::ns_Get(dmmeta::Xref& parent) {
+algo::Smallstr16 dmmeta::ns_Get(dmmeta::Xref& parent) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(parent.field, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Xref.ns.Get2
-algo::Smallstr16 dmmeta::Xref_ns_Get(algo::strptr arg) {
+algo::Smallstr16 dmmeta::Xref_ns_Get(algo::strptr arg) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
 
 // --- dmmeta.Xref.viafld.Get
-algo::Smallstr100 dmmeta::viafld_Get(dmmeta::Xref& parent) {
+algo::Smallstr100 dmmeta::viafld_Get(dmmeta::Xref& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.via, "/LL"));
     return ret;
 }
 
 // --- dmmeta.Xref.viafld.Get2
-algo::Smallstr100 dmmeta::Xref_viafld_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Xref_viafld_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/LL"));
     return ret;
 }
 
 // --- dmmeta.Xref.keyfld.Get
-algo::Smallstr100 dmmeta::keyfld_Get(dmmeta::Xref& parent) {
+algo::Smallstr100 dmmeta::keyfld_Get(dmmeta::Xref& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.via, "/RR"));
     return ret;
 }
 
 // --- dmmeta.Xref.keyfld.Get2
-algo::Smallstr100 dmmeta::Xref_keyfld_Get(algo::strptr arg) {
+algo::Smallstr100 dmmeta::Xref_keyfld_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/RR"));
     return ret;
 }
 
 // --- dmmeta.Xref..ReadFieldMaybe
-bool dmmeta::Xref_ReadFieldMaybe(dmmeta::Xref& parent, algo::strptr field, algo::strptr strval) {
+bool dmmeta::Xref_ReadFieldMaybe(dmmeta::Xref& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     dmmeta::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -9846,7 +9846,7 @@ bool dmmeta::Xref_ReadFieldMaybe(dmmeta::Xref& parent, algo::strptr field, algo:
 // --- dmmeta.Xref..ReadStrptrMaybe
 // Read fields of dmmeta::Xref from an ascii string.
 // The format of the string is an ssim Tuple
-bool dmmeta::Xref_ReadStrptrMaybe(dmmeta::Xref &parent, algo::strptr in_str) {
+bool dmmeta::Xref_ReadStrptrMaybe(dmmeta::Xref &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "dmmeta.xref") || algo::StripTypeTag(in_str, "dmmeta.Xref");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -9858,7 +9858,7 @@ bool dmmeta::Xref_ReadStrptrMaybe(dmmeta::Xref &parent, algo::strptr in_str) {
 // --- dmmeta.Xref..Print
 // print string representation of ROW to string STR
 // cfmt:dmmeta.Xref.String  printfmt:Tuple
-void dmmeta::Xref_Print(dmmeta::Xref& row, algo::cstring& str) {
+void dmmeta::Xref_Print(dmmeta::Xref& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "dmmeta.xref";
 

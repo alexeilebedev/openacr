@@ -139,7 +139,7 @@ namespace atf_unit { // gen:ns_print_proto
 
 // --- atf_unit.Cstr.val.Nextchar
 // Extract next character from STR and advance IDX
-inline static int atf_unit::val_Nextchar(const atf_unit::Cstr& parent, algo::strptr &str, int &idx) {
+inline static int atf_unit::val_Nextchar(const atf_unit::Cstr& parent, algo::strptr &str, int &idx) throw() {
     (void)parent;
     int i = idx;
     int ch = str.elems[i];
@@ -151,7 +151,7 @@ inline static int atf_unit::val_Nextchar(const atf_unit::Cstr& parent, algo::str
 // --- atf_unit.Cstr..ReadStrptrMaybe
 // Read fields of atf_unit::Cstr from an ascii string.
 // The format of the string is the format of the atf_unit::Cstr's only field
-bool atf_unit::Cstr_ReadStrptrMaybe(atf_unit::Cstr &parent, algo::strptr in_str) {
+bool atf_unit::Cstr_ReadStrptrMaybe(atf_unit::Cstr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && algo::cstring_ReadStrptrMaybe(parent.val, in_str);
     return retval;
@@ -160,21 +160,21 @@ bool atf_unit::Cstr_ReadStrptrMaybe(atf_unit::Cstr &parent, algo::strptr in_str)
 // --- atf_unit.Cstr..FmtJson
 // Create JSON representation of atf_unit::Cstr under PARENT node
 // cfmt:atf_unit.Cstr.Json  printfmt:Auto
-lib_json::FNode * atf_unit::Cstr_FmtJson(atf_unit::Cstr& row, lib_json::FNode *parent) {
+lib_json::FNode * atf_unit::Cstr_FmtJson(atf_unit::Cstr& row, lib_json::FNode *parent) throw() {
     return algo::cstring_FmtJson(const_cast<atf_unit::Cstr&>(row).val,parent);;
 }
 
 // --- atf_unit.Cstr..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.Cstr.String  printfmt:Raw
-void atf_unit::Cstr_Print(atf_unit::Cstr& row, algo::cstring& str) {
+void atf_unit::Cstr_Print(atf_unit::Cstr& row, algo::cstring& str) throw() {
     algo::cstring_Print(row.val, str);
 }
 
 // --- atf_unit.Dbl..ReadStrptrMaybe
 // Read fields of atf_unit::Dbl from an ascii string.
 // The format of the string is the format of the atf_unit::Dbl's only field
-bool atf_unit::Dbl_ReadStrptrMaybe(atf_unit::Dbl &parent, algo::strptr in_str) {
+bool atf_unit::Dbl_ReadStrptrMaybe(atf_unit::Dbl &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && double_ReadStrptrMaybe(parent.val, in_str);
     return retval;
@@ -183,21 +183,21 @@ bool atf_unit::Dbl_ReadStrptrMaybe(atf_unit::Dbl &parent, algo::strptr in_str) {
 // --- atf_unit.Dbl..FmtJson
 // Create JSON representation of atf_unit::Dbl under PARENT node
 // cfmt:atf_unit.Dbl.Json  printfmt:Auto
-lib_json::FNode * atf_unit::Dbl_FmtJson(atf_unit::Dbl row, lib_json::FNode *parent) {
+lib_json::FNode * atf_unit::Dbl_FmtJson(atf_unit::Dbl row, lib_json::FNode *parent) throw() {
     return double_FmtJson(const_cast<atf_unit::Dbl&>(row).val,parent);;
 }
 
 // --- atf_unit.Dbl..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.Dbl.String  printfmt:Raw
-void atf_unit::Dbl_Print(atf_unit::Dbl row, algo::cstring& str) {
+void atf_unit::Dbl_Print(atf_unit::Dbl row, algo::cstring& str) throw() {
     double_Print(row.val, str);
 }
 
 // --- atf_unit.trace..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.trace.String  printfmt:Tuple
-void atf_unit::trace_Print(atf_unit::trace& row, algo::cstring& str) {
+void atf_unit::trace_Print(atf_unit::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_unit.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -206,7 +206,7 @@ void atf_unit::trace_Print(atf_unit::trace& row, algo::cstring& str) {
 // --- atf_unit.FDb.acr_ed.Start
 // Start subprocess
 // If subprocess already running, do nothing. Otherwise, start it
-int atf_unit::acr_ed_Start() {
+int atf_unit::acr_ed_Start() throw() {
     int retval = 0;
     if (_db.acr_ed_pid == 0) {
         verblog(acr_ed_ToCmdline()); // maybe print command
@@ -244,7 +244,7 @@ int atf_unit::acr_ed_Start() {
 
 // --- atf_unit.FDb.acr_ed.StartRead
 // Start subprocess & Read output
-algo::Fildes atf_unit::acr_ed_StartRead(algo_lib::FFildes &read) {
+algo::Fildes atf_unit::acr_ed_StartRead(algo_lib::FFildes &read) throw() {
     int pipefd[2];
     int rc=pipe(pipefd);
     (void)rc;
@@ -266,7 +266,7 @@ void atf_unit::acr_ed_Kill() {
 
 // --- atf_unit.FDb.acr_ed.Wait
 // Wait for subprocess to return
-void atf_unit::acr_ed_Wait() {
+void atf_unit::acr_ed_Wait() throw() {
     if (_db.acr_ed_pid > 0) {
         int wait_flags = 0;
         int wait_status = 0;
@@ -285,7 +285,7 @@ void atf_unit::acr_ed_Wait() {
 // --- atf_unit.FDb.acr_ed.Exec
 // Start + Wait
 // Execute subprocess and return exit code
-int atf_unit::acr_ed_Exec() {
+int atf_unit::acr_ed_Exec() throw() {
     acr_ed_Start();
     acr_ed_Wait();
     return _db.acr_ed_status;
@@ -303,7 +303,7 @@ void atf_unit::acr_ed_ExecX() {
 // --- atf_unit.FDb.acr_ed.Execv
 // Call execv()
 // Call execv with specified parameters
-int atf_unit::acr_ed_Execv() {
+int atf_unit::acr_ed_Execv() throw() {
     int ret = 0;
     algo::StringAry args;
     acr_ed_ToArgv(args);
@@ -319,7 +319,7 @@ int atf_unit::acr_ed_Execv() {
 }
 
 // --- atf_unit.FDb.acr_ed.ToCmdline
-algo::tempstr atf_unit::acr_ed_ToCmdline() {
+algo::tempstr atf_unit::acr_ed_ToCmdline() throw() {
     algo::tempstr retval;
     retval << _db.acr_ed_path << " ";
     command::acr_ed_PrintArgv(_db.acr_ed_cmd,retval);
@@ -337,7 +337,7 @@ algo::tempstr atf_unit::acr_ed_ToCmdline() {
 
 // --- atf_unit.FDb.acr_ed.ToArgv
 // Form array from the command line
-void atf_unit::acr_ed_ToArgv(algo::StringAry& args) {
+void atf_unit::acr_ed_ToArgv(algo::StringAry& args) throw() {
     ary_RemoveAll(args);
     ary_Alloc(args) << _db.acr_ed_path;
 
@@ -618,7 +618,7 @@ void atf_unit::acr_ed_ToArgv(algo::StringAry& args) {
 // --- atf_unit.FDb.number.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_unit::FNumber& atf_unit::number_Alloc() {
+atf_unit::FNumber& atf_unit::number_Alloc() throw() {
     atf_unit::FNumber* row = number_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_unit.out_of_mem  field:atf_unit.FDb.number  comment:'Alloc failed'");
@@ -628,7 +628,7 @@ atf_unit::FNumber& atf_unit::number_Alloc() {
 
 // --- atf_unit.FDb.number.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_unit::FNumber* atf_unit::number_AllocMaybe() {
+atf_unit::FNumber* atf_unit::number_AllocMaybe() throw() {
     atf_unit::FNumber *row = (atf_unit::FNumber*)number_AllocMem();
     if (row) {
         new (row) atf_unit::FNumber; // call constructor
@@ -638,7 +638,7 @@ atf_unit::FNumber* atf_unit::number_AllocMaybe() {
 
 // --- atf_unit.FDb.number.Delete
 // Remove row from all global and cross indices, then deallocate row
-void atf_unit::number_Delete(atf_unit::FNumber &row) {
+void atf_unit::number_Delete(atf_unit::FNumber &row) throw() {
     row.~FNumber();
     number_FreeMem(row);
 }
@@ -646,7 +646,7 @@ void atf_unit::number_Delete(atf_unit::FNumber &row) {
 // --- atf_unit.FDb.number.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-void* atf_unit::number_AllocMem() {
+void* atf_unit::number_AllocMem() throw() {
     atf_unit::FNumber *row = _db.number_free;
     if (UNLIKELY(!row)) {
         number_Reserve(1);
@@ -660,7 +660,7 @@ void* atf_unit::number_AllocMem() {
 
 // --- atf_unit.FDb.number.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-void atf_unit::number_FreeMem(atf_unit::FNumber &row) {
+void atf_unit::number_FreeMem(atf_unit::FNumber &row) throw() {
     if (UNLIKELY(row.number_next != (atf_unit::FNumber*)-1)) {
         FatalErrorExit("atf_unit.tpool_double_delete  pool:atf_unit.FDb.number  comment:'double deletion caught'");
     }
@@ -671,7 +671,7 @@ void atf_unit::number_FreeMem(atf_unit::FNumber &row) {
 // --- atf_unit.FDb.number.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-u64 atf_unit::number_Reserve(u64 n_elems) {
+u64 atf_unit::number_Reserve(u64 n_elems) throw() {
     u64 ret = 0;
     while (ret < n_elems) {
         u64 size = _db.number_blocksize; // underlying allocator is probably Lpool
@@ -687,7 +687,7 @@ u64 atf_unit::number_Reserve(u64 n_elems) {
 // --- atf_unit.FDb.number.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-u64 atf_unit::number_ReserveMem(u64 size) {
+u64 atf_unit::number_ReserveMem(u64 size) throw() {
     u64 ret = 0;
     if (size >= sizeof(atf_unit::FNumber)) {
         atf_unit::FNumber *mem = (atf_unit::FNumber*)algo_lib::malloc_AllocMem(size);
@@ -715,7 +715,7 @@ bool atf_unit::number_XrefMaybe(atf_unit::FNumber &row) {
 }
 
 // --- atf_unit.FDb.tr_number.FirstImpl
-atf_unit::FNumber* atf_unit::tr_number_FirstImpl(atf_unit::FNumber* root) {
+atf_unit::FNumber* atf_unit::tr_number_FirstImpl(atf_unit::FNumber* root) throw() {
     atf_unit::FNumber *result = root;
     while(result != NULL && result->tr_number_left != NULL){
         result = result->tr_number_left;
@@ -725,13 +725,13 @@ atf_unit::FNumber* atf_unit::tr_number_FirstImpl(atf_unit::FNumber* root) {
 
 // --- atf_unit.FDb.tr_number.First
 // Return pointer to the first(smallest) element in the tree
-atf_unit::FNumber* atf_unit::tr_number_First() {
+atf_unit::FNumber* atf_unit::tr_number_First() throw() {
     return tr_number_FirstImpl(_db.tr_number_root);
 }
 
 // --- atf_unit.FDb.tr_number.InsertImpl
 // Insert row into the tree. If row is already in the tree, do nothing.
-void atf_unit::tr_number_InsertImpl(atf_unit::FNumber* parent, atf_unit::FNumber& row) {
+void atf_unit::tr_number_InsertImpl(atf_unit::FNumber* parent, atf_unit::FNumber& row) throw() {
     bool left = false;
     while(parent != NULL){
         left = tr_number_ElemLt(row, *parent);
@@ -746,7 +746,7 @@ void atf_unit::tr_number_InsertImpl(atf_unit::FNumber* parent, atf_unit::FNumber
 
 // --- atf_unit.FDb.tr_number.Insert
 // Insert row into the tree. If row is already in the tree, do nothing.
-void atf_unit::tr_number_Insert(atf_unit::FNumber& row) {
+void atf_unit::tr_number_Insert(atf_unit::FNumber& row) throw() {
     if(!tr_number_InTreeQ(row)){
         _db.tr_number_n++;
         tr_number_InsertImpl(_db.tr_number_root, row);
@@ -756,7 +756,7 @@ void atf_unit::tr_number_Insert(atf_unit::FNumber& row) {
 
 // --- atf_unit.FDb.tr_number.Remove
 // Remove element from index. If element is not in index, do nothing.
-void atf_unit::tr_number_Remove(atf_unit::FNumber& row) {
+void atf_unit::tr_number_Remove(atf_unit::FNumber& row) throw() {
     if(!tr_number_InTreeQ(row)){
         return;
     }
@@ -788,14 +788,14 @@ void atf_unit::tr_number_Remove(atf_unit::FNumber& row) {
 
 // --- atf_unit.FDb.tr_number.RemoveFirst
 // If the tree is empty, return NULL. Otherwise unlink and return pointer to first element.
-void atf_unit::tr_number_RemoveFirst() {
+void atf_unit::tr_number_RemoveFirst() throw() {
     if(!tr_number_EmptyQ()){
         tr_number_Remove(*tr_number_First());
     }
 }
 
 // --- atf_unit.FDb.tr_number.Balance
-i32 atf_unit::tr_number_Balance(atf_unit::FNumber& row) {
+i32 atf_unit::tr_number_Balance(atf_unit::FNumber& row) throw() {
     i32 left  = row.tr_number_left  ? row.tr_number_left->tr_number_depth  : 0;
     i32 right = row.tr_number_right ? row.tr_number_right->tr_number_depth : 0;
     return left - right;
@@ -803,7 +803,7 @@ i32 atf_unit::tr_number_Balance(atf_unit::FNumber& row) {
 
 // --- atf_unit.FDb.tr_number.Propagate
 // Recalculate depth and keep rebalancing if needed
-atf_unit::FNumber* atf_unit::tr_number_Propagate(atf_unit::FNumber& pnode) {
+atf_unit::FNumber* atf_unit::tr_number_Propagate(atf_unit::FNumber& pnode) throw() {
     atf_unit::FNumber *root = &pnode;
     atf_unit::FNumber* node = &pnode;
     while(node != NULL){
@@ -817,13 +817,13 @@ atf_unit::FNumber* atf_unit::tr_number_Propagate(atf_unit::FNumber& pnode) {
 
 // --- atf_unit.FDb.tr_number.TallerChild
 // Returns the child that has greater height.
-inline static atf_unit::FNumber* atf_unit::tr_number_TallerChild(atf_unit::FNumber& node) {
+inline static atf_unit::FNumber* atf_unit::tr_number_TallerChild(atf_unit::FNumber& node) throw() {
     return tr_number_Balance(node) < 0 ? node.tr_number_right : node.tr_number_left;
 }
 
 // --- atf_unit.FDb.tr_number.Disconnect
 // Disconnects the subtree(branch) from the parent
-static void atf_unit::tr_number_Disconnect(atf_unit::FNumber& node) {
+static void atf_unit::tr_number_Disconnect(atf_unit::FNumber& node) throw() {
     atf_unit::FNumber* parent = node.tr_number_up;
     if(parent != NULL){
         bool left = parent->tr_number_left == &node;
@@ -834,7 +834,7 @@ static void atf_unit::tr_number_Disconnect(atf_unit::FNumber& node) {
 
 // --- atf_unit.FDb.tr_number.Rebalance
 // Rebalances the node if needed.
-void atf_unit::tr_number_Rebalance(atf_unit::FNumber& node) {
+void atf_unit::tr_number_Rebalance(atf_unit::FNumber& node) throw() {
     if (algo::Abs(tr_number_Balance(node)) > 1){
         atf_unit::FNumber* deep1 = tr_number_TallerChild(node);
         atf_unit::FNumber* deep2 = tr_number_TallerChild(*deep1);
@@ -851,7 +851,7 @@ void atf_unit::tr_number_Rebalance(atf_unit::FNumber& node) {
 }
 
 // --- atf_unit.FDb.tr_number.Next
-atf_unit::FNumber* atf_unit::tr_number_Next(atf_unit::FNumber& node) {
+atf_unit::FNumber* atf_unit::tr_number_Next(atf_unit::FNumber& node) throw() {
     atf_unit::FNumber *result = &node;
     if(result->tr_number_right == NULL){
         while(result->tr_number_up != NULL && result->tr_number_up->tr_number_right == result){
@@ -865,7 +865,7 @@ atf_unit::FNumber* atf_unit::tr_number_Next(atf_unit::FNumber& node) {
 }
 
 // --- atf_unit.FDb.tr_number.Prev
-atf_unit::FNumber* atf_unit::tr_number_Prev(atf_unit::FNumber& node) {
+atf_unit::FNumber* atf_unit::tr_number_Prev(atf_unit::FNumber& node) throw() {
     atf_unit::FNumber *result = &node;
     if(result->tr_number_left == NULL){
         while(result->tr_number_up != NULL && result->tr_number_up->tr_number_left == result){
@@ -879,7 +879,7 @@ atf_unit::FNumber* atf_unit::tr_number_Prev(atf_unit::FNumber& node) {
 }
 
 // --- atf_unit.FDb.tr_number.LastImpl
-atf_unit::FNumber* atf_unit::tr_number_LastImpl(atf_unit::FNumber* root) {
+atf_unit::FNumber* atf_unit::tr_number_LastImpl(atf_unit::FNumber* root) throw() {
     atf_unit::FNumber *result = root;
     while(result != NULL && result->tr_number_right != NULL){
         result = result->tr_number_right;
@@ -889,18 +889,18 @@ atf_unit::FNumber* atf_unit::tr_number_LastImpl(atf_unit::FNumber* root) {
 
 // --- atf_unit.FDb.tr_number.Last
 // Return pointer to the last(largest) element in tree
-atf_unit::FNumber* atf_unit::tr_number_Last() {
+atf_unit::FNumber* atf_unit::tr_number_Last() throw() {
     return tr_number_LastImpl(_db.tr_number_root);
 }
 
 // --- atf_unit.FDb.tr_number.ElemLt
-inline static bool atf_unit::tr_number_ElemLt(atf_unit::FNumber &a, atf_unit::FNumber &b) {
+inline static bool atf_unit::tr_number_ElemLt(atf_unit::FNumber &a, atf_unit::FNumber &b) throw() {
     (void)_db;
     return a.num < b.num;
 }
 
 // --- atf_unit.FDb.tr_number.UpdateDepth
-static void atf_unit::tr_number_updateDepth(atf_unit::FNumber& node) {
+static void atf_unit::tr_number_updateDepth(atf_unit::FNumber& node) throw() {
     i32 ldepth = node.tr_number_left  != NULL ? node.tr_number_left->tr_number_depth : 0;
     i32 rdepth = node.tr_number_right != NULL ? node.tr_number_right->tr_number_depth : 0;
     node.tr_number_depth = i32_Max(ldepth, rdepth) + 1;
@@ -908,7 +908,7 @@ static void atf_unit::tr_number_updateDepth(atf_unit::FNumber& node) {
 
 // --- atf_unit.FDb.tr_number.Turn
 // rotates the tree in from->to direction
-static void atf_unit::tr_number_Turn(atf_unit::FNumber& from, atf_unit::FNumber& to) {
+static void atf_unit::tr_number_Turn(atf_unit::FNumber& from, atf_unit::FNumber& to) throw() {
     atf_unit::FNumber* root = to.tr_number_up;
     bool dir = root && root->tr_number_left == &to;
     tr_number_Connect(root, &from, dir);
@@ -919,7 +919,7 @@ static void atf_unit::tr_number_Turn(atf_unit::FNumber& from, atf_unit::FNumber&
 }
 
 // --- atf_unit.FDb.tr_number.Connect
-inline static void atf_unit::tr_number_Connect(atf_unit::FNumber* parent, atf_unit::FNumber* child, bool left) {
+inline static void atf_unit::tr_number_Connect(atf_unit::FNumber* parent, atf_unit::FNumber* child, bool left) throw() {
     if(parent){
         (left ? parent->tr_number_left : parent->tr_number_right) = child;
     }
@@ -930,7 +930,7 @@ inline static void atf_unit::tr_number_Connect(atf_unit::FNumber* parent, atf_un
 
 // --- atf_unit.FDb.tr_number.RemoveAllImpl
 // Empty the index. (rows may be deleted if cascdel)
-void atf_unit::tr_number_RemoveAllImpl(atf_unit::FNumber* root, bool del) {
+void atf_unit::tr_number_RemoveAllImpl(atf_unit::FNumber* root, bool del) throw() {
     if(root != NULL){
         tr_number_RemoveAllImpl(root->tr_number_left, del);
         tr_number_RemoveAllImpl(root->tr_number_right, del);
@@ -942,14 +942,14 @@ void atf_unit::tr_number_RemoveAllImpl(atf_unit::FNumber* root, bool del) {
 
 // --- atf_unit.FDb.tr_number.Reinsert
 // Reinsert a row with modified key(Reheap semantics)
-void atf_unit::tr_number_Reinsert(atf_unit::FNumber& node) {
+void atf_unit::tr_number_Reinsert(atf_unit::FNumber& node) throw() {
     tr_number_Remove(node);
     tr_number_Insert(node);
 }
 
 // --- atf_unit.FDb.tr_number.FirstGe
 // Find the first element that is greater or equal to a sortfld value
-atf_unit::FNumber* atf_unit::tr_number_FirstGe(const i32& val) {
+atf_unit::FNumber* atf_unit::tr_number_FirstGe(const i32& val) throw() {
     atf_unit::FNumber* result = _db.tr_number_root;
     bool left = false;
     while(result){
@@ -968,7 +968,7 @@ atf_unit::FNumber* atf_unit::tr_number_FirstGe(const i32& val) {
 
 // --- atf_unit.FDb.tr_number.LastLt
 // Find the last element that is smaller or equal to a sortfld value
-atf_unit::FNumber* atf_unit::tr_number_LastLt(const i32& val) {
+atf_unit::FNumber* atf_unit::tr_number_LastLt(const i32& val) throw() {
     atf_unit::FNumber* result = _db.tr_number_root;
     bool left = false;
     while(result){
@@ -988,7 +988,7 @@ atf_unit::FNumber* atf_unit::tr_number_LastLt(const i32& val) {
 // --- atf_unit.FDb.unittest.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_unit::FUnittest& atf_unit::unittest_Alloc() {
+atf_unit::FUnittest& atf_unit::unittest_Alloc() throw() {
     atf_unit::FUnittest* row = unittest_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_unit.out_of_mem  field:atf_unit.FDb.unittest  comment:'Alloc failed'");
@@ -998,7 +998,7 @@ atf_unit::FUnittest& atf_unit::unittest_Alloc() {
 
 // --- atf_unit.FDb.unittest.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_unit::FUnittest* atf_unit::unittest_AllocMaybe() {
+atf_unit::FUnittest* atf_unit::unittest_AllocMaybe() throw() {
     atf_unit::FUnittest *row = (atf_unit::FUnittest*)unittest_AllocMem();
     if (row) {
         new (row) atf_unit::FUnittest; // call constructor
@@ -1009,7 +1009,7 @@ atf_unit::FUnittest* atf_unit::unittest_AllocMaybe() {
 // --- atf_unit.FDb.unittest.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_unit::FUnittest* atf_unit::unittest_InsertMaybe(const atfdb::Unittest &value) {
+atf_unit::FUnittest* atf_unit::unittest_InsertMaybe(const atfdb::Unittest &value) throw() {
     atf_unit::FUnittest *row = &unittest_Alloc(); // if out of memory, process dies. if input error, return NULL.
     unittest_CopyIn(*row,const_cast<atfdb::Unittest&>(value));
     bool ok = unittest_XrefMaybe(*row); // this may return false
@@ -1022,7 +1022,7 @@ atf_unit::FUnittest* atf_unit::unittest_InsertMaybe(const atfdb::Unittest &value
 
 // --- atf_unit.FDb.unittest.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_unit::unittest_AllocMem() {
+void* atf_unit::unittest_AllocMem() throw() {
     u64 new_nelems     = _db.unittest_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1048,7 +1048,7 @@ void* atf_unit::unittest_AllocMem() {
 
 // --- atf_unit.FDb.unittest.RemoveAll
 // Remove all elements from Lary
-void atf_unit::unittest_RemoveAll() {
+void atf_unit::unittest_RemoveAll() throw() {
     for (u64 n = _db.unittest_n; n>0; ) {
         n--;
         unittest_qFind(u64(n)).~FUnittest(); // destroy last element
@@ -1058,7 +1058,7 @@ void atf_unit::unittest_RemoveAll() {
 
 // --- atf_unit.FDb.unittest.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_unit::unittest_RemoveLast() {
+void atf_unit::unittest_RemoveLast() throw() {
     u64 n = _db.unittest_n;
     if (n > 0) {
         n -= 1;
@@ -1068,7 +1068,7 @@ void atf_unit::unittest_RemoveLast() {
 }
 
 // --- atf_unit.FDb.unittest.LoadStatic
-static void atf_unit::unittest_LoadStatic() {
+static void atf_unit::unittest_LoadStatic() throw() {
     static struct _t {
         const char *s;
         void (*step)();
@@ -1353,7 +1353,7 @@ bool atf_unit::unittest_XrefMaybe(atf_unit::FUnittest &row) {
 // The following fields are updated:
 //     atf_unit.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void atf_unit::ReadArgv() {
+void atf_unit::ReadArgv() throw() {
     command::atf_unit &cmd = atf_unit::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -1548,7 +1548,7 @@ bool atf_unit::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_unit.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_unit::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool atf_unit::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = atf_unit::LoadTuplesFile(root, recursive);
@@ -1573,7 +1573,7 @@ bool atf_unit::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool atf_unit::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool atf_unit::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -1586,7 +1586,7 @@ bool atf_unit::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- atf_unit.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool atf_unit::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool atf_unit::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -1606,7 +1606,7 @@ bool atf_unit::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
 
 // --- atf_unit.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_unit::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool atf_unit::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = atf_unit::LoadTuplesFile(fname, recursive);
@@ -1631,7 +1631,7 @@ bool atf_unit::_db_XrefMaybe() {
 
 // --- atf_unit.FDb.ind_unittest.Find
 // Find row by key. Return NULL if not found.
-atf_unit::FUnittest* atf_unit::ind_unittest_Find(const algo::strptr& key) {
+atf_unit::FUnittest* atf_unit::ind_unittest_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_unittest_buckets_n - 1);
     atf_unit::FUnittest* *e = &_db.ind_unittest_buckets_elems[index];
     atf_unit::FUnittest* ret=NULL;
@@ -1654,7 +1654,7 @@ atf_unit::FUnittest& atf_unit::ind_unittest_FindX(const algo::strptr& key) {
 
 // --- atf_unit.FDb.ind_unittest.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_unit::FUnittest& atf_unit::ind_unittest_GetOrCreate(const algo::strptr& key) {
+atf_unit::FUnittest& atf_unit::ind_unittest_GetOrCreate(const algo::strptr& key) throw() {
     atf_unit::FUnittest* ret = ind_unittest_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &unittest_Alloc();
@@ -1671,7 +1671,7 @@ atf_unit::FUnittest& atf_unit::ind_unittest_GetOrCreate(const algo::strptr& key)
 
 // --- atf_unit.FDb.ind_unittest.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_unit::ind_unittest_InsertMaybe(atf_unit::FUnittest& row) {
+bool atf_unit::ind_unittest_InsertMaybe(atf_unit::FUnittest& row) throw() {
     ind_unittest_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_unittest_next == (atf_unit::FUnittest*)-1)) {// check if in hash already
@@ -1699,7 +1699,7 @@ bool atf_unit::ind_unittest_InsertMaybe(atf_unit::FUnittest& row) {
 
 // --- atf_unit.FDb.ind_unittest.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_unit::ind_unittest_Remove(atf_unit::FUnittest& row) {
+void atf_unit::ind_unittest_Remove(atf_unit::FUnittest& row) throw() {
     if (LIKELY(row.ind_unittest_next != (atf_unit::FUnittest*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.unittest) & (_db.ind_unittest_buckets_n - 1);
         atf_unit::FUnittest* *prev = &_db.ind_unittest_buckets_elems[index]; // addr of pointer to current element
@@ -1717,7 +1717,7 @@ void atf_unit::ind_unittest_Remove(atf_unit::FUnittest& row) {
 
 // --- atf_unit.FDb.ind_unittest.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_unit::ind_unittest_Reserve(int n) {
+void atf_unit::ind_unittest_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_unittest_buckets_n;
     u32 new_nelems   = _db.ind_unittest_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1753,13 +1753,13 @@ void atf_unit::ind_unittest_Reserve(int n) {
 
 // --- atf_unit.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr atf_unit::trace_RowidFind(int t) {
+static algo::ImrowPtr atf_unit::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- atf_unit.FDb.trace.N
 // Function return 1
-inline static i32 atf_unit::trace_N() {
+inline static i32 atf_unit::trace_N() throw() {
     return 1;
 }
 
@@ -1802,7 +1802,7 @@ void atf_unit::FDb_Init() {
 }
 
 // --- atf_unit.FDb..Uninit
-void atf_unit::FDb_Uninit() {
+void atf_unit::FDb_Uninit() throw() {
     atf_unit::FDb &row = _db; (void)row;
 
     // atf_unit.FDb.ind_unittest.Uninit (Thash)  //
@@ -1816,7 +1816,7 @@ void atf_unit::FDb_Uninit() {
 }
 
 // --- atf_unit.FNumber..Uninit
-void atf_unit::FNumber_Uninit(atf_unit::FNumber& number) {
+void atf_unit::FNumber_Uninit(atf_unit::FNumber& number) throw() {
     atf_unit::FNumber &row = number; (void)row;
     tr_number_Remove(row); // remove number from index tr_number
 }
@@ -1825,7 +1825,7 @@ void atf_unit::FNumber_Uninit(atf_unit::FNumber& number) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<atf_unit::Dbl> atf_unit::orig_Addary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs) {
+algo::aryptr<atf_unit::Dbl> atf_unit::orig_Addary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.orig_elems && rhs.elems < parent.orig_elems + parent.orig_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.orig  comment:'alias error: sub-array is being appended to the whole'");
@@ -1843,7 +1843,7 @@ algo::aryptr<atf_unit::Dbl> atf_unit::orig_Addary(atf_unit::FPerfSort& parent, a
 // --- atf_unit.FPerfSort.orig.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-atf_unit::Dbl& atf_unit::orig_Alloc(atf_unit::FPerfSort& parent) {
+atf_unit::Dbl& atf_unit::orig_Alloc(atf_unit::FPerfSort& parent) throw() {
     orig_Reserve(parent, 1);
     int n  = parent.orig_n;
     int at = n;
@@ -1856,7 +1856,7 @@ atf_unit::Dbl& atf_unit::orig_Alloc(atf_unit::FPerfSort& parent) {
 // --- atf_unit.FPerfSort.orig.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-atf_unit::Dbl& atf_unit::orig_AllocAt(atf_unit::FPerfSort& parent, int at) {
+atf_unit::Dbl& atf_unit::orig_AllocAt(atf_unit::FPerfSort& parent, int at) throw() {
     orig_Reserve(parent, 1);
     int n  = parent.orig_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -1871,7 +1871,7 @@ atf_unit::Dbl& atf_unit::orig_AllocAt(atf_unit::FPerfSort& parent, int at) {
 
 // --- atf_unit.FPerfSort.orig.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocN(atf_unit::FPerfSort& parent, int n_elems) {
+algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocN(atf_unit::FPerfSort& parent, int n_elems) throw() {
     orig_Reserve(parent, n_elems);
     int old_n  = parent.orig_n;
     int new_n = old_n + n_elems;
@@ -1885,7 +1885,7 @@ algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocN(atf_unit::FPerfSort& parent, i
 
 // --- atf_unit.FPerfSort.orig.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_unit::orig_Remove(atf_unit::FPerfSort& parent, u32 i) {
+void atf_unit::orig_Remove(atf_unit::FPerfSort& parent, u32 i) throw() {
     u32 lim = parent.orig_n;
     atf_unit::Dbl *elems = parent.orig_elems;
     if (i < lim) {
@@ -1896,7 +1896,7 @@ void atf_unit::orig_Remove(atf_unit::FPerfSort& parent, u32 i) {
 
 // --- atf_unit.FPerfSort.orig.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_unit::orig_RemoveLast(atf_unit::FPerfSort& parent) {
+void atf_unit::orig_RemoveLast(atf_unit::FPerfSort& parent) throw() {
     u64 n = parent.orig_n;
     if (n > 0) {
         n -= 1;
@@ -1906,7 +1906,7 @@ void atf_unit::orig_RemoveLast(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.orig.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_unit::orig_AbsReserve(atf_unit::FPerfSort& parent, int n) {
+void atf_unit::orig_AbsReserve(atf_unit::FPerfSort& parent, int n) throw() {
     u32 old_max  = parent.orig_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -1921,7 +1921,7 @@ void atf_unit::orig_AbsReserve(atf_unit::FPerfSort& parent, int n) {
 
 // --- atf_unit.FPerfSort.orig.Setary
 // Copy contents of RHS to PARENT.
-void atf_unit::orig_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) {
+void atf_unit::orig_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) throw() {
     orig_RemoveAll(parent);
     int nnew = rhs.orig_n;
     orig_Reserve(parent, nnew); // reserve space
@@ -1934,14 +1934,14 @@ void atf_unit::orig_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs
 // --- atf_unit.FPerfSort.orig.Setary2
 // Copy specified array into orig, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void atf_unit::orig_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<atf_unit::Dbl> &rhs) {
+void atf_unit::orig_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<atf_unit::Dbl> &rhs) throw() {
     orig_RemoveAll(parent);
     orig_Addary(parent, rhs);
 }
 
 // --- atf_unit.FPerfSort.orig.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) {
+algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) throw() {
     orig_Reserve(parent, n_elems);
     int old_n  = parent.orig_n;
     int new_n = old_n + n_elems;
@@ -1957,7 +1957,7 @@ algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocNVal(atf_unit::FPerfSort& parent
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool atf_unit::orig_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) {
+bool atf_unit::orig_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) throw() {
     bool retval = true;
     atf_unit::Dbl &elem = orig_Alloc(parent);
     retval = atf_unit::Dbl_ReadStrptrMaybe(elem, in_str);
@@ -1971,7 +1971,7 @@ bool atf_unit::orig_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<atf_unit::Dbl> atf_unit::sorted_Addary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs) {
+algo::aryptr<atf_unit::Dbl> atf_unit::sorted_Addary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.sorted_elems && rhs.elems < parent.sorted_elems + parent.sorted_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.sorted  comment:'alias error: sub-array is being appended to the whole'");
@@ -1989,7 +1989,7 @@ algo::aryptr<atf_unit::Dbl> atf_unit::sorted_Addary(atf_unit::FPerfSort& parent,
 // --- atf_unit.FPerfSort.sorted.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-atf_unit::Dbl& atf_unit::sorted_Alloc(atf_unit::FPerfSort& parent) {
+atf_unit::Dbl& atf_unit::sorted_Alloc(atf_unit::FPerfSort& parent) throw() {
     sorted_Reserve(parent, 1);
     int n  = parent.sorted_n;
     int at = n;
@@ -2002,7 +2002,7 @@ atf_unit::Dbl& atf_unit::sorted_Alloc(atf_unit::FPerfSort& parent) {
 // --- atf_unit.FPerfSort.sorted.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-atf_unit::Dbl& atf_unit::sorted_AllocAt(atf_unit::FPerfSort& parent, int at) {
+atf_unit::Dbl& atf_unit::sorted_AllocAt(atf_unit::FPerfSort& parent, int at) throw() {
     sorted_Reserve(parent, 1);
     int n  = parent.sorted_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -2017,7 +2017,7 @@ atf_unit::Dbl& atf_unit::sorted_AllocAt(atf_unit::FPerfSort& parent, int at) {
 
 // --- atf_unit.FPerfSort.sorted.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocN(atf_unit::FPerfSort& parent, int n_elems) {
+algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocN(atf_unit::FPerfSort& parent, int n_elems) throw() {
     sorted_Reserve(parent, n_elems);
     int old_n  = parent.sorted_n;
     int new_n = old_n + n_elems;
@@ -2031,7 +2031,7 @@ algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocN(atf_unit::FPerfSort& parent,
 
 // --- atf_unit.FPerfSort.sorted.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_unit::sorted_Remove(atf_unit::FPerfSort& parent, u32 i) {
+void atf_unit::sorted_Remove(atf_unit::FPerfSort& parent, u32 i) throw() {
     u32 lim = parent.sorted_n;
     atf_unit::Dbl *elems = parent.sorted_elems;
     if (i < lim) {
@@ -2042,7 +2042,7 @@ void atf_unit::sorted_Remove(atf_unit::FPerfSort& parent, u32 i) {
 
 // --- atf_unit.FPerfSort.sorted.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_unit::sorted_RemoveLast(atf_unit::FPerfSort& parent) {
+void atf_unit::sorted_RemoveLast(atf_unit::FPerfSort& parent) throw() {
     u64 n = parent.sorted_n;
     if (n > 0) {
         n -= 1;
@@ -2052,7 +2052,7 @@ void atf_unit::sorted_RemoveLast(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.sorted.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_unit::sorted_AbsReserve(atf_unit::FPerfSort& parent, int n) {
+void atf_unit::sorted_AbsReserve(atf_unit::FPerfSort& parent, int n) throw() {
     u32 old_max  = parent.sorted_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -2067,7 +2067,7 @@ void atf_unit::sorted_AbsReserve(atf_unit::FPerfSort& parent, int n) {
 
 // --- atf_unit.FPerfSort.sorted.Setary
 // Copy contents of RHS to PARENT.
-void atf_unit::sorted_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) {
+void atf_unit::sorted_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) throw() {
     sorted_RemoveAll(parent);
     int nnew = rhs.sorted_n;
     sorted_Reserve(parent, nnew); // reserve space
@@ -2080,14 +2080,14 @@ void atf_unit::sorted_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &r
 // --- atf_unit.FPerfSort.sorted.Setary2
 // Copy specified array into sorted, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void atf_unit::sorted_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<atf_unit::Dbl> &rhs) {
+void atf_unit::sorted_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<atf_unit::Dbl> &rhs) throw() {
     sorted_RemoveAll(parent);
     sorted_Addary(parent, rhs);
 }
 
 // --- atf_unit.FPerfSort.sorted.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) {
+algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const atf_unit::Dbl& val) throw() {
     sorted_Reserve(parent, n_elems);
     int old_n  = parent.sorted_n;
     int new_n = old_n + n_elems;
@@ -2103,7 +2103,7 @@ algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocNVal(atf_unit::FPerfSort& pare
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool atf_unit::sorted_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) {
+bool atf_unit::sorted_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) throw() {
     bool retval = true;
     atf_unit::Dbl &elem = sorted_Alloc(parent);
     retval = atf_unit::Dbl_ReadStrptrMaybe(elem, in_str);
@@ -2115,7 +2115,7 @@ bool atf_unit::sorted_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr 
 
 // --- atf_unit.FPerfSort.sorted.Swap
 // Swap values elem_a and elem_b
-inline static void atf_unit::sorted_Swap(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b) {
+inline static void atf_unit::sorted_Swap(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b) throw() {
     atf_unit::Dbl temp = elem_a;
     elem_a = elem_b;
     elem_b = temp;
@@ -2123,7 +2123,7 @@ inline static void atf_unit::sorted_Swap(atf_unit::Dbl &elem_a, atf_unit::Dbl &e
 
 // --- atf_unit.FPerfSort.sorted.Rotleft
 // Left circular shift of three-tuple
-inline static void atf_unit::sorted_Rotleft(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b, atf_unit::Dbl &elem_c) {
+inline static void atf_unit::sorted_Rotleft(atf_unit::Dbl &elem_a, atf_unit::Dbl &elem_b, atf_unit::Dbl &elem_c) throw() {
     atf_unit::Dbl temp = elem_a;
     elem_a = elem_b;
     elem_b = elem_c;
@@ -2134,7 +2134,7 @@ inline static void atf_unit::sorted_Rotleft(atf_unit::Dbl &elem_a, atf_unit::Dbl
 // Compare values elem_a and elem_b
 // The comparison function must be anti-symmetric: if a>b, then !(b>a).
 // If not, mayhem results.
-static bool atf_unit::sorted_Lt(atf_unit::Dbl elem_a, atf_unit::Dbl elem_b) {
+static bool atf_unit::sorted_Lt(atf_unit::Dbl elem_a, atf_unit::Dbl elem_b) throw() {
     bool ret;
     ret = elem_a.val < elem_b.val;
     return ret;
@@ -2142,7 +2142,7 @@ static bool atf_unit::sorted_Lt(atf_unit::Dbl elem_a, atf_unit::Dbl elem_b) {
 
 // --- atf_unit.FPerfSort.sorted.SortedQ
 // Verify whether array is sorted
-bool atf_unit::sorted_SortedQ(atf_unit::FPerfSort& parent) {
+bool atf_unit::sorted_SortedQ(atf_unit::FPerfSort& parent) throw() {
     atf_unit::Dbl *elems = sorted_Getary(parent).elems;
     int n = sorted_N(parent);
     for (int i = 1; i < n; i++) {
@@ -2155,7 +2155,7 @@ bool atf_unit::sorted_SortedQ(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.sorted.IntInsertionSort
 // Internal insertion sort
-static void atf_unit::sorted_IntInsertionSort(atf_unit::Dbl *elems, int n) {
+static void atf_unit::sorted_IntInsertionSort(atf_unit::Dbl *elems, int n) throw() {
     for (int i = 1; i < n; ++i) {
         int j = i;
         atf_unit::Dbl tmp = elems[i];
@@ -2172,7 +2172,7 @@ static void atf_unit::sorted_IntInsertionSort(atf_unit::Dbl *elems, int n) {
 
 // --- atf_unit.FPerfSort.sorted.IntHeapSort
 // Internal heap sort
-static void atf_unit::sorted_IntHeapSort(atf_unit::Dbl *elems, int n) {
+static void atf_unit::sorted_IntHeapSort(atf_unit::Dbl *elems, int n) throw() {
     // construct max-heap.
     // k=current element
     // j=parent element
@@ -2207,7 +2207,7 @@ static void atf_unit::sorted_IntHeapSort(atf_unit::Dbl *elems, int n) {
 
 // --- atf_unit.FPerfSort.sorted.IntQuickSort
 // Quick sort engine
-static void atf_unit::sorted_IntQuickSort(atf_unit::Dbl *elems, int n, int depth) {
+static void atf_unit::sorted_IntQuickSort(atf_unit::Dbl *elems, int n, int depth) throw() {
     while (n>16) {
         // detect degenerate case and revert to heap sort
         if (depth==0) {
@@ -2255,7 +2255,7 @@ static void atf_unit::sorted_IntQuickSort(atf_unit::Dbl *elems, int n, int depth
 
 // --- atf_unit.FPerfSort.sorted.InsertionSort
 // Insertion sort
-void atf_unit::sorted_InsertionSort(atf_unit::FPerfSort& parent) {
+void atf_unit::sorted_InsertionSort(atf_unit::FPerfSort& parent) throw() {
     atf_unit::Dbl *elems = sorted_Getary(parent).elems;
     int n = sorted_N(parent);
     sorted_IntInsertionSort(elems, n);
@@ -2263,7 +2263,7 @@ void atf_unit::sorted_InsertionSort(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.sorted.HeapSort
 // Heap sort
-void atf_unit::sorted_HeapSort(atf_unit::FPerfSort& parent) {
+void atf_unit::sorted_HeapSort(atf_unit::FPerfSort& parent) throw() {
     atf_unit::Dbl *elems = sorted_Getary(parent).elems;
     int n = sorted_N(parent);
     sorted_IntHeapSort(elems, n);
@@ -2271,7 +2271,7 @@ void atf_unit::sorted_HeapSort(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.sorted.QuickSort
 // Quick sort
-void atf_unit::sorted_QuickSort(atf_unit::FPerfSort& parent) {
+void atf_unit::sorted_QuickSort(atf_unit::FPerfSort& parent) throw() {
     // compute max recursion depth based on number of elements in the array
     int max_depth = algo::CeilingLog2(u32(sorted_N(parent) + 1)) + 3;
     atf_unit::Dbl *elems = sorted_Getary(parent).elems;
@@ -2283,7 +2283,7 @@ void atf_unit::sorted_QuickSort(atf_unit::FPerfSort& parent) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<i32> atf_unit::index_Addary(atf_unit::FPerfSort& parent, algo::aryptr<i32> rhs) {
+algo::aryptr<i32> atf_unit::index_Addary(atf_unit::FPerfSort& parent, algo::aryptr<i32> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.index_elems && rhs.elems < parent.index_elems + parent.index_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.index  comment:'alias error: sub-array is being appended to the whole'");
@@ -2299,7 +2299,7 @@ algo::aryptr<i32> atf_unit::index_Addary(atf_unit::FPerfSort& parent, algo::aryp
 // --- atf_unit.FPerfSort.index.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-i32& atf_unit::index_Alloc(atf_unit::FPerfSort& parent) {
+i32& atf_unit::index_Alloc(atf_unit::FPerfSort& parent) throw() {
     index_Reserve(parent, 1);
     int n  = parent.index_n;
     int at = n;
@@ -2312,7 +2312,7 @@ i32& atf_unit::index_Alloc(atf_unit::FPerfSort& parent) {
 // --- atf_unit.FPerfSort.index.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-i32& atf_unit::index_AllocAt(atf_unit::FPerfSort& parent, int at) {
+i32& atf_unit::index_AllocAt(atf_unit::FPerfSort& parent, int at) throw() {
     index_Reserve(parent, 1);
     int n  = parent.index_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -2327,7 +2327,7 @@ i32& atf_unit::index_AllocAt(atf_unit::FPerfSort& parent, int at) {
 
 // --- atf_unit.FPerfSort.index.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32> atf_unit::index_AllocN(atf_unit::FPerfSort& parent, int n_elems) {
+algo::aryptr<i32> atf_unit::index_AllocN(atf_unit::FPerfSort& parent, int n_elems) throw() {
     index_Reserve(parent, n_elems);
     int old_n  = parent.index_n;
     int new_n = old_n + n_elems;
@@ -2341,7 +2341,7 @@ algo::aryptr<i32> atf_unit::index_AllocN(atf_unit::FPerfSort& parent, int n_elem
 
 // --- atf_unit.FPerfSort.index.Remove
 // Remove item by index. If index outside of range, do nothing.
-void atf_unit::index_Remove(atf_unit::FPerfSort& parent, u32 i) {
+void atf_unit::index_Remove(atf_unit::FPerfSort& parent, u32 i) throw() {
     u32 lim = parent.index_n;
     i32 *elems = parent.index_elems;
     if (i < lim) {
@@ -2352,7 +2352,7 @@ void atf_unit::index_Remove(atf_unit::FPerfSort& parent, u32 i) {
 
 // --- atf_unit.FPerfSort.index.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_unit::index_RemoveLast(atf_unit::FPerfSort& parent) {
+void atf_unit::index_RemoveLast(atf_unit::FPerfSort& parent) throw() {
     u64 n = parent.index_n;
     if (n > 0) {
         n -= 1;
@@ -2362,7 +2362,7 @@ void atf_unit::index_RemoveLast(atf_unit::FPerfSort& parent) {
 
 // --- atf_unit.FPerfSort.index.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void atf_unit::index_AbsReserve(atf_unit::FPerfSort& parent, int n) {
+void atf_unit::index_AbsReserve(atf_unit::FPerfSort& parent, int n) throw() {
     u32 old_max  = parent.index_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -2377,7 +2377,7 @@ void atf_unit::index_AbsReserve(atf_unit::FPerfSort& parent, int n) {
 
 // --- atf_unit.FPerfSort.index.Setary
 // Copy contents of RHS to PARENT.
-void atf_unit::index_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) {
+void atf_unit::index_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rhs) throw() {
     index_RemoveAll(parent);
     int nnew = rhs.index_n;
     index_Reserve(parent, nnew); // reserve space
@@ -2390,14 +2390,14 @@ void atf_unit::index_Setary(atf_unit::FPerfSort& parent, atf_unit::FPerfSort &rh
 // --- atf_unit.FPerfSort.index.Setary2
 // Copy specified array into index, discarding previous contents.
 // If the RHS argument aliases the array (refers to the same memory), throw exception.
-void atf_unit::index_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<i32> &rhs) {
+void atf_unit::index_Setary(atf_unit::FPerfSort& parent, const algo::aryptr<i32> &rhs) throw() {
     index_RemoveAll(parent);
     index_Addary(parent, rhs);
 }
 
 // --- atf_unit.FPerfSort.index.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<i32> atf_unit::index_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const i32& val) {
+algo::aryptr<i32> atf_unit::index_AllocNVal(atf_unit::FPerfSort& parent, int n_elems, const i32& val) throw() {
     index_Reserve(parent, n_elems);
     int old_n  = parent.index_n;
     int new_n = old_n + n_elems;
@@ -2413,7 +2413,7 @@ algo::aryptr<i32> atf_unit::index_AllocNVal(atf_unit::FPerfSort& parent, int n_e
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool atf_unit::index_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) {
+bool atf_unit::index_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in_str) throw() {
     bool retval = true;
     i32 &elem = index_Alloc(parent);
     retval = i32_ReadStrptrMaybe(elem, in_str);
@@ -2424,7 +2424,7 @@ bool atf_unit::index_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr i
 }
 
 // --- atf_unit.FPerfSort..Uninit
-void atf_unit::FPerfSort_Uninit(atf_unit::FPerfSort& parent) {
+void atf_unit::FPerfSort_Uninit(atf_unit::FPerfSort& parent) throw() {
     atf_unit::FPerfSort &row = parent; (void)row;
 
     // atf_unit.FPerfSort.index.Uninit (Tary)  //
@@ -2447,7 +2447,7 @@ void atf_unit::FPerfSort_Uninit(atf_unit::FPerfSort& parent) {
 }
 
 // --- atf_unit.FPerfSort..AssignOp
-atf_unit::FPerfSort& atf_unit::FPerfSort::operator =(const atf_unit::FPerfSort &rhs) {
+atf_unit::FPerfSort& atf_unit::FPerfSort::operator =(const atf_unit::FPerfSort &rhs) throw() {
     orig_Setary(*this, orig_Getary(const_cast<atf_unit::FPerfSort&>(rhs)));
     sorted_Setary(*this, sorted_Getary(const_cast<atf_unit::FPerfSort&>(rhs)));
     index_Setary(*this, index_Getary(const_cast<atf_unit::FPerfSort&>(rhs)));
@@ -2455,7 +2455,7 @@ atf_unit::FPerfSort& atf_unit::FPerfSort::operator =(const atf_unit::FPerfSort &
 }
 
 // --- atf_unit.FPerfSort..CopyCtor
- atf_unit::FPerfSort::FPerfSort(const atf_unit::FPerfSort &rhs) {
+ atf_unit::FPerfSort::FPerfSort(const atf_unit::FPerfSort &rhs) throw() {
     orig_elems 	= 0; // (atf_unit.FPerfSort.orig)
     orig_n     	= 0; // (atf_unit.FPerfSort.orig)
     orig_max   	= 0; // (atf_unit.FPerfSort.orig)
@@ -2472,32 +2472,32 @@ atf_unit::FPerfSort& atf_unit::FPerfSort::operator =(const atf_unit::FPerfSort &
 
 // --- atf_unit.FUnittest.base.CopyOut
 // Copy fields out of row
-void atf_unit::unittest_CopyOut(atf_unit::FUnittest &row, atfdb::Unittest &out) {
+void atf_unit::unittest_CopyOut(atf_unit::FUnittest &row, atfdb::Unittest &out) throw() {
     out.unittest = row.unittest;
     out.comment = row.comment;
 }
 
 // --- atf_unit.FUnittest.base.CopyIn
 // Copy fields in to row
-void atf_unit::unittest_CopyIn(atf_unit::FUnittest &row, atfdb::Unittest &in) {
+void atf_unit::unittest_CopyIn(atf_unit::FUnittest &row, atfdb::Unittest &in) throw() {
     row.unittest = in.unittest;
     row.comment = in.comment;
 }
 
 // --- atf_unit.FUnittest.target.Get
-algo::Smallstr16 atf_unit::target_Get(atf_unit::FUnittest& unittest) {
+algo::Smallstr16 atf_unit::target_Get(atf_unit::FUnittest& unittest) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(unittest.unittest, ".RL"));
     return ret;
 }
 
 // --- atf_unit.FUnittest.testname.Get
-algo::Smallstr50 atf_unit::testname_Get(atf_unit::FUnittest& unittest) {
+algo::Smallstr50 atf_unit::testname_Get(atf_unit::FUnittest& unittest) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(unittest.unittest, ".RR"));
     return ret;
 }
 
 // --- atf_unit.FUnittest..Uninit
-void atf_unit::FUnittest_Uninit(atf_unit::FUnittest& unittest) {
+void atf_unit::FUnittest_Uninit(atf_unit::FUnittest& unittest) throw() {
     atf_unit::FUnittest &row = unittest; (void)row;
     ind_unittest_Remove(row); // remove unittest from index ind_unittest
 }
@@ -2505,7 +2505,7 @@ void atf_unit::FUnittest_Uninit(atf_unit::FUnittest& unittest) {
 // --- atf_unit.FUnittest..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.FUnittest.String  printfmt:Tuple
-void atf_unit::FUnittest_Print(atf_unit::FUnittest& row, algo::cstring& str) {
+void atf_unit::FUnittest_Print(atf_unit::FUnittest& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_unit.FUnittest";
 
@@ -2531,7 +2531,7 @@ void atf_unit::FUnittest_Print(atf_unit::FUnittest& row, algo::cstring& str) {
 // --- atf_unit.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_unit::value_ToCstr(const atf_unit::FieldId& parent) {
+const char* atf_unit::value_ToCstr(const atf_unit::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_unit_FieldId_val          : ret = "val";  break;
@@ -2545,7 +2545,7 @@ const char* atf_unit::value_ToCstr(const atf_unit::FieldId& parent) {
 // --- atf_unit.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_unit::value_Print(const atf_unit::FieldId& parent, algo::cstring &lhs) {
+void atf_unit::value_Print(const atf_unit::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2558,7 +2558,7 @@ void atf_unit::value_Print(const atf_unit::FieldId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_unit::value_SetStrptrMaybe(atf_unit::FieldId& parent, algo::strptr rhs) {
+bool atf_unit::value_SetStrptrMaybe(atf_unit::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
@@ -2595,13 +2595,13 @@ bool atf_unit::value_SetStrptrMaybe(atf_unit::FieldId& parent, algo::strptr rhs)
 // --- atf_unit.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_unit::value_SetStrptr(atf_unit::FieldId& parent, algo::strptr rhs, atf_unit_FieldIdEnum dflt) {
+void atf_unit::value_SetStrptr(atf_unit::FieldId& parent, algo::strptr rhs, atf_unit_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_unit.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_unit::value_ReadStrptrMaybe(atf_unit::FieldId& parent, algo::strptr rhs) {
+bool atf_unit::value_ReadStrptrMaybe(atf_unit::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2613,7 +2613,7 @@ bool atf_unit::value_ReadStrptrMaybe(atf_unit::FieldId& parent, algo::strptr rhs
 // --- atf_unit.FieldId..ReadStrptrMaybe
 // Read fields of atf_unit::FieldId from an ascii string.
 // The format of the string is the format of the atf_unit::FieldId's only field
-bool atf_unit::FieldId_ReadStrptrMaybe(atf_unit::FieldId &parent, algo::strptr in_str) {
+bool atf_unit::FieldId_ReadStrptrMaybe(atf_unit::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2622,14 +2622,14 @@ bool atf_unit::FieldId_ReadStrptrMaybe(atf_unit::FieldId &parent, algo::strptr i
 // --- atf_unit.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.FieldId.String  printfmt:Raw
-void atf_unit::FieldId_Print(atf_unit::FieldId& row, algo::cstring& str) {
+void atf_unit::FieldId_Print(atf_unit::FieldId& row, algo::cstring& str) throw() {
     atf_unit::value_Print(row, str);
 }
 
 // --- atf_unit.TypeA..ReadStrptrMaybe
 // Read fields of atf_unit::TypeA from an ascii string.
 // The format of the string is the format of the atf_unit::TypeA's only field
-bool atf_unit::TypeA_ReadStrptrMaybe(atf_unit::TypeA &parent, algo::strptr in_str) {
+bool atf_unit::TypeA_ReadStrptrMaybe(atf_unit::TypeA &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && i32_ReadStrptrMaybe(parent.typea, in_str);
     return retval;
@@ -2638,19 +2638,19 @@ bool atf_unit::TypeA_ReadStrptrMaybe(atf_unit::TypeA &parent, algo::strptr in_st
 // --- atf_unit.TypeA..FmtJson
 // Create JSON representation of atf_unit::TypeA under PARENT node
 // cfmt:atf_unit.TypeA.Json  printfmt:Auto
-lib_json::FNode * atf_unit::TypeA_FmtJson(atf_unit::TypeA& row, lib_json::FNode *parent) {
+lib_json::FNode * atf_unit::TypeA_FmtJson(atf_unit::TypeA& row, lib_json::FNode *parent) throw() {
     return i32_FmtJson(const_cast<atf_unit::TypeA&>(row).typea,parent);;
 }
 
 // --- atf_unit.TypeA..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.TypeA.String  printfmt:Raw
-void atf_unit::TypeA_Print(atf_unit::TypeA& row, algo::cstring& str) {
+void atf_unit::TypeA_Print(atf_unit::TypeA& row, algo::cstring& str) throw() {
     i32_Print(row.typea, str);
 }
 
 // --- atf_unit.TypeB..ReadFieldMaybe
-bool atf_unit::TypeB_ReadFieldMaybe(atf_unit::TypeB& parent, algo::strptr field, algo::strptr strval) {
+bool atf_unit::TypeB_ReadFieldMaybe(atf_unit::TypeB& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     atf_unit::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2674,7 +2674,7 @@ bool atf_unit::TypeB_ReadFieldMaybe(atf_unit::TypeB& parent, algo::strptr field,
 // --- atf_unit.TypeB..ReadStrptrMaybe
 // Read fields of atf_unit::TypeB from an ascii string.
 // The format of the string is an ssim Tuple
-bool atf_unit::TypeB_ReadStrptrMaybe(atf_unit::TypeB &parent, algo::strptr in_str) {
+bool atf_unit::TypeB_ReadStrptrMaybe(atf_unit::TypeB &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "atf_unit.TypeB");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2686,7 +2686,7 @@ bool atf_unit::TypeB_ReadStrptrMaybe(atf_unit::TypeB &parent, algo::strptr in_st
 // --- atf_unit.TypeB..FmtJson
 // Create JSON representation of atf_unit::TypeB under PARENT node
 // cfmt:atf_unit.TypeB.Json  printfmt:Auto
-lib_json::FNode * atf_unit::TypeB_FmtJson(atf_unit::TypeB& row, lib_json::FNode *parent) {
+lib_json::FNode * atf_unit::TypeB_FmtJson(atf_unit::TypeB& row, lib_json::FNode *parent) throw() {
     lib_json::FNode *object_node = &lib_json::node_Alloc();
     object_node->p_parent = parent?parent:object_node;
     object_node->type   = lib_json_FNode_type_object;
@@ -2711,7 +2711,7 @@ lib_json::FNode * atf_unit::TypeB_FmtJson(atf_unit::TypeB& row, lib_json::FNode 
 // --- atf_unit.TypeB..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.TypeB.String  printfmt:Tuple
-void atf_unit::TypeB_Print(atf_unit::TypeB& row, algo::cstring& str) {
+void atf_unit::TypeB_Print(atf_unit::TypeB& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_unit.TypeB";
 
@@ -2742,7 +2742,7 @@ void atf_unit::TestJson_Init(atf_unit::TestJson& parent) {
 // --- atf_unit.TestJson..FmtJson
 // Create JSON representation of atf_unit::TestJson under PARENT node
 // cfmt:atf_unit.TestJson.Json  printfmt:Auto
-lib_json::FNode * atf_unit::TestJson_FmtJson(atf_unit::TestJson& row, lib_json::FNode *parent) {
+lib_json::FNode * atf_unit::TestJson_FmtJson(atf_unit::TestJson& row, lib_json::FNode *parent) throw() {
     lib_json::FNode *object_node = &lib_json::node_Alloc();
     object_node->p_parent = parent?parent:object_node;
     object_node->type   = lib_json_FNode_type_object;
@@ -2879,7 +2879,7 @@ lib_json::FNode * atf_unit::TestJson_FmtJson(atf_unit::TestJson& row, lib_json::
 // --- atf_unit.TestJson..Print
 // print string representation of ROW to string STR
 // cfmt:atf_unit.TestJson.String  printfmt:Tuple
-void atf_unit::TestJson_Print(atf_unit::TestJson& row, algo::cstring& str) {
+void atf_unit::TestJson_Print(atf_unit::TestJson& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_unit.TestJson";
 

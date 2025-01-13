@@ -27,18 +27,18 @@
 
 // --- lib_amcdb.FieldId.value.GetEnum
 // Get value of field as enum type
-inline lib_amcdb_FieldIdEnum lib_amcdb::value_GetEnum(const lib_amcdb::FieldId& parent) {
+inline lib_amcdb_FieldIdEnum lib_amcdb::value_GetEnum(const lib_amcdb::FieldId& parent) throw() {
     return lib_amcdb_FieldIdEnum(parent.value);
 }
 
 // --- lib_amcdb.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void lib_amcdb::value_SetEnum(lib_amcdb::FieldId& parent, lib_amcdb_FieldIdEnum rhs) {
+inline void lib_amcdb::value_SetEnum(lib_amcdb::FieldId& parent, lib_amcdb_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- lib_amcdb.FieldId.value.Cast
-inline  lib_amcdb::FieldId::operator lib_amcdb_FieldIdEnum() const {
+inline  lib_amcdb::FieldId::operator lib_amcdb_FieldIdEnum() const throw() {
     return lib_amcdb_FieldIdEnum((*this).value);
 }
 
@@ -49,18 +49,18 @@ inline void lib_amcdb::FieldId_Init(lib_amcdb::FieldId& parent) {
 }
 
 // --- lib_amcdb.FieldId..Ctor
-inline  lib_amcdb::FieldId::FieldId() {
+inline  lib_amcdb::FieldId::FieldId() throw() {
     lib_amcdb::FieldId_Init(*this);
 }
 
 // --- lib_amcdb.FieldId..FieldwiseCtor
-inline  lib_amcdb::FieldId::FieldId(i32 in_value)
+inline  lib_amcdb::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_amcdb.FieldId..EnumCtor
-inline  lib_amcdb::FieldId::FieldId(lib_amcdb_FieldIdEnum arg) {
+inline  lib_amcdb::FieldId::FieldId(lib_amcdb_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

@@ -76,7 +76,7 @@ namespace ams_cat { // gen:ns_print_proto
 // --- ams_cat.trace..Print
 // print string representation of ROW to string STR
 // cfmt:ams_cat.trace.String  printfmt:Tuple
-void ams_cat::trace_Print(ams_cat::trace& row, algo::cstring& str) {
+void ams_cat::trace_Print(ams_cat::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams_cat.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -87,7 +87,7 @@ void ams_cat::trace_Print(ams_cat::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     ams_cat.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void ams_cat::ReadArgv() {
+void ams_cat::ReadArgv() throw() {
     command::ams_cat &cmd = ams_cat::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -265,7 +265,7 @@ bool ams_cat::InsertStrptrMaybe(algo::strptr str) {
 
 // --- ams_cat.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool ams_cat::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool ams_cat::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = ams_cat::LoadTuplesFile(root, recursive);
@@ -288,7 +288,7 @@ bool ams_cat::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool ams_cat::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool ams_cat::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -301,7 +301,7 @@ bool ams_cat::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- ams_cat.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool ams_cat::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool ams_cat::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -320,7 +320,7 @@ bool ams_cat::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) 
 
 // --- ams_cat.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool ams_cat::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool ams_cat::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = ams_cat::LoadTuplesFile(fname, recursive);
@@ -345,13 +345,13 @@ bool ams_cat::_db_XrefMaybe() {
 
 // --- ams_cat.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr ams_cat::trace_RowidFind(int t) {
+static algo::ImrowPtr ams_cat::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- ams_cat.FDb.trace.N
 // Function return 1
-inline static i32 ams_cat::trace_N() {
+inline static i32 ams_cat::trace_N() throw() {
     return 1;
 }
 
@@ -365,7 +365,7 @@ void ams_cat::FDb_Init() {
 // --- ams_cat.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ams_cat::value_ToCstr(const ams_cat::FieldId& parent) {
+const char* ams_cat::value_ToCstr(const ams_cat::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ams_cat_FieldId_value         : ret = "value";  break;
@@ -376,7 +376,7 @@ const char* ams_cat::value_ToCstr(const ams_cat::FieldId& parent) {
 // --- ams_cat.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void ams_cat::value_Print(const ams_cat::FieldId& parent, algo::cstring &lhs) {
+void ams_cat::value_Print(const ams_cat::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -389,7 +389,7 @@ void ams_cat::value_Print(const ams_cat::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ams_cat::value_SetStrptrMaybe(ams_cat::FieldId& parent, algo::strptr rhs) {
+bool ams_cat::value_SetStrptrMaybe(ams_cat::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -407,13 +407,13 @@ bool ams_cat::value_SetStrptrMaybe(ams_cat::FieldId& parent, algo::strptr rhs) {
 // --- ams_cat.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ams_cat::value_SetStrptr(ams_cat::FieldId& parent, algo::strptr rhs, ams_cat_FieldIdEnum dflt) {
+void ams_cat::value_SetStrptr(ams_cat::FieldId& parent, algo::strptr rhs, ams_cat_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- ams_cat.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams_cat::value_ReadStrptrMaybe(ams_cat::FieldId& parent, algo::strptr rhs) {
+bool ams_cat::value_ReadStrptrMaybe(ams_cat::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -425,7 +425,7 @@ bool ams_cat::value_ReadStrptrMaybe(ams_cat::FieldId& parent, algo::strptr rhs) 
 // --- ams_cat.FieldId..ReadStrptrMaybe
 // Read fields of ams_cat::FieldId from an ascii string.
 // The format of the string is the format of the ams_cat::FieldId's only field
-bool ams_cat::FieldId_ReadStrptrMaybe(ams_cat::FieldId &parent, algo::strptr in_str) {
+bool ams_cat::FieldId_ReadStrptrMaybe(ams_cat::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -434,7 +434,7 @@ bool ams_cat::FieldId_ReadStrptrMaybe(ams_cat::FieldId &parent, algo::strptr in_
 // --- ams_cat.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:ams_cat.FieldId.String  printfmt:Raw
-void ams_cat::FieldId_Print(ams_cat::FieldId& row, algo::cstring& str) {
+void ams_cat::FieldId_Print(ams_cat::FieldId& row, algo::cstring& str) throw() {
     ams_cat::value_Print(row, str);
 }
 

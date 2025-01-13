@@ -53,7 +53,7 @@ namespace ams { // gen:ns_print_proto
 
 // --- ams.AlarmSyncMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::AlarmSyncMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::AlarmSyncMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -61,7 +61,7 @@ void ams::parent_CopyOut(ams::AlarmSyncMsg &row, ams::MsgHeader &out) {
 }
 
 // --- ams.AlarmSyncMsg..ReadFieldMaybe
-bool ams::AlarmSyncMsg_ReadFieldMaybe(ams::AlarmSyncMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::AlarmSyncMsg_ReadFieldMaybe(ams::AlarmSyncMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -93,7 +93,7 @@ bool ams::AlarmSyncMsg_ReadFieldMaybe(ams::AlarmSyncMsg& parent, algo::strptr fi
 // --- ams.AlarmSyncMsg..ReadStrptrMaybe
 // Read fields of ams::AlarmSyncMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::AlarmSyncMsg_ReadStrptrMaybe(ams::AlarmSyncMsg &parent, algo::strptr in_str) {
+bool ams::AlarmSyncMsg_ReadStrptrMaybe(ams::AlarmSyncMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.AlarmSyncMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -105,7 +105,7 @@ bool ams::AlarmSyncMsg_ReadStrptrMaybe(ams::AlarmSyncMsg &parent, algo::strptr i
 // --- ams.AlarmSyncMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.AlarmSyncMsg.String  printfmt:Tuple
-void ams::AlarmSyncMsg_Print(ams::AlarmSyncMsg& row, algo::cstring& str) {
+void ams::AlarmSyncMsg_Print(ams::AlarmSyncMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.AlarmSyncMsg";
 
@@ -116,7 +116,7 @@ void ams::AlarmSyncMsg_Print(ams::AlarmSyncMsg& row, algo::cstring& str) {
 // --- ams.ProcType.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ams::value_ToCstr(const ams::ProcType& parent) {
+const char* ams::value_ToCstr(const ams::ProcType& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ams_ProcType_0                : ret = "0";  break;
@@ -128,7 +128,7 @@ const char* ams::value_ToCstr(const ams::ProcType& parent) {
 // --- ams.ProcType.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void ams::value_Print(const ams::ProcType& parent, algo::cstring &lhs) {
+void ams::value_Print(const ams::ProcType& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -141,7 +141,7 @@ void ams::value_Print(const ams::ProcType& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ams::value_SetStrptrMaybe(ams::ProcType& parent, algo::strptr rhs) {
+bool ams::value_SetStrptrMaybe(ams::ProcType& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
@@ -167,13 +167,13 @@ bool ams::value_SetStrptrMaybe(ams::ProcType& parent, algo::strptr rhs) {
 // --- ams.ProcType.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ams::value_SetStrptr(ams::ProcType& parent, algo::strptr rhs, ams_ProcTypeEnum dflt) {
+void ams::value_SetStrptr(ams::ProcType& parent, algo::strptr rhs, ams_ProcTypeEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- ams.ProcType.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::value_ReadStrptrMaybe(ams::ProcType& parent, algo::strptr rhs) {
+bool ams::value_ReadStrptrMaybe(ams::ProcType& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -185,7 +185,7 @@ bool ams::value_ReadStrptrMaybe(ams::ProcType& parent, algo::strptr rhs) {
 // --- ams.ProcType..ReadStrptrMaybe
 // Read fields of ams::ProcType from an ascii string.
 // The format of the string is the format of the ams::ProcType's only field
-bool ams::ProcType_ReadStrptrMaybe(ams::ProcType &parent, algo::strptr in_str) {
+bool ams::ProcType_ReadStrptrMaybe(ams::ProcType &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -194,12 +194,12 @@ bool ams::ProcType_ReadStrptrMaybe(ams::ProcType &parent, algo::strptr in_str) {
 // --- ams.ProcType..Print
 // print string representation of ROW to string STR
 // cfmt:ams.ProcType.String  printfmt:Raw
-void ams::ProcType_Print(ams::ProcType row, algo::cstring& str) {
+void ams::ProcType_Print(ams::ProcType row, algo::cstring& str) throw() {
     ams::value_Print(row, str);
 }
 
 // --- ams.ProcId..ReadFieldMaybe
-bool ams::ProcId_ReadFieldMaybe(ams::ProcId& parent, algo::strptr field, algo::strptr strval) {
+bool ams::ProcId_ReadFieldMaybe(ams::ProcId& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -223,7 +223,7 @@ bool ams::ProcId_ReadFieldMaybe(ams::ProcId& parent, algo::strptr field, algo::s
 // --- ams.ProcId..ReadStrptrMaybe
 // Read fields of ams::ProcId from an ascii string.
 // The format of the string is a string with separated values
-bool ams::ProcId_ReadStrptrMaybe(ams::ProcId &parent, algo::strptr in_str) {
+bool ams::ProcId_ReadStrptrMaybe(ams::ProcId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::strptr value;
 
@@ -238,7 +238,7 @@ bool ams::ProcId_ReadStrptrMaybe(ams::ProcId &parent, algo::strptr in_str) {
 // --- ams.ProcId..Print
 // print string representation of ROW to string STR
 // cfmt:ams.ProcId.String  printfmt:Sep
-void ams::ProcId_Print(ams::ProcId row, algo::cstring& str) {
+void ams::ProcId_Print(ams::ProcId row, algo::cstring& str) throw() {
     ams::ProcType_Print(row.proc_type, str);
     str << '-';
     u8_Print(row.procidx, str);
@@ -247,7 +247,7 @@ void ams::ProcId_Print(ams::ProcId row, algo::cstring& str) {
 // --- ams.StreamType.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ams::value_ToCstr(const ams::StreamType& parent) {
+const char* ams::value_ToCstr(const ams::StreamType& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ams_StreamType_0              : ret = "0";  break;
@@ -262,7 +262,7 @@ const char* ams::value_ToCstr(const ams::StreamType& parent) {
 // --- ams.StreamType.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void ams::value_Print(const ams::StreamType& parent, algo::cstring &lhs) {
+void ams::value_Print(const ams::StreamType& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -275,7 +275,7 @@ void ams::value_Print(const ams::StreamType& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ams::value_SetStrptrMaybe(ams::StreamType& parent, algo::strptr rhs) {
+bool ams::value_SetStrptrMaybe(ams::StreamType& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
@@ -320,13 +320,13 @@ bool ams::value_SetStrptrMaybe(ams::StreamType& parent, algo::strptr rhs) {
 // --- ams.StreamType.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ams::value_SetStrptr(ams::StreamType& parent, algo::strptr rhs, ams_StreamTypeEnum dflt) {
+void ams::value_SetStrptr(ams::StreamType& parent, algo::strptr rhs, ams_StreamTypeEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- ams.StreamType.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::value_ReadStrptrMaybe(ams::StreamType& parent, algo::strptr rhs) {
+bool ams::value_ReadStrptrMaybe(ams::StreamType& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -338,7 +338,7 @@ bool ams::value_ReadStrptrMaybe(ams::StreamType& parent, algo::strptr rhs) {
 // --- ams.StreamType..ReadStrptrMaybe
 // Read fields of ams::StreamType from an ascii string.
 // The format of the string is the format of the ams::StreamType's only field
-bool ams::StreamType_ReadStrptrMaybe(ams::StreamType &parent, algo::strptr in_str) {
+bool ams::StreamType_ReadStrptrMaybe(ams::StreamType &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -347,12 +347,12 @@ bool ams::StreamType_ReadStrptrMaybe(ams::StreamType &parent, algo::strptr in_st
 // --- ams.StreamType..Print
 // print string representation of ROW to string STR
 // cfmt:ams.StreamType.String  printfmt:Raw
-void ams::StreamType_Print(ams::StreamType row, algo::cstring& str) {
+void ams::StreamType_Print(ams::StreamType row, algo::cstring& str) throw() {
     ams::value_Print(row, str);
 }
 
 // --- ams.StreamId..ReadFieldMaybe
-bool ams::StreamId_ReadFieldMaybe(ams::StreamId& parent, algo::strptr field, algo::strptr strval) {
+bool ams::StreamId_ReadFieldMaybe(ams::StreamId& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -380,7 +380,7 @@ bool ams::StreamId_ReadFieldMaybe(ams::StreamId& parent, algo::strptr field, alg
 // --- ams.StreamId..ReadStrptrMaybe
 // Read fields of ams::StreamId from an ascii string.
 // The format of the string is a string with separated values
-bool ams::StreamId_ReadStrptrMaybe(ams::StreamId &parent, algo::strptr in_str) {
+bool ams::StreamId_ReadStrptrMaybe(ams::StreamId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::strptr value;
 
@@ -398,7 +398,7 @@ bool ams::StreamId_ReadStrptrMaybe(ams::StreamId &parent, algo::strptr in_str) {
 // --- ams.StreamId..Print
 // print string representation of ROW to string STR
 // cfmt:ams.StreamId.String  printfmt:Sep
-void ams::StreamId_Print(ams::StreamId row, algo::cstring& str) {
+void ams::StreamId_Print(ams::StreamId row, algo::cstring& str) throw() {
     ams::ProcId_Print(row.proc_id, str);
     str << '.';
     ams::StreamType_Print(row.stream_type, str);
@@ -408,7 +408,7 @@ void ams::StreamId_Print(ams::StreamId row, algo::cstring& str) {
 
 // --- ams.DfltStream.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::DfltStream &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::DfltStream &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -416,7 +416,7 @@ void ams::parent_CopyOut(ams::DfltStream &row, ams::MsgHeader &out) {
 }
 
 // --- ams.DfltStream..ReadFieldMaybe
-bool ams::DfltStream_ReadFieldMaybe(ams::DfltStream& parent, algo::strptr field, algo::strptr strval) {
+bool ams::DfltStream_ReadFieldMaybe(ams::DfltStream& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -448,7 +448,7 @@ bool ams::DfltStream_ReadFieldMaybe(ams::DfltStream& parent, algo::strptr field,
 // --- ams.DfltStream..ReadStrptrMaybe
 // Read fields of ams::DfltStream from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::DfltStream_ReadStrptrMaybe(ams::DfltStream &parent, algo::strptr in_str) {
+bool ams::DfltStream_ReadStrptrMaybe(ams::DfltStream &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.DfltStream");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -460,7 +460,7 @@ bool ams::DfltStream_ReadStrptrMaybe(ams::DfltStream &parent, algo::strptr in_st
 // --- ams.DfltStream..Print
 // print string representation of ROW to string STR
 // cfmt:ams.DfltStream.String  printfmt:Tuple
-void ams::DfltStream_Print(ams::DfltStream& row, algo::cstring& str) {
+void ams::DfltStream_Print(ams::DfltStream& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.DfltStream";
 
@@ -470,7 +470,7 @@ void ams::DfltStream_Print(ams::DfltStream& row, algo::cstring& str) {
 
 // --- ams.DumpStreamTableMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::DumpStreamTableMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::DumpStreamTableMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -478,7 +478,7 @@ void ams::parent_CopyOut(ams::DumpStreamTableMsg &row, ams::MsgHeader &out) {
 }
 
 // --- ams.DumpStreamTableMsg..ReadFieldMaybe
-bool ams::DumpStreamTableMsg_ReadFieldMaybe(ams::DumpStreamTableMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::DumpStreamTableMsg_ReadFieldMaybe(ams::DumpStreamTableMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -510,7 +510,7 @@ bool ams::DumpStreamTableMsg_ReadFieldMaybe(ams::DumpStreamTableMsg& parent, alg
 // --- ams.DumpStreamTableMsg..ReadStrptrMaybe
 // Read fields of ams::DumpStreamTableMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::DumpStreamTableMsg_ReadStrptrMaybe(ams::DumpStreamTableMsg &parent, algo::strptr in_str) {
+bool ams::DumpStreamTableMsg_ReadStrptrMaybe(ams::DumpStreamTableMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.DumpStreamTableMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -522,7 +522,7 @@ bool ams::DumpStreamTableMsg_ReadStrptrMaybe(ams::DumpStreamTableMsg &parent, al
 // --- ams.DumpStreamTableMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.DumpStreamTableMsg.String  printfmt:Tuple
-void ams::DumpStreamTableMsg_Print(ams::DumpStreamTableMsg& row, algo::cstring& str) {
+void ams::DumpStreamTableMsg_Print(ams::DumpStreamTableMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.DumpStreamTableMsg";
 
@@ -532,7 +532,7 @@ void ams::DumpStreamTableMsg_Print(ams::DumpStreamTableMsg& row, algo::cstring& 
 
 // --- ams.ExpectMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::ExpectMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::ExpectMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -541,7 +541,7 @@ void ams::parent_CopyOut(ams::ExpectMsg &row, ams::MsgHeader &out) {
 
 // --- ams.ExpectMsg.text.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> ams::text_Getary(ams::ExpectMsg& parent) {
+algo::aryptr<char> ams::text_Getary(ams::ExpectMsg& parent) throw() {
     return algo::aryptr<char>(text_Addr(parent), text_N(parent));
 }
 
@@ -552,7 +552,7 @@ char* ams::text_Addr(ams::ExpectMsg& parent) {
 
 // --- ams.ExpectMsg.text.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::text_ReadStrptrMaybe(ams::ExpectMsg& parent, algo::strptr in_str) {
+bool ams::text_ReadStrptrMaybe(ams::ExpectMsg& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
@@ -564,12 +564,12 @@ bool ams::text_ReadStrptrMaybe(ams::ExpectMsg& parent, algo::strptr in_str) {
 // --- ams.ExpectMsg.text.Print
 // Convert text to a string.
 // Array is printed as a regular string.
-void ams::text_Print(ams::ExpectMsg& parent, algo::cstring &rhs) {
+void ams::text_Print(ams::ExpectMsg& parent, algo::cstring &rhs) throw() {
     rhs << text_Getary(parent);
 }
 
 // --- ams.ExpectMsg..ReadFieldMaybe
-bool ams::ExpectMsg_ReadFieldMaybe(ams::ExpectMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::ExpectMsg_ReadFieldMaybe(ams::ExpectMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -602,7 +602,7 @@ bool ams::ExpectMsg_ReadFieldMaybe(ams::ExpectMsg& parent, algo::strptr field, a
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of ams::ExpectMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::ExpectMsg_ReadStrptrMaybe(ams::ExpectMsg &parent, algo::strptr in_str) {
+bool ams::ExpectMsg_ReadStrptrMaybe(ams::ExpectMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.ExpectMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -614,7 +614,7 @@ bool ams::ExpectMsg_ReadStrptrMaybe(ams::ExpectMsg &parent, algo::strptr in_str)
 // --- ams.ExpectMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.ExpectMsg.String  printfmt:Tuple
-void ams::ExpectMsg_Print(ams::ExpectMsg& row, algo::cstring& str) {
+void ams::ExpectMsg_Print(ams::ExpectMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.ExpectMsg";
 
@@ -625,7 +625,7 @@ void ams::ExpectMsg_Print(ams::ExpectMsg& row, algo::cstring& str) {
 // --- ams.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ams::value_ToCstr(const ams::FieldId& parent) {
+const char* ams::value_ToCstr(const ams::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ams_FieldId_base              : ret = "base";  break;
@@ -670,7 +670,7 @@ const char* ams::value_ToCstr(const ams::FieldId& parent) {
 // --- ams.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void ams::value_Print(const ams::FieldId& parent, algo::cstring &lhs) {
+void ams::value_Print(const ams::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -683,7 +683,7 @@ void ams::value_Print(const ams::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
+bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 3: {
@@ -858,13 +858,13 @@ bool ams::value_SetStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
 // --- ams.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ams::value_SetStrptr(ams::FieldId& parent, algo::strptr rhs, ams_FieldIdEnum dflt) {
+void ams::value_SetStrptr(ams::FieldId& parent, algo::strptr rhs, ams_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- ams.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::value_ReadStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
+bool ams::value_ReadStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -876,7 +876,7 @@ bool ams::value_ReadStrptrMaybe(ams::FieldId& parent, algo::strptr rhs) {
 // --- ams.FieldId..ReadStrptrMaybe
 // Read fields of ams::FieldId from an ascii string.
 // The format of the string is the format of the ams::FieldId's only field
-bool ams::FieldId_ReadStrptrMaybe(ams::FieldId &parent, algo::strptr in_str) {
+bool ams::FieldId_ReadStrptrMaybe(ams::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -885,13 +885,13 @@ bool ams::FieldId_ReadStrptrMaybe(ams::FieldId &parent, algo::strptr in_str) {
 // --- ams.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:ams.FieldId.String  printfmt:Raw
-void ams::FieldId_Print(ams::FieldId& row, algo::cstring& str) {
+void ams::FieldId_Print(ams::FieldId& row, algo::cstring& str) throw() {
     ams::value_Print(row, str);
 }
 
 // --- ams.HeartbeatMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::HeartbeatMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::HeartbeatMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -899,7 +899,7 @@ void ams::parent_CopyOut(ams::HeartbeatMsg &row, ams::MsgHeader &out) {
 }
 
 // --- ams.HeartbeatMsg..ReadFieldMaybe
-bool ams::HeartbeatMsg_ReadFieldMaybe(ams::HeartbeatMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::HeartbeatMsg_ReadFieldMaybe(ams::HeartbeatMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -931,7 +931,7 @@ bool ams::HeartbeatMsg_ReadFieldMaybe(ams::HeartbeatMsg& parent, algo::strptr fi
 // --- ams.HeartbeatMsg..ReadStrptrMaybe
 // Read fields of ams::HeartbeatMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::HeartbeatMsg_ReadStrptrMaybe(ams::HeartbeatMsg &parent, algo::strptr in_str) {
+bool ams::HeartbeatMsg_ReadStrptrMaybe(ams::HeartbeatMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.HeartbeatMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -943,7 +943,7 @@ bool ams::HeartbeatMsg_ReadStrptrMaybe(ams::HeartbeatMsg &parent, algo::strptr i
 // --- ams.HeartbeatMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.HeartbeatMsg.String  printfmt:Tuple
-void ams::HeartbeatMsg_Print(ams::HeartbeatMsg& row, algo::cstring& str) {
+void ams::HeartbeatMsg_Print(ams::HeartbeatMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.HeartbeatMsg";
 
@@ -953,7 +953,7 @@ void ams::HeartbeatMsg_Print(ams::HeartbeatMsg& row, algo::cstring& str) {
 
 // --- ams.InputLineMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::InputLineMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::InputLineMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -962,7 +962,7 @@ void ams::parent_CopyOut(ams::InputLineMsg &row, ams::MsgHeader &out) {
 
 // --- ams.InputLineMsg.payload.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> ams::payload_Getary(ams::InputLineMsg& parent) {
+algo::aryptr<char> ams::payload_Getary(ams::InputLineMsg& parent) throw() {
     return algo::aryptr<char>(payload_Addr(parent), payload_N(parent));
 }
 
@@ -973,7 +973,7 @@ char* ams::payload_Addr(ams::InputLineMsg& parent) {
 
 // --- ams.InputLineMsg.payload.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::payload_ReadStrptrMaybe(ams::InputLineMsg& parent, algo::strptr in_str) {
+bool ams::payload_ReadStrptrMaybe(ams::InputLineMsg& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
@@ -985,12 +985,12 @@ bool ams::payload_ReadStrptrMaybe(ams::InputLineMsg& parent, algo::strptr in_str
 // --- ams.InputLineMsg.payload.Print
 // Convert payload to a string.
 // Array is printed as a regular string.
-void ams::payload_Print(ams::InputLineMsg& parent, algo::cstring &rhs) {
+void ams::payload_Print(ams::InputLineMsg& parent, algo::cstring &rhs) throw() {
     rhs << payload_Getary(parent);
 }
 
 // --- ams.InputLineMsg..ReadFieldMaybe
-bool ams::InputLineMsg_ReadFieldMaybe(ams::InputLineMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::InputLineMsg_ReadFieldMaybe(ams::InputLineMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -1023,7 +1023,7 @@ bool ams::InputLineMsg_ReadFieldMaybe(ams::InputLineMsg& parent, algo::strptr fi
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of ams::InputLineMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::InputLineMsg_ReadStrptrMaybe(ams::InputLineMsg &parent, algo::strptr in_str) {
+bool ams::InputLineMsg_ReadStrptrMaybe(ams::InputLineMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.InputLineMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1035,7 +1035,7 @@ bool ams::InputLineMsg_ReadStrptrMaybe(ams::InputLineMsg &parent, algo::strptr i
 // --- ams.InputLineMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.InputLineMsg.String  printfmt:Tuple
-void ams::InputLineMsg_Print(ams::InputLineMsg& row, algo::cstring& str) {
+void ams::InputLineMsg_Print(ams::InputLineMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.InputLineMsg";
 
@@ -1045,7 +1045,7 @@ void ams::InputLineMsg_Print(ams::InputLineMsg& row, algo::cstring& str) {
 
 // --- ams.LogMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::LogMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::LogMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -1054,7 +1054,7 @@ void ams::parent_CopyOut(ams::LogMsg &row, ams::MsgHeader &out) {
 
 // --- ams.LogMsg.text.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> ams::text_Getary(ams::LogMsg& parent) {
+algo::aryptr<char> ams::text_Getary(ams::LogMsg& parent) throw() {
     return algo::aryptr<char>(text_Addr(parent), text_N(parent));
 }
 
@@ -1065,7 +1065,7 @@ char* ams::text_Addr(ams::LogMsg& parent) {
 
 // --- ams.LogMsg.text.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::text_ReadStrptrMaybe(ams::LogMsg& parent, algo::strptr in_str) {
+bool ams::text_ReadStrptrMaybe(ams::LogMsg& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
@@ -1077,12 +1077,12 @@ bool ams::text_ReadStrptrMaybe(ams::LogMsg& parent, algo::strptr in_str) {
 // --- ams.LogMsg.text.Print
 // Convert text to a string.
 // Array is printed as a regular string.
-void ams::text_Print(ams::LogMsg& parent, algo::cstring &rhs) {
+void ams::text_Print(ams::LogMsg& parent, algo::cstring &rhs) throw() {
     rhs << text_Getary(parent);
 }
 
 // --- ams.LogMsg..ReadFieldMaybe
-bool ams::LogMsg_ReadFieldMaybe(ams::LogMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::LogMsg_ReadFieldMaybe(ams::LogMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -1123,7 +1123,7 @@ bool ams::LogMsg_ReadFieldMaybe(ams::LogMsg& parent, algo::strptr field, algo::s
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of ams::LogMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::LogMsg_ReadStrptrMaybe(ams::LogMsg &parent, algo::strptr in_str) {
+bool ams::LogMsg_ReadStrptrMaybe(ams::LogMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.LogMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1135,7 +1135,7 @@ bool ams::LogMsg_ReadStrptrMaybe(ams::LogMsg &parent, algo::strptr in_str) {
 // --- ams.LogMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.LogMsg.String  printfmt:Tuple
-void ams::LogMsg_Print(ams::LogMsg& row, algo::cstring& str) {
+void ams::LogMsg_Print(ams::LogMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.LogMsg";
 
@@ -1152,7 +1152,7 @@ void ams::LogMsg_Print(ams::LogMsg& row, algo::cstring& str) {
 // --- ams.Member.mode.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ams::mode_ToCstr(const ams::Member& parent) {
+const char* ams::mode_ToCstr(const ams::Member& parent) throw() {
     const char *ret = NULL;
     switch(mode_GetEnum(parent)) {
         case ams_Member_mode_r             : ret = "r";  break;
@@ -1164,7 +1164,7 @@ const char* ams::mode_ToCstr(const ams::Member& parent) {
 // --- ams.Member.mode.Print
 // Convert mode to a string. First, attempt conversion to a known string.
 // If no string matches, print mode as a numeric value.
-void ams::mode_Print(const ams::Member& parent, algo::cstring &lhs) {
+void ams::mode_Print(const ams::Member& parent, algo::cstring &lhs) throw() {
     const char *strval = mode_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1177,7 +1177,7 @@ void ams::mode_Print(const ams::Member& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ams::mode_SetStrptrMaybe(ams::Member& parent, algo::strptr rhs) {
+bool ams::mode_SetStrptrMaybe(ams::Member& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
@@ -1198,13 +1198,13 @@ bool ams::mode_SetStrptrMaybe(ams::Member& parent, algo::strptr rhs) {
 // --- ams.Member.mode.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ams::mode_SetStrptr(ams::Member& parent, algo::strptr rhs, ams_Member_mode_Enum dflt) {
+void ams::mode_SetStrptr(ams::Member& parent, algo::strptr rhs, ams_Member_mode_Enum dflt) throw() {
     if (!mode_SetStrptrMaybe(parent,rhs)) mode_SetEnum(parent,dflt);
 }
 
 // --- ams.Member.mode.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::mode_ReadStrptrMaybe(ams::Member& parent, algo::strptr rhs) {
+bool ams::mode_ReadStrptrMaybe(ams::Member& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = mode_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1214,7 +1214,7 @@ bool ams::mode_ReadStrptrMaybe(ams::Member& parent, algo::strptr rhs) {
 }
 
 // --- ams.Member..ReadFieldMaybe
-bool ams::Member_ReadFieldMaybe(ams::Member& parent, algo::strptr field, algo::strptr strval) {
+bool ams::Member_ReadFieldMaybe(ams::Member& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1242,7 +1242,7 @@ bool ams::Member_ReadFieldMaybe(ams::Member& parent, algo::strptr field, algo::s
 // --- ams.Member..ReadStrptrMaybe
 // Read fields of ams::Member from an ascii string.
 // The format of the string is a string with separated values
-bool ams::Member_ReadStrptrMaybe(ams::Member &parent, algo::strptr in_str) {
+bool ams::Member_ReadStrptrMaybe(ams::Member &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::strptr value;
 
@@ -1260,7 +1260,7 @@ bool ams::Member_ReadStrptrMaybe(ams::Member &parent, algo::strptr in_str) {
 // --- ams.Member..Print
 // print string representation of ROW to string STR
 // cfmt:ams.Member.String  printfmt:Sep
-void ams::Member_Print(ams::Member row, algo::cstring& str) {
+void ams::Member_Print(ams::Member row, algo::cstring& str) throw() {
     ams::ProcId_Print(row.proc_id, str);
     str << '/';
     ams::StreamId_Print(row.stream_id, str);
@@ -1270,7 +1270,7 @@ void ams::Member_Print(ams::Member row, algo::cstring& str) {
 
 // --- ams.MsgBlock.header.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::MsgBlock &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::MsgBlock &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -1279,7 +1279,7 @@ void ams::parent_CopyOut(ams::MsgBlock &row, ams::MsgHeader &out) {
 
 // --- ams.MsgBlock.messages.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u8> ams::messages_Getary(ams::MsgBlock& parent) {
+algo::aryptr<u8> ams::messages_Getary(ams::MsgBlock& parent) throw() {
     return algo::aryptr<u8>(messages_Addr(parent), messages_N(parent));
 }
 
@@ -1291,14 +1291,14 @@ u8* ams::messages_Addr(ams::MsgBlock& parent) {
 // --- ams.MsgBlock.messages.Print
 // Convert messages to a string.
 // Array is printed as a regular string.
-void ams::messages_Print(ams::MsgBlock& parent, algo::cstring &rhs) {
+void ams::messages_Print(ams::MsgBlock& parent, algo::cstring &rhs) throw() {
     rhs << algo::memptr_ToStrptr(messages_Getary(parent));
 }
 
 // --- ams.MsgBlock..Print
 // print string representation of ROW to string STR
 // cfmt:ams.MsgBlock.String  printfmt:Tuple
-void ams::MsgBlock_Print(ams::MsgBlock& row, algo::cstring& str) {
+void ams::MsgBlock_Print(ams::MsgBlock& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.MsgBlock";
 
@@ -1318,7 +1318,7 @@ void ams::MsgBlock_Print(ams::MsgBlock& row, algo::cstring& str) {
 // --- ams.MsgHeader.type.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ams::type_ToCstr(const ams::MsgHeader& data) {
+const char* ams::type_ToCstr(const ams::MsgHeader& data) throw() {
     const char *ret = NULL;
     switch(type_GetEnum(data)) {
         case ams_MsgHeader_type_ams_AlarmSyncMsg: ret = "ams.AlarmSyncMsg";  break;
@@ -1350,7 +1350,7 @@ const char* ams::type_ToCstr(const ams::MsgHeader& data) {
 // --- ams.MsgHeader.type.Print
 // Convert type to a string. First, attempt conversion to a known string.
 // If no string matches, print type as a numeric value.
-void ams::type_Print(const ams::MsgHeader& data, algo::cstring &lhs) {
+void ams::type_Print(const ams::MsgHeader& data, algo::cstring &lhs) throw() {
     const char *strval = type_ToCstr(data);
     if (strval) {
         lhs << strval;
@@ -1363,7 +1363,7 @@ void ams::type_Print(const ams::MsgHeader& data, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ams::type_SetStrptrMaybe(ams::MsgHeader& data, algo::strptr rhs) {
+bool ams::type_SetStrptrMaybe(ams::MsgHeader& data, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 10: {
@@ -1506,13 +1506,13 @@ bool ams::type_SetStrptrMaybe(ams::MsgHeader& data, algo::strptr rhs) {
 // --- ams.MsgHeader.type.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ams::type_SetStrptr(ams::MsgHeader& data, algo::strptr rhs, ams_MsgHeader_type_Enum dflt) {
+void ams::type_SetStrptr(ams::MsgHeader& data, algo::strptr rhs, ams_MsgHeader_type_Enum dflt) throw() {
     if (!type_SetStrptrMaybe(data,rhs)) type_SetEnum(data,dflt);
 }
 
 // --- ams.MsgHeader.type.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::type_ReadStrptrMaybe(ams::MsgHeader& data, algo::strptr rhs) {
+bool ams::type_ReadStrptrMaybe(ams::MsgHeader& data, algo::strptr rhs) throw() {
     bool retval = false;
     retval = type_SetStrptrMaybe(data,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1522,7 +1522,7 @@ bool ams::type_ReadStrptrMaybe(ams::MsgHeader& data, algo::strptr rhs) {
 }
 
 // --- ams.MsgHeader..ReadFieldMaybe
-bool ams::MsgHeader_ReadFieldMaybe(ams::MsgHeader& parent, algo::strptr field, algo::strptr strval) {
+bool ams::MsgHeader_ReadFieldMaybe(ams::MsgHeader& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1546,7 +1546,7 @@ bool ams::MsgHeader_ReadFieldMaybe(ams::MsgHeader& parent, algo::strptr field, a
 // --- ams.MsgHeader..ReadStrptrMaybe
 // Read fields of ams::MsgHeader from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::MsgHeader_ReadStrptrMaybe(ams::MsgHeader &parent, algo::strptr in_str) {
+bool ams::MsgHeader_ReadStrptrMaybe(ams::MsgHeader &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.MsgHeader");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1558,7 +1558,7 @@ bool ams::MsgHeader_ReadStrptrMaybe(ams::MsgHeader &parent, algo::strptr in_str)
 // --- ams.MsgHeader..Print
 // print string representation of ROW to string STR
 // cfmt:ams.MsgHeader.String  printfmt:Tuple
-void ams::MsgHeader_Print(ams::MsgHeader& row, algo::cstring& str) {
+void ams::MsgHeader_Print(ams::MsgHeader& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.MsgHeader";
     (void)row;//only to avoid -Wunused-parameter
@@ -1567,7 +1567,7 @@ void ams::MsgHeader_Print(ams::MsgHeader& row, algo::cstring& str) {
 // --- ams.MsgHeaderMsgsCase.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ams::value_ToCstr(const ams::MsgHeaderMsgsCase& parent) {
+const char* ams::value_ToCstr(const ams::MsgHeaderMsgsCase& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ams_MsgHeaderMsgsCase_ams_AlarmSyncMsg: ret = "ams.AlarmSyncMsg";  break;
@@ -1599,7 +1599,7 @@ const char* ams::value_ToCstr(const ams::MsgHeaderMsgsCase& parent) {
 // --- ams.MsgHeaderMsgsCase.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void ams::value_Print(const ams::MsgHeaderMsgsCase& parent, algo::cstring &lhs) {
+void ams::value_Print(const ams::MsgHeaderMsgsCase& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1612,7 +1612,7 @@ void ams::value_Print(const ams::MsgHeaderMsgsCase& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs) {
+bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 10: {
@@ -1755,13 +1755,13 @@ bool ams::value_SetStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs)
 // --- ams.MsgHeaderMsgsCase.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ams::value_SetStrptr(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs, ams_MsgHeaderMsgsCaseEnum dflt) {
+void ams::value_SetStrptr(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs, ams_MsgHeaderMsgsCaseEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- ams.MsgHeaderMsgsCase.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::value_ReadStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs) {
+bool ams::value_ReadStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1773,14 +1773,14 @@ bool ams::value_ReadStrptrMaybe(ams::MsgHeaderMsgsCase& parent, algo::strptr rhs
 // --- ams.MsgHeaderMsgsCase..ReadStrptrMaybe
 // Read fields of ams::MsgHeaderMsgsCase from an ascii string.
 // The format of the string is the format of the ams::MsgHeaderMsgsCase's only field
-bool ams::MsgHeaderMsgsCase_ReadStrptrMaybe(ams::MsgHeaderMsgsCase &parent, algo::strptr in_str) {
+bool ams::MsgHeaderMsgsCase_ReadStrptrMaybe(ams::MsgHeaderMsgsCase &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
 }
 
 // --- ams.StreamPos..ReadFieldMaybe
-bool ams::StreamPos_ReadFieldMaybe(ams::StreamPos& parent, algo::strptr field, algo::strptr strval) {
+bool ams::StreamPos_ReadFieldMaybe(ams::StreamPos& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1804,7 +1804,7 @@ bool ams::StreamPos_ReadFieldMaybe(ams::StreamPos& parent, algo::strptr field, a
 // --- ams.StreamPos..ReadStrptrMaybe
 // Read fields of ams::StreamPos from an ascii string.
 // The format of the string is a string with separated values
-bool ams::StreamPos_ReadStrptrMaybe(ams::StreamPos &parent, algo::strptr in_str) {
+bool ams::StreamPos_ReadStrptrMaybe(ams::StreamPos &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::strptr value;
 
@@ -1819,7 +1819,7 @@ bool ams::StreamPos_ReadStrptrMaybe(ams::StreamPos &parent, algo::strptr in_str)
 // --- ams.StreamPos..Print
 // print string representation of ROW to string STR
 // cfmt:ams.StreamPos.String  printfmt:Sep
-void ams::StreamPos_Print(ams::StreamPos row, algo::cstring& str) {
+void ams::StreamPos_Print(ams::StreamPos row, algo::cstring& str) throw() {
     u64_Print(row.seq, str);
     str << ',';
     u64_Print(row.off, str);
@@ -1827,7 +1827,7 @@ void ams::StreamPos_Print(ams::StreamPos row, algo::cstring& str) {
 
 // --- ams.OpenMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::OpenMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::OpenMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -1835,7 +1835,7 @@ void ams::parent_CopyOut(ams::OpenMsg &row, ams::MsgHeader &out) {
 }
 
 // --- ams.OpenMsg..ReadFieldMaybe
-bool ams::OpenMsg_ReadFieldMaybe(ams::OpenMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::OpenMsg_ReadFieldMaybe(ams::OpenMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1871,7 +1871,7 @@ bool ams::OpenMsg_ReadFieldMaybe(ams::OpenMsg& parent, algo::strptr field, algo:
 // --- ams.OpenMsg..ReadStrptrMaybe
 // Read fields of ams::OpenMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::OpenMsg_ReadStrptrMaybe(ams::OpenMsg &parent, algo::strptr in_str) {
+bool ams::OpenMsg_ReadStrptrMaybe(ams::OpenMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.OpenMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1883,7 +1883,7 @@ bool ams::OpenMsg_ReadStrptrMaybe(ams::OpenMsg &parent, algo::strptr in_str) {
 // --- ams.OpenMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.OpenMsg.String  printfmt:Tuple
-void ams::OpenMsg_Print(ams::OpenMsg& row, algo::cstring& str) {
+void ams::OpenMsg_Print(ams::OpenMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.OpenMsg";
 
@@ -1896,7 +1896,7 @@ void ams::OpenMsg_Print(ams::OpenMsg& row, algo::cstring& str) {
 
 // --- ams.PrlogMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::PrlogMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::PrlogMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -1905,13 +1905,13 @@ void ams::parent_CopyOut(ams::PrlogMsg &row, ams::MsgHeader &out) {
 
 // --- ams.PrlogMsg.data.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> ams::data_Getary(ams::PrlogMsg& parent) {
+algo::aryptr<u8> ams::data_Getary(ams::PrlogMsg& parent) throw() {
     u8 *end = (u8*)&parent + sizeof(ams::PrlogMsg);
     return algo::aryptr<u8>(end, i32(parent.length) - ssizeof(ams::PrlogMsg));
 }
 
 // --- ams.PrlogMsg.data.Print
-void ams::data_Print(ams::PrlogMsg& parent, cstring &out) {
+void ams::data_Print(ams::PrlogMsg& parent, cstring &out) throw() {
     (void)out;
     (void)parent;
     if (ams::MsgHeader *data = data_Get(parent)) {
@@ -1921,7 +1921,7 @@ void ams::data_Print(ams::PrlogMsg& parent, cstring &out) {
 
 // --- ams.PrlogMsg.data.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::data_ReadStrptrMaybe(ams::PrlogMsg &parent, algo::strptr in_str) {
+bool ams::data_ReadStrptrMaybe(ams::PrlogMsg &parent, algo::strptr in_str) throw() {
     bool retval = false;
     if (algo_lib::_db.varlenbuf) {
         algo::ByteAry temp;
@@ -1933,7 +1933,7 @@ bool ams::data_ReadStrptrMaybe(ams::PrlogMsg &parent, algo::strptr in_str) {
 }
 
 // --- ams.PrlogMsg..ReadFieldMaybe
-bool ams::PrlogMsg_ReadFieldMaybe(ams::PrlogMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::PrlogMsg_ReadFieldMaybe(ams::PrlogMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1974,7 +1974,7 @@ bool ams::PrlogMsg_ReadFieldMaybe(ams::PrlogMsg& parent, algo::strptr field, alg
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of ams::PrlogMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::PrlogMsg_ReadStrptrMaybe(ams::PrlogMsg &parent, algo::strptr in_str) {
+bool ams::PrlogMsg_ReadStrptrMaybe(ams::PrlogMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.PrlogMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1986,7 +1986,7 @@ bool ams::PrlogMsg_ReadStrptrMaybe(ams::PrlogMsg &parent, algo::strptr in_str) {
 // --- ams.PrlogMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.PrlogMsg.String  printfmt:Tuple
-void ams::PrlogMsg_Print(ams::PrlogMsg& row, algo::cstring& str) {
+void ams::PrlogMsg_Print(ams::PrlogMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.PrlogMsg";
 
@@ -2004,7 +2004,7 @@ void ams::PrlogMsg_Print(ams::PrlogMsg& row, algo::cstring& str) {
 
 // --- ams.ProcAddMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::ProcAddMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::ProcAddMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2012,7 +2012,7 @@ void ams::parent_CopyOut(ams::ProcAddMsg &row, ams::MsgHeader &out) {
 }
 
 // --- ams.ProcAddMsg..ReadFieldMaybe
-bool ams::ProcAddMsg_ReadFieldMaybe(ams::ProcAddMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::ProcAddMsg_ReadFieldMaybe(ams::ProcAddMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2044,7 +2044,7 @@ bool ams::ProcAddMsg_ReadFieldMaybe(ams::ProcAddMsg& parent, algo::strptr field,
 // --- ams.ProcAddMsg..ReadStrptrMaybe
 // Read fields of ams::ProcAddMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::ProcAddMsg_ReadStrptrMaybe(ams::ProcAddMsg &parent, algo::strptr in_str) {
+bool ams::ProcAddMsg_ReadStrptrMaybe(ams::ProcAddMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.ProcAddMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2056,7 +2056,7 @@ bool ams::ProcAddMsg_ReadStrptrMaybe(ams::ProcAddMsg &parent, algo::strptr in_st
 // --- ams.ProcAddMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.ProcAddMsg.String  printfmt:Tuple
-void ams::ProcAddMsg_Print(ams::ProcAddMsg& row, algo::cstring& str) {
+void ams::ProcAddMsg_Print(ams::ProcAddMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.ProcAddMsg";
 
@@ -2066,7 +2066,7 @@ void ams::ProcAddMsg_Print(ams::ProcAddMsg& row, algo::cstring& str) {
 
 // --- ams.ProcRemoveMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::ProcRemoveMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::ProcRemoveMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2074,7 +2074,7 @@ void ams::parent_CopyOut(ams::ProcRemoveMsg &row, ams::MsgHeader &out) {
 }
 
 // --- ams.ProcRemoveMsg..ReadFieldMaybe
-bool ams::ProcRemoveMsg_ReadFieldMaybe(ams::ProcRemoveMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::ProcRemoveMsg_ReadFieldMaybe(ams::ProcRemoveMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2106,7 +2106,7 @@ bool ams::ProcRemoveMsg_ReadFieldMaybe(ams::ProcRemoveMsg& parent, algo::strptr 
 // --- ams.ProcRemoveMsg..ReadStrptrMaybe
 // Read fields of ams::ProcRemoveMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::ProcRemoveMsg_ReadStrptrMaybe(ams::ProcRemoveMsg &parent, algo::strptr in_str) {
+bool ams::ProcRemoveMsg_ReadStrptrMaybe(ams::ProcRemoveMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.ProcRemoveMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2118,7 +2118,7 @@ bool ams::ProcRemoveMsg_ReadStrptrMaybe(ams::ProcRemoveMsg &parent, algo::strptr
 // --- ams.ProcRemoveMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.ProcRemoveMsg.String  printfmt:Tuple
-void ams::ProcRemoveMsg_Print(ams::ProcRemoveMsg& row, algo::cstring& str) {
+void ams::ProcRemoveMsg_Print(ams::ProcRemoveMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.ProcRemoveMsg";
 
@@ -2127,7 +2127,7 @@ void ams::ProcRemoveMsg_Print(ams::ProcRemoveMsg& row, algo::cstring& str) {
 }
 
 // --- ams.SeqmsgId..ReadFieldMaybe
-bool ams::SeqmsgId_ReadFieldMaybe(ams::SeqmsgId& parent, algo::strptr field, algo::strptr strval) {
+bool ams::SeqmsgId_ReadFieldMaybe(ams::SeqmsgId& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2155,7 +2155,7 @@ bool ams::SeqmsgId_ReadFieldMaybe(ams::SeqmsgId& parent, algo::strptr field, alg
 // --- ams.SeqmsgId..ReadStrptrMaybe
 // Read fields of ams::SeqmsgId from an ascii string.
 // The format of the string is a string with separated values
-bool ams::SeqmsgId_ReadStrptrMaybe(ams::SeqmsgId &parent, algo::strptr in_str) {
+bool ams::SeqmsgId_ReadStrptrMaybe(ams::SeqmsgId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::strptr value;
 
@@ -2173,7 +2173,7 @@ bool ams::SeqmsgId_ReadStrptrMaybe(ams::SeqmsgId &parent, algo::strptr in_str) {
 // --- ams.SeqmsgId..Print
 // print string representation of ROW to string STR
 // cfmt:ams.SeqmsgId.String  printfmt:Sep
-void ams::SeqmsgId_Print(ams::SeqmsgId row, algo::cstring& str) {
+void ams::SeqmsgId_Print(ams::SeqmsgId row, algo::cstring& str) throw() {
     ams::StreamId_Print(row.stream_id, str);
     str << '@';
     u64_Print(row.seq, str);
@@ -2183,7 +2183,7 @@ void ams::SeqmsgId_Print(ams::SeqmsgId row, algo::cstring& str) {
 
 // --- ams.Seqmsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::Seqmsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::Seqmsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2192,13 +2192,13 @@ void ams::parent_CopyOut(ams::Seqmsg &row, ams::MsgHeader &out) {
 
 // --- ams.Seqmsg.payload.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> ams::payload_Getary(ams::Seqmsg& parent) {
+algo::aryptr<u8> ams::payload_Getary(ams::Seqmsg& parent) throw() {
     u8 *end = (u8*)&parent + sizeof(ams::Seqmsg);
     return algo::aryptr<u8>(end, i32(parent.length) - ssizeof(ams::Seqmsg));
 }
 
 // --- ams.Seqmsg.payload.Print
-void ams::payload_Print(ams::Seqmsg& parent, cstring &out) {
+void ams::payload_Print(ams::Seqmsg& parent, cstring &out) throw() {
     (void)out;
     (void)parent;
     if (ams::MsgHeader *payload = payload_Get(parent)) {
@@ -2208,7 +2208,7 @@ void ams::payload_Print(ams::Seqmsg& parent, cstring &out) {
 
 // --- ams.Seqmsg.payload.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::payload_ReadStrptrMaybe(ams::Seqmsg &parent, algo::strptr in_str) {
+bool ams::payload_ReadStrptrMaybe(ams::Seqmsg &parent, algo::strptr in_str) throw() {
     bool retval = false;
     if (algo_lib::_db.varlenbuf) {
         algo::ByteAry temp;
@@ -2220,7 +2220,7 @@ bool ams::payload_ReadStrptrMaybe(ams::Seqmsg &parent, algo::strptr in_str) {
 }
 
 // --- ams.Seqmsg..ReadFieldMaybe
-bool ams::Seqmsg_ReadFieldMaybe(ams::Seqmsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::Seqmsg_ReadFieldMaybe(ams::Seqmsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2261,7 +2261,7 @@ bool ams::Seqmsg_ReadFieldMaybe(ams::Seqmsg& parent, algo::strptr field, algo::s
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of ams::Seqmsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::Seqmsg_ReadStrptrMaybe(ams::Seqmsg &parent, algo::strptr in_str) {
+bool ams::Seqmsg_ReadStrptrMaybe(ams::Seqmsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.Seqmsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2273,7 +2273,7 @@ bool ams::Seqmsg_ReadStrptrMaybe(ams::Seqmsg &parent, algo::strptr in_str) {
 // --- ams.Seqmsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.Seqmsg.String  printfmt:Tuple
-void ams::Seqmsg_Print(ams::Seqmsg& row, algo::cstring& str) {
+void ams::Seqmsg_Print(ams::Seqmsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.Seqmsg";
 
@@ -2291,7 +2291,7 @@ void ams::Seqmsg_Print(ams::Seqmsg& row, algo::cstring& str) {
 
 // --- ams.SeqmsgTrace.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::SeqmsgTrace &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::SeqmsgTrace &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2301,7 +2301,7 @@ void ams::parent_CopyOut(ams::SeqmsgTrace &row, ams::MsgHeader &out) {
 // --- ams.SeqmsgTrace.mode.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ams::mode_ToCstr(const ams::SeqmsgTrace& parent) {
+const char* ams::mode_ToCstr(const ams::SeqmsgTrace& parent) throw() {
     const char *ret = NULL;
     switch(mode_GetEnum(parent)) {
         case ams_SeqmsgTrace_mode_r        : ret = "r";  break;
@@ -2313,7 +2313,7 @@ const char* ams::mode_ToCstr(const ams::SeqmsgTrace& parent) {
 // --- ams.SeqmsgTrace.mode.Print
 // Convert mode to a string. First, attempt conversion to a known string.
 // If no string matches, print mode as a numeric value.
-void ams::mode_Print(const ams::SeqmsgTrace& parent, algo::cstring &lhs) {
+void ams::mode_Print(const ams::SeqmsgTrace& parent, algo::cstring &lhs) throw() {
     const char *strval = mode_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2326,7 +2326,7 @@ void ams::mode_Print(const ams::SeqmsgTrace& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ams::mode_SetStrptrMaybe(ams::SeqmsgTrace& parent, algo::strptr rhs) {
+bool ams::mode_SetStrptrMaybe(ams::SeqmsgTrace& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
@@ -2347,13 +2347,13 @@ bool ams::mode_SetStrptrMaybe(ams::SeqmsgTrace& parent, algo::strptr rhs) {
 // --- ams.SeqmsgTrace.mode.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ams::mode_SetStrptr(ams::SeqmsgTrace& parent, algo::strptr rhs, ams_SeqmsgTrace_mode_Enum dflt) {
+void ams::mode_SetStrptr(ams::SeqmsgTrace& parent, algo::strptr rhs, ams_SeqmsgTrace_mode_Enum dflt) throw() {
     if (!mode_SetStrptrMaybe(parent,rhs)) mode_SetEnum(parent,dflt);
 }
 
 // --- ams.SeqmsgTrace.mode.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::mode_ReadStrptrMaybe(ams::SeqmsgTrace& parent, algo::strptr rhs) {
+bool ams::mode_ReadStrptrMaybe(ams::SeqmsgTrace& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = mode_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2364,13 +2364,13 @@ bool ams::mode_ReadStrptrMaybe(ams::SeqmsgTrace& parent, algo::strptr rhs) {
 
 // --- ams.SeqmsgTrace.payload.Getary
 // Access optional portion as an array of bytes
-algo::aryptr<u8> ams::payload_Getary(ams::SeqmsgTrace& parent) {
+algo::aryptr<u8> ams::payload_Getary(ams::SeqmsgTrace& parent) throw() {
     u8 *end = (u8*)&parent + sizeof(ams::SeqmsgTrace);
     return algo::aryptr<u8>(end, i32(parent.length) - ssizeof(ams::SeqmsgTrace));
 }
 
 // --- ams.SeqmsgTrace.payload.Print
-void ams::payload_Print(ams::SeqmsgTrace& parent, cstring &out) {
+void ams::payload_Print(ams::SeqmsgTrace& parent, cstring &out) throw() {
     (void)out;
     (void)parent;
     if (ams::MsgHeader *payload = payload_Get(parent)) {
@@ -2380,7 +2380,7 @@ void ams::payload_Print(ams::SeqmsgTrace& parent, cstring &out) {
 
 // --- ams.SeqmsgTrace.payload.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::payload_ReadStrptrMaybe(ams::SeqmsgTrace &parent, algo::strptr in_str) {
+bool ams::payload_ReadStrptrMaybe(ams::SeqmsgTrace &parent, algo::strptr in_str) throw() {
     bool retval = false;
     if (algo_lib::_db.varlenbuf) {
         algo::ByteAry temp;
@@ -2392,7 +2392,7 @@ bool ams::payload_ReadStrptrMaybe(ams::SeqmsgTrace &parent, algo::strptr in_str)
 }
 
 // --- ams.SeqmsgTrace..ReadFieldMaybe
-bool ams::SeqmsgTrace_ReadFieldMaybe(ams::SeqmsgTrace& parent, algo::strptr field, algo::strptr strval) {
+bool ams::SeqmsgTrace_ReadFieldMaybe(ams::SeqmsgTrace& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2441,7 +2441,7 @@ bool ams::SeqmsgTrace_ReadFieldMaybe(ams::SeqmsgTrace& parent, algo::strptr fiel
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of ams::SeqmsgTrace from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::SeqmsgTrace_ReadStrptrMaybe(ams::SeqmsgTrace &parent, algo::strptr in_str) {
+bool ams::SeqmsgTrace_ReadStrptrMaybe(ams::SeqmsgTrace &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.SeqmsgTrace");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2453,7 +2453,7 @@ bool ams::SeqmsgTrace_ReadStrptrMaybe(ams::SeqmsgTrace &parent, algo::strptr in_
 // --- ams.SeqmsgTrace..Print
 // print string representation of ROW to string STR
 // cfmt:ams.SeqmsgTrace.String  printfmt:Tuple
-void ams::SeqmsgTrace_Print(ams::SeqmsgTrace& row, algo::cstring& str) {
+void ams::SeqmsgTrace_Print(ams::SeqmsgTrace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.SeqmsgTrace";
 
@@ -2476,7 +2476,7 @@ void ams::SeqmsgTrace_Print(ams::SeqmsgTrace& row, algo::cstring& str) {
 }
 
 // --- ams.StreamFlags.write.ReadStrptrMaybe
-inline static bool ams::write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) {
+inline static bool ams::write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool write_tmp;
     retval = bool_ReadStrptrMaybe(write_tmp, in_str);
@@ -2487,7 +2487,7 @@ inline static bool ams::write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::st
 }
 
 // --- ams.StreamFlags.read.ReadStrptrMaybe
-inline static bool ams::read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) {
+inline static bool ams::read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool read_tmp;
     retval = bool_ReadStrptrMaybe(read_tmp, in_str);
@@ -2498,7 +2498,7 @@ inline static bool ams::read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::str
 }
 
 // --- ams.StreamFlags.nonblock.ReadStrptrMaybe
-inline static bool ams::nonblock_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) {
+inline static bool ams::nonblock_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool nonblock_tmp;
     retval = bool_ReadStrptrMaybe(nonblock_tmp, in_str);
@@ -2509,7 +2509,7 @@ inline static bool ams::nonblock_ReadStrptrMaybe(ams::StreamFlags &parent, algo:
 }
 
 // --- ams.StreamFlags.trace_read.ReadStrptrMaybe
-inline static bool ams::trace_read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) {
+inline static bool ams::trace_read_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool trace_read_tmp;
     retval = bool_ReadStrptrMaybe(trace_read_tmp, in_str);
@@ -2520,7 +2520,7 @@ inline static bool ams::trace_read_ReadStrptrMaybe(ams::StreamFlags &parent, alg
 }
 
 // --- ams.StreamFlags.trace_write.ReadStrptrMaybe
-inline static bool ams::trace_write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) {
+inline static bool ams::trace_write_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool trace_write_tmp;
     retval = bool_ReadStrptrMaybe(trace_write_tmp, in_str);
@@ -2531,7 +2531,7 @@ inline static bool ams::trace_write_ReadStrptrMaybe(ams::StreamFlags &parent, al
 }
 
 // --- ams.StreamFlags.write_err.ReadStrptrMaybe
-inline static bool ams::write_err_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) {
+inline static bool ams::write_err_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool write_err_tmp;
     retval = bool_ReadStrptrMaybe(write_err_tmp, in_str);
@@ -2542,7 +2542,7 @@ inline static bool ams::write_err_ReadStrptrMaybe(ams::StreamFlags &parent, algo
 }
 
 // --- ams.StreamFlags.trace_text.ReadStrptrMaybe
-inline static bool ams::trace_text_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) {
+inline static bool ams::trace_text_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     bool trace_text_tmp;
     retval = bool_ReadStrptrMaybe(trace_text_tmp, in_str);
@@ -2553,7 +2553,7 @@ inline static bool ams::trace_text_ReadStrptrMaybe(ams::StreamFlags &parent, alg
 }
 
 // --- ams.StreamFlags..ReadFieldMaybe
-bool ams::StreamFlags_ReadFieldMaybe(ams::StreamFlags& parent, algo::strptr field, algo::strptr strval) {
+bool ams::StreamFlags_ReadFieldMaybe(ams::StreamFlags& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2600,7 +2600,7 @@ bool ams::StreamFlags_ReadFieldMaybe(ams::StreamFlags& parent, algo::strptr fiel
 
 // --- ams.StreamFlags..ReadStrptrMaybe
 // Read fields of ams::StreamFlags from an ascii string.
-bool ams::StreamFlags_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) {
+bool ams::StreamFlags_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_str) throw() {
     bool retval = true;
     // Clear affected bits first)
     write_Set(parent, false);
@@ -2656,7 +2656,7 @@ bool ams::StreamFlags_ReadStrptrMaybe(ams::StreamFlags &parent, algo::strptr in_
 // --- ams.StreamFlags..Print
 // print string representation of ROW to string STR
 // cfmt:ams.StreamFlags.String  printfmt:Bitset
-void ams::StreamFlags_Print(ams::StreamFlags row, algo::cstring& str) {
+void ams::StreamFlags_Print(ams::StreamFlags row, algo::cstring& str) throw() {
     algo::ListSep ls(",");
     if (write_Get(row)) {
         str << ls << "write";
@@ -2682,7 +2682,7 @@ void ams::StreamFlags_Print(ams::StreamFlags row, algo::cstring& str) {
 }
 
 // --- ams.StreamFlags..GetAnon
-algo::strptr ams::StreamFlags_GetAnon(ams::StreamFlags &parent, i32 idx) {
+algo::strptr ams::StreamFlags_GetAnon(ams::StreamFlags &parent, i32 idx) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     switch(idx) {
         case(0): return strptr("value", 5);
@@ -2692,7 +2692,7 @@ algo::strptr ams::StreamFlags_GetAnon(ams::StreamFlags &parent, i32 idx) {
 
 // --- ams.StreamHbMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::StreamHbMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::StreamHbMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2700,7 +2700,7 @@ void ams::parent_CopyOut(ams::StreamHbMsg &row, ams::MsgHeader &out) {
 }
 
 // --- ams.StreamHbMsg..ReadFieldMaybe
-bool ams::StreamHbMsg_ReadFieldMaybe(ams::StreamHbMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::StreamHbMsg_ReadFieldMaybe(ams::StreamHbMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2740,7 +2740,7 @@ bool ams::StreamHbMsg_ReadFieldMaybe(ams::StreamHbMsg& parent, algo::strptr fiel
 // --- ams.StreamHbMsg..ReadStrptrMaybe
 // Read fields of ams::StreamHbMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::StreamHbMsg_ReadStrptrMaybe(ams::StreamHbMsg &parent, algo::strptr in_str) {
+bool ams::StreamHbMsg_ReadStrptrMaybe(ams::StreamHbMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.StreamHbMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2752,7 +2752,7 @@ bool ams::StreamHbMsg_ReadStrptrMaybe(ams::StreamHbMsg &parent, algo::strptr in_
 // --- ams.StreamHbMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.StreamHbMsg.String  printfmt:Tuple
-void ams::StreamHbMsg_Print(ams::StreamHbMsg& row, algo::cstring& str) {
+void ams::StreamHbMsg_Print(ams::StreamHbMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.StreamHbMsg";
 
@@ -2768,7 +2768,7 @@ void ams::StreamHbMsg_Print(ams::StreamHbMsg& row, algo::cstring& str) {
 
 // --- ams.TerminateMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::TerminateMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::TerminateMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2776,7 +2776,7 @@ void ams::parent_CopyOut(ams::TerminateMsg &row, ams::MsgHeader &out) {
 }
 
 // --- ams.TerminateMsg..ReadFieldMaybe
-bool ams::TerminateMsg_ReadFieldMaybe(ams::TerminateMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::TerminateMsg_ReadFieldMaybe(ams::TerminateMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2806,7 +2806,7 @@ bool ams::TerminateMsg_ReadFieldMaybe(ams::TerminateMsg& parent, algo::strptr fi
 // --- ams.TerminateMsg..ReadStrptrMaybe
 // Read fields of ams::TerminateMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::TerminateMsg_ReadStrptrMaybe(ams::TerminateMsg &parent, algo::strptr in_str) {
+bool ams::TerminateMsg_ReadStrptrMaybe(ams::TerminateMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.TerminateMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2818,7 +2818,7 @@ bool ams::TerminateMsg_ReadStrptrMaybe(ams::TerminateMsg &parent, algo::strptr i
 // --- ams.TerminateMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.TerminateMsg.String  printfmt:Tuple
-void ams::TerminateMsg_Print(ams::TerminateMsg& row, algo::cstring& str) {
+void ams::TerminateMsg_Print(ams::TerminateMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.TerminateMsg";
     (void)row;//only to avoid -Wunused-parameter
@@ -2826,7 +2826,7 @@ void ams::TerminateMsg_Print(ams::TerminateMsg& row, algo::cstring& str) {
 
 // --- ams.Trace2Msg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::Trace2Msg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::Trace2Msg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2835,7 +2835,7 @@ void ams::parent_CopyOut(ams::Trace2Msg &row, ams::MsgHeader &out) {
 
 // --- ams.Trace2Msg.data.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u64> ams::data_Getary(ams::Trace2Msg& parent) {
+algo::aryptr<u64> ams::data_Getary(ams::Trace2Msg& parent) throw() {
     return algo::aryptr<u64>(data_Addr(parent), data_N(parent));
 }
 
@@ -2846,7 +2846,7 @@ u64* ams::data_Addr(ams::Trace2Msg& parent) {
 
 // --- ams.Trace2Msg.data.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::data_ReadStrptrMaybe(ams::Trace2Msg& parent, algo::strptr in_str) {
+bool ams::data_ReadStrptrMaybe(ams::Trace2Msg& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         u64 *data_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(u64)).elems) u64;
@@ -2857,7 +2857,7 @@ bool ams::data_ReadStrptrMaybe(ams::Trace2Msg& parent, algo::strptr in_str) {
 }
 
 // --- ams.Trace2Msg..ReadFieldMaybe
-bool ams::Trace2Msg_ReadFieldMaybe(ams::Trace2Msg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::Trace2Msg_ReadFieldMaybe(ams::Trace2Msg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -2902,7 +2902,7 @@ bool ams::Trace2Msg_ReadFieldMaybe(ams::Trace2Msg& parent, algo::strptr field, a
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of ams::Trace2Msg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::Trace2Msg_ReadStrptrMaybe(ams::Trace2Msg &parent, algo::strptr in_str) {
+bool ams::Trace2Msg_ReadStrptrMaybe(ams::Trace2Msg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.Trace2Msg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2914,7 +2914,7 @@ bool ams::Trace2Msg_ReadStrptrMaybe(ams::Trace2Msg &parent, algo::strptr in_str)
 // --- ams.Trace2Msg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.Trace2Msg.String  printfmt:Tuple
-void ams::Trace2Msg_Print(ams::Trace2Msg& row, algo::cstring& str) {
+void ams::Trace2Msg_Print(ams::Trace2Msg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.Trace2Msg";
 
@@ -2938,7 +2938,7 @@ void ams::Trace2Msg_Print(ams::Trace2Msg& row, algo::cstring& str) {
 
 // --- ams.TraceInfo2Msg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::TraceInfo2Msg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::TraceInfo2Msg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -2947,7 +2947,7 @@ void ams::parent_CopyOut(ams::TraceInfo2Msg &row, ams::MsgHeader &out) {
 
 // --- ams.TraceInfo2Msg.data.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> ams::data_Getary(ams::TraceInfo2Msg& parent) {
+algo::aryptr<char> ams::data_Getary(ams::TraceInfo2Msg& parent) throw() {
     return algo::aryptr<char>(data_Addr(parent), data_N(parent));
 }
 
@@ -2958,7 +2958,7 @@ char* ams::data_Addr(ams::TraceInfo2Msg& parent) {
 
 // --- ams.TraceInfo2Msg.data.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::data_ReadStrptrMaybe(ams::TraceInfo2Msg& parent, algo::strptr in_str) {
+bool ams::data_ReadStrptrMaybe(ams::TraceInfo2Msg& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
@@ -2970,12 +2970,12 @@ bool ams::data_ReadStrptrMaybe(ams::TraceInfo2Msg& parent, algo::strptr in_str) 
 // --- ams.TraceInfo2Msg.data.Print
 // Convert data to a string.
 // Array is printed as a regular string.
-void ams::data_Print(ams::TraceInfo2Msg& parent, algo::cstring &rhs) {
+void ams::data_Print(ams::TraceInfo2Msg& parent, algo::cstring &rhs) throw() {
     rhs << data_Getary(parent);
 }
 
 // --- ams.TraceInfo2Msg..ReadFieldMaybe
-bool ams::TraceInfo2Msg_ReadFieldMaybe(ams::TraceInfo2Msg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::TraceInfo2Msg_ReadFieldMaybe(ams::TraceInfo2Msg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -3024,7 +3024,7 @@ bool ams::TraceInfo2Msg_ReadFieldMaybe(ams::TraceInfo2Msg& parent, algo::strptr 
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of ams::TraceInfo2Msg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::TraceInfo2Msg_ReadStrptrMaybe(ams::TraceInfo2Msg &parent, algo::strptr in_str) {
+bool ams::TraceInfo2Msg_ReadStrptrMaybe(ams::TraceInfo2Msg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.TraceInfo2Msg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3036,7 +3036,7 @@ bool ams::TraceInfo2Msg_ReadStrptrMaybe(ams::TraceInfo2Msg &parent, algo::strptr
 // --- ams.TraceInfo2Msg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.TraceInfo2Msg.String  printfmt:Tuple
-void ams::TraceInfo2Msg_Print(ams::TraceInfo2Msg& row, algo::cstring& str) {
+void ams::TraceInfo2Msg_Print(ams::TraceInfo2Msg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.TraceInfo2Msg";
 
@@ -3058,7 +3058,7 @@ void ams::TraceInfo2Msg_Print(ams::TraceInfo2Msg& row, algo::cstring& str) {
 
 // --- ams.TraceInfoMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::TraceInfoMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::TraceInfoMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3067,7 +3067,7 @@ void ams::parent_CopyOut(ams::TraceInfoMsg &row, ams::MsgHeader &out) {
 
 // --- ams.TraceInfoMsg.data.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<char> ams::data_Getary(ams::TraceInfoMsg& parent) {
+algo::aryptr<char> ams::data_Getary(ams::TraceInfoMsg& parent) throw() {
     return algo::aryptr<char>(data_Addr(parent), data_N(parent));
 }
 
@@ -3078,7 +3078,7 @@ char* ams::data_Addr(ams::TraceInfoMsg& parent) {
 
 // --- ams.TraceInfoMsg.data.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::data_ReadStrptrMaybe(ams::TraceInfoMsg& parent, algo::strptr in_str) {
+bool ams::data_ReadStrptrMaybe(ams::TraceInfoMsg& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         ary_Addary(*algo_lib::_db.varlenbuf, strptr_ToMemptr(in_str));
@@ -3090,12 +3090,12 @@ bool ams::data_ReadStrptrMaybe(ams::TraceInfoMsg& parent, algo::strptr in_str) {
 // --- ams.TraceInfoMsg.data.Print
 // Convert data to a string.
 // Array is printed as a regular string.
-void ams::data_Print(ams::TraceInfoMsg& parent, algo::cstring &rhs) {
+void ams::data_Print(ams::TraceInfoMsg& parent, algo::cstring &rhs) throw() {
     rhs << data_Getary(parent);
 }
 
 // --- ams.TraceInfoMsg..ReadFieldMaybe
-bool ams::TraceInfoMsg_ReadFieldMaybe(ams::TraceInfoMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::TraceInfoMsg_ReadFieldMaybe(ams::TraceInfoMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -3140,7 +3140,7 @@ bool ams::TraceInfoMsg_ReadFieldMaybe(ams::TraceInfoMsg& parent, algo::strptr fi
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of ams::TraceInfoMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::TraceInfoMsg_ReadStrptrMaybe(ams::TraceInfoMsg &parent, algo::strptr in_str) {
+bool ams::TraceInfoMsg_ReadStrptrMaybe(ams::TraceInfoMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.TraceInfoMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3152,7 +3152,7 @@ bool ams::TraceInfoMsg_ReadStrptrMaybe(ams::TraceInfoMsg &parent, algo::strptr i
 // --- ams.TraceInfoMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.TraceInfoMsg.String  printfmt:Tuple
-void ams::TraceInfoMsg_Print(ams::TraceInfoMsg& row, algo::cstring& str) {
+void ams::TraceInfoMsg_Print(ams::TraceInfoMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.TraceInfoMsg";
 
@@ -3171,7 +3171,7 @@ void ams::TraceInfoMsg_Print(ams::TraceInfoMsg& row, algo::cstring& str) {
 
 // --- ams.TraceMsg.base.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::TraceMsg &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::TraceMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3180,7 +3180,7 @@ void ams::parent_CopyOut(ams::TraceMsg &row, ams::MsgHeader &out) {
 
 // --- ams.TraceMsg.data.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u64> ams::data_Getary(ams::TraceMsg& parent) {
+algo::aryptr<u64> ams::data_Getary(ams::TraceMsg& parent) throw() {
     return algo::aryptr<u64>(data_Addr(parent), data_N(parent));
 }
 
@@ -3191,7 +3191,7 @@ u64* ams::data_Addr(ams::TraceMsg& parent) {
 
 // --- ams.TraceMsg.data.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ams::data_ReadStrptrMaybe(ams::TraceMsg& parent, algo::strptr in_str) {
+bool ams::data_ReadStrptrMaybe(ams::TraceMsg& parent, algo::strptr in_str) throw() {
     bool retval = true;
     if (algo_lib::_db.varlenbuf) {
         u64 *data_tmp = new(ary_AllocN(*algo_lib::_db.varlenbuf, sizeof(u64)).elems) u64;
@@ -3202,7 +3202,7 @@ bool ams::data_ReadStrptrMaybe(ams::TraceMsg& parent, algo::strptr in_str) {
 }
 
 // --- ams.TraceMsg..ReadFieldMaybe
-bool ams::TraceMsg_ReadFieldMaybe(ams::TraceMsg& parent, algo::strptr field, algo::strptr strval) {
+bool ams::TraceMsg_ReadFieldMaybe(ams::TraceMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     ams::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
@@ -3243,7 +3243,7 @@ bool ams::TraceMsg_ReadFieldMaybe(ams::TraceMsg& parent, algo::strptr field, alg
 // Any varlen fields are returned in algo_lib::_db.varlenbuf if set
 // Read fields of ams::TraceMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool ams::TraceMsg_ReadStrptrMaybe(ams::TraceMsg &parent, algo::strptr in_str) {
+bool ams::TraceMsg_ReadStrptrMaybe(ams::TraceMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "ams.TraceMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3255,7 +3255,7 @@ bool ams::TraceMsg_ReadStrptrMaybe(ams::TraceMsg &parent, algo::strptr in_str) {
 // --- ams.TraceMsg..Print
 // print string representation of ROW to string STR
 // cfmt:ams.TraceMsg.String  printfmt:Tuple
-void ams::TraceMsg_Print(ams::TraceMsg& row, algo::cstring& str) {
+void ams::TraceMsg_Print(ams::TraceMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.TraceMsg";
 
@@ -3276,7 +3276,7 @@ void ams::TraceMsg_Print(ams::TraceMsg& row, algo::cstring& str) {
 
 // --- ams.UdpFrame.header.CopyOut
 // Copy fields out of row
-void ams::parent_CopyOut(ams::UdpFrame &row, ams::MsgHeader &out) {
+void ams::parent_CopyOut(ams::UdpFrame &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -3285,7 +3285,7 @@ void ams::parent_CopyOut(ams::UdpFrame &row, ams::MsgHeader &out) {
 
 // --- ams.UdpFrame.payload.Getary
 // Access var-length portion as an aryptr. Length is determined from one of the fields.
-algo::aryptr<u8> ams::payload_Getary(ams::UdpFrame& parent) {
+algo::aryptr<u8> ams::payload_Getary(ams::UdpFrame& parent) throw() {
     return algo::aryptr<u8>(payload_Addr(parent), payload_N(parent));
 }
 
@@ -3297,14 +3297,14 @@ u8* ams::payload_Addr(ams::UdpFrame& parent) {
 // --- ams.UdpFrame.payload.Print
 // Convert payload to a string.
 // Array is printed as a regular string.
-void ams::payload_Print(ams::UdpFrame& parent, algo::cstring &rhs) {
+void ams::payload_Print(ams::UdpFrame& parent, algo::cstring &rhs) throw() {
     rhs << algo::memptr_ToStrptr(payload_Getary(parent));
 }
 
 // --- ams.UdpFrame..Print
 // print string representation of ROW to string STR
 // cfmt:ams.UdpFrame.String  printfmt:Tuple
-void ams::UdpFrame_Print(ams::UdpFrame& row, algo::cstring& str) {
+void ams::UdpFrame_Print(ams::UdpFrame& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ams.UdpFrame";
 

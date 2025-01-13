@@ -45,7 +45,7 @@ namespace lib_sql { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- lib_sql.FAttr..Uninit
-void lib_sql::FAttr_Uninit(lib_sql::FAttr& attr) {
+void lib_sql::FAttr_Uninit(lib_sql::FAttr& attr) throw() {
     lib_sql::FAttr &row = attr; (void)row;
     ind_attr_Remove(row); // remove attr from index ind_attr
 }
@@ -53,7 +53,7 @@ void lib_sql::FAttr_Uninit(lib_sql::FAttr& attr) {
 // --- lib_sql.trace..Print
 // print string representation of ROW to string STR
 // cfmt:lib_sql.trace.String  printfmt:Tuple
-void lib_sql::trace_Print(lib_sql::trace& row, algo::cstring& str) {
+void lib_sql::trace_Print(lib_sql::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_sql.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -89,7 +89,7 @@ bool lib_sql::InsertStrptrMaybe(algo::strptr str) {
 
 // --- lib_sql.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool lib_sql::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool lib_sql::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = lib_sql::LoadTuplesFile(root, recursive);
@@ -112,7 +112,7 @@ bool lib_sql::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool lib_sql::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool lib_sql::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -125,7 +125,7 @@ bool lib_sql::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- lib_sql.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool lib_sql::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool lib_sql::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -144,7 +144,7 @@ bool lib_sql::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) 
 
 // --- lib_sql.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool lib_sql::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool lib_sql::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = lib_sql::LoadTuplesFile(fname, recursive);
@@ -169,7 +169,7 @@ bool lib_sql::_db_XrefMaybe() {
 // --- lib_sql.FDb.attr.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_sql::FAttr& lib_sql::attr_Alloc() {
+lib_sql::FAttr& lib_sql::attr_Alloc() throw() {
     lib_sql::FAttr* row = attr_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_sql.out_of_mem  field:lib_sql.FDb.attr  comment:'Alloc failed'");
@@ -179,7 +179,7 @@ lib_sql::FAttr& lib_sql::attr_Alloc() {
 
 // --- lib_sql.FDb.attr.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_sql::FAttr* lib_sql::attr_AllocMaybe() {
+lib_sql::FAttr* lib_sql::attr_AllocMaybe() throw() {
     lib_sql::FAttr *row = (lib_sql::FAttr*)attr_AllocMem();
     if (row) {
         new (row) lib_sql::FAttr; // call constructor
@@ -189,7 +189,7 @@ lib_sql::FAttr* lib_sql::attr_AllocMaybe() {
 
 // --- lib_sql.FDb.attr.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_sql::attr_AllocMem() {
+void* lib_sql::attr_AllocMem() throw() {
     u64 new_nelems     = _db.attr_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -215,7 +215,7 @@ void* lib_sql::attr_AllocMem() {
 
 // --- lib_sql.FDb.attr.RemoveAll
 // Remove all elements from Lary
-void lib_sql::attr_RemoveAll() {
+void lib_sql::attr_RemoveAll() throw() {
     for (u64 n = _db.attr_n; n>0; ) {
         n--;
         attr_qFind(u64(n)).~FAttr(); // destroy last element
@@ -225,7 +225,7 @@ void lib_sql::attr_RemoveAll() {
 
 // --- lib_sql.FDb.attr.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_sql::attr_RemoveLast() {
+void lib_sql::attr_RemoveLast() throw() {
     u64 n = _db.attr_n;
     if (n > 0) {
         n -= 1;
@@ -254,7 +254,7 @@ bool lib_sql::attr_XrefMaybe(lib_sql::FAttr &row) {
 
 // --- lib_sql.FDb.ind_attr.Find
 // Find row by key. Return NULL if not found.
-lib_sql::FAttr* lib_sql::ind_attr_Find(const algo::strptr& key) {
+lib_sql::FAttr* lib_sql::ind_attr_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_attr_buckets_n - 1);
     lib_sql::FAttr* *e = &_db.ind_attr_buckets_elems[index];
     lib_sql::FAttr* ret=NULL;
@@ -277,7 +277,7 @@ lib_sql::FAttr& lib_sql::ind_attr_FindX(const algo::strptr& key) {
 
 // --- lib_sql.FDb.ind_attr.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-lib_sql::FAttr& lib_sql::ind_attr_GetOrCreate(const algo::strptr& key) {
+lib_sql::FAttr& lib_sql::ind_attr_GetOrCreate(const algo::strptr& key) throw() {
     lib_sql::FAttr* ret = ind_attr_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &attr_Alloc();
@@ -294,7 +294,7 @@ lib_sql::FAttr& lib_sql::ind_attr_GetOrCreate(const algo::strptr& key) {
 
 // --- lib_sql.FDb.ind_attr.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_sql::ind_attr_InsertMaybe(lib_sql::FAttr& row) {
+bool lib_sql::ind_attr_InsertMaybe(lib_sql::FAttr& row) throw() {
     ind_attr_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_attr_next == (lib_sql::FAttr*)-1)) {// check if in hash already
@@ -322,7 +322,7 @@ bool lib_sql::ind_attr_InsertMaybe(lib_sql::FAttr& row) {
 
 // --- lib_sql.FDb.ind_attr.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_sql::ind_attr_Remove(lib_sql::FAttr& row) {
+void lib_sql::ind_attr_Remove(lib_sql::FAttr& row) throw() {
     if (LIKELY(row.ind_attr_next != (lib_sql::FAttr*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.attr) & (_db.ind_attr_buckets_n - 1);
         lib_sql::FAttr* *prev = &_db.ind_attr_buckets_elems[index]; // addr of pointer to current element
@@ -340,7 +340,7 @@ void lib_sql::ind_attr_Remove(lib_sql::FAttr& row) {
 
 // --- lib_sql.FDb.ind_attr.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_sql::ind_attr_Reserve(int n) {
+void lib_sql::ind_attr_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_attr_buckets_n;
     u32 new_nelems   = _db.ind_attr_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -376,13 +376,13 @@ void lib_sql::ind_attr_Reserve(int n) {
 
 // --- lib_sql.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr lib_sql::trace_RowidFind(int t) {
+static algo::ImrowPtr lib_sql::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- lib_sql.FDb.trace.N
 // Function return 1
-inline static i32 lib_sql::trace_N() {
+inline static i32 lib_sql::trace_N() throw() {
     return 1;
 }
 
@@ -413,7 +413,7 @@ void lib_sql::FDb_Init() {
 }
 
 // --- lib_sql.FDb..Uninit
-void lib_sql::FDb_Uninit() {
+void lib_sql::FDb_Uninit() throw() {
     lib_sql::FDb &row = _db; (void)row;
 
     // lib_sql.FDb.ind_attr.Uninit (Thash)  //
@@ -426,7 +426,7 @@ void lib_sql::FDb_Uninit() {
 // --- lib_sql.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_sql::value_ToCstr(const lib_sql::FieldId& parent) {
+const char* lib_sql::value_ToCstr(const lib_sql::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_sql_FieldId_value         : ret = "value";  break;
@@ -437,7 +437,7 @@ const char* lib_sql::value_ToCstr(const lib_sql::FieldId& parent) {
 // --- lib_sql.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_sql::value_Print(const lib_sql::FieldId& parent, algo::cstring &lhs) {
+void lib_sql::value_Print(const lib_sql::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -450,7 +450,7 @@ void lib_sql::value_Print(const lib_sql::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_sql::value_SetStrptrMaybe(lib_sql::FieldId& parent, algo::strptr rhs) {
+bool lib_sql::value_SetStrptrMaybe(lib_sql::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -468,13 +468,13 @@ bool lib_sql::value_SetStrptrMaybe(lib_sql::FieldId& parent, algo::strptr rhs) {
 // --- lib_sql.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_sql::value_SetStrptr(lib_sql::FieldId& parent, algo::strptr rhs, lib_sql_FieldIdEnum dflt) {
+void lib_sql::value_SetStrptr(lib_sql::FieldId& parent, algo::strptr rhs, lib_sql_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_sql.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_sql::value_ReadStrptrMaybe(lib_sql::FieldId& parent, algo::strptr rhs) {
+bool lib_sql::value_ReadStrptrMaybe(lib_sql::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -486,7 +486,7 @@ bool lib_sql::value_ReadStrptrMaybe(lib_sql::FieldId& parent, algo::strptr rhs) 
 // --- lib_sql.FieldId..ReadStrptrMaybe
 // Read fields of lib_sql::FieldId from an ascii string.
 // The format of the string is the format of the lib_sql::FieldId's only field
-bool lib_sql::FieldId_ReadStrptrMaybe(lib_sql::FieldId &parent, algo::strptr in_str) {
+bool lib_sql::FieldId_ReadStrptrMaybe(lib_sql::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -495,7 +495,7 @@ bool lib_sql::FieldId_ReadStrptrMaybe(lib_sql::FieldId &parent, algo::strptr in_
 // --- lib_sql.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_sql.FieldId.String  printfmt:Raw
-void lib_sql::FieldId_Print(lib_sql::FieldId& row, algo::cstring& str) {
+void lib_sql::FieldId_Print(lib_sql::FieldId& row, algo::cstring& str) throw() {
     lib_sql::value_Print(row, str);
 }
 

@@ -29,30 +29,30 @@
 //#pragma endinclude
 
 // --- orgfile.trace..Ctor
-inline  orgfile::trace::trace() {
+inline  orgfile::trace::trace() throw() {
 }
 
 // --- orgfile.FDb.ind_filename.EmptyQ
 // Return true if hash is empty
-inline bool orgfile::ind_filename_EmptyQ() {
+inline bool orgfile::ind_filename_EmptyQ() throw() {
     return _db.ind_filename_n == 0;
 }
 
 // --- orgfile.FDb.ind_filename.N
 // Return number of items in the hash
-inline i32 orgfile::ind_filename_N() {
+inline i32 orgfile::ind_filename_N() throw() {
     return _db.ind_filename_n;
 }
 
 // --- orgfile.FDb.filehash.EmptyQ
 // Return true if index is empty
-inline bool orgfile::filehash_EmptyQ() {
+inline bool orgfile::filehash_EmptyQ() throw() {
     return _db.filehash_n == 0;
 }
 
 // --- orgfile.FDb.filehash.Find
 // Look up row by row id. Return NULL if out of range
-inline orgfile::FFilehash* orgfile::filehash_Find(u64 t) {
+inline orgfile::FFilehash* orgfile::filehash_Find(u64 t) throw() {
     orgfile::FFilehash *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.filehash_n))) {
         u64 x = t + 1;
@@ -66,19 +66,19 @@ inline orgfile::FFilehash* orgfile::filehash_Find(u64 t) {
 
 // --- orgfile.FDb.filehash.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline orgfile::FFilehash* orgfile::filehash_Last() {
+inline orgfile::FFilehash* orgfile::filehash_Last() throw() {
     return filehash_Find(u64(_db.filehash_n-1));
 }
 
 // --- orgfile.FDb.filehash.N
 // Return number of items in the pool
-inline i32 orgfile::filehash_N() {
+inline i32 orgfile::filehash_N() throw() {
     return _db.filehash_n;
 }
 
 // --- orgfile.FDb.filehash.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline orgfile::FFilehash& orgfile::filehash_qFind(u64 t) {
+inline orgfile::FFilehash& orgfile::filehash_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -88,25 +88,25 @@ inline orgfile::FFilehash& orgfile::filehash_qFind(u64 t) {
 
 // --- orgfile.FDb.ind_filehash.EmptyQ
 // Return true if hash is empty
-inline bool orgfile::ind_filehash_EmptyQ() {
+inline bool orgfile::ind_filehash_EmptyQ() throw() {
     return _db.ind_filehash_n == 0;
 }
 
 // --- orgfile.FDb.ind_filehash.N
 // Return number of items in the hash
-inline i32 orgfile::ind_filehash_N() {
+inline i32 orgfile::ind_filehash_N() throw() {
     return _db.ind_filehash_n;
 }
 
 // --- orgfile.FDb.timefmt.EmptyQ
 // Return true if index is empty
-inline bool orgfile::timefmt_EmptyQ() {
+inline bool orgfile::timefmt_EmptyQ() throw() {
     return _db.timefmt_n == 0;
 }
 
 // --- orgfile.FDb.timefmt.Find
 // Look up row by row id. Return NULL if out of range
-inline orgfile::FTimefmt* orgfile::timefmt_Find(u64 t) {
+inline orgfile::FTimefmt* orgfile::timefmt_Find(u64 t) throw() {
     orgfile::FTimefmt *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.timefmt_n))) {
         u64 x = t + 1;
@@ -120,19 +120,19 @@ inline orgfile::FTimefmt* orgfile::timefmt_Find(u64 t) {
 
 // --- orgfile.FDb.timefmt.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline orgfile::FTimefmt* orgfile::timefmt_Last() {
+inline orgfile::FTimefmt* orgfile::timefmt_Last() throw() {
     return timefmt_Find(u64(_db.timefmt_n-1));
 }
 
 // --- orgfile.FDb.timefmt.N
 // Return number of items in the pool
-inline i32 orgfile::timefmt_N() {
+inline i32 orgfile::timefmt_N() throw() {
     return _db.timefmt_n;
 }
 
 // --- orgfile.FDb.timefmt.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline orgfile::FTimefmt& orgfile::timefmt_qFind(u64 t) {
+inline orgfile::FTimefmt& orgfile::timefmt_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -142,63 +142,63 @@ inline orgfile::FTimefmt& orgfile::timefmt_qFind(u64 t) {
 
 // --- orgfile.FDb.filehash_curs.Reset
 // cursor points to valid item
-inline void orgfile::_db_filehash_curs_Reset(_db_filehash_curs &curs, orgfile::FDb &parent) {
+inline void orgfile::_db_filehash_curs_Reset(_db_filehash_curs &curs, orgfile::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- orgfile.FDb.filehash_curs.ValidQ
 // cursor points to valid item
-inline bool orgfile::_db_filehash_curs_ValidQ(_db_filehash_curs &curs) {
+inline bool orgfile::_db_filehash_curs_ValidQ(_db_filehash_curs &curs) throw() {
     return curs.index < _db.filehash_n;
 }
 
 // --- orgfile.FDb.filehash_curs.Next
 // proceed to next item
-inline void orgfile::_db_filehash_curs_Next(_db_filehash_curs &curs) {
+inline void orgfile::_db_filehash_curs_Next(_db_filehash_curs &curs) throw() {
     curs.index++;
 }
 
 // --- orgfile.FDb.filehash_curs.Access
 // item access
-inline orgfile::FFilehash& orgfile::_db_filehash_curs_Access(_db_filehash_curs &curs) {
+inline orgfile::FFilehash& orgfile::_db_filehash_curs_Access(_db_filehash_curs &curs) throw() {
     return filehash_qFind(u64(curs.index));
 }
 
 // --- orgfile.FDb.timefmt_curs.Reset
 // cursor points to valid item
-inline void orgfile::_db_timefmt_curs_Reset(_db_timefmt_curs &curs, orgfile::FDb &parent) {
+inline void orgfile::_db_timefmt_curs_Reset(_db_timefmt_curs &curs, orgfile::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- orgfile.FDb.timefmt_curs.ValidQ
 // cursor points to valid item
-inline bool orgfile::_db_timefmt_curs_ValidQ(_db_timefmt_curs &curs) {
+inline bool orgfile::_db_timefmt_curs_ValidQ(_db_timefmt_curs &curs) throw() {
     return curs.index < _db.timefmt_n;
 }
 
 // --- orgfile.FDb.timefmt_curs.Next
 // proceed to next item
-inline void orgfile::_db_timefmt_curs_Next(_db_timefmt_curs &curs) {
+inline void orgfile::_db_timefmt_curs_Next(_db_timefmt_curs &curs) throw() {
     curs.index++;
 }
 
 // --- orgfile.FDb.timefmt_curs.Access
 // item access
-inline orgfile::FTimefmt& orgfile::_db_timefmt_curs_Access(_db_timefmt_curs &curs) {
+inline orgfile::FTimefmt& orgfile::_db_timefmt_curs_Access(_db_timefmt_curs &curs) throw() {
     return timefmt_qFind(u64(curs.index));
 }
 
 // --- orgfile.FFilehash.c_filename.EmptyQ
 // Return true if index is empty
-inline bool orgfile::c_filename_EmptyQ(orgfile::FFilehash& filehash) {
+inline bool orgfile::c_filename_EmptyQ(orgfile::FFilehash& filehash) throw() {
     return filehash.c_filename_n == 0;
 }
 
 // --- orgfile.FFilehash.c_filename.Find
 // Look up row by row id. Return NULL if out of range
-inline orgfile::FFilename* orgfile::c_filename_Find(orgfile::FFilehash& filehash, u32 t) {
+inline orgfile::FFilename* orgfile::c_filename_Find(orgfile::FFilehash& filehash, u32 t) throw() {
     orgfile::FFilename *retval = NULL;
     u64 idx = t;
     u64 lim = filehash.c_filename_n;
@@ -210,19 +210,19 @@ inline orgfile::FFilename* orgfile::c_filename_Find(orgfile::FFilehash& filehash
 
 // --- orgfile.FFilehash.c_filename.Getary
 // Return array of pointers
-inline algo::aryptr<orgfile::FFilename*> orgfile::c_filename_Getary(orgfile::FFilehash& filehash) {
+inline algo::aryptr<orgfile::FFilename*> orgfile::c_filename_Getary(orgfile::FFilehash& filehash) throw() {
     return algo::aryptr<orgfile::FFilename*>(filehash.c_filename_elems, filehash.c_filename_n);
 }
 
 // --- orgfile.FFilehash.c_filename.N
 // Return number of items in the pointer array
-inline i32 orgfile::c_filename_N(const orgfile::FFilehash& filehash) {
+inline i32 orgfile::c_filename_N(const orgfile::FFilehash& filehash) throw() {
     return filehash.c_filename_n;
 }
 
 // --- orgfile.FFilehash.c_filename.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void orgfile::c_filename_RemoveAll(orgfile::FFilehash& filehash) {
+inline void orgfile::c_filename_RemoveAll(orgfile::FFilehash& filehash) throw() {
     for (u32 i = 0; i < filehash.c_filename_n; i++) {
         // mark all elements as not-in-array
         filehash.c_filename_elems[i]->filehash_c_filename_in_ary = false;
@@ -232,19 +232,19 @@ inline void orgfile::c_filename_RemoveAll(orgfile::FFilehash& filehash) {
 
 // --- orgfile.FFilehash.c_filename.qFind
 // Return reference without bounds checking
-inline orgfile::FFilename& orgfile::c_filename_qFind(orgfile::FFilehash& filehash, u32 idx) {
+inline orgfile::FFilename& orgfile::c_filename_qFind(orgfile::FFilehash& filehash, u32 idx) throw() {
     return *filehash.c_filename_elems[idx];
 }
 
 // --- orgfile.FFilehash.c_filename.InAryQ
 // True if row is in any ptrary instance
-inline bool orgfile::filehash_c_filename_InAryQ(orgfile::FFilename& row) {
+inline bool orgfile::filehash_c_filename_InAryQ(orgfile::FFilename& row) throw() {
     return row.filehash_c_filename_in_ary;
 }
 
 // --- orgfile.FFilehash.c_filename.qLast
 // Reference to last element without bounds checking
-inline orgfile::FFilename& orgfile::c_filename_qLast(orgfile::FFilehash& filehash) {
+inline orgfile::FFilename& orgfile::c_filename_qLast(orgfile::FFilehash& filehash) throw() {
     return *filehash.c_filename_elems[filehash.c_filename_n-1];
 }
 
@@ -258,7 +258,7 @@ inline void orgfile::FFilehash_Init(orgfile::FFilehash& filehash) {
 }
 
 // --- orgfile.FFilehash.c_filename_curs.Reset
-inline void orgfile::filehash_c_filename_curs_Reset(filehash_c_filename_curs &curs, orgfile::FFilehash &parent) {
+inline void orgfile::filehash_c_filename_curs_Reset(filehash_c_filename_curs &curs, orgfile::FFilehash &parent) throw() {
     curs.elems = parent.c_filename_elems;
     curs.n_elems = parent.c_filename_n;
     curs.index = 0;
@@ -266,29 +266,29 @@ inline void orgfile::filehash_c_filename_curs_Reset(filehash_c_filename_curs &cu
 
 // --- orgfile.FFilehash.c_filename_curs.ValidQ
 // cursor points to valid item
-inline bool orgfile::filehash_c_filename_curs_ValidQ(filehash_c_filename_curs &curs) {
+inline bool orgfile::filehash_c_filename_curs_ValidQ(filehash_c_filename_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- orgfile.FFilehash.c_filename_curs.Next
 // proceed to next item
-inline void orgfile::filehash_c_filename_curs_Next(filehash_c_filename_curs &curs) {
+inline void orgfile::filehash_c_filename_curs_Next(filehash_c_filename_curs &curs) throw() {
     curs.index++;
 }
 
 // --- orgfile.FFilehash.c_filename_curs.Access
 // item access
-inline orgfile::FFilename& orgfile::filehash_c_filename_curs_Access(filehash_c_filename_curs &curs) {
+inline orgfile::FFilename& orgfile::filehash_c_filename_curs_Access(filehash_c_filename_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- orgfile.FFilehash..Ctor
-inline  orgfile::FFilehash::FFilehash() {
+inline  orgfile::FFilehash::FFilehash() throw() {
     orgfile::FFilehash_Init(*this);
 }
 
 // --- orgfile.FFilehash..Dtor
-inline  orgfile::FFilehash::~FFilehash() {
+inline  orgfile::FFilehash::~FFilehash() throw() {
     orgfile::FFilehash_Uninit(*this);
 }
 
@@ -302,12 +302,12 @@ inline void orgfile::FFilename_Init(orgfile::FFilename& filename) {
 }
 
 // --- orgfile.FFilename..Ctor
-inline  orgfile::FFilename::FFilename() {
+inline  orgfile::FFilename::FFilename() throw() {
     orgfile::FFilename_Init(*this);
 }
 
 // --- orgfile.FFilename..Dtor
-inline  orgfile::FFilename::~FFilename() {
+inline  orgfile::FFilename::~FFilename() throw() {
     orgfile::FFilename_Uninit(*this);
 }
 
@@ -318,24 +318,24 @@ inline void orgfile::FTimefmt_Init(orgfile::FTimefmt& timefmt) {
 }
 
 // --- orgfile.FTimefmt..Ctor
-inline  orgfile::FTimefmt::FTimefmt() {
+inline  orgfile::FTimefmt::FTimefmt() throw() {
     orgfile::FTimefmt_Init(*this);
 }
 
 // --- orgfile.FieldId.value.GetEnum
 // Get value of field as enum type
-inline orgfile_FieldIdEnum orgfile::value_GetEnum(const orgfile::FieldId& parent) {
+inline orgfile_FieldIdEnum orgfile::value_GetEnum(const orgfile::FieldId& parent) throw() {
     return orgfile_FieldIdEnum(parent.value);
 }
 
 // --- orgfile.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void orgfile::value_SetEnum(orgfile::FieldId& parent, orgfile_FieldIdEnum rhs) {
+inline void orgfile::value_SetEnum(orgfile::FieldId& parent, orgfile_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- orgfile.FieldId.value.Cast
-inline  orgfile::FieldId::operator orgfile_FieldIdEnum() const {
+inline  orgfile::FieldId::operator orgfile_FieldIdEnum() const throw() {
     return orgfile_FieldIdEnum((*this).value);
 }
 
@@ -346,35 +346,35 @@ inline void orgfile::FieldId_Init(orgfile::FieldId& parent) {
 }
 
 // --- orgfile.FieldId..Ctor
-inline  orgfile::FieldId::FieldId() {
+inline  orgfile::FieldId::FieldId() throw() {
     orgfile::FieldId_Init(*this);
 }
 
 // --- orgfile.FieldId..FieldwiseCtor
-inline  orgfile::FieldId::FieldId(i32 in_value)
+inline  orgfile::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- orgfile.FieldId..EnumCtor
-inline  orgfile::FieldId::FieldId(orgfile_FieldIdEnum arg) {
+inline  orgfile::FieldId::FieldId(orgfile_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- orgfile.TableId.value.GetEnum
 // Get value of field as enum type
-inline orgfile_TableIdEnum orgfile::value_GetEnum(const orgfile::TableId& parent) {
+inline orgfile_TableIdEnum orgfile::value_GetEnum(const orgfile::TableId& parent) throw() {
     return orgfile_TableIdEnum(parent.value);
 }
 
 // --- orgfile.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void orgfile::value_SetEnum(orgfile::TableId& parent, orgfile_TableIdEnum rhs) {
+inline void orgfile::value_SetEnum(orgfile::TableId& parent, orgfile_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- orgfile.TableId.value.Cast
-inline  orgfile::TableId::operator orgfile_TableIdEnum() const {
+inline  orgfile::TableId::operator orgfile_TableIdEnum() const throw() {
     return orgfile_TableIdEnum((*this).value);
 }
 
@@ -385,27 +385,27 @@ inline void orgfile::TableId_Init(orgfile::TableId& parent) {
 }
 
 // --- orgfile.TableId..Ctor
-inline  orgfile::TableId::TableId() {
+inline  orgfile::TableId::TableId() throw() {
     orgfile::TableId_Init(*this);
 }
 
 // --- orgfile.TableId..FieldwiseCtor
-inline  orgfile::TableId::TableId(i32 in_value)
+inline  orgfile::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- orgfile.TableId..EnumCtor
-inline  orgfile::TableId::TableId(orgfile_TableIdEnum arg) {
+inline  orgfile::TableId::TableId(orgfile_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- orgfile.dedup..Ctor
-inline  orgfile::dedup::dedup() {
+inline  orgfile::dedup::dedup() throw() {
 }
 
 // --- orgfile.move..Ctor
-inline  orgfile::move::move() {
+inline  orgfile::move::move() throw() {
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const orgfile::trace &row) {// cfmt:orgfile.trace.String

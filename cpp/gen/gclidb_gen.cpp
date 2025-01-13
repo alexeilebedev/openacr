@@ -209,7 +209,7 @@ namespace gclidb { // gen:ns_print_proto
 // --- gclidb.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* gclidb::value_ToCstr(const gclidb::FieldId& parent) {
+const char* gclidb::value_ToCstr(const gclidb::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case gclidb_FieldId_gact           : ret = "gact";  break;
@@ -319,7 +319,7 @@ const char* gclidb::value_ToCstr(const gclidb::FieldId& parent) {
 // --- gclidb.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void gclidb::value_Print(const gclidb::FieldId& parent, algo::cstring &lhs) {
+void gclidb::value_Print(const gclidb::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -332,7 +332,7 @@ void gclidb::value_Print(const gclidb::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
+bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 1: {
@@ -734,13 +734,13 @@ bool gclidb::value_SetStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
 // --- gclidb.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void gclidb::value_SetStrptr(gclidb::FieldId& parent, algo::strptr rhs, gclidb_FieldIdEnum dflt) {
+void gclidb::value_SetStrptr(gclidb::FieldId& parent, algo::strptr rhs, gclidb_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- gclidb.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool gclidb::value_ReadStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
+bool gclidb::value_ReadStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -752,7 +752,7 @@ bool gclidb::value_ReadStrptrMaybe(gclidb::FieldId& parent, algo::strptr rhs) {
 // --- gclidb.FieldId..ReadStrptrMaybe
 // Read fields of gclidb::FieldId from an ascii string.
 // The format of the string is the format of the gclidb::FieldId's only field
-bool gclidb::FieldId_ReadStrptrMaybe(gclidb::FieldId &parent, algo::strptr in_str) {
+bool gclidb::FieldId_ReadStrptrMaybe(gclidb::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -761,12 +761,12 @@ bool gclidb::FieldId_ReadStrptrMaybe(gclidb::FieldId &parent, algo::strptr in_st
 // --- gclidb.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.FieldId.String  printfmt:Raw
-void gclidb::FieldId_Print(gclidb::FieldId& row, algo::cstring& str) {
+void gclidb::FieldId_Print(gclidb::FieldId& row, algo::cstring& str) throw() {
     gclidb::value_Print(row, str);
 }
 
 // --- gclidb.Gact..ReadFieldMaybe
-bool gclidb::Gact_ReadFieldMaybe(gclidb::Gact& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gact_ReadFieldMaybe(gclidb::Gact& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -790,7 +790,7 @@ bool gclidb::Gact_ReadFieldMaybe(gclidb::Gact& parent, algo::strptr field, algo:
 // --- gclidb.Gact..ReadStrptrMaybe
 // Read fields of gclidb::Gact from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gact_ReadStrptrMaybe(gclidb::Gact &parent, algo::strptr in_str) {
+bool gclidb::Gact_ReadStrptrMaybe(gclidb::Gact &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gact") || algo::StripTypeTag(in_str, "gclidb.Gact");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -802,7 +802,7 @@ bool gclidb::Gact_ReadStrptrMaybe(gclidb::Gact &parent, algo::strptr in_str) {
 // --- gclidb.Gact..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gact.String  printfmt:Tuple
-void gclidb::Gact_Print(gclidb::Gact& row, algo::cstring& str) {
+void gclidb::Gact_Print(gclidb::Gact& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gact";
 
@@ -814,7 +814,7 @@ void gclidb::Gact_Print(gclidb::Gact& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gatv..ReadFieldMaybe
-bool gclidb::Gatv_ReadFieldMaybe(gclidb::Gatv& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gatv_ReadFieldMaybe(gclidb::Gatv& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -838,7 +838,7 @@ bool gclidb::Gatv_ReadFieldMaybe(gclidb::Gatv& parent, algo::strptr field, algo:
 // --- gclidb.Gatv..ReadStrptrMaybe
 // Read fields of gclidb::Gatv from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gatv_ReadStrptrMaybe(gclidb::Gatv &parent, algo::strptr in_str) {
+bool gclidb::Gatv_ReadStrptrMaybe(gclidb::Gatv &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gatv") || algo::StripTypeTag(in_str, "gclidb.Gatv");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -850,7 +850,7 @@ bool gclidb::Gatv_ReadStrptrMaybe(gclidb::Gatv &parent, algo::strptr in_str) {
 // --- gclidb.Gatv..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gatv.String  printfmt:Tuple
-void gclidb::Gatv_Print(gclidb::Gatv& row, algo::cstring& str) {
+void gclidb::Gatv_Print(gclidb::Gatv& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gatv";
 
@@ -862,7 +862,7 @@ void gclidb::Gatv_Print(gclidb::Gatv& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gclicmd..ReadFieldMaybe
-bool gclidb::Gclicmd_ReadFieldMaybe(gclidb::Gclicmd& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gclicmd_ReadFieldMaybe(gclidb::Gclicmd& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -890,7 +890,7 @@ bool gclidb::Gclicmd_ReadFieldMaybe(gclidb::Gclicmd& parent, algo::strptr field,
 // --- gclidb.Gclicmd..ReadStrptrMaybe
 // Read fields of gclidb::Gclicmd from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gclicmd_ReadStrptrMaybe(gclidb::Gclicmd &parent, algo::strptr in_str) {
+bool gclidb::Gclicmd_ReadStrptrMaybe(gclidb::Gclicmd &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gclicmd") || algo::StripTypeTag(in_str, "gclidb.Gclicmd");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -902,7 +902,7 @@ bool gclidb::Gclicmd_ReadStrptrMaybe(gclidb::Gclicmd &parent, algo::strptr in_st
 // --- gclidb.Gclicmd..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gclicmd.String  printfmt:Tuple
-void gclidb::Gclicmd_Print(gclidb::Gclicmd& row, algo::cstring& str) {
+void gclidb::Gclicmd_Print(gclidb::Gclicmd& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gclicmd";
 
@@ -917,49 +917,49 @@ void gclidb::Gclicmd_Print(gclidb::Gclicmd& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gclicmdf2j.gclicmdf.Get
-algo::cstring gclidb::gclicmdf_Get(gclidb::Gclicmdf2j& parent) {
+algo::cstring gclidb::gclicmdf_Get(gclidb::Gclicmdf2j& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.gclicmdf2j, "@LL"));
     return ret;
 }
 
 // --- gclidb.Gclicmdf2j.gclicmdf.Get2
-algo::cstring gclidb::Gclicmdf2j_gclicmdf_Get(algo::strptr arg) {
+algo::cstring gclidb::Gclicmdf2j_gclicmdf_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, "@LL"));
     return ret;
 }
 
 // --- gclidb.Gclicmdf2j.gclicmd.Get
-algo::Smallstr250 gclidb::gclicmd_Get(gclidb::Gclicmdf2j& parent) {
+algo::Smallstr250 gclidb::gclicmd_Get(gclidb::Gclicmdf2j& parent) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(parent.gclicmdf2j, "/LL"));
     return ret;
 }
 
 // --- gclidb.Gclicmdf2j.gclicmd.Get2
-algo::Smallstr250 gclidb::Gclicmdf2j_gclicmd_Get(algo::strptr arg) {
+algo::Smallstr250 gclidb::Gclicmdf2j_gclicmd_Get(algo::strptr arg) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(arg, "/LL"));
     return ret;
 }
 
 // --- gclidb.Gclicmdf2j.field.Get
-algo::Smallstr100 gclidb::field_Get(gclidb::Gclicmdf2j& parent) {
+algo::Smallstr100 gclidb::field_Get(gclidb::Gclicmdf2j& parent) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(parent.gclicmdf2j, "/LR@LL"));
     return ret;
 }
 
 // --- gclidb.Gclicmdf2j.field.Get2
-algo::Smallstr100 gclidb::Gclicmdf2j_field_Get(algo::strptr arg) {
+algo::Smallstr100 gclidb::Gclicmdf2j_field_Get(algo::strptr arg) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(arg, "/LR@LL"));
     return ret;
 }
 
 // --- gclidb.Gclicmdf2j.jkey.Get
-algo::cstring gclidb::jkey_Get(gclidb::Gclicmdf2j& parent) {
+algo::cstring gclidb::jkey_Get(gclidb::Gclicmdf2j& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.gclicmdf2j, "/LR@LR"));
     return ret;
 }
 
 // --- gclidb.Gclicmdf2j.jkey.Get2
-algo::cstring gclidb::Gclicmdf2j_jkey_Get(algo::strptr arg) {
+algo::cstring gclidb::Gclicmdf2j_jkey_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, "/LR@LR"));
     return ret;
 }
@@ -970,7 +970,7 @@ tempstr gclidb::Gclicmdf2j_Concat_gclicmd_field_jkey( const algo::strptr& gclicm
 }
 
 // --- gclidb.Gclicmdf2j..ReadFieldMaybe
-bool gclidb::Gclicmdf2j_ReadFieldMaybe(gclidb::Gclicmdf2j& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gclicmdf2j_ReadFieldMaybe(gclidb::Gclicmdf2j& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1014,7 +1014,7 @@ bool gclidb::Gclicmdf2j_ReadFieldMaybe(gclidb::Gclicmdf2j& parent, algo::strptr 
 // --- gclidb.Gclicmdf2j..ReadStrptrMaybe
 // Read fields of gclidb::Gclicmdf2j from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gclicmdf2j_ReadStrptrMaybe(gclidb::Gclicmdf2j &parent, algo::strptr in_str) {
+bool gclidb::Gclicmdf2j_ReadStrptrMaybe(gclidb::Gclicmdf2j &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gclicmdf2j") || algo::StripTypeTag(in_str, "gclidb.Gclicmdf2j");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1026,7 +1026,7 @@ bool gclidb::Gclicmdf2j_ReadStrptrMaybe(gclidb::Gclicmdf2j &parent, algo::strptr
 // --- gclidb.Gclicmdf2j..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gclicmdf2j.String  printfmt:Tuple
-void gclidb::Gclicmdf2j_Print(gclidb::Gclicmdf2j& row, algo::cstring& str) {
+void gclidb::Gclicmdf2j_Print(gclidb::Gclicmdf2j& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gclicmdf2j";
 
@@ -1041,25 +1041,25 @@ void gclidb::Gclicmdf2j_Print(gclidb::Gclicmdf2j& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gclicmdt.gclicmd.Get
-algo::Smallstr250 gclidb::gclicmd_Get(gclidb::Gclicmdt& parent) {
+algo::Smallstr250 gclidb::gclicmd_Get(gclidb::Gclicmdt& parent) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(parent.gclicmdt, ".RL"));
     return ret;
 }
 
 // --- gclidb.Gclicmdt.gclicmd.Get2
-algo::Smallstr250 gclidb::Gclicmdt_gclicmd_Get(algo::strptr arg) {
+algo::Smallstr250 gclidb::Gclicmdt_gclicmd_Get(algo::strptr arg) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- gclidb.Gclicmdt.gtype.Get
-algo::Smallstr50 gclidb::gtype_Get(gclidb::Gclicmdt& parent) {
+algo::Smallstr50 gclidb::gtype_Get(gclidb::Gclicmdt& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gclicmdt, ".RR"));
     return ret;
 }
 
 // --- gclidb.Gclicmdt.gtype.Get2
-algo::Smallstr50 gclidb::Gclicmdt_gtype_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Gclicmdt_gtype_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -1070,7 +1070,7 @@ tempstr gclidb::Gclicmdt_Concat_gclicmd_gtype( const algo::strptr& gclicmd ,cons
 }
 
 // --- gclidb.Gclicmdt..ReadFieldMaybe
-bool gclidb::Gclicmdt_ReadFieldMaybe(gclidb::Gclicmdt& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gclicmdt_ReadFieldMaybe(gclidb::Gclicmdt& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1110,7 +1110,7 @@ bool gclidb::Gclicmdt_ReadFieldMaybe(gclidb::Gclicmdt& parent, algo::strptr fiel
 // --- gclidb.Gclicmdt..ReadStrptrMaybe
 // Read fields of gclidb::Gclicmdt from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gclicmdt_ReadStrptrMaybe(gclidb::Gclicmdt &parent, algo::strptr in_str) {
+bool gclidb::Gclicmdt_ReadStrptrMaybe(gclidb::Gclicmdt &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gclicmdt") || algo::StripTypeTag(in_str, "gclidb.Gclicmdt");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1122,7 +1122,7 @@ bool gclidb::Gclicmdt_ReadStrptrMaybe(gclidb::Gclicmdt &parent, algo::strptr in_
 // --- gclidb.Gclicmdt..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gclicmdt.String  printfmt:Tuple
-void gclidb::Gclicmdt_Print(gclidb::Gclicmdt& row, algo::cstring& str) {
+void gclidb::Gclicmdt_Print(gclidb::Gclicmdt& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gclicmdt";
 
@@ -1140,7 +1140,7 @@ void gclidb::Gclicmdt_Print(gclidb::Gclicmdt& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gclienv..ReadFieldMaybe
-bool gclidb::Gclienv_ReadFieldMaybe(gclidb::Gclienv& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gclienv_ReadFieldMaybe(gclidb::Gclienv& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1168,7 +1168,7 @@ bool gclidb::Gclienv_ReadFieldMaybe(gclidb::Gclienv& parent, algo::strptr field,
 // --- gclidb.Gclienv..ReadStrptrMaybe
 // Read fields of gclidb::Gclienv from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gclienv_ReadStrptrMaybe(gclidb::Gclienv &parent, algo::strptr in_str) {
+bool gclidb::Gclienv_ReadStrptrMaybe(gclidb::Gclienv &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gclienv") || algo::StripTypeTag(in_str, "gclidb.Gclienv");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1180,7 +1180,7 @@ bool gclidb::Gclienv_ReadStrptrMaybe(gclidb::Gclienv &parent, algo::strptr in_st
 // --- gclidb.Gclienv..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gclienv.String  printfmt:Tuple
-void gclidb::Gclienv_Print(gclidb::Gclienv& row, algo::cstring& str) {
+void gclidb::Gclienv_Print(gclidb::Gclienv& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gclienv";
 
@@ -1195,25 +1195,25 @@ void gclidb::Gclienv_Print(gclidb::Gclienv& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gclienvsub.gclienv.Get
-algo::Smallstr50 gclidb::gclienv_Get(gclidb::Gclienvsub& parent) {
+algo::Smallstr50 gclidb::gclienv_Get(gclidb::Gclienvsub& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gclienvsub, ".LL"));
     return ret;
 }
 
 // --- gclidb.Gclienvsub.gclienv.Get2
-algo::Smallstr50 gclidb::Gclienvsub_gclienv_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Gclienvsub_gclienv_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
 
 // --- gclidb.Gclienvsub.sub.Get
-algo::Smallstr50 gclidb::sub_Get(gclidb::Gclienvsub& parent) {
+algo::Smallstr50 gclidb::sub_Get(gclidb::Gclienvsub& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gclienvsub, ".LR"));
     return ret;
 }
 
 // --- gclidb.Gclienvsub.sub.Get2
-algo::Smallstr50 gclidb::Gclienvsub_sub_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Gclienvsub_sub_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LR"));
     return ret;
 }
@@ -1224,7 +1224,7 @@ tempstr gclidb::Gclienvsub_Concat_gclienv_sub( const algo::strptr& gclienv ,cons
 }
 
 // --- gclidb.Gclienvsub..ReadFieldMaybe
-bool gclidb::Gclienvsub_ReadFieldMaybe(gclidb::Gclienvsub& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gclienvsub_ReadFieldMaybe(gclidb::Gclienvsub& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1264,7 +1264,7 @@ bool gclidb::Gclienvsub_ReadFieldMaybe(gclidb::Gclienvsub& parent, algo::strptr 
 // --- gclidb.Gclienvsub..ReadStrptrMaybe
 // Read fields of gclidb::Gclienvsub from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gclienvsub_ReadStrptrMaybe(gclidb::Gclienvsub &parent, algo::strptr in_str) {
+bool gclidb::Gclienvsub_ReadStrptrMaybe(gclidb::Gclienvsub &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gclienvsub") || algo::StripTypeTag(in_str, "gclidb.Gclienvsub");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1276,7 +1276,7 @@ bool gclidb::Gclienvsub_ReadStrptrMaybe(gclidb::Gclienvsub &parent, algo::strptr
 // --- gclidb.Gclienvsub..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gclienvsub.String  printfmt:Tuple
-void gclidb::Gclienvsub_Print(gclidb::Gclienvsub& row, algo::cstring& str) {
+void gclidb::Gclienvsub_Print(gclidb::Gclienvsub& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gclienvsub";
 
@@ -1294,7 +1294,7 @@ void gclidb::Gclienvsub_Print(gclidb::Gclienvsub& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gclisub..ReadFieldMaybe
-bool gclidb::Gclisub_ReadFieldMaybe(gclidb::Gclisub& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gclisub_ReadFieldMaybe(gclidb::Gclisub& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1318,7 +1318,7 @@ bool gclidb::Gclisub_ReadFieldMaybe(gclidb::Gclisub& parent, algo::strptr field,
 // --- gclidb.Gclisub..ReadStrptrMaybe
 // Read fields of gclidb::Gclisub from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gclisub_ReadStrptrMaybe(gclidb::Gclisub &parent, algo::strptr in_str) {
+bool gclidb::Gclisub_ReadStrptrMaybe(gclidb::Gclisub &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gclisub") || algo::StripTypeTag(in_str, "gclidb.Gclisub");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1330,7 +1330,7 @@ bool gclidb::Gclisub_ReadStrptrMaybe(gclidb::Gclisub &parent, algo::strptr in_st
 // --- gclidb.Gclisub..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gclisub.String  printfmt:Tuple
-void gclidb::Gclisub_Print(gclidb::Gclisub& row, algo::cstring& str) {
+void gclidb::Gclisub_Print(gclidb::Gclisub& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gclisub";
 
@@ -1342,7 +1342,7 @@ void gclidb::Gclisub_Print(gclidb::Gclisub& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gfld..ReadFieldMaybe
-bool gclidb::Gfld_ReadFieldMaybe(gclidb::Gfld& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gfld_ReadFieldMaybe(gclidb::Gfld& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1366,7 +1366,7 @@ bool gclidb::Gfld_ReadFieldMaybe(gclidb::Gfld& parent, algo::strptr field, algo:
 // --- gclidb.Gfld..ReadStrptrMaybe
 // Read fields of gclidb::Gfld from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gfld_ReadStrptrMaybe(gclidb::Gfld &parent, algo::strptr in_str) {
+bool gclidb::Gfld_ReadStrptrMaybe(gclidb::Gfld &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gfld") || algo::StripTypeTag(in_str, "gclidb.Gfld");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1378,7 +1378,7 @@ bool gclidb::Gfld_ReadStrptrMaybe(gclidb::Gfld &parent, algo::strptr in_str) {
 // --- gclidb.Gfld..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gfld.String  printfmt:Tuple
-void gclidb::Gfld_Print(gclidb::Gfld& row, algo::cstring& str) {
+void gclidb::Gfld_Print(gclidb::Gfld& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gfld";
 
@@ -1390,37 +1390,37 @@ void gclidb::Gfld_Print(gclidb::Gfld& row, algo::cstring& str) {
 }
 
 // --- gclidb.Githost.git.Get
-algo::cstring gclidb::git_Get(gclidb::Githost& parent) {
+algo::cstring gclidb::git_Get(gclidb::Githost& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.githost, "@LL"));
     return ret;
 }
 
 // --- gclidb.Githost.git.Get2
-algo::cstring gclidb::Githost_git_Get(algo::strptr arg) {
+algo::cstring gclidb::Githost_git_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, "@LL"));
     return ret;
 }
 
 // --- gclidb.Githost.host.Get
-algo::cstring gclidb::host_Get(gclidb::Githost& parent) {
+algo::cstring gclidb::host_Get(gclidb::Githost& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.githost, "@LR:LL"));
     return ret;
 }
 
 // --- gclidb.Githost.host.Get2
-algo::cstring gclidb::Githost_host_Get(algo::strptr arg) {
+algo::cstring gclidb::Githost_host_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, "@LR:LL"));
     return ret;
 }
 
 // --- gclidb.Githost.gitrepo.Get
-algo::cstring gclidb::gitrepo_Get(gclidb::Githost& parent) {
+algo::cstring gclidb::gitrepo_Get(gclidb::Githost& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.githost, "@LR:LR"));
     return ret;
 }
 
 // --- gclidb.Githost.gitrepo.Get2
-algo::cstring gclidb::Githost_gitrepo_Get(algo::strptr arg) {
+algo::cstring gclidb::Githost_gitrepo_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, "@LR:LR"));
     return ret;
 }
@@ -1431,7 +1431,7 @@ tempstr gclidb::Githost_Concat_git_host_gitrepo( const algo::strptr& git ,const 
 }
 
 // --- gclidb.Gmethod..ReadFieldMaybe
-bool gclidb::Gmethod_ReadFieldMaybe(gclidb::Gmethod& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gmethod_ReadFieldMaybe(gclidb::Gmethod& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1459,7 +1459,7 @@ bool gclidb::Gmethod_ReadFieldMaybe(gclidb::Gmethod& parent, algo::strptr field,
 // --- gclidb.Gmethod..ReadStrptrMaybe
 // Read fields of gclidb::Gmethod from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gmethod_ReadStrptrMaybe(gclidb::Gmethod &parent, algo::strptr in_str) {
+bool gclidb::Gmethod_ReadStrptrMaybe(gclidb::Gmethod &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gmethod") || algo::StripTypeTag(in_str, "gclidb.Gmethod");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1471,7 +1471,7 @@ bool gclidb::Gmethod_ReadStrptrMaybe(gclidb::Gmethod &parent, algo::strptr in_st
 // --- gclidb.Gmethod..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gmethod.String  printfmt:Tuple
-void gclidb::Gmethod_Print(gclidb::Gmethod& row, algo::cstring& str) {
+void gclidb::Gmethod_Print(gclidb::Gmethod& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gmethod";
 
@@ -1486,25 +1486,25 @@ void gclidb::Gmethod_Print(gclidb::Gmethod& row, algo::cstring& str) {
 }
 
 // --- gclidb.Grepo.host.Get
-algo::cstring gclidb::host_Get(gclidb::Grepo& parent) {
+algo::cstring gclidb::host_Get(gclidb::Grepo& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.grepo, "@LL"));
     return ret;
 }
 
 // --- gclidb.Grepo.host.Get2
-algo::cstring gclidb::Grepo_host_Get(algo::strptr arg) {
+algo::cstring gclidb::Grepo_host_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, "@LL"));
     return ret;
 }
 
 // --- gclidb.Grepo.fname.Get
-algo::cstring gclidb::fname_Get(gclidb::Grepo& parent) {
+algo::cstring gclidb::fname_Get(gclidb::Grepo& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.grepo, "@LR"));
     return ret;
 }
 
 // --- gclidb.Grepo.fname.Get2
-algo::cstring gclidb::Grepo_fname_Get(algo::strptr arg) {
+algo::cstring gclidb::Grepo_fname_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, "@LR"));
     return ret;
 }
@@ -1515,7 +1515,7 @@ tempstr gclidb::Grepo_Concat_host_fname( const algo::strptr& host ,const algo::s
 }
 
 // --- gclidb.Grepo..ReadFieldMaybe
-bool gclidb::Grepo_ReadFieldMaybe(gclidb::Grepo& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Grepo_ReadFieldMaybe(gclidb::Grepo& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1579,7 +1579,7 @@ bool gclidb::Grepo_ReadFieldMaybe(gclidb::Grepo& parent, algo::strptr field, alg
 // --- gclidb.Grepo..ReadStrptrMaybe
 // Read fields of gclidb::Grepo from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Grepo_ReadStrptrMaybe(gclidb::Grepo &parent, algo::strptr in_str) {
+bool gclidb::Grepo_ReadStrptrMaybe(gclidb::Grepo &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.grepo") || algo::StripTypeTag(in_str, "gclidb.Grepo");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1598,7 +1598,7 @@ void gclidb::Grepo_Init(gclidb::Grepo& parent) {
 // --- gclidb.Grepo..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Grepo.String  printfmt:Tuple
-void gclidb::Grepo_Print(gclidb::Grepo& row, algo::cstring& str) {
+void gclidb::Grepo_Print(gclidb::Grepo& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.grepo";
 
@@ -1634,7 +1634,7 @@ void gclidb::Grepo_Print(gclidb::Grepo& row, algo::cstring& str) {
 }
 
 // --- gclidb.Grepogitport..ReadFieldMaybe
-bool gclidb::Grepogitport_ReadFieldMaybe(gclidb::Grepogitport& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Grepogitport_ReadFieldMaybe(gclidb::Grepogitport& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1662,7 +1662,7 @@ bool gclidb::Grepogitport_ReadFieldMaybe(gclidb::Grepogitport& parent, algo::str
 // --- gclidb.Grepogitport..ReadStrptrMaybe
 // Read fields of gclidb::Grepogitport from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Grepogitport_ReadStrptrMaybe(gclidb::Grepogitport &parent, algo::strptr in_str) {
+bool gclidb::Grepogitport_ReadStrptrMaybe(gclidb::Grepogitport &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.grepogitport") || algo::StripTypeTag(in_str, "gclidb.Grepogitport");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1674,7 +1674,7 @@ bool gclidb::Grepogitport_ReadStrptrMaybe(gclidb::Grepogitport &parent, algo::st
 // --- gclidb.Grepogitport..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Grepogitport.String  printfmt:Tuple
-void gclidb::Grepogitport_Print(gclidb::Grepogitport& row, algo::cstring& str) {
+void gclidb::Grepogitport_Print(gclidb::Grepogitport& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.grepogitport";
 
@@ -1689,19 +1689,19 @@ void gclidb::Grepogitport_Print(gclidb::Grepogitport& row, algo::cstring& str) {
 }
 
 // --- gclidb.Grepossh.name.Get
-algo::cstring gclidb::name_Get(gclidb::Grepossh& parent) {
+algo::cstring gclidb::name_Get(gclidb::Grepossh& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.sshid, "/RR"));
     return ret;
 }
 
 // --- gclidb.Grepossh.name.Get2
-algo::cstring gclidb::Grepossh_name_Get(algo::strptr arg) {
+algo::cstring gclidb::Grepossh_name_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, "/RR"));
     return ret;
 }
 
 // --- gclidb.Grepossh..ReadFieldMaybe
-bool gclidb::Grepossh_ReadFieldMaybe(gclidb::Grepossh& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Grepossh_ReadFieldMaybe(gclidb::Grepossh& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1733,7 +1733,7 @@ bool gclidb::Grepossh_ReadFieldMaybe(gclidb::Grepossh& parent, algo::strptr fiel
 // --- gclidb.Grepossh..ReadStrptrMaybe
 // Read fields of gclidb::Grepossh from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Grepossh_ReadStrptrMaybe(gclidb::Grepossh &parent, algo::strptr in_str) {
+bool gclidb::Grepossh_ReadStrptrMaybe(gclidb::Grepossh &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.grepossh") || algo::StripTypeTag(in_str, "gclidb.Grepossh");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1745,7 +1745,7 @@ bool gclidb::Grepossh_ReadStrptrMaybe(gclidb::Grepossh &parent, algo::strptr in_
 // --- gclidb.Grepossh..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Grepossh.String  printfmt:Tuple
-void gclidb::Grepossh_Print(gclidb::Grepossh& row, algo::cstring& str) {
+void gclidb::Grepossh_Print(gclidb::Grepossh& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.grepossh";
 
@@ -1760,25 +1760,25 @@ void gclidb::Grepossh_Print(gclidb::Grepossh& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gstate.st.Get
-algo::cstring gclidb::st_Get(gclidb::Gstate& parent) {
+algo::cstring gclidb::st_Get(gclidb::Gstate& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.gstate, "_LL"));
     return ret;
 }
 
 // --- gclidb.Gstate.st.Get2
-algo::cstring gclidb::Gstate_st_Get(algo::strptr arg) {
+algo::cstring gclidb::Gstate_st_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, "_LL"));
     return ret;
 }
 
 // --- gclidb.Gstate.state.Get
-algo::cstring gclidb::state_Get(gclidb::Gstate& parent) {
+algo::cstring gclidb::state_Get(gclidb::Gstate& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.gstate, "_LR"));
     return ret;
 }
 
 // --- gclidb.Gstate.state.Get2
-algo::cstring gclidb::Gstate_state_Get(algo::strptr arg) {
+algo::cstring gclidb::Gstate_state_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, "_LR"));
     return ret;
 }
@@ -1789,7 +1789,7 @@ tempstr gclidb::Gstate_Concat_st_state( const algo::strptr& st ,const algo::strp
 }
 
 // --- gclidb.Gstate..ReadFieldMaybe
-bool gclidb::Gstate_ReadFieldMaybe(gclidb::Gstate& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gstate_ReadFieldMaybe(gclidb::Gstate& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1821,7 +1821,7 @@ bool gclidb::Gstate_ReadFieldMaybe(gclidb::Gstate& parent, algo::strptr field, a
 // --- gclidb.Gstate..ReadStrptrMaybe
 // Read fields of gclidb::Gstate from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gstate_ReadStrptrMaybe(gclidb::Gstate &parent, algo::strptr in_str) {
+bool gclidb::Gstate_ReadStrptrMaybe(gclidb::Gstate &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gstate") || algo::StripTypeTag(in_str, "gclidb.Gstate");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1833,7 +1833,7 @@ bool gclidb::Gstate_ReadStrptrMaybe(gclidb::Gstate &parent, algo::strptr in_str)
 // --- gclidb.Gstate..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gstate.String  printfmt:Tuple
-void gclidb::Gstate_Print(gclidb::Gstate& row, algo::cstring& str) {
+void gclidb::Gstate_Print(gclidb::Gstate& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gstate";
 
@@ -1845,25 +1845,25 @@ void gclidb::Gstate_Print(gclidb::Gstate& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gstatet.gtype.Get
-algo::Smallstr50 gclidb::gtype_Get(gclidb::Gstatet& parent) {
+algo::Smallstr50 gclidb::gtype_Get(gclidb::Gstatet& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gstatet, ".RR"));
     return ret;
 }
 
 // --- gclidb.Gstatet.gtype.Get2
-algo::Smallstr50 gclidb::Gstatet_gtype_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Gstatet_gtype_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
 
 // --- gclidb.Gstatet.gstate.Get
-algo::Smallstr50 gclidb::gstate_Get(gclidb::Gstatet& parent) {
+algo::Smallstr50 gclidb::gstate_Get(gclidb::Gstatet& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gstatet, ".RL"));
     return ret;
 }
 
 // --- gclidb.Gstatet.gstate.Get2
-algo::Smallstr50 gclidb::Gstatet_gstate_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Gstatet_gstate_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
@@ -1874,7 +1874,7 @@ tempstr gclidb::Gstatet_Concat_gstate_gtype( const algo::strptr& gstate ,const a
 }
 
 // --- gclidb.Gstatet..ReadFieldMaybe
-bool gclidb::Gstatet_ReadFieldMaybe(gclidb::Gstatet& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gstatet_ReadFieldMaybe(gclidb::Gstatet& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1906,7 +1906,7 @@ bool gclidb::Gstatet_ReadFieldMaybe(gclidb::Gstatet& parent, algo::strptr field,
 // --- gclidb.Gstatet..ReadStrptrMaybe
 // Read fields of gclidb::Gstatet from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gstatet_ReadStrptrMaybe(gclidb::Gstatet &parent, algo::strptr in_str) {
+bool gclidb::Gstatet_ReadStrptrMaybe(gclidb::Gstatet &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gstatet") || algo::StripTypeTag(in_str, "gclidb.Gstatet");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1918,7 +1918,7 @@ bool gclidb::Gstatet_ReadStrptrMaybe(gclidb::Gstatet &parent, algo::strptr in_st
 // --- gclidb.Gstatet..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gstatet.String  printfmt:Tuple
-void gclidb::Gstatet_Print(gclidb::Gstatet& row, algo::cstring& str) {
+void gclidb::Gstatet_Print(gclidb::Gstatet& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gstatet";
 
@@ -1930,7 +1930,7 @@ void gclidb::Gstatet_Print(gclidb::Gstatet& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gtbl..ReadFieldMaybe
-bool gclidb::Gtbl_ReadFieldMaybe(gclidb::Gtbl& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtbl_ReadFieldMaybe(gclidb::Gtbl& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1954,7 +1954,7 @@ bool gclidb::Gtbl_ReadFieldMaybe(gclidb::Gtbl& parent, algo::strptr field, algo:
 // --- gclidb.Gtbl..ReadStrptrMaybe
 // Read fields of gclidb::Gtbl from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gtbl_ReadStrptrMaybe(gclidb::Gtbl &parent, algo::strptr in_str) {
+bool gclidb::Gtbl_ReadStrptrMaybe(gclidb::Gtbl &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gtbl") || algo::StripTypeTag(in_str, "gclidb.Gtbl");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -1966,7 +1966,7 @@ bool gclidb::Gtbl_ReadStrptrMaybe(gclidb::Gtbl &parent, algo::strptr in_str) {
 // --- gclidb.Gtbl..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtbl.String  printfmt:Tuple
-void gclidb::Gtbl_Print(gclidb::Gtbl& row, algo::cstring& str) {
+void gclidb::Gtbl_Print(gclidb::Gtbl& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gtbl";
 
@@ -1978,25 +1978,25 @@ void gclidb::Gtbl_Print(gclidb::Gtbl& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gtblact.gtbl.Get
-algo::Smallstr250 gclidb::gtbl_Get(gclidb::Gtblact& parent) {
+algo::Smallstr250 gclidb::gtbl_Get(gclidb::Gtblact& parent) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(parent.gtblact, "_LL"));
     return ret;
 }
 
 // --- gclidb.Gtblact.gtbl.Get2
-algo::Smallstr250 gclidb::Gtblact_gtbl_Get(algo::strptr arg) {
+algo::Smallstr250 gclidb::Gtblact_gtbl_Get(algo::strptr arg) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(arg, "_LL"));
     return ret;
 }
 
 // --- gclidb.Gtblact.gact.Get
-algo::Smallstr50 gclidb::gact_Get(gclidb::Gtblact& parent) {
+algo::Smallstr50 gclidb::gact_Get(gclidb::Gtblact& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gtblact, "_LR"));
     return ret;
 }
 
 // --- gclidb.Gtblact.gact.Get2
-algo::Smallstr50 gclidb::Gtblact_gact_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Gtblact_gact_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, "_LR"));
     return ret;
 }
@@ -2007,7 +2007,7 @@ tempstr gclidb::Gtblact_Concat_gtbl_gact( const algo::strptr& gtbl ,const algo::
 }
 
 // --- gclidb.Gtblact..ReadFieldMaybe
-bool gclidb::Gtblact_ReadFieldMaybe(gclidb::Gtblact& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtblact_ReadFieldMaybe(gclidb::Gtblact& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2047,7 +2047,7 @@ bool gclidb::Gtblact_ReadFieldMaybe(gclidb::Gtblact& parent, algo::strptr field,
 // --- gclidb.Gtblact..ReadStrptrMaybe
 // Read fields of gclidb::Gtblact from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gtblact_ReadStrptrMaybe(gclidb::Gtblact &parent, algo::strptr in_str) {
+bool gclidb::Gtblact_ReadStrptrMaybe(gclidb::Gtblact &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gtblact") || algo::StripTypeTag(in_str, "gclidb.Gtblact");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2059,7 +2059,7 @@ bool gclidb::Gtblact_ReadStrptrMaybe(gclidb::Gtblact &parent, algo::strptr in_st
 // --- gclidb.Gtblact..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtblact.String  printfmt:Tuple
-void gclidb::Gtblact_Print(gclidb::Gtblact& row, algo::cstring& str) {
+void gclidb::Gtblact_Print(gclidb::Gtblact& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gtblact";
 
@@ -2077,25 +2077,25 @@ void gclidb::Gtblact_Print(gclidb::Gtblact& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gtblactfld.gtblact.Get
-algo::Smallstr50 gclidb::gtblact_Get(gclidb::Gtblactfld& parent) {
+algo::Smallstr50 gclidb::gtblact_Get(gclidb::Gtblactfld& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gtblactfld, ".RL"));
     return ret;
 }
 
 // --- gclidb.Gtblactfld.gtblact.Get2
-algo::Smallstr50 gclidb::Gtblactfld_gtblact_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Gtblactfld_gtblact_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- gclidb.Gtblactfld.field.Get
-algo::Smallstr50 gclidb::field_Get(gclidb::Gtblactfld& parent) {
+algo::Smallstr50 gclidb::field_Get(gclidb::Gtblactfld& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gtblactfld, ".RR"));
     return ret;
 }
 
 // --- gclidb.Gtblactfld.field.Get2
-algo::Smallstr50 gclidb::Gtblactfld_field_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Gtblactfld_field_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -2106,7 +2106,7 @@ tempstr gclidb::Gtblactfld_Concat_gtblact_field( const algo::strptr& gtblact ,co
 }
 
 // --- gclidb.Gtblactfld..ReadFieldMaybe
-bool gclidb::Gtblactfld_ReadFieldMaybe(gclidb::Gtblactfld& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtblactfld_ReadFieldMaybe(gclidb::Gtblactfld& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2154,7 +2154,7 @@ bool gclidb::Gtblactfld_ReadFieldMaybe(gclidb::Gtblactfld& parent, algo::strptr 
 // --- gclidb.Gtblactfld..ReadStrptrMaybe
 // Read fields of gclidb::Gtblactfld from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gtblactfld_ReadStrptrMaybe(gclidb::Gtblactfld &parent, algo::strptr in_str) {
+bool gclidb::Gtblactfld_ReadStrptrMaybe(gclidb::Gtblactfld &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gtblactfld") || algo::StripTypeTag(in_str, "gclidb.Gtblactfld");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2166,7 +2166,7 @@ bool gclidb::Gtblactfld_ReadStrptrMaybe(gclidb::Gtblactfld &parent, algo::strptr
 // --- gclidb.Gtblactfld..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtblactfld.String  printfmt:Tuple
-void gclidb::Gtblactfld_Print(gclidb::Gtblactfld& row, algo::cstring& str) {
+void gclidb::Gtblactfld_Print(gclidb::Gtblactfld& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gtblactfld";
 
@@ -2190,43 +2190,43 @@ void gclidb::Gtblactfld_Print(gclidb::Gtblactfld& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gtblacttst.gtblact.Get
-algo::Smallstr50 gclidb::gtblact_Get(gclidb::Gtblacttst& parent) {
+algo::Smallstr50 gclidb::gtblact_Get(gclidb::Gtblacttst& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gtblacttst, ".LL"));
     return ret;
 }
 
 // --- gclidb.Gtblacttst.gtblact.Get2
-algo::Smallstr50 gclidb::Gtblacttst_gtblact_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Gtblacttst_gtblact_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
 
 // --- gclidb.Gtblacttst.gclienv.Get
-algo::Smallstr50 gclidb::gclienv_Get(gclidb::Gtblacttst& parent) {
+algo::Smallstr50 gclidb::gclienv_Get(gclidb::Gtblacttst& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gtblacttst, ".LR.LL"));
     return ret;
 }
 
 // --- gclidb.Gtblacttst.gclienv.Get2
-algo::Smallstr50 gclidb::Gtblacttst_gclienv_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Gtblacttst_gclienv_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LR.LL"));
     return ret;
 }
 
 // --- gclidb.Gtblacttst.t.Get
-algo::cstring gclidb::t_Get(gclidb::Gtblacttst& parent) {
+algo::cstring gclidb::t_Get(gclidb::Gtblacttst& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.gtblacttst, ".RR"));
     return ret;
 }
 
 // --- gclidb.Gtblacttst.t.Get2
-algo::cstring gclidb::Gtblacttst_t_Get(algo::strptr arg) {
+algo::cstring gclidb::Gtblacttst_t_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
 
 // --- gclidb.Gtblacttst..ReadFieldMaybe
-bool gclidb::Gtblacttst_ReadFieldMaybe(gclidb::Gtblacttst& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtblacttst_ReadFieldMaybe(gclidb::Gtblacttst& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2270,7 +2270,7 @@ bool gclidb::Gtblacttst_ReadFieldMaybe(gclidb::Gtblacttst& parent, algo::strptr 
 // --- gclidb.Gtblacttst..ReadStrptrMaybe
 // Read fields of gclidb::Gtblacttst from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gtblacttst_ReadStrptrMaybe(gclidb::Gtblacttst &parent, algo::strptr in_str) {
+bool gclidb::Gtblacttst_ReadStrptrMaybe(gclidb::Gtblacttst &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gtblacttst") || algo::StripTypeTag(in_str, "gclidb.Gtblacttst");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2282,7 +2282,7 @@ bool gclidb::Gtblacttst_ReadStrptrMaybe(gclidb::Gtblacttst &parent, algo::strptr
 // --- gclidb.Gtblacttst..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtblacttst.String  printfmt:Tuple
-void gclidb::Gtblacttst_Print(gclidb::Gtblacttst& row, algo::cstring& str) {
+void gclidb::Gtblacttst_Print(gclidb::Gtblacttst& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gtblacttst";
 
@@ -2300,25 +2300,25 @@ void gclidb::Gtblacttst_Print(gclidb::Gtblacttst& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gtblacttstout.gtblacttst.Get
-algo::Smallstr250 gclidb::gtblacttst_Get(gclidb::Gtblacttstout& parent) {
+algo::Smallstr250 gclidb::gtblacttst_Get(gclidb::Gtblacttstout& parent) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(parent.gtblacttstout, ".RL"));
     return ret;
 }
 
 // --- gclidb.Gtblacttstout.gtblacttst.Get2
-algo::Smallstr250 gclidb::Gtblacttstout_gtblacttst_Get(algo::strptr arg) {
+algo::Smallstr250 gclidb::Gtblacttstout_gtblacttst_Get(algo::strptr arg) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- gclidb.Gtblacttstout.out.Get
-algo::cstring gclidb::out_Get(gclidb::Gtblacttstout& parent) {
+algo::cstring gclidb::out_Get(gclidb::Gtblacttstout& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.gtblacttstout, ".RR"));
     return ret;
 }
 
 // --- gclidb.Gtblacttstout.out.Get2
-algo::cstring gclidb::Gtblacttstout_out_Get(algo::strptr arg) {
+algo::cstring gclidb::Gtblacttstout_out_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -2329,7 +2329,7 @@ tempstr gclidb::Gtblacttstout_Concat_gtblacttst_out( const algo::strptr& gtblact
 }
 
 // --- gclidb.Gtblacttstout..ReadFieldMaybe
-bool gclidb::Gtblacttstout_ReadFieldMaybe(gclidb::Gtblacttstout& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtblacttstout_ReadFieldMaybe(gclidb::Gtblacttstout& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2361,7 +2361,7 @@ bool gclidb::Gtblacttstout_ReadFieldMaybe(gclidb::Gtblacttstout& parent, algo::s
 // --- gclidb.Gtblacttstout..ReadStrptrMaybe
 // Read fields of gclidb::Gtblacttstout from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gtblacttstout_ReadStrptrMaybe(gclidb::Gtblacttstout &parent, algo::strptr in_str) {
+bool gclidb::Gtblacttstout_ReadStrptrMaybe(gclidb::Gtblacttstout &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gtblacttstout") || algo::StripTypeTag(in_str, "gclidb.Gtblacttstout");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2373,7 +2373,7 @@ bool gclidb::Gtblacttstout_ReadStrptrMaybe(gclidb::Gtblacttstout &parent, algo::
 // --- gclidb.Gtblacttstout..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtblacttstout.String  printfmt:Tuple
-void gclidb::Gtblacttstout_Print(gclidb::Gtblacttstout& row, algo::cstring& str) {
+void gclidb::Gtblacttstout_Print(gclidb::Gtblacttstout& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gtblacttstout";
 
@@ -2385,7 +2385,7 @@ void gclidb::Gtblacttstout_Print(gclidb::Gtblacttstout& row, algo::cstring& str)
 }
 
 // --- gclidb.Gtype..ReadFieldMaybe
-bool gclidb::Gtype_ReadFieldMaybe(gclidb::Gtype& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtype_ReadFieldMaybe(gclidb::Gtype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2413,7 +2413,7 @@ bool gclidb::Gtype_ReadFieldMaybe(gclidb::Gtype& parent, algo::strptr field, alg
 // --- gclidb.Gtype..ReadStrptrMaybe
 // Read fields of gclidb::Gtype from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gtype_ReadStrptrMaybe(gclidb::Gtype &parent, algo::strptr in_str) {
+bool gclidb::Gtype_ReadStrptrMaybe(gclidb::Gtype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gtype") || algo::StripTypeTag(in_str, "gclidb.Gtype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2425,7 +2425,7 @@ bool gclidb::Gtype_ReadStrptrMaybe(gclidb::Gtype &parent, algo::strptr in_str) {
 // --- gclidb.Gtype..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtype.String  printfmt:Tuple
-void gclidb::Gtype_Print(gclidb::Gtype& row, algo::cstring& str) {
+void gclidb::Gtype_Print(gclidb::Gtype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gtype";
 
@@ -2440,25 +2440,25 @@ void gclidb::Gtype_Print(gclidb::Gtype& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gtypeh.gtype.Get
-algo::Smallstr50 gclidb::gtype_Get(gclidb::Gtypeh& parent) {
+algo::Smallstr50 gclidb::gtype_Get(gclidb::Gtypeh& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gtypeh, ".RL"));
     return ret;
 }
 
 // --- gclidb.Gtypeh.gtype.Get2
-algo::Smallstr50 gclidb::Gtypeh_gtype_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Gtypeh_gtype_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- gclidb.Gtypeh.name.Get
-algo::cstring gclidb::name_Get(gclidb::Gtypeh& parent) {
+algo::cstring gclidb::name_Get(gclidb::Gtypeh& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.gtypeh, ".RR"));
     return ret;
 }
 
 // --- gclidb.Gtypeh.name.Get2
-algo::cstring gclidb::Gtypeh_name_Get(algo::strptr arg) {
+algo::cstring gclidb::Gtypeh_name_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -2469,7 +2469,7 @@ tempstr gclidb::Gtypeh_Concat_gtype_name( const algo::strptr& gtype ,const algo:
 }
 
 // --- gclidb.Gtypeh..ReadFieldMaybe
-bool gclidb::Gtypeh_ReadFieldMaybe(gclidb::Gtypeh& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtypeh_ReadFieldMaybe(gclidb::Gtypeh& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2501,7 +2501,7 @@ bool gclidb::Gtypeh_ReadFieldMaybe(gclidb::Gtypeh& parent, algo::strptr field, a
 // --- gclidb.Gtypeh..ReadStrptrMaybe
 // Read fields of gclidb::Gtypeh from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gtypeh_ReadStrptrMaybe(gclidb::Gtypeh &parent, algo::strptr in_str) {
+bool gclidb::Gtypeh_ReadStrptrMaybe(gclidb::Gtypeh &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gtypeh") || algo::StripTypeTag(in_str, "gclidb.Gtypeh");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2513,7 +2513,7 @@ bool gclidb::Gtypeh_ReadStrptrMaybe(gclidb::Gtypeh &parent, algo::strptr in_str)
 // --- gclidb.Gtypeh..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtypeh.String  printfmt:Tuple
-void gclidb::Gtypeh_Print(gclidb::Gtypeh& row, algo::cstring& str) {
+void gclidb::Gtypeh_Print(gclidb::Gtypeh& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gtypeh";
 
@@ -2525,25 +2525,25 @@ void gclidb::Gtypeh_Print(gclidb::Gtypeh& row, algo::cstring& str) {
 }
 
 // --- gclidb.Gtypeprefix.gtype.Get
-algo::Smallstr50 gclidb::gtype_Get(gclidb::Gtypeprefix& parent) {
+algo::Smallstr50 gclidb::gtype_Get(gclidb::Gtypeprefix& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.gtypeprefix, ".RL"));
     return ret;
 }
 
 // --- gclidb.Gtypeprefix.gtype.Get2
-algo::Smallstr50 gclidb::Gtypeprefix_gtype_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Gtypeprefix_gtype_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- gclidb.Gtypeprefix.prefix.Get
-algo::cstring gclidb::prefix_Get(gclidb::Gtypeprefix& parent) {
+algo::cstring gclidb::prefix_Get(gclidb::Gtypeprefix& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.gtypeprefix, ".RR"));
     return ret;
 }
 
 // --- gclidb.Gtypeprefix.prefix.Get2
-algo::cstring gclidb::Gtypeprefix_prefix_Get(algo::strptr arg) {
+algo::cstring gclidb::Gtypeprefix_prefix_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -2554,7 +2554,7 @@ tempstr gclidb::Gtypeprefix_Concat_gtype_prefix( const algo::strptr& gtype ,cons
 }
 
 // --- gclidb.Gtypeprefix..ReadFieldMaybe
-bool gclidb::Gtypeprefix_ReadFieldMaybe(gclidb::Gtypeprefix& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Gtypeprefix_ReadFieldMaybe(gclidb::Gtypeprefix& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2586,7 +2586,7 @@ bool gclidb::Gtypeprefix_ReadFieldMaybe(gclidb::Gtypeprefix& parent, algo::strpt
 // --- gclidb.Gtypeprefix..ReadStrptrMaybe
 // Read fields of gclidb::Gtypeprefix from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Gtypeprefix_ReadStrptrMaybe(gclidb::Gtypeprefix &parent, algo::strptr in_str) {
+bool gclidb::Gtypeprefix_ReadStrptrMaybe(gclidb::Gtypeprefix &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.gtypeprefix") || algo::StripTypeTag(in_str, "gclidb.Gtypeprefix");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2598,7 +2598,7 @@ bool gclidb::Gtypeprefix_ReadStrptrMaybe(gclidb::Gtypeprefix &parent, algo::strp
 // --- gclidb.Gtypeprefix..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Gtypeprefix.String  printfmt:Tuple
-void gclidb::Gtypeprefix_Print(gclidb::Gtypeprefix& row, algo::cstring& str) {
+void gclidb::Gtypeprefix_Print(gclidb::Gtypeprefix& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.gtypeprefix";
 
@@ -2610,25 +2610,25 @@ void gclidb::Gtypeprefix_Print(gclidb::Gtypeprefix& row, algo::cstring& str) {
 }
 
 // --- gclidb.Issue.project.Get
-algo::Smallstr50 gclidb::project_Get(gclidb::Issue& parent) {
+algo::Smallstr50 gclidb::project_Get(gclidb::Issue& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.issue, ".RL"));
     return ret;
 }
 
 // --- gclidb.Issue.project.Get2
-algo::Smallstr50 gclidb::Issue_project_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Issue_project_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- gclidb.Issue.iid.Get
-algo::cstring gclidb::iid_Get(gclidb::Issue& parent) {
+algo::cstring gclidb::iid_Get(gclidb::Issue& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.issue, ".RR"));
     return ret;
 }
 
 // --- gclidb.Issue.iid.Get2
-algo::cstring gclidb::Issue_iid_Get(algo::strptr arg) {
+algo::cstring gclidb::Issue_iid_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -2639,7 +2639,7 @@ tempstr gclidb::Issue_Concat_project_iid( const algo::strptr& project ,const alg
 }
 
 // --- gclidb.Issue..ReadFieldMaybe
-bool gclidb::Issue_ReadFieldMaybe(gclidb::Issue& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Issue_ReadFieldMaybe(gclidb::Issue& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2707,7 +2707,7 @@ bool gclidb::Issue_ReadFieldMaybe(gclidb::Issue& parent, algo::strptr field, alg
 // --- gclidb.Issue..ReadStrptrMaybe
 // Read fields of gclidb::Issue from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Issue_ReadStrptrMaybe(gclidb::Issue &parent, algo::strptr in_str) {
+bool gclidb::Issue_ReadStrptrMaybe(gclidb::Issue &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.issue") || algo::StripTypeTag(in_str, "gclidb.Issue");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2719,7 +2719,7 @@ bool gclidb::Issue_ReadStrptrMaybe(gclidb::Issue &parent, algo::strptr in_str) {
 // --- gclidb.Issue..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Issue.String  printfmt:Tuple
-void gclidb::Issue_Print(gclidb::Issue& row, algo::cstring& str) {
+void gclidb::Issue_Print(gclidb::Issue& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.issue";
 
@@ -2758,25 +2758,25 @@ void gclidb::Issue_Print(gclidb::Issue& row, algo::cstring& str) {
 }
 
 // --- gclidb.Issuenote.issue.Get
-algo::Smallstr50 gclidb::issue_Get(gclidb::Issuenote& parent) {
+algo::Smallstr50 gclidb::issue_Get(gclidb::Issuenote& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.issuenote, ".RL"));
     return ret;
 }
 
 // --- gclidb.Issuenote.issue.Get2
-algo::Smallstr50 gclidb::Issuenote_issue_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Issuenote_issue_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- gclidb.Issuenote.nid.Get
-algo::cstring gclidb::nid_Get(gclidb::Issuenote& parent) {
+algo::cstring gclidb::nid_Get(gclidb::Issuenote& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.issuenote, ".RR"));
     return ret;
 }
 
 // --- gclidb.Issuenote.nid.Get2
-algo::cstring gclidb::Issuenote_nid_Get(algo::strptr arg) {
+algo::cstring gclidb::Issuenote_nid_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -2787,7 +2787,7 @@ tempstr gclidb::Issuenote_Concat_issue_nid( const algo::strptr& issue ,const alg
 }
 
 // --- gclidb.Issuenote..ReadFieldMaybe
-bool gclidb::Issuenote_ReadFieldMaybe(gclidb::Issuenote& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Issuenote_ReadFieldMaybe(gclidb::Issuenote& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2827,7 +2827,7 @@ bool gclidb::Issuenote_ReadFieldMaybe(gclidb::Issuenote& parent, algo::strptr fi
 // --- gclidb.Issuenote..ReadStrptrMaybe
 // Read fields of gclidb::Issuenote from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Issuenote_ReadStrptrMaybe(gclidb::Issuenote &parent, algo::strptr in_str) {
+bool gclidb::Issuenote_ReadStrptrMaybe(gclidb::Issuenote &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.issuenote") || algo::StripTypeTag(in_str, "gclidb.Issuenote");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2839,7 +2839,7 @@ bool gclidb::Issuenote_ReadStrptrMaybe(gclidb::Issuenote &parent, algo::strptr i
 // --- gclidb.Issuenote..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Issuenote.String  printfmt:Tuple
-void gclidb::Issuenote_Print(gclidb::Issuenote& row, algo::cstring& str) {
+void gclidb::Issuenote_Print(gclidb::Issuenote& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.issuenote";
 
@@ -2857,25 +2857,25 @@ void gclidb::Issuenote_Print(gclidb::Issuenote& row, algo::cstring& str) {
 }
 
 // --- gclidb.Issuepipeline.issue.Get
-algo::Smallstr50 gclidb::issue_Get(gclidb::Issuepipeline& parent) {
+algo::Smallstr50 gclidb::issue_Get(gclidb::Issuepipeline& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.issuepipeline, ".RL"));
     return ret;
 }
 
 // --- gclidb.Issuepipeline.issue.Get2
-algo::Smallstr50 gclidb::Issuepipeline_issue_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Issuepipeline_issue_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- gclidb.Issuepipeline.id.Get
-algo::cstring gclidb::id_Get(gclidb::Issuepipeline& parent) {
+algo::cstring gclidb::id_Get(gclidb::Issuepipeline& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.issuepipeline, ".RR"));
     return ret;
 }
 
 // --- gclidb.Issuepipeline.id.Get2
-algo::cstring gclidb::Issuepipeline_id_Get(algo::strptr arg) {
+algo::cstring gclidb::Issuepipeline_id_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -2886,7 +2886,7 @@ tempstr gclidb::Issuepipeline_Concat_issue_id( const algo::strptr& issue ,const 
 }
 
 // --- gclidb.Issuepipeline..ReadFieldMaybe
-bool gclidb::Issuepipeline_ReadFieldMaybe(gclidb::Issuepipeline& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Issuepipeline_ReadFieldMaybe(gclidb::Issuepipeline& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2922,7 +2922,7 @@ bool gclidb::Issuepipeline_ReadFieldMaybe(gclidb::Issuepipeline& parent, algo::s
 // --- gclidb.Issuepipeline..ReadStrptrMaybe
 // Read fields of gclidb::Issuepipeline from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Issuepipeline_ReadStrptrMaybe(gclidb::Issuepipeline &parent, algo::strptr in_str) {
+bool gclidb::Issuepipeline_ReadStrptrMaybe(gclidb::Issuepipeline &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.issuepipeline") || algo::StripTypeTag(in_str, "gclidb.Issuepipeline");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2934,7 +2934,7 @@ bool gclidb::Issuepipeline_ReadStrptrMaybe(gclidb::Issuepipeline &parent, algo::
 // --- gclidb.Issuepipeline..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Issuepipeline.String  printfmt:Tuple
-void gclidb::Issuepipeline_Print(gclidb::Issuepipeline& row, algo::cstring& str) {
+void gclidb::Issuepipeline_Print(gclidb::Issuepipeline& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.issuepipeline";
 
@@ -2949,7 +2949,7 @@ void gclidb::Issuepipeline_Print(gclidb::Issuepipeline& row, algo::cstring& str)
 }
 
 // --- gclidb.Label..ReadFieldMaybe
-bool gclidb::Label_ReadFieldMaybe(gclidb::Label& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Label_ReadFieldMaybe(gclidb::Label& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -2973,7 +2973,7 @@ bool gclidb::Label_ReadFieldMaybe(gclidb::Label& parent, algo::strptr field, alg
 // --- gclidb.Label..ReadStrptrMaybe
 // Read fields of gclidb::Label from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Label_ReadStrptrMaybe(gclidb::Label &parent, algo::strptr in_str) {
+bool gclidb::Label_ReadStrptrMaybe(gclidb::Label &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.label") || algo::StripTypeTag(in_str, "gclidb.Label");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -2985,7 +2985,7 @@ bool gclidb::Label_ReadStrptrMaybe(gclidb::Label &parent, algo::strptr in_str) {
 // --- gclidb.Label..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Label.String  printfmt:Tuple
-void gclidb::Label_Print(gclidb::Label& row, algo::cstring& str) {
+void gclidb::Label_Print(gclidb::Label& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.label";
 
@@ -2997,25 +2997,25 @@ void gclidb::Label_Print(gclidb::Label& row, algo::cstring& str) {
 }
 
 // --- gclidb.Milestone.project.Get
-algo::Smallstr50 gclidb::project_Get(gclidb::Milestone& parent) {
+algo::Smallstr50 gclidb::project_Get(gclidb::Milestone& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.milestone, ".RL"));
     return ret;
 }
 
 // --- gclidb.Milestone.project.Get2
-algo::Smallstr50 gclidb::Milestone_project_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Milestone_project_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- gclidb.Milestone.iid.Get
-algo::cstring gclidb::iid_Get(gclidb::Milestone& parent) {
+algo::cstring gclidb::iid_Get(gclidb::Milestone& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.milestone, ".RR"));
     return ret;
 }
 
 // --- gclidb.Milestone.iid.Get2
-algo::cstring gclidb::Milestone_iid_Get(algo::strptr arg) {
+algo::cstring gclidb::Milestone_iid_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -3026,7 +3026,7 @@ tempstr gclidb::Milestone_Concat_project_iid( const algo::strptr& project ,const
 }
 
 // --- gclidb.Milestone..ReadFieldMaybe
-bool gclidb::Milestone_ReadFieldMaybe(gclidb::Milestone& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Milestone_ReadFieldMaybe(gclidb::Milestone& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3062,7 +3062,7 @@ bool gclidb::Milestone_ReadFieldMaybe(gclidb::Milestone& parent, algo::strptr fi
 // --- gclidb.Milestone..ReadStrptrMaybe
 // Read fields of gclidb::Milestone from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Milestone_ReadStrptrMaybe(gclidb::Milestone &parent, algo::strptr in_str) {
+bool gclidb::Milestone_ReadStrptrMaybe(gclidb::Milestone &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.milestone") || algo::StripTypeTag(in_str, "gclidb.Milestone");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3074,7 +3074,7 @@ bool gclidb::Milestone_ReadStrptrMaybe(gclidb::Milestone &parent, algo::strptr i
 // --- gclidb.Milestone..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Milestone.String  printfmt:Tuple
-void gclidb::Milestone_Print(gclidb::Milestone& row, algo::cstring& str) {
+void gclidb::Milestone_Print(gclidb::Milestone& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.milestone";
 
@@ -3089,25 +3089,25 @@ void gclidb::Milestone_Print(gclidb::Milestone& row, algo::cstring& str) {
 }
 
 // --- gclidb.Mr.proj.Get
-algo::Smallstr50 gclidb::proj_Get(gclidb::Mr& parent) {
+algo::Smallstr50 gclidb::proj_Get(gclidb::Mr& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(parent.mr, ".RL"));
     return ret;
 }
 
 // --- gclidb.Mr.proj.Get2
-algo::Smallstr50 gclidb::Mr_proj_Get(algo::strptr arg) {
+algo::Smallstr50 gclidb::Mr_proj_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
 
 // --- gclidb.Mr.iid.Get
-algo::cstring gclidb::iid_Get(gclidb::Mr& parent) {
+algo::cstring gclidb::iid_Get(gclidb::Mr& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.mr, ".RR"));
     return ret;
 }
 
 // --- gclidb.Mr.iid.Get2
-algo::cstring gclidb::Mr_iid_Get(algo::strptr arg) {
+algo::cstring gclidb::Mr_iid_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
@@ -3118,7 +3118,7 @@ tempstr gclidb::Mr_Concat_proj_iid( const algo::strptr& proj ,const algo::strptr
 }
 
 // --- gclidb.Mr..ReadFieldMaybe
-bool gclidb::Mr_ReadFieldMaybe(gclidb::Mr& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Mr_ReadFieldMaybe(gclidb::Mr& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3190,7 +3190,7 @@ bool gclidb::Mr_ReadFieldMaybe(gclidb::Mr& parent, algo::strptr field, algo::str
 // --- gclidb.Mr..ReadStrptrMaybe
 // Read fields of gclidb::Mr from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Mr_ReadStrptrMaybe(gclidb::Mr &parent, algo::strptr in_str) {
+bool gclidb::Mr_ReadStrptrMaybe(gclidb::Mr &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.mr") || algo::StripTypeTag(in_str, "gclidb.Mr");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3202,7 +3202,7 @@ bool gclidb::Mr_ReadStrptrMaybe(gclidb::Mr &parent, algo::strptr in_str) {
 // --- gclidb.Mr..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Mr.String  printfmt:Tuple
-void gclidb::Mr_Print(gclidb::Mr& row, algo::cstring& str) {
+void gclidb::Mr_Print(gclidb::Mr& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.mr";
 
@@ -3244,25 +3244,25 @@ void gclidb::Mr_Print(gclidb::Mr& row, algo::cstring& str) {
 }
 
 // --- gclidb.Mrjob.mr.Get
-algo::Smallstr150 gclidb::mr_Get(gclidb::Mrjob& parent) {
+algo::Smallstr150 gclidb::mr_Get(gclidb::Mrjob& parent) throw() {
     algo::Smallstr150 ret(algo::Pathcomp(parent.mrjob, "/RL"));
     return ret;
 }
 
 // --- gclidb.Mrjob.mr.Get2
-algo::Smallstr150 gclidb::Mrjob_mr_Get(algo::strptr arg) {
+algo::Smallstr150 gclidb::Mrjob_mr_Get(algo::strptr arg) throw() {
     algo::Smallstr150 ret(algo::Pathcomp(arg, "/RL"));
     return ret;
 }
 
 // --- gclidb.Mrjob.job.Get
-algo::cstring gclidb::job_Get(gclidb::Mrjob& parent) {
+algo::cstring gclidb::job_Get(gclidb::Mrjob& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.mrjob, "/RR"));
     return ret;
 }
 
 // --- gclidb.Mrjob.job.Get2
-algo::cstring gclidb::Mrjob_job_Get(algo::strptr arg) {
+algo::cstring gclidb::Mrjob_job_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, "/RR"));
     return ret;
 }
@@ -3273,7 +3273,7 @@ tempstr gclidb::Mrjob_Concat_mr_job( const algo::strptr& mr ,const algo::strptr&
 }
 
 // --- gclidb.Mrjob..ReadFieldMaybe
-bool gclidb::Mrjob_ReadFieldMaybe(gclidb::Mrjob& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Mrjob_ReadFieldMaybe(gclidb::Mrjob& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3325,7 +3325,7 @@ bool gclidb::Mrjob_ReadFieldMaybe(gclidb::Mrjob& parent, algo::strptr field, alg
 // --- gclidb.Mrjob..ReadStrptrMaybe
 // Read fields of gclidb::Mrjob from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Mrjob_ReadStrptrMaybe(gclidb::Mrjob &parent, algo::strptr in_str) {
+bool gclidb::Mrjob_ReadStrptrMaybe(gclidb::Mrjob &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.mrjob") || algo::StripTypeTag(in_str, "gclidb.Mrjob");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3337,7 +3337,7 @@ bool gclidb::Mrjob_ReadStrptrMaybe(gclidb::Mrjob &parent, algo::strptr in_str) {
 // --- gclidb.Mrjob..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Mrjob.String  printfmt:Tuple
-void gclidb::Mrjob_Print(gclidb::Mrjob& row, algo::cstring& str) {
+void gclidb::Mrjob_Print(gclidb::Mrjob& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.mrjob";
 
@@ -3364,25 +3364,25 @@ void gclidb::Mrjob_Print(gclidb::Mrjob& row, algo::cstring& str) {
 }
 
 // --- gclidb.Mrnote.nid.Get
-algo::cstring gclidb::nid_Get(gclidb::Mrnote& parent) {
+algo::cstring gclidb::nid_Get(gclidb::Mrnote& parent) throw() {
     algo::cstring ret(algo::Pathcomp(parent.mrnote, ".RR"));
     return ret;
 }
 
 // --- gclidb.Mrnote.nid.Get2
-algo::cstring gclidb::Mrnote_nid_Get(algo::strptr arg) {
+algo::cstring gclidb::Mrnote_nid_Get(algo::strptr arg) throw() {
     algo::cstring ret(algo::Pathcomp(arg, ".RR"));
     return ret;
 }
 
 // --- gclidb.Mrnote.mr.Get
-algo::Smallstr150 gclidb::mr_Get(gclidb::Mrnote& parent) {
+algo::Smallstr150 gclidb::mr_Get(gclidb::Mrnote& parent) throw() {
     algo::Smallstr150 ret(algo::Pathcomp(parent.mrnote, ".RL"));
     return ret;
 }
 
 // --- gclidb.Mrnote.mr.Get2
-algo::Smallstr150 gclidb::Mrnote_mr_Get(algo::strptr arg) {
+algo::Smallstr150 gclidb::Mrnote_mr_Get(algo::strptr arg) throw() {
     algo::Smallstr150 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
@@ -3393,7 +3393,7 @@ tempstr gclidb::Mrnote_Concat_mr_nid( const algo::strptr& mr ,const algo::strptr
 }
 
 // --- gclidb.Mrnote..ReadFieldMaybe
-bool gclidb::Mrnote_ReadFieldMaybe(gclidb::Mrnote& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::Mrnote_ReadFieldMaybe(gclidb::Mrnote& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3433,7 +3433,7 @@ bool gclidb::Mrnote_ReadFieldMaybe(gclidb::Mrnote& parent, algo::strptr field, a
 // --- gclidb.Mrnote..ReadStrptrMaybe
 // Read fields of gclidb::Mrnote from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::Mrnote_ReadStrptrMaybe(gclidb::Mrnote &parent, algo::strptr in_str) {
+bool gclidb::Mrnote_ReadStrptrMaybe(gclidb::Mrnote &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.mrnote") || algo::StripTypeTag(in_str, "gclidb.Mrnote");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3445,7 +3445,7 @@ bool gclidb::Mrnote_ReadStrptrMaybe(gclidb::Mrnote &parent, algo::strptr in_str)
 // --- gclidb.Mrnote..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.Mrnote.String  printfmt:Tuple
-void gclidb::Mrnote_Print(gclidb::Mrnote& row, algo::cstring& str) {
+void gclidb::Mrnote_Print(gclidb::Mrnote& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.mrnote";
 
@@ -3463,7 +3463,7 @@ void gclidb::Mrnote_Print(gclidb::Mrnote& row, algo::cstring& str) {
 }
 
 // --- gclidb.User..ReadFieldMaybe
-bool gclidb::User_ReadFieldMaybe(gclidb::User& parent, algo::strptr field, algo::strptr strval) {
+bool gclidb::User_ReadFieldMaybe(gclidb::User& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gclidb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -3491,7 +3491,7 @@ bool gclidb::User_ReadFieldMaybe(gclidb::User& parent, algo::strptr field, algo:
 // --- gclidb.User..ReadStrptrMaybe
 // Read fields of gclidb::User from an ascii string.
 // The format of the string is an ssim Tuple
-bool gclidb::User_ReadStrptrMaybe(gclidb::User &parent, algo::strptr in_str) {
+bool gclidb::User_ReadStrptrMaybe(gclidb::User &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gclidb.user") || algo::StripTypeTag(in_str, "gclidb.User");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -3503,7 +3503,7 @@ bool gclidb::User_ReadStrptrMaybe(gclidb::User &parent, algo::strptr in_str) {
 // --- gclidb.User..Print
 // print string representation of ROW to string STR
 // cfmt:gclidb.User.String  printfmt:Tuple
-void gclidb::User_Print(gclidb::User& row, algo::cstring& str) {
+void gclidb::User_Print(gclidb::User& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gclidb.user";
 

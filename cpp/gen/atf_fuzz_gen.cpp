@@ -90,7 +90,7 @@ namespace atf_fuzz { // gen:ns_print_proto
 // --- atf_fuzz.trace..Print
 // print string representation of ROW to string STR
 // cfmt:atf_fuzz.trace.String  printfmt:Tuple
-void atf_fuzz::trace_Print(atf_fuzz::trace& row, algo::cstring& str) {
+void atf_fuzz::trace_Print(atf_fuzz::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_fuzz.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -101,7 +101,7 @@ void atf_fuzz::trace_Print(atf_fuzz::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     atf_fuzz.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void atf_fuzz::ReadArgv() {
+void atf_fuzz::ReadArgv() throw() {
     command::atf_fuzz &cmd = atf_fuzz::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -311,7 +311,7 @@ bool atf_fuzz::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_fuzz.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_fuzz::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool atf_fuzz::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = atf_fuzz::LoadTuplesFile(root, recursive);
@@ -335,7 +335,7 @@ bool atf_fuzz::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool atf_fuzz::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool atf_fuzz::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -348,7 +348,7 @@ bool atf_fuzz::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- atf_fuzz.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool atf_fuzz::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool atf_fuzz::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -368,7 +368,7 @@ bool atf_fuzz::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
 
 // --- atf_fuzz.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_fuzz::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool atf_fuzz::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = atf_fuzz::LoadTuplesFile(fname, recursive);
@@ -393,7 +393,7 @@ bool atf_fuzz::_db_XrefMaybe() {
 // --- atf_fuzz.FDb.fuzzstrat.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_fuzz::FFuzzstrat& atf_fuzz::fuzzstrat_Alloc() {
+atf_fuzz::FFuzzstrat& atf_fuzz::fuzzstrat_Alloc() throw() {
     atf_fuzz::FFuzzstrat* row = fuzzstrat_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_fuzz.out_of_mem  field:atf_fuzz.FDb.fuzzstrat  comment:'Alloc failed'");
@@ -403,7 +403,7 @@ atf_fuzz::FFuzzstrat& atf_fuzz::fuzzstrat_Alloc() {
 
 // --- atf_fuzz.FDb.fuzzstrat.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_fuzz::FFuzzstrat* atf_fuzz::fuzzstrat_AllocMaybe() {
+atf_fuzz::FFuzzstrat* atf_fuzz::fuzzstrat_AllocMaybe() throw() {
     atf_fuzz::FFuzzstrat *row = (atf_fuzz::FFuzzstrat*)fuzzstrat_AllocMem();
     if (row) {
         new (row) atf_fuzz::FFuzzstrat; // call constructor
@@ -414,7 +414,7 @@ atf_fuzz::FFuzzstrat* atf_fuzz::fuzzstrat_AllocMaybe() {
 // --- atf_fuzz.FDb.fuzzstrat.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_fuzz::FFuzzstrat* atf_fuzz::fuzzstrat_InsertMaybe(const atfdb::Fuzzstrat &value) {
+atf_fuzz::FFuzzstrat* atf_fuzz::fuzzstrat_InsertMaybe(const atfdb::Fuzzstrat &value) throw() {
     atf_fuzz::FFuzzstrat *row = &fuzzstrat_Alloc(); // if out of memory, process dies. if input error, return NULL.
     fuzzstrat_CopyIn(*row,const_cast<atfdb::Fuzzstrat&>(value));
     bool ok = fuzzstrat_XrefMaybe(*row); // this may return false
@@ -427,7 +427,7 @@ atf_fuzz::FFuzzstrat* atf_fuzz::fuzzstrat_InsertMaybe(const atfdb::Fuzzstrat &va
 
 // --- atf_fuzz.FDb.fuzzstrat.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_fuzz::fuzzstrat_AllocMem() {
+void* atf_fuzz::fuzzstrat_AllocMem() throw() {
     u64 new_nelems     = _db.fuzzstrat_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -453,7 +453,7 @@ void* atf_fuzz::fuzzstrat_AllocMem() {
 
 // --- atf_fuzz.FDb.fuzzstrat.RemoveAll
 // Remove all elements from Lary
-void atf_fuzz::fuzzstrat_RemoveAll() {
+void atf_fuzz::fuzzstrat_RemoveAll() throw() {
     for (u64 n = _db.fuzzstrat_n; n>0; ) {
         n--;
         fuzzstrat_qFind(u64(n)).~FFuzzstrat(); // destroy last element
@@ -463,7 +463,7 @@ void atf_fuzz::fuzzstrat_RemoveAll() {
 
 // --- atf_fuzz.FDb.fuzzstrat.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_fuzz::fuzzstrat_RemoveLast() {
+void atf_fuzz::fuzzstrat_RemoveLast() throw() {
     u64 n = _db.fuzzstrat_n;
     if (n > 0) {
         n -= 1;
@@ -473,7 +473,7 @@ void atf_fuzz::fuzzstrat_RemoveLast() {
 }
 
 // --- atf_fuzz.FDb.fuzzstrat.LoadStatic
-static void atf_fuzz::fuzzstrat_LoadStatic() {
+static void atf_fuzz::fuzzstrat_LoadStatic() throw() {
     static struct _t {
         const char *s;
         void (*step)();
@@ -505,7 +505,7 @@ bool atf_fuzz::fuzzstrat_XrefMaybe(atf_fuzz::FFuzzstrat &row) {
 // --- atf_fuzz.FDb.target.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_fuzz::FTarget& atf_fuzz::target_Alloc() {
+atf_fuzz::FTarget& atf_fuzz::target_Alloc() throw() {
     atf_fuzz::FTarget* row = target_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_fuzz.out_of_mem  field:atf_fuzz.FDb.target  comment:'Alloc failed'");
@@ -515,7 +515,7 @@ atf_fuzz::FTarget& atf_fuzz::target_Alloc() {
 
 // --- atf_fuzz.FDb.target.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_fuzz::FTarget* atf_fuzz::target_AllocMaybe() {
+atf_fuzz::FTarget* atf_fuzz::target_AllocMaybe() throw() {
     atf_fuzz::FTarget *row = (atf_fuzz::FTarget*)target_AllocMem();
     if (row) {
         new (row) atf_fuzz::FTarget; // call constructor
@@ -526,7 +526,7 @@ atf_fuzz::FTarget* atf_fuzz::target_AllocMaybe() {
 // --- atf_fuzz.FDb.target.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_fuzz::FTarget* atf_fuzz::target_InsertMaybe(const dev::Target &value) {
+atf_fuzz::FTarget* atf_fuzz::target_InsertMaybe(const dev::Target &value) throw() {
     atf_fuzz::FTarget *row = &target_Alloc(); // if out of memory, process dies. if input error, return NULL.
     target_CopyIn(*row,const_cast<dev::Target&>(value));
     bool ok = target_XrefMaybe(*row); // this may return false
@@ -539,7 +539,7 @@ atf_fuzz::FTarget* atf_fuzz::target_InsertMaybe(const dev::Target &value) {
 
 // --- atf_fuzz.FDb.target.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_fuzz::target_AllocMem() {
+void* atf_fuzz::target_AllocMem() throw() {
     u64 new_nelems     = _db.target_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -565,7 +565,7 @@ void* atf_fuzz::target_AllocMem() {
 
 // --- atf_fuzz.FDb.target.RemoveAll
 // Remove all elements from Lary
-void atf_fuzz::target_RemoveAll() {
+void atf_fuzz::target_RemoveAll() throw() {
     for (u64 n = _db.target_n; n>0; ) {
         n--;
         target_qFind(u64(n)).~FTarget(); // destroy last element
@@ -575,7 +575,7 @@ void atf_fuzz::target_RemoveAll() {
 
 // --- atf_fuzz.FDb.target.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_fuzz::target_RemoveLast() {
+void atf_fuzz::target_RemoveLast() throw() {
     u64 n = _db.target_n;
     if (n > 0) {
         n -= 1;
@@ -585,7 +585,7 @@ void atf_fuzz::target_RemoveLast() {
 }
 
 // --- atf_fuzz.FDb.target.InputMaybe
-static bool atf_fuzz::target_InputMaybe(dev::Target &elem) {
+static bool atf_fuzz::target_InputMaybe(dev::Target &elem) throw() {
     bool retval = true;
     retval = target_InsertMaybe(elem) != nullptr;
     return retval;
@@ -611,7 +611,7 @@ bool atf_fuzz::target_XrefMaybe(atf_fuzz::FTarget &row) {
 
 // --- atf_fuzz.FDb.ind_target.Find
 // Find row by key. Return NULL if not found.
-atf_fuzz::FTarget* atf_fuzz::ind_target_Find(const algo::strptr& key) {
+atf_fuzz::FTarget* atf_fuzz::ind_target_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
     atf_fuzz::FTarget* *e = &_db.ind_target_buckets_elems[index];
     atf_fuzz::FTarget* ret=NULL;
@@ -634,7 +634,7 @@ atf_fuzz::FTarget& atf_fuzz::ind_target_FindX(const algo::strptr& key) {
 
 // --- atf_fuzz.FDb.ind_target.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_fuzz::FTarget& atf_fuzz::ind_target_GetOrCreate(const algo::strptr& key) {
+atf_fuzz::FTarget& atf_fuzz::ind_target_GetOrCreate(const algo::strptr& key) throw() {
     atf_fuzz::FTarget* ret = ind_target_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &target_Alloc();
@@ -651,7 +651,7 @@ atf_fuzz::FTarget& atf_fuzz::ind_target_GetOrCreate(const algo::strptr& key) {
 
 // --- atf_fuzz.FDb.ind_target.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_fuzz::ind_target_InsertMaybe(atf_fuzz::FTarget& row) {
+bool atf_fuzz::ind_target_InsertMaybe(atf_fuzz::FTarget& row) throw() {
     ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (atf_fuzz::FTarget*)-1)) {// check if in hash already
@@ -679,7 +679,7 @@ bool atf_fuzz::ind_target_InsertMaybe(atf_fuzz::FTarget& row) {
 
 // --- atf_fuzz.FDb.ind_target.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_fuzz::ind_target_Remove(atf_fuzz::FTarget& row) {
+void atf_fuzz::ind_target_Remove(atf_fuzz::FTarget& row) throw() {
     if (LIKELY(row.ind_target_next != (atf_fuzz::FTarget*)-1)) {// check if in hash already
         u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
         atf_fuzz::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
@@ -697,7 +697,7 @@ void atf_fuzz::ind_target_Remove(atf_fuzz::FTarget& row) {
 
 // --- atf_fuzz.FDb.ind_target.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_fuzz::ind_target_Reserve(int n) {
+void atf_fuzz::ind_target_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_target_buckets_n;
     u32 new_nelems   = _db.ind_target_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -733,13 +733,13 @@ void atf_fuzz::ind_target_Reserve(int n) {
 
 // --- atf_fuzz.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr atf_fuzz::trace_RowidFind(int t) {
+static algo::ImrowPtr atf_fuzz::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- atf_fuzz.FDb.trace.N
 // Function return 1
-inline static i32 atf_fuzz::trace_N() {
+inline static i32 atf_fuzz::trace_N() throw() {
     return 1;
 }
 
@@ -783,7 +783,7 @@ void atf_fuzz::FDb_Init() {
 }
 
 // --- atf_fuzz.FDb..Uninit
-void atf_fuzz::FDb_Uninit() {
+void atf_fuzz::FDb_Uninit() throw() {
     atf_fuzz::FDb &row = _db; (void)row;
 
     // atf_fuzz.FDb.ind_target.Uninit (Thash)  //
@@ -798,32 +798,32 @@ void atf_fuzz::FDb_Uninit() {
 
 // --- atf_fuzz.FFuzzstrat.base.CopyOut
 // Copy fields out of row
-void atf_fuzz::fuzzstrat_CopyOut(atf_fuzz::FFuzzstrat &row, atfdb::Fuzzstrat &out) {
+void atf_fuzz::fuzzstrat_CopyOut(atf_fuzz::FFuzzstrat &row, atfdb::Fuzzstrat &out) throw() {
     out.fuzzstrat = row.fuzzstrat;
     out.comment = row.comment;
 }
 
 // --- atf_fuzz.FFuzzstrat.base.CopyIn
 // Copy fields in to row
-void atf_fuzz::fuzzstrat_CopyIn(atf_fuzz::FFuzzstrat &row, atfdb::Fuzzstrat &in) {
+void atf_fuzz::fuzzstrat_CopyIn(atf_fuzz::FFuzzstrat &row, atfdb::Fuzzstrat &in) throw() {
     row.fuzzstrat = in.fuzzstrat;
     row.comment = in.comment;
 }
 
 // --- atf_fuzz.FTarget.base.CopyOut
 // Copy fields out of row
-void atf_fuzz::target_CopyOut(atf_fuzz::FTarget &row, dev::Target &out) {
+void atf_fuzz::target_CopyOut(atf_fuzz::FTarget &row, dev::Target &out) throw() {
     out.target = row.target;
 }
 
 // --- atf_fuzz.FTarget.base.CopyIn
 // Copy fields in to row
-void atf_fuzz::target_CopyIn(atf_fuzz::FTarget &row, dev::Target &in) {
+void atf_fuzz::target_CopyIn(atf_fuzz::FTarget &row, dev::Target &in) throw() {
     row.target = in.target;
 }
 
 // --- atf_fuzz.FTarget..Uninit
-void atf_fuzz::FTarget_Uninit(atf_fuzz::FTarget& target) {
+void atf_fuzz::FTarget_Uninit(atf_fuzz::FTarget& target) throw() {
     atf_fuzz::FTarget &row = target; (void)row;
     ind_target_Remove(row); // remove target from index ind_target
 }
@@ -831,7 +831,7 @@ void atf_fuzz::FTarget_Uninit(atf_fuzz::FTarget& target) {
 // --- atf_fuzz.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_fuzz::value_ToCstr(const atf_fuzz::FieldId& parent) {
+const char* atf_fuzz::value_ToCstr(const atf_fuzz::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_fuzz_FieldId_value        : ret = "value";  break;
@@ -842,7 +842,7 @@ const char* atf_fuzz::value_ToCstr(const atf_fuzz::FieldId& parent) {
 // --- atf_fuzz.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_fuzz::value_Print(const atf_fuzz::FieldId& parent, algo::cstring &lhs) {
+void atf_fuzz::value_Print(const atf_fuzz::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -855,7 +855,7 @@ void atf_fuzz::value_Print(const atf_fuzz::FieldId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_fuzz::value_SetStrptrMaybe(atf_fuzz::FieldId& parent, algo::strptr rhs) {
+bool atf_fuzz::value_SetStrptrMaybe(atf_fuzz::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -873,13 +873,13 @@ bool atf_fuzz::value_SetStrptrMaybe(atf_fuzz::FieldId& parent, algo::strptr rhs)
 // --- atf_fuzz.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_fuzz::value_SetStrptr(atf_fuzz::FieldId& parent, algo::strptr rhs, atf_fuzz_FieldIdEnum dflt) {
+void atf_fuzz::value_SetStrptr(atf_fuzz::FieldId& parent, algo::strptr rhs, atf_fuzz_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_fuzz.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_fuzz::value_ReadStrptrMaybe(atf_fuzz::FieldId& parent, algo::strptr rhs) {
+bool atf_fuzz::value_ReadStrptrMaybe(atf_fuzz::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -891,7 +891,7 @@ bool atf_fuzz::value_ReadStrptrMaybe(atf_fuzz::FieldId& parent, algo::strptr rhs
 // --- atf_fuzz.FieldId..ReadStrptrMaybe
 // Read fields of atf_fuzz::FieldId from an ascii string.
 // The format of the string is the format of the atf_fuzz::FieldId's only field
-bool atf_fuzz::FieldId_ReadStrptrMaybe(atf_fuzz::FieldId &parent, algo::strptr in_str) {
+bool atf_fuzz::FieldId_ReadStrptrMaybe(atf_fuzz::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -900,14 +900,14 @@ bool atf_fuzz::FieldId_ReadStrptrMaybe(atf_fuzz::FieldId &parent, algo::strptr i
 // --- atf_fuzz.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_fuzz.FieldId.String  printfmt:Raw
-void atf_fuzz::FieldId_Print(atf_fuzz::FieldId& row, algo::cstring& str) {
+void atf_fuzz::FieldId_Print(atf_fuzz::FieldId& row, algo::cstring& str) throw() {
     atf_fuzz::value_Print(row, str);
 }
 
 // --- atf_fuzz.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_fuzz::value_ToCstr(const atf_fuzz::TableId& parent) {
+const char* atf_fuzz::value_ToCstr(const atf_fuzz::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_fuzz_TableId_dev_Target   : ret = "dev.Target";  break;
@@ -918,7 +918,7 @@ const char* atf_fuzz::value_ToCstr(const atf_fuzz::TableId& parent) {
 // --- atf_fuzz.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_fuzz::value_Print(const atf_fuzz::TableId& parent, algo::cstring &lhs) {
+void atf_fuzz::value_Print(const atf_fuzz::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -931,7 +931,7 @@ void atf_fuzz::value_Print(const atf_fuzz::TableId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_fuzz::value_SetStrptrMaybe(atf_fuzz::TableId& parent, algo::strptr rhs) {
+bool atf_fuzz::value_SetStrptrMaybe(atf_fuzz::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 10: {
@@ -954,13 +954,13 @@ bool atf_fuzz::value_SetStrptrMaybe(atf_fuzz::TableId& parent, algo::strptr rhs)
 // --- atf_fuzz.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_fuzz::value_SetStrptr(atf_fuzz::TableId& parent, algo::strptr rhs, atf_fuzz_TableIdEnum dflt) {
+void atf_fuzz::value_SetStrptr(atf_fuzz::TableId& parent, algo::strptr rhs, atf_fuzz_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_fuzz.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_fuzz::value_ReadStrptrMaybe(atf_fuzz::TableId& parent, algo::strptr rhs) {
+bool atf_fuzz::value_ReadStrptrMaybe(atf_fuzz::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -972,7 +972,7 @@ bool atf_fuzz::value_ReadStrptrMaybe(atf_fuzz::TableId& parent, algo::strptr rhs
 // --- atf_fuzz.TableId..ReadStrptrMaybe
 // Read fields of atf_fuzz::TableId from an ascii string.
 // The format of the string is the format of the atf_fuzz::TableId's only field
-bool atf_fuzz::TableId_ReadStrptrMaybe(atf_fuzz::TableId &parent, algo::strptr in_str) {
+bool atf_fuzz::TableId_ReadStrptrMaybe(atf_fuzz::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -981,7 +981,7 @@ bool atf_fuzz::TableId_ReadStrptrMaybe(atf_fuzz::TableId &parent, algo::strptr i
 // --- atf_fuzz.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_fuzz.TableId.String  printfmt:Raw
-void atf_fuzz::TableId_Print(atf_fuzz::TableId& row, algo::cstring& str) {
+void atf_fuzz::TableId_Print(atf_fuzz::TableId& row, algo::cstring& str) throw() {
     atf_fuzz::value_Print(row, str);
 }
 

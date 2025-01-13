@@ -64,12 +64,12 @@ inline void abt_md::FAnchor_Init(abt_md::FAnchor& anchor) {
 }
 
 // --- abt_md.FAnchor..Ctor
-inline  abt_md::FAnchor::FAnchor() {
+inline  abt_md::FAnchor::FAnchor() throw() {
     abt_md::FAnchor_Init(*this);
 }
 
 // --- abt_md.FAnchor..Dtor
-inline  abt_md::FAnchor::~FAnchor() {
+inline  abt_md::FAnchor::~FAnchor() throw() {
     abt_md::FAnchor_Uninit(*this);
 }
 
@@ -83,18 +83,18 @@ inline void abt_md::FComptest_Init(abt_md::FComptest& comptest) {
 }
 
 // --- abt_md.FComptest..Ctor
-inline  abt_md::FComptest::FComptest() {
+inline  abt_md::FComptest::FComptest() throw() {
     abt_md::FComptest_Init(*this);
 }
 
 // --- abt_md.FComptest..Dtor
-inline  abt_md::FComptest::~FComptest() {
+inline  abt_md::FComptest::~FComptest() throw() {
     abt_md::FComptest_Uninit(*this);
 }
 
 // --- abt_md.FCtype.c_ssimfile.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool abt_md::c_ssimfile_InsertMaybe(abt_md::FCtype& ctype, abt_md::FSsimfile& row) {
+inline bool abt_md::c_ssimfile_InsertMaybe(abt_md::FCtype& ctype, abt_md::FSsimfile& row) throw() {
     abt_md::FSsimfile* ptr = ctype.c_ssimfile;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
@@ -105,7 +105,7 @@ inline bool abt_md::c_ssimfile_InsertMaybe(abt_md::FCtype& ctype, abt_md::FSsimf
 
 // --- abt_md.FCtype.c_ssimfile.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void abt_md::c_ssimfile_Remove(abt_md::FCtype& ctype, abt_md::FSsimfile& row) {
+inline void abt_md::c_ssimfile_Remove(abt_md::FCtype& ctype, abt_md::FSsimfile& row) throw() {
     abt_md::FSsimfile *ptr = ctype.c_ssimfile;
     if (LIKELY(ptr == &row)) {
         ctype.c_ssimfile = NULL;
@@ -114,13 +114,13 @@ inline void abt_md::c_ssimfile_Remove(abt_md::FCtype& ctype, abt_md::FSsimfile& 
 
 // --- abt_md.FCtype.c_field.EmptyQ
 // Return true if index is empty
-inline bool abt_md::c_field_EmptyQ(abt_md::FCtype& ctype) {
+inline bool abt_md::c_field_EmptyQ(abt_md::FCtype& ctype) throw() {
     return ctype.c_field_n == 0;
 }
 
 // --- abt_md.FCtype.c_field.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FField* abt_md::c_field_Find(abt_md::FCtype& ctype, u32 t) {
+inline abt_md::FField* abt_md::c_field_Find(abt_md::FCtype& ctype, u32 t) throw() {
     abt_md::FField *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_field_n;
@@ -132,19 +132,19 @@ inline abt_md::FField* abt_md::c_field_Find(abt_md::FCtype& ctype, u32 t) {
 
 // --- abt_md.FCtype.c_field.Getary
 // Return array of pointers
-inline algo::aryptr<abt_md::FField*> abt_md::c_field_Getary(abt_md::FCtype& ctype) {
+inline algo::aryptr<abt_md::FField*> abt_md::c_field_Getary(abt_md::FCtype& ctype) throw() {
     return algo::aryptr<abt_md::FField*>(ctype.c_field_elems, ctype.c_field_n);
 }
 
 // --- abt_md.FCtype.c_field.N
 // Return number of items in the pointer array
-inline i32 abt_md::c_field_N(const abt_md::FCtype& ctype) {
+inline i32 abt_md::c_field_N(const abt_md::FCtype& ctype) throw() {
     return ctype.c_field_n;
 }
 
 // --- abt_md.FCtype.c_field.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt_md::c_field_RemoveAll(abt_md::FCtype& ctype) {
+inline void abt_md::c_field_RemoveAll(abt_md::FCtype& ctype) throw() {
     for (u32 i = 0; i < ctype.c_field_n; i++) {
         // mark all elements as not-in-array
         ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
@@ -154,31 +154,31 @@ inline void abt_md::c_field_RemoveAll(abt_md::FCtype& ctype) {
 
 // --- abt_md.FCtype.c_field.qFind
 // Return reference without bounds checking
-inline abt_md::FField& abt_md::c_field_qFind(abt_md::FCtype& ctype, u32 idx) {
+inline abt_md::FField& abt_md::c_field_qFind(abt_md::FCtype& ctype, u32 idx) throw() {
     return *ctype.c_field_elems[idx];
 }
 
 // --- abt_md.FCtype.c_field.InAryQ
 // True if row is in any ptrary instance
-inline bool abt_md::ctype_c_field_InAryQ(abt_md::FField& row) {
+inline bool abt_md::ctype_c_field_InAryQ(abt_md::FField& row) throw() {
     return row.ctype_c_field_in_ary;
 }
 
 // --- abt_md.FCtype.c_field.qLast
 // Reference to last element without bounds checking
-inline abt_md::FField& abt_md::c_field_qLast(abt_md::FCtype& ctype) {
+inline abt_md::FField& abt_md::c_field_qLast(abt_md::FCtype& ctype) throw() {
     return *ctype.c_field_elems[ctype.c_field_n-1];
 }
 
 // --- abt_md.FCtype.c_field_arg.EmptyQ
 // Return true if index is empty
-inline bool abt_md::c_field_arg_EmptyQ(abt_md::FCtype& ctype) {
+inline bool abt_md::c_field_arg_EmptyQ(abt_md::FCtype& ctype) throw() {
     return ctype.c_field_arg_n == 0;
 }
 
 // --- abt_md.FCtype.c_field_arg.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FField* abt_md::c_field_arg_Find(abt_md::FCtype& ctype, u32 t) {
+inline abt_md::FField* abt_md::c_field_arg_Find(abt_md::FCtype& ctype, u32 t) throw() {
     abt_md::FField *retval = NULL;
     u64 idx = t;
     u64 lim = ctype.c_field_arg_n;
@@ -190,19 +190,19 @@ inline abt_md::FField* abt_md::c_field_arg_Find(abt_md::FCtype& ctype, u32 t) {
 
 // --- abt_md.FCtype.c_field_arg.Getary
 // Return array of pointers
-inline algo::aryptr<abt_md::FField*> abt_md::c_field_arg_Getary(abt_md::FCtype& ctype) {
+inline algo::aryptr<abt_md::FField*> abt_md::c_field_arg_Getary(abt_md::FCtype& ctype) throw() {
     return algo::aryptr<abt_md::FField*>(ctype.c_field_arg_elems, ctype.c_field_arg_n);
 }
 
 // --- abt_md.FCtype.c_field_arg.N
 // Return number of items in the pointer array
-inline i32 abt_md::c_field_arg_N(const abt_md::FCtype& ctype) {
+inline i32 abt_md::c_field_arg_N(const abt_md::FCtype& ctype) throw() {
     return ctype.c_field_arg_n;
 }
 
 // --- abt_md.FCtype.c_field_arg.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt_md::c_field_arg_RemoveAll(abt_md::FCtype& ctype) {
+inline void abt_md::c_field_arg_RemoveAll(abt_md::FCtype& ctype) throw() {
     for (u32 i = 0; i < ctype.c_field_arg_n; i++) {
         // mark all elements as not-in-array
         ctype.c_field_arg_elems[i]->ctype_c_field_arg_in_ary = false;
@@ -212,24 +212,24 @@ inline void abt_md::c_field_arg_RemoveAll(abt_md::FCtype& ctype) {
 
 // --- abt_md.FCtype.c_field_arg.qFind
 // Return reference without bounds checking
-inline abt_md::FField& abt_md::c_field_arg_qFind(abt_md::FCtype& ctype, u32 idx) {
+inline abt_md::FField& abt_md::c_field_arg_qFind(abt_md::FCtype& ctype, u32 idx) throw() {
     return *ctype.c_field_arg_elems[idx];
 }
 
 // --- abt_md.FCtype.c_field_arg.InAryQ
 // True if row is in any ptrary instance
-inline bool abt_md::ctype_c_field_arg_InAryQ(abt_md::FField& row) {
+inline bool abt_md::ctype_c_field_arg_InAryQ(abt_md::FField& row) throw() {
     return row.ctype_c_field_arg_in_ary;
 }
 
 // --- abt_md.FCtype.c_field_arg.qLast
 // Reference to last element without bounds checking
-inline abt_md::FField& abt_md::c_field_arg_qLast(abt_md::FCtype& ctype) {
+inline abt_md::FField& abt_md::c_field_arg_qLast(abt_md::FCtype& ctype) throw() {
     return *ctype.c_field_arg_elems[ctype.c_field_arg_n-1];
 }
 
 // --- abt_md.FCtype.c_field_curs.Reset
-inline void abt_md::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, abt_md::FCtype &parent) {
+inline void abt_md::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, abt_md::FCtype &parent) throw() {
     curs.elems = parent.c_field_elems;
     curs.n_elems = parent.c_field_n;
     curs.index = 0;
@@ -237,24 +237,24 @@ inline void abt_md::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, abt_md::F
 
 // --- abt_md.FCtype.c_field_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) {
+inline bool abt_md::ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- abt_md.FCtype.c_field_curs.Next
 // proceed to next item
-inline void abt_md::ctype_c_field_curs_Next(ctype_c_field_curs &curs) {
+inline void abt_md::ctype_c_field_curs_Next(ctype_c_field_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FCtype.c_field_curs.Access
 // item access
-inline abt_md::FField& abt_md::ctype_c_field_curs_Access(ctype_c_field_curs &curs) {
+inline abt_md::FField& abt_md::ctype_c_field_curs_Access(ctype_c_field_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- abt_md.FCtype.c_field_arg_curs.Reset
-inline void abt_md::ctype_c_field_arg_curs_Reset(ctype_c_field_arg_curs &curs, abt_md::FCtype &parent) {
+inline void abt_md::ctype_c_field_arg_curs_Reset(ctype_c_field_arg_curs &curs, abt_md::FCtype &parent) throw() {
     curs.elems = parent.c_field_arg_elems;
     curs.n_elems = parent.c_field_arg_n;
     curs.index = 0;
@@ -262,19 +262,19 @@ inline void abt_md::ctype_c_field_arg_curs_Reset(ctype_c_field_arg_curs &curs, a
 
 // --- abt_md.FCtype.c_field_arg_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::ctype_c_field_arg_curs_ValidQ(ctype_c_field_arg_curs &curs) {
+inline bool abt_md::ctype_c_field_arg_curs_ValidQ(ctype_c_field_arg_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- abt_md.FCtype.c_field_arg_curs.Next
 // proceed to next item
-inline void abt_md::ctype_c_field_arg_curs_Next(ctype_c_field_arg_curs &curs) {
+inline void abt_md::ctype_c_field_arg_curs_Next(ctype_c_field_arg_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FCtype.c_field_arg_curs.Access
 // item access
-inline abt_md::FField& abt_md::ctype_c_field_arg_curs_Access(ctype_c_field_arg_curs &curs) {
+inline abt_md::FField& abt_md::ctype_c_field_arg_curs_Access(ctype_c_field_arg_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
@@ -294,30 +294,30 @@ inline void abt_md::FCtype_Init(abt_md::FCtype& ctype) {
 }
 
 // --- abt_md.FCtype..Ctor
-inline  abt_md::FCtype::FCtype() {
+inline  abt_md::FCtype::FCtype() throw() {
     abt_md::FCtype_Init(*this);
 }
 
 // --- abt_md.FCtype..Dtor
-inline  abt_md::FCtype::~FCtype() {
+inline  abt_md::FCtype::~FCtype() throw() {
     abt_md::FCtype_Uninit(*this);
 }
 
 // --- abt_md.FMdsection.step.Call
 // Invoke function by pointer
-inline void abt_md::step_Call(abt_md::FMdsection& mdsection, abt_md::FFileSection& arg) {
+inline void abt_md::step_Call(abt_md::FMdsection& mdsection, abt_md::FFileSection& arg) throw() {
     mdsection.step(arg);
 }
 
 // --- abt_md.FMdsection.zd_file_section.EmptyQ
 // Return true if index is empty
-inline bool abt_md::zd_file_section_EmptyQ(abt_md::FMdsection& mdsection) {
+inline bool abt_md::zd_file_section_EmptyQ(abt_md::FMdsection& mdsection) throw() {
     return mdsection.zd_file_section_head == NULL;
 }
 
 // --- abt_md.FMdsection.zd_file_section.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline abt_md::FFileSection* abt_md::zd_file_section_First(abt_md::FMdsection& mdsection) {
+inline abt_md::FFileSection* abt_md::zd_file_section_First(abt_md::FMdsection& mdsection) throw() {
     abt_md::FFileSection *row = NULL;
     row = mdsection.zd_file_section_head;
     return row;
@@ -325,7 +325,7 @@ inline abt_md::FFileSection* abt_md::zd_file_section_First(abt_md::FMdsection& m
 
 // --- abt_md.FMdsection.zd_file_section.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool abt_md::zd_file_section_InLlistQ(abt_md::FFileSection& row) {
+inline bool abt_md::zd_file_section_InLlistQ(abt_md::FFileSection& row) throw() {
     bool result = false;
     result = !(row.zd_file_section_next == (abt_md::FFileSection*)-1);
     return result;
@@ -333,7 +333,7 @@ inline bool abt_md::zd_file_section_InLlistQ(abt_md::FFileSection& row) {
 
 // --- abt_md.FMdsection.zd_file_section.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline abt_md::FFileSection* abt_md::zd_file_section_Last(abt_md::FMdsection& mdsection) {
+inline abt_md::FFileSection* abt_md::zd_file_section_Last(abt_md::FMdsection& mdsection) throw() {
     abt_md::FFileSection *row = NULL;
     row = mdsection.zd_file_section_tail;
     return row;
@@ -341,25 +341,25 @@ inline abt_md::FFileSection* abt_md::zd_file_section_Last(abt_md::FMdsection& md
 
 // --- abt_md.FMdsection.zd_file_section.N
 // Return number of items in the linked list
-inline i32 abt_md::zd_file_section_N(const abt_md::FMdsection& mdsection) {
+inline i32 abt_md::zd_file_section_N(const abt_md::FMdsection& mdsection) throw() {
     return mdsection.zd_file_section_n;
 }
 
 // --- abt_md.FMdsection.zd_file_section.Next
 // Return pointer to next element in the list
-inline abt_md::FFileSection* abt_md::zd_file_section_Next(abt_md::FFileSection &row) {
+inline abt_md::FFileSection* abt_md::zd_file_section_Next(abt_md::FFileSection &row) throw() {
     return row.zd_file_section_next;
 }
 
 // --- abt_md.FMdsection.zd_file_section.Prev
 // Return pointer to previous element in the list
-inline abt_md::FFileSection* abt_md::zd_file_section_Prev(abt_md::FFileSection &row) {
+inline abt_md::FFileSection* abt_md::zd_file_section_Prev(abt_md::FFileSection &row) throw() {
     return row.zd_file_section_prev;
 }
 
 // --- abt_md.FMdsection.zd_file_section.qLast
 // Return reference to last element in the index. No bounds checking.
-inline abt_md::FFileSection& abt_md::zd_file_section_qLast(abt_md::FMdsection& mdsection) {
+inline abt_md::FFileSection& abt_md::zd_file_section_qLast(abt_md::FMdsection& mdsection) throw() {
     abt_md::FFileSection *row = NULL;
     row = mdsection.zd_file_section_tail;
     return *row;
@@ -367,47 +367,47 @@ inline abt_md::FFileSection& abt_md::zd_file_section_qLast(abt_md::FMdsection& m
 
 // --- abt_md.FMdsection.zd_file_section_curs.Reset
 // cursor points to valid item
-inline void abt_md::mdsection_zd_file_section_curs_Reset(mdsection_zd_file_section_curs &curs, abt_md::FMdsection &parent) {
+inline void abt_md::mdsection_zd_file_section_curs_Reset(mdsection_zd_file_section_curs &curs, abt_md::FMdsection &parent) throw() {
     curs.row = parent.zd_file_section_head;
 }
 
 // --- abt_md.FMdsection.zd_file_section_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::mdsection_zd_file_section_curs_ValidQ(mdsection_zd_file_section_curs &curs) {
+inline bool abt_md::mdsection_zd_file_section_curs_ValidQ(mdsection_zd_file_section_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- abt_md.FMdsection.zd_file_section_curs.Next
 // proceed to next item
-inline void abt_md::mdsection_zd_file_section_curs_Next(mdsection_zd_file_section_curs &curs) {
+inline void abt_md::mdsection_zd_file_section_curs_Next(mdsection_zd_file_section_curs &curs) throw() {
     abt_md::FFileSection *next = (*curs.row).zd_file_section_next;
     curs.row = next;
 }
 
 // --- abt_md.FMdsection.zd_file_section_curs.Access
 // item access
-inline abt_md::FFileSection& abt_md::mdsection_zd_file_section_curs_Access(mdsection_zd_file_section_curs &curs) {
+inline abt_md::FFileSection& abt_md::mdsection_zd_file_section_curs_Access(mdsection_zd_file_section_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- abt_md.FMdsection..Ctor
-inline  abt_md::FMdsection::FMdsection() {
+inline  abt_md::FMdsection::FMdsection() throw() {
     abt_md::FMdsection_Init(*this);
 }
 
 // --- abt_md.trace..Ctor
-inline  abt_md::trace::trace() {
+inline  abt_md::trace::trace() throw() {
 }
 
 // --- abt_md.FDb.readme.EmptyQ
 // Return true if index is empty
-inline bool abt_md::readme_EmptyQ() {
+inline bool abt_md::readme_EmptyQ() throw() {
     return _db.readme_n == 0;
 }
 
 // --- abt_md.FDb.readme.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FReadme* abt_md::readme_Find(u64 t) {
+inline abt_md::FReadme* abt_md::readme_Find(u64 t) throw() {
     abt_md::FReadme *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.readme_n))) {
         u64 x = t + 1;
@@ -421,19 +421,19 @@ inline abt_md::FReadme* abt_md::readme_Find(u64 t) {
 
 // --- abt_md.FDb.readme.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FReadme* abt_md::readme_Last() {
+inline abt_md::FReadme* abt_md::readme_Last() throw() {
     return readme_Find(u64(_db.readme_n-1));
 }
 
 // --- abt_md.FDb.readme.N
 // Return number of items in the pool
-inline i32 abt_md::readme_N() {
+inline i32 abt_md::readme_N() throw() {
     return _db.readme_n;
 }
 
 // --- abt_md.FDb.readme.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FReadme& abt_md::readme_qFind(u64 t) {
+inline abt_md::FReadme& abt_md::readme_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -443,19 +443,19 @@ inline abt_md::FReadme& abt_md::readme_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_readme.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_readme_EmptyQ() {
+inline bool abt_md::ind_readme_EmptyQ() throw() {
     return _db.ind_readme_n == 0;
 }
 
 // --- abt_md.FDb.ind_readme.N
 // Return number of items in the hash
-inline i32 abt_md::ind_readme_N() {
+inline i32 abt_md::ind_readme_N() throw() {
     return _db.ind_readme_n;
 }
 
 // --- abt_md.FDb.mdsection.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-inline void* abt_md::mdsection_AllocMem() {
+inline void* abt_md::mdsection_AllocMem() throw() {
     void *row = reinterpret_cast<abt_md::FMdsection*>(_db.mdsection_data) + _db.mdsection_n;
     if (_db.mdsection_n == 25) row = NULL;
     if (row) _db.mdsection_n++;
@@ -464,13 +464,13 @@ inline void* abt_md::mdsection_AllocMem() {
 
 // --- abt_md.FDb.mdsection.EmptyQ
 // Return true if index is empty
-inline bool abt_md::mdsection_EmptyQ() {
+inline bool abt_md::mdsection_EmptyQ() throw() {
     return _db.mdsection_n == 0;
 }
 
 // --- abt_md.FDb.mdsection.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FMdsection* abt_md::mdsection_Find(i32 t) {
+inline abt_md::FMdsection* abt_md::mdsection_Find(i32 t) throw() {
     u64 idx = t;
     u64 lim = _db.mdsection_n;
     return idx < lim ? reinterpret_cast<abt_md::FMdsection*>(_db.mdsection_data) + idx : NULL; // unsigned comparison with limit
@@ -478,45 +478,45 @@ inline abt_md::FMdsection* abt_md::mdsection_Find(i32 t) {
 
 // --- abt_md.FDb.mdsection.Getary
 // Return array pointer by value
-inline algo::aryptr<abt_md::FMdsection> abt_md::mdsection_Getary() {
+inline algo::aryptr<abt_md::FMdsection> abt_md::mdsection_Getary() throw() {
     return algo::aryptr<abt_md::FMdsection>(reinterpret_cast<abt_md::FMdsection*>(_db.mdsection_data), _db.mdsection_n);
 }
 
 // --- abt_md.FDb.mdsection.Max
 // Return constant 25 -- max. number of items in the pool
-inline i32 abt_md::mdsection_Max() {
+inline i32 abt_md::mdsection_Max() throw() {
     return 25;
 }
 
 // --- abt_md.FDb.mdsection.N
 // Return number of items in the array
-inline i32 abt_md::mdsection_N() {
+inline i32 abt_md::mdsection_N() throw() {
     (void)_db;//only to avoid -Wunused-parameter
     return _db.mdsection_n;
 }
 
 // --- abt_md.FDb.mdsection.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline abt_md::FMdsection& abt_md::mdsection_qFind(i32 t) {
+inline abt_md::FMdsection& abt_md::mdsection_qFind(i32 t) throw() {
     return reinterpret_cast<abt_md::FMdsection*>(_db.mdsection_data)[u64(t)];
 }
 
 // --- abt_md.FDb.mdsection.rowid_Get
 // Compute row id of element given element's address
-inline i32 abt_md::mdsection_rowid_Get(abt_md::FMdsection &row) {
+inline i32 abt_md::mdsection_rowid_Get(abt_md::FMdsection &row) throw() {
     u64 ret = u64(&row - reinterpret_cast<abt_md::FMdsection*>(_db.mdsection_data));
     return i32(ret);
 }
 
 // --- abt_md.FDb.file_section.EmptyQ
 // Return true if index is empty
-inline bool abt_md::file_section_EmptyQ() {
+inline bool abt_md::file_section_EmptyQ() throw() {
     return _db.file_section_n == 0;
 }
 
 // --- abt_md.FDb.file_section.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FFileSection* abt_md::file_section_Find(u64 t) {
+inline abt_md::FFileSection* abt_md::file_section_Find(u64 t) throw() {
     abt_md::FFileSection *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.file_section_n))) {
         u64 x = t + 1;
@@ -530,19 +530,19 @@ inline abt_md::FFileSection* abt_md::file_section_Find(u64 t) {
 
 // --- abt_md.FDb.file_section.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FFileSection* abt_md::file_section_Last() {
+inline abt_md::FFileSection* abt_md::file_section_Last() throw() {
     return file_section_Find(u64(_db.file_section_n-1));
 }
 
 // --- abt_md.FDb.file_section.N
 // Return number of items in the pool
-inline i32 abt_md::file_section_N() {
+inline i32 abt_md::file_section_N() throw() {
     return _db.file_section_n;
 }
 
 // --- abt_md.FDb.file_section.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FFileSection& abt_md::file_section_qFind(u64 t) {
+inline abt_md::FFileSection& abt_md::file_section_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -552,13 +552,13 @@ inline abt_md::FFileSection& abt_md::file_section_qFind(u64 t) {
 
 // --- abt_md.FDb.bh_file_section.EmptyQ
 // Return true if index is empty
-inline bool abt_md::bh_file_section_EmptyQ() {
+inline bool abt_md::bh_file_section_EmptyQ() throw() {
     return _db.bh_file_section_n == 0;
 }
 
 // --- abt_md.FDb.bh_file_section.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline abt_md::FFileSection* abt_md::bh_file_section_First() {
+inline abt_md::FFileSection* abt_md::bh_file_section_First() throw() {
     abt_md::FFileSection *row = NULL;
     if (_db.bh_file_section_n > 0) {
         row = _db.bh_file_section_elems[0];
@@ -568,7 +568,7 @@ inline abt_md::FFileSection* abt_md::bh_file_section_First() {
 
 // --- abt_md.FDb.bh_file_section.InBheapQ
 // Return true if row is in index, false otherwise
-inline bool abt_md::bh_file_section_InBheapQ(abt_md::FFileSection& row) {
+inline bool abt_md::bh_file_section_InBheapQ(abt_md::FFileSection& row) throw() {
     bool result = false;
     result = row.bh_file_section_idx != -1;
     return result;
@@ -576,19 +576,19 @@ inline bool abt_md::bh_file_section_InBheapQ(abt_md::FFileSection& row) {
 
 // --- abt_md.FDb.bh_file_section.N
 // Return number of items in the heap
-inline i32 abt_md::bh_file_section_N() {
+inline i32 abt_md::bh_file_section_N() throw() {
     return _db.bh_file_section_n;
 }
 
 // --- abt_md.FDb.ns.EmptyQ
 // Return true if index is empty
-inline bool abt_md::ns_EmptyQ() {
+inline bool abt_md::ns_EmptyQ() throw() {
     return _db.ns_n == 0;
 }
 
 // --- abt_md.FDb.ns.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FNs* abt_md::ns_Find(u64 t) {
+inline abt_md::FNs* abt_md::ns_Find(u64 t) throw() {
     abt_md::FNs *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ns_n))) {
         u64 x = t + 1;
@@ -602,19 +602,19 @@ inline abt_md::FNs* abt_md::ns_Find(u64 t) {
 
 // --- abt_md.FDb.ns.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FNs* abt_md::ns_Last() {
+inline abt_md::FNs* abt_md::ns_Last() throw() {
     return ns_Find(u64(_db.ns_n-1));
 }
 
 // --- abt_md.FDb.ns.N
 // Return number of items in the pool
-inline i32 abt_md::ns_N() {
+inline i32 abt_md::ns_N() throw() {
     return _db.ns_n;
 }
 
 // --- abt_md.FDb.ns.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FNs& abt_md::ns_qFind(u64 t) {
+inline abt_md::FNs& abt_md::ns_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -624,25 +624,25 @@ inline abt_md::FNs& abt_md::ns_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_ns.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_ns_EmptyQ() {
+inline bool abt_md::ind_ns_EmptyQ() throw() {
     return _db.ind_ns_n == 0;
 }
 
 // --- abt_md.FDb.ind_ns.N
 // Return number of items in the hash
-inline i32 abt_md::ind_ns_N() {
+inline i32 abt_md::ind_ns_N() throw() {
     return _db.ind_ns_n;
 }
 
 // --- abt_md.FDb.ssimfile.EmptyQ
 // Return true if index is empty
-inline bool abt_md::ssimfile_EmptyQ() {
+inline bool abt_md::ssimfile_EmptyQ() throw() {
     return _db.ssimfile_n == 0;
 }
 
 // --- abt_md.FDb.ssimfile.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FSsimfile* abt_md::ssimfile_Find(u64 t) {
+inline abt_md::FSsimfile* abt_md::ssimfile_Find(u64 t) throw() {
     abt_md::FSsimfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
         u64 x = t + 1;
@@ -656,19 +656,19 @@ inline abt_md::FSsimfile* abt_md::ssimfile_Find(u64 t) {
 
 // --- abt_md.FDb.ssimfile.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FSsimfile* abt_md::ssimfile_Last() {
+inline abt_md::FSsimfile* abt_md::ssimfile_Last() throw() {
     return ssimfile_Find(u64(_db.ssimfile_n-1));
 }
 
 // --- abt_md.FDb.ssimfile.N
 // Return number of items in the pool
-inline i32 abt_md::ssimfile_N() {
+inline i32 abt_md::ssimfile_N() throw() {
     return _db.ssimfile_n;
 }
 
 // --- abt_md.FDb.ssimfile.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FSsimfile& abt_md::ssimfile_qFind(u64 t) {
+inline abt_md::FSsimfile& abt_md::ssimfile_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -678,25 +678,25 @@ inline abt_md::FSsimfile& abt_md::ssimfile_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_ssimfile.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_ssimfile_EmptyQ() {
+inline bool abt_md::ind_ssimfile_EmptyQ() throw() {
     return _db.ind_ssimfile_n == 0;
 }
 
 // --- abt_md.FDb.ind_ssimfile.N
 // Return number of items in the hash
-inline i32 abt_md::ind_ssimfile_N() {
+inline i32 abt_md::ind_ssimfile_N() throw() {
     return _db.ind_ssimfile_n;
 }
 
 // --- abt_md.FDb.ctype.EmptyQ
 // Return true if index is empty
-inline bool abt_md::ctype_EmptyQ() {
+inline bool abt_md::ctype_EmptyQ() throw() {
     return _db.ctype_n == 0;
 }
 
 // --- abt_md.FDb.ctype.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FCtype* abt_md::ctype_Find(u64 t) {
+inline abt_md::FCtype* abt_md::ctype_Find(u64 t) throw() {
     abt_md::FCtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctype_n))) {
         u64 x = t + 1;
@@ -710,19 +710,19 @@ inline abt_md::FCtype* abt_md::ctype_Find(u64 t) {
 
 // --- abt_md.FDb.ctype.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FCtype* abt_md::ctype_Last() {
+inline abt_md::FCtype* abt_md::ctype_Last() throw() {
     return ctype_Find(u64(_db.ctype_n-1));
 }
 
 // --- abt_md.FDb.ctype.N
 // Return number of items in the pool
-inline i32 abt_md::ctype_N() {
+inline i32 abt_md::ctype_N() throw() {
     return _db.ctype_n;
 }
 
 // --- abt_md.FDb.ctype.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FCtype& abt_md::ctype_qFind(u64 t) {
+inline abt_md::FCtype& abt_md::ctype_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -732,25 +732,25 @@ inline abt_md::FCtype& abt_md::ctype_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_ctype.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_ctype_EmptyQ() {
+inline bool abt_md::ind_ctype_EmptyQ() throw() {
     return _db.ind_ctype_n == 0;
 }
 
 // --- abt_md.FDb.ind_ctype.N
 // Return number of items in the hash
-inline i32 abt_md::ind_ctype_N() {
+inline i32 abt_md::ind_ctype_N() throw() {
     return _db.ind_ctype_n;
 }
 
 // --- abt_md.FDb.field.EmptyQ
 // Return true if index is empty
-inline bool abt_md::field_EmptyQ() {
+inline bool abt_md::field_EmptyQ() throw() {
     return _db.field_n == 0;
 }
 
 // --- abt_md.FDb.field.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FField* abt_md::field_Find(u64 t) {
+inline abt_md::FField* abt_md::field_Find(u64 t) throw() {
     abt_md::FField *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.field_n))) {
         u64 x = t + 1;
@@ -764,19 +764,19 @@ inline abt_md::FField* abt_md::field_Find(u64 t) {
 
 // --- abt_md.FDb.field.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FField* abt_md::field_Last() {
+inline abt_md::FField* abt_md::field_Last() throw() {
     return field_Find(u64(_db.field_n-1));
 }
 
 // --- abt_md.FDb.field.N
 // Return number of items in the pool
-inline i32 abt_md::field_N() {
+inline i32 abt_md::field_N() throw() {
     return _db.field_n;
 }
 
 // --- abt_md.FDb.field.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FField& abt_md::field_qFind(u64 t) {
+inline abt_md::FField& abt_md::field_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -786,25 +786,25 @@ inline abt_md::FField& abt_md::field_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_field.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_field_EmptyQ() {
+inline bool abt_md::ind_field_EmptyQ() throw() {
     return _db.ind_field_n == 0;
 }
 
 // --- abt_md.FDb.ind_field.N
 // Return number of items in the hash
-inline i32 abt_md::ind_field_N() {
+inline i32 abt_md::ind_field_N() throw() {
     return _db.ind_field_n;
 }
 
 // --- abt_md.FDb.targsrc.EmptyQ
 // Return true if index is empty
-inline bool abt_md::targsrc_EmptyQ() {
+inline bool abt_md::targsrc_EmptyQ() throw() {
     return _db.targsrc_n == 0;
 }
 
 // --- abt_md.FDb.targsrc.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FTargsrc* abt_md::targsrc_Find(u64 t) {
+inline abt_md::FTargsrc* abt_md::targsrc_Find(u64 t) throw() {
     abt_md::FTargsrc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
         u64 x = t + 1;
@@ -818,19 +818,19 @@ inline abt_md::FTargsrc* abt_md::targsrc_Find(u64 t) {
 
 // --- abt_md.FDb.targsrc.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FTargsrc* abt_md::targsrc_Last() {
+inline abt_md::FTargsrc* abt_md::targsrc_Last() throw() {
     return targsrc_Find(u64(_db.targsrc_n-1));
 }
 
 // --- abt_md.FDb.targsrc.N
 // Return number of items in the pool
-inline i32 abt_md::targsrc_N() {
+inline i32 abt_md::targsrc_N() throw() {
     return _db.targsrc_n;
 }
 
 // --- abt_md.FDb.targsrc.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FTargsrc& abt_md::targsrc_qFind(u64 t) {
+inline abt_md::FTargsrc& abt_md::targsrc_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -840,13 +840,13 @@ inline abt_md::FTargsrc& abt_md::targsrc_qFind(u64 t) {
 
 // --- abt_md.FDb.substr.EmptyQ
 // Return true if index is empty
-inline bool abt_md::substr_EmptyQ() {
+inline bool abt_md::substr_EmptyQ() throw() {
     return _db.substr_n == 0;
 }
 
 // --- abt_md.FDb.substr.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FSubstr* abt_md::substr_Find(u64 t) {
+inline abt_md::FSubstr* abt_md::substr_Find(u64 t) throw() {
     abt_md::FSubstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.substr_n))) {
         u64 x = t + 1;
@@ -860,19 +860,19 @@ inline abt_md::FSubstr* abt_md::substr_Find(u64 t) {
 
 // --- abt_md.FDb.substr.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FSubstr* abt_md::substr_Last() {
+inline abt_md::FSubstr* abt_md::substr_Last() throw() {
     return substr_Find(u64(_db.substr_n-1));
 }
 
 // --- abt_md.FDb.substr.N
 // Return number of items in the pool
-inline i32 abt_md::substr_N() {
+inline i32 abt_md::substr_N() throw() {
     return _db.substr_n;
 }
 
 // --- abt_md.FDb.substr.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FSubstr& abt_md::substr_qFind(u64 t) {
+inline abt_md::FSubstr& abt_md::substr_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -882,25 +882,25 @@ inline abt_md::FSubstr& abt_md::substr_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_human_text.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_human_text_EmptyQ() {
+inline bool abt_md::ind_human_text_EmptyQ() throw() {
     return _db.ind_human_text_n == 0;
 }
 
 // --- abt_md.FDb.ind_human_text.N
 // Return number of items in the hash
-inline i32 abt_md::ind_human_text_N() {
+inline i32 abt_md::ind_human_text_N() throw() {
     return _db.ind_human_text_n;
 }
 
 // --- abt_md.FDb.scriptfile.EmptyQ
 // Return true if index is empty
-inline bool abt_md::scriptfile_EmptyQ() {
+inline bool abt_md::scriptfile_EmptyQ() throw() {
     return _db.scriptfile_n == 0;
 }
 
 // --- abt_md.FDb.scriptfile.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FScriptfile* abt_md::scriptfile_Find(u64 t) {
+inline abt_md::FScriptfile* abt_md::scriptfile_Find(u64 t) throw() {
     abt_md::FScriptfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.scriptfile_n))) {
         u64 x = t + 1;
@@ -914,19 +914,19 @@ inline abt_md::FScriptfile* abt_md::scriptfile_Find(u64 t) {
 
 // --- abt_md.FDb.scriptfile.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FScriptfile* abt_md::scriptfile_Last() {
+inline abt_md::FScriptfile* abt_md::scriptfile_Last() throw() {
     return scriptfile_Find(u64(_db.scriptfile_n-1));
 }
 
 // --- abt_md.FDb.scriptfile.N
 // Return number of items in the pool
-inline i32 abt_md::scriptfile_N() {
+inline i32 abt_md::scriptfile_N() throw() {
     return _db.scriptfile_n;
 }
 
 // --- abt_md.FDb.scriptfile.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FScriptfile& abt_md::scriptfile_qFind(u64 t) {
+inline abt_md::FScriptfile& abt_md::scriptfile_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -936,25 +936,25 @@ inline abt_md::FScriptfile& abt_md::scriptfile_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_scriptfile.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_scriptfile_EmptyQ() {
+inline bool abt_md::ind_scriptfile_EmptyQ() throw() {
     return _db.ind_scriptfile_n == 0;
 }
 
 // --- abt_md.FDb.ind_scriptfile.N
 // Return number of items in the hash
-inline i32 abt_md::ind_scriptfile_N() {
+inline i32 abt_md::ind_scriptfile_N() throw() {
     return _db.ind_scriptfile_n;
 }
 
 // --- abt_md.FDb.nstype.EmptyQ
 // Return true if index is empty
-inline bool abt_md::nstype_EmptyQ() {
+inline bool abt_md::nstype_EmptyQ() throw() {
     return _db.nstype_n == 0;
 }
 
 // --- abt_md.FDb.nstype.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FNstype* abt_md::nstype_Find(u64 t) {
+inline abt_md::FNstype* abt_md::nstype_Find(u64 t) throw() {
     abt_md::FNstype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.nstype_n))) {
         u64 x = t + 1;
@@ -968,19 +968,19 @@ inline abt_md::FNstype* abt_md::nstype_Find(u64 t) {
 
 // --- abt_md.FDb.nstype.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FNstype* abt_md::nstype_Last() {
+inline abt_md::FNstype* abt_md::nstype_Last() throw() {
     return nstype_Find(u64(_db.nstype_n-1));
 }
 
 // --- abt_md.FDb.nstype.N
 // Return number of items in the pool
-inline i32 abt_md::nstype_N() {
+inline i32 abt_md::nstype_N() throw() {
     return _db.nstype_n;
 }
 
 // --- abt_md.FDb.nstype.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FNstype& abt_md::nstype_qFind(u64 t) {
+inline abt_md::FNstype& abt_md::nstype_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -990,25 +990,25 @@ inline abt_md::FNstype& abt_md::nstype_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_nstype.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_nstype_EmptyQ() {
+inline bool abt_md::ind_nstype_EmptyQ() throw() {
     return _db.ind_nstype_n == 0;
 }
 
 // --- abt_md.FDb.ind_nstype.N
 // Return number of items in the hash
-inline i32 abt_md::ind_nstype_N() {
+inline i32 abt_md::ind_nstype_N() throw() {
     return _db.ind_nstype_n;
 }
 
 // --- abt_md.FDb.comptest.EmptyQ
 // Return true if index is empty
-inline bool abt_md::comptest_EmptyQ() {
+inline bool abt_md::comptest_EmptyQ() throw() {
     return _db.comptest_n == 0;
 }
 
 // --- abt_md.FDb.comptest.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FComptest* abt_md::comptest_Find(u64 t) {
+inline abt_md::FComptest* abt_md::comptest_Find(u64 t) throw() {
     abt_md::FComptest *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.comptest_n))) {
         u64 x = t + 1;
@@ -1022,19 +1022,19 @@ inline abt_md::FComptest* abt_md::comptest_Find(u64 t) {
 
 // --- abt_md.FDb.comptest.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FComptest* abt_md::comptest_Last() {
+inline abt_md::FComptest* abt_md::comptest_Last() throw() {
     return comptest_Find(u64(_db.comptest_n-1));
 }
 
 // --- abt_md.FDb.comptest.N
 // Return number of items in the pool
-inline i32 abt_md::comptest_N() {
+inline i32 abt_md::comptest_N() throw() {
     return _db.comptest_n;
 }
 
 // --- abt_md.FDb.comptest.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FComptest& abt_md::comptest_qFind(u64 t) {
+inline abt_md::FComptest& abt_md::comptest_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -1044,13 +1044,13 @@ inline abt_md::FComptest& abt_md::comptest_qFind(u64 t) {
 
 // --- abt_md.FDb.anchor.EmptyQ
 // Return true if index is empty
-inline bool abt_md::anchor_EmptyQ() {
+inline bool abt_md::anchor_EmptyQ() throw() {
     return _db.anchor_n == 0;
 }
 
 // --- abt_md.FDb.anchor.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FAnchor* abt_md::anchor_Find(u64 t) {
+inline abt_md::FAnchor* abt_md::anchor_Find(u64 t) throw() {
     abt_md::FAnchor *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.anchor_n))) {
         u64 x = t + 1;
@@ -1064,19 +1064,19 @@ inline abt_md::FAnchor* abt_md::anchor_Find(u64 t) {
 
 // --- abt_md.FDb.anchor.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FAnchor* abt_md::anchor_Last() {
+inline abt_md::FAnchor* abt_md::anchor_Last() throw() {
     return anchor_Find(u64(_db.anchor_n-1));
 }
 
 // --- abt_md.FDb.anchor.N
 // Return number of items in the pool
-inline i32 abt_md::anchor_N() {
+inline i32 abt_md::anchor_N() throw() {
     return _db.anchor_n;
 }
 
 // --- abt_md.FDb.anchor.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FAnchor& abt_md::anchor_qFind(u64 t) {
+inline abt_md::FAnchor& abt_md::anchor_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -1086,25 +1086,25 @@ inline abt_md::FAnchor& abt_md::anchor_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_anchor.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_anchor_EmptyQ() {
+inline bool abt_md::ind_anchor_EmptyQ() throw() {
     return _db.ind_anchor_n == 0;
 }
 
 // --- abt_md.FDb.ind_anchor.N
 // Return number of items in the hash
-inline i32 abt_md::ind_anchor_N() {
+inline i32 abt_md::ind_anchor_N() throw() {
     return _db.ind_anchor_n;
 }
 
 // --- abt_md.FDb.link.EmptyQ
 // Return true if index is empty
-inline bool abt_md::link_EmptyQ() {
+inline bool abt_md::link_EmptyQ() throw() {
     return _db.link_n == 0;
 }
 
 // --- abt_md.FDb.link.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FLink* abt_md::link_Find(u64 t) {
+inline abt_md::FLink* abt_md::link_Find(u64 t) throw() {
     abt_md::FLink *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.link_n))) {
         u64 x = t + 1;
@@ -1118,19 +1118,19 @@ inline abt_md::FLink* abt_md::link_Find(u64 t) {
 
 // --- abt_md.FDb.link.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FLink* abt_md::link_Last() {
+inline abt_md::FLink* abt_md::link_Last() throw() {
     return link_Find(u64(_db.link_n-1));
 }
 
 // --- abt_md.FDb.link.N
 // Return number of items in the pool
-inline i32 abt_md::link_N() {
+inline i32 abt_md::link_N() throw() {
     return _db.link_n;
 }
 
 // --- abt_md.FDb.link.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FLink& abt_md::link_qFind(u64 t) {
+inline abt_md::FLink& abt_md::link_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -1140,13 +1140,13 @@ inline abt_md::FLink& abt_md::link_qFind(u64 t) {
 
 // --- abt_md.FDb.reftype.EmptyQ
 // Return true if index is empty
-inline bool abt_md::reftype_EmptyQ() {
+inline bool abt_md::reftype_EmptyQ() throw() {
     return _db.reftype_n == 0;
 }
 
 // --- abt_md.FDb.reftype.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FReftype* abt_md::reftype_Find(u64 t) {
+inline abt_md::FReftype* abt_md::reftype_Find(u64 t) throw() {
     abt_md::FReftype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.reftype_n))) {
         u64 x = t + 1;
@@ -1160,19 +1160,19 @@ inline abt_md::FReftype* abt_md::reftype_Find(u64 t) {
 
 // --- abt_md.FDb.reftype.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FReftype* abt_md::reftype_Last() {
+inline abt_md::FReftype* abt_md::reftype_Last() throw() {
     return reftype_Find(u64(_db.reftype_n-1));
 }
 
 // --- abt_md.FDb.reftype.N
 // Return number of items in the pool
-inline i32 abt_md::reftype_N() {
+inline i32 abt_md::reftype_N() throw() {
     return _db.reftype_n;
 }
 
 // --- abt_md.FDb.reftype.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FReftype& abt_md::reftype_qFind(u64 t) {
+inline abt_md::FReftype& abt_md::reftype_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -1182,13 +1182,13 @@ inline abt_md::FReftype& abt_md::reftype_qFind(u64 t) {
 
 // --- abt_md.FDb.tclass.EmptyQ
 // Return true if index is empty
-inline bool abt_md::tclass_EmptyQ() {
+inline bool abt_md::tclass_EmptyQ() throw() {
     return _db.tclass_n == 0;
 }
 
 // --- abt_md.FDb.tclass.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FTclass* abt_md::tclass_Find(u64 t) {
+inline abt_md::FTclass* abt_md::tclass_Find(u64 t) throw() {
     abt_md::FTclass *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.tclass_n))) {
         u64 x = t + 1;
@@ -1202,19 +1202,19 @@ inline abt_md::FTclass* abt_md::tclass_Find(u64 t) {
 
 // --- abt_md.FDb.tclass.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FTclass* abt_md::tclass_Last() {
+inline abt_md::FTclass* abt_md::tclass_Last() throw() {
     return tclass_Find(u64(_db.tclass_n-1));
 }
 
 // --- abt_md.FDb.tclass.N
 // Return number of items in the pool
-inline i32 abt_md::tclass_N() {
+inline i32 abt_md::tclass_N() throw() {
     return _db.tclass_n;
 }
 
 // --- abt_md.FDb.tclass.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FTclass& abt_md::tclass_qFind(u64 t) {
+inline abt_md::FTclass& abt_md::tclass_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -1224,25 +1224,25 @@ inline abt_md::FTclass& abt_md::tclass_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_tclass.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_tclass_EmptyQ() {
+inline bool abt_md::ind_tclass_EmptyQ() throw() {
     return _db.ind_tclass_n == 0;
 }
 
 // --- abt_md.FDb.ind_tclass.N
 // Return number of items in the hash
-inline i32 abt_md::ind_tclass_N() {
+inline i32 abt_md::ind_tclass_N() throw() {
     return _db.ind_tclass_n;
 }
 
 // --- abt_md.FDb.fconst.EmptyQ
 // Return true if index is empty
-inline bool abt_md::fconst_EmptyQ() {
+inline bool abt_md::fconst_EmptyQ() throw() {
     return _db.fconst_n == 0;
 }
 
 // --- abt_md.FDb.fconst.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FFconst* abt_md::fconst_Find(u64 t) {
+inline abt_md::FFconst* abt_md::fconst_Find(u64 t) throw() {
     abt_md::FFconst *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fconst_n))) {
         u64 x = t + 1;
@@ -1256,19 +1256,19 @@ inline abt_md::FFconst* abt_md::fconst_Find(u64 t) {
 
 // --- abt_md.FDb.fconst.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FFconst* abt_md::fconst_Last() {
+inline abt_md::FFconst* abt_md::fconst_Last() throw() {
     return fconst_Find(u64(_db.fconst_n-1));
 }
 
 // --- abt_md.FDb.fconst.N
 // Return number of items in the pool
-inline i32 abt_md::fconst_N() {
+inline i32 abt_md::fconst_N() throw() {
     return _db.fconst_n;
 }
 
 // --- abt_md.FDb.fconst.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FFconst& abt_md::fconst_qFind(u64 t) {
+inline abt_md::FFconst& abt_md::fconst_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -1278,13 +1278,13 @@ inline abt_md::FFconst& abt_md::fconst_qFind(u64 t) {
 
 // --- abt_md.FDb.gconst.EmptyQ
 // Return true if index is empty
-inline bool abt_md::gconst_EmptyQ() {
+inline bool abt_md::gconst_EmptyQ() throw() {
     return _db.gconst_n == 0;
 }
 
 // --- abt_md.FDb.gconst.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FGconst* abt_md::gconst_Find(u64 t) {
+inline abt_md::FGconst* abt_md::gconst_Find(u64 t) throw() {
     abt_md::FGconst *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gconst_n))) {
         u64 x = t + 1;
@@ -1298,19 +1298,19 @@ inline abt_md::FGconst* abt_md::gconst_Find(u64 t) {
 
 // --- abt_md.FDb.gconst.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FGconst* abt_md::gconst_Last() {
+inline abt_md::FGconst* abt_md::gconst_Last() throw() {
     return gconst_Find(u64(_db.gconst_n-1));
 }
 
 // --- abt_md.FDb.gconst.N
 // Return number of items in the pool
-inline i32 abt_md::gconst_N() {
+inline i32 abt_md::gconst_N() throw() {
     return _db.gconst_n;
 }
 
 // --- abt_md.FDb.gconst.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FGconst& abt_md::gconst_qFind(u64 t) {
+inline abt_md::FGconst& abt_md::gconst_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -1320,13 +1320,13 @@ inline abt_md::FGconst& abt_md::gconst_qFind(u64 t) {
 
 // --- abt_md.FDb.readmesort.EmptyQ
 // Return true if index is empty
-inline bool abt_md::readmesort_EmptyQ() {
+inline bool abt_md::readmesort_EmptyQ() throw() {
     return _db.readmesort_n == 0;
 }
 
 // --- abt_md.FDb.readmesort.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FReadmesort* abt_md::readmesort_Find(u64 t) {
+inline abt_md::FReadmesort* abt_md::readmesort_Find(u64 t) throw() {
     abt_md::FReadmesort *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.readmesort_n))) {
         u64 x = t + 1;
@@ -1340,19 +1340,19 @@ inline abt_md::FReadmesort* abt_md::readmesort_Find(u64 t) {
 
 // --- abt_md.FDb.readmesort.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FReadmesort* abt_md::readmesort_Last() {
+inline abt_md::FReadmesort* abt_md::readmesort_Last() throw() {
     return readmesort_Find(u64(_db.readmesort_n-1));
 }
 
 // --- abt_md.FDb.readmesort.N
 // Return number of items in the pool
-inline i32 abt_md::readmesort_N() {
+inline i32 abt_md::readmesort_N() throw() {
     return _db.readmesort_n;
 }
 
 // --- abt_md.FDb.readmesort.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FReadmesort& abt_md::readmesort_qFind(u64 t) {
+inline abt_md::FReadmesort& abt_md::readmesort_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -1362,25 +1362,25 @@ inline abt_md::FReadmesort& abt_md::readmesort_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_readmesort.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_readmesort_EmptyQ() {
+inline bool abt_md::ind_readmesort_EmptyQ() throw() {
     return _db.ind_readmesort_n == 0;
 }
 
 // --- abt_md.FDb.ind_readmesort.N
 // Return number of items in the hash
-inline i32 abt_md::ind_readmesort_N() {
+inline i32 abt_md::ind_readmesort_N() throw() {
     return _db.ind_readmesort_n;
 }
 
 // --- abt_md.FDb.gstatic.EmptyQ
 // Return true if index is empty
-inline bool abt_md::gstatic_EmptyQ() {
+inline bool abt_md::gstatic_EmptyQ() throw() {
     return _db.gstatic_n == 0;
 }
 
 // --- abt_md.FDb.gstatic.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FGstatic* abt_md::gstatic_Find(u64 t) {
+inline abt_md::FGstatic* abt_md::gstatic_Find(u64 t) throw() {
     abt_md::FGstatic *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gstatic_n))) {
         u64 x = t + 1;
@@ -1394,19 +1394,19 @@ inline abt_md::FGstatic* abt_md::gstatic_Find(u64 t) {
 
 // --- abt_md.FDb.gstatic.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FGstatic* abt_md::gstatic_Last() {
+inline abt_md::FGstatic* abt_md::gstatic_Last() throw() {
     return gstatic_Find(u64(_db.gstatic_n-1));
 }
 
 // --- abt_md.FDb.gstatic.N
 // Return number of items in the pool
-inline i32 abt_md::gstatic_N() {
+inline i32 abt_md::gstatic_N() throw() {
     return _db.gstatic_n;
 }
 
 // --- abt_md.FDb.gstatic.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FGstatic& abt_md::gstatic_qFind(u64 t) {
+inline abt_md::FGstatic& abt_md::gstatic_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -1416,25 +1416,25 @@ inline abt_md::FGstatic& abt_md::gstatic_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_gstatic.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_gstatic_EmptyQ() {
+inline bool abt_md::ind_gstatic_EmptyQ() throw() {
     return _db.ind_gstatic_n == 0;
 }
 
 // --- abt_md.FDb.ind_gstatic.N
 // Return number of items in the hash
-inline i32 abt_md::ind_gstatic_N() {
+inline i32 abt_md::ind_gstatic_N() throw() {
     return _db.ind_gstatic_n;
 }
 
 // --- abt_md.FDb.target.EmptyQ
 // Return true if index is empty
-inline bool abt_md::target_EmptyQ() {
+inline bool abt_md::target_EmptyQ() throw() {
     return _db.target_n == 0;
 }
 
 // --- abt_md.FDb.target.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FTarget* abt_md::target_Find(u64 t) {
+inline abt_md::FTarget* abt_md::target_Find(u64 t) throw() {
     abt_md::FTarget *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.target_n))) {
         u64 x = t + 1;
@@ -1448,19 +1448,19 @@ inline abt_md::FTarget* abt_md::target_Find(u64 t) {
 
 // --- abt_md.FDb.target.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FTarget* abt_md::target_Last() {
+inline abt_md::FTarget* abt_md::target_Last() throw() {
     return target_Find(u64(_db.target_n-1));
 }
 
 // --- abt_md.FDb.target.N
 // Return number of items in the pool
-inline i32 abt_md::target_N() {
+inline i32 abt_md::target_N() throw() {
     return _db.target_n;
 }
 
 // --- abt_md.FDb.target.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FTarget& abt_md::target_qFind(u64 t) {
+inline abt_md::FTarget& abt_md::target_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -1470,13 +1470,13 @@ inline abt_md::FTarget& abt_md::target_qFind(u64 t) {
 
 // --- abt_md.FDb.targdep.EmptyQ
 // Return true if index is empty
-inline bool abt_md::targdep_EmptyQ() {
+inline bool abt_md::targdep_EmptyQ() throw() {
     return _db.targdep_n == 0;
 }
 
 // --- abt_md.FDb.targdep.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FTargdep* abt_md::targdep_Find(u64 t) {
+inline abt_md::FTargdep* abt_md::targdep_Find(u64 t) throw() {
     abt_md::FTargdep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targdep_n))) {
         u64 x = t + 1;
@@ -1490,19 +1490,19 @@ inline abt_md::FTargdep* abt_md::targdep_Find(u64 t) {
 
 // --- abt_md.FDb.targdep.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FTargdep* abt_md::targdep_Last() {
+inline abt_md::FTargdep* abt_md::targdep_Last() throw() {
     return targdep_Find(u64(_db.targdep_n-1));
 }
 
 // --- abt_md.FDb.targdep.N
 // Return number of items in the pool
-inline i32 abt_md::targdep_N() {
+inline i32 abt_md::targdep_N() throw() {
     return _db.targdep_n;
 }
 
 // --- abt_md.FDb.targdep.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FTargdep& abt_md::targdep_qFind(u64 t) {
+inline abt_md::FTargdep& abt_md::targdep_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -1512,262 +1512,262 @@ inline abt_md::FTargdep& abt_md::targdep_qFind(u64 t) {
 
 // --- abt_md.FDb.ind_target.EmptyQ
 // Return true if hash is empty
-inline bool abt_md::ind_target_EmptyQ() {
+inline bool abt_md::ind_target_EmptyQ() throw() {
     return _db.ind_target_n == 0;
 }
 
 // --- abt_md.FDb.ind_target.N
 // Return number of items in the hash
-inline i32 abt_md::ind_target_N() {
+inline i32 abt_md::ind_target_N() throw() {
     return _db.ind_target_n;
 }
 
 // --- abt_md.FDb.readme_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_readme_curs_Reset(_db_readme_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_readme_curs_Reset(_db_readme_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.readme_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_readme_curs_ValidQ(_db_readme_curs &curs) {
+inline bool abt_md::_db_readme_curs_ValidQ(_db_readme_curs &curs) throw() {
     return curs.index < _db.readme_n;
 }
 
 // --- abt_md.FDb.readme_curs.Next
 // proceed to next item
-inline void abt_md::_db_readme_curs_Next(_db_readme_curs &curs) {
+inline void abt_md::_db_readme_curs_Next(_db_readme_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.readme_curs.Access
 // item access
-inline abt_md::FReadme& abt_md::_db_readme_curs_Access(_db_readme_curs &curs) {
+inline abt_md::FReadme& abt_md::_db_readme_curs_Access(_db_readme_curs &curs) throw() {
     return readme_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.mdsection_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_mdsection_curs_Reset(_db_mdsection_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_mdsection_curs_Reset(_db_mdsection_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.mdsection_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_mdsection_curs_ValidQ(_db_mdsection_curs &curs) {
+inline bool abt_md::_db_mdsection_curs_ValidQ(_db_mdsection_curs &curs) throw() {
     return u64(curs.index) < u64(curs.parent->mdsection_n);
 }
 
 // --- abt_md.FDb.mdsection_curs.Next
 // proceed to next item
-inline void abt_md::_db_mdsection_curs_Next(_db_mdsection_curs &curs) {
+inline void abt_md::_db_mdsection_curs_Next(_db_mdsection_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.mdsection_curs.Access
 // item access
-inline abt_md::FMdsection& abt_md::_db_mdsection_curs_Access(_db_mdsection_curs &curs) {
+inline abt_md::FMdsection& abt_md::_db_mdsection_curs_Access(_db_mdsection_curs &curs) throw() {
     return mdsection_qFind(i32(curs.index));
 }
 
 // --- abt_md.FDb.file_section_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_file_section_curs_Reset(_db_file_section_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_file_section_curs_Reset(_db_file_section_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.file_section_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_file_section_curs_ValidQ(_db_file_section_curs &curs) {
+inline bool abt_md::_db_file_section_curs_ValidQ(_db_file_section_curs &curs) throw() {
     return curs.index < _db.file_section_n;
 }
 
 // --- abt_md.FDb.file_section_curs.Next
 // proceed to next item
-inline void abt_md::_db_file_section_curs_Next(_db_file_section_curs &curs) {
+inline void abt_md::_db_file_section_curs_Next(_db_file_section_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.file_section_curs.Access
 // item access
-inline abt_md::FFileSection& abt_md::_db_file_section_curs_Access(_db_file_section_curs &curs) {
+inline abt_md::FFileSection& abt_md::_db_file_section_curs_Access(_db_file_section_curs &curs) throw() {
     return file_section_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.bh_file_section_curs.Access
 // Access current element. If not more elements, return NULL
-inline abt_md::FFileSection& abt_md::_db_bh_file_section_curs_Access(_db_bh_file_section_curs &curs) {
+inline abt_md::FFileSection& abt_md::_db_bh_file_section_curs_Access(_db_bh_file_section_curs &curs) throw() {
     return *curs.temp_elems[0];
 }
 
 // --- abt_md.FDb.bh_file_section_curs.ValidQ
 // Return true if Access() will return non-NULL.
-inline bool abt_md::_db_bh_file_section_curs_ValidQ(_db_bh_file_section_curs &curs) {
+inline bool abt_md::_db_bh_file_section_curs_ValidQ(_db_bh_file_section_curs &curs) throw() {
     return curs.temp_n > 0;
 }
 
 // --- abt_md.FDb.ns_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_ns_curs_Reset(_db_ns_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_ns_curs_Reset(_db_ns_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.ns_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_ns_curs_ValidQ(_db_ns_curs &curs) {
+inline bool abt_md::_db_ns_curs_ValidQ(_db_ns_curs &curs) throw() {
     return curs.index < _db.ns_n;
 }
 
 // --- abt_md.FDb.ns_curs.Next
 // proceed to next item
-inline void abt_md::_db_ns_curs_Next(_db_ns_curs &curs) {
+inline void abt_md::_db_ns_curs_Next(_db_ns_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.ns_curs.Access
 // item access
-inline abt_md::FNs& abt_md::_db_ns_curs_Access(_db_ns_curs &curs) {
+inline abt_md::FNs& abt_md::_db_ns_curs_Access(_db_ns_curs &curs) throw() {
     return ns_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.ssimfile_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.ssimfile_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) {
+inline bool abt_md::_db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) throw() {
     return curs.index < _db.ssimfile_n;
 }
 
 // --- abt_md.FDb.ssimfile_curs.Next
 // proceed to next item
-inline void abt_md::_db_ssimfile_curs_Next(_db_ssimfile_curs &curs) {
+inline void abt_md::_db_ssimfile_curs_Next(_db_ssimfile_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.ssimfile_curs.Access
 // item access
-inline abt_md::FSsimfile& abt_md::_db_ssimfile_curs_Access(_db_ssimfile_curs &curs) {
+inline abt_md::FSsimfile& abt_md::_db_ssimfile_curs_Access(_db_ssimfile_curs &curs) throw() {
     return ssimfile_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.ctype_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_ctype_curs_Reset(_db_ctype_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_ctype_curs_Reset(_db_ctype_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.ctype_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_ctype_curs_ValidQ(_db_ctype_curs &curs) {
+inline bool abt_md::_db_ctype_curs_ValidQ(_db_ctype_curs &curs) throw() {
     return curs.index < _db.ctype_n;
 }
 
 // --- abt_md.FDb.ctype_curs.Next
 // proceed to next item
-inline void abt_md::_db_ctype_curs_Next(_db_ctype_curs &curs) {
+inline void abt_md::_db_ctype_curs_Next(_db_ctype_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.ctype_curs.Access
 // item access
-inline abt_md::FCtype& abt_md::_db_ctype_curs_Access(_db_ctype_curs &curs) {
+inline abt_md::FCtype& abt_md::_db_ctype_curs_Access(_db_ctype_curs &curs) throw() {
     return ctype_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.field_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_field_curs_Reset(_db_field_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_field_curs_Reset(_db_field_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.field_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_field_curs_ValidQ(_db_field_curs &curs) {
+inline bool abt_md::_db_field_curs_ValidQ(_db_field_curs &curs) throw() {
     return curs.index < _db.field_n;
 }
 
 // --- abt_md.FDb.field_curs.Next
 // proceed to next item
-inline void abt_md::_db_field_curs_Next(_db_field_curs &curs) {
+inline void abt_md::_db_field_curs_Next(_db_field_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.field_curs.Access
 // item access
-inline abt_md::FField& abt_md::_db_field_curs_Access(_db_field_curs &curs) {
+inline abt_md::FField& abt_md::_db_field_curs_Access(_db_field_curs &curs) throw() {
     return field_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.targsrc_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_targsrc_curs_Reset(_db_targsrc_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_targsrc_curs_Reset(_db_targsrc_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.targsrc_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) {
+inline bool abt_md::_db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) throw() {
     return curs.index < _db.targsrc_n;
 }
 
 // --- abt_md.FDb.targsrc_curs.Next
 // proceed to next item
-inline void abt_md::_db_targsrc_curs_Next(_db_targsrc_curs &curs) {
+inline void abt_md::_db_targsrc_curs_Next(_db_targsrc_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.targsrc_curs.Access
 // item access
-inline abt_md::FTargsrc& abt_md::_db_targsrc_curs_Access(_db_targsrc_curs &curs) {
+inline abt_md::FTargsrc& abt_md::_db_targsrc_curs_Access(_db_targsrc_curs &curs) throw() {
     return targsrc_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.substr_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_substr_curs_Reset(_db_substr_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_substr_curs_Reset(_db_substr_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.substr_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_substr_curs_ValidQ(_db_substr_curs &curs) {
+inline bool abt_md::_db_substr_curs_ValidQ(_db_substr_curs &curs) throw() {
     return curs.index < _db.substr_n;
 }
 
 // --- abt_md.FDb.substr_curs.Next
 // proceed to next item
-inline void abt_md::_db_substr_curs_Next(_db_substr_curs &curs) {
+inline void abt_md::_db_substr_curs_Next(_db_substr_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.substr_curs.Access
 // item access
-inline abt_md::FSubstr& abt_md::_db_substr_curs_Access(_db_substr_curs &curs) {
+inline abt_md::FSubstr& abt_md::_db_substr_curs_Access(_db_substr_curs &curs) throw() {
     return substr_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.ind_human_text_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_ind_human_text_curs_ValidQ(_db_ind_human_text_curs &curs) {
+inline bool abt_md::_db_ind_human_text_curs_ValidQ(_db_ind_human_text_curs &curs) throw() {
     return *curs.prow != NULL;
 }
 
 // --- abt_md.FDb.ind_human_text_curs.Next
 // proceed to next item
-inline void abt_md::_db_ind_human_text_curs_Next(_db_ind_human_text_curs &curs) {
+inline void abt_md::_db_ind_human_text_curs_Next(_db_ind_human_text_curs &curs) throw() {
     curs.prow = &(*curs.prow)->ind_human_text_next;
     while (!*curs.prow) {
         curs.bucket += 1;
@@ -1778,344 +1778,344 @@ inline void abt_md::_db_ind_human_text_curs_Next(_db_ind_human_text_curs &curs) 
 
 // --- abt_md.FDb.ind_human_text_curs.Access
 // item access
-inline abt_md::FHumanText& abt_md::_db_ind_human_text_curs_Access(_db_ind_human_text_curs &curs) {
+inline abt_md::FHumanText& abt_md::_db_ind_human_text_curs_Access(_db_ind_human_text_curs &curs) throw() {
     return **curs.prow;
 }
 
 // --- abt_md.FDb.scriptfile_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_scriptfile_curs_Reset(_db_scriptfile_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_scriptfile_curs_Reset(_db_scriptfile_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.scriptfile_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_scriptfile_curs_ValidQ(_db_scriptfile_curs &curs) {
+inline bool abt_md::_db_scriptfile_curs_ValidQ(_db_scriptfile_curs &curs) throw() {
     return curs.index < _db.scriptfile_n;
 }
 
 // --- abt_md.FDb.scriptfile_curs.Next
 // proceed to next item
-inline void abt_md::_db_scriptfile_curs_Next(_db_scriptfile_curs &curs) {
+inline void abt_md::_db_scriptfile_curs_Next(_db_scriptfile_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.scriptfile_curs.Access
 // item access
-inline abt_md::FScriptfile& abt_md::_db_scriptfile_curs_Access(_db_scriptfile_curs &curs) {
+inline abt_md::FScriptfile& abt_md::_db_scriptfile_curs_Access(_db_scriptfile_curs &curs) throw() {
     return scriptfile_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.nstype_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_nstype_curs_Reset(_db_nstype_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_nstype_curs_Reset(_db_nstype_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.nstype_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_nstype_curs_ValidQ(_db_nstype_curs &curs) {
+inline bool abt_md::_db_nstype_curs_ValidQ(_db_nstype_curs &curs) throw() {
     return curs.index < _db.nstype_n;
 }
 
 // --- abt_md.FDb.nstype_curs.Next
 // proceed to next item
-inline void abt_md::_db_nstype_curs_Next(_db_nstype_curs &curs) {
+inline void abt_md::_db_nstype_curs_Next(_db_nstype_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.nstype_curs.Access
 // item access
-inline abt_md::FNstype& abt_md::_db_nstype_curs_Access(_db_nstype_curs &curs) {
+inline abt_md::FNstype& abt_md::_db_nstype_curs_Access(_db_nstype_curs &curs) throw() {
     return nstype_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.comptest_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_comptest_curs_Reset(_db_comptest_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_comptest_curs_Reset(_db_comptest_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.comptest_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_comptest_curs_ValidQ(_db_comptest_curs &curs) {
+inline bool abt_md::_db_comptest_curs_ValidQ(_db_comptest_curs &curs) throw() {
     return curs.index < _db.comptest_n;
 }
 
 // --- abt_md.FDb.comptest_curs.Next
 // proceed to next item
-inline void abt_md::_db_comptest_curs_Next(_db_comptest_curs &curs) {
+inline void abt_md::_db_comptest_curs_Next(_db_comptest_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.comptest_curs.Access
 // item access
-inline abt_md::FComptest& abt_md::_db_comptest_curs_Access(_db_comptest_curs &curs) {
+inline abt_md::FComptest& abt_md::_db_comptest_curs_Access(_db_comptest_curs &curs) throw() {
     return comptest_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.anchor_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_anchor_curs_Reset(_db_anchor_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_anchor_curs_Reset(_db_anchor_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.anchor_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_anchor_curs_ValidQ(_db_anchor_curs &curs) {
+inline bool abt_md::_db_anchor_curs_ValidQ(_db_anchor_curs &curs) throw() {
     return curs.index < _db.anchor_n;
 }
 
 // --- abt_md.FDb.anchor_curs.Next
 // proceed to next item
-inline void abt_md::_db_anchor_curs_Next(_db_anchor_curs &curs) {
+inline void abt_md::_db_anchor_curs_Next(_db_anchor_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.anchor_curs.Access
 // item access
-inline abt_md::FAnchor& abt_md::_db_anchor_curs_Access(_db_anchor_curs &curs) {
+inline abt_md::FAnchor& abt_md::_db_anchor_curs_Access(_db_anchor_curs &curs) throw() {
     return anchor_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.link_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_link_curs_Reset(_db_link_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_link_curs_Reset(_db_link_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.link_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_link_curs_ValidQ(_db_link_curs &curs) {
+inline bool abt_md::_db_link_curs_ValidQ(_db_link_curs &curs) throw() {
     return curs.index < _db.link_n;
 }
 
 // --- abt_md.FDb.link_curs.Next
 // proceed to next item
-inline void abt_md::_db_link_curs_Next(_db_link_curs &curs) {
+inline void abt_md::_db_link_curs_Next(_db_link_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.link_curs.Access
 // item access
-inline abt_md::FLink& abt_md::_db_link_curs_Access(_db_link_curs &curs) {
+inline abt_md::FLink& abt_md::_db_link_curs_Access(_db_link_curs &curs) throw() {
     return link_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.reftype_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_reftype_curs_Reset(_db_reftype_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_reftype_curs_Reset(_db_reftype_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.reftype_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_reftype_curs_ValidQ(_db_reftype_curs &curs) {
+inline bool abt_md::_db_reftype_curs_ValidQ(_db_reftype_curs &curs) throw() {
     return curs.index < _db.reftype_n;
 }
 
 // --- abt_md.FDb.reftype_curs.Next
 // proceed to next item
-inline void abt_md::_db_reftype_curs_Next(_db_reftype_curs &curs) {
+inline void abt_md::_db_reftype_curs_Next(_db_reftype_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.reftype_curs.Access
 // item access
-inline abt_md::FReftype& abt_md::_db_reftype_curs_Access(_db_reftype_curs &curs) {
+inline abt_md::FReftype& abt_md::_db_reftype_curs_Access(_db_reftype_curs &curs) throw() {
     return reftype_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.tclass_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_tclass_curs_Reset(_db_tclass_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_tclass_curs_Reset(_db_tclass_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.tclass_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_tclass_curs_ValidQ(_db_tclass_curs &curs) {
+inline bool abt_md::_db_tclass_curs_ValidQ(_db_tclass_curs &curs) throw() {
     return curs.index < _db.tclass_n;
 }
 
 // --- abt_md.FDb.tclass_curs.Next
 // proceed to next item
-inline void abt_md::_db_tclass_curs_Next(_db_tclass_curs &curs) {
+inline void abt_md::_db_tclass_curs_Next(_db_tclass_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.tclass_curs.Access
 // item access
-inline abt_md::FTclass& abt_md::_db_tclass_curs_Access(_db_tclass_curs &curs) {
+inline abt_md::FTclass& abt_md::_db_tclass_curs_Access(_db_tclass_curs &curs) throw() {
     return tclass_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.fconst_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_fconst_curs_Reset(_db_fconst_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_fconst_curs_Reset(_db_fconst_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.fconst_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_fconst_curs_ValidQ(_db_fconst_curs &curs) {
+inline bool abt_md::_db_fconst_curs_ValidQ(_db_fconst_curs &curs) throw() {
     return curs.index < _db.fconst_n;
 }
 
 // --- abt_md.FDb.fconst_curs.Next
 // proceed to next item
-inline void abt_md::_db_fconst_curs_Next(_db_fconst_curs &curs) {
+inline void abt_md::_db_fconst_curs_Next(_db_fconst_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.fconst_curs.Access
 // item access
-inline abt_md::FFconst& abt_md::_db_fconst_curs_Access(_db_fconst_curs &curs) {
+inline abt_md::FFconst& abt_md::_db_fconst_curs_Access(_db_fconst_curs &curs) throw() {
     return fconst_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.gconst_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_gconst_curs_Reset(_db_gconst_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_gconst_curs_Reset(_db_gconst_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.gconst_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_gconst_curs_ValidQ(_db_gconst_curs &curs) {
+inline bool abt_md::_db_gconst_curs_ValidQ(_db_gconst_curs &curs) throw() {
     return curs.index < _db.gconst_n;
 }
 
 // --- abt_md.FDb.gconst_curs.Next
 // proceed to next item
-inline void abt_md::_db_gconst_curs_Next(_db_gconst_curs &curs) {
+inline void abt_md::_db_gconst_curs_Next(_db_gconst_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.gconst_curs.Access
 // item access
-inline abt_md::FGconst& abt_md::_db_gconst_curs_Access(_db_gconst_curs &curs) {
+inline abt_md::FGconst& abt_md::_db_gconst_curs_Access(_db_gconst_curs &curs) throw() {
     return gconst_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.readmesort_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_readmesort_curs_Reset(_db_readmesort_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_readmesort_curs_Reset(_db_readmesort_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.readmesort_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_readmesort_curs_ValidQ(_db_readmesort_curs &curs) {
+inline bool abt_md::_db_readmesort_curs_ValidQ(_db_readmesort_curs &curs) throw() {
     return curs.index < _db.readmesort_n;
 }
 
 // --- abt_md.FDb.readmesort_curs.Next
 // proceed to next item
-inline void abt_md::_db_readmesort_curs_Next(_db_readmesort_curs &curs) {
+inline void abt_md::_db_readmesort_curs_Next(_db_readmesort_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.readmesort_curs.Access
 // item access
-inline abt_md::FReadmesort& abt_md::_db_readmesort_curs_Access(_db_readmesort_curs &curs) {
+inline abt_md::FReadmesort& abt_md::_db_readmesort_curs_Access(_db_readmesort_curs &curs) throw() {
     return readmesort_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.gstatic_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_gstatic_curs_Reset(_db_gstatic_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_gstatic_curs_Reset(_db_gstatic_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.gstatic_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_gstatic_curs_ValidQ(_db_gstatic_curs &curs) {
+inline bool abt_md::_db_gstatic_curs_ValidQ(_db_gstatic_curs &curs) throw() {
     return curs.index < _db.gstatic_n;
 }
 
 // --- abt_md.FDb.gstatic_curs.Next
 // proceed to next item
-inline void abt_md::_db_gstatic_curs_Next(_db_gstatic_curs &curs) {
+inline void abt_md::_db_gstatic_curs_Next(_db_gstatic_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.gstatic_curs.Access
 // item access
-inline abt_md::FGstatic& abt_md::_db_gstatic_curs_Access(_db_gstatic_curs &curs) {
+inline abt_md::FGstatic& abt_md::_db_gstatic_curs_Access(_db_gstatic_curs &curs) throw() {
     return gstatic_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.target_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_target_curs_Reset(_db_target_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_target_curs_Reset(_db_target_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.target_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_target_curs_ValidQ(_db_target_curs &curs) {
+inline bool abt_md::_db_target_curs_ValidQ(_db_target_curs &curs) throw() {
     return curs.index < _db.target_n;
 }
 
 // --- abt_md.FDb.target_curs.Next
 // proceed to next item
-inline void abt_md::_db_target_curs_Next(_db_target_curs &curs) {
+inline void abt_md::_db_target_curs_Next(_db_target_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.target_curs.Access
 // item access
-inline abt_md::FTarget& abt_md::_db_target_curs_Access(_db_target_curs &curs) {
+inline abt_md::FTarget& abt_md::_db_target_curs_Access(_db_target_curs &curs) throw() {
     return target_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDb.targdep_curs.Reset
 // cursor points to valid item
-inline void abt_md::_db_targdep_curs_Reset(_db_targdep_curs &curs, abt_md::FDb &parent) {
+inline void abt_md::_db_targdep_curs_Reset(_db_targdep_curs &curs, abt_md::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDb.targdep_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::_db_targdep_curs_ValidQ(_db_targdep_curs &curs) {
+inline bool abt_md::_db_targdep_curs_ValidQ(_db_targdep_curs &curs) throw() {
     return curs.index < _db.targdep_n;
 }
 
 // --- abt_md.FDb.targdep_curs.Next
 // proceed to next item
-inline void abt_md::_db_targdep_curs_Next(_db_targdep_curs &curs) {
+inline void abt_md::_db_targdep_curs_Next(_db_targdep_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDb.targdep_curs.Access
 // item access
-inline abt_md::FTargdep& abt_md::_db_targdep_curs_Access(_db_targdep_curs &curs) {
+inline abt_md::FTargdep& abt_md::_db_targdep_curs_Access(_db_targdep_curs &curs) throw() {
     return targdep_qFind(u64(curs.index));
 }
 
 // --- abt_md.FDirent.sortfld.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool abt_md::sortfld_Lt(abt_md::FDirent& dirent, abt_md::FDirent &rhs) {
+inline bool abt_md::sortfld_Lt(abt_md::FDirent& dirent, abt_md::FDirent &rhs) throw() {
     return algo::cstring_Lt(dirent.sortfld,rhs.sortfld);
 }
 
 // --- abt_md.FDirent.sortfld.Cmp
 // Compare two fields.
-inline i32 abt_md::sortfld_Cmp(abt_md::FDirent& dirent, abt_md::FDirent &rhs) {
+inline i32 abt_md::sortfld_Cmp(abt_md::FDirent& dirent, abt_md::FDirent &rhs) throw() {
     i32 retval = 0;
     retval = algo::cstring_Cmp(dirent.sortfld, rhs.sortfld);
     return retval;
@@ -2130,24 +2130,24 @@ inline void abt_md::FDirent_Init(abt_md::FDirent& dirent) {
 }
 
 // --- abt_md.FDirent..Ctor
-inline  abt_md::FDirent::FDirent() {
+inline  abt_md::FDirent::FDirent() throw() {
     abt_md::FDirent_Init(*this);
 }
 
 // --- abt_md.FDirent..Dtor
-inline  abt_md::FDirent::~FDirent() {
+inline  abt_md::FDirent::~FDirent() throw() {
     abt_md::FDirent_Uninit(*this);
 }
 
 // --- abt_md.FDirscan.bh_dirent.EmptyQ
 // Return true if index is empty
-inline bool abt_md::bh_dirent_EmptyQ(abt_md::FDirscan& parent) {
+inline bool abt_md::bh_dirent_EmptyQ(abt_md::FDirscan& parent) throw() {
     return parent.bh_dirent_n == 0;
 }
 
 // --- abt_md.FDirscan.bh_dirent.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline abt_md::FDirent* abt_md::bh_dirent_First(abt_md::FDirscan& parent) {
+inline abt_md::FDirent* abt_md::bh_dirent_First(abt_md::FDirscan& parent) throw() {
     abt_md::FDirent *row = NULL;
     if (parent.bh_dirent_n > 0) {
         row = parent.bh_dirent_elems[0];
@@ -2157,7 +2157,7 @@ inline abt_md::FDirent* abt_md::bh_dirent_First(abt_md::FDirscan& parent) {
 
 // --- abt_md.FDirscan.bh_dirent.InBheapQ
 // Return true if row is in index, false otherwise
-inline bool abt_md::bh_dirent_InBheapQ(abt_md::FDirent& row) {
+inline bool abt_md::bh_dirent_InBheapQ(abt_md::FDirent& row) throw() {
     bool result = false;
     result = row.bh_dirent_idx != -1;
     return result;
@@ -2165,19 +2165,19 @@ inline bool abt_md::bh_dirent_InBheapQ(abt_md::FDirent& row) {
 
 // --- abt_md.FDirscan.bh_dirent.N
 // Return number of items in the heap
-inline i32 abt_md::bh_dirent_N(const abt_md::FDirscan& parent) {
+inline i32 abt_md::bh_dirent_N(const abt_md::FDirscan& parent) throw() {
     return parent.bh_dirent_n;
 }
 
 // --- abt_md.FDirscan.dirent.EmptyQ
 // Return true if index is empty
-inline bool abt_md::dirent_EmptyQ(abt_md::FDirscan& parent) {
+inline bool abt_md::dirent_EmptyQ(abt_md::FDirscan& parent) throw() {
     return parent.dirent_n == 0;
 }
 
 // --- abt_md.FDirscan.dirent.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FDirent* abt_md::dirent_Find(abt_md::FDirscan& parent, u64 t) {
+inline abt_md::FDirent* abt_md::dirent_Find(abt_md::FDirscan& parent, u64 t) throw() {
     abt_md::FDirent *retval = NULL;
     if (LIKELY(u64(t) < u64(parent.dirent_n))) {
         u64 x = t + 1;
@@ -2191,19 +2191,19 @@ inline abt_md::FDirent* abt_md::dirent_Find(abt_md::FDirscan& parent, u64 t) {
 
 // --- abt_md.FDirscan.dirent.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline abt_md::FDirent* abt_md::dirent_Last(abt_md::FDirscan& parent) {
+inline abt_md::FDirent* abt_md::dirent_Last(abt_md::FDirscan& parent) throw() {
     return dirent_Find(parent, u64(parent.dirent_n-1));
 }
 
 // --- abt_md.FDirscan.dirent.N
 // Return number of items in the pool
-inline i32 abt_md::dirent_N(const abt_md::FDirscan& parent) {
+inline i32 abt_md::dirent_N(const abt_md::FDirscan& parent) throw() {
     return parent.dirent_n;
 }
 
 // --- abt_md.FDirscan.dirent.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline abt_md::FDirent& abt_md::dirent_qFind(abt_md::FDirscan& parent, u64 t) {
+inline abt_md::FDirent& abt_md::dirent_qFind(abt_md::FDirscan& parent, u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -2213,48 +2213,48 @@ inline abt_md::FDirent& abt_md::dirent_qFind(abt_md::FDirscan& parent, u64 t) {
 
 // --- abt_md.FDirscan.bh_dirent_curs.Access
 // Access current element. If not more elements, return NULL
-inline abt_md::FDirent& abt_md::FDirscan_bh_dirent_curs_Access(FDirscan_bh_dirent_curs &curs) {
+inline abt_md::FDirent& abt_md::FDirscan_bh_dirent_curs_Access(FDirscan_bh_dirent_curs &curs) throw() {
     return *curs.temp_elems[0];
 }
 
 // --- abt_md.FDirscan.bh_dirent_curs.ValidQ
 // Return true if Access() will return non-NULL.
-inline bool abt_md::FDirscan_bh_dirent_curs_ValidQ(FDirscan_bh_dirent_curs &curs) {
+inline bool abt_md::FDirscan_bh_dirent_curs_ValidQ(FDirscan_bh_dirent_curs &curs) throw() {
     return curs.temp_n > 0;
 }
 
 // --- abt_md.FDirscan.dirent_curs.Reset
 // cursor points to valid item
-inline void abt_md::FDirscan_dirent_curs_Reset(FDirscan_dirent_curs &curs, abt_md::FDirscan &parent) {
+inline void abt_md::FDirscan_dirent_curs_Reset(FDirscan_dirent_curs &curs, abt_md::FDirscan &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- abt_md.FDirscan.dirent_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::FDirscan_dirent_curs_ValidQ(FDirscan_dirent_curs &curs) {
+inline bool abt_md::FDirscan_dirent_curs_ValidQ(FDirscan_dirent_curs &curs) throw() {
     return curs.index < (*curs.parent).dirent_n;
 }
 
 // --- abt_md.FDirscan.dirent_curs.Next
 // proceed to next item
-inline void abt_md::FDirscan_dirent_curs_Next(FDirscan_dirent_curs &curs) {
+inline void abt_md::FDirscan_dirent_curs_Next(FDirscan_dirent_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FDirscan.dirent_curs.Access
 // item access
-inline abt_md::FDirent& abt_md::FDirscan_dirent_curs_Access(FDirscan_dirent_curs &curs) {
+inline abt_md::FDirent& abt_md::FDirscan_dirent_curs_Access(FDirscan_dirent_curs &curs) throw() {
     return dirent_qFind((*curs.parent), u64(curs.index));
 }
 
 // --- abt_md.FDirscan..Ctor
-inline  abt_md::FDirscan::FDirscan() {
+inline  abt_md::FDirscan::FDirscan() throw() {
     abt_md::FDirscan_Init(*this);
 }
 
 // --- abt_md.FDirscan..Dtor
-inline  abt_md::FDirscan::~FDirscan() {
+inline  abt_md::FDirscan::~FDirscan() throw() {
     abt_md::FDirscan_Uninit(*this);
 }
 
@@ -2265,18 +2265,18 @@ inline void abt_md::FFconst_Init(abt_md::FFconst& fconst) {
 }
 
 // --- abt_md.FFconst..Ctor
-inline  abt_md::FFconst::FFconst() {
+inline  abt_md::FFconst::FFconst() throw() {
     abt_md::FFconst_Init(*this);
 }
 
 // --- abt_md.FFconst..Dtor
-inline  abt_md::FFconst::~FFconst() {
+inline  abt_md::FFconst::~FFconst() throw() {
     abt_md::FFconst_Uninit(*this);
 }
 
 // --- abt_md.FField.c_substr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool abt_md::c_substr_InsertMaybe(abt_md::FField& field, abt_md::FSubstr& row) {
+inline bool abt_md::c_substr_InsertMaybe(abt_md::FField& field, abt_md::FSubstr& row) throw() {
     abt_md::FSubstr* ptr = field.c_substr;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
@@ -2287,7 +2287,7 @@ inline bool abt_md::c_substr_InsertMaybe(abt_md::FField& field, abt_md::FSubstr&
 
 // --- abt_md.FField.c_substr.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void abt_md::c_substr_Remove(abt_md::FField& field, abt_md::FSubstr& row) {
+inline void abt_md::c_substr_Remove(abt_md::FField& field, abt_md::FSubstr& row) throw() {
     abt_md::FSubstr *ptr = field.c_substr;
     if (LIKELY(ptr == &row)) {
         field.c_substr = NULL;
@@ -2296,13 +2296,13 @@ inline void abt_md::c_substr_Remove(abt_md::FField& field, abt_md::FSubstr& row)
 
 // --- abt_md.FField.c_fconst.EmptyQ
 // Return true if index is empty
-inline bool abt_md::c_fconst_EmptyQ(abt_md::FField& field) {
+inline bool abt_md::c_fconst_EmptyQ(abt_md::FField& field) throw() {
     return field.c_fconst_n == 0;
 }
 
 // --- abt_md.FField.c_fconst.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FFconst* abt_md::c_fconst_Find(abt_md::FField& field, u32 t) {
+inline abt_md::FFconst* abt_md::c_fconst_Find(abt_md::FField& field, u32 t) throw() {
     abt_md::FFconst *retval = NULL;
     u64 idx = t;
     u64 lim = field.c_fconst_n;
@@ -2314,19 +2314,19 @@ inline abt_md::FFconst* abt_md::c_fconst_Find(abt_md::FField& field, u32 t) {
 
 // --- abt_md.FField.c_fconst.Getary
 // Return array of pointers
-inline algo::aryptr<abt_md::FFconst*> abt_md::c_fconst_Getary(abt_md::FField& field) {
+inline algo::aryptr<abt_md::FFconst*> abt_md::c_fconst_Getary(abt_md::FField& field) throw() {
     return algo::aryptr<abt_md::FFconst*>(field.c_fconst_elems, field.c_fconst_n);
 }
 
 // --- abt_md.FField.c_fconst.N
 // Return number of items in the pointer array
-inline i32 abt_md::c_fconst_N(const abt_md::FField& field) {
+inline i32 abt_md::c_fconst_N(const abt_md::FField& field) throw() {
     return field.c_fconst_n;
 }
 
 // --- abt_md.FField.c_fconst.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt_md::c_fconst_RemoveAll(abt_md::FField& field) {
+inline void abt_md::c_fconst_RemoveAll(abt_md::FField& field) throw() {
     for (u32 i = 0; i < field.c_fconst_n; i++) {
         // mark all elements as not-in-array
         field.c_fconst_elems[i]->field_c_fconst_in_ary = false;
@@ -2336,25 +2336,25 @@ inline void abt_md::c_fconst_RemoveAll(abt_md::FField& field) {
 
 // --- abt_md.FField.c_fconst.qFind
 // Return reference without bounds checking
-inline abt_md::FFconst& abt_md::c_fconst_qFind(abt_md::FField& field, u32 idx) {
+inline abt_md::FFconst& abt_md::c_fconst_qFind(abt_md::FField& field, u32 idx) throw() {
     return *field.c_fconst_elems[idx];
 }
 
 // --- abt_md.FField.c_fconst.InAryQ
 // True if row is in any ptrary instance
-inline bool abt_md::field_c_fconst_InAryQ(abt_md::FFconst& row) {
+inline bool abt_md::field_c_fconst_InAryQ(abt_md::FFconst& row) throw() {
     return row.field_c_fconst_in_ary;
 }
 
 // --- abt_md.FField.c_fconst.qLast
 // Reference to last element without bounds checking
-inline abt_md::FFconst& abt_md::c_fconst_qLast(abt_md::FField& field) {
+inline abt_md::FFconst& abt_md::c_fconst_qLast(abt_md::FField& field) throw() {
     return *field.c_fconst_elems[field.c_fconst_n-1];
 }
 
 // --- abt_md.FField.c_gconst.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool abt_md::c_gconst_InsertMaybe(abt_md::FField& field, abt_md::FGconst& row) {
+inline bool abt_md::c_gconst_InsertMaybe(abt_md::FField& field, abt_md::FGconst& row) throw() {
     abt_md::FGconst* ptr = field.c_gconst;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
@@ -2365,7 +2365,7 @@ inline bool abt_md::c_gconst_InsertMaybe(abt_md::FField& field, abt_md::FGconst&
 
 // --- abt_md.FField.c_gconst.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void abt_md::c_gconst_Remove(abt_md::FField& field, abt_md::FGconst& row) {
+inline void abt_md::c_gconst_Remove(abt_md::FField& field, abt_md::FGconst& row) throw() {
     abt_md::FGconst *ptr = field.c_gconst;
     if (LIKELY(ptr == &row)) {
         field.c_gconst = NULL;
@@ -2373,7 +2373,7 @@ inline void abt_md::c_gconst_Remove(abt_md::FField& field, abt_md::FGconst& row)
 }
 
 // --- abt_md.FField.c_fconst_curs.Reset
-inline void abt_md::field_c_fconst_curs_Reset(field_c_fconst_curs &curs, abt_md::FField &parent) {
+inline void abt_md::field_c_fconst_curs_Reset(field_c_fconst_curs &curs, abt_md::FField &parent) throw() {
     curs.elems = parent.c_fconst_elems;
     curs.n_elems = parent.c_fconst_n;
     curs.index = 0;
@@ -2381,29 +2381,29 @@ inline void abt_md::field_c_fconst_curs_Reset(field_c_fconst_curs &curs, abt_md:
 
 // --- abt_md.FField.c_fconst_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::field_c_fconst_curs_ValidQ(field_c_fconst_curs &curs) {
+inline bool abt_md::field_c_fconst_curs_ValidQ(field_c_fconst_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- abt_md.FField.c_fconst_curs.Next
 // proceed to next item
-inline void abt_md::field_c_fconst_curs_Next(field_c_fconst_curs &curs) {
+inline void abt_md::field_c_fconst_curs_Next(field_c_fconst_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FField.c_fconst_curs.Access
 // item access
-inline abt_md::FFconst& abt_md::field_c_fconst_curs_Access(field_c_fconst_curs &curs) {
+inline abt_md::FFconst& abt_md::field_c_fconst_curs_Access(field_c_fconst_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- abt_md.FField..Ctor
-inline  abt_md::FField::FField() {
+inline  abt_md::FField::FField() throw() {
     abt_md::FField_Init(*this);
 }
 
 // --- abt_md.FField..Dtor
-inline  abt_md::FField::~FField() {
+inline  abt_md::FField::~FField() throw() {
     abt_md::FField_Uninit(*this);
 }
 
@@ -2420,12 +2420,12 @@ inline void abt_md::FFileSection_Init(abt_md::FFileSection& file_section) {
 }
 
 // --- abt_md.FFileSection..Ctor
-inline  abt_md::FFileSection::FFileSection() {
+inline  abt_md::FFileSection::FFileSection() throw() {
     abt_md::FFileSection_Init(*this);
 }
 
 // --- abt_md.FFileSection..Dtor
-inline  abt_md::FFileSection::~FFileSection() {
+inline  abt_md::FFileSection::~FFileSection() throw() {
     abt_md::FFileSection_Uninit(*this);
 }
 
@@ -2436,12 +2436,12 @@ inline void abt_md::FGconst_Init(abt_md::FGconst& gconst) {
 }
 
 // --- abt_md.FGconst..Ctor
-inline  abt_md::FGconst::FGconst() {
+inline  abt_md::FGconst::FGconst() throw() {
     abt_md::FGconst_Init(*this);
 }
 
 // --- abt_md.FGconst..Dtor
-inline  abt_md::FGconst::~FGconst() {
+inline  abt_md::FGconst::~FGconst() throw() {
     abt_md::FGconst_Uninit(*this);
 }
 
@@ -2452,12 +2452,12 @@ inline void abt_md::FGstatic_Init(abt_md::FGstatic& gstatic) {
 }
 
 // --- abt_md.FGstatic..Ctor
-inline  abt_md::FGstatic::FGstatic() {
+inline  abt_md::FGstatic::FGstatic() throw() {
     abt_md::FGstatic_Init(*this);
 }
 
 // --- abt_md.FGstatic..Dtor
-inline  abt_md::FGstatic::~FGstatic() {
+inline  abt_md::FGstatic::~FGstatic() throw() {
     abt_md::FGstatic_Uninit(*this);
 }
 
@@ -2470,28 +2470,28 @@ inline void abt_md::FHumanText_Init(abt_md::FHumanText& human_text) {
 }
 
 // --- abt_md.FHumanText..Ctor
-inline  abt_md::FHumanText::FHumanText() {
+inline  abt_md::FHumanText::FHumanText() throw() {
     abt_md::FHumanText_Init(*this);
 }
 
 // --- abt_md.FHumanText..Dtor
-inline  abt_md::FHumanText::~FHumanText() {
+inline  abt_md::FHumanText::~FHumanText() throw() {
     abt_md::FHumanText_Uninit(*this);
 }
 
 // --- abt_md.FLink..Ctor
-inline  abt_md::FLink::FLink() {
+inline  abt_md::FLink::FLink() throw() {
 }
 
 // --- abt_md.FNs.c_targsrc.EmptyQ
 // Return true if index is empty
-inline bool abt_md::c_targsrc_EmptyQ(abt_md::FNs& ns) {
+inline bool abt_md::c_targsrc_EmptyQ(abt_md::FNs& ns) throw() {
     return ns.c_targsrc_n == 0;
 }
 
 // --- abt_md.FNs.c_targsrc.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FTargsrc* abt_md::c_targsrc_Find(abt_md::FNs& ns, u32 t) {
+inline abt_md::FTargsrc* abt_md::c_targsrc_Find(abt_md::FNs& ns, u32 t) throw() {
     abt_md::FTargsrc *retval = NULL;
     u64 idx = t;
     u64 lim = ns.c_targsrc_n;
@@ -2503,19 +2503,19 @@ inline abt_md::FTargsrc* abt_md::c_targsrc_Find(abt_md::FNs& ns, u32 t) {
 
 // --- abt_md.FNs.c_targsrc.Getary
 // Return array of pointers
-inline algo::aryptr<abt_md::FTargsrc*> abt_md::c_targsrc_Getary(abt_md::FNs& ns) {
+inline algo::aryptr<abt_md::FTargsrc*> abt_md::c_targsrc_Getary(abt_md::FNs& ns) throw() {
     return algo::aryptr<abt_md::FTargsrc*>(ns.c_targsrc_elems, ns.c_targsrc_n);
 }
 
 // --- abt_md.FNs.c_targsrc.N
 // Return number of items in the pointer array
-inline i32 abt_md::c_targsrc_N(const abt_md::FNs& ns) {
+inline i32 abt_md::c_targsrc_N(const abt_md::FNs& ns) throw() {
     return ns.c_targsrc_n;
 }
 
 // --- abt_md.FNs.c_targsrc.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt_md::c_targsrc_RemoveAll(abt_md::FNs& ns) {
+inline void abt_md::c_targsrc_RemoveAll(abt_md::FNs& ns) throw() {
     for (u32 i = 0; i < ns.c_targsrc_n; i++) {
         // mark all elements as not-in-array
         ns.c_targsrc_elems[i]->ns_c_targsrc_in_ary = false;
@@ -2525,31 +2525,31 @@ inline void abt_md::c_targsrc_RemoveAll(abt_md::FNs& ns) {
 
 // --- abt_md.FNs.c_targsrc.qFind
 // Return reference without bounds checking
-inline abt_md::FTargsrc& abt_md::c_targsrc_qFind(abt_md::FNs& ns, u32 idx) {
+inline abt_md::FTargsrc& abt_md::c_targsrc_qFind(abt_md::FNs& ns, u32 idx) throw() {
     return *ns.c_targsrc_elems[idx];
 }
 
 // --- abt_md.FNs.c_targsrc.InAryQ
 // True if row is in any ptrary instance
-inline bool abt_md::ns_c_targsrc_InAryQ(abt_md::FTargsrc& row) {
+inline bool abt_md::ns_c_targsrc_InAryQ(abt_md::FTargsrc& row) throw() {
     return row.ns_c_targsrc_in_ary;
 }
 
 // --- abt_md.FNs.c_targsrc.qLast
 // Reference to last element without bounds checking
-inline abt_md::FTargsrc& abt_md::c_targsrc_qLast(abt_md::FNs& ns) {
+inline abt_md::FTargsrc& abt_md::c_targsrc_qLast(abt_md::FNs& ns) throw() {
     return *ns.c_targsrc_elems[ns.c_targsrc_n-1];
 }
 
 // --- abt_md.FNs.c_ctype.EmptyQ
 // Return true if index is empty
-inline bool abt_md::c_ctype_EmptyQ(abt_md::FNs& ns) {
+inline bool abt_md::c_ctype_EmptyQ(abt_md::FNs& ns) throw() {
     return ns.c_ctype_n == 0;
 }
 
 // --- abt_md.FNs.c_ctype.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FCtype* abt_md::c_ctype_Find(abt_md::FNs& ns, u32 t) {
+inline abt_md::FCtype* abt_md::c_ctype_Find(abt_md::FNs& ns, u32 t) throw() {
     abt_md::FCtype *retval = NULL;
     u64 idx = t;
     u64 lim = ns.c_ctype_n;
@@ -2561,19 +2561,19 @@ inline abt_md::FCtype* abt_md::c_ctype_Find(abt_md::FNs& ns, u32 t) {
 
 // --- abt_md.FNs.c_ctype.Getary
 // Return array of pointers
-inline algo::aryptr<abt_md::FCtype*> abt_md::c_ctype_Getary(abt_md::FNs& ns) {
+inline algo::aryptr<abt_md::FCtype*> abt_md::c_ctype_Getary(abt_md::FNs& ns) throw() {
     return algo::aryptr<abt_md::FCtype*>(ns.c_ctype_elems, ns.c_ctype_n);
 }
 
 // --- abt_md.FNs.c_ctype.N
 // Return number of items in the pointer array
-inline i32 abt_md::c_ctype_N(const abt_md::FNs& ns) {
+inline i32 abt_md::c_ctype_N(const abt_md::FNs& ns) throw() {
     return ns.c_ctype_n;
 }
 
 // --- abt_md.FNs.c_ctype.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt_md::c_ctype_RemoveAll(abt_md::FNs& ns) {
+inline void abt_md::c_ctype_RemoveAll(abt_md::FNs& ns) throw() {
     for (u32 i = 0; i < ns.c_ctype_n; i++) {
         // mark all elements as not-in-array
         ns.c_ctype_elems[i]->ns_c_ctype_in_ary = false;
@@ -2583,31 +2583,31 @@ inline void abt_md::c_ctype_RemoveAll(abt_md::FNs& ns) {
 
 // --- abt_md.FNs.c_ctype.qFind
 // Return reference without bounds checking
-inline abt_md::FCtype& abt_md::c_ctype_qFind(abt_md::FNs& ns, u32 idx) {
+inline abt_md::FCtype& abt_md::c_ctype_qFind(abt_md::FNs& ns, u32 idx) throw() {
     return *ns.c_ctype_elems[idx];
 }
 
 // --- abt_md.FNs.c_ctype.InAryQ
 // True if row is in any ptrary instance
-inline bool abt_md::ns_c_ctype_InAryQ(abt_md::FCtype& row) {
+inline bool abt_md::ns_c_ctype_InAryQ(abt_md::FCtype& row) throw() {
     return row.ns_c_ctype_in_ary;
 }
 
 // --- abt_md.FNs.c_ctype.qLast
 // Reference to last element without bounds checking
-inline abt_md::FCtype& abt_md::c_ctype_qLast(abt_md::FNs& ns) {
+inline abt_md::FCtype& abt_md::c_ctype_qLast(abt_md::FNs& ns) throw() {
     return *ns.c_ctype_elems[ns.c_ctype_n-1];
 }
 
 // --- abt_md.FNs.c_comptest.EmptyQ
 // Return true if index is empty
-inline bool abt_md::c_comptest_EmptyQ(abt_md::FNs& ns) {
+inline bool abt_md::c_comptest_EmptyQ(abt_md::FNs& ns) throw() {
     return ns.c_comptest_n == 0;
 }
 
 // --- abt_md.FNs.c_comptest.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FComptest* abt_md::c_comptest_Find(abt_md::FNs& ns, u32 t) {
+inline abt_md::FComptest* abt_md::c_comptest_Find(abt_md::FNs& ns, u32 t) throw() {
     abt_md::FComptest *retval = NULL;
     u64 idx = t;
     u64 lim = ns.c_comptest_n;
@@ -2619,19 +2619,19 @@ inline abt_md::FComptest* abt_md::c_comptest_Find(abt_md::FNs& ns, u32 t) {
 
 // --- abt_md.FNs.c_comptest.Getary
 // Return array of pointers
-inline algo::aryptr<abt_md::FComptest*> abt_md::c_comptest_Getary(abt_md::FNs& ns) {
+inline algo::aryptr<abt_md::FComptest*> abt_md::c_comptest_Getary(abt_md::FNs& ns) throw() {
     return algo::aryptr<abt_md::FComptest*>(ns.c_comptest_elems, ns.c_comptest_n);
 }
 
 // --- abt_md.FNs.c_comptest.N
 // Return number of items in the pointer array
-inline i32 abt_md::c_comptest_N(const abt_md::FNs& ns) {
+inline i32 abt_md::c_comptest_N(const abt_md::FNs& ns) throw() {
     return ns.c_comptest_n;
 }
 
 // --- abt_md.FNs.c_comptest.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt_md::c_comptest_RemoveAll(abt_md::FNs& ns) {
+inline void abt_md::c_comptest_RemoveAll(abt_md::FNs& ns) throw() {
     for (u32 i = 0; i < ns.c_comptest_n; i++) {
         // mark all elements as not-in-array
         ns.c_comptest_elems[i]->ns_c_comptest_in_ary = false;
@@ -2641,25 +2641,25 @@ inline void abt_md::c_comptest_RemoveAll(abt_md::FNs& ns) {
 
 // --- abt_md.FNs.c_comptest.qFind
 // Return reference without bounds checking
-inline abt_md::FComptest& abt_md::c_comptest_qFind(abt_md::FNs& ns, u32 idx) {
+inline abt_md::FComptest& abt_md::c_comptest_qFind(abt_md::FNs& ns, u32 idx) throw() {
     return *ns.c_comptest_elems[idx];
 }
 
 // --- abt_md.FNs.c_comptest.InAryQ
 // True if row is in any ptrary instance
-inline bool abt_md::ns_c_comptest_InAryQ(abt_md::FComptest& row) {
+inline bool abt_md::ns_c_comptest_InAryQ(abt_md::FComptest& row) throw() {
     return row.ns_c_comptest_in_ary;
 }
 
 // --- abt_md.FNs.c_comptest.qLast
 // Reference to last element without bounds checking
-inline abt_md::FComptest& abt_md::c_comptest_qLast(abt_md::FNs& ns) {
+inline abt_md::FComptest& abt_md::c_comptest_qLast(abt_md::FNs& ns) throw() {
     return *ns.c_comptest_elems[ns.c_comptest_n-1];
 }
 
 // --- abt_md.FNs.c_target.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool abt_md::c_target_InsertMaybe(abt_md::FNs& ns, abt_md::FTarget& row) {
+inline bool abt_md::c_target_InsertMaybe(abt_md::FNs& ns, abt_md::FTarget& row) throw() {
     abt_md::FTarget* ptr = ns.c_target;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
@@ -2670,7 +2670,7 @@ inline bool abt_md::c_target_InsertMaybe(abt_md::FNs& ns, abt_md::FTarget& row) 
 
 // --- abt_md.FNs.c_target.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void abt_md::c_target_Remove(abt_md::FNs& ns, abt_md::FTarget& row) {
+inline void abt_md::c_target_Remove(abt_md::FNs& ns, abt_md::FTarget& row) throw() {
     abt_md::FTarget *ptr = ns.c_target;
     if (LIKELY(ptr == &row)) {
         ns.c_target = NULL;
@@ -2695,7 +2695,7 @@ inline void abt_md::FNs_Init(abt_md::FNs& ns) {
 }
 
 // --- abt_md.FNs.c_targsrc_curs.Reset
-inline void abt_md::ns_c_targsrc_curs_Reset(ns_c_targsrc_curs &curs, abt_md::FNs &parent) {
+inline void abt_md::ns_c_targsrc_curs_Reset(ns_c_targsrc_curs &curs, abt_md::FNs &parent) throw() {
     curs.elems = parent.c_targsrc_elems;
     curs.n_elems = parent.c_targsrc_n;
     curs.index = 0;
@@ -2703,24 +2703,24 @@ inline void abt_md::ns_c_targsrc_curs_Reset(ns_c_targsrc_curs &curs, abt_md::FNs
 
 // --- abt_md.FNs.c_targsrc_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::ns_c_targsrc_curs_ValidQ(ns_c_targsrc_curs &curs) {
+inline bool abt_md::ns_c_targsrc_curs_ValidQ(ns_c_targsrc_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- abt_md.FNs.c_targsrc_curs.Next
 // proceed to next item
-inline void abt_md::ns_c_targsrc_curs_Next(ns_c_targsrc_curs &curs) {
+inline void abt_md::ns_c_targsrc_curs_Next(ns_c_targsrc_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FNs.c_targsrc_curs.Access
 // item access
-inline abt_md::FTargsrc& abt_md::ns_c_targsrc_curs_Access(ns_c_targsrc_curs &curs) {
+inline abt_md::FTargsrc& abt_md::ns_c_targsrc_curs_Access(ns_c_targsrc_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- abt_md.FNs.c_ctype_curs.Reset
-inline void abt_md::ns_c_ctype_curs_Reset(ns_c_ctype_curs &curs, abt_md::FNs &parent) {
+inline void abt_md::ns_c_ctype_curs_Reset(ns_c_ctype_curs &curs, abt_md::FNs &parent) throw() {
     curs.elems = parent.c_ctype_elems;
     curs.n_elems = parent.c_ctype_n;
     curs.index = 0;
@@ -2728,24 +2728,24 @@ inline void abt_md::ns_c_ctype_curs_Reset(ns_c_ctype_curs &curs, abt_md::FNs &pa
 
 // --- abt_md.FNs.c_ctype_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::ns_c_ctype_curs_ValidQ(ns_c_ctype_curs &curs) {
+inline bool abt_md::ns_c_ctype_curs_ValidQ(ns_c_ctype_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- abt_md.FNs.c_ctype_curs.Next
 // proceed to next item
-inline void abt_md::ns_c_ctype_curs_Next(ns_c_ctype_curs &curs) {
+inline void abt_md::ns_c_ctype_curs_Next(ns_c_ctype_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FNs.c_ctype_curs.Access
 // item access
-inline abt_md::FCtype& abt_md::ns_c_ctype_curs_Access(ns_c_ctype_curs &curs) {
+inline abt_md::FCtype& abt_md::ns_c_ctype_curs_Access(ns_c_ctype_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- abt_md.FNs.c_comptest_curs.Reset
-inline void abt_md::ns_c_comptest_curs_Reset(ns_c_comptest_curs &curs, abt_md::FNs &parent) {
+inline void abt_md::ns_c_comptest_curs_Reset(ns_c_comptest_curs &curs, abt_md::FNs &parent) throw() {
     curs.elems = parent.c_comptest_elems;
     curs.n_elems = parent.c_comptest_n;
     curs.index = 0;
@@ -2753,29 +2753,29 @@ inline void abt_md::ns_c_comptest_curs_Reset(ns_c_comptest_curs &curs, abt_md::F
 
 // --- abt_md.FNs.c_comptest_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::ns_c_comptest_curs_ValidQ(ns_c_comptest_curs &curs) {
+inline bool abt_md::ns_c_comptest_curs_ValidQ(ns_c_comptest_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- abt_md.FNs.c_comptest_curs.Next
 // proceed to next item
-inline void abt_md::ns_c_comptest_curs_Next(ns_c_comptest_curs &curs) {
+inline void abt_md::ns_c_comptest_curs_Next(ns_c_comptest_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FNs.c_comptest_curs.Access
 // item access
-inline abt_md::FComptest& abt_md::ns_c_comptest_curs_Access(ns_c_comptest_curs &curs) {
+inline abt_md::FComptest& abt_md::ns_c_comptest_curs_Access(ns_c_comptest_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- abt_md.FNs..Ctor
-inline  abt_md::FNs::FNs() {
+inline  abt_md::FNs::FNs() throw() {
     abt_md::FNs_Init(*this);
 }
 
 // --- abt_md.FNs..Dtor
-inline  abt_md::FNs::~FNs() {
+inline  abt_md::FNs::~FNs() throw() {
     abt_md::FNs_Uninit(*this);
 }
 
@@ -2786,22 +2786,22 @@ inline void abt_md::FNstype_Init(abt_md::FNstype& nstype) {
 }
 
 // --- abt_md.FNstype..Ctor
-inline  abt_md::FNstype::FNstype() {
+inline  abt_md::FNstype::FNstype() throw() {
     abt_md::FNstype_Init(*this);
 }
 
 // --- abt_md.FNstype..Dtor
-inline  abt_md::FNstype::~FNstype() {
+inline  abt_md::FNstype::~FNstype() throw() {
     abt_md::FNstype_Uninit(*this);
 }
 
 // --- abt_md.FReadme..Ctor
-inline  abt_md::FReadme::FReadme() {
+inline  abt_md::FReadme::FReadme() throw() {
     abt_md::FReadme_Init(*this);
 }
 
 // --- abt_md.FReadme..Dtor
-inline  abt_md::FReadme::~FReadme() {
+inline  abt_md::FReadme::~FReadme() throw() {
     abt_md::FReadme_Uninit(*this);
 }
 
@@ -2812,17 +2812,17 @@ inline void abt_md::FReadmesort_Init(abt_md::FReadmesort& readmesort) {
 }
 
 // --- abt_md.FReadmesort..Ctor
-inline  abt_md::FReadmesort::FReadmesort() {
+inline  abt_md::FReadmesort::FReadmesort() throw() {
     abt_md::FReadmesort_Init(*this);
 }
 
 // --- abt_md.FReadmesort..Dtor
-inline  abt_md::FReadmesort::~FReadmesort() {
+inline  abt_md::FReadmesort::~FReadmesort() throw() {
     abt_md::FReadmesort_Uninit(*this);
 }
 
 // --- abt_md.FReftype..Ctor
-inline  abt_md::FReftype::FReftype() {
+inline  abt_md::FReftype::FReftype() throw() {
     abt_md::FReftype_Init(*this);
 }
 
@@ -2833,12 +2833,12 @@ inline void abt_md::FScriptfile_Init(abt_md::FScriptfile& scriptfile) {
 }
 
 // --- abt_md.FScriptfile..Ctor
-inline  abt_md::FScriptfile::FScriptfile() {
+inline  abt_md::FScriptfile::FScriptfile() throw() {
     abt_md::FScriptfile_Init(*this);
 }
 
 // --- abt_md.FScriptfile..Dtor
-inline  abt_md::FScriptfile::~FScriptfile() {
+inline  abt_md::FScriptfile::~FScriptfile() throw() {
     abt_md::FScriptfile_Uninit(*this);
 }
 
@@ -2850,12 +2850,12 @@ inline void abt_md::FSsimfile_Init(abt_md::FSsimfile& ssimfile) {
 }
 
 // --- abt_md.FSsimfile..Ctor
-inline  abt_md::FSsimfile::FSsimfile() {
+inline  abt_md::FSsimfile::FSsimfile() throw() {
     abt_md::FSsimfile_Init(*this);
 }
 
 // --- abt_md.FSsimfile..Dtor
-inline  abt_md::FSsimfile::~FSsimfile() {
+inline  abt_md::FSsimfile::~FSsimfile() throw() {
     abt_md::FSsimfile_Uninit(*this);
 }
 
@@ -2866,12 +2866,12 @@ inline void abt_md::FSubstr_Init(abt_md::FSubstr& substr) {
 }
 
 // --- abt_md.FSubstr..Ctor
-inline  abt_md::FSubstr::FSubstr() {
+inline  abt_md::FSubstr::FSubstr() throw() {
     abt_md::FSubstr_Init(*this);
 }
 
 // --- abt_md.FSubstr..Dtor
-inline  abt_md::FSubstr::~FSubstr() {
+inline  abt_md::FSubstr::~FSubstr() throw() {
     abt_md::FSubstr_Uninit(*this);
 }
 
@@ -2883,24 +2883,24 @@ inline void abt_md::FTargdep_Init(abt_md::FTargdep& targdep) {
 }
 
 // --- abt_md.FTargdep..Ctor
-inline  abt_md::FTargdep::FTargdep() {
+inline  abt_md::FTargdep::FTargdep() throw() {
     abt_md::FTargdep_Init(*this);
 }
 
 // --- abt_md.FTargdep..Dtor
-inline  abt_md::FTargdep::~FTargdep() {
+inline  abt_md::FTargdep::~FTargdep() throw() {
     abt_md::FTargdep_Uninit(*this);
 }
 
 // --- abt_md.FTarget.c_targdep.EmptyQ
 // Return true if index is empty
-inline bool abt_md::c_targdep_EmptyQ(abt_md::FTarget& target) {
+inline bool abt_md::c_targdep_EmptyQ(abt_md::FTarget& target) throw() {
     return target.c_targdep_n == 0;
 }
 
 // --- abt_md.FTarget.c_targdep.Find
 // Look up row by row id. Return NULL if out of range
-inline abt_md::FTargdep* abt_md::c_targdep_Find(abt_md::FTarget& target, u32 t) {
+inline abt_md::FTargdep* abt_md::c_targdep_Find(abt_md::FTarget& target, u32 t) throw() {
     abt_md::FTargdep *retval = NULL;
     u64 idx = t;
     u64 lim = target.c_targdep_n;
@@ -2912,19 +2912,19 @@ inline abt_md::FTargdep* abt_md::c_targdep_Find(abt_md::FTarget& target, u32 t) 
 
 // --- abt_md.FTarget.c_targdep.Getary
 // Return array of pointers
-inline algo::aryptr<abt_md::FTargdep*> abt_md::c_targdep_Getary(abt_md::FTarget& target) {
+inline algo::aryptr<abt_md::FTargdep*> abt_md::c_targdep_Getary(abt_md::FTarget& target) throw() {
     return algo::aryptr<abt_md::FTargdep*>(target.c_targdep_elems, target.c_targdep_n);
 }
 
 // --- abt_md.FTarget.c_targdep.N
 // Return number of items in the pointer array
-inline i32 abt_md::c_targdep_N(const abt_md::FTarget& target) {
+inline i32 abt_md::c_targdep_N(const abt_md::FTarget& target) throw() {
     return target.c_targdep_n;
 }
 
 // --- abt_md.FTarget.c_targdep.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void abt_md::c_targdep_RemoveAll(abt_md::FTarget& target) {
+inline void abt_md::c_targdep_RemoveAll(abt_md::FTarget& target) throw() {
     for (u32 i = 0; i < target.c_targdep_n; i++) {
         // mark all elements as not-in-array
         target.c_targdep_elems[i]->target_c_targdep_in_ary = false;
@@ -2934,19 +2934,19 @@ inline void abt_md::c_targdep_RemoveAll(abt_md::FTarget& target) {
 
 // --- abt_md.FTarget.c_targdep.qFind
 // Return reference without bounds checking
-inline abt_md::FTargdep& abt_md::c_targdep_qFind(abt_md::FTarget& target, u32 idx) {
+inline abt_md::FTargdep& abt_md::c_targdep_qFind(abt_md::FTarget& target, u32 idx) throw() {
     return *target.c_targdep_elems[idx];
 }
 
 // --- abt_md.FTarget.c_targdep.InAryQ
 // True if row is in any ptrary instance
-inline bool abt_md::target_c_targdep_InAryQ(abt_md::FTargdep& row) {
+inline bool abt_md::target_c_targdep_InAryQ(abt_md::FTargdep& row) throw() {
     return row.target_c_targdep_in_ary;
 }
 
 // --- abt_md.FTarget.c_targdep.qLast
 // Reference to last element without bounds checking
-inline abt_md::FTargdep& abt_md::c_targdep_qLast(abt_md::FTarget& target) {
+inline abt_md::FTargdep& abt_md::c_targdep_qLast(abt_md::FTarget& target) throw() {
     return *target.c_targdep_elems[target.c_targdep_n-1];
 }
 
@@ -2961,7 +2961,7 @@ inline void abt_md::FTarget_Init(abt_md::FTarget& target) {
 }
 
 // --- abt_md.FTarget.c_targdep_curs.Reset
-inline void abt_md::target_c_targdep_curs_Reset(target_c_targdep_curs &curs, abt_md::FTarget &parent) {
+inline void abt_md::target_c_targdep_curs_Reset(target_c_targdep_curs &curs, abt_md::FTarget &parent) throw() {
     curs.elems = parent.c_targdep_elems;
     curs.n_elems = parent.c_targdep_n;
     curs.index = 0;
@@ -2969,29 +2969,29 @@ inline void abt_md::target_c_targdep_curs_Reset(target_c_targdep_curs &curs, abt
 
 // --- abt_md.FTarget.c_targdep_curs.ValidQ
 // cursor points to valid item
-inline bool abt_md::target_c_targdep_curs_ValidQ(target_c_targdep_curs &curs) {
+inline bool abt_md::target_c_targdep_curs_ValidQ(target_c_targdep_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- abt_md.FTarget.c_targdep_curs.Next
 // proceed to next item
-inline void abt_md::target_c_targdep_curs_Next(target_c_targdep_curs &curs) {
+inline void abt_md::target_c_targdep_curs_Next(target_c_targdep_curs &curs) throw() {
     curs.index++;
 }
 
 // --- abt_md.FTarget.c_targdep_curs.Access
 // item access
-inline abt_md::FTargdep& abt_md::target_c_targdep_curs_Access(target_c_targdep_curs &curs) {
+inline abt_md::FTargdep& abt_md::target_c_targdep_curs_Access(target_c_targdep_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- abt_md.FTarget..Ctor
-inline  abt_md::FTarget::FTarget() {
+inline  abt_md::FTarget::FTarget() throw() {
     abt_md::FTarget_Init(*this);
 }
 
 // --- abt_md.FTarget..Dtor
-inline  abt_md::FTarget::~FTarget() {
+inline  abt_md::FTarget::~FTarget() throw() {
     abt_md::FTarget_Uninit(*this);
 }
 
@@ -3002,12 +3002,12 @@ inline void abt_md::FTargsrc_Init(abt_md::FTargsrc& targsrc) {
 }
 
 // --- abt_md.FTargsrc..Ctor
-inline  abt_md::FTargsrc::FTargsrc() {
+inline  abt_md::FTargsrc::FTargsrc() throw() {
     abt_md::FTargsrc_Init(*this);
 }
 
 // --- abt_md.FTargsrc..Dtor
-inline  abt_md::FTargsrc::~FTargsrc() {
+inline  abt_md::FTargsrc::~FTargsrc() throw() {
     abt_md::FTargsrc_Uninit(*this);
 }
 
@@ -3018,29 +3018,29 @@ inline void abt_md::FTclass_Init(abt_md::FTclass& tclass) {
 }
 
 // --- abt_md.FTclass..Ctor
-inline  abt_md::FTclass::FTclass() {
+inline  abt_md::FTclass::FTclass() throw() {
     abt_md::FTclass_Init(*this);
 }
 
 // --- abt_md.FTclass..Dtor
-inline  abt_md::FTclass::~FTclass() {
+inline  abt_md::FTclass::~FTclass() throw() {
     abt_md::FTclass_Uninit(*this);
 }
 
 // --- abt_md.FieldId.value.GetEnum
 // Get value of field as enum type
-inline abt_md_FieldIdEnum abt_md::value_GetEnum(const abt_md::FieldId& parent) {
+inline abt_md_FieldIdEnum abt_md::value_GetEnum(const abt_md::FieldId& parent) throw() {
     return abt_md_FieldIdEnum(parent.value);
 }
 
 // --- abt_md.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void abt_md::value_SetEnum(abt_md::FieldId& parent, abt_md_FieldIdEnum rhs) {
+inline void abt_md::value_SetEnum(abt_md::FieldId& parent, abt_md_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- abt_md.FieldId.value.Cast
-inline  abt_md::FieldId::operator abt_md_FieldIdEnum() const {
+inline  abt_md::FieldId::operator abt_md_FieldIdEnum() const throw() {
     return abt_md_FieldIdEnum((*this).value);
 }
 
@@ -3051,35 +3051,35 @@ inline void abt_md::FieldId_Init(abt_md::FieldId& parent) {
 }
 
 // --- abt_md.FieldId..Ctor
-inline  abt_md::FieldId::FieldId() {
+inline  abt_md::FieldId::FieldId() throw() {
     abt_md::FieldId_Init(*this);
 }
 
 // --- abt_md.FieldId..FieldwiseCtor
-inline  abt_md::FieldId::FieldId(i32 in_value)
+inline  abt_md::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- abt_md.FieldId..EnumCtor
-inline  abt_md::FieldId::FieldId(abt_md_FieldIdEnum arg) {
+inline  abt_md::FieldId::FieldId(abt_md_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- abt_md.TableId.value.GetEnum
 // Get value of field as enum type
-inline abt_md_TableIdEnum abt_md::value_GetEnum(const abt_md::TableId& parent) {
+inline abt_md_TableIdEnum abt_md::value_GetEnum(const abt_md::TableId& parent) throw() {
     return abt_md_TableIdEnum(parent.value);
 }
 
 // --- abt_md.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void abt_md::value_SetEnum(abt_md::TableId& parent, abt_md_TableIdEnum rhs) {
+inline void abt_md::value_SetEnum(abt_md::TableId& parent, abt_md_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- abt_md.TableId.value.Cast
-inline  abt_md::TableId::operator abt_md_TableIdEnum() const {
+inline  abt_md::TableId::operator abt_md_TableIdEnum() const throw() {
     return abt_md_TableIdEnum((*this).value);
 }
 
@@ -3090,18 +3090,18 @@ inline void abt_md::TableId_Init(abt_md::TableId& parent) {
 }
 
 // --- abt_md.TableId..Ctor
-inline  abt_md::TableId::TableId() {
+inline  abt_md::TableId::TableId() throw() {
     abt_md::TableId_Init(*this);
 }
 
 // --- abt_md.TableId..FieldwiseCtor
-inline  abt_md::TableId::TableId(i32 in_value)
+inline  abt_md::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- abt_md.TableId..EnumCtor
-inline  abt_md::TableId::TableId(abt_md_TableIdEnum arg) {
+inline  abt_md::TableId::TableId(abt_md_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

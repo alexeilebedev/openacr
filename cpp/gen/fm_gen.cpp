@@ -36,13 +36,13 @@ namespace fm { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- fm.Code.ch.Print
-void fm::ch_Print(fm::Code& parent, algo::cstring &out) {
+void fm::ch_Print(fm::Code& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- fm.Code.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool fm::ch_ReadStrptrMaybe(fm::Code& parent, algo::strptr rhs) {
+bool fm::ch_ReadStrptrMaybe(fm::Code& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 32) {
         ch_SetStrptr(parent, rhs);
@@ -57,7 +57,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Code& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Code& parent, const algo::strptr& rhs) {
+void fm::ch_SetStrptr(fm::Code& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 32);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -71,7 +71,7 @@ void fm::ch_SetStrptr(fm::Code& parent, const algo::strptr& rhs) {
 }
 
 // --- fm.Code..Hash
-u32 fm::Code_Hash(u32 prev, const fm::Code& rhs) {
+u32 fm::Code_Hash(u32 prev, const fm::Code& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -80,7 +80,7 @@ u32 fm::Code_Hash(u32 prev, const fm::Code& rhs) {
 // --- fm.Code..ReadStrptrMaybe
 // Read fields of fm::Code from an ascii string.
 // The format of the string is the format of the fm::Code's only field
-bool fm::Code_ReadStrptrMaybe(fm::Code &parent, algo::strptr in_str) {
+bool fm::Code_ReadStrptrMaybe(fm::Code &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -89,18 +89,18 @@ bool fm::Code_ReadStrptrMaybe(fm::Code &parent, algo::strptr in_str) {
 // --- fm.Code..Print
 // print string representation of ROW to string STR
 // cfmt:fm.Code.String  printfmt:Raw
-void fm::Code_Print(fm::Code& row, algo::cstring& str) {
+void fm::Code_Print(fm::Code& row, algo::cstring& str) throw() {
     fm::ch_Print(row, str);
 }
 
 // --- fm.Objtype.ch.Print
-void fm::ch_Print(fm::Objtype& parent, algo::cstring &out) {
+void fm::ch_Print(fm::Objtype& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- fm.Objtype.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool fm::ch_ReadStrptrMaybe(fm::Objtype& parent, algo::strptr rhs) {
+bool fm::ch_ReadStrptrMaybe(fm::Objtype& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 15) {
         ch_SetStrptr(parent, rhs);
@@ -115,7 +115,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Objtype& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Objtype& parent, const algo::strptr& rhs) {
+void fm::ch_SetStrptr(fm::Objtype& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 15);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -129,7 +129,7 @@ void fm::ch_SetStrptr(fm::Objtype& parent, const algo::strptr& rhs) {
 }
 
 // --- fm.Objtype..Hash
-u32 fm::Objtype_Hash(u32 prev, const fm::Objtype& rhs) {
+u32 fm::Objtype_Hash(u32 prev, const fm::Objtype& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -138,7 +138,7 @@ u32 fm::Objtype_Hash(u32 prev, const fm::Objtype& rhs) {
 // --- fm.Objtype..ReadStrptrMaybe
 // Read fields of fm::Objtype from an ascii string.
 // The format of the string is the format of the fm::Objtype's only field
-bool fm::Objtype_ReadStrptrMaybe(fm::Objtype &parent, algo::strptr in_str) {
+bool fm::Objtype_ReadStrptrMaybe(fm::Objtype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -147,18 +147,18 @@ bool fm::Objtype_ReadStrptrMaybe(fm::Objtype &parent, algo::strptr in_str) {
 // --- fm.Objtype..Print
 // print string representation of ROW to string STR
 // cfmt:fm.Objtype.String  printfmt:Raw
-void fm::Objtype_Print(fm::Objtype& row, algo::cstring& str) {
+void fm::Objtype_Print(fm::Objtype& row, algo::cstring& str) throw() {
     fm::ch_Print(row, str);
 }
 
 // --- fm.Objinst.ch.Print
-void fm::ch_Print(fm::Objinst& parent, algo::cstring &out) {
+void fm::ch_Print(fm::Objinst& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- fm.Objinst.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool fm::ch_ReadStrptrMaybe(fm::Objinst& parent, algo::strptr rhs) {
+bool fm::ch_ReadStrptrMaybe(fm::Objinst& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 79) {
         ch_SetStrptr(parent, rhs);
@@ -173,7 +173,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Objinst& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Objinst& parent, const algo::strptr& rhs) {
+void fm::ch_SetStrptr(fm::Objinst& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 79);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -187,7 +187,7 @@ void fm::ch_SetStrptr(fm::Objinst& parent, const algo::strptr& rhs) {
 }
 
 // --- fm.Objinst..Hash
-u32 fm::Objinst_Hash(u32 prev, const fm::Objinst& rhs) {
+u32 fm::Objinst_Hash(u32 prev, const fm::Objinst& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -196,7 +196,7 @@ u32 fm::Objinst_Hash(u32 prev, const fm::Objinst& rhs) {
 // --- fm.Objinst..ReadStrptrMaybe
 // Read fields of fm::Objinst from an ascii string.
 // The format of the string is the format of the fm::Objinst's only field
-bool fm::Objinst_ReadStrptrMaybe(fm::Objinst &parent, algo::strptr in_str) {
+bool fm::Objinst_ReadStrptrMaybe(fm::Objinst &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -205,14 +205,14 @@ bool fm::Objinst_ReadStrptrMaybe(fm::Objinst &parent, algo::strptr in_str) {
 // --- fm.Objinst..Print
 // print string representation of ROW to string STR
 // cfmt:fm.Objinst.String  printfmt:Raw
-void fm::Objinst_Print(fm::Objinst& row, algo::cstring& str) {
+void fm::Objinst_Print(fm::Objinst& row, algo::cstring& str) throw() {
     fm::ch_Print(row, str);
 }
 
 // --- fm.Flag.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* fm::value_ToCstr(const fm::Flag& parent) {
+const char* fm::value_ToCstr(const fm::Flag& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case fm_Flag_value_cleared         : ret = "cleared";  break;
@@ -224,7 +224,7 @@ const char* fm::value_ToCstr(const fm::Flag& parent) {
 // --- fm.Flag.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void fm::value_Print(const fm::Flag& parent, algo::cstring &lhs) {
+void fm::value_Print(const fm::Flag& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -237,7 +237,7 @@ void fm::value_Print(const fm::Flag& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool fm::value_SetStrptrMaybe(fm::Flag& parent, algo::strptr rhs) {
+bool fm::value_SetStrptrMaybe(fm::Flag& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 6: {
@@ -263,13 +263,13 @@ bool fm::value_SetStrptrMaybe(fm::Flag& parent, algo::strptr rhs) {
 // --- fm.Flag.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void fm::value_SetStrptr(fm::Flag& parent, algo::strptr rhs, fm_Flag_value_Enum dflt) {
+void fm::value_SetStrptr(fm::Flag& parent, algo::strptr rhs, fm_Flag_value_Enum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- fm.Flag.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool fm::value_ReadStrptrMaybe(fm::Flag& parent, algo::strptr rhs) {
+bool fm::value_ReadStrptrMaybe(fm::Flag& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -281,7 +281,7 @@ bool fm::value_ReadStrptrMaybe(fm::Flag& parent, algo::strptr rhs) {
 // --- fm.Flag..ReadStrptrMaybe
 // Read fields of fm::Flag from an ascii string.
 // The format of the string is the format of the fm::Flag's only field
-bool fm::Flag_ReadStrptrMaybe(fm::Flag &parent, algo::strptr in_str) {
+bool fm::Flag_ReadStrptrMaybe(fm::Flag &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -290,14 +290,14 @@ bool fm::Flag_ReadStrptrMaybe(fm::Flag &parent, algo::strptr in_str) {
 // --- fm.Flag..Print
 // print string representation of ROW to string STR
 // cfmt:fm.Flag.String  printfmt:Raw
-void fm::Flag_Print(fm::Flag row, algo::cstring& str) {
+void fm::Flag_Print(fm::Flag row, algo::cstring& str) throw() {
     fm::value_Print(row, str);
 }
 
 // --- fm.Severity.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* fm::value_ToCstr(const fm::Severity& parent) {
+const char* fm::value_ToCstr(const fm::Severity& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case fm_Severity_value_critical    : ret = "critical";  break;
@@ -310,7 +310,7 @@ const char* fm::value_ToCstr(const fm::Severity& parent) {
 // --- fm.Severity.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void fm::value_Print(const fm::Severity& parent, algo::cstring &lhs) {
+void fm::value_Print(const fm::Severity& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -323,7 +323,7 @@ void fm::value_Print(const fm::Severity& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool fm::value_SetStrptrMaybe(fm::Severity& parent, algo::strptr rhs) {
+bool fm::value_SetStrptrMaybe(fm::Severity& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -352,13 +352,13 @@ bool fm::value_SetStrptrMaybe(fm::Severity& parent, algo::strptr rhs) {
 // --- fm.Severity.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void fm::value_SetStrptr(fm::Severity& parent, algo::strptr rhs, fm_Severity_value_Enum dflt) {
+void fm::value_SetStrptr(fm::Severity& parent, algo::strptr rhs, fm_Severity_value_Enum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- fm.Severity.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool fm::value_ReadStrptrMaybe(fm::Severity& parent, algo::strptr rhs) {
+bool fm::value_ReadStrptrMaybe(fm::Severity& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -370,7 +370,7 @@ bool fm::value_ReadStrptrMaybe(fm::Severity& parent, algo::strptr rhs) {
 // --- fm.Severity..ReadStrptrMaybe
 // Read fields of fm::Severity from an ascii string.
 // The format of the string is the format of the fm::Severity's only field
-bool fm::Severity_ReadStrptrMaybe(fm::Severity &parent, algo::strptr in_str) {
+bool fm::Severity_ReadStrptrMaybe(fm::Severity &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -379,18 +379,18 @@ bool fm::Severity_ReadStrptrMaybe(fm::Severity &parent, algo::strptr in_str) {
 // --- fm.Severity..Print
 // print string representation of ROW to string STR
 // cfmt:fm.Severity.String  printfmt:Raw
-void fm::Severity_Print(fm::Severity row, algo::cstring& str) {
+void fm::Severity_Print(fm::Severity row, algo::cstring& str) throw() {
     fm::value_Print(row, str);
 }
 
 // --- fm.Summary.ch.Print
-void fm::ch_Print(fm::Summary& parent, algo::cstring &out) {
+void fm::ch_Print(fm::Summary& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- fm.Summary.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool fm::ch_ReadStrptrMaybe(fm::Summary& parent, algo::strptr rhs) {
+bool fm::ch_ReadStrptrMaybe(fm::Summary& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 64) {
         ch_SetStrptr(parent, rhs);
@@ -405,7 +405,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Summary& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Summary& parent, const algo::strptr& rhs) {
+void fm::ch_SetStrptr(fm::Summary& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 64);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -419,7 +419,7 @@ void fm::ch_SetStrptr(fm::Summary& parent, const algo::strptr& rhs) {
 }
 
 // --- fm.Summary..Hash
-u32 fm::Summary_Hash(u32 prev, const fm::Summary& rhs) {
+u32 fm::Summary_Hash(u32 prev, const fm::Summary& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -428,7 +428,7 @@ u32 fm::Summary_Hash(u32 prev, const fm::Summary& rhs) {
 // --- fm.Summary..ReadStrptrMaybe
 // Read fields of fm::Summary from an ascii string.
 // The format of the string is the format of the fm::Summary's only field
-bool fm::Summary_ReadStrptrMaybe(fm::Summary &parent, algo::strptr in_str) {
+bool fm::Summary_ReadStrptrMaybe(fm::Summary &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -437,18 +437,18 @@ bool fm::Summary_ReadStrptrMaybe(fm::Summary &parent, algo::strptr in_str) {
 // --- fm.Summary..Print
 // print string representation of ROW to string STR
 // cfmt:fm.Summary.String  printfmt:Raw
-void fm::Summary_Print(fm::Summary& row, algo::cstring& str) {
+void fm::Summary_Print(fm::Summary& row, algo::cstring& str) throw() {
     fm::ch_Print(row, str);
 }
 
 // --- fm.Description.ch.Print
-void fm::ch_Print(fm::Description& parent, algo::cstring &out) {
+void fm::ch_Print(fm::Description& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- fm.Description.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool fm::ch_ReadStrptrMaybe(fm::Description& parent, algo::strptr rhs) {
+bool fm::ch_ReadStrptrMaybe(fm::Description& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 128) {
         ch_SetStrptr(parent, rhs);
@@ -463,7 +463,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Description& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Description& parent, const algo::strptr& rhs) {
+void fm::ch_SetStrptr(fm::Description& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 128);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -477,7 +477,7 @@ void fm::ch_SetStrptr(fm::Description& parent, const algo::strptr& rhs) {
 }
 
 // --- fm.Description..Hash
-u32 fm::Description_Hash(u32 prev, const fm::Description& rhs) {
+u32 fm::Description_Hash(u32 prev, const fm::Description& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -486,7 +486,7 @@ u32 fm::Description_Hash(u32 prev, const fm::Description& rhs) {
 // --- fm.Description..ReadStrptrMaybe
 // Read fields of fm::Description from an ascii string.
 // The format of the string is the format of the fm::Description's only field
-bool fm::Description_ReadStrptrMaybe(fm::Description &parent, algo::strptr in_str) {
+bool fm::Description_ReadStrptrMaybe(fm::Description &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -495,18 +495,18 @@ bool fm::Description_ReadStrptrMaybe(fm::Description &parent, algo::strptr in_st
 // --- fm.Description..Print
 // print string representation of ROW to string STR
 // cfmt:fm.Description.String  printfmt:Raw
-void fm::Description_Print(fm::Description& row, algo::cstring& str) {
+void fm::Description_Print(fm::Description& row, algo::cstring& str) throw() {
     fm::ch_Print(row, str);
 }
 
 // --- fm.Source.ch.Print
-void fm::ch_Print(fm::Source& parent, algo::cstring &out) {
+void fm::ch_Print(fm::Source& parent, algo::cstring &out) throw() {
     ch_Addary(out, ch_Getary(parent));
 }
 
 // --- fm.Source.ch.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool fm::ch_ReadStrptrMaybe(fm::Source& parent, algo::strptr rhs) {
+bool fm::ch_ReadStrptrMaybe(fm::Source& parent, algo::strptr rhs) throw() {
     bool retval = false;
     if (rhs.n_elems <= 32) {
         ch_SetStrptr(parent, rhs);
@@ -521,7 +521,7 @@ bool fm::ch_ReadStrptrMaybe(fm::Source& parent, algo::strptr rhs) {
 // Copy from strptr, clipping length
 // Set string to the value provided by RHS.
 // If RHS is too large, it is silently clipped.
-void fm::ch_SetStrptr(fm::Source& parent, const algo::strptr& rhs) {
+void fm::ch_SetStrptr(fm::Source& parent, const algo::strptr& rhs) throw() {
     int len = i32_Min(rhs.n_elems, 32);
     char *rhs_elems = rhs.elems;
     int i = 0;
@@ -535,7 +535,7 @@ void fm::ch_SetStrptr(fm::Source& parent, const algo::strptr& rhs) {
 }
 
 // --- fm.Source..Hash
-u32 fm::Source_Hash(u32 prev, const fm::Source& rhs) {
+u32 fm::Source_Hash(u32 prev, const fm::Source& rhs) throw() {
     algo::strptr ch_strptr = ch_Getary(rhs);
     prev = ::strptr_Hash(prev, ch_strptr);
     return prev;
@@ -544,7 +544,7 @@ u32 fm::Source_Hash(u32 prev, const fm::Source& rhs) {
 // --- fm.Source..ReadStrptrMaybe
 // Read fields of fm::Source from an ascii string.
 // The format of the string is the format of the fm::Source's only field
-bool fm::Source_ReadStrptrMaybe(fm::Source &parent, algo::strptr in_str) {
+bool fm::Source_ReadStrptrMaybe(fm::Source &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && ch_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -553,13 +553,13 @@ bool fm::Source_ReadStrptrMaybe(fm::Source &parent, algo::strptr in_str) {
 // --- fm.Source..Print
 // print string representation of ROW to string STR
 // cfmt:fm.Source.String  printfmt:Raw
-void fm::Source_Print(fm::Source& row, algo::cstring& str) {
+void fm::Source_Print(fm::Source& row, algo::cstring& str) throw() {
     fm::ch_Print(row, str);
 }
 
 // --- fm.AlarmMsg.base.CopyOut
 // Copy fields out of row
-void fm::parent_CopyOut(fm::AlarmMsg &row, ams::MsgHeader &out) {
+void fm::parent_CopyOut(fm::AlarmMsg &row, ams::MsgHeader &out) throw() {
     // type: field value is computed
     // length: field value is computed
     (void)row;//only to avoid -Wunused-parameter
@@ -567,7 +567,7 @@ void fm::parent_CopyOut(fm::AlarmMsg &row, ams::MsgHeader &out) {
 }
 
 // --- fm.AlarmMsg..ReadFieldMaybe
-bool fm::AlarmMsg_ReadFieldMaybe(fm::AlarmMsg& parent, algo::strptr field, algo::strptr strval) {
+bool fm::AlarmMsg_ReadFieldMaybe(fm::AlarmMsg& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     fm::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -651,7 +651,7 @@ bool fm::AlarmMsg_ReadFieldMaybe(fm::AlarmMsg& parent, algo::strptr field, algo:
 // --- fm.AlarmMsg..ReadStrptrMaybe
 // Read fields of fm::AlarmMsg from an ascii string.
 // The format of the string is an ssim Tuple
-bool fm::AlarmMsg_ReadStrptrMaybe(fm::AlarmMsg &parent, algo::strptr in_str) {
+bool fm::AlarmMsg_ReadStrptrMaybe(fm::AlarmMsg &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "fm.AlarmMsg");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -671,7 +671,7 @@ void fm::AlarmMsg_Init(fm::AlarmMsg& parent) {
 // --- fm.AlarmMsg..Print
 // print string representation of ROW to string STR
 // cfmt:fm.AlarmMsg.String  printfmt:Tuple
-void fm::AlarmMsg_Print(fm::AlarmMsg& row, algo::cstring& str) {
+void fm::AlarmMsg_Print(fm::AlarmMsg& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "fm.AlarmMsg";
 
@@ -721,7 +721,7 @@ void fm::AlarmMsg_Print(fm::AlarmMsg& row, algo::cstring& str) {
 // --- fm.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* fm::value_ToCstr(const fm::FieldId& parent) {
+const char* fm::value_ToCstr(const fm::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case fm_FieldId_base               : ret = "base";  break;
@@ -750,7 +750,7 @@ const char* fm::value_ToCstr(const fm::FieldId& parent) {
 // --- fm.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void fm::value_Print(const fm::FieldId& parent, algo::cstring &lhs) {
+void fm::value_Print(const fm::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -763,7 +763,7 @@ void fm::value_Print(const fm::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool fm::value_SetStrptrMaybe(fm::FieldId& parent, algo::strptr rhs) {
+bool fm::value_SetStrptrMaybe(fm::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 2: {
@@ -887,13 +887,13 @@ bool fm::value_SetStrptrMaybe(fm::FieldId& parent, algo::strptr rhs) {
 // --- fm.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void fm::value_SetStrptr(fm::FieldId& parent, algo::strptr rhs, fm_FieldIdEnum dflt) {
+void fm::value_SetStrptr(fm::FieldId& parent, algo::strptr rhs, fm_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- fm.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool fm::value_ReadStrptrMaybe(fm::FieldId& parent, algo::strptr rhs) {
+bool fm::value_ReadStrptrMaybe(fm::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -905,7 +905,7 @@ bool fm::value_ReadStrptrMaybe(fm::FieldId& parent, algo::strptr rhs) {
 // --- fm.FieldId..ReadStrptrMaybe
 // Read fields of fm::FieldId from an ascii string.
 // The format of the string is the format of the fm::FieldId's only field
-bool fm::FieldId_ReadStrptrMaybe(fm::FieldId &parent, algo::strptr in_str) {
+bool fm::FieldId_ReadStrptrMaybe(fm::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -914,7 +914,7 @@ bool fm::FieldId_ReadStrptrMaybe(fm::FieldId &parent, algo::strptr in_str) {
 // --- fm.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:fm.FieldId.String  printfmt:Raw
-void fm::FieldId_Print(fm::FieldId& row, algo::cstring& str) {
+void fm::FieldId_Print(fm::FieldId& row, algo::cstring& str) throw() {
     fm::value_Print(row, str);
 }
 

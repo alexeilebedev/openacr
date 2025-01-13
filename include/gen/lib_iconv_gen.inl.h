@@ -26,28 +26,28 @@
 //#pragma endinclude
 
 // --- lib_iconv.trace..Ctor
-inline  lib_iconv::trace::trace() {
+inline  lib_iconv::trace::trace() throw() {
 }
 
 // --- lib_iconv.FDb..Uninit
-inline void lib_iconv::FDb_Uninit() {
+inline void lib_iconv::FDb_Uninit() throw() {
     lib_iconv::FDb &row = _db; (void)row;
 }
 
 // --- lib_iconv.FieldId.value.GetEnum
 // Get value of field as enum type
-inline lib_iconv_FieldIdEnum lib_iconv::value_GetEnum(const lib_iconv::FieldId& parent) {
+inline lib_iconv_FieldIdEnum lib_iconv::value_GetEnum(const lib_iconv::FieldId& parent) throw() {
     return lib_iconv_FieldIdEnum(parent.value);
 }
 
 // --- lib_iconv.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void lib_iconv::value_SetEnum(lib_iconv::FieldId& parent, lib_iconv_FieldIdEnum rhs) {
+inline void lib_iconv::value_SetEnum(lib_iconv::FieldId& parent, lib_iconv_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- lib_iconv.FieldId.value.Cast
-inline  lib_iconv::FieldId::operator lib_iconv_FieldIdEnum() const {
+inline  lib_iconv::FieldId::operator lib_iconv_FieldIdEnum() const throw() {
     return lib_iconv_FieldIdEnum((*this).value);
 }
 
@@ -58,18 +58,18 @@ inline void lib_iconv::FieldId_Init(lib_iconv::FieldId& parent) {
 }
 
 // --- lib_iconv.FieldId..Ctor
-inline  lib_iconv::FieldId::FieldId() {
+inline  lib_iconv::FieldId::FieldId() throw() {
     lib_iconv::FieldId_Init(*this);
 }
 
 // --- lib_iconv.FieldId..FieldwiseCtor
-inline  lib_iconv::FieldId::FieldId(i32 in_value)
+inline  lib_iconv::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_iconv.FieldId..EnumCtor
-inline  lib_iconv::FieldId::FieldId(lib_iconv_FieldIdEnum arg) {
+inline  lib_iconv::FieldId::FieldId(lib_iconv_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
@@ -80,18 +80,18 @@ inline void lib_iconv::Icd_Init(lib_iconv::Icd& icd) {
 }
 
 // --- lib_iconv.Icd..Uninit
-inline void lib_iconv::Icd_Uninit(lib_iconv::Icd& icd) {
+inline void lib_iconv::Icd_Uninit(lib_iconv::Icd& icd) throw() {
     lib_iconv::Icd &row = icd; (void)row;
     icd_Cleanup(icd); // dmmeta.fcleanup:lib_iconv.Icd.icd
 }
 
 // --- lib_iconv.Icd..Ctor
-inline  lib_iconv::Icd::Icd() {
+inline  lib_iconv::Icd::Icd() throw() {
     lib_iconv::Icd_Init(*this);
 }
 
 // --- lib_iconv.Icd..Dtor
-inline  lib_iconv::Icd::~Icd() {
+inline  lib_iconv::Icd::~Icd() throw() {
     lib_iconv::Icd_Uninit(*this);
 }
 

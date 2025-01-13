@@ -96,7 +96,7 @@ namespace ssimfilt { // gen:ns_print_proto
 // --- ssimfilt.trace..Print
 // print string representation of ROW to string STR
 // cfmt:ssimfilt.trace.String  printfmt:Tuple
-void ssimfilt::trace_Print(ssimfilt::trace& row, algo::cstring& str) {
+void ssimfilt::trace_Print(ssimfilt::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "ssimfilt.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -107,7 +107,7 @@ void ssimfilt::trace_Print(ssimfilt::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     ssimfilt.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void ssimfilt::ReadArgv() {
+void ssimfilt::ReadArgv() throw() {
     command::ssimfilt &cmd = ssimfilt::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -317,7 +317,7 @@ bool ssimfilt::InsertStrptrMaybe(algo::strptr str) {
 
 // --- ssimfilt.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool ssimfilt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool ssimfilt::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = ssimfilt::LoadTuplesFile(root, recursive);
@@ -352,7 +352,7 @@ bool ssimfilt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool ssimfilt::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool ssimfilt::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -365,7 +365,7 @@ bool ssimfilt::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- ssimfilt.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool ssimfilt::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool ssimfilt::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -386,7 +386,7 @@ bool ssimfilt::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
 
 // --- ssimfilt.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool ssimfilt::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool ssimfilt::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = ssimfilt::LoadTuplesFile(fname, recursive);
@@ -411,7 +411,7 @@ bool ssimfilt::_db_XrefMaybe() {
 // --- ssimfilt.FDb.tuple.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-algo::Tuple& ssimfilt::tuple_Alloc() {
+algo::Tuple& ssimfilt::tuple_Alloc() throw() {
     algo::Tuple* row = tuple_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("ssimfilt.out_of_mem  field:ssimfilt.FDb.tuple  comment:'Alloc failed'");
@@ -421,7 +421,7 @@ algo::Tuple& ssimfilt::tuple_Alloc() {
 
 // --- ssimfilt.FDb.tuple.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-algo::Tuple* ssimfilt::tuple_AllocMaybe() {
+algo::Tuple* ssimfilt::tuple_AllocMaybe() throw() {
     algo::Tuple *row = (algo::Tuple*)tuple_AllocMem();
     if (row) {
         new (row) algo::Tuple; // call constructor
@@ -431,7 +431,7 @@ algo::Tuple* ssimfilt::tuple_AllocMaybe() {
 
 // --- ssimfilt.FDb.tuple.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* ssimfilt::tuple_AllocMem() {
+void* ssimfilt::tuple_AllocMem() throw() {
     u64 new_nelems     = _db.tuple_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -457,7 +457,7 @@ void* ssimfilt::tuple_AllocMem() {
 
 // --- ssimfilt.FDb.tuple.RemoveAll
 // Remove all elements from Lary
-void ssimfilt::tuple_RemoveAll() {
+void ssimfilt::tuple_RemoveAll() throw() {
     for (u64 n = _db.tuple_n; n>0; ) {
         n--;
         tuple_qFind(u64(n)).~Tuple(); // destroy last element
@@ -467,7 +467,7 @@ void ssimfilt::tuple_RemoveAll() {
 
 // --- ssimfilt.FDb.tuple.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void ssimfilt::tuple_RemoveLast() {
+void ssimfilt::tuple_RemoveLast() throw() {
     u64 n = _db.tuple_n;
     if (n > 0) {
         n -= 1;
@@ -479,7 +479,7 @@ void ssimfilt::tuple_RemoveLast() {
 // --- ssimfilt.FDb.matchfield.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-ssimfilt::KVRegx& ssimfilt::matchfield_Alloc() {
+ssimfilt::KVRegx& ssimfilt::matchfield_Alloc() throw() {
     ssimfilt::KVRegx* row = matchfield_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("ssimfilt.out_of_mem  field:ssimfilt.FDb.matchfield  comment:'Alloc failed'");
@@ -489,7 +489,7 @@ ssimfilt::KVRegx& ssimfilt::matchfield_Alloc() {
 
 // --- ssimfilt.FDb.matchfield.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-ssimfilt::KVRegx* ssimfilt::matchfield_AllocMaybe() {
+ssimfilt::KVRegx* ssimfilt::matchfield_AllocMaybe() throw() {
     ssimfilt::KVRegx *row = (ssimfilt::KVRegx*)matchfield_AllocMem();
     if (row) {
         new (row) ssimfilt::KVRegx; // call constructor
@@ -499,7 +499,7 @@ ssimfilt::KVRegx* ssimfilt::matchfield_AllocMaybe() {
 
 // --- ssimfilt.FDb.matchfield.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* ssimfilt::matchfield_AllocMem() {
+void* ssimfilt::matchfield_AllocMem() throw() {
     u64 new_nelems     = _db.matchfield_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -525,7 +525,7 @@ void* ssimfilt::matchfield_AllocMem() {
 
 // --- ssimfilt.FDb.matchfield.RemoveAll
 // Remove all elements from Lary
-void ssimfilt::matchfield_RemoveAll() {
+void ssimfilt::matchfield_RemoveAll() throw() {
     for (u64 n = _db.matchfield_n; n>0; ) {
         n--;
         matchfield_qFind(u64(n)).~KVRegx(); // destroy last element
@@ -535,7 +535,7 @@ void ssimfilt::matchfield_RemoveAll() {
 
 // --- ssimfilt.FDb.matchfield.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void ssimfilt::matchfield_RemoveLast() {
+void ssimfilt::matchfield_RemoveLast() throw() {
     u64 n = _db.matchfield_n;
     if (n > 0) {
         n -= 1;
@@ -556,7 +556,7 @@ bool ssimfilt::matchfield_XrefMaybe(ssimfilt::KVRegx &row) {
 // --- ssimfilt.FDb.selfield.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-ssimfilt::KVRegx& ssimfilt::selfield_Alloc() {
+ssimfilt::KVRegx& ssimfilt::selfield_Alloc() throw() {
     ssimfilt::KVRegx* row = selfield_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("ssimfilt.out_of_mem  field:ssimfilt.FDb.selfield  comment:'Alloc failed'");
@@ -566,7 +566,7 @@ ssimfilt::KVRegx& ssimfilt::selfield_Alloc() {
 
 // --- ssimfilt.FDb.selfield.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-ssimfilt::KVRegx* ssimfilt::selfield_AllocMaybe() {
+ssimfilt::KVRegx* ssimfilt::selfield_AllocMaybe() throw() {
     ssimfilt::KVRegx *row = (ssimfilt::KVRegx*)selfield_AllocMem();
     if (row) {
         new (row) ssimfilt::KVRegx; // call constructor
@@ -576,7 +576,7 @@ ssimfilt::KVRegx* ssimfilt::selfield_AllocMaybe() {
 
 // --- ssimfilt.FDb.selfield.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* ssimfilt::selfield_AllocMem() {
+void* ssimfilt::selfield_AllocMem() throw() {
     u64 new_nelems     = _db.selfield_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -602,7 +602,7 @@ void* ssimfilt::selfield_AllocMem() {
 
 // --- ssimfilt.FDb.selfield.RemoveAll
 // Remove all elements from Lary
-void ssimfilt::selfield_RemoveAll() {
+void ssimfilt::selfield_RemoveAll() throw() {
     for (u64 n = _db.selfield_n; n>0; ) {
         n--;
         selfield_qFind(u64(n)).~KVRegx(); // destroy last element
@@ -612,7 +612,7 @@ void ssimfilt::selfield_RemoveAll() {
 
 // --- ssimfilt.FDb.selfield.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void ssimfilt::selfield_RemoveLast() {
+void ssimfilt::selfield_RemoveLast() throw() {
     u64 n = _db.selfield_n;
     if (n > 0) {
         n -= 1;
@@ -624,7 +624,7 @@ void ssimfilt::selfield_RemoveLast() {
 // --- ssimfilt.FDb.unstablefld.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-ssimfilt::FUnstablefld& ssimfilt::unstablefld_Alloc() {
+ssimfilt::FUnstablefld& ssimfilt::unstablefld_Alloc() throw() {
     ssimfilt::FUnstablefld* row = unstablefld_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("ssimfilt.out_of_mem  field:ssimfilt.FDb.unstablefld  comment:'Alloc failed'");
@@ -634,7 +634,7 @@ ssimfilt::FUnstablefld& ssimfilt::unstablefld_Alloc() {
 
 // --- ssimfilt.FDb.unstablefld.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-ssimfilt::FUnstablefld* ssimfilt::unstablefld_AllocMaybe() {
+ssimfilt::FUnstablefld* ssimfilt::unstablefld_AllocMaybe() throw() {
     ssimfilt::FUnstablefld *row = (ssimfilt::FUnstablefld*)unstablefld_AllocMem();
     if (row) {
         new (row) ssimfilt::FUnstablefld; // call constructor
@@ -645,7 +645,7 @@ ssimfilt::FUnstablefld* ssimfilt::unstablefld_AllocMaybe() {
 // --- ssimfilt.FDb.unstablefld.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-ssimfilt::FUnstablefld* ssimfilt::unstablefld_InsertMaybe(const dev::Unstablefld &value) {
+ssimfilt::FUnstablefld* ssimfilt::unstablefld_InsertMaybe(const dev::Unstablefld &value) throw() {
     ssimfilt::FUnstablefld *row = &unstablefld_Alloc(); // if out of memory, process dies. if input error, return NULL.
     unstablefld_CopyIn(*row,const_cast<dev::Unstablefld&>(value));
     bool ok = unstablefld_XrefMaybe(*row); // this may return false
@@ -658,7 +658,7 @@ ssimfilt::FUnstablefld* ssimfilt::unstablefld_InsertMaybe(const dev::Unstablefld
 
 // --- ssimfilt.FDb.unstablefld.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* ssimfilt::unstablefld_AllocMem() {
+void* ssimfilt::unstablefld_AllocMem() throw() {
     u64 new_nelems     = _db.unstablefld_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -684,7 +684,7 @@ void* ssimfilt::unstablefld_AllocMem() {
 
 // --- ssimfilt.FDb.unstablefld.RemoveAll
 // Remove all elements from Lary
-void ssimfilt::unstablefld_RemoveAll() {
+void ssimfilt::unstablefld_RemoveAll() throw() {
     for (u64 n = _db.unstablefld_n; n>0; ) {
         n--;
         unstablefld_qFind(u64(n)).~FUnstablefld(); // destroy last element
@@ -694,7 +694,7 @@ void ssimfilt::unstablefld_RemoveAll() {
 
 // --- ssimfilt.FDb.unstablefld.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void ssimfilt::unstablefld_RemoveLast() {
+void ssimfilt::unstablefld_RemoveLast() throw() {
     u64 n = _db.unstablefld_n;
     if (n > 0) {
         n -= 1;
@@ -704,7 +704,7 @@ void ssimfilt::unstablefld_RemoveLast() {
 }
 
 // --- ssimfilt.FDb.unstablefld.InputMaybe
-static bool ssimfilt::unstablefld_InputMaybe(dev::Unstablefld &elem) {
+static bool ssimfilt::unstablefld_InputMaybe(dev::Unstablefld &elem) throw() {
     bool retval = true;
     retval = unstablefld_InsertMaybe(elem) != nullptr;
     return retval;
@@ -730,7 +730,7 @@ bool ssimfilt::unstablefld_XrefMaybe(ssimfilt::FUnstablefld &row) {
 
 // --- ssimfilt.FDb.ind_unstablefld.Find
 // Find row by key. Return NULL if not found.
-ssimfilt::FUnstablefld* ssimfilt::ind_unstablefld_Find(const algo::strptr& key) {
+ssimfilt::FUnstablefld* ssimfilt::ind_unstablefld_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_unstablefld_buckets_n - 1);
     ssimfilt::FUnstablefld* *e = &_db.ind_unstablefld_buckets_elems[index];
     ssimfilt::FUnstablefld* ret=NULL;
@@ -753,7 +753,7 @@ ssimfilt::FUnstablefld& ssimfilt::ind_unstablefld_FindX(const algo::strptr& key)
 
 // --- ssimfilt.FDb.ind_unstablefld.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-ssimfilt::FUnstablefld& ssimfilt::ind_unstablefld_GetOrCreate(const algo::strptr& key) {
+ssimfilt::FUnstablefld& ssimfilt::ind_unstablefld_GetOrCreate(const algo::strptr& key) throw() {
     ssimfilt::FUnstablefld* ret = ind_unstablefld_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &unstablefld_Alloc();
@@ -770,7 +770,7 @@ ssimfilt::FUnstablefld& ssimfilt::ind_unstablefld_GetOrCreate(const algo::strptr
 
 // --- ssimfilt.FDb.ind_unstablefld.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool ssimfilt::ind_unstablefld_InsertMaybe(ssimfilt::FUnstablefld& row) {
+bool ssimfilt::ind_unstablefld_InsertMaybe(ssimfilt::FUnstablefld& row) throw() {
     ind_unstablefld_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_unstablefld_next == (ssimfilt::FUnstablefld*)-1)) {// check if in hash already
@@ -798,7 +798,7 @@ bool ssimfilt::ind_unstablefld_InsertMaybe(ssimfilt::FUnstablefld& row) {
 
 // --- ssimfilt.FDb.ind_unstablefld.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void ssimfilt::ind_unstablefld_Remove(ssimfilt::FUnstablefld& row) {
+void ssimfilt::ind_unstablefld_Remove(ssimfilt::FUnstablefld& row) throw() {
     if (LIKELY(row.ind_unstablefld_next != (ssimfilt::FUnstablefld*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_unstablefld_buckets_n - 1);
         ssimfilt::FUnstablefld* *prev = &_db.ind_unstablefld_buckets_elems[index]; // addr of pointer to current element
@@ -816,7 +816,7 @@ void ssimfilt::ind_unstablefld_Remove(ssimfilt::FUnstablefld& row) {
 
 // --- ssimfilt.FDb.ind_unstablefld.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void ssimfilt::ind_unstablefld_Reserve(int n) {
+void ssimfilt::ind_unstablefld_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_unstablefld_buckets_n;
     u32 new_nelems   = _db.ind_unstablefld_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -852,13 +852,13 @@ void ssimfilt::ind_unstablefld_Reserve(int n) {
 
 // --- ssimfilt.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr ssimfilt::trace_RowidFind(int t) {
+static algo::ImrowPtr ssimfilt::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- ssimfilt.FDb.trace.N
 // Function return 1
-inline static i32 ssimfilt::trace_N() {
+inline static i32 ssimfilt::trace_N() throw() {
     return 1;
 }
 
@@ -924,7 +924,7 @@ void ssimfilt::FDb_Init() {
 }
 
 // --- ssimfilt.FDb..Uninit
-void ssimfilt::FDb_Uninit() {
+void ssimfilt::FDb_Uninit() throw() {
     ssimfilt::FDb &row = _db; (void)row;
 
     // ssimfilt.FDb.ind_unstablefld.Uninit (Thash)  //
@@ -945,20 +945,20 @@ void ssimfilt::FDb_Uninit() {
 
 // --- ssimfilt.FUnstablefld.base.CopyOut
 // Copy fields out of row
-void ssimfilt::unstablefld_CopyOut(ssimfilt::FUnstablefld &row, dev::Unstablefld &out) {
+void ssimfilt::unstablefld_CopyOut(ssimfilt::FUnstablefld &row, dev::Unstablefld &out) throw() {
     out.field = row.field;
     out.comment = row.comment;
 }
 
 // --- ssimfilt.FUnstablefld.base.CopyIn
 // Copy fields in to row
-void ssimfilt::unstablefld_CopyIn(ssimfilt::FUnstablefld &row, dev::Unstablefld &in) {
+void ssimfilt::unstablefld_CopyIn(ssimfilt::FUnstablefld &row, dev::Unstablefld &in) throw() {
     row.field = in.field;
     row.comment = in.comment;
 }
 
 // --- ssimfilt.FUnstablefld..Uninit
-void ssimfilt::FUnstablefld_Uninit(ssimfilt::FUnstablefld& unstablefld) {
+void ssimfilt::FUnstablefld_Uninit(ssimfilt::FUnstablefld& unstablefld) throw() {
     ssimfilt::FUnstablefld &row = unstablefld; (void)row;
     ind_unstablefld_Remove(row); // remove unstablefld from index ind_unstablefld
 }
@@ -966,7 +966,7 @@ void ssimfilt::FUnstablefld_Uninit(ssimfilt::FUnstablefld& unstablefld) {
 // --- ssimfilt.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ssimfilt::value_ToCstr(const ssimfilt::FieldId& parent) {
+const char* ssimfilt::value_ToCstr(const ssimfilt::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ssimfilt_FieldId_value        : ret = "value";  break;
@@ -977,7 +977,7 @@ const char* ssimfilt::value_ToCstr(const ssimfilt::FieldId& parent) {
 // --- ssimfilt.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void ssimfilt::value_Print(const ssimfilt::FieldId& parent, algo::cstring &lhs) {
+void ssimfilt::value_Print(const ssimfilt::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -990,7 +990,7 @@ void ssimfilt::value_Print(const ssimfilt::FieldId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ssimfilt::value_SetStrptrMaybe(ssimfilt::FieldId& parent, algo::strptr rhs) {
+bool ssimfilt::value_SetStrptrMaybe(ssimfilt::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -1008,13 +1008,13 @@ bool ssimfilt::value_SetStrptrMaybe(ssimfilt::FieldId& parent, algo::strptr rhs)
 // --- ssimfilt.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ssimfilt::value_SetStrptr(ssimfilt::FieldId& parent, algo::strptr rhs, ssimfilt_FieldIdEnum dflt) {
+void ssimfilt::value_SetStrptr(ssimfilt::FieldId& parent, algo::strptr rhs, ssimfilt_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- ssimfilt.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ssimfilt::value_ReadStrptrMaybe(ssimfilt::FieldId& parent, algo::strptr rhs) {
+bool ssimfilt::value_ReadStrptrMaybe(ssimfilt::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1026,7 +1026,7 @@ bool ssimfilt::value_ReadStrptrMaybe(ssimfilt::FieldId& parent, algo::strptr rhs
 // --- ssimfilt.FieldId..ReadStrptrMaybe
 // Read fields of ssimfilt::FieldId from an ascii string.
 // The format of the string is the format of the ssimfilt::FieldId's only field
-bool ssimfilt::FieldId_ReadStrptrMaybe(ssimfilt::FieldId &parent, algo::strptr in_str) {
+bool ssimfilt::FieldId_ReadStrptrMaybe(ssimfilt::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1035,26 +1035,26 @@ bool ssimfilt::FieldId_ReadStrptrMaybe(ssimfilt::FieldId &parent, algo::strptr i
 // --- ssimfilt.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:ssimfilt.FieldId.String  printfmt:Raw
-void ssimfilt::FieldId_Print(ssimfilt::FieldId& row, algo::cstring& str) {
+void ssimfilt::FieldId_Print(ssimfilt::FieldId& row, algo::cstring& str) throw() {
     ssimfilt::value_Print(row, str);
 }
 
 // --- ssimfilt.KVRegx.key.Print
 // Print back to string
-void ssimfilt::key_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) {
+void ssimfilt::key_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) throw() {
     Regx_Print(matchfield.key, out);
 }
 
 // --- ssimfilt.KVRegx.value.Print
 // Print back to string
-void ssimfilt::value_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) {
+void ssimfilt::value_Print(ssimfilt::KVRegx& matchfield, algo::cstring &out) throw() {
     Regx_Print(matchfield.value, out);
 }
 
 // --- ssimfilt.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* ssimfilt::value_ToCstr(const ssimfilt::TableId& parent) {
+const char* ssimfilt::value_ToCstr(const ssimfilt::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case ssimfilt_TableId_dev_Unstablefld: ret = "dev.Unstablefld";  break;
@@ -1065,7 +1065,7 @@ const char* ssimfilt::value_ToCstr(const ssimfilt::TableId& parent) {
 // --- ssimfilt.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void ssimfilt::value_Print(const ssimfilt::TableId& parent, algo::cstring &lhs) {
+void ssimfilt::value_Print(const ssimfilt::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1078,7 +1078,7 @@ void ssimfilt::value_Print(const ssimfilt::TableId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool ssimfilt::value_SetStrptrMaybe(ssimfilt::TableId& parent, algo::strptr rhs) {
+bool ssimfilt::value_SetStrptrMaybe(ssimfilt::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 15: {
@@ -1101,13 +1101,13 @@ bool ssimfilt::value_SetStrptrMaybe(ssimfilt::TableId& parent, algo::strptr rhs)
 // --- ssimfilt.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void ssimfilt::value_SetStrptr(ssimfilt::TableId& parent, algo::strptr rhs, ssimfilt_TableIdEnum dflt) {
+void ssimfilt::value_SetStrptr(ssimfilt::TableId& parent, algo::strptr rhs, ssimfilt_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- ssimfilt.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool ssimfilt::value_ReadStrptrMaybe(ssimfilt::TableId& parent, algo::strptr rhs) {
+bool ssimfilt::value_ReadStrptrMaybe(ssimfilt::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1119,7 +1119,7 @@ bool ssimfilt::value_ReadStrptrMaybe(ssimfilt::TableId& parent, algo::strptr rhs
 // --- ssimfilt.TableId..ReadStrptrMaybe
 // Read fields of ssimfilt::TableId from an ascii string.
 // The format of the string is the format of the ssimfilt::TableId's only field
-bool ssimfilt::TableId_ReadStrptrMaybe(ssimfilt::TableId &parent, algo::strptr in_str) {
+bool ssimfilt::TableId_ReadStrptrMaybe(ssimfilt::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1128,7 +1128,7 @@ bool ssimfilt::TableId_ReadStrptrMaybe(ssimfilt::TableId &parent, algo::strptr i
 // --- ssimfilt.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:ssimfilt.TableId.String  printfmt:Raw
-void ssimfilt::TableId_Print(ssimfilt::TableId& row, algo::cstring& str) {
+void ssimfilt::TableId_Print(ssimfilt::TableId& row, algo::cstring& str) throw() {
     ssimfilt::value_Print(row, str);
 }
 

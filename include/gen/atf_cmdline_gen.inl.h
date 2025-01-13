@@ -27,28 +27,28 @@
 //#pragma endinclude
 
 // --- atf_cmdline.trace..Ctor
-inline  atf_cmdline::trace::trace() {
+inline  atf_cmdline::trace::trace() throw() {
 }
 
 // --- atf_cmdline.FDb..Uninit
-inline void atf_cmdline::FDb_Uninit() {
+inline void atf_cmdline::FDb_Uninit() throw() {
     atf_cmdline::FDb &row = _db; (void)row;
 }
 
 // --- atf_cmdline.FieldId.value.GetEnum
 // Get value of field as enum type
-inline atf_cmdline_FieldIdEnum atf_cmdline::value_GetEnum(const atf_cmdline::FieldId& parent) {
+inline atf_cmdline_FieldIdEnum atf_cmdline::value_GetEnum(const atf_cmdline::FieldId& parent) throw() {
     return atf_cmdline_FieldIdEnum(parent.value);
 }
 
 // --- atf_cmdline.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void atf_cmdline::value_SetEnum(atf_cmdline::FieldId& parent, atf_cmdline_FieldIdEnum rhs) {
+inline void atf_cmdline::value_SetEnum(atf_cmdline::FieldId& parent, atf_cmdline_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- atf_cmdline.FieldId.value.Cast
-inline  atf_cmdline::FieldId::operator atf_cmdline_FieldIdEnum() const {
+inline  atf_cmdline::FieldId::operator atf_cmdline_FieldIdEnum() const throw() {
     return atf_cmdline_FieldIdEnum((*this).value);
 }
 
@@ -59,18 +59,18 @@ inline void atf_cmdline::FieldId_Init(atf_cmdline::FieldId& parent) {
 }
 
 // --- atf_cmdline.FieldId..Ctor
-inline  atf_cmdline::FieldId::FieldId() {
+inline  atf_cmdline::FieldId::FieldId() throw() {
     atf_cmdline::FieldId_Init(*this);
 }
 
 // --- atf_cmdline.FieldId..FieldwiseCtor
-inline  atf_cmdline::FieldId::FieldId(i32 in_value)
+inline  atf_cmdline::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_cmdline.FieldId..EnumCtor
-inline  atf_cmdline::FieldId::FieldId(atf_cmdline_FieldIdEnum arg) {
+inline  atf_cmdline::FieldId::FieldId(atf_cmdline_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

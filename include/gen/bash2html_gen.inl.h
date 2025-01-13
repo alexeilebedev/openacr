@@ -27,28 +27,28 @@
 //#pragma endinclude
 
 // --- bash2html.trace..Ctor
-inline  bash2html::trace::trace() {
+inline  bash2html::trace::trace() throw() {
 }
 
 // --- bash2html.FDb..Uninit
-inline void bash2html::FDb_Uninit() {
+inline void bash2html::FDb_Uninit() throw() {
     bash2html::FDb &row = _db; (void)row;
 }
 
 // --- bash2html.FieldId.value.GetEnum
 // Get value of field as enum type
-inline bash2html_FieldIdEnum bash2html::value_GetEnum(const bash2html::FieldId& parent) {
+inline bash2html_FieldIdEnum bash2html::value_GetEnum(const bash2html::FieldId& parent) throw() {
     return bash2html_FieldIdEnum(parent.value);
 }
 
 // --- bash2html.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void bash2html::value_SetEnum(bash2html::FieldId& parent, bash2html_FieldIdEnum rhs) {
+inline void bash2html::value_SetEnum(bash2html::FieldId& parent, bash2html_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- bash2html.FieldId.value.Cast
-inline  bash2html::FieldId::operator bash2html_FieldIdEnum() const {
+inline  bash2html::FieldId::operator bash2html_FieldIdEnum() const throw() {
     return bash2html_FieldIdEnum((*this).value);
 }
 
@@ -59,18 +59,18 @@ inline void bash2html::FieldId_Init(bash2html::FieldId& parent) {
 }
 
 // --- bash2html.FieldId..Ctor
-inline  bash2html::FieldId::FieldId() {
+inline  bash2html::FieldId::FieldId() throw() {
     bash2html::FieldId_Init(*this);
 }
 
 // --- bash2html.FieldId..FieldwiseCtor
-inline  bash2html::FieldId::FieldId(i32 in_value)
+inline  bash2html::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- bash2html.FieldId..EnumCtor
-inline  bash2html::FieldId::FieldId(bash2html_FieldIdEnum arg) {
+inline  bash2html::FieldId::FieldId(bash2html_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

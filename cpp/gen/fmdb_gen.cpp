@@ -36,61 +36,61 @@ namespace fmdb { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- fmdb.Alarm.code.Get
-fm::Code fmdb::code_Get(fmdb::Alarm& parent) {
+fm::Code fmdb::code_Get(fmdb::Alarm& parent) throw() {
     fm::Code ret(algo::Pathcomp(parent.alarm, "@LL"));
     return ret;
 }
 
 // --- fmdb.Alarm.code.Get2
-fm::Code fmdb::Alarm_code_Get(algo::strptr arg) {
+fm::Code fmdb::Alarm_code_Get(algo::strptr arg) throw() {
     fm::Code ret(algo::Pathcomp(arg, "@LL"));
     return ret;
 }
 
 // --- fmdb.Alarm.object.Get
-algo::Smallstr200 fmdb::object_Get(fmdb::Alarm& parent) {
+algo::Smallstr200 fmdb::object_Get(fmdb::Alarm& parent) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(parent.alarm, "@LR"));
     return ret;
 }
 
 // --- fmdb.Alarm.object.Get2
-algo::Smallstr200 fmdb::Alarm_object_Get(algo::strptr arg) {
+algo::Smallstr200 fmdb::Alarm_object_Get(algo::strptr arg) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(arg, "@LR"));
     return ret;
 }
 
 // --- fmdb.Alarm.objtype.Get
-fm::Objtype fmdb::objtype_Get(fmdb::Alarm& parent) {
+fm::Objtype fmdb::objtype_Get(fmdb::Alarm& parent) throw() {
     fm::Objtype ret(algo::Pathcomp(object_Get(parent), ".LL"));
     return ret;
 }
 
 // --- fmdb.Alarm.objtype.Get2
-fm::Objtype fmdb::Alarm_objtype_Get(algo::strptr arg) {
+fm::Objtype fmdb::Alarm_objtype_Get(algo::strptr arg) throw() {
     fm::Objtype ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
 
 // --- fmdb.Alarm.objinst.Get
-fm::Objinst fmdb::objinst_Get(fmdb::Alarm& parent) {
+fm::Objinst fmdb::objinst_Get(fmdb::Alarm& parent) throw() {
     fm::Objinst ret(algo::Pathcomp(object_Get(parent), ".LR"));
     return ret;
 }
 
 // --- fmdb.Alarm.objinst.Get2
-fm::Objinst fmdb::Alarm_objinst_Get(algo::strptr arg) {
+fm::Objinst fmdb::Alarm_objinst_Get(algo::strptr arg) throw() {
     fm::Objinst ret(algo::Pathcomp(arg, ".LR"));
     return ret;
 }
 
 // --- fmdb.Alarm.objprefix.Get
-algo::Smallstr50 fmdb::objprefix_Get(fmdb::Alarm& parent) {
+algo::Smallstr50 fmdb::objprefix_Get(fmdb::Alarm& parent) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(objinst_Get(parent), ".LL"));
     return ret;
 }
 
 // --- fmdb.Alarm.objprefix.Get2
-algo::Smallstr50 fmdb::Alarm_objprefix_Get(algo::strptr arg) {
+algo::Smallstr50 fmdb::Alarm_objprefix_Get(algo::strptr arg) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(arg, ".LL"));
     return ret;
 }
@@ -106,7 +106,7 @@ tempstr fmdb::Alarm_Concat_objtype_objinst( const algo::strptr& objtype ,const a
 }
 
 // --- fmdb.Alarm..ReadFieldMaybe
-bool fmdb::Alarm_ReadFieldMaybe(fmdb::Alarm& parent, algo::strptr field, algo::strptr strval) {
+bool fmdb::Alarm_ReadFieldMaybe(fmdb::Alarm& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     fmdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -190,7 +190,7 @@ bool fmdb::Alarm_ReadFieldMaybe(fmdb::Alarm& parent, algo::strptr field, algo::s
 // --- fmdb.Alarm..ReadStrptrMaybe
 // Read fields of fmdb::Alarm from an ascii string.
 // The format of the string is an ssim Tuple
-bool fmdb::Alarm_ReadStrptrMaybe(fmdb::Alarm &parent, algo::strptr in_str) {
+bool fmdb::Alarm_ReadStrptrMaybe(fmdb::Alarm &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "fmdb.alarm") || algo::StripTypeTag(in_str, "fmdb.Alarm");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -208,7 +208,7 @@ void fmdb::Alarm_Init(fmdb::Alarm& parent) {
 // --- fmdb.Alarm..Print
 // print string representation of ROW to string STR
 // cfmt:fmdb.Alarm.String  printfmt:Tuple
-void fmdb::Alarm_Print(fmdb::Alarm& row, algo::cstring& str) {
+void fmdb::Alarm_Print(fmdb::Alarm& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "fmdb.alarm";
 
@@ -250,7 +250,7 @@ void fmdb::Alarm_Print(fmdb::Alarm& row, algo::cstring& str) {
 }
 
 // --- fmdb.AlmCode..ReadFieldMaybe
-bool fmdb::AlmCode_ReadFieldMaybe(fmdb::AlmCode& parent, algo::strptr field, algo::strptr strval) {
+bool fmdb::AlmCode_ReadFieldMaybe(fmdb::AlmCode& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     fmdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -282,7 +282,7 @@ bool fmdb::AlmCode_ReadFieldMaybe(fmdb::AlmCode& parent, algo::strptr field, alg
 // --- fmdb.AlmCode..ReadStrptrMaybe
 // Read fields of fmdb::AlmCode from an ascii string.
 // The format of the string is an ssim Tuple
-bool fmdb::AlmCode_ReadStrptrMaybe(fmdb::AlmCode &parent, algo::strptr in_str) {
+bool fmdb::AlmCode_ReadStrptrMaybe(fmdb::AlmCode &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "fmdb.alm_code") || algo::StripTypeTag(in_str, "fmdb.AlmCode");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -294,7 +294,7 @@ bool fmdb::AlmCode_ReadStrptrMaybe(fmdb::AlmCode &parent, algo::strptr in_str) {
 // --- fmdb.AlmCode..Print
 // print string representation of ROW to string STR
 // cfmt:fmdb.AlmCode.String  printfmt:Tuple
-void fmdb::AlmCode_Print(fmdb::AlmCode& row, algo::cstring& str) {
+void fmdb::AlmCode_Print(fmdb::AlmCode& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "fmdb.alm_code";
 
@@ -312,7 +312,7 @@ void fmdb::AlmCode_Print(fmdb::AlmCode& row, algo::cstring& str) {
 }
 
 // --- fmdb.AlmObjtype..ReadFieldMaybe
-bool fmdb::AlmObjtype_ReadFieldMaybe(fmdb::AlmObjtype& parent, algo::strptr field, algo::strptr strval) {
+bool fmdb::AlmObjtype_ReadFieldMaybe(fmdb::AlmObjtype& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     fmdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -336,7 +336,7 @@ bool fmdb::AlmObjtype_ReadFieldMaybe(fmdb::AlmObjtype& parent, algo::strptr fiel
 // --- fmdb.AlmObjtype..ReadStrptrMaybe
 // Read fields of fmdb::AlmObjtype from an ascii string.
 // The format of the string is an ssim Tuple
-bool fmdb::AlmObjtype_ReadStrptrMaybe(fmdb::AlmObjtype &parent, algo::strptr in_str) {
+bool fmdb::AlmObjtype_ReadStrptrMaybe(fmdb::AlmObjtype &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "fmdb.alm_objtype") || algo::StripTypeTag(in_str, "fmdb.AlmObjtype");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -348,7 +348,7 @@ bool fmdb::AlmObjtype_ReadStrptrMaybe(fmdb::AlmObjtype &parent, algo::strptr in_
 // --- fmdb.AlmObjtype..Print
 // print string representation of ROW to string STR
 // cfmt:fmdb.AlmObjtype.String  printfmt:Tuple
-void fmdb::AlmObjtype_Print(fmdb::AlmObjtype& row, algo::cstring& str) {
+void fmdb::AlmObjtype_Print(fmdb::AlmObjtype& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "fmdb.alm_objtype";
 
@@ -360,7 +360,7 @@ void fmdb::AlmObjtype_Print(fmdb::AlmObjtype& row, algo::cstring& str) {
 }
 
 // --- fmdb.AlmSource..ReadFieldMaybe
-bool fmdb::AlmSource_ReadFieldMaybe(fmdb::AlmSource& parent, algo::strptr field, algo::strptr strval) {
+bool fmdb::AlmSource_ReadFieldMaybe(fmdb::AlmSource& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     fmdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -384,7 +384,7 @@ bool fmdb::AlmSource_ReadFieldMaybe(fmdb::AlmSource& parent, algo::strptr field,
 // --- fmdb.AlmSource..ReadStrptrMaybe
 // Read fields of fmdb::AlmSource from an ascii string.
 // The format of the string is an ssim Tuple
-bool fmdb::AlmSource_ReadStrptrMaybe(fmdb::AlmSource &parent, algo::strptr in_str) {
+bool fmdb::AlmSource_ReadStrptrMaybe(fmdb::AlmSource &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "fmdb.alm_source") || algo::StripTypeTag(in_str, "fmdb.AlmSource");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -396,7 +396,7 @@ bool fmdb::AlmSource_ReadStrptrMaybe(fmdb::AlmSource &parent, algo::strptr in_st
 // --- fmdb.AlmSource..Print
 // print string representation of ROW to string STR
 // cfmt:fmdb.AlmSource.String  printfmt:Tuple
-void fmdb::AlmSource_Print(fmdb::AlmSource& row, algo::cstring& str) {
+void fmdb::AlmSource_Print(fmdb::AlmSource& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "fmdb.alm_source";
 
@@ -410,7 +410,7 @@ void fmdb::AlmSource_Print(fmdb::AlmSource& row, algo::cstring& str) {
 // --- fmdb.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* fmdb::value_ToCstr(const fmdb::FieldId& parent) {
+const char* fmdb::value_ToCstr(const fmdb::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case fmdb_FieldId_alarm            : ret = "alarm";  break;
@@ -442,7 +442,7 @@ const char* fmdb::value_ToCstr(const fmdb::FieldId& parent) {
 // --- fmdb.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void fmdb::value_Print(const fmdb::FieldId& parent, algo::cstring &lhs) {
+void fmdb::value_Print(const fmdb::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -455,7 +455,7 @@ void fmdb::value_Print(const fmdb::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool fmdb::value_SetStrptrMaybe(fmdb::FieldId& parent, algo::strptr rhs) {
+bool fmdb::value_SetStrptrMaybe(fmdb::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 4: {
@@ -586,13 +586,13 @@ bool fmdb::value_SetStrptrMaybe(fmdb::FieldId& parent, algo::strptr rhs) {
 // --- fmdb.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void fmdb::value_SetStrptr(fmdb::FieldId& parent, algo::strptr rhs, fmdb_FieldIdEnum dflt) {
+void fmdb::value_SetStrptr(fmdb::FieldId& parent, algo::strptr rhs, fmdb_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- fmdb.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool fmdb::value_ReadStrptrMaybe(fmdb::FieldId& parent, algo::strptr rhs) {
+bool fmdb::value_ReadStrptrMaybe(fmdb::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -604,7 +604,7 @@ bool fmdb::value_ReadStrptrMaybe(fmdb::FieldId& parent, algo::strptr rhs) {
 // --- fmdb.FieldId..ReadStrptrMaybe
 // Read fields of fmdb::FieldId from an ascii string.
 // The format of the string is the format of the fmdb::FieldId's only field
-bool fmdb::FieldId_ReadStrptrMaybe(fmdb::FieldId &parent, algo::strptr in_str) {
+bool fmdb::FieldId_ReadStrptrMaybe(fmdb::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -613,7 +613,7 @@ bool fmdb::FieldId_ReadStrptrMaybe(fmdb::FieldId &parent, algo::strptr in_str) {
 // --- fmdb.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:fmdb.FieldId.String  printfmt:Raw
-void fmdb::FieldId_Print(fmdb::FieldId& row, algo::cstring& str) {
+void fmdb::FieldId_Print(fmdb::FieldId& row, algo::cstring& str) throw() {
     fmdb::value_Print(row, str);
 }
 

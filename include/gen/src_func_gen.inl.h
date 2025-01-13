@@ -42,28 +42,28 @@ inline void src_func::FCtypelen_Init(src_func::FCtypelen& ctypelen) {
 }
 
 // --- src_func.FCtypelen..Ctor
-inline  src_func::FCtypelen::FCtypelen() {
+inline  src_func::FCtypelen::FCtypelen() throw() {
     src_func::FCtypelen_Init(*this);
 }
 
 // --- src_func.FCtypelen..Dtor
-inline  src_func::FCtypelen::~FCtypelen() {
+inline  src_func::FCtypelen::~FCtypelen() throw() {
     src_func::FCtypelen_Uninit(*this);
 }
 
 // --- src_func.trace..Ctor
-inline  src_func::trace::trace() {
+inline  src_func::trace::trace() throw() {
 }
 
 // --- src_func.FDb.genprefix.EmptyQ
 // Return true if index is empty
-inline bool src_func::genprefix_EmptyQ() {
+inline bool src_func::genprefix_EmptyQ() throw() {
     return _db.genprefix_n == 0;
 }
 
 // --- src_func.FDb.genprefix.Find
 // Look up row by row id. Return NULL if out of range
-inline src_func::FGenprefix* src_func::genprefix_Find(u64 t) {
+inline src_func::FGenprefix* src_func::genprefix_Find(u64 t) throw() {
     src_func::FGenprefix *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.genprefix_n))) {
         u64 x = t + 1;
@@ -77,19 +77,19 @@ inline src_func::FGenprefix* src_func::genprefix_Find(u64 t) {
 
 // --- src_func.FDb.genprefix.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_func::FGenprefix* src_func::genprefix_Last() {
+inline src_func::FGenprefix* src_func::genprefix_Last() throw() {
     return genprefix_Find(u64(_db.genprefix_n-1));
 }
 
 // --- src_func.FDb.genprefix.N
 // Return number of items in the pool
-inline i32 src_func::genprefix_N() {
+inline i32 src_func::genprefix_N() throw() {
     return _db.genprefix_n;
 }
 
 // --- src_func.FDb.genprefix.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_func::FGenprefix& src_func::genprefix_qFind(u64 t) {
+inline src_func::FGenprefix& src_func::genprefix_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -99,13 +99,13 @@ inline src_func::FGenprefix& src_func::genprefix_qFind(u64 t) {
 
 // --- src_func.FDb.targsrc.EmptyQ
 // Return true if index is empty
-inline bool src_func::targsrc_EmptyQ() {
+inline bool src_func::targsrc_EmptyQ() throw() {
     return _db.targsrc_n == 0;
 }
 
 // --- src_func.FDb.targsrc.Find
 // Look up row by row id. Return NULL if out of range
-inline src_func::FTargsrc* src_func::targsrc_Find(u64 t) {
+inline src_func::FTargsrc* src_func::targsrc_Find(u64 t) throw() {
     src_func::FTargsrc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
         u64 x = t + 1;
@@ -119,19 +119,19 @@ inline src_func::FTargsrc* src_func::targsrc_Find(u64 t) {
 
 // --- src_func.FDb.targsrc.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_func::FTargsrc* src_func::targsrc_Last() {
+inline src_func::FTargsrc* src_func::targsrc_Last() throw() {
     return targsrc_Find(u64(_db.targsrc_n-1));
 }
 
 // --- src_func.FDb.targsrc.N
 // Return number of items in the pool
-inline i32 src_func::targsrc_N() {
+inline i32 src_func::targsrc_N() throw() {
     return _db.targsrc_n;
 }
 
 // --- src_func.FDb.targsrc.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_func::FTargsrc& src_func::targsrc_qFind(u64 t) {
+inline src_func::FTargsrc& src_func::targsrc_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -141,13 +141,13 @@ inline src_func::FTargsrc& src_func::targsrc_qFind(u64 t) {
 
 // --- src_func.FDb.target.EmptyQ
 // Return true if index is empty
-inline bool src_func::target_EmptyQ() {
+inline bool src_func::target_EmptyQ() throw() {
     return _db.target_n == 0;
 }
 
 // --- src_func.FDb.target.Find
 // Look up row by row id. Return NULL if out of range
-inline src_func::FTarget* src_func::target_Find(u64 t) {
+inline src_func::FTarget* src_func::target_Find(u64 t) throw() {
     src_func::FTarget *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.target_n))) {
         u64 x = t + 1;
@@ -161,19 +161,19 @@ inline src_func::FTarget* src_func::target_Find(u64 t) {
 
 // --- src_func.FDb.target.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_func::FTarget* src_func::target_Last() {
+inline src_func::FTarget* src_func::target_Last() throw() {
     return target_Find(u64(_db.target_n-1));
 }
 
 // --- src_func.FDb.target.N
 // Return number of items in the pool
-inline i32 src_func::target_N() {
+inline i32 src_func::target_N() throw() {
     return _db.target_n;
 }
 
 // --- src_func.FDb.target.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_func::FTarget& src_func::target_qFind(u64 t) {
+inline src_func::FTarget& src_func::target_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -183,25 +183,25 @@ inline src_func::FTarget& src_func::target_qFind(u64 t) {
 
 // --- src_func.FDb.ind_target.EmptyQ
 // Return true if hash is empty
-inline bool src_func::ind_target_EmptyQ() {
+inline bool src_func::ind_target_EmptyQ() throw() {
     return _db.ind_target_n == 0;
 }
 
 // --- src_func.FDb.ind_target.N
 // Return number of items in the hash
-inline i32 src_func::ind_target_N() {
+inline i32 src_func::ind_target_N() throw() {
     return _db.ind_target_n;
 }
 
 // --- src_func.FDb.func.EmptyQ
 // Return true if index is empty
-inline bool src_func::func_EmptyQ() {
+inline bool src_func::func_EmptyQ() throw() {
     return _db.func_n == 0;
 }
 
 // --- src_func.FDb.func.Find
 // Look up row by row id. Return NULL if out of range
-inline src_func::FFunc* src_func::func_Find(u64 t) {
+inline src_func::FFunc* src_func::func_Find(u64 t) throw() {
     src_func::FFunc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.func_n))) {
         u64 x = t + 1;
@@ -215,19 +215,19 @@ inline src_func::FFunc* src_func::func_Find(u64 t) {
 
 // --- src_func.FDb.func.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_func::FFunc* src_func::func_Last() {
+inline src_func::FFunc* src_func::func_Last() throw() {
     return func_Find(u64(_db.func_n-1));
 }
 
 // --- src_func.FDb.func.N
 // Return number of items in the pool
-inline i32 src_func::func_N() {
+inline i32 src_func::func_N() throw() {
     return _db.func_n;
 }
 
 // --- src_func.FDb.func.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_func::FFunc& src_func::func_qFind(u64 t) {
+inline src_func::FFunc& src_func::func_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -237,25 +237,25 @@ inline src_func::FFunc& src_func::func_qFind(u64 t) {
 
 // --- src_func.FDb.ind_func.EmptyQ
 // Return true if hash is empty
-inline bool src_func::ind_func_EmptyQ() {
+inline bool src_func::ind_func_EmptyQ() throw() {
     return _db.ind_func_n == 0;
 }
 
 // --- src_func.FDb.ind_func.N
 // Return number of items in the hash
-inline i32 src_func::ind_func_N() {
+inline i32 src_func::ind_func_N() throw() {
     return _db.ind_func_n;
 }
 
 // --- src_func.FDb.bh_func.EmptyQ
 // Return true if index is empty
-inline bool src_func::bh_func_EmptyQ() {
+inline bool src_func::bh_func_EmptyQ() throw() {
     return _db.bh_func_n == 0;
 }
 
 // --- src_func.FDb.bh_func.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline src_func::FFunc* src_func::bh_func_First() {
+inline src_func::FFunc* src_func::bh_func_First() throw() {
     src_func::FFunc *row = NULL;
     if (_db.bh_func_n > 0) {
         row = _db.bh_func_elems[0];
@@ -265,7 +265,7 @@ inline src_func::FFunc* src_func::bh_func_First() {
 
 // --- src_func.FDb.bh_func.InBheapQ
 // Return true if row is in index, false otherwise
-inline bool src_func::bh_func_InBheapQ(src_func::FFunc& row) {
+inline bool src_func::bh_func_InBheapQ(src_func::FFunc& row) throw() {
     bool result = false;
     result = row.bh_func_idx != -1;
     return result;
@@ -273,19 +273,19 @@ inline bool src_func::bh_func_InBheapQ(src_func::FFunc& row) {
 
 // --- src_func.FDb.bh_func.N
 // Return number of items in the heap
-inline i32 src_func::bh_func_N() {
+inline i32 src_func::bh_func_N() throw() {
     return _db.bh_func_n;
 }
 
 // --- src_func.FDb.dispatch.EmptyQ
 // Return true if index is empty
-inline bool src_func::dispatch_EmptyQ() {
+inline bool src_func::dispatch_EmptyQ() throw() {
     return _db.dispatch_n == 0;
 }
 
 // --- src_func.FDb.dispatch.Find
 // Look up row by row id. Return NULL if out of range
-inline src_func::FDispatch* src_func::dispatch_Find(u64 t) {
+inline src_func::FDispatch* src_func::dispatch_Find(u64 t) throw() {
     src_func::FDispatch *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.dispatch_n))) {
         u64 x = t + 1;
@@ -299,19 +299,19 @@ inline src_func::FDispatch* src_func::dispatch_Find(u64 t) {
 
 // --- src_func.FDb.dispatch.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_func::FDispatch* src_func::dispatch_Last() {
+inline src_func::FDispatch* src_func::dispatch_Last() throw() {
     return dispatch_Find(u64(_db.dispatch_n-1));
 }
 
 // --- src_func.FDb.dispatch.N
 // Return number of items in the pool
-inline i32 src_func::dispatch_N() {
+inline i32 src_func::dispatch_N() throw() {
     return _db.dispatch_n;
 }
 
 // --- src_func.FDb.dispatch.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_func::FDispatch& src_func::dispatch_qFind(u64 t) {
+inline src_func::FDispatch& src_func::dispatch_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -321,13 +321,13 @@ inline src_func::FDispatch& src_func::dispatch_qFind(u64 t) {
 
 // --- src_func.FDb.fstep.EmptyQ
 // Return true if index is empty
-inline bool src_func::fstep_EmptyQ() {
+inline bool src_func::fstep_EmptyQ() throw() {
     return _db.fstep_n == 0;
 }
 
 // --- src_func.FDb.fstep.Find
 // Look up row by row id. Return NULL if out of range
-inline src_func::FFstep* src_func::fstep_Find(u64 t) {
+inline src_func::FFstep* src_func::fstep_Find(u64 t) throw() {
     src_func::FFstep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fstep_n))) {
         u64 x = t + 1;
@@ -341,19 +341,19 @@ inline src_func::FFstep* src_func::fstep_Find(u64 t) {
 
 // --- src_func.FDb.fstep.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_func::FFstep* src_func::fstep_Last() {
+inline src_func::FFstep* src_func::fstep_Last() throw() {
     return fstep_Find(u64(_db.fstep_n-1));
 }
 
 // --- src_func.FDb.fstep.N
 // Return number of items in the pool
-inline i32 src_func::fstep_N() {
+inline i32 src_func::fstep_N() throw() {
     return _db.fstep_n;
 }
 
 // --- src_func.FDb.fstep.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_func::FFstep& src_func::fstep_qFind(u64 t) {
+inline src_func::FFstep& src_func::fstep_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -363,13 +363,13 @@ inline src_func::FFstep& src_func::fstep_qFind(u64 t) {
 
 // --- src_func.FDb.gstatic.EmptyQ
 // Return true if index is empty
-inline bool src_func::gstatic_EmptyQ() {
+inline bool src_func::gstatic_EmptyQ() throw() {
     return _db.gstatic_n == 0;
 }
 
 // --- src_func.FDb.gstatic.Find
 // Look up row by row id. Return NULL if out of range
-inline src_func::FGstatic* src_func::gstatic_Find(u64 t) {
+inline src_func::FGstatic* src_func::gstatic_Find(u64 t) throw() {
     src_func::FGstatic *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gstatic_n))) {
         u64 x = t + 1;
@@ -383,19 +383,19 @@ inline src_func::FGstatic* src_func::gstatic_Find(u64 t) {
 
 // --- src_func.FDb.gstatic.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_func::FGstatic* src_func::gstatic_Last() {
+inline src_func::FGstatic* src_func::gstatic_Last() throw() {
     return gstatic_Find(u64(_db.gstatic_n-1));
 }
 
 // --- src_func.FDb.gstatic.N
 // Return number of items in the pool
-inline i32 src_func::gstatic_N() {
+inline i32 src_func::gstatic_N() throw() {
     return _db.gstatic_n;
 }
 
 // --- src_func.FDb.gstatic.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_func::FGstatic& src_func::gstatic_qFind(u64 t) {
+inline src_func::FGstatic& src_func::gstatic_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -405,25 +405,25 @@ inline src_func::FGstatic& src_func::gstatic_qFind(u64 t) {
 
 // --- src_func.FDb.ind_genprefix.EmptyQ
 // Return true if hash is empty
-inline bool src_func::ind_genprefix_EmptyQ() {
+inline bool src_func::ind_genprefix_EmptyQ() throw() {
     return _db.ind_genprefix_n == 0;
 }
 
 // --- src_func.FDb.ind_genprefix.N
 // Return number of items in the hash
-inline i32 src_func::ind_genprefix_N() {
+inline i32 src_func::ind_genprefix_N() throw() {
     return _db.ind_genprefix_n;
 }
 
 // --- src_func.FDb.ctypelen.EmptyQ
 // Return true if index is empty
-inline bool src_func::ctypelen_EmptyQ() {
+inline bool src_func::ctypelen_EmptyQ() throw() {
     return _db.ctypelen_n == 0;
 }
 
 // --- src_func.FDb.ctypelen.Find
 // Look up row by row id. Return NULL if out of range
-inline src_func::FCtypelen* src_func::ctypelen_Find(u64 t) {
+inline src_func::FCtypelen* src_func::ctypelen_Find(u64 t) throw() {
     src_func::FCtypelen *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.ctypelen_n))) {
         u64 x = t + 1;
@@ -437,19 +437,19 @@ inline src_func::FCtypelen* src_func::ctypelen_Find(u64 t) {
 
 // --- src_func.FDb.ctypelen.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_func::FCtypelen* src_func::ctypelen_Last() {
+inline src_func::FCtypelen* src_func::ctypelen_Last() throw() {
     return ctypelen_Find(u64(_db.ctypelen_n-1));
 }
 
 // --- src_func.FDb.ctypelen.N
 // Return number of items in the pool
-inline i32 src_func::ctypelen_N() {
+inline i32 src_func::ctypelen_N() throw() {
     return _db.ctypelen_n;
 }
 
 // --- src_func.FDb.ctypelen.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_func::FCtypelen& src_func::ctypelen_qFind(u64 t) {
+inline src_func::FCtypelen& src_func::ctypelen_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -459,250 +459,250 @@ inline src_func::FCtypelen& src_func::ctypelen_qFind(u64 t) {
 
 // --- src_func.FDb.ind_ctypelen.EmptyQ
 // Return true if hash is empty
-inline bool src_func::ind_ctypelen_EmptyQ() {
+inline bool src_func::ind_ctypelen_EmptyQ() throw() {
     return _db.ind_ctypelen_n == 0;
 }
 
 // --- src_func.FDb.ind_ctypelen.N
 // Return number of items in the hash
-inline i32 src_func::ind_ctypelen_N() {
+inline i32 src_func::ind_ctypelen_N() throw() {
     return _db.ind_ctypelen_n;
 }
 
 // --- src_func.FDb.genprefix_curs.Reset
 // cursor points to valid item
-inline void src_func::_db_genprefix_curs_Reset(_db_genprefix_curs &curs, src_func::FDb &parent) {
+inline void src_func::_db_genprefix_curs_Reset(_db_genprefix_curs &curs, src_func::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_func.FDb.genprefix_curs.ValidQ
 // cursor points to valid item
-inline bool src_func::_db_genprefix_curs_ValidQ(_db_genprefix_curs &curs) {
+inline bool src_func::_db_genprefix_curs_ValidQ(_db_genprefix_curs &curs) throw() {
     return curs.index < _db.genprefix_n;
 }
 
 // --- src_func.FDb.genprefix_curs.Next
 // proceed to next item
-inline void src_func::_db_genprefix_curs_Next(_db_genprefix_curs &curs) {
+inline void src_func::_db_genprefix_curs_Next(_db_genprefix_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_func.FDb.genprefix_curs.Access
 // item access
-inline src_func::FGenprefix& src_func::_db_genprefix_curs_Access(_db_genprefix_curs &curs) {
+inline src_func::FGenprefix& src_func::_db_genprefix_curs_Access(_db_genprefix_curs &curs) throw() {
     return genprefix_qFind(u64(curs.index));
 }
 
 // --- src_func.FDb.targsrc_curs.Reset
 // cursor points to valid item
-inline void src_func::_db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_func::FDb &parent) {
+inline void src_func::_db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_func::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_func.FDb.targsrc_curs.ValidQ
 // cursor points to valid item
-inline bool src_func::_db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) {
+inline bool src_func::_db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) throw() {
     return curs.index < _db.targsrc_n;
 }
 
 // --- src_func.FDb.targsrc_curs.Next
 // proceed to next item
-inline void src_func::_db_targsrc_curs_Next(_db_targsrc_curs &curs) {
+inline void src_func::_db_targsrc_curs_Next(_db_targsrc_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_func.FDb.targsrc_curs.Access
 // item access
-inline src_func::FTargsrc& src_func::_db_targsrc_curs_Access(_db_targsrc_curs &curs) {
+inline src_func::FTargsrc& src_func::_db_targsrc_curs_Access(_db_targsrc_curs &curs) throw() {
     return targsrc_qFind(u64(curs.index));
 }
 
 // --- src_func.FDb.target_curs.Reset
 // cursor points to valid item
-inline void src_func::_db_target_curs_Reset(_db_target_curs &curs, src_func::FDb &parent) {
+inline void src_func::_db_target_curs_Reset(_db_target_curs &curs, src_func::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_func.FDb.target_curs.ValidQ
 // cursor points to valid item
-inline bool src_func::_db_target_curs_ValidQ(_db_target_curs &curs) {
+inline bool src_func::_db_target_curs_ValidQ(_db_target_curs &curs) throw() {
     return curs.index < _db.target_n;
 }
 
 // --- src_func.FDb.target_curs.Next
 // proceed to next item
-inline void src_func::_db_target_curs_Next(_db_target_curs &curs) {
+inline void src_func::_db_target_curs_Next(_db_target_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_func.FDb.target_curs.Access
 // item access
-inline src_func::FTarget& src_func::_db_target_curs_Access(_db_target_curs &curs) {
+inline src_func::FTarget& src_func::_db_target_curs_Access(_db_target_curs &curs) throw() {
     return target_qFind(u64(curs.index));
 }
 
 // --- src_func.FDb.func_curs.Reset
 // cursor points to valid item
-inline void src_func::_db_func_curs_Reset(_db_func_curs &curs, src_func::FDb &parent) {
+inline void src_func::_db_func_curs_Reset(_db_func_curs &curs, src_func::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_func.FDb.func_curs.ValidQ
 // cursor points to valid item
-inline bool src_func::_db_func_curs_ValidQ(_db_func_curs &curs) {
+inline bool src_func::_db_func_curs_ValidQ(_db_func_curs &curs) throw() {
     return curs.index < _db.func_n;
 }
 
 // --- src_func.FDb.func_curs.Next
 // proceed to next item
-inline void src_func::_db_func_curs_Next(_db_func_curs &curs) {
+inline void src_func::_db_func_curs_Next(_db_func_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_func.FDb.func_curs.Access
 // item access
-inline src_func::FFunc& src_func::_db_func_curs_Access(_db_func_curs &curs) {
+inline src_func::FFunc& src_func::_db_func_curs_Access(_db_func_curs &curs) throw() {
     return func_qFind(u64(curs.index));
 }
 
 // --- src_func.FDb.bh_func_curs.Access
 // Access current element. If not more elements, return NULL
-inline src_func::FFunc& src_func::_db_bh_func_curs_Access(_db_bh_func_curs &curs) {
+inline src_func::FFunc& src_func::_db_bh_func_curs_Access(_db_bh_func_curs &curs) throw() {
     return *curs.temp_elems[0];
 }
 
 // --- src_func.FDb.bh_func_curs.ValidQ
 // Return true if Access() will return non-NULL.
-inline bool src_func::_db_bh_func_curs_ValidQ(_db_bh_func_curs &curs) {
+inline bool src_func::_db_bh_func_curs_ValidQ(_db_bh_func_curs &curs) throw() {
     return curs.temp_n > 0;
 }
 
 // --- src_func.FDb.dispatch_curs.Reset
 // cursor points to valid item
-inline void src_func::_db_dispatch_curs_Reset(_db_dispatch_curs &curs, src_func::FDb &parent) {
+inline void src_func::_db_dispatch_curs_Reset(_db_dispatch_curs &curs, src_func::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_func.FDb.dispatch_curs.ValidQ
 // cursor points to valid item
-inline bool src_func::_db_dispatch_curs_ValidQ(_db_dispatch_curs &curs) {
+inline bool src_func::_db_dispatch_curs_ValidQ(_db_dispatch_curs &curs) throw() {
     return curs.index < _db.dispatch_n;
 }
 
 // --- src_func.FDb.dispatch_curs.Next
 // proceed to next item
-inline void src_func::_db_dispatch_curs_Next(_db_dispatch_curs &curs) {
+inline void src_func::_db_dispatch_curs_Next(_db_dispatch_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_func.FDb.dispatch_curs.Access
 // item access
-inline src_func::FDispatch& src_func::_db_dispatch_curs_Access(_db_dispatch_curs &curs) {
+inline src_func::FDispatch& src_func::_db_dispatch_curs_Access(_db_dispatch_curs &curs) throw() {
     return dispatch_qFind(u64(curs.index));
 }
 
 // --- src_func.FDb.fstep_curs.Reset
 // cursor points to valid item
-inline void src_func::_db_fstep_curs_Reset(_db_fstep_curs &curs, src_func::FDb &parent) {
+inline void src_func::_db_fstep_curs_Reset(_db_fstep_curs &curs, src_func::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_func.FDb.fstep_curs.ValidQ
 // cursor points to valid item
-inline bool src_func::_db_fstep_curs_ValidQ(_db_fstep_curs &curs) {
+inline bool src_func::_db_fstep_curs_ValidQ(_db_fstep_curs &curs) throw() {
     return curs.index < _db.fstep_n;
 }
 
 // --- src_func.FDb.fstep_curs.Next
 // proceed to next item
-inline void src_func::_db_fstep_curs_Next(_db_fstep_curs &curs) {
+inline void src_func::_db_fstep_curs_Next(_db_fstep_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_func.FDb.fstep_curs.Access
 // item access
-inline src_func::FFstep& src_func::_db_fstep_curs_Access(_db_fstep_curs &curs) {
+inline src_func::FFstep& src_func::_db_fstep_curs_Access(_db_fstep_curs &curs) throw() {
     return fstep_qFind(u64(curs.index));
 }
 
 // --- src_func.FDb.gstatic_curs.Reset
 // cursor points to valid item
-inline void src_func::_db_gstatic_curs_Reset(_db_gstatic_curs &curs, src_func::FDb &parent) {
+inline void src_func::_db_gstatic_curs_Reset(_db_gstatic_curs &curs, src_func::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_func.FDb.gstatic_curs.ValidQ
 // cursor points to valid item
-inline bool src_func::_db_gstatic_curs_ValidQ(_db_gstatic_curs &curs) {
+inline bool src_func::_db_gstatic_curs_ValidQ(_db_gstatic_curs &curs) throw() {
     return curs.index < _db.gstatic_n;
 }
 
 // --- src_func.FDb.gstatic_curs.Next
 // proceed to next item
-inline void src_func::_db_gstatic_curs_Next(_db_gstatic_curs &curs) {
+inline void src_func::_db_gstatic_curs_Next(_db_gstatic_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_func.FDb.gstatic_curs.Access
 // item access
-inline src_func::FGstatic& src_func::_db_gstatic_curs_Access(_db_gstatic_curs &curs) {
+inline src_func::FGstatic& src_func::_db_gstatic_curs_Access(_db_gstatic_curs &curs) throw() {
     return gstatic_qFind(u64(curs.index));
 }
 
 // --- src_func.FDb.ctypelen_curs.Reset
 // cursor points to valid item
-inline void src_func::_db_ctypelen_curs_Reset(_db_ctypelen_curs &curs, src_func::FDb &parent) {
+inline void src_func::_db_ctypelen_curs_Reset(_db_ctypelen_curs &curs, src_func::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_func.FDb.ctypelen_curs.ValidQ
 // cursor points to valid item
-inline bool src_func::_db_ctypelen_curs_ValidQ(_db_ctypelen_curs &curs) {
+inline bool src_func::_db_ctypelen_curs_ValidQ(_db_ctypelen_curs &curs) throw() {
     return curs.index < _db.ctypelen_n;
 }
 
 // --- src_func.FDb.ctypelen_curs.Next
 // proceed to next item
-inline void src_func::_db_ctypelen_curs_Next(_db_ctypelen_curs &curs) {
+inline void src_func::_db_ctypelen_curs_Next(_db_ctypelen_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_func.FDb.ctypelen_curs.Access
 // item access
-inline src_func::FCtypelen& src_func::_db_ctypelen_curs_Access(_db_ctypelen_curs &curs) {
+inline src_func::FCtypelen& src_func::_db_ctypelen_curs_Access(_db_ctypelen_curs &curs) throw() {
     return ctypelen_qFind(u64(curs.index));
 }
 
 // --- src_func.FDispatch..Ctor
-inline  src_func::FDispatch::FDispatch() {
+inline  src_func::FDispatch::FDispatch() throw() {
     src_func::FDispatch_Init(*this);
 }
 
 // --- src_func.FFstep..Ctor
-inline  src_func::FFstep::FFstep() {
+inline  src_func::FFstep::FFstep() throw() {
 }
 
 // --- src_func.FFunc.sortkey.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool src_func::sortkey_Lt(src_func::FFunc& func, src_func::FFunc &rhs) {
+inline bool src_func::sortkey_Lt(src_func::FFunc& func, src_func::FFunc &rhs) throw() {
     return sortkey_Cmp(func,rhs) < 0;
 }
 
 // --- src_func.FFunc..Ctor
-inline  src_func::FFunc::FFunc() {
+inline  src_func::FFunc::FFunc() throw() {
     src_func::FFunc_Init(*this);
 }
 
 // --- src_func.FFunc..Dtor
-inline  src_func::FFunc::~FFunc() {
+inline  src_func::FFunc::~FFunc() throw() {
     src_func::FFunc_Uninit(*this);
 }
 
@@ -713,28 +713,28 @@ inline void src_func::FGenprefix_Init(src_func::FGenprefix& genprefix) {
 }
 
 // --- src_func.FGenprefix..Ctor
-inline  src_func::FGenprefix::FGenprefix() {
+inline  src_func::FGenprefix::FGenprefix() throw() {
     src_func::FGenprefix_Init(*this);
 }
 
 // --- src_func.FGenprefix..Dtor
-inline  src_func::FGenprefix::~FGenprefix() {
+inline  src_func::FGenprefix::~FGenprefix() throw() {
     src_func::FGenprefix_Uninit(*this);
 }
 
 // --- src_func.FGstatic..Ctor
-inline  src_func::FGstatic::FGstatic() {
+inline  src_func::FGstatic::FGstatic() throw() {
 }
 
 // --- src_func.FTarget.cd_targsrc.EmptyQ
 // Return true if index is empty
-inline bool src_func::cd_targsrc_EmptyQ(src_func::FTarget& target) {
+inline bool src_func::cd_targsrc_EmptyQ(src_func::FTarget& target) throw() {
     return target.cd_targsrc_head == NULL;
 }
 
 // --- src_func.FTarget.cd_targsrc.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline src_func::FTargsrc* src_func::cd_targsrc_First(src_func::FTarget& target) {
+inline src_func::FTargsrc* src_func::cd_targsrc_First(src_func::FTarget& target) throw() {
     src_func::FTargsrc *row = NULL;
     row = target.cd_targsrc_head;
     return row;
@@ -742,7 +742,7 @@ inline src_func::FTargsrc* src_func::cd_targsrc_First(src_func::FTarget& target)
 
 // --- src_func.FTarget.cd_targsrc.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool src_func::cd_targsrc_InLlistQ(src_func::FTargsrc& row) {
+inline bool src_func::cd_targsrc_InLlistQ(src_func::FTargsrc& row) throw() {
     bool result = false;
     result = !(row.cd_targsrc_next == (src_func::FTargsrc*)-1);
     return result;
@@ -750,7 +750,7 @@ inline bool src_func::cd_targsrc_InLlistQ(src_func::FTargsrc& row) {
 
 // --- src_func.FTarget.cd_targsrc.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline src_func::FTargsrc* src_func::cd_targsrc_Last(src_func::FTarget& target) {
+inline src_func::FTargsrc* src_func::cd_targsrc_Last(src_func::FTarget& target) throw() {
     src_func::FTargsrc *row = NULL;
     row = target.cd_targsrc_head ? target.cd_targsrc_head->cd_targsrc_prev : NULL;
     return row;
@@ -758,25 +758,25 @@ inline src_func::FTargsrc* src_func::cd_targsrc_Last(src_func::FTarget& target) 
 
 // --- src_func.FTarget.cd_targsrc.N
 // Return number of items in the linked list
-inline i32 src_func::cd_targsrc_N(const src_func::FTarget& target) {
+inline i32 src_func::cd_targsrc_N(const src_func::FTarget& target) throw() {
     return target.cd_targsrc_n;
 }
 
 // --- src_func.FTarget.cd_targsrc.Next
 // Return pointer to next element in the list
-inline src_func::FTargsrc* src_func::cd_targsrc_Next(src_func::FTargsrc &row) {
+inline src_func::FTargsrc* src_func::cd_targsrc_Next(src_func::FTargsrc &row) throw() {
     return row.cd_targsrc_next;
 }
 
 // --- src_func.FTarget.cd_targsrc.Prev
 // Return pointer to previous element in the list
-inline src_func::FTargsrc* src_func::cd_targsrc_Prev(src_func::FTargsrc &row) {
+inline src_func::FTargsrc* src_func::cd_targsrc_Prev(src_func::FTargsrc &row) throw() {
     return row.cd_targsrc_prev;
 }
 
 // --- src_func.FTarget.cd_targsrc.qLast
 // Return reference to last element in the index. No bounds checking.
-inline src_func::FTargsrc& src_func::cd_targsrc_qLast(src_func::FTarget& target) {
+inline src_func::FTargsrc& src_func::cd_targsrc_qLast(src_func::FTarget& target) throw() {
     src_func::FTargsrc *row = NULL;
     row = target.cd_targsrc_head ? target.cd_targsrc_head->cd_targsrc_prev : NULL;
     return *row;
@@ -793,20 +793,20 @@ inline void src_func::FTarget_Init(src_func::FTarget& target) {
 
 // --- src_func.FTarget.cd_targsrc_curs.Reset
 // cursor points to valid item
-inline void src_func::target_cd_targsrc_curs_Reset(target_cd_targsrc_curs &curs, src_func::FTarget &parent) {
+inline void src_func::target_cd_targsrc_curs_Reset(target_cd_targsrc_curs &curs, src_func::FTarget &parent) throw() {
     curs.row = parent.cd_targsrc_head;
     curs.head = &parent.cd_targsrc_head;
 }
 
 // --- src_func.FTarget.cd_targsrc_curs.ValidQ
 // cursor points to valid item
-inline bool src_func::target_cd_targsrc_curs_ValidQ(target_cd_targsrc_curs &curs) {
+inline bool src_func::target_cd_targsrc_curs_ValidQ(target_cd_targsrc_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- src_func.FTarget.cd_targsrc_curs.Next
 // proceed to next item
-inline void src_func::target_cd_targsrc_curs_Next(target_cd_targsrc_curs &curs) {
+inline void src_func::target_cd_targsrc_curs_Next(target_cd_targsrc_curs &curs) throw() {
     src_func::FTargsrc *next = (*curs.row).cd_targsrc_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -816,29 +816,29 @@ inline void src_func::target_cd_targsrc_curs_Next(target_cd_targsrc_curs &curs) 
 
 // --- src_func.FTarget.cd_targsrc_curs.Access
 // item access
-inline src_func::FTargsrc& src_func::target_cd_targsrc_curs_Access(target_cd_targsrc_curs &curs) {
+inline src_func::FTargsrc& src_func::target_cd_targsrc_curs_Access(target_cd_targsrc_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- src_func.FTarget..Ctor
-inline  src_func::FTarget::FTarget() {
+inline  src_func::FTarget::FTarget() throw() {
     src_func::FTarget_Init(*this);
 }
 
 // --- src_func.FTarget..Dtor
-inline  src_func::FTarget::~FTarget() {
+inline  src_func::FTarget::~FTarget() throw() {
     src_func::FTarget_Uninit(*this);
 }
 
 // --- src_func.FTargsrc.zd_func.EmptyQ
 // Return true if index is empty
-inline bool src_func::zd_func_EmptyQ(src_func::FTargsrc& targsrc) {
+inline bool src_func::zd_func_EmptyQ(src_func::FTargsrc& targsrc) throw() {
     return targsrc.zd_func_head == NULL;
 }
 
 // --- src_func.FTargsrc.zd_func.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline src_func::FFunc* src_func::zd_func_First(src_func::FTargsrc& targsrc) {
+inline src_func::FFunc* src_func::zd_func_First(src_func::FTargsrc& targsrc) throw() {
     src_func::FFunc *row = NULL;
     row = targsrc.zd_func_head;
     return row;
@@ -846,7 +846,7 @@ inline src_func::FFunc* src_func::zd_func_First(src_func::FTargsrc& targsrc) {
 
 // --- src_func.FTargsrc.zd_func.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool src_func::zd_func_InLlistQ(src_func::FFunc& row) {
+inline bool src_func::zd_func_InLlistQ(src_func::FFunc& row) throw() {
     bool result = false;
     result = !(row.zd_func_next == (src_func::FFunc*)-1);
     return result;
@@ -854,7 +854,7 @@ inline bool src_func::zd_func_InLlistQ(src_func::FFunc& row) {
 
 // --- src_func.FTargsrc.zd_func.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline src_func::FFunc* src_func::zd_func_Last(src_func::FTargsrc& targsrc) {
+inline src_func::FFunc* src_func::zd_func_Last(src_func::FTargsrc& targsrc) throw() {
     src_func::FFunc *row = NULL;
     row = targsrc.zd_func_tail;
     return row;
@@ -862,25 +862,25 @@ inline src_func::FFunc* src_func::zd_func_Last(src_func::FTargsrc& targsrc) {
 
 // --- src_func.FTargsrc.zd_func.N
 // Return number of items in the linked list
-inline i32 src_func::zd_func_N(const src_func::FTargsrc& targsrc) {
+inline i32 src_func::zd_func_N(const src_func::FTargsrc& targsrc) throw() {
     return targsrc.zd_func_n;
 }
 
 // --- src_func.FTargsrc.zd_func.Next
 // Return pointer to next element in the list
-inline src_func::FFunc* src_func::zd_func_Next(src_func::FFunc &row) {
+inline src_func::FFunc* src_func::zd_func_Next(src_func::FFunc &row) throw() {
     return row.zd_func_next;
 }
 
 // --- src_func.FTargsrc.zd_func.Prev
 // Return pointer to previous element in the list
-inline src_func::FFunc* src_func::zd_func_Prev(src_func::FFunc &row) {
+inline src_func::FFunc* src_func::zd_func_Prev(src_func::FFunc &row) throw() {
     return row.zd_func_prev;
 }
 
 // --- src_func.FTargsrc.zd_func.qLast
 // Return reference to last element in the index. No bounds checking.
-inline src_func::FFunc& src_func::zd_func_qLast(src_func::FTargsrc& targsrc) {
+inline src_func::FFunc& src_func::zd_func_qLast(src_func::FTargsrc& targsrc) throw() {
     src_func::FFunc *row = NULL;
     row = targsrc.zd_func_tail;
     return *row;
@@ -900,53 +900,53 @@ inline void src_func::FTargsrc_Init(src_func::FTargsrc& targsrc) {
 
 // --- src_func.FTargsrc.zd_func_curs.Reset
 // cursor points to valid item
-inline void src_func::targsrc_zd_func_curs_Reset(targsrc_zd_func_curs &curs, src_func::FTargsrc &parent) {
+inline void src_func::targsrc_zd_func_curs_Reset(targsrc_zd_func_curs &curs, src_func::FTargsrc &parent) throw() {
     curs.row = parent.zd_func_head;
 }
 
 // --- src_func.FTargsrc.zd_func_curs.ValidQ
 // cursor points to valid item
-inline bool src_func::targsrc_zd_func_curs_ValidQ(targsrc_zd_func_curs &curs) {
+inline bool src_func::targsrc_zd_func_curs_ValidQ(targsrc_zd_func_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- src_func.FTargsrc.zd_func_curs.Next
 // proceed to next item
-inline void src_func::targsrc_zd_func_curs_Next(targsrc_zd_func_curs &curs) {
+inline void src_func::targsrc_zd_func_curs_Next(targsrc_zd_func_curs &curs) throw() {
     src_func::FFunc *next = (*curs.row).zd_func_next;
     curs.row = next;
 }
 
 // --- src_func.FTargsrc.zd_func_curs.Access
 // item access
-inline src_func::FFunc& src_func::targsrc_zd_func_curs_Access(targsrc_zd_func_curs &curs) {
+inline src_func::FFunc& src_func::targsrc_zd_func_curs_Access(targsrc_zd_func_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- src_func.FTargsrc..Ctor
-inline  src_func::FTargsrc::FTargsrc() {
+inline  src_func::FTargsrc::FTargsrc() throw() {
     src_func::FTargsrc_Init(*this);
 }
 
 // --- src_func.FTargsrc..Dtor
-inline  src_func::FTargsrc::~FTargsrc() {
+inline  src_func::FTargsrc::~FTargsrc() throw() {
     src_func::FTargsrc_Uninit(*this);
 }
 
 // --- src_func.FieldId.value.GetEnum
 // Get value of field as enum type
-inline src_func_FieldIdEnum src_func::value_GetEnum(const src_func::FieldId& parent) {
+inline src_func_FieldIdEnum src_func::value_GetEnum(const src_func::FieldId& parent) throw() {
     return src_func_FieldIdEnum(parent.value);
 }
 
 // --- src_func.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void src_func::value_SetEnum(src_func::FieldId& parent, src_func_FieldIdEnum rhs) {
+inline void src_func::value_SetEnum(src_func::FieldId& parent, src_func_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- src_func.FieldId.value.Cast
-inline  src_func::FieldId::operator src_func_FieldIdEnum() const {
+inline  src_func::FieldId::operator src_func_FieldIdEnum() const throw() {
     return src_func_FieldIdEnum((*this).value);
 }
 
@@ -957,35 +957,35 @@ inline void src_func::FieldId_Init(src_func::FieldId& parent) {
 }
 
 // --- src_func.FieldId..Ctor
-inline  src_func::FieldId::FieldId() {
+inline  src_func::FieldId::FieldId() throw() {
     src_func::FieldId_Init(*this);
 }
 
 // --- src_func.FieldId..FieldwiseCtor
-inline  src_func::FieldId::FieldId(i32 in_value)
+inline  src_func::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- src_func.FieldId..EnumCtor
-inline  src_func::FieldId::FieldId(src_func_FieldIdEnum arg) {
+inline  src_func::FieldId::FieldId(src_func_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- src_func.TableId.value.GetEnum
 // Get value of field as enum type
-inline src_func_TableIdEnum src_func::value_GetEnum(const src_func::TableId& parent) {
+inline src_func_TableIdEnum src_func::value_GetEnum(const src_func::TableId& parent) throw() {
     return src_func_TableIdEnum(parent.value);
 }
 
 // --- src_func.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void src_func::value_SetEnum(src_func::TableId& parent, src_func_TableIdEnum rhs) {
+inline void src_func::value_SetEnum(src_func::TableId& parent, src_func_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- src_func.TableId.value.Cast
-inline  src_func::TableId::operator src_func_TableIdEnum() const {
+inline  src_func::TableId::operator src_func_TableIdEnum() const throw() {
     return src_func_TableIdEnum((*this).value);
 }
 
@@ -996,18 +996,18 @@ inline void src_func::TableId_Init(src_func::TableId& parent) {
 }
 
 // --- src_func.TableId..Ctor
-inline  src_func::TableId::TableId() {
+inline  src_func::TableId::TableId() throw() {
     src_func::TableId_Init(*this);
 }
 
 // --- src_func.TableId..FieldwiseCtor
-inline  src_func::TableId::TableId(i32 in_value)
+inline  src_func::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- src_func.TableId..EnumCtor
-inline  src_func::TableId::TableId(src_func_TableIdEnum arg) {
+inline  src_func::TableId::TableId(src_func_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

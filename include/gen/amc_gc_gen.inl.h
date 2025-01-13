@@ -28,28 +28,28 @@
 //#pragma endinclude
 
 // --- amc_gc.trace..Ctor
-inline  amc_gc::trace::trace() {
+inline  amc_gc::trace::trace() throw() {
 }
 
 // --- amc_gc.FDb..Uninit
-inline void amc_gc::FDb_Uninit() {
+inline void amc_gc::FDb_Uninit() throw() {
     amc_gc::FDb &row = _db; (void)row;
 }
 
 // --- amc_gc.FieldId.value.GetEnum
 // Get value of field as enum type
-inline amc_gc_FieldIdEnum amc_gc::value_GetEnum(const amc_gc::FieldId& parent) {
+inline amc_gc_FieldIdEnum amc_gc::value_GetEnum(const amc_gc::FieldId& parent) throw() {
     return amc_gc_FieldIdEnum(parent.value);
 }
 
 // --- amc_gc.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void amc_gc::value_SetEnum(amc_gc::FieldId& parent, amc_gc_FieldIdEnum rhs) {
+inline void amc_gc::value_SetEnum(amc_gc::FieldId& parent, amc_gc_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- amc_gc.FieldId.value.Cast
-inline  amc_gc::FieldId::operator amc_gc_FieldIdEnum() const {
+inline  amc_gc::FieldId::operator amc_gc_FieldIdEnum() const throw() {
     return amc_gc_FieldIdEnum((*this).value);
 }
 
@@ -60,18 +60,18 @@ inline void amc_gc::FieldId_Init(amc_gc::FieldId& parent) {
 }
 
 // --- amc_gc.FieldId..Ctor
-inline  amc_gc::FieldId::FieldId() {
+inline  amc_gc::FieldId::FieldId() throw() {
     amc_gc::FieldId_Init(*this);
 }
 
 // --- amc_gc.FieldId..FieldwiseCtor
-inline  amc_gc::FieldId::FieldId(i32 in_value)
+inline  amc_gc::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- amc_gc.FieldId..EnumCtor
-inline  amc_gc::FieldId::FieldId(amc_gc_FieldIdEnum arg) {
+inline  amc_gc::FieldId::FieldId(amc_gc_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

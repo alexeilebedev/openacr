@@ -38,40 +38,40 @@ inline void lib_sqlite::FConn_Init(lib_sqlite::FConn& conn) {
 }
 
 // --- lib_sqlite.FConn..Ctor
-inline  lib_sqlite::FConn::FConn() {
+inline  lib_sqlite::FConn::FConn() throw() {
     lib_sqlite::FConn_Init(*this);
 }
 
 // --- lib_sqlite.FConn..Dtor
-inline  lib_sqlite::FConn::~FConn() {
+inline  lib_sqlite::FConn::~FConn() throw() {
     lib_sqlite::FConn_Uninit(*this);
 }
 
 // --- lib_sqlite.trace..Ctor
-inline  lib_sqlite::trace::trace() {
+inline  lib_sqlite::trace::trace() throw() {
 }
 
 // --- lib_sqlite.FDb.ind_conn.EmptyQ
 // Return true if hash is empty
-inline bool lib_sqlite::ind_conn_EmptyQ() {
+inline bool lib_sqlite::ind_conn_EmptyQ() throw() {
     return _db.ind_conn_n == 0;
 }
 
 // --- lib_sqlite.FDb.ind_conn.N
 // Return number of items in the hash
-inline i32 lib_sqlite::ind_conn_N() {
+inline i32 lib_sqlite::ind_conn_N() throw() {
     return _db.ind_conn_n;
 }
 
 // --- lib_sqlite.FDb.substr.EmptyQ
 // Return true if index is empty
-inline bool lib_sqlite::substr_EmptyQ() {
+inline bool lib_sqlite::substr_EmptyQ() throw() {
     return _db.substr_n == 0;
 }
 
 // --- lib_sqlite.FDb.substr.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_sqlite::FSubstr* lib_sqlite::substr_Find(u64 t) {
+inline lib_sqlite::FSubstr* lib_sqlite::substr_Find(u64 t) throw() {
     lib_sqlite::FSubstr *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.substr_n))) {
         u64 x = t + 1;
@@ -85,19 +85,19 @@ inline lib_sqlite::FSubstr* lib_sqlite::substr_Find(u64 t) {
 
 // --- lib_sqlite.FDb.substr.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline lib_sqlite::FSubstr* lib_sqlite::substr_Last() {
+inline lib_sqlite::FSubstr* lib_sqlite::substr_Last() throw() {
     return substr_Find(u64(_db.substr_n-1));
 }
 
 // --- lib_sqlite.FDb.substr.N
 // Return number of items in the pool
-inline i32 lib_sqlite::substr_N() {
+inline i32 lib_sqlite::substr_N() throw() {
     return _db.substr_n;
 }
 
 // --- lib_sqlite.FDb.substr.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline lib_sqlite::FSubstr& lib_sqlite::substr_qFind(u64 t) {
+inline lib_sqlite::FSubstr& lib_sqlite::substr_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -107,47 +107,47 @@ inline lib_sqlite::FSubstr& lib_sqlite::substr_qFind(u64 t) {
 
 // --- lib_sqlite.FDb.substr_curs.Reset
 // cursor points to valid item
-inline void lib_sqlite::_db_substr_curs_Reset(_db_substr_curs &curs, lib_sqlite::FDb &parent) {
+inline void lib_sqlite::_db_substr_curs_Reset(_db_substr_curs &curs, lib_sqlite::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- lib_sqlite.FDb.substr_curs.ValidQ
 // cursor points to valid item
-inline bool lib_sqlite::_db_substr_curs_ValidQ(_db_substr_curs &curs) {
+inline bool lib_sqlite::_db_substr_curs_ValidQ(_db_substr_curs &curs) throw() {
     return curs.index < _db.substr_n;
 }
 
 // --- lib_sqlite.FDb.substr_curs.Next
 // proceed to next item
-inline void lib_sqlite::_db_substr_curs_Next(_db_substr_curs &curs) {
+inline void lib_sqlite::_db_substr_curs_Next(_db_substr_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_sqlite.FDb.substr_curs.Access
 // item access
-inline lib_sqlite::FSubstr& lib_sqlite::_db_substr_curs_Access(_db_substr_curs &curs) {
+inline lib_sqlite::FSubstr& lib_sqlite::_db_substr_curs_Access(_db_substr_curs &curs) throw() {
     return substr_qFind(u64(curs.index));
 }
 
 // --- lib_sqlite.FSubstr..Ctor
-inline  lib_sqlite::FSubstr::FSubstr() {
+inline  lib_sqlite::FSubstr::FSubstr() throw() {
 }
 
 // --- lib_sqlite.FieldId.value.GetEnum
 // Get value of field as enum type
-inline lib_sqlite_FieldIdEnum lib_sqlite::value_GetEnum(const lib_sqlite::FieldId& parent) {
+inline lib_sqlite_FieldIdEnum lib_sqlite::value_GetEnum(const lib_sqlite::FieldId& parent) throw() {
     return lib_sqlite_FieldIdEnum(parent.value);
 }
 
 // --- lib_sqlite.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void lib_sqlite::value_SetEnum(lib_sqlite::FieldId& parent, lib_sqlite_FieldIdEnum rhs) {
+inline void lib_sqlite::value_SetEnum(lib_sqlite::FieldId& parent, lib_sqlite_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- lib_sqlite.FieldId.value.Cast
-inline  lib_sqlite::FieldId::operator lib_sqlite_FieldIdEnum() const {
+inline  lib_sqlite::FieldId::operator lib_sqlite_FieldIdEnum() const throw() {
     return lib_sqlite_FieldIdEnum((*this).value);
 }
 
@@ -158,35 +158,35 @@ inline void lib_sqlite::FieldId_Init(lib_sqlite::FieldId& parent) {
 }
 
 // --- lib_sqlite.FieldId..Ctor
-inline  lib_sqlite::FieldId::FieldId() {
+inline  lib_sqlite::FieldId::FieldId() throw() {
     lib_sqlite::FieldId_Init(*this);
 }
 
 // --- lib_sqlite.FieldId..FieldwiseCtor
-inline  lib_sqlite::FieldId::FieldId(i32 in_value)
+inline  lib_sqlite::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_sqlite.FieldId..EnumCtor
-inline  lib_sqlite::FieldId::FieldId(lib_sqlite_FieldIdEnum arg) {
+inline  lib_sqlite::FieldId::FieldId(lib_sqlite_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- lib_sqlite.TableId.value.GetEnum
 // Get value of field as enum type
-inline lib_sqlite_TableIdEnum lib_sqlite::value_GetEnum(const lib_sqlite::TableId& parent) {
+inline lib_sqlite_TableIdEnum lib_sqlite::value_GetEnum(const lib_sqlite::TableId& parent) throw() {
     return lib_sqlite_TableIdEnum(parent.value);
 }
 
 // --- lib_sqlite.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void lib_sqlite::value_SetEnum(lib_sqlite::TableId& parent, lib_sqlite_TableIdEnum rhs) {
+inline void lib_sqlite::value_SetEnum(lib_sqlite::TableId& parent, lib_sqlite_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- lib_sqlite.TableId.value.Cast
-inline  lib_sqlite::TableId::operator lib_sqlite_TableIdEnum() const {
+inline  lib_sqlite::TableId::operator lib_sqlite_TableIdEnum() const throw() {
     return lib_sqlite_TableIdEnum((*this).value);
 }
 
@@ -197,18 +197,18 @@ inline void lib_sqlite::TableId_Init(lib_sqlite::TableId& parent) {
 }
 
 // --- lib_sqlite.TableId..Ctor
-inline  lib_sqlite::TableId::TableId() {
+inline  lib_sqlite::TableId::TableId() throw() {
     lib_sqlite::TableId_Init(*this);
 }
 
 // --- lib_sqlite.TableId..FieldwiseCtor
-inline  lib_sqlite::TableId::TableId(i32 in_value)
+inline  lib_sqlite::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_sqlite.TableId..EnumCtor
-inline  lib_sqlite::TableId::TableId(lib_sqlite_TableIdEnum arg) {
+inline  lib_sqlite::TableId::TableId(lib_sqlite_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
@@ -220,7 +220,7 @@ inline void lib_sqlite::Vtab_Init(lib_sqlite::Vtab& parent) {
 }
 
 // --- lib_sqlite.Vtab..Ctor
-inline  lib_sqlite::Vtab::Vtab() {
+inline  lib_sqlite::Vtab::Vtab() throw() {
     lib_sqlite::Vtab_Init(*this);
 }
 
@@ -232,7 +232,7 @@ inline void lib_sqlite::VtabCurs_Init(lib_sqlite::VtabCurs& parent) {
 }
 
 // --- lib_sqlite.VtabCurs..Ctor
-inline  lib_sqlite::VtabCurs::VtabCurs() {
+inline  lib_sqlite::VtabCurs::VtabCurs() throw() {
     lib_sqlite::VtabCurs_Init(*this);
 }
 

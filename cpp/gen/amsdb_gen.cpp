@@ -38,7 +38,7 @@ namespace amsdb { // gen:ns_print_proto
 // --- amsdb.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* amsdb::value_ToCstr(const amsdb::FieldId& parent) {
+const char* amsdb::value_ToCstr(const amsdb::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case amsdb_FieldId_proctype        : ret = "proctype";  break;
@@ -54,7 +54,7 @@ const char* amsdb::value_ToCstr(const amsdb::FieldId& parent) {
 // --- amsdb.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void amsdb::value_Print(const amsdb::FieldId& parent, algo::cstring &lhs) {
+void amsdb::value_Print(const amsdb::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -67,7 +67,7 @@ void amsdb::value_Print(const amsdb::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool amsdb::value_SetStrptrMaybe(amsdb::FieldId& parent, algo::strptr rhs) {
+bool amsdb::value_SetStrptrMaybe(amsdb::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 2: {
@@ -121,13 +121,13 @@ bool amsdb::value_SetStrptrMaybe(amsdb::FieldId& parent, algo::strptr rhs) {
 // --- amsdb.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void amsdb::value_SetStrptr(amsdb::FieldId& parent, algo::strptr rhs, amsdb_FieldIdEnum dflt) {
+void amsdb::value_SetStrptr(amsdb::FieldId& parent, algo::strptr rhs, amsdb_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- amsdb.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool amsdb::value_ReadStrptrMaybe(amsdb::FieldId& parent, algo::strptr rhs) {
+bool amsdb::value_ReadStrptrMaybe(amsdb::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -139,7 +139,7 @@ bool amsdb::value_ReadStrptrMaybe(amsdb::FieldId& parent, algo::strptr rhs) {
 // --- amsdb.FieldId..ReadStrptrMaybe
 // Read fields of amsdb::FieldId from an ascii string.
 // The format of the string is the format of the amsdb::FieldId's only field
-bool amsdb::FieldId_ReadStrptrMaybe(amsdb::FieldId &parent, algo::strptr in_str) {
+bool amsdb::FieldId_ReadStrptrMaybe(amsdb::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -148,12 +148,12 @@ bool amsdb::FieldId_ReadStrptrMaybe(amsdb::FieldId &parent, algo::strptr in_str)
 // --- amsdb.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:amsdb.FieldId.String  printfmt:Raw
-void amsdb::FieldId_Print(amsdb::FieldId& row, algo::cstring& str) {
+void amsdb::FieldId_Print(amsdb::FieldId& row, algo::cstring& str) throw() {
     amsdb::value_Print(row, str);
 }
 
 // --- amsdb.ProcType..ReadFieldMaybe
-bool amsdb::ProcType_ReadFieldMaybe(amsdb::ProcType& parent, algo::strptr field, algo::strptr strval) {
+bool amsdb::ProcType_ReadFieldMaybe(amsdb::ProcType& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     amsdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -185,7 +185,7 @@ bool amsdb::ProcType_ReadFieldMaybe(amsdb::ProcType& parent, algo::strptr field,
 // --- amsdb.ProcType..ReadStrptrMaybe
 // Read fields of amsdb::ProcType from an ascii string.
 // The format of the string is an ssim Tuple
-bool amsdb::ProcType_ReadStrptrMaybe(amsdb::ProcType &parent, algo::strptr in_str) {
+bool amsdb::ProcType_ReadStrptrMaybe(amsdb::ProcType &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "amsdb.proctype") || algo::StripTypeTag(in_str, "amsdb.ProcType");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -197,7 +197,7 @@ bool amsdb::ProcType_ReadStrptrMaybe(amsdb::ProcType &parent, algo::strptr in_st
 // --- amsdb.ProcType..Print
 // print string representation of ROW to string STR
 // cfmt:amsdb.ProcType.String  printfmt:Tuple
-void amsdb::ProcType_Print(amsdb::ProcType& row, algo::cstring& str) {
+void amsdb::ProcType_Print(amsdb::ProcType& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amsdb.proctype";
 
@@ -215,7 +215,7 @@ void amsdb::ProcType_Print(amsdb::ProcType& row, algo::cstring& str) {
 }
 
 // --- amsdb.StreamType..ReadFieldMaybe
-bool amsdb::StreamType_ReadFieldMaybe(amsdb::StreamType& parent, algo::strptr field, algo::strptr strval) {
+bool amsdb::StreamType_ReadFieldMaybe(amsdb::StreamType& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     amsdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -243,7 +243,7 @@ bool amsdb::StreamType_ReadFieldMaybe(amsdb::StreamType& parent, algo::strptr fi
 // --- amsdb.StreamType..ReadStrptrMaybe
 // Read fields of amsdb::StreamType from an ascii string.
 // The format of the string is an ssim Tuple
-bool amsdb::StreamType_ReadStrptrMaybe(amsdb::StreamType &parent, algo::strptr in_str) {
+bool amsdb::StreamType_ReadStrptrMaybe(amsdb::StreamType &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "amsdb.streamtype") || algo::StripTypeTag(in_str, "amsdb.StreamType");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -255,7 +255,7 @@ bool amsdb::StreamType_ReadStrptrMaybe(amsdb::StreamType &parent, algo::strptr i
 // --- amsdb.StreamType..Print
 // print string representation of ROW to string STR
 // cfmt:amsdb.StreamType.String  printfmt:Tuple
-void amsdb::StreamType_Print(amsdb::StreamType& row, algo::cstring& str) {
+void amsdb::StreamType_Print(amsdb::StreamType& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "amsdb.streamtype";
 

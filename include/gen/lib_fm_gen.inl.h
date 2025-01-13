@@ -29,12 +29,12 @@
 //#pragma endinclude
 
 // --- lib_fm.FAlarm..Ctor
-inline  lib_fm::FAlarm::FAlarm() {
+inline  lib_fm::FAlarm::FAlarm() throw() {
     lib_fm::FAlarm_Init(*this);
 }
 
 // --- lib_fm.FAlarm..Dtor
-inline  lib_fm::FAlarm::~FAlarm() {
+inline  lib_fm::FAlarm::~FAlarm() throw() {
     lib_fm::FAlarm_Uninit(*this);
 }
 
@@ -45,12 +45,12 @@ inline void lib_fm::FAlmCode_Init(lib_fm::FAlmCode& alm_code) {
 }
 
 // --- lib_fm.FAlmCode..Ctor
-inline  lib_fm::FAlmCode::FAlmCode() {
+inline  lib_fm::FAlmCode::FAlmCode() throw() {
     lib_fm::FAlmCode_Init(*this);
 }
 
 // --- lib_fm.FAlmCode..Dtor
-inline  lib_fm::FAlmCode::~FAlmCode() {
+inline  lib_fm::FAlmCode::~FAlmCode() throw() {
     lib_fm::FAlmCode_Uninit(*this);
 }
 
@@ -61,28 +61,28 @@ inline void lib_fm::FAlmObjtype_Init(lib_fm::FAlmObjtype& alm_objtype) {
 }
 
 // --- lib_fm.FAlmObjtype..Ctor
-inline  lib_fm::FAlmObjtype::FAlmObjtype() {
+inline  lib_fm::FAlmObjtype::FAlmObjtype() throw() {
     lib_fm::FAlmObjtype_Init(*this);
 }
 
 // --- lib_fm.FAlmObjtype..Dtor
-inline  lib_fm::FAlmObjtype::~FAlmObjtype() {
+inline  lib_fm::FAlmObjtype::~FAlmObjtype() throw() {
     lib_fm::FAlmObjtype_Uninit(*this);
 }
 
 // --- lib_fm.trace..Ctor
-inline  lib_fm::trace::trace() {
+inline  lib_fm::trace::trace() throw() {
 }
 
 // --- lib_fm.FDb.alarm.EmptyQ
 // Return true if index is empty
-inline bool lib_fm::alarm_EmptyQ() {
+inline bool lib_fm::alarm_EmptyQ() throw() {
     return _db.alarm_n == 0;
 }
 
 // --- lib_fm.FDb.alarm.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_fm::FAlarm* lib_fm::alarm_Find(u64 t) {
+inline lib_fm::FAlarm* lib_fm::alarm_Find(u64 t) throw() {
     lib_fm::FAlarm *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.alarm_n))) {
         u64 x = t + 1;
@@ -96,19 +96,19 @@ inline lib_fm::FAlarm* lib_fm::alarm_Find(u64 t) {
 
 // --- lib_fm.FDb.alarm.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline lib_fm::FAlarm* lib_fm::alarm_Last() {
+inline lib_fm::FAlarm* lib_fm::alarm_Last() throw() {
     return alarm_Find(u64(_db.alarm_n-1));
 }
 
 // --- lib_fm.FDb.alarm.N
 // Return number of items in the pool
-inline i32 lib_fm::alarm_N() {
+inline i32 lib_fm::alarm_N() throw() {
     return _db.alarm_n;
 }
 
 // --- lib_fm.FDb.alarm.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline lib_fm::FAlarm& lib_fm::alarm_qFind(u64 t) {
+inline lib_fm::FAlarm& lib_fm::alarm_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -118,25 +118,25 @@ inline lib_fm::FAlarm& lib_fm::alarm_qFind(u64 t) {
 
 // --- lib_fm.FDb.ind_alarm.EmptyQ
 // Return true if hash is empty
-inline bool lib_fm::ind_alarm_EmptyQ() {
+inline bool lib_fm::ind_alarm_EmptyQ() throw() {
     return _db.ind_alarm_n == 0;
 }
 
 // --- lib_fm.FDb.ind_alarm.N
 // Return number of items in the hash
-inline i32 lib_fm::ind_alarm_N() {
+inline i32 lib_fm::ind_alarm_N() throw() {
     return _db.ind_alarm_n;
 }
 
 // --- lib_fm.FDb.alm_code.EmptyQ
 // Return true if index is empty
-inline bool lib_fm::alm_code_EmptyQ() {
+inline bool lib_fm::alm_code_EmptyQ() throw() {
     return _db.alm_code_n == 0;
 }
 
 // --- lib_fm.FDb.alm_code.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_fm::FAlmCode* lib_fm::alm_code_Find(u64 t) {
+inline lib_fm::FAlmCode* lib_fm::alm_code_Find(u64 t) throw() {
     lib_fm::FAlmCode *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.alm_code_n))) {
         u64 x = t + 1;
@@ -150,19 +150,19 @@ inline lib_fm::FAlmCode* lib_fm::alm_code_Find(u64 t) {
 
 // --- lib_fm.FDb.alm_code.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline lib_fm::FAlmCode* lib_fm::alm_code_Last() {
+inline lib_fm::FAlmCode* lib_fm::alm_code_Last() throw() {
     return alm_code_Find(u64(_db.alm_code_n-1));
 }
 
 // --- lib_fm.FDb.alm_code.N
 // Return number of items in the pool
-inline i32 lib_fm::alm_code_N() {
+inline i32 lib_fm::alm_code_N() throw() {
     return _db.alm_code_n;
 }
 
 // --- lib_fm.FDb.alm_code.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline lib_fm::FAlmCode& lib_fm::alm_code_qFind(u64 t) {
+inline lib_fm::FAlmCode& lib_fm::alm_code_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -172,25 +172,25 @@ inline lib_fm::FAlmCode& lib_fm::alm_code_qFind(u64 t) {
 
 // --- lib_fm.FDb.ind_alm_code.EmptyQ
 // Return true if hash is empty
-inline bool lib_fm::ind_alm_code_EmptyQ() {
+inline bool lib_fm::ind_alm_code_EmptyQ() throw() {
     return _db.ind_alm_code_n == 0;
 }
 
 // --- lib_fm.FDb.ind_alm_code.N
 // Return number of items in the hash
-inline i32 lib_fm::ind_alm_code_N() {
+inline i32 lib_fm::ind_alm_code_N() throw() {
     return _db.ind_alm_code_n;
 }
 
 // --- lib_fm.FDb.alm_objtype.EmptyQ
 // Return true if index is empty
-inline bool lib_fm::alm_objtype_EmptyQ() {
+inline bool lib_fm::alm_objtype_EmptyQ() throw() {
     return _db.alm_objtype_n == 0;
 }
 
 // --- lib_fm.FDb.alm_objtype.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_fm::FAlmObjtype* lib_fm::alm_objtype_Find(u64 t) {
+inline lib_fm::FAlmObjtype* lib_fm::alm_objtype_Find(u64 t) throw() {
     lib_fm::FAlmObjtype *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.alm_objtype_n))) {
         u64 x = t + 1;
@@ -204,19 +204,19 @@ inline lib_fm::FAlmObjtype* lib_fm::alm_objtype_Find(u64 t) {
 
 // --- lib_fm.FDb.alm_objtype.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline lib_fm::FAlmObjtype* lib_fm::alm_objtype_Last() {
+inline lib_fm::FAlmObjtype* lib_fm::alm_objtype_Last() throw() {
     return alm_objtype_Find(u64(_db.alm_objtype_n-1));
 }
 
 // --- lib_fm.FDb.alm_objtype.N
 // Return number of items in the pool
-inline i32 lib_fm::alm_objtype_N() {
+inline i32 lib_fm::alm_objtype_N() throw() {
     return _db.alm_objtype_n;
 }
 
 // --- lib_fm.FDb.alm_objtype.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline lib_fm::FAlmObjtype& lib_fm::alm_objtype_qFind(u64 t) {
+inline lib_fm::FAlmObjtype& lib_fm::alm_objtype_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -226,19 +226,19 @@ inline lib_fm::FAlmObjtype& lib_fm::alm_objtype_qFind(u64 t) {
 
 // --- lib_fm.FDb.ind_alm_objtype.EmptyQ
 // Return true if hash is empty
-inline bool lib_fm::ind_alm_objtype_EmptyQ() {
+inline bool lib_fm::ind_alm_objtype_EmptyQ() throw() {
     return _db.ind_alm_objtype_n == 0;
 }
 
 // --- lib_fm.FDb.ind_alm_objtype.N
 // Return number of items in the hash
-inline i32 lib_fm::ind_alm_objtype_N() {
+inline i32 lib_fm::ind_alm_objtype_N() throw() {
     return _db.ind_alm_objtype_n;
 }
 
 // --- lib_fm.FDb.h_alarm.Call
 // Invoke function by pointer
-inline void lib_fm::h_alarm_Call(lib_fm::FAlarm& arg) {
+inline void lib_fm::h_alarm_Call(lib_fm::FAlarm& arg) throw() {
     if (_db.h_alarm) {
         _db.h_alarm((void*)_db.h_alarm_ctx, arg);
     }
@@ -246,114 +246,114 @@ inline void lib_fm::h_alarm_Call(lib_fm::FAlarm& arg) {
 
 // --- lib_fm.FDb.h_alarm.Set0
 // Assign 0-argument hook with no context pointer
-inline void lib_fm::h_alarm_Set0(void (*fcn)() ) {
+inline void lib_fm::h_alarm_Set0(void (*fcn)() ) throw() {
     _db.h_alarm_ctx = 0;
     _db.h_alarm = (lib_fm::_db_h_alarm_hook)fcn;
 }
 
 // --- lib_fm.FDb.h_alarm.Set1
 // Assign 1-argument hook with context pointer
-template<class T> inline void lib_fm::h_alarm_Set1(T& ctx, void (*fcn)(T&) ) {
+template<class T> inline void lib_fm::h_alarm_Set1(T& ctx, void (*fcn)(T&) ) throw() {
     _db.h_alarm_ctx = (u64)&ctx;
     _db.h_alarm = (lib_fm::_db_h_alarm_hook)fcn;
 }
 
 // --- lib_fm.FDb.h_alarm.Set2
 // Assign 2-argument hook with context pointer
-template<class T> inline void lib_fm::h_alarm_Set2(T& ctx, void (*fcn)(T&, lib_fm::FAlarm& arg) ) {
+template<class T> inline void lib_fm::h_alarm_Set2(T& ctx, void (*fcn)(T&, lib_fm::FAlarm& arg) ) throw() {
     _db.h_alarm_ctx = (u64)&ctx;
     _db.h_alarm = (lib_fm::_db_h_alarm_hook)fcn;
 }
 
 // --- lib_fm.FDb.alarm_curs.Reset
 // cursor points to valid item
-inline void lib_fm::_db_alarm_curs_Reset(_db_alarm_curs &curs, lib_fm::FDb &parent) {
+inline void lib_fm::_db_alarm_curs_Reset(_db_alarm_curs &curs, lib_fm::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- lib_fm.FDb.alarm_curs.ValidQ
 // cursor points to valid item
-inline bool lib_fm::_db_alarm_curs_ValidQ(_db_alarm_curs &curs) {
+inline bool lib_fm::_db_alarm_curs_ValidQ(_db_alarm_curs &curs) throw() {
     return curs.index < _db.alarm_n;
 }
 
 // --- lib_fm.FDb.alarm_curs.Next
 // proceed to next item
-inline void lib_fm::_db_alarm_curs_Next(_db_alarm_curs &curs) {
+inline void lib_fm::_db_alarm_curs_Next(_db_alarm_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_fm.FDb.alarm_curs.Access
 // item access
-inline lib_fm::FAlarm& lib_fm::_db_alarm_curs_Access(_db_alarm_curs &curs) {
+inline lib_fm::FAlarm& lib_fm::_db_alarm_curs_Access(_db_alarm_curs &curs) throw() {
     return alarm_qFind(u64(curs.index));
 }
 
 // --- lib_fm.FDb.alm_code_curs.Reset
 // cursor points to valid item
-inline void lib_fm::_db_alm_code_curs_Reset(_db_alm_code_curs &curs, lib_fm::FDb &parent) {
+inline void lib_fm::_db_alm_code_curs_Reset(_db_alm_code_curs &curs, lib_fm::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- lib_fm.FDb.alm_code_curs.ValidQ
 // cursor points to valid item
-inline bool lib_fm::_db_alm_code_curs_ValidQ(_db_alm_code_curs &curs) {
+inline bool lib_fm::_db_alm_code_curs_ValidQ(_db_alm_code_curs &curs) throw() {
     return curs.index < _db.alm_code_n;
 }
 
 // --- lib_fm.FDb.alm_code_curs.Next
 // proceed to next item
-inline void lib_fm::_db_alm_code_curs_Next(_db_alm_code_curs &curs) {
+inline void lib_fm::_db_alm_code_curs_Next(_db_alm_code_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_fm.FDb.alm_code_curs.Access
 // item access
-inline lib_fm::FAlmCode& lib_fm::_db_alm_code_curs_Access(_db_alm_code_curs &curs) {
+inline lib_fm::FAlmCode& lib_fm::_db_alm_code_curs_Access(_db_alm_code_curs &curs) throw() {
     return alm_code_qFind(u64(curs.index));
 }
 
 // --- lib_fm.FDb.alm_objtype_curs.Reset
 // cursor points to valid item
-inline void lib_fm::_db_alm_objtype_curs_Reset(_db_alm_objtype_curs &curs, lib_fm::FDb &parent) {
+inline void lib_fm::_db_alm_objtype_curs_Reset(_db_alm_objtype_curs &curs, lib_fm::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- lib_fm.FDb.alm_objtype_curs.ValidQ
 // cursor points to valid item
-inline bool lib_fm::_db_alm_objtype_curs_ValidQ(_db_alm_objtype_curs &curs) {
+inline bool lib_fm::_db_alm_objtype_curs_ValidQ(_db_alm_objtype_curs &curs) throw() {
     return curs.index < _db.alm_objtype_n;
 }
 
 // --- lib_fm.FDb.alm_objtype_curs.Next
 // proceed to next item
-inline void lib_fm::_db_alm_objtype_curs_Next(_db_alm_objtype_curs &curs) {
+inline void lib_fm::_db_alm_objtype_curs_Next(_db_alm_objtype_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_fm.FDb.alm_objtype_curs.Access
 // item access
-inline lib_fm::FAlmObjtype& lib_fm::_db_alm_objtype_curs_Access(_db_alm_objtype_curs &curs) {
+inline lib_fm::FAlmObjtype& lib_fm::_db_alm_objtype_curs_Access(_db_alm_objtype_curs &curs) throw() {
     return alm_objtype_qFind(u64(curs.index));
 }
 
 // --- lib_fm.FieldId.value.GetEnum
 // Get value of field as enum type
-inline lib_fm_FieldIdEnum lib_fm::value_GetEnum(const lib_fm::FieldId& parent) {
+inline lib_fm_FieldIdEnum lib_fm::value_GetEnum(const lib_fm::FieldId& parent) throw() {
     return lib_fm_FieldIdEnum(parent.value);
 }
 
 // --- lib_fm.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void lib_fm::value_SetEnum(lib_fm::FieldId& parent, lib_fm_FieldIdEnum rhs) {
+inline void lib_fm::value_SetEnum(lib_fm::FieldId& parent, lib_fm_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- lib_fm.FieldId.value.Cast
-inline  lib_fm::FieldId::operator lib_fm_FieldIdEnum() const {
+inline  lib_fm::FieldId::operator lib_fm_FieldIdEnum() const throw() {
     return lib_fm_FieldIdEnum((*this).value);
 }
 
@@ -364,35 +364,35 @@ inline void lib_fm::FieldId_Init(lib_fm::FieldId& parent) {
 }
 
 // --- lib_fm.FieldId..Ctor
-inline  lib_fm::FieldId::FieldId() {
+inline  lib_fm::FieldId::FieldId() throw() {
     lib_fm::FieldId_Init(*this);
 }
 
 // --- lib_fm.FieldId..FieldwiseCtor
-inline  lib_fm::FieldId::FieldId(i32 in_value)
+inline  lib_fm::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_fm.FieldId..EnumCtor
-inline  lib_fm::FieldId::FieldId(lib_fm_FieldIdEnum arg) {
+inline  lib_fm::FieldId::FieldId(lib_fm_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- lib_fm.TableId.value.GetEnum
 // Get value of field as enum type
-inline lib_fm_TableIdEnum lib_fm::value_GetEnum(const lib_fm::TableId& parent) {
+inline lib_fm_TableIdEnum lib_fm::value_GetEnum(const lib_fm::TableId& parent) throw() {
     return lib_fm_TableIdEnum(parent.value);
 }
 
 // --- lib_fm.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void lib_fm::value_SetEnum(lib_fm::TableId& parent, lib_fm_TableIdEnum rhs) {
+inline void lib_fm::value_SetEnum(lib_fm::TableId& parent, lib_fm_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- lib_fm.TableId.value.Cast
-inline  lib_fm::TableId::operator lib_fm_TableIdEnum() const {
+inline  lib_fm::TableId::operator lib_fm_TableIdEnum() const throw() {
     return lib_fm_TableIdEnum((*this).value);
 }
 
@@ -403,18 +403,18 @@ inline void lib_fm::TableId_Init(lib_fm::TableId& parent) {
 }
 
 // --- lib_fm.TableId..Ctor
-inline  lib_fm::TableId::TableId() {
+inline  lib_fm::TableId::TableId() throw() {
     lib_fm::TableId_Init(*this);
 }
 
 // --- lib_fm.TableId..FieldwiseCtor
-inline  lib_fm::TableId::TableId(i32 in_value)
+inline  lib_fm::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_fm.TableId..EnumCtor
-inline  lib_fm::TableId::TableId(lib_fm_TableIdEnum arg) {
+inline  lib_fm::TableId::TableId(lib_fm_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

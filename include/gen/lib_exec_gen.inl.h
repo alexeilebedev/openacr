@@ -39,23 +39,23 @@ inline void lib_exec::Cmdline_Init(lib_exec::Cmdline& parent) {
 }
 
 // --- lib_exec.Cmdline..Ctor
-inline  lib_exec::Cmdline::Cmdline() {
+inline  lib_exec::Cmdline::Cmdline() throw() {
     lib_exec::Cmdline_Init(*this);
 }
 
 // --- lib_exec.trace..Ctor
-inline  lib_exec::trace::trace() {
+inline  lib_exec::trace::trace() throw() {
 }
 
 // --- lib_exec.FDb.syscmddep.EmptyQ
 // Return true if index is empty
-inline bool lib_exec::syscmddep_EmptyQ() {
+inline bool lib_exec::syscmddep_EmptyQ() throw() {
     return _db.syscmddep_n == 0;
 }
 
 // --- lib_exec.FDb.syscmddep.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_exec::FSyscmddep* lib_exec::syscmddep_Find(u64 t) {
+inline lib_exec::FSyscmddep* lib_exec::syscmddep_Find(u64 t) throw() {
     lib_exec::FSyscmddep *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.syscmddep_n))) {
         u64 x = t + 1;
@@ -69,19 +69,19 @@ inline lib_exec::FSyscmddep* lib_exec::syscmddep_Find(u64 t) {
 
 // --- lib_exec.FDb.syscmddep.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline lib_exec::FSyscmddep* lib_exec::syscmddep_Last() {
+inline lib_exec::FSyscmddep* lib_exec::syscmddep_Last() throw() {
     return syscmddep_Find(u64(_db.syscmddep_n-1));
 }
 
 // --- lib_exec.FDb.syscmddep.N
 // Return number of items in the pool
-inline i32 lib_exec::syscmddep_N() {
+inline i32 lib_exec::syscmddep_N() throw() {
     return _db.syscmddep_n;
 }
 
 // --- lib_exec.FDb.syscmddep.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline lib_exec::FSyscmddep& lib_exec::syscmddep_qFind(u64 t) {
+inline lib_exec::FSyscmddep& lib_exec::syscmddep_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -91,13 +91,13 @@ inline lib_exec::FSyscmddep& lib_exec::syscmddep_qFind(u64 t) {
 
 // --- lib_exec.FDb.syscmd.EmptyQ
 // Return true if index is empty
-inline bool lib_exec::syscmd_EmptyQ() {
+inline bool lib_exec::syscmd_EmptyQ() throw() {
     return _db.syscmd_n == 0;
 }
 
 // --- lib_exec.FDb.syscmd.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_exec::FSyscmd* lib_exec::syscmd_Find(i32 t) {
+inline lib_exec::FSyscmd* lib_exec::syscmd_Find(i32 t) throw() {
     lib_exec::FSyscmd *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.syscmd_n))) {
         u64 x = t + 1;
@@ -111,19 +111,19 @@ inline lib_exec::FSyscmd* lib_exec::syscmd_Find(i32 t) {
 
 // --- lib_exec.FDb.syscmd.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline lib_exec::FSyscmd* lib_exec::syscmd_Last() {
+inline lib_exec::FSyscmd* lib_exec::syscmd_Last() throw() {
     return syscmd_Find(i32(_db.syscmd_n-1));
 }
 
 // --- lib_exec.FDb.syscmd.N
 // Return number of items in the pool
-inline i32 lib_exec::syscmd_N() {
+inline i32 lib_exec::syscmd_N() throw() {
     return _db.syscmd_n;
 }
 
 // --- lib_exec.FDb.syscmd.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline lib_exec::FSyscmd& lib_exec::syscmd_qFind(i32 t) {
+inline lib_exec::FSyscmd& lib_exec::syscmd_qFind(i32 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -133,25 +133,25 @@ inline lib_exec::FSyscmd& lib_exec::syscmd_qFind(i32 t) {
 
 // --- lib_exec.FDb.ind_running.EmptyQ
 // Return true if hash is empty
-inline bool lib_exec::ind_running_EmptyQ() {
+inline bool lib_exec::ind_running_EmptyQ() throw() {
     return _db.ind_running_n == 0;
 }
 
 // --- lib_exec.FDb.ind_running.N
 // Return number of items in the hash
-inline i32 lib_exec::ind_running_N() {
+inline i32 lib_exec::ind_running_N() throw() {
     return _db.ind_running_n;
 }
 
 // --- lib_exec.FDb.bh_syscmd.EmptyQ
 // Return true if index is empty
-inline bool lib_exec::bh_syscmd_EmptyQ() {
+inline bool lib_exec::bh_syscmd_EmptyQ() throw() {
     return _db.bh_syscmd_n == 0;
 }
 
 // --- lib_exec.FDb.bh_syscmd.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_exec::FSyscmd* lib_exec::bh_syscmd_First() {
+inline lib_exec::FSyscmd* lib_exec::bh_syscmd_First() throw() {
     lib_exec::FSyscmd *row = NULL;
     if (_db.bh_syscmd_n > 0) {
         row = _db.bh_syscmd_elems[0];
@@ -161,7 +161,7 @@ inline lib_exec::FSyscmd* lib_exec::bh_syscmd_First() {
 
 // --- lib_exec.FDb.bh_syscmd.InBheapQ
 // Return true if row is in index, false otherwise
-inline bool lib_exec::bh_syscmd_InBheapQ(lib_exec::FSyscmd& row) {
+inline bool lib_exec::bh_syscmd_InBheapQ(lib_exec::FSyscmd& row) throw() {
     bool result = false;
     result = row.bh_syscmd_idx != -1;
     return result;
@@ -169,19 +169,19 @@ inline bool lib_exec::bh_syscmd_InBheapQ(lib_exec::FSyscmd& row) {
 
 // --- lib_exec.FDb.bh_syscmd.N
 // Return number of items in the heap
-inline i32 lib_exec::bh_syscmd_N() {
+inline i32 lib_exec::bh_syscmd_N() throw() {
     return _db.bh_syscmd_n;
 }
 
 // --- lib_exec.FDb.zd_started.EmptyQ
 // Return true if index is empty
-inline bool lib_exec::zd_started_EmptyQ() {
+inline bool lib_exec::zd_started_EmptyQ() throw() {
     return _db.zd_started_head == NULL;
 }
 
 // --- lib_exec.FDb.zd_started.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline lib_exec::FSyscmd* lib_exec::zd_started_First() {
+inline lib_exec::FSyscmd* lib_exec::zd_started_First() throw() {
     lib_exec::FSyscmd *row = NULL;
     row = _db.zd_started_head;
     return row;
@@ -189,7 +189,7 @@ inline lib_exec::FSyscmd* lib_exec::zd_started_First() {
 
 // --- lib_exec.FDb.zd_started.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool lib_exec::zd_started_InLlistQ(lib_exec::FSyscmd& row) {
+inline bool lib_exec::zd_started_InLlistQ(lib_exec::FSyscmd& row) throw() {
     bool result = false;
     result = !(row.zd_started_next == (lib_exec::FSyscmd*)-1);
     return result;
@@ -197,7 +197,7 @@ inline bool lib_exec::zd_started_InLlistQ(lib_exec::FSyscmd& row) {
 
 // --- lib_exec.FDb.zd_started.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline lib_exec::FSyscmd* lib_exec::zd_started_Last() {
+inline lib_exec::FSyscmd* lib_exec::zd_started_Last() throw() {
     lib_exec::FSyscmd *row = NULL;
     row = _db.zd_started_tail;
     return row;
@@ -205,25 +205,25 @@ inline lib_exec::FSyscmd* lib_exec::zd_started_Last() {
 
 // --- lib_exec.FDb.zd_started.N
 // Return number of items in the linked list
-inline i32 lib_exec::zd_started_N() {
+inline i32 lib_exec::zd_started_N() throw() {
     return _db.zd_started_n;
 }
 
 // --- lib_exec.FDb.zd_started.Next
 // Return pointer to next element in the list
-inline lib_exec::FSyscmd* lib_exec::zd_started_Next(lib_exec::FSyscmd &row) {
+inline lib_exec::FSyscmd* lib_exec::zd_started_Next(lib_exec::FSyscmd &row) throw() {
     return row.zd_started_next;
 }
 
 // --- lib_exec.FDb.zd_started.Prev
 // Return pointer to previous element in the list
-inline lib_exec::FSyscmd* lib_exec::zd_started_Prev(lib_exec::FSyscmd &row) {
+inline lib_exec::FSyscmd* lib_exec::zd_started_Prev(lib_exec::FSyscmd &row) throw() {
     return row.zd_started_prev;
 }
 
 // --- lib_exec.FDb.zd_started.qLast
 // Return reference to last element in the index. No bounds checking.
-inline lib_exec::FSyscmd& lib_exec::zd_started_qLast() {
+inline lib_exec::FSyscmd& lib_exec::zd_started_qLast() throw() {
     lib_exec::FSyscmd *row = NULL;
     row = _db.zd_started_tail;
     return *row;
@@ -231,100 +231,100 @@ inline lib_exec::FSyscmd& lib_exec::zd_started_qLast() {
 
 // --- lib_exec.FDb.syscmddep_curs.Reset
 // cursor points to valid item
-inline void lib_exec::_db_syscmddep_curs_Reset(_db_syscmddep_curs &curs, lib_exec::FDb &parent) {
+inline void lib_exec::_db_syscmddep_curs_Reset(_db_syscmddep_curs &curs, lib_exec::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- lib_exec.FDb.syscmddep_curs.ValidQ
 // cursor points to valid item
-inline bool lib_exec::_db_syscmddep_curs_ValidQ(_db_syscmddep_curs &curs) {
+inline bool lib_exec::_db_syscmddep_curs_ValidQ(_db_syscmddep_curs &curs) throw() {
     return curs.index < _db.syscmddep_n;
 }
 
 // --- lib_exec.FDb.syscmddep_curs.Next
 // proceed to next item
-inline void lib_exec::_db_syscmddep_curs_Next(_db_syscmddep_curs &curs) {
+inline void lib_exec::_db_syscmddep_curs_Next(_db_syscmddep_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_exec.FDb.syscmddep_curs.Access
 // item access
-inline lib_exec::FSyscmddep& lib_exec::_db_syscmddep_curs_Access(_db_syscmddep_curs &curs) {
+inline lib_exec::FSyscmddep& lib_exec::_db_syscmddep_curs_Access(_db_syscmddep_curs &curs) throw() {
     return syscmddep_qFind(u64(curs.index));
 }
 
 // --- lib_exec.FDb.syscmd_curs.Reset
 // cursor points to valid item
-inline void lib_exec::_db_syscmd_curs_Reset(_db_syscmd_curs &curs, lib_exec::FDb &parent) {
+inline void lib_exec::_db_syscmd_curs_Reset(_db_syscmd_curs &curs, lib_exec::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- lib_exec.FDb.syscmd_curs.ValidQ
 // cursor points to valid item
-inline bool lib_exec::_db_syscmd_curs_ValidQ(_db_syscmd_curs &curs) {
+inline bool lib_exec::_db_syscmd_curs_ValidQ(_db_syscmd_curs &curs) throw() {
     return curs.index < _db.syscmd_n;
 }
 
 // --- lib_exec.FDb.syscmd_curs.Next
 // proceed to next item
-inline void lib_exec::_db_syscmd_curs_Next(_db_syscmd_curs &curs) {
+inline void lib_exec::_db_syscmd_curs_Next(_db_syscmd_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_exec.FDb.syscmd_curs.Access
 // item access
-inline lib_exec::FSyscmd& lib_exec::_db_syscmd_curs_Access(_db_syscmd_curs &curs) {
+inline lib_exec::FSyscmd& lib_exec::_db_syscmd_curs_Access(_db_syscmd_curs &curs) throw() {
     return syscmd_qFind(i32(curs.index));
 }
 
 // --- lib_exec.FDb.bh_syscmd_curs.Access
 // Access current element. If not more elements, return NULL
-inline lib_exec::FSyscmd& lib_exec::_db_bh_syscmd_curs_Access(_db_bh_syscmd_curs &curs) {
+inline lib_exec::FSyscmd& lib_exec::_db_bh_syscmd_curs_Access(_db_bh_syscmd_curs &curs) throw() {
     return *curs.temp_elems[0];
 }
 
 // --- lib_exec.FDb.bh_syscmd_curs.ValidQ
 // Return true if Access() will return non-NULL.
-inline bool lib_exec::_db_bh_syscmd_curs_ValidQ(_db_bh_syscmd_curs &curs) {
+inline bool lib_exec::_db_bh_syscmd_curs_ValidQ(_db_bh_syscmd_curs &curs) throw() {
     return curs.temp_n > 0;
 }
 
 // --- lib_exec.FDb.zd_started_curs.Reset
 // cursor points to valid item
-inline void lib_exec::_db_zd_started_curs_Reset(_db_zd_started_curs &curs, lib_exec::FDb &parent) {
+inline void lib_exec::_db_zd_started_curs_Reset(_db_zd_started_curs &curs, lib_exec::FDb &parent) throw() {
     curs.row = parent.zd_started_head;
 }
 
 // --- lib_exec.FDb.zd_started_curs.ValidQ
 // cursor points to valid item
-inline bool lib_exec::_db_zd_started_curs_ValidQ(_db_zd_started_curs &curs) {
+inline bool lib_exec::_db_zd_started_curs_ValidQ(_db_zd_started_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- lib_exec.FDb.zd_started_curs.Next
 // proceed to next item
-inline void lib_exec::_db_zd_started_curs_Next(_db_zd_started_curs &curs) {
+inline void lib_exec::_db_zd_started_curs_Next(_db_zd_started_curs &curs) throw() {
     lib_exec::FSyscmd *next = (*curs.row).zd_started_next;
     curs.row = next;
 }
 
 // --- lib_exec.FDb.zd_started_curs.Access
 // item access
-inline lib_exec::FSyscmd& lib_exec::_db_zd_started_curs_Access(_db_zd_started_curs &curs) {
+inline lib_exec::FSyscmd& lib_exec::_db_zd_started_curs_Access(_db_zd_started_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- lib_exec.FSyscmd.c_prior.EmptyQ
 // Return true if index is empty
-inline bool lib_exec::c_prior_EmptyQ(lib_exec::FSyscmd& syscmd) {
+inline bool lib_exec::c_prior_EmptyQ(lib_exec::FSyscmd& syscmd) throw() {
     return syscmd.c_prior_n == 0;
 }
 
 // --- lib_exec.FSyscmd.c_prior.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_exec::FSyscmddep* lib_exec::c_prior_Find(lib_exec::FSyscmd& syscmd, u32 t) {
+inline lib_exec::FSyscmddep* lib_exec::c_prior_Find(lib_exec::FSyscmd& syscmd, u32 t) throw() {
     lib_exec::FSyscmddep *retval = NULL;
     u64 idx = t;
     u64 lim = syscmd.c_prior_n;
@@ -336,19 +336,19 @@ inline lib_exec::FSyscmddep* lib_exec::c_prior_Find(lib_exec::FSyscmd& syscmd, u
 
 // --- lib_exec.FSyscmd.c_prior.Getary
 // Return array of pointers
-inline algo::aryptr<lib_exec::FSyscmddep*> lib_exec::c_prior_Getary(lib_exec::FSyscmd& syscmd) {
+inline algo::aryptr<lib_exec::FSyscmddep*> lib_exec::c_prior_Getary(lib_exec::FSyscmd& syscmd) throw() {
     return algo::aryptr<lib_exec::FSyscmddep*>(syscmd.c_prior_elems, syscmd.c_prior_n);
 }
 
 // --- lib_exec.FSyscmd.c_prior.N
 // Return number of items in the pointer array
-inline i32 lib_exec::c_prior_N(const lib_exec::FSyscmd& syscmd) {
+inline i32 lib_exec::c_prior_N(const lib_exec::FSyscmd& syscmd) throw() {
     return syscmd.c_prior_n;
 }
 
 // --- lib_exec.FSyscmd.c_prior.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void lib_exec::c_prior_RemoveAll(lib_exec::FSyscmd& syscmd) {
+inline void lib_exec::c_prior_RemoveAll(lib_exec::FSyscmd& syscmd) throw() {
     for (u32 i = 0; i < syscmd.c_prior_n; i++) {
         // mark all elements as not-in-array
         syscmd.c_prior_elems[i]->syscmd_c_prior_in_ary = false;
@@ -358,31 +358,31 @@ inline void lib_exec::c_prior_RemoveAll(lib_exec::FSyscmd& syscmd) {
 
 // --- lib_exec.FSyscmd.c_prior.qFind
 // Return reference without bounds checking
-inline lib_exec::FSyscmddep& lib_exec::c_prior_qFind(lib_exec::FSyscmd& syscmd, u32 idx) {
+inline lib_exec::FSyscmddep& lib_exec::c_prior_qFind(lib_exec::FSyscmd& syscmd, u32 idx) throw() {
     return *syscmd.c_prior_elems[idx];
 }
 
 // --- lib_exec.FSyscmd.c_prior.InAryQ
 // True if row is in any ptrary instance
-inline bool lib_exec::syscmd_c_prior_InAryQ(lib_exec::FSyscmddep& row) {
+inline bool lib_exec::syscmd_c_prior_InAryQ(lib_exec::FSyscmddep& row) throw() {
     return row.syscmd_c_prior_in_ary;
 }
 
 // --- lib_exec.FSyscmd.c_prior.qLast
 // Reference to last element without bounds checking
-inline lib_exec::FSyscmddep& lib_exec::c_prior_qLast(lib_exec::FSyscmd& syscmd) {
+inline lib_exec::FSyscmddep& lib_exec::c_prior_qLast(lib_exec::FSyscmd& syscmd) throw() {
     return *syscmd.c_prior_elems[syscmd.c_prior_n-1];
 }
 
 // --- lib_exec.FSyscmd.c_next.EmptyQ
 // Return true if index is empty
-inline bool lib_exec::c_next_EmptyQ(lib_exec::FSyscmd& syscmd) {
+inline bool lib_exec::c_next_EmptyQ(lib_exec::FSyscmd& syscmd) throw() {
     return syscmd.c_next_n == 0;
 }
 
 // --- lib_exec.FSyscmd.c_next.Find
 // Look up row by row id. Return NULL if out of range
-inline lib_exec::FSyscmddep* lib_exec::c_next_Find(lib_exec::FSyscmd& syscmd, u32 t) {
+inline lib_exec::FSyscmddep* lib_exec::c_next_Find(lib_exec::FSyscmd& syscmd, u32 t) throw() {
     lib_exec::FSyscmddep *retval = NULL;
     u64 idx = t;
     u64 lim = syscmd.c_next_n;
@@ -394,19 +394,19 @@ inline lib_exec::FSyscmddep* lib_exec::c_next_Find(lib_exec::FSyscmd& syscmd, u3
 
 // --- lib_exec.FSyscmd.c_next.Getary
 // Return array of pointers
-inline algo::aryptr<lib_exec::FSyscmddep*> lib_exec::c_next_Getary(lib_exec::FSyscmd& syscmd) {
+inline algo::aryptr<lib_exec::FSyscmddep*> lib_exec::c_next_Getary(lib_exec::FSyscmd& syscmd) throw() {
     return algo::aryptr<lib_exec::FSyscmddep*>(syscmd.c_next_elems, syscmd.c_next_n);
 }
 
 // --- lib_exec.FSyscmd.c_next.N
 // Return number of items in the pointer array
-inline i32 lib_exec::c_next_N(const lib_exec::FSyscmd& syscmd) {
+inline i32 lib_exec::c_next_N(const lib_exec::FSyscmd& syscmd) throw() {
     return syscmd.c_next_n;
 }
 
 // --- lib_exec.FSyscmd.c_next.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void lib_exec::c_next_RemoveAll(lib_exec::FSyscmd& syscmd) {
+inline void lib_exec::c_next_RemoveAll(lib_exec::FSyscmd& syscmd) throw() {
     for (u32 i = 0; i < syscmd.c_next_n; i++) {
         // mark all elements as not-in-array
         syscmd.c_next_elems[i]->syscmd_c_next_in_ary = false;
@@ -416,24 +416,24 @@ inline void lib_exec::c_next_RemoveAll(lib_exec::FSyscmd& syscmd) {
 
 // --- lib_exec.FSyscmd.c_next.qFind
 // Return reference without bounds checking
-inline lib_exec::FSyscmddep& lib_exec::c_next_qFind(lib_exec::FSyscmd& syscmd, u32 idx) {
+inline lib_exec::FSyscmddep& lib_exec::c_next_qFind(lib_exec::FSyscmd& syscmd, u32 idx) throw() {
     return *syscmd.c_next_elems[idx];
 }
 
 // --- lib_exec.FSyscmd.c_next.InAryQ
 // True if row is in any ptrary instance
-inline bool lib_exec::syscmd_c_next_InAryQ(lib_exec::FSyscmddep& row) {
+inline bool lib_exec::syscmd_c_next_InAryQ(lib_exec::FSyscmddep& row) throw() {
     return row.syscmd_c_next_in_ary;
 }
 
 // --- lib_exec.FSyscmd.c_next.qLast
 // Reference to last element without bounds checking
-inline lib_exec::FSyscmddep& lib_exec::c_next_qLast(lib_exec::FSyscmd& syscmd) {
+inline lib_exec::FSyscmddep& lib_exec::c_next_qLast(lib_exec::FSyscmd& syscmd) throw() {
     return *syscmd.c_next_elems[syscmd.c_next_n-1];
 }
 
 // --- lib_exec.FSyscmd.c_prior_curs.Reset
-inline void lib_exec::syscmd_c_prior_curs_Reset(syscmd_c_prior_curs &curs, lib_exec::FSyscmd &parent) {
+inline void lib_exec::syscmd_c_prior_curs_Reset(syscmd_c_prior_curs &curs, lib_exec::FSyscmd &parent) throw() {
     curs.elems = parent.c_prior_elems;
     curs.n_elems = parent.c_prior_n;
     curs.index = 0;
@@ -441,24 +441,24 @@ inline void lib_exec::syscmd_c_prior_curs_Reset(syscmd_c_prior_curs &curs, lib_e
 
 // --- lib_exec.FSyscmd.c_prior_curs.ValidQ
 // cursor points to valid item
-inline bool lib_exec::syscmd_c_prior_curs_ValidQ(syscmd_c_prior_curs &curs) {
+inline bool lib_exec::syscmd_c_prior_curs_ValidQ(syscmd_c_prior_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- lib_exec.FSyscmd.c_prior_curs.Next
 // proceed to next item
-inline void lib_exec::syscmd_c_prior_curs_Next(syscmd_c_prior_curs &curs) {
+inline void lib_exec::syscmd_c_prior_curs_Next(syscmd_c_prior_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_exec.FSyscmd.c_prior_curs.Access
 // item access
-inline lib_exec::FSyscmddep& lib_exec::syscmd_c_prior_curs_Access(syscmd_c_prior_curs &curs) {
+inline lib_exec::FSyscmddep& lib_exec::syscmd_c_prior_curs_Access(syscmd_c_prior_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- lib_exec.FSyscmd.c_next_curs.Reset
-inline void lib_exec::syscmd_c_next_curs_Reset(syscmd_c_next_curs &curs, lib_exec::FSyscmd &parent) {
+inline void lib_exec::syscmd_c_next_curs_Reset(syscmd_c_next_curs &curs, lib_exec::FSyscmd &parent) throw() {
     curs.elems = parent.c_next_elems;
     curs.n_elems = parent.c_next_n;
     curs.index = 0;
@@ -466,29 +466,29 @@ inline void lib_exec::syscmd_c_next_curs_Reset(syscmd_c_next_curs &curs, lib_exe
 
 // --- lib_exec.FSyscmd.c_next_curs.ValidQ
 // cursor points to valid item
-inline bool lib_exec::syscmd_c_next_curs_ValidQ(syscmd_c_next_curs &curs) {
+inline bool lib_exec::syscmd_c_next_curs_ValidQ(syscmd_c_next_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- lib_exec.FSyscmd.c_next_curs.Next
 // proceed to next item
-inline void lib_exec::syscmd_c_next_curs_Next(syscmd_c_next_curs &curs) {
+inline void lib_exec::syscmd_c_next_curs_Next(syscmd_c_next_curs &curs) throw() {
     curs.index++;
 }
 
 // --- lib_exec.FSyscmd.c_next_curs.Access
 // item access
-inline lib_exec::FSyscmddep& lib_exec::syscmd_c_next_curs_Access(syscmd_c_next_curs &curs) {
+inline lib_exec::FSyscmddep& lib_exec::syscmd_c_next_curs_Access(syscmd_c_next_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- lib_exec.FSyscmd..Ctor
-inline  lib_exec::FSyscmd::FSyscmd() {
+inline  lib_exec::FSyscmd::FSyscmd() throw() {
     lib_exec::FSyscmd_Init(*this);
 }
 
 // --- lib_exec.FSyscmd..Dtor
-inline  lib_exec::FSyscmd::~FSyscmd() {
+inline  lib_exec::FSyscmd::~FSyscmd() throw() {
     lib_exec::FSyscmd_Uninit(*this);
 }
 
@@ -504,29 +504,29 @@ inline void lib_exec::FSyscmddep_Init(lib_exec::FSyscmddep& syscmddep) {
 }
 
 // --- lib_exec.FSyscmddep..Ctor
-inline  lib_exec::FSyscmddep::FSyscmddep() {
+inline  lib_exec::FSyscmddep::FSyscmddep() throw() {
     lib_exec::FSyscmddep_Init(*this);
 }
 
 // --- lib_exec.FSyscmddep..Dtor
-inline  lib_exec::FSyscmddep::~FSyscmddep() {
+inline  lib_exec::FSyscmddep::~FSyscmddep() throw() {
     lib_exec::FSyscmddep_Uninit(*this);
 }
 
 // --- lib_exec.FieldId.value.GetEnum
 // Get value of field as enum type
-inline lib_exec_FieldIdEnum lib_exec::value_GetEnum(const lib_exec::FieldId& parent) {
+inline lib_exec_FieldIdEnum lib_exec::value_GetEnum(const lib_exec::FieldId& parent) throw() {
     return lib_exec_FieldIdEnum(parent.value);
 }
 
 // --- lib_exec.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void lib_exec::value_SetEnum(lib_exec::FieldId& parent, lib_exec_FieldIdEnum rhs) {
+inline void lib_exec::value_SetEnum(lib_exec::FieldId& parent, lib_exec_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- lib_exec.FieldId.value.Cast
-inline  lib_exec::FieldId::operator lib_exec_FieldIdEnum() const {
+inline  lib_exec::FieldId::operator lib_exec_FieldIdEnum() const throw() {
     return lib_exec_FieldIdEnum((*this).value);
 }
 
@@ -537,18 +537,18 @@ inline void lib_exec::FieldId_Init(lib_exec::FieldId& parent) {
 }
 
 // --- lib_exec.FieldId..Ctor
-inline  lib_exec::FieldId::FieldId() {
+inline  lib_exec::FieldId::FieldId() throw() {
     lib_exec::FieldId_Init(*this);
 }
 
 // --- lib_exec.FieldId..FieldwiseCtor
-inline  lib_exec::FieldId::FieldId(i32 in_value)
+inline  lib_exec::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- lib_exec.FieldId..EnumCtor
-inline  lib_exec::FieldId::FieldId(lib_exec_FieldIdEnum arg) {
+inline  lib_exec::FieldId::FieldId(lib_exec_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

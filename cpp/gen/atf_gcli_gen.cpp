@@ -95,7 +95,7 @@ namespace atf_gcli { // gen:ns_print_proto
 // --- atf_gcli.trace..Print
 // print string representation of ROW to string STR
 // cfmt:atf_gcli.trace.String  printfmt:Tuple
-void atf_gcli::trace_Print(atf_gcli::trace& row, algo::cstring& str) {
+void atf_gcli::trace_Print(atf_gcli::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "atf_gcli.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -106,7 +106,7 @@ void atf_gcli::trace_Print(atf_gcli::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     atf_gcli.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void atf_gcli::ReadArgv() {
+void atf_gcli::ReadArgv() throw() {
     command::atf_gcli &cmd = atf_gcli::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -323,7 +323,7 @@ bool atf_gcli::InsertStrptrMaybe(algo::strptr str) {
 
 // --- atf_gcli.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool atf_gcli::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool atf_gcli::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = atf_gcli::LoadTuplesFile(root, recursive);
@@ -351,7 +351,7 @@ bool atf_gcli::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool atf_gcli::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool atf_gcli::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -364,7 +364,7 @@ bool atf_gcli::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- atf_gcli.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool atf_gcli::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool atf_gcli::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -384,7 +384,7 @@ bool atf_gcli::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
 
 // --- atf_gcli.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool atf_gcli::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool atf_gcli::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = atf_gcli::LoadTuplesFile(fname, recursive);
@@ -409,7 +409,7 @@ bool atf_gcli::_db_XrefMaybe() {
 // --- atf_gcli.FDb.gtblacttst.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_gcli::FGtblacttst& atf_gcli::gtblacttst_Alloc() {
+atf_gcli::FGtblacttst& atf_gcli::gtblacttst_Alloc() throw() {
     atf_gcli::FGtblacttst* row = gtblacttst_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_gcli.out_of_mem  field:atf_gcli.FDb.gtblacttst  comment:'Alloc failed'");
@@ -419,7 +419,7 @@ atf_gcli::FGtblacttst& atf_gcli::gtblacttst_Alloc() {
 
 // --- atf_gcli.FDb.gtblacttst.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_gcli::FGtblacttst* atf_gcli::gtblacttst_AllocMaybe() {
+atf_gcli::FGtblacttst* atf_gcli::gtblacttst_AllocMaybe() throw() {
     atf_gcli::FGtblacttst *row = (atf_gcli::FGtblacttst*)gtblacttst_AllocMem();
     if (row) {
         new (row) atf_gcli::FGtblacttst; // call constructor
@@ -430,7 +430,7 @@ atf_gcli::FGtblacttst* atf_gcli::gtblacttst_AllocMaybe() {
 // --- atf_gcli.FDb.gtblacttst.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_gcli::FGtblacttst* atf_gcli::gtblacttst_InsertMaybe(const gclidb::Gtblacttst &value) {
+atf_gcli::FGtblacttst* atf_gcli::gtblacttst_InsertMaybe(const gclidb::Gtblacttst &value) throw() {
     atf_gcli::FGtblacttst *row = &gtblacttst_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gtblacttst_CopyIn(*row,const_cast<gclidb::Gtblacttst&>(value));
     bool ok = gtblacttst_XrefMaybe(*row); // this may return false
@@ -443,7 +443,7 @@ atf_gcli::FGtblacttst* atf_gcli::gtblacttst_InsertMaybe(const gclidb::Gtblacttst
 
 // --- atf_gcli.FDb.gtblacttst.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_gcli::gtblacttst_AllocMem() {
+void* atf_gcli::gtblacttst_AllocMem() throw() {
     u64 new_nelems     = _db.gtblacttst_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -469,7 +469,7 @@ void* atf_gcli::gtblacttst_AllocMem() {
 
 // --- atf_gcli.FDb.gtblacttst.RemoveAll
 // Remove all elements from Lary
-void atf_gcli::gtblacttst_RemoveAll() {
+void atf_gcli::gtblacttst_RemoveAll() throw() {
     for (u64 n = _db.gtblacttst_n; n>0; ) {
         n--;
         gtblacttst_qFind(u64(n)).~FGtblacttst(); // destroy last element
@@ -479,7 +479,7 @@ void atf_gcli::gtblacttst_RemoveAll() {
 
 // --- atf_gcli.FDb.gtblacttst.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_gcli::gtblacttst_RemoveLast() {
+void atf_gcli::gtblacttst_RemoveLast() throw() {
     u64 n = _db.gtblacttst_n;
     if (n > 0) {
         n -= 1;
@@ -489,7 +489,7 @@ void atf_gcli::gtblacttst_RemoveLast() {
 }
 
 // --- atf_gcli.FDb.gtblacttst.InputMaybe
-static bool atf_gcli::gtblacttst_InputMaybe(gclidb::Gtblacttst &elem) {
+static bool atf_gcli::gtblacttst_InputMaybe(gclidb::Gtblacttst &elem) throw() {
     bool retval = true;
     retval = gtblacttst_InsertMaybe(elem) != nullptr;
     return retval;
@@ -534,7 +534,7 @@ bool atf_gcli::gtblacttst_XrefMaybe(atf_gcli::FGtblacttst &row) {
 // --- atf_gcli.FDb.gtblacttstout.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_gcli::FGtblacttstout& atf_gcli::gtblacttstout_Alloc() {
+atf_gcli::FGtblacttstout& atf_gcli::gtblacttstout_Alloc() throw() {
     atf_gcli::FGtblacttstout* row = gtblacttstout_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_gcli.out_of_mem  field:atf_gcli.FDb.gtblacttstout  comment:'Alloc failed'");
@@ -544,7 +544,7 @@ atf_gcli::FGtblacttstout& atf_gcli::gtblacttstout_Alloc() {
 
 // --- atf_gcli.FDb.gtblacttstout.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_gcli::FGtblacttstout* atf_gcli::gtblacttstout_AllocMaybe() {
+atf_gcli::FGtblacttstout* atf_gcli::gtblacttstout_AllocMaybe() throw() {
     atf_gcli::FGtblacttstout *row = (atf_gcli::FGtblacttstout*)gtblacttstout_AllocMem();
     if (row) {
         new (row) atf_gcli::FGtblacttstout; // call constructor
@@ -555,7 +555,7 @@ atf_gcli::FGtblacttstout* atf_gcli::gtblacttstout_AllocMaybe() {
 // --- atf_gcli.FDb.gtblacttstout.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_gcli::FGtblacttstout* atf_gcli::gtblacttstout_InsertMaybe(const gclidb::Gtblacttstout &value) {
+atf_gcli::FGtblacttstout* atf_gcli::gtblacttstout_InsertMaybe(const gclidb::Gtblacttstout &value) throw() {
     atf_gcli::FGtblacttstout *row = &gtblacttstout_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gtblacttstout_CopyIn(*row,const_cast<gclidb::Gtblacttstout&>(value));
     bool ok = gtblacttstout_XrefMaybe(*row); // this may return false
@@ -568,7 +568,7 @@ atf_gcli::FGtblacttstout* atf_gcli::gtblacttstout_InsertMaybe(const gclidb::Gtbl
 
 // --- atf_gcli.FDb.gtblacttstout.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_gcli::gtblacttstout_AllocMem() {
+void* atf_gcli::gtblacttstout_AllocMem() throw() {
     u64 new_nelems     = _db.gtblacttstout_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -594,7 +594,7 @@ void* atf_gcli::gtblacttstout_AllocMem() {
 
 // --- atf_gcli.FDb.gtblacttstout.RemoveAll
 // Remove all elements from Lary
-void atf_gcli::gtblacttstout_RemoveAll() {
+void atf_gcli::gtblacttstout_RemoveAll() throw() {
     for (u64 n = _db.gtblacttstout_n; n>0; ) {
         n--;
         gtblacttstout_qFind(u64(n)).~FGtblacttstout(); // destroy last element
@@ -604,7 +604,7 @@ void atf_gcli::gtblacttstout_RemoveAll() {
 
 // --- atf_gcli.FDb.gtblacttstout.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_gcli::gtblacttstout_RemoveLast() {
+void atf_gcli::gtblacttstout_RemoveLast() throw() {
     u64 n = _db.gtblacttstout_n;
     if (n > 0) {
         n -= 1;
@@ -614,7 +614,7 @@ void atf_gcli::gtblacttstout_RemoveLast() {
 }
 
 // --- atf_gcli.FDb.gtblacttstout.InputMaybe
-static bool atf_gcli::gtblacttstout_InputMaybe(gclidb::Gtblacttstout &elem) {
+static bool atf_gcli::gtblacttstout_InputMaybe(gclidb::Gtblacttstout &elem) throw() {
     bool retval = true;
     retval = gtblacttstout_InsertMaybe(elem) != nullptr;
     return retval;
@@ -649,7 +649,7 @@ bool atf_gcli::gtblacttstout_XrefMaybe(atf_gcli::FGtblacttstout &row) {
 
 // --- atf_gcli.FDb.ind_gtblacttst.Find
 // Find row by key. Return NULL if not found.
-atf_gcli::FGtblacttst* atf_gcli::ind_gtblacttst_Find(const algo::strptr& key) {
+atf_gcli::FGtblacttst* atf_gcli::ind_gtblacttst_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gtblacttst_buckets_n - 1);
     atf_gcli::FGtblacttst* *e = &_db.ind_gtblacttst_buckets_elems[index];
     atf_gcli::FGtblacttst* ret=NULL;
@@ -672,7 +672,7 @@ atf_gcli::FGtblacttst& atf_gcli::ind_gtblacttst_FindX(const algo::strptr& key) {
 
 // --- atf_gcli.FDb.ind_gtblacttst.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_gcli::ind_gtblacttst_InsertMaybe(atf_gcli::FGtblacttst& row) {
+bool atf_gcli::ind_gtblacttst_InsertMaybe(atf_gcli::FGtblacttst& row) throw() {
     ind_gtblacttst_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gtblacttst_next == (atf_gcli::FGtblacttst*)-1)) {// check if in hash already
@@ -700,7 +700,7 @@ bool atf_gcli::ind_gtblacttst_InsertMaybe(atf_gcli::FGtblacttst& row) {
 
 // --- atf_gcli.FDb.ind_gtblacttst.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_gcli::ind_gtblacttst_Remove(atf_gcli::FGtblacttst& row) {
+void atf_gcli::ind_gtblacttst_Remove(atf_gcli::FGtblacttst& row) throw() {
     if (LIKELY(row.ind_gtblacttst_next != (atf_gcli::FGtblacttst*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.gtblacttst) & (_db.ind_gtblacttst_buckets_n - 1);
         atf_gcli::FGtblacttst* *prev = &_db.ind_gtblacttst_buckets_elems[index]; // addr of pointer to current element
@@ -718,7 +718,7 @@ void atf_gcli::ind_gtblacttst_Remove(atf_gcli::FGtblacttst& row) {
 
 // --- atf_gcli.FDb.ind_gtblacttst.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_gcli::ind_gtblacttst_Reserve(int n) {
+void atf_gcli::ind_gtblacttst_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gtblacttst_buckets_n;
     u32 new_nelems   = _db.ind_gtblacttst_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -754,7 +754,7 @@ void atf_gcli::ind_gtblacttst_Reserve(int n) {
 
 // --- atf_gcli.FDb.ind_gtblacttstout.Find
 // Find row by key. Return NULL if not found.
-atf_gcli::FGtblacttstout* atf_gcli::ind_gtblacttstout_Find(const algo::strptr& key) {
+atf_gcli::FGtblacttstout* atf_gcli::ind_gtblacttstout_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gtblacttstout_buckets_n - 1);
     atf_gcli::FGtblacttstout* *e = &_db.ind_gtblacttstout_buckets_elems[index];
     atf_gcli::FGtblacttstout* ret=NULL;
@@ -777,7 +777,7 @@ atf_gcli::FGtblacttstout& atf_gcli::ind_gtblacttstout_FindX(const algo::strptr& 
 
 // --- atf_gcli.FDb.ind_gtblacttstout.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_gcli::ind_gtblacttstout_InsertMaybe(atf_gcli::FGtblacttstout& row) {
+bool atf_gcli::ind_gtblacttstout_InsertMaybe(atf_gcli::FGtblacttstout& row) throw() {
     ind_gtblacttstout_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gtblacttstout_next == (atf_gcli::FGtblacttstout*)-1)) {// check if in hash already
@@ -805,7 +805,7 @@ bool atf_gcli::ind_gtblacttstout_InsertMaybe(atf_gcli::FGtblacttstout& row) {
 
 // --- atf_gcli.FDb.ind_gtblacttstout.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_gcli::ind_gtblacttstout_Remove(atf_gcli::FGtblacttstout& row) {
+void atf_gcli::ind_gtblacttstout_Remove(atf_gcli::FGtblacttstout& row) throw() {
     if (LIKELY(row.ind_gtblacttstout_next != (atf_gcli::FGtblacttstout*)-1)) {// check if in hash already
         u32 index = algo::Smallstr250_Hash(0, row.gtblacttstout) & (_db.ind_gtblacttstout_buckets_n - 1);
         atf_gcli::FGtblacttstout* *prev = &_db.ind_gtblacttstout_buckets_elems[index]; // addr of pointer to current element
@@ -823,7 +823,7 @@ void atf_gcli::ind_gtblacttstout_Remove(atf_gcli::FGtblacttstout& row) {
 
 // --- atf_gcli.FDb.ind_gtblacttstout.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_gcli::ind_gtblacttstout_Reserve(int n) {
+void atf_gcli::ind_gtblacttstout_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gtblacttstout_buckets_n;
     u32 new_nelems   = _db.ind_gtblacttstout_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -860,7 +860,7 @@ void atf_gcli::ind_gtblacttstout_Reserve(int n) {
 // --- atf_gcli.FDb.c_gtblacttst.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void atf_gcli::c_gtblacttst_Insert(atf_gcli::FGtblacttst& row) {
+void atf_gcli::c_gtblacttst_Insert(atf_gcli::FGtblacttst& row) throw() {
     if (bool_Update(row._db_c_gtblacttst_in_ary,true)) {
         // reserve space
         c_gtblacttst_Reserve(1);
@@ -877,7 +877,7 @@ void atf_gcli::c_gtblacttst_Insert(atf_gcli::FGtblacttst& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool atf_gcli::c_gtblacttst_InsertMaybe(atf_gcli::FGtblacttst& row) {
+bool atf_gcli::c_gtblacttst_InsertMaybe(atf_gcli::FGtblacttst& row) throw() {
     bool retval = !row._db_c_gtblacttst_in_ary;
     c_gtblacttst_Insert(row); // check is performed in _Insert again
     return retval;
@@ -885,7 +885,7 @@ bool atf_gcli::c_gtblacttst_InsertMaybe(atf_gcli::FGtblacttst& row) {
 
 // --- atf_gcli.FDb.c_gtblacttst.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void atf_gcli::c_gtblacttst_Remove(atf_gcli::FGtblacttst& row) {
+void atf_gcli::c_gtblacttst_Remove(atf_gcli::FGtblacttst& row) throw() {
     if (bool_Update(row._db_c_gtblacttst_in_ary,false)) {
         int lim = _db.c_gtblacttst_n;
         atf_gcli::FGtblacttst* *elems = _db.c_gtblacttst_elems;
@@ -906,7 +906,7 @@ void atf_gcli::c_gtblacttst_Remove(atf_gcli::FGtblacttst& row) {
 
 // --- atf_gcli.FDb.c_gtblacttst.Reserve
 // Reserve space in index for N more elements;
-void atf_gcli::c_gtblacttst_Reserve(u32 n) {
+void atf_gcli::c_gtblacttst_Reserve(u32 n) throw() {
     u32 old_max = _db.c_gtblacttst_max;
     if (UNLIKELY(_db.c_gtblacttst_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -924,7 +924,7 @@ void atf_gcli::c_gtblacttst_Reserve(u32 n) {
 // --- atf_gcli.FDb.gclienvsub.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_gcli::FGclienvsub& atf_gcli::gclienvsub_Alloc() {
+atf_gcli::FGclienvsub& atf_gcli::gclienvsub_Alloc() throw() {
     atf_gcli::FGclienvsub* row = gclienvsub_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_gcli.out_of_mem  field:atf_gcli.FDb.gclienvsub  comment:'Alloc failed'");
@@ -934,7 +934,7 @@ atf_gcli::FGclienvsub& atf_gcli::gclienvsub_Alloc() {
 
 // --- atf_gcli.FDb.gclienvsub.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_gcli::FGclienvsub* atf_gcli::gclienvsub_AllocMaybe() {
+atf_gcli::FGclienvsub* atf_gcli::gclienvsub_AllocMaybe() throw() {
     atf_gcli::FGclienvsub *row = (atf_gcli::FGclienvsub*)gclienvsub_AllocMem();
     if (row) {
         new (row) atf_gcli::FGclienvsub; // call constructor
@@ -945,7 +945,7 @@ atf_gcli::FGclienvsub* atf_gcli::gclienvsub_AllocMaybe() {
 // --- atf_gcli.FDb.gclienvsub.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_gcli::FGclienvsub* atf_gcli::gclienvsub_InsertMaybe(const gclidb::Gclienvsub &value) {
+atf_gcli::FGclienvsub* atf_gcli::gclienvsub_InsertMaybe(const gclidb::Gclienvsub &value) throw() {
     atf_gcli::FGclienvsub *row = &gclienvsub_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gclienvsub_CopyIn(*row,const_cast<gclidb::Gclienvsub&>(value));
     bool ok = gclienvsub_XrefMaybe(*row); // this may return false
@@ -958,7 +958,7 @@ atf_gcli::FGclienvsub* atf_gcli::gclienvsub_InsertMaybe(const gclidb::Gclienvsub
 
 // --- atf_gcli.FDb.gclienvsub.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_gcli::gclienvsub_AllocMem() {
+void* atf_gcli::gclienvsub_AllocMem() throw() {
     u64 new_nelems     = _db.gclienvsub_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -984,7 +984,7 @@ void* atf_gcli::gclienvsub_AllocMem() {
 
 // --- atf_gcli.FDb.gclienvsub.RemoveAll
 // Remove all elements from Lary
-void atf_gcli::gclienvsub_RemoveAll() {
+void atf_gcli::gclienvsub_RemoveAll() throw() {
     for (u64 n = _db.gclienvsub_n; n>0; ) {
         n--;
         gclienvsub_qFind(u64(n)).~FGclienvsub(); // destroy last element
@@ -994,7 +994,7 @@ void atf_gcli::gclienvsub_RemoveAll() {
 
 // --- atf_gcli.FDb.gclienvsub.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_gcli::gclienvsub_RemoveLast() {
+void atf_gcli::gclienvsub_RemoveLast() throw() {
     u64 n = _db.gclienvsub_n;
     if (n > 0) {
         n -= 1;
@@ -1004,7 +1004,7 @@ void atf_gcli::gclienvsub_RemoveLast() {
 }
 
 // --- atf_gcli.FDb.gclienvsub.InputMaybe
-static bool atf_gcli::gclienvsub_InputMaybe(gclidb::Gclienvsub &elem) {
+static bool atf_gcli::gclienvsub_InputMaybe(gclidb::Gclienvsub &elem) throw() {
     bool retval = true;
     retval = gclienvsub_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1040,7 +1040,7 @@ bool atf_gcli::gclienvsub_XrefMaybe(atf_gcli::FGclienvsub &row) {
 // --- atf_gcli.FDb.gclienv.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_gcli::FGclienv& atf_gcli::gclienv_Alloc() {
+atf_gcli::FGclienv& atf_gcli::gclienv_Alloc() throw() {
     atf_gcli::FGclienv* row = gclienv_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_gcli.out_of_mem  field:atf_gcli.FDb.gclienv  comment:'Alloc failed'");
@@ -1050,7 +1050,7 @@ atf_gcli::FGclienv& atf_gcli::gclienv_Alloc() {
 
 // --- atf_gcli.FDb.gclienv.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_gcli::FGclienv* atf_gcli::gclienv_AllocMaybe() {
+atf_gcli::FGclienv* atf_gcli::gclienv_AllocMaybe() throw() {
     atf_gcli::FGclienv *row = (atf_gcli::FGclienv*)gclienv_AllocMem();
     if (row) {
         new (row) atf_gcli::FGclienv; // call constructor
@@ -1061,7 +1061,7 @@ atf_gcli::FGclienv* atf_gcli::gclienv_AllocMaybe() {
 // --- atf_gcli.FDb.gclienv.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_gcli::FGclienv* atf_gcli::gclienv_InsertMaybe(const gclidb::Gclienv &value) {
+atf_gcli::FGclienv* atf_gcli::gclienv_InsertMaybe(const gclidb::Gclienv &value) throw() {
     atf_gcli::FGclienv *row = &gclienv_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gclienv_CopyIn(*row,const_cast<gclidb::Gclienv&>(value));
     bool ok = gclienv_XrefMaybe(*row); // this may return false
@@ -1074,7 +1074,7 @@ atf_gcli::FGclienv* atf_gcli::gclienv_InsertMaybe(const gclidb::Gclienv &value) 
 
 // --- atf_gcli.FDb.gclienv.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_gcli::gclienv_AllocMem() {
+void* atf_gcli::gclienv_AllocMem() throw() {
     u64 new_nelems     = _db.gclienv_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1100,7 +1100,7 @@ void* atf_gcli::gclienv_AllocMem() {
 
 // --- atf_gcli.FDb.gclienv.RemoveAll
 // Remove all elements from Lary
-void atf_gcli::gclienv_RemoveAll() {
+void atf_gcli::gclienv_RemoveAll() throw() {
     for (u64 n = _db.gclienv_n; n>0; ) {
         n--;
         gclienv_qFind(u64(n)).~FGclienv(); // destroy last element
@@ -1110,7 +1110,7 @@ void atf_gcli::gclienv_RemoveAll() {
 
 // --- atf_gcli.FDb.gclienv.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_gcli::gclienv_RemoveLast() {
+void atf_gcli::gclienv_RemoveLast() throw() {
     u64 n = _db.gclienv_n;
     if (n > 0) {
         n -= 1;
@@ -1120,7 +1120,7 @@ void atf_gcli::gclienv_RemoveLast() {
 }
 
 // --- atf_gcli.FDb.gclienv.InputMaybe
-static bool atf_gcli::gclienv_InputMaybe(gclidb::Gclienv &elem) {
+static bool atf_gcli::gclienv_InputMaybe(gclidb::Gclienv &elem) throw() {
     bool retval = true;
     retval = gclienv_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1146,7 +1146,7 @@ bool atf_gcli::gclienv_XrefMaybe(atf_gcli::FGclienv &row) {
 
 // --- atf_gcli.FDb.ind_gclienv.Find
 // Find row by key. Return NULL if not found.
-atf_gcli::FGclienv* atf_gcli::ind_gclienv_Find(const algo::strptr& key) {
+atf_gcli::FGclienv* atf_gcli::ind_gclienv_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gclienv_buckets_n - 1);
     atf_gcli::FGclienv* *e = &_db.ind_gclienv_buckets_elems[index];
     atf_gcli::FGclienv* ret=NULL;
@@ -1169,7 +1169,7 @@ atf_gcli::FGclienv& atf_gcli::ind_gclienv_FindX(const algo::strptr& key) {
 
 // --- atf_gcli.FDb.ind_gclienv.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_gcli::FGclienv& atf_gcli::ind_gclienv_GetOrCreate(const algo::strptr& key) {
+atf_gcli::FGclienv& atf_gcli::ind_gclienv_GetOrCreate(const algo::strptr& key) throw() {
     atf_gcli::FGclienv* ret = ind_gclienv_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gclienv_Alloc();
@@ -1186,7 +1186,7 @@ atf_gcli::FGclienv& atf_gcli::ind_gclienv_GetOrCreate(const algo::strptr& key) {
 
 // --- atf_gcli.FDb.ind_gclienv.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_gcli::ind_gclienv_InsertMaybe(atf_gcli::FGclienv& row) {
+bool atf_gcli::ind_gclienv_InsertMaybe(atf_gcli::FGclienv& row) throw() {
     ind_gclienv_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclienv_next == (atf_gcli::FGclienv*)-1)) {// check if in hash already
@@ -1214,7 +1214,7 @@ bool atf_gcli::ind_gclienv_InsertMaybe(atf_gcli::FGclienv& row) {
 
 // --- atf_gcli.FDb.ind_gclienv.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_gcli::ind_gclienv_Remove(atf_gcli::FGclienv& row) {
+void atf_gcli::ind_gclienv_Remove(atf_gcli::FGclienv& row) throw() {
     if (LIKELY(row.ind_gclienv_next != (atf_gcli::FGclienv*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.gclienv) & (_db.ind_gclienv_buckets_n - 1);
         atf_gcli::FGclienv* *prev = &_db.ind_gclienv_buckets_elems[index]; // addr of pointer to current element
@@ -1232,7 +1232,7 @@ void atf_gcli::ind_gclienv_Remove(atf_gcli::FGclienv& row) {
 
 // --- atf_gcli.FDb.ind_gclienv.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_gcli::ind_gclienv_Reserve(int n) {
+void atf_gcli::ind_gclienv_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gclienv_buckets_n;
     u32 new_nelems   = _db.ind_gclienv_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1268,7 +1268,7 @@ void atf_gcli::ind_gclienv_Reserve(int n) {
 
 // --- atf_gcli.FDb.ind_gclienvsub.Find
 // Find row by key. Return NULL if not found.
-atf_gcli::FGclienvsub* atf_gcli::ind_gclienvsub_Find(const algo::strptr& key) {
+atf_gcli::FGclienvsub* atf_gcli::ind_gclienvsub_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gclienvsub_buckets_n - 1);
     atf_gcli::FGclienvsub* *e = &_db.ind_gclienvsub_buckets_elems[index];
     atf_gcli::FGclienvsub* ret=NULL;
@@ -1291,7 +1291,7 @@ atf_gcli::FGclienvsub& atf_gcli::ind_gclienvsub_FindX(const algo::strptr& key) {
 
 // --- atf_gcli.FDb.ind_gclienvsub.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_gcli::ind_gclienvsub_InsertMaybe(atf_gcli::FGclienvsub& row) {
+bool atf_gcli::ind_gclienvsub_InsertMaybe(atf_gcli::FGclienvsub& row) throw() {
     ind_gclienvsub_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclienvsub_next == (atf_gcli::FGclienvsub*)-1)) {// check if in hash already
@@ -1319,7 +1319,7 @@ bool atf_gcli::ind_gclienvsub_InsertMaybe(atf_gcli::FGclienvsub& row) {
 
 // --- atf_gcli.FDb.ind_gclienvsub.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_gcli::ind_gclienvsub_Remove(atf_gcli::FGclienvsub& row) {
+void atf_gcli::ind_gclienvsub_Remove(atf_gcli::FGclienvsub& row) throw() {
     if (LIKELY(row.ind_gclienvsub_next != (atf_gcli::FGclienvsub*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.gclienvsub) & (_db.ind_gclienvsub_buckets_n - 1);
         atf_gcli::FGclienvsub* *prev = &_db.ind_gclienvsub_buckets_elems[index]; // addr of pointer to current element
@@ -1337,7 +1337,7 @@ void atf_gcli::ind_gclienvsub_Remove(atf_gcli::FGclienvsub& row) {
 
 // --- atf_gcli.FDb.ind_gclienvsub.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_gcli::ind_gclienvsub_Reserve(int n) {
+void atf_gcli::ind_gclienvsub_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gclienvsub_buckets_n;
     u32 new_nelems   = _db.ind_gclienvsub_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1374,7 +1374,7 @@ void atf_gcli::ind_gclienvsub_Reserve(int n) {
 // --- atf_gcli.FDb.gtblact.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-atf_gcli::FGtblact& atf_gcli::gtblact_Alloc() {
+atf_gcli::FGtblact& atf_gcli::gtblact_Alloc() throw() {
     atf_gcli::FGtblact* row = gtblact_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("atf_gcli.out_of_mem  field:atf_gcli.FDb.gtblact  comment:'Alloc failed'");
@@ -1384,7 +1384,7 @@ atf_gcli::FGtblact& atf_gcli::gtblact_Alloc() {
 
 // --- atf_gcli.FDb.gtblact.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-atf_gcli::FGtblact* atf_gcli::gtblact_AllocMaybe() {
+atf_gcli::FGtblact* atf_gcli::gtblact_AllocMaybe() throw() {
     atf_gcli::FGtblact *row = (atf_gcli::FGtblact*)gtblact_AllocMem();
     if (row) {
         new (row) atf_gcli::FGtblact; // call constructor
@@ -1395,7 +1395,7 @@ atf_gcli::FGtblact* atf_gcli::gtblact_AllocMaybe() {
 // --- atf_gcli.FDb.gtblact.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-atf_gcli::FGtblact* atf_gcli::gtblact_InsertMaybe(const gclidb::Gtblact &value) {
+atf_gcli::FGtblact* atf_gcli::gtblact_InsertMaybe(const gclidb::Gtblact &value) throw() {
     atf_gcli::FGtblact *row = &gtblact_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gtblact_CopyIn(*row,const_cast<gclidb::Gtblact&>(value));
     bool ok = gtblact_XrefMaybe(*row); // this may return false
@@ -1408,7 +1408,7 @@ atf_gcli::FGtblact* atf_gcli::gtblact_InsertMaybe(const gclidb::Gtblact &value) 
 
 // --- atf_gcli.FDb.gtblact.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* atf_gcli::gtblact_AllocMem() {
+void* atf_gcli::gtblact_AllocMem() throw() {
     u64 new_nelems     = _db.gtblact_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1434,7 +1434,7 @@ void* atf_gcli::gtblact_AllocMem() {
 
 // --- atf_gcli.FDb.gtblact.RemoveAll
 // Remove all elements from Lary
-void atf_gcli::gtblact_RemoveAll() {
+void atf_gcli::gtblact_RemoveAll() throw() {
     for (u64 n = _db.gtblact_n; n>0; ) {
         n--;
         gtblact_qFind(u64(n)).~FGtblact(); // destroy last element
@@ -1444,7 +1444,7 @@ void atf_gcli::gtblact_RemoveAll() {
 
 // --- atf_gcli.FDb.gtblact.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void atf_gcli::gtblact_RemoveLast() {
+void atf_gcli::gtblact_RemoveLast() throw() {
     u64 n = _db.gtblact_n;
     if (n > 0) {
         n -= 1;
@@ -1454,7 +1454,7 @@ void atf_gcli::gtblact_RemoveLast() {
 }
 
 // --- atf_gcli.FDb.gtblact.InputMaybe
-static bool atf_gcli::gtblact_InputMaybe(gclidb::Gtblact &elem) {
+static bool atf_gcli::gtblact_InputMaybe(gclidb::Gtblact &elem) throw() {
     bool retval = true;
     retval = gtblact_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1480,7 +1480,7 @@ bool atf_gcli::gtblact_XrefMaybe(atf_gcli::FGtblact &row) {
 
 // --- atf_gcli.FDb.ind_gtblact.Find
 // Find row by key. Return NULL if not found.
-atf_gcli::FGtblact* atf_gcli::ind_gtblact_Find(const algo::strptr& key) {
+atf_gcli::FGtblact* atf_gcli::ind_gtblact_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gtblact_buckets_n - 1);
     atf_gcli::FGtblact* *e = &_db.ind_gtblact_buckets_elems[index];
     atf_gcli::FGtblact* ret=NULL;
@@ -1503,7 +1503,7 @@ atf_gcli::FGtblact& atf_gcli::ind_gtblact_FindX(const algo::strptr& key) {
 
 // --- atf_gcli.FDb.ind_gtblact.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-atf_gcli::FGtblact& atf_gcli::ind_gtblact_GetOrCreate(const algo::strptr& key) {
+atf_gcli::FGtblact& atf_gcli::ind_gtblact_GetOrCreate(const algo::strptr& key) throw() {
     atf_gcli::FGtblact* ret = ind_gtblact_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gtblact_Alloc();
@@ -1520,7 +1520,7 @@ atf_gcli::FGtblact& atf_gcli::ind_gtblact_GetOrCreate(const algo::strptr& key) {
 
 // --- atf_gcli.FDb.ind_gtblact.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool atf_gcli::ind_gtblact_InsertMaybe(atf_gcli::FGtblact& row) {
+bool atf_gcli::ind_gtblact_InsertMaybe(atf_gcli::FGtblact& row) throw() {
     ind_gtblact_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gtblact_next == (atf_gcli::FGtblact*)-1)) {// check if in hash already
@@ -1548,7 +1548,7 @@ bool atf_gcli::ind_gtblact_InsertMaybe(atf_gcli::FGtblact& row) {
 
 // --- atf_gcli.FDb.ind_gtblact.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void atf_gcli::ind_gtblact_Remove(atf_gcli::FGtblact& row) {
+void atf_gcli::ind_gtblact_Remove(atf_gcli::FGtblact& row) throw() {
     if (LIKELY(row.ind_gtblact_next != (atf_gcli::FGtblact*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.gtblact) & (_db.ind_gtblact_buckets_n - 1);
         atf_gcli::FGtblact* *prev = &_db.ind_gtblact_buckets_elems[index]; // addr of pointer to current element
@@ -1566,7 +1566,7 @@ void atf_gcli::ind_gtblact_Remove(atf_gcli::FGtblact& row) {
 
 // --- atf_gcli.FDb.ind_gtblact.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void atf_gcli::ind_gtblact_Reserve(int n) {
+void atf_gcli::ind_gtblact_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gtblact_buckets_n;
     u32 new_nelems   = _db.ind_gtblact_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1602,13 +1602,13 @@ void atf_gcli::ind_gtblact_Reserve(int n) {
 
 // --- atf_gcli.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr atf_gcli::trace_RowidFind(int t) {
+static algo::ImrowPtr atf_gcli::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- atf_gcli.FDb.trace.N
 // Function return 1
-inline static i32 atf_gcli::trace_N() {
+inline static i32 atf_gcli::trace_N() throw() {
     return 1;
 }
 
@@ -1718,7 +1718,7 @@ void atf_gcli::FDb_Init() {
 }
 
 // --- atf_gcli.FDb..Uninit
-void atf_gcli::FDb_Uninit() {
+void atf_gcli::FDb_Uninit() throw() {
     atf_gcli::FDb &row = _db; (void)row;
 
     // atf_gcli.FDb.ind_gtblact.Uninit (Thash)  //
@@ -1757,7 +1757,7 @@ void atf_gcli::FDb_Uninit() {
 
 // --- atf_gcli.FGclienv.base.CopyOut
 // Copy fields out of row
-void atf_gcli::gclienv_CopyOut(atf_gcli::FGclienv &row, gclidb::Gclienv &out) {
+void atf_gcli::gclienv_CopyOut(atf_gcli::FGclienv &row, gclidb::Gclienv &out) throw() {
     out.gclienv = row.gclienv;
     out.addon = row.addon;
     out.comment = row.comment;
@@ -1765,7 +1765,7 @@ void atf_gcli::gclienv_CopyOut(atf_gcli::FGclienv &row, gclidb::Gclienv &out) {
 
 // --- atf_gcli.FGclienv.base.CopyIn
 // Copy fields in to row
-void atf_gcli::gclienv_CopyIn(atf_gcli::FGclienv &row, gclidb::Gclienv &in) {
+void atf_gcli::gclienv_CopyIn(atf_gcli::FGclienv &row, gclidb::Gclienv &in) throw() {
     row.gclienv = in.gclienv;
     row.addon = in.addon;
     row.comment = in.comment;
@@ -1774,7 +1774,7 @@ void atf_gcli::gclienv_CopyIn(atf_gcli::FGclienv &row, gclidb::Gclienv &in) {
 // --- atf_gcli.FGclienv.c_gclienvsub.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void atf_gcli::c_gclienvsub_Insert(atf_gcli::FGclienv& gclienv, atf_gcli::FGclienvsub& row) {
+void atf_gcli::c_gclienvsub_Insert(atf_gcli::FGclienv& gclienv, atf_gcli::FGclienvsub& row) throw() {
     if (bool_Update(row.gclienv_c_gclienvsub_in_ary,true)) {
         // reserve space
         c_gclienvsub_Reserve(gclienv, 1);
@@ -1791,7 +1791,7 @@ void atf_gcli::c_gclienvsub_Insert(atf_gcli::FGclienv& gclienv, atf_gcli::FGclie
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool atf_gcli::c_gclienvsub_InsertMaybe(atf_gcli::FGclienv& gclienv, atf_gcli::FGclienvsub& row) {
+bool atf_gcli::c_gclienvsub_InsertMaybe(atf_gcli::FGclienv& gclienv, atf_gcli::FGclienvsub& row) throw() {
     bool retval = !row.gclienv_c_gclienvsub_in_ary;
     c_gclienvsub_Insert(gclienv,row); // check is performed in _Insert again
     return retval;
@@ -1799,7 +1799,7 @@ bool atf_gcli::c_gclienvsub_InsertMaybe(atf_gcli::FGclienv& gclienv, atf_gcli::F
 
 // --- atf_gcli.FGclienv.c_gclienvsub.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void atf_gcli::c_gclienvsub_Remove(atf_gcli::FGclienv& gclienv, atf_gcli::FGclienvsub& row) {
+void atf_gcli::c_gclienvsub_Remove(atf_gcli::FGclienv& gclienv, atf_gcli::FGclienvsub& row) throw() {
     if (bool_Update(row.gclienv_c_gclienvsub_in_ary,false)) {
         int lim = gclienv.c_gclienvsub_n;
         atf_gcli::FGclienvsub* *elems = gclienv.c_gclienvsub_elems;
@@ -1820,7 +1820,7 @@ void atf_gcli::c_gclienvsub_Remove(atf_gcli::FGclienv& gclienv, atf_gcli::FGclie
 
 // --- atf_gcli.FGclienv.c_gclienvsub.Reserve
 // Reserve space in index for N more elements;
-void atf_gcli::c_gclienvsub_Reserve(atf_gcli::FGclienv& gclienv, u32 n) {
+void atf_gcli::c_gclienvsub_Reserve(atf_gcli::FGclienv& gclienv, u32 n) throw() {
     u32 old_max = gclienv.c_gclienvsub_max;
     if (UNLIKELY(gclienv.c_gclienvsub_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -1836,7 +1836,7 @@ void atf_gcli::c_gclienvsub_Reserve(atf_gcli::FGclienv& gclienv, u32 n) {
 }
 
 // --- atf_gcli.FGclienv..Uninit
-void atf_gcli::FGclienv_Uninit(atf_gcli::FGclienv& gclienv) {
+void atf_gcli::FGclienv_Uninit(atf_gcli::FGclienv& gclienv) throw() {
     atf_gcli::FGclienv &row = gclienv; (void)row;
     ind_gclienv_Remove(row); // remove gclienv from index ind_gclienv
 
@@ -1846,7 +1846,7 @@ void atf_gcli::FGclienv_Uninit(atf_gcli::FGclienv& gclienv) {
 
 // --- atf_gcli.FGclienvsub.base.CopyOut
 // Copy fields out of row
-void atf_gcli::gclienvsub_CopyOut(atf_gcli::FGclienvsub &row, gclidb::Gclienvsub &out) {
+void atf_gcli::gclienvsub_CopyOut(atf_gcli::FGclienvsub &row, gclidb::Gclienvsub &out) throw() {
     out.gclienvsub = row.gclienvsub;
     out.fwd = row.fwd;
     out.rev = row.rev;
@@ -1855,7 +1855,7 @@ void atf_gcli::gclienvsub_CopyOut(atf_gcli::FGclienvsub &row, gclidb::Gclienvsub
 
 // --- atf_gcli.FGclienvsub.base.CopyIn
 // Copy fields in to row
-void atf_gcli::gclienvsub_CopyIn(atf_gcli::FGclienvsub &row, gclidb::Gclienvsub &in) {
+void atf_gcli::gclienvsub_CopyIn(atf_gcli::FGclienvsub &row, gclidb::Gclienvsub &in) throw() {
     row.gclienvsub = in.gclienvsub;
     row.fwd = in.fwd;
     row.rev = in.rev;
@@ -1863,19 +1863,19 @@ void atf_gcli::gclienvsub_CopyIn(atf_gcli::FGclienvsub &row, gclidb::Gclienvsub 
 }
 
 // --- atf_gcli.FGclienvsub.gclienv.Get
-algo::Smallstr50 atf_gcli::gclienv_Get(atf_gcli::FGclienvsub& gclienvsub) {
+algo::Smallstr50 atf_gcli::gclienv_Get(atf_gcli::FGclienvsub& gclienvsub) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gclienvsub.gclienvsub, ".LL"));
     return ret;
 }
 
 // --- atf_gcli.FGclienvsub.sub.Get
-algo::Smallstr50 atf_gcli::sub_Get(atf_gcli::FGclienvsub& gclienvsub) {
+algo::Smallstr50 atf_gcli::sub_Get(atf_gcli::FGclienvsub& gclienvsub) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gclienvsub.gclienvsub, ".LR"));
     return ret;
 }
 
 // --- atf_gcli.FGclienvsub..Uninit
-void atf_gcli::FGclienvsub_Uninit(atf_gcli::FGclienvsub& gclienvsub) {
+void atf_gcli::FGclienvsub_Uninit(atf_gcli::FGclienvsub& gclienvsub) throw() {
     atf_gcli::FGclienvsub &row = gclienvsub; (void)row;
     atf_gcli::FGclienv* p_gclienv = atf_gcli::ind_gclienv_Find(gclienv_Get(row));
     if (p_gclienv)  {
@@ -1886,7 +1886,7 @@ void atf_gcli::FGclienvsub_Uninit(atf_gcli::FGclienvsub& gclienvsub) {
 
 // --- atf_gcli.FGtblact.base.CopyOut
 // Copy fields out of row
-void atf_gcli::gtblact_CopyOut(atf_gcli::FGtblact &row, gclidb::Gtblact &out) {
+void atf_gcli::gtblact_CopyOut(atf_gcli::FGtblact &row, gclidb::Gtblact &out) throw() {
     out.gtblact = row.gtblact;
     out.t = row.t;
     out.e = row.e;
@@ -1895,7 +1895,7 @@ void atf_gcli::gtblact_CopyOut(atf_gcli::FGtblact &row, gclidb::Gtblact &out) {
 
 // --- atf_gcli.FGtblact.base.CopyIn
 // Copy fields in to row
-void atf_gcli::gtblact_CopyIn(atf_gcli::FGtblact &row, gclidb::Gtblact &in) {
+void atf_gcli::gtblact_CopyIn(atf_gcli::FGtblact &row, gclidb::Gtblact &in) throw() {
     row.gtblact = in.gtblact;
     row.t = in.t;
     row.e = in.e;
@@ -1903,13 +1903,13 @@ void atf_gcli::gtblact_CopyIn(atf_gcli::FGtblact &row, gclidb::Gtblact &in) {
 }
 
 // --- atf_gcli.FGtblact.gtbl.Get
-algo::Smallstr250 atf_gcli::gtbl_Get(atf_gcli::FGtblact& gtblact) {
+algo::Smallstr250 atf_gcli::gtbl_Get(atf_gcli::FGtblact& gtblact) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(gtblact.gtblact, "_LL"));
     return ret;
 }
 
 // --- atf_gcli.FGtblact.gact.Get
-algo::Smallstr50 atf_gcli::gact_Get(atf_gcli::FGtblact& gtblact) {
+algo::Smallstr50 atf_gcli::gact_Get(atf_gcli::FGtblact& gtblact) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gtblact.gtblact, "_LR"));
     return ret;
 }
@@ -1928,14 +1928,14 @@ void atf_gcli::FGtblact_Init(atf_gcli::FGtblact& gtblact) {
 }
 
 // --- atf_gcli.FGtblact..Uninit
-void atf_gcli::FGtblact_Uninit(atf_gcli::FGtblact& gtblact) {
+void atf_gcli::FGtblact_Uninit(atf_gcli::FGtblact& gtblact) throw() {
     atf_gcli::FGtblact &row = gtblact; (void)row;
     ind_gtblact_Remove(row); // remove gtblact from index ind_gtblact
 }
 
 // --- atf_gcli.FGtblacttst.base.CopyOut
 // Copy fields out of row
-void atf_gcli::gtblacttst_CopyOut(atf_gcli::FGtblacttst &row, gclidb::Gtblacttst &out) {
+void atf_gcli::gtblacttst_CopyOut(atf_gcli::FGtblacttst &row, gclidb::Gtblacttst &out) throw() {
     out.gtblacttst = row.gtblacttst;
     out.working = row.working;
     out.cmd = row.cmd;
@@ -1944,7 +1944,7 @@ void atf_gcli::gtblacttst_CopyOut(atf_gcli::FGtblacttst &row, gclidb::Gtblacttst
 
 // --- atf_gcli.FGtblacttst.base.CopyIn
 // Copy fields in to row
-void atf_gcli::gtblacttst_CopyIn(atf_gcli::FGtblacttst &row, gclidb::Gtblacttst &in) {
+void atf_gcli::gtblacttst_CopyIn(atf_gcli::FGtblacttst &row, gclidb::Gtblacttst &in) throw() {
     row.gtblacttst = in.gtblacttst;
     row.working = in.working;
     row.cmd = in.cmd;
@@ -1952,19 +1952,19 @@ void atf_gcli::gtblacttst_CopyIn(atf_gcli::FGtblacttst &row, gclidb::Gtblacttst 
 }
 
 // --- atf_gcli.FGtblacttst.gtblact.Get
-algo::Smallstr50 atf_gcli::gtblact_Get(atf_gcli::FGtblacttst& gtblacttst) {
+algo::Smallstr50 atf_gcli::gtblact_Get(atf_gcli::FGtblacttst& gtblacttst) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gtblacttst.gtblacttst, ".LL"));
     return ret;
 }
 
 // --- atf_gcli.FGtblacttst.gclienv.Get
-algo::Smallstr50 atf_gcli::gclienv_Get(atf_gcli::FGtblacttst& gtblacttst) {
+algo::Smallstr50 atf_gcli::gclienv_Get(atf_gcli::FGtblacttst& gtblacttst) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gtblacttst.gtblacttst, ".LR.LL"));
     return ret;
 }
 
 // --- atf_gcli.FGtblacttst.t.Get
-algo::cstring atf_gcli::t_Get(atf_gcli::FGtblacttst& gtblacttst) {
+algo::cstring atf_gcli::t_Get(atf_gcli::FGtblacttst& gtblacttst) throw() {
     algo::cstring ret(algo::Pathcomp(gtblacttst.gtblacttst, ".RR"));
     return ret;
 }
@@ -1972,7 +1972,7 @@ algo::cstring atf_gcli::t_Get(atf_gcli::FGtblacttst& gtblacttst) {
 // --- atf_gcli.FGtblacttst.c_gtblacttstout.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void atf_gcli::c_gtblacttstout_Insert(atf_gcli::FGtblacttst& gtblacttst, atf_gcli::FGtblacttstout& row) {
+void atf_gcli::c_gtblacttstout_Insert(atf_gcli::FGtblacttst& gtblacttst, atf_gcli::FGtblacttstout& row) throw() {
     if (bool_Update(row.gtblacttst_c_gtblacttstout_in_ary,true)) {
         // reserve space
         c_gtblacttstout_Reserve(gtblacttst, 1);
@@ -1989,7 +1989,7 @@ void atf_gcli::c_gtblacttstout_Insert(atf_gcli::FGtblacttst& gtblacttst, atf_gcl
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool atf_gcli::c_gtblacttstout_InsertMaybe(atf_gcli::FGtblacttst& gtblacttst, atf_gcli::FGtblacttstout& row) {
+bool atf_gcli::c_gtblacttstout_InsertMaybe(atf_gcli::FGtblacttst& gtblacttst, atf_gcli::FGtblacttstout& row) throw() {
     bool retval = !row.gtblacttst_c_gtblacttstout_in_ary;
     c_gtblacttstout_Insert(gtblacttst,row); // check is performed in _Insert again
     return retval;
@@ -1997,7 +1997,7 @@ bool atf_gcli::c_gtblacttstout_InsertMaybe(atf_gcli::FGtblacttst& gtblacttst, at
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void atf_gcli::c_gtblacttstout_Remove(atf_gcli::FGtblacttst& gtblacttst, atf_gcli::FGtblacttstout& row) {
+void atf_gcli::c_gtblacttstout_Remove(atf_gcli::FGtblacttst& gtblacttst, atf_gcli::FGtblacttstout& row) throw() {
     if (bool_Update(row.gtblacttst_c_gtblacttstout_in_ary,false)) {
         int lim = gtblacttst.c_gtblacttstout_n;
         atf_gcli::FGtblacttstout* *elems = gtblacttst.c_gtblacttstout_elems;
@@ -2018,7 +2018,7 @@ void atf_gcli::c_gtblacttstout_Remove(atf_gcli::FGtblacttst& gtblacttst, atf_gcl
 
 // --- atf_gcli.FGtblacttst.c_gtblacttstout.Reserve
 // Reserve space in index for N more elements;
-void atf_gcli::c_gtblacttstout_Reserve(atf_gcli::FGtblacttst& gtblacttst, u32 n) {
+void atf_gcli::c_gtblacttstout_Reserve(atf_gcli::FGtblacttst& gtblacttst, u32 n) throw() {
     u32 old_max = gtblacttst.c_gtblacttstout_max;
     if (UNLIKELY(gtblacttst.c_gtblacttstout_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -2049,7 +2049,7 @@ void atf_gcli::FGtblacttst_Init(atf_gcli::FGtblacttst& gtblacttst) {
 }
 
 // --- atf_gcli.FGtblacttst..Uninit
-void atf_gcli::FGtblacttst_Uninit(atf_gcli::FGtblacttst& gtblacttst) {
+void atf_gcli::FGtblacttst_Uninit(atf_gcli::FGtblacttst& gtblacttst) throw() {
     atf_gcli::FGtblacttst &row = gtblacttst; (void)row;
     ind_gtblacttst_Remove(row); // remove gtblacttst from index ind_gtblacttst
 
@@ -2059,32 +2059,32 @@ void atf_gcli::FGtblacttst_Uninit(atf_gcli::FGtblacttst& gtblacttst) {
 
 // --- atf_gcli.FGtblacttstout.base.CopyOut
 // Copy fields out of row
-void atf_gcli::gtblacttstout_CopyOut(atf_gcli::FGtblacttstout &row, gclidb::Gtblacttstout &out) {
+void atf_gcli::gtblacttstout_CopyOut(atf_gcli::FGtblacttstout &row, gclidb::Gtblacttstout &out) throw() {
     out.gtblacttstout = row.gtblacttstout;
     out.text = row.text;
 }
 
 // --- atf_gcli.FGtblacttstout.base.CopyIn
 // Copy fields in to row
-void atf_gcli::gtblacttstout_CopyIn(atf_gcli::FGtblacttstout &row, gclidb::Gtblacttstout &in) {
+void atf_gcli::gtblacttstout_CopyIn(atf_gcli::FGtblacttstout &row, gclidb::Gtblacttstout &in) throw() {
     row.gtblacttstout = in.gtblacttstout;
     row.text = in.text;
 }
 
 // --- atf_gcli.FGtblacttstout.gtblacttst.Get
-algo::Smallstr250 atf_gcli::gtblacttst_Get(atf_gcli::FGtblacttstout& gtblacttstout) {
+algo::Smallstr250 atf_gcli::gtblacttst_Get(atf_gcli::FGtblacttstout& gtblacttstout) throw() {
     algo::Smallstr250 ret(algo::Pathcomp(gtblacttstout.gtblacttstout, ".RL"));
     return ret;
 }
 
 // --- atf_gcli.FGtblacttstout.out.Get
-algo::cstring atf_gcli::out_Get(atf_gcli::FGtblacttstout& gtblacttstout) {
+algo::cstring atf_gcli::out_Get(atf_gcli::FGtblacttstout& gtblacttstout) throw() {
     algo::cstring ret(algo::Pathcomp(gtblacttstout.gtblacttstout, ".RR"));
     return ret;
 }
 
 // --- atf_gcli.FGtblacttstout..Uninit
-void atf_gcli::FGtblacttstout_Uninit(atf_gcli::FGtblacttstout& gtblacttstout) {
+void atf_gcli::FGtblacttstout_Uninit(atf_gcli::FGtblacttstout& gtblacttstout) throw() {
     atf_gcli::FGtblacttstout &row = gtblacttstout; (void)row;
     atf_gcli::FGtblacttst* p_gtblacttst = atf_gcli::ind_gtblacttst_Find(gtblacttst_Get(row));
     if (p_gtblacttst)  {
@@ -2096,7 +2096,7 @@ void atf_gcli::FGtblacttstout_Uninit(atf_gcli::FGtblacttstout& gtblacttstout) {
 // --- atf_gcli.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_gcli::value_ToCstr(const atf_gcli::FieldId& parent) {
+const char* atf_gcli::value_ToCstr(const atf_gcli::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_gcli_FieldId_value        : ret = "value";  break;
@@ -2107,7 +2107,7 @@ const char* atf_gcli::value_ToCstr(const atf_gcli::FieldId& parent) {
 // --- atf_gcli.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_gcli::value_Print(const atf_gcli::FieldId& parent, algo::cstring &lhs) {
+void atf_gcli::value_Print(const atf_gcli::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2120,7 +2120,7 @@ void atf_gcli::value_Print(const atf_gcli::FieldId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_gcli::value_SetStrptrMaybe(atf_gcli::FieldId& parent, algo::strptr rhs) {
+bool atf_gcli::value_SetStrptrMaybe(atf_gcli::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -2138,13 +2138,13 @@ bool atf_gcli::value_SetStrptrMaybe(atf_gcli::FieldId& parent, algo::strptr rhs)
 // --- atf_gcli.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_gcli::value_SetStrptr(atf_gcli::FieldId& parent, algo::strptr rhs, atf_gcli_FieldIdEnum dflt) {
+void atf_gcli::value_SetStrptr(atf_gcli::FieldId& parent, algo::strptr rhs, atf_gcli_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_gcli.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_gcli::value_ReadStrptrMaybe(atf_gcli::FieldId& parent, algo::strptr rhs) {
+bool atf_gcli::value_ReadStrptrMaybe(atf_gcli::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2156,7 +2156,7 @@ bool atf_gcli::value_ReadStrptrMaybe(atf_gcli::FieldId& parent, algo::strptr rhs
 // --- atf_gcli.FieldId..ReadStrptrMaybe
 // Read fields of atf_gcli::FieldId from an ascii string.
 // The format of the string is the format of the atf_gcli::FieldId's only field
-bool atf_gcli::FieldId_ReadStrptrMaybe(atf_gcli::FieldId &parent, algo::strptr in_str) {
+bool atf_gcli::FieldId_ReadStrptrMaybe(atf_gcli::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2165,14 +2165,14 @@ bool atf_gcli::FieldId_ReadStrptrMaybe(atf_gcli::FieldId &parent, algo::strptr i
 // --- atf_gcli.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_gcli.FieldId.String  printfmt:Raw
-void atf_gcli::FieldId_Print(atf_gcli::FieldId& row, algo::cstring& str) {
+void atf_gcli::FieldId_Print(atf_gcli::FieldId& row, algo::cstring& str) throw() {
     atf_gcli::value_Print(row, str);
 }
 
 // --- atf_gcli.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* atf_gcli::value_ToCstr(const atf_gcli::TableId& parent) {
+const char* atf_gcli::value_ToCstr(const atf_gcli::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case atf_gcli_TableId_gclidb_Gclienv: ret = "gclidb.Gclienv";  break;
@@ -2187,7 +2187,7 @@ const char* atf_gcli::value_ToCstr(const atf_gcli::TableId& parent) {
 // --- atf_gcli.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void atf_gcli::value_Print(const atf_gcli::TableId& parent, algo::cstring &lhs) {
+void atf_gcli::value_Print(const atf_gcli::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -2200,7 +2200,7 @@ void atf_gcli::value_Print(const atf_gcli::TableId& parent, algo::cstring &lhs) 
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool atf_gcli::value_SetStrptrMaybe(atf_gcli::TableId& parent, algo::strptr rhs) {
+bool atf_gcli::value_SetStrptrMaybe(atf_gcli::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 14: {
@@ -2253,13 +2253,13 @@ bool atf_gcli::value_SetStrptrMaybe(atf_gcli::TableId& parent, algo::strptr rhs)
 // --- atf_gcli.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void atf_gcli::value_SetStrptr(atf_gcli::TableId& parent, algo::strptr rhs, atf_gcli_TableIdEnum dflt) {
+void atf_gcli::value_SetStrptr(atf_gcli::TableId& parent, algo::strptr rhs, atf_gcli_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- atf_gcli.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool atf_gcli::value_ReadStrptrMaybe(atf_gcli::TableId& parent, algo::strptr rhs) {
+bool atf_gcli::value_ReadStrptrMaybe(atf_gcli::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -2271,7 +2271,7 @@ bool atf_gcli::value_ReadStrptrMaybe(atf_gcli::TableId& parent, algo::strptr rhs
 // --- atf_gcli.TableId..ReadStrptrMaybe
 // Read fields of atf_gcli::TableId from an ascii string.
 // The format of the string is the format of the atf_gcli::TableId's only field
-bool atf_gcli::TableId_ReadStrptrMaybe(atf_gcli::TableId &parent, algo::strptr in_str) {
+bool atf_gcli::TableId_ReadStrptrMaybe(atf_gcli::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -2280,7 +2280,7 @@ bool atf_gcli::TableId_ReadStrptrMaybe(atf_gcli::TableId &parent, algo::strptr i
 // --- atf_gcli.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:atf_gcli.TableId.String  printfmt:Raw
-void atf_gcli::TableId_Print(atf_gcli::TableId& row, algo::cstring& str) {
+void atf_gcli::TableId_Print(atf_gcli::TableId& row, algo::cstring& str) throw() {
     atf_gcli::value_Print(row, str);
 }
 

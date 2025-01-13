@@ -36,23 +36,23 @@ inline void src_lim::FBadline_Init(src_lim::FBadline& badline) {
 }
 
 // --- src_lim.FBadline..Ctor
-inline  src_lim::FBadline::FBadline() {
+inline  src_lim::FBadline::FBadline() throw() {
     src_lim::FBadline_Init(*this);
 }
 
 // --- src_lim.trace..Ctor
-inline  src_lim::trace::trace() {
+inline  src_lim::trace::trace() throw() {
 }
 
 // --- src_lim.FDb.include.EmptyQ
 // Return true if index is empty
-inline bool src_lim::include_EmptyQ() {
+inline bool src_lim::include_EmptyQ() throw() {
     return _db.include_n == 0;
 }
 
 // --- src_lim.FDb.include.Find
 // Look up row by row id. Return NULL if out of range
-inline src_lim::FInclude* src_lim::include_Find(u64 t) {
+inline src_lim::FInclude* src_lim::include_Find(u64 t) throw() {
     src_lim::FInclude *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.include_n))) {
         u64 x = t + 1;
@@ -66,19 +66,19 @@ inline src_lim::FInclude* src_lim::include_Find(u64 t) {
 
 // --- src_lim.FDb.include.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_lim::FInclude* src_lim::include_Last() {
+inline src_lim::FInclude* src_lim::include_Last() throw() {
     return include_Find(u64(_db.include_n-1));
 }
 
 // --- src_lim.FDb.include.N
 // Return number of items in the pool
-inline i32 src_lim::include_N() {
+inline i32 src_lim::include_N() throw() {
     return _db.include_n;
 }
 
 // --- src_lim.FDb.include.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_lim::FInclude& src_lim::include_qFind(u64 t) {
+inline src_lim::FInclude& src_lim::include_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -88,13 +88,13 @@ inline src_lim::FInclude& src_lim::include_qFind(u64 t) {
 
 // --- src_lim.FDb.linelim.EmptyQ
 // Return true if index is empty
-inline bool src_lim::linelim_EmptyQ() {
+inline bool src_lim::linelim_EmptyQ() throw() {
     return _db.linelim_n == 0;
 }
 
 // --- src_lim.FDb.linelim.Find
 // Look up row by row id. Return NULL if out of range
-inline src_lim::FLinelim* src_lim::linelim_Find(u64 t) {
+inline src_lim::FLinelim* src_lim::linelim_Find(u64 t) throw() {
     src_lim::FLinelim *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.linelim_n))) {
         u64 x = t + 1;
@@ -108,19 +108,19 @@ inline src_lim::FLinelim* src_lim::linelim_Find(u64 t) {
 
 // --- src_lim.FDb.linelim.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_lim::FLinelim* src_lim::linelim_Last() {
+inline src_lim::FLinelim* src_lim::linelim_Last() throw() {
     return linelim_Find(u64(_db.linelim_n-1));
 }
 
 // --- src_lim.FDb.linelim.N
 // Return number of items in the pool
-inline i32 src_lim::linelim_N() {
+inline i32 src_lim::linelim_N() throw() {
     return _db.linelim_n;
 }
 
 // --- src_lim.FDb.linelim.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_lim::FLinelim& src_lim::linelim_qFind(u64 t) {
+inline src_lim::FLinelim& src_lim::linelim_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -130,13 +130,13 @@ inline src_lim::FLinelim& src_lim::linelim_qFind(u64 t) {
 
 // --- src_lim.FDb.targsrc.EmptyQ
 // Return true if index is empty
-inline bool src_lim::targsrc_EmptyQ() {
+inline bool src_lim::targsrc_EmptyQ() throw() {
     return _db.targsrc_n == 0;
 }
 
 // --- src_lim.FDb.targsrc.Find
 // Look up row by row id. Return NULL if out of range
-inline src_lim::FTargsrc* src_lim::targsrc_Find(u64 t) {
+inline src_lim::FTargsrc* src_lim::targsrc_Find(u64 t) throw() {
     src_lim::FTargsrc *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.targsrc_n))) {
         u64 x = t + 1;
@@ -150,19 +150,19 @@ inline src_lim::FTargsrc* src_lim::targsrc_Find(u64 t) {
 
 // --- src_lim.FDb.targsrc.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_lim::FTargsrc* src_lim::targsrc_Last() {
+inline src_lim::FTargsrc* src_lim::targsrc_Last() throw() {
     return targsrc_Find(u64(_db.targsrc_n-1));
 }
 
 // --- src_lim.FDb.targsrc.N
 // Return number of items in the pool
-inline i32 src_lim::targsrc_N() {
+inline i32 src_lim::targsrc_N() throw() {
     return _db.targsrc_n;
 }
 
 // --- src_lim.FDb.targsrc.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_lim::FTargsrc& src_lim::targsrc_qFind(u64 t) {
+inline src_lim::FTargsrc& src_lim::targsrc_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -172,13 +172,13 @@ inline src_lim::FTargsrc& src_lim::targsrc_qFind(u64 t) {
 
 // --- src_lim.FDb.gitfile.EmptyQ
 // Return true if index is empty
-inline bool src_lim::gitfile_EmptyQ() {
+inline bool src_lim::gitfile_EmptyQ() throw() {
     return _db.gitfile_n == 0;
 }
 
 // --- src_lim.FDb.gitfile.Find
 // Look up row by row id. Return NULL if out of range
-inline src_lim::FGitfile* src_lim::gitfile_Find(u64 t) {
+inline src_lim::FGitfile* src_lim::gitfile_Find(u64 t) throw() {
     src_lim::FGitfile *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.gitfile_n))) {
         u64 x = t + 1;
@@ -192,19 +192,19 @@ inline src_lim::FGitfile* src_lim::gitfile_Find(u64 t) {
 
 // --- src_lim.FDb.gitfile.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_lim::FGitfile* src_lim::gitfile_Last() {
+inline src_lim::FGitfile* src_lim::gitfile_Last() throw() {
     return gitfile_Find(u64(_db.gitfile_n-1));
 }
 
 // --- src_lim.FDb.gitfile.N
 // Return number of items in the pool
-inline i32 src_lim::gitfile_N() {
+inline i32 src_lim::gitfile_N() throw() {
     return _db.gitfile_n;
 }
 
 // --- src_lim.FDb.gitfile.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_lim::FGitfile& src_lim::gitfile_qFind(u64 t) {
+inline src_lim::FGitfile& src_lim::gitfile_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -214,25 +214,25 @@ inline src_lim::FGitfile& src_lim::gitfile_qFind(u64 t) {
 
 // --- src_lim.FDb.ind_gitfile.EmptyQ
 // Return true if hash is empty
-inline bool src_lim::ind_gitfile_EmptyQ() {
+inline bool src_lim::ind_gitfile_EmptyQ() throw() {
     return _db.ind_gitfile_n == 0;
 }
 
 // --- src_lim.FDb.ind_gitfile.N
 // Return number of items in the hash
-inline i32 src_lim::ind_gitfile_N() {
+inline i32 src_lim::ind_gitfile_N() throw() {
     return _db.ind_gitfile_n;
 }
 
 // --- src_lim.FDb.badline.EmptyQ
 // Return true if index is empty
-inline bool src_lim::badline_EmptyQ() {
+inline bool src_lim::badline_EmptyQ() throw() {
     return _db.badline_n == 0;
 }
 
 // --- src_lim.FDb.badline.Find
 // Look up row by row id. Return NULL if out of range
-inline src_lim::FBadline* src_lim::badline_Find(u64 t) {
+inline src_lim::FBadline* src_lim::badline_Find(u64 t) throw() {
     src_lim::FBadline *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.badline_n))) {
         u64 x = t + 1;
@@ -246,19 +246,19 @@ inline src_lim::FBadline* src_lim::badline_Find(u64 t) {
 
 // --- src_lim.FDb.badline.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline src_lim::FBadline* src_lim::badline_Last() {
+inline src_lim::FBadline* src_lim::badline_Last() throw() {
     return badline_Find(u64(_db.badline_n-1));
 }
 
 // --- src_lim.FDb.badline.N
 // Return number of items in the pool
-inline i32 src_lim::badline_N() {
+inline i32 src_lim::badline_N() throw() {
     return _db.badline_n;
 }
 
 // --- src_lim.FDb.badline.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline src_lim::FBadline& src_lim::badline_qFind(u64 t) {
+inline src_lim::FBadline& src_lim::badline_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -268,138 +268,138 @@ inline src_lim::FBadline& src_lim::badline_qFind(u64 t) {
 
 // --- src_lim.FDb.include_curs.Reset
 // cursor points to valid item
-inline void src_lim::_db_include_curs_Reset(_db_include_curs &curs, src_lim::FDb &parent) {
+inline void src_lim::_db_include_curs_Reset(_db_include_curs &curs, src_lim::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_lim.FDb.include_curs.ValidQ
 // cursor points to valid item
-inline bool src_lim::_db_include_curs_ValidQ(_db_include_curs &curs) {
+inline bool src_lim::_db_include_curs_ValidQ(_db_include_curs &curs) throw() {
     return curs.index < _db.include_n;
 }
 
 // --- src_lim.FDb.include_curs.Next
 // proceed to next item
-inline void src_lim::_db_include_curs_Next(_db_include_curs &curs) {
+inline void src_lim::_db_include_curs_Next(_db_include_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_lim.FDb.include_curs.Access
 // item access
-inline src_lim::FInclude& src_lim::_db_include_curs_Access(_db_include_curs &curs) {
+inline src_lim::FInclude& src_lim::_db_include_curs_Access(_db_include_curs &curs) throw() {
     return include_qFind(u64(curs.index));
 }
 
 // --- src_lim.FDb.linelim_curs.Reset
 // cursor points to valid item
-inline void src_lim::_db_linelim_curs_Reset(_db_linelim_curs &curs, src_lim::FDb &parent) {
+inline void src_lim::_db_linelim_curs_Reset(_db_linelim_curs &curs, src_lim::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_lim.FDb.linelim_curs.ValidQ
 // cursor points to valid item
-inline bool src_lim::_db_linelim_curs_ValidQ(_db_linelim_curs &curs) {
+inline bool src_lim::_db_linelim_curs_ValidQ(_db_linelim_curs &curs) throw() {
     return curs.index < _db.linelim_n;
 }
 
 // --- src_lim.FDb.linelim_curs.Next
 // proceed to next item
-inline void src_lim::_db_linelim_curs_Next(_db_linelim_curs &curs) {
+inline void src_lim::_db_linelim_curs_Next(_db_linelim_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_lim.FDb.linelim_curs.Access
 // item access
-inline src_lim::FLinelim& src_lim::_db_linelim_curs_Access(_db_linelim_curs &curs) {
+inline src_lim::FLinelim& src_lim::_db_linelim_curs_Access(_db_linelim_curs &curs) throw() {
     return linelim_qFind(u64(curs.index));
 }
 
 // --- src_lim.FDb.targsrc_curs.Reset
 // cursor points to valid item
-inline void src_lim::_db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_lim::FDb &parent) {
+inline void src_lim::_db_targsrc_curs_Reset(_db_targsrc_curs &curs, src_lim::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_lim.FDb.targsrc_curs.ValidQ
 // cursor points to valid item
-inline bool src_lim::_db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) {
+inline bool src_lim::_db_targsrc_curs_ValidQ(_db_targsrc_curs &curs) throw() {
     return curs.index < _db.targsrc_n;
 }
 
 // --- src_lim.FDb.targsrc_curs.Next
 // proceed to next item
-inline void src_lim::_db_targsrc_curs_Next(_db_targsrc_curs &curs) {
+inline void src_lim::_db_targsrc_curs_Next(_db_targsrc_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_lim.FDb.targsrc_curs.Access
 // item access
-inline src_lim::FTargsrc& src_lim::_db_targsrc_curs_Access(_db_targsrc_curs &curs) {
+inline src_lim::FTargsrc& src_lim::_db_targsrc_curs_Access(_db_targsrc_curs &curs) throw() {
     return targsrc_qFind(u64(curs.index));
 }
 
 // --- src_lim.FDb.gitfile_curs.Reset
 // cursor points to valid item
-inline void src_lim::_db_gitfile_curs_Reset(_db_gitfile_curs &curs, src_lim::FDb &parent) {
+inline void src_lim::_db_gitfile_curs_Reset(_db_gitfile_curs &curs, src_lim::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_lim.FDb.gitfile_curs.ValidQ
 // cursor points to valid item
-inline bool src_lim::_db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) {
+inline bool src_lim::_db_gitfile_curs_ValidQ(_db_gitfile_curs &curs) throw() {
     return curs.index < _db.gitfile_n;
 }
 
 // --- src_lim.FDb.gitfile_curs.Next
 // proceed to next item
-inline void src_lim::_db_gitfile_curs_Next(_db_gitfile_curs &curs) {
+inline void src_lim::_db_gitfile_curs_Next(_db_gitfile_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_lim.FDb.gitfile_curs.Access
 // item access
-inline src_lim::FGitfile& src_lim::_db_gitfile_curs_Access(_db_gitfile_curs &curs) {
+inline src_lim::FGitfile& src_lim::_db_gitfile_curs_Access(_db_gitfile_curs &curs) throw() {
     return gitfile_qFind(u64(curs.index));
 }
 
 // --- src_lim.FDb.badline_curs.Reset
 // cursor points to valid item
-inline void src_lim::_db_badline_curs_Reset(_db_badline_curs &curs, src_lim::FDb &parent) {
+inline void src_lim::_db_badline_curs_Reset(_db_badline_curs &curs, src_lim::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- src_lim.FDb.badline_curs.ValidQ
 // cursor points to valid item
-inline bool src_lim::_db_badline_curs_ValidQ(_db_badline_curs &curs) {
+inline bool src_lim::_db_badline_curs_ValidQ(_db_badline_curs &curs) throw() {
     return curs.index < _db.badline_n;
 }
 
 // --- src_lim.FDb.badline_curs.Next
 // proceed to next item
-inline void src_lim::_db_badline_curs_Next(_db_badline_curs &curs) {
+inline void src_lim::_db_badline_curs_Next(_db_badline_curs &curs) throw() {
     curs.index++;
 }
 
 // --- src_lim.FDb.badline_curs.Access
 // item access
-inline src_lim::FBadline& src_lim::_db_badline_curs_Access(_db_badline_curs &curs) {
+inline src_lim::FBadline& src_lim::_db_badline_curs_Access(_db_badline_curs &curs) throw() {
     return badline_qFind(u64(curs.index));
 }
 
 // --- src_lim.FGitfile.zd_include.EmptyQ
 // Return true if index is empty
-inline bool src_lim::zd_include_EmptyQ(src_lim::FGitfile& gitfile) {
+inline bool src_lim::zd_include_EmptyQ(src_lim::FGitfile& gitfile) throw() {
     return gitfile.zd_include_head == NULL;
 }
 
 // --- src_lim.FGitfile.zd_include.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline src_lim::FInclude* src_lim::zd_include_First(src_lim::FGitfile& gitfile) {
+inline src_lim::FInclude* src_lim::zd_include_First(src_lim::FGitfile& gitfile) throw() {
     src_lim::FInclude *row = NULL;
     row = gitfile.zd_include_head;
     return row;
@@ -407,7 +407,7 @@ inline src_lim::FInclude* src_lim::zd_include_First(src_lim::FGitfile& gitfile) 
 
 // --- src_lim.FGitfile.zd_include.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool src_lim::zd_include_InLlistQ(src_lim::FInclude& row) {
+inline bool src_lim::zd_include_InLlistQ(src_lim::FInclude& row) throw() {
     bool result = false;
     result = !(row.zd_include_next == (src_lim::FInclude*)-1);
     return result;
@@ -415,7 +415,7 @@ inline bool src_lim::zd_include_InLlistQ(src_lim::FInclude& row) {
 
 // --- src_lim.FGitfile.zd_include.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline src_lim::FInclude* src_lim::zd_include_Last(src_lim::FGitfile& gitfile) {
+inline src_lim::FInclude* src_lim::zd_include_Last(src_lim::FGitfile& gitfile) throw() {
     src_lim::FInclude *row = NULL;
     row = gitfile.zd_include_tail;
     return row;
@@ -423,25 +423,25 @@ inline src_lim::FInclude* src_lim::zd_include_Last(src_lim::FGitfile& gitfile) {
 
 // --- src_lim.FGitfile.zd_include.N
 // Return number of items in the linked list
-inline i32 src_lim::zd_include_N(const src_lim::FGitfile& gitfile) {
+inline i32 src_lim::zd_include_N(const src_lim::FGitfile& gitfile) throw() {
     return gitfile.zd_include_n;
 }
 
 // --- src_lim.FGitfile.zd_include.Next
 // Return pointer to next element in the list
-inline src_lim::FInclude* src_lim::zd_include_Next(src_lim::FInclude &row) {
+inline src_lim::FInclude* src_lim::zd_include_Next(src_lim::FInclude &row) throw() {
     return row.zd_include_next;
 }
 
 // --- src_lim.FGitfile.zd_include.Prev
 // Return pointer to previous element in the list
-inline src_lim::FInclude* src_lim::zd_include_Prev(src_lim::FInclude &row) {
+inline src_lim::FInclude* src_lim::zd_include_Prev(src_lim::FInclude &row) throw() {
     return row.zd_include_prev;
 }
 
 // --- src_lim.FGitfile.zd_include.qLast
 // Return reference to last element in the index. No bounds checking.
-inline src_lim::FInclude& src_lim::zd_include_qLast(src_lim::FGitfile& gitfile) {
+inline src_lim::FInclude& src_lim::zd_include_qLast(src_lim::FGitfile& gitfile) throw() {
     src_lim::FInclude *row = NULL;
     row = gitfile.zd_include_tail;
     return *row;
@@ -449,7 +449,7 @@ inline src_lim::FInclude& src_lim::zd_include_qLast(src_lim::FGitfile& gitfile) 
 
 // --- src_lim.FGitfile.c_linelim.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool src_lim::c_linelim_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::FLinelim& row) {
+inline bool src_lim::c_linelim_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::FLinelim& row) throw() {
     src_lim::FLinelim* ptr = gitfile.c_linelim;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
@@ -460,7 +460,7 @@ inline bool src_lim::c_linelim_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::
 
 // --- src_lim.FGitfile.c_linelim.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void src_lim::c_linelim_Remove(src_lim::FGitfile& gitfile, src_lim::FLinelim& row) {
+inline void src_lim::c_linelim_Remove(src_lim::FGitfile& gitfile, src_lim::FLinelim& row) throw() {
     src_lim::FLinelim *ptr = gitfile.c_linelim;
     if (LIKELY(ptr == &row)) {
         gitfile.c_linelim = NULL;
@@ -469,7 +469,7 @@ inline void src_lim::c_linelim_Remove(src_lim::FGitfile& gitfile, src_lim::FLine
 
 // --- src_lim.FGitfile.c_targsrc.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool src_lim::c_targsrc_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::FTargsrc& row) {
+inline bool src_lim::c_targsrc_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::FTargsrc& row) throw() {
     src_lim::FTargsrc* ptr = gitfile.c_targsrc;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
@@ -480,7 +480,7 @@ inline bool src_lim::c_targsrc_InsertMaybe(src_lim::FGitfile& gitfile, src_lim::
 
 // --- src_lim.FGitfile.c_targsrc.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void src_lim::c_targsrc_Remove(src_lim::FGitfile& gitfile, src_lim::FTargsrc& row) {
+inline void src_lim::c_targsrc_Remove(src_lim::FGitfile& gitfile, src_lim::FTargsrc& row) throw() {
     src_lim::FTargsrc *ptr = gitfile.c_targsrc;
     if (LIKELY(ptr == &row)) {
         gitfile.c_targsrc = NULL;
@@ -500,36 +500,36 @@ inline void src_lim::FGitfile_Init(src_lim::FGitfile& gitfile) {
 
 // --- src_lim.FGitfile.zd_include_curs.Reset
 // cursor points to valid item
-inline void src_lim::gitfile_zd_include_curs_Reset(gitfile_zd_include_curs &curs, src_lim::FGitfile &parent) {
+inline void src_lim::gitfile_zd_include_curs_Reset(gitfile_zd_include_curs &curs, src_lim::FGitfile &parent) throw() {
     curs.row = parent.zd_include_head;
 }
 
 // --- src_lim.FGitfile.zd_include_curs.ValidQ
 // cursor points to valid item
-inline bool src_lim::gitfile_zd_include_curs_ValidQ(gitfile_zd_include_curs &curs) {
+inline bool src_lim::gitfile_zd_include_curs_ValidQ(gitfile_zd_include_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- src_lim.FGitfile.zd_include_curs.Next
 // proceed to next item
-inline void src_lim::gitfile_zd_include_curs_Next(gitfile_zd_include_curs &curs) {
+inline void src_lim::gitfile_zd_include_curs_Next(gitfile_zd_include_curs &curs) throw() {
     src_lim::FInclude *next = (*curs.row).zd_include_next;
     curs.row = next;
 }
 
 // --- src_lim.FGitfile.zd_include_curs.Access
 // item access
-inline src_lim::FInclude& src_lim::gitfile_zd_include_curs_Access(gitfile_zd_include_curs &curs) {
+inline src_lim::FInclude& src_lim::gitfile_zd_include_curs_Access(gitfile_zd_include_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- src_lim.FGitfile..Ctor
-inline  src_lim::FGitfile::FGitfile() {
+inline  src_lim::FGitfile::FGitfile() throw() {
     src_lim::FGitfile_Init(*this);
 }
 
 // --- src_lim.FGitfile..Dtor
-inline  src_lim::FGitfile::~FGitfile() {
+inline  src_lim::FGitfile::~FGitfile() throw() {
     src_lim::FGitfile_Uninit(*this);
 }
 
@@ -542,12 +542,12 @@ inline void src_lim::FInclude_Init(src_lim::FInclude& include) {
 }
 
 // --- src_lim.FInclude..Ctor
-inline  src_lim::FInclude::FInclude() {
+inline  src_lim::FInclude::FInclude() throw() {
     src_lim::FInclude_Init(*this);
 }
 
 // --- src_lim.FInclude..Dtor
-inline  src_lim::FInclude::~FInclude() {
+inline  src_lim::FInclude::~FInclude() throw() {
     src_lim::FInclude_Uninit(*this);
 }
 
@@ -564,12 +564,12 @@ inline void src_lim::FLinelim_Init(src_lim::FLinelim& linelim) {
 }
 
 // --- src_lim.FLinelim..Ctor
-inline  src_lim::FLinelim::FLinelim() {
+inline  src_lim::FLinelim::FLinelim() throw() {
     src_lim::FLinelim_Init(*this);
 }
 
 // --- src_lim.FLinelim..Dtor
-inline  src_lim::FLinelim::~FLinelim() {
+inline  src_lim::FLinelim::~FLinelim() throw() {
     src_lim::FLinelim_Uninit(*this);
 }
 
@@ -581,29 +581,29 @@ inline void src_lim::FTargsrc_Init(src_lim::FTargsrc& targsrc) {
 }
 
 // --- src_lim.FTargsrc..Ctor
-inline  src_lim::FTargsrc::FTargsrc() {
+inline  src_lim::FTargsrc::FTargsrc() throw() {
     src_lim::FTargsrc_Init(*this);
 }
 
 // --- src_lim.FTargsrc..Dtor
-inline  src_lim::FTargsrc::~FTargsrc() {
+inline  src_lim::FTargsrc::~FTargsrc() throw() {
     src_lim::FTargsrc_Uninit(*this);
 }
 
 // --- src_lim.FieldId.value.GetEnum
 // Get value of field as enum type
-inline src_lim_FieldIdEnum src_lim::value_GetEnum(const src_lim::FieldId& parent) {
+inline src_lim_FieldIdEnum src_lim::value_GetEnum(const src_lim::FieldId& parent) throw() {
     return src_lim_FieldIdEnum(parent.value);
 }
 
 // --- src_lim.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void src_lim::value_SetEnum(src_lim::FieldId& parent, src_lim_FieldIdEnum rhs) {
+inline void src_lim::value_SetEnum(src_lim::FieldId& parent, src_lim_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- src_lim.FieldId.value.Cast
-inline  src_lim::FieldId::operator src_lim_FieldIdEnum() const {
+inline  src_lim::FieldId::operator src_lim_FieldIdEnum() const throw() {
     return src_lim_FieldIdEnum((*this).value);
 }
 
@@ -614,35 +614,35 @@ inline void src_lim::FieldId_Init(src_lim::FieldId& parent) {
 }
 
 // --- src_lim.FieldId..Ctor
-inline  src_lim::FieldId::FieldId() {
+inline  src_lim::FieldId::FieldId() throw() {
     src_lim::FieldId_Init(*this);
 }
 
 // --- src_lim.FieldId..FieldwiseCtor
-inline  src_lim::FieldId::FieldId(i32 in_value)
+inline  src_lim::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- src_lim.FieldId..EnumCtor
-inline  src_lim::FieldId::FieldId(src_lim_FieldIdEnum arg) {
+inline  src_lim::FieldId::FieldId(src_lim_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- src_lim.TableId.value.GetEnum
 // Get value of field as enum type
-inline src_lim_TableIdEnum src_lim::value_GetEnum(const src_lim::TableId& parent) {
+inline src_lim_TableIdEnum src_lim::value_GetEnum(const src_lim::TableId& parent) throw() {
     return src_lim_TableIdEnum(parent.value);
 }
 
 // --- src_lim.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void src_lim::value_SetEnum(src_lim::TableId& parent, src_lim_TableIdEnum rhs) {
+inline void src_lim::value_SetEnum(src_lim::TableId& parent, src_lim_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- src_lim.TableId.value.Cast
-inline  src_lim::TableId::operator src_lim_TableIdEnum() const {
+inline  src_lim::TableId::operator src_lim_TableIdEnum() const throw() {
     return src_lim_TableIdEnum((*this).value);
 }
 
@@ -653,18 +653,18 @@ inline void src_lim::TableId_Init(src_lim::TableId& parent) {
 }
 
 // --- src_lim.TableId..Ctor
-inline  src_lim::TableId::TableId() {
+inline  src_lim::TableId::TableId() throw() {
     src_lim::TableId_Init(*this);
 }
 
 // --- src_lim.TableId..FieldwiseCtor
-inline  src_lim::TableId::TableId(i32 in_value)
+inline  src_lim::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- src_lim.TableId..EnumCtor
-inline  src_lim::TableId::TableId(src_lim_TableIdEnum arg) {
+inline  src_lim::TableId::TableId(src_lim_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

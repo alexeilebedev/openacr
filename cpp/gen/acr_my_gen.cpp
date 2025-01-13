@@ -86,7 +86,7 @@ namespace acr_my { // gen:ns_print_proto
 // --- acr_my.trace..Print
 // print string representation of ROW to string STR
 // cfmt:acr_my.trace.String  printfmt:Tuple
-void acr_my::trace_Print(acr_my::trace& row, algo::cstring& str) {
+void acr_my::trace_Print(acr_my::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "acr_my.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -96,7 +96,7 @@ void acr_my::trace_Print(acr_my::trace& row, algo::cstring& str) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> acr_my::ary_ns_Addary(algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> acr_my::ary_ns_Addary(algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.ary_ns_elems && rhs.elems < _db.ary_ns_elems + _db.ary_ns_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("acr_my.tary_alias  field:acr_my.FDb.ary_ns  comment:'alias error: sub-array is being appended to the whole'");
@@ -114,7 +114,7 @@ algo::aryptr<algo::cstring> acr_my::ary_ns_Addary(algo::aryptr<algo::cstring> rh
 // --- acr_my.FDb.ary_ns.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& acr_my::ary_ns_Alloc() {
+algo::cstring& acr_my::ary_ns_Alloc() throw() {
     ary_ns_Reserve(1);
     int n  = _db.ary_ns_n;
     int at = n;
@@ -127,7 +127,7 @@ algo::cstring& acr_my::ary_ns_Alloc() {
 // --- acr_my.FDb.ary_ns.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& acr_my::ary_ns_AllocAt(int at) {
+algo::cstring& acr_my::ary_ns_AllocAt(int at) throw() {
     ary_ns_Reserve(1);
     int n  = _db.ary_ns_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -142,7 +142,7 @@ algo::cstring& acr_my::ary_ns_AllocAt(int at) {
 
 // --- acr_my.FDb.ary_ns.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> acr_my::ary_ns_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> acr_my::ary_ns_AllocN(int n_elems) throw() {
     ary_ns_Reserve(n_elems);
     int old_n  = _db.ary_ns_n;
     int new_n = old_n + n_elems;
@@ -156,7 +156,7 @@ algo::aryptr<algo::cstring> acr_my::ary_ns_AllocN(int n_elems) {
 
 // --- acr_my.FDb.ary_ns.Remove
 // Remove item by index. If index outside of range, do nothing.
-void acr_my::ary_ns_Remove(u32 i) {
+void acr_my::ary_ns_Remove(u32 i) throw() {
     u32 lim = _db.ary_ns_n;
     algo::cstring *elems = _db.ary_ns_elems;
     if (i < lim) {
@@ -167,7 +167,7 @@ void acr_my::ary_ns_Remove(u32 i) {
 }
 
 // --- acr_my.FDb.ary_ns.RemoveAll
-void acr_my::ary_ns_RemoveAll() {
+void acr_my::ary_ns_RemoveAll() throw() {
     u32 n = _db.ary_ns_n;
     while (n > 0) {
         n -= 1;
@@ -178,7 +178,7 @@ void acr_my::ary_ns_RemoveAll() {
 
 // --- acr_my.FDb.ary_ns.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void acr_my::ary_ns_RemoveLast() {
+void acr_my::ary_ns_RemoveLast() throw() {
     u64 n = _db.ary_ns_n;
     if (n > 0) {
         n -= 1;
@@ -189,7 +189,7 @@ void acr_my::ary_ns_RemoveLast() {
 
 // --- acr_my.FDb.ary_ns.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void acr_my::ary_ns_AbsReserve(int n) {
+void acr_my::ary_ns_AbsReserve(int n) throw() {
     u32 old_max  = _db.ary_ns_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -204,7 +204,7 @@ void acr_my::ary_ns_AbsReserve(int n) {
 
 // --- acr_my.FDb.ary_ns.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> acr_my::ary_ns_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> acr_my::ary_ns_AllocNVal(int n_elems, const algo::cstring& val) throw() {
     ary_ns_Reserve(n_elems);
     int old_n  = _db.ary_ns_n;
     int new_n = old_n + n_elems;
@@ -220,7 +220,7 @@ algo::aryptr<algo::cstring> acr_my::ary_ns_AllocNVal(int n_elems, const algo::cs
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool acr_my::ary_ns_ReadStrptrMaybe(algo::strptr in_str) {
+bool acr_my::ary_ns_ReadStrptrMaybe(algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = ary_ns_Alloc();
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -235,7 +235,7 @@ bool acr_my::ary_ns_ReadStrptrMaybe(algo::strptr in_str) {
 // The following fields are updated:
 //     acr_my.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void acr_my::ReadArgv() {
+void acr_my::ReadArgv() throw() {
     command::acr_my &cmd = acr_my::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -451,7 +451,7 @@ bool acr_my::InsertStrptrMaybe(algo::strptr str) {
 
 // --- acr_my.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool acr_my::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool acr_my::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = acr_my::LoadTuplesFile(root, recursive);
@@ -476,7 +476,7 @@ bool acr_my::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool acr_my::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool acr_my::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -489,7 +489,7 @@ bool acr_my::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- acr_my.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool acr_my::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool acr_my::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -509,7 +509,7 @@ bool acr_my::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
 
 // --- acr_my.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool acr_my::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool acr_my::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = acr_my::LoadTuplesFile(fname, recursive);
@@ -534,7 +534,7 @@ bool acr_my::_db_XrefMaybe() {
 // --- acr_my.FDb.nsdb.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-acr_my::FNsdb& acr_my::nsdb_Alloc() {
+acr_my::FNsdb& acr_my::nsdb_Alloc() throw() {
     acr_my::FNsdb* row = nsdb_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("acr_my.out_of_mem  field:acr_my.FDb.nsdb  comment:'Alloc failed'");
@@ -544,7 +544,7 @@ acr_my::FNsdb& acr_my::nsdb_Alloc() {
 
 // --- acr_my.FDb.nsdb.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-acr_my::FNsdb* acr_my::nsdb_AllocMaybe() {
+acr_my::FNsdb* acr_my::nsdb_AllocMaybe() throw() {
     acr_my::FNsdb *row = (acr_my::FNsdb*)nsdb_AllocMem();
     if (row) {
         new (row) acr_my::FNsdb; // call constructor
@@ -555,7 +555,7 @@ acr_my::FNsdb* acr_my::nsdb_AllocMaybe() {
 // --- acr_my.FDb.nsdb.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-acr_my::FNsdb* acr_my::nsdb_InsertMaybe(const dmmeta::Nsdb &value) {
+acr_my::FNsdb* acr_my::nsdb_InsertMaybe(const dmmeta::Nsdb &value) throw() {
     acr_my::FNsdb *row = &nsdb_Alloc(); // if out of memory, process dies. if input error, return NULL.
     nsdb_CopyIn(*row,const_cast<dmmeta::Nsdb&>(value));
     bool ok = nsdb_XrefMaybe(*row); // this may return false
@@ -568,7 +568,7 @@ acr_my::FNsdb* acr_my::nsdb_InsertMaybe(const dmmeta::Nsdb &value) {
 
 // --- acr_my.FDb.nsdb.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* acr_my::nsdb_AllocMem() {
+void* acr_my::nsdb_AllocMem() throw() {
     u64 new_nelems     = _db.nsdb_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -594,7 +594,7 @@ void* acr_my::nsdb_AllocMem() {
 
 // --- acr_my.FDb.nsdb.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void acr_my::nsdb_RemoveLast() {
+void acr_my::nsdb_RemoveLast() throw() {
     u64 n = _db.nsdb_n;
     if (n > 0) {
         n -= 1;
@@ -604,7 +604,7 @@ void acr_my::nsdb_RemoveLast() {
 }
 
 // --- acr_my.FDb.nsdb.InputMaybe
-static bool acr_my::nsdb_InputMaybe(dmmeta::Nsdb &elem) {
+static bool acr_my::nsdb_InputMaybe(dmmeta::Nsdb &elem) throw() {
     bool retval = true;
     retval = nsdb_InsertMaybe(elem) != nullptr;
     return retval;
@@ -622,7 +622,7 @@ bool acr_my::nsdb_XrefMaybe(acr_my::FNsdb &row) {
 // --- acr_my.FDb.ssimfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-acr_my::FSsimfile& acr_my::ssimfile_Alloc() {
+acr_my::FSsimfile& acr_my::ssimfile_Alloc() throw() {
     acr_my::FSsimfile* row = ssimfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("acr_my.out_of_mem  field:acr_my.FDb.ssimfile  comment:'Alloc failed'");
@@ -632,7 +632,7 @@ acr_my::FSsimfile& acr_my::ssimfile_Alloc() {
 
 // --- acr_my.FDb.ssimfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-acr_my::FSsimfile* acr_my::ssimfile_AllocMaybe() {
+acr_my::FSsimfile* acr_my::ssimfile_AllocMaybe() throw() {
     acr_my::FSsimfile *row = (acr_my::FSsimfile*)ssimfile_AllocMem();
     if (row) {
         new (row) acr_my::FSsimfile; // call constructor
@@ -643,7 +643,7 @@ acr_my::FSsimfile* acr_my::ssimfile_AllocMaybe() {
 // --- acr_my.FDb.ssimfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-acr_my::FSsimfile* acr_my::ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) {
+acr_my::FSsimfile* acr_my::ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) throw() {
     acr_my::FSsimfile *row = &ssimfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ssimfile_CopyIn(*row,const_cast<dmmeta::Ssimfile&>(value));
     bool ok = ssimfile_XrefMaybe(*row); // this may return false
@@ -656,7 +656,7 @@ acr_my::FSsimfile* acr_my::ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) {
 
 // --- acr_my.FDb.ssimfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* acr_my::ssimfile_AllocMem() {
+void* acr_my::ssimfile_AllocMem() throw() {
     u64 new_nelems     = _db.ssimfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -682,7 +682,7 @@ void* acr_my::ssimfile_AllocMem() {
 
 // --- acr_my.FDb.ssimfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void acr_my::ssimfile_RemoveLast() {
+void acr_my::ssimfile_RemoveLast() throw() {
     u64 n = _db.ssimfile_n;
     if (n > 0) {
         n -= 1;
@@ -692,7 +692,7 @@ void acr_my::ssimfile_RemoveLast() {
 }
 
 // --- acr_my.FDb.ssimfile.InputMaybe
-static bool acr_my::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) {
+static bool acr_my::ssimfile_InputMaybe(dmmeta::Ssimfile &elem) throw() {
     bool retval = true;
     retval = ssimfile_InsertMaybe(elem) != nullptr;
     return retval;
@@ -709,13 +709,13 @@ bool acr_my::ssimfile_XrefMaybe(acr_my::FSsimfile &row) {
 
 // --- acr_my.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr acr_my::trace_RowidFind(int t) {
+static algo::ImrowPtr acr_my::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- acr_my.FDb.trace.N
 // Function return 1
-inline static i32 acr_my::trace_N() {
+inline static i32 acr_my::trace_N() throw() {
     return 1;
 }
 
@@ -753,7 +753,7 @@ void acr_my::FDb_Init() {
 }
 
 // --- acr_my.FDb..Uninit
-void acr_my::FDb_Uninit() {
+void acr_my::FDb_Uninit() throw() {
     acr_my::FDb &row = _db; (void)row;
 
     // acr_my.FDb.ssimfile.Uninit (Lary)  //
@@ -771,46 +771,46 @@ void acr_my::FDb_Uninit() {
 
 // --- acr_my.FNsdb.base.CopyOut
 // Copy fields out of row
-void acr_my::nsdb_CopyOut(acr_my::FNsdb &row, dmmeta::Nsdb &out) {
+void acr_my::nsdb_CopyOut(acr_my::FNsdb &row, dmmeta::Nsdb &out) throw() {
     out.ns = row.ns;
     out.comment = row.comment;
 }
 
 // --- acr_my.FNsdb.base.CopyIn
 // Copy fields in to row
-void acr_my::nsdb_CopyIn(acr_my::FNsdb &row, dmmeta::Nsdb &in) {
+void acr_my::nsdb_CopyIn(acr_my::FNsdb &row, dmmeta::Nsdb &in) throw() {
     row.ns = in.ns;
     row.comment = in.comment;
 }
 
 // --- acr_my.FSsimfile.base.CopyOut
 // Copy fields out of row
-void acr_my::ssimfile_CopyOut(acr_my::FSsimfile &row, dmmeta::Ssimfile &out) {
+void acr_my::ssimfile_CopyOut(acr_my::FSsimfile &row, dmmeta::Ssimfile &out) throw() {
     out.ssimfile = row.ssimfile;
     out.ctype = row.ctype;
 }
 
 // --- acr_my.FSsimfile.base.CopyIn
 // Copy fields in to row
-void acr_my::ssimfile_CopyIn(acr_my::FSsimfile &row, dmmeta::Ssimfile &in) {
+void acr_my::ssimfile_CopyIn(acr_my::FSsimfile &row, dmmeta::Ssimfile &in) throw() {
     row.ssimfile = in.ssimfile;
     row.ctype = in.ctype;
 }
 
 // --- acr_my.FSsimfile.ssimns.Get
-algo::Smallstr16 acr_my::ssimns_Get(acr_my::FSsimfile& ssimfile) {
+algo::Smallstr16 acr_my::ssimns_Get(acr_my::FSsimfile& ssimfile) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
     return ret;
 }
 
 // --- acr_my.FSsimfile.ns.Get
-algo::Smallstr16 acr_my::ns_Get(acr_my::FSsimfile& ssimfile) {
+algo::Smallstr16 acr_my::ns_Get(acr_my::FSsimfile& ssimfile) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(ssimfile.ssimfile, ".LL"));
     return ret;
 }
 
 // --- acr_my.FSsimfile.name.Get
-algo::Smallstr50 acr_my::name_Get(acr_my::FSsimfile& ssimfile) {
+algo::Smallstr50 acr_my::name_Get(acr_my::FSsimfile& ssimfile) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(ssimfile.ssimfile, ".RR"));
     return ret;
 }
@@ -818,7 +818,7 @@ algo::Smallstr50 acr_my::name_Get(acr_my::FSsimfile& ssimfile) {
 // --- acr_my.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* acr_my::value_ToCstr(const acr_my::FieldId& parent) {
+const char* acr_my::value_ToCstr(const acr_my::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case acr_my_FieldId_value          : ret = "value";  break;
@@ -829,7 +829,7 @@ const char* acr_my::value_ToCstr(const acr_my::FieldId& parent) {
 // --- acr_my.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void acr_my::value_Print(const acr_my::FieldId& parent, algo::cstring &lhs) {
+void acr_my::value_Print(const acr_my::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -842,7 +842,7 @@ void acr_my::value_Print(const acr_my::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool acr_my::value_SetStrptrMaybe(acr_my::FieldId& parent, algo::strptr rhs) {
+bool acr_my::value_SetStrptrMaybe(acr_my::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -860,13 +860,13 @@ bool acr_my::value_SetStrptrMaybe(acr_my::FieldId& parent, algo::strptr rhs) {
 // --- acr_my.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void acr_my::value_SetStrptr(acr_my::FieldId& parent, algo::strptr rhs, acr_my_FieldIdEnum dflt) {
+void acr_my::value_SetStrptr(acr_my::FieldId& parent, algo::strptr rhs, acr_my_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- acr_my.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool acr_my::value_ReadStrptrMaybe(acr_my::FieldId& parent, algo::strptr rhs) {
+bool acr_my::value_ReadStrptrMaybe(acr_my::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -878,7 +878,7 @@ bool acr_my::value_ReadStrptrMaybe(acr_my::FieldId& parent, algo::strptr rhs) {
 // --- acr_my.FieldId..ReadStrptrMaybe
 // Read fields of acr_my::FieldId from an ascii string.
 // The format of the string is the format of the acr_my::FieldId's only field
-bool acr_my::FieldId_ReadStrptrMaybe(acr_my::FieldId &parent, algo::strptr in_str) {
+bool acr_my::FieldId_ReadStrptrMaybe(acr_my::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -887,14 +887,14 @@ bool acr_my::FieldId_ReadStrptrMaybe(acr_my::FieldId &parent, algo::strptr in_st
 // --- acr_my.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:acr_my.FieldId.String  printfmt:Raw
-void acr_my::FieldId_Print(acr_my::FieldId& row, algo::cstring& str) {
+void acr_my::FieldId_Print(acr_my::FieldId& row, algo::cstring& str) throw() {
     acr_my::value_Print(row, str);
 }
 
 // --- acr_my.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* acr_my::value_ToCstr(const acr_my::TableId& parent) {
+const char* acr_my::value_ToCstr(const acr_my::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case acr_my_TableId_dmmeta_Nsdb    : ret = "dmmeta.Nsdb";  break;
@@ -906,7 +906,7 @@ const char* acr_my::value_ToCstr(const acr_my::TableId& parent) {
 // --- acr_my.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void acr_my::value_Print(const acr_my::TableId& parent, algo::cstring &lhs) {
+void acr_my::value_Print(const acr_my::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -919,7 +919,7 @@ void acr_my::value_Print(const acr_my::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool acr_my::value_SetStrptrMaybe(acr_my::TableId& parent, algo::strptr rhs) {
+bool acr_my::value_SetStrptrMaybe(acr_my::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 11: {
@@ -955,13 +955,13 @@ bool acr_my::value_SetStrptrMaybe(acr_my::TableId& parent, algo::strptr rhs) {
 // --- acr_my.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void acr_my::value_SetStrptr(acr_my::TableId& parent, algo::strptr rhs, acr_my_TableIdEnum dflt) {
+void acr_my::value_SetStrptr(acr_my::TableId& parent, algo::strptr rhs, acr_my_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- acr_my.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool acr_my::value_ReadStrptrMaybe(acr_my::TableId& parent, algo::strptr rhs) {
+bool acr_my::value_ReadStrptrMaybe(acr_my::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -973,7 +973,7 @@ bool acr_my::value_ReadStrptrMaybe(acr_my::TableId& parent, algo::strptr rhs) {
 // --- acr_my.TableId..ReadStrptrMaybe
 // Read fields of acr_my::TableId from an ascii string.
 // The format of the string is the format of the acr_my::TableId's only field
-bool acr_my::TableId_ReadStrptrMaybe(acr_my::TableId &parent, algo::strptr in_str) {
+bool acr_my::TableId_ReadStrptrMaybe(acr_my::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -982,7 +982,7 @@ bool acr_my::TableId_ReadStrptrMaybe(acr_my::TableId &parent, algo::strptr in_st
 // --- acr_my.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:acr_my.TableId.String  printfmt:Raw
-void acr_my::TableId_Print(acr_my::TableId& row, algo::cstring& str) {
+void acr_my::TableId_Print(acr_my::TableId& row, algo::cstring& str) throw() {
     acr_my::value_Print(row, str);
 }
 

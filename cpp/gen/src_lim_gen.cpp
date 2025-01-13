@@ -88,7 +88,7 @@ namespace src_lim { // gen:ns_print_proto
 
 // --- src_lim.FBadline.base.CopyOut
 // Copy fields out of row
-void src_lim::badline_CopyOut(src_lim::FBadline &row, dev::Badline &out) {
+void src_lim::badline_CopyOut(src_lim::FBadline &row, dev::Badline &out) throw() {
     out.badline = row.badline;
     out.expr = row.expr;
     out.targsrc_regx = row.targsrc_regx;
@@ -97,7 +97,7 @@ void src_lim::badline_CopyOut(src_lim::FBadline &row, dev::Badline &out) {
 
 // --- src_lim.FBadline.base.CopyIn
 // Copy fields in to row
-void src_lim::badline_CopyIn(src_lim::FBadline &row, dev::Badline &in) {
+void src_lim::badline_CopyIn(src_lim::FBadline &row, dev::Badline &in) throw() {
     row.badline = in.badline;
     row.expr = in.expr;
     row.targsrc_regx = in.targsrc_regx;
@@ -107,7 +107,7 @@ void src_lim::badline_CopyIn(src_lim::FBadline &row, dev::Badline &in) {
 // --- src_lim.trace..Print
 // print string representation of ROW to string STR
 // cfmt:src_lim.trace.String  printfmt:Tuple
-void src_lim::trace_Print(src_lim::trace& row, algo::cstring& str) {
+void src_lim::trace_Print(src_lim::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "src_lim.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -116,7 +116,7 @@ void src_lim::trace_Print(src_lim::trace& row, algo::cstring& str) {
 // --- src_lim.FDb.include.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_lim::FInclude& src_lim::include_Alloc() {
+src_lim::FInclude& src_lim::include_Alloc() throw() {
     src_lim::FInclude* row = include_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_lim.out_of_mem  field:src_lim.FDb.include  comment:'Alloc failed'");
@@ -126,7 +126,7 @@ src_lim::FInclude& src_lim::include_Alloc() {
 
 // --- src_lim.FDb.include.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_lim::FInclude* src_lim::include_AllocMaybe() {
+src_lim::FInclude* src_lim::include_AllocMaybe() throw() {
     src_lim::FInclude *row = (src_lim::FInclude*)include_AllocMem();
     if (row) {
         new (row) src_lim::FInclude; // call constructor
@@ -137,7 +137,7 @@ src_lim::FInclude* src_lim::include_AllocMaybe() {
 // --- src_lim.FDb.include.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_lim::FInclude* src_lim::include_InsertMaybe(const dev::Include &value) {
+src_lim::FInclude* src_lim::include_InsertMaybe(const dev::Include &value) throw() {
     src_lim::FInclude *row = &include_Alloc(); // if out of memory, process dies. if input error, return NULL.
     include_CopyIn(*row,const_cast<dev::Include&>(value));
     bool ok = include_XrefMaybe(*row); // this may return false
@@ -150,7 +150,7 @@ src_lim::FInclude* src_lim::include_InsertMaybe(const dev::Include &value) {
 
 // --- src_lim.FDb.include.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_lim::include_AllocMem() {
+void* src_lim::include_AllocMem() throw() {
     u64 new_nelems     = _db.include_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -176,7 +176,7 @@ void* src_lim::include_AllocMem() {
 
 // --- src_lim.FDb.include.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_lim::include_RemoveLast() {
+void src_lim::include_RemoveLast() throw() {
     u64 n = _db.include_n;
     if (n > 0) {
         n -= 1;
@@ -186,7 +186,7 @@ void src_lim::include_RemoveLast() {
 }
 
 // --- src_lim.FDb.include.InputMaybe
-static bool src_lim::include_InputMaybe(dev::Include &elem) {
+static bool src_lim::include_InputMaybe(dev::Include &elem) throw() {
     bool retval = true;
     retval = include_InsertMaybe(elem) != nullptr;
     return retval;
@@ -204,7 +204,7 @@ bool src_lim::include_XrefMaybe(src_lim::FInclude &row) {
 // --- src_lim.FDb.linelim.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_lim::FLinelim& src_lim::linelim_Alloc() {
+src_lim::FLinelim& src_lim::linelim_Alloc() throw() {
     src_lim::FLinelim* row = linelim_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_lim.out_of_mem  field:src_lim.FDb.linelim  comment:'Alloc failed'");
@@ -214,7 +214,7 @@ src_lim::FLinelim& src_lim::linelim_Alloc() {
 
 // --- src_lim.FDb.linelim.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_lim::FLinelim* src_lim::linelim_AllocMaybe() {
+src_lim::FLinelim* src_lim::linelim_AllocMaybe() throw() {
     src_lim::FLinelim *row = (src_lim::FLinelim*)linelim_AllocMem();
     if (row) {
         new (row) src_lim::FLinelim; // call constructor
@@ -225,7 +225,7 @@ src_lim::FLinelim* src_lim::linelim_AllocMaybe() {
 // --- src_lim.FDb.linelim.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_lim::FLinelim* src_lim::linelim_InsertMaybe(const dev::Linelim &value) {
+src_lim::FLinelim* src_lim::linelim_InsertMaybe(const dev::Linelim &value) throw() {
     src_lim::FLinelim *row = &linelim_Alloc(); // if out of memory, process dies. if input error, return NULL.
     linelim_CopyIn(*row,const_cast<dev::Linelim&>(value));
     bool ok = linelim_XrefMaybe(*row); // this may return false
@@ -238,7 +238,7 @@ src_lim::FLinelim* src_lim::linelim_InsertMaybe(const dev::Linelim &value) {
 
 // --- src_lim.FDb.linelim.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_lim::linelim_AllocMem() {
+void* src_lim::linelim_AllocMem() throw() {
     u64 new_nelems     = _db.linelim_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -264,7 +264,7 @@ void* src_lim::linelim_AllocMem() {
 
 // --- src_lim.FDb.linelim.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_lim::linelim_RemoveLast() {
+void src_lim::linelim_RemoveLast() throw() {
     u64 n = _db.linelim_n;
     if (n > 0) {
         n -= 1;
@@ -274,7 +274,7 @@ void src_lim::linelim_RemoveLast() {
 }
 
 // --- src_lim.FDb.linelim.InputMaybe
-static bool src_lim::linelim_InputMaybe(dev::Linelim &elem) {
+static bool src_lim::linelim_InputMaybe(dev::Linelim &elem) throw() {
     bool retval = true;
     retval = linelim_InsertMaybe(elem) != nullptr;
     return retval;
@@ -308,7 +308,7 @@ bool src_lim::linelim_XrefMaybe(src_lim::FLinelim &row) {
 // The following fields are updated:
 //     src_lim.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void src_lim::ReadArgv() {
+void src_lim::ReadArgv() throw() {
     command::src_lim &cmd = src_lim::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -529,7 +529,7 @@ bool src_lim::InsertStrptrMaybe(algo::strptr str) {
 
 // --- src_lim.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool src_lim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool src_lim::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = src_lim::LoadTuplesFile(root, recursive);
@@ -557,7 +557,7 @@ bool src_lim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool src_lim::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool src_lim::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -570,7 +570,7 @@ bool src_lim::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- src_lim.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool src_lim::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool src_lim::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -590,7 +590,7 @@ bool src_lim::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) 
 
 // --- src_lim.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool src_lim::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool src_lim::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = src_lim::LoadTuplesFile(fname, recursive);
@@ -615,7 +615,7 @@ bool src_lim::_db_XrefMaybe() {
 // --- src_lim.FDb.targsrc.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_lim::FTargsrc& src_lim::targsrc_Alloc() {
+src_lim::FTargsrc& src_lim::targsrc_Alloc() throw() {
     src_lim::FTargsrc* row = targsrc_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_lim.out_of_mem  field:src_lim.FDb.targsrc  comment:'Alloc failed'");
@@ -625,7 +625,7 @@ src_lim::FTargsrc& src_lim::targsrc_Alloc() {
 
 // --- src_lim.FDb.targsrc.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_lim::FTargsrc* src_lim::targsrc_AllocMaybe() {
+src_lim::FTargsrc* src_lim::targsrc_AllocMaybe() throw() {
     src_lim::FTargsrc *row = (src_lim::FTargsrc*)targsrc_AllocMem();
     if (row) {
         new (row) src_lim::FTargsrc; // call constructor
@@ -636,7 +636,7 @@ src_lim::FTargsrc* src_lim::targsrc_AllocMaybe() {
 // --- src_lim.FDb.targsrc.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_lim::FTargsrc* src_lim::targsrc_InsertMaybe(const dev::Targsrc &value) {
+src_lim::FTargsrc* src_lim::targsrc_InsertMaybe(const dev::Targsrc &value) throw() {
     src_lim::FTargsrc *row = &targsrc_Alloc(); // if out of memory, process dies. if input error, return NULL.
     targsrc_CopyIn(*row,const_cast<dev::Targsrc&>(value));
     bool ok = targsrc_XrefMaybe(*row); // this may return false
@@ -649,7 +649,7 @@ src_lim::FTargsrc* src_lim::targsrc_InsertMaybe(const dev::Targsrc &value) {
 
 // --- src_lim.FDb.targsrc.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_lim::targsrc_AllocMem() {
+void* src_lim::targsrc_AllocMem() throw() {
     u64 new_nelems     = _db.targsrc_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -675,7 +675,7 @@ void* src_lim::targsrc_AllocMem() {
 
 // --- src_lim.FDb.targsrc.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_lim::targsrc_RemoveLast() {
+void src_lim::targsrc_RemoveLast() throw() {
     u64 n = _db.targsrc_n;
     if (n > 0) {
         n -= 1;
@@ -685,7 +685,7 @@ void src_lim::targsrc_RemoveLast() {
 }
 
 // --- src_lim.FDb.targsrc.InputMaybe
-static bool src_lim::targsrc_InputMaybe(dev::Targsrc &elem) {
+static bool src_lim::targsrc_InputMaybe(dev::Targsrc &elem) throw() {
     bool retval = true;
     retval = targsrc_InsertMaybe(elem) != nullptr;
     return retval;
@@ -721,7 +721,7 @@ bool src_lim::targsrc_XrefMaybe(src_lim::FTargsrc &row) {
 // --- src_lim.FDb.gitfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_lim::FGitfile& src_lim::gitfile_Alloc() {
+src_lim::FGitfile& src_lim::gitfile_Alloc() throw() {
     src_lim::FGitfile* row = gitfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_lim.out_of_mem  field:src_lim.FDb.gitfile  comment:'Alloc failed'");
@@ -731,7 +731,7 @@ src_lim::FGitfile& src_lim::gitfile_Alloc() {
 
 // --- src_lim.FDb.gitfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_lim::FGitfile* src_lim::gitfile_AllocMaybe() {
+src_lim::FGitfile* src_lim::gitfile_AllocMaybe() throw() {
     src_lim::FGitfile *row = (src_lim::FGitfile*)gitfile_AllocMem();
     if (row) {
         new (row) src_lim::FGitfile; // call constructor
@@ -742,7 +742,7 @@ src_lim::FGitfile* src_lim::gitfile_AllocMaybe() {
 // --- src_lim.FDb.gitfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_lim::FGitfile* src_lim::gitfile_InsertMaybe(const dev::Gitfile &value) {
+src_lim::FGitfile* src_lim::gitfile_InsertMaybe(const dev::Gitfile &value) throw() {
     src_lim::FGitfile *row = &gitfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     gitfile_CopyIn(*row,const_cast<dev::Gitfile&>(value));
     bool ok = gitfile_XrefMaybe(*row); // this may return false
@@ -755,7 +755,7 @@ src_lim::FGitfile* src_lim::gitfile_InsertMaybe(const dev::Gitfile &value) {
 
 // --- src_lim.FDb.gitfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_lim::gitfile_AllocMem() {
+void* src_lim::gitfile_AllocMem() throw() {
     u64 new_nelems     = _db.gitfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -781,7 +781,7 @@ void* src_lim::gitfile_AllocMem() {
 
 // --- src_lim.FDb.gitfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_lim::gitfile_RemoveLast() {
+void src_lim::gitfile_RemoveLast() throw() {
     u64 n = _db.gitfile_n;
     if (n > 0) {
         n -= 1;
@@ -791,7 +791,7 @@ void src_lim::gitfile_RemoveLast() {
 }
 
 // --- src_lim.FDb.gitfile.InputMaybe
-static bool src_lim::gitfile_InputMaybe(dev::Gitfile &elem) {
+static bool src_lim::gitfile_InputMaybe(dev::Gitfile &elem) throw() {
     bool retval = true;
     retval = gitfile_InsertMaybe(elem) != nullptr;
     return retval;
@@ -817,7 +817,7 @@ bool src_lim::gitfile_XrefMaybe(src_lim::FGitfile &row) {
 
 // --- src_lim.FDb.ind_gitfile.Find
 // Find row by key. Return NULL if not found.
-src_lim::FGitfile* src_lim::ind_gitfile_Find(const algo::strptr& key) {
+src_lim::FGitfile* src_lim::ind_gitfile_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_gitfile_buckets_n - 1);
     src_lim::FGitfile* *e = &_db.ind_gitfile_buckets_elems[index];
     src_lim::FGitfile* ret=NULL;
@@ -840,7 +840,7 @@ src_lim::FGitfile& src_lim::ind_gitfile_FindX(const algo::strptr& key) {
 
 // --- src_lim.FDb.ind_gitfile.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-src_lim::FGitfile& src_lim::ind_gitfile_GetOrCreate(const algo::strptr& key) {
+src_lim::FGitfile& src_lim::ind_gitfile_GetOrCreate(const algo::strptr& key) throw() {
     src_lim::FGitfile* ret = ind_gitfile_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &gitfile_Alloc();
@@ -857,7 +857,7 @@ src_lim::FGitfile& src_lim::ind_gitfile_GetOrCreate(const algo::strptr& key) {
 
 // --- src_lim.FDb.ind_gitfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool src_lim::ind_gitfile_InsertMaybe(src_lim::FGitfile& row) {
+bool src_lim::ind_gitfile_InsertMaybe(src_lim::FGitfile& row) throw() {
     ind_gitfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gitfile_next == (src_lim::FGitfile*)-1)) {// check if in hash already
@@ -885,7 +885,7 @@ bool src_lim::ind_gitfile_InsertMaybe(src_lim::FGitfile& row) {
 
 // --- src_lim.FDb.ind_gitfile.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void src_lim::ind_gitfile_Remove(src_lim::FGitfile& row) {
+void src_lim::ind_gitfile_Remove(src_lim::FGitfile& row) throw() {
     if (LIKELY(row.ind_gitfile_next != (src_lim::FGitfile*)-1)) {// check if in hash already
         u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
         src_lim::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index]; // addr of pointer to current element
@@ -903,7 +903,7 @@ void src_lim::ind_gitfile_Remove(src_lim::FGitfile& row) {
 
 // --- src_lim.FDb.ind_gitfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void src_lim::ind_gitfile_Reserve(int n) {
+void src_lim::ind_gitfile_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_gitfile_buckets_n;
     u32 new_nelems   = _db.ind_gitfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -940,7 +940,7 @@ void src_lim::ind_gitfile_Reserve(int n) {
 // --- src_lim.FDb.badline.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-src_lim::FBadline& src_lim::badline_Alloc() {
+src_lim::FBadline& src_lim::badline_Alloc() throw() {
     src_lim::FBadline* row = badline_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("src_lim.out_of_mem  field:src_lim.FDb.badline  comment:'Alloc failed'");
@@ -950,7 +950,7 @@ src_lim::FBadline& src_lim::badline_Alloc() {
 
 // --- src_lim.FDb.badline.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-src_lim::FBadline* src_lim::badline_AllocMaybe() {
+src_lim::FBadline* src_lim::badline_AllocMaybe() throw() {
     src_lim::FBadline *row = (src_lim::FBadline*)badline_AllocMem();
     if (row) {
         new (row) src_lim::FBadline; // call constructor
@@ -961,7 +961,7 @@ src_lim::FBadline* src_lim::badline_AllocMaybe() {
 // --- src_lim.FDb.badline.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-src_lim::FBadline* src_lim::badline_InsertMaybe(const dev::Badline &value) {
+src_lim::FBadline* src_lim::badline_InsertMaybe(const dev::Badline &value) throw() {
     src_lim::FBadline *row = &badline_Alloc(); // if out of memory, process dies. if input error, return NULL.
     badline_CopyIn(*row,const_cast<dev::Badline&>(value));
     bool ok = badline_XrefMaybe(*row); // this may return false
@@ -974,7 +974,7 @@ src_lim::FBadline* src_lim::badline_InsertMaybe(const dev::Badline &value) {
 
 // --- src_lim.FDb.badline.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* src_lim::badline_AllocMem() {
+void* src_lim::badline_AllocMem() throw() {
     u64 new_nelems     = _db.badline_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1000,7 +1000,7 @@ void* src_lim::badline_AllocMem() {
 
 // --- src_lim.FDb.badline.RemoveAll
 // Remove all elements from Lary
-void src_lim::badline_RemoveAll() {
+void src_lim::badline_RemoveAll() throw() {
     for (u64 n = _db.badline_n; n>0; ) {
         n--;
         badline_qFind(u64(n)).~FBadline(); // destroy last element
@@ -1010,7 +1010,7 @@ void src_lim::badline_RemoveAll() {
 
 // --- src_lim.FDb.badline.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void src_lim::badline_RemoveLast() {
+void src_lim::badline_RemoveLast() throw() {
     u64 n = _db.badline_n;
     if (n > 0) {
         n -= 1;
@@ -1020,7 +1020,7 @@ void src_lim::badline_RemoveLast() {
 }
 
 // --- src_lim.FDb.badline.InputMaybe
-static bool src_lim::badline_InputMaybe(dev::Badline &elem) {
+static bool src_lim::badline_InputMaybe(dev::Badline &elem) throw() {
     bool retval = true;
     retval = badline_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1037,13 +1037,13 @@ bool src_lim::badline_XrefMaybe(src_lim::FBadline &row) {
 
 // --- src_lim.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr src_lim::trace_RowidFind(int t) {
+static algo::ImrowPtr src_lim::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- src_lim.FDb.trace.N
 // Function return 1
-inline static i32 src_lim::trace_N() {
+inline static i32 src_lim::trace_N() throw() {
     return 1;
 }
 
@@ -1118,7 +1118,7 @@ void src_lim::FDb_Init() {
 }
 
 // --- src_lim.FDb..Uninit
-void src_lim::FDb_Uninit() {
+void src_lim::FDb_Uninit() throw() {
     src_lim::FDb &row = _db; (void)row;
 
     // src_lim.FDb.badline.Uninit (Lary)  //
@@ -1142,25 +1142,25 @@ void src_lim::FDb_Uninit() {
 
 // --- src_lim.FGitfile.base.CopyOut
 // Copy fields out of row
-void src_lim::gitfile_CopyOut(src_lim::FGitfile &row, dev::Gitfile &out) {
+void src_lim::gitfile_CopyOut(src_lim::FGitfile &row, dev::Gitfile &out) throw() {
     out.gitfile = row.gitfile;
 }
 
 // --- src_lim.FGitfile.base.CopyIn
 // Copy fields in to row
-void src_lim::gitfile_CopyIn(src_lim::FGitfile &row, dev::Gitfile &in) {
+void src_lim::gitfile_CopyIn(src_lim::FGitfile &row, dev::Gitfile &in) throw() {
     row.gitfile = in.gitfile;
 }
 
 // --- src_lim.FGitfile.ext.Get
-algo::Smallstr50 src_lim::ext_Get(src_lim::FGitfile& gitfile) {
+algo::Smallstr50 src_lim::ext_Get(src_lim::FGitfile& gitfile) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(gitfile.gitfile, "/RR.LR.RR"));
     return ret;
 }
 
 // --- src_lim.FGitfile.zd_include.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void src_lim::zd_include_Insert(src_lim::FGitfile& gitfile, src_lim::FInclude& row) {
+void src_lim::zd_include_Insert(src_lim::FGitfile& gitfile, src_lim::FInclude& row) throw() {
     if (!zd_include_InLlistQ(row)) {
         src_lim::FInclude* old_tail = gitfile.zd_include_tail;
         row.zd_include_next = NULL;
@@ -1176,7 +1176,7 @@ void src_lim::zd_include_Insert(src_lim::FGitfile& gitfile, src_lim::FInclude& r
 
 // --- src_lim.FGitfile.zd_include.Remove
 // Remove element from index. If element is not in index, do nothing.
-void src_lim::zd_include_Remove(src_lim::FGitfile& gitfile, src_lim::FInclude& row) {
+void src_lim::zd_include_Remove(src_lim::FGitfile& gitfile, src_lim::FInclude& row) throw() {
     if (zd_include_InLlistQ(row)) {
         src_lim::FInclude* old_head       = gitfile.zd_include_head;
         (void)old_head; // in case it's not used
@@ -1199,7 +1199,7 @@ void src_lim::zd_include_Remove(src_lim::FGitfile& gitfile, src_lim::FInclude& r
 
 // --- src_lim.FGitfile.zd_include.RemoveAll
 // Empty the index. (The rows are not deleted)
-void src_lim::zd_include_RemoveAll(src_lim::FGitfile& gitfile) {
+void src_lim::zd_include_RemoveAll(src_lim::FGitfile& gitfile) throw() {
     src_lim::FInclude* row = gitfile.zd_include_head;
     gitfile.zd_include_head = NULL;
     gitfile.zd_include_tail = NULL;
@@ -1214,7 +1214,7 @@ void src_lim::zd_include_RemoveAll(src_lim::FGitfile& gitfile) {
 
 // --- src_lim.FGitfile.zd_include.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-src_lim::FInclude* src_lim::zd_include_RemoveFirst(src_lim::FGitfile& gitfile) {
+src_lim::FInclude* src_lim::zd_include_RemoveFirst(src_lim::FGitfile& gitfile) throw() {
     src_lim::FInclude *row = NULL;
     row = gitfile.zd_include_head;
     if (row) {
@@ -1231,14 +1231,14 @@ src_lim::FInclude* src_lim::zd_include_RemoveFirst(src_lim::FGitfile& gitfile) {
 }
 
 // --- src_lim.FGitfile..Uninit
-void src_lim::FGitfile_Uninit(src_lim::FGitfile& gitfile) {
+void src_lim::FGitfile_Uninit(src_lim::FGitfile& gitfile) throw() {
     src_lim::FGitfile &row = gitfile; (void)row;
     ind_gitfile_Remove(row); // remove gitfile from index ind_gitfile
 }
 
 // --- src_lim.FInclude.base.CopyOut
 // Copy fields out of row
-void src_lim::include_CopyOut(src_lim::FInclude &row, dev::Include &out) {
+void src_lim::include_CopyOut(src_lim::FInclude &row, dev::Include &out) throw() {
     out.include = row.include;
     out.sys = row.sys;
     out.comment = row.comment;
@@ -1246,26 +1246,26 @@ void src_lim::include_CopyOut(src_lim::FInclude &row, dev::Include &out) {
 
 // --- src_lim.FInclude.base.CopyIn
 // Copy fields in to row
-void src_lim::include_CopyIn(src_lim::FInclude &row, dev::Include &in) {
+void src_lim::include_CopyIn(src_lim::FInclude &row, dev::Include &in) throw() {
     row.include = in.include;
     row.sys = in.sys;
     row.comment = in.comment;
 }
 
 // --- src_lim.FInclude.srcfile.Get
-algo::Smallstr200 src_lim::srcfile_Get(src_lim::FInclude& include) {
+algo::Smallstr200 src_lim::srcfile_Get(src_lim::FInclude& include) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(include.include, ":LL"));
     return ret;
 }
 
 // --- src_lim.FInclude.filename.Get
-algo::Smallstr200 src_lim::filename_Get(src_lim::FInclude& include) {
+algo::Smallstr200 src_lim::filename_Get(src_lim::FInclude& include) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(include.include, ":LR"));
     return ret;
 }
 
 // --- src_lim.FInclude..Uninit
-void src_lim::FInclude_Uninit(src_lim::FInclude& include) {
+void src_lim::FInclude_Uninit(src_lim::FInclude& include) throw() {
     src_lim::FInclude &row = include; (void)row;
     src_lim::FGitfile* p_srcfile = src_lim::ind_gitfile_Find(srcfile_Get(row));
     if (p_srcfile)  {
@@ -1275,7 +1275,7 @@ void src_lim::FInclude_Uninit(src_lim::FInclude& include) {
 
 // --- src_lim.FLinelim.base.CopyOut
 // Copy fields out of row
-void src_lim::linelim_CopyOut(src_lim::FLinelim &row, dev::Linelim &out) {
+void src_lim::linelim_CopyOut(src_lim::FLinelim &row, dev::Linelim &out) throw() {
     out.gitfile = row.gitfile;
     out.nlongline = row.nlongline;
     out.longestline = row.longestline;
@@ -1289,7 +1289,7 @@ void src_lim::linelim_CopyOut(src_lim::FLinelim &row, dev::Linelim &out) {
 
 // --- src_lim.FLinelim.base.CopyIn
 // Copy fields in to row
-void src_lim::linelim_CopyIn(src_lim::FLinelim &row, dev::Linelim &in) {
+void src_lim::linelim_CopyIn(src_lim::FLinelim &row, dev::Linelim &in) throw() {
     row.gitfile = in.gitfile;
     row.nlongline = in.nlongline;
     row.longestline = in.longestline;
@@ -1302,7 +1302,7 @@ void src_lim::linelim_CopyIn(src_lim::FLinelim &row, dev::Linelim &in) {
 }
 
 // --- src_lim.FLinelim..Uninit
-void src_lim::FLinelim_Uninit(src_lim::FLinelim& linelim) {
+void src_lim::FLinelim_Uninit(src_lim::FLinelim& linelim) throw() {
     src_lim::FLinelim &row = linelim; (void)row;
     src_lim::FGitfile* p_gitfile = src_lim::ind_gitfile_Find(row.gitfile);
     if (p_gitfile)  {
@@ -1312,38 +1312,38 @@ void src_lim::FLinelim_Uninit(src_lim::FLinelim& linelim) {
 
 // --- src_lim.FTargsrc.base.CopyOut
 // Copy fields out of row
-void src_lim::targsrc_CopyOut(src_lim::FTargsrc &row, dev::Targsrc &out) {
+void src_lim::targsrc_CopyOut(src_lim::FTargsrc &row, dev::Targsrc &out) throw() {
     out.targsrc = row.targsrc;
     out.comment = row.comment;
 }
 
 // --- src_lim.FTargsrc.base.CopyIn
 // Copy fields in to row
-void src_lim::targsrc_CopyIn(src_lim::FTargsrc &row, dev::Targsrc &in) {
+void src_lim::targsrc_CopyIn(src_lim::FTargsrc &row, dev::Targsrc &in) throw() {
     row.targsrc = in.targsrc;
     row.comment = in.comment;
 }
 
 // --- src_lim.FTargsrc.target.Get
-algo::Smallstr16 src_lim::target_Get(src_lim::FTargsrc& targsrc) {
+algo::Smallstr16 src_lim::target_Get(src_lim::FTargsrc& targsrc) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
     return ret;
 }
 
 // --- src_lim.FTargsrc.src.Get
-algo::Smallstr200 src_lim::src_Get(src_lim::FTargsrc& targsrc) {
+algo::Smallstr200 src_lim::src_Get(src_lim::FTargsrc& targsrc) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
     return ret;
 }
 
 // --- src_lim.FTargsrc.ext.Get
-algo::Smallstr10 src_lim::ext_Get(src_lim::FTargsrc& targsrc) {
+algo::Smallstr10 src_lim::ext_Get(src_lim::FTargsrc& targsrc) throw() {
     algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
     return ret;
 }
 
 // --- src_lim.FTargsrc..Uninit
-void src_lim::FTargsrc_Uninit(src_lim::FTargsrc& targsrc) {
+void src_lim::FTargsrc_Uninit(src_lim::FTargsrc& targsrc) throw() {
     src_lim::FTargsrc &row = targsrc; (void)row;
     src_lim::FGitfile* p_src = src_lim::ind_gitfile_Find(src_Get(row));
     if (p_src)  {
@@ -1354,7 +1354,7 @@ void src_lim::FTargsrc_Uninit(src_lim::FTargsrc& targsrc) {
 // --- src_lim.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* src_lim::value_ToCstr(const src_lim::FieldId& parent) {
+const char* src_lim::value_ToCstr(const src_lim::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case src_lim_FieldId_value         : ret = "value";  break;
@@ -1365,7 +1365,7 @@ const char* src_lim::value_ToCstr(const src_lim::FieldId& parent) {
 // --- src_lim.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void src_lim::value_Print(const src_lim::FieldId& parent, algo::cstring &lhs) {
+void src_lim::value_Print(const src_lim::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1378,7 +1378,7 @@ void src_lim::value_Print(const src_lim::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool src_lim::value_SetStrptrMaybe(src_lim::FieldId& parent, algo::strptr rhs) {
+bool src_lim::value_SetStrptrMaybe(src_lim::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -1396,13 +1396,13 @@ bool src_lim::value_SetStrptrMaybe(src_lim::FieldId& parent, algo::strptr rhs) {
 // --- src_lim.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void src_lim::value_SetStrptr(src_lim::FieldId& parent, algo::strptr rhs, src_lim_FieldIdEnum dflt) {
+void src_lim::value_SetStrptr(src_lim::FieldId& parent, algo::strptr rhs, src_lim_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- src_lim.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool src_lim::value_ReadStrptrMaybe(src_lim::FieldId& parent, algo::strptr rhs) {
+bool src_lim::value_ReadStrptrMaybe(src_lim::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1414,7 +1414,7 @@ bool src_lim::value_ReadStrptrMaybe(src_lim::FieldId& parent, algo::strptr rhs) 
 // --- src_lim.FieldId..ReadStrptrMaybe
 // Read fields of src_lim::FieldId from an ascii string.
 // The format of the string is the format of the src_lim::FieldId's only field
-bool src_lim::FieldId_ReadStrptrMaybe(src_lim::FieldId &parent, algo::strptr in_str) {
+bool src_lim::FieldId_ReadStrptrMaybe(src_lim::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1423,14 +1423,14 @@ bool src_lim::FieldId_ReadStrptrMaybe(src_lim::FieldId &parent, algo::strptr in_
 // --- src_lim.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:src_lim.FieldId.String  printfmt:Raw
-void src_lim::FieldId_Print(src_lim::FieldId& row, algo::cstring& str) {
+void src_lim::FieldId_Print(src_lim::FieldId& row, algo::cstring& str) throw() {
     src_lim::value_Print(row, str);
 }
 
 // --- src_lim.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* src_lim::value_ToCstr(const src_lim::TableId& parent) {
+const char* src_lim::value_ToCstr(const src_lim::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case src_lim_TableId_dev_Badline   : ret = "dev.Badline";  break;
@@ -1445,7 +1445,7 @@ const char* src_lim::value_ToCstr(const src_lim::TableId& parent) {
 // --- src_lim.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void src_lim::value_Print(const src_lim::TableId& parent, algo::cstring &lhs) {
+void src_lim::value_Print(const src_lim::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1458,7 +1458,7 @@ void src_lim::value_Print(const src_lim::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool src_lim::value_SetStrptrMaybe(src_lim::TableId& parent, algo::strptr rhs) {
+bool src_lim::value_SetStrptrMaybe(src_lim::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 11: {
@@ -1513,13 +1513,13 @@ bool src_lim::value_SetStrptrMaybe(src_lim::TableId& parent, algo::strptr rhs) {
 // --- src_lim.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void src_lim::value_SetStrptr(src_lim::TableId& parent, algo::strptr rhs, src_lim_TableIdEnum dflt) {
+void src_lim::value_SetStrptr(src_lim::TableId& parent, algo::strptr rhs, src_lim_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- src_lim.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool src_lim::value_ReadStrptrMaybe(src_lim::TableId& parent, algo::strptr rhs) {
+bool src_lim::value_ReadStrptrMaybe(src_lim::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1531,7 +1531,7 @@ bool src_lim::value_ReadStrptrMaybe(src_lim::TableId& parent, algo::strptr rhs) 
 // --- src_lim.TableId..ReadStrptrMaybe
 // Read fields of src_lim::TableId from an ascii string.
 // The format of the string is the format of the src_lim::TableId's only field
-bool src_lim::TableId_ReadStrptrMaybe(src_lim::TableId &parent, algo::strptr in_str) {
+bool src_lim::TableId_ReadStrptrMaybe(src_lim::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1540,7 +1540,7 @@ bool src_lim::TableId_ReadStrptrMaybe(src_lim::TableId &parent, algo::strptr in_
 // --- src_lim.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:src_lim.TableId.String  printfmt:Raw
-void src_lim::TableId_Print(src_lim::TableId& row, algo::cstring& str) {
+void src_lim::TableId_Print(src_lim::TableId& row, algo::cstring& str) throw() {
     src_lim::value_Print(row, str);
 }
 

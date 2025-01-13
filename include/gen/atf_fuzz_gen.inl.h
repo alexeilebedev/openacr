@@ -30,18 +30,18 @@
 //#pragma endinclude
 
 // --- atf_fuzz.trace..Ctor
-inline  atf_fuzz::trace::trace() {
+inline  atf_fuzz::trace::trace() throw() {
 }
 
 // --- atf_fuzz.FDb.fuzzstrat.EmptyQ
 // Return true if index is empty
-inline bool atf_fuzz::fuzzstrat_EmptyQ() {
+inline bool atf_fuzz::fuzzstrat_EmptyQ() throw() {
     return _db.fuzzstrat_n == 0;
 }
 
 // --- atf_fuzz.FDb.fuzzstrat.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_fuzz::FFuzzstrat* atf_fuzz::fuzzstrat_Find(u64 t) {
+inline atf_fuzz::FFuzzstrat* atf_fuzz::fuzzstrat_Find(u64 t) throw() {
     atf_fuzz::FFuzzstrat *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.fuzzstrat_n))) {
         u64 x = t + 1;
@@ -55,19 +55,19 @@ inline atf_fuzz::FFuzzstrat* atf_fuzz::fuzzstrat_Find(u64 t) {
 
 // --- atf_fuzz.FDb.fuzzstrat.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_fuzz::FFuzzstrat* atf_fuzz::fuzzstrat_Last() {
+inline atf_fuzz::FFuzzstrat* atf_fuzz::fuzzstrat_Last() throw() {
     return fuzzstrat_Find(u64(_db.fuzzstrat_n-1));
 }
 
 // --- atf_fuzz.FDb.fuzzstrat.N
 // Return number of items in the pool
-inline i32 atf_fuzz::fuzzstrat_N() {
+inline i32 atf_fuzz::fuzzstrat_N() throw() {
     return _db.fuzzstrat_n;
 }
 
 // --- atf_fuzz.FDb.fuzzstrat.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_fuzz::FFuzzstrat& atf_fuzz::fuzzstrat_qFind(u64 t) {
+inline atf_fuzz::FFuzzstrat& atf_fuzz::fuzzstrat_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -77,13 +77,13 @@ inline atf_fuzz::FFuzzstrat& atf_fuzz::fuzzstrat_qFind(u64 t) {
 
 // --- atf_fuzz.FDb.target.EmptyQ
 // Return true if index is empty
-inline bool atf_fuzz::target_EmptyQ() {
+inline bool atf_fuzz::target_EmptyQ() throw() {
     return _db.target_n == 0;
 }
 
 // --- atf_fuzz.FDb.target.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_fuzz::FTarget* atf_fuzz::target_Find(u64 t) {
+inline atf_fuzz::FTarget* atf_fuzz::target_Find(u64 t) throw() {
     atf_fuzz::FTarget *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.target_n))) {
         u64 x = t + 1;
@@ -97,19 +97,19 @@ inline atf_fuzz::FTarget* atf_fuzz::target_Find(u64 t) {
 
 // --- atf_fuzz.FDb.target.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_fuzz::FTarget* atf_fuzz::target_Last() {
+inline atf_fuzz::FTarget* atf_fuzz::target_Last() throw() {
     return target_Find(u64(_db.target_n-1));
 }
 
 // --- atf_fuzz.FDb.target.N
 // Return number of items in the pool
-inline i32 atf_fuzz::target_N() {
+inline i32 atf_fuzz::target_N() throw() {
     return _db.target_n;
 }
 
 // --- atf_fuzz.FDb.target.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_fuzz::FTarget& atf_fuzz::target_qFind(u64 t) {
+inline atf_fuzz::FTarget& atf_fuzz::target_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -119,69 +119,69 @@ inline atf_fuzz::FTarget& atf_fuzz::target_qFind(u64 t) {
 
 // --- atf_fuzz.FDb.ind_target.EmptyQ
 // Return true if hash is empty
-inline bool atf_fuzz::ind_target_EmptyQ() {
+inline bool atf_fuzz::ind_target_EmptyQ() throw() {
     return _db.ind_target_n == 0;
 }
 
 // --- atf_fuzz.FDb.ind_target.N
 // Return number of items in the hash
-inline i32 atf_fuzz::ind_target_N() {
+inline i32 atf_fuzz::ind_target_N() throw() {
     return _db.ind_target_n;
 }
 
 // --- atf_fuzz.FDb.fuzzstrat_curs.Reset
 // cursor points to valid item
-inline void atf_fuzz::_db_fuzzstrat_curs_Reset(_db_fuzzstrat_curs &curs, atf_fuzz::FDb &parent) {
+inline void atf_fuzz::_db_fuzzstrat_curs_Reset(_db_fuzzstrat_curs &curs, atf_fuzz::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_fuzz.FDb.fuzzstrat_curs.ValidQ
 // cursor points to valid item
-inline bool atf_fuzz::_db_fuzzstrat_curs_ValidQ(_db_fuzzstrat_curs &curs) {
+inline bool atf_fuzz::_db_fuzzstrat_curs_ValidQ(_db_fuzzstrat_curs &curs) throw() {
     return curs.index < _db.fuzzstrat_n;
 }
 
 // --- atf_fuzz.FDb.fuzzstrat_curs.Next
 // proceed to next item
-inline void atf_fuzz::_db_fuzzstrat_curs_Next(_db_fuzzstrat_curs &curs) {
+inline void atf_fuzz::_db_fuzzstrat_curs_Next(_db_fuzzstrat_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_fuzz.FDb.fuzzstrat_curs.Access
 // item access
-inline atf_fuzz::FFuzzstrat& atf_fuzz::_db_fuzzstrat_curs_Access(_db_fuzzstrat_curs &curs) {
+inline atf_fuzz::FFuzzstrat& atf_fuzz::_db_fuzzstrat_curs_Access(_db_fuzzstrat_curs &curs) throw() {
     return fuzzstrat_qFind(u64(curs.index));
 }
 
 // --- atf_fuzz.FDb.target_curs.Reset
 // cursor points to valid item
-inline void atf_fuzz::_db_target_curs_Reset(_db_target_curs &curs, atf_fuzz::FDb &parent) {
+inline void atf_fuzz::_db_target_curs_Reset(_db_target_curs &curs, atf_fuzz::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_fuzz.FDb.target_curs.ValidQ
 // cursor points to valid item
-inline bool atf_fuzz::_db_target_curs_ValidQ(_db_target_curs &curs) {
+inline bool atf_fuzz::_db_target_curs_ValidQ(_db_target_curs &curs) throw() {
     return curs.index < _db.target_n;
 }
 
 // --- atf_fuzz.FDb.target_curs.Next
 // proceed to next item
-inline void atf_fuzz::_db_target_curs_Next(_db_target_curs &curs) {
+inline void atf_fuzz::_db_target_curs_Next(_db_target_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_fuzz.FDb.target_curs.Access
 // item access
-inline atf_fuzz::FTarget& atf_fuzz::_db_target_curs_Access(_db_target_curs &curs) {
+inline atf_fuzz::FTarget& atf_fuzz::_db_target_curs_Access(_db_target_curs &curs) throw() {
     return target_qFind(u64(curs.index));
 }
 
 // --- atf_fuzz.FFuzzstrat.step.Call
 // Invoke function by pointer
-inline void atf_fuzz::step_Call(atf_fuzz::FFuzzstrat& fuzzstrat) {
+inline void atf_fuzz::step_Call(atf_fuzz::FFuzzstrat& fuzzstrat) throw() {
     if (fuzzstrat.step) {
         fuzzstrat.step();
     }
@@ -194,7 +194,7 @@ inline void atf_fuzz::FFuzzstrat_Init(atf_fuzz::FFuzzstrat& fuzzstrat) {
 }
 
 // --- atf_fuzz.FFuzzstrat..Ctor
-inline  atf_fuzz::FFuzzstrat::FFuzzstrat() {
+inline  atf_fuzz::FFuzzstrat::FFuzzstrat() throw() {
     atf_fuzz::FFuzzstrat_Init(*this);
 }
 
@@ -205,29 +205,29 @@ inline void atf_fuzz::FTarget_Init(atf_fuzz::FTarget& target) {
 }
 
 // --- atf_fuzz.FTarget..Ctor
-inline  atf_fuzz::FTarget::FTarget() {
+inline  atf_fuzz::FTarget::FTarget() throw() {
     atf_fuzz::FTarget_Init(*this);
 }
 
 // --- atf_fuzz.FTarget..Dtor
-inline  atf_fuzz::FTarget::~FTarget() {
+inline  atf_fuzz::FTarget::~FTarget() throw() {
     atf_fuzz::FTarget_Uninit(*this);
 }
 
 // --- atf_fuzz.FieldId.value.GetEnum
 // Get value of field as enum type
-inline atf_fuzz_FieldIdEnum atf_fuzz::value_GetEnum(const atf_fuzz::FieldId& parent) {
+inline atf_fuzz_FieldIdEnum atf_fuzz::value_GetEnum(const atf_fuzz::FieldId& parent) throw() {
     return atf_fuzz_FieldIdEnum(parent.value);
 }
 
 // --- atf_fuzz.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void atf_fuzz::value_SetEnum(atf_fuzz::FieldId& parent, atf_fuzz_FieldIdEnum rhs) {
+inline void atf_fuzz::value_SetEnum(atf_fuzz::FieldId& parent, atf_fuzz_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- atf_fuzz.FieldId.value.Cast
-inline  atf_fuzz::FieldId::operator atf_fuzz_FieldIdEnum() const {
+inline  atf_fuzz::FieldId::operator atf_fuzz_FieldIdEnum() const throw() {
     return atf_fuzz_FieldIdEnum((*this).value);
 }
 
@@ -238,35 +238,35 @@ inline void atf_fuzz::FieldId_Init(atf_fuzz::FieldId& parent) {
 }
 
 // --- atf_fuzz.FieldId..Ctor
-inline  atf_fuzz::FieldId::FieldId() {
+inline  atf_fuzz::FieldId::FieldId() throw() {
     atf_fuzz::FieldId_Init(*this);
 }
 
 // --- atf_fuzz.FieldId..FieldwiseCtor
-inline  atf_fuzz::FieldId::FieldId(i32 in_value)
+inline  atf_fuzz::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_fuzz.FieldId..EnumCtor
-inline  atf_fuzz::FieldId::FieldId(atf_fuzz_FieldIdEnum arg) {
+inline  atf_fuzz::FieldId::FieldId(atf_fuzz_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- atf_fuzz.TableId.value.GetEnum
 // Get value of field as enum type
-inline atf_fuzz_TableIdEnum atf_fuzz::value_GetEnum(const atf_fuzz::TableId& parent) {
+inline atf_fuzz_TableIdEnum atf_fuzz::value_GetEnum(const atf_fuzz::TableId& parent) throw() {
     return atf_fuzz_TableIdEnum(parent.value);
 }
 
 // --- atf_fuzz.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void atf_fuzz::value_SetEnum(atf_fuzz::TableId& parent, atf_fuzz_TableIdEnum rhs) {
+inline void atf_fuzz::value_SetEnum(atf_fuzz::TableId& parent, atf_fuzz_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- atf_fuzz.TableId.value.Cast
-inline  atf_fuzz::TableId::operator atf_fuzz_TableIdEnum() const {
+inline  atf_fuzz::TableId::operator atf_fuzz_TableIdEnum() const throw() {
     return atf_fuzz_TableIdEnum((*this).value);
 }
 
@@ -277,18 +277,18 @@ inline void atf_fuzz::TableId_Init(atf_fuzz::TableId& parent) {
 }
 
 // --- atf_fuzz.TableId..Ctor
-inline  atf_fuzz::TableId::TableId() {
+inline  atf_fuzz::TableId::TableId() throw() {
     atf_fuzz::TableId_Init(*this);
 }
 
 // --- atf_fuzz.TableId..FieldwiseCtor
-inline  atf_fuzz::TableId::TableId(i32 in_value)
+inline  atf_fuzz::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_fuzz.TableId..EnumCtor
-inline  atf_fuzz::TableId::TableId(atf_fuzz_TableIdEnum arg) {
+inline  atf_fuzz::TableId::TableId(atf_fuzz_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

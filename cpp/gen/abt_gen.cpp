@@ -162,58 +162,58 @@ namespace abt { // gen:ns_print_proto
 
 // --- abt.FArch.msghdr.CopyOut
 // Copy fields out of row
-void abt::arch_CopyOut(abt::FArch &row, dev::Arch &out) {
+void abt::arch_CopyOut(abt::FArch &row, dev::Arch &out) throw() {
     out.arch = row.arch;
     out.comment = row.comment;
 }
 
 // --- abt.FArch.msghdr.CopyIn
 // Copy fields in to row
-void abt::arch_CopyIn(abt::FArch &row, dev::Arch &in) {
+void abt::arch_CopyIn(abt::FArch &row, dev::Arch &in) throw() {
     row.arch = in.arch;
     row.comment = in.comment;
 }
 
 // --- abt.FArch..Uninit
-void abt::FArch_Uninit(abt::FArch& arch) {
+void abt::FArch_Uninit(abt::FArch& arch) throw() {
     abt::FArch &row = arch; (void)row;
     ind_arch_Remove(row); // remove arch from index ind_arch
 }
 
 // --- abt.FBuilddir.base.CopyOut
 // Copy fields out of row
-void abt::builddir_CopyOut(abt::FBuilddir &row, dev::Builddir &out) {
+void abt::builddir_CopyOut(abt::FBuilddir &row, dev::Builddir &out) throw() {
     out.builddir = row.builddir;
     out.comment = row.comment;
 }
 
 // --- abt.FBuilddir.base.CopyIn
 // Copy fields in to row
-void abt::builddir_CopyIn(abt::FBuilddir &row, dev::Builddir &in) {
+void abt::builddir_CopyIn(abt::FBuilddir &row, dev::Builddir &in) throw() {
     row.builddir = in.builddir;
     row.comment = in.comment;
 }
 
 // --- abt.FBuilddir.uname.Get
-algo::Smallstr50 abt::uname_Get(abt::FBuilddir& builddir) {
+algo::Smallstr50 abt::uname_Get(abt::FBuilddir& builddir) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LL"));
     return ret;
 }
 
 // --- abt.FBuilddir.compiler.Get
-algo::Smallstr50 abt::compiler_Get(abt::FBuilddir& builddir) {
+algo::Smallstr50 abt::compiler_Get(abt::FBuilddir& builddir) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LL-LR"));
     return ret;
 }
 
 // --- abt.FBuilddir.cfg.Get
-algo::Smallstr50 abt::cfg_Get(abt::FBuilddir& builddir) {
+algo::Smallstr50 abt::cfg_Get(abt::FBuilddir& builddir) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LL"));
     return ret;
 }
 
 // --- abt.FBuilddir.arch.Get
-algo::Smallstr50 abt::arch_Get(abt::FBuilddir& builddir) {
+algo::Smallstr50 abt::arch_Get(abt::FBuilddir& builddir) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(builddir.builddir, ".LR-LR"));
     return ret;
 }
@@ -227,14 +227,14 @@ void abt::FBuilddir_Init(abt::FBuilddir& builddir) {
 }
 
 // --- abt.FBuilddir..Uninit
-void abt::FBuilddir_Uninit(abt::FBuilddir& builddir) {
+void abt::FBuilddir_Uninit(abt::FBuilddir& builddir) throw() {
     abt::FBuilddir &row = builddir; (void)row;
     ind_builddir_Remove(row); // remove builddir from index ind_builddir
 }
 
 // --- abt.FCfg.msghdr.CopyOut
 // Copy fields out of row
-void abt::cfg_CopyOut(abt::FCfg &row, dev::Cfg &out) {
+void abt::cfg_CopyOut(abt::FCfg &row, dev::Cfg &out) throw() {
     out.cfg = row.cfg;
     out.suffix = row.suffix;
     out.comment = row.comment;
@@ -242,21 +242,21 @@ void abt::cfg_CopyOut(abt::FCfg &row, dev::Cfg &out) {
 
 // --- abt.FCfg.msghdr.CopyIn
 // Copy fields in to row
-void abt::cfg_CopyIn(abt::FCfg &row, dev::Cfg &in) {
+void abt::cfg_CopyIn(abt::FCfg &row, dev::Cfg &in) throw() {
     row.cfg = in.cfg;
     row.suffix = in.suffix;
     row.comment = in.comment;
 }
 
 // --- abt.FCfg..Uninit
-void abt::FCfg_Uninit(abt::FCfg& cfg) {
+void abt::FCfg_Uninit(abt::FCfg& cfg) throw() {
     abt::FCfg &row = cfg; (void)row;
     ind_cfg_Remove(row); // remove cfg from index ind_cfg
 }
 
 // --- abt.FCompiler.msghdr.CopyOut
 // Copy fields out of row
-void abt::compiler_CopyOut(abt::FCompiler &row, dev::Compiler &out) {
+void abt::compiler_CopyOut(abt::FCompiler &row, dev::Compiler &out) throw() {
     out.compiler = row.compiler;
     out.ranlib = row.ranlib;
     out.ar = row.ar;
@@ -271,7 +271,7 @@ void abt::compiler_CopyOut(abt::FCompiler &row, dev::Compiler &out) {
 
 // --- abt.FCompiler.msghdr.CopyIn
 // Copy fields in to row
-void abt::compiler_CopyIn(abt::FCompiler &row, dev::Compiler &in) {
+void abt::compiler_CopyIn(abt::FCompiler &row, dev::Compiler &in) throw() {
     row.compiler = in.compiler;
     row.ranlib = in.ranlib;
     row.ar = in.ar;
@@ -285,7 +285,7 @@ void abt::compiler_CopyIn(abt::FCompiler &row, dev::Compiler &in) {
 }
 
 // --- abt.FCompiler..Uninit
-void abt::FCompiler_Uninit(abt::FCompiler& compiler) {
+void abt::FCompiler_Uninit(abt::FCompiler& compiler) throw() {
     abt::FCompiler &row = compiler; (void)row;
     ind_compiler_Remove(row); // remove compiler from index ind_compiler
 }
@@ -293,7 +293,7 @@ void abt::FCompiler_Uninit(abt::FCompiler& compiler) {
 // --- abt.trace..Print
 // print string representation of ROW to string STR
 // cfmt:abt.trace.String  printfmt:Tuple
-void abt::trace_Print(abt::trace& row, algo::cstring& str) {
+void abt::trace_Print(abt::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "abt.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -301,7 +301,7 @@ void abt::trace_Print(abt::trace& row, algo::cstring& str) {
 
 // --- abt.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
-void abt::lpool_FreeMem(void* mem, u64 size) {
+void abt::lpool_FreeMem(void* mem, u64 size) throw() {
     size = u64_Max(size,1ULL<<4);
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
     if (mem && cell < 36) {
@@ -316,7 +316,7 @@ void abt::lpool_FreeMem(void* mem, u64 size) {
 // If not successful, return NULL
 // The allocated block is at least 1<<4
 // The maximum allocation size is at most 1<<(36+4)
-void* abt::lpool_AllocMem(u64 size) {
+void* abt::lpool_AllocMem(u64 size) throw() {
     void *retval = NULL;
     size     = u64_Max(size,1<<4); // enforce alignment
     u64 cell = algo::u64_BitScanReverse(size-1) + 1 - 4;
@@ -356,7 +356,7 @@ void* abt::lpool_AllocMem(u64 size) {
 // --- abt.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
 // Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
-bool abt::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
+bool abt::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) throw() {
     bool retval = true;
     bufsize = u64_Max(bufsize, 1<<4);
     u64 cell = algo::u64_BitScanReverse(bufsize-1) + 1 - 4;
@@ -381,7 +381,7 @@ bool abt::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) {
 // If the new size is same as old size, do nothing.
 // In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL; old memory remains untouched
-void* abt::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
+void* abt::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) throw() {
     void *ret = oldmem;
     if (new_size != old_size) {
         ret = lpool_AllocMem(new_size);
@@ -396,7 +396,7 @@ void* abt::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) {
 // --- abt.FDb.lpool.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-u8& abt::lpool_Alloc() {
+u8& abt::lpool_Alloc() throw() {
     u8* row = lpool_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.lpool  comment:'Alloc failed'");
@@ -406,7 +406,7 @@ u8& abt::lpool_Alloc() {
 
 // --- abt.FDb.lpool.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-u8* abt::lpool_AllocMaybe() {
+u8* abt::lpool_AllocMaybe() throw() {
     u8 *row = (u8*)lpool_AllocMem(sizeof(u8));
     if (row) {
         new (row) u8; // call constructor
@@ -416,7 +416,7 @@ u8* abt::lpool_AllocMaybe() {
 
 // --- abt.FDb.lpool.Delete
 // Remove row from all global and cross indices, then deallocate row
-void abt::lpool_Delete(u8 &row) {
+void abt::lpool_Delete(u8 &row) throw() {
     int length = sizeof(u8);
     lpool_FreeMem(&row, length);
 }
@@ -424,7 +424,7 @@ void abt::lpool_Delete(u8 &row) {
 // --- abt.FDb.srcfile.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FSrcfile& abt::srcfile_Alloc() {
+abt::FSrcfile& abt::srcfile_Alloc() throw() {
     abt::FSrcfile* row = srcfile_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.srcfile  comment:'Alloc failed'");
@@ -434,7 +434,7 @@ abt::FSrcfile& abt::srcfile_Alloc() {
 
 // --- abt.FDb.srcfile.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FSrcfile* abt::srcfile_AllocMaybe() {
+abt::FSrcfile* abt::srcfile_AllocMaybe() throw() {
     abt::FSrcfile *row = (abt::FSrcfile*)srcfile_AllocMem();
     if (row) {
         new (row) abt::FSrcfile; // call constructor
@@ -445,7 +445,7 @@ abt::FSrcfile* abt::srcfile_AllocMaybe() {
 // --- abt.FDb.srcfile.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FSrcfile* abt::srcfile_InsertMaybe(const dev::Srcfile &value) {
+abt::FSrcfile* abt::srcfile_InsertMaybe(const dev::Srcfile &value) throw() {
     abt::FSrcfile *row = &srcfile_Alloc(); // if out of memory, process dies. if input error, return NULL.
     srcfile_CopyIn(*row,const_cast<dev::Srcfile&>(value));
     bool ok = srcfile_XrefMaybe(*row); // this may return false
@@ -458,7 +458,7 @@ abt::FSrcfile* abt::srcfile_InsertMaybe(const dev::Srcfile &value) {
 
 // --- abt.FDb.srcfile.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::srcfile_AllocMem() {
+void* abt::srcfile_AllocMem() throw() {
     u64 new_nelems     = _db.srcfile_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -484,7 +484,7 @@ void* abt::srcfile_AllocMem() {
 
 // --- abt.FDb.srcfile.RemoveAll
 // Remove all elements from Lary
-void abt::srcfile_RemoveAll() {
+void abt::srcfile_RemoveAll() throw() {
     for (u64 n = _db.srcfile_n; n>0; ) {
         n--;
         srcfile_qFind(u64(n)).~FSrcfile(); // destroy last element
@@ -494,7 +494,7 @@ void abt::srcfile_RemoveAll() {
 
 // --- abt.FDb.srcfile.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::srcfile_RemoveLast() {
+void abt::srcfile_RemoveLast() throw() {
     u64 n = _db.srcfile_n;
     if (n > 0) {
         n -= 1;
@@ -528,7 +528,7 @@ bool abt::srcfile_XrefMaybe(abt::FSrcfile &row) {
 // --- abt.FDb.targdep.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FTargdep& abt::targdep_Alloc() {
+abt::FTargdep& abt::targdep_Alloc() throw() {
     abt::FTargdep* row = targdep_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.targdep  comment:'Alloc failed'");
@@ -538,7 +538,7 @@ abt::FTargdep& abt::targdep_Alloc() {
 
 // --- abt.FDb.targdep.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FTargdep* abt::targdep_AllocMaybe() {
+abt::FTargdep* abt::targdep_AllocMaybe() throw() {
     abt::FTargdep *row = (abt::FTargdep*)targdep_AllocMem();
     if (row) {
         new (row) abt::FTargdep; // call constructor
@@ -549,7 +549,7 @@ abt::FTargdep* abt::targdep_AllocMaybe() {
 // --- abt.FDb.targdep.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FTargdep* abt::targdep_InsertMaybe(const dev::Targdep &value) {
+abt::FTargdep* abt::targdep_InsertMaybe(const dev::Targdep &value) throw() {
     abt::FTargdep *row = &targdep_Alloc(); // if out of memory, process dies. if input error, return NULL.
     targdep_CopyIn(*row,const_cast<dev::Targdep&>(value));
     bool ok = targdep_XrefMaybe(*row); // this may return false
@@ -562,7 +562,7 @@ abt::FTargdep* abt::targdep_InsertMaybe(const dev::Targdep &value) {
 
 // --- abt.FDb.targdep.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::targdep_AllocMem() {
+void* abt::targdep_AllocMem() throw() {
     u64 new_nelems     = _db.targdep_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -588,7 +588,7 @@ void* abt::targdep_AllocMem() {
 
 // --- abt.FDb.targdep.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::targdep_RemoveLast() {
+void abt::targdep_RemoveLast() throw() {
     u64 n = _db.targdep_n;
     if (n > 0) {
         n -= 1;
@@ -598,7 +598,7 @@ void abt::targdep_RemoveLast() {
 }
 
 // --- abt.FDb.targdep.InputMaybe
-static bool abt::targdep_InputMaybe(dev::Targdep &elem) {
+static bool abt::targdep_InputMaybe(dev::Targdep &elem) throw() {
     bool retval = true;
     retval = targdep_InsertMaybe(elem) != nullptr;
     return retval;
@@ -634,7 +634,7 @@ bool abt::targdep_XrefMaybe(abt::FTargdep &row) {
 // --- abt.FDb.tool_opt.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FToolOpt& abt::tool_opt_Alloc() {
+abt::FToolOpt& abt::tool_opt_Alloc() throw() {
     abt::FToolOpt* row = tool_opt_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.tool_opt  comment:'Alloc failed'");
@@ -644,7 +644,7 @@ abt::FToolOpt& abt::tool_opt_Alloc() {
 
 // --- abt.FDb.tool_opt.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FToolOpt* abt::tool_opt_AllocMaybe() {
+abt::FToolOpt* abt::tool_opt_AllocMaybe() throw() {
     abt::FToolOpt *row = (abt::FToolOpt*)tool_opt_AllocMem();
     if (row) {
         new (row) abt::FToolOpt; // call constructor
@@ -655,7 +655,7 @@ abt::FToolOpt* abt::tool_opt_AllocMaybe() {
 // --- abt.FDb.tool_opt.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FToolOpt* abt::tool_opt_InsertMaybe(const dev::ToolOpt &value) {
+abt::FToolOpt* abt::tool_opt_InsertMaybe(const dev::ToolOpt &value) throw() {
     abt::FToolOpt *row = &tool_opt_Alloc(); // if out of memory, process dies. if input error, return NULL.
     tool_opt_CopyIn(*row,const_cast<dev::ToolOpt&>(value));
     bool ok = tool_opt_XrefMaybe(*row); // this may return false
@@ -668,7 +668,7 @@ abt::FToolOpt* abt::tool_opt_InsertMaybe(const dev::ToolOpt &value) {
 
 // --- abt.FDb.tool_opt.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::tool_opt_AllocMem() {
+void* abt::tool_opt_AllocMem() throw() {
     u64 new_nelems     = _db.tool_opt_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -694,7 +694,7 @@ void* abt::tool_opt_AllocMem() {
 
 // --- abt.FDb.tool_opt.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::tool_opt_RemoveLast() {
+void abt::tool_opt_RemoveLast() throw() {
     u64 n = _db.tool_opt_n;
     if (n > 0) {
         n -= 1;
@@ -704,7 +704,7 @@ void abt::tool_opt_RemoveLast() {
 }
 
 // --- abt.FDb.tool_opt.InputMaybe
-static bool abt::tool_opt_InputMaybe(dev::ToolOpt &elem) {
+static bool abt::tool_opt_InputMaybe(dev::ToolOpt &elem) throw() {
     bool retval = true;
     retval = tool_opt_InsertMaybe(elem) != nullptr;
     return retval;
@@ -721,7 +721,7 @@ bool abt::tool_opt_XrefMaybe(abt::FToolOpt &row) {
 
 // --- abt.FDb.ind_target.Find
 // Find row by key. Return NULL if not found.
-abt::FTarget* abt::ind_target_Find(const algo::strptr& key) {
+abt::FTarget* abt::ind_target_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
     abt::FTarget* *e = &_db.ind_target_buckets_elems[index];
     abt::FTarget* ret=NULL;
@@ -736,7 +736,7 @@ abt::FTarget* abt::ind_target_Find(const algo::strptr& key) {
 
 // --- abt.FDb.ind_target.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FTarget& abt::ind_target_GetOrCreate(const algo::strptr& key) {
+abt::FTarget& abt::ind_target_GetOrCreate(const algo::strptr& key) throw() {
     abt::FTarget* ret = ind_target_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &target_Alloc();
@@ -753,7 +753,7 @@ abt::FTarget& abt::ind_target_GetOrCreate(const algo::strptr& key) {
 
 // --- abt.FDb.ind_target.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_target_InsertMaybe(abt::FTarget& row) {
+bool abt::ind_target_InsertMaybe(abt::FTarget& row) throw() {
     ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (abt::FTarget*)-1)) {// check if in hash already
@@ -781,7 +781,7 @@ bool abt::ind_target_InsertMaybe(abt::FTarget& row) {
 
 // --- abt.FDb.ind_target.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_target_Remove(abt::FTarget& row) {
+void abt::ind_target_Remove(abt::FTarget& row) throw() {
     if (LIKELY(row.ind_target_next != (abt::FTarget*)-1)) {// check if in hash already
         u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
         abt::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
@@ -799,7 +799,7 @@ void abt::ind_target_Remove(abt::FTarget& row) {
 
 // --- abt.FDb.ind_target.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_target_Reserve(int n) {
+void abt::ind_target_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_target_buckets_n;
     u32 new_nelems   = _db.ind_target_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -836,7 +836,7 @@ void abt::ind_target_Reserve(int n) {
 // --- abt.FDb.target.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FTarget& abt::target_Alloc() {
+abt::FTarget& abt::target_Alloc() throw() {
     abt::FTarget* row = target_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.target  comment:'Alloc failed'");
@@ -846,7 +846,7 @@ abt::FTarget& abt::target_Alloc() {
 
 // --- abt.FDb.target.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FTarget* abt::target_AllocMaybe() {
+abt::FTarget* abt::target_AllocMaybe() throw() {
     abt::FTarget *row = (abt::FTarget*)target_AllocMem();
     if (row) {
         new (row) abt::FTarget; // call constructor
@@ -857,7 +857,7 @@ abt::FTarget* abt::target_AllocMaybe() {
 // --- abt.FDb.target.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FTarget* abt::target_InsertMaybe(const dev::Target &value) {
+abt::FTarget* abt::target_InsertMaybe(const dev::Target &value) throw() {
     abt::FTarget *row = &target_Alloc(); // if out of memory, process dies. if input error, return NULL.
     target_CopyIn(*row,const_cast<dev::Target&>(value));
     bool ok = target_XrefMaybe(*row); // this may return false
@@ -870,7 +870,7 @@ abt::FTarget* abt::target_InsertMaybe(const dev::Target &value) {
 
 // --- abt.FDb.target.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::target_AllocMem() {
+void* abt::target_AllocMem() throw() {
     u64 new_nelems     = _db.target_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -896,7 +896,7 @@ void* abt::target_AllocMem() {
 
 // --- abt.FDb.target.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::target_RemoveLast() {
+void abt::target_RemoveLast() throw() {
     u64 n = _db.target_n;
     if (n > 0) {
         n -= 1;
@@ -906,7 +906,7 @@ void abt::target_RemoveLast() {
 }
 
 // --- abt.FDb.target.InputMaybe
-static bool abt::target_InputMaybe(dev::Target &elem) {
+static bool abt::target_InputMaybe(dev::Target &elem) throw() {
     bool retval = true;
     retval = target_InsertMaybe(elem) != nullptr;
     return retval;
@@ -941,7 +941,7 @@ bool abt::target_XrefMaybe(abt::FTarget &row) {
 
 // --- abt.FDb.ind_targsrc.Find
 // Find row by key. Return NULL if not found.
-abt::FTargsrc* abt::ind_targsrc_Find(const algo::strptr& key) {
+abt::FTargsrc* abt::ind_targsrc_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_targsrc_buckets_n - 1);
     abt::FTargsrc* *e = &_db.ind_targsrc_buckets_elems[index];
     abt::FTargsrc* ret=NULL;
@@ -956,7 +956,7 @@ abt::FTargsrc* abt::ind_targsrc_Find(const algo::strptr& key) {
 
 // --- abt.FDb.ind_targsrc.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FTargsrc& abt::ind_targsrc_GetOrCreate(const algo::strptr& key) {
+abt::FTargsrc& abt::ind_targsrc_GetOrCreate(const algo::strptr& key) throw() {
     abt::FTargsrc* ret = ind_targsrc_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &targsrc_Alloc();
@@ -973,7 +973,7 @@ abt::FTargsrc& abt::ind_targsrc_GetOrCreate(const algo::strptr& key) {
 
 // --- abt.FDb.ind_targsrc.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_targsrc_InsertMaybe(abt::FTargsrc& row) {
+bool abt::ind_targsrc_InsertMaybe(abt::FTargsrc& row) throw() {
     ind_targsrc_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_targsrc_next == (abt::FTargsrc*)-1)) {// check if in hash already
@@ -1001,7 +1001,7 @@ bool abt::ind_targsrc_InsertMaybe(abt::FTargsrc& row) {
 
 // --- abt.FDb.ind_targsrc.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_targsrc_Remove(abt::FTargsrc& row) {
+void abt::ind_targsrc_Remove(abt::FTargsrc& row) throw() {
     if (LIKELY(row.ind_targsrc_next != (abt::FTargsrc*)-1)) {// check if in hash already
         u32 index = algo::Smallstr100_Hash(0, row.targsrc) & (_db.ind_targsrc_buckets_n - 1);
         abt::FTargsrc* *prev = &_db.ind_targsrc_buckets_elems[index]; // addr of pointer to current element
@@ -1019,7 +1019,7 @@ void abt::ind_targsrc_Remove(abt::FTargsrc& row) {
 
 // --- abt.FDb.ind_targsrc.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_targsrc_Reserve(int n) {
+void abt::ind_targsrc_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_targsrc_buckets_n;
     u32 new_nelems   = _db.ind_targsrc_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1056,7 +1056,7 @@ void abt::ind_targsrc_Reserve(int n) {
 // --- abt.FDb.targsrc.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FTargsrc& abt::targsrc_Alloc() {
+abt::FTargsrc& abt::targsrc_Alloc() throw() {
     abt::FTargsrc* row = targsrc_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.targsrc  comment:'Alloc failed'");
@@ -1066,7 +1066,7 @@ abt::FTargsrc& abt::targsrc_Alloc() {
 
 // --- abt.FDb.targsrc.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FTargsrc* abt::targsrc_AllocMaybe() {
+abt::FTargsrc* abt::targsrc_AllocMaybe() throw() {
     abt::FTargsrc *row = (abt::FTargsrc*)targsrc_AllocMem();
     if (row) {
         new (row) abt::FTargsrc; // call constructor
@@ -1077,7 +1077,7 @@ abt::FTargsrc* abt::targsrc_AllocMaybe() {
 // --- abt.FDb.targsrc.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FTargsrc* abt::targsrc_InsertMaybe(const dev::Targsrc &value) {
+abt::FTargsrc* abt::targsrc_InsertMaybe(const dev::Targsrc &value) throw() {
     abt::FTargsrc *row = &targsrc_Alloc(); // if out of memory, process dies. if input error, return NULL.
     targsrc_CopyIn(*row,const_cast<dev::Targsrc&>(value));
     bool ok = targsrc_XrefMaybe(*row); // this may return false
@@ -1090,7 +1090,7 @@ abt::FTargsrc* abt::targsrc_InsertMaybe(const dev::Targsrc &value) {
 
 // --- abt.FDb.targsrc.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::targsrc_AllocMem() {
+void* abt::targsrc_AllocMem() throw() {
     u64 new_nelems     = _db.targsrc_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1116,7 +1116,7 @@ void* abt::targsrc_AllocMem() {
 
 // --- abt.FDb.targsrc.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::targsrc_RemoveLast() {
+void abt::targsrc_RemoveLast() throw() {
     u64 n = _db.targsrc_n;
     if (n > 0) {
         n -= 1;
@@ -1126,7 +1126,7 @@ void abt::targsrc_RemoveLast() {
 }
 
 // --- abt.FDb.targsrc.InputMaybe
-static bool abt::targsrc_InputMaybe(dev::Targsrc &elem) {
+static bool abt::targsrc_InputMaybe(dev::Targsrc &elem) throw() {
     bool retval = true;
     retval = targsrc_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1166,7 +1166,7 @@ bool abt::targsrc_XrefMaybe(abt::FTargsrc &row) {
 // --- abt.FDb.syscmddep.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FSyscmddep& abt::syscmddep_Alloc() {
+abt::FSyscmddep& abt::syscmddep_Alloc() throw() {
     abt::FSyscmddep* row = syscmddep_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.syscmddep  comment:'Alloc failed'");
@@ -1176,7 +1176,7 @@ abt::FSyscmddep& abt::syscmddep_Alloc() {
 
 // --- abt.FDb.syscmddep.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FSyscmddep* abt::syscmddep_AllocMaybe() {
+abt::FSyscmddep* abt::syscmddep_AllocMaybe() throw() {
     abt::FSyscmddep *row = (abt::FSyscmddep*)syscmddep_AllocMem();
     if (row) {
         new (row) abt::FSyscmddep; // call constructor
@@ -1187,7 +1187,7 @@ abt::FSyscmddep* abt::syscmddep_AllocMaybe() {
 // --- abt.FDb.syscmddep.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FSyscmddep* abt::syscmddep_InsertMaybe(const dev::Syscmddep &value) {
+abt::FSyscmddep* abt::syscmddep_InsertMaybe(const dev::Syscmddep &value) throw() {
     abt::FSyscmddep *row = &syscmddep_Alloc(); // if out of memory, process dies. if input error, return NULL.
     syscmddep_CopyIn(*row,const_cast<dev::Syscmddep&>(value));
     bool ok = syscmddep_XrefMaybe(*row); // this may return false
@@ -1200,7 +1200,7 @@ abt::FSyscmddep* abt::syscmddep_InsertMaybe(const dev::Syscmddep &value) {
 
 // --- abt.FDb.syscmddep.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::syscmddep_AllocMem() {
+void* abt::syscmddep_AllocMem() throw() {
     u64 new_nelems     = _db.syscmddep_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1226,7 +1226,7 @@ void* abt::syscmddep_AllocMem() {
 
 // --- abt.FDb.syscmddep.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::syscmddep_RemoveLast() {
+void abt::syscmddep_RemoveLast() throw() {
     u64 n = _db.syscmddep_n;
     if (n > 0) {
         n -= 1;
@@ -1236,7 +1236,7 @@ void abt::syscmddep_RemoveLast() {
 }
 
 // --- abt.FDb.syscmddep.InputMaybe
-static bool abt::syscmddep_InputMaybe(dev::Syscmddep &elem) {
+static bool abt::syscmddep_InputMaybe(dev::Syscmddep &elem) throw() {
     bool retval = true;
     retval = syscmddep_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1280,7 +1280,7 @@ bool abt::syscmddep_XrefMaybe(abt::FSyscmddep &row) {
 // --- abt.FDb.syscmd.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FSyscmd& abt::syscmd_Alloc() {
+abt::FSyscmd& abt::syscmd_Alloc() throw() {
     abt::FSyscmd* row = syscmd_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.syscmd  comment:'Alloc failed'");
@@ -1290,7 +1290,7 @@ abt::FSyscmd& abt::syscmd_Alloc() {
 
 // --- abt.FDb.syscmd.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FSyscmd* abt::syscmd_AllocMaybe() {
+abt::FSyscmd* abt::syscmd_AllocMaybe() throw() {
     abt::FSyscmd *row = (abt::FSyscmd*)syscmd_AllocMem();
     if (row) {
         new (row) abt::FSyscmd; // call constructor
@@ -1302,7 +1302,7 @@ abt::FSyscmd* abt::syscmd_AllocMaybe() {
 // --- abt.FDb.syscmd.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FSyscmd* abt::syscmd_InsertMaybe(const dev::Syscmd &value) {
+abt::FSyscmd* abt::syscmd_InsertMaybe(const dev::Syscmd &value) throw() {
     abt::FSyscmd *row = &syscmd_Alloc(); // if out of memory, process dies. if input error, return NULL.
     syscmd_CopyIn(*row,const_cast<dev::Syscmd&>(value));
     bool ok = syscmd_XrefMaybe(*row); // this may return false
@@ -1315,7 +1315,7 @@ abt::FSyscmd* abt::syscmd_InsertMaybe(const dev::Syscmd &value) {
 
 // --- abt.FDb.syscmd.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::syscmd_AllocMem() {
+void* abt::syscmd_AllocMem() throw() {
     u64 new_nelems     = _db.syscmd_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -1341,7 +1341,7 @@ void* abt::syscmd_AllocMem() {
 
 // --- abt.FDb.syscmd.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::syscmd_RemoveLast() {
+void abt::syscmd_RemoveLast() throw() {
     u64 n = _db.syscmd_n;
     if (n > 0) {
         n -= 1;
@@ -1351,7 +1351,7 @@ void abt::syscmd_RemoveLast() {
 }
 
 // --- abt.FDb.syscmd.InputMaybe
-static bool abt::syscmd_InputMaybe(dev::Syscmd &elem) {
+static bool abt::syscmd_InputMaybe(dev::Syscmd &elem) throw() {
     bool retval = true;
     retval = syscmd_InsertMaybe(elem) != nullptr;
     return retval;
@@ -1389,7 +1389,7 @@ bool abt::syscmd_XrefMaybe(abt::FSyscmd &row) {
 // The following fields are updated:
 //     abt.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void abt::ReadArgv() {
+void abt::ReadArgv() throw() {
     command::abt &cmd = abt::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -1683,7 +1683,7 @@ bool abt::InsertStrptrMaybe(algo::strptr str) {
 
 // --- abt.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool abt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool abt::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = abt::LoadTuplesFile(root, recursive);
@@ -1721,7 +1721,7 @@ bool abt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool abt::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool abt::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -1734,7 +1734,7 @@ bool abt::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- abt.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool abt::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool abt::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -1754,7 +1754,7 @@ bool abt::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
 
 // --- abt.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool abt::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool abt::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = abt::LoadTuplesFile(fname, recursive);
@@ -1778,7 +1778,7 @@ bool abt::_db_XrefMaybe() {
 
 // --- abt.FDb.ind_syscmd.Find
 // Find row by key. Return NULL if not found.
-abt::FSyscmd* abt::ind_syscmd_Find(i64 key) {
+abt::FSyscmd* abt::ind_syscmd_Find(i64 key) throw() {
     u32 index = ::i64_Hash(0, key) & (_db.ind_syscmd_buckets_n - 1);
     abt::FSyscmd* *e = &_db.ind_syscmd_buckets_elems[index];
     abt::FSyscmd* ret=NULL;
@@ -1793,7 +1793,7 @@ abt::FSyscmd* abt::ind_syscmd_Find(i64 key) {
 
 // --- abt.FDb.ind_syscmd.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FSyscmd& abt::ind_syscmd_GetOrCreate(i64 key) {
+abt::FSyscmd& abt::ind_syscmd_GetOrCreate(i64 key) throw() {
     abt::FSyscmd* ret = ind_syscmd_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &syscmd_Alloc();
@@ -1810,7 +1810,7 @@ abt::FSyscmd& abt::ind_syscmd_GetOrCreate(i64 key) {
 
 // --- abt.FDb.ind_syscmd.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_syscmd_InsertMaybe(abt::FSyscmd& row) {
+bool abt::ind_syscmd_InsertMaybe(abt::FSyscmd& row) throw() {
     ind_syscmd_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_syscmd_next == (abt::FSyscmd*)-1)) {// check if in hash already
@@ -1838,7 +1838,7 @@ bool abt::ind_syscmd_InsertMaybe(abt::FSyscmd& row) {
 
 // --- abt.FDb.ind_syscmd.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_syscmd_Remove(abt::FSyscmd& row) {
+void abt::ind_syscmd_Remove(abt::FSyscmd& row) throw() {
     if (LIKELY(row.ind_syscmd_next != (abt::FSyscmd*)-1)) {// check if in hash already
         u32 index = ::i64_Hash(0, row.syscmd) & (_db.ind_syscmd_buckets_n - 1);
         abt::FSyscmd* *prev = &_db.ind_syscmd_buckets_elems[index]; // addr of pointer to current element
@@ -1856,7 +1856,7 @@ void abt::ind_syscmd_Remove(abt::FSyscmd& row) {
 
 // --- abt.FDb.ind_syscmd.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_syscmd_Reserve(int n) {
+void abt::ind_syscmd_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_syscmd_buckets_n;
     u32 new_nelems   = _db.ind_syscmd_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1892,7 +1892,7 @@ void abt::ind_syscmd_Reserve(int n) {
 
 // --- abt.FDb.ind_running.Find
 // Find row by key. Return NULL if not found.
-abt::FSyscmd* abt::ind_running_Find(i32 key) {
+abt::FSyscmd* abt::ind_running_Find(i32 key) throw() {
     u32 index = ::i32_Hash(0, key) & (_db.ind_running_buckets_n - 1);
     abt::FSyscmd* *e = &_db.ind_running_buckets_elems[index];
     abt::FSyscmd* ret=NULL;
@@ -1907,7 +1907,7 @@ abt::FSyscmd* abt::ind_running_Find(i32 key) {
 
 // --- abt.FDb.ind_running.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FSyscmd& abt::ind_running_GetOrCreate(i32 key) {
+abt::FSyscmd& abt::ind_running_GetOrCreate(i32 key) throw() {
     abt::FSyscmd* ret = ind_running_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &syscmd_Alloc();
@@ -1924,7 +1924,7 @@ abt::FSyscmd& abt::ind_running_GetOrCreate(i32 key) {
 
 // --- abt.FDb.ind_running.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_running_InsertMaybe(abt::FSyscmd& row) {
+bool abt::ind_running_InsertMaybe(abt::FSyscmd& row) throw() {
     ind_running_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_running_next == (abt::FSyscmd*)-1)) {// check if in hash already
@@ -1952,7 +1952,7 @@ bool abt::ind_running_InsertMaybe(abt::FSyscmd& row) {
 
 // --- abt.FDb.ind_running.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_running_Remove(abt::FSyscmd& row) {
+void abt::ind_running_Remove(abt::FSyscmd& row) throw() {
     if (LIKELY(row.ind_running_next != (abt::FSyscmd*)-1)) {// check if in hash already
         u32 index = ::i32_Hash(0, row.pid) & (_db.ind_running_buckets_n - 1);
         abt::FSyscmd* *prev = &_db.ind_running_buckets_elems[index]; // addr of pointer to current element
@@ -1970,7 +1970,7 @@ void abt::ind_running_Remove(abt::FSyscmd& row) {
 
 // --- abt.FDb.ind_running.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_running_Reserve(int n) {
+void abt::ind_running_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_running_buckets_n;
     u32 new_nelems   = _db.ind_running_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2006,7 +2006,7 @@ void abt::ind_running_Reserve(int n) {
 
 // --- abt.FDb.ind_srcfile.Find
 // Find row by key. Return NULL if not found.
-abt::FSrcfile* abt::ind_srcfile_Find(const algo::strptr& key) {
+abt::FSrcfile* abt::ind_srcfile_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_srcfile_buckets_n - 1);
     abt::FSrcfile* *e = &_db.ind_srcfile_buckets_elems[index];
     abt::FSrcfile* ret=NULL;
@@ -2021,7 +2021,7 @@ abt::FSrcfile* abt::ind_srcfile_Find(const algo::strptr& key) {
 
 // --- abt.FDb.ind_srcfile.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FSrcfile& abt::ind_srcfile_GetOrCreate(const algo::strptr& key) {
+abt::FSrcfile& abt::ind_srcfile_GetOrCreate(const algo::strptr& key) throw() {
     abt::FSrcfile* ret = ind_srcfile_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &srcfile_Alloc();
@@ -2038,7 +2038,7 @@ abt::FSrcfile& abt::ind_srcfile_GetOrCreate(const algo::strptr& key) {
 
 // --- abt.FDb.ind_srcfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_srcfile_InsertMaybe(abt::FSrcfile& row) {
+bool abt::ind_srcfile_InsertMaybe(abt::FSrcfile& row) throw() {
     ind_srcfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_srcfile_next == (abt::FSrcfile*)-1)) {// check if in hash already
@@ -2066,7 +2066,7 @@ bool abt::ind_srcfile_InsertMaybe(abt::FSrcfile& row) {
 
 // --- abt.FDb.ind_srcfile.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_srcfile_Remove(abt::FSrcfile& row) {
+void abt::ind_srcfile_Remove(abt::FSrcfile& row) throw() {
     if (LIKELY(row.ind_srcfile_next != (abt::FSrcfile*)-1)) {// check if in hash already
         u32 index = algo::Smallstr200_Hash(0, row.srcfile) & (_db.ind_srcfile_buckets_n - 1);
         abt::FSrcfile* *prev = &_db.ind_srcfile_buckets_elems[index]; // addr of pointer to current element
@@ -2084,7 +2084,7 @@ void abt::ind_srcfile_Remove(abt::FSrcfile& row) {
 
 // --- abt.FDb.ind_srcfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_srcfile_Reserve(int n) {
+void abt::ind_srcfile_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_srcfile_buckets_n;
     u32 new_nelems   = _db.ind_srcfile_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2121,7 +2121,7 @@ void abt::ind_srcfile_Reserve(int n) {
 // --- abt.FDb.cfg.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FCfg& abt::cfg_Alloc() {
+abt::FCfg& abt::cfg_Alloc() throw() {
     abt::FCfg* row = cfg_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.cfg  comment:'Alloc failed'");
@@ -2131,7 +2131,7 @@ abt::FCfg& abt::cfg_Alloc() {
 
 // --- abt.FDb.cfg.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FCfg* abt::cfg_AllocMaybe() {
+abt::FCfg* abt::cfg_AllocMaybe() throw() {
     abt::FCfg *row = (abt::FCfg*)cfg_AllocMem();
     if (row) {
         new (row) abt::FCfg; // call constructor
@@ -2142,7 +2142,7 @@ abt::FCfg* abt::cfg_AllocMaybe() {
 // --- abt.FDb.cfg.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FCfg* abt::cfg_InsertMaybe(const dev::Cfg &value) {
+abt::FCfg* abt::cfg_InsertMaybe(const dev::Cfg &value) throw() {
     abt::FCfg *row = &cfg_Alloc(); // if out of memory, process dies. if input error, return NULL.
     cfg_CopyIn(*row,const_cast<dev::Cfg&>(value));
     bool ok = cfg_XrefMaybe(*row); // this may return false
@@ -2155,7 +2155,7 @@ abt::FCfg* abt::cfg_InsertMaybe(const dev::Cfg &value) {
 
 // --- abt.FDb.cfg.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::cfg_AllocMem() {
+void* abt::cfg_AllocMem() throw() {
     u64 new_nelems     = _db.cfg_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2181,7 +2181,7 @@ void* abt::cfg_AllocMem() {
 
 // --- abt.FDb.cfg.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::cfg_RemoveLast() {
+void abt::cfg_RemoveLast() throw() {
     u64 n = _db.cfg_n;
     if (n > 0) {
         n -= 1;
@@ -2191,7 +2191,7 @@ void abt::cfg_RemoveLast() {
 }
 
 // --- abt.FDb.cfg.InputMaybe
-static bool abt::cfg_InputMaybe(dev::Cfg &elem) {
+static bool abt::cfg_InputMaybe(dev::Cfg &elem) throw() {
     bool retval = true;
     retval = cfg_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2217,7 +2217,7 @@ bool abt::cfg_XrefMaybe(abt::FCfg &row) {
 
 // --- abt.FDb.ind_cfg.Find
 // Find row by key. Return NULL if not found.
-abt::FCfg* abt::ind_cfg_Find(const algo::strptr& key) {
+abt::FCfg* abt::ind_cfg_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_cfg_buckets_n - 1);
     abt::FCfg* *e = &_db.ind_cfg_buckets_elems[index];
     abt::FCfg* ret=NULL;
@@ -2232,7 +2232,7 @@ abt::FCfg* abt::ind_cfg_Find(const algo::strptr& key) {
 
 // --- abt.FDb.ind_cfg.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FCfg& abt::ind_cfg_GetOrCreate(const algo::strptr& key) {
+abt::FCfg& abt::ind_cfg_GetOrCreate(const algo::strptr& key) throw() {
     abt::FCfg* ret = ind_cfg_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &cfg_Alloc();
@@ -2249,7 +2249,7 @@ abt::FCfg& abt::ind_cfg_GetOrCreate(const algo::strptr& key) {
 
 // --- abt.FDb.ind_cfg.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_cfg_InsertMaybe(abt::FCfg& row) {
+bool abt::ind_cfg_InsertMaybe(abt::FCfg& row) throw() {
     ind_cfg_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_cfg_next == (abt::FCfg*)-1)) {// check if in hash already
@@ -2277,7 +2277,7 @@ bool abt::ind_cfg_InsertMaybe(abt::FCfg& row) {
 
 // --- abt.FDb.ind_cfg.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_cfg_Remove(abt::FCfg& row) {
+void abt::ind_cfg_Remove(abt::FCfg& row) throw() {
     if (LIKELY(row.ind_cfg_next != (abt::FCfg*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.cfg) & (_db.ind_cfg_buckets_n - 1);
         abt::FCfg* *prev = &_db.ind_cfg_buckets_elems[index]; // addr of pointer to current element
@@ -2295,7 +2295,7 @@ void abt::ind_cfg_Remove(abt::FCfg& row) {
 
 // --- abt.FDb.ind_cfg.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_cfg_Reserve(int n) {
+void abt::ind_cfg_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_cfg_buckets_n;
     u32 new_nelems   = _db.ind_cfg_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2332,7 +2332,7 @@ void abt::ind_cfg_Reserve(int n) {
 // --- abt.FDb.uname.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FUname& abt::uname_Alloc() {
+abt::FUname& abt::uname_Alloc() throw() {
     abt::FUname* row = uname_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.uname  comment:'Alloc failed'");
@@ -2342,7 +2342,7 @@ abt::FUname& abt::uname_Alloc() {
 
 // --- abt.FDb.uname.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FUname* abt::uname_AllocMaybe() {
+abt::FUname* abt::uname_AllocMaybe() throw() {
     abt::FUname *row = (abt::FUname*)uname_AllocMem();
     if (row) {
         new (row) abt::FUname; // call constructor
@@ -2353,7 +2353,7 @@ abt::FUname* abt::uname_AllocMaybe() {
 // --- abt.FDb.uname.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FUname* abt::uname_InsertMaybe(const dev::Uname &value) {
+abt::FUname* abt::uname_InsertMaybe(const dev::Uname &value) throw() {
     abt::FUname *row = &uname_Alloc(); // if out of memory, process dies. if input error, return NULL.
     uname_CopyIn(*row,const_cast<dev::Uname&>(value));
     bool ok = uname_XrefMaybe(*row); // this may return false
@@ -2366,7 +2366,7 @@ abt::FUname* abt::uname_InsertMaybe(const dev::Uname &value) {
 
 // --- abt.FDb.uname.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::uname_AllocMem() {
+void* abt::uname_AllocMem() throw() {
     u64 new_nelems     = _db.uname_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2392,7 +2392,7 @@ void* abt::uname_AllocMem() {
 
 // --- abt.FDb.uname.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::uname_RemoveLast() {
+void abt::uname_RemoveLast() throw() {
     u64 n = _db.uname_n;
     if (n > 0) {
         n -= 1;
@@ -2402,7 +2402,7 @@ void abt::uname_RemoveLast() {
 }
 
 // --- abt.FDb.uname.InputMaybe
-static bool abt::uname_InputMaybe(dev::Uname &elem) {
+static bool abt::uname_InputMaybe(dev::Uname &elem) throw() {
     bool retval = true;
     retval = uname_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2428,7 +2428,7 @@ bool abt::uname_XrefMaybe(abt::FUname &row) {
 
 // --- abt.FDb.ind_uname.Find
 // Find row by key. Return NULL if not found.
-abt::FUname* abt::ind_uname_Find(const algo::strptr& key) {
+abt::FUname* abt::ind_uname_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_uname_buckets_n - 1);
     abt::FUname* *e = &_db.ind_uname_buckets_elems[index];
     abt::FUname* ret=NULL;
@@ -2443,7 +2443,7 @@ abt::FUname* abt::ind_uname_Find(const algo::strptr& key) {
 
 // --- abt.FDb.ind_uname.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FUname& abt::ind_uname_GetOrCreate(const algo::strptr& key) {
+abt::FUname& abt::ind_uname_GetOrCreate(const algo::strptr& key) throw() {
     abt::FUname* ret = ind_uname_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &uname_Alloc();
@@ -2460,7 +2460,7 @@ abt::FUname& abt::ind_uname_GetOrCreate(const algo::strptr& key) {
 
 // --- abt.FDb.ind_uname.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_uname_InsertMaybe(abt::FUname& row) {
+bool abt::ind_uname_InsertMaybe(abt::FUname& row) throw() {
     ind_uname_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_uname_next == (abt::FUname*)-1)) {// check if in hash already
@@ -2488,7 +2488,7 @@ bool abt::ind_uname_InsertMaybe(abt::FUname& row) {
 
 // --- abt.FDb.ind_uname.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_uname_Remove(abt::FUname& row) {
+void abt::ind_uname_Remove(abt::FUname& row) throw() {
     if (LIKELY(row.ind_uname_next != (abt::FUname*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.uname) & (_db.ind_uname_buckets_n - 1);
         abt::FUname* *prev = &_db.ind_uname_buckets_elems[index]; // addr of pointer to current element
@@ -2506,7 +2506,7 @@ void abt::ind_uname_Remove(abt::FUname& row) {
 
 // --- abt.FDb.ind_uname.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_uname_Reserve(int n) {
+void abt::ind_uname_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_uname_buckets_n;
     u32 new_nelems   = _db.ind_uname_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2543,7 +2543,7 @@ void abt::ind_uname_Reserve(int n) {
 // --- abt.FDb.compiler.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FCompiler& abt::compiler_Alloc() {
+abt::FCompiler& abt::compiler_Alloc() throw() {
     abt::FCompiler* row = compiler_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.compiler  comment:'Alloc failed'");
@@ -2553,7 +2553,7 @@ abt::FCompiler& abt::compiler_Alloc() {
 
 // --- abt.FDb.compiler.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FCompiler* abt::compiler_AllocMaybe() {
+abt::FCompiler* abt::compiler_AllocMaybe() throw() {
     abt::FCompiler *row = (abt::FCompiler*)compiler_AllocMem();
     if (row) {
         new (row) abt::FCompiler; // call constructor
@@ -2564,7 +2564,7 @@ abt::FCompiler* abt::compiler_AllocMaybe() {
 // --- abt.FDb.compiler.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FCompiler* abt::compiler_InsertMaybe(const dev::Compiler &value) {
+abt::FCompiler* abt::compiler_InsertMaybe(const dev::Compiler &value) throw() {
     abt::FCompiler *row = &compiler_Alloc(); // if out of memory, process dies. if input error, return NULL.
     compiler_CopyIn(*row,const_cast<dev::Compiler&>(value));
     bool ok = compiler_XrefMaybe(*row); // this may return false
@@ -2577,7 +2577,7 @@ abt::FCompiler* abt::compiler_InsertMaybe(const dev::Compiler &value) {
 
 // --- abt.FDb.compiler.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::compiler_AllocMem() {
+void* abt::compiler_AllocMem() throw() {
     u64 new_nelems     = _db.compiler_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2603,7 +2603,7 @@ void* abt::compiler_AllocMem() {
 
 // --- abt.FDb.compiler.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::compiler_RemoveLast() {
+void abt::compiler_RemoveLast() throw() {
     u64 n = _db.compiler_n;
     if (n > 0) {
         n -= 1;
@@ -2613,7 +2613,7 @@ void abt::compiler_RemoveLast() {
 }
 
 // --- abt.FDb.compiler.InputMaybe
-static bool abt::compiler_InputMaybe(dev::Compiler &elem) {
+static bool abt::compiler_InputMaybe(dev::Compiler &elem) throw() {
     bool retval = true;
     retval = compiler_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2639,7 +2639,7 @@ bool abt::compiler_XrefMaybe(abt::FCompiler &row) {
 
 // --- abt.FDb.ind_compiler.Find
 // Find row by key. Return NULL if not found.
-abt::FCompiler* abt::ind_compiler_Find(const algo::strptr& key) {
+abt::FCompiler* abt::ind_compiler_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_compiler_buckets_n - 1);
     abt::FCompiler* *e = &_db.ind_compiler_buckets_elems[index];
     abt::FCompiler* ret=NULL;
@@ -2654,7 +2654,7 @@ abt::FCompiler* abt::ind_compiler_Find(const algo::strptr& key) {
 
 // --- abt.FDb.ind_compiler.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FCompiler& abt::ind_compiler_GetOrCreate(const algo::strptr& key) {
+abt::FCompiler& abt::ind_compiler_GetOrCreate(const algo::strptr& key) throw() {
     abt::FCompiler* ret = ind_compiler_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &compiler_Alloc();
@@ -2671,7 +2671,7 @@ abt::FCompiler& abt::ind_compiler_GetOrCreate(const algo::strptr& key) {
 
 // --- abt.FDb.ind_compiler.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_compiler_InsertMaybe(abt::FCompiler& row) {
+bool abt::ind_compiler_InsertMaybe(abt::FCompiler& row) throw() {
     ind_compiler_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_compiler_next == (abt::FCompiler*)-1)) {// check if in hash already
@@ -2699,7 +2699,7 @@ bool abt::ind_compiler_InsertMaybe(abt::FCompiler& row) {
 
 // --- abt.FDb.ind_compiler.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_compiler_Remove(abt::FCompiler& row) {
+void abt::ind_compiler_Remove(abt::FCompiler& row) throw() {
     if (LIKELY(row.ind_compiler_next != (abt::FCompiler*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.compiler) & (_db.ind_compiler_buckets_n - 1);
         abt::FCompiler* *prev = &_db.ind_compiler_buckets_elems[index]; // addr of pointer to current element
@@ -2717,7 +2717,7 @@ void abt::ind_compiler_Remove(abt::FCompiler& row) {
 
 // --- abt.FDb.ind_compiler.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_compiler_Reserve(int n) {
+void abt::ind_compiler_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_compiler_buckets_n;
     u32 new_nelems   = _db.ind_compiler_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2754,7 +2754,7 @@ void abt::ind_compiler_Reserve(int n) {
 // --- abt.FDb.arch.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FArch& abt::arch_Alloc() {
+abt::FArch& abt::arch_Alloc() throw() {
     abt::FArch* row = arch_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.arch  comment:'Alloc failed'");
@@ -2764,7 +2764,7 @@ abt::FArch& abt::arch_Alloc() {
 
 // --- abt.FDb.arch.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FArch* abt::arch_AllocMaybe() {
+abt::FArch* abt::arch_AllocMaybe() throw() {
     abt::FArch *row = (abt::FArch*)arch_AllocMem();
     if (row) {
         new (row) abt::FArch; // call constructor
@@ -2775,7 +2775,7 @@ abt::FArch* abt::arch_AllocMaybe() {
 // --- abt.FDb.arch.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FArch* abt::arch_InsertMaybe(const dev::Arch &value) {
+abt::FArch* abt::arch_InsertMaybe(const dev::Arch &value) throw() {
     abt::FArch *row = &arch_Alloc(); // if out of memory, process dies. if input error, return NULL.
     arch_CopyIn(*row,const_cast<dev::Arch&>(value));
     bool ok = arch_XrefMaybe(*row); // this may return false
@@ -2788,7 +2788,7 @@ abt::FArch* abt::arch_InsertMaybe(const dev::Arch &value) {
 
 // --- abt.FDb.arch.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::arch_AllocMem() {
+void* abt::arch_AllocMem() throw() {
     u64 new_nelems     = _db.arch_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -2814,7 +2814,7 @@ void* abt::arch_AllocMem() {
 
 // --- abt.FDb.arch.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::arch_RemoveLast() {
+void abt::arch_RemoveLast() throw() {
     u64 n = _db.arch_n;
     if (n > 0) {
         n -= 1;
@@ -2824,7 +2824,7 @@ void abt::arch_RemoveLast() {
 }
 
 // --- abt.FDb.arch.InputMaybe
-static bool abt::arch_InputMaybe(dev::Arch &elem) {
+static bool abt::arch_InputMaybe(dev::Arch &elem) throw() {
     bool retval = true;
     retval = arch_InsertMaybe(elem) != nullptr;
     return retval;
@@ -2850,7 +2850,7 @@ bool abt::arch_XrefMaybe(abt::FArch &row) {
 
 // --- abt.FDb.ind_arch.Find
 // Find row by key. Return NULL if not found.
-abt::FArch* abt::ind_arch_Find(const algo::strptr& key) {
+abt::FArch* abt::ind_arch_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_arch_buckets_n - 1);
     abt::FArch* *e = &_db.ind_arch_buckets_elems[index];
     abt::FArch* ret=NULL;
@@ -2865,7 +2865,7 @@ abt::FArch* abt::ind_arch_Find(const algo::strptr& key) {
 
 // --- abt.FDb.ind_arch.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FArch& abt::ind_arch_GetOrCreate(const algo::strptr& key) {
+abt::FArch& abt::ind_arch_GetOrCreate(const algo::strptr& key) throw() {
     abt::FArch* ret = ind_arch_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &arch_Alloc();
@@ -2882,7 +2882,7 @@ abt::FArch& abt::ind_arch_GetOrCreate(const algo::strptr& key) {
 
 // --- abt.FDb.ind_arch.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_arch_InsertMaybe(abt::FArch& row) {
+bool abt::ind_arch_InsertMaybe(abt::FArch& row) throw() {
     ind_arch_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_arch_next == (abt::FArch*)-1)) {// check if in hash already
@@ -2910,7 +2910,7 @@ bool abt::ind_arch_InsertMaybe(abt::FArch& row) {
 
 // --- abt.FDb.ind_arch.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_arch_Remove(abt::FArch& row) {
+void abt::ind_arch_Remove(abt::FArch& row) throw() {
     if (LIKELY(row.ind_arch_next != (abt::FArch*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.arch) & (_db.ind_arch_buckets_n - 1);
         abt::FArch* *prev = &_db.ind_arch_buckets_elems[index]; // addr of pointer to current element
@@ -2928,7 +2928,7 @@ void abt::ind_arch_Remove(abt::FArch& row) {
 
 // --- abt.FDb.ind_arch.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_arch_Reserve(int n) {
+void abt::ind_arch_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_arch_buckets_n;
     u32 new_nelems   = _db.ind_arch_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -2964,7 +2964,7 @@ void abt::ind_arch_Reserve(int n) {
 
 // --- abt.FDb.bh_syscmd.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void abt::bh_syscmd_Dealloc() {
+void abt::bh_syscmd_Dealloc() throw() {
     bh_syscmd_RemoveAll();
     abt::lpool_FreeMem(_db.bh_syscmd_elems, sizeof(abt::FSyscmd*)*_db.bh_syscmd_max);
     _db.bh_syscmd_max   = 0;
@@ -2974,7 +2974,7 @@ void abt::bh_syscmd_Dealloc() {
 // --- abt.FDb.bh_syscmd.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int abt::bh_syscmd_Downheap(abt::FSyscmd& row, int idx) {
+static int abt::bh_syscmd_Downheap(abt::FSyscmd& row, int idx) throw() {
     abt::FSyscmd* *elems = _db.bh_syscmd_elems;
     int n = _db.bh_syscmd_n;
     int child = idx*2+1;
@@ -3001,7 +3001,7 @@ static int abt::bh_syscmd_Downheap(abt::FSyscmd& row, int idx) {
 
 // --- abt.FDb.bh_syscmd.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void abt::bh_syscmd_Insert(abt::FSyscmd& row) {
+void abt::bh_syscmd_Insert(abt::FSyscmd& row) throw() {
     if (LIKELY(row.bh_syscmd_idx == -1)) {
         bh_syscmd_Reserve(1);
         int n = _db.bh_syscmd_n;
@@ -3015,7 +3015,7 @@ void abt::bh_syscmd_Insert(abt::FSyscmd& row) {
 // --- abt.FDb.bh_syscmd.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 abt::bh_syscmd_Reheap(abt::FSyscmd& row) {
+i32 abt::bh_syscmd_Reheap(abt::FSyscmd& row) throw() {
     int old_idx = row.bh_syscmd_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
@@ -3036,7 +3036,7 @@ i32 abt::bh_syscmd_Reheap(abt::FSyscmd& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 abt::bh_syscmd_ReheapFirst() {
+i32 abt::bh_syscmd_ReheapFirst() throw() {
     abt::FSyscmd &row = *_db.bh_syscmd_elems[0];
     i32 new_idx = bh_syscmd_Downheap(row, 0);
     row.bh_syscmd_idx = new_idx;
@@ -3046,7 +3046,7 @@ i32 abt::bh_syscmd_ReheapFirst() {
 
 // --- abt.FDb.bh_syscmd.Remove
 // Remove element from index. If element is not in index, do nothing.
-void abt::bh_syscmd_Remove(abt::FSyscmd& row) {
+void abt::bh_syscmd_Remove(abt::FSyscmd& row) throw() {
     if (bh_syscmd_InBheapQ(row)) {
         int old_idx = row.bh_syscmd_idx;
         if (_db.bh_syscmd_elems[old_idx] == &row) { // sanity check: heap points back to row
@@ -3068,7 +3068,7 @@ void abt::bh_syscmd_Remove(abt::FSyscmd& row) {
 
 // --- abt.FDb.bh_syscmd.RemoveAll
 // Remove all elements from binary heap
-void abt::bh_syscmd_RemoveAll() {
+void abt::bh_syscmd_RemoveAll() throw() {
     int n = _db.bh_syscmd_n;
     for (int i = n - 1; i>=0; i--) {
         _db.bh_syscmd_elems[i]->bh_syscmd_idx = -1; // mark not-in-heap
@@ -3079,7 +3079,7 @@ void abt::bh_syscmd_RemoveAll() {
 // --- abt.FDb.bh_syscmd.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-abt::FSyscmd* abt::bh_syscmd_RemoveFirst() {
+abt::FSyscmd* abt::bh_syscmd_RemoveFirst() throw() {
     abt::FSyscmd *row = NULL;
     if (_db.bh_syscmd_n > 0) {
         row = _db.bh_syscmd_elems[0];
@@ -3098,7 +3098,7 @@ abt::FSyscmd* abt::bh_syscmd_RemoveFirst() {
 
 // --- abt.FDb.bh_syscmd.Reserve
 // Reserve space in index for N more elements
-void abt::bh_syscmd_Reserve(int n) {
+void abt::bh_syscmd_Reserve(int n) throw() {
     i32 old_max = _db.bh_syscmd_max;
     if (UNLIKELY(_db.bh_syscmd_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -3116,7 +3116,7 @@ void abt::bh_syscmd_Reserve(int n) {
 // --- abt.FDb.bh_syscmd.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int abt::bh_syscmd_Upheap(abt::FSyscmd& row, int idx) {
+static int abt::bh_syscmd_Upheap(abt::FSyscmd& row, int idx) throw() {
     abt::FSyscmd* *elems = _db.bh_syscmd_elems;
     while (idx>0) {
         int j = (idx-1)/2;
@@ -3132,14 +3132,14 @@ static int abt::bh_syscmd_Upheap(abt::FSyscmd& row, int idx) {
 }
 
 // --- abt.FDb.bh_syscmd.ElemLt
-inline static bool abt::bh_syscmd_ElemLt(abt::FSyscmd &a, abt::FSyscmd &b) {
+inline static bool abt::bh_syscmd_ElemLt(abt::FSyscmd &a, abt::FSyscmd &b) throw() {
     (void)_db;
     return execkey_Get(a) < execkey_Get(b);
 }
 
 // --- abt.FDb.zs_srcfile_read.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void abt::zs_srcfile_read_Insert(abt::FSrcfile& row) {
+void abt::zs_srcfile_read_Insert(abt::FSrcfile& row) throw() {
     if (!zs_srcfile_read_InLlistQ(row)) {
         abt::FSrcfile* old_tail       = _db.zs_srcfile_read_tail;
         row.zs_srcfile_read_next  = NULL;
@@ -3154,7 +3154,7 @@ void abt::zs_srcfile_read_Insert(abt::FSrcfile& row) {
 // --- abt.FDb.zs_srcfile_read.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void abt::zs_srcfile_read_Remove(abt::FSrcfile& row) {
+void abt::zs_srcfile_read_Remove(abt::FSrcfile& row) throw() {
     if (zs_srcfile_read_InLlistQ(row)) {
         abt::FSrcfile* old_head       = _db.zs_srcfile_read_head;
         (void)old_head; // in case it's not used
@@ -3184,7 +3184,7 @@ void abt::zs_srcfile_read_Remove(abt::FSrcfile& row) {
 
 // --- abt.FDb.zs_srcfile_read.RemoveAll
 // Empty the index. (The rows are not deleted)
-void abt::zs_srcfile_read_RemoveAll() {
+void abt::zs_srcfile_read_RemoveAll() throw() {
     abt::FSrcfile* row = _db.zs_srcfile_read_head;
     _db.zs_srcfile_read_head = NULL;
     _db.zs_srcfile_read_tail = NULL;
@@ -3197,7 +3197,7 @@ void abt::zs_srcfile_read_RemoveAll() {
 
 // --- abt.FDb.zs_srcfile_read.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-abt::FSrcfile* abt::zs_srcfile_read_RemoveFirst() {
+abt::FSrcfile* abt::zs_srcfile_read_RemoveFirst() throw() {
     abt::FSrcfile *row = NULL;
     row = _db.zs_srcfile_read_head;
     if (row) {
@@ -3214,7 +3214,7 @@ abt::FSrcfile* abt::zs_srcfile_read_RemoveFirst() {
 
 // --- abt.FDb.zs_sel_target.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void abt::zs_sel_target_Insert(abt::FTarget& row) {
+void abt::zs_sel_target_Insert(abt::FTarget& row) throw() {
     if (!zs_sel_target_InLlistQ(row)) {
         abt::FTarget* old_tail       = _db.zs_sel_target_tail;
         row.zs_sel_target_next  = NULL;
@@ -3230,7 +3230,7 @@ void abt::zs_sel_target_Insert(abt::FTarget& row) {
 // --- abt.FDb.zs_sel_target.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void abt::zs_sel_target_Remove(abt::FTarget& row) {
+void abt::zs_sel_target_Remove(abt::FTarget& row) throw() {
     if (zs_sel_target_InLlistQ(row)) {
         abt::FTarget* old_head       = _db.zs_sel_target_head;
         (void)old_head; // in case it's not used
@@ -3261,7 +3261,7 @@ void abt::zs_sel_target_Remove(abt::FTarget& row) {
 
 // --- abt.FDb.zs_sel_target.RemoveAll
 // Empty the index. (The rows are not deleted)
-void abt::zs_sel_target_RemoveAll() {
+void abt::zs_sel_target_RemoveAll() throw() {
     abt::FTarget* row = _db.zs_sel_target_head;
     _db.zs_sel_target_head = NULL;
     _db.zs_sel_target_tail = NULL;
@@ -3275,7 +3275,7 @@ void abt::zs_sel_target_RemoveAll() {
 
 // --- abt.FDb.zs_sel_target.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-abt::FTarget* abt::zs_sel_target_RemoveFirst() {
+abt::FTarget* abt::zs_sel_target_RemoveFirst() throw() {
     abt::FTarget *row = NULL;
     row = _db.zs_sel_target_head;
     if (row) {
@@ -3294,7 +3294,7 @@ abt::FTarget* abt::zs_sel_target_RemoveFirst() {
 // --- abt.FDb.targsyslib.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FTargsyslib& abt::targsyslib_Alloc() {
+abt::FTargsyslib& abt::targsyslib_Alloc() throw() {
     abt::FTargsyslib* row = targsyslib_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.targsyslib  comment:'Alloc failed'");
@@ -3304,7 +3304,7 @@ abt::FTargsyslib& abt::targsyslib_Alloc() {
 
 // --- abt.FDb.targsyslib.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FTargsyslib* abt::targsyslib_AllocMaybe() {
+abt::FTargsyslib* abt::targsyslib_AllocMaybe() throw() {
     abt::FTargsyslib *row = (abt::FTargsyslib*)targsyslib_AllocMem();
     if (row) {
         new (row) abt::FTargsyslib; // call constructor
@@ -3315,7 +3315,7 @@ abt::FTargsyslib* abt::targsyslib_AllocMaybe() {
 // --- abt.FDb.targsyslib.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FTargsyslib* abt::targsyslib_InsertMaybe(const dev::Targsyslib &value) {
+abt::FTargsyslib* abt::targsyslib_InsertMaybe(const dev::Targsyslib &value) throw() {
     abt::FTargsyslib *row = &targsyslib_Alloc(); // if out of memory, process dies. if input error, return NULL.
     targsyslib_CopyIn(*row,const_cast<dev::Targsyslib&>(value));
     bool ok = targsyslib_XrefMaybe(*row); // this may return false
@@ -3328,7 +3328,7 @@ abt::FTargsyslib* abt::targsyslib_InsertMaybe(const dev::Targsyslib &value) {
 
 // --- abt.FDb.targsyslib.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::targsyslib_AllocMem() {
+void* abt::targsyslib_AllocMem() throw() {
     u64 new_nelems     = _db.targsyslib_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3354,7 +3354,7 @@ void* abt::targsyslib_AllocMem() {
 
 // --- abt.FDb.targsyslib.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::targsyslib_RemoveLast() {
+void abt::targsyslib_RemoveLast() throw() {
     u64 n = _db.targsyslib_n;
     if (n > 0) {
         n -= 1;
@@ -3364,7 +3364,7 @@ void abt::targsyslib_RemoveLast() {
 }
 
 // --- abt.FDb.targsyslib.InputMaybe
-static bool abt::targsyslib_InputMaybe(dev::Targsyslib &elem) {
+static bool abt::targsyslib_InputMaybe(dev::Targsyslib &elem) throw() {
     bool retval = true;
     retval = targsyslib_InsertMaybe(elem) != nullptr;
     return retval;
@@ -3400,7 +3400,7 @@ bool abt::targsyslib_XrefMaybe(abt::FTargsyslib &row) {
 // --- abt.FDb.syslib.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FSyslib& abt::syslib_Alloc() {
+abt::FSyslib& abt::syslib_Alloc() throw() {
     abt::FSyslib* row = syslib_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.syslib  comment:'Alloc failed'");
@@ -3410,7 +3410,7 @@ abt::FSyslib& abt::syslib_Alloc() {
 
 // --- abt.FDb.syslib.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FSyslib* abt::syslib_AllocMaybe() {
+abt::FSyslib* abt::syslib_AllocMaybe() throw() {
     abt::FSyslib *row = (abt::FSyslib*)syslib_AllocMem();
     if (row) {
         new (row) abt::FSyslib; // call constructor
@@ -3421,7 +3421,7 @@ abt::FSyslib* abt::syslib_AllocMaybe() {
 // --- abt.FDb.syslib.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FSyslib* abt::syslib_InsertMaybe(const dev::Syslib &value) {
+abt::FSyslib* abt::syslib_InsertMaybe(const dev::Syslib &value) throw() {
     abt::FSyslib *row = &syslib_Alloc(); // if out of memory, process dies. if input error, return NULL.
     syslib_CopyIn(*row,const_cast<dev::Syslib&>(value));
     bool ok = syslib_XrefMaybe(*row); // this may return false
@@ -3434,7 +3434,7 @@ abt::FSyslib* abt::syslib_InsertMaybe(const dev::Syslib &value) {
 
 // --- abt.FDb.syslib.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::syslib_AllocMem() {
+void* abt::syslib_AllocMem() throw() {
     u64 new_nelems     = _db.syslib_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3460,7 +3460,7 @@ void* abt::syslib_AllocMem() {
 
 // --- abt.FDb.syslib.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::syslib_RemoveLast() {
+void abt::syslib_RemoveLast() throw() {
     u64 n = _db.syslib_n;
     if (n > 0) {
         n -= 1;
@@ -3470,7 +3470,7 @@ void abt::syslib_RemoveLast() {
 }
 
 // --- abt.FDb.syslib.InputMaybe
-static bool abt::syslib_InputMaybe(dev::Syslib &elem) {
+static bool abt::syslib_InputMaybe(dev::Syslib &elem) throw() {
     bool retval = true;
     retval = syslib_InsertMaybe(elem) != nullptr;
     return retval;
@@ -3496,7 +3496,7 @@ bool abt::syslib_XrefMaybe(abt::FSyslib &row) {
 
 // --- abt.FDb.ind_syslib.Find
 // Find row by key. Return NULL if not found.
-abt::FSyslib* abt::ind_syslib_Find(const algo::strptr& key) {
+abt::FSyslib* abt::ind_syslib_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_syslib_buckets_n - 1);
     abt::FSyslib* *e = &_db.ind_syslib_buckets_elems[index];
     abt::FSyslib* ret=NULL;
@@ -3511,7 +3511,7 @@ abt::FSyslib* abt::ind_syslib_Find(const algo::strptr& key) {
 
 // --- abt.FDb.ind_syslib.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FSyslib& abt::ind_syslib_GetOrCreate(const algo::strptr& key) {
+abt::FSyslib& abt::ind_syslib_GetOrCreate(const algo::strptr& key) throw() {
     abt::FSyslib* ret = ind_syslib_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &syslib_Alloc();
@@ -3528,7 +3528,7 @@ abt::FSyslib& abt::ind_syslib_GetOrCreate(const algo::strptr& key) {
 
 // --- abt.FDb.ind_syslib.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_syslib_InsertMaybe(abt::FSyslib& row) {
+bool abt::ind_syslib_InsertMaybe(abt::FSyslib& row) throw() {
     ind_syslib_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_syslib_next == (abt::FSyslib*)-1)) {// check if in hash already
@@ -3556,7 +3556,7 @@ bool abt::ind_syslib_InsertMaybe(abt::FSyslib& row) {
 
 // --- abt.FDb.ind_syslib.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_syslib_Remove(abt::FSyslib& row) {
+void abt::ind_syslib_Remove(abt::FSyslib& row) throw() {
     if (LIKELY(row.ind_syslib_next != (abt::FSyslib*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.syslib) & (_db.ind_syslib_buckets_n - 1);
         abt::FSyslib* *prev = &_db.ind_syslib_buckets_elems[index]; // addr of pointer to current element
@@ -3574,7 +3574,7 @@ void abt::ind_syslib_Remove(abt::FSyslib& row) {
 
 // --- abt.FDb.ind_syslib.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_syslib_Reserve(int n) {
+void abt::ind_syslib_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_syslib_buckets_n;
     u32 new_nelems   = _db.ind_syslib_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -3611,7 +3611,7 @@ void abt::ind_syslib_Reserve(int n) {
 // --- abt.FDb.include.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FInclude& abt::include_Alloc() {
+abt::FInclude& abt::include_Alloc() throw() {
     abt::FInclude* row = include_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.include  comment:'Alloc failed'");
@@ -3621,7 +3621,7 @@ abt::FInclude& abt::include_Alloc() {
 
 // --- abt.FDb.include.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FInclude* abt::include_AllocMaybe() {
+abt::FInclude* abt::include_AllocMaybe() throw() {
     abt::FInclude *row = (abt::FInclude*)include_AllocMem();
     if (row) {
         new (row) abt::FInclude; // call constructor
@@ -3632,7 +3632,7 @@ abt::FInclude* abt::include_AllocMaybe() {
 // --- abt.FDb.include.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FInclude* abt::include_InsertMaybe(const dev::Include &value) {
+abt::FInclude* abt::include_InsertMaybe(const dev::Include &value) throw() {
     abt::FInclude *row = &include_Alloc(); // if out of memory, process dies. if input error, return NULL.
     include_CopyIn(*row,const_cast<dev::Include&>(value));
     bool ok = include_XrefMaybe(*row); // this may return false
@@ -3645,7 +3645,7 @@ abt::FInclude* abt::include_InsertMaybe(const dev::Include &value) {
 
 // --- abt.FDb.include.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::include_AllocMem() {
+void* abt::include_AllocMem() throw() {
     u64 new_nelems     = _db.include_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -3671,7 +3671,7 @@ void* abt::include_AllocMem() {
 
 // --- abt.FDb.include.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::include_RemoveLast() {
+void abt::include_RemoveLast() throw() {
     u64 n = _db.include_n;
     if (n > 0) {
         n -= 1;
@@ -3681,7 +3681,7 @@ void abt::include_RemoveLast() {
 }
 
 // --- abt.FDb.include.InputMaybe
-static bool abt::include_InputMaybe(dev::Include &elem) {
+static bool abt::include_InputMaybe(dev::Include &elem) throw() {
     bool retval = true;
     retval = include_InsertMaybe(elem) != nullptr;
     return retval;
@@ -3725,7 +3725,7 @@ bool abt::include_XrefMaybe(abt::FInclude &row) {
 
 // --- abt.FDb.ind_include.Find
 // Find row by key. Return NULL if not found.
-abt::FInclude* abt::ind_include_Find(const algo::strptr& key) {
+abt::FInclude* abt::ind_include_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_include_buckets_n - 1);
     abt::FInclude* *e = &_db.ind_include_buckets_elems[index];
     abt::FInclude* ret=NULL;
@@ -3740,7 +3740,7 @@ abt::FInclude* abt::ind_include_Find(const algo::strptr& key) {
 
 // --- abt.FDb.ind_include.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FInclude& abt::ind_include_GetOrCreate(const algo::strptr& key) {
+abt::FInclude& abt::ind_include_GetOrCreate(const algo::strptr& key) throw() {
     abt::FInclude* ret = ind_include_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &include_Alloc();
@@ -3757,7 +3757,7 @@ abt::FInclude& abt::ind_include_GetOrCreate(const algo::strptr& key) {
 
 // --- abt.FDb.ind_include.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_include_InsertMaybe(abt::FInclude& row) {
+bool abt::ind_include_InsertMaybe(abt::FInclude& row) throw() {
     ind_include_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_include_next == (abt::FInclude*)-1)) {// check if in hash already
@@ -3785,7 +3785,7 @@ bool abt::ind_include_InsertMaybe(abt::FInclude& row) {
 
 // --- abt.FDb.ind_include.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_include_Remove(abt::FInclude& row) {
+void abt::ind_include_Remove(abt::FInclude& row) throw() {
     if (LIKELY(row.ind_include_next != (abt::FInclude*)-1)) {// check if in hash already
         u32 index = algo::Smallstr200_Hash(0, row.include) & (_db.ind_include_buckets_n - 1);
         abt::FInclude* *prev = &_db.ind_include_buckets_elems[index]; // addr of pointer to current element
@@ -3803,7 +3803,7 @@ void abt::ind_include_Remove(abt::FInclude& row) {
 
 // --- abt.FDb.ind_include.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_include_Reserve(int n) {
+void abt::ind_include_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_include_buckets_n;
     u32 new_nelems   = _db.ind_include_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -3841,7 +3841,7 @@ void abt::ind_include_Reserve(int n) {
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
 // If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::cstring> abt::sysincl_Addary(algo::aryptr<algo::cstring> rhs) {
+algo::aryptr<algo::cstring> abt::sysincl_Addary(algo::aryptr<algo::cstring> rhs) throw() {
     bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.sysincl_elems && rhs.elems < _db.sysincl_elems + _db.sysincl_max;
     if (UNLIKELY(overlaps)) {
         FatalErrorExit("abt.tary_alias  field:abt.FDb.sysincl  comment:'alias error: sub-array is being appended to the whole'");
@@ -3859,7 +3859,7 @@ algo::aryptr<algo::cstring> abt::sysincl_Addary(algo::aryptr<algo::cstring> rhs)
 // --- abt.FDb.sysincl.Alloc
 // Reserve space. Insert element at the end
 // The new element is initialized to a default value
-algo::cstring& abt::sysincl_Alloc() {
+algo::cstring& abt::sysincl_Alloc() throw() {
     sysincl_Reserve(1);
     int n  = _db.sysincl_n;
     int at = n;
@@ -3872,7 +3872,7 @@ algo::cstring& abt::sysincl_Alloc() {
 // --- abt.FDb.sysincl.AllocAt
 // Reserve space for new element, reallocating the array if necessary
 // Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::cstring& abt::sysincl_AllocAt(int at) {
+algo::cstring& abt::sysincl_AllocAt(int at) throw() {
     sysincl_Reserve(1);
     int n  = _db.sysincl_n;
     if (UNLIKELY(u64(at) >= u64(n+1))) {
@@ -3887,7 +3887,7 @@ algo::cstring& abt::sysincl_AllocAt(int at) {
 
 // --- abt.FDb.sysincl.AllocN
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> abt::sysincl_AllocN(int n_elems) {
+algo::aryptr<algo::cstring> abt::sysincl_AllocN(int n_elems) throw() {
     sysincl_Reserve(n_elems);
     int old_n  = _db.sysincl_n;
     int new_n = old_n + n_elems;
@@ -3901,7 +3901,7 @@ algo::aryptr<algo::cstring> abt::sysincl_AllocN(int n_elems) {
 
 // --- abt.FDb.sysincl.Remove
 // Remove item by index. If index outside of range, do nothing.
-void abt::sysincl_Remove(u32 i) {
+void abt::sysincl_Remove(u32 i) throw() {
     u32 lim = _db.sysincl_n;
     algo::cstring *elems = _db.sysincl_elems;
     if (i < lim) {
@@ -3912,7 +3912,7 @@ void abt::sysincl_Remove(u32 i) {
 }
 
 // --- abt.FDb.sysincl.RemoveAll
-void abt::sysincl_RemoveAll() {
+void abt::sysincl_RemoveAll() throw() {
     u32 n = _db.sysincl_n;
     while (n > 0) {
         n -= 1;
@@ -3923,7 +3923,7 @@ void abt::sysincl_RemoveAll() {
 
 // --- abt.FDb.sysincl.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::sysincl_RemoveLast() {
+void abt::sysincl_RemoveLast() throw() {
     u64 n = _db.sysincl_n;
     if (n > 0) {
         n -= 1;
@@ -3934,7 +3934,7 @@ void abt::sysincl_RemoveLast() {
 
 // --- abt.FDb.sysincl.AbsReserve
 // Make sure N elements fit in array. Process dies if out of memory
-void abt::sysincl_AbsReserve(int n) {
+void abt::sysincl_AbsReserve(int n) throw() {
     u32 old_max  = _db.sysincl_max;
     if (n > i32(old_max)) {
         u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
@@ -3949,7 +3949,7 @@ void abt::sysincl_AbsReserve(int n) {
 
 // --- abt.FDb.sysincl.AllocNVal
 // Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::cstring> abt::sysincl_AllocNVal(int n_elems, const algo::cstring& val) {
+algo::aryptr<algo::cstring> abt::sysincl_AllocNVal(int n_elems, const algo::cstring& val) throw() {
     sysincl_Reserve(n_elems);
     int old_n  = _db.sysincl_n;
     int new_n = old_n + n_elems;
@@ -3965,7 +3965,7 @@ algo::aryptr<algo::cstring> abt::sysincl_AllocNVal(int n_elems, const algo::cstr
 // A single element is read from input string and appended to the array.
 // If the string contains an error, the array is untouched.
 // Function returns success value.
-bool abt::sysincl_ReadStrptrMaybe(algo::strptr in_str) {
+bool abt::sysincl_ReadStrptrMaybe(algo::strptr in_str) throw() {
     bool retval = true;
     algo::cstring &elem = sysincl_Alloc();
     retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
@@ -3977,7 +3977,7 @@ bool abt::sysincl_ReadStrptrMaybe(algo::strptr in_str) {
 
 // --- abt.FDb.zs_origsel_target.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void abt::zs_origsel_target_Insert(abt::FTarget& row) {
+void abt::zs_origsel_target_Insert(abt::FTarget& row) throw() {
     if (!zs_origsel_target_InLlistQ(row)) {
         abt::FTarget* old_tail       = _db.zs_origsel_target_tail;
         row.zs_origsel_target_next  = NULL;
@@ -3992,7 +3992,7 @@ void abt::zs_origsel_target_Insert(abt::FTarget& row) {
 // --- abt.FDb.zs_origsel_target.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void abt::zs_origsel_target_Remove(abt::FTarget& row) {
+void abt::zs_origsel_target_Remove(abt::FTarget& row) throw() {
     if (zs_origsel_target_InLlistQ(row)) {
         abt::FTarget* old_head       = _db.zs_origsel_target_head;
         (void)old_head; // in case it's not used
@@ -4022,7 +4022,7 @@ void abt::zs_origsel_target_Remove(abt::FTarget& row) {
 
 // --- abt.FDb.zs_origsel_target.RemoveAll
 // Empty the index. (The rows are not deleted)
-void abt::zs_origsel_target_RemoveAll() {
+void abt::zs_origsel_target_RemoveAll() throw() {
     abt::FTarget* row = _db.zs_origsel_target_head;
     _db.zs_origsel_target_head = NULL;
     _db.zs_origsel_target_tail = NULL;
@@ -4035,7 +4035,7 @@ void abt::zs_origsel_target_RemoveAll() {
 
 // --- abt.FDb.zs_origsel_target.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-abt::FTarget* abt::zs_origsel_target_RemoveFirst() {
+abt::FTarget* abt::zs_origsel_target_RemoveFirst() throw() {
     abt::FTarget *row = NULL;
     row = _db.zs_origsel_target_head;
     if (row) {
@@ -4053,7 +4053,7 @@ abt::FTarget* abt::zs_origsel_target_RemoveFirst() {
 // --- abt.FDb.ns.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FNs& abt::ns_Alloc() {
+abt::FNs& abt::ns_Alloc() throw() {
     abt::FNs* row = ns_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.ns  comment:'Alloc failed'");
@@ -4063,7 +4063,7 @@ abt::FNs& abt::ns_Alloc() {
 
 // --- abt.FDb.ns.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FNs* abt::ns_AllocMaybe() {
+abt::FNs* abt::ns_AllocMaybe() throw() {
     abt::FNs *row = (abt::FNs*)ns_AllocMem();
     if (row) {
         new (row) abt::FNs; // call constructor
@@ -4074,7 +4074,7 @@ abt::FNs* abt::ns_AllocMaybe() {
 // --- abt.FDb.ns.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FNs* abt::ns_InsertMaybe(const dmmeta::Ns &value) {
+abt::FNs* abt::ns_InsertMaybe(const dmmeta::Ns &value) throw() {
     abt::FNs *row = &ns_Alloc(); // if out of memory, process dies. if input error, return NULL.
     ns_CopyIn(*row,const_cast<dmmeta::Ns&>(value));
     bool ok = ns_XrefMaybe(*row); // this may return false
@@ -4087,7 +4087,7 @@ abt::FNs* abt::ns_InsertMaybe(const dmmeta::Ns &value) {
 
 // --- abt.FDb.ns.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::ns_AllocMem() {
+void* abt::ns_AllocMem() throw() {
     u64 new_nelems     = _db.ns_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4113,7 +4113,7 @@ void* abt::ns_AllocMem() {
 
 // --- abt.FDb.ns.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::ns_RemoveLast() {
+void abt::ns_RemoveLast() throw() {
     u64 n = _db.ns_n;
     if (n > 0) {
         n -= 1;
@@ -4123,7 +4123,7 @@ void abt::ns_RemoveLast() {
 }
 
 // --- abt.FDb.ns.InputMaybe
-static bool abt::ns_InputMaybe(dmmeta::Ns &elem) {
+static bool abt::ns_InputMaybe(dmmeta::Ns &elem) throw() {
     bool retval = true;
     retval = ns_InsertMaybe(elem) != nullptr;
     return retval;
@@ -4149,7 +4149,7 @@ bool abt::ns_XrefMaybe(abt::FNs &row) {
 
 // --- abt.FDb.ind_ns.Find
 // Find row by key. Return NULL if not found.
-abt::FNs* abt::ind_ns_Find(const algo::strptr& key) {
+abt::FNs* abt::ind_ns_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
     abt::FNs* *e = &_db.ind_ns_buckets_elems[index];
     abt::FNs* ret=NULL;
@@ -4164,7 +4164,7 @@ abt::FNs* abt::ind_ns_Find(const algo::strptr& key) {
 
 // --- abt.FDb.ind_ns.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FNs& abt::ind_ns_GetOrCreate(const algo::strptr& key) {
+abt::FNs& abt::ind_ns_GetOrCreate(const algo::strptr& key) throw() {
     abt::FNs* ret = ind_ns_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &ns_Alloc();
@@ -4181,7 +4181,7 @@ abt::FNs& abt::ind_ns_GetOrCreate(const algo::strptr& key) {
 
 // --- abt.FDb.ind_ns.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_ns_InsertMaybe(abt::FNs& row) {
+bool abt::ind_ns_InsertMaybe(abt::FNs& row) throw() {
     ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (abt::FNs*)-1)) {// check if in hash already
@@ -4209,7 +4209,7 @@ bool abt::ind_ns_InsertMaybe(abt::FNs& row) {
 
 // --- abt.FDb.ind_ns.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_ns_Remove(abt::FNs& row) {
+void abt::ind_ns_Remove(abt::FNs& row) throw() {
     if (LIKELY(row.ind_ns_next != (abt::FNs*)-1)) {// check if in hash already
         u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
         abt::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
@@ -4227,7 +4227,7 @@ void abt::ind_ns_Remove(abt::FNs& row) {
 
 // --- abt.FDb.ind_ns.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_ns_Reserve(int n) {
+void abt::ind_ns_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_ns_buckets_n;
     u32 new_nelems   = _db.ind_ns_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -4264,7 +4264,7 @@ void abt::ind_ns_Reserve(int n) {
 // --- abt.FDb.filestat.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FFilestat& abt::filestat_Alloc() {
+abt::FFilestat& abt::filestat_Alloc() throw() {
     abt::FFilestat* row = filestat_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.filestat  comment:'Alloc failed'");
@@ -4274,7 +4274,7 @@ abt::FFilestat& abt::filestat_Alloc() {
 
 // --- abt.FDb.filestat.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FFilestat* abt::filestat_AllocMaybe() {
+abt::FFilestat* abt::filestat_AllocMaybe() throw() {
     abt::FFilestat *row = (abt::FFilestat*)filestat_AllocMem();
     if (row) {
         new (row) abt::FFilestat; // call constructor
@@ -4284,7 +4284,7 @@ abt::FFilestat* abt::filestat_AllocMaybe() {
 
 // --- abt.FDb.filestat.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::filestat_AllocMem() {
+void* abt::filestat_AllocMem() throw() {
     u64 new_nelems     = _db.filestat_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4310,7 +4310,7 @@ void* abt::filestat_AllocMem() {
 
 // --- abt.FDb.filestat.RemoveAll
 // Remove all elements from Lary
-void abt::filestat_RemoveAll() {
+void abt::filestat_RemoveAll() throw() {
     for (u64 n = _db.filestat_n; n>0; ) {
         n--;
         filestat_qFind(u64(n)).~FFilestat(); // destroy last element
@@ -4320,7 +4320,7 @@ void abt::filestat_RemoveAll() {
 
 // --- abt.FDb.filestat.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::filestat_RemoveLast() {
+void abt::filestat_RemoveLast() throw() {
     u64 n = _db.filestat_n;
     if (n > 0) {
         n -= 1;
@@ -4349,7 +4349,7 @@ bool abt::filestat_XrefMaybe(abt::FFilestat &row) {
 
 // --- abt.FDb.ind_filestat.Find
 // Find row by key. Return NULL if not found.
-abt::FFilestat* abt::ind_filestat_Find(const algo::strptr& key) {
+abt::FFilestat* abt::ind_filestat_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_filestat_buckets_n - 1);
     abt::FFilestat* *e = &_db.ind_filestat_buckets_elems[index];
     abt::FFilestat* ret=NULL;
@@ -4364,7 +4364,7 @@ abt::FFilestat* abt::ind_filestat_Find(const algo::strptr& key) {
 
 // --- abt.FDb.ind_filestat.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FFilestat& abt::ind_filestat_GetOrCreate(const algo::strptr& key) {
+abt::FFilestat& abt::ind_filestat_GetOrCreate(const algo::strptr& key) throw() {
     abt::FFilestat* ret = ind_filestat_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &filestat_Alloc();
@@ -4381,7 +4381,7 @@ abt::FFilestat& abt::ind_filestat_GetOrCreate(const algo::strptr& key) {
 
 // --- abt.FDb.ind_filestat.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_filestat_InsertMaybe(abt::FFilestat& row) {
+bool abt::ind_filestat_InsertMaybe(abt::FFilestat& row) throw() {
     ind_filestat_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_filestat_next == (abt::FFilestat*)-1)) {// check if in hash already
@@ -4409,7 +4409,7 @@ bool abt::ind_filestat_InsertMaybe(abt::FFilestat& row) {
 
 // --- abt.FDb.ind_filestat.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_filestat_Remove(abt::FFilestat& row) {
+void abt::ind_filestat_Remove(abt::FFilestat& row) throw() {
     if (LIKELY(row.ind_filestat_next != (abt::FFilestat*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.filename) & (_db.ind_filestat_buckets_n - 1);
         abt::FFilestat* *prev = &_db.ind_filestat_buckets_elems[index]; // addr of pointer to current element
@@ -4427,7 +4427,7 @@ void abt::ind_filestat_Remove(abt::FFilestat& row) {
 
 // --- abt.FDb.ind_filestat.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_filestat_Reserve(int n) {
+void abt::ind_filestat_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_filestat_buckets_n;
     u32 new_nelems   = _db.ind_filestat_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -4464,7 +4464,7 @@ void abt::ind_filestat_Reserve(int n) {
 // --- abt.FDb.builddir.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-abt::FBuilddir& abt::builddir_Alloc() {
+abt::FBuilddir& abt::builddir_Alloc() throw() {
     abt::FBuilddir* row = builddir_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("abt.out_of_mem  field:abt.FDb.builddir  comment:'Alloc failed'");
@@ -4474,7 +4474,7 @@ abt::FBuilddir& abt::builddir_Alloc() {
 
 // --- abt.FDb.builddir.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-abt::FBuilddir* abt::builddir_AllocMaybe() {
+abt::FBuilddir* abt::builddir_AllocMaybe() throw() {
     abt::FBuilddir *row = (abt::FBuilddir*)builddir_AllocMem();
     if (row) {
         new (row) abt::FBuilddir; // call constructor
@@ -4485,7 +4485,7 @@ abt::FBuilddir* abt::builddir_AllocMaybe() {
 // --- abt.FDb.builddir.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-abt::FBuilddir* abt::builddir_InsertMaybe(const dev::Builddir &value) {
+abt::FBuilddir* abt::builddir_InsertMaybe(const dev::Builddir &value) throw() {
     abt::FBuilddir *row = &builddir_Alloc(); // if out of memory, process dies. if input error, return NULL.
     builddir_CopyIn(*row,const_cast<dev::Builddir&>(value));
     bool ok = builddir_XrefMaybe(*row); // this may return false
@@ -4498,7 +4498,7 @@ abt::FBuilddir* abt::builddir_InsertMaybe(const dev::Builddir &value) {
 
 // --- abt.FDb.builddir.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* abt::builddir_AllocMem() {
+void* abt::builddir_AllocMem() throw() {
     u64 new_nelems     = _db.builddir_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -4524,7 +4524,7 @@ void* abt::builddir_AllocMem() {
 
 // --- abt.FDb.builddir.RemoveAll
 // Remove all elements from Lary
-void abt::builddir_RemoveAll() {
+void abt::builddir_RemoveAll() throw() {
     for (u64 n = _db.builddir_n; n>0; ) {
         n--;
         builddir_qFind(u64(n)).~FBuilddir(); // destroy last element
@@ -4534,7 +4534,7 @@ void abt::builddir_RemoveAll() {
 
 // --- abt.FDb.builddir.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void abt::builddir_RemoveLast() {
+void abt::builddir_RemoveLast() throw() {
     u64 n = _db.builddir_n;
     if (n > 0) {
         n -= 1;
@@ -4544,7 +4544,7 @@ void abt::builddir_RemoveLast() {
 }
 
 // --- abt.FDb.builddir.InputMaybe
-static bool abt::builddir_InputMaybe(dev::Builddir &elem) {
+static bool abt::builddir_InputMaybe(dev::Builddir &elem) throw() {
     bool retval = true;
     retval = builddir_InsertMaybe(elem) != nullptr;
     return retval;
@@ -4579,7 +4579,7 @@ bool abt::builddir_XrefMaybe(abt::FBuilddir &row) {
 
 // --- abt.FDb.ind_builddir.Find
 // Find row by key. Return NULL if not found.
-abt::FBuilddir* abt::ind_builddir_Find(const algo::strptr& key) {
+abt::FBuilddir* abt::ind_builddir_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_builddir_buckets_n - 1);
     abt::FBuilddir* *e = &_db.ind_builddir_buckets_elems[index];
     abt::FBuilddir* ret=NULL;
@@ -4594,7 +4594,7 @@ abt::FBuilddir* abt::ind_builddir_Find(const algo::strptr& key) {
 
 // --- abt.FDb.ind_builddir.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-abt::FBuilddir& abt::ind_builddir_GetOrCreate(const algo::strptr& key) {
+abt::FBuilddir& abt::ind_builddir_GetOrCreate(const algo::strptr& key) throw() {
     abt::FBuilddir* ret = ind_builddir_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &builddir_Alloc();
@@ -4611,7 +4611,7 @@ abt::FBuilddir& abt::ind_builddir_GetOrCreate(const algo::strptr& key) {
 
 // --- abt.FDb.ind_builddir.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool abt::ind_builddir_InsertMaybe(abt::FBuilddir& row) {
+bool abt::ind_builddir_InsertMaybe(abt::FBuilddir& row) throw() {
     ind_builddir_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_builddir_next == (abt::FBuilddir*)-1)) {// check if in hash already
@@ -4639,7 +4639,7 @@ bool abt::ind_builddir_InsertMaybe(abt::FBuilddir& row) {
 
 // --- abt.FDb.ind_builddir.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void abt::ind_builddir_Remove(abt::FBuilddir& row) {
+void abt::ind_builddir_Remove(abt::FBuilddir& row) throw() {
     if (LIKELY(row.ind_builddir_next != (abt::FBuilddir*)-1)) {// check if in hash already
         u32 index = algo::Smallstr50_Hash(0, row.builddir) & (_db.ind_builddir_buckets_n - 1);
         abt::FBuilddir* *prev = &_db.ind_builddir_buckets_elems[index]; // addr of pointer to current element
@@ -4657,7 +4657,7 @@ void abt::ind_builddir_Remove(abt::FBuilddir& row) {
 
 // --- abt.FDb.ind_builddir.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void abt::ind_builddir_Reserve(int n) {
+void abt::ind_builddir_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_builddir_buckets_n;
     u32 new_nelems   = _db.ind_builddir_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -4693,7 +4693,7 @@ void abt::ind_builddir_Reserve(int n) {
 
 // --- abt.FDb.zd_inclstack.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void abt::zd_inclstack_Insert(abt::FSrcfile& row) {
+void abt::zd_inclstack_Insert(abt::FSrcfile& row) throw() {
     if (!zd_inclstack_InLlistQ(row)) {
         abt::FSrcfile* old_tail = _db.zd_inclstack_tail;
         row.zd_inclstack_next = NULL;
@@ -4709,7 +4709,7 @@ void abt::zd_inclstack_Insert(abt::FSrcfile& row) {
 
 // --- abt.FDb.zd_inclstack.Remove
 // Remove element from index. If element is not in index, do nothing.
-void abt::zd_inclstack_Remove(abt::FSrcfile& row) {
+void abt::zd_inclstack_Remove(abt::FSrcfile& row) throw() {
     if (zd_inclstack_InLlistQ(row)) {
         abt::FSrcfile* old_head       = _db.zd_inclstack_head;
         (void)old_head; // in case it's not used
@@ -4732,7 +4732,7 @@ void abt::zd_inclstack_Remove(abt::FSrcfile& row) {
 
 // --- abt.FDb.zd_inclstack.RemoveAll
 // Empty the index. (The rows are not deleted)
-void abt::zd_inclstack_RemoveAll() {
+void abt::zd_inclstack_RemoveAll() throw() {
     abt::FSrcfile* row = _db.zd_inclstack_head;
     _db.zd_inclstack_head = NULL;
     _db.zd_inclstack_tail = NULL;
@@ -4747,7 +4747,7 @@ void abt::zd_inclstack_RemoveAll() {
 
 // --- abt.FDb.zd_inclstack.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-abt::FSrcfile* abt::zd_inclstack_RemoveFirst() {
+abt::FSrcfile* abt::zd_inclstack_RemoveFirst() throw() {
     abt::FSrcfile *row = NULL;
     row = _db.zd_inclstack_head;
     if (row) {
@@ -4765,13 +4765,13 @@ abt::FSrcfile* abt::zd_inclstack_RemoveFirst() {
 
 // --- abt.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr abt::trace_RowidFind(int t) {
+static algo::ImrowPtr abt::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- abt.FDb.trace.N
 // Function return 1
-inline static i32 abt::trace_N() {
+inline static i32 abt::trace_N() throw() {
     return 1;
 }
 
@@ -5191,7 +5191,7 @@ void abt::FDb_Init() {
 }
 
 // --- abt.FDb..Uninit
-void abt::FDb_Uninit() {
+void abt::FDb_Uninit() throw() {
     abt::FDb &row = _db; (void)row;
 
     // abt.FDb.ind_builddir.Uninit (Thash)  //
@@ -5298,14 +5298,14 @@ void abt::FDb_Uninit() {
 }
 
 // --- abt.FFilestat..Uninit
-void abt::FFilestat_Uninit(abt::FFilestat& filestat) {
+void abt::FFilestat_Uninit(abt::FFilestat& filestat) throw() {
     abt::FFilestat &row = filestat; (void)row;
     ind_filestat_Remove(row); // remove filestat from index ind_filestat
 }
 
 // --- abt.FInclude.msghdr.CopyOut
 // Copy fields out of row
-void abt::include_CopyOut(abt::FInclude &row, dev::Include &out) {
+void abt::include_CopyOut(abt::FInclude &row, dev::Include &out) throw() {
     out.include = row.include;
     out.sys = row.sys;
     out.comment = row.comment;
@@ -5313,26 +5313,26 @@ void abt::include_CopyOut(abt::FInclude &row, dev::Include &out) {
 
 // --- abt.FInclude.msghdr.CopyIn
 // Copy fields in to row
-void abt::include_CopyIn(abt::FInclude &row, dev::Include &in) {
+void abt::include_CopyIn(abt::FInclude &row, dev::Include &in) throw() {
     row.include = in.include;
     row.sys = in.sys;
     row.comment = in.comment;
 }
 
 // --- abt.FInclude.srcfile.Get
-algo::Smallstr200 abt::srcfile_Get(abt::FInclude& include) {
+algo::Smallstr200 abt::srcfile_Get(abt::FInclude& include) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(include.include, ":LL"));
     return ret;
 }
 
 // --- abt.FInclude.filename.Get
-algo::Smallstr200 abt::filename_Get(abt::FInclude& include) {
+algo::Smallstr200 abt::filename_Get(abt::FInclude& include) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(include.include, ":LR"));
     return ret;
 }
 
 // --- abt.FInclude..Uninit
-void abt::FInclude_Uninit(abt::FInclude& include) {
+void abt::FInclude_Uninit(abt::FInclude& include) throw() {
     abt::FInclude &row = include; (void)row;
     ind_include_Remove(row); // remove include from index ind_include
     abt::FSrcfile* p_srcfile = abt::ind_srcfile_Find(srcfile_Get(row));
@@ -5343,7 +5343,7 @@ void abt::FInclude_Uninit(abt::FInclude& include) {
 
 // --- abt.FNs.base.CopyOut
 // Copy fields out of row
-void abt::ns_CopyOut(abt::FNs &row, dmmeta::Ns &out) {
+void abt::ns_CopyOut(abt::FNs &row, dmmeta::Ns &out) throw() {
     out.ns = row.ns;
     out.nstype = row.nstype;
     out.license = row.license;
@@ -5352,7 +5352,7 @@ void abt::ns_CopyOut(abt::FNs &row, dmmeta::Ns &out) {
 
 // --- abt.FNs.base.CopyIn
 // Copy fields in to row
-void abt::ns_CopyIn(abt::FNs &row, dmmeta::Ns &in) {
+void abt::ns_CopyIn(abt::FNs &row, dmmeta::Ns &in) throw() {
     row.ns = in.ns;
     row.nstype = in.nstype;
     row.license = in.license;
@@ -5360,32 +5360,32 @@ void abt::ns_CopyIn(abt::FNs &row, dmmeta::Ns &in) {
 }
 
 // --- abt.FNs..Uninit
-void abt::FNs_Uninit(abt::FNs& ns) {
+void abt::FNs_Uninit(abt::FNs& ns) throw() {
     abt::FNs &row = ns; (void)row;
     ind_ns_Remove(row); // remove ns from index ind_ns
 }
 
 // --- abt.FSrcfile.msghdr.CopyOut
 // Copy fields out of row
-void abt::srcfile_CopyOut(abt::FSrcfile &row, dev::Srcfile &out) {
+void abt::srcfile_CopyOut(abt::FSrcfile &row, dev::Srcfile &out) throw() {
     out.srcfile = row.srcfile;
 }
 
 // --- abt.FSrcfile.msghdr.CopyIn
 // Copy fields in to row
-void abt::srcfile_CopyIn(abt::FSrcfile &row, dev::Srcfile &in) {
+void abt::srcfile_CopyIn(abt::FSrcfile &row, dev::Srcfile &in) throw() {
     row.srcfile = in.srcfile;
 }
 
 // --- abt.FSrcfile.ext.Get
-algo::Smallstr10 abt::ext_Get(abt::FSrcfile& srcfile) {
+algo::Smallstr10 abt::ext_Get(abt::FSrcfile& srcfile) throw() {
     algo::Smallstr10 ret(algo::Pathcomp(srcfile.srcfile, ".RR"));
     return ret;
 }
 
 // --- abt.FSrcfile.zd_include.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void abt::zd_include_Insert(abt::FSrcfile& srcfile, abt::FInclude& row) {
+void abt::zd_include_Insert(abt::FSrcfile& srcfile, abt::FInclude& row) throw() {
     if (!zd_include_InLlistQ(row)) {
         abt::FInclude* old_tail = srcfile.zd_include_tail;
         row.zd_include_next = NULL;
@@ -5401,7 +5401,7 @@ void abt::zd_include_Insert(abt::FSrcfile& srcfile, abt::FInclude& row) {
 
 // --- abt.FSrcfile.zd_include.Remove
 // Remove element from index. If element is not in index, do nothing.
-void abt::zd_include_Remove(abt::FSrcfile& srcfile, abt::FInclude& row) {
+void abt::zd_include_Remove(abt::FSrcfile& srcfile, abt::FInclude& row) throw() {
     if (zd_include_InLlistQ(row)) {
         abt::FInclude* old_head       = srcfile.zd_include_head;
         (void)old_head; // in case it's not used
@@ -5424,7 +5424,7 @@ void abt::zd_include_Remove(abt::FSrcfile& srcfile, abt::FInclude& row) {
 
 // --- abt.FSrcfile.zd_include.RemoveAll
 // Empty the index. (The rows are not deleted)
-void abt::zd_include_RemoveAll(abt::FSrcfile& srcfile) {
+void abt::zd_include_RemoveAll(abt::FSrcfile& srcfile) throw() {
     abt::FInclude* row = srcfile.zd_include_head;
     srcfile.zd_include_head = NULL;
     srcfile.zd_include_tail = NULL;
@@ -5439,7 +5439,7 @@ void abt::zd_include_RemoveAll(abt::FSrcfile& srcfile) {
 
 // --- abt.FSrcfile.zd_include.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-abt::FInclude* abt::zd_include_RemoveFirst(abt::FSrcfile& srcfile) {
+abt::FInclude* abt::zd_include_RemoveFirst(abt::FSrcfile& srcfile) throw() {
     abt::FInclude *row = NULL;
     row = srcfile.zd_include_head;
     if (row) {
@@ -5474,7 +5474,7 @@ void abt::FSrcfile_Init(abt::FSrcfile& srcfile) {
 }
 
 // --- abt.FSrcfile..Uninit
-void abt::FSrcfile_Uninit(abt::FSrcfile& srcfile) {
+void abt::FSrcfile_Uninit(abt::FSrcfile& srcfile) throw() {
     abt::FSrcfile &row = srcfile; (void)row;
     ind_srcfile_Remove(row); // remove srcfile from index ind_srcfile
     zs_srcfile_read_Remove(row); // remove srcfile from index zs_srcfile_read
@@ -5483,7 +5483,7 @@ void abt::FSrcfile_Uninit(abt::FSrcfile& srcfile) {
 
 // --- abt.FSyscmd.msghdr.CopyOut
 // Copy fields out of row
-void abt::syscmd_CopyOut(abt::FSyscmd &row, dev::Syscmd &out) {
+void abt::syscmd_CopyOut(abt::FSyscmd &row, dev::Syscmd &out) throw() {
     out.syscmd = row.syscmd;
     out.command = row.command;
     out.pid = row.pid;
@@ -5496,7 +5496,7 @@ void abt::syscmd_CopyOut(abt::FSyscmd &row, dev::Syscmd &out) {
 
 // --- abt.FSyscmd.msghdr.CopyIn
 // Copy fields in to row
-void abt::syscmd_CopyIn(abt::FSyscmd &row, dev::Syscmd &in) {
+void abt::syscmd_CopyIn(abt::FSyscmd &row, dev::Syscmd &in) throw() {
     row.syscmd = in.syscmd;
     row.command = in.command;
     row.pid = in.pid;
@@ -5510,7 +5510,7 @@ void abt::syscmd_CopyIn(abt::FSyscmd &row, dev::Syscmd &in) {
 // --- abt.FSyscmd.c_prior.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt::c_prior_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
+void abt::c_prior_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) throw() {
     if (bool_Update(row.syscmd_c_prior_in_ary,true)) {
         // reserve space
         c_prior_Reserve(syscmd, 1);
@@ -5527,7 +5527,7 @@ void abt::c_prior_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool abt::c_prior_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
+bool abt::c_prior_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) throw() {
     bool retval = !row.syscmd_c_prior_in_ary;
     c_prior_Insert(syscmd,row); // check is performed in _Insert again
     return retval;
@@ -5535,7 +5535,7 @@ bool abt::c_prior_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 
 // --- abt.FSyscmd.c_prior.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt::c_prior_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
+void abt::c_prior_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) throw() {
     if (bool_Update(row.syscmd_c_prior_in_ary,false)) {
         int lim = syscmd.c_prior_n;
         abt::FSyscmddep* *elems = syscmd.c_prior_elems;
@@ -5556,7 +5556,7 @@ void abt::c_prior_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 
 // --- abt.FSyscmd.c_prior.Reserve
 // Reserve space in index for N more elements;
-void abt::c_prior_Reserve(abt::FSyscmd& syscmd, u32 n) {
+void abt::c_prior_Reserve(abt::FSyscmd& syscmd, u32 n) throw() {
     u32 old_max = syscmd.c_prior_max;
     if (UNLIKELY(syscmd.c_prior_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -5574,7 +5574,7 @@ void abt::c_prior_Reserve(abt::FSyscmd& syscmd, u32 n) {
 // --- abt.FSyscmd.c_next.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt::c_next_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
+void abt::c_next_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) throw() {
     if (bool_Update(row.syscmd_c_next_in_ary,true)) {
         // reserve space
         c_next_Reserve(syscmd, 1);
@@ -5591,7 +5591,7 @@ void abt::c_next_Insert(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool abt::c_next_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
+bool abt::c_next_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) throw() {
     bool retval = !row.syscmd_c_next_in_ary;
     c_next_Insert(syscmd,row); // check is performed in _Insert again
     return retval;
@@ -5599,7 +5599,7 @@ bool abt::c_next_InsertMaybe(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 
 // --- abt.FSyscmd.c_next.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt::c_next_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
+void abt::c_next_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) throw() {
     if (bool_Update(row.syscmd_c_next_in_ary,false)) {
         int lim = syscmd.c_next_n;
         abt::FSyscmddep* *elems = syscmd.c_next_elems;
@@ -5620,7 +5620,7 @@ void abt::c_next_Remove(abt::FSyscmd& syscmd, abt::FSyscmddep& row) {
 
 // --- abt.FSyscmd.c_next.Reserve
 // Reserve space in index for N more elements;
-void abt::c_next_Reserve(abt::FSyscmd& syscmd, u32 n) {
+void abt::c_next_Reserve(abt::FSyscmd& syscmd, u32 n) throw() {
     u32 old_max = syscmd.c_next_max;
     if (UNLIKELY(syscmd.c_next_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -5660,7 +5660,7 @@ void abt::FSyscmd_Init(abt::FSyscmd& syscmd) {
 }
 
 // --- abt.FSyscmd..Uninit
-void abt::FSyscmd_Uninit(abt::FSyscmd& syscmd) {
+void abt::FSyscmd_Uninit(abt::FSyscmd& syscmd) throw() {
     abt::FSyscmd &row = syscmd; (void)row;
     ind_syscmd_Remove(row); // remove syscmd from index ind_syscmd
     ind_running_Remove(row); // remove syscmd from index ind_running
@@ -5675,20 +5675,20 @@ void abt::FSyscmd_Uninit(abt::FSyscmd& syscmd) {
 
 // --- abt.FSyscmddep.msghdr.CopyOut
 // Copy fields out of row
-void abt::syscmddep_CopyOut(abt::FSyscmddep &row, dev::Syscmddep &out) {
+void abt::syscmddep_CopyOut(abt::FSyscmddep &row, dev::Syscmddep &out) throw() {
     out.child = row.child;
     out.parent = row.parent;
 }
 
 // --- abt.FSyscmddep.msghdr.CopyIn
 // Copy fields in to row
-void abt::syscmddep_CopyIn(abt::FSyscmddep &row, dev::Syscmddep &in) {
+void abt::syscmddep_CopyIn(abt::FSyscmddep &row, dev::Syscmddep &in) throw() {
     row.child = in.child;
     row.parent = in.parent;
 }
 
 // --- abt.FSyscmddep..Uninit
-void abt::FSyscmddep_Uninit(abt::FSyscmddep& syscmddep) {
+void abt::FSyscmddep_Uninit(abt::FSyscmddep& syscmddep) throw() {
     abt::FSyscmddep &row = syscmddep; (void)row;
     abt::FSyscmd* p_child = abt::ind_syscmd_Find(row.child);
     if (p_child)  {
@@ -5702,52 +5702,52 @@ void abt::FSyscmddep_Uninit(abt::FSyscmddep& syscmddep) {
 
 // --- abt.FSyslib.msghdr.CopyOut
 // Copy fields out of row
-void abt::syslib_CopyOut(abt::FSyslib &row, dev::Syslib &out) {
+void abt::syslib_CopyOut(abt::FSyslib &row, dev::Syslib &out) throw() {
     out.syslib = row.syslib;
     out.comment = row.comment;
 }
 
 // --- abt.FSyslib.msghdr.CopyIn
 // Copy fields in to row
-void abt::syslib_CopyIn(abt::FSyslib &row, dev::Syslib &in) {
+void abt::syslib_CopyIn(abt::FSyslib &row, dev::Syslib &in) throw() {
     row.syslib = in.syslib;
     row.comment = in.comment;
 }
 
 // --- abt.FSyslib..Uninit
-void abt::FSyslib_Uninit(abt::FSyslib& syslib) {
+void abt::FSyslib_Uninit(abt::FSyslib& syslib) throw() {
     abt::FSyslib &row = syslib; (void)row;
     ind_syslib_Remove(row); // remove syslib from index ind_syslib
 }
 
 // --- abt.FTargdep.msghdr.CopyOut
 // Copy fields out of row
-void abt::targdep_CopyOut(abt::FTargdep &row, dev::Targdep &out) {
+void abt::targdep_CopyOut(abt::FTargdep &row, dev::Targdep &out) throw() {
     out.targdep = row.targdep;
     out.comment = row.comment;
 }
 
 // --- abt.FTargdep.msghdr.CopyIn
 // Copy fields in to row
-void abt::targdep_CopyIn(abt::FTargdep &row, dev::Targdep &in) {
+void abt::targdep_CopyIn(abt::FTargdep &row, dev::Targdep &in) throw() {
     row.targdep = in.targdep;
     row.comment = in.comment;
 }
 
 // --- abt.FTargdep.target.Get
-algo::Smallstr16 abt::target_Get(abt::FTargdep& targdep) {
+algo::Smallstr16 abt::target_Get(abt::FTargdep& targdep) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(targdep.targdep, ".RL"));
     return ret;
 }
 
 // --- abt.FTargdep.parent.Get
-algo::Smallstr16 abt::parent_Get(abt::FTargdep& targdep) {
+algo::Smallstr16 abt::parent_Get(abt::FTargdep& targdep) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(targdep.targdep, ".RR"));
     return ret;
 }
 
 // --- abt.FTargdep..Uninit
-void abt::FTargdep_Uninit(abt::FTargdep& targdep) {
+void abt::FTargdep_Uninit(abt::FTargdep& targdep) throw() {
     abt::FTargdep &row = targdep; (void)row;
     abt::FTarget* p_target = abt::ind_target_Find(target_Get(row));
     if (p_target)  {
@@ -5757,20 +5757,20 @@ void abt::FTargdep_Uninit(abt::FTargdep& targdep) {
 
 // --- abt.FTarget.msghdr.CopyOut
 // Copy fields out of row
-void abt::target_CopyOut(abt::FTarget &row, dev::Target &out) {
+void abt::target_CopyOut(abt::FTarget &row, dev::Target &out) throw() {
     out.target = row.target;
 }
 
 // --- abt.FTarget.msghdr.CopyIn
 // Copy fields in to row
-void abt::target_CopyIn(abt::FTarget &row, dev::Target &in) {
+void abt::target_CopyIn(abt::FTarget &row, dev::Target &in) throw() {
     row.target = in.target;
 }
 
 // --- abt.FTarget.c_targsrc.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt::c_targsrc_Insert(abt::FTarget& target, abt::FTargsrc& row) {
+void abt::c_targsrc_Insert(abt::FTarget& target, abt::FTargsrc& row) throw() {
     if (bool_Update(row.target_c_targsrc_in_ary,true)) {
         // reserve space
         c_targsrc_Reserve(target, 1);
@@ -5787,7 +5787,7 @@ void abt::c_targsrc_Insert(abt::FTarget& target, abt::FTargsrc& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool abt::c_targsrc_InsertMaybe(abt::FTarget& target, abt::FTargsrc& row) {
+bool abt::c_targsrc_InsertMaybe(abt::FTarget& target, abt::FTargsrc& row) throw() {
     bool retval = !row.target_c_targsrc_in_ary;
     c_targsrc_Insert(target,row); // check is performed in _Insert again
     return retval;
@@ -5795,7 +5795,7 @@ bool abt::c_targsrc_InsertMaybe(abt::FTarget& target, abt::FTargsrc& row) {
 
 // --- abt.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt::c_targsrc_Remove(abt::FTarget& target, abt::FTargsrc& row) {
+void abt::c_targsrc_Remove(abt::FTarget& target, abt::FTargsrc& row) throw() {
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
         int lim = target.c_targsrc_n;
         abt::FTargsrc* *elems = target.c_targsrc_elems;
@@ -5816,7 +5816,7 @@ void abt::c_targsrc_Remove(abt::FTarget& target, abt::FTargsrc& row) {
 
 // --- abt.FTarget.c_targsrc.Reserve
 // Reserve space in index for N more elements;
-void abt::c_targsrc_Reserve(abt::FTarget& target, u32 n) {
+void abt::c_targsrc_Reserve(abt::FTarget& target, u32 n) throw() {
     u32 old_max = target.c_targsrc_max;
     if (UNLIKELY(target.c_targsrc_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -5834,7 +5834,7 @@ void abt::c_targsrc_Reserve(abt::FTarget& target, u32 n) {
 // --- abt.FTarget.c_srcfile.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt::c_srcfile_Insert(abt::FTarget& target, abt::FSrcfile& row) {
+void abt::c_srcfile_Insert(abt::FTarget& target, abt::FSrcfile& row) throw() {
     // reserve space
     c_srcfile_Reserve(target, 1);
     u32 n  = target.c_srcfile_n;
@@ -5850,7 +5850,7 @@ void abt::c_srcfile_Insert(abt::FTarget& target, abt::FSrcfile& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool abt::c_srcfile_ScanInsertMaybe(abt::FTarget& target, abt::FSrcfile& row) {
+bool abt::c_srcfile_ScanInsertMaybe(abt::FTarget& target, abt::FSrcfile& row) throw() {
     bool retval = true;
     u32 n  = target.c_srcfile_n;
     for (u32 i = 0; i < n; i++) {
@@ -5870,7 +5870,7 @@ bool abt::c_srcfile_ScanInsertMaybe(abt::FTarget& target, abt::FSrcfile& row) {
 
 // --- abt.FTarget.c_srcfile.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt::c_srcfile_Remove(abt::FTarget& target, abt::FSrcfile& row) {
+void abt::c_srcfile_Remove(abt::FTarget& target, abt::FSrcfile& row) throw() {
     int lim = target.c_srcfile_n;
     abt::FSrcfile* *elems = target.c_srcfile_elems;
     // search backward, so that most recently added element is found first.
@@ -5889,7 +5889,7 @@ void abt::c_srcfile_Remove(abt::FTarget& target, abt::FSrcfile& row) {
 
 // --- abt.FTarget.c_srcfile.Reserve
 // Reserve space in index for N more elements;
-void abt::c_srcfile_Reserve(abt::FTarget& target, u32 n) {
+void abt::c_srcfile_Reserve(abt::FTarget& target, u32 n) throw() {
     u32 old_max = target.c_srcfile_max;
     if (UNLIKELY(target.c_srcfile_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -5907,7 +5907,7 @@ void abt::c_srcfile_Reserve(abt::FTarget& target, u32 n) {
 // --- abt.FTarget.c_targdep.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt::c_targdep_Insert(abt::FTarget& target, abt::FTargdep& row) {
+void abt::c_targdep_Insert(abt::FTarget& target, abt::FTargdep& row) throw() {
     if (bool_Update(row.target_c_targdep_in_ary,true)) {
         // reserve space
         c_targdep_Reserve(target, 1);
@@ -5924,7 +5924,7 @@ void abt::c_targdep_Insert(abt::FTarget& target, abt::FTargdep& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool abt::c_targdep_InsertMaybe(abt::FTarget& target, abt::FTargdep& row) {
+bool abt::c_targdep_InsertMaybe(abt::FTarget& target, abt::FTargdep& row) throw() {
     bool retval = !row.target_c_targdep_in_ary;
     c_targdep_Insert(target,row); // check is performed in _Insert again
     return retval;
@@ -5932,7 +5932,7 @@ bool abt::c_targdep_InsertMaybe(abt::FTarget& target, abt::FTargdep& row) {
 
 // --- abt.FTarget.c_targdep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt::c_targdep_Remove(abt::FTarget& target, abt::FTargdep& row) {
+void abt::c_targdep_Remove(abt::FTarget& target, abt::FTargdep& row) throw() {
     if (bool_Update(row.target_c_targdep_in_ary,false)) {
         int lim = target.c_targdep_n;
         abt::FTargdep* *elems = target.c_targdep_elems;
@@ -5953,7 +5953,7 @@ void abt::c_targdep_Remove(abt::FTarget& target, abt::FTargdep& row) {
 
 // --- abt.FTarget.c_targdep.Reserve
 // Reserve space in index for N more elements;
-void abt::c_targdep_Reserve(abt::FTarget& target, u32 n) {
+void abt::c_targdep_Reserve(abt::FTarget& target, u32 n) throw() {
     u32 old_max = target.c_targdep_max;
     if (UNLIKELY(target.c_targdep_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -5971,7 +5971,7 @@ void abt::c_targdep_Reserve(abt::FTarget& target, u32 n) {
 // --- abt.FTarget.c_targsyslib.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt::c_targsyslib_Insert(abt::FTarget& target, abt::FTargsyslib& row) {
+void abt::c_targsyslib_Insert(abt::FTarget& target, abt::FTargsyslib& row) throw() {
     if (bool_Update(row.target_c_targsyslib_in_ary,true)) {
         // reserve space
         c_targsyslib_Reserve(target, 1);
@@ -5988,7 +5988,7 @@ void abt::c_targsyslib_Insert(abt::FTarget& target, abt::FTargsyslib& row) {
 // Insert pointer to row in array.
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
-bool abt::c_targsyslib_InsertMaybe(abt::FTarget& target, abt::FTargsyslib& row) {
+bool abt::c_targsyslib_InsertMaybe(abt::FTarget& target, abt::FTargsyslib& row) throw() {
     bool retval = !row.target_c_targsyslib_in_ary;
     c_targsyslib_Insert(target,row); // check is performed in _Insert again
     return retval;
@@ -5996,7 +5996,7 @@ bool abt::c_targsyslib_InsertMaybe(abt::FTarget& target, abt::FTargsyslib& row) 
 
 // --- abt.FTarget.c_targsyslib.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt::c_targsyslib_Remove(abt::FTarget& target, abt::FTargsyslib& row) {
+void abt::c_targsyslib_Remove(abt::FTarget& target, abt::FTargsyslib& row) throw() {
     if (bool_Update(row.target_c_targsyslib_in_ary,false)) {
         int lim = target.c_targsyslib_n;
         abt::FTargsyslib* *elems = target.c_targsyslib_elems;
@@ -6017,7 +6017,7 @@ void abt::c_targsyslib_Remove(abt::FTarget& target, abt::FTargsyslib& row) {
 
 // --- abt.FTarget.c_targsyslib.Reserve
 // Reserve space in index for N more elements;
-void abt::c_targsyslib_Reserve(abt::FTarget& target, u32 n) {
+void abt::c_targsyslib_Reserve(abt::FTarget& target, u32 n) throw() {
     u32 old_max = target.c_targsyslib_max;
     if (UNLIKELY(target.c_targsyslib_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -6035,7 +6035,7 @@ void abt::c_targsyslib_Reserve(abt::FTarget& target, u32 n) {
 // --- abt.FTarget.c_alldep.Insert
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
-void abt::c_alldep_Insert(abt::FTarget& target, abt::FTarget& row) {
+void abt::c_alldep_Insert(abt::FTarget& target, abt::FTarget& row) throw() {
     // reserve space
     c_alldep_Reserve(target, 1);
     u32 n  = target.c_alldep_n;
@@ -6051,7 +6051,7 @@ void abt::c_alldep_Insert(abt::FTarget& target, abt::FTarget& row) {
 // If row is already in the array, do nothing.
 // Linear search is used to locate the element.
 // Return value: whether element was inserted into array.
-bool abt::c_alldep_ScanInsertMaybe(abt::FTarget& target, abt::FTarget& row) {
+bool abt::c_alldep_ScanInsertMaybe(abt::FTarget& target, abt::FTarget& row) throw() {
     bool retval = true;
     u32 n  = target.c_alldep_n;
     for (u32 i = 0; i < n; i++) {
@@ -6071,7 +6071,7 @@ bool abt::c_alldep_ScanInsertMaybe(abt::FTarget& target, abt::FTarget& row) {
 
 // --- abt.FTarget.c_alldep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
-void abt::c_alldep_Remove(abt::FTarget& target, abt::FTarget& row) {
+void abt::c_alldep_Remove(abt::FTarget& target, abt::FTarget& row) throw() {
     int lim = target.c_alldep_n;
     abt::FTarget* *elems = target.c_alldep_elems;
     // search backward, so that most recently added element is found first.
@@ -6090,7 +6090,7 @@ void abt::c_alldep_Remove(abt::FTarget& target, abt::FTarget& row) {
 
 // --- abt.FTarget.c_alldep.Reserve
 // Reserve space in index for N more elements;
-void abt::c_alldep_Reserve(abt::FTarget& target, u32 n) {
+void abt::c_alldep_Reserve(abt::FTarget& target, u32 n) throw() {
     u32 old_max = target.c_alldep_max;
     if (UNLIKELY(target.c_alldep_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -6138,7 +6138,7 @@ void abt::FTarget_Init(abt::FTarget& target) {
 }
 
 // --- abt.FTarget..Uninit
-void abt::FTarget_Uninit(abt::FTarget& target) {
+void abt::FTarget_Uninit(abt::FTarget& target) throw() {
     abt::FTarget &row = target; (void)row;
     ind_target_Remove(row); // remove target from index ind_target
     zs_sel_target_Remove(row); // remove target from index zs_sel_target
@@ -6162,38 +6162,38 @@ void abt::FTarget_Uninit(abt::FTarget& target) {
 
 // --- abt.FTargsrc.msghdr.CopyOut
 // Copy fields out of row
-void abt::targsrc_CopyOut(abt::FTargsrc &row, dev::Targsrc &out) {
+void abt::targsrc_CopyOut(abt::FTargsrc &row, dev::Targsrc &out) throw() {
     out.targsrc = row.targsrc;
     out.comment = row.comment;
 }
 
 // --- abt.FTargsrc.msghdr.CopyIn
 // Copy fields in to row
-void abt::targsrc_CopyIn(abt::FTargsrc &row, dev::Targsrc &in) {
+void abt::targsrc_CopyIn(abt::FTargsrc &row, dev::Targsrc &in) throw() {
     row.targsrc = in.targsrc;
     row.comment = in.comment;
 }
 
 // --- abt.FTargsrc.target.Get
-algo::Smallstr16 abt::target_Get(abt::FTargsrc& targsrc) {
+algo::Smallstr16 abt::target_Get(abt::FTargsrc& targsrc) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(targsrc.targsrc, "/LL"));
     return ret;
 }
 
 // --- abt.FTargsrc.src.Get
-algo::Smallstr200 abt::src_Get(abt::FTargsrc& targsrc) {
+algo::Smallstr200 abt::src_Get(abt::FTargsrc& targsrc) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(targsrc.targsrc, "/LR"));
     return ret;
 }
 
 // --- abt.FTargsrc.ext.Get
-algo::Smallstr10 abt::ext_Get(abt::FTargsrc& targsrc) {
+algo::Smallstr10 abt::ext_Get(abt::FTargsrc& targsrc) throw() {
     algo::Smallstr10 ret(algo::Pathcomp(targsrc.targsrc, ".RR"));
     return ret;
 }
 
 // --- abt.FTargsrc..Uninit
-void abt::FTargsrc_Uninit(abt::FTargsrc& targsrc) {
+void abt::FTargsrc_Uninit(abt::FTargsrc& targsrc) throw() {
     abt::FTargsrc &row = targsrc; (void)row;
     abt::FTarget* p_target = abt::ind_target_Find(target_Get(row));
     if (p_target)  {
@@ -6204,38 +6204,38 @@ void abt::FTargsrc_Uninit(abt::FTargsrc& targsrc) {
 
 // --- abt.FTargsyslib.msghdr.CopyOut
 // Copy fields out of row
-void abt::targsyslib_CopyOut(abt::FTargsyslib &row, dev::Targsyslib &out) {
+void abt::targsyslib_CopyOut(abt::FTargsyslib &row, dev::Targsyslib &out) throw() {
     out.targsyslib = row.targsyslib;
     out.comment = row.comment;
 }
 
 // --- abt.FTargsyslib.msghdr.CopyIn
 // Copy fields in to row
-void abt::targsyslib_CopyIn(abt::FTargsyslib &row, dev::Targsyslib &in) {
+void abt::targsyslib_CopyIn(abt::FTargsyslib &row, dev::Targsyslib &in) throw() {
     row.targsyslib = in.targsyslib;
     row.comment = in.comment;
 }
 
 // --- abt.FTargsyslib.target.Get
-algo::Smallstr16 abt::target_Get(abt::FTargsyslib& targsyslib) {
+algo::Smallstr16 abt::target_Get(abt::FTargsyslib& targsyslib) throw() {
     algo::Smallstr16 ret(algo::Pathcomp(targsyslib.targsyslib, "/LR.LL"));
     return ret;
 }
 
 // --- abt.FTargsyslib.syslib.Get
-algo::Smallstr50 abt::syslib_Get(abt::FTargsyslib& targsyslib) {
+algo::Smallstr50 abt::syslib_Get(abt::FTargsyslib& targsyslib) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(targsyslib.targsyslib, "/LR.LR"));
     return ret;
 }
 
 // --- abt.FTargsyslib.uname.Get
-algo::Smallstr50 abt::uname_Get(abt::FTargsyslib& targsyslib) {
+algo::Smallstr50 abt::uname_Get(abt::FTargsyslib& targsyslib) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(targsyslib.targsyslib, "/LL"));
     return ret;
 }
 
 // --- abt.FTargsyslib..Uninit
-void abt::FTargsyslib_Uninit(abt::FTargsyslib& targsyslib) {
+void abt::FTargsyslib_Uninit(abt::FTargsyslib& targsyslib) throw() {
     abt::FTargsyslib &row = targsyslib; (void)row;
     abt::FTarget* p_target = abt::ind_target_Find(target_Get(row));
     if (p_target)  {
@@ -6245,94 +6245,94 @@ void abt::FTargsyslib_Uninit(abt::FTargsyslib& targsyslib) {
 
 // --- abt.FToolOpt.msghdr.CopyOut
 // Copy fields out of row
-void abt::tool_opt_CopyOut(abt::FToolOpt &row, dev::ToolOpt &out) {
+void abt::tool_opt_CopyOut(abt::FToolOpt &row, dev::ToolOpt &out) throw() {
     out.tool_opt = row.tool_opt;
     out.comment = row.comment;
 }
 
 // --- abt.FToolOpt.msghdr.CopyIn
 // Copy fields in to row
-void abt::tool_opt_CopyIn(abt::FToolOpt &row, dev::ToolOpt &in) {
+void abt::tool_opt_CopyIn(abt::FToolOpt &row, dev::ToolOpt &in) throw() {
     row.tool_opt = in.tool_opt;
     row.comment = in.comment;
 }
 
 // --- abt.FToolOpt.uname.Get
-algo::Smallstr50 abt::uname_Get(abt::FToolOpt& tool_opt) {
+algo::Smallstr50 abt::uname_Get(abt::FToolOpt& tool_opt) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LL.LL-LL"));
     return ret;
 }
 
 // --- abt.FToolOpt.compiler.Get
-algo::Smallstr50 abt::compiler_Get(abt::FToolOpt& tool_opt) {
+algo::Smallstr50 abt::compiler_Get(abt::FToolOpt& tool_opt) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LL.LL-LR"));
     return ret;
 }
 
 // --- abt.FToolOpt.cfg.Get
-algo::Smallstr50 abt::cfg_Get(abt::FToolOpt& tool_opt) {
+algo::Smallstr50 abt::cfg_Get(abt::FToolOpt& tool_opt) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LL.LR-LL"));
     return ret;
 }
 
 // --- abt.FToolOpt.arch.Get
-algo::Smallstr50 abt::arch_Get(abt::FToolOpt& tool_opt) {
+algo::Smallstr50 abt::arch_Get(abt::FToolOpt& tool_opt) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LL.LR-LR"));
     return ret;
 }
 
 // --- abt.FToolOpt.target.Get
-algo::Smallstr50 abt::target_Get(abt::FToolOpt& tool_opt) {
+algo::Smallstr50 abt::target_Get(abt::FToolOpt& tool_opt) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LR:LL-LL"));
     return ret;
 }
 
 // --- abt.FToolOpt.opt_type.Get
-algo::Smallstr50 abt::opt_type_Get(abt::FToolOpt& tool_opt) {
+algo::Smallstr50 abt::opt_type_Get(abt::FToolOpt& tool_opt) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, "/LR:LL-LR"));
     return ret;
 }
 
 // --- abt.FToolOpt.opt.Get
-algo::Smallstr100 abt::opt_Get(abt::FToolOpt& tool_opt) {
+algo::Smallstr100 abt::opt_Get(abt::FToolOpt& tool_opt) throw() {
     algo::Smallstr100 ret(algo::Pathcomp(tool_opt.tool_opt, "/LR:LR"));
     return ret;
 }
 
 // --- abt.FToolOpt.sortfld.Get
-algo::Smallstr50 abt::sortfld_Get(abt::FToolOpt& tool_opt) {
+algo::Smallstr50 abt::sortfld_Get(abt::FToolOpt& tool_opt) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(tool_opt.tool_opt, ".LL"));
     return ret;
 }
 
 // --- abt.FToolOpt.regx_opt.Print
 // Print back to string
-void abt::regx_opt_Print(abt::FToolOpt& tool_opt, algo::cstring &out) {
+void abt::regx_opt_Print(abt::FToolOpt& tool_opt, algo::cstring &out) throw() {
     Regx_Print(tool_opt.regx_opt, out);
 }
 
 // --- abt.FToolOpt.regx_target.Print
 // Print back to string
-void abt::regx_target_Print(abt::FToolOpt& tool_opt, algo::cstring &out) {
+void abt::regx_target_Print(abt::FToolOpt& tool_opt, algo::cstring &out) throw() {
     Regx_Print(tool_opt.regx_target, out);
 }
 
 // --- abt.FUname.msghdr.CopyOut
 // Copy fields out of row
-void abt::uname_CopyOut(abt::FUname &row, dev::Uname &out) {
+void abt::uname_CopyOut(abt::FUname &row, dev::Uname &out) throw() {
     out.uname = row.uname;
     out.comment = row.comment;
 }
 
 // --- abt.FUname.msghdr.CopyIn
 // Copy fields in to row
-void abt::uname_CopyIn(abt::FUname &row, dev::Uname &in) {
+void abt::uname_CopyIn(abt::FUname &row, dev::Uname &in) throw() {
     row.uname = in.uname;
     row.comment = in.comment;
 }
 
 // --- abt.FUname..Uninit
-void abt::FUname_Uninit(abt::FUname& uname) {
+void abt::FUname_Uninit(abt::FUname& uname) throw() {
     abt::FUname &row = uname; (void)row;
     ind_uname_Remove(row); // remove uname from index ind_uname
 }
@@ -6340,7 +6340,7 @@ void abt::FUname_Uninit(abt::FUname& uname) {
 // --- abt.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* abt::value_ToCstr(const abt::FieldId& parent) {
+const char* abt::value_ToCstr(const abt::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case abt_FieldId_value             : ret = "value";  break;
@@ -6351,7 +6351,7 @@ const char* abt::value_ToCstr(const abt::FieldId& parent) {
 // --- abt.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void abt::value_Print(const abt::FieldId& parent, algo::cstring &lhs) {
+void abt::value_Print(const abt::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -6364,7 +6364,7 @@ void abt::value_Print(const abt::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool abt::value_SetStrptrMaybe(abt::FieldId& parent, algo::strptr rhs) {
+bool abt::value_SetStrptrMaybe(abt::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -6382,13 +6382,13 @@ bool abt::value_SetStrptrMaybe(abt::FieldId& parent, algo::strptr rhs) {
 // --- abt.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void abt::value_SetStrptr(abt::FieldId& parent, algo::strptr rhs, abt_FieldIdEnum dflt) {
+void abt::value_SetStrptr(abt::FieldId& parent, algo::strptr rhs, abt_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- abt.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool abt::value_ReadStrptrMaybe(abt::FieldId& parent, algo::strptr rhs) {
+bool abt::value_ReadStrptrMaybe(abt::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -6400,7 +6400,7 @@ bool abt::value_ReadStrptrMaybe(abt::FieldId& parent, algo::strptr rhs) {
 // --- abt.FieldId..ReadStrptrMaybe
 // Read fields of abt::FieldId from an ascii string.
 // The format of the string is the format of the abt::FieldId's only field
-bool abt::FieldId_ReadStrptrMaybe(abt::FieldId &parent, algo::strptr in_str) {
+bool abt::FieldId_ReadStrptrMaybe(abt::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -6409,14 +6409,14 @@ bool abt::FieldId_ReadStrptrMaybe(abt::FieldId &parent, algo::strptr in_str) {
 // --- abt.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:abt.FieldId.String  printfmt:Raw
-void abt::FieldId_Print(abt::FieldId& row, algo::cstring& str) {
+void abt::FieldId_Print(abt::FieldId& row, algo::cstring& str) throw() {
     abt::value_Print(row, str);
 }
 
 // --- abt.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* abt::value_ToCstr(const abt::TableId& parent) {
+const char* abt::value_ToCstr(const abt::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case abt_TableId_dev_Arch          : ret = "dev.Arch";  break;
@@ -6441,7 +6441,7 @@ const char* abt::value_ToCstr(const abt::TableId& parent) {
 // --- abt.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void abt::value_Print(const abt::TableId& parent, algo::cstring &lhs) {
+void abt::value_Print(const abt::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -6454,7 +6454,7 @@ void abt::value_Print(const abt::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool abt::value_SetStrptrMaybe(abt::TableId& parent, algo::strptr rhs) {
+bool abt::value_SetStrptrMaybe(abt::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 7: {
@@ -6614,13 +6614,13 @@ bool abt::value_SetStrptrMaybe(abt::TableId& parent, algo::strptr rhs) {
 // --- abt.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void abt::value_SetStrptr(abt::TableId& parent, algo::strptr rhs, abt_TableIdEnum dflt) {
+void abt::value_SetStrptr(abt::TableId& parent, algo::strptr rhs, abt_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- abt.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool abt::value_ReadStrptrMaybe(abt::TableId& parent, algo::strptr rhs) {
+bool abt::value_ReadStrptrMaybe(abt::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -6632,7 +6632,7 @@ bool abt::value_ReadStrptrMaybe(abt::TableId& parent, algo::strptr rhs) {
 // --- abt.TableId..ReadStrptrMaybe
 // Read fields of abt::TableId from an ascii string.
 // The format of the string is the format of the abt::TableId's only field
-bool abt::TableId_ReadStrptrMaybe(abt::TableId &parent, algo::strptr in_str) {
+bool abt::TableId_ReadStrptrMaybe(abt::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -6641,14 +6641,14 @@ bool abt::TableId_ReadStrptrMaybe(abt::TableId &parent, algo::strptr in_str) {
 // --- abt.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:abt.TableId.String  printfmt:Raw
-void abt::TableId_Print(abt::TableId& row, algo::cstring& str) {
+void abt::TableId_Print(abt::TableId& row, algo::cstring& str) throw() {
     abt::value_Print(row, str);
 }
 
 // --- abt.config..Print
 // print string representation of ROW to string STR
 // cfmt:abt.config.String  printfmt:Tuple
-void abt::config_Print(abt::config& row, algo::cstring& str) {
+void abt::config_Print(abt::config& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "abt.config";
 

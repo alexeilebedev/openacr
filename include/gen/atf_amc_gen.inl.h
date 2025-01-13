@@ -47,37 +47,37 @@ inline void atf_amc::AmcCleanup2_Init(atf_amc::AmcCleanup2& parent) {
 }
 
 // --- atf_amc.AmcCleanup2..Uninit
-inline void atf_amc::AmcCleanup2_Uninit(atf_amc::AmcCleanup2& parent) {
+inline void atf_amc::AmcCleanup2_Uninit(atf_amc::AmcCleanup2& parent) throw() {
     atf_amc::AmcCleanup2 &row = parent; (void)row;
     field2_Cleanup(parent); // dmmeta.fcleanup:atf_amc.AmcCleanup2.field2
     field1_Cleanup(parent); // dmmeta.fcleanup:atf_amc.AmcCleanup2.field1
 }
 
 // --- atf_amc.AmcCleanup2..Ctor
-inline  atf_amc::AmcCleanup2::AmcCleanup2() {
+inline  atf_amc::AmcCleanup2::AmcCleanup2() throw() {
     atf_amc::AmcCleanup2_Init(*this);
 }
 
 // --- atf_amc.AmcCleanup2..Dtor
-inline  atf_amc::AmcCleanup2::~AmcCleanup2() {
+inline  atf_amc::AmcCleanup2::~AmcCleanup2() throw() {
     atf_amc::AmcCleanup2_Uninit(*this);
 }
 
 // --- atf_amc.AmcSubstr1..Ctor
-inline  atf_amc::AmcSubstr1::AmcSubstr1() {
+inline  atf_amc::AmcSubstr1::AmcSubstr1() throw() {
 }
 
 // --- atf_amc.BitfldType1.bit1.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 1.
-inline u64 atf_amc::bit1_Get(const atf_amc::BitfldType1& parent) {
+inline u64 atf_amc::bit1_Get(const atf_amc::BitfldType1& parent) throw() {
     return u64((parent.value >> 1) & 0x01);
 }
 
 // --- atf_amc.BitfldType1.bit1.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 1.
-inline void atf_amc::bit1_Set(atf_amc::BitfldType1& parent, u64 rhs) {
+inline void atf_amc::bit1_Set(atf_amc::BitfldType1& parent, u64 rhs) throw() {
     u64 t1    = u64(0x01) << 1;
     u64 t2    = (u64(rhs) & 0x01) << 1;
     parent.value = u64((parent.value & ~t1) | t2);
@@ -86,14 +86,14 @@ inline void atf_amc::bit1_Set(atf_amc::BitfldType1& parent, u64 rhs) {
 // --- atf_amc.BitfldType1.bits5.Get
 // Retrieve bitfield from value of field value
 //    10 bits starting at bit 5.
-inline u64 atf_amc::bits5_Get(const atf_amc::BitfldType1& parent) {
+inline u64 atf_amc::bits5_Get(const atf_amc::BitfldType1& parent) throw() {
     return u64((parent.value >> 5) & 0x3ff);
 }
 
 // --- atf_amc.BitfldType1.bits5.Set
 // Set bitfield in value of field 'value'
 //    10 bits starting at bit 5.
-inline void atf_amc::bits5_Set(atf_amc::BitfldType1& parent, u64 rhs) {
+inline void atf_amc::bits5_Set(atf_amc::BitfldType1& parent, u64 rhs) throw() {
     u64 t1    = u64(0x3ff) << 5;
     u64 t2    = (u64(rhs) & 0x3ff) << 5;
     parent.value = u64((parent.value & ~t1) | t2);
@@ -106,21 +106,21 @@ inline void atf_amc::BitfldType1_Init(atf_amc::BitfldType1& parent) {
 }
 
 // --- atf_amc.BitfldType1..Ctor
-inline  atf_amc::BitfldType1::BitfldType1() {
+inline  atf_amc::BitfldType1::BitfldType1() throw() {
     atf_amc::BitfldType1_Init(*this);
 }
 
 // --- atf_amc.BitfldType2.bit0.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 0.
-inline bool atf_amc::bit0_Get(const atf_amc::BitfldType2& parent) {
+inline bool atf_amc::bit0_Get(const atf_amc::BitfldType2& parent) throw() {
     return bool((parent.value >> 0) & 0x01);
 }
 
 // --- atf_amc.BitfldType2.bit0.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 0.
-inline void atf_amc::bit0_Set(atf_amc::BitfldType2& parent, bool rhs) {
+inline void atf_amc::bit0_Set(atf_amc::BitfldType2& parent, bool rhs) throw() {
     u64 t1    = u64(0x01) << 0;
     u64 t2    = (u64(rhs) & 0x01) << 0;
     parent.value = u64((parent.value & ~t1) | t2);
@@ -129,14 +129,14 @@ inline void atf_amc::bit0_Set(atf_amc::BitfldType2& parent, bool rhs) {
 // --- atf_amc.BitfldType2.bit1.Get
 // Retrieve bitfield from value of field value
 //    1 bits starting at bit 1.
-inline bool atf_amc::bit1_Get(const atf_amc::BitfldType2& parent) {
+inline bool atf_amc::bit1_Get(const atf_amc::BitfldType2& parent) throw() {
     return bool((parent.value >> 1) & 0x01);
 }
 
 // --- atf_amc.BitfldType2.bit1.Set
 // Set bitfield in value of field 'value'
 //    1 bits starting at bit 1.
-inline void atf_amc::bit1_Set(atf_amc::BitfldType2& parent, bool rhs) {
+inline void atf_amc::bit1_Set(atf_amc::BitfldType2& parent, bool rhs) throw() {
     u64 t1    = u64(0x01) << 1;
     u64 t2    = (u64(rhs) & 0x01) << 1;
     parent.value = u64((parent.value & ~t1) | t2);
@@ -150,21 +150,21 @@ inline void atf_amc::BitfldType2_Init(atf_amc::BitfldType2& parent) {
 }
 
 // --- atf_amc.BitfldType2..Ctor
-inline  atf_amc::BitfldType2::BitfldType2() {
+inline  atf_amc::BitfldType2::BitfldType2() throw() {
     atf_amc::BitfldType2_Init(*this);
 }
 
 // --- atf_amc.BitfldU128.bits1_65.Get
 // Retrieve bitfield from value of field value
 //    64 bits starting at bit 1.
-inline u64 atf_amc::bits1_65_Get(const atf_amc::BitfldU128& parent) {
+inline u64 atf_amc::bits1_65_Get(const atf_amc::BitfldU128& parent) throw() {
     return u64((parent.value >> 1) & 0xffffffffffffffff);
 }
 
 // --- atf_amc.BitfldU128.bits1_65.Set
 // Set bitfield in value of field 'value'
 //    64 bits starting at bit 1.
-inline void atf_amc::bits1_65_Set(atf_amc::BitfldU128& parent, u64 rhs) {
+inline void atf_amc::bits1_65_Set(atf_amc::BitfldU128& parent, u64 rhs) throw() {
     u128 t1    = u128(0xffffffffffffffff) << 1;
     u128 t2    = (u128(rhs) & 0xffffffffffffffff) << 1;
     parent.value = u128((parent.value & ~t1) | t2);
@@ -173,14 +173,14 @@ inline void atf_amc::bits1_65_Set(atf_amc::BitfldU128& parent, u64 rhs) {
 // --- atf_amc.BitfldU128.bits65_128.Get
 // Retrieve bitfield from value of field value
 //    63 bits starting at bit 65.
-inline u64 atf_amc::bits65_128_Get(const atf_amc::BitfldU128& parent) {
+inline u64 atf_amc::bits65_128_Get(const atf_amc::BitfldU128& parent) throw() {
     return u64((parent.value >> 65) & 0x7fffffffffffffff);
 }
 
 // --- atf_amc.BitfldU128.bits65_128.Set
 // Set bitfield in value of field 'value'
 //    63 bits starting at bit 65.
-inline void atf_amc::bits65_128_Set(atf_amc::BitfldU128& parent, u64 rhs) {
+inline void atf_amc::bits65_128_Set(atf_amc::BitfldU128& parent, u64 rhs) throw() {
     u128 t1    = u128(0x7fffffffffffffff) << 65;
     u128 t2    = (u128(rhs) & 0x7fffffffffffffff) << 65;
     parent.value = u128((parent.value & ~t1) | t2);
@@ -193,21 +193,21 @@ inline void atf_amc::BitfldU128_Init(atf_amc::BitfldU128& parent) {
 }
 
 // --- atf_amc.BitfldU128..Ctor
-inline  atf_amc::BitfldU128::BitfldU128() {
+inline  atf_amc::BitfldU128::BitfldU128() throw() {
     atf_amc::BitfldU128_Init(*this);
 }
 
 // --- atf_amc.BitfldU16.bits0_4.Get
 // Retrieve bitfield from value of field value
 //    4 bits starting at bit 0.
-inline u8 atf_amc::bits0_4_Get(const atf_amc::BitfldU16& parent) {
+inline u8 atf_amc::bits0_4_Get(const atf_amc::BitfldU16& parent) throw() {
     return u8((parent.value >> 0) & 0x0f);
 }
 
 // --- atf_amc.BitfldU16.bits0_4.Set
 // Set bitfield in value of field 'value'
 //    4 bits starting at bit 0.
-inline void atf_amc::bits0_4_Set(atf_amc::BitfldU16& parent, u8 rhs) {
+inline void atf_amc::bits0_4_Set(atf_amc::BitfldU16& parent, u8 rhs) throw() {
     u16 t1    = u16(0x0f) << 0;
     u16 t2    = (u16(rhs) & 0x0f) << 0;
     parent.value = u16((parent.value & ~t1) | t2);
@@ -216,14 +216,14 @@ inline void atf_amc::bits0_4_Set(atf_amc::BitfldU16& parent, u8 rhs) {
 // --- atf_amc.BitfldU16.bits8_12.Get
 // Retrieve bitfield from value of field value
 //    4 bits starting at bit 8.
-inline u8 atf_amc::bits8_12_Get(const atf_amc::BitfldU16& parent) {
+inline u8 atf_amc::bits8_12_Get(const atf_amc::BitfldU16& parent) throw() {
     return u8((parent.value >> 8) & 0x0f);
 }
 
 // --- atf_amc.BitfldU16.bits8_12.Set
 // Set bitfield in value of field 'value'
 //    4 bits starting at bit 8.
-inline void atf_amc::bits8_12_Set(atf_amc::BitfldU16& parent, u8 rhs) {
+inline void atf_amc::bits8_12_Set(atf_amc::BitfldU16& parent, u8 rhs) throw() {
     u16 t1    = u16(0x0f) << 8;
     u16 t2    = (u16(rhs) & 0x0f) << 8;
     parent.value = u16((parent.value & ~t1) | t2);
@@ -236,20 +236,20 @@ inline void atf_amc::BitfldU16_Init(atf_amc::BitfldU16& parent) {
 }
 
 // --- atf_amc.BitfldU16..Ctor
-inline  atf_amc::BitfldU16::BitfldU16() {
+inline  atf_amc::BitfldU16::BitfldU16() throw() {
     atf_amc::BitfldU16_Init(*this);
 }
 
 // --- atf_amc.Bitset.fld1.NBits
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
-inline int atf_amc::fld1_Nbits(atf_amc::Bitset& parent) {
+inline int atf_amc::fld1_Nbits(atf_amc::Bitset& parent) throw() {
     return fld1_N(parent) * 16;
 }
 
 // --- atf_amc.Bitset.fld1.qGetBit
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-inline bool atf_amc::fld1_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline bool atf_amc::fld1_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 4;
     u64 shift = bit_idx & 15;
     u16 &elem = fld1_qFind(parent, elem_idx); // fetch element
@@ -258,7 +258,7 @@ inline bool atf_amc::fld1_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld1.GetBit
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-inline bool atf_amc::fld1_GetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline bool atf_amc::fld1_GetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 4;
     u64 shift = bit_idx & 15;
     bool ret = false;
@@ -272,7 +272,7 @@ inline bool atf_amc::fld1_GetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld1.BitsEmptyQ
 // Check if all the bits in the bitset are equal to zero
-inline bool atf_amc::fld1_BitsEmptyQ(atf_amc::Bitset& parent) {
+inline bool atf_amc::fld1_BitsEmptyQ(atf_amc::Bitset& parent) throw() {
     bool retval = true;
     u64 n = fld1_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -285,7 +285,7 @@ inline bool atf_amc::fld1_BitsEmptyQ(atf_amc::Bitset& parent) {
 }
 
 // --- atf_amc.Bitset.fld1.Sum1s
-inline u64 atf_amc::fld1_Sum1s(atf_amc::Bitset& parent) {
+inline u64 atf_amc::fld1_Sum1s(atf_amc::Bitset& parent) throw() {
     u64 sum = 0;
     u64 n = fld1_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -296,7 +296,7 @@ inline u64 atf_amc::fld1_Sum1s(atf_amc::Bitset& parent) {
 
 // --- atf_amc.Bitset.fld1.qClearBit
 // Clear bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld1_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld1_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 4;
     u64 shift = bit_idx & 15;
     u16 &elem = fld1_qFind(parent, elem_idx); // fetch
@@ -305,7 +305,7 @@ inline void atf_amc::fld1_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld1.ClearBit
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-inline void atf_amc::fld1_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld1_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 4;
     u64 shift = bit_idx & 15;
     u64 lim = fld1_N(parent);
@@ -317,7 +317,7 @@ inline void atf_amc::fld1_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld1.qSetBit
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld1_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld1_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 4;
     u64 shift = bit_idx & 15;
     u16 &elem = fld1_qFind(parent, elem_idx); // fetch
@@ -326,7 +326,7 @@ inline void atf_amc::fld1_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld1.SetBit
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-inline void atf_amc::fld1_SetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld1_SetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 4;
     u64 shift = bit_idx & 15;
     u64 lim = fld1_N(parent);
@@ -338,7 +338,7 @@ inline void atf_amc::fld1_SetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld1.qSetBitVal
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld1_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) {
+inline void atf_amc::fld1_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 4;
     u64 shift = bit_idx & 15;
     u16 &elem = fld1_qFind(parent, elem_idx); // fetch
@@ -347,7 +347,7 @@ inline void atf_amc::fld1_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool 
 
 // --- atf_amc.Bitset.fld1.qOrBitVal
 // Or bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld1_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) {
+inline void atf_amc::fld1_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 4;
     u64 shift = bit_idx & 15;
     u16 &elem = fld1_qFind(parent, elem_idx); // fetch
@@ -357,7 +357,7 @@ inline void atf_amc::fld1_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool v
 // --- atf_amc.Bitset.fld1.ClearBitsAll
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
-inline void atf_amc::fld1_ClearBitsAll(atf_amc::Bitset& parent) {
+inline void atf_amc::fld1_ClearBitsAll(atf_amc::Bitset& parent) throw() {
     u64 n = fld1_N(parent);
     for (u64 i = 0; i < n; i++) {
         fld1_qFind(parent, i) = 0;
@@ -366,7 +366,7 @@ inline void atf_amc::fld1_ClearBitsAll(atf_amc::Bitset& parent) {
 
 // --- atf_amc.Bitset.fld1.ClearBits
 // Zero in PARENT any bits that are set in RHS.
-inline void atf_amc::fld1_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) {
+inline void atf_amc::fld1_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) throw() {
     u64 n = u64_Min(fld1_N(parent), fld1_N(rhs));
     for (u64 i = 0; i < n; i++) {
         fld1_qFind(parent, i) &= ~fld1_qFind(rhs, i);
@@ -376,7 +376,7 @@ inline void atf_amc::fld1_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rh
 // --- atf_amc.Bitset.fld1.OrBits
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
-inline void atf_amc::fld1_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) {
+inline void atf_amc::fld1_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) throw() {
     u64 n = u64_Min(fld1_N(parent), fld1_N(rhs));
     for (u64 i = 0; i < n; i++) {
         fld1_qFind(parent, i) |= fld1_qFind(rhs, i);
@@ -385,7 +385,7 @@ inline void atf_amc::fld1_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) 
 
 // --- atf_amc.Bitset.fld1.Sup
 // Return smallest number N such that indexes of all 1 bits are below N
-inline i32 atf_amc::fld1_Sup(atf_amc::Bitset& parent) {
+inline i32 atf_amc::fld1_Sup(atf_amc::Bitset& parent) throw() {
     u64 lim = fld1_N(parent);
     i32 ret = 0;
     for (int i = lim-1; i >= 0; i--) {
@@ -401,7 +401,7 @@ inline i32 atf_amc::fld1_Sup(atf_amc::Bitset& parent) {
 
 // --- atf_amc.Bitset.fld1.Fill
 // Set all elements of fixed array to value RHS
-inline void atf_amc::fld1_Fill(atf_amc::Bitset& parent, const u16 &rhs) {
+inline void atf_amc::fld1_Fill(atf_amc::Bitset& parent, const u16 &rhs) throw() {
     for (int i = 0; i < 4; i++) {
         parent.fld1_elems[i] = rhs;
     }
@@ -409,7 +409,7 @@ inline void atf_amc::fld1_Fill(atf_amc::Bitset& parent, const u16 &rhs) {
 
 // --- atf_amc.Bitset.fld1.Find
 // Look up row by row id. Return NULL if out of range
-inline u16* atf_amc::fld1_Find(atf_amc::Bitset& parent, u64 t) {
+inline u16* atf_amc::fld1_Find(atf_amc::Bitset& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = 4;
     return idx < lim ? parent.fld1_elems + idx : NULL; // unsigned comparison with limit
@@ -417,60 +417,60 @@ inline u16* atf_amc::fld1_Find(atf_amc::Bitset& parent, u64 t) {
 
 // --- atf_amc.Bitset.fld1.Getary
 // Access fixed array fld1 as aryptr.
-inline algo::aryptr<u16> atf_amc::fld1_Getary(atf_amc::Bitset& parent) {
+inline algo::aryptr<u16> atf_amc::fld1_Getary(atf_amc::Bitset& parent) throw() {
     return algo::aryptr<u16>(parent.fld1_elems, 4);
 }
 
 // --- atf_amc.Bitset.fld1.Max
 // Return max number of items in the array
-inline i32 atf_amc::fld1_Max(atf_amc::Bitset& parent) {
+inline i32 atf_amc::fld1_Max(atf_amc::Bitset& parent) throw() {
     (void)parent;
     return 4;
 }
 
 // --- atf_amc.Bitset.fld1.N
 // Return number of items in the array
-inline i32 atf_amc::fld1_N(const atf_amc::Bitset& parent) {
+inline i32 atf_amc::fld1_N(const atf_amc::Bitset& parent) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     return 4;
 }
 
 // --- atf_amc.Bitset.fld1.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
-inline void atf_amc::fld1_Setary(atf_amc::Bitset& parent, const algo::aryptr<u16> &rhs) {
+inline void atf_amc::fld1_Setary(atf_amc::Bitset& parent, const algo::aryptr<u16> &rhs) throw() {
     int n = i32_Min(4, rhs.n_elems);
     memcpy(parent.fld1_elems, rhs.elems, sizeof(u16)*n);
 }
 
 // --- atf_amc.Bitset.fld1.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline u16& atf_amc::fld1_qFind(atf_amc::Bitset& parent, u64 t) {
+inline u16& atf_amc::fld1_qFind(atf_amc::Bitset& parent, u64 t) throw() {
     return parent.fld1_elems[u64(t)];
 }
 
 // --- atf_amc.Bitset.fld8.N
 // Return constant 1
-inline int atf_amc::fld8_N(atf_amc::Bitset& parent) {
+inline int atf_amc::fld8_N(atf_amc::Bitset& parent) throw() {
     (void)parent;
     return 1;
 }
 
 // --- atf_amc.Bitset.fld8.qFind
 // Access value
-inline u8& atf_amc::fld8_qFind(atf_amc::Bitset& parent, int) {
+inline u8& atf_amc::fld8_qFind(atf_amc::Bitset& parent, int) throw() {
     return parent.fld8;
 }
 
 // --- atf_amc.Bitset.fld8.NBits
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
-inline int atf_amc::fld8_Nbits(atf_amc::Bitset& parent) {
+inline int atf_amc::fld8_Nbits(atf_amc::Bitset& parent) throw() {
     return fld8_N(parent) * 8;
 }
 
 // --- atf_amc.Bitset.fld8.qGetBit
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-inline bool atf_amc::fld8_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline bool atf_amc::fld8_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 3;
     u64 shift = bit_idx & 7;
     u8 &elem = fld8_qFind(parent, elem_idx); // fetch element
@@ -479,7 +479,7 @@ inline bool atf_amc::fld8_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld8.GetBit
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-inline bool atf_amc::fld8_GetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline bool atf_amc::fld8_GetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 3;
     u64 shift = bit_idx & 7;
     bool ret = false;
@@ -493,7 +493,7 @@ inline bool atf_amc::fld8_GetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld8.BitsEmptyQ
 // Check if all the bits in the bitset are equal to zero
-inline bool atf_amc::fld8_BitsEmptyQ(atf_amc::Bitset& parent) {
+inline bool atf_amc::fld8_BitsEmptyQ(atf_amc::Bitset& parent) throw() {
     bool retval = true;
     u64 n = fld8_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -506,7 +506,7 @@ inline bool atf_amc::fld8_BitsEmptyQ(atf_amc::Bitset& parent) {
 }
 
 // --- atf_amc.Bitset.fld8.Sum1s
-inline u64 atf_amc::fld8_Sum1s(atf_amc::Bitset& parent) {
+inline u64 atf_amc::fld8_Sum1s(atf_amc::Bitset& parent) throw() {
     u64 sum = 0;
     u64 n = fld8_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -517,7 +517,7 @@ inline u64 atf_amc::fld8_Sum1s(atf_amc::Bitset& parent) {
 
 // --- atf_amc.Bitset.fld8.qClearBit
 // Clear bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld8_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld8_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 3;
     u64 shift = bit_idx & 7;
     u8 &elem = fld8_qFind(parent, elem_idx); // fetch
@@ -526,7 +526,7 @@ inline void atf_amc::fld8_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld8.ClearBit
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-inline void atf_amc::fld8_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld8_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 3;
     u64 shift = bit_idx & 7;
     u64 lim = fld8_N(parent);
@@ -538,7 +538,7 @@ inline void atf_amc::fld8_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld8.qSetBit
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld8_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld8_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 3;
     u64 shift = bit_idx & 7;
     u8 &elem = fld8_qFind(parent, elem_idx); // fetch
@@ -547,7 +547,7 @@ inline void atf_amc::fld8_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld8.SetBit
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-inline void atf_amc::fld8_SetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld8_SetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 3;
     u64 shift = bit_idx & 7;
     u64 lim = fld8_N(parent);
@@ -559,7 +559,7 @@ inline void atf_amc::fld8_SetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld8.qSetBitVal
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld8_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) {
+inline void atf_amc::fld8_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 3;
     u64 shift = bit_idx & 7;
     u8 &elem = fld8_qFind(parent, elem_idx); // fetch
@@ -568,7 +568,7 @@ inline void atf_amc::fld8_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool 
 
 // --- atf_amc.Bitset.fld8.qOrBitVal
 // Or bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld8_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) {
+inline void atf_amc::fld8_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 3;
     u64 shift = bit_idx & 7;
     u8 &elem = fld8_qFind(parent, elem_idx); // fetch
@@ -578,7 +578,7 @@ inline void atf_amc::fld8_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool v
 // --- atf_amc.Bitset.fld8.ClearBitsAll
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
-inline void atf_amc::fld8_ClearBitsAll(atf_amc::Bitset& parent) {
+inline void atf_amc::fld8_ClearBitsAll(atf_amc::Bitset& parent) throw() {
     u64 n = fld8_N(parent);
     for (u64 i = 0; i < n; i++) {
         fld8_qFind(parent, i) = 0;
@@ -587,7 +587,7 @@ inline void atf_amc::fld8_ClearBitsAll(atf_amc::Bitset& parent) {
 
 // --- atf_amc.Bitset.fld8.ClearBits
 // Zero in PARENT any bits that are set in RHS.
-inline void atf_amc::fld8_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) {
+inline void atf_amc::fld8_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) throw() {
     u64 n = u64_Min(fld8_N(parent), fld8_N(rhs));
     for (u64 i = 0; i < n; i++) {
         fld8_qFind(parent, i) &= ~fld8_qFind(rhs, i);
@@ -597,7 +597,7 @@ inline void atf_amc::fld8_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rh
 // --- atf_amc.Bitset.fld8.OrBits
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
-inline void atf_amc::fld8_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) {
+inline void atf_amc::fld8_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) throw() {
     u64 n = u64_Min(fld8_N(parent), fld8_N(rhs));
     for (u64 i = 0; i < n; i++) {
         fld8_qFind(parent, i) |= fld8_qFind(rhs, i);
@@ -606,7 +606,7 @@ inline void atf_amc::fld8_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) 
 
 // --- atf_amc.Bitset.fld8.Sup
 // Return smallest number N such that indexes of all 1 bits are below N
-inline i32 atf_amc::fld8_Sup(atf_amc::Bitset& parent) {
+inline i32 atf_amc::fld8_Sup(atf_amc::Bitset& parent) throw() {
     u64 lim = fld8_N(parent);
     i32 ret = 0;
     for (int i = lim-1; i >= 0; i--) {
@@ -622,27 +622,27 @@ inline i32 atf_amc::fld8_Sup(atf_amc::Bitset& parent) {
 
 // --- atf_amc.Bitset.fld64.N
 // Return constant 1
-inline int atf_amc::fld64_N(atf_amc::Bitset& parent) {
+inline int atf_amc::fld64_N(atf_amc::Bitset& parent) throw() {
     (void)parent;
     return 1;
 }
 
 // --- atf_amc.Bitset.fld64.qFind
 // Access value
-inline u64& atf_amc::fld64_qFind(atf_amc::Bitset& parent, int) {
+inline u64& atf_amc::fld64_qFind(atf_amc::Bitset& parent, int) throw() {
     return parent.fld64;
 }
 
 // --- atf_amc.Bitset.fld64.NBits
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
-inline int atf_amc::fld64_Nbits(atf_amc::Bitset& parent) {
+inline int atf_amc::fld64_Nbits(atf_amc::Bitset& parent) throw() {
     return fld64_N(parent) * 64;
 }
 
 // --- atf_amc.Bitset.fld64.qGetBit
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-inline bool atf_amc::fld64_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline bool atf_amc::fld64_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = fld64_qFind(parent, elem_idx); // fetch element
@@ -651,7 +651,7 @@ inline bool atf_amc::fld64_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld64.GetBit
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-inline bool atf_amc::fld64_GetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline bool atf_amc::fld64_GetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     bool ret = false;
@@ -665,7 +665,7 @@ inline bool atf_amc::fld64_GetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld64.BitsEmptyQ
 // Check if all the bits in the bitset are equal to zero
-inline bool atf_amc::fld64_BitsEmptyQ(atf_amc::Bitset& parent) {
+inline bool atf_amc::fld64_BitsEmptyQ(atf_amc::Bitset& parent) throw() {
     bool retval = true;
     u64 n = fld64_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -678,7 +678,7 @@ inline bool atf_amc::fld64_BitsEmptyQ(atf_amc::Bitset& parent) {
 }
 
 // --- atf_amc.Bitset.fld64.Sum1s
-inline u64 atf_amc::fld64_Sum1s(atf_amc::Bitset& parent) {
+inline u64 atf_amc::fld64_Sum1s(atf_amc::Bitset& parent) throw() {
     u64 sum = 0;
     u64 n = fld64_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -689,7 +689,7 @@ inline u64 atf_amc::fld64_Sum1s(atf_amc::Bitset& parent) {
 
 // --- atf_amc.Bitset.fld64.qClearBit
 // Clear bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld64_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld64_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = fld64_qFind(parent, elem_idx); // fetch
@@ -698,7 +698,7 @@ inline void atf_amc::fld64_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld64.ClearBit
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-inline void atf_amc::fld64_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld64_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 lim = fld64_N(parent);
@@ -710,7 +710,7 @@ inline void atf_amc::fld64_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld64.qSetBit
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld64_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld64_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = fld64_qFind(parent, elem_idx); // fetch
@@ -719,7 +719,7 @@ inline void atf_amc::fld64_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld64.SetBit
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-inline void atf_amc::fld64_SetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld64_SetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 lim = fld64_N(parent);
@@ -731,7 +731,7 @@ inline void atf_amc::fld64_SetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld64.qSetBitVal
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld64_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) {
+inline void atf_amc::fld64_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = fld64_qFind(parent, elem_idx); // fetch
@@ -740,7 +740,7 @@ inline void atf_amc::fld64_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool
 
 // --- atf_amc.Bitset.fld64.qOrBitVal
 // Or bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld64_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) {
+inline void atf_amc::fld64_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = fld64_qFind(parent, elem_idx); // fetch
@@ -750,7 +750,7 @@ inline void atf_amc::fld64_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool 
 // --- atf_amc.Bitset.fld64.ClearBitsAll
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
-inline void atf_amc::fld64_ClearBitsAll(atf_amc::Bitset& parent) {
+inline void atf_amc::fld64_ClearBitsAll(atf_amc::Bitset& parent) throw() {
     u64 n = fld64_N(parent);
     for (u64 i = 0; i < n; i++) {
         fld64_qFind(parent, i) = 0;
@@ -759,7 +759,7 @@ inline void atf_amc::fld64_ClearBitsAll(atf_amc::Bitset& parent) {
 
 // --- atf_amc.Bitset.fld64.ClearBits
 // Zero in PARENT any bits that are set in RHS.
-inline void atf_amc::fld64_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) {
+inline void atf_amc::fld64_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) throw() {
     u64 n = u64_Min(fld64_N(parent), fld64_N(rhs));
     for (u64 i = 0; i < n; i++) {
         fld64_qFind(parent, i) &= ~fld64_qFind(rhs, i);
@@ -769,7 +769,7 @@ inline void atf_amc::fld64_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &r
 // --- atf_amc.Bitset.fld64.OrBits
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
-inline void atf_amc::fld64_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) {
+inline void atf_amc::fld64_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) throw() {
     u64 n = u64_Min(fld64_N(parent), fld64_N(rhs));
     for (u64 i = 0; i < n; i++) {
         fld64_qFind(parent, i) |= fld64_qFind(rhs, i);
@@ -778,7 +778,7 @@ inline void atf_amc::fld64_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs)
 
 // --- atf_amc.Bitset.fld64.Sup
 // Return smallest number N such that indexes of all 1 bits are below N
-inline i32 atf_amc::fld64_Sup(atf_amc::Bitset& parent) {
+inline i32 atf_amc::fld64_Sup(atf_amc::Bitset& parent) throw() {
     u64 lim = fld64_N(parent);
     i32 ret = 0;
     for (int i = lim-1; i >= 0; i--) {
@@ -794,27 +794,27 @@ inline i32 atf_amc::fld64_Sup(atf_amc::Bitset& parent) {
 
 // --- atf_amc.Bitset.fld128.N
 // Return constant 1
-inline int atf_amc::fld128_N(atf_amc::Bitset& parent) {
+inline int atf_amc::fld128_N(atf_amc::Bitset& parent) throw() {
     (void)parent;
     return 1;
 }
 
 // --- atf_amc.Bitset.fld128.qFind
 // Access value
-inline u128& atf_amc::fld128_qFind(atf_amc::Bitset& parent, int) {
+inline u128& atf_amc::fld128_qFind(atf_amc::Bitset& parent, int) throw() {
     return parent.fld128;
 }
 
 // --- atf_amc.Bitset.fld128.NBits
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
-inline int atf_amc::fld128_Nbits(atf_amc::Bitset& parent) {
+inline int atf_amc::fld128_Nbits(atf_amc::Bitset& parent) throw() {
     return fld128_N(parent) * 128;
 }
 
 // --- atf_amc.Bitset.fld128.qGetBit
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-inline bool atf_amc::fld128_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline bool atf_amc::fld128_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u128 &elem = fld128_qFind(parent, elem_idx); // fetch element
@@ -823,7 +823,7 @@ inline bool atf_amc::fld128_qGetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld128.GetBit
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-inline bool atf_amc::fld128_GetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline bool atf_amc::fld128_GetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     bool ret = false;
@@ -837,7 +837,7 @@ inline bool atf_amc::fld128_GetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld128.BitsEmptyQ
 // Check if all the bits in the bitset are equal to zero
-inline bool atf_amc::fld128_BitsEmptyQ(atf_amc::Bitset& parent) {
+inline bool atf_amc::fld128_BitsEmptyQ(atf_amc::Bitset& parent) throw() {
     bool retval = true;
     u64 n = fld128_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -850,7 +850,7 @@ inline bool atf_amc::fld128_BitsEmptyQ(atf_amc::Bitset& parent) {
 }
 
 // --- atf_amc.Bitset.fld128.Sum1s
-inline u64 atf_amc::fld128_Sum1s(atf_amc::Bitset& parent) {
+inline u64 atf_amc::fld128_Sum1s(atf_amc::Bitset& parent) throw() {
     u64 sum = 0;
     u64 n = fld128_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -861,7 +861,7 @@ inline u64 atf_amc::fld128_Sum1s(atf_amc::Bitset& parent) {
 
 // --- atf_amc.Bitset.fld128.qClearBit
 // Clear bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld128_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld128_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u128 &elem = fld128_qFind(parent, elem_idx); // fetch
@@ -870,7 +870,7 @@ inline void atf_amc::fld128_qClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld128.ClearBit
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-inline void atf_amc::fld128_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld128_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u64 lim = fld128_N(parent);
@@ -882,7 +882,7 @@ inline void atf_amc::fld128_ClearBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld128.qSetBit
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld128_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld128_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u128 &elem = fld128_qFind(parent, elem_idx); // fetch
@@ -891,7 +891,7 @@ inline void atf_amc::fld128_qSetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld128.SetBit
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-inline void atf_amc::fld128_SetBit(atf_amc::Bitset& parent, u32 bit_idx) {
+inline void atf_amc::fld128_SetBit(atf_amc::Bitset& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u64 lim = fld128_N(parent);
@@ -903,7 +903,7 @@ inline void atf_amc::fld128_SetBit(atf_amc::Bitset& parent, u32 bit_idx) {
 
 // --- atf_amc.Bitset.fld128.qSetBitVal
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld128_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) {
+inline void atf_amc::fld128_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u128 &elem = fld128_qFind(parent, elem_idx); // fetch
@@ -912,7 +912,7 @@ inline void atf_amc::fld128_qSetBitVal(atf_amc::Bitset& parent, u32 bit_idx, boo
 
 // --- atf_amc.Bitset.fld128.qOrBitVal
 // Or bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::fld128_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) {
+inline void atf_amc::fld128_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u128 &elem = fld128_qFind(parent, elem_idx); // fetch
@@ -922,7 +922,7 @@ inline void atf_amc::fld128_qOrBitVal(atf_amc::Bitset& parent, u32 bit_idx, bool
 // --- atf_amc.Bitset.fld128.ClearBitsAll
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
-inline void atf_amc::fld128_ClearBitsAll(atf_amc::Bitset& parent) {
+inline void atf_amc::fld128_ClearBitsAll(atf_amc::Bitset& parent) throw() {
     u64 n = fld128_N(parent);
     for (u64 i = 0; i < n; i++) {
         fld128_qFind(parent, i) = 0;
@@ -931,7 +931,7 @@ inline void atf_amc::fld128_ClearBitsAll(atf_amc::Bitset& parent) {
 
 // --- atf_amc.Bitset.fld128.ClearBits
 // Zero in PARENT any bits that are set in RHS.
-inline void atf_amc::fld128_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) {
+inline void atf_amc::fld128_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) throw() {
     u64 n = u64_Min(fld128_N(parent), fld128_N(rhs));
     for (u64 i = 0; i < n; i++) {
         fld128_qFind(parent, i) &= ~fld128_qFind(rhs, i);
@@ -941,7 +941,7 @@ inline void atf_amc::fld128_ClearBits(atf_amc::Bitset& parent, atf_amc::Bitset &
 // --- atf_amc.Bitset.fld128.OrBits
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
-inline void atf_amc::fld128_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) {
+inline void atf_amc::fld128_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs) throw() {
     u64 n = u64_Min(fld128_N(parent), fld128_N(rhs));
     for (u64 i = 0; i < n; i++) {
         fld128_qFind(parent, i) |= fld128_qFind(rhs, i);
@@ -949,7 +949,7 @@ inline void atf_amc::fld128_OrBits(atf_amc::Bitset& parent, atf_amc::Bitset &rhs
 }
 
 // --- atf_amc.Bitset.fld1_bitcurs.Reset
-inline void atf_amc::Bitset_fld1_bitcurs_Reset(Bitset_fld1_bitcurs &curs, atf_amc::Bitset &parent) {
+inline void atf_amc::Bitset_fld1_bitcurs_Reset(Bitset_fld1_bitcurs &curs, atf_amc::Bitset &parent) throw() {
     curs.elems = &fld1_qFind(parent,0);
     curs.n_elems = fld1_N(parent);
     curs.bit = -1;
@@ -958,43 +958,43 @@ inline void atf_amc::Bitset_fld1_bitcurs_Reset(Bitset_fld1_bitcurs &curs, atf_am
 
 // --- atf_amc.Bitset.fld1_bitcurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::Bitset_fld1_bitcurs_ValidQ(Bitset_fld1_bitcurs &curs) {
+inline bool atf_amc::Bitset_fld1_bitcurs_ValidQ(Bitset_fld1_bitcurs &curs) throw() {
     return curs.bit < curs.n_elems*16;
 }
 
 // --- atf_amc.Bitset.fld1_bitcurs.Access
 // item access
-inline int& atf_amc::Bitset_fld1_bitcurs_Access(Bitset_fld1_bitcurs &curs) {
+inline int& atf_amc::Bitset_fld1_bitcurs_Access(Bitset_fld1_bitcurs &curs) throw() {
     return curs.bit;
 }
 
 // --- atf_amc.Bitset.fld1_curs.Reset
 // cursor points to valid item
-inline void atf_amc::Bitset_fld1_curs_Reset(Bitset_fld1_curs &curs, atf_amc::Bitset &parent) {
+inline void atf_amc::Bitset_fld1_curs_Reset(Bitset_fld1_curs &curs, atf_amc::Bitset &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.Bitset.fld1_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::Bitset_fld1_curs_ValidQ(Bitset_fld1_curs &curs) {
+inline bool atf_amc::Bitset_fld1_curs_ValidQ(Bitset_fld1_curs &curs) throw() {
     return u64(curs.index) < u64(4);
 }
 
 // --- atf_amc.Bitset.fld1_curs.Next
 // proceed to next item
-inline void atf_amc::Bitset_fld1_curs_Next(Bitset_fld1_curs &curs) {
+inline void atf_amc::Bitset_fld1_curs_Next(Bitset_fld1_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.Bitset.fld1_curs.Access
 // item access
-inline u16& atf_amc::Bitset_fld1_curs_Access(Bitset_fld1_curs &curs) {
+inline u16& atf_amc::Bitset_fld1_curs_Access(Bitset_fld1_curs &curs) throw() {
     return fld1_qFind((*curs.parent), u64(curs.index));
 }
 
 // --- atf_amc.Bitset.fld8_bitcurs.Reset
-inline void atf_amc::Bitset_fld8_bitcurs_Reset(Bitset_fld8_bitcurs &curs, atf_amc::Bitset &parent) {
+inline void atf_amc::Bitset_fld8_bitcurs_Reset(Bitset_fld8_bitcurs &curs, atf_amc::Bitset &parent) throw() {
     curs.elems = &fld8_qFind(parent,0);
     curs.n_elems = fld8_N(parent);
     curs.bit = -1;
@@ -1003,18 +1003,18 @@ inline void atf_amc::Bitset_fld8_bitcurs_Reset(Bitset_fld8_bitcurs &curs, atf_am
 
 // --- atf_amc.Bitset.fld8_bitcurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::Bitset_fld8_bitcurs_ValidQ(Bitset_fld8_bitcurs &curs) {
+inline bool atf_amc::Bitset_fld8_bitcurs_ValidQ(Bitset_fld8_bitcurs &curs) throw() {
     return curs.bit < curs.n_elems*8;
 }
 
 // --- atf_amc.Bitset.fld8_bitcurs.Access
 // item access
-inline int& atf_amc::Bitset_fld8_bitcurs_Access(Bitset_fld8_bitcurs &curs) {
+inline int& atf_amc::Bitset_fld8_bitcurs_Access(Bitset_fld8_bitcurs &curs) throw() {
     return curs.bit;
 }
 
 // --- atf_amc.Bitset.fld64_bitcurs.Reset
-inline void atf_amc::Bitset_fld64_bitcurs_Reset(Bitset_fld64_bitcurs &curs, atf_amc::Bitset &parent) {
+inline void atf_amc::Bitset_fld64_bitcurs_Reset(Bitset_fld64_bitcurs &curs, atf_amc::Bitset &parent) throw() {
     curs.elems = &fld64_qFind(parent,0);
     curs.n_elems = fld64_N(parent);
     curs.bit = -1;
@@ -1023,13 +1023,13 @@ inline void atf_amc::Bitset_fld64_bitcurs_Reset(Bitset_fld64_bitcurs &curs, atf_
 
 // --- atf_amc.Bitset.fld64_bitcurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::Bitset_fld64_bitcurs_ValidQ(Bitset_fld64_bitcurs &curs) {
+inline bool atf_amc::Bitset_fld64_bitcurs_ValidQ(Bitset_fld64_bitcurs &curs) throw() {
     return curs.bit < curs.n_elems*64;
 }
 
 // --- atf_amc.Bitset.fld64_bitcurs.Access
 // item access
-inline int& atf_amc::Bitset_fld64_bitcurs_Access(Bitset_fld64_bitcurs &curs) {
+inline int& atf_amc::Bitset_fld64_bitcurs_Access(Bitset_fld64_bitcurs &curs) throw() {
     return curs.bit;
 }
 
@@ -1045,25 +1045,25 @@ inline void atf_amc::Bitset_Init(atf_amc::Bitset& parent) {
 }
 
 // --- atf_amc.Bitset..Ctor
-inline  atf_amc::Bitset::Bitset() {
+inline  atf_amc::Bitset::Bitset() throw() {
     atf_amc::Bitset_Init(*this);
 }
 
 // --- atf_amc.Bytebuf.in.Max
 // Return max. number of bytes in the buffer.
-inline i32 atf_amc::in_Max(atf_amc::Bytebuf& bytebuf) {
+inline i32 atf_amc::in_Max(atf_amc::Bytebuf& bytebuf) throw() {
     return 64;
     (void)bytebuf;//only to avoid -Wunused-parameter
 }
 
 // --- atf_amc.Bytebuf.in.N
 // Return number of bytes in the buffer.
-inline i32 atf_amc::in_N(atf_amc::Bytebuf& bytebuf) {
+inline i32 atf_amc::in_N(atf_amc::Bytebuf& bytebuf) throw() {
     return bytebuf.in_end - bytebuf.in_start;
 }
 
 // --- atf_amc.Bytebuf..Ctor
-inline  atf_amc::Bytebuf::Bytebuf() {
+inline  atf_amc::Bytebuf::Bytebuf() throw() {
     atf_amc::Bytebuf_Init(*this);
     // added because atf_amc.Bytebuf.in (Fbuf) does not need initialization
     // coverity[uninit_member]
@@ -1071,97 +1071,97 @@ inline  atf_amc::Bytebuf::Bytebuf() {
 
 // --- atf_amc.BytebufDyn.in.Max
 // Return max. number of bytes in the buffer.
-inline i32 atf_amc::in_Max(atf_amc::BytebufDyn& bytebuf_dyn) {
+inline i32 atf_amc::in_Max(atf_amc::BytebufDyn& bytebuf_dyn) throw() {
     return bytebuf_dyn.in_max;
 }
 
 // --- atf_amc.BytebufDyn.in.N
 // Return number of bytes in the buffer.
-inline i32 atf_amc::in_N(atf_amc::BytebufDyn& bytebuf_dyn) {
+inline i32 atf_amc::in_N(atf_amc::BytebufDyn& bytebuf_dyn) throw() {
     return bytebuf_dyn.in_end - bytebuf_dyn.in_start;
 }
 
 // --- atf_amc.BytebufDyn..Ctor
-inline  atf_amc::BytebufDyn::BytebufDyn() {
+inline  atf_amc::BytebufDyn::BytebufDyn() throw() {
     atf_amc::BytebufDyn_Init(*this);
     // added because atf_amc.BytebufDyn.in (Fbuf) does not need initialization
     // coverity[uninit_member]
 }
 
 // --- atf_amc.BytebufDyn..Dtor
-inline  atf_amc::BytebufDyn::~BytebufDyn() {
+inline  atf_amc::BytebufDyn::~BytebufDyn() throw() {
     atf_amc::BytebufDyn_Uninit(*this);
 }
 
 // --- atf_amc.Cstr.val.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool atf_amc::val_Lt(atf_amc::Cstr& parent, atf_amc::Cstr &rhs) {
+inline bool atf_amc::val_Lt(atf_amc::Cstr& parent, atf_amc::Cstr &rhs) throw() {
     return algo::cstring_Lt(parent.val,rhs.val);
 }
 
 // --- atf_amc.Cstr.val.Cmp
 // Compare two fields.
-inline i32 atf_amc::val_Cmp(atf_amc::Cstr& parent, atf_amc::Cstr &rhs) {
+inline i32 atf_amc::val_Cmp(atf_amc::Cstr& parent, atf_amc::Cstr &rhs) throw() {
     i32 retval = 0;
     retval = algo::cstring_Cmp(parent.val, rhs.val);
     return retval;
 }
 
 // --- atf_amc.Cstr.val.Cast
-inline  atf_amc::Cstr::operator algo::strptr() const {
+inline  atf_amc::Cstr::operator algo::strptr() const throw() {
     return algo::strptr((*this).val);
 }
 
 // --- atf_amc.Cstr..Hash
-inline u32 atf_amc::Cstr_Hash(u32 prev, const atf_amc::Cstr& rhs) {
+inline u32 atf_amc::Cstr_Hash(u32 prev, const atf_amc::Cstr& rhs) throw() {
     prev = cstring_Hash(prev, rhs.val);
     return prev;
 }
 
 // --- atf_amc.Cstr..EqOp
-inline bool atf_amc::Cstr::operator ==(const atf_amc::Cstr &rhs) const {
+inline bool atf_amc::Cstr::operator ==(const atf_amc::Cstr &rhs) const throw() {
     return atf_amc::Cstr_Eq(const_cast<atf_amc::Cstr&>(*this),const_cast<atf_amc::Cstr&>(rhs));
 }
 
 // --- atf_amc.Cstr..NeOp
-inline bool atf_amc::Cstr::operator !=(const atf_amc::Cstr &rhs) const {
+inline bool atf_amc::Cstr::operator !=(const atf_amc::Cstr &rhs) const throw() {
     return !atf_amc::Cstr_Eq(const_cast<atf_amc::Cstr&>(*this),const_cast<atf_amc::Cstr&>(rhs));
 }
 
 // --- atf_amc.Cstr..LtOp
-inline bool atf_amc::Cstr::operator <(const atf_amc::Cstr &rhs) const {
+inline bool atf_amc::Cstr::operator <(const atf_amc::Cstr &rhs) const throw() {
     return atf_amc::Cstr_Lt(const_cast<atf_amc::Cstr&>(*this),const_cast<atf_amc::Cstr&>(rhs));
 }
 
 // --- atf_amc.Cstr..GtOp
-inline bool atf_amc::Cstr::operator >(const atf_amc::Cstr &rhs) const {
+inline bool atf_amc::Cstr::operator >(const atf_amc::Cstr &rhs) const throw() {
     return atf_amc::Cstr_Lt(const_cast<atf_amc::Cstr&>(rhs),const_cast<atf_amc::Cstr&>(*this));
 }
 
 // --- atf_amc.Cstr..LeOp
-inline bool atf_amc::Cstr::operator <=(const atf_amc::Cstr &rhs) const {
+inline bool atf_amc::Cstr::operator <=(const atf_amc::Cstr &rhs) const throw() {
     return !atf_amc::Cstr_Lt(const_cast<atf_amc::Cstr&>(rhs),const_cast<atf_amc::Cstr&>(*this));
 }
 
 // --- atf_amc.Cstr..GeOp
-inline bool atf_amc::Cstr::operator >=(const atf_amc::Cstr &rhs) const {
+inline bool atf_amc::Cstr::operator >=(const atf_amc::Cstr &rhs) const throw() {
     return !atf_amc::Cstr_Lt(const_cast<atf_amc::Cstr&>(*this),const_cast<atf_amc::Cstr&>(rhs));
 }
 
 // --- atf_amc.Cstr..Lt
-inline bool atf_amc::Cstr_Lt(atf_amc::Cstr& lhs, atf_amc::Cstr& rhs) {
+inline bool atf_amc::Cstr_Lt(atf_amc::Cstr& lhs, atf_amc::Cstr& rhs) throw() {
     return val_Lt(lhs,rhs);
 }
 
 // --- atf_amc.Cstr..Cmp
-inline i32 atf_amc::Cstr_Cmp(atf_amc::Cstr& lhs, atf_amc::Cstr& rhs) {
+inline i32 atf_amc::Cstr_Cmp(atf_amc::Cstr& lhs, atf_amc::Cstr& rhs) throw() {
     i32 retval = 0;
     retval = val_Cmp(lhs,rhs);
     return retval;
 }
 
 // --- atf_amc.Cstr..Eq
-inline bool atf_amc::Cstr_Eq(atf_amc::Cstr& lhs, atf_amc::Cstr& rhs) {
+inline bool atf_amc::Cstr_Eq(atf_amc::Cstr& lhs, atf_amc::Cstr& rhs) throw() {
     bool retval = true;
     retval = algo::cstring_Eq(lhs.val, rhs.val);
     return retval;
@@ -1169,7 +1169,7 @@ inline bool atf_amc::Cstr_Eq(atf_amc::Cstr& lhs, atf_amc::Cstr& rhs) {
 
 // --- atf_amc.Cstr..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::Cstr_Update(atf_amc::Cstr &lhs, atf_amc::Cstr& rhs) {
+inline bool atf_amc::Cstr_Update(atf_amc::Cstr &lhs, atf_amc::Cstr& rhs) throw() {
     bool ret = !Cstr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -1178,67 +1178,67 @@ inline bool atf_amc::Cstr_Update(atf_amc::Cstr &lhs, atf_amc::Cstr& rhs) {
 }
 
 // --- atf_amc.Cstr..Ctor
-inline  atf_amc::Cstr::Cstr() {
+inline  atf_amc::Cstr::Cstr() throw() {
 }
 
 // --- atf_amc.Cstr..FieldwiseCtor
-inline  atf_amc::Cstr::Cstr(const algo::strptr& in_val)
+inline  atf_amc::Cstr::Cstr(const algo::strptr& in_val) throw()
     : val(in_val)
  {
 }
 
 // --- atf_amc.Cstring..Ctor
-inline  atf_amc::Cstring::Cstring() {
+inline  atf_amc::Cstring::Cstring() throw() {
 }
 
 // --- atf_amc.Ctype1Attr.attr1.Cast
-inline  atf_amc::Ctype1Attr::operator u32() const {
+inline  atf_amc::Ctype1Attr::operator u32() const throw() {
     return u32((*this).attr1);
 }
 
 // --- atf_amc.Ctype1Attr..Hash
-inline u32 atf_amc::Ctype1Attr_Hash(u32 prev, const atf_amc::Ctype1Attr& rhs) {
+inline u32 atf_amc::Ctype1Attr_Hash(u32 prev, const atf_amc::Ctype1Attr& rhs) throw() {
     prev = u32_Hash(prev, rhs.attr1);
     return prev;
 }
 
 // --- atf_amc.Ctype1Attr..EqOp
-inline bool atf_amc::Ctype1Attr::operator ==(const atf_amc::Ctype1Attr &rhs) const {
+inline bool atf_amc::Ctype1Attr::operator ==(const atf_amc::Ctype1Attr &rhs) const throw() {
     return atf_amc::Ctype1Attr_Eq(const_cast<atf_amc::Ctype1Attr&>(*this),const_cast<atf_amc::Ctype1Attr&>(rhs));
 }
 
 // --- atf_amc.Ctype1Attr..NeOp
-inline bool atf_amc::Ctype1Attr::operator !=(const atf_amc::Ctype1Attr &rhs) const {
+inline bool atf_amc::Ctype1Attr::operator !=(const atf_amc::Ctype1Attr &rhs) const throw() {
     return !atf_amc::Ctype1Attr_Eq(const_cast<atf_amc::Ctype1Attr&>(*this),const_cast<atf_amc::Ctype1Attr&>(rhs));
 }
 
 // --- atf_amc.Ctype1Attr..LtOp
-inline bool atf_amc::Ctype1Attr::operator <(const atf_amc::Ctype1Attr &rhs) const {
+inline bool atf_amc::Ctype1Attr::operator <(const atf_amc::Ctype1Attr &rhs) const throw() {
     return atf_amc::Ctype1Attr_Lt(const_cast<atf_amc::Ctype1Attr&>(*this),const_cast<atf_amc::Ctype1Attr&>(rhs));
 }
 
 // --- atf_amc.Ctype1Attr..GtOp
-inline bool atf_amc::Ctype1Attr::operator >(const atf_amc::Ctype1Attr &rhs) const {
+inline bool atf_amc::Ctype1Attr::operator >(const atf_amc::Ctype1Attr &rhs) const throw() {
     return atf_amc::Ctype1Attr_Lt(const_cast<atf_amc::Ctype1Attr&>(rhs),const_cast<atf_amc::Ctype1Attr&>(*this));
 }
 
 // --- atf_amc.Ctype1Attr..LeOp
-inline bool atf_amc::Ctype1Attr::operator <=(const atf_amc::Ctype1Attr &rhs) const {
+inline bool atf_amc::Ctype1Attr::operator <=(const atf_amc::Ctype1Attr &rhs) const throw() {
     return !atf_amc::Ctype1Attr_Lt(const_cast<atf_amc::Ctype1Attr&>(rhs),const_cast<atf_amc::Ctype1Attr&>(*this));
 }
 
 // --- atf_amc.Ctype1Attr..GeOp
-inline bool atf_amc::Ctype1Attr::operator >=(const atf_amc::Ctype1Attr &rhs) const {
+inline bool atf_amc::Ctype1Attr::operator >=(const atf_amc::Ctype1Attr &rhs) const throw() {
     return !atf_amc::Ctype1Attr_Lt(const_cast<atf_amc::Ctype1Attr&>(*this),const_cast<atf_amc::Ctype1Attr&>(rhs));
 }
 
 // --- atf_amc.Ctype1Attr..Lt
-inline bool atf_amc::Ctype1Attr_Lt(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) {
+inline bool atf_amc::Ctype1Attr_Lt(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) throw() {
     return u32_Lt(lhs.attr1, rhs.attr1);
 }
 
 // --- atf_amc.Ctype1Attr..Cmp
-inline i32 atf_amc::Ctype1Attr_Cmp(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) {
+inline i32 atf_amc::Ctype1Attr_Cmp(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) throw() {
     i32 retval = 0;
     retval = u32_Cmp(lhs.attr1, rhs.attr1);
     return retval;
@@ -1251,7 +1251,7 @@ inline void atf_amc::Ctype1Attr_Init(atf_amc::Ctype1Attr& parent) {
 }
 
 // --- atf_amc.Ctype1Attr..Eq
-inline bool atf_amc::Ctype1Attr_Eq(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) {
+inline bool atf_amc::Ctype1Attr_Eq(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr& rhs) throw() {
     bool retval = true;
     retval = u32_Eq(lhs.attr1, rhs.attr1);
     return retval;
@@ -1259,7 +1259,7 @@ inline bool atf_amc::Ctype1Attr_Eq(atf_amc::Ctype1Attr& lhs, atf_amc::Ctype1Attr
 
 // --- atf_amc.Ctype1Attr..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::Ctype1Attr_Update(atf_amc::Ctype1Attr &lhs, atf_amc::Ctype1Attr& rhs) {
+inline bool atf_amc::Ctype1Attr_Update(atf_amc::Ctype1Attr &lhs, atf_amc::Ctype1Attr& rhs) throw() {
     bool ret = !Ctype1Attr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -1268,60 +1268,60 @@ inline bool atf_amc::Ctype1Attr_Update(atf_amc::Ctype1Attr &lhs, atf_amc::Ctype1
 }
 
 // --- atf_amc.Ctype1Attr..Ctor
-inline  atf_amc::Ctype1Attr::Ctype1Attr() {
+inline  atf_amc::Ctype1Attr::Ctype1Attr() throw() {
     atf_amc::Ctype1Attr_Init(*this);
 }
 
 // --- atf_amc.Ctype1Attr..FieldwiseCtor
-inline  atf_amc::Ctype1Attr::Ctype1Attr(u32 in_attr1)
+inline  atf_amc::Ctype1Attr::Ctype1Attr(u32 in_attr1) throw()
     : attr1(in_attr1)
  {
 }
 
 // --- atf_amc.Ctype2Attr..Hash
-inline u32 atf_amc::Ctype2Attr_Hash(u32 prev, const atf_amc::Ctype2Attr& rhs) {
+inline u32 atf_amc::Ctype2Attr_Hash(u32 prev, const atf_amc::Ctype2Attr& rhs) throw() {
     prev = u32_Hash(prev, rhs.attr1);
     prev = u32_Hash(prev, rhs.attr2);
     return prev;
 }
 
 // --- atf_amc.Ctype2Attr..EqOp
-inline bool atf_amc::Ctype2Attr::operator ==(const atf_amc::Ctype2Attr &rhs) const {
+inline bool atf_amc::Ctype2Attr::operator ==(const atf_amc::Ctype2Attr &rhs) const throw() {
     return atf_amc::Ctype2Attr_Eq(const_cast<atf_amc::Ctype2Attr&>(*this),const_cast<atf_amc::Ctype2Attr&>(rhs));
 }
 
 // --- atf_amc.Ctype2Attr..NeOp
-inline bool atf_amc::Ctype2Attr::operator !=(const atf_amc::Ctype2Attr &rhs) const {
+inline bool atf_amc::Ctype2Attr::operator !=(const atf_amc::Ctype2Attr &rhs) const throw() {
     return !atf_amc::Ctype2Attr_Eq(const_cast<atf_amc::Ctype2Attr&>(*this),const_cast<atf_amc::Ctype2Attr&>(rhs));
 }
 
 // --- atf_amc.Ctype2Attr..LtOp
-inline bool atf_amc::Ctype2Attr::operator <(const atf_amc::Ctype2Attr &rhs) const {
+inline bool atf_amc::Ctype2Attr::operator <(const atf_amc::Ctype2Attr &rhs) const throw() {
     return atf_amc::Ctype2Attr_Lt(const_cast<atf_amc::Ctype2Attr&>(*this),const_cast<atf_amc::Ctype2Attr&>(rhs));
 }
 
 // --- atf_amc.Ctype2Attr..GtOp
-inline bool atf_amc::Ctype2Attr::operator >(const atf_amc::Ctype2Attr &rhs) const {
+inline bool atf_amc::Ctype2Attr::operator >(const atf_amc::Ctype2Attr &rhs) const throw() {
     return atf_amc::Ctype2Attr_Lt(const_cast<atf_amc::Ctype2Attr&>(rhs),const_cast<atf_amc::Ctype2Attr&>(*this));
 }
 
 // --- atf_amc.Ctype2Attr..LeOp
-inline bool atf_amc::Ctype2Attr::operator <=(const atf_amc::Ctype2Attr &rhs) const {
+inline bool atf_amc::Ctype2Attr::operator <=(const atf_amc::Ctype2Attr &rhs) const throw() {
     return !atf_amc::Ctype2Attr_Lt(const_cast<atf_amc::Ctype2Attr&>(rhs),const_cast<atf_amc::Ctype2Attr&>(*this));
 }
 
 // --- atf_amc.Ctype2Attr..GeOp
-inline bool atf_amc::Ctype2Attr::operator >=(const atf_amc::Ctype2Attr &rhs) const {
+inline bool atf_amc::Ctype2Attr::operator >=(const atf_amc::Ctype2Attr &rhs) const throw() {
     return !atf_amc::Ctype2Attr_Lt(const_cast<atf_amc::Ctype2Attr&>(*this),const_cast<atf_amc::Ctype2Attr&>(rhs));
 }
 
 // --- atf_amc.Ctype2Attr..Lt
-inline bool atf_amc::Ctype2Attr_Lt(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) {
+inline bool atf_amc::Ctype2Attr_Lt(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) throw() {
     return Ctype2Attr_Cmp(lhs,rhs) < 0;
 }
 
 // --- atf_amc.Ctype2Attr..Cmp
-inline i32 atf_amc::Ctype2Attr_Cmp(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) {
+inline i32 atf_amc::Ctype2Attr_Cmp(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) throw() {
     i32 retval = 0;
     retval = u32_Cmp(lhs.attr1, rhs.attr1);
     if (retval != 0) {
@@ -1339,7 +1339,7 @@ inline void atf_amc::Ctype2Attr_Init(atf_amc::Ctype2Attr& parent) {
 }
 
 // --- atf_amc.Ctype2Attr..Eq
-inline bool atf_amc::Ctype2Attr_Eq(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) {
+inline bool atf_amc::Ctype2Attr_Eq(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr& rhs) throw() {
     bool retval = true;
     retval = u32_Eq(lhs.attr1, rhs.attr1);
     if (!retval) {
@@ -1351,7 +1351,7 @@ inline bool atf_amc::Ctype2Attr_Eq(atf_amc::Ctype2Attr& lhs, atf_amc::Ctype2Attr
 
 // --- atf_amc.Ctype2Attr..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2Attr& rhs) {
+inline bool atf_amc::Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2Attr& rhs) throw() {
     bool ret = !Ctype2Attr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -1360,12 +1360,12 @@ inline bool atf_amc::Ctype2Attr_Update(atf_amc::Ctype2Attr &lhs, atf_amc::Ctype2
 }
 
 // --- atf_amc.Ctype2Attr..Ctor
-inline  atf_amc::Ctype2Attr::Ctype2Attr() {
+inline  atf_amc::Ctype2Attr::Ctype2Attr() throw() {
     atf_amc::Ctype2Attr_Init(*this);
 }
 
 // --- atf_amc.Ctype2Attr..FieldwiseCtor
-inline  atf_amc::Ctype2Attr::Ctype2Attr(u32 in_attr1, u32 in_attr2)
+inline  atf_amc::Ctype2Attr::Ctype2Attr(u32 in_attr1, u32 in_attr2) throw()
     : attr1(in_attr1)
     , attr2(in_attr2)
  {
@@ -1379,12 +1379,12 @@ inline void atf_amc::Ctype2AttrAnon_Init(atf_amc::Ctype2AttrAnon& parent) {
 }
 
 // --- atf_amc.Ctype2AttrAnon..Ctor
-inline  atf_amc::Ctype2AttrAnon::Ctype2AttrAnon() {
+inline  atf_amc::Ctype2AttrAnon::Ctype2AttrAnon() throw() {
     atf_amc::Ctype2AttrAnon_Init(*this);
 }
 
 // --- atf_amc.Ctype2AttrAnon..FieldwiseCtor
-inline  atf_amc::Ctype2AttrAnon::Ctype2AttrAnon(u32 in_attr1, u32 in_attr2)
+inline  atf_amc::Ctype2AttrAnon::Ctype2AttrAnon(u32 in_attr1, u32 in_attr2) throw()
     : attr1(in_attr1)
     , attr2(in_attr2)
  {
@@ -1397,29 +1397,29 @@ inline void atf_amc::DelType1_Init(atf_amc::DelType1& parent) {
 }
 
 // --- atf_amc.DelType1..Ctor
-inline  atf_amc::DelType1::DelType1() {
+inline  atf_amc::DelType1::DelType1() throw() {
     atf_amc::DelType1_Init(*this);
 }
 
 // --- atf_amc.DelType1..Dtor
-inline  atf_amc::DelType1::~DelType1() {
+inline  atf_amc::DelType1::~DelType1() throw() {
     atf_amc::DelType1_Uninit(*this);
 }
 
 // --- atf_amc.DispCase.value.GetEnum
 // Get value of field as enum type
-inline atf_amc_DispCaseEnum atf_amc::value_GetEnum(const atf_amc::DispCase& parent) {
+inline atf_amc_DispCaseEnum atf_amc::value_GetEnum(const atf_amc::DispCase& parent) throw() {
     return atf_amc_DispCaseEnum(parent.value);
 }
 
 // --- atf_amc.DispCase.value.SetEnum
 // Set value of field from enum type.
-inline void atf_amc::value_SetEnum(atf_amc::DispCase& parent, atf_amc_DispCaseEnum rhs) {
+inline void atf_amc::value_SetEnum(atf_amc::DispCase& parent, atf_amc_DispCaseEnum rhs) throw() {
     parent.value = u32(rhs);
 }
 
 // --- atf_amc.DispCase.value.Cast
-inline  atf_amc::DispCase::operator atf_amc_DispCaseEnum() const {
+inline  atf_amc::DispCase::operator atf_amc_DispCaseEnum() const throw() {
     return atf_amc_DispCaseEnum((*this).value);
 }
 
@@ -1430,31 +1430,31 @@ inline void atf_amc::DispCase_Init(atf_amc::DispCase& parent) {
 }
 
 // --- atf_amc.DispCase..Ctor
-inline  atf_amc::DispCase::DispCase() {
+inline  atf_amc::DispCase::DispCase() throw() {
     atf_amc::DispCase_Init(*this);
 }
 
 // --- atf_amc.DispCase..FieldwiseCtor
-inline  atf_amc::DispCase::DispCase(u32 in_value)
+inline  atf_amc::DispCase::DispCase(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_amc.DispCase..EnumCtor
-inline  atf_amc::DispCase::DispCase(atf_amc_DispCaseEnum arg) {
+inline  atf_amc::DispCase::DispCase(atf_amc_DispCaseEnum arg) throw() {
     this->value = u32(arg);
 }
 
 // --- atf_amc.DispFilter.pmask.NBits
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
-inline int atf_amc::pmask_Nbits(atf_amc::DispFilter& parent) {
+inline int atf_amc::pmask_Nbits(atf_amc::DispFilter& parent) throw() {
     return pmask_N(parent) * 64;
 }
 
 // --- atf_amc.DispFilter.pmask.qGetBit
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-inline bool atf_amc::pmask_qGetBit(atf_amc::DispFilter& parent, u32 bit_idx) {
+inline bool atf_amc::pmask_qGetBit(atf_amc::DispFilter& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = pmask_qFind(parent, elem_idx); // fetch element
@@ -1463,7 +1463,7 @@ inline bool atf_amc::pmask_qGetBit(atf_amc::DispFilter& parent, u32 bit_idx) {
 
 // --- atf_amc.DispFilter.pmask.GetBit
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-inline bool atf_amc::pmask_GetBit(atf_amc::DispFilter& parent, u32 bit_idx) {
+inline bool atf_amc::pmask_GetBit(atf_amc::DispFilter& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     bool ret = false;
@@ -1477,7 +1477,7 @@ inline bool atf_amc::pmask_GetBit(atf_amc::DispFilter& parent, u32 bit_idx) {
 
 // --- atf_amc.DispFilter.pmask.BitsEmptyQ
 // Check if all the bits in the bitset are equal to zero
-inline bool atf_amc::pmask_BitsEmptyQ(atf_amc::DispFilter& parent) {
+inline bool atf_amc::pmask_BitsEmptyQ(atf_amc::DispFilter& parent) throw() {
     bool retval = true;
     u64 n = pmask_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -1490,7 +1490,7 @@ inline bool atf_amc::pmask_BitsEmptyQ(atf_amc::DispFilter& parent) {
 }
 
 // --- atf_amc.DispFilter.pmask.Sum1s
-inline u64 atf_amc::pmask_Sum1s(atf_amc::DispFilter& parent) {
+inline u64 atf_amc::pmask_Sum1s(atf_amc::DispFilter& parent) throw() {
     u64 sum = 0;
     u64 n = pmask_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -1501,7 +1501,7 @@ inline u64 atf_amc::pmask_Sum1s(atf_amc::DispFilter& parent) {
 
 // --- atf_amc.DispFilter.pmask.qClearBit
 // Clear bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qClearBit(atf_amc::DispFilter& parent, u32 bit_idx) {
+inline void atf_amc::pmask_qClearBit(atf_amc::DispFilter& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -1510,7 +1510,7 @@ inline void atf_amc::pmask_qClearBit(atf_amc::DispFilter& parent, u32 bit_idx) {
 
 // --- atf_amc.DispFilter.pmask.ClearBit
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-inline void atf_amc::pmask_ClearBit(atf_amc::DispFilter& parent, u32 bit_idx) {
+inline void atf_amc::pmask_ClearBit(atf_amc::DispFilter& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 lim = pmask_N(parent);
@@ -1522,7 +1522,7 @@ inline void atf_amc::pmask_ClearBit(atf_amc::DispFilter& parent, u32 bit_idx) {
 
 // --- atf_amc.DispFilter.pmask.qSetBit
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qSetBit(atf_amc::DispFilter& parent, u32 bit_idx) {
+inline void atf_amc::pmask_qSetBit(atf_amc::DispFilter& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -1531,7 +1531,7 @@ inline void atf_amc::pmask_qSetBit(atf_amc::DispFilter& parent, u32 bit_idx) {
 
 // --- atf_amc.DispFilter.pmask.SetBit
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-inline void atf_amc::pmask_SetBit(atf_amc::DispFilter& parent, u32 bit_idx) {
+inline void atf_amc::pmask_SetBit(atf_amc::DispFilter& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 lim = pmask_N(parent);
@@ -1543,7 +1543,7 @@ inline void atf_amc::pmask_SetBit(atf_amc::DispFilter& parent, u32 bit_idx) {
 
 // --- atf_amc.DispFilter.pmask.qSetBitVal
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qSetBitVal(atf_amc::DispFilter& parent, u32 bit_idx, bool val) {
+inline void atf_amc::pmask_qSetBitVal(atf_amc::DispFilter& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -1552,7 +1552,7 @@ inline void atf_amc::pmask_qSetBitVal(atf_amc::DispFilter& parent, u32 bit_idx, 
 
 // --- atf_amc.DispFilter.pmask.qOrBitVal
 // Or bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qOrBitVal(atf_amc::DispFilter& parent, u32 bit_idx, bool val) {
+inline void atf_amc::pmask_qOrBitVal(atf_amc::DispFilter& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -1562,7 +1562,7 @@ inline void atf_amc::pmask_qOrBitVal(atf_amc::DispFilter& parent, u32 bit_idx, b
 // --- atf_amc.DispFilter.pmask.ClearBitsAll
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
-inline void atf_amc::pmask_ClearBitsAll(atf_amc::DispFilter& parent) {
+inline void atf_amc::pmask_ClearBitsAll(atf_amc::DispFilter& parent) throw() {
     u64 n = pmask_N(parent);
     for (u64 i = 0; i < n; i++) {
         pmask_qFind(parent, i) = 0;
@@ -1571,7 +1571,7 @@ inline void atf_amc::pmask_ClearBitsAll(atf_amc::DispFilter& parent) {
 
 // --- atf_amc.DispFilter.pmask.ClearBits
 // Zero in PARENT any bits that are set in RHS.
-inline void atf_amc::pmask_ClearBits(atf_amc::DispFilter& parent, atf_amc::DispFilter &rhs) {
+inline void atf_amc::pmask_ClearBits(atf_amc::DispFilter& parent, atf_amc::DispFilter &rhs) throw() {
     u64 n = u64_Min(pmask_N(parent), pmask_N(rhs));
     for (u64 i = 0; i < n; i++) {
         pmask_qFind(parent, i) &= ~pmask_qFind(rhs, i);
@@ -1581,7 +1581,7 @@ inline void atf_amc::pmask_ClearBits(atf_amc::DispFilter& parent, atf_amc::DispF
 // --- atf_amc.DispFilter.pmask.OrBits
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
-inline void atf_amc::pmask_OrBits(atf_amc::DispFilter& parent, atf_amc::DispFilter &rhs) {
+inline void atf_amc::pmask_OrBits(atf_amc::DispFilter& parent, atf_amc::DispFilter &rhs) throw() {
     u64 n = u64_Min(pmask_N(parent), pmask_N(rhs));
     for (u64 i = 0; i < n; i++) {
         pmask_qFind(parent, i) |= pmask_qFind(rhs, i);
@@ -1590,7 +1590,7 @@ inline void atf_amc::pmask_OrBits(atf_amc::DispFilter& parent, atf_amc::DispFilt
 
 // --- atf_amc.DispFilter.pmask.Sup
 // Return smallest number N such that indexes of all 1 bits are below N
-inline i32 atf_amc::pmask_Sup(atf_amc::DispFilter& parent) {
+inline i32 atf_amc::pmask_Sup(atf_amc::DispFilter& parent) throw() {
     u64 lim = pmask_N(parent);
     i32 ret = 0;
     for (int i = lim-1; i >= 0; i--) {
@@ -1606,7 +1606,7 @@ inline i32 atf_amc::pmask_Sup(atf_amc::DispFilter& parent) {
 
 // --- atf_amc.DispFilter.pmask.Fill
 // Set all elements of fixed array to value RHS
-inline void atf_amc::pmask_Fill(atf_amc::DispFilter& parent, const u64 &rhs) {
+inline void atf_amc::pmask_Fill(atf_amc::DispFilter& parent, const u64 &rhs) throw() {
     for (int i = 0; i < 1; i++) {
         parent.pmask_elems[i] = rhs;
     }
@@ -1614,7 +1614,7 @@ inline void atf_amc::pmask_Fill(atf_amc::DispFilter& parent, const u64 &rhs) {
 
 // --- atf_amc.DispFilter.pmask.Find
 // Look up row by row id. Return NULL if out of range
-inline u64* atf_amc::pmask_Find(atf_amc::DispFilter& parent, u64 t) {
+inline u64* atf_amc::pmask_Find(atf_amc::DispFilter& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = 1;
     return idx < lim ? parent.pmask_elems + idx : NULL; // unsigned comparison with limit
@@ -1622,78 +1622,78 @@ inline u64* atf_amc::pmask_Find(atf_amc::DispFilter& parent, u64 t) {
 
 // --- atf_amc.DispFilter.pmask.Getary
 // Access fixed array pmask as aryptr.
-inline algo::aryptr<u64> atf_amc::pmask_Getary(atf_amc::DispFilter& parent) {
+inline algo::aryptr<u64> atf_amc::pmask_Getary(atf_amc::DispFilter& parent) throw() {
     return algo::aryptr<u64>(parent.pmask_elems, 1);
 }
 
 // --- atf_amc.DispFilter.pmask.Max
 // Return max number of items in the array
-inline i32 atf_amc::pmask_Max(atf_amc::DispFilter& parent) {
+inline i32 atf_amc::pmask_Max(atf_amc::DispFilter& parent) throw() {
     (void)parent;
     return 1;
 }
 
 // --- atf_amc.DispFilter.pmask.N
 // Return number of items in the array
-inline i32 atf_amc::pmask_N(const atf_amc::DispFilter& parent) {
+inline i32 atf_amc::pmask_N(const atf_amc::DispFilter& parent) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     return 1;
 }
 
 // --- atf_amc.DispFilter.pmask.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
-inline void atf_amc::pmask_Setary(atf_amc::DispFilter& parent, const algo::aryptr<u64> &rhs) {
+inline void atf_amc::pmask_Setary(atf_amc::DispFilter& parent, const algo::aryptr<u64> &rhs) throw() {
     int n = i32_Min(1, rhs.n_elems);
     memcpy(parent.pmask_elems, rhs.elems, sizeof(u64)*n);
 }
 
 // --- atf_amc.DispFilter.pmask.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline u64& atf_amc::pmask_qFind(atf_amc::DispFilter& parent, u64 t) {
+inline u64& atf_amc::pmask_qFind(atf_amc::DispFilter& parent, u64 t) throw() {
     return parent.pmask_elems[u64(t)];
 }
 
 // --- atf_amc.DispFilter.strval.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::strval_PresentQ(atf_amc::DispFilter& parent) {
+inline bool atf_amc::strval_PresentQ(atf_amc::DispFilter& parent) throw() {
     return pmask_qGetBit(parent, 0);
 }
 
 // --- atf_amc.DispFilter.strval.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::strval_SetPresent(atf_amc::DispFilter& parent) {
+inline void atf_amc::strval_SetPresent(atf_amc::DispFilter& parent) throw() {
     pmask_qSetBit(parent, 0); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.strval.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::strval_Present_GetBit(atf_amc::DispFilter& parent) {
+inline int atf_amc::strval_Present_GetBit(atf_amc::DispFilter& parent) throw() {
     int retval = 0;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.DispFilter.strval.Set
-inline void atf_amc::strval_Set(atf_amc::DispFilter& parent, const algo::strptr& rhs) {
+inline void atf_amc::strval_Set(atf_amc::DispFilter& parent, const algo::strptr& rhs) throw() {
     parent.strval = rhs;
     pmask_qSetBit(parent, 0); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.strval_regx.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::strval_regx_PresentQ(atf_amc::DispFilter& parent) {
+inline bool atf_amc::strval_regx_PresentQ(atf_amc::DispFilter& parent) throw() {
     return pmask_qGetBit(parent, 1);
 }
 
 // --- atf_amc.DispFilter.strval_regx.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::strval_regx_SetPresent(atf_amc::DispFilter& parent) {
+inline void atf_amc::strval_regx_SetPresent(atf_amc::DispFilter& parent) throw() {
     pmask_qSetBit(parent, 1); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.strval_regx.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::strval_regx_Present_GetBit(atf_amc::DispFilter& parent) {
+inline int atf_amc::strval_regx_Present_GetBit(atf_amc::DispFilter& parent) throw() {
     int retval = 1;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
@@ -1701,45 +1701,45 @@ inline int atf_amc::strval_regx_Present_GetBit(atf_amc::DispFilter& parent) {
 
 // --- atf_amc.DispFilter.strval2.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::strval2_PresentQ(atf_amc::DispFilter& parent) {
+inline bool atf_amc::strval2_PresentQ(atf_amc::DispFilter& parent) throw() {
     return pmask_qGetBit(parent, 2);
 }
 
 // --- atf_amc.DispFilter.strval2.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::strval2_SetPresent(atf_amc::DispFilter& parent) {
+inline void atf_amc::strval2_SetPresent(atf_amc::DispFilter& parent) throw() {
     pmask_qSetBit(parent, 2); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.strval2.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::strval2_Present_GetBit(atf_amc::DispFilter& parent) {
+inline int atf_amc::strval2_Present_GetBit(atf_amc::DispFilter& parent) throw() {
     int retval = 2;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.DispFilter.strval2.Set
-inline void atf_amc::strval2_Set(atf_amc::DispFilter& parent, const algo::strptr& rhs) {
+inline void atf_amc::strval2_Set(atf_amc::DispFilter& parent, const algo::strptr& rhs) throw() {
     parent.strval2 = rhs;
     pmask_qSetBit(parent, 2); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.strval2_regx.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::strval2_regx_PresentQ(atf_amc::DispFilter& parent) {
+inline bool atf_amc::strval2_regx_PresentQ(atf_amc::DispFilter& parent) throw() {
     return pmask_qGetBit(parent, 3);
 }
 
 // --- atf_amc.DispFilter.strval2_regx.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::strval2_regx_SetPresent(atf_amc::DispFilter& parent) {
+inline void atf_amc::strval2_regx_SetPresent(atf_amc::DispFilter& parent) throw() {
     pmask_qSetBit(parent, 3); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.strval2_regx.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::strval2_regx_Present_GetBit(atf_amc::DispFilter& parent) {
+inline int atf_amc::strval2_regx_Present_GetBit(atf_amc::DispFilter& parent) throw() {
     int retval = 3;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
@@ -1747,162 +1747,162 @@ inline int atf_amc::strval2_regx_Present_GetBit(atf_amc::DispFilter& parent) {
 
 // --- atf_amc.DispFilter.start_dateval.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::start_dateval_PresentQ(atf_amc::DispFilter& parent) {
+inline bool atf_amc::start_dateval_PresentQ(atf_amc::DispFilter& parent) throw() {
     return pmask_qGetBit(parent, 4);
 }
 
 // --- atf_amc.DispFilter.start_dateval.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::start_dateval_SetPresent(atf_amc::DispFilter& parent) {
+inline void atf_amc::start_dateval_SetPresent(atf_amc::DispFilter& parent) throw() {
     pmask_qSetBit(parent, 4); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.start_dateval.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::start_dateval_Present_GetBit(atf_amc::DispFilter& parent) {
+inline int atf_amc::start_dateval_Present_GetBit(atf_amc::DispFilter& parent) throw() {
     int retval = 4;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.DispFilter.start_dateval.Set
-inline void atf_amc::start_dateval_Set(atf_amc::DispFilter& parent, algo::UnTime rhs) {
+inline void atf_amc::start_dateval_Set(atf_amc::DispFilter& parent, algo::UnTime rhs) throw() {
     parent.start_dateval = rhs;
     pmask_qSetBit(parent, 4); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.end_dateval.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::end_dateval_PresentQ(atf_amc::DispFilter& parent) {
+inline bool atf_amc::end_dateval_PresentQ(atf_amc::DispFilter& parent) throw() {
     return pmask_qGetBit(parent, 5);
 }
 
 // --- atf_amc.DispFilter.end_dateval.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::end_dateval_SetPresent(atf_amc::DispFilter& parent) {
+inline void atf_amc::end_dateval_SetPresent(atf_amc::DispFilter& parent) throw() {
     pmask_qSetBit(parent, 5); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.end_dateval.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::end_dateval_Present_GetBit(atf_amc::DispFilter& parent) {
+inline int atf_amc::end_dateval_Present_GetBit(atf_amc::DispFilter& parent) throw() {
     int retval = 5;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.DispFilter.end_dateval.Set
-inline void atf_amc::end_dateval_Set(atf_amc::DispFilter& parent, algo::UnTime rhs) {
+inline void atf_amc::end_dateval_Set(atf_amc::DispFilter& parent, algo::UnTime rhs) throw() {
     parent.end_dateval = rhs;
     pmask_qSetBit(parent, 5); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.dateval.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::dateval_PresentQ(atf_amc::DispFilter& parent) {
+inline bool atf_amc::dateval_PresentQ(atf_amc::DispFilter& parent) throw() {
     return pmask_qGetBit(parent, 6);
 }
 
 // --- atf_amc.DispFilter.dateval.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::dateval_SetPresent(atf_amc::DispFilter& parent) {
+inline void atf_amc::dateval_SetPresent(atf_amc::DispFilter& parent) throw() {
     pmask_qSetBit(parent, 6); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.dateval.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::dateval_Present_GetBit(atf_amc::DispFilter& parent) {
+inline int atf_amc::dateval_Present_GetBit(atf_amc::DispFilter& parent) throw() {
     int retval = 6;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.DispFilter.dateval.Set
-inline void atf_amc::dateval_Set(atf_amc::DispFilter& parent, algo::UnTime rhs) {
+inline void atf_amc::dateval_Set(atf_amc::DispFilter& parent, algo::UnTime rhs) throw() {
     parent.dateval = rhs;
     pmask_qSetBit(parent, 6); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.start_intval.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::start_intval_PresentQ(atf_amc::DispFilter& parent) {
+inline bool atf_amc::start_intval_PresentQ(atf_amc::DispFilter& parent) throw() {
     return pmask_qGetBit(parent, 7);
 }
 
 // --- atf_amc.DispFilter.start_intval.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::start_intval_SetPresent(atf_amc::DispFilter& parent) {
+inline void atf_amc::start_intval_SetPresent(atf_amc::DispFilter& parent) throw() {
     pmask_qSetBit(parent, 7); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.start_intval.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::start_intval_Present_GetBit(atf_amc::DispFilter& parent) {
+inline int atf_amc::start_intval_Present_GetBit(atf_amc::DispFilter& parent) throw() {
     int retval = 7;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.DispFilter.start_intval.Set
-inline void atf_amc::start_intval_Set(atf_amc::DispFilter& parent, u32 rhs) {
+inline void atf_amc::start_intval_Set(atf_amc::DispFilter& parent, u32 rhs) throw() {
     parent.start_intval = rhs;
     pmask_qSetBit(parent, 7); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.end_intval.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::end_intval_PresentQ(atf_amc::DispFilter& parent) {
+inline bool atf_amc::end_intval_PresentQ(atf_amc::DispFilter& parent) throw() {
     return pmask_qGetBit(parent, 8);
 }
 
 // --- atf_amc.DispFilter.end_intval.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::end_intval_SetPresent(atf_amc::DispFilter& parent) {
+inline void atf_amc::end_intval_SetPresent(atf_amc::DispFilter& parent) throw() {
     pmask_qSetBit(parent, 8); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.end_intval.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::end_intval_Present_GetBit(atf_amc::DispFilter& parent) {
+inline int atf_amc::end_intval_Present_GetBit(atf_amc::DispFilter& parent) throw() {
     int retval = 8;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.DispFilter.end_intval.Set
-inline void atf_amc::end_intval_Set(atf_amc::DispFilter& parent, u32 rhs) {
+inline void atf_amc::end_intval_Set(atf_amc::DispFilter& parent, u32 rhs) throw() {
     parent.end_intval = rhs;
     pmask_qSetBit(parent, 8); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.intval.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::intval_PresentQ(atf_amc::DispFilter& parent) {
+inline bool atf_amc::intval_PresentQ(atf_amc::DispFilter& parent) throw() {
     return pmask_qGetBit(parent, 9);
 }
 
 // --- atf_amc.DispFilter.intval.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::intval_SetPresent(atf_amc::DispFilter& parent) {
+inline void atf_amc::intval_SetPresent(atf_amc::DispFilter& parent) throw() {
     pmask_qSetBit(parent, 9); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.intval.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::intval_Present_GetBit(atf_amc::DispFilter& parent) {
+inline int atf_amc::intval_Present_GetBit(atf_amc::DispFilter& parent) throw() {
     int retval = 9;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.DispFilter.intval.Set
-inline void atf_amc::intval_Set(atf_amc::DispFilter& parent, u32 rhs) {
+inline void atf_amc::intval_Set(atf_amc::DispFilter& parent, u32 rhs) throw() {
     parent.intval = rhs;
     pmask_qSetBit(parent, 9); // mark presence in pmask
 }
 
 // --- atf_amc.DispFilter.pmask_bitcurs.Reset
-inline void atf_amc::DispFilter_pmask_bitcurs_Reset(DispFilter_pmask_bitcurs &curs, atf_amc::DispFilter &parent) {
+inline void atf_amc::DispFilter_pmask_bitcurs_Reset(DispFilter_pmask_bitcurs &curs, atf_amc::DispFilter &parent) throw() {
     curs.elems = &pmask_qFind(parent,0);
     curs.n_elems = pmask_N(parent);
     curs.bit = -1;
@@ -1911,48 +1911,48 @@ inline void atf_amc::DispFilter_pmask_bitcurs_Reset(DispFilter_pmask_bitcurs &cu
 
 // --- atf_amc.DispFilter.pmask_bitcurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::DispFilter_pmask_bitcurs_ValidQ(DispFilter_pmask_bitcurs &curs) {
+inline bool atf_amc::DispFilter_pmask_bitcurs_ValidQ(DispFilter_pmask_bitcurs &curs) throw() {
     return curs.bit < curs.n_elems*64;
 }
 
 // --- atf_amc.DispFilter.pmask_bitcurs.Access
 // item access
-inline int& atf_amc::DispFilter_pmask_bitcurs_Access(DispFilter_pmask_bitcurs &curs) {
+inline int& atf_amc::DispFilter_pmask_bitcurs_Access(DispFilter_pmask_bitcurs &curs) throw() {
     return curs.bit;
 }
 
 // --- atf_amc.DispFilter.pmask_curs.Reset
 // cursor points to valid item
-inline void atf_amc::DispFilter_pmask_curs_Reset(DispFilter_pmask_curs &curs, atf_amc::DispFilter &parent) {
+inline void atf_amc::DispFilter_pmask_curs_Reset(DispFilter_pmask_curs &curs, atf_amc::DispFilter &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.DispFilter.pmask_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::DispFilter_pmask_curs_ValidQ(DispFilter_pmask_curs &curs) {
+inline bool atf_amc::DispFilter_pmask_curs_ValidQ(DispFilter_pmask_curs &curs) throw() {
     return u64(curs.index) < u64(1);
 }
 
 // --- atf_amc.DispFilter.pmask_curs.Next
 // proceed to next item
-inline void atf_amc::DispFilter_pmask_curs_Next(DispFilter_pmask_curs &curs) {
+inline void atf_amc::DispFilter_pmask_curs_Next(DispFilter_pmask_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.DispFilter.pmask_curs.Access
 // item access
-inline u64& atf_amc::DispFilter_pmask_curs_Access(DispFilter_pmask_curs &curs) {
+inline u64& atf_amc::DispFilter_pmask_curs_Access(DispFilter_pmask_curs &curs) throw() {
     return pmask_qFind((*curs.parent), u64(curs.index));
 }
 
 // --- atf_amc.DispFilter..Ctor
-inline  atf_amc::DispFilter::DispFilter() {
+inline  atf_amc::DispFilter::DispFilter() throw() {
     atf_amc::DispFilter_Init(*this);
 }
 
 // --- atf_amc.DispType1..Ctor
-inline  atf_amc::DispType1::DispType1() {
+inline  atf_amc::DispType1::DispType1() throw() {
 }
 
 // --- atf_amc.DispType2..Init
@@ -1962,7 +1962,7 @@ inline void atf_amc::DispType2_Init(atf_amc::DispType2& parent) {
 }
 
 // --- atf_amc.DispType2..Ctor
-inline  atf_amc::DispType2::DispType2() {
+inline  atf_amc::DispType2::DispType2() throw() {
     atf_amc::DispType2_Init(*this);
 }
 
@@ -1973,13 +1973,13 @@ inline void atf_amc::DispType3_Init(atf_amc::DispType3& parent) {
 }
 
 // --- atf_amc.DispType3..Ctor
-inline  atf_amc::DispType3::DispType3() {
+inline  atf_amc::DispType3::DispType3() throw() {
     atf_amc::DispType3_Init(*this);
 }
 
 // --- atf_amc.FAmctest.step.Call
 // Invoke function by pointer
-inline void atf_amc::step_Call(atf_amc::FAmctest& amctest) {
+inline void atf_amc::step_Call(atf_amc::FAmctest& amctest) throw() {
     if (amctest.step) {
         amctest.step();
     }
@@ -1995,7 +1995,7 @@ inline void atf_amc::FAmctest_Init(atf_amc::FAmctest& amctest) {
 }
 
 // --- atf_amc.FAmctest..Ctor
-inline  atf_amc::FAmctest::FAmctest() {
+inline  atf_amc::FAmctest::FAmctest() throw() {
     atf_amc::FAmctest_Init(*this);
 }
 
@@ -2010,30 +2010,30 @@ inline void atf_amc::FAvl_Init(atf_amc::FAvl& avl) {
 }
 
 // --- atf_amc.FAvl..Ctor
-inline  atf_amc::FAvl::FAvl() {
+inline  atf_amc::FAvl::FAvl() throw() {
     atf_amc::FAvl_Init(*this);
 }
 
 // --- atf_amc.FAvl..Dtor
-inline  atf_amc::FAvl::~FAvl() {
+inline  atf_amc::FAvl::~FAvl() throw() {
     atf_amc::FAvl_Uninit(*this);
 }
 
 // --- atf_amc.FCascdel.type.GetEnum
 // Get value of field as enum type
-inline atf_amc_FCascdel_type_Enum atf_amc::type_GetEnum(const atf_amc::FCascdel& cascdel) {
+inline atf_amc_FCascdel_type_Enum atf_amc::type_GetEnum(const atf_amc::FCascdel& cascdel) throw() {
     return atf_amc_FCascdel_type_Enum(cascdel.type);
 }
 
 // --- atf_amc.FCascdel.type.SetEnum
 // Set value of field from enum type.
-inline void atf_amc::type_SetEnum(atf_amc::FCascdel& cascdel, atf_amc_FCascdel_type_Enum rhs) {
+inline void atf_amc::type_SetEnum(atf_amc::FCascdel& cascdel, atf_amc_FCascdel_type_Enum rhs) throw() {
     cascdel.type = u32(rhs);
 }
 
 // --- atf_amc.FCascdel.child_ptr.InsertMaybe
 // Insert row into pointer index. Return final membership status.
-inline bool atf_amc::child_ptr_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+inline bool atf_amc::child_ptr_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     atf_amc::FCascdel* ptr = cascdel.child_ptr;
     bool retval = (ptr == NULL) | (ptr == &row);
     if (retval) {
@@ -2044,7 +2044,7 @@ inline bool atf_amc::child_ptr_InsertMaybe(atf_amc::FCascdel& cascdel, atf_amc::
 
 // --- atf_amc.FCascdel.child_ptr.Remove
 // Remove element from index. If element is not in index, do nothing.
-inline void atf_amc::child_ptr_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) {
+inline void atf_amc::child_ptr_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCascdel& row) throw() {
     atf_amc::FCascdel *ptr = cascdel.child_ptr;
     if (LIKELY(ptr == &row)) {
         cascdel.child_ptr = NULL;
@@ -2053,13 +2053,13 @@ inline void atf_amc::child_ptr_Remove(atf_amc::FCascdel& cascdel, atf_amc::FCasc
 
 // --- atf_amc.FCascdel.c_child_ptrary.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::c_child_ptrary_EmptyQ(atf_amc::FCascdel& cascdel) {
+inline bool atf_amc::c_child_ptrary_EmptyQ(atf_amc::FCascdel& cascdel) throw() {
     return cascdel.c_child_ptrary_n == 0;
 }
 
 // --- atf_amc.FCascdel.c_child_ptrary.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::FCascdel* atf_amc::c_child_ptrary_Find(atf_amc::FCascdel& cascdel, u32 t) {
+inline atf_amc::FCascdel* atf_amc::c_child_ptrary_Find(atf_amc::FCascdel& cascdel, u32 t) throw() {
     atf_amc::FCascdel *retval = NULL;
     u64 idx = t;
     u64 lim = cascdel.c_child_ptrary_n;
@@ -2071,19 +2071,19 @@ inline atf_amc::FCascdel* atf_amc::c_child_ptrary_Find(atf_amc::FCascdel& cascde
 
 // --- atf_amc.FCascdel.c_child_ptrary.Getary
 // Return array of pointers
-inline algo::aryptr<atf_amc::FCascdel*> atf_amc::c_child_ptrary_Getary(atf_amc::FCascdel& cascdel) {
+inline algo::aryptr<atf_amc::FCascdel*> atf_amc::c_child_ptrary_Getary(atf_amc::FCascdel& cascdel) throw() {
     return algo::aryptr<atf_amc::FCascdel*>(cascdel.c_child_ptrary_elems, cascdel.c_child_ptrary_n);
 }
 
 // --- atf_amc.FCascdel.c_child_ptrary.N
 // Return number of items in the pointer array
-inline i32 atf_amc::c_child_ptrary_N(const atf_amc::FCascdel& cascdel) {
+inline i32 atf_amc::c_child_ptrary_N(const atf_amc::FCascdel& cascdel) throw() {
     return cascdel.c_child_ptrary_n;
 }
 
 // --- atf_amc.FCascdel.c_child_ptrary.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void atf_amc::c_child_ptrary_RemoveAll(atf_amc::FCascdel& cascdel) {
+inline void atf_amc::c_child_ptrary_RemoveAll(atf_amc::FCascdel& cascdel) throw() {
     for (u32 i = 0; i < cascdel.c_child_ptrary_n; i++) {
         // mark all elements as not-in-array
         cascdel.c_child_ptrary_elems[i]->cascdel_c_child_ptrary_in_ary = false;
@@ -2093,43 +2093,43 @@ inline void atf_amc::c_child_ptrary_RemoveAll(atf_amc::FCascdel& cascdel) {
 
 // --- atf_amc.FCascdel.c_child_ptrary.qFind
 // Return reference without bounds checking
-inline atf_amc::FCascdel& atf_amc::c_child_ptrary_qFind(atf_amc::FCascdel& cascdel, u32 idx) {
+inline atf_amc::FCascdel& atf_amc::c_child_ptrary_qFind(atf_amc::FCascdel& cascdel, u32 idx) throw() {
     return *cascdel.c_child_ptrary_elems[idx];
 }
 
 // --- atf_amc.FCascdel.c_child_ptrary.InAryQ
 // True if row is in any ptrary instance
-inline bool atf_amc::cascdel_c_child_ptrary_InAryQ(atf_amc::FCascdel& row) {
+inline bool atf_amc::cascdel_c_child_ptrary_InAryQ(atf_amc::FCascdel& row) throw() {
     return row.cascdel_c_child_ptrary_in_ary;
 }
 
 // --- atf_amc.FCascdel.c_child_ptrary.qLast
 // Reference to last element without bounds checking
-inline atf_amc::FCascdel& atf_amc::c_child_ptrary_qLast(atf_amc::FCascdel& cascdel) {
+inline atf_amc::FCascdel& atf_amc::c_child_ptrary_qLast(atf_amc::FCascdel& cascdel) throw() {
     return *cascdel.c_child_ptrary_elems[cascdel.c_child_ptrary_n-1];
 }
 
 // --- atf_amc.FCascdel.ind_child_thash.EmptyQ
 // Return true if hash is empty
-inline bool atf_amc::ind_child_thash_EmptyQ(atf_amc::FCascdel& cascdel) {
+inline bool atf_amc::ind_child_thash_EmptyQ(atf_amc::FCascdel& cascdel) throw() {
     return cascdel.ind_child_thash_n == 0;
 }
 
 // --- atf_amc.FCascdel.ind_child_thash.N
 // Return number of items in the hash
-inline i32 atf_amc::ind_child_thash_N(const atf_amc::FCascdel& cascdel) {
+inline i32 atf_amc::ind_child_thash_N(const atf_amc::FCascdel& cascdel) throw() {
     return cascdel.ind_child_thash_n;
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::bh_child_bheap_EmptyQ(atf_amc::FCascdel& cascdel) {
+inline bool atf_amc::bh_child_bheap_EmptyQ(atf_amc::FCascdel& cascdel) throw() {
     return cascdel.bh_child_bheap_n == 0;
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FCascdel* atf_amc::bh_child_bheap_First(atf_amc::FCascdel& cascdel) {
+inline atf_amc::FCascdel* atf_amc::bh_child_bheap_First(atf_amc::FCascdel& cascdel) throw() {
     atf_amc::FCascdel *row = NULL;
     if (cascdel.bh_child_bheap_n > 0) {
         row = cascdel.bh_child_bheap_elems[0];
@@ -2139,7 +2139,7 @@ inline atf_amc::FCascdel* atf_amc::bh_child_bheap_First(atf_amc::FCascdel& cascd
 
 // --- atf_amc.FCascdel.bh_child_bheap.InBheapQ
 // Return true if row is in index, false otherwise
-inline bool atf_amc::bh_child_bheap_InBheapQ(atf_amc::FCascdel& row) {
+inline bool atf_amc::bh_child_bheap_InBheapQ(atf_amc::FCascdel& row) throw() {
     bool result = false;
     result = row.bh_child_bheap_idx != -1;
     return result;
@@ -2147,19 +2147,19 @@ inline bool atf_amc::bh_child_bheap_InBheapQ(atf_amc::FCascdel& row) {
 
 // --- atf_amc.FCascdel.bh_child_bheap.N
 // Return number of items in the heap
-inline i32 atf_amc::bh_child_bheap_N(const atf_amc::FCascdel& cascdel) {
+inline i32 atf_amc::bh_child_bheap_N(const atf_amc::FCascdel& cascdel) throw() {
     return cascdel.bh_child_bheap_n;
 }
 
 // --- atf_amc.FCascdel.zd_childlist.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::zd_childlist_EmptyQ(atf_amc::FCascdel& cascdel) {
+inline bool atf_amc::zd_childlist_EmptyQ(atf_amc::FCascdel& cascdel) throw() {
     return cascdel.zd_childlist_head == NULL;
 }
 
 // --- atf_amc.FCascdel.zd_childlist.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FCascdel* atf_amc::zd_childlist_First(atf_amc::FCascdel& cascdel) {
+inline atf_amc::FCascdel* atf_amc::zd_childlist_First(atf_amc::FCascdel& cascdel) throw() {
     atf_amc::FCascdel *row = NULL;
     row = cascdel.zd_childlist_head;
     return row;
@@ -2167,7 +2167,7 @@ inline atf_amc::FCascdel* atf_amc::zd_childlist_First(atf_amc::FCascdel& cascdel
 
 // --- atf_amc.FCascdel.zd_childlist.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zd_childlist_InLlistQ(atf_amc::FCascdel& row) {
+inline bool atf_amc::zd_childlist_InLlistQ(atf_amc::FCascdel& row) throw() {
     bool result = false;
     result = !(row.zd_childlist_next == (atf_amc::FCascdel*)-1);
     return result;
@@ -2175,7 +2175,7 @@ inline bool atf_amc::zd_childlist_InLlistQ(atf_amc::FCascdel& row) {
 
 // --- atf_amc.FCascdel.zd_childlist.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FCascdel* atf_amc::zd_childlist_Last(atf_amc::FCascdel& cascdel) {
+inline atf_amc::FCascdel* atf_amc::zd_childlist_Last(atf_amc::FCascdel& cascdel) throw() {
     atf_amc::FCascdel *row = NULL;
     row = cascdel.zd_childlist_tail;
     return row;
@@ -2183,25 +2183,25 @@ inline atf_amc::FCascdel* atf_amc::zd_childlist_Last(atf_amc::FCascdel& cascdel)
 
 // --- atf_amc.FCascdel.zd_childlist.N
 // Return number of items in the linked list
-inline i32 atf_amc::zd_childlist_N(const atf_amc::FCascdel& cascdel) {
+inline i32 atf_amc::zd_childlist_N(const atf_amc::FCascdel& cascdel) throw() {
     return cascdel.zd_childlist_n;
 }
 
 // --- atf_amc.FCascdel.zd_childlist.Next
 // Return pointer to next element in the list
-inline atf_amc::FCascdel* atf_amc::zd_childlist_Next(atf_amc::FCascdel &row) {
+inline atf_amc::FCascdel* atf_amc::zd_childlist_Next(atf_amc::FCascdel &row) throw() {
     return row.zd_childlist_next;
 }
 
 // --- atf_amc.FCascdel.zd_childlist.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FCascdel* atf_amc::zd_childlist_Prev(atf_amc::FCascdel &row) {
+inline atf_amc::FCascdel* atf_amc::zd_childlist_Prev(atf_amc::FCascdel &row) throw() {
     return row.zd_childlist_prev;
 }
 
 // --- atf_amc.FCascdel.zd_childlist.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FCascdel& atf_amc::zd_childlist_qLast(atf_amc::FCascdel& cascdel) {
+inline atf_amc::FCascdel& atf_amc::zd_childlist_qLast(atf_amc::FCascdel& cascdel) throw() {
     atf_amc::FCascdel *row = NULL;
     row = cascdel.zd_childlist_tail;
     return *row;
@@ -2209,26 +2209,26 @@ inline atf_amc::FCascdel& atf_amc::zd_childlist_qLast(atf_amc::FCascdel& cascdel
 
 // --- atf_amc.FCascdel.tr_child_atree.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::tr_child_atree_EmptyQ(atf_amc::FCascdel& cascdel) {
+inline bool atf_amc::tr_child_atree_EmptyQ(atf_amc::FCascdel& cascdel) throw() {
     return cascdel.tr_child_atree_root == NULL;
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.InTreeQ
 // Return true if row is in the tree, false otherwise
-inline bool atf_amc::tr_child_atree_InTreeQ(atf_amc::FCascdel& row) {
+inline bool atf_amc::tr_child_atree_InTreeQ(atf_amc::FCascdel& row) throw() {
     return row.tr_child_atree_up != (atf_amc::FCascdel*)-1;
 }
 
 // --- atf_amc.FCascdel.tr_child_atree.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void atf_amc::tr_child_atree_RemoveAll(atf_amc::FCascdel& cascdel) {
+inline void atf_amc::tr_child_atree_RemoveAll(atf_amc::FCascdel& cascdel) throw() {
     tr_child_atree_RemoveAllImpl(cascdel, cascdel.tr_child_atree_root, false);
     cascdel.tr_child_atree_root = NULL;
     cascdel.tr_child_atree_n = 0;
 }
 
 // --- atf_amc.FCascdel.c_child_ptrary_curs.Reset
-inline void atf_amc::cascdel_c_child_ptrary_curs_Reset(cascdel_c_child_ptrary_curs &curs, atf_amc::FCascdel &parent) {
+inline void atf_amc::cascdel_c_child_ptrary_curs_Reset(cascdel_c_child_ptrary_curs &curs, atf_amc::FCascdel &parent) throw() {
     curs.elems = parent.c_child_ptrary_elems;
     curs.n_elems = parent.c_child_ptrary_n;
     curs.index = 0;
@@ -2236,90 +2236,90 @@ inline void atf_amc::cascdel_c_child_ptrary_curs_Reset(cascdel_c_child_ptrary_cu
 
 // --- atf_amc.FCascdel.c_child_ptrary_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::cascdel_c_child_ptrary_curs_ValidQ(cascdel_c_child_ptrary_curs &curs) {
+inline bool atf_amc::cascdel_c_child_ptrary_curs_ValidQ(cascdel_c_child_ptrary_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_amc.FCascdel.c_child_ptrary_curs.Next
 // proceed to next item
-inline void atf_amc::cascdel_c_child_ptrary_curs_Next(cascdel_c_child_ptrary_curs &curs) {
+inline void atf_amc::cascdel_c_child_ptrary_curs_Next(cascdel_c_child_ptrary_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FCascdel.c_child_ptrary_curs.Access
 // item access
-inline atf_amc::FCascdel& atf_amc::cascdel_c_child_ptrary_curs_Access(cascdel_c_child_ptrary_curs &curs) {
+inline atf_amc::FCascdel& atf_amc::cascdel_c_child_ptrary_curs_Access(cascdel_c_child_ptrary_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap_curs.Access
 // Access current element. If not more elements, return NULL
-inline atf_amc::FCascdel& atf_amc::cascdel_bh_child_bheap_curs_Access(cascdel_bh_child_bheap_curs &curs) {
+inline atf_amc::FCascdel& atf_amc::cascdel_bh_child_bheap_curs_Access(cascdel_bh_child_bheap_curs &curs) throw() {
     return *curs.temp_elems[0];
 }
 
 // --- atf_amc.FCascdel.bh_child_bheap_curs.ValidQ
 // Return true if Access() will return non-NULL.
-inline bool atf_amc::cascdel_bh_child_bheap_curs_ValidQ(cascdel_bh_child_bheap_curs &curs) {
+inline bool atf_amc::cascdel_bh_child_bheap_curs_ValidQ(cascdel_bh_child_bheap_curs &curs) throw() {
     return curs.temp_n > 0;
 }
 
 // --- atf_amc.FCascdel.zd_childlist_curs.Reset
 // cursor points to valid item
-inline void atf_amc::cascdel_zd_childlist_curs_Reset(cascdel_zd_childlist_curs &curs, atf_amc::FCascdel &parent) {
+inline void atf_amc::cascdel_zd_childlist_curs_Reset(cascdel_zd_childlist_curs &curs, atf_amc::FCascdel &parent) throw() {
     curs.row = parent.zd_childlist_head;
 }
 
 // --- atf_amc.FCascdel.zd_childlist_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::cascdel_zd_childlist_curs_ValidQ(cascdel_zd_childlist_curs &curs) {
+inline bool atf_amc::cascdel_zd_childlist_curs_ValidQ(cascdel_zd_childlist_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FCascdel.zd_childlist_curs.Next
 // proceed to next item
-inline void atf_amc::cascdel_zd_childlist_curs_Next(cascdel_zd_childlist_curs &curs) {
+inline void atf_amc::cascdel_zd_childlist_curs_Next(cascdel_zd_childlist_curs &curs) throw() {
     atf_amc::FCascdel *next = (*curs.row).zd_childlist_next;
     curs.row = next;
 }
 
 // --- atf_amc.FCascdel.zd_childlist_curs.Access
 // item access
-inline atf_amc::FCascdel& atf_amc::cascdel_zd_childlist_curs_Access(cascdel_zd_childlist_curs &curs) {
+inline atf_amc::FCascdel& atf_amc::cascdel_zd_childlist_curs_Access(cascdel_zd_childlist_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FCascdel.tr_child_atree_curs.Reset
 // cursor points to valid item
-inline void atf_amc::cascdel_tr_child_atree_curs_Reset(cascdel_tr_child_atree_curs &curs, atf_amc::FCascdel& parent) {
+inline void atf_amc::cascdel_tr_child_atree_curs_Reset(cascdel_tr_child_atree_curs &curs, atf_amc::FCascdel& parent) throw() {
     curs.row = tr_child_atree_First(parent);
 }
 
 // --- atf_amc.FCascdel.tr_child_atree_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::cascdel_tr_child_atree_curs_ValidQ(cascdel_tr_child_atree_curs &curs) {
+inline bool atf_amc::cascdel_tr_child_atree_curs_ValidQ(cascdel_tr_child_atree_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FCascdel.tr_child_atree_curs.Next
 // proceed to next item
-inline void atf_amc::cascdel_tr_child_atree_curs_Next(cascdel_tr_child_atree_curs &curs) {
+inline void atf_amc::cascdel_tr_child_atree_curs_Next(cascdel_tr_child_atree_curs &curs) throw() {
     curs.row = tr_child_atree_Next(*curs.row);
 }
 
 // --- atf_amc.FCascdel.tr_child_atree_curs.Access
 // item access
-inline atf_amc::FCascdel& atf_amc::cascdel_tr_child_atree_curs_Access(cascdel_tr_child_atree_curs &curs) {
+inline atf_amc::FCascdel& atf_amc::cascdel_tr_child_atree_curs_Access(cascdel_tr_child_atree_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FCascdel..Ctor
-inline  atf_amc::FCascdel::FCascdel() {
+inline  atf_amc::FCascdel::FCascdel() throw() {
     atf_amc::FCascdel_Init(*this);
 }
 
 // --- atf_amc.FCascdel..Dtor
-inline  atf_amc::FCascdel::~FCascdel() {
+inline  atf_amc::FCascdel::~FCascdel() throw() {
     atf_amc::FCascdel_Uninit(*this);
 }
 
@@ -2330,18 +2330,18 @@ inline void atf_amc::FCstring_Init(atf_amc::FCstring& cstring) {
 }
 
 // --- atf_amc.FCstring..Ctor
-inline  atf_amc::FCstring::FCstring() {
+inline  atf_amc::FCstring::FCstring() throw() {
     atf_amc::FCstring_Init(*this);
 }
 
 // --- atf_amc.FCstring..Dtor
-inline  atf_amc::FCstring::~FCstring() {
+inline  atf_amc::FCstring::~FCstring() throw() {
     atf_amc::FCstring_Uninit(*this);
 }
 
 // --- atf_amc.FListtype.step.Call
 // Invoke function by pointer
-inline void atf_amc::step_Call(atf_amc::FListtype& listtype, atf_amc::FListtype& arg) {
+inline void atf_amc::step_Call(atf_amc::FListtype& listtype, atf_amc::FListtype& arg) throw() {
     listtype.step(arg);
 }
 
@@ -2356,24 +2356,24 @@ inline void atf_amc::FListtype_Init(atf_amc::FListtype& listtype) {
 }
 
 // --- atf_amc.FListtype..Ctor
-inline  atf_amc::FListtype::FListtype() {
+inline  atf_amc::FListtype::FListtype() throw() {
     atf_amc::FListtype_Init(*this);
 }
 
 // --- atf_amc.trace..Ctor
-inline  atf_amc::trace::trace() {
+inline  atf_amc::trace::trace() throw() {
     atf_amc::trace_Init(*this);
 }
 
 // --- atf_amc.FDb.bh_typec.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::bh_typec_EmptyQ() {
+inline bool atf_amc::bh_typec_EmptyQ() throw() {
     return _db.bh_typec_n == 0;
 }
 
 // --- atf_amc.FDb.bh_typec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeC* atf_amc::bh_typec_First() {
+inline atf_amc::FTypeC* atf_amc::bh_typec_First() throw() {
     atf_amc::FTypeC *row = NULL;
     if (_db.bh_typec_n > 0) {
         row = _db.bh_typec_elems[0];
@@ -2383,7 +2383,7 @@ inline atf_amc::FTypeC* atf_amc::bh_typec_First() {
 
 // --- atf_amc.FDb.bh_typec.InBheapQ
 // Return true if row is in index, false otherwise
-inline bool atf_amc::bh_typec_InBheapQ(atf_amc::FTypeC& row) {
+inline bool atf_amc::bh_typec_InBheapQ(atf_amc::FTypeC& row) throw() {
     bool result = false;
     result = row.bh_typec_idx != -1;
     return result;
@@ -2391,24 +2391,24 @@ inline bool atf_amc::bh_typec_InBheapQ(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.bh_typec.N
 // Return number of items in the heap
-inline i32 atf_amc::bh_typec_N() {
+inline i32 atf_amc::bh_typec_N() throw() {
     return _db.bh_typec_n;
 }
 
 // --- atf_amc.FDb.bh_typec.Call
-inline void atf_amc::bh_typec_Call() {
+inline void atf_amc::bh_typec_Call() throw() {
     atf_amc::bh_typec_Step();
 }
 
 // --- atf_amc.FDb.zdl_h_typec.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::zdl_h_typec_EmptyQ() {
+inline bool atf_amc::zdl_h_typec_EmptyQ() throw() {
     return _db.zdl_h_typec_head == NULL;
 }
 
 // --- atf_amc.FDb.zdl_h_typec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeC* atf_amc::zdl_h_typec_First() {
+inline atf_amc::FTypeC* atf_amc::zdl_h_typec_First() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zdl_h_typec_head;
     return row;
@@ -2416,7 +2416,7 @@ inline atf_amc::FTypeC* atf_amc::zdl_h_typec_First() {
 
 // --- atf_amc.FDb.zdl_h_typec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zdl_h_typec_InLlistQ(atf_amc::FTypeC& row) {
+inline bool atf_amc::zdl_h_typec_InLlistQ(atf_amc::FTypeC& row) throw() {
     bool result = false;
     result = !(row.zdl_h_typec_next == (atf_amc::FTypeC*)-1);
     return result;
@@ -2424,7 +2424,7 @@ inline bool atf_amc::zdl_h_typec_InLlistQ(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zdl_h_typec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeC* atf_amc::zdl_h_typec_Last() {
+inline atf_amc::FTypeC* atf_amc::zdl_h_typec_Last() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zdl_h_typec_tail;
     return row;
@@ -2432,25 +2432,25 @@ inline atf_amc::FTypeC* atf_amc::zdl_h_typec_Last() {
 
 // --- atf_amc.FDb.zdl_h_typec.N
 // Return number of items in the linked list
-inline i32 atf_amc::zdl_h_typec_N() {
+inline i32 atf_amc::zdl_h_typec_N() throw() {
     return _db.zdl_h_typec_n;
 }
 
 // --- atf_amc.FDb.zdl_h_typec.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeC* atf_amc::zdl_h_typec_Next(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::zdl_h_typec_Next(atf_amc::FTypeC &row) throw() {
     return row.zdl_h_typec_next;
 }
 
 // --- atf_amc.FDb.zdl_h_typec.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FTypeC* atf_amc::zdl_h_typec_Prev(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::zdl_h_typec_Prev(atf_amc::FTypeC &row) throw() {
     return row.zdl_h_typec_prev;
 }
 
 // --- atf_amc.FDb.zdl_h_typec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeC& atf_amc::zdl_h_typec_qLast() {
+inline atf_amc::FTypeC& atf_amc::zdl_h_typec_qLast() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zdl_h_typec_tail;
     return *row;
@@ -2458,13 +2458,13 @@ inline atf_amc::FTypeC& atf_amc::zdl_h_typec_qLast() {
 
 // --- atf_amc.FDb.zd_t_typec.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::zd_t_typec_EmptyQ() {
+inline bool atf_amc::zd_t_typec_EmptyQ() throw() {
     return _db.zd_t_typec_head == NULL;
 }
 
 // --- atf_amc.FDb.zd_t_typec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeC* atf_amc::zd_t_typec_First() {
+inline atf_amc::FTypeC* atf_amc::zd_t_typec_First() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zd_t_typec_head;
     return row;
@@ -2472,7 +2472,7 @@ inline atf_amc::FTypeC* atf_amc::zd_t_typec_First() {
 
 // --- atf_amc.FDb.zd_t_typec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zd_t_typec_InLlistQ(atf_amc::FTypeC& row) {
+inline bool atf_amc::zd_t_typec_InLlistQ(atf_amc::FTypeC& row) throw() {
     bool result = false;
     result = !(row.zd_t_typec_next == (atf_amc::FTypeC*)-1);
     return result;
@@ -2480,7 +2480,7 @@ inline bool atf_amc::zd_t_typec_InLlistQ(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zd_t_typec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeC* atf_amc::zd_t_typec_Last() {
+inline atf_amc::FTypeC* atf_amc::zd_t_typec_Last() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zd_t_typec_tail;
     return row;
@@ -2488,25 +2488,25 @@ inline atf_amc::FTypeC* atf_amc::zd_t_typec_Last() {
 
 // --- atf_amc.FDb.zd_t_typec.N
 // Return number of items in the linked list
-inline i32 atf_amc::zd_t_typec_N() {
+inline i32 atf_amc::zd_t_typec_N() throw() {
     return _db.zd_t_typec_n;
 }
 
 // --- atf_amc.FDb.zd_t_typec.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeC* atf_amc::zd_t_typec_Next(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::zd_t_typec_Next(atf_amc::FTypeC &row) throw() {
     return row.zd_t_typec_next;
 }
 
 // --- atf_amc.FDb.zd_t_typec.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FTypeC* atf_amc::zd_t_typec_Prev(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::zd_t_typec_Prev(atf_amc::FTypeC &row) throw() {
     return row.zd_t_typec_prev;
 }
 
 // --- atf_amc.FDb.zd_t_typec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeC& atf_amc::zd_t_typec_qLast() {
+inline atf_amc::FTypeC& atf_amc::zd_t_typec_qLast() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zd_t_typec_tail;
     return *row;
@@ -2514,13 +2514,13 @@ inline atf_amc::FTypeC& atf_amc::zd_t_typec_qLast() {
 
 // --- atf_amc.FDb.zd_typed.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::zd_typed_EmptyQ() {
+inline bool atf_amc::zd_typed_EmptyQ() throw() {
     return _db.zd_typed_head == NULL;
 }
 
 // --- atf_amc.FDb.zd_typed.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeD* atf_amc::zd_typed_First() {
+inline atf_amc::FTypeD* atf_amc::zd_typed_First() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.zd_typed_head;
     return row;
@@ -2528,7 +2528,7 @@ inline atf_amc::FTypeD* atf_amc::zd_typed_First() {
 
 // --- atf_amc.FDb.zd_typed.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zd_typed_InLlistQ(atf_amc::FTypeD& row) {
+inline bool atf_amc::zd_typed_InLlistQ(atf_amc::FTypeD& row) throw() {
     bool result = false;
     result = !(row.zd_typed_next == (atf_amc::FTypeD*)-1);
     return result;
@@ -2536,7 +2536,7 @@ inline bool atf_amc::zd_typed_InLlistQ(atf_amc::FTypeD& row) {
 
 // --- atf_amc.FDb.zd_typed.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeD* atf_amc::zd_typed_Last() {
+inline atf_amc::FTypeD* atf_amc::zd_typed_Last() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.zd_typed_tail;
     return row;
@@ -2544,25 +2544,25 @@ inline atf_amc::FTypeD* atf_amc::zd_typed_Last() {
 
 // --- atf_amc.FDb.zd_typed.N
 // Return number of items in the linked list
-inline i32 atf_amc::zd_typed_N() {
+inline i32 atf_amc::zd_typed_N() throw() {
     return _db.zd_typed_n;
 }
 
 // --- atf_amc.FDb.zd_typed.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeD* atf_amc::zd_typed_Next(atf_amc::FTypeD &row) {
+inline atf_amc::FTypeD* atf_amc::zd_typed_Next(atf_amc::FTypeD &row) throw() {
     return row.zd_typed_next;
 }
 
 // --- atf_amc.FDb.zd_typed.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FTypeD* atf_amc::zd_typed_Prev(atf_amc::FTypeD &row) {
+inline atf_amc::FTypeD* atf_amc::zd_typed_Prev(atf_amc::FTypeD &row) throw() {
     return row.zd_typed_prev;
 }
 
 // --- atf_amc.FDb.zd_typed.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeD& atf_amc::zd_typed_qLast() {
+inline atf_amc::FTypeD& atf_amc::zd_typed_qLast() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.zd_typed_tail;
     return *row;
@@ -2570,13 +2570,13 @@ inline atf_amc::FTypeD& atf_amc::zd_typed_qLast() {
 
 // --- atf_amc.FDb.zs_t_typed.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::zs_t_typed_EmptyQ() {
+inline bool atf_amc::zs_t_typed_EmptyQ() throw() {
     return _db.zs_t_typed_head == NULL;
 }
 
 // --- atf_amc.FDb.zs_t_typed.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeD* atf_amc::zs_t_typed_First() {
+inline atf_amc::FTypeD* atf_amc::zs_t_typed_First() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.zs_t_typed_head;
     return row;
@@ -2584,7 +2584,7 @@ inline atf_amc::FTypeD* atf_amc::zs_t_typed_First() {
 
 // --- atf_amc.FDb.zs_t_typed.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zs_t_typed_InLlistQ(atf_amc::FTypeD& row) {
+inline bool atf_amc::zs_t_typed_InLlistQ(atf_amc::FTypeD& row) throw() {
     bool result = false;
     result = !(row.zs_t_typed_next == (atf_amc::FTypeD*)-1);
     return result;
@@ -2592,7 +2592,7 @@ inline bool atf_amc::zs_t_typed_InLlistQ(atf_amc::FTypeD& row) {
 
 // --- atf_amc.FDb.zs_t_typed.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeD* atf_amc::zs_t_typed_Last() {
+inline atf_amc::FTypeD* atf_amc::zs_t_typed_Last() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.zs_t_typed_tail;
     return row;
@@ -2600,19 +2600,19 @@ inline atf_amc::FTypeD* atf_amc::zs_t_typed_Last() {
 
 // --- atf_amc.FDb.zs_t_typed.N
 // Return number of items in the linked list
-inline i32 atf_amc::zs_t_typed_N() {
+inline i32 atf_amc::zs_t_typed_N() throw() {
     return _db.zs_t_typed_n;
 }
 
 // --- atf_amc.FDb.zs_t_typed.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeD* atf_amc::zs_t_typed_Next(atf_amc::FTypeD &row) {
+inline atf_amc::FTypeD* atf_amc::zs_t_typed_Next(atf_amc::FTypeD &row) throw() {
     return row.zs_t_typed_next;
 }
 
 // --- atf_amc.FDb.zs_t_typed.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeD& atf_amc::zs_t_typed_qLast() {
+inline atf_amc::FTypeD& atf_amc::zs_t_typed_qLast() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.zs_t_typed_tail;
     return *row;
@@ -2620,13 +2620,13 @@ inline atf_amc::FTypeD& atf_amc::zs_t_typed_qLast() {
 
 // --- atf_amc.FDb.cd_typed.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::cd_typed_EmptyQ() {
+inline bool atf_amc::cd_typed_EmptyQ() throw() {
     return _db.cd_typed_head == NULL;
 }
 
 // --- atf_amc.FDb.cd_typed.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeD* atf_amc::cd_typed_First() {
+inline atf_amc::FTypeD* atf_amc::cd_typed_First() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.cd_typed_head;
     return row;
@@ -2634,7 +2634,7 @@ inline atf_amc::FTypeD* atf_amc::cd_typed_First() {
 
 // --- atf_amc.FDb.cd_typed.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::cd_typed_InLlistQ(atf_amc::FTypeD& row) {
+inline bool atf_amc::cd_typed_InLlistQ(atf_amc::FTypeD& row) throw() {
     bool result = false;
     result = !(row.cd_typed_next == (atf_amc::FTypeD*)-1);
     return result;
@@ -2642,7 +2642,7 @@ inline bool atf_amc::cd_typed_InLlistQ(atf_amc::FTypeD& row) {
 
 // --- atf_amc.FDb.cd_typed.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeD* atf_amc::cd_typed_Last() {
+inline atf_amc::FTypeD* atf_amc::cd_typed_Last() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.cd_typed_head ? _db.cd_typed_head->cd_typed_prev : NULL;
     return row;
@@ -2650,25 +2650,25 @@ inline atf_amc::FTypeD* atf_amc::cd_typed_Last() {
 
 // --- atf_amc.FDb.cd_typed.N
 // Return number of items in the linked list
-inline i32 atf_amc::cd_typed_N() {
+inline i32 atf_amc::cd_typed_N() throw() {
     return _db.cd_typed_n;
 }
 
 // --- atf_amc.FDb.cd_typed.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeD* atf_amc::cd_typed_Next(atf_amc::FTypeD &row) {
+inline atf_amc::FTypeD* atf_amc::cd_typed_Next(atf_amc::FTypeD &row) throw() {
     return row.cd_typed_next;
 }
 
 // --- atf_amc.FDb.cd_typed.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FTypeD* atf_amc::cd_typed_Prev(atf_amc::FTypeD &row) {
+inline atf_amc::FTypeD* atf_amc::cd_typed_Prev(atf_amc::FTypeD &row) throw() {
     return row.cd_typed_prev;
 }
 
 // --- atf_amc.FDb.cd_typed.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeD& atf_amc::cd_typed_qLast() {
+inline atf_amc::FTypeD& atf_amc::cd_typed_qLast() throw() {
     atf_amc::FTypeD *row = NULL;
     row = _db.cd_typed_head ? _db.cd_typed_head->cd_typed_prev : NULL;
     return *row;
@@ -2676,13 +2676,13 @@ inline atf_amc::FTypeD& atf_amc::cd_typed_qLast() {
 
 // --- atf_amc.FDb.zsl_h_typec.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::zsl_h_typec_EmptyQ() {
+inline bool atf_amc::zsl_h_typec_EmptyQ() throw() {
     return _db.zsl_h_typec_head == NULL;
 }
 
 // --- atf_amc.FDb.zsl_h_typec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeC* atf_amc::zsl_h_typec_First() {
+inline atf_amc::FTypeC* atf_amc::zsl_h_typec_First() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zsl_h_typec_head;
     return row;
@@ -2690,7 +2690,7 @@ inline atf_amc::FTypeC* atf_amc::zsl_h_typec_First() {
 
 // --- atf_amc.FDb.zsl_h_typec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zsl_h_typec_InLlistQ(atf_amc::FTypeC& row) {
+inline bool atf_amc::zsl_h_typec_InLlistQ(atf_amc::FTypeC& row) throw() {
     bool result = false;
     result = !(row.zsl_h_typec_next == (atf_amc::FTypeC*)-1);
     return result;
@@ -2698,7 +2698,7 @@ inline bool atf_amc::zsl_h_typec_InLlistQ(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zsl_h_typec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeC* atf_amc::zsl_h_typec_Last() {
+inline atf_amc::FTypeC* atf_amc::zsl_h_typec_Last() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zsl_h_typec_tail;
     return row;
@@ -2706,38 +2706,38 @@ inline atf_amc::FTypeC* atf_amc::zsl_h_typec_Last() {
 
 // --- atf_amc.FDb.zsl_h_typec.N
 // Return number of items in the linked list
-inline i32 atf_amc::zsl_h_typec_N() {
+inline i32 atf_amc::zsl_h_typec_N() throw() {
     return _db.zsl_h_typec_n;
 }
 
 // --- atf_amc.FDb.zsl_h_typec.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeC* atf_amc::zsl_h_typec_Next(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::zsl_h_typec_Next(atf_amc::FTypeC &row) throw() {
     return row.zsl_h_typec_next;
 }
 
 // --- atf_amc.FDb.zsl_h_typec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeC& atf_amc::zsl_h_typec_qLast() {
+inline atf_amc::FTypeC& atf_amc::zsl_h_typec_qLast() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zsl_h_typec_tail;
     return *row;
 }
 
 // --- atf_amc.FDb.zsl_h_typec.Call
-inline void atf_amc::zsl_h_typec_Call() {
+inline void atf_amc::zsl_h_typec_Call() throw() {
     atf_amc::zsl_h_typec_Step();
 }
 
 // --- atf_amc.FDb.zs_t_typec.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::zs_t_typec_EmptyQ() {
+inline bool atf_amc::zs_t_typec_EmptyQ() throw() {
     return _db.zs_t_typec_head == NULL;
 }
 
 // --- atf_amc.FDb.zs_t_typec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeC* atf_amc::zs_t_typec_First() {
+inline atf_amc::FTypeC* atf_amc::zs_t_typec_First() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zs_t_typec_head;
     return row;
@@ -2745,7 +2745,7 @@ inline atf_amc::FTypeC* atf_amc::zs_t_typec_First() {
 
 // --- atf_amc.FDb.zs_t_typec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zs_t_typec_InLlistQ(atf_amc::FTypeC& row) {
+inline bool atf_amc::zs_t_typec_InLlistQ(atf_amc::FTypeC& row) throw() {
     bool result = false;
     result = !(row.zs_t_typec_next == (atf_amc::FTypeC*)-1);
     return result;
@@ -2753,7 +2753,7 @@ inline bool atf_amc::zs_t_typec_InLlistQ(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zs_t_typec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeC* atf_amc::zs_t_typec_Last() {
+inline atf_amc::FTypeC* atf_amc::zs_t_typec_Last() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zs_t_typec_tail;
     return row;
@@ -2761,32 +2761,32 @@ inline atf_amc::FTypeC* atf_amc::zs_t_typec_Last() {
 
 // --- atf_amc.FDb.zs_t_typec.N
 // Return number of items in the linked list
-inline i32 atf_amc::zs_t_typec_N() {
+inline i32 atf_amc::zs_t_typec_N() throw() {
     return _db.zs_t_typec_n;
 }
 
 // --- atf_amc.FDb.zs_t_typec.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeC* atf_amc::zs_t_typec_Next(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::zs_t_typec_Next(atf_amc::FTypeC &row) throw() {
     return row.zs_t_typec_next;
 }
 
 // --- atf_amc.FDb.zs_t_typec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeC& atf_amc::zs_t_typec_qLast() {
+inline atf_amc::FTypeC& atf_amc::zs_t_typec_qLast() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zs_t_typec_tail;
     return *row;
 }
 
 // --- atf_amc.FDb.zs_t_typec.Call
-inline void atf_amc::zs_t_typec_Call() {
+inline void atf_amc::zs_t_typec_Call() throw() {
     atf_amc::zs_t_typec_Step();
 }
 
 // --- atf_amc.FDb.zs_mt_typec.InLlistQ
 // Return true if row is in index, false otherwise. Row must be non-NULL.
-inline bool atf_amc::zs_mt_typec_InLlistQ(atf_amc::FTypeC& row) {
+inline bool atf_amc::zs_mt_typec_InLlistQ(atf_amc::FTypeC& row) throw() {
     bool result = false;
     result = !(row.zs_mt_typec_next == (atf_amc::FTypeC*)-1);
     return result;
@@ -2794,13 +2794,13 @@ inline bool atf_amc::zs_mt_typec_InLlistQ(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zdl_hnt_typec.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::zdl_hnt_typec_EmptyQ() {
+inline bool atf_amc::zdl_hnt_typec_EmptyQ() throw() {
     return _db.zdl_hnt_typec_head == NULL;
 }
 
 // --- atf_amc.FDb.zdl_hnt_typec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeC* atf_amc::zdl_hnt_typec_First() {
+inline atf_amc::FTypeC* atf_amc::zdl_hnt_typec_First() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.zdl_hnt_typec_head;
     return row;
@@ -2808,7 +2808,7 @@ inline atf_amc::FTypeC* atf_amc::zdl_hnt_typec_First() {
 
 // --- atf_amc.FDb.zdl_hnt_typec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zdl_hnt_typec_InLlistQ(atf_amc::FTypeC& row) {
+inline bool atf_amc::zdl_hnt_typec_InLlistQ(atf_amc::FTypeC& row) throw() {
     bool result = false;
     result = !(row.zdl_hnt_typec_next == (atf_amc::FTypeC*)-1);
     return result;
@@ -2816,31 +2816,31 @@ inline bool atf_amc::zdl_hnt_typec_InLlistQ(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.zdl_hnt_typec.N
 // Return number of items in the linked list
-inline i32 atf_amc::zdl_hnt_typec_N() {
+inline i32 atf_amc::zdl_hnt_typec_N() throw() {
     return _db.zdl_hnt_typec_n;
 }
 
 // --- atf_amc.FDb.zdl_hnt_typec.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeC* atf_amc::zdl_hnt_typec_Next(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::zdl_hnt_typec_Next(atf_amc::FTypeC &row) throw() {
     return row.zdl_hnt_typec_next;
 }
 
 // --- atf_amc.FDb.zdl_hnt_typec.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FTypeC* atf_amc::zdl_hnt_typec_Prev(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::zdl_hnt_typec_Prev(atf_amc::FTypeC &row) throw() {
     return row.zdl_hnt_typec_prev;
 }
 
 // --- atf_amc.FDb.cdl_h_typec.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::cdl_h_typec_EmptyQ() {
+inline bool atf_amc::cdl_h_typec_EmptyQ() throw() {
     return _db.cdl_h_typec_head == NULL;
 }
 
 // --- atf_amc.FDb.cdl_h_typec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeC* atf_amc::cdl_h_typec_First() {
+inline atf_amc::FTypeC* atf_amc::cdl_h_typec_First() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cdl_h_typec_head;
     return row;
@@ -2848,7 +2848,7 @@ inline atf_amc::FTypeC* atf_amc::cdl_h_typec_First() {
 
 // --- atf_amc.FDb.cdl_h_typec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::cdl_h_typec_InLlistQ(atf_amc::FTypeC& row) {
+inline bool atf_amc::cdl_h_typec_InLlistQ(atf_amc::FTypeC& row) throw() {
     bool result = false;
     result = !(row.cdl_h_typec_next == (atf_amc::FTypeC*)-1);
     return result;
@@ -2856,7 +2856,7 @@ inline bool atf_amc::cdl_h_typec_InLlistQ(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.cdl_h_typec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeC* atf_amc::cdl_h_typec_Last() {
+inline atf_amc::FTypeC* atf_amc::cdl_h_typec_Last() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cdl_h_typec_head ? _db.cdl_h_typec_head->cdl_h_typec_prev : NULL;
     return row;
@@ -2864,25 +2864,25 @@ inline atf_amc::FTypeC* atf_amc::cdl_h_typec_Last() {
 
 // --- atf_amc.FDb.cdl_h_typec.N
 // Return number of items in the linked list
-inline i32 atf_amc::cdl_h_typec_N() {
+inline i32 atf_amc::cdl_h_typec_N() throw() {
     return _db.cdl_h_typec_n;
 }
 
 // --- atf_amc.FDb.cdl_h_typec.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeC* atf_amc::cdl_h_typec_Next(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::cdl_h_typec_Next(atf_amc::FTypeC &row) throw() {
     return row.cdl_h_typec_next;
 }
 
 // --- atf_amc.FDb.cdl_h_typec.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FTypeC* atf_amc::cdl_h_typec_Prev(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::cdl_h_typec_Prev(atf_amc::FTypeC &row) throw() {
     return row.cdl_h_typec_prev;
 }
 
 // --- atf_amc.FDb.cdl_h_typec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeC& atf_amc::cdl_h_typec_qLast() {
+inline atf_amc::FTypeC& atf_amc::cdl_h_typec_qLast() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cdl_h_typec_head ? _db.cdl_h_typec_head->cdl_h_typec_prev : NULL;
     return *row;
@@ -2890,13 +2890,13 @@ inline atf_amc::FTypeC& atf_amc::cdl_h_typec_qLast() {
 
 // --- atf_amc.FDb.cd_t_typec.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::cd_t_typec_EmptyQ() {
+inline bool atf_amc::cd_t_typec_EmptyQ() throw() {
     return _db.cd_t_typec_head == NULL;
 }
 
 // --- atf_amc.FDb.cd_t_typec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeC* atf_amc::cd_t_typec_First() {
+inline atf_amc::FTypeC* atf_amc::cd_t_typec_First() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cd_t_typec_head;
     return row;
@@ -2904,7 +2904,7 @@ inline atf_amc::FTypeC* atf_amc::cd_t_typec_First() {
 
 // --- atf_amc.FDb.cd_t_typec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::cd_t_typec_InLlistQ(atf_amc::FTypeC& row) {
+inline bool atf_amc::cd_t_typec_InLlistQ(atf_amc::FTypeC& row) throw() {
     bool result = false;
     result = !(row.cd_t_typec_next == (atf_amc::FTypeC*)-1);
     return result;
@@ -2912,7 +2912,7 @@ inline bool atf_amc::cd_t_typec_InLlistQ(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.cd_t_typec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeC* atf_amc::cd_t_typec_Last() {
+inline atf_amc::FTypeC* atf_amc::cd_t_typec_Last() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cd_t_typec_head ? _db.cd_t_typec_head->cd_t_typec_prev : NULL;
     return row;
@@ -2920,25 +2920,25 @@ inline atf_amc::FTypeC* atf_amc::cd_t_typec_Last() {
 
 // --- atf_amc.FDb.cd_t_typec.N
 // Return number of items in the linked list
-inline i32 atf_amc::cd_t_typec_N() {
+inline i32 atf_amc::cd_t_typec_N() throw() {
     return _db.cd_t_typec_n;
 }
 
 // --- atf_amc.FDb.cd_t_typec.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeC* atf_amc::cd_t_typec_Next(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::cd_t_typec_Next(atf_amc::FTypeC &row) throw() {
     return row.cd_t_typec_next;
 }
 
 // --- atf_amc.FDb.cd_t_typec.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FTypeC* atf_amc::cd_t_typec_Prev(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::cd_t_typec_Prev(atf_amc::FTypeC &row) throw() {
     return row.cd_t_typec_prev;
 }
 
 // --- atf_amc.FDb.cd_t_typec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeC& atf_amc::cd_t_typec_qLast() {
+inline atf_amc::FTypeC& atf_amc::cd_t_typec_qLast() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cd_t_typec_head ? _db.cd_t_typec_head->cd_t_typec_prev : NULL;
     return *row;
@@ -2946,13 +2946,13 @@ inline atf_amc::FTypeC& atf_amc::cd_t_typec_qLast() {
 
 // --- atf_amc.FDb.csl_h_typec.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::csl_h_typec_EmptyQ() {
+inline bool atf_amc::csl_h_typec_EmptyQ() throw() {
     return _db.csl_h_typec_head == NULL;
 }
 
 // --- atf_amc.FDb.csl_h_typec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeC* atf_amc::csl_h_typec_First() {
+inline atf_amc::FTypeC* atf_amc::csl_h_typec_First() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.csl_h_typec_head;
     return row;
@@ -2960,7 +2960,7 @@ inline atf_amc::FTypeC* atf_amc::csl_h_typec_First() {
 
 // --- atf_amc.FDb.csl_h_typec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::csl_h_typec_InLlistQ(atf_amc::FTypeC& row) {
+inline bool atf_amc::csl_h_typec_InLlistQ(atf_amc::FTypeC& row) throw() {
     bool result = false;
     result = !(row.csl_h_typec_next == (atf_amc::FTypeC*)-1);
     return result;
@@ -2968,7 +2968,7 @@ inline bool atf_amc::csl_h_typec_InLlistQ(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.csl_h_typec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeC* atf_amc::csl_h_typec_Last() {
+inline atf_amc::FTypeC* atf_amc::csl_h_typec_Last() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.csl_h_typec_tail;
     return row;
@@ -2976,38 +2976,38 @@ inline atf_amc::FTypeC* atf_amc::csl_h_typec_Last() {
 
 // --- atf_amc.FDb.csl_h_typec.N
 // Return number of items in the linked list
-inline i32 atf_amc::csl_h_typec_N() {
+inline i32 atf_amc::csl_h_typec_N() throw() {
     return _db.csl_h_typec_n;
 }
 
 // --- atf_amc.FDb.csl_h_typec.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeC* atf_amc::csl_h_typec_Next(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::csl_h_typec_Next(atf_amc::FTypeC &row) throw() {
     return row.csl_h_typec_next;
 }
 
 // --- atf_amc.FDb.csl_h_typec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeC& atf_amc::csl_h_typec_qLast() {
+inline atf_amc::FTypeC& atf_amc::csl_h_typec_qLast() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.csl_h_typec_tail;
     return *row;
 }
 
 // --- atf_amc.FDb.csl_h_typec.Call
-inline void atf_amc::csl_h_typec_Call() {
+inline void atf_amc::csl_h_typec_Call() throw() {
     atf_amc::csl_h_typec_Step();
 }
 
 // --- atf_amc.FDb.cs_t_typec.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::cs_t_typec_EmptyQ() {
+inline bool atf_amc::cs_t_typec_EmptyQ() throw() {
     return _db.cs_t_typec_head == NULL;
 }
 
 // --- atf_amc.FDb.cs_t_typec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeC* atf_amc::cs_t_typec_First() {
+inline atf_amc::FTypeC* atf_amc::cs_t_typec_First() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cs_t_typec_head;
     return row;
@@ -3015,7 +3015,7 @@ inline atf_amc::FTypeC* atf_amc::cs_t_typec_First() {
 
 // --- atf_amc.FDb.cs_t_typec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::cs_t_typec_InLlistQ(atf_amc::FTypeC& row) {
+inline bool atf_amc::cs_t_typec_InLlistQ(atf_amc::FTypeC& row) throw() {
     bool result = false;
     result = !(row.cs_t_typec_next == (atf_amc::FTypeC*)-1);
     return result;
@@ -3023,7 +3023,7 @@ inline bool atf_amc::cs_t_typec_InLlistQ(atf_amc::FTypeC& row) {
 
 // --- atf_amc.FDb.cs_t_typec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeC* atf_amc::cs_t_typec_Last() {
+inline atf_amc::FTypeC* atf_amc::cs_t_typec_Last() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cs_t_typec_tail;
     return row;
@@ -3031,38 +3031,38 @@ inline atf_amc::FTypeC* atf_amc::cs_t_typec_Last() {
 
 // --- atf_amc.FDb.cs_t_typec.N
 // Return number of items in the linked list
-inline i32 atf_amc::cs_t_typec_N() {
+inline i32 atf_amc::cs_t_typec_N() throw() {
     return _db.cs_t_typec_n;
 }
 
 // --- atf_amc.FDb.cs_t_typec.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeC* atf_amc::cs_t_typec_Next(atf_amc::FTypeC &row) {
+inline atf_amc::FTypeC* atf_amc::cs_t_typec_Next(atf_amc::FTypeC &row) throw() {
     return row.cs_t_typec_next;
 }
 
 // --- atf_amc.FDb.cs_t_typec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeC& atf_amc::cs_t_typec_qLast() {
+inline atf_amc::FTypeC& atf_amc::cs_t_typec_qLast() throw() {
     atf_amc::FTypeC *row = NULL;
     row = _db.cs_t_typec_tail;
     return *row;
 }
 
 // --- atf_amc.FDb.cs_t_typec.Call
-inline void atf_amc::cs_t_typec_Call() {
+inline void atf_amc::cs_t_typec_Call() throw() {
     atf_amc::cs_t_typec_Step();
 }
 
 // --- atf_amc.FDb.typea.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::typea_EmptyQ() {
+inline bool atf_amc::typea_EmptyQ() throw() {
     return _db.typea_n == 0;
 }
 
 // --- atf_amc.FDb.typea.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::FTypeA* atf_amc::typea_Find(i32 t) {
+inline atf_amc::FTypeA* atf_amc::typea_Find(i32 t) throw() {
     atf_amc::FTypeA *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.typea_n))) {
         u64 x = t + 1;
@@ -3076,19 +3076,19 @@ inline atf_amc::FTypeA* atf_amc::typea_Find(i32 t) {
 
 // --- atf_amc.FDb.typea.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_amc::FTypeA* atf_amc::typea_Last() {
+inline atf_amc::FTypeA* atf_amc::typea_Last() throw() {
     return typea_Find(i32(_db.typea_n-1));
 }
 
 // --- atf_amc.FDb.typea.N
 // Return number of items in the pool
-inline i32 atf_amc::typea_N() {
+inline i32 atf_amc::typea_N() throw() {
     return _db.typea_n;
 }
 
 // --- atf_amc.FDb.typea.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_amc::FTypeA& atf_amc::typea_qFind(i32 t) {
+inline atf_amc::FTypeA& atf_amc::typea_qFind(i32 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -3098,13 +3098,13 @@ inline atf_amc::FTypeA& atf_amc::typea_qFind(i32 t) {
 
 // --- atf_amc.FDb.types.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::types_EmptyQ() {
+inline bool atf_amc::types_EmptyQ() throw() {
     return _db.types_n == 0;
 }
 
 // --- atf_amc.FDb.types.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::FTypeS* atf_amc::types_Find(u64 t) {
+inline atf_amc::FTypeS* atf_amc::types_Find(u64 t) throw() {
     atf_amc::FTypeS *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.types_n))) {
         u64 x = t + 1;
@@ -3118,19 +3118,19 @@ inline atf_amc::FTypeS* atf_amc::types_Find(u64 t) {
 
 // --- atf_amc.FDb.types.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_amc::FTypeS* atf_amc::types_Last() {
+inline atf_amc::FTypeS* atf_amc::types_Last() throw() {
     return types_Find(u64(_db.types_n-1));
 }
 
 // --- atf_amc.FDb.types.N
 // Return number of items in the pool
-inline i32 atf_amc::types_N() {
+inline i32 atf_amc::types_N() throw() {
     return _db.types_n;
 }
 
 // --- atf_amc.FDb.types.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_amc::FTypeS& atf_amc::types_qFind(u64 t) {
+inline atf_amc::FTypeS& atf_amc::types_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -3140,37 +3140,37 @@ inline atf_amc::FTypeS& atf_amc::types_qFind(u64 t) {
 
 // --- atf_amc.FDb.ind_types.EmptyQ
 // Return true if hash is empty
-inline bool atf_amc::ind_types_EmptyQ() {
+inline bool atf_amc::ind_types_EmptyQ() throw() {
     return _db.ind_types_n == 0;
 }
 
 // --- atf_amc.FDb.ind_types.N
 // Return number of items in the hash
-inline i32 atf_amc::ind_types_N() {
+inline i32 atf_amc::ind_types_N() throw() {
     return _db.ind_types_n;
 }
 
 // --- atf_amc.FDb.ind_typea.EmptyQ
 // Return true if hash is empty
-inline bool atf_amc::ind_typea_EmptyQ() {
+inline bool atf_amc::ind_typea_EmptyQ() throw() {
     return _db.ind_typea_n == 0;
 }
 
 // --- atf_amc.FDb.ind_typea.N
 // Return number of items in the hash
-inline i32 atf_amc::ind_typea_N() {
+inline i32 atf_amc::ind_typea_N() throw() {
     return _db.ind_typea_n;
 }
 
 // --- atf_amc.FDb.typet.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::typet_EmptyQ() {
+inline bool atf_amc::typet_EmptyQ() throw() {
     return _db.typet_n == 0;
 }
 
 // --- atf_amc.FDb.typet.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::FTypeT* atf_amc::typet_Find(u64 t) {
+inline atf_amc::FTypeT* atf_amc::typet_Find(u64 t) throw() {
     atf_amc::FTypeT *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.typet_n))) {
         u64 x = t + 1;
@@ -3184,19 +3184,19 @@ inline atf_amc::FTypeT* atf_amc::typet_Find(u64 t) {
 
 // --- atf_amc.FDb.typet.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_amc::FTypeT* atf_amc::typet_Last() {
+inline atf_amc::FTypeT* atf_amc::typet_Last() throw() {
     return typet_Find(u64(_db.typet_n-1));
 }
 
 // --- atf_amc.FDb.typet.N
 // Return number of items in the pool
-inline i32 atf_amc::typet_N() {
+inline i32 atf_amc::typet_N() throw() {
     return _db.typet_n;
 }
 
 // --- atf_amc.FDb.typet.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_amc::FTypeT& atf_amc::typet_qFind(u64 t) {
+inline atf_amc::FTypeT& atf_amc::typet_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -3206,13 +3206,13 @@ inline atf_amc::FTypeT& atf_amc::typet_qFind(u64 t) {
 
 // --- atf_amc.FDb.cstring.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::cstring_EmptyQ() {
+inline bool atf_amc::cstring_EmptyQ() throw() {
     return _db.cstring_n == 0;
 }
 
 // --- atf_amc.FDb.cstring.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::FCstring* atf_amc::cstring_Find(u64 t) {
+inline atf_amc::FCstring* atf_amc::cstring_Find(u64 t) throw() {
     atf_amc::FCstring *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.cstring_n))) {
         u64 x = t + 1;
@@ -3226,19 +3226,19 @@ inline atf_amc::FCstring* atf_amc::cstring_Find(u64 t) {
 
 // --- atf_amc.FDb.cstring.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_amc::FCstring* atf_amc::cstring_Last() {
+inline atf_amc::FCstring* atf_amc::cstring_Last() throw() {
     return cstring_Find(u64(_db.cstring_n-1));
 }
 
 // --- atf_amc.FDb.cstring.N
 // Return number of items in the pool
-inline i32 atf_amc::cstring_N() {
+inline i32 atf_amc::cstring_N() throw() {
     return _db.cstring_n;
 }
 
 // --- atf_amc.FDb.cstring.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_amc::FCstring& atf_amc::cstring_qFind(u64 t) {
+inline atf_amc::FCstring& atf_amc::cstring_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -3248,25 +3248,25 @@ inline atf_amc::FCstring& atf_amc::cstring_qFind(u64 t) {
 
 // --- atf_amc.FDb.ind_cstring.EmptyQ
 // Return true if hash is empty
-inline bool atf_amc::ind_cstring_EmptyQ() {
+inline bool atf_amc::ind_cstring_EmptyQ() throw() {
     return _db.ind_cstring_n == 0;
 }
 
 // --- atf_amc.FDb.ind_cstring.N
 // Return number of items in the hash
-inline i32 atf_amc::ind_cstring_N() {
+inline i32 atf_amc::ind_cstring_N() throw() {
     return _db.ind_cstring_n;
 }
 
 // --- atf_amc.FDb.cd_in_msg.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::cd_in_msg_EmptyQ() {
+inline bool atf_amc::cd_in_msg_EmptyQ() throw() {
     return _db.cd_in_msg_head == NULL;
 }
 
 // --- atf_amc.FDb.cd_in_msg.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::Msgbuf* atf_amc::cd_in_msg_First() {
+inline atf_amc::Msgbuf* atf_amc::cd_in_msg_First() throw() {
     atf_amc::Msgbuf *row = NULL;
     row = _db.cd_in_msg_head;
     return row;
@@ -3274,7 +3274,7 @@ inline atf_amc::Msgbuf* atf_amc::cd_in_msg_First() {
 
 // --- atf_amc.FDb.cd_in_msg.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::cd_in_msg_InLlistQ(atf_amc::Msgbuf& row) {
+inline bool atf_amc::cd_in_msg_InLlistQ(atf_amc::Msgbuf& row) throw() {
     bool result = false;
     result = !(row.cd_in_msg_next == (atf_amc::Msgbuf*)-1);
     return result;
@@ -3282,7 +3282,7 @@ inline bool atf_amc::cd_in_msg_InLlistQ(atf_amc::Msgbuf& row) {
 
 // --- atf_amc.FDb.cd_in_msg.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::Msgbuf* atf_amc::cd_in_msg_Last() {
+inline atf_amc::Msgbuf* atf_amc::cd_in_msg_Last() throw() {
     atf_amc::Msgbuf *row = NULL;
     row = _db.cd_in_msg_head ? _db.cd_in_msg_head->cd_in_msg_prev : NULL;
     return row;
@@ -3290,19 +3290,19 @@ inline atf_amc::Msgbuf* atf_amc::cd_in_msg_Last() {
 
 // --- atf_amc.FDb.cd_in_msg.Next
 // Return pointer to next element in the list
-inline atf_amc::Msgbuf* atf_amc::cd_in_msg_Next(atf_amc::Msgbuf &row) {
+inline atf_amc::Msgbuf* atf_amc::cd_in_msg_Next(atf_amc::Msgbuf &row) throw() {
     return row.cd_in_msg_next;
 }
 
 // --- atf_amc.FDb.cd_in_msg.Prev
 // Return pointer to previous element in the list
-inline atf_amc::Msgbuf* atf_amc::cd_in_msg_Prev(atf_amc::Msgbuf &row) {
+inline atf_amc::Msgbuf* atf_amc::cd_in_msg_Prev(atf_amc::Msgbuf &row) throw() {
     return row.cd_in_msg_prev;
 }
 
 // --- atf_amc.FDb.cd_in_msg.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::Msgbuf& atf_amc::cd_in_msg_qLast() {
+inline atf_amc::Msgbuf& atf_amc::cd_in_msg_qLast() throw() {
     atf_amc::Msgbuf *row = NULL;
     row = _db.cd_in_msg_head ? _db.cd_in_msg_head->cd_in_msg_prev : NULL;
     return *row;
@@ -3310,7 +3310,7 @@ inline atf_amc::Msgbuf& atf_amc::cd_in_msg_qLast() {
 
 // --- atf_amc.FDb.varlen_extern.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-inline atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocMaybe(i32 n_varfld) {
+inline atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocMaybe(i32 n_varfld) throw() {
     atf_amc::VarlenExtern *row = varlen_extern_AllocExtraMaybe(NULL, sizeof(u32) * n_varfld);
     return row;
 }
@@ -3319,7 +3319,7 @@ inline atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocMaybe(i32 n_varfld) {
 // Allocate element & copy memory from input parameter. If out of memory, return NULL.
 // Allocate memory for a new row; Copy var-len portion from varlen.
 // This is a convenience function that uses varlen_extern_Alloc
-inline atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocVarlenMaybe(algo::aryptr<u32> varlen) {
+inline atf_amc::VarlenExtern* atf_amc::varlen_extern_AllocVarlenMaybe(algo::aryptr<u32> varlen) throw() {
     return varlen_extern_AllocExtraMaybe(varlen.elems, varlen.n_elems * sizeof(u32));
 }
 
@@ -3331,19 +3331,19 @@ inline atf_amc::VarlenExtern& atf_amc::varlen_extern_AllocVarlen(algo::aryptr<u3
 
 // --- atf_amc.FDb.varlen_extern.N
 // Return number of items in the pool
-inline i64 atf_amc::varlen_extern_N() {
+inline i64 atf_amc::varlen_extern_N() throw() {
     return _db.varlen_extern_n;
 }
 
 // --- atf_amc.FDb.amctest.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::amctest_EmptyQ() {
+inline bool atf_amc::amctest_EmptyQ() throw() {
     return _db.amctest_n == 0;
 }
 
 // --- atf_amc.FDb.amctest.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::FAmctest* atf_amc::amctest_Find(u64 t) {
+inline atf_amc::FAmctest* atf_amc::amctest_Find(u64 t) throw() {
     atf_amc::FAmctest *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.amctest_n))) {
         u64 x = t + 1;
@@ -3357,19 +3357,19 @@ inline atf_amc::FAmctest* atf_amc::amctest_Find(u64 t) {
 
 // --- atf_amc.FDb.amctest.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_amc::FAmctest* atf_amc::amctest_Last() {
+inline atf_amc::FAmctest* atf_amc::amctest_Last() throw() {
     return amctest_Find(u64(_db.amctest_n-1));
 }
 
 // --- atf_amc.FDb.amctest.N
 // Return number of items in the pool
-inline i32 atf_amc::amctest_N() {
+inline i32 atf_amc::amctest_N() throw() {
     return _db.amctest_n;
 }
 
 // --- atf_amc.FDb.amctest.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_amc::FAmctest& atf_amc::amctest_qFind(u64 t) {
+inline atf_amc::FAmctest& atf_amc::amctest_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -3379,13 +3379,13 @@ inline atf_amc::FAmctest& atf_amc::amctest_qFind(u64 t) {
 
 // --- atf_amc.FDb.optalloc.N
 // Return number of items in the pool
-inline i64 atf_amc::optalloc_N() {
+inline i64 atf_amc::optalloc_N() throw() {
     return _db.optalloc_n;
 }
 
 // --- atf_amc.FDb.varlenalloc.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-inline atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocMaybe(i32 n_varfld) {
+inline atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocMaybe(i32 n_varfld) throw() {
     atf_amc::VarlenAlloc *row = varlenalloc_AllocExtraMaybe(NULL, sizeof(i32) * n_varfld);
     return row;
 }
@@ -3394,7 +3394,7 @@ inline atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocMaybe(i32 n_varfld) {
 // Allocate element & copy memory from input parameter. If out of memory, return NULL.
 // Allocate memory for a new row; Copy var-len portion from elem.
 // This is a convenience function that uses varlenalloc_Alloc
-inline atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocVarlenMaybe(algo::aryptr<i32> elem) {
+inline atf_amc::VarlenAlloc* atf_amc::varlenalloc_AllocVarlenMaybe(algo::aryptr<i32> elem) throw() {
     return varlenalloc_AllocExtraMaybe(elem.elems, elem.n_elems * sizeof(i32));
 }
 
@@ -3406,25 +3406,25 @@ inline atf_amc::VarlenAlloc& atf_amc::varlenalloc_AllocVarlen(algo::aryptr<i32> 
 
 // --- atf_amc.FDb.varlenalloc.N
 // Return number of items in the pool
-inline i64 atf_amc::varlenalloc_N() {
+inline i64 atf_amc::varlenalloc_N() throw() {
     return _db.varlenalloc_n;
 }
 
 // --- atf_amc.FDb.optg.N
 // Return number of items in the pool
-inline i64 atf_amc::optg_N() {
+inline i64 atf_amc::optg_N() throw() {
     return _db.optg_n;
 }
 
 // --- atf_amc.FDb.c_typek.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::c_typek_EmptyQ() {
+inline bool atf_amc::c_typek_EmptyQ() throw() {
     return _db.c_typek_n == 0;
 }
 
 // --- atf_amc.FDb.c_typek.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::FTypeK* atf_amc::c_typek_Find(u32 t) {
+inline atf_amc::FTypeK* atf_amc::c_typek_Find(u32 t) throw() {
     atf_amc::FTypeK *retval = NULL;
     u64 idx = t;
     u64 lim = _db.c_typek_n;
@@ -3436,19 +3436,19 @@ inline atf_amc::FTypeK* atf_amc::c_typek_Find(u32 t) {
 
 // --- atf_amc.FDb.c_typek.Getary
 // Return array of pointers
-inline algo::aryptr<atf_amc::FTypeK*> atf_amc::c_typek_Getary() {
+inline algo::aryptr<atf_amc::FTypeK*> atf_amc::c_typek_Getary() throw() {
     return algo::aryptr<atf_amc::FTypeK*>(_db.c_typek_elems, _db.c_typek_n);
 }
 
 // --- atf_amc.FDb.c_typek.N
 // Return number of items in the pointer array
-inline i32 atf_amc::c_typek_N() {
+inline i32 atf_amc::c_typek_N() throw() {
     return _db.c_typek_n;
 }
 
 // --- atf_amc.FDb.c_typek.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void atf_amc::c_typek_RemoveAll() {
+inline void atf_amc::c_typek_RemoveAll() throw() {
     for (u32 i = 0; i < _db.c_typek_n; i++) {
         // mark all elements as not-in-array
         _db.c_typek_elems[i]->_db_c_typek_in_ary = false;
@@ -3458,31 +3458,31 @@ inline void atf_amc::c_typek_RemoveAll() {
 
 // --- atf_amc.FDb.c_typek.qFind
 // Return reference without bounds checking
-inline atf_amc::FTypeK& atf_amc::c_typek_qFind(u32 idx) {
+inline atf_amc::FTypeK& atf_amc::c_typek_qFind(u32 idx) throw() {
     return *_db.c_typek_elems[idx];
 }
 
 // --- atf_amc.FDb.c_typek.InAryQ
 // True if row is in any ptrary instance
-inline bool atf_amc::c_typek_InAryQ(atf_amc::FTypeK& row) {
+inline bool atf_amc::c_typek_InAryQ(atf_amc::FTypeK& row) throw() {
     return row._db_c_typek_in_ary;
 }
 
 // --- atf_amc.FDb.c_typek.qLast
 // Reference to last element without bounds checking
-inline atf_amc::FTypeK& atf_amc::c_typek_qLast() {
+inline atf_amc::FTypeK& atf_amc::c_typek_qLast() throw() {
     return *_db.c_typek_elems[_db.c_typek_n-1];
 }
 
 // --- atf_amc.FDb.avl.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::avl_EmptyQ() {
+inline bool atf_amc::avl_EmptyQ() throw() {
     return _db.avl_n == 0;
 }
 
 // --- atf_amc.FDb.avl.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::FAvl* atf_amc::avl_Find(u64 t) {
+inline atf_amc::FAvl* atf_amc::avl_Find(u64 t) throw() {
     atf_amc::FAvl *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.avl_n))) {
         u64 x = t + 1;
@@ -3496,19 +3496,19 @@ inline atf_amc::FAvl* atf_amc::avl_Find(u64 t) {
 
 // --- atf_amc.FDb.avl.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_amc::FAvl* atf_amc::avl_Last() {
+inline atf_amc::FAvl* atf_amc::avl_Last() throw() {
     return avl_Find(u64(_db.avl_n-1));
 }
 
 // --- atf_amc.FDb.avl.N
 // Return number of items in the pool
-inline i32 atf_amc::avl_N() {
+inline i32 atf_amc::avl_N() throw() {
     return _db.avl_n;
 }
 
 // --- atf_amc.FDb.avl.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_amc::FAvl& atf_amc::avl_qFind(u64 t) {
+inline atf_amc::FAvl& atf_amc::avl_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -3518,19 +3518,19 @@ inline atf_amc::FAvl& atf_amc::avl_qFind(u64 t) {
 
 // --- atf_amc.FDb.tr_avl.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::tr_avl_EmptyQ() {
+inline bool atf_amc::tr_avl_EmptyQ() throw() {
     return _db.tr_avl_root == NULL;
 }
 
 // --- atf_amc.FDb.tr_avl.InTreeQ
 // Return true if row is in the tree, false otherwise
-inline bool atf_amc::tr_avl_InTreeQ(atf_amc::FAvl& row) {
+inline bool atf_amc::tr_avl_InTreeQ(atf_amc::FAvl& row) throw() {
     return row.tr_avl_up != (atf_amc::FAvl*)-1;
 }
 
 // --- atf_amc.FDb.tr_avl.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void atf_amc::tr_avl_RemoveAll() {
+inline void atf_amc::tr_avl_RemoveAll() throw() {
     tr_avl_RemoveAllImpl(_db.tr_avl_root, false);
     _db.tr_avl_root = NULL;
     _db.tr_avl_n = 0;
@@ -3538,7 +3538,7 @@ inline void atf_amc::tr_avl_RemoveAll() {
 
 // --- atf_amc.FDb.listtype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-inline void* atf_amc::listtype_AllocMem() {
+inline void* atf_amc::listtype_AllocMem() throw() {
     void *row = reinterpret_cast<atf_amc::FListtype*>(_db.listtype_data) + _db.listtype_n;
     if (_db.listtype_n == 10) row = NULL;
     if (row) _db.listtype_n++;
@@ -3547,13 +3547,13 @@ inline void* atf_amc::listtype_AllocMem() {
 
 // --- atf_amc.FDb.listtype.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::listtype_EmptyQ() {
+inline bool atf_amc::listtype_EmptyQ() throw() {
     return _db.listtype_n == 0;
 }
 
 // --- atf_amc.FDb.listtype.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::FListtype* atf_amc::listtype_Find(u64 t) {
+inline atf_amc::FListtype* atf_amc::listtype_Find(u64 t) throw() {
     u64 idx = t;
     u64 lim = _db.listtype_n;
     return idx < lim ? reinterpret_cast<atf_amc::FListtype*>(_db.listtype_data) + idx : NULL; // unsigned comparison with limit
@@ -3561,57 +3561,57 @@ inline atf_amc::FListtype* atf_amc::listtype_Find(u64 t) {
 
 // --- atf_amc.FDb.listtype.Getary
 // Return array pointer by value
-inline algo::aryptr<atf_amc::FListtype> atf_amc::listtype_Getary() {
+inline algo::aryptr<atf_amc::FListtype> atf_amc::listtype_Getary() throw() {
     return algo::aryptr<atf_amc::FListtype>(reinterpret_cast<atf_amc::FListtype*>(_db.listtype_data), _db.listtype_n);
 }
 
 // --- atf_amc.FDb.listtype.Max
 // Return constant 10 -- max. number of items in the pool
-inline i32 atf_amc::listtype_Max() {
+inline i32 atf_amc::listtype_Max() throw() {
     return 10;
 }
 
 // --- atf_amc.FDb.listtype.N
 // Return number of items in the array
-inline i32 atf_amc::listtype_N() {
+inline i32 atf_amc::listtype_N() throw() {
     (void)_db;//only to avoid -Wunused-parameter
     return _db.listtype_n;
 }
 
 // --- atf_amc.FDb.listtype.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline atf_amc::FListtype& atf_amc::listtype_qFind(u64 t) {
+inline atf_amc::FListtype& atf_amc::listtype_qFind(u64 t) throw() {
     return reinterpret_cast<atf_amc::FListtype*>(_db.listtype_data)[u64(t)];
 }
 
 // --- atf_amc.FDb.listtype.rowid_Get
 // Compute row id of element given element's address
-inline u64 atf_amc::listtype_rowid_Get(atf_amc::FListtype &row) {
+inline u64 atf_amc::listtype_rowid_Get(atf_amc::FListtype &row) throw() {
     u64 ret = u64(&row - reinterpret_cast<atf_amc::FListtype*>(_db.listtype_data));
     return u64(ret);
 }
 
 // --- atf_amc.FDb.ind_thash_elem.EmptyQ
 // Return true if hash is empty
-inline bool atf_amc::ind_thash_elem_EmptyQ() {
+inline bool atf_amc::ind_thash_elem_EmptyQ() throw() {
     return _db.ind_thash_elem_n == 0;
 }
 
 // --- atf_amc.FDb.ind_thash_elem.N
 // Return number of items in the hash
-inline i32 atf_amc::ind_thash_elem_N() {
+inline i32 atf_amc::ind_thash_elem_N() throw() {
     return _db.ind_thash_elem_n;
 }
 
 // --- atf_amc.FDb.thash_elem.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::thash_elem_EmptyQ() {
+inline bool atf_amc::thash_elem_EmptyQ() throw() {
     return _db.thash_elem_n == 0;
 }
 
 // --- atf_amc.FDb.thash_elem.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::FThashElem* atf_amc::thash_elem_Find(u64 t) {
+inline atf_amc::FThashElem* atf_amc::thash_elem_Find(u64 t) throw() {
     atf_amc::FThashElem *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.thash_elem_n))) {
         u64 x = t + 1;
@@ -3625,19 +3625,19 @@ inline atf_amc::FThashElem* atf_amc::thash_elem_Find(u64 t) {
 
 // --- atf_amc.FDb.thash_elem.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_amc::FThashElem* atf_amc::thash_elem_Last() {
+inline atf_amc::FThashElem* atf_amc::thash_elem_Last() throw() {
     return thash_elem_Find(u64(_db.thash_elem_n-1));
 }
 
 // --- atf_amc.FDb.thash_elem.N
 // Return number of items in the pool
-inline i32 atf_amc::thash_elem_N() {
+inline i32 atf_amc::thash_elem_N() throw() {
     return _db.thash_elem_n;
 }
 
 // --- atf_amc.FDb.thash_elem.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_amc::FThashElem& atf_amc::thash_elem_qFind(u64 t) {
+inline atf_amc::FThashElem& atf_amc::thash_elem_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -3647,94 +3647,94 @@ inline atf_amc::FThashElem& atf_amc::thash_elem_qFind(u64 t) {
 
 // --- atf_amc.FDb.bh_typec_curs.Access
 // Access current element. If not more elements, return NULL
-inline atf_amc::FTypeC& atf_amc::_db_bh_typec_curs_Access(_db_bh_typec_curs &curs) {
+inline atf_amc::FTypeC& atf_amc::_db_bh_typec_curs_Access(_db_bh_typec_curs &curs) throw() {
     return *curs.temp_elems[0];
 }
 
 // --- atf_amc.FDb.bh_typec_curs.ValidQ
 // Return true if Access() will return non-NULL.
-inline bool atf_amc::_db_bh_typec_curs_ValidQ(_db_bh_typec_curs &curs) {
+inline bool atf_amc::_db_bh_typec_curs_ValidQ(_db_bh_typec_curs &curs) throw() {
     return curs.temp_n > 0;
 }
 
 // --- atf_amc.FDb.zdl_h_typec_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_zdl_h_typec_curs_Reset(_db_zdl_h_typec_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_zdl_h_typec_curs_Reset(_db_zdl_h_typec_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.zdl_h_typec_head;
 }
 
 // --- atf_amc.FDb.zdl_h_typec_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_zdl_h_typec_curs_ValidQ(_db_zdl_h_typec_curs &curs) {
+inline bool atf_amc::_db_zdl_h_typec_curs_ValidQ(_db_zdl_h_typec_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.zdl_h_typec_curs.Next
 // proceed to next item
-inline void atf_amc::_db_zdl_h_typec_curs_Next(_db_zdl_h_typec_curs &curs) {
+inline void atf_amc::_db_zdl_h_typec_curs_Next(_db_zdl_h_typec_curs &curs) throw() {
     atf_amc::FTypeC *next = (*curs.row).zdl_h_typec_next;
     curs.row = next;
 }
 
 // --- atf_amc.FDb.zdl_h_typec_curs.Access
 // item access
-inline atf_amc::FTypeC& atf_amc::_db_zdl_h_typec_curs_Access(_db_zdl_h_typec_curs &curs) {
+inline atf_amc::FTypeC& atf_amc::_db_zdl_h_typec_curs_Access(_db_zdl_h_typec_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.zd_t_typec_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_zd_t_typec_curs_Reset(_db_zd_t_typec_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_zd_t_typec_curs_Reset(_db_zd_t_typec_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.zd_t_typec_head;
 }
 
 // --- atf_amc.FDb.zd_t_typec_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_zd_t_typec_curs_ValidQ(_db_zd_t_typec_curs &curs) {
+inline bool atf_amc::_db_zd_t_typec_curs_ValidQ(_db_zd_t_typec_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.zd_t_typec_curs.Next
 // proceed to next item
-inline void atf_amc::_db_zd_t_typec_curs_Next(_db_zd_t_typec_curs &curs) {
+inline void atf_amc::_db_zd_t_typec_curs_Next(_db_zd_t_typec_curs &curs) throw() {
     atf_amc::FTypeC *next = (*curs.row).zd_t_typec_next;
     curs.row = next;
 }
 
 // --- atf_amc.FDb.zd_t_typec_curs.Access
 // item access
-inline atf_amc::FTypeC& atf_amc::_db_zd_t_typec_curs_Access(_db_zd_t_typec_curs &curs) {
+inline atf_amc::FTypeC& atf_amc::_db_zd_t_typec_curs_Access(_db_zd_t_typec_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.zd_typed_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_zd_typed_curs_Reset(_db_zd_typed_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_zd_typed_curs_Reset(_db_zd_typed_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.zd_typed_head;
 }
 
 // --- atf_amc.FDb.zd_typed_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_zd_typed_curs_ValidQ(_db_zd_typed_curs &curs) {
+inline bool atf_amc::_db_zd_typed_curs_ValidQ(_db_zd_typed_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.zd_typed_curs.Next
 // proceed to next item
-inline void atf_amc::_db_zd_typed_curs_Next(_db_zd_typed_curs &curs) {
+inline void atf_amc::_db_zd_typed_curs_Next(_db_zd_typed_curs &curs) throw() {
     atf_amc::FTypeD *next = (*curs.row).zd_typed_next;
     curs.row = next;
 }
 
 // --- atf_amc.FDb.zd_typed_curs.Access
 // item access
-inline atf_amc::FTypeD& atf_amc::_db_zd_typed_curs_Access(_db_zd_typed_curs &curs) {
+inline atf_amc::FTypeD& atf_amc::_db_zd_typed_curs_Access(_db_zd_typed_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.zd_typed_delcurs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_zd_typed_delcurs_Reset(_db_zd_typed_delcurs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_zd_typed_delcurs_Reset(_db_zd_typed_delcurs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.zd_typed_head;
     if (curs.row) {
         curs.next = (*curs.row).zd_typed_next;
@@ -3743,13 +3743,13 @@ inline void atf_amc::_db_zd_typed_delcurs_Reset(_db_zd_typed_delcurs &curs, atf_
 
 // --- atf_amc.FDb.zd_typed_delcurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_zd_typed_delcurs_ValidQ(_db_zd_typed_delcurs &curs) {
+inline bool atf_amc::_db_zd_typed_delcurs_ValidQ(_db_zd_typed_delcurs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.zd_typed_delcurs.Next
 // proceed to next item
-inline void atf_amc::_db_zd_typed_delcurs_Next(_db_zd_typed_delcurs &curs) {
+inline void atf_amc::_db_zd_typed_delcurs_Next(_db_zd_typed_delcurs &curs) throw() {
     atf_amc::FTypeD *next = curs.next;
     curs.row = next;
     if (curs.row) {
@@ -3759,38 +3759,38 @@ inline void atf_amc::_db_zd_typed_delcurs_Next(_db_zd_typed_delcurs &curs) {
 
 // --- atf_amc.FDb.zd_typed_delcurs.Access
 // item access
-inline atf_amc::FTypeD& atf_amc::_db_zd_typed_delcurs_Access(_db_zd_typed_delcurs &curs) {
+inline atf_amc::FTypeD& atf_amc::_db_zd_typed_delcurs_Access(_db_zd_typed_delcurs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.zs_t_typed_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_zs_t_typed_curs_Reset(_db_zs_t_typed_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_zs_t_typed_curs_Reset(_db_zs_t_typed_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.zs_t_typed_head;
 }
 
 // --- atf_amc.FDb.zs_t_typed_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_zs_t_typed_curs_ValidQ(_db_zs_t_typed_curs &curs) {
+inline bool atf_amc::_db_zs_t_typed_curs_ValidQ(_db_zs_t_typed_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.zs_t_typed_curs.Next
 // proceed to next item
-inline void atf_amc::_db_zs_t_typed_curs_Next(_db_zs_t_typed_curs &curs) {
+inline void atf_amc::_db_zs_t_typed_curs_Next(_db_zs_t_typed_curs &curs) throw() {
     atf_amc::FTypeD *next = (*curs.row).zs_t_typed_next;
     curs.row = next;
 }
 
 // --- atf_amc.FDb.zs_t_typed_curs.Access
 // item access
-inline atf_amc::FTypeD& atf_amc::_db_zs_t_typed_curs_Access(_db_zs_t_typed_curs &curs) {
+inline atf_amc::FTypeD& atf_amc::_db_zs_t_typed_curs_Access(_db_zs_t_typed_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.zs_t_typed_delcurs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_zs_t_typed_delcurs_Reset(_db_zs_t_typed_delcurs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_zs_t_typed_delcurs_Reset(_db_zs_t_typed_delcurs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.zs_t_typed_head;
     if (curs.row) {
         curs.next = (*curs.row).zs_t_typed_next;
@@ -3799,13 +3799,13 @@ inline void atf_amc::_db_zs_t_typed_delcurs_Reset(_db_zs_t_typed_delcurs &curs, 
 
 // --- atf_amc.FDb.zs_t_typed_delcurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_zs_t_typed_delcurs_ValidQ(_db_zs_t_typed_delcurs &curs) {
+inline bool atf_amc::_db_zs_t_typed_delcurs_ValidQ(_db_zs_t_typed_delcurs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.zs_t_typed_delcurs.Next
 // proceed to next item
-inline void atf_amc::_db_zs_t_typed_delcurs_Next(_db_zs_t_typed_delcurs &curs) {
+inline void atf_amc::_db_zs_t_typed_delcurs_Next(_db_zs_t_typed_delcurs &curs) throw() {
     atf_amc::FTypeD *next = curs.next;
     curs.row = next;
     if (curs.row) {
@@ -3815,26 +3815,26 @@ inline void atf_amc::_db_zs_t_typed_delcurs_Next(_db_zs_t_typed_delcurs &curs) {
 
 // --- atf_amc.FDb.zs_t_typed_delcurs.Access
 // item access
-inline atf_amc::FTypeD& atf_amc::_db_zs_t_typed_delcurs_Access(_db_zs_t_typed_delcurs &curs) {
+inline atf_amc::FTypeD& atf_amc::_db_zs_t_typed_delcurs_Access(_db_zs_t_typed_delcurs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.cd_typed_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_cd_typed_curs_Reset(_db_cd_typed_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_cd_typed_curs_Reset(_db_cd_typed_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.cd_typed_head;
     curs.head = &parent.cd_typed_head;
 }
 
 // --- atf_amc.FDb.cd_typed_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_cd_typed_curs_ValidQ(_db_cd_typed_curs &curs) {
+inline bool atf_amc::_db_cd_typed_curs_ValidQ(_db_cd_typed_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.cd_typed_curs.Next
 // proceed to next item
-inline void atf_amc::_db_cd_typed_curs_Next(_db_cd_typed_curs &curs) {
+inline void atf_amc::_db_cd_typed_curs_Next(_db_cd_typed_curs &curs) throw() {
     atf_amc::FTypeD *next = (*curs.row).cd_typed_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -3844,13 +3844,13 @@ inline void atf_amc::_db_cd_typed_curs_Next(_db_cd_typed_curs &curs) {
 
 // --- atf_amc.FDb.cd_typed_curs.Access
 // item access
-inline atf_amc::FTypeD& atf_amc::_db_cd_typed_curs_Access(_db_cd_typed_curs &curs) {
+inline atf_amc::FTypeD& atf_amc::_db_cd_typed_curs_Access(_db_cd_typed_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.cd_typed_delcurs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_cd_typed_delcurs_Reset(_db_cd_typed_delcurs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_cd_typed_delcurs_Reset(_db_cd_typed_delcurs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.cd_typed_head;
     curs.head = &parent.cd_typed_head;
     if (curs.row) {
@@ -3863,13 +3863,13 @@ inline void atf_amc::_db_cd_typed_delcurs_Reset(_db_cd_typed_delcurs &curs, atf_
 
 // --- atf_amc.FDb.cd_typed_delcurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_cd_typed_delcurs_ValidQ(_db_cd_typed_delcurs &curs) {
+inline bool atf_amc::_db_cd_typed_delcurs_ValidQ(_db_cd_typed_delcurs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.cd_typed_delcurs.Next
 // proceed to next item
-inline void atf_amc::_db_cd_typed_delcurs_Next(_db_cd_typed_delcurs &curs) {
+inline void atf_amc::_db_cd_typed_delcurs_Next(_db_cd_typed_delcurs &curs) throw() {
     atf_amc::FTypeD *next = curs.next;
     curs.row = next;
     if (curs.row) {
@@ -3882,101 +3882,101 @@ inline void atf_amc::_db_cd_typed_delcurs_Next(_db_cd_typed_delcurs &curs) {
 
 // --- atf_amc.FDb.cd_typed_delcurs.Access
 // item access
-inline atf_amc::FTypeD& atf_amc::_db_cd_typed_delcurs_Access(_db_cd_typed_delcurs &curs) {
+inline atf_amc::FTypeD& atf_amc::_db_cd_typed_delcurs_Access(_db_cd_typed_delcurs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.zsl_h_typec_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_zsl_h_typec_curs_Reset(_db_zsl_h_typec_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_zsl_h_typec_curs_Reset(_db_zsl_h_typec_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.zsl_h_typec_head;
 }
 
 // --- atf_amc.FDb.zsl_h_typec_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_zsl_h_typec_curs_ValidQ(_db_zsl_h_typec_curs &curs) {
+inline bool atf_amc::_db_zsl_h_typec_curs_ValidQ(_db_zsl_h_typec_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.zsl_h_typec_curs.Next
 // proceed to next item
-inline void atf_amc::_db_zsl_h_typec_curs_Next(_db_zsl_h_typec_curs &curs) {
+inline void atf_amc::_db_zsl_h_typec_curs_Next(_db_zsl_h_typec_curs &curs) throw() {
     atf_amc::FTypeC *next = (*curs.row).zsl_h_typec_next;
     curs.row = next;
 }
 
 // --- atf_amc.FDb.zsl_h_typec_curs.Access
 // item access
-inline atf_amc::FTypeC& atf_amc::_db_zsl_h_typec_curs_Access(_db_zsl_h_typec_curs &curs) {
+inline atf_amc::FTypeC& atf_amc::_db_zsl_h_typec_curs_Access(_db_zsl_h_typec_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.zs_t_typec_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_zs_t_typec_curs_Reset(_db_zs_t_typec_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_zs_t_typec_curs_Reset(_db_zs_t_typec_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.zs_t_typec_head;
 }
 
 // --- atf_amc.FDb.zs_t_typec_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_zs_t_typec_curs_ValidQ(_db_zs_t_typec_curs &curs) {
+inline bool atf_amc::_db_zs_t_typec_curs_ValidQ(_db_zs_t_typec_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.zs_t_typec_curs.Next
 // proceed to next item
-inline void atf_amc::_db_zs_t_typec_curs_Next(_db_zs_t_typec_curs &curs) {
+inline void atf_amc::_db_zs_t_typec_curs_Next(_db_zs_t_typec_curs &curs) throw() {
     atf_amc::FTypeC *next = (*curs.row).zs_t_typec_next;
     curs.row = next;
 }
 
 // --- atf_amc.FDb.zs_t_typec_curs.Access
 // item access
-inline atf_amc::FTypeC& atf_amc::_db_zs_t_typec_curs_Access(_db_zs_t_typec_curs &curs) {
+inline atf_amc::FTypeC& atf_amc::_db_zs_t_typec_curs_Access(_db_zs_t_typec_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.zdl_hnt_typec_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_zdl_hnt_typec_curs_Reset(_db_zdl_hnt_typec_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_zdl_hnt_typec_curs_Reset(_db_zdl_hnt_typec_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.zdl_hnt_typec_head;
 }
 
 // --- atf_amc.FDb.zdl_hnt_typec_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_zdl_hnt_typec_curs_ValidQ(_db_zdl_hnt_typec_curs &curs) {
+inline bool atf_amc::_db_zdl_hnt_typec_curs_ValidQ(_db_zdl_hnt_typec_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.zdl_hnt_typec_curs.Next
 // proceed to next item
-inline void atf_amc::_db_zdl_hnt_typec_curs_Next(_db_zdl_hnt_typec_curs &curs) {
+inline void atf_amc::_db_zdl_hnt_typec_curs_Next(_db_zdl_hnt_typec_curs &curs) throw() {
     atf_amc::FTypeC *next = (*curs.row).zdl_hnt_typec_next;
     curs.row = next;
 }
 
 // --- atf_amc.FDb.zdl_hnt_typec_curs.Access
 // item access
-inline atf_amc::FTypeC& atf_amc::_db_zdl_hnt_typec_curs_Access(_db_zdl_hnt_typec_curs &curs) {
+inline atf_amc::FTypeC& atf_amc::_db_zdl_hnt_typec_curs_Access(_db_zdl_hnt_typec_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.cdl_h_typec_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_cdl_h_typec_curs_Reset(_db_cdl_h_typec_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_cdl_h_typec_curs_Reset(_db_cdl_h_typec_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.cdl_h_typec_head;
     curs.head = &parent.cdl_h_typec_head;
 }
 
 // --- atf_amc.FDb.cdl_h_typec_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_cdl_h_typec_curs_ValidQ(_db_cdl_h_typec_curs &curs) {
+inline bool atf_amc::_db_cdl_h_typec_curs_ValidQ(_db_cdl_h_typec_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.cdl_h_typec_curs.Next
 // proceed to next item
-inline void atf_amc::_db_cdl_h_typec_curs_Next(_db_cdl_h_typec_curs &curs) {
+inline void atf_amc::_db_cdl_h_typec_curs_Next(_db_cdl_h_typec_curs &curs) throw() {
     atf_amc::FTypeC *next = (*curs.row).cdl_h_typec_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -3986,26 +3986,26 @@ inline void atf_amc::_db_cdl_h_typec_curs_Next(_db_cdl_h_typec_curs &curs) {
 
 // --- atf_amc.FDb.cdl_h_typec_curs.Access
 // item access
-inline atf_amc::FTypeC& atf_amc::_db_cdl_h_typec_curs_Access(_db_cdl_h_typec_curs &curs) {
+inline atf_amc::FTypeC& atf_amc::_db_cdl_h_typec_curs_Access(_db_cdl_h_typec_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.cd_t_typec_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_cd_t_typec_curs_Reset(_db_cd_t_typec_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_cd_t_typec_curs_Reset(_db_cd_t_typec_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.cd_t_typec_head;
     curs.head = &parent.cd_t_typec_head;
 }
 
 // --- atf_amc.FDb.cd_t_typec_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_cd_t_typec_curs_ValidQ(_db_cd_t_typec_curs &curs) {
+inline bool atf_amc::_db_cd_t_typec_curs_ValidQ(_db_cd_t_typec_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.cd_t_typec_curs.Next
 // proceed to next item
-inline void atf_amc::_db_cd_t_typec_curs_Next(_db_cd_t_typec_curs &curs) {
+inline void atf_amc::_db_cd_t_typec_curs_Next(_db_cd_t_typec_curs &curs) throw() {
     atf_amc::FTypeC *next = (*curs.row).cd_t_typec_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -4015,26 +4015,26 @@ inline void atf_amc::_db_cd_t_typec_curs_Next(_db_cd_t_typec_curs &curs) {
 
 // --- atf_amc.FDb.cd_t_typec_curs.Access
 // item access
-inline atf_amc::FTypeC& atf_amc::_db_cd_t_typec_curs_Access(_db_cd_t_typec_curs &curs) {
+inline atf_amc::FTypeC& atf_amc::_db_cd_t_typec_curs_Access(_db_cd_t_typec_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.csl_h_typec_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_csl_h_typec_curs_Reset(_db_csl_h_typec_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_csl_h_typec_curs_Reset(_db_csl_h_typec_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.csl_h_typec_head;
     curs.head = &parent.csl_h_typec_head;
 }
 
 // --- atf_amc.FDb.csl_h_typec_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_csl_h_typec_curs_ValidQ(_db_csl_h_typec_curs &curs) {
+inline bool atf_amc::_db_csl_h_typec_curs_ValidQ(_db_csl_h_typec_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.csl_h_typec_curs.Next
 // proceed to next item
-inline void atf_amc::_db_csl_h_typec_curs_Next(_db_csl_h_typec_curs &curs) {
+inline void atf_amc::_db_csl_h_typec_curs_Next(_db_csl_h_typec_curs &curs) throw() {
     atf_amc::FTypeC *next = (*curs.row).csl_h_typec_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -4044,26 +4044,26 @@ inline void atf_amc::_db_csl_h_typec_curs_Next(_db_csl_h_typec_curs &curs) {
 
 // --- atf_amc.FDb.csl_h_typec_curs.Access
 // item access
-inline atf_amc::FTypeC& atf_amc::_db_csl_h_typec_curs_Access(_db_csl_h_typec_curs &curs) {
+inline atf_amc::FTypeC& atf_amc::_db_csl_h_typec_curs_Access(_db_csl_h_typec_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.cs_t_typec_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_cs_t_typec_curs_Reset(_db_cs_t_typec_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_cs_t_typec_curs_Reset(_db_cs_t_typec_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.cs_t_typec_head;
     curs.head = &parent.cs_t_typec_head;
 }
 
 // --- atf_amc.FDb.cs_t_typec_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_cs_t_typec_curs_ValidQ(_db_cs_t_typec_curs &curs) {
+inline bool atf_amc::_db_cs_t_typec_curs_ValidQ(_db_cs_t_typec_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.cs_t_typec_curs.Next
 // proceed to next item
-inline void atf_amc::_db_cs_t_typec_curs_Next(_db_cs_t_typec_curs &curs) {
+inline void atf_amc::_db_cs_t_typec_curs_Next(_db_cs_t_typec_curs &curs) throw() {
     atf_amc::FTypeC *next = (*curs.row).cs_t_typec_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -4073,126 +4073,126 @@ inline void atf_amc::_db_cs_t_typec_curs_Next(_db_cs_t_typec_curs &curs) {
 
 // --- atf_amc.FDb.cs_t_typec_curs.Access
 // item access
-inline atf_amc::FTypeC& atf_amc::_db_cs_t_typec_curs_Access(_db_cs_t_typec_curs &curs) {
+inline atf_amc::FTypeC& atf_amc::_db_cs_t_typec_curs_Access(_db_cs_t_typec_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.typea_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_typea_curs_Reset(_db_typea_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_typea_curs_Reset(_db_typea_curs &curs, atf_amc::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.FDb.typea_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_typea_curs_ValidQ(_db_typea_curs &curs) {
+inline bool atf_amc::_db_typea_curs_ValidQ(_db_typea_curs &curs) throw() {
     return curs.index < _db.typea_n;
 }
 
 // --- atf_amc.FDb.typea_curs.Next
 // proceed to next item
-inline void atf_amc::_db_typea_curs_Next(_db_typea_curs &curs) {
+inline void atf_amc::_db_typea_curs_Next(_db_typea_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FDb.typea_curs.Access
 // item access
-inline atf_amc::FTypeA& atf_amc::_db_typea_curs_Access(_db_typea_curs &curs) {
+inline atf_amc::FTypeA& atf_amc::_db_typea_curs_Access(_db_typea_curs &curs) throw() {
     return typea_qFind(i32(curs.index));
 }
 
 // --- atf_amc.FDb.types_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_types_curs_Reset(_db_types_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_types_curs_Reset(_db_types_curs &curs, atf_amc::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.FDb.types_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_types_curs_ValidQ(_db_types_curs &curs) {
+inline bool atf_amc::_db_types_curs_ValidQ(_db_types_curs &curs) throw() {
     return curs.index < _db.types_n;
 }
 
 // --- atf_amc.FDb.types_curs.Next
 // proceed to next item
-inline void atf_amc::_db_types_curs_Next(_db_types_curs &curs) {
+inline void atf_amc::_db_types_curs_Next(_db_types_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FDb.types_curs.Access
 // item access
-inline atf_amc::FTypeS& atf_amc::_db_types_curs_Access(_db_types_curs &curs) {
+inline atf_amc::FTypeS& atf_amc::_db_types_curs_Access(_db_types_curs &curs) throw() {
     return types_qFind(u64(curs.index));
 }
 
 // --- atf_amc.FDb.typet_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_typet_curs_Reset(_db_typet_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_typet_curs_Reset(_db_typet_curs &curs, atf_amc::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.FDb.typet_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_typet_curs_ValidQ(_db_typet_curs &curs) {
+inline bool atf_amc::_db_typet_curs_ValidQ(_db_typet_curs &curs) throw() {
     return curs.index < _db.typet_n;
 }
 
 // --- atf_amc.FDb.typet_curs.Next
 // proceed to next item
-inline void atf_amc::_db_typet_curs_Next(_db_typet_curs &curs) {
+inline void atf_amc::_db_typet_curs_Next(_db_typet_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FDb.typet_curs.Access
 // item access
-inline atf_amc::FTypeT& atf_amc::_db_typet_curs_Access(_db_typet_curs &curs) {
+inline atf_amc::FTypeT& atf_amc::_db_typet_curs_Access(_db_typet_curs &curs) throw() {
     return typet_qFind(u64(curs.index));
 }
 
 // --- atf_amc.FDb.cstring_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_cstring_curs_Reset(_db_cstring_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_cstring_curs_Reset(_db_cstring_curs &curs, atf_amc::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.FDb.cstring_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_cstring_curs_ValidQ(_db_cstring_curs &curs) {
+inline bool atf_amc::_db_cstring_curs_ValidQ(_db_cstring_curs &curs) throw() {
     return curs.index < _db.cstring_n;
 }
 
 // --- atf_amc.FDb.cstring_curs.Next
 // proceed to next item
-inline void atf_amc::_db_cstring_curs_Next(_db_cstring_curs &curs) {
+inline void atf_amc::_db_cstring_curs_Next(_db_cstring_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FDb.cstring_curs.Access
 // item access
-inline atf_amc::FCstring& atf_amc::_db_cstring_curs_Access(_db_cstring_curs &curs) {
+inline atf_amc::FCstring& atf_amc::_db_cstring_curs_Access(_db_cstring_curs &curs) throw() {
     return cstring_qFind(u64(curs.index));
 }
 
 // --- atf_amc.FDb.cd_in_msg_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_cd_in_msg_curs_Reset(_db_cd_in_msg_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_cd_in_msg_curs_Reset(_db_cd_in_msg_curs &curs, atf_amc::FDb &parent) throw() {
     curs.row = parent.cd_in_msg_head;
     curs.head = &parent.cd_in_msg_head;
 }
 
 // --- atf_amc.FDb.cd_in_msg_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_cd_in_msg_curs_ValidQ(_db_cd_in_msg_curs &curs) {
+inline bool atf_amc::_db_cd_in_msg_curs_ValidQ(_db_cd_in_msg_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.cd_in_msg_curs.Next
 // proceed to next item
-inline void atf_amc::_db_cd_in_msg_curs_Next(_db_cd_in_msg_curs &curs) {
+inline void atf_amc::_db_cd_in_msg_curs_Next(_db_cd_in_msg_curs &curs) throw() {
     atf_amc::Msgbuf *next = (*curs.row).cd_in_msg_next;
     curs.row = next;
     if (curs.row == *curs.head) {
@@ -4202,37 +4202,37 @@ inline void atf_amc::_db_cd_in_msg_curs_Next(_db_cd_in_msg_curs &curs) {
 
 // --- atf_amc.FDb.cd_in_msg_curs.Access
 // item access
-inline atf_amc::Msgbuf& atf_amc::_db_cd_in_msg_curs_Access(_db_cd_in_msg_curs &curs) {
+inline atf_amc::Msgbuf& atf_amc::_db_cd_in_msg_curs_Access(_db_cd_in_msg_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.amctest_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_amctest_curs_Reset(_db_amctest_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_amctest_curs_Reset(_db_amctest_curs &curs, atf_amc::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.FDb.amctest_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_amctest_curs_ValidQ(_db_amctest_curs &curs) {
+inline bool atf_amc::_db_amctest_curs_ValidQ(_db_amctest_curs &curs) throw() {
     return curs.index < _db.amctest_n;
 }
 
 // --- atf_amc.FDb.amctest_curs.Next
 // proceed to next item
-inline void atf_amc::_db_amctest_curs_Next(_db_amctest_curs &curs) {
+inline void atf_amc::_db_amctest_curs_Next(_db_amctest_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FDb.amctest_curs.Access
 // item access
-inline atf_amc::FAmctest& atf_amc::_db_amctest_curs_Access(_db_amctest_curs &curs) {
+inline atf_amc::FAmctest& atf_amc::_db_amctest_curs_Access(_db_amctest_curs &curs) throw() {
     return amctest_qFind(u64(curs.index));
 }
 
 // --- atf_amc.FDb.c_typek_curs.Reset
-inline void atf_amc::_db_c_typek_curs_Reset(_db_c_typek_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_c_typek_curs_Reset(_db_c_typek_curs &curs, atf_amc::FDb &parent) throw() {
     curs.elems = parent.c_typek_elems;
     curs.n_elems = parent.c_typek_n;
     curs.index = 0;
@@ -4240,24 +4240,24 @@ inline void atf_amc::_db_c_typek_curs_Reset(_db_c_typek_curs &curs, atf_amc::FDb
 
 // --- atf_amc.FDb.c_typek_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_c_typek_curs_ValidQ(_db_c_typek_curs &curs) {
+inline bool atf_amc::_db_c_typek_curs_ValidQ(_db_c_typek_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_amc.FDb.c_typek_curs.Next
 // proceed to next item
-inline void atf_amc::_db_c_typek_curs_Next(_db_c_typek_curs &curs) {
+inline void atf_amc::_db_c_typek_curs_Next(_db_c_typek_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FDb.c_typek_curs.Access
 // item access
-inline atf_amc::FTypeK& atf_amc::_db_c_typek_curs_Access(_db_c_typek_curs &curs) {
+inline atf_amc::FTypeK& atf_amc::_db_c_typek_curs_Access(_db_c_typek_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- atf_amc.FDb.c_typek_oncecurs.Reset
-inline void atf_amc::_db_c_typek_oncecurs_Reset(_db_c_typek_oncecurs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_c_typek_oncecurs_Reset(_db_c_typek_oncecurs &curs, atf_amc::FDb &parent) throw() {
     curs.elems = parent.c_typek_elems;
     curs.n_elems = parent.c_typek_n;
     parent.c_typek_n = 0;
@@ -4266,165 +4266,165 @@ inline void atf_amc::_db_c_typek_oncecurs_Reset(_db_c_typek_oncecurs &curs, atf_
 
 // --- atf_amc.FDb.c_typek_oncecurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_c_typek_oncecurs_ValidQ(_db_c_typek_oncecurs &curs) {
+inline bool atf_amc::_db_c_typek_oncecurs_ValidQ(_db_c_typek_oncecurs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_amc.FDb.c_typek_oncecurs.Next
 // proceed to next item
-inline void atf_amc::_db_c_typek_oncecurs_Next(_db_c_typek_oncecurs &curs) {
+inline void atf_amc::_db_c_typek_oncecurs_Next(_db_c_typek_oncecurs &curs) throw() {
     curs.elems[curs.index]->_db_c_typek_in_ary = false;
     curs.index++;
 }
 
 // --- atf_amc.FDb.c_typek_oncecurs.Access
 // item access
-inline atf_amc::FTypeK& atf_amc::_db_c_typek_oncecurs_Access(_db_c_typek_oncecurs &curs) {
+inline atf_amc::FTypeK& atf_amc::_db_c_typek_oncecurs_Access(_db_c_typek_oncecurs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- atf_amc.FDb.avl_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_avl_curs_Reset(_db_avl_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_avl_curs_Reset(_db_avl_curs &curs, atf_amc::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.FDb.avl_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_avl_curs_ValidQ(_db_avl_curs &curs) {
+inline bool atf_amc::_db_avl_curs_ValidQ(_db_avl_curs &curs) throw() {
     return curs.index < _db.avl_n;
 }
 
 // --- atf_amc.FDb.avl_curs.Next
 // proceed to next item
-inline void atf_amc::_db_avl_curs_Next(_db_avl_curs &curs) {
+inline void atf_amc::_db_avl_curs_Next(_db_avl_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FDb.avl_curs.Access
 // item access
-inline atf_amc::FAvl& atf_amc::_db_avl_curs_Access(_db_avl_curs &curs) {
+inline atf_amc::FAvl& atf_amc::_db_avl_curs_Access(_db_avl_curs &curs) throw() {
     return avl_qFind(u64(curs.index));
 }
 
 // --- atf_amc.FDb.tr_avl_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_tr_avl_curs_Reset(_db_tr_avl_curs &curs, atf_amc::FDb& ) {
+inline void atf_amc::_db_tr_avl_curs_Reset(_db_tr_avl_curs &curs, atf_amc::FDb& ) throw() {
     curs.row = tr_avl_First();
 }
 
 // --- atf_amc.FDb.tr_avl_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_tr_avl_curs_ValidQ(_db_tr_avl_curs &curs) {
+inline bool atf_amc::_db_tr_avl_curs_ValidQ(_db_tr_avl_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FDb.tr_avl_curs.Next
 // proceed to next item
-inline void atf_amc::_db_tr_avl_curs_Next(_db_tr_avl_curs &curs) {
+inline void atf_amc::_db_tr_avl_curs_Next(_db_tr_avl_curs &curs) throw() {
     curs.row = tr_avl_Next(*curs.row);
 }
 
 // --- atf_amc.FDb.tr_avl_curs.Access
 // item access
-inline atf_amc::FAvl& atf_amc::_db_tr_avl_curs_Access(_db_tr_avl_curs &curs) {
+inline atf_amc::FAvl& atf_amc::_db_tr_avl_curs_Access(_db_tr_avl_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FDb.listtype_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_listtype_curs_Reset(_db_listtype_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_listtype_curs_Reset(_db_listtype_curs &curs, atf_amc::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.FDb.listtype_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_listtype_curs_ValidQ(_db_listtype_curs &curs) {
+inline bool atf_amc::_db_listtype_curs_ValidQ(_db_listtype_curs &curs) throw() {
     return u64(curs.index) < u64(curs.parent->listtype_n);
 }
 
 // --- atf_amc.FDb.listtype_curs.Next
 // proceed to next item
-inline void atf_amc::_db_listtype_curs_Next(_db_listtype_curs &curs) {
+inline void atf_amc::_db_listtype_curs_Next(_db_listtype_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FDb.listtype_curs.Access
 // item access
-inline atf_amc::FListtype& atf_amc::_db_listtype_curs_Access(_db_listtype_curs &curs) {
+inline atf_amc::FListtype& atf_amc::_db_listtype_curs_Access(_db_listtype_curs &curs) throw() {
     return listtype_qFind(u64(curs.index));
 }
 
 // --- atf_amc.FDb.thash_elem_curs.Reset
 // cursor points to valid item
-inline void atf_amc::_db_thash_elem_curs_Reset(_db_thash_elem_curs &curs, atf_amc::FDb &parent) {
+inline void atf_amc::_db_thash_elem_curs_Reset(_db_thash_elem_curs &curs, atf_amc::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.FDb.thash_elem_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::_db_thash_elem_curs_ValidQ(_db_thash_elem_curs &curs) {
+inline bool atf_amc::_db_thash_elem_curs_ValidQ(_db_thash_elem_curs &curs) throw() {
     return curs.index < _db.thash_elem_n;
 }
 
 // --- atf_amc.FDb.thash_elem_curs.Next
 // proceed to next item
-inline void atf_amc::_db_thash_elem_curs_Next(_db_thash_elem_curs &curs) {
+inline void atf_amc::_db_thash_elem_curs_Next(_db_thash_elem_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FDb.thash_elem_curs.Access
 // item access
-inline atf_amc::FThashElem& atf_amc::_db_thash_elem_curs_Access(_db_thash_elem_curs &curs) {
+inline atf_amc::FThashElem& atf_amc::_db_thash_elem_curs_Access(_db_thash_elem_curs &curs) throw() {
     return thash_elem_qFind(u64(curs.index));
 }
 
 // --- atf_amc.TypeG..Hash
-inline u32 atf_amc::TypeG_Hash(u32 prev, const atf_amc::TypeG& rhs) {
+inline u32 atf_amc::TypeG_Hash(u32 prev, const atf_amc::TypeG& rhs) throw() {
     prev = i32_Hash(prev, rhs.typeg);
     return prev;
 }
 
 // --- atf_amc.TypeG..EqOp
-inline bool atf_amc::TypeG::operator ==(const atf_amc::TypeG &rhs) const {
+inline bool atf_amc::TypeG::operator ==(const atf_amc::TypeG &rhs) const throw() {
     return atf_amc::TypeG_Eq(const_cast<atf_amc::TypeG&>(*this),const_cast<atf_amc::TypeG&>(rhs));
 }
 
 // --- atf_amc.TypeG..NeOp
-inline bool atf_amc::TypeG::operator !=(const atf_amc::TypeG &rhs) const {
+inline bool atf_amc::TypeG::operator !=(const atf_amc::TypeG &rhs) const throw() {
     return !atf_amc::TypeG_Eq(const_cast<atf_amc::TypeG&>(*this),const_cast<atf_amc::TypeG&>(rhs));
 }
 
 // --- atf_amc.TypeG..LtOp
-inline bool atf_amc::TypeG::operator <(const atf_amc::TypeG &rhs) const {
+inline bool atf_amc::TypeG::operator <(const atf_amc::TypeG &rhs) const throw() {
     return atf_amc::TypeG_Lt(const_cast<atf_amc::TypeG&>(*this),const_cast<atf_amc::TypeG&>(rhs));
 }
 
 // --- atf_amc.TypeG..GtOp
-inline bool atf_amc::TypeG::operator >(const atf_amc::TypeG &rhs) const {
+inline bool atf_amc::TypeG::operator >(const atf_amc::TypeG &rhs) const throw() {
     return atf_amc::TypeG_Lt(const_cast<atf_amc::TypeG&>(rhs),const_cast<atf_amc::TypeG&>(*this));
 }
 
 // --- atf_amc.TypeG..LeOp
-inline bool atf_amc::TypeG::operator <=(const atf_amc::TypeG &rhs) const {
+inline bool atf_amc::TypeG::operator <=(const atf_amc::TypeG &rhs) const throw() {
     return !atf_amc::TypeG_Lt(const_cast<atf_amc::TypeG&>(rhs),const_cast<atf_amc::TypeG&>(*this));
 }
 
 // --- atf_amc.TypeG..GeOp
-inline bool atf_amc::TypeG::operator >=(const atf_amc::TypeG &rhs) const {
+inline bool atf_amc::TypeG::operator >=(const atf_amc::TypeG &rhs) const throw() {
     return !atf_amc::TypeG_Lt(const_cast<atf_amc::TypeG&>(*this),const_cast<atf_amc::TypeG&>(rhs));
 }
 
 // --- atf_amc.TypeG..Lt
-inline bool atf_amc::TypeG_Lt(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) {
+inline bool atf_amc::TypeG_Lt(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) throw() {
     return i32_Lt(lhs.typeg, rhs.typeg);
 }
 
 // --- atf_amc.TypeG..Cmp
-inline i32 atf_amc::TypeG_Cmp(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) {
+inline i32 atf_amc::TypeG_Cmp(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) throw() {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typeg, rhs.typeg);
     return retval;
@@ -4437,7 +4437,7 @@ inline void atf_amc::TypeG_Init(atf_amc::TypeG& typeg) {
 }
 
 // --- atf_amc.TypeG..Eq
-inline bool atf_amc::TypeG_Eq(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) {
+inline bool atf_amc::TypeG_Eq(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) throw() {
     bool retval = true;
     retval = i32_Eq(lhs.typeg, rhs.typeg);
     return retval;
@@ -4445,7 +4445,7 @@ inline bool atf_amc::TypeG_Eq(atf_amc::TypeG& lhs, atf_amc::TypeG& rhs) {
 
 // --- atf_amc.TypeG..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::TypeG_Update(atf_amc::TypeG &lhs, atf_amc::TypeG& rhs) {
+inline bool atf_amc::TypeG_Update(atf_amc::TypeG &lhs, atf_amc::TypeG& rhs) throw() {
     bool ret = !TypeG_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -4454,7 +4454,7 @@ inline bool atf_amc::TypeG_Update(atf_amc::TypeG &lhs, atf_amc::TypeG& rhs) {
 }
 
 // --- atf_amc.TypeG..Ctor
-inline  atf_amc::TypeG::TypeG() {
+inline  atf_amc::TypeG::TypeG() throw() {
     atf_amc::TypeG_Init(*this);
 }
 
@@ -4462,7 +4462,7 @@ inline  atf_amc::TypeG::TypeG() {
 // Return pointer to optional last element (NULL if none)
 // The parent's length field is assumed to have already been checked for validity.
 // If the parent's lengthis too short to allow a full-sized typeg, return NULL.
-inline atf_amc::TypeG* atf_amc::typeg_Get(atf_amc::FOptG& optg) {
+inline atf_amc::TypeG* atf_amc::typeg_Get(atf_amc::FOptG& optg) throw() {
     i32 totlen = i32(optg.length);
     u8 *end = (u8*)&optg + sizeof(atf_amc::FOptG);
     atf_amc::TypeG *ptr = (atf_amc::TypeG*)end;
@@ -4472,13 +4472,13 @@ inline atf_amc::TypeG* atf_amc::typeg_Get(atf_amc::FOptG& optg) {
 
 // --- atf_amc.FOptG..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::FOptG& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::FOptG& parent) throw() {
     return i32(const_cast<atf_amc::FOptG&>(parent).length);
 }
 
 // --- atf_amc.FOptG..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::FOptG& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::FOptG& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::FOptG&>(row).length));
 }
 
@@ -4489,19 +4489,19 @@ inline void atf_amc::FOptG_Init(atf_amc::FOptG& optg) {
 }
 
 // --- atf_amc.FOptG..Ctor
-inline  atf_amc::FOptG::FOptG() {
+inline  atf_amc::FOptG::FOptG() throw() {
     atf_amc::FOptG_Init(*this);
 }
 
 // --- atf_amc.FPerfSortString.orig.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::orig_EmptyQ(atf_amc::FPerfSortString& parent) {
+inline bool atf_amc::orig_EmptyQ(atf_amc::FPerfSortString& parent) throw() {
     return parent.orig_n == 0;
 }
 
 // --- atf_amc.FPerfSortString.orig.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::Cstr* atf_amc::orig_Find(atf_amc::FPerfSortString& parent, u64 t) {
+inline atf_amc::Cstr* atf_amc::orig_Find(atf_amc::FPerfSortString& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.orig_n;
     if (idx >= lim) return NULL;
@@ -4510,32 +4510,32 @@ inline atf_amc::Cstr* atf_amc::orig_Find(atf_amc::FPerfSortString& parent, u64 t
 
 // --- atf_amc.FPerfSortString.orig.Getary
 // Return array pointer by value
-inline algo::aryptr<atf_amc::Cstr> atf_amc::orig_Getary(const atf_amc::FPerfSortString& parent) {
+inline algo::aryptr<atf_amc::Cstr> atf_amc::orig_Getary(const atf_amc::FPerfSortString& parent) throw() {
     return algo::aryptr<atf_amc::Cstr>(parent.orig_elems, parent.orig_n);
 }
 
 // --- atf_amc.FPerfSortString.orig.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_amc::Cstr* atf_amc::orig_Last(atf_amc::FPerfSortString& parent) {
+inline atf_amc::Cstr* atf_amc::orig_Last(atf_amc::FPerfSortString& parent) throw() {
     return orig_Find(parent, u64(parent.orig_n-1));
 }
 
 // --- atf_amc.FPerfSortString.orig.Max
 // Return max. number of items in the array
-inline i32 atf_amc::orig_Max(atf_amc::FPerfSortString& parent) {
+inline i32 atf_amc::orig_Max(atf_amc::FPerfSortString& parent) throw() {
     (void)parent;
     return parent.orig_max;
 }
 
 // --- atf_amc.FPerfSortString.orig.N
 // Return number of items in the array
-inline i32 atf_amc::orig_N(const atf_amc::FPerfSortString& parent) {
+inline i32 atf_amc::orig_N(const atf_amc::FPerfSortString& parent) throw() {
     return parent.orig_n;
 }
 
 // --- atf_amc.FPerfSortString.orig.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void atf_amc::orig_Reserve(atf_amc::FPerfSortString& parent, int n) {
+inline void atf_amc::orig_Reserve(atf_amc::FPerfSortString& parent, int n) throw() {
     u32 new_n = parent.orig_n + n;
     if (UNLIKELY(new_n > parent.orig_max)) {
         orig_AbsReserve(parent, new_n);
@@ -4544,32 +4544,32 @@ inline void atf_amc::orig_Reserve(atf_amc::FPerfSortString& parent, int n) {
 
 // --- atf_amc.FPerfSortString.orig.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_amc::Cstr& atf_amc::orig_qFind(atf_amc::FPerfSortString& parent, u64 t) {
+inline atf_amc::Cstr& atf_amc::orig_qFind(atf_amc::FPerfSortString& parent, u64 t) throw() {
     return parent.orig_elems[t];
 }
 
 // --- atf_amc.FPerfSortString.orig.qLast
 // Return reference to last element of array. No bounds checking
-inline atf_amc::Cstr& atf_amc::orig_qLast(atf_amc::FPerfSortString& parent) {
+inline atf_amc::Cstr& atf_amc::orig_qLast(atf_amc::FPerfSortString& parent) throw() {
     return orig_qFind(parent, u64(parent.orig_n-1));
 }
 
 // --- atf_amc.FPerfSortString.orig.rowid_Get
 // Return row id of specified element
-inline u64 atf_amc::orig_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) {
+inline u64 atf_amc::orig_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) throw() {
     u64 id = &elem - parent.orig_elems;
     return u64(id);
 }
 
 // --- atf_amc.FPerfSortString.sorted1.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::sorted1_EmptyQ(atf_amc::FPerfSortString& parent) {
+inline bool atf_amc::sorted1_EmptyQ(atf_amc::FPerfSortString& parent) throw() {
     return parent.sorted1_n == 0;
 }
 
 // --- atf_amc.FPerfSortString.sorted1.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::Cstr* atf_amc::sorted1_Find(atf_amc::FPerfSortString& parent, u64 t) {
+inline atf_amc::Cstr* atf_amc::sorted1_Find(atf_amc::FPerfSortString& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.sorted1_n;
     if (idx >= lim) return NULL;
@@ -4578,32 +4578,32 @@ inline atf_amc::Cstr* atf_amc::sorted1_Find(atf_amc::FPerfSortString& parent, u6
 
 // --- atf_amc.FPerfSortString.sorted1.Getary
 // Return array pointer by value
-inline algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_Getary(const atf_amc::FPerfSortString& parent) {
+inline algo::aryptr<atf_amc::Cstr> atf_amc::sorted1_Getary(const atf_amc::FPerfSortString& parent) throw() {
     return algo::aryptr<atf_amc::Cstr>(parent.sorted1_elems, parent.sorted1_n);
 }
 
 // --- atf_amc.FPerfSortString.sorted1.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_amc::Cstr* atf_amc::sorted1_Last(atf_amc::FPerfSortString& parent) {
+inline atf_amc::Cstr* atf_amc::sorted1_Last(atf_amc::FPerfSortString& parent) throw() {
     return sorted1_Find(parent, u64(parent.sorted1_n-1));
 }
 
 // --- atf_amc.FPerfSortString.sorted1.Max
 // Return max. number of items in the array
-inline i32 atf_amc::sorted1_Max(atf_amc::FPerfSortString& parent) {
+inline i32 atf_amc::sorted1_Max(atf_amc::FPerfSortString& parent) throw() {
     (void)parent;
     return parent.sorted1_max;
 }
 
 // --- atf_amc.FPerfSortString.sorted1.N
 // Return number of items in the array
-inline i32 atf_amc::sorted1_N(const atf_amc::FPerfSortString& parent) {
+inline i32 atf_amc::sorted1_N(const atf_amc::FPerfSortString& parent) throw() {
     return parent.sorted1_n;
 }
 
 // --- atf_amc.FPerfSortString.sorted1.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void atf_amc::sorted1_Reserve(atf_amc::FPerfSortString& parent, int n) {
+inline void atf_amc::sorted1_Reserve(atf_amc::FPerfSortString& parent, int n) throw() {
     u32 new_n = parent.sorted1_n + n;
     if (UNLIKELY(new_n > parent.sorted1_max)) {
         sorted1_AbsReserve(parent, new_n);
@@ -4612,31 +4612,31 @@ inline void atf_amc::sorted1_Reserve(atf_amc::FPerfSortString& parent, int n) {
 
 // --- atf_amc.FPerfSortString.sorted1.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_amc::Cstr& atf_amc::sorted1_qFind(atf_amc::FPerfSortString& parent, u64 t) {
+inline atf_amc::Cstr& atf_amc::sorted1_qFind(atf_amc::FPerfSortString& parent, u64 t) throw() {
     return parent.sorted1_elems[t];
 }
 
 // --- atf_amc.FPerfSortString.sorted1.qLast
 // Return reference to last element of array. No bounds checking
-inline atf_amc::Cstr& atf_amc::sorted1_qLast(atf_amc::FPerfSortString& parent) {
+inline atf_amc::Cstr& atf_amc::sorted1_qLast(atf_amc::FPerfSortString& parent) throw() {
     return sorted1_qFind(parent, u64(parent.sorted1_n-1));
 }
 
 // --- atf_amc.FPerfSortString.sorted1.rowid_Get
 // Return row id of specified element
-inline u64 atf_amc::sorted1_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) {
+inline u64 atf_amc::sorted1_rowid_Get(atf_amc::FPerfSortString& parent, atf_amc::Cstr &elem) throw() {
     u64 id = &elem - parent.sorted1_elems;
     return u64(id);
 }
 
 // --- atf_amc.FPerfSortString.orig_curs.Next
 // proceed to next item
-inline void atf_amc::FPerfSortString_orig_curs_Next(FPerfSortString_orig_curs &curs) {
+inline void atf_amc::FPerfSortString_orig_curs_Next(FPerfSortString_orig_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FPerfSortString.orig_curs.Reset
-inline void atf_amc::FPerfSortString_orig_curs_Reset(FPerfSortString_orig_curs &curs, atf_amc::FPerfSortString &parent) {
+inline void atf_amc::FPerfSortString_orig_curs_Reset(FPerfSortString_orig_curs &curs, atf_amc::FPerfSortString &parent) throw() {
     curs.elems = parent.orig_elems;
     curs.n_elems = parent.orig_n;
     curs.index = 0;
@@ -4644,24 +4644,24 @@ inline void atf_amc::FPerfSortString_orig_curs_Reset(FPerfSortString_orig_curs &
 
 // --- atf_amc.FPerfSortString.orig_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::FPerfSortString_orig_curs_ValidQ(FPerfSortString_orig_curs &curs) {
+inline bool atf_amc::FPerfSortString_orig_curs_ValidQ(FPerfSortString_orig_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_amc.FPerfSortString.orig_curs.Access
 // item access
-inline atf_amc::Cstr& atf_amc::FPerfSortString_orig_curs_Access(FPerfSortString_orig_curs &curs) {
+inline atf_amc::Cstr& atf_amc::FPerfSortString_orig_curs_Access(FPerfSortString_orig_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- atf_amc.FPerfSortString.sorted1_curs.Next
 // proceed to next item
-inline void atf_amc::FPerfSortString_sorted1_curs_Next(FPerfSortString_sorted1_curs &curs) {
+inline void atf_amc::FPerfSortString_sorted1_curs_Next(FPerfSortString_sorted1_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FPerfSortString.sorted1_curs.Reset
-inline void atf_amc::FPerfSortString_sorted1_curs_Reset(FPerfSortString_sorted1_curs &curs, atf_amc::FPerfSortString &parent) {
+inline void atf_amc::FPerfSortString_sorted1_curs_Reset(FPerfSortString_sorted1_curs &curs, atf_amc::FPerfSortString &parent) throw() {
     curs.elems = parent.sorted1_elems;
     curs.n_elems = parent.sorted1_n;
     curs.index = 0;
@@ -4669,13 +4669,13 @@ inline void atf_amc::FPerfSortString_sorted1_curs_Reset(FPerfSortString_sorted1_
 
 // --- atf_amc.FPerfSortString.sorted1_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::FPerfSortString_sorted1_curs_ValidQ(FPerfSortString_sorted1_curs &curs) {
+inline bool atf_amc::FPerfSortString_sorted1_curs_ValidQ(FPerfSortString_sorted1_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_amc.FPerfSortString.sorted1_curs.Access
 // item access
-inline atf_amc::Cstr& atf_amc::FPerfSortString_sorted1_curs_Access(FPerfSortString_sorted1_curs &curs) {
+inline atf_amc::Cstr& atf_amc::FPerfSortString_sorted1_curs_Access(FPerfSortString_sorted1_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -4691,12 +4691,12 @@ inline void atf_amc::FPerfSortString_Init(atf_amc::FPerfSortString& parent) {
 }
 
 // --- atf_amc.FPerfSortString..Ctor
-inline  atf_amc::FPerfSortString::FPerfSortString() {
+inline  atf_amc::FPerfSortString::FPerfSortString() throw() {
     atf_amc::FPerfSortString_Init(*this);
 }
 
 // --- atf_amc.FPerfSortString..Dtor
-inline  atf_amc::FPerfSortString::~FPerfSortString() {
+inline  atf_amc::FPerfSortString::~FPerfSortString() throw() {
     atf_amc::FPerfSortString_Uninit(*this);
 }
 
@@ -4708,12 +4708,12 @@ inline void atf_amc::FThashElem_Init(atf_amc::FThashElem& thash_elem) {
 }
 
 // --- atf_amc.FThashElem..Ctor
-inline  atf_amc::FThashElem::FThashElem() {
+inline  atf_amc::FThashElem::FThashElem() throw() {
     atf_amc::FThashElem_Init(*this);
 }
 
 // --- atf_amc.FThashElem..Dtor
-inline  atf_amc::FThashElem::~FThashElem() {
+inline  atf_amc::FThashElem::~FThashElem() throw() {
     atf_amc::FThashElem_Uninit(*this);
 }
 
@@ -4742,18 +4742,18 @@ inline void atf_amc::FTypeC_Init(atf_amc::FTypeC& typec) {
 }
 
 // --- atf_amc.FTypeC..Ctor
-inline  atf_amc::FTypeC::FTypeC() {
+inline  atf_amc::FTypeC::FTypeC() throw() {
     atf_amc::FTypeC_Init(*this);
 }
 
 // --- atf_amc.FTypeC..Dtor
-inline  atf_amc::FTypeC::~FTypeC() {
+inline  atf_amc::FTypeC::~FTypeC() throw() {
     atf_amc::FTypeC_Uninit(*this);
 }
 
 // --- atf_amc.FTypeA.typec.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-inline void* atf_amc::typec_AllocMem(atf_amc::FTypeA& typea) {
+inline void* atf_amc::typec_AllocMem(atf_amc::FTypeA& typea) throw() {
     void *row = reinterpret_cast<atf_amc::FTypeC*>(typea.typec_data) + typea.typec_n;
     if (typea.typec_n == 10) row = NULL;
     if (row) typea.typec_n++;
@@ -4762,13 +4762,13 @@ inline void* atf_amc::typec_AllocMem(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.typec.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::typec_EmptyQ(atf_amc::FTypeA& typea) {
+inline bool atf_amc::typec_EmptyQ(atf_amc::FTypeA& typea) throw() {
     return typea.typec_n == 0;
 }
 
 // --- atf_amc.FTypeA.typec.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::FTypeC* atf_amc::typec_Find(atf_amc::FTypeA& typea, u64 t) {
+inline atf_amc::FTypeC* atf_amc::typec_Find(atf_amc::FTypeA& typea, u64 t) throw() {
     u64 idx = t;
     u64 lim = typea.typec_n;
     return idx < lim ? reinterpret_cast<atf_amc::FTypeC*>(typea.typec_data) + idx : NULL; // unsigned comparison with limit
@@ -4776,46 +4776,46 @@ inline atf_amc::FTypeC* atf_amc::typec_Find(atf_amc::FTypeA& typea, u64 t) {
 
 // --- atf_amc.FTypeA.typec.Getary
 // Return array pointer by value
-inline algo::aryptr<atf_amc::FTypeC> atf_amc::typec_Getary(atf_amc::FTypeA& typea) {
+inline algo::aryptr<atf_amc::FTypeC> atf_amc::typec_Getary(atf_amc::FTypeA& typea) throw() {
     return algo::aryptr<atf_amc::FTypeC>(reinterpret_cast<atf_amc::FTypeC*>(typea.typec_data), typea.typec_n);
 }
 
 // --- atf_amc.FTypeA.typec.Max
 // Return constant 10 -- max. number of items in the pool
-inline i32 atf_amc::typec_Max(atf_amc::FTypeA& typea) {
+inline i32 atf_amc::typec_Max(atf_amc::FTypeA& typea) throw() {
     (void)typea;
     return 10;
 }
 
 // --- atf_amc.FTypeA.typec.N
 // Return number of items in the array
-inline i32 atf_amc::typec_N(const atf_amc::FTypeA& typea) {
+inline i32 atf_amc::typec_N(const atf_amc::FTypeA& typea) throw() {
     (void)typea;//only to avoid -Wunused-parameter
     return typea.typec_n;
 }
 
 // --- atf_amc.FTypeA.typec.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline atf_amc::FTypeC& atf_amc::typec_qFind(atf_amc::FTypeA& typea, u64 t) {
+inline atf_amc::FTypeC& atf_amc::typec_qFind(atf_amc::FTypeA& typea, u64 t) throw() {
     return reinterpret_cast<atf_amc::FTypeC*>(typea.typec_data)[u64(t)];
 }
 
 // --- atf_amc.FTypeA.typec.rowid_Get
 // Compute row id of element given element's address
-inline u64 atf_amc::typec_rowid_Get(atf_amc::FTypeA& typea, atf_amc::FTypeC &row) {
+inline u64 atf_amc::typec_rowid_Get(atf_amc::FTypeA& typea, atf_amc::FTypeC &row) throw() {
     u64 ret = u64(&row - reinterpret_cast<atf_amc::FTypeC*>(typea.typec_data));
     return u64(ret);
 }
 
 // --- atf_amc.FTypeA.zdl_typeb.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::zdl_typeb_EmptyQ(atf_amc::FTypeA& typea) {
+inline bool atf_amc::zdl_typeb_EmptyQ(atf_amc::FTypeA& typea) throw() {
     return typea.zdl_typeb_head == NULL;
 }
 
 // --- atf_amc.FTypeA.zdl_typeb.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeB* atf_amc::zdl_typeb_First(atf_amc::FTypeA& typea) {
+inline atf_amc::FTypeB* atf_amc::zdl_typeb_First(atf_amc::FTypeA& typea) throw() {
     atf_amc::FTypeB *row = NULL;
     row = typea.zdl_typeb_head;
     return row;
@@ -4823,7 +4823,7 @@ inline atf_amc::FTypeB* atf_amc::zdl_typeb_First(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.zdl_typeb.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zdl_typeb_InLlistQ(atf_amc::FTypeB& row) {
+inline bool atf_amc::zdl_typeb_InLlistQ(atf_amc::FTypeB& row) throw() {
     bool result = false;
     result = !(row.zdl_typeb_next == (atf_amc::FTypeB*)-1);
     return result;
@@ -4831,7 +4831,7 @@ inline bool atf_amc::zdl_typeb_InLlistQ(atf_amc::FTypeB& row) {
 
 // --- atf_amc.FTypeA.zdl_typeb.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeB* atf_amc::zdl_typeb_Last(atf_amc::FTypeA& typea) {
+inline atf_amc::FTypeB* atf_amc::zdl_typeb_Last(atf_amc::FTypeA& typea) throw() {
     atf_amc::FTypeB *row = NULL;
     row = typea.zdl_typeb_tail;
     return row;
@@ -4839,25 +4839,25 @@ inline atf_amc::FTypeB* atf_amc::zdl_typeb_Last(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.zdl_typeb.N
 // Return number of items in the linked list
-inline i32 atf_amc::zdl_typeb_N(const atf_amc::FTypeA& typea) {
+inline i32 atf_amc::zdl_typeb_N(const atf_amc::FTypeA& typea) throw() {
     return typea.zdl_typeb_n;
 }
 
 // --- atf_amc.FTypeA.zdl_typeb.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeB* atf_amc::zdl_typeb_Next(atf_amc::FTypeB &row) {
+inline atf_amc::FTypeB* atf_amc::zdl_typeb_Next(atf_amc::FTypeB &row) throw() {
     return row.zdl_typeb_next;
 }
 
 // --- atf_amc.FTypeA.zdl_typeb.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FTypeB* atf_amc::zdl_typeb_Prev(atf_amc::FTypeB &row) {
+inline atf_amc::FTypeB* atf_amc::zdl_typeb_Prev(atf_amc::FTypeB &row) throw() {
     return row.zdl_typeb_prev;
 }
 
 // --- atf_amc.FTypeA.zdl_typeb.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeB& atf_amc::zdl_typeb_qLast(atf_amc::FTypeA& typea) {
+inline atf_amc::FTypeB& atf_amc::zdl_typeb_qLast(atf_amc::FTypeA& typea) throw() {
     atf_amc::FTypeB *row = NULL;
     row = typea.zdl_typeb_tail;
     return *row;
@@ -4865,13 +4865,13 @@ inline atf_amc::FTypeB& atf_amc::zdl_typeb_qLast(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.bh_typeb.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::bh_typeb_EmptyQ(atf_amc::FTypeA& typea) {
+inline bool atf_amc::bh_typeb_EmptyQ(atf_amc::FTypeA& typea) throw() {
     return typea.bh_typeb_n == 0;
 }
 
 // --- atf_amc.FTypeA.bh_typeb.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeB* atf_amc::bh_typeb_First(atf_amc::FTypeA& typea) {
+inline atf_amc::FTypeB* atf_amc::bh_typeb_First(atf_amc::FTypeA& typea) throw() {
     atf_amc::FTypeB *row = NULL;
     if (typea.bh_typeb_n > 0) {
         row = typea.bh_typeb_elems[0];
@@ -4881,7 +4881,7 @@ inline atf_amc::FTypeB* atf_amc::bh_typeb_First(atf_amc::FTypeA& typea) {
 
 // --- atf_amc.FTypeA.bh_typeb.InBheapQ
 // Return true if row is in index, false otherwise
-inline bool atf_amc::bh_typeb_InBheapQ(atf_amc::FTypeB& row) {
+inline bool atf_amc::bh_typeb_InBheapQ(atf_amc::FTypeB& row) throw() {
     bool result = false;
     result = row.bh_typeb_idx != -1;
     return result;
@@ -4889,81 +4889,81 @@ inline bool atf_amc::bh_typeb_InBheapQ(atf_amc::FTypeB& row) {
 
 // --- atf_amc.FTypeA.bh_typeb.N
 // Return number of items in the heap
-inline i32 atf_amc::bh_typeb_N(const atf_amc::FTypeA& typea) {
+inline i32 atf_amc::bh_typeb_N(const atf_amc::FTypeA& typea) throw() {
     return typea.bh_typeb_n;
 }
 
 // --- atf_amc.FTypeA.typec_curs.Reset
 // cursor points to valid item
-inline void atf_amc::typea_typec_curs_Reset(typea_typec_curs &curs, atf_amc::FTypeA &parent) {
+inline void atf_amc::typea_typec_curs_Reset(typea_typec_curs &curs, atf_amc::FTypeA &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.FTypeA.typec_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::typea_typec_curs_ValidQ(typea_typec_curs &curs) {
+inline bool atf_amc::typea_typec_curs_ValidQ(typea_typec_curs &curs) throw() {
     return u64(curs.index) < u64(curs.parent->typec_n);
 }
 
 // --- atf_amc.FTypeA.typec_curs.Next
 // proceed to next item
-inline void atf_amc::typea_typec_curs_Next(typea_typec_curs &curs) {
+inline void atf_amc::typea_typec_curs_Next(typea_typec_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FTypeA.typec_curs.Access
 // item access
-inline atf_amc::FTypeC& atf_amc::typea_typec_curs_Access(typea_typec_curs &curs) {
+inline atf_amc::FTypeC& atf_amc::typea_typec_curs_Access(typea_typec_curs &curs) throw() {
     return typec_qFind((*curs.parent), u64(curs.index));
 }
 
 // --- atf_amc.FTypeA.zdl_typeb_curs.Reset
 // cursor points to valid item
-inline void atf_amc::typea_zdl_typeb_curs_Reset(typea_zdl_typeb_curs &curs, atf_amc::FTypeA &parent) {
+inline void atf_amc::typea_zdl_typeb_curs_Reset(typea_zdl_typeb_curs &curs, atf_amc::FTypeA &parent) throw() {
     curs.row = parent.zdl_typeb_head;
 }
 
 // --- atf_amc.FTypeA.zdl_typeb_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::typea_zdl_typeb_curs_ValidQ(typea_zdl_typeb_curs &curs) {
+inline bool atf_amc::typea_zdl_typeb_curs_ValidQ(typea_zdl_typeb_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FTypeA.zdl_typeb_curs.Next
 // proceed to next item
-inline void atf_amc::typea_zdl_typeb_curs_Next(typea_zdl_typeb_curs &curs) {
+inline void atf_amc::typea_zdl_typeb_curs_Next(typea_zdl_typeb_curs &curs) throw() {
     atf_amc::FTypeB *next = (*curs.row).zdl_typeb_next;
     curs.row = next;
 }
 
 // --- atf_amc.FTypeA.zdl_typeb_curs.Access
 // item access
-inline atf_amc::FTypeB& atf_amc::typea_zdl_typeb_curs_Access(typea_zdl_typeb_curs &curs) {
+inline atf_amc::FTypeB& atf_amc::typea_zdl_typeb_curs_Access(typea_zdl_typeb_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FTypeA.bh_typeb_curs.Access
 // Access current element. If not more elements, return NULL
-inline atf_amc::FTypeB& atf_amc::typea_bh_typeb_curs_Access(typea_bh_typeb_curs &curs) {
+inline atf_amc::FTypeB& atf_amc::typea_bh_typeb_curs_Access(typea_bh_typeb_curs &curs) throw() {
     return *curs.temp_elems[0];
 }
 
 // --- atf_amc.FTypeA.bh_typeb_curs.ValidQ
 // Return true if Access() will return non-NULL.
-inline bool atf_amc::typea_bh_typeb_curs_ValidQ(typea_bh_typeb_curs &curs) {
+inline bool atf_amc::typea_bh_typeb_curs_ValidQ(typea_bh_typeb_curs &curs) throw() {
     return curs.temp_n > 0;
 }
 
 // --- atf_amc.FTypeA..Ctor
-inline  atf_amc::FTypeA::FTypeA() {
+inline  atf_amc::FTypeA::FTypeA() throw() {
     atf_amc::FTypeA_Init(*this);
     // added because atf_amc.FTypeA.typec (Inlary) does not need initialization
     // coverity[uninit_member]
 }
 
 // --- atf_amc.FTypeA..Dtor
-inline  atf_amc::FTypeA::~FTypeA() {
+inline  atf_amc::FTypeA::~FTypeA() throw() {
     atf_amc::FTypeA_Uninit(*this);
 }
 
@@ -4979,12 +4979,12 @@ inline void atf_amc::FTypeB_Init(atf_amc::FTypeB& typeb) {
 }
 
 // --- atf_amc.FTypeB..Ctor
-inline  atf_amc::FTypeB::FTypeB() {
+inline  atf_amc::FTypeB::FTypeB() throw() {
     atf_amc::FTypeB_Init(*this);
 }
 
 // --- atf_amc.FTypeB..Dtor
-inline  atf_amc::FTypeB::~FTypeB() {
+inline  atf_amc::FTypeB::~FTypeB() throw() {
     atf_amc::FTypeB_Uninit(*this);
 }
 
@@ -5001,12 +5001,12 @@ inline void atf_amc::FTypeD_Init(atf_amc::FTypeD& typed) {
 }
 
 // --- atf_amc.FTypeD..Ctor
-inline  atf_amc::FTypeD::FTypeD() {
+inline  atf_amc::FTypeD::FTypeD() throw() {
     atf_amc::FTypeD_Init(*this);
 }
 
 // --- atf_amc.FTypeD..Dtor
-inline  atf_amc::FTypeD::~FTypeD() {
+inline  atf_amc::FTypeD::~FTypeD() throw() {
     atf_amc::FTypeD_Uninit(*this);
 }
 
@@ -5018,19 +5018,19 @@ inline void atf_amc::FTypeK_Init(atf_amc::FTypeK& parent) {
 }
 
 // --- atf_amc.FTypeK..Ctor
-inline  atf_amc::FTypeK::FTypeK() {
+inline  atf_amc::FTypeK::FTypeK() throw() {
     atf_amc::FTypeK_Init(*this);
 }
 
 // --- atf_amc.FTypeS.zdl_typet.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::zdl_typet_EmptyQ(atf_amc::FTypeS& types) {
+inline bool atf_amc::zdl_typet_EmptyQ(atf_amc::FTypeS& types) throw() {
     return types.zdl_typet_head == NULL;
 }
 
 // --- atf_amc.FTypeS.zdl_typet.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline atf_amc::FTypeT* atf_amc::zdl_typet_First(atf_amc::FTypeS& types) {
+inline atf_amc::FTypeT* atf_amc::zdl_typet_First(atf_amc::FTypeS& types) throw() {
     atf_amc::FTypeT *row = NULL;
     row = types.zdl_typet_head;
     return row;
@@ -5038,7 +5038,7 @@ inline atf_amc::FTypeT* atf_amc::zdl_typet_First(atf_amc::FTypeS& types) {
 
 // --- atf_amc.FTypeS.zdl_typet.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool atf_amc::zdl_typet_InLlistQ(atf_amc::FTypeT& row) {
+inline bool atf_amc::zdl_typet_InLlistQ(atf_amc::FTypeT& row) throw() {
     bool result = false;
     result = !(row.zdl_typet_next == (atf_amc::FTypeT*)-1);
     return result;
@@ -5046,7 +5046,7 @@ inline bool atf_amc::zdl_typet_InLlistQ(atf_amc::FTypeT& row) {
 
 // --- atf_amc.FTypeS.zdl_typet.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline atf_amc::FTypeT* atf_amc::zdl_typet_Last(atf_amc::FTypeS& types) {
+inline atf_amc::FTypeT* atf_amc::zdl_typet_Last(atf_amc::FTypeS& types) throw() {
     atf_amc::FTypeT *row = NULL;
     row = types.zdl_typet_tail;
     return row;
@@ -5054,25 +5054,25 @@ inline atf_amc::FTypeT* atf_amc::zdl_typet_Last(atf_amc::FTypeS& types) {
 
 // --- atf_amc.FTypeS.zdl_typet.N
 // Return number of items in the linked list
-inline i32 atf_amc::zdl_typet_N(const atf_amc::FTypeS& types) {
+inline i32 atf_amc::zdl_typet_N(const atf_amc::FTypeS& types) throw() {
     return types.zdl_typet_n;
 }
 
 // --- atf_amc.FTypeS.zdl_typet.Next
 // Return pointer to next element in the list
-inline atf_amc::FTypeT* atf_amc::zdl_typet_Next(atf_amc::FTypeT &row) {
+inline atf_amc::FTypeT* atf_amc::zdl_typet_Next(atf_amc::FTypeT &row) throw() {
     return row.zdl_typet_next;
 }
 
 // --- atf_amc.FTypeS.zdl_typet.Prev
 // Return pointer to previous element in the list
-inline atf_amc::FTypeT* atf_amc::zdl_typet_Prev(atf_amc::FTypeT &row) {
+inline atf_amc::FTypeT* atf_amc::zdl_typet_Prev(atf_amc::FTypeT &row) throw() {
     return row.zdl_typet_prev;
 }
 
 // --- atf_amc.FTypeS.zdl_typet.qLast
 // Return reference to last element in the index. No bounds checking.
-inline atf_amc::FTypeT& atf_amc::zdl_typet_qLast(atf_amc::FTypeS& types) {
+inline atf_amc::FTypeT& atf_amc::zdl_typet_qLast(atf_amc::FTypeS& types) throw() {
     atf_amc::FTypeT *row = NULL;
     row = types.zdl_typet_tail;
     return *row;
@@ -5090,36 +5090,36 @@ inline void atf_amc::FTypeS_Init(atf_amc::FTypeS& types) {
 
 // --- atf_amc.FTypeS.zdl_typet_curs.Reset
 // cursor points to valid item
-inline void atf_amc::types_zdl_typet_curs_Reset(types_zdl_typet_curs &curs, atf_amc::FTypeS &parent) {
+inline void atf_amc::types_zdl_typet_curs_Reset(types_zdl_typet_curs &curs, atf_amc::FTypeS &parent) throw() {
     curs.row = parent.zdl_typet_head;
 }
 
 // --- atf_amc.FTypeS.zdl_typet_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::types_zdl_typet_curs_ValidQ(types_zdl_typet_curs &curs) {
+inline bool atf_amc::types_zdl_typet_curs_ValidQ(types_zdl_typet_curs &curs) throw() {
     return curs.row != NULL;
 }
 
 // --- atf_amc.FTypeS.zdl_typet_curs.Next
 // proceed to next item
-inline void atf_amc::types_zdl_typet_curs_Next(types_zdl_typet_curs &curs) {
+inline void atf_amc::types_zdl_typet_curs_Next(types_zdl_typet_curs &curs) throw() {
     atf_amc::FTypeT *next = (*curs.row).zdl_typet_next;
     curs.row = next;
 }
 
 // --- atf_amc.FTypeS.zdl_typet_curs.Access
 // item access
-inline atf_amc::FTypeT& atf_amc::types_zdl_typet_curs_Access(types_zdl_typet_curs &curs) {
+inline atf_amc::FTypeT& atf_amc::types_zdl_typet_curs_Access(types_zdl_typet_curs &curs) throw() {
     return *curs.row;
 }
 
 // --- atf_amc.FTypeS..Ctor
-inline  atf_amc::FTypeS::FTypeS() {
+inline  atf_amc::FTypeS::FTypeS() throw() {
     atf_amc::FTypeS_Init(*this);
 }
 
 // --- atf_amc.FTypeS..Dtor
-inline  atf_amc::FTypeS::~FTypeS() {
+inline  atf_amc::FTypeS::~FTypeS() throw() {
     atf_amc::FTypeS_Uninit(*this);
 }
 
@@ -5133,58 +5133,58 @@ inline void atf_amc::FTypeT_Init(atf_amc::FTypeT& typet) {
 }
 
 // --- atf_amc.FTypeT..Ctor
-inline  atf_amc::FTypeT::FTypeT() {
+inline  atf_amc::FTypeT::FTypeT() throw() {
     atf_amc::FTypeT_Init(*this);
 }
 
 // --- atf_amc.FTypeT..Dtor
-inline  atf_amc::FTypeT::~FTypeT() {
+inline  atf_amc::FTypeT::~FTypeT() throw() {
     atf_amc::FTypeT_Uninit(*this);
 }
 
 // --- atf_amc.TypeA..Hash
-inline u32 atf_amc::TypeA_Hash(u32 prev, const atf_amc::TypeA& rhs) {
+inline u32 atf_amc::TypeA_Hash(u32 prev, const atf_amc::TypeA& rhs) throw() {
     prev = i32_Hash(prev, rhs.typea);
     return prev;
 }
 
 // --- atf_amc.TypeA..EqOp
-inline bool atf_amc::TypeA::operator ==(const atf_amc::TypeA &rhs) const {
+inline bool atf_amc::TypeA::operator ==(const atf_amc::TypeA &rhs) const throw() {
     return atf_amc::TypeA_Eq(const_cast<atf_amc::TypeA&>(*this),const_cast<atf_amc::TypeA&>(rhs));
 }
 
 // --- atf_amc.TypeA..NeOp
-inline bool atf_amc::TypeA::operator !=(const atf_amc::TypeA &rhs) const {
+inline bool atf_amc::TypeA::operator !=(const atf_amc::TypeA &rhs) const throw() {
     return !atf_amc::TypeA_Eq(const_cast<atf_amc::TypeA&>(*this),const_cast<atf_amc::TypeA&>(rhs));
 }
 
 // --- atf_amc.TypeA..LtOp
-inline bool atf_amc::TypeA::operator <(const atf_amc::TypeA &rhs) const {
+inline bool atf_amc::TypeA::operator <(const atf_amc::TypeA &rhs) const throw() {
     return atf_amc::TypeA_Lt(const_cast<atf_amc::TypeA&>(*this),const_cast<atf_amc::TypeA&>(rhs));
 }
 
 // --- atf_amc.TypeA..GtOp
-inline bool atf_amc::TypeA::operator >(const atf_amc::TypeA &rhs) const {
+inline bool atf_amc::TypeA::operator >(const atf_amc::TypeA &rhs) const throw() {
     return atf_amc::TypeA_Lt(const_cast<atf_amc::TypeA&>(rhs),const_cast<atf_amc::TypeA&>(*this));
 }
 
 // --- atf_amc.TypeA..LeOp
-inline bool atf_amc::TypeA::operator <=(const atf_amc::TypeA &rhs) const {
+inline bool atf_amc::TypeA::operator <=(const atf_amc::TypeA &rhs) const throw() {
     return !atf_amc::TypeA_Lt(const_cast<atf_amc::TypeA&>(rhs),const_cast<atf_amc::TypeA&>(*this));
 }
 
 // --- atf_amc.TypeA..GeOp
-inline bool atf_amc::TypeA::operator >=(const atf_amc::TypeA &rhs) const {
+inline bool atf_amc::TypeA::operator >=(const atf_amc::TypeA &rhs) const throw() {
     return !atf_amc::TypeA_Lt(const_cast<atf_amc::TypeA&>(*this),const_cast<atf_amc::TypeA&>(rhs));
 }
 
 // --- atf_amc.TypeA..Lt
-inline bool atf_amc::TypeA_Lt(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) {
+inline bool atf_amc::TypeA_Lt(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) throw() {
     return i32_Lt(lhs.typea, rhs.typea);
 }
 
 // --- atf_amc.TypeA..Cmp
-inline i32 atf_amc::TypeA_Cmp(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) {
+inline i32 atf_amc::TypeA_Cmp(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) throw() {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typea, rhs.typea);
     return retval;
@@ -5197,7 +5197,7 @@ inline void atf_amc::TypeA_Init(atf_amc::TypeA& fixary) {
 }
 
 // --- atf_amc.TypeA..Eq
-inline bool atf_amc::TypeA_Eq(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) {
+inline bool atf_amc::TypeA_Eq(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) throw() {
     bool retval = true;
     retval = i32_Eq(lhs.typea, rhs.typea);
     return retval;
@@ -5205,7 +5205,7 @@ inline bool atf_amc::TypeA_Eq(atf_amc::TypeA& lhs, atf_amc::TypeA& rhs) {
 
 // --- atf_amc.TypeA..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::TypeA_Update(atf_amc::TypeA &lhs, atf_amc::TypeA& rhs) {
+inline bool atf_amc::TypeA_Update(atf_amc::TypeA &lhs, atf_amc::TypeA& rhs) throw() {
     bool ret = !TypeA_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -5214,19 +5214,19 @@ inline bool atf_amc::TypeA_Update(atf_amc::TypeA &lhs, atf_amc::TypeA& rhs) {
 }
 
 // --- atf_amc.TypeA..Ctor
-inline  atf_amc::TypeA::TypeA() {
+inline  atf_amc::TypeA::TypeA() throw() {
     atf_amc::TypeA_Init(*this);
 }
 
 // --- atf_amc.FUnitSort.tary.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::tary_EmptyQ(atf_amc::FUnitSort& parent) {
+inline bool atf_amc::tary_EmptyQ(atf_amc::FUnitSort& parent) throw() {
     return parent.tary_n == 0;
 }
 
 // --- atf_amc.FUnitSort.tary.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::TypeA* atf_amc::tary_Find(atf_amc::FUnitSort& parent, u64 t) {
+inline atf_amc::TypeA* atf_amc::tary_Find(atf_amc::FUnitSort& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.tary_n;
     if (idx >= lim) return NULL;
@@ -5235,32 +5235,32 @@ inline atf_amc::TypeA* atf_amc::tary_Find(atf_amc::FUnitSort& parent, u64 t) {
 
 // --- atf_amc.FUnitSort.tary.Getary
 // Return array pointer by value
-inline algo::aryptr<atf_amc::TypeA> atf_amc::tary_Getary(const atf_amc::FUnitSort& parent) {
+inline algo::aryptr<atf_amc::TypeA> atf_amc::tary_Getary(const atf_amc::FUnitSort& parent) throw() {
     return algo::aryptr<atf_amc::TypeA>(parent.tary_elems, parent.tary_n);
 }
 
 // --- atf_amc.FUnitSort.tary.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline atf_amc::TypeA* atf_amc::tary_Last(atf_amc::FUnitSort& parent) {
+inline atf_amc::TypeA* atf_amc::tary_Last(atf_amc::FUnitSort& parent) throw() {
     return tary_Find(parent, u64(parent.tary_n-1));
 }
 
 // --- atf_amc.FUnitSort.tary.Max
 // Return max. number of items in the array
-inline i32 atf_amc::tary_Max(atf_amc::FUnitSort& parent) {
+inline i32 atf_amc::tary_Max(atf_amc::FUnitSort& parent) throw() {
     (void)parent;
     return parent.tary_max;
 }
 
 // --- atf_amc.FUnitSort.tary.N
 // Return number of items in the array
-inline i32 atf_amc::tary_N(const atf_amc::FUnitSort& parent) {
+inline i32 atf_amc::tary_N(const atf_amc::FUnitSort& parent) throw() {
     return parent.tary_n;
 }
 
 // --- atf_amc.FUnitSort.tary.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void atf_amc::tary_Reserve(atf_amc::FUnitSort& parent, int n) {
+inline void atf_amc::tary_Reserve(atf_amc::FUnitSort& parent, int n) throw() {
     u32 new_n = parent.tary_n + n;
     if (UNLIKELY(new_n > parent.tary_max)) {
         tary_AbsReserve(parent, new_n);
@@ -5269,32 +5269,32 @@ inline void atf_amc::tary_Reserve(atf_amc::FUnitSort& parent, int n) {
 
 // --- atf_amc.FUnitSort.tary.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline atf_amc::TypeA& atf_amc::tary_qFind(atf_amc::FUnitSort& parent, u64 t) {
+inline atf_amc::TypeA& atf_amc::tary_qFind(atf_amc::FUnitSort& parent, u64 t) throw() {
     return parent.tary_elems[t];
 }
 
 // --- atf_amc.FUnitSort.tary.qLast
 // Return reference to last element of array. No bounds checking
-inline atf_amc::TypeA& atf_amc::tary_qLast(atf_amc::FUnitSort& parent) {
+inline atf_amc::TypeA& atf_amc::tary_qLast(atf_amc::FUnitSort& parent) throw() {
     return tary_qFind(parent, u64(parent.tary_n-1));
 }
 
 // --- atf_amc.FUnitSort.tary.rowid_Get
 // Return row id of specified element
-inline u64 atf_amc::tary_rowid_Get(atf_amc::FUnitSort& parent, atf_amc::TypeA &elem) {
+inline u64 atf_amc::tary_rowid_Get(atf_amc::FUnitSort& parent, atf_amc::TypeA &elem) throw() {
     u64 id = &elem - parent.tary_elems;
     return u64(id);
 }
 
 // --- atf_amc.FUnitSort.c_ptrary.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::c_ptrary_EmptyQ(atf_amc::FUnitSort& parent) {
+inline bool atf_amc::c_ptrary_EmptyQ(atf_amc::FUnitSort& parent) throw() {
     return parent.c_ptrary_n == 0;
 }
 
 // --- atf_amc.FUnitSort.c_ptrary.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::TypeA* atf_amc::c_ptrary_Find(atf_amc::FUnitSort& parent, u32 t) {
+inline atf_amc::TypeA* atf_amc::c_ptrary_Find(atf_amc::FUnitSort& parent, u32 t) throw() {
     atf_amc::TypeA *retval = NULL;
     u64 idx = t;
     u64 lim = parent.c_ptrary_n;
@@ -5306,37 +5306,37 @@ inline atf_amc::TypeA* atf_amc::c_ptrary_Find(atf_amc::FUnitSort& parent, u32 t)
 
 // --- atf_amc.FUnitSort.c_ptrary.Getary
 // Return array of pointers
-inline algo::aryptr<atf_amc::TypeA*> atf_amc::c_ptrary_Getary(atf_amc::FUnitSort& parent) {
+inline algo::aryptr<atf_amc::TypeA*> atf_amc::c_ptrary_Getary(atf_amc::FUnitSort& parent) throw() {
     return algo::aryptr<atf_amc::TypeA*>(parent.c_ptrary_elems, parent.c_ptrary_n);
 }
 
 // --- atf_amc.FUnitSort.c_ptrary.N
 // Return number of items in the pointer array
-inline i32 atf_amc::c_ptrary_N(const atf_amc::FUnitSort& parent) {
+inline i32 atf_amc::c_ptrary_N(const atf_amc::FUnitSort& parent) throw() {
     return parent.c_ptrary_n;
 }
 
 // --- atf_amc.FUnitSort.c_ptrary.RemoveAll
 // Empty the index. (The rows are not deleted)
-inline void atf_amc::c_ptrary_RemoveAll(atf_amc::FUnitSort& parent) {
+inline void atf_amc::c_ptrary_RemoveAll(atf_amc::FUnitSort& parent) throw() {
     parent.c_ptrary_n = 0;
 }
 
 // --- atf_amc.FUnitSort.c_ptrary.qFind
 // Return reference without bounds checking
-inline atf_amc::TypeA& atf_amc::c_ptrary_qFind(atf_amc::FUnitSort& parent, u32 idx) {
+inline atf_amc::TypeA& atf_amc::c_ptrary_qFind(atf_amc::FUnitSort& parent, u32 idx) throw() {
     return *parent.c_ptrary_elems[idx];
 }
 
 // --- atf_amc.FUnitSort.c_ptrary.qLast
 // Reference to last element without bounds checking
-inline atf_amc::TypeA& atf_amc::c_ptrary_qLast(atf_amc::FUnitSort& parent) {
+inline atf_amc::TypeA& atf_amc::c_ptrary_qLast(atf_amc::FUnitSort& parent) throw() {
     return *parent.c_ptrary_elems[parent.c_ptrary_n-1];
 }
 
 // --- atf_amc.FUnitSort.fixary.Fill
 // Set all elements of fixed array to value RHS
-inline void atf_amc::fixary_Fill(atf_amc::FUnitSort& parent, const atf_amc::TypeA &rhs) {
+inline void atf_amc::fixary_Fill(atf_amc::FUnitSort& parent, const atf_amc::TypeA &rhs) throw() {
     for (int i = 0; i < 100; i++) {
         parent.fixary_elems[i] = rhs;
     }
@@ -5344,7 +5344,7 @@ inline void atf_amc::fixary_Fill(atf_amc::FUnitSort& parent, const atf_amc::Type
 
 // --- atf_amc.FUnitSort.fixary.Find
 // Look up row by row id. Return NULL if out of range
-inline atf_amc::TypeA* atf_amc::fixary_Find(atf_amc::FUnitSort& parent, u64 t) {
+inline atf_amc::TypeA* atf_amc::fixary_Find(atf_amc::FUnitSort& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = 100;
     return idx < lim ? parent.fixary_elems + idx : NULL; // unsigned comparison with limit
@@ -5352,45 +5352,45 @@ inline atf_amc::TypeA* atf_amc::fixary_Find(atf_amc::FUnitSort& parent, u64 t) {
 
 // --- atf_amc.FUnitSort.fixary.Getary
 // Access fixed array fixary as aryptr.
-inline algo::aryptr<atf_amc::TypeA> atf_amc::fixary_Getary(atf_amc::FUnitSort& parent) {
+inline algo::aryptr<atf_amc::TypeA> atf_amc::fixary_Getary(atf_amc::FUnitSort& parent) throw() {
     return algo::aryptr<atf_amc::TypeA>(parent.fixary_elems, 100);
 }
 
 // --- atf_amc.FUnitSort.fixary.Max
 // Return max number of items in the array
-inline i32 atf_amc::fixary_Max(atf_amc::FUnitSort& parent) {
+inline i32 atf_amc::fixary_Max(atf_amc::FUnitSort& parent) throw() {
     (void)parent;
     return 100;
 }
 
 // --- atf_amc.FUnitSort.fixary.N
 // Return number of items in the array
-inline i32 atf_amc::fixary_N(const atf_amc::FUnitSort& parent) {
+inline i32 atf_amc::fixary_N(const atf_amc::FUnitSort& parent) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     return 100;
 }
 
 // --- atf_amc.FUnitSort.fixary.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
-inline void atf_amc::fixary_Setary(atf_amc::FUnitSort& parent, const algo::aryptr<atf_amc::TypeA> &rhs) {
+inline void atf_amc::fixary_Setary(atf_amc::FUnitSort& parent, const algo::aryptr<atf_amc::TypeA> &rhs) throw() {
     int n = i32_Min(100, rhs.n_elems);
     memcpy(parent.fixary_elems, rhs.elems, sizeof(atf_amc::TypeA)*n);
 }
 
 // --- atf_amc.FUnitSort.fixary.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline atf_amc::TypeA& atf_amc::fixary_qFind(atf_amc::FUnitSort& parent, u64 t) {
+inline atf_amc::TypeA& atf_amc::fixary_qFind(atf_amc::FUnitSort& parent, u64 t) throw() {
     return parent.fixary_elems[u64(t)];
 }
 
 // --- atf_amc.FUnitSort.tary_curs.Next
 // proceed to next item
-inline void atf_amc::FUnitSort_tary_curs_Next(FUnitSort_tary_curs &curs) {
+inline void atf_amc::FUnitSort_tary_curs_Next(FUnitSort_tary_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FUnitSort.tary_curs.Reset
-inline void atf_amc::FUnitSort_tary_curs_Reset(FUnitSort_tary_curs &curs, atf_amc::FUnitSort &parent) {
+inline void atf_amc::FUnitSort_tary_curs_Reset(FUnitSort_tary_curs &curs, atf_amc::FUnitSort &parent) throw() {
     curs.elems = parent.tary_elems;
     curs.n_elems = parent.tary_n;
     curs.index = 0;
@@ -5398,18 +5398,18 @@ inline void atf_amc::FUnitSort_tary_curs_Reset(FUnitSort_tary_curs &curs, atf_am
 
 // --- atf_amc.FUnitSort.tary_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::FUnitSort_tary_curs_ValidQ(FUnitSort_tary_curs &curs) {
+inline bool atf_amc::FUnitSort_tary_curs_ValidQ(FUnitSort_tary_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_amc.FUnitSort.tary_curs.Access
 // item access
-inline atf_amc::TypeA& atf_amc::FUnitSort_tary_curs_Access(FUnitSort_tary_curs &curs) {
+inline atf_amc::TypeA& atf_amc::FUnitSort_tary_curs_Access(FUnitSort_tary_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
 // --- atf_amc.FUnitSort.c_ptrary_curs.Reset
-inline void atf_amc::FUnitSort_c_ptrary_curs_Reset(FUnitSort_c_ptrary_curs &curs, atf_amc::FUnitSort &parent) {
+inline void atf_amc::FUnitSort_c_ptrary_curs_Reset(FUnitSort_c_ptrary_curs &curs, atf_amc::FUnitSort &parent) throw() {
     curs.elems = parent.c_ptrary_elems;
     curs.n_elems = parent.c_ptrary_n;
     curs.index = 0;
@@ -5417,44 +5417,44 @@ inline void atf_amc::FUnitSort_c_ptrary_curs_Reset(FUnitSort_c_ptrary_curs &curs
 
 // --- atf_amc.FUnitSort.c_ptrary_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::FUnitSort_c_ptrary_curs_ValidQ(FUnitSort_c_ptrary_curs &curs) {
+inline bool atf_amc::FUnitSort_c_ptrary_curs_ValidQ(FUnitSort_c_ptrary_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_amc.FUnitSort.c_ptrary_curs.Next
 // proceed to next item
-inline void atf_amc::FUnitSort_c_ptrary_curs_Next(FUnitSort_c_ptrary_curs &curs) {
+inline void atf_amc::FUnitSort_c_ptrary_curs_Next(FUnitSort_c_ptrary_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FUnitSort.c_ptrary_curs.Access
 // item access
-inline atf_amc::TypeA& atf_amc::FUnitSort_c_ptrary_curs_Access(FUnitSort_c_ptrary_curs &curs) {
+inline atf_amc::TypeA& atf_amc::FUnitSort_c_ptrary_curs_Access(FUnitSort_c_ptrary_curs &curs) throw() {
     return *curs.elems[curs.index];
 }
 
 // --- atf_amc.FUnitSort.fixary_curs.Reset
 // cursor points to valid item
-inline void atf_amc::FUnitSort_fixary_curs_Reset(FUnitSort_fixary_curs &curs, atf_amc::FUnitSort &parent) {
+inline void atf_amc::FUnitSort_fixary_curs_Reset(FUnitSort_fixary_curs &curs, atf_amc::FUnitSort &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.FUnitSort.fixary_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::FUnitSort_fixary_curs_ValidQ(FUnitSort_fixary_curs &curs) {
+inline bool atf_amc::FUnitSort_fixary_curs_ValidQ(FUnitSort_fixary_curs &curs) throw() {
     return u64(curs.index) < u64(100);
 }
 
 // --- atf_amc.FUnitSort.fixary_curs.Next
 // proceed to next item
-inline void atf_amc::FUnitSort_fixary_curs_Next(FUnitSort_fixary_curs &curs) {
+inline void atf_amc::FUnitSort_fixary_curs_Next(FUnitSort_fixary_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.FUnitSort.fixary_curs.Access
 // item access
-inline atf_amc::TypeA& atf_amc::FUnitSort_fixary_curs_Access(FUnitSort_fixary_curs &curs) {
+inline atf_amc::TypeA& atf_amc::FUnitSort_fixary_curs_Access(FUnitSort_fixary_curs &curs) throw() {
     return fixary_qFind((*curs.parent), u64(curs.index));
 }
 
@@ -5470,29 +5470,29 @@ inline void atf_amc::FUnitSort_Init(atf_amc::FUnitSort& parent) {
 }
 
 // --- atf_amc.FUnitSort..Ctor
-inline  atf_amc::FUnitSort::FUnitSort() {
+inline  atf_amc::FUnitSort::FUnitSort() throw() {
     atf_amc::FUnitSort_Init(*this);
 }
 
 // --- atf_amc.FUnitSort..Dtor
-inline  atf_amc::FUnitSort::~FUnitSort() {
+inline  atf_amc::FUnitSort::~FUnitSort() throw() {
     atf_amc::FUnitSort_Uninit(*this);
 }
 
 // --- atf_amc.FieldId.value.GetEnum
 // Get value of field as enum type
-inline atf_amc_FieldIdEnum atf_amc::value_GetEnum(const atf_amc::FieldId& parent) {
+inline atf_amc_FieldIdEnum atf_amc::value_GetEnum(const atf_amc::FieldId& parent) throw() {
     return atf_amc_FieldIdEnum(parent.value);
 }
 
 // --- atf_amc.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void atf_amc::value_SetEnum(atf_amc::FieldId& parent, atf_amc_FieldIdEnum rhs) {
+inline void atf_amc::value_SetEnum(atf_amc::FieldId& parent, atf_amc_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- atf_amc.FieldId.value.Cast
-inline  atf_amc::FieldId::operator atf_amc_FieldIdEnum() const {
+inline  atf_amc::FieldId::operator atf_amc_FieldIdEnum() const throw() {
     return atf_amc_FieldIdEnum((*this).value);
 }
 
@@ -5503,24 +5503,24 @@ inline void atf_amc::FieldId_Init(atf_amc::FieldId& parent) {
 }
 
 // --- atf_amc.FieldId..Ctor
-inline  atf_amc::FieldId::FieldId() {
+inline  atf_amc::FieldId::FieldId() throw() {
     atf_amc::FieldId_Init(*this);
 }
 
 // --- atf_amc.FieldId..FieldwiseCtor
-inline  atf_amc::FieldId::FieldId(i32 in_value)
+inline  atf_amc::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_amc.FieldId..EnumCtor
-inline  atf_amc::FieldId::FieldId(atf_amc_FieldIdEnum arg) {
+inline  atf_amc::FieldId::FieldId(atf_amc_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- atf_amc.Hooktype.callback.Call
 // Invoke function by pointer
-inline void atf_amc::callback_Call(atf_amc::Hooktype& parent, atf_amc::Hooktype& arg) {
+inline void atf_amc::callback_Call(atf_amc::Hooktype& parent, atf_amc::Hooktype& arg) throw() {
     if (parent.callback) {
         parent.callback((void*)parent.callback_ctx, arg);
     }
@@ -5528,21 +5528,21 @@ inline void atf_amc::callback_Call(atf_amc::Hooktype& parent, atf_amc::Hooktype&
 
 // --- atf_amc.Hooktype.callback.Set0
 // Assign 0-argument hook with no context pointer
-inline void atf_amc::callback_Set0(atf_amc::Hooktype& parent, void (*fcn)() ) {
+inline void atf_amc::callback_Set0(atf_amc::Hooktype& parent, void (*fcn)() ) throw() {
     parent.callback_ctx = 0;
     parent.callback = (atf_amc::parent_callback_hook)fcn;
 }
 
 // --- atf_amc.Hooktype.callback.Set1
 // Assign 1-argument hook with context pointer
-template<class T> inline void atf_amc::callback_Set1(atf_amc::Hooktype& parent, T& ctx, void (*fcn)(T&) ) {
+template<class T> inline void atf_amc::callback_Set1(atf_amc::Hooktype& parent, T& ctx, void (*fcn)(T&) ) throw() {
     parent.callback_ctx = (u64)&ctx;
     parent.callback = (atf_amc::parent_callback_hook)fcn;
 }
 
 // --- atf_amc.Hooktype.callback.Set2
 // Assign 2-argument hook with context pointer
-template<class T> inline void atf_amc::callback_Set2(atf_amc::Hooktype& parent, T& ctx, void (*fcn)(T&, atf_amc::Hooktype& arg) ) {
+template<class T> inline void atf_amc::callback_Set2(atf_amc::Hooktype& parent, T& ctx, void (*fcn)(T&, atf_amc::Hooktype& arg) ) throw() {
     parent.callback_ctx = (u64)&ctx;
     parent.callback = (atf_amc::parent_callback_hook)fcn;
 }
@@ -5556,13 +5556,13 @@ inline void atf_amc::Hooktype_Init(atf_amc::Hooktype& parent) {
 }
 
 // --- atf_amc.Hooktype..Ctor
-inline  atf_amc::Hooktype::Hooktype() {
+inline  atf_amc::Hooktype::Hooktype() throw() {
     atf_amc::Hooktype_Init(*this);
 }
 
 // --- atf_amc.InlaryPrint.fixary.Fill
 // Set all elements of fixed array to value RHS
-inline void atf_amc::fixary_Fill(atf_amc::InlaryPrint& parent, const u32 &rhs) {
+inline void atf_amc::fixary_Fill(atf_amc::InlaryPrint& parent, const u32 &rhs) throw() {
     for (int i = 0; i < 3; i++) {
         parent.fixary_elems[i] = rhs;
     }
@@ -5570,7 +5570,7 @@ inline void atf_amc::fixary_Fill(atf_amc::InlaryPrint& parent, const u32 &rhs) {
 
 // --- atf_amc.InlaryPrint.fixary.Find
 // Look up row by row id. Return NULL if out of range
-inline u32* atf_amc::fixary_Find(atf_amc::InlaryPrint& parent, u64 t) {
+inline u32* atf_amc::fixary_Find(atf_amc::InlaryPrint& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = 3;
     return idx < lim ? parent.fixary_elems + idx : NULL; // unsigned comparison with limit
@@ -5578,40 +5578,40 @@ inline u32* atf_amc::fixary_Find(atf_amc::InlaryPrint& parent, u64 t) {
 
 // --- atf_amc.InlaryPrint.fixary.Getary
 // Access fixed array fixary as aryptr.
-inline algo::aryptr<u32> atf_amc::fixary_Getary(atf_amc::InlaryPrint& parent) {
+inline algo::aryptr<u32> atf_amc::fixary_Getary(atf_amc::InlaryPrint& parent) throw() {
     return algo::aryptr<u32>(parent.fixary_elems, 3);
 }
 
 // --- atf_amc.InlaryPrint.fixary.Max
 // Return max number of items in the array
-inline i32 atf_amc::fixary_Max(atf_amc::InlaryPrint& parent) {
+inline i32 atf_amc::fixary_Max(atf_amc::InlaryPrint& parent) throw() {
     (void)parent;
     return 3;
 }
 
 // --- atf_amc.InlaryPrint.fixary.N
 // Return number of items in the array
-inline i32 atf_amc::fixary_N(const atf_amc::InlaryPrint& parent) {
+inline i32 atf_amc::fixary_N(const atf_amc::InlaryPrint& parent) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     return 3;
 }
 
 // --- atf_amc.InlaryPrint.fixary.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
-inline void atf_amc::fixary_Setary(atf_amc::InlaryPrint& parent, const algo::aryptr<u32> &rhs) {
+inline void atf_amc::fixary_Setary(atf_amc::InlaryPrint& parent, const algo::aryptr<u32> &rhs) throw() {
     int n = i32_Min(3, rhs.n_elems);
     memcpy(parent.fixary_elems, rhs.elems, sizeof(u32)*n);
 }
 
 // --- atf_amc.InlaryPrint.fixary.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline u32& atf_amc::fixary_qFind(atf_amc::InlaryPrint& parent, u64 t) {
+inline u32& atf_amc::fixary_qFind(atf_amc::InlaryPrint& parent, u64 t) throw() {
     return parent.fixary_elems[u64(t)];
 }
 
 // --- atf_amc.InlaryPrint.inlary.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-inline void* atf_amc::inlary_AllocMem(atf_amc::InlaryPrint& parent) {
+inline void* atf_amc::inlary_AllocMem(atf_amc::InlaryPrint& parent) throw() {
     void *row = reinterpret_cast<u32*>(parent.inlary_data) + parent.inlary_n;
     if (parent.inlary_n == 10) row = NULL;
     if (row) parent.inlary_n++;
@@ -5620,13 +5620,13 @@ inline void* atf_amc::inlary_AllocMem(atf_amc::InlaryPrint& parent) {
 
 // --- atf_amc.InlaryPrint.inlary.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::inlary_EmptyQ(atf_amc::InlaryPrint& parent) {
+inline bool atf_amc::inlary_EmptyQ(atf_amc::InlaryPrint& parent) throw() {
     return parent.inlary_n == 0;
 }
 
 // --- atf_amc.InlaryPrint.inlary.Find
 // Look up row by row id. Return NULL if out of range
-inline u32* atf_amc::inlary_Find(atf_amc::InlaryPrint& parent, u64 t) {
+inline u32* atf_amc::inlary_Find(atf_amc::InlaryPrint& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.inlary_n;
     return idx < lim ? reinterpret_cast<u32*>(parent.inlary_data) + idx : NULL; // unsigned comparison with limit
@@ -5634,115 +5634,115 @@ inline u32* atf_amc::inlary_Find(atf_amc::InlaryPrint& parent, u64 t) {
 
 // --- atf_amc.InlaryPrint.inlary.Getary
 // Return array pointer by value
-inline algo::aryptr<u32> atf_amc::inlary_Getary(atf_amc::InlaryPrint& parent) {
+inline algo::aryptr<u32> atf_amc::inlary_Getary(atf_amc::InlaryPrint& parent) throw() {
     return algo::aryptr<u32>(reinterpret_cast<u32*>(parent.inlary_data), parent.inlary_n);
 }
 
 // --- atf_amc.InlaryPrint.inlary.Max
 // Return constant 10 -- max. number of items in the pool
-inline i32 atf_amc::inlary_Max(atf_amc::InlaryPrint& parent) {
+inline i32 atf_amc::inlary_Max(atf_amc::InlaryPrint& parent) throw() {
     (void)parent;
     return 10;
 }
 
 // --- atf_amc.InlaryPrint.inlary.N
 // Return number of items in the array
-inline i32 atf_amc::inlary_N(const atf_amc::InlaryPrint& parent) {
+inline i32 atf_amc::inlary_N(const atf_amc::InlaryPrint& parent) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     return parent.inlary_n;
 }
 
 // --- atf_amc.InlaryPrint.inlary.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
-inline void atf_amc::inlary_Setary(atf_amc::InlaryPrint& parent, const algo::aryptr<u32> &rhs) {
+inline void atf_amc::inlary_Setary(atf_amc::InlaryPrint& parent, const algo::aryptr<u32> &rhs) throw() {
     int n = i32_Min(10, rhs.n_elems);
     memcpy(reinterpret_cast<u32*>(parent.inlary_data), rhs.elems, sizeof(u32)*n);
 }
 
 // --- atf_amc.InlaryPrint.inlary.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline u32& atf_amc::inlary_qFind(atf_amc::InlaryPrint& parent, u64 t) {
+inline u32& atf_amc::inlary_qFind(atf_amc::InlaryPrint& parent, u64 t) throw() {
     return reinterpret_cast<u32*>(parent.inlary_data)[u64(t)];
 }
 
 // --- atf_amc.InlaryPrint.inlary.rowid_Get
 // Compute row id of element given element's address
-inline u64 atf_amc::inlary_rowid_Get(atf_amc::InlaryPrint& parent, u32 &row) {
+inline u64 atf_amc::inlary_rowid_Get(atf_amc::InlaryPrint& parent, u32 &row) throw() {
     u64 ret = u64(&row - reinterpret_cast<u32*>(parent.inlary_data));
     return u64(ret);
 }
 
 // --- atf_amc.InlaryPrint.fixary_curs.Reset
 // cursor points to valid item
-inline void atf_amc::InlaryPrint_fixary_curs_Reset(InlaryPrint_fixary_curs &curs, atf_amc::InlaryPrint &parent) {
+inline void atf_amc::InlaryPrint_fixary_curs_Reset(InlaryPrint_fixary_curs &curs, atf_amc::InlaryPrint &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.InlaryPrint.fixary_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::InlaryPrint_fixary_curs_ValidQ(InlaryPrint_fixary_curs &curs) {
+inline bool atf_amc::InlaryPrint_fixary_curs_ValidQ(InlaryPrint_fixary_curs &curs) throw() {
     return u64(curs.index) < u64(3);
 }
 
 // --- atf_amc.InlaryPrint.fixary_curs.Next
 // proceed to next item
-inline void atf_amc::InlaryPrint_fixary_curs_Next(InlaryPrint_fixary_curs &curs) {
+inline void atf_amc::InlaryPrint_fixary_curs_Next(InlaryPrint_fixary_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.InlaryPrint.fixary_curs.Access
 // item access
-inline u32& atf_amc::InlaryPrint_fixary_curs_Access(InlaryPrint_fixary_curs &curs) {
+inline u32& atf_amc::InlaryPrint_fixary_curs_Access(InlaryPrint_fixary_curs &curs) throw() {
     return fixary_qFind((*curs.parent), u64(curs.index));
 }
 
 // --- atf_amc.InlaryPrint.inlary_curs.Reset
 // cursor points to valid item
-inline void atf_amc::InlaryPrint_inlary_curs_Reset(InlaryPrint_inlary_curs &curs, atf_amc::InlaryPrint &parent) {
+inline void atf_amc::InlaryPrint_inlary_curs_Reset(InlaryPrint_inlary_curs &curs, atf_amc::InlaryPrint &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.InlaryPrint.inlary_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::InlaryPrint_inlary_curs_ValidQ(InlaryPrint_inlary_curs &curs) {
+inline bool atf_amc::InlaryPrint_inlary_curs_ValidQ(InlaryPrint_inlary_curs &curs) throw() {
     return u64(curs.index) < u64(curs.parent->inlary_n);
 }
 
 // --- atf_amc.InlaryPrint.inlary_curs.Next
 // proceed to next item
-inline void atf_amc::InlaryPrint_inlary_curs_Next(InlaryPrint_inlary_curs &curs) {
+inline void atf_amc::InlaryPrint_inlary_curs_Next(InlaryPrint_inlary_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.InlaryPrint.inlary_curs.Access
 // item access
-inline u32& atf_amc::InlaryPrint_inlary_curs_Access(InlaryPrint_inlary_curs &curs) {
+inline u32& atf_amc::InlaryPrint_inlary_curs_Access(InlaryPrint_inlary_curs &curs) throw() {
     return inlary_qFind((*curs.parent), u64(curs.index));
 }
 
 // --- atf_amc.InlaryPrint..AssignOp
-inline atf_amc::InlaryPrint& atf_amc::InlaryPrint::operator =(const atf_amc::InlaryPrint &rhs) {
+inline atf_amc::InlaryPrint& atf_amc::InlaryPrint::operator =(const atf_amc::InlaryPrint &rhs) throw() {
     fixary_Setary(*this, fixary_Getary(const_cast<atf_amc::InlaryPrint&>(rhs)));
     inlary_Setary(*this, inlary_Getary(const_cast<atf_amc::InlaryPrint&>(rhs)));
     return *this;
 }
 
 // --- atf_amc.InlaryPrint..Ctor
-inline  atf_amc::InlaryPrint::InlaryPrint() {
+inline  atf_amc::InlaryPrint::InlaryPrint() throw() {
     atf_amc::InlaryPrint_Init(*this);
     // added because atf_amc.InlaryPrint.inlary (Inlary) does not need initialization
     // coverity[uninit_member]
 }
 
 // --- atf_amc.InlaryPrint..Dtor
-inline  atf_amc::InlaryPrint::~InlaryPrint() {
+inline  atf_amc::InlaryPrint::~InlaryPrint() throw() {
     atf_amc::InlaryPrint_Uninit(*this);
 }
 
 // --- atf_amc.InlaryPrint..CopyCtor
-inline  atf_amc::InlaryPrint::InlaryPrint(const atf_amc::InlaryPrint &rhs) {
+inline  atf_amc::InlaryPrint::InlaryPrint(const atf_amc::InlaryPrint &rhs) throw() {
     for (int i = 0; i < 3; i++) {
         fixary_elems[i] = 0;
     }
@@ -5753,13 +5753,13 @@ inline  atf_amc::InlaryPrint::InlaryPrint(const atf_amc::InlaryPrint &rhs) {
 
 // --- atf_amc.Lary32.lary.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::lary_EmptyQ(atf_amc::Lary32& parent) {
+inline bool atf_amc::lary_EmptyQ(atf_amc::Lary32& parent) throw() {
     return parent.lary_n == 0;
 }
 
 // --- atf_amc.Lary32.lary.Find
 // Look up row by row id. Return NULL if out of range
-inline u32* atf_amc::lary_Find(atf_amc::Lary32& parent, u64 t) {
+inline u32* atf_amc::lary_Find(atf_amc::Lary32& parent, u64 t) throw() {
     u32 *retval = NULL;
     if (LIKELY(u64(t) < u64(parent.lary_n))) {
         u64 x = t + 1;
@@ -5773,19 +5773,19 @@ inline u32* atf_amc::lary_Find(atf_amc::Lary32& parent, u64 t) {
 
 // --- atf_amc.Lary32.lary.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline u32* atf_amc::lary_Last(atf_amc::Lary32& parent) {
+inline u32* atf_amc::lary_Last(atf_amc::Lary32& parent) throw() {
     return lary_Find(parent, u64(parent.lary_n-1));
 }
 
 // --- atf_amc.Lary32.lary.N
 // Return number of items in the pool
-inline i32 atf_amc::lary_N(const atf_amc::Lary32& parent) {
+inline i32 atf_amc::lary_N(const atf_amc::Lary32& parent) throw() {
     return parent.lary_n;
 }
 
 // --- atf_amc.Lary32.lary.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline u32& atf_amc::lary_qFind(atf_amc::Lary32& parent, u64 t) {
+inline u32& atf_amc::lary_qFind(atf_amc::Lary32& parent, u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -5795,54 +5795,54 @@ inline u32& atf_amc::lary_qFind(atf_amc::Lary32& parent, u64 t) {
 
 // --- atf_amc.Lary32.lary_curs.Reset
 // cursor points to valid item
-inline void atf_amc::Lary32_lary_curs_Reset(Lary32_lary_curs &curs, atf_amc::Lary32 &parent) {
+inline void atf_amc::Lary32_lary_curs_Reset(Lary32_lary_curs &curs, atf_amc::Lary32 &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.Lary32.lary_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::Lary32_lary_curs_ValidQ(Lary32_lary_curs &curs) {
+inline bool atf_amc::Lary32_lary_curs_ValidQ(Lary32_lary_curs &curs) throw() {
     return curs.index < (*curs.parent).lary_n;
 }
 
 // --- atf_amc.Lary32.lary_curs.Next
 // proceed to next item
-inline void atf_amc::Lary32_lary_curs_Next(Lary32_lary_curs &curs) {
+inline void atf_amc::Lary32_lary_curs_Next(Lary32_lary_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.Lary32.lary_curs.Access
 // item access
-inline u32& atf_amc::Lary32_lary_curs_Access(Lary32_lary_curs &curs) {
+inline u32& atf_amc::Lary32_lary_curs_Access(Lary32_lary_curs &curs) throw() {
     return lary_qFind((*curs.parent), u64(curs.index));
 }
 
 // --- atf_amc.Lary32..Ctor
-inline  atf_amc::Lary32::Lary32() {
+inline  atf_amc::Lary32::Lary32() throw() {
     atf_amc::Lary32_Init(*this);
 }
 
 // --- atf_amc.Lary32..Dtor
-inline  atf_amc::Lary32::~Lary32() {
+inline  atf_amc::Lary32::~Lary32() throw() {
     atf_amc::Lary32_Uninit(*this);
 }
 
 // --- atf_amc.Linebuf.in.Max
 // Return max. number of bytes in the buffer.
-inline i32 atf_amc::in_Max(atf_amc::Linebuf& linebuf) {
+inline i32 atf_amc::in_Max(atf_amc::Linebuf& linebuf) throw() {
     return 64;
     (void)linebuf;//only to avoid -Wunused-parameter
 }
 
 // --- atf_amc.Linebuf.in.N
 // Return number of bytes in the buffer.
-inline i32 atf_amc::in_N(atf_amc::Linebuf& linebuf) {
+inline i32 atf_amc::in_N(atf_amc::Linebuf& linebuf) throw() {
     return linebuf.in_end - linebuf.in_start;
 }
 
 // --- atf_amc.Linebuf..Ctor
-inline  atf_amc::Linebuf::Linebuf() {
+inline  atf_amc::Linebuf::Linebuf() throw() {
     atf_amc::Linebuf_Init(*this);
     // added because atf_amc.Linebuf.in (Fbuf) does not need initialization
     // coverity[uninit_member]
@@ -5850,25 +5850,25 @@ inline  atf_amc::Linebuf::Linebuf() {
 
 // --- atf_amc.MsgHdrLT.type.GetEnum
 // Get value of field as enum type
-inline atf_amc_MsgHdrLT_type_Enum atf_amc::type_GetEnum(const atf_amc::MsgHdrLT& o) {
+inline atf_amc_MsgHdrLT_type_Enum atf_amc::type_GetEnum(const atf_amc::MsgHdrLT& o) throw() {
     return atf_amc_MsgHdrLT_type_Enum(o.type);
 }
 
 // --- atf_amc.MsgHdrLT.type.SetEnum
 // Set value of field from enum type.
-inline void atf_amc::type_SetEnum(atf_amc::MsgHdrLT& o, atf_amc_MsgHdrLT_type_Enum rhs) {
+inline void atf_amc::type_SetEnum(atf_amc::MsgHdrLT& o, atf_amc_MsgHdrLT_type_Enum rhs) throw() {
     o.type = char(rhs);
 }
 
 // --- atf_amc.MsgHdrLT..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::MsgHdrLT& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::MsgHdrLT& parent) throw() {
     return i32(const_cast<atf_amc::MsgHdrLT&>(parent).len + 2);
 }
 
 // --- atf_amc.MsgHdrLT..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgHdrLT& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgHdrLT& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgHdrLT&>(row).len + 2));
 }
 
@@ -5880,12 +5880,12 @@ inline void atf_amc::MsgHdrLT_Init(atf_amc::MsgHdrLT& o) {
 }
 
 // --- atf_amc.MsgHdrLT..Ctor
-inline  atf_amc::MsgHdrLT::MsgHdrLT() {
+inline  atf_amc::MsgHdrLT::MsgHdrLT() throw() {
     atf_amc::MsgHdrLT_Init(*this);
 }
 
 // --- atf_amc.MsgHdrLT..FieldwiseCtor
-inline  atf_amc::MsgHdrLT::MsgHdrLT(u8 in_len, char in_type)
+inline  atf_amc::MsgHdrLT::MsgHdrLT(u8 in_len, char in_type) throw()
     : len(in_len)
     , type(in_type)
  {
@@ -5893,18 +5893,18 @@ inline  atf_amc::MsgHdrLT::MsgHdrLT(u8 in_len, char in_type)
 
 // --- atf_amc.MsgHdrLTMsgsCase.value.GetEnum
 // Get value of field as enum type
-inline atf_amc_MsgHdrLTMsgsCaseEnum atf_amc::value_GetEnum(const atf_amc::MsgHdrLTMsgsCase& parent) {
+inline atf_amc_MsgHdrLTMsgsCaseEnum atf_amc::value_GetEnum(const atf_amc::MsgHdrLTMsgsCase& parent) throw() {
     return atf_amc_MsgHdrLTMsgsCaseEnum(parent.value);
 }
 
 // --- atf_amc.MsgHdrLTMsgsCase.value.SetEnum
 // Set value of field from enum type.
-inline void atf_amc::value_SetEnum(atf_amc::MsgHdrLTMsgsCase& parent, atf_amc_MsgHdrLTMsgsCaseEnum rhs) {
+inline void atf_amc::value_SetEnum(atf_amc::MsgHdrLTMsgsCase& parent, atf_amc_MsgHdrLTMsgsCaseEnum rhs) throw() {
     parent.value = u32(rhs);
 }
 
 // --- atf_amc.MsgHdrLTMsgsCase.value.Cast
-inline  atf_amc::MsgHdrLTMsgsCase::operator atf_amc_MsgHdrLTMsgsCaseEnum() const {
+inline  atf_amc::MsgHdrLTMsgsCase::operator atf_amc_MsgHdrLTMsgsCaseEnum() const throw() {
     return atf_amc_MsgHdrLTMsgsCaseEnum((*this).value);
 }
 
@@ -5915,28 +5915,28 @@ inline void atf_amc::MsgHdrLTMsgsCase_Init(atf_amc::MsgHdrLTMsgsCase& parent) {
 }
 
 // --- atf_amc.MsgHdrLTMsgsCase..Ctor
-inline  atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase() {
+inline  atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase() throw() {
     atf_amc::MsgHdrLTMsgsCase_Init(*this);
 }
 
 // --- atf_amc.MsgHdrLTMsgsCase..FieldwiseCtor
-inline  atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase(u32 in_value)
+inline  atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_amc.MsgHdrLTMsgsCase..EnumCtor
-inline  atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase(atf_amc_MsgHdrLTMsgsCaseEnum arg) {
+inline  atf_amc::MsgHdrLTMsgsCase::MsgHdrLTMsgsCase(atf_amc_MsgHdrLTMsgsCaseEnum arg) throw() {
     this->value = u32(arg);
 }
 
 // --- atf_amc.MsgHdrLT_curs..ValidQ
-inline bool atf_amc::MsgHdrLT_curs_ValidQ(atf_amc::MsgHdrLT_curs& curs) {
+inline bool atf_amc::MsgHdrLT_curs_ValidQ(atf_amc::MsgHdrLT_curs& curs) throw() {
     return curs.msg != NULL;
 }
 
 // --- atf_amc.MsgHdrLT_curs..Reset
-inline void atf_amc::MsgHdrLT_curs_Reset(atf_amc::MsgHdrLT_curs& curs, algo::memptr buf) {
+inline void atf_amc::MsgHdrLT_curs_Reset(atf_amc::MsgHdrLT_curs& curs, algo::memptr buf) throw() {
     curs.bytes = buf.elems;
     curs.limit = buf.n_elems;
     atf_amc::MsgHdrLT *msg = NULL;
@@ -5953,12 +5953,12 @@ inline void atf_amc::MsgHdrLT_curs_Reset(atf_amc::MsgHdrLT_curs& curs, algo::mem
 }
 
 // --- atf_amc.MsgHdrLT_curs..Access
-inline atf_amc::MsgHdrLT*& atf_amc::MsgHdrLT_curs_Access(atf_amc::MsgHdrLT_curs& curs) {
+inline atf_amc::MsgHdrLT*& atf_amc::MsgHdrLT_curs_Access(atf_amc::MsgHdrLT_curs& curs) throw() {
     return curs.msg;
 }
 
 // --- atf_amc.MsgHdrLT_curs..Next
-inline void atf_amc::MsgHdrLT_curs_Next(atf_amc::MsgHdrLT_curs& curs) {
+inline void atf_amc::MsgHdrLT_curs_Next(atf_amc::MsgHdrLT_curs& curs) throw() {
     curs.bytes += curs.msglen;
     curs.limit -= curs.msglen;
     atf_amc::MsgHdrLT *msg = NULL;
@@ -5984,70 +5984,70 @@ inline void atf_amc::MsgHdrLT_curs_Init(atf_amc::MsgHdrLT_curs& parent) {
 }
 
 // --- atf_amc.MsgHdrLT_curs..Ctor
-inline  atf_amc::MsgHdrLT_curs::MsgHdrLT_curs() {
+inline  atf_amc::MsgHdrLT_curs::MsgHdrLT_curs() throw() {
     atf_amc::MsgHdrLT_curs_Init(*this);
 }
 
 // --- atf_amc.MsgType.value.GetEnum
 // Get value of field as enum type
-inline atf_amc_MsgTypeEnum atf_amc::value_GetEnum(const atf_amc::MsgType& parent) {
+inline atf_amc_MsgTypeEnum atf_amc::value_GetEnum(const atf_amc::MsgType& parent) throw() {
     return atf_amc_MsgTypeEnum(parent.value);
 }
 
 // --- atf_amc.MsgType.value.SetEnum
 // Set value of field from enum type.
-inline void atf_amc::value_SetEnum(atf_amc::MsgType& parent, atf_amc_MsgTypeEnum rhs) {
+inline void atf_amc::value_SetEnum(atf_amc::MsgType& parent, atf_amc_MsgTypeEnum rhs) throw() {
     parent.value = u16(rhs);
 }
 
 // --- atf_amc.MsgType.value.Cast
-inline  atf_amc::MsgType::operator atf_amc_MsgTypeEnum() const {
+inline  atf_amc::MsgType::operator atf_amc_MsgTypeEnum() const throw() {
     return atf_amc_MsgTypeEnum((*this).value);
 }
 
 // --- atf_amc.MsgType..Hash
-inline u32 atf_amc::MsgType_Hash(u32 prev, atf_amc::MsgType rhs) {
+inline u32 atf_amc::MsgType_Hash(u32 prev, atf_amc::MsgType rhs) throw() {
     prev = u16_Hash(prev, rhs.value);
     return prev;
 }
 
 // --- atf_amc.MsgType..EqOp
-inline bool atf_amc::MsgType::operator ==(const atf_amc::MsgType &rhs) const {
+inline bool atf_amc::MsgType::operator ==(const atf_amc::MsgType &rhs) const throw() {
     return atf_amc::MsgType_Eq(const_cast<atf_amc::MsgType&>(*this),const_cast<atf_amc::MsgType&>(rhs));
 }
 
 // --- atf_amc.MsgType..NeOp
-inline bool atf_amc::MsgType::operator !=(const atf_amc::MsgType &rhs) const {
+inline bool atf_amc::MsgType::operator !=(const atf_amc::MsgType &rhs) const throw() {
     return !atf_amc::MsgType_Eq(const_cast<atf_amc::MsgType&>(*this),const_cast<atf_amc::MsgType&>(rhs));
 }
 
 // --- atf_amc.MsgType..LtOp
-inline bool atf_amc::MsgType::operator <(const atf_amc::MsgType &rhs) const {
+inline bool atf_amc::MsgType::operator <(const atf_amc::MsgType &rhs) const throw() {
     return atf_amc::MsgType_Lt(const_cast<atf_amc::MsgType&>(*this),const_cast<atf_amc::MsgType&>(rhs));
 }
 
 // --- atf_amc.MsgType..GtOp
-inline bool atf_amc::MsgType::operator >(const atf_amc::MsgType &rhs) const {
+inline bool atf_amc::MsgType::operator >(const atf_amc::MsgType &rhs) const throw() {
     return atf_amc::MsgType_Lt(const_cast<atf_amc::MsgType&>(rhs),const_cast<atf_amc::MsgType&>(*this));
 }
 
 // --- atf_amc.MsgType..LeOp
-inline bool atf_amc::MsgType::operator <=(const atf_amc::MsgType &rhs) const {
+inline bool atf_amc::MsgType::operator <=(const atf_amc::MsgType &rhs) const throw() {
     return !atf_amc::MsgType_Lt(const_cast<atf_amc::MsgType&>(rhs),const_cast<atf_amc::MsgType&>(*this));
 }
 
 // --- atf_amc.MsgType..GeOp
-inline bool atf_amc::MsgType::operator >=(const atf_amc::MsgType &rhs) const {
+inline bool atf_amc::MsgType::operator >=(const atf_amc::MsgType &rhs) const throw() {
     return !atf_amc::MsgType_Lt(const_cast<atf_amc::MsgType&>(*this),const_cast<atf_amc::MsgType&>(rhs));
 }
 
 // --- atf_amc.MsgType..Lt
-inline bool atf_amc::MsgType_Lt(atf_amc::MsgType lhs, atf_amc::MsgType rhs) {
+inline bool atf_amc::MsgType_Lt(atf_amc::MsgType lhs, atf_amc::MsgType rhs) throw() {
     return u16_Lt(lhs.value, rhs.value);
 }
 
 // --- atf_amc.MsgType..Cmp
-inline i32 atf_amc::MsgType_Cmp(atf_amc::MsgType lhs, atf_amc::MsgType rhs) {
+inline i32 atf_amc::MsgType_Cmp(atf_amc::MsgType lhs, atf_amc::MsgType rhs) throw() {
     i32 retval = 0;
     retval = u16_Cmp(lhs.value, rhs.value);
     return retval;
@@ -6060,7 +6060,7 @@ inline void atf_amc::MsgType_Init(atf_amc::MsgType& parent) {
 }
 
 // --- atf_amc.MsgType..Eq
-inline bool atf_amc::MsgType_Eq(atf_amc::MsgType lhs, atf_amc::MsgType rhs) {
+inline bool atf_amc::MsgType_Eq(atf_amc::MsgType lhs, atf_amc::MsgType rhs) throw() {
     bool retval = true;
     retval = u16_Eq(lhs.value, rhs.value);
     return retval;
@@ -6068,7 +6068,7 @@ inline bool atf_amc::MsgType_Eq(atf_amc::MsgType lhs, atf_amc::MsgType rhs) {
 
 // --- atf_amc.MsgType..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::MsgType_Update(atf_amc::MsgType &lhs, atf_amc::MsgType rhs) {
+inline bool atf_amc::MsgType_Update(atf_amc::MsgType &lhs, atf_amc::MsgType rhs) throw() {
     bool ret = !MsgType_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -6078,44 +6078,44 @@ inline bool atf_amc::MsgType_Update(atf_amc::MsgType &lhs, atf_amc::MsgType rhs)
 
 // --- atf_amc.MsgType..EqEnum
 // define enum comparison operator to avoid ambiguity
-inline bool atf_amc::MsgType::operator ==(atf_amc_MsgTypeEnum rhs) const {
+inline bool atf_amc::MsgType::operator ==(atf_amc_MsgTypeEnum rhs) const throw() {
     return atf_amc_MsgTypeEnum(value) == rhs;
 }
 
 // --- atf_amc.MsgType..Ctor
-inline  atf_amc::MsgType::MsgType() {
+inline  atf_amc::MsgType::MsgType() throw() {
     atf_amc::MsgType_Init(*this);
 }
 
 // --- atf_amc.MsgType..FieldwiseCtor
-inline  atf_amc::MsgType::MsgType(u16 in_value)
+inline  atf_amc::MsgType::MsgType(u16 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_amc.MsgType..EnumCtor
-inline  atf_amc::MsgType::MsgType(atf_amc_MsgTypeEnum arg) {
+inline  atf_amc::MsgType::MsgType(atf_amc_MsgTypeEnum arg) throw() {
     this->value = u16(arg);
 }
 
 // --- atf_amc.MsgLength.value.Cast
-inline  atf_amc::MsgLength::operator u16() const {
+inline  atf_amc::MsgLength::operator u16() const throw() {
     return u16((*this).value);
 }
 
 // --- atf_amc.MsgLength..Hash
-inline u32 atf_amc::MsgLength_Hash(u32 prev, atf_amc::MsgLength rhs) {
+inline u32 atf_amc::MsgLength_Hash(u32 prev, atf_amc::MsgLength rhs) throw() {
     prev = u16_Hash(prev, rhs.value);
     return prev;
 }
 
 // --- atf_amc.MsgLength..Lt
-inline bool atf_amc::MsgLength_Lt(atf_amc::MsgLength lhs, atf_amc::MsgLength rhs) {
+inline bool atf_amc::MsgLength_Lt(atf_amc::MsgLength lhs, atf_amc::MsgLength rhs) throw() {
     return u16_Lt(lhs.value, rhs.value);
 }
 
 // --- atf_amc.MsgLength..Cmp
-inline i32 atf_amc::MsgLength_Cmp(atf_amc::MsgLength lhs, atf_amc::MsgLength rhs) {
+inline i32 atf_amc::MsgLength_Cmp(atf_amc::MsgLength lhs, atf_amc::MsgLength rhs) throw() {
     i32 retval = 0;
     retval = u16_Cmp(lhs.value, rhs.value);
     return retval;
@@ -6128,7 +6128,7 @@ inline void atf_amc::MsgLength_Init(atf_amc::MsgLength& parent) {
 }
 
 // --- atf_amc.MsgLength..Eq
-inline bool atf_amc::MsgLength_Eq(atf_amc::MsgLength lhs, atf_amc::MsgLength rhs) {
+inline bool atf_amc::MsgLength_Eq(atf_amc::MsgLength lhs, atf_amc::MsgLength rhs) throw() {
     bool retval = true;
     retval = u16_Eq(lhs.value, rhs.value);
     return retval;
@@ -6136,7 +6136,7 @@ inline bool atf_amc::MsgLength_Eq(atf_amc::MsgLength lhs, atf_amc::MsgLength rhs
 
 // --- atf_amc.MsgLength..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::MsgLength_Update(atf_amc::MsgLength &lhs, atf_amc::MsgLength rhs) {
+inline bool atf_amc::MsgLength_Update(atf_amc::MsgLength &lhs, atf_amc::MsgLength rhs) throw() {
     bool ret = !MsgLength_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -6145,47 +6145,47 @@ inline bool atf_amc::MsgLength_Update(atf_amc::MsgLength &lhs, atf_amc::MsgLengt
 }
 
 // --- atf_amc.MsgLength..Ctor
-inline  atf_amc::MsgLength::MsgLength() {
+inline  atf_amc::MsgLength::MsgLength() throw() {
     atf_amc::MsgLength_Init(*this);
 }
 
 // --- atf_amc.MsgLength..FieldwiseCtor
-inline  atf_amc::MsgLength::MsgLength(u16 in_value)
+inline  atf_amc::MsgLength::MsgLength(u16 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_amc.MsgHeader..Hash
-inline u32 atf_amc::MsgHeader_Hash(u32 prev, const atf_amc::MsgHeader& rhs) {
+inline u32 atf_amc::MsgHeader_Hash(u32 prev, const atf_amc::MsgHeader& rhs) throw() {
     prev = MsgType_Hash(prev, rhs.type);
     prev = MsgLength_Hash(prev, rhs.length);
     return prev;
 }
 
 // --- atf_amc.MsgHeader..EqOp
-inline bool atf_amc::MsgHeader::operator ==(const atf_amc::MsgHeader &rhs) const {
+inline bool atf_amc::MsgHeader::operator ==(const atf_amc::MsgHeader &rhs) const throw() {
     return atf_amc::MsgHeader_Eq(const_cast<atf_amc::MsgHeader&>(*this),const_cast<atf_amc::MsgHeader&>(rhs));
 }
 
 // --- atf_amc.MsgHeader..NeOp
-inline bool atf_amc::MsgHeader::operator !=(const atf_amc::MsgHeader &rhs) const {
+inline bool atf_amc::MsgHeader::operator !=(const atf_amc::MsgHeader &rhs) const throw() {
     return !atf_amc::MsgHeader_Eq(const_cast<atf_amc::MsgHeader&>(*this),const_cast<atf_amc::MsgHeader&>(rhs));
 }
 
 // --- atf_amc.MsgHeader..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::MsgHeader& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::MsgHeader& parent) throw() {
     return i32(const_cast<atf_amc::MsgHeader&>(parent).length);
 }
 
 // --- atf_amc.MsgHeader..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgHeader& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgHeader& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgHeader&>(row).length));
 }
 
 // --- atf_amc.MsgHeader..Cmp
-inline i32 atf_amc::MsgHeader_Cmp(atf_amc::MsgHeader& lhs, atf_amc::MsgHeader& rhs) {
+inline i32 atf_amc::MsgHeader_Cmp(atf_amc::MsgHeader& lhs, atf_amc::MsgHeader& rhs) throw() {
     i32 retval = 0;
     retval = atf_amc::MsgType_Cmp(lhs.type, rhs.type);
     if (retval != 0) {
@@ -6196,7 +6196,7 @@ inline i32 atf_amc::MsgHeader_Cmp(atf_amc::MsgHeader& lhs, atf_amc::MsgHeader& r
 }
 
 // --- atf_amc.MsgHeader..Eq
-inline bool atf_amc::MsgHeader_Eq(atf_amc::MsgHeader& lhs, atf_amc::MsgHeader& rhs) {
+inline bool atf_amc::MsgHeader_Eq(atf_amc::MsgHeader& lhs, atf_amc::MsgHeader& rhs) throw() {
     bool retval = true;
     retval = atf_amc::MsgType_Eq(lhs.type, rhs.type);
     if (!retval) {
@@ -6207,23 +6207,23 @@ inline bool atf_amc::MsgHeader_Eq(atf_amc::MsgHeader& lhs, atf_amc::MsgHeader& r
 }
 
 // --- atf_amc.MsgHeader..Ctor
-inline  atf_amc::MsgHeader::MsgHeader() {
+inline  atf_amc::MsgHeader::MsgHeader() throw() {
 }
 
 // --- atf_amc.MsgHeader..FieldwiseCtor
-inline  atf_amc::MsgHeader::MsgHeader(atf_amc::MsgType in_type, atf_amc::MsgLength in_length)
+inline  atf_amc::MsgHeader::MsgHeader(atf_amc::MsgType in_type, atf_amc::MsgLength in_length) throw()
     : type(in_type)
     , length(in_length)
  {
 }
 
 // --- atf_amc.MsgHeader_curs..ValidQ
-inline bool atf_amc::MsgHeader_curs_ValidQ(atf_amc::MsgHeader_curs& curs) {
+inline bool atf_amc::MsgHeader_curs_ValidQ(atf_amc::MsgHeader_curs& curs) throw() {
     return curs.msg != NULL;
 }
 
 // --- atf_amc.MsgHeader_curs..Reset
-inline void atf_amc::MsgHeader_curs_Reset(atf_amc::MsgHeader_curs& curs, algo::memptr buf) {
+inline void atf_amc::MsgHeader_curs_Reset(atf_amc::MsgHeader_curs& curs, algo::memptr buf) throw() {
     curs.bytes = buf.elems;
     curs.limit = buf.n_elems;
     atf_amc::MsgHeader *msg = NULL;
@@ -6240,12 +6240,12 @@ inline void atf_amc::MsgHeader_curs_Reset(atf_amc::MsgHeader_curs& curs, algo::m
 }
 
 // --- atf_amc.MsgHeader_curs..Access
-inline atf_amc::MsgHeader*& atf_amc::MsgHeader_curs_Access(atf_amc::MsgHeader_curs& curs) {
+inline atf_amc::MsgHeader*& atf_amc::MsgHeader_curs_Access(atf_amc::MsgHeader_curs& curs) throw() {
     return curs.msg;
 }
 
 // --- atf_amc.MsgHeader_curs..Next
-inline void atf_amc::MsgHeader_curs_Next(atf_amc::MsgHeader_curs& curs) {
+inline void atf_amc::MsgHeader_curs_Next(atf_amc::MsgHeader_curs& curs) throw() {
     curs.bytes += curs.msglen;
     curs.limit -= curs.msglen;
     atf_amc::MsgHeader *msg = NULL;
@@ -6271,7 +6271,7 @@ inline void atf_amc::MsgHeader_curs_Init(atf_amc::MsgHeader_curs& parent) {
 }
 
 // --- atf_amc.MsgHeader_curs..Ctor
-inline  atf_amc::MsgHeader_curs::MsgHeader_curs() {
+inline  atf_amc::MsgHeader_curs::MsgHeader_curs() throw() {
     atf_amc::MsgHeader_curs_Init(*this);
 }
 
@@ -6293,13 +6293,13 @@ inline atf_amc::MsgHdrLT& atf_amc::Castbase(atf_amc::MsgLTA& parent) {
 
 // --- atf_amc.MsgLTA..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTA& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTA& parent) throw() {
     return i32(const_cast<atf_amc::MsgLTA&>(parent).len + 2);
 }
 
 // --- atf_amc.MsgLTA..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTA& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTA& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgLTA&>(row).len + 2));
 }
 
@@ -6311,12 +6311,12 @@ inline void atf_amc::MsgLTA_Init(atf_amc::MsgLTA& parent) {
 }
 
 // --- atf_amc.MsgLTA..Ctor
-inline  atf_amc::MsgLTA::MsgLTA() {
+inline  atf_amc::MsgLTA::MsgLTA() throw() {
     atf_amc::MsgLTA_Init(*this);
 }
 
 // --- atf_amc.MsgLTA..FieldwiseCtor
-inline  atf_amc::MsgLTA::MsgLTA(const algo::strptr& in_a)
+inline  atf_amc::MsgLTA::MsgLTA(const algo::strptr& in_a) throw()
     : a(in_a)
  {
     this->len = u8(ssizeof(*this) + (-2));
@@ -6341,13 +6341,13 @@ inline atf_amc::MsgHdrLT& atf_amc::Castbase(atf_amc::MsgLTB& parent) {
 
 // --- atf_amc.MsgLTB..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTB& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTB& parent) throw() {
     return i32(const_cast<atf_amc::MsgLTB&>(parent).len + 2);
 }
 
 // --- atf_amc.MsgLTB..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTB& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTB& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgLTB&>(row).len + 2));
 }
 
@@ -6359,12 +6359,12 @@ inline void atf_amc::MsgLTB_Init(atf_amc::MsgLTB& parent) {
 }
 
 // --- atf_amc.MsgLTB..Ctor
-inline  atf_amc::MsgLTB::MsgLTB() {
+inline  atf_amc::MsgLTB::MsgLTB() throw() {
     atf_amc::MsgLTB_Init(*this);
 }
 
 // --- atf_amc.MsgLTB..FieldwiseCtor
-inline  atf_amc::MsgLTB::MsgLTB(const algo::strptr& in_b)
+inline  atf_amc::MsgLTB::MsgLTB(const algo::strptr& in_b) throw()
     : b(in_b)
  {
     this->len = u8(ssizeof(*this) + (-2));
@@ -6394,7 +6394,7 @@ inline atf_amc::MsgHdrLT& atf_amc::Castbase(atf_amc::MsgLTO& parent) {
 // Since the last element is itself variable-length, two more checks are applied:
 // If o's length field value is too short, return NULL.
 // If o's length field value extends past parent's allowed length, return NULL.
-inline atf_amc::MsgHdrLT* atf_amc::o_Get(atf_amc::MsgLTO& parent) {
+inline atf_amc::MsgHdrLT* atf_amc::o_Get(atf_amc::MsgLTO& parent) throw() {
     i32 totlen = i32(parent.len + 2);
     u8 *end = (u8*)&parent + sizeof(atf_amc::MsgLTO);
     atf_amc::MsgHdrLT *ptr = (atf_amc::MsgHdrLT*)end;
@@ -6405,13 +6405,13 @@ inline atf_amc::MsgHdrLT* atf_amc::o_Get(atf_amc::MsgLTO& parent) {
 
 // --- atf_amc.MsgLTO..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTO& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTO& parent) throw() {
     return i32(const_cast<atf_amc::MsgLTO&>(parent).len + 2);
 }
 
 // --- atf_amc.MsgLTO..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTO& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTO& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgLTO&>(row).len + 2));
 }
 
@@ -6423,7 +6423,7 @@ inline void atf_amc::MsgLTO_Init(atf_amc::MsgLTO& parent) {
 }
 
 // --- atf_amc.MsgLTO..Ctor
-inline  atf_amc::MsgLTO::MsgLTO() {
+inline  atf_amc::MsgLTO::MsgLTO() throw() {
     atf_amc::MsgLTO_Init(*this);
 }
 
@@ -6445,14 +6445,14 @@ inline atf_amc::MsgHdrLT& atf_amc::Castbase(atf_amc::MsgLTV& parent) {
 
 // --- atf_amc.MsgLTV.v.N
 // Return number of elements in varlen field
-inline u32 atf_amc::v_N(const atf_amc::MsgLTV& parent) {
+inline u32 atf_amc::v_N(const atf_amc::MsgLTV& parent) throw() {
     u32 length = i32(((atf_amc::MsgLTV&)parent).len + 2);
     u32 extra_bytes = u32_Max(length,sizeof(atf_amc::MsgLTV)) - sizeof(atf_amc::MsgLTV); // avoid unsigned subtraction underflow
     return u32(extra_bytes / sizeof(u8));
 }
 
 // --- atf_amc.MsgLTV.v_curs.Reset
-inline void atf_amc::MsgLTV_v_curs_Reset(MsgLTV_v_curs &curs, atf_amc::MsgLTV &parent) {
+inline void atf_amc::MsgLTV_v_curs_Reset(MsgLTV_v_curs &curs, atf_amc::MsgLTV &parent) throw() {
     curs.ptr = (u8*)&parent + sizeof(atf_amc::MsgLTV);
     curs.length = i32(parent.len + 2) - sizeof(atf_amc::MsgLTV);
     curs.index = 0;
@@ -6460,7 +6460,7 @@ inline void atf_amc::MsgLTV_v_curs_Reset(MsgLTV_v_curs &curs, atf_amc::MsgLTV &p
 
 // --- atf_amc.MsgLTV.v_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::MsgLTV_v_curs_ValidQ(MsgLTV_v_curs &curs) {
+inline bool atf_amc::MsgLTV_v_curs_ValidQ(MsgLTV_v_curs &curs) throw() {
     bool valid = ssizeof(atf_amc::MsgHdrLT) <= curs.length;
     valid = valid && unsigned(i32((*(atf_amc::MsgHdrLT*)curs.ptr).len + 2)-ssizeof(atf_amc::MsgHdrLT)) <= curs.length-ssizeof(atf_amc::MsgHdrLT);
     return valid;
@@ -6468,7 +6468,7 @@ inline bool atf_amc::MsgLTV_v_curs_ValidQ(MsgLTV_v_curs &curs) {
 
 // --- atf_amc.MsgLTV.v_curs.Next
 // proceed to next item
-inline void atf_amc::MsgLTV_v_curs_Next(MsgLTV_v_curs &curs) {
+inline void atf_amc::MsgLTV_v_curs_Next(MsgLTV_v_curs &curs) throw() {
     i32 len = i32((*(atf_amc::MsgHdrLT*)curs.ptr).len + 2);
     curs.ptr += len;
     curs.length -= len;
@@ -6477,19 +6477,19 @@ inline void atf_amc::MsgLTV_v_curs_Next(MsgLTV_v_curs &curs) {
 
 // --- atf_amc.MsgLTV.v_curs.Access
 // item access
-inline atf_amc::MsgHdrLT& atf_amc::MsgLTV_v_curs_Access(MsgLTV_v_curs &curs) {
+inline atf_amc::MsgHdrLT& atf_amc::MsgLTV_v_curs_Access(MsgLTV_v_curs &curs) throw() {
     return *(atf_amc::MsgHdrLT*)curs.ptr;
 }
 
 // --- atf_amc.MsgLTV..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTV& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::MsgLTV& parent) throw() {
     return i32(const_cast<atf_amc::MsgLTV&>(parent).len + 2);
 }
 
 // --- atf_amc.MsgLTV..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTV& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::MsgLTV& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::MsgLTV&>(row).len + 2));
 }
 
@@ -6501,88 +6501,88 @@ inline void atf_amc::MsgLTV_Init(atf_amc::MsgLTV& parent) {
 }
 
 // --- atf_amc.MsgLTV..Ctor
-inline  atf_amc::MsgLTV::MsgLTV() {
+inline  atf_amc::MsgLTV::MsgLTV() throw() {
     atf_amc::MsgLTV_Init(*this);
 }
 
 // --- atf_amc.Msgbuf.in_buf.Max
 // Return max. number of bytes in the buffer.
-inline i32 atf_amc::in_buf_Max(atf_amc::Msgbuf& msgbuf) {
+inline i32 atf_amc::in_buf_Max(atf_amc::Msgbuf& msgbuf) throw() {
     return 64;
     (void)msgbuf;//only to avoid -Wunused-parameter
 }
 
 // --- atf_amc.Msgbuf.in_buf.N
 // Return number of bytes in the buffer.
-inline i32 atf_amc::in_buf_N(atf_amc::Msgbuf& msgbuf) {
+inline i32 atf_amc::in_buf_N(atf_amc::Msgbuf& msgbuf) throw() {
     return msgbuf.in_buf_end - msgbuf.in_buf_start;
 }
 
 // --- atf_amc.Msgbuf.in_custom.Max
 // Return max. number of bytes in the buffer.
-inline i32 atf_amc::in_custom_Max(atf_amc::Msgbuf& msgbuf) {
+inline i32 atf_amc::in_custom_Max(atf_amc::Msgbuf& msgbuf) throw() {
     return 64;
     (void)msgbuf;//only to avoid -Wunused-parameter
 }
 
 // --- atf_amc.Msgbuf.in_custom.N
 // Return number of bytes in the buffer.
-inline i32 atf_amc::in_custom_N(atf_amc::Msgbuf& msgbuf) {
+inline i32 atf_amc::in_custom_N(atf_amc::Msgbuf& msgbuf) throw() {
     return msgbuf.in_custom_end - msgbuf.in_custom_start;
 }
 
 // --- atf_amc.Msgbuf.out_extra.Max
 // Return max. number of bytes in the buffer.
-inline i32 atf_amc::out_extra_Max(atf_amc::Msgbuf& msgbuf) {
+inline i32 atf_amc::out_extra_Max(atf_amc::Msgbuf& msgbuf) throw() {
     return 64;
     (void)msgbuf;//only to avoid -Wunused-parameter
 }
 
 // --- atf_amc.Msgbuf.out_extra.N
 // Return number of bytes in the buffer.
-inline i32 atf_amc::out_extra_N(atf_amc::Msgbuf& msgbuf) {
+inline i32 atf_amc::out_extra_N(atf_amc::Msgbuf& msgbuf) throw() {
     return msgbuf.out_extra_end - msgbuf.out_extra_start;
 }
 
 // --- atf_amc.Msgbuf.in_extra.Max
 // Return max. number of bytes in the buffer.
-inline i32 atf_amc::in_extra_Max(atf_amc::Msgbuf& msgbuf) {
+inline i32 atf_amc::in_extra_Max(atf_amc::Msgbuf& msgbuf) throw() {
     return 64;
     (void)msgbuf;//only to avoid -Wunused-parameter
 }
 
 // --- atf_amc.Msgbuf.in_extra.N
 // Return number of bytes in the buffer.
-inline i32 atf_amc::in_extra_N(atf_amc::Msgbuf& msgbuf) {
+inline i32 atf_amc::in_extra_N(atf_amc::Msgbuf& msgbuf) throw() {
     return msgbuf.in_extra_end - msgbuf.in_extra_start;
 }
 
 // --- atf_amc.Msgbuf..Ctor
-inline  atf_amc::Msgbuf::Msgbuf() {
+inline  atf_amc::Msgbuf::Msgbuf() throw() {
     atf_amc::Msgbuf_Init(*this);
     // added because atf_amc.Msgbuf.in_buf (Fbuf) does not need initialization
     // coverity[uninit_member]
 }
 
 // --- atf_amc.Msgbuf..Dtor
-inline  atf_amc::Msgbuf::~Msgbuf() {
+inline  atf_amc::Msgbuf::~Msgbuf() throw() {
     atf_amc::Msgbuf_Uninit(*this);
 }
 
 // --- atf_amc.MsgsCase.value.GetEnum
 // Get value of field as enum type
-inline atf_amc_MsgsCaseEnum atf_amc::value_GetEnum(const atf_amc::MsgsCase& parent) {
+inline atf_amc_MsgsCaseEnum atf_amc::value_GetEnum(const atf_amc::MsgsCase& parent) throw() {
     return atf_amc_MsgsCaseEnum(parent.value);
 }
 
 // --- atf_amc.MsgsCase.value.SetEnum
 // Set value of field from enum type.
-inline void atf_amc::value_SetEnum(atf_amc::MsgsCase& parent, atf_amc_MsgsCaseEnum rhs) {
+inline void atf_amc::value_SetEnum(atf_amc::MsgsCase& parent, atf_amc_MsgsCaseEnum rhs) throw() {
     parent.value = u32(rhs);
 }
 
 // --- atf_amc.MsgsCase.value.Cast
-inline  atf_amc::MsgsCase::operator atf_amc_MsgsCaseEnum() const {
+inline  atf_amc::MsgsCase::operator atf_amc_MsgsCaseEnum() const throw() {
     return atf_amc_MsgsCaseEnum((*this).value);
 }
 
@@ -6593,28 +6593,28 @@ inline void atf_amc::MsgsCase_Init(atf_amc::MsgsCase& parent) {
 }
 
 // --- atf_amc.MsgsCase..Ctor
-inline  atf_amc::MsgsCase::MsgsCase() {
+inline  atf_amc::MsgsCase::MsgsCase() throw() {
     atf_amc::MsgsCase_Init(*this);
 }
 
 // --- atf_amc.MsgsCase..FieldwiseCtor
-inline  atf_amc::MsgsCase::MsgsCase(u32 in_value)
+inline  atf_amc::MsgsCase::MsgsCase(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_amc.MsgsCase..EnumCtor
-inline  atf_amc::MsgsCase::MsgsCase(atf_amc_MsgsCaseEnum arg) {
+inline  atf_amc::MsgsCase::MsgsCase(atf_amc_MsgsCaseEnum arg) throw() {
     this->value = u32(arg);
 }
 
 // --- atf_amc.NetBitfld1.value.Get
-inline u16 atf_amc::value_Get(const atf_amc::NetBitfld1& parent) {
+inline u16 atf_amc::value_Get(const atf_amc::NetBitfld1& parent) throw() {
     return be16toh(parent.value_be); // read big-endian value from memory
 }
 
 // --- atf_amc.NetBitfld1.value.Set
-inline void atf_amc::value_Set(atf_amc::NetBitfld1& parent, u16 rhs) {
+inline void atf_amc::value_Set(atf_amc::NetBitfld1& parent, u16 rhs) throw() {
     parent.value_be = htobe16(rhs); // write big-endian value to memory
 }
 
@@ -6623,7 +6623,7 @@ inline void atf_amc::value_Set(atf_amc::NetBitfld1& parent, u16 rhs) {
 //    4 bits starting at bit 0.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline u8 atf_amc::bits0_4_Get(const atf_amc::NetBitfld1& parent) {
+inline u8 atf_amc::bits0_4_Get(const atf_amc::NetBitfld1& parent) throw() {
     return u8((value_Get(parent) >> 0) & 0x0f);
 }
 
@@ -6633,7 +6633,7 @@ inline u8 atf_amc::bits0_4_Get(const atf_amc::NetBitfld1& parent) {
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline void atf_amc::bits0_4_Set(atf_amc::NetBitfld1& parent, u8 rhs) {
+inline void atf_amc::bits0_4_Set(atf_amc::NetBitfld1& parent, u8 rhs) throw() {
     u16 t1    = u16(0x0f) << 0;
     u16 t2    = (u16(rhs) & 0x0f) << 0;
     value_Set(parent, u16((value_Get(parent) & ~t1) | t2));
@@ -6644,7 +6644,7 @@ inline void atf_amc::bits0_4_Set(atf_amc::NetBitfld1& parent, u8 rhs) {
 //    4 bits starting at bit 8.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline u8 atf_amc::bits8_12_Get(const atf_amc::NetBitfld1& parent) {
+inline u8 atf_amc::bits8_12_Get(const atf_amc::NetBitfld1& parent) throw() {
     return u8((value_Get(parent) >> 8) & 0x0f);
 }
 
@@ -6654,7 +6654,7 @@ inline u8 atf_amc::bits8_12_Get(const atf_amc::NetBitfld1& parent) {
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline void atf_amc::bits8_12_Set(atf_amc::NetBitfld1& parent, u8 rhs) {
+inline void atf_amc::bits8_12_Set(atf_amc::NetBitfld1& parent, u8 rhs) throw() {
     u16 t1    = u16(0x0f) << 8;
     u16 t2    = (u16(rhs) & 0x0f) << 8;
     value_Set(parent, u16((value_Get(parent) & ~t1) | t2));
@@ -6667,7 +6667,7 @@ inline void atf_amc::NetBitfld1_Init(atf_amc::NetBitfld1& parent) {
 }
 
 // --- atf_amc.NetBitfld1..Ctor
-inline  atf_amc::NetBitfld1::NetBitfld1() {
+inline  atf_amc::NetBitfld1::NetBitfld1() throw() {
     atf_amc::NetBitfld1_Init(*this);
 }
 
@@ -6675,7 +6675,7 @@ inline  atf_amc::NetBitfld1::NetBitfld1() {
 // Return pointer to optional last element (NULL if none)
 // The parent's length field is assumed to have already been checked for validity.
 // If the parent's lengthis too short to allow a full-sized typeg, return NULL.
-inline atf_amc::TypeG* atf_amc::typeg_Get(atf_amc::OptAlloc& optalloc) {
+inline atf_amc::TypeG* atf_amc::typeg_Get(atf_amc::OptAlloc& optalloc) throw() {
     i32 totlen = i32(optalloc.length);
     u8 *end = (u8*)&optalloc + sizeof(atf_amc::OptAlloc);
     atf_amc::TypeG *ptr = (atf_amc::TypeG*)end;
@@ -6685,13 +6685,13 @@ inline atf_amc::TypeG* atf_amc::typeg_Get(atf_amc::OptAlloc& optalloc) {
 
 // --- atf_amc.OptAlloc..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::OptAlloc& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::OptAlloc& parent) throw() {
     return i32(const_cast<atf_amc::OptAlloc&>(parent).length);
 }
 
 // --- atf_amc.OptAlloc..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptAlloc& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptAlloc& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::OptAlloc&>(row).length));
 }
 
@@ -6702,17 +6702,17 @@ inline void atf_amc::OptAlloc_Init(atf_amc::OptAlloc& optalloc) {
 }
 
 // --- atf_amc.OptAlloc..Ctor
-inline  atf_amc::OptAlloc::OptAlloc() {
+inline  atf_amc::OptAlloc::OptAlloc() throw() {
     atf_amc::OptAlloc_Init(*this);
 }
 
 // --- atf_amc.OptAlloc_curs..ValidQ
-inline bool atf_amc::OptAlloc_curs_ValidQ(atf_amc::OptAlloc_curs& curs) {
+inline bool atf_amc::OptAlloc_curs_ValidQ(atf_amc::OptAlloc_curs& curs) throw() {
     return curs.msg != NULL;
 }
 
 // --- atf_amc.OptAlloc_curs..Reset
-inline void atf_amc::OptAlloc_curs_Reset(atf_amc::OptAlloc_curs& curs, algo::memptr buf) {
+inline void atf_amc::OptAlloc_curs_Reset(atf_amc::OptAlloc_curs& curs, algo::memptr buf) throw() {
     curs.bytes = buf.elems;
     curs.limit = buf.n_elems;
     atf_amc::OptAlloc *msg = NULL;
@@ -6729,12 +6729,12 @@ inline void atf_amc::OptAlloc_curs_Reset(atf_amc::OptAlloc_curs& curs, algo::mem
 }
 
 // --- atf_amc.OptAlloc_curs..Access
-inline atf_amc::OptAlloc*& atf_amc::OptAlloc_curs_Access(atf_amc::OptAlloc_curs& curs) {
+inline atf_amc::OptAlloc*& atf_amc::OptAlloc_curs_Access(atf_amc::OptAlloc_curs& curs) throw() {
     return curs.msg;
 }
 
 // --- atf_amc.OptAlloc_curs..Next
-inline void atf_amc::OptAlloc_curs_Next(atf_amc::OptAlloc_curs& curs) {
+inline void atf_amc::OptAlloc_curs_Next(atf_amc::OptAlloc_curs& curs) throw() {
     curs.bytes += curs.msglen;
     curs.limit -= curs.msglen;
     atf_amc::OptAlloc *msg = NULL;
@@ -6760,7 +6760,7 @@ inline void atf_amc::OptAlloc_curs_Init(atf_amc::OptAlloc_curs& parent) {
 }
 
 // --- atf_amc.OptAlloc_curs..Ctor
-inline  atf_amc::OptAlloc_curs::OptAlloc_curs() {
+inline  atf_amc::OptAlloc_curs::OptAlloc_curs() throw() {
     atf_amc::OptAlloc_curs_Init(*this);
 }
 
@@ -6768,7 +6768,7 @@ inline  atf_amc::OptAlloc_curs::OptAlloc_curs() {
 // Return pointer to optional last element (NULL if none)
 // The parent's length field is assumed to have already been checked for validity.
 // If the parent's lengthis too short to allow a full-sized typeg, return NULL.
-inline atf_amc::TypeG* atf_amc::typeg_Get(atf_amc::OptG& optg) {
+inline atf_amc::TypeG* atf_amc::typeg_Get(atf_amc::OptG& optg) throw() {
     i32 totlen = i32(optg.length);
     u8 *end = (u8*)&optg + sizeof(atf_amc::OptG);
     atf_amc::TypeG *ptr = (atf_amc::TypeG*)end;
@@ -6778,13 +6778,13 @@ inline atf_amc::TypeG* atf_amc::typeg_Get(atf_amc::OptG& optg) {
 
 // --- atf_amc.OptG..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::OptG& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::OptG& parent) throw() {
     return i32(const_cast<atf_amc::OptG&>(parent).length);
 }
 
 // --- atf_amc.OptG..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptG& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptG& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::OptG&>(row).length));
 }
 
@@ -6795,17 +6795,17 @@ inline void atf_amc::OptG_Init(atf_amc::OptG& optg) {
 }
 
 // --- atf_amc.OptG..Ctor
-inline  atf_amc::OptG::OptG() {
+inline  atf_amc::OptG::OptG() throw() {
     atf_amc::OptG_Init(*this);
 }
 
 // --- atf_amc.OptG_curs..ValidQ
-inline bool atf_amc::OptG_curs_ValidQ(atf_amc::OptG_curs& curs) {
+inline bool atf_amc::OptG_curs_ValidQ(atf_amc::OptG_curs& curs) throw() {
     return curs.msg != NULL;
 }
 
 // --- atf_amc.OptG_curs..Reset
-inline void atf_amc::OptG_curs_Reset(atf_amc::OptG_curs& curs, algo::memptr buf) {
+inline void atf_amc::OptG_curs_Reset(atf_amc::OptG_curs& curs, algo::memptr buf) throw() {
     curs.bytes = buf.elems;
     curs.limit = buf.n_elems;
     atf_amc::OptG *msg = NULL;
@@ -6822,12 +6822,12 @@ inline void atf_amc::OptG_curs_Reset(atf_amc::OptG_curs& curs, algo::memptr buf)
 }
 
 // --- atf_amc.OptG_curs..Access
-inline atf_amc::OptG*& atf_amc::OptG_curs_Access(atf_amc::OptG_curs& curs) {
+inline atf_amc::OptG*& atf_amc::OptG_curs_Access(atf_amc::OptG_curs& curs) throw() {
     return curs.msg;
 }
 
 // --- atf_amc.OptG_curs..Next
-inline void atf_amc::OptG_curs_Next(atf_amc::OptG_curs& curs) {
+inline void atf_amc::OptG_curs_Next(atf_amc::OptG_curs& curs) throw() {
     curs.bytes += curs.msglen;
     curs.limit -= curs.msglen;
     atf_amc::OptG *msg = NULL;
@@ -6853,7 +6853,7 @@ inline void atf_amc::OptG_curs_Init(atf_amc::OptG_curs& parent) {
 }
 
 // --- atf_amc.OptG_curs..Ctor
-inline  atf_amc::OptG_curs::OptG_curs() {
+inline  atf_amc::OptG_curs::OptG_curs() throw() {
     atf_amc::OptG_curs_Init(*this);
 }
 
@@ -6864,7 +6864,7 @@ inline  atf_amc::OptG_curs::OptG_curs() {
 // Since the last element is itself variable-length, two more checks are applied:
 // If optg's length field value is too short, return NULL.
 // If optg's length field value extends past parent's allowed length, return NULL.
-inline atf_amc::OptG* atf_amc::optg_Get(atf_amc::OptOptG& parent) {
+inline atf_amc::OptG* atf_amc::optg_Get(atf_amc::OptOptG& parent) throw() {
     i32 totlen = i32(parent.length);
     u8 *end = (u8*)&parent + sizeof(atf_amc::OptOptG);
     atf_amc::OptG *ptr = (atf_amc::OptG*)end;
@@ -6875,13 +6875,13 @@ inline atf_amc::OptG* atf_amc::optg_Get(atf_amc::OptOptG& parent) {
 
 // --- atf_amc.OptOptG..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::OptOptG& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::OptOptG& parent) throw() {
     return i32(const_cast<atf_amc::OptOptG&>(parent).length);
 }
 
 // --- atf_amc.OptOptG..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptOptG& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::OptOptG& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::OptOptG&>(row).length));
 }
 
@@ -6892,17 +6892,17 @@ inline void atf_amc::OptOptG_Init(atf_amc::OptOptG& parent) {
 }
 
 // --- atf_amc.OptOptG..Ctor
-inline  atf_amc::OptOptG::OptOptG() {
+inline  atf_amc::OptOptG::OptOptG() throw() {
     atf_amc::OptOptG_Init(*this);
 }
 
 // --- atf_amc.OptOptG_curs..ValidQ
-inline bool atf_amc::OptOptG_curs_ValidQ(atf_amc::OptOptG_curs& curs) {
+inline bool atf_amc::OptOptG_curs_ValidQ(atf_amc::OptOptG_curs& curs) throw() {
     return curs.msg != NULL;
 }
 
 // --- atf_amc.OptOptG_curs..Reset
-inline void atf_amc::OptOptG_curs_Reset(atf_amc::OptOptG_curs& curs, algo::memptr buf) {
+inline void atf_amc::OptOptG_curs_Reset(atf_amc::OptOptG_curs& curs, algo::memptr buf) throw() {
     curs.bytes = buf.elems;
     curs.limit = buf.n_elems;
     atf_amc::OptOptG *msg = NULL;
@@ -6919,12 +6919,12 @@ inline void atf_amc::OptOptG_curs_Reset(atf_amc::OptOptG_curs& curs, algo::mempt
 }
 
 // --- atf_amc.OptOptG_curs..Access
-inline atf_amc::OptOptG*& atf_amc::OptOptG_curs_Access(atf_amc::OptOptG_curs& curs) {
+inline atf_amc::OptOptG*& atf_amc::OptOptG_curs_Access(atf_amc::OptOptG_curs& curs) throw() {
     return curs.msg;
 }
 
 // --- atf_amc.OptOptG_curs..Next
-inline void atf_amc::OptOptG_curs_Next(atf_amc::OptOptG_curs& curs) {
+inline void atf_amc::OptOptG_curs_Next(atf_amc::OptOptG_curs& curs) throw() {
     curs.bytes += curs.msglen;
     curs.limit -= curs.msglen;
     atf_amc::OptOptG *msg = NULL;
@@ -6950,33 +6950,33 @@ inline void atf_amc::OptOptG_curs_Init(atf_amc::OptOptG_curs& parent) {
 }
 
 // --- atf_amc.OptOptG_curs..Ctor
-inline  atf_amc::OptOptG_curs::OptOptG_curs() {
+inline  atf_amc::OptOptG_curs::OptOptG_curs() throw() {
     atf_amc::OptOptG_curs_Init(*this);
 }
 
 // --- atf_amc.PmaskMultiple.present.N
 // Return constant 1
-inline int atf_amc::present_N(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::present_N(atf_amc::PmaskMultiple& parent) throw() {
     (void)parent;
     return 1;
 }
 
 // --- atf_amc.PmaskMultiple.present.qFind
 // Access value
-inline u32& atf_amc::present_qFind(atf_amc::PmaskMultiple& parent, int) {
+inline u32& atf_amc::present_qFind(atf_amc::PmaskMultiple& parent, int) throw() {
     return parent.present;
 }
 
 // --- atf_amc.PmaskMultiple.present.NBits
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
-inline int atf_amc::present_Nbits(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::present_Nbits(atf_amc::PmaskMultiple& parent) throw() {
     return present_N(parent) * 32;
 }
 
 // --- atf_amc.PmaskMultiple.present.qGetBit
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-inline bool atf_amc::present_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline bool atf_amc::present_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = present_qFind(parent, elem_idx); // fetch element
@@ -6985,7 +6985,7 @@ inline bool atf_amc::present_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx
 
 // --- atf_amc.PmaskMultiple.present.GetBit
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-inline bool atf_amc::present_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline bool atf_amc::present_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     bool ret = false;
@@ -6999,7 +6999,7 @@ inline bool atf_amc::present_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx)
 
 // --- atf_amc.PmaskMultiple.present.BitsEmptyQ
 // Check if all the bits in the bitset are equal to zero
-inline bool atf_amc::present_BitsEmptyQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::present_BitsEmptyQ(atf_amc::PmaskMultiple& parent) throw() {
     bool retval = true;
     u64 n = present_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -7012,7 +7012,7 @@ inline bool atf_amc::present_BitsEmptyQ(atf_amc::PmaskMultiple& parent) {
 }
 
 // --- atf_amc.PmaskMultiple.present.Sum1s
-inline u64 atf_amc::present_Sum1s(atf_amc::PmaskMultiple& parent) {
+inline u64 atf_amc::present_Sum1s(atf_amc::PmaskMultiple& parent) throw() {
     u64 sum = 0;
     u64 n = present_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -7023,7 +7023,7 @@ inline u64 atf_amc::present_Sum1s(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.present.qClearBit
 // Clear bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::present_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline void atf_amc::present_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = present_qFind(parent, elem_idx); // fetch
@@ -7032,7 +7032,7 @@ inline void atf_amc::present_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_i
 
 // --- atf_amc.PmaskMultiple.present.ClearBit
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-inline void atf_amc::present_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline void atf_amc::present_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u64 lim = present_N(parent);
@@ -7044,7 +7044,7 @@ inline void atf_amc::present_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_id
 
 // --- atf_amc.PmaskMultiple.present.qSetBit
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::present_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline void atf_amc::present_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = present_qFind(parent, elem_idx); // fetch
@@ -7053,7 +7053,7 @@ inline void atf_amc::present_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx
 
 // --- atf_amc.PmaskMultiple.present.SetBit
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-inline void atf_amc::present_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline void atf_amc::present_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u64 lim = present_N(parent);
@@ -7065,7 +7065,7 @@ inline void atf_amc::present_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx)
 
 // --- atf_amc.PmaskMultiple.present.qSetBitVal
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::present_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) {
+inline void atf_amc::present_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = present_qFind(parent, elem_idx); // fetch
@@ -7074,7 +7074,7 @@ inline void atf_amc::present_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_
 
 // --- atf_amc.PmaskMultiple.present.qOrBitVal
 // Or bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::present_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) {
+inline void atf_amc::present_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = present_qFind(parent, elem_idx); // fetch
@@ -7084,7 +7084,7 @@ inline void atf_amc::present_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_i
 // --- atf_amc.PmaskMultiple.present.ClearBitsAll
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
-inline void atf_amc::present_ClearBitsAll(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::present_ClearBitsAll(atf_amc::PmaskMultiple& parent) throw() {
     u64 n = present_N(parent);
     for (u64 i = 0; i < n; i++) {
         present_qFind(parent, i) = 0;
@@ -7093,7 +7093,7 @@ inline void atf_amc::present_ClearBitsAll(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.present.ClearBits
 // Zero in PARENT any bits that are set in RHS.
-inline void atf_amc::present_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) {
+inline void atf_amc::present_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) throw() {
     u64 n = u64_Min(present_N(parent), present_N(rhs));
     for (u64 i = 0; i < n; i++) {
         present_qFind(parent, i) &= ~present_qFind(rhs, i);
@@ -7103,7 +7103,7 @@ inline void atf_amc::present_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::
 // --- atf_amc.PmaskMultiple.present.OrBits
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
-inline void atf_amc::present_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) {
+inline void atf_amc::present_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) throw() {
     u64 n = u64_Min(present_N(parent), present_N(rhs));
     for (u64 i = 0; i < n; i++) {
         present_qFind(parent, i) |= present_qFind(rhs, i);
@@ -7112,7 +7112,7 @@ inline void atf_amc::present_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::Pma
 
 // --- atf_amc.PmaskMultiple.present.Sup
 // Return smallest number N such that indexes of all 1 bits are below N
-inline i32 atf_amc::present_Sup(atf_amc::PmaskMultiple& parent) {
+inline i32 atf_amc::present_Sup(atf_amc::PmaskMultiple& parent) throw() {
     u64 lim = present_N(parent);
     i32 ret = 0;
     for (int i = lim-1; i >= 0; i--) {
@@ -7128,27 +7128,27 @@ inline i32 atf_amc::present_Sup(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.assigned.N
 // Return constant 1
-inline int atf_amc::assigned_N(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::assigned_N(atf_amc::PmaskMultiple& parent) throw() {
     (void)parent;
     return 1;
 }
 
 // --- atf_amc.PmaskMultiple.assigned.qFind
 // Access value
-inline u32& atf_amc::assigned_qFind(atf_amc::PmaskMultiple& parent, int) {
+inline u32& atf_amc::assigned_qFind(atf_amc::PmaskMultiple& parent, int) throw() {
     return parent.assigned;
 }
 
 // --- atf_amc.PmaskMultiple.assigned.NBits
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
-inline int atf_amc::assigned_Nbits(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::assigned_Nbits(atf_amc::PmaskMultiple& parent) throw() {
     return assigned_N(parent) * 32;
 }
 
 // --- atf_amc.PmaskMultiple.assigned.qGetBit
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-inline bool atf_amc::assigned_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline bool atf_amc::assigned_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = assigned_qFind(parent, elem_idx); // fetch element
@@ -7157,7 +7157,7 @@ inline bool atf_amc::assigned_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_id
 
 // --- atf_amc.PmaskMultiple.assigned.GetBit
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-inline bool atf_amc::assigned_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline bool atf_amc::assigned_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     bool ret = false;
@@ -7171,7 +7171,7 @@ inline bool atf_amc::assigned_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx
 
 // --- atf_amc.PmaskMultiple.assigned.BitsEmptyQ
 // Check if all the bits in the bitset are equal to zero
-inline bool atf_amc::assigned_BitsEmptyQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::assigned_BitsEmptyQ(atf_amc::PmaskMultiple& parent) throw() {
     bool retval = true;
     u64 n = assigned_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -7184,7 +7184,7 @@ inline bool atf_amc::assigned_BitsEmptyQ(atf_amc::PmaskMultiple& parent) {
 }
 
 // --- atf_amc.PmaskMultiple.assigned.Sum1s
-inline u64 atf_amc::assigned_Sum1s(atf_amc::PmaskMultiple& parent) {
+inline u64 atf_amc::assigned_Sum1s(atf_amc::PmaskMultiple& parent) throw() {
     u64 sum = 0;
     u64 n = assigned_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -7195,7 +7195,7 @@ inline u64 atf_amc::assigned_Sum1s(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.assigned.qClearBit
 // Clear bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::assigned_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline void atf_amc::assigned_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = assigned_qFind(parent, elem_idx); // fetch
@@ -7204,7 +7204,7 @@ inline void atf_amc::assigned_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_
 
 // --- atf_amc.PmaskMultiple.assigned.ClearBit
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-inline void atf_amc::assigned_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline void atf_amc::assigned_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u64 lim = assigned_N(parent);
@@ -7216,7 +7216,7 @@ inline void atf_amc::assigned_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_i
 
 // --- atf_amc.PmaskMultiple.assigned.qSetBit
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::assigned_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline void atf_amc::assigned_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = assigned_qFind(parent, elem_idx); // fetch
@@ -7225,7 +7225,7 @@ inline void atf_amc::assigned_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_id
 
 // --- atf_amc.PmaskMultiple.assigned.SetBit
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-inline void atf_amc::assigned_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline void atf_amc::assigned_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u64 lim = assigned_N(parent);
@@ -7237,7 +7237,7 @@ inline void atf_amc::assigned_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx
 
 // --- atf_amc.PmaskMultiple.assigned.qSetBitVal
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::assigned_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) {
+inline void atf_amc::assigned_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = assigned_qFind(parent, elem_idx); // fetch
@@ -7246,7 +7246,7 @@ inline void atf_amc::assigned_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit
 
 // --- atf_amc.PmaskMultiple.assigned.qOrBitVal
 // Or bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::assigned_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) {
+inline void atf_amc::assigned_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = assigned_qFind(parent, elem_idx); // fetch
@@ -7256,7 +7256,7 @@ inline void atf_amc::assigned_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_
 // --- atf_amc.PmaskMultiple.assigned.ClearBitsAll
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
-inline void atf_amc::assigned_ClearBitsAll(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::assigned_ClearBitsAll(atf_amc::PmaskMultiple& parent) throw() {
     u64 n = assigned_N(parent);
     for (u64 i = 0; i < n; i++) {
         assigned_qFind(parent, i) = 0;
@@ -7265,7 +7265,7 @@ inline void atf_amc::assigned_ClearBitsAll(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.assigned.ClearBits
 // Zero in PARENT any bits that are set in RHS.
-inline void atf_amc::assigned_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) {
+inline void atf_amc::assigned_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) throw() {
     u64 n = u64_Min(assigned_N(parent), assigned_N(rhs));
     for (u64 i = 0; i < n; i++) {
         assigned_qFind(parent, i) &= ~assigned_qFind(rhs, i);
@@ -7275,7 +7275,7 @@ inline void atf_amc::assigned_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc:
 // --- atf_amc.PmaskMultiple.assigned.OrBits
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
-inline void atf_amc::assigned_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) {
+inline void atf_amc::assigned_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) throw() {
     u64 n = u64_Min(assigned_N(parent), assigned_N(rhs));
     for (u64 i = 0; i < n; i++) {
         assigned_qFind(parent, i) |= assigned_qFind(rhs, i);
@@ -7284,7 +7284,7 @@ inline void atf_amc::assigned_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::Pm
 
 // --- atf_amc.PmaskMultiple.assigned.Sup
 // Return smallest number N such that indexes of all 1 bits are below N
-inline i32 atf_amc::assigned_Sup(atf_amc::PmaskMultiple& parent) {
+inline i32 atf_amc::assigned_Sup(atf_amc::PmaskMultiple& parent) throw() {
     u64 lim = assigned_N(parent);
     i32 ret = 0;
     for (int i = lim-1; i >= 0; i--) {
@@ -7300,27 +7300,27 @@ inline i32 atf_amc::assigned_Sup(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.nullable.N
 // Return constant 1
-inline int atf_amc::nullable_N(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::nullable_N(atf_amc::PmaskMultiple& parent) throw() {
     (void)parent;
     return 1;
 }
 
 // --- atf_amc.PmaskMultiple.nullable.qFind
 // Access value
-inline u32& atf_amc::nullable_qFind(atf_amc::PmaskMultiple& parent, int) {
+inline u32& atf_amc::nullable_qFind(atf_amc::PmaskMultiple& parent, int) throw() {
     return parent.nullable;
 }
 
 // --- atf_amc.PmaskMultiple.nullable.NBits
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
-inline int atf_amc::nullable_Nbits(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::nullable_Nbits(atf_amc::PmaskMultiple& parent) throw() {
     return nullable_N(parent) * 32;
 }
 
 // --- atf_amc.PmaskMultiple.nullable.qGetBit
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-inline bool atf_amc::nullable_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline bool atf_amc::nullable_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = nullable_qFind(parent, elem_idx); // fetch element
@@ -7329,7 +7329,7 @@ inline bool atf_amc::nullable_qGetBit(atf_amc::PmaskMultiple& parent, u32 bit_id
 
 // --- atf_amc.PmaskMultiple.nullable.GetBit
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-inline bool atf_amc::nullable_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline bool atf_amc::nullable_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     bool ret = false;
@@ -7343,7 +7343,7 @@ inline bool atf_amc::nullable_GetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx
 
 // --- atf_amc.PmaskMultiple.nullable.BitsEmptyQ
 // Check if all the bits in the bitset are equal to zero
-inline bool atf_amc::nullable_BitsEmptyQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::nullable_BitsEmptyQ(atf_amc::PmaskMultiple& parent) throw() {
     bool retval = true;
     u64 n = nullable_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -7356,7 +7356,7 @@ inline bool atf_amc::nullable_BitsEmptyQ(atf_amc::PmaskMultiple& parent) {
 }
 
 // --- atf_amc.PmaskMultiple.nullable.Sum1s
-inline u64 atf_amc::nullable_Sum1s(atf_amc::PmaskMultiple& parent) {
+inline u64 atf_amc::nullable_Sum1s(atf_amc::PmaskMultiple& parent) throw() {
     u64 sum = 0;
     u64 n = nullable_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -7367,7 +7367,7 @@ inline u64 atf_amc::nullable_Sum1s(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.nullable.qClearBit
 // Clear bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::nullable_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline void atf_amc::nullable_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = nullable_qFind(parent, elem_idx); // fetch
@@ -7376,7 +7376,7 @@ inline void atf_amc::nullable_qClearBit(atf_amc::PmaskMultiple& parent, u32 bit_
 
 // --- atf_amc.PmaskMultiple.nullable.ClearBit
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-inline void atf_amc::nullable_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline void atf_amc::nullable_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u64 lim = nullable_N(parent);
@@ -7388,7 +7388,7 @@ inline void atf_amc::nullable_ClearBit(atf_amc::PmaskMultiple& parent, u32 bit_i
 
 // --- atf_amc.PmaskMultiple.nullable.qSetBit
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::nullable_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline void atf_amc::nullable_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = nullable_qFind(parent, elem_idx); // fetch
@@ -7397,7 +7397,7 @@ inline void atf_amc::nullable_qSetBit(atf_amc::PmaskMultiple& parent, u32 bit_id
 
 // --- atf_amc.PmaskMultiple.nullable.SetBit
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-inline void atf_amc::nullable_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) {
+inline void atf_amc::nullable_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u64 lim = nullable_N(parent);
@@ -7409,7 +7409,7 @@ inline void atf_amc::nullable_SetBit(atf_amc::PmaskMultiple& parent, u32 bit_idx
 
 // --- atf_amc.PmaskMultiple.nullable.qSetBitVal
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::nullable_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) {
+inline void atf_amc::nullable_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = nullable_qFind(parent, elem_idx); // fetch
@@ -7418,7 +7418,7 @@ inline void atf_amc::nullable_qSetBitVal(atf_amc::PmaskMultiple& parent, u32 bit
 
 // --- atf_amc.PmaskMultiple.nullable.qOrBitVal
 // Or bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::nullable_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) {
+inline void atf_amc::nullable_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = nullable_qFind(parent, elem_idx); // fetch
@@ -7428,7 +7428,7 @@ inline void atf_amc::nullable_qOrBitVal(atf_amc::PmaskMultiple& parent, u32 bit_
 // --- atf_amc.PmaskMultiple.nullable.ClearBitsAll
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
-inline void atf_amc::nullable_ClearBitsAll(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::nullable_ClearBitsAll(atf_amc::PmaskMultiple& parent) throw() {
     u64 n = nullable_N(parent);
     for (u64 i = 0; i < n; i++) {
         nullable_qFind(parent, i) = 0;
@@ -7437,7 +7437,7 @@ inline void atf_amc::nullable_ClearBitsAll(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.nullable.ClearBits
 // Zero in PARENT any bits that are set in RHS.
-inline void atf_amc::nullable_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) {
+inline void atf_amc::nullable_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) throw() {
     u64 n = u64_Min(nullable_N(parent), nullable_N(rhs));
     for (u64 i = 0; i < n; i++) {
         nullable_qFind(parent, i) &= ~nullable_qFind(rhs, i);
@@ -7447,7 +7447,7 @@ inline void atf_amc::nullable_ClearBits(atf_amc::PmaskMultiple& parent, atf_amc:
 // --- atf_amc.PmaskMultiple.nullable.OrBits
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
-inline void atf_amc::nullable_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) {
+inline void atf_amc::nullable_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::PmaskMultiple &rhs) throw() {
     u64 n = u64_Min(nullable_N(parent), nullable_N(rhs));
     for (u64 i = 0; i < n; i++) {
         nullable_qFind(parent, i) |= nullable_qFind(rhs, i);
@@ -7456,7 +7456,7 @@ inline void atf_amc::nullable_OrBits(atf_amc::PmaskMultiple& parent, atf_amc::Pm
 
 // --- atf_amc.PmaskMultiple.nullable.Sup
 // Return smallest number N such that indexes of all 1 bits are below N
-inline i32 atf_amc::nullable_Sup(atf_amc::PmaskMultiple& parent) {
+inline i32 atf_amc::nullable_Sup(atf_amc::PmaskMultiple& parent) throw() {
     u64 lim = nullable_N(parent);
     i32 ret = 0;
     for (int i = lim-1; i >= 0; i--) {
@@ -7472,43 +7472,43 @@ inline i32 atf_amc::nullable_Sup(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.value1.NullableQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value1_NullableQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value1_NullableQ(atf_amc::PmaskMultiple& parent) throw() {
     return nullable_qGetBit(parent, 0);
 }
 
 // --- atf_amc.PmaskMultiple.value1.AssignedQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value1_AssignedQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value1_AssignedQ(atf_amc::PmaskMultiple& parent) throw() {
     return assigned_qGetBit(parent, 0);
 }
 
 // --- atf_amc.PmaskMultiple.value1.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value1_PresentQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value1_PresentQ(atf_amc::PmaskMultiple& parent) throw() {
     return present_qGetBit(parent, 0);
 }
 
 // --- atf_amc.PmaskMultiple.value1.SetNullable
 // Set presence bit for this field in the pmask
-inline void atf_amc::value1_SetNullable(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value1_SetNullable(atf_amc::PmaskMultiple& parent) throw() {
     nullable_qSetBit(parent, 0); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value1.SetAssigned
 // Set presence bit for this field in the pmask
-inline void atf_amc::value1_SetAssigned(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value1_SetAssigned(atf_amc::PmaskMultiple& parent) throw() {
     assigned_qSetBit(parent, 0); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value1.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value1_SetPresent(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value1_SetPresent(atf_amc::PmaskMultiple& parent) throw() {
     present_qSetBit(parent, 0); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value1.Nullable_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value1_Nullable_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value1_Nullable_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 0;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
@@ -7516,7 +7516,7 @@ inline int atf_amc::value1_Nullable_GetBit(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.value1.Assigned_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value1_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value1_Assigned_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 0;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
@@ -7524,14 +7524,14 @@ inline int atf_amc::value1_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.value1.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value1_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value1_Present_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 0;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskMultiple.value1.Set
-inline void atf_amc::value1_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
+inline void atf_amc::value1_Set(atf_amc::PmaskMultiple& parent, u32 rhs) throw() {
     parent.value1 = rhs;
     nullable_qSetBit(parent, 0); // mark presence in pmask
     assigned_qSetBit(parent, 0); // mark presence in pmask
@@ -7540,31 +7540,31 @@ inline void atf_amc::value1_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
 
 // --- atf_amc.PmaskMultiple.value2.AssignedQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value2_AssignedQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value2_AssignedQ(atf_amc::PmaskMultiple& parent) throw() {
     return assigned_qGetBit(parent, 1);
 }
 
 // --- atf_amc.PmaskMultiple.value2.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value2_PresentQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value2_PresentQ(atf_amc::PmaskMultiple& parent) throw() {
     return present_qGetBit(parent, 1);
 }
 
 // --- atf_amc.PmaskMultiple.value2.SetAssigned
 // Set presence bit for this field in the pmask
-inline void atf_amc::value2_SetAssigned(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value2_SetAssigned(atf_amc::PmaskMultiple& parent) throw() {
     assigned_qSetBit(parent, 1); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value2.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value2_SetPresent(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value2_SetPresent(atf_amc::PmaskMultiple& parent) throw() {
     present_qSetBit(parent, 1); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value2.Assigned_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value2_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value2_Assigned_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 1;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
@@ -7572,14 +7572,14 @@ inline int atf_amc::value2_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.value2.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value2_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value2_Present_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 1;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskMultiple.value2.Set
-inline void atf_amc::value2_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
+inline void atf_amc::value2_Set(atf_amc::PmaskMultiple& parent, u32 rhs) throw() {
     parent.value2 = rhs;
     assigned_qSetBit(parent, 1); // mark presence in pmask
     present_qSetBit(parent, 1); // mark presence in pmask
@@ -7587,43 +7587,43 @@ inline void atf_amc::value2_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
 
 // --- atf_amc.PmaskMultiple.value3.NullableQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value3_NullableQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value3_NullableQ(atf_amc::PmaskMultiple& parent) throw() {
     return nullable_qGetBit(parent, 1);
 }
 
 // --- atf_amc.PmaskMultiple.value3.AssignedQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value3_AssignedQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value3_AssignedQ(atf_amc::PmaskMultiple& parent) throw() {
     return assigned_qGetBit(parent, 2);
 }
 
 // --- atf_amc.PmaskMultiple.value3.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value3_PresentQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value3_PresentQ(atf_amc::PmaskMultiple& parent) throw() {
     return present_qGetBit(parent, 2);
 }
 
 // --- atf_amc.PmaskMultiple.value3.SetNullable
 // Set presence bit for this field in the pmask
-inline void atf_amc::value3_SetNullable(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value3_SetNullable(atf_amc::PmaskMultiple& parent) throw() {
     nullable_qSetBit(parent, 1); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value3.SetAssigned
 // Set presence bit for this field in the pmask
-inline void atf_amc::value3_SetAssigned(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value3_SetAssigned(atf_amc::PmaskMultiple& parent) throw() {
     assigned_qSetBit(parent, 2); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value3.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value3_SetPresent(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value3_SetPresent(atf_amc::PmaskMultiple& parent) throw() {
     present_qSetBit(parent, 2); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value3.Nullable_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value3_Nullable_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value3_Nullable_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 1;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
@@ -7631,7 +7631,7 @@ inline int atf_amc::value3_Nullable_GetBit(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.value3.Assigned_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value3_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value3_Assigned_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 2;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
@@ -7639,14 +7639,14 @@ inline int atf_amc::value3_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.value3.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value3_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value3_Present_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 2;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskMultiple.value3.Set
-inline void atf_amc::value3_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
+inline void atf_amc::value3_Set(atf_amc::PmaskMultiple& parent, u32 rhs) throw() {
     parent.value3 = rhs;
     nullable_qSetBit(parent, 1); // mark presence in pmask
     assigned_qSetBit(parent, 2); // mark presence in pmask
@@ -7655,31 +7655,31 @@ inline void atf_amc::value3_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
 
 // --- atf_amc.PmaskMultiple.value4.AssignedQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value4_AssignedQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value4_AssignedQ(atf_amc::PmaskMultiple& parent) throw() {
     return assigned_qGetBit(parent, 3);
 }
 
 // --- atf_amc.PmaskMultiple.value4.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value4_PresentQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value4_PresentQ(atf_amc::PmaskMultiple& parent) throw() {
     return present_qGetBit(parent, 3);
 }
 
 // --- atf_amc.PmaskMultiple.value4.SetAssigned
 // Set presence bit for this field in the pmask
-inline void atf_amc::value4_SetAssigned(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value4_SetAssigned(atf_amc::PmaskMultiple& parent) throw() {
     assigned_qSetBit(parent, 3); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value4.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value4_SetPresent(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value4_SetPresent(atf_amc::PmaskMultiple& parent) throw() {
     present_qSetBit(parent, 3); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value4.Assigned_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value4_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value4_Assigned_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 3;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
@@ -7687,14 +7687,14 @@ inline int atf_amc::value4_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.value4.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value4_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value4_Present_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 3;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskMultiple.value4.Set
-inline void atf_amc::value4_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
+inline void atf_amc::value4_Set(atf_amc::PmaskMultiple& parent, u32 rhs) throw() {
     parent.value4 = rhs;
     assigned_qSetBit(parent, 3); // mark presence in pmask
     present_qSetBit(parent, 3); // mark presence in pmask
@@ -7702,43 +7702,43 @@ inline void atf_amc::value4_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
 
 // --- atf_amc.PmaskMultiple.value5.NullableQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value5_NullableQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value5_NullableQ(atf_amc::PmaskMultiple& parent) throw() {
     return nullable_qGetBit(parent, 2);
 }
 
 // --- atf_amc.PmaskMultiple.value5.AssignedQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value5_AssignedQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value5_AssignedQ(atf_amc::PmaskMultiple& parent) throw() {
     return assigned_qGetBit(parent, 4);
 }
 
 // --- atf_amc.PmaskMultiple.value5.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value5_PresentQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value5_PresentQ(atf_amc::PmaskMultiple& parent) throw() {
     return present_qGetBit(parent, 4);
 }
 
 // --- atf_amc.PmaskMultiple.value5.SetNullable
 // Set presence bit for this field in the pmask
-inline void atf_amc::value5_SetNullable(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value5_SetNullable(atf_amc::PmaskMultiple& parent) throw() {
     nullable_qSetBit(parent, 2); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value5.SetAssigned
 // Set presence bit for this field in the pmask
-inline void atf_amc::value5_SetAssigned(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value5_SetAssigned(atf_amc::PmaskMultiple& parent) throw() {
     assigned_qSetBit(parent, 4); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value5.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value5_SetPresent(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value5_SetPresent(atf_amc::PmaskMultiple& parent) throw() {
     present_qSetBit(parent, 4); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value5.Nullable_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value5_Nullable_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value5_Nullable_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 2;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
@@ -7746,7 +7746,7 @@ inline int atf_amc::value5_Nullable_GetBit(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.value5.Assigned_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value5_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value5_Assigned_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 4;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
@@ -7754,14 +7754,14 @@ inline int atf_amc::value5_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.value5.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value5_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value5_Present_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 4;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskMultiple.value5.Set
-inline void atf_amc::value5_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
+inline void atf_amc::value5_Set(atf_amc::PmaskMultiple& parent, u32 rhs) throw() {
     parent.value5 = rhs;
     nullable_qSetBit(parent, 2); // mark presence in pmask
     assigned_qSetBit(parent, 4); // mark presence in pmask
@@ -7770,31 +7770,31 @@ inline void atf_amc::value5_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
 
 // --- atf_amc.PmaskMultiple.value6.AssignedQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value6_AssignedQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value6_AssignedQ(atf_amc::PmaskMultiple& parent) throw() {
     return assigned_qGetBit(parent, 5);
 }
 
 // --- atf_amc.PmaskMultiple.value6.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value6_PresentQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value6_PresentQ(atf_amc::PmaskMultiple& parent) throw() {
     return present_qGetBit(parent, 5);
 }
 
 // --- atf_amc.PmaskMultiple.value6.SetAssigned
 // Set presence bit for this field in the pmask
-inline void atf_amc::value6_SetAssigned(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value6_SetAssigned(atf_amc::PmaskMultiple& parent) throw() {
     assigned_qSetBit(parent, 5); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value6.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value6_SetPresent(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value6_SetPresent(atf_amc::PmaskMultiple& parent) throw() {
     present_qSetBit(parent, 5); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value6.Assigned_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value6_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value6_Assigned_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 5;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
@@ -7802,14 +7802,14 @@ inline int atf_amc::value6_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.value6.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value6_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value6_Present_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 5;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskMultiple.value6.Set
-inline void atf_amc::value6_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
+inline void atf_amc::value6_Set(atf_amc::PmaskMultiple& parent, u32 rhs) throw() {
     parent.value6 = rhs;
     assigned_qSetBit(parent, 5); // mark presence in pmask
     present_qSetBit(parent, 5); // mark presence in pmask
@@ -7817,31 +7817,31 @@ inline void atf_amc::value6_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
 
 // --- atf_amc.PmaskMultiple.value7.AssignedQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value7_AssignedQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value7_AssignedQ(atf_amc::PmaskMultiple& parent) throw() {
     return assigned_qGetBit(parent, 6);
 }
 
 // --- atf_amc.PmaskMultiple.value7.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value7_PresentQ(atf_amc::PmaskMultiple& parent) {
+inline bool atf_amc::value7_PresentQ(atf_amc::PmaskMultiple& parent) throw() {
     return present_qGetBit(parent, 6);
 }
 
 // --- atf_amc.PmaskMultiple.value7.SetAssigned
 // Set presence bit for this field in the pmask
-inline void atf_amc::value7_SetAssigned(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value7_SetAssigned(atf_amc::PmaskMultiple& parent) throw() {
     assigned_qSetBit(parent, 6); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value7.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value7_SetPresent(atf_amc::PmaskMultiple& parent) {
+inline void atf_amc::value7_SetPresent(atf_amc::PmaskMultiple& parent) throw() {
     present_qSetBit(parent, 6); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.value7.Assigned_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value7_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value7_Assigned_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 6;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
@@ -7849,21 +7849,21 @@ inline int atf_amc::value7_Assigned_GetBit(atf_amc::PmaskMultiple& parent) {
 
 // --- atf_amc.PmaskMultiple.value7.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value7_Present_GetBit(atf_amc::PmaskMultiple& parent) {
+inline int atf_amc::value7_Present_GetBit(atf_amc::PmaskMultiple& parent) throw() {
     int retval = 6;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskMultiple.value7.Set
-inline void atf_amc::value7_Set(atf_amc::PmaskMultiple& parent, u32 rhs) {
+inline void atf_amc::value7_Set(atf_amc::PmaskMultiple& parent, u32 rhs) throw() {
     parent.value7 = rhs;
     assigned_qSetBit(parent, 6); // mark presence in pmask
     present_qSetBit(parent, 6); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskMultiple.present_bitcurs.Reset
-inline void atf_amc::PmaskMultiple_present_bitcurs_Reset(PmaskMultiple_present_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
+inline void atf_amc::PmaskMultiple_present_bitcurs_Reset(PmaskMultiple_present_bitcurs &curs, atf_amc::PmaskMultiple &parent) throw() {
     curs.elems = &present_qFind(parent,0);
     curs.n_elems = present_N(parent);
     curs.bit = -1;
@@ -7872,18 +7872,18 @@ inline void atf_amc::PmaskMultiple_present_bitcurs_Reset(PmaskMultiple_present_b
 
 // --- atf_amc.PmaskMultiple.present_bitcurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::PmaskMultiple_present_bitcurs_ValidQ(PmaskMultiple_present_bitcurs &curs) {
+inline bool atf_amc::PmaskMultiple_present_bitcurs_ValidQ(PmaskMultiple_present_bitcurs &curs) throw() {
     return curs.bit < curs.n_elems*32;
 }
 
 // --- atf_amc.PmaskMultiple.present_bitcurs.Access
 // item access
-inline int& atf_amc::PmaskMultiple_present_bitcurs_Access(PmaskMultiple_present_bitcurs &curs) {
+inline int& atf_amc::PmaskMultiple_present_bitcurs_Access(PmaskMultiple_present_bitcurs &curs) throw() {
     return curs.bit;
 }
 
 // --- atf_amc.PmaskMultiple.assigned_bitcurs.Reset
-inline void atf_amc::PmaskMultiple_assigned_bitcurs_Reset(PmaskMultiple_assigned_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
+inline void atf_amc::PmaskMultiple_assigned_bitcurs_Reset(PmaskMultiple_assigned_bitcurs &curs, atf_amc::PmaskMultiple &parent) throw() {
     curs.elems = &assigned_qFind(parent,0);
     curs.n_elems = assigned_N(parent);
     curs.bit = -1;
@@ -7892,18 +7892,18 @@ inline void atf_amc::PmaskMultiple_assigned_bitcurs_Reset(PmaskMultiple_assigned
 
 // --- atf_amc.PmaskMultiple.assigned_bitcurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::PmaskMultiple_assigned_bitcurs_ValidQ(PmaskMultiple_assigned_bitcurs &curs) {
+inline bool atf_amc::PmaskMultiple_assigned_bitcurs_ValidQ(PmaskMultiple_assigned_bitcurs &curs) throw() {
     return curs.bit < curs.n_elems*32;
 }
 
 // --- atf_amc.PmaskMultiple.assigned_bitcurs.Access
 // item access
-inline int& atf_amc::PmaskMultiple_assigned_bitcurs_Access(PmaskMultiple_assigned_bitcurs &curs) {
+inline int& atf_amc::PmaskMultiple_assigned_bitcurs_Access(PmaskMultiple_assigned_bitcurs &curs) throw() {
     return curs.bit;
 }
 
 // --- atf_amc.PmaskMultiple.nullable_bitcurs.Reset
-inline void atf_amc::PmaskMultiple_nullable_bitcurs_Reset(PmaskMultiple_nullable_bitcurs &curs, atf_amc::PmaskMultiple &parent) {
+inline void atf_amc::PmaskMultiple_nullable_bitcurs_Reset(PmaskMultiple_nullable_bitcurs &curs, atf_amc::PmaskMultiple &parent) throw() {
     curs.elems = &nullable_qFind(parent,0);
     curs.n_elems = nullable_N(parent);
     curs.bit = -1;
@@ -7912,44 +7912,44 @@ inline void atf_amc::PmaskMultiple_nullable_bitcurs_Reset(PmaskMultiple_nullable
 
 // --- atf_amc.PmaskMultiple.nullable_bitcurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::PmaskMultiple_nullable_bitcurs_ValidQ(PmaskMultiple_nullable_bitcurs &curs) {
+inline bool atf_amc::PmaskMultiple_nullable_bitcurs_ValidQ(PmaskMultiple_nullable_bitcurs &curs) throw() {
     return curs.bit < curs.n_elems*32;
 }
 
 // --- atf_amc.PmaskMultiple.nullable_bitcurs.Access
 // item access
-inline int& atf_amc::PmaskMultiple_nullable_bitcurs_Access(PmaskMultiple_nullable_bitcurs &curs) {
+inline int& atf_amc::PmaskMultiple_nullable_bitcurs_Access(PmaskMultiple_nullable_bitcurs &curs) throw() {
     return curs.bit;
 }
 
 // --- atf_amc.PmaskMultiple..Ctor
-inline  atf_amc::PmaskMultiple::PmaskMultiple() {
+inline  atf_amc::PmaskMultiple::PmaskMultiple() throw() {
     atf_amc::PmaskMultiple_Init(*this);
 }
 
 // --- atf_amc.PmaskU128.pmask.N
 // Return constant 1
-inline int atf_amc::pmask_N(atf_amc::PmaskU128& parent) {
+inline int atf_amc::pmask_N(atf_amc::PmaskU128& parent) throw() {
     (void)parent;
     return 1;
 }
 
 // --- atf_amc.PmaskU128.pmask.qFind
 // Access value
-inline u128& atf_amc::pmask_qFind(atf_amc::PmaskU128& parent, int) {
+inline u128& atf_amc::pmask_qFind(atf_amc::PmaskU128& parent, int) throw() {
     return parent.pmask;
 }
 
 // --- atf_amc.PmaskU128.pmask.NBits
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
-inline int atf_amc::pmask_Nbits(atf_amc::PmaskU128& parent) {
+inline int atf_amc::pmask_Nbits(atf_amc::PmaskU128& parent) throw() {
     return pmask_N(parent) * 128;
 }
 
 // --- atf_amc.PmaskU128.pmask.qGetBit
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-inline bool atf_amc::pmask_qGetBit(atf_amc::PmaskU128& parent, u32 bit_idx) {
+inline bool atf_amc::pmask_qGetBit(atf_amc::PmaskU128& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u128 &elem = pmask_qFind(parent, elem_idx); // fetch element
@@ -7958,7 +7958,7 @@ inline bool atf_amc::pmask_qGetBit(atf_amc::PmaskU128& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU128.pmask.GetBit
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-inline bool atf_amc::pmask_GetBit(atf_amc::PmaskU128& parent, u32 bit_idx) {
+inline bool atf_amc::pmask_GetBit(atf_amc::PmaskU128& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     bool ret = false;
@@ -7972,7 +7972,7 @@ inline bool atf_amc::pmask_GetBit(atf_amc::PmaskU128& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU128.pmask.BitsEmptyQ
 // Check if all the bits in the bitset are equal to zero
-inline bool atf_amc::pmask_BitsEmptyQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::pmask_BitsEmptyQ(atf_amc::PmaskU128& parent) throw() {
     bool retval = true;
     u64 n = pmask_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -7985,7 +7985,7 @@ inline bool atf_amc::pmask_BitsEmptyQ(atf_amc::PmaskU128& parent) {
 }
 
 // --- atf_amc.PmaskU128.pmask.Sum1s
-inline u64 atf_amc::pmask_Sum1s(atf_amc::PmaskU128& parent) {
+inline u64 atf_amc::pmask_Sum1s(atf_amc::PmaskU128& parent) throw() {
     u64 sum = 0;
     u64 n = pmask_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -7996,7 +7996,7 @@ inline u64 atf_amc::pmask_Sum1s(atf_amc::PmaskU128& parent) {
 
 // --- atf_amc.PmaskU128.pmask.qClearBit
 // Clear bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qClearBit(atf_amc::PmaskU128& parent, u32 bit_idx) {
+inline void atf_amc::pmask_qClearBit(atf_amc::PmaskU128& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u128 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -8005,7 +8005,7 @@ inline void atf_amc::pmask_qClearBit(atf_amc::PmaskU128& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU128.pmask.ClearBit
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-inline void atf_amc::pmask_ClearBit(atf_amc::PmaskU128& parent, u32 bit_idx) {
+inline void atf_amc::pmask_ClearBit(atf_amc::PmaskU128& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u64 lim = pmask_N(parent);
@@ -8017,7 +8017,7 @@ inline void atf_amc::pmask_ClearBit(atf_amc::PmaskU128& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU128.pmask.qSetBit
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qSetBit(atf_amc::PmaskU128& parent, u32 bit_idx) {
+inline void atf_amc::pmask_qSetBit(atf_amc::PmaskU128& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u128 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -8026,7 +8026,7 @@ inline void atf_amc::pmask_qSetBit(atf_amc::PmaskU128& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU128.pmask.SetBit
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-inline void atf_amc::pmask_SetBit(atf_amc::PmaskU128& parent, u32 bit_idx) {
+inline void atf_amc::pmask_SetBit(atf_amc::PmaskU128& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u64 lim = pmask_N(parent);
@@ -8038,7 +8038,7 @@ inline void atf_amc::pmask_SetBit(atf_amc::PmaskU128& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU128.pmask.qSetBitVal
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qSetBitVal(atf_amc::PmaskU128& parent, u32 bit_idx, bool val) {
+inline void atf_amc::pmask_qSetBitVal(atf_amc::PmaskU128& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u128 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -8047,7 +8047,7 @@ inline void atf_amc::pmask_qSetBitVal(atf_amc::PmaskU128& parent, u32 bit_idx, b
 
 // --- atf_amc.PmaskU128.pmask.qOrBitVal
 // Or bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qOrBitVal(atf_amc::PmaskU128& parent, u32 bit_idx, bool val) {
+inline void atf_amc::pmask_qOrBitVal(atf_amc::PmaskU128& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 7;
     u64 shift = bit_idx & 127;
     u128 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -8057,7 +8057,7 @@ inline void atf_amc::pmask_qOrBitVal(atf_amc::PmaskU128& parent, u32 bit_idx, bo
 // --- atf_amc.PmaskU128.pmask.ClearBitsAll
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
-inline void atf_amc::pmask_ClearBitsAll(atf_amc::PmaskU128& parent) {
+inline void atf_amc::pmask_ClearBitsAll(atf_amc::PmaskU128& parent) throw() {
     u64 n = pmask_N(parent);
     for (u64 i = 0; i < n; i++) {
         pmask_qFind(parent, i) = 0;
@@ -8066,7 +8066,7 @@ inline void atf_amc::pmask_ClearBitsAll(atf_amc::PmaskU128& parent) {
 
 // --- atf_amc.PmaskU128.pmask.ClearBits
 // Zero in PARENT any bits that are set in RHS.
-inline void atf_amc::pmask_ClearBits(atf_amc::PmaskU128& parent, atf_amc::PmaskU128 &rhs) {
+inline void atf_amc::pmask_ClearBits(atf_amc::PmaskU128& parent, atf_amc::PmaskU128 &rhs) throw() {
     u64 n = u64_Min(pmask_N(parent), pmask_N(rhs));
     for (u64 i = 0; i < n; i++) {
         pmask_qFind(parent, i) &= ~pmask_qFind(rhs, i);
@@ -8076,7 +8076,7 @@ inline void atf_amc::pmask_ClearBits(atf_amc::PmaskU128& parent, atf_amc::PmaskU
 // --- atf_amc.PmaskU128.pmask.OrBits
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
-inline void atf_amc::pmask_OrBits(atf_amc::PmaskU128& parent, atf_amc::PmaskU128 &rhs) {
+inline void atf_amc::pmask_OrBits(atf_amc::PmaskU128& parent, atf_amc::PmaskU128 &rhs) throw() {
     u64 n = u64_Min(pmask_N(parent), pmask_N(rhs));
     for (u64 i = 0; i < n; i++) {
         pmask_qFind(parent, i) |= pmask_qFind(rhs, i);
@@ -8085,1878 +8085,1878 @@ inline void atf_amc::pmask_OrBits(atf_amc::PmaskU128& parent, atf_amc::PmaskU128
 
 // --- atf_amc.PmaskU128.value.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 0);
 }
 
 // --- atf_amc.PmaskU128.value.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 0); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 0;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value.Set
-inline void atf_amc::value_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value = rhs;
     pmask_qSetBit(parent, 0); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value2.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value2_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value2_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 1);
 }
 
 // --- atf_amc.PmaskU128.value2.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value2_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value2_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 1); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value2.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value2_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value2_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 1;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value2.Set
-inline void atf_amc::value2_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value2_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value2 = rhs;
     pmask_qSetBit(parent, 1); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value3.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value3_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value3_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 2);
 }
 
 // --- atf_amc.PmaskU128.value3.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value3_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value3_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 2); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value3.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value3_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value3_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 2;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value3.Set
-inline void atf_amc::value3_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value3_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value3 = rhs;
     pmask_qSetBit(parent, 2); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value21.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value21_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value21_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 3);
 }
 
 // --- atf_amc.PmaskU128.value21.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value21_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value21_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 3); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value21.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value21_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value21_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 3;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value21.Set
-inline void atf_amc::value21_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value21_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value21 = rhs;
     pmask_qSetBit(parent, 3); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value22.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value22_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value22_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 4);
 }
 
 // --- atf_amc.PmaskU128.value22.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value22_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value22_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 4); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value22.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value22_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value22_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 4;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value22.Set
-inline void atf_amc::value22_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value22_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value22 = rhs;
     pmask_qSetBit(parent, 4); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value23.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value23_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value23_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 5);
 }
 
 // --- atf_amc.PmaskU128.value23.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value23_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value23_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 5); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value23.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value23_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value23_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 5;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value23.Set
-inline void atf_amc::value23_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value23_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value23 = rhs;
     pmask_qSetBit(parent, 5); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value24.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value24_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value24_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 6);
 }
 
 // --- atf_amc.PmaskU128.value24.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value24_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value24_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 6); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value24.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value24_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value24_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 6;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value24.Set
-inline void atf_amc::value24_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value24_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value24 = rhs;
     pmask_qSetBit(parent, 6); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value25.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value25_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value25_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 7);
 }
 
 // --- atf_amc.PmaskU128.value25.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value25_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value25_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 7); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value25.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value25_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value25_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 7;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value25.Set
-inline void atf_amc::value25_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value25_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value25 = rhs;
     pmask_qSetBit(parent, 7); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value26.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value26_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value26_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 8);
 }
 
 // --- atf_amc.PmaskU128.value26.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value26_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value26_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 8); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value26.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value26_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value26_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 8;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value26.Set
-inline void atf_amc::value26_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value26_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value26 = rhs;
     pmask_qSetBit(parent, 8); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value20.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value20_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value20_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 9);
 }
 
 // --- atf_amc.PmaskU128.value20.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value20_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value20_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 9); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value20.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value20_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value20_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 9;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value20.Set
-inline void atf_amc::value20_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value20_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value20 = rhs;
     pmask_qSetBit(parent, 9); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value28.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value28_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value28_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 10);
 }
 
 // --- atf_amc.PmaskU128.value28.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value28_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value28_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 10); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value28.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value28_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value28_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 10;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value28.Set
-inline void atf_amc::value28_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value28_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value28 = rhs;
     pmask_qSetBit(parent, 10); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value29.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value29_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value29_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 11);
 }
 
 // --- atf_amc.PmaskU128.value29.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value29_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value29_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 11); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value29.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value29_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value29_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 11;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value29.Set
-inline void atf_amc::value29_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value29_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value29 = rhs;
     pmask_qSetBit(parent, 11); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value30.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value30_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value30_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 12);
 }
 
 // --- atf_amc.PmaskU128.value30.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value30_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value30_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 12); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value30.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value30_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value30_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 12;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value30.Set
-inline void atf_amc::value30_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value30_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value30 = rhs;
     pmask_qSetBit(parent, 12); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value31.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value31_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value31_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 13);
 }
 
 // --- atf_amc.PmaskU128.value31.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value31_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value31_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 13); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value31.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value31_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value31_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 13;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value31.Set
-inline void atf_amc::value31_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value31_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value31 = rhs;
     pmask_qSetBit(parent, 13); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value32.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value32_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value32_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 14);
 }
 
 // --- atf_amc.PmaskU128.value32.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value32_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value32_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 14); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value32.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value32_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value32_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 14;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value32.Set
-inline void atf_amc::value32_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value32_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value32 = rhs;
     pmask_qSetBit(parent, 14); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value27.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value27_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value27_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 15);
 }
 
 // --- atf_amc.PmaskU128.value27.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value27_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value27_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 15); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value27.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value27_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value27_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 15;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value27.Set
-inline void atf_amc::value27_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value27_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value27 = rhs;
     pmask_qSetBit(parent, 15); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value19.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value19_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value19_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 16);
 }
 
 // --- atf_amc.PmaskU128.value19.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value19_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value19_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 16); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value19.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value19_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value19_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 16;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value19.Set
-inline void atf_amc::value19_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value19_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value19 = rhs;
     pmask_qSetBit(parent, 16); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value18.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value18_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value18_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 17);
 }
 
 // --- atf_amc.PmaskU128.value18.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value18_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value18_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 17); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value18.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value18_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value18_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 17;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value18.Set
-inline void atf_amc::value18_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value18_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value18 = rhs;
     pmask_qSetBit(parent, 17); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value4.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value4_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value4_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 18);
 }
 
 // --- atf_amc.PmaskU128.value4.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value4_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value4_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 18); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value4.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value4_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value4_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 18;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value4.Set
-inline void atf_amc::value4_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value4_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value4 = rhs;
     pmask_qSetBit(parent, 18); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value5.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value5_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value5_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 19);
 }
 
 // --- atf_amc.PmaskU128.value5.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value5_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value5_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 19); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value5.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value5_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value5_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 19;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value5.Set
-inline void atf_amc::value5_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value5_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value5 = rhs;
     pmask_qSetBit(parent, 19); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value6.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value6_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value6_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 20);
 }
 
 // --- atf_amc.PmaskU128.value6.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value6_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value6_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 20); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value6.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value6_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value6_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 20;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value6.Set
-inline void atf_amc::value6_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value6_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value6 = rhs;
     pmask_qSetBit(parent, 20); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value7.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value7_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value7_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 21);
 }
 
 // --- atf_amc.PmaskU128.value7.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value7_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value7_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 21); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value7.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value7_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value7_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 21;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value7.Set
-inline void atf_amc::value7_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value7_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value7 = rhs;
     pmask_qSetBit(parent, 21); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value8.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value8_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value8_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 22);
 }
 
 // --- atf_amc.PmaskU128.value8.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value8_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value8_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 22); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value8.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value8_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value8_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 22;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value8.Set
-inline void atf_amc::value8_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value8_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value8 = rhs;
     pmask_qSetBit(parent, 22); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value9.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value9_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value9_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 23);
 }
 
 // --- atf_amc.PmaskU128.value9.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value9_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value9_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 23); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value9.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value9_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value9_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 23;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value9.Set
-inline void atf_amc::value9_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value9_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value9 = rhs;
     pmask_qSetBit(parent, 23); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value69.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value69_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value69_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 24);
 }
 
 // --- atf_amc.PmaskU128.value69.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value69_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value69_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 24); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value69.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value69_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value69_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 24;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value69.Set
-inline void atf_amc::value69_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value69_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value69 = rhs;
     pmask_qSetBit(parent, 24); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value11.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value11_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value11_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 25);
 }
 
 // --- atf_amc.PmaskU128.value11.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value11_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value11_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 25); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value11.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value11_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value11_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 25;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value11.Set
-inline void atf_amc::value11_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value11_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value11 = rhs;
     pmask_qSetBit(parent, 25); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value12.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value12_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value12_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 26);
 }
 
 // --- atf_amc.PmaskU128.value12.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value12_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value12_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 26); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value12.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value12_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value12_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 26;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value12.Set
-inline void atf_amc::value12_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value12_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value12 = rhs;
     pmask_qSetBit(parent, 26); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value13.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value13_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value13_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 27);
 }
 
 // --- atf_amc.PmaskU128.value13.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value13_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value13_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 27); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value13.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value13_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value13_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 27;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value13.Set
-inline void atf_amc::value13_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value13_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value13 = rhs;
     pmask_qSetBit(parent, 27); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value14.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value14_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value14_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 28);
 }
 
 // --- atf_amc.PmaskU128.value14.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value14_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value14_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 28); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value14.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value14_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value14_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 28;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value14.Set
-inline void atf_amc::value14_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value14_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value14 = rhs;
     pmask_qSetBit(parent, 28); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value15.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value15_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value15_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 29);
 }
 
 // --- atf_amc.PmaskU128.value15.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value15_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value15_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 29); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value15.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value15_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value15_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 29;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value15.Set
-inline void atf_amc::value15_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value15_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value15 = rhs;
     pmask_qSetBit(parent, 29); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value16.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value16_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value16_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 30);
 }
 
 // --- atf_amc.PmaskU128.value16.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value16_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value16_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 30); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value16.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value16_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value16_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 30;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value16.Set
-inline void atf_amc::value16_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value16_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value16 = rhs;
     pmask_qSetBit(parent, 30); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value33.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value33_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value33_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 31);
 }
 
 // --- atf_amc.PmaskU128.value33.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value33_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value33_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 31); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value33.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value33_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value33_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 31;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value33.Set
-inline void atf_amc::value33_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value33_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value33 = rhs;
     pmask_qSetBit(parent, 31); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value10.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value10_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value10_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 32);
 }
 
 // --- atf_amc.PmaskU128.value10.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value10_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value10_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 32); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value10.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value10_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value10_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 32;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value10.Set
-inline void atf_amc::value10_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value10_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value10 = rhs;
     pmask_qSetBit(parent, 32); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value17.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value17_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value17_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 33);
 }
 
 // --- atf_amc.PmaskU128.value17.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value17_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value17_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 33); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value17.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value17_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value17_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 33;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value17.Set
-inline void atf_amc::value17_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value17_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value17 = rhs;
     pmask_qSetBit(parent, 33); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value35.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value35_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value35_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 34);
 }
 
 // --- atf_amc.PmaskU128.value35.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value35_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value35_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 34); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value35.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value35_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value35_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 34;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value35.Set
-inline void atf_amc::value35_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value35_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value35 = rhs;
     pmask_qSetBit(parent, 34); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value55.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value55_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value55_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 35);
 }
 
 // --- atf_amc.PmaskU128.value55.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value55_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value55_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 35); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value55.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value55_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value55_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 35;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value55.Set
-inline void atf_amc::value55_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value55_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value55 = rhs;
     pmask_qSetBit(parent, 35); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value56.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value56_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value56_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 36);
 }
 
 // --- atf_amc.PmaskU128.value56.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value56_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value56_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 36); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value56.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value56_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value56_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 36;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value56.Set
-inline void atf_amc::value56_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value56_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value56 = rhs;
     pmask_qSetBit(parent, 36); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value57.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value57_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value57_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 37);
 }
 
 // --- atf_amc.PmaskU128.value57.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value57_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value57_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 37); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value57.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value57_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value57_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 37;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value57.Set
-inline void atf_amc::value57_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value57_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value57 = rhs;
     pmask_qSetBit(parent, 37); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value58.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value58_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value58_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 38);
 }
 
 // --- atf_amc.PmaskU128.value58.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value58_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value58_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 38); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value58.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value58_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value58_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 38;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value58.Set
-inline void atf_amc::value58_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value58_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value58 = rhs;
     pmask_qSetBit(parent, 38); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value59.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value59_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value59_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 39);
 }
 
 // --- atf_amc.PmaskU128.value59.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value59_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value59_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 39); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value59.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value59_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value59_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 39;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value59.Set
-inline void atf_amc::value59_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value59_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value59 = rhs;
     pmask_qSetBit(parent, 39); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value60.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value60_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value60_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 40);
 }
 
 // --- atf_amc.PmaskU128.value60.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value60_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value60_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 40); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value60.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value60_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value60_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 40;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value60.Set
-inline void atf_amc::value60_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value60_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value60 = rhs;
     pmask_qSetBit(parent, 40); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value54.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value54_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value54_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 41);
 }
 
 // --- atf_amc.PmaskU128.value54.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value54_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value54_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 41); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value54.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value54_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value54_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 41;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value54.Set
-inline void atf_amc::value54_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value54_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value54 = rhs;
     pmask_qSetBit(parent, 41); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value62.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value62_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value62_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 42);
 }
 
 // --- atf_amc.PmaskU128.value62.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value62_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value62_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 42); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value62.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value62_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value62_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 42;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value62.Set
-inline void atf_amc::value62_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value62_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value62 = rhs;
     pmask_qSetBit(parent, 42); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value63.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value63_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value63_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 43);
 }
 
 // --- atf_amc.PmaskU128.value63.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value63_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value63_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 43); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value63.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value63_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value63_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 43;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value63.Set
-inline void atf_amc::value63_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value63_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value63 = rhs;
     pmask_qSetBit(parent, 43); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value64.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value64_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value64_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 44);
 }
 
 // --- atf_amc.PmaskU128.value64.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value64_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value64_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 44); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value64.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value64_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value64_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 44;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value64.Set
-inline void atf_amc::value64_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value64_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value64 = rhs;
     pmask_qSetBit(parent, 44); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value65.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value65_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value65_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 45);
 }
 
 // --- atf_amc.PmaskU128.value65.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value65_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value65_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 45); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value65.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value65_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value65_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 45;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value65.Set
-inline void atf_amc::value65_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value65_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value65 = rhs;
     pmask_qSetBit(parent, 45); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value66.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value66_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value66_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 46);
 }
 
 // --- atf_amc.PmaskU128.value66.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value66_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value66_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 46); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value66.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value66_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value66_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 46;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value66.Set
-inline void atf_amc::value66_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value66_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value66 = rhs;
     pmask_qSetBit(parent, 46); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value67.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value67_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value67_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 47);
 }
 
 // --- atf_amc.PmaskU128.value67.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value67_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value67_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 47); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value67.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value67_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value67_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 47;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value67.Set
-inline void atf_amc::value67_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value67_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value67 = rhs;
     pmask_qSetBit(parent, 47); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value68.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value68_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value68_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 48);
 }
 
 // --- atf_amc.PmaskU128.value68.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value68_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value68_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 48); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value68.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value68_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value68_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 48;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value68.Set
-inline void atf_amc::value68_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value68_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value68 = rhs;
     pmask_qSetBit(parent, 48); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value61.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value61_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value61_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 49);
 }
 
 // --- atf_amc.PmaskU128.value61.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value61_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value61_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 49); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value61.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value61_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value61_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 49;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value61.Set
-inline void atf_amc::value61_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value61_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value61 = rhs;
     pmask_qSetBit(parent, 49); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value34.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value34_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value34_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 50);
 }
 
 // --- atf_amc.PmaskU128.value34.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value34_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value34_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 50); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value34.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value34_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value34_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 50;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value34.Set
-inline void atf_amc::value34_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value34_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value34 = rhs;
     pmask_qSetBit(parent, 50); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value52.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value52_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value52_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 51);
 }
 
 // --- atf_amc.PmaskU128.value52.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value52_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value52_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 51); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value52.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value52_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value52_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 51;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value52.Set
-inline void atf_amc::value52_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value52_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value52 = rhs;
     pmask_qSetBit(parent, 51); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value36.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value36_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value36_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 52);
 }
 
 // --- atf_amc.PmaskU128.value36.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value36_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value36_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 52); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value36.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value36_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value36_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 52;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value36.Set
-inline void atf_amc::value36_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value36_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value36 = rhs;
     pmask_qSetBit(parent, 52); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value37.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value37_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value37_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 53);
 }
 
 // --- atf_amc.PmaskU128.value37.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value37_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value37_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 53); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value37.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value37_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value37_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 53;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value37.Set
-inline void atf_amc::value37_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value37_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value37 = rhs;
     pmask_qSetBit(parent, 53); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value38.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value38_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value38_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 54);
 }
 
 // --- atf_amc.PmaskU128.value38.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value38_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value38_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 54); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value38.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value38_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value38_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 54;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value38.Set
-inline void atf_amc::value38_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value38_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value38 = rhs;
     pmask_qSetBit(parent, 54); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value39.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value39_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value39_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 55);
 }
 
 // --- atf_amc.PmaskU128.value39.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value39_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value39_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 55); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value39.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value39_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value39_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 55;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value39.Set
-inline void atf_amc::value39_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value39_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value39 = rhs;
     pmask_qSetBit(parent, 55); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value40.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value40_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value40_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 56);
 }
 
 // --- atf_amc.PmaskU128.value40.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value40_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value40_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 56); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value40.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value40_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value40_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 56;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value40.Set
-inline void atf_amc::value40_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value40_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value40 = rhs;
     pmask_qSetBit(parent, 56); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value41.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value41_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value41_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 57);
 }
 
 // --- atf_amc.PmaskU128.value41.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value41_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value41_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 57); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value41.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value41_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value41_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 57;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value41.Set
-inline void atf_amc::value41_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value41_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value41 = rhs;
     pmask_qSetBit(parent, 57); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value42.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value42_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value42_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 58);
 }
 
 // --- atf_amc.PmaskU128.value42.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value42_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value42_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 58); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value42.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value42_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value42_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 58;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value42.Set
-inline void atf_amc::value42_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value42_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value42 = rhs;
     pmask_qSetBit(parent, 58); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value53.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value53_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value53_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 59);
 }
 
 // --- atf_amc.PmaskU128.value53.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value53_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value53_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 59); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value53.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value53_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value53_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 59;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value53.Set
-inline void atf_amc::value53_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value53_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value53 = rhs;
     pmask_qSetBit(parent, 59); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value44.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value44_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value44_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 60);
 }
 
 // --- atf_amc.PmaskU128.value44.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value44_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value44_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 60); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value44.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value44_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value44_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 60;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value44.Set
-inline void atf_amc::value44_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value44_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value44 = rhs;
     pmask_qSetBit(parent, 60); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value45.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value45_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value45_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 61);
 }
 
 // --- atf_amc.PmaskU128.value45.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value45_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value45_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 61); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value45.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value45_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value45_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 61;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value45.Set
-inline void atf_amc::value45_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value45_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value45 = rhs;
     pmask_qSetBit(parent, 61); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value46.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value46_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value46_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 62);
 }
 
 // --- atf_amc.PmaskU128.value46.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value46_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value46_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 62); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value46.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value46_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value46_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 62;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value46.Set
-inline void atf_amc::value46_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value46_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value46 = rhs;
     pmask_qSetBit(parent, 62); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value47.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value47_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value47_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 63);
 }
 
 // --- atf_amc.PmaskU128.value47.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value47_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value47_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 63); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value47.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value47_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value47_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 63;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value47.Set
-inline void atf_amc::value47_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value47_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value47 = rhs;
     pmask_qSetBit(parent, 63); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value48.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value48_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value48_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 64);
 }
 
 // --- atf_amc.PmaskU128.value48.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value48_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value48_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 64); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value48.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value48_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value48_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 64;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value48.Set
-inline void atf_amc::value48_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value48_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value48 = rhs;
     pmask_qSetBit(parent, 64); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value49.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value49_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value49_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 65);
 }
 
 // --- atf_amc.PmaskU128.value49.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value49_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value49_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 65); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value49.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value49_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value49_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 65;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value49.Set
-inline void atf_amc::value49_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value49_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value49 = rhs;
     pmask_qSetBit(parent, 65); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value50.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value50_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value50_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 66);
 }
 
 // --- atf_amc.PmaskU128.value50.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value50_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value50_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 66); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value50.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value50_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value50_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 66;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value50.Set
-inline void atf_amc::value50_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value50_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value50 = rhs;
     pmask_qSetBit(parent, 66); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value51.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value51_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value51_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 67);
 }
 
 // --- atf_amc.PmaskU128.value51.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value51_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value51_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 67); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value51.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value51_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value51_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 67;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value51.Set
-inline void atf_amc::value51_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value51_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value51 = rhs;
     pmask_qSetBit(parent, 67); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value43.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value43_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value43_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 68);
 }
 
 // --- atf_amc.PmaskU128.value43.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value43_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value43_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 68); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value43.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value43_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value43_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 68;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value43.Set
-inline void atf_amc::value43_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value43_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value43 = rhs;
     pmask_qSetBit(parent, 68); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value70.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value70_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value70_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 69);
 }
 
 // --- atf_amc.PmaskU128.value70.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value70_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value70_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 69); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value70.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value70_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value70_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 69;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value70.Set
-inline void atf_amc::value70_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value70_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value70 = rhs;
     pmask_qSetBit(parent, 69); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value71.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value71_PresentQ(atf_amc::PmaskU128& parent) {
+inline bool atf_amc::value71_PresentQ(atf_amc::PmaskU128& parent) throw() {
     return pmask_qGetBit(parent, 70);
 }
 
 // --- atf_amc.PmaskU128.value71.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value71_SetPresent(atf_amc::PmaskU128& parent) {
+inline void atf_amc::value71_SetPresent(atf_amc::PmaskU128& parent) throw() {
     pmask_qSetBit(parent, 70); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128.value71.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value71_Present_GetBit(atf_amc::PmaskU128& parent) {
+inline int atf_amc::value71_Present_GetBit(atf_amc::PmaskU128& parent) throw() {
     int retval = 70;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU128.value71.Set
-inline void atf_amc::value71_Set(atf_amc::PmaskU128& parent, u32 rhs) {
+inline void atf_amc::value71_Set(atf_amc::PmaskU128& parent, u32 rhs) throw() {
     parent.value71 = rhs;
     pmask_qSetBit(parent, 70); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU128..Ctor
-inline  atf_amc::PmaskU128::PmaskU128() {
+inline  atf_amc::PmaskU128::PmaskU128() throw() {
     atf_amc::PmaskU128_Init(*this);
 }
 
 // --- atf_amc.PmaskU32.pmask.N
 // Return constant 1
-inline int atf_amc::pmask_N(atf_amc::PmaskU32& parent) {
+inline int atf_amc::pmask_N(atf_amc::PmaskU32& parent) throw() {
     (void)parent;
     return 1;
 }
 
 // --- atf_amc.PmaskU32.pmask.qFind
 // Access value
-inline u32& atf_amc::pmask_qFind(atf_amc::PmaskU32& parent, int) {
+inline u32& atf_amc::pmask_qFind(atf_amc::PmaskU32& parent, int) throw() {
     return parent.pmask;
 }
 
 // --- atf_amc.PmaskU32.pmask.NBits
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
-inline int atf_amc::pmask_Nbits(atf_amc::PmaskU32& parent) {
+inline int atf_amc::pmask_Nbits(atf_amc::PmaskU32& parent) throw() {
     return pmask_N(parent) * 32;
 }
 
 // --- atf_amc.PmaskU32.pmask.qGetBit
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-inline bool atf_amc::pmask_qGetBit(atf_amc::PmaskU32& parent, u32 bit_idx) {
+inline bool atf_amc::pmask_qGetBit(atf_amc::PmaskU32& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = pmask_qFind(parent, elem_idx); // fetch element
@@ -9965,7 +9965,7 @@ inline bool atf_amc::pmask_qGetBit(atf_amc::PmaskU32& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU32.pmask.GetBit
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-inline bool atf_amc::pmask_GetBit(atf_amc::PmaskU32& parent, u32 bit_idx) {
+inline bool atf_amc::pmask_GetBit(atf_amc::PmaskU32& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     bool ret = false;
@@ -9979,7 +9979,7 @@ inline bool atf_amc::pmask_GetBit(atf_amc::PmaskU32& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU32.pmask.BitsEmptyQ
 // Check if all the bits in the bitset are equal to zero
-inline bool atf_amc::pmask_BitsEmptyQ(atf_amc::PmaskU32& parent) {
+inline bool atf_amc::pmask_BitsEmptyQ(atf_amc::PmaskU32& parent) throw() {
     bool retval = true;
     u64 n = pmask_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -9992,7 +9992,7 @@ inline bool atf_amc::pmask_BitsEmptyQ(atf_amc::PmaskU32& parent) {
 }
 
 // --- atf_amc.PmaskU32.pmask.Sum1s
-inline u64 atf_amc::pmask_Sum1s(atf_amc::PmaskU32& parent) {
+inline u64 atf_amc::pmask_Sum1s(atf_amc::PmaskU32& parent) throw() {
     u64 sum = 0;
     u64 n = pmask_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -10003,7 +10003,7 @@ inline u64 atf_amc::pmask_Sum1s(atf_amc::PmaskU32& parent) {
 
 // --- atf_amc.PmaskU32.pmask.qClearBit
 // Clear bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qClearBit(atf_amc::PmaskU32& parent, u32 bit_idx) {
+inline void atf_amc::pmask_qClearBit(atf_amc::PmaskU32& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -10012,7 +10012,7 @@ inline void atf_amc::pmask_qClearBit(atf_amc::PmaskU32& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU32.pmask.ClearBit
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-inline void atf_amc::pmask_ClearBit(atf_amc::PmaskU32& parent, u32 bit_idx) {
+inline void atf_amc::pmask_ClearBit(atf_amc::PmaskU32& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u64 lim = pmask_N(parent);
@@ -10024,7 +10024,7 @@ inline void atf_amc::pmask_ClearBit(atf_amc::PmaskU32& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU32.pmask.qSetBit
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qSetBit(atf_amc::PmaskU32& parent, u32 bit_idx) {
+inline void atf_amc::pmask_qSetBit(atf_amc::PmaskU32& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -10033,7 +10033,7 @@ inline void atf_amc::pmask_qSetBit(atf_amc::PmaskU32& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU32.pmask.SetBit
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-inline void atf_amc::pmask_SetBit(atf_amc::PmaskU32& parent, u32 bit_idx) {
+inline void atf_amc::pmask_SetBit(atf_amc::PmaskU32& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u64 lim = pmask_N(parent);
@@ -10045,7 +10045,7 @@ inline void atf_amc::pmask_SetBit(atf_amc::PmaskU32& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU32.pmask.qSetBitVal
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qSetBitVal(atf_amc::PmaskU32& parent, u32 bit_idx, bool val) {
+inline void atf_amc::pmask_qSetBitVal(atf_amc::PmaskU32& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -10054,7 +10054,7 @@ inline void atf_amc::pmask_qSetBitVal(atf_amc::PmaskU32& parent, u32 bit_idx, bo
 
 // --- atf_amc.PmaskU32.pmask.qOrBitVal
 // Or bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qOrBitVal(atf_amc::PmaskU32& parent, u32 bit_idx, bool val) {
+inline void atf_amc::pmask_qOrBitVal(atf_amc::PmaskU32& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 5;
     u64 shift = bit_idx & 31;
     u32 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -10064,7 +10064,7 @@ inline void atf_amc::pmask_qOrBitVal(atf_amc::PmaskU32& parent, u32 bit_idx, boo
 // --- atf_amc.PmaskU32.pmask.ClearBitsAll
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
-inline void atf_amc::pmask_ClearBitsAll(atf_amc::PmaskU32& parent) {
+inline void atf_amc::pmask_ClearBitsAll(atf_amc::PmaskU32& parent) throw() {
     u64 n = pmask_N(parent);
     for (u64 i = 0; i < n; i++) {
         pmask_qFind(parent, i) = 0;
@@ -10073,7 +10073,7 @@ inline void atf_amc::pmask_ClearBitsAll(atf_amc::PmaskU32& parent) {
 
 // --- atf_amc.PmaskU32.pmask.ClearBits
 // Zero in PARENT any bits that are set in RHS.
-inline void atf_amc::pmask_ClearBits(atf_amc::PmaskU32& parent, atf_amc::PmaskU32 &rhs) {
+inline void atf_amc::pmask_ClearBits(atf_amc::PmaskU32& parent, atf_amc::PmaskU32 &rhs) throw() {
     u64 n = u64_Min(pmask_N(parent), pmask_N(rhs));
     for (u64 i = 0; i < n; i++) {
         pmask_qFind(parent, i) &= ~pmask_qFind(rhs, i);
@@ -10083,7 +10083,7 @@ inline void atf_amc::pmask_ClearBits(atf_amc::PmaskU32& parent, atf_amc::PmaskU3
 // --- atf_amc.PmaskU32.pmask.OrBits
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
-inline void atf_amc::pmask_OrBits(atf_amc::PmaskU32& parent, atf_amc::PmaskU32 &rhs) {
+inline void atf_amc::pmask_OrBits(atf_amc::PmaskU32& parent, atf_amc::PmaskU32 &rhs) throw() {
     u64 n = u64_Min(pmask_N(parent), pmask_N(rhs));
     for (u64 i = 0; i < n; i++) {
         pmask_qFind(parent, i) |= pmask_qFind(rhs, i);
@@ -10092,7 +10092,7 @@ inline void atf_amc::pmask_OrBits(atf_amc::PmaskU32& parent, atf_amc::PmaskU32 &
 
 // --- atf_amc.PmaskU32.pmask.Sup
 // Return smallest number N such that indexes of all 1 bits are below N
-inline i32 atf_amc::pmask_Sup(atf_amc::PmaskU32& parent) {
+inline i32 atf_amc::pmask_Sup(atf_amc::PmaskU32& parent) throw() {
     u64 lim = pmask_N(parent);
     i32 ret = 0;
     for (int i = lim-1; i >= 0; i--) {
@@ -10108,136 +10108,136 @@ inline i32 atf_amc::pmask_Sup(atf_amc::PmaskU32& parent) {
 
 // --- atf_amc.PmaskU32.value.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value_PresentQ(atf_amc::PmaskU32& parent) {
+inline bool atf_amc::value_PresentQ(atf_amc::PmaskU32& parent) throw() {
     return pmask_qGetBit(parent, 0);
 }
 
 // --- atf_amc.PmaskU32.value.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value_SetPresent(atf_amc::PmaskU32& parent) {
+inline void atf_amc::value_SetPresent(atf_amc::PmaskU32& parent) throw() {
     pmask_qSetBit(parent, 0); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU32.value.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value_Present_GetBit(atf_amc::PmaskU32& parent) {
+inline int atf_amc::value_Present_GetBit(atf_amc::PmaskU32& parent) throw() {
     int retval = 0;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU32.value.Set
-inline void atf_amc::value_Set(atf_amc::PmaskU32& parent, u32 rhs) {
+inline void atf_amc::value_Set(atf_amc::PmaskU32& parent, u32 rhs) throw() {
     parent.value = rhs;
     pmask_qSetBit(parent, 0); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU32.value2.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value2_PresentQ(atf_amc::PmaskU32& parent) {
+inline bool atf_amc::value2_PresentQ(atf_amc::PmaskU32& parent) throw() {
     return pmask_qGetBit(parent, 1);
 }
 
 // --- atf_amc.PmaskU32.value2.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value2_SetPresent(atf_amc::PmaskU32& parent) {
+inline void atf_amc::value2_SetPresent(atf_amc::PmaskU32& parent) throw() {
     pmask_qSetBit(parent, 1); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU32.value2.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value2_Present_GetBit(atf_amc::PmaskU32& parent) {
+inline int atf_amc::value2_Present_GetBit(atf_amc::PmaskU32& parent) throw() {
     int retval = 1;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU32.value2.Set
-inline void atf_amc::value2_Set(atf_amc::PmaskU32& parent, u32 rhs) {
+inline void atf_amc::value2_Set(atf_amc::PmaskU32& parent, u32 rhs) throw() {
     parent.value2 = rhs;
     pmask_qSetBit(parent, 1); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU32.value3.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value3_PresentQ(atf_amc::PmaskU32& parent) {
+inline bool atf_amc::value3_PresentQ(atf_amc::PmaskU32& parent) throw() {
     return pmask_qGetBit(parent, 2);
 }
 
 // --- atf_amc.PmaskU32.value3.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value3_SetPresent(atf_amc::PmaskU32& parent) {
+inline void atf_amc::value3_SetPresent(atf_amc::PmaskU32& parent) throw() {
     pmask_qSetBit(parent, 2); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU32.value3.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value3_Present_GetBit(atf_amc::PmaskU32& parent) {
+inline int atf_amc::value3_Present_GetBit(atf_amc::PmaskU32& parent) throw() {
     int retval = 2;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU32.value3.Set
-inline void atf_amc::value3_Set(atf_amc::PmaskU32& parent, u32 rhs) {
+inline void atf_amc::value3_Set(atf_amc::PmaskU32& parent, u32 rhs) throw() {
     parent.value3 = rhs;
     pmask_qSetBit(parent, 2); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU32.value4.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value4_PresentQ(atf_amc::PmaskU32& parent) {
+inline bool atf_amc::value4_PresentQ(atf_amc::PmaskU32& parent) throw() {
     return pmask_qGetBit(parent, 3);
 }
 
 // --- atf_amc.PmaskU32.value4.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value4_SetPresent(atf_amc::PmaskU32& parent) {
+inline void atf_amc::value4_SetPresent(atf_amc::PmaskU32& parent) throw() {
     pmask_qSetBit(parent, 3); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU32.value4.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value4_Present_GetBit(atf_amc::PmaskU32& parent) {
+inline int atf_amc::value4_Present_GetBit(atf_amc::PmaskU32& parent) throw() {
     int retval = 3;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU32.value4.Set
-inline void atf_amc::value4_Set(atf_amc::PmaskU32& parent, u32 rhs) {
+inline void atf_amc::value4_Set(atf_amc::PmaskU32& parent, u32 rhs) throw() {
     parent.value4 = rhs;
     pmask_qSetBit(parent, 3); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU32.value5.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value5_PresentQ(atf_amc::PmaskU32& parent) {
+inline bool atf_amc::value5_PresentQ(atf_amc::PmaskU32& parent) throw() {
     return pmask_qGetBit(parent, 4);
 }
 
 // --- atf_amc.PmaskU32.value5.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value5_SetPresent(atf_amc::PmaskU32& parent) {
+inline void atf_amc::value5_SetPresent(atf_amc::PmaskU32& parent) throw() {
     pmask_qSetBit(parent, 4); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU32.value5.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value5_Present_GetBit(atf_amc::PmaskU32& parent) {
+inline int atf_amc::value5_Present_GetBit(atf_amc::PmaskU32& parent) throw() {
     int retval = 4;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU32.value5.Set
-inline void atf_amc::value5_Set(atf_amc::PmaskU32& parent, u32 rhs) {
+inline void atf_amc::value5_Set(atf_amc::PmaskU32& parent, u32 rhs) throw() {
     parent.value5 = rhs;
     pmask_qSetBit(parent, 4); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU32.pmask_bitcurs.Reset
-inline void atf_amc::PmaskU32_pmask_bitcurs_Reset(PmaskU32_pmask_bitcurs &curs, atf_amc::PmaskU32 &parent) {
+inline void atf_amc::PmaskU32_pmask_bitcurs_Reset(PmaskU32_pmask_bitcurs &curs, atf_amc::PmaskU32 &parent) throw() {
     curs.elems = &pmask_qFind(parent,0);
     curs.n_elems = pmask_N(parent);
     curs.bit = -1;
@@ -10246,13 +10246,13 @@ inline void atf_amc::PmaskU32_pmask_bitcurs_Reset(PmaskU32_pmask_bitcurs &curs, 
 
 // --- atf_amc.PmaskU32.pmask_bitcurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::PmaskU32_pmask_bitcurs_ValidQ(PmaskU32_pmask_bitcurs &curs) {
+inline bool atf_amc::PmaskU32_pmask_bitcurs_ValidQ(PmaskU32_pmask_bitcurs &curs) throw() {
     return curs.bit < curs.n_elems*32;
 }
 
 // --- atf_amc.PmaskU32.pmask_bitcurs.Access
 // item access
-inline int& atf_amc::PmaskU32_pmask_bitcurs_Access(PmaskU32_pmask_bitcurs &curs) {
+inline int& atf_amc::PmaskU32_pmask_bitcurs_Access(PmaskU32_pmask_bitcurs &curs) throw() {
     return curs.bit;
 }
 
@@ -10268,32 +10268,32 @@ inline void atf_amc::PmaskU32_Init(atf_amc::PmaskU32& parent) {
 }
 
 // --- atf_amc.PmaskU32..Ctor
-inline  atf_amc::PmaskU32::PmaskU32() {
+inline  atf_amc::PmaskU32::PmaskU32() throw() {
     atf_amc::PmaskU32_Init(*this);
 }
 
 // --- atf_amc.PmaskU555.value.PresentQ
 // Return true if the field is marked in the presence mask
-inline bool atf_amc::value_PresentQ(atf_amc::PmaskU555& parent) {
+inline bool atf_amc::value_PresentQ(atf_amc::PmaskU555& parent) throw() {
     return pmask_qGetBit(parent, 0);
 }
 
 // --- atf_amc.PmaskU555.value.SetPresent
 // Set presence bit for this field in the pmask
-inline void atf_amc::value_SetPresent(atf_amc::PmaskU555& parent) {
+inline void atf_amc::value_SetPresent(atf_amc::PmaskU555& parent) throw() {
     pmask_qSetBit(parent, 0); // mark presence in pmask
 }
 
 // --- atf_amc.PmaskU555.value.Present_GetBit
 // Return field's bit number in the pmask
-inline int atf_amc::value_Present_GetBit(atf_amc::PmaskU555& parent) {
+inline int atf_amc::value_Present_GetBit(atf_amc::PmaskU555& parent) throw() {
     int retval = 0;
     (void)parent;//only to avoid -Wunused-parameter
     return retval;
 }
 
 // --- atf_amc.PmaskU555.value.Set
-inline void atf_amc::value_Set(atf_amc::PmaskU555& parent, u32 rhs) {
+inline void atf_amc::value_Set(atf_amc::PmaskU555& parent, u32 rhs) throw() {
     parent.value = rhs;
     pmask_qSetBit(parent, 0); // mark presence in pmask
 }
@@ -10301,13 +10301,13 @@ inline void atf_amc::value_Set(atf_amc::PmaskU555& parent, u32 rhs) {
 // --- atf_amc.PmaskU555.pmask.NBits
 // Get max # of bits in the bitset
 // Return max. number of bits supported by array
-inline int atf_amc::pmask_Nbits(atf_amc::PmaskU555& parent) {
+inline int atf_amc::pmask_Nbits(atf_amc::PmaskU555& parent) throw() {
     return pmask_N(parent) * 64;
 }
 
 // --- atf_amc.PmaskU555.pmask.qGetBit
 // Retrieve value of bit #BIT_IDX in bit set. No bounds checking
-inline bool atf_amc::pmask_qGetBit(atf_amc::PmaskU555& parent, u32 bit_idx) {
+inline bool atf_amc::pmask_qGetBit(atf_amc::PmaskU555& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = pmask_qFind(parent, elem_idx); // fetch element
@@ -10316,7 +10316,7 @@ inline bool atf_amc::pmask_qGetBit(atf_amc::PmaskU555& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU555.pmask.GetBit
 // Retrieve value of bit #BIT_IDX in bit set. If bit index is out of bounds, return 0.
-inline bool atf_amc::pmask_GetBit(atf_amc::PmaskU555& parent, u32 bit_idx) {
+inline bool atf_amc::pmask_GetBit(atf_amc::PmaskU555& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     bool ret = false;
@@ -10330,7 +10330,7 @@ inline bool atf_amc::pmask_GetBit(atf_amc::PmaskU555& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU555.pmask.BitsEmptyQ
 // Check if all the bits in the bitset are equal to zero
-inline bool atf_amc::pmask_BitsEmptyQ(atf_amc::PmaskU555& parent) {
+inline bool atf_amc::pmask_BitsEmptyQ(atf_amc::PmaskU555& parent) throw() {
     bool retval = true;
     u64 n = pmask_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -10343,7 +10343,7 @@ inline bool atf_amc::pmask_BitsEmptyQ(atf_amc::PmaskU555& parent) {
 }
 
 // --- atf_amc.PmaskU555.pmask.Sum1s
-inline u64 atf_amc::pmask_Sum1s(atf_amc::PmaskU555& parent) {
+inline u64 atf_amc::pmask_Sum1s(atf_amc::PmaskU555& parent) throw() {
     u64 sum = 0;
     u64 n = pmask_N(parent);
     for (u64 i = 0; i < n; i++) {
@@ -10354,7 +10354,7 @@ inline u64 atf_amc::pmask_Sum1s(atf_amc::PmaskU555& parent) {
 
 // --- atf_amc.PmaskU555.pmask.qClearBit
 // Clear bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qClearBit(atf_amc::PmaskU555& parent, u32 bit_idx) {
+inline void atf_amc::pmask_qClearBit(atf_amc::PmaskU555& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -10363,7 +10363,7 @@ inline void atf_amc::pmask_qClearBit(atf_amc::PmaskU555& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU555.pmask.ClearBit
 // Clear bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing
-inline void atf_amc::pmask_ClearBit(atf_amc::PmaskU555& parent, u32 bit_idx) {
+inline void atf_amc::pmask_ClearBit(atf_amc::PmaskU555& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 lim = pmask_N(parent);
@@ -10375,7 +10375,7 @@ inline void atf_amc::pmask_ClearBit(atf_amc::PmaskU555& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU555.pmask.qSetBit
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qSetBit(atf_amc::PmaskU555& parent, u32 bit_idx) {
+inline void atf_amc::pmask_qSetBit(atf_amc::PmaskU555& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -10384,7 +10384,7 @@ inline void atf_amc::pmask_qSetBit(atf_amc::PmaskU555& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU555.pmask.SetBit
 // Set bit # BIT_IDX in bit set. If bit index is out of bounds, do nothing.
-inline void atf_amc::pmask_SetBit(atf_amc::PmaskU555& parent, u32 bit_idx) {
+inline void atf_amc::pmask_SetBit(atf_amc::PmaskU555& parent, u32 bit_idx) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 lim = pmask_N(parent);
@@ -10396,7 +10396,7 @@ inline void atf_amc::pmask_SetBit(atf_amc::PmaskU555& parent, u32 bit_idx) {
 
 // --- atf_amc.PmaskU555.pmask.qSetBitVal
 // Set bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qSetBitVal(atf_amc::PmaskU555& parent, u32 bit_idx, bool val) {
+inline void atf_amc::pmask_qSetBitVal(atf_amc::PmaskU555& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -10405,7 +10405,7 @@ inline void atf_amc::pmask_qSetBitVal(atf_amc::PmaskU555& parent, u32 bit_idx, b
 
 // --- atf_amc.PmaskU555.pmask.qOrBitVal
 // Or bit # BIT_IDX in bit set. No bounds checking
-inline void atf_amc::pmask_qOrBitVal(atf_amc::PmaskU555& parent, u32 bit_idx, bool val) {
+inline void atf_amc::pmask_qOrBitVal(atf_amc::PmaskU555& parent, u32 bit_idx, bool val) throw() {
     u64 elem_idx = bit_idx >> 6;
     u64 shift = bit_idx & 63;
     u64 &elem = pmask_qFind(parent, elem_idx); // fetch
@@ -10415,7 +10415,7 @@ inline void atf_amc::pmask_qOrBitVal(atf_amc::PmaskU555& parent, u32 bit_idx, bo
 // --- atf_amc.PmaskU555.pmask.ClearBitsAll
 // Set all bits of array to zero.
 // Note: this does not change what NBits will return.
-inline void atf_amc::pmask_ClearBitsAll(atf_amc::PmaskU555& parent) {
+inline void atf_amc::pmask_ClearBitsAll(atf_amc::PmaskU555& parent) throw() {
     u64 n = pmask_N(parent);
     for (u64 i = 0; i < n; i++) {
         pmask_qFind(parent, i) = 0;
@@ -10424,7 +10424,7 @@ inline void atf_amc::pmask_ClearBitsAll(atf_amc::PmaskU555& parent) {
 
 // --- atf_amc.PmaskU555.pmask.ClearBits
 // Zero in PARENT any bits that are set in RHS.
-inline void atf_amc::pmask_ClearBits(atf_amc::PmaskU555& parent, atf_amc::PmaskU555 &rhs) {
+inline void atf_amc::pmask_ClearBits(atf_amc::PmaskU555& parent, atf_amc::PmaskU555 &rhs) throw() {
     u64 n = u64_Min(pmask_N(parent), pmask_N(rhs));
     for (u64 i = 0; i < n; i++) {
         pmask_qFind(parent, i) &= ~pmask_qFind(rhs, i);
@@ -10434,7 +10434,7 @@ inline void atf_amc::pmask_ClearBits(atf_amc::PmaskU555& parent, atf_amc::PmaskU
 // --- atf_amc.PmaskU555.pmask.OrBits
 // Set PARENT to union of two bitsets.
 // (This function is not named Set.. to avoid triple entendre).
-inline void atf_amc::pmask_OrBits(atf_amc::PmaskU555& parent, atf_amc::PmaskU555 &rhs) {
+inline void atf_amc::pmask_OrBits(atf_amc::PmaskU555& parent, atf_amc::PmaskU555 &rhs) throw() {
     u64 n = u64_Min(pmask_N(parent), pmask_N(rhs));
     for (u64 i = 0; i < n; i++) {
         pmask_qFind(parent, i) |= pmask_qFind(rhs, i);
@@ -10443,7 +10443,7 @@ inline void atf_amc::pmask_OrBits(atf_amc::PmaskU555& parent, atf_amc::PmaskU555
 
 // --- atf_amc.PmaskU555.pmask.Sup
 // Return smallest number N such that indexes of all 1 bits are below N
-inline i32 atf_amc::pmask_Sup(atf_amc::PmaskU555& parent) {
+inline i32 atf_amc::pmask_Sup(atf_amc::PmaskU555& parent) throw() {
     u64 lim = pmask_N(parent);
     i32 ret = 0;
     for (int i = lim-1; i >= 0; i--) {
@@ -10459,7 +10459,7 @@ inline i32 atf_amc::pmask_Sup(atf_amc::PmaskU555& parent) {
 
 // --- atf_amc.PmaskU555.pmask.Fill
 // Set all elements of fixed array to value RHS
-inline void atf_amc::pmask_Fill(atf_amc::PmaskU555& parent, const u64 &rhs) {
+inline void atf_amc::pmask_Fill(atf_amc::PmaskU555& parent, const u64 &rhs) throw() {
     for (int i = 0; i < 10; i++) {
         parent.pmask_elems[i] = rhs;
     }
@@ -10467,7 +10467,7 @@ inline void atf_amc::pmask_Fill(atf_amc::PmaskU555& parent, const u64 &rhs) {
 
 // --- atf_amc.PmaskU555.pmask.Find
 // Look up row by row id. Return NULL if out of range
-inline u64* atf_amc::pmask_Find(atf_amc::PmaskU555& parent, u64 t) {
+inline u64* atf_amc::pmask_Find(atf_amc::PmaskU555& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = 10;
     return idx < lim ? parent.pmask_elems + idx : NULL; // unsigned comparison with limit
@@ -10475,39 +10475,39 @@ inline u64* atf_amc::pmask_Find(atf_amc::PmaskU555& parent, u64 t) {
 
 // --- atf_amc.PmaskU555.pmask.Getary
 // Access fixed array pmask as aryptr.
-inline algo::aryptr<u64> atf_amc::pmask_Getary(atf_amc::PmaskU555& parent) {
+inline algo::aryptr<u64> atf_amc::pmask_Getary(atf_amc::PmaskU555& parent) throw() {
     return algo::aryptr<u64>(parent.pmask_elems, 10);
 }
 
 // --- atf_amc.PmaskU555.pmask.Max
 // Return max number of items in the array
-inline i32 atf_amc::pmask_Max(atf_amc::PmaskU555& parent) {
+inline i32 atf_amc::pmask_Max(atf_amc::PmaskU555& parent) throw() {
     (void)parent;
     return 10;
 }
 
 // --- atf_amc.PmaskU555.pmask.N
 // Return number of items in the array
-inline i32 atf_amc::pmask_N(const atf_amc::PmaskU555& parent) {
+inline i32 atf_amc::pmask_N(const atf_amc::PmaskU555& parent) throw() {
     (void)parent;//only to avoid -Wunused-parameter
     return 10;
 }
 
 // --- atf_amc.PmaskU555.pmask.Setary
 // Set contents of fixed array to RHS; Input length is trimmed as necessary
-inline void atf_amc::pmask_Setary(atf_amc::PmaskU555& parent, const algo::aryptr<u64> &rhs) {
+inline void atf_amc::pmask_Setary(atf_amc::PmaskU555& parent, const algo::aryptr<u64> &rhs) throw() {
     int n = i32_Min(10, rhs.n_elems);
     memcpy(parent.pmask_elems, rhs.elems, sizeof(u64)*n);
 }
 
 // --- atf_amc.PmaskU555.pmask.qFind
 // 'quick' Access row by row id. No bounds checking in release.
-inline u64& atf_amc::pmask_qFind(atf_amc::PmaskU555& parent, u64 t) {
+inline u64& atf_amc::pmask_qFind(atf_amc::PmaskU555& parent, u64 t) throw() {
     return parent.pmask_elems[u64(t)];
 }
 
 // --- atf_amc.PmaskU555.pmask_bitcurs.Reset
-inline void atf_amc::PmaskU555_pmask_bitcurs_Reset(PmaskU555_pmask_bitcurs &curs, atf_amc::PmaskU555 &parent) {
+inline void atf_amc::PmaskU555_pmask_bitcurs_Reset(PmaskU555_pmask_bitcurs &curs, atf_amc::PmaskU555 &parent) throw() {
     curs.elems = &pmask_qFind(parent,0);
     curs.n_elems = pmask_N(parent);
     curs.bit = -1;
@@ -10516,38 +10516,38 @@ inline void atf_amc::PmaskU555_pmask_bitcurs_Reset(PmaskU555_pmask_bitcurs &curs
 
 // --- atf_amc.PmaskU555.pmask_bitcurs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::PmaskU555_pmask_bitcurs_ValidQ(PmaskU555_pmask_bitcurs &curs) {
+inline bool atf_amc::PmaskU555_pmask_bitcurs_ValidQ(PmaskU555_pmask_bitcurs &curs) throw() {
     return curs.bit < curs.n_elems*64;
 }
 
 // --- atf_amc.PmaskU555.pmask_bitcurs.Access
 // item access
-inline int& atf_amc::PmaskU555_pmask_bitcurs_Access(PmaskU555_pmask_bitcurs &curs) {
+inline int& atf_amc::PmaskU555_pmask_bitcurs_Access(PmaskU555_pmask_bitcurs &curs) throw() {
     return curs.bit;
 }
 
 // --- atf_amc.PmaskU555.pmask_curs.Reset
 // cursor points to valid item
-inline void atf_amc::PmaskU555_pmask_curs_Reset(PmaskU555_pmask_curs &curs, atf_amc::PmaskU555 &parent) {
+inline void atf_amc::PmaskU555_pmask_curs_Reset(PmaskU555_pmask_curs &curs, atf_amc::PmaskU555 &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- atf_amc.PmaskU555.pmask_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::PmaskU555_pmask_curs_ValidQ(PmaskU555_pmask_curs &curs) {
+inline bool atf_amc::PmaskU555_pmask_curs_ValidQ(PmaskU555_pmask_curs &curs) throw() {
     return u64(curs.index) < u64(10);
 }
 
 // --- atf_amc.PmaskU555.pmask_curs.Next
 // proceed to next item
-inline void atf_amc::PmaskU555_pmask_curs_Next(PmaskU555_pmask_curs &curs) {
+inline void atf_amc::PmaskU555_pmask_curs_Next(PmaskU555_pmask_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.PmaskU555.pmask_curs.Access
 // item access
-inline u64& atf_amc::PmaskU555_pmask_curs_Access(PmaskU555_pmask_curs &curs) {
+inline u64& atf_amc::PmaskU555_pmask_curs_Access(PmaskU555_pmask_curs &curs) throw() {
     return pmask_qFind((*curs.parent), u64(curs.index));
 }
 
@@ -10561,29 +10561,29 @@ inline void atf_amc::PmaskU555_Init(atf_amc::PmaskU555& parent) {
 }
 
 // --- atf_amc.PmaskU555..Ctor
-inline  atf_amc::PmaskU555::PmaskU555() {
+inline  atf_amc::PmaskU555::PmaskU555() throw() {
     atf_amc::PmaskU555_Init(*this);
 }
 
 // --- atf_amc.PooledBE64.value.Get
-inline u64 atf_amc::value_Get(const atf_amc::PooledBE64& pooledbe64) {
+inline u64 atf_amc::value_Get(const atf_amc::PooledBE64& pooledbe64) throw() {
     return be64toh(pooledbe64.value_be); // read big-endian value from memory
 }
 
 // --- atf_amc.PooledBE64.value.Set
-inline void atf_amc::value_Set(atf_amc::PooledBE64& pooledbe64, u64 rhs) {
+inline void atf_amc::value_Set(atf_amc::PooledBE64& pooledbe64, u64 rhs) throw() {
     pooledbe64.value_be = htobe64(rhs); // write big-endian value to memory
 }
 
 // --- atf_amc.PooledBE64.value.GetEnum
 // Get value of field as enum type
-inline atf_amc_PooledBE64_value_Enum atf_amc::value_GetEnum(const atf_amc::PooledBE64& pooledbe64) {
+inline atf_amc_PooledBE64_value_Enum atf_amc::value_GetEnum(const atf_amc::PooledBE64& pooledbe64) throw() {
     return atf_amc_PooledBE64_value_Enum(value_Get(pooledbe64));
 }
 
 // --- atf_amc.PooledBE64.value.SetEnum
 // Set value of field from enum type.
-inline void atf_amc::value_SetEnum(atf_amc::PooledBE64& pooledbe64, atf_amc_PooledBE64_value_Enum rhs) {
+inline void atf_amc::value_SetEnum(atf_amc::PooledBE64& pooledbe64, atf_amc_PooledBE64_value_Enum rhs) throw() {
     value_Set(pooledbe64, u64(rhs));
 }
 
@@ -10595,18 +10595,18 @@ inline void atf_amc::PooledBE64_Init(atf_amc::PooledBE64& pooledbe64) {
 }
 
 // --- atf_amc.PooledBE64..Ctor
-inline  atf_amc::PooledBE64::PooledBE64() {
+inline  atf_amc::PooledBE64::PooledBE64() throw() {
     atf_amc::PooledBE64_Init(*this);
 }
 
 // --- atf_amc.PooledBE64..EnumCtor
-inline  atf_amc::PooledBE64::PooledBE64(atf_amc_PooledBE64_value_Enum arg) {
+inline  atf_amc::PooledBE64::PooledBE64(atf_amc_PooledBE64_value_Enum arg) throw() {
     value_Set(*this, u64(arg));
 }
 
 // --- atf_amc.RnullStr6_U32.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> atf_amc::ch_Getary(const atf_amc::RnullStr6_U32& parent) {
+inline algo::aryptr<char> atf_amc::ch_Getary(const atf_amc::RnullStr6_U32& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -10618,19 +10618,19 @@ inline u32 atf_amc::RnullStr6_U32_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- atf_amc.RnullStr6_U32.ch.Init
-inline void atf_amc::ch_Init(atf_amc::RnullStr6_U32 &parent) {
+inline void atf_amc::ch_Init(atf_amc::RnullStr6_U32 &parent) throw() {
     memset(parent.ch, 0, 6);
 }
 
 // --- atf_amc.RnullStr6_U32.ch.Max
 // always return constant 6
-inline int atf_amc::ch_Max(atf_amc::RnullStr6_U32& parent) {
+inline int atf_amc::ch_Max(atf_amc::RnullStr6_U32& parent) throw() {
     (void)parent;
     return 6;
 }
 
 // --- atf_amc.RnullStr6_U32.ch.N
-inline int atf_amc::ch_N(const atf_amc::RnullStr6_U32& parent) {
+inline int atf_amc::ch_N(const atf_amc::RnullStr6_U32& parent) throw() {
     u64 ret;
     ret = 6;
     while (ret>0 && parent.ch[ret-1]==u8(0)) {
@@ -10641,52 +10641,52 @@ inline int atf_amc::ch_N(const atf_amc::RnullStr6_U32& parent) {
 
 // --- atf_amc.RnullStr6_U32.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void atf_amc::RnullStr6_U32::operator =(const algo::strptr &str) {
+inline void atf_amc::RnullStr6_U32::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- atf_amc.RnullStr6_U32.ch.CtorStrptr
-inline  atf_amc::RnullStr6_U32::RnullStr6_U32(const algo::strptr &rhs) {
+inline  atf_amc::RnullStr6_U32::RnullStr6_U32(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- atf_amc.RnullStr6_U32..EqOp
-inline bool atf_amc::RnullStr6_U32::operator ==(const atf_amc::RnullStr6_U32 &rhs) const {
+inline bool atf_amc::RnullStr6_U32::operator ==(const atf_amc::RnullStr6_U32 &rhs) const throw() {
     return atf_amc::RnullStr6_U32_Eq(const_cast<atf_amc::RnullStr6_U32&>(*this),const_cast<atf_amc::RnullStr6_U32&>(rhs));
 }
 
 // --- atf_amc.RnullStr6_U32..NeOp
-inline bool atf_amc::RnullStr6_U32::operator !=(const atf_amc::RnullStr6_U32 &rhs) const {
+inline bool atf_amc::RnullStr6_U32::operator !=(const atf_amc::RnullStr6_U32 &rhs) const throw() {
     return !atf_amc::RnullStr6_U32_Eq(const_cast<atf_amc::RnullStr6_U32&>(*this),const_cast<atf_amc::RnullStr6_U32&>(rhs));
 }
 
 // --- atf_amc.RnullStr6_U32..LtOp
-inline bool atf_amc::RnullStr6_U32::operator <(const atf_amc::RnullStr6_U32 &rhs) const {
+inline bool atf_amc::RnullStr6_U32::operator <(const atf_amc::RnullStr6_U32 &rhs) const throw() {
     return atf_amc::RnullStr6_U32_Lt(const_cast<atf_amc::RnullStr6_U32&>(*this),const_cast<atf_amc::RnullStr6_U32&>(rhs));
 }
 
 // --- atf_amc.RnullStr6_U32..GtOp
-inline bool atf_amc::RnullStr6_U32::operator >(const atf_amc::RnullStr6_U32 &rhs) const {
+inline bool atf_amc::RnullStr6_U32::operator >(const atf_amc::RnullStr6_U32 &rhs) const throw() {
     return atf_amc::RnullStr6_U32_Lt(const_cast<atf_amc::RnullStr6_U32&>(rhs),const_cast<atf_amc::RnullStr6_U32&>(*this));
 }
 
 // --- atf_amc.RnullStr6_U32..LeOp
-inline bool atf_amc::RnullStr6_U32::operator <=(const atf_amc::RnullStr6_U32 &rhs) const {
+inline bool atf_amc::RnullStr6_U32::operator <=(const atf_amc::RnullStr6_U32 &rhs) const throw() {
     return !atf_amc::RnullStr6_U32_Lt(const_cast<atf_amc::RnullStr6_U32&>(rhs),const_cast<atf_amc::RnullStr6_U32&>(*this));
 }
 
 // --- atf_amc.RnullStr6_U32..GeOp
-inline bool atf_amc::RnullStr6_U32::operator >=(const atf_amc::RnullStr6_U32 &rhs) const {
+inline bool atf_amc::RnullStr6_U32::operator >=(const atf_amc::RnullStr6_U32 &rhs) const throw() {
     return !atf_amc::RnullStr6_U32_Lt(const_cast<atf_amc::RnullStr6_U32&>(*this),const_cast<atf_amc::RnullStr6_U32&>(rhs));
 }
 
 // --- atf_amc.RnullStr6_U32..Lt
-inline bool atf_amc::RnullStr6_U32_Lt(atf_amc::RnullStr6_U32& lhs, atf_amc::RnullStr6_U32& rhs) {
+inline bool atf_amc::RnullStr6_U32_Lt(atf_amc::RnullStr6_U32& lhs, atf_amc::RnullStr6_U32& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- atf_amc.RnullStr6_U32..Cmp
-inline i32 atf_amc::RnullStr6_U32_Cmp(atf_amc::RnullStr6_U32& lhs, atf_amc::RnullStr6_U32& rhs) {
+inline i32 atf_amc::RnullStr6_U32_Cmp(atf_amc::RnullStr6_U32& lhs, atf_amc::RnullStr6_U32& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -10699,7 +10699,7 @@ inline void atf_amc::RnullStr6_U32_Init(atf_amc::RnullStr6_U32& parent) {
 }
 
 // --- atf_amc.RnullStr6_U32..Eq
-inline bool atf_amc::RnullStr6_U32_Eq(atf_amc::RnullStr6_U32& lhs, atf_amc::RnullStr6_U32& rhs) {
+inline bool atf_amc::RnullStr6_U32_Eq(atf_amc::RnullStr6_U32& lhs, atf_amc::RnullStr6_U32& rhs) throw() {
     bool retval = true;
     retval = retval
     &&*(u32*)(lhs.ch+0) == *(u32*)(rhs.ch+0)
@@ -10709,7 +10709,7 @@ inline bool atf_amc::RnullStr6_U32_Eq(atf_amc::RnullStr6_U32& lhs, atf_amc::Rnul
 
 // --- atf_amc.RnullStr6_U32..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::RnullStr6_U32_Update(atf_amc::RnullStr6_U32 &lhs, atf_amc::RnullStr6_U32& rhs) {
+inline bool atf_amc::RnullStr6_U32_Update(atf_amc::RnullStr6_U32 &lhs, atf_amc::RnullStr6_U32& rhs) throw() {
     bool ret = !RnullStr6_U32_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10718,24 +10718,24 @@ inline bool atf_amc::RnullStr6_U32_Update(atf_amc::RnullStr6_U32 &lhs, atf_amc::
 }
 
 // --- atf_amc.RnullStr6_U32..EqOpAryptr
-inline bool atf_amc::RnullStr6_U32::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool atf_amc::RnullStr6_U32::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- atf_amc.RnullStr6_U32..AssignOp
-inline atf_amc::RnullStr6_U32& atf_amc::RnullStr6_U32::operator =(const atf_amc::RnullStr6_U32 &rhs) {
+inline atf_amc::RnullStr6_U32& atf_amc::RnullStr6_U32::operator =(const atf_amc::RnullStr6_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(atf_amc::RnullStr6_U32));
     return *this;
 }
 
 // --- atf_amc.RnullStr6_U32..Ctor
-inline  atf_amc::RnullStr6_U32::RnullStr6_U32() {
+inline  atf_amc::RnullStr6_U32::RnullStr6_U32() throw() {
     atf_amc::RnullStr6_U32_Init(*this);
 }
 
 // --- atf_amc.RnullStr6_U32..CopyCtor
-inline  atf_amc::RnullStr6_U32::RnullStr6_U32(const atf_amc::RnullStr6_U32 &rhs) {
+inline  atf_amc::RnullStr6_U32::RnullStr6_U32(const atf_amc::RnullStr6_U32 &rhs) throw() {
     // type is plaindata, with no holes, copying as memory
     memcpy(this,&rhs,sizeof(atf_amc::RnullStr6_U32));
 }
@@ -10743,7 +10743,7 @@ inline  atf_amc::RnullStr6_U32::RnullStr6_U32(const atf_amc::RnullStr6_U32 &rhs)
 // --- atf_amc.RpasU32Str6.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
-inline void atf_amc::ch_Add(atf_amc::RpasU32Str6& parent, char c) {
+inline void atf_amc::ch_Add(atf_amc::RpasU32Str6& parent, char c) throw() {
     if (parent.n_ch < 6) {
         parent.ch[parent.n_ch++] = c;
     }
@@ -10753,7 +10753,7 @@ inline void atf_amc::ch_Add(atf_amc::RpasU32Str6& parent, char c) {
 // Append string to this string.
 // If there is no space for an extra character, trim.
 // If there is no space left, dump core in debug mode.
-inline void atf_amc::ch_AddStrptr(atf_amc::RpasU32Str6& parent, algo::strptr str) {
+inline void atf_amc::ch_AddStrptr(atf_amc::RpasU32Str6& parent, algo::strptr str) throw() {
     int n_new = str.n_elems;
     if (parent.n_ch + n_new > 6) {
         n_new = 6 - parent.n_ch;
@@ -10764,7 +10764,7 @@ inline void atf_amc::ch_AddStrptr(atf_amc::RpasU32Str6& parent, algo::strptr str
 
 // --- atf_amc.RpasU32Str6.ch.Getary
 // Access string as array of chars
-inline algo::aryptr<char> atf_amc::ch_Getary(const atf_amc::RpasU32Str6& parent) {
+inline algo::aryptr<char> atf_amc::ch_Getary(const atf_amc::RpasU32Str6& parent) throw() {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
@@ -10776,19 +10776,19 @@ inline u32 atf_amc::RpasU32Str6_Hash(u32 prev, const algo::strptr &str) {
 }
 
 // --- atf_amc.RpasU32Str6.ch.Init
-inline void atf_amc::ch_Init(atf_amc::RpasU32Str6 &parent) {
+inline void atf_amc::ch_Init(atf_amc::RpasU32Str6 &parent) throw() {
     parent.n_ch = 0;
 }
 
 // --- atf_amc.RpasU32Str6.ch.Max
 // always return constant 6
-inline int atf_amc::ch_Max(atf_amc::RpasU32Str6& parent) {
+inline int atf_amc::ch_Max(atf_amc::RpasU32Str6& parent) throw() {
     (void)parent;
     return 6;
 }
 
 // --- atf_amc.RpasU32Str6.ch.N
-inline int atf_amc::ch_N(const atf_amc::RpasU32Str6& parent) {
+inline int atf_amc::ch_N(const atf_amc::RpasU32Str6& parent) throw() {
     u64 ret;
     ret = parent.n_ch;
     return int(ret);
@@ -10796,52 +10796,52 @@ inline int atf_amc::ch_N(const atf_amc::RpasU32Str6& parent) {
 
 // --- atf_amc.RpasU32Str6.ch.AssignStrptr
 // Copy from strptr (operator=)
-inline void atf_amc::RpasU32Str6::operator =(const algo::strptr &str) {
+inline void atf_amc::RpasU32Str6::operator =(const algo::strptr &str) throw() {
     ch_SetStrptr(*this, str);
 }
 
 // --- atf_amc.RpasU32Str6.ch.CtorStrptr
-inline  atf_amc::RpasU32Str6::RpasU32Str6(const algo::strptr &rhs) {
+inline  atf_amc::RpasU32Str6::RpasU32Str6(const algo::strptr &rhs) throw() {
     ch_SetStrptr(*this, rhs);
 }
 
 // --- atf_amc.RpasU32Str6..EqOp
-inline bool atf_amc::RpasU32Str6::operator ==(const atf_amc::RpasU32Str6 &rhs) const {
+inline bool atf_amc::RpasU32Str6::operator ==(const atf_amc::RpasU32Str6 &rhs) const throw() {
     return atf_amc::RpasU32Str6_Eq(const_cast<atf_amc::RpasU32Str6&>(*this),const_cast<atf_amc::RpasU32Str6&>(rhs));
 }
 
 // --- atf_amc.RpasU32Str6..NeOp
-inline bool atf_amc::RpasU32Str6::operator !=(const atf_amc::RpasU32Str6 &rhs) const {
+inline bool atf_amc::RpasU32Str6::operator !=(const atf_amc::RpasU32Str6 &rhs) const throw() {
     return !atf_amc::RpasU32Str6_Eq(const_cast<atf_amc::RpasU32Str6&>(*this),const_cast<atf_amc::RpasU32Str6&>(rhs));
 }
 
 // --- atf_amc.RpasU32Str6..LtOp
-inline bool atf_amc::RpasU32Str6::operator <(const atf_amc::RpasU32Str6 &rhs) const {
+inline bool atf_amc::RpasU32Str6::operator <(const atf_amc::RpasU32Str6 &rhs) const throw() {
     return atf_amc::RpasU32Str6_Lt(const_cast<atf_amc::RpasU32Str6&>(*this),const_cast<atf_amc::RpasU32Str6&>(rhs));
 }
 
 // --- atf_amc.RpasU32Str6..GtOp
-inline bool atf_amc::RpasU32Str6::operator >(const atf_amc::RpasU32Str6 &rhs) const {
+inline bool atf_amc::RpasU32Str6::operator >(const atf_amc::RpasU32Str6 &rhs) const throw() {
     return atf_amc::RpasU32Str6_Lt(const_cast<atf_amc::RpasU32Str6&>(rhs),const_cast<atf_amc::RpasU32Str6&>(*this));
 }
 
 // --- atf_amc.RpasU32Str6..LeOp
-inline bool atf_amc::RpasU32Str6::operator <=(const atf_amc::RpasU32Str6 &rhs) const {
+inline bool atf_amc::RpasU32Str6::operator <=(const atf_amc::RpasU32Str6 &rhs) const throw() {
     return !atf_amc::RpasU32Str6_Lt(const_cast<atf_amc::RpasU32Str6&>(rhs),const_cast<atf_amc::RpasU32Str6&>(*this));
 }
 
 // --- atf_amc.RpasU32Str6..GeOp
-inline bool atf_amc::RpasU32Str6::operator >=(const atf_amc::RpasU32Str6 &rhs) const {
+inline bool atf_amc::RpasU32Str6::operator >=(const atf_amc::RpasU32Str6 &rhs) const throw() {
     return !atf_amc::RpasU32Str6_Lt(const_cast<atf_amc::RpasU32Str6&>(*this),const_cast<atf_amc::RpasU32Str6&>(rhs));
 }
 
 // --- atf_amc.RpasU32Str6..Lt
-inline bool atf_amc::RpasU32Str6_Lt(atf_amc::RpasU32Str6& lhs, atf_amc::RpasU32Str6& rhs) {
+inline bool atf_amc::RpasU32Str6_Lt(atf_amc::RpasU32Str6& lhs, atf_amc::RpasU32Str6& rhs) throw() {
     return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
 }
 
 // --- atf_amc.RpasU32Str6..Cmp
-inline i32 atf_amc::RpasU32Str6_Cmp(atf_amc::RpasU32Str6& lhs, atf_amc::RpasU32Str6& rhs) {
+inline i32 atf_amc::RpasU32Str6_Cmp(atf_amc::RpasU32Str6& lhs, atf_amc::RpasU32Str6& rhs) throw() {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -10854,7 +10854,7 @@ inline void atf_amc::RpasU32Str6_Init(atf_amc::RpasU32Str6& parent) {
 }
 
 // --- atf_amc.RpasU32Str6..Eq
-inline bool atf_amc::RpasU32Str6_Eq(atf_amc::RpasU32Str6& lhs, atf_amc::RpasU32Str6& rhs) {
+inline bool atf_amc::RpasU32Str6_Eq(atf_amc::RpasU32Str6& lhs, atf_amc::RpasU32Str6& rhs) throw() {
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -10862,7 +10862,7 @@ inline bool atf_amc::RpasU32Str6_Eq(atf_amc::RpasU32Str6& lhs, atf_amc::RpasU32S
 
 // --- atf_amc.RpasU32Str6..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::RpasU32Str6_Update(atf_amc::RpasU32Str6 &lhs, atf_amc::RpasU32Str6& rhs) {
+inline bool atf_amc::RpasU32Str6_Update(atf_amc::RpasU32Str6 &lhs, atf_amc::RpasU32Str6& rhs) throw() {
     bool ret = !RpasU32Str6_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10871,30 +10871,30 @@ inline bool atf_amc::RpasU32Str6_Update(atf_amc::RpasU32Str6 &lhs, atf_amc::Rpas
 }
 
 // --- atf_amc.RpasU32Str6..EqOpAryptr
-inline bool atf_amc::RpasU32Str6::operator ==(const algo::aryptr<char> &rhs) const {
+inline bool atf_amc::RpasU32Str6::operator ==(const algo::aryptr<char> &rhs) const throw() {
     return algo::strptr_Eq(ch_Getary(*this), rhs);
 }
 
 // --- atf_amc.RpasU32Str6..AssignOp
-inline atf_amc::RpasU32Str6& atf_amc::RpasU32Str6::operator =(const atf_amc::RpasU32Str6 &rhs) {
+inline atf_amc::RpasU32Str6& atf_amc::RpasU32Str6::operator =(const atf_amc::RpasU32Str6 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
     return *this;
 }
 
 // --- atf_amc.RpasU32Str6..Ctor
-inline  atf_amc::RpasU32Str6::RpasU32Str6() {
+inline  atf_amc::RpasU32Str6::RpasU32Str6() throw() {
     atf_amc::RpasU32Str6_Init(*this);
 }
 
 // --- atf_amc.RpasU32Str6..CopyCtor
-inline  atf_amc::RpasU32Str6::RpasU32Str6(const atf_amc::RpasU32Str6 &rhs) {
+inline  atf_amc::RpasU32Str6::RpasU32Str6(const atf_amc::RpasU32Str6 &rhs) throw() {
     memcpy(ch, rhs.ch, rhs.n_ch);
     n_ch = rhs.n_ch;
 }
 
 // --- atf_amc.Sep1..Hash
-inline u32 atf_amc::Sep1_Hash(u32 prev, const atf_amc::Sep1& rhs) {
+inline u32 atf_amc::Sep1_Hash(u32 prev, const atf_amc::Sep1& rhs) throw() {
     prev = u32_Hash(prev, rhs.val1);
     prev = u32_Hash(prev, rhs.val2);
     prev = u32_Hash(prev, rhs.val3);
@@ -10902,42 +10902,42 @@ inline u32 atf_amc::Sep1_Hash(u32 prev, const atf_amc::Sep1& rhs) {
 }
 
 // --- atf_amc.Sep1..EqOp
-inline bool atf_amc::Sep1::operator ==(const atf_amc::Sep1 &rhs) const {
+inline bool atf_amc::Sep1::operator ==(const atf_amc::Sep1 &rhs) const throw() {
     return atf_amc::Sep1_Eq(const_cast<atf_amc::Sep1&>(*this),const_cast<atf_amc::Sep1&>(rhs));
 }
 
 // --- atf_amc.Sep1..NeOp
-inline bool atf_amc::Sep1::operator !=(const atf_amc::Sep1 &rhs) const {
+inline bool atf_amc::Sep1::operator !=(const atf_amc::Sep1 &rhs) const throw() {
     return !atf_amc::Sep1_Eq(const_cast<atf_amc::Sep1&>(*this),const_cast<atf_amc::Sep1&>(rhs));
 }
 
 // --- atf_amc.Sep1..LtOp
-inline bool atf_amc::Sep1::operator <(const atf_amc::Sep1 &rhs) const {
+inline bool atf_amc::Sep1::operator <(const atf_amc::Sep1 &rhs) const throw() {
     return atf_amc::Sep1_Lt(const_cast<atf_amc::Sep1&>(*this),const_cast<atf_amc::Sep1&>(rhs));
 }
 
 // --- atf_amc.Sep1..GtOp
-inline bool atf_amc::Sep1::operator >(const atf_amc::Sep1 &rhs) const {
+inline bool atf_amc::Sep1::operator >(const atf_amc::Sep1 &rhs) const throw() {
     return atf_amc::Sep1_Lt(const_cast<atf_amc::Sep1&>(rhs),const_cast<atf_amc::Sep1&>(*this));
 }
 
 // --- atf_amc.Sep1..LeOp
-inline bool atf_amc::Sep1::operator <=(const atf_amc::Sep1 &rhs) const {
+inline bool atf_amc::Sep1::operator <=(const atf_amc::Sep1 &rhs) const throw() {
     return !atf_amc::Sep1_Lt(const_cast<atf_amc::Sep1&>(rhs),const_cast<atf_amc::Sep1&>(*this));
 }
 
 // --- atf_amc.Sep1..GeOp
-inline bool atf_amc::Sep1::operator >=(const atf_amc::Sep1 &rhs) const {
+inline bool atf_amc::Sep1::operator >=(const atf_amc::Sep1 &rhs) const throw() {
     return !atf_amc::Sep1_Lt(const_cast<atf_amc::Sep1&>(*this),const_cast<atf_amc::Sep1&>(rhs));
 }
 
 // --- atf_amc.Sep1..Lt
-inline bool atf_amc::Sep1_Lt(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) {
+inline bool atf_amc::Sep1_Lt(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) throw() {
     return Sep1_Cmp(lhs,rhs) < 0;
 }
 
 // --- atf_amc.Sep1..Cmp
-inline i32 atf_amc::Sep1_Cmp(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) {
+inline i32 atf_amc::Sep1_Cmp(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) throw() {
     i32 retval = 0;
     retval = u32_Cmp(lhs.val1, rhs.val1);
     if (retval != 0) {
@@ -10960,7 +10960,7 @@ inline void atf_amc::Sep1_Init(atf_amc::Sep1& parent) {
 }
 
 // --- atf_amc.Sep1..Eq
-inline bool atf_amc::Sep1_Eq(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) {
+inline bool atf_amc::Sep1_Eq(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) throw() {
     bool retval = true;
     retval = u32_Eq(lhs.val1, rhs.val1);
     if (!retval) {
@@ -10976,7 +10976,7 @@ inline bool atf_amc::Sep1_Eq(atf_amc::Sep1& lhs, atf_amc::Sep1& rhs) {
 
 // --- atf_amc.Sep1..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::Sep1_Update(atf_amc::Sep1 &lhs, atf_amc::Sep1& rhs) {
+inline bool atf_amc::Sep1_Update(atf_amc::Sep1 &lhs, atf_amc::Sep1& rhs) throw() {
     bool ret = !Sep1_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -10985,12 +10985,12 @@ inline bool atf_amc::Sep1_Update(atf_amc::Sep1 &lhs, atf_amc::Sep1& rhs) {
 }
 
 // --- atf_amc.Sep1..Ctor
-inline  atf_amc::Sep1::Sep1() {
+inline  atf_amc::Sep1::Sep1() throw() {
     atf_amc::Sep1_Init(*this);
 }
 
 // --- atf_amc.Sep1..FieldwiseCtor
-inline  atf_amc::Sep1::Sep1(u32 in_val1, u32 in_val2, u32 in_val3)
+inline  atf_amc::Sep1::Sep1(u32 in_val1, u32 in_val2, u32 in_val3) throw()
     : val1(in_val1)
     , val2(in_val2)
     , val3(in_val3)
@@ -11020,7 +11020,7 @@ inline atf_amc::MsgHeader& atf_amc::Castbase(atf_amc::Seqmsg& parent) {
 // Since the last element is itself variable-length, two more checks are applied:
 // If payload's length field value is too short, return NULL.
 // If payload's length field value extends past parent's allowed length, return NULL.
-inline atf_amc::MsgHeader* atf_amc::payload_Get(atf_amc::Seqmsg& parent) {
+inline atf_amc::MsgHeader* atf_amc::payload_Get(atf_amc::Seqmsg& parent) throw() {
     i32 totlen = i32(parent.length);
     u8 *end = (u8*)&parent + sizeof(atf_amc::Seqmsg);
     atf_amc::MsgHeader *ptr = (atf_amc::MsgHeader*)end;
@@ -11031,13 +11031,13 @@ inline atf_amc::MsgHeader* atf_amc::payload_Get(atf_amc::Seqmsg& parent) {
 
 // --- atf_amc.Seqmsg..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::Seqmsg& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::Seqmsg& parent) throw() {
     return i32(const_cast<atf_amc::Seqmsg&>(parent).length);
 }
 
 // --- atf_amc.Seqmsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::Seqmsg& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::Seqmsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::Seqmsg&>(row).length));
 }
 
@@ -11049,19 +11049,19 @@ inline void atf_amc::Seqmsg_Init(atf_amc::Seqmsg& parent) {
 }
 
 // --- atf_amc.Seqmsg..Ctor
-inline  atf_amc::Seqmsg::Seqmsg() {
+inline  atf_amc::Seqmsg::Seqmsg() throw() {
     atf_amc::Seqmsg_Init(*this);
 }
 
 // --- atf_amc.SortedStr.novs.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool atf_amc::novs_Lt(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) {
+inline bool atf_amc::novs_Lt(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) throw() {
     return algo::cstring_Lt(parent.novs,rhs.novs);
 }
 
 // --- atf_amc.SortedStr.novs.Cmp
 // Compare two fields.
-inline i32 atf_amc::novs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) {
+inline i32 atf_amc::novs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) throw() {
     i32 retval = 0;
     retval = algo::cstring_Cmp(parent.novs, rhs.novs);
     return retval;
@@ -11069,47 +11069,47 @@ inline i32 atf_amc::novs_Cmp(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs
 
 // --- atf_amc.SortedStr.vs.Lt
 // Compare two fields. Comparison is anti-symmetric: if a>b, then !(b>a).
-inline bool atf_amc::vs_Lt(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) {
+inline bool atf_amc::vs_Lt(atf_amc::SortedStr& parent, atf_amc::SortedStr &rhs) throw() {
     return vs_Cmp(parent,rhs) < 0;
 }
 
 // --- atf_amc.SortedStr..EqOp
-inline bool atf_amc::SortedStr::operator ==(const atf_amc::SortedStr &rhs) const {
+inline bool atf_amc::SortedStr::operator ==(const atf_amc::SortedStr &rhs) const throw() {
     return atf_amc::SortedStr_Eq(const_cast<atf_amc::SortedStr&>(*this),const_cast<atf_amc::SortedStr&>(rhs));
 }
 
 // --- atf_amc.SortedStr..NeOp
-inline bool atf_amc::SortedStr::operator !=(const atf_amc::SortedStr &rhs) const {
+inline bool atf_amc::SortedStr::operator !=(const atf_amc::SortedStr &rhs) const throw() {
     return !atf_amc::SortedStr_Eq(const_cast<atf_amc::SortedStr&>(*this),const_cast<atf_amc::SortedStr&>(rhs));
 }
 
 // --- atf_amc.SortedStr..LtOp
-inline bool atf_amc::SortedStr::operator <(const atf_amc::SortedStr &rhs) const {
+inline bool atf_amc::SortedStr::operator <(const atf_amc::SortedStr &rhs) const throw() {
     return atf_amc::SortedStr_Lt(const_cast<atf_amc::SortedStr&>(*this),const_cast<atf_amc::SortedStr&>(rhs));
 }
 
 // --- atf_amc.SortedStr..GtOp
-inline bool atf_amc::SortedStr::operator >(const atf_amc::SortedStr &rhs) const {
+inline bool atf_amc::SortedStr::operator >(const atf_amc::SortedStr &rhs) const throw() {
     return atf_amc::SortedStr_Lt(const_cast<atf_amc::SortedStr&>(rhs),const_cast<atf_amc::SortedStr&>(*this));
 }
 
 // --- atf_amc.SortedStr..LeOp
-inline bool atf_amc::SortedStr::operator <=(const atf_amc::SortedStr &rhs) const {
+inline bool atf_amc::SortedStr::operator <=(const atf_amc::SortedStr &rhs) const throw() {
     return !atf_amc::SortedStr_Lt(const_cast<atf_amc::SortedStr&>(rhs),const_cast<atf_amc::SortedStr&>(*this));
 }
 
 // --- atf_amc.SortedStr..GeOp
-inline bool atf_amc::SortedStr::operator >=(const atf_amc::SortedStr &rhs) const {
+inline bool atf_amc::SortedStr::operator >=(const atf_amc::SortedStr &rhs) const throw() {
     return !atf_amc::SortedStr_Lt(const_cast<atf_amc::SortedStr&>(*this),const_cast<atf_amc::SortedStr&>(rhs));
 }
 
 // --- atf_amc.SortedStr..Lt
-inline bool atf_amc::SortedStr_Lt(atf_amc::SortedStr& lhs, atf_amc::SortedStr& rhs) {
+inline bool atf_amc::SortedStr_Lt(atf_amc::SortedStr& lhs, atf_amc::SortedStr& rhs) throw() {
     return SortedStr_Cmp(lhs,rhs) < 0;
 }
 
 // --- atf_amc.SortedStr..Cmp
-inline i32 atf_amc::SortedStr_Cmp(atf_amc::SortedStr& lhs, atf_amc::SortedStr& rhs) {
+inline i32 atf_amc::SortedStr_Cmp(atf_amc::SortedStr& lhs, atf_amc::SortedStr& rhs) throw() {
     i32 retval = 0;
     retval = novs_Cmp(lhs,rhs);
     if (retval != 0) {
@@ -11120,7 +11120,7 @@ inline i32 atf_amc::SortedStr_Cmp(atf_amc::SortedStr& lhs, atf_amc::SortedStr& r
 }
 
 // --- atf_amc.SortedStr..Eq
-inline bool atf_amc::SortedStr_Eq(atf_amc::SortedStr& lhs, atf_amc::SortedStr& rhs) {
+inline bool atf_amc::SortedStr_Eq(atf_amc::SortedStr& lhs, atf_amc::SortedStr& rhs) throw() {
     bool retval = true;
     retval = algo::cstring_Eq(lhs.novs, rhs.novs);
     if (!retval) {
@@ -11132,7 +11132,7 @@ inline bool atf_amc::SortedStr_Eq(atf_amc::SortedStr& lhs, atf_amc::SortedStr& r
 
 // --- atf_amc.SortedStr..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::SortedStr_Update(atf_amc::SortedStr &lhs, atf_amc::SortedStr& rhs) {
+inline bool atf_amc::SortedStr_Update(atf_amc::SortedStr &lhs, atf_amc::SortedStr& rhs) throw() {
     bool ret = !SortedStr_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -11141,11 +11141,11 @@ inline bool atf_amc::SortedStr_Update(atf_amc::SortedStr &lhs, atf_amc::SortedSt
 }
 
 // --- atf_amc.SortedStr..Ctor
-inline  atf_amc::SortedStr::SortedStr() {
+inline  atf_amc::SortedStr::SortedStr() throw() {
 }
 
 // --- atf_amc.SortedStr..FieldwiseCtor
-inline  atf_amc::SortedStr::SortedStr(const algo::strptr& in_novs, const algo::strptr& in_vs)
+inline  atf_amc::SortedStr::SortedStr(const algo::strptr& in_novs, const algo::strptr& in_vs) throw()
     : novs(in_novs)
     , vs(in_vs)
  {
@@ -11153,18 +11153,18 @@ inline  atf_amc::SortedStr::SortedStr(const algo::strptr& in_novs, const algo::s
 
 // --- atf_amc.SsimfilesCase.value.GetEnum
 // Get value of field as enum type
-inline atf_amc_SsimfilesCaseEnum atf_amc::value_GetEnum(const atf_amc::SsimfilesCase& parent) {
+inline atf_amc_SsimfilesCaseEnum atf_amc::value_GetEnum(const atf_amc::SsimfilesCase& parent) throw() {
     return atf_amc_SsimfilesCaseEnum(parent.value);
 }
 
 // --- atf_amc.SsimfilesCase.value.SetEnum
 // Set value of field from enum type.
-inline void atf_amc::value_SetEnum(atf_amc::SsimfilesCase& parent, atf_amc_SsimfilesCaseEnum rhs) {
+inline void atf_amc::value_SetEnum(atf_amc::SsimfilesCase& parent, atf_amc_SsimfilesCaseEnum rhs) throw() {
     parent.value = u32(rhs);
 }
 
 // --- atf_amc.SsimfilesCase.value.Cast
-inline  atf_amc::SsimfilesCase::operator atf_amc_SsimfilesCaseEnum() const {
+inline  atf_amc::SsimfilesCase::operator atf_amc_SsimfilesCaseEnum() const throw() {
     return atf_amc_SsimfilesCaseEnum((*this).value);
 }
 
@@ -11175,35 +11175,35 @@ inline void atf_amc::SsimfilesCase_Init(atf_amc::SsimfilesCase& parent) {
 }
 
 // --- atf_amc.SsimfilesCase..Ctor
-inline  atf_amc::SsimfilesCase::SsimfilesCase() {
+inline  atf_amc::SsimfilesCase::SsimfilesCase() throw() {
     atf_amc::SsimfilesCase_Init(*this);
 }
 
 // --- atf_amc.SsimfilesCase..FieldwiseCtor
-inline  atf_amc::SsimfilesCase::SsimfilesCase(u32 in_value)
+inline  atf_amc::SsimfilesCase::SsimfilesCase(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_amc.SsimfilesCase..EnumCtor
-inline  atf_amc::SsimfilesCase::SsimfilesCase(atf_amc_SsimfilesCaseEnum arg) {
+inline  atf_amc::SsimfilesCase::SsimfilesCase(atf_amc_SsimfilesCaseEnum arg) throw() {
     this->value = u32(arg);
 }
 
 // --- atf_amc.TableId.value.GetEnum
 // Get value of field as enum type
-inline atf_amc_TableIdEnum atf_amc::value_GetEnum(const atf_amc::TableId& parent) {
+inline atf_amc_TableIdEnum atf_amc::value_GetEnum(const atf_amc::TableId& parent) throw() {
     return atf_amc_TableIdEnum(parent.value);
 }
 
 // --- atf_amc.TableId.value.SetEnum
 // Set value of field from enum type.
-inline void atf_amc::value_SetEnum(atf_amc::TableId& parent, atf_amc_TableIdEnum rhs) {
+inline void atf_amc::value_SetEnum(atf_amc::TableId& parent, atf_amc_TableIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- atf_amc.TableId.value.Cast
-inline  atf_amc::TableId::operator atf_amc_TableIdEnum() const {
+inline  atf_amc::TableId::operator atf_amc_TableIdEnum() const throw() {
     return atf_amc_TableIdEnum((*this).value);
 }
 
@@ -11214,30 +11214,30 @@ inline void atf_amc::TableId_Init(atf_amc::TableId& parent) {
 }
 
 // --- atf_amc.TableId..Ctor
-inline  atf_amc::TableId::TableId() {
+inline  atf_amc::TableId::TableId() throw() {
     atf_amc::TableId_Init(*this);
 }
 
 // --- atf_amc.TableId..FieldwiseCtor
-inline  atf_amc::TableId::TableId(i32 in_value)
+inline  atf_amc::TableId::TableId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_amc.TableId..EnumCtor
-inline  atf_amc::TableId::TableId(atf_amc_TableIdEnum arg) {
+inline  atf_amc::TableId::TableId(atf_amc_TableIdEnum arg) throw() {
     this->value = i32(arg);
 }
 
 // --- atf_amc.TaryU32.tary_u32.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::tary_u32_EmptyQ(atf_amc::TaryU32& parent) {
+inline bool atf_amc::tary_u32_EmptyQ(atf_amc::TaryU32& parent) throw() {
     return parent.tary_u32_n == 0;
 }
 
 // --- atf_amc.TaryU32.tary_u32.Find
 // Look up row by row id. Return NULL if out of range
-inline u32* atf_amc::tary_u32_Find(atf_amc::TaryU32& parent, u64 t) {
+inline u32* atf_amc::tary_u32_Find(atf_amc::TaryU32& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.tary_u32_n;
     if (idx >= lim) return NULL;
@@ -11246,24 +11246,24 @@ inline u32* atf_amc::tary_u32_Find(atf_amc::TaryU32& parent, u64 t) {
 
 // --- atf_amc.TaryU32.tary_u32.Getary
 // Return array pointer by value
-inline algo::aryptr<u32> atf_amc::tary_u32_Getary(const atf_amc::TaryU32& parent) {
+inline algo::aryptr<u32> atf_amc::tary_u32_Getary(const atf_amc::TaryU32& parent) throw() {
     return algo::aryptr<u32>(parent.tary_u32_elems, parent.tary_u32_n);
 }
 
 // --- atf_amc.TaryU32.tary_u32.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline u32* atf_amc::tary_u32_Last(atf_amc::TaryU32& parent) {
+inline u32* atf_amc::tary_u32_Last(atf_amc::TaryU32& parent) throw() {
     return tary_u32_Find(parent, u64(parent.tary_u32_n-1));
 }
 
 // --- atf_amc.TaryU32.tary_u32.AssignAryptr
 // Copy from aryptr (operator=)
-inline void atf_amc::TaryU32::operator =(const algo::aryptr<u32> &rhs) {
+inline void atf_amc::TaryU32::operator =(const algo::aryptr<u32> &rhs) throw() {
     tary_u32_Setary(*this, rhs);
 }
 
 // --- atf_amc.TaryU32.tary_u32.CtorAryptr
-inline  atf_amc::TaryU32::TaryU32(const algo::aryptr<u32> &rhs) {
+inline  atf_amc::TaryU32::TaryU32(const algo::aryptr<u32> &rhs) throw() {
     tary_u32_elems 	= 0; // (atf_amc.TaryU32.tary_u32)
     tary_u32_n     	= 0; // (atf_amc.TaryU32.tary_u32)
     tary_u32_max   	= 0; // (atf_amc.TaryU32.tary_u32)
@@ -11272,25 +11272,25 @@ inline  atf_amc::TaryU32::TaryU32(const algo::aryptr<u32> &rhs) {
 
 // --- atf_amc.TaryU32.tary_u32.Max
 // Return max. number of items in the array
-inline i32 atf_amc::tary_u32_Max(atf_amc::TaryU32& parent) {
+inline i32 atf_amc::tary_u32_Max(atf_amc::TaryU32& parent) throw() {
     (void)parent;
     return parent.tary_u32_max;
 }
 
 // --- atf_amc.TaryU32.tary_u32.N
 // Return number of items in the array
-inline i32 atf_amc::tary_u32_N(const atf_amc::TaryU32& parent) {
+inline i32 atf_amc::tary_u32_N(const atf_amc::TaryU32& parent) throw() {
     return parent.tary_u32_n;
 }
 
 // --- atf_amc.TaryU32.tary_u32.RemoveAll
-inline void atf_amc::tary_u32_RemoveAll(atf_amc::TaryU32& parent) {
+inline void atf_amc::tary_u32_RemoveAll(atf_amc::TaryU32& parent) throw() {
     parent.tary_u32_n = 0;
 }
 
 // --- atf_amc.TaryU32.tary_u32.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void atf_amc::tary_u32_Reserve(atf_amc::TaryU32& parent, int n) {
+inline void atf_amc::tary_u32_Reserve(atf_amc::TaryU32& parent, int n) throw() {
     u32 new_n = parent.tary_u32_n + n;
     if (UNLIKELY(new_n > parent.tary_u32_max)) {
         tary_u32_AbsReserve(parent, new_n);
@@ -11299,31 +11299,31 @@ inline void atf_amc::tary_u32_Reserve(atf_amc::TaryU32& parent, int n) {
 
 // --- atf_amc.TaryU32.tary_u32.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline u32& atf_amc::tary_u32_qFind(atf_amc::TaryU32& parent, u64 t) {
+inline u32& atf_amc::tary_u32_qFind(atf_amc::TaryU32& parent, u64 t) throw() {
     return parent.tary_u32_elems[t];
 }
 
 // --- atf_amc.TaryU32.tary_u32.qLast
 // Return reference to last element of array. No bounds checking
-inline u32& atf_amc::tary_u32_qLast(atf_amc::TaryU32& parent) {
+inline u32& atf_amc::tary_u32_qLast(atf_amc::TaryU32& parent) throw() {
     return tary_u32_qFind(parent, u64(parent.tary_u32_n-1));
 }
 
 // --- atf_amc.TaryU32.tary_u32.rowid_Get
 // Return row id of specified element
-inline u64 atf_amc::tary_u32_rowid_Get(atf_amc::TaryU32& parent, u32 &elem) {
+inline u64 atf_amc::tary_u32_rowid_Get(atf_amc::TaryU32& parent, u32 &elem) throw() {
     u64 id = &elem - parent.tary_u32_elems;
     return u64(id);
 }
 
 // --- atf_amc.TaryU32.tary_u32_curs.Next
 // proceed to next item
-inline void atf_amc::TaryU32_tary_u32_curs_Next(TaryU32_tary_u32_curs &curs) {
+inline void atf_amc::TaryU32_tary_u32_curs_Next(TaryU32_tary_u32_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.TaryU32.tary_u32_curs.Reset
-inline void atf_amc::TaryU32_tary_u32_curs_Reset(TaryU32_tary_u32_curs &curs, atf_amc::TaryU32 &parent) {
+inline void atf_amc::TaryU32_tary_u32_curs_Reset(TaryU32_tary_u32_curs &curs, atf_amc::TaryU32 &parent) throw() {
     curs.elems = parent.tary_u32_elems;
     curs.n_elems = parent.tary_u32_n;
     curs.index = 0;
@@ -11331,13 +11331,13 @@ inline void atf_amc::TaryU32_tary_u32_curs_Reset(TaryU32_tary_u32_curs &curs, at
 
 // --- atf_amc.TaryU32.tary_u32_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::TaryU32_tary_u32_curs_ValidQ(TaryU32_tary_u32_curs &curs) {
+inline bool atf_amc::TaryU32_tary_u32_curs_ValidQ(TaryU32_tary_u32_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_amc.TaryU32.tary_u32_curs.Access
 // item access
-inline u32& atf_amc::TaryU32_tary_u32_curs_Access(TaryU32_tary_u32_curs &curs) {
+inline u32& atf_amc::TaryU32_tary_u32_curs_Access(TaryU32_tary_u32_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -11350,24 +11350,24 @@ inline void atf_amc::TaryU32_Init(atf_amc::TaryU32& parent) {
 }
 
 // --- atf_amc.TaryU32..Ctor
-inline  atf_amc::TaryU32::TaryU32() {
+inline  atf_amc::TaryU32::TaryU32() throw() {
     atf_amc::TaryU32_Init(*this);
 }
 
 // --- atf_amc.TaryU32..Dtor
-inline  atf_amc::TaryU32::~TaryU32() {
+inline  atf_amc::TaryU32::~TaryU32() throw() {
     atf_amc::TaryU32_Uninit(*this);
 }
 
 // --- atf_amc.TaryU8.ary.EmptyQ
 // Return true if index is empty
-inline bool atf_amc::ary_EmptyQ(atf_amc::TaryU8& parent) {
+inline bool atf_amc::ary_EmptyQ(atf_amc::TaryU8& parent) throw() {
     return parent.ary_n == 0;
 }
 
 // --- atf_amc.TaryU8.ary.Find
 // Look up row by row id. Return NULL if out of range
-inline u8* atf_amc::ary_Find(atf_amc::TaryU8& parent, u64 t) {
+inline u8* atf_amc::ary_Find(atf_amc::TaryU8& parent, u64 t) throw() {
     u64 idx = t;
     u64 lim = parent.ary_n;
     if (idx >= lim) return NULL;
@@ -11376,24 +11376,24 @@ inline u8* atf_amc::ary_Find(atf_amc::TaryU8& parent, u64 t) {
 
 // --- atf_amc.TaryU8.ary.Getary
 // Return array pointer by value
-inline algo::aryptr<u8> atf_amc::ary_Getary(const atf_amc::TaryU8& parent) {
+inline algo::aryptr<u8> atf_amc::ary_Getary(const atf_amc::TaryU8& parent) throw() {
     return algo::aryptr<u8>(parent.ary_elems, parent.ary_n);
 }
 
 // --- atf_amc.TaryU8.ary.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline u8* atf_amc::ary_Last(atf_amc::TaryU8& parent) {
+inline u8* atf_amc::ary_Last(atf_amc::TaryU8& parent) throw() {
     return ary_Find(parent, u64(parent.ary_n-1));
 }
 
 // --- atf_amc.TaryU8.ary.AssignAryptr
 // Copy from aryptr (operator=)
-inline void atf_amc::TaryU8::operator =(const algo::aryptr<u8> &rhs) {
+inline void atf_amc::TaryU8::operator =(const algo::aryptr<u8> &rhs) throw() {
     ary_Setary(*this, rhs);
 }
 
 // --- atf_amc.TaryU8.ary.CtorAryptr
-inline  atf_amc::TaryU8::TaryU8(const algo::aryptr<u8> &rhs) {
+inline  atf_amc::TaryU8::TaryU8(const algo::aryptr<u8> &rhs) throw() {
     ary_elems 	= 0; // (atf_amc.TaryU8.ary)
     ary_n     	= 0; // (atf_amc.TaryU8.ary)
     ary_max   	= 0; // (atf_amc.TaryU8.ary)
@@ -11402,25 +11402,25 @@ inline  atf_amc::TaryU8::TaryU8(const algo::aryptr<u8> &rhs) {
 
 // --- atf_amc.TaryU8.ary.Max
 // Return max. number of items in the array
-inline i32 atf_amc::ary_Max(atf_amc::TaryU8& parent) {
+inline i32 atf_amc::ary_Max(atf_amc::TaryU8& parent) throw() {
     (void)parent;
     return parent.ary_max;
 }
 
 // --- atf_amc.TaryU8.ary.N
 // Return number of items in the array
-inline i32 atf_amc::ary_N(const atf_amc::TaryU8& parent) {
+inline i32 atf_amc::ary_N(const atf_amc::TaryU8& parent) throw() {
     return parent.ary_n;
 }
 
 // --- atf_amc.TaryU8.ary.RemoveAll
-inline void atf_amc::ary_RemoveAll(atf_amc::TaryU8& parent) {
+inline void atf_amc::ary_RemoveAll(atf_amc::TaryU8& parent) throw() {
     parent.ary_n = 0;
 }
 
 // --- atf_amc.TaryU8.ary.Reserve
 // Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void atf_amc::ary_Reserve(atf_amc::TaryU8& parent, int n) {
+inline void atf_amc::ary_Reserve(atf_amc::TaryU8& parent, int n) throw() {
     u32 new_n = parent.ary_n + n;
     if (UNLIKELY(new_n > parent.ary_max)) {
         ary_AbsReserve(parent, new_n);
@@ -11429,31 +11429,31 @@ inline void atf_amc::ary_Reserve(atf_amc::TaryU8& parent, int n) {
 
 // --- atf_amc.TaryU8.ary.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline u8& atf_amc::ary_qFind(atf_amc::TaryU8& parent, u64 t) {
+inline u8& atf_amc::ary_qFind(atf_amc::TaryU8& parent, u64 t) throw() {
     return parent.ary_elems[t];
 }
 
 // --- atf_amc.TaryU8.ary.qLast
 // Return reference to last element of array. No bounds checking
-inline u8& atf_amc::ary_qLast(atf_amc::TaryU8& parent) {
+inline u8& atf_amc::ary_qLast(atf_amc::TaryU8& parent) throw() {
     return ary_qFind(parent, u64(parent.ary_n-1));
 }
 
 // --- atf_amc.TaryU8.ary.rowid_Get
 // Return row id of specified element
-inline u64 atf_amc::ary_rowid_Get(atf_amc::TaryU8& parent, u8 &elem) {
+inline u64 atf_amc::ary_rowid_Get(atf_amc::TaryU8& parent, u8 &elem) throw() {
     u64 id = &elem - parent.ary_elems;
     return u64(id);
 }
 
 // --- atf_amc.TaryU8.ary_curs.Next
 // proceed to next item
-inline void atf_amc::TaryU8_ary_curs_Next(TaryU8_ary_curs &curs) {
+inline void atf_amc::TaryU8_ary_curs_Next(TaryU8_ary_curs &curs) throw() {
     curs.index++;
 }
 
 // --- atf_amc.TaryU8.ary_curs.Reset
-inline void atf_amc::TaryU8_ary_curs_Reset(TaryU8_ary_curs &curs, atf_amc::TaryU8 &parent) {
+inline void atf_amc::TaryU8_ary_curs_Reset(TaryU8_ary_curs &curs, atf_amc::TaryU8 &parent) throw() {
     curs.elems = parent.ary_elems;
     curs.n_elems = parent.ary_n;
     curs.index = 0;
@@ -11461,13 +11461,13 @@ inline void atf_amc::TaryU8_ary_curs_Reset(TaryU8_ary_curs &curs, atf_amc::TaryU
 
 // --- atf_amc.TaryU8.ary_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::TaryU8_ary_curs_ValidQ(TaryU8_ary_curs &curs) {
+inline bool atf_amc::TaryU8_ary_curs_ValidQ(TaryU8_ary_curs &curs) throw() {
     return curs.index < curs.n_elems;
 }
 
 // --- atf_amc.TaryU8.ary_curs.Access
 // item access
-inline u8& atf_amc::TaryU8_ary_curs_Access(TaryU8_ary_curs &curs) {
+inline u8& atf_amc::TaryU8_ary_curs_Access(TaryU8_ary_curs &curs) throw() {
     return curs.elems[curs.index];
 }
 
@@ -11480,21 +11480,21 @@ inline void atf_amc::TaryU8_Init(atf_amc::TaryU8& parent) {
 }
 
 // --- atf_amc.TaryU8..Ctor
-inline  atf_amc::TaryU8::TaryU8() {
+inline  atf_amc::TaryU8::TaryU8() throw() {
     atf_amc::TaryU8_Init(*this);
 }
 
 // --- atf_amc.TaryU8..Dtor
-inline  atf_amc::TaryU8::~TaryU8() {
+inline  atf_amc::TaryU8::~TaryU8() throw() {
     atf_amc::TaryU8_Uninit(*this);
 }
 
 // --- atf_amc.TestRegx1..Ctor
-inline  atf_amc::TestRegx1::TestRegx1() {
+inline  atf_amc::TestRegx1::TestRegx1() throw() {
 }
 
 // --- atf_amc.TestType..Ctor
-inline  atf_amc::TestType::TestType() {
+inline  atf_amc::TestType::TestType() throw() {
 }
 
 // --- atf_amc.Text.msghdr.Castdown
@@ -11515,14 +11515,14 @@ inline atf_amc::MsgHeader& atf_amc::Castbase(atf_amc::Text& parent) {
 
 // --- atf_amc.Text.text.N
 // Return number of elements in varlen field
-inline u32 atf_amc::text_N(const atf_amc::Text& parent) {
+inline u32 atf_amc::text_N(const atf_amc::Text& parent) throw() {
     u32 length = i32(((atf_amc::Text&)parent).length);
     u32 extra_bytes = u32_Max(length,sizeof(atf_amc::Text)) - sizeof(atf_amc::Text); // avoid unsigned subtraction underflow
     return u32(extra_bytes / sizeof(char));
 }
 
 // --- atf_amc.Text.text_curs.Reset
-inline void atf_amc::Text_text_curs_Reset(Text_text_curs &curs, atf_amc::Text &parent) {
+inline void atf_amc::Text_text_curs_Reset(Text_text_curs &curs, atf_amc::Text &parent) throw() {
     curs.ptr = (u8*)&parent + sizeof(atf_amc::Text);
     curs.length = i32(parent.length) - sizeof(atf_amc::Text);
     curs.index = 0;
@@ -11530,14 +11530,14 @@ inline void atf_amc::Text_text_curs_Reset(Text_text_curs &curs, atf_amc::Text &p
 
 // --- atf_amc.Text.text_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::Text_text_curs_ValidQ(Text_text_curs &curs) {
+inline bool atf_amc::Text_text_curs_ValidQ(Text_text_curs &curs) throw() {
     bool valid = ssizeof(char) <= curs.length;
     return valid;
 }
 
 // --- atf_amc.Text.text_curs.Next
 // proceed to next item
-inline void atf_amc::Text_text_curs_Next(Text_text_curs &curs) {
+inline void atf_amc::Text_text_curs_Next(Text_text_curs &curs) throw() {
     i32 len = i32(sizeof(char));
     curs.ptr += len;
     curs.length -= len;
@@ -11546,19 +11546,19 @@ inline void atf_amc::Text_text_curs_Next(Text_text_curs &curs) {
 
 // --- atf_amc.Text.text_curs.Access
 // item access
-inline char& atf_amc::Text_text_curs_Access(Text_text_curs &curs) {
+inline char& atf_amc::Text_text_curs_Access(Text_text_curs &curs) throw() {
     return *(char*)curs.ptr;
 }
 
 // --- atf_amc.Text..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::Text& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::Text& parent) throw() {
     return i32(const_cast<atf_amc::Text&>(parent).length);
 }
 
 // --- atf_amc.Text..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::Text& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::Text& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::Text&>(row).length));
 }
 
@@ -11570,54 +11570,54 @@ inline void atf_amc::Text_Init(atf_amc::Text& parent) {
 }
 
 // --- atf_amc.Text..Ctor
-inline  atf_amc::Text::Text() {
+inline  atf_amc::Text::Text() throw() {
     atf_amc::Text_Init(*this);
 }
 
 // --- atf_amc.TypeB..Hash
-inline u32 atf_amc::TypeB_Hash(u32 prev, const atf_amc::TypeB& rhs) {
+inline u32 atf_amc::TypeB_Hash(u32 prev, const atf_amc::TypeB& rhs) throw() {
     prev = i32_Hash(prev, rhs.typea);
     prev = i32_Hash(prev, rhs.j);
     return prev;
 }
 
 // --- atf_amc.TypeB..EqOp
-inline bool atf_amc::TypeB::operator ==(const atf_amc::TypeB &rhs) const {
+inline bool atf_amc::TypeB::operator ==(const atf_amc::TypeB &rhs) const throw() {
     return atf_amc::TypeB_Eq(const_cast<atf_amc::TypeB&>(*this),const_cast<atf_amc::TypeB&>(rhs));
 }
 
 // --- atf_amc.TypeB..NeOp
-inline bool atf_amc::TypeB::operator !=(const atf_amc::TypeB &rhs) const {
+inline bool atf_amc::TypeB::operator !=(const atf_amc::TypeB &rhs) const throw() {
     return !atf_amc::TypeB_Eq(const_cast<atf_amc::TypeB&>(*this),const_cast<atf_amc::TypeB&>(rhs));
 }
 
 // --- atf_amc.TypeB..LtOp
-inline bool atf_amc::TypeB::operator <(const atf_amc::TypeB &rhs) const {
+inline bool atf_amc::TypeB::operator <(const atf_amc::TypeB &rhs) const throw() {
     return atf_amc::TypeB_Lt(const_cast<atf_amc::TypeB&>(*this),const_cast<atf_amc::TypeB&>(rhs));
 }
 
 // --- atf_amc.TypeB..GtOp
-inline bool atf_amc::TypeB::operator >(const atf_amc::TypeB &rhs) const {
+inline bool atf_amc::TypeB::operator >(const atf_amc::TypeB &rhs) const throw() {
     return atf_amc::TypeB_Lt(const_cast<atf_amc::TypeB&>(rhs),const_cast<atf_amc::TypeB&>(*this));
 }
 
 // --- atf_amc.TypeB..LeOp
-inline bool atf_amc::TypeB::operator <=(const atf_amc::TypeB &rhs) const {
+inline bool atf_amc::TypeB::operator <=(const atf_amc::TypeB &rhs) const throw() {
     return !atf_amc::TypeB_Lt(const_cast<atf_amc::TypeB&>(rhs),const_cast<atf_amc::TypeB&>(*this));
 }
 
 // --- atf_amc.TypeB..GeOp
-inline bool atf_amc::TypeB::operator >=(const atf_amc::TypeB &rhs) const {
+inline bool atf_amc::TypeB::operator >=(const atf_amc::TypeB &rhs) const throw() {
     return !atf_amc::TypeB_Lt(const_cast<atf_amc::TypeB&>(*this),const_cast<atf_amc::TypeB&>(rhs));
 }
 
 // --- atf_amc.TypeB..Lt
-inline bool atf_amc::TypeB_Lt(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) {
+inline bool atf_amc::TypeB_Lt(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) throw() {
     return TypeB_Cmp(lhs,rhs) < 0;
 }
 
 // --- atf_amc.TypeB..Cmp
-inline i32 atf_amc::TypeB_Cmp(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) {
+inline i32 atf_amc::TypeB_Cmp(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) throw() {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typea, rhs.typea);
     if (retval != 0) {
@@ -11635,7 +11635,7 @@ inline void atf_amc::TypeB_Init(atf_amc::TypeB& parent) {
 }
 
 // --- atf_amc.TypeB..Eq
-inline bool atf_amc::TypeB_Eq(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) {
+inline bool atf_amc::TypeB_Eq(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) throw() {
     bool retval = true;
     retval = i32_Eq(lhs.typea, rhs.typea);
     if (!retval) {
@@ -11647,7 +11647,7 @@ inline bool atf_amc::TypeB_Eq(atf_amc::TypeB& lhs, atf_amc::TypeB& rhs) {
 
 // --- atf_amc.TypeB..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::TypeB_Update(atf_amc::TypeB &lhs, atf_amc::TypeB& rhs) {
+inline bool atf_amc::TypeB_Update(atf_amc::TypeB &lhs, atf_amc::TypeB& rhs) throw() {
     bool ret = !TypeB_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -11656,17 +11656,17 @@ inline bool atf_amc::TypeB_Update(atf_amc::TypeB &lhs, atf_amc::TypeB& rhs) {
 }
 
 // --- atf_amc.TypeB..Ctor
-inline  atf_amc::TypeB::TypeB() {
+inline  atf_amc::TypeB::TypeB() throw() {
     atf_amc::TypeB_Init(*this);
 }
 
 // --- atf_amc.TypeBE16.value.Get
-inline u16 atf_amc::value_Get(const atf_amc::TypeBE16& parent) {
+inline u16 atf_amc::value_Get(const atf_amc::TypeBE16& parent) throw() {
     return be16toh(parent.value_be); // read big-endian value from memory
 }
 
 // --- atf_amc.TypeBE16.value.Set
-inline void atf_amc::value_Set(atf_amc::TypeBE16& parent, u16 rhs) {
+inline void atf_amc::value_Set(atf_amc::TypeBE16& parent, u16 rhs) throw() {
     parent.value_be = htobe16(rhs); // write big-endian value to memory
 }
 
@@ -11677,17 +11677,17 @@ inline void atf_amc::TypeBE16_Init(atf_amc::TypeBE16& parent) {
 }
 
 // --- atf_amc.TypeBE16..Ctor
-inline  atf_amc::TypeBE16::TypeBE16() {
+inline  atf_amc::TypeBE16::TypeBE16() throw() {
     atf_amc::TypeBE16_Init(*this);
 }
 
 // --- atf_amc.TypeBE32.value.Get
-inline u32 atf_amc::value_Get(const atf_amc::TypeBE32& parent) {
+inline u32 atf_amc::value_Get(const atf_amc::TypeBE32& parent) throw() {
     return be32toh(parent.value_be); // read big-endian value from memory
 }
 
 // --- atf_amc.TypeBE32.value.Set
-inline void atf_amc::value_Set(atf_amc::TypeBE32& parent, u32 rhs) {
+inline void atf_amc::value_Set(atf_amc::TypeBE32& parent, u32 rhs) throw() {
     parent.value_be = htobe32(rhs); // write big-endian value to memory
 }
 
@@ -11698,39 +11698,39 @@ inline void atf_amc::TypeBE32_Init(atf_amc::TypeBE32& parent) {
 }
 
 // --- atf_amc.TypeBE32..Ctor
-inline  atf_amc::TypeBE32::TypeBE32() {
+inline  atf_amc::TypeBE32::TypeBE32() throw() {
     atf_amc::TypeBE32_Init(*this);
 }
 
 // --- atf_amc.TypeBE32en.value.Get
-inline u32 atf_amc::value_Get(const atf_amc::TypeBE32en& parent) {
+inline u32 atf_amc::value_Get(const atf_amc::TypeBE32en& parent) throw() {
     return be32toh(parent.value_be); // read big-endian value from memory
 }
 
 // --- atf_amc.TypeBE32en.value.Set
-inline void atf_amc::value_Set(atf_amc::TypeBE32en& parent, u32 rhs) {
+inline void atf_amc::value_Set(atf_amc::TypeBE32en& parent, u32 rhs) throw() {
     parent.value_be = htobe32(rhs); // write big-endian value to memory
 }
 
 // --- atf_amc.TypeBE32en.value.GetEnum
 // Get value of field as enum type
-inline atf_amc_TypeBE32en_value_Enum atf_amc::value_GetEnum(const atf_amc::TypeBE32en& parent) {
+inline atf_amc_TypeBE32en_value_Enum atf_amc::value_GetEnum(const atf_amc::TypeBE32en& parent) throw() {
     return atf_amc_TypeBE32en_value_Enum(value_Get(parent));
 }
 
 // --- atf_amc.TypeBE32en.value.SetEnum
 // Set value of field from enum type.
-inline void atf_amc::value_SetEnum(atf_amc::TypeBE32en& parent, atf_amc_TypeBE32en_value_Enum rhs) {
+inline void atf_amc::value_SetEnum(atf_amc::TypeBE32en& parent, atf_amc_TypeBE32en_value_Enum rhs) throw() {
     value_Set(parent, u32(rhs));
 }
 
 // --- atf_amc.TypeBE32en.value.Cast
-inline  atf_amc::TypeBE32en::operator atf_amc_TypeBE32en_value_Enum() const {
+inline  atf_amc::TypeBE32en::operator atf_amc_TypeBE32en_value_Enum() const throw() {
     return atf_amc_TypeBE32en_value_Enum(value_Get((*this)));
 }
 
 // --- atf_amc.TypeBE32en..Hash
-inline u32 atf_amc::TypeBE32en_Hash(u32 prev, const atf_amc::TypeBE32en& rhs) {
+inline u32 atf_amc::TypeBE32en_Hash(u32 prev, const atf_amc::TypeBE32en& rhs) throw() {
     prev = u32_Hash(prev, value_Get(rhs));
     return prev;
 }
@@ -11742,78 +11742,78 @@ inline void atf_amc::TypeBE32en_Init(atf_amc::TypeBE32en& parent) {
 }
 
 // --- atf_amc.TypeBE32en..Ctor
-inline  atf_amc::TypeBE32en::TypeBE32en() {
+inline  atf_amc::TypeBE32en::TypeBE32en() throw() {
     atf_amc::TypeBE32en_Init(*this);
 }
 
 // --- atf_amc.TypeBE32en..FieldwiseCtor
-inline  atf_amc::TypeBE32en::TypeBE32en(u32 in_value) {
+inline  atf_amc::TypeBE32en::TypeBE32en(u32 in_value) throw() {
     value_Set(*this,in_value);
 }
 
 // --- atf_amc.TypeBE32en..EnumCtor
-inline  atf_amc::TypeBE32en::TypeBE32en(atf_amc_TypeBE32en_value_Enum arg) {
+inline  atf_amc::TypeBE32en::TypeBE32en(atf_amc_TypeBE32en_value_Enum arg) throw() {
     value_Set(*this, u32(arg));
 }
 
 // --- atf_amc.TypeBE64.value.Get
-inline u64 atf_amc::value_Get(const atf_amc::TypeBE64& parent) {
+inline u64 atf_amc::value_Get(const atf_amc::TypeBE64& parent) throw() {
     return be64toh(parent.value_be); // read big-endian value from memory
 }
 
 // --- atf_amc.TypeBE64.value.Set
-inline void atf_amc::value_Set(atf_amc::TypeBE64& parent, u64 rhs) {
+inline void atf_amc::value_Set(atf_amc::TypeBE64& parent, u64 rhs) throw() {
     parent.value_be = htobe64(rhs); // write big-endian value to memory
 }
 
 // --- atf_amc.TypeBE64.value.Cast
-inline  atf_amc::TypeBE64::operator u64() const {
+inline  atf_amc::TypeBE64::operator u64() const throw() {
     return u64(value_Get((*this)));
 }
 
 // --- atf_amc.TypeBE64..Hash
-inline u32 atf_amc::TypeBE64_Hash(u32 prev, const atf_amc::TypeBE64& rhs) {
+inline u32 atf_amc::TypeBE64_Hash(u32 prev, const atf_amc::TypeBE64& rhs) throw() {
     prev = u64_Hash(prev, value_Get(rhs));
     return prev;
 }
 
 // --- atf_amc.TypeBE64..EqOp
-inline bool atf_amc::TypeBE64::operator ==(const atf_amc::TypeBE64 &rhs) const {
+inline bool atf_amc::TypeBE64::operator ==(const atf_amc::TypeBE64 &rhs) const throw() {
     return atf_amc::TypeBE64_Eq(const_cast<atf_amc::TypeBE64&>(*this),const_cast<atf_amc::TypeBE64&>(rhs));
 }
 
 // --- atf_amc.TypeBE64..NeOp
-inline bool atf_amc::TypeBE64::operator !=(const atf_amc::TypeBE64 &rhs) const {
+inline bool atf_amc::TypeBE64::operator !=(const atf_amc::TypeBE64 &rhs) const throw() {
     return !atf_amc::TypeBE64_Eq(const_cast<atf_amc::TypeBE64&>(*this),const_cast<atf_amc::TypeBE64&>(rhs));
 }
 
 // --- atf_amc.TypeBE64..LtOp
-inline bool atf_amc::TypeBE64::operator <(const atf_amc::TypeBE64 &rhs) const {
+inline bool atf_amc::TypeBE64::operator <(const atf_amc::TypeBE64 &rhs) const throw() {
     return atf_amc::TypeBE64_Lt(const_cast<atf_amc::TypeBE64&>(*this),const_cast<atf_amc::TypeBE64&>(rhs));
 }
 
 // --- atf_amc.TypeBE64..GtOp
-inline bool atf_amc::TypeBE64::operator >(const atf_amc::TypeBE64 &rhs) const {
+inline bool atf_amc::TypeBE64::operator >(const atf_amc::TypeBE64 &rhs) const throw() {
     return atf_amc::TypeBE64_Lt(const_cast<atf_amc::TypeBE64&>(rhs),const_cast<atf_amc::TypeBE64&>(*this));
 }
 
 // --- atf_amc.TypeBE64..LeOp
-inline bool atf_amc::TypeBE64::operator <=(const atf_amc::TypeBE64 &rhs) const {
+inline bool atf_amc::TypeBE64::operator <=(const atf_amc::TypeBE64 &rhs) const throw() {
     return !atf_amc::TypeBE64_Lt(const_cast<atf_amc::TypeBE64&>(rhs),const_cast<atf_amc::TypeBE64&>(*this));
 }
 
 // --- atf_amc.TypeBE64..GeOp
-inline bool atf_amc::TypeBE64::operator >=(const atf_amc::TypeBE64 &rhs) const {
+inline bool atf_amc::TypeBE64::operator >=(const atf_amc::TypeBE64 &rhs) const throw() {
     return !atf_amc::TypeBE64_Lt(const_cast<atf_amc::TypeBE64&>(*this),const_cast<atf_amc::TypeBE64&>(rhs));
 }
 
 // --- atf_amc.TypeBE64..Lt
-inline bool atf_amc::TypeBE64_Lt(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) {
+inline bool atf_amc::TypeBE64_Lt(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) throw() {
     return u64_Lt(value_Get(lhs), value_Get(rhs));
 }
 
 // --- atf_amc.TypeBE64..Cmp
-inline i32 atf_amc::TypeBE64_Cmp(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) {
+inline i32 atf_amc::TypeBE64_Cmp(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) throw() {
     i32 retval = 0;
     retval = u64_Cmp(value_Get(lhs), value_Get(rhs));
     return retval;
@@ -11826,7 +11826,7 @@ inline void atf_amc::TypeBE64_Init(atf_amc::TypeBE64& parent) {
 }
 
 // --- atf_amc.TypeBE64..Eq
-inline bool atf_amc::TypeBE64_Eq(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) {
+inline bool atf_amc::TypeBE64_Eq(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs) throw() {
     bool retval = true;
     retval = u64_Eq(value_Get(lhs), value_Get(rhs));
     return retval;
@@ -11834,7 +11834,7 @@ inline bool atf_amc::TypeBE64_Eq(atf_amc::TypeBE64& lhs, atf_amc::TypeBE64& rhs)
 
 // --- atf_amc.TypeBE64..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::TypeBE64_Update(atf_amc::TypeBE64 &lhs, atf_amc::TypeBE64& rhs) {
+inline bool atf_amc::TypeBE64_Update(atf_amc::TypeBE64 &lhs, atf_amc::TypeBE64& rhs) throw() {
     bool ret = !TypeBE64_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -11843,27 +11843,27 @@ inline bool atf_amc::TypeBE64_Update(atf_amc::TypeBE64 &lhs, atf_amc::TypeBE64& 
 }
 
 // --- atf_amc.TypeBE64..Ctor
-inline  atf_amc::TypeBE64::TypeBE64() {
+inline  atf_amc::TypeBE64::TypeBE64() throw() {
     atf_amc::TypeBE64_Init(*this);
 }
 
 // --- atf_amc.TypeBE64..FieldwiseCtor
-inline  atf_amc::TypeBE64::TypeBE64(u64 in_value) {
+inline  atf_amc::TypeBE64::TypeBE64(u64 in_value) throw() {
     value_Set(*this,in_value);
 }
 
 // --- atf_amc.TypeBE64dflt.value.Get
-inline u64 atf_amc::value_Get(const atf_amc::TypeBE64dflt& parent) {
+inline u64 atf_amc::value_Get(const atf_amc::TypeBE64dflt& parent) throw() {
     return be64toh(parent.value_be); // read big-endian value from memory
 }
 
 // --- atf_amc.TypeBE64dflt.value.Set
-inline void atf_amc::value_Set(atf_amc::TypeBE64dflt& parent, u64 rhs) {
+inline void atf_amc::value_Set(atf_amc::TypeBE64dflt& parent, u64 rhs) throw() {
     parent.value_be = htobe64(rhs); // write big-endian value to memory
 }
 
 // --- atf_amc.TypeBE64dflt.value.Cast
-inline  atf_amc::TypeBE64dflt::operator u64() const {
+inline  atf_amc::TypeBE64dflt::operator u64() const throw() {
     return u64(value_Get((*this)));
 }
 
@@ -11874,22 +11874,22 @@ inline void atf_amc::TypeBE64dflt_Init(atf_amc::TypeBE64dflt& parent) {
 }
 
 // --- atf_amc.TypeBE64dflt..Ctor
-inline  atf_amc::TypeBE64dflt::TypeBE64dflt() {
+inline  atf_amc::TypeBE64dflt::TypeBE64dflt() throw() {
     atf_amc::TypeBE64dflt_Init(*this);
 }
 
 // --- atf_amc.TypeBE64dflt..FieldwiseCtor
-inline  atf_amc::TypeBE64dflt::TypeBE64dflt(u64 in_value) {
+inline  atf_amc::TypeBE64dflt::TypeBE64dflt(u64 in_value) throw() {
     value_Set(*this,in_value);
 }
 
 // --- atf_amc.TypeBE64sf.value.Get
-inline u64 atf_amc::value_Get(const atf_amc::TypeBE64sf& parent) {
+inline u64 atf_amc::value_Get(const atf_amc::TypeBE64sf& parent) throw() {
     return be64toh(parent.value_be); // read big-endian value from memory
 }
 
 // --- atf_amc.TypeBE64sf.value.Set
-inline void atf_amc::value_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
+inline void atf_amc::value_Set(atf_amc::TypeBE64sf& parent, u64 rhs) throw() {
     parent.value_be = htobe64(rhs); // write big-endian value to memory
 }
 
@@ -11898,7 +11898,7 @@ inline void atf_amc::value_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
 //    1 bits starting at bit 63.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline u64 atf_amc::bit63_Get(const atf_amc::TypeBE64sf& parent) {
+inline u64 atf_amc::bit63_Get(const atf_amc::TypeBE64sf& parent) throw() {
     return u64((value_Get(parent) >> 63) & 0x01);
 }
 
@@ -11908,7 +11908,7 @@ inline u64 atf_amc::bit63_Get(const atf_amc::TypeBE64sf& parent) {
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline void atf_amc::bit63_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
+inline void atf_amc::bit63_Set(atf_amc::TypeBE64sf& parent, u64 rhs) throw() {
     u64 t1    = u64(0x01) << 63;
     u64 t2    = (u64(rhs) & 0x01) << 63;
     value_Set(parent, u64((value_Get(parent) & ~t1) | t2));
@@ -11919,7 +11919,7 @@ inline void atf_amc::bit63_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
 //    2 bits starting at bit 61.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline u64 atf_amc::bits62_61_Get(const atf_amc::TypeBE64sf& parent) {
+inline u64 atf_amc::bits62_61_Get(const atf_amc::TypeBE64sf& parent) throw() {
     return u64((value_Get(parent) >> 61) & 0x03);
 }
 
@@ -11929,7 +11929,7 @@ inline u64 atf_amc::bits62_61_Get(const atf_amc::TypeBE64sf& parent) {
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline void atf_amc::bits62_61_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
+inline void atf_amc::bits62_61_Set(atf_amc::TypeBE64sf& parent, u64 rhs) throw() {
     u64 t1    = u64(0x03) << 61;
     u64 t2    = (u64(rhs) & 0x03) << 61;
     value_Set(parent, u64((value_Get(parent) & ~t1) | t2));
@@ -11940,7 +11940,7 @@ inline void atf_amc::bits62_61_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
 //    3 bits starting at bit 58.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline u64 atf_amc::bits60_58_Get(const atf_amc::TypeBE64sf& parent) {
+inline u64 atf_amc::bits60_58_Get(const atf_amc::TypeBE64sf& parent) throw() {
     return u64((value_Get(parent) >> 58) & 0x07);
 }
 
@@ -11950,7 +11950,7 @@ inline u64 atf_amc::bits60_58_Get(const atf_amc::TypeBE64sf& parent) {
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline void atf_amc::bits60_58_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
+inline void atf_amc::bits60_58_Set(atf_amc::TypeBE64sf& parent, u64 rhs) throw() {
     u64 t1    = u64(0x07) << 58;
     u64 t2    = (u64(rhs) & 0x07) << 58;
     value_Set(parent, u64((value_Get(parent) & ~t1) | t2));
@@ -11961,7 +11961,7 @@ inline void atf_amc::bits60_58_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
 //    5 bits starting at bit 53.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline u64 atf_amc::bits57_53_Get(const atf_amc::TypeBE64sf& parent) {
+inline u64 atf_amc::bits57_53_Get(const atf_amc::TypeBE64sf& parent) throw() {
     return u64((value_Get(parent) >> 53) & 0x1f);
 }
 
@@ -11971,7 +11971,7 @@ inline u64 atf_amc::bits57_53_Get(const atf_amc::TypeBE64sf& parent) {
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline void atf_amc::bits57_53_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
+inline void atf_amc::bits57_53_Set(atf_amc::TypeBE64sf& parent, u64 rhs) throw() {
     u64 t1    = u64(0x1f) << 53;
     u64 t2    = (u64(rhs) & 0x1f) << 53;
     value_Set(parent, u64((value_Get(parent) & ~t1) | t2));
@@ -11982,7 +11982,7 @@ inline void atf_amc::bits57_53_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
 //    8 bits starting at bit 45.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline u64 atf_amc::bits52_45_Get(const atf_amc::TypeBE64sf& parent) {
+inline u64 atf_amc::bits52_45_Get(const atf_amc::TypeBE64sf& parent) throw() {
     return u64((value_Get(parent) >> 45) & 0xff);
 }
 
@@ -11992,7 +11992,7 @@ inline u64 atf_amc::bits52_45_Get(const atf_amc::TypeBE64sf& parent) {
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline void atf_amc::bits52_45_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
+inline void atf_amc::bits52_45_Set(atf_amc::TypeBE64sf& parent, u64 rhs) throw() {
     u64 t1    = u64(0xff) << 45;
     u64 t2    = (u64(rhs) & 0xff) << 45;
     value_Set(parent, u64((value_Get(parent) & ~t1) | t2));
@@ -12003,7 +12003,7 @@ inline void atf_amc::bits52_45_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
 //    13 bits starting at bit 32.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline u64 atf_amc::bits44_32_Get(const atf_amc::TypeBE64sf& parent) {
+inline u64 atf_amc::bits44_32_Get(const atf_amc::TypeBE64sf& parent) throw() {
     return u64((value_Get(parent) >> 32) & 0x1fff);
 }
 
@@ -12013,7 +12013,7 @@ inline u64 atf_amc::bits44_32_Get(const atf_amc::TypeBE64sf& parent) {
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline void atf_amc::bits44_32_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
+inline void atf_amc::bits44_32_Set(atf_amc::TypeBE64sf& parent, u64 rhs) throw() {
     u64 t1    = u64(0x1fff) << 32;
     u64 t2    = (u64(rhs) & 0x1fff) << 32;
     value_Set(parent, u64((value_Get(parent) & ~t1) | t2));
@@ -12024,7 +12024,7 @@ inline void atf_amc::bits44_32_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
 //    21 bits starting at bit 11.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline u64 atf_amc::bits31_11_Get(const atf_amc::TypeBE64sf& parent) {
+inline u64 atf_amc::bits31_11_Get(const atf_amc::TypeBE64sf& parent) throw() {
     return u64((value_Get(parent) >> 11) & 0x1fffff);
 }
 
@@ -12034,7 +12034,7 @@ inline u64 atf_amc::bits31_11_Get(const atf_amc::TypeBE64sf& parent) {
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline void atf_amc::bits31_11_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
+inline void atf_amc::bits31_11_Set(atf_amc::TypeBE64sf& parent, u64 rhs) throw() {
     u64 t1    = u64(0x1fffff) << 11;
     u64 t2    = (u64(rhs) & 0x1fffff) << 11;
     value_Set(parent, u64((value_Get(parent) & ~t1) | t2));
@@ -12045,7 +12045,7 @@ inline void atf_amc::bits31_11_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
 //    11 bits starting at bit 0.
 //    NOTE: bits correspond to the the integer value of the field.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline u64 atf_amc::bits10_0_Get(const atf_amc::TypeBE64sf& parent) {
+inline u64 atf_amc::bits10_0_Get(const atf_amc::TypeBE64sf& parent) throw() {
     return u64((value_Get(parent) >> 0) & 0x7ff);
 }
 
@@ -12055,7 +12055,7 @@ inline u64 atf_amc::bits10_0_Get(const atf_amc::TypeBE64sf& parent) {
 //    NOTE: bits correspond to the integer value of 'value'.
 //    value is stored in memory as big-endian.
 //    The value is obtained by reading bytes from memory and swapping them.
-inline void atf_amc::bits10_0_Set(atf_amc::TypeBE64sf& parent, u64 rhs) {
+inline void atf_amc::bits10_0_Set(atf_amc::TypeBE64sf& parent, u64 rhs) throw() {
     u64 t1    = u64(0x7ff) << 0;
     u64 t2    = (u64(rhs) & 0x7ff) << 0;
     value_Set(parent, u64((value_Get(parent) & ~t1) | t2));
@@ -12068,53 +12068,53 @@ inline void atf_amc::TypeBE64sf_Init(atf_amc::TypeBE64sf& parent) {
 }
 
 // --- atf_amc.TypeBE64sf..Ctor
-inline  atf_amc::TypeBE64sf::TypeBE64sf() {
+inline  atf_amc::TypeBE64sf::TypeBE64sf() throw() {
     atf_amc::TypeBE64sf_Init(*this);
 }
 
 // --- atf_amc.TypeC..Hash
-inline u32 atf_amc::TypeC_Hash(u32 prev, const atf_amc::TypeC& rhs) {
+inline u32 atf_amc::TypeC_Hash(u32 prev, const atf_amc::TypeC& rhs) throw() {
     prev = i32_Hash(prev, rhs.typec);
     return prev;
 }
 
 // --- atf_amc.TypeC..EqOp
-inline bool atf_amc::TypeC::operator ==(const atf_amc::TypeC &rhs) const {
+inline bool atf_amc::TypeC::operator ==(const atf_amc::TypeC &rhs) const throw() {
     return atf_amc::TypeC_Eq(const_cast<atf_amc::TypeC&>(*this),const_cast<atf_amc::TypeC&>(rhs));
 }
 
 // --- atf_amc.TypeC..NeOp
-inline bool atf_amc::TypeC::operator !=(const atf_amc::TypeC &rhs) const {
+inline bool atf_amc::TypeC::operator !=(const atf_amc::TypeC &rhs) const throw() {
     return !atf_amc::TypeC_Eq(const_cast<atf_amc::TypeC&>(*this),const_cast<atf_amc::TypeC&>(rhs));
 }
 
 // --- atf_amc.TypeC..LtOp
-inline bool atf_amc::TypeC::operator <(const atf_amc::TypeC &rhs) const {
+inline bool atf_amc::TypeC::operator <(const atf_amc::TypeC &rhs) const throw() {
     return atf_amc::TypeC_Lt(const_cast<atf_amc::TypeC&>(*this),const_cast<atf_amc::TypeC&>(rhs));
 }
 
 // --- atf_amc.TypeC..GtOp
-inline bool atf_amc::TypeC::operator >(const atf_amc::TypeC &rhs) const {
+inline bool atf_amc::TypeC::operator >(const atf_amc::TypeC &rhs) const throw() {
     return atf_amc::TypeC_Lt(const_cast<atf_amc::TypeC&>(rhs),const_cast<atf_amc::TypeC&>(*this));
 }
 
 // --- atf_amc.TypeC..LeOp
-inline bool atf_amc::TypeC::operator <=(const atf_amc::TypeC &rhs) const {
+inline bool atf_amc::TypeC::operator <=(const atf_amc::TypeC &rhs) const throw() {
     return !atf_amc::TypeC_Lt(const_cast<atf_amc::TypeC&>(rhs),const_cast<atf_amc::TypeC&>(*this));
 }
 
 // --- atf_amc.TypeC..GeOp
-inline bool atf_amc::TypeC::operator >=(const atf_amc::TypeC &rhs) const {
+inline bool atf_amc::TypeC::operator >=(const atf_amc::TypeC &rhs) const throw() {
     return !atf_amc::TypeC_Lt(const_cast<atf_amc::TypeC&>(*this),const_cast<atf_amc::TypeC&>(rhs));
 }
 
 // --- atf_amc.TypeC..Lt
-inline bool atf_amc::TypeC_Lt(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) {
+inline bool atf_amc::TypeC_Lt(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) throw() {
     return i32_Lt(lhs.typec, rhs.typec);
 }
 
 // --- atf_amc.TypeC..Cmp
-inline i32 atf_amc::TypeC_Cmp(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) {
+inline i32 atf_amc::TypeC_Cmp(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) throw() {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typec, rhs.typec);
     return retval;
@@ -12127,7 +12127,7 @@ inline void atf_amc::TypeC_Init(atf_amc::TypeC& parent) {
 }
 
 // --- atf_amc.TypeC..Eq
-inline bool atf_amc::TypeC_Eq(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) {
+inline bool atf_amc::TypeC_Eq(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) throw() {
     bool retval = true;
     retval = i32_Eq(lhs.typec, rhs.typec);
     return retval;
@@ -12135,7 +12135,7 @@ inline bool atf_amc::TypeC_Eq(atf_amc::TypeC& lhs, atf_amc::TypeC& rhs) {
 
 // --- atf_amc.TypeC..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::TypeC_Update(atf_amc::TypeC &lhs, atf_amc::TypeC& rhs) {
+inline bool atf_amc::TypeC_Update(atf_amc::TypeC &lhs, atf_amc::TypeC& rhs) throw() {
     bool ret = !TypeC_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -12144,53 +12144,53 @@ inline bool atf_amc::TypeC_Update(atf_amc::TypeC &lhs, atf_amc::TypeC& rhs) {
 }
 
 // --- atf_amc.TypeC..Ctor
-inline  atf_amc::TypeC::TypeC() {
+inline  atf_amc::TypeC::TypeC() throw() {
     atf_amc::TypeC_Init(*this);
 }
 
 // --- atf_amc.TypeH..Hash
-inline u32 atf_amc::TypeH_Hash(u32 prev, const atf_amc::TypeH& rhs) {
+inline u32 atf_amc::TypeH_Hash(u32 prev, const atf_amc::TypeH& rhs) throw() {
     prev = i32_Hash(prev, rhs.typeh);
     return prev;
 }
 
 // --- atf_amc.TypeH..EqOp
-inline bool atf_amc::TypeH::operator ==(const atf_amc::TypeH &rhs) const {
+inline bool atf_amc::TypeH::operator ==(const atf_amc::TypeH &rhs) const throw() {
     return atf_amc::TypeH_Eq(const_cast<atf_amc::TypeH&>(*this),const_cast<atf_amc::TypeH&>(rhs));
 }
 
 // --- atf_amc.TypeH..NeOp
-inline bool atf_amc::TypeH::operator !=(const atf_amc::TypeH &rhs) const {
+inline bool atf_amc::TypeH::operator !=(const atf_amc::TypeH &rhs) const throw() {
     return !atf_amc::TypeH_Eq(const_cast<atf_amc::TypeH&>(*this),const_cast<atf_amc::TypeH&>(rhs));
 }
 
 // --- atf_amc.TypeH..LtOp
-inline bool atf_amc::TypeH::operator <(const atf_amc::TypeH &rhs) const {
+inline bool atf_amc::TypeH::operator <(const atf_amc::TypeH &rhs) const throw() {
     return atf_amc::TypeH_Lt(const_cast<atf_amc::TypeH&>(*this),const_cast<atf_amc::TypeH&>(rhs));
 }
 
 // --- atf_amc.TypeH..GtOp
-inline bool atf_amc::TypeH::operator >(const atf_amc::TypeH &rhs) const {
+inline bool atf_amc::TypeH::operator >(const atf_amc::TypeH &rhs) const throw() {
     return atf_amc::TypeH_Lt(const_cast<atf_amc::TypeH&>(rhs),const_cast<atf_amc::TypeH&>(*this));
 }
 
 // --- atf_amc.TypeH..LeOp
-inline bool atf_amc::TypeH::operator <=(const atf_amc::TypeH &rhs) const {
+inline bool atf_amc::TypeH::operator <=(const atf_amc::TypeH &rhs) const throw() {
     return !atf_amc::TypeH_Lt(const_cast<atf_amc::TypeH&>(rhs),const_cast<atf_amc::TypeH&>(*this));
 }
 
 // --- atf_amc.TypeH..GeOp
-inline bool atf_amc::TypeH::operator >=(const atf_amc::TypeH &rhs) const {
+inline bool atf_amc::TypeH::operator >=(const atf_amc::TypeH &rhs) const throw() {
     return !atf_amc::TypeH_Lt(const_cast<atf_amc::TypeH&>(*this),const_cast<atf_amc::TypeH&>(rhs));
 }
 
 // --- atf_amc.TypeH..Lt
-inline bool atf_amc::TypeH_Lt(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) {
+inline bool atf_amc::TypeH_Lt(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) throw() {
     return i32_Lt(lhs.typeh, rhs.typeh);
 }
 
 // --- atf_amc.TypeH..Cmp
-inline i32 atf_amc::TypeH_Cmp(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) {
+inline i32 atf_amc::TypeH_Cmp(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) throw() {
     i32 retval = 0;
     retval = i32_Cmp(lhs.typeh, rhs.typeh);
     return retval;
@@ -12203,7 +12203,7 @@ inline void atf_amc::TypeH_Init(atf_amc::TypeH& typeh) {
 }
 
 // --- atf_amc.TypeH..Eq
-inline bool atf_amc::TypeH_Eq(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) {
+inline bool atf_amc::TypeH_Eq(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) throw() {
     bool retval = true;
     retval = i32_Eq(lhs.typeh, rhs.typeh);
     return retval;
@@ -12211,7 +12211,7 @@ inline bool atf_amc::TypeH_Eq(atf_amc::TypeH& lhs, atf_amc::TypeH& rhs) {
 
 // --- atf_amc.TypeH..Update
 // Set value. Return true if new value is different from old value.
-inline bool atf_amc::TypeH_Update(atf_amc::TypeH &lhs, atf_amc::TypeH& rhs) {
+inline bool atf_amc::TypeH_Update(atf_amc::TypeH &lhs, atf_amc::TypeH& rhs) throw() {
     bool ret = !TypeH_Eq(lhs, rhs); // compare values
     if (ret) {
         lhs = rhs; // update
@@ -12220,7 +12220,7 @@ inline bool atf_amc::TypeH_Update(atf_amc::TypeH &lhs, atf_amc::TypeH& rhs) {
 }
 
 // --- atf_amc.TypeH..Ctor
-inline  atf_amc::TypeH::TypeH() {
+inline  atf_amc::TypeH::TypeH() throw() {
     atf_amc::TypeH_Init(*this);
 }
 
@@ -12231,12 +12231,12 @@ inline void atf_amc::TypeS_Init(atf_amc::TypeS& parent) {
 }
 
 // --- atf_amc.TypeS..Ctor
-inline  atf_amc::TypeS::TypeS() {
+inline  atf_amc::TypeS::TypeS() throw() {
     atf_amc::TypeS_Init(*this);
 }
 
 // --- atf_amc.TypeT..Hash
-inline u32 atf_amc::TypeT_Hash(u32 prev, const atf_amc::TypeT& rhs) {
+inline u32 atf_amc::TypeT_Hash(u32 prev, const atf_amc::TypeT& rhs) throw() {
     prev = i32_Hash(prev, rhs.types);
     prev = i32_Hash(prev, rhs.j);
     return prev;
@@ -12250,7 +12250,7 @@ inline void atf_amc::TypeT_Init(atf_amc::TypeT& parent) {
 }
 
 // --- atf_amc.TypeT..Ctor
-inline  atf_amc::TypeT::TypeT() {
+inline  atf_amc::TypeT::TypeT() throw() {
     atf_amc::TypeT_Init(*this);
 }
 
@@ -12261,24 +12261,24 @@ inline void atf_amc::TypeTVal_Init(atf_amc::TypeTVal& parent) {
 }
 
 // --- atf_amc.TypeTVal..Ctor
-inline  atf_amc::TypeTVal::TypeTVal() {
+inline  atf_amc::TypeTVal::TypeTVal() throw() {
     atf_amc::TypeTVal_Init(*this);
 }
 
 // --- atf_amc.Typefconst.value.GetEnum
 // Get value of field as enum type
-inline atf_amc_Typefconst_value_Enum atf_amc::value_GetEnum(const atf_amc::Typefconst& parent) {
+inline atf_amc_Typefconst_value_Enum atf_amc::value_GetEnum(const atf_amc::Typefconst& parent) throw() {
     return atf_amc_Typefconst_value_Enum(parent.value);
 }
 
 // --- atf_amc.Typefconst.value.SetEnum
 // Set value of field from enum type.
-inline void atf_amc::value_SetEnum(atf_amc::Typefconst& parent, atf_amc_Typefconst_value_Enum rhs) {
+inline void atf_amc::value_SetEnum(atf_amc::Typefconst& parent, atf_amc_Typefconst_value_Enum rhs) throw() {
     parent.value = u32(rhs);
 }
 
 // --- atf_amc.Typefconst.value.Cast
-inline  atf_amc::Typefconst::operator atf_amc_Typefconst_value_Enum() const {
+inline  atf_amc::Typefconst::operator atf_amc_Typefconst_value_Enum() const throw() {
     return atf_amc_Typefconst_value_Enum((*this).value);
 }
 
@@ -12289,31 +12289,31 @@ inline void atf_amc::Typefconst_Init(atf_amc::Typefconst& parent) {
 }
 
 // --- atf_amc.Typefconst..Ctor
-inline  atf_amc::Typefconst::Typefconst() {
+inline  atf_amc::Typefconst::Typefconst() throw() {
     atf_amc::Typefconst_Init(*this);
 }
 
 // --- atf_amc.Typefconst..FieldwiseCtor
-inline  atf_amc::Typefconst::Typefconst(u32 in_value)
+inline  atf_amc::Typefconst::Typefconst(u32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- atf_amc.Typefconst..EnumCtor
-inline  atf_amc::Typefconst::Typefconst(atf_amc_Typefconst_value_Enum arg) {
+inline  atf_amc::Typefconst::Typefconst(atf_amc_Typefconst_value_Enum arg) throw() {
     this->value = u32(arg);
 }
 
 // --- atf_amc.VarlenAlloc.elem.N
 // Return number of elements in varlen field
-inline u32 atf_amc::elem_N(const atf_amc::VarlenAlloc& varlenalloc) {
+inline u32 atf_amc::elem_N(const atf_amc::VarlenAlloc& varlenalloc) throw() {
     u32 length = i32(((atf_amc::VarlenAlloc&)varlenalloc).length);
     u32 extra_bytes = u32_Max(length,sizeof(atf_amc::VarlenAlloc)) - sizeof(atf_amc::VarlenAlloc); // avoid unsigned subtraction underflow
     return u32(extra_bytes / sizeof(i32));
 }
 
 // --- atf_amc.VarlenAlloc.elem_curs.Reset
-inline void atf_amc::varlenalloc_elem_curs_Reset(varlenalloc_elem_curs &curs, atf_amc::VarlenAlloc &parent) {
+inline void atf_amc::varlenalloc_elem_curs_Reset(varlenalloc_elem_curs &curs, atf_amc::VarlenAlloc &parent) throw() {
     curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenAlloc);
     curs.length = i32(parent.length) - sizeof(atf_amc::VarlenAlloc);
     curs.index = 0;
@@ -12321,14 +12321,14 @@ inline void atf_amc::varlenalloc_elem_curs_Reset(varlenalloc_elem_curs &curs, at
 
 // --- atf_amc.VarlenAlloc.elem_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::varlenalloc_elem_curs_ValidQ(varlenalloc_elem_curs &curs) {
+inline bool atf_amc::varlenalloc_elem_curs_ValidQ(varlenalloc_elem_curs &curs) throw() {
     bool valid = ssizeof(i32) <= curs.length;
     return valid;
 }
 
 // --- atf_amc.VarlenAlloc.elem_curs.Next
 // proceed to next item
-inline void atf_amc::varlenalloc_elem_curs_Next(varlenalloc_elem_curs &curs) {
+inline void atf_amc::varlenalloc_elem_curs_Next(varlenalloc_elem_curs &curs) throw() {
     i32 len = i32(sizeof(i32));
     curs.ptr += len;
     curs.length -= len;
@@ -12337,19 +12337,19 @@ inline void atf_amc::varlenalloc_elem_curs_Next(varlenalloc_elem_curs &curs) {
 
 // --- atf_amc.VarlenAlloc.elem_curs.Access
 // item access
-inline i32& atf_amc::varlenalloc_elem_curs_Access(varlenalloc_elem_curs &curs) {
+inline i32& atf_amc::varlenalloc_elem_curs_Access(varlenalloc_elem_curs &curs) throw() {
     return *(i32*)curs.ptr;
 }
 
 // --- atf_amc.VarlenAlloc..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenAlloc& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenAlloc& parent) throw() {
     return i32(const_cast<atf_amc::VarlenAlloc&>(parent).length);
 }
 
 // --- atf_amc.VarlenAlloc..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenAlloc& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenAlloc& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::VarlenAlloc&>(row).length));
 }
 
@@ -12360,17 +12360,17 @@ inline void atf_amc::VarlenAlloc_Init(atf_amc::VarlenAlloc& varlenalloc) {
 }
 
 // --- atf_amc.VarlenAlloc..Ctor
-inline  atf_amc::VarlenAlloc::VarlenAlloc() {
+inline  atf_amc::VarlenAlloc::VarlenAlloc() throw() {
     atf_amc::VarlenAlloc_Init(*this);
 }
 
 // --- atf_amc.VarlenAlloc_curs..ValidQ
-inline bool atf_amc::VarlenAlloc_curs_ValidQ(atf_amc::VarlenAlloc_curs& curs) {
+inline bool atf_amc::VarlenAlloc_curs_ValidQ(atf_amc::VarlenAlloc_curs& curs) throw() {
     return curs.msg != NULL;
 }
 
 // --- atf_amc.VarlenAlloc_curs..Reset
-inline void atf_amc::VarlenAlloc_curs_Reset(atf_amc::VarlenAlloc_curs& curs, algo::memptr buf) {
+inline void atf_amc::VarlenAlloc_curs_Reset(atf_amc::VarlenAlloc_curs& curs, algo::memptr buf) throw() {
     curs.bytes = buf.elems;
     curs.limit = buf.n_elems;
     atf_amc::VarlenAlloc *msg = NULL;
@@ -12387,12 +12387,12 @@ inline void atf_amc::VarlenAlloc_curs_Reset(atf_amc::VarlenAlloc_curs& curs, alg
 }
 
 // --- atf_amc.VarlenAlloc_curs..Access
-inline atf_amc::VarlenAlloc*& atf_amc::VarlenAlloc_curs_Access(atf_amc::VarlenAlloc_curs& curs) {
+inline atf_amc::VarlenAlloc*& atf_amc::VarlenAlloc_curs_Access(atf_amc::VarlenAlloc_curs& curs) throw() {
     return curs.msg;
 }
 
 // --- atf_amc.VarlenAlloc_curs..Next
-inline void atf_amc::VarlenAlloc_curs_Next(atf_amc::VarlenAlloc_curs& curs) {
+inline void atf_amc::VarlenAlloc_curs_Next(atf_amc::VarlenAlloc_curs& curs) throw() {
     curs.bytes += curs.msglen;
     curs.limit -= curs.msglen;
     atf_amc::VarlenAlloc *msg = NULL;
@@ -12418,20 +12418,20 @@ inline void atf_amc::VarlenAlloc_curs_Init(atf_amc::VarlenAlloc_curs& parent) {
 }
 
 // --- atf_amc.VarlenAlloc_curs..Ctor
-inline  atf_amc::VarlenAlloc_curs::VarlenAlloc_curs() {
+inline  atf_amc::VarlenAlloc_curs::VarlenAlloc_curs() throw() {
     atf_amc::VarlenAlloc_curs_Init(*this);
 }
 
 // --- atf_amc.VarlenExtern.varlen.N
 // Return number of elements in varlen field
-inline u32 atf_amc::varlen_N(const atf_amc::VarlenExtern& varlen_extern) {
+inline u32 atf_amc::varlen_N(const atf_amc::VarlenExtern& varlen_extern) throw() {
     u32 length = i32(length_Get(((atf_amc::VarlenExtern&)varlen_extern)));
     u32 extra_bytes = u32_Max(length,sizeof(atf_amc::VarlenExtern)) - sizeof(atf_amc::VarlenExtern); // avoid unsigned subtraction underflow
     return u32(extra_bytes / sizeof(u32));
 }
 
 // --- atf_amc.VarlenExtern.varlen_curs.Reset
-inline void atf_amc::varlen_extern_varlen_curs_Reset(varlen_extern_varlen_curs &curs, atf_amc::VarlenExtern &parent) {
+inline void atf_amc::varlen_extern_varlen_curs_Reset(varlen_extern_varlen_curs &curs, atf_amc::VarlenExtern &parent) throw() {
     curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenExtern);
     curs.length = i32(length_Get(parent)) - sizeof(atf_amc::VarlenExtern);
     curs.index = 0;
@@ -12439,14 +12439,14 @@ inline void atf_amc::varlen_extern_varlen_curs_Reset(varlen_extern_varlen_curs &
 
 // --- atf_amc.VarlenExtern.varlen_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::varlen_extern_varlen_curs_ValidQ(varlen_extern_varlen_curs &curs) {
+inline bool atf_amc::varlen_extern_varlen_curs_ValidQ(varlen_extern_varlen_curs &curs) throw() {
     bool valid = ssizeof(u32) <= curs.length;
     return valid;
 }
 
 // --- atf_amc.VarlenExtern.varlen_curs.Next
 // proceed to next item
-inline void atf_amc::varlen_extern_varlen_curs_Next(varlen_extern_varlen_curs &curs) {
+inline void atf_amc::varlen_extern_varlen_curs_Next(varlen_extern_varlen_curs &curs) throw() {
     i32 len = i32(sizeof(u32));
     curs.ptr += len;
     curs.length -= len;
@@ -12455,19 +12455,19 @@ inline void atf_amc::varlen_extern_varlen_curs_Next(varlen_extern_varlen_curs &c
 
 // --- atf_amc.VarlenExtern.varlen_curs.Access
 // item access
-inline u32& atf_amc::varlen_extern_varlen_curs_Access(varlen_extern_varlen_curs &curs) {
+inline u32& atf_amc::varlen_extern_varlen_curs_Access(varlen_extern_varlen_curs &curs) throw() {
     return *(u32*)curs.ptr;
 }
 
 // --- atf_amc.VarlenExtern..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenExtern& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenExtern& parent) throw() {
     return i32(length_Get(const_cast<atf_amc::VarlenExtern&>(parent)));
 }
 
 // --- atf_amc.VarlenExtern..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenExtern& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenExtern& row) throw() {
     return algo::memptr((u8*)&row, i32(length_Get(const_cast<atf_amc::VarlenExtern&>(row))));
 }
 
@@ -12478,17 +12478,17 @@ inline void atf_amc::VarlenExtern_Init(atf_amc::VarlenExtern& varlen_extern) {
 }
 
 // --- atf_amc.VarlenExtern..Ctor
-inline  atf_amc::VarlenExtern::VarlenExtern() {
+inline  atf_amc::VarlenExtern::VarlenExtern() throw() {
     atf_amc::VarlenExtern_Init(*this);
 }
 
 // --- atf_amc.VarlenExtern_curs..ValidQ
-inline bool atf_amc::VarlenExtern_curs_ValidQ(atf_amc::VarlenExtern_curs& curs) {
+inline bool atf_amc::VarlenExtern_curs_ValidQ(atf_amc::VarlenExtern_curs& curs) throw() {
     return curs.msg != NULL;
 }
 
 // --- atf_amc.VarlenExtern_curs..Reset
-inline void atf_amc::VarlenExtern_curs_Reset(atf_amc::VarlenExtern_curs& curs, algo::memptr buf) {
+inline void atf_amc::VarlenExtern_curs_Reset(atf_amc::VarlenExtern_curs& curs, algo::memptr buf) throw() {
     curs.bytes = buf.elems;
     curs.limit = buf.n_elems;
     atf_amc::VarlenExtern *msg = NULL;
@@ -12505,12 +12505,12 @@ inline void atf_amc::VarlenExtern_curs_Reset(atf_amc::VarlenExtern_curs& curs, a
 }
 
 // --- atf_amc.VarlenExtern_curs..Access
-inline atf_amc::VarlenExtern*& atf_amc::VarlenExtern_curs_Access(atf_amc::VarlenExtern_curs& curs) {
+inline atf_amc::VarlenExtern*& atf_amc::VarlenExtern_curs_Access(atf_amc::VarlenExtern_curs& curs) throw() {
     return curs.msg;
 }
 
 // --- atf_amc.VarlenExtern_curs..Next
-inline void atf_amc::VarlenExtern_curs_Next(atf_amc::VarlenExtern_curs& curs) {
+inline void atf_amc::VarlenExtern_curs_Next(atf_amc::VarlenExtern_curs& curs) throw() {
     curs.bytes += curs.msglen;
     curs.limit -= curs.msglen;
     atf_amc::VarlenExtern *msg = NULL;
@@ -12536,20 +12536,20 @@ inline void atf_amc::VarlenExtern_curs_Init(atf_amc::VarlenExtern_curs& parent) 
 }
 
 // --- atf_amc.VarlenExtern_curs..Ctor
-inline  atf_amc::VarlenExtern_curs::VarlenExtern_curs() {
+inline  atf_amc::VarlenExtern_curs::VarlenExtern_curs() throw() {
     atf_amc::VarlenExtern_curs_Init(*this);
 }
 
 // --- atf_amc.VarlenH.typeh.N
 // Return number of elements in varlen field
-inline u32 atf_amc::typeh_N(const atf_amc::VarlenH& parent) {
+inline u32 atf_amc::typeh_N(const atf_amc::VarlenH& parent) throw() {
     u32 length = i32(((atf_amc::VarlenH&)parent).length);
     u32 extra_bytes = u32_Max(length,sizeof(atf_amc::VarlenH)) - sizeof(atf_amc::VarlenH); // avoid unsigned subtraction underflow
     return u32(extra_bytes / sizeof(atf_amc::TypeH));
 }
 
 // --- atf_amc.VarlenH.typeh_curs.Reset
-inline void atf_amc::VarlenH_typeh_curs_Reset(VarlenH_typeh_curs &curs, atf_amc::VarlenH &parent) {
+inline void atf_amc::VarlenH_typeh_curs_Reset(VarlenH_typeh_curs &curs, atf_amc::VarlenH &parent) throw() {
     curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenH);
     curs.length = i32(parent.length) - sizeof(atf_amc::VarlenH);
     curs.index = 0;
@@ -12557,14 +12557,14 @@ inline void atf_amc::VarlenH_typeh_curs_Reset(VarlenH_typeh_curs &curs, atf_amc:
 
 // --- atf_amc.VarlenH.typeh_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::VarlenH_typeh_curs_ValidQ(VarlenH_typeh_curs &curs) {
+inline bool atf_amc::VarlenH_typeh_curs_ValidQ(VarlenH_typeh_curs &curs) throw() {
     bool valid = ssizeof(atf_amc::TypeH) <= curs.length;
     return valid;
 }
 
 // --- atf_amc.VarlenH.typeh_curs.Next
 // proceed to next item
-inline void atf_amc::VarlenH_typeh_curs_Next(VarlenH_typeh_curs &curs) {
+inline void atf_amc::VarlenH_typeh_curs_Next(VarlenH_typeh_curs &curs) throw() {
     i32 len = i32(sizeof(atf_amc::TypeH));
     curs.ptr += len;
     curs.length -= len;
@@ -12573,19 +12573,19 @@ inline void atf_amc::VarlenH_typeh_curs_Next(VarlenH_typeh_curs &curs) {
 
 // --- atf_amc.VarlenH.typeh_curs.Access
 // item access
-inline atf_amc::TypeH& atf_amc::VarlenH_typeh_curs_Access(VarlenH_typeh_curs &curs) {
+inline atf_amc::TypeH& atf_amc::VarlenH_typeh_curs_Access(VarlenH_typeh_curs &curs) throw() {
     return *(atf_amc::TypeH*)curs.ptr;
 }
 
 // --- atf_amc.VarlenH..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenH& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenH& parent) throw() {
     return i32(const_cast<atf_amc::VarlenH&>(parent).length);
 }
 
 // --- atf_amc.VarlenH..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenH& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenH& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::VarlenH&>(row).length));
 }
 
@@ -12596,17 +12596,17 @@ inline void atf_amc::VarlenH_Init(atf_amc::VarlenH& parent) {
 }
 
 // --- atf_amc.VarlenH..Ctor
-inline  atf_amc::VarlenH::VarlenH() {
+inline  atf_amc::VarlenH::VarlenH() throw() {
     atf_amc::VarlenH_Init(*this);
 }
 
 // --- atf_amc.VarlenH_curs..ValidQ
-inline bool atf_amc::VarlenH_curs_ValidQ(atf_amc::VarlenH_curs& curs) {
+inline bool atf_amc::VarlenH_curs_ValidQ(atf_amc::VarlenH_curs& curs) throw() {
     return curs.msg != NULL;
 }
 
 // --- atf_amc.VarlenH_curs..Reset
-inline void atf_amc::VarlenH_curs_Reset(atf_amc::VarlenH_curs& curs, algo::memptr buf) {
+inline void atf_amc::VarlenH_curs_Reset(atf_amc::VarlenH_curs& curs, algo::memptr buf) throw() {
     curs.bytes = buf.elems;
     curs.limit = buf.n_elems;
     atf_amc::VarlenH *msg = NULL;
@@ -12623,12 +12623,12 @@ inline void atf_amc::VarlenH_curs_Reset(atf_amc::VarlenH_curs& curs, algo::mempt
 }
 
 // --- atf_amc.VarlenH_curs..Access
-inline atf_amc::VarlenH*& atf_amc::VarlenH_curs_Access(atf_amc::VarlenH_curs& curs) {
+inline atf_amc::VarlenH*& atf_amc::VarlenH_curs_Access(atf_amc::VarlenH_curs& curs) throw() {
     return curs.msg;
 }
 
 // --- atf_amc.VarlenH_curs..Next
-inline void atf_amc::VarlenH_curs_Next(atf_amc::VarlenH_curs& curs) {
+inline void atf_amc::VarlenH_curs_Next(atf_amc::VarlenH_curs& curs) throw() {
     curs.bytes += curs.msglen;
     curs.limit -= curs.msglen;
     atf_amc::VarlenH *msg = NULL;
@@ -12654,20 +12654,20 @@ inline void atf_amc::VarlenH_curs_Init(atf_amc::VarlenH_curs& parent) {
 }
 
 // --- atf_amc.VarlenH_curs..Ctor
-inline  atf_amc::VarlenH_curs::VarlenH_curs() {
+inline  atf_amc::VarlenH_curs::VarlenH_curs() throw() {
     atf_amc::VarlenH_curs_Init(*this);
 }
 
 // --- atf_amc.VarlenK.i.N
 // Return number of elements in varlen field
-inline u32 atf_amc::i_N(const atf_amc::VarlenK& k) {
+inline u32 atf_amc::i_N(const atf_amc::VarlenK& k) throw() {
     u32 length = i32(((atf_amc::VarlenK&)k).length);
     u32 extra_bytes = u32_Max(length,sizeof(atf_amc::VarlenK)) - sizeof(atf_amc::VarlenK); // avoid unsigned subtraction underflow
     return u32(extra_bytes / sizeof(u32));
 }
 
 // --- atf_amc.VarlenK.i_curs.Reset
-inline void atf_amc::k_i_curs_Reset(k_i_curs &curs, atf_amc::VarlenK &parent) {
+inline void atf_amc::k_i_curs_Reset(k_i_curs &curs, atf_amc::VarlenK &parent) throw() {
     curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenK);
     curs.length = i32(parent.length) - sizeof(atf_amc::VarlenK);
     curs.index = 0;
@@ -12675,14 +12675,14 @@ inline void atf_amc::k_i_curs_Reset(k_i_curs &curs, atf_amc::VarlenK &parent) {
 
 // --- atf_amc.VarlenK.i_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::k_i_curs_ValidQ(k_i_curs &curs) {
+inline bool atf_amc::k_i_curs_ValidQ(k_i_curs &curs) throw() {
     bool valid = ssizeof(u32) <= curs.length;
     return valid;
 }
 
 // --- atf_amc.VarlenK.i_curs.Next
 // proceed to next item
-inline void atf_amc::k_i_curs_Next(k_i_curs &curs) {
+inline void atf_amc::k_i_curs_Next(k_i_curs &curs) throw() {
     i32 len = i32(sizeof(u32));
     curs.ptr += len;
     curs.length -= len;
@@ -12691,19 +12691,19 @@ inline void atf_amc::k_i_curs_Next(k_i_curs &curs) {
 
 // --- atf_amc.VarlenK.i_curs.Access
 // item access
-inline u32& atf_amc::k_i_curs_Access(k_i_curs &curs) {
+inline u32& atf_amc::k_i_curs_Access(k_i_curs &curs) throw() {
     return *(u32*)curs.ptr;
 }
 
 // --- atf_amc.VarlenK..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenK& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenK& parent) throw() {
     return i32(const_cast<atf_amc::VarlenK&>(parent).length);
 }
 
 // --- atf_amc.VarlenK..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenK& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenK& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::VarlenK&>(row).length));
 }
 
@@ -12714,17 +12714,17 @@ inline void atf_amc::VarlenK_Init(atf_amc::VarlenK& k) {
 }
 
 // --- atf_amc.VarlenK..Ctor
-inline  atf_amc::VarlenK::VarlenK() {
+inline  atf_amc::VarlenK::VarlenK() throw() {
     atf_amc::VarlenK_Init(*this);
 }
 
 // --- atf_amc.VarlenK_curs..ValidQ
-inline bool atf_amc::VarlenK_curs_ValidQ(atf_amc::VarlenK_curs& curs) {
+inline bool atf_amc::VarlenK_curs_ValidQ(atf_amc::VarlenK_curs& curs) throw() {
     return curs.msg != NULL;
 }
 
 // --- atf_amc.VarlenK_curs..Reset
-inline void atf_amc::VarlenK_curs_Reset(atf_amc::VarlenK_curs& curs, algo::memptr buf) {
+inline void atf_amc::VarlenK_curs_Reset(atf_amc::VarlenK_curs& curs, algo::memptr buf) throw() {
     curs.bytes = buf.elems;
     curs.limit = buf.n_elems;
     atf_amc::VarlenK *msg = NULL;
@@ -12741,12 +12741,12 @@ inline void atf_amc::VarlenK_curs_Reset(atf_amc::VarlenK_curs& curs, algo::mempt
 }
 
 // --- atf_amc.VarlenK_curs..Access
-inline atf_amc::VarlenK*& atf_amc::VarlenK_curs_Access(atf_amc::VarlenK_curs& curs) {
+inline atf_amc::VarlenK*& atf_amc::VarlenK_curs_Access(atf_amc::VarlenK_curs& curs) throw() {
     return curs.msg;
 }
 
 // --- atf_amc.VarlenK_curs..Next
-inline void atf_amc::VarlenK_curs_Next(atf_amc::VarlenK_curs& curs) {
+inline void atf_amc::VarlenK_curs_Next(atf_amc::VarlenK_curs& curs) throw() {
     curs.bytes += curs.msglen;
     curs.limit -= curs.msglen;
     atf_amc::VarlenK *msg = NULL;
@@ -12772,7 +12772,7 @@ inline void atf_amc::VarlenK_curs_Init(atf_amc::VarlenK_curs& parent) {
 }
 
 // --- atf_amc.VarlenK_curs..Ctor
-inline  atf_amc::VarlenK_curs::VarlenK_curs() {
+inline  atf_amc::VarlenK_curs::VarlenK_curs() throw() {
     atf_amc::VarlenK_curs_Init(*this);
 }
 
@@ -12794,14 +12794,14 @@ inline atf_amc::MsgHeader& atf_amc::Castbase(atf_amc::VarlenMsg& parent) {
 
 // --- atf_amc.VarlenMsg.k.N
 // Return number of elements in varlen field
-inline u32 atf_amc::k_N(const atf_amc::VarlenMsg& parent) {
+inline u32 atf_amc::k_N(const atf_amc::VarlenMsg& parent) throw() {
     u32 length = i32(((atf_amc::VarlenMsg&)parent).length);
     u32 extra_bytes = u32_Max(length,sizeof(atf_amc::VarlenMsg)) - sizeof(atf_amc::VarlenMsg); // avoid unsigned subtraction underflow
     return u32(extra_bytes / sizeof(u8));
 }
 
 // --- atf_amc.VarlenMsg.k_curs.Reset
-inline void atf_amc::VarlenMsg_k_curs_Reset(VarlenMsg_k_curs &curs, atf_amc::VarlenMsg &parent) {
+inline void atf_amc::VarlenMsg_k_curs_Reset(VarlenMsg_k_curs &curs, atf_amc::VarlenMsg &parent) throw() {
     curs.ptr = (u8*)&parent + sizeof(atf_amc::VarlenMsg);
     curs.length = i32(parent.length) - sizeof(atf_amc::VarlenMsg);
     curs.index = 0;
@@ -12809,7 +12809,7 @@ inline void atf_amc::VarlenMsg_k_curs_Reset(VarlenMsg_k_curs &curs, atf_amc::Var
 
 // --- atf_amc.VarlenMsg.k_curs.ValidQ
 // cursor points to valid item
-inline bool atf_amc::VarlenMsg_k_curs_ValidQ(VarlenMsg_k_curs &curs) {
+inline bool atf_amc::VarlenMsg_k_curs_ValidQ(VarlenMsg_k_curs &curs) throw() {
     bool valid = ssizeof(atf_amc::VarlenK) <= curs.length;
     valid = valid && unsigned(i32((*(atf_amc::VarlenK*)curs.ptr).length)-ssizeof(atf_amc::VarlenK)) <= curs.length-ssizeof(atf_amc::VarlenK);
     return valid;
@@ -12817,7 +12817,7 @@ inline bool atf_amc::VarlenMsg_k_curs_ValidQ(VarlenMsg_k_curs &curs) {
 
 // --- atf_amc.VarlenMsg.k_curs.Next
 // proceed to next item
-inline void atf_amc::VarlenMsg_k_curs_Next(VarlenMsg_k_curs &curs) {
+inline void atf_amc::VarlenMsg_k_curs_Next(VarlenMsg_k_curs &curs) throw() {
     i32 len = i32((*(atf_amc::VarlenK*)curs.ptr).length);
     curs.ptr += len;
     curs.length -= len;
@@ -12826,19 +12826,19 @@ inline void atf_amc::VarlenMsg_k_curs_Next(VarlenMsg_k_curs &curs) {
 
 // --- atf_amc.VarlenMsg.k_curs.Access
 // item access
-inline atf_amc::VarlenK& atf_amc::VarlenMsg_k_curs_Access(VarlenMsg_k_curs &curs) {
+inline atf_amc::VarlenK& atf_amc::VarlenMsg_k_curs_Access(VarlenMsg_k_curs &curs) throw() {
     return *(atf_amc::VarlenK*)curs.ptr;
 }
 
 // --- atf_amc.VarlenMsg..GetMsgLength
 // Message length (uses length field)
-inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenMsg& parent) {
+inline i32 atf_amc::GetMsgLength(const atf_amc::VarlenMsg& parent) throw() {
     return i32(const_cast<atf_amc::VarlenMsg&>(parent).length);
 }
 
 // --- atf_amc.VarlenMsg..GetMsgMemptr
 // Memptr encompassing the message (uses length field)
-inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenMsg& row) {
+inline algo::memptr atf_amc::GetMsgMemptr(const atf_amc::VarlenMsg& row) throw() {
     return algo::memptr((u8*)&row, i32(const_cast<atf_amc::VarlenMsg&>(row).length));
 }
 
@@ -12850,7 +12850,7 @@ inline void atf_amc::VarlenMsg_Init(atf_amc::VarlenMsg& parent) {
 }
 
 // --- atf_amc.VarlenMsg..Ctor
-inline  atf_amc::VarlenMsg::VarlenMsg() {
+inline  atf_amc::VarlenMsg::VarlenMsg() throw() {
     atf_amc::VarlenMsg_Init(*this);
 }
 

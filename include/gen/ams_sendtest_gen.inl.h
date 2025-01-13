@@ -41,33 +41,33 @@ inline void ams_sendtest::AmsSendTest_Init(ams_sendtest::AmsSendTest& parent) {
 }
 
 // --- ams_sendtest.AmsSendTest..Ctor
-inline  ams_sendtest::AmsSendTest::AmsSendTest() {
+inline  ams_sendtest::AmsSendTest::AmsSendTest() throw() {
     ams_sendtest::AmsSendTest_Init(*this);
 }
 
 // --- ams_sendtest.FChild..Ctor
-inline  ams_sendtest::FChild::FChild() {
+inline  ams_sendtest::FChild::FChild() throw() {
     ams_sendtest::FChild_Init(*this);
 }
 
 // --- ams_sendtest.FChild..Dtor
-inline  ams_sendtest::FChild::~FChild() {
+inline  ams_sendtest::FChild::~FChild() throw() {
     ams_sendtest::FChild_Uninit(*this);
 }
 
 // --- ams_sendtest.trace..Ctor
-inline  ams_sendtest::trace::trace() {
+inline  ams_sendtest::trace::trace() throw() {
 }
 
 // --- ams_sendtest.FDb.child.EmptyQ
 // Return true if index is empty
-inline bool ams_sendtest::child_EmptyQ() {
+inline bool ams_sendtest::child_EmptyQ() throw() {
     return _db.child_n == 0;
 }
 
 // --- ams_sendtest.FDb.child.Find
 // Look up row by row id. Return NULL if out of range
-inline ams_sendtest::FChild* ams_sendtest::child_Find(u64 t) {
+inline ams_sendtest::FChild* ams_sendtest::child_Find(u64 t) throw() {
     ams_sendtest::FChild *retval = NULL;
     if (LIKELY(u64(t) < u64(_db.child_n))) {
         u64 x = t + 1;
@@ -81,19 +81,19 @@ inline ams_sendtest::FChild* ams_sendtest::child_Find(u64 t) {
 
 // --- ams_sendtest.FDb.child.Last
 // Return pointer to last element of array, or NULL if array is empty
-inline ams_sendtest::FChild* ams_sendtest::child_Last() {
+inline ams_sendtest::FChild* ams_sendtest::child_Last() throw() {
     return child_Find(u64(_db.child_n-1));
 }
 
 // --- ams_sendtest.FDb.child.N
 // Return number of items in the pool
-inline i32 ams_sendtest::child_N() {
+inline i32 ams_sendtest::child_N() throw() {
     return _db.child_n;
 }
 
 // --- ams_sendtest.FDb.child.qFind
 // 'quick' Access row by row id. No bounds checking.
-inline ams_sendtest::FChild& ams_sendtest::child_qFind(u64 t) {
+inline ams_sendtest::FChild& ams_sendtest::child_qFind(u64 t) throw() {
     u64 x = t + 1;
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
@@ -103,43 +103,43 @@ inline ams_sendtest::FChild& ams_sendtest::child_qFind(u64 t) {
 
 // --- ams_sendtest.FDb.child_curs.Reset
 // cursor points to valid item
-inline void ams_sendtest::_db_child_curs_Reset(_db_child_curs &curs, ams_sendtest::FDb &parent) {
+inline void ams_sendtest::_db_child_curs_Reset(_db_child_curs &curs, ams_sendtest::FDb &parent) throw() {
     curs.parent = &parent;
     curs.index = 0;
 }
 
 // --- ams_sendtest.FDb.child_curs.ValidQ
 // cursor points to valid item
-inline bool ams_sendtest::_db_child_curs_ValidQ(_db_child_curs &curs) {
+inline bool ams_sendtest::_db_child_curs_ValidQ(_db_child_curs &curs) throw() {
     return curs.index < _db.child_n;
 }
 
 // --- ams_sendtest.FDb.child_curs.Next
 // proceed to next item
-inline void ams_sendtest::_db_child_curs_Next(_db_child_curs &curs) {
+inline void ams_sendtest::_db_child_curs_Next(_db_child_curs &curs) throw() {
     curs.index++;
 }
 
 // --- ams_sendtest.FDb.child_curs.Access
 // item access
-inline ams_sendtest::FChild& ams_sendtest::_db_child_curs_Access(_db_child_curs &curs) {
+inline ams_sendtest::FChild& ams_sendtest::_db_child_curs_Access(_db_child_curs &curs) throw() {
     return child_qFind(u64(curs.index));
 }
 
 // --- ams_sendtest.FieldId.value.GetEnum
 // Get value of field as enum type
-inline ams_sendtest_FieldIdEnum ams_sendtest::value_GetEnum(const ams_sendtest::FieldId& parent) {
+inline ams_sendtest_FieldIdEnum ams_sendtest::value_GetEnum(const ams_sendtest::FieldId& parent) throw() {
     return ams_sendtest_FieldIdEnum(parent.value);
 }
 
 // --- ams_sendtest.FieldId.value.SetEnum
 // Set value of field from enum type.
-inline void ams_sendtest::value_SetEnum(ams_sendtest::FieldId& parent, ams_sendtest_FieldIdEnum rhs) {
+inline void ams_sendtest::value_SetEnum(ams_sendtest::FieldId& parent, ams_sendtest_FieldIdEnum rhs) throw() {
     parent.value = i32(rhs);
 }
 
 // --- ams_sendtest.FieldId.value.Cast
-inline  ams_sendtest::FieldId::operator ams_sendtest_FieldIdEnum() const {
+inline  ams_sendtest::FieldId::operator ams_sendtest_FieldIdEnum() const throw() {
     return ams_sendtest_FieldIdEnum((*this).value);
 }
 
@@ -150,18 +150,18 @@ inline void ams_sendtest::FieldId_Init(ams_sendtest::FieldId& parent) {
 }
 
 // --- ams_sendtest.FieldId..Ctor
-inline  ams_sendtest::FieldId::FieldId() {
+inline  ams_sendtest::FieldId::FieldId() throw() {
     ams_sendtest::FieldId_Init(*this);
 }
 
 // --- ams_sendtest.FieldId..FieldwiseCtor
-inline  ams_sendtest::FieldId::FieldId(i32 in_value)
+inline  ams_sendtest::FieldId::FieldId(i32 in_value) throw()
     : value(in_value)
  {
 }
 
 // --- ams_sendtest.FieldId..EnumCtor
-inline  ams_sendtest::FieldId::FieldId(ams_sendtest_FieldIdEnum arg) {
+inline  ams_sendtest::FieldId::FieldId(ams_sendtest_FieldIdEnum arg) throw() {
     this->value = i32(arg);
 }
 

@@ -82,7 +82,7 @@ namespace gcache { // gen:ns_print_proto
 } // gen:ns_print_proto
 
 // --- gcache.cleanreport..ReadFieldMaybe
-bool gcache::cleanreport_ReadFieldMaybe(gcache::cleanreport& parent, algo::strptr field, algo::strptr strval) {
+bool gcache::cleanreport_ReadFieldMaybe(gcache::cleanreport& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     gcache::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -122,7 +122,7 @@ bool gcache::cleanreport_ReadFieldMaybe(gcache::cleanreport& parent, algo::strpt
 // --- gcache.cleanreport..ReadStrptrMaybe
 // Read fields of gcache::cleanreport from an ascii string.
 // The format of the string is an ssim Tuple
-bool gcache::cleanreport_ReadStrptrMaybe(gcache::cleanreport &parent, algo::strptr in_str) {
+bool gcache::cleanreport_ReadStrptrMaybe(gcache::cleanreport &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = algo::StripTypeTag(in_str, "gcache.cleanreport");
     ind_beg(algo::Attr_curs, attr, in_str) {
@@ -134,7 +134,7 @@ bool gcache::cleanreport_ReadStrptrMaybe(gcache::cleanreport &parent, algo::strp
 // --- gcache.cleanreport..Print
 // print string representation of ROW to string STR
 // cfmt:gcache.cleanreport.String  printfmt:Tuple
-void gcache::cleanreport_Print(gcache::cleanreport& row, algo::cstring& str) {
+void gcache::cleanreport_Print(gcache::cleanreport& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gcache.cleanreport";
 
@@ -160,7 +160,7 @@ void gcache::cleanreport_Print(gcache::cleanreport& row, algo::cstring& str) {
 // --- gcache.trace..Print
 // print string representation of ROW to string STR
 // cfmt:gcache.trace.String  printfmt:Tuple
-void gcache::trace_Print(gcache::trace& row, algo::cstring& str) {
+void gcache::trace_Print(gcache::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gcache.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -171,7 +171,7 @@ void gcache::trace_Print(gcache::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     gcache.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void gcache::ReadArgv() {
+void gcache::ReadArgv() throw() {
     command::gcache &cmd = gcache::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -366,7 +366,7 @@ bool gcache::InsertStrptrMaybe(algo::strptr str) {
 
 // --- gcache.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool gcache::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool gcache::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = gcache::LoadTuplesFile(root, recursive);
@@ -389,7 +389,7 @@ bool gcache::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool gcache::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool gcache::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -402,7 +402,7 @@ bool gcache::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- gcache.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool gcache::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool gcache::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -421,7 +421,7 @@ bool gcache::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
 
 // --- gcache.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool gcache::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool gcache::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = gcache::LoadTuplesFile(fname, recursive);
@@ -446,7 +446,7 @@ bool gcache::_db_XrefMaybe() {
 // --- gcache.FDb.header.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-gcache::FHeader& gcache::header_Alloc() {
+gcache::FHeader& gcache::header_Alloc() throw() {
     gcache::FHeader* row = header_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("gcache.out_of_mem  field:gcache.FDb.header  comment:'Alloc failed'");
@@ -456,7 +456,7 @@ gcache::FHeader& gcache::header_Alloc() {
 
 // --- gcache.FDb.header.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-gcache::FHeader* gcache::header_AllocMaybe() {
+gcache::FHeader* gcache::header_AllocMaybe() throw() {
     gcache::FHeader *row = (gcache::FHeader*)header_AllocMem();
     if (row) {
         new (row) gcache::FHeader; // call constructor
@@ -466,7 +466,7 @@ gcache::FHeader* gcache::header_AllocMaybe() {
 
 // --- gcache.FDb.header.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* gcache::header_AllocMem() {
+void* gcache::header_AllocMem() throw() {
     u64 new_nelems     = _db.header_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -492,7 +492,7 @@ void* gcache::header_AllocMem() {
 
 // --- gcache.FDb.header.RemoveAll
 // Remove all elements from Lary
-void gcache::header_RemoveAll() {
+void gcache::header_RemoveAll() throw() {
     for (u64 n = _db.header_n; n>0; ) {
         n--;
         header_qFind(u64(n)).~FHeader(); // destroy last element
@@ -502,7 +502,7 @@ void gcache::header_RemoveAll() {
 
 // --- gcache.FDb.header.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void gcache::header_RemoveLast() {
+void gcache::header_RemoveLast() throw() {
     u64 n = _db.header_n;
     if (n > 0) {
         n -= 1;
@@ -522,13 +522,13 @@ bool gcache::header_XrefMaybe(gcache::FHeader &row) {
 
 // --- gcache.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr gcache::trace_RowidFind(int t) {
+static algo::ImrowPtr gcache::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- gcache.FDb.trace.N
 // Function return 1
-inline static i32 gcache::trace_N() {
+inline static i32 gcache::trace_N() throw() {
     return 1;
 }
 
@@ -554,7 +554,7 @@ void gcache::FDb_Init() {
 }
 
 // --- gcache.FDb..Uninit
-void gcache::FDb_Uninit() {
+void gcache::FDb_Uninit() throw() {
     gcache::FDb &row = _db; (void)row;
 
     // gcache.FDb.header.Uninit (Lary)  //
@@ -564,7 +564,7 @@ void gcache::FDb_Uninit() {
 // --- gcache.FHeader..Print
 // print string representation of ROW to string STR
 // cfmt:gcache.FHeader.String  printfmt:Tuple
-void gcache::FHeader_Print(gcache::FHeader& row, algo::cstring& str) {
+void gcache::FHeader_Print(gcache::FHeader& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "gcache.FHeader";
 
@@ -590,7 +590,7 @@ void gcache::FHeader_Print(gcache::FHeader& row, algo::cstring& str) {
 // --- gcache.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* gcache::value_ToCstr(const gcache::FieldId& parent) {
+const char* gcache::value_ToCstr(const gcache::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case gcache_FieldId_n_cachefile    : ret = "n_cachefile";  break;
@@ -607,7 +607,7 @@ const char* gcache::value_ToCstr(const gcache::FieldId& parent) {
 // --- gcache.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void gcache::value_Print(const gcache::FieldId& parent, algo::cstring &lhs) {
+void gcache::value_Print(const gcache::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -620,7 +620,7 @@ void gcache::value_Print(const gcache::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool gcache::value_SetStrptrMaybe(gcache::FieldId& parent, algo::strptr rhs) {
+bool gcache::value_SetStrptrMaybe(gcache::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -692,13 +692,13 @@ bool gcache::value_SetStrptrMaybe(gcache::FieldId& parent, algo::strptr rhs) {
 // --- gcache.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void gcache::value_SetStrptr(gcache::FieldId& parent, algo::strptr rhs, gcache_FieldIdEnum dflt) {
+void gcache::value_SetStrptr(gcache::FieldId& parent, algo::strptr rhs, gcache_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- gcache.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool gcache::value_ReadStrptrMaybe(gcache::FieldId& parent, algo::strptr rhs) {
+bool gcache::value_ReadStrptrMaybe(gcache::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -710,7 +710,7 @@ bool gcache::value_ReadStrptrMaybe(gcache::FieldId& parent, algo::strptr rhs) {
 // --- gcache.FieldId..ReadStrptrMaybe
 // Read fields of gcache::FieldId from an ascii string.
 // The format of the string is the format of the gcache::FieldId's only field
-bool gcache::FieldId_ReadStrptrMaybe(gcache::FieldId &parent, algo::strptr in_str) {
+bool gcache::FieldId_ReadStrptrMaybe(gcache::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -719,7 +719,7 @@ bool gcache::FieldId_ReadStrptrMaybe(gcache::FieldId &parent, algo::strptr in_st
 // --- gcache.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:gcache.FieldId.String  printfmt:Raw
-void gcache::FieldId_Print(gcache::FieldId& row, algo::cstring& str) {
+void gcache::FieldId_Print(gcache::FieldId& row, algo::cstring& str) throw() {
     gcache::value_Print(row, str);
 }
 

@@ -90,7 +90,7 @@ namespace acr_dm { // gen:ns_print_proto
 
 // --- acr_dm.FAttr.zs_value.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void acr_dm::zs_value_Insert(acr_dm::FAttr& attr, acr_dm::FValue& row) {
+void acr_dm::zs_value_Insert(acr_dm::FAttr& attr, acr_dm::FValue& row) throw() {
     if (!zs_value_InLlistQ(row)) {
         acr_dm::FValue* old_tail       = attr.zs_value_tail;
         row.zs_value_next  = NULL;
@@ -106,7 +106,7 @@ void acr_dm::zs_value_Insert(acr_dm::FAttr& attr, acr_dm::FValue& row) {
 // --- acr_dm.FAttr.zs_value.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void acr_dm::zs_value_Remove(acr_dm::FAttr& attr, acr_dm::FValue& row) {
+void acr_dm::zs_value_Remove(acr_dm::FAttr& attr, acr_dm::FValue& row) throw() {
     if (zs_value_InLlistQ(row)) {
         acr_dm::FValue* old_head       = attr.zs_value_head;
         (void)old_head; // in case it's not used
@@ -137,7 +137,7 @@ void acr_dm::zs_value_Remove(acr_dm::FAttr& attr, acr_dm::FValue& row) {
 
 // --- acr_dm.FAttr.zs_value.RemoveAll
 // Empty the index. (The rows are not deleted)
-void acr_dm::zs_value_RemoveAll(acr_dm::FAttr& attr) {
+void acr_dm::zs_value_RemoveAll(acr_dm::FAttr& attr) throw() {
     acr_dm::FValue* row = attr.zs_value_head;
     attr.zs_value_head = NULL;
     attr.zs_value_tail = NULL;
@@ -151,7 +151,7 @@ void acr_dm::zs_value_RemoveAll(acr_dm::FAttr& attr) {
 
 // --- acr_dm.FAttr.zs_value.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-acr_dm::FValue* acr_dm::zs_value_RemoveFirst(acr_dm::FAttr& attr) {
+acr_dm::FValue* acr_dm::zs_value_RemoveFirst(acr_dm::FAttr& attr) throw() {
     acr_dm::FValue *row = NULL;
     row = attr.zs_value_head;
     if (row) {
@@ -168,7 +168,7 @@ acr_dm::FValue* acr_dm::zs_value_RemoveFirst(acr_dm::FAttr& attr) {
 }
 
 // --- acr_dm.FAttr..Uninit
-void acr_dm::FAttr_Uninit(acr_dm::FAttr& attr) {
+void acr_dm::FAttr_Uninit(acr_dm::FAttr& attr) throw() {
     acr_dm::FAttr &row = attr; (void)row;
     acr_dm::FTuple* p_p_tuple = row.p_tuple;
     if (p_p_tuple)  {
@@ -179,7 +179,7 @@ void acr_dm::FAttr_Uninit(acr_dm::FAttr& attr) {
 // --- acr_dm.trace..Print
 // print string representation of ROW to string STR
 // cfmt:acr_dm.trace.String  printfmt:Tuple
-void acr_dm::trace_Print(acr_dm::trace& row, algo::cstring& str) {
+void acr_dm::trace_Print(acr_dm::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "acr_dm.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -190,7 +190,7 @@ void acr_dm::trace_Print(acr_dm::trace& row, algo::cstring& str) {
 // The following fields are updated:
 //     acr_dm.FDb.cmdline
 //     algo_lib.FDb.cmdline
-void acr_dm::ReadArgv() {
+void acr_dm::ReadArgv() throw() {
     command::acr_dm &cmd = acr_dm::_db.cmdline;
     algo_lib::Cmdline &base = algo_lib::_db.cmdline;
     int needarg=-1;// unknown
@@ -385,7 +385,7 @@ bool acr_dm::InsertStrptrMaybe(algo::strptr str) {
 
 // --- acr_dm.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool acr_dm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool acr_dm::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = acr_dm::LoadTuplesFile(root, recursive);
@@ -408,7 +408,7 @@ bool acr_dm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool acr_dm::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool acr_dm::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -421,7 +421,7 @@ bool acr_dm::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- acr_dm.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool acr_dm::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool acr_dm::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -440,7 +440,7 @@ bool acr_dm::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
 
 // --- acr_dm.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool acr_dm::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool acr_dm::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = acr_dm::LoadTuplesFile(fname, recursive);
@@ -465,7 +465,7 @@ bool acr_dm::_db_XrefMaybe() {
 // --- acr_dm.FDb.tuple.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-acr_dm::FTuple& acr_dm::tuple_Alloc() {
+acr_dm::FTuple& acr_dm::tuple_Alloc() throw() {
     acr_dm::FTuple* row = tuple_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("acr_dm.out_of_mem  field:acr_dm.FDb.tuple  comment:'Alloc failed'");
@@ -475,7 +475,7 @@ acr_dm::FTuple& acr_dm::tuple_Alloc() {
 
 // --- acr_dm.FDb.tuple.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-acr_dm::FTuple* acr_dm::tuple_AllocMaybe() {
+acr_dm::FTuple* acr_dm::tuple_AllocMaybe() throw() {
     acr_dm::FTuple *row = (acr_dm::FTuple*)tuple_AllocMem();
     if (row) {
         new (row) acr_dm::FTuple; // call constructor
@@ -485,7 +485,7 @@ acr_dm::FTuple* acr_dm::tuple_AllocMaybe() {
 
 // --- acr_dm.FDb.tuple.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* acr_dm::tuple_AllocMem() {
+void* acr_dm::tuple_AllocMem() throw() {
     u64 new_nelems     = _db.tuple_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -511,7 +511,7 @@ void* acr_dm::tuple_AllocMem() {
 
 // --- acr_dm.FDb.tuple.RemoveAll
 // Remove all elements from Lary
-void acr_dm::tuple_RemoveAll() {
+void acr_dm::tuple_RemoveAll() throw() {
     for (u64 n = _db.tuple_n; n>0; ) {
         n--;
         tuple_qFind(u64(n)).~FTuple(); // destroy last element
@@ -521,7 +521,7 @@ void acr_dm::tuple_RemoveAll() {
 
 // --- acr_dm.FDb.tuple.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void acr_dm::tuple_RemoveLast() {
+void acr_dm::tuple_RemoveLast() throw() {
     u64 n = _db.tuple_n;
     if (n > 0) {
         n -= 1;
@@ -550,7 +550,7 @@ bool acr_dm::tuple_XrefMaybe(acr_dm::FTuple &row) {
 
 // --- acr_dm.FDb.ind_tuple.Find
 // Find row by key. Return NULL if not found.
-acr_dm::FTuple* acr_dm::ind_tuple_Find(const algo::strptr& key) {
+acr_dm::FTuple* acr_dm::ind_tuple_Find(const algo::strptr& key) throw() {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_tuple_buckets_n - 1);
     acr_dm::FTuple* *e = &_db.ind_tuple_buckets_elems[index];
     acr_dm::FTuple* ret=NULL;
@@ -573,7 +573,7 @@ acr_dm::FTuple& acr_dm::ind_tuple_FindX(const algo::strptr& key) {
 
 // --- acr_dm.FDb.ind_tuple.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-acr_dm::FTuple& acr_dm::ind_tuple_GetOrCreate(const algo::strptr& key) {
+acr_dm::FTuple& acr_dm::ind_tuple_GetOrCreate(const algo::strptr& key) throw() {
     acr_dm::FTuple* ret = ind_tuple_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &tuple_Alloc();
@@ -590,7 +590,7 @@ acr_dm::FTuple& acr_dm::ind_tuple_GetOrCreate(const algo::strptr& key) {
 
 // --- acr_dm.FDb.ind_tuple.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool acr_dm::ind_tuple_InsertMaybe(acr_dm::FTuple& row) {
+bool acr_dm::ind_tuple_InsertMaybe(acr_dm::FTuple& row) throw() {
     ind_tuple_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_tuple_next == (acr_dm::FTuple*)-1)) {// check if in hash already
@@ -618,7 +618,7 @@ bool acr_dm::ind_tuple_InsertMaybe(acr_dm::FTuple& row) {
 
 // --- acr_dm.FDb.ind_tuple.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void acr_dm::ind_tuple_Remove(acr_dm::FTuple& row) {
+void acr_dm::ind_tuple_Remove(acr_dm::FTuple& row) throw() {
     if (LIKELY(row.ind_tuple_next != (acr_dm::FTuple*)-1)) {// check if in hash already
         u32 index = algo::cstring_Hash(0, row.key) & (_db.ind_tuple_buckets_n - 1);
         acr_dm::FTuple* *prev = &_db.ind_tuple_buckets_elems[index]; // addr of pointer to current element
@@ -636,7 +636,7 @@ void acr_dm::ind_tuple_Remove(acr_dm::FTuple& row) {
 
 // --- acr_dm.FDb.ind_tuple.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void acr_dm::ind_tuple_Reserve(int n) {
+void acr_dm::ind_tuple_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_tuple_buckets_n;
     u32 new_nelems   = _db.ind_tuple_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -673,7 +673,7 @@ void acr_dm::ind_tuple_Reserve(int n) {
 // --- acr_dm.FDb.attr.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-acr_dm::FAttr& acr_dm::attr_Alloc() {
+acr_dm::FAttr& acr_dm::attr_Alloc() throw() {
     acr_dm::FAttr* row = attr_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("acr_dm.out_of_mem  field:acr_dm.FDb.attr  comment:'Alloc failed'");
@@ -683,7 +683,7 @@ acr_dm::FAttr& acr_dm::attr_Alloc() {
 
 // --- acr_dm.FDb.attr.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-acr_dm::FAttr* acr_dm::attr_AllocMaybe() {
+acr_dm::FAttr* acr_dm::attr_AllocMaybe() throw() {
     acr_dm::FAttr *row = (acr_dm::FAttr*)attr_AllocMem();
     if (row) {
         new (row) acr_dm::FAttr; // call constructor
@@ -693,7 +693,7 @@ acr_dm::FAttr* acr_dm::attr_AllocMaybe() {
 
 // --- acr_dm.FDb.attr.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* acr_dm::attr_AllocMem() {
+void* acr_dm::attr_AllocMem() throw() {
     u64 new_nelems     = _db.attr_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -719,7 +719,7 @@ void* acr_dm::attr_AllocMem() {
 
 // --- acr_dm.FDb.attr.RemoveAll
 // Remove all elements from Lary
-void acr_dm::attr_RemoveAll() {
+void acr_dm::attr_RemoveAll() throw() {
     for (u64 n = _db.attr_n; n>0; ) {
         n--;
         attr_qFind(u64(n)).~FAttr(); // destroy last element
@@ -729,7 +729,7 @@ void acr_dm::attr_RemoveAll() {
 
 // --- acr_dm.FDb.attr.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void acr_dm::attr_RemoveLast() {
+void acr_dm::attr_RemoveLast() throw() {
     u64 n = _db.attr_n;
     if (n > 0) {
         n -= 1;
@@ -759,7 +759,7 @@ bool acr_dm::attr_XrefMaybe(acr_dm::FAttr &row) {
 // --- acr_dm.FDb.value.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-acr_dm::FValue& acr_dm::value_Alloc() {
+acr_dm::FValue& acr_dm::value_Alloc() throw() {
     acr_dm::FValue* row = value_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("acr_dm.out_of_mem  field:acr_dm.FDb.value  comment:'Alloc failed'");
@@ -769,7 +769,7 @@ acr_dm::FValue& acr_dm::value_Alloc() {
 
 // --- acr_dm.FDb.value.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-acr_dm::FValue* acr_dm::value_AllocMaybe() {
+acr_dm::FValue* acr_dm::value_AllocMaybe() throw() {
     acr_dm::FValue *row = (acr_dm::FValue*)value_AllocMem();
     if (row) {
         new (row) acr_dm::FValue; // call constructor
@@ -779,7 +779,7 @@ acr_dm::FValue* acr_dm::value_AllocMaybe() {
 
 // --- acr_dm.FDb.value.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* acr_dm::value_AllocMem() {
+void* acr_dm::value_AllocMem() throw() {
     u64 new_nelems     = _db.value_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -805,7 +805,7 @@ void* acr_dm::value_AllocMem() {
 
 // --- acr_dm.FDb.value.RemoveAll
 // Remove all elements from Lary
-void acr_dm::value_RemoveAll() {
+void acr_dm::value_RemoveAll() throw() {
     for (u64 n = _db.value_n; n>0; ) {
         n--;
         value_qFind(u64(n)).~FValue(); // destroy last element
@@ -815,7 +815,7 @@ void acr_dm::value_RemoveAll() {
 
 // --- acr_dm.FDb.value.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void acr_dm::value_RemoveLast() {
+void acr_dm::value_RemoveLast() throw() {
     u64 n = _db.value_n;
     if (n > 0) {
         n -= 1;
@@ -844,7 +844,7 @@ bool acr_dm::value_XrefMaybe(acr_dm::FValue &row) {
 
 // --- acr_dm.FDb.bh_tuple.Dealloc
 // Remove all elements from heap and free memory used by the array.
-void acr_dm::bh_tuple_Dealloc() {
+void acr_dm::bh_tuple_Dealloc() throw() {
     bh_tuple_RemoveAll();
     algo_lib::malloc_FreeMem(_db.bh_tuple_elems, sizeof(acr_dm::FTuple*)*_db.bh_tuple_max);
     _db.bh_tuple_max   = 0;
@@ -854,7 +854,7 @@ void acr_dm::bh_tuple_Dealloc() {
 // --- acr_dm.FDb.bh_tuple.Downheap
 // Find new location for ROW starting at IDX
 // NOTE: Rest of heap is rearranged, but pointer to ROW is NOT stored in array.
-static int acr_dm::bh_tuple_Downheap(acr_dm::FTuple& row, int idx) {
+static int acr_dm::bh_tuple_Downheap(acr_dm::FTuple& row, int idx) throw() {
     acr_dm::FTuple* *elems = _db.bh_tuple_elems;
     int n = _db.bh_tuple_n;
     int child = idx*2+1;
@@ -881,7 +881,7 @@ static int acr_dm::bh_tuple_Downheap(acr_dm::FTuple& row, int idx) {
 
 // --- acr_dm.FDb.bh_tuple.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
-void acr_dm::bh_tuple_Insert(acr_dm::FTuple& row) {
+void acr_dm::bh_tuple_Insert(acr_dm::FTuple& row) throw() {
     if (LIKELY(row.bh_tuple_idx == -1)) {
         bh_tuple_Reserve(1);
         int n = _db.bh_tuple_n;
@@ -895,7 +895,7 @@ void acr_dm::bh_tuple_Insert(acr_dm::FTuple& row) {
 // --- acr_dm.FDb.bh_tuple.Reheap
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
-i32 acr_dm::bh_tuple_Reheap(acr_dm::FTuple& row) {
+i32 acr_dm::bh_tuple_Reheap(acr_dm::FTuple& row) throw() {
     int old_idx = row.bh_tuple_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
@@ -916,7 +916,7 @@ i32 acr_dm::bh_tuple_Reheap(acr_dm::FTuple& row) {
 // This function does not check the insert condition.
 // Return new position of item in the heap (0=top).
 // Heap must be non-empty or behavior is undefined.
-i32 acr_dm::bh_tuple_ReheapFirst() {
+i32 acr_dm::bh_tuple_ReheapFirst() throw() {
     acr_dm::FTuple &row = *_db.bh_tuple_elems[0];
     i32 new_idx = bh_tuple_Downheap(row, 0);
     row.bh_tuple_idx = new_idx;
@@ -926,7 +926,7 @@ i32 acr_dm::bh_tuple_ReheapFirst() {
 
 // --- acr_dm.FDb.bh_tuple.Remove
 // Remove element from index. If element is not in index, do nothing.
-void acr_dm::bh_tuple_Remove(acr_dm::FTuple& row) {
+void acr_dm::bh_tuple_Remove(acr_dm::FTuple& row) throw() {
     if (bh_tuple_InBheapQ(row)) {
         int old_idx = row.bh_tuple_idx;
         if (_db.bh_tuple_elems[old_idx] == &row) { // sanity check: heap points back to row
@@ -948,7 +948,7 @@ void acr_dm::bh_tuple_Remove(acr_dm::FTuple& row) {
 
 // --- acr_dm.FDb.bh_tuple.RemoveAll
 // Remove all elements from binary heap
-void acr_dm::bh_tuple_RemoveAll() {
+void acr_dm::bh_tuple_RemoveAll() throw() {
     int n = _db.bh_tuple_n;
     for (int i = n - 1; i>=0; i--) {
         _db.bh_tuple_elems[i]->bh_tuple_idx = -1; // mark not-in-heap
@@ -959,7 +959,7 @@ void acr_dm::bh_tuple_RemoveAll() {
 // --- acr_dm.FDb.bh_tuple.RemoveFirst
 // If index is empty, return NULL. Otherwise remove and return first key in index.
 //  Call 'head changed' trigger.
-acr_dm::FTuple* acr_dm::bh_tuple_RemoveFirst() {
+acr_dm::FTuple* acr_dm::bh_tuple_RemoveFirst() throw() {
     acr_dm::FTuple *row = NULL;
     if (_db.bh_tuple_n > 0) {
         row = _db.bh_tuple_elems[0];
@@ -978,7 +978,7 @@ acr_dm::FTuple* acr_dm::bh_tuple_RemoveFirst() {
 
 // --- acr_dm.FDb.bh_tuple.Reserve
 // Reserve space in index for N more elements
-void acr_dm::bh_tuple_Reserve(int n) {
+void acr_dm::bh_tuple_Reserve(int n) throw() {
     i32 old_max = _db.bh_tuple_max;
     if (UNLIKELY(_db.bh_tuple_n + n > old_max)) {
         u32 new_max  = u32_Max(4, old_max * 2);
@@ -996,7 +996,7 @@ void acr_dm::bh_tuple_Reserve(int n) {
 // --- acr_dm.FDb.bh_tuple.Upheap
 // Find and return index of new location for element ROW in the heap, starting at index IDX.
 // Move any elements along the way but do not modify ROW.
-static int acr_dm::bh_tuple_Upheap(acr_dm::FTuple& row, int idx) {
+static int acr_dm::bh_tuple_Upheap(acr_dm::FTuple& row, int idx) throw() {
     acr_dm::FTuple* *elems = _db.bh_tuple_elems;
     while (idx>0) {
         int j = (idx-1)/2;
@@ -1012,20 +1012,20 @@ static int acr_dm::bh_tuple_Upheap(acr_dm::FTuple& row, int idx) {
 }
 
 // --- acr_dm.FDb.bh_tuple.ElemLt
-inline static bool acr_dm::bh_tuple_ElemLt(acr_dm::FTuple &a, acr_dm::FTuple &b) {
+inline static bool acr_dm::bh_tuple_ElemLt(acr_dm::FTuple &a, acr_dm::FTuple &b) throw() {
     (void)_db;
     return rowid_Lt(a, b);
 }
 
 // --- acr_dm.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr acr_dm::trace_RowidFind(int t) {
+static algo::ImrowPtr acr_dm::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- acr_dm.FDb.trace.N
 // Function return 1
-inline static i32 acr_dm::trace_N() {
+inline static i32 acr_dm::trace_N() throw() {
     return 1;
 }
 
@@ -1169,7 +1169,7 @@ void acr_dm::FDb_Init() {
 }
 
 // --- acr_dm.FDb..Uninit
-void acr_dm::FDb_Uninit() {
+void acr_dm::FDb_Uninit() throw() {
     acr_dm::FDb &row = _db; (void)row;
 
     // acr_dm.FDb.bh_tuple.Uninit (Bheap)  //
@@ -1189,7 +1189,7 @@ void acr_dm::FDb_Uninit() {
 }
 
 // --- acr_dm.Rowid..ReadFieldMaybe
-bool acr_dm::Rowid_ReadFieldMaybe(acr_dm::Rowid& parent, algo::strptr field, algo::strptr strval) {
+bool acr_dm::Rowid_ReadFieldMaybe(acr_dm::Rowid& parent, algo::strptr field, algo::strptr strval) throw() {
     bool retval = true;
     acr_dm::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
@@ -1217,7 +1217,7 @@ bool acr_dm::Rowid_ReadFieldMaybe(acr_dm::Rowid& parent, algo::strptr field, alg
 // --- acr_dm.Rowid..ReadStrptrMaybe
 // Read fields of acr_dm::Rowid from an ascii string.
 // The format of the string is a string with separated values
-bool acr_dm::Rowid_ReadStrptrMaybe(acr_dm::Rowid &parent, algo::strptr in_str) {
+bool acr_dm::Rowid_ReadStrptrMaybe(acr_dm::Rowid &parent, algo::strptr in_str) throw() {
     bool retval = true;
     algo::strptr value;
 
@@ -1235,7 +1235,7 @@ bool acr_dm::Rowid_ReadStrptrMaybe(acr_dm::Rowid &parent, algo::strptr in_str) {
 // --- acr_dm.Rowid..Print
 // print string representation of ROW to string STR
 // cfmt:acr_dm.Rowid.String  printfmt:Sep
-void acr_dm::Rowid_Print(acr_dm::Rowid& row, algo::cstring& str) {
+void acr_dm::Rowid_Print(acr_dm::Rowid& row, algo::cstring& str) throw() {
     i32_Print(row.f1, str);
     str << '.';
     i32_Print(row.f2, str);
@@ -1261,7 +1261,7 @@ void acr_dm::Source_source_bitcurs_Next(Source_source_bitcurs &curs) {
 
 // --- acr_dm.FTuple.zs_attr.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
-void acr_dm::zs_attr_Insert(acr_dm::FTuple& tuple, acr_dm::FAttr& row) {
+void acr_dm::zs_attr_Insert(acr_dm::FTuple& tuple, acr_dm::FAttr& row) throw() {
     if (!zs_attr_InLlistQ(row)) {
         acr_dm::FAttr* old_tail       = tuple.zs_attr_tail;
         row.zs_attr_next  = NULL;
@@ -1277,7 +1277,7 @@ void acr_dm::zs_attr_Insert(acr_dm::FTuple& tuple, acr_dm::FAttr& row) {
 // --- acr_dm.FTuple.zs_attr.Remove
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
-void acr_dm::zs_attr_Remove(acr_dm::FTuple& tuple, acr_dm::FAttr& row) {
+void acr_dm::zs_attr_Remove(acr_dm::FTuple& tuple, acr_dm::FAttr& row) throw() {
     if (zs_attr_InLlistQ(row)) {
         acr_dm::FAttr* old_head       = tuple.zs_attr_head;
         (void)old_head; // in case it's not used
@@ -1308,7 +1308,7 @@ void acr_dm::zs_attr_Remove(acr_dm::FTuple& tuple, acr_dm::FAttr& row) {
 
 // --- acr_dm.FTuple.zs_attr.RemoveAll
 // Empty the index. (The rows are not deleted)
-void acr_dm::zs_attr_RemoveAll(acr_dm::FTuple& tuple) {
+void acr_dm::zs_attr_RemoveAll(acr_dm::FTuple& tuple) throw() {
     acr_dm::FAttr* row = tuple.zs_attr_head;
     tuple.zs_attr_head = NULL;
     tuple.zs_attr_tail = NULL;
@@ -1322,7 +1322,7 @@ void acr_dm::zs_attr_RemoveAll(acr_dm::FTuple& tuple) {
 
 // --- acr_dm.FTuple.zs_attr.RemoveFirst
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-acr_dm::FAttr* acr_dm::zs_attr_RemoveFirst(acr_dm::FTuple& tuple) {
+acr_dm::FAttr* acr_dm::zs_attr_RemoveFirst(acr_dm::FTuple& tuple) throw() {
     acr_dm::FAttr *row = NULL;
     row = tuple.zs_attr_head;
     if (row) {
@@ -1339,14 +1339,14 @@ acr_dm::FAttr* acr_dm::zs_attr_RemoveFirst(acr_dm::FTuple& tuple) {
 }
 
 // --- acr_dm.FTuple..Uninit
-void acr_dm::FTuple_Uninit(acr_dm::FTuple& tuple) {
+void acr_dm::FTuple_Uninit(acr_dm::FTuple& tuple) throw() {
     acr_dm::FTuple &row = tuple; (void)row;
     ind_tuple_Remove(row); // remove tuple from index ind_tuple
     bh_tuple_Remove(row); // remove tuple from index bh_tuple
 }
 
 // --- acr_dm.FValue..Uninit
-void acr_dm::FValue_Uninit(acr_dm::FValue& value) {
+void acr_dm::FValue_Uninit(acr_dm::FValue& value) throw() {
     acr_dm::FValue &row = value; (void)row;
     acr_dm::FAttr* p_p_attr = row.p_attr;
     if (p_p_attr)  {
@@ -1357,7 +1357,7 @@ void acr_dm::FValue_Uninit(acr_dm::FValue& value) {
 // --- acr_dm.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* acr_dm::value_ToCstr(const acr_dm::FieldId& parent) {
+const char* acr_dm::value_ToCstr(const acr_dm::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case acr_dm_FieldId_f1             : ret = "f1";  break;
@@ -1371,7 +1371,7 @@ const char* acr_dm::value_ToCstr(const acr_dm::FieldId& parent) {
 // --- acr_dm.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void acr_dm::value_Print(const acr_dm::FieldId& parent, algo::cstring &lhs) {
+void acr_dm::value_Print(const acr_dm::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1384,7 +1384,7 @@ void acr_dm::value_Print(const acr_dm::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool acr_dm::value_SetStrptrMaybe(acr_dm::FieldId& parent, algo::strptr rhs) {
+bool acr_dm::value_SetStrptrMaybe(acr_dm::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 2: {
@@ -1416,13 +1416,13 @@ bool acr_dm::value_SetStrptrMaybe(acr_dm::FieldId& parent, algo::strptr rhs) {
 // --- acr_dm.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void acr_dm::value_SetStrptr(acr_dm::FieldId& parent, algo::strptr rhs, acr_dm_FieldIdEnum dflt) {
+void acr_dm::value_SetStrptr(acr_dm::FieldId& parent, algo::strptr rhs, acr_dm_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- acr_dm.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool acr_dm::value_ReadStrptrMaybe(acr_dm::FieldId& parent, algo::strptr rhs) {
+bool acr_dm::value_ReadStrptrMaybe(acr_dm::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1434,7 +1434,7 @@ bool acr_dm::value_ReadStrptrMaybe(acr_dm::FieldId& parent, algo::strptr rhs) {
 // --- acr_dm.FieldId..ReadStrptrMaybe
 // Read fields of acr_dm::FieldId from an ascii string.
 // The format of the string is the format of the acr_dm::FieldId's only field
-bool acr_dm::FieldId_ReadStrptrMaybe(acr_dm::FieldId &parent, algo::strptr in_str) {
+bool acr_dm::FieldId_ReadStrptrMaybe(acr_dm::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1443,7 +1443,7 @@ bool acr_dm::FieldId_ReadStrptrMaybe(acr_dm::FieldId &parent, algo::strptr in_st
 // --- acr_dm.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:acr_dm.FieldId.String  printfmt:Raw
-void acr_dm::FieldId_Print(acr_dm::FieldId& row, algo::cstring& str) {
+void acr_dm::FieldId_Print(acr_dm::FieldId& row, algo::cstring& str) throw() {
     acr_dm::value_Print(row, str);
 }
 

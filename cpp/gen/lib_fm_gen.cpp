@@ -67,7 +67,7 @@ namespace lib_fm { // gen:ns_print_proto
 
 // --- lib_fm.FAlarm.base.CopyOut
 // Copy fields out of row
-void lib_fm::alarm_CopyOut(lib_fm::FAlarm &row, fmdb::Alarm &out) {
+void lib_fm::alarm_CopyOut(lib_fm::FAlarm &row, fmdb::Alarm &out) throw() {
     out.alarm = row.alarm;
     out.flag = row.flag;
     out.severity = row.severity;
@@ -84,7 +84,7 @@ void lib_fm::alarm_CopyOut(lib_fm::FAlarm &row, fmdb::Alarm &out) {
 
 // --- lib_fm.FAlarm.base.CopyIn
 // Copy fields in to row
-void lib_fm::alarm_CopyIn(lib_fm::FAlarm &row, fmdb::Alarm &in) {
+void lib_fm::alarm_CopyIn(lib_fm::FAlarm &row, fmdb::Alarm &in) throw() {
     row.alarm = in.alarm;
     row.flag = in.flag;
     row.severity = in.severity;
@@ -100,31 +100,31 @@ void lib_fm::alarm_CopyIn(lib_fm::FAlarm &row, fmdb::Alarm &in) {
 }
 
 // --- lib_fm.FAlarm.code.Get
-fm::Code lib_fm::code_Get(lib_fm::FAlarm& alarm) {
+fm::Code lib_fm::code_Get(lib_fm::FAlarm& alarm) throw() {
     fm::Code ret(algo::Pathcomp(alarm.alarm, "@LL"));
     return ret;
 }
 
 // --- lib_fm.FAlarm.object.Get
-algo::Smallstr200 lib_fm::object_Get(lib_fm::FAlarm& alarm) {
+algo::Smallstr200 lib_fm::object_Get(lib_fm::FAlarm& alarm) throw() {
     algo::Smallstr200 ret(algo::Pathcomp(alarm.alarm, "@LR"));
     return ret;
 }
 
 // --- lib_fm.FAlarm.objtype.Get
-fm::Objtype lib_fm::objtype_Get(lib_fm::FAlarm& alarm) {
+fm::Objtype lib_fm::objtype_Get(lib_fm::FAlarm& alarm) throw() {
     fm::Objtype ret(algo::Pathcomp(object_Get(alarm), ".LL"));
     return ret;
 }
 
 // --- lib_fm.FAlarm.objinst.Get
-fm::Objinst lib_fm::objinst_Get(lib_fm::FAlarm& alarm) {
+fm::Objinst lib_fm::objinst_Get(lib_fm::FAlarm& alarm) throw() {
     fm::Objinst ret(algo::Pathcomp(object_Get(alarm), ".LR"));
     return ret;
 }
 
 // --- lib_fm.FAlarm.objprefix.Get
-algo::Smallstr50 lib_fm::objprefix_Get(lib_fm::FAlarm& alarm) {
+algo::Smallstr50 lib_fm::objprefix_Get(lib_fm::FAlarm& alarm) throw() {
     algo::Smallstr50 ret(algo::Pathcomp(objinst_Get(alarm), ".LL"));
     return ret;
 }
@@ -137,14 +137,14 @@ void lib_fm::FAlarm_Init(lib_fm::FAlarm& alarm) {
 }
 
 // --- lib_fm.FAlarm..Uninit
-void lib_fm::FAlarm_Uninit(lib_fm::FAlarm& alarm) {
+void lib_fm::FAlarm_Uninit(lib_fm::FAlarm& alarm) throw() {
     lib_fm::FAlarm &row = alarm; (void)row;
     ind_alarm_Remove(row); // remove alarm from index ind_alarm
 }
 
 // --- lib_fm.FAlmCode.base.CopyOut
 // Copy fields out of row
-void lib_fm::alm_code_CopyOut(lib_fm::FAlmCode &row, fmdb::AlmCode &out) {
+void lib_fm::alm_code_CopyOut(lib_fm::FAlmCode &row, fmdb::AlmCode &out) throw() {
     out.alm_code = row.alm_code;
     out.severity = row.severity;
     out.source = row.source;
@@ -153,7 +153,7 @@ void lib_fm::alm_code_CopyOut(lib_fm::FAlmCode &row, fmdb::AlmCode &out) {
 
 // --- lib_fm.FAlmCode.base.CopyIn
 // Copy fields in to row
-void lib_fm::alm_code_CopyIn(lib_fm::FAlmCode &row, fmdb::AlmCode &in) {
+void lib_fm::alm_code_CopyIn(lib_fm::FAlmCode &row, fmdb::AlmCode &in) throw() {
     row.alm_code = in.alm_code;
     row.severity = in.severity;
     row.source = in.source;
@@ -161,27 +161,27 @@ void lib_fm::alm_code_CopyIn(lib_fm::FAlmCode &row, fmdb::AlmCode &in) {
 }
 
 // --- lib_fm.FAlmCode..Uninit
-void lib_fm::FAlmCode_Uninit(lib_fm::FAlmCode& alm_code) {
+void lib_fm::FAlmCode_Uninit(lib_fm::FAlmCode& alm_code) throw() {
     lib_fm::FAlmCode &row = alm_code; (void)row;
     ind_alm_code_Remove(row); // remove alm_code from index ind_alm_code
 }
 
 // --- lib_fm.FAlmObjtype.base.CopyOut
 // Copy fields out of row
-void lib_fm::alm_objtype_CopyOut(lib_fm::FAlmObjtype &row, fmdb::AlmObjtype &out) {
+void lib_fm::alm_objtype_CopyOut(lib_fm::FAlmObjtype &row, fmdb::AlmObjtype &out) throw() {
     out.alm_objtype = row.alm_objtype;
     out.summary = row.summary;
 }
 
 // --- lib_fm.FAlmObjtype.base.CopyIn
 // Copy fields in to row
-void lib_fm::alm_objtype_CopyIn(lib_fm::FAlmObjtype &row, fmdb::AlmObjtype &in) {
+void lib_fm::alm_objtype_CopyIn(lib_fm::FAlmObjtype &row, fmdb::AlmObjtype &in) throw() {
     row.alm_objtype = in.alm_objtype;
     row.summary = in.summary;
 }
 
 // --- lib_fm.FAlmObjtype..Uninit
-void lib_fm::FAlmObjtype_Uninit(lib_fm::FAlmObjtype& alm_objtype) {
+void lib_fm::FAlmObjtype_Uninit(lib_fm::FAlmObjtype& alm_objtype) throw() {
     lib_fm::FAlmObjtype &row = alm_objtype; (void)row;
     ind_alm_objtype_Remove(row); // remove alm_objtype from index ind_alm_objtype
 }
@@ -189,7 +189,7 @@ void lib_fm::FAlmObjtype_Uninit(lib_fm::FAlmObjtype& alm_objtype) {
 // --- lib_fm.trace..Print
 // print string representation of ROW to string STR
 // cfmt:lib_fm.trace.String  printfmt:Tuple
-void lib_fm::trace_Print(lib_fm::trace& row, algo::cstring& str) {
+void lib_fm::trace_Print(lib_fm::trace& row, algo::cstring& str) throw() {
     algo::tempstr temp;
     str << "lib_fm.trace";
     (void)row;//only to avoid -Wunused-parameter
@@ -246,7 +246,7 @@ bool lib_fm::InsertStrptrMaybe(algo::strptr str) {
 
 // --- lib_fm.FDb._db.LoadTuplesMaybe
 // Load all finputs from given directory.
-bool lib_fm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
+bool lib_fm::LoadTuplesMaybe(algo::strptr root, bool recursive) throw() {
     bool retval = true;
     if (FileQ(root)) {
         retval = lib_fm::LoadTuplesFile(root, recursive);
@@ -271,7 +271,7 @@ bool lib_fm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
 // It a file referred to by FNAME is missing, no error is reported (it's considered an empty set).
 // Function returns TRUE if all records were parsed and inserted without error.
 // If the function returns FALSE, use algo_lib::DetachBadTags() for error description
-bool lib_fm::LoadTuplesFile(algo::strptr fname, bool recursive) {
+bool lib_fm::LoadTuplesFile(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     algo_lib::FFildes fildes;
     // missing files are not an error
@@ -284,7 +284,7 @@ bool lib_fm::LoadTuplesFile(algo::strptr fname, bool recursive) {
 
 // --- lib_fm.FDb._db.LoadTuplesFd
 // Load all finputs from given file descriptor.
-bool lib_fm::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
+bool lib_fm::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     ind_beg(algo::FileLine_curs,line,fd) {
         if (recursive) {
@@ -304,7 +304,7 @@ bool lib_fm::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) {
 
 // --- lib_fm.FDb._db.SaveTuples
 // Save ssim data to given directory.
-u32 lib_fm::SaveTuples(algo::strptr root) {
+u32 lib_fm::SaveTuples(algo::strptr root) throw() {
     u32 retval = 0;
     u32 nbefore = algo_lib::_db.stringtofile_nwrite;
     (void)alarm_SaveSsimfile(SsimFname(root, "fmdb.alarm"));
@@ -314,7 +314,7 @@ u32 lib_fm::SaveTuples(algo::strptr root) {
 
 // --- lib_fm.FDb._db.LoadSsimfileMaybe
 // Load specified ssimfile.
-bool lib_fm::LoadSsimfileMaybe(algo::strptr fname, bool recursive) {
+bool lib_fm::LoadSsimfileMaybe(algo::strptr fname, bool recursive) throw() {
     bool retval = true;
     if (FileQ(fname)) {
         retval = lib_fm::LoadTuplesFile(fname, recursive);
@@ -339,7 +339,7 @@ bool lib_fm::_db_XrefMaybe() {
 // --- lib_fm.FDb.alarm.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_fm::FAlarm& lib_fm::alarm_Alloc() {
+lib_fm::FAlarm& lib_fm::alarm_Alloc() throw() {
     lib_fm::FAlarm* row = alarm_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_fm.out_of_mem  field:lib_fm.FDb.alarm  comment:'Alloc failed'");
@@ -349,7 +349,7 @@ lib_fm::FAlarm& lib_fm::alarm_Alloc() {
 
 // --- lib_fm.FDb.alarm.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_fm::FAlarm* lib_fm::alarm_AllocMaybe() {
+lib_fm::FAlarm* lib_fm::alarm_AllocMaybe() throw() {
     lib_fm::FAlarm *row = (lib_fm::FAlarm*)alarm_AllocMem();
     if (row) {
         new (row) lib_fm::FAlarm; // call constructor
@@ -360,7 +360,7 @@ lib_fm::FAlarm* lib_fm::alarm_AllocMaybe() {
 // --- lib_fm.FDb.alarm.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_fm::FAlarm* lib_fm::alarm_InsertMaybe(const fmdb::Alarm &value) {
+lib_fm::FAlarm* lib_fm::alarm_InsertMaybe(const fmdb::Alarm &value) throw() {
     lib_fm::FAlarm *row = &alarm_Alloc(); // if out of memory, process dies. if input error, return NULL.
     alarm_CopyIn(*row,const_cast<fmdb::Alarm&>(value));
     bool ok = alarm_XrefMaybe(*row); // this may return false
@@ -373,7 +373,7 @@ lib_fm::FAlarm* lib_fm::alarm_InsertMaybe(const fmdb::Alarm &value) {
 
 // --- lib_fm.FDb.alarm.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_fm::alarm_AllocMem() {
+void* lib_fm::alarm_AllocMem() throw() {
     u64 new_nelems     = _db.alarm_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -399,7 +399,7 @@ void* lib_fm::alarm_AllocMem() {
 
 // --- lib_fm.FDb.alarm.RemoveAll
 // Remove all elements from Lary
-void lib_fm::alarm_RemoveAll() {
+void lib_fm::alarm_RemoveAll() throw() {
     for (u64 n = _db.alarm_n; n>0; ) {
         n--;
         alarm_qFind(u64(n)).~FAlarm(); // destroy last element
@@ -409,7 +409,7 @@ void lib_fm::alarm_RemoveAll() {
 
 // --- lib_fm.FDb.alarm.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_fm::alarm_RemoveLast() {
+void lib_fm::alarm_RemoveLast() throw() {
     u64 n = _db.alarm_n;
     if (n > 0) {
         n -= 1;
@@ -420,7 +420,7 @@ void lib_fm::alarm_RemoveLast() {
 
 // --- lib_fm.FDb.alarm.SaveSsimfile
 // Save table to ssimfile
-bool lib_fm::alarm_SaveSsimfile(algo::strptr fname) {
+bool lib_fm::alarm_SaveSsimfile(algo::strptr fname) throw() {
     cstring text;
     ind_beg(lib_fm::_db_alarm_curs, alarm, lib_fm::_db) {
         fmdb::Alarm out;
@@ -453,7 +453,7 @@ bool lib_fm::alarm_XrefMaybe(lib_fm::FAlarm &row) {
 
 // --- lib_fm.FDb.ind_alarm.Find
 // Find row by key. Return NULL if not found.
-lib_fm::FAlarm* lib_fm::ind_alarm_Find(const algo::strptr& key) {
+lib_fm::FAlarm* lib_fm::ind_alarm_Find(const algo::strptr& key) throw() {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_alarm_buckets_n - 1);
     lib_fm::FAlarm* *e = &_db.ind_alarm_buckets_elems[index];
     lib_fm::FAlarm* ret=NULL;
@@ -476,7 +476,7 @@ lib_fm::FAlarm& lib_fm::ind_alarm_FindX(const algo::strptr& key) {
 
 // --- lib_fm.FDb.ind_alarm.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-lib_fm::FAlarm& lib_fm::ind_alarm_GetOrCreate(const algo::strptr& key) {
+lib_fm::FAlarm& lib_fm::ind_alarm_GetOrCreate(const algo::strptr& key) throw() {
     lib_fm::FAlarm* ret = ind_alarm_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &alarm_Alloc();
@@ -493,7 +493,7 @@ lib_fm::FAlarm& lib_fm::ind_alarm_GetOrCreate(const algo::strptr& key) {
 
 // --- lib_fm.FDb.ind_alarm.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_fm::ind_alarm_InsertMaybe(lib_fm::FAlarm& row) {
+bool lib_fm::ind_alarm_InsertMaybe(lib_fm::FAlarm& row) throw() {
     ind_alarm_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_alarm_next == (lib_fm::FAlarm*)-1)) {// check if in hash already
@@ -521,7 +521,7 @@ bool lib_fm::ind_alarm_InsertMaybe(lib_fm::FAlarm& row) {
 
 // --- lib_fm.FDb.ind_alarm.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_fm::ind_alarm_Remove(lib_fm::FAlarm& row) {
+void lib_fm::ind_alarm_Remove(lib_fm::FAlarm& row) throw() {
     if (LIKELY(row.ind_alarm_next != (lib_fm::FAlarm*)-1)) {// check if in hash already
         u32 index = algo::Smallstr200_Hash(0, row.alarm) & (_db.ind_alarm_buckets_n - 1);
         lib_fm::FAlarm* *prev = &_db.ind_alarm_buckets_elems[index]; // addr of pointer to current element
@@ -539,7 +539,7 @@ void lib_fm::ind_alarm_Remove(lib_fm::FAlarm& row) {
 
 // --- lib_fm.FDb.ind_alarm.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_fm::ind_alarm_Reserve(int n) {
+void lib_fm::ind_alarm_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_alarm_buckets_n;
     u32 new_nelems   = _db.ind_alarm_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -576,7 +576,7 @@ void lib_fm::ind_alarm_Reserve(int n) {
 // --- lib_fm.FDb.alm_code.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_fm::FAlmCode& lib_fm::alm_code_Alloc() {
+lib_fm::FAlmCode& lib_fm::alm_code_Alloc() throw() {
     lib_fm::FAlmCode* row = alm_code_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_fm.out_of_mem  field:lib_fm.FDb.alm_code  comment:'Alloc failed'");
@@ -586,7 +586,7 @@ lib_fm::FAlmCode& lib_fm::alm_code_Alloc() {
 
 // --- lib_fm.FDb.alm_code.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_fm::FAlmCode* lib_fm::alm_code_AllocMaybe() {
+lib_fm::FAlmCode* lib_fm::alm_code_AllocMaybe() throw() {
     lib_fm::FAlmCode *row = (lib_fm::FAlmCode*)alm_code_AllocMem();
     if (row) {
         new (row) lib_fm::FAlmCode; // call constructor
@@ -597,7 +597,7 @@ lib_fm::FAlmCode* lib_fm::alm_code_AllocMaybe() {
 // --- lib_fm.FDb.alm_code.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_fm::FAlmCode* lib_fm::alm_code_InsertMaybe(const fmdb::AlmCode &value) {
+lib_fm::FAlmCode* lib_fm::alm_code_InsertMaybe(const fmdb::AlmCode &value) throw() {
     lib_fm::FAlmCode *row = &alm_code_Alloc(); // if out of memory, process dies. if input error, return NULL.
     alm_code_CopyIn(*row,const_cast<fmdb::AlmCode&>(value));
     bool ok = alm_code_XrefMaybe(*row); // this may return false
@@ -610,7 +610,7 @@ lib_fm::FAlmCode* lib_fm::alm_code_InsertMaybe(const fmdb::AlmCode &value) {
 
 // --- lib_fm.FDb.alm_code.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_fm::alm_code_AllocMem() {
+void* lib_fm::alm_code_AllocMem() throw() {
     u64 new_nelems     = _db.alm_code_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -636,7 +636,7 @@ void* lib_fm::alm_code_AllocMem() {
 
 // --- lib_fm.FDb.alm_code.RemoveAll
 // Remove all elements from Lary
-void lib_fm::alm_code_RemoveAll() {
+void lib_fm::alm_code_RemoveAll() throw() {
     for (u64 n = _db.alm_code_n; n>0; ) {
         n--;
         alm_code_qFind(u64(n)).~FAlmCode(); // destroy last element
@@ -646,7 +646,7 @@ void lib_fm::alm_code_RemoveAll() {
 
 // --- lib_fm.FDb.alm_code.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_fm::alm_code_RemoveLast() {
+void lib_fm::alm_code_RemoveLast() throw() {
     u64 n = _db.alm_code_n;
     if (n > 0) {
         n -= 1;
@@ -656,7 +656,7 @@ void lib_fm::alm_code_RemoveLast() {
 }
 
 // --- lib_fm.FDb.alm_code.InputMaybe
-static bool lib_fm::alm_code_InputMaybe(fmdb::AlmCode &elem) {
+static bool lib_fm::alm_code_InputMaybe(fmdb::AlmCode &elem) throw() {
     bool retval = true;
     retval = alm_code_InsertMaybe(elem) != nullptr;
     return retval;
@@ -682,7 +682,7 @@ bool lib_fm::alm_code_XrefMaybe(lib_fm::FAlmCode &row) {
 
 // --- lib_fm.FDb.ind_alm_code.Find
 // Find row by key. Return NULL if not found.
-lib_fm::FAlmCode* lib_fm::ind_alm_code_Find(const algo::strptr& key) {
+lib_fm::FAlmCode* lib_fm::ind_alm_code_Find(const algo::strptr& key) throw() {
     u32 index = fm::Code_Hash(0, key) & (_db.ind_alm_code_buckets_n - 1);
     lib_fm::FAlmCode* *e = &_db.ind_alm_code_buckets_elems[index];
     lib_fm::FAlmCode* ret=NULL;
@@ -705,7 +705,7 @@ lib_fm::FAlmCode& lib_fm::ind_alm_code_FindX(const algo::strptr& key) {
 
 // --- lib_fm.FDb.ind_alm_code.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-lib_fm::FAlmCode& lib_fm::ind_alm_code_GetOrCreate(const algo::strptr& key) {
+lib_fm::FAlmCode& lib_fm::ind_alm_code_GetOrCreate(const algo::strptr& key) throw() {
     lib_fm::FAlmCode* ret = ind_alm_code_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &alm_code_Alloc();
@@ -722,7 +722,7 @@ lib_fm::FAlmCode& lib_fm::ind_alm_code_GetOrCreate(const algo::strptr& key) {
 
 // --- lib_fm.FDb.ind_alm_code.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_fm::ind_alm_code_InsertMaybe(lib_fm::FAlmCode& row) {
+bool lib_fm::ind_alm_code_InsertMaybe(lib_fm::FAlmCode& row) throw() {
     ind_alm_code_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_alm_code_next == (lib_fm::FAlmCode*)-1)) {// check if in hash already
@@ -750,7 +750,7 @@ bool lib_fm::ind_alm_code_InsertMaybe(lib_fm::FAlmCode& row) {
 
 // --- lib_fm.FDb.ind_alm_code.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_fm::ind_alm_code_Remove(lib_fm::FAlmCode& row) {
+void lib_fm::ind_alm_code_Remove(lib_fm::FAlmCode& row) throw() {
     if (LIKELY(row.ind_alm_code_next != (lib_fm::FAlmCode*)-1)) {// check if in hash already
         u32 index = fm::Code_Hash(0, row.alm_code) & (_db.ind_alm_code_buckets_n - 1);
         lib_fm::FAlmCode* *prev = &_db.ind_alm_code_buckets_elems[index]; // addr of pointer to current element
@@ -768,7 +768,7 @@ void lib_fm::ind_alm_code_Remove(lib_fm::FAlmCode& row) {
 
 // --- lib_fm.FDb.ind_alm_code.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_fm::ind_alm_code_Reserve(int n) {
+void lib_fm::ind_alm_code_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_alm_code_buckets_n;
     u32 new_nelems   = _db.ind_alm_code_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -805,7 +805,7 @@ void lib_fm::ind_alm_code_Reserve(int n) {
 // --- lib_fm.FDb.alm_objtype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-lib_fm::FAlmObjtype& lib_fm::alm_objtype_Alloc() {
+lib_fm::FAlmObjtype& lib_fm::alm_objtype_Alloc() throw() {
     lib_fm::FAlmObjtype* row = alm_objtype_AllocMaybe();
     if (UNLIKELY(row == NULL)) {
         FatalErrorExit("lib_fm.out_of_mem  field:lib_fm.FDb.alm_objtype  comment:'Alloc failed'");
@@ -815,7 +815,7 @@ lib_fm::FAlmObjtype& lib_fm::alm_objtype_Alloc() {
 
 // --- lib_fm.FDb.alm_objtype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-lib_fm::FAlmObjtype* lib_fm::alm_objtype_AllocMaybe() {
+lib_fm::FAlmObjtype* lib_fm::alm_objtype_AllocMaybe() throw() {
     lib_fm::FAlmObjtype *row = (lib_fm::FAlmObjtype*)alm_objtype_AllocMem();
     if (row) {
         new (row) lib_fm::FAlmObjtype; // call constructor
@@ -826,7 +826,7 @@ lib_fm::FAlmObjtype* lib_fm::alm_objtype_AllocMaybe() {
 // --- lib_fm.FDb.alm_objtype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-lib_fm::FAlmObjtype* lib_fm::alm_objtype_InsertMaybe(const fmdb::AlmObjtype &value) {
+lib_fm::FAlmObjtype* lib_fm::alm_objtype_InsertMaybe(const fmdb::AlmObjtype &value) throw() {
     lib_fm::FAlmObjtype *row = &alm_objtype_Alloc(); // if out of memory, process dies. if input error, return NULL.
     alm_objtype_CopyIn(*row,const_cast<fmdb::AlmObjtype&>(value));
     bool ok = alm_objtype_XrefMaybe(*row); // this may return false
@@ -839,7 +839,7 @@ lib_fm::FAlmObjtype* lib_fm::alm_objtype_InsertMaybe(const fmdb::AlmObjtype &val
 
 // --- lib_fm.FDb.alm_objtype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-void* lib_fm::alm_objtype_AllocMem() {
+void* lib_fm::alm_objtype_AllocMem() throw() {
     u64 new_nelems     = _db.alm_objtype_n+1;
     // compute level and index on level
     u64 bsr   = algo::u64_BitScanReverse(new_nelems);
@@ -865,7 +865,7 @@ void* lib_fm::alm_objtype_AllocMem() {
 
 // --- lib_fm.FDb.alm_objtype.RemoveAll
 // Remove all elements from Lary
-void lib_fm::alm_objtype_RemoveAll() {
+void lib_fm::alm_objtype_RemoveAll() throw() {
     for (u64 n = _db.alm_objtype_n; n>0; ) {
         n--;
         alm_objtype_qFind(u64(n)).~FAlmObjtype(); // destroy last element
@@ -875,7 +875,7 @@ void lib_fm::alm_objtype_RemoveAll() {
 
 // --- lib_fm.FDb.alm_objtype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-void lib_fm::alm_objtype_RemoveLast() {
+void lib_fm::alm_objtype_RemoveLast() throw() {
     u64 n = _db.alm_objtype_n;
     if (n > 0) {
         n -= 1;
@@ -885,7 +885,7 @@ void lib_fm::alm_objtype_RemoveLast() {
 }
 
 // --- lib_fm.FDb.alm_objtype.InputMaybe
-static bool lib_fm::alm_objtype_InputMaybe(fmdb::AlmObjtype &elem) {
+static bool lib_fm::alm_objtype_InputMaybe(fmdb::AlmObjtype &elem) throw() {
     bool retval = true;
     retval = alm_objtype_InsertMaybe(elem) != nullptr;
     return retval;
@@ -911,7 +911,7 @@ bool lib_fm::alm_objtype_XrefMaybe(lib_fm::FAlmObjtype &row) {
 
 // --- lib_fm.FDb.ind_alm_objtype.Find
 // Find row by key. Return NULL if not found.
-lib_fm::FAlmObjtype* lib_fm::ind_alm_objtype_Find(const algo::strptr& key) {
+lib_fm::FAlmObjtype* lib_fm::ind_alm_objtype_Find(const algo::strptr& key) throw() {
     u32 index = fm::Objtype_Hash(0, key) & (_db.ind_alm_objtype_buckets_n - 1);
     lib_fm::FAlmObjtype* *e = &_db.ind_alm_objtype_buckets_elems[index];
     lib_fm::FAlmObjtype* ret=NULL;
@@ -934,7 +934,7 @@ lib_fm::FAlmObjtype& lib_fm::ind_alm_objtype_FindX(const algo::strptr& key) {
 
 // --- lib_fm.FDb.ind_alm_objtype.GetOrCreate
 // Find row by key. If not found, create and x-reference a new row with with this key.
-lib_fm::FAlmObjtype& lib_fm::ind_alm_objtype_GetOrCreate(const algo::strptr& key) {
+lib_fm::FAlmObjtype& lib_fm::ind_alm_objtype_GetOrCreate(const algo::strptr& key) throw() {
     lib_fm::FAlmObjtype* ret = ind_alm_objtype_Find(key);
     if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
         ret         = &alm_objtype_Alloc();
@@ -951,7 +951,7 @@ lib_fm::FAlmObjtype& lib_fm::ind_alm_objtype_GetOrCreate(const algo::strptr& key
 
 // --- lib_fm.FDb.ind_alm_objtype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool lib_fm::ind_alm_objtype_InsertMaybe(lib_fm::FAlmObjtype& row) {
+bool lib_fm::ind_alm_objtype_InsertMaybe(lib_fm::FAlmObjtype& row) throw() {
     ind_alm_objtype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_alm_objtype_next == (lib_fm::FAlmObjtype*)-1)) {// check if in hash already
@@ -979,7 +979,7 @@ bool lib_fm::ind_alm_objtype_InsertMaybe(lib_fm::FAlmObjtype& row) {
 
 // --- lib_fm.FDb.ind_alm_objtype.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
-void lib_fm::ind_alm_objtype_Remove(lib_fm::FAlmObjtype& row) {
+void lib_fm::ind_alm_objtype_Remove(lib_fm::FAlmObjtype& row) throw() {
     if (LIKELY(row.ind_alm_objtype_next != (lib_fm::FAlmObjtype*)-1)) {// check if in hash already
         u32 index = fm::Objtype_Hash(0, row.alm_objtype) & (_db.ind_alm_objtype_buckets_n - 1);
         lib_fm::FAlmObjtype* *prev = &_db.ind_alm_objtype_buckets_elems[index]; // addr of pointer to current element
@@ -997,7 +997,7 @@ void lib_fm::ind_alm_objtype_Remove(lib_fm::FAlmObjtype& row) {
 
 // --- lib_fm.FDb.ind_alm_objtype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
-void lib_fm::ind_alm_objtype_Reserve(int n) {
+void lib_fm::ind_alm_objtype_Reserve(int n) throw() {
     u32 old_nbuckets = _db.ind_alm_objtype_buckets_n;
     u32 new_nelems   = _db.ind_alm_objtype_n + n;
     // # of elements has to be roughly equal to the number of buckets
@@ -1033,13 +1033,13 @@ void lib_fm::ind_alm_objtype_Reserve(int n) {
 
 // --- lib_fm.FDb.trace.RowidFind
 // find trace by row id (used to implement reflection)
-static algo::ImrowPtr lib_fm::trace_RowidFind(int t) {
+static algo::ImrowPtr lib_fm::trace_RowidFind(int t) throw() {
     return algo::ImrowPtr(t==0 ? u64(&_db.trace) : u64(0));
 }
 
 // --- lib_fm.FDb.trace.N
 // Function return 1
-inline static i32 lib_fm::trace_N() {
+inline static i32 lib_fm::trace_N() throw() {
     return 1;
 }
 
@@ -1110,7 +1110,7 @@ void lib_fm::FDb_Init() {
 }
 
 // --- lib_fm.FDb..Uninit
-void lib_fm::FDb_Uninit() {
+void lib_fm::FDb_Uninit() throw() {
     lib_fm::FDb &row = _db; (void)row;
 
     // lib_fm.FDb.ind_alm_objtype.Uninit (Thash)  //
@@ -1135,7 +1135,7 @@ void lib_fm::FDb_Uninit() {
 // --- lib_fm.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_fm::value_ToCstr(const lib_fm::FieldId& parent) {
+const char* lib_fm::value_ToCstr(const lib_fm::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_fm_FieldId_value          : ret = "value";  break;
@@ -1146,7 +1146,7 @@ const char* lib_fm::value_ToCstr(const lib_fm::FieldId& parent) {
 // --- lib_fm.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_fm::value_Print(const lib_fm::FieldId& parent, algo::cstring &lhs) {
+void lib_fm::value_Print(const lib_fm::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1159,7 +1159,7 @@ void lib_fm::value_Print(const lib_fm::FieldId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_fm::value_SetStrptrMaybe(lib_fm::FieldId& parent, algo::strptr rhs) {
+bool lib_fm::value_SetStrptrMaybe(lib_fm::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -1177,13 +1177,13 @@ bool lib_fm::value_SetStrptrMaybe(lib_fm::FieldId& parent, algo::strptr rhs) {
 // --- lib_fm.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_fm::value_SetStrptr(lib_fm::FieldId& parent, algo::strptr rhs, lib_fm_FieldIdEnum dflt) {
+void lib_fm::value_SetStrptr(lib_fm::FieldId& parent, algo::strptr rhs, lib_fm_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_fm.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_fm::value_ReadStrptrMaybe(lib_fm::FieldId& parent, algo::strptr rhs) {
+bool lib_fm::value_ReadStrptrMaybe(lib_fm::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1195,7 +1195,7 @@ bool lib_fm::value_ReadStrptrMaybe(lib_fm::FieldId& parent, algo::strptr rhs) {
 // --- lib_fm.FieldId..ReadStrptrMaybe
 // Read fields of lib_fm::FieldId from an ascii string.
 // The format of the string is the format of the lib_fm::FieldId's only field
-bool lib_fm::FieldId_ReadStrptrMaybe(lib_fm::FieldId &parent, algo::strptr in_str) {
+bool lib_fm::FieldId_ReadStrptrMaybe(lib_fm::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1204,14 +1204,14 @@ bool lib_fm::FieldId_ReadStrptrMaybe(lib_fm::FieldId &parent, algo::strptr in_st
 // --- lib_fm.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_fm.FieldId.String  printfmt:Raw
-void lib_fm::FieldId_Print(lib_fm::FieldId& row, algo::cstring& str) {
+void lib_fm::FieldId_Print(lib_fm::FieldId& row, algo::cstring& str) throw() {
     lib_fm::value_Print(row, str);
 }
 
 // --- lib_fm.TableId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_fm::value_ToCstr(const lib_fm::TableId& parent) {
+const char* lib_fm::value_ToCstr(const lib_fm::TableId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_fm_TableId_fmdb_AlmCode   : ret = "fmdb.AlmCode";  break;
@@ -1223,7 +1223,7 @@ const char* lib_fm::value_ToCstr(const lib_fm::TableId& parent) {
 // --- lib_fm.TableId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_fm::value_Print(const lib_fm::TableId& parent, algo::cstring &lhs) {
+void lib_fm::value_Print(const lib_fm::TableId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -1236,7 +1236,7 @@ void lib_fm::value_Print(const lib_fm::TableId& parent, algo::cstring &lhs) {
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_fm::value_SetStrptrMaybe(lib_fm::TableId& parent, algo::strptr rhs) {
+bool lib_fm::value_SetStrptrMaybe(lib_fm::TableId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 12: {
@@ -1282,13 +1282,13 @@ bool lib_fm::value_SetStrptrMaybe(lib_fm::TableId& parent, algo::strptr rhs) {
 // --- lib_fm.TableId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_fm::value_SetStrptr(lib_fm::TableId& parent, algo::strptr rhs, lib_fm_TableIdEnum dflt) {
+void lib_fm::value_SetStrptr(lib_fm::TableId& parent, algo::strptr rhs, lib_fm_TableIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_fm.TableId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_fm::value_ReadStrptrMaybe(lib_fm::TableId& parent, algo::strptr rhs) {
+bool lib_fm::value_ReadStrptrMaybe(lib_fm::TableId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -1300,7 +1300,7 @@ bool lib_fm::value_ReadStrptrMaybe(lib_fm::TableId& parent, algo::strptr rhs) {
 // --- lib_fm.TableId..ReadStrptrMaybe
 // Read fields of lib_fm::TableId from an ascii string.
 // The format of the string is the format of the lib_fm::TableId's only field
-bool lib_fm::TableId_ReadStrptrMaybe(lib_fm::TableId &parent, algo::strptr in_str) {
+bool lib_fm::TableId_ReadStrptrMaybe(lib_fm::TableId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -1309,7 +1309,7 @@ bool lib_fm::TableId_ReadStrptrMaybe(lib_fm::TableId &parent, algo::strptr in_st
 // --- lib_fm.TableId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_fm.TableId.String  printfmt:Raw
-void lib_fm::TableId_Print(lib_fm::TableId& row, algo::cstring& str) {
+void lib_fm::TableId_Print(lib_fm::TableId& row, algo::cstring& str) throw() {
     lib_fm::value_Print(row, str);
 }
 

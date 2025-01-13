@@ -36,7 +36,7 @@ namespace lib_amcdb { // gen:ns_print_proto
 // --- lib_amcdb.FieldId.value.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
-const char* lib_amcdb::value_ToCstr(const lib_amcdb::FieldId& parent) {
+const char* lib_amcdb::value_ToCstr(const lib_amcdb::FieldId& parent) throw() {
     const char *ret = NULL;
     switch(value_GetEnum(parent)) {
         case lib_amcdb_FieldId_value       : ret = "value";  break;
@@ -47,7 +47,7 @@ const char* lib_amcdb::value_ToCstr(const lib_amcdb::FieldId& parent) {
 // --- lib_amcdb.FieldId.value.Print
 // Convert value to a string. First, attempt conversion to a known string.
 // If no string matches, print value as a numeric value.
-void lib_amcdb::value_Print(const lib_amcdb::FieldId& parent, algo::cstring &lhs) {
+void lib_amcdb::value_Print(const lib_amcdb::FieldId& parent, algo::cstring &lhs) throw() {
     const char *strval = value_ToCstr(parent);
     if (strval) {
         lhs << strval;
@@ -60,7 +60,7 @@ void lib_amcdb::value_Print(const lib_amcdb::FieldId& parent, algo::cstring &lhs
 // Convert string to field.
 // If the string is invalid, do not modify field and return false.
 // In case of success, return true
-bool lib_amcdb::value_SetStrptrMaybe(lib_amcdb::FieldId& parent, algo::strptr rhs) {
+bool lib_amcdb::value_SetStrptrMaybe(lib_amcdb::FieldId& parent, algo::strptr rhs) throw() {
     bool ret = false;
     switch (elems_N(rhs)) {
         case 5: {
@@ -78,13 +78,13 @@ bool lib_amcdb::value_SetStrptrMaybe(lib_amcdb::FieldId& parent, algo::strptr rh
 // --- lib_amcdb.FieldId.value.SetStrptr
 // Convert string to field.
 // If the string is invalid, set numeric value to DFLT
-void lib_amcdb::value_SetStrptr(lib_amcdb::FieldId& parent, algo::strptr rhs, lib_amcdb_FieldIdEnum dflt) {
+void lib_amcdb::value_SetStrptr(lib_amcdb::FieldId& parent, algo::strptr rhs, lib_amcdb_FieldIdEnum dflt) throw() {
     if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
 }
 
 // --- lib_amcdb.FieldId.value.ReadStrptrMaybe
 // Convert string to field. Return success value
-bool lib_amcdb::value_ReadStrptrMaybe(lib_amcdb::FieldId& parent, algo::strptr rhs) {
+bool lib_amcdb::value_ReadStrptrMaybe(lib_amcdb::FieldId& parent, algo::strptr rhs) throw() {
     bool retval = false;
     retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
     if (!retval) { // didn't work? try reading as underlying type
@@ -96,7 +96,7 @@ bool lib_amcdb::value_ReadStrptrMaybe(lib_amcdb::FieldId& parent, algo::strptr r
 // --- lib_amcdb.FieldId..ReadStrptrMaybe
 // Read fields of lib_amcdb::FieldId from an ascii string.
 // The format of the string is the format of the lib_amcdb::FieldId's only field
-bool lib_amcdb::FieldId_ReadStrptrMaybe(lib_amcdb::FieldId &parent, algo::strptr in_str) {
+bool lib_amcdb::FieldId_ReadStrptrMaybe(lib_amcdb::FieldId &parent, algo::strptr in_str) throw() {
     bool retval = true;
     retval = retval && value_ReadStrptrMaybe(parent, in_str);
     return retval;
@@ -105,7 +105,7 @@ bool lib_amcdb::FieldId_ReadStrptrMaybe(lib_amcdb::FieldId &parent, algo::strptr
 // --- lib_amcdb.FieldId..Print
 // print string representation of ROW to string STR
 // cfmt:lib_amcdb.FieldId.String  printfmt:Raw
-void lib_amcdb::FieldId_Print(lib_amcdb::FieldId& row, algo::cstring& str) {
+void lib_amcdb::FieldId_Print(lib_amcdb::FieldId& row, algo::cstring& str) throw() {
     lib_amcdb::value_Print(row, str);
 }
 
