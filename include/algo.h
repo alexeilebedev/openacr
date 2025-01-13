@@ -273,6 +273,8 @@ namespace algo {
     static const i64 WTIME_PER_SEC  = 10000000;
     static const i64 WTIME_PER_MSEC = 10000;
     static const i64 WTIME_PER_USEC = 10;
+
+    template<class T> tempstr &operator <<(const tempstr &lhs, const T &rhs);
 }
 
 // -----------------------------------------------------------------------------

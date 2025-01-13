@@ -28,13 +28,15 @@ jobs:
               libcurl4-openssl-dev\
               liblz4-dev \
               cppcheck \
+              llvm \
               valgrind
       - name: Build and test
         run: |
+          echo bin >> $GITHUB_PATH
           export PATH=bin:$PATH
           git config --global user.email root@localhost
           git config --global user.name runner
           ${{ matrix.bootstrap }}
-          bin/normalize
-          bin/atf_ci -cijob:comp
-          bin/atf_ci -cijob:memcheck
+          normalize
+          atf_ci -cijob:comp
+          atf_ci -cijob:memcheck

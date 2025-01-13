@@ -32,7 +32,7 @@ my $cfg="release";
 my $rc=0;
 my $found=0;
 my $builddir;
-for my $compiler ('clang++', 'g++') {
+for my $compiler ('g++', 'clang++') {
     $builddir = "$uname-$compiler.$cfg-$arch";
     print "#   considering $builddir\n";
     my $bsfile = "bin/bootstrap/$builddir";
