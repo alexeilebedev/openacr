@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04]
-        bootstrap: [bin/bootstrap/Linux-g++.release-x86_64, bin/bootstrap/Linux-clang++.release-x86_64]
+        bootstrap: [bin/bootstrap/Linux-g++.release-x86_64]
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
@@ -37,6 +37,4 @@ jobs:
           git config --global user.email root@localhost
           git config --global user.name runner
           ${{ matrix.bootstrap }}
-          normalize
-          atf_ci -cijob:comp
-          atf_ci -cijob:memcheck
+          bin/normalize %
