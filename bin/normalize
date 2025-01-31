@@ -19,5 +19,5 @@
 set -o pipefail
 set -e
 job="${1:-normalize}"
-echo "# Running tests: $(acr atfdb.citest.cijob:$job -field citest | tr '\n' ',')"
-(ai && atf_ci -cijob:"${job}") 2>&1 | hilite -e
+echo "# Running tests: $(bin/acr atfdb.citest.cijob:$job -field citest | tr '\n' ',')"
+(bin/ai && bin/atf_ci -cijob:"${job}") 2>&1 | bin/hilite -e
