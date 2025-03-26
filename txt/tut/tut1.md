@@ -61,7 +61,7 @@ acr.insert  dmmeta.ctype  ctype:command.samp_tut1  comment:""
   acr.insert  dmmeta.cfmt  cfmt:command.samp_tut1.Argv  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
-abt.config  builddir:Linux-g++.release-x86_64  ood_src:***  ood_target:***  cache:***
+abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 please execute $(acr_compl -install) to add completions support for new target
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
@@ -288,7 +288,7 @@ And build samp_tut1:
 
 ```
 inline-command: ai samp_tut1
-abt.config  builddir:Linux-g++.release-x86_64  ood_src:***  ood_target:***  cache:***
+abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 ```
 
