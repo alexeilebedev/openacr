@@ -108,6 +108,7 @@ const char *acr_ed_help =
 } // namespace acr_ed
 namespace acr_ed { // gen:ns_gsymbol
     const char* atfdb_cijob_comp("comp");
+    const char* atfdb_cijob_cov("cov");
     const char* atfdb_cijob_memcheck("memcheck");
     const char* atfdb_cijob_normalize("normalize");
 } // gen:ns_gsymbol

@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: Build on ${{ matrix.os }}-${{ matrix.compiler }}
+    name: build-${{ matrix.os }}-${{ matrix.compiler }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -30,15 +30,25 @@ jobs:
           path: temp/build-artifact.tar.gz
 
   test:
-    name: Run atf_ci ${{ matrix.job }} on ${{ matrix.os }}-${{ matrix.compiler }}
+    name: test-${{ matrix.os }}-${{ matrix.test.compiler }}-${{ matrix.test.job }}
     needs: build
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-22.04]
-        compiler: [g++,clang++]
-        job: [normalize, comp, memcheck]
-
+        test:
+        - compiler: clang++
+          job: normalize
+        - compiler: clang++
+          job: comp
+        - compiler: g++
+          job: normalize
+        - compiler: g++
+          job: comp
+        - compiler: g++
+          job: cov
+        - compiler: g++
+          job: memcheck
     steps:
       - uses: actions/checkout@v3
       - name: Add ./bin to PATH
@@ -48,7 +58,7 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
-          name: build-output-${{ matrix.os }}-${{ matrix.compiler }}
+          name: build-output-${{ matrix.os }}-${{ matrix.test.compiler }}
           path: temp/
       - name: Extract build output
         run: tar -xzf temp/build-artifact.tar.gz
@@ -57,4 +67,4 @@ jobs:
           git config --global --add safe.directory $HOME/work/openacr/openacr
           git config --global user.email root@localhost
           git config --global user.name runner
-          atf_ci -cijob:${{ matrix.job }}
+          atf_ci -cijob:${{ matrix.test.job }}

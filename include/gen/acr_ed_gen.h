@@ -149,6 +149,7 @@ namespace acr_ed { // hook_fcn_typedef
 } // hook_decl
 namespace acr_ed { // gen:ns_gsymbol
     extern const char* atfdb_cijob_comp; // "comp"
+    extern const char* atfdb_cijob_cov; // "cov"
     extern const char* atfdb_cijob_memcheck; // "memcheck"
     extern const char* atfdb_cijob_normalize; // "normalize"
 } // gen:ns_gsymbol
