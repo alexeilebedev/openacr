@@ -1,5 +1,6 @@
 dev.gitfile  gitfile:.ffroot
 dev.gitfile  gitfile:.gitattributes
+dev.gitfile  gitfile:.github/actions/setup-deps/action.yml
 dev.gitfile  gitfile:.github/workflows/main.yml
 dev.gitfile  gitfile:.gitignore
 dev.gitfile  gitfile:.gitlab-ci.yml
