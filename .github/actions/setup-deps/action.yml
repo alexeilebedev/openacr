@@ -1,0 +1,19 @@
+name: Setup Developer Tools
+description: Installs required developer tools and libraries
+runs:
+  using: "composite"
+  steps:
+    - name: Install dependencies
+      shell: bash
+      run: |
+        sudo apt-get update && sudo apt-get install -y \
+          mariadb-client \
+          mariadb-server \
+          libmariadb-dev \
+          libmariadbd-dev \
+          libssl-dev \
+          libcurl4-openssl-dev \
+          liblz4-dev \
+          llvm \
+          cppcheck \
+          valgrind

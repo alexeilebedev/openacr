@@ -124,6 +124,7 @@ namespace atf_ci { // hook_fcn_typedef
 } // hook_decl
 namespace atf_ci { // gen:ns_gsymbol
     extern const atfdb::CijobPkey atfdb_cijob_comp; // "comp"
+    extern const atfdb::CijobPkey atfdb_cijob_cov; // "cov"
     extern const atfdb::CijobPkey atfdb_cijob_memcheck; // "memcheck"
     extern const atfdb::CijobPkey atfdb_cijob_normalize; // "normalize"
 } // gen:ns_gsymbol

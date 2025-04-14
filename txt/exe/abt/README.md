@@ -232,7 +232,7 @@ dev.include  include:cpp/abt/ood.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/opt.cpp:include/abt.h  sys:N  comment:""
 dev.include  include:cpp/abt/scan.cpp:include/algo.h  sys:N  comment:""
 dev.include  include:cpp/abt/scan.cpp:include/abt.h  sys:N  comment:""
-abt.config  builddir:Linux-g++.release-x86_64  ood_src:***  ood_target:***  cache:***
+abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 ```
 

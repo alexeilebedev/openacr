@@ -78,6 +78,7 @@ const char *atf_ci_help =
 } // namespace atf_ci
 namespace atf_ci { // gen:ns_gsymbol
     const atfdb::CijobPkey atfdb_cijob_comp("comp");
+    const atfdb::CijobPkey atfdb_cijob_cov("cov");
     const atfdb::CijobPkey atfdb_cijob_memcheck("memcheck");
     const atfdb::CijobPkey atfdb_cijob_normalize("normalize");
 } // gen:ns_gsymbol
@@ -730,7 +731,7 @@ static void atf_ci::citest_LoadStatic() {
         ,{ "atfdb.citest  citest:lineendings  cijob:normalize  sandbox:N  comment:\"Correct windows-style line endings in known text files\"", atf_ci::citest_lineendings }
         ,{ "atfdb.citest  citest:indent_script  cijob:normalize  sandbox:N  comment:\"Indent any bash script file\"", atf_ci::citest_indent_script }
         ,{ "atfdb.citest  citest:comptest  cijob:comp  sandbox:N  comment:\"Rewrite/normalize component tests\"", atf_ci::citest_comptest }
-        ,{ "atfdb.citest  citest:cppcheck  cijob:normalize  sandbox:N  comment:\"Cppcheck static code analysis\"", atf_ci::citest_cppcheck }
+        ,{ "atfdb.citest  citest:cppcheck  cijob:comp  sandbox:N  comment:\"Cppcheck static code analysis\"", atf_ci::citest_cppcheck }
         ,{ "atfdb.citest  citest:bintests  cijob:comp  sandbox:N  comment:\"Run bin/test-* scripts\"", atf_ci::citest_bintests }
         ,{ "atfdb.citest  citest:indent_srcfile  cijob:normalize  sandbox:N  comment:\"Indent any source files modified in last commit\"", atf_ci::citest_indent_srcfile }
         ,{ "atfdb.citest  citest:normalize_amc_vis  cijob:normalize  sandbox:N  comment:\"Check that amc_vis doesn't see any circular dependencies\"", atf_ci::citest_normalize_amc_vis }
@@ -738,7 +739,7 @@ static void atf_ci::citest_LoadStatic() {
         ,{ "atfdb.citest  citest:apm_check  cijob:normalize  sandbox:N  comment:\"\"", atf_ci::citest_apm_check }
         ,{ "atfdb.citest  citest:atf_unit  cijob:comp  sandbox:N  comment:\"Run unit tests\"", atf_ci::citest_atf_unit }
         ,{ "atfdb.citest  citest:atf_comp  cijob:comp  sandbox:N  comment:\"Run component tests\"", atf_ci::citest_atf_comp }
-        ,{ "atfdb.citest  citest:atf_comp_cov  cijob:comp  sandbox:N  comment:\"Check component test coverage\"", atf_ci::citest_atf_comp_cov }
+        ,{ "atfdb.citest  citest:atf_comp_cov  cijob:cov  sandbox:N  comment:\"Check component test coverage\"", atf_ci::citest_atf_comp_cov }
         ,{ "atfdb.citest  citest:apm  cijob:comp  sandbox:Y  comment:\"Test APM\"", atf_ci::citest_apm }
         ,{ "atfdb.citest  citest:atf_comp_mem  cijob:memcheck  sandbox:N  comment:\"Run component tests in memcheck mode (slow)\"", atf_ci::citest_atf_comp_mem }
         ,{ "atfdb.citest  citest:acr_ed_ssimfile  cijob:comp  sandbox:Y  comment:\"Create a new ssimfile\"", atf_ci::citest_acr_ed_ssimfile }

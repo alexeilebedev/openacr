@@ -1,40 +1,70 @@
 name: CI
 on: [push, pull_request]
-  # push:
-  #   branches: [ master ]
-  # pull_request:
-  #   branches: [ master ]
 
 jobs:
-  build_and_test:
-    name: Build & test on ${{ matrix.os }}.
+  build:
+    name: build-${{ matrix.os }}-${{ matrix.compiler }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ubuntu-22.04]
-        bootstrap: [bin/bootstrap/Linux-g++.release-x86_64]
+        compiler: [g++,clang++]
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
       - uses: actions/checkout@v3
-      - name: Setup developers tools
+      - name: Add ./bin to PATH
+        run: echo "bin" >> $GITHUB_PATH
+      - name: Install Dependencies
+        uses: ./.github/actions/setup-deps
+      - name: Build
         run: |
-          sudo apt-get update && sudo apt-get install -y \
-              mariadb-client\
-              mariadb-server\
-              libmariadb-dev\
-              libmariadbd-dev\
-              libssl-dev\
-              libcurl4-openssl-dev\
-              liblz4-dev \
-              cppcheck \
-              llvm \
-              valgrind
-      - name: Build and test
+          bin/bootstrap/Linux-${{ matrix.compiler }}.release-x86_64
+          bin/ai
+      - name: Archive build
+        run: tar -czf temp/build-artifact.tar.gz build
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output-${{ matrix.os }}-${{ matrix.compiler }}
+          path: temp/build-artifact.tar.gz
+
+  test:
+    name: test-${{ matrix.os }}-${{ matrix.test.compiler }}-${{ matrix.test.job }}
+    needs: build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04]
+        test:
+        - compiler: clang++
+          job: normalize
+        - compiler: clang++
+          job: comp
+        - compiler: g++
+          job: normalize
+        - compiler: g++
+          job: comp
+        - compiler: g++
+          job: cov
+        - compiler: g++
+          job: memcheck
+    steps:
+      - uses: actions/checkout@v3
+      - name: Add ./bin to PATH
+        run: echo "bin" >> $GITHUB_PATH
+      - name: Install Dependencies
+        uses: ./.github/actions/setup-deps
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output-${{ matrix.os }}-${{ matrix.test.compiler }}
+          path: temp/
+      - name: Extract build output
+        run: tar -xzf temp/build-artifact.tar.gz
+      - name: Run atf_ci
         run: |
-          echo bin >> $GITHUB_PATH
-          export PATH=bin:$PATH
+          git config --global --add safe.directory $HOME/work/openacr/openacr
           git config --global user.email root@localhost
           git config --global user.name runner
-          ${{ matrix.bootstrap }}
-          bin/normalize %
+          atf_ci -cijob:${{ matrix.test.job }}
