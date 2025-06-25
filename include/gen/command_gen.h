@@ -2389,21 +2389,12 @@ void                 apm_proc_Uninit(command::apm_proc& parent) __attribute__((n
 // --- command.aqlite
 // access: command.aqlite_proc.aqlite (Exec)
 struct aqlite { // command.aqlite
-    algo::cstring    in;     //   "data"  Input directory or filename, - for stdin for schema
-    algo::cstring    data;   //   "data"  Input directory for data
-    algo::cstring    cmd;    // Sql Query to run
-    algo_lib::Regx   ns;     //   "%"  Sql Regx of dmmeta::Ns
+    algo::cstring   in;       //   "data"  Input directory or filename, - for stdin
+    algo::cstring   schema;   //   "data"  Schema dir
+    algo::cstring   cmd;      // Sql Query to run
     // func:command.aqlite..Ctor
     inline               aqlite() __attribute__((nothrow));
 };
-
-// Print back to string
-// func:command.aqlite.ns.Print
-void                 ns_Print(command::aqlite& parent, algo::cstring &out) __attribute__((nothrow));
-// Read Regx from string
-// Convert string to field. Return success value
-// func:command.aqlite.ns.ReadStrptrMaybe
-bool                 ns_ReadStrptrMaybe(command::aqlite& parent, algo::strptr in) __attribute__((nothrow));
 
 // func:command.aqlite..ReadFieldMaybe
 bool                 aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -2412,7 +2403,7 @@ bool                 aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr
 bool                 aqlite_ReadTupleMaybe(command::aqlite &parent, algo::Tuple &tuple) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:command.aqlite..Init
-void                 aqlite_Init(command::aqlite& parent);
+inline void          aqlite_Init(command::aqlite& parent);
 // Convenience function that returns a full command line
 // Assume command is in a directory called bin
 // func:command.aqlite..ToCmdline

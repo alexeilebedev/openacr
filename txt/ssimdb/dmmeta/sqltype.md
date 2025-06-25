@@ -23,6 +23,7 @@ This table is used when converting OpenACR schema to MariaDB schema.
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
 
 * [lib_ctype](/txt/lib/lib_ctype/README.md) as [lib_ctype.FSqltype](/txt/lib/lib_ctype/README.md#lib_ctype-fsqltype)
+* [lib_sqlite](/txt/lib/lib_sqlite/README.md) as [lib_sqlite.FSqltype](/txt/lib/lib_sqlite/README.md#lib_sqlite-fsqltype)
 * [ssim2mysql](/txt/exe/ssim2mysql/internals.md) as [ssim2mysql.FSqltype](/txt/exe/ssim2mysql/internals.md#ssim2mysql-fsqltype)
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->

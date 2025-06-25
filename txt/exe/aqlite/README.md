@@ -20,10 +20,9 @@
 aqlite: Runs sqlite queries against ssim files
 Usage: aqlite [-cmd:]<string> [options]
     OPTION      TYPE    DFLT    COMMENT
-    -in         string  "data"  Input directory or filename, - for stdin for schema
-    -data       string  "data"  Input directory for data
+    -in         string  "data"  Input directory or filename, - for stdin
+    -schema     string  "data"  Schema dir
     [cmd]       string          Sql Query to run
-    -ns         regx    "%"     Regx of databases to attach
     -verbose    int             Verbosity level (0..255); alias -v; cumulative
     -debug      int             Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
@@ -38,17 +37,14 @@ Usage: aqlite [-cmd:]<string> [options]
 <a href="#options"></a>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Options -->
-#### -in -- Input directory or filename, - for stdin for schema
+#### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
-#### -data -- Input directory for data
-<a href="#-data"></a>
+#### -schema -- Schema dir
+<a href="#-schema"></a>
 
 #### -cmd -- Sql Query to run
 <a href="#-cmd"></a>
-
-#### -ns -- Regx of databases to attach
-<a href="#-ns"></a>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
@@ -64,14 +60,7 @@ Usage: aqlite [-cmd:]<string> [options]
 |[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
 |[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

@@ -732,6 +732,13 @@ inline  command::apm_proc::~apm_proc() {
     command::apm_proc_Uninit(*this);
 }
 
+// --- command.aqlite..Init
+// Set all fields to initial values.
+inline void command::aqlite_Init(command::aqlite& parent) {
+    parent.in = algo::strptr("data");
+    parent.schema = algo::strptr("data");
+}
+
 // --- command.aqlite..Ctor
 inline  command::aqlite::aqlite() {
     command::aqlite_Init(*this);

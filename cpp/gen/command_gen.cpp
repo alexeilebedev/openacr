@@ -10160,21 +10160,6 @@ void command::apm_proc_Uninit(command::apm_proc& parent) {
     apm_Kill(parent); // kill child, ensure forward progress
 }
 
-// --- command.aqlite.ns.Print
-// Print back to string
-void command::ns_Print(command::aqlite& parent, algo::cstring &out) {
-    Regx_Print(parent.ns, out);
-}
-
-// --- command.aqlite.ns.ReadStrptrMaybe
-// Read Regx from string
-// Convert string to field. Return success value
-bool command::ns_ReadStrptrMaybe(command::aqlite& parent, algo::strptr in) {
-    bool retval = true;
-    Regx_ReadSql(parent.ns, in, true);
-    return retval;
-}
-
 // --- command.aqlite..ReadFieldMaybe
 bool command::aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -10185,16 +10170,12 @@ bool command::aqlite_ReadFieldMaybe(command::aqlite& parent, algo::strptr field,
             retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
             break;
         }
-        case command_FieldId_data: {
-            retval = algo::cstring_ReadStrptrMaybe(parent.data, strval);
+        case command_FieldId_schema: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.schema, strval);
             break;
         }
         case command_FieldId_cmd: {
             retval = algo::cstring_ReadStrptrMaybe(parent.cmd, strval);
-            break;
-        }
-        case command_FieldId_ns: {
-            retval = ns_ReadStrptrMaybe(parent, strval);
             break;
         }
         default: break;
@@ -10220,14 +10201,6 @@ bool command::aqlite_ReadTupleMaybe(command::aqlite &parent, algo::Tuple &tuple)
         }
     }ind_end;
     return retval;
-}
-
-// --- command.aqlite..Init
-// Set all fields to initial values.
-void command::aqlite_Init(command::aqlite& parent) {
-    parent.in = algo::strptr("data");
-    parent.data = algo::strptr("data");
-    Regx_ReadSql(parent.ns, "%", true);
 }
 
 // --- command.aqlite..ToCmdline
@@ -10260,22 +10233,16 @@ void command::aqlite_PrintArgv(command::aqlite& row, algo::cstring& str) {
         str << " -in:";
         strptr_PrintBash(temp,str);
     }
-    if (!(row.data == "data")) {
+    if (!(row.schema == "data")) {
         ch_RemoveAll(temp);
-        cstring_Print(row.data, temp);
-        str << " -data:";
+        cstring_Print(row.schema, temp);
+        str << " -schema:";
         strptr_PrintBash(temp,str);
     }
     ch_RemoveAll(temp);
     cstring_Print(row.cmd, temp);
     str << " -cmd:";
     strptr_PrintBash(temp,str);
-    if (!(row.ns.expr == "%")) {
-        ch_RemoveAll(temp);
-        command::ns_Print(const_cast<command::aqlite&>(row), temp);
-        str << " -ns:";
-        strptr_PrintBash(temp,str);
-    }
 }
 
 // --- command.aqlite..GetAnon
@@ -10297,14 +10264,11 @@ i32 command::aqlite_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* 
         case command_FieldId_in: { // $comment
             *out_anon = false;
         } break;
-        case command_FieldId_data: { // $comment
+        case command_FieldId_schema: { // $comment
             *out_anon = false;
         } break;
         case command_FieldId_cmd: { // $comment
             *out_anon = true;
-        } break;
-        case command_FieldId_ns: { // $comment
-            *out_anon = false;
         } break;
         default:
         retval=-1; // unrecognized
@@ -10457,22 +10421,16 @@ void command::aqlite_ToArgv(command::aqlite_proc& parent, algo::StringAry& args)
         cstring_Print(parent.cmd.in, *arg);
     }
 
-    if (parent.cmd.data != "data") {
+    if (parent.cmd.schema != "data") {
         cstring *arg = &ary_Alloc(args);
-        *arg << "-data:";
-        cstring_Print(parent.cmd.data, *arg);
+        *arg << "-schema:";
+        cstring_Print(parent.cmd.schema, *arg);
     }
 
     if (true) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-cmd:";
         cstring_Print(parent.cmd.cmd, *arg);
-    }
-
-    if (parent.cmd.ns.expr != "%") {
-        cstring *arg = &ary_Alloc(args);
-        *arg << "-ns:";
-        command::ns_Print(parent.cmd, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";

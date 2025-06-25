@@ -26,38 +26,42 @@
 
 int aqlite::exec_cb(void*, int na, char** av, char** cols) {
     verblog(__PRETTY_FUNCTION__);
-    cstring out;
+    algo::Tuple row;
     for(auto i=0; i<na; i++) {
-        out << Keyval(cols[i], av[i] ? av[i] : "NULL");
+        auto& attr = attrs_Alloc(row);
+        attr.name = cols[i];
+        attr.value = av[i];
     }
-    prlog(out);
+    auto change = attrs_N(row) != attrs_N(_db.last_cols);
+    if (!change) {
+        ind_beg(algo::Tuple_attrs_curs, attr, row) {
+            auto& last = attrs_qFind(_db.last_cols, ind_curs(attr).index);
+            if (attr.name != last.name) {
+                change = true;
+                break;
+            }
+        }ind_end;
+    }
+    if (change) {
+        _db.stmt++;
+    }
+    row.head.value << "stmt" << _db.stmt;
+    prlog(row);
+    if (change) {
+        algo::TSwap(row, _db.last_cols);
+    }
     return SQLITE_OK;
 }
 
 void aqlite::Main() {
-    lib_sqlite::Init();
+    auto rc = sqlite3_auto_extension((void (*)())lib_sqlite::VtabInitExt);
     auto& conn = lib_sqlite::ind_conn_GetOrCreate(":memory:");
-    auto rc = Open(conn);
     if (rc == SQLITE_OK) {
-        rc = sqlite3_create_module(conn.db, "ssimdb", &lib_sqlite::SsimModule, 0);
+        rc = Open(conn);
     }
     if (rc == SQLITE_OK) {
-        auto create = cstring();
-        algo_lib::Replscope R;
-        ind_beg(_db_ns_curs,ns,_db) {
-            ns.select = Regx_Match(_db.cmdline.ns, ns.ns);
-        }ind_end;
-        ind_beg(_db_ns_curs,ns,_db) if (ns.select && ns.nstype == dmmeta_Nstype_nstype_ssimdb) {
-            Set(R,"$ns",ns.ns);
-            Ins(&R,create, "attach ':memory:' as $ns;");
-        }ind_end;
-        ind_beg(lib_ctype::_db_ssimfile_curs, ssimfile, lib_ctype::_db) if (aqlite::ind_ns_Find(ns_Get(ssimfile))->select) {
-            Set(R,"$data",_db.cmdline.data);
-            Set(R,"$ssimfile",ssimfile.ssimfile);
-            Ins(&R,create, "create virtual table $ssimfile using ssimdb( $data , $ssimfile );");
-        }ind_end;
-        verblog(create);
-        rc = sqlite3_exec(conn.db, algo::Zeroterm(create), nullptr, nullptr, nullptr);
+        auto init_cmd = tempstr() << "SELECT init_ssim('" << _db.cmdline.in << "')";
+        rc = sqlite3_exec(conn.db, algo::Zeroterm(init_cmd), nullptr, nullptr, nullptr);
     }
     if (rc == SQLITE_OK) {
         verblog(_db.cmdline.cmd);

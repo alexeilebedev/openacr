@@ -139,6 +139,7 @@ These ssimfiles reference dmmeta.field
 * [amc_vis](/txt/exe/amc_vis/internals.md) as [amc_vis.FField](/txt/exe/amc_vis/internals.md#amc_vis-ffield)
 * [apm](/txt/exe/apm/internals.md) as [apm.FField](/txt/exe/apm/internals.md#apm-ffield)
 * [lib_ctype](/txt/lib/lib_ctype/README.md) as [lib_ctype.FField](/txt/lib/lib_ctype/README.md#lib_ctype-ffield)
+* [lib_sqlite](/txt/lib/lib_sqlite/README.md) as [lib_sqlite.FField](/txt/lib/lib_sqlite/README.md#lib_sqlite-ffield)
 * [ssim2mysql](/txt/exe/ssim2mysql/internals.md) as [ssim2mysql.FField](/txt/exe/ssim2mysql/internals.md#ssim2mysql-ffield)
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->

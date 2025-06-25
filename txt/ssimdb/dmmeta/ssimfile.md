@@ -66,6 +66,7 @@ These ssimfiles reference dmmeta.ssimfile
 * [apm](/txt/exe/apm/internals.md) as [apm.FSsimfile](/txt/exe/apm/internals.md#apm-fssimfile)
 * [atf_ci](/txt/exe/atf_ci/internals.md) as [atf_ci.FSsimfile](/txt/exe/atf_ci/internals.md#atf_ci-fssimfile)
 * [lib_ctype](/txt/lib/lib_ctype/README.md) as [lib_ctype.FSsimfile](/txt/lib/lib_ctype/README.md#lib_ctype-fssimfile)
+* [lib_sqlite](/txt/lib/lib_sqlite/README.md) as [lib_sqlite.FSsimfile](/txt/lib/lib_sqlite/README.md#lib_sqlite-fssimfile)
 * [ssim2mysql](/txt/exe/ssim2mysql/internals.md) as [ssim2mysql.FSsimfile](/txt/exe/ssim2mysql/internals.md#ssim2mysql-fssimfile)
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->

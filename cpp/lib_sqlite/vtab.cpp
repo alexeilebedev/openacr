@@ -20,92 +20,117 @@
 //
 
 #include "include/algo.h"
-#include "include/lib_ctype.h"
 #include "include/lib_sqlite.h"
 
+using namespace lib_sqlite;
 
-static tempstr CreateCtypeTable(lib_ctype::FCtype& ctype) {
+// Find ctype from ctype name
+// Supports ctype and ssimfile lookups.
+static FCtype *TagToCtype(strptr name) {
+    auto *ssimfile = ind_ssimfile_Find(name);
+    auto *ctype = ssimfile ? ssimfile->p_ctype : ind_ctype_Find(name);
+    return ctype;
+}
+
+static tempstr CreateCtypeTable(FCtype& ctype) {
     auto cmd = tempstr();
     cmd << "CREATE TABLE x (";
     algo::ListSep ls(",");
-    ind_beg(lib_ctype::ctype_c_field_curs, field, ctype) {
+    ind_beg(ctype_c_field_curs, field, ctype) {
         auto sqltype = field.p_arg->c_sqltype ? strptr(field.p_arg->c_sqltype->expr) : "TEXT";
         if (algo::FindStr(sqltype, "enum") >= 0) {
             sqltype = "TEXT";
         }
-        cmd << ls << "'" << name_Get(field) << "' " << sqltype;
+        cmd << ls
+            << "'" << name_Get(field) << "' "
+            << (field.c_substr ? " HIDDEN " : "")
+            << sqltype;
     }ind_end;
     cmd << ")";
     return cmd;
 }
 
-static bool CtypeTuple_ReadMaybe(algo::Tuple& row, lib_ctype::FCtype& ctype, strptr line) {
-    algo::Refurbish(row);
-    algo::Tuple _row;
-    auto retval = algo::Tuple_ReadStrptrMaybe(_row, line);
-    row.head = _row.head;
-    ind_beg(lib_ctype::ctype_c_field_curs,field,ctype) {
-        auto& attr = attrs_Alloc(row);
-        attr.name = name_Get(field);
-        if (auto* sub = field.c_substr) {
-            if (auto* src = attr_Find(_row,dmmeta::Field_name_Get(sub->srcfield))) {
-                attr.value = Pathcomp(src->value, sub->expr.value);
-            }
-        } else {
-            if (auto* src = attr_Find(_row,name_Get(field))) {
-                attr.value = src->value;
-            }
+static bool MatchTag(FCtype& ctype, strptr tag) {
+    auto* ssim = ctype.c_ssimfile;
+    return (ssim && tag == ssim->ssimfile) || ctype.ctype == tag;
+}
+
+static void ReadRow(VtabCurs& curs, FRow& row) {
+    auto& ctype = *row.p_ctype;
+    ind_beg(algo::Tuple_attrs_curs, attr, row.tuple) {
+        auto* field = ind_field_name_Find(ctype, attr.name);
+        if (field && !field->c_substr) {
+            auto& value = attrs_qFind(curs, field->id);
+            value = attr.value;
         }
     }ind_end;
-    return retval;
+    ind_beg(ctype_c_field_curs, field, ctype) if (field.c_substr) {
+        auto& src = attrs_qFind(curs, field.c_substr->p_srcfield->id);
+        auto& value = attrs_qFind(curs, field.id);
+        value = Pathcomp(src, field.c_substr->expr.value);
+    }ind_end;
 }
 
-static bool MatchTag(lib_sqlite::Vtab& tab, strptr tag) {
-    auto res = false;
-    if (tab.c_ssimfile && tag == tab.c_ssimfile->ssimfile) {
-        res = true;
+static bool CheckRow(VtabCurs& curs, FRow& row) {
+    auto mismatch = false;
+    ReadRow(curs, row);
+    if (auto* idx = curs.c_idx) {
+        ind_beg(FIdx_cons_curs, con, *idx) {
+            auto& value = attrs_qFind(curs, con.p_field->id);
+            switch (con.op) {
+                break; case SQLITE_INDEX_CONSTRAINT_EQ: mismatch |= value != con.value;
+                break; case SQLITE_INDEX_CONSTRAINT_NE: mismatch |= value == con.value;
+                break; default: ;
+            }
+        }ind_end;
+    }
+    return !mismatch;
+}
+
+static void SsimCursor_Next(VtabCurs& curs) {
+    auto& ctype = *curs.p_ctype;
+    if (curs.c_pkey) {
+        if (!curs.c_row) {
+            curs.c_row = ind_pkey_Find(ctype, curs.c_pkey->value);
+            if (!curs.c_row || !CheckRow(curs, *curs.c_row)) {
+                curs.c_row = nullptr;
+            }
+        } else {
+            // already consumed
+            curs.c_row = nullptr;
+        }
     } else {
-        res = tab.p_ctype->ctype == tag;
+        // full scan
+        if (!curs.c_row) {
+            curs.c_row = zd_row_First(ctype);
+        } else {
+            curs.c_row = zd_row_Next(*curs.c_row);
+        }
+        while (curs.c_row) {
+            if (CheckRow(curs, *curs.c_row)) {
+                break;
+            }
+            curs.c_row = zd_row_Next(*curs.c_row);
+        }
     }
-    return res;
-}
-static void SsimCursor_Next(lib_sqlite::VtabCurs& curs) {
-    auto& tab = *(lib_sqlite::Vtab*)curs.base.pVtab;
-    curs.eof = !ReadLine(curs.file, curs.line);
-    while (!curs.eof && !MatchTag(tab, algo::GetTypeTag(curs.line))) {
-        curs.eof = !ReadLine(curs.file, curs.line);
-    }
-    curs.i++;
-    CtypeTuple_ReadMaybe(curs.row,*tab.p_ctype,curs.line);
-}
-
-static void SsimCursor_Reset(lib_sqlite::VtabCurs& curs) {
-    const auto& tab = *(lib_sqlite::Vtab*)curs.base.pVtab;
-    algo::Refurbish(curs.file);
-    algo::Refurbish(curs.row);
-    curs.file.file.fd = OpenRead(tab.filename);
-    curs.file.own_fd = true;
-    curs.line = strptr();
-    curs.i=0;
-    SsimCursor_Next(curs);
-}
-
-static bool SsimCursor_ValidQ(lib_sqlite::VtabCurs& curs) {
-    return !curs.eof;
-}
-
-static algo::Tuple& SsimCursor_Access(lib_sqlite::VtabCurs& curs) {
-    return curs.row;
+    curs.eof = curs.c_row == nullptr;
+    verblog(__FUNCTION__
+            << Keyval("ctype", ctype.ctype)
+            << Keyval("curs", curs.rowid)
+            << Keyval("pkey", curs.c_pkey ? strptr(curs.c_pkey->value) : "N")
+            << Keyval("row", curs.c_row ? strptr(curs.c_row->pkey) : "N")
+            << Keyval("eof", curs.eof)
+            );
 }
 
 static int xDisconnect(sqlite3_vtab* pVtab) {
-    verblog(__PRETTY_FUNCTION__);
-    auto* tab = (lib_sqlite::Vtab*)pVtab;
+    verblog(__FUNCTION__);
+    auto* tab = (Vtab*)pVtab;
     delete tab;
     return SQLITE_OK;
 }
+
 static int xConnect(sqlite3 *db, void *, int argc, const char *const*argv, sqlite3_vtab **ppVtab, char **pzErr){
-    verblog(__PRETTY_FUNCTION__);
     if (argc != 5) {
         *pzErr = sqlite3_mprintf("%s", "invalid number of arguments");
         return SQLITE_ERROR;
@@ -113,14 +138,14 @@ static int xConnect(sqlite3 *db, void *, int argc, const char *const*argv, sqlit
 
     auto data = algo::Trimmed(strptr(argv[3]));
     auto type_tag = algo::Trimmed(argv[4]);
-    auto* ctype = lib_ctype::TagToCtype(type_tag);
+    auto* ctype = TagToCtype(type_tag);
     if (!ctype) {
         *pzErr = sqlite3_mprintf("create ctype:%s comment:ctype not found", type_tag);
         return SQLITE_ERROR;
     }
 
     auto rc = SQLITE_OK;
-    auto* ctx = new lib_sqlite::Vtab();
+    auto* ctx = new Vtab();
     *ppVtab = (sqlite3_vtab*)ctx;
     if (FileQ(data)) {
         ctx->filename = data;
@@ -130,10 +155,8 @@ static int xConnect(sqlite3 *db, void *, int argc, const char *const*argv, sqlit
         ctx->filename = algo::SsimFname(data, type_tag);
     }
     ctx->p_ctype = ctype;
-    ctx->c_ssimfile = lib_ctype::ind_ssimfile_Find(type_tag);
-    char * schmea = sqlite3_mprintf("%s", algo::Zeroterm(CreateCtypeTable(*ctype)));
-    verblog(schmea);
-    rc = sqlite3_declare_vtab(db, schmea);
+    char * schema = sqlite3_mprintf("%s", algo::Zeroterm(CreateCtypeTable(*ctype)));
+    rc = sqlite3_declare_vtab(db, schema);
     if (rc == SQLITE_OK) {
         rc = sqlite3_vtab_config(db, SQLITE_VTAB_DIRECTONLY);
     }
@@ -142,60 +165,276 @@ static int xConnect(sqlite3 *db, void *, int argc, const char *const*argv, sqlit
             xDisconnect(&ctx->base);
         }
     }
+
     return rc;
 }
+
+static void MaybeLoadTable(Vtab& tab) {
+    if (!bool_Update(tab.loaded, true)) {
+        return;
+    }
+    auto& ctype = *tab.p_ctype;
+    // read the file
+    algo_lib::MmapFile fmap;
+    algo_lib::MmapFile_Load(fmap, tab.filename);
+    ind_beg(algo::Line_curs, line, fmap.text) {
+        auto row = algo::Tuple();
+        if (algo::Tuple_ReadStrptrMaybe(row, line) && MatchTag(ctype, row.head.value)) {
+            auto& trow = trow_Alloc();
+            trow.rowid = c_row_N(ctype);
+            algo::TSwap(trow.tuple, row);
+            if (auto* pkey = attrs_Find(trow.tuple, 0)) {
+                trow.pkey = pkey->value;
+            }
+            trow.p_ctype = &ctype;
+            trow_XrefMaybe(trow);
+        }
+    }ind_end;
+    verblog(__FUNCTION__
+            << Keyval("ctype", ctype.ctype)
+            << Keyval("n_row", zd_row_N(ctype))
+            );
+}
+
 static int xCreate(sqlite3 *db, void *pAux, int argc, const char *const*argv, sqlite3_vtab **ppVtab, char **pzErr){
-    verblog(__PRETTY_FUNCTION__);
     return xConnect(db, pAux, argc, argv, ppVtab, pzErr);
 }
-static int xBestIndex(sqlite3_vtab*,sqlite3_index_info* pIdxInfo) {
-    verblog(__PRETTY_FUNCTION__);
-    pIdxInfo->estimatedCost = 1000000;
+
+static int xBestIndex(sqlite3_vtab* pVtab, sqlite3_index_info* pIdxInfo) {
+    auto& tab = *(Vtab*)pVtab;
+    auto& ctype = *tab.p_ctype;
+    MaybeLoadTable(tab);
+    auto& idx = bestidx_Alloc();
+    idx.rowid = bestidx_N() - 1;
+
+    // Default cost if no useful constraints
+    pIdxInfo->estimatedCost = 100000;
+    pIdxInfo->estimatedRows = zd_row_N(ctype);
+
+    auto out = tempstr() << __FUNCTION__
+                         << Keyval("ctype", ctype.ctype)
+                         << Keyval("nConstraint", pIdxInfo->nConstraint);
+
+    // Check for equality constraints
+    for (auto i = 0; i < pIdxInfo->nConstraint; i++) {
+        auto& sqlcon = pIdxInfo->aConstraint[i];
+        auto& usage = pIdxInfo->aConstraintUsage[i];
+        if (auto* field = c_field_Find(ctype, sqlcon.iColumn)) {
+            out << Keyval(tempstr() << i << "u" << sqlcon.usable << "o" << sqlcon.op, field->field);
+            if (sqlcon.usable) {
+                auto& con = cons_Alloc(idx);
+                con.op = sqlcon.op;
+                con.p_field = field;
+                con.icol = sqlcon.iColumn;
+                switch (sqlcon.op) {
+                    break; case SQLITE_INDEX_CONSTRAINT_EQ: {
+                               usage.argvIndex = cons_N(idx);
+                               // Improve cost estimates for indexed fields
+                               if (sqlcon.iColumn == 0) {
+                                   // Primary key - best case
+                                   pIdxInfo->estimatedCost = 1;
+                                   pIdxInfo->estimatedRows = 1;
+                               }
+                           }
+                    break; case SQLITE_INDEX_CONSTRAINT_NE: usage.argvIndex = cons_N(idx);
+                    break; default: cons_RemoveLast(idx); // drop if not handled
+                }
+            }
+        }
+    }
+
+    if (cons_N(idx)) {
+        pIdxInfo->idxNum = idx.rowid;
+        out << Keyval("n_cons", cons_N(idx));
+    } else {
+        // if no constraint added drop the idx
+        bestidx_RemoveLast();
+    }
+    out << Keyval("idxNum", pIdxInfo->idxNum);
+    verblog(out);
+
     return SQLITE_OK;
 }
-static int xOpen(sqlite3_vtab *, sqlite3_vtab_cursor **ppCursor){
-    verblog(__PRETTY_FUNCTION__);
-    auto* curs = new lib_sqlite::VtabCurs();
+
+static int xOpen(sqlite3_vtab *vtab, sqlite3_vtab_cursor **ppCursor){
+    auto* tab = (Vtab*)vtab;
+    auto* curs = new VtabCurs();
     *ppCursor = &curs->base;
+    curs->p_ctype = tab->p_ctype;
+    curs->p_vtab = tab;
+    curs->rowid = c_curs_N(*tab);
+    c_curs_Insert(*tab, *curs);
+    ind_beg(ctype_c_field_curs, field, *tab->p_ctype) {
+        auto &value = attrs_Alloc(*curs);
+        (void)field;
+        (void)value;
+    }ind_end;
+
     return SQLITE_OK;
 }
+
 static int xClose(sqlite3_vtab_cursor* pCurs) {
-    verblog(__PRETTY_FUNCTION__);
-    auto* curs = (lib_sqlite::VtabCurs*)pCurs;
+    verblog(__FUNCTION__);
+    auto* curs = (VtabCurs*)pCurs;
     delete curs;
     return SQLITE_OK;
 }
-static int xFilter(sqlite3_vtab_cursor* pCurs, int, const char *, int, sqlite3_value **) {
-    verblog(__PRETTY_FUNCTION__);
-    auto& curs = *(lib_sqlite::VtabCurs*)pCurs;
-    SsimCursor_Reset(curs);
-    return SQLITE_OK;
-}
-static int xNext(sqlite3_vtab_cursor* pCurs) {
-    verblog(__PRETTY_FUNCTION__);
-    auto& curs = *(lib_sqlite::VtabCurs*)pCurs;
+
+static int xFilter(sqlite3_vtab_cursor* pCurs, int idxNum, const char* idxStr, int argc, sqlite3_value** argv) {
+    (void)argv;
+    (void)argc;
+    (void)idxNum;
+    (void)idxStr;
+    auto& curs = *(VtabCurs*)pCurs;
+    auto& ctype = *curs.p_ctype;
+    // Reset cursor
+    curs.eof = false;
+    curs.c_row = nullptr;
+    curs.c_idx = nullptr;
+
+    auto* idx = bestidx_Find(idxNum);
+    if (idxNum != 0) {
+        curs.c_idx = idx;
+        // Extract constraint values
+        curs.c_pkey = nullptr;
+        for (int i = 0; i < argc; i++) {
+            auto& con = cons_qFind(*idx, i);
+            con.value = (const char*)sqlite3_value_text(argv[i]);
+            if (con.icol == 0) {
+                curs.c_pkey = &con;
+            }
+        }
+    }
+    verblog(__FUNCTION__
+            << Keyval("ctype", ctype.ctype)
+            << Keyval("curs", curs.rowid)
+            << Keyval("idxNum", idxNum)
+            << Keyval("argc", argc));
     SsimCursor_Next(curs);
     return SQLITE_OK;
 }
-static int xEof(sqlite3_vtab_cursor* pCurs) {
-    verblog(__PRETTY_FUNCTION__);
-    auto& curs = *(lib_sqlite::VtabCurs*)pCurs;
-    return SsimCursor_ValidQ(curs) ? SQLITE_OK : SQLITE_ERROR;
+
+static int xNext(sqlite3_vtab_cursor* pCurs) {
+    auto& curs = *(VtabCurs*)pCurs;
+    SsimCursor_Next(curs);
+    return SQLITE_OK;
 }
+
+static int xEof(sqlite3_vtab_cursor* pCurs) {
+    auto& curs = *(VtabCurs*)pCurs;
+    auto& ctype = *curs.p_ctype;
+    verblog(__FUNCTION__
+            << Keyval("ctype", ctype.ctype)
+            << Keyval("curs", curs.rowid)
+            << Keyval("eof", curs.eof));
+    return curs.eof;
+}
+
 static int xColumn(sqlite3_vtab_cursor* pCurs,sqlite3_context* ctx,int i) {
-    verblog(__PRETTY_FUNCTION__);
-    auto& curs = *(lib_sqlite::VtabCurs*)pCurs;
-    auto& row = SsimCursor_Access(curs);
-    if (i>=0 && i<attrs_N(row)) {
-        auto& value = attrs_qFind(row, i).value;
-        sqlite3_result_text(ctx, value.ch_elems, value.ch_n, SQLITE_STATIC);
+    auto& curs = *(VtabCurs*)pCurs;
+    auto& ctype = *curs.p_ctype;
+    if (auto* field = c_field_Find(ctype, i)) {
+        strptr value = algo::Zeroterm(attrs_qFind(curs, field->id));
+        sqlite3_result_text(ctx, value.elems, value.n_elems, SQLITE_STATIC);
+        verblog(__FUNCTION__
+                << Keyval("curs", curs.rowid)
+                << Keyval(field->field, value));
     }
     return SQLITE_OK;
 }
+
 static int xRowid(sqlite3_vtab_cursor *pCurs, sqlite_int64 *pRowid) {
-    verblog(__PRETTY_FUNCTION__);
-    auto& curs = *(lib_sqlite::VtabCurs*)pCurs;
-    *pRowid = curs.i;
+    auto& curs = *(VtabCurs*)pCurs;
+    auto& ctype = *curs.p_ctype;
+    auto rowid = curs.c_row ? curs.c_row->rowid : -1;
+    *pRowid = rowid;
+    verblog(__FUNCTION__
+            << Keyval("ctype", ctype.ctype)
+            << Keyval("curs", curs.rowid)
+            << Keyval("rowid", rowid)
+            );
+    return SQLITE_OK;
+}
+
+static int xUpdate(sqlite3_vtab *pVTab, int argc, sqlite3_value **argv, sqlite_int64 *pRowid) {
+    (void)pVTab;
+    (void)argc;
+    (void)argv;
+    (void)pRowid;
+    auto& tab = *(Vtab*)pVTab;
+    verblog(__FUNCTION__ << Keyval("ctype", tab.p_ctype->ctype) << Keyval("argc", argc));
+    return SQLITE_OK;
+}
+
+static int xBegin(sqlite3_vtab *pVTab) {
+    auto& tab = *(Vtab*)pVTab;
+    verblog(__FUNCTION__ << Keyval("ctype", tab.p_ctype->ctype));
+    return SQLITE_OK;
+}
+
+static int xSync(sqlite3_vtab *pVTab) {
+    auto& tab = *(Vtab*)pVTab;
+    verblog(__FUNCTION__ << Keyval("ctype", tab.p_ctype->ctype));
+    return SQLITE_OK;
+}
+
+static int xCommit(sqlite3_vtab *pVTab) {
+    auto& tab = *(Vtab*)pVTab;
+    verblog(__FUNCTION__ << Keyval("ctype", tab.p_ctype->ctype));
+    return SQLITE_OK;
+}
+
+static int xRollback(sqlite3_vtab *pVTab) {
+    auto& tab = *(Vtab*)pVTab;
+    verblog(__FUNCTION__ << Keyval("ctype", tab.p_ctype->ctype));
+    return SQLITE_OK;
+}
+
+static int xFindFunction(sqlite3_vtab *pVTab, int nArg, const char *zName, void (**pxFunc)(sqlite3_context*,int,sqlite3_value**), void **ppArg) {
+    (void)nArg;
+    (void)zName;
+    (void)pxFunc;
+    (void)ppArg;
+    auto& tab = *(Vtab*)pVTab;
+    verblog(__FUNCTION__ << Keyval("ctype", tab.p_ctype->ctype));
+    return SQLITE_OK;
+}
+
+static int xRename(sqlite3_vtab *pVTab, const char *zName) {
+    (void)zName;
+    auto& tab = *(Vtab*)pVTab;
+    verblog(__FUNCTION__ << Keyval("ctype", tab.p_ctype->ctype));
+    return SQLITE_OK;
+}
+
+static int xSavepoint(sqlite3_vtab *pVTab, int iSavepoint) {
+    (void)iSavepoint;
+    auto& tab = *(Vtab*)pVTab;
+    verblog(__FUNCTION__ << Keyval("ctype", tab.p_ctype->ctype));
+    return SQLITE_OK;
+}
+
+static int xRelease(sqlite3_vtab *pVTab, int iSavepoint) {
+    (void)iSavepoint;
+    auto& tab = *(Vtab*)pVTab;
+    verblog(__FUNCTION__ << Keyval("ctype", tab.p_ctype->ctype));
+    return SQLITE_OK;
+}
+
+static int xRollbackTo(sqlite3_vtab *pVTab, int iSavepoint) {
+    (void)iSavepoint;
+    auto& tab = *(Vtab*)pVTab;
+    verblog(__FUNCTION__ << Keyval("ctype", tab.p_ctype->ctype));
+    return SQLITE_OK;
+}
+
+static int xIntegrity(sqlite3_vtab *pVTab, const char *zSchema, const char *zTabName, int mFlags, char **pzErr) {
+    (void)zSchema;
+    (void)zTabName;
+    (void)mFlags;
+    (void)pzErr;
+    auto& tab = *(Vtab*)pVTab;
+    verblog(__FUNCTION__ << Keyval("ctype", tab.p_ctype->ctype));
     return SQLITE_OK;
 }
 
@@ -213,16 +452,68 @@ sqlite3_module lib_sqlite::SsimModule = {
     xEof,          /* xEof - check for end of scan */
     xColumn,       /* xColumn - read data */
     xRowid,        /* xRowid - read data */
-    0,             /* xUpdate */
-    0,             /* xBegin */
-    0,             /* xSync */
-    0,             /* xCommit */
-    0,             /* xRollback */
-    0,             /* xFindFunction */
-    0,             /* xRename */
-    0,             /* xSavepoint */
-    0,             /* xRelease */
-    0,             /* xRollbackTo */
-    0,             /* xShadowName */
-    0,             /* xIntegrity */
+    xUpdate,       /* xUpdate */
+    xBegin,        /* xBegin */
+    xSync,         /* xSync */
+    xCommit,       /* xCommit */
+    xRollback,     /* xRollback */
+    xFindFunction, /* xFindFunction */
+    xRename,       /* xRename */
+    xSavepoint,    /* xSavepoint */
+    xRelease,      /* xRelease */
+    xRollbackTo,   /* xRollbackTo */
+    0,   /* xShadowName */
+    xIntegrity,    /* xIntegrity */
 };
+
+
+// Scalar function to initialize virtual tables with given data path
+void lib_sqlite::VtabInitFunc(sqlite3_context *context, int argc, sqlite3_value **argv) {
+    if (argc != 1) {
+        sqlite3_result_error(context, "init_vtabs() requires exactly one argument (data path)", -1);
+        return;
+    }
+
+    const char* data_path = (const char*)sqlite3_value_text(argv[0]);
+    if (!data_path) {
+        sqlite3_result_error(context, "data path cannot be null", -1);
+        return;
+    }
+
+    sqlite3* db = sqlite3_context_db_handle(context);
+    auto create = cstring();
+    algo_lib::Replscope R;
+
+    ind_beg(lib_sqlite::_db_ns_curs,ns,lib_sqlite::_db) if (ns.nstype == dmmeta_Nstype_nstype_ssimdb) {
+        Set(R,"$ns",ns.ns);
+        Ins(&R,create, "attach ':memory:' as $ns;");
+        ind_beg(lib_sqlite::ns_c_ssimfile_curs,ssimfile,ns) {
+            Set(R,"$data",data_path);
+            Set(R,"$ssimfile",ssimfile.ssimfile);
+            Ins(&R,create, "create virtual table $ssimfile using ssimdb( $data , $ssimfile );");
+        }ind_end;
+    }ind_end;
+
+    int rc = sqlite3_exec(db, algo::Zeroterm(create), nullptr, nullptr, nullptr);
+    if (rc == SQLITE_OK) {
+        sqlite3_result_text(context, "Virtual tables initialized successfully", -1, SQLITE_STATIC);
+    } else {
+        sqlite3_result_error(context, sqlite3_errmsg(db), -1);
+    }
+}
+
+//Entrypoint for vtab extension
+int lib_sqlite::VtabInitExt(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *pApi) {
+    (void)pzErrMsg;
+    (void)pApi;
+    lib_sqlite::Init();
+
+    // Register scalar function for initializing virtual tables
+    auto rc = sqlite3_create_function(db, "init_ssim", 1, SQLITE_UTF8, nullptr,
+                                      VtabInitFunc, nullptr, nullptr);
+    if (rc == SQLITE_OK) {
+        rc = sqlite3_create_module(db, "ssimdb", &lib_sqlite::SsimModule, 0);
+    }
+
+    return rc;
+}

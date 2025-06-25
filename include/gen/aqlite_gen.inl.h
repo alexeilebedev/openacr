@@ -24,7 +24,6 @@
 
 #pragma once
 #include "include/gen/command_gen.inl.h"
-#include "include/gen/dmmeta_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 
@@ -32,100 +31,9 @@
 inline  aqlite::trace::trace() {
 }
 
-// --- aqlite.FDb.ns.EmptyQ
-// Return true if index is empty
-inline bool aqlite::ns_EmptyQ() {
-    return _db.ns_n == 0;
-}
-
-// --- aqlite.FDb.ns.Find
-// Look up row by row id. Return NULL if out of range
-inline aqlite::FNs* aqlite::ns_Find(u64 t) {
-    aqlite::FNs *retval = NULL;
-    if (LIKELY(u64(t) < u64(_db.ns_n))) {
-        u64 x = t + 1;
-        u64 bsr   = algo::u64_BitScanReverse(x);
-        u64 base  = u64(1)<<bsr;
-        u64 index = x-base;
-        retval = &_db.ns_lary[bsr][index];
-    }
-    return retval;
-}
-
-// --- aqlite.FDb.ns.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline aqlite::FNs* aqlite::ns_Last() {
-    return ns_Find(u64(_db.ns_n-1));
-}
-
-// --- aqlite.FDb.ns.N
-// Return number of items in the pool
-inline i32 aqlite::ns_N() {
-    return _db.ns_n;
-}
-
-// --- aqlite.FDb.ns.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline aqlite::FNs& aqlite::ns_qFind(u64 t) {
-    u64 x = t + 1;
-    u64 bsr   = algo::u64_BitScanReverse(x);
-    u64 base  = u64(1)<<bsr;
-    u64 index = x-base;
-    return _db.ns_lary[bsr][index];
-}
-
-// --- aqlite.FDb.ind_ns.EmptyQ
-// Return true if hash is empty
-inline bool aqlite::ind_ns_EmptyQ() {
-    return _db.ind_ns_n == 0;
-}
-
-// --- aqlite.FDb.ind_ns.N
-// Return number of items in the hash
-inline i32 aqlite::ind_ns_N() {
-    return _db.ind_ns_n;
-}
-
-// --- aqlite.FDb.ns_curs.Reset
-// cursor points to valid item
-inline void aqlite::_db_ns_curs_Reset(_db_ns_curs &curs, aqlite::FDb &parent) {
-    curs.parent = &parent;
-    curs.index = 0;
-}
-
-// --- aqlite.FDb.ns_curs.ValidQ
-// cursor points to valid item
-inline bool aqlite::_db_ns_curs_ValidQ(_db_ns_curs &curs) {
-    return curs.index < _db.ns_n;
-}
-
-// --- aqlite.FDb.ns_curs.Next
-// proceed to next item
-inline void aqlite::_db_ns_curs_Next(_db_ns_curs &curs) {
-    curs.index++;
-}
-
-// --- aqlite.FDb.ns_curs.Access
-// item access
-inline aqlite::FNs& aqlite::_db_ns_curs_Access(_db_ns_curs &curs) {
-    return ns_qFind(u64(curs.index));
-}
-
-// --- aqlite.FNs..Init
-// Set all fields to initial values.
-inline void aqlite::FNs_Init(aqlite::FNs& ns) {
-    ns.select = bool(false);
-    ns.ind_ns_next = (aqlite::FNs*)-1; // (aqlite.FDb.ind_ns) not-in-hash
-}
-
-// --- aqlite.FNs..Ctor
-inline  aqlite::FNs::FNs() {
-    aqlite::FNs_Init(*this);
-}
-
-// --- aqlite.FNs..Dtor
-inline  aqlite::FNs::~FNs() {
-    aqlite::FNs_Uninit(*this);
+// --- aqlite.FDb..Uninit
+inline void aqlite::FDb_Uninit() {
+    aqlite::FDb &row = _db; (void)row;
 }
 
 // --- aqlite.FieldId.value.GetEnum
@@ -167,45 +75,6 @@ inline  aqlite::FieldId::FieldId(aqlite_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
-// --- aqlite.TableId.value.GetEnum
-// Get value of field as enum type
-inline aqlite_TableIdEnum aqlite::value_GetEnum(const aqlite::TableId& parent) {
-    return aqlite_TableIdEnum(parent.value);
-}
-
-// --- aqlite.TableId.value.SetEnum
-// Set value of field from enum type.
-inline void aqlite::value_SetEnum(aqlite::TableId& parent, aqlite_TableIdEnum rhs) {
-    parent.value = i32(rhs);
-}
-
-// --- aqlite.TableId.value.Cast
-inline  aqlite::TableId::operator aqlite_TableIdEnum() const {
-    return aqlite_TableIdEnum((*this).value);
-}
-
-// --- aqlite.TableId..Init
-// Set all fields to initial values.
-inline void aqlite::TableId_Init(aqlite::TableId& parent) {
-    parent.value = i32(-1);
-}
-
-// --- aqlite.TableId..Ctor
-inline  aqlite::TableId::TableId() {
-    aqlite::TableId_Init(*this);
-}
-
-// --- aqlite.TableId..FieldwiseCtor
-inline  aqlite::TableId::TableId(i32 in_value)
-    : value(in_value)
- {
-}
-
-// --- aqlite.TableId..EnumCtor
-inline  aqlite::TableId::TableId(aqlite_TableIdEnum arg) {
-    this->value = i32(arg);
-}
-
 inline algo::cstring &algo::operator <<(algo::cstring &str, const aqlite::trace &row) {// cfmt:aqlite.trace.String
     aqlite::trace_Print(const_cast<aqlite::trace&>(row), str);
     return str;
@@ -213,10 +82,5 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const aqlite::trace 
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const aqlite::FieldId &row) {// cfmt:aqlite.FieldId.String
     aqlite::FieldId_Print(const_cast<aqlite::FieldId&>(row), str);
-    return str;
-}
-
-inline algo::cstring &algo::operator <<(algo::cstring &str, const aqlite::TableId &row) {// cfmt:aqlite.TableId.String
-    aqlite::TableId_Print(const_cast<aqlite::TableId&>(row), str);
     return str;
 }
