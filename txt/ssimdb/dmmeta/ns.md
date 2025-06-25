@@ -68,7 +68,6 @@ These ssimfiles reference dmmeta.ns
 * [abt_md -ns](/txt/exe/abt_md/README.md) - (overrides -readme) Process readmes for this namespace 
 * [acr_in -ns](/txt/exe/acr_in/README.md) - Regx of matching namespace 
 * [apm -ns](/txt/exe/apm/README.md) - Operate on specified namespace only 
-* [aqlite -ns](/txt/exe/aqlite/README.md) - Regx of databases to attach 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:CmdlineUses -->
 
@@ -83,8 +82,8 @@ These ssimfiles reference dmmeta.ns
 * [acr_in](/txt/exe/acr_in/internals.md) as [acr_in.FNs](/txt/exe/acr_in/internals.md#acr_in-fns)
 * [amc](/txt/exe/amc/internals.md) as [amc.FNs](/txt/exe/amc/internals.md#amc-fns)
 * [apm](/txt/exe/apm/internals.md) as [apm.FNs](/txt/exe/apm/internals.md#apm-fns)
-* [aqlite](/txt/exe/aqlite/internals.md) as [aqlite.FNs](/txt/exe/aqlite/internals.md#aqlite-fns)
 * [atf_ci](/txt/exe/atf_ci/internals.md) as [atf_ci.FNs](/txt/exe/atf_ci/internals.md#atf_ci-fns)
+* [lib_sqlite](/txt/lib/lib_sqlite/README.md) as [lib_sqlite.FNs](/txt/lib/lib_sqlite/README.md#lib_sqlite-fns)
 * [src_hdr](/txt/exe/src_hdr/internals.md) as [src_hdr.FNs](/txt/exe/src_hdr/internals.md#src_hdr-fns)
 * [ssim2mysql](/txt/exe/ssim2mysql/internals.md) as [ssim2mysql.FNs](/txt/exe/ssim2mysql/internals.md#ssim2mysql-fns)
 

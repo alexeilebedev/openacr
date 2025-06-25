@@ -40,4 +40,14 @@ namespace lib_sqlite { // update-hdr
     int Open(lib_sqlite::FConn& conn);
     void db_Cleanup(lib_sqlite::FConn &parent);
     void Init();
+
+    // -------------------------------------------------------------------
+    // cpp/lib_sqlite/vtab.cpp
+    //
+
+    // Scalar function to initialize virtual tables with given data path
+    void VtabInitFunc(sqlite3_context *context, int argc, sqlite3_value **argv);
+
+    // Entrypoint for vtab extension
+    int VtabInitExt(sqlite3 *db, char **pzErrMsg, const sqlite3_api_routines *pApi);
 }

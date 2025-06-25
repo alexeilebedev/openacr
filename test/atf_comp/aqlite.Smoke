@@ -1,15 +1,9 @@
-ROWID  CTYPE  NS    NAME  COMMENT
-1      i16    NULL  i16   NULL
+ROWID  CTYPE  COMMENT
+0      i16
+1      i32
 
-ROWID  CTYPE  NS    NAME  COMMENT
-2      i32    NULL  i32   NULL
-
-ROWID  FIELD             CTYPE      NS   NAME    ARG       REFTYPE  DFLT  COMMENT
-1      abt.FArch.msghdr  abt.FArch  abt  msghdr  dev.Arch  Base     NULL  NULL
-
-ROWID  FIELD            CTYPE     NS   NAME    ARG      REFTYPE  DFLT  COMMENT
-2      abt.FCfg.msghdr  abt.FCfg  abt  msghdr  dev.Cfg  Base     NULL  NULL
-
-ROWID  FIELD                 CTYPE          NS   NAME    ARG           REFTYPE  DFLT  COMMENT
-3      abt.FCompiler.msghdr  abt.FCompiler  abt  msghdr  dev.Compiler  Base     NULL  NULL
+ROWID  FIELD                 ARG           REFTYPE  DFLT  COMMENT
+0      abt.FArch.msghdr      dev.Arch      Base
+1      abt.FCfg.msghdr       dev.Cfg       Base
+2      abt.FCompiler.msghdr  dev.Compiler  Base
 

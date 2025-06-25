@@ -314,10 +314,9 @@ Other ctypes in this namespace which don't have own readme files
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin for schema|
-|data|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory for data|
+|in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
+|schema|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Schema dir|
 |cmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Sql Query to run|
-|ns|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Regx of databases to attach|
 
 #### command.atf_amc - Command line for [atf_amc](/txt/exe/atf_amc/README.md)
 <a href="#command-atf_amc"></a>

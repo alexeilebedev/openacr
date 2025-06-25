@@ -25,9 +25,20 @@
 #pragma once
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/lib_ctype_gen.inl.h"
-#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
+
+// --- lib_sqlite.Cons..Init
+// Set all fields to initial values.
+inline void lib_sqlite::Cons_Init(lib_sqlite::Cons& parent) {
+    parent.p_field = NULL;
+    parent.icol = i32(0);
+    parent.op = i32(0);
+}
+
+// --- lib_sqlite.Cons..Ctor
+inline  lib_sqlite::Cons::Cons() {
+    lib_sqlite::Cons_Init(*this);
+}
 
 // --- lib_sqlite.FConn..Init
 // Set all fields to initial values.
@@ -45,6 +56,327 @@ inline  lib_sqlite::FConn::FConn() {
 // --- lib_sqlite.FConn..Dtor
 inline  lib_sqlite::FConn::~FConn() {
     lib_sqlite::FConn_Uninit(*this);
+}
+
+// --- lib_sqlite.FCtype.c_field.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::c_field_EmptyQ(lib_sqlite::FCtype& ctype) {
+    return ctype.c_field_n == 0;
+}
+
+// --- lib_sqlite.FCtype.c_field.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_sqlite::FField* lib_sqlite::c_field_Find(lib_sqlite::FCtype& ctype, u32 t) {
+    lib_sqlite::FField *retval = NULL;
+    u64 idx = t;
+    u64 lim = ctype.c_field_n;
+    if (idx < lim) {
+        retval = ctype.c_field_elems[idx];
+    }
+    return retval;
+}
+
+// --- lib_sqlite.FCtype.c_field.Getary
+// Return array of pointers
+inline algo::aryptr<lib_sqlite::FField*> lib_sqlite::c_field_Getary(lib_sqlite::FCtype& ctype) {
+    return algo::aryptr<lib_sqlite::FField*>(ctype.c_field_elems, ctype.c_field_n);
+}
+
+// --- lib_sqlite.FCtype.c_field.N
+// Return number of items in the pointer array
+inline i32 lib_sqlite::c_field_N(const lib_sqlite::FCtype& ctype) {
+    return ctype.c_field_n;
+}
+
+// --- lib_sqlite.FCtype.c_field.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void lib_sqlite::c_field_RemoveAll(lib_sqlite::FCtype& ctype) {
+    for (u32 i = 0; i < ctype.c_field_n; i++) {
+        // mark all elements as not-in-array
+        ctype.c_field_elems[i]->ctype_c_field_in_ary = false;
+    }
+    ctype.c_field_n = 0;
+}
+
+// --- lib_sqlite.FCtype.c_field.qFind
+// Return reference without bounds checking
+inline lib_sqlite::FField& lib_sqlite::c_field_qFind(lib_sqlite::FCtype& ctype, u32 idx) {
+    return *ctype.c_field_elems[idx];
+}
+
+// --- lib_sqlite.FCtype.c_field.InAryQ
+// True if row is in any ptrary instance
+inline bool lib_sqlite::ctype_c_field_InAryQ(lib_sqlite::FField& row) {
+    return row.ctype_c_field_in_ary;
+}
+
+// --- lib_sqlite.FCtype.c_field.qLast
+// Reference to last element without bounds checking
+inline lib_sqlite::FField& lib_sqlite::c_field_qLast(lib_sqlite::FCtype& ctype) {
+    return *ctype.c_field_elems[ctype.c_field_n-1];
+}
+
+// --- lib_sqlite.FCtype.c_sqltype.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool lib_sqlite::c_sqltype_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FSqltype& row) {
+    lib_sqlite::FSqltype* ptr = ctype.c_sqltype;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        ctype.c_sqltype = &row;
+    }
+    return retval;
+}
+
+// --- lib_sqlite.FCtype.c_sqltype.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void lib_sqlite::c_sqltype_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FSqltype& row) {
+    lib_sqlite::FSqltype *ptr = ctype.c_sqltype;
+    if (LIKELY(ptr == &row)) {
+        ctype.c_sqltype = NULL;
+    }
+}
+
+// --- lib_sqlite.FCtype.ind_field_name.EmptyQ
+// Return true if hash is empty
+inline bool lib_sqlite::ind_field_name_EmptyQ(lib_sqlite::FCtype& ctype) {
+    return ctype.ind_field_name_n == 0;
+}
+
+// --- lib_sqlite.FCtype.ind_field_name.N
+// Return number of items in the hash
+inline i32 lib_sqlite::ind_field_name_N(const lib_sqlite::FCtype& ctype) {
+    return ctype.ind_field_name_n;
+}
+
+// --- lib_sqlite.FCtype.c_ssimfile.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool lib_sqlite::c_ssimfile_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FSsimfile& row) {
+    lib_sqlite::FSsimfile* ptr = ctype.c_ssimfile;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        ctype.c_ssimfile = &row;
+    }
+    return retval;
+}
+
+// --- lib_sqlite.FCtype.c_ssimfile.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void lib_sqlite::c_ssimfile_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FSsimfile& row) {
+    lib_sqlite::FSsimfile *ptr = ctype.c_ssimfile;
+    if (LIKELY(ptr == &row)) {
+        ctype.c_ssimfile = NULL;
+    }
+}
+
+// --- lib_sqlite.FCtype.zd_row.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::zd_row_EmptyQ(lib_sqlite::FCtype& ctype) {
+    return ctype.zd_row_head == NULL;
+}
+
+// --- lib_sqlite.FCtype.zd_row.First
+// If index empty, return NULL. Otherwise return pointer to first element in index
+inline lib_sqlite::FRow* lib_sqlite::zd_row_First(lib_sqlite::FCtype& ctype) {
+    lib_sqlite::FRow *row = NULL;
+    row = ctype.zd_row_head;
+    return row;
+}
+
+// --- lib_sqlite.FCtype.zd_row.InLlistQ
+// Return true if row is in the linked list, false otherwise
+inline bool lib_sqlite::zd_row_InLlistQ(lib_sqlite::FRow& row) {
+    bool result = false;
+    result = !(row.zd_row_next == (lib_sqlite::FRow*)-1);
+    return result;
+}
+
+// --- lib_sqlite.FCtype.zd_row.Last
+// If index empty, return NULL. Otherwise return pointer to last element in index
+inline lib_sqlite::FRow* lib_sqlite::zd_row_Last(lib_sqlite::FCtype& ctype) {
+    lib_sqlite::FRow *row = NULL;
+    row = ctype.zd_row_tail;
+    return row;
+}
+
+// --- lib_sqlite.FCtype.zd_row.N
+// Return number of items in the linked list
+inline i32 lib_sqlite::zd_row_N(const lib_sqlite::FCtype& ctype) {
+    return ctype.zd_row_n;
+}
+
+// --- lib_sqlite.FCtype.zd_row.Next
+// Return pointer to next element in the list
+inline lib_sqlite::FRow* lib_sqlite::zd_row_Next(lib_sqlite::FRow &row) {
+    return row.zd_row_next;
+}
+
+// --- lib_sqlite.FCtype.zd_row.Prev
+// Return pointer to previous element in the list
+inline lib_sqlite::FRow* lib_sqlite::zd_row_Prev(lib_sqlite::FRow &row) {
+    return row.zd_row_prev;
+}
+
+// --- lib_sqlite.FCtype.zd_row.qLast
+// Return reference to last element in the index. No bounds checking.
+inline lib_sqlite::FRow& lib_sqlite::zd_row_qLast(lib_sqlite::FCtype& ctype) {
+    lib_sqlite::FRow *row = NULL;
+    row = ctype.zd_row_tail;
+    return *row;
+}
+
+// --- lib_sqlite.FCtype.ind_pkey.EmptyQ
+// Return true if hash is empty
+inline bool lib_sqlite::ind_pkey_EmptyQ(lib_sqlite::FCtype& ctype) {
+    return ctype.ind_pkey_n == 0;
+}
+
+// --- lib_sqlite.FCtype.ind_pkey.N
+// Return number of items in the hash
+inline i32 lib_sqlite::ind_pkey_N(const lib_sqlite::FCtype& ctype) {
+    return ctype.ind_pkey_n;
+}
+
+// --- lib_sqlite.FCtype.c_row.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::c_row_EmptyQ(lib_sqlite::FCtype& ctype) {
+    return ctype.c_row_n == 0;
+}
+
+// --- lib_sqlite.FCtype.c_row.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_sqlite::FRow* lib_sqlite::c_row_Find(lib_sqlite::FCtype& ctype, u32 t) {
+    lib_sqlite::FRow *retval = NULL;
+    u64 idx = t;
+    u64 lim = ctype.c_row_n;
+    if (idx < lim) {
+        retval = ctype.c_row_elems[idx];
+    }
+    return retval;
+}
+
+// --- lib_sqlite.FCtype.c_row.Getary
+// Return array of pointers
+inline algo::aryptr<lib_sqlite::FRow*> lib_sqlite::c_row_Getary(lib_sqlite::FCtype& ctype) {
+    return algo::aryptr<lib_sqlite::FRow*>(ctype.c_row_elems, ctype.c_row_n);
+}
+
+// --- lib_sqlite.FCtype.c_row.N
+// Return number of items in the pointer array
+inline i32 lib_sqlite::c_row_N(const lib_sqlite::FCtype& ctype) {
+    return ctype.c_row_n;
+}
+
+// --- lib_sqlite.FCtype.c_row.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void lib_sqlite::c_row_RemoveAll(lib_sqlite::FCtype& ctype) {
+    for (u32 i = 0; i < ctype.c_row_n; i++) {
+        // mark all elements as not-in-array
+        ctype.c_row_elems[i]->ctype_c_row_in_ary = false;
+    }
+    ctype.c_row_n = 0;
+}
+
+// --- lib_sqlite.FCtype.c_row.qFind
+// Return reference without bounds checking
+inline lib_sqlite::FRow& lib_sqlite::c_row_qFind(lib_sqlite::FCtype& ctype, u32 idx) {
+    return *ctype.c_row_elems[idx];
+}
+
+// --- lib_sqlite.FCtype.c_row.InAryQ
+// True if row is in any ptrary instance
+inline bool lib_sqlite::ctype_c_row_InAryQ(lib_sqlite::FRow& row) {
+    return row.ctype_c_row_in_ary;
+}
+
+// --- lib_sqlite.FCtype.c_row.qLast
+// Reference to last element without bounds checking
+inline lib_sqlite::FRow& lib_sqlite::c_row_qLast(lib_sqlite::FCtype& ctype) {
+    return *ctype.c_row_elems[ctype.c_row_n-1];
+}
+
+// --- lib_sqlite.FCtype.c_field_curs.Reset
+inline void lib_sqlite::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, lib_sqlite::FCtype &parent) {
+    curs.elems = parent.c_field_elems;
+    curs.n_elems = parent.c_field_n;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.FCtype.c_field_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- lib_sqlite.FCtype.c_field_curs.Next
+// proceed to next item
+inline void lib_sqlite::ctype_c_field_curs_Next(ctype_c_field_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.FCtype.c_field_curs.Access
+// item access
+inline lib_sqlite::FField& lib_sqlite::ctype_c_field_curs_Access(ctype_c_field_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- lib_sqlite.FCtype.zd_row_curs.Reset
+// cursor points to valid item
+inline void lib_sqlite::ctype_zd_row_curs_Reset(ctype_zd_row_curs &curs, lib_sqlite::FCtype &parent) {
+    curs.row = parent.zd_row_head;
+}
+
+// --- lib_sqlite.FCtype.zd_row_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::ctype_zd_row_curs_ValidQ(ctype_zd_row_curs &curs) {
+    return curs.row != NULL;
+}
+
+// --- lib_sqlite.FCtype.zd_row_curs.Next
+// proceed to next item
+inline void lib_sqlite::ctype_zd_row_curs_Next(ctype_zd_row_curs &curs) {
+    lib_sqlite::FRow *next = (*curs.row).zd_row_next;
+    curs.row = next;
+}
+
+// --- lib_sqlite.FCtype.zd_row_curs.Access
+// item access
+inline lib_sqlite::FRow& lib_sqlite::ctype_zd_row_curs_Access(ctype_zd_row_curs &curs) {
+    return *curs.row;
+}
+
+// --- lib_sqlite.FCtype.c_row_curs.Reset
+inline void lib_sqlite::ctype_c_row_curs_Reset(ctype_c_row_curs &curs, lib_sqlite::FCtype &parent) {
+    curs.elems = parent.c_row_elems;
+    curs.n_elems = parent.c_row_n;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.FCtype.c_row_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::ctype_c_row_curs_ValidQ(ctype_c_row_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- lib_sqlite.FCtype.c_row_curs.Next
+// proceed to next item
+inline void lib_sqlite::ctype_c_row_curs_Next(ctype_c_row_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.FCtype.c_row_curs.Access
+// item access
+inline lib_sqlite::FRow& lib_sqlite::ctype_c_row_curs_Access(ctype_c_row_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- lib_sqlite.FCtype..Ctor
+inline  lib_sqlite::FCtype::FCtype() {
+    lib_sqlite::FCtype_Init(*this);
+}
+
+// --- lib_sqlite.FCtype..Dtor
+inline  lib_sqlite::FCtype::~FCtype() {
+    lib_sqlite::FCtype_Uninit(*this);
 }
 
 // --- lib_sqlite.trace..Ctor
@@ -105,6 +437,373 @@ inline lib_sqlite::FSubstr& lib_sqlite::substr_qFind(u64 t) {
     return _db.substr_lary[bsr][index];
 }
 
+// --- lib_sqlite.FDb.field.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::field_EmptyQ() {
+    return _db.field_n == 0;
+}
+
+// --- lib_sqlite.FDb.field.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_sqlite::FField* lib_sqlite::field_Find(u64 t) {
+    lib_sqlite::FField *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.field_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.field_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- lib_sqlite.FDb.field.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_sqlite::FField* lib_sqlite::field_Last() {
+    return field_Find(u64(_db.field_n-1));
+}
+
+// --- lib_sqlite.FDb.field.N
+// Return number of items in the pool
+inline i32 lib_sqlite::field_N() {
+    return _db.field_n;
+}
+
+// --- lib_sqlite.FDb.field.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_sqlite::FField& lib_sqlite::field_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.field_lary[bsr][index];
+}
+
+// --- lib_sqlite.FDb.ind_field.EmptyQ
+// Return true if hash is empty
+inline bool lib_sqlite::ind_field_EmptyQ() {
+    return _db.ind_field_n == 0;
+}
+
+// --- lib_sqlite.FDb.ind_field.N
+// Return number of items in the hash
+inline i32 lib_sqlite::ind_field_N() {
+    return _db.ind_field_n;
+}
+
+// --- lib_sqlite.FDb.ctype.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::ctype_EmptyQ() {
+    return _db.ctype_n == 0;
+}
+
+// --- lib_sqlite.FDb.ctype.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_sqlite::FCtype* lib_sqlite::ctype_Find(u64 t) {
+    lib_sqlite::FCtype *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.ctype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.ctype_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- lib_sqlite.FDb.ctype.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_sqlite::FCtype* lib_sqlite::ctype_Last() {
+    return ctype_Find(u64(_db.ctype_n-1));
+}
+
+// --- lib_sqlite.FDb.ctype.N
+// Return number of items in the pool
+inline i32 lib_sqlite::ctype_N() {
+    return _db.ctype_n;
+}
+
+// --- lib_sqlite.FDb.ctype.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_sqlite::FCtype& lib_sqlite::ctype_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.ctype_lary[bsr][index];
+}
+
+// --- lib_sqlite.FDb.ind_ctype.EmptyQ
+// Return true if hash is empty
+inline bool lib_sqlite::ind_ctype_EmptyQ() {
+    return _db.ind_ctype_n == 0;
+}
+
+// --- lib_sqlite.FDb.ind_ctype.N
+// Return number of items in the hash
+inline i32 lib_sqlite::ind_ctype_N() {
+    return _db.ind_ctype_n;
+}
+
+// --- lib_sqlite.FDb.ssimfile.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::ssimfile_EmptyQ() {
+    return _db.ssimfile_n == 0;
+}
+
+// --- lib_sqlite.FDb.ssimfile.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_sqlite::FSsimfile* lib_sqlite::ssimfile_Find(u64 t) {
+    lib_sqlite::FSsimfile *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.ssimfile_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.ssimfile_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- lib_sqlite.FDb.ssimfile.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_sqlite::FSsimfile* lib_sqlite::ssimfile_Last() {
+    return ssimfile_Find(u64(_db.ssimfile_n-1));
+}
+
+// --- lib_sqlite.FDb.ssimfile.N
+// Return number of items in the pool
+inline i32 lib_sqlite::ssimfile_N() {
+    return _db.ssimfile_n;
+}
+
+// --- lib_sqlite.FDb.ssimfile.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_sqlite::FSsimfile& lib_sqlite::ssimfile_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.ssimfile_lary[bsr][index];
+}
+
+// --- lib_sqlite.FDb.ind_ssimfile.EmptyQ
+// Return true if hash is empty
+inline bool lib_sqlite::ind_ssimfile_EmptyQ() {
+    return _db.ind_ssimfile_n == 0;
+}
+
+// --- lib_sqlite.FDb.ind_ssimfile.N
+// Return number of items in the hash
+inline i32 lib_sqlite::ind_ssimfile_N() {
+    return _db.ind_ssimfile_n;
+}
+
+// --- lib_sqlite.FDb.sqltype.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::sqltype_EmptyQ() {
+    return _db.sqltype_n == 0;
+}
+
+// --- lib_sqlite.FDb.sqltype.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_sqlite::FSqltype* lib_sqlite::sqltype_Find(u64 t) {
+    lib_sqlite::FSqltype *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.sqltype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.sqltype_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- lib_sqlite.FDb.sqltype.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_sqlite::FSqltype* lib_sqlite::sqltype_Last() {
+    return sqltype_Find(u64(_db.sqltype_n-1));
+}
+
+// --- lib_sqlite.FDb.sqltype.N
+// Return number of items in the pool
+inline i32 lib_sqlite::sqltype_N() {
+    return _db.sqltype_n;
+}
+
+// --- lib_sqlite.FDb.sqltype.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_sqlite::FSqltype& lib_sqlite::sqltype_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.sqltype_lary[bsr][index];
+}
+
+// --- lib_sqlite.FDb.bestidx.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::bestidx_EmptyQ() {
+    return _db.bestidx_n == 0;
+}
+
+// --- lib_sqlite.FDb.bestidx.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_sqlite::FIdx* lib_sqlite::bestidx_Find(u64 t) {
+    u64 idx = t;
+    u64 lim = _db.bestidx_n;
+    if (idx >= lim) return NULL;
+    return _db.bestidx_elems + idx;
+}
+
+// --- lib_sqlite.FDb.bestidx.Getary
+// Return array pointer by value
+inline algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_Getary() {
+    return algo::aryptr<lib_sqlite::FIdx>(_db.bestidx_elems, _db.bestidx_n);
+}
+
+// --- lib_sqlite.FDb.bestidx.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_sqlite::FIdx* lib_sqlite::bestidx_Last() {
+    return bestidx_Find(u64(_db.bestidx_n-1));
+}
+
+// --- lib_sqlite.FDb.bestidx.Max
+// Return max. number of items in the array
+inline i32 lib_sqlite::bestidx_Max() {
+    return _db.bestidx_max;
+}
+
+// --- lib_sqlite.FDb.bestidx.N
+// Return number of items in the array
+inline i32 lib_sqlite::bestidx_N() {
+    return _db.bestidx_n;
+}
+
+// --- lib_sqlite.FDb.bestidx.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void lib_sqlite::bestidx_Reserve(int n) {
+    u32 new_n = _db.bestidx_n + n;
+    if (UNLIKELY(new_n > _db.bestidx_max)) {
+        bestidx_AbsReserve(new_n);
+    }
+}
+
+// --- lib_sqlite.FDb.bestidx.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_sqlite::FIdx& lib_sqlite::bestidx_qFind(u64 t) {
+    return _db.bestidx_elems[t];
+}
+
+// --- lib_sqlite.FDb.bestidx.qLast
+// Return reference to last element of array. No bounds checking
+inline lib_sqlite::FIdx& lib_sqlite::bestidx_qLast() {
+    return bestidx_qFind(u64(_db.bestidx_n-1));
+}
+
+// --- lib_sqlite.FDb.bestidx.rowid_Get
+// Return row id of specified element
+inline u64 lib_sqlite::bestidx_rowid_Get(lib_sqlite::FIdx &elem) {
+    u64 id = &elem - _db.bestidx_elems;
+    return u64(id);
+}
+
+// --- lib_sqlite.FDb.trow.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::trow_EmptyQ() {
+    return _db.trow_n == 0;
+}
+
+// --- lib_sqlite.FDb.trow.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_sqlite::FRow* lib_sqlite::trow_Find(u64 t) {
+    lib_sqlite::FRow *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.trow_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.trow_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- lib_sqlite.FDb.trow.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_sqlite::FRow* lib_sqlite::trow_Last() {
+    return trow_Find(u64(_db.trow_n-1));
+}
+
+// --- lib_sqlite.FDb.trow.N
+// Return number of items in the pool
+inline i32 lib_sqlite::trow_N() {
+    return _db.trow_n;
+}
+
+// --- lib_sqlite.FDb.trow.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_sqlite::FRow& lib_sqlite::trow_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.trow_lary[bsr][index];
+}
+
+// --- lib_sqlite.FDb.ns.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::ns_EmptyQ() {
+    return _db.ns_n == 0;
+}
+
+// --- lib_sqlite.FDb.ns.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_sqlite::FNs* lib_sqlite::ns_Find(u64 t) {
+    lib_sqlite::FNs *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.ns_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.ns_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- lib_sqlite.FDb.ns.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_sqlite::FNs* lib_sqlite::ns_Last() {
+    return ns_Find(u64(_db.ns_n-1));
+}
+
+// --- lib_sqlite.FDb.ns.N
+// Return number of items in the pool
+inline i32 lib_sqlite::ns_N() {
+    return _db.ns_n;
+}
+
+// --- lib_sqlite.FDb.ns.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_sqlite::FNs& lib_sqlite::ns_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.ns_lary[bsr][index];
+}
+
+// --- lib_sqlite.FDb.ind_ns.EmptyQ
+// Return true if hash is empty
+inline bool lib_sqlite::ind_ns_EmptyQ() {
+    return _db.ind_ns_n == 0;
+}
+
+// --- lib_sqlite.FDb.ind_ns.N
+// Return number of items in the hash
+inline i32 lib_sqlite::ind_ns_N() {
+    return _db.ind_ns_n;
+}
+
 // --- lib_sqlite.FDb.substr_curs.Reset
 // cursor points to valid item
 inline void lib_sqlite::_db_substr_curs_Reset(_db_substr_curs &curs, lib_sqlite::FDb &parent) {
@@ -130,8 +829,488 @@ inline lib_sqlite::FSubstr& lib_sqlite::_db_substr_curs_Access(_db_substr_curs &
     return substr_qFind(u64(curs.index));
 }
 
+// --- lib_sqlite.FDb.field_curs.Reset
+// cursor points to valid item
+inline void lib_sqlite::_db_field_curs_Reset(_db_field_curs &curs, lib_sqlite::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.FDb.field_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::_db_field_curs_ValidQ(_db_field_curs &curs) {
+    return curs.index < _db.field_n;
+}
+
+// --- lib_sqlite.FDb.field_curs.Next
+// proceed to next item
+inline void lib_sqlite::_db_field_curs_Next(_db_field_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.FDb.field_curs.Access
+// item access
+inline lib_sqlite::FField& lib_sqlite::_db_field_curs_Access(_db_field_curs &curs) {
+    return field_qFind(u64(curs.index));
+}
+
+// --- lib_sqlite.FDb.ctype_curs.Reset
+// cursor points to valid item
+inline void lib_sqlite::_db_ctype_curs_Reset(_db_ctype_curs &curs, lib_sqlite::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.FDb.ctype_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::_db_ctype_curs_ValidQ(_db_ctype_curs &curs) {
+    return curs.index < _db.ctype_n;
+}
+
+// --- lib_sqlite.FDb.ctype_curs.Next
+// proceed to next item
+inline void lib_sqlite::_db_ctype_curs_Next(_db_ctype_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.FDb.ctype_curs.Access
+// item access
+inline lib_sqlite::FCtype& lib_sqlite::_db_ctype_curs_Access(_db_ctype_curs &curs) {
+    return ctype_qFind(u64(curs.index));
+}
+
+// --- lib_sqlite.FDb.ssimfile_curs.Reset
+// cursor points to valid item
+inline void lib_sqlite::_db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, lib_sqlite::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.FDb.ssimfile_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::_db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) {
+    return curs.index < _db.ssimfile_n;
+}
+
+// --- lib_sqlite.FDb.ssimfile_curs.Next
+// proceed to next item
+inline void lib_sqlite::_db_ssimfile_curs_Next(_db_ssimfile_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.FDb.ssimfile_curs.Access
+// item access
+inline lib_sqlite::FSsimfile& lib_sqlite::_db_ssimfile_curs_Access(_db_ssimfile_curs &curs) {
+    return ssimfile_qFind(u64(curs.index));
+}
+
+// --- lib_sqlite.FDb.sqltype_curs.Reset
+// cursor points to valid item
+inline void lib_sqlite::_db_sqltype_curs_Reset(_db_sqltype_curs &curs, lib_sqlite::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.FDb.sqltype_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::_db_sqltype_curs_ValidQ(_db_sqltype_curs &curs) {
+    return curs.index < _db.sqltype_n;
+}
+
+// --- lib_sqlite.FDb.sqltype_curs.Next
+// proceed to next item
+inline void lib_sqlite::_db_sqltype_curs_Next(_db_sqltype_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.FDb.sqltype_curs.Access
+// item access
+inline lib_sqlite::FSqltype& lib_sqlite::_db_sqltype_curs_Access(_db_sqltype_curs &curs) {
+    return sqltype_qFind(u64(curs.index));
+}
+
+// --- lib_sqlite.FDb.bestidx_curs.Next
+// proceed to next item
+inline void lib_sqlite::_db_bestidx_curs_Next(_db_bestidx_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.FDb.bestidx_curs.Reset
+inline void lib_sqlite::_db_bestidx_curs_Reset(_db_bestidx_curs &curs, lib_sqlite::FDb &parent) {
+    curs.elems = parent.bestidx_elems;
+    curs.n_elems = parent.bestidx_n;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.FDb.bestidx_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::_db_bestidx_curs_ValidQ(_db_bestidx_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- lib_sqlite.FDb.bestidx_curs.Access
+// item access
+inline lib_sqlite::FIdx& lib_sqlite::_db_bestidx_curs_Access(_db_bestidx_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- lib_sqlite.FDb.trow_curs.Reset
+// cursor points to valid item
+inline void lib_sqlite::_db_trow_curs_Reset(_db_trow_curs &curs, lib_sqlite::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.FDb.trow_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::_db_trow_curs_ValidQ(_db_trow_curs &curs) {
+    return curs.index < _db.trow_n;
+}
+
+// --- lib_sqlite.FDb.trow_curs.Next
+// proceed to next item
+inline void lib_sqlite::_db_trow_curs_Next(_db_trow_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.FDb.trow_curs.Access
+// item access
+inline lib_sqlite::FRow& lib_sqlite::_db_trow_curs_Access(_db_trow_curs &curs) {
+    return trow_qFind(u64(curs.index));
+}
+
+// --- lib_sqlite.FDb.ns_curs.Reset
+// cursor points to valid item
+inline void lib_sqlite::_db_ns_curs_Reset(_db_ns_curs &curs, lib_sqlite::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.FDb.ns_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::_db_ns_curs_ValidQ(_db_ns_curs &curs) {
+    return curs.index < _db.ns_n;
+}
+
+// --- lib_sqlite.FDb.ns_curs.Next
+// proceed to next item
+inline void lib_sqlite::_db_ns_curs_Next(_db_ns_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.FDb.ns_curs.Access
+// item access
+inline lib_sqlite::FNs& lib_sqlite::_db_ns_curs_Access(_db_ns_curs &curs) {
+    return ns_qFind(u64(curs.index));
+}
+
+// --- lib_sqlite.FField.c_substr.InsertMaybe
+// Insert row into pointer index. Return final membership status.
+inline bool lib_sqlite::c_substr_InsertMaybe(lib_sqlite::FField& field, lib_sqlite::FSubstr& row) {
+    lib_sqlite::FSubstr* ptr = field.c_substr;
+    bool retval = (ptr == NULL) | (ptr == &row);
+    if (retval) {
+        field.c_substr = &row;
+    }
+    return retval;
+}
+
+// --- lib_sqlite.FField.c_substr.Remove
+// Remove element from index. If element is not in index, do nothing.
+inline void lib_sqlite::c_substr_Remove(lib_sqlite::FField& field, lib_sqlite::FSubstr& row) {
+    lib_sqlite::FSubstr *ptr = field.c_substr;
+    if (LIKELY(ptr == &row)) {
+        field.c_substr = NULL;
+    }
+}
+
+// --- lib_sqlite.FField..Ctor
+inline  lib_sqlite::FField::FField() {
+    lib_sqlite::FField_Init(*this);
+}
+
+// --- lib_sqlite.FField..Dtor
+inline  lib_sqlite::FField::~FField() {
+    lib_sqlite::FField_Uninit(*this);
+}
+
+// --- lib_sqlite.FIdx.cons.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::cons_EmptyQ(lib_sqlite::FIdx& parent) {
+    return parent.cons_n == 0;
+}
+
+// --- lib_sqlite.FIdx.cons.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_sqlite::Cons* lib_sqlite::cons_Find(lib_sqlite::FIdx& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.cons_n;
+    if (idx >= lim) return NULL;
+    return parent.cons_elems + idx;
+}
+
+// --- lib_sqlite.FIdx.cons.Getary
+// Return array pointer by value
+inline algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_Getary(const lib_sqlite::FIdx& parent) {
+    return algo::aryptr<lib_sqlite::Cons>(parent.cons_elems, parent.cons_n);
+}
+
+// --- lib_sqlite.FIdx.cons.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline lib_sqlite::Cons* lib_sqlite::cons_Last(lib_sqlite::FIdx& parent) {
+    return cons_Find(parent, u64(parent.cons_n-1));
+}
+
+// --- lib_sqlite.FIdx.cons.Max
+// Return max. number of items in the array
+inline i32 lib_sqlite::cons_Max(lib_sqlite::FIdx& parent) {
+    (void)parent;
+    return parent.cons_max;
+}
+
+// --- lib_sqlite.FIdx.cons.N
+// Return number of items in the array
+inline i32 lib_sqlite::cons_N(const lib_sqlite::FIdx& parent) {
+    return parent.cons_n;
+}
+
+// --- lib_sqlite.FIdx.cons.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void lib_sqlite::cons_Reserve(lib_sqlite::FIdx& parent, int n) {
+    u32 new_n = parent.cons_n + n;
+    if (UNLIKELY(new_n > parent.cons_max)) {
+        cons_AbsReserve(parent, new_n);
+    }
+}
+
+// --- lib_sqlite.FIdx.cons.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline lib_sqlite::Cons& lib_sqlite::cons_qFind(lib_sqlite::FIdx& parent, u64 t) {
+    return parent.cons_elems[t];
+}
+
+// --- lib_sqlite.FIdx.cons.qLast
+// Return reference to last element of array. No bounds checking
+inline lib_sqlite::Cons& lib_sqlite::cons_qLast(lib_sqlite::FIdx& parent) {
+    return cons_qFind(parent, u64(parent.cons_n-1));
+}
+
+// --- lib_sqlite.FIdx.cons.rowid_Get
+// Return row id of specified element
+inline u64 lib_sqlite::cons_rowid_Get(lib_sqlite::FIdx& parent, lib_sqlite::Cons &elem) {
+    u64 id = &elem - parent.cons_elems;
+    return u64(id);
+}
+
+// --- lib_sqlite.FIdx.cons_curs.Next
+// proceed to next item
+inline void lib_sqlite::FIdx_cons_curs_Next(FIdx_cons_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.FIdx.cons_curs.Reset
+inline void lib_sqlite::FIdx_cons_curs_Reset(FIdx_cons_curs &curs, lib_sqlite::FIdx &parent) {
+    curs.elems = parent.cons_elems;
+    curs.n_elems = parent.cons_n;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.FIdx.cons_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::FIdx_cons_curs_ValidQ(FIdx_cons_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- lib_sqlite.FIdx.cons_curs.Access
+// item access
+inline lib_sqlite::Cons& lib_sqlite::FIdx_cons_curs_Access(FIdx_cons_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- lib_sqlite.FIdx..Init
+// Set all fields to initial values.
+inline void lib_sqlite::FIdx_Init(lib_sqlite::FIdx& parent) {
+    parent.cons_elems 	= 0; // (lib_sqlite.FIdx.cons)
+    parent.cons_n     	= 0; // (lib_sqlite.FIdx.cons)
+    parent.cons_max   	= 0; // (lib_sqlite.FIdx.cons)
+    parent.rowid = i32(0);
+}
+
+// --- lib_sqlite.FIdx..Ctor
+inline  lib_sqlite::FIdx::FIdx() {
+    lib_sqlite::FIdx_Init(*this);
+}
+
+// --- lib_sqlite.FIdx..Dtor
+inline  lib_sqlite::FIdx::~FIdx() {
+    lib_sqlite::FIdx_Uninit(*this);
+}
+
+// --- lib_sqlite.FNs.c_ssimfile.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::c_ssimfile_EmptyQ(lib_sqlite::FNs& ns) {
+    return ns.c_ssimfile_n == 0;
+}
+
+// --- lib_sqlite.FNs.c_ssimfile.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_sqlite::FSsimfile* lib_sqlite::c_ssimfile_Find(lib_sqlite::FNs& ns, u32 t) {
+    lib_sqlite::FSsimfile *retval = NULL;
+    u64 idx = t;
+    u64 lim = ns.c_ssimfile_n;
+    if (idx < lim) {
+        retval = ns.c_ssimfile_elems[idx];
+    }
+    return retval;
+}
+
+// --- lib_sqlite.FNs.c_ssimfile.Getary
+// Return array of pointers
+inline algo::aryptr<lib_sqlite::FSsimfile*> lib_sqlite::c_ssimfile_Getary(lib_sqlite::FNs& ns) {
+    return algo::aryptr<lib_sqlite::FSsimfile*>(ns.c_ssimfile_elems, ns.c_ssimfile_n);
+}
+
+// --- lib_sqlite.FNs.c_ssimfile.N
+// Return number of items in the pointer array
+inline i32 lib_sqlite::c_ssimfile_N(const lib_sqlite::FNs& ns) {
+    return ns.c_ssimfile_n;
+}
+
+// --- lib_sqlite.FNs.c_ssimfile.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void lib_sqlite::c_ssimfile_RemoveAll(lib_sqlite::FNs& ns) {
+    for (u32 i = 0; i < ns.c_ssimfile_n; i++) {
+        // mark all elements as not-in-array
+        ns.c_ssimfile_elems[i]->ns_c_ssimfile_in_ary = false;
+    }
+    ns.c_ssimfile_n = 0;
+}
+
+// --- lib_sqlite.FNs.c_ssimfile.qFind
+// Return reference without bounds checking
+inline lib_sqlite::FSsimfile& lib_sqlite::c_ssimfile_qFind(lib_sqlite::FNs& ns, u32 idx) {
+    return *ns.c_ssimfile_elems[idx];
+}
+
+// --- lib_sqlite.FNs.c_ssimfile.InAryQ
+// True if row is in any ptrary instance
+inline bool lib_sqlite::ns_c_ssimfile_InAryQ(lib_sqlite::FSsimfile& row) {
+    return row.ns_c_ssimfile_in_ary;
+}
+
+// --- lib_sqlite.FNs.c_ssimfile.qLast
+// Reference to last element without bounds checking
+inline lib_sqlite::FSsimfile& lib_sqlite::c_ssimfile_qLast(lib_sqlite::FNs& ns) {
+    return *ns.c_ssimfile_elems[ns.c_ssimfile_n-1];
+}
+
+// --- lib_sqlite.FNs..Init
+// Set all fields to initial values.
+inline void lib_sqlite::FNs_Init(lib_sqlite::FNs& ns) {
+    ns.c_ssimfile_elems = NULL; // (lib_sqlite.FNs.c_ssimfile)
+    ns.c_ssimfile_n = 0; // (lib_sqlite.FNs.c_ssimfile)
+    ns.c_ssimfile_max = 0; // (lib_sqlite.FNs.c_ssimfile)
+    ns.ind_ns_next = (lib_sqlite::FNs*)-1; // (lib_sqlite.FDb.ind_ns) not-in-hash
+}
+
+// --- lib_sqlite.FNs.c_ssimfile_curs.Reset
+inline void lib_sqlite::ns_c_ssimfile_curs_Reset(ns_c_ssimfile_curs &curs, lib_sqlite::FNs &parent) {
+    curs.elems = parent.c_ssimfile_elems;
+    curs.n_elems = parent.c_ssimfile_n;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.FNs.c_ssimfile_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::ns_c_ssimfile_curs_ValidQ(ns_c_ssimfile_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- lib_sqlite.FNs.c_ssimfile_curs.Next
+// proceed to next item
+inline void lib_sqlite::ns_c_ssimfile_curs_Next(ns_c_ssimfile_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.FNs.c_ssimfile_curs.Access
+// item access
+inline lib_sqlite::FSsimfile& lib_sqlite::ns_c_ssimfile_curs_Access(ns_c_ssimfile_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
+// --- lib_sqlite.FNs..Ctor
+inline  lib_sqlite::FNs::FNs() {
+    lib_sqlite::FNs_Init(*this);
+}
+
+// --- lib_sqlite.FNs..Dtor
+inline  lib_sqlite::FNs::~FNs() {
+    lib_sqlite::FNs_Uninit(*this);
+}
+
+// --- lib_sqlite.FRow..Init
+// Set all fields to initial values.
+inline void lib_sqlite::FRow_Init(lib_sqlite::FRow& trow) {
+    trow.p_ctype = NULL;
+    trow.rowid = i64(0);
+    trow.ctype_c_row_in_ary = bool(false);
+    trow.zd_row_next = (lib_sqlite::FRow*)-1; // (lib_sqlite.FCtype.zd_row) not-in-list
+    trow.zd_row_prev = NULL; // (lib_sqlite.FCtype.zd_row)
+    trow.ind_pkey_next = (lib_sqlite::FRow*)-1; // (lib_sqlite.FCtype.ind_pkey) not-in-hash
+}
+
+// --- lib_sqlite.FRow..Ctor
+inline  lib_sqlite::FRow::FRow() {
+    lib_sqlite::FRow_Init(*this);
+}
+
+// --- lib_sqlite.FRow..Dtor
+inline  lib_sqlite::FRow::~FRow() {
+    lib_sqlite::FRow_Uninit(*this);
+}
+
+// --- lib_sqlite.FSqltype..Ctor
+inline  lib_sqlite::FSqltype::FSqltype() {
+}
+
+// --- lib_sqlite.FSqltype..Dtor
+inline  lib_sqlite::FSqltype::~FSqltype() {
+    lib_sqlite::FSqltype_Uninit(*this);
+}
+
+// --- lib_sqlite.FSsimfile..Init
+// Set all fields to initial values.
+inline void lib_sqlite::FSsimfile_Init(lib_sqlite::FSsimfile& ssimfile) {
+    ssimfile.p_ctype = NULL;
+    ssimfile.p_ns = NULL;
+    ssimfile.ns_c_ssimfile_in_ary = bool(false);
+    ssimfile.ind_ssimfile_next = (lib_sqlite::FSsimfile*)-1; // (lib_sqlite.FDb.ind_ssimfile) not-in-hash
+}
+
+// --- lib_sqlite.FSsimfile..Ctor
+inline  lib_sqlite::FSsimfile::FSsimfile() {
+    lib_sqlite::FSsimfile_Init(*this);
+}
+
+// --- lib_sqlite.FSsimfile..Dtor
+inline  lib_sqlite::FSsimfile::~FSsimfile() {
+    lib_sqlite::FSsimfile_Uninit(*this);
+}
+
+// --- lib_sqlite.FSubstr..Init
+// Set all fields to initial values.
+inline void lib_sqlite::FSubstr_Init(lib_sqlite::FSubstr& substr) {
+    substr.p_srcfield = NULL;
+}
+
 // --- lib_sqlite.FSubstr..Ctor
 inline  lib_sqlite::FSubstr::FSubstr() {
+    lib_sqlite::FSubstr_Init(*this);
+}
+
+// --- lib_sqlite.FSubstr..Dtor
+inline  lib_sqlite::FSubstr::~FSubstr() {
+    lib_sqlite::FSubstr_Uninit(*this);
 }
 
 // --- lib_sqlite.FieldId.value.GetEnum
@@ -212,11 +1391,97 @@ inline  lib_sqlite::TableId::TableId(lib_sqlite_TableIdEnum arg) {
     this->value = i32(arg);
 }
 
+// --- lib_sqlite.Vtab.c_curs.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::c_curs_EmptyQ(lib_sqlite::Vtab& parent) {
+    return parent.c_curs_n == 0;
+}
+
+// --- lib_sqlite.Vtab.c_curs.Find
+// Look up row by row id. Return NULL if out of range
+inline lib_sqlite::VtabCurs* lib_sqlite::c_curs_Find(lib_sqlite::Vtab& parent, u32 t) {
+    lib_sqlite::VtabCurs *retval = NULL;
+    u64 idx = t;
+    u64 lim = parent.c_curs_n;
+    if (idx < lim) {
+        retval = parent.c_curs_elems[idx];
+    }
+    return retval;
+}
+
+// --- lib_sqlite.Vtab.c_curs.Getary
+// Return array of pointers
+inline algo::aryptr<lib_sqlite::VtabCurs*> lib_sqlite::c_curs_Getary(lib_sqlite::Vtab& parent) {
+    return algo::aryptr<lib_sqlite::VtabCurs*>(parent.c_curs_elems, parent.c_curs_n);
+}
+
+// --- lib_sqlite.Vtab.c_curs.N
+// Return number of items in the pointer array
+inline i32 lib_sqlite::c_curs_N(const lib_sqlite::Vtab& parent) {
+    return parent.c_curs_n;
+}
+
+// --- lib_sqlite.Vtab.c_curs.RemoveAll
+// Empty the index. (The rows are not deleted)
+inline void lib_sqlite::c_curs_RemoveAll(lib_sqlite::Vtab& parent) {
+    for (u32 i = 0; i < parent.c_curs_n; i++) {
+        // mark all elements as not-in-array
+        parent.c_curs_elems[i]->parent_c_curs_in_ary = false;
+    }
+    parent.c_curs_n = 0;
+}
+
+// --- lib_sqlite.Vtab.c_curs.qFind
+// Return reference without bounds checking
+inline lib_sqlite::VtabCurs& lib_sqlite::c_curs_qFind(lib_sqlite::Vtab& parent, u32 idx) {
+    return *parent.c_curs_elems[idx];
+}
+
+// --- lib_sqlite.Vtab.c_curs.InAryQ
+// True if row is in any ptrary instance
+inline bool lib_sqlite::parent_c_curs_InAryQ(lib_sqlite::VtabCurs& row) {
+    return row.parent_c_curs_in_ary;
+}
+
+// --- lib_sqlite.Vtab.c_curs.qLast
+// Reference to last element without bounds checking
+inline lib_sqlite::VtabCurs& lib_sqlite::c_curs_qLast(lib_sqlite::Vtab& parent) {
+    return *parent.c_curs_elems[parent.c_curs_n-1];
+}
+
+// --- lib_sqlite.Vtab.c_curs_curs.Reset
+inline void lib_sqlite::Vtab_c_curs_curs_Reset(Vtab_c_curs_curs &curs, lib_sqlite::Vtab &parent) {
+    curs.elems = parent.c_curs_elems;
+    curs.n_elems = parent.c_curs_n;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.Vtab.c_curs_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::Vtab_c_curs_curs_ValidQ(Vtab_c_curs_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- lib_sqlite.Vtab.c_curs_curs.Next
+// proceed to next item
+inline void lib_sqlite::Vtab_c_curs_curs_Next(Vtab_c_curs_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.Vtab.c_curs_curs.Access
+// item access
+inline lib_sqlite::VtabCurs& lib_sqlite::Vtab_c_curs_curs_Access(Vtab_c_curs_curs &curs) {
+    return *curs.elems[curs.index];
+}
+
 // --- lib_sqlite.Vtab..Init
 // Set all fields to initial values.
 inline void lib_sqlite::Vtab_Init(lib_sqlite::Vtab& parent) {
-    parent.c_ssimfile = NULL;
     parent.p_ctype = NULL;
+    parent.c_curs_elems = NULL; // (lib_sqlite.Vtab.c_curs)
+    parent.c_curs_n = 0; // (lib_sqlite.Vtab.c_curs)
+    parent.c_curs_max = 0; // (lib_sqlite.Vtab.c_curs)
+    parent.loaded = bool(false);
 }
 
 // --- lib_sqlite.Vtab..Ctor
@@ -224,16 +1489,112 @@ inline  lib_sqlite::Vtab::Vtab() {
     lib_sqlite::Vtab_Init(*this);
 }
 
-// --- lib_sqlite.VtabCurs..Init
-// Set all fields to initial values.
-inline void lib_sqlite::VtabCurs_Init(lib_sqlite::VtabCurs& parent) {
-    parent.i = i32(0);
-    parent.eof = bool(false);
+// --- lib_sqlite.Vtab..Dtor
+inline  lib_sqlite::Vtab::~Vtab() {
+    lib_sqlite::Vtab_Uninit(*this);
+}
+
+// --- lib_sqlite.VtabCurs.attrs.EmptyQ
+// Return true if index is empty
+inline bool lib_sqlite::attrs_EmptyQ(lib_sqlite::VtabCurs& parent) {
+    return parent.attrs_n == 0;
+}
+
+// --- lib_sqlite.VtabCurs.attrs.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::cstring* lib_sqlite::attrs_Find(lib_sqlite::VtabCurs& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.attrs_n;
+    if (idx >= lim) return NULL;
+    return parent.attrs_elems + idx;
+}
+
+// --- lib_sqlite.VtabCurs.attrs.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::cstring> lib_sqlite::attrs_Getary(const lib_sqlite::VtabCurs& parent) {
+    return algo::aryptr<algo::cstring>(parent.attrs_elems, parent.attrs_n);
+}
+
+// --- lib_sqlite.VtabCurs.attrs.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo::cstring* lib_sqlite::attrs_Last(lib_sqlite::VtabCurs& parent) {
+    return attrs_Find(parent, u64(parent.attrs_n-1));
+}
+
+// --- lib_sqlite.VtabCurs.attrs.Max
+// Return max. number of items in the array
+inline i32 lib_sqlite::attrs_Max(lib_sqlite::VtabCurs& parent) {
+    (void)parent;
+    return parent.attrs_max;
+}
+
+// --- lib_sqlite.VtabCurs.attrs.N
+// Return number of items in the array
+inline i32 lib_sqlite::attrs_N(const lib_sqlite::VtabCurs& parent) {
+    return parent.attrs_n;
+}
+
+// --- lib_sqlite.VtabCurs.attrs.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void lib_sqlite::attrs_Reserve(lib_sqlite::VtabCurs& parent, int n) {
+    u32 new_n = parent.attrs_n + n;
+    if (UNLIKELY(new_n > parent.attrs_max)) {
+        attrs_AbsReserve(parent, new_n);
+    }
+}
+
+// --- lib_sqlite.VtabCurs.attrs.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo::cstring& lib_sqlite::attrs_qFind(lib_sqlite::VtabCurs& parent, u64 t) {
+    return parent.attrs_elems[t];
+}
+
+// --- lib_sqlite.VtabCurs.attrs.qLast
+// Return reference to last element of array. No bounds checking
+inline algo::cstring& lib_sqlite::attrs_qLast(lib_sqlite::VtabCurs& parent) {
+    return attrs_qFind(parent, u64(parent.attrs_n-1));
+}
+
+// --- lib_sqlite.VtabCurs.attrs.rowid_Get
+// Return row id of specified element
+inline u64 lib_sqlite::attrs_rowid_Get(lib_sqlite::VtabCurs& parent, algo::cstring &elem) {
+    u64 id = &elem - parent.attrs_elems;
+    return u64(id);
+}
+
+// --- lib_sqlite.VtabCurs.attrs_curs.Next
+// proceed to next item
+inline void lib_sqlite::VtabCurs_attrs_curs_Next(VtabCurs_attrs_curs &curs) {
+    curs.index++;
+}
+
+// --- lib_sqlite.VtabCurs.attrs_curs.Reset
+inline void lib_sqlite::VtabCurs_attrs_curs_Reset(VtabCurs_attrs_curs &curs, lib_sqlite::VtabCurs &parent) {
+    curs.elems = parent.attrs_elems;
+    curs.n_elems = parent.attrs_n;
+    curs.index = 0;
+}
+
+// --- lib_sqlite.VtabCurs.attrs_curs.ValidQ
+// cursor points to valid item
+inline bool lib_sqlite::VtabCurs_attrs_curs_ValidQ(VtabCurs_attrs_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- lib_sqlite.VtabCurs.attrs_curs.Access
+// item access
+inline algo::cstring& lib_sqlite::VtabCurs_attrs_curs_Access(VtabCurs_attrs_curs &curs) {
+    return curs.elems[curs.index];
 }
 
 // --- lib_sqlite.VtabCurs..Ctor
 inline  lib_sqlite::VtabCurs::VtabCurs() {
     lib_sqlite::VtabCurs_Init(*this);
+}
+
+// --- lib_sqlite.VtabCurs..Dtor
+inline  lib_sqlite::VtabCurs::~VtabCurs() {
+    lib_sqlite::VtabCurs_Uninit(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const lib_sqlite::trace &row) {// cfmt:lib_sqlite.trace.String

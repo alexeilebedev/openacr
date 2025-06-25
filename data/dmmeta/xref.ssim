@@ -496,7 +496,6 @@ dmmeta.xref  field:apm.FSsimreq.p_child_ssimfile  inscond:true  via:apm.FDb.ind_
 dmmeta.xref  field:apm.FSsimreq.p_ctype  inscond:true  via:apm.FDb.ind_ctype/dmmeta.Ssimreq.parent_ctype
 dmmeta.xref  field:apm.FSsimreq.p_field  inscond:true  via:apm.FDb.ind_field/dmmeta.Ssimreq.parent_field
 dmmeta.xref  field:apm.FDb.ind_mkdir  inscond:true  via:""
-dmmeta.xref  field:aqlite.FDb.ind_ns  inscond:true  via:""
 dmmeta.xref  field:atf_amc.FDb.zsl_h_typec  inscond:false  via:""
 dmmeta.xref  field:atf_amc.FDb.zs_t_typec  inscond:false  via:""
 dmmeta.xref  field:atf_amc.FDb.zs_mt_typec  inscond:false  via:""
@@ -663,6 +662,24 @@ dmmeta.xref  field:lib_json.FDb.ind_objfld  inscond:"(NULL!=fldkey_Get(row).obje
 dmmeta.xref  field:lib_json.FNode.c_child  inscond:"row.p_parent != &row"  via:lib_json.FNode.p_parent
 dmmeta.xref  field:lib_sql.FDb.ind_attr  inscond:true  via:""
 dmmeta.xref  field:lib_sqlite.FDb.ind_conn  inscond:true  via:""
+dmmeta.xref  field:lib_sqlite.FDb.ind_field  inscond:true  via:""
+dmmeta.xref  field:lib_sqlite.FDb.ind_ctype  inscond:true  via:""
+dmmeta.xref  field:lib_sqlite.FField.c_substr  inscond:true  via:lib_sqlite.FDb.ind_field/dmmeta.Substr.field
+dmmeta.xref  field:lib_sqlite.FCtype.c_field  inscond:true  via:lib_sqlite.FDb.ind_ctype/dmmeta.Field.ctype
+dmmeta.xref  field:lib_sqlite.FSsimfile.p_ctype  inscond:true  via:lib_sqlite.FDb.ind_ctype/dmmeta.Ssimfile.ctype
+dmmeta.xref  field:lib_sqlite.FDb.ind_ssimfile  inscond:true  via:""
+dmmeta.xref  field:lib_sqlite.FField.p_arg  inscond:true  via:lib_sqlite.FDb.ind_ctype/dmmeta.Field.arg
+dmmeta.xref  field:lib_sqlite.FCtype.c_sqltype  inscond:true  via:lib_sqlite.FDb.ind_ctype/dmmeta.Sqltype.ctype
+dmmeta.xref  field:lib_sqlite.FCtype.ind_field_name  inscond:true  via:lib_sqlite.FDb.ind_ctype/dmmeta.Field.ctype
+dmmeta.xref  field:lib_sqlite.FSubstr.p_srcfield  inscond:true  via:lib_sqlite.FDb.ind_field/dmmeta.Substr.srcfield
+dmmeta.xref  field:lib_sqlite.FCtype.c_ssimfile  inscond:true  via:lib_sqlite.FDb.ind_ctype/dmmeta.Ssimfile.ctype
+dmmeta.xref  field:lib_sqlite.FField.p_ctype  inscond:true  via:lib_sqlite.FDb.ind_ctype/dmmeta.Field.ctype
+dmmeta.xref  field:lib_sqlite.FCtype.zd_row  inscond:true  via:lib_sqlite.FRow.p_ctype
+dmmeta.xref  field:lib_sqlite.FCtype.ind_pkey  inscond:"attrs_N(row.tuple)"  via:lib_sqlite.FRow.p_ctype
+dmmeta.xref  field:lib_sqlite.FCtype.c_row  inscond:true  via:lib_sqlite.FRow.p_ctype
+dmmeta.xref  field:lib_sqlite.FDb.ind_ns  inscond:true  via:""
+dmmeta.xref  field:lib_sqlite.FSsimfile.p_ns  inscond:true  via:lib_sqlite.FDb.ind_ns/dmmeta.Ssimfile.ns
+dmmeta.xref  field:lib_sqlite.FNs.c_ssimfile  inscond:true  via:lib_sqlite.FDb.ind_ns/dmmeta.Ssimfile.ns
 dmmeta.xref  field:mdbg.FDb.ind_cfg  inscond:true  via:""
 dmmeta.xref  field:mdbg.FCfg.c_builddir  inscond:true  via:mdbg.FDb.ind_cfg/dev.Builddir.cfg
 dmmeta.xref  field:orgfile.FDb.ind_filename  inscond:true  via:""
