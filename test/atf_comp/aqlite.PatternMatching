@@ -1,0 +1,3 @@
+stmt1  cstring_fields:1
+stmt2  i32_fields:2
+stmt3  comment_with_test:3

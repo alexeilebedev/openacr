@@ -1071,7 +1071,12 @@ dev.gitfile  gitfile:test/atf_comp/acr_ed.CreateSsimfileBadNs
 dev.gitfile  gitfile:test/atf_comp/acr_in.Reverse
 dev.gitfile  gitfile:test/atf_comp/acr_in.Simple
 dev.gitfile  gitfile:test/atf_comp/acr_in.Tree
+dev.gitfile  gitfile:test/atf_comp/aqlite.Constraints
+dev.gitfile  gitfile:test/atf_comp/aqlite.ErrorHandling
+dev.gitfile  gitfile:test/atf_comp/aqlite.Joins
 dev.gitfile  gitfile:test/atf_comp/aqlite.Number
+dev.gitfile  gitfile:test/atf_comp/aqlite.PatternMatching
+dev.gitfile  gitfile:test/atf_comp/aqlite.Performance
 dev.gitfile  gitfile:test/atf_comp/aqlite.Smoke
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Bare
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Debug

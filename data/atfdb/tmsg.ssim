@@ -102,6 +102,20 @@ atfdb.tmsg  tmsg:acr_compl.Acr12/100290.in  istuple:N  msg:"garden.flower  flowe
 atfdb.tmsg  tmsg:acr_compl.Acr12/100300.in  istuple:N  msg:"garden.fruit  fruit:apple"
 atfdb.tmsg  tmsg:acr_compl.Acr12/100310.in  istuple:N  msg:"garden.fruit  fruit:plum"
 atfdb.tmsg  tmsg:acr_compl.Acr12/100320.in  istuple:N  msg:"garden.fruit  fruit:peach"
+atfdb.tmsg  tmsg:aqlite.Constraints/100000.in  istuple:N  msg:'dmmeta.ctype  ctype:dmmeta.TestConstraint     comment:"Test ctype for constraint combinations"'
+atfdb.tmsg  tmsg:aqlite.Constraints/100010.in  istuple:N  msg:'dmmeta.field  field:dmmeta.TestConstraint.id    arg:i32          reftype:Val   dflt:""  comment:"ID field"'
+atfdb.tmsg  tmsg:aqlite.Constraints/100020.in  istuple:N  msg:'dmmeta.field  field:dmmeta.TestConstraint.name  arg:algo.cstring reftype:Val   dflt:""  comment:"Name"'
+atfdb.tmsg  tmsg:aqlite.Constraints/100030.in  istuple:N  msg:'dmmeta.field  field:dmmeta.TestConstraint.flag  arg:i32          reftype:Val   dflt:"0" comment:"Flag"'
+atfdb.tmsg  tmsg:aqlite.ErrorHandling/100000.in  istuple:N  msg:'dmmeta.field  field:dmmeta.ErrorTest.id  arg:i32  reftype:Val  dflt:""  comment:"Error test field"'
+atfdb.tmsg  tmsg:aqlite.Joins/100000.in  istuple:N  msg:'dmmeta.ctype  ctype:dmmeta.TestJoin    comment:"Test ctype for JOIN operations"'
+atfdb.tmsg  tmsg:aqlite.Joins/100010.in  istuple:N  msg:'dmmeta.field  field:dmmeta.TestJoin.id       arg:i32          reftype:Val   dflt:""   comment:"Primary key"'
+atfdb.tmsg  tmsg:aqlite.Joins/100020.in  istuple:N  msg:'dmmeta.field  field:dmmeta.TestJoin.name     arg:algo.cstring reftype:Val   dflt:""   comment:"Name field"'
+atfdb.tmsg  tmsg:aqlite.Joins/100030.in  istuple:N  msg:'dmmeta.field  field:dmmeta.TestJoin.value    arg:i32          reftype:Val   dflt:"0"  comment:"Value field"'
+atfdb.tmsg  tmsg:aqlite.Joins/100040.in  istuple:N  msg:'dmmeta.field  field:dmmeta.TestJoin.extra    arg:algo.cstring reftype:Val   dflt:""   comment:"Extra field"'
+atfdb.tmsg  tmsg:aqlite.PatternMatching/100000.in  istuple:N  msg:'dmmeta.ctype  ctype:dmmeta.PatternTest    comment:"Test ctype for pattern matching"'
+atfdb.tmsg  tmsg:aqlite.PatternMatching/100010.in  istuple:N  msg:'dmmeta.field  field:dmmeta.PatternTest.id      arg:i32          reftype:Val   dflt:""      comment:"Test identifier"'
+atfdb.tmsg  tmsg:aqlite.PatternMatching/100020.in  istuple:N  msg:'dmmeta.field  field:dmmeta.PatternTest.desc    arg:algo.cstring reftype:Val   dflt:""      comment:"Test description field"'
+atfdb.tmsg  tmsg:aqlite.PatternMatching/100030.in  istuple:N  msg:'dmmeta.field  field:dmmeta.PatternTest.flags   arg:i32          reftype:Val   dflt:"0"     comment:"Test flags value"'
 atfdb.tmsg  tmsg:aqlite.Smoke/100000.in  istuple:N  msg:'dmmeta.ctype  ctype:i16                  comment:""'
 atfdb.tmsg  tmsg:aqlite.Smoke/100010.in  istuple:N  msg:'dmmeta.ctype  ctype:i32                  comment:""'
 atfdb.tmsg  tmsg:aqlite.Smoke/100020.in  istuple:N  msg:'dmmeta.field  field:abt.FArch.msghdr      arg:dev.Arch        reftype:Base    dflt:""  comment:""'

@@ -26,8 +26,6 @@
 #include "extern/sqlite-3470000/sqlite3.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/dmmeta_gen.h"
-#include "include/gen/lib_ctype_gen.h"
-#include "include/gen/algo_lib_gen.h"
 //#pragma endinclude
 // gen:ns_enums
 
@@ -42,29 +40,77 @@ enum { lib_sqlite_FieldIdEnum_N = 1 };
 
 // --- lib_sqlite_TableIdEnum
 
-enum lib_sqlite_TableIdEnum {                 // lib_sqlite.TableId.value
-     lib_sqlite_TableId_dmmeta_Substr   = 0   // dmmeta.Substr -> lib_sqlite.FSubstr
-    ,lib_sqlite_TableId_dmmeta_substr   = 0   // dmmeta.substr -> lib_sqlite.FSubstr
+enum lib_sqlite_TableIdEnum {                   // lib_sqlite.TableId.value
+     lib_sqlite_TableId_dmmeta_Ctype      = 0   // dmmeta.Ctype -> lib_sqlite.FCtype
+    ,lib_sqlite_TableId_dmmeta_ctype      = 0   // dmmeta.ctype -> lib_sqlite.FCtype
+    ,lib_sqlite_TableId_dmmeta_Field      = 1   // dmmeta.Field -> lib_sqlite.FField
+    ,lib_sqlite_TableId_dmmeta_field      = 1   // dmmeta.field -> lib_sqlite.FField
+    ,lib_sqlite_TableId_dmmeta_Ns         = 2   // dmmeta.Ns -> lib_sqlite.FNs
+    ,lib_sqlite_TableId_dmmeta_ns         = 2   // dmmeta.ns -> lib_sqlite.FNs
+    ,lib_sqlite_TableId_dmmeta_Sqltype    = 3   // dmmeta.Sqltype -> lib_sqlite.FSqltype
+    ,lib_sqlite_TableId_dmmeta_sqltype    = 3   // dmmeta.sqltype -> lib_sqlite.FSqltype
+    ,lib_sqlite_TableId_dmmeta_Ssimfile   = 4   // dmmeta.Ssimfile -> lib_sqlite.FSsimfile
+    ,lib_sqlite_TableId_dmmeta_ssimfile   = 4   // dmmeta.ssimfile -> lib_sqlite.FSsimfile
+    ,lib_sqlite_TableId_dmmeta_Substr     = 5   // dmmeta.Substr -> lib_sqlite.FSubstr
+    ,lib_sqlite_TableId_dmmeta_substr     = 5   // dmmeta.substr -> lib_sqlite.FSubstr
 };
 
-enum { lib_sqlite_TableIdEnum_N = 2 };
+enum { lib_sqlite_TableIdEnum_N = 12 };
 
 namespace lib_sqlite { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
 namespace lib_sqlite { // gen:ns_tclass_field
 } // gen:ns_tclass_field
 // gen:ns_fwddecl2
+namespace lib_sqlite { struct FField; }
+namespace lib_sqlite { struct FCtype; }
+namespace lib_sqlite { struct FNs; }
+namespace lib_sqlite { struct Vtab; }
+namespace lib_sqlite { struct ctype_c_field_curs; }
+namespace lib_sqlite { struct ctype_zd_row_curs; }
+namespace lib_sqlite { struct ctype_c_row_curs; }
 namespace lib_sqlite { struct _db_substr_curs; }
+namespace lib_sqlite { struct _db_field_curs; }
+namespace lib_sqlite { struct _db_ctype_curs; }
+namespace lib_sqlite { struct _db_ssimfile_curs; }
+namespace lib_sqlite { struct _db_sqltype_curs; }
+namespace lib_sqlite { struct _db_bestidx_curs; }
+namespace lib_sqlite { struct _db_trow_curs; }
+namespace lib_sqlite { struct _db_ns_curs; }
+namespace lib_sqlite { struct FIdx_cons_curs; }
+namespace lib_sqlite { struct ns_c_ssimfile_curs; }
+namespace lib_sqlite { struct Vtab_c_curs_curs; }
+namespace lib_sqlite { struct VtabCurs_attrs_curs; }
+namespace lib_sqlite { struct Cons; }
 namespace lib_sqlite { struct FConn; }
 namespace lib_sqlite { struct trace; }
 namespace lib_sqlite { struct FDb; }
+namespace lib_sqlite { struct FIdx; }
+namespace lib_sqlite { struct FRow; }
+namespace lib_sqlite { struct FSqltype; }
+namespace lib_sqlite { struct FSsimfile; }
 namespace lib_sqlite { struct FSubstr; }
 namespace lib_sqlite { struct FieldId; }
 namespace lib_sqlite { struct TableId; }
-namespace lib_sqlite { struct Vtab; }
 namespace lib_sqlite { struct VtabCurs; }
 namespace lib_sqlite { extern struct lib_sqlite::FDb _db; }
 namespace lib_sqlite { // gen:ns_print_struct
+
+// --- lib_sqlite.Cons
+// create: lib_sqlite.FIdx.cons (Tary)
+// access: lib_sqlite.VtabCurs.c_pkey (Ptr)
+struct Cons { // lib_sqlite.Cons
+    lib_sqlite::FField*   p_field;   // reference to parent row
+    algo::cstring         value;     //
+    i32                   icol;      //   0
+    i32                   op;        //   0
+    // func:lib_sqlite.Cons..Ctor
+    inline               Cons() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:lib_sqlite.Cons..Init
+inline void          Cons_Init(lib_sqlite::Cons& parent);
 
 // --- lib_sqlite.FConn
 // create: lib_sqlite.FDb.conn (Tpool)
@@ -102,6 +148,294 @@ inline void          FConn_Init(lib_sqlite::FConn& conn);
 // func:lib_sqlite.FConn..Uninit
 void                 FConn_Uninit(lib_sqlite::FConn& conn) __attribute__((nothrow));
 
+// --- lib_sqlite.FCtype
+// create: lib_sqlite.FDb.ctype (Lary)
+// global access: ctype (Lary, by rowid)
+// global access: ind_ctype (Thash, hash field ctype)
+// access: lib_sqlite.FField.p_arg (Upptr)
+// access: lib_sqlite.FField.p_ctype (Upptr)
+// access: lib_sqlite.FRow.p_ctype (Upptr)
+// access: lib_sqlite.FSsimfile.p_ctype (Upptr)
+// access: lib_sqlite.Vtab.p_ctype (Ptr)
+// access: lib_sqlite.VtabCurs.p_ctype (Upptr)
+struct FCtype { // lib_sqlite.FCtype
+    algo::Smallstr100        ctype;                          // Identifier. must be ns.typename
+    algo::Comment            comment;                        //
+    lib_sqlite::FField**     c_field_elems;                  // array of pointers
+    u32                      c_field_n;                      // array of pointers
+    u32                      c_field_max;                    // capacity of allocated array
+    lib_sqlite::FSqltype*    c_sqltype;                      // optional pointer
+    lib_sqlite::FField**     ind_field_name_buckets_elems;   // pointer to bucket array
+    i32                      ind_field_name_buckets_n;       // number of elements in bucket array
+    i32                      ind_field_name_n;               // number of elements in the hash table
+    lib_sqlite::FSsimfile*   c_ssimfile;                     // optional pointer
+    lib_sqlite::FRow*        zd_row_head;                    // zero-terminated doubly linked list
+    i32                      zd_row_n;                       // zero-terminated doubly linked list
+    lib_sqlite::FRow*        zd_row_tail;                    // pointer to last element
+    lib_sqlite::FRow**       ind_pkey_buckets_elems;         // pointer to bucket array
+    i32                      ind_pkey_buckets_n;             // number of elements in bucket array
+    i32                      ind_pkey_n;                     // number of elements in the hash table
+    lib_sqlite::FRow**       c_row_elems;                    // array of pointers
+    u32                      c_row_n;                        // array of pointers
+    u32                      c_row_max;                      // capacity of allocated array
+    lib_sqlite::FCtype*      ind_ctype_next;                 // hash next
+    // reftype Ptrary of lib_sqlite.FCtype.c_field prohibits copy
+    // x-reference on lib_sqlite.FCtype.c_sqltype prevents copy
+    // reftype Thash of lib_sqlite.FCtype.ind_field_name prohibits copy
+    // x-reference on lib_sqlite.FCtype.c_ssimfile prevents copy
+    // reftype Llist of lib_sqlite.FCtype.zd_row prohibits copy
+    // reftype Thash of lib_sqlite.FCtype.ind_pkey prohibits copy
+    // reftype Ptrary of lib_sqlite.FCtype.c_row prohibits copy
+    // func:lib_sqlite.FCtype..AssignOp
+    lib_sqlite::FCtype&  operator =(const lib_sqlite::FCtype &rhs) = delete;
+    // reftype Ptrary of lib_sqlite.FCtype.c_field prohibits copy
+    // x-reference on lib_sqlite.FCtype.c_sqltype prevents copy
+    // reftype Thash of lib_sqlite.FCtype.ind_field_name prohibits copy
+    // x-reference on lib_sqlite.FCtype.c_ssimfile prevents copy
+    // reftype Llist of lib_sqlite.FCtype.zd_row prohibits copy
+    // reftype Thash of lib_sqlite.FCtype.ind_pkey prohibits copy
+    // reftype Ptrary of lib_sqlite.FCtype.c_row prohibits copy
+    // func:lib_sqlite.FCtype..CopyCtor
+    FCtype(const lib_sqlite::FCtype &rhs) = delete;
+private:
+    // func:lib_sqlite.FCtype..Ctor
+    inline               FCtype() __attribute__((nothrow));
+    // func:lib_sqlite.FCtype..Dtor
+    inline               ~FCtype() __attribute__((nothrow));
+    friend lib_sqlite::FCtype&  ctype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_sqlite::FCtype*  ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ctype_RemoveAll() __attribute__((nothrow));
+    friend void                 ctype_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:lib_sqlite.FCtype.base.CopyOut
+void                 ctype_CopyOut(lib_sqlite::FCtype &row, dmmeta::Ctype &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:lib_sqlite.FCtype.base.CopyIn
+void                 ctype_CopyIn(lib_sqlite::FCtype &row, dmmeta::Ctype &in) __attribute__((nothrow));
+
+// func:lib_sqlite.FCtype.ns.Get
+algo::Smallstr16     ns_Get(lib_sqlite::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+
+// func:lib_sqlite.FCtype.name.Get
+algo::Smallstr100    name_Get(lib_sqlite::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+
+// Return true if index is empty
+// func:lib_sqlite.FCtype.c_field.EmptyQ
+inline bool          c_field_EmptyQ(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.FCtype.c_field.Find
+inline lib_sqlite::FField* c_field_Find(lib_sqlite::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+// func:lib_sqlite.FCtype.c_field.Getary
+inline algo::aryptr<lib_sqlite::FField*> c_field_Getary(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+// func:lib_sqlite.FCtype.c_field.Insert
+void                 c_field_Insert(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+// func:lib_sqlite.FCtype.c_field.InsertMaybe
+bool                 c_field_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+// func:lib_sqlite.FCtype.c_field.N
+inline i32           c_field_N(const lib_sqlite::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:lib_sqlite.FCtype.c_field.Remove
+void                 c_field_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:lib_sqlite.FCtype.c_field.RemoveAll
+inline void          c_field_RemoveAll(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+// func:lib_sqlite.FCtype.c_field.Reserve
+void                 c_field_Reserve(lib_sqlite::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+// func:lib_sqlite.FCtype.c_field.qFind
+inline lib_sqlite::FField& c_field_qFind(lib_sqlite::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+// func:lib_sqlite.FCtype.c_field.InAryQ
+inline bool          ctype_c_field_InAryQ(lib_sqlite::FField& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+// func:lib_sqlite.FCtype.c_field.qLast
+inline lib_sqlite::FField& c_field_qLast(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+// func:lib_sqlite.FCtype.c_sqltype.InsertMaybe
+inline bool          c_sqltype_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FSqltype& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:lib_sqlite.FCtype.c_sqltype.Remove
+inline void          c_sqltype_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FSqltype& row) __attribute__((nothrow));
+
+// Return true if hash is empty
+// func:lib_sqlite.FCtype.ind_field_name.EmptyQ
+inline bool          ind_field_name_EmptyQ(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:lib_sqlite.FCtype.ind_field_name.Find
+lib_sqlite::FField*  ind_field_name_Find(lib_sqlite::FCtype& ctype, const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:lib_sqlite.FCtype.ind_field_name.FindX
+lib_sqlite::FField&  ind_field_name_FindX(lib_sqlite::FCtype& ctype, const algo::strptr& key);
+// Return number of items in the hash
+// func:lib_sqlite.FCtype.ind_field_name.N
+inline i32           ind_field_name_N(const lib_sqlite::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:lib_sqlite.FCtype.ind_field_name.InsertMaybe
+bool                 ind_field_name_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:lib_sqlite.FCtype.ind_field_name.Remove
+void                 ind_field_name_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:lib_sqlite.FCtype.ind_field_name.Reserve
+void                 ind_field_name_Reserve(lib_sqlite::FCtype& ctype, int n) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+// func:lib_sqlite.FCtype.c_ssimfile.InsertMaybe
+inline bool          c_ssimfile_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FSsimfile& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:lib_sqlite.FCtype.c_ssimfile.Remove
+inline void          c_ssimfile_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FSsimfile& row) __attribute__((nothrow));
+
+// Return true if index is empty
+// func:lib_sqlite.FCtype.zd_row.EmptyQ
+inline bool          zd_row_EmptyQ(lib_sqlite::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:lib_sqlite.FCtype.zd_row.First
+inline lib_sqlite::FRow* zd_row_First(lib_sqlite::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:lib_sqlite.FCtype.zd_row.InLlistQ
+inline bool          zd_row_InLlistQ(lib_sqlite::FRow& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:lib_sqlite.FCtype.zd_row.Insert
+void                 zd_row_Insert(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:lib_sqlite.FCtype.zd_row.Last
+inline lib_sqlite::FRow* zd_row_Last(lib_sqlite::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:lib_sqlite.FCtype.zd_row.N
+inline i32           zd_row_N(const lib_sqlite::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:lib_sqlite.FCtype.zd_row.Next
+inline lib_sqlite::FRow* zd_row_Next(lib_sqlite::FRow &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:lib_sqlite.FCtype.zd_row.Prev
+inline lib_sqlite::FRow* zd_row_Prev(lib_sqlite::FRow &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:lib_sqlite.FCtype.zd_row.Remove
+void                 zd_row_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:lib_sqlite.FCtype.zd_row.RemoveAll
+void                 zd_row_RemoveAll(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:lib_sqlite.FCtype.zd_row.RemoveFirst
+lib_sqlite::FRow*    zd_row_RemoveFirst(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:lib_sqlite.FCtype.zd_row.qLast
+inline lib_sqlite::FRow& zd_row_qLast(lib_sqlite::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+
+// Return true if hash is empty
+// func:lib_sqlite.FCtype.ind_pkey.EmptyQ
+inline bool          ind_pkey_EmptyQ(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:lib_sqlite.FCtype.ind_pkey.Find
+lib_sqlite::FRow*    ind_pkey_Find(lib_sqlite::FCtype& ctype, const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:lib_sqlite.FCtype.ind_pkey.FindX
+lib_sqlite::FRow&    ind_pkey_FindX(lib_sqlite::FCtype& ctype, const algo::strptr& key);
+// Return number of items in the hash
+// func:lib_sqlite.FCtype.ind_pkey.N
+inline i32           ind_pkey_N(const lib_sqlite::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:lib_sqlite.FCtype.ind_pkey.InsertMaybe
+bool                 ind_pkey_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:lib_sqlite.FCtype.ind_pkey.Remove
+void                 ind_pkey_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:lib_sqlite.FCtype.ind_pkey.Reserve
+void                 ind_pkey_Reserve(lib_sqlite::FCtype& ctype, int n) __attribute__((nothrow));
+
+// Return true if index is empty
+// func:lib_sqlite.FCtype.c_row.EmptyQ
+inline bool          c_row_EmptyQ(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.FCtype.c_row.Find
+inline lib_sqlite::FRow* c_row_Find(lib_sqlite::FCtype& ctype, u32 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+// func:lib_sqlite.FCtype.c_row.Getary
+inline algo::aryptr<lib_sqlite::FRow*> c_row_Getary(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+// func:lib_sqlite.FCtype.c_row.Insert
+void                 c_row_Insert(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+// func:lib_sqlite.FCtype.c_row.InsertMaybe
+bool                 c_row_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+// func:lib_sqlite.FCtype.c_row.N
+inline i32           c_row_N(const lib_sqlite::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:lib_sqlite.FCtype.c_row.Remove
+void                 c_row_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:lib_sqlite.FCtype.c_row.RemoveAll
+inline void          c_row_RemoveAll(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+// func:lib_sqlite.FCtype.c_row.Reserve
+void                 c_row_Reserve(lib_sqlite::FCtype& ctype, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+// func:lib_sqlite.FCtype.c_row.qFind
+inline lib_sqlite::FRow& c_row_qFind(lib_sqlite::FCtype& ctype, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+// func:lib_sqlite.FCtype.c_row.InAryQ
+inline bool          ctype_c_row_InAryQ(lib_sqlite::FRow& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+// func:lib_sqlite.FCtype.c_row.qLast
+inline lib_sqlite::FRow& c_row_qLast(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+
+// func:lib_sqlite.FCtype.c_field_curs.Reset
+inline void          ctype_c_field_curs_Reset(ctype_c_field_curs &curs, lib_sqlite::FCtype &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FCtype.c_field_curs.ValidQ
+inline bool          ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_sqlite.FCtype.c_field_curs.Next
+inline void          ctype_c_field_curs_Next(ctype_c_field_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.FCtype.c_field_curs.Access
+inline lib_sqlite::FField& ctype_c_field_curs_Access(ctype_c_field_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FCtype.zd_row_curs.Reset
+inline void          ctype_zd_row_curs_Reset(ctype_zd_row_curs &curs, lib_sqlite::FCtype &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FCtype.zd_row_curs.ValidQ
+inline bool          ctype_zd_row_curs_ValidQ(ctype_zd_row_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_sqlite.FCtype.zd_row_curs.Next
+inline void          ctype_zd_row_curs_Next(ctype_zd_row_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.FCtype.zd_row_curs.Access
+inline lib_sqlite::FRow& ctype_zd_row_curs_Access(ctype_zd_row_curs &curs) __attribute__((nothrow));
+// func:lib_sqlite.FCtype.c_row_curs.Reset
+inline void          ctype_c_row_curs_Reset(ctype_c_row_curs &curs, lib_sqlite::FCtype &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FCtype.c_row_curs.ValidQ
+inline bool          ctype_c_row_curs_ValidQ(ctype_c_row_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_sqlite.FCtype.c_row_curs.Next
+inline void          ctype_c_row_curs_Next(ctype_c_row_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.FCtype.c_row_curs.Access
+inline lib_sqlite::FRow& ctype_c_row_curs_Access(ctype_c_row_curs &curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:lib_sqlite.FCtype..Init
+void                 FCtype_Init(lib_sqlite::FCtype& ctype);
+// func:lib_sqlite.FCtype..Uninit
+void                 FCtype_Uninit(lib_sqlite::FCtype& ctype) __attribute__((nothrow));
+
 // --- lib_sqlite.trace
 #pragma pack(push,1)
 struct trace { // lib_sqlite.trace
@@ -118,14 +452,41 @@ void                 trace_Print(lib_sqlite::trace& row, algo::cstring& str) __a
 // --- lib_sqlite.FDb
 // create: lib_sqlite.FDb._db (Global)
 struct FDb { // lib_sqlite.FDb
-    u64                    conn_blocksize;           // # bytes per block
-    lib_sqlite::FConn*     conn_free;                //
-    lib_sqlite::FConn**    ind_conn_buckets_elems;   // pointer to bucket array
-    i32                    ind_conn_buckets_n;       // number of elements in bucket array
-    i32                    ind_conn_n;               // number of elements in the hash table
-    lib_sqlite::FSubstr*   substr_lary[32];          // level array
-    i32                    substr_n;                 // number of elements in array
-    lib_sqlite::trace      trace;                    //
+    u64                       conn_blocksize;               // # bytes per block
+    lib_sqlite::FConn*        conn_free;                    //
+    lib_sqlite::FConn**       ind_conn_buckets_elems;       // pointer to bucket array
+    i32                       ind_conn_buckets_n;           // number of elements in bucket array
+    i32                       ind_conn_n;                   // number of elements in the hash table
+    lib_sqlite::FSubstr*      substr_lary[32];              // level array
+    i32                       substr_n;                     // number of elements in array
+    lib_sqlite::FField*       field_lary[32];               // level array
+    i32                       field_n;                      // number of elements in array
+    lib_sqlite::FField**      ind_field_buckets_elems;      // pointer to bucket array
+    i32                       ind_field_buckets_n;          // number of elements in bucket array
+    i32                       ind_field_n;                  // number of elements in the hash table
+    lib_sqlite::FCtype*       ctype_lary[32];               // level array
+    i32                       ctype_n;                      // number of elements in array
+    lib_sqlite::FCtype**      ind_ctype_buckets_elems;      // pointer to bucket array
+    i32                       ind_ctype_buckets_n;          // number of elements in bucket array
+    i32                       ind_ctype_n;                  // number of elements in the hash table
+    lib_sqlite::FSsimfile*    ssimfile_lary[32];            // level array
+    i32                       ssimfile_n;                   // number of elements in array
+    lib_sqlite::FSsimfile**   ind_ssimfile_buckets_elems;   // pointer to bucket array
+    i32                       ind_ssimfile_buckets_n;       // number of elements in bucket array
+    i32                       ind_ssimfile_n;               // number of elements in the hash table
+    lib_sqlite::FSqltype*     sqltype_lary[32];             // level array
+    i32                       sqltype_n;                    // number of elements in array
+    lib_sqlite::FIdx*         bestidx_elems;                // pointer to elements
+    u32                       bestidx_n;                    // number of elements in array
+    u32                       bestidx_max;                  // max. capacity of array before realloc
+    lib_sqlite::FRow*         trow_lary[32];                // level array
+    i32                       trow_n;                       // number of elements in array
+    lib_sqlite::FNs*          ns_lary[32];                  // level array
+    i32                       ns_n;                         // number of elements in array
+    lib_sqlite::FNs**         ind_ns_buckets_elems;         // pointer to bucket array
+    i32                       ind_ns_buckets_n;             // number of elements in bucket array
+    i32                       ind_ns_n;                     // number of elements in the hash table
+    lib_sqlite::trace         trace;                        //
 };
 
 // Parse strptr into known type and add to database.
@@ -252,6 +613,397 @@ inline lib_sqlite::FSubstr& substr_qFind(u64 t) __attribute__((nothrow, pure));
 // func:lib_sqlite.FDb.substr.XrefMaybe
 bool                 substr_XrefMaybe(lib_sqlite::FSubstr &row);
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:lib_sqlite.FDb.field.Alloc
+lib_sqlite::FField&  field_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:lib_sqlite.FDb.field.AllocMaybe
+lib_sqlite::FField*  field_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:lib_sqlite.FDb.field.InsertMaybe
+lib_sqlite::FField*  field_InsertMaybe(const dmmeta::Field &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:lib_sqlite.FDb.field.AllocMem
+void*                field_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:lib_sqlite.FDb.field.EmptyQ
+inline bool          field_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.FDb.field.Find
+inline lib_sqlite::FField* field_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:lib_sqlite.FDb.field.Last
+inline lib_sqlite::FField* field_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:lib_sqlite.FDb.field.N
+inline i32           field_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:lib_sqlite.FDb.field.RemoveAll
+void                 field_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:lib_sqlite.FDb.field.RemoveLast
+void                 field_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:lib_sqlite.FDb.field.qFind
+inline lib_sqlite::FField& field_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_sqlite.FDb.field.XrefMaybe
+bool                 field_XrefMaybe(lib_sqlite::FField &row);
+
+// Return true if hash is empty
+// func:lib_sqlite.FDb.ind_field.EmptyQ
+inline bool          ind_field_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:lib_sqlite.FDb.ind_field.Find
+lib_sqlite::FField*  ind_field_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:lib_sqlite.FDb.ind_field.FindX
+lib_sqlite::FField&  ind_field_FindX(const algo::strptr& key);
+// Return number of items in the hash
+// func:lib_sqlite.FDb.ind_field.N
+inline i32           ind_field_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:lib_sqlite.FDb.ind_field.InsertMaybe
+bool                 ind_field_InsertMaybe(lib_sqlite::FField& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:lib_sqlite.FDb.ind_field.Remove
+void                 ind_field_Remove(lib_sqlite::FField& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:lib_sqlite.FDb.ind_field.Reserve
+void                 ind_field_Reserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:lib_sqlite.FDb.ctype.Alloc
+lib_sqlite::FCtype&  ctype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:lib_sqlite.FDb.ctype.AllocMaybe
+lib_sqlite::FCtype*  ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:lib_sqlite.FDb.ctype.InsertMaybe
+lib_sqlite::FCtype*  ctype_InsertMaybe(const dmmeta::Ctype &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:lib_sqlite.FDb.ctype.AllocMem
+void*                ctype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:lib_sqlite.FDb.ctype.EmptyQ
+inline bool          ctype_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.FDb.ctype.Find
+inline lib_sqlite::FCtype* ctype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:lib_sqlite.FDb.ctype.Last
+inline lib_sqlite::FCtype* ctype_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:lib_sqlite.FDb.ctype.N
+inline i32           ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:lib_sqlite.FDb.ctype.RemoveAll
+void                 ctype_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:lib_sqlite.FDb.ctype.RemoveLast
+void                 ctype_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:lib_sqlite.FDb.ctype.qFind
+inline lib_sqlite::FCtype& ctype_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_sqlite.FDb.ctype.XrefMaybe
+bool                 ctype_XrefMaybe(lib_sqlite::FCtype &row);
+
+// Return true if hash is empty
+// func:lib_sqlite.FDb.ind_ctype.EmptyQ
+inline bool          ind_ctype_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:lib_sqlite.FDb.ind_ctype.Find
+lib_sqlite::FCtype*  ind_ctype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:lib_sqlite.FDb.ind_ctype.FindX
+lib_sqlite::FCtype&  ind_ctype_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:lib_sqlite.FDb.ind_ctype.GetOrCreate
+lib_sqlite::FCtype&  ind_ctype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:lib_sqlite.FDb.ind_ctype.N
+inline i32           ind_ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:lib_sqlite.FDb.ind_ctype.InsertMaybe
+bool                 ind_ctype_InsertMaybe(lib_sqlite::FCtype& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:lib_sqlite.FDb.ind_ctype.Remove
+void                 ind_ctype_Remove(lib_sqlite::FCtype& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:lib_sqlite.FDb.ind_ctype.Reserve
+void                 ind_ctype_Reserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:lib_sqlite.FDb.ssimfile.Alloc
+lib_sqlite::FSsimfile& ssimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:lib_sqlite.FDb.ssimfile.AllocMaybe
+lib_sqlite::FSsimfile* ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:lib_sqlite.FDb.ssimfile.InsertMaybe
+lib_sqlite::FSsimfile* ssimfile_InsertMaybe(const dmmeta::Ssimfile &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:lib_sqlite.FDb.ssimfile.AllocMem
+void*                ssimfile_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:lib_sqlite.FDb.ssimfile.EmptyQ
+inline bool          ssimfile_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.FDb.ssimfile.Find
+inline lib_sqlite::FSsimfile* ssimfile_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:lib_sqlite.FDb.ssimfile.Last
+inline lib_sqlite::FSsimfile* ssimfile_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:lib_sqlite.FDb.ssimfile.N
+inline i32           ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:lib_sqlite.FDb.ssimfile.RemoveAll
+void                 ssimfile_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:lib_sqlite.FDb.ssimfile.RemoveLast
+void                 ssimfile_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:lib_sqlite.FDb.ssimfile.qFind
+inline lib_sqlite::FSsimfile& ssimfile_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_sqlite.FDb.ssimfile.XrefMaybe
+bool                 ssimfile_XrefMaybe(lib_sqlite::FSsimfile &row);
+
+// Return true if hash is empty
+// func:lib_sqlite.FDb.ind_ssimfile.EmptyQ
+inline bool          ind_ssimfile_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:lib_sqlite.FDb.ind_ssimfile.Find
+lib_sqlite::FSsimfile* ind_ssimfile_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:lib_sqlite.FDb.ind_ssimfile.FindX
+lib_sqlite::FSsimfile& ind_ssimfile_FindX(const algo::strptr& key);
+// Return number of items in the hash
+// func:lib_sqlite.FDb.ind_ssimfile.N
+inline i32           ind_ssimfile_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:lib_sqlite.FDb.ind_ssimfile.InsertMaybe
+bool                 ind_ssimfile_InsertMaybe(lib_sqlite::FSsimfile& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:lib_sqlite.FDb.ind_ssimfile.Remove
+void                 ind_ssimfile_Remove(lib_sqlite::FSsimfile& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:lib_sqlite.FDb.ind_ssimfile.Reserve
+void                 ind_ssimfile_Reserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:lib_sqlite.FDb.sqltype.Alloc
+lib_sqlite::FSqltype& sqltype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:lib_sqlite.FDb.sqltype.AllocMaybe
+lib_sqlite::FSqltype* sqltype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:lib_sqlite.FDb.sqltype.InsertMaybe
+lib_sqlite::FSqltype* sqltype_InsertMaybe(const dmmeta::Sqltype &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:lib_sqlite.FDb.sqltype.AllocMem
+void*                sqltype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:lib_sqlite.FDb.sqltype.EmptyQ
+inline bool          sqltype_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.FDb.sqltype.Find
+inline lib_sqlite::FSqltype* sqltype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:lib_sqlite.FDb.sqltype.Last
+inline lib_sqlite::FSqltype* sqltype_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:lib_sqlite.FDb.sqltype.N
+inline i32           sqltype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:lib_sqlite.FDb.sqltype.RemoveAll
+void                 sqltype_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:lib_sqlite.FDb.sqltype.RemoveLast
+void                 sqltype_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:lib_sqlite.FDb.sqltype.qFind
+inline lib_sqlite::FSqltype& sqltype_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_sqlite.FDb.sqltype.XrefMaybe
+bool                 sqltype_XrefMaybe(lib_sqlite::FSqltype &row);
+
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:lib_sqlite.FDb.bestidx.Addary
+algo::aryptr<lib_sqlite::FIdx> bestidx_Addary(algo::aryptr<lib_sqlite::FIdx> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:lib_sqlite.FDb.bestidx.Alloc
+lib_sqlite::FIdx&    bestidx_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:lib_sqlite.FDb.bestidx.AllocAt
+lib_sqlite::FIdx&    bestidx_AllocAt(int at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_sqlite.FDb.bestidx.AllocN
+algo::aryptr<lib_sqlite::FIdx> bestidx_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:lib_sqlite.FDb.bestidx.EmptyQ
+inline bool          bestidx_EmptyQ() __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.FDb.bestidx.Find
+inline lib_sqlite::FIdx* bestidx_Find(u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:lib_sqlite.FDb.bestidx.Getary
+inline algo::aryptr<lib_sqlite::FIdx> bestidx_Getary() __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:lib_sqlite.FDb.bestidx.Last
+inline lib_sqlite::FIdx* bestidx_Last() __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:lib_sqlite.FDb.bestidx.Max
+inline i32           bestidx_Max() __attribute__((nothrow));
+// Return number of items in the array
+// func:lib_sqlite.FDb.bestidx.N
+inline i32           bestidx_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:lib_sqlite.FDb.bestidx.Remove
+void                 bestidx_Remove(u32 i) __attribute__((nothrow));
+// func:lib_sqlite.FDb.bestidx.RemoveAll
+void                 bestidx_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:lib_sqlite.FDb.bestidx.RemoveLast
+void                 bestidx_RemoveLast() __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:lib_sqlite.FDb.bestidx.Reserve
+inline void          bestidx_Reserve(int n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:lib_sqlite.FDb.bestidx.AbsReserve
+void                 bestidx_AbsReserve(int n) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:lib_sqlite.FDb.bestidx.qFind
+inline lib_sqlite::FIdx& bestidx_qFind(u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:lib_sqlite.FDb.bestidx.qLast
+inline lib_sqlite::FIdx& bestidx_qLast() __attribute__((nothrow));
+// Return row id of specified element
+// func:lib_sqlite.FDb.bestidx.rowid_Get
+inline u64           bestidx_rowid_Get(lib_sqlite::FIdx &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_sqlite.FDb.bestidx.AllocNVal
+algo::aryptr<lib_sqlite::FIdx> bestidx_AllocNVal(int n_elems, const lib_sqlite::FIdx& val) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:lib_sqlite.FDb.trow.Alloc
+lib_sqlite::FRow&    trow_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:lib_sqlite.FDb.trow.AllocMaybe
+lib_sqlite::FRow*    trow_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:lib_sqlite.FDb.trow.AllocMem
+void*                trow_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:lib_sqlite.FDb.trow.EmptyQ
+inline bool          trow_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.FDb.trow.Find
+inline lib_sqlite::FRow* trow_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:lib_sqlite.FDb.trow.Last
+inline lib_sqlite::FRow* trow_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:lib_sqlite.FDb.trow.N
+inline i32           trow_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:lib_sqlite.FDb.trow.RemoveAll
+void                 trow_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:lib_sqlite.FDb.trow.RemoveLast
+void                 trow_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:lib_sqlite.FDb.trow.qFind
+inline lib_sqlite::FRow& trow_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_sqlite.FDb.trow.XrefMaybe
+bool                 trow_XrefMaybe(lib_sqlite::FRow &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:lib_sqlite.FDb.ns.Alloc
+lib_sqlite::FNs&     ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:lib_sqlite.FDb.ns.AllocMaybe
+lib_sqlite::FNs*     ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:lib_sqlite.FDb.ns.InsertMaybe
+lib_sqlite::FNs*     ns_InsertMaybe(const dmmeta::Ns &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:lib_sqlite.FDb.ns.AllocMem
+void*                ns_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:lib_sqlite.FDb.ns.EmptyQ
+inline bool          ns_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.FDb.ns.Find
+inline lib_sqlite::FNs* ns_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:lib_sqlite.FDb.ns.Last
+inline lib_sqlite::FNs* ns_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:lib_sqlite.FDb.ns.N
+inline i32           ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:lib_sqlite.FDb.ns.RemoveAll
+void                 ns_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:lib_sqlite.FDb.ns.RemoveLast
+void                 ns_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:lib_sqlite.FDb.ns.qFind
+inline lib_sqlite::FNs& ns_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:lib_sqlite.FDb.ns.XrefMaybe
+bool                 ns_XrefMaybe(lib_sqlite::FNs &row);
+
+// Return true if hash is empty
+// func:lib_sqlite.FDb.ind_ns.EmptyQ
+inline bool          ind_ns_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:lib_sqlite.FDb.ind_ns.Find
+lib_sqlite::FNs*     ind_ns_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:lib_sqlite.FDb.ind_ns.FindX
+lib_sqlite::FNs&     ind_ns_FindX(const algo::strptr& key);
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:lib_sqlite.FDb.ind_ns.GetOrCreate
+lib_sqlite::FNs&     ind_ns_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:lib_sqlite.FDb.ind_ns.N
+inline i32           ind_ns_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:lib_sqlite.FDb.ind_ns.InsertMaybe
+bool                 ind_ns_InsertMaybe(lib_sqlite::FNs& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:lib_sqlite.FDb.ind_ns.Remove
+void                 ind_ns_Remove(lib_sqlite::FNs& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:lib_sqlite.FDb.ind_ns.Reserve
+void                 ind_ns_Reserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:lib_sqlite.FDb.substr_curs.Reset
 inline void          _db_substr_curs_Reset(_db_substr_curs &curs, lib_sqlite::FDb &parent) __attribute__((nothrow));
@@ -264,22 +1016,508 @@ inline void          _db_substr_curs_Next(_db_substr_curs &curs) __attribute__((
 // item access
 // func:lib_sqlite.FDb.substr_curs.Access
 inline lib_sqlite::FSubstr& _db_substr_curs_Access(_db_substr_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.field_curs.Reset
+inline void          _db_field_curs_Reset(_db_field_curs &curs, lib_sqlite::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.field_curs.ValidQ
+inline bool          _db_field_curs_ValidQ(_db_field_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_sqlite.FDb.field_curs.Next
+inline void          _db_field_curs_Next(_db_field_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.FDb.field_curs.Access
+inline lib_sqlite::FField& _db_field_curs_Access(_db_field_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.ctype_curs.Reset
+inline void          _db_ctype_curs_Reset(_db_ctype_curs &curs, lib_sqlite::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.ctype_curs.ValidQ
+inline bool          _db_ctype_curs_ValidQ(_db_ctype_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_sqlite.FDb.ctype_curs.Next
+inline void          _db_ctype_curs_Next(_db_ctype_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.FDb.ctype_curs.Access
+inline lib_sqlite::FCtype& _db_ctype_curs_Access(_db_ctype_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.ssimfile_curs.Reset
+inline void          _db_ssimfile_curs_Reset(_db_ssimfile_curs &curs, lib_sqlite::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.ssimfile_curs.ValidQ
+inline bool          _db_ssimfile_curs_ValidQ(_db_ssimfile_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_sqlite.FDb.ssimfile_curs.Next
+inline void          _db_ssimfile_curs_Next(_db_ssimfile_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.FDb.ssimfile_curs.Access
+inline lib_sqlite::FSsimfile& _db_ssimfile_curs_Access(_db_ssimfile_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.sqltype_curs.Reset
+inline void          _db_sqltype_curs_Reset(_db_sqltype_curs &curs, lib_sqlite::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.sqltype_curs.ValidQ
+inline bool          _db_sqltype_curs_ValidQ(_db_sqltype_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_sqlite.FDb.sqltype_curs.Next
+inline void          _db_sqltype_curs_Next(_db_sqltype_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.FDb.sqltype_curs.Access
+inline lib_sqlite::FSqltype& _db_sqltype_curs_Access(_db_sqltype_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_sqlite.FDb.bestidx_curs.Next
+inline void          _db_bestidx_curs_Next(_db_bestidx_curs &curs) __attribute__((nothrow));
+// func:lib_sqlite.FDb.bestidx_curs.Reset
+inline void          _db_bestidx_curs_Reset(_db_bestidx_curs &curs, lib_sqlite::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.bestidx_curs.ValidQ
+inline bool          _db_bestidx_curs_ValidQ(_db_bestidx_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.FDb.bestidx_curs.Access
+inline lib_sqlite::FIdx& _db_bestidx_curs_Access(_db_bestidx_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.trow_curs.Reset
+inline void          _db_trow_curs_Reset(_db_trow_curs &curs, lib_sqlite::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.trow_curs.ValidQ
+inline bool          _db_trow_curs_ValidQ(_db_trow_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_sqlite.FDb.trow_curs.Next
+inline void          _db_trow_curs_Next(_db_trow_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.FDb.trow_curs.Access
+inline lib_sqlite::FRow& _db_trow_curs_Access(_db_trow_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.ns_curs.Reset
+inline void          _db_ns_curs_Reset(_db_ns_curs &curs, lib_sqlite::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FDb.ns_curs.ValidQ
+inline bool          _db_ns_curs_ValidQ(_db_ns_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_sqlite.FDb.ns_curs.Next
+inline void          _db_ns_curs_Next(_db_ns_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.FDb.ns_curs.Access
+inline lib_sqlite::FNs& _db_ns_curs_Access(_db_ns_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_sqlite.FDb..Init
 void                 FDb_Init();
 // func:lib_sqlite.FDb..Uninit
 void                 FDb_Uninit() __attribute__((nothrow));
 
+// --- lib_sqlite.FField
+// create: lib_sqlite.FDb.field (Lary)
+// global access: field (Lary, by rowid)
+// global access: ind_field (Thash, hash field field)
+// access: lib_sqlite.Cons.p_field (Upptr)
+// access: lib_sqlite.FCtype.c_field (Ptrary)
+// access: lib_sqlite.FCtype.ind_field_name (Thash)
+// access: lib_sqlite.FSubstr.p_srcfield (Upptr)
+struct FField { // lib_sqlite.FField
+    lib_sqlite::FField*    ind_field_name_next;    // hash next
+    lib_sqlite::FField*    ind_field_next;         // hash next
+    algo::Smallstr100      field;                  // Primary key, as ctype.name
+    algo::Smallstr100      arg;                    // Type of field
+    algo::Smallstr50       reftype;                //   "Val"  Type constructor
+    algo::CppExpr          dflt;                   // Default value (c++ expression)
+    algo::Comment          comment;                //
+    lib_sqlite::FSubstr*   c_substr;               // optional pointer
+    lib_sqlite::FCtype*    p_arg;                  // reference to parent row
+    lib_sqlite::FCtype*    p_ctype;                // reference to parent row
+    u32                    id;                     //   0
+    bool                   ctype_c_field_in_ary;   //   false  membership flag
+    // x-reference on lib_sqlite.FField.c_substr prevents copy
+    // x-reference on lib_sqlite.FField.p_arg prevents copy
+    // x-reference on lib_sqlite.FField.p_ctype prevents copy
+    // func:lib_sqlite.FField..AssignOp
+    lib_sqlite::FField&  operator =(const lib_sqlite::FField &rhs) = delete;
+    // x-reference on lib_sqlite.FField.c_substr prevents copy
+    // x-reference on lib_sqlite.FField.p_arg prevents copy
+    // x-reference on lib_sqlite.FField.p_ctype prevents copy
+    // func:lib_sqlite.FField..CopyCtor
+    FField(const lib_sqlite::FField &rhs) = delete;
+private:
+    // func:lib_sqlite.FField..Ctor
+    inline               FField() __attribute__((nothrow));
+    // func:lib_sqlite.FField..Dtor
+    inline               ~FField() __attribute__((nothrow));
+    friend lib_sqlite::FField&  field_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_sqlite::FField*  field_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 field_RemoveAll() __attribute__((nothrow));
+    friend void                 field_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:lib_sqlite.FField.base.CopyOut
+void                 field_CopyOut(lib_sqlite::FField &row, dmmeta::Field &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:lib_sqlite.FField.base.CopyIn
+void                 field_CopyIn(lib_sqlite::FField &row, dmmeta::Field &in) __attribute__((nothrow));
+
+// func:lib_sqlite.FField.ctype.Get
+algo::Smallstr100    ctype_Get(lib_sqlite::FField& field) __attribute__((__warn_unused_result__, nothrow));
+
+// func:lib_sqlite.FField.ns.Get
+algo::Smallstr16     ns_Get(lib_sqlite::FField& field) __attribute__((__warn_unused_result__, nothrow));
+
+// func:lib_sqlite.FField.name.Get
+algo::Smallstr50     name_Get(lib_sqlite::FField& field) __attribute__((__warn_unused_result__, nothrow));
+
+// Insert row into pointer index. Return final membership status.
+// func:lib_sqlite.FField.c_substr.InsertMaybe
+inline bool          c_substr_InsertMaybe(lib_sqlite::FField& field, lib_sqlite::FSubstr& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:lib_sqlite.FField.c_substr.Remove
+inline void          c_substr_Remove(lib_sqlite::FField& field, lib_sqlite::FSubstr& row) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:lib_sqlite.FField..Init
+void                 FField_Init(lib_sqlite::FField& field);
+// func:lib_sqlite.FField..Uninit
+void                 FField_Uninit(lib_sqlite::FField& field) __attribute__((nothrow));
+
+// --- lib_sqlite.FIdx
+// create: lib_sqlite.FDb.bestidx (Tary)
+// access: lib_sqlite.VtabCurs.c_idx (Ptr)
+struct FIdx { // lib_sqlite.FIdx
+    lib_sqlite::Cons*   cons_elems;   // pointer to elements
+    u32                 cons_n;       // number of elements in array
+    u32                 cons_max;     // max. capacity of array before realloc
+    i32                 rowid;        //   0
+    // func:lib_sqlite.FIdx..AssignOp
+    lib_sqlite::FIdx&    operator =(const lib_sqlite::FIdx &rhs) __attribute__((nothrow));
+    // func:lib_sqlite.FIdx..Ctor
+    inline               FIdx() __attribute__((nothrow));
+    // func:lib_sqlite.FIdx..Dtor
+    inline               ~FIdx() __attribute__((nothrow));
+    // func:lib_sqlite.FIdx..CopyCtor
+    FIdx(const lib_sqlite::FIdx &rhs) __attribute__((nothrow));
+};
+
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:lib_sqlite.FIdx.cons.Addary
+algo::aryptr<lib_sqlite::Cons> cons_Addary(lib_sqlite::FIdx& parent, algo::aryptr<lib_sqlite::Cons> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:lib_sqlite.FIdx.cons.Alloc
+lib_sqlite::Cons&    cons_Alloc(lib_sqlite::FIdx& parent) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:lib_sqlite.FIdx.cons.AllocAt
+lib_sqlite::Cons&    cons_AllocAt(lib_sqlite::FIdx& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_sqlite.FIdx.cons.AllocN
+algo::aryptr<lib_sqlite::Cons> cons_AllocN(lib_sqlite::FIdx& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:lib_sqlite.FIdx.cons.EmptyQ
+inline bool          cons_EmptyQ(lib_sqlite::FIdx& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.FIdx.cons.Find
+inline lib_sqlite::Cons* cons_Find(lib_sqlite::FIdx& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:lib_sqlite.FIdx.cons.Getary
+inline algo::aryptr<lib_sqlite::Cons> cons_Getary(const lib_sqlite::FIdx& parent) __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:lib_sqlite.FIdx.cons.Last
+inline lib_sqlite::Cons* cons_Last(lib_sqlite::FIdx& parent) __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:lib_sqlite.FIdx.cons.Max
+inline i32           cons_Max(lib_sqlite::FIdx& parent) __attribute__((nothrow));
+// Return number of items in the array
+// func:lib_sqlite.FIdx.cons.N
+inline i32           cons_N(const lib_sqlite::FIdx& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:lib_sqlite.FIdx.cons.Remove
+void                 cons_Remove(lib_sqlite::FIdx& parent, u32 i) __attribute__((nothrow));
+// func:lib_sqlite.FIdx.cons.RemoveAll
+void                 cons_RemoveAll(lib_sqlite::FIdx& parent) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:lib_sqlite.FIdx.cons.RemoveLast
+void                 cons_RemoveLast(lib_sqlite::FIdx& parent) __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:lib_sqlite.FIdx.cons.Reserve
+inline void          cons_Reserve(lib_sqlite::FIdx& parent, int n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:lib_sqlite.FIdx.cons.AbsReserve
+void                 cons_AbsReserve(lib_sqlite::FIdx& parent, int n) __attribute__((nothrow));
+// Copy contents of RHS to PARENT.
+// func:lib_sqlite.FIdx.cons.Setary
+void                 cons_Setary(lib_sqlite::FIdx& parent, lib_sqlite::FIdx &rhs) __attribute__((nothrow));
+// Copy specified array into cons, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:lib_sqlite.FIdx.cons.Setary2
+void                 cons_Setary(lib_sqlite::FIdx& parent, const algo::aryptr<lib_sqlite::Cons> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:lib_sqlite.FIdx.cons.qFind
+inline lib_sqlite::Cons& cons_qFind(lib_sqlite::FIdx& parent, u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:lib_sqlite.FIdx.cons.qLast
+inline lib_sqlite::Cons& cons_qLast(lib_sqlite::FIdx& parent) __attribute__((nothrow));
+// Return row id of specified element
+// func:lib_sqlite.FIdx.cons.rowid_Get
+inline u64           cons_rowid_Get(lib_sqlite::FIdx& parent, lib_sqlite::Cons &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_sqlite.FIdx.cons.AllocNVal
+algo::aryptr<lib_sqlite::Cons> cons_AllocNVal(lib_sqlite::FIdx& parent, int n_elems, const lib_sqlite::Cons& val) __attribute__((nothrow));
+
+// proceed to next item
+// func:lib_sqlite.FIdx.cons_curs.Next
+inline void          FIdx_cons_curs_Next(FIdx_cons_curs &curs) __attribute__((nothrow));
+// func:lib_sqlite.FIdx.cons_curs.Reset
+inline void          FIdx_cons_curs_Reset(FIdx_cons_curs &curs, lib_sqlite::FIdx &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FIdx.cons_curs.ValidQ
+inline bool          FIdx_cons_curs_ValidQ(FIdx_cons_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.FIdx.cons_curs.Access
+inline lib_sqlite::Cons& FIdx_cons_curs_Access(FIdx_cons_curs &curs) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:lib_sqlite.FIdx..Init
+inline void          FIdx_Init(lib_sqlite::FIdx& parent);
+// func:lib_sqlite.FIdx..Uninit
+void                 FIdx_Uninit(lib_sqlite::FIdx& parent) __attribute__((nothrow));
+
+// --- lib_sqlite.FNs
+// create: lib_sqlite.FDb.ns (Lary)
+// global access: ns (Lary, by rowid)
+// global access: ind_ns (Thash, hash field ns)
+// access: lib_sqlite.FSsimfile.p_ns (Upptr)
+struct FNs { // lib_sqlite.FNs
+    lib_sqlite::FNs*          ind_ns_next;        // hash next
+    algo::Smallstr16          ns;                 // Namespace name (primary key)
+    algo::Smallstr50          nstype;             // Namespace type
+    algo::Smallstr50          license;            // Associated license
+    algo::Comment             comment;            //
+    lib_sqlite::FSsimfile**   c_ssimfile_elems;   // array of pointers
+    u32                       c_ssimfile_n;       // array of pointers
+    u32                       c_ssimfile_max;     // capacity of allocated array
+    // reftype Ptrary of lib_sqlite.FNs.c_ssimfile prohibits copy
+    // func:lib_sqlite.FNs..AssignOp
+    inline lib_sqlite::FNs& operator =(const lib_sqlite::FNs &rhs) = delete;
+    // reftype Ptrary of lib_sqlite.FNs.c_ssimfile prohibits copy
+    // func:lib_sqlite.FNs..CopyCtor
+    inline               FNs(const lib_sqlite::FNs &rhs) = delete;
+private:
+    // func:lib_sqlite.FNs..Ctor
+    inline               FNs() __attribute__((nothrow));
+    // func:lib_sqlite.FNs..Dtor
+    inline               ~FNs() __attribute__((nothrow));
+    friend lib_sqlite::FNs&     ns_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_sqlite::FNs*     ns_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ns_RemoveAll() __attribute__((nothrow));
+    friend void                 ns_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:lib_sqlite.FNs.base.CopyOut
+void                 ns_CopyOut(lib_sqlite::FNs &row, dmmeta::Ns &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:lib_sqlite.FNs.base.CopyIn
+void                 ns_CopyIn(lib_sqlite::FNs &row, dmmeta::Ns &in) __attribute__((nothrow));
+
+// Return true if index is empty
+// func:lib_sqlite.FNs.c_ssimfile.EmptyQ
+inline bool          c_ssimfile_EmptyQ(lib_sqlite::FNs& ns) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.FNs.c_ssimfile.Find
+inline lib_sqlite::FSsimfile* c_ssimfile_Find(lib_sqlite::FNs& ns, u32 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+// func:lib_sqlite.FNs.c_ssimfile.Getary
+inline algo::aryptr<lib_sqlite::FSsimfile*> c_ssimfile_Getary(lib_sqlite::FNs& ns) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+// func:lib_sqlite.FNs.c_ssimfile.Insert
+void                 c_ssimfile_Insert(lib_sqlite::FNs& ns, lib_sqlite::FSsimfile& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+// func:lib_sqlite.FNs.c_ssimfile.InsertMaybe
+bool                 c_ssimfile_InsertMaybe(lib_sqlite::FNs& ns, lib_sqlite::FSsimfile& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+// func:lib_sqlite.FNs.c_ssimfile.N
+inline i32           c_ssimfile_N(const lib_sqlite::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:lib_sqlite.FNs.c_ssimfile.Remove
+void                 c_ssimfile_Remove(lib_sqlite::FNs& ns, lib_sqlite::FSsimfile& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:lib_sqlite.FNs.c_ssimfile.RemoveAll
+inline void          c_ssimfile_RemoveAll(lib_sqlite::FNs& ns) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+// func:lib_sqlite.FNs.c_ssimfile.Reserve
+void                 c_ssimfile_Reserve(lib_sqlite::FNs& ns, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+// func:lib_sqlite.FNs.c_ssimfile.qFind
+inline lib_sqlite::FSsimfile& c_ssimfile_qFind(lib_sqlite::FNs& ns, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+// func:lib_sqlite.FNs.c_ssimfile.InAryQ
+inline bool          ns_c_ssimfile_InAryQ(lib_sqlite::FSsimfile& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+// func:lib_sqlite.FNs.c_ssimfile.qLast
+inline lib_sqlite::FSsimfile& c_ssimfile_qLast(lib_sqlite::FNs& ns) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:lib_sqlite.FNs..Init
+inline void          FNs_Init(lib_sqlite::FNs& ns);
+// func:lib_sqlite.FNs.c_ssimfile_curs.Reset
+inline void          ns_c_ssimfile_curs_Reset(ns_c_ssimfile_curs &curs, lib_sqlite::FNs &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.FNs.c_ssimfile_curs.ValidQ
+inline bool          ns_c_ssimfile_curs_ValidQ(ns_c_ssimfile_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_sqlite.FNs.c_ssimfile_curs.Next
+inline void          ns_c_ssimfile_curs_Next(ns_c_ssimfile_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.FNs.c_ssimfile_curs.Access
+inline lib_sqlite::FSsimfile& ns_c_ssimfile_curs_Access(ns_c_ssimfile_curs &curs) __attribute__((nothrow));
+// func:lib_sqlite.FNs..Uninit
+void                 FNs_Uninit(lib_sqlite::FNs& ns) __attribute__((nothrow));
+
+// --- lib_sqlite.FRow
+// create: lib_sqlite.FDb.trow (Lary)
+// global access: trow (Lary, by rowid)
+// access: lib_sqlite.FCtype.zd_row (Llist)
+// access: lib_sqlite.FCtype.ind_pkey (Thash)
+// access: lib_sqlite.FCtype.c_row (Ptrary)
+// access: lib_sqlite.VtabCurs.c_row (Ptr)
+struct FRow { // lib_sqlite.FRow
+    lib_sqlite::FRow*     zd_row_next;          // zslist link; -1 means not-in-list
+    lib_sqlite::FRow*     zd_row_prev;          // previous element
+    lib_sqlite::FRow*     ind_pkey_next;        // hash next
+    algo::cstring         pkey;                 //
+    algo::Tuple           tuple;                //
+    lib_sqlite::FCtype*   p_ctype;              // reference to parent row
+    i64                   rowid;                //   0
+    bool                  ctype_c_row_in_ary;   //   false  membership flag
+    // func:lib_sqlite.FRow..AssignOp
+    inline lib_sqlite::FRow& operator =(const lib_sqlite::FRow &rhs) = delete;
+    // func:lib_sqlite.FRow..CopyCtor
+    inline               FRow(const lib_sqlite::FRow &rhs) = delete;
+private:
+    // func:lib_sqlite.FRow..Ctor
+    inline               FRow() __attribute__((nothrow));
+    // func:lib_sqlite.FRow..Dtor
+    inline               ~FRow() __attribute__((nothrow));
+    friend lib_sqlite::FRow&    trow_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_sqlite::FRow*    trow_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 trow_RemoveAll() __attribute__((nothrow));
+    friend void                 trow_RemoveLast() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:lib_sqlite.FRow..Init
+inline void          FRow_Init(lib_sqlite::FRow& trow);
+// func:lib_sqlite.FRow..Uninit
+void                 FRow_Uninit(lib_sqlite::FRow& trow) __attribute__((nothrow));
+
+// --- lib_sqlite.FSqltype
+// create: lib_sqlite.FDb.sqltype (Lary)
+// global access: sqltype (Lary, by rowid)
+// access: lib_sqlite.FCtype.c_sqltype (Ptr)
+struct FSqltype { // lib_sqlite.FSqltype
+    algo::Smallstr100   ctype;     //
+    algo::Smallstr100   expr;      //
+    algo::Comment       comment;   //
+    // func:lib_sqlite.FSqltype..AssignOp
+    inline lib_sqlite::FSqltype& operator =(const lib_sqlite::FSqltype &rhs) = delete;
+    // func:lib_sqlite.FSqltype..CopyCtor
+    inline               FSqltype(const lib_sqlite::FSqltype &rhs) = delete;
+private:
+    // func:lib_sqlite.FSqltype..Ctor
+    inline               FSqltype() __attribute__((nothrow));
+    // func:lib_sqlite.FSqltype..Dtor
+    inline               ~FSqltype() __attribute__((nothrow));
+    friend lib_sqlite::FSqltype& sqltype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_sqlite::FSqltype* sqltype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 sqltype_RemoveAll() __attribute__((nothrow));
+    friend void                 sqltype_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:lib_sqlite.FSqltype.base.CopyOut
+void                 sqltype_CopyOut(lib_sqlite::FSqltype &row, dmmeta::Sqltype &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:lib_sqlite.FSqltype.base.CopyIn
+void                 sqltype_CopyIn(lib_sqlite::FSqltype &row, dmmeta::Sqltype &in) __attribute__((nothrow));
+
+// func:lib_sqlite.FSqltype..Uninit
+void                 FSqltype_Uninit(lib_sqlite::FSqltype& sqltype) __attribute__((nothrow));
+
+// --- lib_sqlite.FSsimfile
+// create: lib_sqlite.FDb.ssimfile (Lary)
+// global access: ssimfile (Lary, by rowid)
+// global access: ind_ssimfile (Thash, hash field ssimfile)
+// access: lib_sqlite.FCtype.c_ssimfile (Ptr)
+// access: lib_sqlite.FNs.c_ssimfile (Ptrary)
+struct FSsimfile { // lib_sqlite.FSsimfile
+    lib_sqlite::FSsimfile*   ind_ssimfile_next;      // hash next
+    algo::Smallstr50         ssimfile;               //
+    algo::Smallstr100        ctype;                  //
+    lib_sqlite::FCtype*      p_ctype;                // reference to parent row
+    lib_sqlite::FNs*         p_ns;                   // reference to parent row
+    bool                     ns_c_ssimfile_in_ary;   //   false  membership flag
+    // x-reference on lib_sqlite.FSsimfile.p_ctype prevents copy
+    // x-reference on lib_sqlite.FSsimfile.p_ns prevents copy
+    // func:lib_sqlite.FSsimfile..AssignOp
+    inline lib_sqlite::FSsimfile& operator =(const lib_sqlite::FSsimfile &rhs) = delete;
+    // x-reference on lib_sqlite.FSsimfile.p_ctype prevents copy
+    // x-reference on lib_sqlite.FSsimfile.p_ns prevents copy
+    // func:lib_sqlite.FSsimfile..CopyCtor
+    inline               FSsimfile(const lib_sqlite::FSsimfile &rhs) = delete;
+private:
+    // func:lib_sqlite.FSsimfile..Ctor
+    inline               FSsimfile() __attribute__((nothrow));
+    // func:lib_sqlite.FSsimfile..Dtor
+    inline               ~FSsimfile() __attribute__((nothrow));
+    friend lib_sqlite::FSsimfile& ssimfile_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend lib_sqlite::FSsimfile* ssimfile_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ssimfile_RemoveAll() __attribute__((nothrow));
+    friend void                 ssimfile_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:lib_sqlite.FSsimfile.base.CopyOut
+void                 ssimfile_CopyOut(lib_sqlite::FSsimfile &row, dmmeta::Ssimfile &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:lib_sqlite.FSsimfile.base.CopyIn
+void                 ssimfile_CopyIn(lib_sqlite::FSsimfile &row, dmmeta::Ssimfile &in) __attribute__((nothrow));
+
+// func:lib_sqlite.FSsimfile.ssimns.Get
+algo::Smallstr16     ssimns_Get(lib_sqlite::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+
+// func:lib_sqlite.FSsimfile.ns.Get
+algo::Smallstr16     ns_Get(lib_sqlite::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+
+// func:lib_sqlite.FSsimfile.name.Get
+algo::Smallstr50     name_Get(lib_sqlite::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow));
+
+// Set all fields to initial values.
+// func:lib_sqlite.FSsimfile..Init
+inline void          FSsimfile_Init(lib_sqlite::FSsimfile& ssimfile);
+// func:lib_sqlite.FSsimfile..Uninit
+void                 FSsimfile_Uninit(lib_sqlite::FSsimfile& ssimfile) __attribute__((nothrow));
+
 // --- lib_sqlite.FSubstr
 // create: lib_sqlite.FDb.substr (Lary)
 // global access: substr (Lary, by rowid)
+// access: lib_sqlite.FField.c_substr (Ptr)
 struct FSubstr { // lib_sqlite.FSubstr
-    algo::Smallstr100   field;      //
-    algo::CppExpr       expr;       //
-    algo::Smallstr100   srcfield;   //
+    algo::Smallstr100     field;        //
+    algo::CppExpr         expr;         //
+    algo::Smallstr100     srcfield;     //
+    lib_sqlite::FField*   p_srcfield;   // reference to parent row
+    // x-reference on lib_sqlite.FSubstr.p_srcfield prevents copy
+    // func:lib_sqlite.FSubstr..AssignOp
+    inline lib_sqlite::FSubstr& operator =(const lib_sqlite::FSubstr &rhs) = delete;
+    // x-reference on lib_sqlite.FSubstr.p_srcfield prevents copy
+    // func:lib_sqlite.FSubstr..CopyCtor
+    inline               FSubstr(const lib_sqlite::FSubstr &rhs) = delete;
 private:
     // func:lib_sqlite.FSubstr..Ctor
     inline               FSubstr() __attribute__((nothrow));
+    // func:lib_sqlite.FSubstr..Dtor
+    inline               ~FSubstr() __attribute__((nothrow));
     friend lib_sqlite::FSubstr& substr_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend lib_sqlite::FSubstr* substr_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 substr_RemoveAll() __attribute__((nothrow));
@@ -293,6 +1531,11 @@ void                 substr_CopyOut(lib_sqlite::FSubstr &row, dmmeta::Substr &ou
 // func:lib_sqlite.FSubstr.base.CopyIn
 void                 substr_CopyIn(lib_sqlite::FSubstr &row, dmmeta::Substr &in) __attribute__((nothrow));
 
+// Set all fields to initial values.
+// func:lib_sqlite.FSubstr..Init
+inline void          FSubstr_Init(lib_sqlite::FSubstr& substr);
+// func:lib_sqlite.FSubstr..Uninit
+void                 FSubstr_Uninit(lib_sqlite::FSubstr& substr) __attribute__((nothrow));
 
 // --- lib_sqlite.FieldId
 #pragma pack(push,1)
@@ -401,42 +1644,320 @@ inline void          TableId_Init(lib_sqlite::TableId& parent);
 void                 TableId_Print(lib_sqlite::TableId& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- lib_sqlite.Vtab
+// access: lib_sqlite.VtabCurs.p_vtab (Upptr)
 struct Vtab { // lib_sqlite.Vtab: An instance of the virtual table
-    sqlite3_vtab            base;         //
-    algo::cstring           filename;     //
-    lib_ctype::FSsimfile*   c_ssimfile;   // optional pointer
-    lib_ctype::FCtype*      p_ctype;      // optional pointer
+    sqlite3_vtab             base;           //
+    algo::cstring            filename;       //
+    lib_sqlite::FCtype*      p_ctype;        // optional pointer
+    lib_sqlite::VtabCurs**   c_curs_elems;   // array of pointers
+    u32                      c_curs_n;       // array of pointers
+    u32                      c_curs_max;     // capacity of allocated array
+    bool                     loaded;         //   false
     // func:lib_sqlite.Vtab..Ctor
     inline               Vtab() __attribute__((nothrow));
+    // func:lib_sqlite.Vtab..Dtor
+    inline               ~Vtab() __attribute__((nothrow));
 };
 
+// Return true if index is empty
+// func:lib_sqlite.Vtab.c_curs.EmptyQ
+inline bool          c_curs_EmptyQ(lib_sqlite::Vtab& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.Vtab.c_curs.Find
+inline lib_sqlite::VtabCurs* c_curs_Find(lib_sqlite::Vtab& parent, u32 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array of pointers
+// func:lib_sqlite.Vtab.c_curs.Getary
+inline algo::aryptr<lib_sqlite::VtabCurs*> c_curs_Getary(lib_sqlite::Vtab& parent) __attribute__((nothrow));
+// Insert pointer to row into array. Row must not already be in array.
+// If pointer is already in the array, it may be inserted twice.
+// func:lib_sqlite.Vtab.c_curs.Insert
+void                 c_curs_Insert(lib_sqlite::Vtab& parent, lib_sqlite::VtabCurs& row) __attribute__((nothrow));
+// Insert pointer to row in array.
+// If row is already in the array, do nothing.
+// Return value: whether element was inserted into array.
+// func:lib_sqlite.Vtab.c_curs.InsertMaybe
+bool                 c_curs_InsertMaybe(lib_sqlite::Vtab& parent, lib_sqlite::VtabCurs& row) __attribute__((nothrow));
+// Return number of items in the pointer array
+// func:lib_sqlite.Vtab.c_curs.N
+inline i32           c_curs_N(const lib_sqlite::Vtab& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Find element using linear scan. If element is in array, remove, otherwise do nothing
+// func:lib_sqlite.Vtab.c_curs.Remove
+void                 c_curs_Remove(lib_sqlite::Vtab& parent, lib_sqlite::VtabCurs& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:lib_sqlite.Vtab.c_curs.RemoveAll
+inline void          c_curs_RemoveAll(lib_sqlite::Vtab& parent) __attribute__((nothrow));
+// Reserve space in index for N more elements;
+// func:lib_sqlite.Vtab.c_curs.Reserve
+void                 c_curs_Reserve(lib_sqlite::Vtab& parent, u32 n) __attribute__((nothrow));
+// Return reference without bounds checking
+// func:lib_sqlite.Vtab.c_curs.qFind
+inline lib_sqlite::VtabCurs& c_curs_qFind(lib_sqlite::Vtab& parent, u32 idx) __attribute__((nothrow));
+// True if row is in any ptrary instance
+// func:lib_sqlite.Vtab.c_curs.InAryQ
+inline bool          parent_c_curs_InAryQ(lib_sqlite::VtabCurs& row) __attribute__((nothrow));
+// Reference to last element without bounds checking
+// func:lib_sqlite.Vtab.c_curs.qLast
+inline lib_sqlite::VtabCurs& c_curs_qLast(lib_sqlite::Vtab& parent) __attribute__((nothrow));
+
+// func:lib_sqlite.Vtab.c_curs_curs.Reset
+inline void          Vtab_c_curs_curs_Reset(Vtab_c_curs_curs &curs, lib_sqlite::Vtab &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.Vtab.c_curs_curs.ValidQ
+inline bool          Vtab_c_curs_curs_ValidQ(Vtab_c_curs_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:lib_sqlite.Vtab.c_curs_curs.Next
+inline void          Vtab_c_curs_curs_Next(Vtab_c_curs_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.Vtab.c_curs_curs.Access
+inline lib_sqlite::VtabCurs& Vtab_c_curs_curs_Access(Vtab_c_curs_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_sqlite.Vtab..Init
 inline void          Vtab_Init(lib_sqlite::Vtab& parent);
+// func:lib_sqlite.Vtab..Uninit
+void                 Vtab_Uninit(lib_sqlite::Vtab& parent) __attribute__((nothrow));
 
 // --- lib_sqlite.VtabCurs
+// access: lib_sqlite.Vtab.c_curs (Ptrary)
 struct VtabCurs { // lib_sqlite.VtabCurs: A cursor for the virtual table
-    sqlite3_vtab_cursor    base;   // Base class. Must be first
-    algo_lib::InTextFile   file;   // current file
-    algo::strptr           line;   // current line
-    i32                    i;      //   0  current line number
-    bool                   eof;    //   false
-    algo::Tuple            row;    // Parsed row
+    sqlite3_vtab_cursor   base;                   // Base class. Must be first
+    bool                  eof;                    //   false
+    lib_sqlite::Vtab*     p_vtab;                 // reference to parent row
+    lib_sqlite::FCtype*   p_ctype;                // reference to parent row
+    lib_sqlite::FRow*     c_row;                  // optional pointer
+    lib_sqlite::Cons*     c_pkey;                 // optional pointer
+    lib_sqlite::FIdx*     c_idx;                  // optional pointer
+    i32                   rowid;                  //   0
+    algo::cstring*        attrs_elems;            // pointer to elements
+    u32                   attrs_n;                // number of elements in array
+    u32                   attrs_max;              // max. capacity of array before realloc
+    bool                  parent_c_curs_in_ary;   //   false  membership flag
+    // func:lib_sqlite.VtabCurs..AssignOp
+    lib_sqlite::VtabCurs& operator =(const lib_sqlite::VtabCurs &rhs) __attribute__((nothrow));
     // func:lib_sqlite.VtabCurs..Ctor
     inline               VtabCurs() __attribute__((nothrow));
+    // func:lib_sqlite.VtabCurs..Dtor
+    inline               ~VtabCurs() __attribute__((nothrow));
+    // func:lib_sqlite.VtabCurs..CopyCtor
+    VtabCurs(const lib_sqlite::VtabCurs &rhs) __attribute__((nothrow));
 };
 
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:lib_sqlite.VtabCurs.attrs.Addary
+algo::aryptr<algo::cstring> attrs_Addary(lib_sqlite::VtabCurs& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:lib_sqlite.VtabCurs.attrs.Alloc
+algo::cstring&       attrs_Alloc(lib_sqlite::VtabCurs& parent) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:lib_sqlite.VtabCurs.attrs.AllocAt
+algo::cstring&       attrs_AllocAt(lib_sqlite::VtabCurs& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_sqlite.VtabCurs.attrs.AllocN
+algo::aryptr<algo::cstring> attrs_AllocN(lib_sqlite::VtabCurs& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:lib_sqlite.VtabCurs.attrs.EmptyQ
+inline bool          attrs_EmptyQ(lib_sqlite::VtabCurs& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:lib_sqlite.VtabCurs.attrs.Find
+inline algo::cstring* attrs_Find(lib_sqlite::VtabCurs& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:lib_sqlite.VtabCurs.attrs.Getary
+inline algo::aryptr<algo::cstring> attrs_Getary(const lib_sqlite::VtabCurs& parent) __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:lib_sqlite.VtabCurs.attrs.Last
+inline algo::cstring* attrs_Last(lib_sqlite::VtabCurs& parent) __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:lib_sqlite.VtabCurs.attrs.Max
+inline i32           attrs_Max(lib_sqlite::VtabCurs& parent) __attribute__((nothrow));
+// Return number of items in the array
+// func:lib_sqlite.VtabCurs.attrs.N
+inline i32           attrs_N(const lib_sqlite::VtabCurs& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:lib_sqlite.VtabCurs.attrs.Remove
+void                 attrs_Remove(lib_sqlite::VtabCurs& parent, u32 i) __attribute__((nothrow));
+// func:lib_sqlite.VtabCurs.attrs.RemoveAll
+void                 attrs_RemoveAll(lib_sqlite::VtabCurs& parent) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:lib_sqlite.VtabCurs.attrs.RemoveLast
+void                 attrs_RemoveLast(lib_sqlite::VtabCurs& parent) __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:lib_sqlite.VtabCurs.attrs.Reserve
+inline void          attrs_Reserve(lib_sqlite::VtabCurs& parent, int n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:lib_sqlite.VtabCurs.attrs.AbsReserve
+void                 attrs_AbsReserve(lib_sqlite::VtabCurs& parent, int n) __attribute__((nothrow));
+// Copy contents of RHS to PARENT.
+// func:lib_sqlite.VtabCurs.attrs.Setary
+void                 attrs_Setary(lib_sqlite::VtabCurs& parent, lib_sqlite::VtabCurs &rhs) __attribute__((nothrow));
+// Copy specified array into attrs, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:lib_sqlite.VtabCurs.attrs.Setary2
+void                 attrs_Setary(lib_sqlite::VtabCurs& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:lib_sqlite.VtabCurs.attrs.qFind
+inline algo::cstring& attrs_qFind(lib_sqlite::VtabCurs& parent, u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:lib_sqlite.VtabCurs.attrs.qLast
+inline algo::cstring& attrs_qLast(lib_sqlite::VtabCurs& parent) __attribute__((nothrow));
+// Return row id of specified element
+// func:lib_sqlite.VtabCurs.attrs.rowid_Get
+inline u64           attrs_rowid_Get(lib_sqlite::VtabCurs& parent, algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:lib_sqlite.VtabCurs.attrs.AllocNVal
+algo::aryptr<algo::cstring> attrs_AllocNVal(lib_sqlite::VtabCurs& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:lib_sqlite.VtabCurs.attrs.ReadStrptrMaybe
+bool                 attrs_ReadStrptrMaybe(lib_sqlite::VtabCurs& parent, algo::strptr in_str) __attribute__((nothrow));
+
+// proceed to next item
+// func:lib_sqlite.VtabCurs.attrs_curs.Next
+inline void          VtabCurs_attrs_curs_Next(VtabCurs_attrs_curs &curs) __attribute__((nothrow));
+// func:lib_sqlite.VtabCurs.attrs_curs.Reset
+inline void          VtabCurs_attrs_curs_Reset(VtabCurs_attrs_curs &curs, lib_sqlite::VtabCurs &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:lib_sqlite.VtabCurs.attrs_curs.ValidQ
+inline bool          VtabCurs_attrs_curs_ValidQ(VtabCurs_attrs_curs &curs) __attribute__((nothrow));
+// item access
+// func:lib_sqlite.VtabCurs.attrs_curs.Access
+inline algo::cstring& VtabCurs_attrs_curs_Access(VtabCurs_attrs_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:lib_sqlite.VtabCurs..Init
-inline void          VtabCurs_Init(lib_sqlite::VtabCurs& parent);
+void                 VtabCurs_Init(lib_sqlite::VtabCurs& parent);
+// func:lib_sqlite.VtabCurs..Uninit
+void                 VtabCurs_Uninit(lib_sqlite::VtabCurs& parent) __attribute__((nothrow));
 } // gen:ns_print_struct
 namespace lib_sqlite { // gen:ns_curstext
+
+struct ctype_c_field_curs {// fcurs:lib_sqlite.FCtype.c_field/curs
+    typedef lib_sqlite::FField ChildType;
+    lib_sqlite::FField** elems;
+    u32 n_elems;
+    u32 index;
+    ctype_c_field_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct ctype_zd_row_curs {// fcurs:lib_sqlite.FCtype.zd_row/curs
+    typedef lib_sqlite::FRow ChildType;
+    lib_sqlite::FRow* row;
+    ctype_zd_row_curs() {
+        row = NULL;
+    }
+};
+
+
+struct ctype_c_row_curs {// fcurs:lib_sqlite.FCtype.c_row/curs
+    typedef lib_sqlite::FRow ChildType;
+    lib_sqlite::FRow** elems;
+    u32 n_elems;
+    u32 index;
+    ctype_c_row_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
 
 struct _db_substr_curs {// cursor
     typedef lib_sqlite::FSubstr ChildType;
     lib_sqlite::FDb *parent;
     i64 index;
     _db_substr_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_field_curs {// cursor
+    typedef lib_sqlite::FField ChildType;
+    lib_sqlite::FDb *parent;
+    i64 index;
+    _db_field_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_ctype_curs {// cursor
+    typedef lib_sqlite::FCtype ChildType;
+    lib_sqlite::FDb *parent;
+    i64 index;
+    _db_ctype_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_ssimfile_curs {// cursor
+    typedef lib_sqlite::FSsimfile ChildType;
+    lib_sqlite::FDb *parent;
+    i64 index;
+    _db_ssimfile_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_sqltype_curs {// cursor
+    typedef lib_sqlite::FSqltype ChildType;
+    lib_sqlite::FDb *parent;
+    i64 index;
+    _db_sqltype_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_bestidx_curs {// cursor
+    typedef lib_sqlite::FIdx ChildType;
+    lib_sqlite::FIdx* elems;
+    int n_elems;
+    int index;
+    _db_bestidx_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct _db_trow_curs {// cursor
+    typedef lib_sqlite::FRow ChildType;
+    lib_sqlite::FDb *parent;
+    i64 index;
+    _db_trow_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_ns_curs {// cursor
+    typedef lib_sqlite::FNs ChildType;
+    lib_sqlite::FDb *parent;
+    i64 index;
+    _db_ns_curs(){ parent=NULL; index=0; }
+};
+
+
+struct FIdx_cons_curs {// cursor
+    typedef lib_sqlite::Cons ChildType;
+    lib_sqlite::Cons* elems;
+    int n_elems;
+    int index;
+    FIdx_cons_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct ns_c_ssimfile_curs {// fcurs:lib_sqlite.FNs.c_ssimfile/curs
+    typedef lib_sqlite::FSsimfile ChildType;
+    lib_sqlite::FSsimfile** elems;
+    u32 n_elems;
+    u32 index;
+    ns_c_ssimfile_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct Vtab_c_curs_curs {// fcurs:lib_sqlite.Vtab.c_curs/curs
+    typedef lib_sqlite::VtabCurs ChildType;
+    lib_sqlite::VtabCurs** elems;
+    u32 n_elems;
+    u32 index;
+    Vtab_c_curs_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct VtabCurs_attrs_curs {// cursor
+    typedef algo::cstring ChildType;
+    algo::cstring* elems;
+    int n_elems;
+    int index;
+    VtabCurs_attrs_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 } // gen:ns_curstext

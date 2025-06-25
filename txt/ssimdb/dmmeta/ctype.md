@@ -101,6 +101,7 @@ These ssimfiles reference dmmeta.ctype
 * [amc_vis](/txt/exe/amc_vis/internals.md) as [amc_vis.FCtype](/txt/exe/amc_vis/internals.md#amc_vis-fctype)
 * [apm](/txt/exe/apm/internals.md) as [apm.FCtype](/txt/exe/apm/internals.md#apm-fctype)
 * [lib_ctype](/txt/lib/lib_ctype/README.md) as [lib_ctype.FCtype](/txt/lib/lib_ctype/README.md#lib_ctype-fctype)
+* [lib_sqlite](/txt/lib/lib_sqlite/README.md) as [lib_sqlite.FCtype](/txt/lib/lib_sqlite/README.md#lib_sqlite-fctype)
 * [ssim2mysql](/txt/exe/ssim2mysql/internals.md) as [ssim2mysql.FCtype](/txt/exe/ssim2mysql/internals.md#ssim2mysql-fctype)
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
