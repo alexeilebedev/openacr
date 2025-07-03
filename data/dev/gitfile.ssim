@@ -73,6 +73,8 @@ dev.gitfile  gitfile:bin/grephunk
 dev.gitfile  gitfile:bin/hilite
 dev.gitfile  gitfile:bin/hilite-error
 dev.gitfile  gitfile:bin/indent-recent
+dev.gitfile  gitfile:bin/json2kv
+dev.gitfile  gitfile:bin/kv2json
 dev.gitfile  gitfile:bin/limit-output
 dev.gitfile  gitfile:bin/lines-to-dots
 dev.gitfile  gitfile:bin/lsfunc
@@ -105,6 +107,7 @@ dev.gitfile  gitfile:bin/toamc
 dev.gitfile  gitfile:bin/todo
 dev.gitfile  gitfile:bin/update-gitfile
 dev.gitfile  gitfile:bin/update-hdr
+dev.gitfile  gitfile:bin/update-json
 dev.gitfile  gitfile:bin/update-linelim
 dev.gitfile  gitfile:bin/update-scriptfile
 dev.gitfile  gitfile:bin/zfs_snapshot.pl
@@ -1338,6 +1341,8 @@ dev.gitfile  gitfile:txt/script/gitconfig-setup.md
 dev.gitfile  gitfile:txt/script/grephunk.md
 dev.gitfile  gitfile:txt/script/hilite-error.md
 dev.gitfile  gitfile:txt/script/hilite.md
+dev.gitfile  gitfile:txt/script/json2kv.md
+dev.gitfile  gitfile:txt/script/kv2json.md
 dev.gitfile  gitfile:txt/script/limit-output.md
 dev.gitfile  gitfile:txt/script/lines-to-dots.md
 dev.gitfile  gitfile:txt/script/lsfunc.md
@@ -1354,6 +1359,7 @@ dev.gitfile  gitfile:txt/script/toamc.md
 dev.gitfile  gitfile:txt/script/todo.md
 dev.gitfile  gitfile:txt/script/update-gitfile.md
 dev.gitfile  gitfile:txt/script/update-hdr.md
+dev.gitfile  gitfile:txt/script/update-json.md
 dev.gitfile  gitfile:txt/script/update-scriptfile.md
 dev.gitfile  gitfile:txt/script/zfs_snapshot.pl.md
 dev.gitfile  gitfile:txt/setup.md

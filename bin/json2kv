@@ -1,0 +1,72 @@
+#!/usr/bin/env node
+// Copyright (C) 2025 AlgoRND
+//
+// License: GPL
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// Rewrite a json file as a flat file with one key-value per line
+// Array indexes are represented as array-0, array-1, etc.
+// Object indexes are represented with a . - obj.field
+// For reverse mapping, see kv2json.mjs
+// The value field is JSON-encoded (so newlines and special characters do not kill formatting)
+// In kv-form, values can be changed using linux tools like sed:
+// json2kv <file> | sed -E 's/^varname::/varname::newvalue/' | kv2json
+// The kv-form preserves types: strings are printed as key::value, other json types as key:value
+
+import fs from 'fs';
+import path from 'path';
+import { parse } from 'comment-json';
+
+function Flatten(obj, prefix = '', result = {}) {
+    if (Array.isArray(obj)) {
+        obj.forEach((item, i) => {
+            const newPrefix = prefix ? `${prefix}-${i}` : `${i}`;
+            Flatten(item, newPrefix, result);
+        });
+        if (obj.length == 0) {
+            result[prefix] = obj;
+        }
+    } else if (obj && typeof obj === 'object') {
+        for (const [k, v] of Object.entries(obj)) {
+            const newPrefix = prefix ? `${prefix}.${k}` : k;
+            Flatten(v, newPrefix, result);
+        }
+    } else {
+        result[prefix] = obj;
+    }
+    return result;
+}
+
+const [,, fileArg] = process.argv;
+if (!fileArg) {
+    console.error('Usage: node json2kv <json-file>');
+    process.exit(1);
+}
+let content="";
+if (fileArg === '-') {
+    for await (const chunk of process.stdin) { content += chunk; }
+} else {
+    content = fs.readFileSync(path.resolve(fileArg), 'utf8');
+}
+
+const json = parse(content, null, true);
+const flat = Flatten(json);
+
+for (const [key, val] of Object.entries(flat)) {
+    if (typeof val === 'string') {
+        console.log(key + "::" + JSON.stringify(val).slice(1,-1));
+    } else {
+        console.log(key + ":" + JSON.stringify(val));
+    }
+}

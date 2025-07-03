@@ -136,6 +136,7 @@ namespace atf_ci { // gen:ns_gsymbol
     extern const char* dev_scriptfile_bin_msloc_pl; // "bin/msloc.pl"
     extern const char* dev_scriptfile_bin_update_gitfile; // "bin/update-gitfile"
     extern const char* dev_scriptfile_bin_update_hdr; // "bin/update-hdr"
+    extern const char* dev_scriptfile_bin_update_json; // "bin/update-json"
     extern const char* dev_scriptfile_bin_update_scriptfile; // "bin/update-scriptfile"
 } // gen:ns_gsymbol
 namespace atf_ci { // gen:ns_gsymbol

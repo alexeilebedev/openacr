@@ -1,0 +1,113 @@
+#!/usr/bin/env node
+// Copyright (C) 2025 AlgoRND
+//
+// License: GPL
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+//
+// Map a flat key-value pair file back to json
+// Example:
+// $ cat input
+// a-0.c.d::e
+// a-1.c.d::f
+// a-1.c.e:true
+// | $ bin/kv2json input
+// | {
+// |     "a": [
+// |         {
+// |             "c": {
+// |                 "d": "e"
+// |             }
+// |         },
+// |         {
+// |             "c": {
+// |                 "d": "f",
+// |                 "e": true
+// |             }
+// |         }
+// |     ]
+// | }
+// For forward mapping, see kv2json
+// When a key-value uses :: separator, the value is a string (escaped using JSON rules)
+// Otherwise, the value is a JSON expression -- null, true, false, a number, or {} or []
+// A shortcut syntax is supported, where in the above example
+// .d::f would mean the same thing as a-1.c.d::f; kv2json uses the prefix of the last
+// full path when a key starts with a delimiter . or -
+// Thus, an array can be specified as a.b.c.d-0:val1 -1:val2 -2:val3 etc.
+
+import fs from 'fs';
+import path from 'path';
+
+function AssignPath(obj, fullPath, value) {
+    const parts = fullPath.split('.');
+    let current = obj;
+
+    for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        const keys = part.split('-').map(p => isNaN(p) ? p : Number(p));
+
+        for (let j = 0; j < keys.length; j++) {
+            const key = keys[j];
+            const isLast = (i === parts.length - 1) && (j === keys.length - 1);
+
+            if (isLast) {
+                current[key] = value;
+                return;
+            }
+
+            const next = keys[j + 1];
+            const isNextArray = typeof next === 'number';
+            if (!(key in current)) {
+                current[key] = isNextArray ? [] : {};
+            }
+
+            current = current[key];
+        }
+    }
+}
+
+const [,, fileArg] = process.argv;
+if (!fileArg) {
+    console.error('Usage: node kv2json <kv-file> (or "-" for stdin)');
+    process.exit(1);
+}
+
+let content="";
+if (fileArg === '-') {
+    for await (const chunk of process.stdin) { content += chunk; }
+} else {
+    content = fs.readFileSync(path.resolve(fileArg), 'utf8');
+}
+const out = {};
+let lastkey='';
+
+for (const line of content.split('\n')) {
+    if (!line.trim() || line.startsWith('#')) continue;
+
+    const isString = line.includes('::');
+    const sep = isString ? '::' : ':';
+    const idx = line.indexOf(sep);
+
+    if (idx !== -1) {
+        let key = line.slice(0, idx).trim();
+        const valStr = line.slice(idx + sep.length).trim();
+        const val = isString ? JSON.parse('"' + valStr + '"') : JSON.parse(valStr);
+        if ((key.startsWith('.') || key.startsWith('-')) && lastkey.includes(key[0])) {
+            key = lastkey.slice(0, lastkey.lastIndexOf(key[0])) + key;
+        }
+        AssignPath(out, key, val);
+        lastkey=key;
+    }
+}
+
+console.log(JSON.stringify(out, null, 4));

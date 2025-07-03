@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Copyright (C) 2025 AlgoRND
+#
+# Update values in a json file using the intermediate kv format
+# See json2kv and kv2json for a full description of the kv format
+
+if [ $# -lt 2 ]; then
+    echo "Usage: $0 <json-file> key1:val1 [key2::val2 ...]"
+    exit 1
+fi
+file="$1"
+shift
+# stop on first error
+set -e
+if [ "$file" != "-" ]; then
+    tmpfile=$(mktemp)
+    ( json2kv "$file"; for kv in "$@"; do echo "$kv"; done ) | kv2json -  > "$tmpfile"
+    mv "$tmpfile" "$file"
+else
+    ( json2kv "$file"; for kv in "$@"; do echo "$kv"; done ) | kv2json - 
+fi

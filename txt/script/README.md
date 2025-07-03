@@ -38,6 +38,8 @@
 &#128196; [bin/grephunk - Patch file filter](/txt/script/grephunk.md)<br/>
 &#128196; [bin/hilite-error - Read input and highlight errors](/txt/script/hilite-error.md)<br/>
 &#128196; [bin/hilite - Inline highlighter](/txt/script/hilite.md)<br/>
+&#128196; [bin/json2kv - Convert JSON file into a flat key-value file](/txt/script/json2kv.md)<br/>
+&#128196; [bin/kv2json - Convert key-value file into back to a JSON object](/txt/script/kv2json.md)<br/>
 &#128196; [bin/limit-output - Read input and show at most N lines](/txt/script/limit-output.md)<br/>
 &#128196; [bin/lines-to-dots - Read input and print a dot for each input line](/txt/script/lines-to-dots.md)<br/>
 &#128196; [bin/lsfunc - List all functions from all source files](/txt/script/lsfunc.md)<br/>
@@ -54,6 +56,7 @@
 &#128196; [bin/todo -](/txt/script/todo.md)<br/>
 &#128196; [bin/update-gitfile -](/txt/script/update-gitfile.md)<br/>
 &#128196; [bin/update-hdr -](/txt/script/update-hdr.md)<br/>
+&#128196; [bin/update-json -](/txt/script/update-json.md)<br/>
 &#128196; [bin/update-scriptfile -](/txt/script/update-scriptfile.md)<br/>
 &#128196; [bin/zfs_snapshot.pl -](/txt/script/zfs_snapshot.pl.md)<br/>
 

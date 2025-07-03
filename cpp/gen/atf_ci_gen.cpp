@@ -90,6 +90,7 @@ namespace atf_ci { // gen:ns_gsymbol
     const char* dev_scriptfile_bin_msloc_pl("bin/msloc.pl");
     const char* dev_scriptfile_bin_update_gitfile("bin/update-gitfile");
     const char* dev_scriptfile_bin_update_hdr("bin/update-hdr");
+    const char* dev_scriptfile_bin_update_json("bin/update-json");
     const char* dev_scriptfile_bin_update_scriptfile("bin/update-scriptfile");
 } // gen:ns_gsymbol
 namespace atf_ci { // gen:ns_gsymbol
