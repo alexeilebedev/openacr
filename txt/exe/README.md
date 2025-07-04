@@ -74,6 +74,8 @@
 &#128196; [gcache - Internals](/txt/exe/gcache/internals.md)<br/>
 &#128196; [gcli - Gcli - gitlab/github command-line client](/txt/exe/gcli/README.md)<br/>
 &#128196; [gcli - Internals](/txt/exe/gcli/internals.md)<br/>
+&#128196; [jkv - JSON <-> key-value mapping tool](/txt/exe/jkv/README.md)<br/>
+&#128196; [jkv - Internals](/txt/exe/jkv/internals.md)<br/>
 &#128196; [mdbg - Gdb front-end](/txt/exe/mdbg/README.md)<br/>
 &#128196; [mdbg - Internals](/txt/exe/mdbg/internals.md)<br/>
 &#128196; [mysql2ssim - mysql -> ssim conversion tool](/txt/exe/mysql2ssim/README.md)<br/>

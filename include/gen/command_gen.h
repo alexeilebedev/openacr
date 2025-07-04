@@ -272,71 +272,74 @@ enum command_FieldIdEnum {                             // command.FieldId.value
     ,command_FieldId_authdir                    = 239
     ,command_FieldId_gitdir                     = 240
     ,command_FieldId_show_gitlab_system_notes   = 241
-    ,command_FieldId_attach                     = 242
-    ,command_FieldId_catchthrow                 = 243
-    ,command_FieldId_tui                        = 244
-    ,command_FieldId_bcmd                       = 245
-    ,command_FieldId_emacs                      = 246
-    ,command_FieldId_manywin                    = 247
-    ,command_FieldId_follow_child               = 248
-    ,command_FieldId_py                         = 249
-    ,command_FieldId_writessimfile              = 250
-    ,command_FieldId_url                        = 251
-    ,command_FieldId_tables                     = 252
-    ,command_FieldId_nologo                     = 253
-    ,command_FieldId_baddbok                    = 254
-    ,command_FieldId_move                       = 255
-    ,command_FieldId_dedup                      = 256
-    ,command_FieldId_commit                     = 257
-    ,command_FieldId_undo                       = 258
-    ,command_FieldId_hash                       = 259
-    ,command_FieldId_expr                       = 260
-    ,command_FieldId_style                      = 261
-    ,command_FieldId_match                      = 262
-    ,command_FieldId_string                     = 263
-    ,command_FieldId_show                       = 264
-    ,command_FieldId_name                       = 265
-    ,command_FieldId_files                      = 266
-    ,command_FieldId_refs                       = 267
-    ,command_FieldId_body                       = 268
-    ,command_FieldId_targsrc                    = 269
-    ,command_FieldId_func                       = 270
-    ,command_FieldId_nextfile                   = 271
-    ,command_FieldId_other                      = 272
-    ,command_FieldId_updateproto                = 273
-    ,command_FieldId_listfunc                   = 274
-    ,command_FieldId_iffy                       = 275
-    ,command_FieldId_gen                        = 276
-    ,command_FieldId_showloc                    = 277
-    ,command_FieldId_showstatic                 = 278
-    ,command_FieldId_showsortkey                = 279
-    ,command_FieldId_sortname                   = 280
-    ,command_FieldId_baddecl                    = 281
-    ,command_FieldId_indent                     = 282
-    ,command_FieldId_update_copyright           = 283
-    ,command_FieldId_scriptfile                 = 284
-    ,command_FieldId_linelim                    = 285
-    ,command_FieldId_strayfile                  = 286
-    ,command_FieldId_badchar                    = 287
-    ,command_FieldId_badline                    = 288
-    ,command_FieldId_expand                     = 289
-    ,command_FieldId_ignoreQuote                = 290
-    ,command_FieldId_maxpacket                  = 291
-    ,command_FieldId_db                         = 292
-    ,command_FieldId_createdb                   = 293
-    ,command_FieldId_typetag                    = 294
-    ,command_FieldId_format                     = 295
-    ,command_FieldId_tocamelcase                = 296
-    ,command_FieldId_tolowerunder               = 297
-    ,command_FieldId_pathcomp                   = 298
-    ,command_FieldId_fname                      = 299
-    ,command_FieldId_outseparator               = 300
-    ,command_FieldId_header                     = 301
-    ,command_FieldId_prefer_signed              = 302
-    ,command_FieldId_value                      = 303
+    ,command_FieldId_file                       = 242
+    ,command_FieldId_kv                         = 243
+    ,command_FieldId_output                     = 244
+    ,command_FieldId_attach                     = 245
+    ,command_FieldId_catchthrow                 = 246
+    ,command_FieldId_tui                        = 247
+    ,command_FieldId_bcmd                       = 248
+    ,command_FieldId_emacs                      = 249
+    ,command_FieldId_manywin                    = 250
+    ,command_FieldId_follow_child               = 251
+    ,command_FieldId_py                         = 252
+    ,command_FieldId_writessimfile              = 253
+    ,command_FieldId_url                        = 254
+    ,command_FieldId_tables                     = 255
+    ,command_FieldId_nologo                     = 256
+    ,command_FieldId_baddbok                    = 257
+    ,command_FieldId_move                       = 258
+    ,command_FieldId_dedup                      = 259
+    ,command_FieldId_commit                     = 260
+    ,command_FieldId_undo                       = 261
+    ,command_FieldId_hash                       = 262
+    ,command_FieldId_expr                       = 263
+    ,command_FieldId_style                      = 264
+    ,command_FieldId_match                      = 265
+    ,command_FieldId_string                     = 266
+    ,command_FieldId_show                       = 267
+    ,command_FieldId_name                       = 268
+    ,command_FieldId_files                      = 269
+    ,command_FieldId_refs                       = 270
+    ,command_FieldId_body                       = 271
+    ,command_FieldId_targsrc                    = 272
+    ,command_FieldId_func                       = 273
+    ,command_FieldId_nextfile                   = 274
+    ,command_FieldId_other                      = 275
+    ,command_FieldId_updateproto                = 276
+    ,command_FieldId_listfunc                   = 277
+    ,command_FieldId_iffy                       = 278
+    ,command_FieldId_gen                        = 279
+    ,command_FieldId_showloc                    = 280
+    ,command_FieldId_showstatic                 = 281
+    ,command_FieldId_showsortkey                = 282
+    ,command_FieldId_sortname                   = 283
+    ,command_FieldId_baddecl                    = 284
+    ,command_FieldId_indent                     = 285
+    ,command_FieldId_update_copyright           = 286
+    ,command_FieldId_scriptfile                 = 287
+    ,command_FieldId_linelim                    = 288
+    ,command_FieldId_strayfile                  = 289
+    ,command_FieldId_badchar                    = 290
+    ,command_FieldId_badline                    = 291
+    ,command_FieldId_expand                     = 292
+    ,command_FieldId_ignoreQuote                = 293
+    ,command_FieldId_maxpacket                  = 294
+    ,command_FieldId_db                         = 295
+    ,command_FieldId_createdb                   = 296
+    ,command_FieldId_typetag                    = 297
+    ,command_FieldId_format                     = 298
+    ,command_FieldId_tocamelcase                = 299
+    ,command_FieldId_tolowerunder               = 300
+    ,command_FieldId_pathcomp                   = 301
+    ,command_FieldId_fname                      = 302
+    ,command_FieldId_outseparator               = 303
+    ,command_FieldId_header                     = 304
+    ,command_FieldId_prefer_signed              = 305
+    ,command_FieldId_value                      = 306
 };
 
-enum { command_FieldIdEnum_N = 304 };
+enum { command_FieldIdEnum_N = 307 };
 
 
 // --- command_abt_cache_Enum
@@ -361,6 +364,17 @@ enum command_atf_cmdline_fconst_Enum {         // command.atf_cmdline.fconst
 };
 
 enum { command_atf_cmdline_fconst_Enum_N = 3 };
+
+
+// --- command_jkv_output_Enum
+
+enum command_jkv_output_Enum {        // command.jkv.output
+     command_jkv_output_auto    = 0   // Automatic
+    ,command_jkv_output_json    = 1   // Json only
+    ,command_jkv_output_kv      = 2   // Key-value only
+};
+
+enum { command_jkv_output_Enum_N = 3 };
 
 
 // --- command_samp_regx_style_Enum
@@ -404,6 +418,7 @@ namespace command { struct atf_cmdline_mdbl_curs; }
 namespace command { struct atf_cmdline_amnum_curs; }
 namespace command { struct gcache_cmd_curs; }
 namespace command { struct gcli_fields_curs; }
+namespace command { struct jkv_kv_curs; }
 namespace command { struct mdbg_args_curs; }
 namespace command { struct mdbg_b_curs; }
 namespace command { struct sandbox_cmd_curs; }
@@ -467,6 +482,8 @@ namespace command { struct gcache; }
 namespace command { struct gcache_proc; }
 namespace command { struct gcli; }
 namespace command { struct gcli_proc; }
+namespace command { struct jkv; }
+namespace command { struct jkv_proc; }
 namespace command { struct mdbg; }
 namespace command { struct mdbg_proc; }
 namespace command { struct mysql2ssim; }
@@ -4319,6 +4336,218 @@ inline void          gcli_proc_Init(command::gcli_proc& parent);
 // func:command.gcli_proc..Uninit
 void                 gcli_proc_Uninit(command::gcli_proc& parent) __attribute__((nothrow));
 
+// --- command.jkv
+// access: command.jkv_proc.jkv (Exec)
+struct jkv { // command.jkv
+    algo::cstring    in;         //   "data"  Input directory or filename, - for stdin
+    algo::cstring    file;       // Filename (use - for stdin)
+    algo::cstring*   kv_elems;   // pointer to elements
+    u32              kv_n;       // number of elements in array
+    u32              kv_max;     // max. capacity of array before realloc
+    bool             r;          //   false  Reverse (json keyvals -> JSON) mapping
+    bool             write;      //   false  Write the modified file back
+    u8               output;     //   0  Output format
+    u32              pretty;     //   2  Pretty-printer (0-compact; 1=algo style; 2=jq style)
+    // func:command.jkv..AssignOp
+    command::jkv&        operator =(const command::jkv &rhs) __attribute__((nothrow));
+    // func:command.jkv..Ctor
+    inline               jkv() __attribute__((nothrow));
+    // func:command.jkv..Dtor
+    inline               ~jkv() __attribute__((nothrow));
+    // func:command.jkv..CopyCtor
+    jkv(const command::jkv &rhs) __attribute__((nothrow));
+};
+
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:command.jkv.kv.Addary
+algo::aryptr<algo::cstring> kv_Addary(command::jkv& parent, algo::aryptr<algo::cstring> rhs) __attribute__((nothrow));
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+// func:command.jkv.kv.Alloc
+algo::cstring&       kv_Alloc(command::jkv& parent) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:command.jkv.kv.AllocAt
+algo::cstring&       kv_AllocAt(command::jkv& parent, int at) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.jkv.kv.AllocN
+algo::aryptr<algo::cstring> kv_AllocN(command::jkv& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:command.jkv.kv.EmptyQ
+inline bool          kv_EmptyQ(command::jkv& parent) __attribute__((nothrow));
+// Look up row by row id. Return NULL if out of range
+// func:command.jkv.kv.Find
+inline algo::cstring* kv_Find(command::jkv& parent, u64 t) __attribute__((__warn_unused_result__, nothrow));
+// Return array pointer by value
+// func:command.jkv.kv.Getary
+inline algo::aryptr<algo::cstring> kv_Getary(const command::jkv& parent) __attribute__((nothrow));
+// Return pointer to last element of array, or NULL if array is empty
+// func:command.jkv.kv.Last
+inline algo::cstring* kv_Last(command::jkv& parent) __attribute__((nothrow, pure));
+// Return max. number of items in the array
+// func:command.jkv.kv.Max
+inline i32           kv_Max(command::jkv& parent) __attribute__((nothrow));
+// Return number of items in the array
+// func:command.jkv.kv.N
+inline i32           kv_N(const command::jkv& parent) __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove item by index. If index outside of range, do nothing.
+// func:command.jkv.kv.Remove
+void                 kv_Remove(command::jkv& parent, u32 i) __attribute__((nothrow));
+// func:command.jkv.kv.RemoveAll
+void                 kv_RemoveAll(command::jkv& parent) __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:command.jkv.kv.RemoveLast
+void                 kv_RemoveLast(command::jkv& parent) __attribute__((nothrow));
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+// func:command.jkv.kv.Reserve
+inline void          kv_Reserve(command::jkv& parent, int n) __attribute__((nothrow));
+// Make sure N elements fit in array. Process dies if out of memory
+// func:command.jkv.kv.AbsReserve
+void                 kv_AbsReserve(command::jkv& parent, int n) __attribute__((nothrow));
+// Copy contents of RHS to PARENT.
+// func:command.jkv.kv.Setary
+void                 kv_Setary(command::jkv& parent, command::jkv &rhs) __attribute__((nothrow));
+// Copy specified array into kv, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+// func:command.jkv.kv.Setary2
+void                 kv_Setary(command::jkv& parent, const algo::aryptr<algo::cstring> &rhs) __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:command.jkv.kv.qFind
+inline algo::cstring& kv_qFind(command::jkv& parent, u64 t) __attribute__((nothrow));
+// Return reference to last element of array. No bounds checking
+// func:command.jkv.kv.qLast
+inline algo::cstring& kv_qLast(command::jkv& parent) __attribute__((nothrow));
+// Return row id of specified element
+// func:command.jkv.kv.rowid_Get
+inline u64           kv_rowid_Get(command::jkv& parent, algo::cstring &elem) __attribute__((nothrow));
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+// func:command.jkv.kv.AllocNVal
+algo::aryptr<algo::cstring> kv_AllocNVal(command::jkv& parent, int n_elems, const algo::cstring& val) __attribute__((nothrow));
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+// func:command.jkv.kv.ReadStrptrMaybe
+bool                 kv_ReadStrptrMaybe(command::jkv& parent, algo::strptr in_str) __attribute__((nothrow));
+
+// Get value of field as enum type
+// func:command.jkv.output.GetEnum
+inline command_jkv_output_Enum output_GetEnum(const command::jkv& parent) __attribute__((nothrow));
+// Set value of field from enum type.
+// func:command.jkv.output.SetEnum
+inline void          output_SetEnum(command::jkv& parent, command_jkv_output_Enum rhs) __attribute__((nothrow));
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+// func:command.jkv.output.ToCstr
+const char*          output_ToCstr(const command::jkv& parent) __attribute__((nothrow));
+// Convert output to a string. First, attempt conversion to a known string.
+// If no string matches, print output as a numeric value.
+// func:command.jkv.output.Print
+void                 output_Print(const command::jkv& parent, algo::cstring &lhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+// func:command.jkv.output.SetStrptrMaybe
+bool                 output_SetStrptrMaybe(command::jkv& parent, algo::strptr rhs) __attribute__((nothrow));
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+// func:command.jkv.output.SetStrptr
+void                 output_SetStrptr(command::jkv& parent, algo::strptr rhs, command_jkv_output_Enum dflt) __attribute__((nothrow));
+// Convert string to field. Return success value
+// func:command.jkv.output.ReadStrptrMaybe
+bool                 output_ReadStrptrMaybe(command::jkv& parent, algo::strptr rhs) __attribute__((nothrow));
+
+// proceed to next item
+// func:command.jkv.kv_curs.Next
+inline void          jkv_kv_curs_Next(jkv_kv_curs &curs) __attribute__((nothrow));
+// func:command.jkv.kv_curs.Reset
+inline void          jkv_kv_curs_Reset(jkv_kv_curs &curs, command::jkv &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:command.jkv.kv_curs.ValidQ
+inline bool          jkv_kv_curs_ValidQ(jkv_kv_curs &curs) __attribute__((nothrow));
+// item access
+// func:command.jkv.kv_curs.Access
+inline algo::cstring& jkv_kv_curs_Access(jkv_kv_curs &curs) __attribute__((nothrow));
+// func:command.jkv..ReadFieldMaybe
+bool                 jkv_ReadFieldMaybe(command::jkv& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of command::jkv from attributes of ascii tuple TUPLE
+// func:command.jkv..ReadTupleMaybe
+bool                 jkv_ReadTupleMaybe(command::jkv &parent, algo::Tuple &tuple) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:command.jkv..Init
+inline void          jkv_Init(command::jkv& parent);
+// func:command.jkv..Uninit
+void                 jkv_Uninit(command::jkv& parent) __attribute__((nothrow));
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+// func:command.jkv..ToCmdline
+tempstr              jkv_ToCmdline(command::jkv& row) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:command.jkv.Argv  printfmt:Tuple
+// func:command.jkv..PrintArgv
+void                 jkv_PrintArgv(command::jkv& row, algo::cstring& str) __attribute__((nothrow));
+// func:command.jkv..GetAnon
+algo::strptr         jkv_GetAnon(command::jkv &parent, i32 idx) __attribute__((nothrow));
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+// func:command.jkv..NArgs
+i32                  jkv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) __attribute__((nothrow));
+
+// --- command.jkv_proc
+struct jkv_proc { // command.jkv_proc: Subprocess: JSON <-> key-value mapping tool
+    algo::cstring   path;      //   "bin/jkv"  path for executable
+    command::jkv    cmd;       // command line for child process
+    algo::cstring   fstdin;    // redirect for stdin
+    algo::cstring   fstdout;   // redirect for stdout
+    algo::cstring   fstderr;   // redirect for stderr
+    pid_t           pid;       //   0  pid of running child process
+    i32             timeout;   //   0  optional timeout for child process
+    i32             status;    //   0  last exit status of child process
+    // func:command.jkv_proc..Ctor
+    inline               jkv_proc() __attribute__((nothrow));
+    // func:command.jkv_proc..Dtor
+    inline               ~jkv_proc() __attribute__((nothrow));
+};
+
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+// func:command.jkv_proc.jkv.Start
+int                  jkv_Start(command::jkv_proc& parent) __attribute__((nothrow));
+// Start subprocess & Read output
+// func:command.jkv_proc.jkv.StartRead
+algo::Fildes         jkv_StartRead(command::jkv_proc& parent, algo_lib::FFildes &read) __attribute__((nothrow));
+// Kill subprocess and wait
+// func:command.jkv_proc.jkv.Kill
+void                 jkv_Kill(command::jkv_proc& parent);
+// Wait for subprocess to return
+// func:command.jkv_proc.jkv.Wait
+void                 jkv_Wait(command::jkv_proc& parent) __attribute__((nothrow));
+// Start + Wait
+// Execute subprocess and return exit code
+// func:command.jkv_proc.jkv.Exec
+int                  jkv_Exec(command::jkv_proc& parent) __attribute__((nothrow));
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+// func:command.jkv_proc.jkv.ExecX
+void                 jkv_ExecX(command::jkv_proc& parent);
+// Call execv()
+// Call execv with specified parameters
+// func:command.jkv_proc.jkv.Execv
+int                  jkv_Execv(command::jkv_proc& parent) __attribute__((nothrow));
+// func:command.jkv_proc.jkv.ToCmdline
+algo::tempstr        jkv_ToCmdline(command::jkv_proc& parent) __attribute__((nothrow));
+// Form array from the command line
+// func:command.jkv_proc.jkv.ToArgv
+void                 jkv_ToArgv(command::jkv_proc& parent, algo::StringAry& args) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:command.jkv_proc..Init
+inline void          jkv_proc_Init(command::jkv_proc& parent);
+// func:command.jkv_proc..Uninit
+void                 jkv_proc_Uninit(command::jkv_proc& parent) __attribute__((nothrow));
+
 // --- command.mdbg
 // access: command.mdbg_proc.mdbg (Exec)
 struct mdbg { // command.mdbg
@@ -6391,6 +6620,15 @@ struct gcli_fields_curs {// cursor
     int n_elems;
     int index;
     gcli_fields_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct jkv_kv_curs {// cursor
+    typedef algo::cstring ChildType;
+    algo::cstring* elems;
+    int n_elems;
+    int index;
+    jkv_kv_curs() { elems=NULL; n_elems=0; index=0; }
 };
 
 

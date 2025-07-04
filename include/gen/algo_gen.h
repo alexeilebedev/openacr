@@ -1340,15 +1340,6 @@ struct Errcode { // algo.Errcode: Error code
 };
 
 // Retrieve bitfield from value of field value
-//    32 bits starting at bit 0.
-// func:algo.Errcode.code.Get
-inline i32           code_Get(const algo::Errcode& parent) __attribute__((__warn_unused_result__, nothrow));
-// Set bitfield in value of field 'value'
-//    32 bits starting at bit 0.
-// func:algo.Errcode.code.Set
-inline void          code_Set(algo::Errcode& parent, i32 rhs) __attribute__((nothrow));
-
-// Retrieve bitfield from value of field value
 //    8 bits starting at bit 32.
 // func:algo.Errcode.type.Get
 inline algo::Errns   type_Get(const algo::Errcode& parent) __attribute__((__warn_unused_result__, nothrow));
@@ -1356,6 +1347,15 @@ inline algo::Errns   type_Get(const algo::Errcode& parent) __attribute__((__warn
 //    8 bits starting at bit 32.
 // func:algo.Errcode.type.Set
 inline void          type_Set(algo::Errcode& parent, algo::Errns rhs) __attribute__((nothrow));
+
+// Retrieve bitfield from value of field value
+//    32 bits starting at bit 0.
+// func:algo.Errcode.code.Get
+inline i32           code_Get(const algo::Errcode& parent) __attribute__((__warn_unused_result__, nothrow));
+// Set bitfield in value of field 'value'
+//    32 bits starting at bit 0.
+// func:algo.Errcode.code.Set
+inline void          code_Set(algo::Errcode& parent, i32 rhs) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:algo.Errcode..Init

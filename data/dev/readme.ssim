@@ -69,6 +69,8 @@ dev.readme  gitfile:txt/exe/gcache/README.md  inl:N  sandbox:N  filter:""  comme
 dev.readme  gitfile:txt/exe/gcache/internals.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/exe/gcli/README.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/exe/gcli/internals.md  inl:N  sandbox:N  filter:""  comment:""
+dev.readme  gitfile:txt/exe/jkv/README.md  inl:N  sandbox:N  filter:""  comment:""
+dev.readme  gitfile:txt/exe/jkv/internals.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/exe/mdbg/README.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/exe/mdbg/internals.md  inl:N  sandbox:N  filter:""  comment:""
 dev.readme  gitfile:txt/exe/mysql2ssim/README.md  inl:N  sandbox:N  filter:""  comment:""

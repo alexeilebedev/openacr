@@ -59,6 +59,13 @@ namespace lib_json { // update-hdr
     // TYPE      node type
     // VALUE     node value where applicable (only for field, string, number)
     lib_json::FNode &NewNode(lib_json::FNode *parent, lib_json_FNode_type_Enum type);
+
+    // PARENT    parent node or NULL
+    // TYPE      node type
+    // VALUE     node value where applicable (only for field, string, number)
+    // Construct 2 nodes, a "field" node which has the name FIELD, and its value
+    // of type TYPE. Return the VALUE
+    lib_json::FNode &NewFieldVal(lib_json::FNode *parent, lib_json_FNode_type_Enum type, strptr field);
     lib_json::FNode &NewFieldNode(lib_json::FNode *parent, strptr field);
     lib_json::FNode &NewObjectNode(lib_json::FNode *parent, strptr field = strptr());
     lib_json::FNode &NewArrayNode(lib_json::FNode *parent, strptr field = strptr());
@@ -90,17 +97,18 @@ namespace lib_json { // update-hdr
     // quotation mark, reverse solidus, and the control characters (U+0000
     // through U+001F)."
     // -- this says that solidus need not be escaped when printing -- only when parsing!
-    void JsonSerializeString(algo::strptr str, algo::cstring &lhs);
+    void JsonSerializeString(algo::strptr str, algo::cstring &out);
 
     // Serialize to string
     // Serialize to JSON tree to text
     // NODE      root node to start from
-    // LHS       target string
-    // PRETTY    whether or not pretty-format
+    // OUT       target string
+    // PRETTY    pretty printer setting:
+    // 0 = no pretty printer (compact output)
+    // 1 = algo style pretty printer
+    // 2 = standard (jq) style) pretty printer
     // INDENT    level of indenting (for pretty-formatting)
-    void JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty, u32 indent);
-    void JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty);
-    void JsonSerialize(lib_json::FNode* node, cstring &lhs);
+    void JsonSerialize(lib_json::FNode* node, cstring &out, u32 pretty = 0, u32 indent = 0);
 
     // Find node in object chain
     // PARENT    node to start from

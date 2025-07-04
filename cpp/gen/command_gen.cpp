@@ -283,6 +283,9 @@ const char* command::value_ToCstr(const command::FieldId& parent) {
         case command_FieldId_authdir       : ret = "authdir";  break;
         case command_FieldId_gitdir        : ret = "gitdir";  break;
         case command_FieldId_show_gitlab_system_notes: ret = "show_gitlab_system_notes";  break;
+        case command_FieldId_file          : ret = "file";  break;
+        case command_FieldId_kv            : ret = "kv";  break;
+        case command_FieldId_output        : ret = "output";  break;
         case command_FieldId_attach        : ret = "attach";  break;
         case command_FieldId_catchthrow    : ret = "catchthrow";  break;
         case command_FieldId_tui           : ret = "tui";  break;
@@ -417,6 +420,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 case LE_STR2('i','n'): {
                     value_SetEnum(parent,command_FieldId_in); ret = true; break;
                 }
+                case LE_STR2('k','v'): {
+                    value_SetEnum(parent,command_FieldId_kv); ret = true; break;
+                }
                 case LE_STR2('m','r'): {
                     value_SetEnum(parent,command_FieldId_mr); ret = true; break;
                 }
@@ -549,6 +555,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('e','x','p','r'): {
                     value_SetEnum(parent,command_FieldId_expr); ret = true; break;
+                }
+                case LE_STR4('f','i','l','e'): {
+                    value_SetEnum(parent,command_FieldId_file); ret = true; break;
                 }
                 case LE_STR4('f','k','e','y'): {
                     value_SetEnum(parent,command_FieldId_fkey); ret = true; break;
@@ -877,6 +886,9 @@ bool command::value_SetStrptrMaybe(command::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('o','r','i','g','i','n'): {
                     value_SetEnum(parent,command_FieldId_origin); ret = true; break;
+                }
+                case LE_STR6('o','u','t','p','u','t'): {
+                    value_SetEnum(parent,command_FieldId_output); ret = true; break;
                 }
                 case LE_STR6('p','r','e','t','t','y'): {
                     value_SetEnum(parent,command_FieldId_pretty); ret = true; break;
@@ -17489,6 +17501,638 @@ void command::gcli_proc_Uninit(command::gcli_proc& parent) {
 
     // command.gcli_proc.gcli.Uninit (Exec)  //
     gcli_Kill(parent); // kill child, ensure forward progress
+}
+
+// --- command.jkv.kv.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo::cstring> command::kv_Addary(command::jkv& parent, algo::aryptr<algo::cstring> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.kv_elems && rhs.elems < parent.kv_elems + parent.kv_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("command.tary_alias  field:command.jkv.kv  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    kv_Reserve(parent, nnew); // reserve space
+    int at = parent.kv_n;
+    for (int i = 0; i < nnew; i++) {
+        new (parent.kv_elems + at + i) algo::cstring(rhs[i]);
+        parent.kv_n++;
+    }
+    return algo::aryptr<algo::cstring>(parent.kv_elems + at, nnew);
+}
+
+// --- command.jkv.kv.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+algo::cstring& command::kv_Alloc(command::jkv& parent) {
+    kv_Reserve(parent, 1);
+    int n  = parent.kv_n;
+    int at = n;
+    algo::cstring *elems = parent.kv_elems;
+    new (elems + at) algo::cstring(); // construct new element, default initializer
+    parent.kv_n = n+1;
+    return elems[at];
+}
+
+// --- command.jkv.kv.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::cstring& command::kv_AllocAt(command::jkv& parent, int at) {
+    kv_Reserve(parent, 1);
+    int n  = parent.kv_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("command.bad_alloc_at  field:command.jkv.kv  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.kv_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::cstring));
+    new (elems + at) algo::cstring(); // construct element, default initializer
+    parent.kv_n = n+1;
+    return elems[at];
+}
+
+// --- command.jkv.kv.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> command::kv_AllocN(command::jkv& parent, int n_elems) {
+    kv_Reserve(parent, n_elems);
+    int old_n  = parent.kv_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.kv_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.kv_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.jkv.kv.Remove
+// Remove item by index. If index outside of range, do nothing.
+void command::kv_Remove(command::jkv& parent, u32 i) {
+    u32 lim = parent.kv_n;
+    algo::cstring *elems = parent.kv_elems;
+    if (i < lim) {
+        elems[i].~cstring(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(algo::cstring) * (lim - (i + 1)));
+        parent.kv_n = lim - 1;
+    }
+}
+
+// --- command.jkv.kv.RemoveAll
+void command::kv_RemoveAll(command::jkv& parent) {
+    u32 n = parent.kv_n;
+    while (n > 0) {
+        n -= 1;
+        parent.kv_elems[n].~cstring();
+        parent.kv_n = n;
+    }
+}
+
+// --- command.jkv.kv.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void command::kv_RemoveLast(command::jkv& parent) {
+    u64 n = parent.kv_n;
+    if (n > 0) {
+        n -= 1;
+        kv_qFind(parent, u64(n)).~cstring();
+        parent.kv_n = n;
+    }
+}
+
+// --- command.jkv.kv.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void command::kv_AbsReserve(command::jkv& parent, int n) {
+    u32 old_max  = parent.kv_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::malloc_ReallocMem(parent.kv_elems, old_max * sizeof(algo::cstring), new_max * sizeof(algo::cstring));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("command.tary_nomem  field:command.jkv.kv  comment:'out of memory'");
+        }
+        parent.kv_elems = (algo::cstring*)new_mem;
+        parent.kv_max = new_max;
+    }
+}
+
+// --- command.jkv.kv.Setary
+// Copy contents of RHS to PARENT.
+void command::kv_Setary(command::jkv& parent, command::jkv &rhs) {
+    kv_RemoveAll(parent);
+    int nnew = rhs.kv_n;
+    kv_Reserve(parent, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (parent.kv_elems + i) algo::cstring(kv_qFind(rhs, i));
+        parent.kv_n = i + 1;
+    }
+}
+
+// --- command.jkv.kv.Setary2
+// Copy specified array into kv, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void command::kv_Setary(command::jkv& parent, const algo::aryptr<algo::cstring> &rhs) {
+    kv_RemoveAll(parent);
+    kv_Addary(parent, rhs);
+}
+
+// --- command.jkv.kv.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo::cstring> command::kv_AllocNVal(command::jkv& parent, int n_elems, const algo::cstring& val) {
+    kv_Reserve(parent, n_elems);
+    int old_n  = parent.kv_n;
+    int new_n = old_n + n_elems;
+    algo::cstring *elems = parent.kv_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo::cstring(val);
+    }
+    parent.kv_n = new_n;
+    return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- command.jkv.kv.ReadStrptrMaybe
+// A single element is read from input string and appended to the array.
+// If the string contains an error, the array is untouched.
+// Function returns success value.
+bool command::kv_ReadStrptrMaybe(command::jkv& parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::cstring &elem = kv_Alloc(parent);
+    retval = algo::cstring_ReadStrptrMaybe(elem, in_str);
+    if (!retval) {
+        kv_RemoveLast(parent);
+    }
+    return retval;
+}
+
+// --- command.jkv.output.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* command::output_ToCstr(const command::jkv& parent) {
+    const char *ret = NULL;
+    switch(output_GetEnum(parent)) {
+        case command_jkv_output_auto       : ret = "auto";  break;
+        case command_jkv_output_json       : ret = "json";  break;
+        case command_jkv_output_kv         : ret = "kv";  break;
+    }
+    return ret;
+}
+
+// --- command.jkv.output.Print
+// Convert output to a string. First, attempt conversion to a known string.
+// If no string matches, print output as a numeric value.
+void command::output_Print(const command::jkv& parent, algo::cstring &lhs) {
+    const char *strval = output_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.output;
+    }
+}
+
+// --- command.jkv.output.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool command::output_SetStrptrMaybe(command::jkv& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 2: {
+            switch (u64(algo::ReadLE16(rhs.elems))) {
+                case LE_STR2('k','v'): {
+                    output_SetEnum(parent,command_jkv_output_kv); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('a','u','t','o'): {
+                    output_SetEnum(parent,command_jkv_output_auto); ret = true; break;
+                }
+                case LE_STR4('j','s','o','n'): {
+                    output_SetEnum(parent,command_jkv_output_json); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- command.jkv.output.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void command::output_SetStrptr(command::jkv& parent, algo::strptr rhs, command_jkv_output_Enum dflt) {
+    if (!output_SetStrptrMaybe(parent,rhs)) output_SetEnum(parent,dflt);
+}
+
+// --- command.jkv.output.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool command::output_ReadStrptrMaybe(command::jkv& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = output_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u8_ReadStrptrMaybe(parent.output,rhs);
+    }
+    return retval;
+}
+
+// --- command.jkv..ReadFieldMaybe
+bool command::jkv_ReadFieldMaybe(command::jkv& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    command::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,algo::Pathcomp(field, ".LL"));
+    switch(field_id) {
+        case command_FieldId_in: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.in, strval);
+            break;
+        }
+        case command_FieldId_file: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.file, strval);
+            break;
+        }
+        case command_FieldId_kv: {
+            retval = kv_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case command_FieldId_r: {
+            retval = bool_ReadStrptrMaybe(parent.r, strval);
+            break;
+        }
+        case command_FieldId_write: {
+            retval = bool_ReadStrptrMaybe(parent.write, strval);
+            break;
+        }
+        case command_FieldId_output: {
+            retval = output_ReadStrptrMaybe(parent, strval);
+            break;
+        }
+        case command_FieldId_pretty: {
+            retval = u32_ReadStrptrMaybe(parent.pretty, strval);
+            break;
+        }
+        default: break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- command.jkv..ReadTupleMaybe
+// Read fields of command::jkv from attributes of ascii tuple TUPLE
+bool command::jkv_ReadTupleMaybe(command::jkv &parent, algo::Tuple &tuple) {
+    bool retval = true;
+    int anon_idx = 0;
+    ind_beg(algo::Tuple_attrs_curs,attr,tuple) {
+        if (ch_N(attr.name) == 0) {
+            attr.name = jkv_GetAnon(parent, anon_idx++);
+        }
+        retval = jkv_ReadFieldMaybe(parent, attr.name, attr.value);
+        if (!retval) {
+            break;
+        }
+    }ind_end;
+    return retval;
+}
+
+// --- command.jkv..Uninit
+void command::jkv_Uninit(command::jkv& parent) {
+    command::jkv &row = parent; (void)row;
+
+    // command.jkv.kv.Uninit (Tary)  //JSON Keyvals
+    // remove all elements from command.jkv.kv
+    kv_RemoveAll(parent);
+    // free memory for Tary command.jkv.kv
+    algo_lib::malloc_FreeMem(parent.kv_elems, sizeof(algo::cstring)*parent.kv_max); // (command.jkv.kv)
+}
+
+// --- command.jkv..ToCmdline
+// Convenience function that returns a full command line
+// Assume command is in a directory called bin
+tempstr command::jkv_ToCmdline(command::jkv& row) {
+    tempstr ret;
+    ret << "bin/jkv ";
+    jkv_PrintArgv(row, ret);
+    // inherit less intense verbose, debug options
+    for (int i = 1; i < algo_lib::_db.cmdline.verbose; i++) {
+        ret << " -verbose";
+    }
+    for (int i = 1; i < algo_lib::_db.cmdline.debug; i++) {
+        ret << " -debug";
+    }
+    return ret;
+}
+
+// --- command.jkv..PrintArgv
+// print string representation of ROW to string STR
+// cfmt:command.jkv.Argv  printfmt:Tuple
+void command::jkv_PrintArgv(command::jkv& row, algo::cstring& str) {
+    algo::tempstr temp;
+    (void)temp;
+    (void)str;
+    if (!(row.in == "data")) {
+        ch_RemoveAll(temp);
+        cstring_Print(row.in, temp);
+        str << " -in:";
+        strptr_PrintBash(temp,str);
+    }
+    ch_RemoveAll(temp);
+    cstring_Print(row.file, temp);
+    str << " -file:";
+    strptr_PrintBash(temp,str);
+    ind_beg(jkv_kv_curs,value,row) {
+        ch_RemoveAll(temp);
+        cstring_Print(value, temp);
+        str << " -kv:";
+        strptr_PrintBash(temp,str);
+    }ind_end;
+    if (!(row.r == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.r, temp);
+        str << " -r:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.write == false)) {
+        ch_RemoveAll(temp);
+        bool_Print(row.write, temp);
+        str << " -write:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.output == 0)) {
+        ch_RemoveAll(temp);
+        command::output_Print(const_cast<command::jkv&>(row), temp);
+        str << " -output:";
+        strptr_PrintBash(temp,str);
+    }
+    if (!(row.pretty == 2)) {
+        ch_RemoveAll(temp);
+        u32_Print(row.pretty, temp);
+        str << " -pretty:";
+        strptr_PrintBash(temp,str);
+    }
+}
+
+// --- command.jkv..GetAnon
+algo::strptr command::jkv_GetAnon(command::jkv &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("file", 4);
+        default: return strptr("kv", 2);
+    }
+}
+
+// --- command.jkv..NArgs
+// Used with command lines
+// Return # of command-line arguments that must follow this argument
+// If FIELD is invalid, return -1
+i32 command::jkv_NArgs(command::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
+    i32 retval = 1;
+    switch (field) {
+        case command_FieldId_in: { // $comment
+            *out_anon = false;
+        } break;
+        case command_FieldId_file: { // $comment
+            *out_anon = true;
+        } break;
+        case command_FieldId_kv: { // $comment
+            *out_anon = true;
+        } break;
+        case command_FieldId_r: { // $comment
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_write: { // bool: no argument required but value may be specified as r:Y
+            *out_anon = false;
+            retval=0;
+            out_dflt="Y";
+        } break;
+        case command_FieldId_output: { // bool: no argument required but value may be specified as write:Y
+            *out_anon = false;
+        } break;
+        case command_FieldId_pretty: { // bool: no argument required but value may be specified as write:Y
+            *out_anon = false;
+        } break;
+        default:
+        retval=-1; // unrecognized
+    }
+    return retval;
+}
+
+// --- command.jkv..AssignOp
+command::jkv& command::jkv::operator =(const command::jkv &rhs) {
+    in = rhs.in;
+    file = rhs.file;
+    kv_Setary(*this, kv_Getary(const_cast<command::jkv&>(rhs)));
+    r = rhs.r;
+    write = rhs.write;
+    output = rhs.output;
+    pretty = rhs.pretty;
+    return *this;
+}
+
+// --- command.jkv..CopyCtor
+ command::jkv::jkv(const command::jkv &rhs)
+    : in(rhs.in)
+    , file(rhs.file)
+    , r(rhs.r)
+    , write(rhs.write)
+    , output(rhs.output)
+    , pretty(rhs.pretty)
+ {
+    kv_elems 	= 0; // (command.jkv.kv)
+    kv_n     	= 0; // (command.jkv.kv)
+    kv_max   	= 0; // (command.jkv.kv)
+    kv_Setary(*this, kv_Getary(const_cast<command::jkv&>(rhs)));
+}
+
+// --- command.jkv_proc.jkv.Start
+// Start subprocess
+// If subprocess already running, do nothing. Otherwise, start it
+int command::jkv_Start(command::jkv_proc& parent) {
+    int retval = 0;
+    if (parent.pid == 0) {
+        verblog(jkv_ToCmdline(parent)); // maybe print command
+#ifdef WIN32
+        algo_lib::ResolveExecFname(parent.path);
+        tempstr cmdline(jkv_ToCmdline(parent));
+        parent.pid = dospawn(Zeroterm(parent.path),Zeroterm(cmdline),parent.timeout,parent.fstdin,parent.fstdout,parent.fstderr);
+#else
+        parent.pid = fork();
+        if (parent.pid == 0) { // child
+            algo_lib::DieWithParent();
+            if (parent.timeout > 0) {
+                alarm(parent.timeout);
+            }
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdin , 0);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstdout, 1);
+            if (retval==0) retval=algo_lib::ApplyRedirect(parent.fstderr, 2);
+            if (retval==0) retval= jkv_Execv(parent);
+            if (retval != 0) { // if start fails, print error
+                int err=errno;
+                prerr("command.jkv_execv"
+                <<Keyval("errno",err)
+                <<Keyval("errstr",strerror(err))
+                <<Keyval("comment","Execv failed"));
+            }
+            _exit(127); // if failed to start, exit anyway
+        } else if (parent.pid == -1) {
+            retval = errno; // failed to fork
+        }
+#endif
+    }
+    parent.status = parent.pid > 0 ? 0 : -1; // if didn't start, set error status
+    return retval;
+}
+
+// --- command.jkv_proc.jkv.StartRead
+// Start subprocess & Read output
+algo::Fildes command::jkv_StartRead(command::jkv_proc& parent, algo_lib::FFildes &read) {
+    int pipefd[2];
+    int rc=pipe(pipefd);
+    (void)rc;
+    read.fd.value = pipefd[0];
+    parent.fstdout  << ">&" << pipefd[1];
+    jkv_Start(parent);
+    (void)close(pipefd[1]);
+    return read.fd;
+}
+
+// --- command.jkv_proc.jkv.Kill
+// Kill subprocess and wait
+void command::jkv_Kill(command::jkv_proc& parent) {
+    if (parent.pid != 0) {
+        kill(parent.pid,9);
+        jkv_Wait(parent);
+    }
+}
+
+// --- command.jkv_proc.jkv.Wait
+// Wait for subprocess to return
+void command::jkv_Wait(command::jkv_proc& parent) {
+    if (parent.pid > 0) {
+        int wait_flags = 0;
+        int wait_status = 0;
+        int rc = -1;
+        do {
+            // really wait for subprocess to exit
+            rc = waitpid(parent.pid,&wait_status,wait_flags);
+        } while (rc==-1 && errno==EINTR);
+        if (rc == parent.pid) {
+            parent.status = wait_status;
+            parent.pid = 0;
+        }
+    }
+}
+
+// --- command.jkv_proc.jkv.Exec
+// Start + Wait
+// Execute subprocess and return exit code
+int command::jkv_Exec(command::jkv_proc& parent) {
+    jkv_Start(parent);
+    jkv_Wait(parent);
+    return parent.status;
+}
+
+// --- command.jkv_proc.jkv.ExecX
+// Start + Wait, throw exception on error
+// Execute subprocess; throw human-readable exception on error
+void command::jkv_ExecX(command::jkv_proc& parent) {
+    int rc = jkv_Exec(parent);
+    vrfy(rc==0, tempstr() << "algo_lib.exec" << Keyval("cmd",jkv_ToCmdline(parent))
+    << Keyval("comment",algo::DescribeWaitStatus(parent.status)));
+}
+
+// --- command.jkv_proc.jkv.Execv
+// Call execv()
+// Call execv with specified parameters
+int command::jkv_Execv(command::jkv_proc& parent) {
+    int ret = 0;
+    algo::StringAry args;
+    jkv_ToArgv(parent, args);
+    char **argv = (char**)alloca((ary_N(args)+1)*sizeof(*argv));
+    ind_beg(algo::StringAry_ary_curs,arg,args) {
+        argv[ind_curs(arg).index] = Zeroterm(arg);
+    }ind_end;
+    argv[ary_N(args)] = NULL;
+    // if parent.path is relative, search for it in PATH
+    algo_lib::ResolveExecFname(parent.path);
+    ret = execv(Zeroterm(parent.path),argv);
+    return ret;
+}
+
+// --- command.jkv_proc.jkv.ToCmdline
+algo::tempstr command::jkv_ToCmdline(command::jkv_proc& parent) {
+    algo::tempstr retval;
+    retval << parent.path << " ";
+    command::jkv_PrintArgv(parent.cmd,retval);
+    if (ch_N(parent.fstdin)) {
+        retval << " " << parent.fstdin;
+    }
+    if (ch_N(parent.fstdout)) {
+        retval << " " << parent.fstdout;
+    }
+    if (ch_N(parent.fstderr)) {
+        retval << " 2" << parent.fstderr;
+    }
+    return retval;
+}
+
+// --- command.jkv_proc.jkv.ToArgv
+// Form array from the command line
+void command::jkv_ToArgv(command::jkv_proc& parent, algo::StringAry& args) {
+    ary_RemoveAll(args);
+    ary_Alloc(args) << parent.path;
+
+    if (parent.cmd.in != "data") {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-in:";
+        cstring_Print(parent.cmd.in, *arg);
+    }
+
+    if (true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-file:";
+        cstring_Print(parent.cmd.file, *arg);
+    }
+    ind_beg(command::jkv_kv_curs,value,parent.cmd) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-kv:";
+        cstring_Print(value, *arg);
+    }ind_end;
+
+    if (parent.cmd.r != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-r:";
+        bool_Print(parent.cmd.r, *arg);
+    }
+
+    if (parent.cmd.write != false) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-write:";
+        bool_Print(parent.cmd.write, *arg);
+    }
+
+    if (parent.cmd.output != 0) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-output:";
+        command::output_Print(parent.cmd, *arg);
+    }
+
+    if (parent.cmd.pretty != 2) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-pretty:";
+        u32_Print(parent.cmd.pretty, *arg);
+    }
+    for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
+        ary_Alloc(args) << "-verbose";
+    }
+}
+
+// --- command.jkv_proc..Uninit
+void command::jkv_proc_Uninit(command::jkv_proc& parent) {
+    command::jkv_proc &row = parent; (void)row;
+
+    // command.jkv_proc.jkv.Uninit (Exec)  //
+    jkv_Kill(parent); // kill child, ensure forward progress
 }
 
 // --- command.mdbg.args.Addary

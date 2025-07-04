@@ -74,6 +74,7 @@ dev.gitfile  gitfile:bin/grephunk
 dev.gitfile  gitfile:bin/hilite
 dev.gitfile  gitfile:bin/hilite-error
 dev.gitfile  gitfile:bin/indent-recent
+dev.gitfile  gitfile:bin/jkv
 dev.gitfile  gitfile:bin/limit-output
 dev.gitfile  gitfile:bin/lines-to-dots
 dev.gitfile  gitfile:bin/lsfunc
@@ -383,6 +384,7 @@ dev.gitfile  gitfile:cpp/gen/gcache_gen.cpp
 dev.gitfile  gitfile:cpp/gen/gcli_gen.cpp
 dev.gitfile  gitfile:cpp/gen/gclidb_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ietf_gen.cpp
+dev.gitfile  gitfile:cpp/gen/jkv_gen.cpp
 dev.gitfile  gitfile:cpp/gen/lib_amcdb_gen.cpp
 dev.gitfile  gitfile:cpp/gen/lib_ams_gen.cpp
 dev.gitfile  gitfile:cpp/gen/lib_ctype_gen.cpp
@@ -410,6 +412,7 @@ dev.gitfile  gitfile:cpp/gen/ssim2mysql_gen.cpp
 dev.gitfile  gitfile:cpp/gen/ssimfilt_gen.cpp
 dev.gitfile  gitfile:cpp/gen/strconv_gen.cpp
 dev.gitfile  gitfile:cpp/gen/sv2ssim_gen.cpp
+dev.gitfile  gitfile:cpp/jkv/jkv.cpp
 dev.gitfile  gitfile:cpp/lib/algo/arg.cpp
 dev.gitfile  gitfile:cpp/lib/algo/backtrace.cpp
 dev.gitfile  gitfile:cpp/lib/algo/base64.cpp
@@ -811,6 +814,8 @@ dev.gitfile  gitfile:include/gen/gclidb_gen.h
 dev.gitfile  gitfile:include/gen/gclidb_gen.inl.h
 dev.gitfile  gitfile:include/gen/ietf_gen.h
 dev.gitfile  gitfile:include/gen/ietf_gen.inl.h
+dev.gitfile  gitfile:include/gen/jkv_gen.h
+dev.gitfile  gitfile:include/gen/jkv_gen.inl.h
 dev.gitfile  gitfile:include/gen/lib_amcdb_gen.h
 dev.gitfile  gitfile:include/gen/lib_amcdb_gen.inl.h
 dev.gitfile  gitfile:include/gen/lib_ams_gen.h
@@ -865,6 +870,7 @@ dev.gitfile  gitfile:include/gen/strconv_gen.h
 dev.gitfile  gitfile:include/gen/strconv_gen.inl.h
 dev.gitfile  gitfile:include/gen/sv2ssim_gen.h
 dev.gitfile  gitfile:include/gen/sv2ssim_gen.inl.h
+dev.gitfile  gitfile:include/jkv.h
 dev.gitfile  gitfile:include/lib_amcdb.h
 dev.gitfile  gitfile:include/lib_ams.h
 dev.gitfile  gitfile:include/lib_ctype.h
@@ -1088,6 +1094,9 @@ dev.gitfile  gitfile:test/atf_comp/atf_cmdline.RichExec
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Sig
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Verbose
 dev.gitfile  gitfile:test/atf_comp/atf_cmdline.Version
+dev.gitfile  gitfile:test/atf_comp/jkv.ArrayFill
+dev.gitfile  gitfile:test/atf_comp/jkv.ReverseSmoke
+dev.gitfile  gitfile:test/atf_comp/jkv.Smoke
 dev.gitfile  gitfile:test/atf_comp/mdbg.OutOfOrderArgs
 dev.gitfile  gitfile:test/atf_comp/mdbg.Smoke
 dev.gitfile  gitfile:test/atf_comp/mdbg.SmokeBreak
@@ -1192,6 +1201,8 @@ dev.gitfile  gitfile:txt/exe/gcache/README.md
 dev.gitfile  gitfile:txt/exe/gcache/internals.md
 dev.gitfile  gitfile:txt/exe/gcli/README.md
 dev.gitfile  gitfile:txt/exe/gcli/internals.md
+dev.gitfile  gitfile:txt/exe/jkv/README.md
+dev.gitfile  gitfile:txt/exe/jkv/internals.md
 dev.gitfile  gitfile:txt/exe/mdbg/README.md
 dev.gitfile  gitfile:txt/exe/mdbg/internals.md
 dev.gitfile  gitfile:txt/exe/mysql2ssim/README.md

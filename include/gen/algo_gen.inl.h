@@ -1277,22 +1277,6 @@ inline  algo::Errns::Errns(algo_ErrnsEnum arg) {
     this->value = u8(arg);
 }
 
-// --- algo.Errcode.code.Get
-// Retrieve bitfield from value of field value
-//    32 bits starting at bit 0.
-inline i32 algo::code_Get(const algo::Errcode& parent) {
-    return i32((parent.value >> 0) & 0xffffffff);
-}
-
-// --- algo.Errcode.code.Set
-// Set bitfield in value of field 'value'
-//    32 bits starting at bit 0.
-inline void algo::code_Set(algo::Errcode& parent, i32 rhs) {
-    u64 t1    = u64(0xffffffff) << 0;
-    u64 t2    = (u64(rhs) & 0xffffffff) << 0;
-    parent.value = u64((parent.value & ~t1) | t2);
-}
-
 // --- algo.Errcode.type.Get
 // Retrieve bitfield from value of field value
 //    8 bits starting at bit 32.
@@ -1306,6 +1290,22 @@ inline algo::Errns algo::type_Get(const algo::Errcode& parent) {
 inline void algo::type_Set(algo::Errcode& parent, algo::Errns rhs) {
     u64 t1    = u64(0xff) << 32;
     u64 t2    = (u64(rhs.value) & 0xff) << 32;
+    parent.value = u64((parent.value & ~t1) | t2);
+}
+
+// --- algo.Errcode.code.Get
+// Retrieve bitfield from value of field value
+//    32 bits starting at bit 0.
+inline i32 algo::code_Get(const algo::Errcode& parent) {
+    return i32((parent.value >> 0) & 0xffffffff);
+}
+
+// --- algo.Errcode.code.Set
+// Set bitfield in value of field 'value'
+//    32 bits starting at bit 0.
+inline void algo::code_Set(algo::Errcode& parent, i32 rhs) {
+    u64 t1    = u64(0xffffffff) << 0;
+    u64 t2    = (u64(rhs) & 0xffffffff) << 0;
     parent.value = u64((parent.value & ~t1) | t2);
 }
 

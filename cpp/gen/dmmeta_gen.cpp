@@ -121,6 +121,7 @@ const char *dmmeta_Ns_ns_gcli           = "gcli";
 const char *dmmeta_Ns_ns_gclidb         = "gclidb";
 
 const char *dmmeta_Ns_ns_ietf         = "ietf";
+const char *dmmeta_Ns_ns_jkv          = "jkv";
 const char *dmmeta_Ns_ns_lib_amcdb    = "lib_amcdb";
 const char *dmmeta_Ns_ns_lib_ams      = "lib_ams";
 const char *dmmeta_Ns_ns_lib_ctype    = "lib_ctype";

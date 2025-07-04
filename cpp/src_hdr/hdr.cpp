@@ -226,18 +226,36 @@ static void UpdateCopyright(src_hdr::FSrc &src) {
 
 // -----------------------------------------------------------------------------
 
+static strptr GuessCmtString(strptr shebang) {
+    shebang=Trimmed(shebang);
+    strptr executable=Pathcomp(shebang," LR LL");
+    strptr ret = executable == "node" ? "//"
+        : "#";
+    return ret;
+}
+
+// -----------------------------------------------------------------------------
+
 static void RebuildHeader(src_hdr::FSrc &src) {
     algo_lib::MmapFile file;
     if (MmapFile_Load(file,src.src)) {
         src.text=file.text;
         bool inhdr=true;
         ind_beg(Line_curs,line,src.text) {
-            // empty lines following header are part of the header
-            inhdr = inhdr && (StartsWithQ(line,src.cmtstring) || !ch_N(Trimmed(line)));
-            if (inhdr) {
-                ReadTagLine(src,Trimmed(RestFrom(line,ch_N(src.cmtstring))));
+            if (ind_curs(line).i==0 && StartsWithQ(line,"#!")) {
+                src.shebang << line << eol;
+                // if the file had no extension, guess comment string from shebang line
+                if (src.cmtstring == "") {
+                    src.cmtstring = GuessCmtString(src.shebang);
+                }
             } else {
-                src.body<<line<<eol;
+                // empty lines following header are part of the header
+                inhdr = inhdr && (StartsWithQ(line,src.cmtstring) || !ch_N(Trimmed(line)));
+                if (inhdr) {
+                    ReadTagLine(src,Trimmed(RestFrom(line,ch_N(src.cmtstring))));
+                } else {
+                    src.body<<line<<eol;
+                }
             }
         }ind_end;
         UpdateCopyright(src);
@@ -289,11 +307,15 @@ void src_hdr::Main() {
     }ind_end;
     ind_beg(src_hdr::_db_scriptfile_curs,scriptfile,src_hdr::_db) {
         if (Regx_Match(_db.cmdline.scriptfile,scriptfile.gitfile) && !Regx_Match(exclude,scriptfile.gitfile)) {
+            algo::strptr ext = GetFileExt(scriptfile.gitfile);
             src_hdr::FSrc src;
             src.src=scriptfile.gitfile;
             src.p_targsrc=NULL;
             src.p_license=scriptfile.p_license;
-            src.cmtstring="#";
+            src.cmtstring = ext == "" ? ""
+                : ext == ".mjs" || ext == ".js" || ext == ".jsx" || ext == ".ts" || ext == ".tsx" ? "//"
+                : ext == ".json" ? ""
+                : "#";
             RebuildHeader(src);
         }
     }ind_end;

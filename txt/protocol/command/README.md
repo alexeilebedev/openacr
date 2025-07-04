@@ -536,6 +536,19 @@ Other ctypes in this namespace which don't have own readme files
 |gitdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|(setup) Change directory of git repository|
 |show_gitlab_system_notes|bool|[Val](/txt/exe/amc/reftypes.md#val)||(misc) Show issue and mr notes created by gitlab|
 
+#### command.jkv - Command line for [jkv](/txt/exe/jkv/README.md)
+<a href="#command-jkv"></a>
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
+|file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Filename (use - for stdin)|
+|kv|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftypes.md#tary)||JSON Keyvals|
+|r|bool|[Val](/txt/exe/amc/reftypes.md#val)||Reverse (json keyvals -> JSON) mapping|
+|write|bool|[Val](/txt/exe/amc/reftypes.md#val)||Write the modified file back|
+|output|u8|[Val](/txt/exe/amc/reftypes.md#val)|0|Output format|
+|pretty|u32|[Val](/txt/exe/amc/reftypes.md#val)|2|Pretty-printer (0-compact; 1=algo style; 2=jq style)|
+
 #### command.mdbg - Command line for [mdbg](/txt/exe/mdbg/README.md)
 <a href="#command-mdbg"></a>
 

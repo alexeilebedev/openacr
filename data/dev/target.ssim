@@ -27,6 +27,7 @@ dev.target  target:atf_unit
 dev.target  target:bash2html
 dev.target  target:gcache
 dev.target  target:gcli
+dev.target  target:jkv
 dev.target  target:lib_amcdb
 dev.target  target:lib_ams
 dev.target  target:lib_ctype

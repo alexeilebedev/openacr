@@ -752,6 +752,7 @@ dmmeta.ctypelen  ctype:command.bash2html  len:24  alignment:8  padbytes:7  plain
 dmmeta.ctypelen  ctype:command.bash_proc  len:96  alignment:8  padbytes:4  plaindata:N
 dmmeta.ctypelen  ctype:command.gcache  len:72  alignment:8  padbytes:7  plaindata:N
 dmmeta.ctypelen  ctype:command.gcli  len:352  alignment:8  padbytes:24  plaindata:N
+dmmeta.ctypelen  ctype:command.jkv  len:56  alignment:8  padbytes:1  plaindata:N
 dmmeta.ctypelen  ctype:command.mdbg  len:160  alignment:8  padbytes:17  plaindata:N
 dmmeta.ctypelen  ctype:command.mysql2ssim  len:72  alignment:8  padbytes:19  plaindata:N
 dmmeta.ctypelen  ctype:command.orgfile  len:144  alignment:8  padbytes:6  plaindata:N
@@ -1015,6 +1016,7 @@ dmmeta.ctypelen  ctype:gclidb.User  len:72  alignment:8  padbytes:0  plaindata:N
 dmmeta.ctypelen  ctype:ietf.Ipport  len:6  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ietf.Ipv4  len:4  alignment:1  padbytes:0  plaindata:Y
 dmmeta.ctypelen  ctype:ietf.Ipv4Addr  len:4  alignment:1  padbytes:0  plaindata:Y
+dmmeta.ctypelen  ctype:jkv.FDb  len:80  alignment:8  padbytes:7  plaindata:N
 dmmeta.ctypelen  ctype:lib_ams.FDb  len:1352  alignment:8  padbytes:52  plaindata:N
 dmmeta.ctypelen  ctype:lib_ams.FFdin  len:8328  alignment:8  padbytes:17  plaindata:N
 dmmeta.ctypelen  ctype:lib_ams.FMember  len:104  alignment:8  padbytes:5  plaindata:N

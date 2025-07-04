@@ -92,6 +92,15 @@ lib_json::FNode &lib_json::NewNode(lib_json::FNode *parent, lib_json_FNode_type_
 ```
 
 ```c++
+// PARENT    parent node or NULL
+// TYPE      node type
+// VALUE     node value where applicable (only for field, string, number)
+// Construct 2 nodes, a "field" node which has the name FIELD, and its value
+// of type TYPE. Return the VALUE
+lib_json::FNode &lib_json::NewFieldVal(lib_json::FNode *parent, lib_json_FNode_type_Enum type, strptr field) 
+```
+
+```c++
 lib_json::FNode &lib_json::NewFieldNode(lib_json::FNode *parent, strptr field) 
 ```
 
@@ -145,25 +154,20 @@ void lib_json::root_node_Cleanup(lib_json::FParser& parent)
 // quotation mark, reverse solidus, and the control characters (U+0000
 // through U+001F)."
 // -- this says that solidus need not be escaped when printing -- only when parsing!
-void lib_json::JsonSerializeString(algo::strptr str, algo::cstring &lhs) 
+void lib_json::JsonSerializeString(algo::strptr str, algo::cstring &out) 
 ```
 
 ```c++
 // Serialize to string
 // Serialize to JSON tree to text
 // NODE      root node to start from
-// LHS       target string
-// PRETTY    whether or not pretty-format
+// OUT       target string
+// PRETTY    pretty printer setting:
+// 0 = no pretty printer (compact output)
+// 1 = algo style pretty printer
+// 2 = standard (jq) style) pretty printer
 // INDENT    level of indenting (for pretty-formatting)
-void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty, u32 indent) 
-```
-
-```c++
-void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty) 
-```
-
-```c++
-void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs) 
+void lib_json::JsonSerialize(lib_json::FNode* node, cstring &out, u32 pretty = 0, u32 indent = 0) 
 ```
 
 ```c++

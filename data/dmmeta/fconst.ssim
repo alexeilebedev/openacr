@@ -93,6 +93,9 @@ dmmeta.fconst  fconst:command.abt.cache/ccache  value:4  comment:"Select ccache 
 dmmeta.fconst  fconst:command.atf_cmdline.fconst/high  value:0  comment:Cool
 dmmeta.fconst  fconst:command.atf_cmdline.fconst/medium  value:1  comment:So-so
 dmmeta.fconst  fconst:command.atf_cmdline.fconst/low  value:2  comment:Bad
+dmmeta.fconst  fconst:command.jkv.output/auto  value:0  comment:Automatic
+dmmeta.fconst  fconst:command.jkv.output/json  value:1  comment:"Json only"
+dmmeta.fconst  fconst:command.jkv.output/kv  value:2  comment:"Key-value only"
 dmmeta.fconst  fconst:command.samp_regx.style/acr  value:0  comment:"ACR-style regx"
 dmmeta.fconst  fconst:command.samp_regx.style/shell  value:1  comment:"Shell-style regx"
 dmmeta.fconst  fconst:command.samp_regx.style/classic  value:2  comment:"Classic regx"
