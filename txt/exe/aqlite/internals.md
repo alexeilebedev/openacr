@@ -95,6 +95,7 @@ These can be executed with `atf_comp <comptest> -v`
 |[aqlite.Number](/test/atf_comp/aqlite.Number)||
 |[aqlite.PatternMatching](/test/atf_comp/aqlite.PatternMatching)||
 |[aqlite.Performance](/test/atf_comp/aqlite.Performance)||
+|[aqlite.Pragma](/test/atf_comp/aqlite.Pragma)||
 |[aqlite.Smoke](/test/atf_comp/aqlite.Smoke)||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Tests -->

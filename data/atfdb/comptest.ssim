@@ -172,6 +172,7 @@ atfdb.comptest  comptest:aqlite.Joins  timeout:10  memcheck:Y  exit_code:0  comm
 atfdb.comptest  comptest:aqlite.Number  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:aqlite.PatternMatching  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:aqlite.Performance  timeout:10  memcheck:Y  exit_code:0  comment:""
+atfdb.comptest  comptest:aqlite.Pragma  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:aqlite.Smoke  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:atf_cmdline.Bare  timeout:10  memcheck:Y  exit_code:1  comment:""
 atfdb.comptest  comptest:atf_cmdline.Debug  timeout:10  memcheck:Y  exit_code:0  comment:""

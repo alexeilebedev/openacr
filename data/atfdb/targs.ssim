@@ -172,6 +172,7 @@ atfdb.targs  comptest:aqlite.Joins  args:"-in:- \"select count(*) as basic_join 
 atfdb.targs  comptest:aqlite.Number  args:"\"select * from field where dflt = 0 and ns = 'dev'\""
 atfdb.targs  comptest:aqlite.PatternMatching  args:"-in:- \"select count(*) as cstring_fields from field where arg like '%cstring%'; select count(*) as i32_fields from field where arg like '%i32%'; select count(*) as comment_with_test from field where comment like '%test%'\""
 atfdb.targs  comptest:aqlite.Performance  args:"\"select distinct 'test' from field join ctype using(ctype)\""
+atfdb.targs  comptest:aqlite.Pragma  args:'-in:- "PRAGMA compile_options;" | grep -v COMPILER'
 atfdb.targs  comptest:aqlite.Smoke  args:'-in:- "select rowid,* from ctype; select rowid,* from field"'
 atfdb.targs  comptest:atf_cmdline.Bare  args:""
 atfdb.targs  comptest:atf_cmdline.Debug  args:"-debug blah -str blah"

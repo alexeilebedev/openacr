@@ -23,7 +23,7 @@
 
 
 #pragma once
-#include "extern/sqlite-3470000/sqlite3.h"
+#include "extern/sqlite-3500400/sqlite3.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/dmmeta_gen.h"
 //#pragma endinclude
