@@ -89,6 +89,7 @@ The following component tests are defined for `aqlite`.
 These can be executed with `atf_comp <comptest> -v`
 |Comptest|Comment|
 |---|---|
+|[aqlite.CompileOptions](/test/atf_comp/aqlite.CompileOptions)||
 |[aqlite.Constraints](/test/atf_comp/aqlite.Constraints)||
 |[aqlite.ErrorHandling](/test/atf_comp/aqlite.ErrorHandling)||
 |[aqlite.Joins](/test/atf_comp/aqlite.Joins)||
