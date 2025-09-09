@@ -166,6 +166,7 @@ atfdb.targs  comptest:acr_ed.CreateSsimfileBadNs  args:"--create -ssimfile ams.t
 atfdb.targs  comptest:acr_in.Reverse  args:"-r dev.targdep"
 atfdb.targs  comptest:acr_in.Simple  args:acr_in
 atfdb.targs  comptest:acr_in.Tree  args:"acr_in -t"
+atfdb.targs  comptest:aqlite.CompileOptions  args:'-in:- "PRAGMA compile_options;" | grep -v COMPILER'
 atfdb.targs  comptest:aqlite.Constraints  args:"-in:- \"select count(*) as or_test from field where ns = 'dmmeta' OR arg like 'algo.cstr%'; select count(*) as and_test from field where ns = 'dmmeta' AND reftype = 'Val'\""
 atfdb.targs  comptest:aqlite.ErrorHandling  args:"-in:- \"select count(*) from field where nonexistent_field = 'test'\""
 atfdb.targs  comptest:aqlite.Joins  args:"-in:- \"select count(*) as basic_join from field f join ctype c using (ctype) where f.ns = 'dmmeta'; select count(*) as self_join from field f1 join field f2 on f1.ctype = f2.ctype where f1.ns = 'dmmeta' and f1.field <> f2.field\""

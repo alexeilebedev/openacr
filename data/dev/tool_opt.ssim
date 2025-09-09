@@ -1,6 +1,7 @@
 dev.tool_opt  tool_opt:"%-%.%-%/lib_sqlite-CC:-DSQLITE_DQS=0"  comment:""
 dev.tool_opt  tool_opt:"%-%.%-%/lib_sqlite-CC:-DSQLITE_THREADSAFE=0"  comment:""
-dev.tool_opt  tool_opt:%-%.%-%/lib_sqlite-CC:-Iextern/sqlite-3470000  comment:""
+dev.tool_opt  tool_opt:"%-%.%-%/lib_sqlite-CC:-DSQLITE_MAX_ATTACHED=30"  comment:""
+dev.tool_opt  tool_opt:%-%.%-%/lib_sqlite-CC:-Iextern/sqlite-3500400  comment:""
 dev.tool_opt  tool_opt:%-%.%-%/lib_sqlite-CC:-Wno-implicit-fallthrough  comment:""
 dev.tool_opt  tool_opt:"%-cl.%-x86_64/%-CC:/D AOS_SSE42"  comment:""
 dev.tool_opt  tool_opt:"%-clang++.%-%/%-C:-x c"  comment:""

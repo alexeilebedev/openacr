@@ -166,6 +166,7 @@ atfdb.comptest  comptest:acr_ed.CreateSsimfileBadNs  timeout:10  memcheck:Y  exi
 atfdb.comptest  comptest:acr_in.Reverse  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:acr_in.Simple  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:acr_in.Tree  timeout:10  memcheck:Y  exit_code:0  comment:""
+atfdb.comptest  comptest:aqlite.CompileOptions  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:aqlite.Constraints  timeout:10  memcheck:Y  exit_code:0  comment:""
 atfdb.comptest  comptest:aqlite.ErrorHandling  timeout:10  memcheck:Y  exit_code:1  comment:""
 atfdb.comptest  comptest:aqlite.Joins  timeout:10  memcheck:Y  exit_code:0  comment:""
