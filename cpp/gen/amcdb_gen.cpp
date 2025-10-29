@@ -36,52 +36,47 @@ const char *amcdb_Curstype_curstype_oncecurs    = "oncecurs";
 const char *amcdb_Curstype_curstype_unordcurs   = "unordcurs";
 
 // compile-time string constants for amcdb.Tclass.tclass
-const char *amcdb_Tclass_tclass_Alias     = "Alias";
-const char *amcdb_Tclass_tclass_Atree     = "Atree";
-const char *amcdb_Tclass_tclass_Base      = "Base";
-const char *amcdb_Tclass_tclass_Bheap     = "Bheap";
-const char *amcdb_Tclass_tclass_Bitfld    = "Bitfld";
-const char *amcdb_Tclass_tclass_Bitset    = "Bitset";
-const char *amcdb_Tclass_tclass_Blkpool   = "Blkpool";
-const char *amcdb_Tclass_tclass_Charset   = "Charset";
-const char *amcdb_Tclass_tclass_Cmp       = "Cmp";
-
+const char *amcdb_Tclass_tclass_Alias      = "Alias";
+const char *amcdb_Tclass_tclass_Atree      = "Atree";
+const char *amcdb_Tclass_tclass_Base       = "Base";
+const char *amcdb_Tclass_tclass_Bheap      = "Bheap";
+const char *amcdb_Tclass_tclass_Bitfld     = "Bitfld";
+const char *amcdb_Tclass_tclass_Bitset     = "Bitset";
+const char *amcdb_Tclass_tclass_Blkpool    = "Blkpool";
+const char *amcdb_Tclass_tclass_Charset    = "Charset";
+const char *amcdb_Tclass_tclass_Cmp        = "Cmp";
 const char *amcdb_Tclass_tclass_Count      = "Count";
 const char *amcdb_Tclass_tclass_Cppfunc    = "Cppfunc";
 const char *amcdb_Tclass_tclass_Cppstack   = "Cppstack";
 const char *amcdb_Tclass_tclass_Ctype      = "Ctype";
 const char *amcdb_Tclass_tclass_Ctype2     = "Ctype2";
+const char *amcdb_Tclass_tclass_Dec        = "Dec";
+const char *amcdb_Tclass_tclass_Delptr     = "Delptr";
+const char *amcdb_Tclass_tclass_Exec       = "Exec";
+const char *amcdb_Tclass_tclass_Fbuf       = "Fbuf";
+const char *amcdb_Tclass_tclass_Fcast      = "Fcast";
+const char *amcdb_Tclass_tclass_Fconst     = "Fconst";
+const char *amcdb_Tclass_tclass_Field      = "Field";
+const char *amcdb_Tclass_tclass_Field2     = "Field2";
+const char *amcdb_Tclass_tclass_Global     = "Global";
+const char *amcdb_Tclass_tclass_Hook       = "Hook";
+const char *amcdb_Tclass_tclass_Inlary     = "Inlary";
+const char *amcdb_Tclass_tclass_Io         = "Io";
+const char *amcdb_Tclass_tclass_Lary       = "Lary";
+const char *amcdb_Tclass_tclass_Llist      = "Llist";
+const char *amcdb_Tclass_tclass_Lpool      = "Lpool";
+const char *amcdb_Tclass_tclass_Malloc     = "Malloc";
+const char *amcdb_Tclass_tclass_Ns         = "Ns";
+const char *amcdb_Tclass_tclass_Numstr     = "Numstr";
+const char *amcdb_Tclass_tclass_Opt        = "Opt";
 
-const char *amcdb_Tclass_tclass_Dec   = "Dec";
-
-const char *amcdb_Tclass_tclass_Delptr   = "Delptr";
-const char *amcdb_Tclass_tclass_Exec     = "Exec";
-const char *amcdb_Tclass_tclass_Fbuf     = "Fbuf";
-const char *amcdb_Tclass_tclass_Fcast    = "Fcast";
-const char *amcdb_Tclass_tclass_Fconst   = "Fconst";
-const char *amcdb_Tclass_tclass_Field    = "Field";
-const char *amcdb_Tclass_tclass_Field2   = "Field2";
-const char *amcdb_Tclass_tclass_Global   = "Global";
-const char *amcdb_Tclass_tclass_Hook     = "Hook";
-const char *amcdb_Tclass_tclass_Inlary   = "Inlary";
-const char *amcdb_Tclass_tclass_Io       = "Io";
-const char *amcdb_Tclass_tclass_Lary     = "Lary";
-const char *amcdb_Tclass_tclass_Llist    = "Llist";
-const char *amcdb_Tclass_tclass_Lpool    = "Lpool";
-const char *amcdb_Tclass_tclass_Malloc   = "Malloc";
-const char *amcdb_Tclass_tclass_Ns       = "Ns";
-
-const char *amcdb_Tclass_tclass_Numstr   = "Numstr";
-const char *amcdb_Tclass_tclass_Opt      = "Opt";
-const char *amcdb_Tclass_tclass_Pkey     = "Pkey";
-const char *amcdb_Tclass_tclass_Pmask    = "Pmask";
-const char *amcdb_Tclass_tclass_Pool     = "Pool";
-const char *amcdb_Tclass_tclass_Ptr      = "Ptr";
-const char *amcdb_Tclass_tclass_Ptrary   = "Ptrary";
-
-const char *amcdb_Tclass_tclass_Regx      = "Regx";
-const char *amcdb_Tclass_tclass_RegxSql   = "RegxSql";
-
+const char *amcdb_Tclass_tclass_Pkey       = "Pkey";
+const char *amcdb_Tclass_tclass_Pmask      = "Pmask";
+const char *amcdb_Tclass_tclass_Pool       = "Pool";
+const char *amcdb_Tclass_tclass_Ptr        = "Ptr";
+const char *amcdb_Tclass_tclass_Ptrary     = "Ptrary";
+const char *amcdb_Tclass_tclass_Regx       = "Regx";
+const char *amcdb_Tclass_tclass_RegxSql    = "RegxSql";
 const char *amcdb_Tclass_tclass_Sbrk       = "Sbrk";
 const char *amcdb_Tclass_tclass_Smallstr   = "Smallstr";
 const char *amcdb_Tclass_tclass_Sort       = "Sort";
@@ -90,6 +85,7 @@ const char *amcdb_Tclass_tclass_Substr     = "Substr";
 const char *amcdb_Tclass_tclass_Tary       = "Tary";
 const char *amcdb_Tclass_tclass_Thash      = "Thash";
 const char *amcdb_Tclass_tclass_Tpool      = "Tpool";
+
 const char *amcdb_Tclass_tclass_Upptr      = "Upptr";
 const char *amcdb_Tclass_tclass_Val        = "Val";
 const char *amcdb_Tclass_tclass_Varlen     = "Varlen";

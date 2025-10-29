@@ -89,7 +89,12 @@ static void ComputeSysincl() {
                              << "End of search list\n";
         } else {
             tempstr cmd;
-            cmd << compiler_Get(builddir) << " -x c++ -E -v - </dev/null 2>&1";
+            // On Darwin ARM64, need to use arch prefix for proper system include detection
+            if (StartsWithQ(builddir.builddir, "Darwin-clang++") && EndsWithQ(builddir.builddir, "-arm64")) {
+                cmd << "arch -arm64 " << compiler_Get(builddir) << " -x c++ -E -v - </dev/null 2>&1";
+            } else {
+                cmd << compiler_Get(builddir) << " -x c++ -E -v - </dev/null 2>&1";
+            }
             text = SysEval(cmd,FailokQ(true),1024*1024);
         }
         // parse it for the paths...

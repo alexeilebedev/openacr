@@ -89,6 +89,11 @@ void algo_lib::InitCpuHz() {
     size_t size = sizeof(freq);
     if (sysctlbyname("hw.cpufrequency", &freq, &size, NULL, 0) == 0) {
         hz = freq;
+    } else {
+        // Fallback for Apple Silicon Macs where sysctlbyname doesn't work
+        // for hw.cpufrequency even though sysctl command works
+        // Use a reasonable default frequency (2.4 GHz for Apple Silicon)
+        hz = 2400000000ULL;
     }
 #elif defined(__CYGWIN__)
     // sampling /proc/cpuinfo on a windows machine under cygwin

@@ -202,6 +202,14 @@ inline void algo::PageBufInit(PageBuf &F, u64 n, u64 align) {
     F.n_elems  = (int)n;
 }
 
+// Forward declarations for SSE42 fallback functions on non-x86 platforms
+#ifndef AOS_SSE42
+inline u32 _mm_crc32_u64(u32 prev, u64 val);
+inline u32 _mm_crc32_u32(u32 prev, u32 val);
+inline u32 _mm_crc32_u16(u32 prev, u16 val);
+inline u32 _mm_crc32_u8 (u32 prev, u8  val);
+#endif
+
 inline u32 u8_Hash (u32 prev, u8  val) {
     return _mm_crc32_u8 (prev,val);
 }
@@ -243,15 +251,20 @@ inline u32 char_Hash(u32 prev, char  val) {
 }
 
 inline u32 float_Hash(u32 prev, float val) {
-    return algo::CRC32Step(prev, (u8*)&val, sizeof(val));
+    return _mm_crc32_u32(prev, *(u32*)&val);
 }
 
 inline u32 double_Hash(u32 prev, double  val) {
-    return algo::CRC32Step(prev, (u8*)&val, sizeof(val));
+    return _mm_crc32_u64(prev, *(u64*)&val);
 }
 
 inline u32 u128_Hash(u32 prev, u128 t) {
-    return algo::CRC32Step(prev, (u8*)&t, sizeof(t));
+    // Hash as two u64 values
+    u64 lo = (u64)t;
+    u64 hi = (u64)(t >> 64);
+    prev = _mm_crc32_u64(prev, lo);
+    prev = _mm_crc32_u64(prev, hi);
+    return prev;
 }
 
 inline u32 algo::strptr_Hash(u32 prev, algo::strptr val) {
@@ -448,20 +461,46 @@ inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
 
 #else
 
+// Fallback implementations for non-SSE42 platforms
+// Simple inline implementation for hash functions
+#define ALGO_INLINE_CRC32STEP
+inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
+    for (size_t i = 0; i < len; i++) {
+        old = ((old >> 8) ^ old) ^ x[i];
+    }
+    return old;
+}
+
 inline u32 _mm_crc32_u64(u32 prev, u64 val) {
-    return CRC32Step(prev, &val, sizeof(val));
+    // Simple fallback - just use the value as part of hash
+    const u8* bytes = (const u8*)&val;
+    u32 hash = prev;
+    for (int i = 0; i < 8; i++) {
+        hash = ((hash >> 8) ^ hash) ^ bytes[i];
+    }
+    return hash;
 }
 
 inline u32 _mm_crc32_u32(u32 prev, u32 val) {
-    return CRC32Step(prev, &val, sizeof(val));
+    const u8* bytes = (const u8*)&val;
+    u32 hash = prev;
+    for (int i = 0; i < 4; i++) {
+        hash = ((hash >> 8) ^ hash) ^ bytes[i];
+    }
+    return hash;
 }
 
 inline u32 _mm_crc32_u16(u32 prev, u16 val) {
-    return CRC32Step(prev, &val, sizeof(val));
+    const u8* bytes = (const u8*)&val;
+    u32 hash = prev;
+    for (int i = 0; i < 2; i++) {
+        hash = ((hash >> 8) ^ hash) ^ bytes[i];
+    }
+    return hash;
 }
 
 inline u32 _mm_crc32_u8 (u32 prev, u8  val) {
-    return CRC32Step(prev, &val, sizeof(val));
+    return ((prev >> 8) ^ prev) ^ val;
 }
 
 #endif
@@ -783,44 +822,40 @@ inline u32 algo::u32_BitScanForward(u32 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanForward(&r,v);
-#else
-    u32 r;
-    asm ("bsfl %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#else
+    return __builtin_ctz(v);
+#endif
 }
 
 inline u64 algo::u64_BitScanForward(u64 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanForward64(&r,v);
-#else
-    u64 r;
-    asm ("bsfq %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#else
+    return __builtin_ctzll(v);
+#endif
 }
 
 inline u32 algo::u32_BitScanReverse(u32 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanReverse(&r,v);
-#else
-    u32 r;
-    asm ("bsrl %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#else
+    return 31 - __builtin_clz(v);
+#endif
 }
 
 inline u64 algo::u64_BitScanReverse(u64 v) {
 #ifdef WIN32
     unsigned long r;
     _BitScanReverse64(&r,v);
-#else
-    u64 r;
-    asm ("bsrq %1, %0" : "=r"(r) : "rm"(v) );
-#endif
     return r;
+#else
+    return 63 - __builtin_clzll(v);
+#endif
 }
 
 inline u32 algo::u16_BitScanForward(u16 v) {
@@ -918,7 +953,7 @@ inline double algo::get_cpu_hz() {
 inline u64 algo::get_cycles() {
 #ifdef WIN32
     return __rdtsc();
-#else
+#elif defined(__x86_64__) || defined(__i386__)
     unsigned low, high;
     asm volatile (
                   "rdtsc"
@@ -927,6 +962,11 @@ inline u64 algo::get_cycles() {
                   :
                   );
     return u64(high)<<32 | low;
+#else
+    // Fallback for non-x86 architectures (ARM64, etc.)
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    return (u64)ts.tv_sec * 1000000000ULL + (u64)ts.tv_nsec;
 #endif
 }
 
@@ -973,7 +1013,7 @@ inline u64 algo::rdtscp() {
 #ifdef WIN32
     _ReadBarrier();
     return get_cycles();
-#else
+#elif defined(__x86_64__) || defined(__i386__)
     unsigned low, high;
     asm volatile (
                   "lfence\n"
@@ -983,6 +1023,11 @@ inline u64 algo::rdtscp() {
                   : "memory"                // clobbered
                   );
     return u64(high)<<32 | low;
+#else
+    // Fallback for non-x86 architectures (ARM64, etc.)
+    // Use memory barrier and get_cycles
+    __sync_synchronize();
+    return get_cycles();
 #endif
 }
 

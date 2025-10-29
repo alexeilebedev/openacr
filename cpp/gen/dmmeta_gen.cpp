@@ -48,9 +48,8 @@ const char *dmmeta_Fastenc_fastenc_type         = "type";
 const char *dmmeta_Fastenc_fastenc_unsigned     = "unsigned";
 
 // compile-time string constants for dmmeta.Fastinstr.fastinstr
-const char *dmmeta_Fastinstr_fastinstr_field    = "field";
-const char *dmmeta_Fastinstr_fastinstr_length   = "length";
-
+const char *dmmeta_Fastinstr_fastinstr_field      = "field";
+const char *dmmeta_Fastinstr_fastinstr_length     = "length";
 const char *dmmeta_Fastinstr_fastinstr_mantissa   = "mantissa";
 
 // compile-time string constants for dmmeta.Fastop.fastop
@@ -60,7 +59,8 @@ const char *dmmeta_Fastop_fastop_default     = "default";
 const char *dmmeta_Fastop_fastop_delta       = "delta";
 const char *dmmeta_Fastop_fastop_increment   = "increment";
 const char *dmmeta_Fastop_fastop_none        = "none";
-const char *dmmeta_Fastop_fastop_tail        = "tail";
+
+const char *dmmeta_Fastop_fastop_tail   = "tail";
 
 // compile-time string constants for dmmeta.Fbufdir.fbufdir
 const char *dmmeta_Fbufdir_fbufdir_in    = "in";
@@ -74,7 +74,8 @@ const char *dmmeta_Fbuftype_fbuftype_Msgbuf          = "Msgbuf";
 
 // compile-time string constants for dmmeta.Hashtype.hashtype
 const char *dmmeta_Hashtype_hashtype_Extern   = "Extern";
-const char *dmmeta_Hashtype_hashtype_CRC32    = "CRC32";
+
+const char *dmmeta_Hashtype_hashtype_CRC32   = "CRC32";
 
 // compile-time string constants for dmmeta.Ns.ns
 const char *dmmeta_Ns_ns_            = "";
@@ -90,9 +91,9 @@ const char *dmmeta_Ns_ns_algo        = "algo";
 const char *dmmeta_Ns_ns_algo_lib    = "algo_lib";
 const char *dmmeta_Ns_ns_amc         = "amc";
 const char *dmmeta_Ns_ns_amc_gc      = "amc_gc";
-const char *dmmeta_Ns_ns_amc_vis     = "amc_vis";
-const char *dmmeta_Ns_ns_amcdb       = "amcdb";
 
+const char *dmmeta_Ns_ns_amc_vis        = "amc_vis";
+const char *dmmeta_Ns_ns_amcdb          = "amcdb";
 const char *dmmeta_Ns_ns_ams            = "ams";
 const char *dmmeta_Ns_ns_ams_cat        = "ams_cat";
 const char *dmmeta_Ns_ns_ams_sendtest   = "ams_sendtest";
@@ -111,15 +112,17 @@ const char *dmmeta_Ns_ns_atf_nrun       = "atf_nrun";
 const char *dmmeta_Ns_ns_atf_unit       = "atf_unit";
 const char *dmmeta_Ns_ns_atfdb          = "atfdb";
 const char *dmmeta_Ns_ns_bash2html      = "bash2html";
-const char *dmmeta_Ns_ns_command        = "command";
-const char *dmmeta_Ns_ns_dev            = "dev";
-const char *dmmeta_Ns_ns_dmmeta         = "dmmeta";
-const char *dmmeta_Ns_ns_fm             = "fm";
-const char *dmmeta_Ns_ns_fmdb           = "fmdb";
-const char *dmmeta_Ns_ns_gcache         = "gcache";
-const char *dmmeta_Ns_ns_gcli           = "gcli";
-const char *dmmeta_Ns_ns_gclidb         = "gclidb";
 
+const char *dmmeta_Ns_ns_command   = "command";
+const char *dmmeta_Ns_ns_dev       = "dev";
+const char *dmmeta_Ns_ns_dmmeta    = "dmmeta";
+const char *dmmeta_Ns_ns_fm        = "fm";
+
+const char *dmmeta_Ns_ns_fmdb     = "fmdb";
+const char *dmmeta_Ns_ns_gcache   = "gcache";
+
+const char *dmmeta_Ns_ns_gcli         = "gcli";
+const char *dmmeta_Ns_ns_gclidb       = "gclidb";
 const char *dmmeta_Ns_ns_ietf         = "ietf";
 const char *dmmeta_Ns_ns_lib_amcdb    = "lib_amcdb";
 const char *dmmeta_Ns_ns_lib_ams      = "lib_ams";
@@ -143,21 +146,18 @@ const char *dmmeta_Ns_ns_sandbox      = "sandbox";
 const char *dmmeta_Ns_ns_src_func     = "src_func";
 const char *dmmeta_Ns_ns_src_hdr      = "src_hdr";
 const char *dmmeta_Ns_ns_src_lim      = "src_lim";
-
 const char *dmmeta_Ns_ns_ssim2csv     = "ssim2csv";
 const char *dmmeta_Ns_ns_ssim2mysql   = "ssim2mysql";
 const char *dmmeta_Ns_ns_ssimfilt     = "ssimfilt";
-
-const char *dmmeta_Ns_ns_strconv   = "strconv";
-const char *dmmeta_Ns_ns_sv2ssim   = "sv2ssim";
+const char *dmmeta_Ns_ns_strconv      = "strconv";
+const char *dmmeta_Ns_ns_sv2ssim      = "sv2ssim";
 
 // compile-time string constants for dmmeta.Nstype.nstype
-const char *dmmeta_Nstype_nstype_exe   = "exe";
-const char *dmmeta_Nstype_nstype_lib   = "lib";
+const char *dmmeta_Nstype_nstype_exe    = "exe";
+const char *dmmeta_Nstype_nstype_lib    = "lib";
+const char *dmmeta_Nstype_nstype_none   = "none";
 
-const char *dmmeta_Nstype_nstype_none      = "none";
-const char *dmmeta_Nstype_nstype_objlist   = "objlist";
-
+const char *dmmeta_Nstype_nstype_objlist    = "objlist";
 const char *dmmeta_Nstype_nstype_protocol   = "protocol";
 const char *dmmeta_Nstype_nstype_ssimdb     = "ssimdb";
 
@@ -166,14 +166,16 @@ const char *dmmeta_Printfmt_printfmt_Auto         = "Auto";
 const char *dmmeta_Printfmt_printfmt_Bitset       = "Bitset";
 const char *dmmeta_Printfmt_printfmt_CompactSep   = "CompactSep";
 const char *dmmeta_Printfmt_printfmt_Extern       = "Extern";
-const char *dmmeta_Printfmt_printfmt_Raw          = "Raw";
-const char *dmmeta_Printfmt_printfmt_Sep          = "Sep";
-const char *dmmeta_Printfmt_printfmt_Tuple        = "Tuple";
+
+const char *dmmeta_Printfmt_printfmt_Raw     = "Raw";
+const char *dmmeta_Printfmt_printfmt_Sep     = "Sep";
+const char *dmmeta_Printfmt_printfmt_Tuple   = "Tuple";
 
 // compile-time string constants for dmmeta.Reftype.reftype
-const char *dmmeta_Reftype_reftype_Alias      = "Alias";
-const char *dmmeta_Reftype_reftype_Atree      = "Atree";
-const char *dmmeta_Reftype_reftype_Base       = "Base";
+const char *dmmeta_Reftype_reftype_Alias   = "Alias";
+const char *dmmeta_Reftype_reftype_Atree   = "Atree";
+const char *dmmeta_Reftype_reftype_Base    = "Base";
+
 const char *dmmeta_Reftype_reftype_Bheap      = "Bheap";
 const char *dmmeta_Reftype_reftype_Bitfld     = "Bitfld";
 const char *dmmeta_Reftype_reftype_Blkpool    = "Blkpool";
@@ -184,6 +186,7 @@ const char *dmmeta_Reftype_reftype_Ctype      = "Ctype";
 const char *dmmeta_Reftype_reftype_Delptr     = "Delptr";
 const char *dmmeta_Reftype_reftype_Exec       = "Exec";
 const char *dmmeta_Reftype_reftype_Fbuf       = "Fbuf";
+
 const char *dmmeta_Reftype_reftype_Global     = "Global";
 const char *dmmeta_Reftype_reftype_Hook       = "Hook";
 const char *dmmeta_Reftype_reftype_Inlary     = "Inlary";
@@ -195,11 +198,9 @@ const char *dmmeta_Reftype_reftype_Opt        = "Opt";
 const char *dmmeta_Reftype_reftype_Pkey       = "Pkey";
 const char *dmmeta_Reftype_reftype_Ptr        = "Ptr";
 const char *dmmeta_Reftype_reftype_Ptrary     = "Ptrary";
-
-const char *dmmeta_Reftype_reftype_Regx      = "Regx";
-const char *dmmeta_Reftype_reftype_RegxSql   = "RegxSql";
-const char *dmmeta_Reftype_reftype_Sbrk      = "Sbrk";
-
+const char *dmmeta_Reftype_reftype_Regx       = "Regx";
+const char *dmmeta_Reftype_reftype_RegxSql    = "RegxSql";
+const char *dmmeta_Reftype_reftype_Sbrk       = "Sbrk";
 const char *dmmeta_Reftype_reftype_Smallstr   = "Smallstr";
 const char *dmmeta_Reftype_reftype_Tary       = "Tary";
 const char *dmmeta_Reftype_reftype_Thash      = "Thash";
@@ -219,19 +220,18 @@ const char *dmmeta_Ssimfile_ssimfile_amcdb_bltin      = "amcdb.bltin";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_curstype   = "amcdb.curstype";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_gen        = "amcdb.gen";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_regxtype   = "amcdb.regxtype";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_tclass     = "amcdb.tclass";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_tcurs      = "amcdb.tcurs";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_tfunc      = "amcdb.tfunc";
+const char *dmmeta_Ssimfile_ssimfile_amsdb_proctype   = "amsdb.proctype";
 
-const char *dmmeta_Ssimfile_ssimfile_amcdb_tclass       = "amcdb.tclass";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_tcurs        = "amcdb.tcurs";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_tfunc        = "amcdb.tfunc";
-const char *dmmeta_Ssimfile_ssimfile_amsdb_proctype     = "amsdb.proctype";
 const char *dmmeta_Ssimfile_ssimfile_amsdb_streamtype   = "amsdb.streamtype";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_amctest      = "atfdb.amctest";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_cijob        = "atfdb.cijob";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_cipackage    = "atfdb.cipackage";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_citest       = "atfdb.citest";
 
-const char *dmmeta_Ssimfile_ssimfile_atfdb_cipackage   = "atfdb.cipackage";
-const char *dmmeta_Ssimfile_ssimfile_atfdb_citest      = "atfdb.citest";
-const char *dmmeta_Ssimfile_ssimfile_atfdb_comptest    = "atfdb.comptest";
-
+const char *dmmeta_Ssimfile_ssimfile_atfdb_comptest              = "atfdb.comptest";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_fuzzstrat             = "atfdb.fuzzstrat";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_msgdir                = "atfdb.msgdir";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_targs                 = "atfdb.targs";
@@ -242,74 +242,84 @@ const char *dmmeta_Ssimfile_ssimfile_atfdb_tfilt                 = "atfdb.tfilt"
 const char *dmmeta_Ssimfile_ssimfile_atfdb_tmsg                  = "atfdb.tmsg";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_unittest              = "atfdb.unittest";
 const char *dmmeta_Ssimfile_ssimfile_dev_arch                    = "dev.arch";
-const char *dmmeta_Ssimfile_ssimfile_dev_badline                 = "dev.badline";
-const char *dmmeta_Ssimfile_ssimfile_dev_builddir                = "dev.builddir";
-const char *dmmeta_Ssimfile_ssimfile_dev_cfg                     = "dev.cfg";
-const char *dmmeta_Ssimfile_ssimfile_dev_compiler                = "dev.compiler";
-const char *dmmeta_Ssimfile_ssimfile_dev_copyright               = "dev.copyright";
-const char *dmmeta_Ssimfile_ssimfile_dev_covfile                 = "dev.covfile";
-const char *dmmeta_Ssimfile_ssimfile_dev_covline                 = "dev.covline";
-const char *dmmeta_Ssimfile_ssimfile_dev_covtarget               = "dev.covtarget";
-const char *dmmeta_Ssimfile_ssimfile_dev_edaction                = "dev.edaction";
-const char *dmmeta_Ssimfile_ssimfile_dev_edacttype               = "dev.edacttype";
-const char *dmmeta_Ssimfile_ssimfile_dev_gitfile                 = "dev.gitfile";
-const char *dmmeta_Ssimfile_ssimfile_dev_gitinfo                 = "dev.gitinfo";
-const char *dmmeta_Ssimfile_ssimfile_dev_hilite                  = "dev.hilite";
-const char *dmmeta_Ssimfile_ssimfile_dev_htmlentity              = "dev.htmlentity";
-const char *dmmeta_Ssimfile_ssimfile_dev_include                 = "dev.include";
-const char *dmmeta_Ssimfile_ssimfile_dev_license                 = "dev.license";
-const char *dmmeta_Ssimfile_ssimfile_dev_linelim                 = "dev.linelim";
-const char *dmmeta_Ssimfile_ssimfile_dev_mdmark                  = "dev.mdmark";
-const char *dmmeta_Ssimfile_ssimfile_dev_mdsection               = "dev.mdsection";
-const char *dmmeta_Ssimfile_ssimfile_dev_msgfile                 = "dev.msgfile";
-const char *dmmeta_Ssimfile_ssimfile_dev_noindent                = "dev.noindent";
-const char *dmmeta_Ssimfile_ssimfile_dev_opt_type                = "dev.opt_type";
-const char *dmmeta_Ssimfile_ssimfile_dev_package                 = "dev.package";
-const char *dmmeta_Ssimfile_ssimfile_dev_pkgdep                  = "dev.pkgdep";
-const char *dmmeta_Ssimfile_ssimfile_dev_pkgkey                  = "dev.pkgkey";
-const char *dmmeta_Ssimfile_ssimfile_dev_readme                  = "dev.readme";
-const char *dmmeta_Ssimfile_ssimfile_dev_readmesort              = "dev.readmesort";
-const char *dmmeta_Ssimfile_ssimfile_dev_sandbox                 = "dev.sandbox";
 
-const char *dmmeta_Ssimfile_ssimfile_dev_sbpath            = "dev.sbpath";
-const char *dmmeta_Ssimfile_ssimfile_dev_scriptfile        = "dev.scriptfile";
-const char *dmmeta_Ssimfile_ssimfile_dev_srcfile           = "dev.srcfile";
-const char *dmmeta_Ssimfile_ssimfile_dev_syscmd            = "dev.syscmd";
-const char *dmmeta_Ssimfile_ssimfile_dev_syscmddep         = "dev.syscmddep";
-const char *dmmeta_Ssimfile_ssimfile_dev_syslib            = "dev.syslib";
-const char *dmmeta_Ssimfile_ssimfile_dev_targdep           = "dev.targdep";
-const char *dmmeta_Ssimfile_ssimfile_dev_target            = "dev.target";
-const char *dmmeta_Ssimfile_ssimfile_dev_targsrc           = "dev.targsrc";
-const char *dmmeta_Ssimfile_ssimfile_dev_targsyslib        = "dev.targsyslib";
-const char *dmmeta_Ssimfile_ssimfile_dev_tgtcov            = "dev.tgtcov";
-const char *dmmeta_Ssimfile_ssimfile_dev_timefmt           = "dev.timefmt";
-const char *dmmeta_Ssimfile_ssimfile_dev_tool_opt          = "dev.tool_opt";
-const char *dmmeta_Ssimfile_ssimfile_dev_uname             = "dev.uname";
-const char *dmmeta_Ssimfile_ssimfile_dev_unstablefld       = "dev.unstablefld";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_anonfld        = "dmmeta.anonfld";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_argvtype       = "dmmeta.argvtype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_basepool       = "dmmeta.basepool";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_bitfld         = "dmmeta.bitfld";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_cafter         = "dmmeta.cafter";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_cascdel        = "dmmeta.cascdel";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ccmp           = "dmmeta.ccmp";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_cdflt          = "dmmeta.cdflt";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_cextern        = "dmmeta.cextern";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_cfast          = "dmmeta.cfast";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_cfmt           = "dmmeta.cfmt";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_cget           = "dmmeta.cget";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_charset        = "dmmeta.charset";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_chash          = "dmmeta.chash";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_cppfunc        = "dmmeta.cppfunc";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_cppkeyword     = "dmmeta.cppkeyword";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_cpptype        = "dmmeta.cpptype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_csize          = "dmmeta.csize";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_cstr           = "dmmeta.cstr";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ctype          = "dmmeta.ctype";
+const char *dmmeta_Ssimfile_ssimfile_dev_badline     = "dev.badline";
+const char *dmmeta_Ssimfile_ssimfile_dev_builddir    = "dev.builddir";
+const char *dmmeta_Ssimfile_ssimfile_dev_cfg         = "dev.cfg";
+const char *dmmeta_Ssimfile_ssimfile_dev_compiler    = "dev.compiler";
+const char *dmmeta_Ssimfile_ssimfile_dev_copyright   = "dev.copyright";
+const char *dmmeta_Ssimfile_ssimfile_dev_covfile     = "dev.covfile";
+const char *dmmeta_Ssimfile_ssimfile_dev_covline     = "dev.covline";
+const char *dmmeta_Ssimfile_ssimfile_dev_covtarget   = "dev.covtarget";
+const char *dmmeta_Ssimfile_ssimfile_dev_edaction    = "dev.edaction";
+
+const char *dmmeta_Ssimfile_ssimfile_dev_edacttype    = "dev.edacttype";
+const char *dmmeta_Ssimfile_ssimfile_dev_gitfile      = "dev.gitfile";
+const char *dmmeta_Ssimfile_ssimfile_dev_gitinfo      = "dev.gitinfo";
+const char *dmmeta_Ssimfile_ssimfile_dev_hilite       = "dev.hilite";
+const char *dmmeta_Ssimfile_ssimfile_dev_htmlentity   = "dev.htmlentity";
+const char *dmmeta_Ssimfile_ssimfile_dev_include      = "dev.include";
+const char *dmmeta_Ssimfile_ssimfile_dev_license      = "dev.license";
+const char *dmmeta_Ssimfile_ssimfile_dev_linelim      = "dev.linelim";
+const char *dmmeta_Ssimfile_ssimfile_dev_mdmark       = "dev.mdmark";
+
+const char *dmmeta_Ssimfile_ssimfile_dev_mdsection   = "dev.mdsection";
+const char *dmmeta_Ssimfile_ssimfile_dev_msgfile     = "dev.msgfile";
+const char *dmmeta_Ssimfile_ssimfile_dev_noindent    = "dev.noindent";
+
+const char *dmmeta_Ssimfile_ssimfile_dev_opt_type     = "dev.opt_type";
+const char *dmmeta_Ssimfile_ssimfile_dev_package      = "dev.package";
+const char *dmmeta_Ssimfile_ssimfile_dev_pkgdep       = "dev.pkgdep";
+const char *dmmeta_Ssimfile_ssimfile_dev_pkgkey       = "dev.pkgkey";
+const char *dmmeta_Ssimfile_ssimfile_dev_readme       = "dev.readme";
+const char *dmmeta_Ssimfile_ssimfile_dev_readmesort   = "dev.readmesort";
+const char *dmmeta_Ssimfile_ssimfile_dev_sandbox      = "dev.sandbox";
+const char *dmmeta_Ssimfile_ssimfile_dev_sbpath       = "dev.sbpath";
+
+const char *dmmeta_Ssimfile_ssimfile_dev_scriptfile   = "dev.scriptfile";
+const char *dmmeta_Ssimfile_ssimfile_dev_srcfile      = "dev.srcfile";
+const char *dmmeta_Ssimfile_ssimfile_dev_syscmd       = "dev.syscmd";
+const char *dmmeta_Ssimfile_ssimfile_dev_syscmddep    = "dev.syscmddep";
+const char *dmmeta_Ssimfile_ssimfile_dev_syslib       = "dev.syslib";
+
+const char *dmmeta_Ssimfile_ssimfile_dev_targdep      = "dev.targdep";
+const char *dmmeta_Ssimfile_ssimfile_dev_target       = "dev.target";
+const char *dmmeta_Ssimfile_ssimfile_dev_targsrc      = "dev.targsrc";
+const char *dmmeta_Ssimfile_ssimfile_dev_targsyslib   = "dev.targsyslib";
+
+const char *dmmeta_Ssimfile_ssimfile_dev_tgtcov   = "dev.tgtcov";
+
+const char *dmmeta_Ssimfile_ssimfile_dev_timefmt       = "dev.timefmt";
+const char *dmmeta_Ssimfile_ssimfile_dev_tool_opt      = "dev.tool_opt";
+const char *dmmeta_Ssimfile_ssimfile_dev_uname         = "dev.uname";
+const char *dmmeta_Ssimfile_ssimfile_dev_unstablefld   = "dev.unstablefld";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_anonfld    = "dmmeta.anonfld";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_argvtype   = "dmmeta.argvtype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_basepool   = "dmmeta.basepool";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_bitfld     = "dmmeta.bitfld";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_cafter     = "dmmeta.cafter";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_cascdel    = "dmmeta.cascdel";
+
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ccmp      = "dmmeta.ccmp";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_cdflt     = "dmmeta.cdflt";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_cextern   = "dmmeta.cextern";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_cfast     = "dmmeta.cfast";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_cfmt      = "dmmeta.cfmt";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_cget      = "dmmeta.cget";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_charset   = "dmmeta.charset";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_chash     = "dmmeta.chash";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_cppfunc   = "dmmeta.cppfunc";
+
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_cppkeyword   = "dmmeta.cppkeyword";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_cpptype      = "dmmeta.cpptype";
+
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_csize   = "dmmeta.csize";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_cstr    = "dmmeta.cstr";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ctype   = "dmmeta.ctype";
+
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_ctypelen       = "dmmeta.ctypelen";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_dispatch       = "dmmeta.dispatch";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_dispatch_msg   = "dmmeta.dispatch_msg";
-
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_dispctx        = "dmmeta.dispctx";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_dispfilter     = "dmmeta.dispfilter";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_dispsig        = "dmmeta.dispsig";
@@ -317,21 +327,19 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_dispsigcheck   = "dmmeta.dispsigchec
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_disptrace      = "dmmeta.disptrace";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_falias         = "dmmeta.falias";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fastenc        = "dmmeta.fastenc";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fastinstr      = "dmmeta.fastinstr";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fastop         = "dmmeta.fastop";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbase          = "dmmeta.fbase";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbigend        = "dmmeta.fbigend";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbitset        = "dmmeta.fbitset";
 
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fastinstr   = "dmmeta.fastinstr";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fastop      = "dmmeta.fastop";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbase       = "dmmeta.fbase";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbigend     = "dmmeta.fbigend";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbitset     = "dmmeta.fbitset";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbuf        = "dmmeta.fbuf";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbufdir     = "dmmeta.fbufdir";
-
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbuf       = "dmmeta.fbuf";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbufdir    = "dmmeta.fbufdir";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbuftype   = "dmmeta.fbuftype";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcast      = "dmmeta.fcast";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcleanup   = "dmmeta.fcleanup";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcmap      = "dmmeta.fcmap";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcmdline   = "dmmeta.fcmdline";
-
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcmp       = "dmmeta.fcmp";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcompact   = "dmmeta.fcompact";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fconst     = "dmmeta.fconst";
@@ -339,10 +347,10 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcurs      = "dmmeta.fcurs";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fdec       = "dmmeta.fdec";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fdelay     = "dmmeta.fdelay";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_ffast      = "dmmeta.ffast";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fflag      = "dmmeta.fflag";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_field      = "dmmeta.field";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_findrem    = "dmmeta.findrem";
 
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fflag         = "dmmeta.fflag";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_field         = "dmmeta.field";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_findrem       = "dmmeta.findrem";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_finput        = "dmmeta.finput";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fldoffset     = "dmmeta.fldoffset";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_floadtuples   = "dmmeta.floadtuples";
@@ -351,38 +359,40 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_foutput       = "dmmeta.foutput";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fprefix       = "dmmeta.fprefix";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fregx         = "dmmeta.fregx";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fsort         = "dmmeta.fsort";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fstep         = "dmmeta.fstep";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ftrace        = "dmmeta.ftrace";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ftuple        = "dmmeta.ftuple";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_func          = "dmmeta.func";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_funique       = "dmmeta.funique";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fuserinit     = "dmmeta.fuserinit";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fwddecl       = "dmmeta.fwddecl";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_gconst        = "dmmeta.gconst";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_gstatic       = "dmmeta.gstatic";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_gsymbol       = "dmmeta.gsymbol";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_hashtype      = "dmmeta.hashtype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_hook          = "dmmeta.hook";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_inlary        = "dmmeta.inlary";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_lenfld        = "dmmeta.lenfld";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_listtype      = "dmmeta.listtype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_llist         = "dmmeta.llist";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_logcat        = "dmmeta.logcat";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_main          = "dmmeta.main";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_msgtype       = "dmmeta.msgtype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nocascdel     = "dmmeta.nocascdel";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nossimfile    = "dmmeta.nossimfile";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_noxref        = "dmmeta.noxref";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ns            = "dmmeta.ns";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nscpp         = "dmmeta.nscpp";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsdb          = "dmmeta.nsdb";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsfast        = "dmmeta.nsfast";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsinclude     = "dmmeta.nsinclude";
 
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsproto   = "dmmeta.nsproto";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fstep       = "dmmeta.fstep";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ftrace      = "dmmeta.ftrace";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ftuple      = "dmmeta.ftuple";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_func        = "dmmeta.func";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_funique     = "dmmeta.funique";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fuserinit   = "dmmeta.fuserinit";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fwddecl     = "dmmeta.fwddecl";
 
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nstype   = "dmmeta.nstype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_gconst    = "dmmeta.gconst";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_gstatic   = "dmmeta.gstatic";
 
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_gsymbol     = "dmmeta.gsymbol";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_hashtype    = "dmmeta.hashtype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_hook        = "dmmeta.hook";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_inlary      = "dmmeta.inlary";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_lenfld      = "dmmeta.lenfld";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_listtype    = "dmmeta.listtype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_llist       = "dmmeta.llist";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_logcat      = "dmmeta.logcat";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_main        = "dmmeta.main";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_msgtype     = "dmmeta.msgtype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nocascdel   = "dmmeta.nocascdel";
+
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nossimfile   = "dmmeta.nossimfile";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_noxref       = "dmmeta.noxref";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ns           = "dmmeta.ns";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nscpp        = "dmmeta.nscpp";
+
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsdb              = "dmmeta.nsdb";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsfast            = "dmmeta.nsfast";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsinclude         = "dmmeta.nsinclude";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsproto           = "dmmeta.nsproto";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nstype            = "dmmeta.nstype";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsversion         = "dmmeta.nsversion";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsx               = "dmmeta.nsx";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_numstr            = "dmmeta.numstr";
@@ -391,49 +401,47 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_pmaskfld          = "dmmeta.pmaskfld
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_pmaskfld_member   = "dmmeta.pmaskfld_member";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_pnew              = "dmmeta.pnew";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_pnewtype          = "dmmeta.pnewtype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_printfmt          = "dmmeta.printfmt";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ptrary            = "dmmeta.ptrary";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_reftype           = "dmmeta.reftype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_rowid             = "dmmeta.rowid";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_smallstr          = "dmmeta.smallstr";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_sortfld           = "dmmeta.sortfld";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_sorttype          = "dmmeta.sorttype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_sqltype           = "dmmeta.sqltype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ssimfile          = "dmmeta.ssimfile";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ssimreq           = "dmmeta.ssimreq";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ssimsort          = "dmmeta.ssimsort";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ssimvolatile      = "dmmeta.ssimvolatile";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_steptype          = "dmmeta.steptype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_strfmt            = "dmmeta.strfmt";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_strtype           = "dmmeta.strtype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_substr            = "dmmeta.substr";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_svtype            = "dmmeta.svtype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_tary              = "dmmeta.tary";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_thash             = "dmmeta.thash";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_tracefld          = "dmmeta.tracefld";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_tracerec          = "dmmeta.tracerec";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_typefld           = "dmmeta.typefld";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_usertracefld      = "dmmeta.usertracefld";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_xref              = "dmmeta.xref";
+const char *dmmeta_Ssimfile_ssimfile_fmdb_alarm               = "fmdb.alarm";
+const char *dmmeta_Ssimfile_ssimfile_fmdb_alm_code            = "fmdb.alm_code";
+const char *dmmeta_Ssimfile_ssimfile_fmdb_alm_objtype         = "fmdb.alm_objtype";
+const char *dmmeta_Ssimfile_ssimfile_fmdb_alm_source          = "fmdb.alm_source";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_gact              = "gclidb.gact";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_gatv              = "gclidb.gatv";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_gclicmd           = "gclidb.gclicmd";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_gclicmdf2j        = "gclidb.gclicmdf2j";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_gclicmdt          = "gclidb.gclicmdt";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_gclienv           = "gclidb.gclienv";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_gclienvsub        = "gclidb.gclienvsub";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_gclisub           = "gclidb.gclisub";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_gfld              = "gclidb.gfld";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_githost           = "gclidb.githost";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_gmethod           = "gclidb.gmethod";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_grepo             = "gclidb.grepo";
 
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_printfmt       = "dmmeta.printfmt";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ptrary         = "dmmeta.ptrary";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_reftype        = "dmmeta.reftype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_rowid          = "dmmeta.rowid";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_smallstr       = "dmmeta.smallstr";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_sortfld        = "dmmeta.sortfld";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_sorttype       = "dmmeta.sorttype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_sqltype        = "dmmeta.sqltype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ssimfile       = "dmmeta.ssimfile";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ssimreq        = "dmmeta.ssimreq";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ssimsort       = "dmmeta.ssimsort";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ssimvolatile   = "dmmeta.ssimvolatile";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_steptype       = "dmmeta.steptype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_strfmt         = "dmmeta.strfmt";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_strtype        = "dmmeta.strtype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_substr         = "dmmeta.substr";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_svtype         = "dmmeta.svtype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_tary           = "dmmeta.tary";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_thash          = "dmmeta.thash";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_tracefld       = "dmmeta.tracefld";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_tracerec       = "dmmeta.tracerec";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_typefld        = "dmmeta.typefld";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_usertracefld   = "dmmeta.usertracefld";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_xref           = "dmmeta.xref";
-const char *dmmeta_Ssimfile_ssimfile_fmdb_alarm            = "fmdb.alarm";
-const char *dmmeta_Ssimfile_ssimfile_fmdb_alm_code         = "fmdb.alm_code";
-
-const char *dmmeta_Ssimfile_ssimfile_fmdb_alm_objtype    = "fmdb.alm_objtype";
-const char *dmmeta_Ssimfile_ssimfile_fmdb_alm_source     = "fmdb.alm_source";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_gact         = "gclidb.gact";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_gatv         = "gclidb.gatv";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_gclicmd      = "gclidb.gclicmd";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_gclicmdf2j   = "gclidb.gclicmdf2j";
-
-const char *dmmeta_Ssimfile_ssimfile_gclidb_gclicmdt        = "gclidb.gclicmdt";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_gclienv         = "gclidb.gclienv";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_gclienvsub      = "gclidb.gclienvsub";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_gclisub         = "gclidb.gclisub";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_gfld            = "gclidb.gfld";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_githost         = "gclidb.githost";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_gmethod         = "gclidb.gmethod";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_grepo           = "gclidb.grepo";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_grepogitport    = "gclidb.grepogitport";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_grepossh        = "gclidb.grepossh";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_gstate          = "gclidb.gstate";
@@ -446,21 +454,23 @@ const char *dmmeta_Ssimfile_ssimfile_gclidb_gtblacttstout   = "gclidb.gtblacttst
 const char *dmmeta_Ssimfile_ssimfile_gclidb_gtype           = "gclidb.gtype";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_gtypeh          = "gclidb.gtypeh";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_gtypeprefix     = "gclidb.gtypeprefix";
+
 const char *dmmeta_Ssimfile_ssimfile_gclidb_issue           = "gclidb.issue";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_issuenote       = "gclidb.issuenote";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_issuepipeline   = "gclidb.issuepipeline";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_label           = "gclidb.label";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_milestone       = "gclidb.milestone";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_mr              = "gclidb.mr";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_mrjob           = "gclidb.mrjob";
 
+const char *dmmeta_Ssimfile_ssimfile_gclidb_mr        = "gclidb.mr";
+const char *dmmeta_Ssimfile_ssimfile_gclidb_mrjob     = "gclidb.mrjob";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_mrnote    = "gclidb.mrnote";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_project   = "gclidb.project";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_user      = "gclidb.user";
 
 // compile-time string constants for dmmeta.Steptype.steptype
-const char *dmmeta_Steptype_steptype_Callback        = "Callback";
-const char *dmmeta_Steptype_steptype_Extern          = "Extern";
+const char *dmmeta_Steptype_steptype_Callback   = "Callback";
+const char *dmmeta_Steptype_steptype_Extern     = "Extern";
+
 const char *dmmeta_Steptype_steptype_Inline          = "Inline";
 const char *dmmeta_Steptype_steptype_InlineOnce      = "InlineOnce";
 const char *dmmeta_Steptype_steptype_InlineRecur     = "InlineRecur";
@@ -471,7 +481,8 @@ const char *dmmeta_Strfmt_strfmt_Argv      = "Argv";
 const char *dmmeta_Strfmt_strfmt_ArgvGnu   = "ArgvGnu";
 const char *dmmeta_Strfmt_strfmt_Json      = "Json";
 const char *dmmeta_Strfmt_strfmt_String    = "String";
-const char *dmmeta_Strfmt_strfmt_Tuple     = "Tuple";
+
+const char *dmmeta_Strfmt_strfmt_Tuple   = "Tuple";
 
 // compile-time string constants for dmmeta.Strtype.strtype
 const char *dmmeta_Strtype_strtype_rpascal    = "rpascal";

@@ -256,7 +256,13 @@ static uintptr_t GetIp(ucontext_t *uc) {
 #if defined(__FreeBSD__)
     ret = uc->uc_mcontext.mc_rip;
 #elif defined(__MACH__)
+#if defined(__x86_64__)
     ret = uc->uc_mcontext->__ss.__rip;
+#elif defined(__arm64__)
+    ret = uc->uc_mcontext->__ss.__pc;
+#else
+    ret = 0; // Unknown architecture
+#endif
 #elif defined(__CYGWIN__)
     ret = uc->uc_mcontext.rip;
 #elif defined(WIN32)
