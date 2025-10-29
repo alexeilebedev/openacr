@@ -251,11 +251,15 @@ inline u32 char_Hash(u32 prev, char  val) {
 }
 
 inline u32 float_Hash(u32 prev, float val) {
-    return _mm_crc32_u32(prev, *(u32*)&val);
+    u32 bits;
+    memcpy(&bits, &val, sizeof(bits));
+    return _mm_crc32_u32(prev, bits);
 }
 
 inline u32 double_Hash(u32 prev, double  val) {
-    return _mm_crc32_u64(prev, *(u64*)&val);
+    u64 bits;
+    memcpy(&bits, &val, sizeof(bits));
+    return _mm_crc32_u64(prev, bits);
 }
 
 inline u32 u128_Hash(u32 prev, u128 t) {
