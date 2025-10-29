@@ -29,7 +29,7 @@
 #include "include/gen/mysql2ssim_gen.h"
 #include "include/gen/mysql2ssim_gen.inl.h"
 #include "include/lib_mysql.h"
-#include <mariadb/mysqld_error.h> // for ER_BAD_DB_ERROR
+#include <mysqld_error.h> // for ER_BAD_DB_ERROR
 
 // -----------------------------------------------------------------------------
 
