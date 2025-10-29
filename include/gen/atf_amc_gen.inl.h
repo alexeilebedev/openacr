@@ -5766,7 +5766,9 @@ inline u32* atf_amc::lary_Find(atf_amc::Lary32& parent, u64 t) {
         u64 bsr   = algo::u64_BitScanReverse(x);
         u64 base  = u64(1)<<bsr;
         u64 index = x-base;
-        retval = &parent.lary_lary[bsr][index];
+        if (LIKELY(bsr < 32)) {
+            retval = &parent.lary_lary[bsr][index];
+        }
     }
     return retval;
 }
@@ -5790,6 +5792,8 @@ inline u32& atf_amc::lary_qFind(atf_amc::Lary32& parent, u64 t) {
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
+    // Clamp bsr to prevent array bounds violation
+    bsr = bsr < 32 ? bsr : 31;
     return parent.lary_lary[bsr][index];
 }
 
