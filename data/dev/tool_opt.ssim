@@ -42,6 +42,7 @@ dev.tool_opt  tool_opt:"%-clang++.%-arm64/%-CC:-I$(brew --prefix openssl)/includ
 dev.tool_opt  tool_opt:"%-clang++.%-arm64/%-CC:-I$(brew --prefix lz4)/include"  comment:"LZ4 headers for ARM64"
 dev.tool_opt  tool_opt:"%-clang++.%-arm64/%-LINK:-L/opt/homebrew/opt/mariadb/lib"  comment:"MariaDB libraries for ARM64"
 dev.tool_opt  tool_opt:"%-clang++.%-arm64/%-LINK:-L/opt/homebrew/lib"  comment:"ARM64 Homebrew libraries"
+dev.tool_opt  tool_opt:"%-clang++.%-arm64/%-LINK:-Wl,--no_warn_duplicate_libraries"  comment:"Suppress duplicate library warnings for ARM64"
 dev.tool_opt  tool_opt:%-clang++.coverage-%/%-CC:-D_COVERAGE  comment:""
 dev.tool_opt  tool_opt:%-clang++.debug-%/%-CC:-g  comment:""
 dev.tool_opt  tool_opt:"%-clang++.debug-%/%-CC:-D_DEBUG=1"  comment:""
