@@ -29,3 +29,5 @@ runs:
           lz4 \
           llvm \
           cppcheck
+        # Create mariadb symlink for header compatibility
+        sudo ln -sf /opt/homebrew/opt/mariadb/include/mysql /opt/homebrew/opt/mariadb/include/mariadb || true

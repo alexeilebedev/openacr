@@ -37,6 +37,7 @@ dev.tool_opt  tool_opt:%-clang++.%-arm64/%-AR:ar  comment:"Use standard ar on AR
 dev.tool_opt  tool_opt:%-clang++.%-arm64/%-RANLIB:ranlib  comment:"Use standard ranlib on ARM64"
 dev.tool_opt  tool_opt:"%-clang++.%-arm64/%-CC:-I/opt/homebrew/opt/mariadb/include"  comment:"MariaDB headers for ARM64"
 dev.tool_opt  tool_opt:"%-clang++.%-arm64/%-CC:-I/opt/homebrew/opt/mariadb/include/mysql"  comment:"MariaDB mysql subdirectory for ARM64"
+dev.tool_opt  tool_opt:"%-clang++.%-arm64/%-CC:-I/opt/homebrew/opt/mariadb/include/mysql/server"  comment:"MariaDB server headers for ARM64"
 dev.tool_opt  tool_opt:"%-clang++.%-arm64/%-CC:-I$(brew --prefix openssl)/include"  comment:"OpenSSL headers for ARM64"
 dev.tool_opt  tool_opt:"%-clang++.%-arm64/%-CC:-I$(brew --prefix lz4)/include"  comment:"LZ4 headers for ARM64"
 dev.tool_opt  tool_opt:"%-clang++.%-arm64/%-LINK:-L/opt/homebrew/opt/mariadb/lib"  comment:"MariaDB libraries for ARM64"
