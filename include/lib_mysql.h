@@ -27,7 +27,7 @@
 #include "include/algo.h"
 #include "include/gen/lib_mysql_gen.h"
 #include "include/gen/lib_mysql_gen.inl.h"
-#include <mariadb/mysql.h>
+#include <mysql.h>
 //typedef struct st_mysql MYSQL;
 //typedef struct st_mysql_res MYSQL_RES;
 
