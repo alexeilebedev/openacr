@@ -3501,9 +3501,7 @@ inline amc::FInlary* amc::inlary_Find(u64 t) {
         u64 bsr   = algo::u64_BitScanReverse(x);
         u64 base  = u64(1)<<bsr;
         u64 index = x-base;
-        if (LIKELY(bsr < 32)) {
-            retval = &_db.inlary_lary[bsr][index];
-        }
+        retval = &_db.inlary_lary[bsr][index];
     }
     return retval;
 }
@@ -3527,8 +3525,6 @@ inline amc::FInlary& amc::inlary_qFind(u64 t) {
     u64 bsr   = algo::u64_BitScanReverse(x);
     u64 base  = u64(1)<<bsr;
     u64 index = x-base;
-    // Clamp bsr to prevent array bounds violation
-    bsr = bsr < 32 ? bsr : 31;
     return _db.inlary_lary[bsr][index];
 }
 
