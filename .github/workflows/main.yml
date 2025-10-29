@@ -7,8 +7,13 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04]
-        compiler: [g++,clang++]
+        include:
+          - os: ubuntu-22.04
+            compiler: g++
+          - os: ubuntu-22.04
+            compiler: clang++
+          - os: macos-14
+            compiler: clang++
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
@@ -19,7 +24,11 @@ jobs:
         uses: ./.github/actions/setup-deps
       - name: Build
         run: |
-          bin/bootstrap/Linux-${{ matrix.compiler }}.release-x86_64
+          if [[ "${{ matrix.os }}" == "macos-"* ]]; then
+            bin/bootstrap/Darwin-${{ matrix.compiler }}.release-arm64
+          else
+            bin/bootstrap/Linux-${{ matrix.compiler }}.release-x86_64
+          fi
           bin/ai
       - name: Archive build
         run: tar -czf temp/build-artifact.tar.gz build
@@ -35,20 +44,35 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-22.04]
-        test:
-        - compiler: clang++
-          job: normalize
-        - compiler: clang++
-          job: comp
-        - compiler: g++
-          job: normalize
-        - compiler: g++
-          job: comp
-        - compiler: g++
-          job: cov
-        - compiler: g++
-          job: memcheck
+        include:
+          - os: ubuntu-22.04
+            test:
+              compiler: clang++
+              job: normalize
+          - os: ubuntu-22.04
+            test:
+              compiler: clang++
+              job: comp
+          - os: ubuntu-22.04
+            test:
+              compiler: g++
+              job: normalize
+          - os: ubuntu-22.04
+            test:
+              compiler: g++
+              job: comp
+          - os: ubuntu-22.04
+            test:
+              compiler: g++
+              job: cov
+          - os: ubuntu-22.04
+            test:
+              compiler: g++
+              job: memcheck
+          - os: macos-14
+            test:
+              compiler: clang++
+              job: comp
     steps:
       - uses: actions/checkout@v3
       - name: Add ./bin to PATH

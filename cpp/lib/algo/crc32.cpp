@@ -24,7 +24,7 @@
 
 #include "include/algo.h"
 
-#ifndef AOS_SSE42
+#if !defined(AOS_SSE42) && !defined(ALGO_INLINE_CRC32STEP)
 #define UPDC32(octet, crc) (crc_32_tab[((crc) ^ (octet)) & 0xff] ^ ((crc) >> 8))
 
 /* CRC polynomial 0xedb88320 */

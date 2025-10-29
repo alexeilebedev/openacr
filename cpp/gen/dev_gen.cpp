@@ -29,18 +29,24 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 // compile-time string constants for dev.Arch.arch
-const char *dev_Arch_arch_         = "";
-const char *dev_Arch_arch_amd64    = "amd64";
+const char *dev_Arch_arch_        = "";
+const char *dev_Arch_arch_amd64   = "amd64";
+
 const char *dev_Arch_arch_i686     = "i686";
 const char *dev_Arch_arch_i86pc    = "i86pc";
 const char *dev_Arch_arch_x64      = "x64";
 const char *dev_Arch_arch_x86_64   = "x86_64";
+const char *dev_Arch_arch_arm64    = "arm64";
 
 // compile-time string constants for dev.Builddir.builddir
 const char *dev_Builddir_builddir_Darwin_clangPP_coverage_x86_64   = "Darwin-clang++.coverage-x86_64";
 const char *dev_Builddir_builddir_Darwin_clangPP_debug_x86_64      = "Darwin-clang++.debug-x86_64";
 const char *dev_Builddir_builddir_Darwin_clangPP_profile_x86_64    = "Darwin-clang++.profile-x86_64";
 const char *dev_Builddir_builddir_Darwin_clangPP_release_x86_64    = "Darwin-clang++.release-x86_64";
+const char *dev_Builddir_builddir_Darwin_clangPP_coverage_arm64    = "Darwin-clang++.coverage-arm64";
+const char *dev_Builddir_builddir_Darwin_clangPP_debug_arm64       = "Darwin-clang++.debug-arm64";
+const char *dev_Builddir_builddir_Darwin_clangPP_profile_arm64     = "Darwin-clang++.profile-arm64";
+const char *dev_Builddir_builddir_Darwin_clangPP_release_arm64     = "Darwin-clang++.release-arm64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64   = "FreeBSD-clang++.coverage-amd64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64      = "FreeBSD-clang++.debug-amd64";
 const char *dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64    = "FreeBSD-clang++.profile-amd64";
@@ -55,12 +61,11 @@ const char *dev_Builddir_builddir_Linux_gPP_profile_x86_64         = "Linux-g++.
 const char *dev_Builddir_builddir_Linux_gPP_release_x86_64         = "Linux-g++.release-x86_64";
 
 // compile-time string constants for dev.Cfg.cfg
-const char *dev_Cfg_cfg_   = "";
-
+const char *dev_Cfg_cfg_           = "";
 const char *dev_Cfg_cfg_coverage   = "coverage";
 const char *dev_Cfg_cfg_debug      = "debug";
+const char *dev_Cfg_cfg_profile    = "profile";
 
-const char *dev_Cfg_cfg_profile   = "profile";
 const char *dev_Cfg_cfg_release   = "release";
 
 // compile-time string constants for dev.Compiler.compiler
@@ -85,8 +90,7 @@ const char *dev_Mdmark_state_BEG_AUTO   = "BEG_AUTO";
 const char *dev_Mdmark_state_END_AUTO   = "END_AUTO";
 
 // compile-time string constants for dev.Sandbox.sandbox
-const char *dev_Sandbox_sandbox_abt_md   = "abt_md";
-
+const char *dev_Sandbox_sandbox_abt_md       = "abt_md";
 const char *dev_Sandbox_sandbox_acr_ed       = "acr_ed";
 const char *dev_Sandbox_sandbox_amc          = "amc";
 const char *dev_Sandbox_sandbox_amc_gc       = "amc_gc";

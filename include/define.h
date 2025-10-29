@@ -209,6 +209,10 @@
 #define sfence() __faststorefence()
 #define lfence()
 #define mfence() sfence()
+#elif defined(__aarch64__)
+#define sfence() asm volatile("dsb st" ::: "memory")
+#define lfence() asm volatile("dmb ld" ::: "memory")
+#define mfence() asm volatile("dmb sy" ::: "memory")
 #else
 #define sfence() asm volatile("sfence" ::: "memory")
 #define lfence() asm volatile("lfence" ::: "memory")

@@ -88,10 +88,6 @@ tempstr abt::EvalSrcfileCmdline(abt::FBuilddir &builddir, abt::FTarget &target, 
 // -----------------------------------------------------------------------------
 
 static void ComputeLibdepObjlist(abt::FBuilddir &builddir, abt::FTarget &origtarget, abt::FTarget &target, cstring &objs, cstring &libs) {
-    // for lib dependencies, include the lib file as many time as needed
-    if (&origtarget != &target && target.p_ns->nstype == dmmeta_Nstype_nstype_lib) {
-        libs << " "<< GetOutfile(builddir,target);
-    }
     if (bool_Update(target.libdep_visited,true)) {
         ind_beg(abt::target_c_targdep_curs,targdep,target) {
             ComputeLibdepObjlist(builddir,origtarget,*targdep.p_parent,objs,libs);
@@ -103,10 +99,10 @@ static void ComputeLibdepObjlist(abt::FBuilddir &builddir, abt::FTarget &origtar
                 }
             }ind_end;
         }
-    }
-    // for lib dependencies, include the lib file as many time as needed
-    if (&origtarget != &target && target.p_ns->nstype == dmmeta_Nstype_nstype_lib) {
-        libs << " "<< GetOutfile(builddir,target);
+        // for lib dependencies, include the lib file as many time as needed
+        if (&origtarget != &target && target.p_ns->nstype == dmmeta_Nstype_nstype_lib) {
+            libs << " "<< GetOutfile(builddir,target);
+        }
     }
 }
 

@@ -32,10 +32,15 @@ extern const char *  dev_Arch_arch_i686;     // i686      fconst:dev.Arch.arch/i
 extern const char *  dev_Arch_arch_i86pc;    // i86pc     fconst:dev.Arch.arch/i86pc
 extern const char *  dev_Arch_arch_x64;      // x64       fconst:dev.Arch.arch/x64
 extern const char *  dev_Arch_arch_x86_64;   // x86_64    fconst:dev.Arch.arch/x86_64
+extern const char *  dev_Arch_arch_arm64;    // arm64     fconst:dev.Arch.arch/arm64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_coverage_x86_64;   // Darwin-clang++.coverage-x86_64    fconst:dev.Builddir.builddir/Darwin-clang++.coverage-x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_debug_x86_64;      // Darwin-clang++.debug-x86_64       fconst:dev.Builddir.builddir/Darwin-clang++.debug-x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_profile_x86_64;    // Darwin-clang++.profile-x86_64     fconst:dev.Builddir.builddir/Darwin-clang++.profile-x86_64
 extern const char *  dev_Builddir_builddir_Darwin_clangPP_release_x86_64;    // Darwin-clang++.release-x86_64     fconst:dev.Builddir.builddir/Darwin-clang++.release-x86_64
+extern const char *  dev_Builddir_builddir_Darwin_clangPP_coverage_arm64;    // Darwin-clang++.coverage-arm64     fconst:dev.Builddir.builddir/Darwin-clang++.coverage-arm64
+extern const char *  dev_Builddir_builddir_Darwin_clangPP_debug_arm64;       // Darwin-clang++.debug-arm64        fconst:dev.Builddir.builddir/Darwin-clang++.debug-arm64
+extern const char *  dev_Builddir_builddir_Darwin_clangPP_profile_arm64;     // Darwin-clang++.profile-arm64      fconst:dev.Builddir.builddir/Darwin-clang++.profile-arm64
+extern const char *  dev_Builddir_builddir_Darwin_clangPP_release_arm64;     // Darwin-clang++.release-arm64      fconst:dev.Builddir.builddir/Darwin-clang++.release-arm64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_coverage_amd64;   // FreeBSD-clang++.coverage-amd64    fconst:dev.Builddir.builddir/FreeBSD-clang++.coverage-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_debug_amd64;      // FreeBSD-clang++.debug-amd64       fconst:dev.Builddir.builddir/FreeBSD-clang++.debug-amd64
 extern const char *  dev_Builddir_builddir_FreeBSD_clangPP_profile_amd64;    // FreeBSD-clang++.profile-amd64     fconst:dev.Builddir.builddir/FreeBSD-clang++.profile-amd64

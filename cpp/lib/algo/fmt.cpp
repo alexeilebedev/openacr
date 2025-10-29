@@ -2207,3 +2207,34 @@ void algo::Uuid_Print(algo::Uuid &parent, algo::cstring &str) {
     algo::u64_PrintHex(parent.value_elems[14],str,2,false,false);
     algo::u64_PrintHex(parent.value_elems[15],str,2,false,false);
 }
+
+// -----------------------------------------------------------------------------
+
+// Read algo::Attr from string in format "name:value"
+bool algo::Attr_ReadStrptrMaybe(algo::Attr &parent, algo::strptr in_str) {
+    algo::tempstr name;
+    algo::tempstr value;
+    
+    // Find ':' separator
+    int colon_pos = -1;
+    for (int i = 0; i < elems_N(in_str); i++) {
+        if (in_str[i] == ':') {
+            colon_pos = i;
+            break;
+        }
+    }
+    
+    if (colon_pos >= 0) {
+        // Split at colon
+        name = algo::strptr(in_str.elems, colon_pos);
+        value = algo::strptr(in_str.elems + colon_pos + 1, elems_N(in_str) - colon_pos - 1);
+    } else {
+        // No colon, treat entire string as name
+        name = in_str;
+    }
+    
+    parent.name = name;
+    parent.value = value;
+    return true;
+}
+
