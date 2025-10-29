@@ -251,23 +251,17 @@ inline u32 char_Hash(u32 prev, char  val) {
 }
 
 inline u32 float_Hash(u32 prev, float val) {
-#ifdef __APPLE__
-    u32 bits;
-    memcpy(&bits, &val, sizeof(bits));
-    return _mm_crc32_u32(prev, bits);
-#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
     return _mm_crc32_u32(prev, *(u32*)&val);
-#endif
+#pragma GCC diagnostic pop
 }
 
 inline u32 double_Hash(u32 prev, double  val) {
-#ifdef __APPLE__
-    u64 bits;
-    memcpy(&bits, &val, sizeof(bits));
-    return _mm_crc32_u64(prev, bits);
-#else
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
     return _mm_crc32_u64(prev, *(u64*)&val);
-#endif
+#pragma GCC diagnostic pop
 }
 
 inline u32 u128_Hash(u32 prev, u128 t) {
