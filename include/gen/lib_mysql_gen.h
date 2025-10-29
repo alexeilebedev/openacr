@@ -23,7 +23,7 @@
 
 
 #pragma once
-#include <mariadb/mysql.h>
+#include <mysql.h>
 //#pragma endinclude
 // gen:ns_enums
 
