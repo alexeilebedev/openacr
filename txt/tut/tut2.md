@@ -241,7 +241,7 @@ At this point, the only thing that's missing is some description of the columns.
 <a href="#describing-the-columns"></a>
 We will need a new table, with one record for every column we have used so far.
 We will call it `dmmeta.field`, so now we need to add field's `ssimfile` and `ctype` lines to 
-the appropriate ssmifiles:
+the appropriate ssimfiles:
 
     $ cat >> data/dmmeta/ctype.ssim << EOF
     dmmeta.ctype  ctype:dmmeta.Field
