@@ -20,16 +20,15 @@ Usage: samp_regx [-expr:]<string> [[-string:]<string>] [options]
     OPTION      TYPE    DFLT    COMMENT
     -in         string  "data"  Input directory or filename, - for stdin
     [expr]      string          Expression
-    -style      int     acr     Regx style (acr|shell|classic|literal)
-                                    acr  ACR-style regx
-                                    shell  Shell-style regx
-                                    classic  Classic regx
-                                    literal  Literal string
-    -match                      Match a string
+    -style      enum    acr     Regx style (default|sql|acr|shell|literal)
+    -trace                      Trace regx innards
+    -capture                    Use capture groups
+    -full               Y       Match full string
+    -f                          <string> is a filename, grep the lines
+    -match                      Match a string, exit code represnts success
     [string]    string  ""      String to match
-    -show                       Show regx innards
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -51,14 +50,23 @@ Usage: samp_regx [-expr:]<string> [[-string:]<string>] [options]
 #### -style -- Regx style
 <a href="#-style"></a>
 
-#### -match -- Match a string
+#### -trace -- Trace regx innards
+<a href="#-trace"></a>
+
+#### -capture -- Use capture groups
+<a href="#-capture"></a>
+
+#### -full -- Match full string
+<a href="#-full"></a>
+
+#### -f -- <string> is a filename, grep the lines
+<a href="#-f"></a>
+
+#### -match -- Match a string, exit code represnts success
 <a href="#-match"></a>
 
 #### -string -- String to match
 <a href="#-string"></a>
-
-#### -show -- Show regx innards
-<a href="#-show"></a>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 

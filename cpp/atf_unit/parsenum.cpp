@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 //
 // License: GPL
@@ -45,11 +45,7 @@ static u64 test_atoi_be(const u8 *str, u32 len) {
 }
 
 // Template function to facilitate all test cases
-template <u32 N, typename argtype, typename rettype>
-static void TestStrNumConv(
-                           rettype (*func) (argtype arg, u32 &ok)
-                           ,rettype (*afunc)(argtype arg, u32 len, u32 &ok)
-                           ,rettype (*sfunc)(strptr  arg, u32 &ok)) {
+template <u32 N, typename argtype, typename rettype> static void TestStrNumConv(rettype (*func) (argtype arg, u32 &ok),rettype (*afunc)(argtype arg, u32 len, u32 &ok),rettype (*sfunc)(strptr  arg, u32 &ok)) {
     u8 buf[N];
 
     // nominal cases for one running digit on the background of all other digits are the same

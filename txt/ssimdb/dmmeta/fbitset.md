@@ -10,6 +10,7 @@ inline-command: acr -t field:atf_amc.Bitset.fld8 | egrep Bitset
     dmmeta.ctype  ctype:atf_amc.Bitset  comment:"Test bitset"
       dmmeta.field  field:atf_amc.Bitset.fld8  arg:u8  reftype:Val  dflt:""  comment:"Bitset field"
         dmmeta.fbitset  field:atf_amc.Bitset.fld8  comment:""
+        dmmeta.fcurs  fcurs:atf_amc.Bitset.fld8/bitcurs  comment:""
 ```
 
 The generated functions are as follows:

@@ -26,7 +26,7 @@ These ssimfiles are subsets of dev.gitfile
 * [dev.Linelim](/txt/ssimdb/dev/linelim.md) -  
 * [dev.Msgfile](/txt/ssimdb/dev/msgfile.md) - File in repo containing messages that should be normalized during CI 
 * [dev.Noindent](/txt/ssimdb/dev/noindent.md) - Indicates that a file should not be automatically indented 
-* [dev.Readme](/txt/ssimdb/dev/readme.md) - File containing documentation 
+* [dev.Readmefile](/txt/ssimdb/dev/readmefile.md) - File containing documentation 
 * [dev.Scriptfile](/txt/ssimdb/dev/scriptfile.md) - Known script file 
 * [dev.Srcfile](/txt/ssimdb/dev/srcfile.md) - Source file or header (key is pathname) 
 
@@ -39,7 +39,6 @@ These ssimfiles reference dev.gitfile
 
 * [dev.covline via src](/txt/ssimdb/dev/covline.md) - Source file 
 * [dev.targsrc via src](/txt/ssimdb/dev/targsrc.md) - List of sources for target 
-* [gclidb.grepossh via sshid](/txt/ssimdb/gclidb/grepossh.md) - ssh id key name for ssh config 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->
 
@@ -49,7 +48,7 @@ These ssimfiles reference dev.gitfile
 
 * [abt -srcfile](/txt/exe/abt/README.md) - Build/disassemble/preprocess specific file 
 * [atf_cov -exclude](/txt/exe/atf_cov/README.md) - Exclude gitfiles (external, generated) 
-* [src_func -nextfile](/txt/exe/src_func/README.md) - Print name of next srcfile in targsrc list 
+* [src_func -nextfile](/txt/exe/src_func/README.md) - (action) Print name of next srcfile in targsrc list 
 * [src_lim -srcfile](/txt/exe/src_lim/README.md) - Filter for source files to process 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:CmdlineUses -->

@@ -18,9 +18,9 @@
 Functions exported from this namespace:
 
 ```c++
-// Return current git ref, e.g. ac18e6cb142a86136b58561f2f1d63e3ff4b749e
-// Any error output is suppressed.
-tempstr lib_git::CurrentRef() 
+// Check that specified DIR is free of any git modifications.
+// If failed, throw exception with MSG.
+void lib_git::CheckGitCleanX(strptr dir, strptr msg) 
 ```
 
 ```c++
@@ -30,8 +30,35 @@ tempstr lib_git::CurrentBranch()
 ```
 
 ```c++
-// Return date + gitref string describing most recent commit, e.g. 2017-05-24.21f8ce8
-tempstr lib_git::ShortRef() 
+// Return current git ref, e.g. ac18e6cb142a86136b58561f2f1d63e3ff4b749e
+// Any error output is suppressed.
+tempstr lib_git::CurrentRef() 
+```
+
+```c++
+// Get year of latest commit of given file
+u32 lib_git::GetLastCommitYear(strptr file) 
+```
+
+```c++
+// Get configured user: name <email>
+tempstr lib_git::GetUser() 
+```
+
+```c++
+// Return TRUE if BRANCH is a valid git branch
+bool lib_git::GitBranchExistsQ(strptr branch) 
+```
+
+```c++
+// Check that specified DIR is free of any git modifications.
+// Return a string describing modified files, or an empty string if none
+tempstr lib_git::GitModifiedFiles(strptr dir) 
+```
+
+```c++
+// Return TRUE if REMOTE is a valid git remote
+bool lib_git::GitRemoteExistsQ(strptr remote) 
 ```
 
 ```c++
@@ -42,35 +69,8 @@ tempstr lib_git::LastCommitLog()
 ```
 
 ```c++
-// Check that specified DIR is free of any git modifications.
-// Return a string describing modified files, or an empty string if none
-tempstr lib_git::GitModifiedFiles(strptr dir) 
-```
-
-```c++
-// Check that specified DIR is free of any git modifications.
-// If failed, throw exception with MSG.
-void lib_git::CheckGitCleanX(strptr dir, strptr msg) 
-```
-
-```c++
-// Return TRUE if REMOTE is a valid git remote
-bool lib_git::GitRemoteExistsQ(strptr remote) 
-```
-
-```c++
-// Return TRUE if BRANCH is a valid git branch
-bool lib_git::GitBranchExistsQ(strptr branch) 
-```
-
-```c++
-// Get configured user: name <email>
-tempstr lib_git::GetUser() 
-```
-
-```c++
-// Get year of latest commit of given file
-u32 lib_git::GetLastCommitYear(strptr file) 
+// Return date + gitref string describing most recent commit, e.g. 2017-05-24.21f8ce8
+tempstr lib_git::ShortRef() 
 ```
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -28,6 +28,7 @@
 // Generate Dispatch_Print function
 void amc::Disp_Print(amc::FDispatch &disp) {
     algo_lib::Replscope R;
+    R.strict=2;
     Set(R, "$ns", ns_Get(disp));
     Set(R, "$Hdrtype", amc::NsToCpp(disp.p_ctype_hdr->ctype));
     Set(R, "$Dname", name_Get(disp));

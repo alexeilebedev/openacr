@@ -29,12 +29,15 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_mysql_gen.h"
 #include "include/gen/lib_mysql_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb     lib_json::_db;      // dependency found via dev.targdep
 algo_lib::FDb     algo_lib::_db;      // dependency found via dev.targdep
 lib_mysql::FDb    lib_mysql::_db;     // dependency found via dev.targdep
 mysql2ssim::FDb   mysql2ssim::_db;    // dependency found via dev.targdep
@@ -52,8 +55,8 @@ const char *mysql2ssim_help =
 "    -pretty                         Format output for the screen\n"
 "    -nologo                         Don't show copyright notice\n"
 "    -baddbok                        Don't claim if bad database\n"
-"    -verbose        int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug          int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose        flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug          flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                           Print help and exit; alias -h\n"
 "    -version                        Print version and exit\n"
 "    -signature                      Show signatures and exit; alias -sig\n"
@@ -171,9 +174,8 @@ void mysql2ssim::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "mysql2ssim: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -217,6 +219,9 @@ void mysql2ssim::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
         if (!url_present) {
             err << "mysql2ssim: Missing value for required argument -url (see -help)" << eol;
@@ -225,7 +230,7 @@ void mysql2ssim::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -292,8 +297,8 @@ bool mysql2ssim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (DirectoryQ(root)) {
         retval = retval && mysql2ssim::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -422,6 +427,25 @@ algo::aryptr<algo::cstring> mysql2ssim::table_names_AllocN(int n_elems) {
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- mysql2ssim.FDb.table_names.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> mysql2ssim::table_names_AllocNAt(int n_elems, int at) {
+    table_names_Reserve(n_elems);
+    int n  = _db.table_names_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("mysql2ssim.bad_alloc_n_at  field:mysql2ssim.FDb.table_names  comment:'index out of range'");
+    }
+    algo::cstring *elems = _db.table_names_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    _db.table_names_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
 // --- mysql2ssim.FDb.table_names.Remove
 // Remove item by index. If index outside of range, do nothing.
 void mysql2ssim::table_names_Remove(u32 i) {
@@ -498,6 +522,30 @@ bool mysql2ssim::table_names_ReadStrptrMaybe(algo::strptr in_str) {
     return retval;
 }
 
+// --- mysql2ssim.FDb.table_names.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void mysql2ssim::table_names_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.table_names_elems && rhs.elems < _db.table_names_elems + _db.table_names_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("mysql2ssim.tary_alias  field:mysql2ssim.FDb.table_names  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.table_names_elems+1))) {
+        FatalErrorExit("mysql2ssim.bad_insary  field:mysql2ssim.FDb.table_names  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.table_names_n - at;
+    table_names_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.table_names_elems + at + nnew + i) algo::cstring(_db.table_names_elems[at + i]);
+        _db.table_names_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.table_names_elems + at + i) algo::cstring(rhs[i]);
+    }
+    _db.table_names_n += nnew;
+}
+
 // --- mysql2ssim.FDb.in_tables.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -558,6 +606,25 @@ algo::aryptr<algo::cstring> mysql2ssim::in_tables_AllocN(int n_elems) {
     }
     _db.in_tables_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- mysql2ssim.FDb.in_tables.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> mysql2ssim::in_tables_AllocNAt(int n_elems, int at) {
+    in_tables_Reserve(n_elems);
+    int n  = _db.in_tables_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("mysql2ssim.bad_alloc_n_at  field:mysql2ssim.FDb.in_tables  comment:'index out of range'");
+    }
+    algo::cstring *elems = _db.in_tables_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    _db.in_tables_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- mysql2ssim.FDb.in_tables.Remove
@@ -634,6 +701,30 @@ bool mysql2ssim::in_tables_ReadStrptrMaybe(algo::strptr in_str) {
         in_tables_RemoveLast();
     }
     return retval;
+}
+
+// --- mysql2ssim.FDb.in_tables.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void mysql2ssim::in_tables_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.in_tables_elems && rhs.elems < _db.in_tables_elems + _db.in_tables_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("mysql2ssim.tary_alias  field:mysql2ssim.FDb.in_tables  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.in_tables_elems+1))) {
+        FatalErrorExit("mysql2ssim.bad_insary  field:mysql2ssim.FDb.in_tables  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.in_tables_n - at;
+    in_tables_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.in_tables_elems + at + nnew + i) algo::cstring(_db.in_tables_elems[at + i]);
+        _db.in_tables_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.in_tables_elems + at + i) algo::cstring(rhs[i]);
+    }
+    _db.in_tables_n += nnew;
 }
 
 // --- mysql2ssim.FDb.trace.RowidFind
@@ -740,6 +831,25 @@ algo::aryptr<algo::cstring> mysql2ssim::vals_AllocN(mysql2ssim::FTobltin& parent
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- mysql2ssim.FTobltin.vals.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> mysql2ssim::vals_AllocNAt(mysql2ssim::FTobltin& parent, int n_elems, int at) {
+    vals_Reserve(parent, n_elems);
+    int n  = parent.vals_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("mysql2ssim.bad_alloc_n_at  field:mysql2ssim.FTobltin.vals  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.vals_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.vals_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
 // --- mysql2ssim.FTobltin.vals.Remove
 // Remove item by index. If index outside of range, do nothing.
 void mysql2ssim::vals_Remove(mysql2ssim::FTobltin& parent, u32 i) {
@@ -834,6 +944,30 @@ bool mysql2ssim::vals_ReadStrptrMaybe(mysql2ssim::FTobltin& parent, algo::strptr
         vals_RemoveLast(parent);
     }
     return retval;
+}
+
+// --- mysql2ssim.FTobltin.vals.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void mysql2ssim::vals_Insary(mysql2ssim::FTobltin& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.vals_elems && rhs.elems < parent.vals_elems + parent.vals_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("mysql2ssim.tary_alias  field:mysql2ssim.FTobltin.vals  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.vals_elems+1))) {
+        FatalErrorExit("mysql2ssim.bad_insary  field:mysql2ssim.FTobltin.vals  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.vals_n - at;
+    vals_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.vals_elems + at + nnew + i) algo::cstring(parent.vals_elems[at + i]);
+        parent.vals_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.vals_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.vals_n += nnew;
 }
 
 // --- mysql2ssim.FTobltin..Uninit
@@ -954,12 +1088,14 @@ void mysql2ssim::StaticCheck() {
 // --- mysql2ssim...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_mysql::FDb_Init();
         mysql2ssim::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         mysql2ssim::ReadArgv(); // dmmeta.main:mysql2ssim
         mysql2ssim::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -973,6 +1109,7 @@ int main(int argc, char **argv) {
         mysql2ssim::FDb_Uninit();
         lib_mysql::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

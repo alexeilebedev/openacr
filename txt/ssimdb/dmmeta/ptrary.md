@@ -75,6 +75,7 @@ inline atf_amc::FCascdel& c_child_ptrary_qLast(atf_amc::FCascdel& cascdel) __att
 |---|---|---|---|---|
 |field|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
 |unique|bool|[Val](/txt/exe/amc/reftypes.md#val)||Search for and ignore duplicates|
+|heaplike|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 

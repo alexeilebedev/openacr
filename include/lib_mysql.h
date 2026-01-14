@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -58,6 +58,7 @@ namespace lib_mysql { // update-hdr
     // "Commands out of sync; you can't run this command now"
     // error
     void MQuery(MYSQL *conn, strptr query, lib_mysql::Res &res);
-    void mysql_Cleanup();
-    void res_Cleanup(lib_mysql::Res &res);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void mysql_Cleanup(); // fcleanup:lib_mysql.FDb.mysql
+    // void res_Cleanup(lib_mysql::Res &res); // fcleanup:lib_mysql.Res.res
 }

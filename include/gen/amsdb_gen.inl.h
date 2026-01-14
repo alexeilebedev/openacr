@@ -66,19 +66,26 @@ inline  amsdb::FieldId::FieldId(amsdb_FieldIdEnum arg) {
     this->value = i32(arg);
 }
 
-// --- amsdb.ProcType..Init
+// --- amsdb.Proctype..Init
 // Set all fields to initial values.
-inline void amsdb::ProcType_Init(amsdb::ProcType& parent) {
+inline void amsdb::Proctype_Init(amsdb::Proctype& parent) {
     parent.id = u32(0);
 }
 
-// --- amsdb.ProcType..Ctor
-inline  amsdb::ProcType::ProcType() {
-    amsdb::ProcType_Init(*this);
+// --- amsdb.Proctype..Ctor
+inline  amsdb::Proctype::Proctype() {
+    amsdb::Proctype_Init(*this);
 }
 
-// --- amsdb.StreamType..Ctor
-inline  amsdb::StreamType::StreamType() {
+// --- amsdb.Shmtype..Init
+// Set all fields to initial values.
+inline void amsdb::Shmtype_Init(amsdb::Shmtype& parent) {
+    parent.nonblock = bool(false);
+}
+
+// --- amsdb.Shmtype..Ctor
+inline  amsdb::Shmtype::Shmtype() {
+    amsdb::Shmtype_Init(*this);
 }
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::FieldId &row) {// cfmt:amsdb.FieldId.String
@@ -86,12 +93,12 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::FieldId
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::ProcType &row) {// cfmt:amsdb.ProcType.String
-    amsdb::ProcType_Print(const_cast<amsdb::ProcType&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::Proctype &row) {// cfmt:amsdb.Proctype.String
+    amsdb::Proctype_Print(const_cast<amsdb::Proctype&>(row), str);
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::StreamType &row) {// cfmt:amsdb.StreamType.String
-    amsdb::StreamType_Print(const_cast<amsdb::StreamType&>(row), str);
+inline algo::cstring &algo::operator <<(algo::cstring &str, const amsdb::Shmtype &row) {// cfmt:amsdb.Shmtype.String
+    amsdb::Shmtype_Print(const_cast<amsdb::Shmtype&>(row), str);
     return str;
 }

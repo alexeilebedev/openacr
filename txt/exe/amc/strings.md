@@ -75,8 +75,6 @@ inline-command: amc algo.LspaceStr5.ch% -proto -report:N
 // Access string as array of chars
 // func:algo.LspaceStr5.ch.Getary
 inline algo::aryptr<char> ch_Getary(const algo::LspaceStr5& parent) __attribute__((nothrow));
-// func:algo.LspaceStr5.ch.HashStrptr
-inline u32           LspaceStr5_Hash(u32 prev, const algo::strptr &str);
 // func:algo.LspaceStr5.ch.Init
 inline void          ch_Init(algo::LspaceStr5 &parent) __attribute__((nothrow));
 // always return constant 5
@@ -123,8 +121,6 @@ inline-command: amc algo.LspaceStr5_I16.ch% -proto -report:N
 // Access string as array of chars
 // func:algo.LspaceStr5_I16.ch.Getary
 inline algo::aryptr<char> ch_Getary(const algo::LspaceStr5_I16& parent) __attribute__((nothrow));
-// func:algo.LspaceStr5_I16.ch.HashStrptr
-inline u32           LspaceStr5_I16_Hash(u32 prev, const algo::strptr &str);
 // func:algo.LspaceStr5_I16.ch.Init
 inline void          ch_Init(algo::LspaceStr5_I16 &parent) __attribute__((nothrow));
 // always return constant 5

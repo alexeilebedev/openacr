@@ -41,7 +41,6 @@ in the package repo corresponding to the last synchronization point.
 &nbsp;&nbsp;&bull;&nbsp;  [Sandboxes](#sandboxes)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
 &#128196; [apm - Internals](/txt/exe/apm/internals.md)<br/>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
@@ -79,8 +78,8 @@ Usage: apm [[-package:]<regx>] [options]
     -data_in     string  "data"  Dataset from which package records are loaded
     -e                           Open selected records in editor
     -binpath     string  "bin"   (internal use)
-    -verbose     int             Verbosity level (0..255); alias -v; cumulative
-    -debug       int             Debug level (0..255); alias -d; cumulative
+    -verbose     flag            Verbosity level (0..255); alias -v; cumulative
+    -debug       flag            Debug level (0..255); alias -d; cumulative
     -help                        Print help and exit; alias -h
     -version                     Print version and exit
     -signature                   Show signatures and exit; alias -sig
@@ -415,47 +414,28 @@ simply use the `gitfile` table.
 `apm` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
+|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
+|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
+|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
+|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
+|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
+|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
+|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
+|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
+|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
+|[dev.package](/txt/ssimdb/dev/package.md)|OpenACR package|
+|[dev.pkgdep](/txt/ssimdb/dev/pkgdep.md)|OpenACR Package dependency|
+|[dev.pkgkey](/txt/ssimdb/dev/pkgkey.md)|Keys belonging to the OpenACR package|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
 |[dmmeta.ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|Extended constraints for ssim records|
-|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
-|[dev.package](/txt/ssimdb/dev/package.md)|OpenACR package|
-|[dev.pkgkey](/txt/ssimdb/dev/pkgkey.md)|Keys belonging to the OpenACR package|
-|[dev.pkgdep](/txt/ssimdb/dev/pkgdep.md)|OpenACR Package dependency|
-|[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/apm/annotate.cpp](/cpp/apm/annotate.cpp)||
-|[cpp/apm/check.cpp](/cpp/apm/check.cpp)||
-|[cpp/apm/diff.cpp](/cpp/apm/diff.cpp)||
-|[cpp/apm/install.cpp](/cpp/apm/install.cpp)||
-|[cpp/apm/main.cpp](/cpp/apm/main.cpp)||
-|[cpp/apm/push.cpp](/cpp/apm/push.cpp)||
-|[cpp/apm/rec.cpp](/cpp/apm/rec.cpp)||
-|[cpp/apm/remove.cpp](/cpp/apm/remove.cpp)||
-|[cpp/apm/reset.cpp](/cpp/apm/reset.cpp)||
-|[cpp/apm/show.cpp](/cpp/apm/show.cpp)||
-|[cpp/apm/update.cpp](/cpp/apm/update.cpp)||
-|[cpp/gen/apm_gen.cpp](/cpp/gen/apm_gen.cpp)||
-|[include/apm.h](/include/apm.h)||
-|[include/gen/apm_gen.h](/include/gen/apm_gen.h)||
-|[include/gen/apm_gen.inl.h](/include/gen/apm_gen.inl.h)||
 

@@ -45,7 +45,7 @@ These ssimfiles reference dev.target
 * [amc_gc -target](/txt/exe/amc_gc/README.md) - Target to test-build 
 * [atf_fuzz -target](/txt/exe/atf_fuzz/README.md) - Target to fuzz 
 * [mdbg -target](/txt/exe/mdbg/README.md) - Executable name 
-* [src_func -target](/txt/exe/src_func/README.md) - Visit these targets 
+* [src_func -func](/txt/exe/src_func/README.md) - Target.function regex 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:CmdlineUses -->
 

@@ -47,7 +47,7 @@ Other ctypes in this namespace which don't have own readme files
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
-|readme|[dev.Readme](/txt/ssimdb/dev/readme.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Regx of readme to process/show (empty=all)|
+|readmefile|[dev.Readmefile](/txt/ssimdb/dev/readmefile.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Regx of readme to process/show (empty=all)|
 |ns|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|""|(overrides -readme) Process readmes for this namespace|
 |section|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Select specific section to process|
 |update|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|(action) Update mode: Re-generate mdfiles|
@@ -178,6 +178,7 @@ Other ctypes in this namespace which don't have own readme files
 |showcpp|bool|[Val](/txt/exe/amc/reftypes.md#val)||(With -sandbox), show resulting diff|
 |msgtype|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|(with -ctype) use this msgtype as type|
 |anonfld|bool|[Val](/txt/exe/amc/reftypes.md#val)||Create anonfld|
+|amc|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Run amc if needed|
 
 #### command.acr_in - Command line for [acr_in](/txt/exe/acr_in/README.md)
 <a href="#command-acr_in"></a>
@@ -222,6 +223,7 @@ Other ctypes in this namespace which don't have own readme files
 |query|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Query mode: generate code for specified object|
 |out_dir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"."|Root of output cpp dir|
 |proto|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Print prototype|
+|showcomment|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Show generated comments|
 |report|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Final report|
 |e|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Open matching records in editor|
 |trace|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|""|Regx of something to trace code generation|
@@ -245,17 +247,10 @@ Other ctypes in this namespace which don't have own readme files
 |in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
 |dot|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Save dot file with specified filename|
 |xref|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Include all ctypes referenced by selected ones|
-|xns|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Cross namespace boundaries|
+|xns|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Cross namespace boundaries|
 |noinput|bool|[Val](/txt/exe/amc/reftypes.md#val)||Deselect module inputs|
 |check|bool|[Val](/txt/exe/amc/reftypes.md#val)||Check model for dependency problems|
 |render|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Produce an ascii drawing|
-
-#### command.ams_cat - Command line for [ams_cat](/txt/exe/ams_cat/README.md)
-<a href="#command-ams_cat"></a>
-
-|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
 
 #### command.ams_sendtest - Command line for [ams_sendtest](/txt/exe/ams_sendtest/README.md)
 <a href="#command-ams_sendtest"></a>
@@ -317,6 +312,7 @@ Other ctypes in this namespace which don't have own readme files
 |in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
 |schema|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Schema dir|
 |cmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Sql Query to run|
+|ns|[dmmeta.Ns](/txt/ssimdb/dmmeta/ns.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"dmmeta"|Regx of databases to attach|
 
 #### command.atf_amc - Command line for [atf_amc](/txt/exe/atf_amc/README.md)
 <a href="#command-atf_amc"></a>
@@ -338,6 +334,7 @@ Other ctypes in this namespace which don't have own readme files
 |maxerr|i32|[Val](/txt/exe/amc/reftypes.md#val)|0|Exit after this many errors|
 |cijob|[atfdb.Cijob](/txt/ssimdb/atfdb/cijob.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"||
 |capture|bool|[Val](/txt/exe/amc/reftypes.md#val)||Capture the output of the test|
+|check_clean|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Check for modifications after each test|
 
 #### command.atf_cmdline - Command line for [atf_cmdline](/txt/exe/atf_cmdline/README.md)
 <a href="#command-atf_cmdline"></a>
@@ -363,7 +360,7 @@ Other ctypes in this namespace which don't have own readme files
 |mdbl|double|[Tary](/txt/exe/amc/reftypes.md#tary)||Double array|
 |amnum|i32|[Tary](/txt/exe/amc/reftypes.md#tary)||Anon number array|
 |fconst|u8|[Val](/txt/exe/amc/reftypes.md#val)||Fconst for field|
-|cconst|[algo.Month](/txt/protocol/algo/Month.md)|[Val](/txt/exe/amc/reftypes.md#val)|0|Fconst for arg ctype|
+|cconst|[algo.Month](/txt/protocol/algo/Month.md)|[Val](/txt/exe/amc/reftypes.md#val)||Fconst for arg ctype|
 |dregx|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Predefined regx|
 |dpkey|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|""|Predefined pkey|
 
@@ -383,12 +380,11 @@ Other ctypes in this namespace which don't have own readme files
 |normalize|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Renumber and normalize tmsgs|
 |covcapture|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Capture new coverage percentages and save back|
 |covcheck|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Check coverage percentages against tgtcov table|
-|compdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Component image directory (exe)|
+|bindir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Directory with binaries (default: build/cfg)|
 |cfg|[dev.Cfg](/txt/ssimdb/dev/cfg.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|"release"|Set config|
 |check_untracked|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Check for untracked file before allowing test to run|
-|maxerr|i32|[Val](/txt/exe/amc/reftypes.md#val)|1|Exit after this many errors|
+|maxerr|i32|[Val](/txt/exe/amc/reftypes.md#val)|3|Exit after this many errors|
 |build|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Build given cfg before test|
-|ood|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Check given cfg for ood before test|
 |memcheck|bool|[Val](/txt/exe/amc/reftypes.md#val)||Run under memory checker (valgrind)|
 |force|bool|[Val](/txt/exe/amc/reftypes.md#val)||(With -memcheck) run suppressed memcheck|
 |callgrind|bool|[Val](/txt/exe/amc/reftypes.md#val)||Run under callgrind profiler (valgrind)|
@@ -396,8 +392,11 @@ Other ctypes in this namespace which don't have own readme files
 |stream|bool|[Val](/txt/exe/amc/reftypes.md#val)||prints component's output|
 |i|bool|[Val](/txt/exe/amc/reftypes.md#val)||Read and execute testcase from stdin|
 |write|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|(implied with -e) Write any changes back to ssim tables|
-|report|bool|[Val](/txt/exe/amc/reftypes.md#val)||Print final report|
+|report|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Print final report|
 |b|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Breakpoint passed to mdbg as-is|
+|covfast|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Speedup coverage processing|
+|minrepeat|i32|[Val](/txt/exe/amc/reftypes.md#val)|0|Execute every comptest at least this many times|
+|maxrepeat|i32|[Val](/txt/exe/amc/reftypes.md#val)|1|Don't repeat any individual comptest more than X times|
 
 #### command.atf_cov - Command line for [atf_cov](/txt/exe/atf_cov/README.md)
 <a href="#command-atf_cov"></a>
@@ -417,6 +416,20 @@ Other ctypes in this namespace which don't have own readme files
 |xmlpretty|bool|[Val](/txt/exe/amc/reftypes.md#val)||Generate pretty-formatted XML|
 |summary|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Show summary figures|
 |check|bool|[Val](/txt/exe/amc/reftypes.md#val)||Check coverage information against tgtcov table|
+|incremental|bool|[Val](/txt/exe/amc/reftypes.md#val)||Keep *.gcda files from previous run|
+
+#### command.atf_exp - Command line for [atf_exp](/txt/exe/atf_exp/README.md)
+<a href="#command-atf_exp"></a>
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
+|trace|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Regx of things to trace|
+|bindir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"bin"|Directory with binaries|
+|comptest|[atfdb.Comptest](/txt/ssimdb/atfdb/comptest.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|""|Component test name|
+|tempdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Temporary directory for the component test|
+|timeout|double|[Val](/txt/exe/amc/reftypes.md#val)|8.0|Timeout in seconds for a step|
+|dbgshell|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Invoke bash with curr envs in case of timeout|
 
 #### command.atf_fuzz - Command line for [atf_fuzz](/txt/exe/atf_fuzz/README.md)
 <a href="#command-atf_fuzz"></a>
@@ -521,7 +534,7 @@ Other ctypes in this namespace which don't have own readme files
 |in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
 |selector|[gclidb.Gtbl](/txt/ssimdb/gclidb/gtbl.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|"issue:%"|table:key, where table is issue,repo,mr, etc. and key is a regex.|
 |fields|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftypes.md#tary)|""|additional key:value pairs for use with -create, -list, -update|
-|accept|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(action) accept a slected merge request|
+|accept|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(action) accept a selected merge request|
 |start|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(action) start working on a selected issue|
 |list|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(action) show selected table|
 |create|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(action) create a table record(s)|
@@ -536,6 +549,29 @@ Other ctypes in this namespace which don't have own readme files
 |gitdir|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|(setup) Change directory of git repository|
 |show_gitlab_system_notes|bool|[Val](/txt/exe/amc/reftypes.md#val)||(misc) Show issue and mr notes created by gitlab|
 
+#### command.generic - Any generic subprocess
+<a href="#command-generic"></a>
+
+#### command.generic_proc - 
+<a href="#command-generic_proc"></a>
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|name|[command.generic](/txt/protocol/command/README.md#command-generic)|[Exec](/txt/exe/amc/reftypes.md#exec)|""||
+
+#### command.jkv - Command line for [jkv](/txt/exe/jkv/README.md)
+<a href="#command-jkv"></a>
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
+|file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Filename (use - for stdin)|
+|kv|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftypes.md#tary)||JSON Keyvals|
+|r|bool|[Val](/txt/exe/amc/reftypes.md#val)||Reverse (json keyvals -> JSON) mapping|
+|write|bool|[Val](/txt/exe/amc/reftypes.md#val)||Write the modified file back|
+|output|u8|[Val](/txt/exe/amc/reftypes.md#val)|0|Output format|
+|pretty|u32|[Val](/txt/exe/amc/reftypes.md#val)|2|Pretty-printer (0-compact; 1=algo style; 2=jq style)|
+
 #### command.mdbg - Command line for [mdbg](/txt/exe/mdbg/README.md)
 <a href="#command-mdbg"></a>
 
@@ -547,15 +583,17 @@ Other ctypes in this namespace which don't have own readme files
 |cfg|[dev.Cfg](/txt/ssimdb/dev/cfg.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|"debug"|Configuration to use|
 |disas|bool|[Val](/txt/exe/amc/reftypes.md#val)||Show disassembly (use F12)|
 |attach|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Attach to a running process|
+|pid|i32|[Val](/txt/exe/amc/reftypes.md#val)|0|(with -attach) Pid, if omitted mdbg will guess|
 |b|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftypes.md#tary)|""|Set breakpoint, e.g. 'a.cpp:123 if cond1', 'func#3'|
 |catchthrow|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Stop on exceptions|
 |tui|bool|[Val](/txt/exe/amc/reftypes.md#val)||Use gdb -tui as the debugger|
 |bcmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Evaluate command at breakpoint|
 |emacs|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Use emacs environment as the debugger|
 |manywin|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Use gdb-many-windows emacs mode|
-|follow_child|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|follow_child|bool|[Val](/txt/exe/amc/reftypes.md#val)||When forking, follow child (default is parent)|
 |py|bool|[Val](/txt/exe/amc/reftypes.md#val)||Enable python scripting|
 |dry_run|bool|[Val](/txt/exe/amc/reftypes.md#val)||Print commands but don't execute|
+|mp|bool|[Val](/txt/exe/amc/reftypes.md#val)||Multi-process debugging|
 
 #### command.mysql2ssim - Command line for [mysql2ssim](/txt/exe/mysql2ssim/README.md)
 <a href="#command-mysql2ssim"></a>
@@ -583,6 +621,17 @@ Other ctypes in this namespace which don't have own readme files
 |undo|bool|[Val](/txt/exe/amc/reftypes.md#val)||Read previous orgfile output, undoing movement|
 |hash|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"sha1"|Hash command to use for deduplication|
 
+#### command.samp_make - Command line for [samp_make](/txt/exe/samp_make/README.md)
+<a href="#command-samp_make"></a>
+
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
+|target|[sampdb.Target](/txt/ssimdb/sampdb/target.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Create Makefile for selected targets|
+|parse_make|bool|[Val](/txt/exe/amc/reftypes.md#val)||Parse extern/gnumake/Simple-Makefile|
+|makefile|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"extern/gnumake/Simple-Makefile"|(with parse_make) makefile to parse|
+|write|bool|[Val](/txt/exe/amc/reftypes.md#val)||P(with parse_make) write ssimfiles, otherwise print them|
+
 #### command.samp_meng - Command line for [samp_meng](/txt/exe/samp_meng/README.md)
 <a href="#command-samp_meng"></a>
 
@@ -597,10 +646,13 @@ Other ctypes in this namespace which don't have own readme files
 |---|---|---|---|---|
 |in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
 |expr|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Expression|
-|style|u8|[Val](/txt/exe/amc/reftypes.md#val)|0|Regx style|
-|match|bool|[Val](/txt/exe/amc/reftypes.md#val)||Match a string|
+|style|[algo_lib.RegxStyle](/txt/lib/algo_lib/README.md#algo_lib-regxstyle)|[Val](/txt/exe/amc/reftypes.md#val)|2|Regx style|
+|trace|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Trace regx innards|
+|capture|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Use capture groups|
+|full|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Match full string|
+|f|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|<string> is a filename, grep the lines|
+|match|bool|[Val](/txt/exe/amc/reftypes.md#val)||Match a string, exit code represnts success|
 |string|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|String to match|
-|show|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Show regx innards|
 
 #### command.sandbox - Command line for [sandbox](/txt/exe/sandbox/README.md)
 <a href="#command-sandbox"></a>
@@ -619,7 +671,8 @@ Other ctypes in this namespace which don't have own readme files
 |cmd|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftypes.md#tary)||Command to execute in sandbox|
 |diff|bool|[Val](/txt/exe/amc/reftypes.md#val)||Show diff after running command|
 |files|[algo.cstring](/txt/protocol/algo/cstring.md)|[Tary](/txt/exe/amc/reftypes.md#tary)||Shell regx to diff|
-|refs|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"HEAD"|Refs to fetch into sandbox|
+|refs|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"HEAD"|Additional list of refs to fetch into sandbox|
+|ref|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"HEAD"|Reset to this ref|
 |q|bool|[Val](/txt/exe/amc/reftypes.md#val)||Quiet mode|
 
 #### command.src_func - Command line for [src_func](/txt/exe/src_func/README.md)
@@ -628,26 +681,30 @@ Other ctypes in this namespace which don't have own readme files
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
 |in|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|"data"|Input directory or filename, - for stdin|
-|target|[dev.Target](/txt/ssimdb/dev/target.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Visit these targets|
-|name|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Match function name|
-|body|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Match function body|
-|targsrc|[dev.Targsrc](/txt/ssimdb/dev/targsrc.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|""|Visit these sources (optional)|
-|func|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|(with -listfunc) Match function prototype|
-|comment|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|(with -listfunc) Match function comment|
-|nextfile|[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|""|Print name of next srcfile in targsrc list|
-|other|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(with -nextfile), name of previous file|
-|updateproto|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Update prototypes in headers|
-|listfunc|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Show functions in target|
-|iffy|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Select functions that may contain errors|
-|proto|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(with -listfunc) List prototypes only|
-|gen|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(with -listfunc) Visit generated files|
-|showloc|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|(with -listfunc) Show file location|
-|showstatic|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|(with -listfunc) Show static functions|
-|showsortkey|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(with -listfunc) Display function sortkey|
-|sortname|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(with -listfunc) Sort functions by name|
-|e|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(with -listfunc) Edit found functions|
+|targsrc|[dev.Targsrc](/txt/ssimdb/dev/targsrc.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|(scan) Limit scanning to these sources only|
+|acrkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Select function by acr key that caused it|
+|func|[dev.Target](/txt/ssimdb/dev/target.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|Target.function regex|
+|nextfile|[dev.Gitfile](/txt/ssimdb/dev/gitfile.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|""|(action) Print name of next srcfile in targsrc list|
+|other|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|    (with -nextfile), name of previous file|
+|list|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(action) List matching functions|
+|updateproto|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(action) Update prototypes in headers|
+|createmissing|bool|[Val](/txt/exe/amc/reftypes.md#val)||(action) Create missing functions declared in userfunc table|
+|iffy|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(filter) Select functions that may contain errors|
+|gen|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(scan) Scan generated files|
+|showloc|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(output) Show file location|
+|f|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(output) -sortname -showcomment -showbody|
+|showstatic|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|(filter) Allow static functions|
+|matchproto|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|(filter) Match function prototype|
+|matchbody|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|(filter) Match function body|
+|matchcomment|[algo.cstring](/txt/protocol/algo/cstring.md)|[RegxSql](/txt/exe/amc/reftypes.md#regxsql)|"%"|(filter) Match function comment|
+|showsortkey|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(output) Display function sortkey|
+|showcomment|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(output) Display function comment|
+|showbody|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(output) Print function body|
+|sortname|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(output) Sort functions by name|
+|printssim|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|(output) Print ssim tuples|
+|e|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Edit found functions|
 |baddecl|bool|[Val](/txt/exe/amc/reftypes.md#val)||Report and fail on bad declarations|
-|report|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|report|bool|[Val](/txt/exe/amc/reftypes.md#val)||Print final report|
 
 #### command.src_hdr - Command line for [src_hdr](/txt/exe/src_hdr/README.md)
 <a href="#command-src_hdr"></a>

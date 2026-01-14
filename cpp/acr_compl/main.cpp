@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
@@ -54,7 +54,7 @@ tempstr acr_compl::GetCmdArgType(acr_compl::FField& field) {
         ret = "flag";
     } else if (field.reftype == dmmeta_Reftype_reftype_Pkey) {
         ret = "pkey";
-    } if (field.reftype == dmmeta_Reftype_reftype_RegxSql) {
+    } else if (field.reftype == dmmeta_Reftype_reftype_RegxSql) {
         ret = "regx";
     } else {
         if (!argvtype && c_field_N(*field.p_arg) == 1) {
@@ -164,7 +164,7 @@ bool acr_compl::UniqueCompletionQ() {
         }
         iter++;
     }ind_end;
-    dbglog("iter="<<iter<<" badness1="<<badness1<<" badness2="<<badness2);
+    prcat(debug,"iter="<<iter<<" badness1="<<badness1<<" badness2="<<badness2);
     return badness1 < badness2;
 }
 
@@ -266,9 +266,9 @@ void acr_compl::Main_Line_Ctype(acr_compl::FCtype *ctype, strptr value, strptr c
                             : acr_compl_Badness_substring;
                         completion.badness.strkey = completion.value;
                         vrfy(completion_XrefMaybe(completion), algo_lib::_db.errtext);
-                        dbglog("acr_compl.ctype_completion"
-                               << Keyval("value",completion.value)
-                               << Keyval("badness",completion.badness));
+                        prcat(debug,"acr_compl.ctype_completion"
+                              << Keyval("value",completion.value)
+                              << Keyval("badness",completion.badness));
                     }
                 }
             }ind_end;
@@ -337,11 +337,11 @@ void acr_compl::Main_Line() {
     try {
         vrfy(i32_ReadStrptrMaybe(_db.point,_db.cmdline.point), algo_lib::_db.errtext);
     } catch (algo_lib::ErrorX &) {
-        dbglog("Bad completion point - can't read");
+        prcat(debug,"Bad completion point - can't read");
         return;
     }
     if (_db.point > ch_N(_db.cmdline.line)) {
-        dbglog("Bad completion point - exceeds line length");
+        prcat(debug,"Bad completion point - exceeds line length");
         return;
     }
 
@@ -351,7 +351,7 @@ void acr_compl::Main_Line() {
     _db.line = ch_FirstN(_db.cmdline.line,_db.point);
     // split to argv
     if (!Main_SplitLineToArgv()) {
-        dbglog("Unfinished io redirect");
+        prcat(debug,"Unfinished io redirect");
         return;
     };
 
@@ -362,7 +362,7 @@ void acr_compl::Main_Line() {
 
     // can't do anything without command
     if (word_EmptyQ()) {
-        dbglog("Empty line"); // should never happen (command line test only)
+        prcat(debug,"Empty line"); // should never happen (command line test only)
         return;
     }
     strptr cmd = StripDirName(word_qFind(0));
@@ -370,7 +370,7 @@ void acr_compl::Main_Line() {
     FFcmdline *fcmdline = ns ? ns->c_fcmdline : NULL;
     FCtype *ctype = fcmdline ? fcmdline->p_field->p_arg : NULL;
     if (!ctype) {
-        dbglog("Unknown command"); // may happen if outdated completion exists on bash
+        prcat(debug,"Unknown command"); // may happen if outdated completion exists on bash
         return;
     }
 
@@ -378,12 +378,12 @@ void acr_compl::Main_Line() {
     ind_beg(ctype_c_field_curs,field,*ctype) {
         zd_cmd_field_Insert(field);
         ind_cmd_field_name_InsertMaybe(field);
-        //dbglog(field);
+        //prcat(debug,field);
     }ind_end;
     ind_beg(ctype_c_field_curs,field,*fcmdline->p_basecmdline->p_arg) {
         zd_cmd_field_Insert(field);
         ind_cmd_field_name_InsertMaybe(field);
-        //dbglog(field);
+        //prcat(debug,field);
     }ind_end;
 
     // parse command line
@@ -413,7 +413,7 @@ void acr_compl::Main_Line() {
         } else if (word == "--") { // end of named options
             _db.anon = true;
             if (is_last) { // do not complete last
-                dbglog("Double dash is last");
+                prcat(debug,"Double dash is last");
                 return;
             }
         } else {
@@ -426,7 +426,7 @@ void acr_compl::Main_Line() {
                     tempstr field_key = dmmeta::Field_Concat_ctype_name(ctype->ctype,_db.name);
                     FField *field = ind_cmd_field_name_Find(_db.name);
                     if (!field) {
-                        dbglog("Unknown option: "<<_db.name);
+                        prcat(debug,"Unknown option: "<<_db.name);
                         return;
                     }
                     _db.need_value = !_db.exact && CmdArgValueRequiredQ(*field); // check for extra arg, only if no colon
@@ -441,14 +441,14 @@ void acr_compl::Main_Line() {
                 _db.exact      = false;
             }
         }
-        dbglog("atf_compl.parse_word"
-               << Keyval("word",word)
-               << Keyval("name",_db.name)
-               << Keyval("value",_db.value)
-               << Keyval("need_value",_db.need_value)
-               << Keyval("anon_index",_db.anon_index)
-               << Keyval("exact",_db.exact)
-               << Keyval("anon",_db.anon));
+        prcat(debug,"atf_compl.parse_word"
+              << Keyval("word",word)
+              << Keyval("name",_db.name)
+              << Keyval("value",_db.value)
+              << Keyval("need_value",_db.need_value)
+              << Keyval("anon_index",_db.anon_index)
+              << Keyval("exact",_db.exact)
+              << Keyval("anon",_db.anon));
     }ind_end;
 
     // mark seen anons below anon_index
@@ -467,8 +467,8 @@ void acr_compl::Main_Line() {
     if (!ch_N(_db.name) && !_db.anon) {
         ind_beg(_db_zd_cmd_field_curs,field,_db) {
             if (EligibleQ(field) && CmdArgRequiredQ(field)) {
-                dbglog("atf_compl.first_unseen_mandatory"
-                       << Keyval("name",name_Get(field)));
+                prcat(debug,"atf_compl.first_unseen_mandatory"
+                      << Keyval("name",name_Get(field)));
                 AddFieldToCompletion(field,acr_compl_Badness_first);
                 break;
             }
@@ -485,10 +485,10 @@ void acr_compl::Main_Line() {
                 ? (field.reftype == dmmeta_Reftype_reftype_Tary && cnt <= _db.anon_index)
                 || cnt == _db.anon_index
                 : field.reftype != dmmeta_Reftype_reftype_Tary && EligibleQ(field);
-            dbglog("atf_compl.anon"
-                   <<Keyval("name",name_Get(field))
-                   <<Keyval("cnt",cnt)
-                   <<Keyval("ok",ok));
+            prcat(debug,"atf_compl.anon"
+                  <<Keyval("name",name_Get(field))
+                  <<Keyval("cnt",cnt)
+                  <<Keyval("ok",ok));
             if (ok) {
                 AddFieldToCompletion(field,acr_compl_Badness_first);
                 break;
@@ -505,9 +505,9 @@ void acr_compl::Main_Line() {
                 bool first = _db.exact ? fname == _db.name : StartsWithQ(fname,_db.name);
                 acr_compl_BadnessEnum badness = first ? acr_compl_Badness_first : acr_compl_Badness_substring;
                 acr_compl::FCompletion &completion = AddFieldToCompletion(field,badness);
-                dbglog("atf_compl.unseen_option"
-                       << Keyval("first",first)
-                       << Keyval("badness",completion.badness));
+                prcat(debug,"atf_compl.unseen_option"
+                      << Keyval("first",first)
+                      << Keyval("badness",completion.badness));
             }
         }ind_end;
     }
@@ -517,9 +517,9 @@ void acr_compl::Main_Line() {
     tempstr compl_prefix;
     FField *cur_field = NULL;
     if (completion_N() && UniqueCompletionQ()) {
-        dbglog("acr_compl.unique_completion"
-               <<Keyval("completion",bh_completion_First()->value)
-               <<Keyval("nospace",bh_completion_First()->nospace));
+        prcat(debug,"acr_compl.unique_completion"
+              <<Keyval("completion",bh_completion_First()->value)
+              <<Keyval("nospace",bh_completion_First()->nospace));
         cur_field = bh_completion_First()->field;
         if (_db.exact || ch_N(_db.value)) {
             completion_RemoveAll();
@@ -528,8 +528,8 @@ void acr_compl::Main_Line() {
         } else {
             completion_RemoveAll();
             compl_prefix << '-' << name_Get(*cur_field) << ':';
-            dbglog("acr_compl.value_completion"
-                   <<Keyval("prefix",compl_prefix));
+            prcat(debug,"acr_compl.value_completion"
+                  <<Keyval("prefix",compl_prefix));
         }
     }
 
@@ -635,14 +635,14 @@ void acr_compl::Main_Line() {
         // so that they have to be specified by the user explicitly,
         // or they have reasonable default, so better to do not to specify them at all.
         prlog(out);
-        dbglog(out);
+        prcat(debug,out);
     }ind_end;
     // Ugly hack: In some unpredictable situations bash readline treats list completion that yields
     // sole value as normal completion, i.e. completes instead of just display.
     // We add second completion for ambuiguity, so it will not have a chance to complete on its own.
     if (n_type == 1) {
         prlog("value type");
-        dbglog("value type");
+        prcat(debug,"value type");
     }
 }
 
@@ -670,7 +670,7 @@ void acr_compl::Main() {
     }
     if (ch_N(_db.cmdline.debug_log)) {
         algo_lib::_db.cmdline.debug = true;
-        algo_lib::_db.fildes_stderr = OpenWrite(_db.cmdline.debug_log,algo_FileFlags_append);
+        dup2(OpenWrite(_db.cmdline.debug_log,algo_FileFlags_append).value,2);// redirect stderr
     }
     // see how we are invoked
     strptr comp_line = getenv("COMP_LINE");
@@ -687,7 +687,7 @@ void acr_compl::Main() {
             _db.cmdline.point << ch_N(_db.cmdline.line);
         }
     }
-    dbglog(_db.cmdline);
+    prcat(debug,_db.cmdline);
     // load schema and/or data from stdin
     if (_db.cmdline.schema == "-" || _db.cmdline.data == "-") {
         // read from stdin

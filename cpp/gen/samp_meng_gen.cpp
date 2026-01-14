@@ -39,17 +39,18 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
+algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 samp_meng::FDb   samp_meng::_db;    // dependency found via dev.targdep
 
 namespace samp_meng {
 const char *samp_meng_help =
+"samp_meng: Sample matching engine\n"
 "Usage: samp_meng [options]\n"
 "    OPTION      TYPE    DFLT    COMMENT\n"
 "    -in         string  \"data\"  Input directory or filename, - for stdin\n"
-"    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
@@ -110,6 +111,18 @@ namespace samp_meng { // gen:ns_print_proto
     static void          ordq_bh_order_curs_Add(ordq_bh_order_curs &curs, samp_meng::FOrder& row);
     // func:samp_meng...SizeCheck
     inline static void   SizeCheck();
+    // func:samp_meng.In.CancelReqMsg.UpdateCycles
+    static void          In_CancelReqMsg_UpdateCycles();
+    // func:samp_meng.In.MassCancelReqMsg.UpdateCycles
+    static void          In_MassCancelReqMsg_UpdateCycles();
+    // func:samp_meng.In.NewOrderReqMsg.UpdateCycles
+    static void          In_NewOrderReqMsg_UpdateCycles();
+    // func:samp_meng.In.NewSymbolReqMsg.UpdateCycles
+    static void          In_NewSymbolReqMsg_UpdateCycles();
+    // func:samp_meng.In.NewUserReqMsg.UpdateCycles
+    static void          In_NewUserReqMsg_UpdateCycles();
+    // func:samp_meng.In.TextMsg.UpdateCycles
+    static void          In_TextMsg_UpdateCycles();
 } // gen:ns_print_proto
 
 // --- samp_meng.CancelOrderMsg.base.CopyOut
@@ -129,21 +142,20 @@ bool samp_meng::CancelOrderMsg_ReadFieldMaybe(samp_meng::CancelOrderMsg& parent,
     switch(field_id) {
         case samp_meng_FieldId_base: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_type: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_length: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_order: {
             retval = u64_ReadStrptrMaybe(parent.order, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -191,21 +203,20 @@ bool samp_meng::CancelReqMsg_ReadFieldMaybe(samp_meng::CancelReqMsg& parent, alg
     switch(field_id) {
         case samp_meng_FieldId_base: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_type: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_length: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_order: {
             retval = u64_ReadStrptrMaybe(parent.order, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -236,13 +247,73 @@ void samp_meng::CancelReqMsg_Print(samp_meng::CancelReqMsg& row, algo::cstring& 
     PrintAttrSpaceReset(str,"order", temp);
 }
 
+// --- samp_meng.trace..Init
+// Set all fields to initial values.
+void samp_meng::trace_Init(samp_meng::trace& parent) {
+    parent.dispatch_In_CancelReqMsg = u64(0);
+    parent.dispatch_In_CancelReqMsg_cycles = u64(0);
+    parent.dispatch_In_MassCancelReqMsg = u64(0);
+    parent.dispatch_In_MassCancelReqMsg_cycles = u64(0);
+    parent.dispatch_In_NewOrderReqMsg = u64(0);
+    parent.dispatch_In_NewOrderReqMsg_cycles = u64(0);
+    parent.dispatch_In_NewSymbolReqMsg = u64(0);
+    parent.dispatch_In_NewSymbolReqMsg_cycles = u64(0);
+    parent.dispatch_In_NewUserReqMsg = u64(0);
+    parent.dispatch_In_NewUserReqMsg_cycles = u64(0);
+    parent.dispatch_In_TextMsg = u64(0);
+    parent.dispatch_In_TextMsg_cycles = u64(0);
+    parent.dispatch_In_Unkmsg = u64(0);
+    parent.dispatch_In_Unkmsg_cycles = u64(0);
+}
+
 // --- samp_meng.trace..Print
 // print string representation of ROW to string STR
 // cfmt:samp_meng.trace.String  printfmt:Tuple
 void samp_meng::trace_Print(samp_meng::trace& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "samp_meng.trace";
-    (void)row;//only to avoid -Wunused-parameter
+
+    u64_Print(row.dispatch_In_CancelReqMsg, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_CancelReqMsg", temp);
+
+    u64_Print(row.dispatch_In_CancelReqMsg_cycles, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_CancelReqMsg_cycles", temp);
+
+    u64_Print(row.dispatch_In_MassCancelReqMsg, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_MassCancelReqMsg", temp);
+
+    u64_Print(row.dispatch_In_MassCancelReqMsg_cycles, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_MassCancelReqMsg_cycles", temp);
+
+    u64_Print(row.dispatch_In_NewOrderReqMsg, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_NewOrderReqMsg", temp);
+
+    u64_Print(row.dispatch_In_NewOrderReqMsg_cycles, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_NewOrderReqMsg_cycles", temp);
+
+    u64_Print(row.dispatch_In_NewSymbolReqMsg, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_NewSymbolReqMsg", temp);
+
+    u64_Print(row.dispatch_In_NewSymbolReqMsg_cycles, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_NewSymbolReqMsg_cycles", temp);
+
+    u64_Print(row.dispatch_In_NewUserReqMsg, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_NewUserReqMsg", temp);
+
+    u64_Print(row.dispatch_In_NewUserReqMsg_cycles, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_NewUserReqMsg_cycles", temp);
+
+    u64_Print(row.dispatch_In_TextMsg, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_TextMsg", temp);
+
+    u64_Print(row.dispatch_In_TextMsg_cycles, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_TextMsg_cycles", temp);
+
+    u64_Print(row.dispatch_In_Unkmsg, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_Unkmsg", temp);
+
+    u64_Print(row.dispatch_In_Unkmsg_cycles, temp);
+    PrintAttrSpaceReset(str,"dispatch_In_Unkmsg_cycles", temp);
 }
 
 // --- samp_meng.FDb._db.ReadArgv
@@ -314,9 +385,8 @@ void samp_meng::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "samp_meng: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -359,6 +429,9 @@ void samp_meng::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:samp_meng.FDb.cmdline
@@ -370,7 +443,7 @@ void samp_meng::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -440,8 +513,8 @@ bool samp_meng::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (DirectoryQ(root)) {
         retval = retval && samp_meng::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -904,14 +977,9 @@ inline static void samp_meng::cd_fdin_read_Call() {
 // Find row by key. Return NULL if not found.
 samp_meng::FSymbol* samp_meng::ind_symbol_Find(const samp_meng::Symbol& key) {
     u32 index = samp_meng::Symbol_Hash(0, key) & (_db.ind_symbol_buckets_n - 1);
-    samp_meng::FSymbol* *e = &_db.ind_symbol_buckets_elems[index];
-    samp_meng::FSymbol* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).symbol == key;
-        if (done) break;
-        e         = &ret->ind_symbol_next;
-    } while (true);
+    samp_meng::FSymbol *ret = _db.ind_symbol_buckets_elems[index];
+    for (; ret && !((*ret).symbol == key); ret = ret->ind_symbol_next) {
+    }
     return ret;
 }
 
@@ -943,10 +1011,11 @@ samp_meng::FSymbol& samp_meng::ind_symbol_GetOrCreate(const samp_meng::Symbol& k
 // --- samp_meng.FDb.ind_symbol.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool samp_meng::ind_symbol_InsertMaybe(samp_meng::FSymbol& row) {
-    ind_symbol_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_symbol_next == (samp_meng::FSymbol*)-1)) {// check if in hash already
-        u32 index = samp_meng::Symbol_Hash(0, row.symbol) & (_db.ind_symbol_buckets_n - 1);
+        row.ind_symbol_hashval = samp_meng::Symbol_Hash(0, row.symbol);
+        ind_symbol_Reserve(1);
+        u32 index = row.ind_symbol_hashval & (_db.ind_symbol_buckets_n - 1);
         samp_meng::FSymbol* *prev = &_db.ind_symbol_buckets_elems[index];
         do {
             samp_meng::FSymbol* ret = *prev;
@@ -972,7 +1041,7 @@ bool samp_meng::ind_symbol_InsertMaybe(samp_meng::FSymbol& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void samp_meng::ind_symbol_Remove(samp_meng::FSymbol& row) {
     if (LIKELY(row.ind_symbol_next != (samp_meng::FSymbol*)-1)) {// check if in hash already
-        u32 index = samp_meng::Symbol_Hash(0, row.symbol) & (_db.ind_symbol_buckets_n - 1);
+        u32 index = row.ind_symbol_hashval & (_db.ind_symbol_buckets_n - 1);
         samp_meng::FSymbol* *prev = &_db.ind_symbol_buckets_elems[index]; // addr of pointer to current element
         while (samp_meng::FSymbol *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -989,8 +1058,14 @@ void samp_meng::ind_symbol_Remove(samp_meng::FSymbol& row) {
 // --- samp_meng.FDb.ind_symbol.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void samp_meng::ind_symbol_Reserve(int n) {
+    ind_symbol_AbsReserve(_db.ind_symbol_n + n);
+}
+
+// --- samp_meng.FDb.ind_symbol.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void samp_meng::ind_symbol_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_symbol_buckets_n;
-    u32 new_nelems   = _db.ind_symbol_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1009,7 +1084,7 @@ void samp_meng::ind_symbol_Reserve(int n) {
             while (elem) {
                 samp_meng::FSymbol &row        = *elem;
                 samp_meng::FSymbol* next       = row.ind_symbol_next;
-                u32 index          = samp_meng::Symbol_Hash(0, row.symbol) & (new_nbuckets-1);
+                u32 index          = row.ind_symbol_hashval & (new_nbuckets-1);
                 row.ind_symbol_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1148,14 +1223,9 @@ bool samp_meng::order_XrefMaybe(samp_meng::FOrder &row) {
 // Find row by key. Return NULL if not found.
 samp_meng::FOrder* samp_meng::ind_order_Find(i64 key) {
     u32 index = ::i64_Hash(0, key) & (_db.ind_order_buckets_n - 1);
-    samp_meng::FOrder* *e = &_db.ind_order_buckets_elems[index];
-    samp_meng::FOrder* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).order == key;
-        if (done) break;
-        e         = &ret->ind_order_next;
-    } while (true);
+    samp_meng::FOrder *ret = _db.ind_order_buckets_elems[index];
+    for (; ret && !((*ret).order == key); ret = ret->ind_order_next) {
+    }
     return ret;
 }
 
@@ -1170,10 +1240,11 @@ samp_meng::FOrder& samp_meng::ind_order_FindX(i64 key) {
 // --- samp_meng.FDb.ind_order.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool samp_meng::ind_order_InsertMaybe(samp_meng::FOrder& row) {
-    ind_order_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_order_next == (samp_meng::FOrder*)-1)) {// check if in hash already
-        u32 index = ::i64_Hash(0, row.order) & (_db.ind_order_buckets_n - 1);
+        row.ind_order_hashval = ::i64_Hash(0, row.order);
+        ind_order_Reserve(1);
+        u32 index = row.ind_order_hashval & (_db.ind_order_buckets_n - 1);
         samp_meng::FOrder* *prev = &_db.ind_order_buckets_elems[index];
         do {
             samp_meng::FOrder* ret = *prev;
@@ -1199,7 +1270,7 @@ bool samp_meng::ind_order_InsertMaybe(samp_meng::FOrder& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void samp_meng::ind_order_Remove(samp_meng::FOrder& row) {
     if (LIKELY(row.ind_order_next != (samp_meng::FOrder*)-1)) {// check if in hash already
-        u32 index = ::i64_Hash(0, row.order) & (_db.ind_order_buckets_n - 1);
+        u32 index = row.ind_order_hashval & (_db.ind_order_buckets_n - 1);
         samp_meng::FOrder* *prev = &_db.ind_order_buckets_elems[index]; // addr of pointer to current element
         while (samp_meng::FOrder *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1216,8 +1287,14 @@ void samp_meng::ind_order_Remove(samp_meng::FOrder& row) {
 // --- samp_meng.FDb.ind_order.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void samp_meng::ind_order_Reserve(int n) {
+    ind_order_AbsReserve(_db.ind_order_n + n);
+}
+
+// --- samp_meng.FDb.ind_order.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void samp_meng::ind_order_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_order_buckets_n;
-    u32 new_nelems   = _db.ind_order_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1236,7 +1313,7 @@ void samp_meng::ind_order_Reserve(int n) {
             while (elem) {
                 samp_meng::FOrder &row        = *elem;
                 samp_meng::FOrder* next       = row.ind_order_next;
-                u32 index          = ::i64_Hash(0, row.order) & (new_nbuckets-1);
+                u32 index          = row.ind_order_hashval & (new_nbuckets-1);
                 row.ind_order_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1443,14 +1520,9 @@ bool samp_meng::user_XrefMaybe(samp_meng::FUser &row) {
 // Find row by key. Return NULL if not found.
 samp_meng::FUser* samp_meng::ind_user_Find(i32 key) {
     u32 index = ::i32_Hash(0, key) & (_db.ind_user_buckets_n - 1);
-    samp_meng::FUser* *e = &_db.ind_user_buckets_elems[index];
-    samp_meng::FUser* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).user == key;
-        if (done) break;
-        e         = &ret->ind_user_next;
-    } while (true);
+    samp_meng::FUser *ret = _db.ind_user_buckets_elems[index];
+    for (; ret && !((*ret).user == key); ret = ret->ind_user_next) {
+    }
     return ret;
 }
 
@@ -1482,10 +1554,11 @@ samp_meng::FUser& samp_meng::ind_user_GetOrCreate(i32 key) {
 // --- samp_meng.FDb.ind_user.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool samp_meng::ind_user_InsertMaybe(samp_meng::FUser& row) {
-    ind_user_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_user_next == (samp_meng::FUser*)-1)) {// check if in hash already
-        u32 index = ::i32_Hash(0, row.user) & (_db.ind_user_buckets_n - 1);
+        row.ind_user_hashval = ::i32_Hash(0, row.user);
+        ind_user_Reserve(1);
+        u32 index = row.ind_user_hashval & (_db.ind_user_buckets_n - 1);
         samp_meng::FUser* *prev = &_db.ind_user_buckets_elems[index];
         do {
             samp_meng::FUser* ret = *prev;
@@ -1511,7 +1584,7 @@ bool samp_meng::ind_user_InsertMaybe(samp_meng::FUser& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void samp_meng::ind_user_Remove(samp_meng::FUser& row) {
     if (LIKELY(row.ind_user_next != (samp_meng::FUser*)-1)) {// check if in hash already
-        u32 index = ::i32_Hash(0, row.user) & (_db.ind_user_buckets_n - 1);
+        u32 index = row.ind_user_hashval & (_db.ind_user_buckets_n - 1);
         samp_meng::FUser* *prev = &_db.ind_user_buckets_elems[index]; // addr of pointer to current element
         while (samp_meng::FUser *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1528,8 +1601,14 @@ void samp_meng::ind_user_Remove(samp_meng::FUser& row) {
 // --- samp_meng.FDb.ind_user.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void samp_meng::ind_user_Reserve(int n) {
+    ind_user_AbsReserve(_db.ind_user_n + n);
+}
+
+// --- samp_meng.FDb.ind_user.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void samp_meng::ind_user_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_user_buckets_n;
-    u32 new_nelems   = _db.ind_user_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1548,7 +1627,7 @@ void samp_meng::ind_user_Reserve(int n) {
             while (elem) {
                 samp_meng::FUser &row        = *elem;
                 samp_meng::FUser* next       = row.ind_user_next;
-                u32 index          = ::i32_Hash(0, row.user) & (new_nbuckets-1);
+                u32 index          = row.ind_user_hashval & (new_nbuckets-1);
                 row.ind_user_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1677,8 +1756,8 @@ void samp_meng::FDb_Uninit() {
 // File descriptor becomes owned by samp_meng::FFdin.in via FIohook field.
 // Whenever the file descriptor becomes readable, insert fdin into cd_fdin_read.
 void samp_meng::in_BeginRead(samp_meng::FFdin& fdin, algo::Fildes fd) {
-    callback_Set1(fdin.in_iohook, fdin, samp_meng::cd_fdin_read_Insert);
     fdin.in_iohook.fildes = fd;
+    callback_Set1(fdin.in_iohook, fdin, samp_meng::cd_fdin_read_Insert);
     IOEvtFlags flags;
     read_Set(flags, true);
     if (fdin.in_epoll_enable) {
@@ -1729,6 +1808,23 @@ algo::aryptr<char> samp_meng::in_GetMsg(samp_meng::FFdin& fdin) {
         samp_meng::cd_fdin_eof_Insert(fdin);
     }
     return ret;
+}
+
+// --- samp_meng.FFdin.in.Realloc
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+void samp_meng::in_Realloc(samp_meng::FFdin& fdin, int new_max) {
+    new_max = i32_Max(new_max, fdin.in_end);
+    u8 *new_mem = fdin.in_elems
+    ? (u8*)algo_lib::malloc_ReallocMem(fdin.in_elems, fdin.in_max, new_max)
+    : (u8*)algo_lib::malloc_AllocMem(new_max);
+    if (UNLIKELY(!new_mem)) {
+        FatalErrorExit("samp_meng.fbuf_nomem  field:samp_meng.FFdin.in  comment:'out of memory'");
+    }
+    fdin.in_elems = new_mem;
+    fdin.in_max = new_max;
 }
 
 // --- samp_meng.FFdin.in.Refill
@@ -1837,7 +1933,7 @@ void samp_meng::in_SkipMsg(samp_meng::FFdin& fdin) {
 }
 
 // --- samp_meng.FFdin.in.WriteAll
-// Attempt to write buffer contents to fd
+// Attempt to write buffer contents to fbuf, return success
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
@@ -1851,22 +1947,39 @@ bool samp_meng::in_WriteAll(samp_meng::FFdin& fdin, u8 *in, i32 in_n) {
     // now try to write the message.
     i32 end = fdin.in_end;
     bool fits = end + in_n <= max;
-    if (fits && in_n > 0) {
-        memcpy(fdin.in_elems + end, in, in_n);
-        fdin.in_end = end + in_n;
+    if (fits) {
+        if (in_n > 0) {
+            memcpy(fdin.in_elems + end, in, in_n);
+            fdin.in_end = end + in_n;
+        }
     }
     return fits;
+}
+
+// --- samp_meng.FFdin.in.WriteReserve
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written
+void samp_meng::in_WriteReserve(samp_meng::FFdin& fdin, u8 *in, i32 in_n) {
+    if (!in_WriteAll(fdin, in, in_n)) {
+        in_Realloc(fdin, fdin.in_max*2);
+        if (!in_WriteAll(fdin, in, in_n)) {
+            FatalErrorExit("in: out of memory");
+        }
+    }
 }
 
 // --- samp_meng.FFdin..Init
 // Set all fields to initial values.
 void samp_meng::FFdin_Init(samp_meng::FFdin& fdin) {
+    fdin.in_elems = NULL; // in: initialize
+    fdin.in_max = 0; // in: initialize
     fdin.in_end = 0; // in: initialize
     fdin.in_start = 0; // in: initialize
     fdin.in_eof = false; // in: initialize
     fdin.in_msgvalid = false; // in: initialize
     fdin.in_msglen = 0; // in: initialize
     fdin.in_epoll_enable = true; // in: initialize
+    in_Realloc(fdin, 8192);
     fdin.cd_fdin_eof_next = (samp_meng::FFdin*)-1; // (samp_meng.FDb.cd_fdin_eof) not-in-list
     fdin.cd_fdin_eof_prev = NULL; // (samp_meng.FDb.cd_fdin_eof)
     fdin.cd_fdin_read_next = (samp_meng::FFdin*)-1; // (samp_meng.FDb.cd_fdin_read) not-in-list
@@ -1878,6 +1991,13 @@ void samp_meng::FFdin_Uninit(samp_meng::FFdin& fdin) {
     samp_meng::FFdin &row = fdin; (void)row;
     cd_fdin_eof_Remove(row); // remove fdin from index cd_fdin_eof
     cd_fdin_read_Remove(row); // remove fdin from index cd_fdin_read
+
+    // samp_meng.FFdin.in.Uninit (Fbuf)  //
+    if (fdin.in_elems) {
+        algo_lib::malloc_FreeMem(fdin.in_elems, sizeof(char)*fdin.in_max); // (samp_meng.FFdin.in)
+    }
+    fdin.in_elems = NULL;
+    fdin.in_max = 0;
 }
 
 // --- samp_meng.I64Price8.value.SetDoubleMaybe
@@ -1994,7 +2114,7 @@ void samp_meng::bh_order_Cascdel(samp_meng::FOrdq& ordq) {
     while (n > 0) {
         n--;
         samp_meng::FOrder &elem = *ordq.bh_order_elems[n]; // pick cheapest element to remove
-        elem.bh_order_idx = -1; // mark not-in-heap
+        elem.ordq_bh_order_idx = -1; // mark not-in-heap
         ordq.bh_order_n = n;
         order_Delete(elem);
     }
@@ -2029,7 +2149,7 @@ static int samp_meng::bh_order_Downheap(samp_meng::FOrdq& ordq, samp_meng::FOrde
         if (!bh_order_ElemLt(ordq, *p,row)) {
             break;
         }
-        p->bh_order_idx   = idx;
+        p->ordq_bh_order_idx   = idx;
         elems[idx]     = p;
         idx            = child;
         child          = idx*2+1;
@@ -2040,12 +2160,12 @@ static int samp_meng::bh_order_Downheap(samp_meng::FOrdq& ordq, samp_meng::FOrde
 // --- samp_meng.FOrdq.bh_order.Insert
 // Insert row. Row must not already be in index. If row is already in index, do nothing.
 void samp_meng::bh_order_Insert(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
-    if (LIKELY(row.bh_order_idx == -1)) {
+    if (LIKELY(row.ordq_bh_order_idx == -1)) {
         bh_order_Reserve(ordq, 1);
         int n = ordq.bh_order_n;
         ordq.bh_order_n = n + 1;
         int new_idx = bh_order_Upheap(ordq, row, n);
-        row.bh_order_idx = new_idx;
+        row.ordq_bh_order_idx = new_idx;
         ordq.bh_order_elems[new_idx] = &row;
     }
 }
@@ -2054,7 +2174,7 @@ void samp_meng::bh_order_Insert(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) 
 // If row is in heap, update its position. If row is not in heap, insert it.
 // Return new position of item in the heap (0=top)
 i32 samp_meng::bh_order_Reheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
-    int old_idx = row.bh_order_idx;
+    int old_idx = row.ordq_bh_order_idx;
     bool isnew = old_idx == -1;
     if (isnew) {
         bh_order_Reserve(ordq, 1);
@@ -2064,7 +2184,7 @@ i32 samp_meng::bh_order_Reheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
     if (!isnew && new_idx == old_idx) {
         new_idx = bh_order_Downheap(ordq, row, old_idx);
     }
-    row.bh_order_idx = new_idx;
+    row.ordq_bh_order_idx = new_idx;
     ordq.bh_order_elems[new_idx] = &row;
     return new_idx;
 }
@@ -2077,7 +2197,7 @@ i32 samp_meng::bh_order_Reheap(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
 i32 samp_meng::bh_order_ReheapFirst(samp_meng::FOrdq& ordq) {
     samp_meng::FOrder &row = *ordq.bh_order_elems[0];
     i32 new_idx = bh_order_Downheap(ordq, row, 0);
-    row.bh_order_idx = new_idx;
+    row.ordq_bh_order_idx = new_idx;
     ordq.bh_order_elems[new_idx] = &row;
     return new_idx;
 }
@@ -2086,9 +2206,9 @@ i32 samp_meng::bh_order_ReheapFirst(samp_meng::FOrdq& ordq) {
 // Remove element from index. If element is not in index, do nothing.
 void samp_meng::bh_order_Remove(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) {
     if (bh_order_InBheapQ(row)) {
-        int old_idx = row.bh_order_idx;
+        int old_idx = row.ordq_bh_order_idx;
         if (ordq.bh_order_elems[old_idx] == &row) { // sanity check: heap points back to row
-            row.bh_order_idx = -1;           // mark not in heap
+            row.ordq_bh_order_idx = -1;           // mark not in heap
             i32 n = ordq.bh_order_n - 1; // index of last element in heap
             ordq.bh_order_n = n;         // decrease count
             if (old_idx != n) {
@@ -2097,7 +2217,7 @@ void samp_meng::bh_order_Remove(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) 
                 if (new_idx == old_idx) {
                     new_idx = bh_order_Downheap(ordq, *elem, old_idx);
                 }
-                elem->bh_order_idx = new_idx;
+                elem->ordq_bh_order_idx = new_idx;
                 ordq.bh_order_elems[new_idx] = elem;
             }
         }
@@ -2109,7 +2229,7 @@ void samp_meng::bh_order_Remove(samp_meng::FOrdq& ordq, samp_meng::FOrder& row) 
 void samp_meng::bh_order_RemoveAll(samp_meng::FOrdq& ordq) {
     int n = ordq.bh_order_n;
     for (int i = n - 1; i>=0; i--) {
-        ordq.bh_order_elems[i]->bh_order_idx = -1; // mark not-in-heap
+        ordq.bh_order_elems[i]->ordq_bh_order_idx = -1; // mark not-in-heap
     }
     ordq.bh_order_n = 0;
 }
@@ -2121,13 +2241,13 @@ samp_meng::FOrder* samp_meng::bh_order_RemoveFirst(samp_meng::FOrdq& ordq) {
     samp_meng::FOrder *row = NULL;
     if (ordq.bh_order_n > 0) {
         row = ordq.bh_order_elems[0];
-        row->bh_order_idx = -1;           // mark not in heap
+        row->ordq_bh_order_idx = -1;           // mark not in heap
         i32 n = ordq.bh_order_n - 1; // index of last element in heap
         ordq.bh_order_n = n;         // decrease count
         if (n) {
             samp_meng::FOrder &elem = *ordq.bh_order_elems[n];
             int new_idx = bh_order_Downheap(ordq, elem, 0);
-            elem.bh_order_idx = new_idx;
+            elem.ordq_bh_order_idx = new_idx;
             ordq.bh_order_elems[new_idx] = &elem;
         }
     }
@@ -2162,7 +2282,7 @@ static int samp_meng::bh_order_Upheap(samp_meng::FOrdq& ordq, samp_meng::FOrder&
         if (!bh_order_ElemLt(ordq, row, *p)) {
             break;
         }
-        p->bh_order_idx = idx;
+        p->ordq_bh_order_idx = idx;
         elems[idx] = p;
         idx = j;
     }
@@ -2250,7 +2370,7 @@ void samp_meng::ordq_bh_order_curs_Next(ordq_bh_order_curs &curs) {
             i = l;
         } while (i < n);
         curs.temp_n = n-1;
-        int index = dead->bh_order_idx;
+        int index = dead->ordq_bh_order_idx;
         i = (index*2+1);
         if (i < bh_order_N((*curs.parent))) {
             samp_meng::FOrder &elem = *curs.parent->bh_order_elems[i];
@@ -2296,15 +2416,11 @@ void samp_meng::Symbol_Print(samp_meng::Symbol& row, algo::cstring& str) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void samp_meng::c_ordq_Insert(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) {
-    if (bool_Update(row.symbol_c_ordq_in_ary,true)) {
-        // reserve space
+    if (!row.symbol_c_ordq_in_ary) {
         c_ordq_Reserve(symbol, 1);
-        u32 n  = symbol.c_ordq_n;
-        u32 at = n;
-        samp_meng::FOrdq* *elems = symbol.c_ordq_elems;
-        elems[at] = &row;
-        symbol.c_ordq_n = n+1;
-
+        u32 n  = symbol.c_ordq_n++;
+        symbol.c_ordq_elems[n] = &row;
+        row.symbol_c_ordq_in_ary = true;
     }
 }
 
@@ -2313,7 +2429,7 @@ void samp_meng::c_ordq_Insert(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row)
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool samp_meng::c_ordq_InsertMaybe(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) {
-    bool retval = !row.symbol_c_ordq_in_ary;
+    bool retval = !symbol_c_ordq_InAryQ(row);
     c_ordq_Insert(symbol,row); // check is performed in _Insert again
     return retval;
 }
@@ -2321,18 +2437,18 @@ bool samp_meng::c_ordq_InsertMaybe(samp_meng::FSymbol& symbol, samp_meng::FOrdq&
 // --- samp_meng.FSymbol.c_ordq.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void samp_meng::c_ordq_Remove(samp_meng::FSymbol& symbol, samp_meng::FOrdq& row) {
+    int n = symbol.c_ordq_n;
     if (bool_Update(row.symbol_c_ordq_in_ary,false)) {
-        int lim = symbol.c_ordq_n;
         samp_meng::FOrdq* *elems = symbol.c_ordq_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             samp_meng::FOrdq* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(samp_meng::FOrdq*) * (lim - j);
+                size_t nbytes = sizeof(samp_meng::FOrdq*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                symbol.c_ordq_n = lim - 1;
+                symbol.c_ordq_n = n - 1;
                 break;
             }
         }
@@ -2368,12 +2484,12 @@ void samp_meng::FSymbol_Uninit(samp_meng::FSymbol& symbol) {
 // --- samp_meng.FUser.zd_order.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void samp_meng::zd_order_Insert(samp_meng::FUser& user, samp_meng::FOrder& row) {
-    if (!zd_order_InLlistQ(row)) {
+    if (!user_zd_order_InLlistQ(row)) {
         samp_meng::FOrder* old_tail = user.zd_order_tail;
-        row.zd_order_next = NULL;
-        row.zd_order_prev = old_tail;
+        row.user_zd_order_next = NULL;
+        row.user_zd_order_prev = old_tail;
         user.zd_order_tail = &row;
-        samp_meng::FOrder **new_row_a = &old_tail->zd_order_next;
+        samp_meng::FOrder **new_row_a = &old_tail->user_zd_order_next;
         samp_meng::FOrder **new_row_b = &user.zd_order_head;
         samp_meng::FOrder **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -2384,23 +2500,23 @@ void samp_meng::zd_order_Insert(samp_meng::FUser& user, samp_meng::FOrder& row) 
 // --- samp_meng.FUser.zd_order.Remove
 // Remove element from index. If element is not in index, do nothing.
 void samp_meng::zd_order_Remove(samp_meng::FUser& user, samp_meng::FOrder& row) {
-    if (zd_order_InLlistQ(row)) {
+    if (user_zd_order_InLlistQ(row)) {
         samp_meng::FOrder* old_head       = user.zd_order_head;
         (void)old_head; // in case it's not used
-        samp_meng::FOrder* prev = row.zd_order_prev;
-        samp_meng::FOrder* next = row.zd_order_next;
+        samp_meng::FOrder* prev = row.user_zd_order_prev;
+        samp_meng::FOrder* next = row.user_zd_order_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        samp_meng::FOrder **new_next_a = &prev->zd_order_next;
+        samp_meng::FOrder **new_next_a = &prev->user_zd_order_next;
         samp_meng::FOrder **new_next_b = &user.zd_order_head;
         samp_meng::FOrder **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        samp_meng::FOrder **new_prev_a = &next->zd_order_prev;
+        samp_meng::FOrder **new_prev_a = &next->user_zd_order_prev;
         samp_meng::FOrder **new_prev_b = &user.zd_order_tail;
         samp_meng::FOrder **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         user.zd_order_n--;
-        row.zd_order_next=(samp_meng::FOrder*)-1; // not-in-list
+        row.user_zd_order_next=(samp_meng::FOrder*)-1; // not-in-list
     }
 }
 
@@ -2412,9 +2528,9 @@ void samp_meng::zd_order_RemoveAll(samp_meng::FUser& user) {
     user.zd_order_tail = NULL;
     user.zd_order_n = 0;
     while (row) {
-        samp_meng::FOrder* row_next = row->zd_order_next;
-        row->zd_order_next  = (samp_meng::FOrder*)-1;
-        row->zd_order_prev  = NULL;
+        samp_meng::FOrder* row_next = row->user_zd_order_next;
+        row->user_zd_order_next  = (samp_meng::FOrder*)-1;
+        row->user_zd_order_prev  = NULL;
         row = row_next;
     }
 }
@@ -2425,14 +2541,14 @@ samp_meng::FOrder* samp_meng::zd_order_RemoveFirst(samp_meng::FUser& user) {
     samp_meng::FOrder *row = NULL;
     row = user.zd_order_head;
     if (row) {
-        samp_meng::FOrder *next = row->zd_order_next;
+        samp_meng::FOrder *next = row->user_zd_order_next;
         user.zd_order_head = next;
-        samp_meng::FOrder **new_end_a = &next->zd_order_prev;
+        samp_meng::FOrder **new_end_a = &next->user_zd_order_prev;
         samp_meng::FOrder **new_end_b = &user.zd_order_tail;
         samp_meng::FOrder **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         user.zd_order_n--;
-        row->zd_order_next = (samp_meng::FOrder*)-1; // mark as not-in-list
+        row->user_zd_order_next = (samp_meng::FOrder*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -2715,21 +2831,20 @@ bool samp_meng::MassCancelReqMsg_ReadFieldMaybe(samp_meng::MassCancelReqMsg& par
     switch(field_id) {
         case samp_meng_FieldId_base: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_type: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_length: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_user: {
             retval = u32_ReadStrptrMaybe(parent.user, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2905,13 +3020,14 @@ bool samp_meng::MsgHeader_ReadFieldMaybe(samp_meng::MsgHeader& parent, algo::str
     switch(field_id) {
         case samp_meng_FieldId_type: {
             retval = type_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case samp_meng_FieldId_length: {
             retval = false;
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3103,37 +3219,32 @@ bool samp_meng::NewOrderMsg_ReadFieldMaybe(samp_meng::NewOrderMsg& parent, algo:
     switch(field_id) {
         case samp_meng_FieldId_base: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_type: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_length: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_time: {
             retval = algo::UnTime_ReadStrptrMaybe(parent.time, strval);
-            break;
-        }
+        } break;
         case samp_meng_FieldId_price: {
             retval = samp_meng::I64Price8_ReadStrptrMaybe(parent.price, strval);
-            break;
-        }
+        } break;
         case samp_meng_FieldId_order: {
             retval = u64_ReadStrptrMaybe(parent.order, strval);
-            break;
-        }
+        } break;
         case samp_meng_FieldId_symbol: {
             retval = samp_meng::Symbol_ReadStrptrMaybe(parent.symbol, strval);
-            break;
-        }
+        } break;
         case samp_meng_FieldId_qty: {
             retval = u32_ReadStrptrMaybe(parent.qty, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3193,37 +3304,32 @@ bool samp_meng::NewOrderReqMsg_ReadFieldMaybe(samp_meng::NewOrderReqMsg& parent,
     switch(field_id) {
         case samp_meng_FieldId_base: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_type: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_length: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_ioc: {
             retval = bool_ReadStrptrMaybe(parent.ioc, strval);
-            break;
-        }
+        } break;
         case samp_meng_FieldId_qty: {
             retval = i32_ReadStrptrMaybe(parent.qty, strval);
-            break;
-        }
+        } break;
         case samp_meng_FieldId_price: {
             retval = samp_meng::I64Price8_ReadStrptrMaybe(parent.price, strval);
-            break;
-        }
+        } break;
         case samp_meng_FieldId_symbol: {
             retval = samp_meng::Symbol_ReadStrptrMaybe(parent.symbol, strval);
-            break;
-        }
+        } break;
         case samp_meng_FieldId_user: {
             retval = u32_ReadStrptrMaybe(parent.user, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3283,21 +3389,20 @@ bool samp_meng::NewSymbolMsg_ReadFieldMaybe(samp_meng::NewSymbolMsg& parent, alg
     switch(field_id) {
         case samp_meng_FieldId_base: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_type: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_length: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_symbol: {
             retval = samp_meng::Symbol_ReadStrptrMaybe(parent.symbol, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3345,21 +3450,20 @@ bool samp_meng::NewSymbolReqMsg_ReadFieldMaybe(samp_meng::NewSymbolReqMsg& paren
     switch(field_id) {
         case samp_meng_FieldId_base: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_type: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_length: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_symbol: {
             retval = samp_meng::Symbol_ReadStrptrMaybe(parent.symbol, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3407,21 +3511,20 @@ bool samp_meng::NewUserMsg_ReadFieldMaybe(samp_meng::NewUserMsg& parent, algo::s
     switch(field_id) {
         case samp_meng_FieldId_base: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_type: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_length: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_user: {
             retval = u32_ReadStrptrMaybe(parent.user, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3469,21 +3572,20 @@ bool samp_meng::NewUserReqMsg_ReadFieldMaybe(samp_meng::NewUserReqMsg& parent, a
     switch(field_id) {
         case samp_meng_FieldId_base: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_type: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_length: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_user: {
             retval = u32_ReadStrptrMaybe(parent.user, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3531,29 +3633,26 @@ bool samp_meng::OrderTradeMsg_ReadFieldMaybe(samp_meng::OrderTradeMsg& parent, a
     switch(field_id) {
         case samp_meng_FieldId_base: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_type: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_length: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_order: {
             retval = u64_ReadStrptrMaybe(parent.order, strval);
-            break;
-        }
+        } break;
         case samp_meng_FieldId_qty: {
             retval = u32_ReadStrptrMaybe(parent.qty, strval);
-            break;
-        }
+        } break;
         case samp_meng_FieldId_price: {
             retval = samp_meng::I64Price8_ReadStrptrMaybe(parent.price, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3636,21 +3735,20 @@ bool samp_meng::TextMsg_ReadFieldMaybe(samp_meng::TextMsg& parent, algo::strptr 
     switch(field_id) {
         case samp_meng_FieldId_base: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_type: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_length: {
             retval = false;
-            break;
-        }
+        } break;
         case samp_meng_FieldId_text: {
             retval = text_ReadStrptrMaybe(parent, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3690,6 +3788,7 @@ inline static void samp_meng::SizeCheck() {
 void samp_meng::StaticCheck() {
     algo_assert(_offset_of(samp_meng::CancelOrderMsg, order) + sizeof(((samp_meng::CancelOrderMsg*)0)->order) == sizeof(samp_meng::CancelOrderMsg));
     algo_assert(_offset_of(samp_meng::CancelReqMsg, order) + sizeof(((samp_meng::CancelReqMsg*)0)->order) == sizeof(samp_meng::CancelReqMsg));
+    algo_assert(_offset_of(samp_meng::trace, dispatch_In_Unkmsg_cycles) + sizeof(((samp_meng::trace*)0)->dispatch_In_Unkmsg_cycles) == sizeof(samp_meng::trace));
     algo_assert(_offset_of(samp_meng::I64Price8, value) + sizeof(((samp_meng::I64Price8*)0)->value) == sizeof(samp_meng::I64Price8));
     algo_assert(_offset_of(samp_meng::Symbol, symbol) + sizeof(((samp_meng::Symbol*)0)->symbol) == sizeof(samp_meng::Symbol));
     algo_assert(_offset_of(samp_meng::FieldId, value) + sizeof(((samp_meng::FieldId*)0)->value) == sizeof(samp_meng::FieldId));
@@ -3707,35 +3806,90 @@ void samp_meng::StaticCheck() {
     algo_assert(_offset_of(samp_meng::OrderTradeMsg, price) + sizeof(((samp_meng::OrderTradeMsg*)0)->price) == sizeof(samp_meng::OrderTradeMsg));
 }
 
+// --- samp_meng.In.CancelReqMsg.UpdateCycles
+void samp_meng::In_CancelReqMsg_UpdateCycles() {
+    u64 cur_cycles = algo::get_cycles();
+    samp_meng::_db.trace.dispatch_In_CancelReqMsg_cycles += cur_cycles - algo_lib::_db.clock;
+    algo_lib::_db.clock = algo::SchedTime(cur_cycles);
+}
+
+// --- samp_meng.In.MassCancelReqMsg.UpdateCycles
+void samp_meng::In_MassCancelReqMsg_UpdateCycles() {
+    u64 cur_cycles = algo::get_cycles();
+    samp_meng::_db.trace.dispatch_In_MassCancelReqMsg_cycles += cur_cycles - algo_lib::_db.clock;
+    algo_lib::_db.clock = algo::SchedTime(cur_cycles);
+}
+
+// --- samp_meng.In.NewOrderReqMsg.UpdateCycles
+void samp_meng::In_NewOrderReqMsg_UpdateCycles() {
+    u64 cur_cycles = algo::get_cycles();
+    samp_meng::_db.trace.dispatch_In_NewOrderReqMsg_cycles += cur_cycles - algo_lib::_db.clock;
+    algo_lib::_db.clock = algo::SchedTime(cur_cycles);
+}
+
+// --- samp_meng.In.NewSymbolReqMsg.UpdateCycles
+void samp_meng::In_NewSymbolReqMsg_UpdateCycles() {
+    u64 cur_cycles = algo::get_cycles();
+    samp_meng::_db.trace.dispatch_In_NewSymbolReqMsg_cycles += cur_cycles - algo_lib::_db.clock;
+    algo_lib::_db.clock = algo::SchedTime(cur_cycles);
+}
+
+// --- samp_meng.In.NewUserReqMsg.UpdateCycles
+void samp_meng::In_NewUserReqMsg_UpdateCycles() {
+    u64 cur_cycles = algo::get_cycles();
+    samp_meng::_db.trace.dispatch_In_NewUserReqMsg_cycles += cur_cycles - algo_lib::_db.clock;
+    algo_lib::_db.clock = algo::SchedTime(cur_cycles);
+}
+
+// --- samp_meng.In.TextMsg.UpdateCycles
+void samp_meng::In_TextMsg_UpdateCycles() {
+    u64 cur_cycles = algo::get_cycles();
+    samp_meng::_db.trace.dispatch_In_TextMsg_cycles += cur_cycles - algo_lib::_db.clock;
+    algo_lib::_db.clock = algo::SchedTime(cur_cycles);
+}
+
 // --- samp_meng.In..DispatchRaw
 int samp_meng::InDispatchRaw(samp_meng::InCase type, u8 *msg, u32 len) {
     int ret = 0;
     switch(type) {
         case 11: if (sizeof(samp_meng::CancelReqMsg) <= len) {
+            ++samp_meng::_db.trace.dispatch_In_CancelReqMsg;
             samp_meng::In_CancelReqMsg((samp_meng::CancelReqMsg&)*msg);
+            samp_meng::In_CancelReqMsg_UpdateCycles();
             ret = (int)sizeof(samp_meng::CancelReqMsg);
         } break;
         case 12: if (sizeof(samp_meng::MassCancelReqMsg) <= len) {
+            ++samp_meng::_db.trace.dispatch_In_MassCancelReqMsg;
             samp_meng::In_MassCancelReqMsg((samp_meng::MassCancelReqMsg&)*msg);
+            samp_meng::In_MassCancelReqMsg_UpdateCycles();
             ret = (int)sizeof(samp_meng::MassCancelReqMsg);
         } break;
         case 10: if (sizeof(samp_meng::NewOrderReqMsg) <= len) {
+            ++samp_meng::_db.trace.dispatch_In_NewOrderReqMsg;
             samp_meng::In_NewOrderReqMsg((samp_meng::NewOrderReqMsg&)*msg);
+            samp_meng::In_NewOrderReqMsg_UpdateCycles();
             ret = (int)sizeof(samp_meng::NewOrderReqMsg);
         } break;
         case 13: if (sizeof(samp_meng::NewSymbolReqMsg) <= len) {
+            ++samp_meng::_db.trace.dispatch_In_NewSymbolReqMsg;
             samp_meng::In_NewSymbolReqMsg((samp_meng::NewSymbolReqMsg&)*msg);
+            samp_meng::In_NewSymbolReqMsg_UpdateCycles();
             ret = (int)sizeof(samp_meng::NewSymbolReqMsg);
         } break;
         case 14: if (sizeof(samp_meng::NewUserReqMsg) <= len) {
+            ++samp_meng::_db.trace.dispatch_In_NewUserReqMsg;
             samp_meng::In_NewUserReqMsg((samp_meng::NewUserReqMsg&)*msg);
+            samp_meng::In_NewUserReqMsg_UpdateCycles();
             ret = (int)sizeof(samp_meng::NewUserReqMsg);
         } break;
         case 7: if (sizeof(samp_meng::TextMsg) <= len) {
+            ++samp_meng::_db.trace.dispatch_In_TextMsg;
             samp_meng::In_TextMsg((samp_meng::TextMsg&)*msg);
+            samp_meng::In_TextMsg_UpdateCycles();
             ret = (int)sizeof(samp_meng::TextMsg);
         } break;
         default:
+        ++samp_meng::_db.trace.dispatch_In_Unkmsg;
         break;
     }
     return ret;
@@ -4024,12 +4178,13 @@ bool samp_meng::MsgHeaderMsgs_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &b
 // --- samp_meng...main
 int main(int argc, char **argv) {
     try {
-        algo_lib::FDb_Init();
         lib_json::FDb_Init();
+        algo_lib::FDb_Init();
         samp_meng::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         samp_meng::ReadArgv(); // dmmeta.main:samp_meng
         samp_meng::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -4041,8 +4196,8 @@ int main(int argc, char **argv) {
     }
     try {
         samp_meng::FDb_Uninit();
-        lib_json::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

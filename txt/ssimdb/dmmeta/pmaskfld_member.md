@@ -21,7 +21,7 @@ italicised fields: *pmaskfld, field* are [**fldfunc**](/txt/ssim.md#fldfunc) fie
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|pmaskfld_member|[algo.Smallstr100](/txt/protocol/algo/README.md#algo-smallstr100)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|pmaskfld_member|[algo.Smallstr200](/txt/protocol/algo/README.md#algo-smallstr200)|[Val](/txt/exe/amc/reftypes.md#val)|||
 |*pmaskfld*|*[dmmeta.Pmaskfld](/txt/ssimdb/dmmeta/pmaskfld.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RL of pmaskfld_member*|
 |*field*|*[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*<br>/RR of pmaskfld_member*|
 |comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||

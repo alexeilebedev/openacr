@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -61,8 +61,8 @@ static void UpdateHeader(src_func::FTarget &target, strptr fname) {
     // no update if nothing is found
     if (nupdate>0) {
         algo::Refurbish(file);
-        verblog2("src_func.update"
-                 <<Keyval("file",fname));
+        prcat(verbose2,"src_func.update"
+              <<Keyval("file",fname));
         int nbefore = algo_lib::_db.stringtofile_nwrite;
         SafeStringToFile(newfile,fname);
         src_func::_db.report.n_filemod += algo_lib::_db.stringtofile_nwrite - nbefore;

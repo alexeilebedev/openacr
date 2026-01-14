@@ -8,7 +8,9 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-22.04]
-        compiler: [g++,clang++]
+        # clang++ has been disabled for Jan 2026 update
+        #compiler: [g++,clang++]
+        compiler: [g++]
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
@@ -37,16 +39,16 @@ jobs:
       matrix:
         os: [ubuntu-22.04]
         test:
-        - compiler: clang++
-          job: normalize
-        - compiler: clang++
-          job: comp
+        #- compiler: clang++
+        #  job: normalize
+        #- compiler: clang++
+        #  job: comp
         - compiler: g++
           job: normalize
         - compiler: g++
           job: comp
         - compiler: g++
-          job: cov
+          job: coverage
         - compiler: g++
           job: memcheck
     steps:

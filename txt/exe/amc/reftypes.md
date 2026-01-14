@@ -66,15 +66,14 @@ Here is an example of a `Delptr` field:
 The following functions are generated:
 
 ```
-inline-command: amc -report:N atf_amc.DelType1.u32val.% -proto
+inline-command: src_func -gen -showcomment -targsrc:atf_amc/% atf_amc.u32val%
+// --- atf_amc.DelType1.u32val.Access
 // Get or Create
 // Access value, creating it if necessary. Process dies if not successful.
-// func:atf_amc.DelType1.u32val.Access
-u32&                 u32val_Access(atf_amc::DelType1& parent) __attribute__((nothrow));
+u32& atf_amc::u32val_Access(atf_amc::DelType1& parent) 
+// --- atf_amc.DelType1.u32val.Delete
 // Delete value.
-// func:atf_amc.DelType1.u32val.Delete
-void                 u32val_Delete(atf_amc::DelType1& parent) __attribute__((nothrow));
-
+void atf_amc::u32val_Delete(atf_amc::DelType1& parent) 
 ```
 
 #### Exec - Subprocess
@@ -111,46 +110,67 @@ dmmeta.field  field:ssim2mysql.FDb.ctype  arg:ssim2mysql.FCtype  reftype:Lary  d
 
 The following functions are generated:
 ```
-inline-command: amc -report:N ssim2mysql.FDb.ctype.% -proto
+inline-command: src_func -gen -showcomment -targsrc:ssim2mysql/% ssim2mysql.ctype_%
+// --- ssim2mysql.FCtype.msghdr.CopyOut
+// Copy fields out of row
+void ssim2mysql::ctype_CopyOut(ssim2mysql::FCtype &row, dmmeta::Ctype &out) 
+// --- ssim2mysql.FCtype.msghdr.CopyIn
+// Copy fields in to row
+void ssim2mysql::ctype_CopyIn(ssim2mysql::FCtype &row, dmmeta::Ctype &in) 
+// --- ssim2mysql.FDb.ctype.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-// func:ssim2mysql.FDb.ctype.Alloc
-ssim2mysql::FCtype&  ctype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+ssim2mysql::FCtype& ssim2mysql::ctype_Alloc() 
+// --- ssim2mysql.FDb.ctype.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-// func:ssim2mysql.FDb.ctype.AllocMaybe
-ssim2mysql::FCtype*  ctype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+ssim2mysql::FCtype* ssim2mysql::ctype_AllocMaybe() 
+// --- ssim2mysql.FDb.ctype.InsertMaybe
 // Create new row from struct.
 // Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-// func:ssim2mysql.FDb.ctype.InsertMaybe
-ssim2mysql::FCtype*  ctype_InsertMaybe(const dmmeta::Ctype &value) __attribute__((nothrow));
+ssim2mysql::FCtype* ssim2mysql::ctype_InsertMaybe(const dmmeta::Ctype &value) 
+// --- ssim2mysql.FDb.ctype.AllocMem
 // Allocate space for one element. If no memory available, return NULL.
-// func:ssim2mysql.FDb.ctype.AllocMem
-void*                ctype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-// func:ssim2mysql.FDb.ctype.EmptyQ
-inline bool          ctype_EmptyQ() __attribute__((nothrow, pure));
-// Look up row by row id. Return NULL if out of range
-// func:ssim2mysql.FDb.ctype.Find
-inline ssim2mysql::FCtype* ctype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to last element of array, or NULL if array is empty
-// func:ssim2mysql.FDb.ctype.Last
-inline ssim2mysql::FCtype* ctype_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-// func:ssim2mysql.FDb.ctype.N
-inline i32           ctype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+void* ssim2mysql::ctype_AllocMem() 
+// --- ssim2mysql.FDb.ctype.RemoveLast
 // Delete last element of array. Do nothing if array is empty.
-// func:ssim2mysql.FDb.ctype.RemoveLast
-void                 ctype_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-// func:ssim2mysql.FDb.ctype.qFind
-inline ssim2mysql::FCtype& ctype_qFind(u64 t) __attribute__((nothrow, pure));
-// func:ssim2mysql.FDb.ctype.InputMaybe
-static bool          ctype_InputMaybe(dmmeta::Ctype &elem) __attribute__((nothrow));
+void ssim2mysql::ctype_RemoveLast() 
+// --- ssim2mysql.FDb.ctype.InputMaybe
+static bool ssim2mysql::ctype_InputMaybe(dmmeta::Ctype &elem) 
+// --- ssim2mysql.FDb.ctype.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:ssim2mysql.FDb.ctype.XrefMaybe
-bool                 ctype_XrefMaybe(ssim2mysql::FCtype &row);
-
+bool ssim2mysql::ctype_XrefMaybe(ssim2mysql::FCtype &row) 
+// --- ssim2mysql.FField.ctype.Get
+algo::Smallstr100 ssim2mysql::ctype_Get(ssim2mysql::FField& field) 
+// --- ssim2mysql.FCtype.c_field.InAryQ
+// True if row is in any ptrary instance
+inline bool ssim2mysql::ctype_c_field_InAryQ(ssim2mysql::FField& row) 
+// --- ssim2mysql.FCtype.c_field_curs.Reset
+inline void ssim2mysql::ctype_c_field_curs_Reset(ctype_c_field_curs &curs, ssim2mysql::FCtype &parent) 
+// --- ssim2mysql.FCtype.c_field_curs.ValidQ
+// cursor points to valid item
+inline bool ssim2mysql::ctype_c_field_curs_ValidQ(ctype_c_field_curs &curs) 
+// --- ssim2mysql.FCtype.c_field_curs.Next
+// proceed to next item
+inline void ssim2mysql::ctype_c_field_curs_Next(ctype_c_field_curs &curs) 
+// --- ssim2mysql.FCtype.c_field_curs.Access
+// item access
+inline ssim2mysql::FField& ssim2mysql::ctype_c_field_curs_Access(ctype_c_field_curs &curs) 
+// --- ssim2mysql.FDb.ctype.EmptyQ
+// Return true if index is empty
+inline bool ssim2mysql::ctype_EmptyQ() 
+// --- ssim2mysql.FDb.ctype.Find
+// Look up row by row id. Return NULL if out of range
+inline ssim2mysql::FCtype* ssim2mysql::ctype_Find(u64 t) 
+// --- ssim2mysql.FDb.ctype.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline ssim2mysql::FCtype* ssim2mysql::ctype_Last() 
+// --- ssim2mysql.FDb.ctype.N
+// Return number of items in the pool
+inline i32 ssim2mysql::ctype_N() 
+// --- ssim2mysql.FDb.ctype.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline ssim2mysql::FCtype& ssim2mysql::ctype_qFind(u64 t) 
 ```
 
 #### Llist - X-reference: any of 32 possible types of linked list
@@ -226,37 +246,36 @@ Here is an example of an Lpool declaration:
 
 The following functions are generated:
 ```
-inline-command: amc -report:N algo_lib.FDb.lpool.% -proto
+inline-command: src_func -gen -showcomment -targsrc:algo_lib/% algo_lib.lpool_%
+// --- algo_lib.FDb.lpool.FreeMem
 // Free block of memory previously returned by Lpool.
-// func:algo_lib.FDb.lpool.FreeMem
-void                 lpool_FreeMem(void* mem, u64 size) __attribute__((nothrow));
+void algo_lib::lpool_FreeMem(void* mem, u64 size) 
+// --- algo_lib.FDb.lpool.AllocMem
 // Allocate new piece of memory at least SIZE bytes long.
 // If not successful, return NULL
 // The allocated block is at least 1<<4
 // The maximum allocation size is at most 1<<(36+4)
-// func:algo_lib.FDb.lpool.AllocMem
-void*                lpool_AllocMem(u64 size) __attribute__((__warn_unused_result__, nothrow));
+void* algo_lib::lpool_AllocMem(u64 size) 
+// --- algo_lib.FDb.lpool.ReserveBuffers
 // Add N buffers of some size to the free store
 // Reserve NBUF buffers of size BUFSIZE from the base pool (algo_lib::sbrk)
-// func:algo_lib.FDb.lpool.ReserveBuffers
-bool                 lpool_ReserveBuffers(u64 nbuf, u64 bufsize) __attribute__((nothrow));
+bool algo_lib::lpool_ReserveBuffers(u64 nbuf, u64 bufsize) 
+// --- algo_lib.FDb.lpool.ReallocMem
 // Allocate new block, copy old to new, delete old.
 // If the new size is same as old size, do nothing.
 // In all other cases, new memory is allocated (i.e. size reduction is not a no-op)
 // If no memory, return NULL; old memory remains untouched
-// func:algo_lib.FDb.lpool.ReallocMem
-void*                lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) __attribute__((nothrow));
+void* algo_lib::lpool_ReallocMem(void* oldmem, u64 old_size, u64 new_size) 
+// --- algo_lib.FDb.lpool.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-// func:algo_lib.FDb.lpool.Alloc
-u8&                  lpool_Alloc() __attribute__((__warn_unused_result__, nothrow));
+u8& algo_lib::lpool_Alloc() 
+// --- algo_lib.FDb.lpool.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-// func:algo_lib.FDb.lpool.AllocMaybe
-u8*                  lpool_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+u8* algo_lib::lpool_AllocMaybe() 
+// --- algo_lib.FDb.lpool.Delete
 // Remove row from all global and cross indices, then deallocate row
-// func:algo_lib.FDb.lpool.Delete
-void                 lpool_Delete(u8 &row) __attribute__((nothrow));
-
+void algo_lib::lpool_Delete(u8 &row) 
 ```
 
 #### Malloc - Pass-through for malloc / free
@@ -296,15 +315,14 @@ dmmeta.field  field:algo_lib.FDb.sbrk  arg:u8  reftype:Sbrk  dflt:""  comment:"B
 
 The following functions are generated:
 ```
-inline-command: amc -report:N algo_lib.FDb.sbrk.% -proto
+inline-command: src_func -gen -showcomment -targsrc:algo_lib/% algo_lib.sbrk_%
+// --- algo_lib.FDb.sbrk.AllocMem
 // Allocate a new piece of memory at least SIZE bytes long.
 // If out of memory, return NULL
 // Newly allocated memory is initialized to zeros
-// func:algo_lib.FDb.sbrk.AllocMem
-void*                sbrk_AllocMem(u32 size) __attribute__((__warn_unused_result__, nothrow));
-// func:algo_lib.FDb.sbrk.FreeMem
-void                 sbrk_FreeMem(void *mem, u32 size) __attribute__((nothrow));
-
+void* algo_lib::sbrk_AllocMem(u32 size) 
+// --- algo_lib.FDb.sbrk.FreeMem
+void algo_lib::sbrk_FreeMem(void *mem, u32 size) 
 ```
 
 Sbrk supports huge memory pages. To enable this behavior, set `<field>_huge_limit` to some value.
@@ -360,6 +378,11 @@ char&                buf_AllocAt(algo::LineBuf& parent, int at) __attribute__((_
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:algo.LineBuf.buf.AllocN
 algo::aryptr<char>   buf_AllocN(algo::LineBuf& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:algo.LineBuf.buf.AllocNAt
+algo::aryptr<char>   buf_AllocNAt(algo::LineBuf& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:algo.LineBuf.buf.EmptyQ
 inline bool          buf_EmptyQ(algo::LineBuf& parent) __attribute__((nothrow));
@@ -418,6 +441,10 @@ algo::aryptr<char>   buf_AllocNVal(algo::LineBuf& parent, int n_elems, const cha
 // The array is replaced with the input string. Function always succeeds.
 // func:algo.LineBuf.buf.ReadStrptrMaybe
 bool                 buf_ReadStrptrMaybe(algo::LineBuf& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:algo.LineBuf.buf.Insary
+void                 buf_Insary(algo::LineBuf& parent, algo::aryptr<char> rhs, int at) __attribute__((nothrow));
 
 ```
 
@@ -442,37 +469,36 @@ Here is an example of a `Tpool`:
 And here is the generated code:
 
 ```
-inline-command: amc -report:N ssim2mysql.FDb.cmd.% -proto
+inline-command: src_func -gen -showcomment -targsrc:ssim2mysql/% ssim2mysql.cmd%
+// --- ssim2mysql.FDb.cmd.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
-// func:ssim2mysql.FDb.cmd.Alloc
-ssim2mysql::FCmd&    cmd_Alloc() __attribute__((__warn_unused_result__, nothrow));
+ssim2mysql::FCmd& ssim2mysql::cmd_Alloc() 
+// --- ssim2mysql.FDb.cmd.AllocMaybe
 // Allocate memory for new element. If out of memory, return NULL.
-// func:ssim2mysql.FDb.cmd.AllocMaybe
-ssim2mysql::FCmd*    cmd_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+ssim2mysql::FCmd* ssim2mysql::cmd_AllocMaybe() 
+// --- ssim2mysql.FDb.cmd.Delete
 // Remove row from all global and cross indices, then deallocate row
-// func:ssim2mysql.FDb.cmd.Delete
-void                 cmd_Delete(ssim2mysql::FCmd &row) __attribute__((nothrow));
+void ssim2mysql::cmd_Delete(ssim2mysql::FCmd &row) 
+// --- ssim2mysql.FDb.cmd.AllocMem
 // Allocate space for one element
 // If no memory available, return NULL.
-// func:ssim2mysql.FDb.cmd.AllocMem
-void*                cmd_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+void* ssim2mysql::cmd_AllocMem() 
+// --- ssim2mysql.FDb.cmd.FreeMem
 // Remove mem from all global and cross indices, then deallocate mem
-// func:ssim2mysql.FDb.cmd.FreeMem
-void                 cmd_FreeMem(ssim2mysql::FCmd &row) __attribute__((nothrow));
+void ssim2mysql::cmd_FreeMem(ssim2mysql::FCmd &row) 
+// --- ssim2mysql.FDb.cmd.Reserve
 // Preallocate memory for N more elements
 // Return number of elements actually reserved.
-// func:ssim2mysql.FDb.cmd.Reserve
-u64                  cmd_Reserve(u64 n_elems) __attribute__((nothrow));
+u64 ssim2mysql::cmd_Reserve(u64 n_elems) 
+// --- ssim2mysql.FDb.cmd.ReserveMem
 // Allocate block of given size, break up into small elements and append to free list.
 // Return number of elements reserved.
-// func:ssim2mysql.FDb.cmd.ReserveMem
-u64                  cmd_ReserveMem(u64 size) __attribute__((nothrow));
+u64 ssim2mysql::cmd_ReserveMem(u64 size) 
+// --- ssim2mysql.FDb.cmd.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:ssim2mysql.FDb.cmd.XrefMaybe
-bool                 cmd_XrefMaybe(ssim2mysql::FCmd &row);
-
+bool ssim2mysql::cmd_XrefMaybe(ssim2mysql::FCmd &row) 
 ```
 
 #### Upptr - Pointer to a past (pre-existing) record

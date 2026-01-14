@@ -14,7 +14,7 @@ italicised fields: *package, key* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
 |---|---|---|---|---|
 |pkgkey|[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)|[Val](/txt/exe/amc/reftypes.md#val)|||
 |*package*|*[dev.Package](/txt/ssimdb/dev/package.md)*|*[Pkey](/txt/exe/amc/reftypes.md#pkey)*||*Parent package<br>/LL of pkgkey*|
-|*key*|*[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)*|*[Val](/txt/exe/amc/reftypes.md#val)*||*Acr query (regx)<br>/LR of pkgkey*|
+|*key*|*[algo.Smallstr150](/txt/protocol/algo/README.md#algo-smallstr150)*|*[Val](/txt/exe/amc/reftypes.md#val)*||*Acr query (regx) - named key for clarity<br>/LR of pkgkey*|
 |comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->

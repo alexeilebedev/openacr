@@ -1,2 +1,3 @@
-dmmeta.hashtype  hashtype:Extern  comment:""
-dmmeta.hashtype  hashtype:CRC32  comment:""
+dmmeta.hashtype  hashtype:Extern  comment:"Implemened externally"
+dmmeta.hashtype  hashtype:CRC32  comment:"Variant of CRC32"
+dmmeta.hashtype  hashtype:Linear  comment:"Identity hash used as direct index (no collisions)"

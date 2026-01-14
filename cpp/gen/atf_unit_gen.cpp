@@ -35,29 +35,35 @@
 #include "include/gen/atfdb_gen.inl.h"
 #include "include/gen/lib_exec_gen.h"
 #include "include/gen/lib_exec_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 #include "include/gen/lib_ams_gen.h"
 #include "include/gen/lib_ams_gen.inl.h"
+#include "include/gen/lib_curl_gen.h"
+#include "include/gen/lib_curl_gen.inl.h"
 #include "include/gen/lib_fm_gen.h"
 #include "include/gen/lib_fm_gen.inl.h"
+#include "include/gen/lib_netio_gen.h"
+#include "include/gen/lib_netio_gen.inl.h"
 #include "include/gen/lib_sql_gen.h"
 #include "include/gen/lib_sql_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
-lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
-lib_ams::FDb    lib_ams::_db;     // dependency found via dev.targdep
-lib_exec::FDb   lib_exec::_db;    // dependency found via dev.targdep
-lib_fm::FDb     lib_fm::_db;      // dependency found via dev.targdep
-lib_sql::FDb    lib_sql::_db;     // dependency found via dev.targdep
-atf_unit::FDb   atf_unit::_db;    // dependency found via dev.targdep
+lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
+algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
+lib_ams::FDb     lib_ams::_db;      // dependency found via dev.targdep
+lib_curl::FDb    lib_curl::_db;     // dependency found via dev.targdep
+lib_exec::FDb    lib_exec::_db;     // dependency found via dev.targdep
+lib_fm::FDb      lib_fm::_db;       // dependency found via dev.targdep
+lib_netio::FDb   lib_netio::_db;    // dependency found via dev.targdep
+lib_sql::FDb     lib_sql::_db;      // dependency found via dev.targdep
+atf_unit::FDb    atf_unit::_db;     // dependency found via dev.targdep
 
 namespace atf_unit {
 const char *atf_unit_help =
@@ -74,8 +80,8 @@ const char *atf_unit_help =
 "    -report                   Y       Print final report\n"
 "    -capture                          Re-capture test results\n"
 "    -check_untracked          Y       Check for untracked file before allowing test to run\n"
-"    -verbose          int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug            int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose          flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug            flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                             Print help and exit; alias -h\n"
 "    -version                          Print version and exit\n"
 "    -signature                        Show signatures and exit; alias -sig\n"
@@ -258,7 +264,7 @@ algo::Fildes atf_unit::acr_ed_StartRead(algo_lib::FFildes &read) {
 // --- atf_unit.FDb.acr_ed.Kill
 // Kill subprocess and wait
 void atf_unit::acr_ed_Kill() {
-    if (_db.acr_ed_pid != 0) {
+    if (_db.acr_ed_pid > 0) {
         kill(_db.acr_ed_pid,9);
         acr_ed_Wait();
     }
@@ -609,6 +615,12 @@ void atf_unit::acr_ed_ToArgv(algo::StringAry& args) {
         cstring *arg = &ary_Alloc(args);
         *arg << "-anonfld:";
         bool_Print(_db.acr_ed_cmd.anonfld, *arg);
+    }
+
+    if (_db.acr_ed_cmd.amc != true) {
+        cstring *arg = &ary_Alloc(args);
+        *arg << "-amc:";
+        bool_Print(_db.acr_ed_cmd.amc, *arg);
     }
     for (int i=1; i < algo_lib::_db.cmdline.verbose; ++i) {
         ary_Alloc(args) << "-verbose";
@@ -1114,6 +1126,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.DoTestRounding  comment:\"\"", atf_unit::unittest_algo_lib_DoTestRounding }
         ,{ "atfdb.unittest  unittest:algo_lib.ExitCode  comment:\"\"", atf_unit::unittest_algo_lib_ExitCode }
         ,{ "atfdb.unittest  unittest:algo_lib.FTruncate  comment:\"\"", atf_unit::unittest_algo_lib_FTruncate }
+        ,{ "atfdb.unittest  unittest:algo_lib.FileAppend  comment:\"\"", atf_unit::unittest_algo_lib_FileAppend }
         ,{ "atfdb.unittest  unittest:algo_lib.FileLine_curs  comment:\"\"", atf_unit::unittest_algo_lib_FileLine_curs }
         ,{ "atfdb.unittest  unittest:algo_lib.FileQ  comment:\"\"", atf_unit::unittest_algo_lib_FileQ }
         ,{ "atfdb.unittest  unittest:algo_lib.FileToString  comment:\"\"", atf_unit::unittest_algo_lib_FileToString }
@@ -1155,15 +1168,18 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.PrintPad  comment:\"\"", atf_unit::unittest_algo_lib_PrintPad }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintSsim  comment:\"\"", atf_unit::unittest_algo_lib_PrintSsim }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintUnTime  comment:\"\"", atf_unit::unittest_algo_lib_PrintUnTime }
+        ,{ "atfdb.unittest  unittest:algo_lib.PrintUuid  comment:\"\"", atf_unit::unittest_algo_lib_PrintUuid }
         ,{ "atfdb.unittest  unittest:algo_lib.PrintWithCommas  comment:\"\"", atf_unit::unittest_algo_lib_PrintWithCommas }
         ,{ "atfdb.unittest  unittest:algo_lib.ReadLine  comment:\"\"", atf_unit::unittest_algo_lib_ReadLine }
         ,{ "atfdb.unittest  unittest:algo_lib.ReadModuleId  comment:\"\"", atf_unit::unittest_algo_lib_ReadModuleId }
+        ,{ "atfdb.unittest  unittest:algo_lib.ReadUuid  comment:\"\"", atf_unit::unittest_algo_lib_ReadUuid }
         ,{ "atfdb.unittest  unittest:algo_lib.Regx  comment:\"\"", atf_unit::unittest_algo_lib_Regx }
         ,{ "atfdb.unittest  unittest:algo_lib.RegxReadTwice  comment:\"\"", atf_unit::unittest_algo_lib_RegxReadTwice }
         ,{ "atfdb.unittest  unittest:algo_lib.RegxReadTwice2  comment:\"\"", atf_unit::unittest_algo_lib_RegxReadTwice2 }
         ,{ "atfdb.unittest  unittest:algo_lib.RegxShortCircuit  comment:\"\"", atf_unit::unittest_algo_lib_RegxShortCircuit }
         ,{ "atfdb.unittest  unittest:algo_lib.RemDirRecurse  comment:\"Test RemDirRecurse functions\"", atf_unit::unittest_algo_lib_RemDirRecurse }
         ,{ "atfdb.unittest  unittest:algo_lib.Replscope  comment:\"\"", atf_unit::unittest_algo_lib_Replscope }
+        ,{ "atfdb.unittest  unittest:algo_lib.ReplscopeSharedPrefix  comment:\"\"", atf_unit::unittest_algo_lib_ReplscopeSharedPrefix }
         ,{ "atfdb.unittest  unittest:algo_lib.ReverseBits  comment:\"\"", atf_unit::unittest_algo_lib_ReverseBits }
         ,{ "atfdb.unittest  unittest:algo_lib.SchedTime  comment:\"\"", atf_unit::unittest_algo_lib_SchedTime }
         ,{ "atfdb.unittest  unittest:algo_lib.Sleep  comment:\"\"", atf_unit::unittest_algo_lib_Sleep }
@@ -1195,6 +1211,8 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:algo_lib.Txttbl  comment:\"\"", atf_unit::unittest_algo_lib_Txttbl }
         ,{ "atfdb.unittest  unittest:algo_lib.U128PrintHex  comment:\"\"", atf_unit::unittest_algo_lib_U128PrintHex }
         ,{ "atfdb.unittest  unittest:algo_lib.UnescapeC  comment:\"\"", atf_unit::unittest_algo_lib_UnescapeC }
+        ,{ "atfdb.unittest  unittest:algo_lib.Url  comment:\"\"", atf_unit::unittest_algo_lib_Url }
+        ,{ "atfdb.unittest  unittest:algo_lib.Zigzag  comment:\"\"", atf_unit::unittest_algo_lib_Zigzag }
         ,{ "atfdb.unittest  unittest:algo_lib.flock  comment:\"\"", atf_unit::unittest_algo_lib_flock }
         ,{ "atfdb.unittest  unittest:algo_lib.strptr_Eq  comment:\"\"", atf_unit::unittest_algo_lib_strptr_Eq }
         ,{ "atfdb.unittest  unittest:algo_lib.test_strptr  comment:\"\"", atf_unit::unittest_algo_lib_test_strptr }
@@ -1205,6 +1223,10 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:atf_unit.Outfile  comment:\"\"", atf_unit::unittest_atf_unit_Outfile }
         ,{ "atfdb.unittest  unittest:fm  comment:\"\"", atf_unit::unittest_fm }
         ,{ "atfdb.unittest  unittest:lib_ams.Test1  comment:WIP", atf_unit::unittest_lib_ams_Test1 }
+        ,{ "atfdb.unittest  unittest:lib_curl.GET_Echo  comment:\"GET /echo\"", atf_unit::unittest_lib_curl_GET_Echo }
+        ,{ "atfdb.unittest  unittest:lib_curl.POST_JSON  comment:\"POST /echo with JSON + header\"", atf_unit::unittest_lib_curl_POST_JSON }
+        ,{ "atfdb.unittest  unittest:lib_curl.PUT_PLAINTEXT  comment:\"PUT /echo with plain text\"", atf_unit::unittest_lib_curl_PUT_PLAINTEXT }
+        ,{ "atfdb.unittest  unittest:lib_curl.STATUS_200  comment:\"GET status 200\"", atf_unit::unittest_lib_curl_STATUS_200 }
         ,{ "atfdb.unittest  unittest:lib_exec.Dependency  comment:\"\"", atf_unit::unittest_lib_exec_Dependency }
         ,{ "atfdb.unittest  unittest:lib_exec.Parallel1  comment:\"\"", atf_unit::unittest_lib_exec_Parallel1 }
         ,{ "atfdb.unittest  unittest:lib_exec.Timeout  comment:\"\"", atf_unit::unittest_lib_exec_Timeout }
@@ -1315,6 +1337,7 @@ static void atf_unit::unittest_LoadStatic() {
         ,{ "atfdb.unittest  unittest:lib_json.TokenNull  comment:\"Single null token\"", atf_unit::unittest_lib_json_TokenNull }
         ,{ "atfdb.unittest  unittest:lib_json.TokenTrue  comment:\"Single true token\"", atf_unit::unittest_lib_json_TokenTrue }
         ,{ "atfdb.unittest  unittest:lib_json.Typical  comment:\"Normal case similar to typical usage\"", atf_unit::unittest_lib_json_Typical }
+        ,{ "atfdb.unittest  unittest:lib_netio_GetHostAddr  comment:\"resolve hostname to ips\"", atf_unit::unittest_lib_netio_GetHostAddr }
         ,{ "atfdb.unittest  unittest:lib_sql.Main  comment:\"\"", atf_unit::unittest_lib_sql_Main }
         ,{NULL, NULL}
     };
@@ -1434,9 +1457,8 @@ void atf_unit::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "atf_unit: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -1479,6 +1501,9 @@ void atf_unit::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:atf_unit.FDb.cmdline
@@ -1490,7 +1515,7 @@ void atf_unit::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -1559,8 +1584,8 @@ bool atf_unit::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && atf_unit::LoadTuplesFile(algo::SsimFname(root,"fmdb.alm_code"),recursive);
         retval = retval && atf_unit::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -1633,14 +1658,9 @@ bool atf_unit::_db_XrefMaybe() {
 // Find row by key. Return NULL if not found.
 atf_unit::FUnittest* atf_unit::ind_unittest_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_unittest_buckets_n - 1);
-    atf_unit::FUnittest* *e = &_db.ind_unittest_buckets_elems[index];
-    atf_unit::FUnittest* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).unittest == key;
-        if (done) break;
-        e         = &ret->ind_unittest_next;
-    } while (true);
+    atf_unit::FUnittest *ret = _db.ind_unittest_buckets_elems[index];
+    for (; ret && !((*ret).unittest == key); ret = ret->ind_unittest_next) {
+    }
     return ret;
 }
 
@@ -1672,10 +1692,11 @@ atf_unit::FUnittest& atf_unit::ind_unittest_GetOrCreate(const algo::strptr& key)
 // --- atf_unit.FDb.ind_unittest.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_unit::ind_unittest_InsertMaybe(atf_unit::FUnittest& row) {
-    ind_unittest_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_unittest_next == (atf_unit::FUnittest*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.unittest) & (_db.ind_unittest_buckets_n - 1);
+        row.ind_unittest_hashval = algo::Smallstr50_Hash(0, row.unittest);
+        ind_unittest_Reserve(1);
+        u32 index = row.ind_unittest_hashval & (_db.ind_unittest_buckets_n - 1);
         atf_unit::FUnittest* *prev = &_db.ind_unittest_buckets_elems[index];
         do {
             atf_unit::FUnittest* ret = *prev;
@@ -1701,7 +1722,7 @@ bool atf_unit::ind_unittest_InsertMaybe(atf_unit::FUnittest& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_unit::ind_unittest_Remove(atf_unit::FUnittest& row) {
     if (LIKELY(row.ind_unittest_next != (atf_unit::FUnittest*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.unittest) & (_db.ind_unittest_buckets_n - 1);
+        u32 index = row.ind_unittest_hashval & (_db.ind_unittest_buckets_n - 1);
         atf_unit::FUnittest* *prev = &_db.ind_unittest_buckets_elems[index]; // addr of pointer to current element
         while (atf_unit::FUnittest *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1718,8 +1739,14 @@ void atf_unit::ind_unittest_Remove(atf_unit::FUnittest& row) {
 // --- atf_unit.FDb.ind_unittest.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_unit::ind_unittest_Reserve(int n) {
+    ind_unittest_AbsReserve(_db.ind_unittest_n + n);
+}
+
+// --- atf_unit.FDb.ind_unittest.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_unit::ind_unittest_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_unittest_buckets_n;
-    u32 new_nelems   = _db.ind_unittest_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1738,7 +1765,7 @@ void atf_unit::ind_unittest_Reserve(int n) {
             while (elem) {
                 atf_unit::FUnittest &row        = *elem;
                 atf_unit::FUnittest* next       = row.ind_unittest_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.unittest) & (new_nbuckets-1);
+                u32 index          = row.ind_unittest_hashval & (new_nbuckets-1);
                 row.ind_unittest_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1883,6 +1910,25 @@ algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocN(atf_unit::FPerfSort& parent, i
     return algo::aryptr<atf_unit::Dbl>(elems + old_n, n_elems);
 }
 
+// --- atf_unit.FPerfSort.orig.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<atf_unit::Dbl> atf_unit::orig_AllocNAt(atf_unit::FPerfSort& parent, int n_elems, int at) {
+    orig_Reserve(parent, n_elems);
+    int n  = parent.orig_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("atf_unit.bad_alloc_n_at  field:atf_unit.FPerfSort.orig  comment:'index out of range'");
+    }
+    atf_unit::Dbl *elems = parent.orig_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(atf_unit::Dbl));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) atf_unit::Dbl(); // construct new element, default initialize
+    }
+    parent.orig_n = n+n_elems;
+    return algo::aryptr<atf_unit::Dbl>(elems+at,n_elems);
+}
+
 // --- atf_unit.FPerfSort.orig.Remove
 // Remove item by index. If index outside of range, do nothing.
 void atf_unit::orig_Remove(atf_unit::FPerfSort& parent, u32 i) {
@@ -1967,6 +2013,29 @@ bool atf_unit::orig_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr in
     return retval;
 }
 
+// --- atf_unit.FPerfSort.orig.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void atf_unit::orig_Insary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.orig_elems && rhs.elems < parent.orig_elems + parent.orig_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.orig  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.orig_elems+1))) {
+        FatalErrorExit("atf_unit.bad_insary  field:atf_unit.FPerfSort.orig  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.orig_n - at;
+    orig_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.orig_elems + at + nnew + i) atf_unit::Dbl(parent.orig_elems[at + i]);
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.orig_elems + at + i) atf_unit::Dbl(rhs[i]);
+    }
+    parent.orig_n += nnew;
+}
+
 // --- atf_unit.FPerfSort.sorted.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -2027,6 +2096,25 @@ algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocN(atf_unit::FPerfSort& parent,
     }
     parent.sorted_n = new_n;
     return algo::aryptr<atf_unit::Dbl>(elems + old_n, n_elems);
+}
+
+// --- atf_unit.FPerfSort.sorted.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<atf_unit::Dbl> atf_unit::sorted_AllocNAt(atf_unit::FPerfSort& parent, int n_elems, int at) {
+    sorted_Reserve(parent, n_elems);
+    int n  = parent.sorted_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("atf_unit.bad_alloc_n_at  field:atf_unit.FPerfSort.sorted  comment:'index out of range'");
+    }
+    atf_unit::Dbl *elems = parent.sorted_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(atf_unit::Dbl));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) atf_unit::Dbl(); // construct new element, default initialize
+    }
+    parent.sorted_n = n+n_elems;
+    return algo::aryptr<atf_unit::Dbl>(elems+at,n_elems);
 }
 
 // --- atf_unit.FPerfSort.sorted.Remove
@@ -2111,6 +2199,29 @@ bool atf_unit::sorted_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr 
         sorted_RemoveLast(parent);
     }
     return retval;
+}
+
+// --- atf_unit.FPerfSort.sorted.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void atf_unit::sorted_Insary(atf_unit::FPerfSort& parent, algo::aryptr<atf_unit::Dbl> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.sorted_elems && rhs.elems < parent.sorted_elems + parent.sorted_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.sorted  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.sorted_elems+1))) {
+        FatalErrorExit("atf_unit.bad_insary  field:atf_unit.FPerfSort.sorted  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.sorted_n - at;
+    sorted_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.sorted_elems + at + nnew + i) atf_unit::Dbl(parent.sorted_elems[at + i]);
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.sorted_elems + at + i) atf_unit::Dbl(rhs[i]);
+    }
+    parent.sorted_n += nnew;
 }
 
 // --- atf_unit.FPerfSort.sorted.Swap
@@ -2339,6 +2450,25 @@ algo::aryptr<i32> atf_unit::index_AllocN(atf_unit::FPerfSort& parent, int n_elem
     return algo::aryptr<i32>(elems + old_n, n_elems);
 }
 
+// --- atf_unit.FPerfSort.index.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<i32> atf_unit::index_AllocNAt(atf_unit::FPerfSort& parent, int n_elems, int at) {
+    index_Reserve(parent, n_elems);
+    int n  = parent.index_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("atf_unit.bad_alloc_n_at  field:atf_unit.FPerfSort.index  comment:'index out of range'");
+    }
+    i32 *elems = parent.index_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(i32));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) i32(0); // construct new element, default initialize
+    }
+    parent.index_n = n+n_elems;
+    return algo::aryptr<i32>(elems+at,n_elems);
+}
+
 // --- atf_unit.FPerfSort.index.Remove
 // Remove item by index. If index outside of range, do nothing.
 void atf_unit::index_Remove(atf_unit::FPerfSort& parent, u32 i) {
@@ -2423,6 +2553,25 @@ bool atf_unit::index_ReadStrptrMaybe(atf_unit::FPerfSort& parent, algo::strptr i
     return retval;
 }
 
+// --- atf_unit.FPerfSort.index.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void atf_unit::index_Insary(atf_unit::FPerfSort& parent, algo::aryptr<i32> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.index_elems && rhs.elems < parent.index_elems + parent.index_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("atf_unit.tary_alias  field:atf_unit.FPerfSort.index  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.index_elems+1))) {
+        FatalErrorExit("atf_unit.bad_insary  field:atf_unit.FPerfSort.index  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.index_n - at;
+    index_Reserve(parent, nnew); // reserve space
+    memmove(parent.index_elems + at + nnew, parent.index_elems + at, nmove * sizeof(i32));
+    memcpy(parent.index_elems + at, rhs.elems, nnew * sizeof(i32));
+    parent.index_n += nnew;
+}
+
 // --- atf_unit.FPerfSort..Uninit
 void atf_unit::FPerfSort_Uninit(atf_unit::FPerfSort& parent) {
     atf_unit::FPerfSort &row = parent; (void)row;
@@ -2484,8 +2633,8 @@ void atf_unit::unittest_CopyIn(atf_unit::FUnittest &row, atfdb::Unittest &in) {
     row.comment = in.comment;
 }
 
-// --- atf_unit.FUnittest.target.Get
-algo::Smallstr16 atf_unit::target_Get(atf_unit::FUnittest& unittest) {
+// --- atf_unit.FUnittest.ns.Get
+algo::Smallstr16 atf_unit::ns_Get(atf_unit::FUnittest& unittest) {
     algo::Smallstr16 ret(algo::Pathcomp(unittest.unittest, ".RL"));
     return ret;
 }
@@ -2657,13 +2806,14 @@ bool atf_unit::TypeB_ReadFieldMaybe(atf_unit::TypeB& parent, algo::strptr field,
     switch(field_id) {
         case atf_unit_FieldId_typea: {
             retval = i32_ReadStrptrMaybe(parent.typea, strval);
-            break;
-        }
+        } break;
         case atf_unit_FieldId_j: {
             retval = i32_ReadStrptrMaybe(parent.j, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2951,16 +3101,19 @@ void atf_unit::StaticCheck() {
 // --- atf_unit...main
 int main(int argc, char **argv) {
     try {
-        algo_lib::FDb_Init();
         lib_json::FDb_Init();
+        algo_lib::FDb_Init();
         lib_ams::FDb_Init();
+        lib_curl::FDb_Init();
         lib_exec::FDb_Init();
         lib_fm::FDb_Init();
+        lib_netio::FDb_Init();
         lib_sql::FDb_Init();
         atf_unit::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         atf_unit::ReadArgv(); // dmmeta.main:atf_unit
         atf_unit::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -2973,11 +3126,13 @@ int main(int argc, char **argv) {
     try {
         atf_unit::FDb_Uninit();
         lib_sql::FDb_Uninit();
+        lib_netio::FDb_Uninit();
         lib_fm::FDb_Uninit();
         lib_exec::FDb_Uninit();
+        lib_curl::FDb_Uninit();
         lib_ams::FDb_Uninit();
-        lib_json::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

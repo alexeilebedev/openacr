@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -23,21 +23,22 @@
 #include "include/gcli.h"
 // -----------------------------------------------------------------------------
 static void Main_ShowGrepolist(){
-    cstring out;
-    out << "REPO/REMOTE\tDFLT\tHOST\tPRIV\tTOKEN\n";
+    algo_lib::FTxttbl txttbl;
+    AddRow(txttbl);
+    AddCols(txttbl,"REPO/REMOTE,DFLT,HOST,PRIV,TOKEN");
     tempstr dflt("dflt");
     ind_beg(gcli::_db_grepo_curs, grepo, gcli::_db) {
         if (grepo.select) {
-            out << grepo.name
-                << "\t" << dflt
-                << "\t" << host_Get(grepo)
-                << "\t" << grepo.priv
-                << "\t" << grepo.token
-                << eol;
+            AddRow(txttbl);
+            AddCol(txttbl,grepo.name);
+            AddCol(txttbl,dflt);
+            AddCol(txttbl,host_Get(grepo));
+            AddCol(txttbl,grepo.priv);
+            AddCol(txttbl,grepo.token);
         }
         dflt="";
     }ind_end;
-    prlog(Tabulated(out,"\t"));
+    prlog(txttbl);
 }
 // -----------------------------------------------------------------------------
 static void Main_ShowGreporemotelist(){

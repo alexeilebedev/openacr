@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -51,16 +51,17 @@ static void AddCtxProtoArg(amc::FDispatch &dispatch, amc::FFunc &func) {
 }
 
 static void Call_msgname(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
-    ind_beg(amc::dispatch_c_dispatch_msg_curs, msg,dispatch) {
-        Set(R, "$msgname", StripNs("",ctype_Get(msg)));
-        Set(R, "$msgns", GetNs(ctype_Get(msg)));
+    ind_beg(amc::dispatch_c_dispatch_msg_curs, dispatch_msg,dispatch) {
+        Set(R, "$msgname", StripNs("",ctype_Get(dispatch_msg)));
+        Set(R, "$msgns", GetNs(ctype_Get(dispatch_msg)));
         amc::FFunc &func = amc::ind_func_GetOrCreate(Subst(R, "$ns.$Disp.$msgns.$msgname"));
+        func.acrkey <<"dispatch_msg:"<<dispatch_msg.dispatch_msg;
         func.extrn = true;
         func.ret = "void";
         Ins(&R, func.comment, "User-implemented callback function for dispatch $Disp", false);
         Ins(&R, func.proto, "$Disp_$msgname()", false); {
             AddCtxProtoArg(dispatch,func);
-            amc::AddProtoArg(func, tempstr() << msg.p_ctype->cpp_type << " &", "msg");
+            amc::AddProtoArg(func, tempstr() << dispatch_msg.p_ctype->cpp_type << " &", "msg");
             amc::AddProtoArg(func, "u32", "msg_len", dispatch.haslen);
         }
     }ind_end;
@@ -141,7 +142,7 @@ static void Call_Hdr(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
     func.glob = true;
     Ins(&R, func.proto, "$DispDispatch()", false); {
         AddCtxProtoArg(dispatch,func);
-        amc::AddProtoArg(func, amc::Refto(dispatch.p_ctype_hdr->cpp_type)<<" ", "msg");
+        amc::AddProtoArg(func, amc::Refto(dispatch.p_ctype_hdr->cpp_type), "msg");
         amc::AddProtoArg(func, "u32", "msg_len", dispatch.haslen);
     }
     // expression to access the value of the type field
@@ -169,7 +170,7 @@ static void Call_Hdr2(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
     Ins(&R, func.comment, "void rettype useful for hooks", false);
     Ins(&R, func.proto  , "v$DispDispatch()", false); {
         AddCtxProtoArg(dispatch,func);
-        amc::AddProtoArg(func, amc::Refto(dispatch.p_ctype_hdr->cpp_type)<<" ", "msg");
+        amc::AddProtoArg(func, amc::Refto(dispatch.p_ctype_hdr->cpp_type), "msg");
         amc::AddProtoArg(func, "u32", "msg_len", dispatch.haslen);
     }
     Ins(&R, func.body   , "$DispDispatch();"); {
@@ -184,12 +185,13 @@ static void Call_Hdr2(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
 // Declaration for user-provided function for the default case
 static void Call_Unkmsg(algo_lib::Replscope &R, amc::FDispatch &dispatch) {
     amc::FFunc &func = amc::ind_func_GetOrCreate(Subst(R, "$ns.$Disp..Unkmsg"));
+    func.acrkey <<"dispatch:"<<dispatch.dispatch;
     func.extrn = true;
     func.ret = "int";
     Ins(&R, func.comment, "User-implemented callback function for dispatch $Disp", false);
     Ins(&R, func.proto, "$Disp_Unkmsg()", false); {
         AddCtxProtoArg(dispatch,func);
-        amc::AddProtoArg(func, amc::Refto(dispatch.p_ctype_hdr->cpp_type)<<" ", "msg");
+        amc::AddProtoArg(func, amc::Refto(dispatch.p_ctype_hdr->cpp_type), "msg");
         amc::AddProtoArg(func, "u32", "msg_len", dispatch.haslen);
     }
 }

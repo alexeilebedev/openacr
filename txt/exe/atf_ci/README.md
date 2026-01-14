@@ -17,17 +17,18 @@
 ```
 atf_ci: Normalization tests (see citest table)
 Usage: atf_ci [[-citest:]<regx>] [options]
-    OPTION      TYPE    DFLT    COMMENT
-    -in         string  "data"  Input directory or filename, - for stdin
-    [citest]    regx    "%"     Regx of tests to run
-    -maxerr     int     0       Exit after this many errors
-    -cijob      regx    "%"
-    -capture                    Capture the output of the test
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help and exit; alias -h
-    -version                    Print version and exit
-    -signature                  Show signatures and exit; alias -sig
+    OPTION        TYPE    DFLT    COMMENT
+    -in           string  "data"  Input directory or filename, - for stdin
+    [citest]      regx    "%"     Regx of tests to run
+    -maxerr       int     0       Exit after this many errors
+    -cijob        regx    "%"
+    -capture                      Capture the output of the test
+    -check_clean          Y       Check for modifications after each test
+    -verbose      flag            Verbosity level (0..255); alias -v; cumulative
+    -debug        flag            Debug level (0..255); alias -d; cumulative
+    -help                         Print help and exit; alias -h
+    -version                      Print version and exit
+    -signature                    Show signatures and exit; alias -sig
 
 ```
 
@@ -52,6 +53,9 @@ Usage: atf_ci [[-citest:]<regx>] [options]
 #### -capture -- Capture the output of the test
 <a href="#-capture"></a>
 
+#### -check_clean -- Check for modifications after each test
+<a href="#-check_clean"></a>
+
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
@@ -60,29 +64,30 @@ Usage: atf_ci [[-citest:]<regx>] [options]
 `atf_ci` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
-|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
-|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
-|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
-|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
-|[dev.scriptfile](/txt/ssimdb/dev/scriptfile.md)|Known script file|
-|[dev.readme](/txt/ssimdb/dev/readme.md)|File containing documentation|
-|[dev.noindent](/txt/ssimdb/dev/noindent.md)|Indicates that a file should not be automatically indented|
-|[dev.msgfile](/txt/ssimdb/dev/msgfile.md)|File in repo containing messages that should be normalized during CI|
-|[dev.cfg](/txt/ssimdb/dev/cfg.md)|Compiler configuration|
-|[dev.builddir](/txt/ssimdb/dev/builddir.md)|Directory where object files/executables go. Determines compile/link options|
-|[atfdb.cipackage](/txt/ssimdb/atfdb/cipackage.md)||
 |[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
+|[dmmeta.cfmt](/txt/ssimdb/dmmeta/cfmt.md)|Specify options for printing/reading ctypes into multiple formats|
+|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
+|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
+|[dmmeta.fconst](/txt/ssimdb/dmmeta/fconst.md)|Specify enum value (integer + string constant) for a field|
+|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
+|[dmmeta.ftuple](/txt/ssimdb/dmmeta/ftuple.md)||
+|[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
+|[dev.unstablefld](/txt/ssimdb/dev/unstablefld.md)|Fields that should be stripped from component test output because they contain timestamps etc.|
+|[dev.builddir](/txt/ssimdb/dev/builddir.md)|Directory where object files/executables go. Determines compile/link options|
+|[dev.cfg](/txt/ssimdb/dev/cfg.md)|Compiler configuration|
+|[atfdb.cipackage](/txt/ssimdb/atfdb/cipackage.md)||
+|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
+|[dev.msgfile](/txt/ssimdb/dev/msgfile.md)|File in repo containing messages that should be normalized during CI|
+|[dev.noindent](/txt/ssimdb/dev/noindent.md)|Indicates that a file should not be automatically indented|
+|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
+|[dev.readmefile](/txt/ssimdb/dev/readmefile.md)|File containing documentation|
+|[dev.scriptfile](/txt/ssimdb/dev/scriptfile.md)|Known script file|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

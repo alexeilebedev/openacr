@@ -17,34 +17,38 @@
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Syntax -->
 ```
 src_func: Access / edit functions
-Usage: src_func [[-target:]<regx>] [[-name:]<regx>] [[-body:]<regx>] [options]
-    OPTION        TYPE    DFLT    COMMENT
-    -in           string  "data"  Input directory or filename, - for stdin
-    [target]      regx    "%"     Visit these targets
-    [name]        regx    "%"     Match function name
-    [body]        regx    "%"     Match function body
-    -targsrc      regx    ""      Visit these sources (optional)
-    -func         regx    "%"     (with -listfunc) Match function prototype
-    -comment      regx    "%"     (with -listfunc) Match function comment
-    -nextfile     string  ""      Print name of next srcfile in targsrc list
-    -other                        (with -nextfile), name of previous file
-    -updateproto                  Update prototypes in headers
-    -listfunc                     Show functions in target
-    -iffy                         Select functions that may contain errors
-    -proto                        (with -listfunc) List prototypes only
-    -gen                          (with -listfunc) Visit generated files
-    -showloc              Y       (with -listfunc) Show file location
-    -showstatic           Y       (with -listfunc) Show static functions
-    -showsortkey                  (with -listfunc) Display function sortkey
-    -sortname                     (with -listfunc) Sort functions by name
-    -e                            (with -listfunc) Edit found functions
-    -baddecl                      Report and fail on bad declarations
-    -report
-    -verbose      int             Verbosity level (0..255); alias -v; cumulative
-    -debug        int             Debug level (0..255); alias -d; cumulative
-    -help                         Print help and exit; alias -h
-    -version                      Print version and exit
-    -signature                    Show signatures and exit; alias -sig
+Usage: src_func [[-func:]<regx>] [options]
+    OPTION          TYPE    DFLT    COMMENT
+    -in             string  "data"  Input directory or filename, - for stdin
+    -targsrc        regx    "%"     (scan) Limit scanning to these sources only
+    -acrkey         regx    "%"     Select function by acr key that caused it
+    [func]          regx    "%"     Target.function regex
+    -nextfile       string  ""      (action) Print name of next srcfile in targsrc list
+    -other                              (with -nextfile), name of previous file
+    -list                           (action) List matching functions
+    -updateproto                    (action) Update prototypes in headers
+    -createmissing                  (action) Create missing functions declared in userfunc table
+    -iffy                           (filter) Select functions that may contain errors
+    -gen                            (scan) Scan generated files
+    -showloc                        (output) Show file location
+    -f                              (output) -sortname -showcomment -showbody
+    -showstatic             Y       (filter) Allow static functions
+    -matchproto     regx    "%"     (filter) Match function prototype
+    -matchbody      regx    "%"     (filter) Match function body
+    -matchcomment   regx    "%"     (filter) Match function comment
+    -showsortkey                    (output) Display function sortkey
+    -showcomment                    (output) Display function comment
+    -showbody                       (output) Print function body
+    -sortname                       (output) Sort functions by name
+    -printssim                      (output) Print ssim tuples
+    -e                              Edit found functions
+    -baddecl                        Report and fail on bad declarations
+    -report                         Print final report
+    -verbose        flag            Verbosity level (0..255); alias -v; cumulative
+    -debug          flag            Debug level (0..255); alias -d; cumulative
+    -help                           Print help and exit; alias -h
+    -version                        Print version and exit
+    -signature                      Show signatures and exit; alias -sig
 
 ```
 
@@ -108,64 +112,76 @@ Usage: src_func [[-target:]<regx>] [[-name:]<regx>] [[-body:]<regx>] [options]
 #### -in -- Input directory or filename, - for stdin
 <a href="#-in"></a>
 
-#### -target -- Visit these targets
-<a href="#-target"></a>
-
-#### -name -- Match function name
-<a href="#-name"></a>
-
-#### -body -- Match function body
-<a href="#-body"></a>
-
-#### -targsrc -- Visit these sources (optional)
+#### -targsrc -- (scan) Limit scanning to these sources only
 <a href="#-targsrc"></a>
 
-#### -func -- (with -listfunc) Match function prototype
+#### -acrkey -- Select function by acr key that caused it
+<a href="#-acrkey"></a>
+
+#### -func -- Target.function regex
 <a href="#-func"></a>
 
-#### -comment -- (with -listfunc) Match function comment
-<a href="#-comment"></a>
-
-#### -nextfile -- Print name of next srcfile in targsrc list
+#### -nextfile -- (action) Print name of next srcfile in targsrc list
 <a href="#-nextfile"></a>
 
-#### -other -- (with -nextfile), name of previous file
+#### -other --     (with -nextfile), name of previous file
 <a href="#-other"></a>
 
-#### -updateproto -- Update prototypes in headers
+#### -list -- (action) List matching functions
+<a href="#-list"></a>
+
+#### -updateproto -- (action) Update prototypes in headers
 <a href="#-updateproto"></a>
 
-#### -listfunc -- Show functions in target
-<a href="#-listfunc"></a>
+#### -createmissing -- (action) Create missing functions declared in userfunc table
+<a href="#-createmissing"></a>
 
-#### -iffy -- Select functions that may contain errors
+#### -iffy -- (filter) Select functions that may contain errors
 <a href="#-iffy"></a>
 
-#### -proto -- (with -listfunc) List prototypes only
-<a href="#-proto"></a>
-
-#### -gen -- (with -listfunc) Visit generated files
+#### -gen -- (scan) Scan generated files
 <a href="#-gen"></a>
 
-#### -showloc -- (with -listfunc) Show file location
+#### -showloc -- (output) Show file location
 <a href="#-showloc"></a>
 
-#### -showstatic -- (with -listfunc) Show static functions
+#### -f -- (output) -sortname -showcomment -showbody
+<a href="#-f"></a>
+
+#### -showstatic -- (filter) Allow static functions
 <a href="#-showstatic"></a>
 
-#### -showsortkey -- (with -listfunc) Display function sortkey
+#### -matchproto -- (filter) Match function prototype
+<a href="#-matchproto"></a>
+
+#### -matchbody -- (filter) Match function body
+<a href="#-matchbody"></a>
+
+#### -matchcomment -- (filter) Match function comment
+<a href="#-matchcomment"></a>
+
+#### -showsortkey -- (output) Display function sortkey
 <a href="#-showsortkey"></a>
 
-#### -sortname -- (with -listfunc) Sort functions by name
+#### -showcomment -- (output) Display function comment
+<a href="#-showcomment"></a>
+
+#### -showbody -- (output) Print function body
+<a href="#-showbody"></a>
+
+#### -sortname -- (output) Sort functions by name
 <a href="#-sortname"></a>
 
-#### -e -- (with -listfunc) Edit found functions
+#### -printssim -- (output) Print ssim tuples
+<a href="#-printssim"></a>
+
+#### -e -- Edit found functions
 <a href="#-e"></a>
 
 #### -baddecl -- Report and fail on bad declarations
 <a href="#-baddecl"></a>
 
-#### -report -- 
+#### -report -- Print final report
 <a href="#-report"></a>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
@@ -176,13 +192,11 @@ Usage: src_func [[-target:]<regx>] [[-name:]<regx>] [[-body:]<regx>] [options]
 `src_func` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dmmeta.gstatic](/txt/ssimdb/dmmeta/gstatic.md)|Load entries for this table at startup time|
-|[dmmeta.fstep](/txt/ssimdb/dmmeta/fstep.md)|Generate a main loop step to be executed whenever a field is non-empty|
-|[dmmeta.dispatch](/txt/ssimdb/dmmeta/dispatch.md)|Generate code for a multi-way branch|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dmmeta.ctypelen](/txt/ssimdb/dmmeta/ctypelen.md)|Size of Ctype|
 |[dev.target](/txt/ssimdb/dev/target.md)|Build target|
 |[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
+|[dmmeta.userfunc](/txt/ssimdb/dmmeta/userfunc.md)||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

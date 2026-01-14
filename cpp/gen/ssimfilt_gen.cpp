@@ -33,19 +33,19 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
 #include "include/gen/lib_amcdb_gen.inl.h"
 #include "include/gen/lib_ctype_gen.h"
 #include "include/gen/lib_ctype_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_ctype::FDb   lib_ctype::_db;    // dependency found via dev.targdep
-lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 ssimfilt::FDb    ssimfilt::_db;     // dependency found via dev.targdep
 
 namespace ssimfilt {
@@ -57,7 +57,7 @@ const char *ssimfilt_help =
 "    [typetag]   regx    \"%\"     (filter) Match typetag. ^=first encountered typetag\n"
 "    [match]...  string          (filter) Select input tuple if value of key matches value (regx:regx)\n"
 "    -field...   string          (project) Select fields for output (regx)\n"
-"    -format     int     ssim    Output format for selected tuples (ssim|csv|field|cmd|json|stablefld|table|mdtable)\n"
+"    -format     enum    ssim    Output format for selected tuples (ssim|csv|field|cmd|json|stablefld|table|mdtable)\n"
 "                                    ssim  Print selected/filtered tuples\n"
 "                                    csv  First tuple determines header. CSV quoting is used. Newlines are removed\n"
 "                                    field  Print selected fields, one per line\n"
@@ -68,8 +68,8 @@ const char *ssimfilt_help =
 "                                    mdtable  ASCII Markdown table with | separators for each group of tuples\n"
 "    -t                          Alias for -format:table\n"
 "    -cmd        string  \"\"      Command to output\n"
-"    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
@@ -188,9 +188,8 @@ void ssimfilt::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "ssimfilt: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -233,6 +232,9 @@ void ssimfilt::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:ssimfilt.FDb.cmdline
@@ -244,7 +246,7 @@ void ssimfilt::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -338,8 +340,8 @@ bool ssimfilt::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"dev.unstablefld"),recursive);
         retval = retval && ssimfilt::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -732,14 +734,9 @@ bool ssimfilt::unstablefld_XrefMaybe(ssimfilt::FUnstablefld &row) {
 // Find row by key. Return NULL if not found.
 ssimfilt::FUnstablefld* ssimfilt::ind_unstablefld_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_unstablefld_buckets_n - 1);
-    ssimfilt::FUnstablefld* *e = &_db.ind_unstablefld_buckets_elems[index];
-    ssimfilt::FUnstablefld* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).field == key;
-        if (done) break;
-        e         = &ret->ind_unstablefld_next;
-    } while (true);
+    ssimfilt::FUnstablefld *ret = _db.ind_unstablefld_buckets_elems[index];
+    for (; ret && !((*ret).field == key); ret = ret->ind_unstablefld_next) {
+    }
     return ret;
 }
 
@@ -771,10 +768,11 @@ ssimfilt::FUnstablefld& ssimfilt::ind_unstablefld_GetOrCreate(const algo::strptr
 // --- ssimfilt.FDb.ind_unstablefld.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool ssimfilt::ind_unstablefld_InsertMaybe(ssimfilt::FUnstablefld& row) {
-    ind_unstablefld_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_unstablefld_next == (ssimfilt::FUnstablefld*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_unstablefld_buckets_n - 1);
+        row.ind_unstablefld_hashval = algo::Smallstr100_Hash(0, row.field);
+        ind_unstablefld_Reserve(1);
+        u32 index = row.ind_unstablefld_hashval & (_db.ind_unstablefld_buckets_n - 1);
         ssimfilt::FUnstablefld* *prev = &_db.ind_unstablefld_buckets_elems[index];
         do {
             ssimfilt::FUnstablefld* ret = *prev;
@@ -800,7 +798,7 @@ bool ssimfilt::ind_unstablefld_InsertMaybe(ssimfilt::FUnstablefld& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void ssimfilt::ind_unstablefld_Remove(ssimfilt::FUnstablefld& row) {
     if (LIKELY(row.ind_unstablefld_next != (ssimfilt::FUnstablefld*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_unstablefld_buckets_n - 1);
+        u32 index = row.ind_unstablefld_hashval & (_db.ind_unstablefld_buckets_n - 1);
         ssimfilt::FUnstablefld* *prev = &_db.ind_unstablefld_buckets_elems[index]; // addr of pointer to current element
         while (ssimfilt::FUnstablefld *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -817,8 +815,14 @@ void ssimfilt::ind_unstablefld_Remove(ssimfilt::FUnstablefld& row) {
 // --- ssimfilt.FDb.ind_unstablefld.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void ssimfilt::ind_unstablefld_Reserve(int n) {
+    ind_unstablefld_AbsReserve(_db.ind_unstablefld_n + n);
+}
+
+// --- ssimfilt.FDb.ind_unstablefld.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void ssimfilt::ind_unstablefld_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_unstablefld_buckets_n;
-    u32 new_nelems   = _db.ind_unstablefld_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -837,7 +841,7 @@ void ssimfilt::ind_unstablefld_Reserve(int n) {
             while (elem) {
                 ssimfilt::FUnstablefld &row        = *elem;
                 ssimfilt::FUnstablefld* next       = row.ind_unstablefld_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = row.ind_unstablefld_hashval & (new_nbuckets-1);
                 row.ind_unstablefld_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1144,13 +1148,14 @@ void ssimfilt::StaticCheck() {
 // --- ssimfilt...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_ctype::FDb_Init();
-        lib_json::FDb_Init();
         ssimfilt::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         ssimfilt::ReadArgv(); // dmmeta.main:ssimfilt
         ssimfilt::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -1162,9 +1167,9 @@ int main(int argc, char **argv) {
     }
     try {
         ssimfilt::FDb_Uninit();
-        lib_json::FDb_Uninit();
         lib_ctype::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
@@ -1200,40 +1200,40 @@ void atf_unit::unittest_algo_lib_PerfParseNum() {
 // -----------------------------------------------------------------------------
 
 void atf_unit::unittest_algo_lib_DirBeg() {
-    algo::RemDirRecurse(".testdirbeg", true);
-    errno_vrfy(0==mkdir(".testdirbeg", 0755), "mkdir");
+    algo::RemDirRecurse("temp/testdirbeg", true);
+    errno_vrfy(0==mkdir("temp/testdirbeg", 0755), "mkdir");
     prlog("Iterate over empty directory (must not pick up ., ..)");
     {
         cstring check;
-        ind_beg(algo::Dir_curs,E,".testdirbeg/*") {
+        ind_beg(algo::Dir_curs,E,"temp/testdirbeg/*") {
             check<<E.filename<<";";
         }ind_end;
         vrfyeq_(check,"");
     }
 
-    algo::StringToFile("something",".testdirbeg/.file");
+    algo::StringToFile("something","temp/testdirbeg/.file");
 
     prlog("Directory with .-file (must see .-file)");
     {
         cstring check;
-        ind_beg(algo::Dir_curs,E,".testdirbeg/*.*") {
+        ind_beg(algo::Dir_curs,E,"temp/testdirbeg/*.*") {
             check<<E.filename<<";";
         }ind_end;
         vrfyeq_(check,".file;");
     }
 
-    algo::StringToFile("something",".testdirbeg/file2");
+    algo::StringToFile("something","temp/testdirbeg/file2");
 
     prlog("Directory with regular file as well");
     {
         cstring check;
-        ind_beg(algo::Dir_curs,E,".testdirbeg/*") {
+        ind_beg(algo::Dir_curs,E,"temp/testdirbeg/*") {
             check<<E.filename<<";";
         }ind_end;
         vrfy_(check == "file2;.file;" || check == ".file;file2;");
     }
 
-    errno_vrfy(chdir(".testdirbeg")==0, "chdir");
+    errno_vrfy(chdir("temp/testdirbeg")==0, "chdir");
 
     prlog("No directory name (assume ./)");
     {
@@ -1245,7 +1245,7 @@ void atf_unit::unittest_algo_lib_DirBeg() {
     }
 
     errno_vrfy(chdir("..")==0, "chdir");
-    algo::RemDirRecurse(".testdirbeg", true);
+    algo::RemDirRecurse("temp/testdirbeg", true);
 }
 
 void atf_unit::unittest_algo_lib_RemDirRecurse() {
@@ -1674,10 +1674,14 @@ void atf_unit::unittest_algo_lib_Clipped() {
     vrfy_(algo::u32_SubClip(1,0)==1);
     vrfy_(algo::u32_SubClip(1,1)==0);
     vrfy_(algo::u32_SubClip(1,2)==0);
+    vrfy_(algo::u32_SubClip(1516,~0LL)==0);
+    vrfy_(algo::u32_SubClip(UINT_MAX,UINT_MAX)==0);
+    vrfy_(algo::u32_SubClip(UINT_MAX,UINT_MAX-1)==1);
 
     vrfy_(algo::u64_SubClip(1,0)==1);
     vrfy_(algo::u64_SubClip(1,1)==0);
     vrfy_(algo::u64_SubClip(1,2)==0);
+    vrfy_(algo::u64_SubClip(1516,ULLONG_MAX)==0);
 }
 
 // --------------------------------------------------------------------------------
@@ -1855,7 +1859,6 @@ void atf_unit::unittest_algo_lib_PerfSort() {
 void atf_unit::unittest_algo_lib_Replscope() {
     {
         algo_lib::Replscope R;
-        R.fatal=false;
         R.eatcomma=true;
         Set(R,"$xyz","y");
         vrfy_(Subst(R, "") == "");    // empty substitution
@@ -1871,7 +1874,7 @@ void atf_unit::unittest_algo_lib_Replscope() {
         // end-of-string substitution
         vrfyeq_(Subst(R,"$xyz$testvar$xyz"), "yzy");
         vrfyeq_(Subst(R,"$xyz$bad$xyz"), "y$bady");    // failed substitution -- variable is left in place
-        fatal_Set(R,true);
+        R.strict=2;
         Set(R, "$empty", "");
         vrfyeq_(Subst(R,"$empty, blah"), "blah");    // comma-eating
         eatcomma_Set(R,false);
@@ -1881,7 +1884,6 @@ void atf_unit::unittest_algo_lib_Replscope() {
     // Check $$
     {
         algo_lib::Replscope R;
-        R.fatal=false;
         R.eatcomma=false;
         Set(R, "$$", "$");
         vrfyeq_(Subst(R,"$$HOME"), "$HOME");// dollar-substitution
@@ -1900,6 +1902,41 @@ void atf_unit::unittest_algo_lib_Replscope() {
         vrfyeq_(Subst(R,"${var12"), "${var12");// unclosed curly
     }
 }
+
+// -----------------------------------------------------------------------------
+
+
+void atf_unit::unittest_algo_lib_ReplscopeSharedPrefix() {
+    // Check that adding a prefix of another variable fails
+    {
+        algo_lib::Replscope R;
+        R.strict=2;
+        Set(R,"$xyz","");
+        bool good=false;
+        try {
+            Set(R,"$xy","");
+        }  catch (...) {
+            good=true;
+        }
+        vrfy(good, "new prefix was not detected");
+    }
+
+    // Check that adding a variable whose prefix is already added, fails
+    {
+        algo_lib::Replscope R;
+        R.strict=2;
+        Set(R,"$xy","");
+        bool good=false;
+        try {
+            Set(R,"$xyz","");
+        }  catch (...) {
+            good=true;
+        }
+        vrfy(good, "old prefix was not detected");
+    }
+}
+
+// -----------------------------------------------------------------------------
 
 #include <set>
 
@@ -2437,7 +2474,7 @@ void atf_unit::unittest_algo_lib_Mmap() {
     // write to file via OS file api
     {
         algo_lib::FFildes writefd;
-        writefd.fd = OpenWrite(fname,algo_FileFlags_append);
+        writefd.fd = OpenWrite(fname,algo_FileFlags_write|algo_FileFlags_read);
         lseek(writefd.fd.value,0,SEEK_SET);
         ssize_t ret_val = write(writefd.fd.value, "123456", 6);
         (void) ret_val;
@@ -2698,4 +2735,84 @@ void atf_unit::unittest_algo_lib_ReverseBits() {
     vrfyeq_(algo::u8_ReverseBits(0xCC),0x33);
     vrfyeq_(algo::u8_ReverseBits(0x55),0xaa);
     vrfyeq_(algo::u8_ReverseBits(0xaa),0x55);
+}
+
+static void Zigzag32(i32 value, strptr hex) {
+    {
+        algo::ByteAry buf;
+        algo::EncodeVLCLEI32Z(buf,value);
+        tempstr out = tempstr() << ary_Getary(buf);
+        vrfyeq_(out,hex);
+    }
+    {
+        i32 decoded(0);
+        algo::ByteAry buf;
+        ByteAry_ReadStrptrMaybe(buf,hex);
+        algo::memptr ptr = ary_Getary(buf);
+        algo::DecodeVLCLEI32Z(ptr,decoded);
+        vrfy_(!elems_N(ptr));
+        vrfyeq_(decoded,value);
+    }
+}
+
+static void Zigzag64(i64 value, strptr hex) {
+    {
+        algo::ByteAry buf;
+        algo::EncodeVLCLEI64Z(buf,value);
+        tempstr out = tempstr() << ary_Getary(buf);
+        vrfyeq_(out,hex);
+    }
+    {
+        i64 decoded(0);
+        algo::ByteAry buf;
+        ByteAry_ReadStrptrMaybe(buf,hex);
+        algo::memptr ptr = ary_Getary(buf);
+        algo::DecodeVLCLEI64Z(ptr,decoded);
+        vrfy_(!elems_N(ptr));
+        vrfyeq_(decoded,value);
+    }
+}
+
+void atf_unit::unittest_algo_lib_Zigzag() {
+    Zigzag32(0,"00");
+    Zigzag32(-1,"01");
+    Zigzag32(1,"02");
+    Zigzag32(-2,"03");
+    Zigzag32(2, "04");
+    Zigzag32(1000,"d0 0f");
+    Zigzag32(-1000,"cf 0f");
+    Zigzag32(0x7fffffff,"fe ff ff ff 0f");
+    Zigzag32(-0x80000000,"ff ff ff ff 0f");
+
+    Zigzag64(0,"00");
+    Zigzag64(-1,"01");
+    Zigzag64(1,"02");
+    Zigzag64(-2,"03");
+    Zigzag64(2, "04");
+    Zigzag64(1000,"d0 0f");
+    Zigzag64(-1000,"cf 0f");
+    //Zigzag64(0x7fffffffffffffff,"fe ff ff ff ff ff ff ff ff 01");
+    Zigzag64(-0x8000000000000000,"ff ff ff ff ff ff ff ff ff 01");
+}
+// --------------------------------------------------------------------------------
+
+// Test that a file opened in append mode always writes at the end
+// regardless of file position
+void atf_unit::unittest_algo_lib_FileAppend() {
+    algo::strptr fname = "temp/appendfile";
+    DeleteFile(fname);
+    algo::Fildes fildes = algo::OpenFile(fname, algo_FileFlags_append);
+    WriteFile(fildes, (u8*)"blah", 4);
+    SeekFile(fildes, 2);
+    WriteFile(fildes, (u8*)"bleh", 4);
+    vrfy(FileToString(fname)=="blahbleh", "append mode doesn't work");
+}
+
+// --------------------------------------------------------------------------------
+
+void atf_unit::unittest_algo_lib_Url() {
+    vrfyeq_(algo::UrlDecode("///012abcdefACDEF%21%22%234%%%1z+",false),"///012abcdefACDEF!\"#4%%%1z+");
+    algo::Tuple tuple;
+    ParseUrl(tuple,"/api/v1/stream?beg=100&end=inf&par%201=Hello%20World!&flag&par2=John%26Co.");
+    vrfyeq_(tempstr()<<tuple,"/api/v1/stream  beg:100  end:inf  \"par 1\":\"Hello World!\"  flag:\"\"  par2:John&Co.");
 }

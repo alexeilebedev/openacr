@@ -17,7 +17,10 @@ italicised fields: *target, testname* are [**fldfunc**](/txt/ssim.md#fldfunc) fi
 |*testname*|*[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)*|*[Val](/txt/exe/amc/reftypes.md#val)*||*<br>.LR of comptest*|
 |timeout|i32|[Val](/txt/exe/amc/reftypes.md#val)|10||
 |memcheck|bool|[Val](/txt/exe/amc/reftypes.md#val)|true||
+|coverage|bool|[Val](/txt/exe/amc/reftypes.md#val)|true||
 |exit_code|u8|[Val](/txt/exe/amc/reftypes.md#val)||Exit code to check|
+|ncore|i32|[Val](/txt/exe/amc/reftypes.md#val)|1||
+|repeat|i32|[Val](/txt/exe/amc/reftypes.md#val)|1|Number of times to repeat the test|
 |comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
@@ -46,6 +49,7 @@ These ssimfiles reference atfdb.comptest
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:CmdlineUses -->
 
 * [atf_comp -comptest](/txt/exe/atf_comp/README.md) - Select comptest (SQL regex) 
+* [atf_exp -comptest](/txt/exe/atf_exp/README.md) - Component test name 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:CmdlineUses -->
 

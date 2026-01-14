@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
@@ -33,6 +33,35 @@
 // Request that amc runs after the current script
 void acr_ed::NeedAmc() {
     acr_ed::_db.need_amc = true;
+}
+
+// -----------------------------------------------------------------------------
+
+void acr_ed::RegisterFile(algo::strptr fname, algo::strptr comment) {
+    acr_ed::_db.script << "mkdir -p "<<GetDirName(fname)<<eol;
+    acr_ed::_db.script << "touch "<<fname << eol;
+    if (StartsWithQ(fname, "bin/")) {
+        acr_ed::_db.script << "chmod +x "<<fname << eol;
+    }
+    acr_ed::_db.script << "git add "<<fname << eol;
+
+    dev::Gitfile gitfile;
+    gitfile.gitfile = fname;
+    acr_ed::_db.out_ssim << gitfile << eol;
+
+    if (StartsWithQ(fname, "txt/") && EndsWithQ(fname, ".md")) {
+        dev::Readmefile readmefile;
+        readmefile.gitfile = gitfile.gitfile;
+        readmefile.comment.value = comment;
+        acr_ed::_db.out_ssim << readmefile << eol;
+    }
+    if (StartsWithQ(fname, "bin/")) {
+        dev::Scriptfile scriptfile;
+        scriptfile.gitfile = gitfile.gitfile;
+        scriptfile.license = "GPL";
+        scriptfile.comment.value = comment;
+        acr_ed::_db.out_ssim << scriptfile << eol;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -103,7 +132,10 @@ static void Main_Vis() {
     tempstr cmd;
     verblog(acr_ed::_db.out_ssim);
     StringToFile(acr_ed::_db.out_ssim, "temp/acr_ed.ssim");
-    cmd << "(acr_in -data amc_vis -sigcheck:N; cat temp/acr_ed.ssim) | amc_vis -xref:N -in:- '(";
+    // combine amc_vis's expected input with newly proposed changes from acr_ed;
+    // run them through 'acr %' instead of 'cat' to strip acr.rowid's which
+    // will break amc_vis.
+    cmd << "(acr_in -data amc_vis -sigcheck:N; acr % -in:temp/acr_ed.ssim -report:N) | amc_vis -xref:N -in:- '(";
     ind_beg(acr_ed::_db_vis_curs, vis, acr_ed::_db) {
         cmd << ls << vis;
     }ind_end;
@@ -223,7 +255,7 @@ static void ExecuteTransaction() {
     }
     // append accumulated script to 'script'
     final_script << acr_ed::_db.script;
-    if (acr_ed::_db.need_amc) {
+    if (acr_ed::_db.need_amc && acr_ed::_db.cmdline.amc) {
         final_script <<  "bin/amc" << eol;
     }
     algo_lib::FTempfile tempfile;

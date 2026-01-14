@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
@@ -35,14 +35,6 @@
 
 // STRUCTS
 namespace algo {
-    struct PageBuf : memptr {
-        PageBuf(){}
-        ~PageBuf();
-    private:
-        PageBuf(const PageBuf&);
-        void operator =(const PageBuf&){}
-    };
-
     struct RegxMacro {
         char c;
         const char *crange;
@@ -191,6 +183,24 @@ namespace algo {
         u64_Ranges_curs();
     };
 
+    // Unsigned integer ranges packer
+    // Usage:
+    // u64_RangesList p;
+    // Append(p,1);
+    // Append(p,2);
+    // Append(p,3);
+    // Append(p,5);
+    // Yield(p); //evaluates to "1-3,5", which is iterable with u64_Ranges_curs
+    // Note:
+    // - only succesive numbers are packed, not global, e.g. 1,3,2 is not packed
+    struct u64_RangesList {
+        cstring       result;
+        algo::ListSep ls;
+        bool          pending;
+        u64           start;
+        u64           end;
+    };
+
     // -----------------------------------------------------------------------------
     // Day range cursor from start to end
     struct DayRange_curs {
@@ -201,14 +211,10 @@ namespace algo {
     };
 
     // -----------------------------------------------------------------------------
-    // tempstr:
-    // This type is used when returning a string from a function
-    // It behaves exactly like cstring with the following exceptions:
-    // Whenever tempstr A is assigned to tempstr or cstring B, the contents of A and B is swapped
-    // This MOVE CONSTRUCTOR has the effect of saving an extra copy/dealloc when returning string
-    // from function.
-    // For this reason, never use tempstr other than for this intended purpose,
-    // as its contents can suddently be lost if it ever appears on the right hand side of an assignment
+    // tempstr: temporary string.
+    // the system maintains a stack of several global temporary strings which are used
+    // to build up string expressions with few allocations.
+    // when tempstr is assigned to tempstr, the assignment is a move (right hand side is emptied).
     struct tempstr : cstring {
         tempstr();
         explicit tempstr(const cstring &rhs) : cstring(rhs){}
@@ -273,11 +279,13 @@ namespace algo {
     static const i64 WTIME_PER_SEC  = 10000000;
     static const i64 WTIME_PER_MSEC = 10000;
     static const i64 WTIME_PER_USEC = 10;
-
-    template<class T> tempstr &operator <<(const tempstr &lhs, const T &rhs);
 }
 
 // -----------------------------------------------------------------------------
+// definition for an inline template to make clangd happy.
+namespace algo {
+    template<class T> inline tempstr &operator <<(const tempstr &lhs, const T &rhs);
+}
 
 // functions in algo_lib from algo namespace
 namespace algo { // update-hdr
@@ -309,6 +317,98 @@ namespace algo { // update-hdr
     void strptr_PrintBase64(strptr str, cstring &out);
 
     // -------------------------------------------------------------------
+    // cpp/lib/algo/bin_decode.cpp
+    //
+
+    // single byte
+    bool DecodeU8(algo::memptr &buf, u8 &result);
+
+    // single byte, signed
+    bool DecodeI8(algo::memptr &buf, i8 &result);
+
+    // single byte, boolean
+    bool DecodeBoolean(algo::memptr &buf, bool &result);
+
+    // two-byte, big-endian
+    bool DecodeBEU16(algo::memptr &buf, u16 &result);
+
+    // two-byte, big endian, signed
+    bool DecodeBEI16(algo::memptr &buf, i16 &result);
+
+    // four-byte, big-endian
+    bool DecodeBEU32(algo::memptr &buf, u32 &result);
+
+    // four-byte, big-endian signed
+    bool DecodeBEI32(algo::memptr &buf, i32 &result);
+
+    // eight-byte, big-endian
+    bool DecodeBEU64(algo::memptr &buf, u64 &result);
+
+    // eight-byte, big-endian signed
+    bool DecodeBEI64(algo::memptr &buf, i64 &result);
+    bool DecodeBEF64(algo::memptr &buf, double &result);
+
+    // continuation bit (bit 7 of each byte), little-endian, u32
+    bool DecodeVLCLEU32(algo::memptr &buf, u32 &result);
+
+    // continuation bit (bit 7 of each byte), little-endian, u32, signed zigzag
+    // sign - bit 0 (lsb)
+    // unsigned mantissa - bits 1..N (msb)
+    bool DecodeVLCLEI32Z(algo::memptr &buf, i32 &result);
+
+    // continuation bit (bit 7 of each byte), little-endian, u64
+    bool DecodeVLCLEU64(algo::memptr &buf, u64 &result);
+
+    // continuation - bit 7 (msb) of each byte, little-endian, signed zigzag:
+    // sign - bit 0 (lsb)
+    // unsigned mantissa - bits 1..N (msb)
+    bool DecodeVLCLEI64Z(algo::memptr &buf, i64 &result);
+
+    // N bytes, raw
+    bool DecodeNBytes(algo::memptr &buf, int n, algo::memptr &result);
+
+    // N bytes as chars
+    bool DecodeNChars(algo::memptr &buf, int n, strptr &result);
+
+    // zero-terminated string
+    bool DecodeZeroterm(algo::strptr &buf, strptr &result);
+
+    // zero-terminated string
+    bool DecodeZeroterm(algo::memptr &buf, strptr &result);
+
+    // UUID - raw bytes
+    bool DecodeUuid(algo::memptr &buf, algo::Uuid &result);
+
+    // -------------------------------------------------------------------
+    // cpp/lib/algo/bin_encode.cpp
+    //
+    void EncodeBoolean(algo::ByteAry &buf, bool value);
+    void EncodeU8(algo::ByteAry &buf, u8 value);
+    void EncodeI8(algo::ByteAry &buf, i8 value);
+    void EncodeBEU16(algo::ByteAry &buf, u16 value);
+    void EncodeBEI16(algo::ByteAry &buf, i16 value);
+    void EncodeBEU32(algo::ByteAry &buf, u32 value);
+    void EncodeBEI32(algo::ByteAry &buf, i32 value);
+    void EncodeBEU64(algo::ByteAry &buf, u64 value);
+    void EncodeBEI64(algo::ByteAry &buf, i64 value);
+    void EncodeBEF64(algo::ByteAry &buf, double value);
+
+    // variable-length, continuation bit, u32
+    void EncodeVLCLEU32(algo::ByteAry &buf, u32 value);
+
+    // variable-length, continuation bit, i32, zigzag
+    void EncodeVLCLEI32Z(algo::ByteAry &buf, i32 value);
+
+    // variable-length, continuation bit, u64
+    void EncodeVLCLEU64(algo::ByteAry &buf, u64 value);
+
+    // variable-length, continuation bit, i64, zigzag
+    void EncodeVLCLEI64Z(algo::ByteAry &buf, i64 value);
+
+    // UUID - raw bytes
+    void EncodeUuid(algo::ByteAry &buf, algo::Uuid &value);
+
+    // -------------------------------------------------------------------
     // cpp/lib/algo/crc32.cpp -- Software-based CRC32
     //
     u32 CRC32Step(u32 old, const u8 *data, size_t len);
@@ -325,10 +425,11 @@ namespace algo { // update-hdr
     bool TryParseDecimal(algo::StringIter &iter, algo::Decimal &result);
 
     // Print Decimal
-    void Decimal_Print(algo::Decimal parent, algo::cstring &str);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Decimal_Print(algo::Decimal parent, algo::cstring &str); // cfmt:algo.Decimal.String
 
     // Read Decimal from string
-    bool Decimal_ReadStrptrMaybe(algo::Decimal &parent, algo::strptr in_str);
+    // bool Decimal_ReadStrptrMaybe(algo::Decimal &parent, algo::strptr in_str); // cfmt:algo.Decimal.String
 
     // Convert Decimal to double
     double Decimal_GetDouble(algo::Decimal parent);
@@ -472,7 +573,8 @@ namespace algo { // update-hdr
     bool RemDirRecurse(strptr name, bool remove_topmost);
 
     // User-defined cleanup trigger for dir_handle field of ctype:algo.DirEntry
-    void dir_handle_Cleanup(algo::DirEntry &dir_entry);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void dir_handle_Cleanup(algo::DirEntry &dir_entry); // fcleanup:algo.DirEntry.dir_handle
 
     // Open file FILENAME with flags FLAGS, return resulting file descriptor
     // Possible flags:
@@ -514,7 +616,7 @@ namespace algo { // update-hdr
     // File is read using a "safe" method of succesively calling read.
     // relying on reported file size or using mmap does not work in all cases
     // Todo: test on windows
-    const tempstr FileToString(const strptr& fname, algo::FileFlags flags = algo_FileFlags__throw);
+    const tempstr FileToString(const strptr& fname, algo::FileFlags flags = algo::FileFlags());
 
     // Read all bytes from IN_FD as a string.
     // NUL characters in file will appear in the string --
@@ -586,10 +688,11 @@ namespace algo { // update-hdr
     // %Y/%m/%d
     // Where %T is %H:%M:%S.%X
     // And %X is the nanosecond portion
-    bool UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str);
-    bool UnDiff_ReadStrptrMaybe(UnDiff &row, algo::strptr str);
-    bool UnixTime_ReadStrptrMaybe(algo::UnixTime &row, algo::strptr str);
-    bool cstring_ReadStrptrMaybe(algo::cstring &row, algo::strptr str);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // bool UnTime_ReadStrptrMaybe(algo::UnTime &row, algo::strptr str); // cfmt:algo.UnTime.String
+    // bool UnDiff_ReadStrptrMaybe(UnDiff &row, algo::strptr str); // cfmt:algo.UnDiff.String
+    // bool UnixTime_ReadStrptrMaybe(algo::UnixTime &row, algo::strptr str); // cfmt:algo.UnixTime.String
+    // bool cstring_ReadStrptrMaybe(algo::cstring &row, algo::strptr str); // cfmt:algo.cstring.String
 
     // Parse a URL from string STR to OUT.
     // The format of a URL is
@@ -603,8 +706,8 @@ namespace algo { // update-hdr
     // file://c:/dir/dir2
     // c: will not be parsed as a username, but as part of the pathname.
     //
-    bool URL_ReadStrptrMaybe(URL &out, algo::strptr str);
-    bool Ipmask_ReadStrptrMaybe(Ipmask &row, algo::strptr str);
+    // bool URL_ReadStrptrMaybe(URL &out, algo::strptr str); // cfmt:algo.URL.String
+    // bool Ipmask_ReadStrptrMaybe(Ipmask &row, algo::strptr str); // cfmt:algo.Ipmask.String
     void Ptr_Print(void *ptr, algo::cstring &out);
 
     // pads with zeros on the left so that at least 'atleast' characters are output.
@@ -702,7 +805,8 @@ namespace algo { // update-hdr
     // Append N instances of character C to string OUT.
     void char_PrintNTimes(char c, algo::cstring &out, int n);
     void strptr_PrintAligned(algo::strptr str, algo::cstring &out, int nplaces, algo::TextJust align, char c);
-    void cstring_Print(algo::cstring &row, algo::cstring &str);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void cstring_Print(algo::cstring &row, algo::cstring &str); // cfmt:algo.cstring.String
     void strptr_Print(const algo::strptr &row, algo::cstring &str);
 
     // Append a space unless the string already ends with a space
@@ -712,7 +816,8 @@ namespace algo { // update-hdr
     // Example:
     // double_PrintPercent(0.334, str, 1) -> "33.4%"
     void double_PrintPercent(double value, algo::cstring &str, int prec);
-    void i32_Range_Print(algo::i32_Range &r, algo::cstring &o);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void i32_Range_Print(algo::i32_Range &r, algo::cstring &o); // cfmt:algo.i32_Range.String
     void double_PrintWithCommas(double value, algo::cstring &str, int prec);
 
     // ignore:bigret
@@ -755,18 +860,22 @@ namespace algo { // update-hdr
     // %-     Print - sign if timespec is negative
     // %%     Print % sign
     void TimeStruct_Print(const TimeStruct &time, algo::cstring &str, const algo::strptr &spec);
-    void Tuple_Print(algo::Tuple &row_, algo::cstring &str);
-    void Bool_Print(algo::Bool row, algo::cstring &str);
-    void UnDiff_Print(UnDiff row, algo::cstring &str);
-    void UnixDiff_Print(UnixDiff row, algo::cstring &str);
-    void UnTime_Print(algo::UnTime row, algo::cstring &str);
-    void UnixTime_Print(algo::UnixTime row, algo::cstring &str);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Tuple_Print(algo::Tuple &row_, algo::cstring &str); // cfmt:algo.Tuple.String
+    // void Bool_Print(algo::Bool row, algo::cstring &str); // cfmt:algo.Bool.String
+    // void UnDiff_Print(UnDiff row, algo::cstring &str); // cfmt:algo.UnDiff.String
+    // void UnixDiff_Print(UnixDiff row, algo::cstring &str); // cfmt:algo.UnixDiff.String
+    // void UnTime_Print(algo::UnTime row, algo::cstring &str); // cfmt:algo.UnTime.String
+    // void UnixTime_Print(algo::UnixTime row, algo::cstring &str); // cfmt:algo.UnixTime.String
     void UnTime_PrintSpec(UnTime t, algo::cstring &out, const algo::strptr &spec);
     void UnixTime_PrintSpec(UnixTime t, algo::cstring &out, const algo::strptr &spec);
     void UnDiff_PrintSpec(UnDiff   t, algo::cstring &out, const algo::strptr &spec);
     void UnixDiff_PrintSpec(UnixDiff t, algo::cstring &out, const algo::strptr &spec);
-    void Ipmask_Print(algo::Ipmask &row, algo::cstring &str);
-    void Errcode_Print(algo::Errcode &row, algo::cstring &str);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Ipmask_Print(algo::Ipmask &row, algo::cstring &str); // cfmt:algo.Ipmask.String
+
+    // Decode error using algo_lib table of decoders
+    // void Errcode_Print(algo::Errcode &row, algo::cstring &str); // cfmt:algo.Errcode.String
 
     // Append STR to OUT, using comma-separated-values encoding
     // If QUOTE is 0, the need for quotes and the type of quote is determined automatically.
@@ -776,7 +885,8 @@ namespace algo { // update-hdr
 
     // Print CSV field, auto-determine quotes
     void strptr_PrintCsv(algo::strptr str, algo::cstring &out);
-    void URL_Print(algo::URL &url, algo::cstring &str);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void URL_Print(algo::URL &url, algo::cstring &str); // cfmt:algo.URL.String
 
     // Append STR to OUT, and pad remainder with character FILL
     void strptr_PrintPadRight(algo::strptr str, algo::cstring &out, int nplaces, char fill);
@@ -801,7 +911,8 @@ namespace algo { // update-hdr
     // \t
     void strptr_PrintSql(algo::strptr str, algo::cstring &out, char q);
     void strptr_PrintSql(algo::strptr str, algo::cstring &out);
-    void Attr_Print(algo::Attr &attr, algo::cstring &str);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Attr_Print(algo::Attr &attr, algo::cstring &str); // cfmt:algo.Attr.String
 
     // Print a string suitable for parsing with Tuple
     // If the string doesn't need quotes, it is printed as-is.
@@ -814,7 +925,8 @@ namespace algo { // update-hdr
     // copy string B to TO, using ORIG as a case template
     // I.e. PrintCopyCase("AbcD", to, "somestring") -> "SomEstring"
     void strptr_PrintCopyCase(const algo::strptr &orig, algo::cstring &to, const algo::strptr &b);
-    bool Tuple_ReadStrptrMaybe(Tuple &row, algo::strptr s);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // bool Tuple_ReadStrptrMaybe(Tuple &row, algo::strptr s); // cfmt:algo.Tuple.String
 
     // T             target tuple. the tuple is not emptied before parsing.
     // STR           source string
@@ -837,7 +949,8 @@ namespace algo { // update-hdr
     // Read Charset from list of chars.
     // Every character in RHS is simply added to the bitset
     void Charset_ReadStrptrPlain(algo::Charset &lhs, strptr desc);
-    bool Charset_ReadStrptrMaybe(algo::Charset &lhs, strptr rhs);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // bool Charset_ReadStrptrMaybe(algo::Charset &lhs, strptr rhs); // cfmt:algo.Charset.String
 
     // Print STR to OUT in a way that's acceptable as input for bash.
     void strptr_PrintBash(strptr str, algo::cstring &out);
@@ -856,8 +969,9 @@ namespace algo { // update-hdr
     void strptr_PrintDot(strptr s, algo::cstring &out);
 
     // print binary octet string as hex
-    void Sha1sig_Print(algo::Sha1sig &sha1sig, algo::cstring &out);
-    bool Sha1sig_ReadStrptrMaybe(algo::Sha1sig &sha1sig, algo::strptr str);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Sha1sig_Print(algo::Sha1sig &sha1sig, algo::cstring &out); // cfmt:algo.Sha1sig.String
+    // bool Sha1sig_ReadStrptrMaybe(algo::Sha1sig &sha1sig, algo::strptr str); // cfmt:algo.Sha1sig.String
 
     // Write character C into string OUT, using C++ character escapement rules
     // QUOTE_CHAR also gets escaped.
@@ -936,12 +1050,22 @@ namespace algo { // update-hdr
     // Print a string as a classic regex, escaping all special
     // characters. This regex will only match the specified string.
     void strptr_PrintRegxSql(algo::strptr value, algo::cstring &str);
-    void WDiff_Print(algo::WDiff row, algo::cstring &str);
-    void WTime_Print(algo::WTime row, algo::cstring &str);
-    bool WDiff_ReadStrptrMaybe(algo::WDiff &parent, algo::strptr in_str);
-    bool WTime_ReadStrptrMaybe(algo::WTime &parent, algo::strptr in_str);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void WDiff_Print(algo::WDiff row, algo::cstring &str); // cfmt:algo.WDiff.String
+    // void WTime_Print(algo::WTime row, algo::cstring &str); // cfmt:algo.WTime.String
+    // bool WDiff_ReadStrptrMaybe(algo::WDiff &parent, algo::strptr in_str); // cfmt:algo.WDiff.String
+    // bool WTime_ReadStrptrMaybe(algo::WTime &parent, algo::strptr in_str); // cfmt:algo.WTime.String
     void u64_PrintBase32(u64 k, algo::cstring &str);
-    void Uuid_Print(algo::Uuid &parent, algo::cstring &str);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Uuid_Print(algo::Uuid &parent, algo::cstring &str); // cfmt:algo.Uuid.String
+    // bool Uuid_ReadStrptrMaybe(algo::Uuid &parent, strptr str); // cfmt:algo.Uuid.String
+
+    // print bytes in hex e.g: 00 01 ff
+    // void memptr_Print(algo::memptr parent, algo::cstring &str); // cfmt:algo.memptr.String
+    // void ByteAry_Print(algo::ByteAry &parent, algo::cstring &str); // cfmt:algo.ByteAry.String
+
+    // read bytes in hex e.g: 00 01 ff
+    // bool ByteAry_ReadStrptrMaybe(algo::ByteAry &parent, strptr str); // cfmt:algo.ByteAry.String
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/lib.cpp -- Main file
@@ -971,10 +1095,18 @@ namespace algo { // update-hdr
     // Append new attribute with specified name and value.
     void attr_Add(Tuple &T, strptr name, strptr value);
 
+    // Update atribute if exists, otherwise create new one
+    void attr_Set(Tuple &T, strptr name, strptr value);
+
     // Call sleep/usleep, giving up MS milliseconds
     void SleepMsec(int ms);
+
+    // Reeturn Errcode corresponding to a UNIX error code VAL
     Errcode FromErrno(i64 val);
-    Errcode FromWinErr(i64 val);
+
+    // Return Errcode corresponding to namespace <ns> and code VAL
+    // The namespace should have a decoder function (decode_Call(*errns_Find(ns), val))
+    Errcode MakeErrcode(algo::Errns ns, i64 val);
     i64 I64Power10(u32 power);
 
     // Copy bytes from one location to another in blocks of 16 bytes.
@@ -1043,10 +1175,12 @@ namespace algo { // update-hdr
     //
 
     // Default implementation of prlog handler
+    // This function is called via algo_lib::_db.Prlog pointer.
+    // The pointer may be set by the application to replace the function with something else.
     //
     // Notes on WriteFile use:
-    // some tools set fd 1 to nonblocking mode, which causes EAGAIN during fast writes,
-    // so we must use WriteFile (which contains a loop) to write all the bytes out.
+    // we must use WriteFile (which contains a loop) to write all the bytes out,
+    // otherwise some terminals push back and refuse the data.
     void Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str);
 
     // -------------------------------------------------------------------
@@ -1307,6 +1441,8 @@ namespace algo { // update-hdr
     void u64_Ranges_curs_Next(algo::u64_Ranges_curs &curs);
     bool u64_Ranges_curs_ValidQ(algo::u64_Ranges_curs &curs);
     u64 &u64_Ranges_curs_Access(algo::u64_Ranges_curs &curs);
+    void Append(algo::u64_RangesList &p, u64 item);
+    strptr Yield(algo::u64_RangesList &p);
     void Sep_curs_Reset(algo::Sep_curs &curs, strptr line, char sep);
     void Sep_curs_Next(algo::Sep_curs &curs);
 
@@ -1364,6 +1500,26 @@ namespace algo { // update-hdr
     bool SaneTerminalQ();
 
     // -------------------------------------------------------------------
+    // cpp/lib/algo/url.cpp
+    //
+
+    // perform standard url percent decoding (for raw url, path),
+    // and optionally translate '+' to space (for application/x-www-form-urlencoded)
+    tempstr UrlDecode(strptr in, bool plus);
+
+    // Parses HTTP URL
+    // Place path part as value of first attr,
+    // other attrs are key-value pairs in order as the appear
+    void ParseUrl(algo::Tuple &out, strptr in);
+
+    // -------------------------------------------------------------------
+    // cpp/lib/algo/uuid.cpp
+    //
+    void GenerateRandomUuid(algo::Uuid &uuid);
+    algo::Uuid GenerateRandomUuid();
+    bool NullUuidQ(const algo::Uuid &uuid);
+
+    // -------------------------------------------------------------------
     // include/algo.inl.h -- Inline functions
     //
 
@@ -1399,15 +1555,12 @@ namespace algo { // update-hdr
     // RESULT      value of hex digit
     // RETURN      success code
     inline int ParseHex1(u32 c, u8 &result);
-    inline void PageBufInit(PageBuf &F, u64 n, u64 align);
-    inline u32 strptr_Hash(u32 prev, algo::strptr val);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // inline u32 strptr_Hash(u32 prev, algo::strptr val);
     inline u32 cstring_Hash(u32 prev, const algo::strptr &val);
-    inline u32 cstring_Hash(u32 prev, algo::cstring &val);
-    inline u32 cstring_Hash(u32 prev, const algo::cstring &val);
 
-    // this is inefficient because it would be nice to be able to overrun strings.
-    // however, we don't check byte alignment at the beginning,
-    // so a 2-byte string that lies 4 bytes before the end of a page could fault.
+    // When compiled with AOS_SSE42, use intrinsics.
+    // Otherwise, the function is defined in crc32.cpp and uses a software implementation
     inline u32 CRC32Step(u32 old, const u8 *x, size_t len);
     inline int P1Mod(int a, int b);
     inline u32 u32_Count1s(u32 x);
@@ -1551,8 +1704,6 @@ namespace algo { // update-hdr
     inline algo::aryptr<char> ch_LastN(const strptr &lhs, u32 n);
     inline algo::aryptr<char> ch_RestFrom(const strptr &lhs, u32 n);
     inline algo::aryptr<char> ch_GetRegion(const strptr &lhs, u32 lo, u32 n);
-    inline int ImpliedLength(char *, const char *c);
-    inline int ImpliedLength(const char *, const char *c);
     inline int ch_N(const strptr &s);
     inline int ch_First(const strptr &s, int dflt = 0);
     inline int ch_Last(const strptr &s, int dflt = 0);
@@ -1597,10 +1748,11 @@ namespace algo { // update-hdr
     template<typename T> inline bool SameSignQ(T a, T b);
 
     // Compare two strings for equality, case-sensitively
-    inline bool strptr_Eq(algo::strptr a, algo::strptr b);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // inline bool strptr_Eq(algo::strptr a, algo::strptr b);
 
     // Test if string A is lexicographically less than string B.
-    inline bool strptr_Lt(algo::strptr a, algo::strptr b);
+    // inline bool strptr_Lt(algo::strptr a, algo::strptr b);
 
     // reverse bit order in a byte
     inline u8 u8_ReverseBits(u8 b);
@@ -1609,7 +1761,11 @@ namespace algo { // update-hdr
     // On Linux, this function calls clock_gettime() which takes about
     // 30ns and uses rdtsc() to increase underlying clock resolution
     inline algo::UnTime CurrUnTime();
-    inline i32 strptr_Cmp(algo::strptr a, algo::strptr b);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // inline i32 strptr_Cmp(algo::strptr a, algo::strptr b);
+
+    // helper: N bytes as chars
+    template<typename T> inline bool DecodeNChars(algo::memptr &buf, int n, T &result);
 }
 
 // -----------------------------------------------------------------------------
@@ -1673,7 +1829,6 @@ namespace algo_lib { // update-hdr
     // -------------------------------------------------------------------
     // cpp/lib/algo/errtext.cpp
     //
-    void SaveBadField(strptr name, strptr value);
 
     // Reset value of algo_lib::_db.errtext and return it for further editing
     // Usage:
@@ -1682,14 +1837,11 @@ namespace algo_lib { // update-hdr
 
     // Add key-value pair to algo_lib::_db.errtext
     // Error text beyond a reasonable limit is discarded -- keep errors short!
-    void SaveBadTag(const strptr &name, const strptr &value);
-
-    // Better name than SaveBadTAg
     void AppendErrtext(const strptr &name, const strptr &value);
 
-    // Retrieve whatever bad tags were saved with SaveBadTag,
+    // Retrieve whatever bad tags were saved with AppendErrtext,
     // and clear the state.
-    // SaveBadTag is typically called by string read functions that encounter
+    // AppendErrtext is typically called by string read functions that encounter
     // something unreadable. This is the only way to retrieve that
     // additional information
     tempstr DetachBadTags();
@@ -1697,19 +1849,15 @@ namespace algo_lib { // update-hdr
     // Increment algo_lib::_db.trace.tot_insert_err
     // And print accumulated 'bad tags' using prerr.
     // if SetShowInsertErrLim was previously called.
-    // Note: printing is disabled by default, and must be explicitly enabled.
     void NoteInsertErr(strptr tuple);
-
-    // Specify how many times NoteInsertErr can use prerr
-    // to output.
-    void SetShowInsertErrLim(int n);
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/file.cpp -- File functions
     //
 
     // User-defined cleanup trigger fildes field of ctype:algo_lib.FLockfile
-    void fildes_Cleanup(algo_lib::FLockfile &lockfile);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void fildes_Cleanup(algo_lib::FLockfile &lockfile); // fcleanup:algo_lib.FTempfile.fildes
 
     // If PATH is an existing path, leave it unchanged
     // On Windows, If PATH.EXE is an existing path, return that
@@ -1725,9 +1873,8 @@ namespace algo_lib { // update-hdr
     // -------------------------------------------------------------------
     // cpp/lib/algo/fmt.cpp -- Print to string / Read from string
     //
-    void ErrorX_Print(algo_lib::ErrorX &row, algo::cstring &str);
-    void FTxttbl_Print(algo_lib::FTxttbl &T_, algo::cstring &str);
-    void FTxttbl_Markdown(algo_lib::FTxttbl &T_, algo::cstring &str);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void ErrorX_Print(algo_lib::ErrorX &row, algo::cstring &str); // cfmt:algo_lib.ErrorX.String
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/iohook.cpp
@@ -1751,7 +1898,7 @@ namespace algo_lib { // update-hdr
     // that occurs before it in the main loop.
     // Sleep will not extend beyond algo_lib::_db.limit
     //     (user-implemented function, prototype is in amc-generated header)
-    // void giveup_time_Step();
+    // void giveup_time_Step(); // fstep:algo_lib.FDb.giveup_time
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/lib.cpp -- Main file
@@ -1759,25 +1906,32 @@ namespace algo_lib { // update-hdr
 
     // Set exit time of main loop to current time.
     void ReqExitMainLoop();
-    void fd_Cleanup(algo_lib::FFildes &fildes);
-    void fildes_Cleanup(algo_lib::FIohook &iohook);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void bh_timehook_Step();
+    // void fd_Cleanup(algo_lib::FFildes &fildes); // fcleanup:algo_lib.FFildes.fd
+    // void fildes_Cleanup(algo_lib::FIohook &iohook); // fcleanup:algo_lib.FTempfile.fildes
+    // void bh_timehook_Step(); // fstep:algo_lib.FDb.bh_timehook
 
     // Check signature on incoming data
-    bool dispsigcheck_InputMaybe(dmmeta::Dispsigcheck &dispsigcheck);
+    // bool dispsigcheck_InputMaybe(dmmeta::Dispsigcheck &dispsigcheck); // finput:algo_lib.FDb.dispsigcheck
 
     // Die when parent process dies
     void DieWithParent();
 
+    // Return name of temp directory.
+    // If it's not already initialized, it is set to the default value:
+    // temp/<procname> where <procname> is taken from argv[0].
+    // The directory is created as needed.
+    algo::strptr GetTempDir();
+
     // Create temporary file
     // tempfile.fildes points to the new temp file after this
-    // temp file is created under temp/
+    // temp file is created under _db.tempdir
     // prefix is a namespace-unique name, such as "amc.xyz"
-    // Actual file that's created becomes "temp/amc.xyz.XXXXXX"
+    // Actual file that's created becomes "temp/amc/xyz.XXXXXX"
     // Computed filename is saved to tempfile.filename
     void TempfileInitX(algo_lib::FTempfile &tempfile, strptr prefix);
-    void fildes_Cleanup(algo_lib::FTempfile &tempfile);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void fildes_Cleanup(algo_lib::FTempfile &tempfile); // fcleanup:algo_lib.FTempfile.fildes
 
     // Interpret redirect string, return resulting fd
     // If no redirect applies, return -1
@@ -1808,7 +1962,8 @@ namespace algo_lib { // update-hdr
     tempstr EffectiveUser();
 
     // if OWN_FD is cleared, clean up file descriptor before it is closed
-    void file_Cleanup(algo_lib::InTextFile &file);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void file_Cleanup(algo_lib::InTextFile &file); // fcleanup:algo_lib.InTextFile.file
 
     // Walk child process tree for parent process pid, in post-order traversal way,
     // and send signal sig to each process. Kill_topmost is an option whether
@@ -1827,6 +1982,18 @@ namespace algo_lib { // update-hdr
     // Change to the directory that was current before sandbox mode
     // Must be balanced with PushDir
     void PopDir();
+
+    // Global initializer, called from algo_lib::FDb_Init
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void errns_Userinit(); // fuserinit:algo_lib.FDb.errns
+    void UpdateRate(algo::I64Rate &rate, i64 val);
+
+    // For InlineOnce and TimeHookOnce steps, break
+    // out of the enclosing while loop (over timeouts).
+    // Calling this function may be necessary when it becomes known that
+    // no further progress can be made by the step function.
+    void EndStep();
+    void _db_Userinit();
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/line.cpp -- Line processing
@@ -1855,21 +2022,11 @@ namespace algo_lib { // update-hdr
     // Otherwise, algo_lib::_db.errtext (DetachBadTags()) contains human-readable description of error.
     // If WAIT_TIMEOUT is non-zero, block up to WAIT_TIMEOUT seconds before failing
     // Write pid to file specified in NAME, and lock file using flock().
-    bool LockFileInit(algo_lib::FLockfile &lockfile, strptr name, algo::FailokQ fail_ok, algo::UnDiff wait_timeout);
+    bool LockFileInit(algo_lib::FLockfile &lockfile, strptr name, algo::FailokQ fail_ok = algo::FailokQ(false), algo::UnDiff wait_timeout = algo::UnDiff());
 
     // Write pid to lockfile, separate function to update pid after fork().
     // Sets error text in case of error, and return false.
     bool WritePid(algo_lib::FLockfile &lockfile);
-
-    // Non-blocking attempt to lock LOCKFILE
-    // Return success status
-    // If FAIL_OK is FALSE, throw exception on error (must succeed)
-    bool LockFileInit(algo_lib::FLockfile &lockfile, strptr name, algo::FailokQ fail_ok);
-
-    // Non-blocking attempt to lock LOCKFILE.
-    // Throw exception on error.
-    // If the function returns, it has succeeded.
-    void LockFileInit(algo_lib::FLockfile &lockfile, strptr name);
 
     // Read contents of lock file FNAME, extracting the pid that's stored in there.
     // On failure, return 0
@@ -1880,7 +2037,8 @@ namespace algo_lib { // update-hdr
     //
 
     // User-defined cleanup function for MMAP.MEM
-    void mem_Cleanup(algo_lib::Mmap &mmap);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void mem_Cleanup(algo_lib::Mmap &mmap); // fcleanup:algo_lib.Mmap.mem
 
     // Attach mmapfile MMAPFILE to FD.
     // Return success code.
@@ -1891,6 +2049,40 @@ namespace algo_lib { // update-hdr
     bool MmapFile_Load(MmapFile &mmapfile, strptr fname);
 
     // -------------------------------------------------------------------
+    // cpp/lib/algo/prlog.cpp -- prlog macro
+    //
+
+    // Enable or disable logcat tracing based on traace expression WHAT
+    // WHAT is a comma-separated list of logcat regexes, e.g. a,b,c
+    // Each component can be prefixed with + or -, e.g. +a,-b etc.
+    // Finally, each component can be a key-value pair, e.g. +a:<filter>,-b,+c
+    // <filter> is an optional regex; Regex can be prefixed with ! to indicate a negative match.
+    // Timestamps can be enabled with 'timestamps', disabled with '-timestamps'
+    // Verbose can be enabled with 'verbose', disabled with '-verbose'
+    // Debug can be enabled with 'debug', disabled with '-debug'
+    int ApplyTrace(algo::strptr what);
+
+    // Enable/disable log category NAME with filter FILTER.
+    // If NAME is prefixed with +, logging is enabled
+    // If NAME is prefixed with -, logging is disabled
+    // If NAME is an empty string. current state is printed
+    // FILTER is a regex
+    // If FILTER starts with !, it is a negative filter (any matching lines are omitted)
+    // Return number of logcats affected.
+    int ApplyTrace(algo::strptr name, algo::strptr filter);
+    void ShowTrace();
+
+    // Filter string STR for output on LOGCAT.
+    // The string must match FILTER and not match NEGFILTER.
+    // The initial state is that filter is empty (uninitialized), so empty filter
+    // is interpreted as "match all"
+    // Filter and negfilter are configured with ApplyTrace which parses a trace expression
+    // In addition, if throttling is enabled on LOGCAT, block message
+    // if more than MAXMSG are being printed within WINDOW secs. The counter
+    // is reset every WINDOW secs.
+    bool LogcatFilterQ(algo_lib::FLogcat &logcat, algo::strptr str);
+
+    // -------------------------------------------------------------------
     // cpp/lib/algo/regx.cpp -- Sql Regx implementation
     //
 
@@ -1898,53 +2090,59 @@ namespace algo_lib { // update-hdr
     // sql vs shell vs classic regx, vs acr, partial vs full.
     // we print back the original expression that was read in, but the information
     // about what function read it is lost.
-    void Regx_Print(algo_lib::Regx &regx, algo::cstring &lhs);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Regx_Print(algo_lib::Regx &regx, algo::cstring &lhs); // cfmt:algo_lib.Regx.String
+    // void RegxState_Print(algo_lib::RegxState &state, algo::cstring &lhs); // cfmt:algo_lib.RegxState.String
 
-    // Check if REGX matches S, return result
+    // Check if REGX matches TEXT, return result
     bool Regx_Match(algo_lib::Regx &regx, algo::strptr text);
+
+    // Find REGX in TEXT and return range of chars which match.
+    // If the regx is not found, return empty range.
+    // For this to work, REGX must be parsed with "full:N".
+    algo::i32_Range Regx_Find(algo_lib::Regx &regx, algo::strptr text, int start = 0);
+    void Regx_ReadStyle(algo_lib::Regx &regx, algo::strptr input, algo_lib::RegxStyle style, bool full);
 
     // Parse string INPUT as regex and store in REGX.
     // Supported features:
-    // \n,\r,\t,\a,\e,\v,\f, [..], $, ^,
-    // ., *, +, (..), {..}, \d,\D,\w,\W,\s,\S
+    // \n,\r,\t,\a,\e,\v,\f     regular escaped chars
+    // [..]                     char range, possibly with negation
+    // $, ^                     anchors
+    // .                        any char
+    // *                        repetition
+    // +                        one or more
+    // (..)                     precedence grouping and capture groups
+    // \d,\D,\w,\W,\s,\S        macros
     void Regx_ReadDflt(algo_lib::Regx &regx, algo::strptr input);
-
-    // Parse bash-style regx:
-    // * -> .*
-    // ? -> .?
-    // All other regx chars are escaped away
-    // if FULL is set to false, input is treated as ".*input.*"
     void Regx_ReadShell(algo_lib::Regx &regx, algo::strptr input, bool full);
-
-    // Parse SQL-style regx:
-    // % is rewritten as .*
-    // _ is rewritten as .
-    // (, ), [, ] are passed through
-    // ., *, ?, + are escaped
-    // if FULL is set to false, input is treated as ".*input.*"
     void Regx_ReadSql(algo_lib::Regx &regx, algo::strptr input, bool full);
-
-    // Parse ACR-style regx:
-    // % is rewritten as .*
-    // (, ), [, ], _ are passed through
-    // ., *, ?, + are escaped
-    // if FULL is set to false, input is treated as ".*input.*"
-    // If the input expression can be matched as a string, set REGX.LITERAL to true
     void Regx_ReadAcr(algo_lib::Regx &regx, algo::strptr input, bool full);
 
     // Set REGX to match string INPUT literally
     void Regx_ReadLiteral(algo_lib::Regx &regx, algo::strptr input);
-    bool Regx_ReadStrptrMaybe(algo_lib::Regx &regx, algo::strptr input);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // bool Regx_ReadStrptrMaybe(algo_lib::Regx &regx, algo::strptr input); // cfmt:algo_lib.Regx.String
+    algo::tempstr ToDbgString(algo_lib::Bitset &bitset);
+    algo::tempstr ToDbgString(algo_lib::RegxState &state, int index);
+    algo::tempstr ToDbgString(algo_lib::Regx &regx);
+    tempstr ToDbgString(algo_lib::RegxExpr *expr);
+    tempstr ToDbgString(algo_lib::RegxParse &regxparse);
 
     // -------------------------------------------------------------------
-    // cpp/lib/algo/string.cpp -- cstring functions
+    // cpp/lib/algo/replscope.cpp
     //
-    void ind_replvar_Cleanup(algo_lib::Replscope &replscope);
 
     // Set value of key KEY value VALUE
     // KEY        string to replace
     // VALUE      value to replace it with
     // SUBST      If set, $-expand the VALUE parameter
+    // NOTES
+    // With 'strict' Replscope, avoid expressions like this:
+    // Set(R, "$var", field.comment);
+    // This will trigger an error when field.comment contains a $ sign and the substitution fails.
+    // Use
+    // Set(R, "$var", field.comment, false);
+    //
     void Set(algo_lib::Replscope &scope, strptr from, strptr to, bool subst = true);
 
     // Append TEXT to OUT, performing $-substitution using variables from SCOPE (must be non-NULL)
@@ -1954,12 +2152,12 @@ namespace algo_lib { // update-hdr
     // Enable comma-eating (default true)
     void eatcomma_Set(algo_lib::Replscope &scope, bool enable);
 
-    // Enable strict mode (default true -- any failed substitution kills process)
-    // If strict mode is off, failed substitution acts as if there was no substitution
-    void fatal_Set(algo_lib::Replscope &scope, bool enable);
-
     // Perform $-substitutions in TEXT and return new value.
     tempstr Subst(algo_lib::Replscope &scope, strptr text);
+
+    // -------------------------------------------------------------------
+    // cpp/lib/algo/string.cpp -- cstring functions
+    //
 
     // read TEXT into a tuple.
     // perform variable substitution on key-value pairs.
@@ -1972,43 +2170,55 @@ namespace algo_lib { // update-hdr
     // cpp/lib/algo/timehook.cpp
     //
 
-    // Initialize time hook TH as non-recurrent, with delay DELAY.
-    // Usage:
-    // ThInit(th, SchedTime());     // schedule at current time
-    // hook_Set0(th, myfunction);   // set callback
-    // bh_timehook_Reheap(th);      // insert into timehook heap
-    // ... eventually algo_lib::Step() will call the hook
-    void ThInit(algo_lib::FTimehook& th, algo::SchedTime delay) __attribute__((nothrow));
-
-    // Similar to the above, but recurrent.
+    // Initialize a recurrent time hook TH to execute on the next scheduling cycle,
+    // and after that, every DELAY clocks
+    // NOTE: 'delay' field of a recurrent timehook is used when automatically rescheduling it.
     void ThInitRecur(algo_lib::FTimehook& th, algo::SchedTime delay) __attribute__((nothrow));
+
+    // Schedule a time hook TH to execute on the next scheduling cycle,
+    // and after that, every DELAY clocks
+    void ThScheduleRecur(algo_lib::FTimehook& th, algo::SchedTime delay) __attribute__((nothrow));
+
+    // Initialize a non-recurrent time hook TH to execute after DELAY clock cycles with
+    // respect to current time
+    // NOTE: 'delay' field of non-recurrent timehook is ignored
+    // NOTE: this function updates scheduling clock to the most current value
+    void ThScheduleIn(algo_lib::FTimehook& th, algo::SchedTime delay) __attribute__((nothrow));
 
     // -------------------------------------------------------------------
     // cpp/lib/algo/txttbl.cpp -- Ascii table
     //
 
-    // Add new cell to the given row.
-    algo_lib::FTxtcell &AddCell(algo_lib::FTxtrow &txtrow, algo::strptr title, algo_TextJustEnum justify, int span);
-    algo_lib::FTxtcell &AddCell(algo_lib::FTxtrow &txtrow, algo::strptr title, algo_TextJustEnum justify);
+    // Look up cell with specific coordinates.
+    algo_lib::FTxtcell *FindCell(algo_lib::FTxttbl &txttbl, int row, int col);
+    algo_TextJustEnum EvalJust(algo_lib::FTxttbl &txttbl, u32 col, algo_TextJustEnum just);
 
-    // Add new cell to the last row of of table and return references to its text
+    // Add new cell to the given row.
+    // TEXT specifies the text for the cell
+    algo_lib::FTxtcell &AddCell(algo_lib::FTxtrow &txtrow, algo::strptr text, algo_TextJustEnum justify = algo_TextJust_j_auto);
+    algo::cstring &AddCell(algo_lib::FTxttbl &txttbl);
+
+    // Add new row to the table and return a reference to it
     algo_lib::FTxtrow &AddRow(algo_lib::FTxttbl &txttbl);
 
     // Add column to the last row of table and return reference to it
+    // The justification for the column is copied from the header row
     algo_lib::FTxtcell &AddCellEx(algo_lib::FTxttbl &txttbl);
 
-    // Text table.
-    // Text table is a table with rows; Each row has an array of cells.
-    // Each call has text, col span, text justification, and optional style (color).
-    // Add column to the last row of table.
-    void AddCol(algo_lib::FTxttbl &txttbl, algo::strptr col, algo_TextJustEnum justify);
-    void AddCol(algo_lib::FTxttbl &txttbl, algo::strptr col);
-    void AddCols(algo_lib::FTxttbl &txttbl, algo::strptr csv, algo_TextJustEnum justify);
-    void AddCols(algo_lib::FTxttbl &txttbl, algo::strptr csv);
-    algo::cstring &AddCell(algo_lib::FTxttbl &txttbl);
+    // Add a column with specified text TEXT to the last row of the table
+    // If optional JUSTIFY is provided, the justification is set. Otherwise, justification is automatically
+    // determined from the header cell.
+    void AddCol(algo_lib::FTxttbl &txttbl, algo::strptr text, algo_TextJustEnum justify = algo_TextJust_j_auto);
 
-    // Use prlog(txttbl) to print.
-    void TxttblCsv(algo_lib::FTxttbl &tbl);
+    // Add a comma-separated list of columns to the table
+    void AddCols(algo_lib::FTxttbl &txttbl, algo::strptr csv, algo_TextJustEnum justify = algo_TextJust_j_left);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void FTxttbl_Print(algo_lib::FTxttbl &txttbl, algo::cstring &str); // cfmt:algo_lib.FTxttbl.String
+
+    // Print table TXTTBL using markdown, appending to string STR.
+    // First row of the table is assumed to be the header.
+    // Newlines in cells are converted to '<br>'.
+    void FTxttbl_Markdown(algo_lib::FTxttbl &txttbl, algo::cstring &str);
 }
 
 
@@ -2070,6 +2280,9 @@ using algo::tempstr;
 #include "include/gen/ietf_gen.inl.h"
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/algo_lib_gen.inl.h"
+
+// presently cannot be avoided
+#include "include/lib_json.h"
 
 // Gcache pragma to precompile this header
 void __gcache_pragma_pch_preprocess();

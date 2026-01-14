@@ -22,12 +22,20 @@
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->
 
+### Subsets
+<a href="#subsets"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Subsets -->
+These ssimfiles are subsets of dev.syscmd
+
+* [dev.Syscmddep](/txt/ssimdb/dev/syscmddep.md) - Dependency between two commands 
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Subsets -->
+
 ### Related
 <a href="#related"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Related -->
 These ssimfiles reference dev.syscmd
 
-* [dev.syscmddep via child](/txt/ssimdb/dev/syscmddep.md) - Dependency between two commands 
 * [dev.syscmddep via parent](/txt/ssimdb/dev/syscmddep.md) - Dependency between two commands 
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Related -->

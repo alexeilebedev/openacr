@@ -13,6 +13,7 @@
 &#128196; [Iohook & Fbuf](/txt/tut/tut6.md)<br/>
 &#128196; [Tests](/txt/tut/tut7.md)<br/>
 &#128196; [tut8 - ACR live tutorial](/txt/tut/tut8.md)<br/>
+&#128196; [Tutorial on transitioning from Makefile to OpenACR build](/txt/tut/tut9_make.md)<br/>
 
 <!-- dev.mdmark  mdmark:TOC  state:END_AUTO  param:Toc -->
 

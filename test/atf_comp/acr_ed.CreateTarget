@@ -1,0 +1,84 @@
+acr_ed.create_target  target:xyz
+set -e
+bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+dmmeta.ns  ns:xyz  nstype:exe  license:GPL  comment:""
+dmmeta.nsx  ns:xyz  genthrow:Y  correct_getorcreate:Y  pool:algo_lib.FDb.malloc  sortxref:Y  pack:N  comment:""
+dmmeta.main  ns:xyz  ismodule:N
+dmmeta.nscpp  ns:xyz  comment:""
+dev.target  target:xyz
+dev.gitfile  gitfile:cpp/xyz/xyz.cpp
+dev.gitfile  gitfile:include/xyz.h
+dev.gitfile  gitfile:cpp/gen/xyz_gen.cpp
+dev.gitfile  gitfile:include/gen/xyz_gen.h
+dev.gitfile  gitfile:include/gen/xyz_gen.inl.h
+dev.gitfile  gitfile:bin/xyz  comment:''
+dev.targsrc  targsrc:xyz/cpp/xyz/xyz.cpp  comment:''
+dev.targsrc  targsrc:xyz/include/xyz.h  comment:''
+dev.targsrc  targsrc:xyz/cpp/gen/xyz_gen.cpp  comment:''
+dev.targsrc  targsrc:xyz/include/gen/xyz_gen.h  comment:''
+dev.targsrc  targsrc:xyz/include/gen/xyz_gen.inl.h  comment:''
+dev.targdep  targdep:xyz.algo_lib  comment:''
+dev.targdep  targdep:xyz.lib_prot  comment:''
+dmmeta.ctype  ctype:xyz.FDb  comment:''
+dmmeta.field  field:xyz.FDb._db  arg:xyz.FDb  reftype:Global  dflt:''  comment:''  
+dmmeta.ctype  ctype:command.xyz  comment:""
+dmmeta.cfmt  cfmt:command.xyz.Argv  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+dmmeta.field  field:xyz.FDb.cmdline  arg:command.xyz  reftype:Val  dflt:""  comment:""
+dmmeta.fcmdline  field:xyz.FDb.cmdline  read:Y  basecmdline:algo_lib.FDb.cmdline  comment:""
+dmmeta.field  field:command.xyz.in  arg:algo.cstring  reftype:Val  dflt:'"data"'  comment:"Input directory or filename, - for stdin"
+dmmeta.floadtuples  field:command.xyz.in  comment:""
+dev.gitfile  gitfile:txt/exe/xyz/README.md
+dev.readmefile  gitfile:txt/exe/xyz/README.md  inl:N  sandbox:N  filter:""  comment:""
+dev.gitfile  gitfile:txt/exe/xyz/internals.md
+dev.readmefile  gitfile:txt/exe/xyz/internals.md  inl:N  sandbox:N  filter:""  comment:""
+EOF
+
+mkdir -p cpp/xyz/
+touch cpp/xyz/xyz.cpp
+git add cpp/xyz/xyz.cpp
+mkdir -p include/
+touch include/xyz.h
+git add include/xyz.h
+mkdir -p cpp/gen/
+touch cpp/gen/xyz_gen.cpp
+git add cpp/gen/xyz_gen.cpp
+mkdir -p include/gen/
+touch include/gen/xyz_gen.h
+git add include/gen/xyz_gen.h
+mkdir -p include/gen/
+touch include/gen/xyz_gen.inl.h
+git add include/gen/xyz_gen.inl.h
+mkdir -p cpp/xyz/
+cat > include/xyz.h << EOF
+#include "include/gen/xyz_gen.h"
+#include "include/gen/xyz_gen.inl.h"
+
+namespace xyz { // update-hdr
+}
+EOF
+
+cat > cpp/xyz/xyz.cpp << EOF
+#include "include/algo.h"
+#include "include/algo.h"
+#include "include/xyz.h"
+
+void xyz::Main() {
+    prlog("Hello, World!");
+    xyz::MainLoop();
+}
+EOF
+
+bin/amc  # make sure */gen/* files are created
+ln -s ../build/release/xyz bin/xyz
+git add -f bin/xyz
+mkdir -p txt/exe/xyz/
+touch txt/exe/xyz/README.md
+git add txt/exe/xyz/README.md
+mkdir -p txt/exe/xyz/
+touch txt/exe/xyz/internals.md
+git add txt/exe/xyz/internals.md
+bin/src_hdr  -targsrc:xyz/% -write:Y -update_copyright:Y
+bin/abt  -target:xyz -install:Y
+echo 'please execute $(acr_compl -install) to add completions support for new target'
+bin/abt_md  -readmefile:% -ns:xyz -section:%
+bin/amc

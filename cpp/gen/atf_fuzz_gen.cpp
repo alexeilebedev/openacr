@@ -33,18 +33,18 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
+algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 atf_fuzz::FDb   atf_fuzz::_db;    // dependency found via dev.targdep
 
 namespace atf_fuzz {
@@ -60,8 +60,8 @@ const char *atf_fuzz_help =
 "    -in         string  \"data\"                 Input directory or filename, - for stdin\n"
 "    -seed       int     0                      Random seed\n"
 "    -testprob   double  1                      Run each case with this probability\n"
-"    -verbose    int                            Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      int                            Debug level (0..255); alias -d; cumulative\n"
+"    -verbose    flag                           Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug      flag                           Debug level (0..255); alias -d; cumulative\n"
 "    -help                                      Print help and exit; alias -h\n"
 "    -version                                   Print version and exit\n"
 "    -signature                                 Show signatures and exit; alias -sig\n"
@@ -182,9 +182,8 @@ void atf_fuzz::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "atf_fuzz: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -227,6 +226,9 @@ void atf_fuzz::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:atf_fuzz.FDb.cmdline
@@ -238,7 +240,7 @@ void atf_fuzz::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -321,8 +323,8 @@ bool atf_fuzz::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && atf_fuzz::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
         retval = retval && atf_fuzz::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -613,14 +615,9 @@ bool atf_fuzz::target_XrefMaybe(atf_fuzz::FTarget &row) {
 // Find row by key. Return NULL if not found.
 atf_fuzz::FTarget* atf_fuzz::ind_target_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
-    atf_fuzz::FTarget* *e = &_db.ind_target_buckets_elems[index];
-    atf_fuzz::FTarget* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).target == key;
-        if (done) break;
-        e         = &ret->ind_target_next;
-    } while (true);
+    atf_fuzz::FTarget *ret = _db.ind_target_buckets_elems[index];
+    for (; ret && !((*ret).target == key); ret = ret->ind_target_next) {
+    }
     return ret;
 }
 
@@ -652,10 +649,11 @@ atf_fuzz::FTarget& atf_fuzz::ind_target_GetOrCreate(const algo::strptr& key) {
 // --- atf_fuzz.FDb.ind_target.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool atf_fuzz::ind_target_InsertMaybe(atf_fuzz::FTarget& row) {
-    ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (atf_fuzz::FTarget*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        row.ind_target_hashval = algo::Smallstr16_Hash(0, row.target);
+        ind_target_Reserve(1);
+        u32 index = row.ind_target_hashval & (_db.ind_target_buckets_n - 1);
         atf_fuzz::FTarget* *prev = &_db.ind_target_buckets_elems[index];
         do {
             atf_fuzz::FTarget* ret = *prev;
@@ -681,7 +679,7 @@ bool atf_fuzz::ind_target_InsertMaybe(atf_fuzz::FTarget& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void atf_fuzz::ind_target_Remove(atf_fuzz::FTarget& row) {
     if (LIKELY(row.ind_target_next != (atf_fuzz::FTarget*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        u32 index = row.ind_target_hashval & (_db.ind_target_buckets_n - 1);
         atf_fuzz::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
         while (atf_fuzz::FTarget *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -698,8 +696,14 @@ void atf_fuzz::ind_target_Remove(atf_fuzz::FTarget& row) {
 // --- atf_fuzz.FDb.ind_target.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void atf_fuzz::ind_target_Reserve(int n) {
+    ind_target_AbsReserve(_db.ind_target_n + n);
+}
+
+// --- atf_fuzz.FDb.ind_target.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void atf_fuzz::ind_target_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_target_buckets_n;
-    u32 new_nelems   = _db.ind_target_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -718,7 +722,7 @@ void atf_fuzz::ind_target_Reserve(int n) {
             while (elem) {
                 atf_fuzz::FTarget &row        = *elem;
                 atf_fuzz::FTarget* next       = row.ind_target_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
+                u32 index          = row.ind_target_hashval & (new_nbuckets-1);
                 row.ind_target_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -998,12 +1002,13 @@ void atf_fuzz::StaticCheck() {
 // --- atf_fuzz...main
 int main(int argc, char **argv) {
     try {
-        algo_lib::FDb_Init();
         lib_json::FDb_Init();
+        algo_lib::FDb_Init();
         atf_fuzz::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         atf_fuzz::ReadArgv(); // dmmeta.main:atf_fuzz
         atf_fuzz::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -1015,8 +1020,8 @@ int main(int argc, char **argv) {
     }
     try {
         atf_fuzz::FDb_Uninit();
-        lib_json::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

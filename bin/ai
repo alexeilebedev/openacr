@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# Copyright (C) 2023-2024 AlgoRND
+# Copyright (C) 2023-2026 AlgoRND
 #
 # License: GPL
 # This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ sub Die {
     print "error $_[0]. more info in txt/exe/abt/README.md\n";
     exit(1);
 }
-my $clean = scalar(grep(/^-clean$/,@ARGV)) || (system("abt --version >/dev/null 2>/dev/null")!=0 && ! -x "bin/abt");
+my $clean = scalar(grep(/^-clean$/,@ARGV)) || system("abt --version >/dev/null 2>/dev/null")!=0;
 @ARGV = grep(!/^-clean$/,@ARGV);
 # check if abt exists
 if ($clean) {
@@ -37,4 +37,4 @@ $F = "%" if !$F;
 # allow this one to fail
 system("bin/src_hdr", "-write", "-targsrc:%");
 # main build step
-system("bin/abt", "-build", $F, @ARGV)==0 or Die("abt failed: $?");
+system("bin/abt", "-build", "-install", $F, @ARGV)==0 or Die("abt failed: $?");

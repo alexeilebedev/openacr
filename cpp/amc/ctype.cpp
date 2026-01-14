@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
@@ -53,6 +53,17 @@ void amc::tfunc_Ctype_Uninit() {
         uninit.inl = c_field_N(ctype)<10;
         int naction=0;
 
+        // call user-defined cleanup
+        rrep_(i, amc::c_field_N(ctype)) {
+            amc::FField &field = *c_field_Find(ctype,i);
+            if (field.c_fcleanup) {
+                Set(R, "$field", field.field);
+                Set(R, "$name", name_Get(field));
+                Ins(&R, uninit.body, "$name_Cleanup($pararg); // dmmeta.fcleanup:$field");
+                naction++;
+            }
+        }
+
         // cascdel fields
         rrep_(i, amc::c_field_N(ctype)) {
             amc::FField &field = *amc::c_field_Find(ctype,i);
@@ -84,16 +95,6 @@ void amc::tfunc_Ctype_Uninit() {
             }ind_end;
         }
 
-        // call user-defined cleanup
-        rrep_(i, amc::c_field_N(ctype)) {
-            amc::FField &field = *c_field_Find(ctype,i);
-            if (field.c_fcleanup) {
-                Set(R, "$field", field.field);
-                Set(R, "$name", name_Get(field));
-                Ins(&R, uninit.body, "$name_Cleanup($pararg); // dmmeta.fcleanup:$field");
-                naction++;
-            }
-        }
 
         // uninit fields (release memory)
         rrep_(i, amc::c_field_N(ctype)) {
@@ -101,8 +102,9 @@ void amc::tfunc_Ctype_Uninit() {
             if (amc::FFunc *func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Uninit"))) {
                 if (ch_N(func->body)) {
                     Set(R, "$field", field.field);
+                    Set(R, "$comment", field.comment, false);
                     Ins(&R, uninit.body, "");
-                    Ins(&R, uninit.body, tempstr()<<"// $field.Uninit ("<<field.reftype<<")  //"<<field.comment);
+                    Ins(&R, uninit.body, tempstr()<<"// $field.Uninit ("<<field.reftype<<")  //$comment");
                     uninit.body << func->body;
                     uninit.inl = uninit.inl && func->inl;
                     naction++;
@@ -290,8 +292,8 @@ void amc::tfunc_Ctype_Hash() {
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     amc::FNs &ns = *ctype.p_ns;
 
-    if (ctype.c_chash) {
-        vrfy(!ctype.c_varlenfld,tempstr()<< "hash function of varlength records is not supported ("<<ctype.ctype<<")");
+    if (ctype.c_chash && ctype.c_chash->hashtype != dmmeta_Hashtype_hashtype_Linear) {
+        vrfy(zd_varlenfld_EmptyQ(ctype),tempstr()<< "hash function of varlength records is not supported ("<<ctype.ctype<<")");
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype,true));
         ns.nhash++;
 
@@ -300,31 +302,70 @@ void amc::tfunc_Ctype_Hash() {
         Ins(&R, hash.proto, "$Name_Hash(u32 prev, $ByvalArgtype rhs)", false);
         hash.extrn = ctype.c_chash->hashtype == dmmeta_Hashtype_hashtype_Extern;
         hash.inl = c_datafld_N(ctype) < 5;
-        ind_beg(amc::ctype_c_field_curs, field, ctype) {
-            if (PadQ(field)) {
-            } else if (FldfuncQ(field)) {
-            } else if (field.c_smallstr) {
-                hash.inl=false;
-                Set(R, "$name", name_Get(field));
-                Ins(&R, hash.body, "algo::strptr $name_strptr = $name_Getary(rhs);");
-                Ins(&R, hash.body, "prev = ::strptr_Hash(prev, $name_strptr);");
-            } else if (field.reftype == dmmeta_Reftype_reftype_Ptr) {
-                Set(R, "$name", name_Get(field));
-                Ins(&R, hash.body, "prev = u64_Hash(prev, u64(rhs.$name));");
-            } else if (field.reftype == dmmeta_Reftype_reftype_Upptr) {
-                Set(R, "$name", name_Get(field));
-                Ins(&R, hash.body, "prev = u64_Hash(prev, u64(rhs.$name));");
-            } else if (FixaryQ(field)) {
-                Set(R, "$Fldname", name_Get(*field.p_arg));
-                Set(R, "$name", name_Get(field));
-                Set(R, "$width", tempstr() << WidthMin(field));
-                Ins(&R, hash.body, "frep_(i,$width) prev = $Fldname_Hash(prev, rhs.$name_elems[i]);");
-            } else if (ValQ(field)) {
-                Set(R, "$Fldname", name_Get(*field.p_arg));
-                Set(R, "$gethashfld", FieldvalExpr(&ctype, field,"rhs"));
-                Ins(&R, hash.body, tempstr()<<"prev = $Fldname_Hash(prev, $gethashfld);");
+        if (ctype.c_bltin) {
+            vrfy(ctype.c_csize, tempstr()<<"csize record missing for bltin "<<ctype.ctype);
+            int size = ctype.c_csize->size;
+            if (size <= 8 && ctype.c_bltin->likeu64) {
+                // use an intrinsic without taking address
+                Set(R, "$wordsize", tempstr()<<ctype.c_csize->size*8);
+                Ins(&R, hash.body, "prev = _mm_crc32_u$wordsize(prev,rhs);");
+            } else {
+                // go over the bytes
+                int offset=0;
+                Ins(&R, hash.body, "#pragma GCC diagnostic push");
+                Ins(&R, hash.body, "#pragma GCC diagnostic ignored \"-Wstrict-aliasing\"");
+                for (int wordsize=8; wordsize >= 1; wordsize = wordsize/2) {
+                    for (; size >= wordsize; size -= wordsize, offset += wordsize) {
+                        Set(R, "$offset", tempstr()<<offset);
+                        Set(R, "$wordsize", tempstr()<<wordsize*8);
+                        Ins(&R, hash.body, "u$wordsize val$offset = *(u$wordsize*)((u8*)&rhs + $offset);");
+                        Ins(&R, hash.body, "prev = _mm_crc32_u$wordsize(prev, val$offset);");
+                    }
+                }
+                Ins(&R, hash.body, "#pragma GCC diagnostic pop");
             }
-        }ind_end;
+        } else {
+            ind_beg(amc::ctype_c_field_curs, field, ctype) {
+                Set(R, "$name", name_Get(field));
+                Set(R, "$Fldtype", name_Get(*field.p_arg));
+                if (PadQ(field)) {
+                } else if (FldfuncQ(field)) {
+                } else if (field.c_smallstr) {
+                    // The hash function is calculated on the valid characters of the string.
+                    // I.e. if the string representation is changed (from leftpad to rightpad, etc)
+                    // the hash function doesn't change.
+                    // This guarantee is important, as string lengths often mismatch between keys (e.g.
+                    // string 'xyz' stored as RspaceStr10 vs RspaceStr20)
+                    hash.inl=false;
+                    Ins(&R, hash.body, "algo::strptr $name_strptr = $name_Getary(rhs);");
+                    Ins(&R, hash.body, "prev = ::strptr_Hash(prev, $name_strptr);");
+                } else if (field.reftype == dmmeta_Reftype_reftype_Ptr) {
+                    Ins(&R, hash.body, "prev = u64_Hash(prev, u64(rhs.$name));");
+                } else if (field.reftype == dmmeta_Reftype_reftype_Tary) {
+                    if (field.p_arg->c_bltin && field.p_arg->c_csize && field.p_arg->c_csize->size < 8) {
+                        // hash builtin types as strings
+                        // i.e. an array of 2 u32s will not hash to the same value
+                        // as two u32 fields, but that's ok because there is no expectation of
+                        // that behavior
+                        // for types over 8 bytes in length, it's better to compute element-by-element
+                        Ins(&R, hash.body, "prev = strptr_Hash(prev, algo::strptr((char*)rhs.$name_elems,rhs.$name_n));");
+                    } else {
+                        Ins(&R, hash.body, "ind_beg($Parname_$name_curs,elem,($Partype&)rhs) {");
+                        Ins(&R, hash.body, "    prev = $Fldtype_Hash(prev,elem);");
+                        Ins(&R, hash.body, "}ind_end;");
+                    }
+                } else if (field.reftype == dmmeta_Reftype_reftype_Upptr) {
+                    Ins(&R, hash.body, "prev = u64_Hash(prev, u64(rhs.$name));");
+                } else if (FixaryQ(field)) {
+                    Set(R, "$width", tempstr() << WidthMin(field));
+                    Ins(&R, hash.body, "frep_(i,$width) prev = $Fldtype_Hash(prev, rhs.$name_elems[i]);");
+                } else if (ValQ(field)) {
+                    Set(R, "$Fldtype", name_Get(*field.p_arg));
+                    Set(R, "$gethashfld", FieldvalExpr(&ctype, field,"rhs"));
+                    Ins(&R, hash.body, tempstr()<<"prev = $Fldtype_Hash(prev, $gethashfld);");
+                }
+            }ind_end;
+        }
         Ins(&R, hash.body, "return prev;");
     }
 }
@@ -338,7 +379,7 @@ void amc::tfunc_Ctype_Cmp() {
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
     if (ctype.c_ccmp) {
-        vrfy(!ctype.c_varlenfld,tempstr()<< "comparison function of varlength records is not supported ("<<ctype.ctype<<")");
+        vrfy(zd_varlenfld_EmptyQ(ctype),tempstr()<< "comparison function of varlength records is not supported ("<<ctype.ctype<<")");
         Set(R, "$ByvalArgtype", ByvalArgtype(ctype));
 
         amc::FFunc& cmp = amc::CreateCurFunc();
@@ -346,47 +387,50 @@ void amc::tfunc_Ctype_Cmp() {
         Ins(&R, cmp.proto, "$Name_Cmp($ByvalArgtype lhs, $ByvalArgtype rhs)", false);
         cmp.extrn = ctype.c_ccmp->extrn;
         cmp.inl = c_datafld_N(ctype) < 4;
-        Ins(&R, cmp.body    , "i32 retval = 0;");
-        bool need_test = false;
-        ind_beg(amc::ctype_c_datafld_curs, field,ctype) {
-            tempstr test;
-            if (PadQ(field)) {
-            } else if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Cmp"))) {// check field-spsecific compare
-                Set(R, "$name", name_Get(field));
-                Ins(&R, test    , "retval = $name_Cmp(lhs,rhs);");
-            } else if (field.reftype == dmmeta_Reftype_reftype_Upptr || field.reftype == dmmeta_Reftype_reftype_Ptr) {// default for pointers
-                Set(R, "$a_val", FieldvalExpr(&ctype, field, "lhs"));
-                Set(R, "$b_val", FieldvalExpr(&ctype, field, "rhs"));
-                Set(R, "$Fldtype", field.p_arg->cpp_type);
-                Ins(&R, test, "retval = u64_Cmp((u64)(void*)$a_val, (u64)(void*)$b_val);");
-            } else if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {// default for small strings
-                Set(R, "$name", name_Get(field));
-                Ins(&R, test, "retval = algo::strptr_Cmp($name_Getary(lhs), $name_Getary(rhs));");
-            } else if (field.reftype == dmmeta_Reftype_reftype_Base) {
-                // compare bases???
-            } else if (field.p_arg->c_ccmp) {// type-specific compare
-                Set(R, "$a_val", FieldvalExpr(&ctype, field, "lhs"));
-                Set(R, "$b_val", FieldvalExpr(&ctype, field, "rhs"));
-                Set(R, "$Fldtype", field.p_arg->cpp_type);
-                Ins(&R, test, "retval = $Fldtype_Cmp($a_val, $b_val);");
-            } else {
-                prerr("amc.bad_cmp"
-                      <<Keyval("field",field.field)
-                      <<Keyval("offending_type",field.arg)
-                      <<Keyval("comment","No comparison function defined for offending type"));
-                algo_lib::_db.exit_code=1;
-            }
-            if (ch_N(test) > 0) {
-                if (need_test) {
-                    Ins(&R, cmp.body, "if (retval != 0) {");
-                    Ins(&R, cmp.body, "    return retval;");
-                    Ins(&R, cmp.body, "}");
+        AddRetval(cmp, "i32", "retval", "0");
+        if (ctype.c_bltin) {
+            Ins(&R, cmp.body, "retval = lhs<rhs ? -1 : lhs>rhs;");
+        } else {
+            bool need_test = false;
+            ind_beg(amc::ctype_c_datafld_curs, field,ctype) {
+                tempstr test;
+                if (PadQ(field)) {
+                } else if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Cmp"))) {// check field-spsecific compare
+                    Set(R, "$name", name_Get(field));
+                    Ins(&R, test    , "retval = $name_Cmp(lhs,rhs);");
+                } else if (field.reftype == dmmeta_Reftype_reftype_Upptr || field.reftype == dmmeta_Reftype_reftype_Ptr) {// default for pointers
+                    Set(R, "$a_val", FieldvalExpr(&ctype, field, "lhs"));
+                    Set(R, "$b_val", FieldvalExpr(&ctype, field, "rhs"));
+                    Set(R, "$Fldtype", field.p_arg->cpp_type);
+                    Ins(&R, test, "retval = u64_Cmp((u64)(void*)$a_val, (u64)(void*)$b_val);");
+                } else if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {// default for small strings
+                    Set(R, "$name", name_Get(field));
+                    Ins(&R, test, "retval = algo::strptr_Cmp($name_Getary(lhs), $name_Getary(rhs));");
+                } else if (field.reftype == dmmeta_Reftype_reftype_Base) {
+                    // base fields have been already copied over
+                } else if (field.p_arg->c_ccmp) {// type-specific compare
+                    Set(R, "$a_val", FieldvalExpr(&ctype, field, "lhs"));
+                    Set(R, "$b_val", FieldvalExpr(&ctype, field, "rhs"));
+                    Set(R, "$Fldtype", field.p_arg->cpp_type);
+                    Ins(&R, test, "retval = $Fldtype_Cmp($a_val, $b_val);");
+                } else {
+                    prerr("amc.bad_cmp"
+                          <<Keyval("field",field.field)
+                          <<Keyval("offending_type",field.arg)
+                          <<Keyval("comment","No comparison function defined for offending type"));
+                    algo_lib::_db.exit_code=1;
                 }
-                cmp.body << test;
-                need_test = true;
-            }
-        }ind_end;
-        Ins(&R, cmp.body, "return retval;");
+                if (ch_N(test) > 0) {
+                    if (need_test) {
+                        Ins(&R, cmp.body, "if (retval != 0) {");
+                        Ins(&R, cmp.body, "    return retval;");
+                        Ins(&R, cmp.body, "}");
+                    }
+                    cmp.body << test;
+                    need_test = true;
+                }
+            }ind_end;
+        }
     }
 }
 
@@ -436,11 +480,13 @@ void amc::tfunc_Ctype_Lt() {
         Ins(&R, oplt.proto, "$Name_Lt($ByvalArgtype lhs, $ByvalArgtype rhs)", false);
         oplt.extrn = ctype.c_ccmp->extrn;
         oplt.inl = true;
-        // Lt function is faster than Cmp because there are fewer calculations to do
-        // But if there is more than one field the advantage goes away because if a.x is not less
-        // than b.x, you would have to check whether a.x==b.x before proceeding to the next field
-        // So if there is more than one field, we revert to the generic Cmp.
-        if (c_datafld_N(ctype) == 1) { // special case -- single field.
+        if (ctype.c_bltin) {
+            Ins(&R, oplt.body    , "return lhs < rhs;");
+        } else if (c_datafld_N(ctype) == 1) { // special case -- single field.
+            // Lt function is faster than Cmp because there are fewer calculations to do
+            // But if there is more than one field the advantage goes away because if a.x is not less
+            // than b.x, you would have to check whether a.x==b.x before proceeding to the next field
+            // So if there is more than one field, we revert to the generic Cmp.
             Ctype_Lt_SingleField(R,ctype,oplt);
         } else {
             Ins(&R, oplt.body    , "return $Name_Cmp(lhs,rhs) < 0;");
@@ -468,11 +514,7 @@ void amc::tfunc_Ctype_Init() {
         if (field.c_fuserinit) {
             Set(R, "$field", field.field);
             Set(R, "$name", name_Get(field));
-            if (glob) {
-                Ins(&R, text, "Userinit(); // dmmeta.fuserinit:$field");
-            } else {
-                Ins(&R, text, "$name_Userinit($pararg); // dmmeta.fuserinit:$field");
-            }
+            Ins(&R, text, "$name_Userinit(); // dmmeta.fuserinit:$field");
         }
     }ind_end;
 
@@ -623,7 +665,7 @@ void amc::tfunc_Ctype_Eq() {
     amc::FCtype &ctype = *amc::_db.genctx.p_ctype;
 
     if (ctype.c_ccmp) {
-        vrfy(!ctype.c_varlenfld,tempstr()<< "comparison function of varlength records is not supported ("<<ctype.ctype<<")");
+        vrfy(zd_varlenfld_EmptyQ(ctype),tempstr()<< "comparison function of varlength records is not supported ("<<ctype.ctype<<")");
         amc::FFunc& opeq = amc::CreateCurFunc(true);
         AddRetval(opeq,"bool","retval","true");
         AddProtoArg(opeq, ByvalArgtype(ctype,false), "lhs");
@@ -631,45 +673,49 @@ void amc::tfunc_Ctype_Eq() {
         opeq.extrn = ctype.c_ccmp->extrn;
         opeq.inl = c_datafld_N(ctype) < 4;
         bool need_test = false;
-        ind_beg(amc::ctype_c_datafld_curs, field,ctype) {
-            tempstr test;
-            if (PadQ(field)) {
-            } else if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Eq"))) {
-                Set(R, "$name", name_Get(field));
-                Ins(&R, test, "retval = $name_Eq(lhs,rhs);");
-            } else if (field.reftype == dmmeta_Reftype_reftype_Upptr || field.reftype == dmmeta_Reftype_reftype_Ptr) {// default for pointers
-                Set(R, "$a_val", FieldvalExpr(&ctype, field, "lhs"));
-                Set(R, "$b_val", FieldvalExpr(&ctype, field, "rhs"));
-                Set(R, "$Fldtype", field.p_arg->cpp_type);
-                Ins(&R, test, "retval = u64_Eq((u64)(void*)$a_val, (u64)(void*)$b_val);");
-            } else if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {// default for small strings
-                Set(R, "$name", name_Get(field));
-                if (!GenSmallstrEq(R, field, test)) {
-                    Ins(&R, test, "retval = algo::strptr_Eq($name_Getary(lhs), $name_Getary(rhs));");
+        if (ctype.c_bltin) {
+            Ins(&R, opeq.body, "retval = lhs == rhs;");
+        } else {
+            ind_beg(amc::ctype_c_datafld_curs, field,ctype) {
+                tempstr test;
+                if (PadQ(field)) {
+                } else if (amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Eq"))) {
+                    Set(R, "$name", name_Get(field));
+                    Ins(&R, test, "retval = $name_Eq(lhs,rhs);");
+                } else if (field.reftype == dmmeta_Reftype_reftype_Upptr || field.reftype == dmmeta_Reftype_reftype_Ptr) {// default for pointers
+                    Set(R, "$a_val", FieldvalExpr(&ctype, field, "lhs"));
+                    Set(R, "$b_val", FieldvalExpr(&ctype, field, "rhs"));
+                    Set(R, "$Fldtype", field.p_arg->cpp_type);
+                    Ins(&R, test, "retval = u64_Eq((u64)(void*)$a_val, (u64)(void*)$b_val);");
+                } else if (field.reftype == dmmeta_Reftype_reftype_Smallstr) {// default for small strings
+                    Set(R, "$name", name_Get(field));
+                    if (!GenSmallstrEq(R, field, test)) {
+                        Ins(&R, test, "retval = algo::strptr_Eq($name_Getary(lhs), $name_Getary(rhs));");
+                    }
+                } else if (field.reftype == dmmeta_Reftype_reftype_Base) {
+                    // fields have already been imported, ignore
+                } else if (field.p_arg->c_ccmp) {// type-specific compare
+                    Set(R, "$a_val", FieldvalExpr(&ctype, field, "lhs"));
+                    Set(R, "$b_val", FieldvalExpr(&ctype, field, "rhs"));
+                    Set(R, "$Fldtype", field.p_arg->cpp_type);
+                    Ins(&R, test, "retval = $Fldtype_Eq($a_val, $b_val);");
+                } else {
+                    Set(R, "$name", name_Get(field));
+                    Set(R,"$suffix",field.c_fbigend?"_be":"");
+                    // hack: bigend fields do not need swapping to compare
+                    Ins(&R, test, "retval = lhs.$name$suffix==rhs.$name$suffix;");
                 }
-            } else if (field.reftype == dmmeta_Reftype_reftype_Base) {
-                // fields have already been imported, ignore
-            } else if (field.p_arg->c_ccmp) {// type-specific compare
-                Set(R, "$a_val", FieldvalExpr(&ctype, field, "lhs"));
-                Set(R, "$b_val", FieldvalExpr(&ctype, field, "rhs"));
-                Set(R, "$Fldtype", field.p_arg->cpp_type);
-                Ins(&R, test, "retval = $Fldtype_Eq($a_val, $b_val);");
-            } else {
-                Set(R, "$name", name_Get(field));
-                Set(R,"$suffix",field.c_fbigend?"_be":"");
-                // hack: bigend fields do not need swapping to compare
-                Ins(&R, test, "retval = lhs.$name$suffix==rhs.$name$suffix;");
-            }
-            if (ch_N(test) > 0) {
-                if (need_test) {
-                    Ins(&R, opeq.body, "if (!retval) {");
-                    Ins(&R, opeq.body, "    return false;");
-                    Ins(&R, opeq.body, "}");
+                if (ch_N(test) > 0) {
+                    if (need_test) {
+                        Ins(&R, opeq.body, "if (!retval) {");
+                        Ins(&R, opeq.body, "    return false;");
+                        Ins(&R, opeq.body, "}");
+                    }
+                    opeq.body << test;
+                    need_test = true;
                 }
-                opeq.body << test;
-                need_test = true;
-            }
-        }ind_end;
+            }ind_end;
+        }
     }
 }
 
@@ -742,10 +788,10 @@ void amc::tfunc_Ctype_NArgs() {
                 Set(R, "$emptyval",actualfield->c_fflag->emptyval);
                 comment<<"dmmeta.fflag: emptyval specified; no argument required but value may be specified as $name:value";
             }
+            Set(R,"$comment",comment);
             Ins(&R, func.body, "case $ns_FieldId_$name: { // $comment");
             Ins(&R, func.body, "    *out_anon = $isanon;");
             if (nargs==0) {
-                Set(R,"$comment",comment);
                 Ins(&R, func.body, "    retval=0;");
                 Ins(&R, func.body, "    out_dflt=$emptyval;");
             }
@@ -890,7 +936,7 @@ void amc::tfunc_Ctype2_Ctor() {
         amc::FFunc *init = amc::ind_func_Find(tempstr() << ctype.ctype << "..Init");
         amc::FFunc &ctor = amc::CreateCurFunc();
         ctor.member=true;
-        ctor.isprivate = PoolHasAllocQ(ctype);
+        ctor.isprivate = FindPool(ctype)!=NULL;
         ctor.inl=true;
 
         Ins(&R, ctor.proto, "$Name()", false);
@@ -1132,8 +1178,7 @@ void amc::tfunc_Ctype2_Dtor() {
     if (!GlobalQ(ctype) && !ctype.c_cextern && uninit && !uninit->disable) {
         amc::FFunc &func = amc::CreateCurFunc();
         func.member=true;
-        // can we make this private?
-        func.isprivate = PoolHasAllocQ(ctype);
+        func.isprivate = FindPool(ctype)!=0;
         func.inl=true;
 
         Ins(&R, func.proto, "~$Name()", false);

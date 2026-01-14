@@ -20,7 +20,7 @@ CI by running it in a sandbox
 Step 1: Create new target.
 
 ```
-inline-command: acr_ed -create -target samp_tut1 -write
+inline-command: acr_ed -create -target samp_tut1 -write -amc:N
 acr_ed.create_target  target:samp_tut1
 report.acr_check  records:***  errors:0
 acr.insert  dev.gitfile  gitfile:bin/samp_tut1
@@ -30,10 +30,10 @@ acr.insert  dev.gitfile  gitfile:include/gen/samp_tut1_gen.h
 acr.insert  dev.gitfile  gitfile:include/gen/samp_tut1_gen.inl.h
 acr.insert  dev.gitfile  gitfile:include/samp_tut1.h
 acr.insert  dev.gitfile  gitfile:txt/exe/samp_tut1/README.md
-  acr.insert  dev.readme  gitfile:txt/exe/samp_tut1/README.md      inl:N   sandbox:N   filter:""  comment:""
+  acr.insert  dev.readmefile  gitfile:txt/exe/samp_tut1/README.md      inl:N  sandbox:N  filter:""  comment:""
 
 acr.insert  dev.gitfile  gitfile:txt/exe/samp_tut1/internals.md
-  acr.insert  dev.readme  gitfile:txt/exe/samp_tut1/internals.md  inl:N   sandbox:N   filter:""  comment:""
+  acr.insert  dev.readmefile  gitfile:txt/exe/samp_tut1/internals.md  inl:N  sandbox:N  filter:""  comment:""
 
 acr.insert  dmmeta.ns  ns:samp_tut1  nstype:exe  license:GPL  comment:""
   acr.insert  dev.target  target:samp_tut1
@@ -61,16 +61,15 @@ acr.insert  dmmeta.ctype  ctype:command.samp_tut1  comment:""
   acr.insert  dmmeta.cfmt  cfmt:command.samp_tut1.Argv  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
-abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
+abt.config  builddir:Linux-g++.release-x86_64  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 please execute $(acr_compl -install) to add completions support for new target
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Step 2: Define data structures for samp_tut1
 
 ```
-inline-command: acr_ed -create -ctype samp_tut1.Proj -pooltype Tpool -indexed -write
+inline-command: acr_ed -create -ctype samp_tut1.Proj -pooltype Tpool -indexed -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.ctype  ctype:samp_tut1.Proj  comment:""
   acr.insert  dmmeta.field  field:samp_tut1.Proj.proj  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
@@ -80,11 +79,10 @@ acr.insert  dmmeta.field  field:samp_tut1.FDb.ind_proj  arg:samp_tut1.Proj  reft
   acr.insert  dmmeta.thash  field:samp_tut1.FDb.ind_proj  hashfld:samp_tut1.Proj.proj  unique:Y  comment:""
   acr.insert  dmmeta.xref  field:samp_tut1.FDb.ind_proj  inscond:true  via:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 ```
-inline-command: acr_ed -create -ctype samp_tut1.Part -pooltype Tpool -indexed -write
+inline-command: acr_ed -create -ctype samp_tut1.Part -pooltype Tpool -indexed -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.ctype  ctype:samp_tut1.Part  comment:""
   acr.insert  dmmeta.field  field:samp_tut1.Part.part  arg:algo.Smallstr50  reftype:Val  dflt:""  comment:""
@@ -94,37 +92,33 @@ acr.insert  dmmeta.field  field:samp_tut1.FDb.ind_part  arg:samp_tut1.Part  reft
   acr.insert  dmmeta.thash  field:samp_tut1.FDb.ind_part  hashfld:samp_tut1.Part.part  unique:Y  comment:""
   acr.insert  dmmeta.xref  field:samp_tut1.FDb.ind_part  inscond:true  via:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 ```
-inline-command: acr_ed -create -ctype samp_tut1.Partproj -pooltype Tpool  -write
+inline-command: acr_ed -create -ctype samp_tut1.Partproj -pooltype Tpool  -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.ctype  ctype:samp_tut1.Partproj  comment:""
 acr.insert  dmmeta.field  field:samp_tut1.FDb.partproj  arg:samp_tut1.Partproj  reftype:Tpool  dflt:""  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Step 3: Create reference fields.
 The first field is a pointer from Partproj to Part
 
 ```
-inline-command: acr_ed -create -field samp_tut1.Partproj.p_part -arg samp_tut1.Part -reftype Upptr -write
+inline-command: acr_ed -create -field samp_tut1.Partproj.p_part -arg samp_tut1.Part -reftype Upptr -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:samp_tut1.Partproj.p_part  arg:samp_tut1.Part  reftype:Upptr  dflt:""  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 The second field is a pointer from Partproj to Proj
 
 ```
-inline-command: acr_ed -create -field samp_tut1.Partproj.p_proj -arg samp_tut1.Proj -reftype Upptr -write
+inline-command: acr_ed -create -field samp_tut1.Partproj.p_proj -arg samp_tut1.Proj -reftype Upptr -write -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:samp_tut1.Partproj.p_proj  arg:samp_tut1.Proj  reftype:Upptr  dflt:""  comment:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Step 4: Create x-reference (cross reference) fields.
@@ -134,43 +128,40 @@ A cross reference is a synonym for an index.
 First, let's create two global lists so we can scan projects and parts:
 
 ```
-inline-command: acr_ed -create -field samp_tut1.FDb.zd_part -write -comment "List of all parts"
+inline-command: acr_ed -create -field samp_tut1.FDb.zd_part -write -comment "List of all parts" -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:samp_tut1.FDb.zd_part  arg:samp_tut1.Part  reftype:Llist  dflt:""  comment:"List of all parts"
   acr.insert  dmmeta.llist  field:samp_tut1.FDb.zd_part  havetail:Y  havecount:Y  comment:""
   acr.insert  dmmeta.xref  field:samp_tut1.FDb.zd_part  inscond:true  via:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 ```
-inline-command: acr_ed -create -field samp_tut1.FDb.zd_proj -write -comment "List of all projects"
+inline-command: acr_ed -create -field samp_tut1.FDb.zd_proj -write -comment "List of all projects" -amc:N
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:samp_tut1.FDb.zd_proj  arg:samp_tut1.Proj  reftype:Llist  dflt:""  comment:"List of all projects"
   acr.insert  dmmeta.llist  field:samp_tut1.FDb.zd_proj  havetail:Y  havecount:Y  comment:""
   acr.insert  dmmeta.xref  field:samp_tut1.FDb.zd_proj  inscond:true  via:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Second, let's add group-bys. The first is a pointer from Part to Partproj that is initialized
 in response to a new Partproj being created. A part can only be used in one project, so it's a pointer.
 
 ```
-inline-command: acr_ed -create -field samp_tut1.Part.c_partproj -reftype Ptr -cascdel -write -comment "List of projects by part"
+inline-command: acr_ed -create -field samp_tut1.Part.c_partproj -reftype Ptr -cascdel -write -comment "List of projects by part" -amc:N
 acr_ed.via_match1  child:samp_tut1.Partproj.p_part  comment:"This child field is a possible via key candidate"
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:samp_tut1.Part.c_partproj  arg:samp_tut1.Partproj  reftype:Ptr  dflt:""  comment:"List of projects by part"
   acr.insert  dmmeta.cascdel  field:samp_tut1.Part.c_partproj  comment:""
   acr.insert  dmmeta.xref  field:samp_tut1.Part.c_partproj  inscond:true  via:samp_tut1.Partproj.p_part
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 The second cross-reference is a doubly linked, zero-terminated list of Partprojs by Proj.
 
 ```
-inline-command: acr_ed -create -field samp_tut1.Proj.zd_partproj -cascdel -write -comment "List of parts by project"
+inline-command: acr_ed -create -field samp_tut1.Proj.zd_partproj -cascdel -write -comment "List of parts by project" -amc:N
 acr_ed.via_match1  child:samp_tut1.Partproj.p_proj  comment:"This child field is a possible via key candidate"
 report.acr_check  records:***  errors:0
 acr.insert  dmmeta.field  field:samp_tut1.Proj.zd_partproj  arg:samp_tut1.Partproj  reftype:Llist  dflt:""  comment:"List of parts by project"
@@ -178,7 +169,6 @@ acr.insert  dmmeta.field  field:samp_tut1.Proj.zd_partproj  arg:samp_tut1.Partpr
   acr.insert  dmmeta.llist  field:samp_tut1.Proj.zd_partproj  havetail:Y  havecount:Y  comment:""
   acr.insert  dmmeta.xref  field:samp_tut1.Proj.zd_partproj  inscond:true  via:samp_tut1.Partproj.p_proj
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 Step 5: Enter the program text in cpp/samp_tut1.cpp:
@@ -287,8 +277,9 @@ inline-command: cp conf/samp_tut1.txt cpp/samp_tut1/samp_tut1.cpp
 And build samp_tut1:
 
 ```
-inline-command: ai samp_tut1
-abt.config  builddir:***  ood_src:***  ood_target:***  cache:***
+inline-command: amc && ai samp_tut1
+report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
+abt.config  builddir:Linux-g++.release-x86_64  ood_src:***  ood_target:***  cache:***
 report.abt  n_target:***  time:***  hitrate:***  pch_hitrate:***  n_warn:0  n_err:0  n_install:***
 ```
 
@@ -353,30 +344,22 @@ in the in-memory database of `samp_tut1`
 
 ```
 inline-command: amc_vis samp_tut1.%
-                                                                                     
-                                                                                     
-    / samp_tut1.FDb                                                                  
-    |                                                                                
-    |Tpool proj---------->/ samp_tut1.Proj                                           
-    |Thash ind_proj------>|                                                          
-    |Llist zd_proj------->|                                                          
-    |                     |                                                          
-    |Tpool part-----------|------------------->/ samp_tut1.Part                      
-    |Thash ind_part-------|------------------->|                                     
-    |Llist zd_part--------|------------------->|                                     
-    |                     |                    |                                     
-    |Tpool partproj-------|--------------------|---------------->/ samp_tut1.Partproj
-    -                     |                    |                 |                   
-                          |                    |                 |                   
-                          |<-------------------|-----------------|Upptr p_proj       
-                          |                    |<----------------|Upptr p_part       
-                          |Llist zd_partproj---|---------------->|                   
-                          -                    |                 |                   
-                                               |                 |                   
-                                               |Ptr c_partproj-->|                   
-                                               -                 |                   
-                                                                 |                   
-                                                                 -                   
+/ samp_tut1.FDb                                                              
+|Tpool proj------>/ samp_tut1.Proj                                           
+|Thash ind_proj-->|                                                          
+|Llist zd_proj--->|                                                          
+|Tpool part-------|------------------->/ samp_tut1.Part                      
+|Thash ind_part---|------------------->|                                     
+|Llist zd_part----|------------------->|                                     
+|Tpool partproj---|--------------------|---------------->/ samp_tut1.Partproj
+-                 |                    |                 |                   
+                  |<-------------------|-----------------|Upptr p_proj       
+                  |                    |<----------------|Upptr p_part       
+                  |Llist zd_partproj---|---------------->|                   
+                  |                    |Ptr c_partproj-->|                   
+                  -                    |                 |                   
+                                       |                 -                   
+                                       -                                     
 ```
 
 ### Generated Code
@@ -402,7 +385,7 @@ When creating this tutorial, we accidentally introduced unnecessary (and unused)
 `samp_tut1.FDb.ind_proj` and `samp_tut1.FDb.ind_part`. We can easily delete them:
 
 ```
-inline-command: acr_ed -del -field samp_tut1.FDb.ind_proj -write
+inline-command: acr_ed -del -field samp_tut1.FDb.ind_proj -write -amc:N
 report.acr_check  records:***  errors:0
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 acr.delete  dmmeta.field  field:samp_tut1.FDb.ind_proj  arg:samp_tut1.Proj  reftype:Thash  dflt:""  comment:""
@@ -411,11 +394,10 @@ acr.delete  dmmeta.thash  field:samp_tut1.FDb.ind_proj  hashfld:samp_tut1.Proj.p
 
 acr.delete  dmmeta.xref  field:samp_tut1.FDb.ind_proj  inscond:true  via:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 ```
-inline-command: acr_ed -del -field samp_tut1.FDb.ind_part -write
+inline-command: acr_ed -del -field samp_tut1.FDb.ind_part -write -amc:N
 report.acr_check  records:***  errors:0
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
 acr.delete  dmmeta.field  field:samp_tut1.FDb.ind_part  arg:samp_tut1.Part  reftype:Thash  dflt:""  comment:""
@@ -424,7 +406,6 @@ acr.delete  dmmeta.thash  field:samp_tut1.FDb.ind_part  hashfld:samp_tut1.Part.p
 
 acr.delete  dmmeta.xref  field:samp_tut1.FDb.ind_part  inscond:true  via:""
 report.acr  n_select:***  n_insert:***  n_delete:***  n_ignore:***  n_update:***  n_file_mod:***
-report.amc  n_cppfile:***  n_cppline:***  n_ctype:***  n_func:***  n_xref:***  n_filemod:***
 ```
 
 And rebuild the tutorial. These indexes can be easily introduced later if necessary.

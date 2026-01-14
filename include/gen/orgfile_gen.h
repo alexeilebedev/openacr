@@ -202,6 +202,9 @@ void                 ind_filename_Remove(orgfile::FFilename& row) __attribute__(
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:orgfile.FDb.ind_filename.Reserve
 void                 ind_filename_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:orgfile.FDb.ind_filename.AbsReserve
+void                 ind_filename_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -263,6 +266,9 @@ void                 ind_filehash_Remove(orgfile::FFilehash& row) __attribute__(
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:orgfile.FDb.ind_filehash.Reserve
 void                 ind_filehash_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:orgfile.FDb.ind_filehash.AbsReserve
+void                 ind_filehash_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -340,11 +346,12 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: ind_filehash (Thash, hash field filehash)
 // access: orgfile.FFilename.p_filehash (Upptr)
 struct FFilehash { // orgfile.FFilehash
-    orgfile::FFilehash*    ind_filehash_next;   // hash next
-    algo::Smallstr40       filehash;            //
-    orgfile::FFilename**   c_filename_elems;    // array of pointers
-    u32                    c_filename_n;        // array of pointers
-    u32                    c_filename_max;      // capacity of allocated array
+    orgfile::FFilehash*    ind_filehash_next;      // hash next
+    u32                    ind_filehash_hashval;   // hash value
+    algo::Smallstr40       filehash;               //
+    orgfile::FFilename**   c_filename_elems;       // array of pointers
+    u32                    c_filename_n;           // array of pointers
+    u32                    c_filename_max;         // capacity of allocated array
     // reftype Ptrary of orgfile.FFilehash.c_filename prohibits copy
     // func:orgfile.FFilehash..AssignOp
     inline orgfile::FFilehash& operator =(const orgfile::FFilehash &rhs) = delete;
@@ -426,6 +433,7 @@ void                 FFilehash_Uninit(orgfile::FFilehash& filehash) __attribute_
 struct FFilename { // orgfile.FFilename
     orgfile::FFilename*   filename_next;                // Pointer to next free element int tpool
     orgfile::FFilename*   ind_filename_next;            // hash next
+    u32                   ind_filename_hashval;         // hash value
     algo::cstring         filename;                     //
     algo::Smallstr40      filehash;                     //
     orgfile::FFilehash*   p_filehash;                   // reference to parent row

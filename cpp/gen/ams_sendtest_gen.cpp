@@ -43,8 +43,8 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-algo_lib::FDb       algo_lib::_db;        // dependency found via dev.targdep
 lib_json::FDb       lib_json::_db;        // dependency found via dev.targdep
+algo_lib::FDb       algo_lib::_db;        // dependency found via dev.targdep
 lib_ams::FDb        lib_ams::_db;         // dependency found via dev.targdep
 ams_sendtest::FDb   ams_sendtest::_db;    // dependency found via dev.targdep
 
@@ -67,8 +67,8 @@ const char *ams_sendtest_help =
 "    -msgsize_max   int     1024    Maximum message length\n"
 "    -bufsize       int     32768   Shared memory buffer size\n"
 "    -recvdelay     int     0       Pause nanoseconds between messages\n"
-"    -verbose       int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug         int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose       flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug         flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                          Print help and exit; alias -h\n"
 "    -version                       Print version and exit\n"
 "    -signature                     Show signatures and exit; alias -sig\n"
@@ -99,6 +99,12 @@ void ams_sendtest::AmsSendTest_Print(ams_sendtest::AmsSendTest& row, algo::cstri
 
     u64_Print(row.n_msg_send, temp);
     PrintAttrSpaceReset(str,"n_msg_send", temp);
+
+    u64_Print(row.off_send, temp);
+    PrintAttrSpaceReset(str,"off_send", temp);
+
+    u64_Print(row.off_recv, temp);
+    PrintAttrSpaceReset(str,"off_recv", temp);
 
     u64_Print(row.n_msg_recv, temp);
     PrintAttrSpaceReset(str,"n_msg_recv", temp);
@@ -171,7 +177,7 @@ algo::Fildes ams_sendtest::child_StartRead(ams_sendtest::FChild& child, algo_lib
 // --- ams_sendtest.FChild.child.Kill
 // Kill subprocess and wait
 void ams_sendtest::child_Kill(ams_sendtest::FChild& child) {
-    if (child.child_pid != 0) {
+    if (child.child_pid > 0) {
         kill(child.child_pid,9);
         child_Wait(child);
     }
@@ -437,9 +443,8 @@ void ams_sendtest::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "ams_sendtest: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -482,6 +487,9 @@ void ams_sendtest::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:ams_sendtest.FDb.cmdline
@@ -493,7 +501,7 @@ void ams_sendtest::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -560,8 +568,8 @@ bool ams_sendtest::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (DirectoryQ(root)) {
         retval = retval && ams_sendtest::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -833,13 +841,14 @@ void ams_sendtest::StaticCheck() {
 // --- ams_sendtest...main
 int main(int argc, char **argv) {
     try {
-        algo_lib::FDb_Init();
         lib_json::FDb_Init();
+        algo_lib::FDb_Init();
         lib_ams::FDb_Init();
         ams_sendtest::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         ams_sendtest::ReadArgv(); // dmmeta.main:ams_sendtest
         ams_sendtest::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -852,8 +861,8 @@ int main(int argc, char **argv) {
     try {
         ams_sendtest::FDb_Uninit();
         lib_ams::FDb_Uninit();
-        lib_json::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

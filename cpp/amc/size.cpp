@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -253,7 +253,6 @@ void amc::gen_compute_size() {
             }
         }ind_end;
     }ind_end;
-    amc::c_ctypelen_QuickSort();
 }
 
 // -----------------------------------------------------------------------------

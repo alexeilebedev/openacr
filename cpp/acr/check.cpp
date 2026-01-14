@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -64,7 +64,7 @@ static void CheckArgs_Rec(acr::FRec &rec, acr::FCtype &ctype, acr::FCheck &check
 
 static void CheckArgs(acr::FCheck &check) {
     ind_beg(acr::_db_zd_sel_ctype_curs, ctype, acr::_db) {
-        ind_beg(acr::ctype_zd_ctype_selrec_curs,  rec, ctype) {
+        ind_beg(acr::ctype_zd_selrec_curs,  rec, ctype) {
             CheckArgs_Rec(rec,ctype,check);
         }ind_end;
     }ind_end;
@@ -85,7 +85,7 @@ static void SuggestAlternatives(acr::FCtype &ctype, acr::FField &field, acr::FCh
         help << "Valid values       ";
         algo::ListSep ls(", ");
         int idx = 0;
-        ind_beg(acr::ctype_zd_ctype_rec_curs,  rec, *field.p_arg) {
+        ind_beg(acr::ctype_zd_rec_curs,  rec, *field.p_arg) {
             if (idx++ > 100) {
                 help << ", ...";
                 break;
@@ -101,7 +101,7 @@ static void SuggestAlternatives(acr::FCtype &ctype, acr::FField &field, acr::FCh
 static void CheckXref_Field(acr::FCtype &ctype, acr::FField &field, acr::FCheck &check) {
     LoadRecords(*field.p_arg);
     acr::c_bad_rec_RemoveAll(check);
-    ind_beg(acr::ctype_zd_ctype_selrec_curs, rec, ctype) {// loop through all records for this ctype
+    ind_beg(acr::ctype_zd_selrec_curs, rec, ctype) {// loop through all records for this ctype
         tempstr attr(EvalAttr(rec.tuple, field));// find attribute value
         if (!acr::ind_ctype_rec_Find(*field.p_arg,attr)) {// check index for pkey
             c_bad_rec_Insert(check, rec);
@@ -140,7 +140,7 @@ static void CheckFunique() {
     ind_beg(acr::_db_zd_sel_ctype_curs, ctype, acr::_db) {
         ind_beg(acr::ctype_c_field_curs, field, ctype) if (field.unique) {
             // compute key: it is field + field value
-            ind_beg(acr::ctype_zd_ctype_selrec_curs, rec, ctype) {// loop through all records for this ctype
+            ind_beg(acr::ctype_zd_selrec_curs, rec, ctype) {// loop through all records for this ctype
                 tempstr value(EvalAttr(rec.tuple, field));// find attribute value
                 tempstr key = tempstr()<<field.field<<":"<<value;// is this a valid combination?
                 if (acr::ind_uniqueattr_Find(key)) {
@@ -198,9 +198,9 @@ void acr::CheckSsimreq() {
 
         // load files that are needed to execute the check
         // (but only if the involved records are already loaded)
-        if (!acr::zd_ctype_selrec_EmptyQ(*parent)) {
+        if (!acr::zd_selrec_EmptyQ(*parent)) {
             LoadRecords(*child);
-            ind_beg(acr::ctype_zd_ctype_selrec_curs, rec, *parent) {
+            ind_beg(acr::ctype_zd_selrec_curs, rec, *parent) {
                 if (Regx_Match(ssimreq.regx_value,acr::EvalAttr(rec.tuple, *ssimreq.p_parent_field))) {
                     // prepare replscope for $-substitution
                     algo_lib::Replscope R;
@@ -227,10 +227,10 @@ void acr::CheckSsimreq() {
         //   (so test/atf_comp/$comptest becomes test/atf_comp/%)
         // scan the list of child records, and for any record whose primary key matches this regx,
         // require that it be in the "found" list.
-        if (ssimreq.bidir && !acr::zd_ctype_selrec_EmptyQ(*child)) {
+        if (ssimreq.bidir && !acr::zd_selrec_EmptyQ(*child)) {
             algo_lib::Regx regx_child;
             FillWildcardKey(ssimreq,regx_child);
-            ind_beg(acr::ctype_zd_ctype_selrec_curs, rec, *child) {
+            ind_beg(acr::ctype_zd_selrec_curs, rec, *child) {
                 if (Regx_Match(regx_child, rec.pkey) && !c_ssimreq_rec_InAryQ(rec)) {
                     NoteErr(NULL,&rec,ssimreq.p_parent_field,tempstr()<<"acr.ssimreq"
                             <<Keyval("ssimreq",tempstr()<<ssimreq.parent)

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/atf_amc/thash.cpp
 //
 
@@ -201,4 +201,104 @@ void atf_amc::amctest_PerfThashRemove() {
 
     prlog("atf_amc.PerfThashRemove"
           << Keyval("sllist_cycles_per_elem",sllist_cycles_per_elem));
+}
+
+static u32 Lcg100Next(int prev) {
+    return (prev*21+1)%100;
+}
+
+void atf_amc::amctest_ThashLinear() {
+    // fill hash
+    vrfyeq_(ind_linear_EmptyQ(),true);
+    vrfyeq_(ind_linear_N(),0);
+    int x(0);
+    frep_(i,100) {
+        x = Lcg100Next(x);
+        vrfy_(ind_linear_GetOrCreate(algo::U32LinearKey(x)).ind_linear_next!=(FHashableLinear*)-1);
+        vrfyeq_(ind_linear_EmptyQ(),false);
+        vrfyeq_(ind_linear_N(),i+1);
+    }
+    // cursor
+    int count[100];
+    memset(count,0,sizeof(count));
+    ind_beg(_db_ind_linear_curs,item,_db) {
+        ++count[item.key.value];
+    } ind_end;
+    frep_(i,100) {
+        vrfyeq_(count[i],1);
+    }
+    // find
+    x=0;
+    frep_(i,100) {
+        x = Lcg100Next(x);
+        vrfyeq_(ind_linear_FindX(algo::U32LinearKey(x)).key,u32(x));
+    }
+    vrfyeq_(ind_linear_Find(algo::U32LinearKey(100)),NULL);
+    vrfyeq_(ind_linear_Find(algo::U32LinearKey(UINT_MAX)),NULL);
+    // remove by key
+    x=0;
+    frep_(i,100) {
+        x = Lcg100Next(x);
+        // leaks but we do not care
+        FHashableLinear *elem = ind_linear_FindRemove(algo::U32LinearKey(x));
+        vrfyeq_(elem->key,u32(x));
+        vrfyeq_(elem->ind_linear_next,(FHashableLinear *)-1);
+    }
+    vrfyeq_(ind_linear_FindRemove(algo::U32LinearKey(100)),NULL);
+    vrfyeq_(ind_linear_FindRemove(algo::U32LinearKey(UINT_MAX)),NULL);
+    vrfyeq_(ind_linear_EmptyQ(),true);
+    vrfyeq_(ind_linear_N(),0);
+    // remove
+    x=0;
+    frep_(i,100) {
+        x = Lcg100Next(x);
+        ind_linear_GetOrCreate(algo::U32LinearKey(x));
+    }
+    vrfyeq_(ind_linear_N(),100);
+    frep_(i,100) {
+        x = Lcg100Next(x);
+        hashable_linear_Delete(ind_linear_FindX(algo::U32LinearKey(x)));
+    }
+    vrfyeq_(ind_linear_EmptyQ(),true);
+    vrfyeq_(ind_linear_N(),0);
+}
+
+// Test hash with string keys containing binary chars
+void atf_amc::amctest_ThashStrkey() {
+
+    for (int pass=0; pass<2; pass++) {
+        for (int i=0; i<1000; i++) {
+            char key[6];
+            key[0]='\000';
+            (i32&)key[1]=i;
+            key[4]='z';
+            key[5]=i%256;
+            if (pass==0) {
+                Strkey &elem = strkey_Alloc();
+                elem.strkey = algo::strptr(key,6);
+                strkey_XrefMaybe(elem);
+            } else if (pass==1) {
+                Strkey *found=ind_strkey_Find(algo::strptr(key,6));
+                vrfy_(found);
+            }
+        }
+    }
+    {
+        Strkey &elem1 = strkey_Alloc();
+        const char key1[]="\000\001\000\017sub-000-zztt01g\000\032test-topic-0000000-7TLEyoo\000\000\000\001";
+        algo::strptr strkey1(key1,sizeof(key1)-1);
+        prlog(Keyval("key1",strkey1));
+        elem1.strkey = strkey1;
+        strkey_XrefMaybe(elem1);
+        vrfy_(ind_strkey_Find(strkey1)==&elem1);
+
+        Strkey &elem2 = strkey_Alloc();
+        const char key2[]="\000\001\000\017sub-000-zztt01g\000\032test-topic-0000000-7TLEyoo\000\000\000\004";
+        algo::strptr strkey2(key2,sizeof(key2)-1);
+        prlog(Keyval("key2",strkey2));
+        elem2.strkey = strkey2;
+        strkey_XrefMaybe(elem2);
+        vrfy_(ind_strkey_Find(strkey1)==&elem1);
+        vrfy_(ind_strkey_Find(strkey2)==&elem2);
+    }
 }

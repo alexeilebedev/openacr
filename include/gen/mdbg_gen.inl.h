@@ -134,6 +134,7 @@ inline void mdbg::FCfg_Init(mdbg::FCfg& cfg) {
     cfg.c_builddir_n = 0; // (mdbg.FCfg.c_builddir)
     cfg.c_builddir_max = 0; // (mdbg.FCfg.c_builddir)
     cfg.ind_cfg_next = (mdbg::FCfg*)-1; // (mdbg.FDb.ind_cfg) not-in-hash
+    cfg.ind_cfg_hashval = 0; // stored hash value
 }
 
 // --- mdbg.FCfg..Ctor

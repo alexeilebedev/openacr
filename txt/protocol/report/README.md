@@ -61,7 +61,7 @@ Other ctypes in this namespace which don't have own readme files
 |ntest|i32|[Val](/txt/exe/amc/reftypes.md#val)||Total number of tests|
 |nselect|i32|[Val](/txt/exe/amc/reftypes.md#val)||Number of tests selected for execution|
 |npass|i32|[Val](/txt/exe/amc/reftypes.md#val)||Number of tests succeeded|
-|nskip|i32|[Val](/txt/exe/amc/reftypes.md#val)||Number of tests failed|
+|nskip|i32|[Val](/txt/exe/amc/reftypes.md#val)||Number of tests not selected|
 |nrun|i32|[Val](/txt/exe/amc/reftypes.md#val)||Number of tests run|
 |nwrite|i32|[Val](/txt/exe/amc/reftypes.md#val)||Number of files written|
 |nerr|i32|[Val](/txt/exe/amc/reftypes.md#val)||Number of errors|

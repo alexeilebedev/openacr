@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -18,7 +18,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/atf_amc/varlen.cpp
 //
 
@@ -89,8 +89,7 @@ void atf_amc::amctest_VarlenAlloc() {
 
 // template is needed for string literal in order
 // to get correct length for NUL char inside
-template <typename T>
-static void Check(T &bin_literal, strptr str) {
+template <typename T> static void Check(T &bin_literal, strptr str) {
     strptr bin(bin_literal, sizeof bin_literal-1);
     // print bin and compare with str
     {
@@ -184,4 +183,212 @@ void atf_amc::amctest_VarlenMsgsPnew() {
 
     MsgLTV_v_curs_Next(vi);
     vrfy_(!MsgLTV_v_curs_ValidQ(vi));
+}
+
+template <typename T> strptr atf_amc::Bytes(T &arg) {
+    return strptr(arg, sizeof(T)-1);
+}
+
+void atf_amc::amctest_Varlen2() {
+    // pnew
+    algo::ByteAry buf;
+    Varlen2Msg *msg = Varlen2Msg_FmtByteAry(buf,"Hello","My","World!");
+    vrfyeq_(s1_Getary(*msg),"Hello");
+    vrfyeq_(s2_Getary(*msg),"My");
+    vrfyeq_(s3_Getary(*msg),"World!");
+
+    // print
+    vrfyeq_(tempstr()<<*msg, "atf_amc.Varlen2Msg  s1:Hello  s2:My  s3:World!");
+
+    // read
+    algo::Refurbish(buf);
+    atf_amc::MsgHeaderMsgs_ReadStrptr("atf_amc.Varlen2Msg  s1:Salve  s2:Mi  s3:Munde!", buf);
+    msg = (Varlen2Msg *)buf.ary_elems;
+    vrfyeq_(s1_Getary(*msg),"Salve");
+    vrfyeq_(s2_Getary(*msg),"Mi");
+    vrfyeq_(s3_Getary(*msg),"Munde!");
+    vrfyeq_(ToStrPtr(ary_Getary(buf)),Bytes("\001\020\025\000\005\000\007\000SalveMiMunde!"));
+
+    // read in reverse order
+    algo::Refurbish(buf);
+    atf_amc::MsgHeaderMsgs_ReadStrptr("atf_amc.Varlen2Msg  s3:Welt!  s2:Mein s1:Hallo", buf);
+    msg = (Varlen2Msg *)buf.ary_elems;
+    vrfyeq_(s1_Getary(*msg),"Hallo");
+    vrfyeq_(s2_Getary(*msg),"Mein");
+    vrfyeq_(s3_Getary(*msg),"Welt!");
+    vrfyeq_(ToStrPtr(ary_Getary(buf)),Bytes("\001\020\026\000\005\000\011\000HalloMeinWelt!"));
+
+    // cursors
+    {
+        const char *s1="Hallo";
+        int i1(0);
+        ind_beg(Varlen2Msg_s1_curs,c,*msg) {
+            vrfyeq_(c,s1[i1]);
+            ++i1;
+        }ind_end;
+        vrfyeq_(i1,(int)strlen(s1));
+    }
+    {
+        const char *s2="Mein";
+        int i2(0);
+        ind_beg(Varlen2Msg_s2_curs,c,*msg) {
+            vrfyeq_(c,s2[i2]);
+            ++i2;
+        }ind_end;
+        vrfyeq_(i2,(int)strlen(s2));
+    }
+    {
+        const char *s3="Welt!";
+        int i3(0);
+        ind_beg(Varlen2Msg_s3_curs,c,*msg) {
+            vrfyeq_(c,s3[i3]);
+            ++i3;
+        }ind_end;
+        vrfyeq_(i3,(int)strlen(s3));
+    }
+}
+
+bool atf_amc::Arycmp(algo::aryptr<u32> a, algo::aryptr<u32> b) {
+    bool ret = elems_N(a)==elems_N(b);
+    for (int i=0; ret && i<elems_N(a); ++i) {
+        ret = a[i]==b[i];
+    }
+    if (!ret) {
+        cstring out;
+        algo::ListSep ls1,ls2;
+        out << "Array mismatch, got {";
+        frep_(i,elems_N(a)) {
+            out << ls1 << a[i];
+        }
+        out << "}, but shall be {";
+        frep_(i,elems_N(b)) {
+            out << ls2 << b[i];
+        }
+        out << "}";
+        prlog(out);
+    }
+    return ret;
+}
+
+void atf_amc::amctest_Varlen2a() {
+    const u32 a1[] = {1,2,3};
+    const u32 a2[] = {4,5,6};
+    const u32 a3[] = {7,8,9};
+
+    algo::aryptr<u32> pa1(a1,_array_count(a1));
+    algo::aryptr<u32> pa2(a2,_array_count(a2));
+    algo::aryptr<u32> pa3(a3,_array_count(a3));
+
+    // pnew
+    algo::ByteAry buf;
+    Varlen2aMsg *msg = Varlen2aMsg_FmtByteAry(buf,pa1,pa2,pa3);
+
+    vrfy_(Arycmp(u1_Getary(*msg),pa1));
+    vrfy_(Arycmp(u2_Getary(*msg),pa2));
+    vrfy_(Arycmp(u3_Getary(*msg),pa3));
+
+    vrfyeq_(tempstr()<<*msg, "atf_amc.Varlen2aMsg  u1.0:1  u1.1:2  u1.2:3  u2.0:4  u2.1:5  u2.2:6  u3.0:7  u3.1:8  u3.2:9");
+
+    // read
+    algo::Refurbish(buf);
+    atf_amc::MsgHeaderMsgs_ReadStrptr("atf_amc.Varlen2aMsg u3.0:7  u2.0:4  u1.0:1  u3.1:8  u2.1:5  u1.1:2  u3.2:9  u2.2:6  u1.2:3", buf);
+    msg = (Varlen2aMsg *)buf.ary_elems;
+    vrfy_(Arycmp(u1_Getary(*msg),pa1));
+    vrfy_(Arycmp(u2_Getary(*msg),pa2));
+    vrfy_(Arycmp(u3_Getary(*msg),pa3));
+    vrfyeq_(ToStrPtr(ary_Getary(buf)), Bytes("\002\020,\000"
+                                             "\014\000"
+                                             "\030\000"
+                                             "\001\000\000\000"
+                                             "\002\000\000\000"
+                                             "\003\000\000\000"
+                                             "\004\000\000\000"
+                                             "\005\000\000\000"
+                                             "\006\000\000\000"
+                                             "\007\000\000\000"
+                                             "\010\000\000\000"
+                                             "\011\000\000\000"));
+}
+
+void atf_amc::amctest_Varlen2m() {
+    algo::ByteAry buf;
+    const char *str = "atf_amc.Varlen2mMsg"
+        "  m3:'atf_amc.Varlen2Msg  s1:ii  s2:1  s3:9'"
+        "  m2:'atf_amc.Varlen2Msg  s1:h  s2:2  s3:8'"
+        "  m1:'atf_amc.Varlen2Msg  s1:gg  s2:3  s3:7'"
+        "  m3:'atf_amc.Varlen2Msg  s1:fff  s2:4  s3:6'"
+        "  m2:'atf_amc.Varlen2Msg  s1:eee  s2:5  s3:5'"
+        "  m1:'atf_amc.Varlen2Msg  s1:dddd  s2:6  s3:4'"
+        "  m3:'atf_amc.Varlen2Msg  s1:ccc  s2:7  s3:3'"
+        "  m2:'atf_amc.Varlen2Msg  s1:bc  s2:8  s3:2'"
+        "  m1:'atf_amc.Varlen2Msg  s1:a  s2:9  s3:1'";
+    atf_amc::MsgHeaderMsgs_ReadStrptr(str,buf);
+    Varlen2mMsg *msg = (Varlen2mMsg*)buf.ary_elems;
+
+    const char *str1 =
+        "atf_amc.Varlen2mMsg"
+        "  m1.0:\"atf_amc.Varlen2Msg  s1:gg  s2:3  s3:7\""
+        "  m1.1:\"atf_amc.Varlen2Msg  s1:dddd  s2:6  s3:4\""
+        "  m1.2:\"atf_amc.Varlen2Msg  s1:a  s2:9  s3:1\""
+        "  m2.0:\"atf_amc.Varlen2Msg  s1:h  s2:2  s3:8\""
+        "  m2.1:\"atf_amc.Varlen2Msg  s1:eee  s2:5  s3:5\""
+        "  m2.2:\"atf_amc.Varlen2Msg  s1:bc  s2:8  s3:2\""
+        "  m3.0:\"atf_amc.Varlen2Msg  s1:ii  s2:1  s3:9\""
+        "  m3.1:\"atf_amc.Varlen2Msg  s1:fff  s2:4  s3:6\""
+        "  m3.2:\"atf_amc.Varlen2Msg  s1:ccc  s2:7  s3:3\"";
+    vrfyeq_(tempstr()<<*msg, str1);
+
+    const char str2[] = "\004\020w\000%\000I\000"
+        "\001\020\014\000\002\000\003\000gg37"
+        "\001\020\016\000\004\000\005\000dddd64"
+        "\001\020\013\000\001\000\002\000a91"
+        "\001\020\013\000\001\000\002\000h28"
+        "\001\020\r\000\003\000\004\000eee55"
+        "\001\020\014\000\002\000\003\000bc82"
+        "\001\020\014\000\002\000\003\000ii19"
+        "\001\020\r\000\003\000\004\000fff46"
+        "\001\020\r\000\003\000\004\000ccc73";
+    vrfyeq_(ToStrPtr(ary_Getary(buf)), Bytes(str2));
+}
+
+void atf_amc::amctest_Varlen2v() {
+    algo::ByteAry buf;
+    const char *str = "atf_amc.Varlen2vMsg"
+        "  v1:'atf_amc.VarlenK  i:1'"
+        "  v1:'atf_amc.VarlenK  i:2  i:3'"
+        "  v1:'atf_amc.VarlenK  i:4'"
+
+        "  v2:'atf_amc.VarlenK  i:5  i:6'"
+        "  v2:'atf_amc.VarlenK  i:7'"
+        "  v2:'atf_amc.VarlenK  i:8  i:9'"
+
+        "  v3:'atf_amc.VarlenK  i:10'"
+        "  v3:'atf_amc.VarlenK  i:11  i:12'"
+        "  v3:'atf_amc.VarlenK  i:13  i:14  i:15'";
+    atf_amc::MsgHeaderMsgs_ReadStrptr(str,buf);
+    Varlen2vMsg *msg = (Varlen2vMsg*)buf.ary_elems;
+
+    const char *str1 = "atf_amc.Varlen2vMsg"
+        "  v1.0:\"atf_amc.VarlenK  i.0:1\""
+        "  v1.1:\"atf_amc.VarlenK  i.0:2  i.1:3\""
+        "  v1.2:\"atf_amc.VarlenK  i.0:4\""
+        "  v2.0:\"atf_amc.VarlenK  i.0:5  i.1:6\""
+        "  v2.1:\"atf_amc.VarlenK  i.0:7\""
+        "  v2.2:\"atf_amc.VarlenK  i.0:8  i.1:9\""
+        "  v3.0:\"atf_amc.VarlenK  i.0:10\""
+        "  v3.1:\"atf_amc.VarlenK  i.0:11  i.1:12\""
+        "  v3.2:\"atf_amc.VarlenK  i.0:13  i.1:14  i.2:15\"";
+    vrfyeq_(tempstr()<<*msg, str1);
+
+    const char str2[] = "\003\020h\000\034\000<\000"
+        "\010\000\000\000\001\000\000\000"
+        "\014\000\000\000\002\000\000\000\003\000\000\000"
+        "\010\000\000\000\004\000\000\000"
+        "\014\000\000\000\005\000\000\000\006\000\000\000"
+        "\010\000\000\000\007\000\000\000"
+        "\014\000\000\000\010\000\000\000\t\000\000\000"
+        "\010\000\000\000\012\000\000\000"
+        "\014\000\000\000\013\000\000\000\014\000\000\000"
+        "\020\000\000\000\015\000\000\000\016\000\000\000\017\000\000\000";
+    vrfyeq_(ToStrPtr(ary_Getary(buf)), Bytes(str2));
 }

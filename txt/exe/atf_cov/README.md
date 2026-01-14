@@ -34,25 +34,26 @@
 ```
 atf_cov: Line coverage
 Usage: atf_cov [options]
-    OPTION      TYPE    DFLT                              COMMENT
-    -in         string  "data"                            Input directory or filename, - for stdin
-    -covdir     string  "temp/covdata"                    Output directory to save coverage data
-    -logfile    string  ""                                Log file
-    -runcmd     string  ""                                command to run
-    -exclude    regx    "(extern|include/gen|cpp/gen)/%"  Exclude gitfiles (external, generated)
-    -mergepath  string  ""                                colon-separated dir list to load .cov.ssim files from
-    -gcov                                                 run gcov
-    -ssim                                                 write out ssim files
-    -report                                               write out all reports
-    -capture                                              Write coverage information into tgtcov table
-    -xmlpretty                                            Generate pretty-formatted XML
-    -summary            Y                                 Show summary figures
-    -check                                                Check coverage information against tgtcov table
-    -verbose    int                                       Verbosity level (0..255); alias -v; cumulative
-    -debug      int                                       Debug level (0..255); alias -d; cumulative
-    -help                                                 Print help and exit; alias -h
-    -version                                              Print version and exit
-    -signature                                            Show signatures and exit; alias -sig
+    OPTION        TYPE    DFLT                              COMMENT
+    -in           string  "data"                            Input directory or filename, - for stdin
+    -covdir       string  "temp/covdata"                    Output directory to save coverage data
+    -logfile      string  ""                                Log file
+    -runcmd       string  ""                                command to run
+    -exclude      regx    "(extern|include/gen|cpp/gen)/%"  Exclude gitfiles (external, generated)
+    -mergepath    string  ""                                colon-separated dir list to load .cov.ssim files from
+    -gcov                                                   run gcov
+    -ssim                                                   write out ssim files
+    -report                                                 write out all reports
+    -capture                                                Write coverage information into tgtcov table
+    -xmlpretty                                              Generate pretty-formatted XML
+    -summary              Y                                 Show summary figures
+    -check                                                  Check coverage information against tgtcov table
+    -incremental                                            Keep *.gcda files from previous run
+    -verbose      flag                                      Verbosity level (0..255); alias -v; cumulative
+    -debug        flag                                      Debug level (0..255); alias -d; cumulative
+    -help                                                   Print help and exit; alias -h
+    -version                                                Print version and exit
+    -signature                                              Show signatures and exit; alias -sig
 
 ```
 
@@ -313,12 +314,12 @@ Ssim file format is described as 'dev.covline' table:
 
 ```
 inline-command: acr dmmeta.field:dev.Covline.%
-dmmeta.field  field:dev.Covline.covline  arg:algo.Smallstr200  reftype:Val   dflt:""     comment:file:line
-dmmeta.field  field:dev.Covline.src      arg:dev.Gitfile       reftype:Pkey  dflt:""     comment:"Source file"
-dmmeta.field  field:dev.Covline.line     arg:u32               reftype:Val   dflt:""     comment:"Source line"
-dmmeta.field  field:dev.Covline.flag     arg:char              reftype:Val   dflt:"'N'"  comment:Flag
-dmmeta.field  field:dev.Covline.hit      arg:u32               reftype:Val   dflt:""     comment:"Number of hits"
-dmmeta.field  field:dev.Covline.text     arg:algo.cstring      reftype:Val   dflt:""     comment:"Line text"
+dmmeta.field  field:dev.Covline.covline  arg:algo.cstring  reftype:Val   dflt:""     comment:"Key: file:line"
+dmmeta.field  field:dev.Covline.src      arg:dev.Gitfile   reftype:Pkey  dflt:""     comment:"Source file"
+dmmeta.field  field:dev.Covline.line     arg:u32           reftype:Val   dflt:""     comment:"Source line"
+dmmeta.field  field:dev.Covline.flag     arg:char          reftype:Val   dflt:"'N'"  comment:Flag
+dmmeta.field  field:dev.Covline.hit      arg:u32           reftype:Val   dflt:""     comment:"Number of hits"
+dmmeta.field  field:dev.Covline.text     arg:algo.cstring  reftype:Val   dflt:""     comment:"Line text"
 report.acr  n_select:6  n_insert:0  n_delete:0  n_ignore:0  n_update:0  n_file_mod:0
 ```
 
@@ -441,6 +442,9 @@ Atf_cov generates output files on `-covdata` directory;
 #### -check -- Check coverage information against tgtcov table
 <a href="#-check"></a>
 
+#### -incremental -- Keep *.gcda files from previous run
+<a href="#-incremental"></a>
+
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
@@ -449,14 +453,14 @@ Atf_cov generates output files on `-covdata` directory;
 `atf_cov` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
-|[dev.tgtcov](/txt/ssimdb/dev/tgtcov.md)|Captured line coverate information by target|
-|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
-|[dev.covtarget](/txt/ssimdb/dev/covtarget.md)||
-|[dev.covline](/txt/ssimdb/dev/covline.md)||
 |[dev.covfile](/txt/ssimdb/dev/covfile.md)||
+|[dev.covline](/txt/ssimdb/dev/covline.md)||
+|[dev.covtarget](/txt/ssimdb/dev/covtarget.md)||
+|[dev.gitfile](/txt/ssimdb/dev/gitfile.md)|File managed by git|
+|[dev.target](/txt/ssimdb/dev/target.md)|Build target|
+|[dev.targsrc](/txt/ssimdb/dev/targsrc.md)|List of sources for target|
+|[dev.tgtcov](/txt/ssimdb/dev/tgtcov.md)|Captured line coverate information by target|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

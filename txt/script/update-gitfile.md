@@ -1,4 +1,4 @@
-## bin/update-gitfile -
+## bin/update-gitfile - Update dev.gitfile table
 
 
 ### Sources

@@ -1,7 +1,11 @@
-acr.update  dev.target  target:xyz
+acr.delete  dev.target  target:samp
+acr.insert  dev.target  target:xyz
 
-acr.update  dev.targdep  targdep:xyz.algo_lib  comment:""
+acr.delete  dev.targdep  targdep:samp.algo_lib
+acr.insert  dev.targdep  targdep:xyz.algo_lib  comment:""
 
-acr.update  dev.targsrc  targsrc:xyz/cpp/samp/1.cpp  comment:""
-acr.update  dev.targsrc  targsrc:xyz/cpp/samp/2.cpp  comment:""
+acr.delete  dev.targsrc  targsrc:samp/cpp/samp/1.cpp
+acr.insert  dev.targsrc  targsrc:xyz/cpp/samp/1.cpp  comment:""
+acr.delete  dev.targsrc  targsrc:samp/cpp/samp/2.cpp
+acr.insert  dev.targsrc  targsrc:xyz/cpp/samp/2.cpp  comment:""
 report.acr  n_select:4  n_insert:0  n_delete:0  n_ignore:0  n_update:4  n_file_mod:0

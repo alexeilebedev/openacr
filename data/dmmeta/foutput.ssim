@@ -1,7 +1,3 @@
-dmmeta.foutput  field:amc.FDb.c_ctypelen  comment:""
-dmmeta.foutput  field:amc.FDb.c_dispsig_sorted  comment:""
-dmmeta.foutput  field:amc.FDb.tracefld  comment:""
-dmmeta.foutput  field:amc.FDb.tracerec  comment:""
 dmmeta.foutput  field:atf_comp.FDb.zd_out_comptest  comment:""
 dmmeta.foutput  field:atf_comp.FDb.zd_out_targs  comment:""
 dmmeta.foutput  field:atf_comp.FDb.zd_out_tfilt  comment:""

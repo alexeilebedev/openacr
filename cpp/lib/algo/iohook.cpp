@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -197,15 +197,22 @@ static inline void IohookWaitClocks_Kqueue(u64 wait_clocks) {
 
 #ifdef __linux__
 static inline void IohookWaitClocks_Epoll(u64 wait_clocks) {
-    i32 wait_ms = i32(i64_Min(wait_clocks * algo_lib::_db.clocks_to_ms, 60000));
-    // For non-realtime processes,
-    // avoid taking 100% cpu when wait is < 1 msec.
-    // Convert all sub-millisecond waits to 1-millisecond waits
-    if (UNLIKELY(algo_lib::_db.sleep_roundup)) {
-        wait_ms += wait_clocks > 0 && wait_ms == 0;
-    }
     epoll_event events[20];
-    int n = epoll_wait(algo_lib::_db.epoll_fd, events, _array_count(events), wait_ms);
+    int n = 0;
+    if (algo_lib::_db.use_epoll_pwait2) {
+        // #AL# if epoll_pwait2 is not available, then sleep time might need
+        // to be updated to at least 1 msec to avoid taking up 100% cpu for any process
+        // operating at >1KHz. for now assuming that epoll_pwait2 is always there.
+        struct timespec twait;
+        u64 sleep_nsec = i64_Min(wait_clocks * algo_lib::_db.clocks_to_ns, 60*algo::UNTIME_PER_SEC);
+        twait.tv_sec  = sleep_nsec / algo::UNTIME_PER_SEC;
+        twait.tv_nsec = sleep_nsec % algo::UNTIME_PER_SEC;
+        n = epoll_pwait2(algo_lib::_db.epoll_fd, events, _array_count(events), &twait, NULL);
+    } else {
+        i32 wait_ms = i32(i64_Min(wait_clocks * algo_lib::_db.clocks_to_ms, 60000));
+        // WARNING: Any sleep under 1 msec will cause hot-spinning in the process.
+        n = epoll_wait(algo_lib::_db.epoll_fd, events, _array_count(events), wait_ms);
+    }
     for (int i=0; i<n; i++) {
         epoll_event &ev = events[i];
         algo_lib::FIohook *iohook = (algo_lib::FIohook*)ev.data.ptr;

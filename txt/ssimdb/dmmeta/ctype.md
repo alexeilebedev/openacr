@@ -32,10 +32,12 @@ These ssimfiles are subsets of dmmeta.ctype
 * [dmmeta.Cfast](/txt/ssimdb/dmmeta/cfast.md) - FAST properties for ctype 
 * [dmmeta.Cget](/txt/ssimdb/dmmeta/cget.md) - Generate state functions for these ctypes 
 * [dmmeta.Chash](/txt/ssimdb/dmmeta/chash.md) - Generate hash function 
+* [dmmeta.Ckafka](/txt/ssimdb/dmmeta/ckafka.md) -  
 * [dmmeta.Cpptype](/txt/ssimdb/dmmeta/cpptype.md) - Specify whether a ctype can be passed by value, and other c++ options 
 * [dmmeta.Csize](/txt/ssimdb/dmmeta/csize.md) - Specify size/alignment for built-in C++ types 
 * [dmmeta.Cstr](/txt/ssimdb/dmmeta/cstr.md) - Specify that type behaves like a string 
 * [dmmeta.Ctypelen](/txt/ssimdb/dmmeta/ctypelen.md) - Size of Ctype 
+* [dmmeta.Jstype](/txt/ssimdb/dmmeta/jstype.md) -  
 * [dmmeta.Msgtype](/txt/ssimdb/dmmeta/msgtype.md) - Specify message type for each eligible message, controls dispatch 
 * [dmmeta.Nossimfile](/txt/ssimdb/dmmeta/nossimfile.md) - Indicates that ssimfile does not exist for this ssimdb ctype 
 * [dmmeta.Pack](/txt/ssimdb/dmmeta/pack.md) - Request byte-packing of structure fields 

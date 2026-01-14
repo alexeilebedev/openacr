@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -56,7 +56,7 @@ static void Main_Related() {
     }ind_end;
 
     // Build list of related ctypes (all ctypes derived from initial selection)
-    for (acr_in::FCtype *ctype = acr_in::zd_related_First(); ctype; ctype = ctype->zd_related_next) {
+    for (acr_in::FCtype *ctype = acr_in::zd_related_First(); ctype; ctype = zd_related_Next(*ctype)) {
         ind_beg(acr_in::ctype_c_ctype_curs, child, *ctype) {
             acr_in::zd_related_Insert(child);
             child.select = true;
@@ -65,7 +65,7 @@ static void Main_Related() {
     }
 
     // select any children of related records
-    for (acr_in::FTuple *tuple = acr_in::zd_select_First(); tuple; tuple = tuple->zd_select_next) {
+    for (acr_in::FTuple *tuple = acr_in::zd_select_First(); tuple; tuple = zd_select_Next(*tuple)) {
         ind_beg(acr_in::tuple_c_child_curs, child, *tuple) {
             child.p_ctype->select = true;
             acr_in::zd_select_Insert(child);

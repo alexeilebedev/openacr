@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
@@ -57,7 +57,7 @@ acr::FRec* acr::ReadTuple(Tuple &tuple, acr::FFile &file, acr::ReadMode read_mod
         LoadRecords(*ctype);
         // truncate table on first insertion
         if (!file.autoloaded && ctype->n_insert == 0 && acr::_db.cmdline.trunc) {
-            ind_beg(acr::ctype_zd_ctype_rec_curs,rec,*ctype) {
+            ind_beg(acr::ctype_zd_rec_curs,rec,*ctype) {
                 rec.del=true;
             }ind_end;
         }
@@ -150,11 +150,14 @@ acr::FRec *acr::CreateRec(acr::FFile &file, acr::FCtype *ctype, algo::Tuple &tup
     float rowid   = ret ? ret->sortkey.rowid : -1;
     if (read_mode == acr_ReadMode_acr_select) {
         if (ret) {
+            // explicit select
             Rec_Select(*ret);
         }
     } else if (read_mode == acr_ReadMode_acr_delete) {
         if (ret) {
             ret->del = true;
+            // select record so that cascade delete picks it up
+            Rec_Select(*ret);
         } else {
             _db.report.n_ignore++;
         }

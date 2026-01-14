@@ -111,7 +111,7 @@ to read more data.
 ### Generated Functions
 <a href="#generated-functions"></a>
 ```
-inline-command: src_func atf_amc -comment:%atf_amc.Msgbuf.in_buf% -gen -proto -showloc:N
+inline-command: src_func atf_amc.% -matchcomment:%atf_amc.Msgbuf.in_buf% -gen -showcomment
 // --- atf_amc.Msgbuf.in_buf.BeginRead
 // Attach fbuf to Iohook for reading
 // Attach file descriptor and begin reading using edge-triggered epoll.
@@ -129,6 +129,12 @@ void atf_amc::in_buf_EndRead(atf_amc::Msgbuf& msgbuf)
 // The message is length-delimited based on field length field
 // 
 atf_amc::MsgHeader* atf_amc::in_buf_GetMsg(atf_amc::Msgbuf& msgbuf) 
+// --- atf_amc.Msgbuf.in_buf.Realloc
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+void atf_amc::in_buf_Realloc(atf_amc::Msgbuf& msgbuf, int new_max) 
 // --- atf_amc.Msgbuf.in_buf.Refill
 // Refill buffer. Return false if no further refill possible (input buffer exhausted)
 bool atf_amc::in_buf_Refill(atf_amc::Msgbuf& msgbuf) 
@@ -149,12 +155,16 @@ static void atf_amc::in_buf_Shift(atf_amc::Msgbuf& msgbuf)
 // Skip current message, if any.
 void atf_amc::in_buf_SkipMsg(atf_amc::Msgbuf& msgbuf) 
 // --- atf_amc.Msgbuf.in_buf.WriteAll
-// Attempt to write buffer contents to fd
+// Attempt to write buffer contents to fbuf, return success
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 // 
 bool atf_amc::in_buf_WriteAll(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) 
+// --- atf_amc.Msgbuf.in_buf.WriteReserve
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written
+void atf_amc::in_buf_WriteReserve(atf_amc::Msgbuf& msgbuf, u8 *in, i32 in_n) 
 // --- atf_amc.Msgbuf.in_buf.XrefMaybe
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.

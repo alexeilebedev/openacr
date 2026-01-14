@@ -45,7 +45,8 @@ const char* amsdb::value_ToCstr(const amsdb::FieldId& parent) {
         case amsdb_FieldId_id              : ret = "id";  break;
         case amsdb_FieldId_ns              : ret = "ns";  break;
         case amsdb_FieldId_comment         : ret = "comment";  break;
-        case amsdb_FieldId_streamtype      : ret = "streamtype";  break;
+        case amsdb_FieldId_shmtype         : ret = "shmtype";  break;
+        case amsdb_FieldId_nonblock        : ret = "nonblock";  break;
         case amsdb_FieldId_value           : ret = "value";  break;
     }
     return ret;
@@ -94,22 +95,19 @@ bool amsdb::value_SetStrptrMaybe(amsdb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR7('c','o','m','m','e','n','t'): {
                     value_SetEnum(parent,amsdb_FieldId_comment); ret = true; break;
                 }
+                case LE_STR7('s','h','m','t','y','p','e'): {
+                    value_SetEnum(parent,amsdb_FieldId_shmtype); ret = true; break;
+                }
             }
             break;
         }
         case 8: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('n','o','n','b','l','o','c','k'): {
+                    value_SetEnum(parent,amsdb_FieldId_nonblock); ret = true; break;
+                }
                 case LE_STR8('p','r','o','c','t','y','p','e'): {
                     value_SetEnum(parent,amsdb_FieldId_proctype); ret = true; break;
-                }
-            }
-            break;
-        }
-        case 10: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('s','t','r','e','a','m','t','y'): {
-                    if (memcmp(rhs.elems+8,"pe",2)==0) { value_SetEnum(parent,amsdb_FieldId_streamtype); ret = true; break; }
-                    break;
                 }
             }
             break;
@@ -152,29 +150,28 @@ void amsdb::FieldId_Print(amsdb::FieldId& row, algo::cstring& str) {
     amsdb::value_Print(row, str);
 }
 
-// --- amsdb.ProcType..ReadFieldMaybe
-bool amsdb::ProcType_ReadFieldMaybe(amsdb::ProcType& parent, algo::strptr field, algo::strptr strval) {
+// --- amsdb.Proctype..ReadFieldMaybe
+bool amsdb::Proctype_ReadFieldMaybe(amsdb::Proctype& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     amsdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
         case amsdb_FieldId_proctype: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.proctype, strval);
-            break;
-        }
+            retval = algo::Smallstr16_ReadStrptrMaybe(parent.proctype, strval);
+        } break;
         case amsdb_FieldId_id: {
             retval = u32_ReadStrptrMaybe(parent.id, strval);
-            break;
-        }
+        } break;
         case amsdb_FieldId_ns: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
-            break;
-        }
+        } break;
         case amsdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -182,26 +179,26 @@ bool amsdb::ProcType_ReadFieldMaybe(amsdb::ProcType& parent, algo::strptr field,
     return retval;
 }
 
-// --- amsdb.ProcType..ReadStrptrMaybe
-// Read fields of amsdb::ProcType from an ascii string.
+// --- amsdb.Proctype..ReadStrptrMaybe
+// Read fields of amsdb::Proctype from an ascii string.
 // The format of the string is an ssim Tuple
-bool amsdb::ProcType_ReadStrptrMaybe(amsdb::ProcType &parent, algo::strptr in_str) {
+bool amsdb::Proctype_ReadStrptrMaybe(amsdb::Proctype &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "amsdb.proctype") || algo::StripTypeTag(in_str, "amsdb.ProcType");
+    retval = algo::StripTypeTag(in_str, "amsdb.proctype") || algo::StripTypeTag(in_str, "amsdb.Proctype");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && ProcType_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && Proctype_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- amsdb.ProcType..Print
+// --- amsdb.Proctype..Print
 // print string representation of ROW to string STR
-// cfmt:amsdb.ProcType.String  printfmt:Tuple
-void amsdb::ProcType_Print(amsdb::ProcType& row, algo::cstring& str) {
+// cfmt:amsdb.Proctype.String  printfmt:Tuple
+void amsdb::Proctype_Print(amsdb::Proctype& row, algo::cstring& str) {
     algo::tempstr temp;
     str << "amsdb.proctype";
 
-    algo::Smallstr50_Print(row.proctype, temp);
+    algo::Smallstr16_Print(row.proctype, temp);
     PrintAttrSpaceReset(str,"proctype", temp);
 
     u32_Print(row.id, temp);
@@ -214,25 +211,28 @@ void amsdb::ProcType_Print(amsdb::ProcType& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
-// --- amsdb.StreamType..ReadFieldMaybe
-bool amsdb::StreamType_ReadFieldMaybe(amsdb::StreamType& parent, algo::strptr field, algo::strptr strval) {
+// --- amsdb.Shmtype..ReadFieldMaybe
+bool amsdb::Shmtype_ReadFieldMaybe(amsdb::Shmtype& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
     amsdb::FieldId field_id;
     (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
-        case amsdb_FieldId_streamtype: {
-            retval = algo::Smallstr50_ReadStrptrMaybe(parent.streamtype, strval);
-            break;
-        }
+        case amsdb_FieldId_shmtype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.shmtype, strval);
+        } break;
         case amsdb_FieldId_id: {
-            retval = ams::StreamType_ReadStrptrMaybe(parent.id, strval);
-            break;
-        }
+            retval = ams::Shmtype_ReadStrptrMaybe(parent.id, strval);
+        } break;
+        case amsdb_FieldId_nonblock: {
+            retval = bool_ReadStrptrMaybe(parent.nonblock, strval);
+        } break;
         case amsdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -240,31 +240,34 @@ bool amsdb::StreamType_ReadFieldMaybe(amsdb::StreamType& parent, algo::strptr fi
     return retval;
 }
 
-// --- amsdb.StreamType..ReadStrptrMaybe
-// Read fields of amsdb::StreamType from an ascii string.
+// --- amsdb.Shmtype..ReadStrptrMaybe
+// Read fields of amsdb::Shmtype from an ascii string.
 // The format of the string is an ssim Tuple
-bool amsdb::StreamType_ReadStrptrMaybe(amsdb::StreamType &parent, algo::strptr in_str) {
+bool amsdb::Shmtype_ReadStrptrMaybe(amsdb::Shmtype &parent, algo::strptr in_str) {
     bool retval = true;
-    retval = algo::StripTypeTag(in_str, "amsdb.streamtype") || algo::StripTypeTag(in_str, "amsdb.StreamType");
+    retval = algo::StripTypeTag(in_str, "amsdb.shmtype") || algo::StripTypeTag(in_str, "amsdb.Shmtype");
     ind_beg(algo::Attr_curs, attr, in_str) {
-        retval = retval && StreamType_ReadFieldMaybe(parent, attr.name, attr.value);
+        retval = retval && Shmtype_ReadFieldMaybe(parent, attr.name, attr.value);
     }ind_end;
     return retval;
 }
 
-// --- amsdb.StreamType..Print
+// --- amsdb.Shmtype..Print
 // print string representation of ROW to string STR
-// cfmt:amsdb.StreamType.String  printfmt:Tuple
-void amsdb::StreamType_Print(amsdb::StreamType& row, algo::cstring& str) {
+// cfmt:amsdb.Shmtype.String  printfmt:Tuple
+void amsdb::Shmtype_Print(amsdb::Shmtype& row, algo::cstring& str) {
     algo::tempstr temp;
-    str << "amsdb.streamtype";
+    str << "amsdb.shmtype";
 
-    algo::Smallstr50_Print(row.streamtype, temp);
-    PrintAttrSpaceReset(str,"streamtype", temp);
+    algo::Smallstr50_Print(row.shmtype, temp);
+    PrintAttrSpaceReset(str,"shmtype", temp);
 
-    // printing funique, gconst id for pkey amsdb.StreamType.streamtype
+    // printing funique, gconst id for pkey amsdb.Shmtype.shmtype
     u8_Print(row.id.value, temp);
     PrintAttrSpaceReset(str,"id", temp);
+
+    bool_Print(row.nonblock, temp);
+    PrintAttrSpaceReset(str,"nonblock", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

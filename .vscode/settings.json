@@ -1,0 +1,30 @@
+{
+    "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle: Google, IndentWidth: 4, ColumnLimit: 120, IndentCaseLabels:false, IndentCaseBlocks:true, InsertBraces:true}",
+    "editor.wordWrapColumn": 120,
+    "editor.autoClosingBrackets": "never",
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "files.trimTrailingWhitespace": true,
+    "files.associations": {
+        "typeinfo": "cpp",
+        "memory": "cpp",
+        "tuple": "cpp",
+        "array": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "new": "cpp",
+        "system_error": "cpp",
+        "compare": "cpp",
+        "functional": "cpp",
+        "ratio": "cpp",
+        "type_traits": "cpp",
+        "utility": "cpp",
+        "condition_variable": "cpp",
+        "cstddef": "cpp"
+    },
+    "search.exclude": {
+        "temp": true,
+        "build": true,
+    },
+}

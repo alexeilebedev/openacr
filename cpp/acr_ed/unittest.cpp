@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -31,7 +31,7 @@
 void acr_ed::edaction_Create_Unittest() {
     prlog("acr_ed.create_unittest  unittest:"<<acr_ed::_db.cmdline.unittest);
     algo_lib::Replscope R;
-    Set(R, "$ns", atfdb::Unittest_target_Get(acr_ed::_db.cmdline.unittest));
+    Set(R, "$ns", atfdb::Unittest_ns_Get(acr_ed::_db.cmdline.unittest));
     Set(R, "$test", acr_ed::_db.cmdline.unittest);
     Set(R, "$Name", atfdb::Unittest_testname_Get(acr_ed::_db.cmdline.unittest));
 
@@ -46,7 +46,7 @@ void acr_ed::edaction_Create_Unittest() {
                         <<Keyval("comment","")
                         <<eol;
 
-    Ins(&R, acr_ed::_db.script, "cat >> cpp/atf/unit/$ns.cpp << EOF");
+    Ins(&R, acr_ed::_db.script, "cat >> cpp/atf_unit/$ns.cpp << EOF");
     Ins(&R, acr_ed::_db.script, "// --------------------------------------------------------------------------------");
     Ins(&R, acr_ed::_db.script, "");
     Ins(&R, acr_ed::_db.script, "void atf_unit::unittest_$ns_$Name() {");
@@ -54,7 +54,7 @@ void acr_ed::edaction_Create_Unittest() {
     Ins(&R, acr_ed::_db.script, "}");
     Ins(&R, acr_ed::_db.script, "EOF");
     Ins(&R, acr_ed::_db.script, "amc");
-    ScriptEditFile(R,"cpp/atf/unit/$ns.cpp");
+    ScriptEditFile(R,"cpp/atf_unit/$ns.cpp");
     Ins(&R, acr_ed::_db.script, "$prefixabt -install atf_unit && atf_unit $ns.$Name");
 }
 

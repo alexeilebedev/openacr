@@ -12,7 +12,7 @@ dmmeta.ssimreq  ssimreq:"dev.gitfile:txt/${nstype}/$ns/README.md"  parent:"dmmet
 dmmeta.ssimreq  ssimreq:"dev.gitfile:txt/${nstype}/$ns/internals.md"  parent:dmmeta.Ns.nstype:exe  reqchild:N  bidir:N  comment:""
 dmmeta.ssimreq  ssimreq:dev.gitfile:txt/script/$name.md  parent:dev.Scriptfile.gitfile:%  reqchild:Y  bidir:N  comment:""
 dmmeta.ssimreq  ssimreq:dev.gitfile:txt/ssimdb/$ns/$name.md  parent:dmmeta.Ssimfile.ssimfile:%  reqchild:Y  bidir:N  comment:""
-dmmeta.ssimreq  ssimreq:dev.readme:$gitfile  parent:dev.Gitfile.gitfile:txt/%  reqchild:Y  bidir:N  comment:"All gitfiles under txt/ must have readmes"
+dmmeta.ssimreq  ssimreq:dev.readmefile:$gitfile  parent:dev.Gitfile.gitfile:txt/%  reqchild:Y  bidir:N  comment:"All gitfiles under txt/ must have readmes"
 dmmeta.ssimreq  ssimreq:dmmeta.ctype:command.$ns  parent:dmmeta.Ns.nstype:exe  reqchild:Y  bidir:N  comment:""
 dmmeta.ssimreq  ssimreq:dmmeta.ctype:report.$ns  parent:dmmeta.Ns.nstype:exe  reqchild:N  bidir:N  comment:""
 dmmeta.ssimreq  ssimreq:dmmeta.fbuf:$field  parent:dmmeta.Field.reftype:Fbuf  reqchild:Y  bidir:Y  comment:""

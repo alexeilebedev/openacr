@@ -142,6 +142,12 @@ inline char& algo::cstring_ch_curs_Access(cstring_ch_curs &curs) {
     return curs.elems[curs.index];
 }
 
+// --- algo.cstring..Hash
+inline u32 algo::cstring_Hash(u32 prev, const algo::cstring& rhs) {
+    prev = strptr_Hash(prev, algo::strptr((char*)rhs.ch_elems,rhs.ch_n));
+    return prev;
+}
+
 // --- algo.cstring..EqOp
 inline bool algo::cstring::operator ==(const algo::cstring &rhs) const {
     return algo::cstring_Eq(const_cast<algo::cstring&>(*this),const_cast<algo::cstring&>(rhs));
@@ -644,26 +650,6 @@ inline u64& algo::ch_qFind(algo::Charset& parent, u64 t) {
     return parent.ch_elems[u64(t)];
 }
 
-// --- algo.Charset.ch_bitcurs.Reset
-inline void algo::Charset_ch_bitcurs_Reset(Charset_ch_bitcurs &curs, algo::Charset &parent) {
-    curs.elems = &ch_qFind(parent,0);
-    curs.n_elems = ch_N(parent);
-    curs.bit = -1;
-    Charset_ch_bitcurs_Next(curs);
-}
-
-// --- algo.Charset.ch_bitcurs.ValidQ
-// cursor points to valid item
-inline bool algo::Charset_ch_bitcurs_ValidQ(Charset_ch_bitcurs &curs) {
-    return curs.bit < curs.n_elems*64;
-}
-
-// --- algo.Charset.ch_bitcurs.Access
-// item access
-inline int& algo::Charset_ch_bitcurs_Access(Charset_ch_bitcurs &curs) {
-    return curs.bit;
-}
-
 // --- algo.Charset.ch_curs.Reset
 // cursor points to valid item
 inline void algo::Charset_ch_curs_Reset(Charset_ch_curs &curs, algo::Charset &parent) {
@@ -730,11 +716,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr150& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.Smallstr150.ch.HashStrptr
-inline u32 algo::Smallstr150_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.Smallstr150.ch.Init
@@ -882,11 +863,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr250& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.Smallstr250.ch.HashStrptr
-inline u32 algo::Smallstr250_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.Smallstr250.ch.Init
@@ -1309,15 +1285,45 @@ inline void algo::type_Set(algo::Errcode& parent, algo::Errns rhs) {
     parent.value = u64((parent.value & ~t1) | t2);
 }
 
+// --- algo.Errcode..EqOp
+inline bool algo::Errcode::operator ==(const algo::Errcode &rhs) const {
+    return algo::Errcode_Eq(const_cast<algo::Errcode&>(*this),const_cast<algo::Errcode&>(rhs));
+}
+
+// --- algo.Errcode..NeOp
+inline bool algo::Errcode::operator !=(const algo::Errcode &rhs) const {
+    return !algo::Errcode_Eq(const_cast<algo::Errcode&>(*this),const_cast<algo::Errcode&>(rhs));
+}
+
+// --- algo.Errcode..Cmp
+inline i32 algo::Errcode_Cmp(algo::Errcode& lhs, algo::Errcode& rhs) {
+    i32 retval = 0;
+    retval = u64_Cmp(lhs.value, rhs.value);
+    return retval;
+}
+
 // --- algo.Errcode..Init
 // Set all fields to initial values.
 inline void algo::Errcode_Init(algo::Errcode& parent) {
     parent.value = u64(0);
 }
 
+// --- algo.Errcode..Eq
+inline bool algo::Errcode_Eq(algo::Errcode& lhs, algo::Errcode& rhs) {
+    bool retval = true;
+    retval = u64_Eq(lhs.value, rhs.value);
+    return retval;
+}
+
 // --- algo.Errcode..Ctor
 inline  algo::Errcode::Errcode() {
     algo::Errcode_Init(*this);
+}
+
+// --- algo.Errcode..FieldwiseCtor
+inline  algo::Errcode::Errcode(u64 in_value)
+    : value(in_value)
+ {
 }
 
 // --- algo.FailokQ.value.GetEnum
@@ -1945,6 +1951,141 @@ inline  algo::I32Dec5::I32Dec5(i32 in_value)
  {
 }
 
+// --- algo.I32RangeAry.ary.EmptyQ
+// Return true if index is empty
+inline bool algo::ary_EmptyQ(algo::I32RangeAry& parent) {
+    return parent.ary_n == 0;
+}
+
+// --- algo.I32RangeAry.ary.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::i32_Range* algo::ary_Find(algo::I32RangeAry& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.ary_n;
+    if (idx >= lim) return NULL;
+    return parent.ary_elems + idx;
+}
+
+// --- algo.I32RangeAry.ary.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::i32_Range> algo::ary_Getary(const algo::I32RangeAry& parent) {
+    return algo::aryptr<algo::i32_Range>(parent.ary_elems, parent.ary_n);
+}
+
+// --- algo.I32RangeAry.ary.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo::i32_Range* algo::ary_Last(algo::I32RangeAry& parent) {
+    return ary_Find(parent, u64(parent.ary_n-1));
+}
+
+// --- algo.I32RangeAry.ary.AssignAryptr
+// Copy from aryptr (operator=)
+inline void algo::I32RangeAry::operator =(const algo::aryptr<algo::i32_Range> &rhs) {
+    ary_Setary(*this, rhs);
+}
+
+// --- algo.I32RangeAry.ary.CtorAryptr
+inline  algo::I32RangeAry::I32RangeAry(const algo::aryptr<algo::i32_Range> &rhs) {
+    ary_elems 	= 0; // (algo.I32RangeAry.ary)
+    ary_n     	= 0; // (algo.I32RangeAry.ary)
+    ary_max   	= 0; // (algo.I32RangeAry.ary)
+    ary_Addary(*this, rhs);
+}
+
+// --- algo.I32RangeAry.ary.Max
+// Return max. number of items in the array
+inline i32 algo::ary_Max(algo::I32RangeAry& parent) {
+    (void)parent;
+    return parent.ary_max;
+}
+
+// --- algo.I32RangeAry.ary.N
+// Return number of items in the array
+inline i32 algo::ary_N(const algo::I32RangeAry& parent) {
+    return parent.ary_n;
+}
+
+// --- algo.I32RangeAry.ary.RemoveAll
+inline void algo::ary_RemoveAll(algo::I32RangeAry& parent) {
+    parent.ary_n = 0;
+}
+
+// --- algo.I32RangeAry.ary.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void algo::ary_Reserve(algo::I32RangeAry& parent, int n) {
+    u32 new_n = parent.ary_n + n;
+    if (UNLIKELY(new_n > parent.ary_max)) {
+        ary_AbsReserve(parent, new_n);
+    }
+}
+
+// --- algo.I32RangeAry.ary.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo::i32_Range& algo::ary_qFind(algo::I32RangeAry& parent, u64 t) {
+    return parent.ary_elems[t];
+}
+
+// --- algo.I32RangeAry.ary.qLast
+// Return reference to last element of array. No bounds checking
+inline algo::i32_Range& algo::ary_qLast(algo::I32RangeAry& parent) {
+    return ary_qFind(parent, u64(parent.ary_n-1));
+}
+
+// --- algo.I32RangeAry.ary.rowid_Get
+// Return row id of specified element
+inline u64 algo::ary_rowid_Get(algo::I32RangeAry& parent, algo::i32_Range &elem) {
+    u64 id = &elem - parent.ary_elems;
+    return u64(id);
+}
+
+// --- algo.I32RangeAry.ary.Cast
+inline  algo::I32RangeAry::operator algo::aryptr<algo::i32_Range>() const {
+    return ary_Getary(*this);
+}
+
+// --- algo.I32RangeAry.ary_curs.Next
+// proceed to next item
+inline void algo::I32RangeAry_ary_curs_Next(I32RangeAry_ary_curs &curs) {
+    curs.index++;
+}
+
+// --- algo.I32RangeAry.ary_curs.Reset
+inline void algo::I32RangeAry_ary_curs_Reset(I32RangeAry_ary_curs &curs, algo::I32RangeAry &parent) {
+    curs.elems = parent.ary_elems;
+    curs.n_elems = parent.ary_n;
+    curs.index = 0;
+}
+
+// --- algo.I32RangeAry.ary_curs.ValidQ
+// cursor points to valid item
+inline bool algo::I32RangeAry_ary_curs_ValidQ(I32RangeAry_ary_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- algo.I32RangeAry.ary_curs.Access
+// item access
+inline algo::i32_Range& algo::I32RangeAry_ary_curs_Access(I32RangeAry_ary_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- algo.I32RangeAry..Init
+// Set all fields to initial values.
+inline void algo::I32RangeAry_Init(algo::I32RangeAry& parent) {
+    parent.ary_elems 	= 0; // (algo.I32RangeAry.ary)
+    parent.ary_n     	= 0; // (algo.I32RangeAry.ary)
+    parent.ary_max   	= 0; // (algo.I32RangeAry.ary)
+}
+
+// --- algo.I32RangeAry..Ctor
+inline  algo::I32RangeAry::I32RangeAry() {
+    algo::I32RangeAry_Init(*this);
+}
+
+// --- algo.I32RangeAry..Dtor
+inline  algo::I32RangeAry::~I32RangeAry() {
+    algo::I32RangeAry_Uninit(*this);
+}
+
 // --- algo.I64Dec1.value.qSetDouble
 // Set value of field value.
 // The value is rounded to the nearest integer.
@@ -2565,6 +2706,18 @@ inline  algo::I64Dec9::I64Dec9(i64 in_value)
  {
 }
 
+// --- algo.I64Rate..Init
+// Set all fields to initial values.
+inline void algo::I64Rate_Init(algo::I64Rate& parent) {
+    parent.last = i64(0);
+    parent.delta = i64(0);
+}
+
+// --- algo.I64Rate..Ctor
+inline  algo::I64Rate::I64Rate() {
+    algo::I64Rate_Init(*this);
+}
+
 // --- algo.IOEvtFlags.value.Cast
 inline  algo::IOEvtFlags::operator algo_IOEvtFlagsEnum() const {
     return algo_IOEvtFlagsEnum((*this).value);
@@ -2696,11 +2849,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr50& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.Smallstr50.ch.HashStrptr
-inline u32 algo::Smallstr50_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.Smallstr50.ch.Init
@@ -2903,11 +3051,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr100& parent) {
     return ret;
 }
 
-// --- algo.Smallstr100.ch.HashStrptr
-inline u32 algo::Smallstr100_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.Smallstr100.ch.Init
 inline void algo::ch_Init(algo::Smallstr100 &parent) {
     parent.n_ch = 0;
@@ -2943,6 +3086,41 @@ inline  algo::Smallstr100::operator algo::strptr() const {
     return ch_Getary(*this);
 }
 
+// --- algo.Smallstr100..EqOp
+inline bool algo::Smallstr100::operator ==(const algo::Smallstr100 &rhs) const {
+    return algo::Smallstr100_Eq(const_cast<algo::Smallstr100&>(*this),const_cast<algo::Smallstr100&>(rhs));
+}
+
+// --- algo.Smallstr100..NeOp
+inline bool algo::Smallstr100::operator !=(const algo::Smallstr100 &rhs) const {
+    return !algo::Smallstr100_Eq(const_cast<algo::Smallstr100&>(*this),const_cast<algo::Smallstr100&>(rhs));
+}
+
+// --- algo.Smallstr100..LtOp
+inline bool algo::Smallstr100::operator <(const algo::Smallstr100 &rhs) const {
+    return algo::Smallstr100_Lt(const_cast<algo::Smallstr100&>(*this),const_cast<algo::Smallstr100&>(rhs));
+}
+
+// --- algo.Smallstr100..GtOp
+inline bool algo::Smallstr100::operator >(const algo::Smallstr100 &rhs) const {
+    return algo::Smallstr100_Lt(const_cast<algo::Smallstr100&>(rhs),const_cast<algo::Smallstr100&>(*this));
+}
+
+// --- algo.Smallstr100..LeOp
+inline bool algo::Smallstr100::operator <=(const algo::Smallstr100 &rhs) const {
+    return !algo::Smallstr100_Lt(const_cast<algo::Smallstr100&>(rhs),const_cast<algo::Smallstr100&>(*this));
+}
+
+// --- algo.Smallstr100..GeOp
+inline bool algo::Smallstr100::operator >=(const algo::Smallstr100 &rhs) const {
+    return !algo::Smallstr100_Lt(const_cast<algo::Smallstr100&>(*this),const_cast<algo::Smallstr100&>(rhs));
+}
+
+// --- algo.Smallstr100..Lt
+inline bool algo::Smallstr100_Lt(algo::Smallstr100& lhs, algo::Smallstr100& rhs) {
+    return algo::strptr_Lt(ch_Getary(lhs), ch_Getary(rhs));
+}
+
 // --- algo.Smallstr100..Cmp
 inline i32 algo::Smallstr100_Cmp(algo::Smallstr100& lhs, algo::Smallstr100& rhs) {
     i32 retval = 0;
@@ -2961,6 +3139,16 @@ inline bool algo::Smallstr100_Eq(algo::Smallstr100& lhs, algo::Smallstr100& rhs)
     bool retval = true;
     retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
+}
+
+// --- algo.Smallstr100..Update
+// Set value. Return true if new value is different from old value.
+inline bool algo::Smallstr100_Update(algo::Smallstr100 &lhs, algo::Smallstr100& rhs) {
+    bool ret = !Smallstr100_Eq(lhs, rhs); // compare values
+    if (ret) {
+        lhs = rhs; // update
+    }
+    return ret;
 }
 
 // --- algo.Smallstr100..EqOpAryptr
@@ -3164,11 +3352,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr10_U64& parent) {
     return ret;
 }
 
-// --- algo.LnumStr10_U64.ch.HashStrptr
-inline u32 algo::LnumStr10_U64_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LnumStr10_U64.ch.Init
 inline void algo::ch_Init(algo::LnumStr10_U64 &parent) {
     for (int i = 0; i < 10; i++) {
@@ -3274,11 +3457,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr11_U64& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 11 - len;
     return ret;
-}
-
-// --- algo.LnumStr11_U64.ch.HashStrptr
-inline u32 algo::LnumStr11_U64_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LnumStr11_U64.ch.Init
@@ -3389,11 +3567,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr12_U64& parent) {
     return ret;
 }
 
-// --- algo.LnumStr12_U64.ch.HashStrptr
-inline u32 algo::LnumStr12_U64_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LnumStr12_U64.ch.Init
 inline void algo::ch_Init(algo::LnumStr12_U64 &parent) {
     for (int i = 0; i < 12; i++) {
@@ -3499,11 +3672,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr13_U64_Base36& pare
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 13 - len;
     return ret;
-}
-
-// --- algo.LnumStr13_U64_Base36.ch.HashStrptr
-inline u32 algo::LnumStr13_U64_Base36_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LnumStr13_U64_Base36.ch.Init
@@ -3614,11 +3782,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr16_U64_Base16& pare
     return ret;
 }
 
-// --- algo.LnumStr16_U64_Base16.ch.HashStrptr
-inline u32 algo::LnumStr16_U64_Base16_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LnumStr16_U64_Base16.ch.Init
 inline void algo::ch_Init(algo::LnumStr16_U64_Base16 &parent) {
     for (int i = 0; i < 16; i++) {
@@ -3724,11 +3887,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr1_U32& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 1 - len;
     return ret;
-}
-
-// --- algo.LnumStr1_U32.ch.HashStrptr
-inline u32 algo::LnumStr1_U32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LnumStr1_U32.ch.Init
@@ -3837,11 +3995,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr20_U64& parent) {
     return ret;
 }
 
-// --- algo.LnumStr20_U64.ch.HashStrptr
-inline u32 algo::LnumStr20_U64_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LnumStr20_U64.ch.Init
 inline void algo::ch_Init(algo::LnumStr20_U64 &parent) {
     for (int i = 0; i < 20; i++) {
@@ -3948,11 +4101,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr22_U64& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 22 - len;
     return ret;
-}
-
-// --- algo.LnumStr22_U64.ch.HashStrptr
-inline u32 algo::LnumStr22_U64_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LnumStr22_U64.ch.Init
@@ -4064,11 +4212,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr2_U32& parent) {
     return ret;
 }
 
-// --- algo.LnumStr2_U32.ch.HashStrptr
-inline u32 algo::LnumStr2_U32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LnumStr2_U32.ch.Init
 inline void algo::ch_Init(algo::LnumStr2_U32 &parent) {
     for (int i = 0; i < 2; i++) {
@@ -4173,11 +4316,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr3_U32& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 3 - len;
     return ret;
-}
-
-// --- algo.LnumStr3_U32.ch.HashStrptr
-inline u32 algo::LnumStr3_U32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LnumStr3_U32.ch.Init
@@ -4287,11 +4425,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr4_U32& parent) {
     return ret;
 }
 
-// --- algo.LnumStr4_U32.ch.HashStrptr
-inline u32 algo::LnumStr4_U32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LnumStr4_U32.ch.Init
 inline void algo::ch_Init(algo::LnumStr4_U32 &parent) {
     for (int i = 0; i < 4; i++) {
@@ -4396,11 +4529,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr5_U32& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 5 - len;
     return ret;
-}
-
-// --- algo.LnumStr5_U32.ch.HashStrptr
-inline u32 algo::LnumStr5_U32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LnumStr5_U32.ch.Init
@@ -4510,11 +4638,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr5_U32_Base36& paren
     return ret;
 }
 
-// --- algo.LnumStr5_U32_Base36.ch.HashStrptr
-inline u32 algo::LnumStr5_U32_Base36_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LnumStr5_U32_Base36.ch.Init
 inline void algo::ch_Init(algo::LnumStr5_U32_Base36 &parent) {
     for (int i = 0; i < 5; i++) {
@@ -4622,11 +4745,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr6_U32& parent) {
     return ret;
 }
 
-// --- algo.LnumStr6_U32.ch.HashStrptr
-inline u32 algo::LnumStr6_U32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LnumStr6_U32.ch.Init
 inline void algo::ch_Init(algo::LnumStr6_U32 &parent) {
     for (int i = 0; i < 6; i++) {
@@ -4732,11 +4850,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr7_U32& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 7 - len;
     return ret;
-}
-
-// --- algo.LnumStr7_U32.ch.HashStrptr
-inline u32 algo::LnumStr7_U32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LnumStr7_U32.ch.Init
@@ -4847,11 +4960,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr7_U32_Base36& paren
     return ret;
 }
 
-// --- algo.LnumStr7_U32_Base36.ch.HashStrptr
-inline u32 algo::LnumStr7_U32_Base36_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LnumStr7_U32_Base36.ch.Init
 inline void algo::ch_Init(algo::LnumStr7_U32_Base36 &parent) {
     for (int i = 0; i < 7; i++) {
@@ -4960,11 +5068,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr8_U32& parent) {
     return ret;
 }
 
-// --- algo.LnumStr8_U32.ch.HashStrptr
-inline u32 algo::LnumStr8_U32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LnumStr8_U32.ch.Init
 inline void algo::ch_Init(algo::LnumStr8_U32 &parent) {
     for (int i = 0; i < 8; i++) {
@@ -5069,11 +5172,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr8_U32_Base16& paren
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 8 - len;
     return ret;
-}
-
-// --- algo.LnumStr8_U32_Base16.ch.HashStrptr
-inline u32 algo::LnumStr8_U32_Base16_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LnumStr8_U32_Base16.ch.Init
@@ -5182,11 +5280,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr8_U64& parent) {
     return ret;
 }
 
-// --- algo.LnumStr8_U64.ch.HashStrptr
-inline u32 algo::LnumStr8_U64_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LnumStr8_U64.ch.Init
 inline void algo::ch_Init(algo::LnumStr8_U64 &parent) {
     for (int i = 0; i < 8; i++) {
@@ -5291,11 +5384,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr9_U32& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 9 - len;
     return ret;
-}
-
-// --- algo.LnumStr9_U32.ch.HashStrptr
-inline u32 algo::LnumStr9_U32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LnumStr9_U32.ch.Init
@@ -5405,11 +5493,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LnumStr9_U64& parent) {
     return ret;
 }
 
-// --- algo.LnumStr9_U64.ch.HashStrptr
-inline u32 algo::LnumStr9_U64_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LnumStr9_U64.ch.Init
 inline void algo::ch_Init(algo::LnumStr9_U64 &parent) {
     for (int i = 0; i < 9; i++) {
@@ -5517,11 +5600,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr10& parent) {
     return ret;
 }
 
-// --- algo.LspaceStr10.ch.HashStrptr
-inline u32 algo::LspaceStr10_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LspaceStr10.ch.Init
 inline void algo::ch_Init(algo::LspaceStr10 &parent) {
     memset(parent.ch, ' ', 10);
@@ -5623,11 +5701,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr12& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 12 - len;
     return ret;
-}
-
-// --- algo.LspaceStr12.ch.HashStrptr
-inline u32 algo::LspaceStr12_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LspaceStr12.ch.Init
@@ -5733,11 +5806,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr14& parent) {
     return ret;
 }
 
-// --- algo.LspaceStr14.ch.HashStrptr
-inline u32 algo::LspaceStr14_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LspaceStr14.ch.Init
 inline void algo::ch_Init(algo::LspaceStr14 &parent) {
     memset(parent.ch, ' ', 14);
@@ -5840,11 +5908,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr15& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 15 - len;
     return ret;
-}
-
-// --- algo.LspaceStr15.ch.HashStrptr
-inline u32 algo::LspaceStr15_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LspaceStr15.ch.Init
@@ -5952,11 +6015,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr20_I64& parent) {
     return ret;
 }
 
-// --- algo.LspaceStr20_I64.ch.HashStrptr
-inline u32 algo::LspaceStr20_I64_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LspaceStr20_I64.ch.Init
 inline void algo::ch_Init(algo::LspaceStr20_I64 &parent) {
     memset(parent.ch, ' ', 20);
@@ -6059,11 +6117,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr20_U64& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 20 - len;
     return ret;
-}
-
-// --- algo.LspaceStr20_U64.ch.HashStrptr
-inline u32 algo::LspaceStr20_U64_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LspaceStr20_U64.ch.Init
@@ -6170,11 +6223,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr3& parent) {
     return ret;
 }
 
-// --- algo.LspaceStr3.ch.HashStrptr
-inline u32 algo::LspaceStr3_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LspaceStr3.ch.Init
 inline void algo::ch_Init(algo::LspaceStr3 &parent) {
     memset(parent.ch, ' ', 3);
@@ -6276,11 +6324,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr3_I16& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 3 - len;
     return ret;
-}
-
-// --- algo.LspaceStr3_I16.ch.HashStrptr
-inline u32 algo::LspaceStr3_I16_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LspaceStr3_I16.ch.Init
@@ -6386,11 +6429,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr4& parent) {
     return ret;
 }
 
-// --- algo.LspaceStr4.ch.HashStrptr
-inline u32 algo::LspaceStr4_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LspaceStr4.ch.Init
 inline void algo::ch_Init(algo::LspaceStr4 &parent) {
     memset(parent.ch, ' ', 4);
@@ -6491,11 +6529,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr5& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 5 - len;
     return ret;
-}
-
-// --- algo.LspaceStr5.ch.HashStrptr
-inline u32 algo::LspaceStr5_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LspaceStr5.ch.Init
@@ -6601,11 +6634,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr5_I16& parent) {
     return ret;
 }
 
-// --- algo.LspaceStr5_I16.ch.HashStrptr
-inline u32 algo::LspaceStr5_I16_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LspaceStr5_I16.ch.Init
 inline void algo::ch_Init(algo::LspaceStr5_I16 &parent) {
     memset(parent.ch, ' ', 5);
@@ -6707,11 +6735,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr6& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 6 - len;
     return ret;
-}
-
-// --- algo.LspaceStr6.ch.HashStrptr
-inline u32 algo::LspaceStr6_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LspaceStr6.ch.Init
@@ -6817,11 +6840,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr6_U32& parent) {
     return ret;
 }
 
-// --- algo.LspaceStr6_U32.ch.HashStrptr
-inline u32 algo::LspaceStr6_U32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LspaceStr6_U32.ch.Init
 inline void algo::ch_Init(algo::LspaceStr6_U32 &parent) {
     memset(parent.ch, ' ', 6);
@@ -6923,11 +6941,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr7_I32_Base36& par
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 7 - len;
     return ret;
-}
-
-// --- algo.LspaceStr7_I32_Base36.ch.HashStrptr
-inline u32 algo::LspaceStr7_I32_Base36_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LspaceStr7_I32_Base36.ch.Init
@@ -7034,11 +7047,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr8& parent) {
     return ret;
 }
 
-// --- algo.LspaceStr8.ch.HashStrptr
-inline u32 algo::LspaceStr8_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.LspaceStr8.ch.Init
 inline void algo::ch_Init(algo::LspaceStr8 &parent) {
     memset(parent.ch, ' ', 8);
@@ -7139,11 +7147,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::LspaceStr9& parent) {
     algo::aryptr<char> ret((char*)parent.ch, len);
     ret.elems += 9 - len;
     return ret;
-}
-
-// --- algo.LspaceStr9.ch.HashStrptr
-inline u32 algo::LspaceStr9_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.LspaceStr9.ch.Init
@@ -7486,11 +7489,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr1& parent) {
     return ret;
 }
 
-// --- algo.RnullStr1.ch.HashStrptr
-inline u32 algo::RnullStr1_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr1.ch.Init
 inline void algo::ch_Init(algo::RnullStr1 &parent) {
     memset(parent.ch, 0, 1);
@@ -7624,11 +7622,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr10& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr10.ch.HashStrptr
-inline u32 algo::RnullStr10_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr10.ch.Init
@@ -7767,11 +7760,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr100& parent) {
     return ret;
 }
 
-// --- algo.RnullStr100.ch.HashStrptr
-inline u32 algo::RnullStr100_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr100.ch.Init
 inline void algo::ch_Init(algo::RnullStr100 &parent) {
     memset(parent.ch, 0, 100);
@@ -7887,11 +7875,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr1000& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr1000.ch.HashStrptr
-inline u32 algo::RnullStr1000_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr1000.ch.Init
@@ -8028,11 +8011,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr11& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr11.ch.HashStrptr
-inline u32 algo::RnullStr11_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr11.ch.Init
@@ -8172,11 +8150,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr12& parent) {
     return ret;
 }
 
-// --- algo.RnullStr12.ch.HashStrptr
-inline u32 algo::RnullStr12_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr12.ch.Init
 inline void algo::ch_Init(algo::RnullStr12 &parent) {
     memset(parent.ch, 0, 12);
@@ -8311,11 +8284,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr129& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr129.ch.HashStrptr
-inline u32 algo::RnullStr129_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr129.ch.Init
@@ -8456,11 +8424,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr13& parent) {
     return ret;
 }
 
-// --- algo.RnullStr13.ch.HashStrptr
-inline u32 algo::RnullStr13_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr13.ch.Init
 inline void algo::ch_Init(algo::RnullStr13 &parent) {
     memset(parent.ch, 0, 13);
@@ -8596,11 +8559,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr14& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr14.ch.HashStrptr
-inline u32 algo::RnullStr14_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr14.ch.Init
@@ -8740,11 +8698,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr15& parent) {
     return ret;
 }
 
-// --- algo.RnullStr15.ch.HashStrptr
-inline u32 algo::RnullStr15_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr15.ch.Init
 inline void algo::ch_Init(algo::RnullStr15 &parent) {
     memset(parent.ch, 0, 15);
@@ -8881,11 +8834,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr151& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr151.ch.HashStrptr
-inline u32 algo::RnullStr151_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr151.ch.Init
@@ -9028,11 +8976,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr16& parent) {
     return ret;
 }
 
-// --- algo.RnullStr16.ch.HashStrptr
-inline u32 algo::RnullStr16_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr16.ch.Init
 inline void algo::ch_Init(algo::RnullStr16 &parent) {
     memset(parent.ch, 0, 16);
@@ -9137,11 +9080,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr17& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr17.ch.HashStrptr
-inline u32 algo::RnullStr17_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr17.ch.Init
@@ -9281,11 +9219,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr18& parent) {
     return ret;
 }
 
-// --- algo.RnullStr18.ch.HashStrptr
-inline u32 algo::RnullStr18_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr18.ch.Init
 inline void algo::ch_Init(algo::RnullStr18 &parent) {
     memset(parent.ch, 0, 18);
@@ -9423,11 +9356,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr19& parent) {
     return ret;
 }
 
-// --- algo.RnullStr19.ch.HashStrptr
-inline u32 algo::RnullStr19_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr19.ch.Init
 inline void algo::ch_Init(algo::RnullStr19 &parent) {
     memset(parent.ch, 0, 19);
@@ -9534,11 +9462,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr2& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr2.ch.HashStrptr
-inline u32 algo::RnullStr2_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr2.ch.Init
@@ -9674,11 +9597,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr20& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr20.ch.HashStrptr
-inline u32 algo::RnullStr20_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr20.ch.Init
@@ -9818,11 +9736,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr21& parent) {
     return ret;
 }
 
-// --- algo.RnullStr21.ch.HashStrptr
-inline u32 algo::RnullStr21_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr21.ch.Init
 inline void algo::ch_Init(algo::RnullStr21 &parent) {
     memset(parent.ch, 0, 21);
@@ -9929,11 +9842,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr24& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr24.ch.HashStrptr
-inline u32 algo::RnullStr24_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr24.ch.Init
@@ -10071,11 +9979,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr25& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr25.ch.HashStrptr
-inline u32 algo::RnullStr25_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr25.ch.Init
@@ -10216,11 +10119,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr28& parent) {
     return ret;
 }
 
-// --- algo.RnullStr28.ch.HashStrptr
-inline u32 algo::RnullStr28_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr28.ch.Init
 inline void algo::ch_Init(algo::RnullStr28 &parent) {
     memset(parent.ch, 0, 28);
@@ -10359,11 +10257,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr3& parent) {
     return ret;
 }
 
-// --- algo.RnullStr3.ch.HashStrptr
-inline u32 algo::RnullStr3_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr3.ch.Init
 inline void algo::ch_Init(algo::RnullStr3 &parent) {
     memset(parent.ch, 0, 3);
@@ -10500,11 +10393,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr30& parent) {
     return ret;
 }
 
-// --- algo.RnullStr30.ch.HashStrptr
-inline u32 algo::RnullStr30_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr30.ch.Init
 inline void algo::ch_Init(algo::RnullStr30 &parent) {
     memset(parent.ch, 0, 30);
@@ -10612,11 +10500,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr32& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr32.ch.HashStrptr
-inline u32 algo::RnullStr32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr32.ch.Init
@@ -10757,11 +10640,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr33& parent) {
     return ret;
 }
 
-// --- algo.RnullStr33.ch.HashStrptr
-inline u32 algo::RnullStr33_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr33.ch.Init
 inline void algo::ch_Init(algo::RnullStr33 &parent) {
     memset(parent.ch, 0, 33);
@@ -10899,11 +10777,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr35& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr35.ch.HashStrptr
-inline u32 algo::RnullStr35_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr35.ch.Init
@@ -11046,11 +10919,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr36& parent) {
     return ret;
 }
 
-// --- algo.RnullStr36.ch.HashStrptr
-inline u32 algo::RnullStr36_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr36.ch.Init
 inline void algo::ch_Init(algo::RnullStr36 &parent) {
     memset(parent.ch, 0, 36);
@@ -11190,11 +11058,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr4& parent) {
     return ret;
 }
 
-// --- algo.RnullStr4.ch.HashStrptr
-inline u32 algo::RnullStr4_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr4.ch.Init
 inline void algo::ch_Init(algo::RnullStr4 &parent) {
     memset(parent.ch, 0, 4);
@@ -11298,11 +11161,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr40& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr40.ch.HashStrptr
-inline u32 algo::RnullStr40_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr40.ch.Init
@@ -11442,11 +11300,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr41& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr41.ch.HashStrptr
-inline u32 algo::RnullStr41_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr41.ch.Init
@@ -11589,11 +11442,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr43& parent) {
     return ret;
 }
 
-// --- algo.RnullStr43.ch.HashStrptr
-inline u32 algo::RnullStr43_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr43.ch.Init
 inline void algo::ch_Init(algo::RnullStr43 &parent) {
     memset(parent.ch, 0, 43);
@@ -11703,11 +11551,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr44& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr44.ch.HashStrptr
-inline u32 algo::RnullStr44_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr44.ch.Init
@@ -11820,11 +11663,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr48& parent) {
     return ret;
 }
 
-// --- algo.RnullStr48.ch.HashStrptr
-inline u32 algo::RnullStr48_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr48.ch.Init
 inline void algo::ch_Init(algo::RnullStr48 &parent) {
     memset(parent.ch, 0, 48);
@@ -11935,11 +11773,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr5& parent) {
     return ret;
 }
 
-// --- algo.RnullStr5.ch.HashStrptr
-inline u32 algo::RnullStr5_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr5.ch.Init
 inline void algo::ch_Init(algo::RnullStr5 &parent) {
     memset(parent.ch, 0, 5);
@@ -12044,11 +11877,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr50& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr50.ch.HashStrptr
-inline u32 algo::RnullStr50_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr50.ch.Init
@@ -12160,11 +11988,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr54& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr54.ch.HashStrptr
-inline u32 algo::RnullStr54_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr54.ch.Init
@@ -12309,11 +12132,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr55& parent) {
     return ret;
 }
 
-// --- algo.RnullStr55.ch.HashStrptr
-inline u32 algo::RnullStr55_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr55.ch.Init
 inline void algo::ch_Init(algo::RnullStr55 &parent) {
     memset(parent.ch, 0, 55);
@@ -12425,11 +12243,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr6& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr6.ch.HashStrptr
-inline u32 algo::RnullStr6_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr6.ch.Init
@@ -12566,11 +12379,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr60& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr60.ch.HashStrptr
-inline u32 algo::RnullStr60_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr60.ch.Init
@@ -12713,11 +12521,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr62& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr62.ch.HashStrptr
-inline u32 algo::RnullStr62_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr62.ch.Init
@@ -12863,11 +12666,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr66& parent) {
     return ret;
 }
 
-// --- algo.RnullStr66.ch.HashStrptr
-inline u32 algo::RnullStr66_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr66.ch.Init
 inline void algo::ch_Init(algo::RnullStr66 &parent) {
     memset(parent.ch, 0, 66);
@@ -12981,11 +12779,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr6_U32& parent) {
     return ret;
 }
 
-// --- algo.RnullStr6_U32.ch.HashStrptr
-inline u32 algo::RnullStr6_U32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr6_U32.ch.Init
 inline void algo::ch_Init(algo::RnullStr6_U32 &parent) {
     memset(parent.ch, 0, 6);
@@ -13085,11 +12878,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr7& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr7.ch.HashStrptr
-inline u32 algo::RnullStr7_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr7.ch.Init
@@ -13229,11 +13017,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr8& parent) {
     return ret;
 }
 
-// --- algo.RnullStr8.ch.HashStrptr
-inline u32 algo::RnullStr8_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RnullStr8.ch.Init
 inline void algo::ch_Init(algo::RnullStr8 &parent) {
     memset(parent.ch, 0, 8);
@@ -13337,11 +13120,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr80& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr80.ch.HashStrptr
-inline u32 algo::RnullStr80_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr80.ch.Init
@@ -13456,11 +13234,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RnullStr9& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RnullStr9.ch.HashStrptr
-inline u32 algo::RnullStr9_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RnullStr9.ch.Init
@@ -13599,11 +13372,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr10& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr10.ch.HashStrptr
-inline u32 algo::RspaceStr10_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr10.ch.Init
 inline void algo::ch_Init(algo::RspaceStr10 &parent) {
     memset(parent.ch, ' ', 10);
@@ -13703,11 +13471,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr100& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr100.ch.HashStrptr
-inline u32 algo::RspaceStr100_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr100.ch.Init
@@ -13822,11 +13585,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr11& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr11.ch.HashStrptr
-inline u32 algo::RspaceStr11_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr11.ch.Init
 inline void algo::ch_Init(algo::RspaceStr11 &parent) {
     memset(parent.ch, ' ', 11);
@@ -13929,11 +13687,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr12& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr12.ch.HashStrptr
-inline u32 algo::RspaceStr12_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr12.ch.Init
 inline void algo::ch_Init(algo::RspaceStr12 &parent) {
     memset(parent.ch, ' ', 12);
@@ -14033,11 +13786,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr128& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr128.ch.HashStrptr
-inline u32 algo::RspaceStr128_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr128.ch.Init
@@ -14155,11 +13903,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr14& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr14.ch.HashStrptr
-inline u32 algo::RspaceStr14_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr14.ch.Init
 inline void algo::ch_Init(algo::RspaceStr14 &parent) {
     memset(parent.ch, ' ', 14);
@@ -14260,11 +14003,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr15& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr15.ch.HashStrptr
-inline u32 algo::RspaceStr15_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr15.ch.Init
@@ -14368,11 +14106,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr16& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr16.ch.HashStrptr
-inline u32 algo::RspaceStr16_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr16.ch.Init
@@ -14481,11 +14214,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr18& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr18.ch.HashStrptr
-inline u32 algo::RspaceStr18_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr18.ch.Init
 inline void algo::ch_Init(algo::RspaceStr18 &parent) {
     memset(parent.ch, ' ', 18);
@@ -14588,11 +14316,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr2& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr2.ch.HashStrptr
-inline u32 algo::RspaceStr2_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr2.ch.Init
 inline void algo::ch_Init(algo::RspaceStr2 &parent) {
     memset(parent.ch, ' ', 2);
@@ -14691,11 +14414,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr20& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr20.ch.HashStrptr
-inline u32 algo::RspaceStr20_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr20.ch.Init
@@ -14800,11 +14518,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr200& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr200.ch.HashStrptr
-inline u32 algo::RspaceStr200_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr200.ch.Init
 inline void algo::ch_Init(algo::RspaceStr200 &parent) {
     memset(parent.ch, ' ', 200);
@@ -14854,7 +14567,7 @@ inline bool algo::RspaceStr200::operator !=(const algo::RspaceStr200 &rhs) const
 }
 
 // --- algo.RspaceStr200..Cmp
-inline i32 algo::RspaceStr200_Cmp(algo::RspaceStr200& lhs, algo::RspaceStr200& rhs) {
+inline i32 algo::RspaceStr200_Cmp(algo::RspaceStr200 lhs, algo::RspaceStr200 rhs) {
     i32 retval = 0;
     retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
     return retval;
@@ -14867,7 +14580,7 @@ inline void algo::RspaceStr200_Init(algo::RspaceStr200& parent) {
 }
 
 // --- algo.RspaceStr200..Eq
-inline bool algo::RspaceStr200_Eq(algo::RspaceStr200& lhs, algo::RspaceStr200& rhs) {
+inline bool algo::RspaceStr200_Eq(algo::RspaceStr200 lhs, algo::RspaceStr200 rhs) {
     bool retval = true;
     for (int i=0; i<25 && retval; i++) {
         retval = ((u64*)lhs.ch)[i] == ((u64*)rhs.ch)[i];
@@ -14904,11 +14617,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr21& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr21.ch.HashStrptr
-inline u32 algo::RspaceStr21_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr21.ch.Init
@@ -15012,11 +14720,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr24& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr24.ch.HashStrptr
-inline u32 algo::RspaceStr24_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr24.ch.Init
@@ -15126,11 +14829,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr240& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr240.ch.HashStrptr
-inline u32 algo::RspaceStr240_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr240.ch.Init
 inline void algo::ch_Init(algo::RspaceStr240 &parent) {
     memset(parent.ch, ' ', 240);
@@ -15230,11 +14928,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr25& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr25.ch.HashStrptr
-inline u32 algo::RspaceStr25_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr25.ch.Init
@@ -15345,11 +15038,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr26& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr26.ch.HashStrptr
-inline u32 algo::RspaceStr26_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr26.ch.Init
 inline void algo::ch_Init(algo::RspaceStr26 &parent) {
     memset(parent.ch, ' ', 26);
@@ -15453,11 +15141,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr3& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr3.ch.HashStrptr
-inline u32 algo::RspaceStr3_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr3.ch.Init
 inline void algo::ch_Init(algo::RspaceStr3 &parent) {
     memset(parent.ch, ' ', 3);
@@ -15557,11 +15240,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr31& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr31.ch.HashStrptr
-inline u32 algo::RspaceStr31_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr31.ch.Init
@@ -15669,11 +15347,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr32& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr32.ch.HashStrptr
-inline u32 algo::RspaceStr32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr32.ch.Init
 inline void algo::ch_Init(algo::RspaceStr32 &parent) {
     memset(parent.ch, ' ', 32);
@@ -15777,11 +15450,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr4& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr4.ch.HashStrptr
-inline u32 algo::RspaceStr4_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr4.ch.Init
 inline void algo::ch_Init(algo::RspaceStr4 &parent) {
     memset(parent.ch, ' ', 4);
@@ -15882,11 +15550,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr40& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr40.ch.HashStrptr
-inline u32 algo::RspaceStr40_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr40.ch.Init
 inline void algo::ch_Init(algo::RspaceStr40 &parent) {
     memset(parent.ch, ' ', 40);
@@ -15979,11 +15642,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr5& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr5.ch.HashStrptr
-inline u32 algo::RspaceStr5_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr5.ch.Init
@@ -16085,11 +15743,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr50& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr50.ch.HashStrptr
-inline u32 algo::RspaceStr50_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr50.ch.Init
@@ -16196,11 +15849,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr6& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr6.ch.HashStrptr
-inline u32 algo::RspaceStr6_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr6.ch.Init
@@ -16339,11 +15987,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr64& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr64.ch.HashStrptr
-inline u32 algo::RspaceStr64_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr64.ch.Init
 inline void algo::ch_Init(algo::RspaceStr64 &parent) {
     memset(parent.ch, ' ', 64);
@@ -16451,11 +16094,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr7& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr7.ch.HashStrptr
-inline u32 algo::RspaceStr7_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr7.ch.Init
 inline void algo::ch_Init(algo::RspaceStr7 &parent) {
     memset(parent.ch, ' ', 7);
@@ -16556,11 +16194,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr75& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr75.ch.HashStrptr
-inline u32 algo::RspaceStr75_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr75.ch.Init
@@ -16673,11 +16306,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr8& parent) {
     return ret;
 }
 
-// --- algo.RspaceStr8.ch.HashStrptr
-inline u32 algo::RspaceStr8_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.RspaceStr8.ch.Init
 inline void algo::ch_Init(algo::RspaceStr8 &parent) {
     memset(parent.ch, ' ', 8);
@@ -16781,11 +16409,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::RspaceStr9& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.RspaceStr9.ch.HashStrptr
-inline u32 algo::RspaceStr9_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.RspaceStr9.ch.Init
@@ -17165,11 +16788,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr1& parent) {
     return ret;
 }
 
-// --- algo.Smallstr1.ch.HashStrptr
-inline u32 algo::Smallstr1_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.Smallstr1.ch.Init
 inline void algo::ch_Init(algo::Smallstr1 &parent) {
     parent.n_ch = 0;
@@ -17286,11 +16904,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr10& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.Smallstr10.ch.HashStrptr
-inline u32 algo::Smallstr10_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.Smallstr10.ch.Init
@@ -17411,11 +17024,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr16& parent) {
     return ret;
 }
 
-// --- algo.Smallstr16.ch.HashStrptr
-inline u32 algo::Smallstr16_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.Smallstr16.ch.Init
 inline void algo::ch_Init(algo::Smallstr16 &parent) {
     parent.n_ch = 0;
@@ -17534,11 +17142,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr2& parent) {
     return ret;
 }
 
-// --- algo.Smallstr2.ch.HashStrptr
-inline u32 algo::Smallstr2_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.Smallstr2.ch.Init
 inline void algo::ch_Init(algo::Smallstr2 &parent) {
     parent.n_ch = 0;
@@ -17655,11 +17258,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr20& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.Smallstr20.ch.HashStrptr
-inline u32 algo::Smallstr20_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.Smallstr20.ch.Init
@@ -17815,11 +17413,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr200& parent) {
     return ret;
 }
 
-// --- algo.Smallstr200.ch.HashStrptr
-inline u32 algo::Smallstr200_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.Smallstr200.ch.Init
 inline void algo::ch_Init(algo::Smallstr200 &parent) {
     parent.n_ch = 0;
@@ -17908,6 +17501,124 @@ inline  algo::Smallstr200::Smallstr200(const algo::Smallstr200 &rhs) {
     n_ch = rhs.n_ch;
 }
 
+// --- algo.Smallstr249.ch.Add
+// Append character to string.
+// If there is no space for an extra character, do nothing.
+inline void algo::ch_Add(algo::Smallstr249& parent, char c) {
+    if (parent.n_ch < 249) {
+        parent.ch[parent.n_ch++] = c;
+    }
+}
+
+// --- algo.Smallstr249.ch.AddStrptr
+// Append string to this string.
+// If there is no space for an extra character, trim.
+// If there is no space left, dump core in debug mode.
+inline void algo::ch_AddStrptr(algo::Smallstr249& parent, algo::strptr str) {
+    int n_new = str.n_elems;
+    if (parent.n_ch + n_new > 249) {
+        n_new = 249 - parent.n_ch;
+    }
+    memcpy(parent.ch + parent.n_ch, str.elems, n_new);
+    parent.n_ch = u8(parent.n_ch + n_new);
+}
+
+// --- algo.Smallstr249.ch.Getary
+// Access string as array of chars
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr249& parent) {
+    int len = ch_N(parent);
+    algo::aryptr<char> ret((char*)parent.ch, len);
+    return ret;
+}
+
+// --- algo.Smallstr249.ch.Init
+inline void algo::ch_Init(algo::Smallstr249 &parent) {
+    parent.n_ch = 0;
+}
+
+// --- algo.Smallstr249.ch.Max
+// always return constant 249
+inline int algo::ch_Max(algo::Smallstr249& parent) {
+    (void)parent;
+    return 249;
+}
+
+// --- algo.Smallstr249.ch.N
+inline int algo::ch_N(const algo::Smallstr249& parent) {
+    u64 ret;
+    ret = parent.n_ch;
+    return int(ret);
+}
+
+// --- algo.Smallstr249.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr249::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr249.ch.CtorStrptr
+inline  algo::Smallstr249::Smallstr249(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
+// --- algo.Smallstr249.ch.Cast
+inline  algo::Smallstr249::operator algo::strptr() const {
+    return ch_Getary(*this);
+}
+
+// --- algo.Smallstr249..EqOp
+inline bool algo::Smallstr249::operator ==(const algo::Smallstr249 &rhs) const {
+    return algo::Smallstr249_Eq(const_cast<algo::Smallstr249&>(*this),const_cast<algo::Smallstr249&>(rhs));
+}
+
+// --- algo.Smallstr249..NeOp
+inline bool algo::Smallstr249::operator !=(const algo::Smallstr249 &rhs) const {
+    return !algo::Smallstr249_Eq(const_cast<algo::Smallstr249&>(*this),const_cast<algo::Smallstr249&>(rhs));
+}
+
+// --- algo.Smallstr249..Cmp
+inline i32 algo::Smallstr249_Cmp(algo::Smallstr249& lhs, algo::Smallstr249& rhs) {
+    i32 retval = 0;
+    retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.Smallstr249..Init
+// Set all fields to initial values.
+inline void algo::Smallstr249_Init(algo::Smallstr249& parent) {
+    parent.n_ch = 0;
+}
+
+// --- algo.Smallstr249..Eq
+inline bool algo::Smallstr249_Eq(algo::Smallstr249& lhs, algo::Smallstr249& rhs) {
+    bool retval = true;
+    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.Smallstr249..EqOpAryptr
+inline bool algo::Smallstr249::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
+}
+
+// --- algo.Smallstr249..AssignOp
+inline algo::Smallstr249& algo::Smallstr249::operator =(const algo::Smallstr249 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
+}
+
+// --- algo.Smallstr249..Ctor
+inline  algo::Smallstr249::Smallstr249() {
+    algo::Smallstr249_Init(*this);
+}
+
+// --- algo.Smallstr249..CopyCtor
+inline  algo::Smallstr249::Smallstr249(const algo::Smallstr249 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+}
+
 // --- algo.Smallstr25.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
@@ -17936,11 +17647,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr25& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.Smallstr25.ch.HashStrptr
-inline u32 algo::Smallstr25_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.Smallstr25.ch.Init
@@ -18031,6 +17737,114 @@ inline  algo::Smallstr25::Smallstr25(const algo::Smallstr25 &rhs) {
     n_ch = rhs.n_ch;
 }
 
+// --- algo.Smallstr255.ch.Add
+// Append character to string.
+// If there is no space for an extra character, do nothing.
+inline void algo::ch_Add(algo::Smallstr255& parent, char c) {
+    if (parent.n_ch < 255) {
+        parent.ch[parent.n_ch++] = c;
+    }
+}
+
+// --- algo.Smallstr255.ch.AddStrptr
+// Append string to this string.
+// If there is no space for an extra character, trim.
+// If there is no space left, dump core in debug mode.
+inline void algo::ch_AddStrptr(algo::Smallstr255& parent, algo::strptr str) {
+    int n_new = str.n_elems;
+    if (parent.n_ch + n_new > 255) {
+        n_new = 255 - parent.n_ch;
+    }
+    memcpy(parent.ch + parent.n_ch, str.elems, n_new);
+    parent.n_ch = u8(parent.n_ch + n_new);
+}
+
+// --- algo.Smallstr255.ch.Getary
+// Access string as array of chars
+inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr255& parent) {
+    int len = ch_N(parent);
+    algo::aryptr<char> ret((char*)parent.ch, len);
+    return ret;
+}
+
+// --- algo.Smallstr255.ch.Init
+inline void algo::ch_Init(algo::Smallstr255 &parent) {
+    parent.n_ch = 0;
+}
+
+// --- algo.Smallstr255.ch.Max
+// always return constant 255
+inline int algo::ch_Max(algo::Smallstr255& parent) {
+    (void)parent;
+    return 255;
+}
+
+// --- algo.Smallstr255.ch.N
+inline int algo::ch_N(const algo::Smallstr255& parent) {
+    u64 ret;
+    ret = parent.n_ch;
+    return int(ret);
+}
+
+// --- algo.Smallstr255.ch.AssignStrptr
+// Copy from strptr (operator=)
+inline void algo::Smallstr255::operator =(const algo::strptr &str) {
+    ch_SetStrptr(*this, str);
+}
+
+// --- algo.Smallstr255.ch.CtorStrptr
+inline  algo::Smallstr255::Smallstr255(const algo::strptr &rhs) {
+    ch_SetStrptr(*this, rhs);
+}
+
+// --- algo.Smallstr255.ch.Cast
+inline  algo::Smallstr255::operator algo::strptr() const {
+    return ch_Getary(*this);
+}
+
+// --- algo.Smallstr255..Cmp
+inline i32 algo::Smallstr255_Cmp(algo::Smallstr255& lhs, algo::Smallstr255& rhs) {
+    i32 retval = 0;
+    retval = algo::strptr_Cmp(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.Smallstr255..Init
+// Set all fields to initial values.
+inline void algo::Smallstr255_Init(algo::Smallstr255& parent) {
+    parent.n_ch = 0;
+}
+
+// --- algo.Smallstr255..Eq
+inline bool algo::Smallstr255_Eq(algo::Smallstr255& lhs, algo::Smallstr255& rhs) {
+    bool retval = true;
+    retval = algo::strptr_Eq(ch_Getary(lhs), ch_Getary(rhs));
+    return retval;
+}
+
+// --- algo.Smallstr255..EqOpAryptr
+inline bool algo::Smallstr255::operator ==(const algo::aryptr<char> &rhs) const {
+    return algo::strptr_Eq(ch_Getary(*this), rhs);
+}
+
+// --- algo.Smallstr255..AssignOp
+inline algo::Smallstr255& algo::Smallstr255::operator =(const algo::Smallstr255 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+    return *this;
+}
+
+// --- algo.Smallstr255..Ctor
+inline  algo::Smallstr255::Smallstr255() {
+    algo::Smallstr255_Init(*this);
+}
+
+// --- algo.Smallstr255..CopyCtor
+inline  algo::Smallstr255::Smallstr255(const algo::Smallstr255 &rhs) {
+    memcpy(ch, rhs.ch, rhs.n_ch);
+    n_ch = rhs.n_ch;
+}
+
 // --- algo.Smallstr3.ch.Add
 // Append character to string.
 // If there is no space for an extra character, do nothing.
@@ -18059,11 +17873,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr3& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.Smallstr3.ch.HashStrptr
-inline u32 algo::Smallstr3_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.Smallstr3.ch.Init
@@ -18182,11 +17991,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr30& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.Smallstr30.ch.HashStrptr
-inline u32 algo::Smallstr30_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.Smallstr30.ch.Init
@@ -18342,11 +18146,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr32& parent) {
     return ret;
 }
 
-// --- algo.Smallstr32.ch.HashStrptr
-inline u32 algo::Smallstr32_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.Smallstr32.ch.Init
 inline void algo::ch_Init(algo::Smallstr32 &parent) {
     parent.n_ch = 0;
@@ -18463,11 +18262,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr4& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.Smallstr4.ch.HashStrptr
-inline u32 algo::Smallstr4_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.Smallstr4.ch.Init
@@ -18588,11 +18382,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr40& parent) {
     return ret;
 }
 
-// --- algo.Smallstr40.ch.HashStrptr
-inline u32 algo::Smallstr40_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
-}
-
 // --- algo.Smallstr40.ch.Init
 inline void algo::ch_Init(algo::Smallstr40 &parent) {
     parent.n_ch = 0;
@@ -18709,11 +18498,6 @@ inline algo::aryptr<char> algo::ch_Getary(const algo::Smallstr5& parent) {
     int len = ch_N(parent);
     algo::aryptr<char> ret((char*)parent.ch, len);
     return ret;
-}
-
-// --- algo.Smallstr5.ch.HashStrptr
-inline u32 algo::Smallstr5_Hash(u32 prev, const algo::strptr &str) {
-    return algo::CRC32Step(prev, (u8*)str.elems, str.n_elems);
 }
 
 // --- algo.Smallstr5.ch.Init
@@ -19160,6 +18944,166 @@ inline  algo::Tuple::~Tuple() {
     algo::Tuple_Uninit(*this);
 }
 
+// --- algo.U16Ary.ary.EmptyQ
+// Return true if index is empty
+inline bool algo::ary_EmptyQ(algo::U16Ary& parent) {
+    return parent.ary_n == 0;
+}
+
+// --- algo.U16Ary.ary.Find
+// Look up row by row id. Return NULL if out of range
+inline u16* algo::ary_Find(algo::U16Ary& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.ary_n;
+    if (idx >= lim) return NULL;
+    return parent.ary_elems + idx;
+}
+
+// --- algo.U16Ary.ary.Getary
+// Return array pointer by value
+inline algo::aryptr<u16> algo::ary_Getary(const algo::U16Ary& parent) {
+    return algo::aryptr<u16>(parent.ary_elems, parent.ary_n);
+}
+
+// --- algo.U16Ary.ary.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline u16* algo::ary_Last(algo::U16Ary& parent) {
+    return ary_Find(parent, u64(parent.ary_n-1));
+}
+
+// --- algo.U16Ary.ary.AssignAryptr
+// Copy from aryptr (operator=)
+inline void algo::U16Ary::operator =(const algo::aryptr<u16> &rhs) {
+    ary_Setary(*this, rhs);
+}
+
+// --- algo.U16Ary.ary.CtorAryptr
+inline  algo::U16Ary::U16Ary(const algo::aryptr<u16> &rhs) {
+    ary_elems 	= 0; // (algo.U16Ary.ary)
+    ary_n     	= 0; // (algo.U16Ary.ary)
+    ary_max   	= 0; // (algo.U16Ary.ary)
+    ary_Addary(*this, rhs);
+}
+
+// --- algo.U16Ary.ary.Max
+// Return max. number of items in the array
+inline i32 algo::ary_Max(algo::U16Ary& parent) {
+    (void)parent;
+    return parent.ary_max;
+}
+
+// --- algo.U16Ary.ary.N
+// Return number of items in the array
+inline i32 algo::ary_N(const algo::U16Ary& parent) {
+    return parent.ary_n;
+}
+
+// --- algo.U16Ary.ary.RemoveAll
+inline void algo::ary_RemoveAll(algo::U16Ary& parent) {
+    parent.ary_n = 0;
+}
+
+// --- algo.U16Ary.ary.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void algo::ary_Reserve(algo::U16Ary& parent, int n) {
+    u32 new_n = parent.ary_n + n;
+    if (UNLIKELY(new_n > parent.ary_max)) {
+        ary_AbsReserve(parent, new_n);
+    }
+}
+
+// --- algo.U16Ary.ary.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline u16& algo::ary_qFind(algo::U16Ary& parent, u64 t) {
+    return parent.ary_elems[t];
+}
+
+// --- algo.U16Ary.ary.qLast
+// Return reference to last element of array. No bounds checking
+inline u16& algo::ary_qLast(algo::U16Ary& parent) {
+    return ary_qFind(parent, u64(parent.ary_n-1));
+}
+
+// --- algo.U16Ary.ary.rowid_Get
+// Return row id of specified element
+inline u64 algo::ary_rowid_Get(algo::U16Ary& parent, u16 &elem) {
+    u64 id = &elem - parent.ary_elems;
+    return u64(id);
+}
+
+// --- algo.U16Ary.ary_curs.Next
+// proceed to next item
+inline void algo::U16Ary_ary_curs_Next(U16Ary_ary_curs &curs) {
+    curs.index++;
+}
+
+// --- algo.U16Ary.ary_curs.Reset
+inline void algo::U16Ary_ary_curs_Reset(U16Ary_ary_curs &curs, algo::U16Ary &parent) {
+    curs.elems = parent.ary_elems;
+    curs.n_elems = parent.ary_n;
+    curs.index = 0;
+}
+
+// --- algo.U16Ary.ary_curs.ValidQ
+// cursor points to valid item
+inline bool algo::U16Ary_ary_curs_ValidQ(U16Ary_ary_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- algo.U16Ary.ary_curs.Access
+// item access
+inline u16& algo::U16Ary_ary_curs_Access(U16Ary_ary_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- algo.U16Ary..Hash
+inline u32 algo::U16Ary_Hash(u32 prev, const algo::U16Ary& rhs) {
+    prev = strptr_Hash(prev, algo::strptr((char*)rhs.ary_elems,rhs.ary_n));
+    return prev;
+}
+
+// --- algo.U16Ary..EqOp
+inline bool algo::U16Ary::operator ==(const algo::U16Ary &rhs) const {
+    return algo::U16Ary_Eq(const_cast<algo::U16Ary&>(*this),const_cast<algo::U16Ary&>(rhs));
+}
+
+// --- algo.U16Ary..NeOp
+inline bool algo::U16Ary::operator !=(const algo::U16Ary &rhs) const {
+    return !algo::U16Ary_Eq(const_cast<algo::U16Ary&>(*this),const_cast<algo::U16Ary&>(rhs));
+}
+
+// --- algo.U16Ary..Cmp
+inline i32 algo::U16Ary_Cmp(algo::U16Ary& lhs, algo::U16Ary& rhs) {
+    i32 retval = 0;
+    retval = ary_Cmp(lhs,rhs);
+    return retval;
+}
+
+// --- algo.U16Ary..Init
+// Set all fields to initial values.
+inline void algo::U16Ary_Init(algo::U16Ary& parent) {
+    parent.ary_elems 	= 0; // (algo.U16Ary.ary)
+    parent.ary_n     	= 0; // (algo.U16Ary.ary)
+    parent.ary_max   	= 0; // (algo.U16Ary.ary)
+}
+
+// --- algo.U16Ary..Eq
+inline bool algo::U16Ary_Eq(algo::U16Ary& lhs, algo::U16Ary& rhs) {
+    bool retval = true;
+    retval = ary_Eq(lhs,rhs);
+    return retval;
+}
+
+// --- algo.U16Ary..Ctor
+inline  algo::U16Ary::U16Ary() {
+    algo::U16Ary_Init(*this);
+}
+
+// --- algo.U16Ary..Dtor
+inline  algo::U16Ary::~U16Ary() {
+    algo::U16Ary_Uninit(*this);
+}
+
 // --- algo.U16Dec2.value.qSetDouble
 // Set value of field value.
 // The value is rounded to the nearest integer.
@@ -19220,6 +19164,166 @@ inline  algo::U16Dec2::U16Dec2() {
 inline  algo::U16Dec2::U16Dec2(u16 in_value)
     : value(in_value)
  {
+}
+
+// --- algo.U32Ary.ary.EmptyQ
+// Return true if index is empty
+inline bool algo::ary_EmptyQ(algo::U32Ary& parent) {
+    return parent.ary_n == 0;
+}
+
+// --- algo.U32Ary.ary.Find
+// Look up row by row id. Return NULL if out of range
+inline u32* algo::ary_Find(algo::U32Ary& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.ary_n;
+    if (idx >= lim) return NULL;
+    return parent.ary_elems + idx;
+}
+
+// --- algo.U32Ary.ary.Getary
+// Return array pointer by value
+inline algo::aryptr<u32> algo::ary_Getary(const algo::U32Ary& parent) {
+    return algo::aryptr<u32>(parent.ary_elems, parent.ary_n);
+}
+
+// --- algo.U32Ary.ary.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline u32* algo::ary_Last(algo::U32Ary& parent) {
+    return ary_Find(parent, u64(parent.ary_n-1));
+}
+
+// --- algo.U32Ary.ary.AssignAryptr
+// Copy from aryptr (operator=)
+inline void algo::U32Ary::operator =(const algo::aryptr<u32> &rhs) {
+    ary_Setary(*this, rhs);
+}
+
+// --- algo.U32Ary.ary.CtorAryptr
+inline  algo::U32Ary::U32Ary(const algo::aryptr<u32> &rhs) {
+    ary_elems 	= 0; // (algo.U32Ary.ary)
+    ary_n     	= 0; // (algo.U32Ary.ary)
+    ary_max   	= 0; // (algo.U32Ary.ary)
+    ary_Addary(*this, rhs);
+}
+
+// --- algo.U32Ary.ary.Max
+// Return max. number of items in the array
+inline i32 algo::ary_Max(algo::U32Ary& parent) {
+    (void)parent;
+    return parent.ary_max;
+}
+
+// --- algo.U32Ary.ary.N
+// Return number of items in the array
+inline i32 algo::ary_N(const algo::U32Ary& parent) {
+    return parent.ary_n;
+}
+
+// --- algo.U32Ary.ary.RemoveAll
+inline void algo::ary_RemoveAll(algo::U32Ary& parent) {
+    parent.ary_n = 0;
+}
+
+// --- algo.U32Ary.ary.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void algo::ary_Reserve(algo::U32Ary& parent, int n) {
+    u32 new_n = parent.ary_n + n;
+    if (UNLIKELY(new_n > parent.ary_max)) {
+        ary_AbsReserve(parent, new_n);
+    }
+}
+
+// --- algo.U32Ary.ary.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline u32& algo::ary_qFind(algo::U32Ary& parent, u64 t) {
+    return parent.ary_elems[t];
+}
+
+// --- algo.U32Ary.ary.qLast
+// Return reference to last element of array. No bounds checking
+inline u32& algo::ary_qLast(algo::U32Ary& parent) {
+    return ary_qFind(parent, u64(parent.ary_n-1));
+}
+
+// --- algo.U32Ary.ary.rowid_Get
+// Return row id of specified element
+inline u64 algo::ary_rowid_Get(algo::U32Ary& parent, u32 &elem) {
+    u64 id = &elem - parent.ary_elems;
+    return u64(id);
+}
+
+// --- algo.U32Ary.ary_curs.Next
+// proceed to next item
+inline void algo::U32Ary_ary_curs_Next(U32Ary_ary_curs &curs) {
+    curs.index++;
+}
+
+// --- algo.U32Ary.ary_curs.Reset
+inline void algo::U32Ary_ary_curs_Reset(U32Ary_ary_curs &curs, algo::U32Ary &parent) {
+    curs.elems = parent.ary_elems;
+    curs.n_elems = parent.ary_n;
+    curs.index = 0;
+}
+
+// --- algo.U32Ary.ary_curs.ValidQ
+// cursor points to valid item
+inline bool algo::U32Ary_ary_curs_ValidQ(U32Ary_ary_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- algo.U32Ary.ary_curs.Access
+// item access
+inline u32& algo::U32Ary_ary_curs_Access(U32Ary_ary_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- algo.U32Ary..Hash
+inline u32 algo::U32Ary_Hash(u32 prev, const algo::U32Ary& rhs) {
+    prev = strptr_Hash(prev, algo::strptr((char*)rhs.ary_elems,rhs.ary_n));
+    return prev;
+}
+
+// --- algo.U32Ary..EqOp
+inline bool algo::U32Ary::operator ==(const algo::U32Ary &rhs) const {
+    return algo::U32Ary_Eq(const_cast<algo::U32Ary&>(*this),const_cast<algo::U32Ary&>(rhs));
+}
+
+// --- algo.U32Ary..NeOp
+inline bool algo::U32Ary::operator !=(const algo::U32Ary &rhs) const {
+    return !algo::U32Ary_Eq(const_cast<algo::U32Ary&>(*this),const_cast<algo::U32Ary&>(rhs));
+}
+
+// --- algo.U32Ary..Cmp
+inline i32 algo::U32Ary_Cmp(algo::U32Ary& lhs, algo::U32Ary& rhs) {
+    i32 retval = 0;
+    retval = ary_Cmp(lhs,rhs);
+    return retval;
+}
+
+// --- algo.U32Ary..Init
+// Set all fields to initial values.
+inline void algo::U32Ary_Init(algo::U32Ary& parent) {
+    parent.ary_elems 	= 0; // (algo.U32Ary.ary)
+    parent.ary_n     	= 0; // (algo.U32Ary.ary)
+    parent.ary_max   	= 0; // (algo.U32Ary.ary)
+}
+
+// --- algo.U32Ary..Eq
+inline bool algo::U32Ary_Eq(algo::U32Ary& lhs, algo::U32Ary& rhs) {
+    bool retval = true;
+    retval = ary_Eq(lhs,rhs);
+    return retval;
+}
+
+// --- algo.U32Ary..Ctor
+inline  algo::U32Ary::U32Ary() {
+    algo::U32Ary_Init(*this);
+}
+
+// --- algo.U32Ary..Dtor
+inline  algo::U32Ary::~U32Ary() {
+    algo::U32Ary_Uninit(*this);
 }
 
 // --- algo.U32Dec1.value.qSetDouble
@@ -19532,6 +19636,87 @@ inline  algo::U32Dec5::U32Dec5(u32 in_value)
  {
 }
 
+// --- algo.U32LinearKey.value.Cast
+inline  algo::U32LinearKey::operator u32() const {
+    return u32((*this).value);
+}
+
+// --- algo.U32LinearKey..EqOp
+inline bool algo::U32LinearKey::operator ==(const algo::U32LinearKey &rhs) const {
+    return algo::U32LinearKey_Eq(const_cast<algo::U32LinearKey&>(*this),const_cast<algo::U32LinearKey&>(rhs));
+}
+
+// --- algo.U32LinearKey..NeOp
+inline bool algo::U32LinearKey::operator !=(const algo::U32LinearKey &rhs) const {
+    return !algo::U32LinearKey_Eq(const_cast<algo::U32LinearKey&>(*this),const_cast<algo::U32LinearKey&>(rhs));
+}
+
+// --- algo.U32LinearKey..LtOp
+inline bool algo::U32LinearKey::operator <(const algo::U32LinearKey &rhs) const {
+    return algo::U32LinearKey_Lt(const_cast<algo::U32LinearKey&>(*this),const_cast<algo::U32LinearKey&>(rhs));
+}
+
+// --- algo.U32LinearKey..GtOp
+inline bool algo::U32LinearKey::operator >(const algo::U32LinearKey &rhs) const {
+    return algo::U32LinearKey_Lt(const_cast<algo::U32LinearKey&>(rhs),const_cast<algo::U32LinearKey&>(*this));
+}
+
+// --- algo.U32LinearKey..LeOp
+inline bool algo::U32LinearKey::operator <=(const algo::U32LinearKey &rhs) const {
+    return !algo::U32LinearKey_Lt(const_cast<algo::U32LinearKey&>(rhs),const_cast<algo::U32LinearKey&>(*this));
+}
+
+// --- algo.U32LinearKey..GeOp
+inline bool algo::U32LinearKey::operator >=(const algo::U32LinearKey &rhs) const {
+    return !algo::U32LinearKey_Lt(const_cast<algo::U32LinearKey&>(*this),const_cast<algo::U32LinearKey&>(rhs));
+}
+
+// --- algo.U32LinearKey..Lt
+inline bool algo::U32LinearKey_Lt(algo::U32LinearKey lhs, algo::U32LinearKey rhs) {
+    return u32_Lt(lhs.value, rhs.value);
+}
+
+// --- algo.U32LinearKey..Cmp
+inline i32 algo::U32LinearKey_Cmp(algo::U32LinearKey lhs, algo::U32LinearKey rhs) {
+    i32 retval = 0;
+    retval = u32_Cmp(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- algo.U32LinearKey..Init
+// Set all fields to initial values.
+inline void algo::U32LinearKey_Init(algo::U32LinearKey& parent) {
+    parent.value = u32(0);
+}
+
+// --- algo.U32LinearKey..Eq
+inline bool algo::U32LinearKey_Eq(algo::U32LinearKey lhs, algo::U32LinearKey rhs) {
+    bool retval = true;
+    retval = u32_Eq(lhs.value, rhs.value);
+    return retval;
+}
+
+// --- algo.U32LinearKey..Update
+// Set value. Return true if new value is different from old value.
+inline bool algo::U32LinearKey_Update(algo::U32LinearKey &lhs, algo::U32LinearKey rhs) {
+    bool ret = !U32LinearKey_Eq(lhs, rhs); // compare values
+    if (ret) {
+        lhs = rhs; // update
+    }
+    return ret;
+}
+
+// --- algo.U32LinearKey..Ctor
+inline  algo::U32LinearKey::U32LinearKey() {
+    algo::U32LinearKey_Init(*this);
+}
+
+// --- algo.U32LinearKey..FieldwiseCtor
+inline  algo::U32LinearKey::U32LinearKey(u32 in_value)
+    : value(in_value)
+ {
+}
+
 // --- algo.U64Ary.ary.EmptyQ
 // Return true if index is empty
 inline bool algo::ary_EmptyQ(algo::U64Ary& parent) {
@@ -19644,12 +19829,44 @@ inline u64& algo::U64Ary_ary_curs_Access(U64Ary_ary_curs &curs) {
     return curs.elems[curs.index];
 }
 
+// --- algo.U64Ary..Hash
+inline u32 algo::U64Ary_Hash(u32 prev, const algo::U64Ary& rhs) {
+    ind_beg(U64Ary_ary_curs,elem,(algo::U64Ary&)rhs) {
+        prev = u64_Hash(prev,elem);
+    }ind_end;
+    return prev;
+}
+
+// --- algo.U64Ary..EqOp
+inline bool algo::U64Ary::operator ==(const algo::U64Ary &rhs) const {
+    return algo::U64Ary_Eq(const_cast<algo::U64Ary&>(*this),const_cast<algo::U64Ary&>(rhs));
+}
+
+// --- algo.U64Ary..NeOp
+inline bool algo::U64Ary::operator !=(const algo::U64Ary &rhs) const {
+    return !algo::U64Ary_Eq(const_cast<algo::U64Ary&>(*this),const_cast<algo::U64Ary&>(rhs));
+}
+
+// --- algo.U64Ary..Cmp
+inline i32 algo::U64Ary_Cmp(algo::U64Ary& lhs, algo::U64Ary& rhs) {
+    i32 retval = 0;
+    retval = ary_Cmp(lhs,rhs);
+    return retval;
+}
+
 // --- algo.U64Ary..Init
 // Set all fields to initial values.
 inline void algo::U64Ary_Init(algo::U64Ary& parent) {
     parent.ary_elems 	= 0; // (algo.U64Ary.ary)
     parent.ary_n     	= 0; // (algo.U64Ary.ary)
     parent.ary_max   	= 0; // (algo.U64Ary.ary)
+}
+
+// --- algo.U64Ary..Eq
+inline bool algo::U64Ary_Eq(algo::U64Ary& lhs, algo::U64Ary& rhs) {
+    bool retval = true;
+    retval = ary_Eq(lhs,rhs);
+    return retval;
 }
 
 // --- algo.U64Ary..Ctor
@@ -20968,6 +21185,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Bool &ro
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::ByteAry &row) {// cfmt:algo.ByteAry.String
+    algo::ByteAry_Print(const_cast<algo::ByteAry&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Comment &row) {// cfmt:algo.Comment.String
     algo::Comment_Print(const_cast<algo::Comment&>(row), str);
     return str;
@@ -21045,6 +21267,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::I32Dec4 
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::I32Dec5 &row) {// cfmt:algo.I32Dec5.String
     algo::I32Dec5_Print(const_cast<algo::I32Dec5&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::I32RangeAry &row) {// cfmt:algo.I32RangeAry.String
+    algo::I32RangeAry_Print(const_cast<algo::I32RangeAry&>(row), str);
     return str;
 }
 
@@ -21173,8 +21400,18 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::Tuple &r
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::U16Ary &row) {// cfmt:algo.U16Ary.String
+    algo::U16Ary_Print(const_cast<algo::U16Ary&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::U16Dec2 &row) {// cfmt:algo.U16Dec2.String
     algo::U16Dec2_Print(const_cast<algo::U16Dec2&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::U32Ary &row) {// cfmt:algo.U32Ary.String
+    algo::U32Ary_Print(const_cast<algo::U32Ary&>(row), str);
     return str;
 }
 
@@ -21200,6 +21437,16 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::U32Dec4 
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::U32Dec5 &row) {// cfmt:algo.U32Dec5.String
     algo::U32Dec5_Print(const_cast<algo::U32Dec5&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::U32LinearKey &row) {// cfmt:algo.U32LinearKey.String
+    algo::U32LinearKey_Print(const_cast<algo::U32LinearKey&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::U64Ary &row) {// cfmt:algo.U64Ary.String
+    algo::U64Ary_Print(const_cast<algo::U64Ary&>(row), str);
     return str;
 }
 
@@ -21280,5 +21527,10 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::WTime &r
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::i32_Range &row) {// cfmt:algo.i32_Range.String
     algo::i32_Range_Print(const_cast<algo::i32_Range&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo::memptr &row) {// cfmt:algo.memptr.String
+    algo::memptr_Print(const_cast<algo::memptr&>(row), str);
     return str;
 }

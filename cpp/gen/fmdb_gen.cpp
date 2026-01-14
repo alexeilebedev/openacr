@@ -113,73 +113,59 @@ bool fmdb::Alarm_ReadFieldMaybe(fmdb::Alarm& parent, algo::strptr field, algo::s
     switch(field_id) {
         case fmdb_FieldId_alarm: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.alarm, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_code: {
             retval = false;
-            break;
-        }
+        } break;
         case fmdb_FieldId_object: {
             retval = false;
-            break;
-        }
+        } break;
         case fmdb_FieldId_objtype: {
             retval = false;
-            break;
-        }
+        } break;
         case fmdb_FieldId_objinst: {
             retval = false;
-            break;
-        }
+        } break;
         case fmdb_FieldId_objprefix: {
             retval = false;
-            break;
-        }
+        } break;
         case fmdb_FieldId_flag: {
             retval = fm::Flag_ReadStrptrMaybe(parent.flag, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_severity: {
             retval = fm::Severity_ReadStrptrMaybe(parent.severity, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_n_occurred: {
             retval = i32_ReadStrptrMaybe(parent.n_occurred, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_first_time: {
             retval = algo::UnTime_ReadStrptrMaybe(parent.first_time, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_last_time: {
             retval = algo::UnTime_ReadStrptrMaybe(parent.last_time, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_clear_time: {
             retval = algo::UnTime_ReadStrptrMaybe(parent.clear_time, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_update_time: {
             retval = algo::UnTime_ReadStrptrMaybe(parent.update_time, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_objtype_summary: {
             retval = fm::Summary_ReadStrptrMaybe(parent.objtype_summary, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_summary: {
             retval = fm::Summary_ReadStrptrMaybe(parent.summary, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_description: {
             retval = fm::Description_ReadStrptrMaybe(parent.description, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_source: {
             retval = fm::Source_ReadStrptrMaybe(parent.source, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -257,21 +243,20 @@ bool fmdb::AlmCode_ReadFieldMaybe(fmdb::AlmCode& parent, algo::strptr field, alg
     switch(field_id) {
         case fmdb_FieldId_alm_code: {
             retval = fm::Code_ReadStrptrMaybe(parent.alm_code, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_severity: {
             retval = fm::Severity_ReadStrptrMaybe(parent.severity, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_source: {
             retval = fm::Source_ReadStrptrMaybe(parent.source, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_summary: {
             retval = fm::Summary_ReadStrptrMaybe(parent.summary, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -319,13 +304,14 @@ bool fmdb::AlmObjtype_ReadFieldMaybe(fmdb::AlmObjtype& parent, algo::strptr fiel
     switch(field_id) {
         case fmdb_FieldId_alm_objtype: {
             retval = fm::Objtype_ReadStrptrMaybe(parent.alm_objtype, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_summary: {
             retval = fm::Summary_ReadStrptrMaybe(parent.summary, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -367,13 +353,14 @@ bool fmdb::AlmSource_ReadFieldMaybe(fmdb::AlmSource& parent, algo::strptr field,
     switch(field_id) {
         case fmdb_FieldId_alm_source: {
             retval = fm::Source_ReadStrptrMaybe(parent.alm_source, strval);
-            break;
-        }
+        } break;
         case fmdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);

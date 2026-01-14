@@ -1,4 +1,4 @@
-## bin/update-hdr -
+## bin/update-hdr - Update copyright headers in all sources
 
 
 ### Sources

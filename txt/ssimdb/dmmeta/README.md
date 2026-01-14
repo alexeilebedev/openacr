@@ -19,6 +19,7 @@
 &#128196; [dmmeta.cget - Generate state functions for these ctypes](/txt/ssimdb/dmmeta/cget.md)<br/>
 &#128196; [dmmeta.charset - Generate functions to determine if a character is a member of a set](/txt/ssimdb/dmmeta/charset.md)<br/>
 &#128196; [dmmeta.chash - Generate hash function](/txt/ssimdb/dmmeta/chash.md)<br/>
+&#128196; [dmmeta.ckafka -](/txt/ssimdb/dmmeta/ckafka.md)<br/>
 &#128196; [dmmeta.cppfunc - Value of field provided by this expression](/txt/ssimdb/dmmeta/cppfunc.md)<br/>
 &#128196; [dmmeta.cppkeyword - Built-in C++ keyword](/txt/ssimdb/dmmeta/cppkeyword.md)<br/>
 &#128196; [dmmeta.cpptype - Specify whether a ctype can be passed by value, and other c++ options](/txt/ssimdb/dmmeta/cpptype.md)<br/>
@@ -42,6 +43,7 @@
 &#128196; [dmmeta.fbitset - Generate bitset functions over integer field or array](/txt/ssimdb/dmmeta/fbitset.md)<br/>
 &#128196; [dmmeta.fbuf - Buffer for reading/writing messages, works with Iohook](/txt/ssimdb/dmmeta/fbuf.md)<br/>
 &#128196; [dmmeta.fbufdir - Buffer direction (in,out)](/txt/ssimdb/dmmeta/fbufdir.md)<br/>
+&#128196; [dmmeta.fbufiotype - Underlying IO type](/txt/ssimdb/dmmeta/fbufiotype.md)<br/>
 &#128196; [dmmeta.fbuftype - Buffer type](/txt/ssimdb/dmmeta/fbuftype.md)<br/>
 &#128196; [dmmeta.fcast - Generate implicit conversion from field to c++ expression](/txt/ssimdb/dmmeta/fcast.md)<br/>
 &#128196; [dmmeta.fcleanup - Request user-implemented function to be called at Uninit time for a field](/txt/ssimdb/dmmeta/fcleanup.md)<br/>
@@ -58,6 +60,7 @@
 &#128196; [dmmeta.field - Specify field of a struct](/txt/ssimdb/dmmeta/field.md)<br/>
 &#128196; [dmmeta.findrem - Request generation of FindRemove function](/txt/ssimdb/dmmeta/findrem.md)<br/>
 &#128196; [dmmeta.finput - Describe input table of a program](/txt/ssimdb/dmmeta/finput.md)<br/>
+&#128196; [dmmeta.fkafka -](/txt/ssimdb/dmmeta/fkafka.md)<br/>
 &#128196; [dmmeta.fldoffset - Assert field offset - will result in compile-time error if violated](/txt/ssimdb/dmmeta/fldoffset.md)<br/>
 &#128196; [dmmeta.floadtuples - Request that process automatically load any input tables on startup](/txt/ssimdb/dmmeta/floadtuples.md)<br/>
 &#128196; [dmmeta.fnoremove - Omit any functions for removing elements from table; Table is append-only](/txt/ssimdb/dmmeta/fnoremove.md)<br/>
@@ -78,6 +81,8 @@
 &#128196; [dmmeta.hashtype - Hash function type](/txt/ssimdb/dmmeta/hashtype.md)<br/>
 &#128196; [dmmeta.hook - Required on Hook fields](/txt/ssimdb/dmmeta/hook.md)<br/>
 &#128196; [dmmeta.inlary - Generate inline array of fixed or variable length (all entries fit within parent struct)](/txt/ssimdb/dmmeta/inlary.md)<br/>
+&#128196; [dmmeta.jstype -](/txt/ssimdb/dmmeta/jstype.md)<br/>
+&#128196; [dmmeta.kafka_type_kind -](/txt/ssimdb/dmmeta/kafka_type_kind.md)<br/>
 &#128196; [dmmeta.lenfld - Specify which gives length of varlen portion in bytes](/txt/ssimdb/dmmeta/lenfld.md)<br/>
 &#128196; [dmmeta.listtype - Specify structure of linked list based on field prefix](/txt/ssimdb/dmmeta/listtype.md)<br/>
 &#128196; [dmmeta.llist - Options for Llist field](/txt/ssimdb/dmmeta/llist.md)<br/>
@@ -92,6 +97,7 @@
 &#128196; [dmmeta.nsdb - Annotate ssimdb namespaces](/txt/ssimdb/dmmeta/nsdb.md)<br/>
 &#128196; [dmmeta.nsfast - Whether namespace is FAST](/txt/ssimdb/dmmeta/nsfast.md)<br/>
 &#128196; [dmmeta.nsinclude - Explicitly specify a C++ include file for namespace](/txt/ssimdb/dmmeta/nsinclude.md)<br/>
+&#128196; [dmmeta.nsjs - Generate JavaScript code for this namespace](/txt/ssimdb/dmmeta/nsjs.md)<br/>
 &#128196; [dmmeta.nsproto - Annotate protocol namespace (collection of types, no state)](/txt/ssimdb/dmmeta/nsproto.md)<br/>
 &#128196; [dmmeta.nstype - Namespace type](/txt/ssimdb/dmmeta/nstype.md)<br/>
 &#128196; [dmmeta.nsversion - Namespace version](/txt/ssimdb/dmmeta/nsversion.md)<br/>
@@ -124,6 +130,7 @@
 &#128196; [dmmeta.tracefld - Trace fields](/txt/ssimdb/dmmeta/tracefld.md)<br/>
 &#128196; [dmmeta.tracerec - Trace record](/txt/ssimdb/dmmeta/tracerec.md)<br/>
 &#128196; [dmmeta.typefld - Specifies which field of a message carries the type](/txt/ssimdb/dmmeta/typefld.md)<br/>
+&#128196; [dmmeta.userfunc -](/txt/ssimdb/dmmeta/userfunc.md)<br/>
 &#128196; [dmmeta.usertracefld - Add custom user trace fields to process's trace struct](/txt/ssimdb/dmmeta/usertracefld.md)<br/>
 &#128196; [dmmeta.xref - Specify how to cross-reference (i.e. project, or group-by) one record with another](/txt/ssimdb/dmmeta/xref.md)<br/>
 

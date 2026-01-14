@@ -35,24 +35,24 @@
 #include "include/gen/dev_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_amcdb_gen.h"
 #include "include/gen/lib_amcdb_gen.inl.h"
 #include "include/gen/lib_ctype_gen.h"
 #include "include/gen/lib_ctype_gen.inl.h"
 #include "include/gen/lib_git_gen.h"
 #include "include/gen/lib_git_gen.inl.h"
-#include "include/gen/lib_json_gen.h"
-#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 algo_lib::FDb    algo_lib::_db;     // dependency found via dev.targdep
 lib_ctype::FDb   lib_ctype::_db;    // dependency found via dev.targdep
 lib_git::FDb     lib_git::_db;      // dependency found via dev.targdep
-lib_json::FDb    lib_json::_db;     // dependency found via dev.targdep
 apm::FDb         apm::_db;          // dependency found via dev.targdep
 
 namespace apm {
@@ -86,8 +86,8 @@ const char *apm_help =
 "    -data_in     string  \"data\"  Dataset from which package records are loaded\n"
 "    -e                           Open selected records in editor\n"
 "    -binpath     string  \"bin\"   (internal use)\n"
-"    -verbose     int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug       int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose     flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug       flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                        Print help and exit; alias -h\n"
 "    -version                     Print version and exit\n"
 "    -signature                   Show signatures and exit; alias -sig\n"
@@ -96,8 +96,6 @@ const char *apm_help =
 
 } // namespace apm
 namespace apm { // gen:ns_gsymbol
-    const algo::strptr dev_package_amc("amc");
-    const algo::strptr dev_package_apm("apm");
     const algo::strptr dev_package_openacr("openacr");
 } // gen:ns_gsymbol
 namespace apm { // gen:ns_print_proto
@@ -162,15 +160,11 @@ algo::Smallstr100 apm::name_Get(apm::FCtype& ctype) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void apm::c_field_Insert(apm::FCtype& ctype, apm::FField& row) {
-    if (bool_Update(row.ctype_c_field_in_ary,true)) {
-        // reserve space
+    if (!row.ctype_c_field_in_ary) {
         c_field_Reserve(ctype, 1);
-        u32 n  = ctype.c_field_n;
-        u32 at = n;
-        apm::FField* *elems = ctype.c_field_elems;
-        elems[at] = &row;
-        ctype.c_field_n = n+1;
-
+        u32 n  = ctype.c_field_n++;
+        ctype.c_field_elems[n] = &row;
+        row.ctype_c_field_in_ary = true;
     }
 }
 
@@ -179,7 +173,7 @@ void apm::c_field_Insert(apm::FCtype& ctype, apm::FField& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool apm::c_field_InsertMaybe(apm::FCtype& ctype, apm::FField& row) {
-    bool retval = !row.ctype_c_field_in_ary;
+    bool retval = !ctype_c_field_InAryQ(row);
     c_field_Insert(ctype,row); // check is performed in _Insert again
     return retval;
 }
@@ -187,18 +181,18 @@ bool apm::c_field_InsertMaybe(apm::FCtype& ctype, apm::FField& row) {
 // --- apm.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void apm::c_field_Remove(apm::FCtype& ctype, apm::FField& row) {
+    int n = ctype.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
-        int lim = ctype.c_field_n;
         apm::FField* *elems = ctype.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             apm::FField* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(apm::FField*) * (lim - j);
+                size_t nbytes = sizeof(apm::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_field_n = lim - 1;
+                ctype.c_field_n = n - 1;
                 break;
             }
         }
@@ -226,15 +220,11 @@ void apm::c_field_Reserve(apm::FCtype& ctype, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void apm::c_ssimreq_Insert(apm::FCtype& ctype, apm::FSsimreq& row) {
-    if (bool_Update(row.ctype_c_ssimreq_in_ary,true)) {
-        // reserve space
+    if (!row.ctype_c_ssimreq_in_ary) {
         c_ssimreq_Reserve(ctype, 1);
-        u32 n  = ctype.c_ssimreq_n;
-        u32 at = n;
-        apm::FSsimreq* *elems = ctype.c_ssimreq_elems;
-        elems[at] = &row;
-        ctype.c_ssimreq_n = n+1;
-
+        u32 n  = ctype.c_ssimreq_n++;
+        ctype.c_ssimreq_elems[n] = &row;
+        row.ctype_c_ssimreq_in_ary = true;
     }
 }
 
@@ -243,7 +233,7 @@ void apm::c_ssimreq_Insert(apm::FCtype& ctype, apm::FSsimreq& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool apm::c_ssimreq_InsertMaybe(apm::FCtype& ctype, apm::FSsimreq& row) {
-    bool retval = !row.ctype_c_ssimreq_in_ary;
+    bool retval = !ctype_c_ssimreq_InAryQ(row);
     c_ssimreq_Insert(ctype,row); // check is performed in _Insert again
     return retval;
 }
@@ -251,18 +241,18 @@ bool apm::c_ssimreq_InsertMaybe(apm::FCtype& ctype, apm::FSsimreq& row) {
 // --- apm.FCtype.c_ssimreq.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void apm::c_ssimreq_Remove(apm::FCtype& ctype, apm::FSsimreq& row) {
+    int n = ctype.c_ssimreq_n;
     if (bool_Update(row.ctype_c_ssimreq_in_ary,false)) {
-        int lim = ctype.c_ssimreq_n;
         apm::FSsimreq* *elems = ctype.c_ssimreq_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             apm::FSsimreq* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(apm::FSsimreq*) * (lim - j);
+                size_t nbytes = sizeof(apm::FSsimreq*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_ssimreq_n = lim - 1;
+                ctype.c_ssimreq_n = n - 1;
                 break;
             }
         }
@@ -393,9 +383,8 @@ void apm::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "apm: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -438,6 +427,9 @@ void apm::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:apm.FDb.cmdline
@@ -449,7 +441,7 @@ void apm::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -494,7 +486,7 @@ static void apm::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'apm.Input'  signature:'6cd9ce149ee2dcf2150fc77eec6ace0504e98b5a'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'apm.Input'  signature:'8e39e16efc1a10730e148e6d4ccba5b97e895ab6'");
 }
 
 // --- apm.FDb._db.InsertStrptrMaybe
@@ -605,8 +597,8 @@ bool apm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"dev.pkgdep"),recursive);
         retval = retval && apm::LoadTuplesFile(algo::SsimFname(root,"amcdb.bltin"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -858,14 +850,9 @@ apm::FPackage* apm::zd_sel_package_RemoveFirst() {
 // Find row by key. Return NULL if not found.
 apm::FPackage* apm::ind_package_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_package_buckets_n - 1);
-    apm::FPackage* *e = &_db.ind_package_buckets_elems[index];
-    apm::FPackage* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).package == key;
-        if (done) break;
-        e         = &ret->ind_package_next;
-    } while (true);
+    apm::FPackage *ret = _db.ind_package_buckets_elems[index];
+    for (; ret && !((*ret).package == key); ret = ret->ind_package_next) {
+    }
     return ret;
 }
 
@@ -897,10 +884,11 @@ apm::FPackage& apm::ind_package_GetOrCreate(const algo::strptr& key) {
 // --- apm.FDb.ind_package.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool apm::ind_package_InsertMaybe(apm::FPackage& row) {
-    ind_package_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_package_next == (apm::FPackage*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.package) & (_db.ind_package_buckets_n - 1);
+        row.ind_package_hashval = algo::Smallstr50_Hash(0, row.package);
+        ind_package_Reserve(1);
+        u32 index = row.ind_package_hashval & (_db.ind_package_buckets_n - 1);
         apm::FPackage* *prev = &_db.ind_package_buckets_elems[index];
         do {
             apm::FPackage* ret = *prev;
@@ -926,7 +914,7 @@ bool apm::ind_package_InsertMaybe(apm::FPackage& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void apm::ind_package_Remove(apm::FPackage& row) {
     if (LIKELY(row.ind_package_next != (apm::FPackage*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.package) & (_db.ind_package_buckets_n - 1);
+        u32 index = row.ind_package_hashval & (_db.ind_package_buckets_n - 1);
         apm::FPackage* *prev = &_db.ind_package_buckets_elems[index]; // addr of pointer to current element
         while (apm::FPackage *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -943,8 +931,14 @@ void apm::ind_package_Remove(apm::FPackage& row) {
 // --- apm.FDb.ind_package.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void apm::ind_package_Reserve(int n) {
+    ind_package_AbsReserve(_db.ind_package_n + n);
+}
+
+// --- apm.FDb.ind_package.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void apm::ind_package_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_package_buckets_n;
-    u32 new_nelems   = _db.ind_package_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -963,7 +957,7 @@ void apm::ind_package_Reserve(int n) {
             while (elem) {
                 apm::FPackage &row        = *elem;
                 apm::FPackage* next       = row.ind_package_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.package) & (new_nbuckets-1);
+                u32 index          = row.ind_package_hashval & (new_nbuckets-1);
                 row.ind_package_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1306,14 +1300,9 @@ bool apm::mergefile_XrefMaybe(apm::FMergefile &row) {
 // Find row by key. Return NULL if not found.
 apm::FMergefile* apm::ind_mergefile_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_mergefile_buckets_n - 1);
-    apm::FMergefile* *e = &_db.ind_mergefile_buckets_elems[index];
-    apm::FMergefile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).mergefile == key;
-        if (done) break;
-        e         = &ret->ind_mergefile_next;
-    } while (true);
+    apm::FMergefile *ret = _db.ind_mergefile_buckets_elems[index];
+    for (; ret && !((*ret).mergefile == key); ret = ret->ind_mergefile_next) {
+    }
     return ret;
 }
 
@@ -1345,10 +1334,11 @@ apm::FMergefile& apm::ind_mergefile_GetOrCreate(const algo::strptr& key) {
 // --- apm.FDb.ind_mergefile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool apm::ind_mergefile_InsertMaybe(apm::FMergefile& row) {
-    ind_mergefile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_mergefile_next == (apm::FMergefile*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.mergefile) & (_db.ind_mergefile_buckets_n - 1);
+        row.ind_mergefile_hashval = algo::cstring_Hash(0, row.mergefile);
+        ind_mergefile_Reserve(1);
+        u32 index = row.ind_mergefile_hashval & (_db.ind_mergefile_buckets_n - 1);
         apm::FMergefile* *prev = &_db.ind_mergefile_buckets_elems[index];
         do {
             apm::FMergefile* ret = *prev;
@@ -1374,7 +1364,7 @@ bool apm::ind_mergefile_InsertMaybe(apm::FMergefile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void apm::ind_mergefile_Remove(apm::FMergefile& row) {
     if (LIKELY(row.ind_mergefile_next != (apm::FMergefile*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.mergefile) & (_db.ind_mergefile_buckets_n - 1);
+        u32 index = row.ind_mergefile_hashval & (_db.ind_mergefile_buckets_n - 1);
         apm::FMergefile* *prev = &_db.ind_mergefile_buckets_elems[index]; // addr of pointer to current element
         while (apm::FMergefile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1391,8 +1381,14 @@ void apm::ind_mergefile_Remove(apm::FMergefile& row) {
 // --- apm.FDb.ind_mergefile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void apm::ind_mergefile_Reserve(int n) {
+    ind_mergefile_AbsReserve(_db.ind_mergefile_n + n);
+}
+
+// --- apm.FDb.ind_mergefile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void apm::ind_mergefile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_mergefile_buckets_n;
-    u32 new_nelems   = _db.ind_mergefile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1411,7 +1407,7 @@ void apm::ind_mergefile_Reserve(int n) {
             while (elem) {
                 apm::FMergefile &row        = *elem;
                 apm::FMergefile* next       = row.ind_mergefile_next;
-                u32 index          = algo::cstring_Hash(0, row.mergefile) & (new_nbuckets-1);
+                u32 index          = row.ind_mergefile_hashval & (new_nbuckets-1);
                 row.ind_mergefile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1428,14 +1424,9 @@ void apm::ind_mergefile_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 apm::FPkgkey* apm::ind_pkgkey_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_pkgkey_buckets_n - 1);
-    apm::FPkgkey* *e = &_db.ind_pkgkey_buckets_elems[index];
-    apm::FPkgkey* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).pkgkey == key;
-        if (done) break;
-        e         = &ret->ind_pkgkey_next;
-    } while (true);
+    apm::FPkgkey *ret = _db.ind_pkgkey_buckets_elems[index];
+    for (; ret && !((*ret).pkgkey == key); ret = ret->ind_pkgkey_next) {
+    }
     return ret;
 }
 
@@ -1450,10 +1441,11 @@ apm::FPkgkey& apm::ind_pkgkey_FindX(const algo::strptr& key) {
 // --- apm.FDb.ind_pkgkey.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool apm::ind_pkgkey_InsertMaybe(apm::FPkgkey& row) {
-    ind_pkgkey_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_pkgkey_next == (apm::FPkgkey*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr150_Hash(0, row.pkgkey) & (_db.ind_pkgkey_buckets_n - 1);
+        row.ind_pkgkey_hashval = algo::Smallstr150_Hash(0, row.pkgkey);
+        ind_pkgkey_Reserve(1);
+        u32 index = row.ind_pkgkey_hashval & (_db.ind_pkgkey_buckets_n - 1);
         apm::FPkgkey* *prev = &_db.ind_pkgkey_buckets_elems[index];
         do {
             apm::FPkgkey* ret = *prev;
@@ -1479,7 +1471,7 @@ bool apm::ind_pkgkey_InsertMaybe(apm::FPkgkey& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void apm::ind_pkgkey_Remove(apm::FPkgkey& row) {
     if (LIKELY(row.ind_pkgkey_next != (apm::FPkgkey*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr150_Hash(0, row.pkgkey) & (_db.ind_pkgkey_buckets_n - 1);
+        u32 index = row.ind_pkgkey_hashval & (_db.ind_pkgkey_buckets_n - 1);
         apm::FPkgkey* *prev = &_db.ind_pkgkey_buckets_elems[index]; // addr of pointer to current element
         while (apm::FPkgkey *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1496,8 +1488,14 @@ void apm::ind_pkgkey_Remove(apm::FPkgkey& row) {
 // --- apm.FDb.ind_pkgkey.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void apm::ind_pkgkey_Reserve(int n) {
+    ind_pkgkey_AbsReserve(_db.ind_pkgkey_n + n);
+}
+
+// --- apm.FDb.ind_pkgkey.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void apm::ind_pkgkey_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_pkgkey_buckets_n;
-    u32 new_nelems   = _db.ind_pkgkey_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1516,7 +1514,7 @@ void apm::ind_pkgkey_Reserve(int n) {
             while (elem) {
                 apm::FPkgkey &row        = *elem;
                 apm::FPkgkey* next       = row.ind_pkgkey_next;
-                u32 index          = algo::Smallstr150_Hash(0, row.pkgkey) & (new_nbuckets-1);
+                u32 index          = row.ind_pkgkey_hashval & (new_nbuckets-1);
                 row.ind_pkgkey_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1640,14 +1638,9 @@ bool apm::ctype_XrefMaybe(apm::FCtype &row) {
 // Find row by key. Return NULL if not found.
 apm::FCtype* apm::ind_ctype_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
-    apm::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
-    apm::FCtype* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ctype == key;
-        if (done) break;
-        e         = &ret->ind_ctype_next;
-    } while (true);
+    apm::FCtype *ret = _db.ind_ctype_buckets_elems[index];
+    for (; ret && !((*ret).ctype == key); ret = ret->ind_ctype_next) {
+    }
     return ret;
 }
 
@@ -1679,10 +1672,11 @@ apm::FCtype& apm::ind_ctype_GetOrCreate(const algo::strptr& key) {
 // --- apm.FDb.ind_ctype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool apm::ind_ctype_InsertMaybe(apm::FCtype& row) {
-    ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (apm::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        row.ind_ctype_hashval = algo::Smallstr100_Hash(0, row.ctype);
+        ind_ctype_Reserve(1);
+        u32 index = row.ind_ctype_hashval & (_db.ind_ctype_buckets_n - 1);
         apm::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             apm::FCtype* ret = *prev;
@@ -1708,7 +1702,7 @@ bool apm::ind_ctype_InsertMaybe(apm::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void apm::ind_ctype_Remove(apm::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (apm::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = row.ind_ctype_hashval & (_db.ind_ctype_buckets_n - 1);
         apm::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (apm::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1725,8 +1719,14 @@ void apm::ind_ctype_Remove(apm::FCtype& row) {
 // --- apm.FDb.ind_ctype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void apm::ind_ctype_Reserve(int n) {
+    ind_ctype_AbsReserve(_db.ind_ctype_n + n);
+}
+
+// --- apm.FDb.ind_ctype.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void apm::ind_ctype_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ctype_buckets_n;
-    u32 new_nelems   = _db.ind_ctype_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1745,7 +1745,7 @@ void apm::ind_ctype_Reserve(int n) {
             while (elem) {
                 apm::FCtype &row        = *elem;
                 apm::FCtype* next       = row.ind_ctype_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = row.ind_ctype_hashval & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1891,14 +1891,9 @@ bool apm::field_XrefMaybe(apm::FField &row) {
 // Find row by key. Return NULL if not found.
 apm::FField* apm::ind_field_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
-    apm::FField* *e = &_db.ind_field_buckets_elems[index];
-    apm::FField* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).field == key;
-        if (done) break;
-        e         = &ret->ind_field_next;
-    } while (true);
+    apm::FField *ret = _db.ind_field_buckets_elems[index];
+    for (; ret && !((*ret).field == key); ret = ret->ind_field_next) {
+    }
     return ret;
 }
 
@@ -1913,10 +1908,11 @@ apm::FField& apm::ind_field_FindX(const algo::strptr& key) {
 // --- apm.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool apm::ind_field_InsertMaybe(apm::FField& row) {
-    ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (apm::FField*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        row.ind_field_hashval = algo::Smallstr100_Hash(0, row.field);
+        ind_field_Reserve(1);
+        u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         apm::FField* *prev = &_db.ind_field_buckets_elems[index];
         do {
             apm::FField* ret = *prev;
@@ -1942,7 +1938,7 @@ bool apm::ind_field_InsertMaybe(apm::FField& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void apm::ind_field_Remove(apm::FField& row) {
     if (LIKELY(row.ind_field_next != (apm::FField*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         apm::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
         while (apm::FField *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1959,8 +1955,14 @@ void apm::ind_field_Remove(apm::FField& row) {
 // --- apm.FDb.ind_field.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void apm::ind_field_Reserve(int n) {
+    ind_field_AbsReserve(_db.ind_field_n + n);
+}
+
+// --- apm.FDb.ind_field.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void apm::ind_field_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_field_buckets_n;
-    u32 new_nelems   = _db.ind_field_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1979,7 +1981,7 @@ void apm::ind_field_Reserve(int n) {
             while (elem) {
                 apm::FField &row        = *elem;
                 apm::FField* next       = row.ind_field_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = row.ind_field_hashval & (new_nbuckets-1);
                 row.ind_field_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2121,14 +2123,9 @@ bool apm::ssimfile_XrefMaybe(apm::FSsimfile &row) {
 // Find row by key. Return NULL if not found.
 apm::FSsimfile* apm::ind_ssimfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
-    apm::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
-    apm::FSsimfile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ssimfile == key;
-        if (done) break;
-        e         = &ret->ind_ssimfile_next;
-    } while (true);
+    apm::FSsimfile *ret = _db.ind_ssimfile_buckets_elems[index];
+    for (; ret && !((*ret).ssimfile == key); ret = ret->ind_ssimfile_next) {
+    }
     return ret;
 }
 
@@ -2143,10 +2140,11 @@ apm::FSsimfile& apm::ind_ssimfile_FindX(const algo::strptr& key) {
 // --- apm.FDb.ind_ssimfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool apm::ind_ssimfile_InsertMaybe(apm::FSsimfile& row) {
-    ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (apm::FSsimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        row.ind_ssimfile_hashval = algo::Smallstr50_Hash(0, row.ssimfile);
+        ind_ssimfile_Reserve(1);
+        u32 index = row.ind_ssimfile_hashval & (_db.ind_ssimfile_buckets_n - 1);
         apm::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index];
         do {
             apm::FSsimfile* ret = *prev;
@@ -2172,7 +2170,7 @@ bool apm::ind_ssimfile_InsertMaybe(apm::FSsimfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void apm::ind_ssimfile_Remove(apm::FSsimfile& row) {
     if (LIKELY(row.ind_ssimfile_next != (apm::FSsimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = row.ind_ssimfile_hashval & (_db.ind_ssimfile_buckets_n - 1);
         apm::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
         while (apm::FSsimfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2189,8 +2187,14 @@ void apm::ind_ssimfile_Remove(apm::FSsimfile& row) {
 // --- apm.FDb.ind_ssimfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void apm::ind_ssimfile_Reserve(int n) {
+    ind_ssimfile_AbsReserve(_db.ind_ssimfile_n + n);
+}
+
+// --- apm.FDb.ind_ssimfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void apm::ind_ssimfile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ssimfile_buckets_n;
-    u32 new_nelems   = _db.ind_ssimfile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2209,7 +2213,7 @@ void apm::ind_ssimfile_Reserve(int n) {
             while (elem) {
                 apm::FSsimfile &row        = *elem;
                 apm::FSsimfile* next       = row.ind_ssimfile_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
+                u32 index          = row.ind_ssimfile_hashval & (new_nbuckets-1);
                 row.ind_ssimfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2343,14 +2347,9 @@ bool apm::rec_XrefMaybe(apm::FRec &row) {
 // Find row by key. Return NULL if not found.
 apm::FRec* apm::ind_rec_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_rec_buckets_n - 1);
-    apm::FRec* *e = &_db.ind_rec_buckets_elems[index];
-    apm::FRec* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).rec == key;
-        if (done) break;
-        e         = &ret->ind_rec_next;
-    } while (true);
+    apm::FRec *ret = _db.ind_rec_buckets_elems[index];
+    for (; ret && !((*ret).rec == key); ret = ret->ind_rec_next) {
+    }
     return ret;
 }
 
@@ -2365,10 +2364,11 @@ apm::FRec& apm::ind_rec_FindX(const algo::strptr& key) {
 // --- apm.FDb.ind_rec.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool apm::ind_rec_InsertMaybe(apm::FRec& row) {
-    ind_rec_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_rec_next == (apm::FRec*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.rec) & (_db.ind_rec_buckets_n - 1);
+        row.ind_rec_hashval = algo::cstring_Hash(0, row.rec);
+        ind_rec_Reserve(1);
+        u32 index = row.ind_rec_hashval & (_db.ind_rec_buckets_n - 1);
         apm::FRec* *prev = &_db.ind_rec_buckets_elems[index];
         do {
             apm::FRec* ret = *prev;
@@ -2394,7 +2394,7 @@ bool apm::ind_rec_InsertMaybe(apm::FRec& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void apm::ind_rec_Remove(apm::FRec& row) {
     if (LIKELY(row.ind_rec_next != (apm::FRec*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.rec) & (_db.ind_rec_buckets_n - 1);
+        u32 index = row.ind_rec_hashval & (_db.ind_rec_buckets_n - 1);
         apm::FRec* *prev = &_db.ind_rec_buckets_elems[index]; // addr of pointer to current element
         while (apm::FRec *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2411,8 +2411,14 @@ void apm::ind_rec_Remove(apm::FRec& row) {
 // --- apm.FDb.ind_rec.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void apm::ind_rec_Reserve(int n) {
+    ind_rec_AbsReserve(_db.ind_rec_n + n);
+}
+
+// --- apm.FDb.ind_rec.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void apm::ind_rec_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_rec_buckets_n;
-    u32 new_nelems   = _db.ind_rec_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2431,7 +2437,7 @@ void apm::ind_rec_Reserve(int n) {
             while (elem) {
                 apm::FRec &row        = *elem;
                 apm::FRec* next       = row.ind_rec_next;
-                u32 index          = algo::cstring_Hash(0, row.rec) & (new_nbuckets-1);
+                u32 index          = row.ind_rec_hashval & (new_nbuckets-1);
                 row.ind_rec_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3194,14 +3200,9 @@ bool apm::mkdir_XrefMaybe(apm::FMkdir &row) {
 // Find row by key. Return NULL if not found.
 apm::FMkdir* apm::ind_mkdir_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_mkdir_buckets_n - 1);
-    apm::FMkdir* *e = &_db.ind_mkdir_buckets_elems[index];
-    apm::FMkdir* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).mkdir == key;
-        if (done) break;
-        e         = &ret->ind_mkdir_next;
-    } while (true);
+    apm::FMkdir *ret = _db.ind_mkdir_buckets_elems[index];
+    for (; ret && !((*ret).mkdir == key); ret = ret->ind_mkdir_next) {
+    }
     return ret;
 }
 
@@ -3233,10 +3234,11 @@ apm::FMkdir& apm::ind_mkdir_GetOrCreate(const algo::strptr& key) {
 // --- apm.FDb.ind_mkdir.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool apm::ind_mkdir_InsertMaybe(apm::FMkdir& row) {
-    ind_mkdir_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_mkdir_next == (apm::FMkdir*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.mkdir) & (_db.ind_mkdir_buckets_n - 1);
+        row.ind_mkdir_hashval = algo::cstring_Hash(0, row.mkdir);
+        ind_mkdir_Reserve(1);
+        u32 index = row.ind_mkdir_hashval & (_db.ind_mkdir_buckets_n - 1);
         apm::FMkdir* *prev = &_db.ind_mkdir_buckets_elems[index];
         do {
             apm::FMkdir* ret = *prev;
@@ -3262,7 +3264,7 @@ bool apm::ind_mkdir_InsertMaybe(apm::FMkdir& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void apm::ind_mkdir_Remove(apm::FMkdir& row) {
     if (LIKELY(row.ind_mkdir_next != (apm::FMkdir*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.mkdir) & (_db.ind_mkdir_buckets_n - 1);
+        u32 index = row.ind_mkdir_hashval & (_db.ind_mkdir_buckets_n - 1);
         apm::FMkdir* *prev = &_db.ind_mkdir_buckets_elems[index]; // addr of pointer to current element
         while (apm::FMkdir *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3279,8 +3281,14 @@ void apm::ind_mkdir_Remove(apm::FMkdir& row) {
 // --- apm.FDb.ind_mkdir.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void apm::ind_mkdir_Reserve(int n) {
+    ind_mkdir_AbsReserve(_db.ind_mkdir_n + n);
+}
+
+// --- apm.FDb.ind_mkdir.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void apm::ind_mkdir_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_mkdir_buckets_n;
-    u32 new_nelems   = _db.ind_mkdir_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -3299,7 +3307,7 @@ void apm::ind_mkdir_Reserve(int n) {
             while (elem) {
                 apm::FMkdir &row        = *elem;
                 apm::FMkdir* next       = row.ind_mkdir_next;
-                u32 index          = algo::cstring_Hash(0, row.mkdir) & (new_nbuckets-1);
+                u32 index          = row.ind_mkdir_hashval & (new_nbuckets-1);
                 row.ind_mkdir_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3744,6 +3752,7 @@ void apm::FField_Init(apm::FField& field) {
     field.p_arg = NULL;
     field.ctype_c_field_in_ary = bool(false);
     field.ind_field_next = (apm::FField*)-1; // (apm.FDb.ind_field) not-in-hash
+    field.ind_field_hashval = 0; // stored hash value
 }
 
 // --- apm.FField..Uninit
@@ -3836,12 +3845,12 @@ void apm::package_CopyIn(apm::FPackage &row, dev::Package &in) {
 // --- apm.FPackage.zd_pkgkey.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void apm::zd_pkgkey_Insert(apm::FPackage& package, apm::FPkgkey& row) {
-    if (!zd_pkgkey_InLlistQ(row)) {
+    if (!package_zd_pkgkey_InLlistQ(row)) {
         apm::FPkgkey* old_tail = package.zd_pkgkey_tail;
-        row.zd_pkgkey_next = NULL;
-        row.zd_pkgkey_prev = old_tail;
+        row.package_zd_pkgkey_next = NULL;
+        row.package_zd_pkgkey_prev = old_tail;
         package.zd_pkgkey_tail = &row;
-        apm::FPkgkey **new_row_a = &old_tail->zd_pkgkey_next;
+        apm::FPkgkey **new_row_a = &old_tail->package_zd_pkgkey_next;
         apm::FPkgkey **new_row_b = &package.zd_pkgkey_head;
         apm::FPkgkey **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -3852,23 +3861,23 @@ void apm::zd_pkgkey_Insert(apm::FPackage& package, apm::FPkgkey& row) {
 // --- apm.FPackage.zd_pkgkey.Remove
 // Remove element from index. If element is not in index, do nothing.
 void apm::zd_pkgkey_Remove(apm::FPackage& package, apm::FPkgkey& row) {
-    if (zd_pkgkey_InLlistQ(row)) {
+    if (package_zd_pkgkey_InLlistQ(row)) {
         apm::FPkgkey* old_head       = package.zd_pkgkey_head;
         (void)old_head; // in case it's not used
-        apm::FPkgkey* prev = row.zd_pkgkey_prev;
-        apm::FPkgkey* next = row.zd_pkgkey_next;
+        apm::FPkgkey* prev = row.package_zd_pkgkey_prev;
+        apm::FPkgkey* next = row.package_zd_pkgkey_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        apm::FPkgkey **new_next_a = &prev->zd_pkgkey_next;
+        apm::FPkgkey **new_next_a = &prev->package_zd_pkgkey_next;
         apm::FPkgkey **new_next_b = &package.zd_pkgkey_head;
         apm::FPkgkey **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        apm::FPkgkey **new_prev_a = &next->zd_pkgkey_prev;
+        apm::FPkgkey **new_prev_a = &next->package_zd_pkgkey_prev;
         apm::FPkgkey **new_prev_b = &package.zd_pkgkey_tail;
         apm::FPkgkey **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         package.zd_pkgkey_n--;
-        row.zd_pkgkey_next=(apm::FPkgkey*)-1; // not-in-list
+        row.package_zd_pkgkey_next=(apm::FPkgkey*)-1; // not-in-list
     }
 }
 
@@ -3880,9 +3889,9 @@ void apm::zd_pkgkey_RemoveAll(apm::FPackage& package) {
     package.zd_pkgkey_tail = NULL;
     package.zd_pkgkey_n = 0;
     while (row) {
-        apm::FPkgkey* row_next = row->zd_pkgkey_next;
-        row->zd_pkgkey_next  = (apm::FPkgkey*)-1;
-        row->zd_pkgkey_prev  = NULL;
+        apm::FPkgkey* row_next = row->package_zd_pkgkey_next;
+        row->package_zd_pkgkey_next  = (apm::FPkgkey*)-1;
+        row->package_zd_pkgkey_prev  = NULL;
         row = row_next;
     }
 }
@@ -3893,14 +3902,14 @@ apm::FPkgkey* apm::zd_pkgkey_RemoveFirst(apm::FPackage& package) {
     apm::FPkgkey *row = NULL;
     row = package.zd_pkgkey_head;
     if (row) {
-        apm::FPkgkey *next = row->zd_pkgkey_next;
+        apm::FPkgkey *next = row->package_zd_pkgkey_next;
         package.zd_pkgkey_head = next;
-        apm::FPkgkey **new_end_a = &next->zd_pkgkey_prev;
+        apm::FPkgkey **new_end_a = &next->package_zd_pkgkey_prev;
         apm::FPkgkey **new_end_b = &package.zd_pkgkey_tail;
         apm::FPkgkey **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         package.zd_pkgkey_n--;
-        row->zd_pkgkey_next = (apm::FPkgkey*)-1; // mark as not-in-list
+        row->package_zd_pkgkey_next = (apm::FPkgkey*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -3909,15 +3918,11 @@ apm::FPkgkey* apm::zd_pkgkey_RemoveFirst(apm::FPackage& package) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void apm::c_pkgdep_Insert(apm::FPackage& package, apm::FPkgdep& row) {
-    if (bool_Update(row.package_c_pkgdep_in_ary,true)) {
-        // reserve space
+    if (!row.package_c_pkgdep_in_ary) {
         c_pkgdep_Reserve(package, 1);
-        u32 n  = package.c_pkgdep_n;
-        u32 at = n;
-        apm::FPkgdep* *elems = package.c_pkgdep_elems;
-        elems[at] = &row;
-        package.c_pkgdep_n = n+1;
-
+        u32 n  = package.c_pkgdep_n++;
+        package.c_pkgdep_elems[n] = &row;
+        row.package_c_pkgdep_in_ary = true;
     }
 }
 
@@ -3926,7 +3931,7 @@ void apm::c_pkgdep_Insert(apm::FPackage& package, apm::FPkgdep& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool apm::c_pkgdep_InsertMaybe(apm::FPackage& package, apm::FPkgdep& row) {
-    bool retval = !row.package_c_pkgdep_in_ary;
+    bool retval = !package_c_pkgdep_InAryQ(row);
     c_pkgdep_Insert(package,row); // check is performed in _Insert again
     return retval;
 }
@@ -3934,18 +3939,18 @@ bool apm::c_pkgdep_InsertMaybe(apm::FPackage& package, apm::FPkgdep& row) {
 // --- apm.FPackage.c_pkgdep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void apm::c_pkgdep_Remove(apm::FPackage& package, apm::FPkgdep& row) {
+    int n = package.c_pkgdep_n;
     if (bool_Update(row.package_c_pkgdep_in_ary,false)) {
-        int lim = package.c_pkgdep_n;
         apm::FPkgdep* *elems = package.c_pkgdep_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             apm::FPkgdep* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(apm::FPkgdep*) * (lim - j);
+                size_t nbytes = sizeof(apm::FPkgdep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                package.c_pkgdep_n = lim - 1;
+                package.c_pkgdep_n = n - 1;
                 break;
             }
         }
@@ -3973,15 +3978,11 @@ void apm::c_pkgdep_Reserve(apm::FPackage& package, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void apm::c_pkgdep_parent_Insert(apm::FPackage& package, apm::FPkgdep& row) {
-    if (bool_Update(row.package_c_pkgdep_parent_in_ary,true)) {
-        // reserve space
+    if (!row.package_c_pkgdep_parent_in_ary) {
         c_pkgdep_parent_Reserve(package, 1);
-        u32 n  = package.c_pkgdep_parent_n;
-        u32 at = n;
-        apm::FPkgdep* *elems = package.c_pkgdep_parent_elems;
-        elems[at] = &row;
-        package.c_pkgdep_parent_n = n+1;
-
+        u32 n  = package.c_pkgdep_parent_n++;
+        package.c_pkgdep_parent_elems[n] = &row;
+        row.package_c_pkgdep_parent_in_ary = true;
     }
 }
 
@@ -3990,7 +3991,7 @@ void apm::c_pkgdep_parent_Insert(apm::FPackage& package, apm::FPkgdep& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool apm::c_pkgdep_parent_InsertMaybe(apm::FPackage& package, apm::FPkgdep& row) {
-    bool retval = !row.package_c_pkgdep_parent_in_ary;
+    bool retval = !package_c_pkgdep_parent_InAryQ(row);
     c_pkgdep_parent_Insert(package,row); // check is performed in _Insert again
     return retval;
 }
@@ -3998,18 +3999,18 @@ bool apm::c_pkgdep_parent_InsertMaybe(apm::FPackage& package, apm::FPkgdep& row)
 // --- apm.FPackage.c_pkgdep_parent.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void apm::c_pkgdep_parent_Remove(apm::FPackage& package, apm::FPkgdep& row) {
+    int n = package.c_pkgdep_parent_n;
     if (bool_Update(row.package_c_pkgdep_parent_in_ary,false)) {
-        int lim = package.c_pkgdep_parent_n;
         apm::FPkgdep* *elems = package.c_pkgdep_parent_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             apm::FPkgdep* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(apm::FPkgdep*) * (lim - j);
+                size_t nbytes = sizeof(apm::FPkgdep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                package.c_pkgdep_parent_n = lim - 1;
+                package.c_pkgdep_parent_n = n - 1;
                 break;
             }
         }
@@ -4036,12 +4037,12 @@ void apm::c_pkgdep_parent_Reserve(apm::FPackage& package, u32 n) {
 // --- apm.FPackage.zd_pkgrec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void apm::zd_pkgrec_Insert(apm::FPackage& package, apm::FPkgrec& row) {
-    if (!zd_pkgrec_InLlistQ(row)) {
+    if (!package_zd_pkgrec_InLlistQ(row)) {
         apm::FPkgrec* old_tail = package.zd_pkgrec_tail;
-        row.zd_pkgrec_next = NULL;
-        row.zd_pkgrec_prev = old_tail;
+        row.package_zd_pkgrec_next = NULL;
+        row.package_zd_pkgrec_prev = old_tail;
         package.zd_pkgrec_tail = &row;
-        apm::FPkgrec **new_row_a = &old_tail->zd_pkgrec_next;
+        apm::FPkgrec **new_row_a = &old_tail->package_zd_pkgrec_next;
         apm::FPkgrec **new_row_b = &package.zd_pkgrec_head;
         apm::FPkgrec **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -4052,23 +4053,23 @@ void apm::zd_pkgrec_Insert(apm::FPackage& package, apm::FPkgrec& row) {
 // --- apm.FPackage.zd_pkgrec.Remove
 // Remove element from index. If element is not in index, do nothing.
 void apm::zd_pkgrec_Remove(apm::FPackage& package, apm::FPkgrec& row) {
-    if (zd_pkgrec_InLlistQ(row)) {
+    if (package_zd_pkgrec_InLlistQ(row)) {
         apm::FPkgrec* old_head       = package.zd_pkgrec_head;
         (void)old_head; // in case it's not used
-        apm::FPkgrec* prev = row.zd_pkgrec_prev;
-        apm::FPkgrec* next = row.zd_pkgrec_next;
+        apm::FPkgrec* prev = row.package_zd_pkgrec_prev;
+        apm::FPkgrec* next = row.package_zd_pkgrec_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        apm::FPkgrec **new_next_a = &prev->zd_pkgrec_next;
+        apm::FPkgrec **new_next_a = &prev->package_zd_pkgrec_next;
         apm::FPkgrec **new_next_b = &package.zd_pkgrec_head;
         apm::FPkgrec **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        apm::FPkgrec **new_prev_a = &next->zd_pkgrec_prev;
+        apm::FPkgrec **new_prev_a = &next->package_zd_pkgrec_prev;
         apm::FPkgrec **new_prev_b = &package.zd_pkgrec_tail;
         apm::FPkgrec **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         package.zd_pkgrec_n--;
-        row.zd_pkgrec_next=(apm::FPkgrec*)-1; // not-in-list
+        row.package_zd_pkgrec_next=(apm::FPkgrec*)-1; // not-in-list
     }
 }
 
@@ -4080,9 +4081,9 @@ void apm::zd_pkgrec_RemoveAll(apm::FPackage& package) {
     package.zd_pkgrec_tail = NULL;
     package.zd_pkgrec_n = 0;
     while (row) {
-        apm::FPkgrec* row_next = row->zd_pkgrec_next;
-        row->zd_pkgrec_next  = (apm::FPkgrec*)-1;
-        row->zd_pkgrec_prev  = NULL;
+        apm::FPkgrec* row_next = row->package_zd_pkgrec_next;
+        row->package_zd_pkgrec_next  = (apm::FPkgrec*)-1;
+        row->package_zd_pkgrec_prev  = NULL;
         row = row_next;
     }
 }
@@ -4093,14 +4094,14 @@ apm::FPkgrec* apm::zd_pkgrec_RemoveFirst(apm::FPackage& package) {
     apm::FPkgrec *row = NULL;
     row = package.zd_pkgrec_head;
     if (row) {
-        apm::FPkgrec *next = row->zd_pkgrec_next;
+        apm::FPkgrec *next = row->package_zd_pkgrec_next;
         package.zd_pkgrec_head = next;
-        apm::FPkgrec **new_end_a = &next->zd_pkgrec_prev;
+        apm::FPkgrec **new_end_a = &next->package_zd_pkgrec_prev;
         apm::FPkgrec **new_end_b = &package.zd_pkgrec_tail;
         apm::FPkgrec **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         package.zd_pkgrec_n--;
-        row->zd_pkgrec_next = (apm::FPkgrec*)-1; // mark as not-in-list
+        row->package_zd_pkgrec_next = (apm::FPkgrec*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -4190,15 +4191,11 @@ algo::Smallstr150 apm::key_Get(apm::FPkgkey& pkgkey) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void apm::c_pkgrec_Insert(apm::FPkgkey& pkgkey, apm::FPkgrec& row) {
-    if (bool_Update(row.pkgkey_c_pkgrec_in_ary,true)) {
-        // reserve space
+    if (!row.pkgkey_c_pkgrec_in_ary) {
         c_pkgrec_Reserve(pkgkey, 1);
-        u32 n  = pkgkey.c_pkgrec_n;
-        u32 at = n;
-        apm::FPkgrec* *elems = pkgkey.c_pkgrec_elems;
-        elems[at] = &row;
-        pkgkey.c_pkgrec_n = n+1;
-
+        u32 n  = pkgkey.c_pkgrec_n++;
+        pkgkey.c_pkgrec_elems[n] = &row;
+        row.pkgkey_c_pkgrec_in_ary = true;
     }
 }
 
@@ -4207,7 +4204,7 @@ void apm::c_pkgrec_Insert(apm::FPkgkey& pkgkey, apm::FPkgrec& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool apm::c_pkgrec_InsertMaybe(apm::FPkgkey& pkgkey, apm::FPkgrec& row) {
-    bool retval = !row.pkgkey_c_pkgrec_in_ary;
+    bool retval = !pkgkey_c_pkgrec_InAryQ(row);
     c_pkgrec_Insert(pkgkey,row); // check is performed in _Insert again
     return retval;
 }
@@ -4215,18 +4212,18 @@ bool apm::c_pkgrec_InsertMaybe(apm::FPkgkey& pkgkey, apm::FPkgrec& row) {
 // --- apm.FPkgkey.c_pkgrec.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void apm::c_pkgrec_Remove(apm::FPkgkey& pkgkey, apm::FPkgrec& row) {
+    int n = pkgkey.c_pkgrec_n;
     if (bool_Update(row.pkgkey_c_pkgrec_in_ary,false)) {
-        int lim = pkgkey.c_pkgrec_n;
         apm::FPkgrec* *elems = pkgkey.c_pkgrec_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             apm::FPkgrec* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(apm::FPkgrec*) * (lim - j);
+                size_t nbytes = sizeof(apm::FPkgrec*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                pkgkey.c_pkgrec_n = lim - 1;
+                pkgkey.c_pkgrec_n = n - 1;
                 break;
             }
         }
@@ -4284,14 +4281,9 @@ void apm::FPkgrec_Uninit(apm::FPkgrec& pkgrec) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void apm::c_child_Insert(apm::FRec& rec, apm::FRec& row) {
-    // reserve space
     c_child_Reserve(rec, 1);
-    u32 n  = rec.c_child_n;
-    u32 at = n;
-    apm::FRec* *elems = rec.c_child_elems;
-    elems[at] = &row;
-    rec.c_child_n = n+1;
-
+    u32 n  = rec.c_child_n++;
+    rec.c_child_elems[n] = &row;
 }
 
 // --- apm.FRec.c_child.ScanInsertMaybe
@@ -4320,20 +4312,18 @@ bool apm::c_child_ScanInsertMaybe(apm::FRec& rec, apm::FRec& row) {
 // --- apm.FRec.c_child.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void apm::c_child_Remove(apm::FRec& rec, apm::FRec& row) {
-    int lim = rec.c_child_n;
-    apm::FRec* *elems = rec.c_child_elems;
-    // search backward, so that most recently added element is found first.
-    // if found, shift array.
-    for (int i = lim-1; i>=0; i--) {
-        apm::FRec* elem = elems[i]; // fetch element
-        if (elem == &row) {
-            int j = i + 1;
-            size_t nbytes = sizeof(apm::FRec*) * (lim - j);
-            memmove(elems + i, elems + j, nbytes);
-            rec.c_child_n = lim - 1;
-            break;
+    int n = rec.c_child_n;
+    int j=0;
+    for (int i=0; i<n; i++) {
+        if (rec.c_child_elems[i] == &row) {
+        } else {
+            if (j != i) {
+                rec.c_child_elems[j] = rec.c_child_elems[i];
+            }
+            j++;
         }
     }
+    rec.c_child_n = j;
 }
 
 // --- apm.FRec.c_child.Reserve
@@ -4364,12 +4354,12 @@ void apm::zd_rec_pkgrec_Cascdel(apm::FRec& rec) {
 // --- apm.FRec.zd_rec_pkgrec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void apm::zd_rec_pkgrec_Insert(apm::FRec& rec, apm::FPkgrec& row) {
-    if (!zd_rec_pkgrec_InLlistQ(row)) {
+    if (!rec_zd_rec_pkgrec_InLlistQ(row)) {
         apm::FPkgrec* old_tail = rec.zd_rec_pkgrec_tail;
-        row.zd_rec_pkgrec_next = NULL;
-        row.zd_rec_pkgrec_prev = old_tail;
+        row.rec_zd_rec_pkgrec_next = NULL;
+        row.rec_zd_rec_pkgrec_prev = old_tail;
         rec.zd_rec_pkgrec_tail = &row;
-        apm::FPkgrec **new_row_a = &old_tail->zd_rec_pkgrec_next;
+        apm::FPkgrec **new_row_a = &old_tail->rec_zd_rec_pkgrec_next;
         apm::FPkgrec **new_row_b = &rec.zd_rec_pkgrec_head;
         apm::FPkgrec **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -4380,23 +4370,23 @@ void apm::zd_rec_pkgrec_Insert(apm::FRec& rec, apm::FPkgrec& row) {
 // --- apm.FRec.zd_rec_pkgrec.Remove
 // Remove element from index. If element is not in index, do nothing.
 void apm::zd_rec_pkgrec_Remove(apm::FRec& rec, apm::FPkgrec& row) {
-    if (zd_rec_pkgrec_InLlistQ(row)) {
+    if (rec_zd_rec_pkgrec_InLlistQ(row)) {
         apm::FPkgrec* old_head       = rec.zd_rec_pkgrec_head;
         (void)old_head; // in case it's not used
-        apm::FPkgrec* prev = row.zd_rec_pkgrec_prev;
-        apm::FPkgrec* next = row.zd_rec_pkgrec_next;
+        apm::FPkgrec* prev = row.rec_zd_rec_pkgrec_prev;
+        apm::FPkgrec* next = row.rec_zd_rec_pkgrec_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        apm::FPkgrec **new_next_a = &prev->zd_rec_pkgrec_next;
+        apm::FPkgrec **new_next_a = &prev->rec_zd_rec_pkgrec_next;
         apm::FPkgrec **new_next_b = &rec.zd_rec_pkgrec_head;
         apm::FPkgrec **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        apm::FPkgrec **new_prev_a = &next->zd_rec_pkgrec_prev;
+        apm::FPkgrec **new_prev_a = &next->rec_zd_rec_pkgrec_prev;
         apm::FPkgrec **new_prev_b = &rec.zd_rec_pkgrec_tail;
         apm::FPkgrec **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         rec.zd_rec_pkgrec_n--;
-        row.zd_rec_pkgrec_next=(apm::FPkgrec*)-1; // not-in-list
+        row.rec_zd_rec_pkgrec_next=(apm::FPkgrec*)-1; // not-in-list
     }
 }
 
@@ -4408,9 +4398,9 @@ void apm::zd_rec_pkgrec_RemoveAll(apm::FRec& rec) {
     rec.zd_rec_pkgrec_tail = NULL;
     rec.zd_rec_pkgrec_n = 0;
     while (row) {
-        apm::FPkgrec* row_next = row->zd_rec_pkgrec_next;
-        row->zd_rec_pkgrec_next  = (apm::FPkgrec*)-1;
-        row->zd_rec_pkgrec_prev  = NULL;
+        apm::FPkgrec* row_next = row->rec_zd_rec_pkgrec_next;
+        row->rec_zd_rec_pkgrec_next  = (apm::FPkgrec*)-1;
+        row->rec_zd_rec_pkgrec_prev  = NULL;
         row = row_next;
     }
 }
@@ -4421,14 +4411,14 @@ apm::FPkgrec* apm::zd_rec_pkgrec_RemoveFirst(apm::FRec& rec) {
     apm::FPkgrec *row = NULL;
     row = rec.zd_rec_pkgrec_head;
     if (row) {
-        apm::FPkgrec *next = row->zd_rec_pkgrec_next;
+        apm::FPkgrec *next = row->rec_zd_rec_pkgrec_next;
         rec.zd_rec_pkgrec_head = next;
-        apm::FPkgrec **new_end_a = &next->zd_rec_pkgrec_prev;
+        apm::FPkgrec **new_end_a = &next->rec_zd_rec_pkgrec_prev;
         apm::FPkgrec **new_end_b = &rec.zd_rec_pkgrec_tail;
         apm::FPkgrec **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         rec.zd_rec_pkgrec_n--;
-        row->zd_rec_pkgrec_next = (apm::FPkgrec*)-1; // mark as not-in-list
+        row->rec_zd_rec_pkgrec_next = (apm::FPkgrec*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -4485,12 +4475,12 @@ algo::Smallstr50 apm::name_Get(apm::FSsimfile& ssimfile) {
 // --- apm.FSsimfile.zd_ssimfile_rec.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void apm::zd_ssimfile_rec_Insert(apm::FSsimfile& ssimfile, apm::FRec& row) {
-    if (!zd_ssimfile_rec_InLlistQ(row)) {
+    if (!ssimfile_zd_ssimfile_rec_InLlistQ(row)) {
         apm::FRec* old_tail = ssimfile.zd_ssimfile_rec_tail;
-        row.zd_ssimfile_rec_next = NULL;
-        row.zd_ssimfile_rec_prev = old_tail;
+        row.ssimfile_zd_ssimfile_rec_next = NULL;
+        row.ssimfile_zd_ssimfile_rec_prev = old_tail;
         ssimfile.zd_ssimfile_rec_tail = &row;
-        apm::FRec **new_row_a = &old_tail->zd_ssimfile_rec_next;
+        apm::FRec **new_row_a = &old_tail->ssimfile_zd_ssimfile_rec_next;
         apm::FRec **new_row_b = &ssimfile.zd_ssimfile_rec_head;
         apm::FRec **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -4501,23 +4491,23 @@ void apm::zd_ssimfile_rec_Insert(apm::FSsimfile& ssimfile, apm::FRec& row) {
 // --- apm.FSsimfile.zd_ssimfile_rec.Remove
 // Remove element from index. If element is not in index, do nothing.
 void apm::zd_ssimfile_rec_Remove(apm::FSsimfile& ssimfile, apm::FRec& row) {
-    if (zd_ssimfile_rec_InLlistQ(row)) {
+    if (ssimfile_zd_ssimfile_rec_InLlistQ(row)) {
         apm::FRec* old_head       = ssimfile.zd_ssimfile_rec_head;
         (void)old_head; // in case it's not used
-        apm::FRec* prev = row.zd_ssimfile_rec_prev;
-        apm::FRec* next = row.zd_ssimfile_rec_next;
+        apm::FRec* prev = row.ssimfile_zd_ssimfile_rec_prev;
+        apm::FRec* next = row.ssimfile_zd_ssimfile_rec_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        apm::FRec **new_next_a = &prev->zd_ssimfile_rec_next;
+        apm::FRec **new_next_a = &prev->ssimfile_zd_ssimfile_rec_next;
         apm::FRec **new_next_b = &ssimfile.zd_ssimfile_rec_head;
         apm::FRec **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        apm::FRec **new_prev_a = &next->zd_ssimfile_rec_prev;
+        apm::FRec **new_prev_a = &next->ssimfile_zd_ssimfile_rec_prev;
         apm::FRec **new_prev_b = &ssimfile.zd_ssimfile_rec_tail;
         apm::FRec **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         ssimfile.zd_ssimfile_rec_n--;
-        row.zd_ssimfile_rec_next=(apm::FRec*)-1; // not-in-list
+        row.ssimfile_zd_ssimfile_rec_next=(apm::FRec*)-1; // not-in-list
     }
 }
 
@@ -4529,9 +4519,9 @@ void apm::zd_ssimfile_rec_RemoveAll(apm::FSsimfile& ssimfile) {
     ssimfile.zd_ssimfile_rec_tail = NULL;
     ssimfile.zd_ssimfile_rec_n = 0;
     while (row) {
-        apm::FRec* row_next = row->zd_ssimfile_rec_next;
-        row->zd_ssimfile_rec_next  = (apm::FRec*)-1;
-        row->zd_ssimfile_rec_prev  = NULL;
+        apm::FRec* row_next = row->ssimfile_zd_ssimfile_rec_next;
+        row->ssimfile_zd_ssimfile_rec_next  = (apm::FRec*)-1;
+        row->ssimfile_zd_ssimfile_rec_prev  = NULL;
         row = row_next;
     }
 }
@@ -4542,14 +4532,14 @@ apm::FRec* apm::zd_ssimfile_rec_RemoveFirst(apm::FSsimfile& ssimfile) {
     apm::FRec *row = NULL;
     row = ssimfile.zd_ssimfile_rec_head;
     if (row) {
-        apm::FRec *next = row->zd_ssimfile_rec_next;
+        apm::FRec *next = row->ssimfile_zd_ssimfile_rec_next;
         ssimfile.zd_ssimfile_rec_head = next;
-        apm::FRec **new_end_a = &next->zd_ssimfile_rec_prev;
+        apm::FRec **new_end_a = &next->ssimfile_zd_ssimfile_rec_prev;
         apm::FRec **new_end_b = &ssimfile.zd_ssimfile_rec_tail;
         apm::FRec **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         ssimfile.zd_ssimfile_rec_n--;
-        row->zd_ssimfile_rec_next = (apm::FRec*)-1; // mark as not-in-list
+        row->ssimfile_zd_ssimfile_rec_next = (apm::FRec*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -4931,14 +4921,15 @@ void apm::StaticCheck() {
 // --- apm...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_ctype::FDb_Init();
         lib_git::FDb_Init();
-        lib_json::FDb_Init();
         apm::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         apm::ReadArgv(); // dmmeta.main:apm
         apm::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -4950,10 +4941,10 @@ int main(int argc, char **argv) {
     }
     try {
         apm::FDb_Uninit();
-        lib_json::FDb_Uninit();
         lib_git::FDb_Uninit();
         lib_ctype::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

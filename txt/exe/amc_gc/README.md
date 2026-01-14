@@ -23,8 +23,8 @@ Usage: amc_gc [options]
     -key        regx    ""      ACR query selecting records to eliminate, e.g. dmmeta.ctype:amc.%
     -include                    Garbage collect includes for specified target
     -in         string  "data"  Input directory or filename, - for stdin
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig

@@ -45,7 +45,10 @@ The following source files are part of this tool:
 |[cpp/amc/dflt.cpp](/cpp/amc/dflt.cpp)|Field default|
 |[cpp/amc/disp/call.cpp](/cpp/amc/disp/call.cpp)|Dispatch call|
 |[cpp/amc/disp/casetype.cpp](/cpp/amc/disp/casetype.cpp)|Dispatch casetype generator|
+|[cpp/amc/disp/del.cpp](/cpp/amc/disp/del.cpp)||
 |[cpp/amc/disp/filter.cpp](/cpp/amc/disp/filter.cpp)|Dispatch filter|
+|[cpp/amc/disp/kafka_decode.cpp](/cpp/amc/disp/kafka_decode.cpp)||
+|[cpp/amc/disp/kafka_encode.cpp](/cpp/amc/disp/kafka_encode.cpp)||
 |[cpp/amc/disp/main.cpp](/cpp/amc/disp/main.cpp)|Dispatch main|
 |[cpp/amc/disp/msg.cpp](/cpp/amc/disp/msg.cpp)|Dispatch on message|
 |[cpp/amc/disp/print.cpp](/cpp/amc/disp/print.cpp)|Dispatch print|
@@ -68,6 +71,8 @@ The following source files are part of this tool:
 |[cpp/amc/include.cpp](/cpp/amc/include.cpp)|Manage includes for generated files|
 |[cpp/amc/inlary.cpp](/cpp/amc/inlary.cpp)|Inline array|
 |[cpp/amc/io.cpp](/cpp/amc/io.cpp)|I/O functions|
+|[cpp/amc/js.cpp](/cpp/amc/js.cpp)||
+|[cpp/amc/kafka.cpp](/cpp/amc/kafka.cpp)||
 |[cpp/amc/lary.cpp](/cpp/amc/lary.cpp)|Level array with permanent pointers|
 |[cpp/amc/llist.cpp](/cpp/amc/llist.cpp)|Linked lists|
 |[cpp/amc/lpool.cpp](/cpp/amc/lpool.cpp)|Variable-length free pool|
@@ -163,6 +168,8 @@ All allocations are done through global `amc::_db` [amc.FDb](#amc-fdb) structure
 ||||FField.c_charset (Ptr)|
 |[amc.FChash](#amc-fchash)|[dmmeta.chash](/txt/ssimdb/dmmeta/chash.md)|FDb.chash (Lary)|chash (Lary, by rowid)|ind_chash (Thash, hash field ctype)|
 ||||FCtype.c_chash (Ptr)|
+|[amc.FCkafka](#amc-fckafka)|[dmmeta.ckafka](/txt/ssimdb/dmmeta/ckafka.md)|FDb.ckafka (Lary)|ckafka (Lary, by rowid)|
+||||FCtype.c_ckafka (Ptr)|
 |[amc.FCppfunc](#amc-fcppfunc)|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|FDb.cppfunc (Lary)|cppfunc (Lary, by rowid)|
 ||||FField.c_cppfunc (Ptr)|
 |[amc.FCpptype](#amc-fcpptype)|[dmmeta.cpptype](/txt/ssimdb/dmmeta/cpptype.md)|FDb.cpptype (Lary)|cpptype (Lary, by rowid)|ind_cpptype (Thash, hash field ctype)|
@@ -171,6 +178,7 @@ All allocations are done through global `amc::_db` [amc.FDb](#amc-fdb) structure
 ||||FCtype.c_csize (Ptr)|
 |[amc.FCstr](#amc-fcstr)|[dmmeta.cstr](/txt/ssimdb/dmmeta/cstr.md)|FDb.cstr (Lary)|cstr (Lary, by rowid)|
 ||||FCtype.c_cstr (Ptr)|
+|[amc.JsCtype](#amc-jsctype)||
 |[amc.FCtype](#amc-fctype)|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|FDb.ctype (Lary)|ctype (Lary, by rowid)|ind_ctype (Thash, hash field ctype)|c_ctype_sorted (Ptrary)|zsl_ctype_pack_tran (Llist)|zs_sig_visit (Llist)|c_u64 (Ptr)|
 ||||FCafter.p_after (Upptr)|
 ||||FCget.p_ctype (Upptr)|
@@ -194,7 +202,7 @@ All allocations are done through global `amc::_db` [amc.FDb](#amc-fdb) structure
 ||||FXref.p_ctype (Upptr)|
 ||||Genctx.p_ctype (Upptr)|
 ||||Genpnew.p_ctype (Upptr)|
-|[amc.FCtypelen](#amc-fctypelen)|[dmmeta.ctypelen](/txt/ssimdb/dmmeta/ctypelen.md)|FDb.ctypelen (Lary)|ctypelen (Lary, by rowid)|c_ctypelen (Ptrary)|
+|[amc.FCtypelen](#amc-fctypelen)|[dmmeta.ctypelen](/txt/ssimdb/dmmeta/ctypelen.md)|FDb.ctypelen (Lary)|ctypelen (Lary, by rowid)|
 ||||FCtype.c_ctypelen (Ptr)|
 |[amc.Genctx](#amc-genctx)||
 |[amc.FTclass](#amc-ftclass)|[amcdb.tclass](/txt/ssimdb/amcdb/tclass.md)|FDb.tclass (Inlary)|**static**|ind_tclass (Thash, hash field tclass)|
@@ -210,7 +218,7 @@ All allocations are done through global `amc::_db` [amc.FDb](#amc-fdb) structure
 ||||FDispatch.c_dispctx (Ptr)|
 |[amc.FDispfilter](#amc-fdispfilter)|[dmmeta.dispfilter](/txt/ssimdb/dmmeta/dispfilter.md)|FDb.dispfilter (Lary)|dispfilter (Lary, by rowid)|
 ||||FDispatch.c_dispfilter (Ptr)|
-|[amc.FDispsig](#amc-fdispsig)|[dmmeta.dispsig](/txt/ssimdb/dmmeta/dispsig.md)|FDb.dispsig (Lary)|dispsig (Lary, by rowid)|c_dispsig_sorted (Ptrary)|
+|[amc.FDispsig](#amc-fdispsig)|[dmmeta.dispsig](/txt/ssimdb/dmmeta/dispsig.md)|FDb.dispsig (Lary)|dispsig (Lary, by rowid)|
 ||||FNs.c_dispsig (Ptrary)|
 |[amc.FDisptrace](#amc-fdisptrace)|[dmmeta.disptrace](/txt/ssimdb/dmmeta/disptrace.md)|FDb.disptrace (Lary)|disptrace (Lary, by rowid)|
 ||||FDispatch.c_disptrace (Ptr)|
@@ -259,19 +267,19 @@ All allocations are done through global `amc::_db` [amc.FDb](#amc-fdb) structure
 ||||FField.c_ffast (Ptrary)|
 |[amc.FFflag](#amc-ffflag)|[dmmeta.fflag](/txt/ssimdb/dmmeta/fflag.md)|FDb.fflag (Lary)|fflag (Lary, by rowid)|ind_fflag (Thash, hash field field)|
 ||||FField.c_fflag (Ptr)|
-|[amc.FField](#amc-ffield)|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|FDb.field (Lary)|field (Lary, by rowid)|ind_field (Thash, hash field field)|c_malloc (Ptr)|zs_ordkeyfield (Llist)|c_tempfield (Ptrary)|
+|[amc.FField](#amc-ffield)|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|FDb.field (Lary)|field (Lary, by rowid)|ind_field (Thash, hash field field)|c_malloc (Ptr)|zs_ordkeyfield (Llist)|
 ||||FBasepool.p_field (Upptr)|
 ||||FBasepool.p_base (Upptr)|
 ||||FBitfld.p_srcfield (Upptr)|
 ||||FBitfld.p_field (Upptr)|
 ||||FCascdel.p_field (Upptr)|
 ||||FCtype.c_field (Ptrary)|
-||||FCtype.c_varlenfld (Ptr)|
 ||||FCtype.c_optfld (Ptr)|
 ||||FCtype.c_datafld (Ptrary)|
 ||||FCtype.zd_inst (Llist)|
 ||||FCtype.zd_access (Llist)|
 ||||FCtype.c_pkeyfield (Ptr)|
+||||FCtype.zd_varlenfld (Llist)|
 ||||FFalias.p_srcfield (Upptr)|
 ||||FFbigend.p_field (Upptr)|
 ||||FFbitset.p_field (Upptr)|
@@ -321,6 +329,8 @@ All allocations are done through global `amc::_db` [amc.FDb](#amc-fdb) structure
 ||||FField.c_findrem (Ptr)|
 |[amc.FFinput](#amc-ffinput)|[dmmeta.finput](/txt/ssimdb/dmmeta/finput.md)|FDb.finput (Lary)|finput (Lary, by rowid)|
 ||||FField.c_finput (Ptr)|
+|[amc.FFkafka](#amc-ffkafka)|[dmmeta.fkafka](/txt/ssimdb/dmmeta/fkafka.md)|FDb.fkafka (Lary)|fkafka (Lary, by rowid)|
+||||FField.c_fkafka (Ptr)|
 |[amc.FFldoffset](#amc-ffldoffset)|[dmmeta.fldoffset](/txt/ssimdb/dmmeta/fldoffset.md)|FDb.fldoffset (Lary)|fldoffset (Lary, by rowid)|
 ||||FField.c_fldoffset (Ptr)|
 |[amc.FFloadtuples](#amc-ffloadtuples)|[dmmeta.floadtuples](/txt/ssimdb/dmmeta/floadtuples.md)|FDb.floadtuples (Lary)|floadtuples (Lary, by rowid)|
@@ -369,8 +379,11 @@ All allocations are done through global `amc::_db` [amc.FDb](#amc-fdb) structure
 ||||FField.c_hook (Ptr)|
 |[amc.FInlary](#amc-finlary)|[dmmeta.inlary](/txt/ssimdb/dmmeta/inlary.md)|FDb.inlary (Lary)|inlary (Lary, by rowid)|ind_inlary (Thash, hash field field)|
 ||||FField.c_inlary (Ptr)|
+|[amc.FJstype](#amc-fjstype)|[dmmeta.jstype](/txt/ssimdb/dmmeta/jstype.md)|FDb.jstype (Lary)|jstype (Lary, by rowid)|
+||||FCtype.c_jstype (Ptr)|
 |[amc.FLenfld](#amc-flenfld)|[dmmeta.lenfld](/txt/ssimdb/dmmeta/lenfld.md)|FDb.lenfld (Lary)|lenfld (Lary, by rowid)|
 ||||FCtype.c_lenfld (Ptr)|
+||||FField.c_lenfld (Ptr)|
 |[amc.FLicense](#amc-flicense)|[dev.license](/txt/ssimdb/dev/license.md)|FDb.license (Lary)|license (Lary, by rowid)|ind_license (Thash, hash field license)|
 ||||FNs.p_license (Upptr)|
 |[amc.FListtype](#amc-flisttype)|[dmmeta.listtype](/txt/ssimdb/dmmeta/listtype.md)|FDb.listtype (Lary)|listtype (Lary, by rowid)|ind_listtype (Thash, hash field listtype)|
@@ -387,6 +400,7 @@ All allocations are done through global `amc::_db` [amc.FDb](#amc-fdb) structure
 ||||FCtype.c_nossimfile (Ptr)|
 |[amc.FNoxref](#amc-fnoxref)|[dmmeta.noxref](/txt/ssimdb/dmmeta/noxref.md)|FDb.noxref (Lary)|noxref (Lary, by rowid)|
 ||||FField.c_noxref (Ptr)|
+|[amc.JsNs](#amc-jsns)||
 |[amc.FNs](#amc-fns)|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|FDb.ns (Lary)|ns (Lary, by rowid)|ind_ns (Thash, hash field ns)|c_ns_sorted (Ptrary)|c_curns (Ptr)|c_ns (Ptr)|
 ||||FCtype.p_ns (Upptr)|
 ||||FDispatch.p_ns (Upptr)|
@@ -405,6 +419,8 @@ All allocations are done through global `amc::_db` [amc.FDb](#amc-fdb) structure
 ||||FNs.c_nsdb (Ptr)|
 |[amc.FNsinclude](#amc-fnsinclude)|[dmmeta.nsinclude](/txt/ssimdb/dmmeta/nsinclude.md)|FDb.nsinclude (Lary)|nsinclude (Lary, by rowid)|
 ||||FNs.c_nsinclude (Ptrary)|
+|[amc.FNsjs](#amc-fnsjs)|[dmmeta.nsjs](/txt/ssimdb/dmmeta/nsjs.md)|FDb.nsjs (Lary)|nsjs (Lary, by rowid)|
+||||FNs.c_nsjs (Ptr)|
 |[amc.FNsproto](#amc-fnsproto)|[dmmeta.nsproto](/txt/ssimdb/dmmeta/nsproto.md)|FDb.nsproto (Lary)|nsproto (Lary, by rowid)|
 ||||FNs.c_nsproto (Ptr)|
 |[amc.FNsx](#amc-fnsx)|[dmmeta.nsx](/txt/ssimdb/dmmeta/nsx.md)|FDb.nsx (Lary)|nsx (Lary, by rowid)|
@@ -443,6 +459,8 @@ All allocations are done through global `amc::_db` [amc.FDb](#amc-fdb) structure
 ||||FSsimfile.c_ssimvolatile (Ptr)|
 |[amc.FStatictuple](#amc-fstatictuple)||FDb.static_tuple (Lary)|static_tuple (Lary, by rowid)|
 ||||FCtype.c_static (Ptrary)|
+|[amc.FSteptype](#amc-fsteptype)|[dmmeta.steptype](/txt/ssimdb/dmmeta/steptype.md)|FDb.steptype (Lary)|steptype (Lary, by rowid)|ind_steptype (Thash, hash field steptype)|
+||||FFstep.p_steptype (Upptr)|
 |[amc.FSubstr](#amc-fsubstr)|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|FDb.substr (Lary)|substr (Lary, by rowid)|zd_substr_params (Llist)|c_substr_field (Ptrary)|
 ||||FField.c_substr (Ptr)|
 |[amc.FTargdep](#amc-ftargdep)|[dev.targdep](/txt/ssimdb/dev/targdep.md)|FDb.targdep (Lary)|targdep (Lary, by rowid)|
@@ -465,6 +483,7 @@ All allocations are done through global `amc::_db` [amc.FDb](#amc-fdb) structure
 |[amc.FTypefld](#amc-ftypefld)|[dmmeta.typefld](/txt/ssimdb/dmmeta/typefld.md)|FDb.typefld (Lary)|typefld (Lary, by rowid)|
 ||||FCtype.c_typefld (Ptr)|
 ||||FField.c_typefld (Ptr)|
+|[amc.FUserfunc](#amc-fuserfunc)|[dmmeta.userfunc](/txt/ssimdb/dmmeta/userfunc.md)|FDb.userfunc (Lary)|userfunc (Lary, by rowid)|
 |[amc.FUsertracefld](#amc-fusertracefld)|[dmmeta.usertracefld](/txt/ssimdb/dmmeta/usertracefld.md)|FDb.usertracefld (Lary)|usertracefld (Lary, by rowid)|
 |[amc.FXref](#amc-fxref)|[dmmeta.xref](/txt/ssimdb/dmmeta/xref.md)|FDb.xref (Lary)|xref (Lary, by rowid)|ind_xref (Thash, hash field field)|
 ||||FCtype.zs_xref (Llist)|
@@ -685,13 +704,13 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FBitfld { // amc.FBitfld
-    algo::Smallstr100   field;           //
-    i32                 offset;          //   0  Offset, in bits, within parent field
-    i32                 width;           //   0  Width, in bits, within parent field.
-    algo::Smallstr100   srcfield;        //
-    amc::FField*        p_srcfield;      // reference to parent row
-    amc::FField*        p_field;         // reference to parent row
-    i32                 bh_bitfld_idx;   // index in heap; -1 means not-in-heap
+    algo::Smallstr100   field;                 //
+    i32                 offset;                //   0  Offset, in bits, within parent field
+    i32                 width;                 //   0  Width, in bits, within parent field.
+    algo::Smallstr100   srcfield;              //
+    amc::FField*        p_srcfield;            // reference to parent row
+    amc::FField*        p_field;               // reference to parent row
+    i32                 field_bh_bitfld_idx;   // index in heap; -1 means not-in-heap
     // x-reference on amc.FBitfld.p_srcfield prevents copy
     // x-reference on amc.FBitfld.p_field prevents copy
     // func:amc.FBitfld..AssignOp
@@ -727,11 +746,12 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FBltin { // amc.FBltin
-    algo::Smallstr100   ctype;            //
-    bool                likeu64;          //   false
-    bool                bigendok;         //   false
-    bool                issigned;         //   false
-    amc::FBltin*        ind_bltin_next;   // hash next
+    algo::Smallstr100   ctype;               //
+    bool                likeu64;             //   false
+    bool                bigendok;            //   false
+    bool                issigned;            //   false
+    amc::FBltin*        ind_bltin_next;      // hash next
+    u32                 ind_bltin_hashval;   // hash value
     // func:amc.FBltin..AssignOp
     inline amc::FBltin&  operator =(const amc::FBltin &rhs) = delete;
     // func:amc.FBltin..CopyCtor
@@ -764,10 +784,10 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FCafter { // amc.FCafter
-    algo::Smallstr50   cafter;           //
-    amc::FCtype*       p_after;          // reference to parent row
-    amc::FCafter*      zd_cafter_next;   // zslist link; -1 means not-in-list
-    amc::FCafter*      zd_cafter_prev;   // previous element
+    algo::Smallstr50   cafter;                 //
+    amc::FCtype*       p_after;                // reference to parent row
+    amc::FCafter*      ctype_zd_cafter_next;   // zslist link; -1 means not-in-list
+    amc::FCafter*      ctype_zd_cafter_prev;   // previous element
     // x-reference on amc.FCafter.p_after prevents copy
     // func:amc.FCafter..AssignOp
     inline amc::FCafter& operator =(const amc::FCafter &rhs) = delete;
@@ -837,12 +857,13 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FCcmp { // amc.FCcmp
-    algo::Smallstr100   ctype;           // Target ctype
-    bool                extrn;           //   false  Whether implementation is external
-    bool                genop;           //   false  Generate C++ comparison operators (<,>, etc)
-    bool                order;           //   false
-    bool                minmax;          //   false
-    amc::FCcmp*         ind_ccmp_next;   // hash next
+    algo::Smallstr100   ctype;              // Target ctype
+    bool                extrn;              //   false  Whether implementation is external
+    bool                genop;              //   false  Generate C++ comparison operators (<,>, etc)
+    bool                order;              //   false
+    bool                minmax;             //   false
+    amc::FCcmp*         ind_ccmp_next;      // hash next
+    u32                 ind_ccmp_hashval;   // hash value
     // func:amc.FCcmp..AssignOp
     inline amc::FCcmp&   operator =(const amc::FCcmp &rhs) = delete;
     // func:amc.FCcmp..CopyCtor
@@ -983,14 +1004,15 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FCfmt { // amc.FCfmt
-    algo::Smallstr100   cfmt;            //
-    algo::Smallstr50    printfmt;        //
-    bool                read;            //   false
-    bool                print;           //   false
-    algo::Smallstr20    sep;             //
-    bool                genop;           //   false
-    amc::FCfmt*         zs_cfmt_next;    // zslist link; -1 means not-in-list
-    amc::FCfmt*         ind_cfmt_next;   // hash next
+    algo::Smallstr100   cfmt;                 //
+    algo::Smallstr50    printfmt;             //
+    bool                read;                 //   false
+    bool                print;                //   false
+    algo::Smallstr20    sep;                  //
+    bool                genop;                //   false
+    amc::FCfmt*         ctype_zs_cfmt_next;   // zslist link; -1 means not-in-list
+    amc::FCfmt*         ind_cfmt_next;        // hash next
+    u32                 ind_cfmt_hashval;     // hash value
     // func:amc.FCfmt..AssignOp
     inline amc::FCfmt&   operator =(const amc::FCfmt &rhs) = delete;
     // func:amc.FCfmt..CopyCtor
@@ -1090,9 +1112,10 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FChash { // amc.FChash
-    algo::Smallstr100   ctype;            // Target ctype
-    algo::Smallstr50    hashtype;         // Hash type
-    amc::FChash*        ind_chash_next;   // hash next
+    algo::Smallstr100   ctype;               // Target ctype
+    algo::Smallstr50    hashtype;            // Hash type
+    amc::FChash*        ind_chash_next;      // hash next
+    u32                 ind_chash_hashval;   // hash value
     // func:amc.FChash..AssignOp
     inline amc::FChash&  operator =(const amc::FChash &rhs) = delete;
     // func:amc.FChash..CopyCtor
@@ -1105,6 +1128,44 @@ private:
     friend amc::FChash&         chash_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FChash*         chash_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 chash_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### amc.FCkafka - 
+<a href="#amc-fckafka"></a>
+
+#### amc.FCkafka Fields
+<a href="#amc-fckafka-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|amc.FCkafka.base|[dmmeta.Ckafka](/txt/ssimdb/dmmeta/ckafka.md)|[Base](/txt/ssimdb/dmmeta/ckafka.md)|||
+
+#### Struct FCkafka
+<a href="#struct-fckafka"></a>
+*Note:* field ``amc.FCkafka.base`` has reftype ``base`` so the fields of [dmmeta.Ckafka](/txt/ssimdb/dmmeta/ckafka.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
+```
+struct FCkafka { // amc.FCkafka
+    algo::Smallstr100   ctype;               //
+    algo::Smallstr50    kind;                //
+    algo::cstring       root;                //
+    algo::Smallstr10    valid_versions;      //
+    algo::Smallstr10    flexible_versions;   //
+    algo::Comment       comment;             //
+    // func:amc.FCkafka..AssignOp
+    inline amc::FCkafka& operator =(const amc::FCkafka &rhs) = delete;
+    // func:amc.FCkafka..CopyCtor
+    inline               FCkafka(const amc::FCkafka &rhs) = delete;
+private:
+    // func:amc.FCkafka..Ctor
+    inline               FCkafka() __attribute__((nothrow));
+    // func:amc.FCkafka..Dtor
+    inline               ~FCkafka() __attribute__((nothrow));
+    friend amc::FCkafka&        ckafka_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FCkafka*        ckafka_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ckafka_RemoveAll() __attribute__((nothrow));
+    friend void                 ckafka_RemoveLast() __attribute__((nothrow));
 };
 ```
 
@@ -1160,12 +1221,13 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FCpptype { // amc.FCpptype
-    algo::Smallstr100   ctype;              //
-    bool                ctor;               //   false  if true, generate non-default constructor from all fields
-    bool                dtor;               //   true  generate non-default destructor
-    bool                cheap_copy;         //   false  Pass by value whenever possible
-    amc::FCtype*        p_ctype;            // reference to parent row
-    amc::FCpptype*      ind_cpptype_next;   // hash next
+    algo::Smallstr100   ctype;                 //
+    bool                ctor;                  //   false  if true, generate non-default constructor from all fields
+    bool                dtor;                  //   true  generate non-default destructor
+    bool                cheap_copy;            //   false  Pass by value whenever possible
+    amc::FCtype*        p_ctype;               // reference to parent row
+    amc::FCpptype*      ind_cpptype_next;      // hash next
+    u32                 ind_cpptype_hashval;   // hash value
     // x-reference on amc.FCpptype.p_ctype prevents copy
     // func:amc.FCpptype..AssignOp
     inline amc::FCpptype& operator =(const amc::FCpptype &rhs) = delete;
@@ -1250,6 +1312,32 @@ private:
 };
 ```
 
+#### amc.JsCtype - 
+<a href="#amc-jsctype"></a>
+
+#### amc.JsCtype Fields
+<a href="#amc-jsctype-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|amc.JsCtype.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|amc.JsCtype.ctor|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|amc.JsCtype.args|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|amc.JsCtype.funcs|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct JsCtype
+<a href="#struct-jsctype"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
+```
+struct JsCtype { // amc.JsCtype
+    algo::cstring   body;    //
+    algo::cstring   ctor;    //
+    algo::cstring   args;    //
+    algo::cstring   funcs;   //
+    // func:amc.JsCtype..Ctor
+    inline               JsCtype() __attribute__((nothrow));
+};
+```
+
 #### amc.FCtype - Struct
 <a href="#amc-fctype"></a>
 
@@ -1267,7 +1355,6 @@ private:
 |amc.FCtype.c_bltin|[amc.FBltin](/txt/exe/amc/internals.md#amc-fbltin)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 |amc.FCtype.c_field|[amc.FField](/txt/exe/amc/internals.md#amc-ffield)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
 |amc.FCtype.c_msgtype|[amc.FMsgtype](/txt/exe/amc/internals.md#amc-fmsgtype)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
-|amc.FCtype.c_varlenfld|[amc.FField](/txt/exe/amc/internals.md#amc-ffield)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 |amc.FCtype.c_optfld|[amc.FField](/txt/exe/amc/internals.md#amc-ffield)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 |amc.FCtype.c_static|[amc.FStatictuple](/txt/exe/amc/internals.md#amc-fstatictuple)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
 |amc.FCtype.c_cpptype|[amc.FCpptype](/txt/exe/amc/internals.md#amc-fcpptype)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
@@ -1294,16 +1381,13 @@ private:
 |amc.FCtype.c_floadtuples|[amc.FFloadtuples](/txt/exe/amc/internals.md#amc-ffloadtuples)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 |amc.FCtype.c_pkeyfield|[amc.FField](/txt/exe/amc/internals.md#amc-ffield)|[Ptr](/txt/exe/amc/reftypes.md#ptr)||Field corresponding to pkey of this type|
 |amc.FCtype.c_fcurs|[amc.FFcurs](/txt/exe/amc/internals.md#amc-ffcurs)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
-|amc.FCtype.copy_priv_reason|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 |amc.FCtype.c_ctypelen|[amc.FCtypelen](/txt/exe/amc/internals.md#amc-fctypelen)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 |amc.FCtype.size_unknown|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
-|amc.FCtype.copy_priv_valid|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
 |amc.FCtype.size_locked|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
 |amc.FCtype.topo_visited|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Temporary|
 |amc.FCtype.enum_visited|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Temporary|
 |amc.FCtype.fields_cloned|bool|[Val](/txt/exe/amc/reftypes.md#val)||True if fields from c_cbase have been cloned.|
 |amc.FCtype.original|bool|[Val](/txt/exe/amc/reftypes.md#val)||True if this ctype comes from disk|
-|amc.FCtype.copy_priv|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|disallow copy ctor / assign op|
 |amc.FCtype.plaindata|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
 |amc.FCtype.alignment|u32|[Val](/txt/exe/amc/reftypes.md#val)|1||
 |amc.FCtype.n_padbytes|i32|[Val](/txt/exe/amc/reftypes.md#val)|||
@@ -1315,6 +1399,10 @@ private:
 |amc.FCtype.c_cfast|[amc.FCfast](/txt/exe/amc/internals.md#amc-fcfast)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 |amc.FCtype.c_ffast|[amc.FFfast](/txt/exe/amc/internals.md#amc-fffast)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
 |amc.FCtype.in_copy_priv|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|amc.FCtype.zd_varlenfld|[amc.FField](/txt/exe/amc/internals.md#amc-ffield)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
+|amc.FCtype.js|[amc.JsCtype](/txt/exe/amc/internals.md#amc-jsctype)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|amc.FCtype.c_jstype|[amc.FJstype](/txt/exe/amc/internals.md#amc-fjstype)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|amc.FCtype.c_ckafka|[amc.FCkafka](/txt/exe/amc/internals.md#amc-fckafka)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 
 #### Struct FCtype
 <a href="#struct-fctype"></a>
@@ -1337,7 +1425,6 @@ struct FCtype { // amc.FCtype
     u32                   c_field_n;                  // array of pointers
     u32                   c_field_max;                // capacity of allocated array
     amc::FMsgtype*        c_msgtype;                  // optional pointer
-    amc::FField*          c_varlenfld;                // optional pointer
     amc::FField*          c_optfld;                   // optional pointer
     amc::FStatictuple**   c_static_elems;             // array of pointers
     u32                   c_static_n;                 // array of pointers
@@ -1384,16 +1471,13 @@ struct FCtype { // amc.FCtype
     amc::FFcurs**         c_fcurs_elems;              // array of pointers
     u32                   c_fcurs_n;                  // array of pointers
     u32                   c_fcurs_max;                // capacity of allocated array
-    algo::cstring         copy_priv_reason;           //
     amc::FCtypelen*       c_ctypelen;                 // optional pointer
     bool                  size_unknown;               //   false
-    bool                  copy_priv_valid;            //   false
     bool                  size_locked;                //   false
     bool                  topo_visited;               //   false  Temporary
     bool                  enum_visited;               //   false  Temporary
     bool                  fields_cloned;              //   false  True if fields from c_cbase have been cloned.
     bool                  original;                   //   false  True if this ctype comes from disk
-    bool                  copy_priv;                  //   false  disallow copy ctor / assign op
     bool                  plaindata;                  //   false
     u32                   alignment;                  //   1
     i32                   n_padbytes;                 //   0
@@ -1407,8 +1491,15 @@ struct FCtype { // amc.FCtype
     u32                   c_ffast_n;                  // array of pointers
     u32                   c_ffast_max;                // capacity of allocated array
     bool                  in_copy_priv;               //   false
+    amc::FField*          zd_varlenfld_head;          // zero-terminated doubly linked list
+    i32                   zd_varlenfld_n;             // zero-terminated doubly linked list
+    amc::FField*          zd_varlenfld_tail;          // pointer to last element
+    amc::JsCtype          js;                         //
+    amc::FJstype*         c_jstype;                   // optional pointer
+    amc::FCkafka*         c_ckafka;                   // optional pointer
     bool                  ns_c_ctype_in_ary;          //   false  membership flag
     amc::FCtype*          ind_ctype_next;             // hash next
+    u32                   ind_ctype_hashval;          // hash value
     amc::FCtype*          zsl_ctype_pack_tran_next;   // zslist link; -1 means not-in-list
     amc::FCtype*          zs_sig_visit_next;          // zslist link; -1 means not-in-list
     // reftype Llist of amc.FCtype.zs_cfmt prohibits copy
@@ -1416,7 +1507,6 @@ struct FCtype { // amc.FCtype
     // x-reference on amc.FCtype.c_bltin prevents copy
     // reftype Ptrary of amc.FCtype.c_field prohibits copy
     // x-reference on amc.FCtype.c_msgtype prevents copy
-    // x-reference on amc.FCtype.c_varlenfld prevents copy
     // x-reference on amc.FCtype.c_optfld prevents copy
     // reftype Ptrary of amc.FCtype.c_static prohibits copy
     // x-reference on amc.FCtype.c_cpptype prevents copy
@@ -1445,6 +1535,9 @@ struct FCtype { // amc.FCtype
     // x-reference on amc.FCtype.c_nossimfile prevents copy
     // x-reference on amc.FCtype.c_cfast prevents copy
     // reftype Ptrary of amc.FCtype.c_ffast prohibits copy
+    // reftype Llist of amc.FCtype.zd_varlenfld prohibits copy
+    // x-reference on amc.FCtype.c_jstype prevents copy
+    // x-reference on amc.FCtype.c_ckafka prevents copy
     // func:amc.FCtype..AssignOp
     amc::FCtype&         operator =(const amc::FCtype &rhs) = delete;
     // reftype Llist of amc.FCtype.zs_cfmt prohibits copy
@@ -1452,7 +1545,6 @@ struct FCtype { // amc.FCtype
     // x-reference on amc.FCtype.c_bltin prevents copy
     // reftype Ptrary of amc.FCtype.c_field prohibits copy
     // x-reference on amc.FCtype.c_msgtype prevents copy
-    // x-reference on amc.FCtype.c_varlenfld prevents copy
     // x-reference on amc.FCtype.c_optfld prevents copy
     // reftype Ptrary of amc.FCtype.c_static prohibits copy
     // x-reference on amc.FCtype.c_cpptype prevents copy
@@ -1481,6 +1573,9 @@ struct FCtype { // amc.FCtype
     // x-reference on amc.FCtype.c_nossimfile prevents copy
     // x-reference on amc.FCtype.c_cfast prevents copy
     // reftype Ptrary of amc.FCtype.c_ffast prohibits copy
+    // reftype Llist of amc.FCtype.zd_varlenfld prohibits copy
+    // x-reference on amc.FCtype.c_jstype prevents copy
+    // x-reference on amc.FCtype.c_ckafka prevents copy
     // func:amc.FCtype..CopyCtor
     FCtype(const amc::FCtype &rhs) = delete;
 private:
@@ -1510,12 +1605,11 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FCtypelen { // amc.FCtypelen
-    algo::Smallstr100   ctype;                   // Identifies the Ctype
-    u32                 len;                     //   0  (calculated) length of the C++ struct in bytes
-    i32                 alignment;               //   0  (calculated) alignment for the struct
-    i32                 padbytes;                //   0  (calculated) total # of pad bytes
-    bool                plaindata;               //   false  (calculated) this struct can me safely memcpy'ed
-    bool                _db_c_ctypelen_in_ary;   //   false  membership flag
+    algo::Smallstr100   ctype;       // Identifies the Ctype
+    u32                 len;         //   0  (calculated) length of the C++ struct in bytes
+    i32                 alignment;   //   0  (calculated) alignment for the struct
+    i32                 padbytes;    //   0  (calculated) total # of pad bytes
+    bool                plaindata;   //   false  (calculated) this struct can me safely memcpy'ed
     // func:amc.FCtypelen..AssignOp
     inline amc::FCtypelen& operator =(const amc::FCtypelen &rhs) = delete;
     // func:amc.FCtypelen..CopyCtor
@@ -1578,12 +1672,13 @@ struct Genctx { // amc.Genctx
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FTclass { // amc.FTclass
-    algo::Smallstr50        tclass;            //
-    amc::FTfunc**           c_tfunc_elems;     // array of pointers
-    u32                     c_tfunc_n;         // array of pointers
-    u32                     c_tfunc_max;       // capacity of allocated array
-    amc::tclass_step_hook   step;              //   NULL  Pointer to a function
-    amc::FTclass*           ind_tclass_next;   // hash next
+    algo::Smallstr50        tclass;               //
+    amc::FTfunc**           c_tfunc_elems;        // array of pointers
+    u32                     c_tfunc_n;            // array of pointers
+    u32                     c_tfunc_max;          // capacity of allocated array
+    amc::tclass_step_hook   step;                 //   NULL  Pointer to a function
+    amc::FTclass*           ind_tclass_next;      // hash next
+    u32                     ind_tclass_hashval;   // hash value
     // reftype Ptrary of amc.FTclass.c_tfunc prohibits copy
     // reftype Hook of amc.FTclass.step prohibits copy
     // func:amc.FTclass..AssignOp
@@ -1701,7 +1796,6 @@ struct FTclass { // amc.FTclass
 |amc.FDb.tracefld|[amc.FTracefld](/txt/exe/amc/internals.md#amc-ftracefld)|[Lary](/txt/exe/amc/reftypes.md#lary)||Word trace is already taken...|
 |amc.FDb.tracerec|[amc.FTracerec](/txt/exe/amc/internals.md#amc-ftracerec)|[Lary](/txt/exe/amc/reftypes.md#lary)||Word trace is already taken...|
 |amc.FDb.dispsig|[amc.FDispsig](/txt/exe/amc/internals.md#amc-fdispsig)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|amc.FDb.c_dispsig_sorted|[amc.FDispsig](/txt/exe/amc/internals.md#amc-fdispsig)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
 |amc.FDb.zs_sig_visit|[amc.FCtype](/txt/exe/amc/internals.md#amc-fctype)|[Llist](/txt/exe/amc/reftypes.md#llist)|||
 |amc.FDb.target|[amc.FTarget](/txt/exe/amc/internals.md#amc-ftarget)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
 |amc.FDb.ind_target|[amc.FTarget](/txt/exe/amc/internals.md#amc-ftarget)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
@@ -1750,9 +1844,7 @@ struct FTclass { // amc.FTclass
 |amc.FDb.fnoremove|[amc.FFnoremove](/txt/exe/amc/internals.md#amc-ffnoremove)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
 |amc.FDb.c_substr_field|[amc.FSubstr](/txt/exe/amc/internals.md#amc-fsubstr)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
 |amc.FDb.ctypelen|[amc.FCtypelen](/txt/exe/amc/internals.md#amc-fctypelen)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
-|amc.FDb.c_ctypelen|[amc.FCtypelen](/txt/exe/amc/internals.md#amc-fctypelen)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
 |amc.FDb.c_u64|[amc.FCtype](/txt/exe/amc/internals.md#amc-fctype)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
-|amc.FDb.c_tempfield|[amc.FField](/txt/exe/amc/internals.md#amc-ffield)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
 |amc.FDb.fbase|[amc.FFbase](/txt/exe/amc/internals.md#amc-ffbase)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
 |amc.FDb.ind_fcmap|[amc.FFcmap](/txt/exe/amc/internals.md#amc-ffcmap)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
 |amc.FDb.nossimfile|[amc.FNossimfile](/txt/exe/amc/internals.md#amc-fnossimfile)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
@@ -1788,6 +1880,13 @@ struct FTclass { // amc.FTclass
 |amc.FDb.ssimsort|[amc.FSsimsort](/txt/exe/amc/internals.md#amc-fssimsort)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
 |amc.FDb.fbuftype|[amc.FFbuftype](/txt/exe/amc/internals.md#amc-ffbuftype)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
 |amc.FDb.ind_fbuftype|[amc.FFbuftype](/txt/exe/amc/internals.md#amc-ffbuftype)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
+|amc.FDb.nsjs|[amc.FNsjs](/txt/exe/amc/internals.md#amc-fnsjs)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|amc.FDb.jstype|[amc.FJstype](/txt/exe/amc/internals.md#amc-fjstype)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|amc.FDb.ckafka|[amc.FCkafka](/txt/exe/amc/internals.md#amc-fckafka)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|amc.FDb.fkafka|[amc.FFkafka](/txt/exe/amc/internals.md#amc-ffkafka)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|amc.FDb.userfunc|[amc.FUserfunc](/txt/exe/amc/internals.md#amc-fuserfunc)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|amc.FDb.steptype|[amc.FSteptype](/txt/exe/amc/internals.md#amc-fsteptype)|[Lary](/txt/exe/amc/reftypes.md#lary)|||
+|amc.FDb.ind_steptype|[amc.FSteptype](/txt/exe/amc/internals.md#amc-fsteptype)|[Thash](/txt/exe/amc/reftypes.md#thash)|||
 
 #### Struct FDb
 <a href="#struct-fdb"></a>
@@ -2009,9 +2108,6 @@ struct FDb { // amc.FDb: In-memory database for amc
     i32                     tracerec_n;                               // number of elements in array
     amc::FDispsig*          dispsig_lary[32];                         // level array
     i32                     dispsig_n;                                // number of elements in array
-    amc::FDispsig**         c_dispsig_sorted_elems;                   // array of pointers
-    u32                     c_dispsig_sorted_n;                       // array of pointers
-    u32                     c_dispsig_sorted_max;                     // capacity of allocated array
     amc::FCtype*            zs_sig_visit_head;                        // zero-terminated singly linked list
     amc::FCtype*            zs_sig_visit_tail;                        // pointer to last element
     amc::FTarget*           target_lary[32];                          // level array
@@ -2111,13 +2207,7 @@ struct FDb { // amc.FDb: In-memory database for amc
     u32                     c_substr_field_max;                       // capacity of allocated array
     amc::FCtypelen*         ctypelen_lary[32];                        // level array
     i32                     ctypelen_n;                               // number of elements in array
-    amc::FCtypelen**        c_ctypelen_elems;                         // array of pointers
-    u32                     c_ctypelen_n;                             // array of pointers
-    u32                     c_ctypelen_max;                           // capacity of allocated array
     amc::FCtype*            c_u64;                                    // optional pointer
-    amc::FField**           c_tempfield_elems;                        // array of pointers
-    u32                     c_tempfield_n;                            // array of pointers
-    u32                     c_tempfield_max;                          // capacity of allocated array
     amc::FFbase*            fbase_lary[32];                           // level array
     i32                     fbase_n;                                  // number of elements in array
     amc::FFcmap**           ind_fcmap_buckets_elems;                  // pointer to bucket array
@@ -2192,6 +2282,21 @@ struct FDb { // amc.FDb: In-memory database for amc
     amc::FFbuftype**        ind_fbuftype_buckets_elems;               // pointer to bucket array
     i32                     ind_fbuftype_buckets_n;                   // number of elements in bucket array
     i32                     ind_fbuftype_n;                           // number of elements in the hash table
+    amc::FNsjs*             nsjs_lary[32];                            // level array
+    i32                     nsjs_n;                                   // number of elements in array
+    amc::FJstype*           jstype_lary[32];                          // level array
+    i32                     jstype_n;                                 // number of elements in array
+    amc::FCkafka*           ckafka_lary[32];                          // level array
+    i32                     ckafka_n;                                 // number of elements in array
+    amc::FFkafka*           fkafka_lary[32];                          // level array
+    i32                     fkafka_n;                                 // number of elements in array
+    amc::FUserfunc*         userfunc_lary[32];                        // level array
+    i32                     userfunc_n;                               // number of elements in array
+    amc::FSteptype*         steptype_lary[32];                        // level array
+    i32                     steptype_n;                               // number of elements in array
+    amc::FSteptype**        ind_steptype_buckets_elems;               // pointer to bucket array
+    i32                     ind_steptype_buckets_n;                   // number of elements in bucket array
+    i32                     ind_steptype_n;                           // number of elements in the hash table
     amc::trace              trace;                                    //
 };
 ```
@@ -2221,6 +2326,7 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include
 ```
 struct FDispatch { // amc.FDispatch
     amc::FDispatch*       ind_dispatch_next;      // hash next
+    u32                   ind_dispatch_hashval;   // hash value
     algo::Smallstr50      dispatch;               // Primary key (ns.name)
     bool                  unk;                    //   false  Want default case?
     bool                  read;                   //   false  Generate read function
@@ -2228,6 +2334,8 @@ struct FDispatch { // amc.FDispatch
     bool                  haslen;                 //   false  Include length in dispatch function
     bool                  call;                   //   false  Generate call to user-defined function
     bool                  strict;                 //   false  Only dispatch if length matches exactly
+    bool                  dyn;                    //   false  Use dynamic memory allocation: new, delete instead of  ByteAry
+    bool                  kafka;                  //   false  generate kafka codec
     amc::FCtype*          p_ctype_hdr;            // reference to parent row
     amc::FCtype*          p_casetype;             // reference to parent row
     amc::FDispfilter*     c_dispfilter;           // optional pointer
@@ -2393,10 +2501,9 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FDispsig { // amc.FDispsig
-    algo::Smallstr50   dispsig;                       //
-    algo::Sha1sig      signature;                     //
-    bool               _db_c_dispsig_sorted_in_ary;   //   false  membership flag
-    bool               ns_c_dispsig_in_ary;           //   false  membership flag
+    algo::Smallstr50   dispsig;               //
+    algo::Sha1sig      signature;             //
+    bool               ns_c_dispsig_in_ary;   //   false  membership flag
     // func:amc.FDispsig..AssignOp
     inline amc::FDispsig& operator =(const amc::FDispsig &rhs) = delete;
     // func:amc.FDispsig..CopyCtor
@@ -2466,12 +2573,13 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FEnumstr { // amc.FEnumstr: All values of a given length
-    amc::FEnumstr*   ind_enumstr_next;   // hash next
-    amc::Enumstr     enumstr;            //
-    amc::FFconst**   c_fconst_elems;     // array of pointers
-    u32              c_fconst_n;         // array of pointers
-    u32              c_fconst_max;       // capacity of allocated array
-    i32              bh_enumstr_idx;     // index in heap; -1 means not-in-heap
+    amc::FEnumstr*   ind_enumstr_next;             // hash next
+    u32              ind_enumstr_hashval;          // hash value
+    amc::Enumstr     enumstr;                      //
+    amc::FFconst**   c_fconst_elems;               // array of pointers
+    u32              c_fconst_n;                   // array of pointers
+    u32              c_fconst_max;                 // capacity of allocated array
+    i32              enumstr_len_bh_enumstr_idx;   // index in heap; -1 means not-in-heap
     // reftype Ptrary of amc.FEnumstr.c_fconst prohibits copy
     // func:amc.FEnumstr..AssignOp
     inline amc::FEnumstr& operator =(const amc::FEnumstr &rhs) = delete;
@@ -2505,12 +2613,13 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FEnumstrLen { // amc.FEnumstrLen
-    i32                 bh_enumstr_len_idx;     // index in heap; -1 means not-in-heap
-    amc::FEnumstrLen*   ind_enumstr_len_next;   // hash next
-    i32                 len;                    //   0
-    amc::FEnumstr**     bh_enumstr_elems;       // binary heap by str
-    i32                 bh_enumstr_n;           // number of elements in the heap
-    i32                 bh_enumstr_max;         // max elements in bh_enumstr_elems
+    i32                 bh_enumstr_len_idx;        // index in heap; -1 means not-in-heap
+    amc::FEnumstrLen*   ind_enumstr_len_next;      // hash next
+    u32                 ind_enumstr_len_hashval;   // hash value
+    i32                 len;                       //   0
+    amc::FEnumstr**     bh_enumstr_elems;          // binary heap by str
+    i32                 bh_enumstr_n;              // number of elements in the heap
+    i32                 bh_enumstr_max;            // max elements in bh_enumstr_elems
     // reftype Bheap of amc.FEnumstrLen.bh_enumstr prohibits copy
     // func:amc.FEnumstrLen..AssignOp
     inline amc::FEnumstrLen& operator =(const amc::FEnumstrLen &rhs) = delete;
@@ -2657,9 +2766,10 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FFbitset { // amc.FFbitset
-    amc::FFbitset*      ind_fbitset_next;   // hash next
-    algo::Smallstr100   field;              //
-    amc::FField*        p_field;            // reference to parent row
+    amc::FFbitset*      ind_fbitset_next;      // hash next
+    u32                 ind_fbitset_hashval;   // hash value
+    algo::Smallstr100   field;                 //
+    amc::FField*        p_field;               // reference to parent row
     // x-reference on amc.FFbitset.p_field prevents copy
     // func:amc.FFbitset..AssignOp
     inline amc::FFbitset& operator =(const amc::FFbitset &rhs) = delete;
@@ -2696,15 +2806,17 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FFbuf { // amc.FFbuf
-    amc::FFbuf*         ind_fbuf_next;   // hash next
-    algo::Smallstr100   field;           //
-    u32                 max;             //   0  Size of buffer in bytes
-    algo::Smallstr50    fbuftype;        // Type of buffer
-    algo::Smallstr100   insready;        //
-    algo::Smallstr100   inseof;          //
-    amc::FField*        p_insready;      // reference to parent row
-    amc::FField*        p_inseof;        // reference to parent row
-    amc::FFbuftype*     p_fbuftype;      // reference to parent row
+    amc::FFbuf*         ind_fbuf_next;      // hash next
+    u32                 ind_fbuf_hashval;   // hash value
+    algo::Smallstr100   field;              //
+    u32                 max;                //   0  Size of buffer in bytes
+    algo::Smallstr50    fbuftype;           // Type of buffer
+    algo::Smallstr100   insready;           //
+    algo::Smallstr100   inseof;             //
+    algo::Smallstr50    iotype;             //   "standard"
+    amc::FField*        p_insready;         // reference to parent row
+    amc::FField*        p_inseof;           // reference to parent row
+    amc::FFbuftype*     p_fbuftype;         // reference to parent row
     // x-reference on amc.FFbuf.p_insready prevents copy
     // x-reference on amc.FFbuf.p_inseof prevents copy
     // x-reference on amc.FFbuf.p_fbuftype prevents copy
@@ -2742,10 +2854,11 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FFbuftype { // amc.FFbuftype
-    amc::FFbuftype*    ind_fbuftype_next;   // hash next
-    algo::Smallstr50   fbuftype;            //
-    bool               skipbytes;           //   false  Has skipbytes function?
-    algo::Comment      comment;             //
+    amc::FFbuftype*    ind_fbuftype_next;      // hash next
+    u32                ind_fbuftype_hashval;   // hash value
+    algo::Smallstr50   fbuftype;               //
+    bool               skipbytes;              //   false  Has skipbytes function?
+    algo::Comment      comment;                //
     // func:amc.FFbuftype..AssignOp
     inline amc::FFbuftype& operator =(const amc::FFbuftype &rhs) = delete;
     // func:amc.FFbuftype..CopyCtor
@@ -2850,14 +2963,15 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FFcmap { // amc.FFcmap
-    amc::FFcmap*        ind_fcmap_next;   // hash next
-    algo::Smallstr250   fcmap;            // cstring maybe?
-    bool                bidir;            //   true
-    algo::Comment       comment;          //
-    amc::FField*        p_leftField;      // reference to parent row
-    amc::FField*        p_rightField;     // reference to parent row
-    amc::FFunc*         c_convfunc;       // Generated conversion func. optional pointer
-    amc::FFcmap*        zs_fcmap_next;    // zslist link; -1 means not-in-list
+    amc::FFcmap*        ind_fcmap_next;        // hash next
+    u32                 ind_fcmap_hashval;     // hash value
+    algo::Smallstr250   fcmap;                 // cstring maybe?
+    bool                bidir;                 //   true
+    algo::Comment       comment;               //
+    amc::FField*        p_leftField;           // reference to parent row
+    amc::FField*        p_rightField;          // reference to parent row
+    amc::FFunc*         c_convfunc;            // Generated conversion func. optional pointer
+    amc::FFcmap*        field_zs_fcmap_next;   // zslist link; -1 means not-in-list
     // x-reference on amc.FFcmap.p_leftField prevents copy
     // x-reference on amc.FFcmap.p_rightField prevents copy
     // func:amc.FFcmap..AssignOp
@@ -3013,16 +3127,18 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FFconst { // amc.FFconst
-    amc::FFconst*       ind_fconst_next;         // hash next
-    amc::FFconst*       ind_fconst_int_next;     // hash next
-    algo::Smallstr100   fconst;                  //
-    algo::CppExpr       value;                   //
-    algo::Comment       comment;                 //
-    amc::FField*        p_field;                 // reference to parent row
-    algo::cstring       cpp_value;               //
-    i64                 int_val;                 //   0  integer value
-    algo::cstring       cpp_name;                // symbol to use in cpp file
-    bool                field_c_fconst_in_ary;   //   false  membership flag
+    amc::FFconst*       ind_fconst_next;          // hash next
+    u32                 ind_fconst_hashval;       // hash value
+    amc::FFconst*       ind_fconst_int_next;      // hash next
+    u32                 ind_fconst_int_hashval;   // hash value
+    algo::Smallstr100   fconst;                   //
+    algo::CppExpr       value;                    //
+    algo::Comment       comment;                  //
+    amc::FField*        p_field;                  // reference to parent row
+    algo::cstring       cpp_value;                //
+    i64                 int_val;                  //   0  integer value
+    algo::cstring       cpp_name;                 // symbol to use in cpp file
+    bool                field_c_fconst_in_ary;    //   false  membership flag
     // x-reference on amc.FFconst.p_field prevents copy
     // func:amc.FFconst..AssignOp
     amc::FFconst&        operator =(const amc::FFconst &rhs) = delete;
@@ -3058,6 +3174,7 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include
 ```
 struct FFcurs { // amc.FFcurs
     amc::FFcurs*       ind_fcurs_next;         // hash next
+    u32                ind_fcurs_hashval;      // hash value
     algo::Smallstr50   fcurs;                  //
     algo::Comment      comment;                //
     amc::FField*       p_field;                // reference to parent row
@@ -3096,11 +3213,12 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FFdec { // amc.FFdec
-    amc::FFdec*         ind_fdec_next;   // hash next
-    algo::Smallstr100   field;           // Target field
-    i32                 nplace;          //   0  Number of implied decimal places
-    bool                fixedfmt;        //   false  Print exactly SCALE chars after decimal point
-    amc::FField*        p_field;         // reference to parent row
+    amc::FFdec*         ind_fdec_next;      // hash next
+    u32                 ind_fdec_hashval;   // hash value
+    algo::Smallstr100   field;              // Target field
+    i32                 nplace;             //   0  Number of implied decimal places
+    bool                fixedfmt;           //   false  Print exactly SCALE chars after decimal point
+    amc::FField*        p_field;            // reference to parent row
     // x-reference on amc.FFdec.p_field prevents copy
     // func:amc.FFdec..AssignOp
     inline amc::FFdec&   operator =(const amc::FFdec &rhs) = delete;
@@ -3215,11 +3333,12 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FFflag { // amc.FFflag
-    amc::FFflag*        ind_fflag_next;   // hash next
-    algo::Smallstr100   field;            //
-    bool                cumulative;       //   false  Accumulate on every read
-    algo::cstring       emptyval;         //   ""
-    algo::Comment       comment;          //
+    amc::FFflag*        ind_fflag_next;      // hash next
+    u32                 ind_fflag_hashval;   // hash value
+    algo::Smallstr100   field;               //
+    bool                cumulative;          //   false  Accumulate on every read
+    algo::cstring       emptyval;            //   ""
+    algo::Comment       comment;             //
     // func:amc.FFflag..AssignOp
     inline amc::FFflag&  operator =(const amc::FFflag &rhs) = delete;
     // func:amc.FFflag..CopyCtor
@@ -3313,6 +3432,8 @@ private:
 |amc.FField.c_ffast_mantissa|[amc.FFfast](/txt/exe/amc/internals.md#amc-fffast)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 |amc.FField.c_ffast|[amc.FFfast](/txt/exe/amc/internals.md#amc-fffast)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
 |amc.FField.c_pmaskfld_member|[amc.FPmaskfldMember](/txt/exe/amc/internals.md#amc-fpmaskfldmember)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
+|amc.FField.c_lenfld|[amc.FLenfld](/txt/exe/amc/internals.md#amc-flenfld)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|amc.FField.c_fkafka|[amc.FFkafka](/txt/exe/amc/internals.md#amc-ffkafka)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 
 #### Struct FField
 <a href="#struct-ffield"></a>
@@ -3321,11 +3442,14 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FField { // amc.FField
-    amc::FField*             zd_inst_next;              // zslist link; -1 means not-in-list
-    amc::FField*             zd_inst_prev;              // previous element
-    amc::FField*             zd_access_next;            // zslist link; -1 means not-in-list
-    amc::FField*             zd_access_prev;            // previous element
+    amc::FField*             ctype_zd_inst_next;        // zslist link; -1 means not-in-list
+    amc::FField*             ctype_zd_inst_prev;        // previous element
+    amc::FField*             ctype_zd_access_next;      // zslist link; -1 means not-in-list
+    amc::FField*             ctype_zd_access_prev;      // previous element
+    amc::FField*             ctype_zd_varlenfld_next;   // zslist link; -1 means not-in-list
+    amc::FField*             ctype_zd_varlenfld_prev;   // previous element
     amc::FField*             ind_field_next;            // hash next
+    u32                      ind_field_hashval;         // hash value
     amc::FField*             zs_ordkeyfield_next;       // zslist link; -1 means not-in-list
     algo::Smallstr100        field;                     // Primary key, as ctype.name
     algo::Smallstr100        arg;                       // Type of field
@@ -3414,8 +3538,9 @@ struct FField { // amc.FField
     amc::FPmaskfldMember**   c_pmaskfld_member_elems;   // array of pointers
     u32                      c_pmaskfld_member_n;       // array of pointers
     u32                      c_pmaskfld_member_max;     // capacity of allocated array
+    amc::FLenfld*            c_lenfld;                  // optional pointer
+    amc::FFkafka*            c_fkafka;                  // optional pointer
     bool                     ctype_c_datafld_in_ary;    //   false  membership flag
-    bool                     _db_c_tempfield_in_ary;    //   false  membership flag
     // x-reference on amc.FField.c_fsort prevents copy
     // x-reference on amc.FField.c_fbitset prevents copy
     // x-reference on amc.FField.c_smallstr prevents copy
@@ -3473,6 +3598,8 @@ struct FField { // amc.FField
     // x-reference on amc.FField.c_ffast_mantissa prevents copy
     // reftype Ptrary of amc.FField.c_ffast prohibits copy
     // reftype Ptrary of amc.FField.c_pmaskfld_member prohibits copy
+    // x-reference on amc.FField.c_lenfld prevents copy
+    // x-reference on amc.FField.c_fkafka prevents copy
     // func:amc.FField..AssignOp
     amc::FField&         operator =(const amc::FField &rhs) = delete;
     // x-reference on amc.FField.c_fsort prevents copy
@@ -3532,6 +3659,8 @@ struct FField { // amc.FField
     // x-reference on amc.FField.c_ffast_mantissa prevents copy
     // reftype Ptrary of amc.FField.c_ffast prohibits copy
     // reftype Ptrary of amc.FField.c_pmaskfld_member prohibits copy
+    // x-reference on amc.FField.c_lenfld prevents copy
+    // x-reference on amc.FField.c_fkafka prevents copy
     // func:amc.FField..CopyCtor
     FField(const amc::FField &rhs) = delete;
 private:
@@ -3614,6 +3743,44 @@ private:
     friend amc::FFinput&        finput_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FFinput*        finput_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 finput_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### amc.FFkafka - 
+<a href="#amc-ffkafka"></a>
+
+#### amc.FFkafka Fields
+<a href="#amc-ffkafka-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|amc.FFkafka.base|[dmmeta.Fkafka](/txt/ssimdb/dmmeta/fkafka.md)|[Base](/txt/ssimdb/dmmeta/fkafka.md)|||
+
+#### Struct FFkafka
+<a href="#struct-ffkafka"></a>
+*Note:* field ``amc.FFkafka.base`` has reftype ``base`` so the fields of [dmmeta.Fkafka](/txt/ssimdb/dmmeta/fkafka.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
+```
+struct FFkafka { // amc.FFkafka
+    algo::Smallstr100   field;               //
+    algo::Smallstr10    versions;            //
+    algo::Smallstr10    nullable_versions;   //
+    algo::Smallstr10    tagged_versions;     //
+    u64                 tag;                 //   0
+    algo::Comment       comment;             //
+    // func:amc.FFkafka..AssignOp
+    inline amc::FFkafka& operator =(const amc::FFkafka &rhs) = delete;
+    // func:amc.FFkafka..CopyCtor
+    inline               FFkafka(const amc::FFkafka &rhs) = delete;
+private:
+    // func:amc.FFkafka..Ctor
+    inline               FFkafka() __attribute__((nothrow));
+    // func:amc.FFkafka..Dtor
+    inline               ~FFkafka() __attribute__((nothrow));
+    friend amc::FFkafka&        fkafka_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FFkafka*        fkafka_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 fkafka_RemoveAll() __attribute__((nothrow));
+    friend void                 fkafka_RemoveLast() __attribute__((nothrow));
 };
 ```
 
@@ -3773,11 +3940,12 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FFprefix { // amc.FFprefix
-    amc::FFprefix*     ind_prefix_next;   // hash next
-    algo::Smallstr5    fprefix;           //
-    algo::Smallstr50   reftype;           //
-    algo::Comment      comment;           //
-    amc::FFprefix*     zs_fprefix_next;   // zslist link; -1 means not-in-list
+    amc::FFprefix*     ind_prefix_next;           // hash next
+    u32                ind_prefix_hashval;        // hash value
+    algo::Smallstr5    fprefix;                   //
+    algo::Smallstr50   reftype;                   //
+    algo::Comment      comment;                   //
+    amc::FFprefix*     reftype_zs_fprefix_next;   // zslist link; -1 means not-in-list
     // func:amc.FFprefix..AssignOp
     inline amc::FFprefix& operator =(const amc::FFprefix &rhs) = delete;
     // func:amc.FFprefix..CopyCtor
@@ -3880,6 +4048,7 @@ private:
 |amc.FFstep.msghdr|[dmmeta.Fstep](/txt/ssimdb/dmmeta/fstep.md)|[Base](/txt/ssimdb/dmmeta/fstep.md)|||
 |amc.FFstep.c_fdelay|[amc.FFdelay](/txt/exe/amc/internals.md#amc-ffdelay)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 |amc.FFstep.p_field|[amc.FField](/txt/exe/amc/internals.md#amc-ffield)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|amc.FFstep.p_steptype|[amc.FSteptype](/txt/exe/amc/internals.md#amc-fsteptype)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
 
 #### Struct FFstep
 <a href="#struct-ffstep"></a>
@@ -3889,18 +4058,22 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include
 ```
 struct FFstep { // amc.FFstep
     amc::FFstep*        ind_fstep_next;      // hash next
+    u32                 ind_fstep_hashval;   // hash value
     algo::Smallstr100   fstep;               //
     algo::Smallstr50    steptype;            //
     algo::Comment       comment;             //
     amc::FFdelay*       c_fdelay;            // optional pointer
     amc::FField*        p_field;             // reference to parent row
+    amc::FSteptype*     p_steptype;          // reference to parent row
     bool                ns_c_fstep_in_ary;   //   false  membership flag
     // x-reference on amc.FFstep.c_fdelay prevents copy
     // x-reference on amc.FFstep.p_field prevents copy
+    // x-reference on amc.FFstep.p_steptype prevents copy
     // func:amc.FFstep..AssignOp
     amc::FFstep&         operator =(const amc::FFstep &rhs) = delete;
     // x-reference on amc.FFstep.c_fdelay prevents copy
     // x-reference on amc.FFstep.p_field prevents copy
+    // x-reference on amc.FFstep.p_steptype prevents copy
     // func:amc.FFstep..CopyCtor
     FFstep(const amc::FFstep &rhs) = delete;
 private:
@@ -3956,15 +4129,17 @@ private:
 |---|---|---|---|---|
 |amc.FFunc.msghdr|[dmmeta.Func](/txt/ssimdb/dmmeta/func.md)|[Base](/txt/ssimdb/dmmeta/func.md)|||
 |amc.FFunc.p_ns|[amc.FNs](/txt/exe/amc/internals.md#amc-fns)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
-|amc.FFunc.inl|bool|[Val](/txt/exe/amc/reftypes.md#val)||Make inline?|
+|amc.FFunc.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Body of function|
+|amc.FFunc.prepcond|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Preprocessor #if condition|
+|amc.FFunc.proto|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Prototype|
 |amc.FFunc.nonnull|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||List of non-null attributes|
+|amc.FFunc.initializer|[algo.StringAry](/txt/protocol/algo/README.md#algo-stringary)|[Val](/txt/exe/amc/reftypes.md#val)||Initializer list (constructors only)|
+|amc.FFunc.ret|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Return type (c++ expression)|
+|amc.FFunc.acrkey|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Acr key due to which function was created|
 |amc.FFunc.funcarg|[amc.Funcarg](/txt/exe/amc/internals.md#amc-funcarg)|[Tary](/txt/exe/amc/reftypes.md#tary)||Array of declared function arguments|
 |amc.FFunc.printed|bool|[Val](/txt/exe/amc/reftypes.md#val)||Already printed? (internal)|
 |amc.FFunc.throws|bool|[Val](/txt/exe/amc/reftypes.md#val)||Throws exceptions|
-|amc.FFunc.proto|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Prototype|
 |amc.FFunc.nothrow|bool|[Val](/txt/exe/amc/reftypes.md#val)||Definitely doesn't throw exception|
-|amc.FFunc.oper|bool|[Val](/txt/exe/amc/reftypes.md#val)||Is operator?|
-|amc.FFunc.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Body of function|
 |amc.FFunc.member|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Function is a member (print inside struct)|
 |amc.FFunc.disable|bool|[Val](/txt/exe/amc/reftypes.md#val)|false|Function is enabled (if not, don't print)|
 |amc.FFunc.deprecate|bool|[Val](/txt/exe/amc/reftypes.md#val)||Make deprecated?|
@@ -3975,15 +4150,13 @@ private:
 |amc.FFunc.glob|bool|[Val](/txt/exe/amc/reftypes.md#val)||Function is not attached to a field (EXPLAIN!!)|
 |amc.FFunc.wur|bool|[Val](/txt/exe/amc/reftypes.md#val)||Warn on unused result|
 |amc.FFunc.priv|bool|[Val](/txt/exe/amc/reftypes.md#val)||Private to translateion unit (static)|
-|amc.FFunc.ret|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Return type (c++ expression)|
 |amc.FFunc.pure|bool|[Val](/txt/exe/amc/reftypes.md#val)||OK to call fewer times than specified in text|
 |amc.FFunc.isprivate|bool|[Val](/txt/exe/amc/reftypes.md#val)||Applies to member functions only -- private|
 |amc.FFunc.finalized|bool|[Val](/txt/exe/amc/reftypes.md#val)||Don't add any more code to me|
 |amc.FFunc.isexplicit|bool|[Val](/txt/exe/amc/reftypes.md#val)||Is explicit constructor (add 'explicit')|
 |amc.FFunc.istmpl|bool|[Val](/txt/exe/amc/reftypes.md#val)||Function is a template|
 |amc.FFunc.deleted|bool|[Val](/txt/exe/amc/reftypes.md#val)||Function is marked as deleted|
-|amc.FFunc.prepcond|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)||Preprocessor #if condition|
-|amc.FFunc.initializer|[algo.StringAry](/txt/protocol/algo/README.md#algo-stringary)|[Val](/txt/exe/amc/reftypes.md#val)||Initializer list (constructors only)|
+|amc.FFunc.inl|bool|[Val](/txt/exe/amc/reftypes.md#val)||Make inline?|
 
 #### Struct FFunc
 <a href="#struct-ffunc"></a>
@@ -3993,23 +4166,26 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include
 ```
 struct FFunc { // amc.FFunc
     amc::FFunc*         ind_func_next;       // hash next
+    u32                 ind_func_hashval;    // hash value
     amc::FFunc*         cd_temp_func_next;   // zslist link; -1 means not-in-list
     amc::FFunc*         cd_temp_func_prev;   // previous element
     algo::Smallstr100   func;                // Primary key
     bool                extrn;               //   false  Implemented externally by user
     algo::cstring       comment;             // Description
     amc::FNs*           p_ns;                // reference to parent row
-    bool                inl;                 //   false  Make inline?
+    algo::cstring       body;                // Body of function
+    algo::cstring       prepcond;            // Preprocessor #if condition
+    algo::cstring       proto;               // Prototype
     algo::cstring       nonnull;             // List of non-null attributes
+    algo::StringAry     initializer;         // Initializer list (constructors only)
+    algo::cstring       ret;                 // Return type (c++ expression)
+    algo::cstring       acrkey;              // Acr key due to which function was created
     amc::Funcarg*       funcarg_elems;       // pointer to elements
     u32                 funcarg_n;           // number of elements in array
     u32                 funcarg_max;         // max. capacity of array before realloc
     bool                printed;             //   false  Already printed? (internal)
     bool                throws;              //   false  Throws exceptions
-    algo::cstring       proto;               // Prototype
     bool                nothrow;             //   false  Definitely doesn't throw exception
-    bool                oper;                //   false  Is operator?
-    algo::cstring       body;                // Body of function
     bool                member;              //   false  Function is a member (print inside struct)
     bool                disable;             //   false  Function is enabled (if not, don't print)
     bool                deprecate;           //   false  Make deprecated?
@@ -4020,15 +4196,13 @@ struct FFunc { // amc.FFunc
     bool                glob;                //   false  Function is not attached to a field (EXPLAIN!!)
     bool                wur;                 //   false  Warn on unused result
     bool                priv;                //   false  Private to translateion unit (static)
-    algo::cstring       ret;                 // Return type (c++ expression)
     bool                pure;                //   false  OK to call fewer times than specified in text
     bool                isprivate;           //   false  Applies to member functions only -- private
     bool                finalized;           //   false  Don't add any more code to me
     bool                isexplicit;          //   false  Is explicit constructor (add 'explicit')
     bool                istmpl;              //   false  Function is a template
     bool                deleted;             //   false  Function is marked as deleted
-    algo::cstring       prepcond;            // Preprocessor #if condition
-    algo::StringAry     initializer;         // Initializer list (constructors only)
+    bool                inl;                 //   false  Make inline?
     bool                ns_c_func_in_ary;    //   false  membership flag
     // x-reference on amc.FFunc.p_ns prevents copy
     // func:amc.FFunc..AssignOp
@@ -4132,6 +4306,7 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include
 ```
 struct FFwddecl { // amc.FFwddecl
     amc::FFwddecl*      ind_fwddecl_next;      // hash next
+    u32                 ind_fwddecl_hashval;   // hash value
     algo::Smallstr100   fwddecl;               //
     bool                ns_c_fwddecl_in_ary;   //   false  membership flag
     // func:amc.FFwddecl..AssignOp
@@ -4277,10 +4452,11 @@ struct FGenXref { // amc.FGenXref
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FGenXrefSeen { // amc.FGenXrefSeen
-    amc::FGenXrefSeen*   ind_seen_next;   // hash next
-    algo::cstring        value;           //
-    algo::Smallstr100    via;             // Saved via
-    algo::Smallstr100    xreffld;         // Saved xreffld
+    amc::FGenXrefSeen*   parent_ind_seen_next;      // hash next
+    u32                  parent_ind_seen_hashval;   // hash value
+    algo::cstring        value;                     //
+    algo::Smallstr100    via;                       // Saved via
+    algo::Smallstr100    xreffld;                   // Saved xreffld
 private:
     // func:amc.FGenXrefSeen..Ctor
     inline               FGenXrefSeen() __attribute__((nothrow));
@@ -4394,7 +4570,6 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include
 ```
 struct FHook { // amc.FHook
     algo::Smallstr100   field;       // The field
-    algo::Comment       comment;     //
     amc::FCtype*        p_funcptr;   // reference to parent row
     amc::FField*        p_field;     // reference to parent row
     // x-reference on amc.FHook.p_field prevents copy
@@ -4431,11 +4606,12 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FInlary { // amc.FInlary
-    amc::FInlary*       ind_inlary_next;   // hash next
-    algo::Smallstr100   field;             //
-    i32                 min;               //   0  Min. elements to preallocate
-    i32                 max;               //   0  Max. elements
-    algo::Comment       comment;           //
+    amc::FInlary*       ind_inlary_next;      // hash next
+    u32                 ind_inlary_hashval;   // hash value
+    algo::Smallstr100   field;                //
+    i32                 min;                  //   0  Min. elements to preallocate
+    i32                 max;                  //   0  Max. elements
+    algo::Comment       comment;              //
     // func:amc.FInlary..AssignOp
     inline amc::FInlary& operator =(const amc::FInlary &rhs) = delete;
     // func:amc.FInlary..CopyCtor
@@ -4448,6 +4624,40 @@ private:
     friend amc::FInlary&        inlary_Alloc() __attribute__((__warn_unused_result__, nothrow));
     friend amc::FInlary*        inlary_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 inlary_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### amc.FJstype - 
+<a href="#amc-fjstype"></a>
+
+#### amc.FJstype Fields
+<a href="#amc-fjstype-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|amc.FJstype.base|[dmmeta.Jstype](/txt/ssimdb/dmmeta/jstype.md)|[Base](/txt/ssimdb/dmmeta/jstype.md)|||
+
+#### Struct FJstype
+<a href="#struct-fjstype"></a>
+*Note:* field ``amc.FJstype.base`` has reftype ``base`` so the fields of [dmmeta.Jstype](/txt/ssimdb/dmmeta/jstype.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
+```
+struct FJstype { // amc.FJstype
+    algo::Smallstr100   ctype;     //
+    algo::Comment       comment;   //
+    // func:amc.FJstype..AssignOp
+    inline amc::FJstype& operator =(const amc::FJstype &rhs) = delete;
+    // func:amc.FJstype..CopyCtor
+    inline               FJstype(const amc::FJstype &rhs) = delete;
+private:
+    // func:amc.FJstype..Ctor
+    inline               FJstype() __attribute__((nothrow));
+    // func:amc.FJstype..Dtor
+    inline               ~FJstype() __attribute__((nothrow));
+    friend amc::FJstype&        jstype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FJstype*        jstype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 jstype_RemoveAll() __attribute__((nothrow));
+    friend void                 jstype_RemoveLast() __attribute__((nothrow));
 };
 ```
 
@@ -4505,10 +4715,11 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FLicense { // amc.FLicense
-    amc::FLicense*     ind_license_next;   // hash next
-    algo::Smallstr50   license;            //
-    algo::Comment      comment;            //
-    algo::cstring      text;               //
+    amc::FLicense*     ind_license_next;      // hash next
+    u32                ind_license_hashval;   // hash value
+    algo::Smallstr50   license;               //
+    algo::Comment      comment;               //
+    algo::cstring      text;                  //
     // func:amc.FLicense..AssignOp
     inline amc::FLicense& operator =(const amc::FLicense &rhs) = delete;
     // func:amc.FLicense..CopyCtor
@@ -4541,11 +4752,12 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FListtype { // amc.FListtype
-    amc::FListtype*   ind_listtype_next;   // hash next
-    algo::Smallstr5   listtype;            //
-    bool              circular;            //   false  Circular list
-    bool              haveprev;            //   false  Previous link
-    bool              instail;             //   false  Queue
+    amc::FListtype*   ind_listtype_next;      // hash next
+    u32               ind_listtype_hashval;   // hash value
+    algo::Smallstr5   listtype;               //
+    bool              circular;               //   false  Circular list
+    bool              haveprev;               //   false  Previous link
+    bool              instail;                //   false  Queue
     // func:amc.FListtype..AssignOp
     inline amc::FListtype& operator =(const amc::FListtype &rhs) = delete;
     // func:amc.FListtype..CopyCtor
@@ -4615,9 +4827,10 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FMain { // amc.FMain
-    amc::FMain*        ind_main_next;   // hash next
-    algo::Smallstr16   ns;              //
-    bool               ismodule;        //   false
+    amc::FMain*        ind_main_next;      // hash next
+    u32                ind_main_hashval;   // hash value
+    algo::Smallstr16   ns;                 //
+    bool               ismodule;           //   false
     // func:amc.FMain..AssignOp
     inline amc::FMain&   operator =(const amc::FMain &rhs) = delete;
     // func:amc.FMain..CopyCtor
@@ -4768,6 +4981,30 @@ private:
 };
 ```
 
+#### amc.JsNs - 
+<a href="#amc-jsns"></a>
+
+#### amc.JsNs Fields
+<a href="#amc-jsns-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|amc.JsNs.import|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|amc.JsNs.mdl|[algo.cstring](/txt/protocol/algo/cstring.md)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|amc.JsNs.body|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct JsNs
+<a href="#struct-jsns"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
+```
+struct JsNs { // amc.JsNs
+    algo::cstring    import;   //
+    algo::cstring*   mdl;      // optional pointer
+    algo::cstring    body;     //
+    // func:amc.JsNs..Ctor
+    inline               JsNs() __attribute__((nothrow));
+};
+```
+
 #### amc.FNs - Namespace (for in-memory database, protocol, etc)
 <a href="#amc-fns"></a>
 
@@ -4809,6 +5046,8 @@ private:
 |amc.FNs.c_nsinclude|[amc.FNsinclude](/txt/exe/amc/internals.md#amc-fnsinclude)|[Ptrary](/txt/exe/amc/reftypes.md#ptrary)|||
 |amc.FNs.c_nscpp|[amc.FNscpp](/txt/exe/amc/internals.md#amc-fnscpp)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 |amc.FNs.p_license|[amc.FLicense](/txt/exe/amc/internals.md#amc-flicense)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
+|amc.FNs.js|[amc.JsNs](/txt/exe/amc/internals.md#amc-jsns)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|amc.FNs.c_nsjs|[amc.FNsjs](/txt/exe/amc/internals.md#amc-fnsjs)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
 
 #### Struct FNs
 <a href="#struct-fns"></a>
@@ -4818,6 +5057,7 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include
 ```
 struct FNs { // amc.FNs
     amc::FNs*           ind_ns_next;         // hash next
+    u32                 ind_ns_hashval;      // hash value
     algo::Smallstr16    ns;                  // Namespace name (primary key)
     algo::Smallstr50    nstype;              // Namespace type
     algo::Smallstr50    license;             // Associated license
@@ -4887,6 +5127,8 @@ struct FNs { // amc.FNs
     u32                 c_nsinclude_max;     // capacity of allocated array
     amc::FNscpp*        c_nscpp;             // optional pointer
     amc::FLicense*      p_license;           // reference to parent row
+    amc::JsNs           js;                  //
+    amc::FNsjs*         c_nsjs;              // optional pointer
     // reftype Ptrary of amc.FNs.c_ctype prohibits copy
     // reftype Ptrary of amc.FNs.c_func prohibits copy
     // reftype Ptrary of amc.FNs.c_dispatch prohibits copy
@@ -4911,6 +5153,7 @@ struct FNs { // amc.FNs
     // reftype Ptrary of amc.FNs.c_nsinclude prohibits copy
     // x-reference on amc.FNs.c_nscpp prevents copy
     // x-reference on amc.FNs.p_license prevents copy
+    // x-reference on amc.FNs.c_nsjs prevents copy
     // func:amc.FNs..AssignOp
     amc::FNs&            operator =(const amc::FNs &rhs) = delete;
     // reftype Ptrary of amc.FNs.c_ctype prohibits copy
@@ -4937,6 +5180,7 @@ struct FNs { // amc.FNs
     // reftype Ptrary of amc.FNs.c_nsinclude prohibits copy
     // x-reference on amc.FNs.c_nscpp prevents copy
     // x-reference on amc.FNs.p_license prevents copy
+    // x-reference on amc.FNs.c_nsjs prevents copy
     // func:amc.FNs..CopyCtor
     FNs(const amc::FNs &rhs) = delete;
 private:
@@ -5050,6 +5294,42 @@ private:
     friend amc::FNsinclude*     nsinclude_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
     friend void                 nsinclude_RemoveAll() __attribute__((nothrow));
     friend void                 nsinclude_RemoveLast() __attribute__((nothrow));
+};
+```
+
+#### amc.FNsjs - Generate JavaScript code for this namespace
+<a href="#amc-fnsjs"></a>
+
+#### amc.FNsjs Fields
+<a href="#amc-fnsjs-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|amc.FNsjs.base|[dmmeta.Nsjs](/txt/ssimdb/dmmeta/nsjs.md)|[Base](/txt/ssimdb/dmmeta/nsjs.md)|||
+
+#### Struct FNsjs
+<a href="#struct-fnsjs"></a>
+*Note:* field ``amc.FNsjs.base`` has reftype ``base`` so the fields of [dmmeta.Nsjs](/txt/ssimdb/dmmeta/nsjs.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
+```
+struct FNsjs { // amc.FNsjs
+    algo::Smallstr16   ns;           //
+    bool               typescript;   //   false  Generate typescript
+    bool               gensel;       //   false  Generate selected, false-all
+    algo::Comment      comment;      //
+    // func:amc.FNsjs..AssignOp
+    inline amc::FNsjs&   operator =(const amc::FNsjs &rhs) = delete;
+    // func:amc.FNsjs..CopyCtor
+    inline               FNsjs(const amc::FNsjs &rhs) = delete;
+private:
+    // func:amc.FNsjs..Ctor
+    inline               FNsjs() __attribute__((nothrow));
+    // func:amc.FNsjs..Dtor
+    inline               ~FNsjs() __attribute__((nothrow));
+    friend amc::FNsjs&          nsjs_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FNsjs*          nsjs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 nsjs_RemoveAll() __attribute__((nothrow));
+    friend void                 nsjs_RemoveLast() __attribute__((nothrow));
 };
 ```
 
@@ -5233,9 +5513,10 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FPack { // amc.FPack
-    amc::FPack*         ind_pack_next;   // hash next
-    algo::Smallstr100   ctype;           // Target ctype
-    amc::FCtype*        p_ctype;         // reference to parent row
+    amc::FPack*         ind_pack_next;      // hash next
+    u32                 ind_pack_hashval;   // hash value
+    algo::Smallstr100   ctype;              // Target ctype
+    amc::FCtype*        p_ctype;            // reference to parent row
     // x-reference on amc.FPack.p_ctype prevents copy
     // func:amc.FPack..AssignOp
     inline amc::FPack&   operator =(const amc::FPack &rhs) = delete;
@@ -5274,6 +5555,7 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include
 ```
 struct FPmaskfld { // amc.FPmaskfld
     amc::FPmaskfld*          ind_pmaskfld_next;         // hash next
+    u32                      ind_pmaskfld_hashval;      // hash value
     algo::Smallstr100        field;                     //
     bool                     filter_print;              //   true  Omit non-present fields when printing
     algo::Comment            comment;                   //
@@ -5322,7 +5604,7 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FPmaskfldMember { // amc.FPmaskfldMember
-    algo::Smallstr100   pmaskfld_member;                     //
+    algo::Smallstr200   pmaskfld_member;                     //
     algo::Comment       comment;                             //
     u32                 bit;                                 //   0
     amc::FField*        p_field;                             // reference to parent row
@@ -5368,6 +5650,7 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include
 ```
 struct FPnew { // amc.FPnew
     amc::FPnew*         ind_pnew_next;      // hash next
+    u32                 ind_pnew_hashval;   // hash value
     algo::Smallstr100   pnew;               //
     amc::FCtype*        p_ctype;            // reference to parent row
     amc::FNs*           p_ns;               // reference to parent row
@@ -5408,9 +5691,10 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FPtrary { // amc.FPtrary
-    algo::Smallstr100   field;     //
-    bool                unique;    //   false  Search for and ignore duplicates
-    amc::FField*        p_field;   // reference to parent row
+    algo::Smallstr100   field;      //
+    bool                unique;     //   false  Search for and ignore duplicates
+    bool                heaplike;   //   false
+    amc::FField*        p_field;    // reference to parent row
     // x-reference on amc.FPtrary.p_field prevents copy
     // func:amc.FPtrary..AssignOp
     inline amc::FPtrary& operator =(const amc::FPtrary &rhs) = delete;
@@ -5447,23 +5731,24 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FReftype { // amc.FReftype
-    amc::FReftype*     ind_reftype_next;   // hash next
-    algo::Smallstr50   reftype;            //   "Val"
-    bool               isval;              //   false  True if field makes values of target type
-    bool               cascins;            //   false  Field is cascade-insert
-    bool               usebasepool;        //   false  Fields with this type make use of dmmeta.basepool
-    bool               cancopy;            //   false  This type of field can be copied
-    bool               isxref;             //   false  This type of field is an x-ref
-    bool               del;                //   false  Supports random deletion?
-    bool               up;                 //   false  This type of field is a reference
-    bool               isnew;              //   false  If set, skip this relation in amc_vis
-    bool               hasalloc;           //   false  Generte Alloc/Delete functions for arg type
-    bool               inst;               //   false  Field creates an instance of arg type (directly or indirectly)
-    bool               varlen;             //   false  This pool supports varlen allocations
-    i32                rowid;              //   0
-    amc::FTclass*      p_tclass;           // reference to parent row
-    amc::FFprefix*     zs_fprefix_head;    // zero-terminated singly linked list
-    amc::FFprefix*     zs_fprefix_tail;    // pointer to last element
+    amc::FReftype*     ind_reftype_next;      // hash next
+    u32                ind_reftype_hashval;   // hash value
+    algo::Smallstr50   reftype;               //   "Val"
+    bool               isval;                 //   false  True if field makes values of target type
+    bool               cascins;               //   false  Field is cascade-insert
+    bool               usebasepool;           //   false  Fields with this type make use of dmmeta.basepool
+    bool               cancopy;               //   false  This type of field can be copied
+    bool               isxref;                //   false  This type of field is an x-ref
+    bool               del;                   //   false  Supports random deletion?
+    bool               up;                    //   false  This type of field is a reference
+    bool               isnew;                 //   false  If set, skip this relation in amc_vis
+    bool               hasalloc;              //   false  Generte Alloc/Delete functions for arg type
+    bool               inst;                  //   false  Field creates an instance of arg type (directly or indirectly)
+    bool               varlen;                //   false  This pool supports varlen allocations
+    i32                rowid;                 //   0
+    amc::FTclass*      p_tclass;              // reference to parent row
+    amc::FFprefix*     zs_fprefix_head;       // zero-terminated singly linked list
+    amc::FFprefix*     zs_fprefix_tail;       // pointer to last element
     // x-reference on amc.FReftype.p_tclass prevents copy
     // reftype Llist of amc.FReftype.zs_fprefix prohibits copy
     // func:amc.FReftype..AssignOp
@@ -5500,9 +5785,10 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FRowid { // amc.FRowid
-    amc::FRowid*        ind_rowid_next;   // hash next
-    algo::Smallstr100   field;            //
-    algo::Comment       comment;          //
+    amc::FRowid*        ind_rowid_next;      // hash next
+    u32                 ind_rowid_hashval;   // hash value
+    algo::Smallstr100   field;               //
+    algo::Comment       comment;             //
     // func:amc.FRowid..AssignOp
     inline amc::FRowid&  operator =(const amc::FRowid &rhs) = delete;
     // func:amc.FRowid..CopyCtor
@@ -5536,14 +5822,15 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FSmallstr { // amc.FSmallstr
-    amc::FSmallstr*     ind_smallstr_next;   // hash next
-    algo::Smallstr100   field;               //
-    i32                 length;              //   0  Maximum characters in the string
-    algo::Smallstr50    strtype;             // Data format for string
-    algo::CppExpr       pad;                 // Pad character (if applicable)
-    bool                strict;              //   false
-    amc::FField*        p_field;             // reference to parent row
-    amc::FNumstr*       c_numstr;            // optional pointer
+    amc::FSmallstr*     ind_smallstr_next;      // hash next
+    u32                 ind_smallstr_hashval;   // hash value
+    algo::Smallstr100   field;                  //
+    i32                 length;                 //   0  Maximum characters in the string
+    algo::Smallstr50    strtype;                // Data format for string
+    algo::CppExpr       pad;                    // Pad character (if applicable)
+    bool                strict;                 //   false
+    amc::FField*        p_field;                // reference to parent row
+    amc::FNumstr*       c_numstr;               // optional pointer
     // x-reference on amc.FSmallstr.p_field prevents copy
     // x-reference on amc.FSmallstr.c_numstr prevents copy
     // func:amc.FSmallstr..AssignOp
@@ -5622,18 +5909,19 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FSsimfile { // amc.FSsimfile
-    amc::FSsimfile*       ind_ssimfile_next;              // hash next
-    amc::FSsimfile*       zd_ssimfile_todo_next;          // zslist link; -1 means not-in-list
-    amc::FSsimfile*       zd_ssimfile_todo_prev;          // previous element
-    algo::Smallstr50      ssimfile;                       //
-    algo::Smallstr100     ctype;                          //
-    algo::cstring         ssim;                           // Ssim content
-    amc::FCtype*          p_ctype;                        // reference to parent row
-    amc::FSsimvolatile*   c_ssimvolatile;                 // optional pointer
-    bool                  topovisit;                      //   false
-    i32                   topoindex;                      //   0
-    bool                  input_select;                   //   false
-    bool                  _db_c_ssimfile_sorted_in_ary;   //   false  membership flag
+    amc::FSsimfile*       ind_ssimfile_next;          // hash next
+    u32                   ind_ssimfile_hashval;       // hash value
+    amc::FSsimfile*       zd_ssimfile_todo_next;      // zslist link; -1 means not-in-list
+    amc::FSsimfile*       zd_ssimfile_todo_prev;      // previous element
+    algo::Smallstr50      ssimfile;                   //
+    algo::Smallstr100     ctype;                      //
+    algo::cstring         ssim;                       // Ssim content
+    amc::FCtype*          p_ctype;                    // reference to parent row
+    amc::FSsimvolatile*   c_ssimvolatile;             // optional pointer
+    bool                  topovisit;                  //   false
+    i32                   topoindex;                  //   0
+    bool                  input_select;               //   false
+    bool                  c_ssimfile_sorted_in_ary;   //   false  membership flag
     // x-reference on amc.FSsimfile.p_ctype prevents copy
     // x-reference on amc.FSsimfile.c_ssimvolatile prevents copy
     // func:amc.FSsimfile..AssignOp
@@ -5756,6 +6044,42 @@ private:
 };
 ```
 
+#### amc.FSteptype - Type of scheduler step
+<a href="#amc-fsteptype"></a>
+
+#### amc.FSteptype Fields
+<a href="#amc-fsteptype-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|amc.FSteptype.base|[dmmeta.Steptype](/txt/ssimdb/dmmeta/steptype.md)|[Base](/txt/ssimdb/dmmeta/steptype.md)|||
+
+#### Struct FSteptype
+<a href="#struct-fsteptype"></a>
+*Note:* field ``amc.FSteptype.base`` has reftype ``base`` so the fields of [dmmeta.Steptype](/txt/ssimdb/dmmeta/steptype.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
+```
+struct FSteptype { // amc.FSteptype
+    amc::FSteptype*    ind_steptype_next;      // hash next
+    u32                ind_steptype_hashval;   // hash value
+    algo::Smallstr50   steptype;               //
+    algo::Comment      comment;                //
+    // func:amc.FSteptype..AssignOp
+    inline amc::FSteptype& operator =(const amc::FSteptype &rhs) = delete;
+    // func:amc.FSteptype..CopyCtor
+    inline               FSteptype(const amc::FSteptype &rhs) = delete;
+private:
+    // func:amc.FSteptype..Ctor
+    inline               FSteptype() __attribute__((nothrow));
+    // func:amc.FSteptype..Dtor
+    inline               ~FSteptype() __attribute__((nothrow));
+    friend amc::FSteptype&      steptype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FSteptype*      steptype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 steptype_RemoveAll() __attribute__((nothrow));
+    friend void                 steptype_RemoveLast() __attribute__((nothrow));
+};
+```
+
 #### amc.FSubstr - Specify that the field value is computed from a substring of another field
 <a href="#amc-fsubstr"></a>
 
@@ -5775,15 +6099,15 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FSubstr { // amc.FSubstr
-    amc::FSubstr*       zd_substr_params_next;       // zslist link; -1 means not-in-list
-    amc::FSubstr*       zd_substr_params_prev;       // previous element
-    algo::Smallstr100   field;                       //
-    algo::CppExpr       expr;                        //
-    algo::Smallstr100   srcfield;                    //
-    amc::FField*        p_field;                     // reference to parent row
-    amc::FField*        p_srcfield;                  // reference to parent row
-    u64                 range;                       //   0
-    bool                _db_c_substr_field_in_ary;   //   false  membership flag
+    amc::FSubstr*       zd_substr_params_next;   // zslist link; -1 means not-in-list
+    amc::FSubstr*       zd_substr_params_prev;   // previous element
+    algo::Smallstr100   field;                   //
+    algo::CppExpr       expr;                    //
+    algo::Smallstr100   srcfield;                //
+    amc::FField*        p_field;                 // reference to parent row
+    amc::FField*        p_srcfield;              // reference to parent row
+    u64                 range;                   //   0
+    bool                c_substr_field_in_ary;   //   false  membership flag
     // x-reference on amc.FSubstr.p_field prevents copy
     // x-reference on amc.FSubstr.p_srcfield prevents copy
     // func:amc.FSubstr..AssignOp
@@ -5862,12 +6186,13 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FTarget { // amc.FTarget
-    amc::FTarget*      ind_target_next;   // hash next
-    algo::Smallstr16   target;            // Primary key - name of target
-    amc::FTargdep**    c_targdep_elems;   // array of pointers
-    u32                c_targdep_n;       // array of pointers
-    u32                c_targdep_max;     // capacity of allocated array
-    amc::FNs*          p_ns;              // reference to parent row
+    amc::FTarget*      ind_target_next;      // hash next
+    u32                ind_target_hashval;   // hash value
+    algo::Smallstr16   target;               // Primary key - name of target
+    amc::FTargdep**    c_targdep_elems;      // array of pointers
+    u32                c_targdep_n;          // array of pointers
+    u32                c_targdep_max;        // capacity of allocated array
+    amc::FNs*          p_ns;                 // reference to parent row
     // reftype Ptrary of amc.FTarget.c_targdep prohibits copy
     // x-reference on amc.FTarget.p_ns prevents copy
     // func:amc.FTarget..AssignOp
@@ -5904,10 +6229,11 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FTary { // amc.FTary
-    amc::FTary*         ind_tary_next;   // hash next
-    algo::Smallstr100   field;           //
-    bool                aliased;         //   false  Geneate functions to copy from aryptr
-    amc::FField*        p_field;         // reference to parent row
+    amc::FTary*         ind_tary_next;      // hash next
+    u32                 ind_tary_hashval;   // hash value
+    algo::Smallstr100   field;              //
+    bool                aliased;            //   false  Geneate functions to copy from aryptr
+    amc::FField*        p_field;            // reference to parent row
     // x-reference on amc.FTary.p_field prevents copy
     // func:amc.FTary..AssignOp
     inline amc::FTary&   operator =(const amc::FTary &rhs) = delete;
@@ -5979,6 +6305,7 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include
 ```
 struct FTfunc { // amc.FTfunc
     amc::FTfunc*           ind_tfunc_next;          // hash next
+    u32                    ind_tfunc_hashval;       // hash value
     algo::Smallstr50       tfunc;                   //
     bool                   hasthrow;                //   false  Important defaults for new tfuncs to work
     bool                   leaf;                    //   true  Important defaults for new tfuncs to work
@@ -6150,6 +6477,36 @@ private:
 };
 ```
 
+#### amc.FUserfunc - 
+<a href="#amc-fuserfunc"></a>
+
+#### amc.FUserfunc Fields
+<a href="#amc-fuserfunc-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|amc.FUserfunc.base|[dmmeta.Userfunc](/txt/ssimdb/dmmeta/userfunc.md)|[Base](/txt/ssimdb/dmmeta/userfunc.md)|||
+
+#### Struct FUserfunc
+<a href="#struct-fuserfunc"></a>
+*Note:* field ``amc.FUserfunc.base`` has reftype ``base`` so the fields of [dmmeta.Userfunc](/txt/ssimdb/dmmeta/userfunc.md) above are included into the resulting struct.
+
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
+```
+struct FUserfunc { // amc.FUserfunc
+    algo::Smallstr50    userfunc;   //
+    algo::Smallstr200   acrkey;     //
+    algo::Smallstr100   cppname;    //
+    algo::Comment       comment;    //
+private:
+    // func:amc.FUserfunc..Ctor
+    inline               FUserfunc() __attribute__((nothrow));
+    friend amc::FUserfunc&      userfunc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FUserfunc*      userfunc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 userfunc_RemoveAll() __attribute__((nothrow));
+    friend void                 userfunc_RemoveLast() __attribute__((nothrow));
+};
+```
+
 #### amc.FUsertracefld - Add custom user trace fields to process's trace struct
 <a href="#amc-fusertracefld"></a>
 
@@ -6198,18 +6555,19 @@ private:
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/amc_gen.h](/include/gen/amc_gen.h)
 ```
 struct FXref { // amc.FXref
-    amc::FXref*         zs_xref_next;          // zslist link; -1 means not-in-list
-    amc::FXref*         ind_xref_next;         // hash next
-    amc::FXref*         zd_xref_keyfld_next;   // zslist link; -1 means not-in-list
-    amc::FXref*         zd_xref_keyfld_prev;   // previous element
-    algo::Smallstr100   field;                 //
-    algo::CppExpr       inscond;               //   "true"  Insert condition
-    algo::Smallstr200   via;                   //
-    amc::FField*        p_field;               // reference to parent row
-    amc::FCtype*        p_ctype;               // reference to parent row
-    amc::FNocascdel*    c_nocascdel;           // optional pointer
-    amc::FField*        p_viafld;              // reference to parent row
-    amc::FField*        p_keyfld;              // reference to parent row
+    amc::FXref*         ctype_zs_xref_next;          // zslist link; -1 means not-in-list
+    amc::FXref*         ind_xref_next;               // hash next
+    u32                 ind_xref_hashval;            // hash value
+    amc::FXref*         field_zd_xref_keyfld_next;   // zslist link; -1 means not-in-list
+    amc::FXref*         field_zd_xref_keyfld_prev;   // previous element
+    algo::Smallstr100   field;                       //
+    algo::CppExpr       inscond;                     //   "true"  Insert condition
+    algo::Smallstr200   via;                         //
+    amc::FField*        p_field;                     // reference to parent row
+    amc::FCtype*        p_ctype;                     // reference to parent row
+    amc::FNocascdel*    c_nocascdel;                 // optional pointer
+    amc::FField*        p_viafld;                    // reference to parent row
+    amc::FField*        p_keyfld;                    // reference to parent row
     // x-reference on amc.FXref.p_field prevents copy
     // x-reference on amc.FXref.c_nocascdel prevents copy
     // x-reference on amc.FXref.p_viafld prevents copy

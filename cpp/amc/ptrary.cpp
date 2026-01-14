@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
@@ -35,8 +35,13 @@ void amc::tclass_Ptrary() {
     InsVar(R, field.p_ctype, "u32", "$name_max", "", "capacity of allocated array");
 
     amc::FPtrary &ptrary = *field.c_ptrary;
-    if (ptrary.p_field->c_cascdel && !ptrary.unique) {
-        amccheck(0,"amc.explicit_multi_delete"
+    if (ptrary.heaplike) {
+        amccheck(ptrary.unique,"amc.heaplike"
+                 <<Keyval("ptrary",ptrary.field)
+                 <<Keyval("comment","Heaplike implies unique"));
+    }
+    if (ptrary.p_field->c_cascdel) {
+        amccheck(ptrary.unique,"amc.explicit_multi_delete"
                  <<Keyval("ptrary",ptrary.field)
                  <<Keyval("comment","Ptrary with unique:N cannot be cascdel"));
     }
@@ -56,8 +61,10 @@ void amc::tfunc_Ptrary_Cascdel() {
         Ins(&R, cascdel.body, "$parname.$name_n = 0;");
         Ins(&R, cascdel.body, "for (i32 i = n - 1; i >= 0; i--) {");
         Ins(&R, cascdel.body, "    $Cpptype &row = *$parname.$name_elems[i];");
-        if (ptrary.unique) {
-            Ins(&R, cascdel.body, "    row.$parname_$name_in_ary = false;");
+        if (ptrary.heaplike) {
+            Ins(&R, cascdel.body, "    row.$xfname_idx = -1;");
+        } else if (ptrary.unique) {
+            Ins(&R, cascdel.body, "    row.$xfname_in_ary = false;");
         }
         Ins(&R, cascdel.body, DeleteExpr(field,"$pararg","row")<<";");
         Ins(&R, cascdel.body    , "}");
@@ -95,12 +102,12 @@ void amc::tfunc_Ptrary_InAryQ() {
     if (ptrary.unique) {
         amc::FFunc& inary = amc::CreateCurFunc();
         Ins(&R, inary.ret  , "bool", false);
-        if (amc::GlobalQ(*field.p_ctype)) {
-            Ins(&R, inary.proto, "$name_InAryQ($Cpptype& row)", false);
+        Ins(&R, inary.proto, "$xfname_InAryQ($Cpptype& row)", false);
+        if (ptrary.heaplike) {
+            Ins(&R, inary.body, "return row.$xfname_idx != -1;");
         } else {
-            Ins(&R, inary.proto, "$parname_$name_InAryQ($Cpptype& row)", false);
+            Ins(&R, inary.body, "return row.$xfname_in_ary;");
         }
-        Ins(&R, inary.body, "return row.$parname_$name_in_ary;");
     }
 }
 
@@ -148,28 +155,30 @@ void amc::tfunc_Ptrary_Insert() {
 
     tempstr text;
 
-    Ins(&R,         text, "// reserve space");
-    Ins(&R,         text, "$name_Reserve($pararg, 1);");
-    // - find insert point
-    Ins(&R,         text, "u32 n  = $parname.$name_n;");
-    Ins(&R,         text, "u32 at = n;");
-    Ins(&R,         text, "$Cpptype* *elems = $parname.$name_elems;");
-    // actual insertion
-    Ins(&R,         text, "elems[at] = &row;");
-    Ins(&R,         text, "$parname.$name_n = n+1;");
-
     // function body
     amc::FFunc& insert = amc::CreateCurFunc();
     Ins(&R, insert.ret  , "void", false);
     Ins(&R, insert.comment, "Insert pointer to row into array. Row must not already be in array.");
     Ins(&R, insert.comment, "If pointer is already in the array, it may be inserted twice.");//TODO UPDATE ME
     Ins(&R, insert.proto, "$name_Insert($Parent, $Cpptype& row)", false);
-    if (ptrary.unique) {
-        Ins(&R, insert.body, "if (bool_Update(row.$parname_$name_in_ary,true)) {");
-        insert.body <<  text << eol;
+    if (ptrary.heaplike) {
+        Ins(&R, insert.body, "if (row.$xfname_idx == -1) {");
+        Ins(&R, insert.body, "    $name_Reserve($pararg, 1);");
+        Ins(&R, insert.body, "    u32 n  = $parname.$name_n++;");
+        Ins(&R, insert.body, "    $parname.$name_elems[n] = &row;");
+        Ins(&R, insert.body, "    row.$xfname_idx = n;");
+        Ins(&R, insert.body, "}");
+    } else if (ptrary.unique) {
+        Ins(&R, insert.body, "if (!row.$xfname_in_ary) {");
+        Ins(&R, insert.body, "    $name_Reserve($pararg, 1);");
+        Ins(&R, insert.body, "    u32 n  = $parname.$name_n++;");
+        Ins(&R, insert.body, "    $parname.$name_elems[n] = &row;");
+        Ins(&R, insert.body, "    row.$xfname_in_ary = true;");
         Ins(&R, insert.body, "}");
     } else {
-        insert.body <<  text << eol;
+        Ins(&R, insert.body, "$name_Reserve($pararg, 1);");
+        Ins(&R, insert.body, "u32 n  = $parname.$name_n++;");
+        Ins(&R, insert.body, "$parname.$name_elems[n] = &row;");
     }
 }
 
@@ -186,7 +195,7 @@ void amc::tfunc_Ptrary_InsertMaybe() {
         Ins(&R, insmaybe.comment, "Insert pointer to row in array.");
         Ins(&R, insmaybe.comment, "If row is already in the array, do nothing.");
         Ins(&R, insmaybe.comment, "Return value: whether element was inserted into array.");
-        Ins(&R, insmaybe.body, "bool retval = !row.$parname_$name_in_ary;");
+        Ins(&R, insmaybe.body, "bool retval = !$xfname_InAryQ(row);");
         Ins(&R, insmaybe.body, "$name_Insert($pararg,row); // check is performed in _Insert again");
         Ins(&R, insmaybe.body, "return retval;");
     }
@@ -241,31 +250,114 @@ void amc::tfunc_Ptrary_Remove() {
     amc::FField &field = *amc::_db.genctx.p_field;
     amc::FPtrary &ptrary = *field.c_ptrary;
 
-    tempstr text;
-    Ins(&R, text, "int lim = $parname.$name_n;");
-    Ins(&R, text, "$Cpptype* *elems = $parname.$name_elems;");
-    Ins(&R, text, "// search backward, so that most recently added element is found first.");
-    Ins(&R, text, "// if found, shift array.");
-    Ins(&R, text, "for (int i = lim-1; i>=0; i--) {");
-    Ins(&R, text, "    $Cpptype* elem = elems[i]; // fetch element");
-    Ins(&R, text, "    if (elem == &row) {");
-    Ins(&R, text, "        int j = i + 1;");
-    Ins(&R, text, "        size_t nbytes = sizeof($Cpptype*) * (lim - j);");
-    Ins(&R, text, "        memmove(elems + i, elems + j, nbytes);");
-    Ins(&R, text, "        $parname.$name_n = lim - 1;");
-    Ins(&R, text, "        break;");
-    Ins(&R, text, "    }");
-    Ins(&R, text, "}");
-
     amc::FFunc& rem = amc::CreateCurFunc();
     Ins(&R, rem.ret    , "void", false);
     Ins(&R, rem.proto  , "$name_Remove($Parent, $Cpptype& row)", false);
-    if (ptrary.unique) {
-        Ins(&R, rem.body, "if (bool_Update(row.$parname_$name_in_ary,false)) {");
-        rem.body << text;
+    Ins(&R, rem.body, "int n = $parname.$name_n;");
+    if (ptrary.heaplike) {
+        // heap-like removal
+        Ins(&R, rem.body, "int idx = row.$xfname_idx;");
+        Ins(&R, rem.body, "if (idx != -1) {");
+        Ins(&R, rem.body, "    $Cpptype *last = $parname.$name_elems[n-1];");
+        Ins(&R, rem.body, "    last->$xfname_idx = idx;");
+        Ins(&R, rem.body, "    $parname.$name_elems[idx] = last;");
+        Ins(&R, rem.body, "    row.$xfname_idx = -1;");
+        Ins(&R, rem.body, "    $parname.$name_n = n - 1;");
+        Ins(&R, rem.body, "}");
+    } else if (ptrary.unique) {
+        // removal of single element through scanning
+        Ins(&R, rem.body, "if (bool_Update(row.$xfname_in_ary,false)) {");
+        Ins(&R, rem.body, "    $Cpptype* *elems = $parname.$name_elems;");
+        Ins(&R, rem.body, "    // search backward, so that most recently added element is found first.");
+        Ins(&R, rem.body, "    // if found, shift array.");
+        Ins(&R, rem.body, "    for (int i = n-1; i>=0; i--) {");
+        Ins(&R, rem.body, "        $Cpptype* elem = elems[i]; // fetch element");
+        Ins(&R, rem.body, "        if (elem == &row) {");
+        Ins(&R, rem.body, "            int j = i + 1;");
+        Ins(&R, rem.body, "            size_t nbytes = sizeof($Cpptype*) * (n - j);");
+        Ins(&R, rem.body, "            memmove(elems + i, elems + j, nbytes);");
+        Ins(&R, rem.body, "            $parname.$name_n = n - 1;");
+        Ins(&R, rem.body, "            break;");
+        Ins(&R, rem.body, "        }");
+        Ins(&R, rem.body, "    }");
         Ins(&R, rem.body, "}");
     } else {
-        rem.body << text;
+        // element may appear multiple times in a non-unique index
+        Ins(&R, rem.body, "int j=0;");
+        Ins(&R, rem.body, "for (int i=0; i<n; i++) {");
+        Ins(&R, rem.body, "    if ($parname.$name_elems[i] == &row) {");
+        Ins(&R, rem.body, "    } else {");
+        Ins(&R, rem.body, "        if (j != i) {");
+        Ins(&R, rem.body, "            $parname.$name_elems[j] = $parname.$name_elems[i];");
+        Ins(&R, rem.body, "        }");
+        Ins(&R, rem.body, "        j++;");
+        Ins(&R, rem.body, "    }");
+        Ins(&R, rem.body, "}");
+        Ins(&R, rem.body, "$parname.$name_n = j;");
+    }
+}
+
+void amc::tfunc_Ptrary_RemoveFirst() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FPtrary &ptrary = *field.c_ptrary;
+    if (ptrary.heaplike) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        Ins(&R, func.comment, "If index is empty, return NULL. Otherwise remove and return first element in index.");
+        Ins(&R, func.ret  , "$Cpptype*", false);
+        Ins(&R, func.proto, "$name_RemoveFirst($Parent)", false);
+        Ins(&R, func.body, "$Cpptype *row = NULL;");
+        Ins(&R, func.body, "int n = $parname.$name_n;");
+        Ins(&R, func.body, "if (n > 0) {");
+        Ins(&R, func.body, "    row = $parname.$name_elems[0];");
+        Ins(&R, func.body, "    row->$xfname_idx=-1;");
+        Ins(&R, func.body, "    $parname.$name_elems[n-1]->$xfname_idx=0;");
+        Ins(&R, func.body, "    $parname.$name_elems[0]=$parname.$name_elems[n-1];");
+        Ins(&R, func.body, "    $parname.$name_n = n-1;");
+        Ins(&R, func.body, "}");
+        Ins(&R, func.body, "return row;");
+    }
+}
+
+void amc::tfunc_Ptrary_First() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FPtrary &ptrary = *field.c_ptrary;
+    if (ptrary.heaplike) {
+        amc::FFunc& func = amc::CreateCurFunc(true);
+        AddRetval(func,Subst(R,"$Cpptype*"),"row","NULL");
+        Ins(&R, func.body, "row = $parname.$name_n ? $parname.$name_elems[0] : NULL;");
+    }
+}
+
+void amc::tfunc_Ptrary_RemoveLast() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FPtrary &ptrary = *field.c_ptrary;
+    if (ptrary.heaplike) {
+        amc::FFunc& func = amc::CreateCurFunc();
+        Ins(&R, func.comment, "If index is empty, return NULL. Otherwise remove and return last element in index.");
+        Ins(&R, func.ret  , "$Cpptype*", false);
+        Ins(&R, func.proto, "$name_RemoveLast($Parent)", false);
+        Ins(&R, func.body, "$Cpptype *row = NULL;");
+        Ins(&R, func.body, "int n = $parname.$name_n;");
+        Ins(&R, func.body, "if (n > 0) {");
+        Ins(&R, func.body, "    row = $parname.$name_elems[n-1];");
+        Ins(&R, func.body, "    row->$xfname_idx=-1;");
+        Ins(&R, func.body, "    $parname.$name_n = n-1;");
+        Ins(&R, func.body, "}");
+        Ins(&R, func.body, "return row;");
+    }
+}
+
+void amc::tfunc_Ptrary_Last() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    amc::FPtrary &ptrary = *field.c_ptrary;
+    if (ptrary.heaplike) {
+        amc::FFunc& func = amc::CreateCurFunc(true);
+        AddRetval(func,Subst(R,"$Cpptype*"),"row","NULL");
+        Ins(&R, func.body, "row = $parname.$name_n ? $parname.$name_elems[$parname.$name_n-1] : NULL;");
     }
 }
 
@@ -278,10 +370,14 @@ void amc::tfunc_Ptrary_RemoveAll() {
     removeall.inl = true;
     Ins(&R, removeall.ret  , "void", false);
     Ins(&R, removeall.proto, "$name_RemoveAll($Parent)", false);
-    if (ptrary.unique) {
+    if (ptrary.heaplike) {
+        Ins(&R, removeall.body, "for (u32 i = 0; i < $parname.$name_n; i++) {");
+        Ins(&R, removeall.body, "    $parname.$name_elems[i]->$xfname_idx = -1;");
+        Ins(&R, removeall.body, "}");
+    } else if (ptrary.unique) {
         Ins(&R, removeall.body, "for (u32 i = 0; i < $parname.$name_n; i++) {");
         Ins(&R, removeall.body, "    // mark all elements as not-in-array");
-        Ins(&R, removeall.body, "    $parname.$name_elems[i]->$parname_$name_in_ary = false;");
+        Ins(&R, removeall.body, "    $parname.$name_elems[i]->$xfname_in_ary = false;");
         Ins(&R, removeall.body, "}");
     }
     Ins(&R, removeall.body, "$parname.$name_n = 0;");
@@ -355,8 +451,12 @@ void amc::Ptrary_curs(bool once) {
         Ins(&R, func.comment, "proceed to next item");
         Ins(&R, func.ret  , "void", false);
         Ins(&R, func.proto, "$Parname_$name_$curstype_Next($Parname_$name_$curstype &curs)", false);
-        if (once && ptrary.unique) {
-            Ins(&R, func.body, "    curs.elems[curs.index]->$parname_$name_in_ary = false;");
+        if (once) {
+            if (ptrary.heaplike) {
+                Ins(&R, func.body, "    curs.elems[curs.index]->$xfname_idx = -1;");
+            } else if (ptrary.unique) {
+                Ins(&R, func.body, "    curs.elems[curs.index]->$xfname_in_ary = false;");
+            }
         }
         Ins(&R, func.body, "curs.index++;");
     }

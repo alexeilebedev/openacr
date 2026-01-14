@@ -230,6 +230,7 @@ struct FCfmt { // lib_ctype.FCfmt
     algo::Comment       comment;               //
     bool                ctype_c_cfmt_in_ary;   //   false  membership flag
     lib_ctype::FCfmt*   ind_cfmt_next;         // hash next
+    u32                 ind_cfmt_hashval;      // hash value
     // func:lib_ctype.FCfmt..AssignOp
     lib_ctype::FCfmt&    operator =(const lib_ctype::FCfmt &rhs) = delete;
     // func:lib_ctype.FCfmt..CopyCtor
@@ -313,19 +314,20 @@ void                 FCppfunc_Uninit(lib_ctype::FCppfunc& cppfunc) __attribute__
 // access: lib_ctype.FField.p_arg (Upptr)
 // access: lib_ctype.FSsimfile.p_ctype (Upptr)
 struct FCtype { // lib_ctype.FCtype
-    algo::Smallstr100      ctype;            // Identifier. must be ns.typename
-    algo::Comment          comment;          //
-    lib_ctype::FField**    c_field_elems;    // array of pointers
-    u32                    c_field_n;        // array of pointers
-    u32                    c_field_max;      // capacity of allocated array
-    algo::Smallstr50       printfmt;         //
-    lib_ctype::FCdflt*     c_cdflt;          // optional pointer
-    lib_ctype::FCfmt**     c_cfmt_elems;     // array of pointers
-    u32                    c_cfmt_n;         // array of pointers
-    u32                    c_cfmt_max;       // capacity of allocated array
-    lib_ctype::FBltin*     c_bltin;          // optional pointer
-    lib_ctype::FSqltype*   c_sqltype;        // optional pointer
-    lib_ctype::FCtype*     ind_ctype_next;   // hash next
+    algo::Smallstr100      ctype;               // Identifier. must be ns.typename
+    algo::Comment          comment;             //
+    lib_ctype::FField**    c_field_elems;       // array of pointers
+    u32                    c_field_n;           // array of pointers
+    u32                    c_field_max;         // capacity of allocated array
+    algo::Smallstr50       printfmt;            //
+    lib_ctype::FCdflt*     c_cdflt;             // optional pointer
+    lib_ctype::FCfmt**     c_cfmt_elems;        // array of pointers
+    u32                    c_cfmt_n;            // array of pointers
+    u32                    c_cfmt_max;          // capacity of allocated array
+    lib_ctype::FBltin*     c_bltin;             // optional pointer
+    lib_ctype::FSqltype*   c_sqltype;           // optional pointer
+    lib_ctype::FCtype*     ind_ctype_next;      // hash next
+    u32                    ind_ctype_hashval;   // hash value
     // reftype Ptrary of lib_ctype.FCtype.c_field prohibits copy
     // x-reference on lib_ctype.FCtype.c_cdflt prevents copy
     // reftype Ptrary of lib_ctype.FCtype.c_cfmt prohibits copy
@@ -614,6 +616,9 @@ void                 ind_fconst_key_Remove(lib_ctype::FFconst& row) __attribute_
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:lib_ctype.FDb.ind_fconst_key.Reserve
 void                 ind_fconst_key_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:lib_ctype.FDb.ind_fconst_key.AbsReserve
+void                 ind_fconst_key_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:lib_ctype.FDb.ind_fconst.EmptyQ
@@ -636,6 +641,9 @@ void                 ind_fconst_Remove(lib_ctype::FFconst& row) __attribute__((n
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:lib_ctype.FDb.ind_fconst.Reserve
 void                 ind_fconst_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:lib_ctype.FDb.ind_fconst.AbsReserve
+void                 ind_fconst_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -695,6 +703,9 @@ void                 ind_ssimfile_Remove(lib_ctype::FSsimfile& row) __attribute_
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:lib_ctype.FDb.ind_ssimfile.Reserve
 void                 ind_ssimfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:lib_ctype.FDb.ind_ssimfile.AbsReserve
+void                 ind_ssimfile_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -794,6 +805,9 @@ void                 ind_ctype_Remove(lib_ctype::FCtype& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:lib_ctype.FDb.ind_ctype.Reserve
 void                 ind_ctype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:lib_ctype.FDb.ind_ctype.AbsReserve
+void                 ind_ctype_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -853,6 +867,9 @@ void                 ind_field_Remove(lib_ctype::FField& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:lib_ctype.FDb.ind_field.Reserve
 void                 ind_field_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:lib_ctype.FDb.ind_field.AbsReserve
+void                 ind_field_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -978,6 +995,9 @@ void                 ind_cfmt_Remove(lib_ctype::FCfmt& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:lib_ctype.FDb.ind_cfmt.Reserve
 void                 ind_cfmt_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:lib_ctype.FDb.ind_cfmt.AbsReserve
+void                 ind_cfmt_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1336,14 +1356,16 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: ind_fconst (Thash, hash field fconst)
 // access: lib_ctype.FField.zd_fconst (Llist)
 struct FFconst { // lib_ctype.FFconst
-    lib_ctype::FFconst*   ind_fconst_key_next;   // hash next
-    lib_ctype::FFconst*   ind_fconst_next;       // hash next
-    algo::Smallstr100     fconst;                //
-    algo::CppExpr         value;                 //
-    algo::Comment         comment;               //
-    algo::cstring         key;                   //
-    lib_ctype::FFconst*   zd_fconst_next;        // zslist link; -1 means not-in-list
-    lib_ctype::FFconst*   zd_fconst_prev;        // previous element
+    lib_ctype::FFconst*   ind_fconst_key_next;      // hash next
+    u32                   ind_fconst_key_hashval;   // hash value
+    lib_ctype::FFconst*   ind_fconst_next;          // hash next
+    u32                   ind_fconst_hashval;       // hash value
+    algo::Smallstr100     fconst;                   //
+    algo::CppExpr         value;                    //
+    algo::Comment         comment;                  //
+    algo::cstring         key;                      //
+    lib_ctype::FFconst*   field_zd_fconst_next;     // zslist link; -1 means not-in-list
+    lib_ctype::FFconst*   field_zd_fconst_prev;     // previous element
     // func:lib_ctype.FFconst..AssignOp
     inline lib_ctype::FFconst& operator =(const lib_ctype::FFconst &rhs) = delete;
     // func:lib_ctype.FFconst..CopyCtor
@@ -1390,6 +1412,7 @@ void                 FFconst_Print(lib_ctype::FFconst& row, algo::cstring& str) 
 // access: lib_ctype.FSubstr.p_field (Upptr)
 struct FField { // lib_ctype.FField
     lib_ctype::FField*         ind_field_next;            // hash next
+    u32                        ind_field_hashval;         // hash value
     algo::Smallstr100          field;                     // Primary key, as ctype.name
     algo::Smallstr100          arg;                       // Type of field
     algo::Smallstr50           reftype;                   //   "Val"  Type constructor
@@ -1469,7 +1492,7 @@ inline bool          zd_fconst_EmptyQ(lib_ctype::FField& field) __attribute__((_
 inline lib_ctype::FFconst* zd_fconst_First(lib_ctype::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:lib_ctype.FField.zd_fconst.InLlistQ
-inline bool          zd_fconst_InLlistQ(lib_ctype::FFconst& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          field_zd_fconst_InLlistQ(lib_ctype::FFconst& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:lib_ctype.FField.zd_fconst.Insert
 void                 zd_fconst_Insert(lib_ctype::FField& field, lib_ctype::FFconst& row) __attribute__((nothrow));
@@ -1481,10 +1504,10 @@ inline lib_ctype::FFconst* zd_fconst_Last(lib_ctype::FField& field) __attribute_
 inline i32           zd_fconst_N(const lib_ctype::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:lib_ctype.FField.zd_fconst.Next
-inline lib_ctype::FFconst* zd_fconst_Next(lib_ctype::FFconst &row) __attribute__((__warn_unused_result__, nothrow));
+inline lib_ctype::FFconst* field_zd_fconst_Next(lib_ctype::FFconst &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:lib_ctype.FField.zd_fconst.Prev
-inline lib_ctype::FFconst* zd_fconst_Prev(lib_ctype::FFconst &row) __attribute__((__warn_unused_result__, nothrow));
+inline lib_ctype::FFconst* field_zd_fconst_Prev(lib_ctype::FFconst &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:lib_ctype.FField.zd_fconst.Remove
 void                 zd_fconst_Remove(lib_ctype::FField& field, lib_ctype::FFconst& row) __attribute__((nothrow));
@@ -1661,10 +1684,11 @@ void                 FSqltype_Uninit(lib_ctype::FSqltype& sqltype) __attribute__
 // global access: ssimfile (Lary, by rowid)
 // global access: ind_ssimfile (Thash, hash field ssimfile)
 struct FSsimfile { // lib_ctype.FSsimfile
-    lib_ctype::FSsimfile*   ind_ssimfile_next;   // hash next
-    algo::Smallstr50        ssimfile;            //
-    algo::Smallstr100       ctype;               //
-    lib_ctype::FCtype*      p_ctype;             // reference to parent row
+    lib_ctype::FSsimfile*   ind_ssimfile_next;      // hash next
+    u32                     ind_ssimfile_hashval;   // hash value
+    algo::Smallstr50        ssimfile;               //
+    algo::Smallstr100       ctype;                  //
+    lib_ctype::FCtype*      p_ctype;                // reference to parent row
     // x-reference on lib_ctype.FSsimfile.p_ctype prevents copy
     // func:lib_ctype.FSsimfile..AssignOp
     inline lib_ctype::FSsimfile& operator =(const lib_ctype::FSsimfile &rhs) = delete;

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
@@ -30,26 +30,7 @@
 void amc::tclass_Global() {
 }
 
-// -----------------------------------------------------------------------------
-
 void amc::tfunc_Global_Init() {
-    algo_lib::Replscope &R = amc::_db.genctx.R;
-    amc::FField &field = *amc::_db.genctx.p_field;
-
-    if (ctype_Get(field) == "algo_lib.FDb") {// dirty hack
-        amc::FFunc& func = amc::CreateCurFunc(true); {
-            AddRetval(func, "void", "", "");
-            func.inl = false;
-            Ins(&R, func.body, "algo_lib::_db.last_signal             = 0;");
-            Ins(&R, func.body, "ind_beg_aryptr(cstring, str, algo_lib::temp_strings_Getary()) {");
-            Ins(&R, func.body, "    ch_Reserve(str, 256);");
-            Ins(&R, func.body, "}ind_end_aryptr;");
-            Ins(&R, func.body, "algo_lib::_db.n_temp = algo_lib::temp_strings_N();");
-            Ins(&R, func.body, "algo_lib::bh_timehook_Reserve(32);");
-            Ins(&R, func.body, "algo_lib::InitCpuHz();");
-            Ins(&R, func.body, "algo_lib::_db.eol          = true;");
-        }
-    }
 }
 
 int amc::c_parentns_FindIndex(amc::FNs& ns, amc::FNs *val) {
@@ -94,8 +75,8 @@ void amc::tfunc_Global_LoadTuplesMaybe() {
         }
     }ind_end;
     Ins(&R, ldt.body, "} else {");
-    Ins(&R, ldt.body, "    algo_lib::SaveBadTag(\"path\", root);");
-    Ins(&R, ldt.body, "    algo_lib::SaveBadTag(\"comment\", \"Wrong working directory?\");");
+    Ins(&R, ldt.body, "    algo_lib::AppendErrtext(\"path\", root);");
+    Ins(&R, ldt.body, "    algo_lib::AppendErrtext(\"comment\", \"Wrong working directory?\");");
     Ins(&R, ldt.body, "    retval = false;");
     Ins(&R, ldt.body, "}");
 }
@@ -334,6 +315,7 @@ void amc::tfunc_Global_main() {
         Ins(&R, main.body    , "    algo_lib::_db.argc = argc;");
         Ins(&R, main.body    , "    algo_lib::_db.argv = argv;");
         Ins(&R, main.body    , "    algo_lib::IohookInit();");
+        Ins(&R, main.body    , "    algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock");
 
         // call last non-module main, followed by all module mains
         // #AL# this must be cleaned up -- only used for lib_m2
@@ -478,6 +460,7 @@ void amc::tfunc_Global_Main() {
     amc::FNs &ns = *field.p_ctype->p_ns;
     if (ns.c_main) {
         amc::FFunc& func = amc::CreateCurFunc(true);
+        func.acrkey << "main:"<<ns.ns;
         func.extrn = true;
         Ins(&R, func.ret    , "void",false);
     }
@@ -551,7 +534,7 @@ static tempstr GetCmdArgType(amc::FField& field) {
         ret = "flag";
     } else if (field.reftype == dmmeta_Reftype_reftype_Pkey) {
         ret = "pkey";
-    } if (field.reftype == dmmeta_Reftype_reftype_Regx) {
+    } else if (field.reftype == dmmeta_Reftype_reftype_Regx) {
         ret = "regx";
     } else {
         if (!argvtype && c_field_N(*field.p_arg) == 1) {
@@ -579,6 +562,7 @@ bool amc::CmdArgRequiredQ(amc::FField &field) {
     return field.dflt.value=="" // no default provided...
         && !(field.arg == "algo.UnTime" || field.arg == "algo.UnDiff") // these can't be mandatory
         && !field.c_tary // not an array
+        && !c_fconst_N(*amc::GetEnumField(field)) // not an enum (these are always initialized)
         && CmdArgValueRequiredQ(field); // does require an arg
 }
 
@@ -599,11 +583,10 @@ amc::FField *amc::GetEnumField(amc::FField &field) {
 // Translate true/false into "Y"/<empty string>
 static tempstr GetCmdArgDflt(amc::FField &field) {
     tempstr ret(field.dflt.value);
-
     if (field.c_fflag) {
         // no default for flags (even if they can take a value)
         ret="";
-    } if (field.c_tary) {
+    } else if (field.c_tary) {
         // no default for arrays -- since they can be empty
         ret="";
     } else if (field.arg=="bool") {
@@ -911,9 +894,8 @@ void amc::tfunc_Global_ReadArgv() {
         }
         Ins(&R, func.body, "        if (ch_N(attrname) == 0) {");
         Ins(&R, func.body, "            err << \"$ns: too many arguments. error at \"<<algo::strptr_ToSsim(arg)<<eol;");
-        Ins(&R, func.body, "        }");
-        Ins(&R, func.body, "        // read value into currently selected arg");
-        Ins(&R, func.body, "        if (haveval) {");
+        Ins(&R, func.body, "        } else if (haveval) {");
+        Ins(&R, func.body, "            // read value into currently selected arg");
         Ins(&R, func.body, "            bool ret=false;");
         Ins(&R, func.body, "            // it's already known which namespace is consuming the args,");
         Ins(&R, func.body, "            // so directly go there");
@@ -969,6 +951,9 @@ void amc::tfunc_Global_ReadArgv() {
             Ins(&R, func.body, "    }ind_end");
             Ins(&R, func.body, "    doexit = true;");
             Ins(&R, func.body, "}");
+            Ins(&R, func.body, "algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;");
+            Ins(&R, func.body, "algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;");
+            Ins(&R, func.body, "algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;");
         }
 
         Ins(&R, func.body, "if (!dohelp) {");
@@ -997,7 +982,7 @@ void amc::tfunc_Global_ReadArgv() {
 
         Ins(&R, func.body, "if (err != \"\") {");
         Ins(&R, func.body, "    algo_lib::_db.exit_code=1;");
-        Ins(&R, func.body, "    prerr(err);");
+        Ins(&R, func.body, "    prerr_(err); // already has eol");
         Ins(&R, func.body, "    doexit=true;");
         Ins(&R, func.body, "}");
 

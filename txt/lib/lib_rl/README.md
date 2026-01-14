@@ -1,0 +1,237 @@
+## lib_rl - GNU readline support library
+
+
+### Table Of Contents
+<a href="#table-of-contents"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+
+### Functions
+<a href="#functions"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Functions -->
+Functions exported from this namespace:
+
+```c++
+// add line to history
+void lib_rl::AddHistory(strptr line) 
+```
+
+```c++
+// begin readline, user shall add own iohook function
+void lib_rl::BeginReadline(strptr app, strptr prompt) 
+```
+
+```c++
+// stop reading readline
+void lib_rl::EndReadline() 
+```
+
+```c++
+// whether EOF
+bool lib_rl::EofQ() 
+```
+
+```c++
+// stream error
+int lib_rl::Error() 
+```
+
+```c++
+// get line
+strptr lib_rl::GetLine() 
+```
+
+```c++
+// compose history file name
+tempstr lib_rl::HistoryFile(strptr app) 
+```
+
+```c++
+// initialize history from file
+// TODO lock
+void lib_rl::InitHistory() 
+```
+
+```c++
+// Kill entire buffer
+void lib_rl::KillBuffer() 
+```
+
+```c++
+// get last history line, empty if none
+strptr lib_rl::LastHistory() 
+```
+
+```c++
+// whether the line is valid
+bool lib_rl::LineValidQ() 
+```
+
+```c++
+// called inside rl_callback_read_char() when new input line entered
+void lib_rl::OnLine(char *zline) 
+```
+
+```c++
+// prlog handler - safe print when redline is active
+void lib_rl::Prlog(algo_lib::FLogcat *logcat, algo::SchedTime time, strptr str) 
+```
+
+```c++
+// whether mode is readline or normal
+bool lib_rl::ReadlineQ() 
+```
+
+```c++
+// setup own prlog function
+void lib_rl::RedirectPrlog() 
+```
+
+```c++
+// restore prlog function
+void lib_rl::RestorePrlog() 
+```
+
+```c++
+void lib_rl::SetPrompt(algo::strptr prompt) 
+```
+
+```c++
+// Skip current line
+void lib_rl::SkipLine() 
+```
+
+```c++
+// whether realine in substate - not bare chars
+bool lib_rl::SubstateQ() 
+```
+
+```c++
+// switch  mode 0 - normal, 1 - readline
+void lib_rl::SwitchMode(int mode) 
+```
+
+```c++
+// restore terminal settings
+void lib_rl::iohook_Cleanup() 
+```
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
+
+### Inputs
+<a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
+`lib_rl` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
+
+### Sources
+<a href="#sources"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
+The source code license is GPL
+The following source files are part of this tool:
+
+|Source File|Comment|
+|---|---|
+|[cpp/gen/lib_rl_gen.cpp](/cpp/gen/lib_rl_gen.cpp)||
+|[cpp/lib_rl/lib_rl.cpp](/cpp/lib_rl/lib_rl.cpp)||
+|[include/gen/lib_rl_gen.h](/include/gen/lib_rl_gen.h)||
+|[include/gen/lib_rl_gen.inl.h](/include/gen/lib_rl_gen.inl.h)||
+|[include/lib_rl.h](/include/lib_rl.h)||
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
+
+### Dependencies
+<a href="#dependencies"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
+The build target depends on the following libraries
+|Target|Comment|
+|---|---|
+|[algo_lib](/txt/lib/algo_lib/README.md)|Support library for all executables|
+|[lib_prot](/txt/lib/lib_prot/README.md)|Library covering all protocols|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
+
+### In Memory DB
+<a href="#in-memory-db"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Imdb -->
+`lib_rl` generated code creates the tables below.
+All allocations are done through global `lib_rl::_db` [lib_rl.FDb](#lib_rl-fdb) structure
+|Ctype|Ssimfile|Create|Access|
+|---|---|---|---|
+|[lib_rl.Cmdline](#lib_rl-cmdline)||
+|[lib_rl.FDb](#lib_rl-fdb)||FDb._db (Global)|
+
+#### lib_rl.Cmdline - 
+<a href="#lib_rl-cmdline"></a>
+
+#### lib_rl.Cmdline Fields
+<a href="#lib_rl-cmdline-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_rl.Cmdline.app|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Application name|
+|lib_rl.Cmdline.prompt|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|""|Application name|
+|lib_rl.Cmdline.add_history|bool|[Val](/txt/exe/amc/reftypes.md#val)|true|Automatically add to history|
+|lib_rl.Cmdline.max_history|i32|[Val](/txt/exe/amc/reftypes.md#val)|1000|Number to history entries to keep|
+
+#### Struct Cmdline
+<a href="#struct-cmdline"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_rl_gen.h](/include/gen/lib_rl_gen.h)
+```
+struct Cmdline { // lib_rl.Cmdline
+    algo::cstring   app;           //   ""  Application name
+    algo::cstring   prompt;        //   ""  Application name
+    bool            add_history;   //   true  Automatically add to history
+    i32             max_history;   //   1000  Number to history entries to keep
+    // func:lib_rl.Cmdline..Ctor
+    inline               Cmdline() __attribute__((nothrow));
+};
+```
+
+#### lib_rl.FDb - 
+<a href="#lib_rl-fdb"></a>
+
+#### lib_rl.FDb Fields
+<a href="#lib_rl-fdb-fields"></a>
+|Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
+|---|---|---|---|---|
+|lib_rl.FDb._db|[lib_rl.FDb](/txt/lib/lib_rl/README.md#lib_rl-fdb)|[Global](/txt/exe/amc/reftypes.md#global)|||
+|lib_rl.FDb.cmdline|[lib_rl.Cmdline](/txt/lib/lib_rl/README.md#lib_rl-cmdline)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_rl.FDb.Prlog|[algo.PrlogFcn](/txt/protocol/algo/PrlogFcn.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_rl.FDb.history_file|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_rl.FDb.iohook|[algo_lib.FIohook](/txt/lib/algo_lib/README.md#algo_lib-fiohook)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_rl.FDb.line|[algo.cstring](/txt/protocol/algo/cstring.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_rl.FDb.line_valid|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_rl.FDb.eof|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_rl.FDb.err|i32|[Val](/txt/exe/amc/reftypes.md#val)|||
+|lib_rl.FDb.isatty|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+
+#### Struct FDb
+<a href="#struct-fdb"></a>
+Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_rl_gen.h](/include/gen/lib_rl_gen.h)
+```
+struct FDb { // lib_rl.FDb
+    lib_rl::Cmdline     cmdline;        //
+    algo::PrlogFcn      Prlog;          //
+    algo::cstring       history_file;   //
+    algo_lib::FIohook   iohook;         //
+    algo::cstring       line;           //
+    bool                line_valid;     //   false
+    bool                eof;            //   false
+    i32                 err;            //   0
+    bool                isatty;         //   false
+    lib_rl::trace       trace;          //
+};
+```
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Imdb -->
+

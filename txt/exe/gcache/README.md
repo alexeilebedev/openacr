@@ -43,8 +43,8 @@ Usage: gcache [[-cmd:]<string>] [options]
     -after      string                 Start time for reporting
     -report                            Show end-of-run report
     -force                             Force recompile and update cache
-    -verbose    int                    Verbosity level (0..255); alias -v; cumulative
-    -debug      int                    Debug level (0..255); alias -d; cumulative
+    -verbose    flag                   Verbosity level (0..255); alias -v; cumulative
+    -debug      flag                   Debug level (0..255); alias -d; cumulative
     -help                              Print help and exit; alias -h
     -version                           Print version and exit
     -signature                         Show signatures and exit; alias -sig

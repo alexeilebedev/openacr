@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -22,20 +22,21 @@
 #include "include/atf_unit.h"
 #include "include/gen/ams_gen.h"
 #include "include/gen/ams_gen.inl.h"
+#include "include/lib_ams.h"
 
 // --------------------------------------------------------------------------------
 
 void atf_unit::unittest_ams_StreamId() {
-    // Compose a stream ID and check that it prints correctly
-    ams::ProcType proctype=ams_ProcType_0;
-    ams::StreamType streamtype=ams_StreamType_ctl;
-    ams::ProcId proc_id(proctype,0);
-    ams::StreamId id = ams::StreamId(proc_id,streamtype,1);
+    // Compose a shm ID and check that it prints correctly
+    ams::Proctype proctype=ams_Proctype_;
+    ams::Shmtype shmtype=ams_Shmtype_ctl;
+    ams::ProcId proc_id = lib_ams::MakeProcId(proctype,1,2);
+    ams::ShmId id = ams::ShmId(proc_id,shmtype,1);
     prlog(id);
-    vrfy_((tempstr() << id) == "0-0.ctl-1");
+    vrfy_((tempstr() << id) == "-1-2.ctl-1");
 
     // Read the ID back and compare with original
-    ams::StreamId id2;
-    ams::StreamId_ReadStrptrMaybe(id2,(tempstr()<<id));
+    ams::ShmId id2;
+    ams::ShmId_ReadStrptrMaybe(id2,(tempstr()<<id));
     vrfy_(id2==id);
 }

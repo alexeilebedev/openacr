@@ -282,6 +282,9 @@ void                 ind_gtblacttst_Remove(atf_gcli::FGtblacttst& row) __attribu
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_gcli.FDb.ind_gtblacttst.Reserve
 void                 ind_gtblacttst_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_gcli.FDb.ind_gtblacttst.AbsReserve
+void                 ind_gtblacttst_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:atf_gcli.FDb.ind_gtblacttstout.EmptyQ
@@ -304,6 +307,9 @@ void                 ind_gtblacttstout_Remove(atf_gcli::FGtblacttstout& row) __a
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_gcli.FDb.ind_gtblacttstout.Reserve
 void                 ind_gtblacttstout_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_gcli.FDb.ind_gtblacttstout.AbsReserve
+void                 ind_gtblacttstout_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:atf_gcli.FDb.c_gtblacttst.EmptyQ
@@ -449,6 +455,9 @@ void                 ind_gclienv_Remove(atf_gcli::FGclienv& row) __attribute__((
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_gcli.FDb.ind_gclienv.Reserve
 void                 ind_gclienv_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_gcli.FDb.ind_gclienv.AbsReserve
+void                 ind_gclienv_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:atf_gcli.FDb.ind_gclienvsub.EmptyQ
@@ -471,6 +480,9 @@ void                 ind_gclienvsub_Remove(atf_gcli::FGclienvsub& row) __attribu
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_gcli.FDb.ind_gclienvsub.Reserve
 void                 ind_gclienvsub_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_gcli.FDb.ind_gclienvsub.AbsReserve
+void                 ind_gclienvsub_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -536,6 +548,9 @@ void                 ind_gtblact_Remove(atf_gcli::FGtblact& row) __attribute__((
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_gcli.FDb.ind_gtblact.Reserve
 void                 ind_gtblact_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_gcli.FDb.ind_gtblact.AbsReserve
+void                 ind_gtblact_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:atf_gcli.FDb.gtblacttst_curs.Reset
@@ -620,13 +635,14 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: ind_gclienv (Thash, hash field gclienv)
 // access: atf_gcli.FGtblacttst.p_gclienv (Upptr)
 struct FGclienv { // atf_gcli.FGclienv
-    atf_gcli::FGclienv*       ind_gclienv_next;     // hash next
-    algo::Smallstr50          gclienv;              //
-    algo::cstring             addon;                //
-    algo::Comment             comment;              //
-    atf_gcli::FGclienvsub**   c_gclienvsub_elems;   // array of pointers
-    u32                       c_gclienvsub_n;       // array of pointers
-    u32                       c_gclienvsub_max;     // capacity of allocated array
+    atf_gcli::FGclienv*       ind_gclienv_next;      // hash next
+    u32                       ind_gclienv_hashval;   // hash value
+    algo::Smallstr50          gclienv;               //
+    algo::cstring             addon;                 //
+    algo::Comment             comment;               //
+    atf_gcli::FGclienvsub**   c_gclienvsub_elems;    // array of pointers
+    u32                       c_gclienvsub_n;        // array of pointers
+    u32                       c_gclienvsub_max;      // capacity of allocated array
     // reftype Ptrary of atf_gcli.FGclienv.c_gclienvsub prohibits copy
     // func:atf_gcli.FGclienv..AssignOp
     inline atf_gcli::FGclienv& operator =(const atf_gcli::FGclienv &rhs) = delete;
@@ -715,6 +731,7 @@ void                 FGclienv_Uninit(atf_gcli::FGclienv& gclienv) __attribute__(
 // access: atf_gcli.FGclienv.c_gclienvsub (Ptrary)
 struct FGclienvsub { // atf_gcli.FGclienvsub
     atf_gcli::FGclienvsub*   ind_gclienvsub_next;           // hash next
+    u32                      ind_gclienvsub_hashval;        // hash value
     algo::Smallstr50         gclienvsub;                    //
     bool                     fwd;                           //   false
     bool                     rev;                           //   false
@@ -760,15 +777,16 @@ void                 FGclienvsub_Uninit(atf_gcli::FGclienvsub& gclienvsub) __att
 // global access: ind_gtblact (Thash, hash field gtblact)
 // access: atf_gcli.FGtblacttst.p_gtblact (Upptr)
 struct FGtblact { // atf_gcli.FGtblact
-    atf_gcli::FGtblact*   ind_gtblact_next;   // hash next
-    algo::Smallstr50      gtblact;            //
-    bool                  t;                  //   false
-    bool                  e;                  //   false
-    bool                  auth;               //   false
-    u32                   glab_fail;          //   0
-    u32                   glab_run;           //   0
-    u32                   ghub_run;           //   0
-    u32                   ghub_fail;          //   0
+    atf_gcli::FGtblact*   ind_gtblact_next;      // hash next
+    u32                   ind_gtblact_hashval;   // hash value
+    algo::Smallstr50      gtblact;               //
+    bool                  t;                     //   false
+    bool                  e;                     //   false
+    bool                  auth;                  //   false
+    u32                   glab_fail;             //   0
+    u32                   glab_run;              //   0
+    u32                   ghub_run;              //   0
+    u32                   ghub_fail;             //   0
     // func:atf_gcli.FGtblact..AssignOp
     atf_gcli::FGtblact&  operator =(const atf_gcli::FGtblact &rhs) = delete;
     // func:atf_gcli.FGtblact..CopyCtor
@@ -809,19 +827,20 @@ void                 FGtblact_Uninit(atf_gcli::FGtblact& gtblact) __attribute__(
 // global access: ind_gtblacttst (Thash, hash field gtblacttst)
 // global access: c_gtblacttst (Ptrary)
 struct FGtblacttst { // atf_gcli.FGtblacttst
-    atf_gcli::FGtblacttst*       ind_gtblacttst_next;       // hash next
-    algo::Smallstr250            gtblacttst;                //
-    bool                         working;                   //   true
-    algo::cstring                cmd;                       //
-    algo::Comment                comment;                   //
-    bool                         fail;                      //   false
-    atf_gcli::FGtblacttstout**   c_gtblacttstout_elems;     // array of pointers
-    u32                          c_gtblacttstout_n;         // array of pointers
-    u32                          c_gtblacttstout_max;       // capacity of allocated array
-    bool                         select;                    //   false
-    atf_gcli::FGclienv*          p_gclienv;                 // reference to parent row
-    atf_gcli::FGtblact*          p_gtblact;                 // reference to parent row
-    bool                         _db_c_gtblacttst_in_ary;   //   false  membership flag
+    atf_gcli::FGtblacttst*       ind_gtblacttst_next;      // hash next
+    u32                          ind_gtblacttst_hashval;   // hash value
+    algo::Smallstr250            gtblacttst;               //
+    bool                         working;                  //   true
+    algo::cstring                cmd;                      //
+    algo::Comment                comment;                  //
+    bool                         fail;                     //   false
+    atf_gcli::FGtblacttstout**   c_gtblacttstout_elems;    // array of pointers
+    u32                          c_gtblacttstout_n;        // array of pointers
+    u32                          c_gtblacttstout_max;      // capacity of allocated array
+    bool                         select;                   //   false
+    atf_gcli::FGclienv*          p_gclienv;                // reference to parent row
+    atf_gcli::FGtblact*          p_gtblact;                // reference to parent row
+    bool                         c_gtblacttst_in_ary;      //   false  membership flag
     // reftype Ptrary of atf_gcli.FGtblacttst.c_gtblacttstout prohibits copy
     // x-reference on atf_gcli.FGtblacttst.p_gclienv prevents copy
     // x-reference on atf_gcli.FGtblacttst.p_gtblact prevents copy
@@ -923,6 +942,7 @@ void                 FGtblacttst_Uninit(atf_gcli::FGtblacttst& gtblacttst) __att
 // access: atf_gcli.FGtblacttst.c_gtblacttstout (Ptrary)
 struct FGtblacttstout { // atf_gcli.FGtblacttstout
     atf_gcli::FGtblacttstout*   ind_gtblacttstout_next;              // hash next
+    u32                         ind_gtblacttstout_hashval;           // hash value
     algo::Smallstr250           gtblacttstout;                       //
     algo::cstring               text;                                //
     algo::cstring               tout;                                //

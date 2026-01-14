@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -23,12 +23,24 @@
 //
 
 #include "include/atf_unit.h"
+
 // -----------------------------------------------------------------------------
+
+static void Check(algo::strptr a, algo::strptr b) {
+    if (a!=b) {
+        prlog("=result=");
+        prlog(a);
+        prlog("=should be=");
+        prlog(b);
+        vrfy(0,"mismatch");
+    }
+}
+
 void atf_unit::unittest_algo_lib_Txttbl(){
     algo_lib::FTxttbl tbl;
     AddCol(tbl,"col1...",algo_TextJust_j_right);
-    AddCol(tbl,"col2");
-    AddCol(tbl,"col3\n");
+    AddCol(tbl,"col2",algo_TextJust_j_left);
+    AddCol(tbl,"col3\n",algo_TextJust_j_left);
     AddRow(tbl);
     AddCol(tbl,"-",algo_TextJust_j_right);
     AddCol(tbl,"-",algo_TextJust_j_center);
@@ -40,20 +52,20 @@ void atf_unit::unittest_algo_lib_Txttbl(){
 
     cstring out;
     FTxttbl_Markdown(tbl,out);
-    vrfyeq_(out,
-            "|col1...|col2|col3<br>|\n"
-            "|---|---|---|\n"
-            "|-|-|-|\n"
-            "|val3|val2|val1|\n"
-            );
+    Check(out,
+          "|col1...|col2|col3<br>|\n"
+          "|---|---|---|\n"
+          "|-|-|-|\n"
+          "|val3|val2|val1|\n"
+          );
 
     Refurbish(out);
     FTxttbl_Print(tbl,out);
-    vrfyeq_(out,
-            "col1...  col2  col3\n\n"
-            "      -   -    -\n"
-            "val3     val2  val1\n"
-            );
+    Check(out,
+          "col1...  col2  col3\n\n"
+          "      -   -    -\n"
+          "val3     val2  val1\n"
+          );
 
     // Check AddCols
     algo::Refurbish(tbl);
@@ -66,10 +78,10 @@ void atf_unit::unittest_algo_lib_Txttbl(){
     AddCols(tbl,"*,*,*",algo_TextJust_j_left);
     Refurbish(out);
     FTxttbl_Print(tbl,out);
-    vrfyeq_(out,
-            "aaa  bbb  ccc\n"
-            "  *    *    *\n"
-            " *    *    *\n"
-            "*    *    *\n"
-            );
+    Check(out,
+          "aaa  bbb  ccc\n"
+          "  *    *    *\n"
+          " *    *    *\n"
+          "*    *    *\n"
+          );
 }

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 AlgoRND
 // Copyright (C) 2023 Astra
 //
 // License: GPL

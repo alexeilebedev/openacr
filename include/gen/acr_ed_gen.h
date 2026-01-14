@@ -58,25 +58,27 @@ enum acr_ed_TableIdEnum {                    // acr_ed.TableId.value
     ,acr_ed_TableId_dev_gitfile       = 6    // dev.gitfile -> acr_ed.FGitfile
     ,acr_ed_TableId_dmmeta_Listtype   = 7    // dmmeta.Listtype -> acr_ed.FListtype
     ,acr_ed_TableId_dmmeta_listtype   = 7    // dmmeta.listtype -> acr_ed.FListtype
-    ,acr_ed_TableId_dmmeta_Ns         = 8    // dmmeta.Ns -> acr_ed.FNs
-    ,acr_ed_TableId_dmmeta_ns         = 8    // dmmeta.ns -> acr_ed.FNs
-    ,acr_ed_TableId_dmmeta_Nsdb       = 9    // dmmeta.Nsdb -> acr_ed.FNsdb
-    ,acr_ed_TableId_dmmeta_nsdb       = 9    // dmmeta.nsdb -> acr_ed.FNsdb
-    ,acr_ed_TableId_dmmeta_Pack       = 10   // dmmeta.Pack -> acr_ed.FPack
-    ,acr_ed_TableId_dmmeta_pack       = 10   // dmmeta.pack -> acr_ed.FPack
-    ,acr_ed_TableId_dev_Sbpath        = 11   // dev.Sbpath -> acr_ed.FSbpath
-    ,acr_ed_TableId_dev_sbpath        = 11   // dev.sbpath -> acr_ed.FSbpath
-    ,acr_ed_TableId_dmmeta_Ssimfile   = 12   // dmmeta.Ssimfile -> acr_ed.FSsimfile
-    ,acr_ed_TableId_dmmeta_ssimfile   = 12   // dmmeta.ssimfile -> acr_ed.FSsimfile
-    ,acr_ed_TableId_dev_Target        = 13   // dev.Target -> acr_ed.FTarget
-    ,acr_ed_TableId_dev_target        = 13   // dev.target -> acr_ed.FTarget
-    ,acr_ed_TableId_dev_Targsrc       = 14   // dev.Targsrc -> acr_ed.FTargsrc
-    ,acr_ed_TableId_dev_targsrc       = 14   // dev.targsrc -> acr_ed.FTargsrc
-    ,acr_ed_TableId_dmmeta_Typefld    = 15   // dmmeta.Typefld -> acr_ed.FTypefld
-    ,acr_ed_TableId_dmmeta_typefld    = 15   // dmmeta.typefld -> acr_ed.FTypefld
+    ,acr_ed_TableId_dmmeta_Msgtype    = 8    // dmmeta.Msgtype -> acr_ed.FMsgtype
+    ,acr_ed_TableId_dmmeta_msgtype    = 8    // dmmeta.msgtype -> acr_ed.FMsgtype
+    ,acr_ed_TableId_dmmeta_Ns         = 9    // dmmeta.Ns -> acr_ed.FNs
+    ,acr_ed_TableId_dmmeta_ns         = 9    // dmmeta.ns -> acr_ed.FNs
+    ,acr_ed_TableId_dmmeta_Nsdb       = 10   // dmmeta.Nsdb -> acr_ed.FNsdb
+    ,acr_ed_TableId_dmmeta_nsdb       = 10   // dmmeta.nsdb -> acr_ed.FNsdb
+    ,acr_ed_TableId_dmmeta_Pack       = 11   // dmmeta.Pack -> acr_ed.FPack
+    ,acr_ed_TableId_dmmeta_pack       = 11   // dmmeta.pack -> acr_ed.FPack
+    ,acr_ed_TableId_dev_Sbpath        = 12   // dev.Sbpath -> acr_ed.FSbpath
+    ,acr_ed_TableId_dev_sbpath        = 12   // dev.sbpath -> acr_ed.FSbpath
+    ,acr_ed_TableId_dmmeta_Ssimfile   = 13   // dmmeta.Ssimfile -> acr_ed.FSsimfile
+    ,acr_ed_TableId_dmmeta_ssimfile   = 13   // dmmeta.ssimfile -> acr_ed.FSsimfile
+    ,acr_ed_TableId_dev_Target        = 14   // dev.Target -> acr_ed.FTarget
+    ,acr_ed_TableId_dev_target        = 14   // dev.target -> acr_ed.FTarget
+    ,acr_ed_TableId_dev_Targsrc       = 15   // dev.Targsrc -> acr_ed.FTargsrc
+    ,acr_ed_TableId_dev_targsrc       = 15   // dev.targsrc -> acr_ed.FTargsrc
+    ,acr_ed_TableId_dmmeta_Typefld    = 16   // dmmeta.Typefld -> acr_ed.FTypefld
+    ,acr_ed_TableId_dmmeta_typefld    = 16   // dmmeta.typefld -> acr_ed.FTypefld
 };
 
-enum { acr_ed_TableIdEnum_N = 32 };
+enum { acr_ed_TableIdEnum_N = 34 };
 
 namespace acr_ed { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -95,6 +97,7 @@ namespace acr_ed { struct FCtype; }
 namespace dmmeta { struct Fprefix; }
 namespace dev { struct Gitfile; }
 namespace dmmeta { struct Listtype; }
+namespace dmmeta { struct Msgtype; }
 namespace dmmeta { struct Ns; }
 namespace dmmeta { struct Nsdb; }
 namespace dmmeta { struct Pack; }
@@ -124,6 +127,7 @@ namespace acr_ed { struct _db_cfmt_curs; }
 namespace acr_ed { struct _db_nsdb_curs; }
 namespace acr_ed { struct _db_edaction_curs; }
 namespace acr_ed { struct _db_gitfile_curs; }
+namespace acr_ed { struct _db_msgtype_curs; }
 namespace acr_ed { struct target_zd_targsrc_curs; }
 namespace acr_ed { struct FCfmt; }
 namespace acr_ed { struct FCpptype; }
@@ -135,6 +139,7 @@ namespace acr_ed { struct FField; }
 namespace acr_ed { struct FFprefix; }
 namespace acr_ed { struct FGitfile; }
 namespace acr_ed { struct FListtype; }
+namespace acr_ed { struct FMsgtype; }
 namespace acr_ed { struct FNsdb; }
 namespace acr_ed { struct FPack; }
 namespace acr_ed { struct FSbpath; }
@@ -149,13 +154,11 @@ namespace acr_ed { // hook_fcn_typedef
 } // hook_decl
 namespace acr_ed { // gen:ns_gsymbol
     extern const char* atfdb_cijob_comp; // "comp"
-    extern const char* atfdb_cijob_cov; // "cov"
+    extern const char* atfdb_cijob_coverage; // "coverage"
     extern const char* atfdb_cijob_memcheck; // "memcheck"
     extern const char* atfdb_cijob_normalize; // "normalize"
 } // gen:ns_gsymbol
 namespace acr_ed { // gen:ns_gsymbol
-    extern const algo::strptr dev_package_amc; // "amc"
-    extern const algo::strptr dev_package_apm; // "apm"
     extern const algo::strptr dev_package_openacr; // "openacr"
 } // gen:ns_gsymbol
 namespace acr_ed { // gen:ns_print_struct
@@ -286,21 +289,22 @@ void                 FCstr_Uninit(acr_ed::FCstr& cstr) __attribute__((nothrow));
 // access: acr_ed.FField.p_arg (Upptr)
 // access: acr_ed.FSsimfile.p_ctype (Upptr)
 struct FCtype { // acr_ed.FCtype
-    algo::Smallstr100    ctype;            // Identifier. must be ns.typename
-    algo::Comment        comment;          //
-    acr_ed::FField**     c_field_elems;    // array of pointers
-    u32                  c_field_n;        // array of pointers
-    u32                  c_field_max;      // capacity of allocated array
-    acr_ed::FCstr*       c_cstr;           // optional pointer
-    acr_ed::FNs*         p_ns;             // reference to parent row
-    acr_ed::FSsimfile*   c_ssimfile;       // optional pointer
-    acr_ed::FPack*       c_pack;           // optional pointer
-    acr_ed::FTypefld*    c_typefld;        // optional pointer
-    acr_ed::FCpptype*    c_cpptype;        // optional pointer
-    acr_ed::FCfmt**      c_cfmt_elems;     // array of pointers
-    u32                  c_cfmt_n;         // array of pointers
-    u32                  c_cfmt_max;       // capacity of allocated array
-    acr_ed::FCtype*      ind_ctype_next;   // hash next
+    algo::Smallstr100    ctype;               // Identifier. must be ns.typename
+    algo::Comment        comment;             //
+    acr_ed::FField**     c_field_elems;       // array of pointers
+    u32                  c_field_n;           // array of pointers
+    u32                  c_field_max;         // capacity of allocated array
+    acr_ed::FCstr*       c_cstr;              // optional pointer
+    acr_ed::FNs*         p_ns;                // reference to parent row
+    acr_ed::FSsimfile*   c_ssimfile;          // optional pointer
+    acr_ed::FPack*       c_pack;              // optional pointer
+    acr_ed::FTypefld*    c_typefld;           // optional pointer
+    acr_ed::FCpptype*    c_cpptype;           // optional pointer
+    acr_ed::FCfmt**      c_cfmt_elems;        // array of pointers
+    u32                  c_cfmt_n;            // array of pointers
+    u32                  c_cfmt_max;          // capacity of allocated array
+    acr_ed::FCtype*      ind_ctype_next;      // hash next
+    u32                  ind_ctype_hashval;   // hash value
     // reftype Ptrary of acr_ed.FCtype.c_field prohibits copy
     // x-reference on acr_ed.FCtype.c_cstr prevents copy
     // x-reference on acr_ed.FCtype.p_ns prevents copy
@@ -489,12 +493,13 @@ void                 FCtype_Uninit(acr_ed::FCtype& ctype) __attribute__((nothrow
 // create: acr_ed.FDb.edaction (Inlary)
 // global access: ind_edaction (Thash, hash field edaction)
 struct FEdaction { // acr_ed.FEdaction
-    algo::Smallstr50             edaction;            //
-    bool                         needamc;             //   false
-    algo::Comment                comment;             //
-    acr_ed::edaction_step_hook   step;                //   NULL  Pointer to a function
-    bool                         select;              //   false
-    acr_ed::FEdaction*           ind_edaction_next;   // hash next
+    algo::Smallstr50             edaction;               //
+    bool                         needamc;                //   false
+    algo::Comment                comment;                //
+    acr_ed::edaction_step_hook   step;                   //   NULL  Pointer to a function
+    bool                         select;                 //   false
+    acr_ed::FEdaction*           ind_edaction_next;      // hash next
+    u32                          ind_edaction_hashval;   // hash value
     // reftype Hook of acr_ed.FEdaction.step prohibits copy
     // func:acr_ed.FEdaction..AssignOp
     inline acr_ed::FEdaction& operator =(const acr_ed::FEdaction &rhs) = delete;
@@ -627,6 +632,8 @@ struct FDb { // acr_ed.FDb: In-memory database for acr_ed
     i32                   ind_edaction_n;                                  // number of elements in the hash table
     acr_ed::FGitfile*     gitfile_lary[32];                                // level array
     i32                   gitfile_n;                                       // number of elements in array
+    acr_ed::FMsgtype*     msgtype_lary[32];                                // level array
+    i32                   msgtype_n;                                       // number of elements in array
     acr_ed::trace         trace;                                           //
 };
 
@@ -691,6 +698,9 @@ void                 ind_ns_Remove(acr_ed::FNs& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_ed.FDb.ind_ns.Reserve
 void                 ind_ns_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_ed.FDb.ind_ns.AbsReserve
+void                 ind_ns_AbsReserve(int n) __attribute__((nothrow));
 
 // Read argc,argv directly into the fields of the command line(s)
 // The following fields are updated:
@@ -795,6 +805,9 @@ void                 ind_field_Remove(acr_ed::FField& row) __attribute__((nothro
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_ed.FDb.ind_field.Reserve
 void                 ind_field_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_ed.FDb.ind_field.AbsReserve
+void                 ind_field_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -854,6 +867,9 @@ void                 ind_ctype_Remove(acr_ed::FCtype& row) __attribute__((nothro
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_ed.FDb.ind_ctype.Reserve
 void                 ind_ctype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_ed.FDb.ind_ctype.AbsReserve
+void                 ind_ctype_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -913,6 +929,9 @@ void                 ind_ssimfile_Remove(acr_ed::FSsimfile& row) __attribute__((
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_ed.FDb.ind_ssimfile.Reserve
 void                 ind_ssimfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_ed.FDb.ind_ssimfile.AbsReserve
+void                 ind_ssimfile_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -967,6 +986,11 @@ algo::cstring&       vis_AllocAt(int at) __attribute__((__warn_unused_result__, 
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:acr_ed.FDb.vis.AllocN
 algo::aryptr<algo::cstring> vis_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_ed.FDb.vis.AllocNAt
+algo::aryptr<algo::cstring> vis_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr_ed.FDb.vis.EmptyQ
 inline bool          vis_EmptyQ() __attribute__((nothrow));
@@ -1016,6 +1040,10 @@ algo::aryptr<algo::cstring> vis_AllocNVal(int n_elems, const algo::cstring& val)
 // Function returns success value.
 // func:acr_ed.FDb.vis.ReadStrptrMaybe
 bool                 vis_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_ed.FDb.vis.Insary
+void                 vis_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1078,6 +1106,9 @@ void                 ind_listtype_Remove(acr_ed::FListtype& row) __attribute__((
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_ed.FDb.ind_listtype.Reserve
 void                 ind_listtype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_ed.FDb.ind_listtype.AbsReserve
+void                 ind_listtype_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1140,6 +1171,9 @@ void                 ind_fprefix_Remove(acr_ed::FFprefix& row) __attribute__((no
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_ed.FDb.ind_fprefix.Reserve
 void                 ind_fprefix_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_ed.FDb.ind_fprefix.AbsReserve
+void                 ind_fprefix_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1199,6 +1233,9 @@ void                 ind_target_Remove(acr_ed::FTarget& row) __attribute__((noth
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_ed.FDb.ind_target.Reserve
 void                 ind_target_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_ed.FDb.ind_target.AbsReserve
+void                 ind_target_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1535,6 +1572,9 @@ void                 ind_nsdb_Remove(acr_ed::FNsdb& row) __attribute__((nothrow)
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_ed.FDb.ind_nsdb.Reserve
 void                 ind_nsdb_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_ed.FDb.ind_nsdb.AbsReserve
+void                 ind_nsdb_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1606,6 +1646,9 @@ void                 ind_edaction_Remove(acr_ed::FEdaction& row) __attribute__((
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_ed.FDb.ind_edaction.Reserve
 void                 ind_edaction_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_ed.FDb.ind_edaction.AbsReserve
+void                 ind_edaction_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1646,6 +1689,46 @@ inline acr_ed::FGitfile& gitfile_qFind(u64 t) __attribute__((nothrow, pure));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:acr_ed.FDb.gitfile.XrefMaybe
 bool                 gitfile_XrefMaybe(acr_ed::FGitfile &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:acr_ed.FDb.msgtype.Alloc
+acr_ed::FMsgtype&    msgtype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:acr_ed.FDb.msgtype.AllocMaybe
+acr_ed::FMsgtype*    msgtype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:acr_ed.FDb.msgtype.InsertMaybe
+acr_ed::FMsgtype*    msgtype_InsertMaybe(const dmmeta::Msgtype &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:acr_ed.FDb.msgtype.AllocMem
+void*                msgtype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:acr_ed.FDb.msgtype.EmptyQ
+inline bool          msgtype_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:acr_ed.FDb.msgtype.Find
+inline acr_ed::FMsgtype* msgtype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:acr_ed.FDb.msgtype.Last
+inline acr_ed::FMsgtype* msgtype_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:acr_ed.FDb.msgtype.N
+inline i32           msgtype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:acr_ed.FDb.msgtype.RemoveAll
+void                 msgtype_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:acr_ed.FDb.msgtype.RemoveLast
+void                 msgtype_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:acr_ed.FDb.msgtype.qFind
+inline acr_ed::FMsgtype& msgtype_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:acr_ed.FDb.msgtype.XrefMaybe
+bool                 msgtype_XrefMaybe(acr_ed::FMsgtype &row);
 
 // cursor points to valid item
 // func:acr_ed.FDb.ns_curs.Reset
@@ -1862,6 +1945,18 @@ inline void          _db_gitfile_curs_Next(_db_gitfile_curs &curs) __attribute__
 // item access
 // func:acr_ed.FDb.gitfile_curs.Access
 inline acr_ed::FGitfile& _db_gitfile_curs_Access(_db_gitfile_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_ed.FDb.msgtype_curs.Reset
+inline void          _db_msgtype_curs_Reset(_db_msgtype_curs &curs, acr_ed::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:acr_ed.FDb.msgtype_curs.ValidQ
+inline bool          _db_msgtype_curs_ValidQ(_db_msgtype_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:acr_ed.FDb.msgtype_curs.Next
+inline void          _db_msgtype_curs_Next(_db_msgtype_curs &curs) __attribute__((nothrow));
+// item access
+// func:acr_ed.FDb.msgtype_curs.Access
+inline acr_ed::FMsgtype& _db_msgtype_curs_Access(_db_msgtype_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:acr_ed.FDb..Init
 void                 FDb_Init();
@@ -1875,6 +1970,7 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // access: acr_ed.FCtype.c_field (Ptrary)
 struct FField { // acr_ed.FField
     acr_ed::FField*     ind_field_next;         // hash next
+    u32                 ind_field_hashval;      // hash value
     algo::Smallstr100   field;                  // Primary key, as ctype.name
     algo::Smallstr100   arg;                    // Type of field
     algo::Smallstr50    reftype;                //   "Val"  Type constructor
@@ -1931,10 +2027,11 @@ void                 FField_Uninit(acr_ed::FField& field) __attribute__((nothrow
 // global access: fprefix (Lary, by rowid)
 // global access: ind_fprefix (Thash, hash field fprefix)
 struct FFprefix { // acr_ed.FFprefix
-    acr_ed::FFprefix*   ind_fprefix_next;   // hash next
-    algo::Smallstr5     fprefix;            //
-    algo::Smallstr50    reftype;            //
-    algo::Comment       comment;            //
+    acr_ed::FFprefix*   ind_fprefix_next;      // hash next
+    u32                 ind_fprefix_hashval;   // hash value
+    algo::Smallstr5     fprefix;               //
+    algo::Smallstr50    reftype;               //
+    algo::Comment       comment;               //
     // func:acr_ed.FFprefix..AssignOp
     inline acr_ed::FFprefix& operator =(const acr_ed::FFprefix &rhs) = delete;
     // func:acr_ed.FFprefix..CopyCtor
@@ -1992,12 +2089,13 @@ algo::Smallstr50     ext_Get(acr_ed::FGitfile& gitfile) __attribute__((__warn_un
 // global access: listtype (Lary, by rowid)
 // global access: ind_listtype (Thash, hash field listtype)
 struct FListtype { // acr_ed.FListtype
-    acr_ed::FListtype*   ind_listtype_next;   // hash next
-    algo::Smallstr5      listtype;            //
-    bool                 circular;            //   false  Circular list
-    bool                 haveprev;            //   false  Previous link
-    bool                 instail;             //   false  Queue
-    algo::Comment        comment;             //
+    acr_ed::FListtype*   ind_listtype_next;      // hash next
+    u32                  ind_listtype_hashval;   // hash value
+    algo::Smallstr5      listtype;               //
+    bool                 circular;               //   false  Circular list
+    bool                 haveprev;               //   false  Previous link
+    bool                 instail;                //   false  Queue
+    algo::Comment        comment;                //
     // func:acr_ed.FListtype..AssignOp
     inline acr_ed::FListtype& operator =(const acr_ed::FListtype &rhs) = delete;
     // func:acr_ed.FListtype..CopyCtor
@@ -2025,6 +2123,29 @@ inline void          FListtype_Init(acr_ed::FListtype& listtype);
 // func:acr_ed.FListtype..Uninit
 void                 FListtype_Uninit(acr_ed::FListtype& listtype) __attribute__((nothrow));
 
+// --- acr_ed.FMsgtype
+// create: acr_ed.FDb.msgtype (Lary)
+// global access: msgtype (Lary, by rowid)
+struct FMsgtype { // acr_ed.FMsgtype
+    algo::Smallstr100   ctype;   //
+    algo::CppExpr       type;    //
+private:
+    // func:acr_ed.FMsgtype..Ctor
+    inline               FMsgtype() __attribute__((nothrow));
+    friend acr_ed::FMsgtype&    msgtype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend acr_ed::FMsgtype*    msgtype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 msgtype_RemoveAll() __attribute__((nothrow));
+    friend void                 msgtype_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:acr_ed.FMsgtype.base.CopyOut
+void                 msgtype_CopyOut(acr_ed::FMsgtype &row, dmmeta::Msgtype &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:acr_ed.FMsgtype.base.CopyIn
+void                 msgtype_CopyIn(acr_ed::FMsgtype &row, dmmeta::Msgtype &in) __attribute__((nothrow));
+
+
 // --- acr_ed.FNs
 // create: acr_ed.FDb.ns (Lary)
 // global access: ns (Lary, by rowid)
@@ -2034,11 +2155,12 @@ void                 FListtype_Uninit(acr_ed::FListtype& listtype) __attribute__
 // access: acr_ed.FSsimfile.p_ns (Upptr)
 // access: acr_ed.FTarget.p_ns (Upptr)
 struct FNs { // acr_ed.FNs
-    acr_ed::FNs*       ind_ns_next;   // hash next
-    algo::Smallstr16   ns;            // Namespace name (primary key)
-    algo::Smallstr50   nstype;        // Namespace type
-    algo::Smallstr50   license;       // Associated license
-    algo::Comment      comment;       //
+    acr_ed::FNs*       ind_ns_next;      // hash next
+    u32                ind_ns_hashval;   // hash value
+    algo::Smallstr16   ns;               // Namespace name (primary key)
+    algo::Smallstr50   nstype;           // Namespace type
+    algo::Smallstr50   license;          // Associated license
+    algo::Comment      comment;          //
     // func:acr_ed.FNs..AssignOp
     inline acr_ed::FNs&  operator =(const acr_ed::FNs &rhs) = delete;
     // func:acr_ed.FNs..CopyCtor
@@ -2071,9 +2193,10 @@ void                 FNs_Uninit(acr_ed::FNs& ns) __attribute__((nothrow));
 // global access: nsdb (Lary, by rowid)
 // global access: ind_nsdb (Thash, hash field ns)
 struct FNsdb { // acr_ed.FNsdb
-    acr_ed::FNsdb*     ind_nsdb_next;   // hash next
-    algo::Smallstr16   ns;              //
-    algo::Comment      comment;         //
+    acr_ed::FNsdb*     ind_nsdb_next;      // hash next
+    u32                ind_nsdb_hashval;   // hash value
+    algo::Smallstr16   ns;                 //
+    algo::Comment      comment;            //
     // func:acr_ed.FNsdb..AssignOp
     inline acr_ed::FNsdb& operator =(const acr_ed::FNsdb &rhs) = delete;
     // func:acr_ed.FNsdb..CopyCtor
@@ -2163,11 +2286,12 @@ void                 sbpath_CopyIn(acr_ed::FSbpath &row, dev::Sbpath &in) __attr
 // global access: ind_ssimfile (Thash, hash field ssimfile)
 // access: acr_ed.FCtype.c_ssimfile (Ptr)
 struct FSsimfile { // acr_ed.FSsimfile
-    acr_ed::FSsimfile*   ind_ssimfile_next;   // hash next
-    algo::Smallstr50     ssimfile;            //
-    algo::Smallstr100    ctype;               //
-    acr_ed::FCtype*      p_ctype;             // reference to parent row
-    acr_ed::FNs*         p_ns;                // reference to parent row
+    acr_ed::FSsimfile*   ind_ssimfile_next;      // hash next
+    u32                  ind_ssimfile_hashval;   // hash value
+    algo::Smallstr50     ssimfile;               //
+    algo::Smallstr100    ctype;                  //
+    acr_ed::FCtype*      p_ctype;                // reference to parent row
+    acr_ed::FNs*         p_ns;                   // reference to parent row
     // x-reference on acr_ed.FSsimfile.p_ctype prevents copy
     // x-reference on acr_ed.FSsimfile.p_ns prevents copy
     // func:acr_ed.FSsimfile..AssignOp
@@ -2214,13 +2338,14 @@ void                 FSsimfile_Uninit(acr_ed::FSsimfile& ssimfile) __attribute__
 // global access: ind_target (Thash, hash field target)
 // access: acr_ed.FTargsrc.p_target (Upptr)
 struct FTarget { // acr_ed.FTarget
-    acr_ed::FTarget*    ind_target_next;   // hash next
-    algo::Smallstr16    target;            // Primary key - name of target
-    u32                 score;             //   0  For guessing target from source file
-    acr_ed::FTargsrc*   zd_targsrc_head;   // zero-terminated doubly linked list
-    i32                 zd_targsrc_n;      // zero-terminated doubly linked list
-    acr_ed::FTargsrc*   zd_targsrc_tail;   // pointer to last element
-    acr_ed::FNs*        p_ns;              // reference to parent row
+    acr_ed::FTarget*    ind_target_next;      // hash next
+    u32                 ind_target_hashval;   // hash value
+    algo::Smallstr16    target;               // Primary key - name of target
+    u32                 score;                //   0  For guessing target from source file
+    acr_ed::FTargsrc*   zd_targsrc_head;      // zero-terminated doubly linked list
+    i32                 zd_targsrc_n;         // zero-terminated doubly linked list
+    acr_ed::FTargsrc*   zd_targsrc_tail;      // pointer to last element
+    acr_ed::FNs*        p_ns;                 // reference to parent row
     // reftype Llist of acr_ed.FTarget.zd_targsrc prohibits copy
     // x-reference on acr_ed.FTarget.p_ns prevents copy
     // func:acr_ed.FTarget..AssignOp
@@ -2254,7 +2379,7 @@ inline bool          zd_targsrc_EmptyQ(acr_ed::FTarget& target) __attribute__((_
 inline acr_ed::FTargsrc* zd_targsrc_First(acr_ed::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr_ed.FTarget.zd_targsrc.InLlistQ
-inline bool          zd_targsrc_InLlistQ(acr_ed::FTargsrc& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          target_zd_targsrc_InLlistQ(acr_ed::FTargsrc& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr_ed.FTarget.zd_targsrc.Insert
 void                 zd_targsrc_Insert(acr_ed::FTarget& target, acr_ed::FTargsrc& row) __attribute__((nothrow));
@@ -2266,10 +2391,10 @@ inline acr_ed::FTargsrc* zd_targsrc_Last(acr_ed::FTarget& target) __attribute__(
 inline i32           zd_targsrc_N(const acr_ed::FTarget& target) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr_ed.FTarget.zd_targsrc.Next
-inline acr_ed::FTargsrc* zd_targsrc_Next(acr_ed::FTargsrc &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr_ed::FTargsrc* target_zd_targsrc_Next(acr_ed::FTargsrc &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr_ed.FTarget.zd_targsrc.Prev
-inline acr_ed::FTargsrc* zd_targsrc_Prev(acr_ed::FTargsrc &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr_ed::FTargsrc* target_zd_targsrc_Prev(acr_ed::FTargsrc &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_ed.FTarget.zd_targsrc.Remove
 void                 zd_targsrc_Remove(acr_ed::FTarget& target, acr_ed::FTargsrc& row) __attribute__((nothrow));
@@ -2306,11 +2431,11 @@ void                 FTarget_Uninit(acr_ed::FTarget& target) __attribute__((noth
 // global access: targsrc (Lary, by rowid)
 // access: acr_ed.FTarget.zd_targsrc (Llist)
 struct FTargsrc { // acr_ed.FTargsrc
-    acr_ed::FTargsrc*   zd_targsrc_next;   // zslist link; -1 means not-in-list
-    acr_ed::FTargsrc*   zd_targsrc_prev;   // previous element
-    algo::Smallstr100   targsrc;           //
-    algo::Comment       comment;           //
-    acr_ed::FTarget*    p_target;          // reference to parent row
+    acr_ed::FTargsrc*   target_zd_targsrc_next;   // zslist link; -1 means not-in-list
+    acr_ed::FTargsrc*   target_zd_targsrc_prev;   // previous element
+    algo::Smallstr100   targsrc;                  //
+    algo::Comment       comment;                  //
+    acr_ed::FTarget*    p_target;                 // reference to parent row
     // x-reference on acr_ed.FTargsrc.p_target prevents copy
     // func:acr_ed.FTargsrc..AssignOp
     inline acr_ed::FTargsrc& operator =(const acr_ed::FTargsrc &rhs) = delete;
@@ -2653,6 +2778,14 @@ struct _db_gitfile_curs {// cursor
     acr_ed::FDb *parent;
     i64 index;
     _db_gitfile_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_msgtype_curs {// cursor
+    typedef acr_ed::FMsgtype ChildType;
+    acr_ed::FDb *parent;
+    i64 index;
+    _db_msgtype_curs(){ parent=NULL; index=0; }
 };
 
 

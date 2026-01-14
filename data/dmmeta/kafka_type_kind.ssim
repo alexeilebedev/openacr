@@ -1,0 +1,6 @@
+dmmeta.kafka_type_kind  kafka_type_kind:common  comment:"Struct scoped to single root type"
+dmmeta.kafka_type_kind  kafka_type_kind:data  comment:"Global data structure"
+dmmeta.kafka_type_kind  kafka_type_kind:field  comment:"Struct scoped to single field"
+dmmeta.kafka_type_kind  kafka_type_kind:header  comment:"Global header"
+dmmeta.kafka_type_kind  kafka_type_kind:request  comment:"Request message"
+dmmeta.kafka_type_kind  kafka_type_kind:response  comment:"Response message"

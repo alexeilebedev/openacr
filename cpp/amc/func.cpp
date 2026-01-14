@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -319,19 +319,22 @@ static void TmplPrefix(amc::FFunc& func, cstring &out, bool proto) {
 // Emit function prototype into string OUT.
 // If ctype_context is specified, then the declaration is intended to be
 // used inside the struct, so different C++ syntax rules apply.
-void amc::PrintFuncProto(amc::FFunc& func, amc::FCtype *ctype_context, cstring &out) {
+void amc::PrintFuncProto(amc::FFunc& func, amc::FCtype *ctype_context, cstring &out, bool querymode) {
     if (func.prepcond != "") {
         out << "#if " << func.prepcond << eol;
     }
+    int proto_only = querymode && !_db.cmdline.showcomment;
     // show function comment but omit it if it's just a friend declaration
-    if (!(ctype_context && !func.member)) {
-        ind_beg(Line_curs,comment,func.comment) {
-            out << "// "<<comment<<'\n';
-        }ind_end;
-        out << "// func:"<<func.func<<eol;
-    }
-    if (func.extrn) {
-        out << "// this function is 'extrn' and implemented by user"<<eol;
+    if (!proto_only) {
+        if (!(ctype_context && !func.member)) {
+            ind_beg(Line_curs,comment,func.comment) {
+                out << "// "<<comment<<'\n';
+            }ind_end;
+            out << "// func:"<<func.func<<eol;
+        }
+        if (func.extrn) {
+            out << "// this function is 'extrn' and implemented by user"<<eol;
+        }
     }
     if (ctype_context && !func.member) {
         out << "friend ";
@@ -342,12 +345,20 @@ void amc::PrintFuncProto(amc::FFunc& func, amc::FCtype *ctype_context, cstring &
     int start = ch_N(out);
     TmplPrefix(func,out,true);
     out << func.ret;
-    // some indentation for readability
-    char_PrintNTimes(' ', out, start + 20 - ch_N(out));
+    if (!proto_only) {
+        // some indentation for readability
+        char_PrintNTimes(' ', out, start + 20 - ch_N(out));
+    }
     out << " ";
     if (!ctype_context && func.member) {
         if (amc::FCtype *ctype = ind_ctype_Find(ctype_Get(func))) {
             out << ctype->cpp_type << "::";
+        }
+    }
+    if (proto_only) {
+        strptr ns = ns_Get(func);
+        if (ns !="") {
+            out << ns<<"::";
         }
     }
     out << func.proto;

@@ -1,3 +1,4 @@
+// Copyright (C) 2026 AlgoRND
 // Copyright (C) 2023 Astra
 //
 // License: GPL
@@ -60,7 +61,12 @@ void aqlite::Main() {
         rc = Open(conn);
     }
     if (rc == SQLITE_OK) {
-        auto init_cmd = tempstr() << "SELECT init_ssim('" << _db.cmdline.in << "')";
+        algo_lib::Replscope R;
+        Set(R,"$in",_db.cmdline.in);
+        // need to extract expression to pass to sql functions
+        Set(R,"$ns",_db.cmdline.ns.expr);
+        tempstr init_cmd;
+        Ins(&R,init_cmd, "SELECT init_ssim('$in','$ns');");
         rc = sqlite3_exec(conn.db, algo::Zeroterm(init_cmd), nullptr, nullptr, nullptr);
     }
     if (rc == SQLITE_OK) {

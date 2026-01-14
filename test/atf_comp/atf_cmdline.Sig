@@ -1,4 +1,3 @@
 dmmeta.dispsigcheck  dispsig:algo_lib.Input  signature:***
 atf_cmdline: Missing value for required argument -astr (see -help)
 atf_cmdline: Missing value for required argument -str (see -help)
-

@@ -264,7 +264,7 @@ struct atf_comp { // report.atf_comp
     i32    ntest;     //   0  Total number of tests
     i32    nselect;   //   0  Number of tests selected for execution
     i32    npass;     //   0  Number of tests succeeded
-    i32    nskip;     //   0  Number of tests failed
+    i32    nskip;     //   0  Number of tests not selected
     i32    nrun;      //   0  Number of tests run
     i32    nwrite;    //   0  Number of files written
     i32    nerr;      //   0  Number of errors

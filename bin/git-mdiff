@@ -1,5 +1,5 @@
-#!/bin/sh
-# Copyright (C) 2023-2024 AlgoRND
+#!/usr/bin/env bash
+# Copyright (C) 2023-2026 AlgoRND
 #
 # License: GPL
 # This program is free software: you can redistribute it and/or modify
@@ -20,5 +20,5 @@
 
 (
     git diff --color=always HEAD~ --stat | grep -v /gen/
-    git diff -w -U6 $* HEAD~ include cpp data | grephunk f:'!/gen/' | hilite -d
+    git diff -w -U6 $* HEAD~ include cpp data | grephunk f:'!/gen/' f:!'dispsig.ssim' | hilite -d
 ) | less -r

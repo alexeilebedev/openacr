@@ -464,53 +464,53 @@ inline void acr::c_ssimfile_Remove(acr::FCtype& ctype, acr::FSsimfile& row) {
     }
 }
 
-// --- acr.FCtype.zd_ctype_rec.EmptyQ
+// --- acr.FCtype.zd_rec.EmptyQ
 // Return true if index is empty
-inline bool acr::zd_ctype_rec_EmptyQ(acr::FCtype& ctype) {
-    return ctype.zd_ctype_rec_head == NULL;
+inline bool acr::zd_rec_EmptyQ(acr::FCtype& ctype) {
+    return ctype.zd_rec_head == NULL;
 }
 
-// --- acr.FCtype.zd_ctype_rec.First
+// --- acr.FCtype.zd_rec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline acr::FRec* acr::zd_ctype_rec_First(acr::FCtype& ctype) {
+inline acr::FRec* acr::zd_rec_First(acr::FCtype& ctype) {
     acr::FRec *row = NULL;
-    row = ctype.zd_ctype_rec_head;
+    row = ctype.zd_rec_head;
     return row;
 }
 
-// --- acr.FCtype.zd_ctype_rec.InLlistQ
+// --- acr.FCtype.zd_rec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool acr::zd_ctype_rec_InLlistQ(acr::FRec& row) {
+inline bool acr::ctype_zd_rec_InLlistQ(acr::FRec& row) {
     bool result = false;
-    result = !(row.zd_ctype_rec_next == (acr::FRec*)-1);
+    result = !(row.ctype_zd_rec_next == (acr::FRec*)-1);
     return result;
 }
 
-// --- acr.FCtype.zd_ctype_rec.Last
+// --- acr.FCtype.zd_rec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline acr::FRec* acr::zd_ctype_rec_Last(acr::FCtype& ctype) {
+inline acr::FRec* acr::zd_rec_Last(acr::FCtype& ctype) {
     acr::FRec *row = NULL;
-    row = ctype.zd_ctype_rec_tail;
+    row = ctype.zd_rec_tail;
     return row;
 }
 
-// --- acr.FCtype.zd_ctype_rec.Next
+// --- acr.FCtype.zd_rec.Next
 // Return pointer to next element in the list
-inline acr::FRec* acr::zd_ctype_rec_Next(acr::FRec &row) {
-    return row.zd_ctype_rec_next;
+inline acr::FRec* acr::ctype_zd_rec_Next(acr::FRec &row) {
+    return row.ctype_zd_rec_next;
 }
 
-// --- acr.FCtype.zd_ctype_rec.Prev
+// --- acr.FCtype.zd_rec.Prev
 // Return pointer to previous element in the list
-inline acr::FRec* acr::zd_ctype_rec_Prev(acr::FRec &row) {
-    return row.zd_ctype_rec_prev;
+inline acr::FRec* acr::ctype_zd_rec_Prev(acr::FRec &row) {
+    return row.ctype_zd_rec_prev;
 }
 
-// --- acr.FCtype.zd_ctype_rec.qLast
+// --- acr.FCtype.zd_rec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline acr::FRec& acr::zd_ctype_rec_qLast(acr::FCtype& ctype) {
+inline acr::FRec& acr::zd_rec_qLast(acr::FCtype& ctype) {
     acr::FRec *row = NULL;
-    row = ctype.zd_ctype_rec_tail;
+    row = ctype.zd_rec_tail;
     return *row;
 }
 
@@ -526,53 +526,53 @@ inline i32 acr::ind_ctype_rec_N(const acr::FCtype& ctype) {
     return ctype.ind_ctype_rec_n;
 }
 
-// --- acr.FCtype.zd_ctype_selrec.EmptyQ
+// --- acr.FCtype.zd_selrec.EmptyQ
 // Return true if index is empty
-inline bool acr::zd_ctype_selrec_EmptyQ(acr::FCtype& ctype) {
-    return ctype.zd_ctype_selrec_head == NULL;
+inline bool acr::zd_selrec_EmptyQ(acr::FCtype& ctype) {
+    return ctype.zd_selrec_head == NULL;
 }
 
-// --- acr.FCtype.zd_ctype_selrec.First
+// --- acr.FCtype.zd_selrec.First
 // If index empty, return NULL. Otherwise return pointer to first element in index
-inline acr::FRec* acr::zd_ctype_selrec_First(acr::FCtype& ctype) {
+inline acr::FRec* acr::zd_selrec_First(acr::FCtype& ctype) {
     acr::FRec *row = NULL;
-    row = ctype.zd_ctype_selrec_head;
+    row = ctype.zd_selrec_head;
     return row;
 }
 
-// --- acr.FCtype.zd_ctype_selrec.InLlistQ
+// --- acr.FCtype.zd_selrec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool acr::zd_ctype_selrec_InLlistQ(acr::FRec& row) {
+inline bool acr::ctype_zd_selrec_InLlistQ(acr::FRec& row) {
     bool result = false;
-    result = !(row.zd_ctype_selrec_next == (acr::FRec*)-1);
+    result = !(row.ctype_zd_selrec_next == (acr::FRec*)-1);
     return result;
 }
 
-// --- acr.FCtype.zd_ctype_selrec.Last
+// --- acr.FCtype.zd_selrec.Last
 // If index empty, return NULL. Otherwise return pointer to last element in index
-inline acr::FRec* acr::zd_ctype_selrec_Last(acr::FCtype& ctype) {
+inline acr::FRec* acr::zd_selrec_Last(acr::FCtype& ctype) {
     acr::FRec *row = NULL;
-    row = ctype.zd_ctype_selrec_tail;
+    row = ctype.zd_selrec_tail;
     return row;
 }
 
-// --- acr.FCtype.zd_ctype_selrec.Next
+// --- acr.FCtype.zd_selrec.Next
 // Return pointer to next element in the list
-inline acr::FRec* acr::zd_ctype_selrec_Next(acr::FRec &row) {
-    return row.zd_ctype_selrec_next;
+inline acr::FRec* acr::ctype_zd_selrec_Next(acr::FRec &row) {
+    return row.ctype_zd_selrec_next;
 }
 
-// --- acr.FCtype.zd_ctype_selrec.Prev
+// --- acr.FCtype.zd_selrec.Prev
 // Return pointer to previous element in the list
-inline acr::FRec* acr::zd_ctype_selrec_Prev(acr::FRec &row) {
-    return row.zd_ctype_selrec_prev;
+inline acr::FRec* acr::ctype_zd_selrec_Prev(acr::FRec &row) {
+    return row.ctype_zd_selrec_prev;
 }
 
-// --- acr.FCtype.zd_ctype_selrec.qLast
+// --- acr.FCtype.zd_selrec.qLast
 // Return reference to last element in the index. No bounds checking.
-inline acr::FRec& acr::zd_ctype_selrec_qLast(acr::FCtype& ctype) {
+inline acr::FRec& acr::zd_selrec_qLast(acr::FCtype& ctype) {
     acr::FRec *row = NULL;
-    row = ctype.zd_ctype_selrec_tail;
+    row = ctype.zd_selrec_tail;
     return *row;
 }
 
@@ -660,9 +660,9 @@ inline acr::FField* acr::zd_arg_First(acr::FCtype& ctype) {
 
 // --- acr.FCtype.zd_arg.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool acr::zd_arg_InLlistQ(acr::FField& row) {
+inline bool acr::ctype_zd_arg_InLlistQ(acr::FField& row) {
     bool result = false;
-    result = !(row.zd_arg_next == (acr::FField*)-1);
+    result = !(row.ctype_zd_arg_next == (acr::FField*)-1);
     return result;
 }
 
@@ -682,14 +682,14 @@ inline i32 acr::zd_arg_N(const acr::FCtype& ctype) {
 
 // --- acr.FCtype.zd_arg.Next
 // Return pointer to next element in the list
-inline acr::FField* acr::zd_arg_Next(acr::FField &row) {
-    return row.zd_arg_next;
+inline acr::FField* acr::ctype_zd_arg_Next(acr::FField &row) {
+    return row.ctype_zd_arg_next;
 }
 
 // --- acr.FCtype.zd_arg.Prev
 // Return pointer to previous element in the list
-inline acr::FField* acr::zd_arg_Prev(acr::FField &row) {
-    return row.zd_arg_prev;
+inline acr::FField* acr::ctype_zd_arg_Prev(acr::FField &row) {
+    return row.ctype_zd_arg_prev;
 }
 
 // --- acr.FCtype.zd_arg.qLast
@@ -797,28 +797,28 @@ inline acr::FField& acr::ctype_c_field_curs_Access(ctype_c_field_curs &curs) {
     return *curs.elems[curs.index];
 }
 
-// --- acr.FCtype.zd_ctype_rec_curs.Reset
+// --- acr.FCtype.zd_rec_curs.Reset
 // cursor points to valid item
-inline void acr::ctype_zd_ctype_rec_curs_Reset(ctype_zd_ctype_rec_curs &curs, acr::FCtype &parent) {
-    curs.row = parent.zd_ctype_rec_head;
+inline void acr::ctype_zd_rec_curs_Reset(ctype_zd_rec_curs &curs, acr::FCtype &parent) {
+    curs.row = parent.zd_rec_head;
 }
 
-// --- acr.FCtype.zd_ctype_rec_curs.ValidQ
+// --- acr.FCtype.zd_rec_curs.ValidQ
 // cursor points to valid item
-inline bool acr::ctype_zd_ctype_rec_curs_ValidQ(ctype_zd_ctype_rec_curs &curs) {
+inline bool acr::ctype_zd_rec_curs_ValidQ(ctype_zd_rec_curs &curs) {
     return curs.row != NULL;
 }
 
-// --- acr.FCtype.zd_ctype_rec_curs.Next
+// --- acr.FCtype.zd_rec_curs.Next
 // proceed to next item
-inline void acr::ctype_zd_ctype_rec_curs_Next(ctype_zd_ctype_rec_curs &curs) {
-    acr::FRec *next = (*curs.row).zd_ctype_rec_next;
+inline void acr::ctype_zd_rec_curs_Next(ctype_zd_rec_curs &curs) {
+    acr::FRec *next = (*curs.row).ctype_zd_rec_next;
     curs.row = next;
 }
 
-// --- acr.FCtype.zd_ctype_rec_curs.Access
+// --- acr.FCtype.zd_rec_curs.Access
 // item access
-inline acr::FRec& acr::ctype_zd_ctype_rec_curs_Access(ctype_zd_ctype_rec_curs &curs) {
+inline acr::FRec& acr::ctype_zd_rec_curs_Access(ctype_zd_rec_curs &curs) {
     return *curs.row;
 }
 
@@ -831,7 +831,7 @@ inline bool acr::ctype_ind_ctype_rec_curs_ValidQ(ctype_ind_ctype_rec_curs &curs)
 // --- acr.FCtype.ind_ctype_rec_curs.Next
 // proceed to next item
 inline void acr::ctype_ind_ctype_rec_curs_Next(ctype_ind_ctype_rec_curs &curs) {
-    curs.prow = &(*curs.prow)->ind_ctype_rec_next;
+    curs.prow = &(*curs.prow)->ctype_ind_ctype_rec_next;
     while (!*curs.prow) {
         curs.bucket += 1;
         if (curs.bucket >= curs.parent->ind_ctype_rec_buckets_n) break;
@@ -845,28 +845,28 @@ inline acr::FRec& acr::ctype_ind_ctype_rec_curs_Access(ctype_ind_ctype_rec_curs 
     return **curs.prow;
 }
 
-// --- acr.FCtype.zd_ctype_selrec_curs.Reset
+// --- acr.FCtype.zd_selrec_curs.Reset
 // cursor points to valid item
-inline void acr::ctype_zd_ctype_selrec_curs_Reset(ctype_zd_ctype_selrec_curs &curs, acr::FCtype &parent) {
-    curs.row = parent.zd_ctype_selrec_head;
+inline void acr::ctype_zd_selrec_curs_Reset(ctype_zd_selrec_curs &curs, acr::FCtype &parent) {
+    curs.row = parent.zd_selrec_head;
 }
 
-// --- acr.FCtype.zd_ctype_selrec_curs.ValidQ
+// --- acr.FCtype.zd_selrec_curs.ValidQ
 // cursor points to valid item
-inline bool acr::ctype_zd_ctype_selrec_curs_ValidQ(ctype_zd_ctype_selrec_curs &curs) {
+inline bool acr::ctype_zd_selrec_curs_ValidQ(ctype_zd_selrec_curs &curs) {
     return curs.row != NULL;
 }
 
-// --- acr.FCtype.zd_ctype_selrec_curs.Next
+// --- acr.FCtype.zd_selrec_curs.Next
 // proceed to next item
-inline void acr::ctype_zd_ctype_selrec_curs_Next(ctype_zd_ctype_selrec_curs &curs) {
-    acr::FRec *next = (*curs.row).zd_ctype_selrec_next;
+inline void acr::ctype_zd_selrec_curs_Next(ctype_zd_selrec_curs &curs) {
+    acr::FRec *next = (*curs.row).ctype_zd_selrec_next;
     curs.row = next;
 }
 
-// --- acr.FCtype.zd_ctype_selrec_curs.Access
+// --- acr.FCtype.zd_selrec_curs.Access
 // item access
-inline acr::FRec& acr::ctype_zd_ctype_selrec_curs_Access(ctype_zd_ctype_selrec_curs &curs) {
+inline acr::FRec& acr::ctype_zd_selrec_curs_Access(ctype_zd_selrec_curs &curs) {
     return *curs.row;
 }
 
@@ -910,7 +910,7 @@ inline bool acr::ctype_zd_arg_curs_ValidQ(ctype_zd_arg_curs &curs) {
 // --- acr.FCtype.zd_arg_curs.Next
 // proceed to next item
 inline void acr::ctype_zd_arg_curs_Next(ctype_zd_arg_curs &curs) {
-    acr::FField *next = (*curs.row).zd_arg_next;
+    acr::FField *next = (*curs.row).ctype_zd_arg_next;
     curs.row = next;
 }
 
@@ -2032,7 +2032,7 @@ inline i32 acr::c_ssimreq_rec_N() {
 inline void acr::c_ssimreq_rec_RemoveAll() {
     for (u32 i = 0; i < _db.c_ssimreq_rec_n; i++) {
         // mark all elements as not-in-array
-        _db.c_ssimreq_rec_elems[i]->_db_c_ssimreq_rec_in_ary = false;
+        _db.c_ssimreq_rec_elems[i]->c_ssimreq_rec_in_ary = false;
     }
     _db.c_ssimreq_rec_n = 0;
 }
@@ -2046,7 +2046,7 @@ inline acr::FRec& acr::c_ssimreq_rec_qFind(u32 idx) {
 // --- acr.FDb.c_ssimreq_rec.InAryQ
 // True if row is in any ptrary instance
 inline bool acr::c_ssimreq_rec_InAryQ(acr::FRec& row) {
-    return row._db_c_ssimreq_rec_in_ary;
+    return row.c_ssimreq_rec_in_ary;
 }
 
 // --- acr.FDb.c_ssimreq_rec.qLast
@@ -2090,7 +2090,7 @@ inline i32 acr::c_ctype_front_N() {
 inline void acr::c_ctype_front_RemoveAll() {
     for (u32 i = 0; i < _db.c_ctype_front_n; i++) {
         // mark all elements as not-in-array
-        _db.c_ctype_front_elems[i]->_db_c_ctype_front_in_ary = false;
+        _db.c_ctype_front_elems[i]->c_ctype_front_in_ary = false;
     }
     _db.c_ctype_front_n = 0;
 }
@@ -2104,7 +2104,7 @@ inline acr::FCtype& acr::c_ctype_front_qFind(u32 idx) {
 // --- acr.FDb.c_ctype_front.InAryQ
 // True if row is in any ptrary instance
 inline bool acr::c_ctype_front_InAryQ(acr::FCtype& row) {
-    return row._db_c_ctype_front_in_ary;
+    return row.c_ctype_front_in_ary;
 }
 
 // --- acr.FDb.c_ctype_front.qLast
@@ -2890,9 +2890,9 @@ inline acr::FRec* acr::zd_frec_First(acr::FFile& file) {
 
 // --- acr.FFile.zd_frec.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool acr::zd_frec_InLlistQ(acr::FRec& row) {
+inline bool acr::file_zd_frec_InLlistQ(acr::FRec& row) {
     bool result = false;
-    result = !(row.zd_frec_next == (acr::FRec*)-1);
+    result = !(row.file_zd_frec_next == (acr::FRec*)-1);
     return result;
 }
 
@@ -2906,14 +2906,14 @@ inline acr::FRec* acr::zd_frec_Last(acr::FFile& file) {
 
 // --- acr.FFile.zd_frec.Next
 // Return pointer to next element in the list
-inline acr::FRec* acr::zd_frec_Next(acr::FRec &row) {
-    return row.zd_frec_next;
+inline acr::FRec* acr::file_zd_frec_Next(acr::FRec &row) {
+    return row.file_zd_frec_next;
 }
 
 // --- acr.FFile.zd_frec.Prev
 // Return pointer to previous element in the list
-inline acr::FRec* acr::zd_frec_Prev(acr::FRec &row) {
-    return row.zd_frec_prev;
+inline acr::FRec* acr::file_zd_frec_Prev(acr::FRec &row) {
+    return row.file_zd_frec_prev;
 }
 
 // --- acr.FFile.zd_frec.qLast
@@ -2934,6 +2934,7 @@ inline void acr::FFile_Init(acr::FFile& file) {
     file.zd_frec_tail = NULL; // (acr.FFile.zd_frec)
     file.autoloaded = bool(false);
     file.ind_file_next = (acr::FFile*)-1; // (acr.FDb.ind_file) not-in-hash
+    file.ind_file_hashval = 0; // stored hash value
 }
 
 // --- acr.FFile.zd_frec_curs.Reset
@@ -2951,7 +2952,7 @@ inline bool acr::file_zd_frec_curs_ValidQ(file_zd_frec_curs &curs) {
 // --- acr.FFile.zd_frec_curs.Next
 // proceed to next item
 inline void acr::file_zd_frec_curs_Next(file_zd_frec_curs &curs) {
-    acr::FRec *next = (*curs.row).zd_frec_next;
+    acr::FRec *next = (*curs.row).file_zd_frec_next;
     curs.row = next;
 }
 
@@ -2985,8 +2986,8 @@ inline void acr::FPdep_Init(acr::FPdep& pdep) {
     pdep.pdep_next = (acr::FPdep*)-1; // (acr.FDb.pdep) not-in-tpool's freelist
     pdep.zd_pdep_next = (acr::FPdep*)-1; // (acr.FDb.zd_pdep) not-in-list
     pdep.zd_pdep_prev = NULL; // (acr.FDb.zd_pdep)
-    pdep.zd_child_next = (acr::FPdep*)-1; // (acr.FPline.zd_child) not-in-list
-    pdep.zd_child_prev = NULL; // (acr.FPline.zd_child)
+    pdep.pline_zd_child_next = (acr::FPdep*)-1; // (acr.FPline.zd_child) not-in-list
+    pdep.pline_zd_child_prev = NULL; // (acr.FPline.zd_child)
 }
 
 // --- acr.FPdep..Ctor
@@ -3162,9 +3163,9 @@ inline acr::FPdep* acr::zd_child_First(acr::FPline& pline) {
 
 // --- acr.FPline.zd_child.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool acr::zd_child_InLlistQ(acr::FPdep& row) {
+inline bool acr::pline_zd_child_InLlistQ(acr::FPdep& row) {
     bool result = false;
-    result = !(row.zd_child_next == (acr::FPdep*)-1);
+    result = !(row.pline_zd_child_next == (acr::FPdep*)-1);
     return result;
 }
 
@@ -3178,14 +3179,14 @@ inline acr::FPdep* acr::zd_child_Last(acr::FPline& pline) {
 
 // --- acr.FPline.zd_child.Next
 // Return pointer to next element in the list
-inline acr::FPdep* acr::zd_child_Next(acr::FPdep &row) {
-    return row.zd_child_next;
+inline acr::FPdep* acr::pline_zd_child_Next(acr::FPdep &row) {
+    return row.pline_zd_child_next;
 }
 
 // --- acr.FPline.zd_child.Prev
 // Return pointer to previous element in the list
-inline acr::FPdep* acr::zd_child_Prev(acr::FPdep &row) {
-    return row.zd_child_prev;
+inline acr::FPdep* acr::pline_zd_child_Prev(acr::FPdep &row) {
+    return row.pline_zd_child_prev;
 }
 
 // --- acr.FPline.zd_child.qLast
@@ -3223,7 +3224,7 @@ inline bool acr::pline_zd_child_curs_ValidQ(pline_zd_child_curs &curs) {
 // --- acr.FPline.zd_child_curs.Next
 // proceed to next item
 inline void acr::pline_zd_child_curs_Next(pline_zd_child_curs &curs) {
-    acr::FPdep *next = (*curs.row).zd_child_next;
+    acr::FPdep *next = (*curs.row).pline_zd_child_next;
     curs.row = next;
 }
 
@@ -3344,7 +3345,8 @@ inline void acr::FPrintAttr_Init(acr::FPrintAttr& printattr) {
     printattr.p_print = NULL;
     printattr.field = algo::strptr(0);
     printattr.width = u32(0);
-    printattr.ind_printattr_next = (acr::FPrintAttr*)-1; // (acr.FPrint.ind_printattr) not-in-hash
+    printattr.print_ind_printattr_next = (acr::FPrintAttr*)-1; // (acr.FPrint.ind_printattr) not-in-hash
+    printattr.print_ind_printattr_hashval = 0; // stored hash value
 }
 
 // --- acr.FPrintAttr..Ctor
@@ -3765,6 +3767,7 @@ inline  acr::FSmallstr::FSmallstr() {
 inline void acr::FSortkey_Init(acr::FSortkey& sortkey) {
     sortkey.next_rowid = double(0);
     sortkey.ind_sortkey_next = (acr::FSortkey*)-1; // (acr.FDb.ind_sortkey) not-in-hash
+    sortkey.ind_sortkey_hashval = 0; // stored hash value
 }
 
 // --- acr.FSortkey..Ctor
@@ -3804,6 +3807,7 @@ inline void acr::FSsimfile_Init(acr::FSsimfile& ssimfile) {
     ssimfile.p_ctype = NULL;
     ssimfile.c_ssimsort = NULL;
     ssimfile.ind_ssimfile_next = (acr::FSsimfile*)-1; // (acr.FDb.ind_ssimfile) not-in-hash
+    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- acr.FSsimfile..Ctor
@@ -3830,6 +3834,7 @@ inline  acr::FSsimreq::~FSsimreq() {
 // Set all fields to initial values.
 inline void acr::FSsimsort_Init(acr::FSsimsort& ssimsort) {
     ssimsort.ind_ssimsort_next = (acr::FSsimsort*)-1; // (acr.FDb.ind_ssimsort) not-in-hash
+    ssimsort.ind_ssimsort_hashval = 0; // stored hash value
 }
 
 // --- acr.FSsimsort..Ctor
@@ -3855,6 +3860,7 @@ inline  acr::FSubstr::~FSubstr() {
 // Set all fields to initial values.
 inline void acr::FTempkey_Init(acr::FTempkey& tempkey) {
     tempkey.ind_tempkey_next = (acr::FTempkey*)-1; // (acr.FDb.ind_tempkey) not-in-hash
+    tempkey.ind_tempkey_hashval = 0; // stored hash value
 }
 
 // --- acr.FTempkey..Ctor
@@ -3872,6 +3878,7 @@ inline  acr::FTempkey::~FTempkey() {
 inline void acr::FUniqueattr_Init(acr::FUniqueattr& uniqueattr) {
     uniqueattr.uniqueattr_next = (acr::FUniqueattr*)-1; // (acr.FDb.uniqueattr) not-in-tpool's freelist
     uniqueattr.ind_uniqueattr_next = (acr::FUniqueattr*)-1; // (acr.FDb.ind_uniqueattr) not-in-hash
+    uniqueattr.ind_uniqueattr_hashval = 0; // stored hash value
 }
 
 // --- acr.FUniqueattr..Ctor

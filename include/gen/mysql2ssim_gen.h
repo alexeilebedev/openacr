@@ -140,6 +140,11 @@ algo::cstring&       table_names_AllocAt(int at) __attribute__((__warn_unused_re
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:mysql2ssim.FDb.table_names.AllocN
 algo::aryptr<algo::cstring> table_names_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:mysql2ssim.FDb.table_names.AllocNAt
+algo::aryptr<algo::cstring> table_names_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:mysql2ssim.FDb.table_names.EmptyQ
 inline bool          table_names_EmptyQ() __attribute__((nothrow));
@@ -189,6 +194,10 @@ algo::aryptr<algo::cstring> table_names_AllocNVal(int n_elems, const algo::cstri
 // Function returns success value.
 // func:mysql2ssim.FDb.table_names.ReadStrptrMaybe
 bool                 table_names_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:mysql2ssim.FDb.table_names.Insary
+void                 table_names_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -206,6 +215,11 @@ algo::cstring&       in_tables_AllocAt(int at) __attribute__((__warn_unused_resu
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:mysql2ssim.FDb.in_tables.AllocN
 algo::aryptr<algo::cstring> in_tables_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:mysql2ssim.FDb.in_tables.AllocNAt
+algo::aryptr<algo::cstring> in_tables_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:mysql2ssim.FDb.in_tables.EmptyQ
 inline bool          in_tables_EmptyQ() __attribute__((nothrow));
@@ -255,6 +269,10 @@ algo::aryptr<algo::cstring> in_tables_AllocNVal(int n_elems, const algo::cstring
 // Function returns success value.
 // func:mysql2ssim.FDb.in_tables.ReadStrptrMaybe
 bool                 in_tables_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:mysql2ssim.FDb.in_tables.Insary
+void                 in_tables_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // proceed to next item
 // func:mysql2ssim.FDb.table_names_curs.Next
@@ -317,6 +335,11 @@ algo::cstring&       vals_AllocAt(mysql2ssim::FTobltin& parent, int at) __attrib
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:mysql2ssim.FTobltin.vals.AllocN
 algo::aryptr<algo::cstring> vals_AllocN(mysql2ssim::FTobltin& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:mysql2ssim.FTobltin.vals.AllocNAt
+algo::aryptr<algo::cstring> vals_AllocNAt(mysql2ssim::FTobltin& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:mysql2ssim.FTobltin.vals.EmptyQ
 inline bool          vals_EmptyQ(mysql2ssim::FTobltin& parent) __attribute__((nothrow));
@@ -373,6 +396,10 @@ algo::aryptr<algo::cstring> vals_AllocNVal(mysql2ssim::FTobltin& parent, int n_e
 // Function returns success value.
 // func:mysql2ssim.FTobltin.vals.ReadStrptrMaybe
 bool                 vals_ReadStrptrMaybe(mysql2ssim::FTobltin& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:mysql2ssim.FTobltin.vals.Insary
+void                 vals_Insary(mysql2ssim::FTobltin& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // proceed to next item
 // func:mysql2ssim.FTobltin.vals_curs.Next

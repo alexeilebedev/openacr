@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 //
 // License: GPL
@@ -40,6 +40,33 @@ void atf_ci::citest_acr_ed_ssimdb() {
     acr.cmd.query = "%";
     acr.cmd.check=true;
     acr_ExecX(acr);
+}
+
+// -----------------------------------------------------------------------------
+
+// Runs in sandbox
+void atf_ci::citest_acr_ed_unittest() {
+    // create a new ssimdb
+    command::acr_ed_proc acr_ed;
+    acr_ed.cmd.create=true;
+    acr_ed.cmd.unittest="algo_lib.SomeTest";
+    acr_ed.cmd.write=true;
+    acr_ed_ExecX(acr_ed);
+
+    // check that everything is ok
+    command::acr_proc acr;
+    acr.cmd.query = "%";
+    acr.cmd.check=true;
+    acr_ExecX(acr);
+
+    command::abt_proc abt;
+    abt.cmd.target.expr = "%";
+    abt.cmd.build=true;
+    abt_ExecX(abt);
+
+    command::atf_unit_proc atf_unit;
+    atf_unit.cmd.unittest.expr = "algo_lib.SomeTest";
+    atf_unit_ExecX(atf_unit);
 }
 
 // -----------------------------------------------------------------------------

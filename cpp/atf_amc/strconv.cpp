@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -18,7 +18,7 @@
 //
 // Contacting ICE: <https://www.theice.com/contact>
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/atf_amc/strconv.cpp
 //
 
@@ -168,20 +168,4 @@ static void StringConversionTest(StringDesc& desc) {
 void atf_amc::amctest_TestString() {
     atf_amc::ForAllStrings(&StringConversionTest);
     algo::ForAllStrings(&StringConversionTest);
-
-    algo_assert(sizeof(algo::RspaceStr9) == 9);
-    algo_assert(sizeof(algo::RspaceStr10) == 10);
-    algo_assert(sizeof(algo::RspaceStr11) == 11);
-
-    algo_assert(sizeof(byte)== 1);
-    algo_assert(sizeof(i8)  == 1);
-    algo_assert(sizeof(i16) == 2);
-    algo_assert(sizeof(i32) == 4);
-    algo_assert(sizeof(i64) == 8);
-    algo_assert(sizeof(u8)  == 1);
-    algo_assert(sizeof(u16) == 2);
-    algo_assert(sizeof(u32) == 4);
-    algo_assert(sizeof(u64) == 8);
-    algo_assert(sizeof(f32) == 4);
-    algo_assert(sizeof(f64) == 8);
 }

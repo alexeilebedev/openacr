@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -160,7 +160,7 @@ void gcache::Clean() {
 
 static bool SourceQ(strptr fname) {
     strptr ext=GetFileExt(fname);
-    return !StartsWithQ(fname,"-") && (ext==".h" || ext==".hpp" || ext==".cpp" || ext==".c" || ext==".c++");
+    return !StartsWithQ(fname,"-") && (ext==".h" || ext==".hpp" || ext==".cpp" || ext==".c" || ext==".c++"|| ext==".cc");
 }
 
 //------------------------------------------------------------------------------

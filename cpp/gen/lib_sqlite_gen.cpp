@@ -29,10 +29,10 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
@@ -65,8 +65,8 @@ namespace lib_sqlite { // gen:ns_print_proto
 // --- lib_sqlite.FConn..Uninit
 void lib_sqlite::FConn_Uninit(lib_sqlite::FConn& conn) {
     lib_sqlite::FConn &row = conn; (void)row;
-    ind_conn_Remove(row); // remove conn from index ind_conn
     db_Cleanup(conn); // dmmeta.fcleanup:lib_sqlite.FConn.db
+    ind_conn_Remove(row); // remove conn from index ind_conn
 }
 
 // --- lib_sqlite.FCtype.base.CopyOut
@@ -99,15 +99,11 @@ algo::Smallstr100 lib_sqlite::name_Get(lib_sqlite::FCtype& ctype) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void lib_sqlite::c_field_Insert(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) {
-    if (bool_Update(row.ctype_c_field_in_ary,true)) {
-        // reserve space
+    if (!row.ctype_c_field_in_ary) {
         c_field_Reserve(ctype, 1);
-        u32 n  = ctype.c_field_n;
-        u32 at = n;
-        lib_sqlite::FField* *elems = ctype.c_field_elems;
-        elems[at] = &row;
-        ctype.c_field_n = n+1;
-
+        u32 n  = ctype.c_field_n++;
+        ctype.c_field_elems[n] = &row;
+        row.ctype_c_field_in_ary = true;
     }
 }
 
@@ -116,7 +112,7 @@ void lib_sqlite::c_field_Insert(lib_sqlite::FCtype& ctype, lib_sqlite::FField& r
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool lib_sqlite::c_field_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) {
-    bool retval = !row.ctype_c_field_in_ary;
+    bool retval = !ctype_c_field_InAryQ(row);
     c_field_Insert(ctype,row); // check is performed in _Insert again
     return retval;
 }
@@ -124,18 +120,18 @@ bool lib_sqlite::c_field_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FFie
 // --- lib_sqlite.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_sqlite::c_field_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) {
+    int n = ctype.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
-        int lim = ctype.c_field_n;
         lib_sqlite::FField* *elems = ctype.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             lib_sqlite::FField* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(lib_sqlite::FField*) * (lim - j);
+                size_t nbytes = sizeof(lib_sqlite::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_field_n = lim - 1;
+                ctype.c_field_n = n - 1;
                 break;
             }
         }
@@ -163,14 +159,9 @@ void lib_sqlite::c_field_Reserve(lib_sqlite::FCtype& ctype, u32 n) {
 // Find row by key. Return NULL if not found.
 lib_sqlite::FField* lib_sqlite::ind_field_name_Find(lib_sqlite::FCtype& ctype, const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (ctype.ind_field_name_buckets_n - 1);
-    lib_sqlite::FField* *e = &ctype.ind_field_name_buckets_elems[index];
-    lib_sqlite::FField* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || name_Get((*ret)) == key;
-        if (done) break;
-        e         = &ret->ind_field_name_next;
-    } while (true);
+    lib_sqlite::FField *ret = ctype.ind_field_name_buckets_elems[index];
+    for (; ret && !(name_Get((*ret)) == key); ret = ret->ctype_ind_field_name_next) {
+    }
     return ret;
 }
 
@@ -185,10 +176,11 @@ lib_sqlite::FField& lib_sqlite::ind_field_name_FindX(lib_sqlite::FCtype& ctype, 
 // --- lib_sqlite.FCtype.ind_field_name.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_sqlite::ind_field_name_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) {
-    ind_field_name_Reserve(ctype, 1);
     bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_field_name_next == (lib_sqlite::FField*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, name_Get(row)) & (ctype.ind_field_name_buckets_n - 1);
+    if (LIKELY(row.ctype_ind_field_name_next == (lib_sqlite::FField*)-1)) {// check if in hash already
+        row.ctype_ind_field_name_hashval = algo::Smallstr50_Hash(0, name_Get(row));
+        ind_field_name_Reserve(ctype, 1);
+        u32 index = row.ctype_ind_field_name_hashval & (ctype.ind_field_name_buckets_n - 1);
         lib_sqlite::FField* *prev = &ctype.ind_field_name_buckets_elems[index];
         do {
             lib_sqlite::FField* ret = *prev;
@@ -199,10 +191,10 @@ bool lib_sqlite::ind_field_name_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlit
                 retval = false;
                 break;
             }
-            prev = &ret->ind_field_name_next;
+            prev = &ret->ctype_ind_field_name_next;
         } while (true);
         if (retval) {
-            row.ind_field_name_next = *prev;
+            row.ctype_ind_field_name_next = *prev;
             ctype.ind_field_name_n++;
             *prev = &row;
         }
@@ -213,17 +205,17 @@ bool lib_sqlite::ind_field_name_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlit
 // --- lib_sqlite.FCtype.ind_field_name.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_sqlite::ind_field_name_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FField& row) {
-    if (LIKELY(row.ind_field_name_next != (lib_sqlite::FField*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, name_Get(row)) & (ctype.ind_field_name_buckets_n - 1);
+    if (LIKELY(row.ctype_ind_field_name_next != (lib_sqlite::FField*)-1)) {// check if in hash already
+        u32 index = row.ctype_ind_field_name_hashval & (ctype.ind_field_name_buckets_n - 1);
         lib_sqlite::FField* *prev = &ctype.ind_field_name_buckets_elems[index]; // addr of pointer to current element
         while (lib_sqlite::FField *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
-                *prev = next->ind_field_name_next; // unlink (singly linked list)
+                *prev = next->ctype_ind_field_name_next; // unlink (singly linked list)
                 ctype.ind_field_name_n--;
-                row.ind_field_name_next = (lib_sqlite::FField*)-1;// not-in-hash
+                row.ctype_ind_field_name_next = (lib_sqlite::FField*)-1;// not-in-hash
                 break;
             }
-            prev = &next->ind_field_name_next;
+            prev = &next->ctype_ind_field_name_next;
         }
     }
 }
@@ -231,8 +223,14 @@ void lib_sqlite::ind_field_name_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FF
 // --- lib_sqlite.FCtype.ind_field_name.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_sqlite::ind_field_name_Reserve(lib_sqlite::FCtype& ctype, int n) {
+    ind_field_name_AbsReserve(ctype,ctype.ind_field_name_n + n);
+}
+
+// --- lib_sqlite.FCtype.ind_field_name.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_sqlite::ind_field_name_AbsReserve(lib_sqlite::FCtype& ctype, int n) {
     u32 old_nbuckets = ctype.ind_field_name_buckets_n;
-    u32 new_nelems   = ctype.ind_field_name_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -250,9 +248,9 @@ void lib_sqlite::ind_field_name_Reserve(lib_sqlite::FCtype& ctype, int n) {
             lib_sqlite::FField* elem = ctype.ind_field_name_buckets_elems[i];
             while (elem) {
                 lib_sqlite::FField &row        = *elem;
-                lib_sqlite::FField* next       = row.ind_field_name_next;
-                u32 index          = algo::Smallstr50_Hash(0, name_Get(row)) & (new_nbuckets-1);
-                row.ind_field_name_next     = new_buckets[index];
+                lib_sqlite::FField* next       = row.ctype_ind_field_name_next;
+                u32 index          = row.ctype_ind_field_name_hashval & (new_nbuckets-1);
+                row.ctype_ind_field_name_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
             }
@@ -267,12 +265,12 @@ void lib_sqlite::ind_field_name_Reserve(lib_sqlite::FCtype& ctype, int n) {
 // --- lib_sqlite.FCtype.zd_row.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void lib_sqlite::zd_row_Insert(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) {
-    if (!zd_row_InLlistQ(row)) {
+    if (!ctype_zd_row_InLlistQ(row)) {
         lib_sqlite::FRow* old_tail = ctype.zd_row_tail;
-        row.zd_row_next = NULL;
-        row.zd_row_prev = old_tail;
+        row.ctype_zd_row_next = NULL;
+        row.ctype_zd_row_prev = old_tail;
         ctype.zd_row_tail = &row;
-        lib_sqlite::FRow **new_row_a = &old_tail->zd_row_next;
+        lib_sqlite::FRow **new_row_a = &old_tail->ctype_zd_row_next;
         lib_sqlite::FRow **new_row_b = &ctype.zd_row_head;
         lib_sqlite::FRow **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -283,23 +281,23 @@ void lib_sqlite::zd_row_Insert(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row)
 // --- lib_sqlite.FCtype.zd_row.Remove
 // Remove element from index. If element is not in index, do nothing.
 void lib_sqlite::zd_row_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) {
-    if (zd_row_InLlistQ(row)) {
+    if (ctype_zd_row_InLlistQ(row)) {
         lib_sqlite::FRow* old_head       = ctype.zd_row_head;
         (void)old_head; // in case it's not used
-        lib_sqlite::FRow* prev = row.zd_row_prev;
-        lib_sqlite::FRow* next = row.zd_row_next;
+        lib_sqlite::FRow* prev = row.ctype_zd_row_prev;
+        lib_sqlite::FRow* next = row.ctype_zd_row_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        lib_sqlite::FRow **new_next_a = &prev->zd_row_next;
+        lib_sqlite::FRow **new_next_a = &prev->ctype_zd_row_next;
         lib_sqlite::FRow **new_next_b = &ctype.zd_row_head;
         lib_sqlite::FRow **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        lib_sqlite::FRow **new_prev_a = &next->zd_row_prev;
+        lib_sqlite::FRow **new_prev_a = &next->ctype_zd_row_prev;
         lib_sqlite::FRow **new_prev_b = &ctype.zd_row_tail;
         lib_sqlite::FRow **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         ctype.zd_row_n--;
-        row.zd_row_next=(lib_sqlite::FRow*)-1; // not-in-list
+        row.ctype_zd_row_next=(lib_sqlite::FRow*)-1; // not-in-list
     }
 }
 
@@ -311,9 +309,9 @@ void lib_sqlite::zd_row_RemoveAll(lib_sqlite::FCtype& ctype) {
     ctype.zd_row_tail = NULL;
     ctype.zd_row_n = 0;
     while (row) {
-        lib_sqlite::FRow* row_next = row->zd_row_next;
-        row->zd_row_next  = (lib_sqlite::FRow*)-1;
-        row->zd_row_prev  = NULL;
+        lib_sqlite::FRow* row_next = row->ctype_zd_row_next;
+        row->ctype_zd_row_next  = (lib_sqlite::FRow*)-1;
+        row->ctype_zd_row_prev  = NULL;
         row = row_next;
     }
 }
@@ -324,14 +322,14 @@ lib_sqlite::FRow* lib_sqlite::zd_row_RemoveFirst(lib_sqlite::FCtype& ctype) {
     lib_sqlite::FRow *row = NULL;
     row = ctype.zd_row_head;
     if (row) {
-        lib_sqlite::FRow *next = row->zd_row_next;
+        lib_sqlite::FRow *next = row->ctype_zd_row_next;
         ctype.zd_row_head = next;
-        lib_sqlite::FRow **new_end_a = &next->zd_row_prev;
+        lib_sqlite::FRow **new_end_a = &next->ctype_zd_row_prev;
         lib_sqlite::FRow **new_end_b = &ctype.zd_row_tail;
         lib_sqlite::FRow **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         ctype.zd_row_n--;
-        row->zd_row_next = (lib_sqlite::FRow*)-1; // mark as not-in-list
+        row->ctype_zd_row_next = (lib_sqlite::FRow*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -340,14 +338,9 @@ lib_sqlite::FRow* lib_sqlite::zd_row_RemoveFirst(lib_sqlite::FCtype& ctype) {
 // Find row by key. Return NULL if not found.
 lib_sqlite::FRow* lib_sqlite::ind_pkey_Find(lib_sqlite::FCtype& ctype, const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (ctype.ind_pkey_buckets_n - 1);
-    lib_sqlite::FRow* *e = &ctype.ind_pkey_buckets_elems[index];
-    lib_sqlite::FRow* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).pkey == key;
-        if (done) break;
-        e         = &ret->ind_pkey_next;
-    } while (true);
+    lib_sqlite::FRow *ret = ctype.ind_pkey_buckets_elems[index];
+    for (; ret && !((*ret).pkey == key); ret = ret->ctype_ind_pkey_next) {
+    }
     return ret;
 }
 
@@ -362,10 +355,11 @@ lib_sqlite::FRow& lib_sqlite::ind_pkey_FindX(lib_sqlite::FCtype& ctype, const al
 // --- lib_sqlite.FCtype.ind_pkey.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_sqlite::ind_pkey_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) {
-    ind_pkey_Reserve(ctype, 1);
     bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_pkey_next == (lib_sqlite::FRow*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.pkey) & (ctype.ind_pkey_buckets_n - 1);
+    if (LIKELY(row.ctype_ind_pkey_next == (lib_sqlite::FRow*)-1)) {// check if in hash already
+        row.ctype_ind_pkey_hashval = algo::cstring_Hash(0, row.pkey);
+        ind_pkey_Reserve(ctype, 1);
+        u32 index = row.ctype_ind_pkey_hashval & (ctype.ind_pkey_buckets_n - 1);
         lib_sqlite::FRow* *prev = &ctype.ind_pkey_buckets_elems[index];
         do {
             lib_sqlite::FRow* ret = *prev;
@@ -376,10 +370,10 @@ bool lib_sqlite::ind_pkey_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FRo
                 retval = false;
                 break;
             }
-            prev = &ret->ind_pkey_next;
+            prev = &ret->ctype_ind_pkey_next;
         } while (true);
         if (retval) {
-            row.ind_pkey_next = *prev;
+            row.ctype_ind_pkey_next = *prev;
             ctype.ind_pkey_n++;
             *prev = &row;
         }
@@ -390,17 +384,17 @@ bool lib_sqlite::ind_pkey_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FRo
 // --- lib_sqlite.FCtype.ind_pkey.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_sqlite::ind_pkey_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) {
-    if (LIKELY(row.ind_pkey_next != (lib_sqlite::FRow*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.pkey) & (ctype.ind_pkey_buckets_n - 1);
+    if (LIKELY(row.ctype_ind_pkey_next != (lib_sqlite::FRow*)-1)) {// check if in hash already
+        u32 index = row.ctype_ind_pkey_hashval & (ctype.ind_pkey_buckets_n - 1);
         lib_sqlite::FRow* *prev = &ctype.ind_pkey_buckets_elems[index]; // addr of pointer to current element
         while (lib_sqlite::FRow *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
-                *prev = next->ind_pkey_next; // unlink (singly linked list)
+                *prev = next->ctype_ind_pkey_next; // unlink (singly linked list)
                 ctype.ind_pkey_n--;
-                row.ind_pkey_next = (lib_sqlite::FRow*)-1;// not-in-hash
+                row.ctype_ind_pkey_next = (lib_sqlite::FRow*)-1;// not-in-hash
                 break;
             }
-            prev = &next->ind_pkey_next;
+            prev = &next->ctype_ind_pkey_next;
         }
     }
 }
@@ -408,8 +402,14 @@ void lib_sqlite::ind_pkey_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& ro
 // --- lib_sqlite.FCtype.ind_pkey.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_sqlite::ind_pkey_Reserve(lib_sqlite::FCtype& ctype, int n) {
+    ind_pkey_AbsReserve(ctype,ctype.ind_pkey_n + n);
+}
+
+// --- lib_sqlite.FCtype.ind_pkey.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_sqlite::ind_pkey_AbsReserve(lib_sqlite::FCtype& ctype, int n) {
     u32 old_nbuckets = ctype.ind_pkey_buckets_n;
-    u32 new_nelems   = ctype.ind_pkey_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -427,9 +427,9 @@ void lib_sqlite::ind_pkey_Reserve(lib_sqlite::FCtype& ctype, int n) {
             lib_sqlite::FRow* elem = ctype.ind_pkey_buckets_elems[i];
             while (elem) {
                 lib_sqlite::FRow &row        = *elem;
-                lib_sqlite::FRow* next       = row.ind_pkey_next;
-                u32 index          = algo::cstring_Hash(0, row.pkey) & (new_nbuckets-1);
-                row.ind_pkey_next     = new_buckets[index];
+                lib_sqlite::FRow* next       = row.ctype_ind_pkey_next;
+                u32 index          = row.ctype_ind_pkey_hashval & (new_nbuckets-1);
+                row.ctype_ind_pkey_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
             }
@@ -445,15 +445,11 @@ void lib_sqlite::ind_pkey_Reserve(lib_sqlite::FCtype& ctype, int n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void lib_sqlite::c_row_Insert(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) {
-    if (bool_Update(row.ctype_c_row_in_ary,true)) {
-        // reserve space
+    if (!row.ctype_c_row_in_ary) {
         c_row_Reserve(ctype, 1);
-        u32 n  = ctype.c_row_n;
-        u32 at = n;
-        lib_sqlite::FRow* *elems = ctype.c_row_elems;
-        elems[at] = &row;
-        ctype.c_row_n = n+1;
-
+        u32 n  = ctype.c_row_n++;
+        ctype.c_row_elems[n] = &row;
+        row.ctype_c_row_in_ary = true;
     }
 }
 
@@ -462,7 +458,7 @@ void lib_sqlite::c_row_Insert(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) 
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool lib_sqlite::c_row_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) {
-    bool retval = !row.ctype_c_row_in_ary;
+    bool retval = !ctype_c_row_InAryQ(row);
     c_row_Insert(ctype,row); // check is performed in _Insert again
     return retval;
 }
@@ -470,18 +466,18 @@ bool lib_sqlite::c_row_InsertMaybe(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& 
 // --- lib_sqlite.FCtype.c_row.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_sqlite::c_row_Remove(lib_sqlite::FCtype& ctype, lib_sqlite::FRow& row) {
+    int n = ctype.c_row_n;
     if (bool_Update(row.ctype_c_row_in_ary,false)) {
-        int lim = ctype.c_row_n;
         lib_sqlite::FRow* *elems = ctype.c_row_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             lib_sqlite::FRow* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(lib_sqlite::FRow*) * (lim - j);
+                size_t nbytes = sizeof(lib_sqlite::FRow*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_row_n = lim - 1;
+                ctype.c_row_n = n - 1;
                 break;
             }
         }
@@ -536,6 +532,7 @@ void lib_sqlite::FCtype_Init(lib_sqlite::FCtype& ctype) {
     ctype.c_row_n = 0; // (lib_sqlite.FCtype.c_row)
     ctype.c_row_max = 0; // (lib_sqlite.FCtype.c_row)
     ctype.ind_ctype_next = (lib_sqlite::FCtype*)-1; // (lib_sqlite.FDb.ind_ctype) not-in-hash
+    ctype.ind_ctype_hashval = 0; // stored hash value
 }
 
 // --- lib_sqlite.FCtype..Uninit
@@ -655,8 +652,8 @@ bool lib_sqlite::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && lib_sqlite::LoadTuplesFile(algo::SsimFname(root,"dmmeta.sqltype"),recursive);
         retval = retval && lib_sqlite::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -832,14 +829,9 @@ bool lib_sqlite::conn_XrefMaybe(lib_sqlite::FConn &row) {
 // Find row by key. Return NULL if not found.
 lib_sqlite::FConn* lib_sqlite::ind_conn_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_conn_buckets_n - 1);
-    lib_sqlite::FConn* *e = &_db.ind_conn_buckets_elems[index];
-    lib_sqlite::FConn* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).name == key;
-        if (done) break;
-        e         = &ret->ind_conn_next;
-    } while (true);
+    lib_sqlite::FConn *ret = _db.ind_conn_buckets_elems[index];
+    for (; ret && !((*ret).name == key); ret = ret->ind_conn_next) {
+    }
     return ret;
 }
 
@@ -871,10 +863,11 @@ lib_sqlite::FConn& lib_sqlite::ind_conn_GetOrCreate(const algo::strptr& key) {
 // --- lib_sqlite.FDb.ind_conn.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_sqlite::ind_conn_InsertMaybe(lib_sqlite::FConn& row) {
-    ind_conn_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_conn_next == (lib_sqlite::FConn*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.name) & (_db.ind_conn_buckets_n - 1);
+        row.ind_conn_hashval = algo::cstring_Hash(0, row.name);
+        ind_conn_Reserve(1);
+        u32 index = row.ind_conn_hashval & (_db.ind_conn_buckets_n - 1);
         lib_sqlite::FConn* *prev = &_db.ind_conn_buckets_elems[index];
         do {
             lib_sqlite::FConn* ret = *prev;
@@ -900,7 +893,7 @@ bool lib_sqlite::ind_conn_InsertMaybe(lib_sqlite::FConn& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_sqlite::ind_conn_Remove(lib_sqlite::FConn& row) {
     if (LIKELY(row.ind_conn_next != (lib_sqlite::FConn*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.name) & (_db.ind_conn_buckets_n - 1);
+        u32 index = row.ind_conn_hashval & (_db.ind_conn_buckets_n - 1);
         lib_sqlite::FConn* *prev = &_db.ind_conn_buckets_elems[index]; // addr of pointer to current element
         while (lib_sqlite::FConn *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -917,8 +910,14 @@ void lib_sqlite::ind_conn_Remove(lib_sqlite::FConn& row) {
 // --- lib_sqlite.FDb.ind_conn.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_sqlite::ind_conn_Reserve(int n) {
+    ind_conn_AbsReserve(_db.ind_conn_n + n);
+}
+
+// --- lib_sqlite.FDb.ind_conn.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_sqlite::ind_conn_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_conn_buckets_n;
-    u32 new_nelems   = _db.ind_conn_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -937,7 +936,7 @@ void lib_sqlite::ind_conn_Reserve(int n) {
             while (elem) {
                 lib_sqlite::FConn &row        = *elem;
                 lib_sqlite::FConn* next       = row.ind_conn_next;
-                u32 index          = algo::cstring_Hash(0, row.name) & (new_nbuckets-1);
+                u32 index          = row.ind_conn_hashval & (new_nbuckets-1);
                 row.ind_conn_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1213,14 +1212,9 @@ bool lib_sqlite::field_XrefMaybe(lib_sqlite::FField &row) {
 // Find row by key. Return NULL if not found.
 lib_sqlite::FField* lib_sqlite::ind_field_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
-    lib_sqlite::FField* *e = &_db.ind_field_buckets_elems[index];
-    lib_sqlite::FField* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).field == key;
-        if (done) break;
-        e         = &ret->ind_field_next;
-    } while (true);
+    lib_sqlite::FField *ret = _db.ind_field_buckets_elems[index];
+    for (; ret && !((*ret).field == key); ret = ret->ind_field_next) {
+    }
     return ret;
 }
 
@@ -1235,10 +1229,11 @@ lib_sqlite::FField& lib_sqlite::ind_field_FindX(const algo::strptr& key) {
 // --- lib_sqlite.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_sqlite::ind_field_InsertMaybe(lib_sqlite::FField& row) {
-    ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (lib_sqlite::FField*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        row.ind_field_hashval = algo::Smallstr100_Hash(0, row.field);
+        ind_field_Reserve(1);
+        u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         lib_sqlite::FField* *prev = &_db.ind_field_buckets_elems[index];
         do {
             lib_sqlite::FField* ret = *prev;
@@ -1264,7 +1259,7 @@ bool lib_sqlite::ind_field_InsertMaybe(lib_sqlite::FField& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_sqlite::ind_field_Remove(lib_sqlite::FField& row) {
     if (LIKELY(row.ind_field_next != (lib_sqlite::FField*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         lib_sqlite::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
         while (lib_sqlite::FField *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1281,8 +1276,14 @@ void lib_sqlite::ind_field_Remove(lib_sqlite::FField& row) {
 // --- lib_sqlite.FDb.ind_field.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_sqlite::ind_field_Reserve(int n) {
+    ind_field_AbsReserve(_db.ind_field_n + n);
+}
+
+// --- lib_sqlite.FDb.ind_field.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_sqlite::ind_field_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_field_buckets_n;
-    u32 new_nelems   = _db.ind_field_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1301,7 +1302,7 @@ void lib_sqlite::ind_field_Reserve(int n) {
             while (elem) {
                 lib_sqlite::FField &row        = *elem;
                 lib_sqlite::FField* next       = row.ind_field_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = row.ind_field_hashval & (new_nbuckets-1);
                 row.ind_field_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1425,14 +1426,9 @@ bool lib_sqlite::ctype_XrefMaybe(lib_sqlite::FCtype &row) {
 // Find row by key. Return NULL if not found.
 lib_sqlite::FCtype* lib_sqlite::ind_ctype_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
-    lib_sqlite::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
-    lib_sqlite::FCtype* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ctype == key;
-        if (done) break;
-        e         = &ret->ind_ctype_next;
-    } while (true);
+    lib_sqlite::FCtype *ret = _db.ind_ctype_buckets_elems[index];
+    for (; ret && !((*ret).ctype == key); ret = ret->ind_ctype_next) {
+    }
     return ret;
 }
 
@@ -1464,10 +1460,11 @@ lib_sqlite::FCtype& lib_sqlite::ind_ctype_GetOrCreate(const algo::strptr& key) {
 // --- lib_sqlite.FDb.ind_ctype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_sqlite::ind_ctype_InsertMaybe(lib_sqlite::FCtype& row) {
-    ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (lib_sqlite::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        row.ind_ctype_hashval = algo::Smallstr100_Hash(0, row.ctype);
+        ind_ctype_Reserve(1);
+        u32 index = row.ind_ctype_hashval & (_db.ind_ctype_buckets_n - 1);
         lib_sqlite::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             lib_sqlite::FCtype* ret = *prev;
@@ -1493,7 +1490,7 @@ bool lib_sqlite::ind_ctype_InsertMaybe(lib_sqlite::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_sqlite::ind_ctype_Remove(lib_sqlite::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (lib_sqlite::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = row.ind_ctype_hashval & (_db.ind_ctype_buckets_n - 1);
         lib_sqlite::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (lib_sqlite::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1510,8 +1507,14 @@ void lib_sqlite::ind_ctype_Remove(lib_sqlite::FCtype& row) {
 // --- lib_sqlite.FDb.ind_ctype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_sqlite::ind_ctype_Reserve(int n) {
+    ind_ctype_AbsReserve(_db.ind_ctype_n + n);
+}
+
+// --- lib_sqlite.FDb.ind_ctype.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_sqlite::ind_ctype_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ctype_buckets_n;
-    u32 new_nelems   = _db.ind_ctype_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1530,7 +1533,7 @@ void lib_sqlite::ind_ctype_Reserve(int n) {
             while (elem) {
                 lib_sqlite::FCtype &row        = *elem;
                 lib_sqlite::FCtype* next       = row.ind_ctype_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = row.ind_ctype_hashval & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1685,14 +1688,9 @@ bool lib_sqlite::ssimfile_XrefMaybe(lib_sqlite::FSsimfile &row) {
 // Find row by key. Return NULL if not found.
 lib_sqlite::FSsimfile* lib_sqlite::ind_ssimfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
-    lib_sqlite::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
-    lib_sqlite::FSsimfile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ssimfile == key;
-        if (done) break;
-        e         = &ret->ind_ssimfile_next;
-    } while (true);
+    lib_sqlite::FSsimfile *ret = _db.ind_ssimfile_buckets_elems[index];
+    for (; ret && !((*ret).ssimfile == key); ret = ret->ind_ssimfile_next) {
+    }
     return ret;
 }
 
@@ -1707,10 +1705,11 @@ lib_sqlite::FSsimfile& lib_sqlite::ind_ssimfile_FindX(const algo::strptr& key) {
 // --- lib_sqlite.FDb.ind_ssimfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_sqlite::ind_ssimfile_InsertMaybe(lib_sqlite::FSsimfile& row) {
-    ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (lib_sqlite::FSsimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        row.ind_ssimfile_hashval = algo::Smallstr50_Hash(0, row.ssimfile);
+        ind_ssimfile_Reserve(1);
+        u32 index = row.ind_ssimfile_hashval & (_db.ind_ssimfile_buckets_n - 1);
         lib_sqlite::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index];
         do {
             lib_sqlite::FSsimfile* ret = *prev;
@@ -1736,7 +1735,7 @@ bool lib_sqlite::ind_ssimfile_InsertMaybe(lib_sqlite::FSsimfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_sqlite::ind_ssimfile_Remove(lib_sqlite::FSsimfile& row) {
     if (LIKELY(row.ind_ssimfile_next != (lib_sqlite::FSsimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = row.ind_ssimfile_hashval & (_db.ind_ssimfile_buckets_n - 1);
         lib_sqlite::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
         while (lib_sqlite::FSsimfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1753,8 +1752,14 @@ void lib_sqlite::ind_ssimfile_Remove(lib_sqlite::FSsimfile& row) {
 // --- lib_sqlite.FDb.ind_ssimfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_sqlite::ind_ssimfile_Reserve(int n) {
+    ind_ssimfile_AbsReserve(_db.ind_ssimfile_n + n);
+}
+
+// --- lib_sqlite.FDb.ind_ssimfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_sqlite::ind_ssimfile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ssimfile_buckets_n;
-    u32 new_nelems   = _db.ind_ssimfile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1773,7 +1778,7 @@ void lib_sqlite::ind_ssimfile_Reserve(int n) {
             while (elem) {
                 lib_sqlite::FSsimfile &row        = *elem;
                 lib_sqlite::FSsimfile* next       = row.ind_ssimfile_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
+                u32 index          = row.ind_ssimfile_hashval & (new_nbuckets-1);
                 row.ind_ssimfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1960,6 +1965,25 @@ algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_AllocN(int n_elems) {
     return algo::aryptr<lib_sqlite::FIdx>(elems + old_n, n_elems);
 }
 
+// --- lib_sqlite.FDb.bestidx.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_AllocNAt(int n_elems, int at) {
+    bestidx_Reserve(n_elems);
+    int n  = _db.bestidx_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("lib_sqlite.bad_alloc_n_at  field:lib_sqlite.FDb.bestidx  comment:'index out of range'");
+    }
+    lib_sqlite::FIdx *elems = _db.bestidx_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(lib_sqlite::FIdx));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) lib_sqlite::FIdx(); // construct new element, default initialize
+    }
+    _db.bestidx_n = n+n_elems;
+    return algo::aryptr<lib_sqlite::FIdx>(elems+at,n_elems);
+}
+
 // --- lib_sqlite.FDb.bestidx.Remove
 // Remove item by index. If index outside of range, do nothing.
 void lib_sqlite::bestidx_Remove(u32 i) {
@@ -2020,6 +2044,30 @@ algo::aryptr<lib_sqlite::FIdx> lib_sqlite::bestidx_AllocNVal(int n_elems, const 
     }
     _db.bestidx_n = new_n;
     return algo::aryptr<lib_sqlite::FIdx>(elems + old_n, n_elems);
+}
+
+// --- lib_sqlite.FDb.bestidx.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void lib_sqlite::bestidx_Insary(algo::aryptr<lib_sqlite::FIdx> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.bestidx_elems && rhs.elems < _db.bestidx_elems + _db.bestidx_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_sqlite.tary_alias  field:lib_sqlite.FDb.bestidx  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.bestidx_elems+1))) {
+        FatalErrorExit("lib_sqlite.bad_insary  field:lib_sqlite.FDb.bestidx  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.bestidx_n - at;
+    bestidx_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.bestidx_elems + at + nnew + i) lib_sqlite::FIdx(_db.bestidx_elems[at + i]);
+        _db.bestidx_elems[at + i].~FIdx(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.bestidx_elems + at + i) lib_sqlite::FIdx(rhs[i]);
+    }
+    _db.bestidx_n += nnew;
 }
 
 // --- lib_sqlite.FDb.trow.Alloc
@@ -2232,14 +2280,9 @@ bool lib_sqlite::ns_XrefMaybe(lib_sqlite::FNs &row) {
 // Find row by key. Return NULL if not found.
 lib_sqlite::FNs* lib_sqlite::ind_ns_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
-    lib_sqlite::FNs* *e = &_db.ind_ns_buckets_elems[index];
-    lib_sqlite::FNs* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ns == key;
-        if (done) break;
-        e         = &ret->ind_ns_next;
-    } while (true);
+    lib_sqlite::FNs *ret = _db.ind_ns_buckets_elems[index];
+    for (; ret && !((*ret).ns == key); ret = ret->ind_ns_next) {
+    }
     return ret;
 }
 
@@ -2271,10 +2314,11 @@ lib_sqlite::FNs& lib_sqlite::ind_ns_GetOrCreate(const algo::strptr& key) {
 // --- lib_sqlite.FDb.ind_ns.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_sqlite::ind_ns_InsertMaybe(lib_sqlite::FNs& row) {
-    ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (lib_sqlite::FNs*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        row.ind_ns_hashval = algo::Smallstr16_Hash(0, row.ns);
+        ind_ns_Reserve(1);
+        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
         lib_sqlite::FNs* *prev = &_db.ind_ns_buckets_elems[index];
         do {
             lib_sqlite::FNs* ret = *prev;
@@ -2300,7 +2344,7 @@ bool lib_sqlite::ind_ns_InsertMaybe(lib_sqlite::FNs& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_sqlite::ind_ns_Remove(lib_sqlite::FNs& row) {
     if (LIKELY(row.ind_ns_next != (lib_sqlite::FNs*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
         lib_sqlite::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
         while (lib_sqlite::FNs *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2317,8 +2361,14 @@ void lib_sqlite::ind_ns_Remove(lib_sqlite::FNs& row) {
 // --- lib_sqlite.FDb.ind_ns.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_sqlite::ind_ns_Reserve(int n) {
+    ind_ns_AbsReserve(_db.ind_ns_n + n);
+}
+
+// --- lib_sqlite.FDb.ind_ns.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_sqlite::ind_ns_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ns_buckets_n;
-    u32 new_nelems   = _db.ind_ns_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2337,7 +2387,7 @@ void lib_sqlite::ind_ns_Reserve(int n) {
             while (elem) {
                 lib_sqlite::FNs &row        = *elem;
                 lib_sqlite::FNs* next       = row.ind_ns_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                u32 index          = row.ind_ns_hashval & (new_nbuckets-1);
                 row.ind_ns_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2586,8 +2636,10 @@ void lib_sqlite::FField_Init(lib_sqlite::FField& field) {
     field.p_ctype = NULL;
     field.id = u32(0);
     field.ctype_c_field_in_ary = bool(false);
-    field.ind_field_name_next = (lib_sqlite::FField*)-1; // (lib_sqlite.FCtype.ind_field_name) not-in-hash
+    field.ctype_ind_field_name_next = (lib_sqlite::FField*)-1; // (lib_sqlite.FCtype.ind_field_name) not-in-hash
+    field.ctype_ind_field_name_hashval = 0; // stored hash value
     field.ind_field_next = (lib_sqlite::FField*)-1; // (lib_sqlite.FDb.ind_field) not-in-hash
+    field.ind_field_hashval = 0; // stored hash value
 }
 
 // --- lib_sqlite.FField..Uninit
@@ -2663,6 +2715,25 @@ algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_AllocN(lib_sqlite::FIdx& parent,
     }
     parent.cons_n = new_n;
     return algo::aryptr<lib_sqlite::Cons>(elems + old_n, n_elems);
+}
+
+// --- lib_sqlite.FIdx.cons.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_AllocNAt(lib_sqlite::FIdx& parent, int n_elems, int at) {
+    cons_Reserve(parent, n_elems);
+    int n  = parent.cons_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("lib_sqlite.bad_alloc_n_at  field:lib_sqlite.FIdx.cons  comment:'index out of range'");
+    }
+    lib_sqlite::Cons *elems = parent.cons_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(lib_sqlite::Cons));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) lib_sqlite::Cons(); // construct new element, default initialize
+    }
+    parent.cons_n = n+n_elems;
+    return algo::aryptr<lib_sqlite::Cons>(elems+at,n_elems);
 }
 
 // --- lib_sqlite.FIdx.cons.Remove
@@ -2747,6 +2818,30 @@ algo::aryptr<lib_sqlite::Cons> lib_sqlite::cons_AllocNVal(lib_sqlite::FIdx& pare
     return algo::aryptr<lib_sqlite::Cons>(elems + old_n, n_elems);
 }
 
+// --- lib_sqlite.FIdx.cons.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void lib_sqlite::cons_Insary(lib_sqlite::FIdx& parent, algo::aryptr<lib_sqlite::Cons> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.cons_elems && rhs.elems < parent.cons_elems + parent.cons_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_sqlite.tary_alias  field:lib_sqlite.FIdx.cons  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.cons_elems+1))) {
+        FatalErrorExit("lib_sqlite.bad_insary  field:lib_sqlite.FIdx.cons  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.cons_n - at;
+    cons_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.cons_elems + at + nnew + i) lib_sqlite::Cons(parent.cons_elems[at + i]);
+        parent.cons_elems[at + i].~Cons(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.cons_elems + at + i) lib_sqlite::Cons(rhs[i]);
+    }
+    parent.cons_n += nnew;
+}
+
 // --- lib_sqlite.FIdx..Uninit
 void lib_sqlite::FIdx_Uninit(lib_sqlite::FIdx& parent) {
     lib_sqlite::FIdx &row = parent; (void)row;
@@ -2797,15 +2892,11 @@ void lib_sqlite::ns_CopyIn(lib_sqlite::FNs &row, dmmeta::Ns &in) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void lib_sqlite::c_ssimfile_Insert(lib_sqlite::FNs& ns, lib_sqlite::FSsimfile& row) {
-    if (bool_Update(row.ns_c_ssimfile_in_ary,true)) {
-        // reserve space
+    if (!row.ns_c_ssimfile_in_ary) {
         c_ssimfile_Reserve(ns, 1);
-        u32 n  = ns.c_ssimfile_n;
-        u32 at = n;
-        lib_sqlite::FSsimfile* *elems = ns.c_ssimfile_elems;
-        elems[at] = &row;
-        ns.c_ssimfile_n = n+1;
-
+        u32 n  = ns.c_ssimfile_n++;
+        ns.c_ssimfile_elems[n] = &row;
+        row.ns_c_ssimfile_in_ary = true;
     }
 }
 
@@ -2814,7 +2905,7 @@ void lib_sqlite::c_ssimfile_Insert(lib_sqlite::FNs& ns, lib_sqlite::FSsimfile& r
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool lib_sqlite::c_ssimfile_InsertMaybe(lib_sqlite::FNs& ns, lib_sqlite::FSsimfile& row) {
-    bool retval = !row.ns_c_ssimfile_in_ary;
+    bool retval = !ns_c_ssimfile_InAryQ(row);
     c_ssimfile_Insert(ns,row); // check is performed in _Insert again
     return retval;
 }
@@ -2822,18 +2913,18 @@ bool lib_sqlite::c_ssimfile_InsertMaybe(lib_sqlite::FNs& ns, lib_sqlite::FSsimfi
 // --- lib_sqlite.FNs.c_ssimfile.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_sqlite::c_ssimfile_Remove(lib_sqlite::FNs& ns, lib_sqlite::FSsimfile& row) {
+    int n = ns.c_ssimfile_n;
     if (bool_Update(row.ns_c_ssimfile_in_ary,false)) {
-        int lim = ns.c_ssimfile_n;
         lib_sqlite::FSsimfile* *elems = ns.c_ssimfile_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             lib_sqlite::FSsimfile* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(lib_sqlite::FSsimfile*) * (lim - j);
+                size_t nbytes = sizeof(lib_sqlite::FSsimfile*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ns.c_ssimfile_n = lim - 1;
+                ns.c_ssimfile_n = n - 1;
                 break;
             }
         }
@@ -3203,15 +3294,11 @@ void lib_sqlite::TableId_Print(lib_sqlite::TableId& row, algo::cstring& str) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void lib_sqlite::c_curs_Insert(lib_sqlite::Vtab& parent, lib_sqlite::VtabCurs& row) {
-    if (bool_Update(row.parent_c_curs_in_ary,true)) {
-        // reserve space
+    if (!row.parent_c_curs_in_ary) {
         c_curs_Reserve(parent, 1);
-        u32 n  = parent.c_curs_n;
-        u32 at = n;
-        lib_sqlite::VtabCurs* *elems = parent.c_curs_elems;
-        elems[at] = &row;
-        parent.c_curs_n = n+1;
-
+        u32 n  = parent.c_curs_n++;
+        parent.c_curs_elems[n] = &row;
+        row.parent_c_curs_in_ary = true;
     }
 }
 
@@ -3220,7 +3307,7 @@ void lib_sqlite::c_curs_Insert(lib_sqlite::Vtab& parent, lib_sqlite::VtabCurs& r
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool lib_sqlite::c_curs_InsertMaybe(lib_sqlite::Vtab& parent, lib_sqlite::VtabCurs& row) {
-    bool retval = !row.parent_c_curs_in_ary;
+    bool retval = !parent_c_curs_InAryQ(row);
     c_curs_Insert(parent,row); // check is performed in _Insert again
     return retval;
 }
@@ -3228,18 +3315,18 @@ bool lib_sqlite::c_curs_InsertMaybe(lib_sqlite::Vtab& parent, lib_sqlite::VtabCu
 // --- lib_sqlite.Vtab.c_curs.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void lib_sqlite::c_curs_Remove(lib_sqlite::Vtab& parent, lib_sqlite::VtabCurs& row) {
+    int n = parent.c_curs_n;
     if (bool_Update(row.parent_c_curs_in_ary,false)) {
-        int lim = parent.c_curs_n;
         lib_sqlite::VtabCurs* *elems = parent.c_curs_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             lib_sqlite::VtabCurs* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(lib_sqlite::VtabCurs*) * (lim - j);
+                size_t nbytes = sizeof(lib_sqlite::VtabCurs*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                parent.c_curs_n = lim - 1;
+                parent.c_curs_n = n - 1;
                 break;
             }
         }
@@ -3331,6 +3418,25 @@ algo::aryptr<algo::cstring> lib_sqlite::attrs_AllocN(lib_sqlite::VtabCurs& paren
     }
     parent.attrs_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- lib_sqlite.VtabCurs.attrs.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> lib_sqlite::attrs_AllocNAt(lib_sqlite::VtabCurs& parent, int n_elems, int at) {
+    attrs_Reserve(parent, n_elems);
+    int n  = parent.attrs_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("lib_sqlite.bad_alloc_n_at  field:lib_sqlite.VtabCurs.attrs  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.attrs_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.attrs_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- lib_sqlite.VtabCurs.attrs.Remove
@@ -3427,6 +3533,30 @@ bool lib_sqlite::attrs_ReadStrptrMaybe(lib_sqlite::VtabCurs& parent, algo::strpt
         attrs_RemoveLast(parent);
     }
     return retval;
+}
+
+// --- lib_sqlite.VtabCurs.attrs.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void lib_sqlite::attrs_Insary(lib_sqlite::VtabCurs& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.attrs_elems && rhs.elems < parent.attrs_elems + parent.attrs_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("lib_sqlite.tary_alias  field:lib_sqlite.VtabCurs.attrs  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.attrs_elems+1))) {
+        FatalErrorExit("lib_sqlite.bad_insary  field:lib_sqlite.VtabCurs.attrs  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.attrs_n - at;
+    attrs_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.attrs_elems + at + nnew + i) algo::cstring(parent.attrs_elems[at + i]);
+        parent.attrs_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.attrs_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.attrs_n += nnew;
 }
 
 // --- lib_sqlite.VtabCurs..Init

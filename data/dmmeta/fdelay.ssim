@@ -1,2 +1,4 @@
-dmmeta.fdelay  fstep:lib_ams.FDb.cd_stream_hb  delay:1.000000000  scale:Y  comment:""
+dmmeta.fdelay  fstep:atf_exp.FDb.ind_proc_pid  delay:60.000000000  scale:N  comment:""
+dmmeta.fdelay  fstep:lib_ams.FDb.cd_hb  delay:1.000000000  scale:Y  comment:""
+dmmeta.fdelay  fstep:lib_ams.FDb.cd_slow_poll_read  delay:0.000500000  scale:N  comment:""
 dmmeta.fdelay  fstep:lib_ams.FDb.zd_flush  delay:0.100000000  scale:Y  comment:""

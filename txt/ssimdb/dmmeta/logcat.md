@@ -13,6 +13,9 @@
 |logcat|[algo.Smallstr50](/txt/protocol/algo/README.md#algo-smallstr50)|[Val](/txt/exe/amc/reftypes.md#val)|||
 |enabled|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
 |builtin|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|stdout|bool|[Val](/txt/exe/amc/reftypes.md#val)|||
+|maxmsg|i32|[Val](/txt/exe/amc/reftypes.md#val)|0||
+|window|i32|[Val](/txt/exe/amc/reftypes.md#val)|0||
 |comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->

@@ -1,0 +1,7 @@
+dmmeta.jstype  ctype:algo.SeqType  comment:""
+dmmeta.jstype  ctype:algo.UnTime  comment:""
+dmmeta.jstype  ctype:algo.Uuid  comment:""
+dmmeta.jstype  ctype:algo_lib.RegxFlags  comment:""
+dmmeta.jstype  ctype:ams.MsgHeader  comment:""
+dmmeta.jstype  ctype:ams.ProcId  comment:""
+dmmeta.jstype  ctype:ams.Proctype  comment:""

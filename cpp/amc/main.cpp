@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -23,17 +23,8 @@
 // Source: cpp/amc/main.cpp -- Main driver
 //
 // Algo Model Compiler (AMC)
-// TODO: $ errlist 'cd ~/proj/.testgen && (cd ../ && abt amc && dflt.debug-x86_64/amc -out_dir .testgen) && abt -install %'
-// TODO: AB-17400: target:amc: make buffers bidirectional by default
-// TODO: acms_script -> amc_sh
-// TODO: amc -size is broken:
 // TODO: amc can't delete double cascdel
-// TODO: amc extra unnecessary strings: ~40k
-// TODO: amc steps: tutorial
-// TODO: amc.error  where:load_input  amc.xref_error  xref:amc.FFixfield.p_fixtag  via:amc.FDb.ind_fixtag  key:'Account'
 // TODO: amc: Base field must be first -- otherwise no castbase
-// TODO: amc: Cmp - define over Tary
-// TODO: amc: add Alias reftype
 // TODO: amc: add UpdateTrace function
 // TODO: amc: add fldoffset for first data field of Base -- must be zero?
 // TODO: amc: add instname
@@ -58,7 +49,6 @@
 // TODO: amc: generate builtins.
 // TODO: amc: generate cursors as regular ctypes
 // TODO: amc: mark whole namespace as key namespace?
-// TODO: amc: merge xrefvia + xreffld into xrefpath?
 // TODO: amc: newfield: pluggable
 // TODO: amc: print ctype functions with their ctype
 // TODO: amc: print ctype functions with their ctype. cstring: define fcmp
@@ -67,11 +57,9 @@
 // TODO: amc: replace numstr with a fldfunc.
 // TODO: amc: suggest cheapcopy types?
 // TODO: amc: support fnotify for ibendpt
-// TODO: amc: types that don't have Global don't get StaticCheck generated -- for instance global namespace
 // TODO: amc: use top-down Cmp, Lt generator for Smallstr.
 // TODO: amc_vis: print ns summary
 // TODO: amcdb: add pool table
-// TODO: cstring operator ==, < must be defined by amc (default one)
 // TODO: do not make amc dependent on the conversion -- use elems_Getary where necessary
 // TODO: does amc support defaults for bitfld?
 // TODO: fix generation of cross-namespace steps in amc (currently broken -- confuses step namespace with field namespace)
@@ -265,8 +253,14 @@ amc::FField *amc::FirstInst(amc::FCtype &ctype) {
 
 // -----------------------------------------------------------------------------
 
+// Return TRUE if the given step executes directly from the scheduling Step function
+// Indirect steps are those called through a Timehook.
 bool amc::DirectStepQ(amc::FFstep &fstep) {
-    return !(fstep.steptype == dmmeta_Steptype_steptype_TimeHookRecur);
+    return fstep.steptype == dmmeta_Steptype_steptype_Callback
+        || fstep.steptype == dmmeta_Steptype_steptype_Extern
+        || fstep.steptype == dmmeta_Steptype_steptype_Inline
+        || fstep.steptype == dmmeta_Steptype_steptype_InlineOnce
+        || fstep.steptype == dmmeta_Steptype_steptype_InlineRecur;
 }
 
 // -----------------------------------------------------------------------------
@@ -353,18 +347,6 @@ tempstr amc::Initcast(amc::FField &field) {
 
 // -----------------------------------------------------------------------------
 
-// True if ctype is instantiated through a memory pool that has an Alloc function.
-bool amc::PoolHasAllocQ(amc::FCtype &ctype) {
-    bool retval=false;
-    ind_beg(amc::ctype_zd_inst_curs,inst,ctype) if (inst.p_reftype->hasalloc) {
-        retval=true;
-        break;
-    }ind_end;
-    return retval;
-}
-
-// -----------------------------------------------------------------------------
-
 void amc::GenPrintStmt(cstring &out, amc::FCtype &parenttype, amc::FField &field, strptr strname, strptr parentname) {
     if (amc::FFunc* func = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Print"))) {
         vrfy(!func->ismacro, tempstr()<<"invalid macro print function "<<func->func);
@@ -385,7 +367,7 @@ bool amc::FldfuncQ(amc::FField &field) {
 
 bool amc::CanCopyQ(amc::FCtype &ctype) {
     amc::FCtype *fldbase = GetBaseType(ctype,NULL);
-    bool can_copy = fldbase && !fldbase->c_varlenfld && !ctype.c_varlenfld;
+    bool can_copy = fldbase && zd_varlenfld_EmptyQ(*fldbase) && zd_varlenfld_EmptyQ(ctype);
     // cannot copy if any of the parent fields are a Tary
     // cannot copy if any of the parent fields have a private copy constructor
     // or disallow a copy operator.
@@ -719,7 +701,11 @@ bool amc::FixaryQ(amc::FField &field) {
 //     parent.field
 //     field_Get(parent)
 //     field_Get(parent.subfield)
-tempstr amc::FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr parname) {
+tempstr amc::FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr parname, strptr fldname DFLTVAL(strptr())) {
+    cstring name(fldname);
+    if (!ch_N(name)) {
+        name = name_Get(field);
+    }
     tempstr ret;
     bool need_get = field.c_fbigend || FldfuncQ(field) || field.c_bitfld;
     tempstr path;
@@ -783,12 +769,12 @@ tempstr amc::FieldvalExpr(amc::FCtype *ctype, amc::FField &field, strptr parname
     }
     // use the shortest form of accessing the field -- omit _Get if necessary
     if (need_get) {
-        ret << name_Get(field)<<"_Get("<<parname<<path<<")";
+        ret << name<<"_Get("<<parname<<path<<")";
     } else {
         if (parname != "" || path != "") {
             ret << parname << path << ".";
         }
-        ret << name_Get(field);
+        ret << name;
     }
     return ret;
 }
@@ -819,7 +805,11 @@ tempstr amc::LengthExpr(amc::FCtype &ctype, strptr name) {
 // Return C++ expression assigning value VALUE to field FIELD
 // given parent reference PARNAME.
 // If NEEDS_CAST is set, a cast is added to the target type
-tempstr amc::AssignExpr(amc::FField &field, strptr parname, strptr value, bool needs_cast) {
+tempstr amc::AssignExpr(amc::FField &field, strptr parname, strptr value, bool needs_cast, strptr fldname DFLTVAL(strptr())) {
+    cstring name(fldname);
+    if (!ch_N(name)) {
+        name = name_Get(field);
+    }
     tempstr ret;
     tempstr value_expr;
     if (needs_cast) {
@@ -831,14 +821,14 @@ tempstr amc::AssignExpr(amc::FField &field, strptr parname, strptr value, bool n
     }
     bool has_set = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Set"));
     if (has_set || field.c_fbigend || FldfuncQ(field) || field.c_bitfld ) {
-        ret << name_Get(field)<<"_Set("<<parname<<", "<<value_expr<<")";
+        ret << name<<"_Set("<<parname<<", "<<value_expr<<")";
     } else {
         if (elems_N(parname)>0 && parname[0] == '*') {
             ret << RestFrom(parname,1) << "->";
         } else {
             ret << parname << ".";
         }
-        ret << name_Get(field)<<" = "<<value_expr;
+        ret << name<<" = "<<value_expr;
     }
     return ret;
 }
@@ -1183,7 +1173,12 @@ static void CheckCumulativeError(amc::FGen &gen, int &prev_err) {
 
 static void Main_Edit() {
     command::acr_proc acr;
-    acr.cmd.query = tempstr()<<"(ns|ctype|field|dispatch):("<<amc::_db.cmdline.query<<")";
+    tempstr key(algo::Pathcomp(amc::_db.cmdline.query, ":RL"));
+    tempstr val(algo::Pathcomp(amc::_db.cmdline.query, ":RR"));
+    if (key == "") {
+        key = "(ns|ctype|field|dispatch)";
+    }
+    acr.cmd.query = tempstr()<<key<<":"<<val<<"";
     acr.cmd.t = true;
     acr.cmd.e = true;
     acr.cmd.print = true;
@@ -1243,6 +1238,8 @@ void amc::Main_Gen() {
 // OUTPUT        Generate files for the namespace(s)
 
 void amc::Main() {
+    _db.genctx.R.strict=2;
+    algo_lib::ApplyTrace(_db.cmdline.trace.expr);
     // open in editor before loading data
     if (amc::_db.cmdline.e) {
         Main_Edit();
@@ -1260,17 +1257,12 @@ void amc::Main() {
     Main_ReportCycle();
 
     if (QueryModeQ()) {
-        // Print generated code to stdout
         Main_Querymode();
-    } else {
-        // Save files
-        if (algo_lib::_db.exit_code==0) {
-            amc::_db.report.n_filemod += amc::SaveTuples(DirFileJoin(amc::_db.cmdline.out_dir,"data"));
-        } else {
-            prerr("amc.no_output"
-                  <<Keyval("comment","no files were modified"));
-        }
     }
 
+    if (algo_lib::_db.exit_code!=0) {
+        prerr("amc.no_output"
+              <<Keyval("comment","no files were modified"));
+    }
     Main_Report();
 }

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -30,9 +30,6 @@ static void PrintPrecomment(src_func::FFunc &func, cstring &out) {
     ind_beg(Line_curs,line,func.precomment) {
         out << "// "<< line << eol;
     }ind_end;
-    if (src_func::_db.cmdline.showsortkey) {
-        out << "// "<<func.sortkey << eol;
-    }
 }
 
 // -----------------------------------------------------------------------------
@@ -62,16 +59,26 @@ static void PrintGlobalProtos_Decl(src_func::FFunc &func, cstring &out, strptr n
         result << eol;
     }
     PrintPrecomment(func,result);
-    if (func.amcprot) {
+    src_func::FGenaffix *genaffix=src_func::FindAffix(func.name);
+    if (func.p_userfunc || genaffix) {
+        // we found a userfunc matching this function -- don't print the prototype.
+        // amc has generated the prototype in some include/gen/* file.
         if (bool_Update(src_func::_db.printed_user_impl_notice, true)) {
             // avoid several of these notices in a row -- looks bad
             result << "//     (user-implemented function, prototype is in amc-generated header)\n";
+        }
+        if (genaffix && !func.p_userfunc) {
+            result << "// matches known generated affix "<<genaffix->genaffix<<eol;
         }
         result << "// "; // comment out subsequent prototype
     } else {
         src_func::_db.printed_user_impl_notice = false;
     }
-    result << FirstLineWithoutNs(func,ns)<< ";"<< eol;
+    result << FirstLineWithoutNs(func,ns)<< ";";
+    if (func.p_userfunc && func.p_userfunc->acrkey != "") {
+        result << " // "<<func.p_userfunc->acrkey;
+    }
+    result << eol;
     // see define.h for meaning of this
     Replace(result,"NOTHROW","__attribute__((nothrow))");
     Replace(result,"NORETURN","__attribute__((noreturn))");
@@ -111,7 +118,7 @@ void src_func::PrintGlobalProtos(src_func::FTarget &target, strptr ns, strptr sr
         if (Regx_Match(regx,src_Get(targsrc))) {
             tempstr funcs;
             ind_beg(src_func::targsrc_zd_func_curs,func,targsrc) {
-                if (!func.isstatic && GetFuncNs(func.func) == ns) {
+                if (!func.isstatic && src_func::GetFuncNs(func) == ns) {
                     func.p_written_to = &targsrc; // save it
                     PrintGlobalProtos_Decl(func,funcs,ns);
                 }
@@ -133,29 +140,37 @@ void src_func::Main_ListFunc() {
     ind_beg(src_func::_db_bh_func_curs,func,src_func::_db) {
         if (func.select) {
             tempstr out;
-            verblog("# src_func.func"
-                    <<Keyval("func",func.func)
-                    <<Keyval("line",func.line)
-                    <<Keyval("isstatic",func.isstatic)
-                    <<Keyval("isinline",func.isinline)
-                    <<Keyval("amcprot",func.amcprot)
-                    <<Keyval("iffy",func.iffy)
-                    <<Keyval("mystery",func.mystery)
-                    <<Keyval("sortkey",func.sortkey)
-                    );
-            PrintPrecomment(func,out);
-            if (src_func::_db.cmdline.showloc) {
-                out << Location(func,0);
-                if (!src_func::_db.cmdline.proto) {
-                    out << eol;
-                }
-            }
-            if (src_func::_db.cmdline.proto) {
-                out << GetProto(func);
+            if (_db.cmdline.printssim) {
+                prlog("src_func.func"
+                      <<Keyval("func",func.name)
+                      <<Keyval("isstatic",func.isstatic)
+                      <<Keyval("isinline",func.isinline)
+                      <<Keyval("acrkey",func.p_userfunc ? strptr(func.p_userfunc->acrkey) : strptr())
+                      <<Keyval("iffy",func.iffy)
+                      <<Keyval("mystery",func.mystery)
+                      <<Keyval("sortkey",func.sortkey)
+                      <<Keyval("proto",func.func)
+                      );
             } else {
-                out << func.body;
+                if (_db.cmdline.showcomment) {
+                    PrintPrecomment(func,out);
+                }
+                if (src_func::_db.cmdline.showsortkey) {
+                    out << "// "<<func.sortkey << eol;
+                }
+                if (src_func::_db.cmdline.showloc) {
+                    out << Location(func,0);
+                    if (src_func::_db.cmdline.showbody) {
+                        out << eol;
+                    }
+                }
+                if (src_func::_db.cmdline.showbody) {
+                    out << func.body;
+                } else {
+                    out << GetProto(func);
+                }
+                prlog(out);
             }
-            prlog(out);
         }
     }ind_end;
 }

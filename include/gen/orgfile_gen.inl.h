@@ -255,6 +255,7 @@ inline void orgfile::FFilehash_Init(orgfile::FFilehash& filehash) {
     filehash.c_filename_n = 0; // (orgfile.FFilehash.c_filename)
     filehash.c_filename_max = 0; // (orgfile.FFilehash.c_filename)
     filehash.ind_filehash_next = (orgfile::FFilehash*)-1; // (orgfile.FDb.ind_filehash) not-in-hash
+    filehash.ind_filehash_hashval = 0; // stored hash value
 }
 
 // --- orgfile.FFilehash.c_filename_curs.Reset
@@ -299,6 +300,7 @@ inline void orgfile::FFilename_Init(orgfile::FFilename& filename) {
     filename.filehash_c_filename_in_ary = bool(false);
     filename.filename_next = (orgfile::FFilename*)-1; // (orgfile.FDb.filename) not-in-tpool's freelist
     filename.ind_filename_next = (orgfile::FFilename*)-1; // (orgfile.FDb.ind_filename) not-in-hash
+    filename.ind_filename_hashval = 0; // stored hash value
 }
 
 // --- orgfile.FFilename..Ctor

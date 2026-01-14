@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Copyright (C) 2023-2026 AlgoRND
+#
+# Run normilize multiple times till it passes
+# while true; do normalize && break || { echo "Normalize failed! Amending last commit..."; git-add-to-last-commit; sleep 1; }; done
+
+max_tries=10
+try_count=0
+
+while [ $try_count -lt $max_tries ]; do
+    ((try_count++))
+    echo "Attempt $try_count: Running 'normalize'..."
+
+    if normalize; then
+        echo "Success after $try_count tries!"
+        break
+    else
+        echo "Normalize failed! Amending last commit and retrying..."
+        git-add-to-last-commit
+    fi
+done

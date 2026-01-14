@@ -9,7 +9,6 @@ dmmeta.main  ns:acr_my  ismodule:N
 dmmeta.main  ns:amc  ismodule:N
 dmmeta.main  ns:amc_gc  ismodule:N
 dmmeta.main  ns:amc_vis  ismodule:N
-dmmeta.main  ns:ams_cat  ismodule:N
 dmmeta.main  ns:ams_sendtest  ismodule:N
 dmmeta.main  ns:apm  ismodule:N
 dmmeta.main  ns:aqlite  ismodule:N
@@ -18,6 +17,7 @@ dmmeta.main  ns:atf_ci  ismodule:N
 dmmeta.main  ns:atf_cmdline  ismodule:N
 dmmeta.main  ns:atf_comp  ismodule:N
 dmmeta.main  ns:atf_cov  ismodule:N
+dmmeta.main  ns:atf_exp  ismodule:N
 dmmeta.main  ns:atf_fuzz  ismodule:N
 dmmeta.main  ns:atf_gcli  ismodule:N
 dmmeta.main  ns:atf_nrun  ismodule:N
@@ -25,9 +25,11 @@ dmmeta.main  ns:atf_unit  ismodule:N
 dmmeta.main  ns:bash2html  ismodule:N
 dmmeta.main  ns:gcache  ismodule:N
 dmmeta.main  ns:gcli  ismodule:N
+dmmeta.main  ns:jkv  ismodule:N
 dmmeta.main  ns:mdbg  ismodule:N
 dmmeta.main  ns:mysql2ssim  ismodule:N
 dmmeta.main  ns:orgfile  ismodule:N
+dmmeta.main  ns:samp_make  ismodule:N
 dmmeta.main  ns:samp_meng  ismodule:N
 dmmeta.main  ns:samp_regx  ismodule:N
 dmmeta.main  ns:sandbox  ismodule:N

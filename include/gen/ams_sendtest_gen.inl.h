@@ -34,6 +34,8 @@
 // Set all fields to initial values.
 inline void ams_sendtest::AmsSendTest_Init(ams_sendtest::AmsSendTest& parent) {
     parent.n_msg_send = u64(0);
+    parent.off_send = u64(0);
+    parent.off_recv = u64(0);
     parent.n_msg_recv = u64(0);
     parent.n_write_wait = u64(0);
     parent.n_msg_limit = u64(1000000);

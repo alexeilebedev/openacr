@@ -18,6 +18,7 @@ italicised fields: *fbufdir* are [**fldfunc**](/txt/ssim.md#fldfunc) fields
 |fbuftype|[dmmeta.Fbuftype](/txt/ssimdb/dmmeta/fbuftype.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)||Type of buffer|
 |insready|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
 |inseof|[dmmeta.Field](/txt/ssimdb/dmmeta/field.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
+|iotype|[dmmeta.Fbufiotype](/txt/ssimdb/dmmeta/fbufiotype.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|"standard"||
 |comment|[algo.Comment](/txt/protocol/algo/Comment.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Attributes -->

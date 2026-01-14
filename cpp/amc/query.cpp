@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -63,7 +63,7 @@ static void Query_Func(algo_lib::Regx &regx, cstring &out) {
                 if (amc::_db.cmdline.proto || func.extrn || func.deleted) {
                     amc::_db.report.n_func++;
                     tempstr proto;
-                    PrintFuncProto(func, NULL, proto);
+                    PrintFuncProto(func, NULL, proto,true);
                     algo::InsertIndent(*ns.hdr, proto, 0);
                 } else {
                     amc::_db.report.n_func++;
@@ -86,16 +86,19 @@ static void Query_Func(algo_lib::Regx &regx, cstring &out) {
 // -----------------------------------------------------------------------------
 
 void amc::Main_Querymode() {
-    tempstr value(algo::Pathcomp(amc::_db.cmdline.query, ":RR"));
-    if (value == "") {
-        value = "%";
-    } else if (FindStr(value, ".")==-1) {
-        value << ".%";
-    }
     strptr key = Pathcomp(amc::_db.cmdline.query, ":RL");
+    tempstr value(algo::Pathcomp(amc::_db.cmdline.query, ":RR"));
     if (key == "") {
         key = "%";
     }
+    if (value == "") {
+        value = "%";
+    } else if (FindStr(value, ".")==-1) { // <ns> -> <ns>.%
+        value << ".%";
+    }
+    verblog("amc.query"
+            <<Keyval("key",key)
+            <<Keyval("value",value));
     algo_lib::Regx regx_key;
     Regx_ReadSql(regx_key, key, true);
     algo_lib::Regx regx_value;
@@ -104,11 +107,9 @@ void amc::Main_Querymode() {
     tempstr out;
 
     if (Regx_Match(regx_key, "ctype")) {
-        verblog("query ctype "<<regx_value.expr);
         Query_Ctype(regx_value,out);
     }
     if (Regx_Match(regx_key, "func")) {
-        verblog("query func "<<regx_value.expr);
         Query_Func(regx_value,out);
     }
     frep_(i,ch_N(out)) {

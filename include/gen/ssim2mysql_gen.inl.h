@@ -53,6 +53,7 @@ inline void ssim2mysql::FColumn_Init(ssim2mysql::FColumn& column) {
     column.is_pkey = bool(false);
     column.ssimfile_c_column_in_ary = bool(false);
     column.ind_column_next = (ssim2mysql::FColumn*)-1; // (ssim2mysql.FDb.ind_column) not-in-hash
+    column.ind_column_hashval = 0; // stored hash value
 }
 
 // --- ssim2mysql.FColumn..Ctor
@@ -198,6 +199,7 @@ inline void ssim2mysql::FCtype_Init(ssim2mysql::FCtype& ctype) {
     ctype.c_field_max = 0; // (ssim2mysql.FCtype.c_field)
     ctype.c_ssimfile = NULL;
     ctype.ind_ctype_next = (ssim2mysql::FCtype*)-1; // (ssim2mysql.FDb.ind_ctype) not-in-hash
+    ctype.ind_ctype_hashval = 0; // stored hash value
 }
 
 // --- ssim2mysql.FCtype..Ctor
@@ -1009,8 +1011,7 @@ inline  ssim2mysql::FField::~FField() {
 // --- ssim2mysql.FInput.in_buf.Max
 // Return max. number of bytes in the buffer.
 inline i32 ssim2mysql::in_buf_Max(ssim2mysql::FInput& input) {
-    return 65536;
-    (void)input;//only to avoid -Wunused-parameter
+    return input.in_buf_max;
 }
 
 // --- ssim2mysql.FInput.in_buf.N
@@ -1096,6 +1097,7 @@ inline void ssim2mysql::FNs_Init(ssim2mysql::FNs& ns) {
     ns.c_ssimfile_n = 0; // (ssim2mysql.FNs.c_ssimfile)
     ns.c_ssimfile_max = 0; // (ssim2mysql.FNs.c_ssimfile)
     ns.ind_ns_next = (ssim2mysql::FNs*)-1; // (ssim2mysql.FDb.ind_ns) not-in-hash
+    ns.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- ssim2mysql.FNs.c_ssimfile_curs.Reset

@@ -28,8 +28,8 @@ Usage: atf_nrun [[-ncmd:]<int>] [options]
     -in         string  "data"  Input directory or filename, - for stdin
     -maxjobs    int     2       Number of simultaneous jobs
     [ncmd]      int     6
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -60,23 +60,19 @@ Here is the visualization of this structure:
 
 ```
 inline-command: amc_vis atf_nrun.%
-                                          
-                                          
-    / atf_nrun.FDb                        
-    |                                     
-    |Lary fentry-------->/ atf_nrun.FEntry
-    |Thash ind_running-->|                
-    |Llist zd_todo------>|                
-    -                    |                
-                         |                
-                         -                
+/ atf_nrun.FDb                        
+|Lary fentry-------->/ atf_nrun.FEntry
+|Thash ind_running-->|                
+|Llist zd_todo------>|                
+-                    |                
+                     -                
 ```
 
 Since this is a sample, there are no inputs. We will creates all the `FEntry` records
 in Main, and then enter main loop.
 
 ```
-inline-command: src_func atf_nrun Main -report:N -showloc:N 
+inline-command: src_func atf_nrun.Main -f
 void atf_nrun::Main() {
     struct sigaction sigact;
     sigact.sa_handler = SignalHandler;
@@ -114,7 +110,7 @@ for it. If we have reached the maximum number of running jobs, we set the delay 
 spawning a child process.
 
 ```
-inline-command: src_func atf_nrun zd_todo_Step -report:N -showloc:N 
+inline-command: src_func atf_nrun.zd_todo_Step -f
 // Attempted every minute until zd_todo is empty
 // Increases # of jobs
 void atf_nrun::zd_todo_Step() {
@@ -148,7 +144,14 @@ to run immediately since it becomes possible to spawn more jobs after a child ex
 The signal handler is installed in the `Main` function (see above).
 
 ```
-inline-command: src_func atf_nrun '(%Signal%|ind_running_Step)' -report:N -showloc:N 
+inline-command: src_func atf_nrun.'(%Signal%|ind_running_Step)' -f
+// trigger waitpid call
+static void SignalHandler(int sig) {
+    (void)sig;
+    atf_nrun::ind_running_SetDelay(algo::SchedTime());// cause it to execute immediately
+    prlog("SIGCHLD");
+}
+
 // Attempted whenever we suspect that waitpid()
 // will return something interesting
 // Decreases # of jobs
@@ -174,13 +177,6 @@ void atf_nrun::ind_running_Step() {
     }
 }
 
-// trigger waitpid call
-static void SignalHandler(int sig) {
-    (void)sig;
-    atf_nrun::ind_running_SetDelay(algo::SchedTime());// cause it to execute immediately
-    prlog("SIGCHLD");
-}
-
 ```
 
 For completeness, here are the ssim lines defining the `atf_nrun` process, minus
@@ -193,7 +189,7 @@ dmmeta.nstype  nstype:exe  comment:Executable
   dmmeta.ns  ns:atf_nrun  nstype:exe  license:GPL  comment:"Run N subprocesses in parallel"
     dev.target  target:atf_nrun
       dev.targdep  targdep:atf_nrun.algo_lib  comment:""
-      dev.tgtcov  target:atf_nrun  cov_min:0.00  maxerr:1.00  comment:""
+      dev.tgtcov  target:atf_nrun  cov_min:0.00  maxerr:5.00  comment:""
 
     dmmeta.ctype  ctype:atf_nrun.FDb  comment:"In-memory database for atf_nrun"
       dmmeta.field  field:atf_nrun.FDb._db      arg:atf_nrun.FDb      reftype:Global  dflt:""  comment:""
