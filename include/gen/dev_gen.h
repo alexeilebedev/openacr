@@ -71,117 +71,123 @@ enum { dev_Covline_flag_Enum_N = 3 };
 
 // --- dev_FieldIdEnum
 
-enum dev_FieldIdEnum {                 // dev.FieldId.value
-     dev_FieldId_arch           = 0
-    ,dev_FieldId_comment        = 1
-    ,dev_FieldId_badline        = 2
-    ,dev_FieldId_expr           = 3
-    ,dev_FieldId_targsrc_regx   = 4
-    ,dev_FieldId_builddir       = 5
-    ,dev_FieldId_uname          = 6
-    ,dev_FieldId_compiler       = 7
-    ,dev_FieldId_cfg            = 8
-    ,dev_FieldId_suffix         = 9
-    ,dev_FieldId_ranlib         = 10
-    ,dev_FieldId_ar             = 11
-    ,dev_FieldId_link           = 12
-    ,dev_FieldId_libext         = 13
-    ,dev_FieldId_exeext         = 14
-    ,dev_FieldId_pchext         = 15
-    ,dev_FieldId_objext         = 16
-    ,dev_FieldId_rc             = 17
-    ,dev_FieldId_copyright      = 18
-    ,dev_FieldId_dflt           = 19
-    ,dev_FieldId_covfile        = 20
-    ,dev_FieldId_total          = 21
-    ,dev_FieldId_nonexe         = 22
-    ,dev_FieldId_exe            = 23
-    ,dev_FieldId_exer           = 24
-    ,dev_FieldId_hit            = 25
-    ,dev_FieldId_cov            = 26
-    ,dev_FieldId_covline        = 27
-    ,dev_FieldId_src            = 28
-    ,dev_FieldId_line           = 29
-    ,dev_FieldId_flag           = 30
-    ,dev_FieldId_text           = 31
-    ,dev_FieldId_covtarget      = 32
-    ,dev_FieldId_edaction       = 33
-    ,dev_FieldId_edacttype      = 34
-    ,dev_FieldId_name           = 35
-    ,dev_FieldId_needamc        = 36
-    ,dev_FieldId_gitfile        = 37
-    ,dev_FieldId_ext            = 38
-    ,dev_FieldId_gitinfo        = 39
-    ,dev_FieldId_author         = 40
-    ,dev_FieldId_compver        = 41
-    ,dev_FieldId_package        = 42
-    ,dev_FieldId_hilite         = 43
-    ,dev_FieldId_color          = 44
-    ,dev_FieldId_htmlentity     = 45
-    ,dev_FieldId_code           = 46
-    ,dev_FieldId_include        = 47
-    ,dev_FieldId_srcfile        = 48
-    ,dev_FieldId_filename       = 49
-    ,dev_FieldId_sys            = 50
-    ,dev_FieldId_license        = 51
-    ,dev_FieldId_nlongline      = 52
-    ,dev_FieldId_longestline    = 53
-    ,dev_FieldId_nbadws         = 54
-    ,dev_FieldId_maxws          = 55
-    ,dev_FieldId_nlongfunc      = 56
-    ,dev_FieldId_longestfunc    = 57
-    ,dev_FieldId_nmysteryfunc   = 58
-    ,dev_FieldId_badness        = 59
-    ,dev_FieldId_mdmark         = 60
-    ,dev_FieldId_state          = 61
-    ,dev_FieldId_param          = 62
-    ,dev_FieldId_mdsection      = 63
-    ,dev_FieldId_match          = 64
-    ,dev_FieldId_path           = 65
-    ,dev_FieldId_genlist        = 66
-    ,dev_FieldId_strict         = 67
-    ,dev_FieldId_opt_type       = 68
-    ,dev_FieldId_sep            = 69
-    ,dev_FieldId_baseref        = 70
-    ,dev_FieldId_origin         = 71
-    ,dev_FieldId_pkgdep         = 72
-    ,dev_FieldId_parent         = 73
-    ,dev_FieldId_soft           = 74
-    ,dev_FieldId_pkgkey         = 75
-    ,dev_FieldId_key            = 76
-    ,dev_FieldId_inl            = 77
-    ,dev_FieldId_sandbox        = 78
-    ,dev_FieldId_filter         = 79
-    ,dev_FieldId_readmesort     = 80
-    ,dev_FieldId_sbpath         = 81
-    ,dev_FieldId_syscmd         = 82
-    ,dev_FieldId_execkey        = 83
-    ,dev_FieldId_command        = 84
-    ,dev_FieldId_pid            = 85
-    ,dev_FieldId_status         = 86
-    ,dev_FieldId_nprereq        = 87
-    ,dev_FieldId_fail_prereq    = 88
-    ,dev_FieldId_completed      = 89
-    ,dev_FieldId_maxtime        = 90
-    ,dev_FieldId_syscmddep      = 91
-    ,dev_FieldId_child          = 92
-    ,dev_FieldId_syslib         = 93
-    ,dev_FieldId_targdep        = 94
-    ,dev_FieldId_target         = 95
-    ,dev_FieldId_targsrc        = 96
-    ,dev_FieldId_targsyslib     = 97
-    ,dev_FieldId_cov_min        = 98
-    ,dev_FieldId_maxerr         = 99
-    ,dev_FieldId_timefmt        = 100
-    ,dev_FieldId_dirname        = 101
-    ,dev_FieldId_tool_opt       = 102
-    ,dev_FieldId_opt            = 103
-    ,dev_FieldId_sortfld        = 104
-    ,dev_FieldId_field          = 105
-    ,dev_FieldId_value          = 106
+enum dev_FieldIdEnum {                   // dev.FieldId.value
+     dev_FieldId_arch             = 0
+    ,dev_FieldId_comment          = 1
+    ,dev_FieldId_badline          = 2
+    ,dev_FieldId_expr             = 3
+    ,dev_FieldId_targsrc_regx     = 4
+    ,dev_FieldId_builddir         = 5
+    ,dev_FieldId_uname            = 6
+    ,dev_FieldId_compiler         = 7
+    ,dev_FieldId_cfg              = 8
+    ,dev_FieldId_suffix           = 9
+    ,dev_FieldId_ranlib           = 10
+    ,dev_FieldId_ar               = 11
+    ,dev_FieldId_link             = 12
+    ,dev_FieldId_libext           = 13
+    ,dev_FieldId_exeext           = 14
+    ,dev_FieldId_pchext           = 15
+    ,dev_FieldId_objext           = 16
+    ,dev_FieldId_rc               = 17
+    ,dev_FieldId_copyright        = 18
+    ,dev_FieldId_dflt             = 19
+    ,dev_FieldId_covfile          = 20
+    ,dev_FieldId_total            = 21
+    ,dev_FieldId_nonexe           = 22
+    ,dev_FieldId_exe              = 23
+    ,dev_FieldId_exer             = 24
+    ,dev_FieldId_hit              = 25
+    ,dev_FieldId_cov              = 26
+    ,dev_FieldId_covline          = 27
+    ,dev_FieldId_src              = 28
+    ,dev_FieldId_line             = 29
+    ,dev_FieldId_flag             = 30
+    ,dev_FieldId_text             = 31
+    ,dev_FieldId_covtarget        = 32
+    ,dev_FieldId_edaction         = 33
+    ,dev_FieldId_edacttype        = 34
+    ,dev_FieldId_name             = 35
+    ,dev_FieldId_needamc          = 36
+    ,dev_FieldId_gitfile          = 37
+    ,dev_FieldId_ext              = 38
+    ,dev_FieldId_gitinfo          = 39
+    ,dev_FieldId_author           = 40
+    ,dev_FieldId_compver          = 41
+    ,dev_FieldId_package          = 42
+    ,dev_FieldId_hilite           = 43
+    ,dev_FieldId_color            = 44
+    ,dev_FieldId_htmlentity       = 45
+    ,dev_FieldId_code             = 46
+    ,dev_FieldId_include          = 47
+    ,dev_FieldId_srcfile          = 48
+    ,dev_FieldId_filename         = 49
+    ,dev_FieldId_sys              = 50
+    ,dev_FieldId_license          = 51
+    ,dev_FieldId_nlongline        = 52
+    ,dev_FieldId_longestline      = 53
+    ,dev_FieldId_nbadws           = 54
+    ,dev_FieldId_maxws            = 55
+    ,dev_FieldId_nlongfunc        = 56
+    ,dev_FieldId_longestfunc      = 57
+    ,dev_FieldId_nmysteryfunc     = 58
+    ,dev_FieldId_badness          = 59
+    ,dev_FieldId_mdmark           = 60
+    ,dev_FieldId_state            = 61
+    ,dev_FieldId_param            = 62
+    ,dev_FieldId_mdsection        = 63
+    ,dev_FieldId_match            = 64
+    ,dev_FieldId_path             = 65
+    ,dev_FieldId_genlist          = 66
+    ,dev_FieldId_strict           = 67
+    ,dev_FieldId_netproto         = 68
+    ,dev_FieldId_tls              = 69
+    ,dev_FieldId_opt_type         = 70
+    ,dev_FieldId_sep              = 71
+    ,dev_FieldId_baseref          = 72
+    ,dev_FieldId_origin           = 73
+    ,dev_FieldId_pkgdep           = 74
+    ,dev_FieldId_parent           = 75
+    ,dev_FieldId_soft             = 76
+    ,dev_FieldId_pkgkey           = 77
+    ,dev_FieldId_key              = 78
+    ,dev_FieldId_prototransport   = 79
+    ,dev_FieldId_transport        = 80
+    ,dev_FieldId_inl              = 81
+    ,dev_FieldId_sandbox          = 82
+    ,dev_FieldId_filter           = 83
+    ,dev_FieldId_readmesort       = 84
+    ,dev_FieldId_rpm              = 85
+    ,dev_FieldId_sbpath           = 86
+    ,dev_FieldId_syscmd           = 87
+    ,dev_FieldId_execkey          = 88
+    ,dev_FieldId_command          = 89
+    ,dev_FieldId_pid              = 90
+    ,dev_FieldId_status           = 91
+    ,dev_FieldId_nprereq          = 92
+    ,dev_FieldId_fail_prereq      = 93
+    ,dev_FieldId_completed        = 94
+    ,dev_FieldId_maxtime          = 95
+    ,dev_FieldId_child            = 96
+    ,dev_FieldId_syslib           = 97
+    ,dev_FieldId_targdep          = 98
+    ,dev_FieldId_target           = 99
+    ,dev_FieldId_targsrc          = 100
+    ,dev_FieldId_targsyslib       = 101
+    ,dev_FieldId_prefix           = 102
+    ,dev_FieldId_cov_min          = 103
+    ,dev_FieldId_maxerr           = 104
+    ,dev_FieldId_timefmt          = 105
+    ,dev_FieldId_dirname          = 106
+    ,dev_FieldId_tool_opt         = 107
+    ,dev_FieldId_opt              = 108
+    ,dev_FieldId_sortfld          = 109
+    ,dev_FieldId_ip               = 110
+    ,dev_FieldId_field            = 111
+    ,dev_FieldId_value            = 112
 };
 
-enum { dev_FieldIdEnum_N = 107 };
+enum { dev_FieldIdEnum_N = 113 };
 
 extern const char *  dev_License_license_;      //        fconst:dev.License.license/
 extern const char *  dev_License_license_GPL;   // GPL    fconst:dev.License.license/GPL
@@ -203,6 +209,10 @@ enum dev_MdmarkCaseEnum {             // dev.MdmarkCase.mdmark
 
 enum { dev_MdmarkCaseEnum_N = 3 };
 
+extern const char *  dev_Netproto_netproto_http;    // http     fconst:dev.Netproto.netproto/http
+extern const char *  dev_Netproto_netproto_https;   // https    fconst:dev.Netproto.netproto/https
+extern const char *  dev_Netproto_netproto_smtp;    // smtp     fconst:dev.Netproto.netproto/smtp
+extern const char *  dev_Netproto_netproto_ssh;     // ssh      fconst:dev.Netproto.netproto/ssh
 extern const char *  dev_Sandbox_sandbox_abt_md;       // abt_md        fconst:dev.Sandbox.sandbox/abt_md
 extern const char *  dev_Sandbox_sandbox_acr_ed;       // acr_ed        fconst:dev.Sandbox.sandbox/acr_ed
 extern const char *  dev_Sandbox_sandbox_amc;          // amc           fconst:dev.Sandbox.sandbox/amc
@@ -220,7 +230,7 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 CfgPkey;
     typedef algo::Smallstr50 CompilerPkey;
     typedef algo::Smallstr50 CopyrightPkey;
-    typedef algo::Smallstr200 CovlinePkey;
+    typedef algo::cstring CovlinePkey;
     typedef algo::Smallstr50 EdactionPkey;
     typedef algo::Smallstr50 EdacttypePkey;
     typedef algo::Smallstr200 GitfilePkey;
@@ -231,16 +241,18 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 LicensePkey;
     typedef algo::Smallstr50 MdmarkPkey;
     typedef algo::Smallstr50 MdsectionPkey;
+    typedef algo::Smallstr50 NetprotoPkey;
     typedef algo::Smallstr50 OptTypePkey;
     typedef algo::Smallstr50 PackagePkey;
     typedef algo::Smallstr100 PkgdepPkey;
     typedef algo::Smallstr150 PkgkeyPkey;
+    typedef algo::Smallstr50 PrototransportPkey;
     typedef algo::Smallstr250 ReadmesortPkey;
+    typedef algo::Smallstr50 RpmPkey;
     typedef algo::Smallstr50 SandboxPkey;
     typedef algo::Smallstr50 SbpathPkey;
     typedef algo::Smallstr200 SrcfilePkey;
     typedef i64 SyscmdPkey;
-    typedef algo::RspaceStr16 SyscmddepPkey;
     typedef algo::Smallstr50 SyslibPkey;
     typedef algo::Smallstr50 TargdepPkey;
     typedef algo::Smallstr16 TargetPkey;
@@ -248,6 +260,7 @@ namespace dev { // gen:ns_pkeytypedef
     typedef algo::Smallstr50 TargsyslibPkey;
     typedef algo::Smallstr100 TimefmtPkey;
     typedef algo::Smallstr100 ToolOptPkey;
+    typedef algo::Smallstr50 TransportPkey;
     typedef algo::Smallstr50 UnamePkey;
 } // gen:ns_pkeytypedef
 namespace dev { // gen:ns_tclass_field
@@ -276,13 +289,16 @@ namespace dev { struct Mdmark; }
 namespace dev { struct MdmarkCase; }
 namespace dev { struct Mdsection; }
 namespace dev { struct Msgfile; }
+namespace dev { struct Netproto; }
 namespace dev { struct Noindent; }
 namespace dev { struct OptType; }
 namespace dev { struct Package; }
 namespace dev { struct Pkgdep; }
 namespace dev { struct Pkgkey; }
-namespace dev { struct Readme; }
+namespace dev { struct Prototransport; }
+namespace dev { struct Readmefile; }
 namespace dev { struct Readmesort; }
+namespace dev { struct Rpm; }
 namespace dev { struct Sandbox; }
 namespace dev { struct Sbpath; }
 namespace dev { struct Scriptfile; }
@@ -297,6 +313,7 @@ namespace dev { struct Targsyslib; }
 namespace dev { struct Tgtcov; }
 namespace dev { struct Timefmt; }
 namespace dev { struct ToolOpt; }
+namespace dev { struct Transport; }
 namespace dev { struct Uname; }
 namespace dev { struct Unstablefld; }
 namespace dev { // gen:ns_print_struct
@@ -487,10 +504,10 @@ void                 Covfile_Print(dev::Covfile& row, algo::cstring& str) __attr
 
 // --- dev.Covline
 struct Covline { // dev.Covline
-    algo::Smallstr200   covline;   // file:line
-    char                flag;      //   'N'  Flag
-    u32                 hit;       //   0  Number of hits
-    algo::cstring       text;      // Line text
+    algo::cstring   covline;   // Key: file:line
+    char            flag;      //   'N'  Flag
+    u32             hit;       //   0  Number of hits
+    algo::cstring   text;      // Line text
     // func:dev.Covline..Ctor
     inline               Covline() __attribute__((nothrow));
 };
@@ -967,6 +984,29 @@ inline void          Msgfile_Init(dev::Msgfile& parent);
 // func:dev.Msgfile..Print
 void                 Msgfile_Print(dev::Msgfile& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dev.Netproto
+struct Netproto { // dev.Netproto: Network protocol: add all levels here
+    algo::Smallstr50   netproto;   //
+    bool               tls;        //   false
+    algo::Comment      comment;    //
+    // func:dev.Netproto..Ctor
+    inline               Netproto() __attribute__((nothrow));
+};
+
+// func:dev.Netproto..ReadFieldMaybe
+bool                 Netproto_ReadFieldMaybe(dev::Netproto& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Netproto from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Netproto..ReadStrptrMaybe
+bool                 Netproto_ReadStrptrMaybe(dev::Netproto &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:dev.Netproto..Init
+inline void          Netproto_Init(dev::Netproto& parent);
+// print string representation of ROW to string STR
+// cfmt:dev.Netproto.String  printfmt:Tuple
+// func:dev.Netproto..Print
+void                 Netproto_Print(dev::Netproto& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- dev.Noindent
 struct Noindent { // dev.Noindent: Indicates that a file should not be automatically indented
     algo::Smallstr200   gitfile;   //
@@ -1101,32 +1141,63 @@ bool                 Pkgkey_ReadStrptrMaybe(dev::Pkgkey &parent, algo::strptr in
 // func:dev.Pkgkey..Print
 void                 Pkgkey_Print(dev::Pkgkey& row, algo::cstring& str) __attribute__((nothrow));
 
-// --- dev.Readme
-struct Readme { // dev.Readme: File containing documentation
+// --- dev.Prototransport
+struct Prototransport { // dev.Prototransport: Protocol/transport binding
+    algo::Smallstr50   prototransport;   //
+    algo::Comment      comment;          //
+    // func:dev.Prototransport..Ctor
+    inline               Prototransport() __attribute__((nothrow));
+};
+
+// func:dev.Prototransport.netproto.Get
+algo::Smallstr50     netproto_Get(dev::Prototransport& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Prototransport.netproto.Get2
+algo::Smallstr50     Prototransport_netproto_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Prototransport.transport.Get
+algo::Smallstr50     transport_Get(dev::Prototransport& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Prototransport.transport.Get2
+algo::Smallstr50     Prototransport_transport_Get(algo::strptr arg) __attribute__((nothrow));
+
+// func:dev.Prototransport..Concat_netproto_transport
+tempstr              Prototransport_Concat_netproto_transport( const algo::strptr& netproto ,const algo::strptr& transport );
+// func:dev.Prototransport..ReadFieldMaybe
+bool                 Prototransport_ReadFieldMaybe(dev::Prototransport& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Prototransport from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Prototransport..ReadStrptrMaybe
+bool                 Prototransport_ReadStrptrMaybe(dev::Prototransport &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Prototransport.String  printfmt:Tuple
+// func:dev.Prototransport..Print
+void                 Prototransport_Print(dev::Prototransport& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Readmefile
+struct Readmefile { // dev.Readmefile: File containing documentation
     algo::Smallstr200   gitfile;   //
     bool                inl;       //   false
     bool                sandbox;   //   false
     algo::Smallstr100   filter;    //
     algo::Comment       comment;   //
-    // func:dev.Readme..Ctor
-    inline               Readme() __attribute__((nothrow));
-    // func:dev.Readme..FieldwiseCtor
-    explicit inline               Readme(const algo::strptr& in_gitfile, bool in_inl, bool in_sandbox, const algo::strptr& in_filter, const algo::Comment& in_comment) __attribute__((nothrow));
+    // func:dev.Readmefile..Ctor
+    inline               Readmefile() __attribute__((nothrow));
+    // func:dev.Readmefile..FieldwiseCtor
+    explicit inline               Readmefile(const algo::strptr& in_gitfile, bool in_inl, bool in_sandbox, const algo::strptr& in_filter, const algo::Comment& in_comment) __attribute__((nothrow));
 };
 
-// func:dev.Readme..ReadFieldMaybe
-bool                 Readme_ReadFieldMaybe(dev::Readme& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
-// Read fields of dev::Readme from an ascii string.
+// func:dev.Readmefile..ReadFieldMaybe
+bool                 Readmefile_ReadFieldMaybe(dev::Readmefile& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Readmefile from an ascii string.
 // The format of the string is an ssim Tuple
-// func:dev.Readme..ReadStrptrMaybe
-bool                 Readme_ReadStrptrMaybe(dev::Readme &parent, algo::strptr in_str) __attribute__((nothrow));
+// func:dev.Readmefile..ReadStrptrMaybe
+bool                 Readmefile_ReadStrptrMaybe(dev::Readmefile &parent, algo::strptr in_str) __attribute__((nothrow));
 // Set all fields to initial values.
-// func:dev.Readme..Init
-inline void          Readme_Init(dev::Readme& parent);
+// func:dev.Readmefile..Init
+inline void          Readmefile_Init(dev::Readmefile& parent);
 // print string representation of ROW to string STR
-// cfmt:dev.Readme.String  printfmt:Tuple
-// func:dev.Readme..Print
-void                 Readme_Print(dev::Readme& row, algo::cstring& str) __attribute__((nothrow));
+// cfmt:dev.Readmefile.String  printfmt:Tuple
+// func:dev.Readmefile..Print
+void                 Readmefile_Print(dev::Readmefile& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Readmesort
 struct Readmesort { // dev.Readmesort: sorted categories of txt/ *.md files presented in dev.readme
@@ -1146,6 +1217,25 @@ bool                 Readmesort_ReadStrptrMaybe(dev::Readmesort &parent, algo::s
 // cfmt:dev.Readmesort.String  printfmt:Tuple
 // func:dev.Readmesort..Print
 void                 Readmesort_Print(dev::Readmesort& row, algo::cstring& str) __attribute__((nothrow));
+
+// --- dev.Rpm
+struct Rpm { // dev.Rpm
+    algo::Smallstr50   rpm;       //
+    algo::Comment      comment;   //
+    // func:dev.Rpm..Ctor
+    inline               Rpm() __attribute__((nothrow));
+};
+
+// func:dev.Rpm..ReadFieldMaybe
+bool                 Rpm_ReadFieldMaybe(dev::Rpm& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Rpm from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Rpm..ReadStrptrMaybe
+bool                 Rpm_ReadStrptrMaybe(dev::Rpm &parent, algo::strptr in_str) __attribute__((nothrow));
+// print string representation of ROW to string STR
+// cfmt:dev.Rpm.String  printfmt:Tuple
+// func:dev.Rpm..Print
+void                 Rpm_Print(dev::Rpm& row, algo::cstring& str) __attribute__((nothrow));
 
 // --- dev.Sandbox
 struct Sandbox { // dev.Sandbox: Registered sandbox
@@ -1276,10 +1366,6 @@ struct Syscmddep { // dev.Syscmddep: Dependency between two commands
     // func:dev.Syscmddep..FieldwiseCtor
     explicit inline               Syscmddep(i64 in_child, i64 in_parent) __attribute__((nothrow));
 };
-
-// func:dev.Syscmddep.syscmddep.Get
-// this function is 'extrn' and implemented by user
-algo::RspaceStr16    syscmddep_Get(dev::Syscmddep& parent) __attribute__((__warn_unused_result__, nothrow));
 
 // func:dev.Syscmddep..ReadFieldMaybe
 bool                 Syscmddep_ReadFieldMaybe(dev::Syscmddep& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
@@ -1428,6 +1514,11 @@ algo::Smallstr50     uname_Get(dev::Targsyslib& parent) __attribute__((__warn_un
 // func:dev.Targsyslib.uname.Get2
 algo::Smallstr50     Targsyslib_uname_Get(algo::strptr arg) __attribute__((nothrow));
 
+// func:dev.Targsyslib.prefix.Get
+algo::Smallstr50     prefix_Get(dev::Targsyslib& parent) __attribute__((__warn_unused_result__, nothrow));
+// func:dev.Targsyslib.prefix.Get2
+algo::Smallstr50     Targsyslib_prefix_Get(algo::strptr arg) __attribute__((nothrow));
+
 // func:dev.Targsyslib..Concat_uname_target_syslib
 tempstr              Targsyslib_Concat_uname_target_syslib( const algo::strptr& uname ,const algo::strptr& target ,const algo::strptr& syslib );
 // func:dev.Targsyslib..ReadFieldMaybe
@@ -1548,6 +1639,29 @@ bool                 ToolOpt_ReadStrptrMaybe(dev::ToolOpt &parent, algo::strptr 
 // func:dev.ToolOpt..Print
 void                 ToolOpt_Print(dev::ToolOpt& row, algo::cstring& str) __attribute__((nothrow));
 
+// --- dev.Transport
+struct Transport { // dev.Transport: Transport layer
+    algo::Smallstr50   transport;   //
+    bool               ip;          //   false
+    algo::Comment      comment;     //
+    // func:dev.Transport..Ctor
+    inline               Transport() __attribute__((nothrow));
+};
+
+// func:dev.Transport..ReadFieldMaybe
+bool                 Transport_ReadFieldMaybe(dev::Transport& parent, algo::strptr field, algo::strptr strval) __attribute__((nothrow));
+// Read fields of dev::Transport from an ascii string.
+// The format of the string is an ssim Tuple
+// func:dev.Transport..ReadStrptrMaybe
+bool                 Transport_ReadStrptrMaybe(dev::Transport &parent, algo::strptr in_str) __attribute__((nothrow));
+// Set all fields to initial values.
+// func:dev.Transport..Init
+inline void          Transport_Init(dev::Transport& parent);
+// print string representation of ROW to string STR
+// cfmt:dev.Transport.String  printfmt:Tuple
+// func:dev.Transport..Print
+void                 Transport_Print(dev::Transport& row, algo::cstring& str) __attribute__((nothrow));
+
 // --- dev.Uname
 struct Uname { // dev.Uname: List of known unames
     algo::Smallstr50   uname;     //
@@ -1609,12 +1723,15 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Linelim &row);/
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Mdmark &row);// cfmt:dev.Mdmark.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Mdsection &row);// cfmt:dev.Mdsection.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Msgfile &row);// cfmt:dev.Msgfile.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Netproto &row);// cfmt:dev.Netproto.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Noindent &row);// cfmt:dev.Noindent.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Package &row);// cfmt:dev.Package.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgdep &row);// cfmt:dev.Pkgdep.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Pkgkey &row);// cfmt:dev.Pkgkey.String
-inline algo::cstring &operator <<(algo::cstring &str, const dev::Readme &row);// cfmt:dev.Readme.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Prototransport &row);// cfmt:dev.Prototransport.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Readmefile &row);// cfmt:dev.Readmefile.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Readmesort &row);// cfmt:dev.Readmesort.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Rpm &row);// cfmt:dev.Rpm.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sandbox &row);// cfmt:dev.Sandbox.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Sbpath &row);// cfmt:dev.Sbpath.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Scriptfile &row);// cfmt:dev.Scriptfile.String
@@ -1629,6 +1746,7 @@ inline algo::cstring &operator <<(algo::cstring &str, const dev::Targsyslib &row
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Tgtcov &row);// cfmt:dev.Tgtcov.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Timefmt &row);// cfmt:dev.Timefmt.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::ToolOpt &row);// cfmt:dev.ToolOpt.String
+inline algo::cstring &operator <<(algo::cstring &str, const dev::Transport &row);// cfmt:dev.Transport.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Uname &row);// cfmt:dev.Uname.String
 inline algo::cstring &operator <<(algo::cstring &str, const dev::Unstablefld &row);// cfmt:dev.Unstablefld.String
 }

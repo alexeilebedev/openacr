@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -34,7 +34,8 @@ namespace lib_exec { // update-hdr
     // -------------------------------------------------------------------
     // cpp/lib/lib_exec.cpp
     //
-    i64 execkey_Get(lib_exec::FSyscmd &cmd);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // i64 execkey_Get(lib_exec::FSyscmd &cmd);
 
     // Spawn process associated with command.
     // If the command was started successfully, its pid can be

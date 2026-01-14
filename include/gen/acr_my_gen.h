@@ -117,6 +117,11 @@ algo::cstring&       ary_ns_AllocAt(int at) __attribute__((__warn_unused_result_
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:acr_my.FDb.ary_ns.AllocN
 algo::aryptr<algo::cstring> ary_ns_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:acr_my.FDb.ary_ns.AllocNAt
+algo::aryptr<algo::cstring> ary_ns_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:acr_my.FDb.ary_ns.EmptyQ
 inline bool          ary_ns_EmptyQ() __attribute__((nothrow));
@@ -166,6 +171,10 @@ algo::aryptr<algo::cstring> ary_ns_AllocNVal(int n_elems, const algo::cstring& v
 // Function returns success value.
 // func:acr_my.FDb.ary_ns.ReadStrptrMaybe
 bool                 ary_ns_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:acr_my.FDb.ary_ns.Insary
+void                 ary_ns_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Read argc,argv directly into the fields of the command line(s)
 // The following fields are updated:

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -41,6 +41,7 @@ amc::FCfmt *amc::FindStringRead(amc::FCtype &ctype) {
 // Generate Dispatch_Read function
 void amc::Disp_Read(amc::FDispatch &disp) {
     algo_lib::Replscope R;
+    R.strict=2;
     Set(R, "$Dname", name_Get(disp));
     Set(R, "$Disp", disp.dispatch);
     Set(R, "$ns", ns_Get(disp));
@@ -49,12 +50,18 @@ void amc::Disp_Read(amc::FDispatch &disp) {
     Set(R, "$Casetype", disp.p_casetype->cpp_type);
     Set(R, "$casetypefld", strptr(name_Get(typefld)));
     Set(R, "$caseenumprefix", (tempstr() << ns_Get(casetype) << "_"<< name_Get(casetype)));
+    Set(R, "$Hdrtype", disp.p_ctype_hdr ? amc::NsToCpp(disp.p_ctype_hdr->ctype) : tempstr());
 
     amc::FFunc &func = amc::ind_func_GetOrCreate(Subst(R, "$Disp..ReadStrptr"));
     func.ret = Subst(R,"$Casetype");
     func.glob = true;
     Ins(&R, func.comment, "Parse ascii representation of message into binary, appending new data to BUF.");
-    Ins(&R, func.proto, "$Dname_ReadStrptr(algo::strptr str, algo::ByteAry &buf)", false);
+    if (disp.dyn) {
+        Ins(&R, func.proto, "$Dname_ReadStrptr(algo::strptr str, $Hdrtype **msg)", false);
+        Ins(&R, func.body        , "*msg = NULL;");
+    } else {
+        Ins(&R, func.proto, "$Dname_ReadStrptr(algo::strptr str, algo::ByteAry &buf)", false);
+    }
     Ins(&R, func.body            , "bool ok = false;");
     Ins(&R, func.body            , "tempstr msgtype_str;");
     Ins(&R, func.body            , "algo::StringIter iter(str);");
@@ -80,24 +87,34 @@ void amc::Disp_Read(amc::FDispatch &disp) {
         if (!cfmt) {
             Ins(&R, func.body        , "    // no cfmt read:Y found -- cannot read");
         } else if (cfmt->printfmt == dmmeta_Printfmt_printfmt_Tuple || cfmt->printfmt == dmmeta_Printfmt_printfmt_Extern) {
-            Ins(&R, func.body        , "    int len = sizeof($Ctype);");
-            Ins(&R, func.body        , "    $Ctype *ctype = new(ary_AllocN(buf, len).elems) $Ctype; // default values");
-            if (is_varlen) {
-                Ins(&R, func.body    , "    algo::ByteAry varlenbuf;");
-                Ins(&R, func.body    , "    algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;");
-                Ins(&R, func.body    , "    algo_lib::_db.varlenbuf = &varlenbuf;");
-            }
-            Ins(&R, func.body        , "    ok = $Msgname_ReadStrptrMaybe(*ctype, str); // now read attributes");
-            if (is_varlen) {
-                Ins(&R, func.body    , "    len += ary_N(varlenbuf);");
-            }
-            if (is_varlen && lenfld) {// for non-varlen, length is already valid
-                Set(R, "$assignlen", AssignExpr(*lenfld->p_field, "*ctype", lenassign, true));
-                Ins(&R, func.body    , "    $assignlen;");
-            }
-            if (is_varlen) {
-                Ins(&R, func.body    , "    ary_Addary(buf, ary_Getary(varlenbuf));");
-                Ins(&R, func.body    , "    algo_lib::_db.varlenbuf = varlenbuf_save;");
+            if (disp.dyn) {
+                Ins(&R, func.body    , "    $Ctype *ctype = new $Ctype; // default values");
+                Ins(&R, func.body    , "    ok = $Msgname_ReadStrptrMaybe(*ctype, str); // now read attributes");
+                Ins(&R, func.body    , "    if (ok) {");
+                Ins(&R, func.body    , "        *msg = &Castbase(*ctype);");
+                Ins(&R, func.body    , "    } else {");
+                Ins(&R, func.body    , "        delete ctype;");
+                Ins(&R, func.body    , "    }");
+            } else {
+                Ins(&R, func.body        , "    int len = sizeof($Ctype);");
+                Ins(&R, func.body        , "    $Ctype *ctype = new(ary_AllocN(buf, len).elems) $Ctype; // default values");
+                if (is_varlen) {
+                    Ins(&R, func.body    , "    algo::ByteAry varlenbuf;");
+                    Ins(&R, func.body    , "    algo::ByteAry *varlenbuf_save = algo_lib::_db.varlenbuf;");
+                    Ins(&R, func.body    , "    algo_lib::_db.varlenbuf = &varlenbuf;");
+                }
+                Ins(&R, func.body        , "    ok = $Msgname_ReadStrptrMaybe(*ctype, str); // now read attributes");
+                if (is_varlen) {
+                    Ins(&R, func.body    , "    len += ary_N(varlenbuf);");
+                }
+                if (is_varlen && lenfld) {// for non-varlen, length is already valid
+                    Set(R, "$assignlen", AssignExpr(*lenfld->p_field, "*ctype", lenassign, true));
+                    Ins(&R, func.body    , "    $assignlen;");
+                }
+                if (is_varlen) {
+                    Ins(&R, func.body    , "    ary_Addary(buf, ary_Getary(varlenbuf));");
+                    Ins(&R, func.body    , "    algo_lib::_db.varlenbuf = varlenbuf_save;");
+                }
             }
         } else {
             prerr("amc.bad_dispatch_read"
@@ -110,7 +127,9 @@ void amc::Disp_Read(amc::FDispatch &disp) {
     }ind_end;
     Ins(&R, func.body            , "default: break;");
     Ins(&R, func.body            , "}");
-    MaybeUnused(func,"buf");
+    if (!disp.dyn) {
+        MaybeUnused(func,"buf");
+    }
     Ins(&R, func.body            , "return ok ? msgtype : $Casetype();");
 
     //---
@@ -118,7 +137,12 @@ void amc::Disp_Read(amc::FDispatch &disp) {
     read.ret = Subst(R,"bool");
     read.glob = true;
     Ins(&R, read.comment, "Parse ascii representation of message into binary, appending new data to BUF.");
-    Ins(&R, read.proto, "$Dname_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf)", false);
-    Ins(&R, read.body            , "$Casetype msgtype = $Dname_ReadStrptr(str,buf);");
+    if (disp.dyn) {
+        Ins(&R, read.proto, "$Dname_ReadStrptrMaybe(algo::strptr str, $Hdrtype **msg)", false);
+        Ins(&R, read.body            , "$Casetype msgtype = $Dname_ReadStrptr(str,msg);");
+    } else {
+        Ins(&R, read.proto, "$Dname_ReadStrptrMaybe(algo::strptr str, algo::ByteAry &buf)", false);
+        Ins(&R, read.body            , "$Casetype msgtype = $Dname_ReadStrptr(str,buf);");
+    }
     Ins(&R, read.body            , "return !(msgtype == $Casetype());");
 }

@@ -41,8 +41,8 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
-algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
+algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 gcli::FDb       gcli::_db;        // dependency found via dev.targdep
 
 namespace gcli {
@@ -53,7 +53,7 @@ const char *gcli_help =
 "    -in                        string  \"data\"     Input directory or filename, - for stdin\n"
 "    [selector]                 string  \"issue:%\"  table:key, where table is issue,repo,mr, etc. and key is a regex.\n"
 "    [fields]...                string             additional key:value pairs for use with -create, -list, -update\n"
-"    -accept                                       (action) accept a slected merge request\n"
+"    -accept                                       (action) accept a selected merge request\n"
 "    -start                                        (action) start working on a selected issue\n"
 "    -list                                         (action) show selected table\n"
 "    -create                                       (action) create a table record(s)\n"
@@ -67,8 +67,8 @@ const char *gcli_help =
 "    -dry_run                                      Print actions, do not perform\n"
 "    -gitdir                    string  \"\"         (setup) Change directory of git repository\n"
 "    -show_gitlab_system_notes                     (misc) Show issue and mr notes created by gitlab\n"
-"    -verbose                   int                Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug                     int                Debug level (0..255); alias -d; cumulative\n"
+"    -verbose                   flag               Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug                     flag               Debug level (0..255); alias -d; cumulative\n"
 "    -help                                         Print help and exit; alias -h\n"
 "    -version                                      Print version and exit\n"
 "    -signature                                    Show signatures and exit; alias -sig\n"
@@ -82,10 +82,6 @@ namespace gcli { // gen:ns_print_proto
     static void          InitReflection();
     // func:gcli.FDb.gtype.InputMaybe
     static bool          gtype_InputMaybe(gclidb::Gtype &elem) __attribute__((nothrow));
-    // func:gcli.FDb.grepossh.InputMaybe
-    static bool          grepossh_InputMaybe(gclidb::Grepossh &elem) __attribute__((nothrow));
-    // func:gcli.FDb.grepogitport.InputMaybe
-    static bool          grepogitport_InputMaybe(gclidb::Grepogitport &elem) __attribute__((nothrow));
     // func:gcli.FDb.gstatet.InputMaybe
     static bool          gstatet_InputMaybe(gclidb::Gstatet &elem) __attribute__((nothrow));
     // func:gcli.FDb.gmethod.InputMaybe
@@ -217,9 +213,8 @@ void gcli::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "gcli: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -262,6 +257,9 @@ void gcli::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:gcli.FDb.cmdline
@@ -273,7 +271,7 @@ void gcli::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -318,7 +316,7 @@ static void gcli::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'gcli.Input'  signature:'11a9aa9a5e538f546927ef1802bd464c4e5842b9'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'gcli.Input'  signature:'582f69151ea05d2c1b5eb2e745d7211a5c87c417'");
 }
 
 // --- gcli.FDb._db.InsertStrptrMaybe
@@ -333,18 +331,6 @@ bool gcli::InsertStrptrMaybe(algo::strptr str) {
             gclidb::Gtype elem;
             retval = gclidb::Gtype_ReadStrptrMaybe(elem, str);
             retval = retval && gtype_InputMaybe(elem);
-            break;
-        }
-        case gcli_TableId_gclidb_Grepossh: { // finput:gcli.FDb.grepossh
-            gclidb::Grepossh elem;
-            retval = gclidb::Grepossh_ReadStrptrMaybe(elem, str);
-            retval = retval && grepossh_InputMaybe(elem);
-            break;
-        }
-        case gcli_TableId_gclidb_Grepogitport: { // finput:gcli.FDb.grepogitport
-            gclidb::Grepogitport elem;
-            retval = gclidb::Grepogitport_ReadStrptrMaybe(elem, str);
-            retval = retval && grepogitport_InputMaybe(elem);
             break;
         }
         case gcli_TableId_gclidb_Gstatet: { // finput:gcli.FDb.gstatet
@@ -439,16 +425,14 @@ bool gcli::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gfld"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gtblactfld"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gstatet"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepossh"),recursive);
-        retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepogitport"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.grepo"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gmethod"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclicmdt"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"gclidb.gclicmdf2j"),recursive);
         retval = retval && gcli::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -617,220 +601,6 @@ bool gcli::gtype_XrefMaybe(gcli::FGtype &row) {
         if (UNLIKELY(!success)) {
             ch_RemoveAll(algo_lib::_db.errtext);
             algo_lib::_db.errtext << "gcli.duplicate_key  xref:gcli.FDb.ind_gtype"; // check for duplicate key
-            return false;
-        }
-    }
-    return retval;
-}
-
-// --- gcli.FDb.grepossh.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-gcli::FGrepossh& gcli::grepossh_Alloc() {
-    gcli::FGrepossh* row = grepossh_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.grepossh  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- gcli.FDb.grepossh.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-gcli::FGrepossh* gcli::grepossh_AllocMaybe() {
-    gcli::FGrepossh *row = (gcli::FGrepossh*)grepossh_AllocMem();
-    if (row) {
-        new (row) gcli::FGrepossh; // call constructor
-    }
-    return row;
-}
-
-// --- gcli.FDb.grepossh.InsertMaybe
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGrepossh* gcli::grepossh_InsertMaybe(const gclidb::Grepossh &value) {
-    gcli::FGrepossh *row = &grepossh_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    grepossh_CopyIn(*row,const_cast<gclidb::Grepossh&>(value));
-    bool ok = grepossh_XrefMaybe(*row); // this may return false
-    if (!ok) {
-        grepossh_RemoveLast(); // delete offending row, any existing xrefs are cleared
-        row = NULL; // forget this ever happened
-    }
-    return row;
-}
-
-// --- gcli.FDb.grepossh.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* gcli::grepossh_AllocMem() {
-    u64 new_nelems     = _db.grepossh_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    gcli::FGrepossh*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.grepossh_lary[bsr];
-        if (!lev) {
-            lev=(gcli::FGrepossh*)algo_lib::malloc_AllocMem(sizeof(gcli::FGrepossh) * (u64(1)<<bsr));
-            _db.grepossh_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.grepossh_n = i32(new_nelems);
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- gcli.FDb.grepossh.RemoveAll
-// Remove all elements from Lary
-void gcli::grepossh_RemoveAll() {
-    for (u64 n = _db.grepossh_n; n>0; ) {
-        n--;
-        grepossh_qFind(u64(n)).~FGrepossh(); // destroy last element
-        _db.grepossh_n = i32(n);
-    }
-}
-
-// --- gcli.FDb.grepossh.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void gcli::grepossh_RemoveLast() {
-    u64 n = _db.grepossh_n;
-    if (n > 0) {
-        n -= 1;
-        grepossh_qFind(u64(n)).~FGrepossh();
-        _db.grepossh_n = i32(n);
-    }
-}
-
-// --- gcli.FDb.grepossh.InputMaybe
-static bool gcli::grepossh_InputMaybe(gclidb::Grepossh &elem) {
-    bool retval = true;
-    retval = grepossh_InsertMaybe(elem) != nullptr;
-    return retval;
-}
-
-// --- gcli.FDb.grepossh.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool gcli::grepossh_XrefMaybe(gcli::FGrepossh &row) {
-    bool retval = true;
-    (void)row;
-    // insert grepossh into index ind_grepossh
-    if (true) { // user-defined insert condition
-        bool success = ind_grepossh_InsertMaybe(row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "gcli.duplicate_key  xref:gcli.FDb.ind_grepossh"; // check for duplicate key
-            return false;
-        }
-    }
-    return retval;
-}
-
-// --- gcli.FDb.grepogitport.Alloc
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-gcli::FGrepogitport& gcli::grepogitport_Alloc() {
-    gcli::FGrepogitport* row = grepogitport_AllocMaybe();
-    if (UNLIKELY(row == NULL)) {
-        FatalErrorExit("gcli.out_of_mem  field:gcli.FDb.grepogitport  comment:'Alloc failed'");
-    }
-    return *row;
-}
-
-// --- gcli.FDb.grepogitport.AllocMaybe
-// Allocate memory for new element. If out of memory, return NULL.
-gcli::FGrepogitport* gcli::grepogitport_AllocMaybe() {
-    gcli::FGrepogitport *row = (gcli::FGrepogitport*)grepogitport_AllocMem();
-    if (row) {
-        new (row) gcli::FGrepogitport; // call constructor
-    }
-    return row;
-}
-
-// --- gcli.FDb.grepogitport.InsertMaybe
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-gcli::FGrepogitport* gcli::grepogitport_InsertMaybe(const gclidb::Grepogitport &value) {
-    gcli::FGrepogitport *row = &grepogitport_Alloc(); // if out of memory, process dies. if input error, return NULL.
-    grepogitport_CopyIn(*row,const_cast<gclidb::Grepogitport&>(value));
-    bool ok = grepogitport_XrefMaybe(*row); // this may return false
-    if (!ok) {
-        grepogitport_RemoveLast(); // delete offending row, any existing xrefs are cleared
-        row = NULL; // forget this ever happened
-    }
-    return row;
-}
-
-// --- gcli.FDb.grepogitport.AllocMem
-// Allocate space for one element. If no memory available, return NULL.
-void* gcli::grepogitport_AllocMem() {
-    u64 new_nelems     = _db.grepogitport_n+1;
-    // compute level and index on level
-    u64 bsr   = algo::u64_BitScanReverse(new_nelems);
-    u64 base  = u64(1)<<bsr;
-    u64 index = new_nelems-base;
-    void *ret = NULL;
-    // if level doesn't exist yet, create it
-    gcli::FGrepogitport*  lev   = NULL;
-    if (bsr < 32) {
-        lev = _db.grepogitport_lary[bsr];
-        if (!lev) {
-            lev=(gcli::FGrepogitport*)algo_lib::malloc_AllocMem(sizeof(gcli::FGrepogitport) * (u64(1)<<bsr));
-            _db.grepogitport_lary[bsr] = lev;
-        }
-    }
-    // allocate element from this level
-    if (lev) {
-        _db.grepogitport_n = i32(new_nelems);
-        ret = lev + index;
-    }
-    return ret;
-}
-
-// --- gcli.FDb.grepogitport.RemoveAll
-// Remove all elements from Lary
-void gcli::grepogitport_RemoveAll() {
-    for (u64 n = _db.grepogitport_n; n>0; ) {
-        n--;
-        grepogitport_qFind(u64(n)).~FGrepogitport(); // destroy last element
-        _db.grepogitport_n = i32(n);
-    }
-}
-
-// --- gcli.FDb.grepogitport.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void gcli::grepogitport_RemoveLast() {
-    u64 n = _db.grepogitport_n;
-    if (n > 0) {
-        n -= 1;
-        grepogitport_qFind(u64(n)).~FGrepogitport();
-        _db.grepogitport_n = i32(n);
-    }
-}
-
-// --- gcli.FDb.grepogitport.InputMaybe
-static bool gcli::grepogitport_InputMaybe(gclidb::Grepogitport &elem) {
-    bool retval = true;
-    retval = grepogitport_InsertMaybe(elem) != nullptr;
-    return retval;
-}
-
-// --- gcli.FDb.grepogitport.XrefMaybe
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-bool gcli::grepogitport_XrefMaybe(gcli::FGrepogitport &row) {
-    bool retval = true;
-    (void)row;
-    // insert grepogitport into index ind_grepogitport
-    if (true) { // user-defined insert condition
-        bool success = ind_grepogitport_InsertMaybe(row);
-        if (UNLIKELY(!success)) {
-            ch_RemoveAll(algo_lib::_db.errtext);
-            algo_lib::_db.errtext << "gcli.duplicate_key  xref:gcli.FDb.ind_grepogitport"; // check for duplicate key
             return false;
         }
     }
@@ -1716,14 +1486,9 @@ bool gcli::gtypeh_XrefMaybe(gcli::FGtypeh &row) {
 // Find row by key. Return NULL if not found.
 gcli::FGclicmd* gcli::ind_gclicmd_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gclicmd_buckets_n - 1);
-    gcli::FGclicmd* *e = &_db.ind_gclicmd_buckets_elems[index];
-    gcli::FGclicmd* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gclicmd == key;
-        if (done) break;
-        e         = &ret->ind_gclicmd_next;
-    } while (true);
+    gcli::FGclicmd *ret = _db.ind_gclicmd_buckets_elems[index];
+    for (; ret && !((*ret).gclicmd == key); ret = ret->ind_gclicmd_next) {
+    }
     return ret;
 }
 
@@ -1755,10 +1520,11 @@ gcli::FGclicmd& gcli::ind_gclicmd_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_gclicmd.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gclicmd_InsertMaybe(gcli::FGclicmd& row) {
-    ind_gclicmd_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclicmd_next == (gcli::FGclicmd*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gclicmd) & (_db.ind_gclicmd_buckets_n - 1);
+        row.ind_gclicmd_hashval = algo::Smallstr250_Hash(0, row.gclicmd);
+        ind_gclicmd_Reserve(1);
+        u32 index = row.ind_gclicmd_hashval & (_db.ind_gclicmd_buckets_n - 1);
         gcli::FGclicmd* *prev = &_db.ind_gclicmd_buckets_elems[index];
         do {
             gcli::FGclicmd* ret = *prev;
@@ -1784,7 +1550,7 @@ bool gcli::ind_gclicmd_InsertMaybe(gcli::FGclicmd& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gclicmd_Remove(gcli::FGclicmd& row) {
     if (LIKELY(row.ind_gclicmd_next != (gcli::FGclicmd*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gclicmd) & (_db.ind_gclicmd_buckets_n - 1);
+        u32 index = row.ind_gclicmd_hashval & (_db.ind_gclicmd_buckets_n - 1);
         gcli::FGclicmd* *prev = &_db.ind_gclicmd_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGclicmd *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1801,8 +1567,14 @@ void gcli::ind_gclicmd_Remove(gcli::FGclicmd& row) {
 // --- gcli.FDb.ind_gclicmd.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gclicmd_Reserve(int n) {
+    ind_gclicmd_AbsReserve(_db.ind_gclicmd_n + n);
+}
+
+// --- gcli.FDb.ind_gclicmd.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gclicmd_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gclicmd_buckets_n;
-    u32 new_nelems   = _db.ind_gclicmd_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1821,7 +1593,7 @@ void gcli::ind_gclicmd_Reserve(int n) {
             while (elem) {
                 gcli::FGclicmd &row        = *elem;
                 gcli::FGclicmd* next       = row.ind_gclicmd_next;
-                u32 index          = algo::Smallstr250_Hash(0, row.gclicmd) & (new_nbuckets-1);
+                u32 index          = row.ind_gclicmd_hashval & (new_nbuckets-1);
                 row.ind_gclicmd_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1838,14 +1610,9 @@ void gcli::ind_gclicmd_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 gcli::FGclicmdf* gcli::ind_gclicmdf_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gclicmdf_buckets_n - 1);
-    gcli::FGclicmdf* *e = &_db.ind_gclicmdf_buckets_elems[index];
-    gcli::FGclicmdf* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gclicmdf == key;
-        if (done) break;
-        e         = &ret->ind_gclicmdf_next;
-    } while (true);
+    gcli::FGclicmdf *ret = _db.ind_gclicmdf_buckets_elems[index];
+    for (; ret && !((*ret).gclicmdf == key); ret = ret->ind_gclicmdf_next) {
+    }
     return ret;
 }
 
@@ -1877,10 +1644,11 @@ gcli::FGclicmdf& gcli::ind_gclicmdf_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_gclicmdf.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gclicmdf_InsertMaybe(gcli::FGclicmdf& row) {
-    ind_gclicmdf_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclicmdf_next == (gcli::FGclicmdf*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gclicmdf) & (_db.ind_gclicmdf_buckets_n - 1);
+        row.ind_gclicmdf_hashval = algo::Smallstr250_Hash(0, row.gclicmdf);
+        ind_gclicmdf_Reserve(1);
+        u32 index = row.ind_gclicmdf_hashval & (_db.ind_gclicmdf_buckets_n - 1);
         gcli::FGclicmdf* *prev = &_db.ind_gclicmdf_buckets_elems[index];
         do {
             gcli::FGclicmdf* ret = *prev;
@@ -1906,7 +1674,7 @@ bool gcli::ind_gclicmdf_InsertMaybe(gcli::FGclicmdf& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gclicmdf_Remove(gcli::FGclicmdf& row) {
     if (LIKELY(row.ind_gclicmdf_next != (gcli::FGclicmdf*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gclicmdf) & (_db.ind_gclicmdf_buckets_n - 1);
+        u32 index = row.ind_gclicmdf_hashval & (_db.ind_gclicmdf_buckets_n - 1);
         gcli::FGclicmdf* *prev = &_db.ind_gclicmdf_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGclicmdf *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1923,8 +1691,14 @@ void gcli::ind_gclicmdf_Remove(gcli::FGclicmdf& row) {
 // --- gcli.FDb.ind_gclicmdf.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gclicmdf_Reserve(int n) {
+    ind_gclicmdf_AbsReserve(_db.ind_gclicmdf_n + n);
+}
+
+// --- gcli.FDb.ind_gclicmdf.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gclicmdf_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gclicmdf_buckets_n;
-    u32 new_nelems   = _db.ind_gclicmdf_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1943,7 +1717,7 @@ void gcli::ind_gclicmdf_Reserve(int n) {
             while (elem) {
                 gcli::FGclicmdf &row        = *elem;
                 gcli::FGclicmdf* next       = row.ind_gclicmdf_next;
-                u32 index          = algo::Smallstr250_Hash(0, row.gclicmdf) & (new_nbuckets-1);
+                u32 index          = row.ind_gclicmdf_hashval & (new_nbuckets-1);
                 row.ind_gclicmdf_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1960,14 +1734,9 @@ void gcli::ind_gclicmdf_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 gcli::FGclicmdt* gcli::ind_gclicmdt_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gclicmdt_buckets_n - 1);
-    gcli::FGclicmdt* *e = &_db.ind_gclicmdt_buckets_elems[index];
-    gcli::FGclicmdt* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gclicmdt == key;
-        if (done) break;
-        e         = &ret->ind_gclicmdt_next;
-    } while (true);
+    gcli::FGclicmdt *ret = _db.ind_gclicmdt_buckets_elems[index];
+    for (; ret && !((*ret).gclicmdt == key); ret = ret->ind_gclicmdt_next) {
+    }
     return ret;
 }
 
@@ -1982,10 +1751,11 @@ gcli::FGclicmdt& gcli::ind_gclicmdt_FindX(const algo::strptr& key) {
 // --- gcli.FDb.ind_gclicmdt.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gclicmdt_InsertMaybe(gcli::FGclicmdt& row) {
-    ind_gclicmdt_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclicmdt_next == (gcli::FGclicmdt*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gclicmdt) & (_db.ind_gclicmdt_buckets_n - 1);
+        row.ind_gclicmdt_hashval = algo::Smallstr250_Hash(0, row.gclicmdt);
+        ind_gclicmdt_Reserve(1);
+        u32 index = row.ind_gclicmdt_hashval & (_db.ind_gclicmdt_buckets_n - 1);
         gcli::FGclicmdt* *prev = &_db.ind_gclicmdt_buckets_elems[index];
         do {
             gcli::FGclicmdt* ret = *prev;
@@ -2011,7 +1781,7 @@ bool gcli::ind_gclicmdt_InsertMaybe(gcli::FGclicmdt& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gclicmdt_Remove(gcli::FGclicmdt& row) {
     if (LIKELY(row.ind_gclicmdt_next != (gcli::FGclicmdt*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gclicmdt) & (_db.ind_gclicmdt_buckets_n - 1);
+        u32 index = row.ind_gclicmdt_hashval & (_db.ind_gclicmdt_buckets_n - 1);
         gcli::FGclicmdt* *prev = &_db.ind_gclicmdt_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGclicmdt *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2028,8 +1798,14 @@ void gcli::ind_gclicmdt_Remove(gcli::FGclicmdt& row) {
 // --- gcli.FDb.ind_gclicmdt.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gclicmdt_Reserve(int n) {
+    ind_gclicmdt_AbsReserve(_db.ind_gclicmdt_n + n);
+}
+
+// --- gcli.FDb.ind_gclicmdt.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gclicmdt_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gclicmdt_buckets_n;
-    u32 new_nelems   = _db.ind_gclicmdt_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2048,7 +1824,7 @@ void gcli::ind_gclicmdt_Reserve(int n) {
             while (elem) {
                 gcli::FGclicmdt &row        = *elem;
                 gcli::FGclicmdt* next       = row.ind_gclicmdt_next;
-                u32 index          = algo::Smallstr250_Hash(0, row.gclicmdt) & (new_nbuckets-1);
+                u32 index          = row.ind_gclicmdt_hashval & (new_nbuckets-1);
                 row.ind_gclicmdt_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2065,14 +1841,9 @@ void gcli::ind_gclicmdt_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 gcli::FGmethod* gcli::ind_gmethod_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gmethod_buckets_n - 1);
-    gcli::FGmethod* *e = &_db.ind_gmethod_buckets_elems[index];
-    gcli::FGmethod* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gmethod == key;
-        if (done) break;
-        e         = &ret->ind_gmethod_next;
-    } while (true);
+    gcli::FGmethod *ret = _db.ind_gmethod_buckets_elems[index];
+    for (; ret && !((*ret).gmethod == key); ret = ret->ind_gmethod_next) {
+    }
     return ret;
 }
 
@@ -2104,10 +1875,11 @@ gcli::FGmethod& gcli::ind_gmethod_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_gmethod.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gmethod_InsertMaybe(gcli::FGmethod& row) {
-    ind_gmethod_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gmethod_next == (gcli::FGmethod*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gmethod) & (_db.ind_gmethod_buckets_n - 1);
+        row.ind_gmethod_hashval = algo::Smallstr50_Hash(0, row.gmethod);
+        ind_gmethod_Reserve(1);
+        u32 index = row.ind_gmethod_hashval & (_db.ind_gmethod_buckets_n - 1);
         gcli::FGmethod* *prev = &_db.ind_gmethod_buckets_elems[index];
         do {
             gcli::FGmethod* ret = *prev;
@@ -2133,7 +1905,7 @@ bool gcli::ind_gmethod_InsertMaybe(gcli::FGmethod& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gmethod_Remove(gcli::FGmethod& row) {
     if (LIKELY(row.ind_gmethod_next != (gcli::FGmethod*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gmethod) & (_db.ind_gmethod_buckets_n - 1);
+        u32 index = row.ind_gmethod_hashval & (_db.ind_gmethod_buckets_n - 1);
         gcli::FGmethod* *prev = &_db.ind_gmethod_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGmethod *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2150,8 +1922,14 @@ void gcli::ind_gmethod_Remove(gcli::FGmethod& row) {
 // --- gcli.FDb.ind_gmethod.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gmethod_Reserve(int n) {
+    ind_gmethod_AbsReserve(_db.ind_gmethod_n + n);
+}
+
+// --- gcli.FDb.ind_gmethod.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gmethod_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gmethod_buckets_n;
-    u32 new_nelems   = _db.ind_gmethod_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2170,7 +1948,7 @@ void gcli::ind_gmethod_Reserve(int n) {
             while (elem) {
                 gcli::FGmethod &row        = *elem;
                 gcli::FGmethod* next       = row.ind_gmethod_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.gmethod) & (new_nbuckets-1);
+                u32 index          = row.ind_gmethod_hashval & (new_nbuckets-1);
                 row.ind_gmethod_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2187,14 +1965,9 @@ void gcli::ind_gmethod_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 gcli::FGrepo* gcli::ind_grepo_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_grepo_buckets_n - 1);
-    gcli::FGrepo* *e = &_db.ind_grepo_buckets_elems[index];
-    gcli::FGrepo* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).grepo == key;
-        if (done) break;
-        e         = &ret->ind_grepo_next;
-    } while (true);
+    gcli::FGrepo *ret = _db.ind_grepo_buckets_elems[index];
+    for (; ret && !((*ret).grepo == key); ret = ret->ind_grepo_next) {
+    }
     return ret;
 }
 
@@ -2226,10 +1999,11 @@ gcli::FGrepo& gcli::ind_grepo_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_grepo.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_grepo_InsertMaybe(gcli::FGrepo& row) {
-    ind_grepo_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_grepo_next == (gcli::FGrepo*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.grepo) & (_db.ind_grepo_buckets_n - 1);
+        row.ind_grepo_hashval = algo::Smallstr250_Hash(0, row.grepo);
+        ind_grepo_Reserve(1);
+        u32 index = row.ind_grepo_hashval & (_db.ind_grepo_buckets_n - 1);
         gcli::FGrepo* *prev = &_db.ind_grepo_buckets_elems[index];
         do {
             gcli::FGrepo* ret = *prev;
@@ -2255,7 +2029,7 @@ bool gcli::ind_grepo_InsertMaybe(gcli::FGrepo& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_grepo_Remove(gcli::FGrepo& row) {
     if (LIKELY(row.ind_grepo_next != (gcli::FGrepo*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.grepo) & (_db.ind_grepo_buckets_n - 1);
+        u32 index = row.ind_grepo_hashval & (_db.ind_grepo_buckets_n - 1);
         gcli::FGrepo* *prev = &_db.ind_grepo_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGrepo *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2272,8 +2046,14 @@ void gcli::ind_grepo_Remove(gcli::FGrepo& row) {
 // --- gcli.FDb.ind_grepo.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_grepo_Reserve(int n) {
+    ind_grepo_AbsReserve(_db.ind_grepo_n + n);
+}
+
+// --- gcli.FDb.ind_grepo.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_grepo_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_grepo_buckets_n;
-    u32 new_nelems   = _db.ind_grepo_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2292,7 +2072,7 @@ void gcli::ind_grepo_Reserve(int n) {
             while (elem) {
                 gcli::FGrepo &row        = *elem;
                 gcli::FGrepo* next       = row.ind_grepo_next;
-                u32 index          = algo::Smallstr250_Hash(0, row.grepo) & (new_nbuckets-1);
+                u32 index          = row.ind_grepo_hashval & (new_nbuckets-1);
                 row.ind_grepo_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2309,14 +2089,9 @@ void gcli::ind_grepo_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 gcli::FIssue* gcli::ind_issue_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_issue_buckets_n - 1);
-    gcli::FIssue* *e = &_db.ind_issue_buckets_elems[index];
-    gcli::FIssue* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).issue == key;
-        if (done) break;
-        e         = &ret->ind_issue_next;
-    } while (true);
+    gcli::FIssue *ret = _db.ind_issue_buckets_elems[index];
+    for (; ret && !((*ret).issue == key); ret = ret->ind_issue_next) {
+    }
     return ret;
 }
 
@@ -2348,10 +2123,11 @@ gcli::FIssue& gcli::ind_issue_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_issue.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_issue_InsertMaybe(gcli::FIssue& row) {
-    ind_issue_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_issue_next == (gcli::FIssue*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.issue) & (_db.ind_issue_buckets_n - 1);
+        row.ind_issue_hashval = algo::Smallstr50_Hash(0, row.issue);
+        ind_issue_Reserve(1);
+        u32 index = row.ind_issue_hashval & (_db.ind_issue_buckets_n - 1);
         gcli::FIssue* *prev = &_db.ind_issue_buckets_elems[index];
         do {
             gcli::FIssue* ret = *prev;
@@ -2377,7 +2153,7 @@ bool gcli::ind_issue_InsertMaybe(gcli::FIssue& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_issue_Remove(gcli::FIssue& row) {
     if (LIKELY(row.ind_issue_next != (gcli::FIssue*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.issue) & (_db.ind_issue_buckets_n - 1);
+        u32 index = row.ind_issue_hashval & (_db.ind_issue_buckets_n - 1);
         gcli::FIssue* *prev = &_db.ind_issue_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FIssue *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2394,8 +2170,14 @@ void gcli::ind_issue_Remove(gcli::FIssue& row) {
 // --- gcli.FDb.ind_issue.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_issue_Reserve(int n) {
+    ind_issue_AbsReserve(_db.ind_issue_n + n);
+}
+
+// --- gcli.FDb.ind_issue.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_issue_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_issue_buckets_n;
-    u32 new_nelems   = _db.ind_issue_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2414,7 +2196,7 @@ void gcli::ind_issue_Reserve(int n) {
             while (elem) {
                 gcli::FIssue &row        = *elem;
                 gcli::FIssue* next       = row.ind_issue_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.issue) & (new_nbuckets-1);
+                u32 index          = row.ind_issue_hashval & (new_nbuckets-1);
                 row.ind_issue_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2437,14 +2219,9 @@ void gcli::regx_repo_Print(algo::cstring &out) {
 // Find row by key. Return NULL if not found.
 gcli::FGstatet* gcli::ind_gstatet_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gstatet_buckets_n - 1);
-    gcli::FGstatet* *e = &_db.ind_gstatet_buckets_elems[index];
-    gcli::FGstatet* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gstatet == key;
-        if (done) break;
-        e         = &ret->ind_gstatet_next;
-    } while (true);
+    gcli::FGstatet *ret = _db.ind_gstatet_buckets_elems[index];
+    for (; ret && !((*ret).gstatet == key); ret = ret->ind_gstatet_next) {
+    }
     return ret;
 }
 
@@ -2476,10 +2253,11 @@ gcli::FGstatet& gcli::ind_gstatet_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_gstatet.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gstatet_InsertMaybe(gcli::FGstatet& row) {
-    ind_gstatet_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gstatet_next == (gcli::FGstatet*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gstatet) & (_db.ind_gstatet_buckets_n - 1);
+        row.ind_gstatet_hashval = algo::Smallstr50_Hash(0, row.gstatet);
+        ind_gstatet_Reserve(1);
+        u32 index = row.ind_gstatet_hashval & (_db.ind_gstatet_buckets_n - 1);
         gcli::FGstatet* *prev = &_db.ind_gstatet_buckets_elems[index];
         do {
             gcli::FGstatet* ret = *prev;
@@ -2505,7 +2283,7 @@ bool gcli::ind_gstatet_InsertMaybe(gcli::FGstatet& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gstatet_Remove(gcli::FGstatet& row) {
     if (LIKELY(row.ind_gstatet_next != (gcli::FGstatet*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gstatet) & (_db.ind_gstatet_buckets_n - 1);
+        u32 index = row.ind_gstatet_hashval & (_db.ind_gstatet_buckets_n - 1);
         gcli::FGstatet* *prev = &_db.ind_gstatet_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGstatet *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2522,8 +2300,14 @@ void gcli::ind_gstatet_Remove(gcli::FGstatet& row) {
 // --- gcli.FDb.ind_gstatet.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gstatet_Reserve(int n) {
+    ind_gstatet_AbsReserve(_db.ind_gstatet_n + n);
+}
+
+// --- gcli.FDb.ind_gstatet.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gstatet_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gstatet_buckets_n;
-    u32 new_nelems   = _db.ind_gstatet_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2542,7 +2326,7 @@ void gcli::ind_gstatet_Reserve(int n) {
             while (elem) {
                 gcli::FGstatet &row        = *elem;
                 gcli::FGstatet* next       = row.ind_gstatet_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.gstatet) & (new_nbuckets-1);
+                u32 index          = row.ind_gstatet_hashval & (new_nbuckets-1);
                 row.ind_gstatet_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2559,14 +2343,9 @@ void gcli::ind_gstatet_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 gcli::FGithost* gcli::ind_githost_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_githost_buckets_n - 1);
-    gcli::FGithost* *e = &_db.ind_githost_buckets_elems[index];
-    gcli::FGithost* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).githost == key;
-        if (done) break;
-        e         = &ret->ind_githost_next;
-    } while (true);
+    gcli::FGithost *ret = _db.ind_githost_buckets_elems[index];
+    for (; ret && !((*ret).githost == key); ret = ret->ind_githost_next) {
+    }
     return ret;
 }
 
@@ -2598,10 +2377,11 @@ gcli::FGithost& gcli::ind_githost_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_githost.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_githost_InsertMaybe(gcli::FGithost& row) {
-    ind_githost_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_githost_next == (gcli::FGithost*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.githost) & (_db.ind_githost_buckets_n - 1);
+        row.ind_githost_hashval = algo::Smallstr250_Hash(0, row.githost);
+        ind_githost_Reserve(1);
+        u32 index = row.ind_githost_hashval & (_db.ind_githost_buckets_n - 1);
         gcli::FGithost* *prev = &_db.ind_githost_buckets_elems[index];
         do {
             gcli::FGithost* ret = *prev;
@@ -2627,7 +2407,7 @@ bool gcli::ind_githost_InsertMaybe(gcli::FGithost& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_githost_Remove(gcli::FGithost& row) {
     if (LIKELY(row.ind_githost_next != (gcli::FGithost*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.githost) & (_db.ind_githost_buckets_n - 1);
+        u32 index = row.ind_githost_hashval & (_db.ind_githost_buckets_n - 1);
         gcli::FGithost* *prev = &_db.ind_githost_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGithost *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2644,8 +2424,14 @@ void gcli::ind_githost_Remove(gcli::FGithost& row) {
 // --- gcli.FDb.ind_githost.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_githost_Reserve(int n) {
+    ind_githost_AbsReserve(_db.ind_githost_n + n);
+}
+
+// --- gcli.FDb.ind_githost.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_githost_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_githost_buckets_n;
-    u32 new_nelems   = _db.ind_githost_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2664,7 +2450,7 @@ void gcli::ind_githost_Reserve(int n) {
             while (elem) {
                 gcli::FGithost &row        = *elem;
                 gcli::FGithost* next       = row.ind_githost_next;
-                u32 index          = algo::Smallstr250_Hash(0, row.githost) & (new_nbuckets-1);
+                u32 index          = row.ind_githost_hashval & (new_nbuckets-1);
                 row.ind_githost_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2677,262 +2463,13 @@ void gcli::ind_githost_Reserve(int n) {
     }
 }
 
-// --- gcli.FDb.ind_grepogitport.Find
-// Find row by key. Return NULL if not found.
-gcli::FGrepogitport* gcli::ind_grepogitport_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_grepogitport_buckets_n - 1);
-    gcli::FGrepogitport* *e = &_db.ind_grepogitport_buckets_elems[index];
-    gcli::FGrepogitport* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).grepogitport == key;
-        if (done) break;
-        e         = &ret->ind_grepogitport_next;
-    } while (true);
-    return ret;
-}
-
-// --- gcli.FDb.ind_grepogitport.FindX
-// Look up row by key and return reference. Throw exception if not found
-gcli::FGrepogitport& gcli::ind_grepogitport_FindX(const algo::strptr& key) {
-    gcli::FGrepogitport* ret = ind_grepogitport_Find(key);
-    vrfy(ret, tempstr() << "gcli.key_error  table:ind_grepogitport  key:'"<<key<<"'  comment:'key not found'");
-    return *ret;
-}
-
-// --- gcli.FDb.ind_grepogitport.GetOrCreate
-// Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGrepogitport& gcli::ind_grepogitport_GetOrCreate(const algo::strptr& key) {
-    gcli::FGrepogitport* ret = ind_grepogitport_Find(key);
-    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
-        ret         = &grepogitport_Alloc();
-        (*ret).grepogitport = key;
-        bool good = grepogitport_XrefMaybe(*ret);
-        if (!good) {
-            grepogitport_RemoveLast(); // delete offending row, any existing xrefs are cleared
-            ret = NULL;
-        }
-    }
-    vrfy(ret, tempstr() << "gcli.create_error  table:ind_grepogitport  key:'"<<key<<"'  comment:'bad xref'");
-    return *ret;
-}
-
-// --- gcli.FDb.ind_grepogitport.InsertMaybe
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_grepogitport_InsertMaybe(gcli::FGrepogitport& row) {
-    ind_grepogitport_Reserve(1);
-    bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_grepogitport_next == (gcli::FGrepogitport*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.grepogitport) & (_db.ind_grepogitport_buckets_n - 1);
-        gcli::FGrepogitport* *prev = &_db.ind_grepogitport_buckets_elems[index];
-        do {
-            gcli::FGrepogitport* ret = *prev;
-            if (!ret) { // exit condition 1: reached the end of the list
-                break;
-            }
-            if ((*ret).grepogitport == row.grepogitport) { // exit condition 2: found matching key
-                retval = false;
-                break;
-            }
-            prev = &ret->ind_grepogitport_next;
-        } while (true);
-        if (retval) {
-            row.ind_grepogitport_next = *prev;
-            _db.ind_grepogitport_n++;
-            *prev = &row;
-        }
-    }
-    return retval;
-}
-
-// --- gcli.FDb.ind_grepogitport.Remove
-// Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_grepogitport_Remove(gcli::FGrepogitport& row) {
-    if (LIKELY(row.ind_grepogitport_next != (gcli::FGrepogitport*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.grepogitport) & (_db.ind_grepogitport_buckets_n - 1);
-        gcli::FGrepogitport* *prev = &_db.ind_grepogitport_buckets_elems[index]; // addr of pointer to current element
-        while (gcli::FGrepogitport *next = *prev) {                          // scan the collision chain for our element
-            if (next == &row) {        // found it?
-                *prev = next->ind_grepogitport_next; // unlink (singly linked list)
-                _db.ind_grepogitport_n--;
-                row.ind_grepogitport_next = (gcli::FGrepogitport*)-1;// not-in-hash
-                break;
-            }
-            prev = &next->ind_grepogitport_next;
-        }
-    }
-}
-
-// --- gcli.FDb.ind_grepogitport.Reserve
-// Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_grepogitport_Reserve(int n) {
-    u32 old_nbuckets = _db.ind_grepogitport_buckets_n;
-    u32 new_nelems   = _db.ind_grepogitport_n + n;
-    // # of elements has to be roughly equal to the number of buckets
-    if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
-        u32 old_size = old_nbuckets * sizeof(gcli::FGrepogitport*);
-        u32 new_size = new_nbuckets * sizeof(gcli::FGrepogitport*);
-        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
-        // means new memory will have to be allocated anyway
-        gcli::FGrepogitport* *new_buckets = (gcli::FGrepogitport**)algo_lib::malloc_AllocMem(new_size);
-        if (UNLIKELY(!new_buckets)) {
-            FatalErrorExit("gcli.out_of_memory  field:gcli.FDb.ind_grepogitport");
-        }
-        memset(new_buckets, 0, new_size); // clear pointers
-        // rehash all entries
-        for (int i = 0; i < _db.ind_grepogitport_buckets_n; i++) {
-            gcli::FGrepogitport* elem = _db.ind_grepogitport_buckets_elems[i];
-            while (elem) {
-                gcli::FGrepogitport &row        = *elem;
-                gcli::FGrepogitport* next       = row.ind_grepogitport_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.grepogitport) & (new_nbuckets-1);
-                row.ind_grepogitport_next     = new_buckets[index];
-                new_buckets[index] = &row;
-                elem               = next;
-            }
-        }
-        // free old array
-        algo_lib::malloc_FreeMem(_db.ind_grepogitport_buckets_elems, old_size);
-        _db.ind_grepogitport_buckets_elems = new_buckets;
-        _db.ind_grepogitport_buckets_n = new_nbuckets;
-    }
-}
-
-// --- gcli.FDb.ind_grepossh.Find
-// Find row by key. Return NULL if not found.
-gcli::FGrepossh* gcli::ind_grepossh_Find(const algo::strptr& key) {
-    u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_grepossh_buckets_n - 1);
-    gcli::FGrepossh* *e = &_db.ind_grepossh_buckets_elems[index];
-    gcli::FGrepossh* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).grepossh == key;
-        if (done) break;
-        e         = &ret->ind_grepossh_next;
-    } while (true);
-    return ret;
-}
-
-// --- gcli.FDb.ind_grepossh.FindX
-// Look up row by key and return reference. Throw exception if not found
-gcli::FGrepossh& gcli::ind_grepossh_FindX(const algo::strptr& key) {
-    gcli::FGrepossh* ret = ind_grepossh_Find(key);
-    vrfy(ret, tempstr() << "gcli.key_error  table:ind_grepossh  key:'"<<key<<"'  comment:'key not found'");
-    return *ret;
-}
-
-// --- gcli.FDb.ind_grepossh.GetOrCreate
-// Find row by key. If not found, create and x-reference a new row with with this key.
-gcli::FGrepossh& gcli::ind_grepossh_GetOrCreate(const algo::strptr& key) {
-    gcli::FGrepossh* ret = ind_grepossh_Find(key);
-    if (!ret) { //  if memory alloc fails, process dies; if insert fails, function returns NULL.
-        ret         = &grepossh_Alloc();
-        (*ret).grepossh = key;
-        bool good = grepossh_XrefMaybe(*ret);
-        if (!good) {
-            grepossh_RemoveLast(); // delete offending row, any existing xrefs are cleared
-            ret = NULL;
-        }
-    }
-    vrfy(ret, tempstr() << "gcli.create_error  table:ind_grepossh  key:'"<<key<<"'  comment:'bad xref'");
-    return *ret;
-}
-
-// --- gcli.FDb.ind_grepossh.InsertMaybe
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-bool gcli::ind_grepossh_InsertMaybe(gcli::FGrepossh& row) {
-    ind_grepossh_Reserve(1);
-    bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_grepossh_next == (gcli::FGrepossh*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.grepossh) & (_db.ind_grepossh_buckets_n - 1);
-        gcli::FGrepossh* *prev = &_db.ind_grepossh_buckets_elems[index];
-        do {
-            gcli::FGrepossh* ret = *prev;
-            if (!ret) { // exit condition 1: reached the end of the list
-                break;
-            }
-            if ((*ret).grepossh == row.grepossh) { // exit condition 2: found matching key
-                retval = false;
-                break;
-            }
-            prev = &ret->ind_grepossh_next;
-        } while (true);
-        if (retval) {
-            row.ind_grepossh_next = *prev;
-            _db.ind_grepossh_n++;
-            *prev = &row;
-        }
-    }
-    return retval;
-}
-
-// --- gcli.FDb.ind_grepossh.Remove
-// Remove reference to element from hash index. If element is not in hash, do nothing
-void gcli::ind_grepossh_Remove(gcli::FGrepossh& row) {
-    if (LIKELY(row.ind_grepossh_next != (gcli::FGrepossh*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.grepossh) & (_db.ind_grepossh_buckets_n - 1);
-        gcli::FGrepossh* *prev = &_db.ind_grepossh_buckets_elems[index]; // addr of pointer to current element
-        while (gcli::FGrepossh *next = *prev) {                          // scan the collision chain for our element
-            if (next == &row) {        // found it?
-                *prev = next->ind_grepossh_next; // unlink (singly linked list)
-                _db.ind_grepossh_n--;
-                row.ind_grepossh_next = (gcli::FGrepossh*)-1;// not-in-hash
-                break;
-            }
-            prev = &next->ind_grepossh_next;
-        }
-    }
-}
-
-// --- gcli.FDb.ind_grepossh.Reserve
-// Reserve enough room in the hash for N more elements. Return success code.
-void gcli::ind_grepossh_Reserve(int n) {
-    u32 old_nbuckets = _db.ind_grepossh_buckets_n;
-    u32 new_nelems   = _db.ind_grepossh_n + n;
-    // # of elements has to be roughly equal to the number of buckets
-    if (new_nelems > old_nbuckets) {
-        int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
-        u32 old_size = old_nbuckets * sizeof(gcli::FGrepossh*);
-        u32 new_size = new_nbuckets * sizeof(gcli::FGrepossh*);
-        // allocate new array. we don't use Realloc since copying is not needed and factor of 2 probably
-        // means new memory will have to be allocated anyway
-        gcli::FGrepossh* *new_buckets = (gcli::FGrepossh**)algo_lib::malloc_AllocMem(new_size);
-        if (UNLIKELY(!new_buckets)) {
-            FatalErrorExit("gcli.out_of_memory  field:gcli.FDb.ind_grepossh");
-        }
-        memset(new_buckets, 0, new_size); // clear pointers
-        // rehash all entries
-        for (int i = 0; i < _db.ind_grepossh_buckets_n; i++) {
-            gcli::FGrepossh* elem = _db.ind_grepossh_buckets_elems[i];
-            while (elem) {
-                gcli::FGrepossh &row        = *elem;
-                gcli::FGrepossh* next       = row.ind_grepossh_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.grepossh) & (new_nbuckets-1);
-                row.ind_grepossh_next     = new_buckets[index];
-                new_buckets[index] = &row;
-                elem               = next;
-            }
-        }
-        // free old array
-        algo_lib::malloc_FreeMem(_db.ind_grepossh_buckets_elems, old_size);
-        _db.ind_grepossh_buckets_elems = new_buckets;
-        _db.ind_grepossh_buckets_n = new_nbuckets;
-    }
-}
-
 // --- gcli.FDb.ind_gtype.Find
 // Find row by key. Return NULL if not found.
 gcli::FGtype* gcli::ind_gtype_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gtype_buckets_n - 1);
-    gcli::FGtype* *e = &_db.ind_gtype_buckets_elems[index];
-    gcli::FGtype* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gtype == key;
-        if (done) break;
-        e         = &ret->ind_gtype_next;
-    } while (true);
+    gcli::FGtype *ret = _db.ind_gtype_buckets_elems[index];
+    for (; ret && !((*ret).gtype == key); ret = ret->ind_gtype_next) {
+    }
     return ret;
 }
 
@@ -2964,10 +2501,11 @@ gcli::FGtype& gcli::ind_gtype_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_gtype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gtype_InsertMaybe(gcli::FGtype& row) {
-    ind_gtype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gtype_next == (gcli::FGtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gtype) & (_db.ind_gtype_buckets_n - 1);
+        row.ind_gtype_hashval = algo::Smallstr50_Hash(0, row.gtype);
+        ind_gtype_Reserve(1);
+        u32 index = row.ind_gtype_hashval & (_db.ind_gtype_buckets_n - 1);
         gcli::FGtype* *prev = &_db.ind_gtype_buckets_elems[index];
         do {
             gcli::FGtype* ret = *prev;
@@ -2993,7 +2531,7 @@ bool gcli::ind_gtype_InsertMaybe(gcli::FGtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gtype_Remove(gcli::FGtype& row) {
     if (LIKELY(row.ind_gtype_next != (gcli::FGtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gtype) & (_db.ind_gtype_buckets_n - 1);
+        u32 index = row.ind_gtype_hashval & (_db.ind_gtype_buckets_n - 1);
         gcli::FGtype* *prev = &_db.ind_gtype_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3010,8 +2548,14 @@ void gcli::ind_gtype_Remove(gcli::FGtype& row) {
 // --- gcli.FDb.ind_gtype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gtype_Reserve(int n) {
+    ind_gtype_AbsReserve(_db.ind_gtype_n + n);
+}
+
+// --- gcli.FDb.ind_gtype.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gtype_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gtype_buckets_n;
-    u32 new_nelems   = _db.ind_gtype_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -3030,7 +2574,7 @@ void gcli::ind_gtype_Reserve(int n) {
             while (elem) {
                 gcli::FGtype &row        = *elem;
                 gcli::FGtype* next       = row.ind_gtype_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.gtype) & (new_nbuckets-1);
+                u32 index          = row.ind_gtype_hashval & (new_nbuckets-1);
                 row.ind_gtype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3047,15 +2591,11 @@ void gcli::ind_gtype_Reserve(int n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_gclicmd_Insert(gcli::FGclicmd& row) {
-    if (bool_Update(row._db_c_gclicmd_in_ary,true)) {
-        // reserve space
+    if (!row.c_gclicmd_in_ary) {
         c_gclicmd_Reserve(1);
-        u32 n  = _db.c_gclicmd_n;
-        u32 at = n;
-        gcli::FGclicmd* *elems = _db.c_gclicmd_elems;
-        elems[at] = &row;
-        _db.c_gclicmd_n = n+1;
-
+        u32 n  = _db.c_gclicmd_n++;
+        _db.c_gclicmd_elems[n] = &row;
+        row.c_gclicmd_in_ary = true;
     }
 }
 
@@ -3064,7 +2604,7 @@ void gcli::c_gclicmd_Insert(gcli::FGclicmd& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_gclicmd_InsertMaybe(gcli::FGclicmd& row) {
-    bool retval = !row._db_c_gclicmd_in_ary;
+    bool retval = !c_gclicmd_InAryQ(row);
     c_gclicmd_Insert(row); // check is performed in _Insert again
     return retval;
 }
@@ -3072,18 +2612,18 @@ bool gcli::c_gclicmd_InsertMaybe(gcli::FGclicmd& row) {
 // --- gcli.FDb.c_gclicmd.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_gclicmd_Remove(gcli::FGclicmd& row) {
-    if (bool_Update(row._db_c_gclicmd_in_ary,false)) {
-        int lim = _db.c_gclicmd_n;
+    int n = _db.c_gclicmd_n;
+    if (bool_Update(row.c_gclicmd_in_ary,false)) {
         gcli::FGclicmd* *elems = _db.c_gclicmd_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FGclicmd* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FGclicmd*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FGclicmd*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                _db.c_gclicmd_n = lim - 1;
+                _db.c_gclicmd_n = n - 1;
                 break;
             }
         }
@@ -3369,14 +2909,9 @@ bool gcli::gclicmdarg_XrefMaybe(gcli::FGclicmdarg &row) {
 // Find row by key. Return NULL if not found.
 gcli::FGclicmdj2f* gcli::ind_gclicmdj2f_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gclicmdj2f_buckets_n - 1);
-    gcli::FGclicmdj2f* *e = &_db.ind_gclicmdj2f_buckets_elems[index];
-    gcli::FGclicmdj2f* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gclicmdj2f == key;
-        if (done) break;
-        e         = &ret->ind_gclicmdj2f_next;
-    } while (true);
+    gcli::FGclicmdj2f *ret = _db.ind_gclicmdj2f_buckets_elems[index];
+    for (; ret && !((*ret).gclicmdj2f == key); ret = ret->ind_gclicmdj2f_next) {
+    }
     return ret;
 }
 
@@ -3408,10 +2943,11 @@ gcli::FGclicmdj2f& gcli::ind_gclicmdj2f_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_gclicmdj2f.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gclicmdj2f_InsertMaybe(gcli::FGclicmdj2f& row) {
-    ind_gclicmdj2f_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclicmdj2f_next == (gcli::FGclicmdj2f*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gclicmdj2f) & (_db.ind_gclicmdj2f_buckets_n - 1);
+        row.ind_gclicmdj2f_hashval = algo::Smallstr250_Hash(0, row.gclicmdj2f);
+        ind_gclicmdj2f_Reserve(1);
+        u32 index = row.ind_gclicmdj2f_hashval & (_db.ind_gclicmdj2f_buckets_n - 1);
         gcli::FGclicmdj2f* *prev = &_db.ind_gclicmdj2f_buckets_elems[index];
         do {
             gcli::FGclicmdj2f* ret = *prev;
@@ -3437,7 +2973,7 @@ bool gcli::ind_gclicmdj2f_InsertMaybe(gcli::FGclicmdj2f& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gclicmdj2f_Remove(gcli::FGclicmdj2f& row) {
     if (LIKELY(row.ind_gclicmdj2f_next != (gcli::FGclicmdj2f*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gclicmdj2f) & (_db.ind_gclicmdj2f_buckets_n - 1);
+        u32 index = row.ind_gclicmdj2f_hashval & (_db.ind_gclicmdj2f_buckets_n - 1);
         gcli::FGclicmdj2f* *prev = &_db.ind_gclicmdj2f_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGclicmdj2f *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3454,8 +2990,14 @@ void gcli::ind_gclicmdj2f_Remove(gcli::FGclicmdj2f& row) {
 // --- gcli.FDb.ind_gclicmdj2f.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gclicmdj2f_Reserve(int n) {
+    ind_gclicmdj2f_AbsReserve(_db.ind_gclicmdj2f_n + n);
+}
+
+// --- gcli.FDb.ind_gclicmdj2f.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gclicmdj2f_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gclicmdj2f_buckets_n;
-    u32 new_nelems   = _db.ind_gclicmdj2f_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -3474,7 +3016,7 @@ void gcli::ind_gclicmdj2f_Reserve(int n) {
             while (elem) {
                 gcli::FGclicmdj2f &row        = *elem;
                 gcli::FGclicmdj2f* next       = row.ind_gclicmdj2f_next;
-                u32 index          = algo::Smallstr250_Hash(0, row.gclicmdj2f) & (new_nbuckets-1);
+                u32 index          = row.ind_gclicmdj2f_hashval & (new_nbuckets-1);
                 row.ind_gclicmdj2f_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3491,14 +3033,9 @@ void gcli::ind_gclicmdj2f_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 gcli::FGclicmdarg* gcli::ind_gclicmdarg_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gclicmdarg_buckets_n - 1);
-    gcli::FGclicmdarg* *e = &_db.ind_gclicmdarg_buckets_elems[index];
-    gcli::FGclicmdarg* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gclicmdarg == key;
-        if (done) break;
-        e         = &ret->ind_gclicmdarg_next;
-    } while (true);
+    gcli::FGclicmdarg *ret = _db.ind_gclicmdarg_buckets_elems[index];
+    for (; ret && !((*ret).gclicmdarg == key); ret = ret->ind_gclicmdarg_next) {
+    }
     return ret;
 }
 
@@ -3530,10 +3067,11 @@ gcli::FGclicmdarg& gcli::ind_gclicmdarg_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_gclicmdarg.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gclicmdarg_InsertMaybe(gcli::FGclicmdarg& row) {
-    ind_gclicmdarg_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclicmdarg_next == (gcli::FGclicmdarg*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gclicmdarg) & (_db.ind_gclicmdarg_buckets_n - 1);
+        row.ind_gclicmdarg_hashval = algo::Smallstr250_Hash(0, row.gclicmdarg);
+        ind_gclicmdarg_Reserve(1);
+        u32 index = row.ind_gclicmdarg_hashval & (_db.ind_gclicmdarg_buckets_n - 1);
         gcli::FGclicmdarg* *prev = &_db.ind_gclicmdarg_buckets_elems[index];
         do {
             gcli::FGclicmdarg* ret = *prev;
@@ -3559,7 +3097,7 @@ bool gcli::ind_gclicmdarg_InsertMaybe(gcli::FGclicmdarg& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gclicmdarg_Remove(gcli::FGclicmdarg& row) {
     if (LIKELY(row.ind_gclicmdarg_next != (gcli::FGclicmdarg*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gclicmdarg) & (_db.ind_gclicmdarg_buckets_n - 1);
+        u32 index = row.ind_gclicmdarg_hashval & (_db.ind_gclicmdarg_buckets_n - 1);
         gcli::FGclicmdarg* *prev = &_db.ind_gclicmdarg_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGclicmdarg *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3576,8 +3114,14 @@ void gcli::ind_gclicmdarg_Remove(gcli::FGclicmdarg& row) {
 // --- gcli.FDb.ind_gclicmdarg.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gclicmdarg_Reserve(int n) {
+    ind_gclicmdarg_AbsReserve(_db.ind_gclicmdarg_n + n);
+}
+
+// --- gcli.FDb.ind_gclicmdarg.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gclicmdarg_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gclicmdarg_buckets_n;
-    u32 new_nelems   = _db.ind_gclicmdarg_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -3596,7 +3140,7 @@ void gcli::ind_gclicmdarg_Reserve(int n) {
             while (elem) {
                 gcli::FGclicmdarg &row        = *elem;
                 gcli::FGclicmdarg* next       = row.ind_gclicmdarg_next;
-                u32 index          = algo::Smallstr250_Hash(0, row.gclicmdarg) & (new_nbuckets-1);
+                u32 index          = row.ind_gclicmdarg_hashval & (new_nbuckets-1);
                 row.ind_gclicmdarg_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3613,14 +3157,9 @@ void gcli::ind_gclicmdarg_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 gcli::FGclicmdc* gcli::ind_gclicmdc_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gclicmdc_buckets_n - 1);
-    gcli::FGclicmdc* *e = &_db.ind_gclicmdc_buckets_elems[index];
-    gcli::FGclicmdc* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gclicmdc == key;
-        if (done) break;
-        e         = &ret->ind_gclicmdc_next;
-    } while (true);
+    gcli::FGclicmdc *ret = _db.ind_gclicmdc_buckets_elems[index];
+    for (; ret && !((*ret).gclicmdc == key); ret = ret->ind_gclicmdc_next) {
+    }
     return ret;
 }
 
@@ -3652,10 +3191,11 @@ gcli::FGclicmdc& gcli::ind_gclicmdc_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_gclicmdc.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gclicmdc_InsertMaybe(gcli::FGclicmdc& row) {
-    ind_gclicmdc_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gclicmdc_next == (gcli::FGclicmdc*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gclicmdc) & (_db.ind_gclicmdc_buckets_n - 1);
+        row.ind_gclicmdc_hashval = algo::Smallstr250_Hash(0, row.gclicmdc);
+        ind_gclicmdc_Reserve(1);
+        u32 index = row.ind_gclicmdc_hashval & (_db.ind_gclicmdc_buckets_n - 1);
         gcli::FGclicmdc* *prev = &_db.ind_gclicmdc_buckets_elems[index];
         do {
             gcli::FGclicmdc* ret = *prev;
@@ -3681,7 +3221,7 @@ bool gcli::ind_gclicmdc_InsertMaybe(gcli::FGclicmdc& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gclicmdc_Remove(gcli::FGclicmdc& row) {
     if (LIKELY(row.ind_gclicmdc_next != (gcli::FGclicmdc*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gclicmdc) & (_db.ind_gclicmdc_buckets_n - 1);
+        u32 index = row.ind_gclicmdc_hashval & (_db.ind_gclicmdc_buckets_n - 1);
         gcli::FGclicmdc* *prev = &_db.ind_gclicmdc_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGclicmdc *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3698,8 +3238,14 @@ void gcli::ind_gclicmdc_Remove(gcli::FGclicmdc& row) {
 // --- gcli.FDb.ind_gclicmdc.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gclicmdc_Reserve(int n) {
+    ind_gclicmdc_AbsReserve(_db.ind_gclicmdc_n + n);
+}
+
+// --- gcli.FDb.ind_gclicmdc.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gclicmdc_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gclicmdc_buckets_n;
-    u32 new_nelems   = _db.ind_gclicmdc_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -3718,7 +3264,7 @@ void gcli::ind_gclicmdc_Reserve(int n) {
             while (elem) {
                 gcli::FGclicmdc &row        = *elem;
                 gcli::FGclicmdc* next       = row.ind_gclicmdc_next;
-                u32 index          = algo::Smallstr250_Hash(0, row.gclicmdc) & (new_nbuckets-1);
+                u32 index          = row.ind_gclicmdc_hashval & (new_nbuckets-1);
                 row.ind_gclicmdc_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -4346,14 +3892,9 @@ bool gcli::mrnote_XrefMaybe(gcli::FMrnote &row) {
 // Find row by key. Return NULL if not found.
 gcli::FMrnote* gcli::ind_mrnote_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_mrnote_buckets_n - 1);
-    gcli::FMrnote* *e = &_db.ind_mrnote_buckets_elems[index];
-    gcli::FMrnote* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).mrnote == key;
-        if (done) break;
-        e         = &ret->ind_mrnote_next;
-    } while (true);
+    gcli::FMrnote *ret = _db.ind_mrnote_buckets_elems[index];
+    for (; ret && !((*ret).mrnote == key); ret = ret->ind_mrnote_next) {
+    }
     return ret;
 }
 
@@ -4368,10 +3909,11 @@ gcli::FMrnote& gcli::ind_mrnote_FindX(const algo::strptr& key) {
 // --- gcli.FDb.ind_mrnote.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_mrnote_InsertMaybe(gcli::FMrnote& row) {
-    ind_mrnote_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_mrnote_next == (gcli::FMrnote*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.mrnote) & (_db.ind_mrnote_buckets_n - 1);
+        row.ind_mrnote_hashval = algo::Smallstr250_Hash(0, row.mrnote);
+        ind_mrnote_Reserve(1);
+        u32 index = row.ind_mrnote_hashval & (_db.ind_mrnote_buckets_n - 1);
         gcli::FMrnote* *prev = &_db.ind_mrnote_buckets_elems[index];
         do {
             gcli::FMrnote* ret = *prev;
@@ -4397,7 +3939,7 @@ bool gcli::ind_mrnote_InsertMaybe(gcli::FMrnote& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_mrnote_Remove(gcli::FMrnote& row) {
     if (LIKELY(row.ind_mrnote_next != (gcli::FMrnote*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.mrnote) & (_db.ind_mrnote_buckets_n - 1);
+        u32 index = row.ind_mrnote_hashval & (_db.ind_mrnote_buckets_n - 1);
         gcli::FMrnote* *prev = &_db.ind_mrnote_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FMrnote *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -4414,8 +3956,14 @@ void gcli::ind_mrnote_Remove(gcli::FMrnote& row) {
 // --- gcli.FDb.ind_mrnote.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_mrnote_Reserve(int n) {
+    ind_mrnote_AbsReserve(_db.ind_mrnote_n + n);
+}
+
+// --- gcli.FDb.ind_mrnote.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_mrnote_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_mrnote_buckets_n;
-    u32 new_nelems   = _db.ind_mrnote_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -4434,7 +3982,7 @@ void gcli::ind_mrnote_Reserve(int n) {
             while (elem) {
                 gcli::FMrnote &row        = *elem;
                 gcli::FMrnote* next       = row.ind_mrnote_next;
-                u32 index          = algo::Smallstr250_Hash(0, row.mrnote) & (new_nbuckets-1);
+                u32 index          = row.ind_mrnote_hashval & (new_nbuckets-1);
                 row.ind_mrnote_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -4451,14 +3999,9 @@ void gcli::ind_mrnote_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 gcli::FIssuenote* gcli::ind_issuenote_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_issuenote_buckets_n - 1);
-    gcli::FIssuenote* *e = &_db.ind_issuenote_buckets_elems[index];
-    gcli::FIssuenote* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).issuenote == key;
-        if (done) break;
-        e         = &ret->ind_issuenote_next;
-    } while (true);
+    gcli::FIssuenote *ret = _db.ind_issuenote_buckets_elems[index];
+    for (; ret && !((*ret).issuenote == key); ret = ret->ind_issuenote_next) {
+    }
     return ret;
 }
 
@@ -4473,10 +4016,11 @@ gcli::FIssuenote& gcli::ind_issuenote_FindX(const algo::strptr& key) {
 // --- gcli.FDb.ind_issuenote.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_issuenote_InsertMaybe(gcli::FIssuenote& row) {
-    ind_issuenote_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_issuenote_next == (gcli::FIssuenote*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.issuenote) & (_db.ind_issuenote_buckets_n - 1);
+        row.ind_issuenote_hashval = algo::Smallstr250_Hash(0, row.issuenote);
+        ind_issuenote_Reserve(1);
+        u32 index = row.ind_issuenote_hashval & (_db.ind_issuenote_buckets_n - 1);
         gcli::FIssuenote* *prev = &_db.ind_issuenote_buckets_elems[index];
         do {
             gcli::FIssuenote* ret = *prev;
@@ -4502,7 +4046,7 @@ bool gcli::ind_issuenote_InsertMaybe(gcli::FIssuenote& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_issuenote_Remove(gcli::FIssuenote& row) {
     if (LIKELY(row.ind_issuenote_next != (gcli::FIssuenote*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.issuenote) & (_db.ind_issuenote_buckets_n - 1);
+        u32 index = row.ind_issuenote_hashval & (_db.ind_issuenote_buckets_n - 1);
         gcli::FIssuenote* *prev = &_db.ind_issuenote_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FIssuenote *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -4519,8 +4063,14 @@ void gcli::ind_issuenote_Remove(gcli::FIssuenote& row) {
 // --- gcli.FDb.ind_issuenote.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_issuenote_Reserve(int n) {
+    ind_issuenote_AbsReserve(_db.ind_issuenote_n + n);
+}
+
+// --- gcli.FDb.ind_issuenote.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_issuenote_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_issuenote_buckets_n;
-    u32 new_nelems   = _db.ind_issuenote_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -4539,7 +4089,7 @@ void gcli::ind_issuenote_Reserve(int n) {
             while (elem) {
                 gcli::FIssuenote &row        = *elem;
                 gcli::FIssuenote* next       = row.ind_issuenote_next;
-                u32 index          = algo::Smallstr250_Hash(0, row.issuenote) & (new_nbuckets-1);
+                u32 index          = row.ind_issuenote_hashval & (new_nbuckets-1);
                 row.ind_issuenote_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -4556,14 +4106,9 @@ void gcli::ind_issuenote_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 gcli::FMrjob* gcli::ind_mrjob_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_mrjob_buckets_n - 1);
-    gcli::FMrjob* *e = &_db.ind_mrjob_buckets_elems[index];
-    gcli::FMrjob* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).mrjob == key;
-        if (done) break;
-        e         = &ret->ind_mrjob_next;
-    } while (true);
+    gcli::FMrjob *ret = _db.ind_mrjob_buckets_elems[index];
+    for (; ret && !((*ret).mrjob == key); ret = ret->ind_mrjob_next) {
+    }
     return ret;
 }
 
@@ -4578,10 +4123,11 @@ gcli::FMrjob& gcli::ind_mrjob_FindX(const algo::strptr& key) {
 // --- gcli.FDb.ind_mrjob.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_mrjob_InsertMaybe(gcli::FMrjob& row) {
-    ind_mrjob_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_mrjob_next == (gcli::FMrjob*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.mrjob) & (_db.ind_mrjob_buckets_n - 1);
+        row.ind_mrjob_hashval = algo::Smallstr250_Hash(0, row.mrjob);
+        ind_mrjob_Reserve(1);
+        u32 index = row.ind_mrjob_hashval & (_db.ind_mrjob_buckets_n - 1);
         gcli::FMrjob* *prev = &_db.ind_mrjob_buckets_elems[index];
         do {
             gcli::FMrjob* ret = *prev;
@@ -4607,7 +4153,7 @@ bool gcli::ind_mrjob_InsertMaybe(gcli::FMrjob& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_mrjob_Remove(gcli::FMrjob& row) {
     if (LIKELY(row.ind_mrjob_next != (gcli::FMrjob*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.mrjob) & (_db.ind_mrjob_buckets_n - 1);
+        u32 index = row.ind_mrjob_hashval & (_db.ind_mrjob_buckets_n - 1);
         gcli::FMrjob* *prev = &_db.ind_mrjob_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FMrjob *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -4624,8 +4170,14 @@ void gcli::ind_mrjob_Remove(gcli::FMrjob& row) {
 // --- gcli.FDb.ind_mrjob.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_mrjob_Reserve(int n) {
+    ind_mrjob_AbsReserve(_db.ind_mrjob_n + n);
+}
+
+// --- gcli.FDb.ind_mrjob.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_mrjob_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_mrjob_buckets_n;
-    u32 new_nelems   = _db.ind_mrjob_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -4644,7 +4196,7 @@ void gcli::ind_mrjob_Reserve(int n) {
             while (elem) {
                 gcli::FMrjob &row        = *elem;
                 gcli::FMrjob* next       = row.ind_mrjob_next;
-                u32 index          = algo::Smallstr250_Hash(0, row.mrjob) & (new_nbuckets-1);
+                u32 index          = row.ind_mrjob_hashval & (new_nbuckets-1);
                 row.ind_mrjob_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -4761,14 +4313,9 @@ bool gcli::user_XrefMaybe(gcli::FUser &row) {
 // Find row by key. Return NULL if not found.
 gcli::FUser* gcli::ind_user_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_user_buckets_n - 1);
-    gcli::FUser* *e = &_db.ind_user_buckets_elems[index];
-    gcli::FUser* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).user == key;
-        if (done) break;
-        e         = &ret->ind_user_next;
-    } while (true);
+    gcli::FUser *ret = _db.ind_user_buckets_elems[index];
+    for (; ret && !((*ret).user == key); ret = ret->ind_user_next) {
+    }
     return ret;
 }
 
@@ -4800,10 +4347,11 @@ gcli::FUser& gcli::ind_user_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_user.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_user_InsertMaybe(gcli::FUser& row) {
-    ind_user_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_user_next == (gcli::FUser*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.user) & (_db.ind_user_buckets_n - 1);
+        row.ind_user_hashval = algo::Smallstr50_Hash(0, row.user);
+        ind_user_Reserve(1);
+        u32 index = row.ind_user_hashval & (_db.ind_user_buckets_n - 1);
         gcli::FUser* *prev = &_db.ind_user_buckets_elems[index];
         do {
             gcli::FUser* ret = *prev;
@@ -4829,7 +4377,7 @@ bool gcli::ind_user_InsertMaybe(gcli::FUser& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_user_Remove(gcli::FUser& row) {
     if (LIKELY(row.ind_user_next != (gcli::FUser*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.user) & (_db.ind_user_buckets_n - 1);
+        u32 index = row.ind_user_hashval & (_db.ind_user_buckets_n - 1);
         gcli::FUser* *prev = &_db.ind_user_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FUser *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -4846,8 +4394,14 @@ void gcli::ind_user_Remove(gcli::FUser& row) {
 // --- gcli.FDb.ind_user.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_user_Reserve(int n) {
+    ind_user_AbsReserve(_db.ind_user_n + n);
+}
+
+// --- gcli.FDb.ind_user.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_user_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_user_buckets_n;
-    u32 new_nelems   = _db.ind_user_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -4866,7 +4420,7 @@ void gcli::ind_user_Reserve(int n) {
             while (elem) {
                 gcli::FUser &row        = *elem;
                 gcli::FUser* next       = row.ind_user_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.user) & (new_nbuckets-1);
+                u32 index          = row.ind_user_hashval & (new_nbuckets-1);
                 row.ind_user_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -4883,14 +4437,9 @@ void gcli::ind_user_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 gcli::FMr* gcli::ind_mr_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr150_Hash(0, key) & (_db.ind_mr_buckets_n - 1);
-    gcli::FMr* *e = &_db.ind_mr_buckets_elems[index];
-    gcli::FMr* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).mr == key;
-        if (done) break;
-        e         = &ret->ind_mr_next;
-    } while (true);
+    gcli::FMr *ret = _db.ind_mr_buckets_elems[index];
+    for (; ret && !((*ret).mr == key); ret = ret->ind_mr_next) {
+    }
     return ret;
 }
 
@@ -4922,10 +4471,11 @@ gcli::FMr& gcli::ind_mr_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_mr.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_mr_InsertMaybe(gcli::FMr& row) {
-    ind_mr_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_mr_next == (gcli::FMr*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr150_Hash(0, row.mr) & (_db.ind_mr_buckets_n - 1);
+        row.ind_mr_hashval = algo::Smallstr150_Hash(0, row.mr);
+        ind_mr_Reserve(1);
+        u32 index = row.ind_mr_hashval & (_db.ind_mr_buckets_n - 1);
         gcli::FMr* *prev = &_db.ind_mr_buckets_elems[index];
         do {
             gcli::FMr* ret = *prev;
@@ -4951,7 +4501,7 @@ bool gcli::ind_mr_InsertMaybe(gcli::FMr& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_mr_Remove(gcli::FMr& row) {
     if (LIKELY(row.ind_mr_next != (gcli::FMr*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr150_Hash(0, row.mr) & (_db.ind_mr_buckets_n - 1);
+        u32 index = row.ind_mr_hashval & (_db.ind_mr_buckets_n - 1);
         gcli::FMr* *prev = &_db.ind_mr_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FMr *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -4968,8 +4518,14 @@ void gcli::ind_mr_Remove(gcli::FMr& row) {
 // --- gcli.FDb.ind_mr.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_mr_Reserve(int n) {
+    ind_mr_AbsReserve(_db.ind_mr_n + n);
+}
+
+// --- gcli.FDb.ind_mr.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_mr_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_mr_buckets_n;
-    u32 new_nelems   = _db.ind_mr_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -4988,7 +4544,7 @@ void gcli::ind_mr_Reserve(int n) {
             while (elem) {
                 gcli::FMr &row        = *elem;
                 gcli::FMr* next       = row.ind_mr_next;
-                u32 index          = algo::Smallstr150_Hash(0, row.mr) & (new_nbuckets-1);
+                u32 index          = row.ind_mr_hashval & (new_nbuckets-1);
                 row.ind_mr_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -5005,14 +4561,9 @@ void gcli::ind_mr_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 gcli::FMilestone* gcli::ind_milestone_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_milestone_buckets_n - 1);
-    gcli::FMilestone* *e = &_db.ind_milestone_buckets_elems[index];
-    gcli::FMilestone* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).milestone == key;
-        if (done) break;
-        e         = &ret->ind_milestone_next;
-    } while (true);
+    gcli::FMilestone *ret = _db.ind_milestone_buckets_elems[index];
+    for (; ret && !((*ret).milestone == key); ret = ret->ind_milestone_next) {
+    }
     return ret;
 }
 
@@ -5044,10 +4595,11 @@ gcli::FMilestone& gcli::ind_milestone_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_milestone.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_milestone_InsertMaybe(gcli::FMilestone& row) {
-    ind_milestone_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_milestone_next == (gcli::FMilestone*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.milestone) & (_db.ind_milestone_buckets_n - 1);
+        row.ind_milestone_hashval = algo::Smallstr200_Hash(0, row.milestone);
+        ind_milestone_Reserve(1);
+        u32 index = row.ind_milestone_hashval & (_db.ind_milestone_buckets_n - 1);
         gcli::FMilestone* *prev = &_db.ind_milestone_buckets_elems[index];
         do {
             gcli::FMilestone* ret = *prev;
@@ -5073,7 +4625,7 @@ bool gcli::ind_milestone_InsertMaybe(gcli::FMilestone& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_milestone_Remove(gcli::FMilestone& row) {
     if (LIKELY(row.ind_milestone_next != (gcli::FMilestone*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.milestone) & (_db.ind_milestone_buckets_n - 1);
+        u32 index = row.ind_milestone_hashval & (_db.ind_milestone_buckets_n - 1);
         gcli::FMilestone* *prev = &_db.ind_milestone_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FMilestone *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -5090,8 +4642,14 @@ void gcli::ind_milestone_Remove(gcli::FMilestone& row) {
 // --- gcli.FDb.ind_milestone.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_milestone_Reserve(int n) {
+    ind_milestone_AbsReserve(_db.ind_milestone_n + n);
+}
+
+// --- gcli.FDb.ind_milestone.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_milestone_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_milestone_buckets_n;
-    u32 new_nelems   = _db.ind_milestone_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -5110,7 +4668,7 @@ void gcli::ind_milestone_Reserve(int n) {
             while (elem) {
                 gcli::FMilestone &row        = *elem;
                 gcli::FMilestone* next       = row.ind_milestone_next;
-                u32 index          = algo::Smallstr200_Hash(0, row.milestone) & (new_nbuckets-1);
+                u32 index          = row.ind_milestone_hashval & (new_nbuckets-1);
                 row.ind_milestone_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -5717,14 +5275,9 @@ bool gcli::gtblactfld_XrefMaybe(gcli::FGtblactfld &row) {
 // Find row by key. Return NULL if not found.
 gcli::FGtblact* gcli::ind_gtblact_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gtblact_buckets_n - 1);
-    gcli::FGtblact* *e = &_db.ind_gtblact_buckets_elems[index];
-    gcli::FGtblact* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gtblact == key;
-        if (done) break;
-        e         = &ret->ind_gtblact_next;
-    } while (true);
+    gcli::FGtblact *ret = _db.ind_gtblact_buckets_elems[index];
+    for (; ret && !((*ret).gtblact == key); ret = ret->ind_gtblact_next) {
+    }
     return ret;
 }
 
@@ -5756,10 +5309,11 @@ gcli::FGtblact& gcli::ind_gtblact_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_gtblact.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gtblact_InsertMaybe(gcli::FGtblact& row) {
-    ind_gtblact_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gtblact_next == (gcli::FGtblact*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gtblact) & (_db.ind_gtblact_buckets_n - 1);
+        row.ind_gtblact_hashval = algo::Smallstr50_Hash(0, row.gtblact);
+        ind_gtblact_Reserve(1);
+        u32 index = row.ind_gtblact_hashval & (_db.ind_gtblact_buckets_n - 1);
         gcli::FGtblact* *prev = &_db.ind_gtblact_buckets_elems[index];
         do {
             gcli::FGtblact* ret = *prev;
@@ -5785,7 +5339,7 @@ bool gcli::ind_gtblact_InsertMaybe(gcli::FGtblact& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gtblact_Remove(gcli::FGtblact& row) {
     if (LIKELY(row.ind_gtblact_next != (gcli::FGtblact*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gtblact) & (_db.ind_gtblact_buckets_n - 1);
+        u32 index = row.ind_gtblact_hashval & (_db.ind_gtblact_buckets_n - 1);
         gcli::FGtblact* *prev = &_db.ind_gtblact_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGtblact *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -5802,8 +5356,14 @@ void gcli::ind_gtblact_Remove(gcli::FGtblact& row) {
 // --- gcli.FDb.ind_gtblact.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gtblact_Reserve(int n) {
+    ind_gtblact_AbsReserve(_db.ind_gtblact_n + n);
+}
+
+// --- gcli.FDb.ind_gtblact.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gtblact_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gtblact_buckets_n;
-    u32 new_nelems   = _db.ind_gtblact_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -5822,7 +5382,7 @@ void gcli::ind_gtblact_Reserve(int n) {
             while (elem) {
                 gcli::FGtblact &row        = *elem;
                 gcli::FGtblact* next       = row.ind_gtblact_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.gtblact) & (new_nbuckets-1);
+                u32 index          = row.ind_gtblact_hashval & (new_nbuckets-1);
                 row.ind_gtblact_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -5911,14 +5471,9 @@ gcli::FGtblact* gcli::zd_gtblact_RemoveFirst() {
 // Find row by key. Return NULL if not found.
 gcli::FGtblactfld* gcli::ind_gtblactfld_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gtblactfld_buckets_n - 1);
-    gcli::FGtblactfld* *e = &_db.ind_gtblactfld_buckets_elems[index];
-    gcli::FGtblactfld* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gtblactfld == key;
-        if (done) break;
-        e         = &ret->ind_gtblactfld_next;
-    } while (true);
+    gcli::FGtblactfld *ret = _db.ind_gtblactfld_buckets_elems[index];
+    for (; ret && !((*ret).gtblactfld == key); ret = ret->ind_gtblactfld_next) {
+    }
     return ret;
 }
 
@@ -5933,10 +5488,11 @@ gcli::FGtblactfld& gcli::ind_gtblactfld_FindX(const algo::strptr& key) {
 // --- gcli.FDb.ind_gtblactfld.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gtblactfld_InsertMaybe(gcli::FGtblactfld& row) {
-    ind_gtblactfld_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gtblactfld_next == (gcli::FGtblactfld*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gtblactfld) & (_db.ind_gtblactfld_buckets_n - 1);
+        row.ind_gtblactfld_hashval = algo::Smallstr50_Hash(0, row.gtblactfld);
+        ind_gtblactfld_Reserve(1);
+        u32 index = row.ind_gtblactfld_hashval & (_db.ind_gtblactfld_buckets_n - 1);
         gcli::FGtblactfld* *prev = &_db.ind_gtblactfld_buckets_elems[index];
         do {
             gcli::FGtblactfld* ret = *prev;
@@ -5962,7 +5518,7 @@ bool gcli::ind_gtblactfld_InsertMaybe(gcli::FGtblactfld& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gtblactfld_Remove(gcli::FGtblactfld& row) {
     if (LIKELY(row.ind_gtblactfld_next != (gcli::FGtblactfld*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gtblactfld) & (_db.ind_gtblactfld_buckets_n - 1);
+        u32 index = row.ind_gtblactfld_hashval & (_db.ind_gtblactfld_buckets_n - 1);
         gcli::FGtblactfld* *prev = &_db.ind_gtblactfld_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGtblactfld *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -5979,8 +5535,14 @@ void gcli::ind_gtblactfld_Remove(gcli::FGtblactfld& row) {
 // --- gcli.FDb.ind_gtblactfld.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gtblactfld_Reserve(int n) {
+    ind_gtblactfld_AbsReserve(_db.ind_gtblactfld_n + n);
+}
+
+// --- gcli.FDb.ind_gtblactfld.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gtblactfld_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gtblactfld_buckets_n;
-    u32 new_nelems   = _db.ind_gtblactfld_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -5999,7 +5561,7 @@ void gcli::ind_gtblactfld_Reserve(int n) {
             while (elem) {
                 gcli::FGtblactfld &row        = *elem;
                 gcli::FGtblactfld* next       = row.ind_gtblactfld_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.gtblactfld) & (new_nbuckets-1);
+                u32 index          = row.ind_gtblactfld_hashval & (new_nbuckets-1);
                 row.ind_gtblactfld_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -6123,14 +5685,9 @@ bool gcli::gfld_XrefMaybe(gcli::FGfld &row) {
 // Find row by key. Return NULL if not found.
 gcli::FGfld* gcli::ind_gfld_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gfld_buckets_n - 1);
-    gcli::FGfld* *e = &_db.ind_gfld_buckets_elems[index];
-    gcli::FGfld* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gfld == key;
-        if (done) break;
-        e         = &ret->ind_gfld_next;
-    } while (true);
+    gcli::FGfld *ret = _db.ind_gfld_buckets_elems[index];
+    for (; ret && !((*ret).gfld == key); ret = ret->ind_gfld_next) {
+    }
     return ret;
 }
 
@@ -6162,10 +5719,11 @@ gcli::FGfld& gcli::ind_gfld_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_gfld.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gfld_InsertMaybe(gcli::FGfld& row) {
-    ind_gfld_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gfld_next == (gcli::FGfld*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gfld) & (_db.ind_gfld_buckets_n - 1);
+        row.ind_gfld_hashval = algo::Smallstr50_Hash(0, row.gfld);
+        ind_gfld_Reserve(1);
+        u32 index = row.ind_gfld_hashval & (_db.ind_gfld_buckets_n - 1);
         gcli::FGfld* *prev = &_db.ind_gfld_buckets_elems[index];
         do {
             gcli::FGfld* ret = *prev;
@@ -6191,7 +5749,7 @@ bool gcli::ind_gfld_InsertMaybe(gcli::FGfld& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gfld_Remove(gcli::FGfld& row) {
     if (LIKELY(row.ind_gfld_next != (gcli::FGfld*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gfld) & (_db.ind_gfld_buckets_n - 1);
+        u32 index = row.ind_gfld_hashval & (_db.ind_gfld_buckets_n - 1);
         gcli::FGfld* *prev = &_db.ind_gfld_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGfld *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -6208,8 +5766,14 @@ void gcli::ind_gfld_Remove(gcli::FGfld& row) {
 // --- gcli.FDb.ind_gfld.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gfld_Reserve(int n) {
+    ind_gfld_AbsReserve(_db.ind_gfld_n + n);
+}
+
+// --- gcli.FDb.ind_gfld.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gfld_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gfld_buckets_n;
-    u32 new_nelems   = _db.ind_gfld_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -6228,7 +5792,7 @@ void gcli::ind_gfld_Reserve(int n) {
             while (elem) {
                 gcli::FGfld &row        = *elem;
                 gcli::FGfld* next       = row.ind_gfld_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.gfld) & (new_nbuckets-1);
+                u32 index          = row.ind_gfld_hashval & (new_nbuckets-1);
                 row.ind_gfld_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -6245,15 +5809,11 @@ void gcli::ind_gfld_Reserve(int n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_gfld_Insert(gcli::FGfld& row) {
-    if (bool_Update(row._db_c_gfld_in_ary,true)) {
-        // reserve space
+    if (!row.c_gfld_in_ary) {
         c_gfld_Reserve(1);
-        u32 n  = _db.c_gfld_n;
-        u32 at = n;
-        gcli::FGfld* *elems = _db.c_gfld_elems;
-        elems[at] = &row;
-        _db.c_gfld_n = n+1;
-
+        u32 n  = _db.c_gfld_n++;
+        _db.c_gfld_elems[n] = &row;
+        row.c_gfld_in_ary = true;
     }
 }
 
@@ -6262,7 +5822,7 @@ void gcli::c_gfld_Insert(gcli::FGfld& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_gfld_InsertMaybe(gcli::FGfld& row) {
-    bool retval = !row._db_c_gfld_in_ary;
+    bool retval = !c_gfld_InAryQ(row);
     c_gfld_Insert(row); // check is performed in _Insert again
     return retval;
 }
@@ -6270,18 +5830,18 @@ bool gcli::c_gfld_InsertMaybe(gcli::FGfld& row) {
 // --- gcli.FDb.c_gfld.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_gfld_Remove(gcli::FGfld& row) {
-    if (bool_Update(row._db_c_gfld_in_ary,false)) {
-        int lim = _db.c_gfld_n;
+    int n = _db.c_gfld_n;
+    if (bool_Update(row.c_gfld_in_ary,false)) {
         gcli::FGfld* *elems = _db.c_gfld_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FGfld* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FGfld*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FGfld*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                _db.c_gfld_n = lim - 1;
+                _db.c_gfld_n = n - 1;
                 break;
             }
         }
@@ -6416,14 +5976,9 @@ bool gcli::gtbl_XrefMaybe(gcli::FGtbl &row) {
 // Find row by key. Return NULL if not found.
 gcli::FGtbl* gcli::ind_gtbl_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr250_Hash(0, key) & (_db.ind_gtbl_buckets_n - 1);
-    gcli::FGtbl* *e = &_db.ind_gtbl_buckets_elems[index];
-    gcli::FGtbl* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gtbl == key;
-        if (done) break;
-        e         = &ret->ind_gtbl_next;
-    } while (true);
+    gcli::FGtbl *ret = _db.ind_gtbl_buckets_elems[index];
+    for (; ret && !((*ret).gtbl == key); ret = ret->ind_gtbl_next) {
+    }
     return ret;
 }
 
@@ -6455,10 +6010,11 @@ gcli::FGtbl& gcli::ind_gtbl_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_gtbl.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gtbl_InsertMaybe(gcli::FGtbl& row) {
-    ind_gtbl_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gtbl_next == (gcli::FGtbl*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gtbl) & (_db.ind_gtbl_buckets_n - 1);
+        row.ind_gtbl_hashval = algo::Smallstr250_Hash(0, row.gtbl);
+        ind_gtbl_Reserve(1);
+        u32 index = row.ind_gtbl_hashval & (_db.ind_gtbl_buckets_n - 1);
         gcli::FGtbl* *prev = &_db.ind_gtbl_buckets_elems[index];
         do {
             gcli::FGtbl* ret = *prev;
@@ -6484,7 +6040,7 @@ bool gcli::ind_gtbl_InsertMaybe(gcli::FGtbl& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gtbl_Remove(gcli::FGtbl& row) {
     if (LIKELY(row.ind_gtbl_next != (gcli::FGtbl*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr250_Hash(0, row.gtbl) & (_db.ind_gtbl_buckets_n - 1);
+        u32 index = row.ind_gtbl_hashval & (_db.ind_gtbl_buckets_n - 1);
         gcli::FGtbl* *prev = &_db.ind_gtbl_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGtbl *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -6501,8 +6057,14 @@ void gcli::ind_gtbl_Remove(gcli::FGtbl& row) {
 // --- gcli.FDb.ind_gtbl.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gtbl_Reserve(int n) {
+    ind_gtbl_AbsReserve(_db.ind_gtbl_n + n);
+}
+
+// --- gcli.FDb.ind_gtbl.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gtbl_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gtbl_buckets_n;
-    u32 new_nelems   = _db.ind_gtbl_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -6521,7 +6083,7 @@ void gcli::ind_gtbl_Reserve(int n) {
             while (elem) {
                 gcli::FGtbl &row        = *elem;
                 gcli::FGtbl* next       = row.ind_gtbl_next;
-                u32 index          = algo::Smallstr250_Hash(0, row.gtbl) & (new_nbuckets-1);
+                u32 index          = row.ind_gtbl_hashval & (new_nbuckets-1);
                 row.ind_gtbl_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -6645,14 +6207,9 @@ bool gcli::gact_XrefMaybe(gcli::FGact &row) {
 // Find row by key. Return NULL if not found.
 gcli::FGact* gcli::ind_gact_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_gact_buckets_n - 1);
-    gcli::FGact* *e = &_db.ind_gact_buckets_elems[index];
-    gcli::FGact* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gact == key;
-        if (done) break;
-        e         = &ret->ind_gact_next;
-    } while (true);
+    gcli::FGact *ret = _db.ind_gact_buckets_elems[index];
+    for (; ret && !((*ret).gact == key); ret = ret->ind_gact_next) {
+    }
     return ret;
 }
 
@@ -6684,10 +6241,11 @@ gcli::FGact& gcli::ind_gact_GetOrCreate(const algo::strptr& key) {
 // --- gcli.FDb.ind_gact.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool gcli::ind_gact_InsertMaybe(gcli::FGact& row) {
-    ind_gact_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gact_next == (gcli::FGact*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gact) & (_db.ind_gact_buckets_n - 1);
+        row.ind_gact_hashval = algo::Smallstr50_Hash(0, row.gact);
+        ind_gact_Reserve(1);
+        u32 index = row.ind_gact_hashval & (_db.ind_gact_buckets_n - 1);
         gcli::FGact* *prev = &_db.ind_gact_buckets_elems[index];
         do {
             gcli::FGact* ret = *prev;
@@ -6713,7 +6271,7 @@ bool gcli::ind_gact_InsertMaybe(gcli::FGact& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void gcli::ind_gact_Remove(gcli::FGact& row) {
     if (LIKELY(row.ind_gact_next != (gcli::FGact*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.gact) & (_db.ind_gact_buckets_n - 1);
+        u32 index = row.ind_gact_hashval & (_db.ind_gact_buckets_n - 1);
         gcli::FGact* *prev = &_db.ind_gact_buckets_elems[index]; // addr of pointer to current element
         while (gcli::FGact *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -6730,8 +6288,14 @@ void gcli::ind_gact_Remove(gcli::FGact& row) {
 // --- gcli.FDb.ind_gact.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void gcli::ind_gact_Reserve(int n) {
+    ind_gact_AbsReserve(_db.ind_gact_n + n);
+}
+
+// --- gcli.FDb.ind_gact.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void gcli::ind_gact_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gact_buckets_n;
-    u32 new_nelems   = _db.ind_gact_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -6750,7 +6314,7 @@ void gcli::ind_gact_Reserve(int n) {
             while (elem) {
                 gcli::FGact &row        = *elem;
                 gcli::FGact* next       = row.ind_gact_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.gact) & (new_nbuckets-1);
+                u32 index          = row.ind_gact_hashval & (new_nbuckets-1);
                 row.ind_gact_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -6788,28 +6352,6 @@ void gcli::FDb_Init() {
     for (int i = 0; i < 4; i++) {
         _db.gtype_lary[i]  = gtype_first;
         gtype_first    += 1ULL<<i;
-    }
-    // initialize LAry grepossh (gcli.FDb.grepossh)
-    _db.grepossh_n = 0;
-    memset(_db.grepossh_lary, 0, sizeof(_db.grepossh_lary)); // zero out all level pointers
-    gcli::FGrepossh* grepossh_first = (gcli::FGrepossh*)algo_lib::malloc_AllocMem(sizeof(gcli::FGrepossh) * (u64(1)<<4));
-    if (!grepossh_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.grepossh_lary[i]  = grepossh_first;
-        grepossh_first    += 1ULL<<i;
-    }
-    // initialize LAry grepogitport (gcli.FDb.grepogitport)
-    _db.grepogitport_n = 0;
-    memset(_db.grepogitport_lary, 0, sizeof(_db.grepogitport_lary)); // zero out all level pointers
-    gcli::FGrepogitport* grepogitport_first = (gcli::FGrepogitport*)algo_lib::malloc_AllocMem(sizeof(gcli::FGrepogitport) * (u64(1)<<4));
-    if (!grepogitport_first) {
-        FatalErrorExit("out of memory");
-    }
-    for (int i = 0; i < 4; i++) {
-        _db.grepogitport_lary[i]  = grepogitport_first;
-        grepogitport_first    += 1ULL<<i;
     }
     // initialize LAry githost (gcli.FDb.githost)
     _db.githost_n = 0;
@@ -6967,22 +6509,6 @@ void gcli::FDb_Init() {
         FatalErrorExit("out of memory"); // (gcli.FDb.ind_githost)
     }
     memset(_db.ind_githost_buckets_elems, 0, sizeof(gcli::FGithost*)*_db.ind_githost_buckets_n); // (gcli.FDb.ind_githost)
-    // initialize hash table for gcli::FGrepogitport;
-    _db.ind_grepogitport_n             	= 0; // (gcli.FDb.ind_grepogitport)
-    _db.ind_grepogitport_buckets_n     	= 4; // (gcli.FDb.ind_grepogitport)
-    _db.ind_grepogitport_buckets_elems 	= (gcli::FGrepogitport**)algo_lib::malloc_AllocMem(sizeof(gcli::FGrepogitport*)*_db.ind_grepogitport_buckets_n); // initial buckets (gcli.FDb.ind_grepogitport)
-    if (!_db.ind_grepogitport_buckets_elems) {
-        FatalErrorExit("out of memory"); // (gcli.FDb.ind_grepogitport)
-    }
-    memset(_db.ind_grepogitport_buckets_elems, 0, sizeof(gcli::FGrepogitport*)*_db.ind_grepogitport_buckets_n); // (gcli.FDb.ind_grepogitport)
-    // initialize hash table for gcli::FGrepossh;
-    _db.ind_grepossh_n             	= 0; // (gcli.FDb.ind_grepossh)
-    _db.ind_grepossh_buckets_n     	= 4; // (gcli.FDb.ind_grepossh)
-    _db.ind_grepossh_buckets_elems 	= (gcli::FGrepossh**)algo_lib::malloc_AllocMem(sizeof(gcli::FGrepossh*)*_db.ind_grepossh_buckets_n); // initial buckets (gcli.FDb.ind_grepossh)
-    if (!_db.ind_grepossh_buckets_elems) {
-        FatalErrorExit("out of memory"); // (gcli.FDb.ind_grepossh)
-    }
-    memset(_db.ind_grepossh_buckets_elems, 0, sizeof(gcli::FGrepossh*)*_db.ind_grepossh_buckets_n); // (gcli.FDb.ind_grepossh)
     // initialize hash table for gcli::FGtype;
     _db.ind_gtype_n             	= 0; // (gcli.FDb.ind_gtype)
     _db.ind_gtype_buckets_n     	= 4; // (gcli.FDb.ind_gtype)
@@ -7425,12 +6951,6 @@ void gcli::FDb_Uninit() {
     // gcli.FDb.ind_gtype.Uninit (Thash)  //
     // skip destruction of ind_gtype in global scope
 
-    // gcli.FDb.ind_grepossh.Uninit (Thash)  //
-    // skip destruction of ind_grepossh in global scope
-
-    // gcli.FDb.ind_grepogitport.Uninit (Thash)  //
-    // skip destruction of ind_grepogitport in global scope
-
     // gcli.FDb.ind_githost.Uninit (Thash)  //
     // skip destruction of ind_githost in global scope
 
@@ -7479,12 +6999,6 @@ void gcli::FDb_Uninit() {
     // gcli.FDb.githost.Uninit (Lary)  //
     // skip destruction in global scope
 
-    // gcli.FDb.grepogitport.Uninit (Lary)  //
-    // skip destruction in global scope
-
-    // gcli.FDb.grepossh.Uninit (Lary)  //
-    // skip destruction in global scope
-
     // gcli.FDb.gtype.Uninit (Lary)  //
     // skip destruction in global scope
 }
@@ -7529,14 +7043,9 @@ void gcli::gclicmd_CopyIn(gcli::FGclicmd &row, gclidb::Gclicmd &in) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_tuples_Insert(gcli::FGclicmd& gclicmd, gcli::FTuples& row) {
-    // reserve space
     c_tuples_Reserve(gclicmd, 1);
-    u32 n  = gclicmd.c_tuples_n;
-    u32 at = n;
-    gcli::FTuples* *elems = gclicmd.c_tuples_elems;
-    elems[at] = &row;
-    gclicmd.c_tuples_n = n+1;
-
+    u32 n  = gclicmd.c_tuples_n++;
+    gclicmd.c_tuples_elems[n] = &row;
 }
 
 // --- gcli.FGclicmd.c_tuples.ScanInsertMaybe
@@ -7565,20 +7074,18 @@ bool gcli::c_tuples_ScanInsertMaybe(gcli::FGclicmd& gclicmd, gcli::FTuples& row)
 // --- gcli.FGclicmd.c_tuples.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_tuples_Remove(gcli::FGclicmd& gclicmd, gcli::FTuples& row) {
-    int lim = gclicmd.c_tuples_n;
-    gcli::FTuples* *elems = gclicmd.c_tuples_elems;
-    // search backward, so that most recently added element is found first.
-    // if found, shift array.
-    for (int i = lim-1; i>=0; i--) {
-        gcli::FTuples* elem = elems[i]; // fetch element
-        if (elem == &row) {
-            int j = i + 1;
-            size_t nbytes = sizeof(gcli::FTuples*) * (lim - j);
-            memmove(elems + i, elems + j, nbytes);
-            gclicmd.c_tuples_n = lim - 1;
-            break;
+    int n = gclicmd.c_tuples_n;
+    int j=0;
+    for (int i=0; i<n; i++) {
+        if (gclicmd.c_tuples_elems[i] == &row) {
+        } else {
+            if (j != i) {
+                gclicmd.c_tuples_elems[j] = gclicmd.c_tuples_elems[i];
+            }
+            j++;
         }
     }
+    gclicmd.c_tuples_n = j;
 }
 
 // --- gcli.FGclicmd.c_tuples.Reserve
@@ -7602,15 +7109,11 @@ void gcli::c_tuples_Reserve(gcli::FGclicmd& gclicmd, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_gclicmdarg_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) {
-    if (bool_Update(row.gclicmd_c_gclicmdarg_in_ary,true)) {
-        // reserve space
+    if (!row.gclicmd_c_gclicmdarg_in_ary) {
         c_gclicmdarg_Reserve(gclicmd, 1);
-        u32 n  = gclicmd.c_gclicmdarg_n;
-        u32 at = n;
-        gcli::FGclicmdarg* *elems = gclicmd.c_gclicmdarg_elems;
-        elems[at] = &row;
-        gclicmd.c_gclicmdarg_n = n+1;
-
+        u32 n  = gclicmd.c_gclicmdarg_n++;
+        gclicmd.c_gclicmdarg_elems[n] = &row;
+        row.gclicmd_c_gclicmdarg_in_ary = true;
     }
 }
 
@@ -7619,7 +7122,7 @@ void gcli::c_gclicmdarg_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) 
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_gclicmdarg_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) {
-    bool retval = !row.gclicmd_c_gclicmdarg_in_ary;
+    bool retval = !gclicmd_c_gclicmdarg_InAryQ(row);
     c_gclicmdarg_Insert(gclicmd,row); // check is performed in _Insert again
     return retval;
 }
@@ -7627,18 +7130,18 @@ bool gcli::c_gclicmdarg_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& 
 // --- gcli.FGclicmd.c_gclicmdarg.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_gclicmdarg_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdarg& row) {
+    int n = gclicmd.c_gclicmdarg_n;
     if (bool_Update(row.gclicmd_c_gclicmdarg_in_ary,false)) {
-        int lim = gclicmd.c_gclicmdarg_n;
         gcli::FGclicmdarg* *elems = gclicmd.c_gclicmdarg_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FGclicmdarg* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FGclicmdarg*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FGclicmdarg*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                gclicmd.c_gclicmdarg_n = lim - 1;
+                gclicmd.c_gclicmdarg_n = n - 1;
                 break;
             }
         }
@@ -7666,15 +7169,11 @@ void gcli::c_gclicmdarg_Reserve(gcli::FGclicmd& gclicmd, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_gclicmdc_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) {
-    if (bool_Update(row.gclicmd_c_gclicmdc_in_ary,true)) {
-        // reserve space
+    if (!row.gclicmd_c_gclicmdc_in_ary) {
         c_gclicmdc_Reserve(gclicmd, 1);
-        u32 n  = gclicmd.c_gclicmdc_n;
-        u32 at = n;
-        gcli::FGclicmdc* *elems = gclicmd.c_gclicmdc_elems;
-        elems[at] = &row;
-        gclicmd.c_gclicmdc_n = n+1;
-
+        u32 n  = gclicmd.c_gclicmdc_n++;
+        gclicmd.c_gclicmdc_elems[n] = &row;
+        row.gclicmd_c_gclicmdc_in_ary = true;
     }
 }
 
@@ -7683,7 +7182,7 @@ void gcli::c_gclicmdc_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_gclicmdc_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) {
-    bool retval = !row.gclicmd_c_gclicmdc_in_ary;
+    bool retval = !gclicmd_c_gclicmdc_InAryQ(row);
     c_gclicmdc_Insert(gclicmd,row); // check is performed in _Insert again
     return retval;
 }
@@ -7691,18 +7190,18 @@ bool gcli::c_gclicmdc_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row)
 // --- gcli.FGclicmd.c_gclicmdc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_gclicmdc_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdc& row) {
+    int n = gclicmd.c_gclicmdc_n;
     if (bool_Update(row.gclicmd_c_gclicmdc_in_ary,false)) {
-        int lim = gclicmd.c_gclicmdc_n;
         gcli::FGclicmdc* *elems = gclicmd.c_gclicmdc_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FGclicmdc* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FGclicmdc*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FGclicmdc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                gclicmd.c_gclicmdc_n = lim - 1;
+                gclicmd.c_gclicmdc_n = n - 1;
                 break;
             }
         }
@@ -7730,15 +7229,11 @@ void gcli::c_gclicmdc_Reserve(gcli::FGclicmd& gclicmd, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_gclicmdf2j_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) {
-    if (bool_Update(row.gclicmd_c_gclicmdf2j_in_ary,true)) {
-        // reserve space
+    if (!row.gclicmd_c_gclicmdf2j_in_ary) {
         c_gclicmdf2j_Reserve(gclicmd, 1);
-        u32 n  = gclicmd.c_gclicmdf2j_n;
-        u32 at = n;
-        gcli::FGclicmdf2j* *elems = gclicmd.c_gclicmdf2j_elems;
-        elems[at] = &row;
-        gclicmd.c_gclicmdf2j_n = n+1;
-
+        u32 n  = gclicmd.c_gclicmdf2j_n++;
+        gclicmd.c_gclicmdf2j_elems[n] = &row;
+        row.gclicmd_c_gclicmdf2j_in_ary = true;
     }
 }
 
@@ -7747,7 +7242,7 @@ void gcli::c_gclicmdf2j_Insert(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) 
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_gclicmdf2j_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) {
-    bool retval = !row.gclicmd_c_gclicmdf2j_in_ary;
+    bool retval = !gclicmd_c_gclicmdf2j_InAryQ(row);
     c_gclicmdf2j_Insert(gclicmd,row); // check is performed in _Insert again
     return retval;
 }
@@ -7755,18 +7250,18 @@ bool gcli::c_gclicmdf2j_InsertMaybe(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& 
 // --- gcli.FGclicmd.c_gclicmdf2j.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_gclicmdf2j_Remove(gcli::FGclicmd& gclicmd, gcli::FGclicmdf2j& row) {
+    int n = gclicmd.c_gclicmdf2j_n;
     if (bool_Update(row.gclicmd_c_gclicmdf2j_in_ary,false)) {
-        int lim = gclicmd.c_gclicmdf2j_n;
         gcli::FGclicmdf2j* *elems = gclicmd.c_gclicmdf2j_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FGclicmdf2j* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FGclicmdf2j*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FGclicmdf2j*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                gclicmd.c_gclicmdf2j_n = lim - 1;
+                gclicmd.c_gclicmdf2j_n = n - 1;
                 break;
             }
         }
@@ -7812,8 +7307,9 @@ void gcli::FGclicmd_Init(gcli::FGclicmd& gclicmd) {
     gclicmd.c_gclicmdf2j_n = 0; // (gcli.FGclicmd.c_gclicmdf2j)
     gclicmd.c_gclicmdf2j_max = 0; // (gcli.FGclicmd.c_gclicmdf2j)
     gclicmd.p_gclicmd = NULL;
-    gclicmd._db_c_gclicmd_in_ary = bool(false);
+    gclicmd.c_gclicmd_in_ary = bool(false);
     gclicmd.ind_gclicmd_next = (gcli::FGclicmd*)-1; // (gcli.FDb.ind_gclicmd) not-in-hash
+    gclicmd.ind_gclicmd_hashval = 0; // stored hash value
     gclicmd.step = NULL;
 }
 
@@ -7874,15 +7370,11 @@ algo::cstring gcli::ctype_Get(gcli::FGclicmdc& gclicmdc) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_gclicmdf_Insert(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) {
-    if (bool_Update(row.gclicmdc_c_gclicmdf_in_ary,true)) {
-        // reserve space
+    if (!row.gclicmdc_c_gclicmdf_in_ary) {
         c_gclicmdf_Reserve(gclicmdc, 1);
-        u32 n  = gclicmdc.c_gclicmdf_n;
-        u32 at = n;
-        gcli::FGclicmdf* *elems = gclicmdc.c_gclicmdf_elems;
-        elems[at] = &row;
-        gclicmdc.c_gclicmdf_n = n+1;
-
+        u32 n  = gclicmdc.c_gclicmdf_n++;
+        gclicmdc.c_gclicmdf_elems[n] = &row;
+        row.gclicmdc_c_gclicmdf_in_ary = true;
     }
 }
 
@@ -7891,7 +7383,7 @@ void gcli::c_gclicmdf_Insert(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_gclicmdf_InsertMaybe(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) {
-    bool retval = !row.gclicmdc_c_gclicmdf_in_ary;
+    bool retval = !gclicmdc_c_gclicmdf_InAryQ(row);
     c_gclicmdf_Insert(gclicmdc,row); // check is performed in _Insert again
     return retval;
 }
@@ -7899,18 +7391,18 @@ bool gcli::c_gclicmdf_InsertMaybe(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& ro
 // --- gcli.FGclicmdc.c_gclicmdf.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_gclicmdf_Remove(gcli::FGclicmdc& gclicmdc, gcli::FGclicmdf& row) {
+    int n = gclicmdc.c_gclicmdf_n;
     if (bool_Update(row.gclicmdc_c_gclicmdf_in_ary,false)) {
-        int lim = gclicmdc.c_gclicmdf_n;
         gcli::FGclicmdf* *elems = gclicmdc.c_gclicmdf_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FGclicmdf* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FGclicmdf*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FGclicmdf*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                gclicmdc.c_gclicmdf_n = lim - 1;
+                gclicmdc.c_gclicmdf_n = n - 1;
                 break;
             }
         }
@@ -8053,14 +7545,9 @@ algo::cstring gcli::jkey_Get(gcli::FGclicmdj2f& gclicmdj2f) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_gclicmdf_Insert(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGclicmdf& row) {
-    // reserve space
     c_gclicmdf_Reserve(gclicmdj2f, 1);
-    u32 n  = gclicmdj2f.c_gclicmdf_n;
-    u32 at = n;
-    gcli::FGclicmdf* *elems = gclicmdj2f.c_gclicmdf_elems;
-    elems[at] = &row;
-    gclicmdj2f.c_gclicmdf_n = n+1;
-
+    u32 n  = gclicmdj2f.c_gclicmdf_n++;
+    gclicmdj2f.c_gclicmdf_elems[n] = &row;
 }
 
 // --- gcli.FGclicmdj2f.c_gclicmdf.ScanInsertMaybe
@@ -8089,20 +7576,18 @@ bool gcli::c_gclicmdf_ScanInsertMaybe(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGcli
 // --- gcli.FGclicmdj2f.c_gclicmdf.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_gclicmdf_Remove(gcli::FGclicmdj2f& gclicmdj2f, gcli::FGclicmdf& row) {
-    int lim = gclicmdj2f.c_gclicmdf_n;
-    gcli::FGclicmdf* *elems = gclicmdj2f.c_gclicmdf_elems;
-    // search backward, so that most recently added element is found first.
-    // if found, shift array.
-    for (int i = lim-1; i>=0; i--) {
-        gcli::FGclicmdf* elem = elems[i]; // fetch element
-        if (elem == &row) {
-            int j = i + 1;
-            size_t nbytes = sizeof(gcli::FGclicmdf*) * (lim - j);
-            memmove(elems + i, elems + j, nbytes);
-            gclicmdj2f.c_gclicmdf_n = lim - 1;
-            break;
+    int n = gclicmdj2f.c_gclicmdf_n;
+    int j=0;
+    for (int i=0; i<n; i++) {
+        if (gclicmdj2f.c_gclicmdf_elems[i] == &row) {
+        } else {
+            if (j != i) {
+                gclicmdj2f.c_gclicmdf_elems[j] = gclicmdj2f.c_gclicmdf_elems[i];
+            }
+            j++;
         }
     }
+    gclicmdj2f.c_gclicmdf_n = j;
 }
 
 // --- gcli.FGclicmdj2f.c_gclicmdf.Reserve
@@ -8190,15 +7675,11 @@ void gcli::gfld_CopyIn(gcli::FGfld &row, gclidb::Gfld &in) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_gtblactfld_Insert(gcli::FGfld& gfld, gcli::FGtblactfld& row) {
-    if (bool_Update(row.gfld_c_gtblactfld_in_ary,true)) {
-        // reserve space
+    if (!row.gfld_c_gtblactfld_in_ary) {
         c_gtblactfld_Reserve(gfld, 1);
-        u32 n  = gfld.c_gtblactfld_n;
-        u32 at = n;
-        gcli::FGtblactfld* *elems = gfld.c_gtblactfld_elems;
-        elems[at] = &row;
-        gfld.c_gtblactfld_n = n+1;
-
+        u32 n  = gfld.c_gtblactfld_n++;
+        gfld.c_gtblactfld_elems[n] = &row;
+        row.gfld_c_gtblactfld_in_ary = true;
     }
 }
 
@@ -8207,7 +7688,7 @@ void gcli::c_gtblactfld_Insert(gcli::FGfld& gfld, gcli::FGtblactfld& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_gtblactfld_InsertMaybe(gcli::FGfld& gfld, gcli::FGtblactfld& row) {
-    bool retval = !row.gfld_c_gtblactfld_in_ary;
+    bool retval = !gfld_c_gtblactfld_InAryQ(row);
     c_gtblactfld_Insert(gfld,row); // check is performed in _Insert again
     return retval;
 }
@@ -8215,18 +7696,18 @@ bool gcli::c_gtblactfld_InsertMaybe(gcli::FGfld& gfld, gcli::FGtblactfld& row) {
 // --- gcli.FGfld.c_gtblactfld.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_gtblactfld_Remove(gcli::FGfld& gfld, gcli::FGtblactfld& row) {
+    int n = gfld.c_gtblactfld_n;
     if (bool_Update(row.gfld_c_gtblactfld_in_ary,false)) {
-        int lim = gfld.c_gtblactfld_n;
         gcli::FGtblactfld* *elems = gfld.c_gtblactfld_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FGtblactfld* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FGtblactfld*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FGtblactfld*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                gfld.c_gtblactfld_n = lim - 1;
+                gfld.c_gtblactfld_n = n - 1;
                 break;
             }
         }
@@ -8336,62 +7817,13 @@ void gcli::FGrepo_Init(gcli::FGrepo& grepo) {
     grepo.active = bool(true);
     grepo.select = bool(false);
     grepo.ind_grepo_next = (gcli::FGrepo*)-1; // (gcli.FDb.ind_grepo) not-in-hash
+    grepo.ind_grepo_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGrepo..Uninit
 void gcli::FGrepo_Uninit(gcli::FGrepo& grepo) {
     gcli::FGrepo &row = grepo; (void)row;
     ind_grepo_Remove(row); // remove grepo from index ind_grepo
-}
-
-// --- gcli.FGrepogitport.base.CopyOut
-// Copy fields out of row
-void gcli::grepogitport_CopyOut(gcli::FGrepogitport &row, gclidb::Grepogitport &out) {
-    out.grepogitport = row.grepogitport;
-    out.port = row.port;
-    out.comment = row.comment;
-}
-
-// --- gcli.FGrepogitport.base.CopyIn
-// Copy fields in to row
-void gcli::grepogitport_CopyIn(gcli::FGrepogitport &row, gclidb::Grepogitport &in) {
-    row.grepogitport = in.grepogitport;
-    row.port = in.port;
-    row.comment = in.comment;
-}
-
-// --- gcli.FGrepogitport..Uninit
-void gcli::FGrepogitport_Uninit(gcli::FGrepogitport& grepogitport) {
-    gcli::FGrepogitport &row = grepogitport; (void)row;
-    ind_grepogitport_Remove(row); // remove grepogitport from index ind_grepogitport
-}
-
-// --- gcli.FGrepossh.base.CopyOut
-// Copy fields out of row
-void gcli::grepossh_CopyOut(gcli::FGrepossh &row, gclidb::Grepossh &out) {
-    out.grepossh = row.grepossh;
-    out.sshid = row.sshid;
-    out.comment = row.comment;
-}
-
-// --- gcli.FGrepossh.base.CopyIn
-// Copy fields in to row
-void gcli::grepossh_CopyIn(gcli::FGrepossh &row, gclidb::Grepossh &in) {
-    row.grepossh = in.grepossh;
-    row.sshid = in.sshid;
-    row.comment = in.comment;
-}
-
-// --- gcli.FGrepossh.name.Get
-algo::cstring gcli::name_Get(gcli::FGrepossh& grepossh) {
-    algo::cstring ret(algo::Pathcomp(grepossh.sshid, "/RR"));
-    return ret;
-}
-
-// --- gcli.FGrepossh..Uninit
-void gcli::FGrepossh_Uninit(gcli::FGrepossh& grepossh) {
-    gcli::FGrepossh &row = grepossh; (void)row;
-    ind_grepossh_Remove(row); // remove grepossh from index ind_grepossh
 }
 
 // --- gcli.FGstatet.base.CopyOut
@@ -8444,15 +7876,11 @@ void gcli::gtbl_CopyIn(gcli::FGtbl &row, gclidb::Gtbl &in) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_gtblact_Insert(gcli::FGtbl& gtbl, gcli::FGtblact& row) {
-    if (bool_Update(row.gtbl_c_gtblact_in_ary,true)) {
-        // reserve space
+    if (!row.gtbl_c_gtblact_in_ary) {
         c_gtblact_Reserve(gtbl, 1);
-        u32 n  = gtbl.c_gtblact_n;
-        u32 at = n;
-        gcli::FGtblact* *elems = gtbl.c_gtblact_elems;
-        elems[at] = &row;
-        gtbl.c_gtblact_n = n+1;
-
+        u32 n  = gtbl.c_gtblact_n++;
+        gtbl.c_gtblact_elems[n] = &row;
+        row.gtbl_c_gtblact_in_ary = true;
     }
 }
 
@@ -8461,7 +7889,7 @@ void gcli::c_gtblact_Insert(gcli::FGtbl& gtbl, gcli::FGtblact& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_gtblact_InsertMaybe(gcli::FGtbl& gtbl, gcli::FGtblact& row) {
-    bool retval = !row.gtbl_c_gtblact_in_ary;
+    bool retval = !gtbl_c_gtblact_InAryQ(row);
     c_gtblact_Insert(gtbl,row); // check is performed in _Insert again
     return retval;
 }
@@ -8469,18 +7897,18 @@ bool gcli::c_gtblact_InsertMaybe(gcli::FGtbl& gtbl, gcli::FGtblact& row) {
 // --- gcli.FGtbl.c_gtblact.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_gtblact_Remove(gcli::FGtbl& gtbl, gcli::FGtblact& row) {
+    int n = gtbl.c_gtblact_n;
     if (bool_Update(row.gtbl_c_gtblact_in_ary,false)) {
-        int lim = gtbl.c_gtblact_n;
         gcli::FGtblact* *elems = gtbl.c_gtblact_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FGtblact* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FGtblact*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FGtblact*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                gtbl.c_gtblact_n = lim - 1;
+                gtbl.c_gtblact_n = n - 1;
                 break;
             }
         }
@@ -8547,15 +7975,11 @@ algo::Smallstr50 gcli::gact_Get(gcli::FGtblact& gtblact) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_gtblactfld_Insert(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) {
-    if (bool_Update(row.gtblact_c_gtblactfld_in_ary,true)) {
-        // reserve space
+    if (!row.gtblact_c_gtblactfld_in_ary) {
         c_gtblactfld_Reserve(gtblact, 1);
-        u32 n  = gtblact.c_gtblactfld_n;
-        u32 at = n;
-        gcli::FGtblactfld* *elems = gtblact.c_gtblactfld_elems;
-        elems[at] = &row;
-        gtblact.c_gtblactfld_n = n+1;
-
+        u32 n  = gtblact.c_gtblactfld_n++;
+        gtblact.c_gtblactfld_elems[n] = &row;
+        row.gtblact_c_gtblactfld_in_ary = true;
     }
 }
 
@@ -8564,7 +7988,7 @@ void gcli::c_gtblactfld_Insert(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) 
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_gtblactfld_InsertMaybe(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) {
-    bool retval = !row.gtblact_c_gtblactfld_in_ary;
+    bool retval = !gtblact_c_gtblactfld_InAryQ(row);
     c_gtblactfld_Insert(gtblact,row); // check is performed in _Insert again
     return retval;
 }
@@ -8572,18 +7996,18 @@ bool gcli::c_gtblactfld_InsertMaybe(gcli::FGtblact& gtblact, gcli::FGtblactfld& 
 // --- gcli.FGtblact.c_gtblactfld.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_gtblactfld_Remove(gcli::FGtblact& gtblact, gcli::FGtblactfld& row) {
+    int n = gtblact.c_gtblactfld_n;
     if (bool_Update(row.gtblact_c_gtblactfld_in_ary,false)) {
-        int lim = gtblact.c_gtblactfld_n;
         gcli::FGtblactfld* *elems = gtblact.c_gtblactfld_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FGtblactfld* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FGtblactfld*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FGtblactfld*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                gtblact.c_gtblactfld_n = lim - 1;
+                gtblact.c_gtblactfld_n = n - 1;
                 break;
             }
         }
@@ -8619,6 +8043,7 @@ void gcli::FGtblact_Init(gcli::FGtblact& gtblact) {
     gtblact.select = bool(false);
     gtblact.gtbl_c_gtblact_in_ary = bool(false);
     gtblact.ind_gtblact_next = (gcli::FGtblact*)-1; // (gcli.FDb.ind_gtblact) not-in-hash
+    gtblact.ind_gtblact_hashval = 0; // stored hash value
     gtblact.zd_gtblact_next = (gcli::FGtblact*)-1; // (gcli.FDb.zd_gtblact) not-in-list
     gtblact.zd_gtblact_prev = NULL; // (gcli.FDb.zd_gtblact)
     gtblact.step = NULL;
@@ -8681,6 +8106,7 @@ void gcli::FGtblactfld_Init(gcli::FGtblactfld& gtblactfld) {
     gtblactfld.gfld_c_gtblactfld_in_ary = bool(false);
     gtblactfld.gtblact_c_gtblactfld_in_ary = bool(false);
     gtblactfld.ind_gtblactfld_next = (gcli::FGtblactfld*)-1; // (gcli.FDb.ind_gtblactfld) not-in-hash
+    gtblactfld.ind_gtblactfld_hashval = 0; // stored hash value
 }
 
 // --- gcli.FGtblactfld..Uninit
@@ -8717,15 +8143,11 @@ void gcli::gtype_CopyIn(gcli::FGtype &row, gclidb::Gtype &in) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_gtypeh_Insert(gcli::FGtype& gtype, gcli::FGtypeh& row) {
-    if (bool_Update(row.gtype_c_gtypeh_in_ary,true)) {
-        // reserve space
+    if (!row.gtype_c_gtypeh_in_ary) {
         c_gtypeh_Reserve(gtype, 1);
-        u32 n  = gtype.c_gtypeh_n;
-        u32 at = n;
-        gcli::FGtypeh* *elems = gtype.c_gtypeh_elems;
-        elems[at] = &row;
-        gtype.c_gtypeh_n = n+1;
-
+        u32 n  = gtype.c_gtypeh_n++;
+        gtype.c_gtypeh_elems[n] = &row;
+        row.gtype_c_gtypeh_in_ary = true;
     }
 }
 
@@ -8734,7 +8156,7 @@ void gcli::c_gtypeh_Insert(gcli::FGtype& gtype, gcli::FGtypeh& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_gtypeh_InsertMaybe(gcli::FGtype& gtype, gcli::FGtypeh& row) {
-    bool retval = !row.gtype_c_gtypeh_in_ary;
+    bool retval = !gtype_c_gtypeh_InAryQ(row);
     c_gtypeh_Insert(gtype,row); // check is performed in _Insert again
     return retval;
 }
@@ -8742,18 +8164,18 @@ bool gcli::c_gtypeh_InsertMaybe(gcli::FGtype& gtype, gcli::FGtypeh& row) {
 // --- gcli.FGtype.c_gtypeh.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_gtypeh_Remove(gcli::FGtype& gtype, gcli::FGtypeh& row) {
+    int n = gtype.c_gtypeh_n;
     if (bool_Update(row.gtype_c_gtypeh_in_ary,false)) {
-        int lim = gtype.c_gtypeh_n;
         gcli::FGtypeh* *elems = gtype.c_gtypeh_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FGtypeh* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FGtypeh*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FGtypeh*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                gtype.c_gtypeh_n = lim - 1;
+                gtype.c_gtypeh_n = n - 1;
                 break;
             }
         }
@@ -8781,15 +8203,11 @@ void gcli::c_gtypeh_Reserve(gcli::FGtype& gtype, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_gtypeprefix_Insert(gcli::FGtype& gtype, gcli::FGtypeprefix& row) {
-    if (bool_Update(row.gtype_c_gtypeprefix_in_ary,true)) {
-        // reserve space
+    if (!row.gtype_c_gtypeprefix_in_ary) {
         c_gtypeprefix_Reserve(gtype, 1);
-        u32 n  = gtype.c_gtypeprefix_n;
-        u32 at = n;
-        gcli::FGtypeprefix* *elems = gtype.c_gtypeprefix_elems;
-        elems[at] = &row;
-        gtype.c_gtypeprefix_n = n+1;
-
+        u32 n  = gtype.c_gtypeprefix_n++;
+        gtype.c_gtypeprefix_elems[n] = &row;
+        row.gtype_c_gtypeprefix_in_ary = true;
     }
 }
 
@@ -8798,7 +8216,7 @@ void gcli::c_gtypeprefix_Insert(gcli::FGtype& gtype, gcli::FGtypeprefix& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_gtypeprefix_InsertMaybe(gcli::FGtype& gtype, gcli::FGtypeprefix& row) {
-    bool retval = !row.gtype_c_gtypeprefix_in_ary;
+    bool retval = !gtype_c_gtypeprefix_InAryQ(row);
     c_gtypeprefix_Insert(gtype,row); // check is performed in _Insert again
     return retval;
 }
@@ -8806,18 +8224,18 @@ bool gcli::c_gtypeprefix_InsertMaybe(gcli::FGtype& gtype, gcli::FGtypeprefix& ro
 // --- gcli.FGtype.c_gtypeprefix.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_gtypeprefix_Remove(gcli::FGtype& gtype, gcli::FGtypeprefix& row) {
+    int n = gtype.c_gtypeprefix_n;
     if (bool_Update(row.gtype_c_gtypeprefix_in_ary,false)) {
-        int lim = gtype.c_gtypeprefix_n;
         gcli::FGtypeprefix* *elems = gtype.c_gtypeprefix_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FGtypeprefix* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FGtypeprefix*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FGtypeprefix*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                gtype.c_gtypeprefix_n = lim - 1;
+                gtype.c_gtypeprefix_n = n - 1;
                 break;
             }
         }
@@ -9065,6 +8483,25 @@ algo::aryptr<algo::cstring> gcli::response_header_AllocN(gcli::FHttp& parent, in
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
 }
 
+// --- gcli.FHttp.response_header.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> gcli::response_header_AllocNAt(gcli::FHttp& parent, int n_elems, int at) {
+    response_header_Reserve(parent, n_elems);
+    int n  = parent.response_header_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("gcli.bad_alloc_n_at  field:gcli.FHttp.response_header  comment:'index out of range'");
+    }
+    algo::cstring *elems = parent.response_header_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    parent.response_header_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
+}
+
 // --- gcli.FHttp.response_header.Remove
 // Remove item by index. If index outside of range, do nothing.
 void gcli::response_header_Remove(gcli::FHttp& parent, u32 i) {
@@ -9159,6 +8596,30 @@ bool gcli::response_header_ReadStrptrMaybe(gcli::FHttp& parent, algo::strptr in_
         response_header_RemoveLast(parent);
     }
     return retval;
+}
+
+// --- gcli.FHttp.response_header.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void gcli::response_header_Insary(gcli::FHttp& parent, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.response_header_elems && rhs.elems < parent.response_header_elems + parent.response_header_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("gcli.tary_alias  field:gcli.FHttp.response_header  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.response_header_elems+1))) {
+        FatalErrorExit("gcli.bad_insary  field:gcli.FHttp.response_header  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.response_header_n - at;
+    response_header_Reserve(parent, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (parent.response_header_elems + at + nnew + i) algo::cstring(parent.response_header_elems[at + i]);
+        parent.response_header_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (parent.response_header_elems + at + i) algo::cstring(rhs[i]);
+    }
+    parent.response_header_n += nnew;
 }
 
 // --- gcli.FHttp..Init
@@ -9284,15 +8745,11 @@ algo::cstring gcli::iid_Get(gcli::FIssue& issue) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_mrjob_Insert(gcli::FIssue& issue, gcli::FMrjob& row) {
-    if (bool_Update(row.issue_c_mrjob_in_ary,true)) {
-        // reserve space
+    if (!row.issue_c_mrjob_in_ary) {
         c_mrjob_Reserve(issue, 1);
-        u32 n  = issue.c_mrjob_n;
-        u32 at = n;
-        gcli::FMrjob* *elems = issue.c_mrjob_elems;
-        elems[at] = &row;
-        issue.c_mrjob_n = n+1;
-
+        u32 n  = issue.c_mrjob_n++;
+        issue.c_mrjob_elems[n] = &row;
+        row.issue_c_mrjob_in_ary = true;
     }
 }
 
@@ -9301,7 +8758,7 @@ void gcli::c_mrjob_Insert(gcli::FIssue& issue, gcli::FMrjob& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_mrjob_InsertMaybe(gcli::FIssue& issue, gcli::FMrjob& row) {
-    bool retval = !row.issue_c_mrjob_in_ary;
+    bool retval = !issue_c_mrjob_InAryQ(row);
     c_mrjob_Insert(issue,row); // check is performed in _Insert again
     return retval;
 }
@@ -9309,18 +8766,18 @@ bool gcli::c_mrjob_InsertMaybe(gcli::FIssue& issue, gcli::FMrjob& row) {
 // --- gcli.FIssue.c_mrjob.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_mrjob_Remove(gcli::FIssue& issue, gcli::FMrjob& row) {
+    int n = issue.c_mrjob_n;
     if (bool_Update(row.issue_c_mrjob_in_ary,false)) {
-        int lim = issue.c_mrjob_n;
         gcli::FMrjob* *elems = issue.c_mrjob_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FMrjob* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FMrjob*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FMrjob*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                issue.c_mrjob_n = lim - 1;
+                issue.c_mrjob_n = n - 1;
                 break;
             }
         }
@@ -9348,15 +8805,11 @@ void gcli::c_mrjob_Reserve(gcli::FIssue& issue, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_issuenote_Insert(gcli::FIssue& issue, gcli::FIssuenote& row) {
-    if (bool_Update(row.issue_c_issuenote_in_ary,true)) {
-        // reserve space
+    if (!row.issue_c_issuenote_in_ary) {
         c_issuenote_Reserve(issue, 1);
-        u32 n  = issue.c_issuenote_n;
-        u32 at = n;
-        gcli::FIssuenote* *elems = issue.c_issuenote_elems;
-        elems[at] = &row;
-        issue.c_issuenote_n = n+1;
-
+        u32 n  = issue.c_issuenote_n++;
+        issue.c_issuenote_elems[n] = &row;
+        row.issue_c_issuenote_in_ary = true;
     }
 }
 
@@ -9365,7 +8818,7 @@ void gcli::c_issuenote_Insert(gcli::FIssue& issue, gcli::FIssuenote& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_issuenote_InsertMaybe(gcli::FIssue& issue, gcli::FIssuenote& row) {
-    bool retval = !row.issue_c_issuenote_in_ary;
+    bool retval = !issue_c_issuenote_InAryQ(row);
     c_issuenote_Insert(issue,row); // check is performed in _Insert again
     return retval;
 }
@@ -9373,18 +8826,18 @@ bool gcli::c_issuenote_InsertMaybe(gcli::FIssue& issue, gcli::FIssuenote& row) {
 // --- gcli.FIssue.c_issuenote.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_issuenote_Remove(gcli::FIssue& issue, gcli::FIssuenote& row) {
+    int n = issue.c_issuenote_n;
     if (bool_Update(row.issue_c_issuenote_in_ary,false)) {
-        int lim = issue.c_issuenote_n;
         gcli::FIssuenote* *elems = issue.c_issuenote_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FIssuenote* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FIssuenote*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FIssuenote*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                issue.c_issuenote_n = lim - 1;
+                issue.c_issuenote_n = n - 1;
                 break;
             }
         }
@@ -9420,6 +8873,7 @@ void gcli::FIssue_Init(gcli::FIssue& issue) {
     issue.c_issuenote_n = 0; // (gcli.FIssue.c_issuenote)
     issue.c_issuenote_max = 0; // (gcli.FIssue.c_issuenote)
     issue.ind_issue_next = (gcli::FIssue*)-1; // (gcli.FDb.ind_issue) not-in-hash
+    issue.ind_issue_hashval = 0; // stored hash value
 }
 
 // --- gcli.FIssue..Uninit
@@ -9578,15 +9032,11 @@ algo::cstring gcli::iid_Get(gcli::FMr& mr) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_mrnote_Insert(gcli::FMr& mr, gcli::FMrnote& row) {
-    if (bool_Update(row.mr_c_mrnote_in_ary,true)) {
-        // reserve space
+    if (!row.mr_c_mrnote_in_ary) {
         c_mrnote_Reserve(mr, 1);
-        u32 n  = mr.c_mrnote_n;
-        u32 at = n;
-        gcli::FMrnote* *elems = mr.c_mrnote_elems;
-        elems[at] = &row;
-        mr.c_mrnote_n = n+1;
-
+        u32 n  = mr.c_mrnote_n++;
+        mr.c_mrnote_elems[n] = &row;
+        row.mr_c_mrnote_in_ary = true;
     }
 }
 
@@ -9595,7 +9045,7 @@ void gcli::c_mrnote_Insert(gcli::FMr& mr, gcli::FMrnote& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_mrnote_InsertMaybe(gcli::FMr& mr, gcli::FMrnote& row) {
-    bool retval = !row.mr_c_mrnote_in_ary;
+    bool retval = !mr_c_mrnote_InAryQ(row);
     c_mrnote_Insert(mr,row); // check is performed in _Insert again
     return retval;
 }
@@ -9603,18 +9053,18 @@ bool gcli::c_mrnote_InsertMaybe(gcli::FMr& mr, gcli::FMrnote& row) {
 // --- gcli.FMr.c_mrnote.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_mrnote_Remove(gcli::FMr& mr, gcli::FMrnote& row) {
+    int n = mr.c_mrnote_n;
     if (bool_Update(row.mr_c_mrnote_in_ary,false)) {
-        int lim = mr.c_mrnote_n;
         gcli::FMrnote* *elems = mr.c_mrnote_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FMrnote* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FMrnote*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FMrnote*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                mr.c_mrnote_n = lim - 1;
+                mr.c_mrnote_n = n - 1;
                 break;
             }
         }
@@ -9642,15 +9092,11 @@ void gcli::c_mrnote_Reserve(gcli::FMr& mr, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void gcli::c_mrjob_Insert(gcli::FMr& mr, gcli::FMrjob& row) {
-    if (bool_Update(row.mr_c_mrjob_in_ary,true)) {
-        // reserve space
+    if (!row.mr_c_mrjob_in_ary) {
         c_mrjob_Reserve(mr, 1);
-        u32 n  = mr.c_mrjob_n;
-        u32 at = n;
-        gcli::FMrjob* *elems = mr.c_mrjob_elems;
-        elems[at] = &row;
-        mr.c_mrjob_n = n+1;
-
+        u32 n  = mr.c_mrjob_n++;
+        mr.c_mrjob_elems[n] = &row;
+        row.mr_c_mrjob_in_ary = true;
     }
 }
 
@@ -9659,7 +9105,7 @@ void gcli::c_mrjob_Insert(gcli::FMr& mr, gcli::FMrjob& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool gcli::c_mrjob_InsertMaybe(gcli::FMr& mr, gcli::FMrjob& row) {
-    bool retval = !row.mr_c_mrjob_in_ary;
+    bool retval = !mr_c_mrjob_InAryQ(row);
     c_mrjob_Insert(mr,row); // check is performed in _Insert again
     return retval;
 }
@@ -9667,18 +9113,18 @@ bool gcli::c_mrjob_InsertMaybe(gcli::FMr& mr, gcli::FMrjob& row) {
 // --- gcli.FMr.c_mrjob.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void gcli::c_mrjob_Remove(gcli::FMr& mr, gcli::FMrjob& row) {
+    int n = mr.c_mrjob_n;
     if (bool_Update(row.mr_c_mrjob_in_ary,false)) {
-        int lim = mr.c_mrjob_n;
         gcli::FMrjob* *elems = mr.c_mrjob_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             gcli::FMrjob* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(gcli::FMrjob*) * (lim - j);
+                size_t nbytes = sizeof(gcli::FMrjob*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                mr.c_mrjob_n = lim - 1;
+                mr.c_mrjob_n = n - 1;
                 break;
             }
         }
@@ -9713,6 +9159,7 @@ void gcli::FMr_Init(gcli::FMr& mr) {
     mr.c_mrjob_max = 0; // (gcli.FMr.c_mrjob)
     mr.select = bool(false);
     mr.ind_mr_next = (gcli::FMr*)-1; // (gcli.FDb.ind_mr) not-in-hash
+    mr.ind_mr_hashval = 0; // stored hash value
 }
 
 // --- gcli.FMr..Uninit
@@ -9817,6 +9264,7 @@ void gcli::FMrjob_Init(gcli::FMrjob& mrjob) {
     mrjob.issue_c_mrjob_in_ary = bool(false);
     mrjob.mr_c_mrjob_in_ary = bool(false);
     mrjob.ind_mrjob_next = (gcli::FMrjob*)-1; // (gcli.FDb.ind_mrjob) not-in-hash
+    mrjob.ind_mrjob_hashval = 0; // stored hash value
 }
 
 // --- gcli.FMrjob..Uninit
@@ -9979,8 +9427,6 @@ const char* gcli::value_ToCstr(const gcli::TableId& parent) {
         case gcli_TableId_gclidb_Gfld      : ret = "gclidb.Gfld";  break;
         case gcli_TableId_gclidb_Gmethod   : ret = "gclidb.Gmethod";  break;
         case gcli_TableId_gclidb_Grepo     : ret = "gclidb.Grepo";  break;
-        case gcli_TableId_gclidb_Grepogitport: ret = "gclidb.Grepogitport";  break;
-        case gcli_TableId_gclidb_Grepossh  : ret = "gclidb.Grepossh";  break;
         case gcli_TableId_gclidb_Gstatet   : ret = "gclidb.Gstatet";  break;
         case gcli_TableId_gclidb_Gtbl      : ret = "gclidb.Gtbl";  break;
         case gcli_TableId_gclidb_Gtblactfld: ret = "gclidb.Gtblactfld";  break;
@@ -10074,12 +9520,10 @@ bool gcli::value_SetStrptrMaybe(gcli::TableId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('g','c','l','i','d','b','.','G'): {
                     if (memcmp(rhs.elems+8,"clicmdt",7)==0) { value_SetEnum(parent,gcli_TableId_gclidb_Gclicmdt); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"repossh",7)==0) { value_SetEnum(parent,gcli_TableId_gclidb_Grepossh); ret = true; break; }
                     break;
                 }
                 case LE_STR8('g','c','l','i','d','b','.','g'): {
                     if (memcmp(rhs.elems+8,"clicmdt",7)==0) { value_SetEnum(parent,gcli_TableId_gclidb_gclicmdt); ret = true; break; }
-                    if (memcmp(rhs.elems+8,"repossh",7)==0) { value_SetEnum(parent,gcli_TableId_gclidb_grepossh); ret = true; break; }
                     break;
                 }
             }
@@ -10108,19 +9552,6 @@ bool gcli::value_SetStrptrMaybe(gcli::TableId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('g','c','l','i','d','b','.','g'): {
                     if (memcmp(rhs.elems+8,"typeprefix",10)==0) { value_SetEnum(parent,gcli_TableId_gclidb_gtypeprefix); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 19: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('g','c','l','i','d','b','.','G'): {
-                    if (memcmp(rhs.elems+8,"repogitport",11)==0) { value_SetEnum(parent,gcli_TableId_gclidb_Grepogitport); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('g','c','l','i','d','b','.','g'): {
-                    if (memcmp(rhs.elems+8,"repogitport",11)==0) { value_SetEnum(parent,gcli_TableId_gclidb_grepogitport); ret = true; break; }
                     break;
                 }
             }
@@ -10178,12 +9609,13 @@ void gcli::StaticCheck() {
 // --- gcli...main
 int main(int argc, char **argv) {
     try {
-        algo_lib::FDb_Init();
         lib_json::FDb_Init();
+        algo_lib::FDb_Init();
         gcli::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         gcli::ReadArgv(); // dmmeta.main:gcli
         gcli::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -10195,8 +9627,8 @@ int main(int argc, char **argv) {
     }
     try {
         gcli::FDb_Uninit();
-        lib_json::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

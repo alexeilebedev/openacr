@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -64,7 +64,7 @@ static void Main_Ns() {
     }ind_end;
 
     // Extend namespace selection to include all dependent targets
-    for (acr_in::FTarget *target = acr_in::zd_targ_visit_First(); target; target=target->zd_targ_visit_next) {
+    for (acr_in::FTarget *target = acr_in::zd_targ_visit_First(); target; target=zd_targ_visit_Next(*target)) {
         ind_beg(acr_in::target_c_targdep_curs,targdep,*target) {
             acr_in::FTarget *parent = targdep.p_parent;
             if ((parent->p_ns->nstype == dmmeta_Nstype_nstype_exe) || (parent->p_ns->nstype == dmmeta_Nstype_nstype_lib)) {

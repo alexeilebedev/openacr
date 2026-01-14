@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
@@ -24,6 +24,7 @@
 // Odbc/Iconvlib wrappers
 // close conversion descriptor
 
+#include "include/lib_mysql.h"
 #include "include/lib_iconv.h"
 
 void lib_iconv::Close(lib_iconv::Icd &icd) {

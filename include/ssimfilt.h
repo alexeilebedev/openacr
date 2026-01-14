@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -56,5 +56,6 @@ namespace ssimfilt { // update-hdr
     void Table_Save(algo::Tuple &tuple);
     void MDTable_Save(algo::Tuple &tuple);
     void Table_Flush();
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:ssimfilt
 }

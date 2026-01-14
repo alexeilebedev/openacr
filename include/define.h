@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -184,12 +184,13 @@
 
 #define prlog(x)              log_msg_(algo_lib_logcat_stdout,x,true)
 #define prerr(x)              log_msg_(algo_lib_logcat_stderr,x,true)
+#define prcat(cat,x)          { if(UNLIKELY(algo_lib_logcat_##cat.enabled)) log_msg_(algo_lib_logcat_##cat,x,true); }
 
+// these 4 are deprecated
 #define prlog_cat(cat,x)      { if(UNLIKELY(cat.enabled)) log_msg_(cat,x,true); }
-#define verblog(x)            { if(UNLIKELY(algo_lib::_db.cmdline.verbose)) { log_msg_(algo_lib_logcat_stderr,x,true); }}
-#define verblog2(x)           { if(UNLIKELY(algo_lib::_db.cmdline.verbose>1)) { log_msg_(algo_lib_logcat_stderr,x,true); }}
-#define verblog3(x)           { if(UNLIKELY(algo_lib::_db.cmdline.verbose>2)) { log_msg_(algo_lib_logcat_stderr,x,true); }}
-#define dbglog(x)             { if(UNLIKELY(algo_lib::_db.cmdline.debug)) { log_msg_(algo_lib_logcat_stderr,x,true); }}
+#define verblog(x)            prcat(verbose,x)
+#define verblog2(x)           prcat(verbose2,x)
+#define dbglog(x)             prcat(debug,x)
 
 #ifdef constant
 #undef constant

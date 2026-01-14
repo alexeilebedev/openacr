@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -260,7 +260,7 @@ int acr::Main_SelectDown(bool unused) {
     // add records which reference one of selected records
     ind_beg(acr::_db_c_ctype_front_curs, child, _db) {
         LoadRecords(child);
-        ind_beg(acr::ctype_zd_ctype_rec_curs, rec, child) {
+        ind_beg(acr::ctype_zd_rec_curs, rec, child) {
             ind_beg(acr::ctype_c_field_curs,  field, child) if (field.p_arg->c_ssimfile && LeftCheck(child,field)) {
                 tempstr val(EvalAttr(rec.tuple, field));
                 acr::FRec *parrec = acr::ind_ctype_rec_Find(*field.p_arg, val);
@@ -275,7 +275,7 @@ int acr::Main_SelectDown(bool unused) {
                     // work.
                     if (good) {
                         zd_all_selrec_Remove(*parrec);
-                        zd_ctype_selrec_Remove(*parrec->p_ctype, *parrec);
+                        zd_selrec_Remove(*parrec->p_ctype, *parrec);
                     }
                 } else {
                     good = good && Rec_Select(rec);
@@ -394,7 +394,7 @@ void acr::CascadeDelete() {
         // scan all selected records since the last one
         // collect a list of child tables to scan
         for (; rec; rec=zd_all_selrec_Next(*rec)) {
-            if (rec->del) {
+            if (rec->del && !rec->isnew) {
                 if (_db.cmdline.x) {
                     DelChildRecords(*rec);
                 }
@@ -410,7 +410,7 @@ void acr::CascadeDelete() {
         // makr any references to a deleted record as deleted
         ind_beg(acr::_db_c_ctype_front_curs, child, _db) {
             LoadRecords(child);
-            ind_beg(acr::ctype_zd_ctype_rec_curs, childrec, child) {
+            ind_beg(acr::ctype_zd_rec_curs, childrec, child) {
                 ind_beg(acr::ctype_c_field_curs, field, child) if (field.p_arg->c_ssimfile) {
                     acr::FRec *parrec = acr::ind_ctype_rec_Find(*field.p_arg, EvalAttr(childrec.tuple, field));
                     if (parrec && parrec->del) {

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2023 Astra
 //
 // License: GPL
@@ -44,17 +44,17 @@ namespace atf_comp { // update-hdr
     //
 
     // Compute component directory depending on config given on command line
-    void Main_GuessCompdir();
+    void Main_GuessBindir();
 
     // Run abt for build or ood check for config given on command line
-    // -cfg, -build, and -ood options are passed directly to abt
+    // -cfg, -build options are passed directly to abt
     void Main_Ood();
 
     // Running instrumented executable or under dynamic analyzer
     // may slow down execution greatly. Timeout given on the comptest record is
     // 3 * typical elapsed time for running release executable without any tool.
     // This functios applies known slowdown figures for various configurations and tools.
-    int GetTimeout(atf_comp::FComptest &comptest);
+    int CalcTimeout(atf_comp::FComptest &comptest);
 
     // Initialize COMPTEST.BASH.CMD to the command that will execute
     // If invoked with -memcheck, wrap the command line with valgrind
@@ -62,7 +62,7 @@ namespace atf_comp { // update-hdr
     // If invoked with -callgrind, wrap the command line with valgrind
     // and initialize COMPTEST.FILE_CALLGRIND_LOG, COMPTEST.FILE_CALLGRIND_OUT pathname
     // If invoked with -coverage, wrap the command line with atf_cov
-    // and initialize COMPTEST.COVDIR
+    // and link with covdir
     //
     void SetupCmdline(atf_comp::FComptest &comptest, algo_lib::Replscope &R);
 
@@ -72,8 +72,10 @@ namespace atf_comp { // update-hdr
     void Comptest_Start(atf_comp::FComptest &comptest);
 
     // Start next test
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void zd_sel_comptest_Step();
+    // If no tests are running, it's always OK to start.
+    // Otherwise, the test is started only if total "# of cores used" after
+    // starting the test would not exceed the limit
+    void StartNextTest();
 
     // Compare output of current test with the reference file.
     // If tfilt exists, filter output before matching
@@ -95,7 +97,7 @@ namespace atf_comp { // update-hdr
     // will return something interesting
     // Decreases # of jobs
     //     (user-implemented function, prototype is in amc-generated header)
-    // void zd_run_comptest_Step();
+    // void zd_run_comptest_Step(); // fstep:atf_comp.FDb.zd_run_comptest
 
     // Set up signal handler to detect process exits
     void Main_SetupSigchild();
@@ -107,8 +109,15 @@ namespace atf_comp { // update-hdr
     // Merge outputs of multiple atf_cov runs into a single report.
     void Main_Coverage();
 
-    // Rewrite / normalize tags in all tmsgs
+    // Rewrite / normalize component tests
+    // - Rewrite type tags in all tmsgs
     // If a tmsg corresponds to an unknown type, the message is deleted
+    // - Rewrite "abc | xyz" as
+    // targs abc
+    // tfilt xyz
+    // First, we want to see the true output of abc (the component test), prior to filtering
+    // Second, xyz will "eat" the non-zero exit code of abc and we don't want to use 'set -o pipefail' tricks
+    // TODO: also detect errors in command line for subcommand
     void Main_Normalize();
 
     // Write all testcases from list zd_out_comptest back
@@ -121,7 +130,8 @@ namespace atf_comp { // update-hdr
     void Main_Select();
     void Main_Debug();
     void Main_RewriteCmdline();
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:atf_comp
 
     // -------------------------------------------------------------------
     // cpp/atf_comp/read.cpp -- Read comptest from input

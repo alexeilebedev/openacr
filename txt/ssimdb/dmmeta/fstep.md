@@ -43,7 +43,6 @@ These ssimfiles are subsets of dmmeta.fstep
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:ImdbUses -->
 
 * [amc](/txt/exe/amc/internals.md) as [amc.FFstep](/txt/exe/amc/internals.md#amc-ffstep)
-* [src_func](/txt/exe/src_func/internals.md) as [src_func.FFstep](/txt/exe/src_func/internals.md#src_func-ffstep)
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:ImdbUses -->
 

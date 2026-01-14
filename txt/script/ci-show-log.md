@@ -1,4 +1,4 @@
-## bin/ci-show-log - Fetch gitlab runner output for current issue
+## bin/ci-show-log - Fetch gitlab-runner output for current issue
 
 
 ### Sources

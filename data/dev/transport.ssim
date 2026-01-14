@@ -1,0 +1,4 @@
+dev.transport  transport:ib_rc  ip:N  comment:""
+dev.transport  transport:ib_ud  ip:N  comment:""
+dev.transport  transport:tcp  ip:Y  comment:""
+dev.transport  transport:udp  ip:Y  comment:""

@@ -1,4 +1,4 @@
-// Copyright (C) 2024 AlgoRND
+// Copyright (C) 2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -41,14 +41,14 @@ void abt_md::CheckSection(abt_md::FFileSection &file_section) {
             codeblock_start_line = codeblock_start_line ? 0 : lineno;
         }
         if (codeblock_start_line && backticks_start_line) {
-            prlog(_db.c_readme->gitfile<<":"<<lineno
+            prlog(_db.c_readmefile->gitfile<<":"<<lineno
                   <<": "<<"Interleaved code block & performatted block");
             prlog("    "<<line);
         }
         if (!backticks_start_line && !codeblock_start_line) {
             int level=GetHeaderLevel(line);
             if (level > 0 && level <= title_level) {
-                prlog(_db.c_readme->gitfile<<":"<<lineno
+                prlog(_db.c_readmefile->gitfile<<":"<<lineno
                       <<": "<<"Bad title indentation "<<level<<"; header has "<<title_level);
                 prlog("    "<<line);
                 algo_lib::_db.exit_code=1;
@@ -56,11 +56,11 @@ void abt_md::CheckSection(abt_md::FFileSection &file_section) {
         }
     }ind_end;
     if (backticks_start_line) {
-        prlog(_db.c_readme->gitfile<<":"<<backticks_start_line<<": "<<"Unterminated preformatted block (```)");
+        prlog(_db.c_readmefile->gitfile<<":"<<backticks_start_line<<": "<<"Unterminated preformatted block (```)");
         algo_lib::_db.exit_code=1;
     }
     if (codeblock_start_line) {
-        prlog(_db.c_readme->gitfile<<":"<<codeblock_start_line<<": "<<"Unterminated code block (~~~)");
+        prlog(_db.c_readmefile->gitfile<<":"<<codeblock_start_line<<": "<<"Unterminated code block (~~~)");
         algo_lib::_db.exit_code=1;
     }
 }
@@ -70,8 +70,13 @@ static bool MarktagQ(strptr line){
 
     if (StartsWithQ(line,tempstr()<<"<!-- ")){
         dev::Mdmark mdmark;
-        if (Mdmark_ReadStrptrMaybe(mdmark,Pathcomp(line," LR"))){
+        algo::strptr text = ch_GetRegion(line,4,line.n_elems-7);// skip <!-- and -->
+        if (Mdmark_ReadStrptrMaybe(mdmark,text)){
             ret=EndsWithQ(mdmark.state,"_AUTO");
+        } else {
+            prerr("Marktag: failed to read string "<<text
+                  <<": "<<algo_lib::DetachBadTags());
+            algo_lib::_db.exit_code=1;
         }
     }
     return ret;
@@ -225,7 +230,7 @@ void abt_md::ScanLinksAnchors() {
                         } else {
                             // Take action
                             abt_md::FLink &link = link_Alloc();
-                            link.location << _db.c_readme->gitfile<<":"<<(file_section.firstline + 1 + ind_curs(line).i);
+                            link.location << _db.c_readmefile->gitfile<<":"<<(file_section.firstline + 1 + ind_curs(line).i);
                             link.text=link_text;
                             link.target=link_target;
                             link_text="";
@@ -238,7 +243,7 @@ void abt_md::ScanLinksAnchors() {
                 if (StartsWithQ(line,"<a href=\"")) {
                     strptr name=Pathcomp(line,"\"LR#LR\"LL");
                     abt_md::FAnchor &anchor=anchor_Alloc();
-                    anchor.anchor << _db.c_readme->gitfile<<"#"<<name;
+                    anchor.anchor << _db.c_readmefile->gitfile<<"#"<<name;
                     if (!anchor_XrefMaybe(anchor)) {
                         anchor_RemoveLast();
                     }
@@ -277,7 +282,7 @@ void abt_md::Marktag(abt_md::FFileSection &section){
 // Execute commands marked by "inline-command: ..." inside backtick blocks,
 // and substitute their output into the section text
 void abt_md::EvalInlineCommand(abt_md::FFileSection &file_section) {
-    abt_md::FReadme &readme = *_db.c_readme;
+    abt_md::FReadmefile &readmefile = *_db.c_readmefile;
     cstring out;
     bool inlinecommand=false;
     bool backticks=false;// inside backticks block
@@ -290,11 +295,11 @@ void abt_md::EvalInlineCommand(abt_md::FFileSection &file_section) {
             // ignore leading empty line
         } else if ((codeblock || backticks) && StartsWithQ(line,"inline-command: ")) {
             out << line << eol;
-            verblog(readme.gitfile<<": eval "<<line);
+            verblog(readmefile.gitfile<<": eval "<<line);
             tempstr cmd(Pathcomp(line," LR"));
             int rc=0;
             algo::strptr tempfile("temp/abt_md.out");
-            if (readme.sandbox) {
+            if (readmefile.sandbox) {
                 command::sandbox_proc sandbox;
                 sandbox.cmd.name.expr = dev_Sandbox_sandbox_abt_md;
                 cmd_Alloc(sandbox.cmd) << "bash";
@@ -311,13 +316,13 @@ void abt_md::EvalInlineCommand(abt_md::FFileSection &file_section) {
                 rc = bash_Exec(bash);
             }
             if (rc) {
-                prerr(readme.gitfile<<":"<<lineno<<": command failed: "<<cmd);
+                prerr(readmefile.gitfile<<":"<<lineno<<": command failed: "<<cmd);
                 algo_lib::_db.exit_code=rc;
             }
-            if (readme.filter == "") {
-                readme.filter = "cat";
+            if (readmefile.filter == "") {
+                readmefile.filter = "cat";
             }
-            out << SysEval(tempstr()<<readme.filter<<" <"<<tempfile,FailokQ(true),1024*1024*10);
+            out << SysEval(tempstr()<<readmefile.filter<<" <"<<tempfile,FailokQ(true),1024*1024*10);
             inlinecommand=true;
         } else if (StartsWithQ(line, "```")) {
             out << line << eol;
@@ -360,14 +365,14 @@ void abt_md::EvalInlineCommand(abt_md::FFileSection &file_section) {
 // (it's possible since the inline-command output might contain backticks).
 void abt_md::UpdateSection(abt_md::FFileSection &file_section) {
     // evaluate section content if it's not fully generated
-    abt_md::FReadme &readme = *_db.c_readme;
+    abt_md::FReadmefile &readmefile = *_db.c_readmefile;
     abt_md::FMdsection &mdsection = *file_section.p_mdsection;
     verblog("abt_md.update_section_begin"
             <<Keyval("mdsection",mdsection.mdsection)
             <<Keyval("title",file_section.title)
             <<Keyval("sortkey",file_section.sortkey)
             <<Keyval("length",ch_N(file_section.text)));
-    if (NeedSectionQ(mdsection,readme)) {
+    if (NeedSectionQ(mdsection,readmefile)) {
         // run generator function on section --
         // this may generate content and/or replace file section fields
         // is section has 'genlist' defined, scan for human-entered text and save it in a hash
@@ -406,16 +411,16 @@ bool abt_md::TitleQ(abt_md::FFileSection &section) {
 // Load specified readme into memory as FILE_SECTION records
 // the section table is global and is wiped on every readme.
 // Only lines starting with ## or ### are considered FILE_SECTIONS
-void abt_md::LoadSections(abt_md::FReadme &readme) {
+void abt_md::LoadSections(abt_md::FReadmefile &readmefile) {
     ind_replvar_Cascdel(_db.R);// clean up
-    if (readme.p_ns) {
-        Set(_db.R,"$ns",readme.p_ns->ns);
+    if (readmefile.p_ns) {
+        Set(_db.R,"$ns",readmefile.p_ns->ns);
     }
     file_section_RemoveAll();
     abt_md::FFileSection *cur_section=NULL;
     bool backticks=false;// inside backticks block
     bool codeblock=false;// inside code block
-    ind_beg(algo::FileLine_curs,line,readme.gitfile) {
+    ind_beg(algo::FileLine_curs,line,readmefile.gitfile) {
         bool skip=false;
         if (StartsWithQ(line,"```")) {
             backticks=!backticks;
@@ -437,7 +442,7 @@ void abt_md::LoadSections(abt_md::FReadme &readme) {
                         cur_section->p_mdsection=&mdsection;
                     }
                 }ind_end;
-                verblog(readme.gitfile<<":"<<cur_section->firstline
+                verblog(readmefile.gitfile<<":"<<cur_section->firstline
                         <<Keyval("section",line)
                         <<Keyval("mdsection",(cur_section->p_mdsection ? cur_section->p_mdsection->mdsection : dev::MdsectionPkey())));
                 cur_section->sortkey=Sortkey(*cur_section->p_mdsection, file_section_N());

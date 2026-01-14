@@ -1,19 +1,21 @@
-dmmeta.hook  field:abt_md.FMdsection.step  comment:""
-dmmeta.hook  field:acr_ed.FEdaction.step  comment:""
-dmmeta.hook  field:algo_lib.FDb.h_fatalerror  comment:""
-dmmeta.hook  field:algo_lib.FIohook.callback  comment:""
-dmmeta.hook  field:algo_lib.FTimehook.hook  comment:""
-dmmeta.hook  field:amc.FGen.step  comment:""
-dmmeta.hook  field:amc.FTclass.step  comment:""
-dmmeta.hook  field:amc.FTfunc.step  comment:""
-dmmeta.hook  field:atf_amc.FAmctest.step  comment:""
-dmmeta.hook  field:atf_amc.FListtype.step  comment:""
-dmmeta.hook  field:atf_amc.Hooktype.callback  comment:""
-dmmeta.hook  field:atf_ci.FCitest.step  comment:""
-dmmeta.hook  field:atf_fuzz.FFuzzstrat.step  comment:""
-dmmeta.hook  field:atf_unit.FUnittest.step  comment:""
-dmmeta.hook  field:gcli.FGclicmd.step  comment:""
-dmmeta.hook  field:gcli.FGtblact.step  comment:""
-dmmeta.hook  field:lib_ams.FStream.h_msg  comment:"Message processing hook"
-dmmeta.hook  field:lib_ams.FStream.h_msg_orig  comment:"Message processing hook"
-dmmeta.hook  field:lib_fm.FDb.h_alarm  comment:""
+dmmeta.hook  field:abt_md.FMdsection.step
+dmmeta.hook  field:acr_ed.FEdaction.step
+dmmeta.hook  field:algo_lib.FDb.h_fatalerror
+dmmeta.hook  field:algo_lib.FErrns.decode
+dmmeta.hook  field:algo_lib.FIohook.callback
+dmmeta.hook  field:algo_lib.FTimehook.hook
+dmmeta.hook  field:amc.FGen.step
+dmmeta.hook  field:amc.FTclass.step
+dmmeta.hook  field:amc.FTfunc.step
+dmmeta.hook  field:atf_amc.FAmctest.step
+dmmeta.hook  field:atf_amc.FListtype.step
+dmmeta.hook  field:atf_amc.Hooktype.callback
+dmmeta.hook  field:atf_ci.FCitest.step
+dmmeta.hook  field:atf_fuzz.FFuzzstrat.step
+dmmeta.hook  field:atf_unit.FUnittest.step
+dmmeta.hook  field:gcli.FGclicmd.step
+dmmeta.hook  field:gcli.FGtblact.step
+dmmeta.hook  field:lib_ams.FShm.h_amsmsg
+dmmeta.hook  field:lib_ams.FShm.h_msg_orig
+dmmeta.hook  field:lib_ams.MsgFmt.h_convert
+dmmeta.hook  field:lib_fm.FDb.h_alarm

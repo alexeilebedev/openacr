@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -52,6 +52,10 @@ bool amc::FwdDeclQ(amc::FField &field) {
         && !field.p_arg->c_cextern
         && (field.reftype == dmmeta_Reftype_reftype_Fbuf
             || field.reftype == dmmeta_Reftype_reftype_Opt
+            || field.reftype == dmmeta_Reftype_reftype_Ptrary
+            || field.reftype == dmmeta_Reftype_reftype_Delptr
+            || field.reftype == dmmeta_Reftype_reftype_Upptr
+            || field.reftype == dmmeta_Reftype_reftype_Ptr
             || field.reftype == dmmeta_Reftype_reftype_Varlen
             || field.reftype == dmmeta_Reftype_reftype_Lary);
 }
@@ -116,7 +120,7 @@ static void Fwddecl_GenStructNs(amc::FNs &ns) {
 
 void amc::gen_ns_fwddecl2() {
     ind_beg(amc::_db_ns_curs, ns, amc::_db) {
-        if (ns.select) {
+        if (ns.c_nscpp) {
             *ns.hdr << "// gen:ns_fwddecl2" << eol;
             Fwddecl_GenStructNs(ns);
         }
@@ -142,6 +146,7 @@ static void Hook_FwdDecl(amc::FField &field, amc::FGstatic &gstatic) {
             }
         }
         func.comment<<"User-implemented function from gstatic:"<<gstatic.field;
+        func.acrkey << "gstatic/"<<static_tuple.tuple.head<<":"<<attrs_qFind(static_tuple.tuple,0).value;
         func.glob  = true;
         func.extrn = true;
     }ind_end;
@@ -151,7 +156,7 @@ static void Hook_FwdDecl(amc::FField &field, amc::FGstatic &gstatic) {
 
 // emit forward-declarations of steps
 void amc::gen_ns_fwddecl() {
-    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.select) {
+    ind_beg(amc::_db_ns_curs, ns, amc::_db) if (ns.c_nscpp) {
         // fwd declaration for json formatters
         ind_beg(amc::ns_c_ctype_curs, ctype, ns) {
             ind_beg(amc::ctype_zs_cfmt_curs, cfmt, ctype) {

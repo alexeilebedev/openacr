@@ -4,33 +4,11 @@
 ### Table Of Contents
 <a href="#table-of-contents"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-&nbsp;&nbsp;&bull;&nbsp;  [Ctypes](#ctypes)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
-### Ctypes
-<a href="#ctypes"></a>
-Other ctypes in this namespace which don't have own readme files
-
-#### lib_iconv.FDb - In-memory database for lib_iconv
-<a href="#lib_iconv-fdb"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|_db|lib_iconv.FDb|Global|
-|icd|lib_iconv.Icd|Cppstack||Provides default name for variables of this type|
-
-#### lib_iconv.Icd - 
-<a href="#lib_iconv-icd"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|icd|iconv_t|Val|((iconv_t)-1)|iconv descriptor|
 
 ### Functions
 <a href="#functions"></a>
@@ -42,13 +20,13 @@ void lib_iconv::Close(lib_iconv::Icd &icd)
 ```
 
 ```c++
-// open conversion descriptor
-void lib_iconv::Open(lib_iconv::Icd& icd, strptr tocode, strptr fromcode) 
+// convert multibyte sequence
+tempstr lib_iconv::Convert(lib_iconv::Icd &icd, strptr in, bool no_throw) 
 ```
 
 ```c++
-// convert multibyte sequence
-tempstr lib_iconv::Convert(lib_iconv::Icd &icd, strptr in, bool no_throw) 
+// open conversion descriptor
+void lib_iconv::Open(lib_iconv::Icd& icd, strptr tocode, strptr fromcode) 
 ```
 
 ```c++
@@ -56,16 +34,6 @@ void lib_iconv::icd_Cleanup(lib_iconv::Icd &icd)
 ```
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
-
-### Inputs
-<a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
-`lib_iconv` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 
 ### Sources
 <a href="#sources"></a>
@@ -82,16 +50,6 @@ The following source files are part of this tool:
 |[include/lib_iconv.h](/include/lib_iconv.h)||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
-
-### Dependencies
-<a href="#dependencies"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
-The build target depends on the following libraries
-|Target|Comment|
-|---|---|
-|[algo_lib](/txt/lib/algo_lib/README.md)|Support library for all executables|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
 
 ### In Memory DB
 <a href="#in-memory-db"></a>

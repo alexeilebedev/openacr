@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 //
 // Target: atf_amc (exe) -- Unit tests for amc (see amctest table)
-// Exceptions: NO
+// Exceptions: yes
 // Source: cpp/atf_amc/lary.cpp
 //
 

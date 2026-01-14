@@ -378,6 +378,7 @@ inline void acr_ed::FEdaction_Init(acr_ed::FEdaction& edaction) {
     edaction.select = bool(false);
     edaction.step = NULL;
     edaction.ind_edaction_next = (acr_ed::FEdaction*)-1; // (acr_ed.FDb.ind_edaction) not-in-hash
+    edaction.ind_edaction_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FEdaction..Ctor
@@ -1296,6 +1297,48 @@ inline acr_ed::FGitfile& acr_ed::gitfile_qFind(u64 t) {
     return _db.gitfile_lary[bsr][index];
 }
 
+// --- acr_ed.FDb.msgtype.EmptyQ
+// Return true if index is empty
+inline bool acr_ed::msgtype_EmptyQ() {
+    return _db.msgtype_n == 0;
+}
+
+// --- acr_ed.FDb.msgtype.Find
+// Look up row by row id. Return NULL if out of range
+inline acr_ed::FMsgtype* acr_ed::msgtype_Find(u64 t) {
+    acr_ed::FMsgtype *retval = NULL;
+    if (LIKELY(u64(t) < u64(_db.msgtype_n))) {
+        u64 x = t + 1;
+        u64 bsr   = algo::u64_BitScanReverse(x);
+        u64 base  = u64(1)<<bsr;
+        u64 index = x-base;
+        retval = &_db.msgtype_lary[bsr][index];
+    }
+    return retval;
+}
+
+// --- acr_ed.FDb.msgtype.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline acr_ed::FMsgtype* acr_ed::msgtype_Last() {
+    return msgtype_Find(u64(_db.msgtype_n-1));
+}
+
+// --- acr_ed.FDb.msgtype.N
+// Return number of items in the pool
+inline i32 acr_ed::msgtype_N() {
+    return _db.msgtype_n;
+}
+
+// --- acr_ed.FDb.msgtype.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline acr_ed::FMsgtype& acr_ed::msgtype_qFind(u64 t) {
+    u64 x = t + 1;
+    u64 bsr   = algo::u64_BitScanReverse(x);
+    u64 base  = u64(1)<<bsr;
+    u64 index = x-base;
+    return _db.msgtype_lary[bsr][index];
+}
+
 // --- acr_ed.FDb.ns_curs.Reset
 // cursor points to valid item
 inline void acr_ed::_db_ns_curs_Reset(_db_ns_curs &curs, acr_ed::FDb &parent) {
@@ -1746,6 +1789,31 @@ inline acr_ed::FGitfile& acr_ed::_db_gitfile_curs_Access(_db_gitfile_curs &curs)
     return gitfile_qFind(u64(curs.index));
 }
 
+// --- acr_ed.FDb.msgtype_curs.Reset
+// cursor points to valid item
+inline void acr_ed::_db_msgtype_curs_Reset(_db_msgtype_curs &curs, acr_ed::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- acr_ed.FDb.msgtype_curs.ValidQ
+// cursor points to valid item
+inline bool acr_ed::_db_msgtype_curs_ValidQ(_db_msgtype_curs &curs) {
+    return curs.index < _db.msgtype_n;
+}
+
+// --- acr_ed.FDb.msgtype_curs.Next
+// proceed to next item
+inline void acr_ed::_db_msgtype_curs_Next(_db_msgtype_curs &curs) {
+    curs.index++;
+}
+
+// --- acr_ed.FDb.msgtype_curs.Access
+// item access
+inline acr_ed::FMsgtype& acr_ed::_db_msgtype_curs_Access(_db_msgtype_curs &curs) {
+    return msgtype_qFind(u64(curs.index));
+}
+
 // --- acr_ed.FField..Ctor
 inline  acr_ed::FField::FField() {
     acr_ed::FField_Init(*this);
@@ -1760,6 +1828,7 @@ inline  acr_ed::FField::~FField() {
 // Set all fields to initial values.
 inline void acr_ed::FFprefix_Init(acr_ed::FFprefix& fprefix) {
     fprefix.ind_fprefix_next = (acr_ed::FFprefix*)-1; // (acr_ed.FDb.ind_fprefix) not-in-hash
+    fprefix.ind_fprefix_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FFprefix..Ctor
@@ -1783,6 +1852,7 @@ inline void acr_ed::FListtype_Init(acr_ed::FListtype& listtype) {
     listtype.haveprev = bool(false);
     listtype.instail = bool(false);
     listtype.ind_listtype_next = (acr_ed::FListtype*)-1; // (acr_ed.FDb.ind_listtype) not-in-hash
+    listtype.ind_listtype_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FListtype..Ctor
@@ -1795,10 +1865,15 @@ inline  acr_ed::FListtype::~FListtype() {
     acr_ed::FListtype_Uninit(*this);
 }
 
+// --- acr_ed.FMsgtype..Ctor
+inline  acr_ed::FMsgtype::FMsgtype() {
+}
+
 // --- acr_ed.FNs..Init
 // Set all fields to initial values.
 inline void acr_ed::FNs_Init(acr_ed::FNs& ns) {
     ns.ind_ns_next = (acr_ed::FNs*)-1; // (acr_ed.FDb.ind_ns) not-in-hash
+    ns.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FNs..Ctor
@@ -1815,6 +1890,7 @@ inline  acr_ed::FNs::~FNs() {
 // Set all fields to initial values.
 inline void acr_ed::FNsdb_Init(acr_ed::FNsdb& nsdb) {
     nsdb.ind_nsdb_next = (acr_ed::FNsdb*)-1; // (acr_ed.FDb.ind_nsdb) not-in-hash
+    nsdb.ind_nsdb_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FNsdb..Ctor
@@ -1846,6 +1922,7 @@ inline void acr_ed::FSsimfile_Init(acr_ed::FSsimfile& ssimfile) {
     ssimfile.p_ctype = NULL;
     ssimfile.p_ns = NULL;
     ssimfile.ind_ssimfile_next = (acr_ed::FSsimfile*)-1; // (acr_ed.FDb.ind_ssimfile) not-in-hash
+    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FSsimfile..Ctor
@@ -1874,9 +1951,9 @@ inline acr_ed::FTargsrc* acr_ed::zd_targsrc_First(acr_ed::FTarget& target) {
 
 // --- acr_ed.FTarget.zd_targsrc.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool acr_ed::zd_targsrc_InLlistQ(acr_ed::FTargsrc& row) {
+inline bool acr_ed::target_zd_targsrc_InLlistQ(acr_ed::FTargsrc& row) {
     bool result = false;
-    result = !(row.zd_targsrc_next == (acr_ed::FTargsrc*)-1);
+    result = !(row.target_zd_targsrc_next == (acr_ed::FTargsrc*)-1);
     return result;
 }
 
@@ -1896,14 +1973,14 @@ inline i32 acr_ed::zd_targsrc_N(const acr_ed::FTarget& target) {
 
 // --- acr_ed.FTarget.zd_targsrc.Next
 // Return pointer to next element in the list
-inline acr_ed::FTargsrc* acr_ed::zd_targsrc_Next(acr_ed::FTargsrc &row) {
-    return row.zd_targsrc_next;
+inline acr_ed::FTargsrc* acr_ed::target_zd_targsrc_Next(acr_ed::FTargsrc &row) {
+    return row.target_zd_targsrc_next;
 }
 
 // --- acr_ed.FTarget.zd_targsrc.Prev
 // Return pointer to previous element in the list
-inline acr_ed::FTargsrc* acr_ed::zd_targsrc_Prev(acr_ed::FTargsrc &row) {
-    return row.zd_targsrc_prev;
+inline acr_ed::FTargsrc* acr_ed::target_zd_targsrc_Prev(acr_ed::FTargsrc &row) {
+    return row.target_zd_targsrc_prev;
 }
 
 // --- acr_ed.FTarget.zd_targsrc.qLast
@@ -1923,6 +2000,7 @@ inline void acr_ed::FTarget_Init(acr_ed::FTarget& target) {
     target.zd_targsrc_tail = NULL; // (acr_ed.FTarget.zd_targsrc)
     target.p_ns = NULL;
     target.ind_target_next = (acr_ed::FTarget*)-1; // (acr_ed.FDb.ind_target) not-in-hash
+    target.ind_target_hashval = 0; // stored hash value
 }
 
 // --- acr_ed.FTarget.zd_targsrc_curs.Reset
@@ -1940,7 +2018,7 @@ inline bool acr_ed::target_zd_targsrc_curs_ValidQ(target_zd_targsrc_curs &curs) 
 // --- acr_ed.FTarget.zd_targsrc_curs.Next
 // proceed to next item
 inline void acr_ed::target_zd_targsrc_curs_Next(target_zd_targsrc_curs &curs) {
-    acr_ed::FTargsrc *next = (*curs.row).zd_targsrc_next;
+    acr_ed::FTargsrc *next = (*curs.row).target_zd_targsrc_next;
     curs.row = next;
 }
 
@@ -1964,8 +2042,8 @@ inline  acr_ed::FTarget::~FTarget() {
 // Set all fields to initial values.
 inline void acr_ed::FTargsrc_Init(acr_ed::FTargsrc& targsrc) {
     targsrc.p_target = NULL;
-    targsrc.zd_targsrc_next = (acr_ed::FTargsrc*)-1; // (acr_ed.FTarget.zd_targsrc) not-in-list
-    targsrc.zd_targsrc_prev = NULL; // (acr_ed.FTarget.zd_targsrc)
+    targsrc.target_zd_targsrc_next = (acr_ed::FTargsrc*)-1; // (acr_ed.FTarget.zd_targsrc) not-in-list
+    targsrc.target_zd_targsrc_prev = NULL; // (acr_ed.FTarget.zd_targsrc)
 }
 
 // --- acr_ed.FTargsrc..Ctor

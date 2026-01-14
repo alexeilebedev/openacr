@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 //
 // License: GPL
@@ -34,5 +34,6 @@ namespace bash2html { // update-hdr
     // -------------------------------------------------------------------
     // cpp/bash2html.cpp
     //
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:bash2html
 }

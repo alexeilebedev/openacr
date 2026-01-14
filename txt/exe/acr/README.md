@@ -65,8 +65,8 @@ Usage: acr [[-query:]<string>] [options]
     -field...   string          Fields to select
     -regxof     string  ""      Single field: output regx of matching field values
     -meta                       Select meta-data for selected records
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -420,19 +420,19 @@ Deselect any selected records and selects their meta-data instead.
 `acr` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
-|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.ssimsort](/txt/ssimdb/dmmeta/ssimsort.md)|Define sort order for ssimfile|
-|[dmmeta.ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|Extended constraints for ssim records|
-|[dmmeta.smallstr](/txt/ssimdb/dmmeta/smallstr.md)|Generated fixed-length padded or length-delimited string field|
-|[dmmeta.funique](/txt/ssimdb/dmmeta/funique.md)|This field must be unique in the table. Not needed for primary key|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
-|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
 |[dmmeta.anonfld](/txt/ssimdb/dmmeta/anonfld.md)|Omit field name where possible (command line, enums, constants)|
 |[amcdb.bltin](/txt/ssimdb/amcdb/bltin.md)|Specify properties of a C built-in type|
+|[dmmeta.cdflt](/txt/ssimdb/dmmeta/cdflt.md)|Specify default value for single-value types that lack fields|
+|[dmmeta.cppfunc](/txt/ssimdb/dmmeta/cppfunc.md)|Value of field provided by this expression|
+|[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
+|[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
+|[dmmeta.funique](/txt/ssimdb/dmmeta/funique.md)|This field must be unique in the table. Not needed for primary key|
+|[dmmeta.smallstr](/txt/ssimdb/dmmeta/smallstr.md)|Generated fixed-length padded or length-delimited string field|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.ssimreq](/txt/ssimdb/dmmeta/ssimreq.md)|Extended constraints for ssim records|
+|[dmmeta.ssimsort](/txt/ssimdb/dmmeta/ssimsort.md)|Define sort order for ssimfile|
+|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

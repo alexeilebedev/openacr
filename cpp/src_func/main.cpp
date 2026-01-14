@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2016-2019 NYSE | Intercontinental Exchange
 //
@@ -33,7 +33,7 @@ strptr src_func::StripComment(strptr line) {
     algo::i32_Range r=substr_FindLast(line,"//");
     strptr ret = line;
     if (r.end > r.beg) {
-        ret = FirstN(line,r.beg);
+        ret = Trimmed(FirstN(line,r.beg));
     }
     return ret;
 }
@@ -82,12 +82,14 @@ tempstr src_func::GetProto(src_func::FFunc &func) {
 // Check if line contains function start
 // Criteria are:
 // - first character nonblank
+// - has parentheses
 // - last nonblank character is {
 // - it's not namespace, enum or struct
 bool src_func::FuncstartQ(strptr line, strptr trimmedline) {
     bool funcstart = line.n_elems>0
         && !algo_lib::WhiteCharQ(line.elems[0])
         && !Regx_Match(src_func::_db.ignore_funcstart,line)
+        && FindStr(line,"(") !=-1
         && trimmedline.n_elems>0
         && trimmedline.elems[0] != '}'
         && qLast(trimmedline)!= ';';
@@ -110,16 +112,10 @@ bool src_func::FuncstartQ(strptr line, strptr trimmedline) {
 
 // -----------------------------------------------------------------------------
 
-// Extract function name for a global function, stripping arguments and namespace
-static strptr GetFuncname(strptr funcname) {
-    return Pathcomp(funcname,"(LL RR:RR");
-}
-
-// -----------------------------------------------------------------------------
-
 // Extract function namespace name
 // void *ns::blah(arg1, arg2) -> ns
-strptr src_func::GetFuncNs(strptr funcname) {
+tempstr src_func::GetFuncNs(src_func::FFunc &func) {
+    strptr funcname = func.func;
     strptr s = Pathcomp(funcname,"(LL RR"); // void *ns::blah
     algo::i32_Range r = substr_FindLast(s,"::"); // 8..10
     s = FirstN(s,r.beg);// void *ns
@@ -127,20 +123,31 @@ strptr src_func::GetFuncNs(strptr funcname) {
     while (idx>0 && algo_lib::IdentCharQ(s[idx-1])) {
         idx--;
     }
-    return RestFrom(s,idx);// ns
+    tempstr ret(RestFrom(s,idx));// ns
+    return ret;
+}
+
+static strptr GetAcrkey(src_func::FFunc &func) {
+    algo::strptr ret;
+    if (func.p_userfunc) {
+        // for keys like X/Y, leave only the Y
+        ret = Pathcomp(func.p_userfunc->acrkey,"/RR");
+    }
+    return ret;
 }
 
 // -----------------------------------------------------------------------------
 
 // Filter functions based on parameters provided on command line.
-static bool MatchFuncQ(src_func::FFunc &func) {
+bool src_func::MatchFuncQ(src_func::FFunc &func) {
     bool show=true
         && !(func.isstatic && !src_func::_db.cmdline.showstatic)
         // match raw function name (no namespace)
-        && Regx_Match(src_func::_db.cmdline.name,GetFuncname(func.func))
-        && Regx_Match(src_func::_db.cmdline.body,func.body)
-        && Regx_Match(src_func::_db.cmdline.func,func.func)
-        && Regx_Match(src_func::_db.cmdline.comment, func.precomment);
+        && Regx_Match(src_func::_db.cmdline.func,func.name)
+        && Regx_Match(src_func::_db.cmdline.matchbody,func.body)
+        && Regx_Match(src_func::_db.cmdline.matchproto,func.func)
+        && Regx_Match(src_func::_db.cmdline.acrkey,GetAcrkey(func))
+        && Regx_Match(src_func::_db.cmdline.matchcomment, func.precomment);
     return show;
 }
 
@@ -184,24 +191,8 @@ strptr src_func::Nsline_GetNamespace(strptr str) {
 // -----------------------------------------------------------------------------
 
 static void SelectTarget() {
-    // select target, and any targsrc under it
-    ind_beg(src_func::_db_target_curs,target,src_func::_db) {
-        target.select = Regx_Match(src_func::_db.cmdline.target, target.target);
-        if (target.select) {
-            ind_beg(src_func::target_cd_targsrc_curs,targsrc,target) {
-                targsrc.select=true;
-            }ind_end;
-        }
-    }ind_end;
-    // select targsrc, and any target above it
     ind_beg(src_func::_db_targsrc_curs,targsrc,src_func::_db) {
-        targsrc.select = targsrc.select || Regx_Match(src_func::_db.cmdline.targsrc, targsrc.targsrc);
-        if (targsrc.select) {
-            targsrc.p_target->select=true;
-        }
-    }ind_end;
-    ind_beg(src_func::_db_target_curs,target,src_func::_db) if (target.select) {
-        verblog("# select "<<target.target);
+        targsrc.select=Regx_Match(src_func::_db.cmdline.targsrc, targsrc.targsrc);
     }ind_end;
 }
 
@@ -213,27 +204,106 @@ static void Main_Report() {
 
 // -----------------------------------------------------------------------------
 
-static void RewriteOpts() {
+void src_func::RewriteOpts() {
     bool nextfile = ch_N(src_func::_db.cmdline.nextfile);
     bool updateproto = src_func::_db.cmdline.updateproto;
 
-    if (!nextfile && !updateproto) {
-        src_func::_db.cmdline.listfunc = true;
+    if (!nextfile && !updateproto && !_db.cmdline.baddecl) {
+        src_func::_db.cmdline.list = true;
     }
+    if (_db.cmdline.f) {
+        _db.cmdline.showbody=true;
+        _db.cmdline.showcomment=true;
+        _db.cmdline.sortname=true;
+    }
+    if (_db.cmdline.createmissing) {
+        _db.cmdline.list=false;
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+// Calculate a set of prefixes & suffixes (together:affixes)
+// which "look like generated code"
+// We will not generate prototypes for functions that look like generated code
+//   (this is a heuristic, not a hard rule, but it saves hours of debugging when it works)
+// The reason is that if something changes in the underlying table where the userfunc
+// no longer gets generated (and thus expected) by amc, the user function should trigger
+// a compile error from lack of prototype.
+// Also, for each prototype that we refused to generate because a function matched
+// a known gen affix, we add a comment to the include file.
+void src_func::CalcGenaffix() {
+    ind_beg(_db_userfunc_curs,userfunc,_db) {
+        tempstr affix;
+        strptr ns = Pathcomp(userfunc.userfunc,".LL");
+        if (StartsWithQ(userfunc.acrkey,"gstatic/")) {
+            // e.g. userfunc:ns...tuneparam_hugepages
+            //      acrkey:gstatic/db.tuneparam:hugepages
+            //   -> affix ns_tuneparam_
+            // this is the most important class
+            affix << ns << "."<<Pathcomp(userfunc.acrkey,":LL.RR") << "_";
+        } else if (StartsWithQ(userfunc.acrkey,"dispatch_msg:")) {
+            // acrkey:dispatch_msg:someproc.In/somens.SomeMsg
+            //   -> affix someproc.In_
+            affix << Pathcomp(userfunc.acrkey,":LR/LL") << "_";
+        } else if (StartsWithQ(userfunc.acrkey,"fstep:") || StartsWithQ(userfunc.acrkey,"fbuf:")) {
+            // acrkey:fstep:%
+            // userfunc:ns.FDb.cd_intfmc_read.Step
+            //   -> affix ns._Step
+            // or
+            // acrkey:fbuf:ns.Msgbuf.in_custom
+            // userfunc:ns.Msgbuf.in_custom.ScanMsg
+            //   -> affix ns._ScanMsg
+            affix << ns << "._" << Pathcomp(userfunc.userfunc,".RR");
+        }
+        if (affix != "") {
+            src_func::ind_genaffix_GetOrCreate(affix);
+        }
+    }ind_end;
+    ind_beg(_db_genaffix_curs,genaffix,_db) {
+        verblog("src_func.genaffix"
+                <<Keyval("genaffix",genaffix.genaffix));
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
+src_func::FGenaffix *src_func::FindAffix(strptr cppname) {
+    src_func::FGenaffix *ret=NULL;
+    int idx = 0;
+    strptr ns=Pathcomp(cppname,".LL");
+    strptr name=Pathcomp(cppname,".LR");
+    while ((idx = FindFrom(name, "_", idx, true))!=-1) {
+        ret=ind_genaffix_Find(tempstr()<<ns<<"."<<FirstN(strptr(name), idx+1)); // try prefix
+        if (ret) {
+            break;
+        }
+        ret=ind_genaffix_Find(tempstr()<<ns<<"."<<RestFrom(strptr(name), idx)); // try suffix
+        if (ret) {
+            break;
+        }
+        idx++;
+    }
+    return ret;
 }
 
 // -----------------------------------------------------------------------------
 
 // Main
 void src_func::Main() {
-    (void)Regx_ReadStrptrMaybe(src_func::_db.ignore_funcstart
-                               , "(namespace|enum|struct|#|//|/*|*/)%");
+    (void)Regx_ReadStrptrMaybe(src_func::_db.ignore_funcstart, "(namespace|enum|struct|#|//|/*|*/)%");
     bool report=_db.cmdline.report;
 
     SelectTarget();
 
     RewriteOpts();
+
+    CalcGenaffix();
+
     bool action = false;
+    if (_db.cmdline.baddecl) {
+        action=true;
+    }
 
     if (ch_N(src_func::_db.cmdline.nextfile)) {
         Main_Nextfile();
@@ -245,12 +315,16 @@ void src_func::Main() {
             action=true;
             Main_UpdateHeader();
         }
+        if (src_func::_db.cmdline.createmissing) {
+            action=true;
+            Main_CreateMissing();
+        }
         Main_SelectFunc();
         if (src_func::_db.cmdline.e) {
             action=true;
             Main_EditFunc();
         }
-        if (src_func::_db.cmdline.listfunc) {
+        if (src_func::_db.cmdline.list) {
             action=true;
             Main_ListFunc();
         }

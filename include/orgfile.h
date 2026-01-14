@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 //
 // License: GPL
@@ -62,5 +62,6 @@ namespace orgfile { // update-hdr
     void MoveFile(strptr pathname);
     bool RawMove(strptr line);
     bool RawDedup(strptr line);
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:orgfile
 }

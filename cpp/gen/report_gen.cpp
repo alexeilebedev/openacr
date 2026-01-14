@@ -380,33 +380,29 @@ bool report::abt_ReadFieldMaybe(report::abt& parent, algo::strptr field, algo::s
     switch(field_id) {
         case report_FieldId_n_target: {
             retval = u16_ReadStrptrMaybe(parent.n_target, strval);
-            break;
-        }
+        } break;
         case report_FieldId_time: {
             retval = algo::UnDiff_ReadStrptrMaybe(parent.time, strval);
-            break;
-        }
+        } break;
         case report_FieldId_hitrate: {
             retval = algo::Smallstr20_ReadStrptrMaybe(parent.hitrate, strval);
-            break;
-        }
+        } break;
         case report_FieldId_pch_hitrate: {
             retval = algo::Smallstr20_ReadStrptrMaybe(parent.pch_hitrate, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_warn: {
             retval = u32_ReadStrptrMaybe(parent.n_warn, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_err: {
             retval = u32_ReadStrptrMaybe(parent.n_err, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_install: {
             retval = u16_ReadStrptrMaybe(parent.n_install, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -463,29 +459,26 @@ bool report::acr_ReadFieldMaybe(report::acr& parent, algo::strptr field, algo::s
     switch(field_id) {
         case report_FieldId_n_select: {
             retval = u32_ReadStrptrMaybe(parent.n_select, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_insert: {
             retval = u32_ReadStrptrMaybe(parent.n_insert, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_delete: {
             retval = u32_ReadStrptrMaybe(parent.n_delete, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_ignore: {
             retval = u32_ReadStrptrMaybe(parent.n_ignore, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_update: {
             retval = u32_ReadStrptrMaybe(parent.n_update, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_file_mod: {
             retval = u32_ReadStrptrMaybe(parent.n_file_mod, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -539,13 +532,14 @@ bool report::acr_check_ReadFieldMaybe(report::acr_check& parent, algo::strptr fi
     switch(field_id) {
         case report_FieldId_records: {
             retval = u32_ReadStrptrMaybe(parent.records, strval);
-            break;
-        }
+        } break;
         case report_FieldId_errors: {
             retval = u32_ReadStrptrMaybe(parent.errors, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -587,29 +581,26 @@ bool report::amc_ReadFieldMaybe(report::amc& parent, algo::strptr field, algo::s
     switch(field_id) {
         case report_FieldId_n_cppfile: {
             retval = u32_ReadStrptrMaybe(parent.n_cppfile, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_cppline: {
             retval = u32_ReadStrptrMaybe(parent.n_cppline, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_ctype: {
             retval = u32_ReadStrptrMaybe(parent.n_ctype, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_func: {
             retval = u32_ReadStrptrMaybe(parent.n_func, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_xref: {
             retval = u32_ReadStrptrMaybe(parent.n_xref, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_filemod: {
             retval = u32_ReadStrptrMaybe(parent.n_filemod, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -663,41 +654,35 @@ bool report::atf_comp_ReadFieldMaybe(report::atf_comp& parent, algo::strptr fiel
     switch(field_id) {
         case report_FieldId_ntest: {
             retval = i32_ReadStrptrMaybe(parent.ntest, strval);
-            break;
-        }
+        } break;
         case report_FieldId_nselect: {
             retval = i32_ReadStrptrMaybe(parent.nselect, strval);
-            break;
-        }
+        } break;
         case report_FieldId_npass: {
             retval = i32_ReadStrptrMaybe(parent.npass, strval);
-            break;
-        }
+        } break;
         case report_FieldId_nskip: {
             retval = i32_ReadStrptrMaybe(parent.nskip, strval);
-            break;
-        }
+        } break;
         case report_FieldId_nrun: {
             retval = i32_ReadStrptrMaybe(parent.nrun, strval);
-            break;
-        }
+        } break;
         case report_FieldId_nwrite: {
             retval = i32_ReadStrptrMaybe(parent.nwrite, strval);
-            break;
-        }
+        } break;
         case report_FieldId_nerr: {
             retval = i32_ReadStrptrMaybe(parent.nerr, strval);
-            break;
-        }
+        } break;
         case report_FieldId_ninsert: {
             retval = i32_ReadStrptrMaybe(parent.ninsert, strval);
-            break;
-        }
+        } break;
         case report_FieldId_success: {
             retval = bool_ReadStrptrMaybe(parent.success, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -760,21 +745,20 @@ bool report::atf_unit_ReadFieldMaybe(report::atf_unit& parent, algo::strptr fiel
     switch(field_id) {
         case report_FieldId_n_test_total: {
             retval = u32_ReadStrptrMaybe(parent.n_test_total, strval);
-            break;
-        }
+        } break;
         case report_FieldId_success: {
             retval = bool_ReadStrptrMaybe(parent.success, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_test_run: {
             retval = u64_ReadStrptrMaybe(parent.n_test_run, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_err: {
             retval = u64_ReadStrptrMaybe(parent.n_err, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -822,45 +806,38 @@ bool report::gcache_ReadFieldMaybe(report::gcache& parent, algo::strptr field, a
     switch(field_id) {
         case report_FieldId_starttime: {
             retval = algo::UnTime_ReadStrptrMaybe(parent.starttime, strval);
-            break;
-        }
+        } break;
         case report_FieldId_elapsed_sec: {
             retval = double_ReadStrptrMaybe(parent.elapsed_sec, strval);
-            break;
-        }
+        } break;
         case report_FieldId_preproc_size: {
             retval = i32_ReadStrptrMaybe(parent.preproc_size, strval);
-            break;
-        }
+        } break;
         case report_FieldId_hit: {
             retval = bool_ReadStrptrMaybe(parent.hit, strval);
-            break;
-        }
+        } break;
         case report_FieldId_cached_file: {
             retval = algo::cstring_ReadStrptrMaybe(parent.cached_file, strval);
-            break;
-        }
+        } break;
         case report_FieldId_copy_file_range: {
             retval = bool_ReadStrptrMaybe(parent.copy_file_range, strval);
-            break;
-        }
+        } break;
         case report_FieldId_pch_hit: {
             retval = bool_ReadStrptrMaybe(parent.pch_hit, strval);
-            break;
-        }
+        } break;
         case report_FieldId_pch_file: {
             retval = algo::cstring_ReadStrptrMaybe(parent.pch_file, strval);
-            break;
-        }
+        } break;
         case report_FieldId_source: {
             retval = algo::cstring_ReadStrptrMaybe(parent.source, strval);
-            break;
-        }
+        } break;
         case report_FieldId_pch_source: {
             retval = algo::cstring_ReadStrptrMaybe(parent.pch_source, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -936,13 +913,14 @@ bool report::gcache_hitrate_ReadFieldMaybe(report::gcache_hitrate& parent, algo:
     switch(field_id) {
         case report_FieldId_hitrate: {
             retval = algo::Smallstr20_ReadStrptrMaybe(parent.hitrate, strval);
-            break;
-        }
+        } break;
         case report_FieldId_pch_hitrate: {
             retval = algo::Smallstr20_ReadStrptrMaybe(parent.pch_hitrate, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -984,37 +962,32 @@ bool report::src_func_ReadFieldMaybe(report::src_func& parent, algo::strptr fiel
     switch(field_id) {
         case report_FieldId_n_func: {
             retval = u32_ReadStrptrMaybe(parent.n_func, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_line: {
             retval = u32_ReadStrptrMaybe(parent.n_line, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_static: {
             retval = u32_ReadStrptrMaybe(parent.n_static, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_inline: {
             retval = u32_ReadStrptrMaybe(parent.n_inline, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_mysteryfunc: {
             retval = u32_ReadStrptrMaybe(parent.n_mysteryfunc, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_filemod: {
             retval = u32_ReadStrptrMaybe(parent.n_filemod, strval);
-            break;
-        }
+        } break;
         case report_FieldId_n_baddecl: {
             retval = u32_ReadStrptrMaybe(parent.n_baddecl, strval);
-            break;
-        }
+        } break;
         case report_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);

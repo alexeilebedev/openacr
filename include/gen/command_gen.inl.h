@@ -24,6 +24,7 @@
 
 #pragma once
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // --- command.FieldId.value.GetEnum
@@ -654,36 +655,6 @@ inline  command::amc_vis_proc::~amc_vis_proc() {
     command::amc_vis_proc_Uninit(*this);
 }
 
-// --- command.ams_cat..Init
-// Set all fields to initial values.
-inline void command::ams_cat_Init(command::ams_cat& parent) {
-    parent.in = algo::strptr("data");
-}
-
-// --- command.ams_cat..Ctor
-inline  command::ams_cat::ams_cat() {
-    command::ams_cat_Init(*this);
-}
-
-// --- command.ams_cat_proc..Init
-// Set all fields to initial values.
-inline void command::ams_cat_proc_Init(command::ams_cat_proc& parent) {
-    parent.path = algo::strptr("bin/ams_cat");
-    parent.pid = pid_t(0);
-    parent.timeout = i32(0);
-    parent.status = i32(0);
-}
-
-// --- command.ams_cat_proc..Ctor
-inline  command::ams_cat_proc::ams_cat_proc() {
-    command::ams_cat_proc_Init(*this);
-}
-
-// --- command.ams_cat_proc..Dtor
-inline  command::ams_cat_proc::~ams_cat_proc() {
-    command::ams_cat_proc_Uninit(*this);
-}
-
 // --- command.ams_sendtest..Ctor
 inline  command::ams_sendtest::ams_sendtest() {
     command::ams_sendtest_Init(*this);
@@ -730,13 +701,6 @@ inline  command::apm_proc::apm_proc() {
 // --- command.apm_proc..Dtor
 inline  command::apm_proc::~apm_proc() {
     command::apm_proc_Uninit(*this);
-}
-
-// --- command.aqlite..Init
-// Set all fields to initial values.
-inline void command::aqlite_Init(command::aqlite& parent) {
-    parent.in = algo::strptr("data");
-    parent.schema = algo::strptr("data");
 }
 
 // --- command.aqlite..Ctor
@@ -1287,6 +1251,42 @@ inline  command::atf_cov_proc::~atf_cov_proc() {
     command::atf_cov_proc_Uninit(*this);
 }
 
+// --- command.atf_exp..Init
+// Set all fields to initial values.
+inline void command::atf_exp_Init(command::atf_exp& parent) {
+    parent.in = algo::strptr("data");
+    parent.trace = algo::strptr("");
+    parent.bindir = algo::strptr("bin");
+    parent.comptest = algo::strptr("");
+    parent.tempdir = algo::strptr("");
+    parent.timeout = double(8.0);
+    parent.dbgshell = bool(false);
+}
+
+// --- command.atf_exp..Ctor
+inline  command::atf_exp::atf_exp() {
+    command::atf_exp_Init(*this);
+}
+
+// --- command.atf_exp_proc..Init
+// Set all fields to initial values.
+inline void command::atf_exp_proc_Init(command::atf_exp_proc& parent) {
+    parent.path = algo::strptr("bin/atf_exp");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+
+// --- command.atf_exp_proc..Ctor
+inline  command::atf_exp_proc::atf_exp_proc() {
+    command::atf_exp_proc_Init(*this);
+}
+
+// --- command.atf_exp_proc..Dtor
+inline  command::atf_exp_proc::~atf_exp_proc() {
+    command::atf_exp_proc_Uninit(*this);
+}
+
 // --- command.atf_fuzz..Ctor
 inline  command::atf_fuzz::atf_fuzz() {
     command::atf_fuzz_Init(*this);
@@ -1696,6 +1696,176 @@ inline  command::gcli_proc::~gcli_proc() {
     command::gcli_proc_Uninit(*this);
 }
 
+// --- command.generic..Ctor
+inline  command::generic::generic() {
+}
+
+// --- command.generic_proc..Init
+// Set all fields to initial values.
+inline void command::generic_proc_Init(command::generic_proc& parent) {
+    parent.path = algo::strptr("");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+
+// --- command.generic_proc..Ctor
+inline  command::generic_proc::generic_proc() {
+    command::generic_proc_Init(*this);
+}
+
+// --- command.generic_proc..Dtor
+inline  command::generic_proc::~generic_proc() {
+    command::generic_proc_Uninit(*this);
+}
+
+// --- command.jkv.kv.EmptyQ
+// Return true if index is empty
+inline bool command::kv_EmptyQ(command::jkv& parent) {
+    return parent.kv_n == 0;
+}
+
+// --- command.jkv.kv.Find
+// Look up row by row id. Return NULL if out of range
+inline algo::cstring* command::kv_Find(command::jkv& parent, u64 t) {
+    u64 idx = t;
+    u64 lim = parent.kv_n;
+    if (idx >= lim) return NULL;
+    return parent.kv_elems + idx;
+}
+
+// --- command.jkv.kv.Getary
+// Return array pointer by value
+inline algo::aryptr<algo::cstring> command::kv_Getary(const command::jkv& parent) {
+    return algo::aryptr<algo::cstring>(parent.kv_elems, parent.kv_n);
+}
+
+// --- command.jkv.kv.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo::cstring* command::kv_Last(command::jkv& parent) {
+    return kv_Find(parent, u64(parent.kv_n-1));
+}
+
+// --- command.jkv.kv.Max
+// Return max. number of items in the array
+inline i32 command::kv_Max(command::jkv& parent) {
+    (void)parent;
+    return parent.kv_max;
+}
+
+// --- command.jkv.kv.N
+// Return number of items in the array
+inline i32 command::kv_N(const command::jkv& parent) {
+    return parent.kv_n;
+}
+
+// --- command.jkv.kv.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void command::kv_Reserve(command::jkv& parent, int n) {
+    u32 new_n = parent.kv_n + n;
+    if (UNLIKELY(new_n > parent.kv_max)) {
+        kv_AbsReserve(parent, new_n);
+    }
+}
+
+// --- command.jkv.kv.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo::cstring& command::kv_qFind(command::jkv& parent, u64 t) {
+    return parent.kv_elems[t];
+}
+
+// --- command.jkv.kv.qLast
+// Return reference to last element of array. No bounds checking
+inline algo::cstring& command::kv_qLast(command::jkv& parent) {
+    return kv_qFind(parent, u64(parent.kv_n-1));
+}
+
+// --- command.jkv.kv.rowid_Get
+// Return row id of specified element
+inline u64 command::kv_rowid_Get(command::jkv& parent, algo::cstring &elem) {
+    u64 id = &elem - parent.kv_elems;
+    return u64(id);
+}
+
+// --- command.jkv.output.GetEnum
+// Get value of field as enum type
+inline command_jkv_output_Enum command::output_GetEnum(const command::jkv& parent) {
+    return command_jkv_output_Enum(parent.output);
+}
+
+// --- command.jkv.output.SetEnum
+// Set value of field from enum type.
+inline void command::output_SetEnum(command::jkv& parent, command_jkv_output_Enum rhs) {
+    parent.output = u8(rhs);
+}
+
+// --- command.jkv.kv_curs.Next
+// proceed to next item
+inline void command::jkv_kv_curs_Next(jkv_kv_curs &curs) {
+    curs.index++;
+}
+
+// --- command.jkv.kv_curs.Reset
+inline void command::jkv_kv_curs_Reset(jkv_kv_curs &curs, command::jkv &parent) {
+    curs.elems = parent.kv_elems;
+    curs.n_elems = parent.kv_n;
+    curs.index = 0;
+}
+
+// --- command.jkv.kv_curs.ValidQ
+// cursor points to valid item
+inline bool command::jkv_kv_curs_ValidQ(jkv_kv_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- command.jkv.kv_curs.Access
+// item access
+inline algo::cstring& command::jkv_kv_curs_Access(jkv_kv_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- command.jkv..Init
+// Set all fields to initial values.
+inline void command::jkv_Init(command::jkv& parent) {
+    parent.in = algo::strptr("data");
+    parent.kv_elems 	= 0; // (command.jkv.kv)
+    parent.kv_n     	= 0; // (command.jkv.kv)
+    parent.kv_max   	= 0; // (command.jkv.kv)
+    parent.r = bool(false);
+    parent.write = bool(false);
+    parent.output = u8(0);
+    parent.pretty = u32(2);
+}
+
+// --- command.jkv..Ctor
+inline  command::jkv::jkv() {
+    command::jkv_Init(*this);
+}
+
+// --- command.jkv..Dtor
+inline  command::jkv::~jkv() {
+    command::jkv_Uninit(*this);
+}
+
+// --- command.jkv_proc..Init
+// Set all fields to initial values.
+inline void command::jkv_proc_Init(command::jkv_proc& parent) {
+    parent.path = algo::strptr("bin/jkv");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+
+// --- command.jkv_proc..Ctor
+inline  command::jkv_proc::jkv_proc() {
+    command::jkv_proc_Init(*this);
+}
+
+// --- command.jkv_proc..Dtor
+inline  command::jkv_proc::~jkv_proc() {
+    command::jkv_proc_Uninit(*this);
+}
+
 // --- command.mdbg.args.EmptyQ
 // Return true if index is empty
 inline bool command::args_EmptyQ(command::mdbg& parent) {
@@ -1971,6 +2141,30 @@ inline  command::orgfile_proc::~orgfile_proc() {
     command::orgfile_proc_Uninit(*this);
 }
 
+// --- command.samp_make..Ctor
+inline  command::samp_make::samp_make() {
+    command::samp_make_Init(*this);
+}
+
+// --- command.samp_make_proc..Init
+// Set all fields to initial values.
+inline void command::samp_make_proc_Init(command::samp_make_proc& parent) {
+    parent.path = algo::strptr("bin/samp_make");
+    parent.pid = pid_t(0);
+    parent.timeout = i32(0);
+    parent.status = i32(0);
+}
+
+// --- command.samp_make_proc..Ctor
+inline  command::samp_make_proc::samp_make_proc() {
+    command::samp_make_proc_Init(*this);
+}
+
+// --- command.samp_make_proc..Dtor
+inline  command::samp_make_proc::~samp_make_proc() {
+    command::samp_make_proc_Uninit(*this);
+}
+
 // --- command.samp_meng..Init
 // Set all fields to initial values.
 inline void command::samp_meng_Init(command::samp_meng& parent) {
@@ -2001,26 +2195,17 @@ inline  command::samp_meng_proc::~samp_meng_proc() {
     command::samp_meng_proc_Uninit(*this);
 }
 
-// --- command.samp_regx.style.GetEnum
-// Get value of field as enum type
-inline command_samp_regx_style_Enum command::style_GetEnum(const command::samp_regx& parent) {
-    return command_samp_regx_style_Enum(parent.style);
-}
-
-// --- command.samp_regx.style.SetEnum
-// Set value of field from enum type.
-inline void command::style_SetEnum(command::samp_regx& parent, command_samp_regx_style_Enum rhs) {
-    parent.style = u8(rhs);
-}
-
 // --- command.samp_regx..Init
 // Set all fields to initial values.
 inline void command::samp_regx_Init(command::samp_regx& parent) {
     parent.in = algo::strptr("data");
-    parent.style = u8(0);
+    parent.style = algo_lib_RegxStyleEnum(2);
+    parent.trace = bool(false);
+    parent.capture = bool(false);
+    parent.full = bool(true);
+    parent.f = bool(false);
     parent.match = bool(false);
     parent.string = algo::strptr("");
-    parent.show = bool(false);
 }
 
 // --- command.samp_regx..Ctor

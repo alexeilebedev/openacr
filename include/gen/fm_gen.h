@@ -121,8 +121,6 @@ struct Code { // fm.Code
 // Access string as array of chars
 // func:fm.Code.ch.Getary
 inline algo::aryptr<char> ch_Getary(const fm::Code& parent) __attribute__((nothrow));
-// func:fm.Code.ch.HashStrptr
-inline u32           Code_Hash(u32 prev, const algo::strptr &str);
 // func:fm.Code.ch.Init
 inline void          ch_Init(fm::Code &parent) __attribute__((nothrow));
 // always return constant 32
@@ -189,8 +187,6 @@ struct Objtype { // fm.Objtype
 // Access string as array of chars
 // func:fm.Objtype.ch.Getary
 inline algo::aryptr<char> ch_Getary(const fm::Objtype& parent) __attribute__((nothrow));
-// func:fm.Objtype.ch.HashStrptr
-inline u32           Objtype_Hash(u32 prev, const algo::strptr &str);
 // func:fm.Objtype.ch.Init
 inline void          ch_Init(fm::Objtype &parent) __attribute__((nothrow));
 // always return constant 15
@@ -257,8 +253,6 @@ struct Objinst { // fm.Objinst
 // Access string as array of chars
 // func:fm.Objinst.ch.Getary
 inline algo::aryptr<char> ch_Getary(const fm::Objinst& parent) __attribute__((nothrow));
-// func:fm.Objinst.ch.HashStrptr
-inline u32           Objinst_Hash(u32 prev, const algo::strptr &str);
 // func:fm.Objinst.ch.Init
 inline void          ch_Init(fm::Objinst &parent) __attribute__((nothrow));
 // always return constant 79
@@ -461,8 +455,6 @@ struct Summary { // fm.Summary
 // Access string as array of chars
 // func:fm.Summary.ch.Getary
 inline algo::aryptr<char> ch_Getary(const fm::Summary& parent) __attribute__((nothrow));
-// func:fm.Summary.ch.HashStrptr
-inline u32           Summary_Hash(u32 prev, const algo::strptr &str);
 // func:fm.Summary.ch.Init
 inline void          ch_Init(fm::Summary &parent) __attribute__((nothrow));
 // always return constant 64
@@ -529,8 +521,6 @@ struct Description { // fm.Description
 // Access string as array of chars
 // func:fm.Description.ch.Getary
 inline algo::aryptr<char> ch_Getary(const fm::Description& parent) __attribute__((nothrow));
-// func:fm.Description.ch.HashStrptr
-inline u32           Description_Hash(u32 prev, const algo::strptr &str);
 // func:fm.Description.ch.Init
 inline void          ch_Init(fm::Description &parent) __attribute__((nothrow));
 // always return constant 128
@@ -597,8 +587,6 @@ struct Source { // fm.Source
 // Access string as array of chars
 // func:fm.Source.ch.Getary
 inline algo::aryptr<char> ch_Getary(const fm::Source& parent) __attribute__((nothrow));
-// func:fm.Source.ch.HashStrptr
-inline u32           Source_Hash(u32 prev, const algo::strptr &str);
 // func:fm.Source.ch.Init
 inline void          ch_Init(fm::Source &parent) __attribute__((nothrow));
 // always return constant 32

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
@@ -220,7 +220,7 @@ int algo::FindFrom(strptr s, strptr t, int from, bool case_sensitive) {
     }
     if (case_sensitive) {
         for (int i=from, lim=s.n_elems-n+1; i<lim; i++) {
-            if (strncmp(s.elems+i, t.elems, n)==0) {
+            if (memcmp(s.elems+i, t.elems, n)==0) {
                 return i;
             }
         }
@@ -472,166 +472,6 @@ void algo::Translate(strptr s, strptr from, strptr to) {
         int idx = Find(from,s[i]);
         if (idx !=-1) s[i] = to[idx];
     }
-}
-
-// -----------------------------------------------------------------------------
-
-void algo_lib::ind_replvar_Cleanup(algo_lib::Replscope &replscope) {
-    (void)replscope;
-}
-
-// -----------------------------------------------------------------------------
-
-static void SetVar(algo_lib::Replscope &scope, strptr from, strptr to) {
-    // make sure the new variable is not a suffix of any existin variable
-    algo_lib::FReplvar *replvar = algo_lib::ind_replvar_Find(scope, from);
-    if (!replvar) {
-        replvar              = &algo_lib::replvar_Alloc();
-        replvar->p_replscope = &scope;
-        replvar->key         = from;
-        (void)replvar_XrefMaybe(*replvar);
-    }
-    replvar->value = to;
-}
-
-// -----------------------------------------------------------------------------
-
-// Set value of key KEY value VALUE
-// KEY        string to replace
-// VALUE      value to replace it with
-// SUBST      If set, $-expand the VALUE parameter
-void algo_lib::Set(algo_lib::Replscope &scope, strptr from, strptr to, bool subst DFLTVAL(true)) {
-    if (subst) {
-        tempstr temp;
-        Ins(&scope, temp, to, false);
-        SetVar(scope,from,temp);
-    } else {
-        SetVar(scope,from,to);
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-//
-// An empty substitution followed by
-static int EatComma(strptr text, int j) {
-    if (j < text.n_elems && (text.elems[j] == ',' || text.elems[j] == '.')) {
-        j++;
-    }
-    if (j < text.n_elems && algo_lib::WhiteCharQ(text.elems[j])) {
-        j++;
-    }
-    return j;
-}
-
-// Scan TEXT starting at position I for a variable that is defined in R
-// If the variable is found, I is set to the character position right after
-// the variable, and the variable value is returned.
-// Initially I points to the '$' character.
-// If the variable is not found because end-of-string is found the substitution fails,
-// and the scanner advances one character.
-// In this case, if R.FATAL is set, the program is killed; otherwise
-// I is advanced 1 character and that character is returned as the substitution,
-// leaving the original string untouched.
-// If one variable is a prefix another (e.g. $field, $fieldval), then
-// one must use ${fieldval} to avoid the shortest substitution being used
-static strptr ScanVar(algo_lib::Replscope &R, strptr text, int &i) {
-    strptr ret;
-    int j=i+1;// right after the $
-    algo_lib::FReplvar *replvar=NULL;
-    if (j<text.n_elems-1 && text.elems[j]=='{') {    // scan ${....} expression
-        for (j++; j<text.n_elems; j++) {
-            if (text.elems[j]=='}') {
-                tempstr key = tempstr()<<'$'<<strptr(text.elems+(i+2),j-(i+2));// '$' + variable name
-                replvar = algo_lib::ind_replvar_Find(R,key);
-                if (replvar) {
-                    j++;// skip '}'
-                    break;
-                }
-            } else if (text.elems[j]=='$') {
-                break;// exit on start of next substitution
-            }
-        }
-    } else { // scan character-by-character
-        for (; j<=text.n_elems; j++) {
-            replvar = algo_lib::ind_replvar_Find(R,strptr(text.elems+i, j-i));
-            if (replvar) {
-                break;
-            }
-        }
-        if (j > text.n_elems) {
-            j=i+1;
-        }
-    }
-    if (replvar) {
-        ret=replvar->value;
-        if (ret.n_elems==0 && R.eatcomma) {
-            j = EatComma(text,j);
-        }
-    } else {
-        if (R.fatal) {
-            tempstr msg;
-            msg<<"algo_lib.badreplace"
-               <<Keyval("text",LimitLengthEllipsis(text,80))
-               <<Keyval("expr",LimitLengthEllipsis(strptr(text.elems+i, j-i),20))
-               <<Keyval("comment","substitution pattern not found");
-            FatalErrorExit(Zeroterm(msg));
-        } else {
-            // leave text intact
-            ret=strptr(text.elems+i, j-i);
-        }
-    }
-    i=j;// whatever we grabbed so far
-    return ret;
-}
-
-// -----------------------------------------------------------------------------
-
-// Append TEXT to OUT, performing $-substitution using variables from SCOPE (must be non-NULL)
-// if EOL is set, then new line is appended at the end.
-void algo_lib::Ins(algo_lib::Replscope *scope, algo::cstring &out, strptr text, bool eol DFLTVAL(true)) {
-    int i=0;
-    int lim = text.n_elems;
-    int start=0;
-    strptr var;
-    while (i < lim) {
-        int ch = text.elems[i];
-        if (ch=='$') {
-            out << qGetRegion(text,start,i-start);// previous stuff
-            out << ScanVar(*scope,text,i);// updates i
-            start=i;
-        } else {
-            i++;
-        }
-    }
-    if (i > start) {
-        out << qGetRegion(text,start,i-start);
-    }
-    if (eol) {
-        out << '\n';
-    }
-}
-
-// -----------------------------------------------------------------------------
-
-// Enable comma-eating (default true)
-void algo_lib::eatcomma_Set(algo_lib::Replscope &scope, bool enable) {
-    scope.eatcomma=enable;
-}
-
-// Enable strict mode (default true -- any failed substitution kills process)
-// If strict mode is off, failed substitution acts as if there was no substitution
-void algo_lib::fatal_Set(algo_lib::Replscope &scope, bool enable) {
-    scope.fatal=enable;
-}
-
-// -----------------------------------------------------------------------------
-
-// Perform $-substitutions in TEXT and return new value.
-tempstr algo_lib::Subst(algo_lib::Replscope &scope, strptr text) {
-    tempstr retval;
-    Ins(&scope, retval, text, false);
-    return retval;
 }
 
 // read TEXT into a tuple.
@@ -1615,6 +1455,35 @@ bool algo::u64_Ranges_curs_ValidQ(algo::u64_Ranges_curs &curs) {
 u64 &algo::u64_Ranges_curs_Access(algo::u64_Ranges_curs &curs) {
     return curs.cur;
 }
+
+// -----------------------------------------------------------------------------
+
+void algo::Append(algo::u64_RangesList &p, u64 item) {
+    if (!p.pending) {
+        p.start = item;
+        p.end = item;
+        p.pending = true;
+    } else if (item == p.end+1) {
+        ++p.end;
+    } else {
+        Yield(p);
+    }
+}
+
+strptr algo::Yield(algo::u64_RangesList &p) {
+    if (p.pending) {
+        p.pending = false;
+        if (p.start == p.end) {
+            p.result << p.ls << p.start ;
+        } else {
+            p.result << p.ls << p.start << "-" << p.end;
+        }
+    }
+    return p.result;
+}
+
+
+// -----------------------------------------------------------------------------
 
 void algo::Sep_curs_Reset(algo::Sep_curs &curs, strptr line, char sep) {
     curs.rest  = line;

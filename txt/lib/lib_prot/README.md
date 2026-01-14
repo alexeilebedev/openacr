@@ -1,14 +1,6 @@
 ## lib_prot - Library covering all protocols
 
 
-### Table Of Contents
-<a href="#table-of-contents"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
 ### Sources
 <a href="#sources"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Sources -->
@@ -24,8 +16,14 @@ The following source files are part of this tool:
 |[cpp/gen/fm_gen.cpp](/cpp/gen/fm_gen.cpp)||
 |[cpp/gen/fmdb_gen.cpp](/cpp/gen/fmdb_gen.cpp)||
 |[cpp/gen/gclidb_gen.cpp](/cpp/gen/gclidb_gen.cpp)||
+|[cpp/gen/http_gen.cpp](/cpp/gen/http_gen.cpp)||
+|[cpp/gen/httpdb_gen.cpp](/cpp/gen/httpdb_gen.cpp)||
 |[cpp/gen/ietf_gen.cpp](/cpp/gen/ietf_gen.cpp)||
+|[cpp/gen/kafka_gen.cpp](/cpp/gen/kafka_gen.cpp)||
 |[cpp/gen/lib_prot_gen.cpp](/cpp/gen/lib_prot_gen.cpp)||
+|[cpp/gen/sampdb_gen.cpp](/cpp/gen/sampdb_gen.cpp)||
+|[cpp/gen/ws_gen.cpp](/cpp/gen/ws_gen.cpp)||
+|[cpp/gen/wsdb_gen.cpp](/cpp/gen/wsdb_gen.cpp)||
 |[include/gen/ams_gen.h](/include/gen/ams_gen.h)||
 |[include/gen/ams_gen.inl.h](/include/gen/ams_gen.inl.h)||
 |[include/gen/amsdb_gen.h](/include/gen/amsdb_gen.h)||
@@ -34,24 +32,28 @@ The following source files are part of this tool:
 |[include/gen/atf_gen.inl.h](/include/gen/atf_gen.inl.h)||
 |[include/gen/atfdb_gen.h](/include/gen/atfdb_gen.h)||
 |[include/gen/atfdb_gen.inl.h](/include/gen/atfdb_gen.inl.h)||
+|[include/gen/dmmeta_gen.h](/include/gen/dmmeta_gen.h)||
+|[include/gen/dmmeta_gen.inl.h](/include/gen/dmmeta_gen.inl.h)||
 |[include/gen/fm_gen.h](/include/gen/fm_gen.h)||
 |[include/gen/fm_gen.inl.h](/include/gen/fm_gen.inl.h)||
 |[include/gen/fmdb_gen.h](/include/gen/fmdb_gen.h)||
 |[include/gen/fmdb_gen.inl.h](/include/gen/fmdb_gen.inl.h)||
 |[include/gen/gclidb_gen.h](/include/gen/gclidb_gen.h)||
 |[include/gen/gclidb_gen.inl.h](/include/gen/gclidb_gen.inl.h)||
+|[include/gen/http_gen.h](/include/gen/http_gen.h)||
+|[include/gen/http_gen.inl.h](/include/gen/http_gen.inl.h)||
+|[include/gen/httpdb_gen.h](/include/gen/httpdb_gen.h)||
+|[include/gen/httpdb_gen.inl.h](/include/gen/httpdb_gen.inl.h)||
+|[include/gen/ietf_gen.h](/include/gen/ietf_gen.h)||
+|[include/gen/ietf_gen.inl.h](/include/gen/ietf_gen.inl.h)||
 |[include/gen/lib_prot_gen.h](/include/gen/lib_prot_gen.h)||
 |[include/gen/lib_prot_gen.inl.h](/include/gen/lib_prot_gen.inl.h)||
+|[include/gen/sampdb_gen.h](/include/gen/sampdb_gen.h)||
+|[include/gen/sampdb_gen.inl.h](/include/gen/sampdb_gen.inl.h)||
+|[include/gen/ws_gen.h](/include/gen/ws_gen.h)||
+|[include/gen/ws_gen.inl.h](/include/gen/ws_gen.inl.h)||
+|[include/gen/wsdb_gen.h](/include/gen/wsdb_gen.h)||
+|[include/gen/wsdb_gen.inl.h](/include/gen/wsdb_gen.inl.h)||
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
-
-### Dependencies
-<a href="#dependencies"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
-The build target depends on the following libraries
-|Target|Comment|
-|---|---|
-|[lib_json](/txt/lib/lib_json/README.md)|Full json support library|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
 

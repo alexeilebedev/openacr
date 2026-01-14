@@ -176,7 +176,7 @@ inline i32 atf_gcli::c_gtblacttst_N() {
 inline void atf_gcli::c_gtblacttst_RemoveAll() {
     for (u32 i = 0; i < _db.c_gtblacttst_n; i++) {
         // mark all elements as not-in-array
-        _db.c_gtblacttst_elems[i]->_db_c_gtblacttst_in_ary = false;
+        _db.c_gtblacttst_elems[i]->c_gtblacttst_in_ary = false;
     }
     _db.c_gtblacttst_n = 0;
 }
@@ -190,7 +190,7 @@ inline atf_gcli::FGtblacttst& atf_gcli::c_gtblacttst_qFind(u32 idx) {
 // --- atf_gcli.FDb.c_gtblacttst.InAryQ
 // True if row is in any ptrary instance
 inline bool atf_gcli::c_gtblacttst_InAryQ(atf_gcli::FGtblacttst& row) {
-    return row._db_c_gtblacttst_in_ary;
+    return row.c_gtblacttst_in_ary;
 }
 
 // --- atf_gcli.FDb.c_gtblacttst.qLast
@@ -576,6 +576,7 @@ inline void atf_gcli::FGclienv_Init(atf_gcli::FGclienv& gclienv) {
     gclienv.c_gclienvsub_n = 0; // (atf_gcli.FGclienv.c_gclienvsub)
     gclienv.c_gclienvsub_max = 0; // (atf_gcli.FGclienv.c_gclienvsub)
     gclienv.ind_gclienv_next = (atf_gcli::FGclienv*)-1; // (atf_gcli.FDb.ind_gclienv) not-in-hash
+    gclienv.ind_gclienv_hashval = 0; // stored hash value
 }
 
 // --- atf_gcli.FGclienv.c_gclienvsub_curs.Reset
@@ -620,6 +621,7 @@ inline void atf_gcli::FGclienvsub_Init(atf_gcli::FGclienvsub& gclienvsub) {
     gclienvsub.rev = bool(false);
     gclienvsub.gclienv_c_gclienvsub_in_ary = bool(false);
     gclienvsub.ind_gclienvsub_next = (atf_gcli::FGclienvsub*)-1; // (atf_gcli.FDb.ind_gclienvsub) not-in-hash
+    gclienvsub.ind_gclienvsub_hashval = 0; // stored hash value
 }
 
 // --- atf_gcli.FGclienvsub..Ctor
@@ -740,6 +742,7 @@ inline  atf_gcli::FGtblacttst::~FGtblacttst() {
 inline void atf_gcli::FGtblacttstout_Init(atf_gcli::FGtblacttstout& gtblacttstout) {
     gtblacttstout.gtblacttst_c_gtblacttstout_in_ary = bool(false);
     gtblacttstout.ind_gtblacttstout_next = (atf_gcli::FGtblacttstout*)-1; // (atf_gcli.FDb.ind_gtblacttstout) not-in-hash
+    gtblacttstout.ind_gtblacttstout_hashval = 0; // stored hash value
 }
 
 // --- atf_gcli.FGtblacttstout..Ctor

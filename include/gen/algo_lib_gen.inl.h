@@ -26,9 +26,16 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dmmeta_gen.inl.h"
 //#pragma endinclude
-static algo_lib::FLogcat &algo_lib_logcat_expect   = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[0];
-static algo_lib::FLogcat &algo_lib_logcat_stderr   = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[1];
-static algo_lib::FLogcat &algo_lib_logcat_stdout   = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[2];
+static algo_lib::FLogcat &algo_lib_logcat_ams          = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[0];
+static algo_lib::FLogcat &algo_lib_logcat_debug        = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[1];
+static algo_lib::FLogcat &algo_lib_logcat_inserr       = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[2];
+static algo_lib::FLogcat &algo_lib_logcat_slowness     = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[3];
+static algo_lib::FLogcat &algo_lib_logcat_stderr       = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[4];
+static algo_lib::FLogcat &algo_lib_logcat_stdout       = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[5];
+static algo_lib::FLogcat &algo_lib_logcat_timestamps   = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[6];
+static algo_lib::FLogcat &algo_lib_logcat_verbose      = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[7];
+static algo_lib::FLogcat &algo_lib_logcat_verbose2     = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[8];
+static algo_lib::FLogcat &algo_lib_logcat_warn         = ((algo_lib::FLogcat*)algo_lib::_db.logcat_data)[9];
 
 // --- algo_lib.Bitset.ary.NBits
 // Get max # of bits in the bitset
@@ -513,6 +520,10 @@ inline  algo_lib::ErrorX::ErrorX(const algo::strptr& in_str)
  {
 }
 
+// --- algo_lib.RegxM..Ctor
+inline  algo_lib::RegxM::RegxM() {
+}
+
 // --- algo_lib.FFildes..Uninit
 inline void algo_lib::FFildes_Uninit(algo_lib::FFildes& fildes) {
     algo_lib::FFildes &row = fildes; (void)row;
@@ -613,6 +624,7 @@ inline void algo_lib::FImdb_Init(algo_lib::FImdb& imdb) {
     memset(&imdb.MainLoop, 0, sizeof(imdb.MainLoop));
     memset(&imdb.GetTrace, 0, sizeof(imdb.GetTrace));
     imdb.ind_imdb_next = (algo_lib::FImdb*)-1; // (algo_lib.FDb.ind_imdb) not-in-hash
+    imdb.ind_imdb_hashval = 0; // stored hash value
 }
 
 // --- algo_lib.FImdb..Ctor
@@ -625,12 +637,272 @@ inline  algo_lib::FImdb::~FImdb() {
     algo_lib::FImdb_Uninit(*this);
 }
 
-// --- algo_lib.FLogcat..Init
+// --- algo_lib.RegxFlags.trace.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 0.
+inline bool algo_lib::trace_Get(const algo_lib::RegxFlags& parent) {
+    return bool((parent.value >> 0) & 0x01);
+}
+
+// --- algo_lib.RegxFlags.trace.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 0.
+inline void algo_lib::trace_Set(algo_lib::RegxFlags& parent, bool rhs) {
+    u8 t1    = u8(0x01) << 0;
+    u8 t2    = (u8(rhs) & 0x01) << 0;
+    parent.value = u8((parent.value & ~t1) | t2);
+}
+
+// --- algo_lib.RegxFlags.capture.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 1.
+inline bool algo_lib::capture_Get(const algo_lib::RegxFlags& parent) {
+    return bool((parent.value >> 1) & 0x01);
+}
+
+// --- algo_lib.RegxFlags.capture.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 1.
+inline void algo_lib::capture_Set(algo_lib::RegxFlags& parent, bool rhs) {
+    u8 t1    = u8(0x01) << 1;
+    u8 t2    = (u8(rhs) & 0x01) << 1;
+    parent.value = u8((parent.value & ~t1) | t2);
+}
+
+// --- algo_lib.RegxFlags.valid.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 2.
+inline bool algo_lib::valid_Get(const algo_lib::RegxFlags& parent) {
+    return bool((parent.value >> 2) & 0x01);
+}
+
+// --- algo_lib.RegxFlags.valid.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 2.
+inline void algo_lib::valid_Set(algo_lib::RegxFlags& parent, bool rhs) {
+    u8 t1    = u8(0x01) << 2;
+    u8 t2    = (u8(rhs) & 0x01) << 2;
+    parent.value = u8((parent.value & ~t1) | t2);
+}
+
+// --- algo_lib.RegxFlags.literal.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 3.
+inline bool algo_lib::literal_Get(const algo_lib::RegxFlags& parent) {
+    return bool((parent.value >> 3) & 0x01);
+}
+
+// --- algo_lib.RegxFlags.literal.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 3.
+inline void algo_lib::literal_Set(algo_lib::RegxFlags& parent, bool rhs) {
+    u8 t1    = u8(0x01) << 3;
+    u8 t2    = (u8(rhs) & 0x01) << 3;
+    parent.value = u8((parent.value & ~t1) | t2);
+}
+
+// --- algo_lib.RegxFlags.accepts_all.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 4.
+inline bool algo_lib::accepts_all_Get(const algo_lib::RegxFlags& parent) {
+    return bool((parent.value >> 4) & 0x01);
+}
+
+// --- algo_lib.RegxFlags.accepts_all.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 4.
+inline void algo_lib::accepts_all_Set(algo_lib::RegxFlags& parent, bool rhs) {
+    u8 t1    = u8(0x01) << 4;
+    u8 t2    = (u8(rhs) & 0x01) << 4;
+    parent.value = u8((parent.value & ~t1) | t2);
+}
+
+// --- algo_lib.RegxFlags.fullmatch.Get
+// Retrieve bitfield from value of field value
+//    1 bits starting at bit 5.
+inline bool algo_lib::fullmatch_Get(const algo_lib::RegxFlags& parent) {
+    return bool((parent.value >> 5) & 0x01);
+}
+
+// --- algo_lib.RegxFlags.fullmatch.Set
+// Set bitfield in value of field 'value'
+//    1 bits starting at bit 5.
+inline void algo_lib::fullmatch_Set(algo_lib::RegxFlags& parent, bool rhs) {
+    u8 t1    = u8(0x01) << 5;
+    u8 t2    = (u8(rhs) & 0x01) << 5;
+    parent.value = u8((parent.value & ~t1) | t2);
+}
+
+// --- algo_lib.RegxFlags..Init
 // Set all fields to initial values.
-inline void algo_lib::FLogcat_Init(algo_lib::FLogcat& logcat) {
-    logcat.enabled = bool(false);
-    logcat.builtin = bool(false);
-    logcat.ind_logcat_next = (algo_lib::FLogcat*)-1; // (algo_lib.FDb.ind_logcat) not-in-hash
+inline void algo_lib::RegxFlags_Init(algo_lib::RegxFlags& parent) {
+    parent.value = u8(0);
+}
+
+// --- algo_lib.RegxFlags..Ctor
+inline  algo_lib::RegxFlags::RegxFlags() {
+    algo_lib::RegxFlags_Init(*this);
+}
+
+// --- algo_lib.RegxFlags..FieldwiseCtor
+inline  algo_lib::RegxFlags::RegxFlags(u8 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo_lib.RegxFlags..EnumCtor
+inline  algo_lib::RegxFlags::RegxFlags(algo_lib_RegxFlagsEnum arg) {
+    this->value = u8(arg);
+}
+
+// --- algo_lib.RegxStyle.value.GetEnum
+// Get value of field as enum type
+inline algo_lib_RegxStyleEnum algo_lib::value_GetEnum(const algo_lib::RegxStyle& parent) {
+    return algo_lib_RegxStyleEnum(parent.value);
+}
+
+// --- algo_lib.RegxStyle.value.SetEnum
+// Set value of field from enum type.
+inline void algo_lib::value_SetEnum(algo_lib::RegxStyle& parent, algo_lib_RegxStyleEnum rhs) {
+    parent.value = u8(rhs);
+}
+
+// --- algo_lib.RegxStyle.value.Cast
+inline  algo_lib::RegxStyle::operator algo_lib_RegxStyleEnum() const {
+    return algo_lib_RegxStyleEnum((*this).value);
+}
+
+// --- algo_lib.RegxStyle..Init
+// Set all fields to initial values.
+inline void algo_lib::RegxStyle_Init(algo_lib::RegxStyle& parent) {
+    parent.value = u8(0);
+}
+
+// --- algo_lib.RegxStyle..Ctor
+inline  algo_lib::RegxStyle::RegxStyle() {
+    algo_lib::RegxStyle_Init(*this);
+}
+
+// --- algo_lib.RegxStyle..FieldwiseCtor
+inline  algo_lib::RegxStyle::RegxStyle(u8 in_value)
+    : value(in_value)
+ {
+}
+
+// --- algo_lib.RegxStyle..EnumCtor
+inline  algo_lib::RegxStyle::RegxStyle(algo_lib_RegxStyleEnum arg) {
+    this->value = u8(arg);
+}
+
+// --- algo_lib.Regx.state.EmptyQ
+// Return true if index is empty
+inline bool algo_lib::state_EmptyQ(algo_lib::Regx& regx) {
+    return regx.state_n == 0;
+}
+
+// --- algo_lib.Regx.state.Find
+// Look up row by row id. Return NULL if out of range
+inline algo_lib::RegxState* algo_lib::state_Find(algo_lib::Regx& regx, u64 t) {
+    u64 idx = t;
+    u64 lim = regx.state_n;
+    if (idx >= lim) return NULL;
+    return regx.state_elems + idx;
+}
+
+// --- algo_lib.Regx.state.Getary
+// Return array pointer by value
+inline algo::aryptr<algo_lib::RegxState> algo_lib::state_Getary(const algo_lib::Regx& regx) {
+    return algo::aryptr<algo_lib::RegxState>(regx.state_elems, regx.state_n);
+}
+
+// --- algo_lib.Regx.state.Last
+// Return pointer to last element of array, or NULL if array is empty
+inline algo_lib::RegxState* algo_lib::state_Last(algo_lib::Regx& regx) {
+    return state_Find(regx, u64(regx.state_n-1));
+}
+
+// --- algo_lib.Regx.state.Max
+// Return max. number of items in the array
+inline i32 algo_lib::state_Max(algo_lib::Regx& regx) {
+    (void)regx;
+    return regx.state_max;
+}
+
+// --- algo_lib.Regx.state.N
+// Return number of items in the array
+inline i32 algo_lib::state_N(const algo_lib::Regx& regx) {
+    return regx.state_n;
+}
+
+// --- algo_lib.Regx.state.Reserve
+// Make sure N *more* elements will fit in array. Process dies if out of memory
+inline void algo_lib::state_Reserve(algo_lib::Regx& regx, int n) {
+    u32 new_n = regx.state_n + n;
+    if (UNLIKELY(new_n > regx.state_max)) {
+        state_AbsReserve(regx, new_n);
+    }
+}
+
+// --- algo_lib.Regx.state.qFind
+// 'quick' Access row by row id. No bounds checking.
+inline algo_lib::RegxState& algo_lib::state_qFind(algo_lib::Regx& regx, u64 t) {
+    return regx.state_elems[t];
+}
+
+// --- algo_lib.Regx.state.qLast
+// Return reference to last element of array. No bounds checking
+inline algo_lib::RegxState& algo_lib::state_qLast(algo_lib::Regx& regx) {
+    return state_qFind(regx, u64(regx.state_n-1));
+}
+
+// --- algo_lib.Regx.state.rowid_Get
+// Return row id of specified element
+inline u64 algo_lib::state_rowid_Get(algo_lib::Regx& regx, algo_lib::RegxState &elem) {
+    u64 id = &elem - regx.state_elems;
+    return u64(id);
+}
+
+// --- algo_lib.Regx.state_curs.Next
+// proceed to next item
+inline void algo_lib::regx_state_curs_Next(regx_state_curs &curs) {
+    curs.index++;
+}
+
+// --- algo_lib.Regx.state_curs.Reset
+inline void algo_lib::regx_state_curs_Reset(regx_state_curs &curs, algo_lib::Regx &parent) {
+    curs.elems = parent.state_elems;
+    curs.n_elems = parent.state_n;
+    curs.index = 0;
+}
+
+// --- algo_lib.Regx.state_curs.ValidQ
+// cursor points to valid item
+inline bool algo_lib::regx_state_curs_ValidQ(regx_state_curs &curs) {
+    return curs.index < curs.n_elems;
+}
+
+// --- algo_lib.Regx.state_curs.Access
+// item access
+inline algo_lib::RegxState& algo_lib::regx_state_curs_Access(regx_state_curs &curs) {
+    return curs.elems[curs.index];
+}
+
+// --- algo_lib.Regx..Init
+// Set all fields to initial values.
+inline void algo_lib::Regx_Init(algo_lib::Regx& regx) {
+    regx.state_elems 	= 0; // (algo_lib.Regx.state)
+    regx.state_n     	= 0; // (algo_lib.Regx.state)
+    regx.state_max   	= 0; // (algo_lib.Regx.state)
+}
+
+// --- algo_lib.Regx..Ctor
+inline  algo_lib::Regx::Regx() {
+    algo_lib::Regx_Init(*this);
+}
+
+// --- algo_lib.Regx..Dtor
+inline  algo_lib::Regx::~Regx() {
+    algo_lib::Regx_Uninit(*this);
 }
 
 // --- algo_lib.FLogcat..Ctor
@@ -641,6 +913,48 @@ inline  algo_lib::FLogcat::FLogcat() {
 // --- algo_lib.FLogcat..Dtor
 inline  algo_lib::FLogcat::~FLogcat() {
     algo_lib::FLogcat_Uninit(*this);
+}
+
+// --- algo_lib.FErrns.decode.Call
+// Invoke function by pointer
+inline void algo_lib::decode_Call(algo_lib::FErrns& errns, i32& arg) {
+    if (errns.decode) {
+        errns.decode((void*)errns.decode_ctx, arg);
+    }
+}
+
+// --- algo_lib.FErrns.decode.Set0
+// Assign 0-argument hook with no context pointer
+inline void algo_lib::decode_Set0(algo_lib::FErrns& errns, void (*fcn)() ) {
+    errns.decode_ctx = 0;
+    errns.decode = (algo_lib::errns_decode_hook)fcn;
+}
+
+// --- algo_lib.FErrns.decode.Set1
+// Assign 1-argument hook with context pointer
+template<class T> inline void algo_lib::decode_Set1(algo_lib::FErrns& errns, T& ctx, void (*fcn)(T&) ) {
+    errns.decode_ctx = (u64)&ctx;
+    errns.decode = (algo_lib::errns_decode_hook)fcn;
+}
+
+// --- algo_lib.FErrns.decode.Set2
+// Assign 2-argument hook with context pointer
+template<class T> inline void algo_lib::decode_Set2(algo_lib::FErrns& errns, T& ctx, void (*fcn)(T&, i32& arg) ) {
+    errns.decode_ctx = (u64)&ctx;
+    errns.decode = (algo_lib::errns_decode_hook)fcn;
+}
+
+// --- algo_lib.FErrns..Init
+// Set all fields to initial values.
+inline void algo_lib::FErrns_Init(algo_lib::FErrns& errns) {
+    errns.errns = i32(0);
+    errns.decode = NULL;
+    errns.decode_ctx = 0;
+}
+
+// --- algo_lib.FErrns..Ctor
+inline  algo_lib::FErrns::FErrns() {
+    algo_lib::FErrns_Init(*this);
 }
 
 // --- algo_lib.trace..Ctor
@@ -812,13 +1126,6 @@ inline i32 algo_lib::bh_timehook_N() {
     return _db.bh_timehook_n;
 }
 
-// --- algo_lib.FDb.bh_timehook.Call
-inline void algo_lib::bh_timehook_Call() {
-    if (!algo_lib::bh_timehook_EmptyQ()) { // fstep:algo_lib.FDb.bh_timehook
-        algo_lib::bh_timehook_Step(); // steptype:Callback: user calls call _UpdateCycles
-    }
-}
-
 // --- algo_lib.FDb.dispsigcheck.EmptyQ
 // Return true if index is empty
 inline bool algo_lib::dispsigcheck_EmptyQ() {
@@ -969,11 +1276,6 @@ template<class T> inline void algo_lib::h_fatalerror_Set2(T& ctx, void (*fcn)(T&
     _db.h_fatalerror = (algo_lib::_db_h_fatalerror_hook)fcn;
 }
 
-// --- algo_lib.FDb.giveup_time.Call
-inline void algo_lib::giveup_time_Call() {
-    algo_lib::giveup_time_Step();
-}
-
 // --- algo_lib.FDb.DigitChar.Match
 inline bool algo_lib::DigitCharQ(u32 ch) {
     bool ret = false;
@@ -1110,7 +1412,7 @@ inline bool algo_lib::UrlsafeQ(u32 ch) {
 // Allocate space for one element. If no memory available, return NULL.
 inline void* algo_lib::logcat_AllocMem() {
     void *row = reinterpret_cast<algo_lib::FLogcat*>(_db.logcat_data) + _db.logcat_n;
-    if (_db.logcat_n == 3) row = NULL;
+    if (_db.logcat_n == 10) row = NULL;
     if (row) _db.logcat_n++;
     return row;
 }
@@ -1136,9 +1438,9 @@ inline algo::aryptr<algo_lib::FLogcat> algo_lib::logcat_Getary() {
 }
 
 // --- algo_lib.FDb.logcat.Max
-// Return constant 3 -- max. number of items in the pool
+// Return constant 10 -- max. number of items in the pool
 inline i32 algo_lib::logcat_Max() {
-    return 3;
+    return 10;
 }
 
 // --- algo_lib.FDb.logcat.N
@@ -1305,6 +1607,44 @@ inline algo::cstring& algo_lib::dirstack_qLast() {
 inline u64 algo_lib::dirstack_rowid_Get(algo::cstring &elem) {
     u64 id = &elem - _db.dirstack_elems;
     return u64(id);
+}
+
+// --- algo_lib.FDb.errns.Find
+// Look up row by row id. Return NULL if out of range
+inline algo_lib::FErrns* algo_lib::errns_Find(i32 t) {
+    u64 idx = t;
+    u64 lim = 8;
+    return idx < lim ? _db.errns_elems + idx : NULL; // unsigned comparison with limit
+}
+
+// --- algo_lib.FDb.errns.Getary
+// Access fixed array errns as aryptr.
+inline algo::aryptr<algo_lib::FErrns> algo_lib::errns_Getary() {
+    return algo::aryptr<algo_lib::FErrns>(_db.errns_elems, 8);
+}
+
+// --- algo_lib.FDb.errns.Max
+// Return max number of items in the array
+inline i32 algo_lib::errns_Max() {
+    return 8;
+}
+
+// --- algo_lib.FDb.errns.N
+// Return number of items in the array
+inline i32 algo_lib::errns_N() {
+    (void)_db;//only to avoid -Wunused-parameter
+    return 8;
+}
+
+// --- algo_lib.FDb.errns.qFind
+// 'quick' Access row by row id. No bounds checking in release.
+inline algo_lib::FErrns& algo_lib::errns_qFind(i32 t) {
+    return _db.errns_elems[u64(t)];
+}
+
+// --- algo_lib.FDb.giveup_time.Call
+inline void algo_lib::giveup_time_Call() {
+    algo_lib::giveup_time_Step();
 }
 
 // --- algo_lib.FDb.temp_strings_curs.Reset
@@ -1494,10 +1834,36 @@ inline algo::cstring& algo_lib::_db_dirstack_curs_Access(_db_dirstack_curs &curs
     return curs.elems[curs.index];
 }
 
+// --- algo_lib.FDb.errns_curs.Reset
+// cursor points to valid item
+inline void algo_lib::_db_errns_curs_Reset(_db_errns_curs &curs, algo_lib::FDb &parent) {
+    curs.parent = &parent;
+    curs.index = 0;
+}
+
+// --- algo_lib.FDb.errns_curs.ValidQ
+// cursor points to valid item
+inline bool algo_lib::_db_errns_curs_ValidQ(_db_errns_curs &curs) {
+    return u64(curs.index) < u64(8);
+}
+
+// --- algo_lib.FDb.errns_curs.Next
+// proceed to next item
+inline void algo_lib::_db_errns_curs_Next(_db_errns_curs &curs) {
+    curs.index++;
+}
+
+// --- algo_lib.FDb.errns_curs.Access
+// item access
+inline algo_lib::FErrns& algo_lib::_db_errns_curs_Access(_db_errns_curs &curs) {
+    return errns_qFind(i32(curs.index));
+}
+
 // --- algo_lib.FDispsigcheck..Init
 // Set all fields to initial values.
 inline void algo_lib::FDispsigcheck_Init(algo_lib::FDispsigcheck& dispsigcheck) {
     dispsigcheck.ind_dispsigcheck_next = (algo_lib::FDispsigcheck*)-1; // (algo_lib.FDb.ind_dispsigcheck) not-in-hash
+    dispsigcheck.ind_dispsigcheck_hashval = 0; // stored hash value
 }
 
 // --- algo_lib.FDispsigcheck..Ctor
@@ -1519,6 +1885,7 @@ inline void algo_lib::FImtable_Init(algo_lib::FImtable& imtable) {
     memset(&imtable.Print, 0, sizeof(imtable.Print));
     imtable.size = i32(0);
     imtable.ind_imtable_next = (algo_lib::FImtable*)-1; // (algo_lib.FDb.ind_imtable) not-in-hash
+    imtable.ind_imtable_hashval = 0; // stored hash value
 }
 
 // --- algo_lib.FImtable..Ctor
@@ -1590,8 +1957,10 @@ inline  algo_lib::FIohook::~FIohook() {
 inline void algo_lib::FReplvar_Init(algo_lib::FReplvar& replvar) {
     replvar.p_replscope = NULL;
     replvar.nsubst = i32(0);
+    replvar.partial = bool(false);
     replvar.replvar_next = (algo_lib::FReplvar*)-1; // (algo_lib.FDb.replvar) not-in-tpool's freelist
-    replvar.ind_replvar_next = (algo_lib::FReplvar*)-1; // (algo_lib.Replscope.ind_replvar) not-in-hash
+    replvar.replscope_ind_replvar_next = (algo_lib::FReplvar*)-1; // (algo_lib.Replscope.ind_replvar) not-in-hash
+    replvar.replscope_ind_replvar_hashval = 0; // stored hash value
 }
 
 // --- algo_lib.FReplvar..Ctor
@@ -1855,7 +2224,6 @@ inline void algo_lib::FTxttbl_Init(algo_lib::FTxttbl& txttbl) {
     txttbl.c_txtrow_n = 0; // (algo_lib.FTxttbl.c_txtrow)
     txttbl.c_txtrow_max = 0; // (algo_lib.FTxttbl.c_txtrow)
     txttbl.col_space = i32(2);
-    txttbl.hdr_row = i32(0);
     txttbl.normalized = bool(false);
 }
 
@@ -2046,121 +2414,6 @@ inline  algo_lib::Mmap::~Mmap() {
 inline  algo_lib::MmapFile::MmapFile() {
 }
 
-// --- algo_lib.Regx.state.EmptyQ
-// Return true if index is empty
-inline bool algo_lib::state_EmptyQ(algo_lib::Regx& regx) {
-    return regx.state_n == 0;
-}
-
-// --- algo_lib.Regx.state.Find
-// Look up row by row id. Return NULL if out of range
-inline algo_lib::RegxState* algo_lib::state_Find(algo_lib::Regx& regx, u64 t) {
-    u64 idx = t;
-    u64 lim = regx.state_n;
-    if (idx >= lim) return NULL;
-    return regx.state_elems + idx;
-}
-
-// --- algo_lib.Regx.state.Getary
-// Return array pointer by value
-inline algo::aryptr<algo_lib::RegxState> algo_lib::state_Getary(const algo_lib::Regx& regx) {
-    return algo::aryptr<algo_lib::RegxState>(regx.state_elems, regx.state_n);
-}
-
-// --- algo_lib.Regx.state.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline algo_lib::RegxState* algo_lib::state_Last(algo_lib::Regx& regx) {
-    return state_Find(regx, u64(regx.state_n-1));
-}
-
-// --- algo_lib.Regx.state.Max
-// Return max. number of items in the array
-inline i32 algo_lib::state_Max(algo_lib::Regx& regx) {
-    (void)regx;
-    return regx.state_max;
-}
-
-// --- algo_lib.Regx.state.N
-// Return number of items in the array
-inline i32 algo_lib::state_N(const algo_lib::Regx& regx) {
-    return regx.state_n;
-}
-
-// --- algo_lib.Regx.state.Reserve
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::state_Reserve(algo_lib::Regx& regx, int n) {
-    u32 new_n = regx.state_n + n;
-    if (UNLIKELY(new_n > regx.state_max)) {
-        state_AbsReserve(regx, new_n);
-    }
-}
-
-// --- algo_lib.Regx.state.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline algo_lib::RegxState& algo_lib::state_qFind(algo_lib::Regx& regx, u64 t) {
-    return regx.state_elems[t];
-}
-
-// --- algo_lib.Regx.state.qLast
-// Return reference to last element of array. No bounds checking
-inline algo_lib::RegxState& algo_lib::state_qLast(algo_lib::Regx& regx) {
-    return state_qFind(regx, u64(regx.state_n-1));
-}
-
-// --- algo_lib.Regx.state.rowid_Get
-// Return row id of specified element
-inline u64 algo_lib::state_rowid_Get(algo_lib::Regx& regx, algo_lib::RegxState &elem) {
-    u64 id = &elem - regx.state_elems;
-    return u64(id);
-}
-
-// --- algo_lib.Regx.state_curs.Next
-// proceed to next item
-inline void algo_lib::regx_state_curs_Next(regx_state_curs &curs) {
-    curs.index++;
-}
-
-// --- algo_lib.Regx.state_curs.Reset
-inline void algo_lib::regx_state_curs_Reset(regx_state_curs &curs, algo_lib::Regx &parent) {
-    curs.elems = parent.state_elems;
-    curs.n_elems = parent.state_n;
-    curs.index = 0;
-}
-
-// --- algo_lib.Regx.state_curs.ValidQ
-// cursor points to valid item
-inline bool algo_lib::regx_state_curs_ValidQ(regx_state_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- algo_lib.Regx.state_curs.Access
-// item access
-inline algo_lib::RegxState& algo_lib::regx_state_curs_Access(regx_state_curs &curs) {
-    return curs.elems[curs.index];
-}
-
-// --- algo_lib.Regx..Init
-// Set all fields to initial values.
-inline void algo_lib::Regx_Init(algo_lib::Regx& regx) {
-    regx.state_elems 	= 0; // (algo_lib.Regx.state)
-    regx.state_n     	= 0; // (algo_lib.Regx.state)
-    regx.state_max   	= 0; // (algo_lib.Regx.state)
-    regx.accept = i32(0);
-    regx.parseerror = bool(false);
-    regx.accepts_all = bool(false);
-    regx.literal = bool(false);
-}
-
-// --- algo_lib.Regx..Ctor
-inline  algo_lib::Regx::Regx() {
-    algo_lib::Regx_Init(*this);
-}
-
-// --- algo_lib.Regx..Dtor
-inline  algo_lib::Regx::~Regx() {
-    algo_lib::Regx_Uninit(*this);
-}
-
 // --- algo_lib.RegxToken.type.GetEnum
 // Get value of field as enum type
 inline algo_lib_RegxToken_type_Enum algo_lib::type_GetEnum(const algo_lib::RegxToken& parent) {
@@ -2203,12 +2456,45 @@ inline  algo_lib::RegxToken::RegxToken(algo_lib_RegxToken_type_Enum arg) {
 // --- algo_lib.RegxExpr..Init
 // Set all fields to initial values.
 inline void algo_lib::RegxExpr_Init(algo_lib::RegxExpr& parent) {
-    parent.in = i32(0);
+    parent.first = i32(0);
 }
 
 // --- algo_lib.RegxExpr..Ctor
 inline  algo_lib::RegxExpr::RegxExpr() {
     algo_lib::RegxExpr_Init(*this);
+}
+
+// --- algo_lib.RegxOp.op.GetEnum
+// Get value of field as enum type
+inline algo_lib_RegxOpEnum algo_lib::op_GetEnum(const algo_lib::RegxOp& parent) {
+    return algo_lib_RegxOpEnum(parent.op);
+}
+
+// --- algo_lib.RegxOp.op.SetEnum
+// Set value of field from enum type.
+inline void algo_lib::op_SetEnum(algo_lib::RegxOp& parent, algo_lib_RegxOpEnum rhs) {
+    parent.op = u8(rhs);
+}
+
+// --- algo_lib.RegxOp..Init
+// Set all fields to initial values.
+inline void algo_lib::RegxOp_Init(algo_lib::RegxOp& parent) {
+    parent.op = u8(0);
+    parent.consume = u8(1);
+    parent.imm = u16(0);
+}
+
+// --- algo_lib.RegxOp..Ctor
+inline  algo_lib::RegxOp::RegxOp() {
+    algo_lib::RegxOp_Init(*this);
+}
+
+// --- algo_lib.RegxOp..FieldwiseCtor
+inline  algo_lib::RegxOp::RegxOp(u8 in_op, u8 in_consume, u16 in_imm)
+    : op(in_op)
+    , consume(in_consume)
+    , imm(in_imm)
+ {
 }
 
 // --- algo_lib.RegxParse.ary_expr.EmptyQ
@@ -2307,6 +2593,7 @@ inline algo_lib::RegxExpr& algo_lib::regxparse_ary_expr_curs_Access(regxparse_ar
 // --- algo_lib.RegxParse..Init
 // Set all fields to initial values.
 inline void algo_lib::RegxParse_Init(algo_lib::RegxParse& regxparse) {
+    regxparse.nextgroup = i32(0);
     regxparse.p_regx = NULL;
     regxparse.ary_expr_elems 	= 0; // (algo_lib.RegxParse.ary_expr)
     regxparse.ary_expr_n     	= 0; // (algo_lib.RegxParse.ary_expr)
@@ -2323,121 +2610,15 @@ inline  algo_lib::RegxParse::~RegxParse() {
     algo_lib::RegxParse_Uninit(*this);
 }
 
-// --- algo_lib.RegxState.ch_class.EmptyQ
-// Return true if index is empty
-inline bool algo_lib::ch_class_EmptyQ(algo_lib::RegxState& parent) {
-    return parent.ch_class_n == 0;
-}
-
-// --- algo_lib.RegxState.ch_class.Find
-// Look up row by row id. Return NULL if out of range
-inline algo::i32_Range* algo_lib::ch_class_Find(algo_lib::RegxState& parent, u64 t) {
-    u64 idx = t;
-    u64 lim = parent.ch_class_n;
-    if (idx >= lim) return NULL;
-    return parent.ch_class_elems + idx;
-}
-
-// --- algo_lib.RegxState.ch_class.Getary
-// Return array pointer by value
-inline algo::aryptr<algo::i32_Range> algo_lib::ch_class_Getary(const algo_lib::RegxState& parent) {
-    return algo::aryptr<algo::i32_Range>(parent.ch_class_elems, parent.ch_class_n);
-}
-
-// --- algo_lib.RegxState.ch_class.Last
-// Return pointer to last element of array, or NULL if array is empty
-inline algo::i32_Range* algo_lib::ch_class_Last(algo_lib::RegxState& parent) {
-    return ch_class_Find(parent, u64(parent.ch_class_n-1));
-}
-
-// --- algo_lib.RegxState.ch_class.Max
-// Return max. number of items in the array
-inline i32 algo_lib::ch_class_Max(algo_lib::RegxState& parent) {
-    (void)parent;
-    return parent.ch_class_max;
-}
-
-// --- algo_lib.RegxState.ch_class.N
-// Return number of items in the array
-inline i32 algo_lib::ch_class_N(const algo_lib::RegxState& parent) {
-    return parent.ch_class_n;
-}
-
-// --- algo_lib.RegxState.ch_class.RemoveAll
-inline void algo_lib::ch_class_RemoveAll(algo_lib::RegxState& parent) {
-    parent.ch_class_n = 0;
-}
-
-// --- algo_lib.RegxState.ch_class.Reserve
-// Make sure N *more* elements will fit in array. Process dies if out of memory
-inline void algo_lib::ch_class_Reserve(algo_lib::RegxState& parent, int n) {
-    u32 new_n = parent.ch_class_n + n;
-    if (UNLIKELY(new_n > parent.ch_class_max)) {
-        ch_class_AbsReserve(parent, new_n);
-    }
-}
-
-// --- algo_lib.RegxState.ch_class.qFind
-// 'quick' Access row by row id. No bounds checking.
-inline algo::i32_Range& algo_lib::ch_class_qFind(algo_lib::RegxState& parent, u64 t) {
-    return parent.ch_class_elems[t];
-}
-
-// --- algo_lib.RegxState.ch_class.qLast
-// Return reference to last element of array. No bounds checking
-inline algo::i32_Range& algo_lib::ch_class_qLast(algo_lib::RegxState& parent) {
-    return ch_class_qFind(parent, u64(parent.ch_class_n-1));
-}
-
-// --- algo_lib.RegxState.ch_class.rowid_Get
-// Return row id of specified element
-inline u64 algo_lib::ch_class_rowid_Get(algo_lib::RegxState& parent, algo::i32_Range &elem) {
-    u64 id = &elem - parent.ch_class_elems;
-    return u64(id);
-}
-
-// --- algo_lib.RegxState.ch_class_curs.Next
-// proceed to next item
-inline void algo_lib::RegxState_ch_class_curs_Next(RegxState_ch_class_curs &curs) {
-    curs.index++;
-}
-
-// --- algo_lib.RegxState.ch_class_curs.Reset
-inline void algo_lib::RegxState_ch_class_curs_Reset(RegxState_ch_class_curs &curs, algo_lib::RegxState &parent) {
-    curs.elems = parent.ch_class_elems;
-    curs.n_elems = parent.ch_class_n;
-    curs.index = 0;
-}
-
-// --- algo_lib.RegxState.ch_class_curs.ValidQ
-// cursor points to valid item
-inline bool algo_lib::RegxState_ch_class_curs_ValidQ(RegxState_ch_class_curs &curs) {
-    return curs.index < curs.n_elems;
-}
-
-// --- algo_lib.RegxState.ch_class_curs.Access
-// item access
-inline algo::i32_Range& algo_lib::RegxState_ch_class_curs_Access(RegxState_ch_class_curs &curs) {
-    return curs.elems[curs.index];
-}
-
 // --- algo_lib.RegxState..Init
 // Set all fields to initial values.
 inline void algo_lib::RegxState_Init(algo_lib::RegxState& parent) {
-    parent.ch_class_elems 	= 0; // (algo_lib.RegxState.ch_class)
-    parent.ch_class_n     	= 0; // (algo_lib.RegxState.ch_class)
-    parent.ch_class_max   	= 0; // (algo_lib.RegxState.ch_class)
-    parent.accept_all = bool(false);
+    parent.lparen = i32(0);
 }
 
 // --- algo_lib.RegxState..Ctor
 inline  algo_lib::RegxState::RegxState() {
     algo_lib::RegxState_Init(*this);
-}
-
-// --- algo_lib.RegxState..Dtor
-inline  algo_lib::RegxState::~RegxState() {
-    algo_lib::RegxState_Uninit(*this);
 }
 
 // --- algo_lib.Replscope.ind_replvar.EmptyQ
@@ -2461,7 +2642,7 @@ inline bool algo_lib::replscope_ind_replvar_curs_ValidQ(replscope_ind_replvar_cu
 // --- algo_lib.Replscope.ind_replvar_curs.Next
 // proceed to next item
 inline void algo_lib::replscope_ind_replvar_curs_Next(replscope_ind_replvar_curs &curs) {
-    curs.prow = &(*curs.prow)->ind_replvar_next;
+    curs.prow = &(*curs.prow)->replscope_ind_replvar_next;
     while (!*curs.prow) {
         curs.bucket += 1;
         if (curs.bucket >= curs.parent->ind_replvar_buckets_n) break;
@@ -2693,6 +2874,21 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::FTim
     return str;
 }
 
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::RegxFlags &row) {// cfmt:algo_lib.RegxFlags.String
+    algo_lib::RegxFlags_Print(const_cast<algo_lib::RegxFlags&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::RegxStyle &row) {// cfmt:algo_lib.RegxStyle.String
+    algo_lib::RegxStyle_Print(const_cast<algo_lib::RegxStyle&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::Regx &row) {// cfmt:algo_lib.Regx.String
+    algo_lib::Regx_Print(const_cast<algo_lib::Regx&>(row), str);
+    return str;
+}
+
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::trace &row) {// cfmt:algo_lib.trace.String
     algo_lib::trace_Print(const_cast<algo_lib::trace&>(row), str);
     return str;
@@ -2713,11 +2909,6 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::Fiel
     return str;
 }
 
-inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::Regx &row) {// cfmt:algo_lib.Regx.String
-    algo_lib::Regx_Print(const_cast<algo_lib::Regx&>(row), str);
-    return str;
-}
-
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::RegxToken &row) {// cfmt:algo_lib.RegxToken.String
     algo_lib::RegxToken_Print(const_cast<algo_lib::RegxToken&>(row), str);
     return str;
@@ -2725,6 +2916,11 @@ inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::Regx
 
 inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::RegxExpr &row) {// cfmt:algo_lib.RegxExpr.String
     algo_lib::RegxExpr_Print(const_cast<algo_lib::RegxExpr&>(row), str);
+    return str;
+}
+
+inline algo::cstring &algo::operator <<(algo::cstring &str, const algo_lib::RegxOp &row) {// cfmt:algo_lib.RegxOp.String
+    algo_lib::RegxOp_Print(const_cast<algo_lib::RegxOp&>(row), str);
     return str;
 }
 

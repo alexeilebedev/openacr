@@ -32,8 +32,8 @@ Usage: acr_my [[-nsdb:]<regx>] [options]
     -abort                      Abort local mysql server, losing data
     -shell                      Connect to local mysql server
     -serv                       Start mysql with TCP/IP service enabled
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -147,9 +147,9 @@ can be round tripped through MariaDB with no change.
 `acr_my` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dmmeta.nsdb](/txt/ssimdb/dmmeta/nsdb.md)|Annotate ssimdb namespaces|
 |[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

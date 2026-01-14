@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
@@ -39,7 +39,7 @@ static bool AllowCastbaseQ(amc::FField &field) {
         ctype.n_xref==0
         && zd_inst_EmptyQ(ctype)
         && !StripCommentQ(field)
-        && !(base && (base->c_optfld || base->c_varlenfld));
+        && !(base && (base->c_optfld || !zd_varlenfld_EmptyQ(*base)));
     return retval;
 }
 
@@ -275,6 +275,22 @@ void amc::CloneFields(amc::FCtype &from, amc::FCtype &to, double next_rowid, amc
             amc::pmaskfld_CopyOut(*field.c_pmaskfld, newpmaskfld);
             newpmaskfld.field = newfield.field;
             amc::pmaskfld_InsertMaybe(newpmaskfld);
+        }
+        // TODO: need to map req and response header version to api versions:
+        // - non-flexible version of request matches ReqHeader V1
+        // - flexible version of request matches ReqHeader V2
+        // - non-flexible version of request matches RespHeader V0
+        // - flexible version of request matches RespHeader V1
+        // Use simplified logic for now
+        if (field.c_fkafka) {
+            dmmeta::Fkafka newfkafka;
+            newfkafka.field = newfield.field;
+            newfkafka.versions = to.c_ckafka ? strptr(to.c_ckafka->valid_versions) : strptr();
+            strptr name = name_Get(field);
+            if (name == "client_id") {
+                newfkafka.nullable_versions = to.c_ckafka ? strptr(to.c_ckafka->flexible_versions) : strptr();
+            }
+            amc::fkafka_InsertMaybe(newfkafka);
         }
         // throw away c_fldfoffset
         vrfy(!fnewfield.c_xref, "cannot copy field with xref");

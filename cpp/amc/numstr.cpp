@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -412,8 +412,8 @@ static void GenParseNum(strptr type, strptr valtype, bool issigned, strptr maxva
     Ins(&R, func.body, "if (retval) {");
     Ins(&R, func.body, "    parent = num;");
     Ins(&R, func.body, "} else {");
-    Ins(&R, func.body, "    algo_lib::SaveBadTag(\"comment\", \"$type_ReadStrptrMaybe: bad number\");");
-    Ins(&R, func.body, "    algo_lib::SaveBadTag(\"value\",in_str);");
+    Ins(&R, func.body, "    algo_lib::AppendErrtext(\"comment\", \"$type_ReadStrptrMaybe: bad number\");");
+    Ins(&R, func.body, "    algo_lib::AppendErrtext(\"value\",in_str);");
     Ins(&R, func.body, "}");
 }
 

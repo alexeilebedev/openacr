@@ -19,15 +19,16 @@
 ```
 aqlite: Runs sqlite queries against ssim files
 Usage: aqlite [-cmd:]<string> [options]
-    OPTION      TYPE    DFLT    COMMENT
-    -in         string  "data"  Input directory or filename, - for stdin
-    -schema     string  "data"  Schema dir
-    [cmd]       string          Sql Query to run
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
-    -help                       Print help and exit; alias -h
-    -version                    Print version and exit
-    -signature                  Show signatures and exit; alias -sig
+    OPTION      TYPE    DFLT      COMMENT
+    -in         string  "data"    Input directory or filename, - for stdin
+    -schema     string  "data"    Schema dir
+    [cmd]       string            Sql Query to run
+    -ns         regx    "dmmeta"  Regx of databases to attach
+    -verbose    flag              Verbosity level (0..255); alias -v; cumulative
+    -debug      flag              Debug level (0..255); alias -d; cumulative
+    -help                         Print help and exit; alias -h
+    -version                      Print version and exit
+    -signature                    Show signatures and exit; alias -sig
 
 ```
 
@@ -46,6 +47,9 @@ Usage: aqlite [-cmd:]<string> [options]
 #### -cmd -- Sql Query to run
 <a href="#-cmd"></a>
 
+#### -ns -- Regx of databases to attach
+<a href="#-ns"></a>
+
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
@@ -54,13 +58,13 @@ Usage: aqlite [-cmd:]<string> [options]
 `aqlite` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 |[dmmeta.ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
 |[dmmeta.field](/txt/ssimdb/dmmeta/field.md)|Specify field of a struct|
-|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
-|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.ns](/txt/ssimdb/dmmeta/ns.md)|Namespace (for in-memory database, protocol, etc)|
 |[dmmeta.sqltype](/txt/ssimdb/dmmeta/sqltype.md)|Mapping of ctype -> SQL expression|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[dmmeta.ssimfile](/txt/ssimdb/dmmeta/ssimfile.md)|File with ssim tuples|
+|[dmmeta.substr](/txt/ssimdb/dmmeta/substr.md)|Specify that the field value is computed from a substring of another field|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

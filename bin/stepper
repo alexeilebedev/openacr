@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Copyright (C) 2025-2026 AlgoRND
+#
+# usage: command1 | stepper | command2
+# this reaads lines from command1, allows editing them, then sends to command2
+
+while IFS= read -r line; do
+    sleep 0.2
+    printf "\n" > /dev/tty
+    read -e -i "$line" -p "> " edited < /dev/tty > /dev/tty 2>&1
+    # erase current line
+    # printf "\033[1A\033[2K" > /dev/tty
+    printf '%s\n' "$edited"
+done

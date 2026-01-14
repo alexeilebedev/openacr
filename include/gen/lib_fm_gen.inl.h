@@ -42,6 +42,7 @@ inline  lib_fm::FAlarm::~FAlarm() {
 // Set all fields to initial values.
 inline void lib_fm::FAlmCode_Init(lib_fm::FAlmCode& alm_code) {
     alm_code.ind_alm_code_next = (lib_fm::FAlmCode*)-1; // (lib_fm.FDb.ind_alm_code) not-in-hash
+    alm_code.ind_alm_code_hashval = 0; // stored hash value
 }
 
 // --- lib_fm.FAlmCode..Ctor
@@ -58,6 +59,7 @@ inline  lib_fm::FAlmCode::~FAlmCode() {
 // Set all fields to initial values.
 inline void lib_fm::FAlmObjtype_Init(lib_fm::FAlmObjtype& alm_objtype) {
     alm_objtype.ind_alm_objtype_next = (lib_fm::FAlmObjtype*)-1; // (lib_fm.FDb.ind_alm_objtype) not-in-hash
+    alm_objtype.ind_alm_objtype_hashval = 0; // stored hash value
 }
 
 // --- lib_fm.FAlmObjtype..Ctor

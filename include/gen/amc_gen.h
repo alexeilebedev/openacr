@@ -160,13 +160,13 @@ enum { amc_FieldIdEnum_N = 3 };
 
 // --- amc_PnewtypeEnum
 
-enum amc_PnewtypeEnum {             // amc.Pnewtype.value
-     amc_Pnewtype_Memptr      = 0   // Some region in memory
-    ,amc_Pnewtype_AmsStream   = 1   // Ams stream
-    ,amc_Pnewtype_Fixed       = 2   // Fixed buffer
-    ,amc_Pnewtype_Dynamic     = 3   // Dynamic buffer
-    ,amc_Pnewtype_ByteAry     = 4   // ByteAry
-    ,amc_Pnewtype_Append      = 5   // Append
+enum amc_PnewtypeEnum {           // amc.Pnewtype.value
+     amc_Pnewtype_Memptr    = 0   // Some region in memory
+    ,amc_Pnewtype_Shm       = 1   // Ams stream
+    ,amc_Pnewtype_Fixed     = 2   // Fixed buffer
+    ,amc_Pnewtype_Dynamic   = 3   // Dynamic buffer
+    ,amc_Pnewtype_ByteAry   = 4   // ByteAry
+    ,amc_Pnewtype_Append    = 5   // Append
 };
 
 enum { amc_PnewtypeEnum_N = 6 };
@@ -174,210 +174,220 @@ enum { amc_PnewtypeEnum_N = 6 };
 
 // --- amc_TableIdEnum
 
-enum amc_TableIdEnum {                           // amc.TableId.value
-     amc_TableId_dmmeta_Anonfld           = 0    // dmmeta.Anonfld -> amc.FAnonfld
-    ,amc_TableId_dmmeta_anonfld           = 0    // dmmeta.anonfld -> amc.FAnonfld
-    ,amc_TableId_dmmeta_Argvtype          = 1    // dmmeta.Argvtype -> amc.FArgvtype
-    ,amc_TableId_dmmeta_argvtype          = 1    // dmmeta.argvtype -> amc.FArgvtype
-    ,amc_TableId_dmmeta_Basepool          = 2    // dmmeta.Basepool -> amc.FBasepool
-    ,amc_TableId_dmmeta_basepool          = 2    // dmmeta.basepool -> amc.FBasepool
-    ,amc_TableId_dmmeta_Bitfld            = 3    // dmmeta.Bitfld -> amc.FBitfld
-    ,amc_TableId_dmmeta_bitfld            = 3    // dmmeta.bitfld -> amc.FBitfld
-    ,amc_TableId_amcdb_Bltin              = 4    // amcdb.Bltin -> amc.FBltin
-    ,amc_TableId_amcdb_bltin              = 4    // amcdb.bltin -> amc.FBltin
-    ,amc_TableId_dmmeta_Cafter            = 5    // dmmeta.Cafter -> amc.FCafter
-    ,amc_TableId_dmmeta_cafter            = 5    // dmmeta.cafter -> amc.FCafter
-    ,amc_TableId_dmmeta_Cascdel           = 6    // dmmeta.Cascdel -> amc.FCascdel
-    ,amc_TableId_dmmeta_cascdel           = 6    // dmmeta.cascdel -> amc.FCascdel
-    ,amc_TableId_dmmeta_Ccmp              = 7    // dmmeta.Ccmp -> amc.FCcmp
-    ,amc_TableId_dmmeta_ccmp              = 7    // dmmeta.ccmp -> amc.FCcmp
-    ,amc_TableId_dmmeta_Cdflt             = 8    // dmmeta.Cdflt -> amc.FCdflt
-    ,amc_TableId_dmmeta_cdflt             = 8    // dmmeta.cdflt -> amc.FCdflt
-    ,amc_TableId_dmmeta_Cextern           = 9    // dmmeta.Cextern -> amc.FCextern
-    ,amc_TableId_dmmeta_cextern           = 9    // dmmeta.cextern -> amc.FCextern
-    ,amc_TableId_dmmeta_Cfast             = 10   // dmmeta.Cfast -> amc.FCfast
-    ,amc_TableId_dmmeta_cfast             = 10   // dmmeta.cfast -> amc.FCfast
-    ,amc_TableId_dmmeta_Cfmt              = 11   // dmmeta.Cfmt -> amc.FCfmt
-    ,amc_TableId_dmmeta_cfmt              = 11   // dmmeta.cfmt -> amc.FCfmt
-    ,amc_TableId_dmmeta_Cget              = 12   // dmmeta.Cget -> amc.FCget
-    ,amc_TableId_dmmeta_cget              = 12   // dmmeta.cget -> amc.FCget
-    ,amc_TableId_dmmeta_Charset           = 13   // dmmeta.Charset -> amc.FCharset
-    ,amc_TableId_dmmeta_charset           = 13   // dmmeta.charset -> amc.FCharset
-    ,amc_TableId_dmmeta_Chash             = 14   // dmmeta.Chash -> amc.FChash
-    ,amc_TableId_dmmeta_chash             = 14   // dmmeta.chash -> amc.FChash
-    ,amc_TableId_dmmeta_Cppfunc           = 15   // dmmeta.Cppfunc -> amc.FCppfunc
-    ,amc_TableId_dmmeta_cppfunc           = 15   // dmmeta.cppfunc -> amc.FCppfunc
-    ,amc_TableId_dmmeta_Cpptype           = 16   // dmmeta.Cpptype -> amc.FCpptype
-    ,amc_TableId_dmmeta_cpptype           = 16   // dmmeta.cpptype -> amc.FCpptype
-    ,amc_TableId_dmmeta_Csize             = 17   // dmmeta.Csize -> amc.FCsize
-    ,amc_TableId_dmmeta_csize             = 17   // dmmeta.csize -> amc.FCsize
-    ,amc_TableId_dmmeta_Cstr              = 18   // dmmeta.Cstr -> amc.FCstr
-    ,amc_TableId_dmmeta_cstr              = 18   // dmmeta.cstr -> amc.FCstr
-    ,amc_TableId_dmmeta_Ctype             = 19   // dmmeta.Ctype -> amc.FCtype
-    ,amc_TableId_dmmeta_ctype             = 19   // dmmeta.ctype -> amc.FCtype
-    ,amc_TableId_dmmeta_Dispatch          = 20   // dmmeta.Dispatch -> amc.FDispatch
-    ,amc_TableId_dmmeta_dispatch          = 20   // dmmeta.dispatch -> amc.FDispatch
-    ,amc_TableId_dmmeta_DispatchMsg       = 21   // dmmeta.DispatchMsg -> amc.FDispatchmsg
-    ,amc_TableId_dmmeta_dispatch_msg      = 21   // dmmeta.dispatch_msg -> amc.FDispatchmsg
-    ,amc_TableId_dmmeta_Dispctx           = 22   // dmmeta.Dispctx -> amc.FDispctx
-    ,amc_TableId_dmmeta_dispctx           = 22   // dmmeta.dispctx -> amc.FDispctx
-    ,amc_TableId_dmmeta_Dispfilter        = 23   // dmmeta.Dispfilter -> amc.FDispfilter
-    ,amc_TableId_dmmeta_dispfilter        = 23   // dmmeta.dispfilter -> amc.FDispfilter
-    ,amc_TableId_dmmeta_Disptrace         = 24   // dmmeta.Disptrace -> amc.FDisptrace
-    ,amc_TableId_dmmeta_disptrace         = 24   // dmmeta.disptrace -> amc.FDisptrace
-    ,amc_TableId_dmmeta_Falias            = 25   // dmmeta.Falias -> amc.FFalias
-    ,amc_TableId_dmmeta_falias            = 25   // dmmeta.falias -> amc.FFalias
-    ,amc_TableId_dmmeta_Fbase             = 26   // dmmeta.Fbase -> amc.FFbase
-    ,amc_TableId_dmmeta_fbase             = 26   // dmmeta.fbase -> amc.FFbase
-    ,amc_TableId_dmmeta_Fbigend           = 27   // dmmeta.Fbigend -> amc.FFbigend
-    ,amc_TableId_dmmeta_fbigend           = 27   // dmmeta.fbigend -> amc.FFbigend
-    ,amc_TableId_dmmeta_Fbitset           = 28   // dmmeta.Fbitset -> amc.FFbitset
-    ,amc_TableId_dmmeta_fbitset           = 28   // dmmeta.fbitset -> amc.FFbitset
-    ,amc_TableId_dmmeta_Fbuf              = 29   // dmmeta.Fbuf -> amc.FFbuf
-    ,amc_TableId_dmmeta_fbuf              = 29   // dmmeta.fbuf -> amc.FFbuf
-    ,amc_TableId_dmmeta_Fbuftype          = 30   // dmmeta.Fbuftype -> amc.FFbuftype
-    ,amc_TableId_dmmeta_fbuftype          = 30   // dmmeta.fbuftype -> amc.FFbuftype
-    ,amc_TableId_dmmeta_Fcast             = 31   // dmmeta.Fcast -> amc.FFcast
-    ,amc_TableId_dmmeta_fcast             = 31   // dmmeta.fcast -> amc.FFcast
-    ,amc_TableId_dmmeta_Fcleanup          = 32   // dmmeta.Fcleanup -> amc.FFcleanup
-    ,amc_TableId_dmmeta_fcleanup          = 32   // dmmeta.fcleanup -> amc.FFcleanup
-    ,amc_TableId_dmmeta_Fcmap             = 33   // dmmeta.Fcmap -> amc.FFcmap
-    ,amc_TableId_dmmeta_fcmap             = 33   // dmmeta.fcmap -> amc.FFcmap
-    ,amc_TableId_dmmeta_Fcmdline          = 34   // dmmeta.Fcmdline -> amc.FFcmdline
-    ,amc_TableId_dmmeta_fcmdline          = 34   // dmmeta.fcmdline -> amc.FFcmdline
-    ,amc_TableId_dmmeta_Fcmp              = 35   // dmmeta.Fcmp -> amc.FFcmp
-    ,amc_TableId_dmmeta_fcmp              = 35   // dmmeta.fcmp -> amc.FFcmp
-    ,amc_TableId_dmmeta_Fcompact          = 36   // dmmeta.Fcompact -> amc.FFcompact
-    ,amc_TableId_dmmeta_fcompact          = 36   // dmmeta.fcompact -> amc.FFcompact
-    ,amc_TableId_dmmeta_Fconst            = 37   // dmmeta.Fconst -> amc.FFconst
-    ,amc_TableId_dmmeta_fconst            = 37   // dmmeta.fconst -> amc.FFconst
-    ,amc_TableId_dmmeta_Fcurs             = 38   // dmmeta.Fcurs -> amc.FFcurs
-    ,amc_TableId_dmmeta_fcurs             = 38   // dmmeta.fcurs -> amc.FFcurs
-    ,amc_TableId_dmmeta_Fdec              = 39   // dmmeta.Fdec -> amc.FFdec
-    ,amc_TableId_dmmeta_fdec              = 39   // dmmeta.fdec -> amc.FFdec
-    ,amc_TableId_dmmeta_Fdelay            = 40   // dmmeta.Fdelay -> amc.FFdelay
-    ,amc_TableId_dmmeta_fdelay            = 40   // dmmeta.fdelay -> amc.FFdelay
-    ,amc_TableId_dmmeta_Ffast             = 41   // dmmeta.Ffast -> amc.FFfast
-    ,amc_TableId_dmmeta_ffast             = 41   // dmmeta.ffast -> amc.FFfast
-    ,amc_TableId_dmmeta_Fflag             = 42   // dmmeta.Fflag -> amc.FFflag
-    ,amc_TableId_dmmeta_fflag             = 42   // dmmeta.fflag -> amc.FFflag
-    ,amc_TableId_dmmeta_Field             = 43   // dmmeta.Field -> amc.FField
-    ,amc_TableId_dmmeta_field             = 43   // dmmeta.field -> amc.FField
-    ,amc_TableId_dmmeta_Findrem           = 44   // dmmeta.Findrem -> amc.FFindrem
-    ,amc_TableId_dmmeta_findrem           = 44   // dmmeta.findrem -> amc.FFindrem
-    ,amc_TableId_dmmeta_Finput            = 45   // dmmeta.Finput -> amc.FFinput
-    ,amc_TableId_dmmeta_finput            = 45   // dmmeta.finput -> amc.FFinput
-    ,amc_TableId_dmmeta_Fldoffset         = 46   // dmmeta.Fldoffset -> amc.FFldoffset
-    ,amc_TableId_dmmeta_fldoffset         = 46   // dmmeta.fldoffset -> amc.FFldoffset
-    ,amc_TableId_dmmeta_Floadtuples       = 47   // dmmeta.Floadtuples -> amc.FFloadtuples
-    ,amc_TableId_dmmeta_floadtuples       = 47   // dmmeta.floadtuples -> amc.FFloadtuples
-    ,amc_TableId_dmmeta_Fnoremove         = 48   // dmmeta.Fnoremove -> amc.FFnoremove
-    ,amc_TableId_dmmeta_fnoremove         = 48   // dmmeta.fnoremove -> amc.FFnoremove
-    ,amc_TableId_dmmeta_Foutput           = 49   // dmmeta.Foutput -> amc.FFoutput
-    ,amc_TableId_dmmeta_foutput           = 49   // dmmeta.foutput -> amc.FFoutput
-    ,amc_TableId_dmmeta_Fprefix           = 50   // dmmeta.Fprefix -> amc.FFprefix
-    ,amc_TableId_dmmeta_fprefix           = 50   // dmmeta.fprefix -> amc.FFprefix
-    ,amc_TableId_dmmeta_Fregx             = 51   // dmmeta.Fregx -> amc.FFregx
-    ,amc_TableId_dmmeta_fregx             = 51   // dmmeta.fregx -> amc.FFregx
-    ,amc_TableId_dmmeta_Fsort             = 52   // dmmeta.Fsort -> amc.FFsort
-    ,amc_TableId_dmmeta_fsort             = 52   // dmmeta.fsort -> amc.FFsort
-    ,amc_TableId_dmmeta_Fstep             = 53   // dmmeta.Fstep -> amc.FFstep
-    ,amc_TableId_dmmeta_fstep             = 53   // dmmeta.fstep -> amc.FFstep
-    ,amc_TableId_dmmeta_Ftrace            = 54   // dmmeta.Ftrace -> amc.FFtrace
-    ,amc_TableId_dmmeta_ftrace            = 54   // dmmeta.ftrace -> amc.FFtrace
-    ,amc_TableId_dmmeta_Func              = 55   // dmmeta.Func -> amc.FFunc
-    ,amc_TableId_dmmeta_func              = 55   // dmmeta.func -> amc.FFunc
-    ,amc_TableId_dmmeta_Funique           = 56   // dmmeta.Funique -> amc.FFunique
-    ,amc_TableId_dmmeta_funique           = 56   // dmmeta.funique -> amc.FFunique
-    ,amc_TableId_dmmeta_Fuserinit         = 57   // dmmeta.Fuserinit -> amc.FFuserinit
-    ,amc_TableId_dmmeta_fuserinit         = 57   // dmmeta.fuserinit -> amc.FFuserinit
-    ,amc_TableId_dmmeta_Fwddecl           = 58   // dmmeta.Fwddecl -> amc.FFwddecl
-    ,amc_TableId_dmmeta_fwddecl           = 58   // dmmeta.fwddecl -> amc.FFwddecl
-    ,amc_TableId_dmmeta_Gconst            = 59   // dmmeta.Gconst -> amc.FGconst
-    ,amc_TableId_dmmeta_gconst            = 59   // dmmeta.gconst -> amc.FGconst
-    ,amc_TableId_dmmeta_Gstatic           = 60   // dmmeta.Gstatic -> amc.FGstatic
-    ,amc_TableId_dmmeta_gstatic           = 60   // dmmeta.gstatic -> amc.FGstatic
-    ,amc_TableId_dmmeta_Gsymbol           = 61   // dmmeta.Gsymbol -> amc.FGsymbol
-    ,amc_TableId_dmmeta_gsymbol           = 61   // dmmeta.gsymbol -> amc.FGsymbol
-    ,amc_TableId_dmmeta_Hook              = 62   // dmmeta.Hook -> amc.FHook
-    ,amc_TableId_dmmeta_hook              = 62   // dmmeta.hook -> amc.FHook
-    ,amc_TableId_dmmeta_Inlary            = 63   // dmmeta.Inlary -> amc.FInlary
-    ,amc_TableId_dmmeta_inlary            = 63   // dmmeta.inlary -> amc.FInlary
-    ,amc_TableId_dmmeta_Lenfld            = 64   // dmmeta.Lenfld -> amc.FLenfld
-    ,amc_TableId_dmmeta_lenfld            = 64   // dmmeta.lenfld -> amc.FLenfld
-    ,amc_TableId_dev_License              = 65   // dev.License -> amc.FLicense
-    ,amc_TableId_dev_license              = 65   // dev.license -> amc.FLicense
-    ,amc_TableId_dmmeta_Listtype          = 66   // dmmeta.Listtype -> amc.FListtype
-    ,amc_TableId_dmmeta_listtype          = 66   // dmmeta.listtype -> amc.FListtype
-    ,amc_TableId_dmmeta_Llist             = 67   // dmmeta.Llist -> amc.FLlist
-    ,amc_TableId_dmmeta_llist             = 67   // dmmeta.llist -> amc.FLlist
-    ,amc_TableId_dmmeta_Main              = 68   // dmmeta.Main -> amc.FMain
-    ,amc_TableId_dmmeta_main              = 68   // dmmeta.main -> amc.FMain
-    ,amc_TableId_dmmeta_Msgtype           = 69   // dmmeta.Msgtype -> amc.FMsgtype
-    ,amc_TableId_dmmeta_msgtype           = 69   // dmmeta.msgtype -> amc.FMsgtype
-    ,amc_TableId_dmmeta_Nocascdel         = 70   // dmmeta.Nocascdel -> amc.FNocascdel
-    ,amc_TableId_dmmeta_nocascdel         = 70   // dmmeta.nocascdel -> amc.FNocascdel
-    ,amc_TableId_dmmeta_Nossimfile        = 71   // dmmeta.Nossimfile -> amc.FNossimfile
-    ,amc_TableId_dmmeta_nossimfile        = 71   // dmmeta.nossimfile -> amc.FNossimfile
-    ,amc_TableId_dmmeta_Noxref            = 72   // dmmeta.Noxref -> amc.FNoxref
-    ,amc_TableId_dmmeta_noxref            = 72   // dmmeta.noxref -> amc.FNoxref
-    ,amc_TableId_dmmeta_Ns                = 73   // dmmeta.Ns -> amc.FNs
-    ,amc_TableId_dmmeta_ns                = 73   // dmmeta.ns -> amc.FNs
-    ,amc_TableId_dmmeta_Nscpp             = 74   // dmmeta.Nscpp -> amc.FNscpp
-    ,amc_TableId_dmmeta_nscpp             = 74   // dmmeta.nscpp -> amc.FNscpp
-    ,amc_TableId_dmmeta_Nsdb              = 75   // dmmeta.Nsdb -> amc.FNsdb
-    ,amc_TableId_dmmeta_nsdb              = 75   // dmmeta.nsdb -> amc.FNsdb
-    ,amc_TableId_dmmeta_Nsinclude         = 76   // dmmeta.Nsinclude -> amc.FNsinclude
-    ,amc_TableId_dmmeta_nsinclude         = 76   // dmmeta.nsinclude -> amc.FNsinclude
-    ,amc_TableId_dmmeta_Nsproto           = 77   // dmmeta.Nsproto -> amc.FNsproto
-    ,amc_TableId_dmmeta_nsproto           = 77   // dmmeta.nsproto -> amc.FNsproto
-    ,amc_TableId_dmmeta_Nsx               = 78   // dmmeta.Nsx -> amc.FNsx
-    ,amc_TableId_dmmeta_nsx               = 78   // dmmeta.nsx -> amc.FNsx
-    ,amc_TableId_dmmeta_Numstr            = 79   // dmmeta.Numstr -> amc.FNumstr
-    ,amc_TableId_dmmeta_numstr            = 79   // dmmeta.numstr -> amc.FNumstr
-    ,amc_TableId_dmmeta_Pack              = 80   // dmmeta.Pack -> amc.FPack
-    ,amc_TableId_dmmeta_pack              = 80   // dmmeta.pack -> amc.FPack
-    ,amc_TableId_dmmeta_Pmaskfld          = 81   // dmmeta.Pmaskfld -> amc.FPmaskfld
-    ,amc_TableId_dmmeta_pmaskfld          = 81   // dmmeta.pmaskfld -> amc.FPmaskfld
-    ,amc_TableId_dmmeta_PmaskfldMember    = 82   // dmmeta.PmaskfldMember -> amc.FPmaskfldMember
-    ,amc_TableId_dmmeta_pmaskfld_member   = 82   // dmmeta.pmaskfld_member -> amc.FPmaskfldMember
-    ,amc_TableId_dmmeta_Pnew              = 83   // dmmeta.Pnew -> amc.FPnew
-    ,amc_TableId_dmmeta_pnew              = 83   // dmmeta.pnew -> amc.FPnew
-    ,amc_TableId_dmmeta_Ptrary            = 84   // dmmeta.Ptrary -> amc.FPtrary
-    ,amc_TableId_dmmeta_ptrary            = 84   // dmmeta.ptrary -> amc.FPtrary
-    ,amc_TableId_dmmeta_Rowid             = 85   // dmmeta.Rowid -> amc.FRowid
-    ,amc_TableId_dmmeta_rowid             = 85   // dmmeta.rowid -> amc.FRowid
-    ,amc_TableId_dmmeta_Smallstr          = 86   // dmmeta.Smallstr -> amc.FSmallstr
-    ,amc_TableId_dmmeta_smallstr          = 86   // dmmeta.smallstr -> amc.FSmallstr
-    ,amc_TableId_dmmeta_Sortfld           = 87   // dmmeta.Sortfld -> amc.FSortfld
-    ,amc_TableId_dmmeta_sortfld           = 87   // dmmeta.sortfld -> amc.FSortfld
-    ,amc_TableId_dmmeta_Ssimfile          = 88   // dmmeta.Ssimfile -> amc.FSsimfile
-    ,amc_TableId_dmmeta_ssimfile          = 88   // dmmeta.ssimfile -> amc.FSsimfile
-    ,amc_TableId_dmmeta_Ssimsort          = 89   // dmmeta.Ssimsort -> amc.FSsimsort
-    ,amc_TableId_dmmeta_ssimsort          = 89   // dmmeta.ssimsort -> amc.FSsimsort
-    ,amc_TableId_dmmeta_Ssimvolatile      = 90   // dmmeta.Ssimvolatile -> amc.FSsimvolatile
-    ,amc_TableId_dmmeta_ssimvolatile      = 90   // dmmeta.ssimvolatile -> amc.FSsimvolatile
-    ,amc_TableId_dmmeta_Substr            = 91   // dmmeta.Substr -> amc.FSubstr
-    ,amc_TableId_dmmeta_substr            = 91   // dmmeta.substr -> amc.FSubstr
-    ,amc_TableId_dev_Targdep              = 92   // dev.Targdep -> amc.FTargdep
-    ,amc_TableId_dev_targdep              = 92   // dev.targdep -> amc.FTargdep
-    ,amc_TableId_dev_Target               = 93   // dev.Target -> amc.FTarget
-    ,amc_TableId_dev_target               = 93   // dev.target -> amc.FTarget
-    ,amc_TableId_dmmeta_Tary              = 94   // dmmeta.Tary -> amc.FTary
-    ,amc_TableId_dmmeta_tary              = 94   // dmmeta.tary -> amc.FTary
-    ,amc_TableId_amcdb_Tcurs              = 95   // amcdb.Tcurs -> amc.FTcurs
-    ,amc_TableId_amcdb_tcurs              = 95   // amcdb.tcurs -> amc.FTcurs
-    ,amc_TableId_dmmeta_Thash             = 96   // dmmeta.Thash -> amc.FThash
-    ,amc_TableId_dmmeta_thash             = 96   // dmmeta.thash -> amc.FThash
-    ,amc_TableId_dmmeta_Typefld           = 97   // dmmeta.Typefld -> amc.FTypefld
-    ,amc_TableId_dmmeta_typefld           = 97   // dmmeta.typefld -> amc.FTypefld
-    ,amc_TableId_dmmeta_Usertracefld      = 98   // dmmeta.Usertracefld -> amc.FUsertracefld
-    ,amc_TableId_dmmeta_usertracefld      = 98   // dmmeta.usertracefld -> amc.FUsertracefld
-    ,amc_TableId_dmmeta_Xref              = 99   // dmmeta.Xref -> amc.FXref
-    ,amc_TableId_dmmeta_xref              = 99   // dmmeta.xref -> amc.FXref
+enum amc_TableIdEnum {                            // amc.TableId.value
+     amc_TableId_dmmeta_Anonfld           = 0     // dmmeta.Anonfld -> amc.FAnonfld
+    ,amc_TableId_dmmeta_anonfld           = 0     // dmmeta.anonfld -> amc.FAnonfld
+    ,amc_TableId_dmmeta_Argvtype          = 1     // dmmeta.Argvtype -> amc.FArgvtype
+    ,amc_TableId_dmmeta_argvtype          = 1     // dmmeta.argvtype -> amc.FArgvtype
+    ,amc_TableId_dmmeta_Basepool          = 2     // dmmeta.Basepool -> amc.FBasepool
+    ,amc_TableId_dmmeta_basepool          = 2     // dmmeta.basepool -> amc.FBasepool
+    ,amc_TableId_dmmeta_Bitfld            = 3     // dmmeta.Bitfld -> amc.FBitfld
+    ,amc_TableId_dmmeta_bitfld            = 3     // dmmeta.bitfld -> amc.FBitfld
+    ,amc_TableId_amcdb_Bltin              = 4     // amcdb.Bltin -> amc.FBltin
+    ,amc_TableId_amcdb_bltin              = 4     // amcdb.bltin -> amc.FBltin
+    ,amc_TableId_dmmeta_Cafter            = 5     // dmmeta.Cafter -> amc.FCafter
+    ,amc_TableId_dmmeta_cafter            = 5     // dmmeta.cafter -> amc.FCafter
+    ,amc_TableId_dmmeta_Cascdel           = 6     // dmmeta.Cascdel -> amc.FCascdel
+    ,amc_TableId_dmmeta_cascdel           = 6     // dmmeta.cascdel -> amc.FCascdel
+    ,amc_TableId_dmmeta_Ccmp              = 7     // dmmeta.Ccmp -> amc.FCcmp
+    ,amc_TableId_dmmeta_ccmp              = 7     // dmmeta.ccmp -> amc.FCcmp
+    ,amc_TableId_dmmeta_Cdflt             = 8     // dmmeta.Cdflt -> amc.FCdflt
+    ,amc_TableId_dmmeta_cdflt             = 8     // dmmeta.cdflt -> amc.FCdflt
+    ,amc_TableId_dmmeta_Cextern           = 9     // dmmeta.Cextern -> amc.FCextern
+    ,amc_TableId_dmmeta_cextern           = 9     // dmmeta.cextern -> amc.FCextern
+    ,amc_TableId_dmmeta_Cfast             = 10    // dmmeta.Cfast -> amc.FCfast
+    ,amc_TableId_dmmeta_cfast             = 10    // dmmeta.cfast -> amc.FCfast
+    ,amc_TableId_dmmeta_Cfmt              = 11    // dmmeta.Cfmt -> amc.FCfmt
+    ,amc_TableId_dmmeta_cfmt              = 11    // dmmeta.cfmt -> amc.FCfmt
+    ,amc_TableId_dmmeta_Cget              = 12    // dmmeta.Cget -> amc.FCget
+    ,amc_TableId_dmmeta_cget              = 12    // dmmeta.cget -> amc.FCget
+    ,amc_TableId_dmmeta_Charset           = 13    // dmmeta.Charset -> amc.FCharset
+    ,amc_TableId_dmmeta_charset           = 13    // dmmeta.charset -> amc.FCharset
+    ,amc_TableId_dmmeta_Chash             = 14    // dmmeta.Chash -> amc.FChash
+    ,amc_TableId_dmmeta_chash             = 14    // dmmeta.chash -> amc.FChash
+    ,amc_TableId_dmmeta_Ckafka            = 15    // dmmeta.Ckafka -> amc.FCkafka
+    ,amc_TableId_dmmeta_ckafka            = 15    // dmmeta.ckafka -> amc.FCkafka
+    ,amc_TableId_dmmeta_Cppfunc           = 16    // dmmeta.Cppfunc -> amc.FCppfunc
+    ,amc_TableId_dmmeta_cppfunc           = 16    // dmmeta.cppfunc -> amc.FCppfunc
+    ,amc_TableId_dmmeta_Cpptype           = 17    // dmmeta.Cpptype -> amc.FCpptype
+    ,amc_TableId_dmmeta_cpptype           = 17    // dmmeta.cpptype -> amc.FCpptype
+    ,amc_TableId_dmmeta_Csize             = 18    // dmmeta.Csize -> amc.FCsize
+    ,amc_TableId_dmmeta_csize             = 18    // dmmeta.csize -> amc.FCsize
+    ,amc_TableId_dmmeta_Cstr              = 19    // dmmeta.Cstr -> amc.FCstr
+    ,amc_TableId_dmmeta_cstr              = 19    // dmmeta.cstr -> amc.FCstr
+    ,amc_TableId_dmmeta_Ctype             = 20    // dmmeta.Ctype -> amc.FCtype
+    ,amc_TableId_dmmeta_ctype             = 20    // dmmeta.ctype -> amc.FCtype
+    ,amc_TableId_dmmeta_Dispatch          = 21    // dmmeta.Dispatch -> amc.FDispatch
+    ,amc_TableId_dmmeta_dispatch          = 21    // dmmeta.dispatch -> amc.FDispatch
+    ,amc_TableId_dmmeta_DispatchMsg       = 22    // dmmeta.DispatchMsg -> amc.FDispatchmsg
+    ,amc_TableId_dmmeta_dispatch_msg      = 22    // dmmeta.dispatch_msg -> amc.FDispatchmsg
+    ,amc_TableId_dmmeta_Dispctx           = 23    // dmmeta.Dispctx -> amc.FDispctx
+    ,amc_TableId_dmmeta_dispctx           = 23    // dmmeta.dispctx -> amc.FDispctx
+    ,amc_TableId_dmmeta_Dispfilter        = 24    // dmmeta.Dispfilter -> amc.FDispfilter
+    ,amc_TableId_dmmeta_dispfilter        = 24    // dmmeta.dispfilter -> amc.FDispfilter
+    ,amc_TableId_dmmeta_Disptrace         = 25    // dmmeta.Disptrace -> amc.FDisptrace
+    ,amc_TableId_dmmeta_disptrace         = 25    // dmmeta.disptrace -> amc.FDisptrace
+    ,amc_TableId_dmmeta_Falias            = 26    // dmmeta.Falias -> amc.FFalias
+    ,amc_TableId_dmmeta_falias            = 26    // dmmeta.falias -> amc.FFalias
+    ,amc_TableId_dmmeta_Fbase             = 27    // dmmeta.Fbase -> amc.FFbase
+    ,amc_TableId_dmmeta_fbase             = 27    // dmmeta.fbase -> amc.FFbase
+    ,amc_TableId_dmmeta_Fbigend           = 28    // dmmeta.Fbigend -> amc.FFbigend
+    ,amc_TableId_dmmeta_fbigend           = 28    // dmmeta.fbigend -> amc.FFbigend
+    ,amc_TableId_dmmeta_Fbitset           = 29    // dmmeta.Fbitset -> amc.FFbitset
+    ,amc_TableId_dmmeta_fbitset           = 29    // dmmeta.fbitset -> amc.FFbitset
+    ,amc_TableId_dmmeta_Fbuf              = 30    // dmmeta.Fbuf -> amc.FFbuf
+    ,amc_TableId_dmmeta_fbuf              = 30    // dmmeta.fbuf -> amc.FFbuf
+    ,amc_TableId_dmmeta_Fbuftype          = 31    // dmmeta.Fbuftype -> amc.FFbuftype
+    ,amc_TableId_dmmeta_fbuftype          = 31    // dmmeta.fbuftype -> amc.FFbuftype
+    ,amc_TableId_dmmeta_Fcast             = 32    // dmmeta.Fcast -> amc.FFcast
+    ,amc_TableId_dmmeta_fcast             = 32    // dmmeta.fcast -> amc.FFcast
+    ,amc_TableId_dmmeta_Fcleanup          = 33    // dmmeta.Fcleanup -> amc.FFcleanup
+    ,amc_TableId_dmmeta_fcleanup          = 33    // dmmeta.fcleanup -> amc.FFcleanup
+    ,amc_TableId_dmmeta_Fcmap             = 34    // dmmeta.Fcmap -> amc.FFcmap
+    ,amc_TableId_dmmeta_fcmap             = 34    // dmmeta.fcmap -> amc.FFcmap
+    ,amc_TableId_dmmeta_Fcmdline          = 35    // dmmeta.Fcmdline -> amc.FFcmdline
+    ,amc_TableId_dmmeta_fcmdline          = 35    // dmmeta.fcmdline -> amc.FFcmdline
+    ,amc_TableId_dmmeta_Fcmp              = 36    // dmmeta.Fcmp -> amc.FFcmp
+    ,amc_TableId_dmmeta_fcmp              = 36    // dmmeta.fcmp -> amc.FFcmp
+    ,amc_TableId_dmmeta_Fcompact          = 37    // dmmeta.Fcompact -> amc.FFcompact
+    ,amc_TableId_dmmeta_fcompact          = 37    // dmmeta.fcompact -> amc.FFcompact
+    ,amc_TableId_dmmeta_Fconst            = 38    // dmmeta.Fconst -> amc.FFconst
+    ,amc_TableId_dmmeta_fconst            = 38    // dmmeta.fconst -> amc.FFconst
+    ,amc_TableId_dmmeta_Fcurs             = 39    // dmmeta.Fcurs -> amc.FFcurs
+    ,amc_TableId_dmmeta_fcurs             = 39    // dmmeta.fcurs -> amc.FFcurs
+    ,amc_TableId_dmmeta_Fdec              = 40    // dmmeta.Fdec -> amc.FFdec
+    ,amc_TableId_dmmeta_fdec              = 40    // dmmeta.fdec -> amc.FFdec
+    ,amc_TableId_dmmeta_Fdelay            = 41    // dmmeta.Fdelay -> amc.FFdelay
+    ,amc_TableId_dmmeta_fdelay            = 41    // dmmeta.fdelay -> amc.FFdelay
+    ,amc_TableId_dmmeta_Ffast             = 42    // dmmeta.Ffast -> amc.FFfast
+    ,amc_TableId_dmmeta_ffast             = 42    // dmmeta.ffast -> amc.FFfast
+    ,amc_TableId_dmmeta_Fflag             = 43    // dmmeta.Fflag -> amc.FFflag
+    ,amc_TableId_dmmeta_fflag             = 43    // dmmeta.fflag -> amc.FFflag
+    ,amc_TableId_dmmeta_Field             = 44    // dmmeta.Field -> amc.FField
+    ,amc_TableId_dmmeta_field             = 44    // dmmeta.field -> amc.FField
+    ,amc_TableId_dmmeta_Findrem           = 45    // dmmeta.Findrem -> amc.FFindrem
+    ,amc_TableId_dmmeta_findrem           = 45    // dmmeta.findrem -> amc.FFindrem
+    ,amc_TableId_dmmeta_Finput            = 46    // dmmeta.Finput -> amc.FFinput
+    ,amc_TableId_dmmeta_finput            = 46    // dmmeta.finput -> amc.FFinput
+    ,amc_TableId_dmmeta_Fkafka            = 47    // dmmeta.Fkafka -> amc.FFkafka
+    ,amc_TableId_dmmeta_fkafka            = 47    // dmmeta.fkafka -> amc.FFkafka
+    ,amc_TableId_dmmeta_Fldoffset         = 48    // dmmeta.Fldoffset -> amc.FFldoffset
+    ,amc_TableId_dmmeta_fldoffset         = 48    // dmmeta.fldoffset -> amc.FFldoffset
+    ,amc_TableId_dmmeta_Floadtuples       = 49    // dmmeta.Floadtuples -> amc.FFloadtuples
+    ,amc_TableId_dmmeta_floadtuples       = 49    // dmmeta.floadtuples -> amc.FFloadtuples
+    ,amc_TableId_dmmeta_Fnoremove         = 50    // dmmeta.Fnoremove -> amc.FFnoremove
+    ,amc_TableId_dmmeta_fnoremove         = 50    // dmmeta.fnoremove -> amc.FFnoremove
+    ,amc_TableId_dmmeta_Foutput           = 51    // dmmeta.Foutput -> amc.FFoutput
+    ,amc_TableId_dmmeta_foutput           = 51    // dmmeta.foutput -> amc.FFoutput
+    ,amc_TableId_dmmeta_Fprefix           = 52    // dmmeta.Fprefix -> amc.FFprefix
+    ,amc_TableId_dmmeta_fprefix           = 52    // dmmeta.fprefix -> amc.FFprefix
+    ,amc_TableId_dmmeta_Fregx             = 53    // dmmeta.Fregx -> amc.FFregx
+    ,amc_TableId_dmmeta_fregx             = 53    // dmmeta.fregx -> amc.FFregx
+    ,amc_TableId_dmmeta_Fsort             = 54    // dmmeta.Fsort -> amc.FFsort
+    ,amc_TableId_dmmeta_fsort             = 54    // dmmeta.fsort -> amc.FFsort
+    ,amc_TableId_dmmeta_Fstep             = 55    // dmmeta.Fstep -> amc.FFstep
+    ,amc_TableId_dmmeta_fstep             = 55    // dmmeta.fstep -> amc.FFstep
+    ,amc_TableId_dmmeta_Ftrace            = 56    // dmmeta.Ftrace -> amc.FFtrace
+    ,amc_TableId_dmmeta_ftrace            = 56    // dmmeta.ftrace -> amc.FFtrace
+    ,amc_TableId_dmmeta_Func              = 57    // dmmeta.Func -> amc.FFunc
+    ,amc_TableId_dmmeta_func              = 57    // dmmeta.func -> amc.FFunc
+    ,amc_TableId_dmmeta_Funique           = 58    // dmmeta.Funique -> amc.FFunique
+    ,amc_TableId_dmmeta_funique           = 58    // dmmeta.funique -> amc.FFunique
+    ,amc_TableId_dmmeta_Fuserinit         = 59    // dmmeta.Fuserinit -> amc.FFuserinit
+    ,amc_TableId_dmmeta_fuserinit         = 59    // dmmeta.fuserinit -> amc.FFuserinit
+    ,amc_TableId_dmmeta_Fwddecl           = 60    // dmmeta.Fwddecl -> amc.FFwddecl
+    ,amc_TableId_dmmeta_fwddecl           = 60    // dmmeta.fwddecl -> amc.FFwddecl
+    ,amc_TableId_dmmeta_Gconst            = 61    // dmmeta.Gconst -> amc.FGconst
+    ,amc_TableId_dmmeta_gconst            = 61    // dmmeta.gconst -> amc.FGconst
+    ,amc_TableId_dmmeta_Gstatic           = 62    // dmmeta.Gstatic -> amc.FGstatic
+    ,amc_TableId_dmmeta_gstatic           = 62    // dmmeta.gstatic -> amc.FGstatic
+    ,amc_TableId_dmmeta_Gsymbol           = 63    // dmmeta.Gsymbol -> amc.FGsymbol
+    ,amc_TableId_dmmeta_gsymbol           = 63    // dmmeta.gsymbol -> amc.FGsymbol
+    ,amc_TableId_dmmeta_Hook              = 64    // dmmeta.Hook -> amc.FHook
+    ,amc_TableId_dmmeta_hook              = 64    // dmmeta.hook -> amc.FHook
+    ,amc_TableId_dmmeta_Inlary            = 65    // dmmeta.Inlary -> amc.FInlary
+    ,amc_TableId_dmmeta_inlary            = 65    // dmmeta.inlary -> amc.FInlary
+    ,amc_TableId_dmmeta_Jstype            = 66    // dmmeta.Jstype -> amc.FJstype
+    ,amc_TableId_dmmeta_jstype            = 66    // dmmeta.jstype -> amc.FJstype
+    ,amc_TableId_dmmeta_Lenfld            = 67    // dmmeta.Lenfld -> amc.FLenfld
+    ,amc_TableId_dmmeta_lenfld            = 67    // dmmeta.lenfld -> amc.FLenfld
+    ,amc_TableId_dev_License              = 68    // dev.License -> amc.FLicense
+    ,amc_TableId_dev_license              = 68    // dev.license -> amc.FLicense
+    ,amc_TableId_dmmeta_Listtype          = 69    // dmmeta.Listtype -> amc.FListtype
+    ,amc_TableId_dmmeta_listtype          = 69    // dmmeta.listtype -> amc.FListtype
+    ,amc_TableId_dmmeta_Llist             = 70    // dmmeta.Llist -> amc.FLlist
+    ,amc_TableId_dmmeta_llist             = 70    // dmmeta.llist -> amc.FLlist
+    ,amc_TableId_dmmeta_Main              = 71    // dmmeta.Main -> amc.FMain
+    ,amc_TableId_dmmeta_main              = 71    // dmmeta.main -> amc.FMain
+    ,amc_TableId_dmmeta_Msgtype           = 72    // dmmeta.Msgtype -> amc.FMsgtype
+    ,amc_TableId_dmmeta_msgtype           = 72    // dmmeta.msgtype -> amc.FMsgtype
+    ,amc_TableId_dmmeta_Nocascdel         = 73    // dmmeta.Nocascdel -> amc.FNocascdel
+    ,amc_TableId_dmmeta_nocascdel         = 73    // dmmeta.nocascdel -> amc.FNocascdel
+    ,amc_TableId_dmmeta_Nossimfile        = 74    // dmmeta.Nossimfile -> amc.FNossimfile
+    ,amc_TableId_dmmeta_nossimfile        = 74    // dmmeta.nossimfile -> amc.FNossimfile
+    ,amc_TableId_dmmeta_Noxref            = 75    // dmmeta.Noxref -> amc.FNoxref
+    ,amc_TableId_dmmeta_noxref            = 75    // dmmeta.noxref -> amc.FNoxref
+    ,amc_TableId_dmmeta_Ns                = 76    // dmmeta.Ns -> amc.FNs
+    ,amc_TableId_dmmeta_ns                = 76    // dmmeta.ns -> amc.FNs
+    ,amc_TableId_dmmeta_Nscpp             = 77    // dmmeta.Nscpp -> amc.FNscpp
+    ,amc_TableId_dmmeta_nscpp             = 77    // dmmeta.nscpp -> amc.FNscpp
+    ,amc_TableId_dmmeta_Nsdb              = 78    // dmmeta.Nsdb -> amc.FNsdb
+    ,amc_TableId_dmmeta_nsdb              = 78    // dmmeta.nsdb -> amc.FNsdb
+    ,amc_TableId_dmmeta_Nsinclude         = 79    // dmmeta.Nsinclude -> amc.FNsinclude
+    ,amc_TableId_dmmeta_nsinclude         = 79    // dmmeta.nsinclude -> amc.FNsinclude
+    ,amc_TableId_dmmeta_Nsjs              = 80    // dmmeta.Nsjs -> amc.FNsjs
+    ,amc_TableId_dmmeta_nsjs              = 80    // dmmeta.nsjs -> amc.FNsjs
+    ,amc_TableId_dmmeta_Nsproto           = 81    // dmmeta.Nsproto -> amc.FNsproto
+    ,amc_TableId_dmmeta_nsproto           = 81    // dmmeta.nsproto -> amc.FNsproto
+    ,amc_TableId_dmmeta_Nsx               = 82    // dmmeta.Nsx -> amc.FNsx
+    ,amc_TableId_dmmeta_nsx               = 82    // dmmeta.nsx -> amc.FNsx
+    ,amc_TableId_dmmeta_Numstr            = 83    // dmmeta.Numstr -> amc.FNumstr
+    ,amc_TableId_dmmeta_numstr            = 83    // dmmeta.numstr -> amc.FNumstr
+    ,amc_TableId_dmmeta_Pack              = 84    // dmmeta.Pack -> amc.FPack
+    ,amc_TableId_dmmeta_pack              = 84    // dmmeta.pack -> amc.FPack
+    ,amc_TableId_dmmeta_Pmaskfld          = 85    // dmmeta.Pmaskfld -> amc.FPmaskfld
+    ,amc_TableId_dmmeta_pmaskfld          = 85    // dmmeta.pmaskfld -> amc.FPmaskfld
+    ,amc_TableId_dmmeta_PmaskfldMember    = 86    // dmmeta.PmaskfldMember -> amc.FPmaskfldMember
+    ,amc_TableId_dmmeta_pmaskfld_member   = 86    // dmmeta.pmaskfld_member -> amc.FPmaskfldMember
+    ,amc_TableId_dmmeta_Pnew              = 87    // dmmeta.Pnew -> amc.FPnew
+    ,amc_TableId_dmmeta_pnew              = 87    // dmmeta.pnew -> amc.FPnew
+    ,amc_TableId_dmmeta_Ptrary            = 88    // dmmeta.Ptrary -> amc.FPtrary
+    ,amc_TableId_dmmeta_ptrary            = 88    // dmmeta.ptrary -> amc.FPtrary
+    ,amc_TableId_dmmeta_Rowid             = 89    // dmmeta.Rowid -> amc.FRowid
+    ,amc_TableId_dmmeta_rowid             = 89    // dmmeta.rowid -> amc.FRowid
+    ,amc_TableId_dmmeta_Smallstr          = 90    // dmmeta.Smallstr -> amc.FSmallstr
+    ,amc_TableId_dmmeta_smallstr          = 90    // dmmeta.smallstr -> amc.FSmallstr
+    ,amc_TableId_dmmeta_Sortfld           = 91    // dmmeta.Sortfld -> amc.FSortfld
+    ,amc_TableId_dmmeta_sortfld           = 91    // dmmeta.sortfld -> amc.FSortfld
+    ,amc_TableId_dmmeta_Ssimfile          = 92    // dmmeta.Ssimfile -> amc.FSsimfile
+    ,amc_TableId_dmmeta_ssimfile          = 92    // dmmeta.ssimfile -> amc.FSsimfile
+    ,amc_TableId_dmmeta_Ssimsort          = 93    // dmmeta.Ssimsort -> amc.FSsimsort
+    ,amc_TableId_dmmeta_ssimsort          = 93    // dmmeta.ssimsort -> amc.FSsimsort
+    ,amc_TableId_dmmeta_Ssimvolatile      = 94    // dmmeta.Ssimvolatile -> amc.FSsimvolatile
+    ,amc_TableId_dmmeta_ssimvolatile      = 94    // dmmeta.ssimvolatile -> amc.FSsimvolatile
+    ,amc_TableId_dmmeta_Steptype          = 95    // dmmeta.Steptype -> amc.FSteptype
+    ,amc_TableId_dmmeta_steptype          = 95    // dmmeta.steptype -> amc.FSteptype
+    ,amc_TableId_dmmeta_Substr            = 96    // dmmeta.Substr -> amc.FSubstr
+    ,amc_TableId_dmmeta_substr            = 96    // dmmeta.substr -> amc.FSubstr
+    ,amc_TableId_dev_Targdep              = 97    // dev.Targdep -> amc.FTargdep
+    ,amc_TableId_dev_targdep              = 97    // dev.targdep -> amc.FTargdep
+    ,amc_TableId_dev_Target               = 98    // dev.Target -> amc.FTarget
+    ,amc_TableId_dev_target               = 98    // dev.target -> amc.FTarget
+    ,amc_TableId_dmmeta_Tary              = 99    // dmmeta.Tary -> amc.FTary
+    ,amc_TableId_dmmeta_tary              = 99    // dmmeta.tary -> amc.FTary
+    ,amc_TableId_amcdb_Tcurs              = 100   // amcdb.Tcurs -> amc.FTcurs
+    ,amc_TableId_amcdb_tcurs              = 100   // amcdb.tcurs -> amc.FTcurs
+    ,amc_TableId_dmmeta_Thash             = 101   // dmmeta.Thash -> amc.FThash
+    ,amc_TableId_dmmeta_thash             = 101   // dmmeta.thash -> amc.FThash
+    ,amc_TableId_dmmeta_Typefld           = 102   // dmmeta.Typefld -> amc.FTypefld
+    ,amc_TableId_dmmeta_typefld           = 102   // dmmeta.typefld -> amc.FTypefld
+    ,amc_TableId_dmmeta_Usertracefld      = 103   // dmmeta.Usertracefld -> amc.FUsertracefld
+    ,amc_TableId_dmmeta_usertracefld      = 103   // dmmeta.usertracefld -> amc.FUsertracefld
+    ,amc_TableId_dmmeta_Xref              = 104   // dmmeta.Xref -> amc.FXref
+    ,amc_TableId_dmmeta_xref              = 104   // dmmeta.xref -> amc.FXref
 };
 
-enum { amc_TableIdEnum_N = 200 };
+enum { amc_TableIdEnum_N = 210 };
 
 namespace amc { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -405,6 +415,7 @@ namespace dmmeta { struct Cfmt; }
 namespace dmmeta { struct Cget; }
 namespace dmmeta { struct Charset; }
 namespace dmmeta { struct Chash; }
+namespace dmmeta { struct Ckafka; }
 namespace dmmeta { struct Cppfunc; }
 namespace dmmeta { struct Cpptype; }
 namespace dmmeta { struct Csize; }
@@ -442,6 +453,7 @@ namespace dmmeta { struct Field; }
 namespace amc { struct FReftype; }
 namespace dmmeta { struct Findrem; }
 namespace dmmeta { struct Finput; }
+namespace dmmeta { struct Fkafka; }
 namespace dmmeta { struct Fldoffset; }
 namespace dmmeta { struct Floadtuples; }
 namespace dmmeta { struct Fnoremove; }
@@ -450,6 +462,7 @@ namespace dmmeta { struct Fprefix; }
 namespace dmmeta { struct Fregx; }
 namespace dmmeta { struct Fsort; }
 namespace dmmeta { struct Fstep; }
+namespace amc { struct FSteptype; }
 namespace dmmeta { struct Ftrace; }
 namespace dmmeta { struct Func; }
 namespace dmmeta { struct Funique; }
@@ -462,6 +475,7 @@ namespace dmmeta { struct Gsymbol; }
 namespace amc { struct FSsimfile; }
 namespace dmmeta { struct Hook; }
 namespace dmmeta { struct Inlary; }
+namespace dmmeta { struct Jstype; }
 namespace dmmeta { struct Lenfld; }
 namespace dev { struct License; }
 namespace dmmeta { struct Listtype; }
@@ -477,6 +491,7 @@ namespace amc { struct FLicense; }
 namespace dmmeta { struct Nscpp; }
 namespace dmmeta { struct Nsdb; }
 namespace dmmeta { struct Nsinclude; }
+namespace dmmeta { struct Nsjs; }
 namespace dmmeta { struct Nsproto; }
 namespace dmmeta { struct Nsx; }
 namespace dmmeta { struct Numstr; }
@@ -494,6 +509,7 @@ namespace dmmeta { struct Sortfld; }
 namespace dmmeta { struct Ssimfile; }
 namespace dmmeta { struct Ssimsort; }
 namespace dmmeta { struct Ssimvolatile; }
+namespace dmmeta { struct Steptype; }
 namespace dmmeta { struct Substr; }
 namespace dev { struct Targdep; }
 namespace amc { struct FTarget; }
@@ -506,6 +522,7 @@ namespace dmmeta { struct Thash; }
 namespace dmmeta { struct Tracefld; }
 namespace dmmeta { struct Tracerec; }
 namespace dmmeta { struct Typefld; }
+namespace dmmeta { struct Userfunc; }
 namespace dmmeta { struct Usertracefld; }
 namespace dmmeta { struct Xref; }
 namespace amc { struct FTfunc; }
@@ -523,6 +540,7 @@ namespace amc { struct ctype_zd_cafter_curs; }
 namespace amc { struct ctype_zd_access_curs; }
 namespace amc { struct ctype_c_fcurs_curs; }
 namespace amc { struct ctype_c_ffast_curs; }
+namespace amc { struct ctype_zd_varlenfld_curs; }
 namespace amc { struct tclass_c_tfunc_curs; }
 namespace amc { struct _db_fsort_curs; }
 namespace amc { struct _db_dispfilter_curs; }
@@ -588,7 +606,6 @@ namespace amc { struct _db_disptrace_curs; }
 namespace amc { struct _db_tracefld_curs; }
 namespace amc { struct _db_tracerec_curs; }
 namespace amc { struct _db_dispsig_curs; }
-namespace amc { struct _db_c_dispsig_sorted_curs; }
 namespace amc { struct _db_zs_sig_visit_curs; }
 namespace amc { struct _db_target_curs; }
 namespace amc { struct _db_targdep_curs; }
@@ -623,8 +640,6 @@ namespace amc { struct _db_ftrace_curs; }
 namespace amc { struct _db_fnoremove_curs; }
 namespace amc { struct _db_c_substr_field_curs; }
 namespace amc { struct _db_ctypelen_curs; }
-namespace amc { struct _db_c_ctypelen_curs; }
-namespace amc { struct _db_c_tempfield_curs; }
 namespace amc { struct _db_fbase_curs; }
 namespace amc { struct _db_nossimfile_curs; }
 namespace amc { struct _db_gsymbol_curs; }
@@ -650,6 +665,12 @@ namespace amc { struct _db_ffast_curs; }
 namespace amc { struct _db_pmaskfld_member_curs; }
 namespace amc { struct _db_ssimsort_curs; }
 namespace amc { struct _db_fbuftype_curs; }
+namespace amc { struct _db_nsjs_curs; }
+namespace amc { struct _db_jstype_curs; }
+namespace amc { struct _db_ckafka_curs; }
+namespace amc { struct _db_fkafka_curs; }
+namespace amc { struct _db_userfunc_curs; }
+namespace amc { struct _db_steptype_curs; }
 namespace amc { struct dispatch_c_dispatch_msg_curs; }
 namespace amc { struct enumstr_c_fconst_curs; }
 namespace amc { struct enumstr_len_bh_enumstr_curs; }
@@ -699,10 +720,12 @@ namespace amc { struct FCfmt; }
 namespace amc { struct FCget; }
 namespace amc { struct FCharset; }
 namespace amc { struct FChash; }
+namespace amc { struct FCkafka; }
 namespace amc { struct FCppfunc; }
 namespace amc { struct FCpptype; }
 namespace amc { struct FCsize; }
 namespace amc { struct FCstr; }
+namespace amc { struct JsCtype; }
 namespace amc { struct FCtypelen; }
 namespace amc { struct Genctx; }
 namespace amc { struct trace; }
@@ -733,6 +756,7 @@ namespace amc { struct FFfast; }
 namespace amc { struct FFflag; }
 namespace amc { struct FFindrem; }
 namespace amc { struct FFinput; }
+namespace amc { struct FFkafka; }
 namespace amc { struct FFldoffset; }
 namespace amc { struct FFloadtuples; }
 namespace amc { struct FFnoremove; }
@@ -753,6 +777,7 @@ namespace amc { struct FGstatic; }
 namespace amc { struct FGsymbol; }
 namespace amc { struct FHook; }
 namespace amc { struct FInlary; }
+namespace amc { struct FJstype; }
 namespace amc { struct FLenfld; }
 namespace amc { struct FLlist; }
 namespace amc { struct FMain; }
@@ -760,9 +785,11 @@ namespace amc { struct FMsgtype; }
 namespace amc { struct FNocascdel; }
 namespace amc { struct FNossimfile; }
 namespace amc { struct FNoxref; }
+namespace amc { struct JsNs; }
 namespace amc { struct FNscpp; }
 namespace amc { struct FNsdb; }
 namespace amc { struct FNsinclude; }
+namespace amc { struct FNsjs; }
 namespace amc { struct FNsproto; }
 namespace amc { struct FNsx; }
 namespace amc { struct FNumstr; }
@@ -785,6 +812,7 @@ namespace amc { struct FThash; }
 namespace amc { struct FTracefld; }
 namespace amc { struct FTracerec; }
 namespace amc { struct FTypefld; }
+namespace amc { struct FUserfunc; }
 namespace amc { struct FUsertracefld; }
 namespace amc { struct FXref; }
 namespace amc { struct FieldId; }
@@ -806,6 +834,19 @@ namespace amc { // gen:ns_gsymbol
 } // gen:ns_gsymbol
 namespace amc { // gen:ns_gsymbol
     extern const algo::strptr dev_gitfile_conf_copyright_txt; // "conf/copyright.txt"
+} // gen:ns_gsymbol
+namespace amc { // gen:ns_gsymbol
+    extern const char* dmmeta_fbufiotype_nofd; // "nofd"
+    extern const char* dmmeta_fbufiotype_openssl; // "openssl"
+    extern const char* dmmeta_fbufiotype_standard; // "standard"
+} // gen:ns_gsymbol
+namespace amc { // gen:ns_gsymbol
+    extern const dmmeta::KafkaTypeKindPkey dmmeta_kafka_type_kind_common; // "common"
+    extern const dmmeta::KafkaTypeKindPkey dmmeta_kafka_type_kind_data; // "data"
+    extern const dmmeta::KafkaTypeKindPkey dmmeta_kafka_type_kind_field; // "field"
+    extern const dmmeta::KafkaTypeKindPkey dmmeta_kafka_type_kind_header; // "header"
+    extern const dmmeta::KafkaTypeKindPkey dmmeta_kafka_type_kind_request; // "request"
+    extern const dmmeta::KafkaTypeKindPkey dmmeta_kafka_type_kind_response; // "response"
 } // gen:ns_gsymbol
 namespace amc { // gen:ns_print_struct
 
@@ -1064,13 +1105,13 @@ void                 FBasepool_Uninit(amc::FBasepool& basepool) __attribute__((n
 // access: amc.FField.c_bitfld (Ptr)
 // access: amc.FField.bh_bitfld (Bheap)
 struct FBitfld { // amc.FBitfld
-    algo::Smallstr100   field;           //
-    i32                 offset;          //   0  Offset, in bits, within parent field
-    i32                 width;           //   0  Width, in bits, within parent field.
-    algo::Smallstr100   srcfield;        //
-    amc::FField*        p_srcfield;      // reference to parent row
-    amc::FField*        p_field;         // reference to parent row
-    i32                 bh_bitfld_idx;   // index in heap; -1 means not-in-heap
+    algo::Smallstr100   field;                 //
+    i32                 offset;                //   0  Offset, in bits, within parent field
+    i32                 width;                 //   0  Width, in bits, within parent field.
+    algo::Smallstr100   srcfield;              //
+    amc::FField*        p_srcfield;            // reference to parent row
+    amc::FField*        p_field;               // reference to parent row
+    i32                 field_bh_bitfld_idx;   // index in heap; -1 means not-in-heap
     // x-reference on amc.FBitfld.p_srcfield prevents copy
     // x-reference on amc.FBitfld.p_field prevents copy
     // func:amc.FBitfld..AssignOp
@@ -1111,11 +1152,12 @@ void                 FBitfld_Uninit(amc::FBitfld& bitfld) __attribute__((nothrow
 // global access: ind_bltin (Thash, hash field ctype)
 // access: amc.FCtype.c_bltin (Ptr)
 struct FBltin { // amc.FBltin
-    algo::Smallstr100   ctype;            //
-    bool                likeu64;          //   false
-    bool                bigendok;         //   false
-    bool                issigned;         //   false
-    amc::FBltin*        ind_bltin_next;   // hash next
+    algo::Smallstr100   ctype;               //
+    bool                likeu64;             //   false
+    bool                bigendok;            //   false
+    bool                issigned;            //   false
+    amc::FBltin*        ind_bltin_next;      // hash next
+    u32                 ind_bltin_hashval;   // hash value
     // func:amc.FBltin..AssignOp
     inline amc::FBltin&  operator =(const amc::FBltin &rhs) = delete;
     // func:amc.FBltin..CopyCtor
@@ -1148,10 +1190,10 @@ void                 FBltin_Uninit(amc::FBltin& bltin) __attribute__((nothrow));
 // global access: cafter (Lary, by rowid)
 // access: amc.FCtype.zd_cafter (Llist)
 struct FCafter { // amc.FCafter
-    algo::Smallstr50   cafter;           //
-    amc::FCtype*       p_after;          // reference to parent row
-    amc::FCafter*      zd_cafter_next;   // zslist link; -1 means not-in-list
-    amc::FCafter*      zd_cafter_prev;   // previous element
+    algo::Smallstr50   cafter;                 //
+    amc::FCtype*       p_after;                // reference to parent row
+    amc::FCafter*      ctype_zd_cafter_next;   // zslist link; -1 means not-in-list
+    amc::FCafter*      ctype_zd_cafter_prev;   // previous element
     // x-reference on amc.FCafter.p_after prevents copy
     // func:amc.FCafter..AssignOp
     inline amc::FCafter& operator =(const amc::FCafter &rhs) = delete;
@@ -1229,12 +1271,13 @@ void                 FCascdel_Uninit(amc::FCascdel& cascdel) __attribute__((noth
 // global access: ind_ccmp (Thash, hash field ctype)
 // access: amc.FCtype.c_ccmp (Ptr)
 struct FCcmp { // amc.FCcmp
-    algo::Smallstr100   ctype;           // Target ctype
-    bool                extrn;           //   false  Whether implementation is external
-    bool                genop;           //   false  Generate C++ comparison operators (<,>, etc)
-    bool                order;           //   false
-    bool                minmax;          //   false
-    amc::FCcmp*         ind_ccmp_next;   // hash next
+    algo::Smallstr100   ctype;              // Target ctype
+    bool                extrn;              //   false  Whether implementation is external
+    bool                genop;              //   false  Generate C++ comparison operators (<,>, etc)
+    bool                order;              //   false
+    bool                minmax;             //   false
+    amc::FCcmp*         ind_ccmp_next;      // hash next
+    u32                 ind_ccmp_hashval;   // hash value
     // func:amc.FCcmp..AssignOp
     inline amc::FCcmp&   operator =(const amc::FCcmp &rhs) = delete;
     // func:amc.FCcmp..CopyCtor
@@ -1377,14 +1420,15 @@ void                 FCfast_Uninit(amc::FCfast& cfast) __attribute__((nothrow));
 // global access: cfmt (Lary, by rowid)
 // access: amc.FCtype.zs_cfmt (Llist)
 struct FCfmt { // amc.FCfmt
-    algo::Smallstr100   cfmt;            //
-    algo::Smallstr50    printfmt;        //
-    bool                read;            //   false
-    bool                print;           //   false
-    algo::Smallstr20    sep;             //
-    bool                genop;           //   false
-    amc::FCfmt*         zs_cfmt_next;    // zslist link; -1 means not-in-list
-    amc::FCfmt*         ind_cfmt_next;   // hash next
+    algo::Smallstr100   cfmt;                 //
+    algo::Smallstr50    printfmt;             //
+    bool                read;                 //   false
+    bool                print;                //   false
+    algo::Smallstr20    sep;                  //
+    bool                genop;                //   false
+    amc::FCfmt*         ctype_zs_cfmt_next;   // zslist link; -1 means not-in-list
+    amc::FCfmt*         ind_cfmt_next;        // hash next
+    u32                 ind_cfmt_hashval;     // hash value
     // func:amc.FCfmt..AssignOp
     inline amc::FCfmt&   operator =(const amc::FCfmt &rhs) = delete;
     // func:amc.FCfmt..CopyCtor
@@ -1489,9 +1533,10 @@ void                 FCharset_Uninit(amc::FCharset& charset) __attribute__((noth
 // global access: ind_chash (Thash, hash field ctype)
 // access: amc.FCtype.c_chash (Ptr)
 struct FChash { // amc.FChash
-    algo::Smallstr100   ctype;            // Target ctype
-    algo::Smallstr50    hashtype;         // Hash type
-    amc::FChash*        ind_chash_next;   // hash next
+    algo::Smallstr100   ctype;               // Target ctype
+    algo::Smallstr50    hashtype;            // Hash type
+    amc::FChash*        ind_chash_next;      // hash next
+    u32                 ind_chash_hashval;   // hash value
     // func:amc.FChash..AssignOp
     inline amc::FChash&  operator =(const amc::FChash &rhs) = delete;
     // func:amc.FChash..CopyCtor
@@ -1518,6 +1563,42 @@ void                 chash_CopyIn(amc::FChash &row, dmmeta::Chash &in) __attribu
 inline void          FChash_Init(amc::FChash& chash);
 // func:amc.FChash..Uninit
 void                 FChash_Uninit(amc::FChash& chash) __attribute__((nothrow));
+
+// --- amc.FCkafka
+// create: amc.FDb.ckafka (Lary)
+// global access: ckafka (Lary, by rowid)
+// access: amc.FCtype.c_ckafka (Ptr)
+struct FCkafka { // amc.FCkafka
+    algo::Smallstr100   ctype;               //
+    algo::Smallstr50    kind;                //
+    algo::cstring       root;                //
+    algo::Smallstr10    valid_versions;      //
+    algo::Smallstr10    flexible_versions;   //
+    algo::Comment       comment;             //
+    // func:amc.FCkafka..AssignOp
+    inline amc::FCkafka& operator =(const amc::FCkafka &rhs) = delete;
+    // func:amc.FCkafka..CopyCtor
+    inline               FCkafka(const amc::FCkafka &rhs) = delete;
+private:
+    // func:amc.FCkafka..Ctor
+    inline               FCkafka() __attribute__((nothrow));
+    // func:amc.FCkafka..Dtor
+    inline               ~FCkafka() __attribute__((nothrow));
+    friend amc::FCkafka&        ckafka_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FCkafka*        ckafka_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 ckafka_RemoveAll() __attribute__((nothrow));
+    friend void                 ckafka_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:amc.FCkafka.base.CopyOut
+void                 ckafka_CopyOut(amc::FCkafka &row, dmmeta::Ckafka &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:amc.FCkafka.base.CopyIn
+void                 ckafka_CopyIn(amc::FCkafka &row, dmmeta::Ckafka &in) __attribute__((nothrow));
+
+// func:amc.FCkafka..Uninit
+void                 FCkafka_Uninit(amc::FCkafka& ckafka) __attribute__((nothrow));
 
 // --- amc.FCppfunc
 // create: amc.FDb.cppfunc (Lary)
@@ -1561,12 +1642,13 @@ void                 FCppfunc_Uninit(amc::FCppfunc& cppfunc) __attribute__((noth
 // global access: ind_cpptype (Thash, hash field ctype)
 // access: amc.FCtype.c_cpptype (Ptr)
 struct FCpptype { // amc.FCpptype
-    algo::Smallstr100   ctype;              //
-    bool                ctor;               //   false  if true, generate non-default constructor from all fields
-    bool                dtor;               //   true  generate non-default destructor
-    bool                cheap_copy;         //   false  Pass by value whenever possible
-    amc::FCtype*        p_ctype;            // reference to parent row
-    amc::FCpptype*      ind_cpptype_next;   // hash next
+    algo::Smallstr100   ctype;                 //
+    bool                ctor;                  //   false  if true, generate non-default constructor from all fields
+    bool                dtor;                  //   true  generate non-default destructor
+    bool                cheap_copy;            //   false  Pass by value whenever possible
+    amc::FCtype*        p_ctype;               // reference to parent row
+    amc::FCpptype*      ind_cpptype_next;      // hash next
+    u32                 ind_cpptype_hashval;   // hash value
     // x-reference on amc.FCpptype.p_ctype prevents copy
     // func:amc.FCpptype..AssignOp
     inline amc::FCpptype& operator =(const amc::FCpptype &rhs) = delete;
@@ -1665,6 +1747,17 @@ inline void          FCstr_Init(amc::FCstr& cstr);
 // func:amc.FCstr..Uninit
 void                 FCstr_Uninit(amc::FCstr& cstr) __attribute__((nothrow));
 
+// --- amc.JsCtype
+struct JsCtype { // amc.JsCtype
+    algo::cstring   body;    //
+    algo::cstring   ctor;    //
+    algo::cstring   args;    //
+    algo::cstring   funcs;   //
+    // func:amc.JsCtype..Ctor
+    inline               JsCtype() __attribute__((nothrow));
+};
+
+
 // --- amc.FCtype
 // create: amc.FDb.ctype (Lary)
 // global access: ctype (Lary, by rowid)
@@ -1710,7 +1803,6 @@ struct FCtype { // amc.FCtype
     u32                   c_field_n;                  // array of pointers
     u32                   c_field_max;                // capacity of allocated array
     amc::FMsgtype*        c_msgtype;                  // optional pointer
-    amc::FField*          c_varlenfld;                // optional pointer
     amc::FField*          c_optfld;                   // optional pointer
     amc::FStatictuple**   c_static_elems;             // array of pointers
     u32                   c_static_n;                 // array of pointers
@@ -1757,16 +1849,13 @@ struct FCtype { // amc.FCtype
     amc::FFcurs**         c_fcurs_elems;              // array of pointers
     u32                   c_fcurs_n;                  // array of pointers
     u32                   c_fcurs_max;                // capacity of allocated array
-    algo::cstring         copy_priv_reason;           //
     amc::FCtypelen*       c_ctypelen;                 // optional pointer
     bool                  size_unknown;               //   false
-    bool                  copy_priv_valid;            //   false
     bool                  size_locked;                //   false
     bool                  topo_visited;               //   false  Temporary
     bool                  enum_visited;               //   false  Temporary
     bool                  fields_cloned;              //   false  True if fields from c_cbase have been cloned.
     bool                  original;                   //   false  True if this ctype comes from disk
-    bool                  copy_priv;                  //   false  disallow copy ctor / assign op
     bool                  plaindata;                  //   false
     u32                   alignment;                  //   1
     i32                   n_padbytes;                 //   0
@@ -1780,8 +1869,15 @@ struct FCtype { // amc.FCtype
     u32                   c_ffast_n;                  // array of pointers
     u32                   c_ffast_max;                // capacity of allocated array
     bool                  in_copy_priv;               //   false
+    amc::FField*          zd_varlenfld_head;          // zero-terminated doubly linked list
+    i32                   zd_varlenfld_n;             // zero-terminated doubly linked list
+    amc::FField*          zd_varlenfld_tail;          // pointer to last element
+    amc::JsCtype          js;                         //
+    amc::FJstype*         c_jstype;                   // optional pointer
+    amc::FCkafka*         c_ckafka;                   // optional pointer
     bool                  ns_c_ctype_in_ary;          //   false  membership flag
     amc::FCtype*          ind_ctype_next;             // hash next
+    u32                   ind_ctype_hashval;          // hash value
     amc::FCtype*          zsl_ctype_pack_tran_next;   // zslist link; -1 means not-in-list
     amc::FCtype*          zs_sig_visit_next;          // zslist link; -1 means not-in-list
     // reftype Llist of amc.FCtype.zs_cfmt prohibits copy
@@ -1789,7 +1885,6 @@ struct FCtype { // amc.FCtype
     // x-reference on amc.FCtype.c_bltin prevents copy
     // reftype Ptrary of amc.FCtype.c_field prohibits copy
     // x-reference on amc.FCtype.c_msgtype prevents copy
-    // x-reference on amc.FCtype.c_varlenfld prevents copy
     // x-reference on amc.FCtype.c_optfld prevents copy
     // reftype Ptrary of amc.FCtype.c_static prohibits copy
     // x-reference on amc.FCtype.c_cpptype prevents copy
@@ -1818,6 +1913,9 @@ struct FCtype { // amc.FCtype
     // x-reference on amc.FCtype.c_nossimfile prevents copy
     // x-reference on amc.FCtype.c_cfast prevents copy
     // reftype Ptrary of amc.FCtype.c_ffast prohibits copy
+    // reftype Llist of amc.FCtype.zd_varlenfld prohibits copy
+    // x-reference on amc.FCtype.c_jstype prevents copy
+    // x-reference on amc.FCtype.c_ckafka prevents copy
     // func:amc.FCtype..AssignOp
     amc::FCtype&         operator =(const amc::FCtype &rhs) = delete;
     // reftype Llist of amc.FCtype.zs_cfmt prohibits copy
@@ -1825,7 +1923,6 @@ struct FCtype { // amc.FCtype
     // x-reference on amc.FCtype.c_bltin prevents copy
     // reftype Ptrary of amc.FCtype.c_field prohibits copy
     // x-reference on amc.FCtype.c_msgtype prevents copy
-    // x-reference on amc.FCtype.c_varlenfld prevents copy
     // x-reference on amc.FCtype.c_optfld prevents copy
     // reftype Ptrary of amc.FCtype.c_static prohibits copy
     // x-reference on amc.FCtype.c_cpptype prevents copy
@@ -1854,6 +1951,9 @@ struct FCtype { // amc.FCtype
     // x-reference on amc.FCtype.c_nossimfile prevents copy
     // x-reference on amc.FCtype.c_cfast prevents copy
     // reftype Ptrary of amc.FCtype.c_ffast prohibits copy
+    // reftype Llist of amc.FCtype.zd_varlenfld prohibits copy
+    // x-reference on amc.FCtype.c_jstype prevents copy
+    // x-reference on amc.FCtype.c_ckafka prevents copy
     // func:amc.FCtype..CopyCtor
     FCtype(const amc::FCtype &rhs) = delete;
 private:
@@ -1887,7 +1987,7 @@ inline bool          zs_cfmt_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_un
 inline amc::FCfmt*   zs_cfmt_First(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FCtype.zs_cfmt.InLlistQ
-inline bool          zs_cfmt_InLlistQ(amc::FCfmt& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          ctype_zs_cfmt_InLlistQ(amc::FCfmt& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FCtype.zs_cfmt.Insert
 void                 zs_cfmt_Insert(amc::FCtype& ctype, amc::FCfmt& row) __attribute__((nothrow));
@@ -1896,7 +1996,7 @@ void                 zs_cfmt_Insert(amc::FCtype& ctype, amc::FCfmt& row) __attri
 inline amc::FCfmt*   zs_cfmt_Last(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FCtype.zs_cfmt.Next
-inline amc::FCfmt*   zs_cfmt_Next(amc::FCfmt &row) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FCfmt*   ctype_zs_cfmt_Next(amc::FCfmt &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:amc.FCtype.zs_cfmt.Remove
@@ -1974,13 +2074,6 @@ inline bool          c_msgtype_InsertMaybe(amc::FCtype& ctype, amc::FMsgtype& ro
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.c_msgtype.Remove
 inline void          c_msgtype_Remove(amc::FCtype& ctype, amc::FMsgtype& row) __attribute__((nothrow));
-
-// Insert row into pointer index. Return final membership status.
-// func:amc.FCtype.c_varlenfld.InsertMaybe
-inline bool          c_varlenfld_InsertMaybe(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
-// Remove element from index. If element is not in index, do nothing.
-// func:amc.FCtype.c_varlenfld.Remove
-inline void          c_varlenfld_Remove(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
 
 // Insert row into pointer index. Return final membership status.
 // func:amc.FCtype.c_optfld.InsertMaybe
@@ -2190,7 +2283,7 @@ inline bool          zd_inst_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_un
 inline amc::FField*  zd_inst_First(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FCtype.zd_inst.InLlistQ
-inline bool          zd_inst_InLlistQ(amc::FField& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          ctype_zd_inst_InLlistQ(amc::FField& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FCtype.zd_inst.Insert
 void                 zd_inst_Insert(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
@@ -2202,10 +2295,10 @@ inline amc::FField*  zd_inst_Last(amc::FCtype& ctype) __attribute__((__warn_unus
 inline i32           zd_inst_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FCtype.zd_inst.Next
-inline amc::FField*  zd_inst_Next(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FField*  ctype_zd_inst_Next(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:amc.FCtype.zd_inst.Prev
-inline amc::FField*  zd_inst_Prev(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FField*  ctype_zd_inst_Prev(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.zd_inst.Remove
 void                 zd_inst_Remove(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
@@ -2227,7 +2320,7 @@ inline bool          zs_xref_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_un
 inline amc::FXref*   zs_xref_First(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FCtype.zs_xref.InLlistQ
-inline bool          zs_xref_InLlistQ(amc::FXref& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          ctype_zs_xref_InLlistQ(amc::FXref& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FCtype.zs_xref.Insert
 void                 zs_xref_Insert(amc::FCtype& ctype, amc::FXref& row) __attribute__((nothrow));
@@ -2239,7 +2332,7 @@ inline amc::FXref*   zs_xref_Last(amc::FCtype& ctype) __attribute__((__warn_unus
 inline i32           zs_xref_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FCtype.zs_xref.Next
-inline amc::FXref*   zs_xref_Next(amc::FXref &row) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FXref*   ctype_zs_xref_Next(amc::FXref &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:amc.FCtype.zs_xref.Remove
@@ -2328,7 +2421,7 @@ inline bool          zd_cafter_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_
 inline amc::FCafter* zd_cafter_First(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FCtype.zd_cafter.InLlistQ
-inline bool          zd_cafter_InLlistQ(amc::FCafter& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          ctype_zd_cafter_InLlistQ(amc::FCafter& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FCtype.zd_cafter.Insert
 void                 zd_cafter_Insert(amc::FCtype& ctype, amc::FCafter& row) __attribute__((nothrow));
@@ -2340,10 +2433,10 @@ inline amc::FCafter* zd_cafter_Last(amc::FCtype& ctype) __attribute__((__warn_un
 inline i32           zd_cafter_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FCtype.zd_cafter.Next
-inline amc::FCafter* zd_cafter_Next(amc::FCafter &row) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FCafter* ctype_zd_cafter_Next(amc::FCafter &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:amc.FCtype.zd_cafter.Prev
-inline amc::FCafter* zd_cafter_Prev(amc::FCafter &row) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FCafter* ctype_zd_cafter_Prev(amc::FCafter &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.zd_cafter.Remove
 void                 zd_cafter_Remove(amc::FCtype& ctype, amc::FCafter& row) __attribute__((nothrow));
@@ -2372,7 +2465,7 @@ inline bool          zd_access_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_
 inline amc::FField*  zd_access_First(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FCtype.zd_access.InLlistQ
-inline bool          zd_access_InLlistQ(amc::FField& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          ctype_zd_access_InLlistQ(amc::FField& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FCtype.zd_access.Insert
 void                 zd_access_Insert(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
@@ -2384,10 +2477,10 @@ inline amc::FField*  zd_access_Last(amc::FCtype& ctype) __attribute__((__warn_un
 inline i32           zd_access_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FCtype.zd_access.Next
-inline amc::FField*  zd_access_Next(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FField*  ctype_zd_access_Next(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:amc.FCtype.zd_access.Prev
-inline amc::FField*  zd_access_Prev(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FField*  ctype_zd_access_Prev(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FCtype.zd_access.Remove
 void                 zd_access_Remove(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
@@ -2534,6 +2627,57 @@ void                 c_ffast_HeapSort(amc::FCtype& ctype) __attribute__((nothrow
 // Quick sort
 // func:amc.FCtype.c_ffast.QuickSort
 void                 c_ffast_QuickSort(amc::FCtype& ctype) __attribute__((nothrow));
+
+// Return true if index is empty
+// func:amc.FCtype.zd_varlenfld.EmptyQ
+inline bool          zd_varlenfld_EmptyQ(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:amc.FCtype.zd_varlenfld.First
+inline amc::FField*  zd_varlenfld_First(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:amc.FCtype.zd_varlenfld.InLlistQ
+inline bool          ctype_zd_varlenfld_InLlistQ(amc::FField& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:amc.FCtype.zd_varlenfld.Insert
+void                 zd_varlenfld_Insert(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:amc.FCtype.zd_varlenfld.Last
+inline amc::FField*  zd_varlenfld_Last(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:amc.FCtype.zd_varlenfld.N
+inline i32           zd_varlenfld_N(const amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:amc.FCtype.zd_varlenfld.Next
+inline amc::FField*  ctype_zd_varlenfld_Next(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:amc.FCtype.zd_varlenfld.Prev
+inline amc::FField*  ctype_zd_varlenfld_Prev(amc::FField &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:amc.FCtype.zd_varlenfld.Remove
+void                 zd_varlenfld_Remove(amc::FCtype& ctype, amc::FField& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:amc.FCtype.zd_varlenfld.RemoveAll
+void                 zd_varlenfld_RemoveAll(amc::FCtype& ctype) __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:amc.FCtype.zd_varlenfld.RemoveFirst
+amc::FField*         zd_varlenfld_RemoveFirst(amc::FCtype& ctype) __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:amc.FCtype.zd_varlenfld.qLast
+inline amc::FField&  zd_varlenfld_qLast(amc::FCtype& ctype) __attribute__((__warn_unused_result__, nothrow));
+
+// Insert row into pointer index. Return final membership status.
+// func:amc.FCtype.c_jstype.InsertMaybe
+inline bool          c_jstype_InsertMaybe(amc::FCtype& ctype, amc::FJstype& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:amc.FCtype.c_jstype.Remove
+inline void          c_jstype_Remove(amc::FCtype& ctype, amc::FJstype& row) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+// func:amc.FCtype.c_ckafka.InsertMaybe
+inline bool          c_ckafka_InsertMaybe(amc::FCtype& ctype, amc::FCkafka& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:amc.FCtype.c_ckafka.Remove
+inline void          c_ckafka_Remove(amc::FCtype& ctype, amc::FCkafka& row) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:amc.FCtype.zs_cfmt_curs.Reset
@@ -2683,6 +2827,18 @@ inline void          ctype_c_ffast_curs_Next(ctype_c_ffast_curs &curs) __attribu
 // item access
 // func:amc.FCtype.c_ffast_curs.Access
 inline amc::FFfast&  ctype_c_ffast_curs_Access(ctype_c_ffast_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FCtype.zd_varlenfld_curs.Reset
+inline void          ctype_zd_varlenfld_curs_Reset(ctype_zd_varlenfld_curs &curs, amc::FCtype &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FCtype.zd_varlenfld_curs.ValidQ
+inline bool          ctype_zd_varlenfld_curs_ValidQ(ctype_zd_varlenfld_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FCtype.zd_varlenfld_curs.Next
+inline void          ctype_zd_varlenfld_curs_Next(ctype_zd_varlenfld_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FCtype.zd_varlenfld_curs.Access
+inline amc::FField&  ctype_zd_varlenfld_curs_Access(ctype_zd_varlenfld_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc.FCtype..Init
 void                 FCtype_Init(amc::FCtype& ctype);
@@ -2692,15 +2848,13 @@ void                 FCtype_Uninit(amc::FCtype& ctype) __attribute__((nothrow));
 // --- amc.FCtypelen
 // create: amc.FDb.ctypelen (Lary)
 // global access: ctypelen (Lary, by rowid)
-// global access: c_ctypelen (Ptrary)
 // access: amc.FCtype.c_ctypelen (Ptr)
 struct FCtypelen { // amc.FCtypelen
-    algo::Smallstr100   ctype;                   // Identifies the Ctype
-    u32                 len;                     //   0  (calculated) length of the C++ struct in bytes
-    i32                 alignment;               //   0  (calculated) alignment for the struct
-    i32                 padbytes;                //   0  (calculated) total # of pad bytes
-    bool                plaindata;               //   false  (calculated) this struct can me safely memcpy'ed
-    bool                _db_c_ctypelen_in_ary;   //   false  membership flag
+    algo::Smallstr100   ctype;       // Identifies the Ctype
+    u32                 len;         //   0  (calculated) length of the C++ struct in bytes
+    i32                 alignment;   //   0  (calculated) alignment for the struct
+    i32                 padbytes;    //   0  (calculated) total # of pad bytes
+    bool                plaindata;   //   false  (calculated) this struct can me safely memcpy'ed
     // func:amc.FCtypelen..AssignOp
     inline amc::FCtypelen& operator =(const amc::FCtypelen &rhs) = delete;
     // func:amc.FCtypelen..CopyCtor
@@ -2749,12 +2903,13 @@ inline void          Genctx_Init(amc::Genctx& parent);
 // global access: ind_tclass (Thash, hash field tclass)
 // access: amc.FReftype.p_tclass (Upptr)
 struct FTclass { // amc.FTclass
-    algo::Smallstr50        tclass;            //
-    amc::FTfunc**           c_tfunc_elems;     // array of pointers
-    u32                     c_tfunc_n;         // array of pointers
-    u32                     c_tfunc_max;       // capacity of allocated array
-    amc::tclass_step_hook   step;              //   NULL  Pointer to a function
-    amc::FTclass*           ind_tclass_next;   // hash next
+    algo::Smallstr50        tclass;               //
+    amc::FTfunc**           c_tfunc_elems;        // array of pointers
+    u32                     c_tfunc_n;            // array of pointers
+    u32                     c_tfunc_max;          // capacity of allocated array
+    amc::tclass_step_hook   step;                 //   NULL  Pointer to a function
+    amc::FTclass*           ind_tclass_next;      // hash next
+    u32                     ind_tclass_hashval;   // hash value
     // reftype Ptrary of amc.FTclass.c_tfunc prohibits copy
     // reftype Hook of amc.FTclass.step prohibits copy
     // func:amc.FTclass..AssignOp
@@ -3068,9 +3223,6 @@ struct FDb { // amc.FDb: In-memory database for amc
     i32                     tracerec_n;                               // number of elements in array
     amc::FDispsig*          dispsig_lary[32];                         // level array
     i32                     dispsig_n;                                // number of elements in array
-    amc::FDispsig**         c_dispsig_sorted_elems;                   // array of pointers
-    u32                     c_dispsig_sorted_n;                       // array of pointers
-    u32                     c_dispsig_sorted_max;                     // capacity of allocated array
     amc::FCtype*            zs_sig_visit_head;                        // zero-terminated singly linked list
     amc::FCtype*            zs_sig_visit_tail;                        // pointer to last element
     amc::FTarget*           target_lary[32];                          // level array
@@ -3170,13 +3322,7 @@ struct FDb { // amc.FDb: In-memory database for amc
     u32                     c_substr_field_max;                       // capacity of allocated array
     amc::FCtypelen*         ctypelen_lary[32];                        // level array
     i32                     ctypelen_n;                               // number of elements in array
-    amc::FCtypelen**        c_ctypelen_elems;                         // array of pointers
-    u32                     c_ctypelen_n;                             // array of pointers
-    u32                     c_ctypelen_max;                           // capacity of allocated array
     amc::FCtype*            c_u64;                                    // optional pointer
-    amc::FField**           c_tempfield_elems;                        // array of pointers
-    u32                     c_tempfield_n;                            // array of pointers
-    u32                     c_tempfield_max;                          // capacity of allocated array
     amc::FFbase*            fbase_lary[32];                           // level array
     i32                     fbase_n;                                  // number of elements in array
     amc::FFcmap**           ind_fcmap_buckets_elems;                  // pointer to bucket array
@@ -3251,6 +3397,21 @@ struct FDb { // amc.FDb: In-memory database for amc
     amc::FFbuftype**        ind_fbuftype_buckets_elems;               // pointer to bucket array
     i32                     ind_fbuftype_buckets_n;                   // number of elements in bucket array
     i32                     ind_fbuftype_n;                           // number of elements in the hash table
+    amc::FNsjs*             nsjs_lary[32];                            // level array
+    i32                     nsjs_n;                                   // number of elements in array
+    amc::FJstype*           jstype_lary[32];                          // level array
+    i32                     jstype_n;                                 // number of elements in array
+    amc::FCkafka*           ckafka_lary[32];                          // level array
+    i32                     ckafka_n;                                 // number of elements in array
+    amc::FFkafka*           fkafka_lary[32];                          // level array
+    i32                     fkafka_n;                                 // number of elements in array
+    amc::FUserfunc*         userfunc_lary[32];                        // level array
+    i32                     userfunc_n;                               // number of elements in array
+    amc::FSteptype*         steptype_lary[32];                        // level array
+    i32                     steptype_n;                               // number of elements in array
+    amc::FSteptype**        ind_steptype_buckets_elems;               // pointer to bucket array
+    i32                     ind_steptype_buckets_n;                   // number of elements in bucket array
+    i32                     ind_steptype_n;                           // number of elements in the hash table
     amc::trace              trace;                                    //
 };
 
@@ -3342,6 +3503,9 @@ void                 ind_cfmt_Remove(amc::FCfmt& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_cfmt.Reserve
 void                 ind_cfmt_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_cfmt.AbsReserve
+void                 ind_cfmt_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -4408,9 +4572,6 @@ bool                 LoadTuplesFile(algo::strptr fname, bool recursive) __attrib
 // Load all finputs from given file descriptor.
 // func:amc.FDb._db.LoadTuplesFd
 bool                 LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive) __attribute__((nothrow));
-// Save ssim data to given directory.
-// func:amc.FDb._db.SaveTuples
-u32                  SaveTuples(algo::strptr root) __attribute__((nothrow));
 // Load specified ssimfile.
 // func:amc.FDb._db.LoadSsimfileMaybe
 bool                 LoadSsimfileMaybe(algo::strptr fname, bool recursive) __attribute__((nothrow));
@@ -4443,6 +4604,9 @@ void                 ind_bltin_Remove(amc::FBltin& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_bltin.Reserve
 void                 ind_bltin_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_bltin.AbsReserve
+void                 ind_bltin_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:amc.FDb.ind_ctype.EmptyQ
@@ -4465,6 +4629,9 @@ void                 ind_ctype_Remove(amc::FCtype& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_ctype.Reserve
 void                 ind_ctype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_ctype.AbsReserve
+void                 ind_ctype_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:amc.FDb.ind_dispatch.EmptyQ
@@ -4487,6 +4654,9 @@ void                 ind_dispatch_Remove(amc::FDispatch& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_dispatch.Reserve
 void                 ind_dispatch_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_dispatch.AbsReserve
+void                 ind_dispatch_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:amc.FDb.ind_func.EmptyQ
@@ -4509,6 +4679,9 @@ void                 ind_func_Remove(amc::FFunc& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_func.Reserve
 void                 ind_func_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_func.AbsReserve
+void                 ind_func_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:amc.FDb.ind_field.EmptyQ
@@ -4528,6 +4701,9 @@ void                 ind_field_Remove(amc::FField& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_field.Reserve
 void                 ind_field_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_field.AbsReserve
+void                 ind_field_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:amc.FDb.ind_ns.EmptyQ
@@ -4550,6 +4726,9 @@ void                 ind_ns_Remove(amc::FNs& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_ns.Reserve
 void                 ind_ns_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_ns.AbsReserve
+void                 ind_ns_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:amc.FDb.ind_pnew.EmptyQ
@@ -4572,6 +4751,9 @@ void                 ind_pnew_Remove(amc::FPnew& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_pnew.Reserve
 void                 ind_pnew_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_pnew.AbsReserve
+void                 ind_pnew_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:amc.FDb.ind_xref.EmptyQ
@@ -4594,6 +4776,9 @@ void                 ind_xref_Remove(amc::FXref& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_xref.Reserve
 void                 ind_xref_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_xref.AbsReserve
+void                 ind_xref_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -4653,6 +4838,9 @@ void                 ind_cpptype_Remove(amc::FCpptype& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_cpptype.Reserve
 void                 ind_cpptype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_cpptype.AbsReserve
+void                 ind_cpptype_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -4712,6 +4900,9 @@ void                 ind_inlary_Remove(amc::FInlary& row) __attribute__((nothrow
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_inlary.Reserve
 void                 ind_inlary_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_inlary.AbsReserve
+void                 ind_inlary_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -4771,6 +4962,9 @@ void                 ind_tary_Remove(amc::FTary& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_tary.Reserve
 void                 ind_tary_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_tary.AbsReserve
+void                 ind_tary_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -4867,6 +5061,9 @@ void                 ind_rowid_Remove(amc::FRowid& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_rowid.Reserve
 void                 ind_rowid_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_rowid.AbsReserve
+void                 ind_rowid_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -5037,6 +5234,9 @@ void                 ind_ssimfile_Remove(amc::FSsimfile& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_ssimfile.Reserve
 void                 ind_ssimfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_ssimfile.AbsReserve
+void                 ind_ssimfile_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -5096,6 +5296,9 @@ void                 ind_pack_Remove(amc::FPack& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_pack.Reserve
 void                 ind_pack_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_pack.AbsReserve
+void                 ind_pack_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:amc.FDb.ind_smallstr.EmptyQ
@@ -5118,6 +5321,9 @@ void                 ind_smallstr_Remove(amc::FSmallstr& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_smallstr.Reserve
 void                 ind_smallstr_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_smallstr.AbsReserve
+void                 ind_smallstr_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -5341,6 +5547,9 @@ void                 ind_enumstr_len_Remove(amc::FEnumstrLen& row) __attribute__
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_enumstr_len.Reserve
 void                 ind_enumstr_len_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_enumstr_len.AbsReserve
+void                 ind_enumstr_len_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:amc.FDb.ind_enumstr.EmptyQ
@@ -5363,6 +5572,9 @@ void                 ind_enumstr_Remove(amc::FEnumstr& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_enumstr.Reserve
 void                 ind_enumstr_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_enumstr.AbsReserve
+void                 ind_enumstr_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -5422,6 +5634,9 @@ void                 ind_fbitset_Remove(amc::FFbitset& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_fbitset.Reserve
 void                 ind_fbitset_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_fbitset.AbsReserve
+void                 ind_fbitset_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -5518,6 +5733,9 @@ void                 ind_fdec_Remove(amc::FFdec& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_fdec.Reserve
 void                 ind_fdec_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_fdec.AbsReserve
+void                 ind_fdec_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:amc.FDb.ind_reftype.EmptyQ
@@ -5540,6 +5758,9 @@ void                 ind_reftype_Remove(amc::FReftype& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_reftype.Reserve
 void                 ind_reftype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_reftype.AbsReserve
+void                 ind_reftype_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -5599,6 +5820,9 @@ void                 ind_fconst_Remove(amc::FFconst& row) __attribute__((nothrow
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_fconst.Reserve
 void                 ind_fconst_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_fconst.AbsReserve
+void                 ind_fconst_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FDb.c_ns_sorted.EmptyQ
@@ -5770,6 +5994,9 @@ void                 ind_fbuf_Remove(amc::FFbuf& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_fbuf.Reserve
 void                 ind_fbuf_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_fbuf.AbsReserve
+void                 ind_fbuf_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -5829,6 +6056,9 @@ void                 ind_chash_Remove(amc::FChash& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_chash.Reserve
 void                 ind_chash_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_chash.AbsReserve
+void                 ind_chash_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -5888,6 +6118,9 @@ void                 ind_ccmp_Remove(amc::FCcmp& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_ccmp.Reserve
 void                 ind_ccmp_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_ccmp.AbsReserve
+void                 ind_ccmp_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -6047,6 +6280,9 @@ void                 ind_listtype_Remove(amc::FListtype& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_listtype.Reserve
 void                 ind_listtype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_listtype.AbsReserve
+void                 ind_listtype_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -6217,6 +6453,9 @@ void                 ind_fstep_Remove(amc::FFstep& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_fstep.Reserve
 void                 ind_fstep_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_fstep.AbsReserve
+void                 ind_fstep_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -6253,9 +6492,6 @@ void                 tracefld_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:amc.FDb.tracefld.qFind
 inline amc::FTracefld& tracefld_qFind(u64 t) __attribute__((nothrow, pure));
-// Save table to ssimfile
-// func:amc.FDb.tracefld.SaveSsimfile
-bool                 tracefld_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:amc.FDb.tracefld.XrefMaybe
@@ -6296,9 +6532,6 @@ void                 tracerec_RemoveLast() __attribute__((nothrow));
 // 'quick' Access row by row id. No bounds checking.
 // func:amc.FDb.tracerec.qFind
 inline amc::FTracerec& tracerec_qFind(u64 t) __attribute__((nothrow, pure));
-// Save table to ssimfile
-// func:amc.FDb.tracerec.SaveSsimfile
-bool                 tracerec_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
 // Insert row into all appropriate indices. If error occurs, store error
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:amc.FDb.tracerec.XrefMaybe
@@ -6343,61 +6576,6 @@ inline amc::FDispsig& dispsig_qFind(u64 t) __attribute__((nothrow, pure));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:amc.FDb.dispsig.XrefMaybe
 bool                 dispsig_XrefMaybe(amc::FDispsig &row);
-
-// Return true if index is empty
-// func:amc.FDb.c_dispsig_sorted.EmptyQ
-inline bool          c_dispsig_sorted_EmptyQ() __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-// func:amc.FDb.c_dispsig_sorted.Find
-inline amc::FDispsig* c_dispsig_sorted_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array of pointers
-// func:amc.FDb.c_dispsig_sorted.Getary
-inline algo::aryptr<amc::FDispsig*> c_dispsig_sorted_Getary() __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-// func:amc.FDb.c_dispsig_sorted.Insert
-void                 c_dispsig_sorted_Insert(amc::FDispsig& row) __attribute__((nothrow));
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Return value: whether element was inserted into array.
-// func:amc.FDb.c_dispsig_sorted.InsertMaybe
-bool                 c_dispsig_sorted_InsertMaybe(amc::FDispsig& row) __attribute__((nothrow));
-// Return number of items in the pointer array
-// func:amc.FDb.c_dispsig_sorted.N
-inline i32           c_dispsig_sorted_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-// func:amc.FDb.c_dispsig_sorted.Remove
-void                 c_dispsig_sorted_Remove(amc::FDispsig& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:amc.FDb.c_dispsig_sorted.RemoveAll
-inline void          c_dispsig_sorted_RemoveAll() __attribute__((nothrow));
-// Reserve space in index for N more elements;
-// func:amc.FDb.c_dispsig_sorted.Reserve
-void                 c_dispsig_sorted_Reserve(u32 n) __attribute__((nothrow));
-// Return reference without bounds checking
-// func:amc.FDb.c_dispsig_sorted.qFind
-inline amc::FDispsig& c_dispsig_sorted_qFind(u32 idx) __attribute__((nothrow));
-// True if row is in any ptrary instance
-// func:amc.FDb.c_dispsig_sorted.InAryQ
-inline bool          c_dispsig_sorted_InAryQ(amc::FDispsig& row) __attribute__((nothrow));
-// Reference to last element without bounds checking
-// func:amc.FDb.c_dispsig_sorted.qLast
-inline amc::FDispsig& c_dispsig_sorted_qLast() __attribute__((nothrow));
-// Verify whether array is sorted
-// func:amc.FDb.c_dispsig_sorted.SortedQ
-bool                 c_dispsig_sorted_SortedQ() __attribute__((nothrow));
-// Insertion sort
-// func:amc.FDb.c_dispsig_sorted.InsertionSort
-void                 c_dispsig_sorted_InsertionSort() __attribute__((nothrow));
-// Heap sort
-// func:amc.FDb.c_dispsig_sorted.HeapSort
-void                 c_dispsig_sorted_HeapSort() __attribute__((nothrow));
-// Quick sort
-// func:amc.FDb.c_dispsig_sorted.QuickSort
-void                 c_dispsig_sorted_QuickSort() __attribute__((nothrow));
-// Save table to ssimfile
-// func:amc.FDb.c_dispsig_sorted.SaveSsimfile
-bool                 c_dispsig_sorted_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FDb.zs_sig_visit.EmptyQ
@@ -6489,6 +6667,9 @@ void                 ind_target_Remove(amc::FTarget& row) __attribute__((nothrow
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_target.Reserve
 void                 ind_target_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_target.AbsReserve
+void                 ind_target_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -6659,6 +6840,9 @@ void                 ind_fwddecl_Remove(amc::FFwddecl& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_fwddecl.Reserve
 void                 ind_fwddecl_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_fwddecl.AbsReserve
+void                 ind_fwddecl_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -6721,6 +6905,9 @@ void                 ind_tfunc_Remove(amc::FTfunc& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_tfunc.Reserve
 void                 ind_tfunc_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_tfunc.AbsReserve
+void                 ind_tfunc_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -6866,6 +7053,9 @@ void                 ind_tclass_Remove(amc::FTclass& row) __attribute__((nothrow
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_tclass.Reserve
 void                 ind_tclass_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_tclass.AbsReserve
+void                 ind_tclass_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -7369,6 +7559,9 @@ void                 ind_main_Remove(amc::FMain& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_main.Reserve
 void                 ind_main_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_main.AbsReserve
+void                 ind_main_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -7605,6 +7798,9 @@ void                 ind_fconst_int_Remove(amc::FFconst& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_fconst_int.Reserve
 void                 ind_fconst_int_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_fconst_int.AbsReserve
+void                 ind_fconst_int_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -7664,6 +7860,9 @@ void                 ind_prefix_Remove(amc::FFprefix& row) __attribute__((nothro
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_prefix.Reserve
 void                 ind_prefix_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_prefix.AbsReserve
+void                 ind_prefix_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -7831,101 +8030,6 @@ inline amc::FCtypelen& ctypelen_qFind(u64 t) __attribute__((nothrow, pure));
 // func:amc.FDb.ctypelen.XrefMaybe
 bool                 ctypelen_XrefMaybe(amc::FCtypelen &row);
 
-// Return true if index is empty
-// func:amc.FDb.c_ctypelen.EmptyQ
-inline bool          c_ctypelen_EmptyQ() __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-// func:amc.FDb.c_ctypelen.Find
-inline amc::FCtypelen* c_ctypelen_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array of pointers
-// func:amc.FDb.c_ctypelen.Getary
-inline algo::aryptr<amc::FCtypelen*> c_ctypelen_Getary() __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-// func:amc.FDb.c_ctypelen.Insert
-void                 c_ctypelen_Insert(amc::FCtypelen& row) __attribute__((nothrow));
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Return value: whether element was inserted into array.
-// func:amc.FDb.c_ctypelen.InsertMaybe
-bool                 c_ctypelen_InsertMaybe(amc::FCtypelen& row) __attribute__((nothrow));
-// Return number of items in the pointer array
-// func:amc.FDb.c_ctypelen.N
-inline i32           c_ctypelen_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-// func:amc.FDb.c_ctypelen.Remove
-void                 c_ctypelen_Remove(amc::FCtypelen& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:amc.FDb.c_ctypelen.RemoveAll
-inline void          c_ctypelen_RemoveAll() __attribute__((nothrow));
-// Reserve space in index for N more elements;
-// func:amc.FDb.c_ctypelen.Reserve
-void                 c_ctypelen_Reserve(u32 n) __attribute__((nothrow));
-// Return reference without bounds checking
-// func:amc.FDb.c_ctypelen.qFind
-inline amc::FCtypelen& c_ctypelen_qFind(u32 idx) __attribute__((nothrow));
-// True if row is in any ptrary instance
-// func:amc.FDb.c_ctypelen.InAryQ
-inline bool          c_ctypelen_InAryQ(amc::FCtypelen& row) __attribute__((nothrow));
-// Reference to last element without bounds checking
-// func:amc.FDb.c_ctypelen.qLast
-inline amc::FCtypelen& c_ctypelen_qLast() __attribute__((nothrow));
-// Verify whether array is sorted
-// func:amc.FDb.c_ctypelen.SortedQ
-bool                 c_ctypelen_SortedQ() __attribute__((nothrow));
-// Insertion sort
-// func:amc.FDb.c_ctypelen.InsertionSort
-void                 c_ctypelen_InsertionSort() __attribute__((nothrow));
-// Heap sort
-// func:amc.FDb.c_ctypelen.HeapSort
-void                 c_ctypelen_HeapSort() __attribute__((nothrow));
-// Quick sort
-// func:amc.FDb.c_ctypelen.QuickSort
-void                 c_ctypelen_QuickSort() __attribute__((nothrow));
-// Save table to ssimfile
-// func:amc.FDb.c_ctypelen.SaveSsimfile
-bool                 c_ctypelen_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
-
-// Return true if index is empty
-// func:amc.FDb.c_tempfield.EmptyQ
-inline bool          c_tempfield_EmptyQ() __attribute__((nothrow));
-// Look up row by row id. Return NULL if out of range
-// func:amc.FDb.c_tempfield.Find
-inline amc::FField*  c_tempfield_Find(u32 t) __attribute__((__warn_unused_result__, nothrow));
-// Return array of pointers
-// func:amc.FDb.c_tempfield.Getary
-inline algo::aryptr<amc::FField*> c_tempfield_Getary() __attribute__((nothrow));
-// Insert pointer to row into array. Row must not already be in array.
-// If pointer is already in the array, it may be inserted twice.
-// func:amc.FDb.c_tempfield.Insert
-void                 c_tempfield_Insert(amc::FField& row) __attribute__((nothrow));
-// Insert pointer to row in array.
-// If row is already in the array, do nothing.
-// Return value: whether element was inserted into array.
-// func:amc.FDb.c_tempfield.InsertMaybe
-bool                 c_tempfield_InsertMaybe(amc::FField& row) __attribute__((nothrow));
-// Return number of items in the pointer array
-// func:amc.FDb.c_tempfield.N
-inline i32           c_tempfield_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Find element using linear scan. If element is in array, remove, otherwise do nothing
-// func:amc.FDb.c_tempfield.Remove
-void                 c_tempfield_Remove(amc::FField& row) __attribute__((nothrow));
-// Empty the index. (The rows are not deleted)
-// func:amc.FDb.c_tempfield.RemoveAll
-inline void          c_tempfield_RemoveAll() __attribute__((nothrow));
-// Reserve space in index for N more elements;
-// func:amc.FDb.c_tempfield.Reserve
-void                 c_tempfield_Reserve(u32 n) __attribute__((nothrow));
-// Return reference without bounds checking
-// func:amc.FDb.c_tempfield.qFind
-inline amc::FField&  c_tempfield_qFind(u32 idx) __attribute__((nothrow));
-// True if row is in any ptrary instance
-// func:amc.FDb.c_tempfield.InAryQ
-inline bool          c_tempfield_InAryQ(amc::FField& row) __attribute__((nothrow));
-// Reference to last element without bounds checking
-// func:amc.FDb.c_tempfield.qLast
-inline amc::FField&  c_tempfield_qLast() __attribute__((nothrow));
-
 // Allocate memory for new default row.
 // If out of memory, process is killed.
 // func:amc.FDb.fbase.Alloc
@@ -7987,6 +8091,9 @@ void                 ind_fcmap_Remove(amc::FFcmap& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_fcmap.Reserve
 void                 ind_fcmap_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_fcmap.AbsReserve
+void                 ind_fcmap_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -8479,6 +8586,9 @@ void                 ind_fcurs_Remove(amc::FFcurs& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_fcurs.Reserve
 void                 ind_fcurs_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_fcurs.AbsReserve
+void                 ind_fcurs_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -8621,6 +8731,9 @@ void                 ind_fflag_Remove(amc::FFflag& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_fflag.Reserve
 void                 ind_fflag_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_fflag.AbsReserve
+void                 ind_fflag_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -8723,6 +8836,9 @@ void                 ind_license_Remove(amc::FLicense& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_license.Reserve
 void                 ind_license_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_license.AbsReserve
+void                 ind_license_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FDb.c_ssimfile_sorted.EmptyQ
@@ -8942,6 +9058,9 @@ void                 ind_pmaskfld_Remove(amc::FPmaskfld& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_pmaskfld.Reserve
 void                 ind_pmaskfld_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_pmaskfld.AbsReserve
+void                 ind_pmaskfld_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -9044,6 +9163,274 @@ void                 ind_fbuftype_Remove(amc::FFbuftype& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FDb.ind_fbuftype.Reserve
 void                 ind_fbuftype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_fbuftype.AbsReserve
+void                 ind_fbuftype_AbsReserve(int n) __attribute__((nothrow));
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc.FDb.nsjs.Alloc
+amc::FNsjs&          nsjs_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc.FDb.nsjs.AllocMaybe
+amc::FNsjs*          nsjs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:amc.FDb.nsjs.InsertMaybe
+amc::FNsjs*          nsjs_InsertMaybe(const dmmeta::Nsjs &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:amc.FDb.nsjs.AllocMem
+void*                nsjs_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:amc.FDb.nsjs.EmptyQ
+inline bool          nsjs_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:amc.FDb.nsjs.Find
+inline amc::FNsjs*   nsjs_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:amc.FDb.nsjs.Last
+inline amc::FNsjs*   nsjs_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:amc.FDb.nsjs.N
+inline i32           nsjs_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:amc.FDb.nsjs.RemoveAll
+void                 nsjs_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:amc.FDb.nsjs.RemoveLast
+void                 nsjs_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:amc.FDb.nsjs.qFind
+inline amc::FNsjs&   nsjs_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:amc.FDb.nsjs.XrefMaybe
+bool                 nsjs_XrefMaybe(amc::FNsjs &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc.FDb.jstype.Alloc
+amc::FJstype&        jstype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc.FDb.jstype.AllocMaybe
+amc::FJstype*        jstype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:amc.FDb.jstype.InsertMaybe
+amc::FJstype*        jstype_InsertMaybe(const dmmeta::Jstype &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:amc.FDb.jstype.AllocMem
+void*                jstype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:amc.FDb.jstype.EmptyQ
+inline bool          jstype_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:amc.FDb.jstype.Find
+inline amc::FJstype* jstype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:amc.FDb.jstype.Last
+inline amc::FJstype* jstype_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:amc.FDb.jstype.N
+inline i32           jstype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:amc.FDb.jstype.RemoveAll
+void                 jstype_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:amc.FDb.jstype.RemoveLast
+void                 jstype_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:amc.FDb.jstype.qFind
+inline amc::FJstype& jstype_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:amc.FDb.jstype.XrefMaybe
+bool                 jstype_XrefMaybe(amc::FJstype &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc.FDb.ckafka.Alloc
+amc::FCkafka&        ckafka_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc.FDb.ckafka.AllocMaybe
+amc::FCkafka*        ckafka_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:amc.FDb.ckafka.InsertMaybe
+amc::FCkafka*        ckafka_InsertMaybe(const dmmeta::Ckafka &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:amc.FDb.ckafka.AllocMem
+void*                ckafka_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:amc.FDb.ckafka.EmptyQ
+inline bool          ckafka_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:amc.FDb.ckafka.Find
+inline amc::FCkafka* ckafka_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:amc.FDb.ckafka.Last
+inline amc::FCkafka* ckafka_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:amc.FDb.ckafka.N
+inline i32           ckafka_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:amc.FDb.ckafka.RemoveAll
+void                 ckafka_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:amc.FDb.ckafka.RemoveLast
+void                 ckafka_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:amc.FDb.ckafka.qFind
+inline amc::FCkafka& ckafka_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:amc.FDb.ckafka.XrefMaybe
+bool                 ckafka_XrefMaybe(amc::FCkafka &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc.FDb.fkafka.Alloc
+amc::FFkafka&        fkafka_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc.FDb.fkafka.AllocMaybe
+amc::FFkafka*        fkafka_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:amc.FDb.fkafka.InsertMaybe
+amc::FFkafka*        fkafka_InsertMaybe(const dmmeta::Fkafka &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:amc.FDb.fkafka.AllocMem
+void*                fkafka_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:amc.FDb.fkafka.EmptyQ
+inline bool          fkafka_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:amc.FDb.fkafka.Find
+inline amc::FFkafka* fkafka_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:amc.FDb.fkafka.Last
+inline amc::FFkafka* fkafka_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:amc.FDb.fkafka.N
+inline i32           fkafka_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:amc.FDb.fkafka.RemoveAll
+void                 fkafka_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:amc.FDb.fkafka.RemoveLast
+void                 fkafka_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:amc.FDb.fkafka.qFind
+inline amc::FFkafka& fkafka_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:amc.FDb.fkafka.XrefMaybe
+bool                 fkafka_XrefMaybe(amc::FFkafka &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc.FDb.userfunc.Alloc
+amc::FUserfunc&      userfunc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc.FDb.userfunc.AllocMaybe
+amc::FUserfunc*      userfunc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:amc.FDb.userfunc.InsertMaybe
+amc::FUserfunc*      userfunc_InsertMaybe(const dmmeta::Userfunc &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:amc.FDb.userfunc.AllocMem
+void*                userfunc_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:amc.FDb.userfunc.EmptyQ
+inline bool          userfunc_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:amc.FDb.userfunc.Find
+inline amc::FUserfunc* userfunc_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:amc.FDb.userfunc.Last
+inline amc::FUserfunc* userfunc_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:amc.FDb.userfunc.N
+inline i32           userfunc_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:amc.FDb.userfunc.RemoveAll
+void                 userfunc_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:amc.FDb.userfunc.RemoveLast
+void                 userfunc_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:amc.FDb.userfunc.qFind
+inline amc::FUserfunc& userfunc_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:amc.FDb.userfunc.XrefMaybe
+bool                 userfunc_XrefMaybe(amc::FUserfunc &row);
+
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:amc.FDb.steptype.Alloc
+amc::FSteptype&      steptype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:amc.FDb.steptype.AllocMaybe
+amc::FSteptype*      steptype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Create new row from struct.
+// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
+// func:amc.FDb.steptype.InsertMaybe
+amc::FSteptype*      steptype_InsertMaybe(const dmmeta::Steptype &value) __attribute__((nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:amc.FDb.steptype.AllocMem
+void*                steptype_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:amc.FDb.steptype.EmptyQ
+inline bool          steptype_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:amc.FDb.steptype.Find
+inline amc::FSteptype* steptype_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:amc.FDb.steptype.Last
+inline amc::FSteptype* steptype_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:amc.FDb.steptype.N
+inline i32           steptype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:amc.FDb.steptype.RemoveAll
+void                 steptype_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:amc.FDb.steptype.RemoveLast
+void                 steptype_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:amc.FDb.steptype.qFind
+inline amc::FSteptype& steptype_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:amc.FDb.steptype.XrefMaybe
+bool                 steptype_XrefMaybe(amc::FSteptype &row);
+
+// Return true if hash is empty
+// func:amc.FDb.ind_steptype.EmptyQ
+inline bool          ind_steptype_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:amc.FDb.ind_steptype.Find
+amc::FSteptype*      ind_steptype_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Find row by key. If not found, create and x-reference a new row with with this key.
+// func:amc.FDb.ind_steptype.GetOrCreate
+amc::FSteptype&      ind_steptype_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
+// Return number of items in the hash
+// func:amc.FDb.ind_steptype.N
+inline i32           ind_steptype_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:amc.FDb.ind_steptype.InsertMaybe
+bool                 ind_steptype_InsertMaybe(amc::FSteptype& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:amc.FDb.ind_steptype.Remove
+void                 ind_steptype_Remove(amc::FSteptype& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:amc.FDb.ind_steptype.Reserve
+void                 ind_steptype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FDb.ind_steptype.AbsReserve
+void                 ind_steptype_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:amc.FDb.fsort_curs.Reset
@@ -9813,17 +10200,6 @@ inline void          _db_dispsig_curs_Next(_db_dispsig_curs &curs) __attribute__
 // item access
 // func:amc.FDb.dispsig_curs.Access
 inline amc::FDispsig& _db_dispsig_curs_Access(_db_dispsig_curs &curs) __attribute__((nothrow));
-// func:amc.FDb.c_dispsig_sorted_curs.Reset
-inline void          _db_c_dispsig_sorted_curs_Reset(_db_c_dispsig_sorted_curs &curs, amc::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:amc.FDb.c_dispsig_sorted_curs.ValidQ
-inline bool          _db_c_dispsig_sorted_curs_ValidQ(_db_c_dispsig_sorted_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:amc.FDb.c_dispsig_sorted_curs.Next
-inline void          _db_c_dispsig_sorted_curs_Next(_db_c_dispsig_sorted_curs &curs) __attribute__((nothrow));
-// item access
-// func:amc.FDb.c_dispsig_sorted_curs.Access
-inline amc::FDispsig& _db_c_dispsig_sorted_curs_Access(_db_c_dispsig_sorted_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc.FDb.zs_sig_visit_curs.Reset
 inline void          _db_zs_sig_visit_curs_Reset(_db_zs_sig_visit_curs &curs, amc::FDb &parent) __attribute__((nothrow));
@@ -10231,28 +10607,6 @@ inline void          _db_ctypelen_curs_Next(_db_ctypelen_curs &curs) __attribute
 // item access
 // func:amc.FDb.ctypelen_curs.Access
 inline amc::FCtypelen& _db_ctypelen_curs_Access(_db_ctypelen_curs &curs) __attribute__((nothrow));
-// func:amc.FDb.c_ctypelen_curs.Reset
-inline void          _db_c_ctypelen_curs_Reset(_db_c_ctypelen_curs &curs, amc::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:amc.FDb.c_ctypelen_curs.ValidQ
-inline bool          _db_c_ctypelen_curs_ValidQ(_db_c_ctypelen_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:amc.FDb.c_ctypelen_curs.Next
-inline void          _db_c_ctypelen_curs_Next(_db_c_ctypelen_curs &curs) __attribute__((nothrow));
-// item access
-// func:amc.FDb.c_ctypelen_curs.Access
-inline amc::FCtypelen& _db_c_ctypelen_curs_Access(_db_c_ctypelen_curs &curs) __attribute__((nothrow));
-// func:amc.FDb.c_tempfield_curs.Reset
-inline void          _db_c_tempfield_curs_Reset(_db_c_tempfield_curs &curs, amc::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:amc.FDb.c_tempfield_curs.ValidQ
-inline bool          _db_c_tempfield_curs_ValidQ(_db_c_tempfield_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:amc.FDb.c_tempfield_curs.Next
-inline void          _db_c_tempfield_curs_Next(_db_c_tempfield_curs &curs) __attribute__((nothrow));
-// item access
-// func:amc.FDb.c_tempfield_curs.Access
-inline amc::FField&  _db_c_tempfield_curs_Access(_db_c_tempfield_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:amc.FDb.fbase_curs.Reset
 inline void          _db_fbase_curs_Reset(_db_fbase_curs &curs, amc::FDb &parent) __attribute__((nothrow));
@@ -10552,6 +10906,78 @@ inline void          _db_fbuftype_curs_Next(_db_fbuftype_curs &curs) __attribute
 // item access
 // func:amc.FDb.fbuftype_curs.Access
 inline amc::FFbuftype& _db_fbuftype_curs_Access(_db_fbuftype_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.nsjs_curs.Reset
+inline void          _db_nsjs_curs_Reset(_db_nsjs_curs &curs, amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.nsjs_curs.ValidQ
+inline bool          _db_nsjs_curs_ValidQ(_db_nsjs_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FDb.nsjs_curs.Next
+inline void          _db_nsjs_curs_Next(_db_nsjs_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FDb.nsjs_curs.Access
+inline amc::FNsjs&   _db_nsjs_curs_Access(_db_nsjs_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.jstype_curs.Reset
+inline void          _db_jstype_curs_Reset(_db_jstype_curs &curs, amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.jstype_curs.ValidQ
+inline bool          _db_jstype_curs_ValidQ(_db_jstype_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FDb.jstype_curs.Next
+inline void          _db_jstype_curs_Next(_db_jstype_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FDb.jstype_curs.Access
+inline amc::FJstype& _db_jstype_curs_Access(_db_jstype_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.ckafka_curs.Reset
+inline void          _db_ckafka_curs_Reset(_db_ckafka_curs &curs, amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.ckafka_curs.ValidQ
+inline bool          _db_ckafka_curs_ValidQ(_db_ckafka_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FDb.ckafka_curs.Next
+inline void          _db_ckafka_curs_Next(_db_ckafka_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FDb.ckafka_curs.Access
+inline amc::FCkafka& _db_ckafka_curs_Access(_db_ckafka_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.fkafka_curs.Reset
+inline void          _db_fkafka_curs_Reset(_db_fkafka_curs &curs, amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.fkafka_curs.ValidQ
+inline bool          _db_fkafka_curs_ValidQ(_db_fkafka_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FDb.fkafka_curs.Next
+inline void          _db_fkafka_curs_Next(_db_fkafka_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FDb.fkafka_curs.Access
+inline amc::FFkafka& _db_fkafka_curs_Access(_db_fkafka_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.userfunc_curs.Reset
+inline void          _db_userfunc_curs_Reset(_db_userfunc_curs &curs, amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.userfunc_curs.ValidQ
+inline bool          _db_userfunc_curs_ValidQ(_db_userfunc_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FDb.userfunc_curs.Next
+inline void          _db_userfunc_curs_Next(_db_userfunc_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FDb.userfunc_curs.Access
+inline amc::FUserfunc& _db_userfunc_curs_Access(_db_userfunc_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.steptype_curs.Reset
+inline void          _db_steptype_curs_Reset(_db_steptype_curs &curs, amc::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:amc.FDb.steptype_curs.ValidQ
+inline bool          _db_steptype_curs_ValidQ(_db_steptype_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:amc.FDb.steptype_curs.Next
+inline void          _db_steptype_curs_Next(_db_steptype_curs &curs) __attribute__((nothrow));
+// item access
+// func:amc.FDb.steptype_curs.Access
+inline amc::FSteptype& _db_steptype_curs_Access(_db_steptype_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:amc.FDb..Init
 void                 FDb_Init();
@@ -10567,6 +10993,7 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // access: amc.FNs.c_dispatch (Ptrary)
 struct FDispatch { // amc.FDispatch
     amc::FDispatch*       ind_dispatch_next;      // hash next
+    u32                   ind_dispatch_hashval;   // hash value
     algo::Smallstr50      dispatch;               // Primary key (ns.name)
     bool                  unk;                    //   false  Want default case?
     bool                  read;                   //   false  Generate read function
@@ -10574,6 +11001,8 @@ struct FDispatch { // amc.FDispatch
     bool                  haslen;                 //   false  Include length in dispatch function
     bool                  call;                   //   false  Generate call to user-defined function
     bool                  strict;                 //   false  Only dispatch if length matches exactly
+    bool                  dyn;                    //   false  Use dynamic memory allocation: new, delete instead of  ByteAry
+    bool                  kafka;                  //   false  generate kafka codec
     amc::FCtype*          p_ctype_hdr;            // reference to parent row
     amc::FCtype*          p_casetype;             // reference to parent row
     amc::FDispfilter*     c_dispfilter;           // optional pointer
@@ -10821,13 +11250,11 @@ void                 FDispfilter_Uninit(amc::FDispfilter& dispfilter) __attribut
 // --- amc.FDispsig
 // create: amc.FDb.dispsig (Lary)
 // global access: dispsig (Lary, by rowid)
-// global access: c_dispsig_sorted (Ptrary)
 // access: amc.FNs.c_dispsig (Ptrary)
 struct FDispsig { // amc.FDispsig
-    algo::Smallstr50   dispsig;                       //
-    algo::Sha1sig      signature;                     //
-    bool               _db_c_dispsig_sorted_in_ary;   //   false  membership flag
-    bool               ns_c_dispsig_in_ary;           //   false  membership flag
+    algo::Smallstr50   dispsig;               //
+    algo::Sha1sig      signature;             //
+    bool               ns_c_dispsig_in_ary;   //   false  membership flag
     // func:amc.FDispsig..AssignOp
     inline amc::FDispsig& operator =(const amc::FDispsig &rhs) = delete;
     // func:amc.FDispsig..CopyCtor
@@ -10906,12 +11333,13 @@ void                 FDisptrace_Uninit(amc::FDisptrace& disptrace) __attribute__
 // global access: ind_enumstr (Thash, hash field enumstr)
 // access: amc.FEnumstrLen.bh_enumstr (Bheap)
 struct FEnumstr { // amc.FEnumstr: All values of a given length
-    amc::FEnumstr*   ind_enumstr_next;   // hash next
-    amc::Enumstr     enumstr;            //
-    amc::FFconst**   c_fconst_elems;     // array of pointers
-    u32              c_fconst_n;         // array of pointers
-    u32              c_fconst_max;       // capacity of allocated array
-    i32              bh_enumstr_idx;     // index in heap; -1 means not-in-heap
+    amc::FEnumstr*   ind_enumstr_next;             // hash next
+    u32              ind_enumstr_hashval;          // hash value
+    amc::Enumstr     enumstr;                      //
+    amc::FFconst**   c_fconst_elems;               // array of pointers
+    u32              c_fconst_n;                   // array of pointers
+    u32              c_fconst_max;                 // capacity of allocated array
+    i32              enumstr_len_bh_enumstr_idx;   // index in heap; -1 means not-in-heap
     // reftype Ptrary of amc.FEnumstr.c_fconst prohibits copy
     // func:amc.FEnumstr..AssignOp
     inline amc::FEnumstr& operator =(const amc::FEnumstr &rhs) = delete;
@@ -10990,12 +11418,13 @@ void                 FEnumstr_Uninit(amc::FEnumstr& enumstr) __attribute__((noth
 // global access: bh_enumstr_len (Bheap, sort field len)
 // global access: ind_enumstr_len (Thash, hash field len)
 struct FEnumstrLen { // amc.FEnumstrLen
-    i32                 bh_enumstr_len_idx;     // index in heap; -1 means not-in-heap
-    amc::FEnumstrLen*   ind_enumstr_len_next;   // hash next
-    i32                 len;                    //   0
-    amc::FEnumstr**     bh_enumstr_elems;       // binary heap by str
-    i32                 bh_enumstr_n;           // number of elements in the heap
-    i32                 bh_enumstr_max;         // max elements in bh_enumstr_elems
+    i32                 bh_enumstr_len_idx;        // index in heap; -1 means not-in-heap
+    amc::FEnumstrLen*   ind_enumstr_len_next;      // hash next
+    u32                 ind_enumstr_len_hashval;   // hash value
+    i32                 len;                       //   0
+    amc::FEnumstr**     bh_enumstr_elems;          // binary heap by str
+    i32                 bh_enumstr_n;              // number of elements in the heap
+    i32                 bh_enumstr_max;            // max elements in bh_enumstr_elems
     // reftype Bheap of amc.FEnumstrLen.bh_enumstr prohibits copy
     // func:amc.FEnumstrLen..AssignOp
     inline amc::FEnumstrLen& operator =(const amc::FEnumstrLen &rhs) = delete;
@@ -11193,9 +11622,10 @@ void                 FFbigend_Uninit(amc::FFbigend& fbigend) __attribute__((noth
 // global access: ind_fbitset (Thash, hash field field)
 // access: amc.FField.c_fbitset (Ptr)
 struct FFbitset { // amc.FFbitset
-    amc::FFbitset*      ind_fbitset_next;   // hash next
-    algo::Smallstr100   field;              //
-    amc::FField*        p_field;            // reference to parent row
+    amc::FFbitset*      ind_fbitset_next;      // hash next
+    u32                 ind_fbitset_hashval;   // hash value
+    algo::Smallstr100   field;                 //
+    amc::FField*        p_field;               // reference to parent row
     // x-reference on amc.FFbitset.p_field prevents copy
     // func:amc.FFbitset..AssignOp
     inline amc::FFbitset& operator =(const amc::FFbitset &rhs) = delete;
@@ -11231,15 +11661,17 @@ void                 FFbitset_Uninit(amc::FFbitset& fbitset) __attribute__((noth
 // global access: ind_fbuf (Thash, hash field field)
 // access: amc.FField.c_fbuf (Ptr)
 struct FFbuf { // amc.FFbuf
-    amc::FFbuf*         ind_fbuf_next;   // hash next
-    algo::Smallstr100   field;           //
-    u32                 max;             //   0  Size of buffer in bytes
-    algo::Smallstr50    fbuftype;        // Type of buffer
-    algo::Smallstr100   insready;        //
-    algo::Smallstr100   inseof;          //
-    amc::FField*        p_insready;      // reference to parent row
-    amc::FField*        p_inseof;        // reference to parent row
-    amc::FFbuftype*     p_fbuftype;      // reference to parent row
+    amc::FFbuf*         ind_fbuf_next;      // hash next
+    u32                 ind_fbuf_hashval;   // hash value
+    algo::Smallstr100   field;              //
+    u32                 max;                //   0  Size of buffer in bytes
+    algo::Smallstr50    fbuftype;           // Type of buffer
+    algo::Smallstr100   insready;           //
+    algo::Smallstr100   inseof;             //
+    algo::Smallstr50    iotype;             //   "standard"
+    amc::FField*        p_insready;         // reference to parent row
+    amc::FField*        p_inseof;           // reference to parent row
+    amc::FFbuftype*     p_fbuftype;         // reference to parent row
     // x-reference on amc.FFbuf.p_insready prevents copy
     // x-reference on amc.FFbuf.p_inseof prevents copy
     // x-reference on amc.FFbuf.p_fbuftype prevents copy
@@ -11272,7 +11704,7 @@ algo::Smallstr50     fbufdir_Get(amc::FFbuf& fbuf) __attribute__((__warn_unused_
 
 // Set all fields to initial values.
 // func:amc.FFbuf..Init
-inline void          FFbuf_Init(amc::FFbuf& fbuf);
+void                 FFbuf_Init(amc::FFbuf& fbuf);
 // func:amc.FFbuf..Uninit
 void                 FFbuf_Uninit(amc::FFbuf& fbuf) __attribute__((nothrow));
 
@@ -11282,10 +11714,11 @@ void                 FFbuf_Uninit(amc::FFbuf& fbuf) __attribute__((nothrow));
 // global access: ind_fbuftype (Thash, hash field fbuftype)
 // access: amc.FFbuf.p_fbuftype (Upptr)
 struct FFbuftype { // amc.FFbuftype
-    amc::FFbuftype*    ind_fbuftype_next;   // hash next
-    algo::Smallstr50   fbuftype;            //
-    bool               skipbytes;           //   false  Has skipbytes function?
-    algo::Comment      comment;             //
+    amc::FFbuftype*    ind_fbuftype_next;      // hash next
+    u32                ind_fbuftype_hashval;   // hash value
+    algo::Smallstr50   fbuftype;               //
+    bool               skipbytes;              //   false  Has skipbytes function?
+    algo::Comment      comment;                //
     // func:amc.FFbuftype..AssignOp
     inline amc::FFbuftype& operator =(const amc::FFbuftype &rhs) = delete;
     // func:amc.FFbuftype..CopyCtor
@@ -11387,14 +11820,15 @@ void                 FFcleanup_Uninit(amc::FFcleanup& fcleanup) __attribute__((n
 // global access: ind_fcmap (Thash, hash field fcmap)
 // access: amc.FField.zs_fcmap (Llist)
 struct FFcmap { // amc.FFcmap
-    amc::FFcmap*        ind_fcmap_next;   // hash next
-    algo::Smallstr250   fcmap;            // cstring maybe?
-    bool                bidir;            //   true
-    algo::Comment       comment;          //
-    amc::FField*        p_leftField;      // reference to parent row
-    amc::FField*        p_rightField;     // reference to parent row
-    amc::FFunc*         c_convfunc;       // Generated conversion func. optional pointer
-    amc::FFcmap*        zs_fcmap_next;    // zslist link; -1 means not-in-list
+    amc::FFcmap*        ind_fcmap_next;        // hash next
+    u32                 ind_fcmap_hashval;     // hash value
+    algo::Smallstr250   fcmap;                 // cstring maybe?
+    bool                bidir;                 //   true
+    algo::Comment       comment;               //
+    amc::FField*        p_leftField;           // reference to parent row
+    amc::FField*        p_rightField;          // reference to parent row
+    amc::FFunc*         c_convfunc;            // Generated conversion func. optional pointer
+    amc::FFcmap*        field_zs_fcmap_next;   // zslist link; -1 means not-in-list
     // x-reference on amc.FFcmap.p_leftField prevents copy
     // x-reference on amc.FFcmap.p_rightField prevents copy
     // func:amc.FFcmap..AssignOp
@@ -11563,16 +11997,18 @@ void                 FFcompact_Uninit(amc::FFcompact& fcompact) __attribute__((n
 // access: amc.FField.c_fconst (Ptrary)
 // access: amc.FField.c_inkey_fconst (Ptr)
 struct FFconst { // amc.FFconst
-    amc::FFconst*       ind_fconst_next;         // hash next
-    amc::FFconst*       ind_fconst_int_next;     // hash next
-    algo::Smallstr100   fconst;                  //
-    algo::CppExpr       value;                   //
-    algo::Comment       comment;                 //
-    amc::FField*        p_field;                 // reference to parent row
-    algo::cstring       cpp_value;               //
-    i64                 int_val;                 //   0  integer value
-    algo::cstring       cpp_name;                // symbol to use in cpp file
-    bool                field_c_fconst_in_ary;   //   false  membership flag
+    amc::FFconst*       ind_fconst_next;          // hash next
+    u32                 ind_fconst_hashval;       // hash value
+    amc::FFconst*       ind_fconst_int_next;      // hash next
+    u32                 ind_fconst_int_hashval;   // hash value
+    algo::Smallstr100   fconst;                   //
+    algo::CppExpr       value;                    //
+    algo::Comment       comment;                  //
+    amc::FField*        p_field;                  // reference to parent row
+    algo::cstring       cpp_value;                //
+    i64                 int_val;                  //   0  integer value
+    algo::cstring       cpp_name;                 // symbol to use in cpp file
+    bool                field_c_fconst_in_ary;    //   false  membership flag
     // x-reference on amc.FFconst.p_field prevents copy
     // func:amc.FFconst..AssignOp
     amc::FFconst&        operator =(const amc::FFconst &rhs) = delete;
@@ -11615,6 +12051,7 @@ void                 FFconst_Uninit(amc::FFconst& fconst) __attribute__((nothrow
 // access: amc.FCtype.c_fcurs (Ptrary)
 struct FFcurs { // amc.FFcurs
     amc::FFcurs*       ind_fcurs_next;         // hash next
+    u32                ind_fcurs_hashval;      // hash value
     algo::Smallstr50   fcurs;                  //
     algo::Comment      comment;                //
     amc::FField*       p_field;                // reference to parent row
@@ -11663,11 +12100,12 @@ void                 FFcurs_Uninit(amc::FFcurs& fcurs) __attribute__((nothrow));
 // global access: ind_fdec (Thash, hash field field)
 // access: amc.FField.c_fdec (Ptr)
 struct FFdec { // amc.FFdec
-    amc::FFdec*         ind_fdec_next;   // hash next
-    algo::Smallstr100   field;           // Target field
-    i32                 nplace;          //   0  Number of implied decimal places
-    bool                fixedfmt;        //   false  Print exactly SCALE chars after decimal point
-    amc::FField*        p_field;         // reference to parent row
+    amc::FFdec*         ind_fdec_next;      // hash next
+    u32                 ind_fdec_hashval;   // hash value
+    algo::Smallstr100   field;              // Target field
+    i32                 nplace;             //   0  Number of implied decimal places
+    bool                fixedfmt;           //   false  Print exactly SCALE chars after decimal point
+    amc::FField*        p_field;            // reference to parent row
     // x-reference on amc.FFdec.p_field prevents copy
     // func:amc.FFdec..AssignOp
     inline amc::FFdec&   operator =(const amc::FFdec &rhs) = delete;
@@ -11798,11 +12236,12 @@ void                 FFfast_Uninit(amc::FFfast& ffast) __attribute__((nothrow));
 // global access: ind_fflag (Thash, hash field field)
 // access: amc.FField.c_fflag (Ptr)
 struct FFflag { // amc.FFflag
-    amc::FFflag*        ind_fflag_next;   // hash next
-    algo::Smallstr100   field;            //
-    bool                cumulative;       //   false  Accumulate on every read
-    algo::cstring       emptyval;         //   ""
-    algo::Comment       comment;          //
+    amc::FFflag*        ind_fflag_next;      // hash next
+    u32                 ind_fflag_hashval;   // hash value
+    algo::Smallstr100   field;               //
+    bool                cumulative;          //   false  Accumulate on every read
+    algo::cstring       emptyval;            //   ""
+    algo::Comment       comment;             //
     // func:amc.FFflag..AssignOp
     inline amc::FFflag&  operator =(const amc::FFflag &rhs) = delete;
     // func:amc.FFflag..CopyCtor
@@ -11837,19 +12276,18 @@ void                 FFflag_Uninit(amc::FFflag& fflag) __attribute__((nothrow));
 // global access: ind_field (Thash, hash field field)
 // global access: c_malloc (Ptr)
 // global access: zs_ordkeyfield (Llist)
-// global access: c_tempfield (Ptrary)
 // access: amc.FBasepool.p_field (Upptr)
 // access: amc.FBasepool.p_base (Upptr)
 // access: amc.FBitfld.p_srcfield (Upptr)
 // access: amc.FBitfld.p_field (Upptr)
 // access: amc.FCascdel.p_field (Upptr)
 // access: amc.FCtype.c_field (Ptrary)
-// access: amc.FCtype.c_varlenfld (Ptr)
 // access: amc.FCtype.c_optfld (Ptr)
 // access: amc.FCtype.c_datafld (Ptrary)
 // access: amc.FCtype.zd_inst (Llist)
 // access: amc.FCtype.zd_access (Llist)
 // access: amc.FCtype.c_pkeyfield (Ptr)
+// access: amc.FCtype.zd_varlenfld (Llist)
 // access: amc.FFalias.p_srcfield (Upptr)
 // access: amc.FFbigend.p_field (Upptr)
 // access: amc.FFbitset.p_field (Upptr)
@@ -11896,11 +12334,14 @@ void                 FFflag_Uninit(amc::FFflag& fflag) __attribute__((nothrow));
 // access: amc.Genpnew.p_optfld (Upptr)
 // access: amc.Genpnew.p_varlenfld (Upptr)
 struct FField { // amc.FField
-    amc::FField*             zd_inst_next;              // zslist link; -1 means not-in-list
-    amc::FField*             zd_inst_prev;              // previous element
-    amc::FField*             zd_access_next;            // zslist link; -1 means not-in-list
-    amc::FField*             zd_access_prev;            // previous element
+    amc::FField*             ctype_zd_inst_next;        // zslist link; -1 means not-in-list
+    amc::FField*             ctype_zd_inst_prev;        // previous element
+    amc::FField*             ctype_zd_access_next;      // zslist link; -1 means not-in-list
+    amc::FField*             ctype_zd_access_prev;      // previous element
+    amc::FField*             ctype_zd_varlenfld_next;   // zslist link; -1 means not-in-list
+    amc::FField*             ctype_zd_varlenfld_prev;   // previous element
     amc::FField*             ind_field_next;            // hash next
+    u32                      ind_field_hashval;         // hash value
     amc::FField*             zs_ordkeyfield_next;       // zslist link; -1 means not-in-list
     algo::Smallstr100        field;                     // Primary key, as ctype.name
     algo::Smallstr100        arg;                       // Type of field
@@ -11989,8 +12430,9 @@ struct FField { // amc.FField
     amc::FPmaskfldMember**   c_pmaskfld_member_elems;   // array of pointers
     u32                      c_pmaskfld_member_n;       // array of pointers
     u32                      c_pmaskfld_member_max;     // capacity of allocated array
+    amc::FLenfld*            c_lenfld;                  // optional pointer
+    amc::FFkafka*            c_fkafka;                  // optional pointer
     bool                     ctype_c_datafld_in_ary;    //   false  membership flag
-    bool                     _db_c_tempfield_in_ary;    //   false  membership flag
     // x-reference on amc.FField.c_fsort prevents copy
     // x-reference on amc.FField.c_fbitset prevents copy
     // x-reference on amc.FField.c_smallstr prevents copy
@@ -12048,6 +12490,8 @@ struct FField { // amc.FField
     // x-reference on amc.FField.c_ffast_mantissa prevents copy
     // reftype Ptrary of amc.FField.c_ffast prohibits copy
     // reftype Ptrary of amc.FField.c_pmaskfld_member prohibits copy
+    // x-reference on amc.FField.c_lenfld prevents copy
+    // x-reference on amc.FField.c_fkafka prevents copy
     // func:amc.FField..AssignOp
     amc::FField&         operator =(const amc::FField &rhs) = delete;
     // x-reference on amc.FField.c_fsort prevents copy
@@ -12107,6 +12551,8 @@ struct FField { // amc.FField
     // x-reference on amc.FField.c_ffast_mantissa prevents copy
     // reftype Ptrary of amc.FField.c_ffast prohibits copy
     // reftype Ptrary of amc.FField.c_pmaskfld_member prohibits copy
+    // x-reference on amc.FField.c_lenfld prevents copy
+    // x-reference on amc.FField.c_fkafka prevents copy
     // func:amc.FField..CopyCtor
     FField(const amc::FField &rhs) = delete;
 private:
@@ -12459,7 +12905,7 @@ inline bool          zd_xref_keyfld_EmptyQ(amc::FField& field) __attribute__((__
 inline amc::FXref*   zd_xref_keyfld_First(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FField.zd_xref_keyfld.InLlistQ
-inline bool          zd_xref_keyfld_InLlistQ(amc::FXref& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          field_zd_xref_keyfld_InLlistQ(amc::FXref& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FField.zd_xref_keyfld.Insert
 void                 zd_xref_keyfld_Insert(amc::FField& field, amc::FXref& row) __attribute__((nothrow));
@@ -12471,10 +12917,10 @@ inline amc::FXref*   zd_xref_keyfld_Last(amc::FField& field) __attribute__((__wa
 inline i32           zd_xref_keyfld_N(const amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FField.zd_xref_keyfld.Next
-inline amc::FXref*   zd_xref_keyfld_Next(amc::FXref &row) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FXref*   field_zd_xref_keyfld_Next(amc::FXref &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:amc.FField.zd_xref_keyfld.Prev
-inline amc::FXref*   zd_xref_keyfld_Prev(amc::FXref &row) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FXref*   field_zd_xref_keyfld_Prev(amc::FXref &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:amc.FField.zd_xref_keyfld.Remove
 void                 zd_xref_keyfld_Remove(amc::FField& field, amc::FXref& row) __attribute__((nothrow));
@@ -12496,7 +12942,7 @@ inline bool          zs_fcmap_EmptyQ(amc::FField& field) __attribute__((__warn_u
 inline amc::FFcmap*  zs_fcmap_First(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FField.zs_fcmap.InLlistQ
-inline bool          zs_fcmap_InLlistQ(amc::FFcmap& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          field_zs_fcmap_InLlistQ(amc::FFcmap& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FField.zs_fcmap.Insert
 void                 zs_fcmap_Insert(amc::FField& field, amc::FFcmap& row) __attribute__((nothrow));
@@ -12505,7 +12951,7 @@ void                 zs_fcmap_Insert(amc::FField& field, amc::FFcmap& row) __att
 inline amc::FFcmap*  zs_fcmap_Last(amc::FField& field) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FField.zs_fcmap.Next
-inline amc::FFcmap*  zs_fcmap_Next(amc::FFcmap &row) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFcmap*  field_zs_fcmap_Next(amc::FFcmap &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:amc.FField.zs_fcmap.Remove
@@ -12733,6 +13179,20 @@ inline bool          field_c_pmaskfld_member_InAryQ(amc::FPmaskfldMember& row) _
 // func:amc.FField.c_pmaskfld_member.qLast
 inline amc::FPmaskfldMember& c_pmaskfld_member_qLast(amc::FField& field) __attribute__((nothrow));
 
+// Insert row into pointer index. Return final membership status.
+// func:amc.FField.c_lenfld.InsertMaybe
+inline bool          c_lenfld_InsertMaybe(amc::FField& field, amc::FLenfld& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:amc.FField.c_lenfld.Remove
+inline void          c_lenfld_Remove(amc::FField& field, amc::FLenfld& row) __attribute__((nothrow));
+
+// Insert row into pointer index. Return final membership status.
+// func:amc.FField.c_fkafka.InsertMaybe
+inline bool          c_fkafka_InsertMaybe(amc::FField& field, amc::FFkafka& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:amc.FField.c_fkafka.Remove
+inline void          c_fkafka_Remove(amc::FField& field, amc::FFkafka& row) __attribute__((nothrow));
+
 // Set all fields to initial values.
 // func:amc.FField..Init
 void                 FField_Init(amc::FField& field);
@@ -12894,6 +13354,45 @@ inline void          FFinput_Init(amc::FFinput& finput);
 // func:amc.FFinput..Uninit
 void                 FFinput_Uninit(amc::FFinput& finput) __attribute__((nothrow));
 
+// --- amc.FFkafka
+// create: amc.FDb.fkafka (Lary)
+// global access: fkafka (Lary, by rowid)
+// access: amc.FField.c_fkafka (Ptr)
+struct FFkafka { // amc.FFkafka
+    algo::Smallstr100   field;               //
+    algo::Smallstr10    versions;            //
+    algo::Smallstr10    nullable_versions;   //
+    algo::Smallstr10    tagged_versions;     //
+    u64                 tag;                 //   0
+    algo::Comment       comment;             //
+    // func:amc.FFkafka..AssignOp
+    inline amc::FFkafka& operator =(const amc::FFkafka &rhs) = delete;
+    // func:amc.FFkafka..CopyCtor
+    inline               FFkafka(const amc::FFkafka &rhs) = delete;
+private:
+    // func:amc.FFkafka..Ctor
+    inline               FFkafka() __attribute__((nothrow));
+    // func:amc.FFkafka..Dtor
+    inline               ~FFkafka() __attribute__((nothrow));
+    friend amc::FFkafka&        fkafka_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FFkafka*        fkafka_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 fkafka_RemoveAll() __attribute__((nothrow));
+    friend void                 fkafka_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:amc.FFkafka.base.CopyOut
+void                 fkafka_CopyOut(amc::FFkafka &row, dmmeta::Fkafka &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:amc.FFkafka.base.CopyIn
+void                 fkafka_CopyIn(amc::FFkafka &row, dmmeta::Fkafka &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:amc.FFkafka..Init
+inline void          FFkafka_Init(amc::FFkafka& fkafka);
+// func:amc.FFkafka..Uninit
+void                 FFkafka_Uninit(amc::FFkafka& fkafka) __attribute__((nothrow));
+
 // --- amc.FFldoffset
 // create: amc.FDb.fldoffset (Lary)
 // global access: fldoffset (Lary, by rowid)
@@ -13046,11 +13545,12 @@ void                 FFoutput_Uninit(amc::FFoutput& foutput) __attribute__((noth
 // global access: ind_prefix (Thash, hash field fprefix)
 // access: amc.FReftype.zs_fprefix (Llist)
 struct FFprefix { // amc.FFprefix
-    amc::FFprefix*     ind_prefix_next;   // hash next
-    algo::Smallstr5    fprefix;           //
-    algo::Smallstr50   reftype;           //
-    algo::Comment      comment;           //
-    amc::FFprefix*     zs_fprefix_next;   // zslist link; -1 means not-in-list
+    amc::FFprefix*     ind_prefix_next;           // hash next
+    u32                ind_prefix_hashval;        // hash value
+    algo::Smallstr5    fprefix;                   //
+    algo::Smallstr50   reftype;                   //
+    algo::Comment      comment;                   //
+    amc::FFprefix*     reftype_zs_fprefix_next;   // zslist link; -1 means not-in-list
     // func:amc.FFprefix..AssignOp
     inline amc::FFprefix& operator =(const amc::FFprefix &rhs) = delete;
     // func:amc.FFprefix..CopyCtor
@@ -13163,18 +13663,22 @@ void                 FFsort_Uninit(amc::FFsort& fsort) __attribute__((nothrow));
 // access: amc.FNs.c_fstep (Ptrary)
 struct FFstep { // amc.FFstep
     amc::FFstep*        ind_fstep_next;      // hash next
+    u32                 ind_fstep_hashval;   // hash value
     algo::Smallstr100   fstep;               //
     algo::Smallstr50    steptype;            //
     algo::Comment       comment;             //
     amc::FFdelay*       c_fdelay;            // optional pointer
     amc::FField*        p_field;             // reference to parent row
+    amc::FSteptype*     p_steptype;          // reference to parent row
     bool                ns_c_fstep_in_ary;   //   false  membership flag
     // x-reference on amc.FFstep.c_fdelay prevents copy
     // x-reference on amc.FFstep.p_field prevents copy
+    // x-reference on amc.FFstep.p_steptype prevents copy
     // func:amc.FFstep..AssignOp
     amc::FFstep&         operator =(const amc::FFstep &rhs) = delete;
     // x-reference on amc.FFstep.c_fdelay prevents copy
     // x-reference on amc.FFstep.p_field prevents copy
+    // x-reference on amc.FFstep.p_steptype prevents copy
     // func:amc.FFstep..CopyCtor
     FFstep(const amc::FFstep &rhs) = delete;
 private:
@@ -13212,7 +13716,7 @@ inline void          c_fdelay_Remove(amc::FFstep& fstep, amc::FFdelay& row) __at
 
 // Set all fields to initial values.
 // func:amc.FFstep..Init
-inline void          FFstep_Init(amc::FFstep& fstep);
+void                 FFstep_Init(amc::FFstep& fstep);
 // func:amc.FFstep..Uninit
 void                 FFstep_Uninit(amc::FFstep& fstep) __attribute__((nothrow));
 
@@ -13260,23 +13764,26 @@ void                 FFtrace_Uninit(amc::FFtrace& ftrace) __attribute__((nothrow
 // access: amc.Genpnew.p_func (Upptr)
 struct FFunc { // amc.FFunc
     amc::FFunc*         ind_func_next;       // hash next
+    u32                 ind_func_hashval;    // hash value
     amc::FFunc*         cd_temp_func_next;   // zslist link; -1 means not-in-list
     amc::FFunc*         cd_temp_func_prev;   // previous element
     algo::Smallstr100   func;                // Primary key
     bool                extrn;               //   false  Implemented externally by user
     algo::cstring       comment;             // Description
     amc::FNs*           p_ns;                // reference to parent row
-    bool                inl;                 //   false  Make inline?
+    algo::cstring       body;                // Body of function
+    algo::cstring       prepcond;            // Preprocessor #if condition
+    algo::cstring       proto;               // Prototype
     algo::cstring       nonnull;             // List of non-null attributes
+    algo::StringAry     initializer;         // Initializer list (constructors only)
+    algo::cstring       ret;                 // Return type (c++ expression)
+    algo::cstring       acrkey;              // Acr key due to which function was created
     amc::Funcarg*       funcarg_elems;       // pointer to elements
     u32                 funcarg_n;           // number of elements in array
     u32                 funcarg_max;         // max. capacity of array before realloc
     bool                printed;             //   false  Already printed? (internal)
     bool                throws;              //   false  Throws exceptions
-    algo::cstring       proto;               // Prototype
     bool                nothrow;             //   false  Definitely doesn't throw exception
-    bool                oper;                //   false  Is operator?
-    algo::cstring       body;                // Body of function
     bool                member;              //   false  Function is a member (print inside struct)
     bool                disable;             //   false  Function is enabled (if not, don't print)
     bool                deprecate;           //   false  Make deprecated?
@@ -13287,15 +13794,13 @@ struct FFunc { // amc.FFunc
     bool                glob;                //   false  Function is not attached to a field (EXPLAIN!!)
     bool                wur;                 //   false  Warn on unused result
     bool                priv;                //   false  Private to translateion unit (static)
-    algo::cstring       ret;                 // Return type (c++ expression)
     bool                pure;                //   false  OK to call fewer times than specified in text
     bool                isprivate;           //   false  Applies to member functions only -- private
     bool                finalized;           //   false  Don't add any more code to me
     bool                isexplicit;          //   false  Is explicit constructor (add 'explicit')
     bool                istmpl;              //   false  Function is a template
     bool                deleted;             //   false  Function is marked as deleted
-    algo::cstring       prepcond;            // Preprocessor #if condition
-    algo::StringAry     initializer;         // Initializer list (constructors only)
+    bool                inl;                 //   false  Make inline?
     bool                ns_c_func_in_ary;    //   false  membership flag
     // x-reference on amc.FFunc.p_ns prevents copy
     // func:amc.FFunc..AssignOp
@@ -13348,6 +13853,11 @@ amc::Funcarg&        funcarg_AllocAt(amc::FFunc& func, int at) __attribute__((__
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:amc.FFunc.funcarg.AllocN
 algo::aryptr<amc::Funcarg> funcarg_AllocN(amc::FFunc& func, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:amc.FFunc.funcarg.AllocNAt
+algo::aryptr<amc::Funcarg> funcarg_AllocNAt(amc::FFunc& func, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:amc.FFunc.funcarg.EmptyQ
 inline bool          funcarg_EmptyQ(amc::FFunc& func) __attribute__((nothrow));
@@ -13399,6 +13909,10 @@ inline u64           funcarg_rowid_Get(amc::FFunc& func, amc::Funcarg &elem) __a
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:amc.FFunc.funcarg.AllocNVal
 algo::aryptr<amc::Funcarg> funcarg_AllocNVal(amc::FFunc& func, int n_elems, const amc::Funcarg& val) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:amc.FFunc.funcarg.Insary
+void                 funcarg_Insary(amc::FFunc& func, algo::aryptr<amc::Funcarg> rhs, int at) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:amc.FFunc..Init
@@ -13488,6 +14002,7 @@ void                 FFuserinit_Uninit(amc::FFuserinit& fuserinit) __attribute__
 // access: amc.FNs.c_fwddecl (Ptrary)
 struct FFwddecl { // amc.FFwddecl
     amc::FFwddecl*      ind_fwddecl_next;      // hash next
+    u32                 ind_fwddecl_hashval;   // hash value
     algo::Smallstr100   fwddecl;               //
     bool                ns_c_fwddecl_in_ary;   //   false  membership flag
     // func:amc.FFwddecl..AssignOp
@@ -13644,6 +14159,9 @@ void                 ind_seen_Remove(amc::FGenXref& parent, amc::FGenXrefSeen& r
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:amc.FGenXref.ind_seen.Reserve
 void                 ind_seen_Reserve(amc::FGenXref& parent, int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:amc.FGenXref.ind_seen.AbsReserve
+void                 ind_seen_AbsReserve(amc::FGenXref& parent, int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -13703,10 +14221,11 @@ void                 FGenXref_Uninit(amc::FGenXref& parent) __attribute__((nothr
 // create: amc.FGenXref.seen (Lary)
 // access: amc.FGenXref.ind_seen (Thash)
 struct FGenXrefSeen { // amc.FGenXrefSeen
-    amc::FGenXrefSeen*   ind_seen_next;   // hash next
-    algo::cstring        value;           //
-    algo::Smallstr100    via;             // Saved via
-    algo::Smallstr100    xreffld;         // Saved xreffld
+    amc::FGenXrefSeen*   parent_ind_seen_next;      // hash next
+    u32                  parent_ind_seen_hashval;   // hash value
+    algo::cstring        value;                     //
+    algo::Smallstr100    via;                       // Saved via
+    algo::Smallstr100    xreffld;                   // Saved xreffld
 private:
     // func:amc.FGenXrefSeen..Ctor
     inline               FGenXrefSeen() __attribute__((nothrow));
@@ -13818,7 +14337,6 @@ void                 FGsymbol_Uninit(amc::FGsymbol& gsymbol) __attribute__((noth
 // access: amc.FField.c_hook (Ptr)
 struct FHook { // amc.FHook
     algo::Smallstr100   field;       // The field
-    algo::Comment       comment;     //
     amc::FCtype*        p_funcptr;   // reference to parent row
     amc::FField*        p_field;     // reference to parent row
     // x-reference on amc.FHook.p_field prevents copy
@@ -13857,11 +14375,12 @@ void                 FHook_Uninit(amc::FHook& hook) __attribute__((nothrow));
 // global access: ind_inlary (Thash, hash field field)
 // access: amc.FField.c_inlary (Ptr)
 struct FInlary { // amc.FInlary
-    amc::FInlary*       ind_inlary_next;   // hash next
-    algo::Smallstr100   field;             //
-    i32                 min;               //   0  Min. elements to preallocate
-    i32                 max;               //   0  Max. elements
-    algo::Comment       comment;           //
+    amc::FInlary*       ind_inlary_next;      // hash next
+    u32                 ind_inlary_hashval;   // hash value
+    algo::Smallstr100   field;                //
+    i32                 min;                  //   0  Min. elements to preallocate
+    i32                 max;                  //   0  Max. elements
+    algo::Comment       comment;              //
     // func:amc.FInlary..AssignOp
     inline amc::FInlary& operator =(const amc::FInlary &rhs) = delete;
     // func:amc.FInlary..CopyCtor
@@ -13889,10 +14408,43 @@ inline void          FInlary_Init(amc::FInlary& inlary);
 // func:amc.FInlary..Uninit
 void                 FInlary_Uninit(amc::FInlary& inlary) __attribute__((nothrow));
 
+// --- amc.FJstype
+// create: amc.FDb.jstype (Lary)
+// global access: jstype (Lary, by rowid)
+// access: amc.FCtype.c_jstype (Ptr)
+struct FJstype { // amc.FJstype
+    algo::Smallstr100   ctype;     //
+    algo::Comment       comment;   //
+    // func:amc.FJstype..AssignOp
+    inline amc::FJstype& operator =(const amc::FJstype &rhs) = delete;
+    // func:amc.FJstype..CopyCtor
+    inline               FJstype(const amc::FJstype &rhs) = delete;
+private:
+    // func:amc.FJstype..Ctor
+    inline               FJstype() __attribute__((nothrow));
+    // func:amc.FJstype..Dtor
+    inline               ~FJstype() __attribute__((nothrow));
+    friend amc::FJstype&        jstype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FJstype*        jstype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 jstype_RemoveAll() __attribute__((nothrow));
+    friend void                 jstype_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:amc.FJstype.base.CopyOut
+void                 jstype_CopyOut(amc::FJstype &row, dmmeta::Jstype &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:amc.FJstype.base.CopyIn
+void                 jstype_CopyIn(amc::FJstype &row, dmmeta::Jstype &in) __attribute__((nothrow));
+
+// func:amc.FJstype..Uninit
+void                 FJstype_Uninit(amc::FJstype& jstype) __attribute__((nothrow));
+
 // --- amc.FLenfld
 // create: amc.FDb.lenfld (Lary)
 // global access: lenfld (Lary, by rowid)
 // access: amc.FCtype.c_lenfld (Ptr)
+// access: amc.FField.c_lenfld (Ptr)
 struct FLenfld { // amc.FLenfld
     algo::Smallstr100   field;     // Name of length field
     i32                 extra;     //   0  Extra #bytes to add
@@ -13935,10 +14487,11 @@ void                 FLenfld_Uninit(amc::FLenfld& lenfld) __attribute__((nothrow
 // global access: ind_license (Thash, hash field license)
 // access: amc.FNs.p_license (Upptr)
 struct FLicense { // amc.FLicense
-    amc::FLicense*     ind_license_next;   // hash next
-    algo::Smallstr50   license;            //
-    algo::Comment      comment;            //
-    algo::cstring      text;               //
+    amc::FLicense*     ind_license_next;      // hash next
+    u32                ind_license_hashval;   // hash value
+    algo::Smallstr50   license;               //
+    algo::Comment      comment;               //
+    algo::cstring      text;                  //
     // func:amc.FLicense..AssignOp
     inline amc::FLicense& operator =(const amc::FLicense &rhs) = delete;
     // func:amc.FLicense..CopyCtor
@@ -13973,11 +14526,12 @@ void                 FLicense_Uninit(amc::FLicense& license) __attribute__((noth
 // global access: ind_listtype (Thash, hash field listtype)
 // access: amc.FLlist.p_listtype (Upptr)
 struct FListtype { // amc.FListtype
-    amc::FListtype*   ind_listtype_next;   // hash next
-    algo::Smallstr5   listtype;            //
-    bool              circular;            //   false  Circular list
-    bool              haveprev;            //   false  Previous link
-    bool              instail;             //   false  Queue
+    amc::FListtype*   ind_listtype_next;      // hash next
+    u32               ind_listtype_hashval;   // hash value
+    algo::Smallstr5   listtype;               //
+    bool              circular;               //   false  Circular list
+    bool              haveprev;               //   false  Previous link
+    bool              instail;                //   false  Queue
     // func:amc.FListtype..AssignOp
     inline amc::FListtype& operator =(const amc::FListtype &rhs) = delete;
     // func:amc.FListtype..CopyCtor
@@ -14052,9 +14606,10 @@ void                 FLlist_Uninit(amc::FLlist& llist) __attribute__((nothrow));
 // global access: ind_main (Thash, hash field ns)
 // access: amc.FNs.c_main (Ptr)
 struct FMain { // amc.FMain
-    amc::FMain*        ind_main_next;   // hash next
-    algo::Smallstr16   ns;              //
-    bool               ismodule;        //   false
+    amc::FMain*        ind_main_next;      // hash next
+    u32                ind_main_hashval;   // hash value
+    algo::Smallstr16   ns;                 //
+    bool               ismodule;           //   false
     // func:amc.FMain..AssignOp
     inline amc::FMain&   operator =(const amc::FMain &rhs) = delete;
     // func:amc.FMain..CopyCtor
@@ -14211,6 +14766,19 @@ void                 noxref_CopyIn(amc::FNoxref &row, dmmeta::Noxref &in) __attr
 // func:amc.FNoxref..Uninit
 void                 FNoxref_Uninit(amc::FNoxref& noxref) __attribute__((nothrow));
 
+// --- amc.JsNs
+struct JsNs { // amc.JsNs
+    algo::cstring    import;   //
+    algo::cstring*   mdl;      // optional pointer
+    algo::cstring    body;     //
+    // func:amc.JsNs..Ctor
+    inline               JsNs() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:amc.JsNs..Init
+inline void          JsNs_Init(amc::JsNs& parent);
+
 // --- amc.FNs
 // create: amc.FDb.ns (Lary)
 // global access: ns (Lary, by rowid)
@@ -14231,6 +14799,7 @@ void                 FNoxref_Uninit(amc::FNoxref& noxref) __attribute__((nothrow
 // access: amc.Genctx.p_ns (Upptr)
 struct FNs { // amc.FNs
     amc::FNs*           ind_ns_next;         // hash next
+    u32                 ind_ns_hashval;      // hash value
     algo::Smallstr16    ns;                  // Namespace name (primary key)
     algo::Smallstr50    nstype;              // Namespace type
     algo::Smallstr50    license;             // Associated license
@@ -14300,6 +14869,8 @@ struct FNs { // amc.FNs
     u32                 c_nsinclude_max;     // capacity of allocated array
     amc::FNscpp*        c_nscpp;             // optional pointer
     amc::FLicense*      p_license;           // reference to parent row
+    amc::JsNs           js;                  //
+    amc::FNsjs*         c_nsjs;              // optional pointer
     // reftype Ptrary of amc.FNs.c_ctype prohibits copy
     // reftype Ptrary of amc.FNs.c_func prohibits copy
     // reftype Ptrary of amc.FNs.c_dispatch prohibits copy
@@ -14324,6 +14895,7 @@ struct FNs { // amc.FNs
     // reftype Ptrary of amc.FNs.c_nsinclude prohibits copy
     // x-reference on amc.FNs.c_nscpp prevents copy
     // x-reference on amc.FNs.p_license prevents copy
+    // x-reference on amc.FNs.c_nsjs prevents copy
     // func:amc.FNs..AssignOp
     amc::FNs&            operator =(const amc::FNs &rhs) = delete;
     // reftype Ptrary of amc.FNs.c_ctype prohibits copy
@@ -14350,6 +14922,7 @@ struct FNs { // amc.FNs
     // reftype Ptrary of amc.FNs.c_nsinclude prohibits copy
     // x-reference on amc.FNs.c_nscpp prevents copy
     // x-reference on amc.FNs.p_license prevents copy
+    // x-reference on amc.FNs.c_nsjs prevents copy
     // func:amc.FNs..CopyCtor
     FNs(const amc::FNs &rhs) = delete;
 private:
@@ -14559,6 +15132,11 @@ algo::cstring&       include_AllocAt(amc::FNs& ns, int at) __attribute__((__warn
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:amc.FNs.include.AllocN
 algo::aryptr<algo::cstring> include_AllocN(amc::FNs& ns, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:amc.FNs.include.AllocNAt
+algo::aryptr<algo::cstring> include_AllocNAt(amc::FNs& ns, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:amc.FNs.include.EmptyQ
 inline bool          include_EmptyQ(amc::FNs& ns) __attribute__((nothrow));
@@ -14615,6 +15193,10 @@ algo::aryptr<algo::cstring> include_AllocNVal(amc::FNs& ns, int n_elems, const a
 // Function returns success value.
 // func:amc.FNs.include.ReadStrptrMaybe
 bool                 include_ReadStrptrMaybe(amc::FNs& ns, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:amc.FNs.include.Insary
+void                 include_Insary(amc::FNs& ns, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:amc.FNs.c_dispsig.EmptyQ
@@ -15095,6 +15677,13 @@ inline bool          c_nscpp_InsertMaybe(amc::FNs& ns, amc::FNscpp& row) __attri
 // func:amc.FNs.c_nscpp.Remove
 inline void          c_nscpp_Remove(amc::FNs& ns, amc::FNscpp& row) __attribute__((nothrow));
 
+// Insert row into pointer index. Return final membership status.
+// func:amc.FNs.c_nsjs.InsertMaybe
+inline bool          c_nsjs_InsertMaybe(amc::FNs& ns, amc::FNsjs& row) __attribute__((nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:amc.FNs.c_nsjs.Remove
+inline void          c_nsjs_Remove(amc::FNs& ns, amc::FNsjs& row) __attribute__((nothrow));
+
 // Set all fields to initial values.
 // func:amc.FNs..Init
 void                 FNs_Init(amc::FNs& ns);
@@ -15383,6 +15972,43 @@ inline void          FNsinclude_Init(amc::FNsinclude& nsinclude);
 // func:amc.FNsinclude..Uninit
 void                 FNsinclude_Uninit(amc::FNsinclude& nsinclude) __attribute__((nothrow));
 
+// --- amc.FNsjs
+// create: amc.FDb.nsjs (Lary)
+// global access: nsjs (Lary, by rowid)
+// access: amc.FNs.c_nsjs (Ptr)
+struct FNsjs { // amc.FNsjs
+    algo::Smallstr16   ns;           //
+    bool               typescript;   //   false  Generate typescript
+    bool               gensel;       //   false  Generate selected, false-all
+    algo::Comment      comment;      //
+    // func:amc.FNsjs..AssignOp
+    inline amc::FNsjs&   operator =(const amc::FNsjs &rhs) = delete;
+    // func:amc.FNsjs..CopyCtor
+    inline               FNsjs(const amc::FNsjs &rhs) = delete;
+private:
+    // func:amc.FNsjs..Ctor
+    inline               FNsjs() __attribute__((nothrow));
+    // func:amc.FNsjs..Dtor
+    inline               ~FNsjs() __attribute__((nothrow));
+    friend amc::FNsjs&          nsjs_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FNsjs*          nsjs_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 nsjs_RemoveAll() __attribute__((nothrow));
+    friend void                 nsjs_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:amc.FNsjs.base.CopyOut
+void                 nsjs_CopyOut(amc::FNsjs &row, dmmeta::Nsjs &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:amc.FNsjs.base.CopyIn
+void                 nsjs_CopyIn(amc::FNsjs &row, dmmeta::Nsjs &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:amc.FNsjs..Init
+inline void          FNsjs_Init(amc::FNsjs& nsjs);
+// func:amc.FNsjs..Uninit
+void                 FNsjs_Uninit(amc::FNsjs& nsjs) __attribute__((nothrow));
+
 // --- amc.FNsproto
 // create: amc.FDb.nsproto (Lary)
 // global access: nsproto (Lary, by rowid)
@@ -15540,9 +16166,10 @@ void                 FOutfile_Uninit(amc::FOutfile& outfile) __attribute__((noth
 // global access: ind_pack (Thash, hash field ctype)
 // access: amc.FCtype.c_pack (Ptr)
 struct FPack { // amc.FPack
-    amc::FPack*         ind_pack_next;   // hash next
-    algo::Smallstr100   ctype;           // Target ctype
-    amc::FCtype*        p_ctype;         // reference to parent row
+    amc::FPack*         ind_pack_next;      // hash next
+    u32                 ind_pack_hashval;   // hash value
+    algo::Smallstr100   ctype;              // Target ctype
+    amc::FCtype*        p_ctype;            // reference to parent row
     // x-reference on amc.FPack.p_ctype prevents copy
     // func:amc.FPack..AssignOp
     inline amc::FPack&   operator =(const amc::FPack &rhs) = delete;
@@ -15581,6 +16208,7 @@ void                 FPack_Uninit(amc::FPack& pack) __attribute__((nothrow));
 // access: amc.FPmaskfldMember.p_pmaskfld (Upptr)
 struct FPmaskfld { // amc.FPmaskfld
     amc::FPmaskfld*          ind_pmaskfld_next;         // hash next
+    u32                      ind_pmaskfld_hashval;      // hash value
     algo::Smallstr100        field;                     //
     bool                     filter_print;              //   true  Omit non-present fields when printing
     algo::Comment            comment;                   //
@@ -15682,7 +16310,7 @@ void                 FPmaskfld_Uninit(amc::FPmaskfld& pmaskfld) __attribute__((n
 // access: amc.FField.c_pmaskfld_member (Ptrary)
 // access: amc.FPmaskfld.c_pmaskfld_member (Ptrary)
 struct FPmaskfldMember { // amc.FPmaskfldMember
-    algo::Smallstr100   pmaskfld_member;                     //
+    algo::Smallstr200   pmaskfld_member;                     //
     algo::Comment       comment;                             //
     u32                 bit;                                 //   0
     amc::FField*        p_field;                             // reference to parent row
@@ -15734,6 +16362,7 @@ void                 FPmaskfldMember_Uninit(amc::FPmaskfldMember& pmaskfld_membe
 // access: amc.FNs.c_pnew (Ptrary)
 struct FPnew { // amc.FPnew
     amc::FPnew*         ind_pnew_next;      // hash next
+    u32                 ind_pnew_hashval;   // hash value
     algo::Smallstr100   pnew;               //
     amc::FCtype*        p_ctype;            // reference to parent row
     amc::FNs*           p_ns;               // reference to parent row
@@ -15783,9 +16412,10 @@ void                 FPnew_Uninit(amc::FPnew& pnew) __attribute__((nothrow));
 // global access: ptrary (Lary, by rowid)
 // access: amc.FField.c_ptrary (Ptr)
 struct FPtrary { // amc.FPtrary
-    algo::Smallstr100   field;     //
-    bool                unique;    //   false  Search for and ignore duplicates
-    amc::FField*        p_field;   // reference to parent row
+    algo::Smallstr100   field;      //
+    bool                unique;     //   false  Search for and ignore duplicates
+    bool                heaplike;   //   false
+    amc::FField*        p_field;    // reference to parent row
     // x-reference on amc.FPtrary.p_field prevents copy
     // func:amc.FPtrary..AssignOp
     inline amc::FPtrary& operator =(const amc::FPtrary &rhs) = delete;
@@ -15821,23 +16451,24 @@ void                 FPtrary_Uninit(amc::FPtrary& ptrary) __attribute__((nothrow
 // global access: ind_reftype (Thash, hash field reftype)
 // access: amc.FField.p_reftype (Upptr)
 struct FReftype { // amc.FReftype
-    amc::FReftype*     ind_reftype_next;   // hash next
-    algo::Smallstr50   reftype;            //   "Val"
-    bool               isval;              //   false  True if field makes values of target type
-    bool               cascins;            //   false  Field is cascade-insert
-    bool               usebasepool;        //   false  Fields with this type make use of dmmeta.basepool
-    bool               cancopy;            //   false  This type of field can be copied
-    bool               isxref;             //   false  This type of field is an x-ref
-    bool               del;                //   false  Supports random deletion?
-    bool               up;                 //   false  This type of field is a reference
-    bool               isnew;              //   false  If set, skip this relation in amc_vis
-    bool               hasalloc;           //   false  Generte Alloc/Delete functions for arg type
-    bool               inst;               //   false  Field creates an instance of arg type (directly or indirectly)
-    bool               varlen;             //   false  This pool supports varlen allocations
-    i32                rowid;              //   0
-    amc::FTclass*      p_tclass;           // reference to parent row
-    amc::FFprefix*     zs_fprefix_head;    // zero-terminated singly linked list
-    amc::FFprefix*     zs_fprefix_tail;    // pointer to last element
+    amc::FReftype*     ind_reftype_next;      // hash next
+    u32                ind_reftype_hashval;   // hash value
+    algo::Smallstr50   reftype;               //   "Val"
+    bool               isval;                 //   false  True if field makes values of target type
+    bool               cascins;               //   false  Field is cascade-insert
+    bool               usebasepool;           //   false  Fields with this type make use of dmmeta.basepool
+    bool               cancopy;               //   false  This type of field can be copied
+    bool               isxref;                //   false  This type of field is an x-ref
+    bool               del;                   //   false  Supports random deletion?
+    bool               up;                    //   false  This type of field is a reference
+    bool               isnew;                 //   false  If set, skip this relation in amc_vis
+    bool               hasalloc;              //   false  Generte Alloc/Delete functions for arg type
+    bool               inst;                  //   false  Field creates an instance of arg type (directly or indirectly)
+    bool               varlen;                //   false  This pool supports varlen allocations
+    i32                rowid;                 //   0
+    amc::FTclass*      p_tclass;              // reference to parent row
+    amc::FFprefix*     zs_fprefix_head;       // zero-terminated singly linked list
+    amc::FFprefix*     zs_fprefix_tail;       // pointer to last element
     // x-reference on amc.FReftype.p_tclass prevents copy
     // reftype Llist of amc.FReftype.zs_fprefix prohibits copy
     // func:amc.FReftype..AssignOp
@@ -15872,7 +16503,7 @@ inline bool          zs_fprefix_EmptyQ(amc::FReftype& reftype) __attribute__((__
 inline amc::FFprefix* zs_fprefix_First(amc::FReftype& reftype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:amc.FReftype.zs_fprefix.InLlistQ
-inline bool          zs_fprefix_InLlistQ(amc::FFprefix& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          reftype_zs_fprefix_InLlistQ(amc::FFprefix& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:amc.FReftype.zs_fprefix.Insert
 void                 zs_fprefix_Insert(amc::FReftype& reftype, amc::FFprefix& row) __attribute__((nothrow));
@@ -15881,7 +16512,7 @@ void                 zs_fprefix_Insert(amc::FReftype& reftype, amc::FFprefix& ro
 inline amc::FFprefix* zs_fprefix_Last(amc::FReftype& reftype) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:amc.FReftype.zs_fprefix.Next
-inline amc::FFprefix* zs_fprefix_Next(amc::FFprefix &row) __attribute__((__warn_unused_result__, nothrow));
+inline amc::FFprefix* reftype_zs_fprefix_Next(amc::FFprefix &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // Since the list is singly-linked, use linear search to locate the element.
 // func:amc.FReftype.zs_fprefix.Remove
@@ -15920,9 +16551,10 @@ void                 FReftype_Uninit(amc::FReftype& reftype) __attribute__((noth
 // global access: ind_rowid (Thash, hash field field)
 // access: amc.FField.c_rowid (Ptr)
 struct FRowid { // amc.FRowid
-    amc::FRowid*        ind_rowid_next;   // hash next
-    algo::Smallstr100   field;            //
-    algo::Comment       comment;          //
+    amc::FRowid*        ind_rowid_next;      // hash next
+    u32                 ind_rowid_hashval;   // hash value
+    algo::Smallstr100   field;               //
+    algo::Comment       comment;             //
     // func:amc.FRowid..AssignOp
     inline amc::FRowid&  operator =(const amc::FRowid &rhs) = delete;
     // func:amc.FRowid..CopyCtor
@@ -15956,14 +16588,15 @@ void                 FRowid_Uninit(amc::FRowid& rowid) __attribute__((nothrow));
 // global access: ind_smallstr (Thash, hash field field)
 // access: amc.FField.c_smallstr (Ptr)
 struct FSmallstr { // amc.FSmallstr
-    amc::FSmallstr*     ind_smallstr_next;   // hash next
-    algo::Smallstr100   field;               //
-    i32                 length;              //   0  Maximum characters in the string
-    algo::Smallstr50    strtype;             // Data format for string
-    algo::CppExpr       pad;                 // Pad character (if applicable)
-    bool                strict;              //   false
-    amc::FField*        p_field;             // reference to parent row
-    amc::FNumstr*       c_numstr;            // optional pointer
+    amc::FSmallstr*     ind_smallstr_next;      // hash next
+    u32                 ind_smallstr_hashval;   // hash value
+    algo::Smallstr100   field;                  //
+    i32                 length;                 //   0  Maximum characters in the string
+    algo::Smallstr50    strtype;                // Data format for string
+    algo::CppExpr       pad;                    // Pad character (if applicable)
+    bool                strict;                 //   false
+    amc::FField*        p_field;                // reference to parent row
+    amc::FNumstr*       c_numstr;               // optional pointer
     // x-reference on amc.FSmallstr.p_field prevents copy
     // x-reference on amc.FSmallstr.c_numstr prevents copy
     // func:amc.FSmallstr..AssignOp
@@ -16052,18 +16685,19 @@ void                 FSortfld_Uninit(amc::FSortfld& sortfld) __attribute__((noth
 // access: amc.FGsymbol.p_ssimfile (Upptr)
 // access: amc.FSsimsort.p_ssimfile (Upptr)
 struct FSsimfile { // amc.FSsimfile
-    amc::FSsimfile*       ind_ssimfile_next;              // hash next
-    amc::FSsimfile*       zd_ssimfile_todo_next;          // zslist link; -1 means not-in-list
-    amc::FSsimfile*       zd_ssimfile_todo_prev;          // previous element
-    algo::Smallstr50      ssimfile;                       //
-    algo::Smallstr100     ctype;                          //
-    algo::cstring         ssim;                           // Ssim content
-    amc::FCtype*          p_ctype;                        // reference to parent row
-    amc::FSsimvolatile*   c_ssimvolatile;                 // optional pointer
-    bool                  topovisit;                      //   false
-    i32                   topoindex;                      //   0
-    bool                  input_select;                   //   false
-    bool                  _db_c_ssimfile_sorted_in_ary;   //   false  membership flag
+    amc::FSsimfile*       ind_ssimfile_next;          // hash next
+    u32                   ind_ssimfile_hashval;       // hash value
+    amc::FSsimfile*       zd_ssimfile_todo_next;      // zslist link; -1 means not-in-list
+    amc::FSsimfile*       zd_ssimfile_todo_prev;      // previous element
+    algo::Smallstr50      ssimfile;                   //
+    algo::Smallstr100     ctype;                      //
+    algo::cstring         ssim;                       // Ssim content
+    amc::FCtype*          p_ctype;                    // reference to parent row
+    amc::FSsimvolatile*   c_ssimvolatile;             // optional pointer
+    bool                  topovisit;                  //   false
+    i32                   topoindex;                  //   0
+    bool                  input_select;               //   false
+    bool                  c_ssimfile_sorted_in_ary;   //   false  membership flag
     // x-reference on amc.FSsimfile.p_ctype prevents copy
     // x-reference on amc.FSsimfile.c_ssimvolatile prevents copy
     // func:amc.FSsimfile..AssignOp
@@ -16202,6 +16836,44 @@ inline void          FStatictuple_Init(amc::FStatictuple& static_tuple);
 // func:amc.FStatictuple..Uninit
 void                 FStatictuple_Uninit(amc::FStatictuple& static_tuple) __attribute__((nothrow));
 
+// --- amc.FSteptype
+// create: amc.FDb.steptype (Lary)
+// global access: steptype (Lary, by rowid)
+// global access: ind_steptype (Thash, hash field steptype)
+// access: amc.FFstep.p_steptype (Upptr)
+struct FSteptype { // amc.FSteptype
+    amc::FSteptype*    ind_steptype_next;      // hash next
+    u32                ind_steptype_hashval;   // hash value
+    algo::Smallstr50   steptype;               //
+    algo::Comment      comment;                //
+    // func:amc.FSteptype..AssignOp
+    inline amc::FSteptype& operator =(const amc::FSteptype &rhs) = delete;
+    // func:amc.FSteptype..CopyCtor
+    inline               FSteptype(const amc::FSteptype &rhs) = delete;
+private:
+    // func:amc.FSteptype..Ctor
+    inline               FSteptype() __attribute__((nothrow));
+    // func:amc.FSteptype..Dtor
+    inline               ~FSteptype() __attribute__((nothrow));
+    friend amc::FSteptype&      steptype_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FSteptype*      steptype_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 steptype_RemoveAll() __attribute__((nothrow));
+    friend void                 steptype_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:amc.FSteptype.base.CopyOut
+void                 steptype_CopyOut(amc::FSteptype &row, dmmeta::Steptype &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:amc.FSteptype.base.CopyIn
+void                 steptype_CopyIn(amc::FSteptype &row, dmmeta::Steptype &in) __attribute__((nothrow));
+
+// Set all fields to initial values.
+// func:amc.FSteptype..Init
+inline void          FSteptype_Init(amc::FSteptype& steptype);
+// func:amc.FSteptype..Uninit
+void                 FSteptype_Uninit(amc::FSteptype& steptype) __attribute__((nothrow));
+
 // --- amc.FSubstr
 // create: amc.FDb.substr (Lary)
 // global access: substr (Lary, by rowid)
@@ -16209,15 +16881,15 @@ void                 FStatictuple_Uninit(amc::FStatictuple& static_tuple) __attr
 // global access: c_substr_field (Ptrary)
 // access: amc.FField.c_substr (Ptr)
 struct FSubstr { // amc.FSubstr
-    amc::FSubstr*       zd_substr_params_next;       // zslist link; -1 means not-in-list
-    amc::FSubstr*       zd_substr_params_prev;       // previous element
-    algo::Smallstr100   field;                       //
-    algo::CppExpr       expr;                        //
-    algo::Smallstr100   srcfield;                    //
-    amc::FField*        p_field;                     // reference to parent row
-    amc::FField*        p_srcfield;                  // reference to parent row
-    u64                 range;                       //   0
-    bool                _db_c_substr_field_in_ary;   //   false  membership flag
+    amc::FSubstr*       zd_substr_params_next;   // zslist link; -1 means not-in-list
+    amc::FSubstr*       zd_substr_params_prev;   // previous element
+    algo::Smallstr100   field;                   //
+    algo::CppExpr       expr;                    //
+    algo::Smallstr100   srcfield;                //
+    amc::FField*        p_field;                 // reference to parent row
+    amc::FField*        p_srcfield;              // reference to parent row
+    u64                 range;                   //   0
+    bool                c_substr_field_in_ary;   //   false  membership flag
     // x-reference on amc.FSubstr.p_field prevents copy
     // x-reference on amc.FSubstr.p_srcfield prevents copy
     // func:amc.FSubstr..AssignOp
@@ -16303,12 +16975,13 @@ void                 FTargdep_Uninit(amc::FTargdep& targdep) __attribute__((noth
 // access: amc.FTargdep.p_target (Upptr)
 // access: amc.FTargdep.p_parent (Upptr)
 struct FTarget { // amc.FTarget
-    amc::FTarget*      ind_target_next;   // hash next
-    algo::Smallstr16   target;            // Primary key - name of target
-    amc::FTargdep**    c_targdep_elems;   // array of pointers
-    u32                c_targdep_n;       // array of pointers
-    u32                c_targdep_max;     // capacity of allocated array
-    amc::FNs*          p_ns;              // reference to parent row
+    amc::FTarget*      ind_target_next;      // hash next
+    u32                ind_target_hashval;   // hash value
+    algo::Smallstr16   target;               // Primary key - name of target
+    amc::FTargdep**    c_targdep_elems;      // array of pointers
+    u32                c_targdep_n;          // array of pointers
+    u32                c_targdep_max;        // capacity of allocated array
+    amc::FNs*          p_ns;                 // reference to parent row
     // reftype Ptrary of amc.FTarget.c_targdep prohibits copy
     // x-reference on amc.FTarget.p_ns prevents copy
     // func:amc.FTarget..AssignOp
@@ -16397,10 +17070,11 @@ void                 FTarget_Uninit(amc::FTarget& target) __attribute__((nothrow
 // global access: ind_tary (Thash, hash field field)
 // access: amc.FField.c_tary (Ptr)
 struct FTary { // amc.FTary
-    amc::FTary*         ind_tary_next;   // hash next
-    algo::Smallstr100   field;           //
-    bool                aliased;         //   false  Geneate functions to copy from aryptr
-    amc::FField*        p_field;         // reference to parent row
+    amc::FTary*         ind_tary_next;      // hash next
+    u32                 ind_tary_hashval;   // hash value
+    algo::Smallstr100   field;              //
+    bool                aliased;            //   false  Geneate functions to copy from aryptr
+    amc::FField*        p_field;            // reference to parent row
     // x-reference on amc.FTary.p_field prevents copy
     // func:amc.FTary..AssignOp
     inline amc::FTary&   operator =(const amc::FTary &rhs) = delete;
@@ -16477,6 +17151,7 @@ void                 FTcurs_Uninit(amc::FTcurs& tcurs) __attribute__((nothrow));
 // access: amc.Genctx.p_tfunc (Upptr)
 struct FTfunc { // amc.FTfunc
     amc::FTfunc*           ind_tfunc_next;          // hash next
+    u32                    ind_tfunc_hashval;       // hash value
     algo::Smallstr50       tfunc;                   //
     bool                   hasthrow;                //   false  Important defaults for new tfuncs to work
     bool                   leaf;                    //   true  Important defaults for new tfuncs to work
@@ -16681,6 +17356,31 @@ inline void          FTypefld_Init(amc::FTypefld& typefld);
 // func:amc.FTypefld..Uninit
 void                 FTypefld_Uninit(amc::FTypefld& typefld) __attribute__((nothrow));
 
+// --- amc.FUserfunc
+// create: amc.FDb.userfunc (Lary)
+// global access: userfunc (Lary, by rowid)
+struct FUserfunc { // amc.FUserfunc
+    algo::Smallstr50    userfunc;   //
+    algo::Smallstr200   acrkey;     //
+    algo::Smallstr100   cppname;    //
+    algo::Comment       comment;    //
+private:
+    // func:amc.FUserfunc..Ctor
+    inline               FUserfunc() __attribute__((nothrow));
+    friend amc::FUserfunc&      userfunc_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend amc::FUserfunc*      userfunc_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 userfunc_RemoveAll() __attribute__((nothrow));
+    friend void                 userfunc_RemoveLast() __attribute__((nothrow));
+};
+
+// Copy fields out of row
+// func:amc.FUserfunc.base.CopyOut
+void                 userfunc_CopyOut(amc::FUserfunc &row, dmmeta::Userfunc &out) __attribute__((nothrow));
+// Copy fields in to row
+// func:amc.FUserfunc.base.CopyIn
+void                 userfunc_CopyIn(amc::FUserfunc &row, dmmeta::Userfunc &in) __attribute__((nothrow));
+
+
 // --- amc.FUsertracefld
 // create: amc.FDb.usertracefld (Lary)
 // global access: usertracefld (Lary, by rowid)
@@ -16711,18 +17411,19 @@ void                 usertracefld_CopyIn(amc::FUsertracefld &row, dmmeta::Usertr
 // access: amc.FField.c_xref (Ptr)
 // access: amc.FField.zd_xref_keyfld (Llist)
 struct FXref { // amc.FXref
-    amc::FXref*         zs_xref_next;          // zslist link; -1 means not-in-list
-    amc::FXref*         ind_xref_next;         // hash next
-    amc::FXref*         zd_xref_keyfld_next;   // zslist link; -1 means not-in-list
-    amc::FXref*         zd_xref_keyfld_prev;   // previous element
-    algo::Smallstr100   field;                 //
-    algo::CppExpr       inscond;               //   "true"  Insert condition
-    algo::Smallstr200   via;                   //
-    amc::FField*        p_field;               // reference to parent row
-    amc::FCtype*        p_ctype;               // reference to parent row
-    amc::FNocascdel*    c_nocascdel;           // optional pointer
-    amc::FField*        p_viafld;              // reference to parent row
-    amc::FField*        p_keyfld;              // reference to parent row
+    amc::FXref*         ctype_zs_xref_next;          // zslist link; -1 means not-in-list
+    amc::FXref*         ind_xref_next;               // hash next
+    u32                 ind_xref_hashval;            // hash value
+    amc::FXref*         field_zd_xref_keyfld_next;   // zslist link; -1 means not-in-list
+    amc::FXref*         field_zd_xref_keyfld_prev;   // previous element
+    algo::Smallstr100   field;                       //
+    algo::CppExpr       inscond;                     //   "true"  Insert condition
+    algo::Smallstr200   via;                         //
+    amc::FField*        p_field;                     // reference to parent row
+    amc::FCtype*        p_ctype;                     // reference to parent row
+    amc::FNocascdel*    c_nocascdel;                 // optional pointer
+    amc::FField*        p_viafld;                    // reference to parent row
+    amc::FField*        p_keyfld;                    // reference to parent row
     // x-reference on amc.FXref.p_field prevents copy
     // x-reference on amc.FXref.c_nocascdel prevents copy
     // x-reference on amc.FXref.p_viafld prevents copy
@@ -17089,6 +17790,15 @@ struct ctype_c_ffast_curs {// fcurs:amc.FCtype.c_ffast/curs
     u32 n_elems;
     u32 index;
     ctype_c_ffast_curs() { elems=NULL; n_elems=0; index=0; }
+};
+
+
+struct ctype_zd_varlenfld_curs {// fcurs:amc.FCtype.zd_varlenfld/curs
+    typedef amc::FField ChildType;
+    amc::FField* row;
+    ctype_zd_varlenfld_curs() {
+        row = NULL;
+    }
 };
 
 
@@ -17620,15 +18330,6 @@ struct _db_dispsig_curs {// cursor
 };
 
 
-struct _db_c_dispsig_sorted_curs {// fcurs:amc.FDb.c_dispsig_sorted/curs
-    typedef amc::FDispsig ChildType;
-    amc::FDispsig** elems;
-    u32 n_elems;
-    u32 index;
-    _db_c_dispsig_sorted_curs() { elems=NULL; n_elems=0; index=0; }
-};
-
-
 struct _db_zs_sig_visit_curs {// fcurs:amc.FDb.zs_sig_visit/curs
     typedef amc::FCtype ChildType;
     amc::FCtype* row;
@@ -17905,24 +18606,6 @@ struct _db_ctypelen_curs {// cursor
 };
 
 
-struct _db_c_ctypelen_curs {// fcurs:amc.FDb.c_ctypelen/curs
-    typedef amc::FCtypelen ChildType;
-    amc::FCtypelen** elems;
-    u32 n_elems;
-    u32 index;
-    _db_c_ctypelen_curs() { elems=NULL; n_elems=0; index=0; }
-};
-
-
-struct _db_c_tempfield_curs {// fcurs:amc.FDb.c_tempfield/curs
-    typedef amc::FField ChildType;
-    amc::FField** elems;
-    u32 n_elems;
-    u32 index;
-    _db_c_tempfield_curs() { elems=NULL; n_elems=0; index=0; }
-};
-
-
 struct _db_fbase_curs {// cursor
     typedef amc::FFbase ChildType;
     amc::FDb *parent;
@@ -18126,6 +18809,54 @@ struct _db_fbuftype_curs {// cursor
     amc::FDb *parent;
     i64 index;
     _db_fbuftype_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_nsjs_curs {// cursor
+    typedef amc::FNsjs ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_nsjs_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_jstype_curs {// cursor
+    typedef amc::FJstype ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_jstype_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_ckafka_curs {// cursor
+    typedef amc::FCkafka ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_ckafka_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_fkafka_curs {// cursor
+    typedef amc::FFkafka ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_fkafka_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_userfunc_curs {// cursor
+    typedef amc::FUserfunc ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_userfunc_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_steptype_curs {// cursor
+    typedef amc::FSteptype ChildType;
+    amc::FDb *parent;
+    i64 index;
+    _db_steptype_curs(){ parent=NULL; index=0; }
 };
 
 
@@ -19139,6 +19870,14 @@ void                 tfunc_Ctype_FastEncode();
 // this function is 'extrn' and implemented by user
 void                 tfunc_Ctype_FastDecode();
 // User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Ctype_KafkaEncode
+// this function is 'extrn' and implemented by user
+void                 tfunc_Ctype_KafkaEncode();
+// User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Ctype_KafkaDecode
+// this function is 'extrn' and implemented by user
+void                 tfunc_Ctype_KafkaDecode();
+// User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Ctype_AssignOp
 // this function is 'extrn' and implemented by user
 void                 tfunc_Ctype_AssignOp();
@@ -19322,6 +20061,10 @@ void                 tfunc_Fbuf_SkipMsg();
 // func:amc...tfunc_Fbuf_WriteAll
 // this function is 'extrn' and implemented by user
 void                 tfunc_Fbuf_WriteAll();
+// User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Fbuf_WriteReserve
+// this function is 'extrn' and implemented by user
+void                 tfunc_Fbuf_WriteReserve();
 // User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Fbuf_WriteMsg
 // this function is 'extrn' and implemented by user
@@ -19839,6 +20582,14 @@ void                 tfunc_Ptrary_Getary();
 // this function is 'extrn' and implemented by user
 void                 tfunc_Ptrary_Init();
 // User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Ptrary_First
+// this function is 'extrn' and implemented by user
+void                 tfunc_Ptrary_First();
+// User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Ptrary_Last
+// this function is 'extrn' and implemented by user
+void                 tfunc_Ptrary_Last();
+// User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Ptrary_Insert
 // this function is 'extrn' and implemented by user
 void                 tfunc_Ptrary_Insert();
@@ -19875,9 +20626,17 @@ void                 tfunc_Ptrary_Uninit();
 // this function is 'extrn' and implemented by user
 void                 tfunc_Ptrary_curs();
 // User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Ptrary_RemoveFirst
+// this function is 'extrn' and implemented by user
+void                 tfunc_Ptrary_RemoveFirst();
+// User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Ptrary_oncecurs
 // this function is 'extrn' and implemented by user
 void                 tfunc_Ptrary_oncecurs();
+// User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Ptrary_RemoveLast
+// this function is 'extrn' and implemented by user
+void                 tfunc_Ptrary_RemoveLast();
 // User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Ptrary_qFind
 // this function is 'extrn' and implemented by user
@@ -19938,10 +20697,6 @@ void                 tfunc_Smallstr_AddStrptr();
 // func:amc...tfunc_Smallstr_Getary
 // this function is 'extrn' and implemented by user
 void                 tfunc_Smallstr_Getary();
-// User-implemented function from gstatic:amc.FDb.tfunc
-// func:amc...tfunc_Smallstr_HashStrptr
-// this function is 'extrn' and implemented by user
-void                 tfunc_Smallstr_HashStrptr();
 // User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Smallstr_Init
 // this function is 'extrn' and implemented by user
@@ -20071,6 +20826,10 @@ void                 tfunc_Tary_AllocAt();
 // this function is 'extrn' and implemented by user
 void                 tfunc_Tary_AllocN();
 // User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Tary_AllocNAt
+// this function is 'extrn' and implemented by user
+void                 tfunc_Tary_AllocNAt();
+// User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Tary_EmptyQ
 // this function is 'extrn' and implemented by user
 void                 tfunc_Tary_EmptyQ();
@@ -20171,6 +20930,10 @@ void                 tfunc_Tary_AllocNVal();
 // this function is 'extrn' and implemented by user
 void                 tfunc_Tary_ReadStrptrMaybe();
 // User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Tary_Insary
+// this function is 'extrn' and implemented by user
+void                 tfunc_Tary_Insary();
+// User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Thash_Cascdel
 // this function is 'extrn' and implemented by user
 void                 tfunc_Thash_Cascdel();
@@ -20210,6 +20973,10 @@ void                 tfunc_Thash_Remove();
 // func:amc...tfunc_Thash_Reserve
 // this function is 'extrn' and implemented by user
 void                 tfunc_Thash_Reserve();
+// User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Thash_AbsReserve
+// this function is 'extrn' and implemented by user
+void                 tfunc_Thash_AbsReserve();
 // User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_Thash_FindRemove
 // this function is 'extrn' and implemented by user
@@ -20290,6 +21057,10 @@ void                 tfunc_Varlen_curs();
 // func:amc...tfunc_Varlen_Print
 // this function is 'extrn' and implemented by user
 void                 tfunc_Varlen_Print();
+// User-implemented function from gstatic:amc.FDb.tfunc
+// func:amc...tfunc_Varlen_Init
+// this function is 'extrn' and implemented by user
+void                 tfunc_Varlen_Init();
 // User-implemented function from gstatic:amc.FDb.tfunc
 // func:amc...tfunc_ZSListMT_DestructiveFirst
 // this function is 'extrn' and implemented by user
@@ -20647,9 +21418,33 @@ void                 gen_ns_operators();
 // this function is 'extrn' and implemented by user
 void                 gen_ns_check_lim();
 // User-implemented function from gstatic:amc.FDb.gen
+// func:amc...gen_create_userfunc
+// this function is 'extrn' and implemented by user
+void                 gen_create_userfunc();
+// User-implemented function from gstatic:amc.FDb.gen
+// func:amc...gen_nsjs_field
+// this function is 'extrn' and implemented by user
+void                 gen_nsjs_field();
+// User-implemented function from gstatic:amc.FDb.gen
+// func:amc...gen_nsjs_ctype
+// this function is 'extrn' and implemented by user
+void                 gen_nsjs_ctype();
+// User-implemented function from gstatic:amc.FDb.gen
+// func:amc...gen_nsjs_ns
+// this function is 'extrn' and implemented by user
+void                 gen_nsjs_ns();
+// User-implemented function from gstatic:amc.FDb.gen
+// func:amc...gen_nsjs_module
+// this function is 'extrn' and implemented by user
+void                 gen_nsjs_module();
+// User-implemented function from gstatic:amc.FDb.gen
 // func:amc...gen_ns_write
 // this function is 'extrn' and implemented by user
 void                 gen_ns_write();
+// User-implemented function from gstatic:amc.FDb.gen
+// func:amc...gen_table_write
+// this function is 'extrn' and implemented by user
+void                 gen_table_write();
 // func:amc...StaticCheck
 void                 StaticCheck();
 } // gen:ns_func

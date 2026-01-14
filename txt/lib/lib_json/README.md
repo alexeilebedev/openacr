@@ -4,69 +4,11 @@
 ### Table Of Contents
 <a href="#table-of-contents"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
-&nbsp;&nbsp;&bull;&nbsp;  [Ctypes](#ctypes)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Functions](#functions)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [In Memory DB](#in-memory-db)<br/>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
-
-### Ctypes
-<a href="#ctypes"></a>
-Other ctypes in this namespace which don't have own readme files
-
-#### lib_json.FDb - In-memory database for lib_json
-<a href="#lib_json-fdb"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|lpool|u8|Lpool||private memory pool|
-|_db|lib_json.FDb|Global|
-|node|lib_json.FNode|Tpool|
-|ind_objfld|lib_json.FNode|Thash|
-|JsonNumChar|algo.Charset|Charset|
-|JsonFirstNumChar|algo.Charset|Charset|
-
-#### lib_json.FNode - 
-<a href="#lib_json-fnode"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|p_parent|lib_json.FNode|Upptr||Parent node, may be NULL|
-|c_child|lib_json.FNode|Ptrary||Child node(s)|
-|type|u32|Val|
-|value|algo.cstring|Val|
-|fldkey|lib_json.FldKey|Val|
-
-#### lib_json.FParser - 
-<a href="#lib_json-fparser"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|buf|algo.strptr|Val|
-|ind|i32|Val|
-|node|lib_json.FNode|Ptr|
-|root_node|lib_json.FNode|Ptr|
-|state|u32|Val|
-|need_comma|bool|Val|
-|have_comma|bool|Val|
-|need_colon|bool|Val|
-|err_info|algo.cstring|Val|
-|err_offset|i32|Val|
-|offset|i32|Val|
-|uesc_value|u32|Val|
-|uesc_need|u8|Val|
-|value|algo.cstring|Val|
-
-#### lib_json.FldKey - 
-<a href="#lib_json-fldkey"></a>
-
-|Name|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
-|---|---|---|---|---|
-|object|lib_json.FNode|Ptr|
-|field|algo.strptr|Val|
 
 ### Functions
 <a href="#functions"></a>
@@ -74,45 +16,54 @@ Other ctypes in this namespace which don't have own readme files
 Functions exported from this namespace:
 
 ```c++
-// Note: this detects duplicate field names.
-inline bool NodeParentingRulesOkQ(lib_json::FNode *parent, lib_json_FNode_type_Enum type, strptr value) 
+lib_json::FNode *bool_FmtJson(bool value, lib_json::FNode *parent) 
 ```
 
 ```c++
-// Create new node
-// enforce hierarchy rules
-lib_json::FNode &lib_json::NewNode(lib_json::FNode *parent, lib_json_FNode_type_Enum type, strptr field) 
+lib_json::FNode *char_FmtJson(char value, lib_json::FNode *parent) 
 ```
 
 ```c++
-// PARENT    parent node or NULL
-// TYPE      node type
-// VALUE     node value where applicable (only for field, string, number)
-lib_json::FNode &lib_json::NewNode(lib_json::FNode *parent, lib_json_FNode_type_Enum type) 
+lib_json::FNode *double_FmtJson(double value, lib_json::FNode *parent) 
 ```
 
 ```c++
-lib_json::FNode &lib_json::NewFieldNode(lib_json::FNode *parent, strptr field) 
+lib_json::FNode *float_FmtJson(float value, lib_json::FNode *parent) 
 ```
 
 ```c++
-lib_json::FNode &lib_json::NewObjectNode(lib_json::FNode *parent, strptr field = strptr()) 
+lib_json::FNode *i8_FmtJson(i8 value, lib_json::FNode *parent) 
 ```
 
 ```c++
-lib_json::FNode &lib_json::NewArrayNode(lib_json::FNode *parent, strptr field = strptr()) 
+lib_json::FNode *i16_FmtJson(i16 value, lib_json::FNode *parent) 
 ```
 
 ```c++
-lib_json::FNode &lib_json::NewStringNode(lib_json::FNode *parent, strptr field = strptr(), strptr value = strptr()) 
+lib_json::FNode *i32_FmtJson(i32 value, lib_json::FNode *parent) 
 ```
 
 ```c++
-lib_json::FNode &lib_json::NewNumberNode(lib_json::FNode *parent, strptr field = strptr(), strptr value = strptr("0")) 
+lib_json::FNode *i64_FmtJson(i64 value, lib_json::FNode *parent) 
 ```
 
 ```c++
-inline bool ScalarNodeQ(lib_json::FNode &node) 
+lib_json::FNode *u8_FmtJson(u8 value, lib_json::FNode *parent) 
+```
+
+```c++
+lib_json::FNode *u16_FmtJson(u16 value, lib_json::FNode *parent) 
+```
+
+```c++
+lib_json::FNode *u32_FmtJson(u32 value, lib_json::FNode *parent) 
+```
+
+```c++
+// 
+// predefined conversion functions
+// 
+lib_json::FNode *u64_FmtJson(u64 value, lib_json::FNode *parent) 
 ```
 
 ```c++
@@ -132,8 +83,24 @@ bool lib_json::JsonParse(lib_json::FParser &parser, strptr buf)
 ```
 
 ```c++
-// AMC cleanup function - automatically delete parsed JSON tree
-void lib_json::root_node_Cleanup(lib_json::FParser& parent) 
+// Check for parse error
+// 
+// PARSER    parser handle
+// RETURN    true for OK, false for parse error
+inline bool lib_json::JsonParseOkQ(lib_json::FParser &parser) 
+```
+
+```c++
+// Serialize to string
+// Serialize to JSON tree to text
+// NODE      root node to start from
+// OUT       target string
+// PRETTY    pretty printer setting:
+// 0 = no pretty printer (compact output)
+// 1 = algo style pretty printer
+// 2 = standard (jq) style) pretty printer
+// INDENT    level of indenting (for pretty-formatting)
+void lib_json::JsonSerialize(lib_json::FNode* node, cstring &out, u32 pretty = 0, u32 indent = 0) 
 ```
 
 ```c++
@@ -145,25 +112,87 @@ void lib_json::root_node_Cleanup(lib_json::FParser& parent)
 // quotation mark, reverse solidus, and the control characters (U+0000
 // through U+001F)."
 // -- this says that solidus need not be escaped when printing -- only when parsing!
-void lib_json::JsonSerializeString(algo::strptr str, algo::cstring &lhs) 
+void lib_json::JsonSerializeString(algo::strptr str, algo::cstring &out) 
 ```
 
 ```c++
-// Serialize to string
-// Serialize to JSON tree to text
-// NODE      root node to start from
-// LHS       target string
-// PRETTY    whether or not pretty-format
-// INDENT    level of indenting (for pretty-formatting)
-void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty, u32 indent) 
+lib_json::FNode &lib_json::NewArrayNode(lib_json::FNode *parent, strptr field = strptr()) 
 ```
 
 ```c++
-void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs, bool pretty) 
+lib_json::FNode &lib_json::NewBoolNode(lib_json::FNode *parent, strptr field = strptr(), bool value = true) 
 ```
 
 ```c++
-void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs) 
+lib_json::FNode &lib_json::NewFieldNode(lib_json::FNode *parent, strptr field) 
+```
+
+```c++
+// PARENT    parent node or NULL
+// TYPE      node type
+// VALUE     node value where applicable (only for field, string, number)
+// Construct 2 nodes, a "field" node which has the name FIELD, and its value
+// of type TYPE. Return the VALUE
+lib_json::FNode &lib_json::NewFieldVal(lib_json::FNode *parent, lib_json_FNode_type_Enum type, strptr field) 
+```
+
+```c++
+// PARENT    parent node or NULL
+// TYPE      node type
+// VALUE     node value where applicable (only for field, string, number)
+lib_json::FNode &lib_json::NewNode(lib_json::FNode *parent, lib_json_FNode_type_Enum type) 
+```
+
+```c++
+// Create new node
+// enforce hierarchy rules
+lib_json::FNode &lib_json::NewNode(lib_json::FNode *parent, lib_json_FNode_type_Enum type, strptr field) 
+```
+
+```c++
+lib_json::FNode &lib_json::NewNumberNode(lib_json::FNode *parent, strptr field = strptr(), strptr value = strptr("0")) 
+```
+
+```c++
+lib_json::FNode &lib_json::NewObjectNode(lib_json::FNode *parent, strptr field = strptr()) 
+```
+
+```c++
+lib_json::FNode &lib_json::NewStringNode(lib_json::FNode *parent, strptr field = strptr(), strptr value = strptr()) 
+```
+
+```c++
+// Note: this detects duplicate field names.
+inline bool NodeParentingRulesOkQ(lib_json::FNode *parent, lib_json_FNode_type_Enum type, strptr value) 
+```
+
+```c++
+inline bool ScalarNodeQ(lib_json::FNode &node) 
+```
+
+```c++
+// Get node value as bool
+// number is converted: zero - false, nonzero true
+// empty string - false, non-empty string true
+// On any error, DFLT is returned.
+// 
+// PARENT    node to start from
+// PATH      dot-separated list of field keys
+u32 lib_json::bool_Get(lib_json::FNode* parent, strptr path, int dflt = false) 
+```
+
+```c++
+lib_json::FldKey lib_json::fldkey_Get(lib_json::FNode &node) 
+```
+
+```c++
+// Get node value as u32
+// If the path is not found, or the value is malformatted, DFLT is returned.
+// true/false is converted to 0/1
+// 
+// PARENT    node to start from
+// PATH      dot-separated list of field keys
+u32 lib_json::i32_Get(lib_json::FNode* parent, strptr path, int dflt = 0) 
 ```
 
 ```c++
@@ -173,6 +202,19 @@ void lib_json::JsonSerialize(lib_json::FNode* node, cstring &lhs)
 // e.g. path abc.def.ghi and parent pointing to {"abc:{"def":{"ghi":value}}}
 // yields value node
 lib_json::FNode* lib_json::node_Find(lib_json::FNode* parent, strptr path) 
+```
+
+```c++
+// Get array node, NULL in case of any error
+// 
+// PARENT    node to start from
+// PATH      dot-separated list of field keys
+lib_json::FNode* lib_json::node_GetArray(lib_json::FNode* parent, strptr path) 
+```
+
+```c++
+// AMC cleanup function - automatically delete parsed JSON tree
+void lib_json::root_node_Cleanup(lib_json::FParser& parent) 
 ```
 
 ```c++
@@ -186,14 +228,6 @@ strptr lib_json::strptr_Get(lib_json::FNode* parent, strptr path)
 ```
 
 ```c++
-// Get array node, NULL in case of any error
-// 
-// PARENT    node to start from
-// PATH      dot-separated list of field keys
-lib_json::FNode* lib_json::node_GetArray(lib_json::FNode* parent, strptr path) 
-```
-
-```c++
 // Get node value as u32
 // If the path is not found, or the value is malformatted, DFLT is returned.
 // true/false is converted to 0/1
@@ -203,88 +237,7 @@ lib_json::FNode* lib_json::node_GetArray(lib_json::FNode* parent, strptr path)
 u32 lib_json::u32_Get(lib_json::FNode* parent, strptr path, int dflt = 0) 
 ```
 
-```c++
-// 
-// predefined conversion functions
-// 
-lib_json::FNode *u64_FmtJson(u64 value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *u32_FmtJson(u32 value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *u16_FmtJson(u16 value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *u8_FmtJson(u8 value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *i64_FmtJson(i64 value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *i32_FmtJson(i32 value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *i16_FmtJson(i16 value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *i8_FmtJson(i8 value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *double_FmtJson(double value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *float_FmtJson(float value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *bool_FmtJson(bool value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *char_FmtJson(char value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *algo::strptr_FmtJson(const algo::strptr value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FNode *algo::cstring_FmtJson(algo::cstring &value, lib_json::FNode *parent) 
-```
-
-```c++
-lib_json::FldKey lib_json::fldkey_Get(lib_json::FNode &node) 
-```
-
-```c++
-// Check for parse error
-// 
-// PARSER    parser handle
-// RETURN    true for OK, false for parse error
-inline bool lib_json::JsonParseOkQ(lib_json::FParser &parser) 
-```
-
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Functions -->
-
-### Inputs
-<a href="#inputs"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
-`lib_json` takes the following tables on input:
-|Ssimfile|Comment|
-|---|---|
-|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 
 ### Sources
 <a href="#sources"></a>
@@ -303,16 +256,6 @@ The following source files are part of this tool:
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Sources -->
 
-### Dependencies
-<a href="#dependencies"></a>
-<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Dependencies -->
-The build target depends on the following libraries
-|Target|Comment|
-|---|---|
-|[algo_lib](/txt/lib/algo_lib/README.md)|Support library for all executables|
-
-<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Dependencies -->
-
 ### In Memory DB
 <a href="#in-memory-db"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Imdb -->
@@ -327,7 +270,7 @@ All allocations are done through global `lib_json::_db` [lib_json.FDb](#lib_json
 ||||FNode.c_child (Ptrary)|
 ||||FParser.node (Ptr)|
 ||||FParser.root_node (Ptr)|
-||||FldKey.object (Ptr)|
+||||FldKey.p_object (Upptr)|
 |[lib_json.FParser](#lib_json-fparser)||
 
 #### lib_json.FDb - In-memory database for lib_json
@@ -366,7 +309,7 @@ struct FDb { // lib_json.FDb: In-memory database for lib_json
 <a href="#lib_json-fldkey-fields"></a>
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|lib_json.FldKey.object|[lib_json.FNode](/txt/lib/lib_json/README.md#lib_json-fnode)|[Ptr](/txt/exe/amc/reftypes.md#ptr)|||
+|lib_json.FldKey.p_object|[lib_json.FNode](/txt/lib/lib_json/README.md#lib_json-fnode)|[Upptr](/txt/exe/amc/reftypes.md#upptr)|||
 |lib_json.FldKey.field|[algo.strptr](/txt/protocol/algo/strptr.md)|[Val](/txt/exe/amc/reftypes.md#val)|||
 
 #### Struct FldKey
@@ -374,8 +317,8 @@ struct FDb { // lib_json.FDb: In-memory database for lib_json
 Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_json_gen.h](/include/gen/lib_json_gen.h)
 ```
 struct FldKey { // lib_json.FldKey
-    lib_json::FNode*   object;   // optional pointer
-    algo::strptr       field;    //
+    lib_json::FNode*   p_object;   // reference to parent row
+    algo::strptr       field;      //
     // func:lib_json.FldKey..EqOp
     inline bool          operator ==(const lib_json::FldKey &rhs) const __attribute__((nothrow));
     // func:lib_json.FldKey..NeOp
@@ -391,7 +334,7 @@ struct FldKey { // lib_json.FldKey
     // func:lib_json.FldKey..Ctor
     inline               FldKey() __attribute__((nothrow));
     // func:lib_json.FldKey..FieldwiseCtor
-    explicit inline               FldKey(lib_json::FNode* in_object, algo::strptr in_field) __attribute__((nothrow));
+    explicit inline               FldKey(lib_json::FNode* in_p_object, algo::strptr in_field) __attribute__((nothrow));
 };
 ```
 
@@ -415,6 +358,7 @@ Generated by [amc](/txt/exe/amc/README.md) into [include/gen/lib_json_gen.h](/in
 struct FNode { // lib_json.FNode
     lib_json::FNode*    node_next;             // Pointer to next free element int tpool
     lib_json::FNode*    ind_objfld_next;       // hash next
+    u32                 ind_objfld_hashval;    // hash value
     lib_json::FNode*    p_parent;              // reference to parent row
     lib_json::FNode**   c_child_elems;         // array of pointers
     u32                 c_child_n;             // array of pointers

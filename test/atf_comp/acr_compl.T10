@@ -9,7 +9,7 @@
 -dregx:<regx>
 -dstr:<string>
 -exec
--fconst:<int>
+-fconst:<enum>
 -flag
 -h
 -help

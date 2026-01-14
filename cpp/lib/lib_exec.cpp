@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2014-2019 NYSE | Intercontinental Exchange
 //
@@ -142,7 +142,7 @@ static void Child(lib_exec::FSyscmd &cmd) {
         argv[ary_N(cmd.args)] = NULL;
         ret = execv(argv[0],argv);
     } else {
-        ret = execl("/bin/sh", "/bin/sh", "-c", Zeroterm(cmd.command), (char*)NULL);
+        ret = execl("/bin/bash", "/bin/bash", "-c", Zeroterm(cmd.command), (char*)NULL);
     }
     errno_vrfy(ret==0, "can't exec");
     _exit(1);// not sure if _exit or exit should be called here
@@ -157,7 +157,7 @@ static void Child(lib_exec::FSyscmd &cmd) {
 void lib_exec::StartCmd(lib_exec::FSyscmd &cmd) {
     // if a specific argv array has been provided, create the command string from it
     if (cmd.command != "") {
-        ary_Alloc(cmd.args)="/bin/sh";
+        ary_Alloc(cmd.args)="/bin/bash";
         ary_Alloc(cmd.args)="-c";
         ary_Alloc(cmd.args)=cmd.command;
     }

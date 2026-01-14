@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
@@ -52,15 +52,11 @@ void amc::tclass_Bheap() {
     InsVar(R, field.p_ctype     , "$Cpptype**", "$name_elems", "", "binary heap by $sortfld");
     InsVar(R, field.p_ctype     , "i32", "$name_n", "", "number of elements in the heap");
     InsVar(R, field.p_ctype     , "i32", "$name_max", "", "max elements in $name_elems");
-
-    vrfy(!field.p_arg->c_varlenfld || !field.p_arg->c_varlenfld->processed
-         , "no field can appear after varlen field.");
-
-    InsVar(R, field.p_arg       , "i32", "$name_idx", "", "index in heap; -1 means not-in-heap");
+    InsVar(R, field.p_arg       , "i32", "$xfname_idx", "", "index in heap; -1 means not-in-heap");
     amc::FFunc *child_init = amc::init_GetOrCreate(*field.p_arg);
     Set(R, "$fname"     , Refname(*field.p_arg));
 
-    Ins(&R, child_init->body  , "$fname.$name_idx = -1; // ($field) not-in-heap");
+    Ins(&R, child_init->body  , "$fname.$xfname_idx = -1; // ($field) not-in-heap");
 }
 
 void amc::tfunc_Bheap_Upheap() {
@@ -79,7 +75,7 @@ void amc::tfunc_Bheap_Upheap() {
     Ins(&R, up.body, "    if (!$name_ElemLt($pararg, row, *p)) {");
     Ins(&R, up.body, "        break;");
     Ins(&R, up.body, "    }");
-    Ins(&R, up.body, "    p->$name_idx = idx;");
+    Ins(&R, up.body, "    p->$xfname_idx = idx;");
     Ins(&R, up.body, "    elems[idx] = p;");
     Ins(&R, up.body, "    idx = j;");
     Ins(&R, up.body, "}");
@@ -111,7 +107,7 @@ void amc::tfunc_Bheap_Downheap() {
     Ins(&R, down.body, "    if (!$name_ElemLt($pararg, *p,row)) {");
     Ins(&R, down.body, "        break;");
     Ins(&R, down.body, "    }");
-    Ins(&R, down.body, "    p->$name_idx   = idx;");
+    Ins(&R, down.body, "    p->$xfname_idx   = idx;");
     Ins(&R, down.body, "    elems[idx]     = p;");
     Ins(&R, down.body, "    idx            = child;");
     Ins(&R, down.body, "    child          = idx*2+1;");
@@ -128,7 +124,7 @@ void amc::tfunc_Bheap_Reheap() {
     Ins(&R, reheap.comment, "Return new position of item in the heap (0=top)");
     Ins(&R, reheap.ret  , "i32", false);
     Ins(&R, reheap.proto, "$name_Reheap($Parent, $Cpptype& row)", false);
-    Ins(&R, reheap.body    , "int old_idx = row.$name_idx;");
+    Ins(&R, reheap.body    , "int old_idx = row.$xfname_idx;");
     Ins(&R, reheap.body    , "bool isnew = old_idx == -1;");
     Ins(&R, reheap.body    , "if (isnew) {");
     Ins(&R, reheap.body    , "    $name_Reserve($pararg, 1);");
@@ -138,7 +134,7 @@ void amc::tfunc_Bheap_Reheap() {
     Ins(&R, reheap.body    , "if (!isnew && new_idx == old_idx) {");
     Ins(&R, reheap.body    , "    new_idx = $name_Downheap($pararg, row, old_idx);");
     Ins(&R, reheap.body    , "}");
-    Ins(&R, reheap.body    , "row.$name_idx = new_idx;");
+    Ins(&R, reheap.body    , "row.$xfname_idx = new_idx;");
     Ins(&R, reheap.body    , "$parname.$name_elems[new_idx] = &row;");
     if (field.need_firstchanged) {
         Ins(&R, reheap.comment, "If first item of the is changed, update fstep:$field");
@@ -163,7 +159,7 @@ void amc::tfunc_Bheap_ReheapFirst() {
     Ins(&R, reheapfirst.proto, "$name_ReheapFirst($Parent)", false);
     Ins(&R, reheapfirst.body    , "$Cpptype &row = *$parname.$name_elems[0];");
     Ins(&R, reheapfirst.body    , "i32 new_idx = $name_Downheap($pararg, row, 0);");
-    Ins(&R, reheapfirst.body    , "row.$name_idx = new_idx;");
+    Ins(&R, reheapfirst.body    , "row.$xfname_idx = new_idx;");
     Ins(&R, reheapfirst.body    , "$parname.$name_elems[new_idx] = &row;");
     if (field.need_firstchanged) {
         Ins(&R, reheapfirst.comment, "Update fstep:$field");
@@ -186,7 +182,7 @@ void amc::tfunc_Bheap_Set() {
         Ins(&R, set.proto, "$sortfld_Set($Parent, $Cpptype &row, $Sortfldstore new_key)", false);
         Ins(&R, set.body, "row.$sortfld = new_key;");
         if (field.need_firstchanged) {
-            Ins(&R, set.body, "int old_idx = row.$name_idx;");
+            Ins(&R, set.body, "int old_idx = row.$xfname_idx;");
         }
         Ins(&R, set.body, "bool ins = $inscond; // user-defined insert condition (xref)");
         Ins(&R, set.body, "if (ins) {");
@@ -195,7 +191,7 @@ void amc::tfunc_Bheap_Set() {
         Ins(&R, set.body, "    $name_Remove($pararg, row);");
         Ins(&R, set.body, "}");
         if (field.need_firstchanged) {
-            Ins(&R, set.body, "int new_idx = row.$name_idx;");
+            Ins(&R, set.body, "int new_idx = row.$xfname_idx;");
             Ins(&R, set.body, "bool changed = new_idx==0 || old_idx==0;");
             Ins(&R, set.body, "// detect changes in the heap top.");
             Ins(&R, set.body, "// this is overly loose -- it may be that row is the top element");
@@ -239,7 +235,7 @@ void amc::tfunc_Bheap_Cascdel() {
         Ins(&R, cascdel.body, "while (n > 0) {");
         Ins(&R, cascdel.body, "    n--;");
         Ins(&R, cascdel.body, "    $Cpptype &elem = *$parname.$name_elems[n]; // pick cheapest element to remove");
-        Ins(&R, cascdel.body, "    elem.$name_idx = -1; // mark not-in-heap");
+        Ins(&R, cascdel.body, "    elem.$xfname_idx = -1; // mark not-in-heap");
         Ins(&R, cascdel.body, "    $parname.$name_n = n;");
         Ins(&R, cascdel.body, DeleteExpr(field,"$pararg","elem")<<";");
         Ins(&R, cascdel.body, "}");
@@ -257,13 +253,13 @@ void amc::tfunc_Bheap_RemoveFirst() {
     Ins(&R, remfirst.body, "$Cpptype *row = NULL;");
     Ins(&R, remfirst.body, "if ($parname.$name_n > 0) {");
     Ins(&R, remfirst.body, "    row = $parname.$name_elems[0];");
-    Ins(&R, remfirst.body, "    row->$name_idx = -1;           // mark not in heap");
+    Ins(&R, remfirst.body, "    row->$xfname_idx = -1;           // mark not in heap");
     Ins(&R, remfirst.body, "    i32 n = $parname.$name_n - 1; // index of last element in heap");
     Ins(&R, remfirst.body, "    $parname.$name_n = n;         // decrease count");
     Ins(&R, remfirst.body, "    if (n) {");
     Ins(&R, remfirst.body, "        $Cpptype &elem = *$parname.$name_elems[n];");
     Ins(&R, remfirst.body, "        int new_idx = $name_Downheap($pararg, elem, 0);");
-    Ins(&R, remfirst.body, "        elem.$name_idx = new_idx;");
+    Ins(&R, remfirst.body, "        elem.$xfname_idx = new_idx;");
     Ins(&R, remfirst.body, "        $parname.$name_elems[new_idx] = &elem;");
     Ins(&R, remfirst.body, "    }");
     if (field.need_firstchanged) {
@@ -291,7 +287,7 @@ void amc::tfunc_Bheap_InBheapQ() {
     Ins(&R, inheap.ret  , "bool", false);
     Ins(&R, inheap.proto, "$name_InBheapQ($Cpptype& row)", false);
     Ins(&R, inheap.body, "bool result = false;");
-    Ins(&R, inheap.body, "result = row.$name_idx != -1;");
+    Ins(&R, inheap.body, "result = row.$xfname_idx != -1;");
     Ins(&R, inheap.body, "return result;");
 }
 
@@ -303,12 +299,12 @@ void amc::tfunc_Bheap_Insert() {
     Ins(&R, insert.comment, "Insert row. Row must not already be in index. If row is already in index, do nothing.", false);
     Ins(&R, insert.ret  , "void", false);
     Ins(&R, insert.proto, "$name_Insert($Parent, $Cpptype& row)", false);
-    Ins(&R, insert.body,     "if (LIKELY(row.$name_idx == -1)) {");
+    Ins(&R, insert.body,     "if (LIKELY(row.$xfname_idx == -1)) {");
     Ins(&R, insert.body,     "    $name_Reserve($pararg, 1);");
     Ins(&R, insert.body,     "    int n = $parname.$name_n;");
     Ins(&R, insert.body,     "    $parname.$name_n = n + 1;");
     Ins(&R, insert.body,     "    int new_idx = $name_Upheap($pararg, row, n);");
-    Ins(&R, insert.body,     "    row.$name_idx = new_idx;");
+    Ins(&R, insert.body,     "    row.$xfname_idx = new_idx;");
     Ins(&R, insert.body,     "    $parname.$name_elems[new_idx] = &row;");
     if (field.need_firstchanged) {
         Ins(&R, insert.body, "    if (new_idx==0) {");
@@ -347,9 +343,9 @@ void amc::tfunc_Bheap_Remove() {
     Ins(&R,  remove.ret  , "void", false);
     Ins(&R,  remove.proto, "$name_Remove($Parent, $Cpptype& row)", false);
     Ins(&R,  remove.body    , "if ($name_InBheapQ(row)) {");
-    Ins(&R,  remove.body    , "    int old_idx = row.$name_idx;");
+    Ins(&R,  remove.body    , "    int old_idx = row.$xfname_idx;");
     Ins(&R,  remove.body    , "    if ($parname.$name_elems[old_idx] == &row) { // sanity check: heap points back to row");
-    Ins(&R,  remove.body    , "        row.$name_idx = -1;           // mark not in heap");
+    Ins(&R,  remove.body    , "        row.$xfname_idx = -1;           // mark not in heap");
     Ins(&R,  remove.body    , "        i32 n = $parname.$name_n - 1; // index of last element in heap");
     Ins(&R,  remove.body    , "        $parname.$name_n = n;         // decrease count");
     Ins(&R,  remove.body    , "        if (old_idx != n) {");
@@ -358,7 +354,7 @@ void amc::tfunc_Bheap_Remove() {
     Ins(&R,  remove.body    , "            if (new_idx == old_idx) {");
     Ins(&R,  remove.body    , "                new_idx = $name_Downheap($pararg, *elem, old_idx);");
     Ins(&R,  remove.body    , "            }");
-    Ins(&R,  remove.body    , "            elem->$name_idx = new_idx;");
+    Ins(&R,  remove.body    , "            elem->$xfname_idx = new_idx;");
     Ins(&R,  remove.body    , "            $parname.$name_elems[new_idx] = elem;");
     Ins(&R,  remove.body    , "        }");
     if (field.c_fcompact) {
@@ -403,7 +399,7 @@ void amc::tfunc_Bheap_RemoveAll() {
     Ins(&R, flush.proto, "$name_RemoveAll($Parent)", false);
     Ins(&R, flush.body    , "int n = $parname.$name_n;");
     Ins(&R, flush.body    , "for (int i = n - 1; i>=0; i--) {");
-    Ins(&R, flush.body    , "    $parname.$name_elems[i]->$name_idx = -1; // mark not-in-heap");
+    Ins(&R, flush.body    , "    $parname.$name_elems[i]->$xfname_idx = -1; // mark not-in-heap");
     Ins(&R, flush.body    , "}");
     Ins(&R, flush.body    , "$parname.$name_n = 0;");
     if (field.need_firstchanged) {
@@ -681,7 +677,7 @@ void amc::tfunc_Bheap_curs() {
         Ins(&R, curs_next.body, "        i = l;");
         Ins(&R, curs_next.body, "    } while (i < n);");
         Ins(&R, curs_next.body, "    curs.temp_n = n-1;");
-        Ins(&R, curs_next.body, "    int index = dead->$name_idx;");
+        Ins(&R, curs_next.body, "    int index = dead->$xfname_idx;");
         Ins(&R, curs_next.body, "    i = (index*2+1);");
         Ins(&R, curs_next.body, "    if (i < $name_N($curspararg)) {");
         Ins(&R, curs_next.body, "        $Cpptype &elem = *curs.parent->$name_elems[i];");

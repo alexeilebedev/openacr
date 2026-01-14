@@ -1,3 +1,4 @@
+// Copyright (C) 2026 AlgoRND
 // Copyright (C) 2023 Astra
 //
 // License: GPL
@@ -104,13 +105,13 @@ static void SsimCursor_Next(VtabCurs& curs) {
         if (!curs.c_row) {
             curs.c_row = zd_row_First(ctype);
         } else {
-            curs.c_row = zd_row_Next(*curs.c_row);
+            curs.c_row = ctype_zd_row_Next(*curs.c_row);
         }
         while (curs.c_row) {
             if (CheckRow(curs, *curs.c_row)) {
                 break;
             }
-            curs.c_row = zd_row_Next(*curs.c_row);
+            curs.c_row = ctype_zd_row_Next(*curs.c_row);
         }
     }
     curs.eof = curs.c_row == nullptr;
@@ -469,8 +470,8 @@ sqlite3_module lib_sqlite::SsimModule = {
 
 // Scalar function to initialize virtual tables with given data path
 void lib_sqlite::VtabInitFunc(sqlite3_context *context, int argc, sqlite3_value **argv) {
-    if (argc != 1) {
-        sqlite3_result_error(context, "init_ssim() requires exactly one argument (data path)", -1);
+    if (argc != 2) {
+        sqlite3_result_error(context, "init_ssim() requires 2 args : data and ns", -1);
         return;
     }
 
@@ -479,19 +480,29 @@ void lib_sqlite::VtabInitFunc(sqlite3_context *context, int argc, sqlite3_value 
         sqlite3_result_error(context, "data path cannot be null", -1);
         return;
     }
+    const char* ns_c = (const char*)sqlite3_value_text(argv[1]);
+    if (!data_path) {
+        sqlite3_result_error(context, "ns  cannot be null", -1);
+        return;
+    }
+    tempstr ns_str(ns_c);
+    algo_lib::Regx ns_regex;
+    algo_lib::Regx_ReadSql(ns_regex, ns_str, true);
 
     sqlite3* db = sqlite3_context_db_handle(context);
     auto create = cstring();
     algo_lib::Replscope R;
 
     ind_beg(lib_sqlite::_db_ns_curs,ns,lib_sqlite::_db) if (ns.nstype == dmmeta_Nstype_nstype_ssimdb) {
-        Set(R,"$ns",ns.ns);
-        Ins(&R,create, "attach ':memory:' as $ns;");
-        ind_beg(lib_sqlite::ns_c_ssimfile_curs,ssimfile,ns) {
-            Set(R,"$data",data_path);
-            Set(R,"$ssimfile",ssimfile.ssimfile);
-            Ins(&R,create, "create virtual table $ssimfile using ssimdb( $data , $ssimfile );");
-        }ind_end;
+        if (Regx_Match(ns_regex, ns.ns)) {
+            Set(R,"$ns",ns.ns);
+            Ins(&R,create, "attach ':memory:' as $ns;");
+            ind_beg(lib_sqlite::ns_c_ssimfile_curs,ssimfile,ns) {
+                Set(R,"$data",data_path);
+                Set(R,"$ssimfile",ssimfile.ssimfile);
+                Ins(&R,create, "create virtual table $ssimfile using ssimdb( $data , $ssimfile );");
+            }ind_end;
+        }
     }ind_end;
 
     int rc = sqlite3_exec(db, algo::Zeroterm(create), nullptr, nullptr, nullptr);
@@ -509,7 +520,7 @@ int lib_sqlite::VtabInitExt(sqlite3 *db, char **pzErrMsg, const sqlite3_api_rout
     lib_sqlite::Init();
 
     // Register scalar function for initializing virtual tables
-    auto rc = sqlite3_create_function(db, "init_ssim", 1, SQLITE_UTF8, nullptr,
+    auto rc = sqlite3_create_function(db, "init_ssim", 2, SQLITE_UTF8, nullptr,
                                       VtabInitFunc, nullptr, nullptr);
     if (rc == SQLITE_OK) {
         rc = sqlite3_create_module(db, "ssimdb", &lib_sqlite::SsimModule, 0);

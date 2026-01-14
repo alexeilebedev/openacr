@@ -1,0 +1,11 @@
+set -e
+bin/acr  -query:'' -replace:Y -check:Y -selerr:N -write:Y -t:Y << EOF
+dmmeta.ctype  ctype:ams.AbcMsg  comment:""
+dmmeta.field  field:ams.AbcMsg.base  arg:ams.MsgHeader  reftype:Base  dflt:""  comment:""
+dmmeta.pack  ctype:ams.AbcMsg  comment:""
+dmmeta.msgtype  ctype:ams.AbcMsg  type:706
+dmmeta.cpptype  ctype:ams.AbcMsg  ctor:N  dtor:N  cheap_copy:N
+dmmeta.cfmt  cfmt:ams.AbcMsg.String  printfmt:Tuple  read:Y  print:Y  sep:""  genop:Y  comment:""
+EOF
+
+bin/amc

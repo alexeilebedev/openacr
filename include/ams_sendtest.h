@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -33,5 +33,7 @@ namespace ams_sendtest { // update-hdr
     // -------------------------------------------------------------------
     // cpp/ams_sendtest.cpp
     //
-    void Main();
+    lib_ams::FShm &GetOrCreateShm(ams::ShmId shm_id);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:ams_sendtest
 }

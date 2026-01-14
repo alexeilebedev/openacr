@@ -90,12 +90,13 @@ namespace sv2ssim { // gen:ns_print_struct
 // global access: bltin (Lary, by rowid)
 // global access: ind_bltin (Thash, hash field ctype)
 struct FBltin { // sv2ssim.FBltin
-    algo::Smallstr100   ctype;            //
-    bool                likeu64;          //   false
-    bool                bigendok;         //   false
-    bool                issigned;         //   false
-    algo::Comment       comment;          //
-    sv2ssim::FBltin*    ind_bltin_next;   // hash next
+    algo::Smallstr100   ctype;               //
+    bool                likeu64;             //   false
+    bool                bigendok;            //   false
+    bool                issigned;            //   false
+    algo::Comment       comment;             //
+    sv2ssim::FBltin*    ind_bltin_next;      // hash next
+    u32                 ind_bltin_hashval;   // hash value
     // func:sv2ssim.FBltin..AssignOp
     inline sv2ssim::FBltin& operator =(const sv2ssim::FBltin &rhs) = delete;
     // func:sv2ssim.FBltin..CopyCtor
@@ -261,6 +262,11 @@ algo::cstring&       linetok_AllocAt(int at) __attribute__((__warn_unused_result
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:sv2ssim.FDb.linetok.AllocN
 algo::aryptr<algo::cstring> linetok_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:sv2ssim.FDb.linetok.AllocNAt
+algo::aryptr<algo::cstring> linetok_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:sv2ssim.FDb.linetok.EmptyQ
 inline bool          linetok_EmptyQ() __attribute__((nothrow));
@@ -310,6 +316,10 @@ algo::aryptr<algo::cstring> linetok_AllocNVal(int n_elems, const algo::cstring& 
 // Function returns success value.
 // func:sv2ssim.FDb.linetok.ReadStrptrMaybe
 bool                 linetok_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:sv2ssim.FDb.linetok.Insary
+void                 linetok_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -375,6 +385,9 @@ void                 ind_field_Remove(sv2ssim::FField& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:sv2ssim.FDb.ind_field.Reserve
 void                 ind_field_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:sv2ssim.FDb.ind_field.AbsReserve
+void                 ind_field_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:sv2ssim.FDb.zd_selfield.EmptyQ
@@ -477,6 +490,9 @@ void                 ind_bltin_Remove(sv2ssim::FBltin& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:sv2ssim.FDb.ind_bltin.Reserve
 void                 ind_bltin_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:sv2ssim.FDb.ind_bltin.AbsReserve
+void                 ind_bltin_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:sv2ssim.FDb.field_curs.Reset
@@ -549,23 +565,24 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: ind_field (Thash, hash field name)
 // global access: zd_selfield (Llist)
 struct FField { // sv2ssim.FField
-    sv2ssim::FField*    ind_field_next;     // hash next
-    sv2ssim::FField*    zd_selfield_next;   // zslist link; -1 means not-in-list
-    sv2ssim::FField*    zd_selfield_prev;   // previous element
-    algo::cstring       name;               // Field name
-    algo::Smallstr100   ctype;              // Determined type
-    i32                 maxwid;             //   0  Max field width in chars
-    double              minval;             //   1e300  Min numeric value
-    double              maxval;             //   -1e300  Max numeric value
-    i32                 minwid_fix1;        //   100000  Min digits before .
-    i32                 maxwid_fix1;        //   0  Max digits before .
-    i32                 minwid_fix2;        //   100000  Min digits after .
-    i32                 maxwid_fix2;        //   0  Max digits after .
-    bool                couldbe_int;        //   true
-    bool                couldbe_bool;       //   true
-    bool                couldbe_fixwid;     //   true  Fixed width char
-    bool                couldbe_double;     //   true
-    i32                 rowid;              //   0
+    sv2ssim::FField*    ind_field_next;      // hash next
+    u32                 ind_field_hashval;   // hash value
+    sv2ssim::FField*    zd_selfield_next;    // zslist link; -1 means not-in-list
+    sv2ssim::FField*    zd_selfield_prev;    // previous element
+    algo::cstring       name;                // Field name
+    algo::Smallstr100   ctype;               // Determined type
+    i32                 maxwid;              //   0  Max field width in chars
+    double              minval;              //   1e300  Min numeric value
+    double              maxval;              //   -1e300  Max numeric value
+    i32                 minwid_fix1;         //   100000  Min digits before .
+    i32                 maxwid_fix1;         //   0  Max digits before .
+    i32                 minwid_fix2;         //   100000  Min digits after .
+    i32                 maxwid_fix2;         //   0  Max digits after .
+    bool                couldbe_int;         //   true
+    bool                couldbe_bool;        //   true
+    bool                couldbe_fixwid;      //   true  Fixed width char
+    bool                couldbe_double;      //   true
+    i32                 rowid;               //   0
     // func:sv2ssim.FField..AssignOp
     sv2ssim::FField&     operator =(const sv2ssim::FField &rhs) = delete;
     // func:sv2ssim.FField..CopyCtor

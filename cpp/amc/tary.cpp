@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
@@ -177,6 +177,40 @@ void amc::tfunc_Tary_AllocN() {
             Ins(&R, allocn.body, "$ns::_db.trace.alloc_$partrace_$name += n_elems;");
         }
         Ins(&R, allocn.body    , "return algo::aryptr<$Cpptype>(elems + old_n, n_elems);");
+    }
+}
+
+void amc::tfunc_Tary_AllocNAt() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    bool can_memset = field.arg == "char" || field.arg == "u8";
+
+    {
+        amc::FFunc& allocnat = amc::CreateCurFunc();
+        Ins(&R, allocnat.comment, "Reserve space for new element, reallocating the array if necessary");
+        Ins(&R, allocnat.comment, "Insert new element at specified index. Index must be in range or a fatal error occurs.", false);
+        Ins(&R, allocnat.ret  , "algo::aryptr<$Cpptype>", false);
+        Ins(&R, allocnat.proto, "$name_AllocNAt($Parent, int n_elems, int at)", false);
+        Ins(&R, allocnat.body    , "$name_Reserve($pararg, n_elems);");
+        Ins(&R, allocnat.body    , "int n  = $parname.$name_n;");
+        Ins(&R, allocnat.body    , "if (UNLIKELY(u64(at) > u64(n))) {");// silently cure bad index?
+        Ins(&R, allocnat.body    , "    FatalErrorExit(\"$ns.bad_alloc_n_at  field:$field  comment:'index out of range'\");");
+        Ins(&R, allocnat.body    , "}");
+        Ins(&R, allocnat.body    , "$Cpptype *elems = $parname.$name_elems;");
+        Ins(&R, allocnat.body    , "memmove(elems + at + n_elems, elems + at, (n - at) * sizeof($Cpptype));");
+        if (can_memset) {
+            Ins(&R, allocnat.body, "memset(elems + at, $dflt, n_elems); // initialize new space");
+        } else {
+            Ins(&R, allocnat.body, "for (int i = 0; i < n_elems; i++) {");
+            Ins(&R, allocnat.body, "    new (elems + at + i) $Cpptype($dflt); // construct new element, default initialize");
+            Ins(&R, allocnat.body, "}");
+        }
+        Ins(&R, allocnat.body    , "$parname.$name_n = n+n_elems;");
+        if (field.do_trace) {
+            Set(R, "$partrace", Refname(*field.p_ctype));
+            Ins(&R, allocnat.body, "$ns::_db.trace.alloc_$partrace_$name += n_elems;");
+        }
+        Ins(&R, allocnat.body    , "return algo::aryptr<$Cpptype>(elems+at,n_elems);");
     }
 }
 
@@ -715,5 +749,56 @@ void amc::tfunc_Tary_CtorAryptr() {
         Ins(&R, func.body, "$name_n     \t= 0; // ($field)");
         Ins(&R, func.body, "$name_max   \t= 0; // ($field)");
         Ins(&R, func.body, "$name_Addary(*this, rhs);");
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+void amc::tfunc_Tary_Insary() {
+    algo_lib::Replscope &R = amc::_db.genctx.R;
+    amc::FField &field = *amc::_db.genctx.p_field;
+    bool can_copy = !CopyPrivQ(*field.p_arg);
+    bool can_memcpy = field.p_arg->c_bltin;
+    bool dtor = (field.p_arg->c_cpptype && field.p_arg->c_cpptype->dtor)||!field.p_arg->c_cpptype;
+
+    if (field.p_arg->n_xref == 0 && can_copy) {
+        amc::FFunc& insary = amc::CreateCurFunc();
+        Ins(&R, insary.comment, "Insert N elements at specified index. Index must be in range or a fatal error occurs.", false);
+        Ins(&R, insary.comment, "Reserve space, and move existing elements to end.", false);
+        Ins(&R, insary.comment, "If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.");
+        Ins(&R, insary.proto, "$name_Insary($Parent, algo::aryptr<$Cpptype> rhs, int at)", false);
+        Ins(&R, insary.ret     , "void", false);
+        Ins(&R, insary.body    , "bool overlaps = rhs.n_elems>0 && rhs.elems >= $parname.$name_elems && rhs.elems < $parname.$name_elems + $parname.$name_max;");
+        Ins(&R, insary.body    , "if (UNLIKELY(overlaps)) {");
+        Ins(&R, insary.body    , "    FatalErrorExit(\"$ns.tary_alias  field:$field  comment:'alias error: sub-array is being appended to the whole'\");");
+        Ins(&R, insary.body    , "}");
+        Ins(&R, insary.body    , "if (UNLIKELY(u64(at) >= u64($parname.$name_elems+1))) {");
+        Ins(&R, insary.body    , "    FatalErrorExit(\"$ns.bad_insary  field:$field  comment:'index out of range'\");");
+        Ins(&R, insary.body    , "}");
+        Ins(&R, insary.body    , "int nnew = rhs.n_elems;");
+        Ins(&R, insary.body    , "int nmove = $parname.$name_n - at;");
+        Ins(&R, insary.body    , "$name_Reserve($pararg, nnew); // reserve space");
+        if (can_memcpy) {
+            Ins(&R, insary.body, "memmove($parname.$name_elems + at + nnew, $parname.$name_elems + at, nmove * sizeof($Cpptype));");
+            Ins(&R, insary.body, "memcpy($parname.$name_elems + at, rhs.elems, nnew * sizeof($Cpptype));");
+            Ins(&R, insary.body, "$parname.$name_n += nnew;");
+        } else {
+            // copy one by one -- if exception thrown during copying, $name_n will contain
+            // a valid value.
+            Ins(&R, insary.body, "for (int i = nmove-1; i >=0 ; --i) {");
+            Ins(&R, insary.body, "    new ($parname.$name_elems + at + nnew + i) $Cpptype($parname.$name_elems[at + i]);");
+            if (dtor) {
+                Ins(&R, insary.body, "    $parname.$name_elems[at + i].~$Ctype(); // destroy element");
+            }
+            Ins(&R, insary.body, "}");
+            Ins(&R, insary.body, "for (int i = 0; i < nnew; ++i) {");
+            Ins(&R, insary.body, "    new ($parname.$name_elems + at + i) $Cpptype(rhs[i]);");
+            Ins(&R, insary.body, "}");
+            Ins(&R, insary.body, "$parname.$name_n += nnew;");
+        }
+        if (field.do_trace) {
+            Set(R, "$partrace", Refname(*field.p_ctype));
+            Ins(&R, insary.body, "$ns::_db.trace.alloc_$partrace_$name += nnew;");
+        }
     }
 }

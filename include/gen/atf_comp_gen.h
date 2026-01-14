@@ -73,7 +73,10 @@ namespace atf_comp { struct _db_zd_out_tmsg_curs; }
 namespace atf_comp { struct _db_zd_out_comptest_curs; }
 namespace atf_comp { struct _db_zd_out_tfilt_curs; }
 namespace atf_comp { struct _db_zd_out_targs_curs; }
+namespace atf_comp { struct _db_covdir_curs; }
+namespace atf_comp { struct _db_zd_covdir_free_curs; }
 namespace atf_comp { struct FComptest; }
+namespace atf_comp { struct FCovdir; }
 namespace atf_comp { struct trace; }
 namespace atf_comp { struct FDb; }
 namespace atf_comp { struct FTargs; }
@@ -95,7 +98,10 @@ struct FComptest { // atf_comp.FComptest
     algo::Smallstr50       comptest;               //
     i32                    timeout;                //   10
     bool                   memcheck;               //   true
+    bool                   coverage;               //   true
     u8                     exit_code;              //   0  Exit code to check
+    i32                    ncore;                  //   1
+    i32                    repeat;                 //   1  Number of times to repeat the test
     algo::Comment          comment;                //
     algo::cstring          file_test_out;          //
     algo::cstring          file_test_in;           //
@@ -107,18 +113,21 @@ struct FComptest { // atf_comp.FComptest
     algo::SchedTime        finish;                 //
     double                 elapsed;                //   0.0
     algo_lib::FTimehook    thook;                  //
-    bool                   success;                //   false
+    bool                   success;                //   false  Success so far
+    i32                    nrun;                   //   0  Number of times the test ran
     algo::cstring          file_memcheck;          //
     algo::cstring          file_callgrind_log;     //
     algo::cstring          file_callgrind_out;     //
-    algo::cstring          covdir;                 //
     atf_comp::FTmsg*       zd_tmsg_head;           // zero-terminated doubly linked list
     i32                    zd_tmsg_n;              // zero-terminated doubly linked list
     atf_comp::FTmsg*       zd_tmsg_tail;           // pointer to last element
     bool                   need_write;             //   false  Component test modified during runtime, needs to be written back
     algo::cstring          err;                    // Error string
     algo::cstring          filter_command;         //
+    atf_comp::FCovdir*     c_covdir;               // optional pointer
+    algo::cstring          dir;                    //
     atf_comp::FComptest*   ind_comptest_next;      // hash next
+    u32                    ind_comptest_hashval;   // hash value
     atf_comp::FComptest*   zd_sel_comptest_next;   // zslist link; -1 means not-in-list
     atf_comp::FComptest*   zd_sel_comptest_prev;   // previous element
     atf_comp::FComptest*   zd_run_comptest_next;   // zslist link; -1 means not-in-list
@@ -196,7 +205,7 @@ inline bool          zd_tmsg_EmptyQ(atf_comp::FComptest& comptest) __attribute__
 inline atf_comp::FTmsg* zd_tmsg_First(atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:atf_comp.FComptest.zd_tmsg.InLlistQ
-inline bool          zd_tmsg_InLlistQ(atf_comp::FTmsg& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          comptest_zd_tmsg_InLlistQ(atf_comp::FTmsg& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:atf_comp.FComptest.zd_tmsg.Insert
 void                 zd_tmsg_Insert(atf_comp::FComptest& comptest, atf_comp::FTmsg& row) __attribute__((nothrow));
@@ -208,10 +217,10 @@ inline atf_comp::FTmsg* zd_tmsg_Last(atf_comp::FComptest& comptest) __attribute_
 inline i32           zd_tmsg_N(const atf_comp::FComptest& comptest) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:atf_comp.FComptest.zd_tmsg.Next
-inline atf_comp::FTmsg* zd_tmsg_Next(atf_comp::FTmsg &row) __attribute__((__warn_unused_result__, nothrow));
+inline atf_comp::FTmsg* comptest_zd_tmsg_Next(atf_comp::FTmsg &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:atf_comp.FComptest.zd_tmsg.Prev
-inline atf_comp::FTmsg* zd_tmsg_Prev(atf_comp::FTmsg &row) __attribute__((__warn_unused_result__, nothrow));
+inline atf_comp::FTmsg* comptest_zd_tmsg_Prev(atf_comp::FTmsg &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:atf_comp.FComptest.zd_tmsg.Remove
 void                 zd_tmsg_Remove(atf_comp::FComptest& comptest, atf_comp::FTmsg& row) __attribute__((nothrow));
@@ -243,6 +252,36 @@ void                 FComptest_Init(atf_comp::FComptest& comptest);
 // func:atf_comp.FComptest..Uninit
 void                 FComptest_Uninit(atf_comp::FComptest& comptest) __attribute__((nothrow));
 
+// --- atf_comp.FCovdir
+// create: atf_comp.FDb.covdir (Lary)
+// global access: covdir (Lary, by rowid)
+// global access: zd_covdir_free (Llist)
+// access: atf_comp.FComptest.c_covdir (Ptr)
+struct FCovdir { // atf_comp.FCovdir
+    algo::cstring        covdir;                //
+    atf_comp::FCovdir*   zd_covdir_free_next;   // zslist link; -1 means not-in-list
+    atf_comp::FCovdir*   zd_covdir_free_prev;   // previous element
+    // func:atf_comp.FCovdir..AssignOp
+    inline atf_comp::FCovdir& operator =(const atf_comp::FCovdir &rhs) = delete;
+    // func:atf_comp.FCovdir..CopyCtor
+    inline               FCovdir(const atf_comp::FCovdir &rhs) = delete;
+private:
+    // func:atf_comp.FCovdir..Ctor
+    inline               FCovdir() __attribute__((nothrow));
+    // func:atf_comp.FCovdir..Dtor
+    inline               ~FCovdir() __attribute__((nothrow));
+    friend atf_comp::FCovdir&   covdir_Alloc() __attribute__((__warn_unused_result__, nothrow));
+    friend atf_comp::FCovdir*   covdir_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+    friend void                 covdir_RemoveAll() __attribute__((nothrow));
+    friend void                 covdir_RemoveLast() __attribute__((nothrow));
+};
+
+// Set all fields to initial values.
+// func:atf_comp.FCovdir..Init
+inline void          FCovdir_Init(atf_comp::FCovdir& covdir);
+// func:atf_comp.FCovdir..Uninit
+void                 FCovdir_Uninit(atf_comp::FCovdir& covdir) __attribute__((nothrow));
+
 // --- atf_comp.trace
 #pragma pack(push,1)
 struct trace { // atf_comp.trace
@@ -266,7 +305,7 @@ struct FDb { // atf_comp.FDb: In-memory database for atf_comp
     atf_comp::FComptest**   ind_comptest_buckets_elems;   // pointer to bucket array
     i32                     ind_comptest_buckets_n;       // number of elements in bucket array
     i32                     ind_comptest_n;               // number of elements in the hash table
-    algo::cstring           compdir;                      //
+    algo::cstring           bindir;                       // Directory with binaries
     report::atf_comp        report;                       // Final report
     atf_comp::FComptest*    zd_sel_comptest_head;         // zero-terminated doubly linked list
     i32                     zd_sel_comptest_n;            // zero-terminated doubly linked list
@@ -280,8 +319,8 @@ struct FDb { // atf_comp.FDb: In-memory database for atf_comp
     atf_comp::FComptest*    zd_run_comptest_head;         // zero-terminated doubly linked list
     i32                     zd_run_comptest_n;            // zero-terminated doubly linked list
     atf_comp::FComptest*    zd_run_comptest_tail;         // pointer to last element
-    algo::SchedTime         zd_run_comptest_next;         // atf_comp.FDb.zd_run_comptest          Next invocation time
-    algo::SchedTime         zd_run_comptest_delay;        // atf_comp.FDb.zd_run_comptest          Delay between invocations
+    algo::SchedTime         zd_run_comptest_next;         // atf_comp.FDb.zd_run_comptest                        Next invocation time
+    algo::SchedTime         zd_run_comptest_delay;        // atf_comp.FDb.zd_run_comptest                        Delay between invocations
     atf_comp::FTmsg*        zd_out_tmsg_head;             // zero-terminated doubly linked list
     i32                     zd_out_tmsg_n;                // zero-terminated doubly linked list
     atf_comp::FTmsg*        zd_out_tmsg_tail;             // pointer to last element
@@ -295,6 +334,16 @@ struct FDb { // atf_comp.FDb: In-memory database for atf_comp
     atf_comp::FTargs*       zd_out_targs_head;            // zero-terminated doubly linked list
     i32                     zd_out_targs_n;               // zero-terminated doubly linked list
     atf_comp::FTargs*       zd_out_targs_tail;            // pointer to last element
+    atf_comp::FCovdir*      covdir_lary[32];              // level array
+    i32                     covdir_n;                     // number of elements in array
+    atf_comp::FCovdir*      zd_covdir_free_head;          // zero-terminated doubly linked list
+    i32                     zd_covdir_free_n;             // zero-terminated doubly linked list
+    atf_comp::FCovdir*      zd_covdir_free_tail;          // pointer to last element
+    i32                     ncore_used;                   //   0  Number of cores 'used' by running child tests
+    atf_comp::FTfilt**      ind_tfilt_buckets_elems;      // pointer to bucket array
+    i32                     ind_tfilt_buckets_n;          // number of elements in bucket array
+    i32                     ind_tfilt_n;                  // number of elements in the hash table
+    algo_lib::FTimehook     th_runtest;                   //
     atf_comp::trace         trace;                        //
 };
 
@@ -410,6 +459,9 @@ void                 ind_comptest_Remove(atf_comp::FComptest& row) __attribute__
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_comp.FDb.ind_comptest.Reserve
 void                 ind_comptest_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_comp.FDb.ind_comptest.AbsReserve
+void                 ind_comptest_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:atf_comp.FDb.zd_sel_comptest.EmptyQ
@@ -442,15 +494,11 @@ void                 zd_sel_comptest_Remove(atf_comp::FComptest& row) __attribut
 // func:atf_comp.FDb.zd_sel_comptest.RemoveAll
 void                 zd_sel_comptest_RemoveAll() __attribute__((nothrow));
 // If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
-// Call FirstChanged trigger.
 // func:atf_comp.FDb.zd_sel_comptest.RemoveFirst
 atf_comp::FComptest* zd_sel_comptest_RemoveFirst() __attribute__((nothrow));
 // Return reference to last element in the index. No bounds checking.
 // func:atf_comp.FDb.zd_sel_comptest.qLast
 inline atf_comp::FComptest& zd_sel_comptest_qLast() __attribute__((__warn_unused_result__, nothrow));
-// func:atf_comp.FDb.zd_sel_comptest.Step
-// this function is 'extrn' and implemented by user
-void                 zd_sel_comptest_Step() __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -762,6 +810,104 @@ inline atf_comp::FTargs& zd_out_targs_qLast() __attribute__((__warn_unused_resul
 // func:atf_comp.FDb.zd_out_targs.SaveSsimfile
 bool                 zd_out_targs_SaveSsimfile(algo::strptr fname) __attribute__((nothrow));
 
+// Allocate memory for new default row.
+// If out of memory, process is killed.
+// func:atf_comp.FDb.covdir.Alloc
+atf_comp::FCovdir&   covdir_Alloc() __attribute__((__warn_unused_result__, nothrow));
+// Allocate memory for new element. If out of memory, return NULL.
+// func:atf_comp.FDb.covdir.AllocMaybe
+atf_comp::FCovdir*   covdir_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
+// Allocate space for one element. If no memory available, return NULL.
+// func:atf_comp.FDb.covdir.AllocMem
+void*                covdir_AllocMem() __attribute__((__warn_unused_result__, nothrow));
+// Return true if index is empty
+// func:atf_comp.FDb.covdir.EmptyQ
+inline bool          covdir_EmptyQ() __attribute__((nothrow, pure));
+// Look up row by row id. Return NULL if out of range
+// func:atf_comp.FDb.covdir.Find
+inline atf_comp::FCovdir* covdir_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to last element of array, or NULL if array is empty
+// func:atf_comp.FDb.covdir.Last
+inline atf_comp::FCovdir* covdir_Last() __attribute__((nothrow, pure));
+// Return number of items in the pool
+// func:atf_comp.FDb.covdir.N
+inline i32           covdir_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Remove all elements from Lary
+// func:atf_comp.FDb.covdir.RemoveAll
+void                 covdir_RemoveAll() __attribute__((nothrow));
+// Delete last element of array. Do nothing if array is empty.
+// func:atf_comp.FDb.covdir.RemoveLast
+void                 covdir_RemoveLast() __attribute__((nothrow));
+// 'quick' Access row by row id. No bounds checking.
+// func:atf_comp.FDb.covdir.qFind
+inline atf_comp::FCovdir& covdir_qFind(u64 t) __attribute__((nothrow, pure));
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+// func:atf_comp.FDb.covdir.XrefMaybe
+bool                 covdir_XrefMaybe(atf_comp::FCovdir &row);
+
+// Return true if index is empty
+// func:atf_comp.FDb.zd_covdir_free.EmptyQ
+inline bool          zd_covdir_free_EmptyQ() __attribute__((__warn_unused_result__, nothrow, pure));
+// If index empty, return NULL. Otherwise return pointer to first element in index
+// func:atf_comp.FDb.zd_covdir_free.First
+inline atf_comp::FCovdir* zd_covdir_free_First() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return true if row is in the linked list, false otherwise
+// func:atf_comp.FDb.zd_covdir_free.InLlistQ
+inline bool          zd_covdir_free_InLlistQ(atf_comp::FCovdir& row) __attribute__((__warn_unused_result__, nothrow));
+// Insert row into linked list. If row is already in linked list, do nothing.
+// func:atf_comp.FDb.zd_covdir_free.Insert
+void                 zd_covdir_free_Insert(atf_comp::FCovdir& row) __attribute__((nothrow));
+// If index empty, return NULL. Otherwise return pointer to last element in index
+// func:atf_comp.FDb.zd_covdir_free.Last
+inline atf_comp::FCovdir* zd_covdir_free_Last() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return number of items in the linked list
+// func:atf_comp.FDb.zd_covdir_free.N
+inline i32           zd_covdir_free_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Return pointer to next element in the list
+// func:atf_comp.FDb.zd_covdir_free.Next
+inline atf_comp::FCovdir* zd_covdir_free_Next(atf_comp::FCovdir &row) __attribute__((__warn_unused_result__, nothrow));
+// Return pointer to previous element in the list
+// func:atf_comp.FDb.zd_covdir_free.Prev
+inline atf_comp::FCovdir* zd_covdir_free_Prev(atf_comp::FCovdir &row) __attribute__((__warn_unused_result__, nothrow));
+// Remove element from index. If element is not in index, do nothing.
+// func:atf_comp.FDb.zd_covdir_free.Remove
+void                 zd_covdir_free_Remove(atf_comp::FCovdir& row) __attribute__((nothrow));
+// Empty the index. (The rows are not deleted)
+// func:atf_comp.FDb.zd_covdir_free.RemoveAll
+void                 zd_covdir_free_RemoveAll() __attribute__((nothrow));
+// If linked list is empty, return NULL. Otherwise unlink and return pointer to first element.
+// func:atf_comp.FDb.zd_covdir_free.RemoveFirst
+atf_comp::FCovdir*   zd_covdir_free_RemoveFirst() __attribute__((nothrow));
+// Return reference to last element in the index. No bounds checking.
+// func:atf_comp.FDb.zd_covdir_free.qLast
+inline atf_comp::FCovdir& zd_covdir_free_qLast() __attribute__((__warn_unused_result__, nothrow));
+
+// Return true if hash is empty
+// func:atf_comp.FDb.ind_tfilt.EmptyQ
+inline bool          ind_tfilt_EmptyQ() __attribute__((nothrow));
+// Find row by key. Return NULL if not found.
+// func:atf_comp.FDb.ind_tfilt.Find
+atf_comp::FTfilt*    ind_tfilt_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
+// Look up row by key and return reference. Throw exception if not found
+// func:atf_comp.FDb.ind_tfilt.FindX
+atf_comp::FTfilt&    ind_tfilt_FindX(const algo::strptr& key);
+// Return number of items in the hash
+// func:atf_comp.FDb.ind_tfilt.N
+inline i32           ind_tfilt_N() __attribute__((__warn_unused_result__, nothrow, pure));
+// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
+// func:atf_comp.FDb.ind_tfilt.InsertMaybe
+bool                 ind_tfilt_InsertMaybe(atf_comp::FTfilt& row) __attribute__((nothrow));
+// Remove reference to element from hash index. If element is not in hash, do nothing
+// func:atf_comp.FDb.ind_tfilt.Remove
+void                 ind_tfilt_Remove(atf_comp::FTfilt& row) __attribute__((nothrow));
+// Reserve enough room in the hash for N more elements. Return success code.
+// func:atf_comp.FDb.ind_tfilt.Reserve
+void                 ind_tfilt_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_comp.FDb.ind_tfilt.AbsReserve
+void                 ind_tfilt_AbsReserve(int n) __attribute__((nothrow));
+
 // cursor points to valid item
 // func:atf_comp.FDb.comptest_curs.Reset
 inline void          _db_comptest_curs_Reset(_db_comptest_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
@@ -846,6 +992,30 @@ inline void          _db_zd_out_targs_curs_Next(_db_zd_out_targs_curs &curs) __a
 // item access
 // func:atf_comp.FDb.zd_out_targs_curs.Access
 inline atf_comp::FTargs& _db_zd_out_targs_curs_Access(_db_zd_out_targs_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_comp.FDb.covdir_curs.Reset
+inline void          _db_covdir_curs_Reset(_db_covdir_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_comp.FDb.covdir_curs.ValidQ
+inline bool          _db_covdir_curs_ValidQ(_db_covdir_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_comp.FDb.covdir_curs.Next
+inline void          _db_covdir_curs_Next(_db_covdir_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_comp.FDb.covdir_curs.Access
+inline atf_comp::FCovdir& _db_covdir_curs_Access(_db_covdir_curs &curs) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_comp.FDb.zd_covdir_free_curs.Reset
+inline void          _db_zd_covdir_free_curs_Reset(_db_zd_covdir_free_curs &curs, atf_comp::FDb &parent) __attribute__((nothrow));
+// cursor points to valid item
+// func:atf_comp.FDb.zd_covdir_free_curs.ValidQ
+inline bool          _db_zd_covdir_free_curs_ValidQ(_db_zd_covdir_free_curs &curs) __attribute__((nothrow));
+// proceed to next item
+// func:atf_comp.FDb.zd_covdir_free_curs.Next
+inline void          _db_zd_covdir_free_curs_Next(_db_zd_covdir_free_curs &curs) __attribute__((nothrow));
+// item access
+// func:atf_comp.FDb.zd_covdir_free_curs.Access
+inline atf_comp::FCovdir& _db_zd_covdir_free_curs_Access(_db_zd_covdir_free_curs &curs) __attribute__((nothrow));
 // Set all fields to initial values.
 // func:atf_comp.FDb..Init
 void                 FDb_Init();
@@ -892,11 +1062,14 @@ void                 FTargs_Uninit(atf_comp::FTargs& targs) __attribute__((nothr
 // --- atf_comp.FTfilt
 // create: atf_comp.FDb.tfilt (Tpool)
 // global access: zd_out_tfilt (Llist)
+// global access: ind_tfilt (Thash, hash field comptest)
 // access: atf_comp.FComptest.c_tfilt (Ptr)
 struct FTfilt { // atf_comp.FTfilt
     atf_comp::FTfilt*   tfilt_next;          // Pointer to next free element int tpool
     atf_comp::FTfilt*   zd_out_tfilt_next;   // zslist link; -1 means not-in-list
     atf_comp::FTfilt*   zd_out_tfilt_prev;   // previous element
+    atf_comp::FTfilt*   ind_tfilt_next;      // hash next
+    u32                 ind_tfilt_hashval;   // hash value
     algo::Smallstr50    comptest;            //
     algo::cstring       filter;              //
     algo::Comment       comment;             //
@@ -932,14 +1105,14 @@ void                 FTfilt_Uninit(atf_comp::FTfilt& tfilt) __attribute__((nothr
 // global access: zd_out_tmsg (Llist)
 // access: atf_comp.FComptest.zd_tmsg (Llist)
 struct FTmsg { // atf_comp.FTmsg
-    atf_comp::FTmsg*   zd_tmsg_next;       // zslist link; -1 means not-in-list
-    atf_comp::FTmsg*   zd_tmsg_prev;       // previous element
-    atf_comp::FTmsg*   tmsg_next;          // Pointer to next free element int tpool
-    atf_comp::FTmsg*   zd_out_tmsg_next;   // zslist link; -1 means not-in-list
-    atf_comp::FTmsg*   zd_out_tmsg_prev;   // previous element
-    algo::Smallstr50   tmsg;               //
-    bool               istuple;            //   false
-    algo::cstring      msg;                //
+    atf_comp::FTmsg*   comptest_zd_tmsg_next;   // zslist link; -1 means not-in-list
+    atf_comp::FTmsg*   comptest_zd_tmsg_prev;   // previous element
+    atf_comp::FTmsg*   tmsg_next;               // Pointer to next free element int tpool
+    atf_comp::FTmsg*   zd_out_tmsg_next;        // zslist link; -1 means not-in-list
+    atf_comp::FTmsg*   zd_out_tmsg_prev;        // previous element
+    algo::Smallstr50   tmsg;                    //
+    bool               istuple;                 //   false
+    algo::cstring      msg;                     //
     // func:atf_comp.FTmsg..AssignOp
     inline atf_comp::FTmsg& operator =(const atf_comp::FTmsg &rhs) = delete;
     // func:atf_comp.FTmsg..CopyCtor
@@ -1150,6 +1323,23 @@ struct _db_zd_out_targs_curs {// fcurs:atf_comp.FDb.zd_out_targs/curs
     typedef atf_comp::FTargs ChildType;
     atf_comp::FTargs* row;
     _db_zd_out_targs_curs() {
+        row = NULL;
+    }
+};
+
+
+struct _db_covdir_curs {// cursor
+    typedef atf_comp::FCovdir ChildType;
+    atf_comp::FDb *parent;
+    i64 index;
+    _db_covdir_curs(){ parent=NULL; index=0; }
+};
+
+
+struct _db_zd_covdir_free_curs {// fcurs:atf_comp.FDb.zd_covdir_free/curs
+    typedef atf_comp::FCovdir ChildType;
+    atf_comp::FCovdir* row;
+    _db_zd_covdir_free_curs() {
         row = NULL;
     }
 };

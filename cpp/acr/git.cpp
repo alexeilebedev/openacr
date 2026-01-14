@@ -1,4 +1,4 @@
-// Copyright (C) 2024 AlgoRND
+// Copyright (C) 2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@ void acr::Main_GitTriggers() {
     acr::FSsimfile *gitfile = ind_ssimfile_Find("dev.gitfile");
     algo::cstring script;
     if (gitfile) {
-        ind_beg(acr::ctype_zd_ctype_selrec_curs,selrec,*gitfile->p_ctype) {
+        ind_beg(acr::ctype_zd_selrec_curs,selrec,*gitfile->p_ctype) {
             if (selrec.del) {
                 script << "git rm --force "<<strptr_ToBash(selrec.pkey)<<eol;
             } else if (selrec.oldpkey && *selrec.oldpkey != selrec.pkey) {

@@ -18,9 +18,9 @@ if [ "$PS1" != "" ]; then
     PS1="\e[0;34m[\$? \D{%b %d %H:%M:%S}] \u@$HOSTNAME\e[0;32m:\w\e[m \n\$ "
     LS_OPTIONS='--color=auto --quoting-style=shell'
 
-    cd $(dirname $(dirname $(dirname "$(readlink ~/.bash_profile)")))
-    $(bin/acr_compl -install)
-    cd - >/dev/null
+    PREV="$PWD"
+    cd $(dirname $(dirname $(dirname "$(readlink -f ~/.bash_profile)"))) 2>/dev/null && $(bin/acr_compl -install) 
+    cd "$PREV"
 fi
 
 # acr_compl -install needs a list of executables to work

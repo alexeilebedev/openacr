@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -27,29 +27,63 @@
 // -----------------------------------------------------------------------------
 
 void src_func::Main_EditFunc() {
-    // tempstr out;
-    // show loaded functions in sorted order
-    // ind_beg(src_func::_db_bh_func_curs,func,src_func::_db) {
-    //     if (func.select) {
-    //         PrintProto(func,out);
-    //         out << eol;
-    //     }
-    // }ind_end;
-    command::src_func cmd;
-    cmd.e            = false;
-    cmd.in           = src_func::_db.cmdline.in;
-    cmd.targsrc.expr = src_func::_db.cmdline.targsrc.expr;
-    cmd.name.expr    = src_func::_db.cmdline.name.expr;
-    cmd.body.expr    = src_func::_db.cmdline.body.expr;
-    cmd.func.expr    = src_func::_db.cmdline.func.expr;
-    cmd.comment.expr = src_func::_db.cmdline.comment.expr;
-    cmd.iffy         = src_func::_db.cmdline.iffy;
-    cmd.listfunc     = src_func::_db.cmdline.listfunc;
-    cmd.proto        = src_func::_db.cmdline.proto;
-    cmd.gen          = src_func::_db.cmdline.gen;
-    cmd.showloc      = true;
-    cmd.showstatic   = src_func::_db.cmdline.showstatic;
-    cmd.showsortkey  = src_func::_db.cmdline.showsortkey;
-    cmd.sortname     = src_func::_db.cmdline.sortname;
-    SysCmd(tempstr()<<"errlist '"<<src_func_ToCmdline(cmd)<<"'");
+    if (_db.editloc != "") {
+        StringToFile(_db.editloc,"temp/src_func.loc");
+        SysCmd("errlist cat temp/src_func.loc");
+    } else {
+        command::src_func cmd = _db.cmdline;
+        cmd.showloc      = true;
+        cmd.showbody     = false;
+        cmd.e            = false;
+        SysCmd(tempstr()<<"errlist "<<strptr_ToBash(src_func_ToCmdline(cmd)));
+    }
+}
+
+void src_func::Main_CreateMissing() {
+    ind_beg(_db_userfunc_curs,userfunc,_db) {
+        if (!zd_func_EmptyQ(userfunc)) {
+            // instances exist
+        } else if (ind_userfunc_cppname_Find(userfunc.cppname)!=NULL) {
+            // instances don't exist...
+            // but another function with the same cpp name exists.
+            // this means we can't reliably determine if the function is missing
+            // because we don't parse prototypes
+        } else {
+            // step 1: determine prefix
+            src_func::FGenaffix *affix=FindAffix(userfunc.cppname);
+            // step 2: scan source files and count which files have the most functions with the same prefix
+            src_func::FTargsrc *bestsrc=NULL;
+            if (src_func::FTarget *target=ind_target_Find(Pathcomp(userfunc.userfunc,".LL"))) {
+                ind_beg(target_cd_targsrc_curs,targsrc,*target) if (!StartsWithQ(src_Get(targsrc),"cpp/gen")) {
+                    targsrc.counter=0;
+                    ind_beg(targsrc_zd_func_curs,func,targsrc) {
+                        src_func::FGenaffix *thisaffix=FindAffix(func.name);
+                        if (thisaffix == affix) {
+                            targsrc.counter++;
+                        }
+                    }ind_end;
+                    if (!bestsrc || targsrc.counter>bestsrc->counter) {
+                        bestsrc=&targsrc;
+                    }
+                }ind_end;
+                if (!bestsrc) {
+                    bestsrc=cd_targsrc_First(*target);
+                }
+            }
+            // step 3: write missing function to the file
+            if (bestsrc) {
+                tempstr text = tempstr() << eol << Trimmed(SysEval(tempstr()<<"amc -showcomment:N -report:N "<<userfunc.userfunc,FailokQ(true),102400));
+                Replace(text,";"," {\n}\n");
+                int nline=0;
+                ind_beg(algo::FileLine_curs,line,src_Get(*bestsrc)) {
+                    (void)line;
+                    nline++;
+                }ind_end;
+                _db.editloc << src_Get(*bestsrc)<<":"<<nline+2<<":"<<eol;
+                prlog("# adding "<<userfunc.userfunc<<" to "<<src_Get(*bestsrc));
+                prlog(text);
+                StringToFile(text, src_Get(*bestsrc), algo_FileFlags_append);
+            }
+        }
+    }ind_end;
 }

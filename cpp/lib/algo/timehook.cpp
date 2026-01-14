@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -23,21 +23,31 @@
 
 #include "include/algo.h"
 
-// Initialize time hook TH as non-recurrent, with delay DELAY.
-// Usage:
-// ThInit(th, SchedTime());     // schedule at current time
-// hook_Set0(th, myfunction);   // set callback
-// bh_timehook_Reheap(th);      // insert into timehook heap
-// ... eventually algo_lib::Step() will call the hook
-void algo_lib::ThInit(algo_lib::FTimehook& th, algo::SchedTime delay) NOTHROW {
-    th.recurrent = false;
-    th.delay     = delay;
-    th.time      = algo_lib::_db.clock;
-}
-
-// Similar to the above, but recurrent.
+// Initialize a recurrent time hook TH to execute on the next scheduling cycle,
+// and after that, every DELAY clocks
+// NOTE: 'delay' field of a recurrent timehook is used when automatically rescheduling it.
 void algo_lib::ThInitRecur(algo_lib::FTimehook& th, algo::SchedTime delay) NOTHROW {
     th.recurrent = true;
     th.delay     = delay;
     th.time      = algo_lib::_db.clock;
+}
+
+// Schedule a time hook TH to execute on the next scheduling cycle,
+// and after that, every DELAY clocks
+void algo_lib::ThScheduleRecur(algo_lib::FTimehook& th, algo::SchedTime delay) NOTHROW {
+    th.recurrent = true;
+    th.delay     = delay;
+    th.time      = algo_lib::_db.clock;
+    bh_timehook_Reheap(th);
+}
+
+// Initialize a non-recurrent time hook TH to execute after DELAY clock cycles with
+// respect to current time
+// NOTE: 'delay' field of non-recurrent timehook is ignored
+// NOTE: this function updates scheduling clock to the most current value
+void algo_lib::ThScheduleIn(algo_lib::FTimehook& th, algo::SchedTime delay) NOTHROW {
+    algo_lib::_db.clock = algo::CurrSchedTime();
+    th.recurrent = false;
+    th.time = algo_lib::_db.clock + delay;
+    bh_timehook_Reheap(th);
 }

@@ -7,6 +7,7 @@
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Input Messages](#input-messages)<br/>
 &#128196; [atf_amc - Internals](/txt/exe/atf_amc/internals.md)<br/>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
@@ -22,8 +23,8 @@ Usage: atf_amc [[-amctest:]<regx>] [options]
     [amctest]   regx    "%"     SQL regex, selecting test to run
     -dofork             Y       Use fork
     -q                          Quiet mode
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig
@@ -59,4 +60,26 @@ Usage: atf_amc [[-amctest:]<regx>] [options]
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
+
+### Input Messages
+<a href="#input-messages"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:InputMessages -->
+`atf_amc` Consumes the following messages via atf_amc.Disp ()
+|Message|Comment|
+|---|---|
+|[atf_amc.DispType1](/txt/exe/atf_amc/internals.md#atf_amc-disptype1)|Dispfilter test 1|
+|[atf_amc.DispType2](/txt/exe/atf_amc/internals.md#atf_amc-disptype2)|Dispfilter test 2|
+|[atf_amc.DispType3](/txt/exe/atf_amc/internals.md#atf_amc-disptype3)|Dispfilter test 3|
+
+`atf_amc` Consumes the following messages via atf_amc.Msgs ()
+|Message|Comment|
+|---|---|
+|[atf_amc.VarlenK](/txt/exe/atf_amc/internals.md#atf_amc-varlenk)|An optional instance of atf_unit.A|
+
+`atf_amc` Consumes the following messages via atf_amc.Ssimfiles ()
+|Message|Comment|
+|---|---|
+|[dmmeta.Ctype](/txt/ssimdb/dmmeta/ctype.md)|Struct|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:InputMessages -->
 

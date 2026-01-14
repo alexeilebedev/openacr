@@ -29,12 +29,12 @@
 #include "include/gen/algo_gen.inl.h"
 //#pragma endinclude
 // compile-time string constants for dmmeta.Buftype.pnewtype
-const char *dmmeta_Buftype_pnewtype_Memptr      = "Memptr";
-const char *dmmeta_Buftype_pnewtype_AmsStream   = "AmsStream";
-const char *dmmeta_Buftype_pnewtype_Fixed       = "Fixed";
-const char *dmmeta_Buftype_pnewtype_Dynamic     = "Dynamic";
-const char *dmmeta_Buftype_pnewtype_ByteAry     = "ByteAry";
-const char *dmmeta_Buftype_pnewtype_Append      = "Append";
+const char *dmmeta_Buftype_pnewtype_Memptr    = "Memptr";
+const char *dmmeta_Buftype_pnewtype_Shm       = "Shm";
+const char *dmmeta_Buftype_pnewtype_Fixed     = "Fixed";
+const char *dmmeta_Buftype_pnewtype_Dynamic   = "Dynamic";
+const char *dmmeta_Buftype_pnewtype_ByteAry   = "ByteAry";
+const char *dmmeta_Buftype_pnewtype_Append    = "Append";
 
 // compile-time string constants for dmmeta.Fastenc.fastenc
 const char *dmmeta_Fastenc_fastenc_byteVector   = "byteVector";
@@ -75,6 +75,7 @@ const char *dmmeta_Fbuftype_fbuftype_Msgbuf          = "Msgbuf";
 // compile-time string constants for dmmeta.Hashtype.hashtype
 const char *dmmeta_Hashtype_hashtype_Extern   = "Extern";
 const char *dmmeta_Hashtype_hashtype_CRC32    = "CRC32";
+const char *dmmeta_Hashtype_hashtype_Linear   = "Linear";
 
 // compile-time string constants for dmmeta.Ns.ns
 const char *dmmeta_Ns_ns_            = "";
@@ -94,7 +95,6 @@ const char *dmmeta_Ns_ns_amc_vis     = "amc_vis";
 const char *dmmeta_Ns_ns_amcdb       = "amcdb";
 
 const char *dmmeta_Ns_ns_ams            = "ams";
-const char *dmmeta_Ns_ns_ams_cat        = "ams_cat";
 const char *dmmeta_Ns_ns_ams_sendtest   = "ams_sendtest";
 const char *dmmeta_Ns_ns_amsdb          = "amsdb";
 const char *dmmeta_Ns_ns_apm            = "apm";
@@ -105,6 +105,7 @@ const char *dmmeta_Ns_ns_atf_ci         = "atf_ci";
 const char *dmmeta_Ns_ns_atf_cmdline    = "atf_cmdline";
 const char *dmmeta_Ns_ns_atf_comp       = "atf_comp";
 const char *dmmeta_Ns_ns_atf_cov        = "atf_cov";
+const char *dmmeta_Ns_ns_atf_exp        = "atf_exp";
 const char *dmmeta_Ns_ns_atf_fuzz       = "atf_fuzz";
 const char *dmmeta_Ns_ns_atf_gcli       = "atf_gcli";
 const char *dmmeta_Ns_ns_atf_nrun       = "atf_nrun";
@@ -120,25 +121,37 @@ const char *dmmeta_Ns_ns_gcache         = "gcache";
 const char *dmmeta_Ns_ns_gcli           = "gcli";
 const char *dmmeta_Ns_ns_gclidb         = "gclidb";
 
+const char *dmmeta_Ns_ns_http         = "http";
+const char *dmmeta_Ns_ns_httpdb       = "httpdb";
 const char *dmmeta_Ns_ns_ietf         = "ietf";
+const char *dmmeta_Ns_ns_jkv          = "jkv";
+const char *dmmeta_Ns_ns_js           = "js";
+const char *dmmeta_Ns_ns_kafka        = "kafka";
 const char *dmmeta_Ns_ns_lib_amcdb    = "lib_amcdb";
 const char *dmmeta_Ns_ns_lib_ams      = "lib_ams";
 const char *dmmeta_Ns_ns_lib_ctype    = "lib_ctype";
+const char *dmmeta_Ns_ns_lib_curl     = "lib_curl";
 const char *dmmeta_Ns_ns_lib_exec     = "lib_exec";
 const char *dmmeta_Ns_ns_lib_fm       = "lib_fm";
 const char *dmmeta_Ns_ns_lib_git      = "lib_git";
+const char *dmmeta_Ns_ns_lib_http     = "lib_http";
 const char *dmmeta_Ns_ns_lib_iconv    = "lib_iconv";
 const char *dmmeta_Ns_ns_lib_json     = "lib_json";
 const char *dmmeta_Ns_ns_lib_mysql    = "lib_mysql";
+const char *dmmeta_Ns_ns_lib_netio    = "lib_netio";
 const char *dmmeta_Ns_ns_lib_prot     = "lib_prot";
+const char *dmmeta_Ns_ns_lib_rl       = "lib_rl";
 const char *dmmeta_Ns_ns_lib_sql      = "lib_sql";
 const char *dmmeta_Ns_ns_lib_sqlite   = "lib_sqlite";
+const char *dmmeta_Ns_ns_lib_ws       = "lib_ws";
 const char *dmmeta_Ns_ns_mdbg         = "mdbg";
 const char *dmmeta_Ns_ns_mysql2ssim   = "mysql2ssim";
 const char *dmmeta_Ns_ns_orgfile      = "orgfile";
 const char *dmmeta_Ns_ns_report       = "report";
+const char *dmmeta_Ns_ns_samp_make    = "samp_make";
 const char *dmmeta_Ns_ns_samp_meng    = "samp_meng";
 const char *dmmeta_Ns_ns_samp_regx    = "samp_regx";
+const char *dmmeta_Ns_ns_sampdb       = "sampdb";
 const char *dmmeta_Ns_ns_sandbox      = "sandbox";
 const char *dmmeta_Ns_ns_src_func     = "src_func";
 const char *dmmeta_Ns_ns_src_hdr      = "src_hdr";
@@ -150,6 +163,9 @@ const char *dmmeta_Ns_ns_ssimfilt     = "ssimfilt";
 
 const char *dmmeta_Ns_ns_strconv   = "strconv";
 const char *dmmeta_Ns_ns_sv2ssim   = "sv2ssim";
+
+const char *dmmeta_Ns_ns_ws     = "ws";
+const char *dmmeta_Ns_ns_wsdb   = "wsdb";
 
 // compile-time string constants for dmmeta.Nstype.nstype
 const char *dmmeta_Nstype_nstype_exe   = "exe";
@@ -220,13 +236,13 @@ const char *dmmeta_Ssimfile_ssimfile_amcdb_curstype   = "amcdb.curstype";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_gen        = "amcdb.gen";
 const char *dmmeta_Ssimfile_ssimfile_amcdb_regxtype   = "amcdb.regxtype";
 
-const char *dmmeta_Ssimfile_ssimfile_amcdb_tclass       = "amcdb.tclass";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_tcurs        = "amcdb.tcurs";
-const char *dmmeta_Ssimfile_ssimfile_amcdb_tfunc        = "amcdb.tfunc";
-const char *dmmeta_Ssimfile_ssimfile_amsdb_proctype     = "amsdb.proctype";
-const char *dmmeta_Ssimfile_ssimfile_amsdb_streamtype   = "amsdb.streamtype";
-const char *dmmeta_Ssimfile_ssimfile_atfdb_amctest      = "atfdb.amctest";
-const char *dmmeta_Ssimfile_ssimfile_atfdb_cijob        = "atfdb.cijob";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_tclass     = "amcdb.tclass";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_tcurs      = "amcdb.tcurs";
+const char *dmmeta_Ssimfile_ssimfile_amcdb_tfunc      = "amcdb.tfunc";
+const char *dmmeta_Ssimfile_ssimfile_amsdb_proctype   = "amsdb.proctype";
+const char *dmmeta_Ssimfile_ssimfile_amsdb_shmtype    = "amsdb.shmtype";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_amctest    = "atfdb.amctest";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_cijob      = "atfdb.cijob";
 
 const char *dmmeta_Ssimfile_ssimfile_atfdb_cipackage   = "atfdb.cipackage";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_citest      = "atfdb.citest";
@@ -241,6 +257,7 @@ const char *dmmeta_Ssimfile_ssimfile_atfdb_test_gsymbol_strptr   = "atfdb.test_g
 const char *dmmeta_Ssimfile_ssimfile_atfdb_tfilt                 = "atfdb.tfilt";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_tmsg                  = "atfdb.tmsg";
 const char *dmmeta_Ssimfile_ssimfile_atfdb_unittest              = "atfdb.unittest";
+const char *dmmeta_Ssimfile_ssimfile_atfdb_var                   = "atfdb.var";
 const char *dmmeta_Ssimfile_ssimfile_dev_arch                    = "dev.arch";
 const char *dmmeta_Ssimfile_ssimfile_dev_badline                 = "dev.badline";
 const char *dmmeta_Ssimfile_ssimfile_dev_builddir                = "dev.builddir";
@@ -262,14 +279,18 @@ const char *dmmeta_Ssimfile_ssimfile_dev_linelim                 = "dev.linelim"
 const char *dmmeta_Ssimfile_ssimfile_dev_mdmark                  = "dev.mdmark";
 const char *dmmeta_Ssimfile_ssimfile_dev_mdsection               = "dev.mdsection";
 const char *dmmeta_Ssimfile_ssimfile_dev_msgfile                 = "dev.msgfile";
-const char *dmmeta_Ssimfile_ssimfile_dev_noindent                = "dev.noindent";
-const char *dmmeta_Ssimfile_ssimfile_dev_opt_type                = "dev.opt_type";
-const char *dmmeta_Ssimfile_ssimfile_dev_package                 = "dev.package";
-const char *dmmeta_Ssimfile_ssimfile_dev_pkgdep                  = "dev.pkgdep";
-const char *dmmeta_Ssimfile_ssimfile_dev_pkgkey                  = "dev.pkgkey";
-const char *dmmeta_Ssimfile_ssimfile_dev_readme                  = "dev.readme";
-const char *dmmeta_Ssimfile_ssimfile_dev_readmesort              = "dev.readmesort";
-const char *dmmeta_Ssimfile_ssimfile_dev_sandbox                 = "dev.sandbox";
+const char *dmmeta_Ssimfile_ssimfile_dev_netproto                = "dev.netproto";
+
+const char *dmmeta_Ssimfile_ssimfile_dev_noindent         = "dev.noindent";
+const char *dmmeta_Ssimfile_ssimfile_dev_opt_type         = "dev.opt_type";
+const char *dmmeta_Ssimfile_ssimfile_dev_package          = "dev.package";
+const char *dmmeta_Ssimfile_ssimfile_dev_pkgdep           = "dev.pkgdep";
+const char *dmmeta_Ssimfile_ssimfile_dev_pkgkey           = "dev.pkgkey";
+const char *dmmeta_Ssimfile_ssimfile_dev_prototransport   = "dev.prototransport";
+const char *dmmeta_Ssimfile_ssimfile_dev_readmefile       = "dev.readmefile";
+const char *dmmeta_Ssimfile_ssimfile_dev_readmesort       = "dev.readmesort";
+const char *dmmeta_Ssimfile_ssimfile_dev_rpm              = "dev.rpm";
+const char *dmmeta_Ssimfile_ssimfile_dev_sandbox          = "dev.sandbox";
 
 const char *dmmeta_Ssimfile_ssimfile_dev_sbpath            = "dev.sbpath";
 const char *dmmeta_Ssimfile_ssimfile_dev_scriptfile        = "dev.scriptfile";
@@ -284,6 +305,7 @@ const char *dmmeta_Ssimfile_ssimfile_dev_targsyslib        = "dev.targsyslib";
 const char *dmmeta_Ssimfile_ssimfile_dev_tgtcov            = "dev.tgtcov";
 const char *dmmeta_Ssimfile_ssimfile_dev_timefmt           = "dev.timefmt";
 const char *dmmeta_Ssimfile_ssimfile_dev_tool_opt          = "dev.tool_opt";
+const char *dmmeta_Ssimfile_ssimfile_dev_transport         = "dev.transport";
 const char *dmmeta_Ssimfile_ssimfile_dev_uname             = "dev.uname";
 const char *dmmeta_Ssimfile_ssimfile_dev_unstablefld       = "dev.unstablefld";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_anonfld        = "dmmeta.anonfld";
@@ -300,6 +322,7 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_cfmt           = "dmmeta.cfmt";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_cget           = "dmmeta.cget";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_charset        = "dmmeta.charset";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_chash          = "dmmeta.chash";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ckafka         = "dmmeta.ckafka";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_cppfunc        = "dmmeta.cppfunc";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_cppkeyword     = "dmmeta.cppkeyword";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_cpptype        = "dmmeta.cpptype";
@@ -326,11 +349,12 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbitset     = "dmmeta.fbitset";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbuf        = "dmmeta.fbuf";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbufdir     = "dmmeta.fbufdir";
 
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbuftype   = "dmmeta.fbuftype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcast      = "dmmeta.fcast";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcleanup   = "dmmeta.fcleanup";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcmap      = "dmmeta.fcmap";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcmdline   = "dmmeta.fcmdline";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbufiotype   = "dmmeta.fbufiotype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fbuftype     = "dmmeta.fbuftype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcast        = "dmmeta.fcast";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcleanup     = "dmmeta.fcleanup";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcmap        = "dmmeta.fcmap";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcmdline     = "dmmeta.fcmdline";
 
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcmp       = "dmmeta.fcmp";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fcompact   = "dmmeta.fcompact";
@@ -340,45 +364,49 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_fdec       = "dmmeta.fdec";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_fdelay     = "dmmeta.fdelay";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_ffast      = "dmmeta.ffast";
 
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fflag         = "dmmeta.fflag";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_field         = "dmmeta.field";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_findrem       = "dmmeta.findrem";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_finput        = "dmmeta.finput";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fldoffset     = "dmmeta.fldoffset";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_floadtuples   = "dmmeta.floadtuples";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fnoremove     = "dmmeta.fnoremove";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_foutput       = "dmmeta.foutput";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fprefix       = "dmmeta.fprefix";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fregx         = "dmmeta.fregx";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fsort         = "dmmeta.fsort";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fstep         = "dmmeta.fstep";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ftrace        = "dmmeta.ftrace";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ftuple        = "dmmeta.ftuple";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_func          = "dmmeta.func";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_funique       = "dmmeta.funique";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fuserinit     = "dmmeta.fuserinit";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_fwddecl       = "dmmeta.fwddecl";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_gconst        = "dmmeta.gconst";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_gstatic       = "dmmeta.gstatic";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_gsymbol       = "dmmeta.gsymbol";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_hashtype      = "dmmeta.hashtype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_hook          = "dmmeta.hook";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_inlary        = "dmmeta.inlary";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_lenfld        = "dmmeta.lenfld";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_listtype      = "dmmeta.listtype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_llist         = "dmmeta.llist";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_logcat        = "dmmeta.logcat";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_main          = "dmmeta.main";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_msgtype       = "dmmeta.msgtype";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nocascdel     = "dmmeta.nocascdel";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nossimfile    = "dmmeta.nossimfile";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_noxref        = "dmmeta.noxref";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_ns            = "dmmeta.ns";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nscpp         = "dmmeta.nscpp";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsdb          = "dmmeta.nsdb";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsfast        = "dmmeta.nsfast";
-const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsinclude     = "dmmeta.nsinclude";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fflag             = "dmmeta.fflag";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_field             = "dmmeta.field";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_findrem           = "dmmeta.findrem";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_finput            = "dmmeta.finput";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fkafka            = "dmmeta.fkafka";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fldoffset         = "dmmeta.fldoffset";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_floadtuples       = "dmmeta.floadtuples";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fnoremove         = "dmmeta.fnoremove";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_foutput           = "dmmeta.foutput";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fprefix           = "dmmeta.fprefix";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fregx             = "dmmeta.fregx";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fsort             = "dmmeta.fsort";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fstep             = "dmmeta.fstep";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ftrace            = "dmmeta.ftrace";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ftuple            = "dmmeta.ftuple";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_func              = "dmmeta.func";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_funique           = "dmmeta.funique";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fuserinit         = "dmmeta.fuserinit";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_fwddecl           = "dmmeta.fwddecl";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_gconst            = "dmmeta.gconst";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_gstatic           = "dmmeta.gstatic";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_gsymbol           = "dmmeta.gsymbol";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_hashtype          = "dmmeta.hashtype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_hook              = "dmmeta.hook";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_inlary            = "dmmeta.inlary";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_jstype            = "dmmeta.jstype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_kafka_type_kind   = "dmmeta.kafka_type_kind";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_lenfld            = "dmmeta.lenfld";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_listtype          = "dmmeta.listtype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_llist             = "dmmeta.llist";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_logcat            = "dmmeta.logcat";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_main              = "dmmeta.main";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_msgtype           = "dmmeta.msgtype";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nocascdel         = "dmmeta.nocascdel";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nossimfile        = "dmmeta.nossimfile";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_noxref            = "dmmeta.noxref";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_ns                = "dmmeta.ns";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nscpp             = "dmmeta.nscpp";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsdb              = "dmmeta.nsdb";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsfast            = "dmmeta.nsfast";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsinclude         = "dmmeta.nsinclude";
 
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsjs      = "dmmeta.nsjs";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nsproto   = "dmmeta.nsproto";
 
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_nstype   = "dmmeta.nstype";
@@ -414,6 +442,7 @@ const char *dmmeta_Ssimfile_ssimfile_dmmeta_thash          = "dmmeta.thash";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_tracefld       = "dmmeta.tracefld";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_tracerec       = "dmmeta.tracerec";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_typefld        = "dmmeta.typefld";
+const char *dmmeta_Ssimfile_ssimfile_dmmeta_userfunc       = "dmmeta.userfunc";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_usertracefld   = "dmmeta.usertracefld";
 const char *dmmeta_Ssimfile_ssimfile_dmmeta_xref           = "dmmeta.xref";
 const char *dmmeta_Ssimfile_ssimfile_fmdb_alarm            = "fmdb.alarm";
@@ -434,8 +463,6 @@ const char *dmmeta_Ssimfile_ssimfile_gclidb_gfld            = "gclidb.gfld";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_githost         = "gclidb.githost";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_gmethod         = "gclidb.gmethod";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_grepo           = "gclidb.grepo";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_grepogitport    = "gclidb.grepogitport";
-const char *dmmeta_Ssimfile_ssimfile_gclidb_grepossh        = "gclidb.grepossh";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_gstate          = "gclidb.gstate";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_gstatet         = "gclidb.gstatet";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_gtbl            = "gclidb.gtbl";
@@ -457,13 +484,26 @@ const char *dmmeta_Ssimfile_ssimfile_gclidb_mrjob           = "gclidb.mrjob";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_mrnote    = "gclidb.mrnote";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_project   = "gclidb.project";
 const char *dmmeta_Ssimfile_ssimfile_gclidb_user      = "gclidb.user";
+const char *dmmeta_Ssimfile_ssimfile_httpdb_content   = "httpdb.content";
+const char *dmmeta_Ssimfile_ssimfile_httpdb_header    = "httpdb.header";
+const char *dmmeta_Ssimfile_ssimfile_httpdb_method    = "httpdb.method";
+const char *dmmeta_Ssimfile_ssimfile_httpdb_status    = "httpdb.status";
+const char *dmmeta_Ssimfile_ssimfile_httpdb_version   = "httpdb.version";
+const char *dmmeta_Ssimfile_ssimfile_sampdb_gitfile   = "sampdb.gitfile";
+const char *dmmeta_Ssimfile_ssimfile_sampdb_targdep   = "sampdb.targdep";
+const char *dmmeta_Ssimfile_ssimfile_sampdb_target    = "sampdb.target";
+const char *dmmeta_Ssimfile_ssimfile_sampdb_targrec   = "sampdb.targrec";
+const char *dmmeta_Ssimfile_ssimfile_sampdb_targsrc   = "sampdb.targsrc";
+const char *dmmeta_Ssimfile_ssimfile_wsdb_status      = "wsdb.status";
 
 // compile-time string constants for dmmeta.Steptype.steptype
-const char *dmmeta_Steptype_steptype_Callback        = "Callback";
-const char *dmmeta_Steptype_steptype_Extern          = "Extern";
-const char *dmmeta_Steptype_steptype_Inline          = "Inline";
-const char *dmmeta_Steptype_steptype_InlineOnce      = "InlineOnce";
-const char *dmmeta_Steptype_steptype_InlineRecur     = "InlineRecur";
+const char *dmmeta_Steptype_steptype_Callback       = "Callback";
+const char *dmmeta_Steptype_steptype_Extern         = "Extern";
+const char *dmmeta_Steptype_steptype_Inline         = "Inline";
+const char *dmmeta_Steptype_steptype_InlineOnce     = "InlineOnce";
+const char *dmmeta_Steptype_steptype_InlineRecur    = "InlineRecur";
+const char *dmmeta_Steptype_steptype_TimeHookOnce   = "TimeHookOnce";
+
 const char *dmmeta_Steptype_steptype_TimeHookRecur   = "TimeHookRecur";
 
 // compile-time string constants for dmmeta.Strfmt.strfmt
@@ -491,13 +531,14 @@ bool dmmeta::Anonfld_ReadFieldMaybe(dmmeta::Anonfld& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -539,17 +580,17 @@ bool dmmeta::Argvtype_ReadFieldMaybe(dmmeta::Argvtype& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_argvtype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.argvtype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -594,13 +635,14 @@ bool dmmeta::Basepool_ReadFieldMaybe(dmmeta::Basepool& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_base: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.base, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -654,29 +696,26 @@ bool dmmeta::Bitfld_ReadFieldMaybe(dmmeta::Bitfld& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_offset: {
             retval = i32_ReadStrptrMaybe(parent.offset, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_width: {
             retval = i32_ReadStrptrMaybe(parent.width, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_srcfield: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.srcfield, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -727,13 +766,14 @@ bool dmmeta::Buftype_ReadFieldMaybe(dmmeta::Buftype& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_pnewtype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.pnewtype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -804,21 +844,20 @@ bool dmmeta::Cafter_ReadFieldMaybe(dmmeta::Cafter& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_cafter: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.cafter, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_after: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -860,13 +899,14 @@ bool dmmeta::Cascdel_ReadFieldMaybe(dmmeta::Cascdel& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -908,29 +948,26 @@ bool dmmeta::Ccmp_ReadFieldMaybe(dmmeta::Ccmp& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_extrn: {
             retval = bool_ReadStrptrMaybe(parent.extrn, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_genop: {
             retval = bool_ReadStrptrMaybe(parent.genop, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_order: {
             retval = bool_ReadStrptrMaybe(parent.order, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_minmax: {
             retval = bool_ReadStrptrMaybe(parent.minmax, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -984,29 +1021,26 @@ bool dmmeta::Cdflt_ReadFieldMaybe(dmmeta::Cdflt& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_dflt: {
             retval = algo::CppExpr_ReadStrptrMaybe(parent.dflt, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_cppdflt: {
             retval = algo::CppExpr_ReadStrptrMaybe(parent.cppdflt, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ssimdflt: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.ssimdflt, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_jsdflt: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.jsdflt, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1060,21 +1094,20 @@ bool dmmeta::Cextern_ReadFieldMaybe(dmmeta::Cextern& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_initmemset: {
             retval = bool_ReadStrptrMaybe(parent.initmemset, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_isstruct: {
             retval = bool_ReadStrptrMaybe(parent.isstruct, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_plaindata: {
             retval = bool_ReadStrptrMaybe(parent.plaindata, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1122,25 +1155,23 @@ bool dmmeta::Cfast_ReadFieldMaybe(dmmeta::Cfast& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_id: {
             retval = u32_ReadStrptrMaybe(parent.id, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_encoding: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.encoding, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_reset: {
             retval = bool_ReadStrptrMaybe(parent.reset, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1220,41 +1251,35 @@ bool dmmeta::Cfmt_ReadFieldMaybe(dmmeta::Cfmt& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_cfmt: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.cfmt, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_strfmt: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_printfmt: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.printfmt, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_read: {
             retval = bool_ReadStrptrMaybe(parent.read, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_print: {
             retval = bool_ReadStrptrMaybe(parent.print, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_sep: {
             retval = algo::Smallstr20_ReadStrptrMaybe(parent.sep, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_genop: {
             retval = bool_ReadStrptrMaybe(parent.genop, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1311,13 +1336,14 @@ bool dmmeta::Cget_ReadFieldMaybe(dmmeta::Cget& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1359,25 +1385,23 @@ bool dmmeta::Charset_ReadFieldMaybe(dmmeta::Charset& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_expr: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.expr, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_charrange: {
             retval = bool_ReadStrptrMaybe(parent.charrange, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_calc: {
             retval = bool_ReadStrptrMaybe(parent.calc, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1428,17 +1452,17 @@ bool dmmeta::Chash_ReadFieldMaybe(dmmeta::Chash& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_hashtype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.hashtype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1475,6 +1499,79 @@ void dmmeta::Chash_Print(dmmeta::Chash& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dmmeta.Ckafka..ReadFieldMaybe
+bool dmmeta::Ckafka_ReadFieldMaybe(dmmeta::Ckafka& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dmmeta::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dmmeta_FieldId_ctype: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
+        } break;
+        case dmmeta_FieldId_kind: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.kind, strval);
+        } break;
+        case dmmeta_FieldId_root: {
+            retval = algo::cstring_ReadStrptrMaybe(parent.root, strval);
+        } break;
+        case dmmeta_FieldId_valid_versions: {
+            retval = algo::Smallstr10_ReadStrptrMaybe(parent.valid_versions, strval);
+        } break;
+        case dmmeta_FieldId_flexible_versions: {
+            retval = algo::Smallstr10_ReadStrptrMaybe(parent.flexible_versions, strval);
+        } break;
+        case dmmeta_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dmmeta.Ckafka..ReadStrptrMaybe
+// Read fields of dmmeta::Ckafka from an ascii string.
+// The format of the string is an ssim Tuple
+bool dmmeta::Ckafka_ReadStrptrMaybe(dmmeta::Ckafka &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dmmeta.ckafka") || algo::StripTypeTag(in_str, "dmmeta.Ckafka");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Ckafka_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dmmeta.Ckafka..Print
+// print string representation of ROW to string STR
+// cfmt:dmmeta.Ckafka.String  printfmt:Tuple
+void dmmeta::Ckafka_Print(dmmeta::Ckafka& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dmmeta.ckafka";
+
+    algo::Smallstr100_Print(row.ctype, temp);
+    PrintAttrSpaceReset(str,"ctype", temp);
+
+    algo::Smallstr50_Print(row.kind, temp);
+    PrintAttrSpaceReset(str,"kind", temp);
+
+    algo::cstring_Print(row.root, temp);
+    PrintAttrSpaceReset(str,"root", temp);
+
+    algo::Smallstr10_Print(row.valid_versions, temp);
+    PrintAttrSpaceReset(str,"valid_versions", temp);
+
+    algo::Smallstr10_Print(row.flexible_versions, temp);
+    PrintAttrSpaceReset(str,"flexible_versions", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dmmeta.Cppfunc..ReadFieldMaybe
 bool dmmeta::Cppfunc_ReadFieldMaybe(dmmeta::Cppfunc& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -1483,21 +1580,20 @@ bool dmmeta::Cppfunc_ReadFieldMaybe(dmmeta::Cppfunc& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_expr: {
             retval = algo::CppExpr_ReadStrptrMaybe(parent.expr, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_print: {
             retval = bool_ReadStrptrMaybe(parent.print, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_set: {
             retval = bool_ReadStrptrMaybe(parent.set, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1545,9 +1641,11 @@ bool dmmeta::Cppkeyword_ReadFieldMaybe(dmmeta::Cppkeyword& parent, algo::strptr 
     switch(field_id) {
         case dmmeta_FieldId_cppkeyword: {
             retval = algo::Smallstr20_ReadStrptrMaybe(parent.cppkeyword, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1586,21 +1684,20 @@ bool dmmeta::Cpptype_ReadFieldMaybe(dmmeta::Cpptype& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctor: {
             retval = bool_ReadStrptrMaybe(parent.ctor, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_dtor: {
             retval = bool_ReadStrptrMaybe(parent.dtor, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_cheap_copy: {
             retval = bool_ReadStrptrMaybe(parent.cheap_copy, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1648,21 +1745,20 @@ bool dmmeta::Csize_ReadFieldMaybe(dmmeta::Csize& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_size: {
             retval = u32_ReadStrptrMaybe(parent.size, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_alignment: {
             retval = u32_ReadStrptrMaybe(parent.alignment, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1710,17 +1806,17 @@ bool dmmeta::Cstr_ReadFieldMaybe(dmmeta::Cstr& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_strequiv: {
             retval = bool_ReadStrptrMaybe(parent.strequiv, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1794,21 +1890,20 @@ bool dmmeta::Ctype_ReadFieldMaybe(dmmeta::Ctype& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1850,25 +1945,23 @@ bool dmmeta::Ctypelen_ReadFieldMaybe(dmmeta::Ctypelen& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_len: {
             retval = u32_ReadStrptrMaybe(parent.len, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_alignment: {
             retval = i32_ReadStrptrMaybe(parent.alignment, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_padbytes: {
             retval = i32_ReadStrptrMaybe(parent.padbytes, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_plaindata: {
             retval = bool_ReadStrptrMaybe(parent.plaindata, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1948,45 +2041,44 @@ bool dmmeta::Dispatch_ReadFieldMaybe(dmmeta::Dispatch& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_dispatch: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.dispatch, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_unk: {
             retval = bool_ReadStrptrMaybe(parent.unk, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_read: {
             retval = bool_ReadStrptrMaybe(parent.read, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_print: {
             retval = bool_ReadStrptrMaybe(parent.print, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_haslen: {
             retval = bool_ReadStrptrMaybe(parent.haslen, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_call: {
             retval = bool_ReadStrptrMaybe(parent.call, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_strict: {
             retval = bool_ReadStrptrMaybe(parent.strict, strval);
-            break;
-        }
+        } break;
+        case dmmeta_FieldId_dyn: {
+            retval = bool_ReadStrptrMaybe(parent.dyn, strval);
+        } break;
+        case dmmeta_FieldId_kafka: {
+            retval = bool_ReadStrptrMaybe(parent.kafka, strval);
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2015,6 +2107,8 @@ void dmmeta::Dispatch_Init(dmmeta::Dispatch& parent) {
     parent.haslen = bool(false);
     parent.call = bool(false);
     parent.strict = bool(false);
+    parent.dyn = bool(false);
+    parent.kafka = bool(false);
 }
 
 // --- dmmeta.Dispatch..Print
@@ -2044,6 +2138,12 @@ void dmmeta::Dispatch_Print(dmmeta::Dispatch& row, algo::cstring& str) {
 
     bool_Print(row.strict, temp);
     PrintAttrSpaceReset(str,"strict", temp);
+
+    bool_Print(row.dyn, temp);
+    PrintAttrSpaceReset(str,"dyn", temp);
+
+    bool_Print(row.kafka, temp);
+    PrintAttrSpaceReset(str,"kafka", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -2086,21 +2186,20 @@ bool dmmeta::DispatchMsg_ReadFieldMaybe(dmmeta::DispatchMsg& parent, algo::strpt
     switch(field_id) {
         case dmmeta_FieldId_dispatch_msg: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.dispatch_msg, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_dispatch: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2142,17 +2241,17 @@ bool dmmeta::Dispctx_ReadFieldMaybe(dmmeta::Dispctx& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_dispatch: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.dispatch, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2197,17 +2296,17 @@ bool dmmeta::Dispfilter_ReadFieldMaybe(dmmeta::Dispfilter& parent, algo::strptr 
     switch(field_id) {
         case dmmeta_FieldId_dispatch: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.dispatch, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_match_all: {
             retval = bool_ReadStrptrMaybe(parent.match_all, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2281,21 +2380,20 @@ bool dmmeta::Dispsig_ReadFieldMaybe(dmmeta::Dispsig& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_dispsig: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.dispsig, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_signature: {
             retval = algo::Sha1sig_ReadStrptrMaybe(parent.signature, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2337,13 +2435,14 @@ bool dmmeta::Dispsigcheck_ReadFieldMaybe(dmmeta::Dispsigcheck& parent, algo::str
     switch(field_id) {
         case dmmeta_FieldId_dispsig: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.dispsig, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_signature: {
             retval = algo::Sha1sig_ReadStrptrMaybe(parent.signature, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2385,17 +2484,17 @@ bool dmmeta::Disptrace_ReadFieldMaybe(dmmeta::Disptrace& parent, algo::strptr fi
     switch(field_id) {
         case dmmeta_FieldId_dispatch: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.dispatch, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_cycle: {
             retval = bool_ReadStrptrMaybe(parent.cycle, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2440,17 +2539,17 @@ bool dmmeta::Falias_ReadFieldMaybe(dmmeta::Falias& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_srcfield: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.srcfield, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2495,13 +2594,14 @@ bool dmmeta::Fastenc_ReadFieldMaybe(dmmeta::Fastenc& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_fastenc: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.fastenc, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2645,13 +2745,14 @@ bool dmmeta::Fastinstr_ReadFieldMaybe(dmmeta::Fastinstr& parent, algo::strptr fi
     switch(field_id) {
         case dmmeta_FieldId_fastinstr: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.fastinstr, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2760,13 +2861,14 @@ bool dmmeta::Fastop_ReadFieldMaybe(dmmeta::Fastop& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_fastop: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.fastop, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2902,17 +3004,17 @@ bool dmmeta::Fbase_ReadFieldMaybe(dmmeta::Fbase& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_stripcomment: {
             retval = bool_ReadStrptrMaybe(parent.stripcomment, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -2957,13 +3059,14 @@ bool dmmeta::Fbigend_ReadFieldMaybe(dmmeta::Fbigend& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3005,13 +3108,14 @@ bool dmmeta::Fbitset_ReadFieldMaybe(dmmeta::Fbitset& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3065,33 +3169,32 @@ bool dmmeta::Fbuf_ReadFieldMaybe(dmmeta::Fbuf& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_fbufdir: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_max: {
             retval = u32_ReadStrptrMaybe(parent.max, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_fbuftype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.fbuftype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_insready: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.insready, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_inseof: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.inseof, strval);
-            break;
-        }
+        } break;
+        case dmmeta_FieldId_iotype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.iotype, strval);
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3133,6 +3236,9 @@ void dmmeta::Fbuf_Print(dmmeta::Fbuf& row, algo::cstring& str) {
     algo::Smallstr100_Print(row.inseof, temp);
     PrintAttrSpaceReset(str,"inseof", temp);
 
+    algo::Smallstr50_Print(row.iotype, temp);
+    PrintAttrSpaceReset(str,"iotype", temp);
+
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 }
@@ -3145,17 +3251,17 @@ bool dmmeta::Fbufdir_ReadFieldMaybe(dmmeta::Fbufdir& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_fbufdir: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.fbufdir, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_read: {
             retval = bool_ReadStrptrMaybe(parent.read, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3192,6 +3298,55 @@ void dmmeta::Fbufdir_Print(dmmeta::Fbufdir& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dmmeta.Fbufiotype..ReadFieldMaybe
+bool dmmeta::Fbufiotype_ReadFieldMaybe(dmmeta::Fbufiotype& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dmmeta::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dmmeta_FieldId_fbufiotype: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.fbufiotype, strval);
+        } break;
+        case dmmeta_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dmmeta.Fbufiotype..ReadStrptrMaybe
+// Read fields of dmmeta::Fbufiotype from an ascii string.
+// The format of the string is an ssim Tuple
+bool dmmeta::Fbufiotype_ReadStrptrMaybe(dmmeta::Fbufiotype &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dmmeta.fbufiotype") || algo::StripTypeTag(in_str, "dmmeta.Fbufiotype");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Fbufiotype_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dmmeta.Fbufiotype..Print
+// print string representation of ROW to string STR
+// cfmt:dmmeta.Fbufiotype.String  printfmt:Tuple
+void dmmeta::Fbufiotype_Print(dmmeta::Fbufiotype& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dmmeta.fbufiotype";
+
+    algo::Smallstr50_Print(row.fbufiotype, temp);
+    PrintAttrSpaceReset(str,"fbufiotype", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dmmeta.Fbuftype..ReadFieldMaybe
 bool dmmeta::Fbuftype_ReadFieldMaybe(dmmeta::Fbuftype& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -3200,17 +3355,17 @@ bool dmmeta::Fbuftype_ReadFieldMaybe(dmmeta::Fbuftype& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_fbuftype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.fbuftype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_skipbytes: {
             retval = bool_ReadStrptrMaybe(parent.skipbytes, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3255,17 +3410,17 @@ bool dmmeta::Fcast_ReadFieldMaybe(dmmeta::Fcast& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_expr: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.expr, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3310,13 +3465,14 @@ bool dmmeta::Fcleanup_ReadFieldMaybe(dmmeta::Fcleanup& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3411,33 +3567,29 @@ bool dmmeta::Fcmap_ReadFieldMaybe(dmmeta::Fcmap& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_fcmap: {
             retval = algo::Smallstr250_ReadStrptrMaybe(parent.fcmap, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_leftField: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_leftVal: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_rightVal: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_rightField: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_bidir: {
             retval = bool_ReadStrptrMaybe(parent.bidir, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3494,25 +3646,23 @@ bool dmmeta::Fcmdline_ReadFieldMaybe(dmmeta::Fcmdline& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_read: {
             retval = bool_ReadStrptrMaybe(parent.read, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_basecmdline: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.basecmdline, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3560,25 +3710,23 @@ bool dmmeta::Fcmp_ReadFieldMaybe(dmmeta::Fcmp& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_versionsort: {
             retval = bool_ReadStrptrMaybe(parent.versionsort, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_casesens: {
             retval = bool_ReadStrptrMaybe(parent.casesens, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_extrn: {
             retval = bool_ReadStrptrMaybe(parent.extrn, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3629,13 +3777,14 @@ bool dmmeta::Fcompact_ReadFieldMaybe(dmmeta::Fcompact& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3706,25 +3855,23 @@ bool dmmeta::Fconst_ReadFieldMaybe(dmmeta::Fconst& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_fconst: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.fconst, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_field: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_value: {
             retval = algo::CppExpr_ReadStrptrMaybe(parent.value, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3810,25 +3957,23 @@ bool dmmeta::Fcurs_ReadFieldMaybe(dmmeta::Fcurs& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_fcurs: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.fcurs, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_field: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_curstype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3870,21 +4015,20 @@ bool dmmeta::Fdec_ReadFieldMaybe(dmmeta::Fdec& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_nplace: {
             retval = i32_ReadStrptrMaybe(parent.nplace, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_fixedfmt: {
             retval = bool_ReadStrptrMaybe(parent.fixedfmt, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -3932,21 +4076,20 @@ bool dmmeta::Fdelay_ReadFieldMaybe(dmmeta::Fdelay& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_fstep: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.fstep, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_delay: {
             retval = algo::I64Dec9_ReadStrptrMaybe(parent.delay, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_scale: {
             retval = bool_ReadStrptrMaybe(parent.scale, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -4035,53 +4178,44 @@ bool dmmeta::Ffast_ReadFieldMaybe(dmmeta::Ffast& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_ffast: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ffast, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_field: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_fastinstr: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.name, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_id: {
             retval = u32_ReadStrptrMaybe(parent.id, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_pos: {
             retval = u32_ReadStrptrMaybe(parent.pos, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_optional: {
             retval = bool_ReadStrptrMaybe(parent.optional, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_encoding: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.encoding, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_op: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.op, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_value: {
             retval = algo::CppExpr_ReadStrptrMaybe(parent.value, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -4152,21 +4286,20 @@ bool dmmeta::Fflag_ReadFieldMaybe(dmmeta::Fflag& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_cumulative: {
             retval = bool_ReadStrptrMaybe(parent.cumulative, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_emptyval: {
             retval = algo::cstring_ReadStrptrMaybe(parent.emptyval, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -4255,37 +4388,32 @@ bool dmmeta::Field_ReadFieldMaybe(dmmeta::Field& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_arg: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.arg, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_reftype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.reftype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_dflt: {
             retval = algo::CppExpr_ReadStrptrMaybe(parent.dflt, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -4370,6 +4498,10 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_charrange      : ret = "charrange";  break;
         case dmmeta_FieldId_calc           : ret = "calc";  break;
         case dmmeta_FieldId_hashtype       : ret = "hashtype";  break;
+        case dmmeta_FieldId_kind           : ret = "kind";  break;
+        case dmmeta_FieldId_root           : ret = "root";  break;
+        case dmmeta_FieldId_valid_versions : ret = "valid_versions";  break;
+        case dmmeta_FieldId_flexible_versions: ret = "flexible_versions";  break;
         case dmmeta_FieldId_set            : ret = "set";  break;
         case dmmeta_FieldId_cppkeyword     : ret = "cppkeyword";  break;
         case dmmeta_FieldId_ctor           : ret = "ctor";  break;
@@ -4386,6 +4518,8 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_haslen         : ret = "haslen";  break;
         case dmmeta_FieldId_call           : ret = "call";  break;
         case dmmeta_FieldId_strict         : ret = "strict";  break;
+        case dmmeta_FieldId_dyn            : ret = "dyn";  break;
+        case dmmeta_FieldId_kafka          : ret = "kafka";  break;
         case dmmeta_FieldId_dispatch_msg   : ret = "dispatch_msg";  break;
         case dmmeta_FieldId_match_all      : ret = "match_all";  break;
         case dmmeta_FieldId_dispsig        : ret = "dispsig";  break;
@@ -4400,6 +4534,8 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_fbuftype       : ret = "fbuftype";  break;
         case dmmeta_FieldId_insready       : ret = "insready";  break;
         case dmmeta_FieldId_inseof         : ret = "inseof";  break;
+        case dmmeta_FieldId_iotype         : ret = "iotype";  break;
+        case dmmeta_FieldId_fbufiotype     : ret = "fbufiotype";  break;
         case dmmeta_FieldId_skipbytes      : ret = "skipbytes";  break;
         case dmmeta_FieldId_fcmap          : ret = "fcmap";  break;
         case dmmeta_FieldId_leftField      : ret = "leftField";  break;
@@ -4428,6 +4564,10 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_arg            : ret = "arg";  break;
         case dmmeta_FieldId_reftype        : ret = "reftype";  break;
         case dmmeta_FieldId_update         : ret = "update";  break;
+        case dmmeta_FieldId_versions       : ret = "versions";  break;
+        case dmmeta_FieldId_nullable_versions: ret = "nullable_versions";  break;
+        case dmmeta_FieldId_tagged_versions: ret = "tagged_versions";  break;
+        case dmmeta_FieldId_tag            : ret = "tag";  break;
         case dmmeta_FieldId_fprefix        : ret = "fprefix";  break;
         case dmmeta_FieldId_partial        : ret = "partial";  break;
         case dmmeta_FieldId_regxtype       : ret = "regxtype";  break;
@@ -4445,6 +4585,7 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_inc            : ret = "inc";  break;
         case dmmeta_FieldId_symboltype     : ret = "symboltype";  break;
         case dmmeta_FieldId_min            : ret = "min";  break;
+        case dmmeta_FieldId_kafka_type_kind: ret = "kafka_type_kind";  break;
         case dmmeta_FieldId_extra          : ret = "extra";  break;
         case dmmeta_FieldId_listtype       : ret = "listtype";  break;
         case dmmeta_FieldId_circular       : ret = "circular";  break;
@@ -4455,6 +4596,9 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_logcat         : ret = "logcat";  break;
         case dmmeta_FieldId_enabled        : ret = "enabled";  break;
         case dmmeta_FieldId_builtin        : ret = "builtin";  break;
+        case dmmeta_FieldId_stdout         : ret = "stdout";  break;
+        case dmmeta_FieldId_maxmsg         : ret = "maxmsg";  break;
+        case dmmeta_FieldId_window         : ret = "window";  break;
         case dmmeta_FieldId_ismodule       : ret = "ismodule";  break;
         case dmmeta_FieldId_type           : ret = "type";  break;
         case dmmeta_FieldId_xref           : ret = "xref";  break;
@@ -4462,6 +4606,8 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_license        : ret = "license";  break;
         case dmmeta_FieldId_nsinclude      : ret = "nsinclude";  break;
         case dmmeta_FieldId_sys            : ret = "sys";  break;
+        case dmmeta_FieldId_typescript     : ret = "typescript";  break;
+        case dmmeta_FieldId_gensel         : ret = "gensel";  break;
         case dmmeta_FieldId_version        : ret = "version";  break;
         case dmmeta_FieldId_genthrow       : ret = "genthrow";  break;
         case dmmeta_FieldId_correct_getorcreate: ret = "correct_getorcreate";  break;
@@ -4476,6 +4622,7 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_pnew           : ret = "pnew";  break;
         case dmmeta_FieldId_buftype        : ret = "buftype";  break;
         case dmmeta_FieldId_unique         : ret = "unique";  break;
+        case dmmeta_FieldId_heaplike       : ret = "heaplike";  break;
         case dmmeta_FieldId_isval          : ret = "isval";  break;
         case dmmeta_FieldId_cascins        : ret = "cascins";  break;
         case dmmeta_FieldId_usebasepool    : ret = "usebasepool";  break;
@@ -4505,6 +4652,9 @@ const char* dmmeta::value_ToCstr(const dmmeta::FieldId& parent) {
         case dmmeta_FieldId_hashfld        : ret = "hashfld";  break;
         case dmmeta_FieldId_tracefld       : ret = "tracefld";  break;
         case dmmeta_FieldId_tracerec       : ret = "tracerec";  break;
+        case dmmeta_FieldId_userfunc       : ret = "userfunc";  break;
+        case dmmeta_FieldId_acrkey         : ret = "acrkey";  break;
+        case dmmeta_FieldId_cppname        : ret = "cppname";  break;
         case dmmeta_FieldId_inscond        : ret = "inscond";  break;
         case dmmeta_FieldId_via            : ret = "via";  break;
         case dmmeta_FieldId_viafld         : ret = "viafld";  break;
@@ -4557,6 +4707,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 case LE_STR3('d','e','l'): {
                     value_SetEnum(parent,dmmeta_FieldId_del); ret = true; break;
                 }
+                case LE_STR3('d','y','n'): {
+                    value_SetEnum(parent,dmmeta_FieldId_dyn); ret = true; break;
+                }
                 case LE_STR3('i','n','c'): {
                     value_SetEnum(parent,dmmeta_FieldId_inc); ret = true; break;
                 }
@@ -4583,6 +4736,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR3('s','y','s'): {
                     value_SetEnum(parent,dmmeta_FieldId_sys); ret = true; break;
+                }
+                case LE_STR3('t','a','g'): {
+                    value_SetEnum(parent,dmmeta_FieldId_tag); ret = true; break;
                 }
                 case LE_STR3('u','n','k'): {
                     value_SetEnum(parent,dmmeta_FieldId_unk); ret = true; break;
@@ -4625,6 +4781,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 case LE_STR4('i','n','s','t'): {
                     value_SetEnum(parent,dmmeta_FieldId_inst); ret = true; break;
                 }
+                case LE_STR4('k','i','n','d'): {
+                    value_SetEnum(parent,dmmeta_FieldId_kind); ret = true; break;
+                }
                 case LE_STR4('n','a','m','e'): {
                     value_SetEnum(parent,dmmeta_FieldId_name); ret = true; break;
                 }
@@ -4639,6 +4798,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR4('r','e','a','d'): {
                     value_SetEnum(parent,dmmeta_FieldId_read); ret = true; break;
+                }
+                case LE_STR4('r','o','o','t'): {
+                    value_SetEnum(parent,dmmeta_FieldId_root); ret = true; break;
                 }
                 case LE_STR4('s','i','z','e'): {
                     value_SetEnum(parent,dmmeta_FieldId_size); ret = true; break;
@@ -4702,6 +4864,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('i','s','v','a','l'): {
                     value_SetEnum(parent,dmmeta_FieldId_isval); ret = true; break;
                 }
+                case LE_STR5('k','a','f','k','a'): {
+                    value_SetEnum(parent,dmmeta_FieldId_kafka); ret = true; break;
+                }
                 case LE_STR5('o','r','d','e','r'): {
                     value_SetEnum(parent,dmmeta_FieldId_order); ret = true; break;
                 }
@@ -4725,6 +4890,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
         }
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('a','c','r','k','e','y'): {
+                    value_SetEnum(parent,dmmeta_FieldId_acrkey); ret = true; break;
+                }
                 case LE_STR6('c','a','f','t','e','r'): {
                     value_SetEnum(parent,dmmeta_FieldId_cafter); ret = true; break;
                 }
@@ -4734,11 +4902,17 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('f','c','o','n','s','t'): {
                     value_SetEnum(parent,dmmeta_FieldId_fconst); ret = true; break;
                 }
+                case LE_STR6('g','e','n','s','e','l'): {
+                    value_SetEnum(parent,dmmeta_FieldId_gensel); ret = true; break;
+                }
                 case LE_STR6('h','a','s','l','e','n'): {
                     value_SetEnum(parent,dmmeta_FieldId_haslen); ret = true; break;
                 }
                 case LE_STR6('i','n','s','e','o','f'): {
                     value_SetEnum(parent,dmmeta_FieldId_inseof); ret = true; break;
+                }
+                case LE_STR6('i','o','t','y','p','e'): {
+                    value_SetEnum(parent,dmmeta_FieldId_iotype); ret = true; break;
                 }
                 case LE_STR6('i','s','x','r','e','f'): {
                     value_SetEnum(parent,dmmeta_FieldId_isxref); ret = true; break;
@@ -4754,6 +4928,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('l','o','g','c','a','t'): {
                     value_SetEnum(parent,dmmeta_FieldId_logcat); ret = true; break;
+                }
+                case LE_STR6('m','a','x','m','s','g'): {
+                    value_SetEnum(parent,dmmeta_FieldId_maxmsg); ret = true; break;
                 }
                 case LE_STR6('m','a','x','w','i','d'): {
                     value_SetEnum(parent,dmmeta_FieldId_maxwid); ret = true; break;
@@ -4776,6 +4953,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 case LE_STR6('s','s','i','m','n','s'): {
                     value_SetEnum(parent,dmmeta_FieldId_ssimns); ret = true; break;
                 }
+                case LE_STR6('s','t','d','o','u','t'): {
+                    value_SetEnum(parent,dmmeta_FieldId_stdout); ret = true; break;
+                }
                 case LE_STR6('s','t','r','f','m','t'): {
                     value_SetEnum(parent,dmmeta_FieldId_strfmt); ret = true; break;
                 }
@@ -4793,6 +4973,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('v','i','a','f','l','d'): {
                     value_SetEnum(parent,dmmeta_FieldId_viafld); ret = true; break;
+                }
+                case LE_STR6('w','i','n','d','o','w'): {
+                    value_SetEnum(parent,dmmeta_FieldId_window); ret = true; break;
                 }
             }
             break;
@@ -4819,6 +5002,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR7('c','p','p','d','f','l','t'): {
                     value_SetEnum(parent,dmmeta_FieldId_cppdflt); ret = true; break;
+                }
+                case LE_STR7('c','p','p','n','a','m','e'): {
+                    value_SetEnum(parent,dmmeta_FieldId_cppname); ret = true; break;
                 }
                 case LE_STR7('d','i','s','p','s','i','g'): {
                     value_SetEnum(parent,dmmeta_FieldId_dispsig); ret = true; break;
@@ -4930,6 +5116,9 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 case LE_STR8('h','a','v','e','t','a','i','l'): {
                     value_SetEnum(parent,dmmeta_FieldId_havetail); ret = true; break;
                 }
+                case LE_STR8('h','e','a','p','l','i','k','e'): {
+                    value_SetEnum(parent,dmmeta_FieldId_heaplike); ret = true; break;
+                }
                 case LE_STR8('i','n','s','r','e','a','d','y'): {
                     value_SetEnum(parent,dmmeta_FieldId_insready); ret = true; break;
                 }
@@ -4992,6 +5181,12 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('t','r','a','c','e','r','e','c'): {
                     value_SetEnum(parent,dmmeta_FieldId_tracerec); ret = true; break;
+                }
+                case LE_STR8('u','s','e','r','f','u','n','c'): {
+                    value_SetEnum(parent,dmmeta_FieldId_userfunc); ret = true; break;
+                }
+                case LE_STR8('v','e','r','s','i','o','n','s'): {
+                    value_SetEnum(parent,dmmeta_FieldId_versions); ret = true; break;
                 }
                 case LE_STR8('w','a','n','t','e','n','u','m'): {
                     value_SetEnum(parent,dmmeta_FieldId_wantenum); ret = true; break;
@@ -5067,6 +5262,10 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"ve",2)==0) { value_SetEnum(parent,dmmeta_FieldId_cumulative); ret = true; break; }
                     break;
                 }
+                case LE_STR8('f','b','u','f','i','o','t','y'): {
+                    if (memcmp(rhs.elems+8,"pe",2)==0) { value_SetEnum(parent,dmmeta_FieldId_fbufiotype); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('i','n','i','t','m','e','m','s'): {
                     if (memcmp(rhs.elems+8,"et",2)==0) { value_SetEnum(parent,dmmeta_FieldId_initmemset); ret = true; break; }
                     break;
@@ -5077,6 +5276,10 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR8('s','y','m','b','o','l','t','y'): {
                     if (memcmp(rhs.elems+8,"pe",2)==0) { value_SetEnum(parent,dmmeta_FieldId_symboltype); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('t','y','p','e','s','c','r','i'): {
+                    if (memcmp(rhs.elems+8,"pt",2)==0) { value_SetEnum(parent,dmmeta_FieldId_typescript); ret = true; break; }
                     break;
                 }
             }
@@ -5134,13 +5337,38 @@ bool dmmeta::value_SetStrptrMaybe(dmmeta::FieldId& parent, algo::strptr rhs) {
                     if (memcmp(rhs.elems+8,"imfile",6)==0) { value_SetEnum(parent,dmmeta_FieldId_child_ssimfile); ret = true; break; }
                     break;
                 }
+                case LE_STR8('v','a','l','i','d','_','v','e'): {
+                    if (memcmp(rhs.elems+8,"rsions",6)==0) { value_SetEnum(parent,dmmeta_FieldId_valid_versions); ret = true; break; }
+                    break;
+                }
             }
             break;
         }
         case 15: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('k','a','f','k','a','_','t','y'): {
+                    if (memcmp(rhs.elems+8,"pe_kind",7)==0) { value_SetEnum(parent,dmmeta_FieldId_kafka_type_kind); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('p','m','a','s','k','f','l','d'): {
                     if (memcmp(rhs.elems+8,"_member",7)==0) { value_SetEnum(parent,dmmeta_FieldId_pmaskfld_member); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('t','a','g','g','e','d','_','v'): {
+                    if (memcmp(rhs.elems+8,"ersions",7)==0) { value_SetEnum(parent,dmmeta_FieldId_tagged_versions); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+        case 17: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('f','l','e','x','i','b','l','e'): {
+                    if (memcmp(rhs.elems+8,"_versions",9)==0) { value_SetEnum(parent,dmmeta_FieldId_flexible_versions); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('n','u','l','l','a','b','l','e'): {
+                    if (memcmp(rhs.elems+8,"_versions",9)==0) { value_SetEnum(parent,dmmeta_FieldId_nullable_versions); ret = true; break; }
                     break;
                 }
             }
@@ -5201,13 +5429,14 @@ bool dmmeta::Findrem_ReadFieldMaybe(dmmeta::Findrem& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5261,29 +5490,26 @@ bool dmmeta::Finput_ReadFieldMaybe(dmmeta::Finput& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_extrn: {
             retval = bool_ReadStrptrMaybe(parent.extrn, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_update: {
             retval = bool_ReadStrptrMaybe(parent.update, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_strict: {
             retval = bool_ReadStrptrMaybe(parent.strict, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5326,6 +5552,79 @@ void dmmeta::Finput_Print(dmmeta::Finput& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dmmeta.Fkafka..ReadFieldMaybe
+bool dmmeta::Fkafka_ReadFieldMaybe(dmmeta::Fkafka& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dmmeta::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dmmeta_FieldId_field: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
+        } break;
+        case dmmeta_FieldId_versions: {
+            retval = algo::Smallstr10_ReadStrptrMaybe(parent.versions, strval);
+        } break;
+        case dmmeta_FieldId_nullable_versions: {
+            retval = algo::Smallstr10_ReadStrptrMaybe(parent.nullable_versions, strval);
+        } break;
+        case dmmeta_FieldId_tagged_versions: {
+            retval = algo::Smallstr10_ReadStrptrMaybe(parent.tagged_versions, strval);
+        } break;
+        case dmmeta_FieldId_tag: {
+            retval = u64_ReadStrptrMaybe(parent.tag, strval);
+        } break;
+        case dmmeta_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dmmeta.Fkafka..ReadStrptrMaybe
+// Read fields of dmmeta::Fkafka from an ascii string.
+// The format of the string is an ssim Tuple
+bool dmmeta::Fkafka_ReadStrptrMaybe(dmmeta::Fkafka &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dmmeta.fkafka") || algo::StripTypeTag(in_str, "dmmeta.Fkafka");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Fkafka_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dmmeta.Fkafka..Print
+// print string representation of ROW to string STR
+// cfmt:dmmeta.Fkafka.String  printfmt:Tuple
+void dmmeta::Fkafka_Print(dmmeta::Fkafka& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dmmeta.fkafka";
+
+    algo::Smallstr100_Print(row.field, temp);
+    PrintAttrSpaceReset(str,"field", temp);
+
+    algo::Smallstr10_Print(row.versions, temp);
+    PrintAttrSpaceReset(str,"versions", temp);
+
+    algo::Smallstr10_Print(row.nullable_versions, temp);
+    PrintAttrSpaceReset(str,"nullable_versions", temp);
+
+    algo::Smallstr10_Print(row.tagged_versions, temp);
+    PrintAttrSpaceReset(str,"tagged_versions", temp);
+
+    u64_Print(row.tag, temp);
+    PrintAttrSpaceReset(str,"tag", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dmmeta.Fldoffset..ReadFieldMaybe
 bool dmmeta::Fldoffset_ReadFieldMaybe(dmmeta::Fldoffset& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -5334,13 +5633,14 @@ bool dmmeta::Fldoffset_ReadFieldMaybe(dmmeta::Fldoffset& parent, algo::strptr fi
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_offset: {
             retval = i32_ReadStrptrMaybe(parent.offset, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5394,17 +5694,17 @@ bool dmmeta::Floadtuples_ReadFieldMaybe(dmmeta::Floadtuples& parent, algo::strpt
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5446,13 +5746,14 @@ bool dmmeta::Fnoremove_ReadFieldMaybe(dmmeta::Fnoremove& parent, algo::strptr fi
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5506,17 +5807,17 @@ bool dmmeta::Foutput_ReadFieldMaybe(dmmeta::Foutput& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5558,17 +5859,17 @@ bool dmmeta::Fprefix_ReadFieldMaybe(dmmeta::Fprefix& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_fprefix: {
             retval = algo::Smallstr5_ReadStrptrMaybe(parent.fprefix, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_reftype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.reftype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5613,21 +5914,20 @@ bool dmmeta::Fregx_ReadFieldMaybe(dmmeta::Fregx& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_partial: {
             retval = bool_ReadStrptrMaybe(parent.partial, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_regxtype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.regxtype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5675,21 +5975,20 @@ bool dmmeta::Fsort_ReadFieldMaybe(dmmeta::Fsort& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_sorttype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.sorttype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_sortfld: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.sortfld, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5778,29 +6077,26 @@ bool dmmeta::Fstep_ReadFieldMaybe(dmmeta::Fstep& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_fstep: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.fstep, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_field: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_steptype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.steptype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5845,13 +6141,14 @@ bool dmmeta::Ftrace_ReadFieldMaybe(dmmeta::Ftrace& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5893,13 +6190,14 @@ bool dmmeta::Ftuple_ReadFieldMaybe(dmmeta::Ftuple& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -5994,33 +6292,29 @@ bool dmmeta::Func_ReadFieldMaybe(dmmeta::Func& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_func: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.func, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_field: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_extrn: {
             retval = bool_ReadStrptrMaybe(parent.extrn, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::cstring_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6065,13 +6359,14 @@ bool dmmeta::Funique_ReadFieldMaybe(dmmeta::Funique& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6113,13 +6408,14 @@ bool dmmeta::Fuserinit_ReadFieldMaybe(dmmeta::Fuserinit& parent, algo::strptr fi
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6190,21 +6486,20 @@ bool dmmeta::Fwddecl_ReadFieldMaybe(dmmeta::Fwddecl& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_fwddecl: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.fwddecl, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6258,25 +6553,23 @@ bool dmmeta::Gconst_ReadFieldMaybe(dmmeta::Gconst& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_namefld: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.namefld, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_idfld: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.idfld, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_wantenum: {
             retval = bool_ReadStrptrMaybe(parent.wantenum, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_namefldctyp: {
             retval = false;
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6336,17 +6629,17 @@ bool dmmeta::Gstatic_ReadFieldMaybe(dmmeta::Gstatic& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6417,29 +6710,26 @@ bool dmmeta::Gsymbol_ReadFieldMaybe(dmmeta::Gsymbol& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_gsymbol: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.gsymbol, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ssimfile: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_inc: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.inc, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_symboltype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.symboltype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6487,13 +6777,14 @@ bool dmmeta::Hashtype_ReadFieldMaybe(dmmeta::Hashtype& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_hashtype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.hashtype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6535,13 +6826,11 @@ bool dmmeta::Hook_ReadFieldMaybe(dmmeta::Hook& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
-        case dmmeta_FieldId_comment: {
-            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6570,9 +6859,6 @@ void dmmeta::Hook_Print(dmmeta::Hook& row, algo::cstring& str) {
 
     algo::Smallstr100_Print(row.field, temp);
     PrintAttrSpaceReset(str,"field", temp);
-
-    algo::Comment_Print(row.comment, temp);
-    PrintAttrSpaceReset(str,"comment", temp);
 }
 
 // --- dmmeta.Inlary..ReadFieldMaybe
@@ -6583,21 +6869,20 @@ bool dmmeta::Inlary_ReadFieldMaybe(dmmeta::Inlary& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_min: {
             retval = i32_ReadStrptrMaybe(parent.min, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_max: {
             retval = i32_ReadStrptrMaybe(parent.max, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6637,6 +6922,104 @@ void dmmeta::Inlary_Print(dmmeta::Inlary& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dmmeta.Jstype..ReadFieldMaybe
+bool dmmeta::Jstype_ReadFieldMaybe(dmmeta::Jstype& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dmmeta::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dmmeta_FieldId_ctype: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
+        } break;
+        case dmmeta_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dmmeta.Jstype..ReadStrptrMaybe
+// Read fields of dmmeta::Jstype from an ascii string.
+// The format of the string is an ssim Tuple
+bool dmmeta::Jstype_ReadStrptrMaybe(dmmeta::Jstype &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dmmeta.jstype") || algo::StripTypeTag(in_str, "dmmeta.Jstype");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Jstype_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dmmeta.Jstype..Print
+// print string representation of ROW to string STR
+// cfmt:dmmeta.Jstype.String  printfmt:Tuple
+void dmmeta::Jstype_Print(dmmeta::Jstype& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dmmeta.jstype";
+
+    algo::Smallstr100_Print(row.ctype, temp);
+    PrintAttrSpaceReset(str,"ctype", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- dmmeta.KafkaTypeKind..ReadFieldMaybe
+bool dmmeta::KafkaTypeKind_ReadFieldMaybe(dmmeta::KafkaTypeKind& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dmmeta::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dmmeta_FieldId_kafka_type_kind: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.kafka_type_kind, strval);
+        } break;
+        case dmmeta_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dmmeta.KafkaTypeKind..ReadStrptrMaybe
+// Read fields of dmmeta::KafkaTypeKind from an ascii string.
+// The format of the string is an ssim Tuple
+bool dmmeta::KafkaTypeKind_ReadStrptrMaybe(dmmeta::KafkaTypeKind &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dmmeta.kafka_type_kind") || algo::StripTypeTag(in_str, "dmmeta.KafkaTypeKind");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && KafkaTypeKind_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dmmeta.KafkaTypeKind..Print
+// print string representation of ROW to string STR
+// cfmt:dmmeta.KafkaTypeKind.String  printfmt:Tuple
+void dmmeta::KafkaTypeKind_Print(dmmeta::KafkaTypeKind& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dmmeta.kafka_type_kind";
+
+    algo::Smallstr50_Print(row.kafka_type_kind, temp);
+    PrintAttrSpaceReset(str,"kafka_type_kind", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dmmeta.Lenfld.ctype.Get
 algo::Smallstr100 dmmeta::ctype_Get(dmmeta::Lenfld& parent) {
     algo::Smallstr100 ret(algo::Pathcomp(parent.field, ".RL"));
@@ -6657,17 +7040,17 @@ bool dmmeta::Lenfld_ReadFieldMaybe(dmmeta::Lenfld& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_extra: {
             retval = i32_ReadStrptrMaybe(parent.extra, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6709,25 +7092,23 @@ bool dmmeta::Listtype_ReadFieldMaybe(dmmeta::Listtype& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_listtype: {
             retval = algo::Smallstr5_ReadStrptrMaybe(parent.listtype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_circular: {
             retval = bool_ReadStrptrMaybe(parent.circular, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_haveprev: {
             retval = bool_ReadStrptrMaybe(parent.haveprev, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_instail: {
             retval = bool_ReadStrptrMaybe(parent.instail, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6790,25 +7171,23 @@ bool dmmeta::Llist_ReadFieldMaybe(dmmeta::Llist& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_havetail: {
             retval = bool_ReadStrptrMaybe(parent.havetail, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_havecount: {
             retval = bool_ReadStrptrMaybe(parent.havecount, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_listtype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6856,21 +7235,29 @@ bool dmmeta::Logcat_ReadFieldMaybe(dmmeta::Logcat& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_logcat: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.logcat, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_enabled: {
             retval = bool_ReadStrptrMaybe(parent.enabled, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_builtin: {
             retval = bool_ReadStrptrMaybe(parent.builtin, strval);
-            break;
-        }
+        } break;
+        case dmmeta_FieldId_stdout: {
+            retval = bool_ReadStrptrMaybe(parent.stdout, strval);
+        } break;
+        case dmmeta_FieldId_maxmsg: {
+            retval = i32_ReadStrptrMaybe(parent.maxmsg, strval);
+        } break;
+        case dmmeta_FieldId_window: {
+            retval = i32_ReadStrptrMaybe(parent.window, strval);
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6906,6 +7293,15 @@ void dmmeta::Logcat_Print(dmmeta::Logcat& row, algo::cstring& str) {
     bool_Print(row.builtin, temp);
     PrintAttrSpaceReset(str,"builtin", temp);
 
+    bool_Print(row.stdout, temp);
+    PrintAttrSpaceReset(str,"stdout", temp);
+
+    i32_Print(row.maxmsg, temp);
+    PrintAttrSpaceReset(str,"maxmsg", temp);
+
+    i32_Print(row.window, temp);
+    PrintAttrSpaceReset(str,"window", temp);
+
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
 }
@@ -6918,13 +7314,14 @@ bool dmmeta::Main_ReadFieldMaybe(dmmeta::Main& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_ns: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ismodule: {
             retval = bool_ReadStrptrMaybe(parent.ismodule, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -6966,13 +7363,14 @@ bool dmmeta::Msgtype_ReadFieldMaybe(dmmeta::Msgtype& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_type: {
             retval = algo::CppExpr_ReadStrptrMaybe(parent.type, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7014,13 +7412,14 @@ bool dmmeta::Nocascdel_ReadFieldMaybe(dmmeta::Nocascdel& parent, algo::strptr fi
     switch(field_id) {
         case dmmeta_FieldId_xref: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.xref, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7062,13 +7461,14 @@ bool dmmeta::Nossimfile_ReadFieldMaybe(dmmeta::Nossimfile& parent, algo::strptr 
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7110,13 +7510,14 @@ bool dmmeta::Noxref_ReadFieldMaybe(dmmeta::Noxref& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7158,21 +7559,20 @@ bool dmmeta::Ns_ReadFieldMaybe(dmmeta::Ns& parent, algo::strptr field, algo::str
     switch(field_id) {
         case dmmeta_FieldId_ns: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_nstype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.nstype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_license: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.license, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7220,13 +7620,14 @@ bool dmmeta::Nscpp_ReadFieldMaybe(dmmeta::Nscpp& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_ns: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7268,13 +7669,14 @@ bool dmmeta::Nsdb_ReadFieldMaybe(dmmeta::Nsdb& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_ns: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7316,13 +7718,14 @@ bool dmmeta::Nsfast_ReadFieldMaybe(dmmeta::Nsfast& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_ns: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7393,25 +7796,23 @@ bool dmmeta::Nsinclude_ReadFieldMaybe(dmmeta::Nsinclude& parent, algo::strptr fi
     switch(field_id) {
         case dmmeta_FieldId_nsinclude: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.nsinclude, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_sys: {
             retval = bool_ReadStrptrMaybe(parent.sys, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7448,6 +7849,67 @@ void dmmeta::Nsinclude_Print(dmmeta::Nsinclude& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dmmeta.Nsjs..ReadFieldMaybe
+bool dmmeta::Nsjs_ReadFieldMaybe(dmmeta::Nsjs& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dmmeta::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dmmeta_FieldId_ns: {
+            retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
+        } break;
+        case dmmeta_FieldId_typescript: {
+            retval = bool_ReadStrptrMaybe(parent.typescript, strval);
+        } break;
+        case dmmeta_FieldId_gensel: {
+            retval = bool_ReadStrptrMaybe(parent.gensel, strval);
+        } break;
+        case dmmeta_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dmmeta.Nsjs..ReadStrptrMaybe
+// Read fields of dmmeta::Nsjs from an ascii string.
+// The format of the string is an ssim Tuple
+bool dmmeta::Nsjs_ReadStrptrMaybe(dmmeta::Nsjs &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dmmeta.nsjs") || algo::StripTypeTag(in_str, "dmmeta.Nsjs");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Nsjs_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dmmeta.Nsjs..Print
+// print string representation of ROW to string STR
+// cfmt:dmmeta.Nsjs.String  printfmt:Tuple
+void dmmeta::Nsjs_Print(dmmeta::Nsjs& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dmmeta.nsjs";
+
+    algo::Smallstr16_Print(row.ns, temp);
+    PrintAttrSpaceReset(str,"ns", temp);
+
+    bool_Print(row.typescript, temp);
+    PrintAttrSpaceReset(str,"typescript", temp);
+
+    bool_Print(row.gensel, temp);
+    PrintAttrSpaceReset(str,"gensel", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dmmeta.Nsproto..ReadFieldMaybe
 bool dmmeta::Nsproto_ReadFieldMaybe(dmmeta::Nsproto& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -7456,13 +7918,14 @@ bool dmmeta::Nsproto_ReadFieldMaybe(dmmeta::Nsproto& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_ns: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7504,13 +7967,14 @@ bool dmmeta::Nstype_ReadFieldMaybe(dmmeta::Nstype& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_nstype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.nstype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7552,17 +8016,17 @@ bool dmmeta::Nsversion_ReadFieldMaybe(dmmeta::Nsversion& parent, algo::strptr fi
     switch(field_id) {
         case dmmeta_FieldId_ns: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_version: {
             retval = algo::Smallstr10_ReadStrptrMaybe(parent.version, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7607,33 +8071,29 @@ bool dmmeta::Nsx_ReadFieldMaybe(dmmeta::Nsx& parent, algo::strptr field, algo::s
     switch(field_id) {
         case dmmeta_FieldId_ns: {
             retval = algo::Smallstr16_ReadStrptrMaybe(parent.ns, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_genthrow: {
             retval = bool_ReadStrptrMaybe(parent.genthrow, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_correct_getorcreate: {
             retval = bool_ReadStrptrMaybe(parent.correct_getorcreate, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_pool: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.pool, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_sortxref: {
             retval = bool_ReadStrptrMaybe(parent.sortxref, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_pack: {
             retval = bool_ReadStrptrMaybe(parent.pack, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7690,21 +8150,20 @@ bool dmmeta::Numstr_ReadFieldMaybe(dmmeta::Numstr& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_numtype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.numtype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_base: {
             retval = i32_ReadStrptrMaybe(parent.base, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_min_len: {
             retval = i32_ReadStrptrMaybe(parent.min_len, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7752,13 +8211,14 @@ bool dmmeta::Pack_ReadFieldMaybe(dmmeta::Pack& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7812,21 +8272,20 @@ bool dmmeta::Pmaskfld_ReadFieldMaybe(dmmeta::Pmaskfld& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_filter_print: {
             retval = bool_ReadStrptrMaybe(parent.filter_print, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7899,22 +8358,21 @@ bool dmmeta::PmaskfldMember_ReadFieldMaybe(dmmeta::PmaskfldMember& parent, algo:
     (void)value_SetStrptrMaybe(field_id,field);
     switch(field_id) {
         case dmmeta_FieldId_pmaskfld_member: {
-            retval = algo::Smallstr100_ReadStrptrMaybe(parent.pmaskfld_member, strval);
-            break;
-        }
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.pmaskfld_member, strval);
+        } break;
         case dmmeta_FieldId_pmaskfld: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_field: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -7941,7 +8399,7 @@ void dmmeta::PmaskfldMember_Print(dmmeta::PmaskfldMember& row, algo::cstring& st
     algo::tempstr temp;
     str << "dmmeta.pmaskfld_member";
 
-    algo::Smallstr100_Print(row.pmaskfld_member, temp);
+    algo::Smallstr200_Print(row.pmaskfld_member, temp);
     PrintAttrSpaceReset(str,"pmaskfld_member", temp);
 
     algo::Comment_Print(row.comment, temp);
@@ -7997,25 +8455,23 @@ bool dmmeta::Pnew_ReadFieldMaybe(dmmeta::Pnew& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_pnew: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.pnew, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_buftype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -8057,13 +8513,14 @@ bool dmmeta::Printfmt_ReadFieldMaybe(dmmeta::Printfmt& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_printfmt: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.printfmt, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -8105,13 +8562,17 @@ bool dmmeta::Ptrary_ReadFieldMaybe(dmmeta::Ptrary& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_unique: {
             retval = bool_ReadStrptrMaybe(parent.unique, strval);
-            break;
-        }
-        default: break;
+        } break;
+        case dmmeta_FieldId_heaplike: {
+            retval = bool_ReadStrptrMaybe(parent.heaplike, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -8143,6 +8604,9 @@ void dmmeta::Ptrary_Print(dmmeta::Ptrary& row, algo::cstring& str) {
 
     bool_Print(row.unique, temp);
     PrintAttrSpaceReset(str,"unique", temp);
+
+    bool_Print(row.heaplike, temp);
+    PrintAttrSpaceReset(str,"heaplike", temp);
 }
 
 // --- dmmeta.Reftype..ReadFieldMaybe
@@ -8153,53 +8617,44 @@ bool dmmeta::Reftype_ReadFieldMaybe(dmmeta::Reftype& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_reftype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.reftype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_isval: {
             retval = bool_ReadStrptrMaybe(parent.isval, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_cascins: {
             retval = bool_ReadStrptrMaybe(parent.cascins, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_usebasepool: {
             retval = bool_ReadStrptrMaybe(parent.usebasepool, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_cancopy: {
             retval = bool_ReadStrptrMaybe(parent.cancopy, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_isxref: {
             retval = bool_ReadStrptrMaybe(parent.isxref, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_del: {
             retval = bool_ReadStrptrMaybe(parent.del, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_up: {
             retval = bool_ReadStrptrMaybe(parent.up, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_isnew: {
             retval = bool_ReadStrptrMaybe(parent.isnew, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_hasalloc: {
             retval = bool_ReadStrptrMaybe(parent.hasalloc, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_inst: {
             retval = bool_ReadStrptrMaybe(parent.inst, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_varlen: {
             retval = bool_ReadStrptrMaybe(parent.varlen, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -8498,13 +8953,14 @@ bool dmmeta::Rowid_ReadFieldMaybe(dmmeta::Rowid& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -8558,29 +9014,26 @@ bool dmmeta::Smallstr_ReadFieldMaybe(dmmeta::Smallstr& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_length: {
             retval = i32_ReadStrptrMaybe(parent.length, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_strtype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.strtype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_pad: {
             retval = algo::CppExpr_ReadStrptrMaybe(parent.pad, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_strict: {
             retval = bool_ReadStrptrMaybe(parent.strict, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -8631,13 +9084,14 @@ bool dmmeta::Sortfld_ReadFieldMaybe(dmmeta::Sortfld& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_sortfld: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.sortfld, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -8679,13 +9133,14 @@ bool dmmeta::Sorttype_ReadFieldMaybe(dmmeta::Sorttype& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_sorttype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.sorttype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -8727,17 +9182,17 @@ bool dmmeta::Sqltype_ReadFieldMaybe(dmmeta::Sqltype& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_expr: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.expr, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -8818,25 +9273,23 @@ bool dmmeta::Ssimfile_ReadFieldMaybe(dmmeta::Ssimfile& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_ssimfile: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.ssimfile, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ssimns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -8943,45 +9396,38 @@ bool dmmeta::Ssimreq_ReadFieldMaybe(dmmeta::Ssimreq& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_ssimreq: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ssimreq, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_parent: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.parent, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_parent_field: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_parent_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_value: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_child_ssimfile: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_child_key: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_reqchild: {
             retval = bool_ReadStrptrMaybe(parent.reqchild, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_bidir: {
             retval = bool_ReadStrptrMaybe(parent.bidir, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9039,17 +9485,17 @@ bool dmmeta::Ssimsort_ReadFieldMaybe(dmmeta::Ssimsort& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_ssimfile: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.ssimfile, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_sortfld: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.sortfld, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9094,13 +9540,14 @@ bool dmmeta::Ssimvolatile_ReadFieldMaybe(dmmeta::Ssimvolatile& parent, algo::str
     switch(field_id) {
         case dmmeta_FieldId_ssimfile: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.ssimfile, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9142,13 +9589,14 @@ bool dmmeta::Steptype_ReadFieldMaybe(dmmeta::Steptype& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_steptype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.steptype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9190,13 +9638,14 @@ bool dmmeta::Strtype_ReadFieldMaybe(dmmeta::Strtype& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_strtype: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.strtype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9238,17 +9687,17 @@ bool dmmeta::Substr_ReadFieldMaybe(dmmeta::Substr& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_expr: {
             retval = algo::CppExpr_ReadStrptrMaybe(parent.expr, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_srcfield: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.srcfield, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9293,25 +9742,23 @@ bool dmmeta::Svtype_ReadFieldMaybe(dmmeta::Svtype& parent, algo::strptr field, a
     switch(field_id) {
         case dmmeta_FieldId_ctype: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.ctype, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_maxwid: {
             retval = i32_ReadStrptrMaybe(parent.maxwid, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_fixedwid1: {
             retval = i32_ReadStrptrMaybe(parent.fixedwid1, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_fixedwid2: {
             retval = i32_ReadStrptrMaybe(parent.fixedwid2, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9362,17 +9809,17 @@ bool dmmeta::Tary_ReadFieldMaybe(dmmeta::Tary& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_aliased: {
             retval = bool_ReadStrptrMaybe(parent.aliased, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9417,21 +9864,20 @@ bool dmmeta::Thash_ReadFieldMaybe(dmmeta::Thash& parent, algo::strptr field, alg
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_hashfld: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.hashfld, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_unique: {
             retval = bool_ReadStrptrMaybe(parent.unique, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9508,21 +9954,20 @@ bool dmmeta::Tracefld_ReadFieldMaybe(dmmeta::Tracefld& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_tracefld: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.tracefld, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_tracerec: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9593,21 +10038,20 @@ bool dmmeta::Tracerec_ReadFieldMaybe(dmmeta::Tracerec& parent, algo::strptr fiel
     switch(field_id) {
         case dmmeta_FieldId_tracerec: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.tracerec, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9661,17 +10105,17 @@ bool dmmeta::Typefld_ReadFieldMaybe(dmmeta::Typefld& parent, algo::strptr field,
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ctype: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9705,6 +10149,67 @@ void dmmeta::Typefld_Print(dmmeta::Typefld& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"comment", temp);
 }
 
+// --- dmmeta.Userfunc..ReadFieldMaybe
+bool dmmeta::Userfunc_ReadFieldMaybe(dmmeta::Userfunc& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    dmmeta::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case dmmeta_FieldId_userfunc: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.userfunc, strval);
+        } break;
+        case dmmeta_FieldId_acrkey: {
+            retval = algo::Smallstr200_ReadStrptrMaybe(parent.acrkey, strval);
+        } break;
+        case dmmeta_FieldId_cppname: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.cppname, strval);
+        } break;
+        case dmmeta_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- dmmeta.Userfunc..ReadStrptrMaybe
+// Read fields of dmmeta::Userfunc from an ascii string.
+// The format of the string is an ssim Tuple
+bool dmmeta::Userfunc_ReadStrptrMaybe(dmmeta::Userfunc &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "dmmeta.userfunc") || algo::StripTypeTag(in_str, "dmmeta.Userfunc");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Userfunc_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- dmmeta.Userfunc..Print
+// print string representation of ROW to string STR
+// cfmt:dmmeta.Userfunc.String  printfmt:Tuple
+void dmmeta::Userfunc_Print(dmmeta::Userfunc& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "dmmeta.userfunc";
+
+    algo::Smallstr50_Print(row.userfunc, temp);
+    PrintAttrSpaceReset(str,"userfunc", temp);
+
+    algo::Smallstr200_Print(row.acrkey, temp);
+    PrintAttrSpaceReset(str,"acrkey", temp);
+
+    algo::Smallstr100_Print(row.cppname, temp);
+    PrintAttrSpaceReset(str,"cppname", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
 // --- dmmeta.Usertracefld..ReadFieldMaybe
 bool dmmeta::Usertracefld_ReadFieldMaybe(dmmeta::Usertracefld& parent, algo::strptr field, algo::strptr strval) {
     bool retval = true;
@@ -9713,13 +10218,14 @@ bool dmmeta::Usertracefld_ReadFieldMaybe(dmmeta::Usertracefld& parent, algo::str
     switch(field_id) {
         case dmmeta_FieldId_tracefld: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.tracefld, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -9809,33 +10315,29 @@ bool dmmeta::Xref_ReadFieldMaybe(dmmeta::Xref& parent, algo::strptr field, algo:
     switch(field_id) {
         case dmmeta_FieldId_field: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.field, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_name: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_inscond: {
             retval = algo::CppExpr_ReadStrptrMaybe(parent.inscond, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_via: {
             retval = algo::Smallstr200_ReadStrptrMaybe(parent.via, strval);
-            break;
-        }
+        } break;
         case dmmeta_FieldId_viafld: {
             retval = false;
-            break;
-        }
+        } break;
         case dmmeta_FieldId_keyfld: {
             retval = false;
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);

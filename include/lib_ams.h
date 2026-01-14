@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@
 // Header: include/lib_ams.h
 //
 
+#pragma once
 #include "include/algo.h"
 #include "include/gen/lib_ams_gen.h"
 #include "include/gen/lib_ams_gen.inl.h"
@@ -31,48 +32,35 @@ namespace lib_ams { // update-hdr
     //     To convert this section to a hand-written section, remove the word 'update-hdr' from namespace line.
 
     // -------------------------------------------------------------------
-    // cpp/lib_ams/expect.cpp -- Expect implementation
+    // cpp/lib_ams/dump.cpp
     //
 
-    // In-process `expect` implementation allows pausing reading of inputs until
-    // a certain prlog output is produced
-    // Motivating example:
-    // InputMsg1
-    // InputMsg2
-    // Expect text:blah
-    // InputMsg3
-    // InputMsg3 is not processed until blah is printed.
-    // Implementation:
-    // When reading an input message:
-    // clear output buffer
-    // if read an ExpectMsg:
-    // set expect string to the input data
-    // check output buffer (match any outputs since last input against expect string)
-    // set expect timeout
-    // Expect timeout:
-    // exit process with error
-    // When printing:
-    // add to output buffer (limit: 100K).
-    // if expect mode, check output buffer
-    void ExpectEnable(strptr str);
+    // Print table of shms in lib_ams, using ssim format
+    // if MEMBER is specified, print member information as well
+    void DumpShmTableDflt(algo_lib::Regx &regx, bool member);
 
-    // Replace input reading function with one that pauses output
-    // to support ExpectMsg functionality
-    void ExpectAttach(lib_ams::FStream &stream);
+    // Print table of shms in lib_ams, using a more readable layout
+    void DumpShmTableVisual(algo_lib::Regx &regx);
 
-    // Function that replaces uses-provided message hook for a given stream
-    // Having no cost until the first call to ExpectEnable, the purpose
-    // is to block processing of any messages until expect_Str is empty
-    void ExpectHook(lib_ams::FStream &stream, ams::MsgHeader &msg);
+    // Print message MSG to string OUT according to format FMT
+    // if FMT.STRIP > 0, strip this many outer "layers";
+    // if FMT.BIN, the message is printed as pure binary; otherwise, convert to text
+    // if FMT.PRETTY, every next layer / payload is printed on a new line with indent
+    // for readability.
+    // FMT.PAYLOAD_LEN limits maximum printed payload length, allowing to fit one messge per
+    // screen even if payload is 10MB
+    // Finally, if FMT.SHOWLEN is true, message length is included in output.
+    void PrintMsg(lib_ams::MsgFmt &fmt, ams::MsgHeader &msg, cstring &out);
 
-    // Save output to possibly check against expect string later
-    // Keep last 50k-100k of output
-    void ExpectSaveOutput(algo::strptr text);
-    void ExpectTimeout();
+    // This function should be called if the ams logcat is enabled
+    // It prints the given MSG to ams logcat using pretty format.
+    // Heartbeats (ShmHb, MemberHb, PubMetric) are skipped unless verbose is on
+    void TraceMsg(ams::Shmmsg *msg, ams::MsgHeader *payload);
+    tempstr ToString(ams::MsgHeader &msg);
 
-    // Check saved output buffer against expect string
-    // WARNING: calling prlog() from this function will cause an infinite loop
-    void ExpectCheck();
+    // Convert message MSG to string in a way suitable for debugging
+    // (some information is lost in exchange for readability)
+    tempstr ToDbgString(ams::MsgHeader &msg);
 
     // -------------------------------------------------------------------
     // cpp/lib_ams/file.cpp
@@ -91,7 +79,7 @@ namespace lib_ams { // update-hdr
 
     // Flush data to file
     //     (user-implemented function, prototype is in amc-generated header)
-    // void zd_flush_Step();
+    // void zd_flush_Step(); // fstep:lib_ams.FDb.zd_flush
 
     // Write message (buffered)
     void WriteMsg(lib_ams::FWritefile &wf, ams::MsgHeader &msg);
@@ -112,7 +100,8 @@ namespace lib_ams { // update-hdr
     void Close(lib_ams::FWritefile &wf);
 
     // cleanup function
-    void fd_Cleanup(lib_ams::FWritefile& parent);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void fd_Cleanup(lib_ams::FWritefile& parent); // fcleanup:lib_ams.FWritefile.fd
 
     // Whether read file is in good state - valid fd and no failure.
     // EOF is not a failure.
@@ -162,183 +151,183 @@ namespace lib_ams { // update-hdr
     void Close(lib_ams::FReadfile &wf);
 
     // cleanup function
-    void fd_Cleanup(lib_ams::FReadfile& parent);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void fd_Cleanup(lib_ams::FReadfile& parent); // fcleanup:lib_ams.FWritefile.fd
 
     // -------------------------------------------------------------------
-    // cpp/lib_ams/stream.cpp
+    // cpp/lib_ams/shm.cpp
     //
 
-    // Scan /dev/shm for stale stream files and delete them
+    // Scan /dev/shm for stale shm files and delete them
     // A file is stale if it's flockable (i.e. no process has locked it for writing)
-    // and it's at least 1 hour old
-    void CleanOldStreamFiles();
+    // and it's at least 15 seconds old
+    void CleanOldShmFiles();
 
-    // return TRUE if shared memory region is attached to stream STREAM.
-    bool ShmemOpenQ(lib_ams::FStream &stream);
+    // return TRUE if shared memory region is attached to shm SHM.
+    bool ShmemFdOpenQ(lib_ams::FShm &shm);
 
     // Open shared memory for reading/writing (as specified in FLAGS)
-    // and return resulting shared memory region size.
+    // and return success status
     // Fields initialized:
-    // - stream.filename
-    // - stream.shm_handle (windows)
-    // - stream.shm_file (linux)
-    // - stream.shm_region, if mapped successfully
-    i64 OpenShmem(lib_ams::FStream &stream, ams::StreamFlags flags);
+    // - shm.filename
+    // - shm.shm_handle (windows)
+    // - shm.shm_file (linux)
+    // - shm.shm_region, if mapped successfully
+    // If the segment is opened for writing, it is flocked.
+    bool ShmemOpenFile(lib_ams::FShm &shm, ams::ShmFlags flags);
 
-    // Open stream for reading or writing (but not both)
-    // If shared memory mode (lib_ams::_db.shmem_mode) is set,
-    // The file creator sets stream size.
+    // Open shm for reading or writing (or both)
+    // The file creator sets shm size.
     // Writer creates & locks the file.
     // Reader determines file from file size
-    // If shared memory mode is not set (stdio mode),
-    // the stream is attached to a private memory block of default size.
     // When opening for writing:
-    // The next message written to the stream will have sequence SEQ and offset OFFSET.
-    // Default is to use sequence 1, offset 0.
+    // The next message written to the shm will have OFFSET as determined by POS
+    // Initial value of offset is 0
     // (However a newly spawned child process can be provided a known sequence & offset by the parent.)
     // When opening for reading:
-    // begin hot-polling for new messages on the stream
-    bool OpenStream(lib_ams::FStream &stream, ams::StreamFlags flags, ams::StreamPos pos);
-    bool OpenStream(lib_ams::FStream &stream, ams::StreamFlags flags);
+    // begin hot-polling for new messages on the shm
+    bool OpenShm(lib_ams::FShm &shm, ams::ShmFlags flags, u64 pos = 0);
 
-    // TBD not sure if this function is needed in non-fork() environment
-    bool ReopenForReading(lib_ams::FStream &stream);
-
-    // Update budget for stream STREAM
-    // Return TRUE if the stream is potentially unblocked for
+    // Update budget for shm SHM
+    // Return TRUE if the shm is potentially unblocked for
     // writing due to WRITELIMIT being increased.
     // (WRITELIMIT is the point beyond which no message can be written
     // because doing so would overwrite data not yet consumed by one of the read members.)
-    // TODO: do not update budget for a stream that is not opened for writing
-    bool UpdateBudget(lib_ams::FStream &stream);
-
-    // Update stream budgets
-    void UpdateBudgets();
+    bool UpdateWriteLimit(lib_ams::FShm &shm);
 
     // Register a bad, unskippable incoming message
-    // on STREAM, report it, and stop reading.
-    void WriterError(lib_ams::FStream &stream, ams::Seqmsg *msg);
-
-    // If the stream is open for reading, check to see if a message
-    // is available.
-    // If it is available, return pointer to message.
-    ams::Seqmsg *PeekMsg(lib_ams::FStream &stream);
-
-    // Called by the client
-    // to aoivd reading current message
-    void StopReading(lib_ams::FStream &stream);
-
-    // Mark current message as read and move to the next message.
-    void SkipMsg(lib_ams::FStream &stream);
-    int WriteBudget(lib_ams::FStream &stream);
-
-    // Send heartbeat to control stream
-    // Update
-    void SendHb(lib_ams::FStream &stream);
-
-    // Publish stream heartbeats to c_stream_ctl stream
-    //     (user-implemented function, prototype is in amc-generated header)
-    // void cd_stream_hb_Step();
-
-    // Check all streams (that are not already readable) for readability.
-    // If readable, call h_msg hook.
-    // void cd_poll_read_Step();
+    // on SHM, report it, and stop reading.
+    void ShmError(lib_ams::FShm &shm, ams::Shmmsg *msg, const char *text);
     void PollCtlIn();
 
     // Begin writing message of length LENGTH
     // Used by WriteMsg and with amc's pnew (acr pnew) for zero-copy sends.
     // If successful, return pointer to region of size LENGTH whre the mssage can be written,
     // otherwise return NULL.
-    void *BeginWrite(lib_ams::FStream &stream, int length);
+    void *BeginWrite(lib_ams::FShm &shm, int length);
 
     // Finish writing message of length LENGTH,
     // and send the result.
-    void EndWrite(lib_ams::FStream &stream, void *ptr, int len);
+    void EndWrite(lib_ams::FShm &shm, void *ptr, int len);
 
-    // If the stream is attached to a writable shared memory segment,
-    // write sequenced message to stream STREAM, and increment sequence number
-    // and stream offset.
+    // If the shm is attached to a writable shared memory segment,
+    // write sequenced message to shm SHM, and increment sequence number
+    // and shm offset.
     // Message must be within max. message size
-    // If the stream is not configured for writingIf an output fd is associated with the stream, hthe stream, write
-    bool WriteMsg(lib_ams::FStream &stream, ams::MsgHeader &msg);
+    // If the shm is not configured for writingIf an output fd is associated with the shm, hthe shm, write
+    bool WriteMsg(lib_ams::FShm &shm, ams::MsgHeader &msg);
 
-    // Write message MSG to output, either in binary or text mode.
-    // Return success status
-    // If ISREAD flag is set, this is a copy of a message that has just been read
-    // from another stream. Otherwise, it's a copy of a message that's just been written.
-    // In stdin mode, where messages are read from ascii input and posted to the
-    void TraceMsg(lib_ams::FStream &stream, ams::MsgHeader &msg, bool isread);
-
-    // Initialize stream library
-    // FILE_PREFIX: unique filesystem prefix for all subsequently created streams
-    // Also clean any stale (unlocked) stream files.
-    // (this can be disabled by setting _db.stream_files_cleaned to true)
+    // Initialize shm library
+    // FILE_PREFIX: unique filesystem prefix for all subsequently created shms.
+    // This is copied to lib_ams::_db.file_prefix.
+    // if FILE_PREFIX is empty, we are running in NON-SHMEM mode. In this mode,
+    // the library begins reading STDIN and posting any input messages to the default
+    // input shm.
+    // PROC_ID: process ID for this app. This is copied to lib_ams::_db.proc_id.
+    // The PROC_ID is <proctype>.<nodeindex>-<index> -- enough to identify any number of processes within
+    // a cluster.
+    // If the variable _db.shm_files_cleaned is FALSE (which is the default),
+    // clean any stale (unlocked) shm files in /dev/shm/*.ams
+    // In SHMEM mode, all current and future memory is locked using mlockall.
     bool Init(algo::strptr file_prefix, ams::ProcId proc_id);
     void Uninit();
-    void shm_handle_Cleanup(lib_ams::FStream &stream);
-    void shm_file_Cleanup(lib_ams::FStream &stream);
-
-    // Process joined the group
     //     (user-implemented function, prototype is in amc-generated header)
-    // void CtlMsg_ProcAddMsg(ams::ProcAddMsg &msg);
-
-    // A process has exited
-    // Remove any read/write members contributed by the process and
-    // potentially unblock some write streams
-    // void CtlMsg_ProcRemoveMsg(ams::ProcRemoveMsg &msg);
-    // void CtlMsg_DumpStreamTableMsg(ams::DumpStreamTableMsg &msg);
-    // void CtlMsg_StreamHbMsg(ams::StreamHbMsg &msg);
-    void ReadCtlMsg(lib_ams::FStream &, ams::MsgHeader &msg);
+    // void shm_file_Cleanup(lib_ams::FShm &shm); // fcleanup:lib_ams.FShm.shm_file
+    // void CtlMsg_ShmHbMsg(ams::ShmHbMsg &msg); // dispatch_msg:lib_ams.CtlMsg/ams.ShmHbMsg
+    void ReadCtlMsg(lib_ams::FShm &, ams::MsgHeader &msg);
 
     // Read next input line from stdin
+    // The line is parsed as an AMS message. It could be a Shmmsg or any other msg.
+    // If the line doesn't look like anything, it is converted to ams.InputLineMsg
+    // Then, look up a shm where to post the message.
+    // If we see a Shmmsg, find shm where this message is intended to go and write the message there.
+    // Otherwise, post the message to the default shm (lib_ams::_db.dflt_shm_id)
+    // If the shm where we are posting the message is full (won't accept the message)
+    // then reading of fdin is stopped and will resume after the shm has room.
+    // If there is nowhere to post the message because no target shm is found, the counter
+    // trace.n_fdin_drop_notgt is incremented and a message is printed in verbose mode.
     //     (user-implemented function, prototype is in amc-generated header)
-    // void cd_fdin_read_Step();
+    // void cd_fdin_read_Step(); // fstep:lib_ams.FDb.cd_fdin_read
 
     // Stop reading stdin
-    // void cd_fdin_eof_Step();
+    // void cd_fdin_eof_Step(); // fstep:lib_ams.FDb.cd_fdin_eof
 
     // Begin reading ams control messages from stdin
     void BeginReadStdin();
-    lib_ams::FStream &ind_stream_GetOrCreate(ams::StreamId stream_id);
-    void DumpStreamTableDflt();
-    void DumpStreamTableVisual();
-    void DumpStreamTable(int format = 0);
+    lib_ams::FShm &ind_shm_GetOrCreate(ams::ShmId shm_id);
 
-    // Close stream.
-    // If stream is opened for writing, remove its file.
-    // BUG: I think if the stream is opened for reading, the mmap() leaks
-    void Close(lib_ams::FStream &stream);
+    // Close shm.
+    // If shm is opened for writing, remove its file.
+    // BUG: I think if the shm is opened for reading, the mmap() leaks
+    void Close(lib_ams::FShm &shm);
     void SetDfltShmSize(u32 size);
-    ams::StreamPos ReadStreamPos(algo::strptr val);
 
-    // Register PROC_ID as reader of stream STREAM_ID starting at offset 0
-    // This immediately limits the write budget of STREAM_ID
+    // Register PROC_ID as reader of shm SHM_ID starting at offset 0
+    // This immediately limits the write budget of SHM_ID
     // (Subsequent attempt to overwrite data not yet consumed by PROC_ID causes
     // either reject or blocking wait)
-    void AddReadMember(ams::ProcId proc_id, ams::StreamId stream_id);
+    void AddReadShmember(ams::ShmId shm_id, ams::ProcId proc_id);
 
-    // Open stream STREAM for reading and add it to the list of streams
-    // which lib_ams scans for messages (i.e. control streams).
-    // Attach lib_ams message dispatch to the stream
-    bool AddCtlIn(lib_ams::FStream &stream);
-    void CloseAllStreams();
+    // Open shm SHM for reading and add it to the list of shms
+    // which lib_ams scans for messages (i.e. control shms).
+    // Attach lib_ams message dispatch to the shm
+    bool AddCtlIn(lib_ams::FShm &shm);
+    void CloseAllShms();
+    bool EnsureOutput(lib_ams::FShm &outshm, int budget);
 
-    // Match trace expression REGX against stream STREAM.
-    // If it matches, enable/disable tracing as indicated by ENABLE
-    // For full description see txt/trace.md
-    bool ApplyTrace(lib_ams::FStream &stream, algo_lib::Regx &regx, bool enable);
+    // -------------------------------------------------------------------
+    // cpp/lib_ams/shmember.cpp
+    //
 
-    // Enable or disable logcat tracing based on regex WHAT
-    // If TRACE is specified, logcats matching regex are enabled; otherwise
-    // they are disabled.
-    // This affects all future `prlog_cat` calls.
-    // Return number of matches
-    int ApplyTrace(algo::strptr what, bool enable);
+    // If the shm is open for reading, check to see if a message
+    // is available. If it is available, return pointer to message.
+    ams::Shmmsg *PeekMsg(lib_ams::FShmember &shmember);
 
-    // Same as ApplyTrace, but
-    // If expression doesn't match anything, print a helpful message for the user
-    void ApplyTraceV(algo::strptr what, bool enable);
+    // Called by the client
+    // to avoid reading current message
+    void StopReading(lib_ams::FShm &shm);
 
-    // prlog hook for ams application, could be used for sending log messages to output stream
-    void Prlog(algo_lib::FLogcat *logcat, algo::SchedTime tstamp, strptr str);
+    // Read up to N messages from the message heap
+    // Messages are processed in the order in which they were posted to the shms.
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void bh_shmember_read_Step(); // fstep:lib_ams.FDb.bh_shmember_read
+
+    // Check all shms (that are not already readable) for readability and
+    // transfer readable shms to the read heap with correct sort key.
+    // If powersave is enabled, then non-readable shms
+    // are transferred to the slow_poll_read list where they are polled less frequently
+    // void cd_poll_read_Step(); // fstep:lib_ams.FDb.cd_poll_read
+    // void cd_slow_poll_read_Step(); // fstep:lib_ams.FDb.cd_slow_poll_read
+
+    // Mark current message as read and move to the next message.
+    void SkipMsg(lib_ams::FShmember &shmember);
+
+    // Send heartbeat to control shm
+    void SendHb(lib_ams::FShmember &shmember);
+
+    // Publish shm heartbeats to c_shm_ctl shm
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void cd_hb_Step(); // fstep:lib_ams.FDb.cd_hb
+
+    // Create a read shmember for shm SHM
+    // Begin hot-polling the shm
+    bool OpenRead(lib_ams::FShm &shm, u64 off);
+
+    // Create a write shmember for shm SHM
+    bool OpenWrite(lib_ams::FShm &shm, u64 off);
+    void UnreadMsg();
+
+    // -------------------------------------------------------------------
+    // include/lib_ams.inl.h
+    //
+    inline u64 AddOffset(u64 offset, int n);
+    inline ams::Shmmsg *MsgAtOffset(lib_ams::FShm &shm, u64 offset);
+
+    // next_ackoff is the read offset at which an unconditional
+    // Shmhb is sent out. It is enabled when the shm is being read.
+    inline void UpdateAckOffset(lib_ams::FShm &shm, lib_ams::FShmember &shmember);
+    inline ams::ProcId MakeProcId(ams::Proctype proctype, int node, int index);
+    inline u64 GetWriteBudget(lib_ams::FShm &shm);
 }
+
+#include "include/lib_ams.inl.h"

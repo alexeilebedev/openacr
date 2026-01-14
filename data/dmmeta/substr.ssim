@@ -11,7 +11,7 @@ dmmeta.substr  field:atfdb.Comptest.testname  expr:.LR  srcfield:atfdb.Comptest.
 dmmeta.substr  field:atfdb.Tmsg.comptest  expr:/LL  srcfield:atfdb.Tmsg.tmsg
 dmmeta.substr  field:atfdb.Tmsg.dir  expr:/LR.LR  srcfield:atfdb.Tmsg.tmsg
 dmmeta.substr  field:atfdb.Tmsg.rank  expr:/LR.LL  srcfield:atfdb.Tmsg.tmsg
-dmmeta.substr  field:atfdb.Unittest.target  expr:.RL  srcfield:atfdb.Unittest.unittest
+dmmeta.substr  field:atfdb.Unittest.ns  expr:.RL  srcfield:atfdb.Unittest.unittest
 dmmeta.substr  field:atfdb.Unittest.testname  expr:.RR  srcfield:atfdb.Unittest.unittest
 dmmeta.substr  field:dev.Builddir.arch  expr:.LR-LR  srcfield:dev.Builddir.builddir
 dmmeta.substr  field:dev.Builddir.cfg  expr:.LR-LL  srcfield:dev.Builddir.builddir
@@ -28,6 +28,8 @@ dmmeta.substr  field:dev.Pkgdep.package  expr:.RL  srcfield:dev.Pkgdep.pkgdep
 dmmeta.substr  field:dev.Pkgdep.parent  expr:.RR  srcfield:dev.Pkgdep.pkgdep
 dmmeta.substr  field:dev.Pkgkey.key  expr:/LR  srcfield:dev.Pkgkey.pkgkey
 dmmeta.substr  field:dev.Pkgkey.package  expr:/LL  srcfield:dev.Pkgkey.pkgkey
+dmmeta.substr  field:dev.Prototransport.netproto  expr:/RL  srcfield:dev.Prototransport.prototransport
+dmmeta.substr  field:dev.Prototransport.transport  expr:/RR  srcfield:dev.Prototransport.prototransport
 dmmeta.substr  field:dev.Scriptfile.name  expr:/RR  srcfield:dev.Scriptfile.gitfile
 dmmeta.substr  field:dev.Srcfile.ext  expr:.RR  srcfield:dev.Srcfile.srcfile
 dmmeta.substr  field:dev.Targdep.parent  expr:.RR  srcfield:dev.Targdep.targdep
@@ -35,6 +37,7 @@ dmmeta.substr  field:dev.Targdep.target  expr:.RL  srcfield:dev.Targdep.targdep
 dmmeta.substr  field:dev.Targsrc.ext  expr:.RR  srcfield:dev.Targsrc.targsrc
 dmmeta.substr  field:dev.Targsrc.src  expr:/LR  srcfield:dev.Targsrc.targsrc
 dmmeta.substr  field:dev.Targsrc.target  expr:/LL  srcfield:dev.Targsrc.targsrc
+dmmeta.substr  field:dev.Targsyslib.prefix  expr:.RL  srcfield:dev.Targsyslib.targsyslib
 dmmeta.substr  field:dev.Targsyslib.syslib  expr:/LR.LR  srcfield:dev.Targsyslib.targsyslib
 dmmeta.substr  field:dev.Targsyslib.target  expr:/LR.LL  srcfield:dev.Targsyslib.targsyslib
 dmmeta.substr  field:dev.Targsyslib.uname  expr:/LL  srcfield:dev.Targsyslib.targsyslib
@@ -148,7 +151,6 @@ dmmeta.substr  field:gclidb.Githost.gitrepo  expr:@LR:LR  srcfield:gclidb.Githos
 dmmeta.substr  field:gclidb.Githost.host  expr:@LR:LL  srcfield:gclidb.Githost.githost
 dmmeta.substr  field:gclidb.Grepo.fname  expr:@LR  srcfield:gclidb.Grepo.grepo
 dmmeta.substr  field:gclidb.Grepo.host  expr:@LL  srcfield:gclidb.Grepo.grepo
-dmmeta.substr  field:gclidb.Grepossh.name  expr:/RR  srcfield:gclidb.Grepossh.sshid
 dmmeta.substr  field:gclidb.Gstate.st  expr:_LL  srcfield:gclidb.Gstate.gstate
 dmmeta.substr  field:gclidb.Gstate.state  expr:_LR  srcfield:gclidb.Gstate.gstate
 dmmeta.substr  field:gclidb.Gstatet.gstate  expr:.RL  srcfield:gclidb.Gstatet.gstatet
@@ -180,5 +182,11 @@ dmmeta.substr  field:gclidb.Mrjob.job  expr:/RR  srcfield:gclidb.Mrjob.mrjob
 dmmeta.substr  field:gclidb.Mrjob.mr  expr:/RL  srcfield:gclidb.Mrjob.mrjob
 dmmeta.substr  field:gclidb.Mrnote.mr  expr:.RL  srcfield:gclidb.Mrnote.mrnote
 dmmeta.substr  field:gclidb.Mrnote.nid  expr:.RR  srcfield:gclidb.Mrnote.mrnote
+dmmeta.substr  field:httpdb.Status.code  expr:" LL"  srcfield:httpdb.Status.status
+dmmeta.substr  field:httpdb.Status.reason  expr:" LR"  srcfield:httpdb.Status.status
+dmmeta.substr  field:sampdb.Targdep.parent  expr:.LR  srcfield:sampdb.Targdep.targdep
+dmmeta.substr  field:sampdb.Targdep.target  expr:.LL  srcfield:sampdb.Targdep.targdep
+dmmeta.substr  field:sampdb.Targsrc.src  expr:/LR  srcfield:sampdb.Targsrc.targsrc
+dmmeta.substr  field:sampdb.Targsrc.target  expr:/LL  srcfield:sampdb.Targsrc.targsrc
 dmmeta.substr  field:ssim2mysql.FColumn.name  expr:.RR  srcfield:ssim2mysql.FColumn.column
 dmmeta.substr  field:ssim2mysql.FColumn.ssimfile  expr:.RL  srcfield:ssim2mysql.FColumn.column

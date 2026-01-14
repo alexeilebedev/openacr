@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -32,7 +32,7 @@ void amc::tclass_Ns() {
 
 static void SizeCheck(algo_lib::Replscope &R, amc::FNs &ns, amc::FFunc &chk) {
     ind_beg(amc::ns_c_ctype_curs, ctype,ns) {
-        if (ctype.c_csize) {// check csize
+        if ((ns.ns=="" ? ctype.c_bltin!=NULL : true) && ctype.c_csize) {// check csize
             Set(R,"$size",tempstr()<<ctype.c_csize->size);
             Set(R, "$Type", ctype.cpp_type);
             Set(R, "$Ctype", ctype.ctype);
@@ -61,7 +61,7 @@ static void OffsetCheck(algo_lib::Replscope &R, amc::FField &field, int field_id
             Ins(&R, text, "// check that bitfield fits width");
             Ins(&R, text, "algo_assert(sizeof((($Type*)0)->$fld$suffix)*8 >= $bitwidth);");
         }
-        bool is_val = !field.c_inlary && &field != field.p_ctype->c_varlenfld;
+        bool is_val = !field.c_inlary && !ctype_zd_varlenfld_InLlistQ(field);
         bool needcheck = field_idx == c_datafld_N(ctype)-1
             && ctype.c_pack
             && name_Get(field).n_ch > 0
@@ -97,7 +97,7 @@ void amc::tfunc_Ns_StaticCheck() {
                 }
             }ind_end;
             ind_beg(amc::ctype_c_field_curs, field,ctype) if (field.c_fldoffset) {
-                if (name_Get(field).n_ch > 0 && !FixaryQ(field) && &field != field.p_ctype->c_varlenfld) {
+                if (name_Get(field).n_ch > 0 && !FixaryQ(field) && !ctype_zd_varlenfld_InLlistQ(field)) {
                     Set(R, "$Type", amc::NsToCpp(ctype_Get(field)));
                     Set(R, "$offset", tempstr() << field.c_fldoffset->offset);
                     Set(R, "$fld", name_Get(field));

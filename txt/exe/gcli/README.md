@@ -11,6 +11,7 @@ Examples are provided below
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
 &nbsp;&nbsp;&bull;&nbsp;  [Syntax](#syntax)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Operation](#operation)<br/>
+&nbsp;&nbsp;&bull;&nbsp;  [Starting](#starting)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: Get help (beyond command syntax)](#example-get-help--beyond-command-syntax-)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: Get detailed help](#example-get-detailed-help)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Example: create access to repository](#example-create-access-to-repository)<br/>
@@ -37,7 +38,6 @@ Examples are provided below
 &nbsp;&nbsp;&bull;&nbsp;  [Example: list remote users](#example-list-remote-users)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Options](#options)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
-&nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
 &#128196; [gcli - Internals](/txt/exe/gcli/internals.md)<br/>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
@@ -52,7 +52,7 @@ Usage: gcli [[-selector:]<string>] [[-fields:]<string>] [options]
     -in                        string  "data"     Input directory or filename, - for stdin
     [selector]                 string  "issue:%"  table:key, where table is issue,repo,mr, etc. and key is a regex.
     [fields]...                string             additional key:value pairs for use with -create, -list, -update
-    -accept                                       (action) accept a slected merge request
+    -accept                                       (action) accept a selected merge request
     -start                                        (action) start working on a selected issue
     -list                                         (action) show selected table
     -create                                       (action) create a table record(s)
@@ -66,8 +66,8 @@ Usage: gcli [[-selector:]<string>] [[-fields:]<string>] [options]
     -dry_run                                      Print actions, do not perform
     -gitdir                    string  ""         (setup) Change directory of git repository
     -show_gitlab_system_notes                     (misc) Show issue and mr notes created by gitlab
-    -verbose                   int                Verbosity level (0..255); alias -v; cumulative
-    -debug                     int                Debug level (0..255); alias -d; cumulative
+    -verbose                   flag               Verbosity level (0..255); alias -v; cumulative
+    -debug                     flag               Debug level (0..255); alias -d; cumulative
     -help                                         Print help and exit; alias -h
     -version                                      Print version and exit
     -signature                                    Show signatures and exit; alias -sig
@@ -85,6 +85,14 @@ pair `[table]:[key]` identifying the table on which to perform an action;
 
 Table is by default `issue`, but can be any table from the list provided by `gcli help`.
 Key is a regex. Actions can be `-create`, `-update`, `-start`, `-e`, etc.
+
+### Starting
+<a href="#starting"></a>
+First a user have to create access token and ssh key on user's (not prject!) account and run gcli command repo -create to populate grepo table.
+`gcli`  is governed by grepo table that is set up by executing gcli repo -create host:xxx token:yyy command.
+After the command is successfully executed, gcli gitconfig -create will populate git remote with the right hosts and ports for accessing gitlab or github
+
+execute these commands with -dry_run option to see what they do.
 
 ### Example: Get help (beyond command syntax)
 <a href="#example-get-help--beyond-command-syntax-"></a>
@@ -400,7 +408,7 @@ gcli user
 #### -fields -- additional key:value pairs for use with -create, -list, -update
 <a href="#-fields"></a>
 
-#### -accept -- (action) accept a slected merge request
+#### -accept -- (action) accept a selected merge request
 <a href="#-accept"></a>
 
 #### -start -- (action) start working on a selected issue
@@ -450,45 +458,19 @@ gcli user
 `gcli` takes the following tables on input:
 |Ssimfile|Comment|
 |---|---|
-|[gclidb.gtype](/txt/ssimdb/gclidb/gtype.md)|Platform type (ghp=github; glpat=gitlab)|
-|[gclidb.gtypeprefix](/txt/ssimdb/gclidb/gtypeprefix.md)|Token prefix mapping to platform|
-|[gclidb.gtypeh](/txt/ssimdb/gclidb/gtypeh.md)|HTTP heaaderes for user with platform|
-|[gclidb.gact](/txt/ssimdb/gclidb/gact.md)|Action that may be performed on a table|
-|[gclidb.gtbl](/txt/ssimdb/gclidb/gtbl.md)|Supported gcli tables|
-|[gclidb.gfld](/txt/ssimdb/gclidb/gfld.md)|Gitlab/github field name|
-|[gclidb.gtblactfld](/txt/ssimdb/gclidb/gtblactfld.md)|List of available for each table & action combination|
-|[gclidb.gstatet](/txt/ssimdb/gclidb/gstatet.md)|Internal|
-|[gclidb.grepossh](/txt/ssimdb/gclidb/grepossh.md)|Ssh key table|
-|[gclidb.grepogitport](/txt/ssimdb/gclidb/grepogitport.md)|Default ports for repositories|
-|[gclidb.grepo](/txt/ssimdb/gclidb/grepo.md)|Repo table (acr grepo -in ~/.ssim)|
-|[gclidb.gmethod](/txt/ssimdb/gclidb/gmethod.md)|HTTP method list|
-|[gclidb.gclicmdt](/txt/ssimdb/gclidb/gclicmdt.md)|Internal test|
-|[gclidb.gclicmdf2j](/txt/ssimdb/gclidb/gclicmdf2j.md)|Mapping of internal fields to JSON fields for gitlab/github|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+|[gclidb.gact](/txt/ssimdb/gclidb/gact.md)|Action that may be performed on a table|
+|[gclidb.gclicmdf2j](/txt/ssimdb/gclidb/gclicmdf2j.md)|Mapping of internal fields to JSON fields for gitlab/github|
+|[gclidb.gclicmdt](/txt/ssimdb/gclidb/gclicmdt.md)|Internal test|
+|[gclidb.gfld](/txt/ssimdb/gclidb/gfld.md)|Gitlab/github field name|
+|[gclidb.gmethod](/txt/ssimdb/gclidb/gmethod.md)|HTTP method list|
+|[gclidb.grepo](/txt/ssimdb/gclidb/grepo.md)|Repo table (acr grepo -in ~/.ssim)|
+|[gclidb.gstatet](/txt/ssimdb/gclidb/gstatet.md)|Internal|
+|[gclidb.gtbl](/txt/ssimdb/gclidb/gtbl.md)|Supported gcli tables|
+|[gclidb.gtblactfld](/txt/ssimdb/gclidb/gtblactfld.md)|List of available for each table & action combination|
+|[gclidb.gtype](/txt/ssimdb/gclidb/gtype.md)|Platform type (ghp=github; glpat=gitlab)|
+|[gclidb.gtypeh](/txt/ssimdb/gclidb/gtypeh.md)|HTTP heaaderes for user with platform|
+|[gclidb.gtypeprefix](/txt/ssimdb/gclidb/gtypeprefix.md)|Token prefix mapping to platform|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
-
-### Sources
-<a href="#sources"></a>
-The source code license is GPL
-The following source files are part of this tool:
-
-|Source File|Comment|
-|---|---|
-|[cpp/gcli/git.cpp](/cpp/gcli/git.cpp)||
-|[cpp/gcli/gtblact.cpp](/cpp/gcli/gtblact.cpp)||
-|[cpp/gcli/help.cpp](/cpp/gcli/help.cpp)||
-|[cpp/gcli/issue.cpp](/cpp/gcli/issue.cpp)||
-|[cpp/gcli/main.cpp](/cpp/gcli/main.cpp)||
-|[cpp/gcli/milestone.cpp](/cpp/gcli/milestone.cpp)||
-|[cpp/gcli/mr.cpp](/cpp/gcli/mr.cpp)||
-|[cpp/gcli/note.cpp](/cpp/gcli/note.cpp)||
-|[cpp/gcli/repo.cpp](/cpp/gcli/repo.cpp)||
-|[cpp/gcli/rest.cpp](/cpp/gcli/rest.cpp)||
-|[cpp/gcli/search.cpp](/cpp/gcli/search.cpp)||
-|[cpp/gcli/user.cpp](/cpp/gcli/user.cpp)||
-|[cpp/gen/gcli_gen.cpp](/cpp/gen/gcli_gen.cpp)||
-|[include/gcli.h](/include/gcli.h)||
-|[include/gen/gcli_gen.h](/include/gen/gcli_gen.h)||
-|[include/gen/gcli_gen.inl.h](/include/gen/gcli_gen.inl.h)||
 

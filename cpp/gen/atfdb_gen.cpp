@@ -45,13 +45,14 @@ bool atfdb::Amctest_ReadFieldMaybe(atfdb::Amctest& parent, algo::strptr field, a
     switch(field_id) {
         case atfdb_FieldId_amctest: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.amctest, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -93,13 +94,14 @@ bool atfdb::Cijob_ReadFieldMaybe(atfdb::Cijob& parent, algo::strptr field, algo:
     switch(field_id) {
         case atfdb_FieldId_cijob: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.cijob, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -141,25 +143,23 @@ bool atfdb::Cipackage_ReadFieldMaybe(atfdb::Cipackage& parent, algo::strptr fiel
     switch(field_id) {
         case atfdb_FieldId_package: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.package, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_remove: {
             retval = bool_ReadStrptrMaybe(parent.remove, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_build: {
             retval = bool_ReadStrptrMaybe(parent.build, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_reinstall: {
             retval = algo::Smallstr100_ReadStrptrMaybe(parent.reinstall, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -210,21 +210,20 @@ bool atfdb::Citest_ReadFieldMaybe(atfdb::Citest& parent, algo::strptr field, alg
     switch(field_id) {
         case atfdb_FieldId_citest: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.citest, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_cijob: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.cijob, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_sandbox: {
             retval = bool_ReadStrptrMaybe(parent.sandbox, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -301,33 +300,38 @@ bool atfdb::Comptest_ReadFieldMaybe(atfdb::Comptest& parent, algo::strptr field,
     switch(field_id) {
         case atfdb_FieldId_comptest: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.comptest, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_target: {
             retval = false;
-            break;
-        }
+        } break;
         case atfdb_FieldId_testname: {
             retval = false;
-            break;
-        }
+        } break;
         case atfdb_FieldId_timeout: {
             retval = i32_ReadStrptrMaybe(parent.timeout, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_memcheck: {
             retval = bool_ReadStrptrMaybe(parent.memcheck, strval);
-            break;
-        }
+        } break;
+        case atfdb_FieldId_coverage: {
+            retval = bool_ReadStrptrMaybe(parent.coverage, strval);
+        } break;
         case atfdb_FieldId_exit_code: {
             retval = u8_ReadStrptrMaybe(parent.exit_code, strval);
-            break;
-        }
+        } break;
+        case atfdb_FieldId_ncore: {
+            retval = i32_ReadStrptrMaybe(parent.ncore, strval);
+        } break;
+        case atfdb_FieldId_repeat: {
+            retval = i32_ReadStrptrMaybe(parent.repeat, strval);
+        } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -347,6 +351,17 @@ bool atfdb::Comptest_ReadStrptrMaybe(atfdb::Comptest &parent, algo::strptr in_st
     return retval;
 }
 
+// --- atfdb.Comptest..Init
+// Set all fields to initial values.
+void atfdb::Comptest_Init(atfdb::Comptest& parent) {
+    parent.timeout = i32(10);
+    parent.memcheck = bool(true);
+    parent.coverage = bool(true);
+    parent.exit_code = u8(0);
+    parent.ncore = i32(1);
+    parent.repeat = i32(1);
+}
+
 // --- atfdb.Comptest..Print
 // print string representation of ROW to string STR
 // cfmt:atfdb.Comptest.String  printfmt:Tuple
@@ -363,8 +378,17 @@ void atfdb::Comptest_Print(atfdb::Comptest& row, algo::cstring& str) {
     bool_Print(row.memcheck, temp);
     PrintAttrSpaceReset(str,"memcheck", temp);
 
+    bool_Print(row.coverage, temp);
+    PrintAttrSpaceReset(str,"coverage", temp);
+
     u8_Print(row.exit_code, temp);
     PrintAttrSpaceReset(str,"exit_code", temp);
+
+    i32_Print(row.ncore, temp);
+    PrintAttrSpaceReset(str,"ncore", temp);
+
+    i32_Print(row.repeat, temp);
+    PrintAttrSpaceReset(str,"repeat", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);
@@ -390,7 +414,10 @@ const char* atfdb::value_ToCstr(const atfdb::FieldId& parent) {
         case atfdb_FieldId_testname        : ret = "testname";  break;
         case atfdb_FieldId_timeout         : ret = "timeout";  break;
         case atfdb_FieldId_memcheck        : ret = "memcheck";  break;
+        case atfdb_FieldId_coverage        : ret = "coverage";  break;
         case atfdb_FieldId_exit_code       : ret = "exit_code";  break;
+        case atfdb_FieldId_ncore           : ret = "ncore";  break;
+        case atfdb_FieldId_repeat          : ret = "repeat";  break;
         case atfdb_FieldId_fuzzstrat       : ret = "fuzzstrat";  break;
         case atfdb_FieldId_msgdir          : ret = "msgdir";  break;
         case atfdb_FieldId_args            : ret = "args";  break;
@@ -404,6 +431,8 @@ const char* atfdb::value_ToCstr(const atfdb::FieldId& parent) {
         case atfdb_FieldId_istuple         : ret = "istuple";  break;
         case atfdb_FieldId_msg             : ret = "msg";  break;
         case atfdb_FieldId_unittest        : ret = "unittest";  break;
+        case atfdb_FieldId_ns              : ret = "ns";  break;
+        case atfdb_FieldId_var             : ret = "var";  break;
         case atfdb_FieldId_value           : ret = "value";  break;
     }
     return ret;
@@ -428,6 +457,14 @@ void atfdb::value_Print(const atfdb::FieldId& parent, algo::cstring &lhs) {
 bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
     bool ret = false;
     switch (elems_N(rhs)) {
+        case 2: {
+            switch (u64(algo::ReadLE16(rhs.elems))) {
+                case LE_STR2('n','s'): {
+                    value_SetEnum(parent,atfdb_FieldId_ns); ret = true; break;
+                }
+            }
+            break;
+        }
         case 3: {
             switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
                 case LE_STR3('d','i','r'): {
@@ -435,6 +472,9 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR3('m','s','g'): {
                     value_SetEnum(parent,atfdb_FieldId_msg); ret = true; break;
+                }
+                case LE_STR3('v','a','r'): {
+                    value_SetEnum(parent,atfdb_FieldId_var); ret = true; break;
                 }
             }
             break;
@@ -461,6 +501,9 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
                 case LE_STR5('c','i','j','o','b'): {
                     value_SetEnum(parent,atfdb_FieldId_cijob); ret = true; break;
                 }
+                case LE_STR5('n','c','o','r','e'): {
+                    value_SetEnum(parent,atfdb_FieldId_ncore); ret = true; break;
+                }
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,atfdb_FieldId_value); ret = true; break;
                 }
@@ -480,6 +523,9 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
                 }
                 case LE_STR6('r','e','m','o','v','e'): {
                     value_SetEnum(parent,atfdb_FieldId_remove); ret = true; break;
+                }
+                case LE_STR6('r','e','p','e','a','t'): {
+                    value_SetEnum(parent,atfdb_FieldId_repeat); ret = true; break;
                 }
                 case LE_STR6('t','a','r','g','e','t'): {
                     value_SetEnum(parent,atfdb_FieldId_target); ret = true; break;
@@ -514,6 +560,9 @@ bool atfdb::value_SetStrptrMaybe(atfdb::FieldId& parent, algo::strptr rhs) {
             switch (algo::ReadLE64(rhs.elems)) {
                 case LE_STR8('c','o','m','p','t','e','s','t'): {
                     value_SetEnum(parent,atfdb_FieldId_comptest); ret = true; break;
+                }
+                case LE_STR8('c','o','v','e','r','a','g','e'): {
+                    value_SetEnum(parent,atfdb_FieldId_coverage); ret = true; break;
                 }
                 case LE_STR8('m','e','m','c','h','e','c','k'): {
                     value_SetEnum(parent,atfdb_FieldId_memcheck); ret = true; break;
@@ -609,13 +658,14 @@ bool atfdb::Fuzzstrat_ReadFieldMaybe(atfdb::Fuzzstrat& parent, algo::strptr fiel
     switch(field_id) {
         case atfdb_FieldId_fuzzstrat: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.fuzzstrat, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -657,13 +707,14 @@ bool atfdb::Msgdir_ReadFieldMaybe(atfdb::Msgdir& parent, algo::strptr field, alg
     switch(field_id) {
         case atfdb_FieldId_msgdir: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.msgdir, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -705,13 +756,14 @@ bool atfdb::Targs_ReadFieldMaybe(atfdb::Targs& parent, algo::strptr field, algo:
     switch(field_id) {
         case atfdb_FieldId_comptest: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.comptest, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_args: {
             retval = algo::cstring_ReadStrptrMaybe(parent.args, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -753,13 +805,14 @@ bool atfdb::TestGsymbolChar_ReadFieldMaybe(atfdb::TestGsymbolChar& parent, algo:
     switch(field_id) {
         case atfdb_FieldId_test_gsymbol_char: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.test_gsymbol_char, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -801,13 +854,14 @@ bool atfdb::TestGsymbolPkey_ReadFieldMaybe(atfdb::TestGsymbolPkey& parent, algo:
     switch(field_id) {
         case atfdb_FieldId_test_gsymbol_pkey: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.test_gsymbol_pkey, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -849,13 +903,14 @@ bool atfdb::TestGsymbolStrptr_ReadFieldMaybe(atfdb::TestGsymbolStrptr& parent, a
     switch(field_id) {
         case atfdb_FieldId_test_gsymbol_strptr: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.test_gsymbol_strptr, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -897,17 +952,17 @@ bool atfdb::Tfilt_ReadFieldMaybe(atfdb::Tfilt& parent, algo::strptr field, algo:
     switch(field_id) {
         case atfdb_FieldId_comptest: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.comptest, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_filter: {
             retval = algo::cstring_ReadStrptrMaybe(parent.filter, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -997,29 +1052,26 @@ bool atfdb::Tmsg_ReadFieldMaybe(atfdb::Tmsg& parent, algo::strptr field, algo::s
     switch(field_id) {
         case atfdb_FieldId_tmsg: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.tmsg, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_comptest: {
             retval = false;
-            break;
-        }
+        } break;
         case atfdb_FieldId_rank: {
             retval = false;
-            break;
-        }
+        } break;
         case atfdb_FieldId_dir: {
             retval = false;
-            break;
-        }
+        } break;
         case atfdb_FieldId_istuple: {
             retval = bool_ReadStrptrMaybe(parent.istuple, strval);
-            break;
-        }
+        } break;
         case atfdb_FieldId_msg: {
             retval = algo::cstring_ReadStrptrMaybe(parent.msg, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1056,14 +1108,14 @@ void atfdb::Tmsg_Print(atfdb::Tmsg& row, algo::cstring& str) {
     PrintAttrSpaceReset(str,"msg", temp);
 }
 
-// --- atfdb.Unittest.target.Get
-algo::Smallstr16 atfdb::target_Get(atfdb::Unittest& parent) {
+// --- atfdb.Unittest.ns.Get
+algo::Smallstr16 atfdb::ns_Get(atfdb::Unittest& parent) {
     algo::Smallstr16 ret(algo::Pathcomp(parent.unittest, ".RL"));
     return ret;
 }
 
-// --- atfdb.Unittest.target.Get2
-algo::Smallstr16 atfdb::Unittest_target_Get(algo::strptr arg) {
+// --- atfdb.Unittest.ns.Get2
+algo::Smallstr16 atfdb::Unittest_ns_Get(algo::strptr arg) {
     algo::Smallstr16 ret(algo::Pathcomp(arg, ".RL"));
     return ret;
 }
@@ -1080,9 +1132,9 @@ algo::Smallstr50 atfdb::Unittest_testname_Get(algo::strptr arg) {
     return ret;
 }
 
-// --- atfdb.Unittest..Concat_target_testname
-tempstr atfdb::Unittest_Concat_target_testname( const algo::strptr& target ,const algo::strptr& testname ) {
-    return tempstr() << target <<'.'<< testname ;
+// --- atfdb.Unittest..Concat_ns_testname
+tempstr atfdb::Unittest_Concat_ns_testname( const algo::strptr& ns ,const algo::strptr& testname ) {
+    return tempstr() << ns <<'.'<< testname ;
 }
 
 // --- atfdb.Unittest..ReadFieldMaybe
@@ -1093,21 +1145,20 @@ bool atfdb::Unittest_ReadFieldMaybe(atfdb::Unittest& parent, algo::strptr field,
     switch(field_id) {
         case atfdb_FieldId_unittest: {
             retval = algo::Smallstr50_ReadStrptrMaybe(parent.unittest, strval);
-            break;
-        }
-        case atfdb_FieldId_target: {
+        } break;
+        case atfdb_FieldId_ns: {
             retval = false;
-            break;
-        }
+        } break;
         case atfdb_FieldId_testname: {
             retval = false;
-            break;
-        }
+        } break;
         case atfdb_FieldId_comment: {
             retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -1149,6 +1200,61 @@ void atfdb::Unittest_Print(atfdb::Unittest& row, algo::cstring& str) {
 
     algo::Smallstr50_Print(row.unittest, temp);
     PrintAttrSpaceReset(str,"unittest", temp);
+
+    algo::Comment_Print(row.comment, temp);
+    PrintAttrSpaceReset(str,"comment", temp);
+}
+
+// --- atfdb.Var..ReadFieldMaybe
+bool atfdb::Var_ReadFieldMaybe(atfdb::Var& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    atfdb::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case atfdb_FieldId_var: {
+            retval = algo::Smallstr50_ReadStrptrMaybe(parent.var, strval);
+        } break;
+        case atfdb_FieldId_value: {
+            retval = algo::Smallstr100_ReadStrptrMaybe(parent.value, strval);
+        } break;
+        case atfdb_FieldId_comment: {
+            retval = algo::Comment_ReadStrptrMaybe(parent.comment, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- atfdb.Var..ReadStrptrMaybe
+// Read fields of atfdb::Var from an ascii string.
+// The format of the string is an ssim Tuple
+bool atfdb::Var_ReadStrptrMaybe(atfdb::Var &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = algo::StripTypeTag(in_str, "atfdb.var") || algo::StripTypeTag(in_str, "atfdb.Var");
+    ind_beg(algo::Attr_curs, attr, in_str) {
+        retval = retval && Var_ReadFieldMaybe(parent, attr.name, attr.value);
+    }ind_end;
+    return retval;
+}
+
+// --- atfdb.Var..Print
+// print string representation of ROW to string STR
+// cfmt:atfdb.Var.String  printfmt:Tuple
+void atfdb::Var_Print(atfdb::Var& row, algo::cstring& str) {
+    algo::tempstr temp;
+    str << "atfdb.var";
+
+    algo::Smallstr50_Print(row.var, temp);
+    PrintAttrSpaceReset(str,"var", temp);
+
+    algo::Smallstr100_Print(row.value, temp);
+    PrintAttrSpaceReset(str,"value", temp);
 
     algo::Comment_Print(row.comment, temp);
     PrintAttrSpaceReset(str,"comment", temp);

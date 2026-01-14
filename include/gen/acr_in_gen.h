@@ -134,25 +134,26 @@ namespace acr_in { // gen:ns_print_struct
 // access: acr_in.FSsimfile.p_ctype (Upptr)
 // access: acr_in.FTuple.p_ctype (Upptr)
 struct FCtype { // acr_in.FCtype
-    algo::Smallstr100    ctype;              // Identifier. must be ns.typename
-    algo::Comment        comment;            //
-    acr_in::FSsimfile*   c_ssimfile;         // optional pointer
-    bool                 related;            //   false  Matches 'related' regex
-    bool                 select;             //   false
-    bool                 visit;              //   false
-    acr_in::FField**     c_field_elems;      // array of pointers
-    u32                  c_field_n;          // array of pointers
-    u32                  c_field_max;        // capacity of allocated array
-    acr_in::FCtype**     c_ctype_elems;      // array of pointers
-    u32                  c_ctype_n;          // array of pointers
-    u32                  c_ctype_max;        // capacity of allocated array
-    bool                 parent_of_finput;   //   false  Ctype required by one of the namespaces
-    acr_in::FNs*         p_ns;               // reference to parent row
-    acr_in::FCtype*      ind_ctype_next;     // hash next
-    acr_in::FCtype*      zd_todo_next;       // zslist link; -1 means not-in-list
-    acr_in::FCtype*      zd_todo_prev;       // previous element
-    acr_in::FCtype*      zd_related_next;    // zslist link; -1 means not-in-list
-    acr_in::FCtype*      zd_related_prev;    // previous element
+    algo::Smallstr100    ctype;               // Identifier. must be ns.typename
+    algo::Comment        comment;             //
+    acr_in::FSsimfile*   c_ssimfile;          // optional pointer
+    bool                 related;             //   false  Matches 'related' regex
+    bool                 select;              //   false
+    bool                 visit;               //   false
+    acr_in::FField**     c_field_elems;       // array of pointers
+    u32                  c_field_n;           // array of pointers
+    u32                  c_field_max;         // capacity of allocated array
+    acr_in::FCtype**     c_ctype_elems;       // array of pointers
+    u32                  c_ctype_n;           // array of pointers
+    u32                  c_ctype_max;         // capacity of allocated array
+    bool                 parent_of_finput;    //   false  Ctype required by one of the namespaces
+    acr_in::FNs*         p_ns;                // reference to parent row
+    acr_in::FCtype*      ind_ctype_next;      // hash next
+    u32                  ind_ctype_hashval;   // hash value
+    acr_in::FCtype*      zd_todo_next;        // zslist link; -1 means not-in-list
+    acr_in::FCtype*      zd_todo_prev;        // previous element
+    acr_in::FCtype*      zd_related_next;     // zslist link; -1 means not-in-list
+    acr_in::FCtype*      zd_related_prev;     // previous element
     // x-reference on acr_in.FCtype.c_ssimfile prevents copy
     // reftype Ptrary of acr_in.FCtype.c_field prohibits copy
     // reftype Ptrary of acr_in.FCtype.c_ctype prohibits copy
@@ -448,6 +449,9 @@ void                 ind_tuple_Remove(acr_in::FTuple& row) __attribute__((nothro
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_in.FDb.ind_tuple.Reserve
 void                 ind_tuple_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_in.FDb.ind_tuple.AbsReserve
+void                 ind_tuple_AbsReserve(int n) __attribute__((nothrow));
 
 // Read argc,argv directly into the fields of the command line(s)
 // The following fields are updated:
@@ -589,6 +593,9 @@ void                 ind_field_Remove(acr_in::FField& row) __attribute__((nothro
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_in.FDb.ind_field.Reserve
 void                 ind_field_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_in.FDb.ind_field.AbsReserve
+void                 ind_field_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -648,6 +655,9 @@ void                 ind_ctype_Remove(acr_in::FCtype& row) __attribute__((nothro
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_in.FDb.ind_ctype.Reserve
 void                 ind_ctype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_in.FDb.ind_ctype.AbsReserve
+void                 ind_ctype_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -747,6 +757,9 @@ void                 ind_ns_Remove(acr_in::FNs& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_in.FDb.ind_ns.Reserve
 void                 ind_ns_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_in.FDb.ind_ns.AbsReserve
+void                 ind_ns_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr_in.FDb.zd_todo.EmptyQ
@@ -917,6 +930,9 @@ void                 ind_dispsig_Remove(acr_in::FDispsig& row) __attribute__((no
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_in.FDb.ind_dispsig.Reserve
 void                 ind_dispsig_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_in.FDb.ind_dispsig.AbsReserve
+void                 ind_dispsig_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:acr_in.FDb.zd_select.EmptyQ
@@ -1050,6 +1066,9 @@ void                 ind_finput_Remove(acr_in::FFinput& row) __attribute__((noth
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_in.FDb.ind_finput.Reserve
 void                 ind_finput_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_in.FDb.ind_finput.AbsReserve
+void                 ind_finput_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1109,6 +1128,9 @@ void                 ind_target_Remove(acr_in::FTarget& row) __attribute__((noth
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_in.FDb.ind_target.Reserve
 void                 ind_target_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_in.FDb.ind_target.AbsReserve
+void                 ind_target_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1241,6 +1263,9 @@ void                 ind_nsssimfile_Remove(acr_in::FNsssimfile& row) __attribute
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_in.FDb.ind_nsssimfile.Reserve
 void                 ind_nsssimfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_in.FDb.ind_nsssimfile.AbsReserve
+void                 ind_nsssimfile_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:acr_in.FDb.ind_ssimfile.EmptyQ
@@ -1263,6 +1288,9 @@ void                 ind_ssimfile_Remove(acr_in::FSsimfile& row) __attribute__((
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:acr_in.FDb.ind_ssimfile.Reserve
 void                 ind_ssimfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:acr_in.FDb.ind_ssimfile.AbsReserve
+void                 ind_ssimfile_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:acr_in.FDb.tuple_curs.Reset
@@ -1479,10 +1507,11 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: dispsig (Lary, by rowid)
 // global access: ind_dispsig (Thash, hash field dispsig)
 struct FDispsig { // acr_in.FDispsig
-    acr_in::FDispsig*   ind_dispsig_next;   // hash next
-    algo::Smallstr50    dispsig;            //
-    algo::Sha1sig       signature;          //
-    acr_in::FNs*        p_ns;               // reference to parent row
+    acr_in::FDispsig*   ind_dispsig_next;      // hash next
+    u32                 ind_dispsig_hashval;   // hash value
+    algo::Smallstr50    dispsig;               //
+    algo::Sha1sig       signature;             //
+    acr_in::FNs*        p_ns;                  // reference to parent row
     // x-reference on acr_in.FDispsig.p_ns prevents copy
     // func:acr_in.FDispsig..AssignOp
     inline acr_in::FDispsig& operator =(const acr_in::FDispsig &rhs) = delete;
@@ -1526,6 +1555,7 @@ void                 FDispsig_Uninit(acr_in::FDispsig& dispsig) __attribute__((n
 // access: acr_in.FFinput.p_field (Upptr)
 struct FField { // acr_in.FField
     acr_in::FField*     ind_field_next;         // hash next
+    u32                 ind_field_hashval;      // hash value
     algo::Smallstr100   field;                  // Primary key, as ctype.name
     algo::Smallstr100   arg;                    // Type of field
     algo::Smallstr50    reftype;                //   "Val"  Type constructor
@@ -1589,14 +1619,15 @@ void                 FField_Uninit(acr_in::FField& field) __attribute__((nothrow
 // global access: finput (Lary, by rowid)
 // global access: ind_finput (Thash, hash field field)
 struct FFinput { // acr_in.FFinput
-    acr_in::FFinput*    ind_finput_next;   // hash next
-    algo::Smallstr100   field;             // Target field to read
-    bool                extrn;             //   false  Call user-provided function
-    bool                update;            //   false
-    bool                strict;            //   true  Exist process if record contains error
-    algo::Comment       comment;           //
-    acr_in::FNs*        p_ns;              // reference to parent row
-    acr_in::FField*     p_field;           // reference to parent row
+    acr_in::FFinput*    ind_finput_next;      // hash next
+    u32                 ind_finput_hashval;   // hash value
+    algo::Smallstr100   field;                // Target field to read
+    bool                extrn;                //   false  Call user-provided function
+    bool                update;               //   false
+    bool                strict;               //   true  Exist process if record contains error
+    algo::Comment       comment;              //
+    acr_in::FNs*        p_ns;                 // reference to parent row
+    acr_in::FField*     p_field;              // reference to parent row
     // x-reference on acr_in.FFinput.p_ns prevents copy
     // x-reference on acr_in.FFinput.p_field prevents copy
     // func:acr_in.FFinput..AssignOp
@@ -1642,6 +1673,7 @@ void                 FFinput_Uninit(acr_in::FFinput& finput) __attribute__((noth
 // access: acr_in.FTarget.p_ns (Upptr)
 struct FNs { // acr_in.FNs
     acr_in::FNs*           ind_ns_next;             // hash next
+    u32                    ind_ns_hashval;          // hash value
     algo::Smallstr16       ns;                      // Namespace name (primary key)
     algo::Smallstr50       nstype;                  // Namespace type
     algo::Smallstr50       license;                 // Associated license
@@ -1691,7 +1723,7 @@ inline bool          zd_nsssimfile_ns_EmptyQ(acr_in::FNs& ns) __attribute__((__w
 inline acr_in::FNsssimfile* zd_nsssimfile_ns_First(acr_in::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr_in.FNs.zd_nsssimfile_ns.InLlistQ
-inline bool          zd_nsssimfile_ns_InLlistQ(acr_in::FNsssimfile& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          ns_zd_nsssimfile_ns_InLlistQ(acr_in::FNsssimfile& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr_in.FNs.zd_nsssimfile_ns.Insert
 void                 zd_nsssimfile_ns_Insert(acr_in::FNs& ns, acr_in::FNsssimfile& row) __attribute__((nothrow));
@@ -1703,10 +1735,10 @@ inline acr_in::FNsssimfile* zd_nsssimfile_ns_Last(acr_in::FNs& ns) __attribute__
 inline i32           zd_nsssimfile_ns_N(const acr_in::FNs& ns) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr_in.FNs.zd_nsssimfile_ns.Next
-inline acr_in::FNsssimfile* zd_nsssimfile_ns_Next(acr_in::FNsssimfile &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr_in::FNsssimfile* ns_zd_nsssimfile_ns_Next(acr_in::FNsssimfile &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr_in.FNs.zd_nsssimfile_ns.Prev
-inline acr_in::FNsssimfile* zd_nsssimfile_ns_Prev(acr_in::FNsssimfile &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr_in::FNsssimfile* ns_zd_nsssimfile_ns_Prev(acr_in::FNsssimfile &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_in.FNs.zd_nsssimfile_ns.Remove
 void                 zd_nsssimfile_ns_Remove(acr_in::FNs& ns, acr_in::FNsssimfile& row) __attribute__((nothrow));
@@ -1745,15 +1777,16 @@ void                 FNs_Uninit(acr_in::FNs& ns) __attribute__((nothrow));
 // access: acr_in.FNs.zd_nsssimfile_ns (Llist)
 // access: acr_in.FSsimfile.zd_nsssimfile_ssimfile (Llist)
 struct FNsssimfile { // acr_in.FNsssimfile
-    acr_in::FNsssimfile*   ind_nsssimfile_next;           // hash next
-    acr_in::FNsssimfile*   zd_nsssimfile_ns_next;         // zslist link; -1 means not-in-list
-    acr_in::FNsssimfile*   zd_nsssimfile_ns_prev;         // previous element
-    algo::Smallstr200      nsssimfile;                    //
-    bool                   show;                          //   false
-    acr_in::FNs*           p_ns;                          // reference to parent row
-    acr_in::FSsimfile*     p_ssimfile;                    // reference to parent row
-    acr_in::FNsssimfile*   zd_nsssimfile_ssimfile_next;   // zslist link; -1 means not-in-list
-    acr_in::FNsssimfile*   zd_nsssimfile_ssimfile_prev;   // previous element
+    acr_in::FNsssimfile*   ind_nsssimfile_next;                    // hash next
+    u32                    ind_nsssimfile_hashval;                 // hash value
+    acr_in::FNsssimfile*   ns_zd_nsssimfile_ns_next;               // zslist link; -1 means not-in-list
+    acr_in::FNsssimfile*   ns_zd_nsssimfile_ns_prev;               // previous element
+    algo::Smallstr200      nsssimfile;                             //
+    bool                   show;                                   //   false
+    acr_in::FNs*           p_ns;                                   // reference to parent row
+    acr_in::FSsimfile*     p_ssimfile;                             // reference to parent row
+    acr_in::FNsssimfile*   ssimfile_zd_nsssimfile_ssimfile_next;   // zslist link; -1 means not-in-list
+    acr_in::FNsssimfile*   ssimfile_zd_nsssimfile_ssimfile_prev;   // previous element
     // x-reference on acr_in.FNsssimfile.p_ns prevents copy
     // x-reference on acr_in.FNsssimfile.p_ssimfile prevents copy
     // func:acr_in.FNsssimfile..AssignOp
@@ -1798,6 +1831,7 @@ struct FSsimfile { // acr_in.FSsimfile
     acr_in::FSsimfile*     zd_ssimfile_next;              // zslist link; -1 means not-in-list
     acr_in::FSsimfile*     zd_ssimfile_prev;              // previous element
     acr_in::FSsimfile*     ind_ssimfile_next;             // hash next
+    u32                    ind_ssimfile_hashval;          // hash value
     algo::Smallstr50       ssimfile;                      //
     algo::Smallstr100      ctype;                         //
     acr_in::FCtype*        p_ctype;                       // reference to parent row
@@ -1847,7 +1881,7 @@ inline bool          zd_nsssimfile_ssimfile_EmptyQ(acr_in::FSsimfile& ssimfile) 
 inline acr_in::FNsssimfile* zd_nsssimfile_ssimfile_First(acr_in::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:acr_in.FSsimfile.zd_nsssimfile_ssimfile.InLlistQ
-inline bool          zd_nsssimfile_ssimfile_InLlistQ(acr_in::FNsssimfile& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          ssimfile_zd_nsssimfile_ssimfile_InLlistQ(acr_in::FNsssimfile& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:acr_in.FSsimfile.zd_nsssimfile_ssimfile.Insert
 void                 zd_nsssimfile_ssimfile_Insert(acr_in::FSsimfile& ssimfile, acr_in::FNsssimfile& row) __attribute__((nothrow));
@@ -1859,10 +1893,10 @@ inline acr_in::FNsssimfile* zd_nsssimfile_ssimfile_Last(acr_in::FSsimfile& ssimf
 inline i32           zd_nsssimfile_ssimfile_N(const acr_in::FSsimfile& ssimfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:acr_in.FSsimfile.zd_nsssimfile_ssimfile.Next
-inline acr_in::FNsssimfile* zd_nsssimfile_ssimfile_Next(acr_in::FNsssimfile &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr_in::FNsssimfile* ssimfile_zd_nsssimfile_ssimfile_Next(acr_in::FNsssimfile &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:acr_in.FSsimfile.zd_nsssimfile_ssimfile.Prev
-inline acr_in::FNsssimfile* zd_nsssimfile_ssimfile_Prev(acr_in::FNsssimfile &row) __attribute__((__warn_unused_result__, nothrow));
+inline acr_in::FNsssimfile* ssimfile_zd_nsssimfile_ssimfile_Prev(acr_in::FNsssimfile &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:acr_in.FSsimfile.zd_nsssimfile_ssimfile.Remove
 void                 zd_nsssimfile_ssimfile_Remove(acr_in::FSsimfile& ssimfile, acr_in::FNsssimfile& row) __attribute__((nothrow));
@@ -1981,6 +2015,7 @@ void                 FTargdep_Uninit(acr_in::FTargdep& targdep) __attribute__((n
 // access: acr_in.FTargdep.p_parent (Upptr)
 struct FTarget { // acr_in.FTarget
     acr_in::FTarget*     ind_target_next;         // hash next
+    u32                  ind_target_hashval;      // hash value
     acr_in::FTarget*     zd_targ_visit_next;      // zslist link; -1 means not-in-list
     acr_in::FTarget*     zd_targ_visit_prev;      // previous element
     algo::Smallstr16     target;                  // Primary key - name of target
@@ -2135,21 +2170,22 @@ void                 FTarget_Uninit(acr_in::FTarget& target) __attribute__((noth
 // access: acr_in.FTuple.c_child (Ptrary)
 // access: acr_in.FTuple.c_parent (Ptrary)
 struct FTuple { // acr_in.FTuple
-    acr_in::FTuple*    ind_tuple_next;     // hash next
-    acr_in::FTuple*    zd_select_next;     // zslist link; -1 means not-in-list
-    acr_in::FTuple*    zd_select_prev;     // previous element
-    acr_in::FTuple*    zd_deselect_next;   // zslist link; -1 means not-in-list
-    acr_in::FTuple*    zd_deselect_prev;   // previous element
-    algo::cstring      key;                //
-    algo::cstring      str;                //
-    acr_in::FTuple**   c_child_elems;      // array of pointers
-    u32                c_child_n;          // array of pointers
-    u32                c_child_max;        // capacity of allocated array
-    acr_in::FCtype*    p_ctype;            // reference to parent row
-    acr_in::FTuple**   c_parent_elems;     // array of pointers
-    u32                c_parent_n;         // array of pointers
-    u32                c_parent_max;       // capacity of allocated array
-    bool               deselect_visited;   //   false
+    acr_in::FTuple*    ind_tuple_next;      // hash next
+    u32                ind_tuple_hashval;   // hash value
+    acr_in::FTuple*    zd_select_next;      // zslist link; -1 means not-in-list
+    acr_in::FTuple*    zd_select_prev;      // previous element
+    acr_in::FTuple*    zd_deselect_next;    // zslist link; -1 means not-in-list
+    acr_in::FTuple*    zd_deselect_prev;    // previous element
+    algo::cstring      key;                 //
+    algo::cstring      str;                 //
+    acr_in::FTuple**   c_child_elems;       // array of pointers
+    u32                c_child_n;           // array of pointers
+    u32                c_child_max;         // capacity of allocated array
+    acr_in::FCtype*    p_ctype;             // reference to parent row
+    acr_in::FTuple**   c_parent_elems;      // array of pointers
+    u32                c_parent_n;          // array of pointers
+    u32                c_parent_max;        // capacity of allocated array
+    bool               deselect_visited;    //   false
     // reftype Ptrary of acr_in.FTuple.c_child prohibits copy
     // reftype Ptrary of acr_in.FTuple.c_parent prohibits copy
     // func:acr_in.FTuple..AssignOp

@@ -27,6 +27,8 @@
 #include "include/gen/lib_sql_gen.inl.h"
 #include "include/gen/algo_gen.h"
 #include "include/gen/algo_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
@@ -98,8 +100,8 @@ bool lib_sql::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (DirectoryQ(root)) {
         retval = retval && lib_sql::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -256,14 +258,9 @@ bool lib_sql::attr_XrefMaybe(lib_sql::FAttr &row) {
 // Find row by key. Return NULL if not found.
 lib_sql::FAttr* lib_sql::ind_attr_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_attr_buckets_n - 1);
-    lib_sql::FAttr* *e = &_db.ind_attr_buckets_elems[index];
-    lib_sql::FAttr* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).attr == key;
-        if (done) break;
-        e         = &ret->ind_attr_next;
-    } while (true);
+    lib_sql::FAttr *ret = _db.ind_attr_buckets_elems[index];
+    for (; ret && !((*ret).attr == key); ret = ret->ind_attr_next) {
+    }
     return ret;
 }
 
@@ -295,10 +292,11 @@ lib_sql::FAttr& lib_sql::ind_attr_GetOrCreate(const algo::strptr& key) {
 // --- lib_sql.FDb.ind_attr.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_sql::ind_attr_InsertMaybe(lib_sql::FAttr& row) {
-    ind_attr_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_attr_next == (lib_sql::FAttr*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.attr) & (_db.ind_attr_buckets_n - 1);
+        row.ind_attr_hashval = algo::cstring_Hash(0, row.attr);
+        ind_attr_Reserve(1);
+        u32 index = row.ind_attr_hashval & (_db.ind_attr_buckets_n - 1);
         lib_sql::FAttr* *prev = &_db.ind_attr_buckets_elems[index];
         do {
             lib_sql::FAttr* ret = *prev;
@@ -324,7 +322,7 @@ bool lib_sql::ind_attr_InsertMaybe(lib_sql::FAttr& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_sql::ind_attr_Remove(lib_sql::FAttr& row) {
     if (LIKELY(row.ind_attr_next != (lib_sql::FAttr*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.attr) & (_db.ind_attr_buckets_n - 1);
+        u32 index = row.ind_attr_hashval & (_db.ind_attr_buckets_n - 1);
         lib_sql::FAttr* *prev = &_db.ind_attr_buckets_elems[index]; // addr of pointer to current element
         while (lib_sql::FAttr *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -341,8 +339,14 @@ void lib_sql::ind_attr_Remove(lib_sql::FAttr& row) {
 // --- lib_sql.FDb.ind_attr.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_sql::ind_attr_Reserve(int n) {
+    ind_attr_AbsReserve(_db.ind_attr_n + n);
+}
+
+// --- lib_sql.FDb.ind_attr.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_sql::ind_attr_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_attr_buckets_n;
-    u32 new_nelems   = _db.ind_attr_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -361,7 +365,7 @@ void lib_sql::ind_attr_Reserve(int n) {
             while (elem) {
                 lib_sql::FAttr &row        = *elem;
                 lib_sql::FAttr* next       = row.ind_attr_next;
-                u32 index          = algo::cstring_Hash(0, row.attr) & (new_nbuckets-1);
+                u32 index          = row.ind_attr_hashval & (new_nbuckets-1);
                 row.ind_attr_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;

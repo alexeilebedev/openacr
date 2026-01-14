@@ -56,6 +56,7 @@ inline void atf_cov::FCovline_Init(atf_cov::FCovline& covline) {
     covline.p_gitfile = NULL;
     covline.gitfile_c_covline_in_ary = bool(false);
     covline.ind_covline_next = (atf_cov::FCovline*)-1; // (atf_cov.FDb.ind_covline) not-in-hash
+    covline.ind_covline_hashval = 0; // stored hash value
 }
 
 // --- atf_cov.FCovline..Ctor
@@ -727,6 +728,7 @@ inline void atf_cov::FGitfile_Init(atf_cov::FGitfile& gitfile) {
     gitfile.c_covline_max = 0; // (atf_cov.FGitfile.c_covline)
     gitfile.c_covfile = NULL;
     gitfile.ind_gitfile_next = (atf_cov::FGitfile*)-1; // (atf_cov.FDb.ind_gitfile) not-in-hash
+    gitfile.ind_gitfile_hashval = 0; // stored hash value
 }
 
 // --- atf_cov.FGitfile.c_covline_curs.Reset
@@ -871,6 +873,7 @@ inline void atf_cov::FTarget_Init(atf_cov::FTarget& target) {
     target.c_covtarget = NULL;
     target.c_tgtcov = NULL;
     target.ind_target_next = (atf_cov::FTarget*)-1; // (atf_cov.FDb.ind_target) not-in-hash
+    target.ind_target_hashval = 0; // stored hash value
 }
 
 // --- atf_cov.FTarget.c_targsrc_curs.Reset
@@ -915,6 +918,7 @@ inline void atf_cov::FTargsrc_Init(atf_cov::FTargsrc& targsrc) {
     targsrc.p_target = NULL;
     targsrc.target_c_targsrc_in_ary = bool(false);
     targsrc.ind_targsrc_next = (atf_cov::FTargsrc*)-1; // (atf_cov.FDb.ind_targsrc) not-in-hash
+    targsrc.ind_targsrc_hashval = 0; // stored hash value
 }
 
 // --- atf_cov.FTargsrc..Ctor
@@ -931,6 +935,7 @@ inline  atf_cov::FTargsrc::~FTargsrc() {
 // Set all fields to initial values.
 inline void atf_cov::FTgtcov_Init(atf_cov::FTgtcov& tgtcov) {
     tgtcov.ind_tgtcov_next = (atf_cov::FTgtcov*)-1; // (atf_cov.FDb.ind_tgtcov) not-in-hash
+    tgtcov.ind_tgtcov_hashval = 0; // stored hash value
 }
 
 // --- atf_cov.FTgtcov..Ctor

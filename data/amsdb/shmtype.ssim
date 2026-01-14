@@ -1,0 +1,3 @@
+amsdb.shmtype  shmtype:ctl  id:1  nonblock:Y  comment:"AMS control messages"
+amsdb.shmtype  shmtype:log  id:9  nonblock:N  comment:"Log messages"
+amsdb.shmtype  shmtype:out  id:2  nonblock:N  comment:"Log messages, alarms"

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -20,9 +20,9 @@
 //
 
 #include "include/algo.h"
-#include "include/lib_json.h"
 #include "include/gen/gcli_gen.h"
 #include "include/gen/gcli_gen.inl.h"
+#define old_intf false
 
 namespace gcli { // update-hdr
     // Dear human:
@@ -38,13 +38,14 @@ namespace gcli { // update-hdr
     tempstr GetCurrentGitBranch();
     void PushGitBranch(strptr remote_name);
     void ParseGitComment(strptr issue_key,tempstr &title,tempstr &description);
-    void CheckGitBranchExists(strptr issue_key);
+    bool CheckGitBranchExists(strptr issue_key);
+    void GitCheckoutBranch(strptr target_branch);
     void GitCheckoutBranch(strptr target_branch, strptr source_branch);
     void GitCheckoutMasterBranch(gcli::FIssue &issue);
     void GitRemoveMrBranch(strptr mr_branch);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gtblact_gitconfig_list(gcli::FGtblact&);
-    // void gtblact_gitconfig_create(gcli::FGtblact &gtblact);
+    // void gtblact_gitconfig_list(gcli::FGtblact&); // gstatic/gclidb.gtblact:gitconfig_list
+    // void gtblact_gitconfig_create(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:gitconfig_create
 
     // -------------------------------------------------------------------
     // cpp/gcli/gtblact.cpp
@@ -76,7 +77,7 @@ namespace gcli { // update-hdr
     //
     void ShowHelp(strptr gtbl_key, strptr gact_key);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gtblact_help_list(gcli::FGtblact &gtblact);
+    // void gtblact_help_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:help_list
 
     // -------------------------------------------------------------------
     // cpp/gcli/issue.cpp
@@ -95,24 +96,26 @@ namespace gcli { // update-hdr
     gcli::FIssue & ReadSingleIssue(gcli::FGtblact &gtblact);
     tempstr Gstate(strptr gstate_key);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gclicmd_issuelist(gcli::FGclicmd &gclicmd);
-    // void gclicmd_issuesearch(gcli::FGclicmd &gclicmd);
-    // void gclicmd_issuenote(gcli::FGclicmd &gclicmd);
-    // void gclicmd_issueadd(gcli::FGclicmd &gclicmd);
-    // void gclicmd_issuemod(gcli::FGclicmd &gclicmd);
-    // void gtblact_issue_list(gcli::FGtblact &gtblact);
-    // void gtblact_issue_update(gcli::FGtblact &gtblact);
-    // void gtblact_issue_create(gcli::FGtblact &gtblact);
-    // void gtblact_issue_start(gcli::FGtblact &gtblact);
-    // void gtblact_issue_needs_work(gcli::FGtblact &gtblact);
-    // void gtblact_issue_stop(gcli::FGtblact &gtblact);
+    // void gclicmd_issuelist(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:issuelist
+    // void gclicmd_issuesearch(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:issuesearch
+    // void gclicmd_issuenote(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:issuenote
+    // void gclicmd_issueadd(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:issueadd
+    // void gclicmd_issuemod(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:issuemod
+    // void gtblact_issue_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:issue_list
+    // void gtblact_issue_update(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:issue_update
+    // void gtblact_issue_create(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:issue_create
+    // void gtblact_issue_start(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:issue_start
+    // void gtblact_issue_needs_work(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:issue_needs_work
+    // void gtblact_issue_stop(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:issue_stop
 
     // -------------------------------------------------------------------
     // cpp/gcli/main.cpp
     //
+    void RemoveEditFile();
     gcli::FGclicmd&  AddGclicmd(strptr gclicmd_key, bool argOK, strptr arg);
     void AddGclicmdArg(strptr gclicmd_key, strptr arg);
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:gcli
 
     // -------------------------------------------------------------------
     // cpp/gcli/milestone.cpp
@@ -120,70 +123,70 @@ namespace gcli { // update-hdr
     void Main_ShowMslist();
     tempstr MilestoneName(strptr proj, strptr iid);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gclicmd_mslist(gcli::FGclicmd &gclicmd);
+    // void gclicmd_mslist(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:mslist
     gcli::FMilestone& GetMilestone(strptr milestone_key);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gtblact_milestone_list(gcli::FGtblact &gtblact);
+    // void gtblact_milestone_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:milestone_list
 
     // -------------------------------------------------------------------
     // cpp/gcli/mr.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gclicmd_graphql(gcli::FGclicmd&);
+    // void gclicmd_graphql(gcli::FGclicmd&); // gstatic/gclidb.gclicmd:graphql
     void Main_ShowMrlist();
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gclicmd_repojobtrace(gcli::FGclicmd&);
-    // void gclicmd_repojob(gcli::FGclicmd &gclicmd);
-    // void gclicmd_mrlist(gcli::FGclicmd &gclicmd);
-    // void gclicmd_mrlistdet(gcli::FGclicmd &gclicmd);
-    // void gclicmd_mrnote(gcli::FGclicmd &gclicmd);
-    // void gclicmd_mrreview(gcli::FGclicmd &gclicmd);
-    // void gclicmd_mrreviewrm(gcli::FGclicmd &gclicmd);
-    // void gclicmd_mrreq(gcli::FGclicmd &gclicmd);
-    // void gclicmd_mrmod(gcli::FGclicmd &gclicmd);
-    // void gclicmd_mrsearch(gcli::FGclicmd &gclicmd);
-    // void gclicmd_mraccept(gcli::FGclicmd &gclicmd);
-    // void gtblact_mr_create(gcli::FGtblact &gtblact);
+    // void gclicmd_repojobtrace(gcli::FGclicmd&); // gstatic/gclidb.gclicmd:repojobtrace
+    // void gclicmd_repojob(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:repojob
+    // void gclicmd_mrlist(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:mrlist
+    // void gclicmd_mrlistdet(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:mrlistdet
+    // void gclicmd_mrnote(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:mrnote
+    // void gclicmd_mrreview(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:mrreview
+    // void gclicmd_mrreviewrm(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:mrreviewrm
+    // void gclicmd_mrreq(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:mrreq
+    // void gclicmd_mrmod(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:mrmod
+    // void gclicmd_mrsearch(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:mrsearch
+    // void gclicmd_mraccept(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:mraccept
+    // void gtblact_mr_create(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mr_create
     gcli::FMr & ReadSingleMr(gcli::FGtblact &gtblact);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gtblact_mr_update(gcli::FGtblact &gtblact);
+    // void gtblact_mr_update(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mr_update
     void Mr_SearchCond(gcli::FGtblact &gtblact);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gtblact_mr_list(gcli::FGtblact &gtblact);
-    // void gtblact_mrjob_list(gcli::FGtblact &gtblact);
-    // void gtblact_mr_accept(gcli::FGtblact &gtblact);
-    // void gtblact_mr_approve(gcli::FGtblact &gtblact);
-    // void gtblact_mr_needs_work(gcli::FGtblact &gtblact);
-    // void gtblact_mr_start(gcli::FGtblact &gtblact);
-    // void gtblact_mr_stop(gcli::FGtblact &gtblact);
+    // void gtblact_mr_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mr_list
+    // void gtblact_mrjob_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mrjob_list
+    // void gtblact_mr_accept(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mr_accept
+    // void gtblact_mr_approve(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mr_approve
+    // void gtblact_mr_needs_work(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mr_needs_work
+    // void gtblact_mr_start(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mr_start
+    // void gtblact_mr_stop(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mr_stop
 
     // -------------------------------------------------------------------
     // cpp/gcli/note.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gclicmd_noteadd(gcli::FGclicmd&);
-    // void gclicmd_mrnoteadd(gcli::FGclicmd&);
-    // void gclicmd_notemod(gcli::FGclicmd&);
-    // void gclicmd_mrnotemod(gcli::FGclicmd&);
-    // void gtblact_issuenote_create(gcli::FGtblact &gtblact);
-    // void gtblact_issuenote_update(gcli::FGtblact &gtblact);
-    // void gtblact_issuenote_list(gcli::FGtblact &gtblact);
-    // void gtblact_mrnote_list(gcli::FGtblact &gtblact);
-    // void gtblact_mrnote_create(gcli::FGtblact &gtblact);
-    // void gtblact_mrnote_update(gcli::FGtblact &gtblact);
+    // void gclicmd_noteadd(gcli::FGclicmd&); // gstatic/gclidb.gclicmd:noteadd
+    // void gclicmd_mrnoteadd(gcli::FGclicmd&); // gstatic/gclidb.gclicmd:mrnoteadd
+    // void gclicmd_notemod(gcli::FGclicmd&); // gstatic/gclidb.gclicmd:notemod
+    // void gclicmd_mrnotemod(gcli::FGclicmd&); // gstatic/gclidb.gclicmd:mrnotemod
+    // void gtblact_issuenote_create(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:issuenote_create
+    // void gtblact_issuenote_update(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:issuenote_update
+    // void gtblact_issuenote_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:issuenote_list
+    // void gtblact_mrnote_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mrnote_list
+    // void gtblact_mrnote_create(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mrnote_create
+    // void gtblact_mrnote_update(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:mrnote_update
 
     // -------------------------------------------------------------------
     // cpp/gcli/repo.cpp
     //
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gtblact_repo_list(gcli::FGtblact &gtblact);
-    // void gclicmd_token2repos(gcli::FGclicmd &gclicmd);
+    // void gtblact_repo_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:repo_list
+    // void gclicmd_token2repos(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:token2repos
     void LoadGrepo();
     void Main_ManageAuth();
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gtblact_repo_create(gcli::FGtblact &gtblact);
-    // void gtblact_reporemote_list(gcli::FGtblact &gtblact);
-    // void gtblact_repo_update(gcli::FGtblact &gtblact);
+    // void gtblact_repo_create(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:repo_create
+    // void gtblact_reporemote_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:reporemote_list
+    // void gtblact_repo_update(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:repo_update
 
     // -------------------------------------------------------------------
     // cpp/gcli/rest.cpp
@@ -207,10 +210,10 @@ namespace gcli { // update-hdr
     //
     void Main_ShowUserlist();
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gclicmd_user(gcli::FGclicmd &gclicmd);
-    // void gclicmd_userlist(gcli::FGclicmd &gclicmd);
-    // void gclicmd_userdet(gcli::FGclicmd &gclicmd);
+    // void gclicmd_user(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:user
+    // void gclicmd_userlist(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:userlist
+    // void gclicmd_userdet(gcli::FGclicmd &gclicmd); // gstatic/gclidb.gclicmd:userdet
     gcli::FUser& GetUser(strptr user_key);
     //     (user-implemented function, prototype is in amc-generated header)
-    // void gtblact_user_list(gcli::FGtblact &gtblact);
+    // void gtblact_user_list(gcli::FGtblact &gtblact); // gstatic/gclidb.gtblact:user_list
 }

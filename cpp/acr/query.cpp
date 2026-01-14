@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
@@ -192,6 +192,9 @@ static bool VisitField(acr::FQuery& query, acr::FRec& rec, acr::FField &field, a
         } break;
 
         case acr_Queryop_value_rename_typetag: {
+            if (!rec.oldhead) {
+                oldhead_Access(rec) = rec.tuple.head.value;// save old head, but only once
+            }
             rec.tuple.head.value = query.new_val;
             MarkModified(query,rec);
         } break;
@@ -269,7 +272,7 @@ void acr::RunQuery(acr::FQuery &query) {
         }
     } else {
         // compute list of potential ssimfiles that contain matches
-        if (!query.ssimfile.literal) {
+        if (!literal_Get(query.ssimfile.flags)) {
             ind_beg(acr::_db_ssimfile_curs, ssimfile,acr::_db) {
                 query.n_regx_match++;
                 if (Regx_Match(query.ssimfile, ssimfile.ssimfile)) {
@@ -285,6 +288,11 @@ void acr::RunQuery(acr::FQuery &query) {
         // load ssimfiles (if necessary)
         ind_beg(acr::query_c_ctype_curs, ctype, query) {
             LoadRecords(ctype);
+            // If no records were loaded, consider the ctype "selected"
+            // so that "sample tuple" can be shown
+            if (ind_ctype_rec_N(ctype)==0) {
+                acr::zd_sel_ctype_Insert(ctype);
+            }
         }ind_end;
         // Visit all selected ctypes in QUERY, scan all records
         // of each ctype and match QUERY against each record.
@@ -295,7 +303,7 @@ void acr::RunQuery(acr::FQuery &query) {
             query.n_visit_ctype++;
             // match on pkey if the query field is omitted
             bool is_pkey = !ch_N(query.query.name.expr)
-                || (query.query.name.literal && query.query.name.expr == name_Get(*c_field_Find(ctype, 0)));
+                || (literal_Get(query.query.name.flags) && query.query.name.expr == name_Get(*c_field_Find(ctype, 0)));
 
             // determine set of fields to scan
             // if query is for pkey, we already have that indexed.
@@ -313,13 +321,13 @@ void acr::RunQuery(acr::FQuery &query) {
 
             // determine set of records to scan
             c_rec_RemoveAll(query);
-            if (is_pkey && query.query.value.literal) {
+            if (is_pkey && literal_Get(query.query.value.flags)) {
                 acr::FRec *rec = acr::ind_ctype_rec_Find(ctype, query.query.value.expr);
                 if (rec) {
                     c_rec_Insert(query, *rec);
                 }
             } else {
-                ind_beg(acr::ctype_zd_ctype_rec_curs, rec, ctype) {
+                ind_beg(acr::ctype_zd_rec_curs, rec, ctype) {
                     c_rec_Insert(query, rec);
                 }ind_end;
             }

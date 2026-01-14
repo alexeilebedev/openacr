@@ -4,10 +4,21 @@
 ### Table Of Contents
 <a href="#table-of-contents"></a>
 <!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Toc -->
+&nbsp;&nbsp;&bull;&nbsp;  [Inputs](#inputs)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Sources](#sources)<br/>
 &nbsp;&nbsp;&bull;&nbsp;  [Dependencies](#dependencies)<br/>
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Toc -->
+
+### Inputs
+<a href="#inputs"></a>
+<!-- dev.mdmark  mdmark:MDSECTION  state:BEG_AUTO  param:Inputs -->
+`lib_amcdb` takes the following tables on input:
+|Ssimfile|Comment|
+|---|---|
+|[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
+
+<!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 
 ### Sources
 <a href="#sources"></a>

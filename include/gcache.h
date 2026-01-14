@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -99,5 +99,6 @@ namespace gcache { // update-hdr
     void Pch();
 
     // main routine
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:gcache
 }

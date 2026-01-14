@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -56,7 +56,8 @@ namespace abt { // update-hdr
     abt::FFilestat &GetFilestat(strptr fname);
 
     // how are we using this execkey???
-    i64 execkey_Get(abt::FSyscmd &cmd);
+    //     (user-implemented function, prototype is in amc-generated header)
+    // i64 execkey_Get(abt::FSyscmd &cmd);
     bool SourceQ(abt::FTargsrc &targsrc);
 
     // compute obj key by replacing path components
@@ -70,7 +71,8 @@ namespace abt { // update-hdr
     tempstr GetObjpath(abt::FBuilddir &builddir, abt::FSrcfile &srcfile);
     void DeleteFileV(strptr path);
     tempstr GetOutfile(abt::FBuilddir &builddir, abt::FTarget &target);
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:abt
 
     // -------------------------------------------------------------------
     // cpp/abt/ood.cpp

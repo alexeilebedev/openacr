@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -22,41 +22,58 @@
 #include "include/algo.h"
 #include "include/gcli.h"
 // -----------------------------------------------------------------------------
+static tempstr ShowDesc(gcli::FIssue &issue){
+    algo_lib::FTxttbl txttbl;
+    AddRow(txttbl);
+    AddCol(txttbl,"DESCRIPTION");
+    AddRow(txttbl);
+    AddCol(txttbl,issue.description);
+    return tempstr()<<txttbl;
+}
+// -----------------------------------------------------------------------------
+static tempstr ShowNote(gcli::FIssue &issue){
+    algo_lib::FTxttbl txttbl;
+
+    AddRow(txttbl);
+    AddCols(txttbl,"ISSUENOTE,AUTHOR");
+
+    ind_beg(gcli::issue_c_issuenote_curs, issuenote, issue) if (issuenote.select){
+        AddRow(txttbl);
+        AddCol(txttbl,issuenote.issuenote);
+        AddCol(txttbl,issuenote.author);
+
+        AddRow(txttbl);
+        AddCol(txttbl,issuenote.note);
+    }ind_end;
+    return tempstr()<<txttbl;
+}
+// -----------------------------------------------------------------------------
 void gcli::Main_ShowIssuelist() {
     cstring out;
-    out << "ISSUE\tMR\tAUTHOR\tLABELS\tASSIGNEE\tMILESTONE\tSTATE\tTITLE\n";
+    algo_lib::FTxttbl txttbl;
+    algo_lib::FTxttbl txttbl_desc;
+    algo_lib::FTxttbl txttbl_note;
+    AddRow(txttbl);
+    AddCols(txttbl,"ISSUE,MR,AUTHOR,LABELS,ASSIGNEE,MILESTONE,STATE,TITLE");
     ind_beg(gcli::_db_issue_curs, issue, gcli::_db) if (issue.select) {
-        out << issue.issue
-            << "\t" << issue.mr
-            //            << "\t" << issue.milestone
-            << "\t" << issue.author
-            << "\t" << issue.labels
-            << "\t" << issue.assignee
-            << "\t" << issue.milestone
-            << "\t" << issue.state
-            << "\t" << issue.title
-            << eol;
+        AddRow(txttbl);
+        AddCol(txttbl,issue.issue);
+        AddCol(txttbl,issue.mr);
+        AddCol(txttbl,issue.author);
+        AddCol(txttbl,issue.labels);
+        AddCol(txttbl,issue.assignee);
+        AddCol(txttbl,issue.milestone);
+        AddCol(txttbl,issue.state);
+        AddCol(txttbl,issue.title);
         if (gcli::_db.cmdline.t){
-            out << eol;
-            out << "DESCRIPTION" << eol;
-            out <<issue.description << eol;
+            out << ShowDesc(issue)<<eol;
             if (c_issuenote_N(issue)){
-                out << eol;
-                out << "ISSUENOTE\tAUTHOR\n";
+                out<< ShowNote(issue)<<eol;
             }
-            ind_beg(gcli::issue_c_issuenote_curs, issuenote, issue) if (issuenote.select){
-                out << issuenote.issuenote;
-                out << "\t" << issuenote.author;
-                out << eol;
-                //                out << "NOTE:";
-                out << issuenote.note;
-                out << eol;
-                out << eol;
-            }ind_end;
-
         }
     }ind_end;
-    prlog(Tabulated(out,"\t"));
+    prlog(txttbl);
+    prlog(out);
 }
 // -----------------------------------------------------------------------------
 static tempstr IssueName(strptr proj, strptr iid){
@@ -313,10 +330,7 @@ void gcli::gtblact_issue_update(gcli::FGtblact &gtblact){
         gcli::Main_ShowIssuelist();
     }
     // consider operation successful, remove file
-    if (gcli::_db.edit_file!="") {
-        unlink(Zeroterm(gcli::_db.edit_file));
-        gcli::_db.edit_file="";
-    }
+    RemoveEditFile();
 }
 // -----------------------------------------------------------------------------
 void gcli::gtblact_issue_create(gcli::FGtblact &gtblact){
@@ -353,6 +367,8 @@ void gcli::gtblact_issue_create(gcli::FGtblact &gtblact){
             PropagateGtblactID(issue_new->issue);
         }
     }
+    // consider operation successful, remove file
+    RemoveEditFile();
 }
 // -----------------------------------------------------------------------------
 void gcli::gtblact_issue_start(gcli::FGtblact &gtblact){
@@ -362,25 +378,31 @@ void gcli::gtblact_issue_start(gcli::FGtblact &gtblact){
     gcli::FIssue &issue=ReadSingleIssue(gtblact);
     //    gcli::FIssue &issue=ValidateIssue(issue_key);
     // Check branch exists
-    CheckGitBranchExists(issue_key);
-    // Check dir is clean
-    AssertGitWorkDirClean();
-    // Checkout branch
-    GitCheckoutMasterBranch(issue);
-    // Add "in_progress" label here, preserve other labels
-    gcli::_db.cmdline.e=false; // just in case
-    //    zd_gtblact_Extend(gclidb_Gtblact_gtblact_issue_update);
-    // if "in_progress" label present, just show the issue.
-    tempstr labels(issue.labels);
-    if (Replace(labels,gclidb_Label_label_in_progress,gclidb_Label_label_in_progress)){
-        zd_gtblact_Extend(gclidb_Gtblact_gtblact_issue_list,id);
-    } else {
-        if (labels!=""){
-            labels<<",";
+    if (CheckGitBranchExists(issue_key)){
+        // Check dir is clean
+        AssertGitWorkDirClean();
+        // Checkout branch
+        GitCheckoutMasterBranch(issue);
+        // Add "in_progress" label here, preserve other labels
+        gcli::_db.cmdline.e=false; // just in case
+        //    zd_gtblact_Extend(gclidb_Gtblact_gtblact_issue_update);
+        // if "in_progress" label present, just show the issue.
+        tempstr labels(issue.labels);
+        if (Replace(labels,gclidb_Label_label_in_progress,gclidb_Label_label_in_progress)){
+            zd_gtblact_Extend(gclidb_Gtblact_gtblact_issue_list,id);
+        } else {
+            if (labels!=""){
+                labels<<",";
+            }
+            labels<<gclidb_Label_label_in_progress;
+            gcli::SetGtblactfld(gclidb_Gtblact_gtblact_issue_update,gclidb_Gfld_gfld_labels, labels);
+            zd_gtblact_Extend(gclidb_Gtblact_gtblact_issue_update,id);
         }
-        labels<<gclidb_Label_label_in_progress;
-        gcli::SetGtblactfld(gclidb_Gtblact_gtblact_issue_update,gclidb_Gfld_gfld_labels, labels);
-        zd_gtblact_Extend(gclidb_Gtblact_gtblact_issue_update,id);
+    } else {
+        // Check dir is clean
+        AssertGitWorkDirClean();
+        prlog("Branch exists, switching to it");
+        gcli::GitCheckoutBranch(issue_key);
     }
 }
 // -----------------------------------------------------------------------------

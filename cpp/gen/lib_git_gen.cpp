@@ -25,6 +25,8 @@
 #include "include/algo.h"  // hard-coded include
 #include "include/gen/lib_git_gen.h"
 #include "include/gen/lib_git_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
@@ -90,8 +92,8 @@ bool lib_git::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (DirectoryQ(root)) {
         retval = retval && lib_git::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -24,9 +24,9 @@
 
 // -----------------------------------------------------------------------------
 
-// Return true if readme file README needs section MDSECTION
-bool abt_md::NeedSectionQ(abt_md::FMdsection &mdsection, abt_md::FReadme &readme) {
-    return Regx_Match(mdsection.regx_path,readme.gitfile) && mdsection.path!="";
+// Return true if readme file READMEFILE needs section MDSECTION
+bool abt_md::NeedSectionQ(abt_md::FMdsection &mdsection, abt_md::FReadmefile &readmefile) {
+    return Regx_Match(mdsection.regx_path,readmefile.gitfile) && mdsection.path!="";
 }
 
 // Extract words from line up until first dash
@@ -35,9 +35,10 @@ bool abt_md::NeedSectionQ(abt_md::FMdsection &mdsection, abt_md::FReadme &readme
 // to generate anchors, but we allow '.' in anchor name
 tempstr abt_md::LineKey(algo::strptr line) {
     strptr str=Pathcomp(line," LR");
-    int i=FindStr(str," -- ");
-    if (i==-1) {
-        i=FindStr(str," - ");
+    int i=FindStr(str," - ");
+    int j=FindStr(str," -- ");
+    if (i==-1 || (j!=-1 && j<i)) {
+        i=j;
     }
     if (i!=-1) {
         str=ch_FirstN(str,i);
@@ -291,10 +292,10 @@ int abt_md::GetHeaderLevel(strptr line) {
 // - evaluate all commands using sandbox (if specified)
 // - save readme to disk
 void abt_md::UpdateReadme() {
-    abt_md::FReadme &readme = *_db.c_readme;
+    abt_md::FReadmefile &readmefile = *_db.c_readmefile;
     // create missing file sections
     ind_beg(abt_md::_db_mdsection_curs,mdsection,_db) {
-        if (zd_file_section_EmptyQ(mdsection) && NeedSectionQ(mdsection,readme)) {
+        if (zd_file_section_EmptyQ(mdsection) && NeedSectionQ(mdsection,readmefile)) {
             abt_md::FFileSection &section=file_section_Alloc();
             section.firstline=1;
             section.p_mdsection=&mdsection;
@@ -306,7 +307,7 @@ void abt_md::UpdateReadme() {
         }
     }ind_end;
 
-    if (readme.sandbox && _db.cmdline.evalcmd) {
+    if (readmefile.sandbox && _db.cmdline.evalcmd) {
         command::sandbox_proc sandbox;
         sandbox.cmd.name.expr = dev_Sandbox_sandbox_abt_md;
         sandbox.cmd.reset = true;
@@ -325,13 +326,13 @@ void abt_md::UpdateReadme() {
 
     cstring out;
     PrintSections(out);
-    if (!_db.cmdline.dry_run) {
-        verblog("save "<<readme.gitfile<<eol);
-        SafeStringToFile(out,readme.gitfile);
+    if (!_db.cmdline.dry_run && algo_lib::_db.exit_code==0) {
+        verblog("save "<<readmefile.gitfile<<eol);
+        SafeStringToFile(out,readmefile.gitfile);
         // **VP** Hardcoded code for keeping top level README.md to be automatically visible in gitlab/github
         // Softlink README.md to txt/README.md doesn't work for gitlab - doesn't render
         // Keeping README.md in dev.readme table so abt_md generates it breaks xref with ordered dev.readmecat
-        if (readme.gitfile=="txt/README.md"){
+        if (readmefile.gitfile=="txt/README.md"){
             tempstr out_readme;
             out_readme<<"<!-- This file is a copy of txt/README.md -->"<<eol;
             out_readme<<"<!-- Don't edit this file, edit txt/README.md -->"<<eol;
@@ -352,12 +353,12 @@ void abt_md::UpdateReadme() {
 // The same check is partially implemented via ssimreq, but ssimreq
 // canot handle exceptions like README.md
 void abt_md::Main_XrefNs() {
-    ind_beg(_db_readme_curs,readme,_db) {
+    ind_beg(_db_readmefile_curs,readmefile,_db) {
         // PATHNAME                              DIR1     DIR2     FILENAME
         // txt/exe/acr/main.md                   exe      ""       main
         // txt/script/abc.md                     script   script   abc
         // txt/ssimdb/ns/name.md                 ssimdb   ssimdb   name
-        tempstr gitfile(readme.gitfile);
+        tempstr gitfile(readmefile.gitfile);
         algo::strptr dir1=Pathcomp(gitfile, "/LR/LL");
         algo::strptr dir2=Pathcomp(gitfile, "/LR/LR/LL");
         algo::strptr filename = Pathcomp(gitfile, "/RR.RL");
@@ -365,34 +366,34 @@ void abt_md::Main_XrefNs() {
         if (dir1 == "script" && filename != "README") {// manually check script existence
             tempstr scriptfile_key(DirFileJoin("bin",filename));
             if (abt_md::FScriptfile *scriptfile=ind_scriptfile_Find(scriptfile_key)) {
-                readme.p_scriptfile=scriptfile;
+                readmefile.p_scriptfile=scriptfile;
             } else {
                 stray_error<<Keyval("no such script",scriptfile_key);
             }
         } else if (abt_md::FNs *ns=ind_ns_Find(dir2)) {
             if (dir1 == dmmeta_Nstype_nstype_exe) {
                 if (ns->ns != "") {
-                    readme.p_ns=ns;
-                    ns->c_readme=&readme;
+                    readmefile.p_ns=ns;
+                    ns->c_readmefile=&readmefile;
                 }
             } else if (dir1==dmmeta_Nstype_nstype_ssimdb) {
                 tempstr ssimfile_key(tempstr()<<dir2<<"."<<filename);
                 if (filename == "README") {
-                    readme.p_ns = ns;
-                    ns->c_readme=&readme;
+                    readmefile.p_ns = ns;
+                    ns->c_readmefile=&readmefile;
                 } else if (abt_md::FSsimfile *ssimfile =ind_ssimfile_Find(ssimfile_key)) {
-                    readme.p_ssimfile=ssimfile;
-                    readme.p_ctype=ssimfile->p_ctype;
+                    readmefile.p_ssimfile=ssimfile;
+                    readmefile.p_ctype=ssimfile->p_ctype;
                 } else {
                     stray_error<<Keyval("no such ssimfile",ssimfile_key);
                 }
             } else if (dir1==dmmeta_Nstype_nstype_lib || dir1==dmmeta_Nstype_nstype_protocol) {
                 tempstr ctype_key(tempstr()<<dir2<<"."<<filename);
                 if (filename == "README") {
-                    readme.p_ns = ns;
-                    ns->c_readme=&readme;
+                    readmefile.p_ns = ns;
+                    ns->c_readmefile=&readmefile;
                 } else if (abt_md::FCtype *ctype =ind_ctype_Find(ctype_key)) {
-                    readme.p_ctype=ctype;
+                    readmefile.p_ctype=ctype;
                 } else {
                     stray_error<<Keyval("no such ctype",ctype_key);
                 }
@@ -403,25 +404,25 @@ void abt_md::Main_XrefNs() {
 
         if (stray_error!="") {
             prerr("abt_md.unrecognized_readme"
-                  <<Keyval("readme",readme.gitfile)
+                  <<Keyval("readmefile",readmefile.gitfile)
                   <<Keyval("dir1",dir1)
                   <<Keyval("dir2",dir2)
                   <<Keyval("comment",stray_error));
             algo_lib::_db.exit_code=1;
         }
-        if (readme.select) {
-            if (readme.p_scriptfile) {
+        if (readmefile.select) {
+            if (readmefile.p_scriptfile) {
                 verblog("abt_md.readme_scriptfile"
-                        <<Keyval("readme",readme.gitfile)
-                        <<Keyval("scriptfile",readme.p_scriptfile->gitfile));
-            } else if (readme.p_ns) {
+                        <<Keyval("readmefile",readmefile.gitfile)
+                        <<Keyval("scriptfile",readmefile.p_scriptfile->gitfile));
+            } else if (readmefile.p_ns) {
                 verblog("abt_md.readme_ns"
-                        <<Keyval("readme",readme.gitfile)
-                        <<Keyval("ns",readme.p_ns->ns));
-            } else if (readme.p_ssimfile) {
+                        <<Keyval("readmefile",readmefile.gitfile)
+                        <<Keyval("ns",readmefile.p_ns->ns));
+            } else if (readmefile.p_ssimfile) {
                 verblog("abt_md.readme_ssimfile"
-                        <<Keyval("readme",readme.gitfile)
-                        <<Keyval("ssimfile",readme.p_ssimfile->ssimfile));
+                        <<Keyval("readmefile",readmefile.gitfile)
+                        <<Keyval("ssimfile",readmefile.p_ssimfile->ssimfile));
             }
         }
     }ind_end;
@@ -483,6 +484,22 @@ void abt_md::CheckLinks() {
     }ind_end;
 }
 
+void abt_md::ProcessReadme(abt_md::FReadmefile& readmefile) {
+    verblog("processing " << readmefile.gitfile);
+    _db.c_readmefile = &readmefile;
+    LoadSections(readmefile);
+    if (_db.cmdline.update) {
+        UpdateReadme();
+    }
+    // scan sections for links and anchors
+    ScanLinksAnchors();
+    if (_db.cmdline.print && !_db.cmdline.link && !_db.cmdline.anchor) {
+        cstring out;
+        PrintSections(out);
+        prlog(out);
+    }
+}
+
 // -----------------------------------------------------------------------------
 
 void abt_md::Main() {
@@ -505,13 +522,13 @@ void abt_md::Main() {
     Main_XrefNs();
 
     // select md files by regex or by namespace
-    ind_beg(_db_readme_curs,readme,_db) {
-        readme.select = _db.cmdline.ns.expr != ""
-            ? (readme.p_ns && Regx_Match(_db.cmdline.ns,readme.p_ns->ns))
-            : Regx_Match(_db.cmdline.readme,readme.gitfile);
+    ind_beg(_db_readmefile_curs,readmefile,_db) {
+        readmefile.select = _db.cmdline.ns.expr != ""
+            ? (readmefile.p_ns && Regx_Match(_db.cmdline.ns,readmefile.p_ns->ns))
+            : Regx_Match(_db.cmdline.readmefile,readmefile.gitfile);
 
-        if (readme.select) {
-            verblog("abt_md: select "<<readme.gitfile);
+        if (readmefile.select) {
+            verblog("abt_md: select "<<readmefile.gitfile);
         }
     }ind_end;
 
@@ -523,29 +540,24 @@ void abt_md::Main() {
 
     // count number of selected md files
     int nselect=0;
-    ind_beg(_db_readme_curs,readme,_db) {
-        nselect += readme.select;
+    ind_beg(_db_readmefile_curs,readmefile,_db) {
+        nselect += readmefile.select;
     }ind_end;
 
     // process selected readmes
     // if none are selected, it is an error, unless the selection
     // was an empty string, in which case just update the top-level readme
-    if (algo_lib::_db.exit_code==0 && (_db.cmdline.readme.expr != "" || _db.cmdline.ns.expr != "")) {
+    if (algo_lib::_db.exit_code==0 && (_db.cmdline.readmefile.expr != "" || _db.cmdline.ns.expr != "")) {
         int nmatch=0;
-        ind_beg(_db_readme_curs,readme,_db) if (readme.select) {
+        ind_beg(_db_readmefile_curs,readmefile,_db) if (readmefile.select) {
             nmatch++;
-            verblog("processing "<<readme.gitfile);
-            _db.c_readme = &readme;
-            LoadSections(readme);
-            if (_db.cmdline.update) {
-                UpdateReadme();
-            }
-            // scan sections for links and anchors
-            ScanLinksAnchors();
-            if (_db.cmdline.print && !_db.cmdline.link && !_db.cmdline.anchor) {
-                cstring out;
-                PrintSections(out);
-                prlog(out);
+            ProcessReadme(readmefile);
+        }ind_end;
+
+        // second pass to populate all README.md with new .md for new ssimdb files
+        ind_beg(_db_readmefile_curs,readmefile,_db) if (readmefile.select) {
+            if (algo::StripDirName(readmefile.gitfile) =="README.md") {
+                ProcessReadme(readmefile);
             }
         }ind_end;
 
@@ -558,7 +570,7 @@ void abt_md::Main() {
     // can't check links if not all files were loaded
     // -update implies -check
     if (_db.cmdline.check || _db.cmdline.update) {
-        if (nselect < readme_N()) {
+        if (nselect < readmefile_N()) {
             verblog("abt_md: disable link checking, not all files being loaded");
         } else {
             CheckLinks();

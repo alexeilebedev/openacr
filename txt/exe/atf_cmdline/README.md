@@ -36,15 +36,15 @@ Usage: atf_cmdline [-astr:]<string> [[-anum:]<int>] [[-adbl:]<double>] -str:<str
     -mnum...    int             Number array
     -mdbl...    double          Double array
     [amnum]...  int             Anon number array
-    -fconst     int     high    Fconst for field (high|medium|low)
+    -fconst     enum    high    Fconst for field (high|medium|low)
                                     high  Cool
                                     medium  So-so
                                     low  Bad
     -cconst     enum    None    Fconst for arg ctype (January|February|March|April|May|June|July|August|September|October|November|December|None)
     -dregx      regx    "%"     Predefined regx
     -dpkey      string  ""      Predefined pkey
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig

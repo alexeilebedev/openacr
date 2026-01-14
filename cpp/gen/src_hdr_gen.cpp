@@ -33,6 +33,8 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_git_gen.h"
@@ -41,6 +43,7 @@
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 lib_git::FDb    lib_git::_db;     // dependency found via dev.targdep
 src_hdr::FDb    src_hdr::_db;     // dependency found via dev.targdep
@@ -56,8 +59,8 @@ const char *src_hdr_help =
 "    -indent                            Indent source files\n"
 "    -update_copyright                  Update copyright year for current company\n"
 "    -scriptfile        regx    \"\"      Regx of scripts to update header\n"
-"    -verbose           int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug             int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose           flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug             flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                              Print help and exit; alias -h\n"
 "    -version                           Print version and exit\n"
 "    -signature                         Show signatures and exit; alias -sig\n"
@@ -218,9 +221,8 @@ void src_hdr::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "src_hdr: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -263,6 +265,9 @@ void src_hdr::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:src_hdr.FDb.cmdline
@@ -274,7 +279,7 @@ void src_hdr::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -399,8 +404,8 @@ bool src_hdr::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.scriptfile"),recursive);
         retval = retval && src_hdr::LoadTuplesFile(algo::SsimFname(root,"dev.copyright"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -679,14 +684,9 @@ bool src_hdr::ns_XrefMaybe(src_hdr::FNs &row) {
 // Find row by key. Return NULL if not found.
 src_hdr::FNs* src_hdr::ind_ns_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
-    src_hdr::FNs* *e = &_db.ind_ns_buckets_elems[index];
-    src_hdr::FNs* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ns == key;
-        if (done) break;
-        e         = &ret->ind_ns_next;
-    } while (true);
+    src_hdr::FNs *ret = _db.ind_ns_buckets_elems[index];
+    for (; ret && !((*ret).ns == key); ret = ret->ind_ns_next) {
+    }
     return ret;
 }
 
@@ -701,10 +701,11 @@ src_hdr::FNs& src_hdr::ind_ns_FindX(const algo::strptr& key) {
 // --- src_hdr.FDb.ind_ns.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool src_hdr::ind_ns_InsertMaybe(src_hdr::FNs& row) {
-    ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (src_hdr::FNs*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        row.ind_ns_hashval = algo::Smallstr16_Hash(0, row.ns);
+        ind_ns_Reserve(1);
+        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
         src_hdr::FNs* *prev = &_db.ind_ns_buckets_elems[index];
         do {
             src_hdr::FNs* ret = *prev;
@@ -730,7 +731,7 @@ bool src_hdr::ind_ns_InsertMaybe(src_hdr::FNs& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_hdr::ind_ns_Remove(src_hdr::FNs& row) {
     if (LIKELY(row.ind_ns_next != (src_hdr::FNs*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
         src_hdr::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
         while (src_hdr::FNs *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -747,8 +748,14 @@ void src_hdr::ind_ns_Remove(src_hdr::FNs& row) {
 // --- src_hdr.FDb.ind_ns.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void src_hdr::ind_ns_Reserve(int n) {
+    ind_ns_AbsReserve(_db.ind_ns_n + n);
+}
+
+// --- src_hdr.FDb.ind_ns.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void src_hdr::ind_ns_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ns_buckets_n;
-    u32 new_nelems   = _db.ind_ns_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -767,7 +774,7 @@ void src_hdr::ind_ns_Reserve(int n) {
             while (elem) {
                 src_hdr::FNs &row        = *elem;
                 src_hdr::FNs* next       = row.ind_ns_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                u32 index          = row.ind_ns_hashval & (new_nbuckets-1);
                 row.ind_ns_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -993,14 +1000,9 @@ bool src_hdr::license_XrefMaybe(src_hdr::FLicense &row) {
 // Find row by key. Return NULL if not found.
 src_hdr::FLicense* src_hdr::ind_license_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_license_buckets_n - 1);
-    src_hdr::FLicense* *e = &_db.ind_license_buckets_elems[index];
-    src_hdr::FLicense* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).license == key;
-        if (done) break;
-        e         = &ret->ind_license_next;
-    } while (true);
+    src_hdr::FLicense *ret = _db.ind_license_buckets_elems[index];
+    for (; ret && !((*ret).license == key); ret = ret->ind_license_next) {
+    }
     return ret;
 }
 
@@ -1032,10 +1034,11 @@ src_hdr::FLicense& src_hdr::ind_license_GetOrCreate(const algo::strptr& key) {
 // --- src_hdr.FDb.ind_license.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool src_hdr::ind_license_InsertMaybe(src_hdr::FLicense& row) {
-    ind_license_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_license_next == (src_hdr::FLicense*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.license) & (_db.ind_license_buckets_n - 1);
+        row.ind_license_hashval = algo::Smallstr50_Hash(0, row.license);
+        ind_license_Reserve(1);
+        u32 index = row.ind_license_hashval & (_db.ind_license_buckets_n - 1);
         src_hdr::FLicense* *prev = &_db.ind_license_buckets_elems[index];
         do {
             src_hdr::FLicense* ret = *prev;
@@ -1061,7 +1064,7 @@ bool src_hdr::ind_license_InsertMaybe(src_hdr::FLicense& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_hdr::ind_license_Remove(src_hdr::FLicense& row) {
     if (LIKELY(row.ind_license_next != (src_hdr::FLicense*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.license) & (_db.ind_license_buckets_n - 1);
+        u32 index = row.ind_license_hashval & (_db.ind_license_buckets_n - 1);
         src_hdr::FLicense* *prev = &_db.ind_license_buckets_elems[index]; // addr of pointer to current element
         while (src_hdr::FLicense *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1078,8 +1081,14 @@ void src_hdr::ind_license_Remove(src_hdr::FLicense& row) {
 // --- src_hdr.FDb.ind_license.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void src_hdr::ind_license_Reserve(int n) {
+    ind_license_AbsReserve(_db.ind_license_n + n);
+}
+
+// --- src_hdr.FDb.ind_license.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void src_hdr::ind_license_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_license_buckets_n;
-    u32 new_nelems   = _db.ind_license_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1098,7 +1107,7 @@ void src_hdr::ind_license_Reserve(int n) {
             while (elem) {
                 src_hdr::FLicense &row        = *elem;
                 src_hdr::FLicense* next       = row.ind_license_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.license) & (new_nbuckets-1);
+                u32 index          = row.ind_license_hashval & (new_nbuckets-1);
                 row.ind_license_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1231,14 +1240,9 @@ bool src_hdr::target_XrefMaybe(src_hdr::FTarget &row) {
 // Find row by key. Return NULL if not found.
 src_hdr::FTarget* src_hdr::ind_target_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
-    src_hdr::FTarget* *e = &_db.ind_target_buckets_elems[index];
-    src_hdr::FTarget* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).target == key;
-        if (done) break;
-        e         = &ret->ind_target_next;
-    } while (true);
+    src_hdr::FTarget *ret = _db.ind_target_buckets_elems[index];
+    for (; ret && !((*ret).target == key); ret = ret->ind_target_next) {
+    }
     return ret;
 }
 
@@ -1253,10 +1257,11 @@ src_hdr::FTarget& src_hdr::ind_target_FindX(const algo::strptr& key) {
 // --- src_hdr.FDb.ind_target.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool src_hdr::ind_target_InsertMaybe(src_hdr::FTarget& row) {
-    ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (src_hdr::FTarget*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        row.ind_target_hashval = algo::Smallstr16_Hash(0, row.target);
+        ind_target_Reserve(1);
+        u32 index = row.ind_target_hashval & (_db.ind_target_buckets_n - 1);
         src_hdr::FTarget* *prev = &_db.ind_target_buckets_elems[index];
         do {
             src_hdr::FTarget* ret = *prev;
@@ -1282,7 +1287,7 @@ bool src_hdr::ind_target_InsertMaybe(src_hdr::FTarget& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_hdr::ind_target_Remove(src_hdr::FTarget& row) {
     if (LIKELY(row.ind_target_next != (src_hdr::FTarget*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        u32 index = row.ind_target_hashval & (_db.ind_target_buckets_n - 1);
         src_hdr::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
         while (src_hdr::FTarget *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1299,8 +1304,14 @@ void src_hdr::ind_target_Remove(src_hdr::FTarget& row) {
 // --- src_hdr.FDb.ind_target.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void src_hdr::ind_target_Reserve(int n) {
+    ind_target_AbsReserve(_db.ind_target_n + n);
+}
+
+// --- src_hdr.FDb.ind_target.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void src_hdr::ind_target_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_target_buckets_n;
-    u32 new_nelems   = _db.ind_target_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1319,7 +1330,7 @@ void src_hdr::ind_target_Reserve(int n) {
             while (elem) {
                 src_hdr::FTarget &row        = *elem;
                 src_hdr::FTarget* next       = row.ind_target_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
+                u32 index          = row.ind_target_hashval & (new_nbuckets-1);
                 row.ind_target_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1547,14 +1558,9 @@ bool src_hdr::fcopyline_XrefMaybe(src_hdr::FCopyline &row) {
 // Find row by key. Return NULL if not found.
 src_hdr::FCopyline* src_hdr::ind_fcopyline_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_fcopyline_buckets_n - 1);
-    src_hdr::FCopyline* *e = &_db.ind_fcopyline_buckets_elems[index];
-    src_hdr::FCopyline* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).fcopyline == key;
-        if (done) break;
-        e         = &ret->ind_fcopyline_next;
-    } while (true);
+    src_hdr::FCopyline *ret = _db.ind_fcopyline_buckets_elems[index];
+    for (; ret && !((*ret).fcopyline == key); ret = ret->ind_fcopyline_next) {
+    }
     return ret;
 }
 
@@ -1586,10 +1592,11 @@ src_hdr::FCopyline& src_hdr::ind_fcopyline_GetOrCreate(const algo::strptr& key) 
 // --- src_hdr.FDb.ind_fcopyline.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool src_hdr::ind_fcopyline_InsertMaybe(src_hdr::FCopyline& row) {
-    ind_fcopyline_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_fcopyline_next == (src_hdr::FCopyline*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.fcopyline) & (_db.ind_fcopyline_buckets_n - 1);
+        row.ind_fcopyline_hashval = algo::cstring_Hash(0, row.fcopyline);
+        ind_fcopyline_Reserve(1);
+        u32 index = row.ind_fcopyline_hashval & (_db.ind_fcopyline_buckets_n - 1);
         src_hdr::FCopyline* *prev = &_db.ind_fcopyline_buckets_elems[index];
         do {
             src_hdr::FCopyline* ret = *prev;
@@ -1615,7 +1622,7 @@ bool src_hdr::ind_fcopyline_InsertMaybe(src_hdr::FCopyline& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_hdr::ind_fcopyline_Remove(src_hdr::FCopyline& row) {
     if (LIKELY(row.ind_fcopyline_next != (src_hdr::FCopyline*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.fcopyline) & (_db.ind_fcopyline_buckets_n - 1);
+        u32 index = row.ind_fcopyline_hashval & (_db.ind_fcopyline_buckets_n - 1);
         src_hdr::FCopyline* *prev = &_db.ind_fcopyline_buckets_elems[index]; // addr of pointer to current element
         while (src_hdr::FCopyline *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1632,8 +1639,14 @@ void src_hdr::ind_fcopyline_Remove(src_hdr::FCopyline& row) {
 // --- src_hdr.FDb.ind_fcopyline.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void src_hdr::ind_fcopyline_Reserve(int n) {
+    ind_fcopyline_AbsReserve(_db.ind_fcopyline_n + n);
+}
+
+// --- src_hdr.FDb.ind_fcopyline.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void src_hdr::ind_fcopyline_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_fcopyline_buckets_n;
-    u32 new_nelems   = _db.ind_fcopyline_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1652,7 +1665,7 @@ void src_hdr::ind_fcopyline_Reserve(int n) {
             while (elem) {
                 src_hdr::FCopyline &row        = *elem;
                 src_hdr::FCopyline* next       = row.ind_fcopyline_next;
-                u32 index          = algo::cstring_Hash(0, row.fcopyline) & (new_nbuckets-1);
+                u32 index          = row.ind_fcopyline_hashval & (new_nbuckets-1);
                 row.ind_fcopyline_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1789,14 +1802,9 @@ bool src_hdr::copyright_XrefMaybe(src_hdr::FCopyright &row) {
 // Find row by key. Return NULL if not found.
 src_hdr::FCopyright* src_hdr::ind_copyright_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_copyright_buckets_n - 1);
-    src_hdr::FCopyright* *e = &_db.ind_copyright_buckets_elems[index];
-    src_hdr::FCopyright* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).copyright == key;
-        if (done) break;
-        e         = &ret->ind_copyright_next;
-    } while (true);
+    src_hdr::FCopyright *ret = _db.ind_copyright_buckets_elems[index];
+    for (; ret && !((*ret).copyright == key); ret = ret->ind_copyright_next) {
+    }
     return ret;
 }
 
@@ -1811,10 +1819,11 @@ src_hdr::FCopyright& src_hdr::ind_copyright_FindX(const algo::strptr& key) {
 // --- src_hdr.FDb.ind_copyright.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool src_hdr::ind_copyright_InsertMaybe(src_hdr::FCopyright& row) {
-    ind_copyright_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_copyright_next == (src_hdr::FCopyright*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.copyright) & (_db.ind_copyright_buckets_n - 1);
+        row.ind_copyright_hashval = algo::Smallstr50_Hash(0, row.copyright);
+        ind_copyright_Reserve(1);
+        u32 index = row.ind_copyright_hashval & (_db.ind_copyright_buckets_n - 1);
         src_hdr::FCopyright* *prev = &_db.ind_copyright_buckets_elems[index];
         do {
             src_hdr::FCopyright* ret = *prev;
@@ -1840,7 +1849,7 @@ bool src_hdr::ind_copyright_InsertMaybe(src_hdr::FCopyright& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_hdr::ind_copyright_Remove(src_hdr::FCopyright& row) {
     if (LIKELY(row.ind_copyright_next != (src_hdr::FCopyright*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.copyright) & (_db.ind_copyright_buckets_n - 1);
+        u32 index = row.ind_copyright_hashval & (_db.ind_copyright_buckets_n - 1);
         src_hdr::FCopyright* *prev = &_db.ind_copyright_buckets_elems[index]; // addr of pointer to current element
         while (src_hdr::FCopyright *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1857,8 +1866,14 @@ void src_hdr::ind_copyright_Remove(src_hdr::FCopyright& row) {
 // --- src_hdr.FDb.ind_copyright.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void src_hdr::ind_copyright_Reserve(int n) {
+    ind_copyright_AbsReserve(_db.ind_copyright_n + n);
+}
+
+// --- src_hdr.FDb.ind_copyright.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void src_hdr::ind_copyright_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_copyright_buckets_n;
-    u32 new_nelems   = _db.ind_copyright_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1877,7 +1892,7 @@ void src_hdr::ind_copyright_Reserve(int n) {
             while (elem) {
                 src_hdr::FCopyright &row        = *elem;
                 src_hdr::FCopyright* next       = row.ind_copyright_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.copyright) & (new_nbuckets-1);
+                u32 index          = row.ind_copyright_hashval & (new_nbuckets-1);
                 row.ind_copyright_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2463,15 +2478,11 @@ void src_hdr::target_CopyIn(src_hdr::FTarget &row, dev::Target &in) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void src_hdr::c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
-    if (bool_Update(row.target_c_targsrc_in_ary,true)) {
-        // reserve space
+    if (!row.target_c_targsrc_in_ary) {
         c_targsrc_Reserve(target, 1);
-        u32 n  = target.c_targsrc_n;
-        u32 at = n;
-        src_hdr::FTargsrc* *elems = target.c_targsrc_elems;
-        elems[at] = &row;
-        target.c_targsrc_n = n+1;
-
+        u32 n  = target.c_targsrc_n++;
+        target.c_targsrc_elems[n] = &row;
+        row.target_c_targsrc_in_ary = true;
     }
 }
 
@@ -2480,7 +2491,7 @@ void src_hdr::c_targsrc_Insert(src_hdr::FTarget& target, src_hdr::FTargsrc& row)
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool src_hdr::c_targsrc_InsertMaybe(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
-    bool retval = !row.target_c_targsrc_in_ary;
+    bool retval = !target_c_targsrc_InAryQ(row);
     c_targsrc_Insert(target,row); // check is performed in _Insert again
     return retval;
 }
@@ -2488,18 +2499,18 @@ bool src_hdr::c_targsrc_InsertMaybe(src_hdr::FTarget& target, src_hdr::FTargsrc&
 // --- src_hdr.FTarget.c_targsrc.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void src_hdr::c_targsrc_Remove(src_hdr::FTarget& target, src_hdr::FTargsrc& row) {
+    int n = target.c_targsrc_n;
     if (bool_Update(row.target_c_targsrc_in_ary,false)) {
-        int lim = target.c_targsrc_n;
         src_hdr::FTargsrc* *elems = target.c_targsrc_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             src_hdr::FTargsrc* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(src_hdr::FTargsrc*) * (lim - j);
+                size_t nbytes = sizeof(src_hdr::FTargsrc*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                target.c_targsrc_n = lim - 1;
+                target.c_targsrc_n = n - 1;
                 break;
             }
         }
@@ -2816,12 +2827,14 @@ void src_hdr::StaticCheck() {
 // --- src_hdr...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         lib_git::FDb_Init();
         src_hdr::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         src_hdr::ReadArgv(); // dmmeta.main:src_hdr
         src_hdr::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -2835,6 +2848,7 @@ int main(int argc, char **argv) {
         src_hdr::FDb_Uninit();
         lib_git::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

@@ -30,17 +30,19 @@ Usage: mdbg [-target:]<string> [[-args:]<string>] [options]
     -cfg           string  "debug"  Configuration to use
     -disas                          Show disassembly (use F12)
     -attach                         Attach to a running process
+    -pid           int     0        (with -attach) Pid, if omitted mdbg will guess
     -b...          string           Set breakpoint, e.g. 'a.cpp:123 if cond1', 'func#3'
     -catchthrow            Y        Stop on exceptions
     -tui                            Use gdb -tui as the debugger
     -bcmd          string  ""       Evaluate command at breakpoint
     -emacs                 Y        Use emacs environment as the debugger
     -manywin                        Use gdb-many-windows emacs mode
-    -follow_child
+    -follow_child                   When forking, follow child (default is parent)
     -py                             Enable python scripting
     -dry_run                        Print commands but don't execute
-    -verbose       int              Verbosity level (0..255); alias -v; cumulative
-    -debug         int              Debug level (0..255); alias -d; cumulative
+    -mp                             Multi-process debugging
+    -verbose       flag             Verbosity level (0..255); alias -v; cumulative
+    -debug         flag             Debug level (0..255); alias -d; cumulative
     -help                           Print help and exit; alias -h
     -version                        Print version and exit
     -signature                      Show signatures and exit; alias -sig
@@ -159,6 +161,9 @@ This option configures the environment to show disassembly when running
 #### -attach -- Attach to a running process
 <a href="#-attach"></a>
 
+#### -pid -- (with -attach) Pid, if omitted mdbg will guess
+<a href="#-pid"></a>
+
 #### -b -- Set breakpoint, e.g. 'a.cpp:123 if cond1', 'func#3'
 <a href="#-b"></a>
 
@@ -199,7 +204,7 @@ Enable emacs' gdb's `gud-many-windows` mode, which brings up
 a debugger layout reminiscent of Visual Studio or Eclipse, with locals, breakpoints, 
 threads subwindows, etc. See also `-disas`
 
-#### -follow_child -- 
+#### -follow_child -- When forking, follow child (default is parent)
 <a href="#-follow_child"></a>
 
 This controlls gdb's `follow child` so that the debugger traces the child process instead
@@ -217,6 +222,9 @@ Configure gdb to enable gdb python scriptability
 #### -dry_run -- Print commands but don't execute
 <a href="#-dry_run"></a>
 
+#### -mp -- Multi-process debugging
+<a href="#-mp"></a>
+
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Options -->
 
 ### Inputs
@@ -226,8 +234,8 @@ Configure gdb to enable gdb python scriptability
 |Ssimfile|Comment|
 |---|---|
 |[dmmeta.dispsigcheck](/txt/ssimdb/dmmeta/dispsigcheck.md)|Check signature of input data against executable's version|
-|[dev.cfg](/txt/ssimdb/dev/cfg.md)|Compiler configuration|
 |[dev.builddir](/txt/ssimdb/dev/builddir.md)|Directory where object files/executables go. Determines compile/link options|
+|[dev.cfg](/txt/ssimdb/dev/cfg.md)|Compiler configuration|
 
 <!-- dev.mdmark  mdmark:MDSECTION  state:END_AUTO  param:Inputs -->
 

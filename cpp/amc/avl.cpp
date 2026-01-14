@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -34,10 +34,10 @@ void amc::tclass_Atree(){
 
     Set(R, "$Sortfld"   , name_Get(sortfld));
     Set(R, "$Sortstore" , sortfld.cpp_type);
-    Set(R, "$Left"      , "$name_left");
-    Set(R, "$Right"     , "$name_right");
-    Set(R, "$Up"        , "$name_up");
-    Set(R, "$Depth"     , "$name_depth");
+    Set(R, "$Left"      , "$xfname_left");
+    Set(R, "$Right"     , "$xfname_right");
+    Set(R, "$Up"        , "$xfname_up");
+    Set(R, "$Depth"     , "$xfname_depth");
     Set(R, "$Root"      , "$parname.$name_root");
     Set(R, "$NElem"     , "$parname.$name_n");
 

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 //
@@ -97,6 +97,8 @@ void atf_ci::citest_atf_unit() {
 void atf_ci::citest_atf_comp() {
     command::atf_comp_proc atf_comp;
     atf_comp.cmd.capture = CaptureQ();
+    atf_comp.cmd.maxerr = 3;
+    atf_comp.cmd.maxrepeat = 10000;
     atf_comp_ExecX(atf_comp);
 }
 
@@ -105,6 +107,7 @@ void atf_ci::citest_atf_comp_cov() {
     command::atf_comp_proc atf_comp;
     atf_comp.cmd.build = true;
     atf_comp.cmd.covcapture = CaptureQ();
+    atf_comp.cmd.maxerr = 3;
     atf_comp.cmd.covcheck = !atf_comp.cmd.covcapture;
     atf_comp_ExecX(atf_comp);
 }
@@ -113,6 +116,7 @@ void atf_ci::citest_atf_comp_cov() {
 void atf_ci::citest_atf_comp_mem() {
     command::atf_comp_proc atf_comp;
     atf_comp.cmd.build = true;
+    atf_comp.cmd.maxerr = 3;
     atf_comp.cmd.memcheck = true;
     atf_comp_ExecX(atf_comp);
 }
@@ -146,12 +150,54 @@ void atf_ci::citest_gitfile() {
 
 // -----------------------------------------------------------------------------
 
+algo::UnTime atf_ci::FileAtime(algo::strptr fname) {
+    struct stat st;
+    algo::UnTime ret;
+    if (stat(Zeroterm(tempstr()<<fname),&st)==0) {
+        ret = algo::ToUnTime(algo::UnixTime(st.st_atime));
+    }
+    return ret;
+}
+
+// Return max. access time of all files in directory DIRNAME, as recursively
+// calculated. This is different from the directory access time.
+algo::UnTime atf_ci::DirAtime(algo::strptr dirname) {
+    algo::UnTime ret;
+    ind_beg(algo::Dir_curs,entry,DirFileJoin(dirname,"*")) {
+        if (entry.is_dir) {
+            i64_UpdateMax(ret.value,DirAtime(entry.pathname).value);
+        } else {
+            i64_UpdateMax(ret.value,FileAtime(entry.pathname).value);
+        }
+    }ind_end;
+    return ret;
+}
+
+// Delete files that haven't been accessed in the last couple days
+void atf_ci::citest_cleantemp() {
+    algo::UnTime thresh = algo::CurrUnTime() - algo::UnDiffHMS(48,0,0);
+    ind_beg(algo::Dir_curs,entry,"temp/*") if (!StartsWithQ(entry.filename, ".")) {
+        algo::UnTime atime = entry.is_dir ? DirAtime(entry.pathname) : FileAtime(entry.pathname);
+        // empty dir will yield atime = 0, don't delete it
+        if (atime.value && atime < thresh){
+            prlog("cleanup: "<<entry.pathname);
+            if (entry.is_dir) {
+                RemDirRecurse(entry.pathname,true);
+            } else {
+                DeleteFile(entry.pathname);
+            }
+        }
+    }ind_end;
+}
+
+// -----------------------------------------------------------------------------
+
 void atf_ci::citest_scanreadme() {
     // update list of readmes
     cstring out;
     ind_beg(_db_gitfile_curs,gitfile,_db) if (StartsWithQ(gitfile.gitfile,"txt/")) {
         // print just the pkey so that other attrs don't get overwritten
-        out << "dev.readme gitfile:"<<gitfile.gitfile<<eol;
+        out << "dev.readmefile gitfile:"<<gitfile.gitfile<<eol;
     }ind_end;
     algo_lib::FTempfile tempfile;
     TempfileInitX(tempfile,"readme");
@@ -163,6 +209,14 @@ void atf_ci::citest_scanreadme() {
     acr.cmd.print   = true;
     acr.cmd.report  = false;
     acr_ExecX(acr);
+}
+
+// -----------------------------------------------------------------------------
+
+void atf_ci::citest_quickreadme() {
+    command::abt_md_proc abt_md;
+    abt_md.cmd.evalcmd=false;
+    abt_md_ExecX(abt_md);
 }
 
 // -----------------------------------------------------------------------------
@@ -195,7 +249,7 @@ static bool RunCiTest(atf_ci::FCitest &citest) {
     }
     // for sandboxed tests, do not check for modified files
     // for regular tests, it is mandatory
-    if (!citest.sandbox) {
+    if (!citest.sandbox && atf_ci::_db.cmdline.check_clean) {
         citest.nerr += !atf_ci::CheckCleanDirs(".");
     }
     if (citest.nerr) {
@@ -315,6 +369,8 @@ void atf_ci::citest_readme() {
 
 void atf_ci::Main() {
     algo_lib::DieWithParent();
+    algo_lib::FLockfile lockfile;
+    LockFileInit(lockfile, "lock/atf_ci");// prevent overlapping runs
 
     lib_ctype::Init();
 
@@ -357,5 +413,5 @@ void atf_ci::Main() {
           <<Keyval("success", Bool(algo_lib::_db.exit_code==0))
           <<Keyval("comment",(algo_lib::_db.exit_code==0
                               ? "The coast is clear. Proceed with caution :-)"
-                              : "Some errors occured. Please examine them and try again.")));
+                              : "Did not pass. Please resolve issues and try again.")));
 }

@@ -174,9 +174,10 @@ namespace abt { // gen:ns_print_struct
 // global access: arch (Lary, by rowid)
 // global access: ind_arch (Thash, hash field arch)
 struct FArch { // abt.FArch: Machine architecture
-    algo::Smallstr50   arch;            //
-    algo::Comment      comment;         //
-    abt::FArch*        ind_arch_next;   // hash next
+    algo::Smallstr50   arch;               //
+    algo::Comment      comment;            //
+    abt::FArch*        ind_arch_next;      // hash next
+    u32                ind_arch_hashval;   // hash value
     // func:abt.FArch..AssignOp
     inline abt::FArch&   operator =(const abt::FArch &rhs) = delete;
     // func:abt.FArch..CopyCtor
@@ -210,14 +211,15 @@ void                 FArch_Uninit(abt::FArch& arch) __attribute__((nothrow));
 // global access: ind_builddir (Thash, hash field builddir)
 // global access: c_builddir (Ptr)
 struct FBuilddir { // abt.FBuilddir
-    algo::Smallstr50      builddir;            // Primary key - uname.compiler.cfg-arch
-    algo::Comment         comment;             //
-    bool                  select;              //   false
-    algo::cstring         path;                // Path for this builddir
-    algo_lib::FLockfile   lockfile;            //
-    algo_lib::Replscope   R;                   //
-    abt::FCompiler*       p_compiler;          // reference to parent row
-    abt::FBuilddir*       ind_builddir_next;   // hash next
+    algo::Smallstr50      builddir;               // Primary key - uname.compiler.cfg-arch
+    algo::Comment         comment;                //
+    bool                  select;                 //   false
+    algo::cstring         path;                   // Path for this builddir
+    algo_lib::FLockfile   lockfile;               //
+    algo_lib::Replscope   R;                      //
+    abt::FCompiler*       p_compiler;             // reference to parent row
+    abt::FBuilddir*       ind_builddir_next;      // hash next
+    u32                   ind_builddir_hashval;   // hash value
     // value field abt.FBuilddir.R is not copiable
     // x-reference on abt.FBuilddir.p_compiler prevents copy
     // func:abt.FBuilddir..AssignOp
@@ -267,10 +269,11 @@ void                 FBuilddir_Uninit(abt::FBuilddir& builddir) __attribute__((n
 // global access: cfg (Lary, by rowid)
 // global access: ind_cfg (Thash, hash field cfg)
 struct FCfg { // abt.FCfg: Build configuration
-    algo::Smallstr50   cfg;            //
-    algo::Smallstr5    suffix;         //
-    algo::Comment      comment;        //
-    abt::FCfg*         ind_cfg_next;   // hash next
+    algo::Smallstr50   cfg;               //
+    algo::Smallstr5    suffix;            //
+    algo::Comment      comment;           //
+    abt::FCfg*         ind_cfg_next;      // hash next
+    u32                ind_cfg_hashval;   // hash value
     // func:abt.FCfg..AssignOp
     inline abt::FCfg&    operator =(const abt::FCfg &rhs) = delete;
     // func:abt.FCfg..CopyCtor
@@ -304,17 +307,18 @@ void                 FCfg_Uninit(abt::FCfg& cfg) __attribute__((nothrow));
 // global access: ind_compiler (Thash, hash field compiler)
 // access: abt.FBuilddir.p_compiler (Upptr)
 struct FCompiler { // abt.FCompiler: Compiler
-    algo::Smallstr50   compiler;            //
-    algo::Smallstr50   ranlib;              //
-    algo::Smallstr50   ar;                  //
-    algo::Smallstr50   link;                //
-    algo::Smallstr50   libext;              //
-    algo::Smallstr20   exeext;              //
-    algo::Smallstr20   pchext;              //
-    algo::Smallstr20   objext;              //
-    algo::Smallstr50   rc;                  //
-    algo::Comment      comment;             //
-    abt::FCompiler*    ind_compiler_next;   // hash next
+    algo::Smallstr50   compiler;               //
+    algo::Smallstr50   ranlib;                 //
+    algo::Smallstr50   ar;                     //
+    algo::Smallstr50   link;                   //
+    algo::Smallstr50   libext;                 //
+    algo::Smallstr20   exeext;                 //
+    algo::Smallstr20   pchext;                 //
+    algo::Smallstr20   objext;                 //
+    algo::Smallstr50   rc;                     //
+    algo::Comment      comment;                //
+    abt::FCompiler*    ind_compiler_next;      // hash next
+    u32                ind_compiler_hashval;   // hash value
     // func:abt.FCompiler..AssignOp
     abt::FCompiler&      operator =(const abt::FCompiler &rhs) = delete;
     // func:abt.FCompiler..CopyCtor
@@ -625,6 +629,9 @@ void                 ind_target_Remove(abt::FTarget& row) __attribute__((nothrow
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_target.Reserve
 void                 ind_target_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_target.AbsReserve
+void                 ind_target_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -684,6 +691,9 @@ void                 ind_targsrc_Remove(abt::FTargsrc& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_targsrc.Reserve
 void                 ind_targsrc_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_targsrc.AbsReserve
+void                 ind_targsrc_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -862,6 +872,9 @@ void                 ind_syscmd_Remove(abt::FSyscmd& row) __attribute__((nothrow
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_syscmd.Reserve
 void                 ind_syscmd_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_syscmd.AbsReserve
+void                 ind_syscmd_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:abt.FDb.ind_running.EmptyQ
@@ -884,6 +897,9 @@ void                 ind_running_Remove(abt::FSyscmd& row) __attribute__((nothro
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_running.Reserve
 void                 ind_running_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_running.AbsReserve
+void                 ind_running_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:abt.FDb.ind_srcfile.EmptyQ
@@ -906,6 +922,9 @@ void                 ind_srcfile_Remove(abt::FSrcfile& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_srcfile.Reserve
 void                 ind_srcfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_srcfile.AbsReserve
+void                 ind_srcfile_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -965,6 +984,9 @@ void                 ind_cfg_Remove(abt::FCfg& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_cfg.Reserve
 void                 ind_cfg_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_cfg.AbsReserve
+void                 ind_cfg_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1024,6 +1046,9 @@ void                 ind_uname_Remove(abt::FUname& row) __attribute__((nothrow))
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_uname.Reserve
 void                 ind_uname_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_uname.AbsReserve
+void                 ind_uname_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1083,6 +1108,9 @@ void                 ind_compiler_Remove(abt::FCompiler& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_compiler.Reserve
 void                 ind_compiler_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_compiler.AbsReserve
+void                 ind_compiler_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1142,6 +1170,9 @@ void                 ind_arch_Remove(abt::FArch& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_arch.Reserve
 void                 ind_arch_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_arch.AbsReserve
+void                 ind_arch_AbsReserve(int n) __attribute__((nothrow));
 
 // Remove all elements from heap and free memory used by the array.
 // func:abt.FDb.bh_syscmd.Dealloc
@@ -1347,6 +1378,9 @@ void                 ind_syslib_Remove(abt::FSyslib& row) __attribute__((nothrow
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_syslib.Reserve
 void                 ind_syslib_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_syslib.AbsReserve
+void                 ind_syslib_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1406,6 +1440,9 @@ void                 ind_include_Remove(abt::FInclude& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_include.Reserve
 void                 ind_include_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_include.AbsReserve
+void                 ind_include_AbsReserve(int n) __attribute__((nothrow));
 
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -1423,6 +1460,11 @@ algo::cstring&       sysincl_AllocAt(int at) __attribute__((__warn_unused_result
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:abt.FDb.sysincl.AllocN
 algo::aryptr<algo::cstring> sysincl_AllocN(int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:abt.FDb.sysincl.AllocNAt
+algo::aryptr<algo::cstring> sysincl_AllocNAt(int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:abt.FDb.sysincl.EmptyQ
 inline bool          sysincl_EmptyQ() __attribute__((nothrow));
@@ -1472,6 +1514,10 @@ algo::aryptr<algo::cstring> sysincl_AllocNVal(int n_elems, const algo::cstring& 
 // Function returns success value.
 // func:abt.FDb.sysincl.ReadStrptrMaybe
 bool                 sysincl_ReadStrptrMaybe(algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:abt.FDb.sysincl.Insary
+void                 sysincl_Insary(algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:abt.FDb.zs_origsel_target.EmptyQ
@@ -1563,6 +1609,9 @@ void                 ind_ns_Remove(abt::FNs& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_ns.Reserve
 void                 ind_ns_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_ns.AbsReserve
+void                 ind_ns_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1621,6 +1670,9 @@ void                 ind_filestat_Remove(abt::FFilestat& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_filestat.Reserve
 void                 ind_filestat_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_filestat.AbsReserve
+void                 ind_filestat_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1683,6 +1735,9 @@ void                 ind_builddir_Remove(abt::FBuilddir& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:abt.FDb.ind_builddir.Reserve
 void                 ind_builddir_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:abt.FDb.ind_builddir.AbsReserve
+void                 ind_builddir_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:abt.FDb.zd_inclstack.EmptyQ
@@ -2009,12 +2064,13 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: filestat (Lary, by rowid)
 // global access: ind_filestat (Thash, hash field filename)
 struct FFilestat { // abt.FFilestat: Stat cache
-    abt::FFilestat*   ind_filestat_next;   // hash next
-    algo::cstring     filename;            //
-    algo::UnTime      modtime;             //
-    u64               size;                //   0
-    bool              isdir;               //   false
-    bool              exists;              //   false
+    abt::FFilestat*   ind_filestat_next;      // hash next
+    u32               ind_filestat_hashval;   // hash value
+    algo::cstring     filename;               //
+    algo::UnTime      modtime;                //
+    u64               size;                   //   0
+    bool              isdir;                  //   false
+    bool              exists;                 //   false
     // func:abt.FFilestat..AssignOp
     inline abt::FFilestat& operator =(const abt::FFilestat &rhs) = delete;
     // func:abt.FFilestat..CopyCtor
@@ -2042,14 +2098,15 @@ void                 FFilestat_Uninit(abt::FFilestat& filestat) __attribute__((n
 // global access: ind_include (Thash, hash field include)
 // access: abt.FSrcfile.zd_include (Llist)
 struct FInclude { // abt.FInclude
-    abt::FInclude*      ind_include_next;   // hash next
-    algo::Smallstr200   include;            //
-    bool                sys;                //   false
-    algo::Comment       comment;            //
-    abt::FSrcfile*      p_header;           // reference to parent row
-    bool                wantprint;          //   false
-    abt::FInclude*      zd_include_next;    // zslist link; -1 means not-in-list
-    abt::FInclude*      zd_include_prev;    // previous element
+    abt::FInclude*      ind_include_next;          // hash next
+    u32                 ind_include_hashval;       // hash value
+    algo::Smallstr200   include;                   //
+    bool                sys;                       //   false
+    algo::Comment       comment;                   //
+    abt::FSrcfile*      p_header;                  // reference to parent row
+    bool                wantprint;                 //   false
+    abt::FInclude*      srcfile_zd_include_next;   // zslist link; -1 means not-in-list
+    abt::FInclude*      srcfile_zd_include_prev;   // previous element
     // x-reference on abt.FInclude.p_header prevents copy
     // func:abt.FInclude..AssignOp
     inline abt::FInclude& operator =(const abt::FInclude &rhs) = delete;
@@ -2091,11 +2148,12 @@ void                 FInclude_Uninit(abt::FInclude& include) __attribute__((noth
 // global access: ind_ns (Thash, hash field ns)
 // access: abt.FTarget.p_ns (Upptr)
 struct FNs { // abt.FNs
-    abt::FNs*          ind_ns_next;   // hash next
-    algo::Smallstr16   ns;            // Namespace name (primary key)
-    algo::Smallstr50   nstype;        // Namespace type
-    algo::Smallstr50   license;       // Associated license
-    algo::Comment      comment;       //
+    abt::FNs*          ind_ns_next;      // hash next
+    u32                ind_ns_hashval;   // hash value
+    algo::Smallstr16   ns;               // Namespace name (primary key)
+    algo::Smallstr50   nstype;           // Namespace type
+    algo::Smallstr50   license;          // Associated license
+    algo::Comment      comment;          //
     // func:abt.FNs..AssignOp
     inline abt::FNs&     operator =(const abt::FNs &rhs) = delete;
     // func:abt.FNs..CopyCtor
@@ -2133,6 +2191,7 @@ void                 FNs_Uninit(abt::FNs& ns) __attribute__((nothrow));
 // access: abt.FTarget.c_srcfile (Ptrary)
 struct FSrcfile { // abt.FSrcfile: Source file or header (key is pathname)
     abt::FSrcfile*      ind_srcfile_next;       // hash next
+    u32                 ind_srcfile_hashval;    // hash value
     abt::FSrcfile*      zs_srcfile_read_next;   // zslist link; -1 means not-in-list
     abt::FSrcfile*      zd_inclstack_next;      // zslist link; -1 means not-in-list
     abt::FSrcfile*      zd_inclstack_prev;      // previous element
@@ -2184,7 +2243,7 @@ inline bool          zd_include_EmptyQ(abt::FSrcfile& srcfile) __attribute__((__
 inline abt::FInclude* zd_include_First(abt::FSrcfile& srcfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:abt.FSrcfile.zd_include.InLlistQ
-inline bool          zd_include_InLlistQ(abt::FInclude& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          srcfile_zd_include_InLlistQ(abt::FInclude& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:abt.FSrcfile.zd_include.Insert
 void                 zd_include_Insert(abt::FSrcfile& srcfile, abt::FInclude& row) __attribute__((nothrow));
@@ -2196,10 +2255,10 @@ inline abt::FInclude* zd_include_Last(abt::FSrcfile& srcfile) __attribute__((__w
 inline i32           zd_include_N(const abt::FSrcfile& srcfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:abt.FSrcfile.zd_include.Next
-inline abt::FInclude* zd_include_Next(abt::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
+inline abt::FInclude* srcfile_zd_include_Next(abt::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:abt.FSrcfile.zd_include.Prev
-inline abt::FInclude* zd_include_Prev(abt::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
+inline abt::FInclude* srcfile_zd_include_Prev(abt::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:abt.FSrcfile.zd_include.Remove
 void                 zd_include_Remove(abt::FSrcfile& srcfile, abt::FInclude& row) __attribute__((nothrow));
@@ -2244,31 +2303,33 @@ void                 FSrcfile_Uninit(abt::FSrcfile& srcfile) __attribute__((noth
 // access: abt.FTarget.syscmd_link (Ptr)
 // access: abt.FTarget.syscmd_end (Ptr)
 struct FSyscmd { // abt.FSyscmd: A build command
-    abt::FSyscmd*       ind_syscmd_next;    // hash next
-    abt::FSyscmd*       ind_running_next;   // hash next
-    i32                 bh_syscmd_idx;      // index in heap; -1 means not-in-heap
-    i64                 syscmd;             //   0  Step number
-    algo::cstring       command;            // Command to execute
-    i32                 pid;                //   0  PID, if running
-    i32                 status;             //   0  Exit status (if command has completed)
-    i32                 nprereq;            //   0  Number of live pre-requisites
-    bool                fail_prereq;        //   false  Set if one of pre-requisites fails
-    bool                completed;          //   false  Completed?
-    i32                 maxtime;            //   0  Optional max running time (used to use SIGALRM)
-    algo::cstring       fstdout;            // filename for stdout output
-    algo::cstring       fstderr;            // filename for stderr output
-    abt::FSyscmddep**   c_prior_elems;      // array of pointers
-    u32                 c_prior_n;          // array of pointers
-    u32                 c_prior_max;        // capacity of allocated array
-    abt::FSyscmddep**   c_next_elems;       // array of pointers
-    u32                 c_next_n;           // array of pointers
-    u32                 c_next_max;         // capacity of allocated array
-    i32                 rowid;              //   0
-    algo_lib::FFildes   fd_stdout;          // fd for stdout
-    algo_lib::FFildes   fd_stderr;          // fd for stderr
-    u64                 line_n;             //   0  Number of lines attributed to this command
-    algo::cstring       outfile;            //
-    bool                redirect;           //   true
+    abt::FSyscmd*       ind_syscmd_next;       // hash next
+    u32                 ind_syscmd_hashval;    // hash value
+    abt::FSyscmd*       ind_running_next;      // hash next
+    u32                 ind_running_hashval;   // hash value
+    i32                 bh_syscmd_idx;         // index in heap; -1 means not-in-heap
+    i64                 syscmd;                //   0  Step number
+    algo::cstring       command;               // Command to execute
+    i32                 pid;                   //   0  PID, if running
+    i32                 status;                //   0  Exit status (if command has completed)
+    i32                 nprereq;               //   0  Number of live pre-requisites
+    bool                fail_prereq;           //   false  Set if one of pre-requisites fails
+    bool                completed;             //   false  Completed?
+    i32                 maxtime;               //   0  Optional max running time (used to use SIGALRM)
+    algo::cstring       fstdout;               // filename for stdout output
+    algo::cstring       fstderr;               // filename for stderr output
+    abt::FSyscmddep**   c_prior_elems;         // array of pointers
+    u32                 c_prior_n;             // array of pointers
+    u32                 c_prior_max;           // capacity of allocated array
+    abt::FSyscmddep**   c_next_elems;          // array of pointers
+    u32                 c_next_n;              // array of pointers
+    u32                 c_next_max;            // capacity of allocated array
+    i32                 rowid;                 //   0
+    algo_lib::FFildes   fd_stdout;             // fd for stdout
+    algo_lib::FFildes   fd_stderr;             // fd for stderr
+    u64                 line_n;                //   0  Number of lines attributed to this command
+    algo::cstring       outfile;               //
+    bool                redirect;              //   true
     // reftype Ptrary of abt.FSyscmd.c_prior prohibits copy
     // reftype Ptrary of abt.FSyscmd.c_next prohibits copy
     // func:abt.FSyscmd..AssignOp
@@ -2443,10 +2504,6 @@ void                 syscmddep_CopyOut(abt::FSyscmddep &row, dev::Syscmddep &out
 // func:abt.FSyscmddep.msghdr.CopyIn
 void                 syscmddep_CopyIn(abt::FSyscmddep &row, dev::Syscmddep &in) __attribute__((nothrow));
 
-// func:abt.FSyscmddep.syscmddep.Get
-// this function is 'extrn' and implemented by user
-algo::RspaceStr16    syscmddep_Get(abt::FSyscmddep& syscmddep) __attribute__((__warn_unused_result__, nothrow));
-
 // Set all fields to initial values.
 // func:abt.FSyscmddep..Init
 inline void          FSyscmddep_Init(abt::FSyscmddep& syscmddep);
@@ -2459,9 +2516,10 @@ void                 FSyscmddep_Uninit(abt::FSyscmddep& syscmddep) __attribute__
 // global access: ind_syslib (Thash, hash field syslib)
 // access: abt.FTargsyslib.p_syslib (Upptr)
 struct FSyslib { // abt.FSyslib: System library
-    abt::FSyslib*      ind_syslib_next;   // hash next
-    algo::Smallstr50   syslib;            //
-    algo::Comment      comment;           //
+    abt::FSyslib*      ind_syslib_next;      // hash next
+    u32                ind_syslib_hashval;   // hash value
+    algo::Smallstr50   syslib;               //
+    algo::Comment      comment;              //
     // func:abt.FSyslib..AssignOp
     inline abt::FSyslib& operator =(const abt::FSyslib &rhs) = delete;
     // func:abt.FSyslib..CopyCtor
@@ -2545,6 +2603,7 @@ void                 FTargdep_Uninit(abt::FTargdep& targdep) __attribute__((noth
 // access: abt.FTargsrc.p_target (Upptr)
 struct FTarget { // abt.FTarget: Build target
     abt::FTarget*        ind_target_next;          // hash next
+    u32                  ind_target_hashval;       // hash value
     abt::FTarget*        zs_sel_target_next;       // zslist link; -1 means not-in-list
     abt::FTarget*        zs_origsel_target_next;   // zslist link; -1 means not-in-list
     algo::Smallstr16     target;                   // Primary key - name of target
@@ -2871,6 +2930,7 @@ void                 FTarget_Uninit(abt::FTarget& target) __attribute__((nothrow
 // access: abt.FTarget.c_targsrc (Ptrary)
 struct FTargsrc { // abt.FTargsrc: Source file for specific target
     abt::FTargsrc*      ind_targsrc_next;          // hash next
+    u32                 ind_targsrc_hashval;       // hash value
     algo::Smallstr100   targsrc;                   //
     algo::Comment       comment;                   //
     abt::FTarget*       p_target;                  // reference to parent row
@@ -2954,6 +3014,9 @@ algo::Smallstr50     syslib_Get(abt::FTargsyslib& targsyslib) __attribute__((__w
 // func:abt.FTargsyslib.uname.Get
 algo::Smallstr50     uname_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
 
+// func:abt.FTargsyslib.prefix.Get
+algo::Smallstr50     prefix_Get(abt::FTargsyslib& targsyslib) __attribute__((__warn_unused_result__, nothrow));
+
 // Set all fields to initial values.
 // func:abt.FTargsyslib..Init
 inline void          FTargsyslib_Init(abt::FTargsyslib& targsyslib);
@@ -3021,9 +3084,10 @@ void                 regx_target_Print(abt::FToolOpt& tool_opt, algo::cstring &o
 // global access: uname (Lary, by rowid)
 // global access: ind_uname (Thash, hash field uname)
 struct FUname { // abt.FUname: Unix name
-    abt::FUname*       ind_uname_next;   // hash next
-    algo::Smallstr50   uname;            //
-    algo::Comment      comment;          //
+    abt::FUname*       ind_uname_next;      // hash next
+    u32                ind_uname_hashval;   // hash value
+    algo::Smallstr50   uname;               //
+    algo::Comment      comment;             //
     // func:abt.FUname..AssignOp
     inline abt::FUname&  operator =(const abt::FUname &rhs) = delete;
     // func:abt.FUname..CopyCtor

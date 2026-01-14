@@ -1,3 +1,4 @@
+// Copyright (C) 2026 AlgoRND
 // Copyright (C) 2023 Astra
 //
 // License: GPL
@@ -33,5 +34,6 @@ namespace aqlite { // update-hdr
     // cpp/aqlite/aqlite.cpp
     //
     int exec_cb(void*, int na, char** av, char** cols);
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:aqlite
 }

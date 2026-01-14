@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -132,7 +132,7 @@ tempstr abt::GetObjpath(abt::FBuilddir &builddir, abt::FSrcfile &srcfile) {
     // Replace extension
     strptr tgt_ext;
     strptr ext = GetFileExt(srcfile.srcfile);
-    if (ext == ".cpp" || ext == ".c") {
+    if (ext == ".cpp" || ext == ".c" || ext == ".cc") {
         tgt_ext = builddir.p_compiler->objext;
     } else if (ext == ".rc" && builddir.p_compiler->rc != "") {
         tgt_ext = ".res";
@@ -344,7 +344,7 @@ static void Main_CreateCmds(abt::FBuilddir &builddir, abt::FSyscmd *start, abt::
         }ind_end;
 
         // if a source file filter as specified, do not perform link step
-        bool canlink = abt::_db.cmdline.srcfile.accepts_all;
+        bool canlink = accepts_all_Get(abt::_db.cmdline.srcfile.flags);
 
         // link step
         if (abt::_db.cmdline.build && target.ood && canlink) {
@@ -459,13 +459,11 @@ static void Main_GuessParams() {
 // -----------------------------------------------------------------------------
 
 static void CreateTmpdir() {
-    errno_vrfy(algo::CreateDirRecurse("temp")
-               ,tempstr()<<"abt.createdir"
-               <<Keyval("comment","failed to create temp directory"));
+    algo_lib::GetTempDir();
     if (abt::_db.cmdline.printcmd) {
-        prlog("mkdir -p temp");
+        prlog("mkdir -p temp " << algo_lib::_db.tempdir);
     }
-    setenv("TMPDIR","temp",1);
+    setenv("TMPDIR",Zeroterm(algo_lib::_db.tempdir),1);
 }
 
 // -----------------------------------------------------------------------------

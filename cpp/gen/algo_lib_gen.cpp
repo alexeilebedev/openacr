@@ -29,6 +29,8 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/dmmeta_gen.h"
 #include "include/gen/dmmeta_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 algo_lib::_db_bh_timehook_curs::~_db_bh_timehook_curs() {
     algo_lib::lpool_FreeMem(temp_elems, sizeof(void*) * temp_max);
@@ -40,6 +42,18 @@ namespace algo_lib { // gen:ns_print_proto
     inline static bool   verbose_ReadStrptrMaybe(algo_lib::Cmdline &parent, algo::strptr in_str) __attribute__((nothrow));
     // func:algo_lib.Cmdline.debug.ReadStrptrMaybe
     inline static bool   debug_ReadStrptrMaybe(algo_lib::Cmdline &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo_lib.RegxFlags.trace.ReadStrptrMaybe
+    inline static bool   trace_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo_lib.RegxFlags.capture.ReadStrptrMaybe
+    inline static bool   capture_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo_lib.RegxFlags.valid.ReadStrptrMaybe
+    inline static bool   valid_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo_lib.RegxFlags.literal.ReadStrptrMaybe
+    inline static bool   literal_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo_lib.RegxFlags.accepts_all.ReadStrptrMaybe
+    inline static bool   accepts_all_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
+    // func:algo_lib.RegxFlags.fullmatch.ReadStrptrMaybe
+    inline static bool   fullmatch_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) __attribute__((nothrow));
     // Load statically available data into tables, register tables and database.
     // func:algo_lib.FDb._db.InitReflection
     static void          InitReflection();
@@ -55,6 +69,11 @@ namespace algo_lib { // gen:ns_print_proto
     inline static bool   bh_timehook_ElemLt(algo_lib::FTimehook &a, algo_lib::FTimehook &b) __attribute__((nothrow));
     // func:algo_lib.FDb.bh_timehook_curs.Add
     static void          _db_bh_timehook_curs_Add(_db_bh_timehook_curs &curs, algo_lib::FTimehook& row);
+    // Update cycles count from previous clock capture
+    // func:algo_lib.FDb.bh_timehook.UpdateCycles
+    inline static void   bh_timehook_UpdateCycles() __attribute__((nothrow));
+    // func:algo_lib.FDb.bh_timehook.Call
+    inline static void   bh_timehook_Call() __attribute__((nothrow));
     // func:algo_lib.FDb.logcat.LoadStatic
     static void          logcat_LoadStatic() __attribute__((nothrow));
     // find trace by row id (used to implement reflection)
@@ -86,26 +105,6 @@ namespace algo_lib { // gen:ns_print_proto
     // Quick sort engine
     // func:algo_lib.FTxttbl.c_txtrow.IntQuickSort
     static void          c_txtrow_IntQuickSort(algo_lib::FTxtrow* *elems, int n, int depth) __attribute__((nothrow));
-    // Swap values elem_a and elem_b
-    // func:algo_lib.RegxState.ch_class.Swap
-    inline static void   ch_class_Swap(algo::i32_Range &elem_a, algo::i32_Range &elem_b) __attribute__((nothrow));
-    // Left circular shift of three-tuple
-    // func:algo_lib.RegxState.ch_class.Rotleft
-    inline static void   ch_class_Rotleft(algo::i32_Range &elem_a, algo::i32_Range &elem_b, algo::i32_Range &elem_c) __attribute__((nothrow));
-    // Compare values elem_a and elem_b
-    // The comparison function must be anti-symmetric: if a>b, then !(b>a).
-    // If not, mayhem results.
-    // func:algo_lib.RegxState.ch_class.Lt
-    static bool          ch_class_Lt(algo::i32_Range &elem_a, algo::i32_Range &elem_b) __attribute__((nothrow));
-    // Internal insertion sort
-    // func:algo_lib.RegxState.ch_class.IntInsertionSort
-    static void          ch_class_IntInsertionSort(algo::i32_Range *elems, int n) __attribute__((nothrow));
-    // Internal heap sort
-    // func:algo_lib.RegxState.ch_class.IntHeapSort
-    static void          ch_class_IntHeapSort(algo::i32_Range *elems, int n) __attribute__((nothrow));
-    // Quick sort engine
-    // func:algo_lib.RegxState.ch_class.IntQuickSort
-    static void          ch_class_IntQuickSort(algo::i32_Range *elems, int n, int depth) __attribute__((nothrow));
     // func:algo_lib...SizeCheck
     inline static void   SizeCheck();
 } // gen:ns_print_proto
@@ -187,6 +186,25 @@ algo::aryptr<u64> algo_lib::ary_AllocN(algo_lib::Bitset& parent, int n_elems) {
     }
     parent.ary_n = new_n;
     return algo::aryptr<u64>(elems + old_n, n_elems);
+}
+
+// --- algo_lib.Bitset.ary.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<u64> algo_lib::ary_AllocNAt(algo_lib::Bitset& parent, int n_elems, int at) {
+    ary_Reserve(parent, n_elems);
+    int n  = parent.ary_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.Bitset.ary  comment:'index out of range'");
+    }
+    u64 *elems = parent.ary_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(u64));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) u64(0); // construct new element, default initialize
+    }
+    parent.ary_n = n+n_elems;
+    return algo::aryptr<u64>(elems+at,n_elems);
 }
 
 // --- algo_lib.Bitset.ary.Remove
@@ -271,6 +289,25 @@ bool algo_lib::ary_ReadStrptrMaybe(algo_lib::Bitset& parent, algo::strptr in_str
         ary_RemoveLast(parent);
     }
     return retval;
+}
+
+// --- algo_lib.Bitset.ary.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo_lib::ary_Insary(algo_lib::Bitset& parent, algo::aryptr<u64> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ary_elems && rhs.elems < parent.ary_elems + parent.ary_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo_lib.tary_alias  field:algo_lib.Bitset.ary  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(parent.ary_elems+1))) {
+        FatalErrorExit("algo_lib.bad_insary  field:algo_lib.Bitset.ary  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = parent.ary_n - at;
+    ary_Reserve(parent, nnew); // reserve space
+    memmove(parent.ary_elems + at + nnew, parent.ary_elems + at, nmove * sizeof(u64));
+    memcpy(parent.ary_elems + at, rhs.elems, nnew * sizeof(u64));
+    parent.ary_n += nnew;
 }
 
 // --- algo_lib.Bitset.ary_bitcurs.Next
@@ -419,41 +456,35 @@ bool algo_lib::Cmdline_ReadFieldMaybe(algo_lib::Cmdline& parent, algo::strptr fi
     switch(field_id) {
         case algo_lib_FieldId_verbose: {
             retval = verbose_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_lib_FieldId_debug: {
             retval = debug_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_lib_FieldId_help: {
             retval = bool_ReadStrptrMaybe(parent.help, strval);
-            break;
-        }
+        } break;
         case algo_lib_FieldId_version: {
             retval = bool_ReadStrptrMaybe(parent.version, strval);
-            break;
-        }
+        } break;
         case algo_lib_FieldId_signature: {
             retval = bool_ReadStrptrMaybe(parent.signature, strval);
-            break;
-        }
+        } break;
         case algo_lib_FieldId_v: {
             retval = v_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_lib_FieldId_d: {
             retval = d_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_lib_FieldId_sig: {
             retval = sig_ReadStrptrMaybe(parent, strval);
-            break;
-        }
+        } break;
         case algo_lib_FieldId_h: {
             retval = h_ReadStrptrMaybe(parent, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -481,47 +512,47 @@ bool algo_lib::Cmdline_ReadTupleMaybe(algo_lib::Cmdline &parent, algo::Tuple &tu
 i32 algo_lib::Cmdline_NArgs(algo_lib::FieldId field, algo::strptr& out_dflt, bool* out_anon) {
     i32 retval = 1;
     switch (field) {
-        case algo_lib_FieldId_verbose: { // $comment
+        case algo_lib_FieldId_verbose: { // dmmeta.fflag: emptyval specified; no argument required but value may be specified as verbose:value
             *out_anon = false;
             retval=0;
             out_dflt="1";
         } break;
-        case algo_lib_FieldId_debug: { // dmmeta.fflag: emptyval specified; no argument required but value may be specified as verbose:value
+        case algo_lib_FieldId_debug: { // dmmeta.fflag: emptyval specified; no argument required but value may be specified as debug:value
             *out_anon = false;
             retval=0;
             out_dflt="1";
         } break;
-        case algo_lib_FieldId_help: { // dmmeta.fflag: emptyval specified; no argument required but value may be specified as debug:value
+        case algo_lib_FieldId_help: { // bool: no argument required but value may be specified as help:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case algo_lib_FieldId_version: { // bool: no argument required but value may be specified as help:Y
+        case algo_lib_FieldId_version: { // bool: no argument required but value may be specified as version:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case algo_lib_FieldId_signature: { // bool: no argument required but value may be specified as version:Y
+        case algo_lib_FieldId_signature: { // bool: no argument required but value may be specified as signature:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case algo_lib_FieldId_v: { // bool: no argument required but value may be specified as signature:Y
+        case algo_lib_FieldId_v: { // dmmeta.fflag: emptyval specified; no argument required but value may be specified as v:value
             *out_anon = false;
             retval=0;
             out_dflt="1";
         } break;
-        case algo_lib_FieldId_d: { // dmmeta.fflag: emptyval specified; no argument required but value may be specified as v:value
+        case algo_lib_FieldId_d: { // dmmeta.fflag: emptyval specified; no argument required but value may be specified as d:value
             *out_anon = false;
             retval=0;
             out_dflt="1";
         } break;
-        case algo_lib_FieldId_sig: { // dmmeta.fflag: emptyval specified; no argument required but value may be specified as d:value
+        case algo_lib_FieldId_sig: { // bool: no argument required but value may be specified as sig:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
         } break;
-        case algo_lib_FieldId_h: { // bool: no argument required but value may be specified as sig:Y
+        case algo_lib_FieldId_h: { // bool: no argument required but value may be specified as h:Y
             *out_anon = false;
             retval=0;
             out_dflt="Y";
@@ -592,6 +623,25 @@ algo::aryptr<algo::cstring> algo_lib::ary_tok_AllocN(algo_lib::CsvParse& csvpars
     }
     csvparse.ary_tok_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- algo_lib.CsvParse.ary_tok.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> algo_lib::ary_tok_AllocNAt(algo_lib::CsvParse& csvparse, int n_elems, int at) {
+    ary_tok_Reserve(csvparse, n_elems);
+    int n  = csvparse.ary_tok_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.CsvParse.ary_tok  comment:'index out of range'");
+    }
+    algo::cstring *elems = csvparse.ary_tok_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    csvparse.ary_tok_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- algo_lib.CsvParse.ary_tok.Remove
@@ -690,6 +740,30 @@ bool algo_lib::ary_tok_ReadStrptrMaybe(algo_lib::CsvParse& csvparse, algo::strpt
     return retval;
 }
 
+// --- algo_lib.CsvParse.ary_tok.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo_lib::ary_tok_Insary(algo_lib::CsvParse& csvparse, algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= csvparse.ary_tok_elems && rhs.elems < csvparse.ary_tok_elems + csvparse.ary_tok_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo_lib.tary_alias  field:algo_lib.CsvParse.ary_tok  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(csvparse.ary_tok_elems+1))) {
+        FatalErrorExit("algo_lib.bad_insary  field:algo_lib.CsvParse.ary_tok  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = csvparse.ary_tok_n - at;
+    ary_tok_Reserve(csvparse, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (csvparse.ary_tok_elems + at + nnew + i) algo::cstring(csvparse.ary_tok_elems[at + i]);
+        csvparse.ary_tok_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (csvparse.ary_tok_elems + at + i) algo::cstring(rhs[i]);
+    }
+    csvparse.ary_tok_n += nnew;
+}
+
 // --- algo_lib.CsvParse..Uninit
 void algo_lib::CsvParse_Uninit(algo_lib::CsvParse& csvparse) {
     algo_lib::CsvParse &row = csvparse; (void)row;
@@ -772,21 +846,20 @@ bool algo_lib::FTimehook_ReadFieldMaybe(algo_lib::FTimehook& parent, algo::strpt
     switch(field_id) {
         case algo_lib_FieldId_time: {
             retval = algo::SchedTime_ReadStrptrMaybe(parent.time, strval);
-            break;
-        }
+        } break;
         case algo_lib_FieldId_delay: {
             retval = algo::SchedTime_ReadStrptrMaybe(parent.delay, strval);
-            break;
-        }
+        } break;
         case algo_lib_FieldId_hook: {
             retval = false;
-            break;
-        }
+        } break;
         case algo_lib_FieldId_recurrent: {
             retval = bool_ReadStrptrMaybe(parent.recurrent, strval);
-            break;
-        }
-        default: break;
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -857,12 +930,525 @@ void algo_lib::FImdb_Uninit(algo_lib::FImdb& imdb) {
     ind_imdb_Remove(row); // remove imdb from index ind_imdb
 }
 
+// --- algo_lib.RegxFlags.trace.ReadStrptrMaybe
+inline static bool algo_lib::trace_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+    bool retval = true;
+    bool trace_tmp;
+    retval = bool_ReadStrptrMaybe(trace_tmp, in_str);
+    if (retval) {
+        trace_Set(parent, trace_tmp);
+    }
+    return retval;
+}
+
+// --- algo_lib.RegxFlags.capture.ReadStrptrMaybe
+inline static bool algo_lib::capture_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+    bool retval = true;
+    bool capture_tmp;
+    retval = bool_ReadStrptrMaybe(capture_tmp, in_str);
+    if (retval) {
+        capture_Set(parent, capture_tmp);
+    }
+    return retval;
+}
+
+// --- algo_lib.RegxFlags.valid.ReadStrptrMaybe
+inline static bool algo_lib::valid_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+    bool retval = true;
+    bool valid_tmp;
+    retval = bool_ReadStrptrMaybe(valid_tmp, in_str);
+    if (retval) {
+        valid_Set(parent, valid_tmp);
+    }
+    return retval;
+}
+
+// --- algo_lib.RegxFlags.literal.ReadStrptrMaybe
+inline static bool algo_lib::literal_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+    bool retval = true;
+    bool literal_tmp;
+    retval = bool_ReadStrptrMaybe(literal_tmp, in_str);
+    if (retval) {
+        literal_Set(parent, literal_tmp);
+    }
+    return retval;
+}
+
+// --- algo_lib.RegxFlags.accepts_all.ReadStrptrMaybe
+inline static bool algo_lib::accepts_all_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+    bool retval = true;
+    bool accepts_all_tmp;
+    retval = bool_ReadStrptrMaybe(accepts_all_tmp, in_str);
+    if (retval) {
+        accepts_all_Set(parent, accepts_all_tmp);
+    }
+    return retval;
+}
+
+// --- algo_lib.RegxFlags.fullmatch.ReadStrptrMaybe
+inline static bool algo_lib::fullmatch_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+    bool retval = true;
+    bool fullmatch_tmp;
+    retval = bool_ReadStrptrMaybe(fullmatch_tmp, in_str);
+    if (retval) {
+        fullmatch_Set(parent, fullmatch_tmp);
+    }
+    return retval;
+}
+
+// --- algo_lib.RegxFlags..ReadFieldMaybe
+bool algo_lib::RegxFlags_ReadFieldMaybe(algo_lib::RegxFlags& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    algo_lib::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case algo_lib_FieldId_value: {
+            retval = u8_ReadStrptrMaybe(parent.value, strval);
+        } break;
+        case algo_lib_FieldId_trace: {
+            retval = trace_ReadStrptrMaybe(parent, strval);
+        } break;
+        case algo_lib_FieldId_capture: {
+            retval = capture_ReadStrptrMaybe(parent, strval);
+        } break;
+        case algo_lib_FieldId_valid: {
+            retval = valid_ReadStrptrMaybe(parent, strval);
+        } break;
+        case algo_lib_FieldId_literal: {
+            retval = literal_ReadStrptrMaybe(parent, strval);
+        } break;
+        case algo_lib_FieldId_accepts_all: {
+            retval = accepts_all_ReadStrptrMaybe(parent, strval);
+        } break;
+        case algo_lib_FieldId_fullmatch: {
+            retval = fullmatch_ReadStrptrMaybe(parent, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- algo_lib.RegxFlags..ReadStrptrMaybe
+// Read fields of algo_lib::RegxFlags from an ascii string.
+bool algo_lib::RegxFlags_ReadStrptrMaybe(algo_lib::RegxFlags &parent, algo::strptr in_str) {
+    bool retval = true;
+    // Clear affected bits first)
+    trace_Set(parent, false);
+    capture_Set(parent, false);
+    valid_Set(parent, false);
+    literal_Set(parent, false);
+    accepts_all_Set(parent, false);
+    fullmatch_Set(parent, false);
+    // Read ','-separated list of bools
+    while (ch_N(in_str)) {
+        strptr field_name;
+        algo::NextSep(in_str,',',field_name);
+        field_name = algo::Trimmed(field_name);
+        if (ch_N(field_name)) {
+            algo_lib::FieldId field_id;
+            bool ok = algo_lib::value_SetStrptrMaybe(field_id,field_name);
+            if (ok) {
+                switch (field_id) {
+                    case algo_lib_FieldId_trace: {
+                        trace_Set(parent, true);
+                    } break;
+                    case algo_lib_FieldId_capture: {
+                        capture_Set(parent, true);
+                    } break;
+                    case algo_lib_FieldId_valid: {
+                        valid_Set(parent, true);
+                    } break;
+                    case algo_lib_FieldId_literal: {
+                        literal_Set(parent, true);
+                    } break;
+                    case algo_lib_FieldId_accepts_all: {
+                        accepts_all_Set(parent, true);
+                    } break;
+                    case algo_lib_FieldId_fullmatch: {
+                        fullmatch_Set(parent, true);
+                    } break;
+                    default: ok = false; break;
+                }
+            }
+            if (!ok) {
+                algo_lib::AppendErrtext("bitfld",field_name);
+                retval = false;
+            }
+        }
+    }
+    return retval;
+}
+
+// --- algo_lib.RegxFlags..Print
+// print string representation of ROW to string STR
+// cfmt:algo_lib.RegxFlags.String  printfmt:Bitset
+void algo_lib::RegxFlags_Print(algo_lib::RegxFlags row, algo::cstring& str) {
+    algo::ListSep ls(",");
+    if (trace_Get(row)) {
+        str << ls << "trace";
+    }
+    if (capture_Get(row)) {
+        str << ls << "capture";
+    }
+    if (valid_Get(row)) {
+        str << ls << "valid";
+    }
+    if (literal_Get(row)) {
+        str << ls << "literal";
+    }
+    if (accepts_all_Get(row)) {
+        str << ls << "accepts_all";
+    }
+    if (fullmatch_Get(row)) {
+        str << ls << "fullmatch";
+    }
+}
+
+// --- algo_lib.RegxFlags..GetAnon
+algo::strptr algo_lib::RegxFlags_GetAnon(algo_lib::RegxFlags &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("value", 5);
+        default: return algo::strptr();
+    }
+}
+
+// --- algo_lib.RegxStyle.value.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* algo_lib::value_ToCstr(const algo_lib::RegxStyle& parent) {
+    const char *ret = NULL;
+    switch(value_GetEnum(parent)) {
+        case algo_lib_RegxStyle_default    : ret = "default";  break;
+        case algo_lib_RegxStyle_sql        : ret = "sql";  break;
+        case algo_lib_RegxStyle_acr        : ret = "acr";  break;
+        case algo_lib_RegxStyle_shell      : ret = "shell";  break;
+        case algo_lib_RegxStyle_literal    : ret = "literal";  break;
+    }
+    return ret;
+}
+
+// --- algo_lib.RegxStyle.value.Print
+// Convert value to a string. First, attempt conversion to a known string.
+// If no string matches, print value as a numeric value.
+void algo_lib::value_Print(const algo_lib::RegxStyle& parent, algo::cstring &lhs) {
+    const char *strval = value_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.value;
+    }
+}
+
+// --- algo_lib.RegxStyle.value.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool algo_lib::value_SetStrptrMaybe(algo_lib::RegxStyle& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 3: {
+            switch (u64(algo::ReadLE16(rhs.elems))|(u64(rhs[2])<<16)) {
+                case LE_STR3('a','c','r'): {
+                    value_SetEnum(parent,algo_lib_RegxStyle_acr); ret = true; break;
+                }
+                case LE_STR3('s','q','l'): {
+                    value_SetEnum(parent,algo_lib_RegxStyle_sql); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('s','h','e','l','l'): {
+                    value_SetEnum(parent,algo_lib_RegxStyle_shell); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 7: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('d','e','f','a','u','l','t'): {
+                    value_SetEnum(parent,algo_lib_RegxStyle_default); ret = true; break;
+                }
+                case LE_STR7('l','i','t','e','r','a','l'): {
+                    value_SetEnum(parent,algo_lib_RegxStyle_literal); ret = true; break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- algo_lib.RegxStyle.value.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void algo_lib::value_SetStrptr(algo_lib::RegxStyle& parent, algo::strptr rhs, algo_lib_RegxStyleEnum dflt) {
+    if (!value_SetStrptrMaybe(parent,rhs)) value_SetEnum(parent,dflt);
+}
+
+// --- algo_lib.RegxStyle.value.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo_lib::value_ReadStrptrMaybe(algo_lib::RegxStyle& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = value_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u8_ReadStrptrMaybe(parent.value,rhs);
+    }
+    return retval;
+}
+
+// --- algo_lib.RegxStyle..ReadStrptrMaybe
+// Read fields of algo_lib::RegxStyle from an ascii string.
+// The format of the string is the format of the algo_lib::RegxStyle's only field
+bool algo_lib::RegxStyle_ReadStrptrMaybe(algo_lib::RegxStyle &parent, algo::strptr in_str) {
+    bool retval = true;
+    retval = retval && value_ReadStrptrMaybe(parent, in_str);
+    return retval;
+}
+
+// --- algo_lib.RegxStyle..Print
+// print string representation of ROW to string STR
+// cfmt:algo_lib.RegxStyle.String  printfmt:Raw
+void algo_lib::RegxStyle_Print(algo_lib::RegxStyle& row, algo::cstring& str) {
+    algo_lib::value_Print(row, str);
+}
+
+// --- algo_lib.Regx.state.Addary
+// Reserve space (this may move memory). Insert N element at the end.
+// Return aryptr to newly inserted block.
+// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+algo::aryptr<algo_lib::RegxState> algo_lib::state_Addary(algo_lib::Regx& regx, algo::aryptr<algo_lib::RegxState> rhs) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= regx.state_elems && rhs.elems < regx.state_elems + regx.state_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo_lib.tary_alias  field:algo_lib.Regx.state  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    int nnew = rhs.n_elems;
+    state_Reserve(regx, nnew); // reserve space
+    int at = regx.state_n;
+    for (int i = 0; i < nnew; i++) {
+        new (regx.state_elems + at + i) algo_lib::RegxState(rhs[i]);
+        regx.state_n++;
+    }
+    return algo::aryptr<algo_lib::RegxState>(regx.state_elems + at, nnew);
+}
+
+// --- algo_lib.Regx.state.Alloc
+// Reserve space. Insert element at the end
+// The new element is initialized to a default value
+algo_lib::RegxState& algo_lib::state_Alloc(algo_lib::Regx& regx) {
+    state_Reserve(regx, 1);
+    int n  = regx.state_n;
+    int at = n;
+    algo_lib::RegxState *elems = regx.state_elems;
+    new (elems + at) algo_lib::RegxState(); // construct new element, default initializer
+    regx.state_n = n+1;
+    return elems[at];
+}
+
+// --- algo_lib.Regx.state.AllocAt
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo_lib::RegxState& algo_lib::state_AllocAt(algo_lib::Regx& regx, int at) {
+    state_Reserve(regx, 1);
+    int n  = regx.state_n;
+    if (UNLIKELY(u64(at) >= u64(n+1))) {
+        FatalErrorExit("algo_lib.bad_alloc_at  field:algo_lib.Regx.state  comment:'index out of range'");
+    }
+    algo_lib::RegxState *elems = regx.state_elems;
+    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo_lib::RegxState));
+    new (elems + at) algo_lib::RegxState(); // construct element, default initializer
+    regx.state_n = n+1;
+    return elems[at];
+}
+
+// --- algo_lib.Regx.state.AllocN
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocN(algo_lib::Regx& regx, int n_elems) {
+    state_Reserve(regx, n_elems);
+    int old_n  = regx.state_n;
+    int new_n = old_n + n_elems;
+    algo_lib::RegxState *elems = regx.state_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo_lib::RegxState(); // construct new element, default initialize
+    }
+    regx.state_n = new_n;
+    return algo::aryptr<algo_lib::RegxState>(elems + old_n, n_elems);
+}
+
+// --- algo_lib.Regx.state.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocNAt(algo_lib::Regx& regx, int n_elems, int at) {
+    state_Reserve(regx, n_elems);
+    int n  = regx.state_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.Regx.state  comment:'index out of range'");
+    }
+    algo_lib::RegxState *elems = regx.state_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo_lib::RegxState));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo_lib::RegxState(); // construct new element, default initialize
+    }
+    regx.state_n = n+n_elems;
+    return algo::aryptr<algo_lib::RegxState>(elems+at,n_elems);
+}
+
+// --- algo_lib.Regx.state.Remove
+// Remove item by index. If index outside of range, do nothing.
+void algo_lib::state_Remove(algo_lib::Regx& regx, u32 i) {
+    u32 lim = regx.state_n;
+    algo_lib::RegxState *elems = regx.state_elems;
+    if (i < lim) {
+        elems[i].~RegxState(); // destroy element
+        memmove(elems + i, elems + (i + 1), sizeof(algo_lib::RegxState) * (lim - (i + 1)));
+        regx.state_n = lim - 1;
+    }
+}
+
+// --- algo_lib.Regx.state.RemoveAll
+void algo_lib::state_RemoveAll(algo_lib::Regx& regx) {
+    u32 n = regx.state_n;
+    while (n > 0) {
+        n -= 1;
+        regx.state_elems[n].~RegxState();
+        regx.state_n = n;
+    }
+}
+
+// --- algo_lib.Regx.state.RemoveLast
+// Delete last element of array. Do nothing if array is empty.
+void algo_lib::state_RemoveLast(algo_lib::Regx& regx) {
+    u64 n = regx.state_n;
+    if (n > 0) {
+        n -= 1;
+        state_qFind(regx, u64(n)).~RegxState();
+        regx.state_n = n;
+    }
+}
+
+// --- algo_lib.Regx.state.AbsReserve
+// Make sure N elements fit in array. Process dies if out of memory
+void algo_lib::state_AbsReserve(algo_lib::Regx& regx, int n) {
+    u32 old_max  = regx.state_max;
+    if (n > i32(old_max)) {
+        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
+        void *new_mem = algo_lib::lpool_ReallocMem(regx.state_elems, old_max * sizeof(algo_lib::RegxState), new_max * sizeof(algo_lib::RegxState));
+        if (UNLIKELY(!new_mem)) {
+            FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.Regx.state  comment:'out of memory'");
+        }
+        regx.state_elems = (algo_lib::RegxState*)new_mem;
+        regx.state_max = new_max;
+    }
+}
+
+// --- algo_lib.Regx.state.Setary
+// Copy contents of RHS to PARENT.
+void algo_lib::state_Setary(algo_lib::Regx& regx, algo_lib::Regx &rhs) {
+    state_RemoveAll(regx);
+    int nnew = rhs.state_n;
+    state_Reserve(regx, nnew); // reserve space
+    for (int i = 0; i < nnew; i++) { // copy elements over
+        new (regx.state_elems + i) algo_lib::RegxState(state_qFind(rhs, i));
+        regx.state_n = i + 1;
+    }
+}
+
+// --- algo_lib.Regx.state.Setary2
+// Copy specified array into state, discarding previous contents.
+// If the RHS argument aliases the array (refers to the same memory), throw exception.
+void algo_lib::state_Setary(algo_lib::Regx& regx, const algo::aryptr<algo_lib::RegxState> &rhs) {
+    state_RemoveAll(regx);
+    state_Addary(regx, rhs);
+}
+
+// --- algo_lib.Regx.state.AllocNVal
+// Reserve space. Insert N elements at the end of the array, return pointer to array
+algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocNVal(algo_lib::Regx& regx, int n_elems, const algo_lib::RegxState& val) {
+    state_Reserve(regx, n_elems);
+    int old_n  = regx.state_n;
+    int new_n = old_n + n_elems;
+    algo_lib::RegxState *elems = regx.state_elems;
+    for (int i = old_n; i < new_n; i++) {
+        new (elems + i) algo_lib::RegxState(val);
+    }
+    regx.state_n = new_n;
+    return algo::aryptr<algo_lib::RegxState>(elems + old_n, n_elems);
+}
+
+// --- algo_lib.Regx.state.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo_lib::state_Insary(algo_lib::Regx& regx, algo::aryptr<algo_lib::RegxState> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= regx.state_elems && rhs.elems < regx.state_elems + regx.state_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo_lib.tary_alias  field:algo_lib.Regx.state  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(regx.state_elems+1))) {
+        FatalErrorExit("algo_lib.bad_insary  field:algo_lib.Regx.state  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = regx.state_n - at;
+    state_Reserve(regx, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (regx.state_elems + at + nnew + i) algo_lib::RegxState(regx.state_elems[at + i]);
+        regx.state_elems[at + i].~RegxState(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (regx.state_elems + at + i) algo_lib::RegxState(rhs[i]);
+    }
+    regx.state_n += nnew;
+}
+
+// --- algo_lib.Regx..Uninit
+void algo_lib::Regx_Uninit(algo_lib::Regx& regx) {
+    algo_lib::Regx &row = regx; (void)row;
+
+    // algo_lib.Regx.state.Uninit (Tary)  //Array of states
+    // remove all elements from algo_lib.Regx.state
+    state_RemoveAll(regx);
+    // free memory for Tary algo_lib.Regx.state
+    algo_lib::lpool_FreeMem(regx.state_elems, sizeof(algo_lib::RegxState)*regx.state_max); // (algo_lib.Regx.state)
+}
+
+// --- algo_lib.Regx..AssignOp
+algo_lib::Regx& algo_lib::Regx::operator =(const algo_lib::Regx &rhs) {
+    expr = rhs.expr;
+    state_Setary(*this, state_Getary(const_cast<algo_lib::Regx&>(rhs)));
+    flags = rhs.flags;
+    style = rhs.style;
+    return *this;
+}
+
+// --- algo_lib.Regx..CopyCtor
+ algo_lib::Regx::Regx(const algo_lib::Regx &rhs)
+    : expr(rhs.expr)
+    , flags(rhs.flags)
+    , style(rhs.style)
+ {
+    state_elems 	= 0; // (algo_lib.Regx.state)
+    state_n     	= 0; // (algo_lib.Regx.state)
+    state_max   	= 0; // (algo_lib.Regx.state)
+    state_Setary(*this, state_Getary(const_cast<algo_lib::Regx&>(rhs)));
+}
+
 // --- algo_lib.FLogcat.base.CopyOut
 // Copy fields out of row
 void algo_lib::logcat_CopyOut(algo_lib::FLogcat &row, dmmeta::Logcat &out) {
     out.logcat = row.logcat;
     out.enabled = row.enabled;
     out.builtin = row.builtin;
+    out.stdout = row.stdout;
+    out.maxmsg = row.maxmsg;
+    out.window = row.window;
     out.comment = row.comment;
 }
 
@@ -872,7 +1458,23 @@ void algo_lib::logcat_CopyIn(algo_lib::FLogcat &row, dmmeta::Logcat &in) {
     row.logcat = in.logcat;
     row.enabled = in.enabled;
     row.builtin = in.builtin;
+    row.stdout = in.stdout;
+    row.maxmsg = in.maxmsg;
+    row.window = in.window;
     row.comment = in.comment;
+}
+
+// --- algo_lib.FLogcat..Init
+// Set all fields to initial values.
+void algo_lib::FLogcat_Init(algo_lib::FLogcat& logcat) {
+    logcat.enabled = bool(false);
+    logcat.builtin = bool(false);
+    logcat.stdout = bool(false);
+    logcat.maxmsg = i32(0);
+    logcat.window = i32(0);
+    logcat.nmsg = i64(0);
+    logcat.ind_logcat_next = (algo_lib::FLogcat*)-1; // (algo_lib.FDb.ind_logcat) not-in-hash
+    logcat.ind_logcat_hashval = 0; // stored hash value
 }
 
 // --- algo_lib.FLogcat..Uninit
@@ -1207,8 +1809,8 @@ bool algo_lib::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (DirectoryQ(root)) {
         retval = retval && algo_lib::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -1249,18 +1851,6 @@ bool algo_lib::LoadTuplesFd(algo::Fildes fd, algo::strptr fname, bool recursive)
         }
     }ind_end;
     return retval;
-}
-
-// --- algo_lib.FDb._db.Init
-void algo_lib::Init() {
-    algo_lib::_db.last_signal             = 0;
-    ind_beg_aryptr(cstring, str, algo_lib::temp_strings_Getary()) {
-        ch_Reserve(str, 256);
-    }ind_end_aryptr;
-    algo_lib::_db.n_temp = algo_lib::temp_strings_N();
-    algo_lib::bh_timehook_Reserve(32);
-    algo_lib::InitCpuHz();
-    algo_lib::_db.eol          = true;
 }
 
 // --- algo_lib.FDb._db.LoadSsimfileMaybe
@@ -1391,14 +1981,9 @@ bool algo_lib::imtable_XrefMaybe(algo_lib::FImtable &row) {
 // Find row by key. Return NULL if not found.
 algo_lib::FImtable* algo_lib::ind_imtable_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_imtable_buckets_n - 1);
-    algo_lib::FImtable* *e = &_db.ind_imtable_buckets_elems[index];
-    algo_lib::FImtable* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).imtable == key;
-        if (done) break;
-        e         = &ret->ind_imtable_next;
-    } while (true);
+    algo_lib::FImtable *ret = _db.ind_imtable_buckets_elems[index];
+    for (; ret && !((*ret).imtable == key); ret = ret->ind_imtable_next) {
+    }
     return ret;
 }
 
@@ -1422,10 +2007,11 @@ algo_lib::FImtable& algo_lib::ind_imtable_GetOrCreate(const algo::strptr& key) {
 // --- algo_lib.FDb.ind_imtable.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool algo_lib::ind_imtable_InsertMaybe(algo_lib::FImtable& row) {
-    ind_imtable_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_imtable_next == (algo_lib::FImtable*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.imtable) & (_db.ind_imtable_buckets_n - 1);
+        row.ind_imtable_hashval = algo::Smallstr50_Hash(0, row.imtable);
+        ind_imtable_Reserve(1);
+        u32 index = row.ind_imtable_hashval & (_db.ind_imtable_buckets_n - 1);
         algo_lib::FImtable* *prev = &_db.ind_imtable_buckets_elems[index];
         do {
             algo_lib::FImtable* ret = *prev;
@@ -1451,7 +2037,7 @@ bool algo_lib::ind_imtable_InsertMaybe(algo_lib::FImtable& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void algo_lib::ind_imtable_Remove(algo_lib::FImtable& row) {
     if (LIKELY(row.ind_imtable_next != (algo_lib::FImtable*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.imtable) & (_db.ind_imtable_buckets_n - 1);
+        u32 index = row.ind_imtable_hashval & (_db.ind_imtable_buckets_n - 1);
         algo_lib::FImtable* *prev = &_db.ind_imtable_buckets_elems[index]; // addr of pointer to current element
         while (algo_lib::FImtable *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1468,8 +2054,14 @@ void algo_lib::ind_imtable_Remove(algo_lib::FImtable& row) {
 // --- algo_lib.FDb.ind_imtable.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void algo_lib::ind_imtable_Reserve(int n) {
+    ind_imtable_AbsReserve(_db.ind_imtable_n + n);
+}
+
+// --- algo_lib.FDb.ind_imtable.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void algo_lib::ind_imtable_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_imtable_buckets_n;
-    u32 new_nelems   = _db.ind_imtable_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1488,7 +2080,7 @@ void algo_lib::ind_imtable_Reserve(int n) {
             while (elem) {
                 algo_lib::FImtable &row        = *elem;
                 algo_lib::FImtable* next       = row.ind_imtable_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.imtable) & (new_nbuckets-1);
+                u32 index          = row.ind_imtable_hashval & (new_nbuckets-1);
                 row.ind_imtable_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1774,12 +2366,31 @@ void algo_lib::bh_timehook_FirstChanged() {
 
 // --- algo_lib.FDb.bh_timehook.UpdateCycles
 // Update cycles count from previous clock capture
-void algo_lib::bh_timehook_UpdateCycles() {
+inline static void algo_lib::bh_timehook_UpdateCycles() {
     u64 cur_cycles                      = algo::get_cycles();
     u64 prev_cycles                     = algo_lib::_db.clock.value;
     ++algo_lib::_db.trace.step_bh_timehook;
     algo_lib::_db.trace.step_bh_timehook_cycles  += cur_cycles - prev_cycles;
     algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
+}
+
+// --- algo_lib.FDb.bh_timehook.Call
+inline static void algo_lib::bh_timehook_Call() {
+    // Call Step for all entries expired by this time.
+    // (_db.clock may get updated during this loop, but only those entries
+    // that expired prior will be processed.)
+    algo_lib::_db.step_limit = algo_lib::_db.clock;
+    while (algo_lib::FTimehook *bh_timehook = algo_lib::bh_timehook_First()) { // fstep:algo_lib.FDb.bh_timehook
+        algo::SchedTime expire = (*bh_timehook).time;
+        if (expire < algo_lib::_db.step_limit) {
+            algo_lib::bh_timehook_Step(); // steptype:InlineOnce: call function at specified time
+            bh_timehook_UpdateCycles();
+            algo_lib::_db.next_loop.value = algo_lib::_db.step_limit;
+        } else {
+            algo_lib::_db.next_loop.value = u64_Min(expire, algo_lib::_db.next_loop);
+            break;
+        }
+    }
 }
 
 // --- algo_lib.FDb.dispsigcheck.Alloc
@@ -1876,14 +2487,9 @@ bool algo_lib::dispsigcheck_XrefMaybe(algo_lib::FDispsigcheck &row) {
 // Find row by key. Return NULL if not found.
 algo_lib::FDispsigcheck* algo_lib::ind_dispsigcheck_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_dispsigcheck_buckets_n - 1);
-    algo_lib::FDispsigcheck* *e = &_db.ind_dispsigcheck_buckets_elems[index];
-    algo_lib::FDispsigcheck* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).dispsig == key;
-        if (done) break;
-        e         = &ret->ind_dispsigcheck_next;
-    } while (true);
+    algo_lib::FDispsigcheck *ret = _db.ind_dispsigcheck_buckets_elems[index];
+    for (; ret && !((*ret).dispsig == key); ret = ret->ind_dispsigcheck_next) {
+    }
     return ret;
 }
 
@@ -1907,10 +2513,11 @@ algo_lib::FDispsigcheck& algo_lib::ind_dispsigcheck_GetOrCreate(const algo::strp
 // --- algo_lib.FDb.ind_dispsigcheck.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool algo_lib::ind_dispsigcheck_InsertMaybe(algo_lib::FDispsigcheck& row) {
-    ind_dispsigcheck_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_dispsigcheck_next == (algo_lib::FDispsigcheck*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.dispsig) & (_db.ind_dispsigcheck_buckets_n - 1);
+        row.ind_dispsigcheck_hashval = algo::Smallstr50_Hash(0, row.dispsig);
+        ind_dispsigcheck_Reserve(1);
+        u32 index = row.ind_dispsigcheck_hashval & (_db.ind_dispsigcheck_buckets_n - 1);
         algo_lib::FDispsigcheck* *prev = &_db.ind_dispsigcheck_buckets_elems[index];
         do {
             algo_lib::FDispsigcheck* ret = *prev;
@@ -1936,7 +2543,7 @@ bool algo_lib::ind_dispsigcheck_InsertMaybe(algo_lib::FDispsigcheck& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void algo_lib::ind_dispsigcheck_Remove(algo_lib::FDispsigcheck& row) {
     if (LIKELY(row.ind_dispsigcheck_next != (algo_lib::FDispsigcheck*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.dispsig) & (_db.ind_dispsigcheck_buckets_n - 1);
+        u32 index = row.ind_dispsigcheck_hashval & (_db.ind_dispsigcheck_buckets_n - 1);
         algo_lib::FDispsigcheck* *prev = &_db.ind_dispsigcheck_buckets_elems[index]; // addr of pointer to current element
         while (algo_lib::FDispsigcheck *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1953,8 +2560,14 @@ void algo_lib::ind_dispsigcheck_Remove(algo_lib::FDispsigcheck& row) {
 // --- algo_lib.FDb.ind_dispsigcheck.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void algo_lib::ind_dispsigcheck_Reserve(int n) {
+    ind_dispsigcheck_AbsReserve(_db.ind_dispsigcheck_n + n);
+}
+
+// --- algo_lib.FDb.ind_dispsigcheck.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void algo_lib::ind_dispsigcheck_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_dispsigcheck_buckets_n;
-    u32 new_nelems   = _db.ind_dispsigcheck_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1973,7 +2586,7 @@ void algo_lib::ind_dispsigcheck_Reserve(int n) {
             while (elem) {
                 algo_lib::FDispsigcheck &row        = *elem;
                 algo_lib::FDispsigcheck* next       = row.ind_dispsigcheck_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.dispsig) & (new_nbuckets-1);
+                u32 index          = row.ind_dispsigcheck_hashval & (new_nbuckets-1);
                 row.ind_dispsigcheck_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2055,14 +2668,9 @@ bool algo_lib::imdb_XrefMaybe(algo_lib::FImdb &row) {
 // Find row by key. Return NULL if not found.
 algo_lib::FImdb* algo_lib::ind_imdb_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_imdb_buckets_n - 1);
-    algo_lib::FImdb* *e = &_db.ind_imdb_buckets_elems[index];
-    algo_lib::FImdb* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).imdb == key;
-        if (done) break;
-        e         = &ret->ind_imdb_next;
-    } while (true);
+    algo_lib::FImdb *ret = _db.ind_imdb_buckets_elems[index];
+    for (; ret && !((*ret).imdb == key); ret = ret->ind_imdb_next) {
+    }
     return ret;
 }
 
@@ -2086,10 +2694,11 @@ algo_lib::FImdb& algo_lib::ind_imdb_GetOrCreate(const algo::strptr& key) {
 // --- algo_lib.FDb.ind_imdb.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool algo_lib::ind_imdb_InsertMaybe(algo_lib::FImdb& row) {
-    ind_imdb_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_imdb_next == (algo_lib::FImdb*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.imdb) & (_db.ind_imdb_buckets_n - 1);
+        row.ind_imdb_hashval = algo::Smallstr50_Hash(0, row.imdb);
+        ind_imdb_Reserve(1);
+        u32 index = row.ind_imdb_hashval & (_db.ind_imdb_buckets_n - 1);
         algo_lib::FImdb* *prev = &_db.ind_imdb_buckets_elems[index];
         do {
             algo_lib::FImdb* ret = *prev;
@@ -2115,7 +2724,7 @@ bool algo_lib::ind_imdb_InsertMaybe(algo_lib::FImdb& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void algo_lib::ind_imdb_Remove(algo_lib::FImdb& row) {
     if (LIKELY(row.ind_imdb_next != (algo_lib::FImdb*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.imdb) & (_db.ind_imdb_buckets_n - 1);
+        u32 index = row.ind_imdb_hashval & (_db.ind_imdb_buckets_n - 1);
         algo_lib::FImdb* *prev = &_db.ind_imdb_buckets_elems[index]; // addr of pointer to current element
         while (algo_lib::FImdb *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2132,8 +2741,14 @@ void algo_lib::ind_imdb_Remove(algo_lib::FImdb& row) {
 // --- algo_lib.FDb.ind_imdb.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void algo_lib::ind_imdb_Reserve(int n) {
+    ind_imdb_AbsReserve(_db.ind_imdb_n + n);
+}
+
+// --- algo_lib.FDb.ind_imdb.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void algo_lib::ind_imdb_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_imdb_buckets_n;
-    u32 new_nelems   = _db.ind_imdb_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2152,7 +2767,7 @@ void algo_lib::ind_imdb_Reserve(int n) {
             while (elem) {
                 algo_lib::FImdb &row        = *elem;
                 algo_lib::FImdb* next       = row.ind_imdb_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.imdb) & (new_nbuckets-1);
+                u32 index          = row.ind_imdb_hashval & (new_nbuckets-1);
                 row.ind_imdb_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2550,16 +3165,6 @@ bool algo_lib::replvar_XrefMaybe(algo_lib::FReplvar &row) {
     return retval;
 }
 
-// --- algo_lib.FDb.giveup_time.UpdateCycles
-// Update cycles count from previous clock capture
-void algo_lib::giveup_time_UpdateCycles() {
-    u64 cur_cycles                      = algo::get_cycles();
-    u64 prev_cycles                     = algo_lib::_db.clock.value;
-    ++algo_lib::_db.trace.step_giveup_time;
-    algo_lib::_db.trace.step_giveup_time_cycles  += cur_cycles - prev_cycles;
-    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
-}
-
 // --- algo_lib.FDb.logcat.Alloc
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -2621,9 +3226,16 @@ static void algo_lib::logcat_LoadStatic() {
     static struct _t {
         const char *s;
     } data[] = {
-        { "dmmeta.logcat  logcat:expect  enabled:N  builtin:N  comment:\"lib_ams expect implementation\"" }
-        ,{ "dmmeta.logcat  logcat:stderr  enabled:Y  builtin:Y  comment:\"Standard error (cannot be disabled)\"" }
-        ,{ "dmmeta.logcat  logcat:stdout  enabled:Y  builtin:Y  comment:\"Standard output (cannot be disabled)\"" }
+        { "dmmeta.logcat  logcat:ams  enabled:N  builtin:N  stdout:Y  maxmsg:0  window:0  comment:\"Trace ams bus\"" }
+        ,{ "dmmeta.logcat  logcat:debug  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  comment:\"Debug messages\"" }
+        ,{ "dmmeta.logcat  logcat:inserr  enabled:N  builtin:Y  stdout:N  maxmsg:10  window:10  comment:\"In-memory db insert error\"" }
+        ,{ "dmmeta.logcat  logcat:slowness  enabled:N  builtin:N  stdout:Y  maxmsg:10  window:5  comment:\"Debug slowness\"" }
+        ,{ "dmmeta.logcat  logcat:stderr  enabled:Y  builtin:Y  stdout:N  maxmsg:0  window:0  comment:\"Standard error (cannot be disabled)\"" }
+        ,{ "dmmeta.logcat  logcat:stdout  enabled:Y  builtin:Y  stdout:Y  maxmsg:0  window:0  comment:\"Standard output (cannot be disabled)\"" }
+        ,{ "dmmeta.logcat  logcat:timestamps  enabled:N  builtin:N  stdout:Y  maxmsg:0  window:0  comment:\"Show timestamps\"" }
+        ,{ "dmmeta.logcat  logcat:verbose  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  comment:\"Verbose messages go here\"" }
+        ,{ "dmmeta.logcat  logcat:verbose2  enabled:N  builtin:N  stdout:N  maxmsg:0  window:0  comment:\"Extra verbose messages go here\"" }
+        ,{ "dmmeta.logcat  logcat:warn  enabled:Y  builtin:N  stdout:N  maxmsg:100  window:5  comment:Warnings" }
         ,{NULL}
     };
     (void)data;
@@ -2659,14 +3271,9 @@ bool algo_lib::logcat_XrefMaybe(algo_lib::FLogcat &row) {
 // Find row by key. Return NULL if not found.
 algo_lib::FLogcat* algo_lib::ind_logcat_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_logcat_buckets_n - 1);
-    algo_lib::FLogcat* *e = &_db.ind_logcat_buckets_elems[index];
-    algo_lib::FLogcat* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).logcat == key;
-        if (done) break;
-        e         = &ret->ind_logcat_next;
-    } while (true);
+    algo_lib::FLogcat *ret = _db.ind_logcat_buckets_elems[index];
+    for (; ret && !((*ret).logcat == key); ret = ret->ind_logcat_next) {
+    }
     return ret;
 }
 
@@ -2690,10 +3297,11 @@ algo_lib::FLogcat& algo_lib::ind_logcat_GetOrCreate(const algo::strptr& key) {
 // --- algo_lib.FDb.ind_logcat.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool algo_lib::ind_logcat_InsertMaybe(algo_lib::FLogcat& row) {
-    ind_logcat_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_logcat_next == (algo_lib::FLogcat*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.logcat) & (_db.ind_logcat_buckets_n - 1);
+        row.ind_logcat_hashval = algo::Smallstr50_Hash(0, row.logcat);
+        ind_logcat_Reserve(1);
+        u32 index = row.ind_logcat_hashval & (_db.ind_logcat_buckets_n - 1);
         algo_lib::FLogcat* *prev = &_db.ind_logcat_buckets_elems[index];
         do {
             algo_lib::FLogcat* ret = *prev;
@@ -2719,7 +3327,7 @@ bool algo_lib::ind_logcat_InsertMaybe(algo_lib::FLogcat& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void algo_lib::ind_logcat_Remove(algo_lib::FLogcat& row) {
     if (LIKELY(row.ind_logcat_next != (algo_lib::FLogcat*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.logcat) & (_db.ind_logcat_buckets_n - 1);
+        u32 index = row.ind_logcat_hashval & (_db.ind_logcat_buckets_n - 1);
         algo_lib::FLogcat* *prev = &_db.ind_logcat_buckets_elems[index]; // addr of pointer to current element
         while (algo_lib::FLogcat *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2736,8 +3344,14 @@ void algo_lib::ind_logcat_Remove(algo_lib::FLogcat& row) {
 // --- algo_lib.FDb.ind_logcat.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void algo_lib::ind_logcat_Reserve(int n) {
+    ind_logcat_AbsReserve(_db.ind_logcat_n + n);
+}
+
+// --- algo_lib.FDb.ind_logcat.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void algo_lib::ind_logcat_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_logcat_buckets_n;
-    u32 new_nelems   = _db.ind_logcat_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2756,7 +3370,7 @@ void algo_lib::ind_logcat_Reserve(int n) {
             while (elem) {
                 algo_lib::FLogcat &row        = *elem;
                 algo_lib::FLogcat* next       = row.ind_logcat_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.logcat) & (new_nbuckets-1);
+                u32 index          = row.ind_logcat_hashval & (new_nbuckets-1);
                 row.ind_logcat_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2829,6 +3443,25 @@ algo::aryptr<algo::cstring> algo_lib::exec_args_AllocN(int n_elems) {
     }
     _db.exec_args_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- algo_lib.FDb.exec_args.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> algo_lib::exec_args_AllocNAt(int n_elems, int at) {
+    exec_args_Reserve(n_elems);
+    int n  = _db.exec_args_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.FDb.exec_args  comment:'index out of range'");
+    }
+    algo::cstring *elems = _db.exec_args_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    _db.exec_args_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- algo_lib.FDb.exec_args.Remove
@@ -2907,6 +3540,30 @@ bool algo_lib::exec_args_ReadStrptrMaybe(algo::strptr in_str) {
     return retval;
 }
 
+// --- algo_lib.FDb.exec_args.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo_lib::exec_args_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.exec_args_elems && rhs.elems < _db.exec_args_elems + _db.exec_args_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo_lib.tary_alias  field:algo_lib.FDb.exec_args  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.exec_args_elems+1))) {
+        FatalErrorExit("algo_lib.bad_insary  field:algo_lib.FDb.exec_args  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.exec_args_n - at;
+    exec_args_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.exec_args_elems + at + nnew + i) algo::cstring(_db.exec_args_elems[at + i]);
+        _db.exec_args_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.exec_args_elems + at + i) algo::cstring(rhs[i]);
+    }
+    _db.exec_args_n += nnew;
+}
+
 // --- algo_lib.FDb.dirstack.Addary
 // Reserve space (this may move memory). Insert N element at the end.
 // Return aryptr to newly inserted block.
@@ -2967,6 +3624,25 @@ algo::aryptr<algo::cstring> algo_lib::dirstack_AllocN(int n_elems) {
     }
     _db.dirstack_n = new_n;
     return algo::aryptr<algo::cstring>(elems + old_n, n_elems);
+}
+
+// --- algo_lib.FDb.dirstack.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo::cstring> algo_lib::dirstack_AllocNAt(int n_elems, int at) {
+    dirstack_Reserve(n_elems);
+    int n  = _db.dirstack_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.FDb.dirstack  comment:'index out of range'");
+    }
+    algo::cstring *elems = _db.dirstack_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo::cstring));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo::cstring(); // construct new element, default initialize
+    }
+    _db.dirstack_n = n+n_elems;
+    return algo::aryptr<algo::cstring>(elems+at,n_elems);
 }
 
 // --- algo_lib.FDb.dirstack.Remove
@@ -3043,6 +3719,49 @@ bool algo_lib::dirstack_ReadStrptrMaybe(algo::strptr in_str) {
         dirstack_RemoveLast();
     }
     return retval;
+}
+
+// --- algo_lib.FDb.dirstack.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo_lib::dirstack_Insary(algo::aryptr<algo::cstring> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= _db.dirstack_elems && rhs.elems < _db.dirstack_elems + _db.dirstack_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo_lib.tary_alias  field:algo_lib.FDb.dirstack  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(_db.dirstack_elems+1))) {
+        FatalErrorExit("algo_lib.bad_insary  field:algo_lib.FDb.dirstack  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = _db.dirstack_n - at;
+    dirstack_Reserve(nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (_db.dirstack_elems + at + nnew + i) algo::cstring(_db.dirstack_elems[at + i]);
+        _db.dirstack_elems[at + i].~cstring(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (_db.dirstack_elems + at + i) algo::cstring(rhs[i]);
+    }
+    _db.dirstack_n += nnew;
+}
+
+// --- algo_lib.FDb.errns.XrefMaybe
+// Insert row into all appropriate indices. If error occurs, store error
+// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
+bool algo_lib::errns_XrefMaybe(algo_lib::FErrns &row) {
+    bool retval = true;
+    (void)row;
+    return retval;
+}
+
+// --- algo_lib.FDb.giveup_time.UpdateCycles
+// Update cycles count from previous clock capture
+void algo_lib::giveup_time_UpdateCycles() {
+    u64 cur_cycles                      = algo::get_cycles();
+    u64 prev_cycles                     = algo_lib::_db.clock.value;
+    ++algo_lib::_db.trace.step_giveup_time;
+    algo_lib::_db.trace.step_giveup_time_cycles  += cur_cycles - prev_cycles;
+    algo_lib::_db.clock                 = algo::SchedTime(cur_cycles);
 }
 
 // --- algo_lib.FDb.trace.RowidFind
@@ -3160,7 +3879,6 @@ void algo_lib::FDb_Init() {
     _db.clocks_to_ns = double(0.0);
     _db.n_temp = u32(0);
     _db.last_signal = u32(0);
-    _db.eol = bool(false);
     _db.cpu_hz = u64(0);
     (void)Charset_ReadStrptrMaybe(_db.ArgvIdent, "a-zA-Z0-9_");
     (void)Charset_ReadStrptrMaybe(_db.BashQuotesafe, "a-zA-Z0-9_^%@./-");
@@ -3168,14 +3886,7 @@ void algo_lib::FDb_Init() {
     (void)Charset_ReadStrptrPlain(_db.SsimBreakName, "[]{}()\t \r\n:");
     (void)Charset_ReadStrptrPlain(_db.SsimBreakValue, "[]{}()\t \r\n");
     (void)Charset_ReadStrptrMaybe(_db.SsimQuotesafe, "a-zA-Z0-9_;&*^%$@.!:,+/-");
-    algo_lib::_db.last_signal             = 0;
-    ind_beg_aryptr(cstring, str, algo_lib::temp_strings_Getary()) {
-        ch_Reserve(str, 256);
-    }ind_end_aryptr;
-    algo_lib::_db.n_temp = algo_lib::temp_strings_N();
-    algo_lib::bh_timehook_Reserve(32);
-    algo_lib::InitCpuHz();
-    algo_lib::_db.eol          = true;
+    _db_Userinit(); // dmmeta.fuserinit:algo_lib.FDb._db
     // initialize LAry imtable (algo_lib.FDb.imtable)
     _db.imtable_n = 0;
     memset(_db.imtable_lary, 0, sizeof(_db.imtable_lary)); // zero out all level pointers
@@ -3242,10 +3953,7 @@ void algo_lib::FDb_Init() {
     _db.replvar_blocksize = algo::BumpToPow2(64 * sizeof(algo_lib::FReplvar)); // allocate 64-127 elements at a time
     _db.giveup_count = u64(0);
     _db.stringtofile_nwrite = u32(0);
-    _db.giveup_time = bool(true);
-    _db.sleep_roundup = bool(false);
     _db.last_sleep_clocks = u64(0);
-    _db.show_insert_err_lim = u32(0);
     (void)Charset_ReadStrptrMaybe(_db.Urlsafe, "0-9a-zA-Z_.~");
     _db.winjob = u64(0);
     _db.Prlog = algo::PrlogFcn(algo::Prlog);
@@ -3258,17 +3966,18 @@ void algo_lib::FDb_Init() {
         FatalErrorExit("out of memory"); // (algo_lib.FDb.ind_logcat)
     }
     memset(_db.ind_logcat_buckets_elems, 0, sizeof(algo_lib::FLogcat*)*_db.ind_logcat_buckets_n); // (algo_lib.FDb.ind_logcat)
-    _db.show_tstamp = bool(false);
     _db.tstamp_fmt = algo::strptr("%Y/%m/%dT%H:%M:%S.%.6X ");
-    _db.fildes_stdout = algo::Fildes(1);
-    _db.fildes_stderr = algo::Fildes(2);
-    _db.pending_eol = bool(false);
     _db.exec_args_elems 	= 0; // (algo_lib.FDb.exec_args)
     _db.exec_args_n     	= 0; // (algo_lib.FDb.exec_args)
     _db.exec_args_max   	= 0; // (algo_lib.FDb.exec_args)
     _db.dirstack_elems 	= 0; // (algo_lib.FDb.dirstack)
     _db.dirstack_n     	= 0; // (algo_lib.FDb.dirstack)
     _db.dirstack_max   	= 0; // (algo_lib.FDb.dirstack)
+    errns_Userinit(); // dmmeta.fuserinit:algo_lib.FDb.errns
+    _db.use_epoll_pwait2 = bool(false);
+    _db.pending_eol = bool(false);
+    _db.giveup_time = bool(true);
+    _db.show_tstamp = bool(false);
 
     algo_lib::InitReflection();
     _db.h_fatalerror = NULL;
@@ -3478,15 +4187,11 @@ void algo_lib::c_txtcell_Cascdel(algo_lib::FTxtrow& txtrow) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void algo_lib::c_txtcell_Insert(algo_lib::FTxtrow& txtrow, algo_lib::FTxtcell& row) {
-    if (bool_Update(row.txtrow_c_txtcell_in_ary,true)) {
-        // reserve space
+    if (!row.txtrow_c_txtcell_in_ary) {
         c_txtcell_Reserve(txtrow, 1);
-        u32 n  = txtrow.c_txtcell_n;
-        u32 at = n;
-        algo_lib::FTxtcell* *elems = txtrow.c_txtcell_elems;
-        elems[at] = &row;
-        txtrow.c_txtcell_n = n+1;
-
+        u32 n  = txtrow.c_txtcell_n++;
+        txtrow.c_txtcell_elems[n] = &row;
+        row.txtrow_c_txtcell_in_ary = true;
     }
 }
 
@@ -3495,7 +4200,7 @@ void algo_lib::c_txtcell_Insert(algo_lib::FTxtrow& txtrow, algo_lib::FTxtcell& r
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool algo_lib::c_txtcell_InsertMaybe(algo_lib::FTxtrow& txtrow, algo_lib::FTxtcell& row) {
-    bool retval = !row.txtrow_c_txtcell_in_ary;
+    bool retval = !txtrow_c_txtcell_InAryQ(row);
     c_txtcell_Insert(txtrow,row); // check is performed in _Insert again
     return retval;
 }
@@ -3503,18 +4208,18 @@ bool algo_lib::c_txtcell_InsertMaybe(algo_lib::FTxtrow& txtrow, algo_lib::FTxtce
 // --- algo_lib.FTxtrow.c_txtcell.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void algo_lib::c_txtcell_Remove(algo_lib::FTxtrow& txtrow, algo_lib::FTxtcell& row) {
+    int n = txtrow.c_txtcell_n;
     if (bool_Update(row.txtrow_c_txtcell_in_ary,false)) {
-        int lim = txtrow.c_txtcell_n;
         algo_lib::FTxtcell* *elems = txtrow.c_txtcell_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             algo_lib::FTxtcell* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(algo_lib::FTxtcell*) * (lim - j);
+                size_t nbytes = sizeof(algo_lib::FTxtcell*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                txtrow.c_txtcell_n = lim - 1;
+                txtrow.c_txtcell_n = n - 1;
                 break;
             }
         }
@@ -3570,15 +4275,11 @@ void algo_lib::c_txtrow_Cascdel(algo_lib::FTxttbl& txttbl) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void algo_lib::c_txtrow_Insert(algo_lib::FTxttbl& txttbl, algo_lib::FTxtrow& row) {
-    if (bool_Update(row.txttbl_c_txtrow_in_ary,true)) {
-        // reserve space
+    if (!row.txttbl_c_txtrow_in_ary) {
         c_txtrow_Reserve(txttbl, 1);
-        u32 n  = txttbl.c_txtrow_n;
-        u32 at = n;
-        algo_lib::FTxtrow* *elems = txttbl.c_txtrow_elems;
-        elems[at] = &row;
-        txttbl.c_txtrow_n = n+1;
-
+        u32 n  = txttbl.c_txtrow_n++;
+        txttbl.c_txtrow_elems[n] = &row;
+        row.txttbl_c_txtrow_in_ary = true;
     }
 }
 
@@ -3587,7 +4288,7 @@ void algo_lib::c_txtrow_Insert(algo_lib::FTxttbl& txttbl, algo_lib::FTxtrow& row
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool algo_lib::c_txtrow_InsertMaybe(algo_lib::FTxttbl& txttbl, algo_lib::FTxtrow& row) {
-    bool retval = !row.txttbl_c_txtrow_in_ary;
+    bool retval = !txttbl_c_txtrow_InAryQ(row);
     c_txtrow_Insert(txttbl,row); // check is performed in _Insert again
     return retval;
 }
@@ -3595,18 +4296,18 @@ bool algo_lib::c_txtrow_InsertMaybe(algo_lib::FTxttbl& txttbl, algo_lib::FTxtrow
 // --- algo_lib.FTxttbl.c_txtrow.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void algo_lib::c_txtrow_Remove(algo_lib::FTxttbl& txttbl, algo_lib::FTxtrow& row) {
+    int n = txttbl.c_txtrow_n;
     if (bool_Update(row.txttbl_c_txtrow_in_ary,false)) {
-        int lim = txttbl.c_txtrow_n;
         algo_lib::FTxtrow* *elems = txttbl.c_txtrow_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             algo_lib::FTxtrow* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(algo_lib::FTxtrow*) * (lim - j);
+                size_t nbytes = sizeof(algo_lib::FTxtrow*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                txttbl.c_txtrow_n = lim - 1;
+                txttbl.c_txtrow_n = n - 1;
                 break;
             }
         }
@@ -3801,7 +4502,7 @@ void algo_lib::FTxttbl_Uninit(algo_lib::FTxttbl& txttbl) {
     algo_lib::FTxttbl &row = txttbl; (void)row;
     c_txtrow_Cascdel(txttbl); // dmmeta.cascdel:algo_lib.FTxttbl.c_txtrow
 
-    // algo_lib.FTxttbl.c_txtrow.Uninit (Ptrary)  //Array of cells
+    // algo_lib.FTxttbl.c_txtrow.Uninit (Ptrary)  //Array of rows
     algo_lib::lpool_FreeMem(txttbl.c_txtrow_elems, sizeof(algo_lib::FTxtrow*)*txttbl.c_txtrow_max); // (algo_lib.FTxttbl.c_txtrow)
 }
 
@@ -3827,17 +4528,21 @@ const char* algo_lib::value_ToCstr(const algo_lib::FieldId& parent) {
         case algo_lib_FieldId_recurrent    : ret = "recurrent";  break;
         case algo_lib_FieldId_expr         : ret = "expr";  break;
         case algo_lib_FieldId_state        : ret = "state";  break;
-        case algo_lib_FieldId_front        : ret = "front";  break;
-        case algo_lib_FieldId_next_front   : ret = "next_front";  break;
-        case algo_lib_FieldId_start        : ret = "start";  break;
-        case algo_lib_FieldId_accept       : ret = "accept";  break;
-        case algo_lib_FieldId_parseerror   : ret = "parseerror";  break;
-        case algo_lib_FieldId_accepts_all  : ret = "accepts_all";  break;
-        case algo_lib_FieldId_literal      : ret = "literal";  break;
+        case algo_lib_FieldId_flags        : ret = "flags";  break;
+        case algo_lib_FieldId_style        : ret = "style";  break;
         case algo_lib_FieldId_type         : ret = "type";  break;
-        case algo_lib_FieldId_in           : ret = "in";  break;
-        case algo_lib_FieldId_out          : ret = "out";  break;
+        case algo_lib_FieldId_first        : ret = "first";  break;
+        case algo_lib_FieldId_last         : ret = "last";  break;
         case algo_lib_FieldId_value        : ret = "value";  break;
+        case algo_lib_FieldId_trace        : ret = "trace";  break;
+        case algo_lib_FieldId_capture      : ret = "capture";  break;
+        case algo_lib_FieldId_valid        : ret = "valid";  break;
+        case algo_lib_FieldId_literal      : ret = "literal";  break;
+        case algo_lib_FieldId_accepts_all  : ret = "accepts_all";  break;
+        case algo_lib_FieldId_fullmatch    : ret = "fullmatch";  break;
+        case algo_lib_FieldId_op           : ret = "op";  break;
+        case algo_lib_FieldId_consume      : ret = "consume";  break;
+        case algo_lib_FieldId_imm          : ret = "imm";  break;
     }
     return ret;
 }
@@ -3877,8 +4582,8 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
         }
         case 2: {
             switch (u64(algo::ReadLE16(rhs.elems))) {
-                case LE_STR2('i','n'): {
-                    value_SetEnum(parent,algo_lib_FieldId_in); ret = true; break;
+                case LE_STR2('o','p'): {
+                    value_SetEnum(parent,algo_lib_FieldId_op); ret = true; break;
                 }
             }
             break;
@@ -3888,8 +4593,8 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
                 case LE_STR3('a','r','y'): {
                     value_SetEnum(parent,algo_lib_FieldId_ary); ret = true; break;
                 }
-                case LE_STR3('o','u','t'): {
-                    value_SetEnum(parent,algo_lib_FieldId_out); ret = true; break;
+                case LE_STR3('i','m','m'): {
+                    value_SetEnum(parent,algo_lib_FieldId_imm); ret = true; break;
                 }
                 case LE_STR3('s','i','g'): {
                     value_SetEnum(parent,algo_lib_FieldId_sig); ret = true; break;
@@ -3908,6 +4613,9 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
                 case LE_STR4('h','o','o','k'): {
                     value_SetEnum(parent,algo_lib_FieldId_hook); ret = true; break;
                 }
+                case LE_STR4('l','a','s','t'): {
+                    value_SetEnum(parent,algo_lib_FieldId_last); ret = true; break;
+                }
                 case LE_STR4('t','i','m','e'): {
                     value_SetEnum(parent,algo_lib_FieldId_time); ret = true; break;
                 }
@@ -3925,14 +4633,23 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
                 case LE_STR5('d','e','l','a','y'): {
                     value_SetEnum(parent,algo_lib_FieldId_delay); ret = true; break;
                 }
-                case LE_STR5('f','r','o','n','t'): {
-                    value_SetEnum(parent,algo_lib_FieldId_front); ret = true; break;
+                case LE_STR5('f','i','r','s','t'): {
+                    value_SetEnum(parent,algo_lib_FieldId_first); ret = true; break;
                 }
-                case LE_STR5('s','t','a','r','t'): {
-                    value_SetEnum(parent,algo_lib_FieldId_start); ret = true; break;
+                case LE_STR5('f','l','a','g','s'): {
+                    value_SetEnum(parent,algo_lib_FieldId_flags); ret = true; break;
                 }
                 case LE_STR5('s','t','a','t','e'): {
                     value_SetEnum(parent,algo_lib_FieldId_state); ret = true; break;
+                }
+                case LE_STR5('s','t','y','l','e'): {
+                    value_SetEnum(parent,algo_lib_FieldId_style); ret = true; break;
+                }
+                case LE_STR5('t','r','a','c','e'): {
+                    value_SetEnum(parent,algo_lib_FieldId_trace); ret = true; break;
+                }
+                case LE_STR5('v','a','l','i','d'): {
+                    value_SetEnum(parent,algo_lib_FieldId_valid); ret = true; break;
                 }
                 case LE_STR5('v','a','l','u','e'): {
                     value_SetEnum(parent,algo_lib_FieldId_value); ret = true; break;
@@ -3940,16 +4657,14 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
             }
             break;
         }
-        case 6: {
-            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
-                case LE_STR6('a','c','c','e','p','t'): {
-                    value_SetEnum(parent,algo_lib_FieldId_accept); ret = true; break;
-                }
-            }
-            break;
-        }
         case 7: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)|(u64(rhs[6])<<48)) {
+                case LE_STR7('c','a','p','t','u','r','e'): {
+                    value_SetEnum(parent,algo_lib_FieldId_capture); ret = true; break;
+                }
+                case LE_STR7('c','o','n','s','u','m','e'): {
+                    value_SetEnum(parent,algo_lib_FieldId_consume); ret = true; break;
+                }
                 case LE_STR7('l','i','t','e','r','a','l'): {
                     value_SetEnum(parent,algo_lib_FieldId_literal); ret = true; break;
                 }
@@ -3964,25 +4679,16 @@ bool algo_lib::value_SetStrptrMaybe(algo_lib::FieldId& parent, algo::strptr rhs)
         }
         case 9: {
             switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('f','u','l','l','m','a','t','c'): {
+                    if (memcmp(rhs.elems+8,"h",1)==0) { value_SetEnum(parent,algo_lib_FieldId_fullmatch); ret = true; break; }
+                    break;
+                }
                 case LE_STR8('r','e','c','u','r','r','e','n'): {
                     if (memcmp(rhs.elems+8,"t",1)==0) { value_SetEnum(parent,algo_lib_FieldId_recurrent); ret = true; break; }
                     break;
                 }
                 case LE_STR8('s','i','g','n','a','t','u','r'): {
                     if (memcmp(rhs.elems+8,"e",1)==0) { value_SetEnum(parent,algo_lib_FieldId_signature); ret = true; break; }
-                    break;
-                }
-            }
-            break;
-        }
-        case 10: {
-            switch (algo::ReadLE64(rhs.elems)) {
-                case LE_STR8('n','e','x','t','_','f','r','o'): {
-                    if (memcmp(rhs.elems+8,"nt",2)==0) { value_SetEnum(parent,algo_lib_FieldId_next_front); ret = true; break; }
-                    break;
-                }
-                case LE_STR8('p','a','r','s','e','e','r','r'): {
-                    if (memcmp(rhs.elems+8,"or",2)==0) { value_SetEnum(parent,algo_lib_FieldId_parseerror); ret = true; break; }
                     break;
                 }
             }
@@ -4106,192 +4812,6 @@ void algo_lib::InTextFile_Uninit(algo_lib::InTextFile& parent) {
     temp_buf_RemoveAll(parent);
 }
 
-// --- algo_lib.Regx.state.Addary
-// Reserve space (this may move memory). Insert N element at the end.
-// Return aryptr to newly inserted block.
-// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo_lib::RegxState> algo_lib::state_Addary(algo_lib::Regx& regx, algo::aryptr<algo_lib::RegxState> rhs) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= regx.state_elems && rhs.elems < regx.state_elems + regx.state_max;
-    if (UNLIKELY(overlaps)) {
-        FatalErrorExit("algo_lib.tary_alias  field:algo_lib.Regx.state  comment:'alias error: sub-array is being appended to the whole'");
-    }
-    int nnew = rhs.n_elems;
-    state_Reserve(regx, nnew); // reserve space
-    int at = regx.state_n;
-    for (int i = 0; i < nnew; i++) {
-        new (regx.state_elems + at + i) algo_lib::RegxState(rhs[i]);
-        regx.state_n++;
-    }
-    return algo::aryptr<algo_lib::RegxState>(regx.state_elems + at, nnew);
-}
-
-// --- algo_lib.Regx.state.Alloc
-// Reserve space. Insert element at the end
-// The new element is initialized to a default value
-algo_lib::RegxState& algo_lib::state_Alloc(algo_lib::Regx& regx) {
-    state_Reserve(regx, 1);
-    int n  = regx.state_n;
-    int at = n;
-    algo_lib::RegxState *elems = regx.state_elems;
-    new (elems + at) algo_lib::RegxState(); // construct new element, default initializer
-    regx.state_n = n+1;
-    return elems[at];
-}
-
-// --- algo_lib.Regx.state.AllocAt
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo_lib::RegxState& algo_lib::state_AllocAt(algo_lib::Regx& regx, int at) {
-    state_Reserve(regx, 1);
-    int n  = regx.state_n;
-    if (UNLIKELY(u64(at) >= u64(n+1))) {
-        FatalErrorExit("algo_lib.bad_alloc_at  field:algo_lib.Regx.state  comment:'index out of range'");
-    }
-    algo_lib::RegxState *elems = regx.state_elems;
-    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo_lib::RegxState));
-    new (elems + at) algo_lib::RegxState(); // construct element, default initializer
-    regx.state_n = n+1;
-    return elems[at];
-}
-
-// --- algo_lib.Regx.state.AllocN
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocN(algo_lib::Regx& regx, int n_elems) {
-    state_Reserve(regx, n_elems);
-    int old_n  = regx.state_n;
-    int new_n = old_n + n_elems;
-    algo_lib::RegxState *elems = regx.state_elems;
-    for (int i = old_n; i < new_n; i++) {
-        new (elems + i) algo_lib::RegxState(); // construct new element, default initialize
-    }
-    regx.state_n = new_n;
-    return algo::aryptr<algo_lib::RegxState>(elems + old_n, n_elems);
-}
-
-// --- algo_lib.Regx.state.Remove
-// Remove item by index. If index outside of range, do nothing.
-void algo_lib::state_Remove(algo_lib::Regx& regx, u32 i) {
-    u32 lim = regx.state_n;
-    algo_lib::RegxState *elems = regx.state_elems;
-    if (i < lim) {
-        elems[i].~RegxState(); // destroy element
-        memmove(elems + i, elems + (i + 1), sizeof(algo_lib::RegxState) * (lim - (i + 1)));
-        regx.state_n = lim - 1;
-    }
-}
-
-// --- algo_lib.Regx.state.RemoveAll
-void algo_lib::state_RemoveAll(algo_lib::Regx& regx) {
-    u32 n = regx.state_n;
-    while (n > 0) {
-        n -= 1;
-        regx.state_elems[n].~RegxState();
-        regx.state_n = n;
-    }
-}
-
-// --- algo_lib.Regx.state.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void algo_lib::state_RemoveLast(algo_lib::Regx& regx) {
-    u64 n = regx.state_n;
-    if (n > 0) {
-        n -= 1;
-        state_qFind(regx, u64(n)).~RegxState();
-        regx.state_n = n;
-    }
-}
-
-// --- algo_lib.Regx.state.AbsReserve
-// Make sure N elements fit in array. Process dies if out of memory
-void algo_lib::state_AbsReserve(algo_lib::Regx& regx, int n) {
-    u32 old_max  = regx.state_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-        void *new_mem = algo_lib::lpool_ReallocMem(regx.state_elems, old_max * sizeof(algo_lib::RegxState), new_max * sizeof(algo_lib::RegxState));
-        if (UNLIKELY(!new_mem)) {
-            FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.Regx.state  comment:'out of memory'");
-        }
-        regx.state_elems = (algo_lib::RegxState*)new_mem;
-        regx.state_max = new_max;
-    }
-}
-
-// --- algo_lib.Regx.state.Setary
-// Copy contents of RHS to PARENT.
-void algo_lib::state_Setary(algo_lib::Regx& regx, algo_lib::Regx &rhs) {
-    state_RemoveAll(regx);
-    int nnew = rhs.state_n;
-    state_Reserve(regx, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
-        new (regx.state_elems + i) algo_lib::RegxState(state_qFind(rhs, i));
-        regx.state_n = i + 1;
-    }
-}
-
-// --- algo_lib.Regx.state.Setary2
-// Copy specified array into state, discarding previous contents.
-// If the RHS argument aliases the array (refers to the same memory), throw exception.
-void algo_lib::state_Setary(algo_lib::Regx& regx, const algo::aryptr<algo_lib::RegxState> &rhs) {
-    state_RemoveAll(regx);
-    state_Addary(regx, rhs);
-}
-
-// --- algo_lib.Regx.state.AllocNVal
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo_lib::RegxState> algo_lib::state_AllocNVal(algo_lib::Regx& regx, int n_elems, const algo_lib::RegxState& val) {
-    state_Reserve(regx, n_elems);
-    int old_n  = regx.state_n;
-    int new_n = old_n + n_elems;
-    algo_lib::RegxState *elems = regx.state_elems;
-    for (int i = old_n; i < new_n; i++) {
-        new (elems + i) algo_lib::RegxState(val);
-    }
-    regx.state_n = new_n;
-    return algo::aryptr<algo_lib::RegxState>(elems + old_n, n_elems);
-}
-
-// --- algo_lib.Regx..Uninit
-void algo_lib::Regx_Uninit(algo_lib::Regx& regx) {
-    algo_lib::Regx &row = regx; (void)row;
-
-    // algo_lib.Regx.state.Uninit (Tary)  //Array of states
-    // remove all elements from algo_lib.Regx.state
-    state_RemoveAll(regx);
-    // free memory for Tary algo_lib.Regx.state
-    algo_lib::lpool_FreeMem(regx.state_elems, sizeof(algo_lib::RegxState)*regx.state_max); // (algo_lib.Regx.state)
-}
-
-// --- algo_lib.Regx..AssignOp
-algo_lib::Regx& algo_lib::Regx::operator =(const algo_lib::Regx &rhs) {
-    expr = rhs.expr;
-    state_Setary(*this, state_Getary(const_cast<algo_lib::Regx&>(rhs)));
-    front = rhs.front;
-    next_front = rhs.next_front;
-    start = rhs.start;
-    accept = rhs.accept;
-    parseerror = rhs.parseerror;
-    accepts_all = rhs.accepts_all;
-    literal = rhs.literal;
-    return *this;
-}
-
-// --- algo_lib.Regx..CopyCtor
- algo_lib::Regx::Regx(const algo_lib::Regx &rhs)
-    : expr(rhs.expr)
-    , front(rhs.front)
-    , next_front(rhs.next_front)
-    , start(rhs.start)
-    , accept(rhs.accept)
-    , parseerror(rhs.parseerror)
-    , accepts_all(rhs.accepts_all)
-    , literal(rhs.literal)
- {
-    state_elems 	= 0; // (algo_lib.Regx.state)
-    state_n     	= 0; // (algo_lib.Regx.state)
-    state_max   	= 0; // (algo_lib.Regx.state)
-    state_Setary(*this, state_Getary(const_cast<algo_lib::Regx&>(rhs)));
-}
-
 // --- algo_lib.RegxToken.type.ToCstr
 // Convert numeric value of field to one of predefined string constants.
 // If string is found, return a static C string. Otherwise, return NULL.
@@ -4299,8 +4819,10 @@ const char* algo_lib::type_ToCstr(const algo_lib::RegxToken& parent) {
     const char *ret = NULL;
     switch(type_GetEnum(parent)) {
         case algo_lib_RegxToken_type_expr  : ret = "expr";  break;
+        case algo_lib_RegxToken_type_start : ret = "start";  break;
         case algo_lib_RegxToken_type_or    : ret = "or";  break;
         case algo_lib_RegxToken_type_lparen: ret = "lparen";  break;
+        case algo_lib_RegxToken_type_rparen: ret = "rparen";  break;
     }
     return ret;
 }
@@ -4340,10 +4862,21 @@ bool algo_lib::type_SetStrptrMaybe(algo_lib::RegxToken& parent, algo::strptr rhs
             }
             break;
         }
+        case 5: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(rhs[4])<<32)) {
+                case LE_STR5('s','t','a','r','t'): {
+                    type_SetEnum(parent,algo_lib_RegxToken_type_start); ret = true; break;
+                }
+            }
+            break;
+        }
         case 6: {
             switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
                 case LE_STR6('l','p','a','r','e','n'): {
                     type_SetEnum(parent,algo_lib_RegxToken_type_lparen); ret = true; break;
+                }
+                case LE_STR6('r','p','a','r','e','n'): {
+                    type_SetEnum(parent,algo_lib_RegxToken_type_rparen); ret = true; break;
                 }
             }
             break;
@@ -4394,17 +4927,17 @@ bool algo_lib::RegxExpr_ReadFieldMaybe(algo_lib::RegxExpr& parent, algo::strptr 
     switch(field_id) {
         case algo_lib_FieldId_type: {
             retval = algo_lib::RegxToken_ReadStrptrMaybe(parent.type, strval);
-            break;
-        }
-        case algo_lib_FieldId_in: {
-            retval = i32_ReadStrptrMaybe(parent.in, strval);
-            break;
-        }
-        case algo_lib_FieldId_out: {
-            retval = algo_lib::Bitset_ReadStrptrMaybe(parent.out, strval);
-            break;
-        }
-        default: break;
+        } break;
+        case algo_lib_FieldId_first: {
+            retval = i32_ReadStrptrMaybe(parent.first, strval);
+        } break;
+        case algo_lib_FieldId_last: {
+            retval = algo_lib::Bitset_ReadStrptrMaybe(parent.last, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
     }
     if (!retval) {
         algo_lib::AppendErrtext("attr",field);
@@ -4434,11 +4967,180 @@ void algo_lib::RegxExpr_Print(algo_lib::RegxExpr& row, algo::cstring& str) {
     algo_lib::RegxToken_Print(row.type, temp);
     PrintAttrSpaceReset(str,"type", temp);
 
-    i32_Print(row.in, temp);
-    PrintAttrSpaceReset(str,"in", temp);
+    i32_Print(row.first, temp);
+    PrintAttrSpaceReset(str,"first", temp);
 
-    algo_lib::Bitset_Print(row.out, temp);
-    PrintAttrSpaceReset(str,"out", temp);
+    algo_lib::Bitset_Print(row.last, temp);
+    PrintAttrSpaceReset(str,"last", temp);
+}
+
+// --- algo_lib.RegxOp.op.ToCstr
+// Convert numeric value of field to one of predefined string constants.
+// If string is found, return a static C string. Otherwise, return NULL.
+const char* algo_lib::op_ToCstr(const algo_lib::RegxOp& parent) {
+    const char *ret = NULL;
+    switch(op_GetEnum(parent)) {
+        case algo_lib_RegxOp_charrange     : ret = "charrange";  break;
+        case algo_lib_RegxOp_char          : ret = "char";  break;
+        case algo_lib_RegxOp_true          : ret = "true";  break;
+        case algo_lib_RegxOp_stringbeg     : ret = "stringbeg";  break;
+        case algo_lib_RegxOp_lparen        : ret = "lparen";  break;
+        case algo_lib_RegxOp_rparen        : ret = "rparen";  break;
+        case algo_lib_RegxOp_stringend     : ret = "stringend";  break;
+        case algo_lib_RegxOp_accept        : ret = "accept";  break;
+        case algo_lib_RegxOp_noop          : ret = "noop";  break;
+    }
+    return ret;
+}
+
+// --- algo_lib.RegxOp.op.Print
+// Convert op to a string. First, attempt conversion to a known string.
+// If no string matches, print op as a numeric value.
+void algo_lib::op_Print(const algo_lib::RegxOp& parent, algo::cstring &lhs) {
+    const char *strval = op_ToCstr(parent);
+    if (strval) {
+        lhs << strval;
+    } else {
+        lhs << parent.op;
+    }
+}
+
+// --- algo_lib.RegxOp.op.SetStrptrMaybe
+// Convert string to field.
+// If the string is invalid, do not modify field and return false.
+// In case of success, return true
+bool algo_lib::op_SetStrptrMaybe(algo_lib::RegxOp& parent, algo::strptr rhs) {
+    bool ret = false;
+    switch (elems_N(rhs)) {
+        case 4: {
+            switch (u64(algo::ReadLE32(rhs.elems))) {
+                case LE_STR4('c','h','a','r'): {
+                    op_SetEnum(parent,algo_lib_RegxOp_char); ret = true; break;
+                }
+                case LE_STR4('n','o','o','p'): {
+                    op_SetEnum(parent,algo_lib_RegxOp_noop); ret = true; break;
+                }
+                case LE_STR4('t','r','u','e'): {
+                    op_SetEnum(parent,algo_lib_RegxOp_true); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 6: {
+            switch (u64(algo::ReadLE32(rhs.elems))|(u64(algo::ReadLE16(rhs.elems+4))<<32)) {
+                case LE_STR6('a','c','c','e','p','t'): {
+                    op_SetEnum(parent,algo_lib_RegxOp_accept); ret = true; break;
+                }
+                case LE_STR6('l','p','a','r','e','n'): {
+                    op_SetEnum(parent,algo_lib_RegxOp_lparen); ret = true; break;
+                }
+                case LE_STR6('r','p','a','r','e','n'): {
+                    op_SetEnum(parent,algo_lib_RegxOp_rparen); ret = true; break;
+                }
+            }
+            break;
+        }
+        case 9: {
+            switch (algo::ReadLE64(rhs.elems)) {
+                case LE_STR8('c','h','a','r','r','a','n','g'): {
+                    if (memcmp(rhs.elems+8,"e",1)==0) { op_SetEnum(parent,algo_lib_RegxOp_charrange); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('s','t','r','i','n','g','b','e'): {
+                    if (memcmp(rhs.elems+8,"g",1)==0) { op_SetEnum(parent,algo_lib_RegxOp_stringbeg); ret = true; break; }
+                    break;
+                }
+                case LE_STR8('s','t','r','i','n','g','e','n'): {
+                    if (memcmp(rhs.elems+8,"d",1)==0) { op_SetEnum(parent,algo_lib_RegxOp_stringend); ret = true; break; }
+                    break;
+                }
+            }
+            break;
+        }
+    }
+    return ret;
+}
+
+// --- algo_lib.RegxOp.op.SetStrptr
+// Convert string to field.
+// If the string is invalid, set numeric value to DFLT
+void algo_lib::op_SetStrptr(algo_lib::RegxOp& parent, algo::strptr rhs, algo_lib_RegxOpEnum dflt) {
+    if (!op_SetStrptrMaybe(parent,rhs)) op_SetEnum(parent,dflt);
+}
+
+// --- algo_lib.RegxOp.op.ReadStrptrMaybe
+// Convert string to field. Return success value
+bool algo_lib::op_ReadStrptrMaybe(algo_lib::RegxOp& parent, algo::strptr rhs) {
+    bool retval = false;
+    retval = op_SetStrptrMaybe(parent,rhs); // try symbol conversion
+    if (!retval) { // didn't work? try reading as underlying type
+        retval = u8_ReadStrptrMaybe(parent.op,rhs);
+    }
+    return retval;
+}
+
+// --- algo_lib.RegxOp..ReadFieldMaybe
+bool algo_lib::RegxOp_ReadFieldMaybe(algo_lib::RegxOp& parent, algo::strptr field, algo::strptr strval) {
+    bool retval = true;
+    algo_lib::FieldId field_id;
+    (void)value_SetStrptrMaybe(field_id,field);
+    switch(field_id) {
+        case algo_lib_FieldId_op: {
+            retval = op_ReadStrptrMaybe(parent, strval);
+        } break;
+        case algo_lib_FieldId_consume: {
+            retval = u8_ReadStrptrMaybe(parent.consume, strval);
+        } break;
+        case algo_lib_FieldId_imm: {
+            retval = u16_ReadStrptrMaybe(parent.imm, strval);
+        } break;
+        default: {
+            retval = false;
+            algo_lib::AppendErrtext("comment", "unrecognized attr");
+        } break;
+    }
+    if (!retval) {
+        algo_lib::AppendErrtext("attr",field);
+    }
+    return retval;
+}
+
+// --- algo_lib.RegxOp..ReadStrptrMaybe
+// Read fields of algo_lib::RegxOp from an ascii string.
+// The format of the string is a string with separated values
+bool algo_lib::RegxOp_ReadStrptrMaybe(algo_lib::RegxOp &parent, algo::strptr in_str) {
+    bool retval = true;
+    algo::strptr value;
+
+    algo::NextSep(in_str, ',', value);
+    retval = retval && op_ReadStrptrMaybe(parent, value);
+
+    algo::NextSep(in_str, ',', value);
+    retval = retval && u8_ReadStrptrMaybe(parent.consume, value);
+
+    value = in_str;
+    retval = retval && u16_ReadStrptrMaybe(parent.imm, value);
+    return retval;
+}
+
+// --- algo_lib.RegxOp..Print
+// print string representation of ROW to string STR
+// cfmt:algo_lib.RegxOp.String  printfmt:Sep
+void algo_lib::RegxOp_Print(algo_lib::RegxOp& row, algo::cstring& str) {
+    algo_lib::op_Print(row, str);
+    str << ',';
+    u8_Print(row.consume, str);
+    str << ',';
+    u16_Print(row.imm, str);
+}
+
+// --- algo_lib.RegxOp..GetAnon
+algo::strptr algo_lib::RegxOp_GetAnon(algo_lib::RegxOp &parent, i32 idx) {
+    (void)parent;//only to avoid -Wunused-parameter
+    switch(idx) {
+        case(0): return strptr("op", 2);
+        default: return algo::strptr();
+    }
 }
 
 // --- algo_lib.RegxParse.ary_expr.Addary
@@ -4501,6 +5203,25 @@ algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_AllocN(algo_lib::RegxParse& 
     }
     regxparse.ary_expr_n = new_n;
     return algo::aryptr<algo_lib::RegxExpr>(elems + old_n, n_elems);
+}
+
+// --- algo_lib.RegxParse.ary_expr.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<algo_lib::RegxExpr> algo_lib::ary_expr_AllocNAt(algo_lib::RegxParse& regxparse, int n_elems, int at) {
+    ary_expr_Reserve(regxparse, n_elems);
+    int n  = regxparse.ary_expr_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.RegxParse.ary_expr  comment:'index out of range'");
+    }
+    algo_lib::RegxExpr *elems = regxparse.ary_expr_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(algo_lib::RegxExpr));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) algo_lib::RegxExpr(); // construct new element, default initialize
+    }
+    regxparse.ary_expr_n = n+n_elems;
+    return algo::aryptr<algo_lib::RegxExpr>(elems+at,n_elems);
 }
 
 // --- algo_lib.RegxParse.ary_expr.Remove
@@ -4599,11 +5320,35 @@ bool algo_lib::ary_expr_ReadStrptrMaybe(algo_lib::RegxParse& regxparse, algo::st
     return retval;
 }
 
+// --- algo_lib.RegxParse.ary_expr.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo_lib::ary_expr_Insary(algo_lib::RegxParse& regxparse, algo::aryptr<algo_lib::RegxExpr> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= regxparse.ary_expr_elems && rhs.elems < regxparse.ary_expr_elems + regxparse.ary_expr_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo_lib.tary_alias  field:algo_lib.RegxParse.ary_expr  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(regxparse.ary_expr_elems+1))) {
+        FatalErrorExit("algo_lib.bad_insary  field:algo_lib.RegxParse.ary_expr  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = regxparse.ary_expr_n - at;
+    ary_expr_Reserve(regxparse, nnew); // reserve space
+    for (int i = nmove-1; i >=0 ; --i) {
+        new (regxparse.ary_expr_elems + at + nnew + i) algo_lib::RegxExpr(regxparse.ary_expr_elems[at + i]);
+        regxparse.ary_expr_elems[at + i].~RegxExpr(); // destroy element
+    }
+    for (int i = 0; i < nnew; ++i) {
+        new (regxparse.ary_expr_elems + at + i) algo_lib::RegxExpr(rhs[i]);
+    }
+    regxparse.ary_expr_n += nnew;
+}
+
 // --- algo_lib.RegxParse..Uninit
 void algo_lib::RegxParse_Uninit(algo_lib::RegxParse& regxparse) {
     algo_lib::RegxParse &row = regxparse; (void)row;
 
-    // algo_lib.RegxParse.ary_expr.Uninit (Tary)  //Output expression array
+    // algo_lib.RegxParse.ary_expr.Uninit (Tary)  //Expression stack
     // remove all elements from algo_lib.RegxParse.ary_expr
     ary_expr_RemoveAll(regxparse);
     // free memory for Tary algo_lib.RegxParse.ary_expr
@@ -4620,6 +5365,9 @@ void algo_lib::RegxParse_Print(algo_lib::RegxParse& row, algo::cstring& str) {
     algo::strptr_Print(row.input, temp);
     PrintAttrSpaceReset(str,"input", temp);
 
+    i32_Print(row.nextgroup, temp);
+    PrintAttrSpaceReset(str,"nextgroup", temp);
+
     ind_beg(regxparse_ary_expr_curs,ary_expr,row) {
         algo_lib::RegxExpr_Print(ary_expr, temp);
         tempstr name;
@@ -4632,6 +5380,7 @@ void algo_lib::RegxParse_Print(algo_lib::RegxParse& row, algo::cstring& str) {
 // --- algo_lib.RegxParse..AssignOp
 algo_lib::RegxParse& algo_lib::RegxParse::operator =(const algo_lib::RegxParse &rhs) {
     input = rhs.input;
+    nextgroup = rhs.nextgroup;
     p_regx = rhs.p_regx;
     ary_expr_Setary(*this, ary_expr_Getary(const_cast<algo_lib::RegxParse&>(rhs)));
     return *this;
@@ -4640,343 +5389,13 @@ algo_lib::RegxParse& algo_lib::RegxParse::operator =(const algo_lib::RegxParse &
 // --- algo_lib.RegxParse..CopyCtor
  algo_lib::RegxParse::RegxParse(const algo_lib::RegxParse &rhs)
     : input(rhs.input)
+    , nextgroup(rhs.nextgroup)
     , p_regx(rhs.p_regx)
  {
     ary_expr_elems 	= 0; // (algo_lib.RegxParse.ary_expr)
     ary_expr_n     	= 0; // (algo_lib.RegxParse.ary_expr)
     ary_expr_max   	= 0; // (algo_lib.RegxParse.ary_expr)
     ary_expr_Setary(*this, ary_expr_Getary(const_cast<algo_lib::RegxParse&>(rhs)));
-}
-
-// --- algo_lib.RegxState.ch_class.Addary
-// Reserve space (this may move memory). Insert N element at the end.
-// Return aryptr to newly inserted block.
-// If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
-algo::aryptr<algo::i32_Range> algo_lib::ch_class_Addary(algo_lib::RegxState& parent, algo::aryptr<algo::i32_Range> rhs) {
-    bool overlaps = rhs.n_elems>0 && rhs.elems >= parent.ch_class_elems && rhs.elems < parent.ch_class_elems + parent.ch_class_max;
-    if (UNLIKELY(overlaps)) {
-        FatalErrorExit("algo_lib.tary_alias  field:algo_lib.RegxState.ch_class  comment:'alias error: sub-array is being appended to the whole'");
-    }
-    int nnew = rhs.n_elems;
-    ch_class_Reserve(parent, nnew); // reserve space
-    int at = parent.ch_class_n;
-    for (int i = 0; i < nnew; i++) {
-        new (parent.ch_class_elems + at + i) algo::i32_Range(rhs[i]);
-        parent.ch_class_n++;
-    }
-    return algo::aryptr<algo::i32_Range>(parent.ch_class_elems + at, nnew);
-}
-
-// --- algo_lib.RegxState.ch_class.Alloc
-// Reserve space. Insert element at the end
-// The new element is initialized to a default value
-algo::i32_Range& algo_lib::ch_class_Alloc(algo_lib::RegxState& parent) {
-    ch_class_Reserve(parent, 1);
-    int n  = parent.ch_class_n;
-    int at = n;
-    algo::i32_Range *elems = parent.ch_class_elems;
-    new (elems + at) algo::i32_Range(); // construct new element, default initializer
-    parent.ch_class_n = n+1;
-    return elems[at];
-}
-
-// --- algo_lib.RegxState.ch_class.AllocAt
-// Reserve space for new element, reallocating the array if necessary
-// Insert new element at specified index. Index must be in range or a fatal error occurs.
-algo::i32_Range& algo_lib::ch_class_AllocAt(algo_lib::RegxState& parent, int at) {
-    ch_class_Reserve(parent, 1);
-    int n  = parent.ch_class_n;
-    if (UNLIKELY(u64(at) >= u64(n+1))) {
-        FatalErrorExit("algo_lib.bad_alloc_at  field:algo_lib.RegxState.ch_class  comment:'index out of range'");
-    }
-    algo::i32_Range *elems = parent.ch_class_elems;
-    memmove(elems + at + 1, elems + at, (n - at) * sizeof(algo::i32_Range));
-    new (elems + at) algo::i32_Range(); // construct element, default initializer
-    parent.ch_class_n = n+1;
-    return elems[at];
-}
-
-// --- algo_lib.RegxState.ch_class.AllocN
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::i32_Range> algo_lib::ch_class_AllocN(algo_lib::RegxState& parent, int n_elems) {
-    ch_class_Reserve(parent, n_elems);
-    int old_n  = parent.ch_class_n;
-    int new_n = old_n + n_elems;
-    algo::i32_Range *elems = parent.ch_class_elems;
-    for (int i = old_n; i < new_n; i++) {
-        new (elems + i) algo::i32_Range(); // construct new element, default initialize
-    }
-    parent.ch_class_n = new_n;
-    return algo::aryptr<algo::i32_Range>(elems + old_n, n_elems);
-}
-
-// --- algo_lib.RegxState.ch_class.Remove
-// Remove item by index. If index outside of range, do nothing.
-void algo_lib::ch_class_Remove(algo_lib::RegxState& parent, u32 i) {
-    u32 lim = parent.ch_class_n;
-    algo::i32_Range *elems = parent.ch_class_elems;
-    if (i < lim) {
-        memmove(elems + i, elems + (i + 1), sizeof(algo::i32_Range) * (lim - (i + 1)));
-        parent.ch_class_n = lim - 1;
-    }
-}
-
-// --- algo_lib.RegxState.ch_class.RemoveLast
-// Delete last element of array. Do nothing if array is empty.
-void algo_lib::ch_class_RemoveLast(algo_lib::RegxState& parent) {
-    u64 n = parent.ch_class_n;
-    if (n > 0) {
-        n -= 1;
-        parent.ch_class_n = n;
-    }
-}
-
-// --- algo_lib.RegxState.ch_class.AbsReserve
-// Make sure N elements fit in array. Process dies if out of memory
-void algo_lib::ch_class_AbsReserve(algo_lib::RegxState& parent, int n) {
-    u32 old_max  = parent.ch_class_max;
-    if (n > i32(old_max)) {
-        u32 new_max  = i32_Max(i32_Max(old_max * 2, n), 4);
-        void *new_mem = algo_lib::lpool_ReallocMem(parent.ch_class_elems, old_max * sizeof(algo::i32_Range), new_max * sizeof(algo::i32_Range));
-        if (UNLIKELY(!new_mem)) {
-            FatalErrorExit("algo_lib.tary_nomem  field:algo_lib.RegxState.ch_class  comment:'out of memory'");
-        }
-        parent.ch_class_elems = (algo::i32_Range*)new_mem;
-        parent.ch_class_max = new_max;
-    }
-}
-
-// --- algo_lib.RegxState.ch_class.Setary
-// Copy contents of RHS to PARENT.
-void algo_lib::ch_class_Setary(algo_lib::RegxState& parent, algo_lib::RegxState &rhs) {
-    ch_class_RemoveAll(parent);
-    int nnew = rhs.ch_class_n;
-    ch_class_Reserve(parent, nnew); // reserve space
-    for (int i = 0; i < nnew; i++) { // copy elements over
-        new (parent.ch_class_elems + i) algo::i32_Range(ch_class_qFind(rhs, i));
-        parent.ch_class_n = i + 1;
-    }
-}
-
-// --- algo_lib.RegxState.ch_class.Setary2
-// Copy specified array into ch_class, discarding previous contents.
-// If the RHS argument aliases the array (refers to the same memory), throw exception.
-void algo_lib::ch_class_Setary(algo_lib::RegxState& parent, const algo::aryptr<algo::i32_Range> &rhs) {
-    ch_class_RemoveAll(parent);
-    ch_class_Addary(parent, rhs);
-}
-
-// --- algo_lib.RegxState.ch_class.AllocNVal
-// Reserve space. Insert N elements at the end of the array, return pointer to array
-algo::aryptr<algo::i32_Range> algo_lib::ch_class_AllocNVal(algo_lib::RegxState& parent, int n_elems, const algo::i32_Range& val) {
-    ch_class_Reserve(parent, n_elems);
-    int old_n  = parent.ch_class_n;
-    int new_n = old_n + n_elems;
-    algo::i32_Range *elems = parent.ch_class_elems;
-    for (int i = old_n; i < new_n; i++) {
-        new (elems + i) algo::i32_Range(val);
-    }
-    parent.ch_class_n = new_n;
-    return algo::aryptr<algo::i32_Range>(elems + old_n, n_elems);
-}
-
-// --- algo_lib.RegxState.ch_class.Swap
-// Swap values elem_a and elem_b
-inline static void algo_lib::ch_class_Swap(algo::i32_Range &elem_a, algo::i32_Range &elem_b) {
-    u8 temp[sizeof(algo::i32_Range)];
-    memcpy(&temp  , &elem_a, sizeof(algo::i32_Range));
-    memcpy(&elem_a, &elem_b, sizeof(algo::i32_Range));
-    memcpy(&elem_b, &temp  , sizeof(algo::i32_Range));
-}
-
-// --- algo_lib.RegxState.ch_class.Rotleft
-// Left circular shift of three-tuple
-inline static void algo_lib::ch_class_Rotleft(algo::i32_Range &elem_a, algo::i32_Range &elem_b, algo::i32_Range &elem_c) {
-    u8 temp[sizeof(algo::i32_Range)];
-    memcpy(&temp, &elem_a   , sizeof(algo::i32_Range));
-    memcpy(&elem_a   , &elem_b   , sizeof(algo::i32_Range));
-    memcpy(&elem_b   , &elem_c   , sizeof(algo::i32_Range));
-    memcpy(&elem_c   , &temp, sizeof(algo::i32_Range));
-}
-
-// --- algo_lib.RegxState.ch_class.Lt
-// Compare values elem_a and elem_b
-// The comparison function must be anti-symmetric: if a>b, then !(b>a).
-// If not, mayhem results.
-static bool algo_lib::ch_class_Lt(algo::i32_Range &elem_a, algo::i32_Range &elem_b) {
-    bool ret;
-    ret = elem_a.beg < elem_b.beg;
-    return ret;
-}
-
-// --- algo_lib.RegxState.ch_class.SortedQ
-// Verify whether array is sorted
-bool algo_lib::ch_class_SortedQ(algo_lib::RegxState& parent) {
-    algo::i32_Range *elems = ch_class_Getary(parent).elems;
-    int n = ch_class_N(parent);
-    for (int i = 1; i < n; i++) {
-        if (ch_class_Lt(elems[i], elems[i-1])) {
-            return false;
-        }
-    }
-    return true;
-}
-
-// --- algo_lib.RegxState.ch_class.IntInsertionSort
-// Internal insertion sort
-static void algo_lib::ch_class_IntInsertionSort(algo::i32_Range *elems, int n) {
-    for (int i = 1; i < n; ++i) {
-        int j = i;
-        // find the spot for ith element.
-        while (j>0 && ch_class_Lt(elems[i], elems[j-1])) {
-            j--;
-        }
-        if (j<i) {
-            u8 tmp[sizeof(algo::i32_Range)];
-            memcpy (tmp                       , &elems[i], sizeof(algo::i32_Range)      );
-            memmove(&elems[j+1], &elems[j], sizeof(algo::i32_Range)*(i-j));
-            memcpy (&elems[j]  , tmp                     , sizeof(algo::i32_Range)      );
-        }
-    }
-}
-
-// --- algo_lib.RegxState.ch_class.IntHeapSort
-// Internal heap sort
-static void algo_lib::ch_class_IntHeapSort(algo::i32_Range *elems, int n) {
-    // construct max-heap.
-    // k=current element
-    // j=parent element
-    for (int i = 1; i < n; i++) {
-        int k=i;
-        int j=(i-1)/2;
-        while (ch_class_Lt(elems[j], elems[k])) {
-            ch_class_Swap(elems[k],elems[j]);
-            k=j;
-            j=(k-1)/2;
-        }
-    }
-    // remove elements from heap one-by-one,
-    // deposit them in reverse order starting at the end of ARY.
-    for (int i = n - 1; i>=0; i--) {
-        int k = 0;
-        int l = 1;
-        while (l<i) {
-            l += l<i-1 && ch_class_Lt(elems[l], elems[l+1]);
-            if (ch_class_Lt(elems[l], elems[i])) {
-                break;
-            }
-            ch_class_Swap(elems[k], elems[l]);
-            k = l;
-            l = k*2+1;
-        }
-        if (i != k) {
-            ch_class_Swap(elems[i],elems[k]);
-        }
-    }
-}
-
-// --- algo_lib.RegxState.ch_class.IntQuickSort
-// Quick sort engine
-static void algo_lib::ch_class_IntQuickSort(algo::i32_Range *elems, int n, int depth) {
-    while (n>16) {
-        // detect degenerate case and revert to heap sort
-        if (depth==0) {
-            ch_class_IntHeapSort(elems,n);
-            return;
-        }
-        // elements to sort initially to determine pivot.
-        // choose pp=n/2 in case the input is already sorted.
-        int pi = 0;
-        int pp = n/2;
-        int pj = n-1;
-        // insertion sort for 1st, middle and last element
-        if (ch_class_Lt(elems[pp], elems[pi])) {
-            ch_class_Swap(elems[pi], elems[pp]);
-        }
-        if (ch_class_Lt(elems[pj], elems[pp])) {
-            if (ch_class_Lt(elems[pj], elems[pi])) {
-                ch_class_Rotleft(elems[pi], elems[pj], elems[pp]);
-            } else {
-                ch_class_Swap(elems[pj], elems[pp]);
-            }
-        }
-        // deposit pivot near the end of the array and skip it.
-        ch_class_Swap(elems[--pj], elems[pp]);
-        // reference to pivot
-        algo::i32_Range &pivot = elems[pj];
-        for(;;){
-            while (ch_class_Lt(elems[++pi], pivot)) {
-            }
-            while (ch_class_Lt(pivot, elems[--pj])) {
-            }
-            if (pj <= pi) {
-                break;
-            }
-            ch_class_Swap(elems[pi],elems[pj]);
-        }
-        depth -= 1;
-        ch_class_IntQuickSort(elems, pi, depth);
-        elems += pi;
-        n -= pi;
-    }
-    // sort the remainder of this section
-    ch_class_IntInsertionSort(elems,n);
-}
-
-// --- algo_lib.RegxState.ch_class.InsertionSort
-// Insertion sort
-void algo_lib::ch_class_InsertionSort(algo_lib::RegxState& parent) {
-    algo::i32_Range *elems = ch_class_Getary(parent).elems;
-    int n = ch_class_N(parent);
-    ch_class_IntInsertionSort(elems, n);
-}
-
-// --- algo_lib.RegxState.ch_class.HeapSort
-// Heap sort
-void algo_lib::ch_class_HeapSort(algo_lib::RegxState& parent) {
-    algo::i32_Range *elems = ch_class_Getary(parent).elems;
-    int n = ch_class_N(parent);
-    ch_class_IntHeapSort(elems, n);
-}
-
-// --- algo_lib.RegxState.ch_class.QuickSort
-// Quick sort
-void algo_lib::ch_class_QuickSort(algo_lib::RegxState& parent) {
-    // compute max recursion depth based on number of elements in the array
-    int max_depth = algo::CeilingLog2(u32(ch_class_N(parent) + 1)) + 3;
-    algo::i32_Range *elems = ch_class_Getary(parent).elems;
-    int n = ch_class_N(parent);
-    ch_class_IntQuickSort(elems, n, max_depth);
-}
-
-// --- algo_lib.RegxState..Uninit
-void algo_lib::RegxState_Uninit(algo_lib::RegxState& parent) {
-    algo_lib::RegxState &row = parent; (void)row;
-
-    // algo_lib.RegxState.ch_class.Uninit (Tary)  //What to match
-    // remove all elements from algo_lib.RegxState.ch_class
-    ch_class_RemoveAll(parent);
-    // free memory for Tary algo_lib.RegxState.ch_class
-    algo_lib::lpool_FreeMem(parent.ch_class_elems, sizeof(algo::i32_Range)*parent.ch_class_max); // (algo_lib.RegxState.ch_class)
-}
-
-// --- algo_lib.RegxState..AssignOp
-algo_lib::RegxState& algo_lib::RegxState::operator =(const algo_lib::RegxState &rhs) {
-    ch_class_Setary(*this, ch_class_Getary(const_cast<algo_lib::RegxState&>(rhs)));
-    out = rhs.out;
-    accept_all = rhs.accept_all;
-    return *this;
-}
-
-// --- algo_lib.RegxState..CopyCtor
- algo_lib::RegxState::RegxState(const algo_lib::RegxState &rhs)
-    : out(rhs.out)
-    , accept_all(rhs.accept_all)
- {
-    ch_class_elems 	= 0; // (algo_lib.RegxState.ch_class)
-    ch_class_n     	= 0; // (algo_lib.RegxState.ch_class)
-    ch_class_max   	= 0; // (algo_lib.RegxState.ch_class)
-    ch_class_Setary(*this, ch_class_Getary(const_cast<algo_lib::RegxState&>(rhs)));
 }
 
 // --- algo_lib.Replscope.ind_replvar.Cascdel
@@ -4986,7 +5405,7 @@ void algo_lib::ind_replvar_Cascdel(algo_lib::Replscope& replscope) {
         for (int i = 0; i < replscope.ind_replvar_buckets_n; i++) {
             algo_lib::FReplvar *elem = replscope.ind_replvar_buckets_elems[i];
             while (elem) {
-                algo_lib::FReplvar *next = elem->ind_replvar_next;
+                algo_lib::FReplvar *next = elem->replscope_ind_replvar_next;
                 replvar_Delete(*elem);
                 elem = next;
             }
@@ -4998,24 +5417,20 @@ void algo_lib::ind_replvar_Cascdel(algo_lib::Replscope& replscope) {
 // Find row by key. Return NULL if not found.
 algo_lib::FReplvar* algo_lib::ind_replvar_Find(algo_lib::Replscope& replscope, const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (replscope.ind_replvar_buckets_n - 1);
-    algo_lib::FReplvar* *e = &replscope.ind_replvar_buckets_elems[index];
-    algo_lib::FReplvar* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).key == key;
-        if (done) break;
-        e         = &ret->ind_replvar_next;
-    } while (true);
+    algo_lib::FReplvar *ret = replscope.ind_replvar_buckets_elems[index];
+    for (; ret && !((*ret).key == key); ret = ret->replscope_ind_replvar_next) {
+    }
     return ret;
 }
 
 // --- algo_lib.Replscope.ind_replvar.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool algo_lib::ind_replvar_InsertMaybe(algo_lib::Replscope& replscope, algo_lib::FReplvar& row) {
-    ind_replvar_Reserve(replscope, 1);
     bool retval = true; // if already in hash, InsertMaybe returns true
-    if (LIKELY(row.ind_replvar_next == (algo_lib::FReplvar*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.key) & (replscope.ind_replvar_buckets_n - 1);
+    if (LIKELY(row.replscope_ind_replvar_next == (algo_lib::FReplvar*)-1)) {// check if in hash already
+        row.replscope_ind_replvar_hashval = algo::cstring_Hash(0, row.key);
+        ind_replvar_Reserve(replscope, 1);
+        u32 index = row.replscope_ind_replvar_hashval & (replscope.ind_replvar_buckets_n - 1);
         algo_lib::FReplvar* *prev = &replscope.ind_replvar_buckets_elems[index];
         do {
             algo_lib::FReplvar* ret = *prev;
@@ -5026,10 +5441,10 @@ bool algo_lib::ind_replvar_InsertMaybe(algo_lib::Replscope& replscope, algo_lib:
                 retval = false;
                 break;
             }
-            prev = &ret->ind_replvar_next;
+            prev = &ret->replscope_ind_replvar_next;
         } while (true);
         if (retval) {
-            row.ind_replvar_next = *prev;
+            row.replscope_ind_replvar_next = *prev;
             replscope.ind_replvar_n++;
             *prev = &row;
         }
@@ -5040,17 +5455,17 @@ bool algo_lib::ind_replvar_InsertMaybe(algo_lib::Replscope& replscope, algo_lib:
 // --- algo_lib.Replscope.ind_replvar.Remove
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void algo_lib::ind_replvar_Remove(algo_lib::Replscope& replscope, algo_lib::FReplvar& row) {
-    if (LIKELY(row.ind_replvar_next != (algo_lib::FReplvar*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.key) & (replscope.ind_replvar_buckets_n - 1);
+    if (LIKELY(row.replscope_ind_replvar_next != (algo_lib::FReplvar*)-1)) {// check if in hash already
+        u32 index = row.replscope_ind_replvar_hashval & (replscope.ind_replvar_buckets_n - 1);
         algo_lib::FReplvar* *prev = &replscope.ind_replvar_buckets_elems[index]; // addr of pointer to current element
         while (algo_lib::FReplvar *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
-                *prev = next->ind_replvar_next; // unlink (singly linked list)
+                *prev = next->replscope_ind_replvar_next; // unlink (singly linked list)
                 replscope.ind_replvar_n--;
-                row.ind_replvar_next = (algo_lib::FReplvar*)-1;// not-in-hash
+                row.replscope_ind_replvar_next = (algo_lib::FReplvar*)-1;// not-in-hash
                 break;
             }
-            prev = &next->ind_replvar_next;
+            prev = &next->replscope_ind_replvar_next;
         }
     }
 }
@@ -5058,8 +5473,14 @@ void algo_lib::ind_replvar_Remove(algo_lib::Replscope& replscope, algo_lib::FRep
 // --- algo_lib.Replscope.ind_replvar.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void algo_lib::ind_replvar_Reserve(algo_lib::Replscope& replscope, int n) {
+    ind_replvar_AbsReserve(replscope,replscope.ind_replvar_n + n);
+}
+
+// --- algo_lib.Replscope.ind_replvar.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void algo_lib::ind_replvar_AbsReserve(algo_lib::Replscope& replscope, int n) {
     u32 old_nbuckets = replscope.ind_replvar_buckets_n;
-    u32 new_nelems   = replscope.ind_replvar_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -5077,9 +5498,9 @@ void algo_lib::ind_replvar_Reserve(algo_lib::Replscope& replscope, int n) {
             algo_lib::FReplvar* elem = replscope.ind_replvar_buckets_elems[i];
             while (elem) {
                 algo_lib::FReplvar &row        = *elem;
-                algo_lib::FReplvar* next       = row.ind_replvar_next;
-                u32 index          = algo::cstring_Hash(0, row.key) & (new_nbuckets-1);
-                row.ind_replvar_next     = new_buckets[index];
+                algo_lib::FReplvar* next       = row.replscope_ind_replvar_next;
+                u32 index          = row.replscope_ind_replvar_hashval & (new_nbuckets-1);
+                row.replscope_ind_replvar_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
             }
@@ -5107,7 +5528,7 @@ void algo_lib::replscope_ind_replvar_curs_Reset(replscope_ind_replvar_curs &curs
 // Set all fields to initial values.
 void algo_lib::Replscope_Init(algo_lib::Replscope& replscope) {
     replscope.eatcomma = bool(true);
-    replscope.fatal = bool(false);
+    replscope.strict = u8(0);
     // initialize hash table for algo_lib::FReplvar;
     replscope.ind_replvar_n             	= 0; // (algo_lib.Replscope.ind_replvar)
     replscope.ind_replvar_buckets_n     	= 4; // (algo_lib.Replscope.ind_replvar)
@@ -5122,7 +5543,6 @@ void algo_lib::Replscope_Init(algo_lib::Replscope& replscope) {
 void algo_lib::Replscope_Uninit(algo_lib::Replscope& replscope) {
     algo_lib::Replscope &row = replscope; (void)row;
     ind_replvar_Cascdel(replscope); // dmmeta.cascdel:algo_lib.Replscope.ind_replvar
-    ind_replvar_Cleanup(replscope); // dmmeta.fcleanup:algo_lib.Replscope.ind_replvar
 
     // algo_lib.Replscope.ind_replvar.Uninit (Thash)  //
     algo_lib::lpool_FreeMem(replscope.ind_replvar_buckets_elems, sizeof(algo_lib::FReplvar*)*replscope.ind_replvar_buckets_n); // (algo_lib.Replscope.ind_replvar)
@@ -5138,8 +5558,8 @@ void algo_lib::Replscope_Print(algo_lib::Replscope& row, algo::cstring& str) {
     bool_Print(row.eatcomma, temp);
     PrintAttrSpaceReset(str,"eatcomma", temp);
 
-    bool_Print(row.fatal, temp);
-    PrintAttrSpaceReset(str,"fatal", temp);
+    u8_Print(row.strict, temp);
+    PrintAttrSpaceReset(str,"strict", temp);
 }
 
 // --- algo_lib.TableId.value.ToCstr
@@ -5283,6 +5703,25 @@ algo::aryptr<i32> algo_lib::width_AllocN(algo_lib::Tabulate& tabulate, int n_ele
     return algo::aryptr<i32>(elems + old_n, n_elems);
 }
 
+// --- algo_lib.Tabulate.width.AllocNAt
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+algo::aryptr<i32> algo_lib::width_AllocNAt(algo_lib::Tabulate& tabulate, int n_elems, int at) {
+    width_Reserve(tabulate, n_elems);
+    int n  = tabulate.width_n;
+    if (UNLIKELY(u64(at) > u64(n))) {
+        FatalErrorExit("algo_lib.bad_alloc_n_at  field:algo_lib.Tabulate.width  comment:'index out of range'");
+    }
+    i32 *elems = tabulate.width_elems;
+    memmove(elems + at + n_elems, elems + at, (n - at) * sizeof(i32));
+    for (int i = 0; i < n_elems; i++) {
+        new (elems + at + i) i32(0); // construct new element, default initialize
+    }
+    tabulate.width_n = n+n_elems;
+    return algo::aryptr<i32>(elems+at,n_elems);
+}
+
 // --- algo_lib.Tabulate.width.Remove
 // Remove item by index. If index outside of range, do nothing.
 void algo_lib::width_Remove(algo_lib::Tabulate& tabulate, u32 i) {
@@ -5367,6 +5806,25 @@ bool algo_lib::width_ReadStrptrMaybe(algo_lib::Tabulate& tabulate, algo::strptr 
     return retval;
 }
 
+// --- algo_lib.Tabulate.width.Insary
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+void algo_lib::width_Insary(algo_lib::Tabulate& tabulate, algo::aryptr<i32> rhs, int at) {
+    bool overlaps = rhs.n_elems>0 && rhs.elems >= tabulate.width_elems && rhs.elems < tabulate.width_elems + tabulate.width_max;
+    if (UNLIKELY(overlaps)) {
+        FatalErrorExit("algo_lib.tary_alias  field:algo_lib.Tabulate.width  comment:'alias error: sub-array is being appended to the whole'");
+    }
+    if (UNLIKELY(u64(at) >= u64(tabulate.width_elems+1))) {
+        FatalErrorExit("algo_lib.bad_insary  field:algo_lib.Tabulate.width  comment:'index out of range'");
+    }
+    int nnew = rhs.n_elems;
+    int nmove = tabulate.width_n - at;
+    width_Reserve(tabulate, nnew); // reserve space
+    memmove(tabulate.width_elems + at + nnew, tabulate.width_elems + at, nmove * sizeof(i32));
+    memcpy(tabulate.width_elems + at, rhs.elems, nnew * sizeof(i32));
+    tabulate.width_n += nnew;
+}
+
 // --- algo_lib.Tabulate..Uninit
 void algo_lib::Tabulate_Uninit(algo_lib::Tabulate& tabulate) {
     algo_lib::Tabulate &row = tabulate; (void)row;
@@ -5421,8 +5879,12 @@ inline static void algo_lib::SizeCheck() {
 // --- algo_lib...StaticCheck
 void algo_lib::StaticCheck() {
     algo_assert(sizeof(algo_lib::_db_h_fatalerror_hook) == 8); // csize:algo_lib._db_h_fatalerror_hook
+    algo_assert(sizeof(algo_lib::errns_decode_hook) == 8); // csize:algo_lib.errns_decode_hook
     algo_assert(sizeof(algo_lib::iohook_callback_hook) == 8); // csize:algo_lib.iohook_callback_hook
     algo_assert(sizeof(algo_lib::timehook_hook_hook) == 8); // csize:algo_lib.timehook_hook_hook
+    // check that bitfield fits width
+    algo_assert(sizeof(((algo_lib::RegxFlags*)0)->value)*8 >= 6);
+    algo_assert(_offset_of(algo_lib::RegxFlags, value) + sizeof(((algo_lib::RegxFlags*)0)->value) == sizeof(algo_lib::RegxFlags));
     algo_assert(_offset_of(algo_lib::trace, del__db_malloc) + sizeof(((algo_lib::trace*)0)->del__db_malloc) == sizeof(algo_lib::trace));
     algo_assert(_offset_of(algo_lib::FieldId, value) + sizeof(((algo_lib::FieldId*)0)->value) == sizeof(algo_lib::FieldId));
 }

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
@@ -314,12 +314,12 @@ void acr::Main() {
     } else if (acr::_db.cmdline.print) {
         Main_Print();
     }
-    if (acr::_db.cmdline.g) {
-        acr::Main_GitTriggers();
-    }
     // do not write files if an error occurred
     if (acr::_db.cmdline.write && (acr::_db.cmdline.e || algo_lib::_db.exit_code==0)) {
         acr::WriteFiles();
+    }
+    if (acr::_db.cmdline.g) {
+        acr::Main_GitTriggers();
     }
     // in interactive mode, return # of files modified
     // amc -e mode uses this flag

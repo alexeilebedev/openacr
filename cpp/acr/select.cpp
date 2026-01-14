@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2013 AlgoEngineering LLC
 //
@@ -31,9 +31,9 @@
 // If the record was the last selected record for its ctype,
 // remove its ctype from the selected list
 void acr::Rec_Deselect(acr::FRec& rec) {
-    acr::zd_ctype_selrec_Remove(*rec.p_ctype, rec);
+    acr::zd_selrec_Remove(*rec.p_ctype, rec);
     acr::zd_all_selrec_Remove(rec);
-    if (zd_ctype_selrec_EmptyQ(*rec.p_ctype)) {
+    if (zd_selrec_EmptyQ(*rec.p_ctype)) {
         acr::zd_sel_ctype_Remove(*rec.p_ctype);
     }
 }
@@ -47,7 +47,7 @@ void acr::Rec_Deselect(acr::FRec& rec) {
 void acr::Rec_DeselectAll() {
     acr::zd_all_selrec_RemoveAll();
     while(acr::FCtype *ctype=acr::zd_sel_ctype_First()) {
-        acr::zd_ctype_selrec_RemoveAll(*ctype);
+        acr::zd_selrec_RemoveAll(*ctype);
         acr::zd_sel_ctype_RemoveFirst();
     }
 }
@@ -89,7 +89,7 @@ bool acr::Rec_Select(acr::FRec& rec) {
     if (add) {
         rec.seldist = 0;
         acr::zd_all_selrec_Insert(rec);
-        acr::zd_ctype_selrec_Insert(*rec.p_ctype,rec);
+        acr::zd_selrec_Insert(*rec.p_ctype,rec);
         acr::zd_sel_ctype_Insert(*rec.p_ctype);
     }
     return add;

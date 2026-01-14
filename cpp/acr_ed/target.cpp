@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -23,6 +23,7 @@
 //
 
 #include "include/acr_ed.h"
+#include "include/lib_git.h"
 
 
 void acr_ed::edaction_Create_Target() {
@@ -75,21 +76,13 @@ void acr_ed::edaction_Create_Target() {
         Ins(&R, acr_ed::_db.out_ssim, tempstr()<<target);
     }
     if (is_exe || is_lib) {
-        Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:cpp/$target/$target.cpp  comment:''");
-        Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/$target.h  comment:''");
+        RegisterFile(Subst(R,"cpp/$target/$target.cpp"), "");
+        RegisterFile(Subst(R,"include/$target.h"), "");
     }
 
-    Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:txt/$nstype/$target/README.md  comment:''");
-    Ins(&R, acr_ed::_db.out_ssim, "dev.readme  gitfile:txt/$nstype/$target/README.md  comment:''");
-
-    if (is_exe) {
-        Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:txt/$nstype/$target/internals.md  comment:''");
-        Ins(&R, acr_ed::_db.out_ssim, "dev.readme  gitfile:txt/$nstype/$target/internals.md  comment:''");
-    }
-
-    Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:cpp/gen/$target_gen.cpp  comment:''");
-    Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/gen/$target_gen.h  comment:''");
-    Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:include/gen/$target_gen.inl.h  comment:''");
+    RegisterFile(Subst(R, "cpp/gen/$target_gen.cpp"), "");
+    RegisterFile(Subst(R, "include/gen/$target_gen.h"), "");
+    RegisterFile(Subst(R, "include/gen/$target_gen.inl.h"), "");
     if (is_exe) {
         Ins(&R, acr_ed::_db.out_ssim, "dev.gitfile  gitfile:bin/$target  comment:''");
     }
@@ -190,22 +183,18 @@ void acr_ed::edaction_Create_Target() {
         Ins(&R, acr_ed::_db.script,"ln -s ../build/release/$target bin/$target");
         Ins(&R, acr_ed::_db.script,"git add -f bin/$target");
     }
-    if (is_exe || is_lib) {
-        Ins(&R, acr_ed::_db.script,"git add cpp/$target/$target.cpp");
-        Ins(&R, acr_ed::_db.script,"git add include/$target.h");
-    }
-    Ins(&R, acr_ed::_db.script,"git add cpp/gen/$target_gen.cpp");
-    Ins(&R, acr_ed::_db.script,"git add include/gen/$target_gen.h");
-    Ins(&R, acr_ed::_db.script,"git add include/gen/$target_gen.inl.h");
+    acr_ed::RegisterFile(Subst(R,"txt/$nstype/$target/README.md"), "");
 
-    Ins(&R, acr_ed::_db.script, "mkdir -p txt/$nstype/$target/");
-    Ins(&R, acr_ed::_db.script,"touch txt/$nstype/$target/README.md");
-    Ins(&R, acr_ed::_db.script,"git add txt/$nstype/$target/README.md");
+    // create internals file
+    if (is_exe) {
+        acr_ed::RegisterFile(Subst(R,"txt/$nstype/$target/internals.md"), "");
+    }
 
     // update headers
     {
         command::src_hdr src_hdr;
         src_hdr.targsrc.expr=Subst(R,"$target/%");
+        src_hdr.update_copyright=true;// insert default copyright
         src_hdr.write=true;
         Ins(&R, acr_ed::_db.script,src_hdr_ToCmdline(src_hdr));
     }

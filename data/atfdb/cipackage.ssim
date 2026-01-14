@@ -1,0 +1,2 @@
+atfdb.cipackage  package:gcli  remove:Y  build:N  reinstall:"gcli|gmv"  comment:""
+atfdb.cipackage  package:samp_make  remove:Y  build:N  reinstall:samp_make  comment:""

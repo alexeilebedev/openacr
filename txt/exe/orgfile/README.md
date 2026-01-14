@@ -30,8 +30,8 @@ Usage: orgfile [options]
     -commit                     Apply changes
     -undo                       Read previous orgfile output, undoing movement
     -hash       string  "sha1"  Hash command to use for deduplication
-    -verbose    int             Verbosity level (0..255); alias -v; cumulative
-    -debug      int             Debug level (0..255); alias -d; cumulative
+    -verbose    flag            Verbosity level (0..255); alias -v; cumulative
+    -debug      flag            Debug level (0..255); alias -d; cumulative
     -help                       Print help and exit; alias -h
     -version                    Print version and exit
     -signature                  Show signatures and exit; alias -sig

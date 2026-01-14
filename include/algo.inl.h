@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -114,24 +114,39 @@ template<class T> inline algo::aryptr<u8> algo::BytesOf(const T &t) {
 template<class T> inline algo::aryptr<T>::aryptr(const T *e, i32 in_n) : elems(const_cast<T*>(e)) , n_elems(in_n) {
 }
 
-template<class T> inline algo::aryptr<T>::aryptr(const char *e) : elems(const_cast<T*>(e)) , n_elems(algo::ImpliedLength((T*)NULL,e)) {
-}
-
 template<class T> inline T &algo::qLast(const algo::aryptr<T> &ary) {
     return ary.elems[ary.n_elems-1];
 }
 
 
 #ifdef WIN32
-inline u16 htobe16(u16 val) { return _byteswap_ushort(val); }
-inline u32 htobe32(u32 val) { return _byteswap_ulong(val); }
-inline u64 htobe64(u64 val) { return _byteswap_uint64(val); }
-inline u16 be16toh(u16 val) { return _byteswap_ushort(val); }
-inline u32 be32toh(u32 val) { return _byteswap_ulong(val); }
-inline u64 be64toh(u64 val) { return _byteswap_uint64(val); }
-inline u16 htole16(u16 val) { return val; }
-inline u32 htole32(u32 val) { return val; }
-inline u64 htole64(u64 val) { return val; }
+inline u16 htobe16(u16 val) {
+    return _byteswap_ushort(val);
+}
+inline u32 htobe32(u32 val) {
+    return _byteswap_ulong(val);
+}
+inline u64 htobe64(u64 val) {
+    return _byteswap_uint64(val);
+}
+inline u16 be16toh(u16 val) {
+    return _byteswap_ushort(val);
+}
+inline u32 be32toh(u32 val) {
+    return _byteswap_ulong(val);
+}
+inline u64 be64toh(u64 val) {
+    return _byteswap_uint64(val);
+}
+inline u16 htole16(u16 val) {
+    return val;
+}
+inline u32 htole32(u32 val) {
+    return val;
+}
+inline u64 htole64(u64 val) {
+    return val;
+}
 #endif
 
 // Taylor series expansion. For x around 0.01, this produces 2 digits per
@@ -192,68 +207,6 @@ inline int algo::ParseHex1(u32 c, u8 &result) {
 
 // -----------------------------------------------------------------------------
 
-inline void algo::PageBufInit(PageBuf &F, u64 n, u64 align) {
-#ifdef WIN32
-    F.elems = (u8*)_aligned_malloc(n, align);
-    vrfy(F.elems!=NULL, "aligned_malloc");
-#else
-    errno_vrfy(posix_memalign((void**)&F.elems, align, n)==0, "posix_memalign");
-#endif
-    F.n_elems  = (int)n;
-}
-
-inline u32 u8_Hash (u32 prev, u8  val) {
-    return _mm_crc32_u8 (prev,val);
-}
-
-inline u32 u16_Hash(u32 prev, u16 val) {
-    return _mm_crc32_u16(prev,val);
-}
-
-inline u32 u32_Hash(u32 prev, u32 val) {
-    return _mm_crc32_u32(prev,val);
-}
-
-inline u32 u64_Hash(u32 prev, u64 val) {
-    return _mm_crc32_u64(prev, val);
-}
-
-inline u32 i8_Hash (u32 prev, i8  val) {
-    return _mm_crc32_u8 (prev,val);
-}
-
-inline u32 i16_Hash(u32 prev, i16 val) {
-    return _mm_crc32_u16(prev,val);
-}
-
-inline u32 i32_Hash(u32 prev, i32 val) {
-    return _mm_crc32_u32(prev,val);
-}
-
-inline u32 i64_Hash(u32 prev, i64 val) {
-    return _mm_crc32_u64(prev, val);
-}
-
-inline u32 bool_Hash(u32 prev, bool  val) {
-    return _mm_crc32_u8 (prev,val);
-}
-
-inline u32 char_Hash(u32 prev, char  val) {
-    return _mm_crc32_u8 (prev,val);
-}
-
-inline u32 float_Hash(u32 prev, float val) {
-    return algo::CRC32Step(prev, (u8*)&val, sizeof(val));
-}
-
-inline u32 double_Hash(u32 prev, double  val) {
-    return algo::CRC32Step(prev, (u8*)&val, sizeof(val));
-}
-
-inline u32 u128_Hash(u32 prev, u128 t) {
-    return algo::CRC32Step(prev, (u8*)&t, sizeof(t));
-}
-
 inline u32 algo::strptr_Hash(u32 prev, algo::strptr val) {
     return algo::CRC32Step(prev, (u8*)val.elems, val.n_elems);
 }
@@ -262,181 +215,10 @@ inline u32 algo::cstring_Hash(u32 prev, const algo::strptr &val) {
     return algo::CRC32Step(prev, (u8*)val.elems, val.n_elems);
 }
 
-inline u32 algo::cstring_Hash(u32 prev, algo::cstring &val) {
-    return algo::CRC32Step(prev, (u8*)val.ch_elems, val.ch_n);
-}
-
-inline u32 algo::cstring_Hash(u32 prev, const algo::cstring &val) {
-    return algo::CRC32Step(prev, (u8*)val.ch_elems, val.ch_n);
-}
-
-// -----------------------------------------------------------------------------
-
-inline i32 u8_Cmp (u8 a, u8 b) {
-    return a<b ? -1 : a>b;
-}
-
-inline i32 u16_Cmp(u16 a, u16 b) {
-    return a<b ? -1 : a>b;
-}
-
-inline i32 u32_Cmp(u32 a, u32 b) {
-    return a<b ? -1 : a>b;
-}
-
-inline i32 u64_Cmp(u64 a, u64 b) {
-    return a<b ? -1 : a>b;
-}
-
-inline i32 i8_Cmp (i8 a, i8 b) {
-    return a<b ? -1 : a>b;
-}
-
-inline i32 i16_Cmp(i16 a, i16 b) {
-    return a<b ? -1 : a>b;
-}
-
-inline i32 i32_Cmp(i32 a, i32 b) {
-    return a<b ? -1 : a>b;
-}
-
-inline i32 i64_Cmp(i64 a, i64 b) {
-    return a<b ? -1 : a>b;
-}
-
-inline i32 bool_Cmp(bool a, bool b) {
-    return a<b ? -1 : a>b;
-}
-
-inline i32 char_Cmp(char a, char b) {
-    return a<b ? -1 : a>b;
-}
-
-inline i32 float_Cmp(float a, float b) {
-    return a<b ? -1 : a>b;
-}
-
-inline i32 double_Cmp(double a, double b) {
-    return a<b ? -1 : a>b;
-}
-
-inline i32 u128_Cmp(u128 a, u128 b) {
-    return a<b ? -1 : a>b;
-}
-
-// -----------------------------------------------------------------------------
-
-inline bool u8_Lt (u8 a, u8 b) {
-    return a < b;
-}
-
-inline bool u16_Lt(u16 a, u16 b) {
-    return a < b;
-}
-
-inline bool u32_Lt(u32 a, u32 b) {
-    return a < b;
-}
-
-inline bool u64_Lt(u64 a, u64 b) {
-    return a < b;
-}
-
-inline bool i8_Lt (i8 a, i8 b) {
-    return a < b;
-}
-
-inline bool i16_Lt(i16 a, i16 b) {
-    return a < b;
-}
-
-inline bool i32_Lt(i32 a, i32 b) {
-    return a < b;
-}
-
-inline bool i64_Lt(i64 a, i64 b) {
-    return a < b;
-}
-
-inline bool bool_Lt(bool a, bool b) {
-    return a < b;
-}
-
-inline bool char_Lt(char a, char b) {
-    return a < b;
-}
-
-inline bool float_Lt(float a, float b) {
-    return a < b;
-}
-
-inline bool double_Lt(double a, double b) {
-    return a < b;
-}
-
-inline bool u128_Lt(u128 a, u128 b) {
-    return a < b;
-}
-
-// -----------------------------------------------------------------------------
-
-inline bool u8_Eq (u8 a, u8 b) {
-    return a == b;
-}
-
-inline bool u16_Eq(u16 a, u16 b) {
-    return a == b;
-}
-
-inline bool u32_Eq(u32 a, u32 b) {
-    return a == b;
-}
-
-inline bool u64_Eq(u64 a, u64 b) {
-    return a == b;
-}
-
-inline bool i8_Eq (i8 a, i8 b) {
-    return a == b;
-}
-
-inline bool i16_Eq(i16 a, i16 b) {
-    return a == b;
-}
-
-inline bool i32_Eq(i32 a, i32 b) {
-    return a == b;
-}
-
-inline bool i64_Eq(i64 a, i64 b) {
-    return a == b;
-}
-
-inline bool bool_Eq(bool a, bool b) {
-    return a == b;
-}
-
-inline bool char_Eq(char a, char b) {
-    return a == b;
-}
-
-inline bool float_Eq(float a, float b) {
-    return a == b;
-}
-
-inline bool double_Eq(double a, double b) {
-    return a == b;
-}
-
-inline bool u128_Eq(u128 a, u128 b) {
-    return a == b;
-}
-
 #ifdef AOS_SSE42
 
-// this is inefficient because it would be nice to be able to overrun strings.
-// however, we don't check byte alignment at the beginning,
-// so a 2-byte string that lies 4 bytes before the end of a page could fault.
+// When compiled with AOS_SSE42, use intrinsics.
+// Otherwise, the function is defined in crc32.cpp and uses a software implementation
 inline u32 algo::CRC32Step(u32 old, const u8 *x, size_t len) {
     u64 h = old;
     while (len>=8) { h = _mm_crc32_u64(h,*(u64 T_MAY_ALIAS*)x); x = (u8*)x + 8; len -= 8; }
@@ -892,10 +674,6 @@ inline bool     algo::u32_Pow2Q(u32 i) {
     return (i>0) && !(i & (i-1));
 }
 
-inline algo::PageBuf::~PageBuf() {
-    free(elems);// posix_memalign_free?
-}
-
 
 #pragma once
 
@@ -1164,14 +942,6 @@ inline algo::aryptr<char> algo::ch_GetRegion(const strptr &lhs, u32 lo, u32 n) {
     return algo::aryptr<char>(lhs.elems + lo, n);
 }
 
-inline int algo::ImpliedLength(char *, const char *c) {
-    return int(c ? strlen(c) : 0);
-}
-
-inline int algo::ImpliedLength(const char *, const char *c) {
-    return int(c ? strlen(c) : 0);
-}
-
 inline int algo::ch_N(const strptr &s) {
     return s.n_elems;
 }
@@ -1333,15 +1103,13 @@ template<typename T> inline bool algo::SameSignQ(T a, T b) {
 
 // Compare two strings for equality, case-sensitively
 inline bool algo::strptr_Eq(algo::strptr a, algo::strptr b) {
-    // strncmp is heavily optimized using vector instructions
-    // and is the fastest way to do this
-    return a.n_elems==b.n_elems && strncmp(a.elems,b.elems,a.n_elems)==0;
+    return a.n_elems==b.n_elems && memcmp(a.elems,b.elems,a.n_elems)==0;
 }
 
 // Test if string A is lexicographically less than string B.
 inline bool algo::strptr_Lt(algo::strptr a, algo::strptr b) {
     int n = i32_Min(a.n_elems,b.n_elems);
-    int cmp=strncmp(a.elems,b.elems,n);
+    int cmp=memcmp(a.elems,b.elems,n);
     return cmp==0 ? a.n_elems<b.n_elems : cmp<0;
 }
 
@@ -1370,4 +1138,12 @@ inline i32 algo::strptr_Cmp(algo::strptr a, algo::strptr b) {
         if (a[i] != b[i]) return a[i]-b[i];
     }
     return i32_Cmp(a.n_elems, b.n_elems);
+}
+
+// helper: N bytes as chars
+template<typename T> inline bool algo::DecodeNChars(algo::memptr &buf, int n, T &result) {
+    strptr tmp;
+    bool ok = DecodeNChars(buf,n,tmp);
+    result = tmp;
+    return ok;
 }

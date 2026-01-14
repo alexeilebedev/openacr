@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Copyright (C) 2025-2026 AlgoRND
+#
+# Select target script for VSCODE, which knows only source file name, which is open in editor.
+# We have to compute target, build it, and symlink it with well-known name e.g. temp/a.out
+# VSCODE task command example: "vscode-select-debug-target ${file} temp/a.out"
+
+set -e
+SRCFILE=$1
+LINK=$2
+TGT=$(acr dev.targsrc:%/${SRCFILE##$(realpath $PWD)/} -report:N -field:target)
+TGT=${TGT:+$(acr dmmeta.ns:$TGT -where:nstype:exe -report:N -field:ns)}
+[[ -e $LINK ]] && TGT=${TGT:-$(basename `realpath $LINK`)}
+[[ -n $TGT ]]
+rm -f $LINK
+ln -s ../build/debug/$TGT $LINK

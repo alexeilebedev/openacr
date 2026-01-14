@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -95,7 +95,8 @@ namespace apm { // update-hdr
 
     // Definte fake packages based on 'ns' regx
     void DefPackages();
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:apm
 
     // -------------------------------------------------------------------
     // cpp/apm/push.cpp
@@ -114,6 +115,10 @@ namespace apm { // update-hdr
     // -------------------------------------------------------------------
     // cpp/apm/rec.cpp
     //
+
+    // return TRUE if the field is a valid edge for transitive closure.
+    // The field is chosen if it's the pkey, or a leftmost subtring of pkey
+    bool LeftCheckQ(apm::FField &field);
 
     // Load all records (FRec) from dataset _db.cmdline.data_in)
     // For each record (FRec), compute p_ssimfile, pkey, tuple

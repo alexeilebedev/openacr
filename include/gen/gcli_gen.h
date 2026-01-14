@@ -54,38 +54,34 @@ enum { gcli_FieldIdEnum_N = 1 };
 
 // --- gcli_TableIdEnum
 
-enum gcli_TableIdEnum {                        // gcli.TableId.value
-     gcli_TableId_gclidb_Gact           = 0    // gclidb.Gact -> gcli.FGact
-    ,gcli_TableId_gclidb_gact           = 0    // gclidb.gact -> gcli.FGact
-    ,gcli_TableId_gclidb_Gclicmdf2j     = 1    // gclidb.Gclicmdf2j -> gcli.FGclicmdf2j
-    ,gcli_TableId_gclidb_gclicmdf2j     = 1    // gclidb.gclicmdf2j -> gcli.FGclicmdf2j
-    ,gcli_TableId_gclidb_Gclicmdt       = 2    // gclidb.Gclicmdt -> gcli.FGclicmdt
-    ,gcli_TableId_gclidb_gclicmdt       = 2    // gclidb.gclicmdt -> gcli.FGclicmdt
-    ,gcli_TableId_gclidb_Gfld           = 3    // gclidb.Gfld -> gcli.FGfld
-    ,gcli_TableId_gclidb_gfld           = 3    // gclidb.gfld -> gcli.FGfld
-    ,gcli_TableId_gclidb_Gmethod        = 4    // gclidb.Gmethod -> gcli.FGmethod
-    ,gcli_TableId_gclidb_gmethod        = 4    // gclidb.gmethod -> gcli.FGmethod
-    ,gcli_TableId_gclidb_Grepo          = 5    // gclidb.Grepo -> gcli.FGrepo
-    ,gcli_TableId_gclidb_grepo          = 5    // gclidb.grepo -> gcli.FGrepo
-    ,gcli_TableId_gclidb_Grepogitport   = 6    // gclidb.Grepogitport -> gcli.FGrepogitport
-    ,gcli_TableId_gclidb_grepogitport   = 6    // gclidb.grepogitport -> gcli.FGrepogitport
-    ,gcli_TableId_gclidb_Grepossh       = 7    // gclidb.Grepossh -> gcli.FGrepossh
-    ,gcli_TableId_gclidb_grepossh       = 7    // gclidb.grepossh -> gcli.FGrepossh
-    ,gcli_TableId_gclidb_Gstatet        = 8    // gclidb.Gstatet -> gcli.FGstatet
-    ,gcli_TableId_gclidb_gstatet        = 8    // gclidb.gstatet -> gcli.FGstatet
-    ,gcli_TableId_gclidb_Gtbl           = 9    // gclidb.Gtbl -> gcli.FGtbl
-    ,gcli_TableId_gclidb_gtbl           = 9    // gclidb.gtbl -> gcli.FGtbl
-    ,gcli_TableId_gclidb_Gtblactfld     = 10   // gclidb.Gtblactfld -> gcli.FGtblactfld
-    ,gcli_TableId_gclidb_gtblactfld     = 10   // gclidb.gtblactfld -> gcli.FGtblactfld
-    ,gcli_TableId_gclidb_Gtype          = 11   // gclidb.Gtype -> gcli.FGtype
-    ,gcli_TableId_gclidb_gtype          = 11   // gclidb.gtype -> gcli.FGtype
-    ,gcli_TableId_gclidb_Gtypeh         = 12   // gclidb.Gtypeh -> gcli.FGtypeh
-    ,gcli_TableId_gclidb_gtypeh         = 12   // gclidb.gtypeh -> gcli.FGtypeh
-    ,gcli_TableId_gclidb_Gtypeprefix    = 13   // gclidb.Gtypeprefix -> gcli.FGtypeprefix
-    ,gcli_TableId_gclidb_gtypeprefix    = 13   // gclidb.gtypeprefix -> gcli.FGtypeprefix
+enum gcli_TableIdEnum {                       // gcli.TableId.value
+     gcli_TableId_gclidb_Gact          = 0    // gclidb.Gact -> gcli.FGact
+    ,gcli_TableId_gclidb_gact          = 0    // gclidb.gact -> gcli.FGact
+    ,gcli_TableId_gclidb_Gclicmdf2j    = 1    // gclidb.Gclicmdf2j -> gcli.FGclicmdf2j
+    ,gcli_TableId_gclidb_gclicmdf2j    = 1    // gclidb.gclicmdf2j -> gcli.FGclicmdf2j
+    ,gcli_TableId_gclidb_Gclicmdt      = 2    // gclidb.Gclicmdt -> gcli.FGclicmdt
+    ,gcli_TableId_gclidb_gclicmdt      = 2    // gclidb.gclicmdt -> gcli.FGclicmdt
+    ,gcli_TableId_gclidb_Gfld          = 3    // gclidb.Gfld -> gcli.FGfld
+    ,gcli_TableId_gclidb_gfld          = 3    // gclidb.gfld -> gcli.FGfld
+    ,gcli_TableId_gclidb_Gmethod       = 4    // gclidb.Gmethod -> gcli.FGmethod
+    ,gcli_TableId_gclidb_gmethod       = 4    // gclidb.gmethod -> gcli.FGmethod
+    ,gcli_TableId_gclidb_Grepo         = 5    // gclidb.Grepo -> gcli.FGrepo
+    ,gcli_TableId_gclidb_grepo         = 5    // gclidb.grepo -> gcli.FGrepo
+    ,gcli_TableId_gclidb_Gstatet       = 6    // gclidb.Gstatet -> gcli.FGstatet
+    ,gcli_TableId_gclidb_gstatet       = 6    // gclidb.gstatet -> gcli.FGstatet
+    ,gcli_TableId_gclidb_Gtbl          = 7    // gclidb.Gtbl -> gcli.FGtbl
+    ,gcli_TableId_gclidb_gtbl          = 7    // gclidb.gtbl -> gcli.FGtbl
+    ,gcli_TableId_gclidb_Gtblactfld    = 8    // gclidb.Gtblactfld -> gcli.FGtblactfld
+    ,gcli_TableId_gclidb_gtblactfld    = 8    // gclidb.gtblactfld -> gcli.FGtblactfld
+    ,gcli_TableId_gclidb_Gtype         = 9    // gclidb.Gtype -> gcli.FGtype
+    ,gcli_TableId_gclidb_gtype         = 9    // gclidb.gtype -> gcli.FGtype
+    ,gcli_TableId_gclidb_Gtypeh        = 10   // gclidb.Gtypeh -> gcli.FGtypeh
+    ,gcli_TableId_gclidb_gtypeh        = 10   // gclidb.gtypeh -> gcli.FGtypeh
+    ,gcli_TableId_gclidb_Gtypeprefix   = 11   // gclidb.Gtypeprefix -> gcli.FGtypeprefix
+    ,gcli_TableId_gclidb_gtypeprefix   = 11   // gclidb.gtypeprefix -> gcli.FGtypeprefix
 };
 
-enum { gcli_TableIdEnum_N = 28 };
+enum { gcli_TableIdEnum_N = 24 };
 
 namespace gcli { // gen:ns_pkeytypedef
 } // gen:ns_pkeytypedef
@@ -102,11 +98,10 @@ namespace gcli { struct FGtype; }
 namespace gclidb { struct Gfld; }
 namespace gclidb { struct Gmethod; }
 namespace gclidb { struct Grepo; }
-namespace gclidb { struct Grepogitport; }
-namespace gclidb { struct Grepossh; }
 namespace gclidb { struct Gstatet; }
 namespace gclidb { struct Gtbl; }
 namespace gclidb { struct Gtblact; }
+namespace gcli { struct FGtblact; }
 namespace gclidb { struct Gtblactfld; }
 namespace gcli { struct FGfld; }
 namespace gclidb { struct Gtype; }
@@ -120,8 +115,6 @@ namespace gclidb { struct Mrjob; }
 namespace gclidb { struct Mrnote; }
 namespace gclidb { struct User; }
 namespace gcli { struct _db_gtype_curs; }
-namespace gcli { struct _db_grepossh_curs; }
-namespace gcli { struct _db_grepogitport_curs; }
 namespace gcli { struct _db_githost_curs; }
 namespace gcli { struct _db_gstatet_curs; }
 namespace gcli { struct _db_gmethod_curs; }
@@ -179,11 +172,8 @@ namespace gcli { struct FGclicmdt; }
 namespace gcli { struct FGithost; }
 namespace gcli { struct FGmethod; }
 namespace gcli { struct FGrepo; }
-namespace gcli { struct FGrepogitport; }
-namespace gcli { struct FGrepossh; }
 namespace gcli { struct FGstatet; }
 namespace gcli { struct FGtbl; }
-namespace gcli { struct FGtblact; }
 namespace gcli { struct FGtblactfld; }
 namespace gcli { struct FGtypeh; }
 namespace gcli { struct FGtypeprefix; }
@@ -221,160 +211,150 @@ void                 trace_Print(gcli::trace& row, algo::cstring& str) __attribu
 // --- gcli.FDb
 // create: gcli.FDb._db (Global)
 struct FDb { // gcli.FDb: In-memory database for gcli
-    command::gcli           cmdline;                          //
-    gcli::FGtype*           gtype_lary[32];                   // level array
-    i32                     gtype_n;                          // number of elements in array
-    gcli::FGrepossh*        grepossh_lary[32];                // level array
-    i32                     grepossh_n;                       // number of elements in array
-    gcli::FGrepogitport*    grepogitport_lary[32];            // level array
-    i32                     grepogitport_n;                   // number of elements in array
-    gcli::FGithost*         githost_lary[32];                 // level array
-    i32                     githost_n;                        // number of elements in array
-    bool                    need_auth;                        //   false
-    gcli::FGstatet*         gstatet_lary[32];                 // level array
-    i32                     gstatet_n;                        // number of elements in array
-    gcli::FGmethod*         gmethod_lary[32];                 // level array
-    i32                     gmethod_n;                        // number of elements in array
-    gcli::FGclicmdt*        gclicmdt_lary[32];                // level array
-    i32                     gclicmdt_n;                       // number of elements in array
-    gcli::FGclicmdf*        gclicmdf_lary[32];                // level array
-    i32                     gclicmdf_n;                       // number of elements in array
-    gcli::FGclicmdf2j*      gclicmdf2j_lary[32];              // level array
-    i32                     gclicmdf2j_n;                     // number of elements in array
-    gcli::FGclicmd*         gclicmd_lary[32];                 // level array
-    i32                     gclicmd_n;                        // number of elements in array
-    gcli::FGtypeh*          gtypeh_lary[32];                  // level array
-    i32                     gtypeh_n;                         // number of elements in array
-    gcli::FGtype*           p_gtype;                          // optional pointer
-    gcli::FGtbl*            p_gtbl;                           // optional pointer
-    gclidb::Grepo           grepo_sel;                        //
-    gcli::FGclicmd**        ind_gclicmd_buckets_elems;        // pointer to bucket array
-    i32                     ind_gclicmd_buckets_n;            // number of elements in bucket array
-    i32                     ind_gclicmd_n;                    // number of elements in the hash table
-    gcli::FGclicmdf**       ind_gclicmdf_buckets_elems;       // pointer to bucket array
-    i32                     ind_gclicmdf_buckets_n;           // number of elements in bucket array
-    i32                     ind_gclicmdf_n;                   // number of elements in the hash table
-    gcli::FGclicmdt**       ind_gclicmdt_buckets_elems;       // pointer to bucket array
-    i32                     ind_gclicmdt_buckets_n;           // number of elements in bucket array
-    i32                     ind_gclicmdt_n;                   // number of elements in the hash table
-    gcli::FGmethod**        ind_gmethod_buckets_elems;        // pointer to bucket array
-    i32                     ind_gmethod_buckets_n;            // number of elements in bucket array
-    i32                     ind_gmethod_n;                    // number of elements in the hash table
-    gcli::FGrepo**          ind_grepo_buckets_elems;          // pointer to bucket array
-    i32                     ind_grepo_buckets_n;              // number of elements in bucket array
-    i32                     ind_grepo_n;                      // number of elements in the hash table
-    gcli::FIssue**          ind_issue_buckets_elems;          // pointer to bucket array
-    i32                     ind_issue_buckets_n;              // number of elements in bucket array
-    i32                     ind_issue_n;                      // number of elements in the hash table
-    algo_lib::Regx          regx_repo;                        //   "%"  Sql Regx
-    gcli::FGstatet**        ind_gstatet_buckets_elems;        // pointer to bucket array
-    i32                     ind_gstatet_buckets_n;            // number of elements in bucket array
-    i32                     ind_gstatet_n;                    // number of elements in the hash table
-    gcli::FGithost**        ind_githost_buckets_elems;        // pointer to bucket array
-    i32                     ind_githost_buckets_n;            // number of elements in bucket array
-    i32                     ind_githost_n;                    // number of elements in the hash table
-    gcli::FGrepogitport**   ind_grepogitport_buckets_elems;   // pointer to bucket array
-    i32                     ind_grepogitport_buckets_n;       // number of elements in bucket array
-    i32                     ind_grepogitport_n;               // number of elements in the hash table
-    gcli::FGrepossh**       ind_grepossh_buckets_elems;       // pointer to bucket array
-    i32                     ind_grepossh_buckets_n;           // number of elements in bucket array
-    i32                     ind_grepossh_n;                   // number of elements in the hash table
-    gcli::FGtype**          ind_gtype_buckets_elems;          // pointer to bucket array
-    i32                     ind_gtype_buckets_n;              // number of elements in bucket array
-    i32                     ind_gtype_n;                      // number of elements in the hash table
-    algo::cstring           home;                             // User's HOME directory
-    algo::cstring           auth_file;                        //
-    algo::cstring           edit_file;                        //
-    gcli::FGclicmd**        c_gclicmd_elems;                  // array of pointers
-    u32                     c_gclicmd_n;                      // array of pointers
-    u32                     c_gclicmd_max;                    // capacity of allocated array
-    algo::cstring           unix_user;                        // UNIX user login name
-    algo::cstring           editor;                           // Command line to invoke editor
-    gcli::FGclicmdj2f*      gclicmdj2f_lary[32];              // level array
-    i32                     gclicmdj2f_n;                     // number of elements in array
-    gcli::FGclicmdc*        gclicmdc_lary[32];                // level array
-    i32                     gclicmdc_n;                       // number of elements in array
-    gcli::FGclicmdarg*      gclicmdarg_lary[32];              // level array
-    i32                     gclicmdarg_n;                     // number of elements in array
-    gcli::FGclicmdj2f**     ind_gclicmdj2f_buckets_elems;     // pointer to bucket array
-    i32                     ind_gclicmdj2f_buckets_n;         // number of elements in bucket array
-    i32                     ind_gclicmdj2f_n;                 // number of elements in the hash table
-    gcli::FGclicmdarg**     ind_gclicmdarg_buckets_elems;     // pointer to bucket array
-    i32                     ind_gclicmdarg_buckets_n;         // number of elements in bucket array
-    i32                     ind_gclicmdarg_n;                 // number of elements in the hash table
-    gcli::FGclicmdc**       ind_gclicmdc_buckets_elems;       // pointer to bucket array
-    i32                     ind_gclicmdc_buckets_n;           // number of elements in bucket array
-    i32                     ind_gclicmdc_n;                   // number of elements in the hash table
-    gcli::FIssue*           issue_lary[32];                   // level array
-    i32                     issue_n;                          // number of elements in array
-    gcli::FGrepo*           grepo_lary[32];                   // level array
-    i32                     grepo_n;                          // number of elements in array
-    gcli::FTuples*          tuples_lary[32];                  // level array
-    i32                     tuples_n;                         // number of elements in array
-    gcli::FIssuenote*       issuenote_lary[32];               // level array
-    i32                     issuenote_n;                      // number of elements in array
-    gcli::FMrjob*           mrjob_lary[32];                   // level array
-    i32                     mrjob_n;                          // number of elements in array
-    gcli::FMrnote*          mrnote_lary[32];                  // level array
-    i32                     mrnote_n;                         // number of elements in array
-    gcli::FMrnote**         ind_mrnote_buckets_elems;         // pointer to bucket array
-    i32                     ind_mrnote_buckets_n;             // number of elements in bucket array
-    i32                     ind_mrnote_n;                     // number of elements in the hash table
-    gcli::FIssuenote**      ind_issuenote_buckets_elems;      // pointer to bucket array
-    i32                     ind_issuenote_buckets_n;          // number of elements in bucket array
-    i32                     ind_issuenote_n;                  // number of elements in the hash table
-    gcli::FMrjob**          ind_mrjob_buckets_elems;          // pointer to bucket array
-    i32                     ind_mrjob_buckets_n;              // number of elements in bucket array
-    i32                     ind_mrjob_n;                      // number of elements in the hash table
-    gcli::FUser*            user_lary[32];                    // level array
-    i32                     user_n;                           // number of elements in array
-    gcli::FUser**           ind_user_buckets_elems;           // pointer to bucket array
-    i32                     ind_user_buckets_n;               // number of elements in bucket array
-    i32                     ind_user_n;                       // number of elements in the hash table
-    gcli::FMr**             ind_mr_buckets_elems;             // pointer to bucket array
-    i32                     ind_mr_buckets_n;                 // number of elements in bucket array
-    i32                     ind_mr_n;                         // number of elements in the hash table
-    gcli::FMilestone**      ind_milestone_buckets_elems;      // pointer to bucket array
-    i32                     ind_milestone_buckets_n;          // number of elements in bucket array
-    i32                     ind_milestone_n;                  // number of elements in the hash table
-    gcli::FMilestone*       milestone_lary[32];               // level array
-    i32                     milestone_n;                      // number of elements in array
-    gcli::FMr*              mr_lary[32];                      // level array
-    i32                     mr_n;                             // number of elements in array
-    gcli::FGtypeprefix*     gtypeprefix_lary[32];             // level array
-    i32                     gtypeprefix_n;                    // number of elements in array
-    gcli::FGtblact*         gtblact_lary[32];                 // level array
-    i32                     gtblact_n;                        // number of elements in array
-    gcli::FGtblactfld*      gtblactfld_lary[32];              // level array
-    i32                     gtblactfld_n;                     // number of elements in array
-    gcli::FGtblact**        ind_gtblact_buckets_elems;        // pointer to bucket array
-    i32                     ind_gtblact_buckets_n;            // number of elements in bucket array
-    i32                     ind_gtblact_n;                    // number of elements in the hash table
-    gcli::FGtblact*         zd_gtblact_head;                  // zero-terminated doubly linked list
-    i32                     zd_gtblact_n;                     // zero-terminated doubly linked list
-    gcli::FGtblact*         zd_gtblact_tail;                  // pointer to last element
-    gcli::FGtblactfld**     ind_gtblactfld_buckets_elems;     // pointer to bucket array
-    i32                     ind_gtblactfld_buckets_n;         // number of elements in bucket array
-    i32                     ind_gtblactfld_n;                 // number of elements in the hash table
-    gcli::FGfld*            gfld_lary[32];                    // level array
-    i32                     gfld_n;                           // number of elements in array
-    gcli::FGfld**           ind_gfld_buckets_elems;           // pointer to bucket array
-    i32                     ind_gfld_buckets_n;               // number of elements in bucket array
-    i32                     ind_gfld_n;                       // number of elements in the hash table
-    gcli::FGfld**           c_gfld_elems;                     // array of pointers
-    u32                     c_gfld_n;                         // array of pointers
-    u32                     c_gfld_max;                       // capacity of allocated array
-    gcli::FGtbl*            gtbl_lary[32];                    // level array
-    i32                     gtbl_n;                           // number of elements in array
-    gcli::FGtbl**           ind_gtbl_buckets_elems;           // pointer to bucket array
-    i32                     ind_gtbl_buckets_n;               // number of elements in bucket array
-    i32                     ind_gtbl_n;                       // number of elements in the hash table
-    gcli::FGact*            gact_lary[32];                    // level array
-    i32                     gact_n;                           // number of elements in array
-    gcli::FGact**           ind_gact_buckets_elems;           // pointer to bucket array
-    i32                     ind_gact_buckets_n;               // number of elements in bucket array
-    i32                     ind_gact_n;                       // number of elements in the hash table
-    gcli::trace             trace;                            //
+    command::gcli         cmdline;                        //
+    gcli::FGtype*         gtype_lary[32];                 // level array
+    i32                   gtype_n;                        // number of elements in array
+    gcli::FGithost*       githost_lary[32];               // level array
+    i32                   githost_n;                      // number of elements in array
+    bool                  need_auth;                      //   false
+    gcli::FGstatet*       gstatet_lary[32];               // level array
+    i32                   gstatet_n;                      // number of elements in array
+    gcli::FGmethod*       gmethod_lary[32];               // level array
+    i32                   gmethod_n;                      // number of elements in array
+    gcli::FGclicmdt*      gclicmdt_lary[32];              // level array
+    i32                   gclicmdt_n;                     // number of elements in array
+    gcli::FGclicmdf*      gclicmdf_lary[32];              // level array
+    i32                   gclicmdf_n;                     // number of elements in array
+    gcli::FGclicmdf2j*    gclicmdf2j_lary[32];            // level array
+    i32                   gclicmdf2j_n;                   // number of elements in array
+    gcli::FGclicmd*       gclicmd_lary[32];               // level array
+    i32                   gclicmd_n;                      // number of elements in array
+    gcli::FGtypeh*        gtypeh_lary[32];                // level array
+    i32                   gtypeh_n;                       // number of elements in array
+    gcli::FGtype*         p_gtype;                        // optional pointer
+    gcli::FGtbl*          p_gtbl;                         // optional pointer
+    gclidb::Grepo         grepo_sel;                      //
+    gcli::FGclicmd**      ind_gclicmd_buckets_elems;      // pointer to bucket array
+    i32                   ind_gclicmd_buckets_n;          // number of elements in bucket array
+    i32                   ind_gclicmd_n;                  // number of elements in the hash table
+    gcli::FGclicmdf**     ind_gclicmdf_buckets_elems;     // pointer to bucket array
+    i32                   ind_gclicmdf_buckets_n;         // number of elements in bucket array
+    i32                   ind_gclicmdf_n;                 // number of elements in the hash table
+    gcli::FGclicmdt**     ind_gclicmdt_buckets_elems;     // pointer to bucket array
+    i32                   ind_gclicmdt_buckets_n;         // number of elements in bucket array
+    i32                   ind_gclicmdt_n;                 // number of elements in the hash table
+    gcli::FGmethod**      ind_gmethod_buckets_elems;      // pointer to bucket array
+    i32                   ind_gmethod_buckets_n;          // number of elements in bucket array
+    i32                   ind_gmethod_n;                  // number of elements in the hash table
+    gcli::FGrepo**        ind_grepo_buckets_elems;        // pointer to bucket array
+    i32                   ind_grepo_buckets_n;            // number of elements in bucket array
+    i32                   ind_grepo_n;                    // number of elements in the hash table
+    gcli::FIssue**        ind_issue_buckets_elems;        // pointer to bucket array
+    i32                   ind_issue_buckets_n;            // number of elements in bucket array
+    i32                   ind_issue_n;                    // number of elements in the hash table
+    algo_lib::Regx        regx_repo;                      //   "%"  Sql Regx
+    gcli::FGstatet**      ind_gstatet_buckets_elems;      // pointer to bucket array
+    i32                   ind_gstatet_buckets_n;          // number of elements in bucket array
+    i32                   ind_gstatet_n;                  // number of elements in the hash table
+    gcli::FGithost**      ind_githost_buckets_elems;      // pointer to bucket array
+    i32                   ind_githost_buckets_n;          // number of elements in bucket array
+    i32                   ind_githost_n;                  // number of elements in the hash table
+    gcli::FGtype**        ind_gtype_buckets_elems;        // pointer to bucket array
+    i32                   ind_gtype_buckets_n;            // number of elements in bucket array
+    i32                   ind_gtype_n;                    // number of elements in the hash table
+    algo::cstring         home;                           // User's HOME directory
+    algo::cstring         auth_file;                      //
+    algo::cstring         edit_file;                      //
+    gcli::FGclicmd**      c_gclicmd_elems;                // array of pointers
+    u32                   c_gclicmd_n;                    // array of pointers
+    u32                   c_gclicmd_max;                  // capacity of allocated array
+    algo::cstring         unix_user;                      // UNIX user login name
+    algo::cstring         editor;                         // Command line to invoke editor
+    gcli::FGclicmdj2f*    gclicmdj2f_lary[32];            // level array
+    i32                   gclicmdj2f_n;                   // number of elements in array
+    gcli::FGclicmdc*      gclicmdc_lary[32];              // level array
+    i32                   gclicmdc_n;                     // number of elements in array
+    gcli::FGclicmdarg*    gclicmdarg_lary[32];            // level array
+    i32                   gclicmdarg_n;                   // number of elements in array
+    gcli::FGclicmdj2f**   ind_gclicmdj2f_buckets_elems;   // pointer to bucket array
+    i32                   ind_gclicmdj2f_buckets_n;       // number of elements in bucket array
+    i32                   ind_gclicmdj2f_n;               // number of elements in the hash table
+    gcli::FGclicmdarg**   ind_gclicmdarg_buckets_elems;   // pointer to bucket array
+    i32                   ind_gclicmdarg_buckets_n;       // number of elements in bucket array
+    i32                   ind_gclicmdarg_n;               // number of elements in the hash table
+    gcli::FGclicmdc**     ind_gclicmdc_buckets_elems;     // pointer to bucket array
+    i32                   ind_gclicmdc_buckets_n;         // number of elements in bucket array
+    i32                   ind_gclicmdc_n;                 // number of elements in the hash table
+    gcli::FIssue*         issue_lary[32];                 // level array
+    i32                   issue_n;                        // number of elements in array
+    gcli::FGrepo*         grepo_lary[32];                 // level array
+    i32                   grepo_n;                        // number of elements in array
+    gcli::FTuples*        tuples_lary[32];                // level array
+    i32                   tuples_n;                       // number of elements in array
+    gcli::FIssuenote*     issuenote_lary[32];             // level array
+    i32                   issuenote_n;                    // number of elements in array
+    gcli::FMrjob*         mrjob_lary[32];                 // level array
+    i32                   mrjob_n;                        // number of elements in array
+    gcli::FMrnote*        mrnote_lary[32];                // level array
+    i32                   mrnote_n;                       // number of elements in array
+    gcli::FMrnote**       ind_mrnote_buckets_elems;       // pointer to bucket array
+    i32                   ind_mrnote_buckets_n;           // number of elements in bucket array
+    i32                   ind_mrnote_n;                   // number of elements in the hash table
+    gcli::FIssuenote**    ind_issuenote_buckets_elems;    // pointer to bucket array
+    i32                   ind_issuenote_buckets_n;        // number of elements in bucket array
+    i32                   ind_issuenote_n;                // number of elements in the hash table
+    gcli::FMrjob**        ind_mrjob_buckets_elems;        // pointer to bucket array
+    i32                   ind_mrjob_buckets_n;            // number of elements in bucket array
+    i32                   ind_mrjob_n;                    // number of elements in the hash table
+    gcli::FUser*          user_lary[32];                  // level array
+    i32                   user_n;                         // number of elements in array
+    gcli::FUser**         ind_user_buckets_elems;         // pointer to bucket array
+    i32                   ind_user_buckets_n;             // number of elements in bucket array
+    i32                   ind_user_n;                     // number of elements in the hash table
+    gcli::FMr**           ind_mr_buckets_elems;           // pointer to bucket array
+    i32                   ind_mr_buckets_n;               // number of elements in bucket array
+    i32                   ind_mr_n;                       // number of elements in the hash table
+    gcli::FMilestone**    ind_milestone_buckets_elems;    // pointer to bucket array
+    i32                   ind_milestone_buckets_n;        // number of elements in bucket array
+    i32                   ind_milestone_n;                // number of elements in the hash table
+    gcli::FMilestone*     milestone_lary[32];             // level array
+    i32                   milestone_n;                    // number of elements in array
+    gcli::FMr*            mr_lary[32];                    // level array
+    i32                   mr_n;                           // number of elements in array
+    gcli::FGtypeprefix*   gtypeprefix_lary[32];           // level array
+    i32                   gtypeprefix_n;                  // number of elements in array
+    gcli::FGtblact*       gtblact_lary[32];               // level array
+    i32                   gtblact_n;                      // number of elements in array
+    gcli::FGtblactfld*    gtblactfld_lary[32];            // level array
+    i32                   gtblactfld_n;                   // number of elements in array
+    gcli::FGtblact**      ind_gtblact_buckets_elems;      // pointer to bucket array
+    i32                   ind_gtblact_buckets_n;          // number of elements in bucket array
+    i32                   ind_gtblact_n;                  // number of elements in the hash table
+    gcli::FGtblact*       zd_gtblact_head;                // zero-terminated doubly linked list
+    i32                   zd_gtblact_n;                   // zero-terminated doubly linked list
+    gcli::FGtblact*       zd_gtblact_tail;                // pointer to last element
+    gcli::FGtblactfld**   ind_gtblactfld_buckets_elems;   // pointer to bucket array
+    i32                   ind_gtblactfld_buckets_n;       // number of elements in bucket array
+    i32                   ind_gtblactfld_n;               // number of elements in the hash table
+    gcli::FGfld*          gfld_lary[32];                  // level array
+    i32                   gfld_n;                         // number of elements in array
+    gcli::FGfld**         ind_gfld_buckets_elems;         // pointer to bucket array
+    i32                   ind_gfld_buckets_n;             // number of elements in bucket array
+    i32                   ind_gfld_n;                     // number of elements in the hash table
+    gcli::FGfld**         c_gfld_elems;                   // array of pointers
+    u32                   c_gfld_n;                       // array of pointers
+    u32                   c_gfld_max;                     // capacity of allocated array
+    gcli::FGtbl*          gtbl_lary[32];                  // level array
+    i32                   gtbl_n;                         // number of elements in array
+    gcli::FGtbl**         ind_gtbl_buckets_elems;         // pointer to bucket array
+    i32                   ind_gtbl_buckets_n;             // number of elements in bucket array
+    i32                   ind_gtbl_n;                     // number of elements in the hash table
+    gcli::FGact*          gact_lary[32];                  // level array
+    i32                   gact_n;                         // number of elements in array
+    gcli::FGact**         ind_gact_buckets_elems;         // pointer to bucket array
+    i32                   ind_gact_buckets_n;             // number of elements in bucket array
+    i32                   ind_gact_n;                     // number of elements in the hash table
+    gcli::trace           trace;                          //
 };
 
 // Read argc,argv directly into the fields of the command line(s)
@@ -461,86 +441,6 @@ inline gcli::FGtype& gtype_qFind(u64 t) __attribute__((nothrow, pure));
 // in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
 // func:gcli.FDb.gtype.XrefMaybe
 bool                 gtype_XrefMaybe(gcli::FGtype &row);
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-// func:gcli.FDb.grepossh.Alloc
-gcli::FGrepossh&     grepossh_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:gcli.FDb.grepossh.AllocMaybe
-gcli::FGrepossh*     grepossh_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-// func:gcli.FDb.grepossh.InsertMaybe
-gcli::FGrepossh*     grepossh_InsertMaybe(const gclidb::Grepossh &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-// func:gcli.FDb.grepossh.AllocMem
-void*                grepossh_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-// func:gcli.FDb.grepossh.EmptyQ
-inline bool          grepossh_EmptyQ() __attribute__((nothrow, pure));
-// Look up row by row id. Return NULL if out of range
-// func:gcli.FDb.grepossh.Find
-inline gcli::FGrepossh* grepossh_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to last element of array, or NULL if array is empty
-// func:gcli.FDb.grepossh.Last
-inline gcli::FGrepossh* grepossh_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-// func:gcli.FDb.grepossh.N
-inline i32           grepossh_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-// func:gcli.FDb.grepossh.RemoveAll
-void                 grepossh_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-// func:gcli.FDb.grepossh.RemoveLast
-void                 grepossh_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-// func:gcli.FDb.grepossh.qFind
-inline gcli::FGrepossh& grepossh_qFind(u64 t) __attribute__((nothrow, pure));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:gcli.FDb.grepossh.XrefMaybe
-bool                 grepossh_XrefMaybe(gcli::FGrepossh &row);
-
-// Allocate memory for new default row.
-// If out of memory, process is killed.
-// func:gcli.FDb.grepogitport.Alloc
-gcli::FGrepogitport& grepogitport_Alloc() __attribute__((__warn_unused_result__, nothrow));
-// Allocate memory for new element. If out of memory, return NULL.
-// func:gcli.FDb.grepogitport.AllocMaybe
-gcli::FGrepogitport* grepogitport_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-// Create new row from struct.
-// Return pointer to new element, or NULL if insertion failed (due to out-of-memory, duplicate key, etc)
-// func:gcli.FDb.grepogitport.InsertMaybe
-gcli::FGrepogitport* grepogitport_InsertMaybe(const gclidb::Grepogitport &value) __attribute__((nothrow));
-// Allocate space for one element. If no memory available, return NULL.
-// func:gcli.FDb.grepogitport.AllocMem
-void*                grepogitport_AllocMem() __attribute__((__warn_unused_result__, nothrow));
-// Return true if index is empty
-// func:gcli.FDb.grepogitport.EmptyQ
-inline bool          grepogitport_EmptyQ() __attribute__((nothrow, pure));
-// Look up row by row id. Return NULL if out of range
-// func:gcli.FDb.grepogitport.Find
-inline gcli::FGrepogitport* grepogitport_Find(u64 t) __attribute__((__warn_unused_result__, nothrow, pure));
-// Return pointer to last element of array, or NULL if array is empty
-// func:gcli.FDb.grepogitport.Last
-inline gcli::FGrepogitport* grepogitport_Last() __attribute__((nothrow, pure));
-// Return number of items in the pool
-// func:gcli.FDb.grepogitport.N
-inline i32           grepogitport_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Remove all elements from Lary
-// func:gcli.FDb.grepogitport.RemoveAll
-void                 grepogitport_RemoveAll() __attribute__((nothrow));
-// Delete last element of array. Do nothing if array is empty.
-// func:gcli.FDb.grepogitport.RemoveLast
-void                 grepogitport_RemoveLast() __attribute__((nothrow));
-// 'quick' Access row by row id. No bounds checking.
-// func:gcli.FDb.grepogitport.qFind
-inline gcli::FGrepogitport& grepogitport_qFind(u64 t) __attribute__((nothrow, pure));
-// Insert row into all appropriate indices. If error occurs, store error
-// in algo_lib::_db.errtext and return false. Caller must Delete or Unref such row.
-// func:gcli.FDb.grepogitport.XrefMaybe
-bool                 grepogitport_XrefMaybe(gcli::FGrepogitport &row);
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -878,6 +778,9 @@ void                 ind_gclicmd_Remove(gcli::FGclicmd& row) __attribute__((noth
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gclicmd.Reserve
 void                 ind_gclicmd_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gclicmd.AbsReserve
+void                 ind_gclicmd_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gclicmdf.EmptyQ
@@ -903,6 +806,9 @@ void                 ind_gclicmdf_Remove(gcli::FGclicmdf& row) __attribute__((no
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gclicmdf.Reserve
 void                 ind_gclicmdf_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gclicmdf.AbsReserve
+void                 ind_gclicmdf_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gclicmdt.EmptyQ
@@ -925,6 +831,9 @@ void                 ind_gclicmdt_Remove(gcli::FGclicmdt& row) __attribute__((no
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gclicmdt.Reserve
 void                 ind_gclicmdt_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gclicmdt.AbsReserve
+void                 ind_gclicmdt_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gmethod.EmptyQ
@@ -950,6 +859,9 @@ void                 ind_gmethod_Remove(gcli::FGmethod& row) __attribute__((noth
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gmethod.Reserve
 void                 ind_gmethod_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gmethod.AbsReserve
+void                 ind_gmethod_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_grepo.EmptyQ
@@ -975,6 +887,9 @@ void                 ind_grepo_Remove(gcli::FGrepo& row) __attribute__((nothrow)
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_grepo.Reserve
 void                 ind_grepo_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_grepo.AbsReserve
+void                 ind_grepo_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_issue.EmptyQ
@@ -1000,6 +915,9 @@ void                 ind_issue_Remove(gcli::FIssue& row) __attribute__((nothrow)
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_issue.Reserve
 void                 ind_issue_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_issue.AbsReserve
+void                 ind_issue_AbsReserve(int n) __attribute__((nothrow));
 
 // Print back to string
 // func:gcli.FDb.regx_repo.Print
@@ -1029,6 +947,9 @@ void                 ind_gstatet_Remove(gcli::FGstatet& row) __attribute__((noth
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gstatet.Reserve
 void                 ind_gstatet_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gstatet.AbsReserve
+void                 ind_gstatet_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_githost.EmptyQ
@@ -1054,56 +975,9 @@ void                 ind_githost_Remove(gcli::FGithost& row) __attribute__((noth
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_githost.Reserve
 void                 ind_githost_Reserve(int n) __attribute__((nothrow));
-
-// Return true if hash is empty
-// func:gcli.FDb.ind_grepogitport.EmptyQ
-inline bool          ind_grepogitport_EmptyQ() __attribute__((nothrow));
-// Find row by key. Return NULL if not found.
-// func:gcli.FDb.ind_grepogitport.Find
-gcli::FGrepogitport* ind_grepogitport_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
-// Look up row by key and return reference. Throw exception if not found
-// func:gcli.FDb.ind_grepogitport.FindX
-gcli::FGrepogitport& ind_grepogitport_FindX(const algo::strptr& key);
-// Find row by key. If not found, create and x-reference a new row with with this key.
-// func:gcli.FDb.ind_grepogitport.GetOrCreate
-gcli::FGrepogitport& ind_grepogitport_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
-// Return number of items in the hash
-// func:gcli.FDb.ind_grepogitport.N
-inline i32           ind_grepogitport_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-// func:gcli.FDb.ind_grepogitport.InsertMaybe
-bool                 ind_grepogitport_InsertMaybe(gcli::FGrepogitport& row) __attribute__((nothrow));
-// Remove reference to element from hash index. If element is not in hash, do nothing
-// func:gcli.FDb.ind_grepogitport.Remove
-void                 ind_grepogitport_Remove(gcli::FGrepogitport& row) __attribute__((nothrow));
-// Reserve enough room in the hash for N more elements. Return success code.
-// func:gcli.FDb.ind_grepogitport.Reserve
-void                 ind_grepogitport_Reserve(int n) __attribute__((nothrow));
-
-// Return true if hash is empty
-// func:gcli.FDb.ind_grepossh.EmptyQ
-inline bool          ind_grepossh_EmptyQ() __attribute__((nothrow));
-// Find row by key. Return NULL if not found.
-// func:gcli.FDb.ind_grepossh.Find
-gcli::FGrepossh*     ind_grepossh_Find(const algo::strptr& key) __attribute__((__warn_unused_result__, nothrow));
-// Look up row by key and return reference. Throw exception if not found
-// func:gcli.FDb.ind_grepossh.FindX
-gcli::FGrepossh&     ind_grepossh_FindX(const algo::strptr& key);
-// Find row by key. If not found, create and x-reference a new row with with this key.
-// func:gcli.FDb.ind_grepossh.GetOrCreate
-gcli::FGrepossh&     ind_grepossh_GetOrCreate(const algo::strptr& key) __attribute__((nothrow));
-// Return number of items in the hash
-// func:gcli.FDb.ind_grepossh.N
-inline i32           ind_grepossh_N() __attribute__((__warn_unused_result__, nothrow, pure));
-// Insert row into hash table. Return true if row is reachable through the hash after the function completes.
-// func:gcli.FDb.ind_grepossh.InsertMaybe
-bool                 ind_grepossh_InsertMaybe(gcli::FGrepossh& row) __attribute__((nothrow));
-// Remove reference to element from hash index. If element is not in hash, do nothing
-// func:gcli.FDb.ind_grepossh.Remove
-void                 ind_grepossh_Remove(gcli::FGrepossh& row) __attribute__((nothrow));
-// Reserve enough room in the hash for N more elements. Return success code.
-// func:gcli.FDb.ind_grepossh.Reserve
-void                 ind_grepossh_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_githost.AbsReserve
+void                 ind_githost_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gtype.EmptyQ
@@ -1129,6 +1003,9 @@ void                 ind_gtype_Remove(gcli::FGtype& row) __attribute__((nothrow)
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gtype.Reserve
 void                 ind_gtype_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gtype.AbsReserve
+void                 ind_gtype_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FDb.c_gclicmd.EmptyQ
@@ -1302,6 +1179,9 @@ void                 ind_gclicmdj2f_Remove(gcli::FGclicmdj2f& row) __attribute__
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gclicmdj2f.Reserve
 void                 ind_gclicmdj2f_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gclicmdj2f.AbsReserve
+void                 ind_gclicmdj2f_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gclicmdarg.EmptyQ
@@ -1327,6 +1207,9 @@ void                 ind_gclicmdarg_Remove(gcli::FGclicmdarg& row) __attribute__
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gclicmdarg.Reserve
 void                 ind_gclicmdarg_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gclicmdarg.AbsReserve
+void                 ind_gclicmdarg_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_gclicmdc.EmptyQ
@@ -1352,6 +1235,9 @@ void                 ind_gclicmdc_Remove(gcli::FGclicmdc& row) __attribute__((no
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gclicmdc.Reserve
 void                 ind_gclicmdc_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gclicmdc.AbsReserve
+void                 ind_gclicmdc_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1610,6 +1496,9 @@ void                 ind_mrnote_Remove(gcli::FMrnote& row) __attribute__((nothro
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_mrnote.Reserve
 void                 ind_mrnote_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_mrnote.AbsReserve
+void                 ind_mrnote_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_issuenote.EmptyQ
@@ -1632,6 +1521,9 @@ void                 ind_issuenote_Remove(gcli::FIssuenote& row) __attribute__((
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_issuenote.Reserve
 void                 ind_issuenote_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_issuenote.AbsReserve
+void                 ind_issuenote_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_mrjob.EmptyQ
@@ -1654,6 +1546,9 @@ void                 ind_mrjob_Remove(gcli::FMrjob& row) __attribute__((nothrow)
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_mrjob.Reserve
 void                 ind_mrjob_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_mrjob.AbsReserve
+void                 ind_mrjob_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1719,6 +1614,9 @@ void                 ind_user_Remove(gcli::FUser& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_user.Reserve
 void                 ind_user_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_user.AbsReserve
+void                 ind_user_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_mr.EmptyQ
@@ -1744,6 +1642,9 @@ void                 ind_mr_Remove(gcli::FMr& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_mr.Reserve
 void                 ind_mr_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_mr.AbsReserve
+void                 ind_mr_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if hash is empty
 // func:gcli.FDb.ind_milestone.EmptyQ
@@ -1769,6 +1670,9 @@ void                 ind_milestone_Remove(gcli::FMilestone& row) __attribute__((
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_milestone.Reserve
 void                 ind_milestone_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_milestone.AbsReserve
+void                 ind_milestone_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -1994,6 +1898,9 @@ void                 ind_gtblact_Remove(gcli::FGtblact& row) __attribute__((noth
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gtblact.Reserve
 void                 ind_gtblact_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gtblact.AbsReserve
+void                 ind_gtblact_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FDb.zd_gtblact.EmptyQ
@@ -2053,6 +1960,9 @@ void                 ind_gtblactfld_Remove(gcli::FGtblactfld& row) __attribute__
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gtblactfld.Reserve
 void                 ind_gtblactfld_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gtblactfld.AbsReserve
+void                 ind_gtblactfld_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -2118,6 +2028,9 @@ void                 ind_gfld_Remove(gcli::FGfld& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gfld.Reserve
 void                 ind_gfld_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gfld.AbsReserve
+void                 ind_gfld_AbsReserve(int n) __attribute__((nothrow));
 
 // Return true if index is empty
 // func:gcli.FDb.c_gfld.EmptyQ
@@ -2223,6 +2136,9 @@ void                 ind_gtbl_Remove(gcli::FGtbl& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gtbl.Reserve
 void                 ind_gtbl_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gtbl.AbsReserve
+void                 ind_gtbl_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -2288,6 +2204,9 @@ void                 ind_gact_Remove(gcli::FGact& row) __attribute__((nothrow));
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:gcli.FDb.ind_gact.Reserve
 void                 ind_gact_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:gcli.FDb.ind_gact.AbsReserve
+void                 ind_gact_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:gcli.FDb.gtype_curs.Reset
@@ -2301,30 +2220,6 @@ inline void          _db_gtype_curs_Next(_db_gtype_curs &curs) __attribute__((no
 // item access
 // func:gcli.FDb.gtype_curs.Access
 inline gcli::FGtype& _db_gtype_curs_Access(_db_gtype_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:gcli.FDb.grepossh_curs.Reset
-inline void          _db_grepossh_curs_Reset(_db_grepossh_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:gcli.FDb.grepossh_curs.ValidQ
-inline bool          _db_grepossh_curs_ValidQ(_db_grepossh_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:gcli.FDb.grepossh_curs.Next
-inline void          _db_grepossh_curs_Next(_db_grepossh_curs &curs) __attribute__((nothrow));
-// item access
-// func:gcli.FDb.grepossh_curs.Access
-inline gcli::FGrepossh& _db_grepossh_curs_Access(_db_grepossh_curs &curs) __attribute__((nothrow));
-// cursor points to valid item
-// func:gcli.FDb.grepogitport_curs.Reset
-inline void          _db_grepogitport_curs_Reset(_db_grepogitport_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
-// cursor points to valid item
-// func:gcli.FDb.grepogitport_curs.ValidQ
-inline bool          _db_grepogitport_curs_ValidQ(_db_grepogitport_curs &curs) __attribute__((nothrow));
-// proceed to next item
-// func:gcli.FDb.grepogitport_curs.Next
-inline void          _db_grepogitport_curs_Next(_db_grepogitport_curs &curs) __attribute__((nothrow));
-// item access
-// func:gcli.FDb.grepogitport_curs.Access
-inline gcli::FGrepogitport& _db_grepogitport_curs_Access(_db_grepogitport_curs &curs) __attribute__((nothrow));
 // cursor points to valid item
 // func:gcli.FDb.githost_curs.Reset
 inline void          _db_githost_curs_Reset(_db_githost_curs &curs, gcli::FDb &parent) __attribute__((nothrow));
@@ -2682,9 +2577,10 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: gact (Lary, by rowid)
 // global access: ind_gact (Thash, hash field gact)
 struct FGact { // gcli.FGact
-    gcli::FGact*       ind_gact_next;   // hash next
-    algo::Smallstr50   gact;            //
-    algo::Comment      comment;         //
+    gcli::FGact*       ind_gact_next;      // hash next
+    u32                ind_gact_hashval;   // hash value
+    algo::Smallstr50   gact;               //
+    algo::Comment      comment;            //
     // func:gcli.FGact..AssignOp
     inline gcli::FGact&  operator =(const gcli::FGact &rhs) = delete;
     // func:gcli.FGact..CopyCtor
@@ -2723,41 +2619,42 @@ void                 FGact_Uninit(gcli::FGact& gact) __attribute__((nothrow));
 // access: gcli.FGclicmdf2j.p_gclicmd (Upptr)
 // access: gcli.FGclicmdt.p_gclicmd (Upptr)
 struct FGclicmd { // gcli.FGclicmd
-    gcli::FGclicmd*           ind_gclicmd_next;       // hash next
-    algo::Smallstr250         gclicmd;                //
-    algo::Smallstr250         gclicmdf2j;             // Base for gclicmdf2j
-    algo::Comment             comment;                //
-    algo::cstring             url;                    //
-    algo::cstring             sep;                    //
-    algo::cstring             host;                   //
-    algo::cstring             proj;                   //
-    algo::cstring             token;                  //
-    algo::cstring             body;                   //
-    algo::cstring             note_id;                //
-    algo::cstring             issue_id;               //
-    algo::cstring             cond;                   //
-    bool                      select;                 //   false
-    bool                      write_auth;             //   false
-    bool                      finish;                 //   false
-    algo::cstring             gclicmdt_key;           //
-    u32                       method;                 //   0
-    gcli::FIssue*             p_issue;                // optional pointer
-    gcli::FMr*                p_mr;                   // optional pointer
-    gcli::FTuples**           c_tuples_elems;         // array of pointers
-    u32                       c_tuples_n;             // array of pointers
-    u32                       c_tuples_max;           // capacity of allocated array
-    gcli::gclicmd_step_hook   step;                   //   NULL  Pointer to a function
-    gcli::FGclicmdarg**       c_gclicmdarg_elems;     // array of pointers
-    u32                       c_gclicmdarg_n;         // array of pointers
-    u32                       c_gclicmdarg_max;       // capacity of allocated array
-    gcli::FGclicmdc**         c_gclicmdc_elems;       // array of pointers
-    u32                       c_gclicmdc_n;           // array of pointers
-    u32                       c_gclicmdc_max;         // capacity of allocated array
-    gcli::FGclicmdf2j**       c_gclicmdf2j_elems;     // array of pointers
-    u32                       c_gclicmdf2j_n;         // array of pointers
-    u32                       c_gclicmdf2j_max;       // capacity of allocated array
-    gcli::FGclicmd*           p_gclicmd;              // reference to parent row
-    bool                      _db_c_gclicmd_in_ary;   //   false  membership flag
+    gcli::FGclicmd*           ind_gclicmd_next;      // hash next
+    u32                       ind_gclicmd_hashval;   // hash value
+    algo::Smallstr250         gclicmd;               // table of static commands
+    algo::Smallstr250         gclicmdf2j;            // Base for gclicmdf2j
+    algo::Comment             comment;               //
+    algo::cstring             url;                   //
+    algo::cstring             sep;                   //
+    algo::cstring             host;                  //
+    algo::cstring             proj;                  //
+    algo::cstring             token;                 //
+    algo::cstring             body;                  //
+    algo::cstring             note_id;               //
+    algo::cstring             issue_id;              //
+    algo::cstring             cond;                  //
+    bool                      select;                //   false
+    bool                      write_auth;            //   false
+    bool                      finish;                //   false
+    algo::cstring             gclicmdt_key;          //
+    u32                       method;                //   0
+    gcli::FIssue*             p_issue;               // optional pointer
+    gcli::FMr*                p_mr;                  // optional pointer
+    gcli::FTuples**           c_tuples_elems;        // array of pointers
+    u32                       c_tuples_n;            // array of pointers
+    u32                       c_tuples_max;          // capacity of allocated array
+    gcli::gclicmd_step_hook   step;                  //   NULL  Pointer to a function
+    gcli::FGclicmdarg**       c_gclicmdarg_elems;    // array of pointers
+    u32                       c_gclicmdarg_n;        // array of pointers
+    u32                       c_gclicmdarg_max;      // capacity of allocated array
+    gcli::FGclicmdc**         c_gclicmdc_elems;      // array of pointers
+    u32                       c_gclicmdc_n;          // array of pointers
+    u32                       c_gclicmdc_max;        // capacity of allocated array
+    gcli::FGclicmdf2j**       c_gclicmdf2j_elems;    // array of pointers
+    u32                       c_gclicmdf2j_n;        // array of pointers
+    u32                       c_gclicmdf2j_max;      // capacity of allocated array
+    gcli::FGclicmd*           p_gclicmd;             // reference to parent row
+    bool                      c_gclicmd_in_ary;      //   false  membership flag
     // reftype Ptrary of gcli.FGclicmd.c_tuples prohibits copy
     // reftype Hook of gcli.FGclicmd.step prohibits copy
     // reftype Ptrary of gcli.FGclicmd.c_gclicmdarg prohibits copy
@@ -3009,6 +2906,7 @@ void                 FGclicmd_Uninit(gcli::FGclicmd& gclicmd) __attribute__((not
 // access: gcli.FGclicmd.c_gclicmdarg (Ptrary)
 struct FGclicmdarg { // gcli.FGclicmdarg
     gcli::FGclicmdarg*   ind_gclicmdarg_next;           // hash next
+    u32                  ind_gclicmdarg_hashval;        // hash value
     algo::Smallstr250    gclicmdarg;                    //
     bool                 gclicmd_c_gclicmdarg_in_ary;   //   false  membership flag
     // func:gcli.FGclicmdarg..AssignOp
@@ -3047,6 +2945,7 @@ void                 FGclicmdarg_Uninit(gcli::FGclicmdarg& gclicmdarg) __attribu
 // access: gcli.FGclicmd.c_gclicmdc (Ptrary)
 struct FGclicmdc { // gcli.FGclicmdc
     gcli::FGclicmdc*    ind_gclicmdc_next;           // hash next
+    u32                 ind_gclicmdc_hashval;        // hash value
     algo::Smallstr250   gclicmdc;                    //
     gcli::FGclicmdf**   c_gclicmdf_elems;            // array of pointers
     u32                 c_gclicmdf_n;                // array of pointers
@@ -3142,6 +3041,7 @@ void                 FGclicmdc_Uninit(gcli::FGclicmdc& gclicmdc) __attribute__((
 // access: gcli.FGclicmdj2f.c_gclicmdf (Ptrary)
 struct FGclicmdf { // gcli.FGclicmdf: fields
     gcli::FGclicmdf*    ind_gclicmdf_next;            // hash next
+    u32                 ind_gclicmdf_hashval;         // hash value
     algo::Smallstr250   gclicmdf;                     //
     algo::cstring       uval;                         //
     bool                gclicmdc_c_gclicmdf_in_ary;   //   false  membership flag
@@ -3239,13 +3139,14 @@ void                 FGclicmdf2j_Uninit(gcli::FGclicmdf2j& gclicmdf2j) __attribu
 // global access: gclicmdj2f (Lary, by rowid)
 // global access: ind_gclicmdj2f (Thash, hash field gclicmdj2f)
 struct FGclicmdj2f { // gcli.FGclicmdj2f
-    gcli::FGclicmdj2f*   ind_gclicmdj2f_next;   // hash next
-    algo::Smallstr250    gclicmdj2f;            //
-    bool                 select;                //   false
-    bool                 dup;                   //   false
-    gcli::FGclicmdf**    c_gclicmdf_elems;      // array of pointers
-    u32                  c_gclicmdf_n;          // array of pointers
-    u32                  c_gclicmdf_max;        // capacity of allocated array
+    gcli::FGclicmdj2f*   ind_gclicmdj2f_next;      // hash next
+    u32                  ind_gclicmdj2f_hashval;   // hash value
+    algo::Smallstr250    gclicmdj2f;               //
+    bool                 select;                   //   false
+    bool                 dup;                      //   false
+    gcli::FGclicmdf**    c_gclicmdf_elems;         // array of pointers
+    u32                  c_gclicmdf_n;             // array of pointers
+    u32                  c_gclicmdf_max;           // capacity of allocated array
     // reftype Ptrary of gcli.FGclicmdj2f.c_gclicmdf prohibits copy
     // func:gcli.FGclicmdj2f..AssignOp
     inline gcli::FGclicmdj2f& operator =(const gcli::FGclicmdj2f &rhs) = delete;
@@ -3331,13 +3232,14 @@ void                 FGclicmdj2f_Uninit(gcli::FGclicmdj2f& gclicmdj2f) __attribu
 // global access: gclicmdt (Lary, by rowid)
 // global access: ind_gclicmdt (Thash, hash field gclicmdt)
 struct FGclicmdt { // gcli.FGclicmdt
-    gcli::FGclicmdt*    ind_gclicmdt_next;   // hash next
-    algo::Smallstr250   gclicmdt;            //
-    algo::Smallstr50    gmethod;             //   "GET"
-    algo::Comment       uri;                 //
-    algo::Comment       comment;             //
-    gcli::FGclicmd*     p_gclicmd;           // reference to parent row
-    gcli::FGtype*       p_gtype;             // reference to parent row
+    gcli::FGclicmdt*    ind_gclicmdt_next;      // hash next
+    u32                 ind_gclicmdt_hashval;   // hash value
+    algo::Smallstr250   gclicmdt;               //
+    algo::Smallstr50    gmethod;                //   "GET"
+    algo::Comment       uri;                    //
+    algo::Comment       comment;                //
+    gcli::FGclicmd*     p_gclicmd;              // reference to parent row
+    gcli::FGtype*       p_gtype;                // reference to parent row
     // x-reference on gcli.FGclicmdt.p_gclicmd prevents copy
     // x-reference on gcli.FGclicmdt.p_gtype prevents copy
     // func:gcli.FGclicmdt..AssignOp
@@ -3384,12 +3286,13 @@ void                 FGclicmdt_Uninit(gcli::FGclicmdt& gclicmdt) __attribute__((
 // access: gcli.FGtblactfld.p_gfld (Upptr)
 struct FGfld { // gcli.FGfld
     gcli::FGfld*          ind_gfld_next;        // hash next
+    u32                   ind_gfld_hashval;     // hash value
     algo::Smallstr50      gfld;                 //
     algo::Comment         comment;              //
     gcli::FGtblactfld**   c_gtblactfld_elems;   // array of pointers
     u32                   c_gtblactfld_n;       // array of pointers
     u32                   c_gtblactfld_max;     // capacity of allocated array
-    bool                  _db_c_gfld_in_ary;    //   false  membership flag
+    bool                  c_gfld_in_ary;        //   false  membership flag
     // reftype Ptrary of gcli.FGfld.c_gtblactfld prohibits copy
     // func:gcli.FGfld..AssignOp
     inline gcli::FGfld&  operator =(const gcli::FGfld &rhs) = delete;
@@ -3476,15 +3379,16 @@ void                 FGfld_Uninit(gcli::FGfld& gfld) __attribute__((nothrow));
 // global access: githost (Lary, by rowid)
 // global access: ind_githost (Thash, hash field githost)
 struct FGithost { // gcli.FGithost
-    gcli::FGithost*     ind_githost_next;   // hash next
-    algo::Smallstr250   githost;            //
-    algo::cstring       ip;                 //
-    algo::cstring       id;                 //
-    algo::cstring       id_file;            //
-    algo::cstring       port;               //
-    algo::cstring       user;               //
-    algo::cstring       ssh_config;         //
-    algo::cstring       ssh_cmd;            //
+    gcli::FGithost*     ind_githost_next;      // hash next
+    u32                 ind_githost_hashval;   // hash value
+    algo::Smallstr250   githost;               //
+    algo::cstring       ip;                    //
+    algo::cstring       id;                    //
+    algo::cstring       id_file;               //
+    algo::cstring       port;                  //
+    algo::cstring       user;                  //
+    algo::cstring       ssh_config;            //
+    algo::cstring       ssh_cmd;               //
     // func:gcli.FGithost..AssignOp
     inline gcli::FGithost& operator =(const gcli::FGithost &rhs) = delete;
     // func:gcli.FGithost..CopyCtor
@@ -3511,10 +3415,11 @@ void                 FGithost_Uninit(gcli::FGithost& githost) __attribute__((not
 // global access: gmethod (Lary, by rowid)
 // global access: ind_gmethod (Thash, hash field gmethod)
 struct FGmethod { // gcli.FGmethod
-    gcli::FGmethod*    ind_gmethod_next;   // hash next
-    algo::Smallstr50   gmethod;            //
-    u32                val;                //   0
-    algo::Comment      comment;            //
+    gcli::FGmethod*    ind_gmethod_next;      // hash next
+    u32                ind_gmethod_hashval;   // hash value
+    algo::Smallstr50   gmethod;               //
+    u32                val;                   //   0
+    algo::Comment      comment;               //
     // func:gcli.FGmethod..AssignOp
     inline gcli::FGmethod& operator =(const gcli::FGmethod &rhs) = delete;
     // func:gcli.FGmethod..CopyCtor
@@ -3548,19 +3453,20 @@ void                 FGmethod_Uninit(gcli::FGmethod& gmethod) __attribute__((not
 // global access: ind_grepo (Thash, hash field grepo)
 // global access: grepo (Lary, by rowid)
 struct FGrepo { // gcli.FGrepo
-    gcli::FGrepo*       ind_grepo_next;   // hash next
-    algo::Smallstr250   grepo;            // gcli host/full name
-    algo::cstring       name;             // gcli full name
-    algo::cstring       token;            // gitlab project or repo access token
-    algo::cstring       default_branch;   //   "origin"  gcli remote used in the workflow
-    algo::cstring       keyid;            // gcli project id or repo
-    algo::cstring       ssh_repo;         //
-    algo::cstring       web_url;          //
-    algo::cstring       descr;            //
-    bool                active;           //   true  set to false to ignore the line but keep it in the file
-    algo::cstring       priv;             //
-    bool                select;           //   false
-    algo::cstring       gitremote_cmd;    //
+    gcli::FGrepo*       ind_grepo_next;      // hash next
+    u32                 ind_grepo_hashval;   // hash value
+    algo::Smallstr250   grepo;               // gcli host/full name
+    algo::cstring       name;                // gcli full name
+    algo::cstring       token;               // gitlab project or repo access token
+    algo::cstring       default_branch;      //   "origin"  gcli remote used in the workflow
+    algo::cstring       keyid;               // gcli project id or repo
+    algo::cstring       ssh_repo;            //
+    algo::cstring       web_url;             //
+    algo::cstring       descr;               //
+    bool                active;              //   true  set to false to ignore the line but keep it in the file
+    algo::cstring       priv;                //
+    bool                select;              //   false
+    algo::cstring       gitremote_cmd;       //
     // func:gcli.FGrepo..AssignOp
     gcli::FGrepo&        operator =(const gcli::FGrepo &rhs) = delete;
     // func:gcli.FGrepo..CopyCtor
@@ -3595,91 +3501,15 @@ void                 FGrepo_Init(gcli::FGrepo& grepo);
 // func:gcli.FGrepo..Uninit
 void                 FGrepo_Uninit(gcli::FGrepo& grepo) __attribute__((nothrow));
 
-// --- gcli.FGrepogitport
-// create: gcli.FDb.grepogitport (Lary)
-// global access: grepogitport (Lary, by rowid)
-// global access: ind_grepogitport (Thash, hash field grepogitport)
-struct FGrepogitport { // gcli.FGrepogitport
-    gcli::FGrepogitport*   ind_grepogitport_next;   // hash next
-    algo::Smallstr50       grepogitport;            // grepo git host
-    algo::cstring          port;                    // ssh port for config
-    algo::Comment          comment;                 //
-    // func:gcli.FGrepogitport..AssignOp
-    inline gcli::FGrepogitport& operator =(const gcli::FGrepogitport &rhs) = delete;
-    // func:gcli.FGrepogitport..CopyCtor
-    inline               FGrepogitport(const gcli::FGrepogitport &rhs) = delete;
-private:
-    // func:gcli.FGrepogitport..Ctor
-    inline               FGrepogitport() __attribute__((nothrow));
-    // func:gcli.FGrepogitport..Dtor
-    inline               ~FGrepogitport() __attribute__((nothrow));
-    friend gcli::FGrepogitport& grepogitport_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend gcli::FGrepogitport* grepogitport_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 grepogitport_RemoveAll() __attribute__((nothrow));
-    friend void                 grepogitport_RemoveLast() __attribute__((nothrow));
-};
-
-// Copy fields out of row
-// func:gcli.FGrepogitport.base.CopyOut
-void                 grepogitport_CopyOut(gcli::FGrepogitport &row, gclidb::Grepogitport &out) __attribute__((nothrow));
-// Copy fields in to row
-// func:gcli.FGrepogitport.base.CopyIn
-void                 grepogitport_CopyIn(gcli::FGrepogitport &row, gclidb::Grepogitport &in) __attribute__((nothrow));
-
-// Set all fields to initial values.
-// func:gcli.FGrepogitport..Init
-inline void          FGrepogitport_Init(gcli::FGrepogitport& grepogitport);
-// func:gcli.FGrepogitport..Uninit
-void                 FGrepogitport_Uninit(gcli::FGrepogitport& grepogitport) __attribute__((nothrow));
-
-// --- gcli.FGrepossh
-// create: gcli.FDb.grepossh (Lary)
-// global access: grepossh (Lary, by rowid)
-// global access: ind_grepossh (Thash, hash field grepossh)
-struct FGrepossh { // gcli.FGrepossh
-    gcli::FGrepossh*    ind_grepossh_next;   // hash next
-    algo::Smallstr50    grepossh;            // grepo project/repo name
-    algo::Smallstr200   sshid;               // ssh id key name for ssh config
-    algo::Comment       comment;             //
-    // func:gcli.FGrepossh..AssignOp
-    inline gcli::FGrepossh& operator =(const gcli::FGrepossh &rhs) = delete;
-    // func:gcli.FGrepossh..CopyCtor
-    inline               FGrepossh(const gcli::FGrepossh &rhs) = delete;
-private:
-    // func:gcli.FGrepossh..Ctor
-    inline               FGrepossh() __attribute__((nothrow));
-    // func:gcli.FGrepossh..Dtor
-    inline               ~FGrepossh() __attribute__((nothrow));
-    friend gcli::FGrepossh&     grepossh_Alloc() __attribute__((__warn_unused_result__, nothrow));
-    friend gcli::FGrepossh*     grepossh_AllocMaybe() __attribute__((__warn_unused_result__, nothrow));
-    friend void                 grepossh_RemoveAll() __attribute__((nothrow));
-    friend void                 grepossh_RemoveLast() __attribute__((nothrow));
-};
-
-// Copy fields out of row
-// func:gcli.FGrepossh.base.CopyOut
-void                 grepossh_CopyOut(gcli::FGrepossh &row, gclidb::Grepossh &out) __attribute__((nothrow));
-// Copy fields in to row
-// func:gcli.FGrepossh.base.CopyIn
-void                 grepossh_CopyIn(gcli::FGrepossh &row, gclidb::Grepossh &in) __attribute__((nothrow));
-
-// func:gcli.FGrepossh.name.Get
-algo::cstring        name_Get(gcli::FGrepossh& grepossh) __attribute__((__warn_unused_result__, nothrow));
-
-// Set all fields to initial values.
-// func:gcli.FGrepossh..Init
-inline void          FGrepossh_Init(gcli::FGrepossh& grepossh);
-// func:gcli.FGrepossh..Uninit
-void                 FGrepossh_Uninit(gcli::FGrepossh& grepossh) __attribute__((nothrow));
-
 // --- gcli.FGstatet
 // create: gcli.FDb.gstatet (Lary)
 // global access: gstatet (Lary, by rowid)
 // global access: ind_gstatet (Thash, hash field gstatet)
 struct FGstatet { // gcli.FGstatet
-    gcli::FGstatet*    ind_gstatet_next;   // hash next
-    algo::Smallstr50   gstatet;            //
-    algo::cstring      state;              //
+    gcli::FGstatet*    ind_gstatet_next;      // hash next
+    u32                ind_gstatet_hashval;   // hash value
+    algo::Smallstr50   gstatet;               //
+    algo::cstring      state;                 //
     // func:gcli.FGstatet..AssignOp
     inline gcli::FGstatet& operator =(const gcli::FGstatet &rhs) = delete;
     // func:gcli.FGstatet..CopyCtor
@@ -3720,15 +3550,16 @@ void                 FGstatet_Uninit(gcli::FGstatet& gstatet) __attribute__((not
 // global access: gtbl (Lary, by rowid)
 // global access: ind_gtbl (Thash, hash field gtbl)
 struct FGtbl { // gcli.FGtbl
-    gcli::FGtbl*        ind_gtbl_next;     // hash next
-    algo::Smallstr250   gtbl;              //
-    algo::Comment       comment;           //
-    algo::cstring       id;                //
-    bool                set_as_dflt;       //   false
-    bool                tail_dot;          //   false
-    gcli::FGtblact**    c_gtblact_elems;   // array of pointers
-    u32                 c_gtblact_n;       // array of pointers
-    u32                 c_gtblact_max;     // capacity of allocated array
+    gcli::FGtbl*        ind_gtbl_next;      // hash next
+    u32                 ind_gtbl_hashval;   // hash value
+    algo::Smallstr250   gtbl;               //
+    algo::Comment       comment;            //
+    algo::cstring       id;                 //
+    bool                set_as_dflt;        //   false
+    bool                tail_dot;           //   false
+    gcli::FGtblact**    c_gtblact_elems;    // array of pointers
+    u32                 c_gtblact_n;        // array of pointers
+    u32                 c_gtblact_max;      // capacity of allocated array
     // reftype Ptrary of gcli.FGtbl.c_gtblact prohibits copy
     // func:gcli.FGtbl..AssignOp
     inline gcli::FGtbl&  operator =(const gcli::FGtbl &rhs) = delete;
@@ -3819,6 +3650,7 @@ void                 FGtbl_Uninit(gcli::FGtbl& gtbl) __attribute__((nothrow));
 // access: gcli.FGtblact.step (Hook)
 struct FGtblact { // gcli.FGtblact
     gcli::FGtblact*           ind_gtblact_next;        // hash next
+    u32                       ind_gtblact_hashval;     // hash value
     gcli::FGtblact*           zd_gtblact_next;         // zslist link; -1 means not-in-list
     gcli::FGtblact*           zd_gtblact_prev;         // previous element
     algo::Smallstr50          gtblact;                 //
@@ -3934,6 +3766,7 @@ void                 FGtblact_Uninit(gcli::FGtblact& gtblact) __attribute__((not
 // access: gcli.FGtblact.c_gtblactfld (Ptrary)
 struct FGtblactfld { // gcli.FGtblactfld
     gcli::FGtblactfld*   ind_gtblactfld_next;           // hash next
+    u32                  ind_gtblactfld_hashval;        // hash value
     algo::Smallstr50     gtblactfld;                    //
     algo::cstring        dflt;                          //
     bool                 field_name_dflt;               //   false
@@ -3993,6 +3826,7 @@ void                 FGtblactfld_Uninit(gcli::FGtblactfld& gtblactfld) __attribu
 // access: gcli.FGtypeprefix.p_gtype (Upptr)
 struct FGtype { // gcli.FGtype
     gcli::FGtype*          ind_gtype_next;        // hash next
+    u32                    ind_gtype_hashval;     // hash value
     algo::Smallstr50       gtype;                 //
     algo::cstring          default_url;           //
     algo::Comment          comment;               //
@@ -4292,6 +4126,11 @@ algo::cstring&       response_header_AllocAt(gcli::FHttp& parent, int at) __attr
 // Reserve space. Insert N elements at the end of the array, return pointer to array
 // func:gcli.FHttp.response_header.AllocN
 algo::aryptr<algo::cstring> response_header_AllocN(gcli::FHttp& parent, int n_elems) __attribute__((__warn_unused_result__, nothrow));
+// Reserve space. Insert N elements at the given position of the array, return pointer to inserted elements
+// Reserve space for new element, reallocating the array if necessary
+// Insert new element at specified index. Index must be in range or a fatal error occurs.
+// func:gcli.FHttp.response_header.AllocNAt
+algo::aryptr<algo::cstring> response_header_AllocNAt(gcli::FHttp& parent, int n_elems, int at) __attribute__((__warn_unused_result__, nothrow));
 // Return true if index is empty
 // func:gcli.FHttp.response_header.EmptyQ
 inline bool          response_header_EmptyQ(gcli::FHttp& parent) __attribute__((nothrow));
@@ -4348,6 +4187,10 @@ algo::aryptr<algo::cstring> response_header_AllocNVal(gcli::FHttp& parent, int n
 // Function returns success value.
 // func:gcli.FHttp.response_header.ReadStrptrMaybe
 bool                 response_header_ReadStrptrMaybe(gcli::FHttp& parent, algo::strptr in_str) __attribute__((nothrow));
+// Insert array at specific position
+// Insert N elements at specified index. Index must be in range or a fatal error occurs.Reserve space, and move existing elements to end.If the RHS argument aliases the array (refers to the same memory), exit program with fatal error.
+// func:gcli.FHttp.response_header.Insary
+void                 response_header_Insary(gcli::FHttp& parent, algo::aryptr<algo::cstring> rhs, int at) __attribute__((nothrow));
 
 // proceed to next item
 // func:gcli.FHttp.response_header_curs.Next
@@ -4377,6 +4220,7 @@ void                 FHttp_Print(gcli::FHttp& row, algo::cstring& str) __attribu
 // access: gcli.FGclicmd.p_issue (Ptr)
 struct FIssue { // gcli.FIssue
     gcli::FIssue*        ind_issue_next;      // hash next
+    u32                  ind_issue_hashval;   // hash value
     algo::Smallstr50     issue;               // Identifier. must be in form project.iid
     algo::Smallstr50     assignee;            // User the issue is assigned to
     algo::cstring        labels;              // issue labels - comma-separated list
@@ -4543,6 +4387,7 @@ void                 FIssue_Uninit(gcli::FIssue& issue) __attribute__((nothrow))
 // access: gcli.FIssue.c_issuenote (Ptrary)
 struct FIssuenote { // gcli.FIssuenote
     gcli::FIssuenote*   ind_issuenote_next;         // hash next
+    u32                 ind_issuenote_hashval;      // hash value
     algo::Smallstr250   issuenote;                  // Identifier. must be in form issue.id
     algo::cstring       note;                       // Body of issue note
     algo::cstring       system;                     // System or user note (glab only)
@@ -4588,11 +4433,12 @@ void                 FIssuenote_Uninit(gcli::FIssuenote& issuenote) __attribute_
 // global access: ind_milestone (Thash, hash field milestone)
 // global access: milestone (Lary, by rowid)
 struct FMilestone { // gcli.FMilestone
-    gcli::FMilestone*   ind_milestone_next;   // hash next
-    algo::Smallstr200   milestone;            // Milestone id
-    algo::cstring       description;          // Milestone description
-    algo::cstring       title;                // Milestone title
-    bool                select;               //   false
+    gcli::FMilestone*   ind_milestone_next;      // hash next
+    u32                 ind_milestone_hashval;   // hash value
+    algo::Smallstr200   milestone;               // Milestone id
+    algo::cstring       description;             // Milestone description
+    algo::cstring       title;                   // Milestone title
+    bool                select;                  //   false
     // func:gcli.FMilestone..AssignOp
     inline gcli::FMilestone& operator =(const gcli::FMilestone &rhs) = delete;
     // func:gcli.FMilestone..CopyCtor
@@ -4639,6 +4485,7 @@ void                 FMilestone_Print(gcli::FMilestone& row, algo::cstring& str)
 // access: gcli.FIssue.p_mr_open (Ptr)
 struct FMr { // gcli.FMr
     gcli::FMr*          ind_mr_next;       // hash next
+    u32                 ind_mr_hashval;    // hash value
     algo::Smallstr150   mr;                // Identifier. must be in form project.iid
     algo::cstring       state;             // Mr state
     algo::cstring       title;             // Mr title
@@ -4810,6 +4657,7 @@ void                 FMr_Print(gcli::FMr& row, algo::cstring& str) __attribute__
 // access: gcli.FMr.c_mrjob (Ptrary)
 struct FMrjob { // gcli.FMrjob
     gcli::FMrjob*       ind_mrjob_next;         // hash next
+    u32                 ind_mrjob_hashval;      // hash value
     algo::Smallstr250   mrjob;                  // Identifier. must be in form mr.id
     algo::Smallstr150   ref;                    // Mr portion of mr job
     algo::cstring       id;                     // Job ID
@@ -4861,6 +4709,7 @@ void                 FMrjob_Uninit(gcli::FMrjob& mrjob) __attribute__((nothrow))
 // access: gcli.FMr.c_mrnote (Ptrary)
 struct FMrnote { // gcli.FMrnote
     gcli::FMrnote*      ind_mrnote_next;      // hash next
+    u32                 ind_mrnote_hashval;   // hash value
     algo::cstring       system;               // System or user note (glab only)
     algo::Smallstr250   mrnote;               // Identifier. must be in form issue.id
     algo::cstring       note;                 // Body of mr note
@@ -4922,11 +4771,12 @@ private:
 // global access: user (Lary, by rowid)
 // global access: ind_user (Thash, hash field user)
 struct FUser { // gcli.FUser
-    gcli::FUser*       ind_user_next;   // hash next
-    algo::Smallstr50   user;            //
-    u32                id;              //   0
-    algo::cstring      name;            //
-    bool               select;          //   false
+    gcli::FUser*       ind_user_next;      // hash next
+    u32                ind_user_hashval;   // hash value
+    algo::Smallstr50   user;               //
+    u32                id;                 //   0
+    algo::cstring      name;               //
+    bool               select;             //   false
     // func:gcli.FUser..AssignOp
     inline gcli::FUser&  operator =(const gcli::FUser &rhs) = delete;
     // func:gcli.FUser..CopyCtor
@@ -5068,22 +4918,6 @@ struct _db_gtype_curs {// cursor
     gcli::FDb *parent;
     i64 index;
     _db_gtype_curs(){ parent=NULL; index=0; }
-};
-
-
-struct _db_grepossh_curs {// cursor
-    typedef gcli::FGrepossh ChildType;
-    gcli::FDb *parent;
-    i64 index;
-    _db_grepossh_curs(){ parent=NULL; index=0; }
-};
-
-
-struct _db_grepogitport_curs {// cursor
-    typedef gcli::FGrepogitport ChildType;
-    gcli::FDb *parent;
-    i64 index;
-    _db_grepogitport_curs(){ parent=NULL; index=0; }
 };
 
 

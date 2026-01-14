@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -428,6 +428,7 @@ void amc::GenPrint(amc::FCtype &parent, amc::FCfmt &cfmt) {
     Ins(&R, print.comment, tempstr()<<"cfmt:"<<cfmt.cfmt<<"  printfmt:"<<cfmt.printfmt);
 
     if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Extern) {
+        print.acrkey << "cfmt:"<<cfmt.cfmt;
         print.extrn = true;
     } else if (strfmt == dmmeta_Strfmt_strfmt_String) {
         if (cfmt.printfmt == dmmeta_Printfmt_printfmt_Tuple || cfmt.printfmt == dmmeta_Printfmt_printfmt_Auto) {

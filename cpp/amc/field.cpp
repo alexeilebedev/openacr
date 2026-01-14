@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
@@ -77,6 +77,7 @@ void amc::tfunc_Field_Cleanup() {
         amc::FFunc& cleanup = amc::CreateCurFunc(true); {
             AddRetval(cleanup, "void", "", "");
         }
+        cleanup.acrkey << "fcleanup:"<<field.field;
         cleanup.extrn = true;
         Ins(&R, cleanup.comment, "User-defined cleanup function invoked for field $name of $Partype");
     }
@@ -89,6 +90,7 @@ void amc::tfunc_Field_Userinit() {
         amc::FFunc& func = amc::CreateCurFunc(true); {
             AddRetval(func, "void", "", "");
         }
+        func.acrkey << "fuserinit:"<<field.field;
         func.extrn = true;
         Ins(&R, func.comment, "User-defined init function invoked for field $name of $Partype");
     }
@@ -120,7 +122,7 @@ void amc::tfunc_Field2_ReadStrptrMaybe() {
     // or if the underlying type supports read.
     algo_lib::Replscope &R = amc::_db.genctx.R;
     amc::FField &field = *amc::_db.genctx.p_field;
-    amc::FCtype &ctype = *field.p_ctype;
+    //amc::FCtype &ctype = *field.p_ctype;
     bool ok = true;
     // need srcfield for raw
     ok = ok && !PadQ(field);
@@ -128,7 +130,7 @@ void amc::tfunc_Field2_ReadStrptrMaybe() {
     ok = ok && !field.c_cppfunc;// do not read these
     ok = ok && !GetLenfld(field);  // this field cannot be read
     ok = ok && !field.c_typefld; // this field cannot be read
-    ok = ok && !field.c_pmaskfld;
+    ok = ok && !field.c_pmaskfld;// this field cannot be "read"
     ok = ok && (ValQ(field) || field.reftype == dmmeta_Reftype_reftype_Bitfld);
     ok = ok && !amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"ReadStrptrMaybe"));
     bool has_set = amc::ind_func_Find(dmmeta::Func_Concat_field_name(field.field,"Set"));
@@ -139,7 +141,7 @@ void amc::tfunc_Field2_ReadStrptrMaybe() {
          <<Keyval("fflag",field.field)
          <<Keyval("comment", "fflag.cumulative can't be used on a field with Set function"));
     if (HasReadQ(*field.p_ctype) && ok) {
-        if (has_ctyperead && !has_set && !c_pmaskfld_N(ctype) && !field.c_fflag) {
+        if (has_ctyperead && !has_set && !c_pmaskfld_member_N(field) && !field.c_fflag) {
             field.ctype_read=true;// use ctype's function to read this field
         } else {
             amc::FFunc& doread = amc::CreateCurFunc();

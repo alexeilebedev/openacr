@@ -1,4 +1,4 @@
-// Copyright (C) 2024 AlgoRND
+// Copyright (C) 2024,2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -85,7 +85,7 @@ void abt::ComputeOod(abt::FBuilddir &builddir) {
 
     // compute out-of-date flag for each target (collect it from source files)
     // if a source file filter was specified, don't mark targets as out-of-date
-    if (_db.cmdline.srcfile.accepts_all) {
+    if (accepts_all_Get(_db.cmdline.srcfile.flags)) {
         ind_beg(abt::_db_zs_sel_target_curs, target,abt::_db) {
             ind_beg(abt::target_c_srcfile_curs, src,target) {
                 target.ood |= src.ood;

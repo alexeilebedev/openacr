@@ -1555,6 +1555,7 @@ inline acr_in::FNsssimfile& acr_in::_db_nsssimfile_curs_Access(_db_nsssimfile_cu
 inline void acr_in::FDispsig_Init(acr_in::FDispsig& dispsig) {
     dispsig.p_ns = NULL;
     dispsig.ind_dispsig_next = (acr_in::FDispsig*)-1; // (acr_in.FDb.ind_dispsig) not-in-hash
+    dispsig.ind_dispsig_hashval = 0; // stored hash value
 }
 
 // --- acr_in.FDispsig..Ctor
@@ -1606,6 +1607,7 @@ inline void acr_in::FFinput_Init(acr_in::FFinput& finput) {
     finput.p_ns = NULL;
     finput.p_field = NULL;
     finput.ind_finput_next = (acr_in::FFinput*)-1; // (acr_in.FDb.ind_finput) not-in-hash
+    finput.ind_finput_hashval = 0; // stored hash value
 }
 
 // --- acr_in.FFinput..Ctor
@@ -1654,9 +1656,9 @@ inline acr_in::FNsssimfile* acr_in::zd_nsssimfile_ns_First(acr_in::FNs& ns) {
 
 // --- acr_in.FNs.zd_nsssimfile_ns.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool acr_in::zd_nsssimfile_ns_InLlistQ(acr_in::FNsssimfile& row) {
+inline bool acr_in::ns_zd_nsssimfile_ns_InLlistQ(acr_in::FNsssimfile& row) {
     bool result = false;
-    result = !(row.zd_nsssimfile_ns_next == (acr_in::FNsssimfile*)-1);
+    result = !(row.ns_zd_nsssimfile_ns_next == (acr_in::FNsssimfile*)-1);
     return result;
 }
 
@@ -1676,14 +1678,14 @@ inline i32 acr_in::zd_nsssimfile_ns_N(const acr_in::FNs& ns) {
 
 // --- acr_in.FNs.zd_nsssimfile_ns.Next
 // Return pointer to next element in the list
-inline acr_in::FNsssimfile* acr_in::zd_nsssimfile_ns_Next(acr_in::FNsssimfile &row) {
-    return row.zd_nsssimfile_ns_next;
+inline acr_in::FNsssimfile* acr_in::ns_zd_nsssimfile_ns_Next(acr_in::FNsssimfile &row) {
+    return row.ns_zd_nsssimfile_ns_next;
 }
 
 // --- acr_in.FNs.zd_nsssimfile_ns.Prev
 // Return pointer to previous element in the list
-inline acr_in::FNsssimfile* acr_in::zd_nsssimfile_ns_Prev(acr_in::FNsssimfile &row) {
-    return row.zd_nsssimfile_ns_prev;
+inline acr_in::FNsssimfile* acr_in::ns_zd_nsssimfile_ns_Prev(acr_in::FNsssimfile &row) {
+    return row.ns_zd_nsssimfile_ns_prev;
 }
 
 // --- acr_in.FNs.zd_nsssimfile_ns.qLast
@@ -1703,6 +1705,7 @@ inline void acr_in::FNs_Init(acr_in::FNs& ns) {
     ns.zd_nsssimfile_ns_n = 0; // (acr_in.FNs.zd_nsssimfile_ns)
     ns.zd_nsssimfile_ns_tail = NULL; // (acr_in.FNs.zd_nsssimfile_ns)
     ns.ind_ns_next = (acr_in::FNs*)-1; // (acr_in.FDb.ind_ns) not-in-hash
+    ns.ind_ns_hashval = 0; // stored hash value
 }
 
 // --- acr_in.FNs.zd_nsssimfile_ns_curs.Reset
@@ -1720,7 +1723,7 @@ inline bool acr_in::ns_zd_nsssimfile_ns_curs_ValidQ(ns_zd_nsssimfile_ns_curs &cu
 // --- acr_in.FNs.zd_nsssimfile_ns_curs.Next
 // proceed to next item
 inline void acr_in::ns_zd_nsssimfile_ns_curs_Next(ns_zd_nsssimfile_ns_curs &curs) {
-    acr_in::FNsssimfile *next = (*curs.row).zd_nsssimfile_ns_next;
+    acr_in::FNsssimfile *next = (*curs.row).ns_zd_nsssimfile_ns_next;
     curs.row = next;
 }
 
@@ -1747,10 +1750,11 @@ inline void acr_in::FNsssimfile_Init(acr_in::FNsssimfile& nsssimfile) {
     nsssimfile.p_ns = NULL;
     nsssimfile.p_ssimfile = NULL;
     nsssimfile.ind_nsssimfile_next = (acr_in::FNsssimfile*)-1; // (acr_in.FDb.ind_nsssimfile) not-in-hash
-    nsssimfile.zd_nsssimfile_ns_next = (acr_in::FNsssimfile*)-1; // (acr_in.FNs.zd_nsssimfile_ns) not-in-list
-    nsssimfile.zd_nsssimfile_ns_prev = NULL; // (acr_in.FNs.zd_nsssimfile_ns)
-    nsssimfile.zd_nsssimfile_ssimfile_next = (acr_in::FNsssimfile*)-1; // (acr_in.FSsimfile.zd_nsssimfile_ssimfile) not-in-list
-    nsssimfile.zd_nsssimfile_ssimfile_prev = NULL; // (acr_in.FSsimfile.zd_nsssimfile_ssimfile)
+    nsssimfile.ind_nsssimfile_hashval = 0; // stored hash value
+    nsssimfile.ns_zd_nsssimfile_ns_next = (acr_in::FNsssimfile*)-1; // (acr_in.FNs.zd_nsssimfile_ns) not-in-list
+    nsssimfile.ns_zd_nsssimfile_ns_prev = NULL; // (acr_in.FNs.zd_nsssimfile_ns)
+    nsssimfile.ssimfile_zd_nsssimfile_ssimfile_next = (acr_in::FNsssimfile*)-1; // (acr_in.FSsimfile.zd_nsssimfile_ssimfile) not-in-list
+    nsssimfile.ssimfile_zd_nsssimfile_ssimfile_prev = NULL; // (acr_in.FSsimfile.zd_nsssimfile_ssimfile)
 }
 
 // --- acr_in.FNsssimfile..Ctor
@@ -1779,9 +1783,9 @@ inline acr_in::FNsssimfile* acr_in::zd_nsssimfile_ssimfile_First(acr_in::FSsimfi
 
 // --- acr_in.FSsimfile.zd_nsssimfile_ssimfile.InLlistQ
 // Return true if row is in the linked list, false otherwise
-inline bool acr_in::zd_nsssimfile_ssimfile_InLlistQ(acr_in::FNsssimfile& row) {
+inline bool acr_in::ssimfile_zd_nsssimfile_ssimfile_InLlistQ(acr_in::FNsssimfile& row) {
     bool result = false;
-    result = !(row.zd_nsssimfile_ssimfile_next == (acr_in::FNsssimfile*)-1);
+    result = !(row.ssimfile_zd_nsssimfile_ssimfile_next == (acr_in::FNsssimfile*)-1);
     return result;
 }
 
@@ -1801,14 +1805,14 @@ inline i32 acr_in::zd_nsssimfile_ssimfile_N(const acr_in::FSsimfile& ssimfile) {
 
 // --- acr_in.FSsimfile.zd_nsssimfile_ssimfile.Next
 // Return pointer to next element in the list
-inline acr_in::FNsssimfile* acr_in::zd_nsssimfile_ssimfile_Next(acr_in::FNsssimfile &row) {
-    return row.zd_nsssimfile_ssimfile_next;
+inline acr_in::FNsssimfile* acr_in::ssimfile_zd_nsssimfile_ssimfile_Next(acr_in::FNsssimfile &row) {
+    return row.ssimfile_zd_nsssimfile_ssimfile_next;
 }
 
 // --- acr_in.FSsimfile.zd_nsssimfile_ssimfile.Prev
 // Return pointer to previous element in the list
-inline acr_in::FNsssimfile* acr_in::zd_nsssimfile_ssimfile_Prev(acr_in::FNsssimfile &row) {
-    return row.zd_nsssimfile_ssimfile_prev;
+inline acr_in::FNsssimfile* acr_in::ssimfile_zd_nsssimfile_ssimfile_Prev(acr_in::FNsssimfile &row) {
+    return row.ssimfile_zd_nsssimfile_ssimfile_prev;
 }
 
 // --- acr_in.FSsimfile.zd_nsssimfile_ssimfile.qLast
@@ -1830,6 +1834,7 @@ inline void acr_in::FSsimfile_Init(acr_in::FSsimfile& ssimfile) {
     ssimfile.zd_ssimfile_next = (acr_in::FSsimfile*)-1; // (acr_in.FDb.zd_ssimfile) not-in-list
     ssimfile.zd_ssimfile_prev = NULL; // (acr_in.FDb.zd_ssimfile)
     ssimfile.ind_ssimfile_next = (acr_in::FSsimfile*)-1; // (acr_in.FDb.ind_ssimfile) not-in-hash
+    ssimfile.ind_ssimfile_hashval = 0; // stored hash value
 }
 
 // --- acr_in.FSsimfile.zd_nsssimfile_ssimfile_curs.Reset
@@ -1847,7 +1852,7 @@ inline bool acr_in::ssimfile_zd_nsssimfile_ssimfile_curs_ValidQ(ssimfile_zd_nsss
 // --- acr_in.FSsimfile.zd_nsssimfile_ssimfile_curs.Next
 // proceed to next item
 inline void acr_in::ssimfile_zd_nsssimfile_ssimfile_curs_Next(ssimfile_zd_nsssimfile_ssimfile_curs &curs) {
-    acr_in::FNsssimfile *next = (*curs.row).zd_nsssimfile_ssimfile_next;
+    acr_in::FNsssimfile *next = (*curs.row).ssimfile_zd_nsssimfile_ssimfile_next;
     curs.row = next;
 }
 
@@ -2021,6 +2026,7 @@ inline void acr_in::FTarget_Init(acr_in::FTarget& target) {
     target.c_targdep_child_max = 0; // (acr_in.FTarget.c_targdep_child)
     target.p_ns = NULL;
     target.ind_target_next = (acr_in::FTarget*)-1; // (acr_in.FDb.ind_target) not-in-hash
+    target.ind_target_hashval = 0; // stored hash value
     target.zd_targ_visit_next = (acr_in::FTarget*)-1; // (acr_in.FDb.zd_targ_visit) not-in-list
     target.zd_targ_visit_prev = NULL; // (acr_in.FDb.zd_targ_visit)
 }
@@ -2193,6 +2199,7 @@ inline void acr_in::FTuple_Init(acr_in::FTuple& tuple) {
     tuple.c_parent_max = 0; // (acr_in.FTuple.c_parent)
     tuple.deselect_visited = bool(false);
     tuple.ind_tuple_next = (acr_in::FTuple*)-1; // (acr_in.FDb.ind_tuple) not-in-hash
+    tuple.ind_tuple_hashval = 0; // stored hash value
     tuple.zd_select_next = (acr_in::FTuple*)-1; // (acr_in.FDb.zd_select) not-in-list
     tuple.zd_select_prev = NULL; // (acr_in.FDb.zd_select)
     tuple.zd_deselect_next = (acr_in::FTuple*)-1; // (acr_in.FDb.zd_deselect) not-in-list

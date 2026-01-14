@@ -76,7 +76,7 @@ enum samp_meng_MsgHeader_type_Enum {                              // samp_meng.M
     ,samp_meng_MsgHeader_type_samp_meng_NewUserMsg         = 6    // From matching engine: new user
     ,samp_meng_MsgHeader_type_samp_meng_NewUserReqMsg      = 14   // To matching engine: new user request
     ,samp_meng_MsgHeader_type_samp_meng_OrderTradeMsg      = 4    // From matching engine: trade order
-    ,samp_meng_MsgHeader_type_samp_meng_TextMsg            = 7    // debug message
+    ,samp_meng_MsgHeader_type_samp_meng_TextMsg            = 7    // Debug message
 };
 
 enum { samp_meng_MsgHeader_type_Enum_N = 11 };
@@ -237,11 +237,28 @@ void                 CancelReqMsg_Print(samp_meng::CancelReqMsg& row, algo::cstr
 // --- samp_meng.trace
 #pragma pack(push,1)
 struct trace { // samp_meng.trace
+    u64   dispatch_In_CancelReqMsg;              //   0  Total number of CancelReqMsg processed by samp_meng
+    u64   dispatch_In_CancelReqMsg_cycles;       //   0
+    u64   dispatch_In_MassCancelReqMsg;          //   0  Total number of MassCancelReqMsg processed by samp_meng
+    u64   dispatch_In_MassCancelReqMsg_cycles;   //   0
+    u64   dispatch_In_NewOrderReqMsg;            //   0  Total number of NewOrderReqMsg processed by samp_meng
+    u64   dispatch_In_NewOrderReqMsg_cycles;     //   0
+    u64   dispatch_In_NewSymbolReqMsg;           //   0  Total number of NewSymbolReqMsg processed by samp_meng
+    u64   dispatch_In_NewSymbolReqMsg_cycles;    //   0
+    u64   dispatch_In_NewUserReqMsg;             //   0  Total number of NewUserReqMsg processed by samp_meng
+    u64   dispatch_In_NewUserReqMsg_cycles;      //   0
+    u64   dispatch_In_TextMsg;                   //   0  Total number of TextMsg processed by samp_meng
+    u64   dispatch_In_TextMsg_cycles;            //   0
+    u64   dispatch_In_Unkmsg;                    //   0
+    u64   dispatch_In_Unkmsg_cycles;             //   0
     // func:samp_meng.trace..Ctor
     inline               trace() __attribute__((nothrow));
 };
 #pragma pack(pop)
 
+// Set all fields to initial values.
+// func:samp_meng.trace..Init
+void                 trace_Init(samp_meng::trace& parent);
 // print string representation of ROW to string STR
 // cfmt:samp_meng.trace.String  printfmt:Tuple
 // func:samp_meng.trace..Print
@@ -249,7 +266,7 @@ void                 trace_Print(samp_meng::trace& row, algo::cstring& str) __at
 
 // --- samp_meng.FDb
 // create: samp_meng.FDb._db (Global)
-struct FDb { // samp_meng.FDb
+struct FDb { // samp_meng.FDb: In-memory database
     samp_meng::FFdin*      fdin_lary[32];              // level array
     i32                    fdin_n;                     // number of elements in array
     command::samp_meng     cmdline;                    //
@@ -509,6 +526,9 @@ void                 ind_symbol_Remove(samp_meng::FSymbol& row) __attribute__((n
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:samp_meng.FDb.ind_symbol.Reserve
 void                 ind_symbol_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:samp_meng.FDb.ind_symbol.AbsReserve
+void                 ind_symbol_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -561,6 +581,9 @@ void                 ind_order_Remove(samp_meng::FOrder& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:samp_meng.FDb.ind_order.Reserve
 void                 ind_order_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:samp_meng.FDb.ind_order.AbsReserve
+void                 ind_order_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -652,6 +675,9 @@ void                 ind_user_Remove(samp_meng::FUser& row) __attribute__((nothr
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:samp_meng.FDb.ind_user.Reserve
 void                 ind_user_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:samp_meng.FDb.ind_user.AbsReserve
+void                 ind_user_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:samp_meng.FDb.fdin_curs.Reset
@@ -724,22 +750,22 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: fdin (Lary, by rowid)
 // global access: cd_fdin_eof (Llist)
 // global access: cd_fdin_read (Llist)
-struct FFdin { // samp_meng.FFdin: FD input
+struct FFdin { // samp_meng.FFdin: File descriptor input
     samp_meng::FFdin*   cd_fdin_eof_next;    // zslist link; -1 means not-in-list
     samp_meng::FFdin*   cd_fdin_eof_prev;    // previous element
     samp_meng::FFdin*   cd_fdin_read_next;   // zslist link; -1 means not-in-list
     samp_meng::FFdin*   cd_fdin_read_prev;   // previous element
     algo_lib::FIohook   iohook;              //
-    u8                  in_elems[8192];      // pointer to elements of inline array
+    u8*                 in_elems;            //   NULL  pointer to elements of indirect array
+    u32                 in_max;              //   0  current length of allocated array
     i32                 in_start;            // beginning of valid bytes (in bytes)
     i32                 in_end;              // end of valid bytes (in bytes)
-    bool                in_eof;              // no more data will be written to buffer
-    algo::Errcode       in_err;              // system error code
-    bool                in_msgvalid;         // current message is valid
     i32                 in_msglen;           // current message length
-    algo_lib::FIohook   in_iohook;           // edge-triggered hook for refilling buffer
+    algo::Errcode       in_err;              // system error code
+    algo_lib::FIohook   in_iohook;           // edge-triggered hook for the buffer
+    bool                in_eof;              // no more data will be written to buffer
+    bool                in_msgvalid;         // current message is valid
     bool                in_epoll_enable;     // use epoll?
-    enum { in_max = 8192 };
     // value field samp_meng.FFdin.iohook is not copiable
     // field samp_meng.FFdin.in prevents copy
     // func:samp_meng.FFdin..AssignOp
@@ -781,6 +807,12 @@ void                 in_EndRead(samp_meng::FFdin& fdin) __attribute__((nothrow))
 //
 // func:samp_meng.FFdin.in.GetMsg
 algo::aryptr<char>   in_GetMsg(samp_meng::FFdin& fdin) __attribute__((nothrow));
+// Set buffer size.
+// Unconditionally reallocate buffer to have size NEW_MAX
+// If the buffer has data in it, NEW_MAX is adjusted so that the data is not lost
+// (best to call this before filling the buffer)
+// func:samp_meng.FFdin.in.Realloc
+void                 in_Realloc(samp_meng::FFdin& fdin, int new_max) __attribute__((nothrow));
 // Return max. number of bytes in the buffer.
 // func:samp_meng.FFdin.in.Max
 inline i32           in_Max(samp_meng::FFdin& fdin) __attribute__((nothrow));
@@ -803,13 +835,17 @@ void                 in_SkipBytes(samp_meng::FFdin& fdin, int n) __attribute__((
 // Skip current message, if any.
 // func:samp_meng.FFdin.in.SkipMsg
 void                 in_SkipMsg(samp_meng::FFdin& fdin) __attribute__((nothrow));
-// Attempt to write buffer contents to fd
+// Attempt to write buffer contents to fbuf, return success
 // Write bytes to the buffer. If the entire block is written, return true,
 // Otherwise return false.
 // Bytes in the buffer are potentially shifted left to make room for the message.
 //
 // func:samp_meng.FFdin.in.WriteAll
 bool                 in_WriteAll(samp_meng::FFdin& fdin, u8 *in, i32 in_n) __attribute__((nothrow));
+// Write buffer contents to fbuf, reallocate as needed
+// Write bytes to the buffer. The entire block is always written
+// func:samp_meng.FFdin.in.WriteReserve
+void                 in_WriteReserve(samp_meng::FFdin& fdin, u8 *in, i32 in_n) __attribute__((nothrow));
 
 // Set all fields to initial values.
 // func:samp_meng.FFdin..Init
@@ -819,7 +855,7 @@ void                 FFdin_Uninit(samp_meng::FFdin& fdin) __attribute__((nothrow
 
 // --- samp_meng.I64Price8
 #pragma pack(push,1)
-struct I64Price8 { // samp_meng.I64Price8
+struct I64Price8 { // samp_meng.I64Price8: Price type (8 implied decimal places)
     i64   value;   //   0
     // func:samp_meng.I64Price8..EqOp
     inline bool          operator ==(const samp_meng::I64Price8 &rhs) const __attribute__((nothrow));
@@ -901,7 +937,7 @@ inline bool          I64Price8_Update(samp_meng::I64Price8 &lhs, samp_meng::I64P
 void                 I64Price8_Print(samp_meng::I64Price8 row, algo::cstring& str) __attribute__((nothrow));
 
 // --- samp_meng.Ordkey
-struct Ordkey { // samp_meng.Ordkey
+struct Ordkey { // samp_meng.Ordkey: Order key
     u64   price;   //   0
     u64   time;    //   0
     // func:samp_meng.Ordkey..EqOp
@@ -938,19 +974,20 @@ inline bool          Ordkey_Update(samp_meng::Ordkey &lhs, samp_meng::Ordkey& rh
 // global access: ind_order (Thash, hash field order)
 // access: samp_meng.FOrdq.bh_order (Bheap)
 // access: samp_meng.FUser.zd_order (Llist)
-struct FOrder { // samp_meng.FOrder
-    samp_meng::FOrder*     order_next;       // Pointer to next free element int tpool
-    samp_meng::FOrder*     ind_order_next;   // hash next
-    i64                    order;            //   0
-    samp_meng::FOrdq*      p_ordq;           // reference to parent row
-    samp_meng::I64Price8   price;            //
-    algo::UnTime           time;             //
-    u32                    qty;              //   0
-    samp_meng::Ordkey      ordkey;           //
-    samp_meng::FUser*      p_user;           // reference to parent row
-    i32                    bh_order_idx;     // index in heap; -1 means not-in-heap
-    samp_meng::FOrder*     zd_order_next;    // zslist link; -1 means not-in-list
-    samp_meng::FOrder*     zd_order_prev;    // previous element
+struct FOrder { // samp_meng.FOrder: Order record
+    samp_meng::FOrder*     order_next;           // Pointer to next free element int tpool
+    samp_meng::FOrder*     ind_order_next;       // hash next
+    u32                    ind_order_hashval;    // hash value
+    i64                    order;                //   0
+    samp_meng::FOrdq*      p_ordq;               // reference to parent row
+    samp_meng::I64Price8   price;                //
+    algo::UnTime           time;                 //
+    u32                    qty;                  //   0
+    samp_meng::Ordkey      ordkey;               //
+    samp_meng::FUser*      p_user;               // reference to parent row
+    i32                    ordq_bh_order_idx;    // index in heap; -1 means not-in-heap
+    samp_meng::FOrder*     user_zd_order_next;   // zslist link; -1 means not-in-list
+    samp_meng::FOrder*     user_zd_order_prev;   // previous element
     // func:samp_meng.FOrder..AssignOp
     inline samp_meng::FOrder& operator =(const samp_meng::FOrder &rhs) = delete;
     // func:samp_meng.FOrder..CopyCtor
@@ -982,7 +1019,7 @@ void                 FOrder_Uninit(samp_meng::FOrder& order) __attribute__((noth
 // create: samp_meng.FDb.ordq (Tpool)
 // access: samp_meng.FOrder.p_ordq (Upptr)
 // access: samp_meng.FSymbol.c_ordq (Ptrary)
-struct FOrdq { // samp_meng.FOrdq
+struct FOrdq { // samp_meng.FOrdq: Order queue record
     samp_meng::FOrdq*     ordq_next;              // Pointer to next free element int tpool
     u8                    side;                   //   0
     samp_meng::FSymbol*   p_symbol;               // reference to parent row
@@ -1074,7 +1111,7 @@ void                 FOrdq_Uninit(samp_meng::FOrdq& ordq) __attribute__((nothrow
 
 // --- samp_meng.Symbol
 #pragma pack(push,1)
-struct Symbol { // samp_meng.Symbol
+struct Symbol { // samp_meng.Symbol: Symbol name
     algo::RnullStr8   symbol;   //
     // func:samp_meng.Symbol..EqOp
     inline bool          operator ==(const samp_meng::Symbol &rhs) const __attribute__((nothrow));
@@ -1105,13 +1142,14 @@ void                 Symbol_Print(samp_meng::Symbol& row, algo::cstring& str) __
 // global access: symbol (Lary, by rowid)
 // global access: ind_symbol (Thash, hash field symbol)
 // access: samp_meng.FOrdq.p_symbol (Upptr)
-struct FSymbol { // samp_meng.FSymbol
-    samp_meng::FSymbol*   ind_symbol_next;   // hash next
-    samp_meng::Symbol     symbol;            //
-    i32                   id;                //   0
-    samp_meng::FOrdq**    c_ordq_elems;      // array of pointers
-    u32                   c_ordq_n;          // array of pointers
-    u32                   c_ordq_max;        // capacity of allocated array
+struct FSymbol { // samp_meng.FSymbol: Symbol record
+    samp_meng::FSymbol*   ind_symbol_next;      // hash next
+    u32                   ind_symbol_hashval;   // hash value
+    samp_meng::Symbol     symbol;               //
+    i32                   id;                   //   0
+    samp_meng::FOrdq**    c_ordq_elems;         // array of pointers
+    u32                   c_ordq_n;             // array of pointers
+    u32                   c_ordq_max;           // capacity of allocated array
     // reftype Ptrary of samp_meng.FSymbol.c_ordq prohibits copy
     // func:samp_meng.FSymbol..AssignOp
     inline samp_meng::FSymbol& operator =(const samp_meng::FSymbol &rhs) = delete;
@@ -1191,12 +1229,13 @@ void                 FSymbol_Uninit(samp_meng::FSymbol& symbol) __attribute__((n
 // global access: user (Lary, by rowid)
 // global access: ind_user (Thash, hash field user)
 // access: samp_meng.FOrder.p_user (Upptr)
-struct FUser { // samp_meng.FUser
-    samp_meng::FUser*    ind_user_next;   // hash next
-    i32                  user;            //   0
-    samp_meng::FOrder*   zd_order_head;   // zero-terminated doubly linked list
-    i32                  zd_order_n;      // zero-terminated doubly linked list
-    samp_meng::FOrder*   zd_order_tail;   // pointer to last element
+struct FUser { // samp_meng.FUser: User record
+    samp_meng::FUser*    ind_user_next;      // hash next
+    u32                  ind_user_hashval;   // hash value
+    i32                  user;               //   0
+    samp_meng::FOrder*   zd_order_head;      // zero-terminated doubly linked list
+    i32                  zd_order_n;         // zero-terminated doubly linked list
+    samp_meng::FOrder*   zd_order_tail;      // pointer to last element
     // reftype Llist of samp_meng.FUser.zd_order prohibits copy
     // func:samp_meng.FUser..AssignOp
     inline samp_meng::FUser& operator =(const samp_meng::FUser &rhs) = delete;
@@ -1222,7 +1261,7 @@ inline bool          zd_order_EmptyQ(samp_meng::FUser& user) __attribute__((__wa
 inline samp_meng::FOrder* zd_order_First(samp_meng::FUser& user) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:samp_meng.FUser.zd_order.InLlistQ
-inline bool          zd_order_InLlistQ(samp_meng::FOrder& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          user_zd_order_InLlistQ(samp_meng::FOrder& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:samp_meng.FUser.zd_order.Insert
 void                 zd_order_Insert(samp_meng::FUser& user, samp_meng::FOrder& row) __attribute__((nothrow));
@@ -1234,10 +1273,10 @@ inline samp_meng::FOrder* zd_order_Last(samp_meng::FUser& user) __attribute__((_
 inline i32           zd_order_N(const samp_meng::FUser& user) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:samp_meng.FUser.zd_order.Next
-inline samp_meng::FOrder* zd_order_Next(samp_meng::FOrder &row) __attribute__((__warn_unused_result__, nothrow));
+inline samp_meng::FOrder* user_zd_order_Next(samp_meng::FOrder &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:samp_meng.FUser.zd_order.Prev
-inline samp_meng::FOrder* zd_order_Prev(samp_meng::FOrder &row) __attribute__((__warn_unused_result__, nothrow));
+inline samp_meng::FOrder* user_zd_order_Prev(samp_meng::FOrder &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:samp_meng.FUser.zd_order.Remove
 void                 zd_order_Remove(samp_meng::FUser& user, samp_meng::FOrder& row) __attribute__((nothrow));
@@ -1432,7 +1471,7 @@ void                 MassCancelReqMsg_Print(samp_meng::MassCancelReqMsg& row, al
 // access: samp_meng.TextMsg.base (Base)
 // access: samp_meng.MsgHeader_curs.msg (Ptr)
 #pragma pack(push,1)
-struct MsgHeader { // samp_meng.MsgHeader
+struct MsgHeader { // samp_meng.MsgHeader: Message header
     u8   type;     //   0
     u8   length;   //   0
     // func:samp_meng.MsgHeader..Ctor
@@ -1891,7 +1930,7 @@ void                 OrderTradeMsg_Print(samp_meng::OrderTradeMsg& row, algo::cs
 
 // --- samp_meng.TextMsg
 #pragma pack(push,1)
-struct TextMsg { // samp_meng.TextMsg: debug message
+struct TextMsg { // samp_meng.TextMsg: Debug message
     u8   type;     //   7
     u8   length;   //   ssizeof(parent) + (0)
     // var-length field samp_meng.TextMsg.text starts here. access it with text_Addr

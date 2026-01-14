@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -122,4 +122,50 @@ void atf_unit::unittest_algo_Base64() {
                       "\xab\xb2\xdb\xaf\xc3\x1c\xb3\xd3\x5d\xb7\xe3\x9e\xbb\xf3\xdf\xbf"
                       ,16*3),
                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/");
+}
+
+
+void atf_unit::unittest_algo_lib_PrintUuid() {
+    {
+        algo::Uuid dflt;
+        cstring dflt_str;
+        algo::Uuid_Print(dflt,dflt_str);
+        vrfyeq_(dflt_str,"00000000-0000-0000-0000-000000000000");
+    }
+    {
+        algo::Uuid some;
+        const u8 bytes[] = {0x01,0x23,0x45,0x67,0x89,0xab,0xcd,0xef,0xfe,0xdc,0xba,0x98,0x76,0x54,0x32,0x10};
+        memcpy(some.value_elems,bytes,sizeof bytes);
+        cstring some_str;
+        algo::Uuid_Print(some,some_str);
+        vrfyeq_(some_str,"01234567-89ab-cdef-fedc-ba9876543210");
+    }
+}
+
+
+void atf_unit::unittest_algo_lib_ReadUuid() {
+    algo::Uuid uuid;
+    vrfy_(algo::Uuid_ReadStrptrMaybe(uuid,"01234567-89ab-cdef-fedc-ba9876543210"));
+    vrfyeq_(uuid.value_elems[0],0x01);
+    vrfyeq_(uuid.value_elems[1],0x23);
+    vrfyeq_(uuid.value_elems[2],0x45);
+    vrfyeq_(uuid.value_elems[3],0x67);
+    vrfyeq_(uuid.value_elems[4],0x89);
+    vrfyeq_(uuid.value_elems[5],0xab);
+    vrfyeq_(uuid.value_elems[6],0xcd);
+    vrfyeq_(uuid.value_elems[7],0xef);
+    vrfyeq_(uuid.value_elems[8],0xfe);
+    vrfyeq_(uuid.value_elems[9],0xdc);
+    vrfyeq_(uuid.value_elems[10],0xba);
+    vrfyeq_(uuid.value_elems[11],0x98);
+    vrfyeq_(uuid.value_elems[12],0x76);
+    vrfyeq_(uuid.value_elems[13],0x54);
+    vrfyeq_(uuid.value_elems[14],0x32);
+    vrfyeq_(uuid.value_elems[15],0x10);
+    vrfy_(!algo::Uuid_ReadStrptrMaybe(uuid,""));
+    vrfy_(!algo::Uuid_ReadStrptrMaybe(uuid,"01234567-89ab-cdef-fedc-ba987654321001"));
+    vrfy_(!algo::Uuid_ReadStrptrMaybe(uuid,"01234567-89ab-cdef-fedc-ba98765432101"));
+    vrfy_(!algo::Uuid_ReadStrptrMaybe(uuid,"0123456-89ab-cdef-fedc-ba98765432101"));
+    vrfy_(!algo::Uuid_ReadStrptrMaybe(uuid,"012345671-89ab-cdef-fedc-ba987654321"));
+    vrfy_(!algo::Uuid_ReadStrptrMaybe(uuid,"ZDSK"));
 }

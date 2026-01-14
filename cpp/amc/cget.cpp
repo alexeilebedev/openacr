@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
 // License: GPL
@@ -29,6 +29,7 @@ static amc::FFunc* CreateFunc(amc::FCtype& ctype, strptr fconst){
     tempstr name(fconst);
     Translate(name, ".", "_");
     algo_lib::Replscope R;
+    R.strict=2;
     Set(R, "$Ns"    , ns_Get(ctype));
     Set(R, "$Ctype" , name_Get(ctype));
     Set(R, "$Fname" , name);
@@ -51,6 +52,7 @@ static amc::FFunc* CreateFunc(amc::FCtype& ctype, strptr fconst){
 
 static void GenBoolFunc(amc::FCtype& ctype, amc::FField& field){
     algo_lib::Replscope R;
+    R.strict=2;
     Set(R, "$Field" , name_Get(field));
     amc::FFunc* func = CreateFunc(ctype, Subst(R, "$FieldQ"));
     if(func){
@@ -61,6 +63,7 @@ static void GenBoolFunc(amc::FCtype& ctype, amc::FField& field){
 
 static void GenInlineFconstFunc(amc::FCtype& ctype, amc::FField& field, amc::FFconst& fconst){
     algo_lib::Replscope R;
+    R.strict=2;
     Set(R, "$Field"    , FieldvalExpr(NULL, field, "row"));
     Set(R, "$Fconst"   , name_Get(fconst));
     Set(R, "$Constval" , fconst.cpp_name);
@@ -74,6 +77,7 @@ static void GenInlineFconstFunc(amc::FCtype& ctype, amc::FField& field, amc::FFc
 
 static void GenFarFconstFunc(amc::FCtype& ctype, amc::FField& field, amc::FCtype& arg){
     algo_lib::Replscope R;
+    R.strict=2;
     Set(R, "$Ns"       , ns_Get(ctype));
     Set(R, "$Ctype"    , name_Get(ctype));
     Set(R, "$Field"    , FieldvalExpr(NULL, field, "row"));

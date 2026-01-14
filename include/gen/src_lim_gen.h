@@ -362,6 +362,9 @@ void                 ind_gitfile_Remove(src_lim::FGitfile& row) __attribute__((n
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:src_lim.FDb.ind_gitfile.Reserve
 void                 ind_gitfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:src_lim.FDb.ind_gitfile.AbsReserve
+void                 ind_gitfile_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -475,13 +478,14 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // global access: ind_gitfile (Thash, hash field gitfile)
 // access: src_lim.FTargsrc.p_gitfile (Upptr)
 struct FGitfile { // src_lim.FGitfile
-    src_lim::FGitfile*   ind_gitfile_next;   // hash next
-    algo::Smallstr200    gitfile;            //
-    src_lim::FInclude*   zd_include_head;    // zero-terminated doubly linked list
-    i32                  zd_include_n;       // zero-terminated doubly linked list
-    src_lim::FInclude*   zd_include_tail;    // pointer to last element
-    src_lim::FLinelim*   c_linelim;          // optional pointer
-    src_lim::FTargsrc*   c_targsrc;          // optional pointer
+    src_lim::FGitfile*   ind_gitfile_next;      // hash next
+    u32                  ind_gitfile_hashval;   // hash value
+    algo::Smallstr200    gitfile;               //
+    src_lim::FInclude*   zd_include_head;       // zero-terminated doubly linked list
+    i32                  zd_include_n;          // zero-terminated doubly linked list
+    src_lim::FInclude*   zd_include_tail;       // pointer to last element
+    src_lim::FLinelim*   c_linelim;             // optional pointer
+    src_lim::FTargsrc*   c_targsrc;             // optional pointer
     // reftype Llist of src_lim.FGitfile.zd_include prohibits copy
     // x-reference on src_lim.FGitfile.c_linelim prevents copy
     // x-reference on src_lim.FGitfile.c_targsrc prevents copy
@@ -520,7 +524,7 @@ inline bool          zd_include_EmptyQ(src_lim::FGitfile& gitfile) __attribute__
 inline src_lim::FInclude* zd_include_First(src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return true if row is in the linked list, false otherwise
 // func:src_lim.FGitfile.zd_include.InLlistQ
-inline bool          zd_include_InLlistQ(src_lim::FInclude& row) __attribute__((__warn_unused_result__, nothrow));
+inline bool          gitfile_zd_include_InLlistQ(src_lim::FInclude& row) __attribute__((__warn_unused_result__, nothrow));
 // Insert row into linked list. If row is already in linked list, do nothing.
 // func:src_lim.FGitfile.zd_include.Insert
 void                 zd_include_Insert(src_lim::FGitfile& gitfile, src_lim::FInclude& row) __attribute__((nothrow));
@@ -532,10 +536,10 @@ inline src_lim::FInclude* zd_include_Last(src_lim::FGitfile& gitfile) __attribut
 inline i32           zd_include_N(const src_lim::FGitfile& gitfile) __attribute__((__warn_unused_result__, nothrow, pure));
 // Return pointer to next element in the list
 // func:src_lim.FGitfile.zd_include.Next
-inline src_lim::FInclude* zd_include_Next(src_lim::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
+inline src_lim::FInclude* gitfile_zd_include_Next(src_lim::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
 // Return pointer to previous element in the list
 // func:src_lim.FGitfile.zd_include.Prev
-inline src_lim::FInclude* zd_include_Prev(src_lim::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
+inline src_lim::FInclude* gitfile_zd_include_Prev(src_lim::FInclude &row) __attribute__((__warn_unused_result__, nothrow));
 // Remove element from index. If element is not in index, do nothing.
 // func:src_lim.FGitfile.zd_include.Remove
 void                 zd_include_Remove(src_lim::FGitfile& gitfile, src_lim::FInclude& row) __attribute__((nothrow));
@@ -586,11 +590,11 @@ void                 FGitfile_Uninit(src_lim::FGitfile& gitfile) __attribute__((
 // global access: include (Lary, by rowid)
 // access: src_lim.FGitfile.zd_include (Llist)
 struct FInclude { // src_lim.FInclude
-    src_lim::FInclude*   zd_include_next;   // zslist link; -1 means not-in-list
-    src_lim::FInclude*   zd_include_prev;   // previous element
-    algo::Smallstr200    include;           //
-    bool                 sys;               //   false
-    algo::Comment        comment;           //
+    src_lim::FInclude*   gitfile_zd_include_next;   // zslist link; -1 means not-in-list
+    src_lim::FInclude*   gitfile_zd_include_prev;   // previous element
+    algo::Smallstr200    include;                   //
+    bool                 sys;                       //   false
+    algo::Comment        comment;                   //
     // func:src_lim.FInclude..AssignOp
     inline src_lim::FInclude& operator =(const src_lim::FInclude &rhs) = delete;
     // func:src_lim.FInclude..CopyCtor

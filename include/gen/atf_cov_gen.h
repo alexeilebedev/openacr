@@ -155,13 +155,14 @@ void                 FCovfile_Uninit(atf_cov::FCovfile& covfile) __attribute__((
 // global access: ind_covline (Thash, hash field covline)
 // access: atf_cov.FGitfile.c_covline (Ptrary)
 struct FCovline { // atf_cov.FCovline
-    algo::Smallstr200    covline;                    // file:line
+    algo::cstring        covline;                    // Key: file:line
     char                 flag;                       //   'N'  Flag
     u32                  hit;                        //   0  Number of hits
     algo::cstring        text;                       // Line text
     atf_cov::FGitfile*   p_gitfile;                  // reference to parent row
     bool                 gitfile_c_covline_in_ary;   //   false  membership flag
     atf_cov::FCovline*   ind_covline_next;           // hash next
+    u32                  ind_covline_hashval;        // hash value
     // x-reference on atf_cov.FCovline.p_gitfile prevents copy
     // func:atf_cov.FCovline..AssignOp
     inline atf_cov::FCovline& operator =(const atf_cov::FCovline &rhs) = delete;
@@ -400,6 +401,9 @@ void                 ind_covline_Remove(atf_cov::FCovline& row) __attribute__((n
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_cov.FDb.ind_covline.Reserve
 void                 ind_covline_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_cov.FDb.ind_covline.AbsReserve
+void                 ind_covline_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -465,6 +469,9 @@ void                 ind_target_Remove(atf_cov::FTarget& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_cov.FDb.ind_target.Reserve
 void                 ind_target_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_cov.FDb.ind_target.AbsReserve
+void                 ind_target_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -527,6 +534,9 @@ void                 ind_targsrc_Remove(atf_cov::FTargsrc& row) __attribute__((n
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_cov.FDb.ind_targsrc.Reserve
 void                 ind_targsrc_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_cov.FDb.ind_targsrc.AbsReserve
+void                 ind_targsrc_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -592,6 +602,9 @@ void                 ind_gitfile_Remove(atf_cov::FGitfile& row) __attribute__((n
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_cov.FDb.ind_gitfile.Reserve
 void                 ind_gitfile_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_cov.FDb.ind_gitfile.AbsReserve
+void                 ind_gitfile_AbsReserve(int n) __attribute__((nothrow));
 
 // Allocate memory for new default row.
 // If out of memory, process is killed.
@@ -734,6 +747,9 @@ void                 ind_tgtcov_Remove(atf_cov::FTgtcov& row) __attribute__((not
 // Reserve enough room in the hash for N more elements. Return success code.
 // func:atf_cov.FDb.ind_tgtcov.Reserve
 void                 ind_tgtcov_Reserve(int n) __attribute__((nothrow));
+// Reserve enough room for exacty N elements. Return success code.
+// func:atf_cov.FDb.ind_tgtcov.AbsReserve
+void                 ind_tgtcov_AbsReserve(int n) __attribute__((nothrow));
 
 // cursor points to valid item
 // func:atf_cov.FDb.covline_curs.Reset
@@ -832,13 +848,14 @@ void                 FDb_Uninit() __attribute__((nothrow));
 // access: atf_cov.FCovline.p_gitfile (Upptr)
 // access: atf_cov.FTargsrc.p_gitfile (Upptr)
 struct FGitfile { // atf_cov.FGitfile
-    atf_cov::FGitfile*    ind_gitfile_next;   // hash next
-    algo::Smallstr200     gitfile;            //
-    atf_cov::FTargsrc*    c_targsrc;          // optional pointer
-    atf_cov::FCovline**   c_covline_elems;    // array of pointers
-    u32                   c_covline_n;        // array of pointers
-    u32                   c_covline_max;      // capacity of allocated array
-    atf_cov::FCovfile*    c_covfile;          // optional pointer
+    atf_cov::FGitfile*    ind_gitfile_next;      // hash next
+    u32                   ind_gitfile_hashval;   // hash value
+    algo::Smallstr200     gitfile;               //
+    atf_cov::FTargsrc*    c_targsrc;             // optional pointer
+    atf_cov::FCovline**   c_covline_elems;       // array of pointers
+    u32                   c_covline_n;           // array of pointers
+    u32                   c_covline_max;         // capacity of allocated array
+    atf_cov::FCovfile*    c_covfile;             // optional pointer
     // x-reference on atf_cov.FGitfile.c_targsrc prevents copy
     // reftype Ptrary of atf_cov.FGitfile.c_covline prohibits copy
     // x-reference on atf_cov.FGitfile.c_covfile prevents copy
@@ -947,13 +964,14 @@ void                 FGitfile_Uninit(atf_cov::FGitfile& gitfile) __attribute__((
 // global access: ind_target (Thash, hash field target)
 // access: atf_cov.FTargsrc.p_target (Upptr)
 struct FTarget { // atf_cov.FTarget
-    atf_cov::FTarget*      ind_target_next;   // hash next
-    algo::Smallstr16       target;            // Primary key - name of target
-    atf_cov::FTargsrc**    c_targsrc_elems;   // array of pointers
-    u32                    c_targsrc_n;       // array of pointers
-    u32                    c_targsrc_max;     // capacity of allocated array
-    atf_cov::FCovtarget*   c_covtarget;       // optional pointer
-    atf_cov::FTgtcov*      c_tgtcov;          // optional pointer
+    atf_cov::FTarget*      ind_target_next;      // hash next
+    u32                    ind_target_hashval;   // hash value
+    algo::Smallstr16       target;               // Primary key - name of target
+    atf_cov::FTargsrc**    c_targsrc_elems;      // array of pointers
+    u32                    c_targsrc_n;          // array of pointers
+    u32                    c_targsrc_max;        // capacity of allocated array
+    atf_cov::FCovtarget*   c_covtarget;          // optional pointer
+    atf_cov::FTgtcov*      c_tgtcov;             // optional pointer
     // reftype Ptrary of atf_cov.FTarget.c_targsrc prohibits copy
     // x-reference on atf_cov.FTarget.c_covtarget prevents copy
     // x-reference on atf_cov.FTarget.c_tgtcov prevents copy
@@ -1061,6 +1079,7 @@ void                 FTarget_Uninit(atf_cov::FTarget& target) __attribute__((not
 // access: atf_cov.FTarget.c_targsrc (Ptrary)
 struct FTargsrc { // atf_cov.FTargsrc
     atf_cov::FTargsrc*   ind_targsrc_next;          // hash next
+    u32                  ind_targsrc_hashval;       // hash value
     algo::Smallstr100    targsrc;                   //
     algo::Comment        comment;                   //
     atf_cov::FGitfile*   p_gitfile;                 // reference to parent row
@@ -1113,11 +1132,12 @@ void                 FTargsrc_Uninit(atf_cov::FTargsrc& targsrc) __attribute__((
 // global access: ind_tgtcov (Thash, hash field target)
 // access: atf_cov.FTarget.c_tgtcov (Ptr)
 struct FTgtcov { // atf_cov.FTgtcov
-    atf_cov::FTgtcov*   ind_tgtcov_next;   // hash next
-    algo::Smallstr16    target;            // Target
-    algo::U32Dec2       cov_min;           // Minimal coverage limit
-    algo::U32Dec2       maxerr;            // Tolerable error
-    algo::Comment       comment;           //
+    atf_cov::FTgtcov*   ind_tgtcov_next;      // hash next
+    u32                 ind_tgtcov_hashval;   // hash value
+    algo::Smallstr16    target;               // Target
+    algo::U32Dec2       cov_min;              // Minimal coverage limit
+    algo::U32Dec2       maxerr;               // Tolerable error
+    algo::Comment       comment;              //
     // func:atf_cov.FTgtcov..AssignOp
     inline atf_cov::FTgtcov& operator =(const atf_cov::FTgtcov &rhs) = delete;
     // func:atf_cov.FTgtcov..CopyCtor

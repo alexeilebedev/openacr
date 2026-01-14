@@ -1,5 +1,5 @@
-#!/bin/sh
-# Copyright (C) 2023-2024 AlgoRND
+#!/usr/bin/env bash
+# Copyright (C) 2023-2026 AlgoRND
 #
 # License: GPL
 # This program is free software: you can redistribute it and/or modify
@@ -16,17 +16,4 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-(
-    # delete commands for all scriptfiles
-    acr scriptfile -cmd 'echo acr.delete dev.scriptfile gitfile:"$gitfile"' | bash
-    # search for them again -- this undoes the deletion
-    # -L follows symlinks
-    for X in $(find bin -exec file -L {} \; | egrep -i script | cut -f1 -d: | egrep -v "(~$|bin/bootstrap/)"); do
-        echo dev.scriptfile gitfile:$X
-    done
-    for X in $(find bin -type f -executable | grep -v \~); do
-        if head -1 $X | grep python >/dev/null; then
-            echo dev.scriptfile gitfile:$X
-        fi
-    done
-) | acr -merge -write -print:N
+atf_ci update_script -check_clean:N

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2020-2023 Astra
 // Copyright (C) 2019 NYSE | Intercontinental Exchange
 //
@@ -56,7 +56,7 @@ static int FlockTimeout(int fd, algo::UnDiff wait_timeout) {
 // Otherwise, algo_lib::_db.errtext (DetachBadTags()) contains human-readable description of error.
 // If WAIT_TIMEOUT is non-zero, block up to WAIT_TIMEOUT seconds before failing
 // Write pid to file specified in NAME, and lock file using flock().
-bool algo_lib::LockFileInit(algo_lib::FLockfile &lockfile, strptr name, algo::FailokQ fail_ok, algo::UnDiff wait_timeout) {
+bool algo_lib::LockFileInit(algo_lib::FLockfile &lockfile, strptr name, algo::FailokQ fail_ok DFLTVAL(algo::FailokQ(false)), algo::UnDiff wait_timeout DFLTVAL(algo::UnDiff())) {
     cstring &err = algo_lib::ResetErrtext();
     bool was_open = ValidQ(lockfile.fildes.fd);
     if (was_open) {
@@ -127,26 +127,8 @@ bool algo_lib::WritePid(algo_lib::FLockfile &lockfile) {
 
 // -----------------------------------------------------------------------------
 
-// Non-blocking attempt to lock LOCKFILE
-// Return success status
-// If FAIL_OK is FALSE, throw exception on error (must succeed)
-bool algo_lib::LockFileInit(algo_lib::FLockfile &lockfile, strptr name, algo::FailokQ fail_ok) {
-    return LockFileInit(lockfile, name, fail_ok, algo::UnDiff());
-}
-
-// -----------------------------------------------------------------------------
-
-// Non-blocking attempt to lock LOCKFILE.
-// Throw exception on error.
-// If the function returns, it has succeeded.
-void algo_lib::LockFileInit(algo_lib::FLockfile &lockfile, strptr name) {
-    (void)LockFileInit(lockfile, name, algo::FailokQ(false), algo::UnDiff());
-}
-
-// -----------------------------------------------------------------------------
-
 // Read contents of lock file FNAME, extracting the pid that's stored in there.
 // On failure, return 0
 pid_t algo_lib::LockFileRead(strptr fname) {
-    return algo::ParseU32(FileToString(fname), 0);
+    return algo::ParseU32(FileToString(fname, algo::FileFlags()), 0);
 }

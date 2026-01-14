@@ -29,6 +29,31 @@ inline void pad_byte_Init(pad_byte& parent) {
     parent.value = u8(0);
 }
 
+// --- bool..Hash
+inline u32 bool_Hash(u32 prev, bool rhs) {
+    prev = _mm_crc32_u8(prev,rhs);
+    return prev;
+}
+
+// --- bool..Lt
+inline bool bool_Lt(bool lhs, bool rhs) {
+    return lhs < rhs;
+}
+
+// --- bool..Cmp
+inline i32 bool_Cmp(bool lhs, bool rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
+}
+
+// --- bool..Eq
+inline bool bool_Eq(bool lhs, bool rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
+}
+
 // --- bool..Update
 // Set value. Return true if new value is different from old value.
 inline bool bool_Update(bool &lhs, bool rhs) {
@@ -39,6 +64,31 @@ inline bool bool_Update(bool &lhs, bool rhs) {
     return ret;
 }
 
+// --- char..Hash
+inline u32 char_Hash(u32 prev, char rhs) {
+    prev = _mm_crc32_u8(prev,rhs);
+    return prev;
+}
+
+// --- char..Lt
+inline bool char_Lt(char lhs, char rhs) {
+    return lhs < rhs;
+}
+
+// --- char..Cmp
+inline i32 char_Cmp(char lhs, char rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
+}
+
+// --- char..Eq
+inline bool char_Eq(char lhs, char rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
+}
+
 // --- char..Update
 // Set value. Return true if new value is different from old value.
 inline bool char_Update(char &lhs, char rhs) {
@@ -47,6 +97,28 @@ inline bool char_Update(char &lhs, char rhs) {
         lhs = rhs; // update
     }
     return ret;
+}
+
+// --- double..Hash
+inline u32 double_Hash(u32 prev, double rhs) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+    u64 val0 = *(u64*)((u8*)&rhs + 0);
+    prev = _mm_crc32_u64(prev, val0);
+#pragma GCC diagnostic pop
+    return prev;
+}
+
+// --- double..Lt
+inline bool double_Lt(double lhs, double rhs) {
+    return lhs < rhs;
+}
+
+// --- double..Cmp
+inline i32 double_Cmp(double lhs, double rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
 }
 
 // --- double..UpdateMax
@@ -81,6 +153,13 @@ inline double double_Max(double lhs, double rhs) {
     return rhs < lhs ? lhs : rhs;
 }
 
+// --- double..Eq
+inline bool double_Eq(double lhs, double rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
+}
+
 // --- double..Update
 // Set value. Return true if new value is different from old value.
 inline bool double_Update(double &lhs, double rhs) {
@@ -89,6 +168,28 @@ inline bool double_Update(double &lhs, double rhs) {
         lhs = rhs; // update
     }
     return ret;
+}
+
+// --- float..Hash
+inline u32 float_Hash(u32 prev, float rhs) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+    u32 val0 = *(u32*)((u8*)&rhs + 0);
+    prev = _mm_crc32_u32(prev, val0);
+#pragma GCC diagnostic pop
+    return prev;
+}
+
+// --- float..Lt
+inline bool float_Lt(float lhs, float rhs) {
+    return lhs < rhs;
+}
+
+// --- float..Cmp
+inline i32 float_Cmp(float lhs, float rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
 }
 
 // --- float..UpdateMax
@@ -123,6 +224,13 @@ inline float float_Max(float lhs, float rhs) {
     return rhs < lhs ? lhs : rhs;
 }
 
+// --- float..Eq
+inline bool float_Eq(float lhs, float rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
+}
+
 // --- float..Update
 // Set value. Return true if new value is different from old value.
 inline bool float_Update(float &lhs, float rhs) {
@@ -131,6 +239,24 @@ inline bool float_Update(float &lhs, float rhs) {
         lhs = rhs; // update
     }
     return ret;
+}
+
+// --- i16..Hash
+inline u32 i16_Hash(u32 prev, i16 rhs) {
+    prev = _mm_crc32_u16(prev,rhs);
+    return prev;
+}
+
+// --- i16..Lt
+inline bool i16_Lt(i16 lhs, i16 rhs) {
+    return lhs < rhs;
+}
+
+// --- i16..Cmp
+inline i32 i16_Cmp(i16 lhs, i16 rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
 }
 
 // --- i16..UpdateMax
@@ -165,6 +291,13 @@ inline i16 i16_Max(i16 lhs, i16 rhs) {
     return rhs < lhs ? lhs : rhs;
 }
 
+// --- i16..Eq
+inline bool i16_Eq(i16 lhs, i16 rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
+}
+
 // --- i16..Update
 // Set value. Return true if new value is different from old value.
 inline bool i16_Update(i16 &lhs, i16 rhs) {
@@ -173,6 +306,24 @@ inline bool i16_Update(i16 &lhs, i16 rhs) {
         lhs = rhs; // update
     }
     return ret;
+}
+
+// --- i32..Hash
+inline u32 i32_Hash(u32 prev, i32 rhs) {
+    prev = _mm_crc32_u32(prev,rhs);
+    return prev;
+}
+
+// --- i32..Lt
+inline bool i32_Lt(i32 lhs, i32 rhs) {
+    return lhs < rhs;
+}
+
+// --- i32..Cmp
+inline i32 i32_Cmp(i32 lhs, i32 rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
 }
 
 // --- i32..UpdateMax
@@ -207,6 +358,13 @@ inline i32 i32_Max(i32 lhs, i32 rhs) {
     return rhs < lhs ? lhs : rhs;
 }
 
+// --- i32..Eq
+inline bool i32_Eq(i32 lhs, i32 rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
+}
+
 // --- i32..Update
 // Set value. Return true if new value is different from old value.
 inline bool i32_Update(i32 &lhs, i32 rhs) {
@@ -215,6 +373,24 @@ inline bool i32_Update(i32 &lhs, i32 rhs) {
         lhs = rhs; // update
     }
     return ret;
+}
+
+// --- i64..Hash
+inline u32 i64_Hash(u32 prev, i64 rhs) {
+    prev = _mm_crc32_u64(prev,rhs);
+    return prev;
+}
+
+// --- i64..Lt
+inline bool i64_Lt(i64 lhs, i64 rhs) {
+    return lhs < rhs;
+}
+
+// --- i64..Cmp
+inline i32 i64_Cmp(i64 lhs, i64 rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
 }
 
 // --- i64..UpdateMax
@@ -249,6 +425,13 @@ inline i64 i64_Max(i64 lhs, i64 rhs) {
     return rhs < lhs ? lhs : rhs;
 }
 
+// --- i64..Eq
+inline bool i64_Eq(i64 lhs, i64 rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
+}
+
 // --- i64..Update
 // Set value. Return true if new value is different from old value.
 inline bool i64_Update(i64 &lhs, i64 rhs) {
@@ -257,6 +440,24 @@ inline bool i64_Update(i64 &lhs, i64 rhs) {
         lhs = rhs; // update
     }
     return ret;
+}
+
+// --- i8..Hash
+inline u32 i8_Hash(u32 prev, i8 rhs) {
+    prev = _mm_crc32_u8(prev,rhs);
+    return prev;
+}
+
+// --- i8..Lt
+inline bool i8_Lt(i8 lhs, i8 rhs) {
+    return lhs < rhs;
+}
+
+// --- i8..Cmp
+inline i32 i8_Cmp(i8 lhs, i8 rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
 }
 
 // --- i8..UpdateMax
@@ -291,6 +492,13 @@ inline i8 i8_Max(i8 lhs, i8 rhs) {
     return rhs < lhs ? lhs : rhs;
 }
 
+// --- i8..Eq
+inline bool i8_Eq(i8 lhs, i8 rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
+}
+
 // --- i8..Update
 // Set value. Return true if new value is different from old value.
 inline bool i8_Update(i8 &lhs, i8 rhs) {
@@ -299,6 +507,24 @@ inline bool i8_Update(i8 &lhs, i8 rhs) {
         lhs = rhs; // update
     }
     return ret;
+}
+
+// --- u8..Hash
+inline u32 u8_Hash(u32 prev, u8 rhs) {
+    prev = _mm_crc32_u8(prev,rhs);
+    return prev;
+}
+
+// --- u8..Lt
+inline bool u8_Lt(u8 lhs, u8 rhs) {
+    return lhs < rhs;
+}
+
+// --- u8..Cmp
+inline i32 u8_Cmp(u8 lhs, u8 rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
 }
 
 // --- u8..UpdateMax
@@ -333,6 +559,13 @@ inline u8 u8_Max(u8 lhs, u8 rhs) {
     return rhs < lhs ? lhs : rhs;
 }
 
+// --- u8..Eq
+inline bool u8_Eq(u8 lhs, u8 rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
+}
+
 // --- u8..Update
 // Set value. Return true if new value is different from old value.
 inline bool u8_Update(u8 &lhs, u8 rhs) {
@@ -341,6 +574,30 @@ inline bool u8_Update(u8 &lhs, u8 rhs) {
         lhs = rhs; // update
     }
     return ret;
+}
+
+// --- u128..Hash
+inline u32 u128_Hash(u32 prev, u128 rhs) {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+    u64 val0 = *(u64*)((u8*)&rhs + 0);
+    prev = _mm_crc32_u64(prev, val0);
+    u64 val8 = *(u64*)((u8*)&rhs + 8);
+    prev = _mm_crc32_u64(prev, val8);
+#pragma GCC diagnostic pop
+    return prev;
+}
+
+// --- u128..Lt
+inline bool u128_Lt(u128 lhs, u128 rhs) {
+    return lhs < rhs;
+}
+
+// --- u128..Cmp
+inline i32 u128_Cmp(u128 lhs, u128 rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
 }
 
 // --- u128..UpdateMax
@@ -375,6 +632,13 @@ inline u128 u128_Max(u128 lhs, u128 rhs) {
     return rhs < lhs ? lhs : rhs;
 }
 
+// --- u128..Eq
+inline bool u128_Eq(u128 lhs, u128 rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
+}
+
 // --- u128..Update
 // Set value. Return true if new value is different from old value.
 inline bool u128_Update(u128 &lhs, u128 rhs) {
@@ -383,6 +647,24 @@ inline bool u128_Update(u128 &lhs, u128 rhs) {
         lhs = rhs; // update
     }
     return ret;
+}
+
+// --- u16..Hash
+inline u32 u16_Hash(u32 prev, u16 rhs) {
+    prev = _mm_crc32_u16(prev,rhs);
+    return prev;
+}
+
+// --- u16..Lt
+inline bool u16_Lt(u16 lhs, u16 rhs) {
+    return lhs < rhs;
+}
+
+// --- u16..Cmp
+inline i32 u16_Cmp(u16 lhs, u16 rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
 }
 
 // --- u16..UpdateMax
@@ -417,6 +699,13 @@ inline u16 u16_Max(u16 lhs, u16 rhs) {
     return rhs < lhs ? lhs : rhs;
 }
 
+// --- u16..Eq
+inline bool u16_Eq(u16 lhs, u16 rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
+}
+
 // --- u16..Update
 // Set value. Return true if new value is different from old value.
 inline bool u16_Update(u16 &lhs, u16 rhs) {
@@ -425,6 +714,24 @@ inline bool u16_Update(u16 &lhs, u16 rhs) {
         lhs = rhs; // update
     }
     return ret;
+}
+
+// --- u32..Hash
+inline u32 u32_Hash(u32 prev, u32 rhs) {
+    prev = _mm_crc32_u32(prev,rhs);
+    return prev;
+}
+
+// --- u32..Lt
+inline bool u32_Lt(u32 lhs, u32 rhs) {
+    return lhs < rhs;
+}
+
+// --- u32..Cmp
+inline i32 u32_Cmp(u32 lhs, u32 rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
 }
 
 // --- u32..UpdateMax
@@ -459,6 +766,13 @@ inline u32 u32_Max(u32 lhs, u32 rhs) {
     return rhs < lhs ? lhs : rhs;
 }
 
+// --- u32..Eq
+inline bool u32_Eq(u32 lhs, u32 rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
+}
+
 // --- u32..Update
 // Set value. Return true if new value is different from old value.
 inline bool u32_Update(u32 &lhs, u32 rhs) {
@@ -467,6 +781,24 @@ inline bool u32_Update(u32 &lhs, u32 rhs) {
         lhs = rhs; // update
     }
     return ret;
+}
+
+// --- u64..Hash
+inline u32 u64_Hash(u32 prev, u64 rhs) {
+    prev = _mm_crc32_u64(prev,rhs);
+    return prev;
+}
+
+// --- u64..Lt
+inline bool u64_Lt(u64 lhs, u64 rhs) {
+    return lhs < rhs;
+}
+
+// --- u64..Cmp
+inline i32 u64_Cmp(u64 lhs, u64 rhs) {
+    i32 retval = 0;
+    retval = lhs<rhs ? -1 : lhs>rhs;
+    return retval;
 }
 
 // --- u64..UpdateMax
@@ -499,6 +831,13 @@ inline bool u64_UpdateMin(u64 &lhs, u64 rhs) {
 // Return the greater of two values
 inline u64 u64_Max(u64 lhs, u64 rhs) {
     return rhs < lhs ? lhs : rhs;
+}
+
+// --- u64..Eq
+inline bool u64_Eq(u64 lhs, u64 rhs) {
+    bool retval = true;
+    retval = lhs == rhs;
+    return retval;
 }
 
 // --- u64..Update

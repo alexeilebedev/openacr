@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 // Copyright (C) 2013-2019 NYSE | Intercontinental Exchange
 // Copyright (C) 2008-2012 AlgoEngineering LLC
 //
@@ -62,6 +62,7 @@ void amc::tfunc_Cppfunc_Set() {
     if (field.c_cppfunc && field.c_cppfunc->set) {
         Set(R, "$Fldargtype", Argtype(field));
         amc::FFunc& set = amc::CreateCurFunc();
+        set.acrkey << "cppfunc:"<<field.field;
         set.extrn = true;
         Ins(&R, set.ret  , "void", false);
         Ins(&R, set.proto, "$name_Set($Parent, $Fldargtype rhs)", false);

@@ -33,10 +33,13 @@
 #include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/command_gen.h"
 #include "include/gen/command_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 src_lim::FDb    src_lim::_db;     // dependency found via dev.targdep
 
@@ -53,8 +56,8 @@ const char *src_lim_help =
 "    -write                      Update ssim database (with -capture)\n"
 "    -badchar                    Check for bad chars in source files\n"
 "    -badline    regx    \"\"      Check badline (acr badline)\n"
-"    -verbose    int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug      int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose    flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug      flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                       Print help and exit; alias -h\n"
 "    -version                    Print version and exit\n"
 "    -signature                  Show signatures and exit; alias -sig\n"
@@ -372,9 +375,8 @@ void src_lim::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "src_lim: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -417,6 +419,9 @@ void src_lim::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:src_lim.FDb.cmdline
@@ -428,7 +433,7 @@ void src_lim::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -473,7 +478,7 @@ static void src_lim::InitReflection() {
 
 
     // -- load signatures of existing dispatches --
-    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_lim.Input'  signature:'00ee14baa7bb10e798a9968848e5501b1eba3043'");
+    algo_lib::InsertStrptrMaybe("dmmeta.Dispsigcheck  dispsig:'src_lim.Input'  signature:'224e271405f3446891ae5d77a84627cf985aff9f'");
 }
 
 // --- src_lim.FDb._db.InsertStrptrMaybe
@@ -536,15 +541,15 @@ bool src_lim::LoadTuplesMaybe(algo::strptr root, bool recursive) {
     } else if (root == "-") {
         retval = src_lim::LoadTuplesFd(algo::Fildes(0),"(stdin)",recursive);
     } else if (DirectoryQ(root)) {
-        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
         retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
+        retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.gitfile"),recursive);
         retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.targsrc"),recursive);
         retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.linelim"),recursive);
         retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.include"),recursive);
         retval = retval && src_lim::LoadTuplesFile(algo::SsimFname(root,"dev.badline"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -819,14 +824,9 @@ bool src_lim::gitfile_XrefMaybe(src_lim::FGitfile &row) {
 // Find row by key. Return NULL if not found.
 src_lim::FGitfile* src_lim::ind_gitfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_gitfile_buckets_n - 1);
-    src_lim::FGitfile* *e = &_db.ind_gitfile_buckets_elems[index];
-    src_lim::FGitfile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).gitfile == key;
-        if (done) break;
-        e         = &ret->ind_gitfile_next;
-    } while (true);
+    src_lim::FGitfile *ret = _db.ind_gitfile_buckets_elems[index];
+    for (; ret && !((*ret).gitfile == key); ret = ret->ind_gitfile_next) {
+    }
     return ret;
 }
 
@@ -858,10 +858,11 @@ src_lim::FGitfile& src_lim::ind_gitfile_GetOrCreate(const algo::strptr& key) {
 // --- src_lim.FDb.ind_gitfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool src_lim::ind_gitfile_InsertMaybe(src_lim::FGitfile& row) {
-    ind_gitfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_gitfile_next == (src_lim::FGitfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
+        row.ind_gitfile_hashval = algo::Smallstr200_Hash(0, row.gitfile);
+        ind_gitfile_Reserve(1);
+        u32 index = row.ind_gitfile_hashval & (_db.ind_gitfile_buckets_n - 1);
         src_lim::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index];
         do {
             src_lim::FGitfile* ret = *prev;
@@ -887,7 +888,7 @@ bool src_lim::ind_gitfile_InsertMaybe(src_lim::FGitfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void src_lim::ind_gitfile_Remove(src_lim::FGitfile& row) {
     if (LIKELY(row.ind_gitfile_next != (src_lim::FGitfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.gitfile) & (_db.ind_gitfile_buckets_n - 1);
+        u32 index = row.ind_gitfile_hashval & (_db.ind_gitfile_buckets_n - 1);
         src_lim::FGitfile* *prev = &_db.ind_gitfile_buckets_elems[index]; // addr of pointer to current element
         while (src_lim::FGitfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -904,8 +905,14 @@ void src_lim::ind_gitfile_Remove(src_lim::FGitfile& row) {
 // --- src_lim.FDb.ind_gitfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void src_lim::ind_gitfile_Reserve(int n) {
+    ind_gitfile_AbsReserve(_db.ind_gitfile_n + n);
+}
+
+// --- src_lim.FDb.ind_gitfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void src_lim::ind_gitfile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_gitfile_buckets_n;
-    u32 new_nelems   = _db.ind_gitfile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -924,7 +931,7 @@ void src_lim::ind_gitfile_Reserve(int n) {
             while (elem) {
                 src_lim::FGitfile &row        = *elem;
                 src_lim::FGitfile* next       = row.ind_gitfile_next;
-                u32 index          = algo::Smallstr200_Hash(0, row.gitfile) & (new_nbuckets-1);
+                u32 index          = row.ind_gitfile_hashval & (new_nbuckets-1);
                 row.ind_gitfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1161,12 +1168,12 @@ algo::Smallstr50 src_lim::ext_Get(src_lim::FGitfile& gitfile) {
 // --- src_lim.FGitfile.zd_include.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void src_lim::zd_include_Insert(src_lim::FGitfile& gitfile, src_lim::FInclude& row) {
-    if (!zd_include_InLlistQ(row)) {
+    if (!gitfile_zd_include_InLlistQ(row)) {
         src_lim::FInclude* old_tail = gitfile.zd_include_tail;
-        row.zd_include_next = NULL;
-        row.zd_include_prev = old_tail;
+        row.gitfile_zd_include_next = NULL;
+        row.gitfile_zd_include_prev = old_tail;
         gitfile.zd_include_tail = &row;
-        src_lim::FInclude **new_row_a = &old_tail->zd_include_next;
+        src_lim::FInclude **new_row_a = &old_tail->gitfile_zd_include_next;
         src_lim::FInclude **new_row_b = &gitfile.zd_include_head;
         src_lim::FInclude **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -1177,23 +1184,23 @@ void src_lim::zd_include_Insert(src_lim::FGitfile& gitfile, src_lim::FInclude& r
 // --- src_lim.FGitfile.zd_include.Remove
 // Remove element from index. If element is not in index, do nothing.
 void src_lim::zd_include_Remove(src_lim::FGitfile& gitfile, src_lim::FInclude& row) {
-    if (zd_include_InLlistQ(row)) {
+    if (gitfile_zd_include_InLlistQ(row)) {
         src_lim::FInclude* old_head       = gitfile.zd_include_head;
         (void)old_head; // in case it's not used
-        src_lim::FInclude* prev = row.zd_include_prev;
-        src_lim::FInclude* next = row.zd_include_next;
+        src_lim::FInclude* prev = row.gitfile_zd_include_prev;
+        src_lim::FInclude* next = row.gitfile_zd_include_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        src_lim::FInclude **new_next_a = &prev->zd_include_next;
+        src_lim::FInclude **new_next_a = &prev->gitfile_zd_include_next;
         src_lim::FInclude **new_next_b = &gitfile.zd_include_head;
         src_lim::FInclude **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        src_lim::FInclude **new_prev_a = &next->zd_include_prev;
+        src_lim::FInclude **new_prev_a = &next->gitfile_zd_include_prev;
         src_lim::FInclude **new_prev_b = &gitfile.zd_include_tail;
         src_lim::FInclude **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         gitfile.zd_include_n--;
-        row.zd_include_next=(src_lim::FInclude*)-1; // not-in-list
+        row.gitfile_zd_include_next=(src_lim::FInclude*)-1; // not-in-list
     }
 }
 
@@ -1205,9 +1212,9 @@ void src_lim::zd_include_RemoveAll(src_lim::FGitfile& gitfile) {
     gitfile.zd_include_tail = NULL;
     gitfile.zd_include_n = 0;
     while (row) {
-        src_lim::FInclude* row_next = row->zd_include_next;
-        row->zd_include_next  = (src_lim::FInclude*)-1;
-        row->zd_include_prev  = NULL;
+        src_lim::FInclude* row_next = row->gitfile_zd_include_next;
+        row->gitfile_zd_include_next  = (src_lim::FInclude*)-1;
+        row->gitfile_zd_include_prev  = NULL;
         row = row_next;
     }
 }
@@ -1218,14 +1225,14 @@ src_lim::FInclude* src_lim::zd_include_RemoveFirst(src_lim::FGitfile& gitfile) {
     src_lim::FInclude *row = NULL;
     row = gitfile.zd_include_head;
     if (row) {
-        src_lim::FInclude *next = row->zd_include_next;
+        src_lim::FInclude *next = row->gitfile_zd_include_next;
         gitfile.zd_include_head = next;
-        src_lim::FInclude **new_end_a = &next->zd_include_prev;
+        src_lim::FInclude **new_end_a = &next->gitfile_zd_include_prev;
         src_lim::FInclude **new_end_b = &gitfile.zd_include_tail;
         src_lim::FInclude **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         gitfile.zd_include_n--;
-        row->zd_include_next = (src_lim::FInclude*)-1; // mark as not-in-list
+        row->gitfile_zd_include_next = (src_lim::FInclude*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -1556,11 +1563,13 @@ void src_lim::StaticCheck() {
 // --- src_lim...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         src_lim::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         src_lim::ReadArgv(); // dmmeta.main:src_lim
         src_lim::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -1573,6 +1582,7 @@ int main(int argc, char **argv) {
     try {
         src_lim::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

@@ -26,13 +26,16 @@
 &#128196; [dev.mdmark - invisible markers for markdown files](/txt/ssimdb/dev/mdmark.md)<br/>
 &#128196; [dev.mdsection - Template for updating a markdown file](/txt/ssimdb/dev/mdsection.md)<br/>
 &#128196; [dev.msgfile - File in repo containing messages that should be normalized during CI](/txt/ssimdb/dev/msgfile.md)<br/>
+&#128196; [dev.netproto - Network protocol: add all levels here](/txt/ssimdb/dev/netproto.md)<br/>
 &#128196; [dev.noindent - Indicates that a file should not be automatically indented](/txt/ssimdb/dev/noindent.md)<br/>
 &#128196; [dev.opt_type - Type of option (used in tool_opt)](/txt/ssimdb/dev/opt_type.md)<br/>
 &#128196; [dev.package - OpenACR package](/txt/ssimdb/dev/package.md)<br/>
 &#128196; [dev.pkgdep - OpenACR Package dependency](/txt/ssimdb/dev/pkgdep.md)<br/>
 &#128196; [dev.pkgkey - Keys belonging to the OpenACR package](/txt/ssimdb/dev/pkgkey.md)<br/>
-&#128196; [dev.readme - File containing documentation](/txt/ssimdb/dev/readme.md)<br/>
+&#128196; [dev.prototransport - Protocol/transport binding](/txt/ssimdb/dev/prototransport.md)<br/>
+&#128196; [dev.readmefile - File containing documentation](/txt/ssimdb/dev/readmefile.md)<br/>
 &#128196; [dev.readmesort - sorted categories of txt/ *.md files presented in dev.readme](/txt/ssimdb/dev/readmesort.md)<br/>
+&#128196; [dev.rpm -](/txt/ssimdb/dev/rpm.md)<br/>
 &#128196; [dev.sandbox - Registered sandbox](/txt/ssimdb/dev/sandbox.md)<br/>
 &#128196; [dev.sbpath - Extra files to copy into the sandbox](/txt/ssimdb/dev/sbpath.md)<br/>
 &#128196; [dev.scriptfile - Known script file](/txt/ssimdb/dev/scriptfile.md)<br/>
@@ -47,6 +50,7 @@
 &#128196; [dev.tgtcov - Captured line coverate information by target](/txt/ssimdb/dev/tgtcov.md)<br/>
 &#128196; [dev.timefmt - Time formats supported by orgfile](/txt/ssimdb/dev/timefmt.md)<br/>
 &#128196; [dev.tool_opt - Compiler/linker options to use](/txt/ssimdb/dev/tool_opt.md)<br/>
+&#128196; [dev.transport - Transport layer](/txt/ssimdb/dev/transport.md)<br/>
 &#128196; [dev.uname - List of known unames](/txt/ssimdb/dev/uname.md)<br/>
 &#128196; [dev.unstablefld - Fields that should be stripped from component test output because they contain timestamps etc.](/txt/ssimdb/dev/unstablefld.md)<br/>
 

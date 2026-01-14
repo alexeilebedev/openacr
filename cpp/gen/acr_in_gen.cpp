@@ -33,12 +33,15 @@
 #include "include/gen/command_gen.inl.h"
 #include "include/gen/dev_gen.h"
 #include "include/gen/dev_gen.inl.h"
+#include "include/gen/lib_json_gen.h"
+#include "include/gen/lib_json_gen.inl.h"
 #include "include/gen/algo_lib_gen.h"
 #include "include/gen/algo_lib_gen.inl.h"
 //#pragma endinclude
 
 // Instantiate all libraries linked into this executable,
 // in dependency order
+lib_json::FDb   lib_json::_db;    // dependency found via dev.targdep
 algo_lib::FDb   algo_lib::_db;    // dependency found via dev.targdep
 acr_in::FDb     acr_in::_db;      // dependency found via dev.targdep
 
@@ -58,8 +61,8 @@ const char *acr_in_help =
 "    -notssimfile  regx    \"\"      Exclude ssimfiles matching regx\n"
 "    -checkable                    Ensure output passes acr -check\n"
 "    -r            regx    \"\"      Reverse lookup of target by ssimfile\n"
-"    -verbose      int             Verbosity level (0..255); alias -v; cumulative\n"
-"    -debug        int             Debug level (0..255); alias -d; cumulative\n"
+"    -verbose      flag            Verbosity level (0..255); alias -v; cumulative\n"
+"    -debug        flag            Debug level (0..255); alias -d; cumulative\n"
 "    -help                         Print help and exit; alias -h\n"
 "    -version                      Print version and exit\n"
 "    -signature                    Show signatures and exit; alias -sig\n"
@@ -129,15 +132,11 @@ algo::Smallstr100 acr_in::name_Get(acr_in::FCtype& ctype) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void acr_in::c_field_Insert(acr_in::FCtype& ctype, acr_in::FField& row) {
-    if (bool_Update(row.ctype_c_field_in_ary,true)) {
-        // reserve space
+    if (!row.ctype_c_field_in_ary) {
         c_field_Reserve(ctype, 1);
-        u32 n  = ctype.c_field_n;
-        u32 at = n;
-        acr_in::FField* *elems = ctype.c_field_elems;
-        elems[at] = &row;
-        ctype.c_field_n = n+1;
-
+        u32 n  = ctype.c_field_n++;
+        ctype.c_field_elems[n] = &row;
+        row.ctype_c_field_in_ary = true;
     }
 }
 
@@ -146,7 +145,7 @@ void acr_in::c_field_Insert(acr_in::FCtype& ctype, acr_in::FField& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool acr_in::c_field_InsertMaybe(acr_in::FCtype& ctype, acr_in::FField& row) {
-    bool retval = !row.ctype_c_field_in_ary;
+    bool retval = !ctype_c_field_InAryQ(row);
     c_field_Insert(ctype,row); // check is performed in _Insert again
     return retval;
 }
@@ -154,18 +153,18 @@ bool acr_in::c_field_InsertMaybe(acr_in::FCtype& ctype, acr_in::FField& row) {
 // --- acr_in.FCtype.c_field.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr_in::c_field_Remove(acr_in::FCtype& ctype, acr_in::FField& row) {
+    int n = ctype.c_field_n;
     if (bool_Update(row.ctype_c_field_in_ary,false)) {
-        int lim = ctype.c_field_n;
         acr_in::FField* *elems = ctype.c_field_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             acr_in::FField* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(acr_in::FField*) * (lim - j);
+                size_t nbytes = sizeof(acr_in::FField*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                ctype.c_field_n = lim - 1;
+                ctype.c_field_n = n - 1;
                 break;
             }
         }
@@ -193,14 +192,9 @@ void acr_in::c_field_Reserve(acr_in::FCtype& ctype, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void acr_in::c_ctype_Insert(acr_in::FCtype& ctype, acr_in::FCtype& row) {
-    // reserve space
     c_ctype_Reserve(ctype, 1);
-    u32 n  = ctype.c_ctype_n;
-    u32 at = n;
-    acr_in::FCtype* *elems = ctype.c_ctype_elems;
-    elems[at] = &row;
-    ctype.c_ctype_n = n+1;
-
+    u32 n  = ctype.c_ctype_n++;
+    ctype.c_ctype_elems[n] = &row;
 }
 
 // --- acr_in.FCtype.c_ctype.ScanInsertMaybe
@@ -229,20 +223,18 @@ bool acr_in::c_ctype_ScanInsertMaybe(acr_in::FCtype& ctype, acr_in::FCtype& row)
 // --- acr_in.FCtype.c_ctype.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr_in::c_ctype_Remove(acr_in::FCtype& ctype, acr_in::FCtype& row) {
-    int lim = ctype.c_ctype_n;
-    acr_in::FCtype* *elems = ctype.c_ctype_elems;
-    // search backward, so that most recently added element is found first.
-    // if found, shift array.
-    for (int i = lim-1; i>=0; i--) {
-        acr_in::FCtype* elem = elems[i]; // fetch element
-        if (elem == &row) {
-            int j = i + 1;
-            size_t nbytes = sizeof(acr_in::FCtype*) * (lim - j);
-            memmove(elems + i, elems + j, nbytes);
-            ctype.c_ctype_n = lim - 1;
-            break;
+    int n = ctype.c_ctype_n;
+    int j=0;
+    for (int i=0; i<n; i++) {
+        if (ctype.c_ctype_elems[i] == &row) {
+        } else {
+            if (j != i) {
+                ctype.c_ctype_elems[j] = ctype.c_ctype_elems[i];
+            }
+            j++;
         }
     }
+    ctype.c_ctype_n = j;
 }
 
 // --- acr_in.FCtype.c_ctype.Reserve
@@ -278,6 +270,7 @@ void acr_in::FCtype_Init(acr_in::FCtype& ctype) {
     ctype.parent_of_finput = bool(false);
     ctype.p_ns = NULL;
     ctype.ind_ctype_next = (acr_in::FCtype*)-1; // (acr_in.FDb.ind_ctype) not-in-hash
+    ctype.ind_ctype_hashval = 0; // stored hash value
     ctype.zd_todo_next = (acr_in::FCtype*)-1; // (acr_in.FDb.zd_todo) not-in-list
     ctype.zd_todo_prev = NULL; // (acr_in.FDb.zd_todo)
     ctype.zd_related_next = (acr_in::FCtype*)-1; // (acr_in.FDb.zd_related) not-in-list
@@ -397,14 +390,9 @@ bool acr_in::tuple_XrefMaybe(acr_in::FTuple &row) {
 // Find row by key. Return NULL if not found.
 acr_in::FTuple* acr_in::ind_tuple_Find(const algo::strptr& key) {
     u32 index = algo::cstring_Hash(0, key) & (_db.ind_tuple_buckets_n - 1);
-    acr_in::FTuple* *e = &_db.ind_tuple_buckets_elems[index];
-    acr_in::FTuple* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).key == key;
-        if (done) break;
-        e         = &ret->ind_tuple_next;
-    } while (true);
+    acr_in::FTuple *ret = _db.ind_tuple_buckets_elems[index];
+    for (; ret && !((*ret).key == key); ret = ret->ind_tuple_next) {
+    }
     return ret;
 }
 
@@ -436,10 +424,11 @@ acr_in::FTuple& acr_in::ind_tuple_GetOrCreate(const algo::strptr& key) {
 // --- acr_in.FDb.ind_tuple.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_in::ind_tuple_InsertMaybe(acr_in::FTuple& row) {
-    ind_tuple_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_tuple_next == (acr_in::FTuple*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.key) & (_db.ind_tuple_buckets_n - 1);
+        row.ind_tuple_hashval = algo::cstring_Hash(0, row.key);
+        ind_tuple_Reserve(1);
+        u32 index = row.ind_tuple_hashval & (_db.ind_tuple_buckets_n - 1);
         acr_in::FTuple* *prev = &_db.ind_tuple_buckets_elems[index];
         do {
             acr_in::FTuple* ret = *prev;
@@ -465,7 +454,7 @@ bool acr_in::ind_tuple_InsertMaybe(acr_in::FTuple& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_tuple_Remove(acr_in::FTuple& row) {
     if (LIKELY(row.ind_tuple_next != (acr_in::FTuple*)-1)) {// check if in hash already
-        u32 index = algo::cstring_Hash(0, row.key) & (_db.ind_tuple_buckets_n - 1);
+        u32 index = row.ind_tuple_hashval & (_db.ind_tuple_buckets_n - 1);
         acr_in::FTuple* *prev = &_db.ind_tuple_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FTuple *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -482,8 +471,14 @@ void acr_in::ind_tuple_Remove(acr_in::FTuple& row) {
 // --- acr_in.FDb.ind_tuple.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_in::ind_tuple_Reserve(int n) {
+    ind_tuple_AbsReserve(_db.ind_tuple_n + n);
+}
+
+// --- acr_in.FDb.ind_tuple.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_in::ind_tuple_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_tuple_buckets_n;
-    u32 new_nelems   = _db.ind_tuple_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -502,7 +497,7 @@ void acr_in::ind_tuple_Reserve(int n) {
             while (elem) {
                 acr_in::FTuple &row        = *elem;
                 acr_in::FTuple* next       = row.ind_tuple_next;
-                u32 index          = algo::cstring_Hash(0, row.key) & (new_nbuckets-1);
+                u32 index          = row.ind_tuple_hashval & (new_nbuckets-1);
                 row.ind_tuple_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -601,9 +596,8 @@ void acr_in::ReadArgv() {
         }
         if (ch_N(attrname) == 0) {
             err << "acr_in: too many arguments. error at "<<algo::strptr_ToSsim(arg)<<eol;
-        }
-        // read value into currently selected arg
-        if (haveval) {
+        } else if (haveval) {
+            // read value into currently selected arg
             bool ret=false;
             // it's already known which namespace is consuming the args,
             // so directly go there
@@ -646,6 +640,9 @@ void acr_in::ReadArgv() {
         }ind_end
         doexit = true;
     }
+    algo_lib_logcat_debug.enabled = algo_lib::_db.cmdline.debug;
+    algo_lib_logcat_verbose.enabled = algo_lib::_db.cmdline.verbose > 0;
+    algo_lib_logcat_verbose2.enabled = algo_lib::_db.cmdline.verbose > 1;
     if (!dohelp) {
     }
     // dmmeta.floadtuples:acr_in.FDb.cmdline
@@ -657,7 +654,7 @@ void acr_in::ReadArgv() {
     }
     if (err != "") {
         algo_lib::_db.exit_code=1;
-        prerr(err);
+        prerr_(err); // already has eol
         doexit=true;
     }
     if (dohelp) {
@@ -796,8 +793,8 @@ bool acr_in::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dev.target"),recursive);
         retval = retval && acr_in::LoadTuplesFile(algo::SsimFname(root,"dev.targdep"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -1103,14 +1100,9 @@ bool acr_in::field_XrefMaybe(acr_in::FField &row) {
 // Find row by key. Return NULL if not found.
 acr_in::FField* acr_in::ind_field_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_field_buckets_n - 1);
-    acr_in::FField* *e = &_db.ind_field_buckets_elems[index];
-    acr_in::FField* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).field == key;
-        if (done) break;
-        e         = &ret->ind_field_next;
-    } while (true);
+    acr_in::FField *ret = _db.ind_field_buckets_elems[index];
+    for (; ret && !((*ret).field == key); ret = ret->ind_field_next) {
+    }
     return ret;
 }
 
@@ -1125,10 +1117,11 @@ acr_in::FField& acr_in::ind_field_FindX(const algo::strptr& key) {
 // --- acr_in.FDb.ind_field.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_in::ind_field_InsertMaybe(acr_in::FField& row) {
-    ind_field_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_field_next == (acr_in::FField*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        row.ind_field_hashval = algo::Smallstr100_Hash(0, row.field);
+        ind_field_Reserve(1);
+        u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         acr_in::FField* *prev = &_db.ind_field_buckets_elems[index];
         do {
             acr_in::FField* ret = *prev;
@@ -1154,7 +1147,7 @@ bool acr_in::ind_field_InsertMaybe(acr_in::FField& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_field_Remove(acr_in::FField& row) {
     if (LIKELY(row.ind_field_next != (acr_in::FField*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_field_buckets_n - 1);
+        u32 index = row.ind_field_hashval & (_db.ind_field_buckets_n - 1);
         acr_in::FField* *prev = &_db.ind_field_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FField *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1171,8 +1164,14 @@ void acr_in::ind_field_Remove(acr_in::FField& row) {
 // --- acr_in.FDb.ind_field.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_in::ind_field_Reserve(int n) {
+    ind_field_AbsReserve(_db.ind_field_n + n);
+}
+
+// --- acr_in.FDb.ind_field.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_in::ind_field_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_field_buckets_n;
-    u32 new_nelems   = _db.ind_field_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1191,7 +1190,7 @@ void acr_in::ind_field_Reserve(int n) {
             while (elem) {
                 acr_in::FField &row        = *elem;
                 acr_in::FField* next       = row.ind_field_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = row.ind_field_hashval & (new_nbuckets-1);
                 row.ind_field_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1314,14 +1313,9 @@ bool acr_in::ctype_XrefMaybe(acr_in::FCtype &row) {
 // Find row by key. Return NULL if not found.
 acr_in::FCtype* acr_in::ind_ctype_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_ctype_buckets_n - 1);
-    acr_in::FCtype* *e = &_db.ind_ctype_buckets_elems[index];
-    acr_in::FCtype* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ctype == key;
-        if (done) break;
-        e         = &ret->ind_ctype_next;
-    } while (true);
+    acr_in::FCtype *ret = _db.ind_ctype_buckets_elems[index];
+    for (; ret && !((*ret).ctype == key); ret = ret->ind_ctype_next) {
+    }
     return ret;
 }
 
@@ -1336,10 +1330,11 @@ acr_in::FCtype& acr_in::ind_ctype_FindX(const algo::strptr& key) {
 // --- acr_in.FDb.ind_ctype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_in::ind_ctype_InsertMaybe(acr_in::FCtype& row) {
-    ind_ctype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ctype_next == (acr_in::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        row.ind_ctype_hashval = algo::Smallstr100_Hash(0, row.ctype);
+        ind_ctype_Reserve(1);
+        u32 index = row.ind_ctype_hashval & (_db.ind_ctype_buckets_n - 1);
         acr_in::FCtype* *prev = &_db.ind_ctype_buckets_elems[index];
         do {
             acr_in::FCtype* ret = *prev;
@@ -1365,7 +1360,7 @@ bool acr_in::ind_ctype_InsertMaybe(acr_in::FCtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_ctype_Remove(acr_in::FCtype& row) {
     if (LIKELY(row.ind_ctype_next != (acr_in::FCtype*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.ctype) & (_db.ind_ctype_buckets_n - 1);
+        u32 index = row.ind_ctype_hashval & (_db.ind_ctype_buckets_n - 1);
         acr_in::FCtype* *prev = &_db.ind_ctype_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FCtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1382,8 +1377,14 @@ void acr_in::ind_ctype_Remove(acr_in::FCtype& row) {
 // --- acr_in.FDb.ind_ctype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_in::ind_ctype_Reserve(int n) {
+    ind_ctype_AbsReserve(_db.ind_ctype_n + n);
+}
+
+// --- acr_in.FDb.ind_ctype.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_in::ind_ctype_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ctype_buckets_n;
-    u32 new_nelems   = _db.ind_ctype_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1402,7 +1403,7 @@ void acr_in::ind_ctype_Reserve(int n) {
             while (elem) {
                 acr_in::FCtype &row        = *elem;
                 acr_in::FCtype* next       = row.ind_ctype_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.ctype) & (new_nbuckets-1);
+                u32 index          = row.ind_ctype_hashval & (new_nbuckets-1);
                 row.ind_ctype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -1631,14 +1632,9 @@ bool acr_in::ns_XrefMaybe(acr_in::FNs &row) {
 // Find row by key. Return NULL if not found.
 acr_in::FNs* acr_in::ind_ns_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_ns_buckets_n - 1);
-    acr_in::FNs* *e = &_db.ind_ns_buckets_elems[index];
-    acr_in::FNs* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ns == key;
-        if (done) break;
-        e         = &ret->ind_ns_next;
-    } while (true);
+    acr_in::FNs *ret = _db.ind_ns_buckets_elems[index];
+    for (; ret && !((*ret).ns == key); ret = ret->ind_ns_next) {
+    }
     return ret;
 }
 
@@ -1670,10 +1666,11 @@ acr_in::FNs& acr_in::ind_ns_GetOrCreate(const algo::strptr& key) {
 // --- acr_in.FDb.ind_ns.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_in::ind_ns_InsertMaybe(acr_in::FNs& row) {
-    ind_ns_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ns_next == (acr_in::FNs*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        row.ind_ns_hashval = algo::Smallstr16_Hash(0, row.ns);
+        ind_ns_Reserve(1);
+        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
         acr_in::FNs* *prev = &_db.ind_ns_buckets_elems[index];
         do {
             acr_in::FNs* ret = *prev;
@@ -1699,7 +1696,7 @@ bool acr_in::ind_ns_InsertMaybe(acr_in::FNs& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_ns_Remove(acr_in::FNs& row) {
     if (LIKELY(row.ind_ns_next != (acr_in::FNs*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.ns) & (_db.ind_ns_buckets_n - 1);
+        u32 index = row.ind_ns_hashval & (_db.ind_ns_buckets_n - 1);
         acr_in::FNs* *prev = &_db.ind_ns_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FNs *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -1716,8 +1713,14 @@ void acr_in::ind_ns_Remove(acr_in::FNs& row) {
 // --- acr_in.FDb.ind_ns.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_in::ind_ns_Reserve(int n) {
+    ind_ns_AbsReserve(_db.ind_ns_n + n);
+}
+
+// --- acr_in.FDb.ind_ns.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_in::ind_ns_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ns_buckets_n;
-    u32 new_nelems   = _db.ind_ns_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1736,7 +1739,7 @@ void acr_in::ind_ns_Reserve(int n) {
             while (elem) {
                 acr_in::FNs &row        = *elem;
                 acr_in::FNs* next       = row.ind_ns_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.ns) & (new_nbuckets-1);
+                u32 index          = row.ind_ns_hashval & (new_nbuckets-1);
                 row.ind_ns_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2105,14 +2108,9 @@ bool acr_in::dispsig_XrefMaybe(acr_in::FDispsig &row) {
 // Find row by key. Return NULL if not found.
 acr_in::FDispsig* acr_in::ind_dispsig_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_dispsig_buckets_n - 1);
-    acr_in::FDispsig* *e = &_db.ind_dispsig_buckets_elems[index];
-    acr_in::FDispsig* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).dispsig == key;
-        if (done) break;
-        e         = &ret->ind_dispsig_next;
-    } while (true);
+    acr_in::FDispsig *ret = _db.ind_dispsig_buckets_elems[index];
+    for (; ret && !((*ret).dispsig == key); ret = ret->ind_dispsig_next) {
+    }
     return ret;
 }
 
@@ -2127,10 +2125,11 @@ acr_in::FDispsig& acr_in::ind_dispsig_FindX(const algo::strptr& key) {
 // --- acr_in.FDb.ind_dispsig.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_in::ind_dispsig_InsertMaybe(acr_in::FDispsig& row) {
-    ind_dispsig_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_dispsig_next == (acr_in::FDispsig*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.dispsig) & (_db.ind_dispsig_buckets_n - 1);
+        row.ind_dispsig_hashval = algo::Smallstr50_Hash(0, row.dispsig);
+        ind_dispsig_Reserve(1);
+        u32 index = row.ind_dispsig_hashval & (_db.ind_dispsig_buckets_n - 1);
         acr_in::FDispsig* *prev = &_db.ind_dispsig_buckets_elems[index];
         do {
             acr_in::FDispsig* ret = *prev;
@@ -2156,7 +2155,7 @@ bool acr_in::ind_dispsig_InsertMaybe(acr_in::FDispsig& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_dispsig_Remove(acr_in::FDispsig& row) {
     if (LIKELY(row.ind_dispsig_next != (acr_in::FDispsig*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.dispsig) & (_db.ind_dispsig_buckets_n - 1);
+        u32 index = row.ind_dispsig_hashval & (_db.ind_dispsig_buckets_n - 1);
         acr_in::FDispsig* *prev = &_db.ind_dispsig_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FDispsig *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2173,8 +2172,14 @@ void acr_in::ind_dispsig_Remove(acr_in::FDispsig& row) {
 // --- acr_in.FDb.ind_dispsig.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_in::ind_dispsig_Reserve(int n) {
+    ind_dispsig_AbsReserve(_db.ind_dispsig_n + n);
+}
+
+// --- acr_in.FDb.ind_dispsig.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_in::ind_dispsig_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_dispsig_buckets_n;
-    u32 new_nelems   = _db.ind_dispsig_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2193,7 +2198,7 @@ void acr_in::ind_dispsig_Reserve(int n) {
             while (elem) {
                 acr_in::FDispsig &row        = *elem;
                 acr_in::FDispsig* next       = row.ind_dispsig_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.dispsig) & (new_nbuckets-1);
+                u32 index          = row.ind_dispsig_hashval & (new_nbuckets-1);
                 row.ind_dispsig_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2426,14 +2431,9 @@ acr_in::FCtype* acr_in::zd_related_RemoveFirst() {
 // Find row by key. Return NULL if not found.
 acr_in::FFinput* acr_in::ind_finput_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr100_Hash(0, key) & (_db.ind_finput_buckets_n - 1);
-    acr_in::FFinput* *e = &_db.ind_finput_buckets_elems[index];
-    acr_in::FFinput* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).field == key;
-        if (done) break;
-        e         = &ret->ind_finput_next;
-    } while (true);
+    acr_in::FFinput *ret = _db.ind_finput_buckets_elems[index];
+    for (; ret && !((*ret).field == key); ret = ret->ind_finput_next) {
+    }
     return ret;
 }
 
@@ -2448,10 +2448,11 @@ acr_in::FFinput& acr_in::ind_finput_FindX(const algo::strptr& key) {
 // --- acr_in.FDb.ind_finput.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_in::ind_finput_InsertMaybe(acr_in::FFinput& row) {
-    ind_finput_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_finput_next == (acr_in::FFinput*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_finput_buckets_n - 1);
+        row.ind_finput_hashval = algo::Smallstr100_Hash(0, row.field);
+        ind_finput_Reserve(1);
+        u32 index = row.ind_finput_hashval & (_db.ind_finput_buckets_n - 1);
         acr_in::FFinput* *prev = &_db.ind_finput_buckets_elems[index];
         do {
             acr_in::FFinput* ret = *prev;
@@ -2477,7 +2478,7 @@ bool acr_in::ind_finput_InsertMaybe(acr_in::FFinput& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_finput_Remove(acr_in::FFinput& row) {
     if (LIKELY(row.ind_finput_next != (acr_in::FFinput*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr100_Hash(0, row.field) & (_db.ind_finput_buckets_n - 1);
+        u32 index = row.ind_finput_hashval & (_db.ind_finput_buckets_n - 1);
         acr_in::FFinput* *prev = &_db.ind_finput_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FFinput *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2494,8 +2495,14 @@ void acr_in::ind_finput_Remove(acr_in::FFinput& row) {
 // --- acr_in.FDb.ind_finput.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_in::ind_finput_Reserve(int n) {
+    ind_finput_AbsReserve(_db.ind_finput_n + n);
+}
+
+// --- acr_in.FDb.ind_finput.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_in::ind_finput_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_finput_buckets_n;
-    u32 new_nelems   = _db.ind_finput_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2514,7 +2521,7 @@ void acr_in::ind_finput_Reserve(int n) {
             while (elem) {
                 acr_in::FFinput &row        = *elem;
                 acr_in::FFinput* next       = row.ind_finput_next;
-                u32 index          = algo::Smallstr100_Hash(0, row.field) & (new_nbuckets-1);
+                u32 index          = row.ind_finput_hashval & (new_nbuckets-1);
                 row.ind_finput_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -2646,14 +2653,9 @@ bool acr_in::target_XrefMaybe(acr_in::FTarget &row) {
 // Find row by key. Return NULL if not found.
 acr_in::FTarget* acr_in::ind_target_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr16_Hash(0, key) & (_db.ind_target_buckets_n - 1);
-    acr_in::FTarget* *e = &_db.ind_target_buckets_elems[index];
-    acr_in::FTarget* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).target == key;
-        if (done) break;
-        e         = &ret->ind_target_next;
-    } while (true);
+    acr_in::FTarget *ret = _db.ind_target_buckets_elems[index];
+    for (; ret && !((*ret).target == key); ret = ret->ind_target_next) {
+    }
     return ret;
 }
 
@@ -2668,10 +2670,11 @@ acr_in::FTarget& acr_in::ind_target_FindX(const algo::strptr& key) {
 // --- acr_in.FDb.ind_target.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_in::ind_target_InsertMaybe(acr_in::FTarget& row) {
-    ind_target_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_target_next == (acr_in::FTarget*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        row.ind_target_hashval = algo::Smallstr16_Hash(0, row.target);
+        ind_target_Reserve(1);
+        u32 index = row.ind_target_hashval & (_db.ind_target_buckets_n - 1);
         acr_in::FTarget* *prev = &_db.ind_target_buckets_elems[index];
         do {
             acr_in::FTarget* ret = *prev;
@@ -2697,7 +2700,7 @@ bool acr_in::ind_target_InsertMaybe(acr_in::FTarget& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_target_Remove(acr_in::FTarget& row) {
     if (LIKELY(row.ind_target_next != (acr_in::FTarget*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr16_Hash(0, row.target) & (_db.ind_target_buckets_n - 1);
+        u32 index = row.ind_target_hashval & (_db.ind_target_buckets_n - 1);
         acr_in::FTarget* *prev = &_db.ind_target_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FTarget *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -2714,8 +2717,14 @@ void acr_in::ind_target_Remove(acr_in::FTarget& row) {
 // --- acr_in.FDb.ind_target.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_in::ind_target_Reserve(int n) {
+    ind_target_AbsReserve(_db.ind_target_n + n);
+}
+
+// --- acr_in.FDb.ind_target.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_in::ind_target_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_target_buckets_n;
-    u32 new_nelems   = _db.ind_target_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -2734,7 +2743,7 @@ void acr_in::ind_target_Reserve(int n) {
             while (elem) {
                 acr_in::FTarget &row        = *elem;
                 acr_in::FTarget* next       = row.ind_target_next;
-                u32 index          = algo::Smallstr16_Hash(0, row.target) & (new_nbuckets-1);
+                u32 index          = row.ind_target_hashval & (new_nbuckets-1);
                 row.ind_target_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3045,14 +3054,9 @@ bool acr_in::nsssimfile_XrefMaybe(acr_in::FNsssimfile &row) {
 // Find row by key. Return NULL if not found.
 acr_in::FNsssimfile* acr_in::ind_nsssimfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_nsssimfile_buckets_n - 1);
-    acr_in::FNsssimfile* *e = &_db.ind_nsssimfile_buckets_elems[index];
-    acr_in::FNsssimfile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).nsssimfile == key;
-        if (done) break;
-        e         = &ret->ind_nsssimfile_next;
-    } while (true);
+    acr_in::FNsssimfile *ret = _db.ind_nsssimfile_buckets_elems[index];
+    for (; ret && !((*ret).nsssimfile == key); ret = ret->ind_nsssimfile_next) {
+    }
     return ret;
 }
 
@@ -3067,10 +3071,11 @@ acr_in::FNsssimfile& acr_in::ind_nsssimfile_FindX(const algo::strptr& key) {
 // --- acr_in.FDb.ind_nsssimfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_in::ind_nsssimfile_InsertMaybe(acr_in::FNsssimfile& row) {
-    ind_nsssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_nsssimfile_next == (acr_in::FNsssimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.nsssimfile) & (_db.ind_nsssimfile_buckets_n - 1);
+        row.ind_nsssimfile_hashval = algo::Smallstr200_Hash(0, row.nsssimfile);
+        ind_nsssimfile_Reserve(1);
+        u32 index = row.ind_nsssimfile_hashval & (_db.ind_nsssimfile_buckets_n - 1);
         acr_in::FNsssimfile* *prev = &_db.ind_nsssimfile_buckets_elems[index];
         do {
             acr_in::FNsssimfile* ret = *prev;
@@ -3096,7 +3101,7 @@ bool acr_in::ind_nsssimfile_InsertMaybe(acr_in::FNsssimfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_nsssimfile_Remove(acr_in::FNsssimfile& row) {
     if (LIKELY(row.ind_nsssimfile_next != (acr_in::FNsssimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.nsssimfile) & (_db.ind_nsssimfile_buckets_n - 1);
+        u32 index = row.ind_nsssimfile_hashval & (_db.ind_nsssimfile_buckets_n - 1);
         acr_in::FNsssimfile* *prev = &_db.ind_nsssimfile_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FNsssimfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3113,8 +3118,14 @@ void acr_in::ind_nsssimfile_Remove(acr_in::FNsssimfile& row) {
 // --- acr_in.FDb.ind_nsssimfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_in::ind_nsssimfile_Reserve(int n) {
+    ind_nsssimfile_AbsReserve(_db.ind_nsssimfile_n + n);
+}
+
+// --- acr_in.FDb.ind_nsssimfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_in::ind_nsssimfile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_nsssimfile_buckets_n;
-    u32 new_nelems   = _db.ind_nsssimfile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -3133,7 +3144,7 @@ void acr_in::ind_nsssimfile_Reserve(int n) {
             while (elem) {
                 acr_in::FNsssimfile &row        = *elem;
                 acr_in::FNsssimfile* next       = row.ind_nsssimfile_next;
-                u32 index          = algo::Smallstr200_Hash(0, row.nsssimfile) & (new_nbuckets-1);
+                u32 index          = row.ind_nsssimfile_hashval & (new_nbuckets-1);
                 row.ind_nsssimfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3150,14 +3161,9 @@ void acr_in::ind_nsssimfile_Reserve(int n) {
 // Find row by key. Return NULL if not found.
 acr_in::FSsimfile* acr_in::ind_ssimfile_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr50_Hash(0, key) & (_db.ind_ssimfile_buckets_n - 1);
-    acr_in::FSsimfile* *e = &_db.ind_ssimfile_buckets_elems[index];
-    acr_in::FSsimfile* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).ssimfile == key;
-        if (done) break;
-        e         = &ret->ind_ssimfile_next;
-    } while (true);
+    acr_in::FSsimfile *ret = _db.ind_ssimfile_buckets_elems[index];
+    for (; ret && !((*ret).ssimfile == key); ret = ret->ind_ssimfile_next) {
+    }
     return ret;
 }
 
@@ -3172,10 +3178,11 @@ acr_in::FSsimfile& acr_in::ind_ssimfile_FindX(const algo::strptr& key) {
 // --- acr_in.FDb.ind_ssimfile.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool acr_in::ind_ssimfile_InsertMaybe(acr_in::FSsimfile& row) {
-    ind_ssimfile_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_ssimfile_next == (acr_in::FSsimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        row.ind_ssimfile_hashval = algo::Smallstr50_Hash(0, row.ssimfile);
+        ind_ssimfile_Reserve(1);
+        u32 index = row.ind_ssimfile_hashval & (_db.ind_ssimfile_buckets_n - 1);
         acr_in::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index];
         do {
             acr_in::FSsimfile* ret = *prev;
@@ -3201,7 +3208,7 @@ bool acr_in::ind_ssimfile_InsertMaybe(acr_in::FSsimfile& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void acr_in::ind_ssimfile_Remove(acr_in::FSsimfile& row) {
     if (LIKELY(row.ind_ssimfile_next != (acr_in::FSsimfile*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr50_Hash(0, row.ssimfile) & (_db.ind_ssimfile_buckets_n - 1);
+        u32 index = row.ind_ssimfile_hashval & (_db.ind_ssimfile_buckets_n - 1);
         acr_in::FSsimfile* *prev = &_db.ind_ssimfile_buckets_elems[index]; // addr of pointer to current element
         while (acr_in::FSsimfile *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -3218,8 +3225,14 @@ void acr_in::ind_ssimfile_Remove(acr_in::FSsimfile& row) {
 // --- acr_in.FDb.ind_ssimfile.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void acr_in::ind_ssimfile_Reserve(int n) {
+    ind_ssimfile_AbsReserve(_db.ind_ssimfile_n + n);
+}
+
+// --- acr_in.FDb.ind_ssimfile.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void acr_in::ind_ssimfile_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_ssimfile_buckets_n;
-    u32 new_nelems   = _db.ind_ssimfile_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -3238,7 +3251,7 @@ void acr_in::ind_ssimfile_Reserve(int n) {
             while (elem) {
                 acr_in::FSsimfile &row        = *elem;
                 acr_in::FSsimfile* next       = row.ind_ssimfile_next;
-                u32 index          = algo::Smallstr50_Hash(0, row.ssimfile) & (new_nbuckets-1);
+                u32 index          = row.ind_ssimfile_hashval & (new_nbuckets-1);
                 row.ind_ssimfile_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -3625,6 +3638,7 @@ void acr_in::FField_Init(acr_in::FField& field) {
     field.c_substr = NULL;
     field.ctype_c_field_in_ary = bool(false);
     field.ind_field_next = (acr_in::FField*)-1; // (acr_in.FDb.ind_field) not-in-hash
+    field.ind_field_hashval = 0; // stored hash value
 }
 
 // --- acr_in.FField..Uninit
@@ -3690,12 +3704,12 @@ void acr_in::ns_CopyIn(acr_in::FNs &row, dmmeta::Ns &in) {
 // --- acr_in.FNs.zd_nsssimfile_ns.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void acr_in::zd_nsssimfile_ns_Insert(acr_in::FNs& ns, acr_in::FNsssimfile& row) {
-    if (!zd_nsssimfile_ns_InLlistQ(row)) {
+    if (!ns_zd_nsssimfile_ns_InLlistQ(row)) {
         acr_in::FNsssimfile* old_tail = ns.zd_nsssimfile_ns_tail;
-        row.zd_nsssimfile_ns_next = NULL;
-        row.zd_nsssimfile_ns_prev = old_tail;
+        row.ns_zd_nsssimfile_ns_next = NULL;
+        row.ns_zd_nsssimfile_ns_prev = old_tail;
         ns.zd_nsssimfile_ns_tail = &row;
-        acr_in::FNsssimfile **new_row_a = &old_tail->zd_nsssimfile_ns_next;
+        acr_in::FNsssimfile **new_row_a = &old_tail->ns_zd_nsssimfile_ns_next;
         acr_in::FNsssimfile **new_row_b = &ns.zd_nsssimfile_ns_head;
         acr_in::FNsssimfile **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -3706,23 +3720,23 @@ void acr_in::zd_nsssimfile_ns_Insert(acr_in::FNs& ns, acr_in::FNsssimfile& row) 
 // --- acr_in.FNs.zd_nsssimfile_ns.Remove
 // Remove element from index. If element is not in index, do nothing.
 void acr_in::zd_nsssimfile_ns_Remove(acr_in::FNs& ns, acr_in::FNsssimfile& row) {
-    if (zd_nsssimfile_ns_InLlistQ(row)) {
+    if (ns_zd_nsssimfile_ns_InLlistQ(row)) {
         acr_in::FNsssimfile* old_head       = ns.zd_nsssimfile_ns_head;
         (void)old_head; // in case it's not used
-        acr_in::FNsssimfile* prev = row.zd_nsssimfile_ns_prev;
-        acr_in::FNsssimfile* next = row.zd_nsssimfile_ns_next;
+        acr_in::FNsssimfile* prev = row.ns_zd_nsssimfile_ns_prev;
+        acr_in::FNsssimfile* next = row.ns_zd_nsssimfile_ns_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        acr_in::FNsssimfile **new_next_a = &prev->zd_nsssimfile_ns_next;
+        acr_in::FNsssimfile **new_next_a = &prev->ns_zd_nsssimfile_ns_next;
         acr_in::FNsssimfile **new_next_b = &ns.zd_nsssimfile_ns_head;
         acr_in::FNsssimfile **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        acr_in::FNsssimfile **new_prev_a = &next->zd_nsssimfile_ns_prev;
+        acr_in::FNsssimfile **new_prev_a = &next->ns_zd_nsssimfile_ns_prev;
         acr_in::FNsssimfile **new_prev_b = &ns.zd_nsssimfile_ns_tail;
         acr_in::FNsssimfile **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         ns.zd_nsssimfile_ns_n--;
-        row.zd_nsssimfile_ns_next=(acr_in::FNsssimfile*)-1; // not-in-list
+        row.ns_zd_nsssimfile_ns_next=(acr_in::FNsssimfile*)-1; // not-in-list
     }
 }
 
@@ -3734,9 +3748,9 @@ void acr_in::zd_nsssimfile_ns_RemoveAll(acr_in::FNs& ns) {
     ns.zd_nsssimfile_ns_tail = NULL;
     ns.zd_nsssimfile_ns_n = 0;
     while (row) {
-        acr_in::FNsssimfile* row_next = row->zd_nsssimfile_ns_next;
-        row->zd_nsssimfile_ns_next  = (acr_in::FNsssimfile*)-1;
-        row->zd_nsssimfile_ns_prev  = NULL;
+        acr_in::FNsssimfile* row_next = row->ns_zd_nsssimfile_ns_next;
+        row->ns_zd_nsssimfile_ns_next  = (acr_in::FNsssimfile*)-1;
+        row->ns_zd_nsssimfile_ns_prev  = NULL;
         row = row_next;
     }
 }
@@ -3747,14 +3761,14 @@ acr_in::FNsssimfile* acr_in::zd_nsssimfile_ns_RemoveFirst(acr_in::FNs& ns) {
     acr_in::FNsssimfile *row = NULL;
     row = ns.zd_nsssimfile_ns_head;
     if (row) {
-        acr_in::FNsssimfile *next = row->zd_nsssimfile_ns_next;
+        acr_in::FNsssimfile *next = row->ns_zd_nsssimfile_ns_next;
         ns.zd_nsssimfile_ns_head = next;
-        acr_in::FNsssimfile **new_end_a = &next->zd_nsssimfile_ns_prev;
+        acr_in::FNsssimfile **new_end_a = &next->ns_zd_nsssimfile_ns_prev;
         acr_in::FNsssimfile **new_end_b = &ns.zd_nsssimfile_ns_tail;
         acr_in::FNsssimfile **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         ns.zd_nsssimfile_ns_n--;
-        row->zd_nsssimfile_ns_next = (acr_in::FNsssimfile*)-1; // mark as not-in-list
+        row->ns_zd_nsssimfile_ns_next = (acr_in::FNsssimfile*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -3831,12 +3845,12 @@ algo::Smallstr50 acr_in::name_Get(acr_in::FSsimfile& ssimfile) {
 // --- acr_in.FSsimfile.zd_nsssimfile_ssimfile.Insert
 // Insert row into linked list. If row is already in linked list, do nothing.
 void acr_in::zd_nsssimfile_ssimfile_Insert(acr_in::FSsimfile& ssimfile, acr_in::FNsssimfile& row) {
-    if (!zd_nsssimfile_ssimfile_InLlistQ(row)) {
+    if (!ssimfile_zd_nsssimfile_ssimfile_InLlistQ(row)) {
         acr_in::FNsssimfile* old_tail = ssimfile.zd_nsssimfile_ssimfile_tail;
-        row.zd_nsssimfile_ssimfile_next = NULL;
-        row.zd_nsssimfile_ssimfile_prev = old_tail;
+        row.ssimfile_zd_nsssimfile_ssimfile_next = NULL;
+        row.ssimfile_zd_nsssimfile_ssimfile_prev = old_tail;
         ssimfile.zd_nsssimfile_ssimfile_tail = &row;
-        acr_in::FNsssimfile **new_row_a = &old_tail->zd_nsssimfile_ssimfile_next;
+        acr_in::FNsssimfile **new_row_a = &old_tail->ssimfile_zd_nsssimfile_ssimfile_next;
         acr_in::FNsssimfile **new_row_b = &ssimfile.zd_nsssimfile_ssimfile_head;
         acr_in::FNsssimfile **new_row = old_tail ? new_row_a : new_row_b;
         *new_row = &row;
@@ -3847,23 +3861,23 @@ void acr_in::zd_nsssimfile_ssimfile_Insert(acr_in::FSsimfile& ssimfile, acr_in::
 // --- acr_in.FSsimfile.zd_nsssimfile_ssimfile.Remove
 // Remove element from index. If element is not in index, do nothing.
 void acr_in::zd_nsssimfile_ssimfile_Remove(acr_in::FSsimfile& ssimfile, acr_in::FNsssimfile& row) {
-    if (zd_nsssimfile_ssimfile_InLlistQ(row)) {
+    if (ssimfile_zd_nsssimfile_ssimfile_InLlistQ(row)) {
         acr_in::FNsssimfile* old_head       = ssimfile.zd_nsssimfile_ssimfile_head;
         (void)old_head; // in case it's not used
-        acr_in::FNsssimfile* prev = row.zd_nsssimfile_ssimfile_prev;
-        acr_in::FNsssimfile* next = row.zd_nsssimfile_ssimfile_next;
+        acr_in::FNsssimfile* prev = row.ssimfile_zd_nsssimfile_ssimfile_prev;
+        acr_in::FNsssimfile* next = row.ssimfile_zd_nsssimfile_ssimfile_next;
         // if element is first, adjust list head; otherwise, adjust previous element's next
-        acr_in::FNsssimfile **new_next_a = &prev->zd_nsssimfile_ssimfile_next;
+        acr_in::FNsssimfile **new_next_a = &prev->ssimfile_zd_nsssimfile_ssimfile_next;
         acr_in::FNsssimfile **new_next_b = &ssimfile.zd_nsssimfile_ssimfile_head;
         acr_in::FNsssimfile **new_next = prev ? new_next_a : new_next_b;
         *new_next = next;
         // if element is last, adjust list tail; otherwise, adjust next element's prev
-        acr_in::FNsssimfile **new_prev_a = &next->zd_nsssimfile_ssimfile_prev;
+        acr_in::FNsssimfile **new_prev_a = &next->ssimfile_zd_nsssimfile_ssimfile_prev;
         acr_in::FNsssimfile **new_prev_b = &ssimfile.zd_nsssimfile_ssimfile_tail;
         acr_in::FNsssimfile **new_prev = next ? new_prev_a : new_prev_b;
         *new_prev = prev;
         ssimfile.zd_nsssimfile_ssimfile_n--;
-        row.zd_nsssimfile_ssimfile_next=(acr_in::FNsssimfile*)-1; // not-in-list
+        row.ssimfile_zd_nsssimfile_ssimfile_next=(acr_in::FNsssimfile*)-1; // not-in-list
     }
 }
 
@@ -3875,9 +3889,9 @@ void acr_in::zd_nsssimfile_ssimfile_RemoveAll(acr_in::FSsimfile& ssimfile) {
     ssimfile.zd_nsssimfile_ssimfile_tail = NULL;
     ssimfile.zd_nsssimfile_ssimfile_n = 0;
     while (row) {
-        acr_in::FNsssimfile* row_next = row->zd_nsssimfile_ssimfile_next;
-        row->zd_nsssimfile_ssimfile_next  = (acr_in::FNsssimfile*)-1;
-        row->zd_nsssimfile_ssimfile_prev  = NULL;
+        acr_in::FNsssimfile* row_next = row->ssimfile_zd_nsssimfile_ssimfile_next;
+        row->ssimfile_zd_nsssimfile_ssimfile_next  = (acr_in::FNsssimfile*)-1;
+        row->ssimfile_zd_nsssimfile_ssimfile_prev  = NULL;
         row = row_next;
     }
 }
@@ -3888,14 +3902,14 @@ acr_in::FNsssimfile* acr_in::zd_nsssimfile_ssimfile_RemoveFirst(acr_in::FSsimfil
     acr_in::FNsssimfile *row = NULL;
     row = ssimfile.zd_nsssimfile_ssimfile_head;
     if (row) {
-        acr_in::FNsssimfile *next = row->zd_nsssimfile_ssimfile_next;
+        acr_in::FNsssimfile *next = row->ssimfile_zd_nsssimfile_ssimfile_next;
         ssimfile.zd_nsssimfile_ssimfile_head = next;
-        acr_in::FNsssimfile **new_end_a = &next->zd_nsssimfile_ssimfile_prev;
+        acr_in::FNsssimfile **new_end_a = &next->ssimfile_zd_nsssimfile_ssimfile_prev;
         acr_in::FNsssimfile **new_end_b = &ssimfile.zd_nsssimfile_ssimfile_tail;
         acr_in::FNsssimfile **new_end = next ? new_end_a : new_end_b;
         *new_end = NULL;
         ssimfile.zd_nsssimfile_ssimfile_n--;
-        row->zd_nsssimfile_ssimfile_next = (acr_in::FNsssimfile*)-1; // mark as not-in-list
+        row->ssimfile_zd_nsssimfile_ssimfile_next = (acr_in::FNsssimfile*)-1; // mark as not-in-list
     }
     return row;
 }
@@ -3991,15 +4005,11 @@ void acr_in::target_CopyIn(acr_in::FTarget &row, dev::Target &in) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void acr_in::c_targdep_Insert(acr_in::FTarget& target, acr_in::FTargdep& row) {
-    if (bool_Update(row.target_c_targdep_in_ary,true)) {
-        // reserve space
+    if (!row.target_c_targdep_in_ary) {
         c_targdep_Reserve(target, 1);
-        u32 n  = target.c_targdep_n;
-        u32 at = n;
-        acr_in::FTargdep* *elems = target.c_targdep_elems;
-        elems[at] = &row;
-        target.c_targdep_n = n+1;
-
+        u32 n  = target.c_targdep_n++;
+        target.c_targdep_elems[n] = &row;
+        row.target_c_targdep_in_ary = true;
     }
 }
 
@@ -4008,7 +4018,7 @@ void acr_in::c_targdep_Insert(acr_in::FTarget& target, acr_in::FTargdep& row) {
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool acr_in::c_targdep_InsertMaybe(acr_in::FTarget& target, acr_in::FTargdep& row) {
-    bool retval = !row.target_c_targdep_in_ary;
+    bool retval = !target_c_targdep_InAryQ(row);
     c_targdep_Insert(target,row); // check is performed in _Insert again
     return retval;
 }
@@ -4016,18 +4026,18 @@ bool acr_in::c_targdep_InsertMaybe(acr_in::FTarget& target, acr_in::FTargdep& ro
 // --- acr_in.FTarget.c_targdep.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr_in::c_targdep_Remove(acr_in::FTarget& target, acr_in::FTargdep& row) {
+    int n = target.c_targdep_n;
     if (bool_Update(row.target_c_targdep_in_ary,false)) {
-        int lim = target.c_targdep_n;
         acr_in::FTargdep* *elems = target.c_targdep_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             acr_in::FTargdep* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(acr_in::FTargdep*) * (lim - j);
+                size_t nbytes = sizeof(acr_in::FTargdep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                target.c_targdep_n = lim - 1;
+                target.c_targdep_n = n - 1;
                 break;
             }
         }
@@ -4055,15 +4065,11 @@ void acr_in::c_targdep_Reserve(acr_in::FTarget& target, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void acr_in::c_targdep_child_Insert(acr_in::FTarget& target, acr_in::FTargdep& row) {
-    if (bool_Update(row.target_c_targdep_child_in_ary,true)) {
-        // reserve space
+    if (!row.target_c_targdep_child_in_ary) {
         c_targdep_child_Reserve(target, 1);
-        u32 n  = target.c_targdep_child_n;
-        u32 at = n;
-        acr_in::FTargdep* *elems = target.c_targdep_child_elems;
-        elems[at] = &row;
-        target.c_targdep_child_n = n+1;
-
+        u32 n  = target.c_targdep_child_n++;
+        target.c_targdep_child_elems[n] = &row;
+        row.target_c_targdep_child_in_ary = true;
     }
 }
 
@@ -4072,7 +4078,7 @@ void acr_in::c_targdep_child_Insert(acr_in::FTarget& target, acr_in::FTargdep& r
 // If row is already in the array, do nothing.
 // Return value: whether element was inserted into array.
 bool acr_in::c_targdep_child_InsertMaybe(acr_in::FTarget& target, acr_in::FTargdep& row) {
-    bool retval = !row.target_c_targdep_child_in_ary;
+    bool retval = !target_c_targdep_child_InAryQ(row);
     c_targdep_child_Insert(target,row); // check is performed in _Insert again
     return retval;
 }
@@ -4080,18 +4086,18 @@ bool acr_in::c_targdep_child_InsertMaybe(acr_in::FTarget& target, acr_in::FTargd
 // --- acr_in.FTarget.c_targdep_child.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr_in::c_targdep_child_Remove(acr_in::FTarget& target, acr_in::FTargdep& row) {
+    int n = target.c_targdep_child_n;
     if (bool_Update(row.target_c_targdep_child_in_ary,false)) {
-        int lim = target.c_targdep_child_n;
         acr_in::FTargdep* *elems = target.c_targdep_child_elems;
         // search backward, so that most recently added element is found first.
         // if found, shift array.
-        for (int i = lim-1; i>=0; i--) {
+        for (int i = n-1; i>=0; i--) {
             acr_in::FTargdep* elem = elems[i]; // fetch element
             if (elem == &row) {
                 int j = i + 1;
-                size_t nbytes = sizeof(acr_in::FTargdep*) * (lim - j);
+                size_t nbytes = sizeof(acr_in::FTargdep*) * (n - j);
                 memmove(elems + i, elems + j, nbytes);
-                target.c_targdep_child_n = lim - 1;
+                target.c_targdep_child_n = n - 1;
                 break;
             }
         }
@@ -4136,14 +4142,9 @@ void acr_in::FTarget_Uninit(acr_in::FTarget& target) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void acr_in::c_child_Insert(acr_in::FTuple& tuple, acr_in::FTuple& row) {
-    // reserve space
     c_child_Reserve(tuple, 1);
-    u32 n  = tuple.c_child_n;
-    u32 at = n;
-    acr_in::FTuple* *elems = tuple.c_child_elems;
-    elems[at] = &row;
-    tuple.c_child_n = n+1;
-
+    u32 n  = tuple.c_child_n++;
+    tuple.c_child_elems[n] = &row;
 }
 
 // --- acr_in.FTuple.c_child.ScanInsertMaybe
@@ -4172,20 +4173,18 @@ bool acr_in::c_child_ScanInsertMaybe(acr_in::FTuple& tuple, acr_in::FTuple& row)
 // --- acr_in.FTuple.c_child.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr_in::c_child_Remove(acr_in::FTuple& tuple, acr_in::FTuple& row) {
-    int lim = tuple.c_child_n;
-    acr_in::FTuple* *elems = tuple.c_child_elems;
-    // search backward, so that most recently added element is found first.
-    // if found, shift array.
-    for (int i = lim-1; i>=0; i--) {
-        acr_in::FTuple* elem = elems[i]; // fetch element
-        if (elem == &row) {
-            int j = i + 1;
-            size_t nbytes = sizeof(acr_in::FTuple*) * (lim - j);
-            memmove(elems + i, elems + j, nbytes);
-            tuple.c_child_n = lim - 1;
-            break;
+    int n = tuple.c_child_n;
+    int j=0;
+    for (int i=0; i<n; i++) {
+        if (tuple.c_child_elems[i] == &row) {
+        } else {
+            if (j != i) {
+                tuple.c_child_elems[j] = tuple.c_child_elems[i];
+            }
+            j++;
         }
     }
+    tuple.c_child_n = j;
 }
 
 // --- acr_in.FTuple.c_child.Reserve
@@ -4209,14 +4208,9 @@ void acr_in::c_child_Reserve(acr_in::FTuple& tuple, u32 n) {
 // Insert pointer to row into array. Row must not already be in array.
 // If pointer is already in the array, it may be inserted twice.
 void acr_in::c_parent_Insert(acr_in::FTuple& tuple, acr_in::FTuple& row) {
-    // reserve space
     c_parent_Reserve(tuple, 1);
-    u32 n  = tuple.c_parent_n;
-    u32 at = n;
-    acr_in::FTuple* *elems = tuple.c_parent_elems;
-    elems[at] = &row;
-    tuple.c_parent_n = n+1;
-
+    u32 n  = tuple.c_parent_n++;
+    tuple.c_parent_elems[n] = &row;
 }
 
 // --- acr_in.FTuple.c_parent.ScanInsertMaybe
@@ -4245,20 +4239,18 @@ bool acr_in::c_parent_ScanInsertMaybe(acr_in::FTuple& tuple, acr_in::FTuple& row
 // --- acr_in.FTuple.c_parent.Remove
 // Find element using linear scan. If element is in array, remove, otherwise do nothing
 void acr_in::c_parent_Remove(acr_in::FTuple& tuple, acr_in::FTuple& row) {
-    int lim = tuple.c_parent_n;
-    acr_in::FTuple* *elems = tuple.c_parent_elems;
-    // search backward, so that most recently added element is found first.
-    // if found, shift array.
-    for (int i = lim-1; i>=0; i--) {
-        acr_in::FTuple* elem = elems[i]; // fetch element
-        if (elem == &row) {
-            int j = i + 1;
-            size_t nbytes = sizeof(acr_in::FTuple*) * (lim - j);
-            memmove(elems + i, elems + j, nbytes);
-            tuple.c_parent_n = lim - 1;
-            break;
+    int n = tuple.c_parent_n;
+    int j=0;
+    for (int i=0; i<n; i++) {
+        if (tuple.c_parent_elems[i] == &row) {
+        } else {
+            if (j != i) {
+                tuple.c_parent_elems[j] = tuple.c_parent_elems[i];
+            }
+            j++;
         }
     }
+    tuple.c_parent_n = j;
 }
 
 // --- acr_in.FTuple.c_parent.Reserve
@@ -4563,11 +4555,13 @@ void acr_in::StaticCheck() {
 // --- acr_in...main
 int main(int argc, char **argv) {
     try {
+        lib_json::FDb_Init();
         algo_lib::FDb_Init();
         acr_in::FDb_Init();
         algo_lib::_db.argc = argc;
         algo_lib::_db.argv = argv;
         algo_lib::IohookInit();
+        algo_lib::_db.clock = algo::CurrSchedTime(); // initialize clock
         acr_in::ReadArgv(); // dmmeta.main:acr_in
         acr_in::Main(); // user-defined main
     } catch(algo_lib::ErrorX &x) {
@@ -4580,6 +4574,7 @@ int main(int argc, char **argv) {
     try {
         acr_in::FDb_Uninit();
         algo_lib::FDb_Uninit();
+        lib_json::FDb_Uninit();
     } catch(algo_lib::ErrorX &) {
         // don't print anything, might crash
         algo_lib::_db.exit_code = 1;

@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2023 Astra
 //
 // License: GPL
@@ -46,5 +46,6 @@ namespace atf_cov { // update-hdr
     void Main_Check();
     void Main_Capture();
     void SaveCov();
-    void Main();
+    //     (user-implemented function, prototype is in amc-generated header)
+    // void Main(); // main:atf_cov
 }

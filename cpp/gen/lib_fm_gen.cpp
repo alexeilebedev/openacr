@@ -31,10 +31,10 @@
 #include "include/gen/algo_gen.inl.h"
 #include "include/gen/fm_gen.h"
 #include "include/gen/fm_gen.inl.h"
-#include "include/gen/algo_lib_gen.h"
-#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_json_gen.h"
 #include "include/gen/lib_json_gen.inl.h"
+#include "include/gen/algo_lib_gen.h"
+#include "include/gen/algo_lib_gen.inl.h"
 #include "include/gen/lib_prot_gen.h"
 #include "include/gen/lib_prot_gen.inl.h"
 //#pragma endinclude
@@ -134,6 +134,7 @@ algo::Smallstr50 lib_fm::objprefix_Get(lib_fm::FAlarm& alarm) {
 void lib_fm::FAlarm_Init(lib_fm::FAlarm& alarm) {
     alarm.n_occurred = i32(0);
     alarm.ind_alarm_next = (lib_fm::FAlarm*)-1; // (lib_fm.FDb.ind_alarm) not-in-hash
+    alarm.ind_alarm_hashval = 0; // stored hash value
 }
 
 // --- lib_fm.FAlarm..Uninit
@@ -257,8 +258,8 @@ bool lib_fm::LoadTuplesMaybe(algo::strptr root, bool recursive) {
         retval = retval && lib_fm::LoadTuplesFile(algo::SsimFname(root,"fmdb.alm_code"),recursive);
         retval = retval && lib_fm::LoadTuplesFile(algo::SsimFname(root,"dmmeta.dispsigcheck"),recursive);
     } else {
-        algo_lib::SaveBadTag("path", root);
-        algo_lib::SaveBadTag("comment", "Wrong working directory?");
+        algo_lib::AppendErrtext("path", root);
+        algo_lib::AppendErrtext("comment", "Wrong working directory?");
         retval = false;
     }
     return retval;
@@ -455,14 +456,9 @@ bool lib_fm::alarm_XrefMaybe(lib_fm::FAlarm &row) {
 // Find row by key. Return NULL if not found.
 lib_fm::FAlarm* lib_fm::ind_alarm_Find(const algo::strptr& key) {
     u32 index = algo::Smallstr200_Hash(0, key) & (_db.ind_alarm_buckets_n - 1);
-    lib_fm::FAlarm* *e = &_db.ind_alarm_buckets_elems[index];
-    lib_fm::FAlarm* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).alarm == key;
-        if (done) break;
-        e         = &ret->ind_alarm_next;
-    } while (true);
+    lib_fm::FAlarm *ret = _db.ind_alarm_buckets_elems[index];
+    for (; ret && !((*ret).alarm == key); ret = ret->ind_alarm_next) {
+    }
     return ret;
 }
 
@@ -494,10 +490,11 @@ lib_fm::FAlarm& lib_fm::ind_alarm_GetOrCreate(const algo::strptr& key) {
 // --- lib_fm.FDb.ind_alarm.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_fm::ind_alarm_InsertMaybe(lib_fm::FAlarm& row) {
-    ind_alarm_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_alarm_next == (lib_fm::FAlarm*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.alarm) & (_db.ind_alarm_buckets_n - 1);
+        row.ind_alarm_hashval = algo::Smallstr200_Hash(0, row.alarm);
+        ind_alarm_Reserve(1);
+        u32 index = row.ind_alarm_hashval & (_db.ind_alarm_buckets_n - 1);
         lib_fm::FAlarm* *prev = &_db.ind_alarm_buckets_elems[index];
         do {
             lib_fm::FAlarm* ret = *prev;
@@ -523,7 +520,7 @@ bool lib_fm::ind_alarm_InsertMaybe(lib_fm::FAlarm& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_fm::ind_alarm_Remove(lib_fm::FAlarm& row) {
     if (LIKELY(row.ind_alarm_next != (lib_fm::FAlarm*)-1)) {// check if in hash already
-        u32 index = algo::Smallstr200_Hash(0, row.alarm) & (_db.ind_alarm_buckets_n - 1);
+        u32 index = row.ind_alarm_hashval & (_db.ind_alarm_buckets_n - 1);
         lib_fm::FAlarm* *prev = &_db.ind_alarm_buckets_elems[index]; // addr of pointer to current element
         while (lib_fm::FAlarm *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -540,8 +537,14 @@ void lib_fm::ind_alarm_Remove(lib_fm::FAlarm& row) {
 // --- lib_fm.FDb.ind_alarm.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_fm::ind_alarm_Reserve(int n) {
+    ind_alarm_AbsReserve(_db.ind_alarm_n + n);
+}
+
+// --- lib_fm.FDb.ind_alarm.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_fm::ind_alarm_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_alarm_buckets_n;
-    u32 new_nelems   = _db.ind_alarm_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -560,7 +563,7 @@ void lib_fm::ind_alarm_Reserve(int n) {
             while (elem) {
                 lib_fm::FAlarm &row        = *elem;
                 lib_fm::FAlarm* next       = row.ind_alarm_next;
-                u32 index          = algo::Smallstr200_Hash(0, row.alarm) & (new_nbuckets-1);
+                u32 index          = row.ind_alarm_hashval & (new_nbuckets-1);
                 row.ind_alarm_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -684,14 +687,9 @@ bool lib_fm::alm_code_XrefMaybe(lib_fm::FAlmCode &row) {
 // Find row by key. Return NULL if not found.
 lib_fm::FAlmCode* lib_fm::ind_alm_code_Find(const algo::strptr& key) {
     u32 index = fm::Code_Hash(0, key) & (_db.ind_alm_code_buckets_n - 1);
-    lib_fm::FAlmCode* *e = &_db.ind_alm_code_buckets_elems[index];
-    lib_fm::FAlmCode* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).alm_code == key;
-        if (done) break;
-        e         = &ret->ind_alm_code_next;
-    } while (true);
+    lib_fm::FAlmCode *ret = _db.ind_alm_code_buckets_elems[index];
+    for (; ret && !((*ret).alm_code == key); ret = ret->ind_alm_code_next) {
+    }
     return ret;
 }
 
@@ -723,10 +721,11 @@ lib_fm::FAlmCode& lib_fm::ind_alm_code_GetOrCreate(const algo::strptr& key) {
 // --- lib_fm.FDb.ind_alm_code.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_fm::ind_alm_code_InsertMaybe(lib_fm::FAlmCode& row) {
-    ind_alm_code_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_alm_code_next == (lib_fm::FAlmCode*)-1)) {// check if in hash already
-        u32 index = fm::Code_Hash(0, row.alm_code) & (_db.ind_alm_code_buckets_n - 1);
+        row.ind_alm_code_hashval = fm::Code_Hash(0, row.alm_code);
+        ind_alm_code_Reserve(1);
+        u32 index = row.ind_alm_code_hashval & (_db.ind_alm_code_buckets_n - 1);
         lib_fm::FAlmCode* *prev = &_db.ind_alm_code_buckets_elems[index];
         do {
             lib_fm::FAlmCode* ret = *prev;
@@ -752,7 +751,7 @@ bool lib_fm::ind_alm_code_InsertMaybe(lib_fm::FAlmCode& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_fm::ind_alm_code_Remove(lib_fm::FAlmCode& row) {
     if (LIKELY(row.ind_alm_code_next != (lib_fm::FAlmCode*)-1)) {// check if in hash already
-        u32 index = fm::Code_Hash(0, row.alm_code) & (_db.ind_alm_code_buckets_n - 1);
+        u32 index = row.ind_alm_code_hashval & (_db.ind_alm_code_buckets_n - 1);
         lib_fm::FAlmCode* *prev = &_db.ind_alm_code_buckets_elems[index]; // addr of pointer to current element
         while (lib_fm::FAlmCode *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -769,8 +768,14 @@ void lib_fm::ind_alm_code_Remove(lib_fm::FAlmCode& row) {
 // --- lib_fm.FDb.ind_alm_code.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_fm::ind_alm_code_Reserve(int n) {
+    ind_alm_code_AbsReserve(_db.ind_alm_code_n + n);
+}
+
+// --- lib_fm.FDb.ind_alm_code.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_fm::ind_alm_code_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_alm_code_buckets_n;
-    u32 new_nelems   = _db.ind_alm_code_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -789,7 +794,7 @@ void lib_fm::ind_alm_code_Reserve(int n) {
             while (elem) {
                 lib_fm::FAlmCode &row        = *elem;
                 lib_fm::FAlmCode* next       = row.ind_alm_code_next;
-                u32 index          = fm::Code_Hash(0, row.alm_code) & (new_nbuckets-1);
+                u32 index          = row.ind_alm_code_hashval & (new_nbuckets-1);
                 row.ind_alm_code_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;
@@ -913,14 +918,9 @@ bool lib_fm::alm_objtype_XrefMaybe(lib_fm::FAlmObjtype &row) {
 // Find row by key. Return NULL if not found.
 lib_fm::FAlmObjtype* lib_fm::ind_alm_objtype_Find(const algo::strptr& key) {
     u32 index = fm::Objtype_Hash(0, key) & (_db.ind_alm_objtype_buckets_n - 1);
-    lib_fm::FAlmObjtype* *e = &_db.ind_alm_objtype_buckets_elems[index];
-    lib_fm::FAlmObjtype* ret=NULL;
-    do {
-        ret       = *e;
-        bool done = !ret || (*ret).alm_objtype == key;
-        if (done) break;
-        e         = &ret->ind_alm_objtype_next;
-    } while (true);
+    lib_fm::FAlmObjtype *ret = _db.ind_alm_objtype_buckets_elems[index];
+    for (; ret && !((*ret).alm_objtype == key); ret = ret->ind_alm_objtype_next) {
+    }
     return ret;
 }
 
@@ -952,10 +952,11 @@ lib_fm::FAlmObjtype& lib_fm::ind_alm_objtype_GetOrCreate(const algo::strptr& key
 // --- lib_fm.FDb.ind_alm_objtype.InsertMaybe
 // Insert row into hash table. Return true if row is reachable through the hash after the function completes.
 bool lib_fm::ind_alm_objtype_InsertMaybe(lib_fm::FAlmObjtype& row) {
-    ind_alm_objtype_Reserve(1);
     bool retval = true; // if already in hash, InsertMaybe returns true
     if (LIKELY(row.ind_alm_objtype_next == (lib_fm::FAlmObjtype*)-1)) {// check if in hash already
-        u32 index = fm::Objtype_Hash(0, row.alm_objtype) & (_db.ind_alm_objtype_buckets_n - 1);
+        row.ind_alm_objtype_hashval = fm::Objtype_Hash(0, row.alm_objtype);
+        ind_alm_objtype_Reserve(1);
+        u32 index = row.ind_alm_objtype_hashval & (_db.ind_alm_objtype_buckets_n - 1);
         lib_fm::FAlmObjtype* *prev = &_db.ind_alm_objtype_buckets_elems[index];
         do {
             lib_fm::FAlmObjtype* ret = *prev;
@@ -981,7 +982,7 @@ bool lib_fm::ind_alm_objtype_InsertMaybe(lib_fm::FAlmObjtype& row) {
 // Remove reference to element from hash index. If element is not in hash, do nothing
 void lib_fm::ind_alm_objtype_Remove(lib_fm::FAlmObjtype& row) {
     if (LIKELY(row.ind_alm_objtype_next != (lib_fm::FAlmObjtype*)-1)) {// check if in hash already
-        u32 index = fm::Objtype_Hash(0, row.alm_objtype) & (_db.ind_alm_objtype_buckets_n - 1);
+        u32 index = row.ind_alm_objtype_hashval & (_db.ind_alm_objtype_buckets_n - 1);
         lib_fm::FAlmObjtype* *prev = &_db.ind_alm_objtype_buckets_elems[index]; // addr of pointer to current element
         while (lib_fm::FAlmObjtype *next = *prev) {                          // scan the collision chain for our element
             if (next == &row) {        // found it?
@@ -998,8 +999,14 @@ void lib_fm::ind_alm_objtype_Remove(lib_fm::FAlmObjtype& row) {
 // --- lib_fm.FDb.ind_alm_objtype.Reserve
 // Reserve enough room in the hash for N more elements. Return success code.
 void lib_fm::ind_alm_objtype_Reserve(int n) {
+    ind_alm_objtype_AbsReserve(_db.ind_alm_objtype_n + n);
+}
+
+// --- lib_fm.FDb.ind_alm_objtype.AbsReserve
+// Reserve enough room for exacty N elements. Return success code.
+void lib_fm::ind_alm_objtype_AbsReserve(int n) {
     u32 old_nbuckets = _db.ind_alm_objtype_buckets_n;
-    u32 new_nelems   = _db.ind_alm_objtype_n + n;
+    u32 new_nelems   = n;
     // # of elements has to be roughly equal to the number of buckets
     if (new_nelems > old_nbuckets) {
         int new_nbuckets = i32_Max(algo::BumpToPow2(new_nelems), u32(4));
@@ -1018,7 +1025,7 @@ void lib_fm::ind_alm_objtype_Reserve(int n) {
             while (elem) {
                 lib_fm::FAlmObjtype &row        = *elem;
                 lib_fm::FAlmObjtype* next       = row.ind_alm_objtype_next;
-                u32 index          = fm::Objtype_Hash(0, row.alm_objtype) & (new_nbuckets-1);
+                u32 index          = row.ind_alm_objtype_hashval & (new_nbuckets-1);
                 row.ind_alm_objtype_next     = new_buckets[index];
                 new_buckets[index] = &row;
                 elem               = next;

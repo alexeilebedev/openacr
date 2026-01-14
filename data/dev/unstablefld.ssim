@@ -1,8 +1,6 @@
-dev.unstablefld  field:abt.config.builddir  comment:"Compiler builddir"
 dev.unstablefld  field:abt.config.cache  comment:""
 dev.unstablefld  field:abt.config.ood_src  comment:""
 dev.unstablefld  field:abt.config.ood_target  comment:""
-dev.unstablefld  field:ams.TraceInfo2Msg.tstamp  comment:""
 dev.unstablefld  field:report.abt.hitrate  comment:"Compiler cache hit rate"
 dev.unstablefld  field:report.abt.n_install  comment:"Number of executabes linked to bin/"
 dev.unstablefld  field:report.abt.n_target  comment:"Number of build targets considered"

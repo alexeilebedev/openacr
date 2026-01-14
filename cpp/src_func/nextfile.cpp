@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2018-2019 NYSE | Intercontinental Exchange
 //
@@ -33,9 +33,9 @@ static tempstr Main_NextSrcFile(strptr srcfile) {
     ind_beg(src_func::_db_targsrc_curs,targsrc,src_func::_db) {
         if (src_Get(targsrc)==srcfile) {
             if (src_func::_db.cmdline.other) {
-                ret=src_Get(*src_func::cd_targsrc_Prev(targsrc));// previous circular list
+                ret=src_Get(*src_func::target_cd_targsrc_Prev(targsrc));// previous circular list
             } else {
-                ret=src_Get(*src_func::cd_targsrc_Next(targsrc));// next in circular list
+                ret=src_Get(*src_func::target_cd_targsrc_Next(targsrc));// next in circular list
             }
             break;
         }

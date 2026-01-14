@@ -10,7 +10,6 @@
 
 |Field|[Type](/txt/ssimdb/dmmeta/ctype.md)|[Reftype](/txt/ssimdb/dmmeta/reftype.md)|Default|Comment|
 |---|---|---|---|---|
-|syscmddep|[algo.RspaceStr16](/txt/protocol/algo/README.md#algo-rspacestr16)|[Val](/txt/exe/amc/reftypes.md#val)|||
 |child|[dev.Syscmd](/txt/ssimdb/dev/syscmd.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
 |parent|[dev.Syscmd](/txt/ssimdb/dev/syscmd.md)|[Pkey](/txt/exe/amc/reftypes.md#pkey)|||
 

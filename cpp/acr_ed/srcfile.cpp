@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2024,2026 AlgoRND
 // Copyright (C) 2020-2021 Astra
 // Copyright (C) 2017-2019 NYSE | Intercontinental Exchange
 //
@@ -47,7 +47,7 @@ static acr_ed::FTarget *GuessTarget(strptr srcfile) {
 
 // -----------------------------------------------------------------------------
 
-// Create cpp, h or readme file
+// Create cpp, script, h or readme file
 void acr_ed::edaction_Create_Srcfile() {
     vrfy(DirectoryQ(GetDirName(acr_ed::_db.cmdline.srcfile))
          , tempstr()<<"acr_ed.baddir"
@@ -56,6 +56,7 @@ void acr_ed::edaction_Create_Srcfile() {
     bool readme = Pathcomp(acr_ed::_db.cmdline.srcfile,"/LL") == "txt";
     bool cpp = GetFileExt(acr_ed::_db.cmdline.srcfile) == ".cpp";
     bool h = GetFileExt(acr_ed::_db.cmdline.srcfile) == ".h";
+    bool script = StartsWithQ(acr_ed::_db.cmdline.srcfile, "bin/");
     bool cpp_or_h = cpp || h;
     bool need_target = cpp_or_h;
 
@@ -77,10 +78,8 @@ void acr_ed::edaction_Create_Srcfile() {
 
     algo_lib::Replscope R;
     Set(R, "$target", acr_ed::_db.cmdline.target);
+    Set(R, "$basename", StripDirName(acr_ed::_db.cmdline.srcfile));
     Set(R, "$srcfile", acr_ed::_db.cmdline.srcfile);
-
-    // create gitfile record
-    acr_ed::_db.out_ssim << dev::Gitfile(acr_ed::_db.cmdline.srcfile)<<eol;
 
     // create targsrc, readme record
     if (cpp_or_h) {
@@ -89,29 +88,33 @@ void acr_ed::edaction_Create_Srcfile() {
         targsrc.comment = algo::Comment(acr_ed::_db.cmdline.comment);
         acr_ed::_db.out_ssim << targsrc << eol;
     }
-    if (readme) {
-        dev::Readme r;
-        r.inl=false;
-        r.gitfile = acr_ed::_db.cmdline.srcfile;
-        r.comment.value = acr_ed::_db.cmdline.comment;
-        acr_ed::_db.out_ssim << r << eol;
+
+    // create file, insert some content
+    // but only if file doesn't exist
+    if (!FileQ(_db.cmdline.srcfile)) {
+        acr_ed::_db.script<<"cat > "<<acr_ed::_db.cmdline.srcfile<<" << EOF"<<eol;
+        if (cpp_or_h) {
+            bool mainheader = StripExt(StripDirName(acr_ed::_db.cmdline.srcfile)) == acr_ed::_db.cmdline.target;
+            InsertSrcfileInclude(R, mainheader);
+        }
+        if (readme) {
+            Ins(&R, acr_ed::_db.script, "## $srcfile");
+        }
+        if (script) {
+            Ins(&R, acr_ed::_db.script, "#!/usr/bin/env bash");
+        }
+        Ins(&R, acr_ed::_db.script, "EOF");
     }
 
-    // create source file, insert some content
-    Ins(&R, acr_ed::_db.script, "cat > $srcfile << EOF");
+    // update file copyright headers
+    RegisterFile(Subst(R,"$srcfile"),_db.cmdline.comment);
     if (cpp_or_h) {
-        bool mainheader = StripExt(StripDirName(acr_ed::_db.cmdline.srcfile)) == acr_ed::_db.cmdline.target;
-        InsertSrcfileInclude(R, mainheader);
+        Ins(&R, acr_ed::_db.script, "bin/src_hdr -targsrc:$target/% -write -update_copyright");
     }
-    if (readme) {
-        Ins(&R, acr_ed::_db.script, "## $srcfile");
-    }
-    Ins(&R, acr_ed::_db.script, "EOF");
-
-    // updateh file copyright headers
-    Ins(&R, acr_ed::_db.script, "git add $srcfile");
-    if (cpp_or_h) {
-        Ins(&R, acr_ed::_db.script, "bin/src_hdr -targsrc:$target/% -write");
+    if (script) {
+        Ins(&R, acr_ed::_db.script, "bin/src_hdr -scriptfile:$srcfile -write -update_copyright");
+        Ins(&R, acr_ed::_db.script, "bin/atf_ci update_script -check_clean:N");
+        acr_ed::RegisterFile(Subst(R,"txt/script/$basename.md"), "");
     }
     ScriptEditFile(R,acr_ed::_db.cmdline.srcfile);
 }

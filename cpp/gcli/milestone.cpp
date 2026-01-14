@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024 AlgoRND
+// Copyright (C) 2023-2026 AlgoRND
 //
 // License: GPL
 // This program is free software: you can redistribute it and/or modify
@@ -22,19 +22,21 @@
 #include "include/gcli.h"
 // -----------------------------------------------------------------------------
 void gcli::Main_ShowMslist(){
-    cstring out;
-    out << "MILESTONE\tTITLE\n";
+    algo_lib::FTxttbl txttbl;
+    AddRow(txttbl);
+    AddCols(txttbl,"MILESTONE,TITLE");
+    if (gcli::_db.cmdline.t){
+        AddCol(txttbl,"DESCRIPTION");
+    }
     ind_beg(gcli::_db_milestone_curs, milestone, gcli::_db) if (milestone.select){
-        out << milestone.milestone
-            << "\t" << milestone.title
-            << eol;
+        AddRow(txttbl);
+        AddCol(txttbl,milestone.milestone);
+        AddCol(txttbl,milestone.title);
         if (gcli::_db.cmdline.t){
-            out << eol;
-            InsertIndent(out,milestone.description,1);
-            out << eol;
+            AddCol(txttbl,milestone.description);
         }
     }ind_end;
-    prlog(Tabulated(out,"\t"));
+    prlog(txttbl);
 }
 // -----------------------------------------------------------------------------
 tempstr gcli::MilestoneName(strptr proj, strptr iid){
